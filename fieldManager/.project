@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>fieldManagerServer</name>
+	<name>fieldManagerServer-P</name>
 	<comment></comment>
 	<projects>
 		<project>sdDAL</project>
