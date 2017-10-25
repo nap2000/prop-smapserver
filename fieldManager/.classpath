@@ -30,13 +30,13 @@
 	<classpathentry kind="lib" path="lib/javax.mail.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/gson-2.1.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/sdDAL"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/sdDataAccess"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java se 7">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v7.0"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/sdDAL-P"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/sdDataAccess-P"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
