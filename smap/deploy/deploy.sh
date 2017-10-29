@@ -123,4 +123,4 @@ service apache2 start
 
 # Hosted Only
 # Start disk monitor
-~/smap/deploy/manage.sh
+sudo -u ubuntu ~ubuntu/smap/deploy/manage.sh
