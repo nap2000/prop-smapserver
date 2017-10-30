@@ -427,6 +427,7 @@ define({
     "t_drag": "Drag a task and drop onto calendar",
     "t_g": "Guidance",
     "t_ass_done": "Have you completed this assignment?",
+    "t_defn": "Task Group Definition",
 
     // template load errors
     "e_u_err": "Form Upload Error",
