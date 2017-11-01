@@ -426,6 +426,7 @@ $(document).ready(function() {
 		organisation.locale = $('#o_language').val();
 		organisation.timeZone = $('#o_tz').val();
         organisation.ft_send = $('#ft_send').val();
+        organisation.ft_delete = $('#ft_delete').val();
 	
 		if(typeof organisation.email_port !== "number") {
 			organisation.email_port = 0;
@@ -466,8 +467,6 @@ $(document).ready(function() {
 				organisation.allow_twitter = true;
 			} else if(options[i] === "can_edit") {
 				organisation.can_edit = true;
-			} else if(options[i] === "ft_delete_submitted") {
-				organisation.ft_delete_submitted = true;
 			} else if(options[i] === "ft_send_trail") {
 				organisation.ft_send_trail = true;
 			} else if(options[i] === "ft_sync_incomplete") {
@@ -916,8 +915,6 @@ function openOrganisationDialog(existing, organisationIndex) {
 				this.checked = org.allow_twitter;
 			} else if($(this).val() === "can_edit") {
 				this.checked = org.can_edit;
-			} else if($(this).val() === "ft_delete_submitted") {
-				this.checked = org.ft_delete_submitted;
 			} else if($(this).val() === "ft_send_trail") {
 				this.checked = org.ft_send_trail;
 			} else if($(this).val() === "ft_sync_incomplete") {
@@ -931,6 +928,7 @@ function openOrganisationDialog(existing, organisationIndex) {
 		addLanguageOptions($('#o_language'), org.locale);
 		$('#o_tz').val(org.timeZone);
         $('#ft_send').val(org.ft_send);
+        $('#ft_delete').val(org.ft_delete);
 		gOrgId = org.id;
 		setBannerLogo(org.id);
 

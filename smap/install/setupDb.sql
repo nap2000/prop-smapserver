@@ -112,7 +112,7 @@ create TABLE organisation (
 	allow_facebook boolean,
 	allow_twitter boolean,
 	can_edit boolean,
-	ft_delete_submitted boolean,
+	ft_delete text,
 	ft_send_trail boolean,
 	ft_sync_incomplete boolean,
 	ft_odk_style_menus boolean default true,
