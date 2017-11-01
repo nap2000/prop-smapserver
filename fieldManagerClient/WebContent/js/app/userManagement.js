@@ -425,6 +425,7 @@ $(document).ready(function() {
 		organisation.default_email_content = $('#o_default_email_content').val();
 		organisation.locale = $('#o_language').val();
 		organisation.timeZone = $('#o_tz').val();
+        organisation.ft_send = $('#ft_send').val();
 	
 		if(typeof organisation.email_port !== "number") {
 			organisation.email_port = 0;
@@ -475,11 +476,7 @@ $(document).ready(function() {
 				organisation.ft_odk_style_menus = true;
 			} else if(options[i] === "ft_review_final") {
 				organisation.ft_review_final = true;
-			} else if(options[i] === "ft_send_wifi") {
-                organisation.ft_send_wifi = true;
-            } else if(options[i] === "ft_send_wifi_cell") {
-                organisation.ft_send_wifi_cell = true;
-            }
+			}
 		}
 		organisationList[0] = organisation;	
 		var organisationString = JSON.stringify(organisationList);
@@ -929,14 +926,11 @@ function openOrganisationDialog(existing, organisationIndex) {
 				this.checked = org.ft_odk_style_menus;
 			} else if($(this).val() === "ft_review_final") {
 				this.checked = org.ft_review_final;
-			} else if($(this).val() === "ft_send_wifi") {
-                this.checked = org.ft_send_wifi;
-            } else if($(this).val() === "ft_send_wifi_cell") {
-                this.checked = org.ft_send_wifi_cell;
-            }
+			}
 		});
 		addLanguageOptions($('#o_language'), org.locale);
 		$('#o_tz').val(org.timeZone);
+        $('#ft_send').val(org.ft_send);
 		gOrgId = org.id;
 		setBannerLogo(org.id);
 
