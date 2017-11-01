@@ -395,6 +395,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                     }
                 }
+                refreshTaskDefinition(assignObj);   // Update the Task Defintion directly without calling the server
 
                 assignString = JSON.stringify(assignObj);
                 globals.gCurrentUserId = undefined;
@@ -1056,8 +1057,10 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 globals.gCurrentTaskGroup = $(this).val();
                 saveCurrentProject(undefined, undefined, globals.gCurrentTaskGroup);
                 refreshAssignmentData();
+                refreshTaskDefinition();
             })
             refreshAssignmentData();
+            refreshTaskDefinition();
 
         }
 
@@ -1691,6 +1694,12 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             $('#dragTask').html(h.join(''));
 
             return events;
+        }
+
+        function refreshTaskDefinition(defn) {
+            if(defn) {
+                alert("Got task definition");
+            }
         }
 
 
