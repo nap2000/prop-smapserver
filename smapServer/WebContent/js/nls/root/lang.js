@@ -230,6 +230,8 @@ define({
     "c_keys": "Keys",
     "c_counts": "Counts",
     "c_unsav": "You have unsaved changes are you sure you want to leave?",
+    "c_off": "Off",
+    "c_on": "On",
 
     // File Types
     "ft": "File Type",
@@ -639,8 +641,10 @@ define({
     "u_ft_os": "Enable ODK style menus to delete, submit, edit and get new forms",
     "u_ft_rv": "Allow finalised forms to be opened for review",
     "u_ft_as": "Automatically Synchronise",
+    "u_ft_ms": "Manual Synchronisation",
     "u_ft_sw": "WIFI",
     "u_ft_sw_c": "WIFI and cellular network",
+    "u_ft_sop": "Set on phone",
     "u_det_o_email": "Email Options",
     "u_det_o_other": "Other Options",
     "u_other_edit": "Allow editing of results",

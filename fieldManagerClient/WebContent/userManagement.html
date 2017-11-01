@@ -457,17 +457,26 @@
 					       			</a>
 				     			</h4>
    							</div>
-			    			<div id="collapseFieldtaskOptions" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">      								
-								<div class="checkbox"><label><input type="checkbox" name="puboption" value="ft_delete_submitted" class="puboption" tabindex="6"/> <span class="lang" data-lang="u_ft_del">del</span></label></div>
+			    			<div id="collapseFieldtaskOptions" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 								<div class="checkbox"><label><input type="checkbox" name="puboption" value="ft_send_trail" class="puboption" tabindex="7"/> <span class="lang" data-lang="u_ft_ld">send trail</span></label></div>
 								<div class="checkbox"><label><input type="checkbox" name="puboption" value="ft_odk_style_menus" class="puboption" tabindex="8"/> <span class="lang" data-lang="u_ft_os">ODK style menus</span></label></div>
 								<div class="checkbox"><label><input type="checkbox" name="puboption" value="ft_review_final" class="puboption" tabindex="9"/> <span class="lang" data-lang="u_ft_rv">review Final</span></label></div>
+
 								<label for="ft_send" data-lang="u_ft_as" class="lang control-label">synchronise</label>
 								<select class="form-control" id="ft_send">
-									<option class="lang" data-lang="c_none" value="none"></option>
-									<option class="lang" data-lang="u_ft_sw" value="wifi"></option>
-									<option class="lang" data-lang="u_ft_sw_c" value="cell"></option>
+									<option class="lang" data-lang="u_ft_sop" value="not set"></option>
+									<option class="lang" data-lang="c_off" value="off"></option>
+									<option class="lang" data-lang="u_ft_sw" value="wifi_only"></option>
+									<option class="lang" data-lang="u_ft_sw_c" value="wifi_and_cellular"></option>
 								</select>
+
+								<label for="ft_send" data-lang="u_ft_del" class="lang control-label">delete</label>
+								<select class="form-control" id="ft_delete">
+									<option class="lang" data-lang="u_ft_sop" value="not set"></option>
+									<option class="lang" data-lang="c_off" value="off"></option>
+									<option class="lang" data-lang="c_on" value="on"></option>
+								</select>
+
 							</div>
 								
 						</div>
