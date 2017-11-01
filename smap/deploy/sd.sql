@@ -778,10 +778,6 @@ ALTER TABLE report OWNER TO ws;
 alter table server add column sms_url text;
 delete from survey_change where changes like '%"action":"external option"%' ;
 
--- Upgrade to 17.07
-alter table organisation add column ft_send_wifi boolean default false;
-alter table organisation add column ft_send_wifi_cell boolean default false;
-
 CREATE SEQUENCE form_dependencies_seq START 1;
 ALTER TABLE form_dependencies_seq OWNER TO ws;
 
@@ -803,3 +799,7 @@ alter table survey add column auto_updates text;
 
 -- Upgrade to 17.10
 alter table forward add column filter text;
+
+-- Upgrade to 17.11
+alter table task_group add column definition text;
+alter table organisation add column ft_send text;
