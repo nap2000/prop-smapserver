@@ -63,19 +63,11 @@
 		          </ul>
 		        </li> 
 
-			<li id="m_notify" class="restrict_role admin_role analyst_role"><a class="lang" data-lang="m_notify" href="/fieldManager/notifications.html">Notifications</a></li>	
-			<li id="m_locations" class="restrict_role admin_role analyst_role"><a class="lang" data-lang="m_locations" href="/userTrail.html">Locations</a></li>			
+			<li id="m_notify" class="restrict_role admin_role analyst_role"><a href="/fieldManager/notifications.html"><i class="fa fa-envelope"></i> <span class="nav-label lang" data-lang="m_notify">notifications</span></a></li>
+			<li id="m_locations" class="restrict_role admin_role analyst_role"><a href="/userTrail.html"><i class="fa fa-map-o"></i> <span class="nav-label lang" data-lang="m_locations">locations</span></a></li>
 
 			<li id="m_help"><a href="https://docs.google.com/folderview?id=0B5_SmpWlQYxvNExwSFV5X051Yjg&usp=docslist_api#" target="_blank"><i class="fa fa-info-circle"></i> <span class="lang" data-lang="m_help">help</span></a></li>
-	        <!--  
-	        <li>
-	         	<a id="username" type="button" class="btn btn-default" data-toggle="modal" data-target="#modify_me_popup" aria-label="User">
-				<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-				</a>
-			</li>
-			-->
 			<li class="nav-divider"></li>
-			
 			
 	      </ul>
 		</div>
@@ -325,6 +317,160 @@
 					</div>
 				</div>	
 			</div>
+
+			<div class="row" id="task_group_defn">
+				<div class="col-md-12">
+					<div class="ibox float-e-margins">
+						<div class="ibox-title">
+							<h5 class="lang" data-lang="t_defn">task group definition</h5>
+							<div class="ibox-tools">
+								<a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+							</div>
+						</div>
+
+						<div class="ibox-content" style="display:none;">
+							<div class="row">
+								<form role="form" class="form-horizontal" id="tgd_form">
+
+
+									<div id="tg_an" style="display:none;">
+										<p><b><span class="lang" data-lang="t_ceg"></span></b></p>
+									</div>
+									<div id="tg_afe" style="display:none;">
+										<p><b><span class="lang" data-lang="t_cfe"></span></b></p>
+										<div class="form-group">
+											<label for="project_select" class="col-sm-2 control-label lang" data-lang="t_ep">existing project</label>
+											<div class="col-sm-10">
+												<select id="tg_project_select" class="project_list form-control"></select>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label for="survey" class="col-sm-2 control-label lang" data-lang="t_es">existing survey</label>
+											<div class="col-sm-10">
+												<select class="survey_select form-control" id="tg_survey"></select><br/>
+											</div>
+										</div>
+
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" name="filter_results" value="filter_results" id="tg_filter_results_check">
+												<span class="lang" data-lang="t_ft">filter tasks</span>
+											</label>
+										</div>
+
+										<div id="tg_filter_results" style="display:none;">
+
+											<div class="form-group">
+												<label for="filter_language" class="col-sm-2 control-label lang" data-lang="c_lang">Language</label>
+												<div class="col-sm-10">
+													<select id="tg_filter_language" class="form-control"></select>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label for="filter_question" class="col-sm-2 control-label lang" data-lang="t_fq">Filter by question</label>
+												<div class="col-sm-10">
+													<select class="selected_question form-control" id="tg_filter_question"></select>
+												</div>
+											</div>
+
+											<div class="filter_option_only" style="display:none;">
+												<div class="form-group">
+													<label class="col-sm-2 control-label lang" data-lang="t_so" for="filter_option">selected option</label>
+													<div class="col-sm-10">
+														<select class="form-control selected_option" id="tg_filter_option"></select>
+													</div>
+												</div>
+											</div>
+
+											<div class="filter_integer_only" style="display:none;">
+												<div class="form-group">
+													<label class="col-sm-2 control-label lang" for="filter_integer" data-lang="t_sn">numeric value</label>
+													<div class="col-sm-10">
+														<input type="number" class="selected_integer form-control" id="tg_filter_integer">
+													</div>
+												</div>
+											</div>
+
+											<div class="filter_text_only" style="display:none;">
+												<div class="form-group">
+													<label class="col-sm-2 control-label lang" for="filter_text" data-lang="t_st">text value</label>
+													<div class="col-sm-10">
+														<input type="text" class="selected_text form-control" id="tg_filter_text">
+													</div>
+												</div>
+											</div>
+
+											<div class="filter_date_only" style="display:none;">
+
+												<div class="form-group">
+													<label class="col-sm-2 control-label lang" for="startDate" data-lang="c_from">from</label>
+													<div class="col-sm-10">
+														<div class='input-group date' id='tg_startDate' data-toggle="tooltip"  data-container="body" title="Dates in local time zone">
+															<input type='text' class="form-control" data-date-format="YYYY/MM/DD"/>
+															<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+														</div>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="col-sm-2 control-label lang" for="endDate" data-lang="c_to">to</label>
+													<div class="col-sm-10">
+														<div class='input-group date' id='tg_endDate' data-toggle="tooltip"  data-container="body" title="Dates in local time zone">
+															<input type='text' class="form-control" data-date-format="YYYY/MM/DD"/>
+															<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+														</div>
+													</div>
+												</div>
+											</div>
+
+										</div>
+										<div class="checkbox">
+											<label>
+												<input id="tg_update_results" type="checkbox" name="update_results" value="update_results"/>
+												<span class="lang" data-lang="t_ue">update existing</span>
+											</label>
+										</div>
+
+										<div class="panel-group" role="tablist" aria-multiselectable="true">
+											<div class="panel panel-default">
+												<div class="panel-heading" role="tab" id="tg_headingTaskParams">
+													<h4 class="panel-title">
+														<a data-toggle="collapse" data-parent="#show_task_params" href="#tg_collapseTaskParams"
+														   aria-expanded="true" aria-controls="collapseLayers" class="lang" data-lang="t_ap">
+															address parameters
+														</a>
+													</h4>
+												</div>
+												<div id="tg_collapseTaskParams" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+													<div id="tg_task_params_table"></div>
+												</div>
+											</div>
+										</div>
+
+
+										<div class="form-group">
+											<label for="survey_to_complete" class="col-sm-2 control-label lang" data-lang="t_ns">New Survey</label>
+											<div class="col-sm-10">
+												<select class="survey_select disable_blocked form-control" id="tg_survey_to_complete"></select>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label for="users_task_group" class="col-sm-2 control-label lang" data-lang="t_assign">assign user</label>
+											<div class="col-sm-10">
+												<select class="form-control users_select" id="tg_users_task_group"></select>
+											</div>
+										</div>
+									</div>
+
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -411,7 +557,7 @@
 			         </div>
 			         
 			          <div class="form-group">
-			            <label class="col-sm-2 control-label lang" data-lang="c_location" for="task_location">locn</label>
+			            <label class="col-sm-2 control-label lang" data-lang="c_location">locn</label>
 		            	<div class="col-sm-10">
 			            	<div id="mapModal"></div>
 			             </div>
@@ -454,7 +600,7 @@
 
 
 
-<!-- Modal to allow the user to add tasks from an existing survey -->
+<!-- Modal to allow the user to add tasks to a task group -->
 <div id="addTask" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addTaskLabel" aria-hidden="true">
 	<div class="modal-dialog">
    		<div class="modal-content">
