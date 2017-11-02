@@ -312,6 +312,8 @@ define({
     "msg_val_nm": "Name is required",
     "msg_val_file": "A file must be selected",
     "msg_val_let": "Name must start with a letter or underscore",
+    "msg_pwd_l": "Passwords, if specified, must be longer than 1 character",
+    "msg_pwd_m": "Passwords do not match",
     "msg_add_notification": "Add Notification",
     "msg_edit_notification": "Edit Notification",
     "msg_add_map": "Add Map",
@@ -358,6 +360,10 @@ define({
     "msg_u_nt": "No nfc tags found",
     "msg_csv": "Only CSV files and Zip files containing CSV and media files are allowed",
     "msg_inv_email": "Not a valid email address",
+    "msg_dup_email": "Duplicate email. Some other user has this email.",
+    "msg_email_req": "If sending an email to the user then email address must be specified",
+    "msg_email_dom": "Email user name should not include the email domain.  So for an email address of example@org.com the user name would be 'example'",
+    "msg_dup_ident": "Duplicate user identification. Please change the user ident.",
     "msg_cs": "Click to filter or sort on this column",
     "msg_nrf": "No results forwarded to another server",
     "msg_saf": "Select a form to view the users that have downloaded that form",
@@ -381,6 +387,7 @@ define({
     "msg_ren": "renamed to",
     "msg_nq": "You have no queries defined, use the 'add query' button to add one",
     "msg_dup_f": "This form is already in the query",
+    "msg_ui": "Spaces are not allowed in the user ident",
 
     // Editor
     "e_b_e": "Base on existing form",
