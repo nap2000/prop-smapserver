@@ -41,6 +41,7 @@ $(document).ready(function() {
 	getGroups();
 	getProjects();
 	getLoggedInUser(userKnown, false, false, getOrganisations);
+	getDeviceSettings();
 	
 	getAvailableTimeZones($('#o_tz'), showTimeZones);
 	
@@ -94,6 +95,7 @@ $(document).ready(function() {
 		$('#organisationPanel').hide();
 		$('#serverPanel').hide();
 		$('#userPanel').show();
+        $('#devicePanel').hide();
     })
     $('#projectsTab a').click(function (e) {
     	e.preventDefault();
@@ -104,6 +106,7 @@ $(document).ready(function() {
 		$('#serverPanel').hide();
 		$('#userPanel').hide();
 		$('#rolesPanel').hide();
+        $('#devicePanel').hide();
     })
     $('#organisationTab a').click(function (e) {
     	e.preventDefault();
@@ -114,6 +117,7 @@ $(document).ready(function() {
 		$('#serverPanel').hide();
 		$('#userPanel').hide();
 		$('#rolesPanel').hide();
+        $('#devicePanel').hide();
     });
     $('#serverTab a').click(function (e) {
     	e.preventDefault();
@@ -124,6 +128,7 @@ $(document).ready(function() {
 		$('#serverPanel').show();
 		$('#userPanel').hide();
 		$('#rolesPanel').hide();
+        $('#devicePanel').hide();
     });
     $('#roleTab a').click(function (e) {
     	e.preventDefault();
@@ -134,6 +139,18 @@ $(document).ready(function() {
 		$('#serverPanel').hide();
 		$('#userPanel').hide();
 		$('#rolesPanel').show();
+        $('#devicePanel').hide();
+    })
+    $('#deviceTab a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+
+        $('#projectPanel').hide();
+        $('#organisationPanel').hide();
+        $('#serverPanel').hide();
+        $('#userPanel').hide();
+        $('#rolesPanel').hide();
+        $('#devicePanel').show();
     })
     
     // Style the upload buttons
@@ -186,14 +203,13 @@ $(document).ready(function() {
 		
 		// Validations
 		if((!validIdent.test(user.ident) && !validEmail.test(user.ident)) || user.ident.length == 0) {
-			alert("User ident must be specified and either be an email address or " +
-					"only include lowercase characters from a-z and numbers.  No spaces.");
+			alert(localise.set["u_ident"]);
 			$('#user_ident').focus();
 			$('#userDetailsSave').prop("disabled", false);
 			return false;
 		}
 		if(user.ident.indexOf(' ') !== -1) {
-			alert("Spaces are not allowed in the user ident");
+			alert(localise.set["msg_ui"]);
 			$('#user_ident').focus();
 			$('#userDetailsSave').prop("disabled", false);
 			return false;
@@ -201,7 +217,7 @@ $(document).ready(function() {
 		if(user.email.length > 0) {
 			if(!validEmail2.test(user.email)) {
 				error = true;
-				alert("Email is not valid");
+                alert(localise.set["msg_inv_email"]);
 				$('#user_email').focus();
 				$('#userDetailsSave').prop("disabled", false);
 				return false;
@@ -211,7 +227,7 @@ $(document).ready(function() {
 		// For a new user, email must be specified if the send email check box is set
 		if(user.sendEmail && user.email.length === 0) {
 			error = true;
-			alert("If sending an email to the user then email address must be specified");
+			alert(localise.set["msg_email_req"]);
 			$('#user_email').focus();
 			$('#userDetailsSave').prop("disabled", false);
 			return false;
@@ -222,7 +238,7 @@ $(document).ready(function() {
 			if(user.password.length < 2) {
 				error = true;
 				user.password = undefined;
-				alert("Passwords, if specified, must be longer than 1 character");
+				alert(localise.set["msg_pwd_l"]);
 				$('#user_password').focus();
 				$('#userDetailsSave').prop("disabled", false);
 				return false;
@@ -230,7 +246,7 @@ $(document).ready(function() {
 			if($('#user_password_confirm').val() !== user.password) {
 				error = true;
 				user.password = undefined;
-				alert("Passwords do not match");
+				alert(localise.set["msg_pwd_m"]);
 				$('#user_password').focus();
 				$('#userDetailsSave').prop("disabled", false);
 				return false;
@@ -425,29 +441,27 @@ $(document).ready(function() {
 		organisation.default_email_content = $('#o_default_email_content').val();
 		organisation.locale = $('#o_language').val();
 		organisation.timeZone = $('#o_tz').val();
-        organisation.ft_send = $('#ft_send').val();
-        organisation.ft_delete = $('#ft_delete').val();
 	
 		if(typeof organisation.email_port !== "number") {
 			organisation.email_port = 0;
 		}
 		// Validate
 		if(organisation.name.length === 0) {
-			alert("Name must be specified");
+			alert(localise.set["msg_val_nm"]);
 			$('#o_name').focus();
 			return false;
 		}
 		if(organisation.admin_email.length > 0) {
     		if(!validEmail.test(organisation.admin_email)) {
 				error = true;
-				alert("Email is not valid");
+                alert(localise.set["msg_inv_email"]);
 				$('#o_admin_email').focus();
 				return false;
 			}
 		}
 		if(organisation.email_user.indexOf('@') > 0) {
 			error = true;
-			alert("Email user name should not include the email domain.  So for an email address of example@org.com the user name would be 'example'");
+			alert(localise.set["msg_email_dom"]);
 			$('#o_email_user').focus();
 			return false;
 		}
@@ -467,14 +481,8 @@ $(document).ready(function() {
 				organisation.allow_twitter = true;
 			} else if(options[i] === "can_edit") {
 				organisation.can_edit = true;
-			} else if(options[i] === "ft_send_trail") {
-				organisation.ft_send_trail = true;
 			} else if(options[i] === "ft_sync_incomplete") {
 				organisation.ft_sync_incomplete = true;
-			} else if(options[i] === "ft_odk_style_menus") {
-				organisation.ft_odk_style_menus = true;
-			} else if(options[i] === "ft_review_final") {
-				organisation.ft_review_final = true;
 			}
 		}
 		organisationList[0] = organisation;	
@@ -511,6 +519,59 @@ $(document).ready(function() {
 			  }
 		});
 	
+    });
+
+    /*
+ 	 * Save the device options
+ 	 */
+    $('#saveDevice').click(function() {
+        var device = {},
+            error = false,
+            options=[],
+            i;
+
+        device.ft_send = $('#ft_send').val();
+        device.ft_delete = $('#ft_delete').val();
+
+        options = $(".devoption:checked").map(function(){
+            return $(this).val();
+        }).toArray();
+
+        for(i = 0; i < options.length; i++) {
+         	if(options[i] === "ft_send_trail") {
+                device.ft_send_trail = true;
+            } else if(options[i] === "ft_odk_style_menus") {
+                device.ft_odk_style_menus = true;
+            } else if(options[i] === "ft_review_final") {
+                device.ft_review_final = true;
+            }
+        }
+
+        var deviceString = JSON.stringify(device);
+
+        $('#org_alert').hide();
+        addHourglass();
+        $.ajax({
+            type: 'POST',
+            data: {settings: deviceString},
+            cache: false,
+            contentType: "application/json",
+            url: "/surveyKPI/organisationList/device",
+            success: function(data, status) {
+                removeHourglass();
+                $('#org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+                getDeviceSettings();
+            }, error: function(xhr, textStatus, err) {
+                removeHourglass();
+                if(xhr.readyState == 0 || xhr.status == 0) {
+                    return;  // Not an error
+                } else {
+                    var msg = err;
+                    $('#org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
+                }
+            }
+        });
+
     });
     
     /*
@@ -637,7 +698,7 @@ function getProjects() {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 	              return;  // Not an error
 			} else {
-				alert("Error: Failed to get list of projects: " + err);
+				alert(localise.set["c_error"] + ": " + err);
 			}
 		}
 	});	
@@ -667,7 +728,7 @@ function getOrganisations() {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 	              return;  // Not an error
 			} else {
-				alert("Error: Failed to get list of organisations: " + err);
+				alert(localise.set["c_error"] + ": " + err);
 			}
 		}
 	});	
@@ -688,7 +749,7 @@ function getOrganisations() {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 	              return;  // Not an error
 			} else {
-				alert("Error: Failed to get list of organisations: " + err);
+				alert(localise.set["c_error"] + ": " + err);
 			}
 		}
 	});	
@@ -971,13 +1032,13 @@ function writeUserDetails(userList, $dialog) {
 				  if(xhr.status === 409) {
 					  var msg;
 					  if(xhr.responseText.indexOf("email") > 0) {
-						  msg = "Duplicate email. Some other user has this email."
+						  msg = localise.set["msg_dup_email"];
 					  } else {
-						  msg = "Duplicate user identification. Please change the user ident.";
+						  msg = localise.set["msg_dup_ident"];
 					  }
 					  alert(msg); 
 				  } else {
-					  alert("Error user details not saved: " + xhr.responseText);
+					  alert(localise.set["c_error"] + ": " + xhr.responseText);
 				  }
 			  }
 				
@@ -1514,7 +1575,7 @@ function getGroups() {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 	              return;  // Not an error
 			} else {
-				alert("Error: Failed to get list of groups: " + err);
+                alert(localise.set["c_error"] + ": " + err);
 			}
 		}
 	});	
@@ -1734,12 +1795,53 @@ function moveToOrganisations (orgId, users, projects) {
 			  if(data && data.responseText) {
 				  alert(data.responseText);
 			  } else {
-				  alert("Error: Failed to move users and projects to new organisation");
+                  alert(localise.set["c_error"]);
 			  }
 		  }
 	});
 
 }
+
+    /*
+     * Show the organisation dialog
+     */
+    function getDeviceSettings() {
+
+        addHourglass();
+        $.ajax({
+            url: "/surveyKPI/organisationList/device",
+            dataType: 'json',
+            cache: false,
+            success: function(device) {
+                removeHourglass();
+
+                $('.devoption').each(function() {
+                    if($(this).val() === "ft_send_trail") {
+                        this.checked = device.ft_send_trail;
+                    } else if($(this).val() === "ft_odk_style_menus") {
+                        this.checked = device.ft_odk_style_menus;
+                    } else if($(this).val() === "ft_review_final") {
+                        this.checked = device.ft_review_final;
+                    }
+                });
+
+                $('#ft_send').val(device.ft_send);
+                $('#ft_delete').val(device.ft_delete);
+
+            },
+            error: function(xhr, textStatus, err) {
+                removeHourglass();
+                if(xhr.readyState == 0 || xhr.status == 0) {
+                    return;  // Not an error
+                } else {
+                    alert(localise.set["c_error"] + ": " + err);
+                }
+            }
+        });
+
+
+
+    }
 
 });
 	
