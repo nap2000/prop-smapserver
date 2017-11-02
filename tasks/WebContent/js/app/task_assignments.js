@@ -32,9 +32,9 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
         // The following globals are only in this java script file
         var gTasks,					// Object containing the task data retrieved from the database
             gTaskGroupIndex = -1,	// Currently selected task group
+            gTaskGroups,            // Current list of task groups
             gTaskParams = [],		// Parameters for a new task
             gFilterqType,			// The type of the filter question select, select1, int, string
-            gTaskGroupId = 0,		// Currently selected task group
             gCurrentTaskFeature,	// Currently edited task feature
             gClickOnMapEnabled = false,		// Listen to clicks on the map
             gCalendarInitialised = false,	// Set true when the calendar pane has been initialised
@@ -395,7 +395,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                     }
                 }
-                refreshTaskDefinition(assignObj);   // Update the Task Defintion directly without calling the server
 
                 assignString = JSON.stringify(assignObj);
                 globals.gCurrentUserId = undefined;
@@ -511,7 +510,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
             // Create trigger to open modal to edit task parameters
             $('#show_task_params').button().click(function () {
-                gTaskGroupIndex = -1;
                 $('#task_params').modal("show");
             });
 
@@ -1348,14 +1346,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             });
             gTaskParams = updatedTaskParams;
 
-            if (gTaskGroupIndex !== -1) {	// An existing set of task parameters was being edited
-                // Update the array of task params
-                gTasks.task_groups[gTaskGroupIndex].tg_address_params = JSON.stringify(gTaskParams);
-                // Update the task params in the database TODO
-
-                refreshAssignmentData();
-                //refreshTableAssignments(gTasks);	// Refresh the table view
-            }
         }
 
         /*
@@ -1698,7 +1688,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
         function refreshTaskDefinition(defn) {
             if(defn) {
-                alert("Got task definition");
+                alert("Got task definition: " + defn);
             }
         }
 

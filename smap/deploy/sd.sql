@@ -800,6 +800,5 @@ alter table survey add column auto_updates text;
 alter table forward add column filter text;
 
 -- Upgrade to 17.11
-alter table task_group add column definition text;
 alter table organisation add column ft_send text;
 alter table organisation add column ft_delete text;
