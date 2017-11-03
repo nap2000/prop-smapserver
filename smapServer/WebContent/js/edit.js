@@ -475,6 +475,9 @@ $(document).ready(function() {
 		globals.model.settingsAddPdfClicked();
 		$('.upload_file_msg').val("");
 	});
+    $('#downloadPdfTemplate').off().click(function() {
+        downloadFile("/surveyKPI/file/pdf/surveyPdfTemplate/" + gSId);
+    });
     $('#set_key_policy').change(function() {
         globals.model.settingsChange();
     });
