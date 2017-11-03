@@ -80,11 +80,25 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             // Add a trigger to respond to the clicking of "filter tasks"
             $('#filter_results_check').change(function () {
                 if($('#filter_results_check').prop('checked')) {
-                    $('#filter_results').show();
+                    $('#filter_results_check_advanced').prop('checked', false);
+                    $('.simple_filter').show();
+                    $('.advanced_filter').hide();
                 } else {
-                    $('#filter_results').hide();
+                    $('.simple_filter').hide();
                 }
             });
+
+            // Add a trigger to respond to the clicking of "advanced filter tasks"
+            $('#filter_results_check_advanced').change(function () {
+                if($('#filter_results_check_advanced').prop('checked')) {
+                    $('#filter_results_check').prop('checked', false);
+                    $('.simple_filter').hide();
+                    $('.advanced_filter').show();
+                } else {
+                    $('.advanced_filter').hide();
+                }
+            });
+
 
             // Add a trigger to respond to the clicking of "add_from_survey"
             $('#add_from_survey').prop('checked', false).click(function () {
@@ -322,6 +336,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 $('#assign_survey_form')[0].reset();
                 surveyChanged();
                 $('#add_task_from_existing').hide();
+                $('.simple_filter').hide();
+                $('.advanced_filter').hide();
 
                 if($('#filter_results_check').prop('checked', false));
                 $('#filter_results').hide();
@@ -393,6 +409,9 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                         filterObj["lang"] = $('#filter_language option:selected').val();
                         assignObj["filter"] = filterObj;
 
+                    } else if ($('#filter_results_check_advanced').is(':checked')) {
+                        filterObj["advanced"] = $('#tg_ad_filter').val();
+                        assignObj["filter"] = filterObj;
                     }
                 }
 
@@ -1014,6 +1033,9 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 firstTg,
                 hasCurrentTg = false;
 
+            gTaskGroups = taskgroups;   // Keep the task group list
+            gTaskGroupIndex = 0;
+
             if (!taskgroups || taskgroups.length == 0) {
                 $('#tasks_row').hide();
             } else {
@@ -1029,7 +1051,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 for (i = 0; i < taskgroups.length; i++) {
                     grp = taskgroups[i];
                     h[++idx] = '<option value="';
-                    h[++idx] = grp.tg_id;
+                    h[++idx] = i;
                     h[++idx] = '">';
                     h[++idx] = grp.name;
                     h[++idx] = '</option>';
@@ -1039,6 +1061,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     }
                     if (grp.tg_id == globals.gCurrentTaskGroup) {
                         hasCurrentTg = true;
+                        gTaskGroupIndex = i;
                     }
                 }
             }
@@ -1048,17 +1071,18 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             if (!hasCurrentTg) {
                 globals.gCurrentTaskGroup = firstTg;
             }
-            $('#taskgroup').val(globals.gCurrentTaskGroup);
+            $('#taskgroup').val(gTaskGroupIndex);
 
 
             $('#taskgroup').change(function () {
-                globals.gCurrentTaskGroup = $(this).val();
+                gTaskGroupIndex = $(this).val();
+                globals.gCurrentTaskGroup = gTaskGroups[gTaskGroupIndex].tg_id;
                 saveCurrentProject(undefined, undefined, globals.gCurrentTaskGroup);
                 refreshAssignmentData();
-                refreshTaskDefinition();
+                refreshTaskGroupDefinition();
             })
             refreshAssignmentData();
-            refreshTaskDefinition();
+            refreshTaskGroupDefinition();
 
         }
 
@@ -1686,9 +1710,12 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             return events;
         }
 
-        function refreshTaskDefinition(defn) {
-            if(defn) {
-                alert("Got task definition: " + defn);
+        function refreshTaskGroupDefinition() {
+            alert(gTaskGroups[gTaskGroupIndex].rule);
+            if(gTaskGroups && gTaskGroups.length > 0) {
+                var tg = JSON.parse(gTaskGroups[gTaskGroupIndex].rule);
+                $('#tg_survey').val(tg.source_survey_name);
+
             }
         }
 
