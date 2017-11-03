@@ -412,6 +412,7 @@ define({
     "t_nt": "New Text",
     "t_ns": "New Survey",
     "t_ft": "Filter Tasks",
+    "t_aft": "Advanced Filter Tasks",
     "t_fq": "Filter by Question",
     "t_so": "Selected Option",
     "t_sn": "Set Numeric Value",
