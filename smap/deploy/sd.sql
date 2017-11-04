@@ -167,7 +167,6 @@ alter table upload_event add column incomplete boolean default false;
 update upload_event set incomplete = 'false';
 
 -- Upgrade to:  14.11.1 from 14.10.2 =======
-alter table organisation add column ft_delete_submitted boolean;
 alter table organisation add column ft_send_trail boolean;
 
 CREATE SEQUENCE task_completion_id_seq START 1;
@@ -801,5 +800,5 @@ alter table survey add column auto_updates text;
 alter table forward add column filter text;
 
 -- Upgrade to 17.11
-alter table task_group add column definition text;
 alter table organisation add column ft_send text;
+alter table organisation add column ft_delete text;
