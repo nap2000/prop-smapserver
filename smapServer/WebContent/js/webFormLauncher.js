@@ -184,7 +184,7 @@ function saveUserDetails(formData, key) {
 		  success: function(data, status) {
 			  removeHourglass();
 			  var user = JSON.parse(data);
-			  $('#up_alert').show().removeClass('alert-danger').addClass('alert-success').html("User details saved");
+			  $('#up_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
 			  $('#my_signature').attr("src", user.signature);
 			  $('#my_signature_file').val(undefined);
 		  },
@@ -201,7 +201,7 @@ function saveUserDetails(formData, key) {
 			  if(!originalKey) {
 				  getKey(originalFormData);
 			  } else {
-				 $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html("Error profile not saved" + xhr.responseText);
+				 $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
 			 }
 		  }
 	});

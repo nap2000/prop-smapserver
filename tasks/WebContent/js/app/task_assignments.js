@@ -32,9 +32,9 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
         // The following globals are only in this java script file
         var gTasks,					// Object containing the task data retrieved from the database
             gTaskGroupIndex = -1,	// Currently selected task group
+            gTaskGroups,            // Current list of task groups
             gTaskParams = [],		// Parameters for a new task
             gFilterqType,			// The type of the filter question select, select1, int, string
-            gTaskGroupId = 0,		// Currently selected task group
             gCurrentTaskFeature,	// Currently edited task feature
             gClickOnMapEnabled = false,		// Listen to clicks on the map
             gCalendarInitialised = false,	// Set true when the calendar pane has been initialised
@@ -80,11 +80,25 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             // Add a trigger to respond to the clicking of "filter tasks"
             $('#filter_results_check').change(function () {
                 if($('#filter_results_check').prop('checked')) {
-                    $('#filter_results').show();
+                    $('#filter_results_check_advanced').prop('checked', false);
+                    $('.simple_filter').show();
+                    $('.advanced_filter').hide();
                 } else {
-                    $('#filter_results').hide();
+                    $('.simple_filter').hide();
                 }
             });
+
+            // Add a trigger to respond to the clicking of "advanced filter tasks"
+            $('#filter_results_check_advanced').change(function () {
+                if($('#filter_results_check_advanced').prop('checked')) {
+                    $('#filter_results_check').prop('checked', false);
+                    $('.simple_filter').hide();
+                    $('.advanced_filter').show();
+                } else {
+                    $('.advanced_filter').hide();
+                }
+            });
+
 
             // Add a trigger to respond to the clicking of "add_from_survey"
             $('#add_from_survey').prop('checked', false).click(function () {
@@ -299,10 +313,70 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 });
             })
 
-            // Create new task group
+            // Edit existing task group
+            // TODO - for now these will be greyed out
+            $('#editTaskGroup').click(function () {
+                var s_id = $('#survey').val();
+
+                /*
+                 * Make sure we have a current task group to edit
+                 * The option should be greyed out if this is the case
+                 */
+                if (!gTaskGroups || gTaskGroups.length == 0) {
+                    alert("No task group to edit");
+                    return;
+                }
+
+                // Clear form
+                $('#assign_survey_form')[0].reset();
+                surveyChanged();    // Set survey related parameters
+
+                var tg = gTaskGroups[gTaskGroupIndex];
+                var tgRule = JSON.parse(gTaskGroups[gTaskGroupIndex].rule);
+
+                $('#task_group_name').val(tgRule.task_group_name);
+
+                // If added from a survey
+                if(tgRule.source_survey_id) {
+                    $('#add_from_survey').prop('checked', true);
+                    $('#add_task_from_existing').show();
+
+                    $('#survey_to_complete').val(tgRule.target_survey_id);
+                    $('#users_task_group option:selected').val(tgRule.user_id)
+                    $('#survey').val(tgRule.source_survey_id);
+
+                    // Add Question Filter
+                    $('.simple_filter').hide();
+                    $('.advanced_filter').hide();
+                    if(typeof tgRule.filter.qId !== "undefined" && tgRule.filter.qId.length > 0) {
+
+                        $('#filter_language').val(tgRule.lang_val);
+                        $('#project_select').val(tgRule.filter.existing_proj);
+                        $('#filter_question').val(tgRule.filter.qId);
+
+                        $('#filter_results').prop('checked', true);
+                        $('.simple_filter').show();
+                    } else  if(typeof tgRule.filter.advanced !== "undefined" && tgRule.filter.advanced.trim().length > 0) {
+                        $('#tg_ad_filter').val(tgRule.filter.advanced);
+
+                        $('#filter_results_advanced').prop('checked',  true);
+                        $('.advanced_filter').show(tgRule.filter.advanced);
+                    }
+                } else {
+                    $('#add_task_from_existing').hide();
+                }
+
+
+                // open the modal read only
+                $('#addTask input,select,#addNewGroupSave').prop('disabled', true);
+                $('#addTaskLabel').text(localise["t_edit_group"]);
+                $('#addTask').modal("show");
+
+            });
+
+            // Add new Task Group
             $('#addTaskGroup').click(function () {
-                var taskSource = $('input[name=task_source]:checked', '#assign_survey_form').val(),
-                    s_id = $('#survey').val();
+                var s_id = $('#survey').val();
 
                 /*
                  * Make sure we have the survey id
@@ -312,24 +386,21 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     return;
                 }
 
-                //if(taskSource === "new") {
-                //	globals.gCurrentUserName = $('#users_select_new_task option:selected').text();
-                //	globals.gCurrentUserId = $('#users_select_new_task option:selected').val();
-                //	registerForNewTasks();
-                //}
-
                 // Clear form
                 $('#assign_survey_form')[0].reset();
                 surveyChanged();
                 $('#add_task_from_existing').hide();
+                $('.simple_filter').hide();
+                $('.advanced_filter').hide();
 
-                if($('#filter_results_check').prop('checked', false));
-                $('#filter_results').hide();
 
                 // open the modal
+                $('#addTask input,select,#addNewGroupSave').prop('disabled', false);
+                $('#addTaskLabel').text(localise["t_add_group"]);
                 $('#addTask').modal("show");
 
             });
+
 
             /*
              * Create a new group,
@@ -382,6 +453,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     if ($('#filter_results_check').is(':checked')) {
 
                         filterObj["qType"] = gFilterqType;
+                        filterObj["lang_val"] = $('#filter_language option:selected').val();
+                        filterObj["existing_proj"] = $('#project_select option:selected').val();
                         filterObj["qId"] = $('#filter_question option:selected').val();
                         filterObj["oValue"] = $('#filter_option option:selected').val();
                         filterObj["qText"] = $('#filter_text').val();
@@ -393,9 +466,11 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                         filterObj["lang"] = $('#filter_language option:selected').val();
                         assignObj["filter"] = filterObj;
 
+                    } else if ($('#filter_results_check_advanced').is(':checked')) {
+                        filterObj["advanced"] = $('#tg_ad_filter').val();
+                        assignObj["filter"] = filterObj;
                     }
                 }
-                refreshTaskDefinition(assignObj);   // Update the Task Defintion directly without calling the server
 
                 assignString = JSON.stringify(assignObj);
                 globals.gCurrentUserId = undefined;
@@ -511,7 +586,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
             // Create trigger to open modal to edit task parameters
             $('#show_task_params').button().click(function () {
-                gTaskGroupIndex = -1;
                 $('#task_params').modal("show");
             });
 
@@ -711,13 +785,9 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
         }
 
         function surveyChanged() {
-            var updateResults = $('#update_results').is(':checked'),
-                sId = $('#survey').val();
+            var sId = $('#survey').val();
 
             $('#filter_option').empty();
-            //if(updateResults) {
-            //	$('#survey_to_complete').val(sId);
-            //}
             getLanguageList(sId, questionChanged, false, '#filter_language', false);
             setAddressOptions();
         }
@@ -1016,6 +1086,9 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 firstTg,
                 hasCurrentTg = false;
 
+            gTaskGroups = taskgroups;   // Keep the task group list
+            gTaskGroupIndex = 0;
+
             if (!taskgroups || taskgroups.length == 0) {
                 $('#tasks_row').hide();
             } else {
@@ -1031,7 +1104,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 for (i = 0; i < taskgroups.length; i++) {
                     grp = taskgroups[i];
                     h[++idx] = '<option value="';
-                    h[++idx] = grp.tg_id;
+                    h[++idx] = i;
                     h[++idx] = '">';
                     h[++idx] = grp.name;
                     h[++idx] = '</option>';
@@ -1041,6 +1114,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     }
                     if (grp.tg_id == globals.gCurrentTaskGroup) {
                         hasCurrentTg = true;
+                        gTaskGroupIndex = i;
                     }
                 }
             }
@@ -1050,17 +1124,16 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             if (!hasCurrentTg) {
                 globals.gCurrentTaskGroup = firstTg;
             }
-            $('#taskgroup').val(globals.gCurrentTaskGroup);
+            $('#taskgroup').val(gTaskGroupIndex);
 
 
             $('#taskgroup').change(function () {
-                globals.gCurrentTaskGroup = $(this).val();
+                gTaskGroupIndex = $(this).val();
+                globals.gCurrentTaskGroup = gTaskGroups[gTaskGroupIndex].tg_id;
                 saveCurrentProject(undefined, undefined, globals.gCurrentTaskGroup);
                 refreshAssignmentData();
-                refreshTaskDefinition();
             })
             refreshAssignmentData();
-            refreshTaskDefinition();
 
         }
 
@@ -1348,14 +1421,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             });
             gTaskParams = updatedTaskParams;
 
-            if (gTaskGroupIndex !== -1) {	// An existing set of task parameters was being edited
-                // Update the array of task params
-                gTasks.task_groups[gTaskGroupIndex].tg_address_params = JSON.stringify(gTaskParams);
-                // Update the task params in the database TODO
-
-                refreshAssignmentData();
-                //refreshTableAssignments(gTasks);	// Refresh the table view
-            }
         }
 
         /*
@@ -1695,12 +1760,5 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
             return events;
         }
-
-        function refreshTaskDefinition(defn) {
-            if(defn) {
-                alert("Got task definition");
-            }
-        }
-
 
     });
