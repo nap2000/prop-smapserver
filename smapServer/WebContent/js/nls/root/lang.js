@@ -391,6 +391,7 @@ define({
     "t_assign": "Assign User",
     "t_add_group": "Add Task Group",
     "t_del_group": "Delete Task Group",
+    "t_edit_group": "Edit Task Group",
     "t_lt_file": "Load Tasks From File",
     "t_choose_user": "Choose the user to assign to the selected tasks",
     "t_ce": "Clear Existing Tasks",
