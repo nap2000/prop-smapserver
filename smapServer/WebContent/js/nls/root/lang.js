@@ -53,7 +53,7 @@ define({
     // Common
     "c_apply": "Apply",
     "c_desc": "Description",
-    "c_project": "Select Project",
+    "c_project": "Project",
     "c_forms": "Forms",
     "c_form": "Form",
     "c_forward": "Forward",
@@ -157,6 +157,7 @@ define({
     "c_zoom_data": "Zoom to Data",
     "c_vector_data": "Vector Data",
     "c_vector_style": "Vector Style",
+    "c_style": "Style",
     "c_portrait": "Portrait",
     "c_landscape": "Landscape",
     "c_tools": "Tools",
@@ -587,6 +588,8 @@ define({
     "ed_blocked": "The survey has been blocked. Changes cannot be saved.  You can unblock the survey on the form management page.",
     "ed_cml": "Cannot modify languages while there are unsaved changes",
     "ed_csr": "Cannot set questions required, or not required, while there are unsaved changes",
+    "ed_fi": "Form Identifier",
+    "ed_dl": "Default Language",
 
 
     // Managed Forms
