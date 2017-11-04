@@ -76,6 +76,7 @@
         <li id="roleTab" class="restrict_role org_role security_role" role="presentation"><a href="#" class="lang" data-lang="c_roles">roles</a></li>
         <li id="organisationTab" role="presentation" class="restrict_role org_role"><a href="#" class="lang" data-lang="c_orgs">orgs</a></li>
         <li id="serverTab" role="presentation" class="restrict_role org_role"><a href="#" class="lang" data-lang="c_server">server</a></li>
+		<li id="deviceTab" role="presentation"><a href="#" class="lang" data-lang="u_det_o_ft">fieldTask</a></li>
     </ul>
 	
 	
@@ -144,7 +145,67 @@
 		<button class="btn btn-danger lang" id="delete_role" data-lang="u_del_r">Delete Role</button>
 
 	</div>
-	
+
+	<!-- The container for device settings -->
+	<div id="devicePanel" style="display:none;">
+
+		<div class="well">
+			<div class="container">
+				<form role="form" class="form-horizontal" id="device_form">
+
+					<div class="form-group">
+						<label data-lang="u_ft_ld" class="lang col-sm-4 control-label">tasks</label>
+						<div class="col-sm-6">
+							<div class="checkbox">
+								<input type="checkbox" name="devoption" class="devoption" value="ft_send_trail">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label data-lang="u_ft_os" class="lang col-sm-4 control-label">tasks</label>
+						<div class="col-sm-6">
+							<div class="checkbox">
+								<input type="checkbox" name="devoption" class="devoption" value="ft_odk_style_menus">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label data-lang="u_ft_rv" class="lang col-sm-4 control-label">tasks</label>
+						<div class="col-sm-6">
+							<div class="checkbox">
+								<input type="checkbox" name="devoption" class="devoption" value="ft_review_final">
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="ft_send" data-lang="u_ft_as" class="lang control-label col-sm-4">synchronise</label>
+						<div class="col-sm-6">
+							<select class="form-control" id="ft_send">
+								<option class="lang" data-lang="u_ft_sop" value="not set"></option>
+								<option class="lang" data-lang="c_off" value="off"></option>
+								<option class="lang" data-lang="u_ft_sw" value="wifi_only"></option>
+								<option class="lang" data-lang="u_ft_sw_c" value="wifi_and_cellular"></option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="ft_send" data-lang="u_ft_del" class="lang control-label col-sm-4">delete</label>
+						<div class="col-sm-6">
+							<select class="form-control" id="ft_delete">
+								<option class="lang" data-lang="u_ft_sop" value="not set"></option>
+								<option class="lang" data-lang="c_off" value="off"></option>
+								<option class="lang" data-lang="c_on" value="on"></option>
+							</select>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<button id="saveDevice" class="btn btn-success lang" data-lang="c_save">save</button>
+	</div>
+
 	<!-- The container for the list of organisations -->
     <div id="organisationPanel" style="display:none;">
 
@@ -309,7 +370,7 @@
    		<div class="modal-content">
    			<div class="modal-header">
      			<a type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></a>
-     			<h4 class="modal-title lang" id="createProjectLabel" data-lang="u_det_p">project details</h4>
+     			<h4 class="modal-title lang" data-lang="u_det_p">project details</h4>
    			</div>
 		    <div class="modal-body">
 		     
@@ -443,28 +504,6 @@
 								<div class="checkbox"><label><input type="checkbox" name="puboption" value="email" class="puboption" tabindex="3" /> <span  class="lang" data-lang="c_email">email</span></label></div>
 								<!-- <div class="checkbox"><label><input type="checkbox" name="puboption" value="facebook" class="puboption" tabindex="4" /> Facebook</label></div> -->
 								<div class="checkbox"><label><input type="checkbox" name="puboption" value="twitter" class="puboption" tabindex="5" /> <span class="lang" data-lang="c_twitter">twitter</span></label></div>
-							</div>
-								
-						</div>
-					</div>
-					
-					<div class="panel-group" role="tablist" aria-multiselectable="true">
- 							<div class="panel panel-default">
-   							<div class="panel-heading" role="tab" id="fieldtaskOptions">
-								<h4 class="panel-title">
-					       			<a data-toggle="collapse" data-parent="#show_fieldtask_params" href="#collapseFieldtaskOptions" aria-expanded="true" aria-controls="collapseLayers">
-					         			<span class="lang" data-lang="u_det_o_ft">ft options</span>
-					       			</a>
-				     			</h4>
-   							</div>
-			    			<div id="collapseFieldtaskOptions" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">      								
-								<div class="checkbox"><label><input type="checkbox" name="puboption" value="ft_delete_submitted" class="puboption" tabindex="6"/> <span class="lang" data-lang="u_ft_del">del</span></label></div>
-								<div class="checkbox"><label><input type="checkbox" name="puboption" value="ft_send_trail" class="puboption" tabindex="7"/> <span class="lang" data-lang="u_ft_ld">send trail</span></label></div>
-								<div class="checkbox"><label><input type="checkbox" name="puboption" value="ft_odk_style_menus" class="puboption" tabindex="8"/> <span class="lang" data-lang="u_ft_os">ODK style menus</span></label></div>
-								<div class="checkbox"><label><input type="checkbox" name="puboption" value="ft_review_final" class="puboption" tabindex="9"/> <span class="lang" data-lang="u_ft_rv">Review Final</span></label></div>
-								<div class="checkbox"><label><input type="checkbox" name="puboption" value="ft_send_wifi" class="puboption" tabindex="10"/> <span class="lang" data-lang="u_ft_sw">Sync over wifi</span></label></div>
-								<div class="checkbox"><label><input type="checkbox" name="puboption" value="ft_send_wifi_cell" class="puboption" tabindex="11"/> <span class="lang" data-lang="u_ft_sw_c">sync over wifi and cell</span></label></div>
-								<!--  <div class="checkbox"><label><input type="checkbox" name="puboption" value="ft_sync_incomplete" class="puboption" tabindex="9"/> Send incomplete surveys to the server</label></div> -->
 							</div>
 								
 						</div>
@@ -658,7 +697,7 @@
    			</div>
 		    <div class="modal-body">
 		     
-				<form class="form" role="form" id="project_create_form">	
+				<form class="form" role="form">
 					<div class="form-group">
 	                	<div class='input-group date' id='usageDate' data-toggle="tooltip"  data-container="body" title="Month and Year of report">
 	                    	<input type='text' class="form-control" data-date-format="YYYY/MM"/>
