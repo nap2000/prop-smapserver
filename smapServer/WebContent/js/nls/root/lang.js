@@ -53,7 +53,7 @@ define({
     // Common
     "c_apply": "Apply",
     "c_desc": "Description",
-    "c_project": "Select Project",
+    "c_project": "Project",
     "c_forms": "Forms",
     "c_form": "Form",
     "c_forward": "Forward",
@@ -157,6 +157,7 @@ define({
     "c_zoom_data": "Zoom to Data",
     "c_vector_data": "Vector Data",
     "c_vector_style": "Vector Style",
+    "c_style": "Style",
     "c_portrait": "Portrait",
     "c_landscape": "Landscape",
     "c_tools": "Tools",
@@ -230,8 +231,6 @@ define({
     "c_keys": "Keys",
     "c_counts": "Counts",
     "c_unsav": "You have unsaved changes are you sure you want to leave?",
-    "c_off": "Off",
-    "c_on": "On",
 
     // File Types
     "ft": "File Type",
@@ -312,8 +311,6 @@ define({
     "msg_val_nm": "Name is required",
     "msg_val_file": "A file must be selected",
     "msg_val_let": "Name must start with a letter or underscore",
-    "msg_pwd_l": "Passwords, if specified, must be longer than 1 character",
-    "msg_pwd_m": "Passwords do not match",
     "msg_add_notification": "Add Notification",
     "msg_edit_notification": "Edit Notification",
     "msg_add_map": "Add Map",
@@ -360,10 +357,6 @@ define({
     "msg_u_nt": "No nfc tags found",
     "msg_csv": "Only CSV files and Zip files containing CSV and media files are allowed",
     "msg_inv_email": "Not a valid email address",
-    "msg_dup_email": "Duplicate email. Some other user has this email.",
-    "msg_email_req": "If sending an email to the user then email address must be specified",
-    "msg_email_dom": "Email user name should not include the email domain.  So for an email address of example@org.com the user name would be 'example'",
-    "msg_dup_ident": "Duplicate user identification. Please change the user ident.",
     "msg_cs": "Click to filter or sort on this column",
     "msg_nrf": "No results forwarded to another server",
     "msg_saf": "Select a form to view the users that have downloaded that form",
@@ -387,7 +380,6 @@ define({
     "msg_ren": "renamed to",
     "msg_nq": "You have no queries defined, use the 'add query' button to add one",
     "msg_dup_f": "This form is already in the query",
-    "msg_ui": "Spaces are not allowed in the user ident",
 
     // Editor
     "e_b_e": "Base on existing form",
@@ -399,6 +391,7 @@ define({
     "t_assign": "Assign User",
     "t_add_group": "Add Task Group",
     "t_del_group": "Delete Task Group",
+    "t_edit_group": "Edit Task Group",
     "t_lt_file": "Load Tasks From File",
     "t_choose_user": "Choose the user to assign to the selected tasks",
     "t_ce": "Clear Existing Tasks",
@@ -412,7 +405,6 @@ define({
     "t_nt": "New Text",
     "t_ns": "New Survey",
     "t_ft": "Filter Tasks",
-    "t_aft": "Advanced Filter Tasks",
     "t_fq": "Filter by Question",
     "t_so": "Selected Option",
     "t_sn": "Set Numeric Value",
@@ -597,6 +589,8 @@ define({
     "ed_blocked": "The survey has been blocked. Changes cannot be saved.  You can unblock the survey on the form management page.",
     "ed_cml": "Cannot modify languages while there are unsaved changes",
     "ed_csr": "Cannot set questions required, or not required, while there are unsaved changes",
+    "ed_fi": "Form Identifier",
+    "ed_dl": "Default Language",
 
 
     // Managed Forms
@@ -648,11 +642,8 @@ define({
     "u_ft_ld": "Send location data on path of user",
     "u_ft_os": "Enable ODK style menus to delete, submit, edit and get new forms",
     "u_ft_rv": "Allow finalised forms to be opened for review",
-    "u_ft_as": "Automatically Synchronise",
-    "u_ft_ms": "Manual Synchronisation",
-    "u_ft_sw": "WIFI",
-    "u_ft_sw_c": "WIFI and cellular network",
-    "u_ft_sop": "Set on phone",
+    "u_ft_sw": "Automatically synchronise over wifi",
+    "u_ft_sw_c": "Automatically synchronise over wifi and cellular network",
     "u_det_o_email": "Email Options",
     "u_det_o_other": "Other Options",
     "u_other_edit": "Allow editing of results",
