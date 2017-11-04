@@ -78,9 +78,9 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             });
 
             // Add a trigger to respond to the clicking of "filter tasks"
-            $('#filter_results_check').change(function () {
-                if($('#filter_results_check').prop('checked')) {
-                    $('#filter_results_check_advanced').prop('checked', false);
+            $('#filter_results').change(function () {
+                if($('#filter_results').prop('checked')) {
+                    $('#filter_results_advanced').prop('checked', false);
                     $('.simple_filter').show();
                     $('.advanced_filter').hide();
                 } else {
@@ -89,9 +89,9 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             });
 
             // Add a trigger to respond to the clicking of "advanced filter tasks"
-            $('#filter_results_check_advanced').change(function () {
-                if($('#filter_results_check_advanced').prop('checked')) {
-                    $('#filter_results_check').prop('checked', false);
+            $('#filter_results_advanced').change(function () {
+                if($('#filter_results_advanced').prop('checked')) {
+                    $('#filter_results').prop('checked', false);
                     $('.simple_filter').hide();
                     $('.advanced_filter').show();
                 } else {
@@ -450,7 +450,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     assignObj["update_results"] = $('#update_results').is(':checked'); 			// Set to true if the survey is to be updated
 
                     // Add filter if filter checkbox has been checked
-                    if ($('#filter_results_check').is(':checked')) {
+                    if ($('#filter_results').is(':checked')) {
 
                         filterObj["qType"] = gFilterqType;
                         filterObj["lang_val"] = $('#filter_language option:selected').val();
@@ -466,7 +466,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                         filterObj["lang"] = $('#filter_language option:selected').val();
                         assignObj["filter"] = filterObj;
 
-                    } else if ($('#filter_results_check_advanced').is(':checked')) {
+                    } else if ($('#filter_results_advanced').is(':checked')) {
                         filterObj["advanced"] = $('#tg_ad_filter').val();
                         assignObj["filter"] = filterObj;
                     }
