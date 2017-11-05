@@ -1206,13 +1206,17 @@ function loadForms(surveyId, selector) {
 }
 
 // Common Function to get the language and question list (for the default language)
-function getLanguageList(sId, callback, addNone, selector, setGroupList) {
+function getLanguageList(sId, callback, addNone, selector, setGroupList, filterQuestion) {
 	
 	if(typeof sId === "undefined") {
 		sId = globals.gCurrentSurvey;
 	}
+
+	if(typeof filterQuestion === "undefined") {
+		filterQuestion = "-1";
+	}
 	
-	function getAsyncLanguageList(sId, theCallback, selector) {
+	function getAsyncLanguageList(sId, theCallback, selector, filterQuestion) {
 		addHourglass();
 		$.ajax({
 			url: languageListUrl(sId),
@@ -1230,7 +1234,7 @@ function getLanguageList(sId, callback, addNone, selector, setGroupList) {
 				}
 				
 				if(data[0]) {
-					getQuestionList(sId, data[0], "-1", "-1", theCallback, setGroupList, undefined);	// Default language to the first in the list
+					getQuestionList(sId, data[0], filterQuestion, "-1", theCallback, setGroupList, undefined);	// Default language to the first in the list
 				} else {
 					if(typeof theCallback === "function") {
 						theCallback();
@@ -1249,7 +1253,7 @@ function getLanguageList(sId, callback, addNone, selector, setGroupList) {
 		});	
 	}
 	
-	getAsyncLanguageList(sId, callback, selector);
+	getAsyncLanguageList(sId, callback, selector, filterQuestion);
 }
 
 //Function to get the question list
