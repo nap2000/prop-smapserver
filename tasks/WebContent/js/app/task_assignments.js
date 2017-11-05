@@ -112,7 +112,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
             // Add response to a source survey being selected
             $('#survey').change(function () {
-                surveyChanged();
+                surveyChanged("-1");
             });
 
             // Add response to a source survey being selected
@@ -329,7 +329,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                 // Clear form
                 $('#assign_survey_form')[0].reset();
-                surveyChanged();    // Set survey related parameters
 
                 var tg = gTaskGroups[gTaskGroupIndex];
                 var tgRule = JSON.parse(gTaskGroups[gTaskGroupIndex].rule);
@@ -337,6 +336,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 $('#task_group_name').val(tgRule.task_group_name);
 
                 // If added from a survey
+                var filterQuestion = "-1";
                 if(tgRule.source_survey_id) {
                     $('#add_from_survey').prop('checked', true);
                     $('#add_task_from_existing').show();
@@ -348,24 +348,33 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     // Add Question Filter
                     $('.simple_filter').hide();
                     $('.advanced_filter').hide();
-                    if(typeof tgRule.filter.qId !== "undefined" && tgRule.filter.qId.length > 0) {
+                    if(typeof tgRule.filter !== "undefined") {
+                        if (typeof tgRule.filter.qId !== "undefined" && tgRule.filter.qId.length > 0) {
 
-                        $('#filter_language').val(tgRule.lang_val);
-                        $('#project_select').val(tgRule.filter.existing_proj);
-                        $('#filter_question').val(tgRule.filter.qId);
+                            $('#filter_language').val(tgRule.lang_val);
+                            $('#project_select').val(tgRule.filter.existing_proj);
+                            filterQuestion = tgRule.filter.qId;
+                            if(tgRule.filter.qType === "string") {
+                                $('#filter_text').val(tgRule.filter.text);
+                            } else if(tgRule.filter.qType === "int") {
+                                $('#filter_integer').val(tgRule.filter.qInteger);
+                            }
 
-                        $('#filter_results').prop('checked', true);
-                        $('.simple_filter').show();
-                    } else  if(typeof tgRule.filter.advanced !== "undefined" && tgRule.filter.advanced.trim().length > 0) {
-                        $('#tg_ad_filter').val(tgRule.filter.advanced);
+                            $('#filter_results').prop('checked', true);
+                            $('.simple_filter').show();
+                        } else if (typeof tgRule.filter.advanced !== "undefined" && tgRule.filter.advanced.trim().length > 0) {
+                            $('#tg_ad_filter').val(tgRule.filter.advanced);
 
-                        $('#filter_results_advanced').prop('checked',  true);
-                        $('.advanced_filter').show(tgRule.filter.advanced);
+                            $('#filter_results_advanced').prop('checked', true);
+                            $('.advanced_filter').show(tgRule.filter.advanced);
+                        }
                     }
                 } else {
                     $('#add_task_from_existing').hide();
                 }
 
+
+                surveyChanged(filterQuestion);    // Set survey related parameters
 
                 // open the modal read only
                 $('#addTask input,select,#addNewGroupSave').prop('disabled', true);
@@ -388,7 +397,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                 // Clear form
                 $('#assign_survey_form')[0].reset();
-                surveyChanged();
+                surveyChanged("-1");
                 $('#add_task_from_existing').hide();
                 $('.simple_filter').hide();
                 $('.advanced_filter').hide();
@@ -784,11 +793,14 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
         }
 
-        function surveyChanged() {
+        function surveyChanged(filterQuestion) {
             var sId = $('#survey').val();
 
+            if(typeof filterQuestion === "undefined") {
+                filterQuestion = "-1";
+            }
             $('#filter_option').empty();
-            getLanguageList(sId, questionChanged, false, '#filter_language', false);
+            getLanguageList(sId, questionChanged, false, '#filter_language', false, filterQuestion);
             setAddressOptions();
         }
 
@@ -851,6 +863,11 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                                     h[++idx] = '</option>';
                                 }
                                 $filter_option.append(h.join(''));
+
+                                var tgRule = JSON.parse(gTaskGroups[gTaskGroupIndex].rule);
+                                if(tgRule && tgRule.filter) {
+                                    $filter_option.val(tgRule.filter.oValue);
+                                }
                             }
                         },
                         error: function (xhr, textStatus, err) {
@@ -901,10 +918,10 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     dataType: 'json',
                     cache: false,
                     success: function (data) {
-
-                        addHourglass();
+                        removeHourglass();
 
                         // Get the data for the top level table
+                        addHourglass();
                         $.ajax({
                             url: "/surveyKPI/table/" + data.top_table,
                             dataType: 'json',
@@ -957,7 +974,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                             }
                         });
 
-                        removeHourglass();
                     },
                     error: function (data) {
                         removeHourglass();
@@ -1057,8 +1073,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     cache: false,
                     dataType: 'json',
                     success: function (data) {
-                        refreshTaskGroupList(data);
                         removeHourglass();
+                        refreshTaskGroupList(data);
                     },
                     error: function (xhr, textStatus, err) {
                         removeHourglass();
@@ -1282,7 +1298,11 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             }
 
             $('#nfc_select').val(task.location_trigger);
-            $('#tp_guidance').val(task.guidance);
+            if(task.guidance) {
+                $('#tp_guidance').val(task.guidance);
+            } else {
+                $('#tp_guidance').val(task.address);    // Initialise with address data
+            }
             if (task.update_id && task.update_id.length > 0) {
                 $('#initial_data').html(getInitialDataLink(task.form_id, task.update_id));
             }
