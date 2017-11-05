@@ -355,7 +355,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                             $('#project_select').val(tgRule.filter.existing_proj);
                             filterQuestion = tgRule.filter.qId;
                             if(tgRule.filter.qType === "string") {
-                                $('#filter_text').val(tgRule.filter.text);
+                                $('#filter_text').val(tgRule.filter.qText);
                             } else if(tgRule.filter.qType === "int") {
                                 $('#filter_integer').val(tgRule.filter.qInteger);
                             }
