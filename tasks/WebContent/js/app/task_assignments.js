@@ -360,6 +360,20 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                                 $('#filter_integer').val(tgRule.filter.qInteger);
                             }
 
+                            if(tgRule.filter.qStartDate) {
+                                $('#startDate').datetimepicker({
+                                    useCurrent: false,
+                                    locale: gUserLocale || 'en'
+                                }).data("DateTimePicker").date(moment.utc(tgRule.filter.qStartDate));
+                            }
+
+                            if(tgRule.filter.qEndDate) {
+                                $('#endDate').datetimepicker({
+                                    useCurrent: false,
+                                    locale: gUserLocale || 'en'
+                                }).data("DateTimePicker").date(moment.utc(tgRule.filter.qEndDate));
+                            }
+
                             $('#filter_results').prop('checked', true);
                             $('.simple_filter').show();
                         } else if (typeof tgRule.filter.advanced !== "undefined" && tgRule.filter.advanced.trim().length > 0) {
@@ -377,7 +391,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 surveyChanged(filterQuestion);    // Set survey related parameters
 
                 // open the modal read only
-                $('#addTask input,select,#addNewGroupSave').prop('disabled', true);
+                $('#addTask').find('input,select,#addNewGroupSave').prop('disabled', true);
                 $('#addTaskLabel').text(localise["t_edit_group"]);
                 $('#addTask').modal("show");
 
@@ -404,7 +418,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
 
                 // open the modal
-                $('#addTask input,select,#addNewGroupSave').prop('disabled', false);
+                $('#addTask').find('input,select,#addNewGroupSave').prop('disabled', false);
                 $('#addTaskLabel').text(localise["t_add_group"]);
                 $('#addTask').modal("show");
 
