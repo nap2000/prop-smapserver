@@ -506,7 +506,6 @@ alter table tasks add column repeat_count integer default 0;
 
 -- Upgrade to 16.06 from 16.05
 alter table survey add column hrk text;
---alter table question add column linked_survey int default 0;
 alter table question add column list_name text;
 
 -- Log table
@@ -686,7 +685,6 @@ ALTER TABLE message OWNER TO ws;
 
 alter table users add column created timestamp with time zone;
 alter table question add column linked_target text;
-update question set linked_target = cast(linked_survey as text) where linked_survey > 0 and linked_target is null ;
 
 CREATE SEQUENCE custom_query_seq START 1;
 ALTER SEQUENCE custom_query_seq OWNER TO ws;

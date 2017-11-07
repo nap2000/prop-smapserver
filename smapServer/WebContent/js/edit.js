@@ -2296,13 +2296,12 @@ function updateLabel(type, formIndex, itemIndex, optionList, element, newVal, qn
 	
 	/*
 	 * If the question type is a calculate then the label will contain the calculation unless the
-	 * property type is type, name or linked_survey or display name
+	 * property type is type, name or display name
 	 */
 	if(typeof questionType !== "undefined"
 			&& questionType === "calculate"
 			&& prop !== "name"
         	&& prop !== "type"
-			&& prop !== "linked_survey"
 			&& prop !== "display_name"
 			&& prop !== "appearance"
         	&& prop !== "parameters") {	// Whatever the property for a calculation type the label field contains the calculation expression
