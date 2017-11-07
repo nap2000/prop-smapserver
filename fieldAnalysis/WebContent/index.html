@@ -160,9 +160,8 @@
 					<div class="showxls">	
 						<label for="export_xlstype" class="lang" data-lang="c_xlstype">xls</label>
 						<select id="export_xlstype">
-							<option value="html" selected>HTML</option>
-							<!-- <option value="xls">XLS</option> -->
-							<option value="xlsx">XLSX</option>
+							<option value="xlsx" selected>XLSX</option>
+							<option value="html">HTML</option>
 						</select>
 					</div>
 					<div class="showlang">
@@ -237,6 +236,13 @@
 				<input type="date" id="exp_from_date" class="hasDatepicker"> <span class="lang" data-lang="c_inclusive">Inclusive</span>
 				<label for="exp_to_date" class="lang" data-lang="a_to_date">to</label>
 				<input type="date" id="exp_to_date" class="hasDatepicker"> <span class="lang" data-lang="c_inclusive">inclusive</span>
+			</fieldset>
+			<fieldset class="ui-widget-content">
+				<legend class="ui-widget-header ui-corner-all" class="lang" data-lang="t_aft">advanced filter</legend>
+				<label for="ad_filter" data-lang="c_filter" class="lang">filter</label>
+				<input type="text" id="ad_filter">
+				<a href="/sqlFilterHelp.html" target="_blank"> ( i ) </span>
+				</a>
 			</fieldset>
 			
 		</form>

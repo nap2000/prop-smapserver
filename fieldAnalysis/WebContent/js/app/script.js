@@ -207,7 +207,8 @@ function initialiseDialogs() {
                             dateQuestionId = $('#export_date_question option:selected').val(),
                             exportQuerySel = $('#exportQuerySel').prop("checked"),
                             queryName = $('#export_query option:selected').text(),
-                            filename;
+                            filename,
+							filter = $('#ad_filter').val();
 
                         // Set the filename of the exported file
                         if(exportQuerySel) {
@@ -323,7 +324,7 @@ function initialiseDialogs() {
                             }
                             url = exportSurveyURL(sId, displayName, language, format, split_locn,
                                 forms, exportReadOnly, merge_select_multiple, xlstype, embedImages, incHxl,
-                                exp_from_date, exp_to_date, dateQuestionId);
+                                exp_from_date, exp_to_date, dateQuestionId, filter);
                         }
 
                         downloadFile(url);
@@ -1006,7 +1007,8 @@ function exportSurveyURL (
 		incHxl,
 		exp_from_date,
 		exp_to_date,
-		dateQuestionId) {
+		dateQuestionId,
+		filter) {
 
 	var url;
 	if(xlstype === "html") {
@@ -1055,8 +1057,16 @@ function exportSurveyURL (
 			url += "&to=" + exp_to_date;
 		}
 	}
+
+	if(filter) {
+		url += '&filter=' + fixedEncodeURIComponent(filter);
+	}
 	
-	return encodeURI(url);
+	return url;
+}
+
+function fixedEncodeURIComponent (str) {
+    return encodeURIComponent(str).replace(/[!'()*]/g, escape);
 }
 
 function exportSurveyMediaURL (sId, filename, form, mediaQuestion, nameQuestions,
