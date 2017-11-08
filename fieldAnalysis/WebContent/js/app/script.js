@@ -301,7 +301,7 @@ function initialiseDialogs() {
                             }).get();
 
                             url = exportSurveyMediaURL(sId, displayName, undefined, mediaQuestion, name_questions.join(','),
-                                exp_from_date, exp_to_date, dateQuestionId);
+                                exp_from_date, exp_to_date, dateQuestionId, filter);
 
                         } else if(format === "lqas") {
 
@@ -1072,21 +1072,19 @@ function fixedEncodeURIComponent (str) {
 function exportSurveyMediaURL (sId, filename, form, mediaQuestion, nameQuestions,
                                exp_from_date,
                                exp_to_date,
-                               dateQuestionId
-) {
+                               dateQuestionId,
+                               filter) {
 
     var url = "/surveyKPI/exportSurveyMedia/";
 
     filename = cleanFileName(filename);
-
-
 
     url += sId;
     url += "/" + filename;
 
     url+="?mediaquestion=" + mediaQuestion;
     if(nameQuestions && nameQuestions.trim().length > 0) {
-        url+="&namequestions=" + nameQuestions;
+        url+="&namequestions=" + fixedEncodeURIComponent(nameQuestions);
     }
 
     if(dateQuestionId > 0 || dateQuestionId == -100) {	// -100 is a pseudo ID for Upload Time
@@ -1099,7 +1097,11 @@ function exportSurveyMediaURL (sId, filename, form, mediaQuestion, nameQuestions
         }
     }
 
-    return encodeURI(url);
+    if(filter) {
+        url += '&filter=' + fixedEncodeURIComponent(filter);
+    }
+
+    return url;
 }
 
 function exportSurveyLqasURL (sId, sources, reportDefn,
