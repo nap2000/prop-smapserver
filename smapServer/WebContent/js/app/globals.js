@@ -523,6 +523,16 @@ define(function () {
                 source: "user"
             },
             {
+                name: "Chart",
+                type: "chart",
+                trans: "c_chart",
+                glyphicon: "stats",
+                text: "Chart",
+                canSelect: true,
+                visible: true,
+                source: "user"
+            },
+            {
                 name: "Unknown Type",
                 glyphicon: "record",
                 canSelect: false
