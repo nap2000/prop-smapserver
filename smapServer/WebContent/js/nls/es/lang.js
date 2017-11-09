@@ -568,6 +568,7 @@ define(
     "ed_csr": "No puede establecer todas las preguntas obligatorias, u opcionales mientras haya cambios sin guardar",
     "ed_fi": "Identificador del Formulario",
     "ed_dl": "Idioma por Defecto",
+    "ed_td": "Registrar Tiempo de Respuestas",
     "mf_fd": "Datos del Formulario",
     "mf_md": "Datos de Supervisión",
     "mf_sc": "Columnas Visibles",

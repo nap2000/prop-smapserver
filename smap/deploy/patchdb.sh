@@ -199,6 +199,12 @@ then
 
 fi
 
+# version 17.10
+if [ $version -lt "1710" ]
+then
+sudo mkdir /usr/share/tomcat7/.aws
+fi
+
 
 #####################################################################################
 # All versions
@@ -208,7 +214,7 @@ cd ../install
 chmod +x apacheConfig.sh
 ./apacheConfig.sh
 cd ../deploy
-
+ 
 # Patch pyxform
 sudo sed -i "s/from pyxform import constants/import constants/g" /smap_bin/pyxform/survey.py
 
