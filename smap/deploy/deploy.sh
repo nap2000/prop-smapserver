@@ -124,3 +124,5 @@ service apache2 start
 # Hosted Only
 # Start disk monitor
 sudo -u ubuntu ~ubuntu/smap/deploy/manage.sh
+# Copy aws credentials
+sudo cp  $deploy_from/resources/properties/credentials /usr/share/tomcat7/.aws
