@@ -53,6 +53,7 @@ define({
     // Common
     "c_apply": "Apply",
     "c_desc": "Description",
+    "c_default": "Default",
     "c_project": "Project",
     "c_forms": "Forms",
     "c_form": "Form",
