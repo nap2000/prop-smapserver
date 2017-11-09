@@ -103,6 +103,7 @@ define({
     "c_blocked": "Blocked",
     "c_graph": "Graph",
     "c_map": "Map",
+    "c_chart": "Chart",
     "c_charts": "Charts",
     "c_maps": "Maps",
     "c_map_layers": "Map Layers",
@@ -594,6 +595,7 @@ define({
     "ed_gps_area": "GPS Area",
     "ed_ack": "Acknowledge",
     "ed_range": "Range",
+    "ed_graph": "Graph",
     "ed_qs": "Questions set ",
     "ed_ee": "Don't include empty answers in reports",
     "ed_er": "Cannot save until errors are fixed",
@@ -780,8 +782,10 @@ define({
     "rev_det": "Details for change number",
     "rev_cq": "Changed Question",
     "rev_sc": "Selcted Choice",
-    "rev_usc": "Un-Selected Choice"
+    "rev_usc": "Un-Selected Choice",
 
+    // Chart Questions
+    "ch_ds": "Chart Data"
 
 
 
