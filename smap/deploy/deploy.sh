@@ -77,7 +77,7 @@ systemctl stop subscribers
 systemctl stop subscribers_fwd
 fi
 
-# new smap bin
+# smap bin
 cp ../install/subscribers.sh /smap_bin
 cp $deploy_from/subscribers.jar /smap_bin
 cp $deploy_from/codebook.jar /smap_bin
@@ -86,6 +86,9 @@ cp -r $deploy_from/resources /smap_bin
 cp -r $deploy_from/scripts/* /smap_bin
 cp  $deploy_from/resources/fonts/* /usr/share/fonts/truetype
 chmod +x /smap_bin/*.sh
+
+# Copy aws credentials
+sudo cp  $deploy_from/resources/properties/credentials /usr/share/tomcat7/.aws
 
 cd /var/log/subscribers
 rm *.log_old
@@ -124,5 +127,3 @@ service apache2 start
 # Hosted Only
 # Start disk monitor
 sudo -u ubuntu ~ubuntu/smap/deploy/manage.sh
-# Copy aws credentials
-sudo cp  $deploy_from/resources/properties/credentials /usr/share/tomcat7/.aws
