@@ -200,7 +200,7 @@ then
 fi
 
 # version 17.10
-if [ $version -lt "1710" ]
+if [ ! -e /usr/share/tomcat7/.aws ]
 then
 sudo mkdir /usr/share/tomcat7/.aws
 fi
