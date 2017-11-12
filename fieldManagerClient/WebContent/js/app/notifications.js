@@ -148,8 +148,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
 		 */
         function saveNotification() {
 
-            var notication,
-                url,
+            var url,
                 notificationString,
                 target = $('#target').val();
 
@@ -159,6 +158,8 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 notification = saveForward();
             } else if(target === "sms") {
                 notification = saveSMS();
+            } else if(target === "document") {
+                notification = saveDocument();
             }
 
             if(!notification.error) {
@@ -208,8 +209,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
 		 */
         function saveEmail() {
 
-            var error = false,
-                notification = {};
+            var notification = {};
 
             notification.target = "email";
             notification.notifyDetails = {};
@@ -227,8 +227,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
 		 */
         function saveSMS() {
 
-            var error = false,
-                notification = {};
+            var notification = {};
 
             notification.target = "sms";
             notification.notifyDetails = {};
@@ -236,6 +235,20 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
             notification.notifyDetails.emailQuestion = $('#sms_question').val();
             notification.notifyDetails.content = $('#sms_content').val();
             notification.notifyDetails.attach = $('#sms_attach').val();
+
+            return notification;
+        }
+
+        /*
+         * Process a save notification when the target is "document"
+         */
+        function saveDocument() {
+
+            var notification = {};
+
+            notification.target = "document";
+            notification.notifyDetails = {};
+
 
             return notification;
         }
@@ -342,7 +355,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 $('#fwd_host').val(gRemote_host);	// Set the values to the ones last used
                 $('#fwd_user').val(gRemote_user);
 
-                $('#nt_enabled').prop('checked',false);
+                $('#nt_enabled').prop('checked',true);
                 gUpdateFwdPassword = true;
                 gSelectedNotification = -1;
             }
