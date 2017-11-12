@@ -800,3 +800,6 @@ alter table forward add column filter text;
 -- Upgrade to 17.11
 alter table organisation add column ft_send text;
 alter table organisation add column ft_delete text;
+
+-- Upgrade to 17.12
+alter table server add column document_sync boolean;

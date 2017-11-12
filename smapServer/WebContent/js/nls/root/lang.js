@@ -71,6 +71,7 @@ define({
     "c_projects": "Projects",
     "c_email": "Email",
     "c_sms": "SMS",
+    "c_document": "Document",
     "c_twitter": "Twitter",
     "c_lang": "Language",
     "c_langs": "Languages",
