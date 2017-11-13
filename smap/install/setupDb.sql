@@ -989,4 +989,3 @@ create TABLE report (
 	s_id int				-- Replace with many to many relationship
 	);
 ALTER TABLE report OWNER TO ws;
-
