@@ -93,7 +93,10 @@ create TABLE server (
 	mapbox_default text,
 	google_key text,
 	sms_url text,
-	document_sync boolean
+	document_sync boolean,
+	doc_server text,
+	doc_server_user text,
+	doc_server_password text
 	);
 ALTER TABLE server OWNER TO ws;
 
