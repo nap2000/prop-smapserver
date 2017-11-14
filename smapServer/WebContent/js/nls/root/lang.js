@@ -8,6 +8,7 @@ define({
     "m_reports_org": "Organisation Reports",
     "m_refresh": "Refresh",
     "m_export": "Export",
+    "m_export_media": "Export with Media",
     "m_discuss": "Discuss",
     "m_modify": "Modify",
     "m_data_mod": "Web Forms",
