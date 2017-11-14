@@ -100,6 +100,7 @@ var htable6 =	'<div class="phead"></div>';
 var htable7 =  '<h3>' + localise.set["c_actions"] + '</h3>';
 var htable8 =	'<div class="pfoot">';
 var htable9 =	  '<button class="tExport">' + localise.set["m_export"] + '</button>';
+var htable9b =	  '<button class="tExportMedia">' + localise.set["m_export_media"] + '</button>';
 var htable10 =	  '<button class="tImport">' + localise.set["m_import"] + '</button>';
 var htable11 =	  '<button class="tDelete">' + localise.set["c_del_data"] + '</button>';
 var htable12 =	'</div>' ;
@@ -612,6 +613,7 @@ function setPanelType(type, idx, period, qId) {
 		h[++i] = htable7;
 		h[++i] = htable8;
 		h[++i] = htable9;
+        h[++i] = htable9b;
 		h[++i] = htable10;
 		h[++i] = htable11;
 		h[++i] = htable12;
