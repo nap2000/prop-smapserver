@@ -320,6 +320,7 @@ define({
     "msg_pwd_m": "Passwords do not match",
     "msg_add_notification": "Add Notification",
     "msg_edit_notification": "Edit Notification",
+    "msg_nn": "No notifications",
     "msg_add_map": "Add Map",
     "msg_edit_map": "Edit Map",
     "msg_sel_form": "Select Form:",
@@ -392,6 +393,7 @@ define({
     "msg_nq": "You have no queries defined, use the 'add query' button to add one",
     "msg_dup_f": "This form is already in the query",
     "msg_ui": "Spaces are not allowed in the user ident",
+    "msg_sp": "Select a project to see the status of forms",
 
     // Editor
     "e_b_e": "Base on existing form",
