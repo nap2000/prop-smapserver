@@ -142,6 +142,11 @@ function setTableSurvey(view) {
 		var filename = cleanFileName(view.sName);
 		downloadFile("/surveyKPI/surveyexchange/" + view.sId + "/" + filename);
 	});
+
+    $selFoot.find('.tExportMedia').button().off().click(function() {
+        var filename = cleanFileName(view.sName);
+        downloadFile("/surveyKPI/surveyexchange/" + view.sId + "/" + filename + "?media=true");
+    });
 	
 	$selFoot.find('.tImport').button().off().click(function() {
 
@@ -375,7 +380,7 @@ function setTableQuestion(view) {
 	//$selFoot.find('.tExport').button().click(function() {
 	//	exportTable($(this), view);
 	//});
-	$selFoot.find('.tExport').hide();		// Export of table level data from question view no longer supported
+	$selFoot.find('.tExport,.tExportMedia').hide();		// Export of table level data from question view no longer supported
 	$selFoot.find('.tImport').hide();
 	$selFoot.find('.tDelete').hide();
 	
