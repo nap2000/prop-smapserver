@@ -605,6 +605,8 @@ define({
     "ed_fi": "Form Identifier",
     "ed_dl": "Default Language",
     "ed_td": "Timing Data",
+    "ed_s_g": "Grid (Web Forms)",
+    "ed_s_p": "Pages",
 
 
     // Managed Forms
