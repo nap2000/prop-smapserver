@@ -804,3 +804,17 @@ alter table question add column chartdata text;
 
 -- Upgrade to 17.12
 alter table server add column document_sync boolean;
+alter table server add column doc_server text;
+alter table server add column doc_server_user text;
+alter table server add column doc_server_password text;
+
+CREATE SEQUENCE sync_seq START 1;
+ALTER SEQUENCE sync_seq OWNER TO ws;
+
+create TABLE sync (
+	id INTEGER DEFAULT NEXTVAL('sync_seq') CONSTRAINT pk_sync PRIMARY KEY,
+	s_id integer REFERENCES survey(s_id) ON DELETE CASCADE,
+	n_id integer REFERENCES forward(id) ON DELETE CASCADE,
+	prikey integer				-- Primary key of synchronised record
+	);
+ALTER TABLE sync OWNER TO ws;

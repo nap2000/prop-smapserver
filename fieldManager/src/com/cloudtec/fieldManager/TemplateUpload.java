@@ -261,7 +261,7 @@ public class TemplateUpload extends Application {
 			String basePath = GeneralUtilityMethods.getBasePath(request);
 			
 			// Parse the form into an object model
-			PutXForm loader = new PutXForm();
+			PutXForm loader = new PutXForm(localisation);
 			SurveyTemplate model = loader.put(new FileInputStream(templateFile), 
 					request.getRemoteUser(),
 					basePath);	// Load the XForm into the model

@@ -8,6 +8,7 @@ define({
     "m_reports_org": "Organisation Reports",
     "m_refresh": "Refresh",
     "m_export": "Export",
+    "m_export_media": "Export with Media",
     "m_discuss": "Discuss",
     "m_modify": "Modify",
     "m_data_mod": "Web Forms",
@@ -606,6 +607,8 @@ define({
     "ed_fi": "Form Identifier",
     "ed_dl": "Default Language",
     "ed_td": "Timing Data",
+    "ed_s_g": "Grid (Web Forms)",
+    "ed_s_p": "Pages",
 
 
     // Managed Forms
