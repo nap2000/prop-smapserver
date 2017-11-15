@@ -677,7 +677,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
             $msg.empty();
 
             if(typeof features === "undefined" || features.length === 0) {
-                var msg = "<h1>No notifications</h1>";
+                var msg = "<h1>" + localise.set["msg_nn"] + "</h1>";
                 $msg.html(msg);
                 return;
             }
@@ -730,24 +730,29 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
 
         }
 
-        function refreshFormsTable(data) {
+        function refreshFormsTable(forms) {
 
-            var forms = data.forms,
-                $elem = $("#events tbody"),
+            var $elem = $("#events tbody"),
                 $head = $("#events thead"),
                 $msg = $('#events_table_msg'),
                 h = [],
-                i = -1,
-                j,
-                locn,
-                status,
-                reason,
-                survey_ident,
-                sId = $('#survey option:selected').val();
+                i = -1;
 
             $head.empty();
             $elem.empty();
             $msg.empty();
+
+            if($('#project_name').val() == 0) {
+                var msg = "<h1>" + localise.set["msg_sp"] + "</h1>";
+                $msg.html(msg);
+                return;
+            }
+
+            if(typeof forms === "undefined" || forms.length === 0) {
+                var msg = "<h1>" + localise.set["msg_nf"] + "</h1>";
+                $msg.html(msg);
+                return;
+            }
 
             // Add the head
             h[++i] = '<tr>';
@@ -768,29 +773,24 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 h[++i] = '<td>' + forms[j].u_ident + '</td>';
                 h[++i] = '<td>' + forms[j].device_id + '</td>';
 
-                survey_ident = forms[j].survey_ident;
-                if(survey_ident) {
-                    h[++i] = '<td class="success">' + data.all_surveys[survey_ident].name + '</td>';
+                if(forms[j].no_download) {
+                    h[++i] = '<td class="error">' + forms[j].survey_name + '</td>';
                 } else {
-                    h[++i] = '<td class="error">Not Downloaded</td>';
+                    h[++i] = '<td class="success">' + forms[j].survey_name + '</td>';
                 }
-                if(survey_ident) {
-                    if(forms[j].survey_version === data.all_surveys[survey_ident].version) {
-                        h[++i] = '<td class="success">' + forms[j].survey_version + '</td>';
-                    } else {
-                        h[++i] = '<td class="error">' + forms[j].survey_version + '</td>';
-                    }
+
+                if(forms[j].survey_version === forms[j].download_version || forms[j].download_version === '') {
+                    h[++i] = '<td class="success">' + forms[j].download_version + '</td>';
                 } else {
-                    h[++i] = '<td class="error"></td>';
+                    h[++i] = '<td class="error">' + forms[j].download_version + ' (' +
+                        forms[j].survey_version + ')'+ '</td>';
                 }
+
                 h[++i] = '</tr>';
 
             }
 
             $elem.append(h.join(''));
-
-            // Apply styling
-            //$("#events").tablesorter({ widgets: ['zebra'] });
 
         }
 
