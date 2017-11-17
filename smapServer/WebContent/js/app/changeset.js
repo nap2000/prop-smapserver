@@ -138,9 +138,11 @@ define([
         function save(callback) {
 
             var url="/surveyKPI/surveys/save/" + globals.gCurrentSurvey,
-                changes = globals.changes,
-                changesString = JSON.stringify(changes);
+                changesString,
+                changesInSeq = resequenceChangeSet(globals.changes);
 
+
+            changesString = JSON.stringify(changesInSeq);
             setHasChanges(0);
             globals.gSaveInProgress = true;
             addHourglass();
@@ -213,6 +215,60 @@ define([
             });
 
         };
+
+        /*
+         * Resequence a change array to allign with the sequences in the model
+         */
+        function resequenceChangeSet(changes) {
+
+            var fo = [],
+                i,
+                newSeq = [];
+
+            for(i = 0; i < globals.model.survey.forms.length; i++) {
+                fo.push({});
+            }
+
+            // Set the sequence nuber as per the model
+            for(i = 0; i < changes.length; i++) {
+                if(globals.changes[i].changeType === "question") {
+                    var question = globals.changes[i].items[0].question;
+                    if(question && question.action === "add") {
+                        var form = globals.model.survey.forms[question.formIndex];
+                        for (var j = 0; j < form.qSeq.length; j++) {
+                            if(form.qSeq[j] == question.itemIndex) {
+                                question.seq = j;
+                                fo[question.formIndex]["q"+j] = globals.changes[i];
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Put the question changes in the order of their sequence numbers
+            for(i = 0; i < globals.model.survey.forms.length; i++) {
+                var form = globals.model.survey.forms[i];
+                for (var j = 0; j < form.qSeq.length; j++) {
+                    if(fo[i]["q"+j]) {
+                        newSeq.push(fo[i]["q"+j]);
+                    }
+                }
+            }
+
+            // Add any other changes
+            for(i = 0; i < changes.length; i++) {
+                if (globals.changes[i].changeType !== "question"
+                    || typeof globals.changes[i].items[0].question === "undefined"
+                    || typeof globals.changes[i].items[0].question.action !== "add"
+                ) {
+                    newSeq.push(changes[i]);
+                }
+            }
+
+            return newSeq;
+
+        }
 
 		/*
 		 * Add a single change item to the array of changes (changeset)
@@ -923,7 +979,7 @@ define([
                             newLocation,
                             sourceForm,
                             oldLocation);
-
+                        
                         // Fix up the form being moved to point to its new parent
                         var movedForm;
                         if(question.type === "begin repeat") {
@@ -1112,6 +1168,11 @@ define([
                     }
                 }
             }
+
+            // Update the model
+            question.itemIndex = itemIndex;
+            question.formIndex = targetForm;
+
             return itemIndex;
         }
 		/*
