@@ -27,12 +27,16 @@ var	gSurveys,		// Only in this java script file
 	gSelectedTemplate,
 	gSelectedTemplateName,
 	gRemote_host,
-	gRemote_user;	
+	gRemote_user,
+	gUseNewUrl = false;
 	
 $(document).ready(function() {
 	
 	localise.setlang();		// Localise HTML
-	
+
+    // Check for advanced upload parameter
+    var gUseNewUrl = location.search.indexOf("?new=yes") >= 0;
+
 	/*
 	 * Add functionality to control buttons
 	 */
@@ -82,10 +86,18 @@ $(document).ready(function() {
     	var sId = $('#survey_id').val();
     	var f = document.forms.namedItem("uploadForm");
     	var formData = new FormData(f);
+    	var url;
+    	if(gUseNewUrl) {
+            url = '/surveyKPI/xlsForm/upload';
+            console.log("+++ using new url")
+		} else {
+            url = '/fieldManagerServer/formUpload';
+            console.log("--- using old url")
+		}
     	
 		addHourglass();
         $.ajax({
-            url: '/fieldManagerServer/formUpload',
+            url: url,
             type: 'POST',
             data: formData,
             dataType: 'json',
