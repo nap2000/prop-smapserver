@@ -123,7 +123,7 @@ $(document).ready(function() {
 	localise.setlang();		// Localise HTML
 	
 	// Get the parameters and start editing a survey if one was passed as a parameter
-	params = location.search.substr(location.search.indexOf("?") + 1)
+	params = location.search.substr(location.search.indexOf("?") + 1);
 	pArray = params.split("&");
 	dont_get_current_survey = false;
 	for (i = 0; i < pArray.length; i++) {
