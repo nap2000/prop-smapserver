@@ -35,7 +35,7 @@ $(document).ready(function() {
 	localise.setlang();		// Localise HTML
 
     // Check for advanced upload parameter
-    var gUseNewUrl = location.search.indexOf("?new=yes") >= 0;
+    gUseNewUrl = location.search.indexOf("?new=yes") >= 0;
 
 	/*
 	 * Add functionality to control buttons
@@ -88,7 +88,7 @@ $(document).ready(function() {
     	var formData = new FormData(f);
     	var url;
     	if(gUseNewUrl) {
-            url = '/surveyKPI/xlsForm/upload';
+            url = '/surveyKPI/survey/create/upload';
             console.log("+++ using new url")
 		} else {
             url = '/fieldManagerServer/formUpload';
