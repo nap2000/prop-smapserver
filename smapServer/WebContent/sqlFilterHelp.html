@@ -104,6 +104,7 @@
                     <li>barcode</li>
                     <li>calculation</li>
                     <li>date</li>
+                    <li>datetime</li>
                     <li>acknowldege</li>
                 </ul>
                 <h2>Minimal-Support</h2>
@@ -200,6 +201,33 @@
                 <li>${weight} < 0.5</li>
                 <li>${name} like '%ax'</li>
                 <li>${date_question} = '2016-04-23'</li>
+            </ul>
+
+            <h1 id="dates" class="page-header">
+                <a class="anchorjs-link " href="#brackets" aria-label="Anchor link for: dates"
+                   data-anchorjs-icon="" style="font-family: anchorjs-icons; font-style: normal;
+	   				font-variant: normal; font-weight: normal; position: absolute; margin-left: -1em;
+	   				padding-right: 0.5em; margin-bottom: 2em;">Date Calculations</a>
+            </h1>
+            <h2>Date Intervals</h2>
+
+            <ul>
+                <li>{1_day}</li>
+                <li>{n_days}</li>
+                <li>{1_hour}</li>
+                <li>{n_hours}</li>
+                <li>{1_minute}</li>
+                <li>{n_minutes}</li>
+                <li>{1_second}</li>
+                <li>{n_seconds}</li>
+                <li>{hh:mm:ss}</li>
+            </ul>
+            <b>Examples</b>
+            <ul>
+                <li>${_upload_time} > ( {allocated_time} + {2_days} )</li>
+                <li>${_start} + interval {7_days}</li>
+                <li>${_start} + {7_days} + {20_minutes} </li>
+                <li>${_start} + {23:23:23}</li>
             </ul>
 
             <h1 id="special" class="page-header">
