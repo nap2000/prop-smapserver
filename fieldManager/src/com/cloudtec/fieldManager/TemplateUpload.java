@@ -82,13 +82,6 @@ public class TemplateUpload extends Application {
 	
 	Authorise a = new Authorise(null, Authorise.ANALYST);
 	
-	// Tell class loader about the root classes.  (needed as tomcat6 does not support servlet 3)
-	public Set<Class<?>> getClasses() {
-		Set<Class<?>> s = new HashSet<Class<?>>();
-		s.add(TemplateUpload.class);
-		return s;
-	}
-	
 	private class Message {
 		String status;
 		String host;
