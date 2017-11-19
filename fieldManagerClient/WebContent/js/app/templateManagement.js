@@ -90,58 +90,107 @@ $(document).ready(function() {
     	if(gUseNewUrl) {
             url = '/surveyKPI/survey/create/upload';
             console.log("+++ using new url")
+
+            addHourglass();
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                dataType: 'json',
+                cache: false,
+                contentType: false,
+                processData:false,
+                success: function(data) {
+                    removeHourglass();
+
+                    var surveyId = sId;
+                    console.log("Done");
+                    console.log(data);
+                    projectSet(data, surveyId);
+
+                    // Check for errors in the form
+                    if(data && data.status === "error") {
+                        $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(getResponseHtml(data));
+                        var sendto = data.administrator || '';
+                        $('#email_button').attr("href", "mailto:" + data.administrator + "?subject=Error loading template&body=" + msgToText(data));
+                    } else {
+                        document.forms.namedItem("uploadForm").reset();
+                        $('#up_alert').show().removeClass('alert-danger').addClass('alert-success').html("Template Loaded");
+                    }
+
+                    // Check for warnings in the form
+                    if(data && data.warnings && data.warnings.length > 0) {
+                        $('#up_warnings').show().html(warningMsgToHtml(data));
+                    }
+
+                },
+                error: function(xhr, textStatus, err) {
+                    removeHourglass();
+                    if(xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        var msg = xhr.responseText;
+                        if(msg && msg.indexOf("Content is not allowed in prolog") === 0) {
+                            msg = "File is not a valid form definition. check that the file is of type .xls or .xml.";
+                        }
+                        $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html("Upload failed: " + msg);
+
+                    }
+                }
+            });
 		} else {
             url = '/fieldManagerServer/formUpload';
             console.log("--- using old url")
+            addHourglass();
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                dataType: 'json',
+                cache: false,
+                contentType: false,
+                processData:false,
+                success: function(data) {
+                    removeHourglass();
+
+                    var surveyId = sId;
+                    console.log("Done");
+                    console.log(data);
+                    projectSet(data, surveyId);
+
+                    // Check for errors in the form
+                    if(data && data.status === "error") {
+                        $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(getResponseHtml(data));
+                        var sendto = data.administrator || '';
+                        $('#email_button').attr("href", "mailto:" + data.administrator + "?subject=Error loading template&body=" + msgToText(data));
+                    } else {
+                        document.forms.namedItem("uploadForm").reset();
+                        $('#up_alert').show().removeClass('alert-danger').addClass('alert-success').html("Template Loaded");
+                    }
+
+                    // Check for warnings in the form
+                    if(data && data.warnings && data.warnings.length > 0) {
+                        $('#up_warnings').show().html(warningMsgToHtml(data));
+                    }
+
+                },
+                error: function(xhr, textStatus, err) {
+                    removeHourglass();
+                    if(xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        var msg = xhr.responseText;
+                        if(msg && msg.indexOf("Content is not allowed in prolog") === 0) {
+                            msg = "File is not a valid form definition. check that the file is of type .xls or .xml.";
+                        }
+                        $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html("Upload failed: " + msg);
+
+                    }
+                }
+            });
 		}
     	
-		addHourglass();
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: formData,
-            dataType: 'json',
-            cache: false,
-            contentType: false,
-            processData:false,
-            success: function(data) {
-				removeHourglass();
-				
-            	var surveyId = sId;
-            	console.log("Done");
-            	console.log(data);
-            	projectSet(data, surveyId);
-            	
-            	// Check for errors in the form
-            	if(data && data.status === "error") {
-            		$('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(getResponseHtml(data));
-            		var sendto = data.administrator || '';
-            		$('#email_button').attr("href", "mailto:" + data.administrator + "?subject=Error loading template&body=" + msgToText(data));
-            	} else {
-            		document.forms.namedItem("uploadForm").reset();
-            		$('#up_alert').show().removeClass('alert-danger').addClass('alert-success').html("Template Loaded");
-            	}
-            	
-            	// Check for warnings in the form
-            	if(data && data.warnings && data.warnings.length > 0) {
-            		$('#up_warnings').show().html(warningMsgToHtml(data));
-            	}
-            	
-            },
-            error: function(xhr, textStatus, err) {
-				removeHourglass();
-  				if(xhr.readyState == 0 || xhr.status == 0) {
-		              return;  // Not an error
-				} else {
-					var msg = xhr.responseText;
-					if(msg && msg.indexOf("Content is not allowed in prolog") === 0) {
-						msg = "File is not a valid form definition. check that the file is of type .xls or .xml.";
-					}
-					$('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html("Upload failed: " + msg);
 
-				}
-            }
-        });
     });
     
 	// Download file
