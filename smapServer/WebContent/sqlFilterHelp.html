@@ -222,12 +222,19 @@
                 <li>{n_seconds}</li>
                 <li>{hh:mm:ss}</li>
             </ul>
+
+            <h2>Other</h2>
+
+            <ul>
+                <li>now()  (The current date and time)</li>
+            </ul>
             <b>Examples</b>
             <ul>
                 <li>${_upload_time} > ( {allocated_time} + {2_days} )</li>
                 <li>${_start} + interval {7_days}</li>
                 <li>${_start} + {7_days} + {20_minutes} </li>
                 <li>${_start} + {23:23:23}</li>
+                <li>now() - ${_upload_time} < {2_days}</li>
             </ul>
 
             <h1 id="special" class="page-header">
@@ -242,11 +249,14 @@
                 <li>is null (Test to see if an answer was no given to a media or geopoint question)</li>
                 <li>is not null (Test to see if an answer was given to a media or geopoint question)</li>
                 <li>_upload_time (The date that the survey was uploaded to the server)</li>
+                <li>_start (The time the survey was started)</li>
+                <li>_end (The time the survey ended)</li>
             </ul>
             <b>Examples</b>
             <ul>
                 <li>${image} empty</li>
                 <li>_upload_time > '2017-01-23'</li>
+                <li></li>
             </ul>
 
         </div>
@@ -267,6 +277,9 @@
                     </li>
                     <li class="">
                         <a href="#brackets">Brackets</a>
+                    </li>
+                    <li class="">
+                        <a href="#dates">Date Calculations</a>
                     </li>
                     <li class="">
                         <a href="#special">Special Terms</a>
