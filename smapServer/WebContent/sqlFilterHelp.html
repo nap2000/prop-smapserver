@@ -144,6 +144,7 @@
                 <li>>= (Greater than or equals)</li>
                 <li><= (Less than or equals)</li>
                 <li>!= (Not equals)</li>
+                <li>not</li>
                 <li>- (minus)</li>
                 <li>+ (plus)</li>
                 <li>* (times)</li>
@@ -160,6 +161,7 @@
                 <li>${age} > 25 or ${name} = 'tom'</li>
                 <li>${name} like 'sam%'   (Matches "sam", "samuel", "sammy" etc)</li>
                 <li>${city} like '_erlin'   (Matches "Berlin", "berlin")</li>
+                <li>${city} not like '%ich%'   (Matches anything that does not have "ich" in it )</li>
             </ul>
 
             <h1 id="brackets" class="page-header">
@@ -173,8 +175,8 @@
                 around them.</p>
 
             <ul>
-                <li>=(</li>
-                <li>>)</li>
+                <li>(</li>
+                <li>)</li>
             </ul>
             <b>Examples</b>
             <ul>
@@ -200,7 +202,7 @@
             <ul>
                 <li>${name} > 25</li>
                 <li>${weight} < 0.5</li>
-                <li>${name} like '%ax'</li>
+                <li>${name} = 'tom'</li>
                 <li>${date_question} = '2016-04-23'</li>
             </ul>
 
