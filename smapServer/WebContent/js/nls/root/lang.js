@@ -430,6 +430,7 @@ define({
     "t_nfc": "NFC or Location",
     "t_assigned": "Assigned",
     "t_fl": "File Loaded",
+    "t_tl": "Template Loaded",
     "t_efnl": "Error file not loaded",
     "t_ens": "Error not saved",
     "t_add_tasks": "Click on the map where you want to add new tasks. When finished click on 'Save Tasks' button",
