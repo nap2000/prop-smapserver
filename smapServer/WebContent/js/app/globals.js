@@ -522,6 +522,7 @@ define(function () {
                 visible: true,
                 source: "user"
             },
+            /*
             {
                 name: "Chart",
                 type: "chart",
@@ -532,6 +533,7 @@ define(function () {
                 visible: true,
                 source: "user"
             },
+            */
             {
                 name: "Unknown Type",
                 glyphicon: "record",
