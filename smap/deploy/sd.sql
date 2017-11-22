@@ -818,3 +818,5 @@ create TABLE sync (
 	prikey integer				-- Primary key of synchronised record
 	);
 ALTER TABLE sync OWNER TO ws;
+
+alter table survey add column meta text;
