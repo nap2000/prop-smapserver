@@ -291,11 +291,12 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 				url: url,
 				cache: false,
 	  			dataType: 'json',
-	  			success: function(results) {	
+	  			success: function(results) {
+                    removeHourglass();
 	  				globals.gSelector.addDataItem(url, results);				// Cache the raw data
 	  				view.results = results;						// Save the raw data against the panel
 	  				refreshData(view, "question");
-	  				removeHourglass();
+
 	  			},
 	  			error: function(xhr, textStatus, err) {
 	  				removeHourglass();
