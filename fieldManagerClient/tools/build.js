@@ -1,6 +1,6 @@
 ({
     appDir: '../WebContent',
-//    optimize: 'none',
+    optimize: 'none',
     wrapShim: false,
     waitSeconds: 0,
     baseUrl: 'js/libs',
@@ -30,6 +30,9 @@
     modules: [
         {
             name: '../templatemanagement_main',
+        },
+ 	{
+            name: '../surveymanagement_main',
         },
         {
             name: '../oversight_main',

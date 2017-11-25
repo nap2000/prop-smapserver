@@ -84,8 +84,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                 var formData = new FormData(f);
                 var url;
 
-                url = '/surveyKPI/upload/surveytemplate';
-                console.log("+++ using new url")
+                url = '/fieldManagerServer/formUpload';
 
                 addHourglass();
                 $.ajax({
@@ -105,14 +104,20 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
 
                         // Check for errors in the form
                         if(data && data.status === "error") {
-                            $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(msgToHtml(data));
-
-                        } else {
-                            document.forms.namedItem("uploadForm").reset();
-                            $('#up_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["t_tl"] + ": " + data.name);
+            		        $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(getResponseHtml(data));
+            		        var sendto = data.administrator || '';
+                            $('#email_button').attr("href", "mailto:" + data.administrator + "?subject=Error loading template&body=" + msgToText(data));
+                                } else {
+                                    document.forms.namedItem("uploadForm").reset();
+                            $('#up_alert').show().removeClass('alert-danger').addClass('alert-success').html("Template Loaded");
                         }
 
-                    },
+                        // Check for warnings in the form
+                        if(data && data.warnings && data.warnings.length > 0) {
+                            $('#up_warnings').show().html(warningMsgToHtml(data));
+                                }
+
+                            },
                     error: function(xhr, textStatus, err) {
                         removeHourglass();
                         if(xhr.readyState == 0 || xhr.status == 0) {
@@ -230,6 +235,40 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
 
         });
 
+/*
+ * Convert an error response into HTML
+ */
+function getResponseHtml(msg) {
+	var i,
+		frag;
+
+	msg.mesg = "";
+	for(i = 0; i < msg.mesgArray.length; i++) {
+		if(msg.mesgArray[i].indexOf("$") === 0) {
+			frag = localise.set[msg.mesgArray[i].substring(1)];
+			if(frag && frag.length > 0) {
+				msg.mesg += localise.set[msg.mesgArray[i].substring(1)];
+			} else {
+				msg.mesg += msg.mesgArray[i];
+			}
+		} else {
+			msg.mesg += msg.mesgArray[i];
+		}
+	}
+
+	if(msg.hints) {
+		for(i = 0; i < msg.hints.length; i++) {
+			if(msg.hints[i].indexOf("$") === 0) {
+				frag = localise.set[msg.hints[i].substring(1)];
+				if(frag && frag.length > 0) {
+					msg.hints[i] = frag;
+				}
+			}
+		}
+	}
+
+	return msgToHtml(msg);
+}
 
         /*
          * Convert the error response to html
@@ -240,10 +279,63 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
 
             h[++idx] = '<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> ';
             h[++idx] = '<span class="sr-only"> Error:</span>';
-            h[++idx] = " " + localise.set["c_error"] + ": " + msg.message;
+	h[++idx] = " Error: " + msg.mesg;
+	h[++idx] = '<ul>';
+	for(i = 0; msg.hints && i < msg.hints.length; i++) {
+		h[++idx] = '<li>';
+		h[++idx] = msg.hints[i];
+		h[++idx] = '</li>';
+	}
+	h[++idx] = '</ul>';
+	h[++idx] = '<a class="btn btn-default" id="email_button" href="#" type="button">';
+	h[++idx] = '<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>';
+	h[++idx] = '<span class="lang" data-lang="m_help"> Get Help</span>';
+	h[++idx] = '</a>';
 
             return h.join('');
         }
+
+/*
+ * Convert the warning response to html
+ */
+function warningMsgToHtml(msg) {
+	var idx = -1,
+		h = [];
+
+	h[++idx] = '<span class="sr-only"> Warnings:</span>';
+	h[++idx] = "Warnings:";
+	h[++idx] = '<ul>';
+	for(i = 0; msg.warnings && i < msg.warnings.length; i++) {
+		h[++idx] = '<li>';
+		h[++idx] = msg.warnings[i];
+		h[++idx] = '</li>';
+	}
+	h[++idx] = '</ul>';
+
+	return h.join('');
+}
+
+/*
+ * Convert the error response to a text message suitable for email
+ */
+function msgToText(msg) {
+	var nl = escape('\r'),
+		tab = escape('        '),
+		msgtext = msg.mesg + nl;
+
+	for(i = 0; msg.hints && i < msg.hints.length; i++) {
+		msgtext += tab + msg.hints[i] + nl;
+	}
+	msgtext += nl;
+	msgtext += 'Host: ' + msg.host + nl;
+	msgtext += 'Project: ' + msg.project + nl;
+	msgtext += 'Survey: ' + msg.survey + nl;
+	msgtext += 'FileName: ' + msg.fileName + nl;
+
+	msgtext += nl + 'Attach template to email';
+
+	return msgtext;
+}
 
 
         function projectSet() {
