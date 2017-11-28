@@ -447,6 +447,8 @@ define({
     "t_g": "Guidance",
     "t_ass_done": "Have you completed this assignment?",
     "t_defn": "Task Group Definition",
+    "t_au": "All Users",
+    "t_u": "Unassigned",
 
     // template load errors
     "e_u_err": "Form Upload Error",

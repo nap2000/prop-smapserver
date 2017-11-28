@@ -313,8 +313,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 });
             })
 
-            // Edit existing task group
-            // TODO - for now these will be greyed out
             $('#editTaskGroup').click(function () {
                 var s_id = $('#survey').val();
 
@@ -342,8 +340,9 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     $('#add_task_from_existing').show();
 
                     $('#survey_to_complete').val(tgRule.target_survey_id);
-                    $('#users_task_group option:selected').val(tgRule.user_id)
+                    $('#users_task_group').val(tgRule.user_id);
                     $('#survey').val(tgRule.source_survey_id);
+                    $('#update_results').prop('checked', tgRule.update_results);
 
                     // Add Question Filter
                     $('.simple_filter').hide();
@@ -1009,11 +1008,11 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 idx = -1;
 
             $users.empty();
-            $('#users_filter').append('<option value="0">All Users</options>');
-            $('#users_filter').append('<option value="-1">Unassigned Users</options>');
+            $('#users_filter').append('<option value="0">' + localise.set["t_au"] + '</options>');
+            $('#users_filter').append('<option value="-1">' + localise.set["t_u"] + '</options>');
 
-            $('#users_select_new_task').append('<option value="-1">Unassigned</options>');
-            $('#users_task_group, #users_select_user, #tp_user').append('<option value="-1">Unassigned</options>');
+            $('#users_select_new_task, #users_task_group, #users_select_user, #tp_user')
+                .append('<option value="-1">' + localise.set["t_u"] + '</options>');
 
             $.ajax({
                 url: "/surveyKPI/userList",
@@ -1536,7 +1535,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             idx = -1;
 
             tab[++idx] = '<a href="';
-            tab[++idx] = getWebFormUrl(task.properties.form_id, task.properties.update_id);
+            tab[++idx] = getWebFormUrl(task.properties.form_ident, task.properties.update_id);
             tab[++idx] = '" target="_blank">'
             tab[++idx] = '<i class="fa fa-file-text"></i>';	// Edit existing data
             tab[++idx] = '</a>';
@@ -1544,10 +1543,10 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             return tab.join('');
         }
 
-        function getWebFormUrl(form_id, update_id) {
+        function getWebFormUrl(form_ident, update_id) {
             var url;
 
-            url = "/webForm/" + form_id;
+            url = "/webForm/" + form_ident;
             if (update_id) {
                 url += "?datakey=instanceid&datakeyvalue=" + update_id;
                 url += "&viewOnly=true"
