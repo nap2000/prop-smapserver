@@ -60,7 +60,7 @@ $(document).ready(function() {
     /*
      * Change event on export format select
      */
-    $('#exportformat').change(function(){
+    $('#exportformat,#export_xlstype').change(function(){
         setExportControls();
     });
 
@@ -207,6 +207,7 @@ function initialiseDialogs() {
                             dateQuestionId = $('#export_date_question option:selected').val(),
                             exportQuerySel = $('#exportQuerySel').prop("checked"),
                             queryName = $('#export_query option:selected').text(),
+                            includeMeta=$('#includeMeta').prop("checked"),
                             filename,
                             filter = $('#ad_filter').val();
 
@@ -308,23 +309,38 @@ function initialiseDialogs() {
                             url = exportSurveyLqasURL(sId, sources, exportReport);
 
                         } else {
-                            // XLS export
-                            forms = $(':checkbox:checked', '.selectforms').map(function() {
-                                return this.value;
-                            }).get();
-
-                            if(forms.length === 0) {
-                                alert(window.localise.set["msg_one_f"]);
-                                return(false);
-                            } else {
-                                if(embedImages === true && xlstype === "html") {
-                                    alert(window.localise.set["msg_embed"]);
+                            if(xlstype === "new_xlsx") {
+                                forms = $(':radio:checked', '.shapeforms').map(function() {
+                                    return this.value;
+                                }).get();
+                                if(forms.length === 0) {
+                                    alert(window.localise.set["msg_one_f2"]);
                                     return(false);
                                 }
+                                form = forms[0];
+
+                                url = exportXlsxSurveyURL(sId, displayName, language, split_locn,
+                                    form, exportReadOnly, merge_select_multiple, embedImages, incHxl,
+                                    exp_from_date, exp_to_date, dateQuestionId, filter, includeMeta);
+                            } else {
+                                // Legacy XLS export
+                                forms = $(':checkbox:checked', '.selectforms').map(function () {
+                                    return this.value;
+                                }).get();
+
+                                if (forms.length === 0) {
+                                    alert(window.localise.set["msg_one_f"]);
+                                    return (false);
+                                } else {
+                                    if (embedImages === true && xlstype === "html") {
+                                        alert(window.localise.set["msg_embed"]);
+                                        return (false);
+                                    }
+                                }
+                                url = exportSurveyURL(sId, displayName, language, format, split_locn,
+                                    forms, exportReadOnly, merge_select_multiple, xlstype, embedImages, incHxl,
+                                    exp_from_date, exp_to_date, dateQuestionId, filter);
                             }
-                            url = exportSurveyURL(sId, displayName, language, format, split_locn,
-                                forms, exportReadOnly, merge_select_multiple, xlstype, embedImages, incHxl,
-                                exp_from_date, exp_to_date, dateQuestionId, filter);
                         }
 
                         downloadFile(url);
@@ -420,29 +436,30 @@ function exportQuerySelChanged() {
 }
 
 function setExportControls() {
-    var format = $('#exportformat').val();
+    var format = $('#exportformat').val(),
+        xlsType = $('#export_xlstype').val();
 
     // Make sure the export button is enabled as export to things at may have disabled it
     $('#export').next().find("button:contains('Export')").removeClass("ui-state-disabled");
 
     if(format === "osm") {
-        $('.showshape,.showspreadsheet,.showxls,.showthingsat,.showtrail, .showmedia, .showlqas, .showquery, .selectquery').hide();
+        $('.showshape,.showspreadsheet,.showxls,.showthingsat,.showtrail, .showmedia, .showlqas, .showquery, .selectquery, .shownewxlsx').hide();
         $('.showosm,.showro,.showlang, selectsurvey').show();
     } else if(format === "shape" || format === "kml" || format === "vrt" || format === "csv") {
-        $('.showspreadsheet,.showxls,.showosm,.showthingsat, .showmedia, .showlqas, .showquery, .selectquery').hide();
+        $('.showspreadsheet,.showxls,.showosm,.showthingsat, .showmedia, .showlqas, .showquery, .selectquery, .shownewxlsx').hide();
         $('.showshape,.showro,.showlang, .selectsurvey').show();
     } else if(format === "stata" || format === "spss") {
-        $('.showxls,.showosm,.showthingsat, .showmedia, .showlqas, .showquery, .selectquery').hide();
+        $('.showxls,.showosm,.showthingsat, .showmedia, .showlqas, .showquery, .selectquery, .shownewxlsx').hide();
         $('.showshape,.showspreadsheet,.showro,.showlang, .selectsurvey').show();
     } else if(format === "thingsat") {
-        $('.showxls,.showosm, .showmedia, .showlqas, .showquery, .selectquery').hide();
+        $('.showxls,.showosm, .showmedia, .showlqas, .showquery, .selectquery, .shownewxlsx').hide();
         $('.showshape,.showspreadsheet,.showro,.showlang, .selectsurvey').show();
         showModel();			// Show the thingsat model
     } else if(format === "trail") {
-        $('.showxls,.showosm,.showro,.showlang,.showthingsat, .showmedia, .showlqas, .showquery, .selectquery').hide();
+        $('.showxls,.showosm,.showro,.showlang,.showthingsat, .showmedia, .showlqas, .showquery, .selectquery, .shownewxlsx').hide();
         $('.showshape,.showspreadsheet, .selectsurvey').show();
     } else if(format === "media") {
-        $('.showshape, .showxls,.showosm,.showro,.showlang,.showthingsat,.showmedia, .showlqas, .showquery, .selectquery').hide();
+        $('.showshape, .showxls,.showosm,.showro,.showlang,.showthingsat,.showmedia, .showlqas, .showquery, .selectquery, .shownewxlsx').hide();
         $('.showspreadsheet,.showmedia, .showlang, .selectsurvey').show();
     } else if(format === "lqas") {
         $('.showshape, .showxls,.showosm,.showro,.showlang,.showthingsat,.showmedia, .showlqas, .showquery, .selectquery').hide();
@@ -450,8 +467,15 @@ function setExportControls() {
         getReports(showReportList, undefined, "lqas");
 
     } else {
-        $('.showshape,.showspreadsheet,.showxls,.showosm,.showthingsat, .showmedia, .showlqas, .showquery, .selectquery').hide();
-        $('.showxls,.showspreadsheet,.showro,.showlang, .selectsurvey').show();
+        $('.showshape,.showspreadsheet,.showxls,.showosm,.showthingsat, .showmedia, .showlqas, .showquery, .selectquery, .shownewxlsx').hide();
+        if(format === "xls" && xlsType === "new_xlsx") {
+            $('.showxls,.showspreadsheet,.showro,.showlang, .selectsurvey').show();
+            $('.shownewxlsx').show();
+            $('.hidenewxlsx').hide();
+
+        } else {
+            $('.showxls,.showspreadsheet,.showro,.showlang, .selectsurvey').show();
+        }
     }
 }
 
@@ -991,7 +1015,7 @@ function exportTableURL (table, format) {
 }
 
 /*
- * Web service handler for exporting an entire survey to CSV
+ * Web service handler for exporting an entire survey to legacy XLS
  */
 function exportSurveyURL (
     sId,
@@ -1060,6 +1084,71 @@ function exportSurveyURL (
 
     if(filter) {
         url += '&filter=' + fixedEncodeURIComponent(filter);
+    }
+
+    return url;
+}
+
+/*
+ * Web service handler for exporting an entire survey to legacy XLS
+ */
+function exportXlsxSurveyURL (
+    sId,
+    filename,
+    language,
+    split_locn,
+    form,
+    exp_ro,
+    merge_select_multiple,
+    embedImages,
+    incHxl,
+    exp_from_date,
+    exp_to_date,
+    dateQuestionId,
+    filter,
+    includeMeta) {
+
+    var url = "/surveyKPI/exportxlsx/";
+
+    filename = cleanFileName(filename);
+
+    exp_ro = exp_ro || false;
+
+    url += sId;
+    url += "/" + filename;
+    url += "?language=" + language;
+
+    if(split_locn === true) {
+        url += "&split_locn=true";
+    }
+    if(merge_select_multiple === true) {
+        url += "&merge_select_multiple=true";
+    }
+    url += "&form=" + form;
+    url += "&exp_ro=" + exp_ro;
+    if(typeof embedImages !== "undefined") {
+        url += "&embedimages=" + embedImages;
+    }
+    if(typeof incHxl !== "undefined") {
+        url += "&hxl=" + incHxl;
+    }
+
+    if(dateQuestionId > 0 || dateQuestionId == -100) {	// -100 is a pseudo ID for Upload Time
+        url += "&dateId=" + dateQuestionId;
+        if(exp_from_date) {
+            url += "&from=" + exp_from_date;
+        }
+        if(exp_to_date) {
+            url += "&to=" + exp_to_date;
+        }
+    }
+
+    if(filter) {
+        url += '&filter=' + fixedEncodeURIComponent(filter);
+    }
+
+    if(includeMeta) {
+        url += "&meta=true";
     }
 
     return url;
