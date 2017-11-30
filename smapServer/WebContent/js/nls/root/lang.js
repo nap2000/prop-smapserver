@@ -270,6 +270,7 @@ define({
     "a_exp_leg1": "Select a survey",
     "a_exp_leg2": "Output format:",
     "a_exp_notes": "Export notes:",
+    "a_exp_meta": "Include Meta Data:",
     "a_exp_split": "Split lat / lon:",
     "a_exp_merge": "Compress select multiples:",
     "a_sel_ways": "Select ways (if any):",
