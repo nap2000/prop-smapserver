@@ -160,8 +160,9 @@
 					<div class="showxls">	
 						<label for="export_xlstype" class="lang" data-lang="c_xlstype">xls</label>
 						<select id="export_xlstype">
-							<option value="xlsx" selected>XLSX</option>
-							<option value="html">HTML</option>
+							<option value="new_xlsx" selected>New XLSX</option>
+							<option value="xlsx">Legacy XLSX</option>
+							<option value="html">Legacy HTML</option>
 						</select>
 					</div>
 					<div class="showlang">
@@ -184,6 +185,10 @@
 						<label for="embedImages" class="lang" data-lang="a_hxl">hxl:</label>	
 						<input type="checkbox" id="incHxl"/>
 					</div>
+					<div class="shownewxlsx">
+						<label for="includeMeta" class="lang" data-lang="a_exp_meta">meta</label>
+						<input type="checkbox" id="includeMeta"/>
+					</div>
 
 				</fieldset><br/>
 			</div>		
@@ -194,13 +199,13 @@
 					<div class="osmforms"></div>
 				</fieldset>
 			</div>
-			<div class="showxls">
+			<div class="showxls hidenewxlsx">
 				<fieldset class="ui-widget-content">
 					<legend class="ui-widget-header ui-corner-all lang" data-lang="a_sel_forms">Select forms to include:</legend>
 					<div class="selectforms"></div>
 				</fieldset>
 			</div>
-			<div class="showshape" style="display:none;">
+			<div class="showshape shownewxlsx" style="display:none;">
 				<fieldset class="ui-widget-content">
 					<legend class="ui-widget-header ui-corner-all lang" data-lang="msg_sel_form">Select form:</legend>
 					<div class="shapeforms"></div>
