@@ -343,6 +343,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     $('#users_task_group').val(tgRule.user_id);
                     $('#survey').val(tgRule.source_survey_id);
                     $('#update_results').prop('checked', tgRule.update_results);
+                    $('#add_current').prop('checked', tgRule.add_current);
+                    $('#add_future').prop('checked', tgRule.add_future);
 
                     // Add Question Filter
                     $('.simple_filter').hide();
@@ -491,6 +493,15 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     } else if ($('#filter_results_advanced').is(':checked')) {
                         filterObj["advanced"] = $('#tg_ad_filter').val();
                         assignObj["filter"] = filterObj;
+                    }
+
+                    // Set flag to indicate if tasks should be created from data submitted before the task group creation, after or both
+                    assignObj["add_current"] = $('#add_current').is(':checked');
+                    assignObj["add_future"] = $('#add_future').is(':checked');
+
+                    if (!assignObj["add_current"] && !assignObj["add_future"]) {
+                        alert(localise.set["msg_ab_ns"]);
+                        return;
                     }
                 }
 

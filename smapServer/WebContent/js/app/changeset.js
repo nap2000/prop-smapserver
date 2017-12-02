@@ -1849,7 +1849,7 @@ define([
 
         function isValidODKOptionName(val) {
 
-            var sqlCheck = /^[A-Za-z0-9_@\-\.:/]*$/;
+            var sqlCheck = /^[A-Za-z0-9_@\-\.\+\(\),%:]*$/;
             return sqlCheck.test(val);
         }
 
@@ -2071,7 +2071,7 @@ define([
                             container,
                             itemIndex,
                             "name",
-                            localise.set["ed_vc"],
+                            localise.set["ed_vc"] + " : "  + val,
                             itemType,
                             "error");
 
