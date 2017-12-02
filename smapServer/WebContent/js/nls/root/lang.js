@@ -396,6 +396,7 @@ define({
     "msg_dup_f": "This form is already in the query",
     "msg_ui": "Spaces are not allowed in the user ident",
     "msg_sp": "Select a project to see the status of forms",
+    "msg_ab_ns": "Either adding tasks from already submitted data, or adding tasks from data yet to be submitted or both should be selected",
 
     // Editor
     "e_b_e": "Base on existing form",
@@ -450,6 +451,8 @@ define({
     "t_defn": "Task Group Definition",
     "t_au": "All Users",
     "t_u": "Unassigned",
+    "t_af": "Create tasks from results submitted after this task group is created",
+    "t_ac": "Create tasks from results that have already been submitted",
 
     // template load errors
     "e_u_err": "Form Upload Error",

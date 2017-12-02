@@ -1101,12 +1101,11 @@ function respondToEventsChoices($context) {
 		var $this = $(this),
 			$elem = $this.closest('tr'),
 			listName = $elem.data("list_name"),
-			formIndex = $elem.data("fid"),
 			itemIndex = $elem.data("id"),
 			qname = $elem.data("qname"),
 			newVal = $this.val();
 		
-		updateLabel("option", formIndex, itemIndex, listName, "text", newVal, qname, "value") ;
+		updateLabel("option", 0, itemIndex, listName, "text", newVal, "", "value") ;
 		
 	});
 	
@@ -2398,7 +2397,7 @@ function optionListExists(list) {
  */
 function getSurveyForms(sId, callback) {
 
-	if(sId != -1) {
+	if(sId != -1 && sId && sId !== 'null') {
 		var url = '/surveyKPI/survey/' + sId + '/getMeta';
 	
 		addHourglass();
@@ -2419,7 +2418,7 @@ function getSurveyForms(sId, callback) {
   				if(xhr.readyState == 0 || xhr.status == 0) {
 		              return;  // Not an error
 				} else {
-					bootbox.alert("Error failed to get forms for survey:" + sId);
+					bootbox.alert(localise.set["msg_err_get_s"] + ":" + xhr.responseText + " : " + sId);
 				}
 			}
 		});
