@@ -991,6 +991,7 @@ create TABLE report (
 	id INTEGER DEFAULT NEXTVAL('report_seq') CONSTRAINT pk_report PRIMARY KEY,
 	o_id integer REFERENCES organisation(id) ON DELETE CASCADE,
 	name text,				-- Report Name
-	s_id int				-- Replace with many to many relationship
+	s_id int	,				-- Replace with many to many relationship
+	url text
 	);
 ALTER TABLE report OWNER TO ws;

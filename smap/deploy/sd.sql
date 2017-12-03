@@ -820,3 +820,4 @@ create TABLE sync (
 ALTER TABLE sync OWNER TO ws;
 
 alter table survey add column meta text;
+alter table report add column url text;
