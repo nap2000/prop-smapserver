@@ -70,6 +70,10 @@ require([
 		getLoggedInUser(undefined, false, true, undefined);
 		getReportsForUser();
 
+		$('#m_refresh').click(function() {
+            getReportsForUser();
+		});
+
         $('#generateReport').click(function() {
         	var i;
         	var filename;
@@ -100,19 +104,28 @@ require([
 			}
             $('#alert').hide();
 
-            url = '/surveyKPI/reportgen/' +
-                gReportList[gReportIdx].sId + '/' +
-                cleanFileName(gReportList[gReportIdx].name);
+            url = gReportList[gReportIdx].url;
+
+            if(url.indexOf('{filename}') > 0) {
+            	url = url.replace('{filename}',  cleanFileName(gReportList[gReportIdx].name));
+			}
+            if(url.indexOf('{sId}') > 0) {
+                url = url.replace('{sId}',  gReportList[gReportIdx].sId);
+            }
+
             if(params.length > 0) {
                 for(i = 0; i < params.length; i++) {
-                    if(i == 0) {
+                    if(url.indexOf('?') < 0) {
                         url += '?';
                     } else {
                         url += '&';
                     }
                     url += params[i].key + '=' + params[i].val;
+                    gReportList[gReportIdx].savedParams[gConfig[i].name] = params[i].val;	// save param
                 }
             }
+
+
 
             $('#report_popup').modal("hide");
             window.location.href = url;
@@ -163,15 +176,6 @@ require([
 		// Add the reports
 		if(gReportList) {
             for (i = 0; i < gReportList.length; i++) {
-            	/*
-				h[++idx] = '<a role="button" class="btn btn-primary btn-block btn-lg" href="/surveyKPI/reportgen/';
-				h[++idx] = reportList[i].sId;
-				h[++idx] = '/';
-				h[++idx] = cleanFileName(reportList[i].name);
-                h[++idx] = '">';
-                h[++idx] = reportList[i].name;
-                h[++idx] = '</a>';
-                */
                 h[++idx] = '<button type="button" data-idx="';
                 h[++idx] = i;
                 h[++idx] = '" class="btn btn-block btn-primary report">';
