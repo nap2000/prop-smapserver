@@ -2193,9 +2193,33 @@ define([
             $('li.panel.warning', '#formList').removeClass("warning");
 
             for(i = 0; i < forms.length; i++) {
-                for(j = 0; j < forms[i].questions.length; j++) {
-                    if(!forms[i].questions[j].deleted &&  !forms[i].questions[j].soft_deleted) {
-                        validateItem(i, j, "question", false);		// Validate the question
+                var deleted = false;
+                var parentForm = forms[i].parentFormIndex;
+                var parentQuestion = forms[i].parentQuestionIndex;
+                if(parentForm > -1 && parentQuestion > -1) {
+                    deleted = forms[parentForm].questions[parentQuestion].deleted;
+                }
+                if(!deleted) {
+                    var validate = true;
+                    var groupName;
+                    for (j = 0; j < forms[i].questions.length; j++) {
+                        // Skip deleted groups
+                        if(validate) {
+                            if (!forms[i].questions[j].deleted && !forms[i].questions[j].soft_deleted) {
+                                validateItem(i, j, "question", false);		// Validate the question
+                            } else {
+                                if(forms[i].questions[j].type === "begin group") {
+                                    groupName = forms[i].questions[j].name;
+                                    validate = false;
+                                }
+                            }
+                        } else {
+                            if(forms[i].questions[j].type === "end group") {
+                                if(forms[i].questions[j].name.indexOf(groupName) > 0) {
+                                    validate = true;
+                                }
+                            }
+                        }
                     }
                 }
             }
