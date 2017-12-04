@@ -1510,7 +1510,7 @@ define([
                 removeValidationError(container, itemIndex,	"item", itemType);
             }
 
-            if(!item.deleted && !item.published &&
+            if(!item.deleted &&
                 ((itemType === "question" && markup.includeQuestion(item)) ||
                 (itemType === "optionlist") ||
                 (itemType === "option"))) {
@@ -1771,40 +1771,49 @@ define([
                 }
             }
 
-
-            for(i = 0; i < survey.forms.length; i++) {
-                form = survey.forms[i];
-                for(j = 0; j < form.questions.length; j++) {
-                    var otherItem = form.questions[j];
-                    var questionType = otherItem.type;
-                    if(!otherItem.deleted && !otherItem.soft_deleted && questionType !== "end group") {
-                        if(!(i === container && j === itemIndex)) {	// Don't test the question against itself!
-                            otherItem = form.questions[j];
-
-                            for (name in refQuestions) {
-                                if (refQuestions.hasOwnProperty(name)) {
-                                    if(name === otherItem.name) {
-                                        refQuestions[name].exists = true;
-                                    }
-                                }
-                            }
-
-                        }
-                    }
+            var refCount = 0;
+            for (name in refQuestions) {
+                if (refQuestions.hasOwnProperty(name)) {
+                    refCount++;
                 }
             }
 
-            for (name in refQuestions) {
-                if (refQuestions.hasOwnProperty(name)) {
-                    if(!refQuestions[name].exists) {
-                        addValidationError(
-                            container,
-                            itemIndex,
-                            "item",
-                            localise.set["c_question"] + " ${" + name + "} " + localise.set["msg_not_f"],
-                            itemType,
-                            "error");
-                        return false;
+            if(refCount > 0) {
+
+                for (i = 0; i < survey.forms.length; i++) {
+                    form = survey.forms[i];
+                    for (j = 0; j < form.questions.length; j++) {
+                        var otherItem = form.questions[j];
+                        var questionType = otherItem.type;
+                        if (!otherItem.deleted && !otherItem.soft_deleted && questionType !== "end group") {
+                            if (!(i === container && j === itemIndex)) {	// Don't test the question against itself!
+                                otherItem = form.questions[j];
+
+                                for (name in refQuestions) {
+                                    if (refQuestions.hasOwnProperty(name)) {
+                                        if (name === otherItem.name) {
+                                            refQuestions[name].exists = true;
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+                for (name in refQuestions) {
+                    if (refQuestions.hasOwnProperty(name)) {
+                        if (!refQuestions[name].exists) {
+                            addValidationError(
+                                container,
+                                itemIndex,
+                                "item",
+                                localise.set["c_question"] + " ${" + name + "} " + localise.set["msg_not_f"],
+                                itemType,
+                                "error");
+                            return false;
+                        }
                     }
                 }
             }
@@ -2185,7 +2194,7 @@ define([
 
             for(i = 0; i < forms.length; i++) {
                 for(j = 0; j < forms[i].questions.length; j++) {
-                    if(forms[i].questions[j].visible && !forms[i].questions[j].deleted &&  !forms[i].questions[j].soft_deleted) {
+                    if(!forms[i].questions[j].deleted &&  !forms[i].questions[j].soft_deleted) {
                         validateItem(i, j, "question", false);		// Validate the question
                     }
                 }
