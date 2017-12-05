@@ -634,6 +634,11 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 				}
 			}
 
+			// Add hack to show beta functions. There should be a user setting of beta tester
+			if(data.name.indexOf("Penman") >= 0 || data.name.indexOf("Torraco") >= 0) {
+				$('.beta').show();
+			}
+
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
