@@ -22,45 +22,55 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 var gUserLocale = navigator.language;
 if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
+    gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+}
 
 requirejs.config({
     baseUrl: 'js/libs',
     locale: gUserLocale,
     waitSeconds: 0,
     paths: {
-     	app: '../app',
-     	i18n: '../../../../js/libs/i18n',
-     	async: '../../../../js/libs/async',
-     	localise: '../../../../js/app/localise',
-    	moment: '../../../../js/libs/moment-with-locales.min',
-    	jquery: '../../../../js/libs/jquery-2.1.1',
-    	modernizr: '../../../../js/libs/modernizr',
-    	common: '../../../../js/app/common',
-    	globals: '../../../../js/app/globals',
-    	bootstrap: '../../../../js/libs/bootstrap.min',
-    	lang_location: '../../../../js'
+        app: '../app',
+        i18n: '../../../../js/libs/i18n',
+        async: '../../../../js/libs/async',
+        localise: '../../../../js/app/localise',
+        moment: '../../../../js/libs/moment-with-locales.min',
+        jquery: '../../../../js/libs/jquery-2.1.1',
+        modernizr: '../../../../js/libs/modernizr',
+        common: '../../../../js/app/common',
+        globals: '../../../../js/app/globals',
+        bootstrap: '../../../../js/libs/bootstrap.min',
+        lang_location: '../../../../js',
+        inspinia: '../../../../js/libs/wb/inspinia',
+        metismenu: '../../../../js/libs/wb/plugins/metisMenu/jquery.metisMenu',
+        slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll.min',
     },
     shim: {
-    	'bootstrap': ['jquery'],
-    	'common': ['jquery']
-	
-    	}
-    });
+        'bootstrap': ['jquery'],
+        'common': ['jquery'],
+        'inspinia': ['jquery'],
+        'metismenu': ['jquery'],
+        'slimscroll': ['jquery']
+
+    }
+});
 
 require([
-         'jquery', 
-         'common', 
-         'localise', 
-         'globals',
-         'bootstrap',
-         'moment',
-         'app/surveyManagement'
-         
-         ], function($, common, localise, globals, bootstrap, moment) {
-	
-	window.moment = moment;		// Make moment global for use by common.js
-	
+    'jquery',
+    'common',
+    'localise',
+    'globals',
+    'bootstrap',
+    'moment',
+    'app/surveyManagement',
+    'inspinia',
+    'metismenu',
+    'slimscroll',
+    'pace'
+
+], function($, common, localise, globals, bootstrap, moment) {
+
+    window.moment = moment;		// Make moment global for use by common.js
+
 });
 
