@@ -1193,7 +1193,7 @@ define([
                     }
                     break;
                 } else {
-                   
+
                     // Delete the member
                     if(action === "delete"  && typeof form_index !== "undefined") {
                         modelGeneratedChanges.push({
