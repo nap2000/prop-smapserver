@@ -577,7 +577,7 @@ define([
 							 * If the item is a group question then also remove its group end
 							 */
                             changes.splice(j,1);	// Remove this item
-                            return false;
+                            return true;
 
                         }
                     }
@@ -796,7 +796,7 @@ define([
 
                                     }
                                     console.log("xxxxxxx remove end group");
-                                    applyToEndGroup(survey.forms[oldFormIdx], question.name, oldLocation, "delete");
+                                    applyToEndGroup(survey.forms[oldFormIdx], question.name, oldLocation, "delete", undefined, undefined);
                                     refresh = true;
                                 } else if(oldVal === "begin repeat") {
                                     console.log("xxxxxxx fix up begin repeat");
@@ -865,7 +865,7 @@ define([
                                 // update the end group name
                                 if(survey.forms[property.formIndex].questions[property.itemIndex].type === "begin group") {
                                     applyToEndGroup(survey.forms[property.formIndex],
-                                        oldVal, 0, "rename", property.newVal);
+                                        oldVal, 0, "rename", property.newVal, undefined);
 
                                 }
                             }
@@ -1038,7 +1038,7 @@ define([
                     form.qSeq.splice(change.question.seq, 1);	// Remove item from the sequence array
                     question.deleted = true;	// Mark deleted
                     if(question.type === "begin group") {
-                        applyToEndGroup(form, question.name, change.question.seq, "delete");
+                        applyToEndGroup(form, question.name, change.question.seq, "delete", undefined, change.question.formIndex);
                         refresh = true;
                     }
                 } else {
@@ -1178,7 +1178,7 @@ define([
 		/*
 		 * Apply a change to the "end group" of a group
 		 */
-        function applyToEndGroup(form, name, start_seq, action, new_name) {
+        function applyToEndGroup(form, name, start_seq, action, new_name, form_index) {
             var i,
                 end_name = name + "_groupEnd";
 
@@ -1192,10 +1192,25 @@ define([
                         form.questions[form.qSeq[i]].name = new_name + "_groupEnd";
                     }
                     break;
+                } else {
+                   
+                    // Delete the member
+                    if(action === "delete"  && typeof form_index !== "undefined") {
+                        modelGeneratedChanges.push({
+                            changeType: "question",
+                            action: "delete",
+                            source: "editor",
+                            question: {
+                                seq: i,
+                                formIndex: form_index,
+                                itemIndex: i
+                            }
+                        });
+                    }
                 }
             }
 
-            // Remove any group items from the pending changes list
+            // Remove group end from the pending changes list
             for(i = 0; i < globals.changes.length; i++) {
                 if(globals.changes[i].items[0].question) {
                     if(globals.changes[i].items[0].question.name === end_name) {
