@@ -74,63 +74,18 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                     globals.gCurrentTaskGroup);
             });
 
-            // Upload File
+            // Upload a template
             $('#submitFile').click( function(e) {
-
-                $('#up_alert, #up_warnings').hide();
-                e.preventDefault();
-                var sId = $('#survey_id').val();
-                var f = document.forms.namedItem("uploadForm");
-                var formData = new FormData(f);
-                var url;
-
-                url = '/surveyKPI/upload/surveytemplate';
-                console.log("+++ using new url")
-
-                addHourglass();
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: formData,
-                    dataType: 'json',
-                    cache: false,
-                    contentType: false,
-                    processData:false,
-                    success: function(data) {
-                        removeHourglass();
-
-                        var surveyId = sId;
-                        console.log(data);
-                        projectSet(data, surveyId);
-
-                        // Check for errors in the form
-                        if(data && data.status === "error") {
-                            $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(msgToHtml(data));
-
-                        } else {
-                            document.forms.namedItem("uploadForm").reset();
-                            $('#up_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["t_tl"] + ": " + data.name);
-                        }
-
-                    },
-                    error: function(xhr, textStatus, err) {
-                        removeHourglass();
-                        if(xhr.readyState == 0 || xhr.status == 0) {
-                            return;  // Not an error
-                        } else {
-                            var msg = xhr.responseText;
-                            if(msg && msg.indexOf("Content is not allowed in prolog") === 0) {
-                                msg = "File is not a valid form definition. check that the file is of type .xls or .xml.";
-                            }
-                            $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html("Upload failed: " + msg);
-
-                        }
-                    }
-                });
-
-
-
+                $('#survey_add').modal('show');
             });
+
+            // Upload File
+            $('#submitFileGroup').click( function(e) {
+                // TODO Check to see if this is replace or add to group
+                // For now lets add to group
+                uploadTemplate();
+            });
+
 
             // Download file
             $('#downloadFile').click(function () {
@@ -332,6 +287,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             h[++idx] = '<th class="col-md-1"></th>';
             h[++idx] = '<th class="col-md-7">' + localise.set["c_name"], + '</th>';
             h[++idx] = '<th class="col-md-2">' + localise.set["c_block"] + '</th>';
+            h[++idx] = '<th class="col-md-2">Add</th>';
             h[++idx] = '<th class="col-md-2">' + localise.set["c_download"] + '</th>';
             h[++idx] = '</tr>';
             h[++idx] = '</thead>';
@@ -372,6 +328,13 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                         h[++idx] = 'checked="checked"';
                     }
                     h[++idx] = '></td>';
+                    h[++idx] = '<td>';
+                    h[++idx] = '<button class="btn survey_add" value="';
+                    h[++idx] = survey.id;
+                    h[++idx] = '">Add</button>';
+                    h[++idx] = '</td>';
+
+
                     h[++idx] = '<td>';
                     h[++idx] = '<button class="btn pdf_td" value="';
                     h[++idx] = survey.id;
@@ -437,6 +400,12 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                     executeBlock(id, false);
                 }
 
+            });
+
+            $('.survey_add').click(function(e) {
+
+                $('#surveyId').val($(this).val());
+                $('#survey_add').modal('show');
             });
 
             $('.pdf_td').click(function(e) {
@@ -658,7 +627,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             });
         }
 
-//Block or ublock the template
+        //Block or ublock the template
         function executeBlock(template, set) {
 
             var blockURL = "/surveyKPI/survey/" + template + "/block?set=" + set;
@@ -679,6 +648,62 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                 }
             });
         }
+
+        /*
+         * Upload a template
+         */
+        function uploadTemplate() {
+
+            $('#up_alert, #up_warnings').hide();
+            var f = document.forms.namedItem("uploadForm");
+            var formData = new FormData(f);
+            var url;
+
+            url = '/surveyKPI/upload/surveytemplate';
+
+            addHourglass();
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                dataType: 'json',
+                cache: false,
+                contentType: false,
+                processData:false,
+                success: function(data) {
+                    removeHourglass();
+
+                    console.log(data);
+                    projectSet();
+
+                    // Check for errors in the form
+                    if(data && data.status === "error") {
+                        $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(msgToHtml(data));
+
+                    } else {
+                        document.forms.namedItem("uploadForm").reset();
+                        $('#up_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["t_tl"] + ": " + data.name);
+                    }
+
+                },
+                error: function(xhr, textStatus, err) {
+                    removeHourglass();
+                    if(xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        var msg = xhr.responseText;
+                        if(msg && msg.indexOf("Content is not allowed in prolog") === 0) {
+                            msg = "File is not a valid form definition. check that the file is of type .xls or .xml.";
+                        }
+                        $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html("Upload failed: " + msg);
+
+                    }
+                }
+            });
+        }
+
+
+
 
 
     });
