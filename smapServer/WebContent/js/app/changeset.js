@@ -233,7 +233,7 @@ define([
             for(i = 0; i < changes.length; i++) {
                 if(globals.changes[i].changeType === "question") {
                     var question = globals.changes[i].items[0].question;
-                    if(question && question.action === "add") {
+                    if(question && globals.changes[i].items[0].action === "add") {
                         var form = globals.model.survey.forms[question.formIndex];
                         for (var j = 0; j < form.qSeq.length; j++) {
                             if(form.qSeq[j] == question.itemIndex) {
@@ -260,7 +260,7 @@ define([
             for(i = 0; i < changes.length; i++) {
                 if (globals.changes[i].changeType !== "question"
                     || typeof globals.changes[i].items[0].question === "undefined"
-                    || typeof globals.changes[i].items[0].question.action !== "add"
+                    || globals.changes[i].items[0].action !== "add"
                 ) {
                     newSeq.push(changes[i]);
                 }
