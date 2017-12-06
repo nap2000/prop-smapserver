@@ -1440,7 +1440,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             h[++idx] = '</tbody>';
             h[++idx] = '</table>';
 
-            $('#task_params_table').empty().append(h.join(''));
+            $('.task_params_table').empty().append(h.join(''));
 
         }
 
@@ -1456,7 +1456,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 updatedTaskParams = [];
 
 
-            $('#task_params_table').find('tbody tr').each(function (index) {
+            $('#task_params_table_manage').find('tbody tr').each(function (index) {
                 name = $(this).find('td.task_name').text();
                 selected = $(this).find('td.task_selected input').is(':checked');
                 isBarcode = $(this).find('td.task_isBarcode input').is(':checked');
