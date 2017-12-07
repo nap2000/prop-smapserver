@@ -237,6 +237,7 @@ define({
     "c_unsav": "You have unsaved changes are you sure you want to leave?",
     "c_off": "Off",
     "c_on": "On",
+    "c_replace": "Replace",
 
     // File Types
     "ft": "File Type",
