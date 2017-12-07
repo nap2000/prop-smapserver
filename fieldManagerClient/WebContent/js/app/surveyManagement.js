@@ -27,7 +27,8 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             gSelectedTemplate,
             gSelectedTemplateName,
             gRemote_host,
-            gRemote_user;
+            gRemote_user,
+            gSurveyGroups;
 
         $(document).ready(function() {
 
@@ -285,10 +286,11 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             h[++idx] = '<thead>';
             h[++idx] = '<tr>';
             h[++idx] = '<th class="col-md-1"></th>';
-            h[++idx] = '<th class="col-md-7">' + localise.set["c_name"], + '</th>';
-            h[++idx] = '<th class="col-md-2">' + localise.set["c_block"] + '</th>';
-            h[++idx] = '<th class="col-md-2">Add</th>';
-            h[++idx] = '<th class="col-md-2">' + localise.set["c_download"] + '</th>';
+            h[++idx] = '<th class="col-md-5">' + localise.set["c_name"], + '</th>';
+            h[++idx] = '<th class="col-md-1">' + localise.set["c_block"] + '</th>';
+            h[++idx] = '<th class="col-md-2">' + localise.set["sr_g"] + '</th>';
+            h[++idx] = '<th class="col-md-2">' + localise.set["c_replace"] + '</th>';
+            h[++idx] = '<th class="col-md-1">' + localise.set["c_download"] + '</th>';
             h[++idx] = '</tr>';
             h[++idx] = '</thead>';
             h[++idx] = '<tbody class="table-striped">';
@@ -307,6 +309,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                     h[++idx] = '<td class="control_td"><input type="checkbox" name="controls" value="';
                     h[++idx] = i;
                     h[++idx] = '"></td>';
+
                     h[++idx] = '<td class="displayName">';
                     h[++idx] = '<a class="displayName" href="';
                     if(survey.deleted) {
@@ -328,10 +331,19 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                         h[++idx] = 'checked="checked"';
                     }
                     h[++idx] = '></td>';
+
+                    h[++idx] = '<td class="groupsurvey" data-id="';
+                    h[++idx] = survey.groupSurveyId;
+                    h[++idx] = '">';
+                    h[++idx] = survey.groupSurveyId;
+                    h[++idx] = '</td>';
+
                     h[++idx] = '<td>';
                     h[++idx] = '<button class="btn survey_add" value="';
                     h[++idx] = survey.id;
-                    h[++idx] = '">Add</button>';
+                    h[++idx] = '">';
+                    h[++idx] = localise.set["c_replace"];
+                    h[++idx] = '</button>';
                     h[++idx] = '</td>';
 
 
@@ -340,6 +352,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                     h[++idx] = survey.id;
                     h[++idx] = '"><img src="images/downarrow.png" height="16" width="16"></button>';
                     h[++idx] = '</td>';
+
                     h[++idx] = '</tr>';
                 }
             }
