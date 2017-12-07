@@ -376,6 +376,15 @@ $(document).ready(function() {
 		
 		$('#infoModal').modal('show');
 	});
+
+    $('#m_export').off().click(function() {	// Export to XLS
+        if($(this).closest('li').hasClass('disabled')) {
+            bootbox.alert(localise.set["ed_cx"]);
+        } else {
+            window.location.href = "/surveyKPI/xlsForm/" + gSId + "?filetype=" + "xlsx";
+        }
+
+    });
 	
 	/*
 	 * Save changes to the language list
