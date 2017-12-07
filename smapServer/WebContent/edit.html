@@ -4,7 +4,7 @@
 
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	
+
 	<meta name="keywords" content="" />
 	<meta name="description" content="" />
 	<!--  
@@ -12,169 +12,170 @@
 	-->
 
 	<title>Form Builder</title>
-	
+
 	<link href="/css/wb/plugins/iCheck/custom.css" rel="stylesheet">
 	<link rel="shortcut icon" href="favicon.ico" />
 	<link rel="stylesheet" href="css/normalize.css" />
-	<link rel="stylesheet" href="/css/bootstrap.min.css" /> 
-	<link rel="stylesheet" href="/css/bootstrap-toggle.min.css" /> 
+	<link rel="stylesheet" href="/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/css/bootstrap-toggle.min.css" />
 	<link rel="stylesheet" href="/css/smap-bs.css" type="text/css">
-    
- 	<script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
+
+	<script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
 	<script src="js/libs/modernizr.js"></script>
 	<script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
-    <script data-main="js/edit" src="js/libs/require.js"></script>
+	<script data-main="js/edit" src="js/libs/require.js"></script>
 </head>
 <body>
 
-	<header class="navbar navbar-default navbar-fixed-top" role="banner">
-	  <div class="container">
-	    <div class="navbar-header">
-	      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
-	        <span class="sr-only">Toggle navigation</span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	      </button>
-	      <a href='javascript:void(0)' class="navbar-brand">
-	      	<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-	     	 <span class="formName"></span>
-	      </a>
-	    </div>
+<header class="navbar navbar-default navbar-fixed-top" role="banner">
+	<div class="container">
+		<div class="navbar-header">
+			<button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a href='javascript:void(0)' class="navbar-brand">
+				<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+				<span class="formName"></span>
+			</a>
+		</div>
 		<nav class="collapse navbar-collapse" role="navigation">
-	      <ul class="nav navbar-nav navbar-right">
-	      	<li id="m_modules" class="dropdown">
-	          <a href='javascript:void(0)' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="lang" data-lang="m_modules">View</span> <span class="caret"></span></a>
-	          <ul class="dropdown-menu" role="menu">
-	            
-	            <li><a class="lang" data-lang="m_home" href="/?loggedin=yes">home</a></li>
-	            <li class="disabled restrict_role admin_role analyst_role"><a href='javascript:void(0)'><span class="lang" data-lang="c_edit">Edit</span><span class="glyphicon glyphicon-edit pull-right"></span></a></li>
-	            <li class="restrict_role admin_role analyst_role"><a href="/fieldManager/templateManagement.html"><span class="lang" data-lang="m_admin">admin</span><span class="glyphicon glyphicon-wrench pull-right"></span></a></li>
-	            <li class="restrict_role enum_role"><a href="/webForm.html"><span class="lang" data-lang="m_data_mod" >Web Forms</span><span class="glyphicon glyphicon-globe pull-right"></span></a></li>
-	            <li class="restrict_role analyst_role"><a href="/fieldAnalysis/index.html"><span class="lang" data-lang="m_analysis">Analysis</span><span class="glyphicon glyphicon-stats pull-right"></span></a></li>
-	            <li class="restrict_role admin_role analyst_role bus_only"><a href="/tasks/taskManagement.html"><span class="nav-label lang" data-lang="m_assign">assign</span><span class="glyphicon glyphicon-tasks pull-right"></span></a></li>
-	          </ul>
-	        </li> 
-	        <li class="dropdown">
-	          <a href='javascript:void(0)' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="lang" data-lang="c_file">File</span> <span class="caret"></span></a>
-	          <ul class="dropdown-menu" role="menu">
-	            <li><a id="c_save" class="m_save_survey lang" href='javascript:void(0)' data-lang="c_save">save</a></li>
-	            <li><a id="m_open" href='javascript:void(0)' class="lang" data-lang="m_open">open</a></li>
-	            <li><a id="m_new" href='javascript:void(0)' class="lang" data-lang="m_new">New</a></li>
-	            <li class="disabled"><a id="m_import" href='javascript:void(0)' class="lang" data-lang="m_import">import</a></li>
-	            <li role="presentation" class="divider"></li>
-	            <li><a id="m_languages" class="lang m_languages" data-lang="c_langs" href='javascript:void(0)'>languages</a></li>
-	           	<li><a id="m_pulldata" class="lang" data-lang="c_pulldata" href='javascript:void(0)'>pulldata</a></li>
-	            <li><a id="m_media" href='javascript:void(0)' class="lang" data-lang="c_media">media</a></li>
-	            <li><a id="m_settings" href='javascript:void(0)' class="lang" data-lang="c_settings">settings</a></li>
-				<li><a id="m_keys" href='javascript:void(0)' class="lang" data-lang="c_keys">keys</a></li>
-	            <li role="presentation" class="divider"></li>
-	            <li><a id="m_changes" href="/changes.html" class="lang" data-lang="c_changes">changes</a></li>
-				<li><a id="m_calculations" href="/ssc.html" class="lang" data-lang="c_calc">calculations</a></li>
-				<li class="restrict_role org_role security_role"><a id="m_roles" href="/surveyRoles.html" class="lang" data-lang="c_roles">roles</a></li>
-				<li><a id="m_info" href='javascript:void(0)' class="lang" data-lang="m_info">info</a></li>
-	          </ul>
-	        </li> 
-	        <li class="dropdown">
-	          <a href='javascript:void(0)' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="lang" data-lang="c_tools">Tools</span> <span class="caret"></span></a>
-	          <ul class="dropdown-menu" role="menu">
-	            <li><a id="m_required" class="lang" data-lang="c_required" href='javascript:void(0)'>Req</a></li>
-	            <li><a id="m_not_required" class="lang" data-lang="c_not_required" href='javascript:void(0)'>NR</a></li>
-	            <li role="presentation" class="divider"></li>
-	            <li><a id="m_translate" class="lang" data-lang="trans" href="translate.html">translate</a>
-				<li><a id="m_validate" class="lang m_validate" data-lang="c_validate" href='javascript:void(0)'>validate</a></li>
-	          </ul>
-	        </li> 
-	      	<li class="dropdown">
-	          <a href='javascript:void(0)' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span id="langSelected"></span> <span class="caret"></span></a>
-	          <ul id="language" class="dropdown-menu language_menu_list" role="menu">
-	          </ul>
-	        </li> 
-	        <li class="dropdown">
-	          <a href='javascript:void(0)' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span id="propSelected"></span> <span class="caret"></span></a>
-				<ul id="selProperty" class="dropdown-menu" role="menu">
-					<li class="q_only default"><a data-prop="label" href='javascript:void(0)'  class="lang" data-lang="ed_qt">question text</a></li>
-					<li class="o_only default"><a data-prop="label" href='javascript:void(0)'  class="lang" data-lang="ed_ct">choice text</a></li>
-					<li class="q_only"><a data-prop="hint" href='javascript:void(0)'  class="lang" data-lang="ed_qh">question hint</a></li>
-					<li><a data-prop="media" href='javascript:void(0)'  class="lang" data-lang="c_media">media</a></li>
-					<li class="q_only"><a data-prop="appearance" href='javascript:void(0)'  class="lang" data-lang="ed_appearance">appearance</a></li>
-					<li class="q_only"><a data-prop="parameters" href='javascript:void(0)'  class="lang" data-lang="ed_parameters">parameters</a></li>
-					<li class="q_only"><a data-prop="constraint" href='javascript:void(0)'  class="lang" data-lang="ed_con">constraint</a></li>
-					<li class="q_only"><a data-prop="constraint_msg" href='javascript:void(0)'  class="lang" data-lang="ed_con_msg">constraint message</a></li>
-					<li class="q_only"><a data-prop="relevant" href='javascript:void(0)'  class="lang" data-lang="ed_rel">relevant</a></li>
-					<li class="q_only"><a data-prop="required" href='javascript:void(0)'  class="lang" data-lang="ed_req">required</a></li>
-					<li class="q_only"><a data-prop="autoplay" href='javascript:void(0)'  class="lang" data-lang="ed_ap">auto play</a></li>
-					<li class="q_only"><a data-prop="accuracy" href='javascript:void(0)'  class="lang" data-lang="ed_at">accuracy</a></li>
-					<li class="q_only"><a data-prop="readonly" href='javascript:void(0)'  class="lang" data-lang="ed_ro">Read Only</a></li>
-					<li class="q_only"><a data-prop="display_name" href='javascript:void(0)'  class="lang" data-lang="ed_dn">display name</a></li>
-					<li class="q_only"><a data-prop="defaultanswer" href='javascript:void(0)'  class="lang" data-lang="c_default">default</a></li>
-					<li class="q_only"><a data-prop="chartdata" href='javascript:void(0)'  class="lang" data-lang="ch_ds">chart data</a></li>
-					<!--  <li><a data-value="group" href='javascript:void(0)'>Set the end of a group</a></li> -->
-				</ul>
-	        </li> 
-	        <li class="notoptionslist"><input id="viewType" type="checkbox" checked 
-	        		data-onstyle="primary" data-offstyle="info"></li>
-	        <li><a type="button" tabindex="-1"  class="btn btn-success lang disabled m_save_survey" disabled="disabled">
-	        		<span class="lang" data-lang="c_save">Save</span> 
-	        		<span class="badge">0</span></a></li>
-	 		<li><a type="button" tabindex="-1"  data-lang="c_test" 
-	 				class="btn btn-primary lang m_test_survey" href='javascript:void(0)' target="_blank">Test</a></li>
-	                      
-		    <!-- 
-		   	<li><a id="m_undo" href='javascript:void(0)'>Undo</a></li>
-		    <li><a id="m_redo" href='javascript:void(0)'>Redo</a></li>
-		    -->
-			<li id="m_help"><a class="lang" data-lang="m_help" href="/editorHelp.html" target="_blank">Help</a></li>
-			<!-- 
-	        <li>
-	         	<a id="username" type="button" class="btn btn-default" data-toggle="modal" data-target="#modify_me_popup" aria-label="User">
-				<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-				</a>
-			</li>
-			-->
-	      </ul>
-	      	
+			<ul class="nav navbar-nav navbar-right">
+				<li id="m_modules" class="dropdown">
+					<a href='javascript:void(0)' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="lang" data-lang="m_modules">View</span> <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+
+						<li><a class="lang" data-lang="m_home" href="/?loggedin=yes">home</a></li>
+						<li class="disabled restrict_role admin_role analyst_role"><a href='javascript:void(0)'><span class="lang" data-lang="c_edit">Edit</span><span class="glyphicon glyphicon-edit pull-right"></span></a></li>
+						<li class="restrict_role admin_role analyst_role"><a href="/fieldManager/templateManagement.html"><span class="lang" data-lang="m_admin">admin</span><span class="glyphicon glyphicon-wrench pull-right"></span></a></li>
+						<li class="restrict_role enum_role"><a href="/webForm.html"><span class="lang" data-lang="m_data_mod" >Web Forms</span><span class="glyphicon glyphicon-globe pull-right"></span></a></li>
+						<li class="restrict_role analyst_role"><a href="/fieldAnalysis/index.html"><span class="lang" data-lang="m_analysis">Analysis</span><span class="glyphicon glyphicon-stats pull-right"></span></a></li>
+						<li class="restrict_role admin_role analyst_role bus_only"><a href="/tasks/taskManagement.html"><span class="nav-label lang" data-lang="m_assign">assign</span><span class="glyphicon glyphicon-tasks pull-right"></span></a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href='javascript:void(0)' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="lang" data-lang="c_file">File</span> <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+						<li><a id="c_save" class="m_save_survey lang" href='javascript:void(0)' data-lang="c_save">save</a></li>
+						<li><a id="m_open" href='javascript:void(0)' class="lang" data-lang="m_open">open</a></li>
+						<li><a id="m_new" href='javascript:void(0)' class="lang" data-lang="m_new">New</a></li>
+						<li class="disabled"><a id="m_import" href='javascript:void(0)' class="lang" data-lang="m_import">import</a></li>
+						<li role="presentation" class="divider"></li>
+						<li><a id="m_languages" class="lang m_languages" data-lang="c_langs" href='javascript:void(0)'>languages</a></li>
+						<li><a id="m_pulldata" class="lang" data-lang="c_pulldata" href='javascript:void(0)'>pulldata</a></li>
+						<li><a id="m_media" href='javascript:void(0)' class="lang" data-lang="c_media">media</a></li>
+						<li><a id="m_settings" href='javascript:void(0)' class="lang" data-lang="c_settings">settings</a></li>
+						<li><a id="m_keys" href='javascript:void(0)' class="lang" data-lang="c_keys">keys</a></li>
+						<li role="presentation" class="divider"></li>
+						<li><a id="m_changes" href="/changes.html" class="lang" data-lang="c_changes">changes</a></li>
+						<li><a id="m_calculations" href="/ssc.html" class="lang" data-lang="c_calc">calculations</a></li>
+						<li class="restrict_role org_role security_role"><a id="m_roles" href="/surveyRoles.html" class="lang" data-lang="c_roles">roles</a></li>
+						<li><a id="m_info" href='javascript:void(0)' class="lang" data-lang="m_info">info</a></li>
+						<li><a id="m_export" href='javascript:void(0)' class="lang" data-lang="m_export">export</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href='javascript:void(0)' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="lang" data-lang="c_tools">Tools</span> <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+						<li><a id="m_required" class="lang" data-lang="c_required" href='javascript:void(0)'>Req</a></li>
+						<li><a id="m_not_required" class="lang" data-lang="c_not_required" href='javascript:void(0)'>NR</a></li>
+						<li role="presentation" class="divider"></li>
+						<li><a id="m_translate" class="lang" data-lang="trans" href="translate.html">translate</a>
+						<li><a id="m_validate" class="lang m_validate" data-lang="c_validate" href='javascript:void(0)'>validate</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href='javascript:void(0)' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span id="langSelected"></span> <span class="caret"></span></a>
+					<ul id="language" class="dropdown-menu language_menu_list" role="menu">
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href='javascript:void(0)' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span id="propSelected"></span> <span class="caret"></span></a>
+					<ul id="selProperty" class="dropdown-menu" role="menu">
+						<li class="q_only default"><a data-prop="label" href='javascript:void(0)'  class="lang" data-lang="ed_qt">question text</a></li>
+						<li class="o_only default"><a data-prop="label" href='javascript:void(0)'  class="lang" data-lang="ed_ct">choice text</a></li>
+						<li class="q_only"><a data-prop="hint" href='javascript:void(0)'  class="lang" data-lang="ed_qh">question hint</a></li>
+						<li><a data-prop="media" href='javascript:void(0)'  class="lang" data-lang="c_media">media</a></li>
+						<li class="q_only"><a data-prop="appearance" href='javascript:void(0)'  class="lang" data-lang="ed_appearance">appearance</a></li>
+						<li class="q_only"><a data-prop="parameters" href='javascript:void(0)'  class="lang" data-lang="ed_parameters">parameters</a></li>
+						<li class="q_only"><a data-prop="constraint" href='javascript:void(0)'  class="lang" data-lang="ed_con">constraint</a></li>
+						<li class="q_only"><a data-prop="constraint_msg" href='javascript:void(0)'  class="lang" data-lang="ed_con_msg">constraint message</a></li>
+						<li class="q_only"><a data-prop="relevant" href='javascript:void(0)'  class="lang" data-lang="ed_rel">relevant</a></li>
+						<li class="q_only"><a data-prop="required" href='javascript:void(0)'  class="lang" data-lang="ed_req">required</a></li>
+						<li class="q_only"><a data-prop="autoplay" href='javascript:void(0)'  class="lang" data-lang="ed_ap">auto play</a></li>
+						<li class="q_only"><a data-prop="accuracy" href='javascript:void(0)'  class="lang" data-lang="ed_at">accuracy</a></li>
+						<li class="q_only"><a data-prop="readonly" href='javascript:void(0)'  class="lang" data-lang="ed_ro">Read Only</a></li>
+						<li class="q_only"><a data-prop="display_name" href='javascript:void(0)'  class="lang" data-lang="ed_dn">display name</a></li>
+						<li class="q_only"><a data-prop="defaultanswer" href='javascript:void(0)'  class="lang" data-lang="c_default">default</a></li>
+						<li class="q_only"><a data-prop="chartdata" href='javascript:void(0)'  class="lang" data-lang="ch_ds">chart data</a></li>
+						<!--  <li><a data-value="group" href='javascript:void(0)'>Set the end of a group</a></li> -->
+					</ul>
+				</li>
+				<li class="notoptionslist"><input id="viewType" type="checkbox" checked
+												  data-onstyle="primary" data-offstyle="info"></li>
+				<li><a type="button" tabindex="-1"  class="btn btn-success lang disabled m_save_survey" disabled="disabled">
+					<span class="lang" data-lang="c_save">Save</span>
+					<span class="badge">0</span></a></li>
+				<li><a type="button" tabindex="-1"  data-lang="c_test"
+					   class="btn btn-primary lang m_test_survey" href='javascript:void(0)' target="_blank">Test</a></li>
+
+				<!--
+                   <li><a id="m_undo" href='javascript:void(0)'>Undo</a></li>
+                <li><a id="m_redo" href='javascript:void(0)'>Redo</a></li>
+                -->
+				<li id="m_help"><a class="lang" data-lang="m_help" href="/editorHelp.html" target="_blank">Help</a></li>
+				<!--
+                <li>
+                     <a id="username" type="button" class="btn btn-default" data-toggle="modal" data-target="#modify_me_popup" aria-label="User">
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                    </a>
+                </li>
+                -->
+			</ul>
+
 		</nav>
-	
-	  </div>
-	</header>
+
+	</div>
+</header>
 
 
-	<div id="content" class="editorContent">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-md-12">
-					<ol id="formList" class="list-unstyled">
-					</ol>
-				</div>
+<div id="content" class="editorContent">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<ol id="formList" class="list-unstyled">
+				</ol>
 			</div>
 		</div>
 	</div>
-	<div id="toolbar" class="editorContent">
-		<div class="row margin-bottom" id="error-nav-btns" style="display:none;">
-			<div class="col-xs-6">
-  				<button type="button" id="next-warning" class="btn btn-warning"><span class="badge warning-count">0</span></button>
-  			</div>
-  			<div class="col-xs-6">
-  				<button type="button" id="next-error" class="btn btn-danger"><span class="badge error-count">0</span></button>
-  			</div>
+</div>
+<div id="toolbar" class="editorContent">
+	<div class="row margin-bottom" id="error-nav-btns" style="display:none;">
+		<div class="col-xs-6">
+			<button type="button" id="next-warning" class="btn btn-warning"><span class="badge warning-count">0</span></button>
 		</div>
-		<div id="toolbar_types"></div>
+		<div class="col-xs-6">
+			<button type="button" id="next-error" class="btn btn-danger"><span class="badge error-count">0</span></button>
+		</div>
 	</div>
-	
-	<div id="choiceView" class="editorContent" style="display:none;">
-		<div class="container-fluid">
-			<div class="row">
-	     		<h4><span class="modal-title lang" data-lang="c_choices" id="choiceViewLabel">choices</span> - <span id="choiceViewQuestion"></span></h4>	   			
-	   		</div>
-	   		<div class="choice-content"></div>
+	<div id="toolbar_types"></div>
+</div>
+
+<div id="choiceView" class="editorContent" style="display:none;">
+	<div class="container-fluid">
+		<div class="row">
+			<h4><span class="modal-title lang" data-lang="c_choices" id="choiceViewLabel">choices</span> - <span id="choiceViewQuestion"></span></h4>
 		</div>
-	</div>	
-	
+		<div class="choice-content"></div>
+	</div>
+</div>
+
 <div class="col-md-12 text-center">
 	<img class="hour_glass" src="/images/ajax-loader.gif" style="display:none;position: fixed; top: 200px; left:300px;" alt="hourglass" height="60" width="60">
-</div>    
-	
+</div>
+
 <!-- Informational -->
 <div id="infobox" class="alert alert-warning alert-dismissible" role="alert" style="display:none;">
 	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -184,49 +185,49 @@
 <!-- Setting Dialog -->
 <div id="settingsModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="settingsLabel" aria-hidden="true">
 	<div class="modal-dialog">
-   		<div class="modal-content">
-   		 	<div class="modal-header">
-     			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     			<h4 class="modal-title lang" id="settingsLabel" data-lang="c_settings">Settings</h4>
-   			</div>
-		     <div class="modal-body">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title lang" id="settingsLabel" data-lang="c_settings">Settings</h4>
+			</div>
+			<div class="modal-body">
 				<form role="form" class="form-horizontal">
-					
+
 					<div class="form-group">
 						<label for="set_survey_name" data-lang="c_form" class="lang col-sm-2 control-label">form</label>
 						<div class="col-sm-10">
 							<input type="text" id="set_survey_name" required class="form-control survey_name">
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="set_survey_ident" data-lang="ed_fi" class="lang col-sm-2 control-label">ident</label>
 						<div class="col-sm-10">
 							<input type="text" id="set_survey_ident" readonly class="form-control">
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="set_project_name" data-lang="c_project" class="lang col-sm-2 control-label">Project</label>
 						<div class="col-sm-10">
 							<select id="set_project_name" class="form-control project_list"></select>
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="set_default_language" data-lang="ed_dl" class="lang col-sm-2 control-label">language</label>
 						<div class="col-sm-10">
 							<select id="set_default_language" class="form-control language_list"></select>
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="set_instance_name" data-lang="ed_in" class="lang col-sm-2 control-label" data-lang="ed_in">Instance Name</label>
 						<div class="col-sm-10">
 							<input type="text" id="set_instance_name" required class="form-control instance_name">
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="set_style" data-lang="c_style" class="lang col-sm-2 control-label">Style</label>
 						<div class="col-sm-10">
@@ -237,7 +238,7 @@
 							</select>
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
 							<div class="checkbox">
@@ -247,7 +248,7 @@
 							</div>
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
 							<div class="checkbox">
@@ -267,135 +268,135 @@
 							</div>
 						</div>
 					</div>
-					
-				</form>	
-				<form enctype="multipart/form-data" name="pdftemplate" role="form" class="form-horizontal" 
-						method="POST" accept-charset="utf-8">
+
+				</form>
+				<form enctype="multipart/form-data" name="pdftemplate" role="form" class="form-horizontal"
+					  method="POST" accept-charset="utf-8">
 					<fieldset>
 						<legend class="lang" data-lang="ft_pdf">Pdf Template:</legend>
 						<input id="pdfSettings" type="hidden" name="settings" >
-						
+
 						<div class="form-group">
-      						<div class="input-group col-sm-offset-2 col-sm-7	" style="float:left;">	<!-- Override float:none set for input group -->
-      							<span class="input-group-btn">
+							<div class="input-group col-sm-offset-2 col-sm-7	" style="float:left;">	<!-- Override float:none set for input group -->
+								<span class="input-group-btn">
         							<input id="addPdfTemplate" name="files" title="Add" class="file-inputs" type="file" accept="application/pdf">
       							</span>
-     					 		<input type="text" class="upload_file_msg form-control" placeholder="None selected ...">
-    						</div>
-    
+								<input type="text" class="upload_file_msg form-control" placeholder="None selected ...">
+							</div>
+
 							<button type="button" class="btn btn-danger col-sm-1" id="delPdfTemplate"><i class="glyphicon glyphicon-trash" aria-hidden=true"></i></button>
 							<button type="button" class="btn btn-default col-sm-1" id="downloadPdfTemplate"><i class="glyphicon glyphicon-chevron-down" aria-hidden=true"></i></button>
-						</div>          			
+						</div>
 					</fieldset>
-				</form>	
+				</form>
 			</div>
-			
+
 			<div class="modal-footer">
-	            <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_cancel">Cancel</button>
-	            <button id="save_settings" type="button" class="btn btn-primary lang" data-lang="m_save" disabled="disabled">Save</button>
-	        </div>
-	        
-		</div>
-  	</div>	
-</div>
-
-	<!-- Keys Dialog -->
-	<div id="keysModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="keysLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-					<h4 class="modal-title lang" id="keysLabel" data-lang="c_recid">Record Identifiers</h4>
-				</div>
-				<div class="modal-body">
-					<form role="form" class="form-horizontal">
-
-						<div class="form-group">
-							<label for="set_key_policy" class="lang col-sm-2 control-label" data-lang="ed_kp">key policy</label>
-							<div class="col-sm-10">
-								<select id="set_key_policy" class="form-control">
-									<option value="add" class="lang" data-lang="c_add">add</option>
-									<option value="merge" class="lang" data-lang="c_merge">merge</option>
-									<option value="discard" class="lang" data-lang="c_discard">discard</option>
-								</select>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label for="set_hrk" class="lang col-sm-2 control-label" data-lang="ed_hrk"
-								   title="Specify a unique key if you want to refer to the data collected by this form from another form"
-							>key</label>
-							<div class="col-sm-10">
-								<input type="text" id="set_hrk" required class="form-control">
-							</div>
-						</div>
-
-					</form>
-
-				</div>
-
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_cancel">Cancel</button>
-					<button id="save_keys" type="button" class="btn btn-primary lang" data-lang="m_save" disabled="disabled">Save</button>
-				</div>
-
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_cancel">Cancel</button>
+				<button id="save_settings" type="button" class="btn btn-primary lang" data-lang="m_save" disabled="disabled">Save</button>
 			</div>
+
 		</div>
 	</div>
+</div>
+
+<!-- Keys Dialog -->
+<div id="keysModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="keysLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title lang" id="keysLabel" data-lang="c_recid">Record Identifiers</h4>
+			</div>
+			<div class="modal-body">
+				<form role="form" class="form-horizontal">
+
+					<div class="form-group">
+						<label for="set_key_policy" class="lang col-sm-2 control-label" data-lang="ed_kp">key policy</label>
+						<div class="col-sm-10">
+							<select id="set_key_policy" class="form-control">
+								<option value="add" class="lang" data-lang="c_add">add</option>
+								<option value="merge" class="lang" data-lang="c_merge">merge</option>
+								<option value="discard" class="lang" data-lang="c_discard">discard</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="set_hrk" class="lang col-sm-2 control-label" data-lang="ed_hrk"
+							   title="Specify a unique key if you want to refer to the data collected by this form from another form"
+						>key</label>
+						<div class="col-sm-10">
+							<input type="text" id="set_hrk" required class="form-control">
+						</div>
+					</div>
+
+				</form>
+
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_cancel">Cancel</button>
+				<button id="save_keys" type="button" class="btn btn-primary lang" data-lang="m_save" disabled="disabled">Save</button>
+			</div>
+
+		</div>
+	</div>
+</div>
 
 <!-- Info Dialog -->
 <div id="infoModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="infoLabel" aria-hidden="true">
 	<div class="modal-dialog">
-   		<div class="modal-content">
-   		 	<div class="modal-header">
-     			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     			<h4 class="modal-title lang" id="infoLabel" data-lang="m_info">info</h4>
-   			</div>
-		     <div class="modal-body">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title lang" id="infoLabel" data-lang="m_info">info</h4>
+			</div>
+			<div class="modal-body">
 				<form role="form" class="form-horizontal">
-					
+
 					<div class="form-group">
 						<label for="i_name" class="lang col-sm-2 control-label" data-lang="c_name">name</label>
 						<div class="col-sm-10">
 							<input type="text" id="i_name" readonly class="form-control">
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="i_ident" class="lang col-sm-2 control-label" data-lang="c_ident">ident</label>
 						<div class="col-sm-10">
 							<input type="text" id="i_ident" readonly class="form-control">
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="i_version" class="lang col-sm-2 control-label" data-lang="c_version">version</label>
 						<div class="col-sm-10">
 							<input type="text" id="i_version" readonly class="form-control">
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="i_created" class="lang col-sm-2 control-label" data-lang="ed_i_c">created</label>
 						<div class="col-sm-10">
 							<input type="text" id="i_created" readonly  class="form-control survey_name">
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="i_based_on" class="lang col-sm-2 control-label" data-lang="ed_i_bo">based on</label>
 						<div class="col-sm-10">
 							<input type="text" id="i_based_on" readonly class="form-control survey_name">
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="i_table_names" class="lang col-sm-2 control-label" data-lang="ed_i_tn">table names</label>
 						<div class="col-sm-10">
 							<input type="text" id="i_table_names" readonly class="form-control survey_name">
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
 							<div class="checkbox">
@@ -405,30 +406,30 @@
 							</div>
 						</div>
 					</div>
-					
-					
-				</form>	
+
+
+				</form>
 			</div>
-			
+
 			<div class="modal-footer">
-	            <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_cancel">Cancel</button>
-	        </div>
-	        
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_cancel">Cancel</button>
+			</div>
+
 		</div>
-  	</div>	
-</div>	
+	</div>
+</div>
 
 <!-- Modals -->
 <div id="openFormModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="openFormLabel" aria-hidden="true">
 	<div class="modal-dialog">
-   		<div class="modal-content">
-   			<div class="modal-header">
-     			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     			<h4 class="modal-title" id="openSurveyLabel">Open Form</h4>
-   			</div>
-		     <div class="modal-body">
-		  		<form role="form" class="form-horizontal">
-		  			<div class="form-group">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="openSurveyLabel">Open Form</h4>
+			</div>
+			<div class="modal-body">
+				<form role="form" class="form-horizontal">
+					<div class="form-group">
 						<label for="project_name" class="lang col-sm-2 control-label" data-lang="c_project">Project :</label>
 						<div class="col-sm-10">
 							<select id="project_name" class="project_list form-control"></select>
@@ -482,103 +483,103 @@
 			</div>
 
 			<div class="modal-footer">
-	            <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_cancel">Cancel</button>
-	            <button id="get_form" type="button" class="btn btn-primary lang" data-lang="m_open">Open</button>
-	        </div>
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_cancel">Cancel</button>
+				<button id="get_form" type="button" class="btn btn-primary lang" data-lang="m_open">Open</button>
+			</div>
 		</div>
 	</div>
 </div>
-	
+
 
 <!-- Modal for managing media -->
 <div id="mediaModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mediaModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
-   		<div class="modal-content">
-   			<div class="modal-header">
-     			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     			<h4 class="modal-title" id="mediaModalLabel"></h4>
-   			</div>
-   			<div class="container">
-		    <div class="modal-body row">
-   				<ul class="nav nav-pills mediaSelect" role="tablist">
-       				<li id="orgLevelTab" role="presentation" class="active"><a href='javascript:void(0)' class="lang" data-lang="c_org">organisation</a></li>
-       				<li id="surveyLevelTab" role="presentation" class="disabled"><a href='javascript:void(0)' class="lang" data-lang="c_form">form</a></li>
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="mediaModalLabel"></h4>
+			</div>
+			<div class="container">
+				<div class="modal-body row">
+					<ul class="nav nav-pills mediaSelect" role="tablist">
+						<li id="orgLevelTab" role="presentation" class="active"><a href='javascript:void(0)' class="lang" data-lang="c_org">organisation</a></li>
+						<li id="surveyLevelTab" role="presentation" class="disabled"><a href='javascript:void(0)' class="lang" data-lang="c_form">form</a></li>
 
-   				</ul>
-   
-   				<!-- The file upload form used as target for the file upload widget -->
-   				<form enctype="multipart/form-data" name="fileupload">
-       
-	       			<input id="survey_id" type="hidden" name="survey_id" >
-	       			<!-- The fileupload-buttonbar contains buttons to add files and start/cancel the upload -->
-	       			<div class="row fileupload-buttonbar mediaManage">
-	           			<div class="col-lg-7">
-	                		<!-- The fileinput-button span is used to style the file input field as button -->
-	
-	                		<input name="files" title="Add files..." class="file-inputs" type="file" multiple
-	                			accept="image/png, image/jpeg, image/gif, video/3gpp, video/mp4, audio/mp4, audio/mpeg, audio/mp3, audio/x-wav, text/csv">
-	                
-	                		<button type="button" id="submitFiles" class="btn btn-primary">
-	                    		<i class="glyphicon glyphicon-upload"></i>
-	                    		<span class="lang" data-lang="c_start">start</span>
-	                		</button>
-	                		<button type="reset" class="btn btn-warning cancel">
-	                    		<i class="glyphicon glyphicon-ban-circle"></i>
-	                    		<span class="lang" data-lang="c_cancel">cancel</span>
-	                		</button>
-	                		
-	                		<!-- The global file processing state -->
-	                		<span class="fileupload-process"></span>
-	           			</div>
-	           			<!-- The global progress state -->
-	           			<div class="col-lg-5 fileupload-progress fade">
-	                		<!-- The global progress bar -->
-	                		<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-	                    		<div class="progress-bar progress-bar-success" style="width:0%;"></div>
-	                		</div>
-	         
-	            		</div>
-	       			</div>
-  				</form>   
-  				
-				<!-- Status -->
-				<div class="upload_file_msg alert alert-success mediaManage" role="alert"></div>
-		
-				<!-- The global progress bar -->
-			    <div id="progress" class="progress mediaManage">
-			        <div class="progress-bar progress-bar-success"></div>
-			    </div>
-	    
-	   			<!-- The container for the uploaded Survey files -->
-			    <div id="surveyPanel" class="col-lg-10" style="display:none;">
-				    <h4 class="formName"></h4>
-				    
-				    <div class="table-responsive">
-					    <table role="presentation" class="table table-striped col-lg-10">
-					       	<tbody id="filesSurvey">
-				   			</tbody>
-					    </table>
-				    </div>
-			    </div>
-			   
-				<!-- The container for the uploaded Survey files -->
-				<div id="orgPanel" class="col-lg-10">
-					<div class="table-responsive">
-			   			<table role="presentation" class="table table-striped col-lg-10">
-			   				<tbody id="filesOrg">
-			   				</tbody>
-			    		</table>
-			    	</div>
-		    	</div>
-	
-			</div>	<!-- End Body -->
+					</ul>
+
+					<!-- The file upload form used as target for the file upload widget -->
+					<form enctype="multipart/form-data" name="fileupload">
+
+						<input id="survey_id" type="hidden" name="survey_id" >
+						<!-- The fileupload-buttonbar contains buttons to add files and start/cancel the upload -->
+						<div class="row fileupload-buttonbar mediaManage">
+							<div class="col-lg-7">
+								<!-- The fileinput-button span is used to style the file input field as button -->
+
+								<input name="files" title="Add files..." class="file-inputs" type="file" multiple
+									   accept="image/png, image/jpeg, image/gif, video/3gpp, video/mp4, audio/mp4, audio/mpeg, audio/mp3, audio/x-wav, text/csv">
+
+								<button type="button" id="submitFiles" class="btn btn-primary">
+									<i class="glyphicon glyphicon-upload"></i>
+									<span class="lang" data-lang="c_start">start</span>
+								</button>
+								<button type="reset" class="btn btn-warning cancel">
+									<i class="glyphicon glyphicon-ban-circle"></i>
+									<span class="lang" data-lang="c_cancel">cancel</span>
+								</button>
+
+								<!-- The global file processing state -->
+								<span class="fileupload-process"></span>
+							</div>
+							<!-- The global progress state -->
+							<div class="col-lg-5 fileupload-progress fade">
+								<!-- The global progress bar -->
+								<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+									<div class="progress-bar progress-bar-success" style="width:0%;"></div>
+								</div>
+
+							</div>
+						</div>
+					</form>
+
+					<!-- Status -->
+					<div class="upload_file_msg alert alert-success mediaManage" role="alert"></div>
+
+					<!-- The global progress bar -->
+					<div id="progress" class="progress mediaManage">
+						<div class="progress-bar progress-bar-success"></div>
+					</div>
+
+					<!-- The container for the uploaded Survey files -->
+					<div id="surveyPanel" class="col-lg-10" style="display:none;">
+						<h4 class="formName"></h4>
+
+						<div class="table-responsive">
+							<table role="presentation" class="table table-striped col-lg-10">
+								<tbody id="filesSurvey">
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<!-- The container for the uploaded Survey files -->
+					<div id="orgPanel" class="col-lg-10">
+						<div class="table-responsive">
+							<table role="presentation" class="table table-striped col-lg-10">
+								<tbody id="filesOrg">
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+				</div>	<!-- End Body -->
 			</div>
 
 			<div class="modal-footer">
 				<button id="removeMedia" type="button" class="btn btn-danger" data-dismiss="modal" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> <span class="lang" data-lang="c_del">delete</span></button>
-	           	<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-	           	<button id="mediaSelectSave" type="button" class="btn btn-primary lang mediaSelect" data-dismiss="modal" data-lang="c_save">Save</button>
-	       	</div>
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="mediaSelectSave" type="button" class="btn btn-primary lang mediaSelect" data-dismiss="modal" data-lang="c_save">Save</button>
+			</div>
 		</div>
 	</div>
 </div>
@@ -586,21 +587,21 @@
 <!-- Modal for setting question type -->
 <div id="typeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="typeModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
-   		<div class="modal-content">
-   			<div class="modal-header">
-     			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     			<h4 class="modal-title lang" id="typeModalLabel" data-lang="c_type">type</h4>
-   			</div>
-   			
-   			<div class="modal-body">
-   				<div class="container-fluid">
-		  			<div class="btn-group" id="dialog_types"></div>
-		  		</div>
-	    		
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title lang" id="typeModalLabel" data-lang="c_type">type</h4>
+			</div>
+
+			<div class="modal-body">
+				<div class="container-fluid">
+					<div class="btn-group" id="dialog_types"></div>
+				</div>
+
 			</div>
 			<div class="modal-footer">
-        		<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">close</button>
-      		</div>
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">close</button>
+			</div>
 		</div>
 	</div>
 </div>
@@ -608,15 +609,15 @@
 <!-- Modal to add/remove a filter -->
 <div id="filterModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
-   		<div class="modal-content">
-   			<div class="modal-header">
-     			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     			<h4 class="modal-title lang" id="filterModalLabel" data-lang="c_filter">filter</h4>
-   			</div>
-   			
-   			<div class="modal-body">
-   				<div class="container-fluid">
-		  			<form role="form" class="form-horizontal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title lang" id="filterModalLabel" data-lang="c_filter">filter</h4>
+			</div>
+
+			<div class="modal-body">
+				<div class="container-fluid">
+					<form role="form" class="form-horizontal">
 						<div class="form-group">
 							<label for="filter_name" data-lang="c_name" class="lang col-sm-2 control-label">name</label>
 							<div class="col-sm-10">
@@ -624,13 +625,13 @@
 							</div>
 						</div>
 					</form>
-		  		</div>
-	    		
+				</div>
+
 			</div>
 			<div class="modal-footer">
-        		<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">close</button>
-        		<button id="filterModalSave" type="button" data-dismiss="modal" class="btn btn-primary lang" data-lang="c_save">save</button>
-      		</div>
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">close</button>
+				<button id="filterModalSave" type="button" data-dismiss="modal" class="btn btn-primary lang" data-lang="c_save">save</button>
+			</div>
 		</div>
 	</div>
 </div>
@@ -639,15 +640,15 @@
 <!-- Model to edit languages -->
 <div id="editLanguageModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editLanguageLabel" aria-hidden="true">
 	<div class="modal-dialog">
-   		<div class="modal-content">
-   			<div class="modal-header">
-     			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     			<h4 class="modal-title lang" data-lang="c_langs" id="editLanguageLabel">lang</h4>
-   			</div>
-   			
-   			<div class="modal-body">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title lang" data-lang="c_langs" id="editLanguageLabel">lang</h4>
+			</div>
+
+			<div class="modal-body">
 				<div class="container-fluid">
-					<div class = "well">					
+					<div class = "well">
 						<div class="table-responsive">
 							<div id="language_edit_list"></div>
 						</div>
@@ -658,28 +659,28 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="modal-footer">
-        		<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-        		<button id="editLanguageSave" type="button" class="btn btn-primary lang" data-lang="c_save">Save</button>
-      		</div>
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="editLanguageSave" type="button" class="btn btn-primary lang" data-lang="c_save">Save</button>
+			</div>
 		</div>
 	</div>
-		
+
 </div>
 
 <!-- Model to edit pull data settings -->
 <div id="pulldataModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="pulldataLabel" aria-hidden="true">
 	<div class="modal-dialog">
-   		<div class="modal-content">
-   			<div class="modal-header">
-     			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     			<h4 class="modal-title lang" data-lang="c_pulldata" id="pulldataLabel">pulldata</h4>
-   			</div>
-   			
-   			<div class="modal-body">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title lang" data-lang="c_pulldata" id="pulldataLabel">pulldata</h4>
+			</div>
+
+			<div class="modal-body">
 				<div class="container-fluid">
-					<div class = "well">					
+					<div class = "well">
 						<div class="table-responsive">
 							<div id="pulldata_edit_list"></div>
 						</div>
@@ -690,26 +691,26 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="modal-footer">
-        		<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-        		<button id="pulldataSave" type="button" class="btn btn-primary lang" data-lang="c_save">Save</button>
-      		</div>
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="pulldataSave" type="button" class="btn btn-primary lang" data-lang="c_save">Save</button>
+			</div>
 		</div>
 	</div>
-		
+
 </div>
 
 
 <!-- Modal to allow the user to edit their own details -->
 <div id="modify_me_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modifyMeLabel" aria-hidden="true">
 	<div class="modal-dialog">
-   		<div class="modal-content">
-   			<div class="modal-header">
-     			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     			<h4 class="modal-title" id="modifyMeLabel">New message</h4>
-   			</div>
-		     <div class="modal-body">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="modifyMeLabel">New message</h4>
+			</div>
+			<div class="modal-body">
 				<form role="form" class="form-horizontal" id="me_edit_form">
 					<div class="form-group">
 						<label for="me_name" data-lang="c_name" class="lang col-sm-2 control-label">Name</label>
@@ -726,9 +727,9 @@
 					<div class="form-group">
 						<label for="me_email" data-lang="c_email" class="lang col-sm-2 control-label">Email</label>
 						<div class="col-sm-10">
-							<input type="email" class="form-control" id="me_email" 
-									placeholder="Enter email" 
-									pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$">
+							<input type="email" class="form-control" id="me_email"
+								   placeholder="Enter email"
+								   pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$">
 						</div>
 					</div>
 					<div id="reset_me_password_fields" style="display:none;">
@@ -748,28 +749,28 @@
 							<div class="col-sm-10">
 								<input id="me_password" type="password" placeholder="Password" class="form-control">
 							</div>
-						</div>	
+						</div>
 						<div class="form-group">
 							<label for="me_password_confirm" data-lang="c_c_p" class="lang col-sm-2 control-label">Confirm Password</label>
 							<div class="col-sm-10">
 								<input id="me_password_confirm" type="password" placeholder="Password" class="form-control">
 							</div>
-						</div>	
-					</div>		
-				</form>	
+						</div>
+					</div>
+				</form>
 			</div>
 
 			<div class="modal-footer">
-            	<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-            	<button id="userProfileLogout"type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_logout">Logout</button>
-            	<button id="userProfileSave" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_save">Save</button>
-        	</div>
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="userProfileLogout"type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_logout">Logout</button>
+				<button id="userProfileSave" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_save">Save</button>
+			</div>
 		</div>
 	</div>
 </div>
 
 <script>
-	setCustomEdit();
+    setCustomEdit();
 </script>
 </body>
 </html>

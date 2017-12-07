@@ -613,6 +613,7 @@ define({
     "ed_er": "Cannot save until errors are fixed",
     "ed_blocked": "The survey has been blocked. Changes cannot be saved.  You can unblock the survey on the form management page.",
     "ed_cml": "Cannot modify languages while there are unsaved changes",
+    "ed_cx": "Cannot export to an xlsForm while there are unsaved changes",
     "ed_csr": "Cannot set questions required, or not required, while there are unsaved changes",
     "ed_fi": "Form Identifier",
     "ed_dl": "Default Language",
