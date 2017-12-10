@@ -824,3 +824,4 @@ alter table report add column url text;
 alter table survey add column group_survey_id integer;
 alter table task_group add column target_s_id integer;
 DROP INDEX IF EXISTS SurveyDisplayName;
+alter table form add column reference boolean;
