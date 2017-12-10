@@ -430,7 +430,7 @@ CREATE TABLE survey (
 	);
 ALTER TABLE survey OWNER TO ws;
 DROP INDEX IF EXISTS SurveyDisplayName;
-CREATE UNIQUE INDEX SurveyDisplayName ON survey(p_id, display_name);
+-- CREATE UNIQUE INDEX SurveyDisplayName ON survey(p_id, display_name);
 DROP INDEX IF EXISTS SurveyKey;
 CREATE UNIQUE INDEX SurveyKey ON survey(ident);
 
@@ -712,7 +712,8 @@ CREATE TABLE public.task_group (
 	p_id integer,
     address_params text,
     rule text,					-- The criteria for adding a new task to this group (JSON)
-    source_s_id integer			-- The source survey id for quick lookup from notifications engine
+    source_s_id integer,			-- The source survey id for quick lookup from notifications engine
+    target_s_id integer
 );
 
 ALTER TABLE public.task_group OWNER TO ws;
