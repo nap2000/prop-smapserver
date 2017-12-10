@@ -212,3 +212,14 @@ body {
 .new_alert {
 	color: red;
 }
+
+/*
+ * Survey Management
+ */
+tr.deleted td a {
+    color: red !important;
+}
+
+.blocked {
+    opacity: 0.5;
+}

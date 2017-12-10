@@ -254,6 +254,7 @@ define({
     "tm_r_forms": "Restore Forms",
     "tm_e_forms": "Erase Forms",
     "tm_c_form": "Create a Form",
+    "tm_c_form_rep": "Replace a Form",
     "tm_c_xls": "Using the Spreadsheet editor",
     "tm_g_temp": "Download Template",
     "tm_g_new": "Create new Form",
@@ -263,6 +264,7 @@ define({
     "tm_ul_f": "Upload the spreadsheet",
     "tm_si": "Specify survey identifier",
     "tm_up": "Upload Template",
+    "tm_ups": "Upload Survey",
     "tm_add_for": "Add Forward",
     "tm_ref_f": "Refresh Form List",
 

@@ -152,12 +152,12 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 							<a class="btn btn-success lang alist" type="button" data-lang="tm_g_new" href="/edit.html?new=true">New</a>
 						</div>
 						<div class="col-md-4">
-							<a class="btn btn-primary lang alist" id="xls_download" type="button" data-lang="tm_g_temp" href="blankform.xlsx">download</a>
+							<a class="btn btn-default lang alist" id="xls_download" type="button" data-lang="tm_g_temp" href="blankform.xlsx">download</a>
 							<div class="alist"><a data-lang="m_help" id="xls_editor_help" class="lang" href="https://docs.google.com/file/d/0B5_SmpWlQYxvdHREdEJTWEVmLTQ/edit" target="_blank"></a></div>
 							<div class="alist"><a data-lang="tm_g_temp_i3" id="editor_rg" class="lang" href="https://docs.google.com/file/d/0B5_SmpWlQYxvWlBoWkdiT3FrY1U/edit" target="_blank"></a></div>
 						</div>
 						<div class="col-md-4">
-							<button	class="btn btn-primary lang" data-lang="tm_up" id="submitFile" value="Upload File" >Upload</button>
+							<button	class="btn btn-primary lang" data-lang="tm_ups" id="submitFile" value="Upload File" >upload</button>
 						</div>
 					</div>
 
@@ -200,22 +200,22 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 				<h4 class="modal-title"></h4>
 			</div>
 			<div class="modal-body">
-				<h3 class="lang" data-lang="tm_c_form">Create a Form</h3>
+				<h3 id="survey_add_title" class="lang" data-lang="tm_c_form">Create a Form</h3>
 
 
 				<div class="spreadsheet_editor">
-					<h3 class="lang" data-lang="tm_c_xls">Using Spreadsheet</h3>
+					<h3 class="lang notreplace" data-lang="tm_c_xls">Using Spreadsheet</h3>
 
 
 					<div style="clear: both;">&nbsp;</div>
-					<p data-lang="tm_g_temp_i1" class="lang"></p>
+					<p data-lang="tm_g_temp_i1" class="lang notreplace"></p>
 
 
 					<div class="col-md-12 text-center">
 						<img id="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
 					</div>
 					<br>
-					<h4 data-lang="tm_ul_f" class="lang">Upload a Form</h4>
+					<h4 data-lang="tm_ul_f" class="lang notreplace">Upload the Spreadsheet</h4>
 					<div id="up_alert" style="display:none; word-wrap:break-word;" class="alert alert-success" role="alert"></div>
 					<div id="up_warnings" style="display:none;" class="alert alert-warning" role="alert"></div>
 					<form role="form" id="uploadForm" name="uploadForm" accept-charset="utf-8"
@@ -223,8 +223,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<fieldset id="templateUpload">
 							<input id="surveyId" type="hidden" name="surveyId" value="" style="display:none;"/>
 							<input id="projectId" type="hidden" name="projectId" value="" style="display:none;"/>
-							<input id="projectName" type="hidden" name="projectName" value="" style="display:none;"/>
-							<div class="form-group">
+							<input id="uploadAction" type="hidden" name="action" value="" style="display:none;"/>
+							<div class="form-group notreplace">
 								<label for="templateName"><span data-lang="c_name" class="lang control-label">Name</span>:</label>
 								<input id="templateName" class="form-control" type="text" name="templateName" maxlength="100" required />
 							</div>
@@ -232,7 +232,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 								<label for="file"><span data-lang="c_file" class="lang control-label">file</label>
 								<input type="file" class="form-control" name="tname" id="file" required/>
 							</div>
-							<div class="form-group">
+							<div class="form-group notreplace">
 								<label for="group"><span data-lang="sr_g" class="lang control-label">group</label>
 								<select id="group"></select>
 							</div>
@@ -244,7 +244,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-				<button id="submitFileGroup" type="button" class="btn btn-primary lang" data-lang="tm_up">Upload</button>
+				<button id="submitFileGroup" type="button" class="btn btn-primary lang" data-lang="c_upload">Upload</button>
 			</div>
 		</div>
 	</div>
