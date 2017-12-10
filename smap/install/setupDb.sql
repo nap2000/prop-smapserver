@@ -471,7 +471,8 @@ CREATE TABLE form (
 	parentQuestion integer not null default 0,
 	repeats text,
 	path text,
-	form_index int default -1					-- Temporary data used by the online editor
+	form_index int default -1,					-- Temporary data used by the online editor
+	reference boolean
 	);
 ALTER TABLE form OWNER TO ws;
 
