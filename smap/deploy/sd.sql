@@ -822,3 +822,5 @@ ALTER TABLE sync OWNER TO ws;
 alter table survey add column meta text;
 alter table report add column url text;
 alter table survey add column group_survey_id integer;
+alter table task_group add column target_s_id integer;
+DROP INDEX IF EXISTS SurveyDisplayName;

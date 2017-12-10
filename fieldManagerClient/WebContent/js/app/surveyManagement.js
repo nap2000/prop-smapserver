@@ -60,6 +60,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
 
             // Get the user details
             getLoggedInUser(projectSet, false, true, undefined);
+            getGroupSurveys();
 
             // Set change function on projects
             $('#project_name').change(function() {
@@ -75,8 +76,13 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                     globals.gCurrentTaskGroup);
             });
 
-            // Upload a template
+            // Open the dialog to select a new survey for upload
             $('#submitFile').click( function(e) {
+                $('#uploadAction').val("add");
+                $('#uploadForm')[0].reset();
+                $('#up_alert, #up_warnings').hide();
+                $('.notreplace').show();
+                $('#survey_add_title').text(localise.set["tm_c_form"])
                 $('#survey_add').modal('show');
             });
 
@@ -219,13 +225,13 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                 window.location.href = "/webForm.html";
             }
 
-            getSurveysForList(globals.gCurrentProject);			// Get surveys
+            getSurveys(globals.gCurrentProject);			// Get surveys
         }
 
         /*
          * Load the surveys from the server and populate the survey table
          */
-        function getSurveysForList(projectId) {
+        function getSurveys(projectId) {
 
             if(projectId != -1) {
                 var url="/surveyKPI/surveys?projectId=" + projectId + "&blocked=true";
@@ -240,10 +246,10 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                     dataType: 'json',
                     cache: false,
                     success: function(data) {
+                        removeHourglass();
                         gSurveys = data;
                         setLocalTime();		// Convert timestamps from UTC to local time
                         completeSurveyList();
-                        removeHourglass();
                     },
                     error: function(xhr, textStatus, err) {
                         removeHourglass();
@@ -256,6 +262,51 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                 });
             }
         }
+
+        /*
+         * Get the surveys that can be used as groups
+         */
+        function getGroupSurveys() {
+
+            var url="/surveyKPI/surveys?blocked=true&groups=true";
+
+            addHourglass();
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                cache: false,
+                success: function(data) {
+                    removeHourglass();
+                    var h = [],
+                        idx = -1,
+                        i;
+
+                    h[++idx] = '<option value="0">';
+                    h[++idx] = localise.set["c_none"]
+                    h[++idx] = '</option>';
+                    for(i = 0; i < data.length; i++) {
+                        h[++idx] = '<option value="';
+                        h[++idx] = data[i].id;
+                        h[++idx] = '">';
+                        h[++idx] = data[i].projectName;
+                        h[++idx] = ' : ';
+                        h[++idx] = data[i].displayName;
+                        h[++idx] = '</option>';
+                    }
+                    $('#group').empty().append(h.join(''));
+
+                },
+                error: function(xhr, textStatus, err) {
+                    removeHourglass();
+                    if(xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        console.log("Error: Failed to get list of groups: " + err);
+                    }
+                }
+            });
+        }
+
 
         /*
          * Set any timestamps in the display name to local time
@@ -335,11 +386,11 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                     h[++idx] = '<td class="groupsurvey" data-id="';
                     h[++idx] = survey.groupSurveyId;
                     h[++idx] = '">';
-                    h[++idx] = survey.groupSurveyId;
+                    h[++idx] = survey.groupSurveyDetails;
                     h[++idx] = '</td>';
 
                     h[++idx] = '<td>';
-                    h[++idx] = '<button class="btn survey_add" value="';
+                    h[++idx] = '<button class="btn survey_replace" value="';
                     h[++idx] = survey.id;
                     h[++idx] = '">';
                     h[++idx] = localise.set["c_replace"];
@@ -415,9 +466,13 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
 
             });
 
-            $('.survey_add').click(function(e) {
+            $('.survey_replace').click(function(e) {
 
                 $('#surveyId').val($(this).val());
+                $('#uploadAction').val("replace");
+                $('#up_alert, #up_warnings').hide();
+                $('.notreplace').hide();
+                $('#survey_add_title').text(localise.set["tm_c_form_rep"])
                 $('#survey_add').modal('show');
             });
 
@@ -608,7 +663,8 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                 success : function() {
                     removeHourglass();
                     var projectId = $('#project_name option:selected').val();
-                    getSurveysForList(projectId);
+                    getSurveys(projectId);
+                    getGroupSurveys();
                 }
             });
         }
@@ -634,7 +690,8 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                 },
                 success : function() {
                     var projectId = $('#project_name option:selected').val();
-                    getSurveysForList(projectId);
+                    getSurveys(projectId);
+                    getGroupSurveys();
                     removeHourglass();
                 }
             });
@@ -657,7 +714,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                 success : function() {
                     removeHourglass();
                     var projectId = $('#project_name option:selected').val();
-                    getSurveysForList(projectId);
+                    getSurveys(projectId);
                 }
             });
         }
@@ -688,6 +745,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
 
                     console.log(data);
                     projectSet();
+                    getGroupSurveys();
 
                     // Check for errors in the form
                     if(data && data.status === "error") {
