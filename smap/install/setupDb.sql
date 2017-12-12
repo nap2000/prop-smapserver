@@ -421,7 +421,7 @@ CREATE TABLE survey (
 	hrk text,										-- human readable key
 	key_policy text,								-- Whether to discard, add or merge duplicates of the HRK
 	based_on text,									-- Survey and form this survey was based on
-	group_survey_id integer,
+	group_survey_id integer default 0,
 	shared_table boolean default false,				-- True if this survey shares its table
 	pulldata text,									-- Settings to customise pulling data from another survey into a csv file
 	exclude_empty boolean default false,				-- True if reports should not include empty data

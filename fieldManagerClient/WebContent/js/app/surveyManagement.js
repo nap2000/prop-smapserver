@@ -88,8 +88,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
 
             // Upload File
             $('#submitFileGroup').click( function(e) {
-                // TODO Check to see if this is replace or add to group
-                // For now lets add to group
+                $('#surveyId').val($('#group').val());
                 uploadTemplate();
             });
 
@@ -743,9 +742,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                 success: function(data) {
                     removeHourglass();
 
-                    console.log(data);
-                    projectSet();
-                    getGroupSurveys();
+
 
                     // Check for errors in the form
                     if(data && data.status === "error") {
@@ -753,6 +750,8 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
 
                     } else {
                         document.forms.namedItem("uploadForm").reset();
+                        projectSet();
+                        getGroupSurveys();
                         $('#up_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["t_tl"] + ": " + data.name);
                     }
 
@@ -763,10 +762,8 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                         return;  // Not an error
                     } else {
                         var msg = xhr.responseText;
-                        if(msg && msg.indexOf("Content is not allowed in prolog") === 0) {
-                            msg = "File is not a valid form definition. check that the file is of type .xls or .xml.";
-                        }
-                        $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html("Upload failed: " + msg);
+
+                        $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_u_f"] + msg);
 
                     }
                 }
