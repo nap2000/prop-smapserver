@@ -1536,7 +1536,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             idx = -1;
 
             tab[++idx] = '<a href="';
-            tab[++idx] = getWebFormUrl(task.properties.form_id, task.properties.update_id);
+            tab[++idx] = getWebFormUrl(task.properties.form_ident, task.properties.update_id);
             tab[++idx] = '" target="_blank">'
             tab[++idx] = '<i class="fa fa-file-text"></i>';	// Edit existing data
             tab[++idx] = '</a>';
@@ -1544,10 +1544,10 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             return tab.join('');
         }
 
-        function getWebFormUrl(form_id, update_id) {
+        function getWebFormUrl(form_ident, update_id) {
             var url;
 
-            url = "/webForm/" + form_id;
+            url = "/webForm/" + form_ident;
             if (update_id) {
                 url += "?datakey=instanceid&datakeyvalue=" + update_id;
                 url += "&viewOnly=true"
