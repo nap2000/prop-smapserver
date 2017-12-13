@@ -354,13 +354,18 @@ $(document).ready(function() {
 	$('#m_info').off().click(function() {	// Show the info dialog
 		
 		var tableNames ="",
-			i;
-		
+			i,
+			idx;
+
+		idx = 0;
 		for(i = 0; i < globals.model.survey.forms.length; i++) {
-			if(i > 0) {
-				tableNames += ", ";
-			}
-			tableNames += globals.model.survey.forms[i].tableName;
+			if(!globals.model.survey.forms[i].reference) {
+                if (idx > 0) {
+                    tableNames += ", ";
+                }
+                tableNames += globals.model.survey.forms[i].tableName;
+                idx++;
+            }
 		}
 		// Close any drop downmenus
 		$('.dropdown-toggle').parent().removeClass("open");
