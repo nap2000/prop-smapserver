@@ -372,7 +372,6 @@ $(document).ready(function() {
 		$('#i_created').val(localTime(globals.model.survey.created));		
 		$('#i_based_on').val(globals.model.survey.basedOn);	
 		$('#i_table_names').val(tableNames);
-		$('#i_shared').prop('checked', globals.model.survey.sharedTable);	
 		
 		$('#infoModal').modal('show');
 	});

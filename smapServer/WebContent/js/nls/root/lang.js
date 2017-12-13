@@ -264,7 +264,7 @@ define({
     "tm_ul_f": "Upload the spreadsheet",
     "tm_si": "Specify survey identifier",
     "tm_up": "Upload Template",
-    "tm_ups": "Upload Survey",
+    "tm_ups": "Upload Form",
     "tm_add_for": "Add Forward",
     "tm_ref_f": "Refresh Form List",
 
