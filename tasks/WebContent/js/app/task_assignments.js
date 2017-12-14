@@ -521,7 +521,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                         $('#addTask').modal("hide");
                         globals.gCurrentTaskGroup = data.tg_id;
                         refreshTaskGroupData();
-                        refreshAssignmentData();
                     }, error: function (data, status) {
                         removeHourglass();
                         if (data.responseText.indexOf("<html>") !== 0) {
@@ -1234,10 +1233,10 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                 $('#task_table_body').empty().html(getTableBody(tasks));
 
-                $('input', '#task_table_body').iCheck({
-                    checkboxClass: 'icheckbox_square-green',
-                    radioClass: 'iradio_square-green'
-                });
+                //$('input', '#task_table_body').iCheck({
+                //    checkboxClass: 'icheckbox_square-green',
+                //    radioClass: 'iradio_square-green'
+                //});
 
 
                 // Respond to selection of a task
