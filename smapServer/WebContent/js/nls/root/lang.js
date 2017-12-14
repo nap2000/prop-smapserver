@@ -678,6 +678,7 @@ define({
     "u_ft_sw": "WIFI",
     "u_ft_sw_c": "WIFI and cellular network",
     "u_ft_sop": "Set on phone",
+    "u_ft_tasks": "Maximum number of tasks to download",
     "u_det_o_email": "Email Options",
     "u_det_o_other": "Other Options",
     "u_other_edit": "Allow editing of results",
