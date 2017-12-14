@@ -532,6 +532,7 @@ $(document).ready(function() {
 
         device.ft_send = $('#ft_send').val();
         device.ft_delete = $('#ft_delete').val();
+        device.ft_number_tasks = $('#ft_number_tasks').val();
 
         options = $(".devoption:checked").map(function(){
             return $(this).val();
@@ -1827,6 +1828,7 @@ function moveToOrganisations (orgId, users, projects) {
 
                 $('#ft_send').val(device.ft_send);
                 $('#ft_delete').val(device.ft_delete);
+                $('#ft_number_tasks').val(device.ft_number_tasks);
 
             },
             error: function(xhr, textStatus, err) {
