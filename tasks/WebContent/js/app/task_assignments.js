@@ -1322,7 +1322,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 $('#task_table_body').empty().html(getTableBody(tasks));
 
                 // Respond to selection of a task
-                $('input', '#task_table_body').on('ifChanged', function (event) {
+                $('input', '#task_table_body').change(function (event) {
                     var $this = $(this),
                         idx = $this.val(),
                         selected = $this.is(':checked');
