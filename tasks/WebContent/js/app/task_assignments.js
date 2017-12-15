@@ -182,6 +182,32 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             });
             $('.file-inputs').bootstrapFileInput();
 
+            $('.assign_data').hide();
+            $('#users_task_group, #roles_task_group').change(function() {
+                if($(this).val() == -2) {
+                    $('.assign_data').show();
+                } else {
+                    $('.assign_data').hide();
+                }
+            });
+
+            getRoles();
+            $('.assign_user').show();
+            $('.assign_role').hide();
+            $('input[type=radio][name=assign_type]').change(function() {
+                if (this.id == 'assign_user_type') {
+                    $('#assign_user_type').closest('label').prop('active', true);
+                    $('#assign_role_type').closest('label').prop('active', false);
+                    $('.assign_user').show();
+                    $('.assign_role').hide();
+                } else {
+                    $('#assign_user_type').closest('label').prop('active', false);
+                    $('#assign_role_type').closest('label').prop('active', true);
+                    $('.assign_user').hide();
+                    $('.assign_role').show();
+                }
+            });
+
             // Add a trigger to open the modal that bulk assigns a user to tasks
             $('#assignUser').click(function () {
 
@@ -341,6 +367,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                     $('#survey_to_complete').val(tgRule.target_survey_id);
                     $('#users_task_group').val(tgRule.user_id);
+                    $('#roles_task_group').val(tgRule.role_id);
+                    $('#assign_data').val(tgRule.assign_data);
                     $('#survey').val(tgRule.source_survey_id);
                     $('#update_results').prop('checked', tgRule.update_results);
                     $('#add_current').prop('checked', tgRule.add_current);
@@ -462,7 +490,24 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                     assignObj["survey_name"] = $('#survey_to_complete option:selected').text();	// The display name of the survey to complete
                     assignObj["target_survey_id"] = $('#survey_to_complete option:selected').val(); 		// The form id is the survey id of the survey used to complete the task!
-                    assignObj["user_id"] = $('#users_task_group option:selected').val(); 		// User assigned to complete the task
+
+                    var assignType = $("input[name='assign_type']:checked").attr("id");
+                    if(assignType == 'assign_user_type') {
+                        assignObj["user_id"] = $('#users_task_group option:selected').val(); 		// User assigned to complete the task
+                        assignObj["role_id"] = 0;
+                    } else {
+                        assignObj["user_id"] = 0;
+                        assignObj["role_id"] = $('#roles_task_group option:selected').val();
+                    }
+                    if(assignObj["user_id"] == -2 || assignObj["role_id"] == -2) {
+                        assignObj["assign_data"] = $('#assign_data').val();
+
+                        // validate
+                        if (typeof assignObj["assign_data"] === "undefined" || assignObj["assign_data"].trim().length == 0) {
+                            alert(localise.set["msg_val_ad"]);
+                            return;
+                        }
+                    }
 
                     source_survey = $('#survey').val(); 						// The survey that provides the existing results
                     if (!source_survey) {
@@ -1024,6 +1069,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             $('#users_select_new_task, #users_task_group, #users_select_user, #tp_user')
                 .append('<option value="-1">' + localise.set["t_u"] + '</options>');
 
+            $('#users_task_group').append('<option value="-2">' + localise.set["t_ad"] + '</options>');
             $.ajax({
                 url: "/surveyKPI/userList",
                 cache: false,
@@ -1047,7 +1093,49 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     if (xhr.readyState == 0 || xhr.status == 0) {
                         return;  // Not an error
                     } else {
-                        alert("Error: Failed to get list of users: " + err);
+                        alert(localise.set["c_error"] + err);
+                    }
+                }
+            });
+        }
+
+        /*
+         * Get the list of roles from the server
+         */
+        function getRoles() {
+            var $roles = $('.roles_select'),
+                i,
+                role,
+                h = [],
+                idx = -1;
+
+            $roles.empty();
+
+            $roles.append('<option value="-1">' + localise.set["t_u"] + '</options>');
+            $roles.append('<option value="-2">' + localise.set["t_ad"] + '</options>');
+
+            $.ajax({
+                url: "/surveyKPI/role/roles/names",
+                cache: false,
+                success: function (data) {
+
+                    for (i = 0; i < data.length; i++) {
+                        role = data[i];
+
+                        h[++idx] = '<option value="';
+                        h[++idx] = role.id;
+                        h[++idx] = '">';
+                        h[++idx] = role.name;
+                        h[++idx] = '</option>';
+
+                    }
+                    $roles.append(h.join(''));
+                },
+                error: function (xhr, textStatus, err) {
+                    if (xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        alert(localise.set["c_error"] + err);
                     }
                 }
             });
@@ -1232,12 +1320,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             if (typeof tasks != "undefined") {
 
                 $('#task_table_body').empty().html(getTableBody(tasks));
-
-                //$('input', '#task_table_body').iCheck({
-                //    checkboxClass: 'icheckbox_square-green',
-                //    radioClass: 'iradio_square-green'
-                //});
-
 
                 // Respond to selection of a task
                 $('input', '#task_table_body').on('ifChanged', function (event) {
