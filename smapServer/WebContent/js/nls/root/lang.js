@@ -319,6 +319,7 @@ define({
     "msg_val_pass": "You must specify a password",
     "msg_nv": "Please specify a new value",
     "msg_val_nm": "Name is required",
+    "msg_val_ad": "If assigning a task using collected data then you need to specify the data",
     "msg_val_file": "A file must be selected",
     "msg_val_let": "Name must start with a letter or underscore",
     "msg_pwd_l": "Passwords, if specified, must be longer than 1 character",
@@ -408,7 +409,9 @@ define({
     // Tasks
     "t_complete": "Show Completed Tasks",
     "t_show": "Show tasks for:",
+    "t_assign_type": "Assignment type",
     "t_assign": "Assign User",
+    "t_assign_roles": "Assign to users with role",
     "t_add_group": "Add Task Group",
     "t_del_group": "Delete Task Group",
     "t_edit_group": "Edit Task Group",
@@ -454,6 +457,7 @@ define({
     "t_defn": "Task Group Definition",
     "t_au": "All Users",
     "t_u": "Unassigned",
+    "t_ad": "Assign from data values",
     "t_af": "Create tasks from results submitted after this task group is created",
     "t_ac": "Create tasks from results that have already been submitted",
 

@@ -18,7 +18,6 @@
     <link href="/css/wb/plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet">
     <link href="/css/wb/plugins/fullcalendar/fullcalendar.print.min.css" rel='stylesheet' media='print'>
 
-
     <link href="/css/wb/animate.css" rel="stylesheet">
     <link href="/css/wb/style.css" rel="stylesheet">
 
@@ -665,15 +664,6 @@
                             </div>
                         </div>
 
-
-                        <div class="checkbox col-sm-12">
-                            <label>
-                                <input id="update_results" type="checkbox" name="update_results"
-                                       value="update_results"/>
-                                <span class="lang" data-lang="t_ue">update existing</span>
-                            </label>
-                        </div>
-
                         <div class="panel-group" role="tablist" aria-multiselectable="true">
                             <div class="panel panel-default">
                                 <div class="panel-heading" role="tab" id="headingTaskParams">
@@ -691,6 +681,14 @@
                                     <div class="task_params_table" id="task_params_table_main"></div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="checkbox">
+                            <label>
+                                <input id="update_results" type="checkbox" name="update_results"
+                                       value="update_results"/>
+                                <span class="lang" data-lang="t_ue">update existing</span>
+                            </label>
                         </div>
 
 
@@ -716,11 +714,52 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="users_task_group" class="col-sm-2 control-label lang" data-lang="t_assign">assign
-                                user</label>
-                            <div class="col-sm-10">
-                                <select class="form-control users_select" id="users_task_group"></select>
+                        <div class="well">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label lang" data-lang="t_assign_type">assign type</label>
+                                <div class="col-sm-10">
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <label class="btn btn-default active">
+                                            <input id="assign_user_type" name="assign_type" type="radio" checked autocomplete="off">
+                                            <span class="lang" data-lang="c_user">user</span>
+                                        </label>
+                                        <label class="btn btn-default">
+                                            <input id="assign_role_type" name="assign_type" type="radio" autocomplete="off">
+                                            <span class="lang" data-lang="c_role">role</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group assign_user">
+                                <label for="users_task_group" class="col-sm-2 control-label lang" data-lang="t_assign">assign
+                                    user</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control users_select" id="users_task_group"></select>
+                                </div>
+                            </div>
+
+                            <div class="form-group assign_role">
+                                <label for="roles_task_group" class="col-sm-2 control-label lang" data-lang="t_assign_roles">assign
+                                    user</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control roles_select" id="roles_task_group"></select>
+                                </div>
+                            </div>
+
+                            <div class="form-group assign_data" data-container="body">
+                                <label for="assign_data" data-lang="c_data" class="lang col-sm-2 control-label">filter</label>
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        <input type="text" id="assign_data" class="form-control">
+                                        <span class="input-group-addon">
+									<a href="/sqlFilterHelp.html" target="_blank">
+										<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+									</a>
+								</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
