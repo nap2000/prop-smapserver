@@ -28,6 +28,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             gSelectedTemplateName,
             gRemote_host,
             gRemote_user,
+            gReplace,
             gSurveyGroups;
 
         $(document).ready(function() {
@@ -78,6 +79,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
 
             // Open the dialog to select a new survey for upload
             $('#submitFile').click( function(e) {
+                gReplace = false;
                 $('#uploadAction').val("add");
                 $('#uploadForm')[0].reset();
                 $('#up_alert, #up_warnings').hide();
@@ -88,7 +90,9 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
 
             // Upload File
             $('#submitFileGroup').click( function(e) {
-                $('#surveyId').val($('#group').val());
+                if(!gReplace) {
+                    $('#surveyId').val($('#group').val());
+                }
                 uploadTemplate();
             });
 
@@ -467,6 +471,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
 
             $('.survey_replace').click(function(e) {
 
+                gReplace = true;
                 $('#surveyId').val($(this).val());
                 $('#uploadAction').val("replace");
                 $('#up_alert, #up_warnings').hide();
