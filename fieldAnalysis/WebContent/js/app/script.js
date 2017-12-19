@@ -443,38 +443,36 @@ function setExportControls() {
     $('#export').next().find("button:contains('Export')").removeClass("ui-state-disabled");
 
     if(format === "osm") {
-        $('.showshape,.showspreadsheet,.showxls,.showthingsat,.showtrail, .showmedia, .showlqas, .showquery, .selectquery, .shownewxlsx').hide();
+        $('.showshape,.showspreadsheet,.showoldxls,.showthingsat,.showtrail, .showmedia, .showlqas, .showquery, .selectquery, .shownewxls').hide();
         $('.showosm,.showro,.showlang, selectsurvey').show();
     } else if(format === "shape" || format === "kml" || format === "vrt" || format === "csv") {
-        $('.showspreadsheet,.showxls,.showosm,.showthingsat, .showmedia, .showlqas, .showquery, .selectquery, .shownewxlsx').hide();
+        $('.showspreadsheet,.showoldxls,.showosm,.showthingsat, .showmedia, .showlqas, .showquery, .selectquery, .shownewxls').hide();
         $('.showshape,.showro,.showlang, .selectsurvey').show();
     } else if(format === "stata" || format === "spss") {
-        $('.showxls,.showosm,.showthingsat, .showmedia, .showlqas, .showquery, .selectquery, .shownewxlsx').hide();
+        $('.showoldxls,.showosm,.showthingsat, .showmedia, .showlqas, .showquery, .selectquery, .shownewxls').hide();
         $('.showshape,.showspreadsheet,.showro,.showlang, .selectsurvey').show();
     } else if(format === "thingsat") {
-        $('.showxls,.showosm, .showmedia, .showlqas, .showquery, .selectquery, .shownewxlsx').hide();
+        $('.showoldxls,.showosm, .showmedia, .showlqas, .showquery, .selectquery, .shownewxls').hide();
         $('.showshape,.showspreadsheet,.showro,.showlang, .selectsurvey').show();
         showModel();			// Show the thingsat model
     } else if(format === "trail") {
-        $('.showxls,.showosm,.showro,.showlang,.showthingsat, .showmedia, .showlqas, .showquery, .selectquery, .shownewxlsx').hide();
+        $('.showoldxls,.showosm,.showro,.showlang,.showthingsat, .showmedia, .showlqas, .showquery, .selectquery, .shownewxls').hide();
         $('.showshape,.showspreadsheet, .selectsurvey').show();
     } else if(format === "media") {
-        $('.showshape, .showxls,.showosm,.showro,.showlang,.showthingsat,.showmedia, .showlqas, .showquery, .selectquery, .shownewxlsx').hide();
+        $('.showshape, .showoldxls,.showosm,.showro,.showlang,.showthingsat,.showmedia, .showlqas, .showquery, .selectquery, .shownewxls').hide();
         $('.showspreadsheet,.showmedia, .showlang, .selectsurvey').show();
     } else if(format === "lqas") {
-        $('.showshape, .showxls,.showosm,.showro,.showlang,.showthingsat,.showmedia, .showlqas, .showquery, .selectquery').hide();
+        $('.showshape, .showoldxls,.showosm,.showro,.showlang,.showthingsat,.showmedia, .showlqas, .showquery, .selectquery,  .shownewxls').hide();
         $('.showlqas, .selectsurvey').show();
         getReports(showReportList, undefined, "lqas");
 
     } else {
-        $('.showshape,.showspreadsheet,.showxls,.showosm,.showthingsat, .showmedia, .showlqas, .showquery, .selectquery, .shownewxlsx').hide();
+        $('.showshape,.showspreadsheet,.showoldxls,.showosm,.showthingsat, .showmedia, .showlqas, .showquery, .selectquery, .shownewxls').hide();
         if(format === "xls" && xlsType === "new_xlsx") {
-            $('.showxls,.showspreadsheet,.showro,.showlang, .selectsurvey').show();
-            $('.shownewxlsx').show();
-            $('.hidenewxlsx').hide();
+            $('.showspreadsheet,.showro,.showlang, .selectsurvey, .shownewxls').show();
 
         } else {
-            $('.showxls,.showspreadsheet,.showro,.showlang, .selectsurvey').show();
+            $('.showoldxls,.showspreadsheet,.showro,.showlang, .selectsurvey').show();
         }
     }
 }

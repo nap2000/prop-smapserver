@@ -157,7 +157,7 @@
 			
 			<div class="showspreadsheet">
 				<fieldset class="ui-widget-content">
-					<div class="showxls">	
+					<div class="showoldxls shownewxls">
 						<label for="export_xlstype" class="lang" data-lang="c_xlstype">xls</label>
 						<select id="export_xlstype">
 							<option value="new_xlsx" selected>New XLSX</option>
@@ -169,23 +169,23 @@
 						<label for="export_language" class="lang" data-lang="c_lang">Language</label>
 						<select id="export_language"></select>
 					</div>
-					<div class="showxls">	
+					<div class="showoldxls shownewxls">
 						<label for="splitlocn" class="lang" data-lang="a_exp_split">Split lat / lon:</label>	
 						<input type="checkbox" id="splitlocn"/>
 					</div>
-					<div class="showxls">
+					<div class="showoldxls shownewxls">
 						<label for="mergeSelectMultiple" class="lang" data-lang="a_exp_merge">Compress Select Multiples:</label>	
 						<input type="checkbox" id="mergeSelectMultiple"/>
 					</div>
-					<div class="showxls">
+					<div class="showoldxls shownewxls">
 						<label for="embedImages" class="lang" data-lang="a_embed">Embed:</label>	
 						<input type="checkbox" id="embedImages"/>
 					</div>
-					<div class="showxls">
+					<div class="showoldxls shownewxls">
 						<label for="embedImages" class="lang" data-lang="a_hxl">hxl:</label>	
 						<input type="checkbox" id="incHxl"/>
 					</div>
-					<div class="shownewxlsx">
+					<div class="shownewxls">
 						<label for="includeMeta" class="lang" data-lang="a_exp_meta">meta</label>
 						<input type="checkbox" id="includeMeta"/>
 					</div>
@@ -199,13 +199,13 @@
 					<div class="osmforms"></div>
 				</fieldset>
 			</div>
-			<div class="showxls hidenewxlsx">
+			<div class="showoldxls" style="display:none;">
 				<fieldset class="ui-widget-content">
 					<legend class="ui-widget-header ui-corner-all lang" data-lang="a_sel_forms">Select forms to include:</legend>
 					<div class="selectforms"></div>
 				</fieldset>
 			</div>
-			<div class="showshape shownewxlsx" style="display:none;">
+			<div class="showshape shownewxls">
 				<fieldset class="ui-widget-content">
 					<legend class="ui-widget-header ui-corner-all lang" data-lang="msg_sel_form">Select form:</legend>
 					<div class="shapeforms"></div>
