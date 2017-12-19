@@ -827,6 +827,6 @@ update survey set group_survey_id = 0 where group_survey_id is null;
 alter table task_group add column target_s_id integer;
 DROP INDEX IF EXISTS SurveyDisplayName;
 alter table form add column reference boolean default false;
-update form set reference = false where reference = null;
+update form set reference = false where reference is null;
 
 alter table organisation add column ft_number_tasks integer default 20;
