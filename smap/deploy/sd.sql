@@ -830,3 +830,5 @@ alter table form add column reference boolean default false;
 update form set reference = false where reference is null;
 
 alter table organisation add column ft_number_tasks integer default 20;
+alter table survey_change add column visible boolean default true;
+update survey_change set visible = true where visible is null;
