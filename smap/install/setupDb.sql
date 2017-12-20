@@ -438,12 +438,13 @@ DROP TABLE IF EXISTS survey_change CASCADE;
 CREATE TABLE survey_change (
 	c_id integer DEFAULT NEXTVAL('sc_seq') CONSTRAINT pk_survey_changes PRIMARY KEY,
 	s_id integer REFERENCES survey ON DELETE CASCADE,	-- Survey containing this version		
-	version integer,							-- Version of survey with these changes
+	version integer,								-- Version of survey with these changes
 	changes text,								-- Changes as json object
-	apply_results boolean default false,		-- Set to true if the results tables need to be updated	
+	apply_results boolean default false,			-- Set to true if the results tables need to be updated	
 	success boolean default false,				-- Set true of the update was a success
 	msg text,									-- Error messages
-	user_id integer,							-- Person who made the changes
+	user_id integer,								-- Person who made the changes
+	visible boolean default true,				-- set false if the change should not be displayed 				
 	updated_time TIMESTAMP WITH TIME ZONE		-- Time and date of change
 	);
 ALTER TABLE survey_change OWNER TO ws;
