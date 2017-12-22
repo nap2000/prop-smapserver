@@ -998,3 +998,16 @@ create TABLE report (
 	url text
 	);
 ALTER TABLE report OWNER TO ws;
+
+DROP SEQUENCE IF EXISTS replacement_seq CASCADE;
+CREATE SEQUENCE replacement_seq START 1;
+ALTER SEQUENCE replacement_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS replacement CASCADE;
+create TABLE replacement (
+	id INTEGER DEFAULT NEXTVAL('replacement_seq') CONSTRAINT pk_replacement PRIMARY KEY,
+	old_id integer REFERENCES survey(s_id) ON DELETE CASCADE,
+	old_ident text,				-- Survey ident of the replaced survey
+	new_ident text				-- Survey ident of the new survey
+	);
+ALTER TABLE report OWNER TO ws;
