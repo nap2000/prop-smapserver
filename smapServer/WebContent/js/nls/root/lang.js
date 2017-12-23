@@ -267,6 +267,7 @@ define({
     "tm_ups": "Upload Form",
     "tm_add_for": "Add Forward",
     "tm_ref_f": "Refresh Form List",
+    "tm_o_u": "Original Upload Page",
 
     // Analysis
     "a_exp_title": "Export Results",
