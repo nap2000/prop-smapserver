@@ -841,4 +841,4 @@ create TABLE replacement (
 	old_ident text,				-- Survey ident of the replaced survey
 	new_ident text				-- Survey ident of the new survey
 	);
-ALTER TABLE report OWNER TO ws;
+ALTER TABLE replacement OWNER TO ws;
