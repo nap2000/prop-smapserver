@@ -842,3 +842,5 @@ create TABLE replacement (
 	new_ident text				-- Survey ident of the new survey
 	);
 ALTER TABLE replacement OWNER TO ws;
+
+alter table question add column compressed boolean default false;
