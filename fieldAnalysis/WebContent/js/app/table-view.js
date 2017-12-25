@@ -228,50 +228,6 @@ function importData() {
 	});
 }
 
-/*
- * Export of table data as csv no longer supported
- *
-function exportTable($this, view) {
-	
-	var tableName = "",
-		$firstHeader,
-		hideFirstColumn = false;
-	
-	if(view.qId == "-1") {
-		tableName = view.table;
-	} else {
-		tableName = view.title;
-		if(!tableName || tableName == "") {
-			tableName = "table";
-		}
-	}
-
-	$panel = $this.closest('.pContent');
-	
-	// Hide columns that should not be exported
-	$panel.find('thead').find('tr').each(function( index ) {
-		$firstHeader = $(this).find('th').first();
-		if($firstHeader.text().trim().length == 0) {
-			hideFirstColumn = true;
-			$firstHeader.hide();
-		}
-	});
-	if(hideFirstColumn) {
-	 	$panel.find('tbody').find('tr').each(function( index ) {
-			$(this).find('td').first().hide();
-		});
-	}
-	var csvValue = $panel.find('table').table2CSV({delivery:'value'});
-	$this.closest('form').find('.csv_name').val(tableName);
-	$this.closest('form').find('.csv_text').val(csvValue);
-	
-	// Show hidden columns
-	$panel.find('tbody, thead').find('td, th').show();
-	
-	
-}
-*/
-
 function deleteAllTables(sId) {
 	var msg = localise.set["msg_del_data"];
 	var decision = confirm(msg);
@@ -518,6 +474,9 @@ function addRightClickToTable($elem, sId, view) {
 			} else {
 				$('#download_edit').button("enable");
 				$('#download_edit').attr("href", "/webForm/" + survey_ident + "?datakey=prikey&datakeyvalue="+pkey);
+				$('#download_edit, #download_pdf').click(function () {
+                    $('#instance_functions_popup').dialog("close");
+				});
 			}
 			
 			$('#instance_functions_popup').dialog("open");
