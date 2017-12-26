@@ -224,7 +224,7 @@ function refreshRFQuestionSelect(questions) {
 
 
 /*
- * Convert change log JSON to html
+ * Convert roles to html
  */
 function refreshView() {
 	
@@ -392,7 +392,7 @@ function refreshColumnSelect(questions, filter_columns) {
 	h[++idx] = '</th>';
 	h[++idx] = '</thead>';
 	h[++idx] = '<tbody>';
-	
+
 	j = 0;
 	for(i = 0; i < questions.length; i++) {
 		h[++idx] = '<tr>';
