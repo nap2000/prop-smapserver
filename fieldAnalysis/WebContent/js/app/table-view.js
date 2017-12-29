@@ -474,7 +474,7 @@ function addRightClickToTable($elem, sId, view) {
 			} else {
 				$('#download_edit').button("enable");
 				$('#download_edit').attr("href", "/webForm/" + survey_ident + "?datakey=prikey&datakeyvalue="+pkey);
-				$('#download_edit, #download_pdf').click(function () {
+				$('#download_edit').click(function () {
                     $('#instance_functions_popup').dialog("close");
 				});
 			}
