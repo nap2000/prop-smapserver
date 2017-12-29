@@ -65,19 +65,6 @@ $(document).ready(function() {
 		param = [];
 	
 	localise.setlang();		// Localise HTML
-
-	// Get the parameters and start editing a survey if one was passed as a parameter
-	params = location.search.substr(location.search.indexOf("?") + 1)
-	pArray = params.split("&");
-	dont_get_current_survey = false;
-	for (i = 0; i < pArray.length; i++) {
-		param = pArray[i].split("=");
-		if ( param[0] === "id" ) {
-			dont_get_current_survey = true;		// USe the passed in survey id
-			globals.gCurrentSurvey = param[1];
-			saveCurrentProject(-1, globals.gCurrentSurvey);	// Save the current survey id
-		} 
-	}
 	
 	// Get the user details
 	globals.gIsAdministrator = false;

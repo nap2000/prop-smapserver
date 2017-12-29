@@ -495,9 +495,17 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     if(assignType == 'assign_user_type') {
                         assignObj["user_id"] = $('#users_task_group option:selected').val(); 		// User assigned to complete the task
                         assignObj["role_id"] = 0;
+                        assignObj["fixed_role_id"] = 0;
                     } else {
                         assignObj["user_id"] = 0;
                         assignObj["role_id"] = $('#roles_task_group option:selected').val();
+                        assignObj["fixed_role_id"] = $('#fixed_role:selected').val();
+
+                        // validate - The fixed role id should only be set if the role id is also set
+                        if (assignObj["fixed_role_id"] > 0 &&  assignObj["role_id"] == 0) {
+                            alert(localise.set["msg_val_ad2"]);
+                            return;
+                        }
                     }
                     if(assignObj["user_id"] == -2 || assignObj["role_id"] == -2) {
                         assignObj["assign_data"] = $('#assign_data').val();
@@ -1104,6 +1112,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
          */
         function getRoles() {
             var $roles = $('.roles_select'),
+                $fixed = $('#fixed_role'),
                 i,
                 role,
                 h = [],
@@ -1113,7 +1122,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
             $roles.append('<option value="-1">' + localise.set["t_u"] + '</options>');
             $roles.append('<option value="-2">' + localise.set["t_ad"] + '</options>');
-
+            $fixed.append('<option value="-1">' + localise.set["none"] + '</options>');
             $.ajax({
                 url: "/surveyKPI/role/roles/names",
                 cache: false,
@@ -1130,6 +1139,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                     }
                     $roles.append(h.join(''));
+                    $fixed.append(h.join(''));
                 },
                 error: function (xhr, textStatus, err) {
                     if (xhr.readyState == 0 || xhr.status == 0) {
