@@ -194,6 +194,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             getRoles();
             $('.assign_user').show();
             $('.assign_role').hide();
+            $('.assign_data').hide();
             $('input[type=radio][name=assign_type]').change(function() {
                 if (this.id == 'assign_user_type') {
                     $('.assign_user').show();
@@ -391,6 +392,11 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                         $('.assign_user').hide();
                         $('.assign_role').show();
                     }
+                    if(tgRule.user_id == -2 || tgRule.role_id == -2) {
+                        $('.assign_data').show();
+                    } else {
+                        $('.assign_data').hide();
+                    }
                     // Add Question Filter
                     $('.simple_filter').hide();
                     $('.advanced_filter').hide();
@@ -432,7 +438,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 } else {
                     $('#add_task_from_existing').hide();
                 }
-                
+
                 surveyChanged(filterQuestion);    // Set survey related parameters
 
                 // open the modal read only
