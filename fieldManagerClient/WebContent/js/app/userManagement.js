@@ -543,6 +543,10 @@ $(document).ready(function() {
                 device.ft_send_trail = true;
             } else if(options[i] === "ft_odk_style_menus") {
                 device.ft_odk_style_menus = true;
+            } else if(options[i] === "ft_specify_instancename") {
+                device.ft_specify_instancename = true;
+            } else if(options[i] === "ft_admin_menu") {
+                device.ft_admin_menu = true;
             } else if(options[i] === "ft_review_final") {
                 device.ft_review_final = true;
             }
@@ -983,7 +987,13 @@ function openOrganisationDialog(existing, organisationIndex) {
 				this.checked = org.ft_sync_incomplete;
 			} else if($(this).val() === "ft_odk_style_menus") {
 				this.checked = org.ft_odk_style_menus;
-			} else if($(this).val() === "ft_review_final") {
+			} else if($(this).val() === "ft_odk_style_menus") {
+                this.checked = org.ft_odk_style_menus;
+            } else if($(this).val() === "ft_specify_instancename") {
+                this.checked = org.ft_specify_instancename;
+            } else if($(this).val() === "ft_admin_menu") {
+                this.checked = org.ft_admin_menu;
+            } else if($(this).val() === "ft_review_final") {
 				this.checked = org.ft_review_final;
 			}
 		});
@@ -1821,6 +1831,10 @@ function moveToOrganisations (orgId, users, projects) {
                         this.checked = device.ft_send_trail;
                     } else if($(this).val() === "ft_odk_style_menus") {
                         this.checked = device.ft_odk_style_menus;
+                    } else if($(this).val() === "ft_specify_instancename") {
+                        this.checked = device.ft_specify_instancename;
+                    } else if($(this).val() === "ft_admin_menu") {
+                        this.checked = device.ft_admin_menu;
                     } else if($(this).val() === "ft_review_final") {
                         this.checked = device.ft_review_final;
                     }

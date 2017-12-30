@@ -844,3 +844,7 @@ create TABLE replacement (
 ALTER TABLE replacement OWNER TO ws;
 
 alter table question add column compressed boolean default false;
+alter table organisation add column ft_specify_instancename boolean default false;
+alter table organisation add column ft_admin_menu boolean default false;
+update organisation set ft_specify_instancename = false where ft_specify_instancename is null;
+update organisation set ft_admin_menu = false where ft_admin_menu is null;

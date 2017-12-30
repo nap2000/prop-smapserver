@@ -679,6 +679,8 @@ define({
     "u_ft_del": "Delete submitted results from the phone",
     "u_ft_ld": "Send location data on path of user",
     "u_ft_os": "Enable ODK style menus to delete, submit, edit and get new forms",
+    "u_ft_am": "Enable ODK Admin menu",
+    "u_ft_in": "Allow user to set instance name",
     "u_ft_rv": "Allow finalised forms to be opened for review",
     "u_ft_as": "Automatically Synchronise",
     "u_ft_ms": "Manual Synchronisation",
