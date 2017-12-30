@@ -196,13 +196,9 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             $('.assign_role').hide();
             $('input[type=radio][name=assign_type]').change(function() {
                 if (this.id == 'assign_user_type') {
-                    $('#assign_user_type').closest('label').prop('active', true);
-                    $('#assign_role_type').closest('label').prop('active', false);
                     $('.assign_user').show();
                     $('.assign_role').hide();
                 } else {
-                    $('#assign_user_type').closest('label').prop('active', false);
-                    $('#assign_role_type').closest('label').prop('active', true);
                     $('.assign_user').hide();
                     $('.assign_role').show();
                 }
@@ -355,7 +351,12 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 $('#assign_survey_form')[0].reset();
 
                 var tg = gTaskGroups[gTaskGroupIndex];
-                var tgRule = JSON.parse(gTaskGroups[gTaskGroupIndex].rule);
+                var rule = gTaskGroups[gTaskGroupIndex].rule;
+                if(typeof rule === "undefined") {
+                    alert(localise.set["msg_tg_rd"]);
+                    return;
+                }
+                var tgRule = JSON.parse(rule);
 
                 $('#task_group_name').val(tgRule.task_group_name);
 
@@ -369,11 +370,27 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     $('#users_task_group').val(tgRule.user_id);
                     $('#roles_task_group').val(tgRule.role_id);
                     $('#assign_data').val(tgRule.assign_data);
+                    $('#fixed_role').val(tgRule.fixed_role_id);
                     $('#survey').val(tgRule.source_survey_id);
                     $('#update_results').prop('checked', tgRule.update_results);
                     $('#add_current').prop('checked', tgRule.add_current);
                     $('#add_future').prop('checked', tgRule.add_future);
 
+                    if(tgRule.user_id != 0) {
+                        $('#assign_user_type').prop('checked', true);
+                        $('#assign_role_type').prop('checked', false);
+                        $('#assign_user_type').closest('label').addClass('active');
+                        $('#assign_role_type').closest('label').removeClass('active');
+                        $('.assign_user').show();
+                        $('.assign_role').hide();
+                    } else {
+                        $('#assign_user_type').prop('checked', false);
+                        $('#assign_role_type').prop('checked', true);
+                        $('#assign_user_type').closest('label').removeClass('active');
+                        $('#assign_role_type').closest('label').addClass('active');
+                        $('.assign_user').hide();
+                        $('.assign_role').show();
+                    }
                     // Add Question Filter
                     $('.simple_filter').hide();
                     $('.advanced_filter').hide();
@@ -415,8 +432,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 } else {
                     $('#add_task_from_existing').hide();
                 }
-
-
+                
                 surveyChanged(filterQuestion);    // Set survey related parameters
 
                 // open the modal read only
@@ -499,7 +515,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     } else {
                         assignObj["user_id"] = 0;
                         assignObj["role_id"] = $('#roles_task_group option:selected').val();
-                        assignObj["fixed_role_id"] = $('#fixed_role:selected').val();
+                        assignObj["fixed_role_id"] = $('#fixed_role option:selected').val();
 
                         // validate - The fixed role id should only be set if the role id is also set
                         if (assignObj["fixed_role_id"] > 0 &&  assignObj["role_id"] == 0) {

@@ -384,6 +384,7 @@ define({
     "msg_ns": "No Submissions",
     "msg_us": "Unknown Source",
     "msg_tg_ns": "Task group not selected",
+    "msg_tg_rd": "The task group rule has been deleted",
     "msg_no_roles": "There are no enabled roles. Hence there are no restrictions on access",
     "msg_has_roles": "Only users who have one of the following enabled roles are allowed access",
     "msg_one_f": "At least one form must be selected",
