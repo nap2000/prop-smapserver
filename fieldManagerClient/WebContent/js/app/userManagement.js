@@ -771,6 +771,7 @@ function updateServerData(data) {
 	$('#s_email_user').val(data.email_user);
 	$('#s_email_password').val(data.email_password);
 	$('#s_email_port').val(data.email_port);
+    $('#s_sms_url').val(data.sms_url);
 	
 }
 
@@ -1073,7 +1074,8 @@ function writeServerDetails() {
 			email_domain: $('#s_email_domain').val(),
 			email_user: $('#s_email_user').val(),
 			email_password: $('#s_email_password').val(),
-			email_port: $('#s_email_port').val()
+			email_port: $('#s_email_port').val(),
+            sms_url: $('#s_sms_url').val()
 		};
 	
 	var serverString = JSON.stringify(server);
