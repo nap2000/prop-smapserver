@@ -768,7 +768,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                     } else {
                         var msg = xhr.responseText;
 
-                        $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_u_f"] + msg);
+                        $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_u_f"] + ": " + msg);
 
                     }
                 }
