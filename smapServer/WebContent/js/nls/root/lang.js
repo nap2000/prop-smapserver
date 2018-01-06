@@ -704,6 +704,7 @@ define({
     "u_rap_d": "Administrators will be able to assign the selected users only to this project",
     "u_chg": "Changed by",
     "u_usage": "Usage Report",
+    "u_sms_url": "SMS Url",
 
     // Browse Results
     "br_ci": "Case Insensitive",
