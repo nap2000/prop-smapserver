@@ -304,6 +304,9 @@ define({
     "a_query": "Select a query",
     "a_fn": "Function",
     "a_ni": "You need to enable loading tasks for this form in the form settings in the editor page",
+    "a_nx": "New XLSX",
+    "a_lx": "Legacy XLSX",
+    "a_lh": "Legacy HTML",
 
 
     // Messages
@@ -432,7 +435,7 @@ define({
     "t_nt": "New Text",
     "t_ns": "New Survey",
     "t_ft": "Filter Tasks",
-    "t_aft": "Advanced Filter Tasks",
+    "t_aft": "Advanced Filter",
     "t_fq": "Filter by Question",
     "t_so": "Selected Option",
     "t_sn": "Set Numeric Value",
