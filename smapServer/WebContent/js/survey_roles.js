@@ -68,7 +68,7 @@ $(document).ready(function() {
 	
 	// Get the user details
 	globals.gIsAdministrator = false;
-	getLoggedInUser(projectChanged, false, true, undefined, false, dont_get_current_survey);
+	getLoggedInUser(projectChanged, false, true, undefined, false, false);
 	
 	// Save a row filter
 	$('#saveRowFilter').click(function() {
