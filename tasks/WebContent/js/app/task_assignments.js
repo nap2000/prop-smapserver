@@ -691,10 +691,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 });
             });
 
-            // Create trigger to open modal to edit task parameters
-            $('#show_task_params').button().click(function () {
-                $('#task_params').modal("show");
-            });
 
             $('#taskParamsSave').click(function () {
                 updateTaskParams();
@@ -1566,13 +1562,15 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 selected,
                 isBarcode,
                 isMedia,
-                updatedTaskParams = [];
+                updatedTaskParams = [],
+                $this;
 
 
-            $('#task_params_table_manage').find('tbody tr').each(function (index) {
-                name = $(this).find('td.task_name').text();
-                selected = $(this).find('td.task_selected input').is(':checked');
-                isBarcode = $(this).find('td.task_isBarcode input').is(':checked');
+            $('#task_params_table_main').find('tbody tr').each(function (index) {
+                $this = $(this);
+                name = $this.find('td.task_name').text();
+                selected = $this.find('td.task_selected input').prop('checked');
+                isBarcode = $this.find('td.task_isBarcode input').prop('checked');
                 isMedia = gTaskParams[index].isMedia;
                 updatedTaskParams[index] = {selected: selected, name: name, isBarcode: isBarcode, isMedia: isMedia};
             });
