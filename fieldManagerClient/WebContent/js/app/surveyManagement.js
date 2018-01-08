@@ -205,7 +205,14 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
 
             h[++idx] = '<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> ';
             h[++idx] = '<span class="sr-only"> Error:</span>';
-            h[++idx] = " " + localise.set["c_error"] + ": " + msg.message;
+            h[++idx] = ' ';
+            if(msg.status === "error") {
+                h[++idx] = localise.set["c_error"];
+            } else if(msg.status === "warning") {
+                h[++idx] = localise.set["c_warning"];
+            }
+            h[++idx] =  ': ';
+            h[++idx] = msg.message;
 
             return h.join('');
         }
@@ -747,17 +754,18 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                 success: function(data) {
                     removeHourglass();
 
-
-
                     // Check for errors in the form
                     if(data && data.status === "error") {
-                        $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(msgToHtml(data));
+                        $('#up_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(msgToHtml(data));
+
+                    } else if(data && data.status === "warning") {
+                        $('#up_alert').show().removeClass('alert-success alert-danger').addClass('alert-warning').html(msgToHtml(data));
 
                     } else {
                         document.forms.namedItem("uploadForm").reset();
                         projectSet();
                         getGroupSurveys();
-                        $('#up_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["t_tl"] + ": " + data.name);
+                        $('#up_alert').show().removeClass('alert-danger alert-warning').addClass('alert-success').html(localise.set["t_tl"] + ": " + data.name);
                     }
 
                 },
