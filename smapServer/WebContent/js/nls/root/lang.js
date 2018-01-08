@@ -188,6 +188,7 @@ define({
     "c_success": "Success",
     "c_errors": "Errors",
     "c_error": "Error",
+    "c_warning": "Warning",
     "c_lt": "Local Time",
     "c_user": "User",
     "c_location": "Location",
