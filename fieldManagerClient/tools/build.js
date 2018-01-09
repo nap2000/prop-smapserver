@@ -47,9 +47,6 @@
             name: '../usermanagement_main',
         },
         {
-            name: '../assignments_main',
-        },
-        {
             name: '../monitor_main',
         },
         {
