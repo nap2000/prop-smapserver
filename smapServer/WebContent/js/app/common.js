@@ -317,7 +317,7 @@ function updateUserDetails(data, getOrganisationsFn) {
 	} 
 	
 	// Other conditional elements
-	if(!globals.gSendTrail) {
+	if(globals.gSendTrail === 'off') {
 		$('.user_trail').hide();
 	}
 	isBusinessServer();		// Reset server specific menus
@@ -611,7 +611,7 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 			globals.gFacebookEnabled = data.allow_facebook;
 			globals.gTwitterEnabled = data.allow_twitter;
 			globals.gCanEdit = data.can_edit;
-			globals.gSendTrail = data.ft_send_trail;
+			globals.gSendTrail = data.ft_send_location;
 			globals.gAlertSeen = data.seen;		// Alerts have been acknowledged
 			globals.gLastAlertTime = data.lastalert;
 			
