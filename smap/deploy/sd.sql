@@ -167,7 +167,6 @@ alter table upload_event add column incomplete boolean default false;
 update upload_event set incomplete = 'false';
 
 -- Upgrade to:  14.11.1 from 14.10.2 =======
-alter table organisation add column ft_send_trail boolean;
 
 CREATE SEQUENCE task_completion_id_seq START 1;
 ALTER TABLE task_completion_id_seq OWNER TO ws;
@@ -848,3 +847,6 @@ alter table organisation add column ft_specify_instancename boolean default fals
 alter table organisation add column ft_admin_menu boolean default false;
 update organisation set ft_specify_instancename = false where ft_specify_instancename is null;
 update organisation set ft_admin_menu = false where ft_admin_menu is null;
+
+-- Upgrade to 18.01
+alter table organisation add column ft_send_location text;

@@ -530,6 +530,7 @@ $(document).ready(function() {
             options=[],
             i;
 
+        device.ft_send_location = $('#ft_send_location').val();
         device.ft_send = $('#ft_send').val();
         device.ft_delete = $('#ft_delete').val();
         device.ft_number_tasks = $('#ft_number_tasks').val();
@@ -539,9 +540,7 @@ $(document).ready(function() {
         }).toArray();
 
         for(i = 0; i < options.length; i++) {
-         	if(options[i] === "ft_send_trail") {
-                device.ft_send_trail = true;
-            } else if(options[i] === "ft_odk_style_menus") {
+         	if(options[i] === "ft_odk_style_menus") {
                 device.ft_odk_style_menus = true;
             } else if(options[i] === "ft_specify_instancename") {
                 device.ft_specify_instancename = true;
@@ -982,8 +981,6 @@ function openOrganisationDialog(existing, organisationIndex) {
 				this.checked = org.allow_twitter;
 			} else if($(this).val() === "can_edit") {
 				this.checked = org.can_edit;
-			} else if($(this).val() === "ft_send_trail") {
-				this.checked = org.ft_send_trail;
 			} else if($(this).val() === "ft_sync_incomplete") {
 				this.checked = org.ft_sync_incomplete;
 			} else if($(this).val() === "ft_odk_style_menus") {
@@ -1001,6 +998,7 @@ function openOrganisationDialog(existing, organisationIndex) {
 		addLanguageOptions($('#o_language'), org.locale);
 		$('#o_tz').val(org.timeZone);
         $('#ft_send').val(org.ft_send);
+        $('#ft_send_location').val(org.ft_send_location);
         $('#ft_delete').val(org.ft_delete);
 		gOrgId = org.id;
 		setBannerLogo(org.id);
@@ -1829,9 +1827,7 @@ function moveToOrganisations (orgId, users, projects) {
                 removeHourglass();
 
                 $('.devoption').each(function() {
-                    if($(this).val() === "ft_send_trail") {
-                        this.checked = device.ft_send_trail;
-                    } else if($(this).val() === "ft_odk_style_menus") {
+                    if($(this).val() === "ft_odk_style_menus") {
                         this.checked = device.ft_odk_style_menus;
                     } else if($(this).val() === "ft_specify_instancename") {
                         this.checked = device.ft_specify_instancename;
@@ -1843,6 +1839,7 @@ function moveToOrganisations (orgId, users, projects) {
                 });
 
                 $('#ft_send').val(device.ft_send);
+                $('#ft_send_location').val(device.ft_send_location);
                 $('#ft_delete').val(device.ft_delete);
                 $('#ft_number_tasks').val(device.ft_number_tasks);
 

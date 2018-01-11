@@ -117,7 +117,7 @@ create TABLE organisation (
 	allow_twitter boolean,
 	can_edit boolean,
 	ft_delete text,
-	ft_send_trail boolean,
+	ft_send_location text,
 	ft_sync_incomplete boolean,
 	ft_odk_style_menus boolean default true,
 	ft_specify_instancename boolean default false,
