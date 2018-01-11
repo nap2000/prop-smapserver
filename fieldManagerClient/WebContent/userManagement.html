@@ -154,14 +154,6 @@
 				<form role="form" class="form-horizontal" id="device_form">
 
 					<div class="form-group">
-						<label data-lang="u_ft_ld" class="lang col-sm-4 control-label">tasks</label>
-						<div class="col-sm-6">
-							<div class="checkbox">
-								<input type="checkbox" name="devoption" class="devoption" value="ft_send_trail">
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
 						<label data-lang="u_ft_rv" class="lang col-sm-4 control-label">tasks</label>
 						<div class="col-sm-6">
 							<div class="checkbox">
@@ -223,6 +215,16 @@
 							<div class="checkbox">
 								<input type="checkbox" name="devoption" class="devoption" value="ft_specify_instancename">
 							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="ft_send_location" data-lang="u_ft_ld" class="lang control-label col-sm-4">location</label>
+						<div class="col-sm-6">
+							<select class="form-control" id="ft_send_location">
+								<option class="lang" data-lang="u_ft_sop" value="not set"></option>
+								<option class="lang" data-lang="c_off" value="off"></option>
+								<option class="lang" data-lang="c_on" value="on"></option>
+							</select>
 						</div>
 					</div>
 				</form>
