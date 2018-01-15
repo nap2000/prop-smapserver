@@ -850,3 +850,5 @@ update organisation set ft_admin_menu = false where ft_admin_menu is null;
 
 -- Upgrade to 18.01
 alter table organisation add column ft_send_location text;
+alter table translation add column external boolean default false;
+update translation set external = false where external is null;
