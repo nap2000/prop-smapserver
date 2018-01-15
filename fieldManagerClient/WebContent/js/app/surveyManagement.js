@@ -759,6 +759,9 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                         $('#up_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(msgToHtml(data));
 
                     } else if(data && data.status === "warning") {
+                        document.forms.namedItem("uploadForm").reset();
+                        projectSet();
+                        getGroupSurveys();
                         $('#up_alert').show().removeClass('alert-success alert-danger').addClass('alert-warning').html(msgToHtml(data));
 
                     } else {

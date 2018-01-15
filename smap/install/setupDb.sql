@@ -616,7 +616,8 @@ CREATE TABLE translation (
 	language text,
 	text_id text,
 	type char(5),
-	value text
+	value text,
+	external boolean default false
 	);
 ALTER TABLE translation OWNER TO ws;
 CREATE UNIQUE INDEX translation_index ON translation(s_id, language, text_id, type);
