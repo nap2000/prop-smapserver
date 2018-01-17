@@ -1808,11 +1808,21 @@ define([
                                     if (refQuestions.hasOwnProperty(name)) {
                                         if (name === otherItem.name) {
                                             refQuestions[name].exists = true;
+                                            break;
                                         }
                                     }
                                 }
-
                             }
+                        }
+                    }
+                }
+
+                // Check against preloads
+                console.log("check against preloads");
+                if(survey.meta) {
+                    for (i = 0; i < survey.meta.length; i++) {
+                        if(name === survey.meta[i].name) {
+                            refQuestions[name].exists = true;
                         }
                     }
                 }
