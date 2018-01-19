@@ -655,6 +655,11 @@ function setPanelType(type, idx, period, qId) {
 		console.log("No type");
 		break;
 	}
+
+	// Hide the footer that has delete, import etc buttons if the user is not an analyst They may just have "data view" privileges
+	if(!globals.gIsAnalyst) {
+		$('.pfoot').hide();
+	}
 	
 }
 
