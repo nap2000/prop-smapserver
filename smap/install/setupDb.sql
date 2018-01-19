@@ -337,6 +337,7 @@ insert into groups(id,name) values(3,'enum');
 insert into groups(id,name) values(4,'org admin');
 insert into groups(id,name) values(5,'manage');
 insert into groups(id,name) values(6,'security');
+insert into groups(id,name) values(7,'view data');
 
 insert into user_group (u_id, g_id) values (1, 1);
 insert into user_group (u_id, g_id) values (1, 2);
@@ -344,6 +345,7 @@ insert into user_group (u_id, g_id) values (1, 3);
 insert into user_group (u_id, g_id) values (1, 4);
 insert into user_group (u_id, g_id) values (1, 5);
 insert into user_group (u_id, g_id) values (1, 6);
+insert into user_group (u_id, g_id) values (1, 7);
 
 insert into project (id, o_id, name) values (1, 1, 'A project');
 
