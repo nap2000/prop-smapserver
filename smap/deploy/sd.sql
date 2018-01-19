@@ -852,3 +852,4 @@ update organisation set ft_admin_menu = false where ft_admin_menu is null;
 alter table organisation add column ft_send_location text;
 alter table translation add column external boolean default false;
 update translation set external = false where external is null;
+insert into groups(id,name) values(7,'view data');
