@@ -289,6 +289,9 @@ function updateUserDetails(data, getOrganisationsFn) {
 			if(groups[i].name === "enum") {
 				globals.gIsEnum = true;
 			}
+            if(groups[i].name === "view data") {
+                globals.gViewData = true;
+            }
 		}
 	}
 	
@@ -299,8 +302,11 @@ function updateUserDetails(data, getOrganisationsFn) {
 	}
 	if(globals.gIsAnalyst) {
 		$('.analyst_role').show();
-	} 
-	if(globals.gIsAdministrator) {
+	}
+    if(globals.gViewData) {
+        $('.data_role').show();
+    }
+    if(globals.gIsAdministrator) {
 		$('.admin_role').show();
 	} 
 	if(globals.gIsManage) {
