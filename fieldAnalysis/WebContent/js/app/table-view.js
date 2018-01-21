@@ -469,7 +469,7 @@ function addRightClickToTable($elem, sId, view) {
 			gSelectedTemplate = sId;
 			gInstanceId = instanceid;
 			
-			if(isBad && isReplaced) {
+			if((isBad && isReplaced) || !globals.gIsAnalyst) {
 				$('#download_edit').button("disable");
 			} else {
 				$('#download_edit').button("enable");
