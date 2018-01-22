@@ -477,6 +477,30 @@ require([
 
     // Generate an xls file of basic counts for all data
     $('.genxlsfileall').click(function () {
+        var $groupBy = $('#srf_group')
+        if(gTasks.cache.surveyConfig[globals.gViewId]) {
+            var cols = gTasks.cache.surveyConfig[globals.gViewId].columns;
+            var h = [];
+            var idx = -1;
+            var i;
+
+            h[++idx] = '<option name="_none">';
+            h[++idx] = localise.set["none"];
+            h[++idx] = '</option>';
+
+            for(i = 0; i < cols.length; i++) {
+                h[++idx] = '<option name="';
+                h[++idx] = cols[i].name;
+                h[++idx] = '">';
+                h[++idx] = cols[i].humanName;
+                h[++idx] = '</option>';
+            }
+            $groupBy.empty().append(h.join(''));
+        }
+        $('#overviewReport').modal("show");
+    });
+
+    $('#overviewReportSave').click(function() {
         genFile(true, "xlsx");
     });
 
