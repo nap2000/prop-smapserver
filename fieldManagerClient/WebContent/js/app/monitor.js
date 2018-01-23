@@ -694,6 +694,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 h[++i] = '<th>' + localise.set["c_status"] + '</th>';
                 h[++i] = '<th>' + localise.set["mon_fr"] + '</th>';
                 h[++i] = '<th>' + localise.set["c_lt"] + '</th>';
+                h[++i] = '<th>' + localise.set["c_retry"] + '</th>';
             }
             h[++i] = '</tr>';
             $head.append(h.join(''));
@@ -711,14 +712,22 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                     h[++i] = '<td>' + features[j].properties.id + '</td>';
                     h[++i] = '<td>' + features[j].properties.notify_details + '</td>';
                     status = features[j].properties.status;
-                    h[++i] = '<td class="' + status + '">' + status + '</td>';
+                    h[++i] = '<td class="' + status + '">' + localise[status] + '</td>';
                     if(features[j].properties.status_details) {
                         h[++i] = '<td>' + features[j].properties.status_details + '</td>';
                     } else {
                         h[++i] = '<td></td>';
                     }
                     h[++i] = '<td>' + localTime(features[j].properties.event_time) + '</td>';
-
+                    if(status === "error") {
+                        h[++i] = '<td><button class="retry_button" value="';
+                        h[++i] = features[j].properties.message_id;
+                        h[++i] = '">';
+                        h[++i] = localise.set["c_retry"];
+                        h[++i] = '</button></td>';
+                    } else {
+                        h[++i] = '<td></td>';
+                    }
 
                 }
                 h[++i] = '</tr>';
@@ -726,6 +735,9 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
             }
 
             $elem.append(h.join(''));
+            $('.retry_button', $elem).button().click(function() {
+               alert("Got me: " + $(this).val());
+            });
 
 
         }
