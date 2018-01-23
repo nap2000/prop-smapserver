@@ -853,3 +853,4 @@ alter table organisation add column ft_send_location text;
 alter table translation add column external boolean default false;
 update translation set external = false where external is null;
 insert into groups(id,name) values(7,'view data');
+alter table notification_log add column message_id integer;
