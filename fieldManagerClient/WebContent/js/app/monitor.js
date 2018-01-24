@@ -736,7 +736,27 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
 
             $elem.append(h.join(''));
             $('.retry_button', $elem).button().click(function() {
-               alert("Got me: " + $(this).val());
+                var $this = $(this);
+                var messageId = $this.val();
+                $this.closest('tr').remove();
+
+                addHourglass();
+                $.ajax({
+                    url: "/surveyKPI/eventList/retry/" + messageId,
+                    dataType: 'json',
+                    cache: false,
+                    success: function() {
+                        removeHourglass();
+                    },
+                    error: function(xhr, textStatus, err) {
+                        removeHourglass();
+                        if(xhr.readyState == 0 || xhr.status == 0) {
+                            return;  // Not an error
+                        } else {
+                            alert("Failed reset message notification");
+                        }
+                    }
+                });
             });
 
 
