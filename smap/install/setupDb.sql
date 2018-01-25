@@ -605,7 +605,8 @@ CREATE TABLE public.notification_log (
 	notify_details text,
 	status text,	
 	status_details text,
-	event_time TIMESTAMP WITH TIME ZONE
+	event_time TIMESTAMP WITH TIME ZONE,
+	message_id integer			-- Identifier from the message queue that triggered this notification
 	);
 ALTER TABLE notification_log OWNER TO ws;
 
