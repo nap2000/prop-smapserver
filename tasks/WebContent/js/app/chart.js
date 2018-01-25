@@ -202,7 +202,7 @@ define([
                             title: columns[i].select_name ? columns[i].select_name : columns[i].humanName,
                             tSeries: false,
                             chart_type: "other",
-                            fn: "count",
+                            fn: getChartFunction(columns[i].type),
                             groups: [{
                                 name: columns[i].select_name ? columns[i].select_name  : columns[i].humanName,
                                 dataLabel: columns[i].select_name ? columns[i].select_name  : columns[i].humanName,
@@ -1437,6 +1437,18 @@ define([
 
             return name;    // Not found
 
+        }
+
+        /*
+         * get the chart function from the question type
+         */
+        function getChartFunction(type) {
+            if(type === "decimal" || type === "integer") {
+                // numeric
+                return $('#srf_num_fn').val();
+            } else {
+                return $('#srf_text_fn').val();
+            }
         }
 
     });
