@@ -719,7 +719,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                         h[++i] = '<td></td>';
                     }
                     h[++i] = '<td>' + localTime(features[j].properties.event_time) + '</td>';
-                    if(status === "error") {
+                    if(status === "error" && features[j].properties.message_id) {
                         h[++i] = '<td><button class="retry_button" value="';
                         h[++i] = features[j].properties.message_id;
                         h[++i] = '">';
