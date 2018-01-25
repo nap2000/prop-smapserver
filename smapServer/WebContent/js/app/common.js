@@ -2138,7 +2138,7 @@ function generateFile(url, filename, format, mime, data, sId, managedId, title, 
 		        window.URL.revokeObjectURL(url);  
 		    }, 100);  
 		  } else {
-			  alert("Error: Download Failed");
+			  alert(localise.set["c_error"]);
 		  }
 	};
 	

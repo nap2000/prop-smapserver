@@ -502,6 +502,7 @@ require([
 
     $('#overviewReportSave').click(function() {
         genFile(true, "xlsx");
+        $('#overviewReport').modal("hide");
     });
 
     /*
