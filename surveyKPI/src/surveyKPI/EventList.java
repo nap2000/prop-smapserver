@@ -26,6 +26,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -38,9 +39,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,6 +61,57 @@ public class EventList extends Application {
 		
 	}
 
+	/*
+	 * Retry a notification
+	 */
+	@GET
+	@Path("/retry/{messageId}")
+	public Response retry(@Context HttpServletRequest request,
+			@PathParam("messageId") int messageId,
+			@PathParam("notificationId") int notificationId
+			) {
+		
+		Response response = null;
+		
+		String user = request.getRemoteUser();
+		// Authorisation - Access
+		Connection sd = SDDataSource.getConnection("surveyKPI-EventList - retry");
+		a.isAuthorised(sd, user);
+		if(messageId != 0) {
+			a.isValidMessage(sd, request.getRemoteUser(), messageId);
+		}
+		
+		String sqlNot = "delete from notification_log where message_id = ?";
+		PreparedStatement pstmtNot = null;
+		
+		String sqlMsg = "update message set processed_time = null where id = ?";
+		PreparedStatement pstmtMsg = null;
+		
+		try {
+			
+			// Delete notification
+			pstmtNot = sd.prepareStatement(sqlNot);
+			pstmtNot.setInt(1,messageId);
+			pstmtNot.executeUpdate();
+			
+			// Delete message
+			pstmtMsg = sd.prepareStatement(sqlMsg);
+			pstmtMsg.setInt(1,messageId);
+			pstmtMsg.executeUpdate();
+			
+			
+		} catch (SQLException e) {
+				
+			log.log(Level.SEVERE, "SQL Exception", e);
+		
+		} finally {
+			try {if (pstmtNot != null) {pstmtNot.close();}} catch (SQLException e) {}
+			try {if (pstmtMsg != null) {pstmtMsg.close();}} catch (SQLException e) {}
+			SDDataSource.closeConnection("surveyKPI-EventList - retry", sd);
+		}
+		
+		return response;
+	}
 	
 	// Respond with JSON 
 	@GET
@@ -362,7 +412,7 @@ public class EventList extends Application {
 				projSurveySelect = "and n.p_id = ? ";
 			}
 				
-			sql = "SELECT n.id, n.status, n.notify_details, n.status_details, n.event_time " +
+			sql = "SELECT n.id, n.status, n.notify_details, n.status_details, n.event_time, n.message_id " +
 					"from notification_log n, users u " +
 					"where u.ident = ? " +
 					"and u.o_id = n.o_id " +
@@ -415,6 +465,7 @@ public class EventList extends Application {
 					jp.put("status", resultSet.getString("status"));
 					jp.put("status_details", resultSet.getString("status_details"));
 					jp.put("event_time", resultSet.getString("event_time"));
+					jp.put("message_id", resultSet.getString("message_id"));
 					jr.put("properties", jp);
 					ja.put(jr);
 					

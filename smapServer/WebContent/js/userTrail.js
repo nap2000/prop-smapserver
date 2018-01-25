@@ -261,6 +261,11 @@ $(document).ready(function() {
   	    document.getElementById('info').innerHTML = date;
   	    
     });
+
+    $('#refreshMenu').on('click', function(e) {
+        e.preventDefault();
+        getData();
+    });
     
 	// From: http://stackoverflow.com/questions/20247945/bootstrap-3-navbar-dynamic-collapse
     /*

@@ -239,6 +239,7 @@ define({
     "c_off": "Off",
     "c_on": "On",
     "c_replace": "Replace",
+    "c_retry": "Retry",
 
     // File Types
     "ft": "File Type",
@@ -525,6 +526,8 @@ define({
     "mon_pi": "Phone Identifier",
     "mon_fr": "Failure Reason",
     "mon_file": "File with raw results",
+    "error": "Error",
+    "success": "Success",
 
     // Analysis, reports, modify
     "an_auth": "Author",

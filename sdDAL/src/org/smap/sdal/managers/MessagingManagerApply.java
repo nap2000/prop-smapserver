@@ -23,6 +23,7 @@ import org.smap.sdal.model.TaskMessage;
 import org.smap.sdal.model.UserMessage;
 import org.smap.sdal.model.Organisation;
 import org.smap.sdal.model.ProjectMessage;
+import org.smap.sdal.model.SubmissionMessage;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -61,7 +62,7 @@ public class MessagingManagerApply {
 	/*
 	 * Apply any outbound messages
 	 */
-	public void applyOutbound(Connection sd, String serverName) {
+	public void applyOutbound(Connection sd, Connection cResults, String serverName) {
 
 		ResultSet rs = null;
 		PreparedStatement pstmtGetMessages = null;
@@ -89,6 +90,8 @@ public class MessagingManagerApply {
 			pstmtGetMessages = sd.prepareStatement(sqlGetMessages);
 			pstmtConfirm = sd.prepareStatement(sqlConfirm);
 
+			Gson gson=  new GsonBuilder().disableHtmlEscaping().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+			
 			rs = pstmtGetMessages.executeQuery();
 			while (rs.next()) {
 
@@ -117,28 +120,35 @@ public class MessagingManagerApply {
 				pstmtConfirm.executeUpdate();
 				
 				if(topic.equals("task")) {
-					Gson gson=  new GsonBuilder().disableHtmlEscaping().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 					TaskMessage tm = gson.fromJson(data, TaskMessage.class);
 					
 					changedTasks.put(tm.id, tm);
 					
 				} else if(topic.equals("survey")) {
-					Gson gson=  new GsonBuilder().disableHtmlEscaping().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 					SurveyMessage sm = gson.fromJson(data, SurveyMessage.class);
 					
 					changedSurveys.put(sm.id, sm);
 					
 				} else if(topic.equals("user")) {
-					Gson gson=  new GsonBuilder().disableHtmlEscaping().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 					UserMessage um = gson.fromJson(data, UserMessage.class);
 					
 					usersImpacted.put(um.ident, um.ident);
 					
 				} else if(topic.equals("project")) {
-					Gson gson=  new GsonBuilder().disableHtmlEscaping().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 					ProjectMessage pm = gson.fromJson(data, ProjectMessage.class);
 					
 					changedProjects.put(pm.id, pm);
+					
+				} else if(topic.equals("submission")) {
+					SubmissionMessage sm = gson.fromJson(data, SubmissionMessage.class);
+			
+					NotificationManager nm = new NotificationManager(localisation);
+					nm.processNotification(
+							sd, 
+							cResults, 
+							organisation, 
+							sm,
+							id); 
 					
 				} else {
 					// Assume a direct email to be processed immediately
