@@ -379,13 +379,31 @@ define([
                 // Rollup the data as per the chart settings
 
                 var add = true;
+                var rows = data.length;
+                if(chart.fn === "percent" && rows === 0) {
+                    return;
+                }
+
+                var groupsObject = {};
+                // Get the number of entries per row for calculating percentage
+                if(chart.fn === "percent") {
+                    var groupRows = d3.nest()
+                        .key(function (d) {
+                            return d[chart.groups[1].name];
+                        })
+                        .rollup(function (v) {
+                            return v.length;
+                        })
+                        .entries(data);
+
+                    for(i = 0; i < groupRows.length; i++) {
+                        groupsObject["x" + groupRows[i].key] = groupRows[i].value;
+                    }
+                }
+
                 if(chart.groups.length === 1) {
                     if(chart.fn === "count" || chart.fn === "percent") {
 
-                        var rows = data.length;
-                        if(chart.fn === "percent" && rows === 0) {
-                            return;
-                        }
                         newData = d3.nest()
                             .key(function (d) {
                                 return d[chart.groups[0].name];
@@ -429,7 +447,8 @@ define([
                             .entries(data);
                     }
                 } else {
-                    if(chart.fn === "count") {
+                    if(chart.fn === "count" || chart.fn === "percent") {
+
                         newData = d3.nest()
                             .key(function (d) {
                                 return d[chart.groups[0].name];
@@ -441,6 +460,18 @@ define([
                                 return v.length;
                             })
                             .entries(data);
+
+                        if(chart.fn === "percent") {
+                            for(i = 0; i < newData.length; i++) {
+                                for(j = 0; j < newData[i].values.length; j++) {
+                                    if (groupsObject["x" + newData[i].values[j].key] == 0) {
+                                        newData[i].values[j].value = 0;
+                                    } else {
+                                        newData[i].values[j].value = newData[i].values[j].value * 100 / groupsObject["x" + newData[i].values[j].key];
+                                    }
+                                }
+                            }
+                        }
                     } else {
                         newData = d3.nest()
                             .key(function (d) {
@@ -481,7 +512,7 @@ define([
 
                 // Get the array of columns
                 var columnArray = [];
-                if(chart.groups.length === 2  && chart.fn === "count") {
+                if(chart.groups.length === 2 && (chart.fn === "count" || chart.fn === "percent")) {
                     for(i = 0; i < newData.length; i++) {
                         for(j = 0; j < newData[i].values.length; j++) {
                             var key = newData[i].values[j].key;
@@ -495,18 +526,12 @@ define([
                 // Normalise 2 dimensional array
                 for(i = 0; i < newData.length; i++) {
 
-                    //var choiceLabel = newData[i].key;
-                    //if(chart.groups.length === 1 && (chart.groups[0].type == 'select' || chart.groups[0].type == 'select1')) {
-                    //    choiceLabel = lookupChoiceLabel(chart.groups[0].l_id, newData[i].key);
-                    //} else  if(chart.groups.length === 2 && (chart.groups[1].type == 'select' || chart.groups[1].type == 'select1')) {
-                    //    choiceLabel = lookupChoiceLabel(chart.groups[1].l_id, newData[i].key);
-                    //}
                     var item = {
                         key: newData[i].key,
                         pr: []
                     };
 
-                    if(chart.groups.length === 1 || chart.fn !== "count") {
+                    if(chart.groups.length === 1 || (chart.fn !== "count" && chart.fn !== "percent")) {
                         item.pr.push({
                             key: chart.fn,
                             value: newData[i].value
