@@ -478,7 +478,7 @@ require([
     // Generate an xls file of basic counts for all data
     $('.genxlsfileall').click(function () {
         var $groupBy = $('#srf_group')
-        if(gTasks.cache.surveyConfig[globals.gViewId]) {
+        if(gTasks.cache.surveyConfig[globals.gViewId] &&  $groupBy.html().length == 0) {
             var cols = gTasks.cache.surveyConfig[globals.gViewId].columns;
             var h = [];
             var idx = -1;

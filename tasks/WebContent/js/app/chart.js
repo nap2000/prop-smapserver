@@ -363,17 +363,29 @@ define([
 
                 var add = true;
                 if(chart.groups.length === 1) {
-                    if(chart.fn === "count") {
+                    if(chart.fn === "count" || chart.fn === "percent") {
+
+                        var rows = data.length;
+                        if(chart.fn === "percent" && rows === 0) {
+                            return;
+                        }
                         newData = d3.nest()
                             .key(function (d) {
                                 return d[chart.groups[0].name];
                             })
                             .rollup(function (v) {
-                                return v.length;
+                                if(chart.fn === "count") {
+                                    return v.length;
+                                } else {
+                                    return v.length * 100 / rows;
+                                }
                             })
                             .entries(data);
                     } else {
                         newData = d3.nest()
+                            .key(function (d) {
+                                return chart.groups[0].name;
+                            })
                             .rollup(function (v) {
                                if (chart.fn === "average") {
                                     return d3.mean(v, function (d) {
@@ -1443,7 +1455,7 @@ define([
          * get the chart function from the question type
          */
         function getChartFunction(type) {
-            if(type === "decimal" || type === "integer") {
+            if(type === "decimal" || type === "integer" || type === "duration") {
                 // numeric
                 return $('#srf_num_fn').val();
             } else {
