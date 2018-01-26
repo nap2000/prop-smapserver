@@ -484,11 +484,20 @@ require([
             var idx = -1;
             var i;
 
-            h[++idx] = '<option name="-1">';
+            h[++idx] = '<option value="-1">';
             h[++idx] = localise.set["none"];
             h[++idx] = '</option>';
 
             for(i = 0; i < cols.length; i++) {
+
+                // Don't use some types to group
+                if(cols[i].type === "image" || cols[i].type === "video" || cols[i].type === "audio"
+                    || cols[i].name === "prikey" || cols[i].name === "the_geom") {
+
+                    continue;
+
+                }
+
                 h[++idx] = '<option value="';
                 h[++idx] = i;
                 h[++idx] = '">';
