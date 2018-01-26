@@ -655,6 +655,7 @@ define({
     "mf_mf": "Managed forms",
     "mf_ld": "Layer details",
     "mf_tr": "A title is required",
+    "mf_sr": "Summary Report",
 
     // Logout
     "lo_back": "Back",

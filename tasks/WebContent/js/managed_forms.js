@@ -484,13 +484,13 @@ require([
             var idx = -1;
             var i;
 
-            h[++idx] = '<option name="_none">';
+            h[++idx] = '<option name="-1">';
             h[++idx] = localise.set["none"];
             h[++idx] = '</option>';
 
             for(i = 0; i < cols.length; i++) {
-                h[++idx] = '<option name="';
-                h[++idx] = cols[i].name;
+                h[++idx] = '<option value="';
+                h[++idx] = i;
                 h[++idx] = '">';
                 h[++idx] = cols[i].humanName;
                 h[++idx] = '</option>';

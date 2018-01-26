@@ -190,7 +190,8 @@ define([
                 chart,
                 chartArray = [],
                 dataLength = results.count(),
-                xlsResponse = [];
+                xlsResponse = [],
+                groupIdx;
 
             if(alldata) {
                 // Create an array of dummy charts that will generate the counts
@@ -215,6 +216,22 @@ define([
                         if (columns[i].type === "select") {
                             chart.groups[0].choiceNames = columns[i].choiceNames;
                             chart.groups[0].choices = columns[i].choices;
+                        }
+
+                        groupIdx = $('#srf_group').val();
+                        if(groupIdx != -1) {
+                            console.log("they selected a group: " + groupIdx);
+                            chart.groups.push({
+                                name: columns[groupIdx].select_name ? columns[groupIdx].select_name  : columns[groupIdx].humanName,
+                                    dataLabel: columns[groupIdx].select_name ? columns[groupIdx].select_name  : columns[groupIdx].humanName,
+                                l_id: columns[groupIdx].l_id,
+                                type: columns[groupIdx].type
+                            });
+
+                            if (columns[groupIdx].type === "select") {
+                                chart.groups[1].choiceNames = columns[groupIdx].choiceNames;
+                                chart.groups[1].choices = columns[groupIdx].choices;
+                            }
                         }
                         chartArray.push(chart);
                     }
