@@ -1581,6 +1581,8 @@ function openForm(type) {
  * Return true if this is a business server
  */
 function isBusinessServer() {
+	return true;
+	/*
 	var hostname = location.hostname;
 	var bs;
 	
@@ -1601,6 +1603,7 @@ function isBusinessServer() {
 		$('.public_only').hide();
 	}
 	return bs;
+	*/
 }
 
 /*
