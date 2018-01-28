@@ -724,9 +724,6 @@ define({
     "br_cd": "Use the table of data for this survey view",
     "br_tf": "for text questions, including select and select_one",
     "br_nf": "for numeric questions, including integer and decimal",
-    "br_nf": "for numeric questions, including integer and decimal",
-    "br_tf": "Text function",
-    "br_nf": "Numeric function",
 
     // Shared Resources
     "sr_res": "Images Video Audio and CSV Files",
