@@ -483,6 +483,8 @@ require([
             var h = [];
             var idx = -1;
             var i;
+            var currentSelectQuestion = "";
+            var selectQuestion = "";
 
             h[++idx] = '<option value="-1">';
             h[++idx] = localise.set["none"];
@@ -498,10 +500,23 @@ require([
 
                 }
 
+                if(cols[i].type === "select") {
+                    var n = cols[i].humanName.split(" - ");
+                    if (n.length > 1) {
+                        selectQuestion = n[0];
+                        if(selectQuestion === currentSelectQuestion) {
+                            continue;
+                        } else {
+                            currentSelectQuestion = selectQuestion;
+                        }
+                    } else {
+                        continue;
+                    }
+                }
                 h[++idx] = '<option value="';
                 h[++idx] = i;
                 h[++idx] = '">';
-                h[++idx] = cols[i].humanName;
+                h[++idx] = cols[i].type === "select" ? selectQuestion : cols[i].humanName;
                 h[++idx] = '</option>';
             }
             $groupBy.empty().append(h.join(''));
@@ -541,21 +556,39 @@ require([
          */
         settingsObj = globals.gMainTable.settings();
         settings.push({
-            k: "search",
+            k: localise.set["br_s"],
             v: settingsObj.search()
         });
         settings.push({
-            k: "Filter Date",
+            k: localise.set["c_dateq"],
             v: $('#date_question :selected').text()
         });
         settings.push({
-            k: "from",
+            k: localise.set["a_from_date"],
             v: $('#filter_from').val()
         });
         settings.push({
-            k: "to",
+            k: localise.set["a_to_date"],
             v: $('#filter_to').val()
         });
+        if(format === "xlsx" && alldata) {
+            settings.push({
+                k: localise.set["br_tf"],
+                v: $('#srf_num_fn').val()
+            });
+            settings.push({
+                k: localise.set["br_nf"],
+                v: $('#srf_text_fn').val()
+            });
+
+            var groupIdx = $('#srf_group').val();
+            if(groupIdx != -1) {
+                settings.push({
+                    k: "Group By",
+                    v: gTasks.cache.surveyConfig[globals.gViewId].columns[groupIdx].humanName
+                });
+            }
+        }
         colCount = globals.gMainTable.columns()[0].length;
         for (i = 0; i < colCount; i++) {
             colValue = globals.gMainTable.column(i).search();
@@ -613,7 +646,6 @@ require([
                         title: title
                     }
                     charts.push(chart);
-                    console.log("Got image: " + countImages);
                     countImages--;
                     if (countImages <= 0) {
                         generateFile(url, filename, format, mime, undefined, globals.gCurrentSurvey, managedId, title, project, charts, chartData, settings);
@@ -921,7 +953,6 @@ require([
             columns: shownColumns,
             order: [0],
             initComplete: function (settings, json) {
-                console.log("initComplete");
                 gDataLoaded = true;
                 gRefreshingData = false;
                 if (gConfigLoaded) {
@@ -1556,8 +1587,7 @@ require([
 
     /*
      * Save the report definition as opposed to saveConfig which saves the data table filter settings
-     * TODO These should be merged?????
-     */
+     *
     function saveReport(report) {
 
 
@@ -1580,6 +1610,7 @@ require([
             }
         });
     }
+    */
 
     /*
      * Perform initialisation after the data and the survey view configuration have been loaded

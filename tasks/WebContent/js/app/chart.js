@@ -220,7 +220,6 @@ define([
 
                         groupIdx = $('#srf_group').val();
                         if(groupIdx != -1) {
-                            console.log("they selected a group: " + groupIdx);
                             chart.groups.push({
                                 name: columns[groupIdx].select_name ? columns[groupIdx].select_name  : columns[groupIdx].humanName,
                                     dataLabel: columns[groupIdx].select_name ? columns[groupIdx].select_name  : columns[groupIdx].humanName,
@@ -858,8 +857,8 @@ define([
 
 
             for(i = 0; i < results.length; i++) {
-                for(j = 0; j < selM.choiceNames.length; j++) {
-                    if(results[i][selM.choiceNames[j]] == 1) {
+                for(j = 0; j < selM.choices.length; j++) {
+                    if(results[i][selM.choices[j]] == 1) {
                         // add a row
                         row = {
                             count: 1
@@ -1042,8 +1041,6 @@ define([
                         break;
                     }
                 }
-
-                console.log("delete");
 
             });
 
@@ -1497,7 +1494,7 @@ define([
          * get the chart function from the question type
          */
         function getChartFunction(type) {
-            if(type === "decimal" || type === "integer" || type === "duration") {
+            if(type === "decimal" || type === "int" || type === "duration") {
                 // numeric
                 return $('#srf_num_fn').val();
             } else {
