@@ -46,11 +46,8 @@ $(document).ready(function() {
 	getAvailableTimeZones($('#o_tz'), showTimeZones);
 	
 	// Add change event on group and project filter
-	$('#group_name, #project_name').change(function() {
-		var group=$('#group_name').val(), 
-			project=$('#project_name').val();
-		
- 	 	updateUserTable(group, project);
+	$('#group_name, #project_name, #role_name').change(function() {
+ 	 	updateUserTable();
  	 });
 	
 	// Set button style and function
@@ -1101,26 +1098,29 @@ function writeServerDetails() {
 /*
  * Update the user table with the latest user data
  */
-function updateUserTable(group, projectStr) {
+function updateUserTable() {
 	
 	var $userTable = $('#user_table'),
 		i, user,
 		h = [],
 		idx = -1,
-		filterGroup = true, filterProject = true,
-		yesGroup, yesProject,
-		project;
+		filterGroup = true,
+		filterProject = true,
+		filterRole = true,
+		yesGroup,
+		yesProject,
+		yesRole,
+		project,
+		group,
+		projectStr,
+		role;
 	
 	gControlCount = 0;
 	$('#controls').find('button').addClass("disabled");
-	
-	if(group === undefined || group === null) {
-		group = $('#group_name').val(); 
 
-	}
-	if(projectStr === undefined) {
-		projectStr = $('#project_name').val();
-	}
+	group = $('#group_name').val();
+	projectStr = $('#project_name').val();
+	role = $('#role_name').val();
 
 	project = Number(projectStr);
 	
@@ -1130,9 +1130,11 @@ function updateUserTable(group, projectStr) {
 	if(project === 0) {
 		filterProject = false;
 	}
-	
-	
-	h[++idx] = '<table class="table table-striped">';
+    if(!role || role == -1) {
+        filterRole = false;
+    }
+
+    h[++idx] = '<table class="table table-striped">';
 	h[++idx] = '<thead>';
 	h[++idx] = '<col style="width:auto;">';
 	h[++idx] = '<col style="width:160px;">';	
@@ -1159,8 +1161,9 @@ function updateUserTable(group, projectStr) {
 
 		yesGroup = !filterGroup || hasName(user.groups, group);
 		yesProject = !filterProject || hasId(user.projects, project);
+		yesRole = !filterRole || hasId(user.roles, +role);
 		
-		if(yesGroup && yesProject) {
+		if(yesGroup && yesProject && yesRole) {
 			h[++idx] = '<tr>';
 			h[++idx] = '<td class="control_td"><input type="checkbox" name="controls" value="';
 			h[++idx] = i;
@@ -1373,6 +1376,30 @@ function updateRoleTable() {
 	$('.role_edit', $tab).click(function() {
 		openRoleDialog(true, $(this).val());
 	});
+
+	/*
+	 * Update the role filter select on the users page
+	 */
+    var $roleSelect = $('#role_name');
+
+    h = [];
+	idx = -1;
+
+    h[++idx] = '<option value="-1">All</option>';
+    for(i = 0; i < globals.gRoleList.length; i++) {
+
+    	role = globals.gRoleList[i];
+
+        if((globals.gIsSecurityAdministrator)) {
+            h[++idx] = '<option value="';
+            h[++idx] = role.id;
+            h[++idx] = '">';
+            h[++idx] = role.name;
+            h[++idx] = '</option>';
+        }
+    }
+    $roleSelect.empty().append(h.join(''));
+    $roleSelect.val("-1");
 
 }
 
@@ -1591,8 +1618,6 @@ function getGroups() {
 		}
 	});	
 }
-
-
 
 /*
  * Update the group table with the current group list
