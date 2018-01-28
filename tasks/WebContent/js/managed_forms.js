@@ -605,10 +605,10 @@ require([
         data = getTableData(globals.gMainTable,
             gTasks.cache.surveyConfig[globals.gViewId].columns);
 
-        if (format = "xlsx") {
+        if (format === "xlsx") {
             filename = title + ".xlsx";
             mime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        } else if (format = "pdf") {
+        } else if (format === "pdf") {
             filename = title + ".pdf";
             mime = "application/pdf";
         } else {
