@@ -712,7 +712,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                     h[++i] = '<td>' + features[j].properties.id + '</td>';
                     h[++i] = '<td>' + features[j].properties.notify_details + '</td>';
                     status = features[j].properties.status;
-                    h[++i] = '<td class="' + status + '">' + localise[status] + '</td>';
+                    h[++i] = '<td class="' + status + '">' + localise.set[features[j].properties.status] + '</td>';
                     if(features[j].properties.status_details) {
                         h[++i] = '<td>' + features[j].properties.status_details + '</td>';
                     } else {
