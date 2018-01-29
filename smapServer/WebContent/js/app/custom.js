@@ -79,3 +79,7 @@ function setCustomEdit() {
 function setCustomWebForms() {
 	
 }
+
+unction setCustomLogs() {
+
+}
