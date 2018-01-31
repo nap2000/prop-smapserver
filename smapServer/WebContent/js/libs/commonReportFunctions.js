@@ -215,7 +215,7 @@ function getMedia(property) {
 		} else {
 			media.type = "unknown";
 			media.url = property; 
-			media.thumbNail = "/fieldAnalysis/img/audio-icon.png"
+			media.thumbNail = "/fieldAnalysis/img/link.png"
 		}
 
 
