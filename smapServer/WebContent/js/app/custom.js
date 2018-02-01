@@ -80,6 +80,6 @@ function setCustomWebForms() {
 	
 }
 
-unction setCustomLogs() {
+function setCustomLogs() {
 
 }
