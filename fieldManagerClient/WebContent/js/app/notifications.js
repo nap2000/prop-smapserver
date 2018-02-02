@@ -103,11 +103,12 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
             enableUserProfileBS();
         });
 
-        function surveyChanged(qId) {
+        function surveyChanged(qId, metaItem) {
 
             var language = "none",
                 sId = $('#survey').val(),
-                qList;
+                qList,
+                metaList;
 
             if(sId) {
                 if(!qId) {
@@ -115,11 +116,18 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 }
 
                 qList = globals.gSelector.getSurveyQuestions(sId, language);
+                metaList = globals.gSelector.getSurveyMeta(sId);
 
                 if(!qList) {
                     getQuestionList(sId, language, qId, "-1", undefined, false, undefined);
                 } else {
                     setSurveyViewQuestions(qList, qId);
+                }
+
+                if(!metaList) {
+                    getMetaList(sId, metaItem);
+                } else {
+                    setSurveyViewMeta(metaList, metaItem);
                 }
             }
         }
@@ -215,6 +223,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
             notification.notifyDetails = {};
             notification.notifyDetails.emails = $('#notify_emails').val().split(",");
             notification.notifyDetails.emailQuestion = $('#email_question').val();
+            notification.notifyDetails.emailMeta = $('#email_meta').val();
             notification.notifyDetails.subject = $('#email_subject').val();
             notification.notifyDetails.content = $('#email_content').val();
             notification.notifyDetails.attach = $('#email_attach').val();
@@ -323,9 +332,10 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 $('#survey').val(notification.s_id);
                 $('#not_filter').val(notification.filter);
                 if(notification.notifyDetails && notification.notifyDetails.emails) {
-                    if(notification.notifyDetails.emailQuestion) {
-                        surveyChanged(notification.notifyDetails.emailQuestion);
+                    if(notification.notifyDetails.emailQuestion || notification.notifyDetails.emailMeta) {
+                        surveyChanged(notification.notifyDetails.emailQuestion, notification.notifyDetails.emailMeta);
                     }
+
                     if(notification.target == "email") {
                         $('#notify_emails').val(notification.notifyDetails.emails.join(","));
                         $('#email_subject').val(notification.notifyDetails.subject);

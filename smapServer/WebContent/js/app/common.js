@@ -1303,6 +1303,31 @@ function getQuestionList(sId, language, qId, groupId, callback, setGroupList, vi
 	getAsyncQuestionList(sId, language, callback, groupId, qId, view);
 }
 
+//Function to get the meta list
+function getMetaList(sId, metaItem) {
+
+	addHourglass();
+	$.ajax({
+		url: "/surveyKPI/metaList/" + sId,
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			removeHourglass();
+			globals.gSelector.setSurveyMeta(sId, data);
+			setSurveyViewMeta(data, metaItem);
+		},
+		error: function(xhr, textStatus, err) {
+			removeHourglass();
+			if(xhr.readyState == 0 || xhr.status == 0) {
+				return;  // Not an error
+			} else {
+				alert(localise.set["c_error"] + ": " + err);
+			}
+		}
+	});
+}
+
+
 //Set the language list in the survey view control
 function setSurveyViewLanguages(list, language,elem, addNone) {
 
@@ -1353,6 +1378,30 @@ function setSurveyViewQuestions(list, qId, view) {
 	if(view) {
 		setFilterFromView(view);	// Set the filter dialog settings
 	}
+
+}
+
+// Set the meta list in the survey view control
+function setSurveyViewMeta(list, metaItem) {
+
+    var $metaSelect = $('.selected_meta'),
+        item,
+		i;
+
+    $metaSelect.empty();
+    $metaSelect.append('<option value="-1">None</option>');
+
+    if(list) {
+    	for(i = 0; i < list.length; i++) {
+    		item = list[i];
+			$metaSelect.append('<option value="' + item.name + '">' + item.name + '</option>');
+        }
+    }
+    if(!metaItem) {
+        metaItem = "-1";
+    }
+    $metaSelect.val(metaItem);
+
 
 }
 
