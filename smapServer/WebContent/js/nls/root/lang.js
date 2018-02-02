@@ -749,6 +749,7 @@ define({
     "n_pdfp": "PDF (Portrait)",
     "n_pdfl": "PDF (Landscape)",
     "n_eq": "Email Question",
+    "n_ep": "Email Meta Item",
     "n_smsq": "SMS Question",
     "n_share": "Get link",
     "n_cs_e": "Comma separated list of email addresses",
