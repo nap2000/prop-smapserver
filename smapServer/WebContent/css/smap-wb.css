@@ -223,3 +223,8 @@ tr.deleted td a {
 .blocked {
     opacity: 0.5;
 }
+
+.mgmt_buttons {
+     padding-top: 10px;
+     padding-bottom: 10px;
+ }
