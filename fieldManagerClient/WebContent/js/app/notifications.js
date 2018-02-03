@@ -618,14 +618,26 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 // details
                 h[++idx] = '<td>';
                 if(data[i].target === "email" && data[i].notifyDetails) {
-                    if((data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0) || (data[i].notifyDetails.emailQuestion && data[i].notifyDetails.emailQuestion > 0)) {
-                        h[++idx] = 'Send ' + data[i].notifyDetails.attach + ' to ';
+                    var notifyEmail = false;
+                    if((data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0)
+                            || (data[i].notifyDetails.emailQuestion && data[i].notifyDetails.emailQuestion > 0)
+                            || (data[i].notifyDetails.emailMeta && data[i].notifyDetails.emailMeta.length > 0)) {
+
                         h[++idx] = data[i].notifyDetails.emails.join(",");
                         if(data[i].notifyDetails.emailQuestion && data[i].notifyDetails.emailQuestion > 0) {
+                            notifyEmail = true;
                             if(data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0) {
-                                h[++idx] = ', and'
+                                h[++idx] = ', '
                             }
-                            h[++idx] = ' emails entered in response to a question';
+                            h[++idx] = localise.set["msg_n1"];
+                        }
+                        if(data[i].notifyDetails.emailMeta && data[i].notifyDetails.emailMeta.length > 0) {
+                            if(notifyEmail || (data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0)) {
+                                h[++idx] = ', '
+                            }
+                            h[++idx] = localise.set["msg_n2"];
+                            h[++idx] = ' ';
+                            h[++idx] = data[i].notifyDetails.emailMeta;
                         }
                     }
                 } else if(data[i].target === "forward"){
@@ -634,13 +646,14 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                     h[++idx] = data[i].remote_s_name;
                 } else if(data[i].target === "sms" && data[i].notifyDetails) {
                     if((data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0) || (data[i].notifyDetails.emailQuestion && data[i].notifyDetails.emailQuestion > 0)) {
-                        h[++idx] = 'Send SMS to ';
+                        h[++idx] = localise.set["msg_sms_n1"];
+                        h[++idx] = ' ';
                         h[++idx] = data[i].notifyDetails.emails.join(",");
                         if(data[i].notifyDetails.emailQuestion && data[i].notifyDetails.emailQuestion > 0) {
                             if(data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0) {
-                                h[++idx] = ', and'
+                                h[++idx] = ', '
                             }
-                            h[++idx] = ' numbers entered in response to a question';
+                            h[++idx] = localise.set["msg_sms_n2"];
                         }
                     }
                 }
