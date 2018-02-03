@@ -409,6 +409,10 @@ define({
     "msg_ui": "Spaces are not allowed in the user ident",
     "msg_sp": "Select a project to see the status of forms",
     "msg_ab_ns": "Either adding tasks from already submitted data, or adding tasks from data yet to be submitted or both should be selected",
+    "msg_n1": "emails in a question",
+    "msg_n2": "emails in meta item",
+    "msg_sms_n1": "Send SMS to ",
+    "msg_sms_n2": "numbers entered in response to a question",
 
     // Editor
     "e_b_e": "Base on existing form",
