@@ -92,16 +92,6 @@ $(document).ready(function() {
 		getSurveyList();
  	 });
 	
-	
-	$('.language_list').off().change(function() {
-		globals.gLanguage1 = $('#language1').val();
-		globals.gLanguage2 = $('#language2').val();
-		refreshView(gMode);
-		//$('#set_language').foundation('reveal', 'close');
- 	 });
-	
-
-	
 	enableUserProfileBS();
 });
 
@@ -125,17 +115,12 @@ function refreshView() {
 		qList = [],
 		index = -1,
 		survey = globals.model.survey,
-		numberLanguages,
 		key,
 		options = [];
 	
 	gTempQuestions = [];
-	
-	if(survey) {
-		numberLanguages = survey.languages.length;
-	}
 
-	setChangesHtml($('#changes'), survey, survey);
+	setChangesHtml($('#meta'), survey, survey);
 }
 
 
@@ -145,72 +130,42 @@ function refreshView() {
 function setChangesHtml($element, survey) {
 	var h =[],
 		idx = -1,
-		i,
-		changes;
+		i;
 	
 	if(!survey) {
-		$('#errormesg').html("<strong>No Changes</strong> Create or select a survey to see changes");
+		$('#errormesg').html("<strong>No Changes</strong> Create or select a survey to see meta items");
 		$('#infobox').show();
 	} else {
 
-		changes = survey.changes;
-		
 		h[++idx] = '<table class="table table-striped">';
 		
 		// write the table headings
 		h[++idx] = '<thead>';
 			h[++idx] = '<tr>';
-        		h[++idx] = '<th>';
-        			h[++idx] = localise.set["c_version"];
-        		h[++idx] = '</th>';
-
-        		h[++idx] = '<th>';
-        			h[++idx] = localise.set["c_changes"];
-        		h[++idx] = '</th>';
-
-        		h[++idx] = '<th>';
-					h[++idx] = localise.set["rev_cb"];
-        		h[++idx] = '</th>';
-
 				h[++idx] = '<th>';
-					h[++idx] = localise.set["ed_dt"];
+					h[++idx] = localise.set["c_type"];
 				h[++idx] = '</th>';
 
-				h[++idx] = '<th>Results Table Updated</th>';
-				h[++idx] = '<th>Msg</th>';
+        		h[++idx] = '<th>';
+        			h[++idx] = localise.set["c_name"];
+        		h[++idx] = '</th>';
 			h[++idx] = '</tr>';
 		h[++idx] = '</thead>';
 		
 		// Write the table body
 		h[++idx] = '<body>';
-		for(i = 0; i < changes.length; i++) {
-			
-			var status = "pending";
-			if(!changes[i].apply_results) {		// Change has been applied to the results tables
-				status = changes[i].success ? "success" : "failed";
-			}
-			h[++idx] = '<tr class="change_';
-					h[++idx] = status;
-					h[++idx] = '">';
-				h[++idx] = '<td>';
-				h[++idx] = changes[i].version;
-				h[++idx] = '</td>';	
-				h[++idx] = '<td>';
-				h[++idx] = getChangeDescription(changes[i].change);
-				h[++idx] = '</td>';
-				h[++idx] = '<td>';
-				h[++idx] = changes[i].userName;
-				h[++idx] = '</td>';
-				h[++idx] = '<td>';
-				h[++idx] = changes[i].updatedTime;
-				h[++idx] = '</td>';
-				h[++idx] = '<td>';
-				h[++idx] = status;
-				h[++idx] = '</td>';
-				h[++idx] = '<td>';
-				h[++idx] = changes[i].msg;
-				h[++idx] = '</td>';
-			h[++idx] = '</tr>';
+		for(i = 0; i < survey.meta.length; i++) {
+
+			if(survey.meta[i].isPreload) {
+                h[++idx] = '<tr>';
+                h[++idx] = '<td>';
+                h[++idx] = survey.meta[i].sourceParam;
+                h[++idx] = '</td>';
+                h[++idx] = '<td>';
+                h[++idx] = survey.meta[i].name;
+                h[++idx] = '</td>';
+                h[++idx] = '</tr>';
+            }
 		}
 		h[++idx] = '</body>';
 		
