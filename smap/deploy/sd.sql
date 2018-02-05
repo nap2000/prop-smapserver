@@ -854,3 +854,7 @@ alter table translation add column external boolean default false;
 update translation set external = false where external is null;
 insert into groups(id,name) values(7,'view data');
 alter table notification_log add column message_id integer;
+
+-- Upgrade to 19.01
+alter table question add column external_choices text;
+alter table question add column external_table text;
