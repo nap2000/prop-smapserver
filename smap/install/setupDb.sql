@@ -535,7 +535,9 @@ CREATE TABLE question (
 	autoplay text,
 	accuracy text,						-- gps accuracy at which a reading is automatically accepted
 	linked_target text,					-- Id of a survey whose hrk is populated here
-	compressed boolean default false		-- Will put all answers to select multiples into a single column
+	compressed boolean default false,	-- Will put all answers to select multiples into a single column
+	external_choices text,				-- Set to yes if choices are external
+	external_table text					-- The table containing the external choices
 	);
 ALTER TABLE question OWNER TO ws;
 CREATE INDEX qtext_id_sequence ON question(qtext_id);
