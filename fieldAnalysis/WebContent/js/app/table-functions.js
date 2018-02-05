@@ -27,6 +27,7 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 		fn = data.fn,
 		groups = data.features,
 		cols = data.cols,
+		types = data.types,
 		groupLabels = data.groups,
 		isGrouped = false,
 		isPeriod = false,
@@ -34,7 +35,9 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 		numberGroups,
 		repeatCols = 1,
 		title,
-		val, key,
+		val,
+		key,
+		type,
 		params,
 		record = [],
 		curPeriod,
@@ -146,8 +149,8 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 			if(cols[i] !== "_instanceid" && cols[i] !== "instanceid" && cols[i] !== "_task_key" && 
 					cols[i] !== "_task_replace"&& cols[i] !== "prikey" && cols[i] !== "_modified") {
 				gTab[++gIdx] = '<th>';
-				if(cols[i] === "Upload Time" || cols[i] === "_start" || cols[i] === "_end") {
-					gTab[++gIdx] = localise.set[cols[i]] + ' (' + localise.set["c_lt"] + ')';
+				if(types[i] === "dateTime") {
+					gTab[++gIdx] = cols[i] + ' (' + localise.set["c_lt"] + ')';
 				} else {
 					gTab[++gIdx] = cols[i];
 				}
@@ -234,6 +237,7 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 				
 				params = "";
 				key = cols[k];
+				type = types[k];
 	
 				if(key !== "_instanceid" && key !== "instanceid" && key !== "_task_key" && 
 						key !== "_task_replace" && key !== "prikey" && key !== "_modified") {
@@ -276,7 +280,7 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 							}
 						} else if(key === "_complete") {
 							val = (val === "f") ? "No" : "Yes";
-						} else if(key === "Upload Time" || key === "_start" || key === "_end") {
+						} else if(type === "dateTime") {
 							val = localTime(val);
 						}
 						gTab[++gIdx] = '<td ' + params + '>';
