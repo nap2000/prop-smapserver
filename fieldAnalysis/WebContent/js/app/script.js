@@ -377,9 +377,40 @@ function exportSurveyChanged() {
     var sId = $('#export_survey option:selected').val(),
         languages = globals.gSelector.getSurveyLanguages(sId),
         sMeta,
-        questions;
+        questions,
+        checkedForms,
+        format,
+        xls_type,
+        i,
+        language;
 
     if(sId > 0) {
+
+        // Save selections so they can be restored
+        format = $('#exportformat').val();
+        xls_type = $('#export_xlstype').val();
+        if(format === "osm") {
+            checkedForms = $(':radio:checked', '.osmforms').map(function () {
+                return this.value;
+            }).get();
+        } else if (format == "xls" && xls_type == "new_xlsx") {
+            checkedForms = $(':radio:checked', '.shapeforms').map(function () {
+                return this.value;
+            }).get();
+        } else {
+            checkedForms = $(':checkbox:checked', '.selectforms').map(function () {
+                return this.value;
+            }).get();
+            if(checkedForms && checkedForms.length > 0) {
+                for(i = 0; i < checkedForms.length; i++) {
+                    var  val_array= checkedForms[i].split(":");
+                    checkedForms[i] = val_array[0];
+                }
+            }
+        }
+        language = $('#export_language').val();
+
+
         if(!languages) {
             getLanguageList(sId, addMediaPickList);		// Retrieve the languages and questions for the default language
         } else {
@@ -393,7 +424,7 @@ function exportSurveyChanged() {
         if(!sMeta) {
             getSurveyMetaSE(sId, {}, false,true, true, false, false);
         } else {
-            addFormPickList(sMeta);
+            addFormPickList(sMeta, checkedForms);
             addDatePickList(sMeta);
         }
 
@@ -403,6 +434,10 @@ function exportSurveyChanged() {
         }
 
         exportQuerySelChanged();
+
+        // Restore previous selections
+        $('#export_language').val(language);
+
     } else {
         $('#export_date_question').html("");
     }
@@ -612,7 +647,7 @@ function showModel() {
 /*
  * Add a list of forms to pick from during export
  */
-function addFormPickList(sMeta) {
+function addFormPickList(sMeta, checked_forms) {
 
     var h = [],
         idx = -1,
@@ -621,9 +656,9 @@ function addFormPickList(sMeta) {
     // Start with the top level form
     for(i = 0; i < sMeta.forms.length; i++) {
         if(sMeta.forms[i].p_id == 0) {
-            $(".osmforms").html(addFormToList(sMeta.forms[i], sMeta, 0, true, false));
-            $(".selectforms").html(addFormToList(sMeta.forms[i], sMeta, 0, false, false));
-            $(".shapeforms,.taforms").html(addFormToList(sMeta.forms[i], sMeta, 0, true, true));
+            $(".osmforms").html(addFormToList(sMeta.forms[i], sMeta, 0, true, false, checked_forms));
+            $(".selectforms").html(addFormToList(sMeta.forms[i], sMeta, 0, false, false, checked_forms));
+            $(".shapeforms,.taforms").html(addFormToList(sMeta.forms[i], sMeta, 0, true, true, checked_forms));
         }
     }
 
@@ -707,7 +742,7 @@ function addDatePickList(sMeta, currentDate) {
 
 }
 
-function addFormToList(form, sMeta, offset, osm, set_radio) {
+function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms) {
 
     var h = [],
         idx = -1,
@@ -715,27 +750,42 @@ function addFormToList(form, sMeta, offset, osm, set_radio) {
         type,
         checked;
 
-    if(set_radio) {
-        type="radio";
+    if (set_radio) {
+        type = "radio";
     } else {
-        type="checkbox";
+        type = "checkbox";
     }
 
     // Don't automatically check the forms that hold the points for geopolygon and linestring
-    if(form.form.substring(0, 10) === "geopolygon" || form.form.substring(0, 13) === "geolinestring") {
-        checked = '';
-    } else {
+    //if(form.form.substring(0, 10) === "geopolygon" || form.form.substring(0, 13) === "geolinestring") {
+    //    checked = '';
+    //} else {
+    //    checked = 'checked="checked"';
+    //}
+
+    // Set checked value based on previous selections
+    if (offset == 0 && (!checked_forms || checked_forms.length == 0)) {
         checked = 'checked="checked"';
+    } else {
+        checked = '';
+    }
+    if(checked_forms && checked_forms.length > 0) {
+        for(i = 0; i < checked_forms.length; i++) {
+            if(form.f_id == checked_forms[i]) {
+                checked = 'checked="checked"';
+                break;
+            }
+        }
     }
 
     h[++idx] = '<span style="padding-left:';
     h[++idx] = offset;
     h[++idx] = 'px;">';
-    if(osm && (!set_radio || offset > 0)) {
-        h[++idx] = '<input class="osmform" type="' + type + '" name="osmform" value="';
-    } else {
-        h[++idx] = '<input class="osmform" type="' + type + '" ' + checked + ' name="osmform" value="';
-    }
+    //if(osm && (!set_radio || offset > 0)) {
+    //    h[++idx] = '<input class="osmform" type="' + type + '" name="osmform" value="';
+    //} else {
+    h[++idx] = '<input class="osmform" type="' + type + '" ' + checked + ' name="osmform" value="';
+    //}
     h[++idx] = form.f_id;
     if(!osm) {
         h[++idx] = ':false"/>';
@@ -752,7 +802,7 @@ function addFormToList(form, sMeta, offset, osm, set_radio) {
     // Add the children (recursively)
     for(i = 0; i < sMeta.forms.length; i++) {
         if(sMeta.forms[i].p_id != 0  && sMeta.forms[i].p_id == form.f_id) {
-            h[++idx] = addFormToList(sMeta.forms[i], sMeta, offset + 20, osm, set_radio);
+            h[++idx] = addFormToList(sMeta.forms[i], sMeta, offset + 20, osm, set_radio, checked_forms);
         }
     }
 
