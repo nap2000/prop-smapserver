@@ -258,7 +258,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                     success: function(data) {
                         removeHourglass();
                         gSurveys = data;
-                        setLocalTime();		// Convert timestamps from UTC to local time
+                        //setLocalTime();		// Convert timestamps from UTC to local time
                         completeSurveyList();
                     },
                     error: function(xhr, textStatus, err) {
@@ -320,7 +320,8 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
 
         /*
          * Set any timestamps in the display name to local time
-         */
+         *
+         * Won't do this it is better to have a consistent name
         function setLocalTime() {
             var i;
 
@@ -328,6 +329,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                 gSurveys[i].displayName = convertTimesToLocal(gSurveys[i].displayName);
             }
         }
+        */
 
         /*
          * Fill in the survey list
