@@ -377,7 +377,7 @@ function msgToText(msg) {
                     cache: false,
                     success: function(data) {
                         gSurveys = data;
-                        setLocalTime();		// Convert timestamps from UTC to local time
+                        //setLocalTime();		// Convert timestamps from UTC to local time
                         completeSurveyList();
                         removeHourglass();
                     },
@@ -395,7 +395,8 @@ function msgToText(msg) {
 
         /*
          * Set any timestamps in the display name to local time
-         */
+         *
+         * Removed.  Won't do this it is better to have a consistent name
         function setLocalTime() {
             var i;
 
@@ -403,6 +404,7 @@ function msgToText(msg) {
                 gSurveys[i].displayName = convertTimesToLocal(gSurveys[i].displayName);
             }
         }
+        */
 
         /*
          * Fill in the survey list
