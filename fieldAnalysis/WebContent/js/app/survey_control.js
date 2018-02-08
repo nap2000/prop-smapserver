@@ -809,7 +809,7 @@ function getTextValues(sId, qId, value) {
 	              return;  // Not an error
 			} else {
 				console.log("Error: Failed to get values for question filter: " + err);
-				alert("Invalid filter question");
+				alert(localise.set["c_error"] + " " + xhr.responseText);
 			}
 		}
 	});	
