@@ -26,7 +26,8 @@ require(['jquery', 'bootstrap.min', 'app/localise', 'app/common','app/globals'],
 		pArray = [],
 		param = [],
 		i,
-		loggedin=false;
+		loggedin=false,
+		androidVersion;
 	
 	localise.setlang();
 	
@@ -73,4 +74,24 @@ require(['jquery', 'bootstrap.min', 'app/localise', 'app/common','app/globals'],
 	$('#logout').click(function(){
 		logout();
 	});
+
+	/*
+	 * Add links to download fieldTask
+	 */
+	androidVersion = parseFloat(getAndroidVersion());
+	if(androidVersion == 0 || androidVersion >= 4.1) {		// Default to downloading the new APK
+		$('#ft').attr("href", "fieldTask.apk");
+	} else {
+		$('#ft').attr("href", "fieldTaskPreJellyBean.apk");
+	}
+
  });
+
+/*
+ * Get the android version - return 0.0 if it cannot be determined
+ */
+function getAndroidVersion() {
+    var ua = (navigator.userAgent).toLowerCase();
+    var match = ua.match(/android\s([0-9\.]*)/);
+    return match ? match[1] : 0;
+};
