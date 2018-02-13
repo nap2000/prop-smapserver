@@ -245,6 +245,33 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 	</div>
 </div>
 
+<!-- Popup to edit a public link to a webform -->
+<div id="survey_link" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dtLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title"></h4>
+			</div>
+			<div class="modal-body">
+				<h3 id="survey_link_title" class="lang" data-lang="n_sahre">Get Link</h3>
+
+				<form role="form" class="form-horizontal">
+					<div class="form-group">
+						<input type="text" id="srLink" required class="form-control" readonly>
+					</div>
+				</form>
+				<button id="getLink" type="button" class="btn btn-primary lang" data-lang="n_share">get link</button>
+				<button id="deleteLink" type="button" class="btn btn-danger lang" data-lang="c_del">delete</button>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- Popup to allow the user to edit their own details -->
 <div id="modify_me_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modifyMeLabel" aria-hidden="true">
 	<div class="modal-dialog">

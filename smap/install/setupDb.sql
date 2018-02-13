@@ -430,7 +430,8 @@ CREATE TABLE survey (
 	pulldata text,									-- Settings to customise pulling data from another survey into a csv file
 	exclude_empty boolean default false,				-- True if reports should not include empty data
 	created timestamp with time zone,				-- Date / Time the survey was created
-	meta text										-- Meta items to collect with this survey
+	meta text,										-- Meta items to collect with this survey
+	public_link text
 	);
 ALTER TABLE survey OWNER TO ws;
 DROP INDEX IF EXISTS SurveyDisplayName;
