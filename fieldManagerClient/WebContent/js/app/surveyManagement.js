@@ -29,7 +29,8 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             gRemote_host,
             gRemote_user,
             gReplace,
-            gSurveyGroups;
+            gSurveyGroups,
+            gLinkSurvey;
 
         $(document).ready(function() {
 
@@ -189,6 +190,38 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                 }
 
                 return true;
+            });
+
+            /*
+             * Respond to a user clicking getLink
+             */
+            $('#getLink').click(function () {
+
+                var url = "/surveyKPI/survey/" +
+                    gLinkSurvey.id + "/link";
+
+                addHourglass();
+                $.ajax({
+                    url: url,
+                    dataType: 'json',
+                    cache: false,
+                    success: function (data) {
+
+                        removeHourglass();
+                        gLinkSurvey.publicLink = data;
+                        $('#srLink').val(data);
+                        setLinkControls();
+                    },
+                    error: function (xhr, textStatus, err) {
+                        removeHourglass();
+                        if (xhr.readyState == 0 || xhr.status == 0) {
+                            return;  // Not an error
+                        } else {
+                            console.log("Error: Failed to get sharing link: " + err);
+                        }
+                    }
+                });
+
             });
 
             enableUserProfileBS();
@@ -352,7 +385,8 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             h[++idx] = '<th class="col-md-5">' + localise.set["c_name"], + '</th>';
             h[++idx] = '<th class="col-md-1">' + localise.set["c_block"] + '</th>';
             h[++idx] = '<th class="col-md-2">' + localise.set["sr_g"] + '</th>';
-            h[++idx] = '<th class="col-md-2">' + localise.set["c_replace"] + '</th>';
+            h[++idx] = '<th class="col-md-1">' + localise.set["c_replace"] + '</th>';
+            h[++idx] = '<th class="col-md-1">' + localise.set["n_share"] + '</th>';
             h[++idx] = '<th class="col-md-1">' + localise.set["c_download"] + '</th>';
             h[++idx] = '</tr>';
             h[++idx] = '</thead>';
@@ -405,7 +439,15 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                     h[++idx] = '<button class="btn survey_replace" value="';
                     h[++idx] = survey.id;
                     h[++idx] = '">';
-                    h[++idx] = localise.set["c_replace"];
+                    h[++idx] = '<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>';
+                    h[++idx] = '</button>';
+                    h[++idx] = '</td>';
+
+                    h[++idx] = '<td>';
+                    h[++idx] = '<button class="btn btn-info survey_link" value="';
+                    h[++idx] = i;
+                    h[++idx] = '">';
+                    h[++idx] = '<i class="fa fa-share-alt"></i>';
                     h[++idx] = '</button>';
                     h[++idx] = '</td>';
 
@@ -487,6 +529,14 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                 $('.notreplace').hide();
                 $('#survey_add_title').text(localise.set["tm_c_form_rep"])
                 $('#survey_add').modal('show');
+            });
+
+            $('.survey_link').click(function(e) {
+
+                gLinkSurvey = gSurveys[$(this).val()];
+                $('#srLink').val(survey.publicLink);
+                setLinkControls();
+                $('#survey_link').modal('show');
             });
 
             $('.pdf_td').click(function(e) {
@@ -789,6 +839,15 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
         }
 
 
+        function setLinkControls() {
+            if(gLinkSurvey.publicLink && gLinkSurvey.publicLink.length > 0) {
+                $('#getLink').prop("disabled", true);
+                $('#deleteLink').prop("disabled", false);
+            } else {
+                $('#getLink').prop("disabled", false);
+                $('#deleteLink').prop("disabled", true);
+            }
+        }
 
 
 
