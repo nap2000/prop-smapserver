@@ -859,3 +859,6 @@ alter table notification_log add column message_id integer;
 alter table question add column external_choices text;
 alter table question add column external_table text;
 alter table survey add column public_link text;
+
+alter table form_downloads drop constraint form_downloads_form_ident_fkey;
+alter table task_completion drop constraint task_completion_form_ident_fkey;

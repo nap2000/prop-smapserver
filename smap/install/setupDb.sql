@@ -795,7 +795,7 @@ DROP TABLE IF EXISTS public.form_downloads CASCADE;
 CREATE TABLE public.form_downloads (
 	id integer DEFAULT nextval('form_downloads_id_seq') NOT NULL PRIMARY KEY,
 	u_id integer REFERENCES users(id) ON DELETE CASCADE,
-	form_ident text REFERENCES survey(ident) ON DELETE CASCADE,
+	form_ident text,
 	form_version text,
 	device_id text,
 	updated_time TIMESTAMP WITH TIME ZONE
@@ -811,7 +811,7 @@ DROP TABLE IF EXISTS public.task_completion CASCADE;
 CREATE TABLE public.task_completion (
 	id integer DEFAULT nextval('task_completion_id_seq') NOT NULL PRIMARY KEY,
 	u_id integer REFERENCES users(id) ON DELETE CASCADE,
-	form_ident text REFERENCES survey(ident) ON DELETE CASCADE,
+	form_ident text,
 	form_version int,
 	device_id text,
 	uuid text,		-- Unique identifier for the results
