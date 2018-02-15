@@ -203,7 +203,6 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                 addHourglass();
                 $.ajax({
                     url: url,
-                    dataType: 'json',
                     cache: false,
                     success: function (data) {
 
@@ -211,6 +210,52 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                         gLinkSurvey.publicLink = data;
                         $('#srLink').val(data);
                         setLinkControls();
+                        completeSurveyList();
+                    },
+                    error: function (xhr, textStatus, err) {
+                        removeHourglass();
+                        if (xhr.readyState == 0 || xhr.status == 0) {
+                            return;  // Not an error
+                        } else {
+                            console.log("Error: Failed to get sharing link: " + err);
+                        }
+                    }
+                });
+
+            });
+
+            /*
+             * Respond to a user clicking deleteLink
+             */
+            $('#deleteLink').click(function () {
+                var idx,
+                    idx2,
+                    ident,
+                    url;
+
+                // Get ident of public user
+                idx = gLinkSurvey.publicLink.indexOf("/id/");
+                if(idx >= 0) {
+                    idx2 = gLinkSurvey.publicLink.indexOf("/", idx + 4);
+                    if (idx2 > idx) {
+                        ident = gLinkSurvey.publicLink.substring(idx + 4, idx2);
+
+                        var url = "/surveyKPI/survey/" + gLinkSurvey.id + "/deletelink/" + ident;
+                    }
+                }
+
+                addHourglass();
+                $.ajax({
+                    type : 'DELETE',
+                    url: url,
+                    cache: false,
+                    success: function (data) {
+
+                        removeHourglass();
+                        gLinkSurvey.publicLink = undefined;
+                        $('#srLink').val("");
+                        completeSurveyList();
+                        $('#survey_link').modal('hide');
                     },
                     error: function (xhr, textStatus, err) {
                         removeHourglass();
@@ -444,7 +489,11 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                     h[++idx] = '</td>';
 
                     h[++idx] = '<td>';
-                    h[++idx] = '<button class="btn btn-info survey_link" value="';
+                    if(survey.publicLink && survey.publicLink.trim().length > 0) {
+                        h[++idx] = '<button class="btn btn-primary survey_link" value="';
+                    } else {
+                        h[++idx] = '<button class="btn btn-info survey_link" value="';
+                    }
                     h[++idx] = i;
                     h[++idx] = '">';
                     h[++idx] = '<i class="fa fa-share-alt"></i>';
@@ -534,7 +583,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             $('.survey_link').click(function(e) {
 
                 gLinkSurvey = gSurveys[$(this).val()];
-                $('#srLink').val(survey.publicLink);
+                $('#srLink').val(gLinkSurvey.publicLink);
                 setLinkControls();
                 $('#survey_link').modal('show');
             });
