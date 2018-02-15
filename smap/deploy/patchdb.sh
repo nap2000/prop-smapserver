@@ -219,5 +219,5 @@ cd ../deploy
 sudo sed -i "s/from pyxform import constants/import constants/g" /smap_bin/pyxform/survey.py
 
 # update version reference
-new_version="1801"
+new_version="1802"
 echo "$new_version" > ~/smap_version
