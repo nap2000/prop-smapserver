@@ -501,7 +501,7 @@ require([
                 }
 
                 if(cols[i].type === "select") {
-                    var n = cols[i].humanName.split(" - ");
+                    var n = cols[i].humanName.split(" - ");         // Handle legacy select multiple
                     if (n.length > 1) {
                         selectQuestion = n[0];
                         if(selectQuestion === currentSelectQuestion) {
@@ -510,7 +510,7 @@ require([
                             currentSelectQuestion = selectQuestion;
                         }
                     } else {
-                        continue;
+                        selectQuestion = n;     // A compressed select multiple
                     }
                 }
                 h[++idx] = '<option value="';
@@ -574,11 +574,11 @@ require([
         if(format === "xlsx" && alldata) {
             settings.push({
                 k: localise.set["br_tf"],
-                v: $('#srf_num_fn').val()
+                v: $('#srf_text_fn').val()
             });
             settings.push({
                 k: localise.set["br_nf"],
-                v: $('#srf_text_fn').val()
+                v: $('#srf_num_fn').val()
             });
 
             var groupIdx = $('#srf_group').val();

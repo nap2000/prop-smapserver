@@ -219,6 +219,9 @@ define([
                         }
 
                         groupIdx = $('#srf_group').val();
+                        if(groupIdx == i) {
+                            continue;   // Don't create a chart of the question grouped by itself
+                        }
                         if(groupIdx != -1) {
                             chart.groups.push({
                                 name: columns[groupIdx].select_name ? columns[groupIdx].select_name  : columns[groupIdx].humanName,
@@ -227,7 +230,7 @@ define([
                                 type: columns[groupIdx].type
                             });
 
-                            if (columns[groupIdx].type === "select") {
+                            if (columns[groupIdx].type === "select" || columns[groupIdx].type === "select1") {
                                 chart.groups[1].choiceNames = columns[groupIdx].choiceNames;
                                 chart.groups[1].choices = columns[groupIdx].choices;
                             }
@@ -834,7 +837,7 @@ define([
                 selM,
                 nonM,
                 row,
-                choiceValues = [],
+                choiceValues,
                 val;
 
             // Get index of select multiple
@@ -850,34 +853,36 @@ define([
             }
 
             // Get the choice values from the choices which have the question name in them
-            for(i = 0; i < selM.choices.length; i++) {
-                var n = selM.choices[i].split(" - ");
-                choiceValues.push(n[1]);
+            var choiceLists = gTasks.cache.surveyConfig[globals.gViewId].choiceLists;
+            for(i = 0; i < choiceLists.length; i++) {
+                if(choiceLists[i].l_id == selM.l_id) {
+                    choiceValues = choiceLists[i].choices;
+                    break;
+                }
             }
 
-
             for(i = 0; i < results.length; i++) {
-                for(j = 0; j < selM.choices.length; j++) {
-                    if(results[i][selM.choices[j]] == 1) {
-                        // add a row
-                        row = {
-                            count: 1
-                        };
+                if(results[i][selM.dataLabel]) {
+                    var selectedValues = results[i][selM.dataLabel].split(" ");
+                }
 
-                        val = choiceValues[j];
-                        if(selM.l_id > 0) {
-                            if(chart.qlabel) {
-                                val = lookupChoiceLabel(selM.l_id, val);
-                            } else {
-                                val = choiceValues[j];
-                            }
-                        }
-                        row[selM.dataLabel] = val;
-                        if(nonM) {
-                            row[nonM.dataLabel] = results[i][nonM.dataLabel];
-                        }
-                        data.push(row);
+                for(j = 0; j < selectedValues.length; j++) {
+                    // add a row
+                    row = {
+                        count: 1
+                    };
+
+                    if(chart.qlabel) {
+                        val = lookupChoiceLabel(selM.l_id, selectedValues[j]);
+                    } else {
+                        val = selectedValues[j];
                     }
+
+                    row[selM.dataLabel] = val;
+                    if(nonM) {
+                        row[nonM.dataLabel] = results[i][nonM.dataLabel];
+                    }
+                    data.push(row);
                 }
 
             }
