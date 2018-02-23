@@ -838,7 +838,8 @@ define([
                 nonM,
                 row,
                 choiceValues,
-                val;
+                val,
+                selectedValues;
 
             // Get index of select multiple
             groups = chart.groups;
@@ -863,26 +864,26 @@ define([
 
             for(i = 0; i < results.length; i++) {
                 if(results[i][selM.dataLabel]) {
-                    var selectedValues = results[i][selM.dataLabel].split(" ");
-                }
+                    selectedValues = results[i][selM.dataLabel].split(" ");
 
-                for(j = 0; j < selectedValues.length; j++) {
-                    // add a row
-                    row = {
-                        count: 1
-                    };
+                    for(j = 0; j < selectedValues.length; j++) {
+                        // add a row
+                        row = {
+                            count: 1
+                        };
 
-                    if(chart.qlabel) {
-                        val = lookupChoiceLabel(selM.l_id, selectedValues[j]);
-                    } else {
-                        val = selectedValues[j];
+                        if(chart.qlabel) {
+                            val = lookupChoiceLabel(selM.l_id, selectedValues[j]);
+                        } else {
+                            val = selectedValues[j];
+                        }
+
+                        row[selM.dataLabel] = val;
+                        if(nonM) {
+                            row[nonM.dataLabel] = results[i][nonM.dataLabel];
+                        }
+                        data.push(row);
                     }
-
-                    row[selM.dataLabel] = val;
-                    if(nonM) {
-                        row[nonM.dataLabel] = results[i][nonM.dataLabel];
-                    }
-                    data.push(row);
                 }
 
             }
