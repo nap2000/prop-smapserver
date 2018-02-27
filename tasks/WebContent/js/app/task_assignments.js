@@ -363,16 +363,16 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                 // If added from a survey
                 var filterQuestion = "-1";
-                if(tgRule.source_survey_id) {
+                if(tg.source_s_id) {
                     $('#add_from_survey').prop('checked', true);
                     $('#add_task_from_existing').show();
 
-                    $('#survey_to_complete').val(tgRule.target_survey_id);
+                    $('#survey_to_complete').val(tg.target_s_id);
                     $('#users_task_group').val(tgRule.user_id);
                     $('#roles_task_group').val(tgRule.role_id);
                     $('#assign_data').val(tgRule.assign_data);
                     $('#fixed_role').val(tgRule.fixed_role_id);
-                    $('#survey').val(tgRule.source_survey_id);
+                    $('#survey').val(tg.source_s_id);
                     $('#update_results').prop('checked', tgRule.update_results);
                     $('#add_current').prop('checked', tgRule.add_current);
                     $('#add_future').prop('checked', tgRule.add_future);
