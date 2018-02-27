@@ -478,7 +478,8 @@ CREATE TABLE form (
 	repeats text,
 	path text,
 	form_index int default -1,					-- Temporary data used by the online editor
-	reference boolean default false
+	reference boolean default false,
+	merge boolean default false
 	);
 ALTER TABLE form OWNER TO ws;
 
