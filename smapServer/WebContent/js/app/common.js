@@ -851,7 +851,7 @@ function refreshMediaView(data, sId) {
 			} else if(files[i].type == "geojson") {
 				h[++idx] = addVectorMapIcon();
 			} else {
-				h[++idx] = '<img src="';
+				h[++idx] = '<img width="100" height="100" src="';
 				h[++idx] = files[i].thumbnailUrl;
 				h[++idx] = '" alt="';
 				h[++idx] = files[i].name;
