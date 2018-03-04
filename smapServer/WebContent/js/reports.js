@@ -145,6 +145,7 @@ require([
             var sId = $('#survey').val();
             var url = "/surveyKPI/reporting/link/" + sId;
             var name = $('#r_name').val();
+            var pId = $('#project_name').val();
 
             // Validation
             if(sId <= 0) {
