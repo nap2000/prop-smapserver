@@ -67,7 +67,7 @@ require([
 
 		// Get the user details
 		globals.gIsAdministrator = false;
-		getLoggedInUser(undefined, false, true, undefined);
+        getLoggedInUser(projectChanged, false, true, undefined);
 		getReportsForUser();
 
 		$('#m_refresh').click(function() {
@@ -126,12 +126,72 @@ require([
             }
 
 
-
             $('#report_popup').modal("hide");
             window.location.href = url;
 
 		});
 
+        // Set change function on projects
+        $('#project_name').change(function () {
+            projectChanged();
+        });
+
+        $('#addReport').click(function(){
+            $('#publish_popup').modal("show");
+		});
+
+        $('#publishReport').click(function () {
+
+            var sId = $('#survey').val();
+            var url = "/surveyKPI/reporting/link/" + sId;
+            var name = $('#r_name').val();
+
+            // Validation
+            if(sId <= 0) {
+                $('#publish_alert').html(localise.set["a_exp_leg1"])
+                    .addClass("alert-danger").removeClass("alert-success").show();
+                return;
+            } else if (!name || name.trim().length == 0) {
+                $('#publish_alert').html(localise.set["msg_val_nm"])
+                    .addClass("alert-danger").removeClass("alert-success").show();
+                return;
+            }
+            if (globals.gIsSecurityAdministrator) {
+                var roleIds = [],
+                    id;
+                $('input[type=checkbox]:checked', '.role_select_roles').each(function () {
+                    id = $(this).val();
+                    roleIds.push(id);
+                });
+                if (roleIds.length > 0) {
+                    url += "?roles=" + roleIds.join();
+                }
+            }
+
+            addHourglass();
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+
+                    removeHourglass();
+                    $('#publish_alert').html("").hide();
+                    $('#publish_popup').addClass("alert-success").removeClass("alert-danger").modal("hide");
+                },
+                error: function (xhr, textStatus, err) {
+                    removeHourglass();
+                    if (xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                    	$('#publish_alert').html(localise.set["msg_err_upd"] + xhr.responseText)
+                            .addClass("alert-danger").removeClass("alert-success").show();
+                        console.log("Error: Failed to get sharing link: " + err);
+                    }
+                }
+            });
+
+        });
 
 
 		enableUserProfileBS();
@@ -263,6 +323,24 @@ require([
 		});
 
 	}
+
+    /*
+  * Function called when the current project is changed
+  */
+    function projectChanged() {
+
+        globals.gCurrentProject = $('#project_name option:selected').val();
+        globals.gCurrentSurvey = -1;
+        globals.gCurrentTaskGroup = undefined;
+
+        loadSurveys(globals.gCurrentProject, undefined, false, false, undefined);			// Get surveys
+        completeReportList();		// Refresh the shown reports
+
+        saveCurrentProject(globals.gCurrentProject,
+            globals.gCurrentSurvey,
+            globals.gCurrentTaskGroup);
+
+    }
 
 });
 
