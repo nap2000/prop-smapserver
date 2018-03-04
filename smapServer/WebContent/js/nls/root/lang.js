@@ -537,8 +537,12 @@ define({
     // Analysis, reports, modify
     "an_auth": "Author",
     "an_published": "Published",
+    "an_publish": "Publish",
     "an_dr": "Date Range",
     "an_csel": "Clear Selection",
+    "r_add": "Add Report",
+    "r_ed": "Edit Report",
+    "r_del": "Delete Reports",
 
     // Server Strings and direct word conversions
     "Upload Time": "Upload",
