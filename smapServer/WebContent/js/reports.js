@@ -39,6 +39,7 @@ requirejs.config({
     },
     shim: {
     	'app/common': ['jquery'],
+        'app/data': ['jquery'],
     	'bootstrap.min': ['jquery'],
     	'icheck': ['jquery'],
        	'inspinia': ['jquery'],
@@ -50,7 +51,7 @@ requirejs.config({
 require([
          'jquery', 
          'bootstrap.min',
-         'app/common', 
+         'app/common',
          'app/globals',
          'app/localise',
          'bootstrapfileinput',
@@ -58,6 +59,7 @@ require([
          'metismenu',
          'slimscroll',
          'pace',
+         'app/data',
          'icheck'
          ], function($, bootstrap, common, globals, localise, bsfi) {
 
@@ -80,7 +82,10 @@ require([
         	var val;
         	var params = [];
         	var url;
+        	var action = gReportList[gReportIdx].action_details;
 
+
+        	/*
         	for(i = 0; i < gConfig.length; i++) {
         		val = $('#param_' + gConfig[i].name).val();
 
@@ -102,26 +107,19 @@ require([
 
                 gReportList[gReportIdx].savedParams[gConfig[i].name] = val;
 			}
+			*/
             $('#alert').hide();
 
-            url = gReportList[gReportIdx].url;
-
-            if(url.indexOf('{filename}') > 0) {
-            	url = url.replace('{filename}',  cleanFileName(gReportList[gReportIdx].name));
-			}
-            if(url.indexOf('{sId}') > 0) {
-                url = url.replace('{sId}',  gReportList[gReportIdx].sId);
-            }
-
-            if(params.length > 0) {
+            url = getReportUrl(action.reportType, action.sId, action.filename);
+            params = gReportList[gReportIdx].action_details.parameters
+            if(params && params.length > 0) {
                 for(i = 0; i < params.length; i++) {
                     if(url.indexOf('?') < 0) {
                         url += '?';
                     } else {
                         url += '&';
                     }
-                    url += params[i].key + '=' + params[i].val;
-                    gReportList[gReportIdx].savedParams[gConfig[i].name] = params[i].val;	// save param
+                    url += params[i].k + '=' + params[i].v;
                 }
             }
 
@@ -136,16 +134,27 @@ require([
             projectChanged();
         });
 
+        // Set change function on surveys
+        $('#survey').change(function() {
+            surveyChanged();
+        });
+
         $('#addReport').click(function(){
+
             $('#publish_popup').modal("show");
 		});
 
         $('#publishReport').click(function () {
 
             var sId = $('#survey').val();
-            var url = "/surveyKPI/reporting/link/" + sId;
             var name = $('#r_name').val();
-            var pId = $('#project_name').val();
+            var reportType = $('#reportType').val();
+
+            var filename = $('#filename').val();
+            var forms = $(':radio:checked', '.shapeforms').map(function() {
+                return this.value;
+            }).get();
+            var form = forms[0];
 
             // Validation
             if(sId <= 0) {
@@ -157,6 +166,8 @@ require([
                     .addClass("alert-danger").removeClass("alert-success").show();
                 return;
             }
+
+            // Add roles
             if (globals.gIsSecurityAdministrator) {
                 var roleIds = [],
                     id;
@@ -169,6 +180,16 @@ require([
                 }
             }
 
+            var url = "/surveyKPI/reporting/link/" + name + "/" + sId
+                + "?reportType=" + reportType;
+
+            if(filename && filename.trim().length > 0) {
+                url += "&filename=" + filename;
+            }
+            if(form > 0) {
+                url += "&form=" + form;
+            }
+
             addHourglass();
             $.ajax({
                 url: url,
@@ -177,6 +198,7 @@ require([
                 success: function (data) {
 
                     removeHourglass();
+                    getReportsForUser();
                     $('#publish_alert').html("").hide();
                     $('#publish_popup').addClass("alert-success").removeClass("alert-danger").modal("hide");
                 },
@@ -185,9 +207,8 @@ require([
                     if (xhr.readyState == 0 || xhr.status == 0) {
                         return;  // Not an error
                     } else {
-                    	$('#publish_alert').html(localise.set["msg_err_upd"] + xhr.responseText)
+                    	$('#publish_alert').html(localise.set["msg_err_upd"] + " : " + xhr.responseText)
                             .addClass("alert-danger").removeClass("alert-success").show();
-                        console.log("Error: Failed to get sharing link: " + err);
                     }
                 }
             });
@@ -198,10 +219,25 @@ require([
 		enableUserProfileBS();
 	});
 
+    function surveyChanged() {
+        var sId = $('#survey').val();
+        var dateQuestionId = 0;     // TODO
+        // Set the survey meta data
+        var sMeta = globals.gSelector.getSurvey(sId);
+        if(!sMeta) {
+            getSurveyMetaSE(sId, undefined, false, true, true, dateQuestionId);
+        } else {
+            addFormPickList(sMeta);
+            //addDatePickList(sMeta);   TODO
+        }
+    }
 
+	/*
+	 * Get published reports
+	 */
 	function getReportsForUser() {
 
-		url="/surveyKPI/reportgen";
+		url="/surveyKPI/userList/temporary?action=report";
 
 		addHourglass();
 		$.ajax({
@@ -218,7 +254,7 @@ require([
 				if(xhr.readyState == 0 || xhr.status == 0) {
 					  return;  // Not an error
 				} else {
-					console.log("Error: Failed to get list of reports: " + err);
+				    alert(localise.set["error"] + ": " + xhr.responseText);
 				}
 			}
 		});
@@ -237,10 +273,11 @@ require([
 		// Add the reports
 		if(gReportList) {
             for (i = 0; i < gReportList.length; i++) {
+                var action = gReportList[i].action_details;
                 h[++idx] = '<button type="button" data-idx="';
                 h[++idx] = i;
                 h[++idx] = '" class="btn btn-block btn-primary report">';
-                h[++idx] = gReportList[i].name;
+                h[++idx] = action.name;
                 h[++idx] = '</button>';
 
                 // Add an object to store parameter values
@@ -254,26 +291,27 @@ require([
 		$reportList.find('.report').click(function() {
 
 			gReportIdx = $(this).data("idx");
+			var selectedAction = gReportList[gReportIdx].action_details;
 
 			// Hard code the config for present - this should have come from the DB
 			gConfig = [
 				{
-					name: "from",
+					name: "startDate",
 					type: "date",
 					trans: "a_from_date",
-					required: true
+					required: false
 				},
                 {
-                    name: "to",
+                    name: "endDate",
                     type: "date",
                     trans: "a_to_date",
-                    required: true
+                    required: false
                 },
 				{
                     name: "filename",
                     type: "text",
                     trans: "sr_fn",
-                    required: true
+                    required: false
                 }
 			];
 
@@ -313,7 +351,9 @@ require([
 
             // Restore saved parameters
             for(i = 0; i < gConfig.length; i++) {
-                if(gReportList[gReportIdx].savedParams[gConfig[i].name]) {
+                if(selectedAction[gConfig[i].name]) {
+                    $('#param_' + gConfig[i].name).val(selectedAction[gConfig[i].name]);
+                } else if(gReportList[gReportIdx].savedParams[gConfig[i].name]) {
                     $('#param_' + gConfig[i].name).val(gReportList[gReportIdx].savedParams[gConfig[i].name]);
 				} else if(gConfig[i].name === "filename") {
                     $('#param_' + gConfig[i].name).val(gReportList[gReportIdx].name);
@@ -326,21 +366,36 @@ require([
 	}
 
     /*
-  * Function called when the current project is changed
-  */
+     * Function called when the current project is changed
+     */
     function projectChanged() {
 
         globals.gCurrentProject = $('#project_name option:selected').val();
         globals.gCurrentSurvey = -1;
         globals.gCurrentTaskGroup = undefined;
 
-        loadSurveys(globals.gCurrentProject, undefined, false, false, undefined);			// Get surveys
+        loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged);			// Get surveys
         completeReportList();		// Refresh the shown reports
 
         saveCurrentProject(globals.gCurrentProject,
             globals.gCurrentSurvey,
             globals.gCurrentTaskGroup);
 
+    }
+
+    /*
+     * Convert a report type into the base of the URL
+     */
+    function getReportUrl(type, sId, filename) {
+        var url = "/surveyKPI/";
+        if(type === "xlsx") {
+            url += "exportxlsx/";
+        }
+
+        url += sId;
+        url += "/" + filename;
+
+        return url;
     }
 
 });

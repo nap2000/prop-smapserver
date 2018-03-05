@@ -642,50 +642,6 @@ function showModel() {
     });
 }
 
-
-
-/*
- * Add a list of forms to pick from during export
- */
-function addFormPickList(sMeta, checked_forms) {
-
-    var h = [],
-        idx = -1,
-        i;
-
-    // Start with the top level form
-    for(i = 0; i < sMeta.forms.length; i++) {
-        if(sMeta.forms[i].p_id == 0) {
-            $(".osmforms").html(addFormToList(sMeta.forms[i], sMeta, 0, true, false, checked_forms));
-            $(".selectforms").html(addFormToList(sMeta.forms[i], sMeta, 0, false, false, checked_forms));
-            $(".shapeforms,.taforms").html(addFormToList(sMeta.forms[i], sMeta, 0, true, true, checked_forms));
-        }
-    }
-
-    $("button",".selectforms").click(function() {
-        var $this = $(this),
-            $check = $this.parent().find("input"),
-            val,
-            val_array = [];
-
-        val = $check.val();
-        val_array= val.split(":");
-        if(val_array.length > 1) {
-            if(val_array[1] === "true") {
-                $check.val(val_array[0] + ":false");
-                $this.text("Pivot");
-            } else {
-                $check.val(val_array[0] + ":true");
-                $this.text("Flat");
-            }
-            $this.toggleClass('exportflat');
-            $this.toggleClass('exportpivot');
-        }
-
-        return false;
-    });
-}
-
 /*
  * Get the type of a question
  */
@@ -709,105 +665,6 @@ function getQuestionInfo(sId, language, qId) {
     return qInfo;
 }
 
-/*
- * Add a list of date questions to pick from 
- */
-function addDatePickList(sMeta, currentDate) {
-
-    var h = [],
-        idx = -1,
-        i,
-        value;
-
-    if(sMeta && sMeta.dates) {
-        for(i = 0; i < sMeta.dates.length; i++) {
-
-            h[++idx] = '<option value="';
-            h[++idx] = sMeta.dates[i].id;
-            h[++idx] = '">';
-            h[++idx] = sMeta.dates[i].name;
-            h[++idx] = '</option>';
-
-        }
-
-        $(".date_question").html((h.join('')));
-
-        if(typeof currentDate !== "undefined" && currentDate != 0) {
-            value = currentDate;
-        } else {
-            value = $("#settings_date_question").val();
-        }
-    }
-
-
-}
-
-function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms) {
-
-    var h = [],
-        idx = -1,
-        i,
-        type,
-        checked;
-
-    if (set_radio) {
-        type = "radio";
-    } else {
-        type = "checkbox";
-    }
-
-    // Don't automatically check the forms that hold the points for geopolygon and linestring
-    //if(form.form.substring(0, 10) === "geopolygon" || form.form.substring(0, 13) === "geolinestring") {
-    //    checked = '';
-    //} else {
-    //    checked = 'checked="checked"';
-    //}
-
-    // Set checked value based on previous selections
-    if (offset == 0 && (!checked_forms || checked_forms.length == 0)) {
-        checked = 'checked="checked"';
-    } else {
-        checked = '';
-    }
-    if(checked_forms && checked_forms.length > 0) {
-        for(i = 0; i < checked_forms.length; i++) {
-            if(form.f_id == checked_forms[i]) {
-                checked = 'checked="checked"';
-                break;
-            }
-        }
-    }
-
-    h[++idx] = '<span style="padding-left:';
-    h[++idx] = offset;
-    h[++idx] = 'px;">';
-    //if(osm && (!set_radio || offset > 0)) {
-    //    h[++idx] = '<input class="osmform" type="' + type + '" name="osmform" value="';
-    //} else {
-    h[++idx] = '<input class="osmform" type="' + type + '" ' + checked + ' name="osmform" value="';
-    //}
-    h[++idx] = form.f_id;
-    if(!osm) {
-        h[++idx] = ':false"/>';
-    } else {
-        h[++idx] = '"/>';
-    }
-    h[++idx] = form.form;
-    if(form.p_id != 0 && !osm) {
-        h[++idx] = ' <button class="exportpivot">Pivot</button>';
-    }
-    h[++idx] = '<br/>';
-    h[++idx] = '</span>';
-
-    // Add the children (recursively)
-    for(i = 0; i < sMeta.forms.length; i++) {
-        if(sMeta.forms[i].p_id != 0  && sMeta.forms[i].p_id == form.f_id) {
-            h[++idx] = addFormToList(sMeta.forms[i], sMeta, offset + 20, osm, set_radio, checked_forms);
-        }
-    }
-
-    return h.join('');
-}
 
 
 /******************************************************************************/
@@ -958,18 +815,6 @@ function resultsURL (sId, qId, dateId, groupId, groupType, geoTable, fn, lang, t
         url+= "&filter=" + filter;
     }
 
-    return url;
-}
-
-/**
- * Web service handler for survey Meta Data
- * @param {string} survey name
- */
-function surveyMeta (survey) {
-
-    var url = "/surveyKPI/survey/";
-    url += survey;
-    url += "/getMeta";
     return url;
 }
 
@@ -1138,7 +983,7 @@ function exportSurveyURL (
 }
 
 /*
- * Web service handler for exporting an entire survey to legacy XLS
+ * Web service handler for exporting an entire survey to XLSX
  */
 function exportXlsxSurveyURL (
     sId,
