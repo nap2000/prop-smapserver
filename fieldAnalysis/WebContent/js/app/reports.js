@@ -113,8 +113,7 @@ function setReport(data) {
 function getSurveyMetaReport(sId, data) {
 
 	if(sId != -1) {
-		var url = surveyMeta(sId);
-	
+        var url = "/surveyKPI/survey/" + sId + "/getMeta";
 		addHourglass();
 	 	$.ajax({
 			url: url,

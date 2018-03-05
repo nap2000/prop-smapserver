@@ -21,8 +21,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, currentDate, neo_model) {
 
 	if(sId != -1) {
-		var url = surveyMeta(sId);
-	
+        var url = "/surveyKPI/survey/" + sId + "/getMeta";
+
 		addHourglass();
 	 	$.ajax({
 			url: url,
@@ -42,13 +42,13 @@ function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, curren
 				}
 				if(neo_model) {
 					$('.showthingsat').show();
-					
+
 					// Set the form to the value stored in the model
 					if(sMeta.model) {
 						var graph = JSON.parse(sMeta.model);
 						$('.osmform[value=' + graph.form + ']').prop("checked", "checked");
 					}
-					
+
 					neo_model.init(sId, undefined, undefined, data.model);
 					neo_model.showModel('#ta_model_show', sId, 200, 200);
 				}
@@ -76,7 +76,7 @@ function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, curren
 function getExtendedSurveyMetaSE(sId, callback) {
 
 	if(sId != -1) {
-		var url = surveyMeta(sId) + "?extended=true";
+        var url = "/surveyKPI/survey/" + sId + "/getMeta" + "?extended=true";
 	
 		addHourglass();
 	 	$.ajax({
