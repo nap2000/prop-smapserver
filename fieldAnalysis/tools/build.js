@@ -1,6 +1,6 @@
 ({
     appDir: '../WebContent',
-//    optimize: 'none',
+    optimize: 'none',
     wrapShim: false,
     waitSeconds: 0,
     baseUrl: 'js/libs',
@@ -16,6 +16,7 @@
     	modernizr: '../../../../smapServer/WebContent/js/libs/modernizr',
     	rmm: '../../../../smapServer/WebContent/js/libs/responsivemobilemenu',
     	common: '../../../../smapServer/WebContent/js/app/common',
+    	data: '../../../../smapServer/WebContent/js/app/data',
         moment: '../../../../smapServer/WebContent/js/libs/moment-with-locales.min',
     	version: '../../../../smapServer/WebContent/js/app/version',
     	pacesettings: '../../../../smapServer/WebContent/js/libs/paceSettings',
