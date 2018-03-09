@@ -13,9 +13,6 @@ clean="true"
 filelocn="/smap"
 
 CATALINA_HOME=/usr/share/tomcat7
-postgresDriverLocation="http://jdbc.postgresql.org/download"				# Postgres jdbc driver
-#postgresDriver="postgresql-9.2-1002.jdbc4.jar"								# Postgres jdbc driver
-postgresDriver="postgresql-9.3-1102.jdbc41.jar"								# Postgres jdbc driver
 sd="survey_definitions"														# Postgres config survey definitions db name
 results="results"															# Postgres config results db name
 tc_server_xml="/etc/tomcat7/server.xml"										# Tomcat config
@@ -73,14 +70,6 @@ sudo mkdir /var/www/smap/OpenLayers
 
 echo '##### 3. Install Tomcat'
 sudo apt-get install tomcat7 -y
-
-echo '##### 4. Get the Postgres JDBC driver'
-if [ ! -f $postgresDriver ]
-then
-	wget $postgresDriverLocation/$postgresDriver
-fi
-sudo cp $postgresDriver $CATALINA_HOME/lib/
-sudo cp misc_files/tomcat-jdbc.jar $CATALINA_HOME/lib/		# Add file missing from debian version of tomcat
 
 echo '##### 5. Install Postgres / Postgis'
 
