@@ -266,7 +266,7 @@ require([
 	function completeReportList() {
 
 		var i,
-			h = [],
+			tab = [],
 			idx = -1,
 			$reportList = $('#report_list');
 
@@ -274,11 +274,37 @@ require([
 		if(gReportList) {
             for (i = 0; i < gReportList.length; i++) {
                 var action = gReportList[i].action_details;
-                h[++idx] = '<button type="button" data-idx="';
-                h[++idx] = i;
-                h[++idx] = '" class="btn btn-block btn-primary report">';
-                h[++idx] = action.name;
-                h[++idx] = '</button>';
+
+                tab[++idx] = '<tr>';
+
+                tab[++idx] = '<td>';
+                tab[++idx] = action.surveyName;
+                tab[++idx] = '</td>';
+
+                tab[++idx] = '<td>';			// Report Name
+                tab[++idx] = action.name;
+                tab[++idx] = '</td>';
+
+                tab[++idx] = '<td>';            // Launch report
+                tab[++idx] = '<button class="btn btn-default report" value="';
+                tab[++idx] = i;
+                tab[++idx] = '" type="button"><i class="fa fa-book"></i></button>';
+                tab[++idx] = '</td>';
+
+                tab[++idx] = '<td>';            // Edit Report
+                tab[++idx] = '<button class="btn btn-default report_edit" value="';
+                tab[++idx] = i;
+                tab[++idx] = '" type="button"><i class="fa fa-edit"></i></button>';
+                tab[++idx] = '</td>';
+
+                tab[++idx] = '<td>';            // Delete Report
+                tab[++idx] = '<button class="btn btn-default report_delete" value="';
+                tab[++idx] = i;
+                tab[++idx] = '" type="button"><i class="fa fa-trash"></i></button>';
+                tab[++idx] = '</td>';
+
+
+                tab[++idx] = '</tr>';
 
                 // Add an object to store parameter values
 				gReportList[i].savedParams = {};
@@ -286,11 +312,42 @@ require([
             }
         }
 
-		$reportList.html(h.join(''));
+		$reportList.html(tab.join(''));
 
+		/*
+		 * Deleting reports
+		 */
+        $reportList.find('.report_delete').click(function() {
+            gReportIdx = $(this).val();
+            var report = gReportList[gReportIdx];
+
+            addHourglass();
+            $.ajax({
+                url: "/surveyKPI/reporting/link/"  + report.ident,
+                type: "DELETE",
+                cache: false,
+                success: function (data) {
+                    removeHourglass();
+                    getReportsForUser();
+                },
+                error: function (xhr, textStatus, err) {
+                    removeHourglass();
+                    if (xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        $('#publish_alert').html(localise.set["msg_err_upd"] + " : " + xhr.responseText)
+                            .addClass("alert-danger").removeClass("alert-success").show();
+                    }
+                }
+            });
+        });
+
+		/*
+		 * Launching reports
+		 */
 		$reportList.find('.report').click(function() {
 
-			gReportIdx = $(this).data("idx");
+			gReportIdx = $(this).val();
 			var selectedAction = gReportList[gReportIdx].action_details;
 
 			// Hard code the config for present - this should have come from the DB
