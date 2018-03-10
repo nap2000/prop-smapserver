@@ -484,10 +484,12 @@ $(document).ready(function() {
     });
 	$('#addPdfTemplate').off().click(function() {
 		globals.model.settingsAddPdfClicked();
+        $('#pdfSet').val("yes");
 	});
 	$('#delPdfTemplate').off().click(function() {
 		globals.model.settingsAddPdfClicked();
-		$('.upload_file_msg').val("");
+		$('#pdf_file_msg').val("");
+		$('#pdfSet').val("no");
 	});
     $('#downloadPdfTemplate').off().click(function() {
         downloadFile("/surveyKPI/file/pdf/surveyPdfTemplate/" + gSId);
@@ -2075,7 +2077,12 @@ function updateSettingsData() {
 	$('#set_survey_ident').val(globals.model.survey.ident);
 	$('#set_instance_name').val(globals.model.survey.instanceNameDefn);
 	$('#set_style').val(globals.model.survey.surveyClass);
-	$('.upload_file_msg').val(globals.model.survey.pdfTemplateName);
+	$('#pdf_file_msg').val(globals.model.survey.pdfTemplateName);
+	if(globals.model.survey.pdfTemplateName && globals.model.survey.pdfTemplateName.trim().length > 0) {
+		$('#pdfSet').val("yes");
+	} else {
+        $('#pdfSet').val("no");
+	}
 	$('#set_hrk').val(globals.model.survey.hrk);
 	if(globals.model.survey.key_policy) {
         $('#set_key_policy').val(globals.model.survey.key_policy);
