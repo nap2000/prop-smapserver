@@ -285,22 +285,31 @@ require([
                 tab[++idx] = action.name;
                 tab[++idx] = '</td>';
 
-                tab[++idx] = '<td>';            // Launch report
-                tab[++idx] = '<button class="btn btn-default report" value="';
-                tab[++idx] = i;
-                tab[++idx] = '" type="button"><i class="fa fa-book"></i></button>';
+                tab[++idx] = '<td>';			// Anonymous Link
+                tab[++idx] = location.origin + "/surveyKPI/action/" + gReportList[i].ident;
                 tab[++idx] = '</td>';
 
-                tab[++idx] = '<td>';            // Edit Report
-                tab[++idx] = '<button class="btn btn-default report_edit" value="';
+                tab[++idx] = '<td>';            // Actions
+                tab[++idx] = '<select class="form-control report_action" data-idx="';
                 tab[++idx] = i;
-                tab[++idx] = '" type="button"><i class="fa fa-edit"></i></button>';
-                tab[++idx] = '</td>';
+                tab[++idx] = '">';
 
-                tab[++idx] = '<td>';            // Delete Report
-                tab[++idx] = '<button class="btn btn-default report_delete" value="';
-                tab[++idx] = i;
-                tab[++idx] = '" type="button"><i class="fa fa-trash"></i></button>';
+                tab[++idx] = '<option value="report">';
+                tab[++idx] = '<i class="fa fa-book"></i> ';
+                tab[++idx] = '<span class="lang" data-lang="c_generate">generate</span>'
+                tab[++idx] = '</option>';
+
+                tab[++idx] = '<option value="edit">';
+                tab[++idx] = '<i class="fa fa-edit"></i> ';
+                tab[++idx] = '<span class="lang" data-lang="c_edit">edit</span>';
+                tab[++idx] = '</option>';
+
+                tab[++idx] = '<option value="delete">';
+                tab[++idx] = '<i class="fa fa-trash"></i> ';
+                tab[++idx] = '<span class="lang" data-lang="c_delete">delete</span>';
+                tab[++idx] = '</option>';
+
+                tab[++idx] = '</select>';
                 tab[++idx] = '</td>';
 
 
@@ -315,31 +324,35 @@ require([
 		$reportList.html(tab.join(''));
 
 		/*
-		 * Deleting reports
+		 * Actions
 		 */
-        $reportList.find('.report_delete').click(function() {
-            gReportIdx = $(this).val();
+        $reportList.find('.report_action').change(function() {
+            var $this = $(this);
+            gReportIdx = $this.closest('select').data("idx");
+            var action = $this.val();
             var report = gReportList[gReportIdx];
 
-            addHourglass();
-            $.ajax({
-                url: "/surveyKPI/reporting/link/"  + report.ident,
-                type: "DELETE",
-                cache: false,
-                success: function (data) {
-                    removeHourglass();
-                    getReportsForUser();
-                },
-                error: function (xhr, textStatus, err) {
-                    removeHourglass();
-                    if (xhr.readyState == 0 || xhr.status == 0) {
-                        return;  // Not an error
-                    } else {
-                        $('#publish_alert').html(localise.set["msg_err_upd"] + " : " + xhr.responseText)
-                            .addClass("alert-danger").removeClass("alert-success").show();
+            if(action === "delete") {
+                addHourglass();
+                $.ajax({
+                    url: "/surveyKPI/reporting/link/" + report.ident,
+                    type: "DELETE",
+                    cache: false,
+                    success: function (data) {
+                        removeHourglass();
+                        getReportsForUser();
+                    },
+                    error: function (xhr, textStatus, err) {
+                        removeHourglass();
+                        if (xhr.readyState == 0 || xhr.status == 0) {
+                            return;  // Not an error
+                        } else {
+                            $('#publish_alert').html(localise.set["msg_err_upd"] + " : " + xhr.responseText)
+                                .addClass("alert-danger").removeClass("alert-success").show();
+                        }
                     }
-                }
-            });
+                });
+            }
         });
 
 		/*
