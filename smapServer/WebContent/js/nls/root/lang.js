@@ -216,6 +216,7 @@ define({
     "c_cols": "Columns",
     "c_add": "Add",
     "c_create": "Create",
+    "c_generate": "Generate",
     "c_imp_xls": "Import Spreadsheet",
     "c_xlstype": "Excel Format",
     "c_roles": "Roles",
@@ -241,6 +242,7 @@ define({
     "c_on": "On",
     "c_replace": "Replace",
     "c_retry": "Retry",
+    "c_alink": "Anonymous Link",
 
     // File Types
     "ft": "File Type",
