@@ -276,13 +276,14 @@
 					<fieldset>
 						<legend class="lang" data-lang="ft_pdf">Pdf Template:</legend>
 						<input id="pdfSettings" type="hidden" name="settings" >
+						<input id="pdfSet" type="hidden" name="pdfSet" >
 
 						<div class="form-group">
 							<div class="input-group col-sm-offset-2 col-sm-7	" style="float:left;">	<!-- Override float:none set for input group -->
 								<span class="input-group-btn">
         							<input id="addPdfTemplate" name="files" title="Add" class="file-inputs" type="file" accept="application/pdf">
       							</span>
-								<input type="text" class="upload_file_msg form-control" placeholder="None selected ...">
+								<input type="text" id="pdf_file_msg" class="upload_file_msg form-control" placeholder="None selected ...">
 							</div>
 
 							<button type="button" class="btn btn-danger col-sm-1" id="delPdfTemplate"><i class="glyphicon glyphicon-trash" aria-hidden=true"></i></button>
