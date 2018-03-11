@@ -923,19 +923,6 @@ function getViewSurveys (view) {
 	}
 }
 
-function getViewLanguages(view) {
-	
-	if(view.sId != -1) {
-		var url = languageListUrl(view.sId);
-		$.getJSON(url, function(data) {
-			globals.gSelector.setSurveyLanguages(view.sId, data);
-			setSurveyViewLanguages(data, view.lang, '#settings_language', false);	
-			setSurveyViewLanguages(data, view.lang, '#export_language', true);
-		});
-	}
-	
-}
-
 /*
  * Get the list of available regions
  */

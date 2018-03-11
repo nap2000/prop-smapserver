@@ -2890,26 +2890,32 @@ function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms) {
         }
     }
 
-    h[++idx] = '<span style="padding-left:';
-    h[++idx] = offset;
-    h[++idx] = 'px;">';
-    //if(osm && (!set_radio || offset > 0)) {
-    //    h[++idx] = '<input class="osmform" type="' + type + '" name="osmform" value="';
-    //} else {
-    h[++idx] = '<input class="osmform" type="' + type + '" ' + checked + ' name="osmform" value="';
-    //}
+    //h[++idx] = '<span style="padding-left:';
+    //h[++idx] = offset;
+    //h[++idx] = 'px;">';
+    //h[++idx] = '<input class="osmform" type="' + type + '" ' + checked + ' name="osmform" value="';
+	h[++idx] = '<div class="' + type + '"';
+	h[++idx] = '<span style="padding-left:';
+	h[++idx]= offset + 'px;">';
+	h[++idx] = '<label>';
+	h[++idx] = '<input class="osmform" type="' + type + '" ' + checked + ' name="osmform" value="';
     h[++idx] = form.f_id;
     if(!osm) {
         h[++idx] = ':false"/>';
     } else {
-        h[++idx] = '"/>';
+        h[++idx] = '">';
     }
     h[++idx] = form.form;
+    h[++idx] = '</label>';
     if(form.p_id != 0 && !osm) {
         h[++idx] = ' <button class="exportpivot">Pivot</button>';
     }
-    h[++idx] = '<br/>';
-    h[++idx] = '</span>';
+    h[++idx]= '</div>';
+
+
+
+    //h[++idx] = '<br/>';
+    //h[++idx] = '</span>';
 
     // Add the children (recursively)
     for(i = 0; i < sMeta.forms.length; i++) {
@@ -2921,6 +2927,18 @@ function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms) {
     return h.join('');
 }
 
+function getViewLanguages(view) {
+
+    if(view.sId != -1) {
+        var url = languageListUrl(view.sId);
+        $.getJSON(url, function(data) {
+            globals.gSelector.setSurveyLanguages(view.sId, data);
+            setSurveyViewLanguages(data, view.lang, '#settings_language', false);
+            setSurveyViewLanguages(data, view.lang, '#export_language', true);
+        });
+    }
+
+}
 
 /*
  * Prevent the menu bar from extending over two lines
