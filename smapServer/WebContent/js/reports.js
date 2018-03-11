@@ -228,8 +228,19 @@ require([
             getSurveyMetaSE(sId, undefined, false, true, true, dateQuestionId);
         } else {
             addFormPickList(sMeta);
-            //addDatePickList(sMeta);   TODO
+            addDatePickList(sMeta);
         }
+
+        var languages = globals.gSelector.getSurveyLanguages(sId);
+        if(typeof languages === "undefined") {
+            var view = {
+                sId: sId
+            }
+            getViewLanguages(view);
+        } else {
+            setSurveyViewLanguages(languages, undefined, '#export_language', true);
+        }
+
     }
 
 	/*
