@@ -6,6 +6,8 @@ define({
     "m_reports": "Reports",
     "m_reports_def": "Default Reports",
     "m_reports_org": "Organisation Reports",
+    "m_reports_leg": "Legacy Reports",
+    "m_reports_new": "New Reports",
     "m_refresh": "Refresh",
     "m_export": "Export",
     "m_export_media": "Export with Media",
