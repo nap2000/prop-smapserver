@@ -140,7 +140,7 @@ require([
         });
 
         $('#addReport').click(function(){
-
+            $('#publish_form')[0].reset();
             $('#publish_popup').modal("show");
 		});
 
@@ -275,7 +275,9 @@ require([
             for (i = 0; i < gReportList.length; i++) {
                 var action = gReportList[i].action_details;
 
-                tab[++idx] = '<tr>';
+                tab[++idx] = '<tr data-idx="'
+                tab[++idx] = i;
+                tab[++idx] = '">';
 
                 tab[++idx] = '<td>';
                 tab[++idx] = action.surveyName;
@@ -289,28 +291,10 @@ require([
                 tab[++idx] = location.origin + "/surveyKPI/action/" + gReportList[i].ident;
                 tab[++idx] = '</td>';
 
-                tab[++idx] = '<td>';            // Actions
-                tab[++idx] = '<select class="form-control report_action" data-idx="';
-                tab[++idx] = i;
-                tab[++idx] = '">';
-
-                tab[++idx] = '<option value="report">';
-                tab[++idx] = '<i class="fa fa-book"></i> ';
-                tab[++idx] = '<span class="lang" data-lang="c_generate">generate</span>'
-                tab[++idx] = '</option>';
-
-                tab[++idx] = '<option value="edit">';
-                tab[++idx] = '<i class="fa fa-edit"></i> ';
-                tab[++idx] = '<span class="lang" data-lang="c_edit">edit</span>';
-                tab[++idx] = '</option>';
-
-                tab[++idx] = '<option value="delete">';
-                tab[++idx] = '<i class="fa fa-trash"></i> ';
-                tab[++idx] = '<span class="lang" data-lang="c_delete">delete</span>';
-                tab[++idx] = '</option>';
-
-                tab[++idx] = '</select>';
-                tab[++idx] = '</td>';
+                tab[++idx] = '<td class="dropdown"><a class="btn btn-default report_action lang"';
+                tab[++idx] = ' data-toggle="dropdown" href="#">';
+                tab[++idx] = '<i class="fa fa-ellipsis-v"></i>';
+                tab[++idx] = '</a></td>';
 
 
                 tab[++idx] = '</tr>';
@@ -324,40 +308,59 @@ require([
 		$reportList.html(tab.join(''));
 
 		/*
-		 * Actions
+		 * Action Dropbox
 		 */
-        $reportList.find('.report_action').change(function() {
-            var $this = $(this);
-            gReportIdx = $this.closest('select').data("idx");
-            var action = $this.val();
-            var report = gReportList[gReportIdx];
-
-            if(action === "delete") {
-                addHourglass();
-                $.ajax({
-                    url: "/surveyKPI/reporting/link/" + report.ident,
-                    type: "DELETE",
-                    cache: false,
-                    success: function (data) {
-                        removeHourglass();
-                        getReportsForUser();
-                    },
-                    error: function (xhr, textStatus, err) {
-                        removeHourglass();
-                        if (xhr.readyState == 0 || xhr.status == 0) {
-                            return;  // Not an error
-                        } else {
-                            $('#publish_alert').html(localise.set["msg_err_upd"] + " : " + xhr.responseText)
-                                .addClass("alert-danger").removeClass("alert-success").show();
-                        }
-                    }
-                });
-            }
+		var $dropdown = $('#contextMenu');
+        $reportList.find('.report_action').click(function() {
+            $(this).after($dropdown);
+            $(this).dropdown();
         });
 
-		/*
-		 * Launching reports
-		 */
+        /*
+         * Delete
+         */
+        $('#repDelete').click(function() {
+            var $this = $(this);
+            gReportIdx = $this.closest('tr').data("idx");
+            var report = gReportList[gReportIdx];
+
+            // Move the context menu out of the way
+            $('#menuStore').after($dropdown);
+
+            addHourglass();
+            $.ajax({
+                url: "/surveyKPI/reporting/link/" + report.ident,
+                type: "DELETE",
+                cache: false,
+                success: function (data) {
+                    removeHourglass();
+                    getReportsForUser();
+                },
+                error: function (xhr, textStatus, err) {
+                    removeHourglass();
+                    if (xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        $('#publish_alert').html(localise.set["msg_err_upd"] + " : " + xhr.responseText)
+                            .addClass("alert-danger").removeClass("alert-success").show();
+                    }
+                }
+            });
+        });
+
+        $('#repEdit').click(function() {
+            var $this = $(this);
+            gReportIdx = $this.closest('tr').data("idx");
+            var report = gReportList[gReportIdx];
+
+            $('#r_name').val(report.action_details.name);
+            $('#publish_popup').modal("show");
+        });
+
+
+        /*
+         * Launching reports
+         */
 		$reportList.find('.report').click(function() {
 
 			gReportIdx = $(this).val();
