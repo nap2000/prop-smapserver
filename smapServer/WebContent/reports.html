@@ -84,7 +84,7 @@
                 </li>
                 -->
                 <li class="nav-divider"></li>
-                <li id="m_reports_leg"><a href="/fieldAnalysis/reports.html" target="_blank"><i class="fa fa-file"></i> <span
+                <li id="m_reports_leg"><a href="/fieldAnalysis/reports.html"><i class="fa fa-file"></i> <span
                         class="lang" data-lang="m_reports_leg">legacy reports</span></a></li>
             </ul>
         </div>
@@ -188,7 +188,7 @@
     </div>
 </div>
 
-<!-- Modal to publish a new report -->
+<!-- Modal to edit or create a report -->
 <div id="publish_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="publishLabel"
      aria-hidden="true">
     <div class="modal-dialog">
@@ -234,6 +234,55 @@
                         </div>
                     </div>
 
+                    <div class="well">
+                        <div class="form-group">
+                            <label for="export_date_question" class="col-sm-2 control-label lang" data-lang="c_lang">language</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="export_language"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-1 col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="splitlocn"><span data-lang="a_exp_split" class="lang">split lat lon</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-1 col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="mergeSelectMultiple"><span data-lang="a_exp_merge" class="lang">compress select multiples</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-1 col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="embedImages"><span data-lang="a_embed" class="lang">embed</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-1 col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" checked="checked" id="includeMeta"><span data-lang="a_exp_meta" class="lang">meta</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label class="col-sm-2 control-label lang" data-lang="msg_sel_form">select form</label>
                         <div class="col-sm-10">
@@ -241,7 +290,25 @@
                         </div>
                     </div>
 
-                    <div class="advanced_filter well">
+                    <div class="well">
+                        <div class="form-group">
+                            <label for="export_date_question" class="col-sm-2 control-label lang" data-lang="c_dateq">date</label>
+                            <div class="col-sm-10">
+                                <select class="date_question form-control" id="export_date_question"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="exp_from_date" class="col-sm-2 control-label lang" data-lang="a_from_date">from</label>
+                            <div class="col-sm-10">
+                                <input type="date" id="exp_from_date" class="form-control hasDatepicker"> <span class="lang" data-lang="c_inclusive">Inclusive</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="exp_to_date" class="col-sm-2 control-label lang" data-lang="a_to_date">to</label>
+                            <div class="col-sm-10">
+                                <input type="date" id="exp_to_date" class="form-control hasDatepicker"> <span class="lang" data-lang="c_inclusive">inclusive</span>
+                            </div>
+                        </div>
                         <div class="form-group" data-container="body">
                             <label for="tg_ad_filter" data-lang="c_filter" class="lang col-sm-2 control-label">filter</label>
                             <div class="col-sm-10">
@@ -250,8 +317,8 @@
                                     <span class="input-group-addon">
                                         <a href="/sqlFilterHelp.html" target="_blank">
                                             <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-									    </a>
-								    </span>
+                                        </a>
+                                    </span>
                                 </div>
                             </div>
                         </div>
