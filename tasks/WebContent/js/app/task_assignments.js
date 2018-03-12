@@ -444,6 +444,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 // open the modal read only
                 $('#addTask').find('input,select,#addNewGroupSave').prop('disabled', true);
                 $('#addTaskLabel').text(localise["t_edit_group"]);
+
+
                 $('#addTask').modal("show");
 
             });
@@ -462,10 +464,19 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                 // Clear form
                 $('#assign_survey_form')[0].reset();
+
+                $('#assign_user_type').prop('checked', true);
+                $('#assign_role_type').prop('checked', false);
+                $('#assign_user_type').closest('label').addClass('active');
+                $('#assign_role_type').closest('label').removeClass('active');
+                $('.assign_user').show();
+                $('.assign_role').hide();
+
                 surveyChanged("-1");
                 $('#add_task_from_existing').hide();
                 $('.simple_filter').hide();
                 $('.advanced_filter').hide();
+
 
 
                 // open the modal
