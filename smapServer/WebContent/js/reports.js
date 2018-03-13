@@ -141,83 +141,99 @@ require([
 
         $('#addReport').click(function(){
             $('#publish_form')[0].reset();
+
+            // Set button to create
+            $('#publishReport').show();
+            $('#saveReport').hide();
             $('#publish_popup').modal("show");
 		});
 
         $('#publishReport').click(function () {
-
-            var sId = $('#survey').val();
-            var name = $('#r_name').val();
-            var reportType = $('#reportType').val();
-
-            var filename = $('#filename').val();
-            var forms = $(':radio:checked', '.shapeforms').map(function() {
-                return this.value;
-            }).get();
-            var form = forms[0];
-
-            // Validation
-            if(sId <= 0) {
-                $('#publish_alert').html(localise.set["a_exp_leg1"])
-                    .addClass("alert-danger").removeClass("alert-success").show();
-                return;
-            } else if (!name || name.trim().length == 0) {
-                $('#publish_alert').html(localise.set["msg_val_nm"])
-                    .addClass("alert-danger").removeClass("alert-success").show();
-                return;
-            }
-
-            // Add roles
-            if (globals.gIsSecurityAdministrator) {
-                var roleIds = [],
-                    id;
-                $('input[type=checkbox]:checked', '.role_select_roles').each(function () {
-                    id = $(this).val();
-                    roleIds.push(id);
-                });
-                if (roleIds.length > 0) {
-                    url += "?roles=" + roleIds.join();
-                }
-            }
-
-            var url = "/surveyKPI/reporting/link/" + name + "/" + sId
-                + "?reportType=" + reportType;
-
-            if(filename && filename.trim().length > 0) {
-                url += "&filename=" + filename;
-            }
-            if(form > 0) {
-                url += "&form=" + form;
-            }
-
-            addHourglass();
-            $.ajax({
-                url: url,
-                dataType: 'json',
-                cache: false,
-                success: function (data) {
-
-                    removeHourglass();
-                    getReportsForUser();
-                    $('#publish_alert').html("").hide();
-                    $('#publish_popup').addClass("alert-success").removeClass("alert-danger").modal("hide");
-                },
-                error: function (xhr, textStatus, err) {
-                    removeHourglass();
-                    if (xhr.readyState == 0 || xhr.status == 0) {
-                        return;  // Not an error
-                    } else {
-                    	$('#publish_alert').html(localise.set["msg_err_upd"] + " : " + xhr.responseText)
-                            .addClass("alert-danger").removeClass("alert-success").show();
-                    }
-                }
-            });
-
+            updateReport(false);
         });
 
+        $('#saveReport').click(function () {
+            updateReport(true);
+        });
 
 		enableUserProfileBS();
 	});
+
+	function updateReport(edit) {
+        var sId = $('#survey').val();
+        var name = $('#r_name').val();
+        var reportType = $('#reportType').val();
+        var includeMeta = $('#includeMeta').prop('checked');
+        var filename = $('#filename').val();
+        var forms = $(':radio:checked', '.shapeforms').map(function() {
+            return this.value;
+        }).get();
+        var form = forms[0];
+
+        // Validation
+        if(sId <= 0) {
+            $('#publish_alert').html(localise.set["a_exp_leg1"])
+                .addClass("alert-danger").removeClass("alert-success").show();
+            return;
+        } else if (!name || name.trim().length == 0) {
+            $('#publish_alert').html(localise.set["msg_val_nm"])
+                .addClass("alert-danger").removeClass("alert-success").show();
+            return;
+        }
+
+        // Add roles
+        if (globals.gIsSecurityAdministrator) {
+            var roleIds = [],
+                id;
+            $('input[type=checkbox]:checked', '.role_select_roles').each(function () {
+                id = $(this).val();
+                roleIds.push(id);
+            });
+            if (roleIds.length > 0) {
+                url += "?roles=" + roleIds.join();
+            }
+        }
+
+        var url = "/surveyKPI/reporting/link/" + name + "/" + sId
+            + "?reportType=" + reportType;
+
+        if(filename && filename.trim().length > 0) {
+            url += "&filename=" + filename;
+        }
+        if(form > 0) {
+            url += "&form=" + form;
+        }
+        if(includeMeta) {
+            url += "&meta=true";
+        }
+
+        if(edit) {
+            url += "&ident=" + gReportList[gReportIdx].ident;
+        }
+
+        addHourglass();
+        $.ajax({
+            url: url,
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+
+                removeHourglass();
+                getReportsForUser();
+                $('#publish_alert').html("").hide();
+                $('#publish_popup').addClass("alert-success").removeClass("alert-danger").modal("hide");
+            },
+            error: function (xhr, textStatus, err) {
+                removeHourglass();
+                if (xhr.readyState == 0 || xhr.status == 0) {
+                    return;  // Not an error
+                } else {
+                    $('#publish_alert').html(localise.set["msg_err_upd"] + " : " + xhr.responseText)
+                        .addClass("alert-danger").removeClass("alert-success").show();
+                }
+            }
+        });
+    }
 
     function surveyChanged() {
         var sId = $('#survey').val();
@@ -323,7 +339,7 @@ require([
 		 */
 		var $dropdown = $('#contextMenu');
         $reportList.find('.report_action').click(function() {
-            $(this).after($dropdown);
+            $(this).after($dropdown.clone(true));
             $(this).dropdown();
         });
 
@@ -361,10 +377,38 @@ require([
 
         $('#repEdit').click(function() {
             var $this = $(this);
+            var i;
+
             gReportIdx = $this.closest('tr').data("idx");
             var report = gReportList[gReportIdx];
 
             $('#r_name').val(report.action_details.name);
+
+            // Add parameters
+            var meta = false;
+            var form = 0;
+            for(i =0; i < report.action_details.parameters.length; i++) {
+                var param = report.action_details.parameters[i];
+
+                if(param.k === "meta") {
+                    if(param.v === "true") {
+                        meta = true;
+                    }
+                } else  if(param.k === "form") {
+                    form = param.v;
+                    $('.shapeforms').each(function() {
+                        if($(this).val() == form) {
+                            $(this).prop('checked', true);
+                        }
+                    }).get();
+                }
+            }
+            $('#includeMeta').prop('checked', meta);
+
+            // Set button to save
+            $('#publishReport').hide();
+            $('#saveReport').show();
+
             $('#publish_popup').modal("show");
         });
 
