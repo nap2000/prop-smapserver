@@ -412,6 +412,15 @@ require([
             $('#publish_popup').modal("show");
         });
 
+        $('#repGenerate').click(function() {
+            var $this = $(this);
+            var i;
+
+            gReportIdx = $this.closest('tr').data("idx");
+            var report = gReportList[gReportIdx];
+
+            downloadFile(location.origin + "/surveyKPI/action/" + report.ident);
+        });
 
         /*
          * Launching reports
