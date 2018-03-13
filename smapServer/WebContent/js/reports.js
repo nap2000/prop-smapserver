@@ -164,6 +164,7 @@ require([
         var name = $('#r_name').val();
         var reportType = $('#reportType').val();
         var includeMeta = $('#includeMeta').prop('checked');
+        var split_locn = $('#splitlocn').prop('checked');
         var filename = $('#filename').val();
         var forms = $(':radio:checked', '.shapeforms').map(function() {
             return this.value;
@@ -172,12 +173,10 @@ require([
 
         // Validation
         if(sId <= 0) {
-            $('#publish_alert').html(localise.set["a_exp_leg1"])
-                .addClass("alert-danger").removeClass("alert-success").show();
+            alert(localise.set["a_exp_leg1"]);
             return;
         } else if (!name || name.trim().length == 0) {
-            $('#publish_alert').html(localise.set["msg_val_nm"])
-                .addClass("alert-danger").removeClass("alert-success").show();
+            alert(localise.set["msg_val_nm"]);
             return;
         }
 
@@ -206,6 +205,9 @@ require([
         if(includeMeta) {
             url += "&meta=true";
         }
+        if(split_locn) {
+            url += "&split_locn=true";
+        }
 
         if(edit) {
             url += "&ident=" + gReportList[gReportIdx].ident;
@@ -220,16 +222,14 @@ require([
 
                 removeHourglass();
                 getReportsForUser();
-                $('#publish_alert').html("").hide();
-                $('#publish_popup').addClass("alert-success").removeClass("alert-danger").modal("hide");
+                $('#publish_popup').modal("hide");
             },
             error: function (xhr, textStatus, err) {
                 removeHourglass();
                 if (xhr.readyState == 0 || xhr.status == 0) {
                     return;  // Not an error
                 } else {
-                    $('#publish_alert').html(localise.set["msg_err_upd"] + " : " + xhr.responseText)
-                        .addClass("alert-danger").removeClass("alert-success").show();
+                    alert(localise.set["msg_err_upd"] + " : " + xhr.responseText);
                 }
             }
         });
@@ -302,7 +302,7 @@ require([
             for (i = 0; i < gReportList.length; i++) {
                 var action = gReportList[i].action_details;
 
-                tab[++idx] = '<tr data-idx="'
+                tab[++idx] = '<tr data-idx="';
                 tab[++idx] = i;
                 tab[++idx] = '">';
 
@@ -318,12 +318,18 @@ require([
                 tab[++idx] = location.origin + "/surveyKPI/action/" + gReportList[i].ident;
                 tab[++idx] = '</td>';
 
-                tab[++idx] = '<td class="dropdown"><a class="btn btn-default report_action lang"';
-                tab[++idx] = ' data-toggle="dropdown" href="#">';
-                tab[++idx] = '<i class="fa fa-ellipsis-v"></i>';
-                tab[++idx] = '</a></td>';
-
-
+                tab[++idx] = '<td>';
+                tab[++idx] = '<div class="dropdown">';
+                tab[++idx] = '<button id="dropdownMenu' + i + '" class="btn btn-default dropdown-toggle report_action" data-toggle="dropdown"  type="button" aria-haspopup="true" aria-expanded="false">';
+                tab[++idx] = localise.set["c_action"] + ' <span class="caret"></span>';
+                tab[++idx] = '</button>';
+                tab[++idx] = '<ul class="dropdown-menu" aria-labelledby="dropdownMenu' + i + '">';
+                    tab[++idx] = '<li><a class="repGenerate" href="#">' + localise.set["c_generate"] + '</a></li>';
+                    tab[++idx] = '<li><a class="repEdit" href="#">' + localise.set["c_edit"] + '</a></li>';
+                    tab[++idx] = '<li><a class="repDelete" href="#">' + localise.set["c_del"] + '</a></li>';
+                tab[++idx] = '</ul>';
+                tab[++idx] = '</div>';  // Dropdown class
+                tab[++idx] = '</td>';
                 tab[++idx] = '</tr>';
 
                 // Add an object to store parameter values
@@ -346,7 +352,7 @@ require([
         /*
          * Delete
          */
-        $('#repDelete').click(function() {
+        $('.repDelete').click(function() {
             var $this = $(this);
             gReportIdx = $this.closest('tr').data("idx");
             var report = gReportList[gReportIdx];
@@ -368,26 +374,30 @@ require([
                     if (xhr.readyState == 0 || xhr.status == 0) {
                         return;  // Not an error
                     } else {
-                        $('#publish_alert').html(localise.set["msg_err_upd"] + " : " + xhr.responseText)
-                            .addClass("alert-danger").removeClass("alert-success").show();
+                        alert(localise.set["msg_err_upd"] + " : " + xhr.responseText);
                     }
                 }
             });
         });
 
-        $('#repEdit').click(function() {
+        $('.repEdit').click(function() {
             var $this = $(this);
             var i;
 
             gReportIdx = $this.closest('tr').data("idx");
             var report = gReportList[gReportIdx];
 
+            $('#publish_form')[0].reset();
             $('#r_name').val(report.action_details.name);
+
+            $('#survey').val(report.action_details.sId);
+            surveyChanged();
 
             // Add parameters
             var meta = false;
+            var split_locn = false;
             var form = 0;
-            for(i =0; i < report.action_details.parameters.length; i++) {
+            for(i = 0; i < report.action_details.parameters.length; i++) {
                 var param = report.action_details.parameters[i];
 
                 if(param.k === "meta") {
@@ -395,15 +405,23 @@ require([
                         meta = true;
                     }
                 } else  if(param.k === "form") {
-                    form = param.v;
-                    $('.shapeforms').each(function() {
+                    form = +param.v;
+                    $('.shapeforms').find("input").each(function() {
+                        console.log($(this).val());
                         if($(this).val() == form) {
                             $(this).prop('checked', true);
+                        } else {
+                            
                         }
                     }).get();
+                } else if(param.k === "split_locn") {
+                    if(param.v === "true") {
+                        split_locn = true;
+                    }
                 }
             }
             $('#includeMeta').prop('checked', meta);
+            $('#splitlocn').prop('checked', split_locn);
 
             // Set button to save
             $('#publishReport').hide();
@@ -412,7 +430,7 @@ require([
             $('#publish_popup').modal("show");
         });
 
-        $('#repGenerate').click(function() {
+        $('.repGenerate').click(function() {
             var $this = $(this);
             var i;
 
