@@ -18,7 +18,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Get a surveys meta data
  */
-function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, currentDate, neo_model) {
+function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, currentDate, neo_model, callback) {
 
 	if(sId != -1) {
         var url = "/surveyKPI/survey/" + sId + "/getMeta";
@@ -51,6 +51,10 @@ function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, curren
 
 					neo_model.init(sId, undefined, undefined, data.model);
 					neo_model.showModel('#ta_model_show', sId, 200, 200);
+				}
+
+				if(typeof callback === "function") {
+					callback();
 				}
 
 			},
