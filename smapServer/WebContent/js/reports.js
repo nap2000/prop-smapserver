@@ -27,6 +27,7 @@ if (Modernizr.localstorage) {
 var gReportList = [];
 var gConfig;
 var gReportIdx;
+var gForm = 0;
 
 requirejs.config({
     baseUrl: 'js/libs',
@@ -136,7 +137,7 @@ require([
 
         // Set change function on surveys
         $('#survey').change(function() {
-            surveyChanged();
+            surveyChanged(setForm);
         });
 
         $('#addReport').click(function(){
@@ -165,6 +166,7 @@ require([
         var reportType = $('#reportType').val();
         var includeMeta = $('#includeMeta').prop('checked');
         var split_locn = $('#splitlocn').prop('checked');
+        var merge_select_multiple = $('#mergeSelectMultiple').prop('checked');
         var filename = $('#filename').val();
         var forms = $(':radio:checked', '.shapeforms').map(function() {
             return this.value;
@@ -208,6 +210,9 @@ require([
         if(split_locn) {
             url += "&split_locn=true";
         }
+        if(merge_select_multiple) {
+            url += "&merge_select_multiple=true";
+        }
 
         if(edit) {
             url += "&ident=" + gReportList[gReportIdx].ident;
@@ -235,13 +240,13 @@ require([
         });
     }
 
-    function surveyChanged() {
+    function surveyChanged(callback) {
         var sId = $('#survey').val();
         var dateQuestionId = 0;     // TODO
         // Set the survey meta data
         var sMeta = globals.gSelector.getSurvey(sId);
         if(!sMeta) {
-            getSurveyMetaSE(sId, undefined, false, true, true, dateQuestionId);
+            getSurveyMetaSE(sId, undefined, false, true, true, dateQuestionId, false, callback);
         } else {
             addFormPickList(sMeta);
             addDatePickList(sMeta);
@@ -391,12 +396,12 @@ require([
             $('#r_name').val(report.action_details.name);
 
             $('#survey').val(report.action_details.sId);
-            surveyChanged();
+            surveyChanged(setForm);
 
             // Add parameters
             var meta = false;
             var split_locn = false;
-            var form = 0;
+            var merge_select_multiple = false;
             for(i = 0; i < report.action_details.parameters.length; i++) {
                 var param = report.action_details.parameters[i];
 
@@ -405,23 +410,21 @@ require([
                         meta = true;
                     }
                 } else  if(param.k === "form") {
-                    form = +param.v;
-                    $('.shapeforms').find("input").each(function() {
-                        console.log($(this).val());
-                        if($(this).val() == form) {
-                            $(this).prop('checked', true);
-                        } else {
-                            
-                        }
-                    }).get();
+                    gForm = +param.v;
+                    setForm();
                 } else if(param.k === "split_locn") {
                     if(param.v === "true") {
                         split_locn = true;
+                    }
+                } else if(param.k === "merge_select_multiple") {
+                    if(param.v === "true") {
+                        merge_select_multiple = true;
                     }
                 }
             }
             $('#includeMeta').prop('checked', meta);
             $('#splitlocn').prop('checked', split_locn);
+            $('#mergeSelectMultiple').prop('checked', merge_select_multiple);
 
             // Set button to save
             $('#publishReport').hide();
@@ -551,6 +554,18 @@ require([
         url += "/" + filename;
 
         return url;
+    }
+
+    /*
+     * Set the selected form in the pick list
+     */
+    function setForm() {
+        $('.shapeforms').find("input").each(function() {
+            console.log($(this).val());
+            if($(this).val() == gForm) {
+                $(this).prop('checked', true);
+            }
+        }).get();
     }
 
 });
