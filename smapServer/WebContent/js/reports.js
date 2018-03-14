@@ -167,6 +167,7 @@ require([
         var includeMeta = $('#includeMeta').prop('checked');
         var split_locn = $('#splitlocn').prop('checked');
         var merge_select_multiple = $('#mergeSelectMultiple').prop('checked');
+        var embed_images = $('#embedImages').prop('checked');
         var filename = $('#filename').val();
         var forms = $(':radio:checked', '.shapeforms').map(function() {
             return this.value;
@@ -212,6 +213,9 @@ require([
         }
         if(merge_select_multiple) {
             url += "&merge_select_multiple=true";
+        }
+        if(embed_images) {
+            url += "&embedimages=true";
         }
 
         if(edit) {
@@ -402,6 +406,7 @@ require([
             var meta = false;
             var split_locn = false;
             var merge_select_multiple = false;
+            var embed_images = false;
             for(i = 0; i < report.action_details.parameters.length; i++) {
                 var param = report.action_details.parameters[i];
 
@@ -420,11 +425,16 @@ require([
                     if(param.v === "true") {
                         merge_select_multiple = true;
                     }
+                } else if(param.k === "embed_images") {
+                    if(param.v === "true") {
+                        embed_images = true;
+                    }
                 }
             }
             $('#includeMeta').prop('checked', meta);
             $('#splitlocn').prop('checked', split_locn);
             $('#mergeSelectMultiple').prop('checked', merge_select_multiple);
+            $('#embedImages').prop('checked', embed_images);
 
             // Set button to save
             $('#publishReport').hide();
