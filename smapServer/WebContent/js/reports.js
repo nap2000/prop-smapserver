@@ -168,6 +168,7 @@ require([
         var split_locn = $('#splitlocn').prop('checked');
         var merge_select_multiple = $('#mergeSelectMultiple').prop('checked');
         var embed_images = $('#embedImages').prop('checked');
+        var language = $('#export_language').val();
         var filename = $('#filename').val();
         var forms = $(':radio:checked', '.shapeforms').map(function() {
             return this.value;
@@ -216,6 +217,9 @@ require([
         }
         if(embed_images) {
             url += "&embedimages=true";
+        }
+        if(language != "none") {
+            url += "&language=" + language;
         }
 
         if(edit) {
@@ -407,6 +411,7 @@ require([
             var split_locn = false;
             var merge_select_multiple = false;
             var embed_images = false;
+            var language = "none";
             for(i = 0; i < report.action_details.parameters.length; i++) {
                 var param = report.action_details.parameters[i];
 
@@ -429,12 +434,15 @@ require([
                     if(param.v === "true") {
                         embed_images = true;
                     }
+                } else if(param.k === "language") {
+                    language = param.v;
                 }
             }
             $('#includeMeta').prop('checked', meta);
             $('#splitlocn').prop('checked', split_locn);
             $('#mergeSelectMultiple').prop('checked', merge_select_multiple);
             $('#embedImages').prop('checked', embed_images);
+            $('#export_language').val(language);
 
             // Set button to save
             $('#publishReport').hide();

@@ -112,6 +112,10 @@ function setTableSurvey(view) {
 	$selFoot.find('.tDelete').button().off().click(function() {
 		deleteAllTables(view.sId);
 	});
+
+    $selFoot.find('.tRestore').button().off().click(function() {
+        restoreAllTables(view.sId);
+    });
 	
 	/*
 	 * Enable the dialog to import data
@@ -259,6 +263,37 @@ function deleteAllTables(sId) {
 
 }
 
+function restoreAllTables(sId) {
+    var msg = localise.set["msg_res_data"];
+    var decision = confirm(msg);
+    if (decision == true) {
+        var msg2 = localise.set["msg_del_data2"];
+        var decision2 = confirm(msg2);
+        if(decision2 == true) {
+            addHourglass();
+            $.ajax({
+                url: "/surveyKPI/surveyResults/" + sId + "/restore",
+                cache: false,
+                success: function (response) {
+                    removeHourglass();
+                    setTimeout(refreshAnalysisData, 5000);
+                },
+                error: function (xhr, textStatus, err) {
+                    removeHourglass();
+                    if (xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        console.log(xhr);
+                        alert(localise.set["error"] + " " + err);
+                    }
+                }
+            });
+        }
+	}
+
+
+}
+
 function showTable(tableIdx, view, tableItems, fId, survey_ident) {
 
 	var elemMain = 'table_panel' + view.pId,
@@ -339,6 +374,7 @@ function setTableQuestion(view) {
 	$selFoot.find('.tExport,.tExportMedia').hide();		// Export of table level data from question view no longer supported
 	$selFoot.find('.tImport').hide();
 	$selFoot.find('.tDelete').hide();
+    $selFoot.find('.tRestore').hide();
 	
 }
 
