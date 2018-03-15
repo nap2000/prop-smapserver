@@ -157,6 +157,10 @@ require([
             updateReport(true);
         });
 
+        $('#publish_popup').on('shown.bs.modal', function () {
+            $('#r_name').focus();
+        })
+
 		enableUserProfileBS();
 	});
 
@@ -169,6 +173,7 @@ require([
         var merge_select_multiple = $('#mergeSelectMultiple').prop('checked');
         var embed_images = $('#embedImages').prop('checked');
         var language = $('#export_language').val();
+        var filter = $('#tg_ad_filter').val();
         var filename = $('#filename').val();
         var forms = $(':radio:checked', '.shapeforms').map(function() {
             return this.value;
@@ -181,6 +186,7 @@ require([
             return;
         } else if (!name || name.trim().length == 0) {
             alert(localise.set["msg_val_nm"]);
+            $('#r_name').focus();
             return;
         }
 
@@ -220,6 +226,9 @@ require([
         }
         if(language != "none") {
             url += "&language=" + language;
+        }
+        if(filter && filter.length > 0) {
+            url += "&filter=" + filter;
         }
 
         if(edit) {
@@ -412,6 +421,7 @@ require([
             var merge_select_multiple = false;
             var embed_images = false;
             var language = "none";
+            var filter;
             for(i = 0; i < report.action_details.parameters.length; i++) {
                 var param = report.action_details.parameters[i];
 
@@ -436,6 +446,8 @@ require([
                     }
                 } else if(param.k === "language") {
                     language = param.v;
+                } else if(param.k === "filter") {
+                    filter = param.v;
                 }
             }
             $('#includeMeta').prop('checked', meta);
@@ -443,6 +455,7 @@ require([
             $('#mergeSelectMultiple').prop('checked', merge_select_multiple);
             $('#embedImages').prop('checked', embed_images);
             $('#export_language').val(language);
+            $('#tg_ad_filter').val(filter);
 
             // Set button to save
             $('#publishReport').hide();
