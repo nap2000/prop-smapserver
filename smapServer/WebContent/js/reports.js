@@ -172,7 +172,7 @@ require([
                 useCurrent: false
             });
             $('#r_name').focus();
-        })
+        });
 
 		enableUserProfileBS();
 	});
@@ -187,12 +187,13 @@ require([
         var embed_images = $('#embedImages').prop('checked');
         var language = $('#export_language').val();
         var dateId = $('#export_date_question').val();
-        var exp_from_date;
+        var exp_from_date = undefined;
+        var exp_to_date = undefined;
         if($('#exp_from_date').data("DateTimePicker").date()) {
-            exp_from_date = $('#exp_from_date').data("DateTimePicker").date().startOf('day');
+            exp_from_date = $('#exp_from_date').data("DateTimePicker").date().startOf('day').format('YYYY-MM-DD');
         }
         if($('#exp_to_date').data("DateTimePicker").date()) {
-            exp_to_date = $('#exp_to_date').data("DateTimePicker").date().endOf('day');
+            exp_to_date = $('#exp_to_date').data("DateTimePicker").date().endOf('day').format('YYYY-MM-DD');
         }
         var filter = $('#tg_ad_filter').val();
         var filename = $('#filename').val();
@@ -489,9 +490,9 @@ require([
                     filter = param.v;
                 } else if(param.k === "dateId") {
                     dateId = param.v;
-                } else if(param.k === "from") {
+                } else if(param.k === "startDate") {
                     exp_from_date = param.v;
-                } else if(param.k === "to") {
+                } else if(param.k === "endDate") {
                     exp_to_date = param.v;
                 }
             }
