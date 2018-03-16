@@ -965,7 +965,7 @@ function exportSurveyURL (
     if(xlstype != "html") {
         url += "&filetype=" + xlstype;
     }
-    if(dateQuestionId > 0 || dateQuestionId == -100) {	// -100 is a pseudo ID for Upload Time
+    if(dateQuestionId != 0) {	// -100 is a pseudo ID for Upload Time
         url += "&dateId=" + dateQuestionId;
         if(exp_from_date) {
             url += "&from=" + exp_from_date;
