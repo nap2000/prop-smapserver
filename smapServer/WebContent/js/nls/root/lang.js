@@ -369,6 +369,7 @@ define({
     "msg_del_recs": "There are %s1 data rows submitted for %s2. Are you sure you want to delete this data?",
     "msg_del_s": "Are you sure you want to delete these surveys?",
     "msg_del_data": "Are you sure you want to delete all the data in this survey?",
+    "msg_del_groups": "This survey is part of a group and deleting its data will also delete the data for these other surveys",
     "msg_res_data": "Are you sure you want to restore all the data in this survey to the original submissions?",
     "msg_del_data2": "Are you really sure?",
     "msg_del_rep": "Are you sure you want to delete this report?",
