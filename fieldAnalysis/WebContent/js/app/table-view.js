@@ -233,33 +233,67 @@ function importData() {
 }
 
 function deleteAllTables(sId) {
-	var msg = localise.set["msg_del_data"];
-	var decision = confirm(msg);
-	if (decision == true) {
-		var msg2 = localise.set["msg_del_data2"];
-		var decision2 = confirm(msg2);		
-		if(decision2 == true) {
-			addHourglass();
-			$.ajax({
-				type : 'Delete',
-				url : deleteSurveyDataURL(sId),
-				cache: false,
-				success : function(response) {
-					removeHourglass();
-					refreshAnalysisData();
-				}, 
-				error: function(xhr, textStatus, err) {
-					removeHourglass();
-					if(xhr.readyState == 0 || xhr.status == 0) {
-			              return;  // Not an error
-					} else {
-						console.log(xhr);
-						alert(localise.set["msg_err_del"] + " " + err);
-					}
+
+	// Get the groups
+    $.ajax({
+        url: "/surveyKPI/surveyResults/" + sId + "/groups",
+        cache: false,
+        dataType: 'json',
+        success: function (response) {
+            removeHourglass();
+
+            if(response.length > 1) {
+            	var surveyList = "";
+            	for(i = 0; i < response.length; i++) {
+            		if(sId != response[i].sId) {
+                        if (surveyList.length > 0) {
+                            surveyList += ", ";
+                        }
+                        surveyList += response[i].surveyName;
+                    }
 				}
-			});
-		}
-	}
+                var decisionGroups = confirm(localise.set["msg_del_groups"] + " " + surveyList);
+                if(decisionGroups == false) {
+                	return;
+				}
+			}
+            var decision = confirm(localise.set["msg_del_data"]);
+            if (decision == true) {
+                var msg2 = localise.set["msg_del_data2"];
+                var decision2 = confirm(msg2);
+                if(decision2 == true) {
+                    addHourglass();
+                    $.ajax({
+                        type : 'Delete',
+                        url : deleteSurveyDataURL(sId),
+                        cache: false,
+                        success : function(response) {
+                            removeHourglass();
+                            refreshAnalysisData();
+                        },
+                        error: function(xhr, textStatus, err) {
+                            removeHourglass();
+                            if(xhr.readyState == 0 || xhr.status == 0) {
+                                return;  // Not an error
+                            } else {
+                                console.log(xhr);
+                                alert(localise.set["msg_err_del"] + " " + err);
+                            }
+                        }
+                    });
+                }
+            }
+        },
+        error: function (xhr, textStatus, err) {
+            removeHourglass();
+            if (xhr.readyState == 0 || xhr.status == 0) {
+                return;  // Not an error
+            } else {
+                console.log(xhr);
+                alert(localise.set["error"] + " " + err);
+            }
+        }
+    });
 
 }
 
