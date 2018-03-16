@@ -36,6 +36,7 @@ requirejs.config({
     paths: {
     	app: '../app',
     	jquery: '../../../../js/libs/jquery-2.1.1',
+        moment: 'moment-with-locales.min',
        	lang_location: '../'
     },
     shim: {
@@ -45,7 +46,8 @@ requirejs.config({
     	'icheck': ['jquery'],
        	'inspinia': ['jquery'],
     	'metismenu': ['jquery'],
-    	'slimscroll': ['jquery']
+    	'slimscroll': ['jquery'],
+        'bootstrap-datetimepicker.min': ['moment']
     }
 });
 
@@ -56,13 +58,15 @@ require([
          'app/globals',
          'app/localise',
          'bootstrapfileinput',
+         'moment',
          'inspinia',
          'metismenu',
          'slimscroll',
          'pace',
          'app/data',
-         'icheck'
-         ], function($, bootstrap, common, globals, localise, bsfi) {
+         'icheck',
+         'bootstrap-datetimepicker.min'
+         ], function($, bootstrap, common, globals, localise, bsfi, moment) {
 
 	$(document).ready(function() {
 
@@ -158,6 +162,15 @@ require([
         });
 
         $('#publish_popup').on('shown.bs.modal', function () {
+            $('#exp_from_date').datetimepicker({
+                locale: gUserLocale || 'en',
+                useCurrent: false
+            });
+
+            $('#exp_to_date').datetimepicker({
+                locale: gUserLocale || 'en',
+                useCurrent: false
+            });
             $('#r_name').focus();
         })
 
@@ -173,6 +186,14 @@ require([
         var merge_select_multiple = $('#mergeSelectMultiple').prop('checked');
         var embed_images = $('#embedImages').prop('checked');
         var language = $('#export_language').val();
+        var dateId = $('#export_date_question').val();
+        var exp_from_date;
+        if($('#exp_from_date').data("DateTimePicker").date()) {
+            exp_from_date = $('#exp_from_date').data("DateTimePicker").date().startOf('day');
+        }
+        if($('#exp_to_date').data("DateTimePicker").date()) {
+            exp_to_date = $('#exp_to_date').data("DateTimePicker").date().endOf('day');
+        }
         var filter = $('#tg_ad_filter').val();
         var filename = $('#filename').val();
         var forms = $(':radio:checked', '.shapeforms').map(function() {
@@ -188,7 +209,12 @@ require([
             alert(localise.set["msg_val_nm"]);
             $('#r_name').focus();
             return;
+        } else if(exp_from_date && exp_to_date && exp_to_date < exp_from_date) {
+            alert(window.localise.set["msg_sel_dates"]);
+            $('#exp_from_date').focus();
+            return;
         }
+
 
         // Add roles
         if (globals.gIsSecurityAdministrator) {
@@ -203,8 +229,9 @@ require([
             }
         }
 
-        var url = "/surveyKPI/reporting/link/" + name + "/" + sId
-            + "?reportType=" + reportType;
+        var url = "/surveyKPI/reporting/link/" + sId
+            + "?reportType=" + reportType
+            + "&name=" + name;
 
         if(filename && filename.trim().length > 0) {
             url += "&filename=" + filename;
@@ -217,6 +244,15 @@ require([
         }
         if(split_locn) {
             url += "&split_locn=true";
+        }
+        if(dateId != 0) {
+            url += "&dateId=" + dateId;
+        }
+        if(exp_from_date) {
+            url += "&from=" + exp_from_date;
+        }
+        if(exp_to_date) {
+            url += "&to=" + exp_to_date;
         }
         if(merge_select_multiple) {
             url += "&merge_select_multiple=true";
@@ -421,6 +457,9 @@ require([
             var merge_select_multiple = false;
             var embed_images = false;
             var language = "none";
+            var dateId = 0;
+            var exp_from_date;
+            var exp_to_date;
             var filter;
             for(i = 0; i < report.action_details.parameters.length; i++) {
                 var param = report.action_details.parameters[i];
@@ -448,6 +487,12 @@ require([
                     language = param.v;
                 } else if(param.k === "filter") {
                     filter = param.v;
+                } else if(param.k === "dateId") {
+                    dateId = param.v;
+                } else if(param.k === "from") {
+                    exp_from_date = param.v;
+                } else if(param.k === "to") {
+                    exp_to_date = param.v;
                 }
             }
             $('#includeMeta').prop('checked', meta);
@@ -456,6 +501,23 @@ require([
             $('#embedImages').prop('checked', embed_images);
             $('#export_language').val(language);
             $('#tg_ad_filter').val(filter);
+            if(dateId) {
+                $('#export_date_question').val(dateId);
+            }
+            if(exp_from_date) {
+                $('#exp_from_date').datetimepicker({
+                    locale: gUserLocale || 'en',
+                    useCurrent: false
+                }).data("DateTimePicker").date(moment(exp_from_date));
+
+                $('#r_name').focus();
+            }
+            if(exp_to_date) {
+                $('#exp_to_date').datetimepicker({
+                    locale: gUserLocale || 'en',
+                    useCurrent: false
+                }).data("DateTimePicker").date(moment(exp_to_date));
+            }
 
             // Set button to save
             $('#publishReport').hide();
