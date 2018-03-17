@@ -863,3 +863,8 @@ alter table survey add column public_link text;
 alter table form_downloads drop constraint form_downloads_form_ident_fkey;
 alter table task_completion drop constraint task_completion_form_ident_fkey;
 alter table form add column merge boolean default false;
+
+-- Upgrade to 18.03
+alter table survey add column hidden boolean default false;
+alter table survey add column original_ident text;
+update survey set hidden = 'true'  where deleted and ident like 's%\_%\_%' and not hidden;
