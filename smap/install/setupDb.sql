@@ -431,7 +431,9 @@ CREATE TABLE survey (
 	exclude_empty boolean default false,				-- True if reports should not include empty data
 	created timestamp with time zone,				-- Date / Time the survey was created
 	meta text,										-- Meta items to collect with this survey
-	public_link text
+	public_link text,
+	hidden boolean default false,					-- Updated when a form is replaced
+	text original_ident								-- Updated when a form is replaced
 	);
 ALTER TABLE survey OWNER TO ws;
 DROP INDEX IF EXISTS SurveyDisplayName;
