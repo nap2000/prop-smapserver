@@ -331,7 +331,8 @@ $(document).ready(function() {
 		$('.navbar-collapse').removeClass("in");
 		
 		updateSettingsData();		
-		
+
+		$('#settingsMsg').html("").hide();
 		$('#settingsModal').modal('show');
 	});
 
@@ -348,6 +349,13 @@ $(document).ready(function() {
 
 
 	$('#save_settings, #save_keys').off().click(function() {	// Save settings to the database
+
+		// validate
+		var displayName = $('#set_survey_name').val();
+		if(!displayName || displayName.trim().length == 0) {
+			alert(localise.set["ed_er"]);
+            return false;
+		}
 		globals.model.save_settings();
 	});
 	
@@ -464,6 +472,15 @@ $(document).ready(function() {
 	
 	// Check for changes in settings
 	$('#set_survey_name, #set_instance_name, #set_hrk').keyup(function(){
+
+		// validate
+		var displayName = $('#set_survey_name').val();
+        if(!displayName || displayName.length == 0) {
+            $('#settings_msg').html(localise.set["msg_val_nm"]).removeClass("alert-success").addClass("alert-danger").show();
+        } else {
+
+            $('#settings_msg').hide();
+		}
 		globals.model.settingsChange();
 	});
 	$('#set_project_name').change(function() {
@@ -589,7 +606,7 @@ $(document).ready(function() {
 			} else {
 				name = $('#new_form_name').val();
 				if(typeof name === "undefined" || name.trim() == "") {
-					bootbox.alert("Please specify a name for the new survey");
+					bootbox.alert(localise.set["msg_val_nm"]);
 					return false;
 				}
 				existing = $('#base_on_existing').prop('checked');

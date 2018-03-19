@@ -91,6 +91,14 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
 
             // Upload File
             $('#submitFileGroup').click( function(e) {
+
+                file = $('#templateName').val();
+
+                if(!file || file.trim().length == 0) {
+                    alert(localise.set["msg_val_nm"]);
+                    return false;
+                }
+
                 if(!gReplace) {
                     $('#surveyId').val($('#group').val());
                 }
@@ -180,6 +188,11 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                 // Check file name
                 if(!reg_start.test(file)) {
                     alert(localise.set["msg_val_let"]);
+                    return false;
+                }
+
+                if(!file || file.trim().length == 0) {
+                    alert(localise.set["msg_val_nm"]);
                     return false;
                 }
 
