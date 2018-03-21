@@ -246,6 +246,15 @@ define({
     "c_replace": "Replace",
     "c_retry": "Retry",
     "c_alink": "Anonymous Link",
+    "c_excel": "Excel",
+    "c_csv": "CSV",
+    "c_osm": "Openstreetmap",
+    "c_shape": "Shape",
+    "c_kml": "KML / KMZ",
+    "c_vrt": "VRT / CSV",
+    "c_stata": "Stata / CSV",
+    "c_spss": "SPSS / CSV",
+    "c_pdf": "PDF",
 
     // File Types
     "ft": "File Type",
