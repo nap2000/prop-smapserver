@@ -174,16 +174,26 @@ require([
             $('#r_name').focus();
         });
 
+        // Dialog methods
+        $('#reportType').change(function () {
+           setupReportDialog();
+        });
+        $('#publish_popup').on('show.bs.modal', function (event) {
+            setupReportDialog();
+        });
+
 		enableUserProfileBS();
 	});
 
 	function updateReport(edit) {
+
         var sId = $('#survey').val();
         var name = $('#r_name').val();
         var reportType = $('#reportType').val();
         var includeMeta = $('#includeMeta').prop('checked');
         var split_locn = $('#splitlocn').prop('checked');
         var merge_select_multiple = $('#mergeSelectMultiple').prop('checked');
+        var landscape = $('#orient_landscape').prop('checked');
         var embed_images = $('#embedImages').prop('checked');
         var language = $('#export_language').val();
         var dateId = $('#export_date_question').val();
@@ -260,6 +270,9 @@ require([
         }
         if(embed_images) {
             url += "&embedimages=true";
+        }
+        if(landscape) {
+            url += "&landscape=true";
         }
         if(language != "none") {
             url += "&language=" + language;
@@ -449,6 +462,7 @@ require([
             $('#publish_form')[0].reset();
             $('#r_name').val(report.action_details.name);
 
+            $('#reportType').val(report.action_details.reportType);
             $('#survey').val(report.action_details.sId);
             surveyChanged(setForm);
 
@@ -462,6 +476,7 @@ require([
             var exp_from_date;
             var exp_to_date;
             var filter;
+            var landscape;
             for(i = 0; i < report.action_details.parameters.length; i++) {
                 var param = report.action_details.parameters[i];
 
@@ -494,12 +509,21 @@ require([
                     exp_from_date = param.v;
                 } else if(param.k === "endDate") {
                     exp_to_date = param.v;
+                } else if(param.k === "landscape") {
+                    if(param.v === "true") {
+                        landscape = true;
+                    }
                 }
             }
             $('#includeMeta').prop('checked', meta);
             $('#splitlocn').prop('checked', split_locn);
             $('#mergeSelectMultiple').prop('checked', merge_select_multiple);
             $('#embedImages').prop('checked', embed_images);
+            if(landscape) {
+                $("#orient_landscape").prop("checked",true);
+            } else {
+                $("#orient_portrait").prop("checked",true);
+            }
             $('#export_language').val(language);
             $('#tg_ad_filter').val(filter);
             if(dateId) {
@@ -523,6 +547,8 @@ require([
             // Set button to save
             $('#publishReport').hide();
             $('#saveReport').show();
+
+            setupReportDialog();        // Enable and disable controls
 
             $('#publish_popup').modal("show");
         });
@@ -660,6 +686,15 @@ require([
                 $(this).prop('checked', true);
             }
         }).get();
+    }
+
+    /*
+     * Hide and show controls in the report dialog
+     */
+    function setupReportDialog() {
+        var reportType = $('#reportType').val();
+        $('.rt_dependent').hide();
+        $('.' + reportType).show();
     }
 
 });
