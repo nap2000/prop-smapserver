@@ -194,7 +194,7 @@
                                for="reportType">type</label>
                         <div class="col-sm-10">
                             <select class= "form-control" id="reportType">
-                                <option value="xlsx">New XLSX</option>
+                                <option value="xlsx" class="lang" data-lang="c_excel">excel</option>
                                 <!--
                                 <option value="csv">CSV</option>
                                 <option value="osm">OSM</option>
@@ -204,6 +204,7 @@
                                 <option value="vrt">VRT / CSV</option>
                                 <option value="stata">Stata / CSV</option>
                                 <option value="spss">SPSS / CSV</option>-->
+                                <option value="pdf" class="lang" data-lang="c_pdf">pdf</option>
                             </select>
                         </div>
                     </div>
@@ -223,7 +224,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group rt_dependent xlsx">
                             <div class="col-sm-offset-1 col-sm-10">
                                 <div class="checkbox">
                                     <label>
@@ -233,7 +234,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group rt_dependent xlsx">
                             <div class="col-sm-offset-1 col-sm-10">
                                 <div class="checkbox">
                                     <label>
@@ -243,7 +244,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group rt_dependent xlsx">
                             <div class="col-sm-offset-1 col-sm-10">
                                 <div class="checkbox">
                                     <label>
@@ -253,7 +254,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group rt_dependent xlsx">
                             <div class="col-sm-offset-1 col-sm-10">
                                 <div class="checkbox">
                                     <label>
@@ -262,9 +263,22 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="form-group rt_dependent pdf">
+                            <div class="col-sm-offset-1 col-sm-10">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" id="orient_portrait" name="orientation" value="portrait" checked="checked"><span data-lang="c_portrait" class="lang">portrait</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" id="orient_landscape"name="orientation" value="landscape"><span data-lang="c_landscape" class="lang">landscape</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group rt_dependent xlsx">
                         <label class="col-sm-2 control-label lang" data-lang="msg_sel_form">select form</label>
                         <div class="col-sm-10">
                             <div class="shapeforms"></div>
