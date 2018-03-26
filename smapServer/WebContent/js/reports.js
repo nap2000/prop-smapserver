@@ -561,6 +561,7 @@ require([
             var report = gReportList[gReportIdx];
 
             downloadFile(location.origin + "/surveyKPI/action/" + report.ident);
+            alert(localise.set["msg_ds_s"]);
         });
 
         /*
