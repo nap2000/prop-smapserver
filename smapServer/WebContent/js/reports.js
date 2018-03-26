@@ -75,10 +75,10 @@ require([
 		// Get the user details
 		globals.gIsAdministrator = false;
         getLoggedInUser(projectChanged, false, true, undefined);
-		getReportsForUser();
+		getReports();
 
 		$('#m_refresh').click(function() {
-            getReportsForUser();
+            getReports();
 		});
 
         $('#generateReport').click(function() {
@@ -293,7 +293,7 @@ require([
             success: function (data) {
 
                 removeHourglass();
-                getReportsForUser();
+                getReports();
                 $('#publish_popup').modal("hide");
             },
             error: function (xhr, textStatus, err) {
@@ -334,9 +334,9 @@ require([
 	/*
 	 * Get published reports
 	 */
-	function getReportsForUser() {
+	function getReports() {
 
-		url="/surveyKPI/userList/temporary?action=report";
+		url="/surveyKPI/userList/temporary?action=report&pId=" + globals.gCurrentProject;
 
 		addHourglass();
 		$.ajax({
@@ -439,7 +439,7 @@ require([
                 cache: false,
                 success: function (data) {
                     removeHourglass();
-                    getReportsForUser();
+                    getReports();
                 },
                 error: function (xhr, textStatus, err) {
                     removeHourglass();
@@ -653,7 +653,7 @@ require([
         globals.gCurrentTaskGroup = undefined;
 
         loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged);			// Get surveys
-        completeReportList();		// Refresh the shown reports
+        getReports();		// Refresh the shown reports
 
         saveCurrentProject(globals.gCurrentProject,
             globals.gCurrentSurvey,
