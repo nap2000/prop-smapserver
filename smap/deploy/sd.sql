@@ -868,3 +868,17 @@ alter table form add column merge boolean default false;
 alter table survey add column hidden boolean default false;
 alter table survey add column original_ident text;
 update survey set hidden = 'true'  where deleted and ident like 's%\_%\_%' and not hidden;
+
+-- Upgrade to 18.04
+-- Create table to manage csv files
+CREATE SEQUENCE csv_seq START 1;
+ALTER SEQUENCE csv_seq OWNER TO ws;
+
+create TABLE csvtable (
+	id integer default nextval('csv_seq') constraint pk_csvtable primary key,
+	o_id integer references organisation(id) on delete cascade,
+	s_id integer,				-- Survey id may be 0 for organisation level csv hence do not reference
+	filename text				-- Name of the CSV file
+	);
+ALTER TABLE csvtable OWNER TO ws;
+CREATE SCHEMA csv AUTHORIZATION ws;
