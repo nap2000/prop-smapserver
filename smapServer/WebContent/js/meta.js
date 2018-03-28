@@ -77,20 +77,26 @@ $(document).ready(function() {
 		refreshView(gMode);
 	});
 
+	$('#addPreload').off().click(function() {
+		$('#addModal').modal('show');
+	})
 
-	
+	$('#saveMetaItem').click(function() {
+		var name = $('#item_name').val();
+		var type = $('#item_type').val();
+
 	// Add responses to events
 	$('#project_name').change(function() {
 		globals.gCurrentProject = $('#project_name option:selected').val();
 		globals.gCurrentSurvey = -1;
 		globals.gCurrentTaskGroup = undefined;
-		
-		saveCurrentProject(globals.gCurrentProject, 
-				globals.gCurrentSurvey, 
+
+		saveCurrentProject(globals.gCurrentProject,
+				globals.gCurrentSurvey,
 				globals.gCurrentTaskGroup);
-		
+
 		getSurveyList();
- 	 });
+	});
 	
 	enableUserProfileBS();
 });
@@ -109,18 +115,7 @@ function surveyListDone() {
 }
 
 function refreshView() {
-	
-	var i,
-		j,
-		qList = [],
-		index = -1,
-		survey = globals.model.survey,
-		key,
-		options = [];
-	
-	gTempQuestions = [];
-
-	setChangesHtml($('#meta'), survey, survey);
+	setChangesHtml($('#meta'), globals.model.survey);
 }
 
 
@@ -138,22 +133,7 @@ function setChangesHtml($element, survey) {
 	} else {
 
 		h[++idx] = '<table class="table table-striped">';
-		
-		// write the table headings
-		h[++idx] = '<thead>';
-			h[++idx] = '<tr>';
-				h[++idx] = '<th>';
-					h[++idx] = localise.set["c_type"];
-				h[++idx] = '</th>';
 
-        		h[++idx] = '<th>';
-        			h[++idx] = localise.set["c_name"];
-        		h[++idx] = '</th>';
-			h[++idx] = '</tr>';
-		h[++idx] = '</thead>';
-		
-		// Write the table body
-		h[++idx] = '<body>';
 		for(i = 0; i < survey.meta.length; i++) {
 
 			if(survey.meta[i].isPreload) {
@@ -164,17 +144,20 @@ function setChangesHtml($element, survey) {
                 h[++idx] = '<td>';
                 h[++idx] = survey.meta[i].name;
                 h[++idx] = '</td>';
+                h[++idx] = '<td>';
+                h[++idx] = '<button type="button" data-idx="';
+                h[++idx] = i;
+                h[++idx] = '" class="btn btn-default btn-sm rm_preload danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+                h[++idx] = '</td>';
                 h[++idx] = '</tr>';
             }
 		}
-		h[++idx] = '</body>';
-		
-		h[++idx] = '</table>';
+
 	} 
 	
 	$element.html(h.join(''));
-	
-	
+
 }
 
 });
+

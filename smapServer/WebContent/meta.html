@@ -72,111 +72,156 @@
 
   </div>
 </header>
-	
 
-	<div class="uno" id="main_page">
-	
-		
-		<!-- List of changes to the current survey -->
-		<div id="meta">
-		</div>
+<!-- Main panel -->
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5 id="survey_title"></h5>
+					<div class="ibox-tools">
+					</div>
 
-
-	<!-- Modals -->
-	<div id="openFormModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="openFormLabel" aria-hidden="true">
-		<div class="modal-dialog">
-	   		<div class="modal-content">
-	   			<div class="modal-header">
-	     			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-	     			<h4 class="modal-title" id="openSurveyLabel">Open Form</h4>
-	   			</div>
-			     <div class="modal-body">
-			  		<form role="form" class="form-horizontal">
-			  			<div class="form-group">
-							<label for="project_name" class="lang col-sm-2 control-label" data-lang="c_project">Project :</label>
-							<div class="col-sm-10">
-								<select id="project_name" class="project_list form-control"></select>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="survey_name" class="lang col-sm-2 control-label" data-lang="a_exp_leg1">Form</label>
-							<select id="survey_name" class="survey_select form-control"></select>
-						</div>
-					</form>
 				</div>
-			</div>
-	
-			<div class="modal-footer">
-	            <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_cancel">Cancel</button>
-	            <button id="get_form" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="m_open">Open</button>
-	        </div>
-		</div>
-	</div>
-	
-	
-<!-- Popup to allow the user to edit their own details -->
-<div id="modify_me_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modifyMeLabel" aria-hidden="true">
-	<div class="modal-dialog">
-   		<div class="modal-content">
-   			<div class="modal-header">
-     			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     			<h4 class="modal-title" id="modifyMeLabel">New message</h4>
-   			</div>
-		     <div class="modal-body">
-				<form role="form" class="form-horizontal" id="me_edit_form">
-					<div class="form-group">
-						<label for="me_name" data-lang="c_name" class="lang col-sm-2 control-label">Name</label>
-						<div class="col-sm-10">
-							<input type="text" id="me_name" required class="form-control">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="me_language" data-lang="c_lang" class="lang col-sm-2 control-label">Language</label>
-						<div class="col-sm-10">
-							<select id="me_language" class="language_select form-control"></select>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="me_email" data-lang="c_email" class="lang col-sm-2 control-label">Email</label>
-						<div class="col-sm-10">
-							<input type="email" class="form-control" id="me_email" 
-									placeholder="Enter email" 
-									pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$">
-						</div>
-					</div>
-					<div id="reset_me_password_fields" style="display:none;">
-						<div class="form-group">
-							<div class="col-sm-offset-2 col-sm-10">
-								<div class="checkbox">
-									<label>
-										<input type="checkbox" id="reset_me_password"><span data-lang="c_r_p" class="lang">Reset Password</span>
-									</label>
+				<div class="ibox-content">
+					<div id="table-view" class="tab-pane active">
+						<div class="panel-body">
+							<div class="well">
+								<a id="addPreload" type="button" class="btn btn-default lang" aria-label="Add Preload" data-lang="c_add">add</a>
+								<div class="table-responsive" style="min-height: 300px;">
+									<table id="reports_table" class="table table-responsive table-striped">
+										<thead>
+										<tr>
+											<th class="lang" data-lang="c_type">type</th>
+											<th class="lang" data-lang="c_name">name</th>
+											<th class="lang" data-lang="c_delete">delete</th>
+										</tr>
+										</thead>
+										<tbody id="meta">
+										</tbody>
+									</table>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div id="password_me_fields" style="display:none;">
-						<div class="form-group">
-							<label for="me_password" data-lang="c_password" class="lang col-sm-2 control-label">Password</label>
-							<div class="col-sm-10">
-								<input id="me_password" type="password" placeholder="Password" class="form-control">
-							</div>
-						</div>	
-						<div class="form-group">
-							<label for="me_password_confirm" data-lang="c_c_p" class="lang col-sm-2 control-label">Confirm Password</label>
-							<div class="col-sm-10">
-								<input id="me_password_confirm" type="password" placeholder="Password" class="form-control">
-							</div>
-						</div>	
-					</div>		
-				</form>	
+				</div>
 			</div>
+		</div>
+	</div>
 
-			<div class="modal-footer">
-            	<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-            	<button id="userProfileLogout"type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_logout">Logout</button>
-            	<button id="userProfileSave" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_save">Save</button>
-        	</div>
+
+
+	<!-- Modals -->
+	<div id="addModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addLabel" aria-hidden="true">
+		<div class="modal-dialog">
+	   		<div class="modal-content">
+	   			<div class="modal-header">
+	     			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	     			<h4 class="modal-title lang" id="addLabel" data-lang="c_add">Add</h4>
+	   			</div>
+			     <div class="modal-body">
+			  		<form role="form" class="form-horizontal">
+						<div class="form-group">
+							<label for="item_name" data-lang="c_name" class="lang col-sm-2 control-label">name</label>
+							<div class="col-sm-10">
+								<input type="text" id="item_name" required class="form-control">
+							</div>
+						</div>
+			  			<div class="form-group">
+							<label for="item_type" class="lang col-sm-2 control-label" data-lang="c_type">type</label>
+							<div class="col-sm-10">
+								<select id="item_type" class="form-control">
+									<option class="lang" data-lang="c_start" value="start">start</option>
+									<option class="lang" data-lang="c_end" value="end">end</option>
+									<option class="lang" data-lang="c_today" value="today">today</option>
+									<option class="lang" data-lang="c_device" value="deviceid">device</option>
+									<option class="lang" data-lang="c_subscriber" value="subscriberid">subscriber</option>
+									<option class="lang" data-lang="c_sim" value="simserial">sim serial</option>
+									<option class="lang" data-lang="c_phone" value="phonenumber">device</option>
+									<option class="lang" data-lang="c_device" value="deviceid">device</option>
+									<option class="lang" data-lang="c_user" value="username">user</option>
+									<option class="lang" data-lang="c_email" value="email">email</option>
+								</select>
+							</div>
+						</div>
+
+					</form>
+				</div>
+	
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_cancel">Cancel</button>
+					<button id="saveMetaItem" type="button" class="btn btn-primary lang" data-lang="c_save">save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<!-- Popup to allow the user to edit their own details -->
+	<div id="modify_me_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modifyMeLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title" id="modifyMeLabel">New message</h4>
+				</div>
+				 <div class="modal-body">
+					<form role="form" class="form-horizontal" id="me_edit_form">
+						<div class="form-group">
+							<label for="me_name" data-lang="c_name" class="lang col-sm-2 control-label">Name</label>
+							<div class="col-sm-10">
+								<input type="text" id="me_name" required class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="me_language" data-lang="c_lang" class="lang col-sm-2 control-label">Language</label>
+							<div class="col-sm-10">
+								<select id="me_language" class="language_select form-control"></select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="me_email" data-lang="c_email" class="lang col-sm-2 control-label">Email</label>
+							<div class="col-sm-10">
+								<input type="email" class="form-control" id="me_email"
+										placeholder="Enter email"
+										pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$">
+							</div>
+						</div>
+						<div id="reset_me_password_fields" style="display:none;">
+							<div class="form-group">
+								<div class="col-sm-offset-2 col-sm-10">
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" id="reset_me_password"><span data-lang="c_r_p" class="lang">Reset Password</span>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="password_me_fields" style="display:none;">
+							<div class="form-group">
+								<label for="me_password" data-lang="c_password" class="lang col-sm-2 control-label">Password</label>
+								<div class="col-sm-10">
+									<input id="me_password" type="password" placeholder="Password" class="form-control">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="me_password_confirm" data-lang="c_c_p" class="lang col-sm-2 control-label">Confirm Password</label>
+								<div class="col-sm-10">
+									<input id="me_password_confirm" type="password" placeholder="Password" class="form-control">
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+					<button id="userProfileLogout"type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_logout">Logout</button>
+					<button id="userProfileSave" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_save">Save</button>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
