@@ -155,6 +155,7 @@ define({
     "c_back": "Back",
     "c_target": "Target",
     "c_content": "Content",
+    "c_today": "Today",
     "c_attach": "Attach",
     "c_details": "Details",
     "c_action": "Action",
@@ -194,6 +195,7 @@ define({
     "c_warning": "Warning",
     "c_lt": "Local Time",
     "c_user": "User",
+    "c_simserial": "Sim Serial Number",
     "c_location": "Location",
     "c_ident": "Identifier",
     "c_version": "Version",
@@ -255,6 +257,7 @@ define({
     "c_stata": "Stata / CSV",
     "c_spss": "SPSS / CSV",
     "c_pdf": "PDF",
+    "c_phone": "Phone Number",
 
     // File Types
     "ft": "File Type",
