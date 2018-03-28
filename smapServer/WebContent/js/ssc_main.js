@@ -53,7 +53,8 @@ $(document).ready(function() {
 	var i,
 		params,
 		pArray = [],
-		param = [];
+		param = [],
+		dont_get_current_survey;
 	
 	localise.setlang();		// Localise HTML
 	

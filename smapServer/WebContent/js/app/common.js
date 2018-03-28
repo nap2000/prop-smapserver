@@ -2876,10 +2876,14 @@ function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms) {
     //}
 
     // Set checked value based on previous selections
-    if (offset == 0 && (!checked_forms || checked_forms.length == 0)) {
+	if(set_radio && offset == 0) {
         checked = 'checked="checked"';
-    } else {
-        checked = '';
+	} else {
+        if (offset == 0 && (!checked_forms || checked_forms.length == 0)) {
+            checked = 'checked="checked"';
+        } else {
+            checked = '';
+        }
     }
     if(checked_forms && checked_forms.length > 0) {
         for(i = 0; i < checked_forms.length; i++) {
@@ -2888,7 +2892,7 @@ function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms) {
                 break;
             }
         }
-    }
+    } else {}
 
     //h[++idx] = '<span style="padding-left:';
     //h[++idx] = offset;
