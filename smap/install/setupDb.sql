@@ -1024,3 +1024,19 @@ create TABLE replacement (
 	new_ident text				-- Survey ident of the new survey
 	);
 ALTER TABLE replacement OWNER TO ws;
+
+DROP SEQUENCE IF EXISTS csv_seq CASCADE;
+CREATE SEQUENCE csv_seq START 1;
+ALTER SEQUENCE csv_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS csvtable CASCADE;
+create TABLE csvtable (
+	id integer default nextval('csv_seq') constraint pk_csvtable primary key,
+	o_id integer references organisation(id) on delete cascade,
+	s_id integer,				-- Survey id may be 0 for organisation level csv hence do not reference
+	filename text,				-- Name of the CSV file
+	headers text
+	);
+ALTER TABLE csvtable OWNER TO ws;
+
+CREATE SCHEMA csv AUTHORIZATION ws;
