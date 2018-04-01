@@ -879,7 +879,8 @@ create TABLE csvtable (
 	o_id integer references organisation(id) on delete cascade,
 	s_id integer,				-- Survey id may be 0 for organisation level csv hence do not reference
 	filename text,				-- Name of the CSV file
-	headers text					-- Mapping between file headers and table headers
+	headers text,				-- Mapping between file headers and table headers
+	ts_initialised TIMESTAMP WITH TIME ZONE
 	);
 ALTER TABLE csvtable OWNER TO ws;
 CREATE SCHEMA csv AUTHORIZATION ws;
