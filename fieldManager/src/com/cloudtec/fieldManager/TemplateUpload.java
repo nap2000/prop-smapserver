@@ -353,13 +353,8 @@ public class TemplateUpload extends Application {
 
 			//model.printModel();
 			model.writeDatabase();				// write the survey definitions
-			model.writeExternalChoices();		// Update the survey definitions with choices from csv files
+			//model.writeExternalChoices();		// Update the survey definitions with choices from csv files
 			log.info("userevent: " + request.getRemoteUser() + " : create survey : " + displayName);
-
-			// Return warnings only
-			//if(warnings.size() > 0) {		// Ignore warnings they are not useful
-			//	return getErrorResponse(request,  null, null, warnings, serverName, projectName, displayName, fileName);
-			//}
 
 			// Return OK with no messages
 			response = Response.ok("{}").build();	
