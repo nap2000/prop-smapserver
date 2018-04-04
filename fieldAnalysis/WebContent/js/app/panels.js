@@ -268,6 +268,7 @@ $(document).ready(function() {
 		        		}
 		        		
 		        		view.filter = getFilter();
+		        		view.advanced_filter = $('#set_ad_filter').val();
 		        		
 		        		savePanels(view);	// Save to the database
 			        	$(this).dialog("close");

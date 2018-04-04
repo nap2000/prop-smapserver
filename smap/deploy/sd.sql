@@ -884,3 +884,5 @@ create TABLE csvtable (
 	);
 ALTER TABLE csvtable OWNER TO ws;
 CREATE SCHEMA csv AUTHORIZATION ws;
+
+ALTER TABLE dashboard_settings add column ds_advanced_filter text;
