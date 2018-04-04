@@ -349,7 +349,13 @@ function showTable(tableIdx, view, tableItems, fId, survey_ident) {
 		$selMain.find('table').tablesorter();
 		addMoreLessButtons($selMain, view, fId, tableItems);
 	} else {
-		$selMain.html("No data available");
+        if(typeof tableItems.message !== "undefined" && tableItems.message.trim().length > 0) {
+            $selMain.html(tableItems.message);
+        } else if(typeof tableItems.totals !== "undefined" && tableItems.totals.total_count > 0) {
+            $selMain.html(localise.set["an_nmd"]);
+        } else {
+            $selMain.html(localise.set["an_nd"]);
+        }
 	}
 }
 
@@ -398,7 +404,7 @@ function setTableQuestion(view) {
 		generateTable(elemMain, data, disp_desc, undefined, 0);
 		addRightClickToTable($selMain, view.sId);
 	} else {
-		$selHead.html("No data available");
+		$selHead.html(localise.set["an_nd"]);
 	}
 	
 	// Enable the export and hide the delete button
