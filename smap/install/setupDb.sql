@@ -677,7 +677,8 @@ CREATE TABLE dashboard_settings (
 	ds_time_group text,
 	ds_from_date date,
 	ds_to_date date,
-	ds_filter text
+	ds_filter text,
+	ds_advanced_filter text
 	);
 alter table dashboard_settings add constraint ds_user_ident FOREIGN KEY (ds_user_ident)
 	REFERENCES users (ident) MATCH SIMPLE

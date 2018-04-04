@@ -563,6 +563,7 @@ define({
     "r_add": "Add Report",
     "r_ed": "Edit Report",
     "r_del": "Delete Reports",
+    "an_nd": "No data available",
 
     // Server Strings and direct word conversions
     "Upload Time": "Upload",
