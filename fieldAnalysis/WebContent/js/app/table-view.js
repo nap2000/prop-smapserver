@@ -398,7 +398,7 @@ function setTableQuestion(view) {
 		generateTable(elemMain, data, disp_desc, undefined, 0);
 		addRightClickToTable($selMain, view.sId);
 	} else {
-		$selHead.html("No data available");
+		$selHead.html(localise.set["an_nd"]);
 	}
 	
 	// Enable the export and hide the delete button
