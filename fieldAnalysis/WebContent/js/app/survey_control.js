@@ -157,7 +157,8 @@ function copyView(v) {
 			toDate: v.toDate,
 			fn: v.fn,
 			filter: v.filter,
-			dateQuestionId: v.dateQuestionId
+			dateQuestionId: v.dateQuestionId,
+        	advanced_filter: v.advanced_filter
 	}
 	
 	return cp;
@@ -598,6 +599,7 @@ function setSurveyViewControl(view) {
 
 	// Filter
 	setFilterFromView(view);
+    $('#set_ad_filter').val(view.advanced_filter);
 	
 }
 

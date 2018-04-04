@@ -843,7 +843,8 @@ function regionsURL () {
  * Web service handler for retrieving items in a table
  * @param {string} survey
  */
-function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bBad, filter, dateId, startDate, endDate) {
+function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bBad, filter, dateId, startDate,
+                       endDate, advanced_filter) {
 
     var url = "/surveyKPI/items/";
 
@@ -889,6 +890,10 @@ function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bB
 
     if(typeof endDate !== "undefined" && endDate.length > 0) {
         url+= "&endDate=" + endDate;
+    }
+
+    if(typeof advanced_filter !== "undefined" && advanced_filter.length > 0) {
+        url+= "&advanced_filter=" + advanced_filter;
     }
 
     return url;
