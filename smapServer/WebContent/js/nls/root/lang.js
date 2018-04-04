@@ -315,6 +315,7 @@ define({
     "a_fq": "Filter question",
     "a_res": "Please provide a reason",
     "a_mb": "Marked Bad",
+    "a_oo": "out of",
     "a_cm": "Cluster Members",
     "a_dv": "Show Details",
     "a_rd": "Report Definition",
@@ -563,6 +564,8 @@ define({
     "r_add": "Add Report",
     "r_ed": "Edit Report",
     "r_del": "Delete Reports",
+    "an_nd": "No data available",
+    "an_nmd": "No data matches the filter",
 
     // Server Strings and direct word conversions
     "Upload Time": "Upload",
