@@ -66,12 +66,15 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 	}
 	if(typeof data.totals !== "undefined") {
 		gTab[++gIdx] = '(';
-		gTab[++gIdx] = data.totals.total_count;
+		gTab[++gIdx] = data.totals.filtered_count;
 		gTab[++gIdx] = ' ';
-		gTab[++gIdx] = data.totals.total_count == 1 ? localise.set["c_record"] : localise.set["c_records"];
+		gTab[++gIdx] = data.totals.filtered_count == 1 ? localise.set["c_record"] : localise.set["c_records"];
 		gTab[++gIdx] = ' ';
+        gTab[++gIdx] = " " + localise.set["a_oo"] + " ";
+        gTab[++gIdx] = data.totals.total_count;
+        gTab[++gIdx] = ', ';
 		gTab[++gIdx] = data.totals.bad_count;
-		gTab[++gIdx] = " " + localise.set["a_mb"] + ")";   // ' marked bad)';
+		gTab[++gIdx] = ' ' + localise.set["a_mb"] + ")";
 	}
 	
 	gTab[++gIdx] = '</p>';
