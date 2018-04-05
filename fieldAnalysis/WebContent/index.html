@@ -319,8 +319,6 @@
 				<legend class="ui-widget-header ui-corner-all lang" data-lang="a_ss">Select Survey</legend>
 				<label for="settings_survey" class="lang" data-lang="c_survey">Survey</label>
 				<select id="settings_survey"></select><br/>
-				<label for="settings_date_question" class="lang" data-lang="c_date">date</label>
-				<select class="date_question" id="settings_date_question"></select><br/>
 			</fieldset>	
 			<fieldset class="ui-widget-content">
 				<legend class="ui-widget-header ui-corner-all lang" data-lang="a_sq">Select Question</legend>
@@ -348,17 +346,19 @@
 				</span>	
 			</fieldset>	
 			<fieldset class="ui-widget-content">
-				<legend class="ui-widget-header ui-corner-all" class="lang" data-lang="c_filter">Filter</legend>
+				<legend class="ui-widget-header ui-corner-all" class="lang" data-lang="a_df">date filter</legend>
+				<label for="settings_date_question" class="lang" data-lang="c_dateq">date question</label>
+				<select class="date_question" id="settings_date_question"></select><br/><br/>
 				<label for="from_date" class="lang" data-lang="a_from_date">From date</label>
 				<input type="date" id="from_date"/> <span class="lang" data-lang="c_inclusive">inclusive</span><br/>	
 				<label for="to_date" class="lang" data-lang="a_to_date">To date</label>
 				<input type="date" id="to_date"/> <span class="lang" data-lang="c_inclusive">inclusive</span><br/>
-				<button id="filter_button" class="lang" data-lang="a_fbv">Filter by value</button>
 			</fieldset>
 			<fieldset class="ui-widget-content">
-				<legend class="ui-widget-header ui-corner-all lang" data-lang="t_aft">advanced filter</legend>
-				<label for="set_ad_filter" data-lang="c_filter" class="lang">filter</label>
-				<input type="text" id="set_ad_filter"><a href="/sqlFilterHelp.html" target="_blank"> ( i ) </span></a>
+				<legend class="ui-widget-header ui-corner-all lang" data-lang="c_filter">filter</legend>
+				<label for="set_ad_filter" data-lang="t_aft" class="lang">filter</label>
+				<input type="text" id="set_ad_filter"><a href="/sqlFilterHelp.html" target="_blank"> ( i ) </span></a><br/><br/>
+				<button id="filter_button" class="lang" data-lang="a_fbv">Filter by value</button>
 			</fieldset>
 		</form>
 	</div>
