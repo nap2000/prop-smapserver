@@ -1012,12 +1012,13 @@ require([
                 });
             },
 
-            columnDefs: [{
-                targets: "_all",
-                render: function (data, type, full, meta) {
-                    return addAnchors(data, true);
-                }
-            },
+            columnDefs: [
+                {
+                    targets: "_all",
+                    render: function (data, type, full, meta) {
+                        return addAnchors(data, true);
+                    }
+                },
                 {
                     visible: false,
                     "targets": hiddenColumns
