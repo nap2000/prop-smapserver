@@ -464,6 +464,7 @@ define({
     "t_ns": "New Survey",
     "t_ft": "Filter Tasks",
     "t_aft": "Advanced Filter",
+    "t_df": "Date Filter",
     "t_fq": "Filter by Question",
     "t_so": "Selected Option",
     "t_sn": "Set Numeric Value",
