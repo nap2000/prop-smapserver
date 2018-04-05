@@ -227,7 +227,8 @@ define([
             var i,
                 col;
             for(i = 0; i < columns.length; i++) {
-                if(qname === columns[i].name) {
+                // Hack.  For forms the human name is the question name that has not been modified to act as a database column
+                if((columns[i].mgmt && qname === columns[i].name) || (!columns[i].mgmt && qname === columns[i].humanName)) {
                     col = columns[i];
                     break;
                 }
@@ -238,7 +239,8 @@ define([
 
 
         function addSourceQuestion(column, record, ref_rows) {
-            var v = addAnchors(record[column.name])[0];
+            var name = column.mgmt ? column.name : column.humanName;        // Name hack
+            var v = addAnchors(record[name])[0];
             var h = [];
             var idx = -1;
 
