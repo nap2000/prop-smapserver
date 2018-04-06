@@ -119,7 +119,7 @@
 		<form>
 			<fieldset class="ui-widget-content">
 
-				<div class="showquery" style="display:none;">
+				<div class="exportcontrol showquery" style="display:none;">
 					<label for="exportQuerySel" class="lang" data-lang="a_query">export queries</label>
 					<input type="checkbox" id="exportQuerySel"/>
 				</div>
@@ -152,9 +152,9 @@
 				</select>
 			</fieldset><br/>
 			
-			<div class="showspreadsheet">
+			<div>
 				<fieldset class="ui-widget-content">
-					<div class="showoldxls shownewxls">
+					<div class="exportcontrol showoldxls shownewxls">
 						<label for="export_xlstype" class="lang" data-lang="c_xlstype">xls</label>
 						<select id="export_xlstype">
 							<option value="new_xlsx" selected class="lang" data-lang="a_nx" >new xlsx</option>
@@ -162,27 +162,27 @@
 							<option value="html" class="lang" data-lang="a_lh">html</option>
 						</select>
 					</div>
-					<div class="showlang">
+					<div class="exportcontrol showlang showoldxls shownewxls">
 						<label for="export_language" class="lang" data-lang="c_lang">Language</label>
 						<select id="export_language"></select>
 					</div>
-					<div class="showoldxls shownewxls">
+					<div class="exportcontrol showoldxls shownewxls">
 						<label for="splitlocn" class="lang" data-lang="a_exp_split">Split lat / lon:</label>	
 						<input type="checkbox" id="splitlocn"/>
 					</div>
-					<div class="showoldxls shownewxls showshape">
+					<div class="exportcontrol mergeselmult showoldxls shownewxls">
 						<label for="mergeSelectMultiple" class="lang" data-lang="a_exp_merge">Compress Select Multiples:</label>	
 						<input type="checkbox" id="mergeSelectMultiple"/>
 					</div>
-					<div class="showoldxls shownewxls">
+					<div class="exportcontrol showoldxls shownewxls">
 						<label for="embedImages" class="lang" data-lang="a_embed">Embed:</label>	
 						<input type="checkbox" id="embedImages"/>
 					</div>
-					<div class="showoldxls shownewxls">
+					<div class="exportcontrol showoldxls shownewxls">
 						<label for="embedImages" class="lang" data-lang="a_hxl">hxl:</label>	
 						<input type="checkbox" id="incHxl"/>
 					</div>
-					<div class="shownewxls">
+					<div class="exportcontrol shownewxls">
 						<label for="includeMeta" class="lang" data-lang="a_exp_meta">meta</label>
 						<input type="checkbox" checked="checked" id="includeMeta"/>
 					</div>
@@ -196,13 +196,13 @@
 					<div class="osmforms"></div>
 				</fieldset>
 			</div>
-			<div class="showoldxls" style="display:none;">
+			<div class="exportcontrol showoldxls" style="display:none;">
 				<fieldset class="ui-widget-content">
 					<legend class="ui-widget-header ui-corner-all lang" data-lang="a_sel_forms">Select forms to include:</legend>
 					<div class="selectforms"></div>
 				</fieldset>
 			</div>
-			<div class="showshape shownewxls">
+			<div class="exportcontrol showshape shownewxls">
 				<fieldset class="ui-widget-content">
 					<legend class="ui-widget-header ui-corner-all lang" data-lang="msg_sel_form">Select form:</legend>
 					<div class="shapeforms"></div>
@@ -213,7 +213,7 @@
 				<div style="width: 100%; height:400px;" id="extsvg"></div>
 			</div>
 			-->
-			<div class="showmedia" style="display:none;">
+			<div class="exportcontrol showmedia" style="display:none;">
 				<fieldset class="ui-widget-content">
 					<legend class="ui-widget-header ui-corner-all lang" data-lang="msg_sel_media">Select Media:</legend>
 					<label class="lang" data-lang="msg_sel_media" for="export_media_question" >Media Question</label>
@@ -222,7 +222,7 @@
 					<div class="mediaselect"></div>
 				</fieldset>
 			</div>
-			<div class="showlqas">
+			<div class="exportcontrol showlqas">
 				<label class="lang" data-lang="a_rd" for="export_report_defn" >rpt defn</label>
 				<select id="export_report_defn"></select>
 				<label for="sources" class="lang" data-lang="a_dv">Details</label>	
@@ -248,7 +248,7 @@
 			</fieldset>
 			
 		</form>
-		<div class="showthingsat" style="display:none;">
+		<div class="exportcontrol showthingsat" style="display:none;">
 			<button id="btn_edit_thingsat" class="lang" data-lang="a_sel_model">Edit Survey Model</button>	
 			<div id="ta_model_show"></div>
 		</div>
