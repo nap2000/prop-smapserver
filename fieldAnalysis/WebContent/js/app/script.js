@@ -266,7 +266,8 @@ function initialiseDialogs() {
                             }
                             url = exportSurveyMisc(sId, filename, form,
                                 format, exportReadOnly, language,
-                                exp_from_date, exp_to_date, dateQuestionId, queryId, filter);
+                                exp_from_date, exp_to_date, dateQuestionId, queryId,
+                                filter, merge_select_multiple);
 
                         } else if(format === "thingsat") {
                             forms = $(':radio:checked', '.shapeforms').map(function() {
@@ -1174,7 +1175,8 @@ function exportSurveyMisc (sId, filename, form, format, exp_ro, language,
                            exp_to_date,
                            dateQuestionId,
                            queryId,
-                           filter) {
+                           filter,
+                           merge_select_multiple) {
 
     var url = "/surveyKPI/exportSurveyMisc/";
 
@@ -1213,6 +1215,10 @@ function exportSurveyMisc (sId, filename, form, format, exp_ro, language,
 
     if(filter) {
         url += '&filter=' + fixedEncodeURIComponent(filter);
+    }
+
+    if(merge_select_multiple) {
+        url += "&merge_select_multiple=true";
     }
 
     return url;
