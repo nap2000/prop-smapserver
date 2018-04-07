@@ -258,6 +258,7 @@ define({
     "c_spss": "SPSS / CSV",
     "c_pdf": "PDF",
     "c_phone": "Phone Number",
+    "c_rep_type": "Sub Form",
 
     // File Types
     "ft": "File Type",
