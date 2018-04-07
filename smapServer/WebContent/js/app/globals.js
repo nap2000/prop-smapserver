@@ -381,7 +381,7 @@ define(function () {
             {
                 name: "Form",
                 type: "begin repeat",
-                trans: "c_form",
+                trans: "c_rep_type",
                 glyphicon: "repeat",
                 canSelect: true,
                 visible: true,
