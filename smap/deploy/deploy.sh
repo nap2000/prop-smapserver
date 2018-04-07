@@ -78,6 +78,9 @@ systemctl stop subscribers
 systemctl stop subscribers_fwd
 fi
 
+# Copy postgres driver
+cp -r $deploy_from/jdbc/* $CATALINA_HOME/lib/ 
+
 # smap bin
 cp ../install/subscribers.sh /smap_bin
 cp $deploy_from/subscribers.jar /smap_bin
