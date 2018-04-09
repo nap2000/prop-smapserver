@@ -89,6 +89,7 @@ $(document).ready(function() {
 		var $this = $(this);
 		if($this.is(':checked')) {
 			$('#target_question_name_cont, .review_update_other').show();
+			getData();
 		} else {
 			$('#target_question_name_cont, .review_update_other').hide();
 		}
@@ -248,7 +249,7 @@ function enableTextUpdate() {
 				        				  
 				        			  }, error: function(data, status) {
 				        				  removeHourglass();
-				        				  console.log("Error: Failed to save updates");
+				        				  alert(localise.set["c_error"] + data.responseText);
 				        			  }
 				        		});
 				        		$(this).dialog("close");
@@ -274,21 +275,30 @@ function getReviewLanguageList() {
 
 function getTextQuestions() {
 	var i,
-		$text_name = $('#text_name,#target_question_name');
+		$text_name_full = $('#target_question_name'),
+        $text_name = $('#text_name');
 	
 	gCurrentLanguage = $('#language_name option:selected').val();
 	
 	addHourglass();
 	$.ajax({
-		url: "/surveyKPI/questionList/" + globals.gCurrentSurvey + "/" + gCurrentLanguage + "?exc_read_only=true&single_type=string&exc_ssc=true",
+		url: "/surveyKPI/questionList/" + globals.gCurrentSurvey + "/" + gCurrentLanguage + "/new?exc_read_only=true&exc_ssc=true&inc_meta=true",
 		dataType: 'json',
 		cache: false,
 		success: function(data) {
 			removeHourglass();
 			$text_name.empty();
+			$text_name_full.empty();
 			
 			for(i = 0; i < data.length; i++) {
-				$text_name.append('<option value="' + data[i].id + '">' + data[i].name + ' : ' + data[i].q + '</option>');
+				var label = data[i].q ? data[i].q : '';
+				if(data[i].type === "string" || data[i].type === "calculate" || data[i].type === "barcode") {
+                    $text_name.append('<option value="' + data[i].id + '">' + data[i].name + ' : ' + label + '</option>');
+                    $text_name_full.append('<option value="' + data[i].id + '">' + data[i].name + ' : ' + label + '</option>');
+                } else if(data[i].type === "int" || data[i].type === "decimal") {
+                    $text_name_full.append('<option value="' + data[i].id + '">' + data[i].name + ' : ' + label + '</option>');
+				}
+
 			}
 			getData();
 			getRelevance();
@@ -299,7 +309,7 @@ function getTextQuestions() {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 	              return;  // Not an error
 			} else {
-				console.log("Error: Failed to get list of text questions: " + err);
+                alert(localise.set["c_error"] + xhr.responseText);
 			}
 		}
 	});	
@@ -391,7 +401,7 @@ function getData() {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 	              return;  // Not an error
 			} else {
-				console.log("Error: Failed to get results: " + err);
+                alert(localise.set["c_error"] + xhr.responseText);
 			}
 		}
 	});	
@@ -416,7 +426,7 @@ function getRelevance() {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 	              return;  // Not an error
 			} else {
-				console.log("Error: Failed to get relevance options: " + err);
+                alert(localise.set["c_error"] + xhr.responseText);
 			}
 		}
 	});	
@@ -561,7 +571,7 @@ function saveTargetResults() {
 					  
 				  }, error: function(data, status) {
 					  removeHourglass();
-					  console.log("Error: Failed to save updates");
+					  alert(localise.set["c_error"] + data.responseText);
 				  }
 			});
 

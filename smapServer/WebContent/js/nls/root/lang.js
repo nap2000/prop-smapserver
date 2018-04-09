@@ -568,6 +568,7 @@ define({
     "r_del": "Delete Reports",
     "an_nd": "No data available",
     "an_nmd": "No data matches the filter",
+    "an_mod_hint": "The modify page allows you to make bulk changes to text.  You can select a specific text value and then change all occurences of that to another value.  This is very useful for fixing spelling inconsistencies. You can also change text values in \"other\" questions into one of the select choices. You can also update barcode and calculate questions. Other question types are not supported as, for example, it would make no sense to do a bulk change of an integer age from 25 to 26 wherever it occured. You can review modifications by selecting the review page.<br/><br/> You can however update integer and decimal questions by selecting the checkbox \"Update a different question\". In this case the change will be applied to all questions that match the existing values of the two questions. In most cases you will not need this option.",
 
     // Server Strings and direct word conversions
     "Upload Time": "Upload",
