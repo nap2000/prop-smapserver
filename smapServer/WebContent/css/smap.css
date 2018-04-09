@@ -1276,3 +1276,8 @@ span.selectProject
   pointer-events: none;
   font: 10px sans-serif;
 }
+
+.disabled {
+	color: lightgrey;
+	filter:opacity(0.4);
+}
