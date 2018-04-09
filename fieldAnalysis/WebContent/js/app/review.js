@@ -89,9 +89,11 @@ $(document).ready(function() {
 		var $this = $(this);
 		if($this.is(':checked')) {
 			$('#target_question_name_cont, .review_update_other').show();
+            $('.review_update').prop("disabled", true).addClass("disabled");
 			getData();
 		} else {
 			$('#target_question_name_cont, .review_update_other').hide();
+            $('.review_update').prop("disabled", false).removeClass("disabled");
 		}
  	 });
 	$('#target_question_name_cont, .review_update_other').hide();
@@ -295,7 +297,7 @@ function getTextQuestions() {
 				if(data[i].type === "string" || data[i].type === "calculate" || data[i].type === "barcode") {
                     $text_name.append('<option value="' + data[i].id + '">' + data[i].name + ' : ' + label + '</option>');
                     $text_name_full.append('<option value="' + data[i].id + '">' + data[i].name + ' : ' + label + '</option>');
-                } else if(data[i].type === "int" || data[i].type === "decimal") {
+                } else if(data[i].type === "int" || data[i].type === "decimal" || data[i].type === "select1") {
                     $text_name_full.append('<option value="' + data[i].id + '">' + data[i].name + ' : ' + label + '</option>');
 				}
 
@@ -390,8 +392,10 @@ function getData() {
 			
 			if($('#other_target_cb').is(':checked')) {
 				$('#target_question_name_cont, .review_update_other').show();
+                $('.review_update').prop("disabled", true).addClass("disabled");
 			} else {
 				$('#target_question_name_cont, .review_update_other').hide();
+                $('.review_update').prop("disabled", false).removeClass("disabled");
 			}
 			
 

@@ -699,6 +699,7 @@ td.completed, td.submitted {
 
 .disabled {
 	color: lightgrey;
+	filter:opacity(0.4);
 }
 
 
