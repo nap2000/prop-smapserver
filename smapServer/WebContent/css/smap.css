@@ -598,6 +598,7 @@ tr.deleted td a {
 	margin-top: 2px;
 }
 
+
 /* Analysis Panels */
 
 
@@ -832,6 +833,15 @@ tr.deleted td a {
 .pmain {
 	clear: both;
 	margin: 0px 10px;
+}
+
+.modify_main {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.modify_form {
+	font-size: 16px;
 }
 
 /* Style for buttons used in exporting forms */
