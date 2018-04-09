@@ -57,26 +57,47 @@
 			<div id="username"></div>
 			<div id="banner" class="lang" data-lang="m_modify">modify</div>
 		</div>
-	
-		<div id="main" role="main">
-			<p><span class="lang" data-lang="c_project">project</span>:
-			<select class="project_list" id="project_name"></select>
-			<span class="lang" data-lang="c_survey">survey</span>:
-			<select class="survey_select" id="survey_name"></select>
-			<span class="lang" data-lang="c_lang">language</span>:
-			<select class="language_select" id="language_name"></select>
-			<span class="lang" data-lang="c_question">question</span>:
-			<select id="text_name"></select>
-			</p>
-			<p>
-			<span class="lang" data-lang="rev_upd_diff">Update different</span>:
-			<input type="checkbox" name="other_target" id="other_target_cb">
-			<span id="target_question_name_cont" style="display:none;">
-				<span class="lang" data-lang="rev_q_upd">question</span>:
-				<select id="target_question_name"></select>
-			</span>
-			</p>
-			
+
+		<div id="main" role="main" class="modify_main">
+			<div style="padding-left: 50px; padding-right:50px; color:blue;">
+				<p class="lang" data-lang="an_mod_hint"></p>
+			</div>
+
+			<form class="modify_form">
+				<div style="width:210px; height:50px; font-size:16px; float:left;">
+					<label for="project_name" class="lang" data-lang="c_project">project</label>
+					<select class="project_list" id="project_name" style="font-size: 16px;"></select>
+				</div>
+
+				<div style="width:210px; height:50px;font-size:16px; float:left;">
+					<label for="survey_name" class="lang" data-lang="c_survey">survey</label>
+					<select class="survey_select" id="survey_name" style="font-size: 16px;"></select>
+				</div>
+
+				<div style="width:210px; height:50px; font-size:16px; float:left;">
+					<label for="language_name" class="lang" data-lang="c_lang">language</label>
+					<select class="language_select" id="language_name" style="font-size: 16px;"></select>
+				</div>
+
+				<div style="width:210px; height:50px;font-size:16px; float:left;">
+					<label for="text_name" class="lang" data-lang="c_question">question</label>
+					<select id="text_name" style="font-size: 16px;"></select>
+				</div>
+			</form>
+			<div style="clear: both;">&nbsp;</div>
+			<form class="modify_form">
+				<div style="float:left;">
+					<span class="lang" data-lang="rev_upd_diff">Update different</span>:
+					<input type="checkbox" name="other_target" id="other_target_cb">
+				</div>
+				<div id = "target_question_name_cont" style="display:none; margin-left:50px; width:210px; height:50px;font-size:16px; float:left;">
+					<label for="target_question_name" class="lang" data-lang="rev_q_upd">question</label>
+					<select id="target_question_name" style="font-size: 16px;"></select>
+				</div>
+			</form>
+
+			<div style="clear: both;">&nbsp;</div>
+
 			<div id="review-container">		
 				<table class="tablesorter">
 					<thead>
