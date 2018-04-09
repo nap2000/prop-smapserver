@@ -19,18 +19,20 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Purpose: Review and modify collected data
  */
-define(['jquery', 'jquery_ui', 'localise', 'common', 'globals'], function($, ui, lang, common, globals) {
+var gTextValues,
+    gCurrentLanguage,
+    gUpdate = {},
+    gTextSelected = 0,	// checked
+    gHasSelect = true,
+    gHasText,
+    gCountRecords = 0,
+    gRelevance = [],
+    gQuestions,
+	gSecondaryChoices = {},
+    gTextId,			// The id of the selected text question
+    gTextOtherId;		// The id of the other selected text question
 
-var gTextValues,	
-	gCurrentLanguage,	
-	gUpdate = {},
-	gTextSelected = 0,	// checked
-	gHasSelect = true,
-	gHasText,
-	gCountRecords = 0,
-	gRelevance = [],
-	gTextId,			// The id of the selected text question	
-	gTextOtherId;		// The id of the other selected text question
+define(['jquery', 'jquery_ui', 'localise', 'common', 'globals'], function($, ui, lang, common, globals) {
 
 $(document).ready(function() {
 	
@@ -123,10 +125,11 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(targetHasChanged()) {
 			if (confirm(localise.set["msg_refresh"])) {
-
+                gSecondaryChoices = {};	// Clear cache
 				getData();
 			}
 		} else {
+            gSecondaryChoices = {};	// clear cache
 			getData();
 		}
 	}); 
@@ -288,6 +291,7 @@ function getTextQuestions() {
 		dataType: 'json',
 		cache: false,
 		success: function(data) {
+			gQuestions = data;
 			removeHourglass();
 			$text_name.empty();
 			$text_name_full.empty();
@@ -295,10 +299,10 @@ function getTextQuestions() {
 			for(i = 0; i < data.length; i++) {
 				var label = data[i].q ? data[i].q : '';
 				if(data[i].type === "string" || data[i].type === "calculate" || data[i].type === "barcode") {
-                    $text_name.append('<option value="' + data[i].id + '">' + data[i].name + ' : ' + label + '</option>');
-                    $text_name_full.append('<option value="' + data[i].id + '">' + data[i].name + ' : ' + label + '</option>');
+                    $text_name.append('<option value="' + i + '">' + data[i].name + ' : ' + label + '</option>');
+                    $text_name_full.append('<option value="' + i + '">' + data[i].name + ' : ' + label + '</option>');
                 } else if(data[i].type === "int" || data[i].type === "decimal" || data[i].type === "select1") {
-                    $text_name_full.append('<option value="' + data[i].id + '">' + data[i].name + ' : ' + label + '</option>');
+                    $text_name_full.append('<option value="' + i + '">' + data[i].name + ' : ' + label + '</option>');
 				}
 
 			}
@@ -326,8 +330,8 @@ function getData() {
 		otherTargetSelected = $('#other_target_cb').is(':checked');
 		textOtherOption = "";
 	
-	gTextId = $('#text_name option:selected').val();
-	gTextOtherId = $('#target_question_name option:selected').val();
+	gTextId = gQuestions[$('#text_name option:selected').val()].id;
+	gTextOtherId = gQuestions[$('#target_question_name option:selected').val()].id;
 
 	if(otherTargetSelected ) {
         textOtherOption = "?targetQuestion=" + gTextOtherId;
@@ -361,13 +365,7 @@ function getData() {
 				h[++idx] = '"><img src="img/rightarrow.png" height="16" width="16"></button>';
 				h[++idx] = '</td>';
 				h[++idx] = '<td class="review_update_other">';
-				h[++idx] = '<input type="text" data-orig="';
-				h[++idx] = data[i].targetQuestion;
-				h[++idx] = '" data-idx="';
-				h[++idx] = i;
-				h[++idx] = '" value="';
-				h[++idx] = data[i].targetQuestion;
-				h[++idx] = '">';
+				h[++idx] = addSecondary(data[i], i);
 				h[++idx] = '</td>';
 				h[++idx] = "<tr>";	
 			}
@@ -385,6 +383,8 @@ function getData() {
 				gTextIdx = $(this).val();
 				textUpdate();
 			});
+
+			getSecondarySelects();
 			
 			$('#target_update_btn').button().click(function(e) {
 				saveTargetResults();
@@ -413,7 +413,7 @@ function getData() {
 
 function getRelevance() {
 	
-	gTextId = $('#text_name option:selected').val();
+	gTextId = gQuestions[$('#text_name option:selected').val()].id;
 	
 	addHourglass();
 	$.ajax({
@@ -526,7 +526,7 @@ function saveTargetResults() {
 		
 
 		// for each item where value has changed
-	$('.review_update_other input').each(function(index){
+	$('.review_update_other input, .sec_sel1').each(function(index){
 		var $this = $(this);
 		
 		if($this.data("orig") != $this.val()) {
@@ -594,7 +594,6 @@ function targetHasChanged() {
 	$('.review_update_other input').each(function(index){
 		var $this = $(this);
 		if($this.data("orig") != $this.val()) {
-			console.log("val: " + $this.val() + " has changed");
 			changed = true;
 		}
 		
@@ -602,6 +601,95 @@ function targetHasChanged() {
 	
 	return changed;
 }
+
+function addSecondary(item, i) {
+	var h =[],
+		idx = -1,
+		qIndex = $('#target_question_name option:selected').val(),
+        type = gQuestions[qIndex].type;
+
+	if(type === "select1") {
+        h[++idx] = '<select class="sec_sel1" data-orig="';
+        h[++idx] = item.targetQuestion;
+        h[++idx] = '" data-idx="';
+        h[++idx] = i;
+        h[++idx] = '">';
+        h[++idx] = '</select>';
+	} else {
+        h[++idx] = '<input type="text" data-orig="';
+        h[++idx] = item.targetQuestion;
+        h[++idx] = '" data-idx="';
+        h[++idx] = i;
+        h[++idx] = '" value="';
+        h[++idx] = item.targetQuestion;
+        h[++idx] = '">';
+    }
+
+    return h.join('');
+}
+
+function getSecondarySelects() {
+
+
+	var qIndex = $('#target_question_name option:selected').val(),
+		type;
+
+    type = gQuestions[qIndex].type;
+    if(type === 'select' || type === 'select1') {
+        if (!gSecondaryChoices[qIndex]) {
+            // Get choices from the server
+
+            gCurrentLanguage = $('#language_name option:selected').val();
+            addHourglass();
+            $.ajax({
+                url: "/surveyKPI/optionList/" + globals.gCurrentSurvey + "/" + gCurrentLanguage + "/"
+					+ gQuestions[qIndex].id,
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                    removeHourglass();
+
+                    var idx = qIndex;
+                    gSecondaryChoices[idx] = data;
+                    addSecondarySelects(data);
+                },
+                error: function (xhr, textStatus, err) {
+                    removeHourglass();
+                    if (xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        alert(localise.set["c_error"] + xhr.responseText);
+                    }
+                }
+            });
+        } else {
+            // Use cached choices
+            addSecondarySelects(gSecondaryChoices[qIndex]);
+        }
+    }
+}
+
+function addSecondarySelects(choices) {
+	var i,
+		h = [];
+		idx = -1;
+
+	for(i = 0; i < choices.length; i++) {
+		h[++idx] = '<option value="';
+		h[++idx] = choices[i].value;
+		h[++idx] = '">';
+		h[++idx] = choices[i].label;
+		h[++idx] = '</option>';
+	}
+
+    $('.sec_sel1').empty().append(h.join(''));
+	$('.sec_sel1').each(function(){
+		var $this = $(this);
+		var val = $this.data('orig');
+		$this.val(val);
+	});
+}
+
 
 
 });

@@ -1281,3 +1281,8 @@ span.selectProject
 	color: lightgrey;
 	filter:opacity(0.4);
 }
+
+.sec_sel1 {
+	font-size: 16px;
+	width: 150px;
+}
