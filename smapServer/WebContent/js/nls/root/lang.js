@@ -259,6 +259,9 @@ define({
     "c_pdf": "PDF",
     "c_phone": "Phone Number",
     "c_rep_type": "Sub Form",
+    "c_cl": "Copy Link",
+    "c_cb": "Copy to clipboard",
+    "c_c": "Copied",
 
     // File Types
     "ft": "File Type",
