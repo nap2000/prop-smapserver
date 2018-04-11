@@ -282,6 +282,21 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
 
             });
 
+            // Respond to a user clicking copy link
+            $('.has_tt').tooltip();
+            $('#copyLink').click(function () {
+                var copyText = document.getElementById("srLink");
+                copyText.select();
+                document.execCommand("Copy");
+
+                var tooltip = document.getElementById("clTooltip");
+                $('#copyLink').prop('title', localise.set["c_c"] + ": " + copyText.value).tooltip('fixTitle').tooltip('show');
+
+            });
+            $('#copyLink').mouseout(function () {
+                $('#copyLink').prop('title', localise.set["c_cb"]).tooltip('fixTitle');
+            });
+
             enableUserProfileBS();
 
         });
