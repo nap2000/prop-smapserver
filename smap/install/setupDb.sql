@@ -433,7 +433,7 @@ CREATE TABLE survey (
 	meta text,										-- Meta items to collect with this survey
 	public_link text,
 	hidden boolean default false,					-- Updated when a form is replaced
-	text original_ident								-- Updated when a form is replaced
+	original_ident text								-- Updated when a form is replaced
 	);
 ALTER TABLE survey OWNER TO ws;
 DROP INDEX IF EXISTS SurveyDisplayName;
