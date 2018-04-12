@@ -1,5 +1,10 @@
 #!/bin/sh
 
+CATALINA_HOME=/usr/share/tomcat7
+
+# Copy postgres driver
+cp -r $deploy_from/jdbc/* $CATALINA_HOME/lib/ 
+
 echo '##### 0. check configuration'
 # Set flag if this is apache2.4
 a24=`sudo apachectl -version | grep -c "2\.4"`
