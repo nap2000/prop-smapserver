@@ -332,6 +332,7 @@ define({
     "a_nx": "New XLSX",
     "a_lx": "Legacy XLSX",
     "a_lh": "Legacy HTML",
+    "a_df": "Date Filter",
 
 
     // Messages

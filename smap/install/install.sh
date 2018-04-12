@@ -157,7 +157,7 @@ then
 	
 	# Update the volatile configuration setting, only this should change after initial installation
 	chmod +x apacheConfig.sh
-	./apacheConfig.sh
+	sudo ./apacheConfig.sh
 
 	echo '# copy subscriber upstart files'
 	if [ $u1604 -eq 1 ]; then
