@@ -1,7 +1,6 @@
 #!/bin/sh
 deploy_from="version1"
 u1604=`lsb_release -r | grep -c "16\.04"`
-CATALINA_HOME=/usr/share/tomcat7
 
 service apache2 stop
 service tomcat7 stop
@@ -78,9 +77,6 @@ if [ $u1604 -eq 1 ]; then
 systemctl stop subscribers
 systemctl stop subscribers_fwd
 fi
-
-# Copy postgres driver
-cp -r $deploy_from/jdbc/* $CATALINA_HOME/lib/ 
 
 # smap bin
 cp ../install/subscribers.sh /smap_bin
