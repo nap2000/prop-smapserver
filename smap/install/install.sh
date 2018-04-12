@@ -342,6 +342,8 @@ echo "1804" > ~/smap_version
 
 echo '##### 21. Deploy Smap'
 cd ../deploy
+chmod +x patchdb.sh
+sudo ./patchdb.sh
 chmod +x deploy.sh
 sudo ./deploy.sh
 cd ../install

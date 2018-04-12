@@ -860,8 +860,8 @@ alter table question add column external_choices text;
 alter table question add column external_table text;
 alter table survey add column public_link text;
 
-alter table form_downloads drop constraint form_downloads_form_ident_fkey;
-alter table task_completion drop constraint task_completion_form_ident_fkey;
+alter table form_downloads drop constraint IF EXISTS form_downloads_form_ident_fkey;
+alter table task_completion drop constraint IF EXISTS task_completion_form_ident_fkey;
 alter table form add column merge boolean default false;
 
 -- Upgrade to 18.03
