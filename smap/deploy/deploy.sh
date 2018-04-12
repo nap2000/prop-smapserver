@@ -1,6 +1,7 @@
 #!/bin/sh
 deploy_from="version1"
 u1604=`lsb_release -r | grep -c "16\.04"`
+CATALINA_HOME=/usr/share/tomcat7
 
 service apache2 stop
 service tomcat7 stop
