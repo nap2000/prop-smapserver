@@ -1,5 +1,5 @@
 #!/bin/sh
-
+deploy_from="version1"
 CATALINA_HOME=/usr/share/tomcat7
 
 # Copy postgres driver

@@ -535,7 +535,9 @@ define([
 					if(question[selProperty] == "audio") {
 						h[++idx] = "active";
 					}
-					h[++idx] = '" value="audio">Audio</button>';
+					h[++idx] = '" value="audio">';
+					h[++idx] = localise.set["ed_audio"];
+					h[++idx] = '</button>';
 					
 				h[++idx] = '</div>';
 				
@@ -865,7 +867,7 @@ define([
 	    h[++idx] = '<a type="button" class="btn btn-default mediaProp form-control" data-element="';
 	    h[++idx] = label.toLowerCase();
 	    h[++idx] = '">';
-	    h[++idx] = lcLabel;
+	    h[++idx] = localise.set["ed_" + lcLabel];
 	    h[++idx] = '</a>';
 	 
 	    h[++idx] = '</div>';
