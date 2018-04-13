@@ -587,7 +587,7 @@ CREATE UNIQUE INDEX SscName ON ssc(s_id, name);
 DROP TABLE IF EXISTS forward;
 CREATE TABLE forward (
 	id INTEGER DEFAULT NEXTVAL('forward_seq') CONSTRAINT pk_forward PRIMARY KEY,
-	s_id INTEGER REFERENCES survey ON DELETE CASCADE,
+	s_id INTEGER,
 	enabled boolean,
 	filter text,
 	target text,
