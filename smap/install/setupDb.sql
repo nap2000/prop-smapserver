@@ -1042,3 +1042,21 @@ create TABLE csvtable (
 ALTER TABLE csvtable OWNER TO ws;
 
 CREATE SCHEMA csv AUTHORIZATION ws;
+
+DROP SEQUENCE IF EXISTS du_seq CASCADE;
+CREATE SEQUENCE du_seq START 1;
+ALTER SEQUENCE du_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS disk_usage CASCADE;
+create TABLE disk_usage (
+	id integer default nextval('du_seq') constraint  pk_diskusage primary key,
+	o_id integer,
+	total bigint,					-- Total disk usage
+	upload bigint,					-- Disk used in upload directory
+	media bigint,					-- Disk used in media directory
+	template bigint,					-- Disk used in template directory
+	attachments bigint,				-- Disk used in attachments directory
+	when_measured TIMESTAMP WITH TIME ZONE
+	);
+ALTER TABLE disk_usage OWNER TO ws;
+
