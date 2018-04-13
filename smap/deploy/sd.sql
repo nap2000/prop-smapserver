@@ -877,3 +877,18 @@ CREATE SCHEMA csv AUTHORIZATION ws;
 ALTER TABLE dashboard_settings add column ds_advanced_filter text;
 drop table sync;											-- Only used in results database
 alter table forward drop constraint forward_s_id_fkey;	-- Notifications may now be transferred to a new survey if survey replaced
+
+CREATE SEQUENCE du_seq START 1;
+ALTER SEQUENCE du_seq OWNER TO ws;
+
+create TABLE disk_usage (
+	id integer default nextval('du_seq') constraint pk_diskusage primary key,
+	o_id integer,
+	upload total,					-- Total disk usage
+	upload bigint,					-- Disk used in upload directory
+	media bigint,					-- Disk used in media directory
+	template bigint,					-- Disk used in template directory
+	attachments bigint,				-- Disk used in attachments directory
+	when_measured TIMESTAMP WITH TIME ZONE
+	);
+ALTER TABLE disk_usage OWNER TO ws;
