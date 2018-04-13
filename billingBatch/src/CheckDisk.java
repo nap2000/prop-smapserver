@@ -31,11 +31,26 @@ public class CheckDisk {
 				+ "order by o.id, p.id asc";
 		PreparedStatement pstmt = null;
 		
+		String sqlWrite = "insert into disk_usage (o_id, total, upload, media, template, attachments, when_measured) "
+				+ "values(?, ?, ?, ?, ?, ?, now())";
+		PreparedStatement pstmtWrite = null;
+		
+		
 		String uploadPath = basePath + "/uploadedSurveys/";
 		String mediaPath = basePath + "/media/";
 		String attachmentsPath = basePath + "/attachments/";
 		String templatePath = basePath + "/templates/";
 		try {
+			pstmtWrite = sd.prepareStatement(sqlWrite);
+			
+			/*
+			 * Write total disk usage for organisation
+			 */
+			File p = new File("/smap");
+			long pSize = p.getTotalSpace() / 1000000;	// MB
+			writeUsage(pstmtWrite, 0, pSize, 0, 0, 0, 0);
+			System.out.println("Total usage: " + pSize);
+			
 			pstmt = sd.prepareStatement(sql);
 			ResultSet rs = pstmt.executeQuery();
 			
@@ -53,12 +68,14 @@ public class CheckDisk {
 				String surveyIdent = rs.getString("ident");
 				
 				if(currentOrg >= 0 && oId != currentOrg) {
+					writeUsage(pstmtWrite, currentOrg, pSize, uploadSize, mediaSize, templateSize, attachmentsSize);
 					System.out.println("Usage for organisation: " + currentOrgName + " : " 
 							+ uploadSize + " : " + mediaSize + " : " + templateSize + " ; " + attachmentsSize);
 					
 					uploadSize = 0;
 					mediaSize = 0;
 					templateSize = 0;
+					attachmentsSize = 0;
 				} 
 				
 				if(currentProject != pId) {
@@ -80,13 +97,29 @@ public class CheckDisk {
 				attachmentsSize += getDirUsage(attachmentsDir);
 		
 			}
+			writeUsage(pstmtWrite, currentOrg, pSize, uploadSize, mediaSize, templateSize, attachmentsSize);
 			System.out.println("Usage for organisation: " + currentOrgName + " : " + uploadSize + " : " + mediaSize + " : " + templateSize);
+			
+			
 		} finally {
 			try {pstmt.close();} catch(Exception e) {}
+			try {pstmtWrite.close();} catch(Exception e) {}
 		}
 	}
 	
-	long getDirUsage(File dir) throws IOException {
+	
+	private void writeUsage(PreparedStatement pstmt, int org, long totalSize, long uploadSize, long mediaSize, 
+			long templateSize, long attachmentsSize) throws SQLException {
+		pstmt.setInt(1, org);
+		pstmt.setLong(2, totalSize);
+		pstmt.setLong(3, uploadSize);
+		pstmt.setLong(4, mediaSize);
+		pstmt.setLong(5, templateSize);
+		pstmt.setLong(6, attachmentsSize);
+		pstmt.executeUpdate();
+	}
+	
+	private long getDirUsage(File dir) throws IOException {
 		long size = 0;
 		if(dir.exists()) {
 			InputStreamReader is = null;
