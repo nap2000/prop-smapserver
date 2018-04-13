@@ -71,11 +71,12 @@ public class CheckDisk {
 				currentProject = pId;
 				
 				File uploadDir = new File(uploadPath + surveyIdent);
-				File mediaDir = new File(mediaPath + surveyIdent);
-				File attachmentsDir = new File(attachmentsPath + surveyIdent);
-			
 				uploadSize += getDirUsage(uploadDir);
+				
+				File mediaDir = new File(mediaPath + surveyIdent);
 				mediaSize += getDirUsage(mediaDir);
+				
+				File attachmentsDir = new File(attachmentsPath + surveyIdent);
 				attachmentsSize += getDirUsage(attachmentsDir);
 		
 			}
@@ -88,18 +89,21 @@ public class CheckDisk {
 	long getDirUsage(File dir) throws IOException {
 		long size = 0;
 		if(dir.exists()) {
-			 Process p = Runtime.getRuntime().exec("du -d0 -k " + dir.getAbsolutePath());
-			 BufferedReader stdInput = new BufferedReader(new  InputStreamReader(p.getInputStream())); 
-            BufferedReader stdError = new BufferedReader(new  InputStreamReader(p.getErrorStream())); 
-            String resp = stdInput.readLine();
-            if(resp != null) {
-           	 	String [] respArray = resp.trim().split("\\s");
-           	 	size = Long.parseLong(respArray[0].trim());
-            }
-            String err = null;
-            while ((err = stdError.readLine()) != null) { 
-                  System.out.println(err); 
-            } 
+			InputStreamReader is = null;
+			BufferedReader br = null;
+			try {
+				Process p = Runtime.getRuntime().exec("du -d0 -m " + dir.getAbsolutePath());
+				is = new InputStreamReader(p.getInputStream());
+				br = new BufferedReader(is); 
+				String resp = br.readLine();
+				if(resp != null) {
+					String [] respArray = resp.trim().split("\\s");
+					size = Long.parseLong(respArray[0].trim());
+				}
+			} finally {
+				is.close();
+				br.close();
+			}
 		}
 		return size;
 	}
