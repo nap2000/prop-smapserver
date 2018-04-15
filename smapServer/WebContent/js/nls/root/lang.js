@@ -46,6 +46,7 @@ define({
     "m_logs": "Logs",
     "m_info": "Info",
     "m_os": "Oversight",
+    "m_billing": "Billing",
 
     // Smap Server
     "ss_welcome": "Welcome to Smap Server Version:",
