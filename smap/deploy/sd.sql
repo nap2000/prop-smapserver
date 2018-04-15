@@ -892,3 +892,6 @@ create TABLE disk_usage (
 	when_measured TIMESTAMP WITH TIME ZONE
 	);
 ALTER TABLE disk_usage OWNER TO ws;
+
+-- Upgrade to 18.05
+alter table organisation add column billing_enabled boolean default false;

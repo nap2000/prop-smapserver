@@ -37,6 +37,8 @@ define(function () {
         gIsOrgAdministrator: false,
         gIsSecurityAdministrator: false,
         gViewData: false,
+        gBillingData: false,
+        gOrgBillingData: false,
         gSendTrail: 'off',
         gViewIdx: 0,
         gSelector: new Selector(),
