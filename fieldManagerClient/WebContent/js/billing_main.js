@@ -58,7 +58,7 @@ require([
          'localise', 
          'globals',
          'bootbox',
-         'app/userManagement',
+         'app/billing',
          'bootstrapfileinput'
          
          ], function($, bootstrap, common, localise, globals) {
