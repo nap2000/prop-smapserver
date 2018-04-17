@@ -82,8 +82,9 @@ $(document).ready(function() {
 	})
 
 	$('#saveMetaItem').click(function() {
-		var name = $('#item_name').val();
-		var type = $('#item_type').val();
+        var name = $('#item_name').val();
+        var type = $('#item_type').val();
+    });
 
 	// Add responses to events
 	$('#project_name').change(function() {
