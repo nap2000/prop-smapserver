@@ -336,6 +336,7 @@ define({
 
 
     // Messages
+    "msg_pk_sel": "You can only select the record identifier if you have selected the \"Update a different question\" checkbox",
     "msg_wait": "Waiting for a response from the server. Please try again in a few seconds",
     "msg_reason": "Please provide a reason: ",
     "msg_sel_survey": "You must select a survey",

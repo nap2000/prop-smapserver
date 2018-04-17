@@ -77,6 +77,12 @@ $(document).ready(function() {
 	
 	// Set change function on the text question
 	$('#text_name').change(function() {
+        var otherTargetSelected = $('#other_target_cb').is(':checked');
+		if($('#text_name').val() < 0 && !otherTargetSelected) {
+			alert(localise.set["msg_pk_sel"]);
+            $('#review-container tbody').empty();
+			return false;
+		}
 		getData();
 		getRelevance();
  	 });
@@ -295,7 +301,6 @@ function getTextQuestions() {
 			removeHourglass();
 			$text_name.empty();
 			$text_name_full.empty();
-			
 			for(i = 0; i < data.length; i++) {
 				var label = data[i].q ? data[i].q : '';
 				if(data[i].type === "string" || data[i].type === "calculate" || data[i].type === "barcode") {
@@ -304,8 +309,8 @@ function getTextQuestions() {
                 } else if(data[i].type === "int" || data[i].type === "decimal" || data[i].type === "select1") {
                     $text_name_full.append('<option value="' + i + '">' + data[i].name + ' : ' + label + '</option>');
 				}
-
 			}
+            $text_name.append('<option value="-1">' + localise.set["c_record"] + '</option>');
 			getData();
 			getRelevance();
 		
@@ -327,10 +332,15 @@ function getData() {
 		h = [],
 		idx = -1,
 		$textUpdate = $('#text_update'),
-		otherTargetSelected = $('#other_target_cb').is(':checked');
-		textOtherOption = "";
-	
-	gTextId = gQuestions[$('#text_name option:selected').val()].id;
+		otherTargetSelected = $('#other_target_cb').is(':checked'),
+		textOtherOption = "",
+		textVal = $('#text_name option:selected').val();
+
+	if(textVal >= 0) {
+        gTextId = gQuestions[textVal].id;
+    } else {
+		gTextId = textVal;
+	}
 	gTextOtherId = gQuestions[$('#target_question_name option:selected').val()].id;
 
 	if(otherTargetSelected ) {
@@ -412,28 +422,31 @@ function getData() {
 }
 
 function getRelevance() {
-	
-	gTextId = gQuestions[$('#text_name option:selected').val()].id;
-	
-	addHourglass();
-	$.ajax({
-		url: "/surveyKPI/review/" + globals.gCurrentSurvey + "/relevance/" + gCurrentLanguage + "/" + gTextId,
-		dataType: 'json',
-		cache: false,
-		success: function(data) {
-			removeHourglass();
-			gRelevance = data;
 
-		},
-		error: function(xhr, textStatus, err) {
-			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-	              return;  // Not an error
-			} else {
-                alert(localise.set["c_error"] + xhr.responseText);
-			}
-		}
-	});	
+	var textVal = $('#text_name option:selected').val();
+	if(textVal >= 0) {
+        gTextId = gQuestions[textVal].id;
+
+        addHourglass();
+        $.ajax({
+            url: "/surveyKPI/review/" + globals.gCurrentSurvey + "/relevance/" + gCurrentLanguage + "/" + gTextId,
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                removeHourglass();
+                gRelevance = data;
+
+            },
+            error: function (xhr, textStatus, err) {
+                removeHourglass();
+                if (xhr.readyState == 0 || xhr.status == 0) {
+                    return;  // Not an error
+                } else {
+                    alert(localise.set["c_error"] + xhr.responseText);
+                }
+            }
+        });
+    }
 }
 
 
