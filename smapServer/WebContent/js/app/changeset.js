@@ -1821,8 +1821,10 @@ define([
                 console.log("check against preloads");
                 if(survey.meta) {
                     for (i = 0; i < survey.meta.length; i++) {
-                        if(name === survey.meta[i].name) {
-                            refQuestions[name].exists = true;
+                        for (name in refQuestions) {
+                            if (name === survey.meta[i].name) {
+                                refQuestions[name].exists = true;
+                            }
                         }
                     }
                 }
