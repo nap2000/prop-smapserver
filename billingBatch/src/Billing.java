@@ -12,17 +12,18 @@ public class Billing {
 	public static void main(String[] args) {
 		
 
-		Connection connectionSD = null;
-		String response = "";
+		Connection sd = null;
 		String dbClass = "org.postgresql.Driver";
 		String sd_db = "jdbc:postgresql://127.0.0.1:5432/survey_definitions";
 		
 		try {
 		    Class.forName(dbClass);	 
-			connectionSD = DriverManager.getConnection(sd_db, "ws", "ws1234");
+			sd = DriverManager.getConnection(sd_db, "ws", "ws1234");
 				
 			CheckDisk cd = new CheckDisk();
-			cd.check(connectionSD, "/smap");
+			cd.check(sd, "/smap");
+			
+			CheckSubmissions cs = new CheckSubmissions();
 			
 		} catch (ApplicationException e) {		
 			System.out.println("        " + e.getMessage());	
@@ -30,8 +31,8 @@ public class Billing {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (connectionSD != null) {
-					connectionSD.close();
+				if (sd != null) {
+					sd.close();
 				}
 			} catch (Exception e) {
 				

@@ -96,26 +96,25 @@ $(document).ready(function() {
     $('#primary_key_cb').change(function() {
         var $this = $(this);
         if($this.is(':checked')) {
-        	// 1. Hide question and language select
-            $('.not_pk_select').hide();
-			// 2. Show form picker
-            $('.pk_select').show();
-			// 3. Select and disable other_target_cb
             $('#other_target_cb').prop('checked', true);
             $('#other_target_cb').prop("disabled", true).addClass("disabled");
-            getData();
+            $('.not_pk_select').hide();
+            $('.pk_select').show();
+            getTextQuestions();
         } else {
             // 1. Hide form picker
             $('.pk_select').hide();
-            // 2. Show question and language select
             $('.not_pk_select').show();
-            // 3. Enable other_target_cb
             $('#other_target_cb').prop("disabled", false).removeClass("disabled");
             $('#target_question_name_cont, .review_update_other').show();
             $('.review_update').prop("disabled", true).addClass("disabled");
-            getData();
+            getTextQuestions();
         }
     });
+
+    $('#form_name').change(function() {
+    	getTextQuestions();
+	});
 
 	// Set change function on the "other target" checkbox
 	$('#other_target_cb').change(function() {
@@ -325,9 +324,18 @@ function getTextQuestions() {
 		success: function(data) {
 			gQuestions = data;
 			removeHourglass();
+
+			var f_id = 0;
+            if( $('#primary_key_cb').is(':checked')) {
+            	f_id = $('#form_name').val();
+            }
+
 			$text_name.empty();
 			$text_name_full.empty();
 			for(i = 0; i < data.length; i++) {
+				if(f_id > 0 && f_id != data[i].f_id) {
+					continue;		// Skip questions not in the selected form
+				}
 				var label = data[i].q ? data[i].q : '';
 				if(data[i].type === "string" || data[i].type === "calculate" || data[i].type === "barcode") {
                     $text_name.append('<option value="' + i + '">' + data[i].name + ' : ' + label + '</option>');
@@ -336,7 +344,6 @@ function getTextQuestions() {
                     $text_name_full.append('<option value="' + i + '">' + data[i].name + ' : ' + label + '</option>');
 				}
 			}
-            $text_name.append('<option value="-1">' + localise.set["c_record"] + '</option>');
 			getData();
 			getRelevance();
 		
