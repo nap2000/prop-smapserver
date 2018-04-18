@@ -66,7 +66,7 @@ $(document).ready(function() {
 		saveCurrentProject(globals.gCurrentProject, 
 				globals.gCurrentSurvey, 
 				globals.gCurrentTaskGroup);	// Save the current survey id
-		
+
 		getReviewLanguageList();
  	 });
 	
@@ -91,7 +91,31 @@ $(document).ready(function() {
 	$('#target_question_name').change(function() {
 		getData();
  	 });
-	
+
+    // Set change function on the select by primary key checkbox
+    $('#primary_key_cb').change(function() {
+        var $this = $(this);
+        if($this.is(':checked')) {
+            $('#other_target_cb').prop('checked', true);
+            $('#other_target_cb').prop("disabled", true).addClass("disabled");
+            $('.not_pk_select').hide();
+            $('.pk_select').show();
+            getTextQuestions();
+        } else {
+            // 1. Hide form picker
+            $('.pk_select').hide();
+            $('.not_pk_select').show();
+            $('#other_target_cb').prop("disabled", false).removeClass("disabled");
+            $('#target_question_name_cont, .review_update_other').show();
+            $('.review_update').prop("disabled", true).addClass("disabled");
+            getTextQuestions();
+        }
+    });
+
+    $('#form_name').change(function() {
+    	getTextQuestions();
+	});
+
 	// Set change function on the "other target" checkbox
 	$('#other_target_cb').change(function() {
 		var $this = $(this);
@@ -277,9 +301,10 @@ function getSurveyList() {
 
 
 function getReviewLanguageList() {
-	globals.gCurrentSurvey = $('#survey_name option:selected').val();	// TODO Remove when gCurrent survey is truly global and preserved for duration of app
+	globals.gCurrentSurvey = $('#survey_name option:selected').val();
 	if(globals.gCurrentSurvey) {
 		getLanguageList(globals.gCurrentSurvey, getTextQuestions, false, '#language_name', false);
+		getFormList(globals.gCurrentSurvey);
 	}
 }
 
@@ -299,9 +324,18 @@ function getTextQuestions() {
 		success: function(data) {
 			gQuestions = data;
 			removeHourglass();
+
+			var f_id = 0;
+            if( $('#primary_key_cb').is(':checked')) {
+            	f_id = $('#form_name').val();
+            }
+
 			$text_name.empty();
 			$text_name_full.empty();
 			for(i = 0; i < data.length; i++) {
+				if(f_id > 0 && f_id != data[i].f_id) {
+					continue;		// Skip questions not in the selected form
+				}
 				var label = data[i].q ? data[i].q : '';
 				if(data[i].type === "string" || data[i].type === "calculate" || data[i].type === "barcode") {
                     $text_name.append('<option value="' + i + '">' + data[i].name + ' : ' + label + '</option>');
@@ -310,7 +344,6 @@ function getTextQuestions() {
                     $text_name_full.append('<option value="' + i + '">' + data[i].name + ' : ' + label + '</option>');
 				}
 			}
-            $text_name.append('<option value="-1">' + localise.set["c_record"] + '</option>');
 			getData();
 			getRelevance();
 		
@@ -334,24 +367,33 @@ function getData() {
 		$textUpdate = $('#text_update'),
 		otherTargetSelected = $('#other_target_cb').is(':checked'),
 		textOtherOption = "",
-		textVal = $('#text_name option:selected').val();
+		textVal = $('#text_name option:selected').val(),
+		f_id = $('#form_name').val(),
+		qId;
 
 	if(textVal >= 0) {
         gTextId = gQuestions[textVal].id;
     } else {
-		gTextId = textVal;
+		gTextId = textVal;		// A meta question
 	}
 	gTextOtherId = gQuestions[$('#target_question_name option:selected').val()].id;
 
+	qId = gTextId;
 	if(otherTargetSelected ) {
         textOtherOption = "?targetQuestion=" + gTextOtherId;
+        if( $('#primary_key_cb').is(':checked')) {
+            textOtherOption += "&f_id=" + f_id;
+            qId = 0;
+        }
     }
 
 	$elem.empty();
+	var url = "/surveyKPI/review/" + globals.gCurrentSurvey + "/results/distinct/" + qId + textOtherOption;
+
 	
 	addHourglass();
 	$.ajax({
-		url: "/surveyKPI/review/" + globals.gCurrentSurvey + "/results/distinct/" + gTextId + textOtherOption,
+		url: url,
 		dataType: 'json',
 		cache: false,
 		success: function(data) {
@@ -552,8 +594,14 @@ function saveTargetResults() {
 			gTextIdx = $this.data("idx");
 			
 			// Filter on the main question
-			gUpdate.qFilter = gTextId;
-			gUpdate.valueFilter = gTextValues[gTextIdx].text;
+            if( $('#primary_key_cb').is(':checked')) {
+                gUpdate.r_id = gTextValues[gTextIdx].text;
+                gUpdate.qFilter = 0;
+            } else {
+                gUpdate.r_id = 0;
+                gUpdate.qFilter = gTextId;
+                gUpdate.valueFilter = gTextValues[gTextIdx].text;
+			}
 			
 			// Filter on the target question
 			gUpdate.qFilterTarget = gTextOtherId;
@@ -682,27 +730,57 @@ function getSecondarySelects() {
     }
 }
 
-function addSecondarySelects(choices) {
-	var i,
-		h = [];
-		idx = -1;
+    function addSecondarySelects(choices) {
+        var i,
+            h = [];
+        var idx = -1;
 
-	for(i = 0; i < choices.length; i++) {
-		h[++idx] = '<option value="';
-		h[++idx] = choices[i].value;
-		h[++idx] = '">';
-		h[++idx] = choices[i].label;
-		h[++idx] = '</option>';
-	}
+        for(i = 0; i < choices.length; i++) {
+            h[++idx] = '<option value="';
+            h[++idx] = choices[i].value;
+            h[++idx] = '">';
+            h[++idx] = choices[i].label;
+            h[++idx] = '</option>';
+        }
 
-    $('.sec_sel1').empty().append(h.join(''));
-	$('.sec_sel1').each(function(){
-		var $this = $(this);
-		var val = $this.data('orig');
-		$this.val(val);
-	});
-}
+        $('.sec_sel1').empty().append(h.join(''));
+        $('.sec_sel1').each(function(){
+            var $this = $(this);
+            var val = $this.data('orig');
+            $this.val(val);
+        });
+    }
 
+    function getFormList(sId) {
+        addHourglass();
+        $.ajax({
+            url: "/surveyKPI/survey/" + sId + "/getMeta",
+            cache: false,
+            dataType: 'json',
+            success: function(data) {
+                removeHourglass();
+                var i,
+                    h = [];
+                var idx = -1;
+
+                if(data) {
+                    for(i = 0; i < data.forms.length; i++) {
+                        h[++idx] = '<option value="';
+                        h[++idx] = data.forms[i].f_id;
+                        h[++idx] = '">';
+                        h[++idx] = data.forms[i].name;
+                        h[++idx] = '</option>';
+                    }
+				}
+                $('#form_name').empty().append(h.join(''));
+
+            },
+            error: function(data) {
+                removeHourglass();
+                alert(localise.set["c_error"] + data.responseText);
+            }
+        });
+    }
 
 
 });
