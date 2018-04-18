@@ -64,6 +64,14 @@
 			</div>
 
 			<form class="modify_form">
+				<div style="float:left;">
+					<span class="lang" data-lang="rev_sel_pk">use primary key</span>:
+					<input type="checkbox" name="primary_key" id="primary_key_cb">
+				</div>
+			</form>
+			<div style="clear: both;">&nbsp;</div>
+
+			<form class="modify_form">
 				<div style="width:210px; height:50px; font-size:16px; float:left;">
 					<label for="project_name" class="lang" data-lang="c_project">project</label>
 					<select class="project_list" id="project_name" style="font-size: 16px;"></select>
@@ -74,14 +82,19 @@
 					<select class="survey_select" id="survey_name" style="font-size: 16px;"></select>
 				</div>
 
-				<div style="width:210px; height:50px; font-size:16px; float:left;">
+				<div style="width:210px; height:50px; font-size:16px; float:left;" class="not_pk_select">
 					<label for="language_name" class="lang" data-lang="c_lang">language</label>
 					<select class="language_select" id="language_name" style="font-size: 16px;"></select>
 				</div>
 
-				<div style="width:210px; height:50px;font-size:16px; float:left;">
+				<div style="width:210px; height:50px;font-size:16px; float:left;" class="not_pk_select">
 					<label for="text_name" class="lang" data-lang="c_question">question</label>
 					<select id="text_name" style="font-size: 16px;"></select>
+				</div>
+
+				<div style="width:210px; height:50px;font-size:16px; float:left; display:none;" class="pk_select">
+					<label for="text_name" class="lang" data-lang="c_form">form</label>
+					<select id="form_name" style="font-size: 16px;"></select>
 				</div>
 			</form>
 			<div style="clear: both;">&nbsp;</div>
