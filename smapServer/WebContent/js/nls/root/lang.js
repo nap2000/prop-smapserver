@@ -846,6 +846,7 @@ define({
 
     // Review
     "rev_upd_diff": "Update a different question to the source question",
+    "rev_sel_pk": "Select data to change using a primary key",
     "rev_q_upd": "Question to update",
     "rev_text": "Text",
     "rev_upd": "Update",
