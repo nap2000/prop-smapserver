@@ -33,38 +33,65 @@ var gUsers,
 	gCurrentUserIndex,		// Set while editing a users details
 	gOrgId;
 
-$(document).ready(function() {
+	$(document).ready(function() {
 
-	localise.setlang();		// Localise HTML
+		localise.setlang();		// Localise HTML
 
-	getLoggedInUser(userKnown, false, false, getOrganisations);
-	
-	getAvailableTimeZones($('#o_tz'), showTimeZones);
-    
-	/* 
-	 * Set focus to first element on opening modals
-	 */
-	$('.modal').on('shown.bs.modal', function() {
-		$(this).find('input[type=text],textarea,select').filter(':visible:first').focus();
+		getLoggedInUser(false, false, false, undefined);
+
+		getAvailableTimeZones($('#o_tz'), showTimeZones);
+
+		/*
+		 * Set focus to first element on opening modals
+		 */
+		$('.modal').on('shown.bs.modal', function() {
+			$(this).find('input[type=text],textarea,select').filter(':visible:first').focus();
+		});
+
+		/*
+		 * Add date time picker to usage date
+		 */
+		moment.locale();
+		$('#usageDate').datetimepicker({
+			useCurrent: false,
+			format: "MM/YYYY",
+			viewMode: "months",
+			locale: gUserLocale || 'en'
+		}).data("DateTimePicker").date(moment());
+
+
+		getBillDetails();
+		enableUserProfileBS();	// Allow user to reset their own profile
+
 	});
-    
-	/*
-	 * Add date time picker to usage date
-	 *
-	moment.locale();
-	$('#usageDate').datetimepicker({
-		useCurrent: false,
-		format: "MM/YYYY",
-		viewMode: "months",
-		locale: gUserLocale || 'en'
-	}).data("DateTimePicker").date(moment());
-*/
 
+	function getBillDetails() {
+        var usageMsec = $('#usageDate').data("DateTimePicker").date(),
+            d = new Date(usageMsec),
+			url,
+            month = d.getMonth() + 1,
+            year = d.getFullYear(),
 
-	enableUserProfileBS();	// Allow user to reset their own profile
-	
-});
+		url = "/surveyKPI/billing?og=0&date=" + year + "-" + month + "-" + "27";
+        addHourglass();
+        $.ajax({
+            url: url,
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                removeHourglass();
 
+            },
+            error: function (xhr, textStatus, err) {
+                removeHourglass();
+                if (xhr.readyState == 0 || xhr.status == 0) {
+                    return;  // Not an error
+                } else {
+                    alert(localise.set["c_error"] + ": " + err);
+                }
+            }
+        });
+    }
 
 
 });
