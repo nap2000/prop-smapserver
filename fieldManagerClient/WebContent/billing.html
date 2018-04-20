@@ -63,8 +63,48 @@
 </header>
 
 <div class="container">
-	
-	
+	<div id="org_alert" class="alert alert-info" role="alert"></div>
+	<ul class="nav nav-pills" role="tablist">
+		<li id="billTab" role="presentation" class="active"><a href="#" class="lang" data-lang="m_billing">billing</a></li>
+	</ul>
+
+	<!-- The container for details of a bill -->
+	<div id="billPanel" >
+
+		<div class="well" id="filters">
+			<div class="container">
+				<form role="form" class="form-horizontal" id="user_filter_form">
+					<div class="form-group">
+
+						<label class="control-label col-sm-4" for="usageDate"><span class="lang" data-lang="c_month"></span>:</label>
+						<div class="input-group date col-sm-4" id='usageDate' >
+							<input type='text' class="form-control" data-date-format="YYYY/MM"/>
+							<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+						</div>
+					</div>
+
+				</form>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 col-xs-12">
+					<div id="user_table"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 col-xs-12">
+					<button class="btn btn-success lang" id="create_user" data-lang="u_add">add</button>
+					<button class="btn btn-danger lang" id="delete_user" data-lang="u_del">del</button>
+					<button class="btn btn-warning restrict_role org_role move_to_org lang" data-lang="u_mv">move</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12 text-center">
+			<img id="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
+		</div>
+	</div>
 </div>
 
 
