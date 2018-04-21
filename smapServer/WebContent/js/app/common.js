@@ -273,9 +273,13 @@ function updateUserDetails(data, getOrganisationsFn) {
 		for(i = 0; i < groups.length; i++) {
 			if(groups[i].name === "admin") {
 				globals.gIsAdministrator = true;
+                if(data.billing_enabled) {
+                    globals.gOrgBillingData = true;
+                }
 			}
 			if(groups[i].name === "org admin") {
 				globals.gIsOrgAdministrator = true;
+				globals.gBillingData = true;
 			}
 			if(groups[i].name === "security") {
 				globals.gIsSecurityAdministrator = true;
@@ -320,7 +324,10 @@ function updateUserDetails(data, getOrganisationsFn) {
 		if(typeof getOrganisationsFn === "function") {
 			getOrganisationsFn();
 		}
-	} 
+	}
+    if(globals.gBillingData || globals.gOrgBillingData) {
+        $('.billing_role').show();
+    }
 	
 	// Other conditional elements
 	if(globals.gSendTrail === 'off') {
@@ -1630,29 +1637,19 @@ function openForm(type) {
  * Return true if this is a business server
  */
 function isBusinessServer() {
-	return true;
-	/*
+
 	var hostname = location.hostname;
 	var bs;
 	
 	if(hostname !== 'localhost' &&
-			hostname.indexOf('.smap.com.au') < 0 &&
 			hostname.indexOf('kontrolid.com') < 0 &&
-			hostname.indexOf('zarkman.com') < 0 &&
-			hostname.indexOf('reachnettechnologies.com') < 0 &&
-			hostname.indexOf('blueoakenergy.com') < 0 &&
-			hostname.indexOf('.icanreach.com') < 0 &&
-			hostname.indexOf('encontactone.com') < 0 &&
-			hostname.indexOf('app.ezpilot.me') < 0 &&
-			hostname.indexOf('10.0') != 0) {
+			hostname.indexOf('zarkman.com') < 0) {
 		bs = false;
 		$('.bus_only').hide();
 	} else {
-		bs = true
-		$('.public_only').hide();
+		bs = true;
 	}
 	return bs;
-	*/
 }
 
 /*
