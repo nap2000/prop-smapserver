@@ -51,6 +51,9 @@
         },
         {
             name: '../notifications_main',
+        },
+        {
+            name: '../billing_main',
         }
 
     ]
