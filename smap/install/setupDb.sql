@@ -136,6 +136,7 @@ create TABLE organisation (
 	website text,
 	locale text,				-- default locale for the organisation
 	timezone text,				-- default timezone for the organisation
+	billing_enabled boolean default false,
 	changed_ts TIMESTAMP WITH TIME ZONE
 	);
 CREATE UNIQUE INDEX idx_organisation ON organisation(name);
@@ -1060,3 +1061,18 @@ create TABLE disk_usage (
 	);
 ALTER TABLE disk_usage OWNER TO ws;
 
+DROP SEQUENCE IF EXISTS bill_seq CASCADE;
+CREATE SEQUENCE bill_seq START 1;
+ALTER SEQUENCE bill_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS billing CASCADE;
+create TABLE billing (
+	id integer default nextval('bill_seq') constraint pk_billing primary key,
+	o_id integer,
+	apply_from TIMESTAMP WITH TIME ZONE,		-- Date that the billing applies from
+	free_submissions integer,				-- Number of free submissions available
+	submission_unit_cost real,				-- Cost per submission
+	free_disk integer,						-- Free disk available
+	disk_unit_cost real						-- Cost per GB of disk
+	);
+ALTER TABLE billing OWNER TO ws;

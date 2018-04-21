@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Billing</title>
+
+
+<link rel="stylesheet" href="/css/normalize.css" />
+<link rel="stylesheet" href="/css/bootstrap.min.css" /> 
+<link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css" />
+<link rel="stylesheet" href="/css/smap-bs.css" type="text/css">
+
+	
+<script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
+<script src="/js/libs/modernizr.js"></script>
+<script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
+<script data-main="js/billing_main" src="/js/libs/require.js"></script>
+
+</head>
+<body>
+
+<header class="navbar navbar-default navbar-static-top noPrint" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="#" class="navbar-brand">
+      	<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+     	<span class="lang" data-lang="m_billing" >billing</span>
+      </a>
+    </div>
+	<nav class="collapse navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav navbar-right">
+      	<li id="m_modules" class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="lang" data-lang="m_modules">Modules</span> <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            
+              <li><a class="lang" data-lang="m_home" href="/?loggedin=yes">home</a></li>
+              <li class="restrict_role admin_role analyst_role"><a href="/edit.html"><span class="lang" data-lang="c_edit">Edit</span><span class="glyphicon glyphicon-edit pull-right"></span></a></li>
+              <li class="restrict_role admin_role analyst_role"><a href="/fieldManager/surveyManagement.html"><span class="lang" data-lang="m_admin">Admin</span><span class="glyphicon glyphicon-wrench pull-right"></span></a></li>
+              <li class="restrict_role enum_role"><a href="/webForm.html"><span class="lang" data-lang="m_data_mod" >Web Forms</span><span class="glyphicon glyphicon-globe pull-right"></span></a></li>
+              <li class="restrict_role analyst_role data_role"><a href="/fieldAnalysis/index.html"><span class="lang" data-lang="m_analysis">Analysis</span><span class="glyphicon glyphicon-stats pull-right"></span></a></li>
+              <li class="restrict_role admin_role analyst_role"><a href="/tasks/taskManagement.html"><span class="nav-label lang" data-lang="m_assign">assign</span><span class="glyphicon glyphicon-tasks pull-right"></span></a></li>
+			  <li class="restrict_role billing_role bus_only"><a href="/fieldManager/billing.html"><span class="nav-label lang" data-lang="m_billing">billing</span><span class="glyphicon glyphicon-usd pull-right"></span></a></li>
+		  </ul>
+        </li>
+		<li id="m_help"><a class="lang" data-lang="m_help" href="https://docs.google.com/folderview?id=0B5_SmpWlQYxvNExwSFV5X051Yjg&usp=docslist_api#" target="_blank">Help</a></li>
+        <li>
+         	<a id="username" type="button" class="btn btn-default" data-toggle="modal" data-target="#modify_me_popup" aria-label="User">
+			<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+			</a>
+		</li>
+      </ul>
+      	
+	</nav>
+
+  </div>
+</header>
+
+<div class="container">
+	<div id="org_alert" class="alert alert-info" role="alert"></div>
+	<ul class="nav nav-pills" role="tablist">
+		<li id="billTab" role="presentation" class="active"><a href="#" class="lang" data-lang="m_billing">billing</a></li>
+	</ul>
+
+	<!-- The container for details of a bill -->
+	<div id="billPanel" >
+
+		<div class="well" id="filters">
+			<div class="container">
+				<form role="form" class="form-horizontal" id="user_filter_form">
+					<div class="form-group">
+
+						<label class="control-label col-sm-4" for="usageDate"><span class="lang" data-lang="c_month"></span>:</label>
+						<div class="input-group date col-sm-4" id='usageDate' >
+							<input type='text' class="form-control" data-date-format="YYYY/MM"/>
+							<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+						</div>
+					</div>
+
+				</form>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 col-xs-12 table-responsive">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th></th>;
+								<th class="lang" data-lang="c_quantity">quantity</th>
+								<th class="lang" data-lang="c_free">free</th>
+								<th class="lang" data-lang="c_uc">unit cost</th>
+								<th class="lang" data-lang="c_total">total</th>
+							</tr>
+						</thead>
+						<tbody id="billing_table"></tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12 text-center">
+			<img id="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
+		</div>
+	</div>
+</div>
+
+
+<!-- Modal to allow the user to edit their own details -->
+<div id="modify_me_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modifyMeLabel" aria-hidden="true">
+	<div class="modal-dialog">
+   		<div class="modal-content">
+   			<div class="modal-header">
+     			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+     			<h4 class="modal-title" id="modifyMeLabel"></h4>
+   			</div>
+		     <div class="modal-body">
+				<form role="form" class="form-horizontal" id="me_edit_form">
+					<div class="form-group">
+						<label for="me_name" data-lang="c_name" class="lang col-sm-2 control-label">Name</label>
+						<div class="col-sm-10">
+							<input type="text" id="me_name" required class="form-control">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="me_language" data-lang="c_lang" class="lang col-sm-2 control-label">Language</label>
+						<div class="col-sm-10">
+							<select id="me_language" class="language_select form-control"></select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="me_email" data-lang="c_email" class="lang col-sm-2 control-label">Email</label>
+						<div class="col-sm-10">
+							<input type="email" class="form-control" id="me_email" 
+									placeholder="Enter email" 
+									pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$">
+						</div>
+					</div>
+					<div id="reset_me_password_fields" style="display:none;">
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" id="reset_me_password"><span data-lang="c_r_p" class="lang">Reset Password</span>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="password_me_fields" style="display:none;">
+						<div class="form-group">
+							<label for="me_password" data-lang="c_password" class="lang col-sm-2 control-label">Password</label>
+							<div class="col-sm-10">
+								<input id="me_password" type="password" placeholder="Password" class="form-control">
+							</div>
+						</div>	
+						<div class="form-group">
+							<label for="me_password_confirm" data-lang="c_c_p" class="lang col-sm-2 control-label">Confirm Password</label>
+							<div class="col-sm-10">
+								<input id="me_password_confirm" type="password" placeholder="Password" class="form-control">
+							</div>
+						</div>	
+					</div>		
+				</form>	
+			</div>
+
+			<div class="modal-footer">
+            	<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+            	<button id="userProfileLogout"type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_logout">Logout</button>
+            	<button id="userProfileSave" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_save">Save</button>
+        	</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	setCustomUserMgmt();			// Apply custom javascript
+</script>
+</body>
+</html>

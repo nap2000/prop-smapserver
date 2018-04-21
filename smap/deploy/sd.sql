@@ -892,3 +892,19 @@ create TABLE disk_usage (
 	when_measured TIMESTAMP WITH TIME ZONE
 	);
 ALTER TABLE disk_usage OWNER TO ws;
+
+-- Upgrade to 18.05
+CREATE SEQUENCE bill_seq START 1;
+ALTER SEQUENCE bill_seq OWNER TO ws;
+
+create TABLE billing (
+	id integer default nextval('bill_seq') constraint pk_billing primary key,
+	o_id integer,
+	apply_from TIMESTAMP WITH TIME ZONE,		-- Date that the billing applies from
+	free_submissions integer,				-- Number of free submissions available
+	submission_unit_cost real,				-- Cost per submission
+	free_disk integer,						-- Free disk available
+	disk_unit_cost real						-- Cost per GB of disk
+	);
+ALTER TABLE billing OWNER TO ws;
+alter table organisation add column billing_enabled boolean default false;
