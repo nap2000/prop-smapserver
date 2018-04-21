@@ -37,7 +37,7 @@ var gUsers,
 
 		localise.setlang();		// Localise HTML
 
-		getLoggedInUser(false, false, false, undefined);
+		getLoggedInUser(undefined, false, false, undefined);
 
 		getAvailableTimeZones($('#o_tz'), showTimeZones);
 
@@ -59,8 +59,19 @@ var gUsers,
 			locale: gUserLocale || 'en'
 		}).data("DateTimePicker").date(moment());
 
+		// Workaround for bug in view mode of bootstrap date time picker
+        $('#usageDate').on('dp.hide', function(event){
+            setTimeout(function(){
+                $('#usageDate').data('DateTimePicker').viewMode('months');
+            },1);
+        });
 
-		getBillDetails();
+
+        $('#usageDate').on("dp.change", function () {
+        	getBillDetails();
+		});
+
+        getBillDetails();
 		enableUserProfileBS();	// Allow user to reset their own profile
 
 	});
@@ -72,7 +83,7 @@ var gUsers,
             month = d.getMonth() + 1,
             year = d.getFullYear(),
 
-		url = "/surveyKPI/billing?og=0&date=" + year + "-" + month + "-" + "27";
+		url = "/surveyKPI/billing?org=0&year=" + year + "&month=" + month;
         addHourglass();
         $.ajax({
             url: url,
@@ -80,7 +91,9 @@ var gUsers,
             cache: false,
             success: function (data) {
                 removeHourglass();
-
+				if(data) {
+					populateServerTable(data);
+				}
             },
             error: function (xhr, textStatus, err) {
                 removeHourglass();
@@ -92,6 +105,51 @@ var gUsers,
             }
         });
     }
+
+    function populateServerTable(data) {
+		var $elem = $('#billing_table'),
+			h = [],
+			idx = -1,
+            lineItems = data.line,
+			grandTotal  = 0.0;
+
+		for(i = 0; i < lineItems.length; i++) {
+			var line = lineItems[i];
+            h[++idx] = addBillingRow(localise.set[line["name"]], line["quantity"], line["free"], line["unitCost"], line["amount"]);
+            grandTotal += line["amount"];
+		}
+        h[++idx] = addBillingRow('<b>' + localise.set["c_total"] + '</b>', '', '', '', '<b>' + grandTotal + '</b>');
+        $elem.empty().append(h.join(''));
+	}
+
+	function addBillingRow(name, usage, free, unit, total) {
+		var h = [],
+			idx = -1;
+
+        h[++idx] = '<tr>';
+        h[++idx] = '<td>';			// Server
+        h[++idx] = name;
+        h[++idx] = '</td>';
+
+        h[++idx] = '<td>';			// Usage
+        h[++idx] = usage;
+        h[++idx] = '</td>';
+
+        h[++idx] = '<td>';			// Free Usage
+        h[++idx] = free;
+        h[++idx] = '</td>';
+
+        h[++idx] = '<td>';			// Unit Cost
+        h[++idx] = unit;
+        h[++idx] = '</td>';
+
+        h[++idx] = '<td>';			// Total
+        h[++idx] = '$' + total;
+        h[++idx] = '</td>';
+        h[++idx] = '</tr>';
+
+        return h.join('');
+	}
 
 
 });
