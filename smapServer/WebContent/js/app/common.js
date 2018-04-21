@@ -279,13 +279,10 @@ function updateUserDetails(data, getOrganisationsFn) {
 			}
 			if(groups[i].name === "org admin") {
 				globals.gIsOrgAdministrator = true;
-                if(data.billing_enabled) {
-                    globals.gBillingData = true;
-                }
+				globals.gBillingData = true;
 			}
 			if(groups[i].name === "security") {
 				globals.gIsSecurityAdministrator = true;
-                globals.gBillingData = true;
 			}
 			if(groups[i].name === "analyst") {
 				globals.gIsAnalyst = true;
@@ -1651,7 +1648,6 @@ function isBusinessServer() {
 		$('.bus_only').hide();
 	} else {
 		bs = true;
-        $('.bus_only').show();
 	}
 	return bs;
 }

@@ -46,7 +46,7 @@
               <li class="restrict_role enum_role"><a href="/webForm.html"><span class="lang" data-lang="m_data_mod" >Web Forms</span><span class="glyphicon glyphicon-globe pull-right"></span></a></li>
               <li class="restrict_role analyst_role data_role"><a href="/fieldAnalysis/index.html"><span class="lang" data-lang="m_analysis">Analysis</span><span class="glyphicon glyphicon-stats pull-right"></span></a></li>
               <li class="restrict_role admin_role analyst_role"><a href="/tasks/taskManagement.html"><span class="nav-label lang" data-lang="m_assign">assign</span><span class="glyphicon glyphicon-tasks pull-right"></span></a></li>
-			  <li class="restrict_role billing_role"><a href="/tasks/taskManagement.html"><span class="nav-label lang" data-lang="m_assign">assign</span><span class="glyphicon glyphicon-tasks pull-right"></span></a></li>
+			  <li class="restrict_role billing_role bus_only"><a href="/fieldManager/billing.html"><span class="nav-label lang" data-lang="m_billing">billing</span><span class="glyphicon glyphicon-usd pull-right"></span></a></li>
 		  </ul>
         </li>
 		<li id="m_help"><a class="lang" data-lang="m_help" href="https://docs.google.com/folderview?id=0B5_SmpWlQYxvNExwSFV5X051Yjg&usp=docslist_api#" target="_blank">Help</a></li>
@@ -89,15 +89,19 @@
 
 		<div class="container">
 			<div class="row">
-				<div class="col-md-12 col-xs-12">
-					<div id="user_table"></div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12 col-xs-12">
-					<button class="btn btn-success lang" id="create_user" data-lang="u_add">add</button>
-					<button class="btn btn-danger lang" id="delete_user" data-lang="u_del">del</button>
-					<button class="btn btn-warning restrict_role org_role move_to_org lang" data-lang="u_mv">move</button>
+				<div class="col-md-12 col-xs-12 table-responsive">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th></th>;
+								<th class="lang" data-lang="c_quantity">quantity</th>
+								<th class="lang" data-lang="c_free">free</th>
+								<th class="lang" data-lang="c_uc">unit cost</th>
+								<th class="lang" data-lang="c_total">total</th>
+							</tr>
+						</thead>
+						<tbody id="billing_table"></tbody>
+					</table>
 				</div>
 			</div>
 		</div>

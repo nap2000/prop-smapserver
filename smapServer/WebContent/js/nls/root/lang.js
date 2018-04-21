@@ -187,6 +187,7 @@ define({
     "c_source": "Source",
     "c_show": "Show",
     "c_hide": "Hide",
+    "c_total": "Total",
     "c_totals": "Totals",
     "c_instances": "Instances",
     "c_device": "Device",
@@ -263,6 +264,7 @@ define({
     "c_cl": "Copy Link",
     "c_cb": "Copy to clipboard",
     "c_c": "Copied",
+    "c_quantity": "Quantity",
 
     // File Types
     "ft": "File Type",
@@ -868,8 +870,17 @@ define({
     "rev_usc": "Un-Selected Choice",
 
     // Chart Questions
-    "ch_ds": "Chart Data"
+    "ch_ds": "Chart Data",
 
+    // Billing
+    "quantity": "Quantity",
+    "free": "Free",
+    "unitCost": "Unit Cost",
+    "amount": "Amount",
+    "server": "Server",
+    "submissions": "Submissions",
+    "disk": "Disk",
+    "static map": "Static Map"
 
 
 });
