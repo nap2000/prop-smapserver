@@ -115,14 +115,14 @@ var gUsers,
 
 		for(i = 0; i < lineItems.length; i++) {
 			var line = lineItems[i];
-            h[++idx] = addBillingRow(localise.set[line["name"]], line["quantity"], line["free"], line["unitCost"], line["amount"]);
+            h[++idx] = addBillingRow(localise.set[line["name"]], line["quantity"], line["free"], line["unitCost"], line["amount"], false);
             grandTotal += line["amount"];
 		}
-        h[++idx] = addBillingRow('<b>' + localise.set["c_total"] + '</b>', '', '', '', '<b>' + grandTotal + '</b>');
+        h[++idx] = addBillingRow('<b>' + localise.set["c_total"] + '</b>', '', '', '', grandTotal, true);
         $elem.empty().append(h.join(''));
 	}
 
-	function addBillingRow(name, usage, free, unit, total) {
+	function addBillingRow(name, usage, free, unit, total, grand) {
 		var h = [],
 			idx = -1;
 
@@ -144,7 +144,13 @@ var gUsers,
         h[++idx] = '</td>';
 
         h[++idx] = '<td>';			// Total
-        h[++idx] = '$' + total;
+        if(grand) {
+            h[++idx] = '<b>';
+        }
+        h[++idx] = '$' + parseFloat(total).toFixed(2);
+        if(grand) {
+            h[++idx] = '</b>';
+        }
         h[++idx] = '</td>';
         h[++idx] = '</tr>';
 
