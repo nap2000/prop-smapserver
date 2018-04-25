@@ -59,5 +59,8 @@ require([
          'app/notifications',  
          'tablesorter'
          
-         ], function($, common, localise, globals, bootstrap) {});
+         ], function($, common, localise, globals, bootstrap) {
+
+    setCustomNotifications();			// Apply custom javascript
+});
 

@@ -71,6 +71,6 @@ require([
 ], function($, common, localise, globals, bootstrap, moment) {
 
     window.moment = moment;		// Make moment global for use by common.js
-
+    setCustomTemplateMgmt();
 });
 

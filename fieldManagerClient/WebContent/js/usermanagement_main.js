@@ -63,5 +63,7 @@ require([
          
          ], function($, bootstrap, common, localise, globals) {
 
+    setCustomUserMgmt();			// Apply custom javascript
+
 });
 

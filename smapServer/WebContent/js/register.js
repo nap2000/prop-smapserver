@@ -53,6 +53,7 @@ require([
 
         window.bootbox = bootbox;
 
+        setCustomRegister();			// Apply custom javascript
         localise.setlang();
 
         $('#registerForm').bootstrapValidator({

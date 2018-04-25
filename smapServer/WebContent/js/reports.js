@@ -70,6 +70,7 @@ require([
 
 	$(document).ready(function() {
 
+        setCustomReports();			// Apply custom javascript
 		localise.setlang();		// Localise HTML
 
 		// Get the user details

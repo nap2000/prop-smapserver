@@ -116,7 +116,8 @@ var trailStyle = new ol.style.Style({
 });
 
 $(document).ready(function() {
-	
+
+    setCustomUserTrail();			// Apply custom javascript
 	localise.setlang();
 		
 	// Set up the start and end dates with date picker

@@ -113,7 +113,8 @@ require([
 	var table;
 	
 	$(document).ready(function() {
-		
+
+        setCustomLogs();
 		localise.setlang();		// Localise HTML
 		
 		getLoggedInUser(undefined, false, true, undefined);
