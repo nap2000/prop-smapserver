@@ -109,8 +109,10 @@ require(['jquery', 'jquery_ui', 'rmm', 'common', 'localise', 'globals', 'moment'
          'crf',
          
          ], function($, jquery_ui, rmm, common, localise, globals, moment) {
+    setCustomDashboard();			// Apply custom javascript
 	window.localise = localise;
     initialiseDialogs();
+
 
 });
 

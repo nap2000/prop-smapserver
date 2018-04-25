@@ -90,7 +90,8 @@ var gQueries,
 'use strict';
 
 $(document).ready(function() {
- 
+
+    setCustomManage();			// Apply custom javascript
 	localise.setlang();		// Localise HTML
 	
 	loadQueries();

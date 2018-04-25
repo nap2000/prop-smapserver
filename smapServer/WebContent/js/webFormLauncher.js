@@ -60,7 +60,8 @@ require([
          ], function($, bootstrap, common, globals, localise, bsfi) {
 
 $(document).ready(function() {
-	
+
+    setCustomWebForms();			// Apply custom javascript
 	localise.setlang();		// Localise HTML
 	
 	// Get the user details

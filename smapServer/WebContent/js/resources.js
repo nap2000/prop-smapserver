@@ -52,7 +52,8 @@ require([
 		gMapId;
 	
 $(document).ready(function() {
-	
+
+    setCustomResources();			// Apply custom javascript
 	var bs = isBusinessServer();
 	localise.setlang();		// Localise HTML
 	$('#map_name').attr("placeholder", localise.set["sr_m_ph"]);

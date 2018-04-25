@@ -107,7 +107,8 @@ require([
 			openingNew = false,
 			dont_get_current_survey = true,
 			bs = isBusinessServer();
-			
+
+		setCustomManage();		// Apply custom javascript
 		localise.setlang();		// Localise HTML
 		 
 		// Get the parameters and show a management survey if required

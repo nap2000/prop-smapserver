@@ -119,7 +119,8 @@ $(document).ready(function() {
 		bs = isBusinessServer();
 	
 	window.bootbox = bootbox;
-	
+
+    setCustomEdit();
 	localise.setlang();		// Localise HTML
 	
 	// Get the parameters and start editing a survey if one was passed as a parameter

@@ -125,5 +125,7 @@ require([
         		 moment,
         		 mapbox) {
 
+    setCustomAssignments();			// Apply custom javascript
+
 });
 
