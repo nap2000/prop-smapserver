@@ -156,6 +156,7 @@ require([
 
         window.chart = chart;
         window.moment = moment;
+        setCustomManage();
         localise.setlang();		// Localise HTML
 
         // Get the parameters and show a management survey if required

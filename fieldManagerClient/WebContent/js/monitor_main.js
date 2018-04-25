@@ -74,5 +74,7 @@ require([
          'crf'
          
          ], function($, jquery_ui, rmm, common, localise, globals, moment) {
+
+    setCustomMonitor();			// Apply custom javascript
 });
 

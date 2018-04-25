@@ -63,7 +63,8 @@ $(document).ready(function() {
 		params,
 		pArray = [],
 		param = [];
-	
+
+    setCustomEdit();
 	localise.setlang();		// Localise HTML
 	
 	// Get the user details
