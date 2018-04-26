@@ -908,3 +908,5 @@ create TABLE billing (
 	);
 ALTER TABLE billing OWNER TO ws;
 alter table organisation add column billing_enabled boolean default false;
+
+alter table csvtable add column survey boolean default false;
