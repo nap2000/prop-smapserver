@@ -1035,9 +1035,10 @@ DROP TABLE IF EXISTS csvtable CASCADE;
 create TABLE csvtable (
 	id integer default nextval('csv_seq') constraint pk_csvtable primary key,
 	o_id integer references organisation(id) on delete cascade,
-	s_id integer,				-- Survey id may be 0 for organisation level csv hence do not reference
-	filename text,				-- Name of the CSV file
+	s_id integer,					-- Survey id may be 0 for organisation level csv hence do not reference
+	filename text,					-- Name of the CSV file
 	headers text,
+	survey boolean default false,	-- Set true if the data actually comes from a survey
 	ts_initialised TIMESTAMP WITH TIME ZONE
 	);
 ALTER TABLE csvtable OWNER TO ws;
