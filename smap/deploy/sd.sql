@@ -910,3 +910,6 @@ ALTER TABLE billing OWNER TO ws;
 alter table organisation add column billing_enabled boolean default false;
 
 alter table csvtable add column survey boolean default false;
+alter table csvtable add column chart boolean default false;
+alter table csvtable add column non_unique_key boolean default false;
+alter table csvtable add column sqldef text;
