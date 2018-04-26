@@ -1039,6 +1039,9 @@ create TABLE csvtable (
 	filename text,					-- Name of the CSV file
 	headers text,
 	survey boolean default false,	-- Set true if the data actually comes from a survey
+	chart boolean default false,		-- Set true if the data is for a chart
+	non_unique_key default false,	-- Set true if the data does not have a unique key
+	sqldef text,						-- The sql definition			
 	ts_initialised TIMESTAMP WITH TIME ZONE
 	);
 ALTER TABLE csvtable OWNER TO ws;
