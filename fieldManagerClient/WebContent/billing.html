@@ -65,25 +65,29 @@
 <div class="container">
 	<div id="org_alert" class="alert alert-info" role="alert"></div>
 	<ul class="nav nav-pills" role="tablist">
-		<li id="billTab" role="presentation" class="active"><a href="#" class="lang" data-lang="m_billing">billing</a></li>
+		<li id="serverBillTab" role="presentation" class="active"><a href="#" class="lang" data-lang="m_billing_server">server billing</a></li>
+		<li id="organisationBillTab" role="presentation"><a href="#" class="lang" data-lang="m_billing_orgs">organisation billing</a></li>
 	</ul>
 
-	<!-- The container for details of a bill -->
-	<div id="billPanel" >
+	<!-- The container for details of a server bill -->
+	<div id="serverBillPanel" class="billtab">
 
 		<div class="well" id="filters">
 			<div class="container">
 				<form role="form" class="form-horizontal" id="user_filter_form">
-					<div class="form-group">
+						<div class="form-group">
 
-						<label class="control-label col-sm-4" for="usageDate"><span class="lang" data-lang="c_month"></span>:</label>
-						<div class="input-group date col-sm-4" id='usageDate' >
-							<input type='text' class="form-control" data-date-format="YYYY/MM"/>
-							<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+							<label class="control-label col-sm-4" for="usageDate"><span class="lang" data-lang="c_month"></span>:</label>
+							<div class="input-group date col-sm-4" id='usageDate' >
+								<input type='text' class="form-control" data-date-format="YYYY/MM"/>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
 						</div>
-					</div>
 
 				</form>
+				<div class="col-sm-3 col-xs-6">
+					<a id="org_bill_rpt" class="btn btn-success lang" type="button" data-lang="org_bill_rpt">report</a>
+				</div>
 			</div>
 		</div>
 
@@ -106,7 +110,21 @@
 			</div>
 		</div>
 		<div class="col-md-12 text-center">
-			<img id="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
+			<img class="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
+		</div>
+	</div>
+
+	<!-- The container for managing organisation billing -->
+	<div id="organisationBillPanel" class="billtab">
+
+		<div class="well">
+			<div class="container">
+
+			</div>
+		</div>
+
+		<div class="container">
+
 		</div>
 	</div>
 </div>

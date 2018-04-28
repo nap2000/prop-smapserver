@@ -85,68 +85,45 @@ $(document).ready(function() {
 	// Set up the tabs
     $('#usersTab a').click(function (e) {
     	e.preventDefault();
-    	$(this).tab('show');
-    		 
-		$('#rolesPanel').hide();
-		$('#projectPanel').hide();
-		$('#organisationPanel').hide();
-		$('#serverPanel').hide();
-		$('#userPanel').show();
-        $('#devicePanel').hide();
+        $(this).tab('show');
+
+    	$(".usertab").hide();
+        $('#userPanel').show();
+
     })
     $('#projectsTab a').click(function (e) {
     	e.preventDefault();
-    	$(this).tab('show');
-    		  	  
-		$('#projectPanel').show();
-		$('#organisationPanel').hide();
-		$('#serverPanel').hide();
-		$('#userPanel').hide();
-		$('#rolesPanel').hide();
-        $('#devicePanel').hide();
+        $(this).tab('show');
+
+        $(".usertab").hide();
+        $('#projectPanel').show();
     })
     $('#organisationTab a').click(function (e) {
     	e.preventDefault();
-    	$(this).tab('show');
-    		  	  
-		$('#projectPanel').hide();
-		$('#organisationPanel').show();
-		$('#serverPanel').hide();
-		$('#userPanel').hide();
-		$('#rolesPanel').hide();
-        $('#devicePanel').hide();
+        $(this).tab('show');
+
+        $(".usertab").hide();
+        $('#organisationPanel').show();
     });
     $('#serverTab a').click(function (e) {
     	e.preventDefault();
-    	$(this).tab('show');
-    		  	  
-		$('#projectPanel').hide();
-		$('#organisationPanel').hide();
-		$('#serverPanel').show();
-		$('#userPanel').hide();
-		$('#rolesPanel').hide();
-        $('#devicePanel').hide();
+        $(this).tab('show');
+
+        $(".usertab").hide();
+        $('#serverPanel').show();
     });
     $('#roleTab a').click(function (e) {
     	e.preventDefault();
-    	$(this).tab('show');
-    		  	  
-		$('#projectPanel').hide();
-		$('#organisationPanel').hide();
-		$('#serverPanel').hide();
-		$('#userPanel').hide();
-		$('#rolesPanel').show();
-        $('#devicePanel').hide();
+        $(this).tab('show');
+
+        $(".usertab").hide();
+        $('#rolesPanel').show();
     })
     $('#deviceTab a').click(function (e) {
         e.preventDefault();
         $(this).tab('show');
 
-        $('#projectPanel').hide();
-        $('#organisationPanel').hide();
-        $('#serverPanel').hide();
-        $('#userPanel').hide();
-        $('#rolesPanel').hide();
+        $(".usertab").hide();
         $('#devicePanel').show();
     })
     

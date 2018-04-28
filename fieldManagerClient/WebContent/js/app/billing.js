@@ -72,6 +72,36 @@ var gUsers,
 		});
 
         getBillDetails();
+
+        $('#org_bill_rpt').click(function (e) {
+            var usageMsec = $('#usageDate').data("DateTimePicker").date(),
+                d = new Date(usageMsec),
+                url,
+                month = d.getMonth() + 1,
+                year = d.getFullYear();
+
+            url = "/surveyKPI/billing/organisations/xlsx?year=" + year + "&month=" + month;
+            downloadFile(url);
+
+        });
+
+        // Set up the tabs
+        $('#serverBillTab a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+
+            $(".billtab").hide();
+            $('#serverBillPanel').show();
+
+        });
+        $('#organisationBillTab a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+
+            $(".billtab").hide();
+            $('#organisationBillPanel').show();
+        });
+
 		enableUserProfileBS();	// Allow user to reset their own profile
 
 	});
