@@ -47,6 +47,8 @@ define({
     "m_info": "Info",
     "m_os": "Oversight",
     "m_billing": "Billing",
+    "m_billing_server": "Server Billing",
+    "m_billing_orgs": "Organisations Billing",
 
     // Smap Server
     "ss_welcome": "Welcome to Smap Server Version:",
@@ -880,7 +882,8 @@ define({
     "server": "Server",
     "submissions": "Submissions",
     "disk": "Disk",
-    "static map": "Static Map"
+    "static map": "Static Map",
+    "org_bill_rpt": "Organisation Usage Report"
 
 
 });
