@@ -777,6 +777,7 @@ CREATE TABLE public.assignments (
 	status text NOT NULL,
 	task_id integer,
 	assigned_date date,
+	submitted_date timestamp with time zone,
 	last_status_changed_date date,
 	PRIMARY KEY (id),
 	CONSTRAINT assignee FOREIGN KEY (assignee)
