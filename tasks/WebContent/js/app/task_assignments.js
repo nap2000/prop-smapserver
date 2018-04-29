@@ -435,6 +435,14 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                             $('.advanced_filter').show(tgRule.filter.advanced);
                         }
                     }
+
+                    if(tgRule.taskStart) {
+                        $('#task_start').val(tgRule.taskStart);		// Get start of task
+                        $('#task_after').val(tgRule.taskAfter);
+                        $('#task_units').val(tgRule.taskUnits);
+                        $('#task_duration').val(tgRule.taskDuration);
+                        $('#duration_units').val(tgRule.durationUnits);
+                    }
                 } else {
                     $('#add_task_from_existing').hide();
                 }
@@ -589,6 +597,14 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                         alert(localise.set["msg_ab_ns"]);
                         return;
                     }
+
+                    // Start and durations
+                    assignObj["taskStart"] = $('#task_start').val();		// Get start of task
+                    assignObj["taskAfter"] = $('#task_after').val();
+                    assignObj["taskUnits"] = $('#task_units').val();
+                    assignObj["taskDuration"] = $('#task_duration').val();
+                    assignObj["durationUnits"] = $('#duration_units').val();
+
                 }
 
                 assignString = JSON.stringify(assignObj);
@@ -913,14 +929,15 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
             var language = $('#filter_language option:selected').val(),
                 sId = $('#survey').val(),
+                dateqId = $('#task_start').val();
                 qList;
 
             qList = globals.gSelector.getSurveyQuestions(sId, language);
 
             if (!qList) {
-                getQuestionList(sId, language, "-1", "-1", questionChanged, false, undefined);
+                getQuestionList(sId, language, "-1", "-1", questionChanged, false, undefined, dateqId);
             } else {
-                setSurveyViewQuestions(qList, qId);
+                setSurveyViewQuestions(qList, qId, undefined, dateqId);
             }
         }
 
