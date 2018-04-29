@@ -1252,7 +1252,8 @@ function getLanguageList(sId, callback, addNone, selector, setGroupList, filterQ
 				}
 				
 				if(data[0]) {
-					getQuestionList(sId, data[0], filterQuestion, "-1", theCallback, setGroupList, undefined);	// Default language to the first in the list
+					var dateqId = $('#task_start').val();
+					getQuestionList(sId, data[0], filterQuestion, "-1", theCallback, setGroupList, undefined, dateqId);	// Default language to the first in the list
 				} else {
 					if(typeof theCallback === "function") {
 						theCallback();
@@ -1275,9 +1276,9 @@ function getLanguageList(sId, callback, addNone, selector, setGroupList, filterQ
 }
 
 //Function to get the question list
-function getQuestionList(sId, language, qId, groupId, callback, setGroupList, view) {
+function getQuestionList(sId, language, qId, groupId, callback, setGroupList, view, dateqId) {
 
-	function getAsyncQuestionList(sId, language, theCallback, groupId, qId, view) {
+	function getAsyncQuestionList(sId, language, theCallback, groupId, qId, view, dateqId) {
 	
 		addHourglass();
 		$.ajax({
@@ -1287,7 +1288,7 @@ function getQuestionList(sId, language, qId, groupId, callback, setGroupList, vi
 			success: function(data) {
 				removeHourglass();
 				globals.gSelector.setSurveyQuestions(sId, language, data);
-				setSurveyViewQuestions(data, qId, view);
+				setSurveyViewQuestions(data, qId, view, dateqId);
 	
 				if(setGroupList && typeof setSurveyViewQuestionGroups === "function") {
 					setSurveyViewQuestionGroups(data, groupId);
@@ -1307,7 +1308,7 @@ function getQuestionList(sId, language, qId, groupId, callback, setGroupList, vi
 		});	
 	}
 	
-	getAsyncQuestionList(sId, language, callback, groupId, qId, view);
+	getAsyncQuestionList(sId, language, callback, groupId, qId, view, dateqId);
 }
 
 //Function to get the meta list
@@ -1356,13 +1357,17 @@ function setSurveyViewLanguages(list, language,elem, addNone) {
 }
 
 // Set the question list in the survey view control
-function setSurveyViewQuestions(list, qId, view) {
+function setSurveyViewQuestions(list, qId, view, dateqId) {
 	
 	var $questionSelect = $('.selected_question'),
+		$dateQuestions = $('.date_questions'),
 		label;
 	
 	$questionSelect.empty();
-	$questionSelect.append('<option value="-1">None</option>');
+	$questionSelect.append('<option value="-1">' + localise.set["c_none"] + '</option>');
+
+    $dateQuestions.empty();
+    $dateQuestions.append('<option value="-1">' + localise.set["ed_i_c"] + '</option>');
 
 	if(list) {
 		$.each(list, function(j, item) {
@@ -1375,6 +1380,9 @@ function setSurveyViewQuestions(list, qId, view) {
 				$questionSelect.append('<option value="' + item.id + '">ssc : ' + item.name + " : " + item.fn + '</option>');
 			} else {
 				$questionSelect.append('<option value="' + item.id + '">' + item.name + " : " + label + '</option>');
+				if(item.type === 'timestamp') {
+                    $dateQuestions.append('<option value="' + item.id + '">' + item.name + " : " + label + '</option>');
+                }
 			}
 		});
 	}
@@ -1382,6 +1390,10 @@ function setSurveyViewQuestions(list, qId, view) {
 		qId = "-1";
 	}
 	$questionSelect.val(qId);
+    if(!dateqId) {
+        dateqId = "-1";
+    }
+    $dateQuestions.val(dateqId);
 	if(view) {
 		setFilterFromView(view);	// Set the filter dialog settings
 	}
