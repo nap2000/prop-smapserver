@@ -914,3 +914,5 @@ alter table csvtable add column user_ident text;
 alter table csvtable add column chart boolean default false;
 alter table csvtable add column non_unique_key boolean default false;
 alter table csvtable add column sqldef text;
+
+alter table assignments add column submitted_date timestamp with time zone;
