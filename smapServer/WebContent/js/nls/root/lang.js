@@ -267,6 +267,9 @@ define({
     "c_cb": "Copy to clipboard",
     "c_c": "Copied",
     "c_quantity": "Quantity",
+    "c_after": "After",
+    "c_units": "Units",
+    "c_duration": "Duation",
 
     // File Types
     "ft": "File Type",
@@ -506,6 +509,7 @@ define({
     "t_ad": "Assign from data values",
     "t_af": "Create tasks from results submitted after this task group is created",
     "t_ac": "Create tasks from results that have already been submitted",
+    "t_start": "Set the start time and duration of the task relative to when it is created or a date in the source survey",
 
     // template load errors
     "e_u_err": "Form Upload Error",
@@ -811,6 +815,9 @@ define({
     "ro_fc_i": "Select the columns to show with this filter. If no columns are selected then all columns will be shown.",
 
     // Intervals
+    "i_m": "minutes",
+    "i_h": "hours",
+    "i_d": "days",
     "i_sec": "second ago",
     "i_secs": "seconds ago",
     "i_min": "minute ago",
