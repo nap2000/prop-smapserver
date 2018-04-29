@@ -1380,7 +1380,7 @@ function setSurveyViewQuestions(list, qId, view, dateqId) {
 				$questionSelect.append('<option value="' + item.id + '">ssc : ' + item.name + " : " + item.fn + '</option>');
 			} else {
 				$questionSelect.append('<option value="' + item.id + '">' + item.name + " : " + label + '</option>');
-				if(item.type === 'timestamp') {
+				if(item.type === 'timestamp' || item.type === 'dateTime' || item.type == 'date') {
                     $dateQuestions.append('<option value="' + item.id + '">' + item.name + " : " + label + '</option>');
                 }
 			}
