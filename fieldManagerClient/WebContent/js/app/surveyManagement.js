@@ -510,7 +510,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
 
                     h[++idx] = '<td>';
                     h[++idx] = '<button class="btn survey_replace" value="';
-                    h[++idx] = survey.id;
+                    h[++idx] = i;
                     h[++idx] = '">';
                     h[++idx] = '<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>';
                     h[++idx] = '</button>';
@@ -598,13 +598,13 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             });
 
             $('.survey_replace').click(function(e) {
-
+                var survey = gSurveys[$(this).val()];
                 gReplace = true;
-                $('#surveyId').val($(this).val());
+                $('#surveyId').val(survey.id);
                 $('#uploadAction').val("replace");
                 $('#up_alert, #up_warnings').hide();
                 $('.notreplace').hide();
-                $('#survey_add_title').text(localise.set["tm_c_form_rep"])
+                $('#survey_add_title').text(localise.set["tm_c_form_rep"] + ": " + survey.displayName);
                 $('#survey_add').modal('show');
             });
 
