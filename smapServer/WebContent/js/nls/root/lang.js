@@ -269,7 +269,7 @@ define({
     "c_quantity": "Quantity",
     "c_after": "After",
     "c_units": "Units",
-    "c_duration": "Duation",
+    "c_duration": "Duration",
 
     // File Types
     "ft": "File Type",
