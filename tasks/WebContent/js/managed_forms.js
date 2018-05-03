@@ -942,6 +942,7 @@ require([
 
 
         url += "&format=dt";
+        url += "&merge_select_multiple=yes"
         url += "&sort=prikey&dirn=desc";
 
         $.fn.dataTable.ext.errMode = 'none';
