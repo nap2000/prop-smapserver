@@ -423,20 +423,6 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             });
         }
 
-
-        /*
-         * Set any timestamps in the display name to local time
-         *
-         * Won't do this it is better to have a consistent name
-        function setLocalTime() {
-            var i;
-
-            for(i = 0; i < gSurveys.length; i++) {
-                gSurveys[i].displayName = convertTimesToLocal(gSurveys[i].displayName);
-            }
-        }
-        */
-
         /*
          * Fill in the survey list
          */
