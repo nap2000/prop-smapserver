@@ -884,7 +884,7 @@ ALTER SEQUENCE du_seq OWNER TO ws;
 create TABLE disk_usage (
 	id integer default nextval('du_seq') constraint pk_diskusage primary key,
 	o_id integer,
-	upload bigint,					-- Total disk usage
+	total bigint,					-- Total disk usage
 	upload bigint,					-- Disk used in upload directory
 	media bigint,					-- Disk used in media directory
 	template bigint,					-- Disk used in template directory
