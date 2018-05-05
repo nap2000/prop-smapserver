@@ -717,8 +717,6 @@ legend {
   width: 100%;
   padding: 0;
   margin-bottom: 12px; }
-  legend > span {
-    vertical-align: 12px; }
 
 .option-wrapper {
   /*IE10*/
@@ -1192,8 +1190,6 @@ input[type=text].autocomplete {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
       display: table-cell; }
-  .geopicker .btn:not(.close-chain-btn):not(.toggle-input-type-btn) {
-    height: 34px; }
   .geopicker .btn[name="geodetect"] {
     display: inline-block;
     float: right;
@@ -3273,6 +3269,8 @@ table th[class*="col-"] {
       display: none; }
   .draw-widget__footer {
     margin-top: 10px; }
+    .draw-widget__footer .draw-widget__btn-reset:disabled {
+      display: none; }
   .draw-widget__undo {
     position: absolute;
     top: 37px;
@@ -3667,6 +3665,8 @@ table th[class*="col-"] {
       background-repeat: repeat-y;
       background-origin: border-box;
       background-size: 100% 10%; }
+    .or-appearance-analog-scale .slider-vertical.widget:not(.or-comment-widget) {
+      margin-top: 15px; }
     .or-appearance-analog-scale .slider-vertical .slider {
       -webkit-flex: 1;
       -ms-flex: 1;
@@ -3992,10 +3992,6 @@ table th[class*="col-"] {
     color: #e00e0e; }
     .btn-comment.invalid .icon, .btn-comment.invalid .enketo-geopoint-marker, .btn-comment.invalid .glyphicon-chevron-up, .btn-comment.invalid .glyphicon-chevron-down {
       font-weight: bold; }
-
-legend .btn-comment .icon, legend .btn-comment .enketo-geopoint-marker, legend .btn-comment .glyphicon-chevron-up, legend .btn-comment .glyphicon-chevron-down {
-  position: absolute;
-  top: -2px; }
 
 .or[dir="rtl"] .btn-comment {
   left: auto;
