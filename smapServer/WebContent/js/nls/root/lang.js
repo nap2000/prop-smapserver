@@ -688,6 +688,11 @@ define({
     "ed_td": "Timing Data",
     "ed_s_g": "Grid (Web Forms)",
     "ed_s_p": "Pages",
+    "ed_c_del_q": "Deleted question",
+    "ed_c_del_o": "Deleted choice %s1 from option list %s2",
+    "ed_c_chg_p":  "%s1 property of question %s2 changed to: %s3 from: %s4",
+    "ed_c_add_q": "Added question %s1 with type %s2",
+    "ed_c_add_o": "Added choice %s1 to choice list: %s2",
 
 
     // Managed Forms

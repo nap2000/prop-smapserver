@@ -1754,7 +1754,8 @@ function getChangeDescription(change, version) {
 		idx = -1,
 		oldVal,
 		newVal,
-		forms = globals.model.survey.forms;
+		forms = globals.model.survey.forms,
+		str;
 	
 	if(change.action === "external option") {		
 		/*
@@ -1803,16 +1804,12 @@ function getChangeDescription(change, version) {
 			h[++idx] = oldVal;
 			h[++idx] = '</span>';
 		} else {
-			h[++idx] = '"';
-			h[++idx] = change.property.prop;
-			h[++idx] = '" property of question ';
-			h[++idx] = change.property.name;
-			h[++idx] = ' changed to: <span style="color:blue;">';
-			h[++idx] = newVal;
-			h[++idx] = '</span>';
-			h[++idx] = ' from: <span style="color:red;">';
-			h[++idx] = oldVal;
-			h[++idx] = '</span>';
+			str = localise.set["ed_c_chg_p"];
+			str = str.replace("%s1", '"' + change.property.prop + '"');
+			str = str.replace("%s2", change.property.name);
+			str = str.replace("%s3", '<span style="color:blue;">' + newVal + '</span>');
+            str = str.replace("%s4", '<span style="color:red;">' + oldVal + '</span>');
+            h[++idx] = str;
 		}
 		
 	} else if(change.action === "add")  {
@@ -1820,40 +1817,38 @@ function getChangeDescription(change, version) {
 		/*
 		 * New questions or options
 		 */
-		h[++idx] = 'Added ';
-		
 		if(change.type === "question" || change.changeType === "question"){  // deprecate checking of changeType
-			
-			h[++idx] = 'question <span style="color:blue;">';
-			h[++idx] = change.question.name;
-			h[++idx] = '</span> with type <span style="color:red;">';
+
+			str = localise.set["ed_c_add_q"];
+			str = str.replace("%s1", '<span style="color:blue;">' + change.question.name + "</span>");
+			var typeString;
 			if(change.question.type === "string") {
-				h[++idx] = 'text';
+				typeString = 'text';
 			} else if(change.question.type === "select"){
-				h[++idx] = 'select_multiple';
+				typeString = 'select_multiple';
 			} else if(change.question.type === "select1"){
-				h[++idx] = 'select_one';
+				typeString = 'select_one';
 			} else {
-				h[++idx] = change.question.type;
+				typeString = change.question.type;
 			}
-			h[++idx] = '</span>';
+            str = str.replace("%s2", '<span style="color:red;">' + typeString + "</span>");
+			h[++idx] = str;
 			
 		} else if(change.type === "option" || change.changeType === "option") {	// deprecate checking of changeType
 			/*
 			 * Options added or deleted from the editor
 			 */
-			h[++idx] = 'choice <span style="color:blue;">'; 
-			h[++idx] = change.option.value;
+            str = localise.set["ed_c_add_o"];
+            var valueStr = '<span style="color:blue;">' + change.option.value;
 			if(change.option.labels && change.option.labels.length >= 1) {
-				h[++idx] = ' (';
-				h[++idx] = change.option.labels[0].text;
-				h[++idx] = ')';
+				valueStr += ' (';
+				valueStr += change.option.labels[0].text;
+				valueStr += ')';
 			}
-			h[++idx] = '</span>';
-			h[++idx] = ' to choice list: <span style="color:blue;">';
-			h[++idx] = change.option.optionList;
-			h[++idx] = '</span>';
-			h[++idx] = ' using the online editor';
+			valueStr += '</span>';
+			str = str.replace("%s1", valueStr);
+			str = str.replace("%s2", '<span style="color:blue;">' + change.option.optionList + '</span>');
+			h[++idx] = str;
 		}
 		
 	}  else if(change.action === "move")  {
@@ -1902,31 +1897,28 @@ function getChangeDescription(change, version) {
 		}
 		
 	} else if(change.action === "delete")  {
-		
-		h[++idx] = 'Deleted ';
-		
+
 		if(change.type === "question" || change.changeType === "question"){
-			
-			h[++idx] = 'question <span style="color:blue;">';
+
+            h[++idx] = localise.set["ed_c_del_q"];
+
+            h[++idx] = ' <span style="color:blue;">';
 			h[++idx] = change.question.name;
 			h[++idx] = '</span>'; 
 			
 		} else if(change.type === "option") {
-			/*
-			 * Options added or deleted from the editor
-			 */
-			h[++idx] = 'choice <span style="color:blue;">'; 
-			h[++idx] = change.option.value;
+
+            str = localise.set["ed_c_del_o"];
+			var valueStr = '<span style="color:blue;">' + change.option.value;
 			if(change.option.labels && change.option.labels.length >= 1) {
-				h[++idx] = ' (';
-				h[++idx] = change.option.labels[0].text;
-				h[++idx] = ')';
+                valueStr  += ' (';
+                valueStr  += change.option.labels[0].text;
+                valueStr  += ')';
 			}
-			h[++idx] = '</span>';
-			h[++idx] = ' from choice list: <span style="color:blue;">';
-			h[++idx] = change.option.optionList;
-			h[++idx] = '</span>';
-			h[++idx] = ' using the online editor';
+            valueStr  += '</span>';
+            str = str.replace("%s1", valueStr);
+            str = str.replace("%s2", '<span style="color:blue;">' + change.option.optionList + '</span>');
+			h[++idx] = str;
 		}
 	} else if(change.action === "set_required")  {
         h[++idx] = 'All questions set ';
