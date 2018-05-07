@@ -270,6 +270,7 @@ define({
     "c_after": "After",
     "c_units": "Units",
     "c_duration": "Duration",
+    "c_msg": "Message",
 
     // File Types
     "ft": "File Type",
@@ -448,6 +449,8 @@ define({
     "msg_sms_n1": "Send SMS to ",
     "msg_sms_n2": "numbers entered in response to a question",
     "msg_ds_s": "Download started.  If there is a lot of data then this may take some time please be patient",
+    "msg_survey_replaced": "Survey replaced",
+    "msg_survey_loaded": "Survey loaded",
 
     // Editor
     "e_b_e": "Base on existing form",
