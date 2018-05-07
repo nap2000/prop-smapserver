@@ -1655,6 +1655,7 @@ function isBusinessServer() {
 	
 	if(hostname !== 'localhost' &&
 			hostname.indexOf('kontrolid.com') < 0 &&
+        	hostname.indexOf('ezpilot') < 0 &&
 			hostname.indexOf('zarkman.com') < 0) {
 		bs = false;
 		$('.bus_only').hide();
@@ -1747,7 +1748,7 @@ function getUtcDate($element, start, end) {
 /*
  * Get a description from a change made in the editor
  */
-function getChangeDescription(change) {
+function getChangeDescription(change, version) {
 	
 	var h =[],
 		idx = -1,
@@ -1939,7 +1940,15 @@ function getChangeDescription(change) {
             h[++idx] = '</span>';
 		}
 
-	} else {
+	} else if(change.action === "upload_template")  {
+
+		if(version > 1) {
+            h[++idx] = localise.set["msg_survey_replaced"];
+		} else {
+            h[++idx] = localise.set["msg_survey_loaded"];
+		}
+
+    } else {
 		h[++idx] = change.type;
 		h[++idx] = ' ';
 		h[++idx] = change.name;

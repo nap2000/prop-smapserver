@@ -176,8 +176,8 @@ function setChangesHtml($element, survey) {
 					h[++idx] = localise.set["ed_dt"];
 				h[++idx] = '</th>';
 
-				h[++idx] = '<th>Results Table Updated</th>';
-				h[++idx] = '<th>Msg</th>';
+				h[++idx] = '<th>' + localise.set["ft_xls_orig"] + '</th>';
+				h[++idx] = '<th>' + localise.set["c_msg"] + '</th>';
 			h[++idx] = '</tr>';
 		h[++idx] = '</thead>';
 		
@@ -189,6 +189,16 @@ function setChangesHtml($element, survey) {
 			if(!changes[i].apply_results) {		// Change has been applied to the results tables
 				status = changes[i].success ? "success" : "failed";
 			}
+			var filehtml = "";
+			if(changes[i].change.fileName && changes[i].change.fileName.trim().length > 0) {
+                var filename = changes[i].change.fileName;
+				var fnIndex = changes[i].change.fileName.lastIndexOf('/');
+				if(fnIndex >= 0) {
+					filename = filename.substr(fnIndex + 1);
+				}
+                filehtml = '<a href="/surveyKPI/survey/' + changes[i].change.origSId + '/download?type=xls">'
+					+ filename + '</a>';
+			}
 			h[++idx] = '<tr class="change_';
 					h[++idx] = status;
 					h[++idx] = '">';
@@ -196,7 +206,7 @@ function setChangesHtml($element, survey) {
 				h[++idx] = changes[i].version;
 				h[++idx] = '</td>';	
 				h[++idx] = '<td>';
-				h[++idx] = getChangeDescription(changes[i].change);
+				h[++idx] = getChangeDescription(changes[i].change, changes[i].version);
 				h[++idx] = '</td>';
 				h[++idx] = '<td>';
 				h[++idx] = changes[i].userName;
@@ -205,7 +215,7 @@ function setChangesHtml($element, survey) {
 				h[++idx] = changes[i].updatedTime;
 				h[++idx] = '</td>';
 				h[++idx] = '<td>';
-				h[++idx] = status;
+				h[++idx] = filehtml;
 				h[++idx] = '</td>';
 				h[++idx] = '<td>';
 				h[++idx] = changes[i].msg;
