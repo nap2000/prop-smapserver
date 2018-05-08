@@ -693,6 +693,7 @@ define({
     "ed_c_chg_p":  "%s1 property of question %s2 changed to: %s3 from: %s4",
     "ed_c_add_q": "Added question %s1 with type %s2",
     "ed_c_add_o": "Added choice %s1 to choice list: %s2",
+    "ed_c_settings": "Settings changed",
 
 
     // Managed Forms
