@@ -1769,7 +1769,8 @@ function getChangeDescription(change, version) {
 		h[++idx] = '</span>';
 		
 	}  else if(change.action === "settings_update") {
-		h[++idx] = 'Settings changed <span style="color:blue;">';
+		h[++idx] = localise.set["ed_c_settings"];
+		h[++idx] = ' <span style="color:blue;">';
 		h[++idx] = change.msg;
 		h[++idx] = '</span>';
 		
