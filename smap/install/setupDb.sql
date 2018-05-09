@@ -708,6 +708,7 @@ ALTER TABLE general_settings OWNER TO ws;
 DROP TABLE IF EXISTS public.tasks CASCADE;
 DROP TABLE IF EXISTS public.assignments CASCADE;
 DROP TABLE IF EXISTS public.task_group CASCADE;
+DROP TABLE IF EXISTS public.task_log CASCADE;
 
 DROP SEQUENCE IF EXISTS assignment_id_seq CASCADE;
 CREATE SEQUENCE assignment_id_seq START 1;
@@ -717,10 +718,13 @@ DROP SEQUENCE IF EXISTS task_id_seq CASCADE;
 CREATE SEQUENCE task_id_seq START 1;
 ALTER TABLE task_id_seq OWNER TO ws;
 
-
 DROP SEQUENCE IF EXISTS task_group_id_seq CASCADE;
 CREATE SEQUENCE task_group_id_seq START 1;
 ALTER TABLE task_group_id_seq OWNER TO ws;
+
+DROP SEQUENCE IF EXISTS task_log_seq CASCADE;
+CREATE SEQUENCE task_log_seq START 1;
+ALTER TABLE task_log_seq OWNER TO ws;
 
 CREATE TABLE public.task_group (
 	tg_id integer NOT NULL DEFAULT nextval('task_group_id_seq') PRIMARY KEY,
@@ -731,7 +735,6 @@ CREATE TABLE public.task_group (
     source_s_id integer,			-- The source survey id for quick lookup from notifications engine
     target_s_id integer
 );
-
 ALTER TABLE public.task_group OWNER TO ws;
 
 CREATE TABLE public.tasks (
@@ -791,6 +794,35 @@ CREATE TABLE public.assignments (
       ON UPDATE NO ACTION ON DELETE CASCADE
 );
 ALTER TABLE public.assignments OWNER TO ws;
+
+CREATE TABLE public.task_log (
+	id integer DEFAULT nextval('task_log_seq') NOT NULL PRIMARY KEY,
+	task_created timestamp with time zone,
+	tg_id integer,		-- Task group id
+	tg_name text,		-- Task group name - record here incase task group is deleted
+	t_id integer,		-- Task id
+	u_id integer,		-- User id
+	u_name text,
+	p_id integer,		-- Project id
+	p_name text,
+	f_id integer,		-- Form id
+	f_name text,
+	title text,			-- Task name
+	status text,			-- created || rejected || submitted || modified
+	schedule_at timestamp with time zone,
+	schedule_finish timestamp with time zone,
+	actual_finish timestamp with time zone,		-- When task was submitted or rejected
+    details text,								-- json with address / guidance, triggers
+	repeat boolean,
+	repeat_count integer default 0,
+	email text,
+	guidance text,
+	p_id integer REFERENCES project(id),
+	location_trigger text
+);
+SELECT AddGeometryColumn('task_log', 'scheduled_point', 4326, 'POINT', 2);
+SELECT AddGeometryColumn('task_log', 'actual_point', 4326, 'POINT', 2);
+ALTER TABLE public.task_log OWNER TO ws;
 
 -- Table to manage state of user downloads of forms
 DROP SEQUENCE IF EXISTS form_downloads_id_seq CASCADE;
