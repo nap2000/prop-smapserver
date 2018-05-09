@@ -708,23 +708,22 @@ ALTER TABLE general_settings OWNER TO ws;
 DROP TABLE IF EXISTS public.tasks CASCADE;
 DROP TABLE IF EXISTS public.assignments CASCADE;
 DROP TABLE IF EXISTS public.task_group CASCADE;
-DROP TABLE IF EXISTS public.task_log CASCADE;
 
-DROP SEQUENCE IF EXISTS assignment_id_seq CASCADE;
-CREATE SEQUENCE assignment_id_seq START 1;
-ALTER TABLE assignment_id_seq OWNER TO ws;
+--DROP SEQUENCE IF EXISTS assignment_id_seq CASCADE;
+--CREATE SEQUENCE assignment_id_seq START 1;
+--ALTER TABLE assignment_id_seq OWNER TO ws;
   
 DROP SEQUENCE IF EXISTS task_id_seq CASCADE;
 CREATE SEQUENCE task_id_seq START 1;
 ALTER TABLE task_id_seq OWNER TO ws;
 
+DROP SEQUENCE IF EXISTS task_history_seq CASCADE;
+CREATE SEQUENCE task_histoy_seq START 1;
+ALTER TABLE task_history_seq OWNER TO ws;
+
 DROP SEQUENCE IF EXISTS task_group_id_seq CASCADE;
 CREATE SEQUENCE task_group_id_seq START 1;
 ALTER TABLE task_group_id_seq OWNER TO ws;
-
-DROP SEQUENCE IF EXISTS task_log_seq CASCADE;
-CREATE SEQUENCE task_log_seq START 1;
-ALTER TABLE task_log_seq OWNER TO ws;
 
 CREATE TABLE public.task_group (
 	tg_id integer NOT NULL DEFAULT nextval('task_group_id_seq') PRIMARY KEY,
@@ -739,90 +738,82 @@ ALTER TABLE public.task_group OWNER TO ws;
 
 CREATE TABLE public.tasks (
 	id integer DEFAULT nextval('task_id_seq') NOT NULL PRIMARY KEY,
-	tg_id integer REFERENCES task_group ON DELETE CASCADE,
-	type text,
+	tg_id integer,				-- (change) Remove reference to task group
+	tg_name text,				-- (new) Task group name - record here incase task group is deleted
+	p_id integer,				-- (change) Remove reference to project, Project id
+	p_name text,
+--	type text,					-- (delete)
 	title text,
 	url text,
-	form_id integer REFERENCES survey(s_id) ON DELETE CASCADE,
+	survey_ident text,			-- (new) Ident of survey
+--	form_id,						-- (delete) Remove reference to survey - Suvey ID
+	form_name text,				-- (new)
+	status text,					-- (new) Current status: created || rejected || submitted || modified || deleted	
 	initial_data text,
-	schedule_at timestamp,		-- no time zone, all values should be UTC
-	schedule_finish timestamp,
-    from_date date,
-    address text,
-	geo_type text,
+	created_at timestamp with time zone,			-- (new)
+	assigned_at timestamp with time zone,		-- (new)
+	schedule_at timestamp with time zone,		-- (changed) added time zone
+	schedule_finish timestamp with time zone,	-- (changed) added time zone
+	actual_finish timestamp with time zone,		-- (new)
+--  from_date date,				-- (delete)
+	address text,
+--	geo_type text,				-- (delete)
 	update_id text,
 	repeat boolean,
 	repeat_count integer default 0,
 	email text,
 	guidance text,
-	p_id integer REFERENCES project(id),
 	location_trigger text
-);
-SELECT AddGeometryColumn('tasks', 'geo_linestring', 4326, 'LINESTRING', 2);
-SELECT AddGeometryColumn('tasks', 'geo_polygon', 4326, 'POLYGON', 2);
+--);
+--SELECT AddGeometryColumn('tasks', 'geo_linestring', 4326, 'LINESTRING', 2);		-- Delete
+--SELECT AddGeometryColumn('tasks', 'geo_polygon', 4326, 'POLYGON', 2);			-- Delete
 SELECT AddGeometryColumn('tasks', 'geo_point', 4326, 'POINT', 2);
+SELECT AddGeometryColumn('tasks', 'geo_point_actual', 4326, 'POINT', 2);			-- (new)
 ALTER TABLE public.tasks OWNER TO ws;
 
-CREATE TABLE public.locations (
-	id integer DEFAULT nextval('location_seq') NOT NULL PRIMARY KEY,
-	o_id integer REFERENCES organisation ON DELETE CASCADE,
-	locn_group text,
-	locn_type text,
-	name text,
-	uid text
+CREATE TABLE public.tasks_history (
+	id integer DEFAULT nextval('task_history_seq') NOT NULL PRIMARY KEY,
+	t_id integer REFERENCES tasks(id) ON DELETE CASCADE,
+	u_id integer,				-- Id of person who made the change
+	u_name text,	
+	when timestamp with time zone,
+	change text
 );
-ALTER TABLE public.locations OWNER TO ws;
+ALTER TABLE public.tasks_history OWNER TO ws;
 
-CREATE TABLE public.assignments (
-	id integer NOT NULL DEFAULT nextval('assignment_id_seq'),
-	assigned_by integer,
-	assignee integer,
-	status text NOT NULL,
-	task_id integer,
-	assigned_date date,
-	submitted_date timestamp with time zone,
-	last_status_changed_date date,
-	PRIMARY KEY (id),
-	CONSTRAINT assignee FOREIGN KEY (assignee)
-      REFERENCES users (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE CASCADE,
-  	CONSTRAINT assigner FOREIGN KEY (assigned_by)
-      REFERENCES users (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-    CONSTRAINT task_cons FOREIGN KEY (task_id)
-      REFERENCES tasks (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE CASCADE
-);
-ALTER TABLE public.assignments OWNER TO ws;
+-- Deprecated
+--CREATE TABLE public.locations (
+--	id integer DEFAULT nextval('location_seq') NOT NULL PRIMARY KEY,
+--	o_id integer REFERENCES organisation ON DELETE CASCADE,
+--	locn_group text,
+--	locn_type text,
+--	name text,
+--	uid text
+--);
+--ALTER TABLE public.locations OWNER TO ws;
 
-CREATE TABLE public.task_log (
-	id integer DEFAULT nextval('task_log_seq') NOT NULL PRIMARY KEY,
-	task_created timestamp with time zone,
-	tg_id integer,		-- Task group id
-	tg_name text,		-- Task group name - record here incase task group is deleted
-	t_id integer,		-- Task id
-	u_id integer,		-- User id
-	u_name text,
-	p_id integer,		-- Project id
-	p_name text,
-	f_id integer,		-- Form id
-	f_name text,
-	title text,			-- Task name
-	status text,			-- created || rejected || submitted || modified
-	schedule_at timestamp with time zone,
-	schedule_finish timestamp with time zone,
-	actual_finish timestamp with time zone,		-- When task was submitted or rejected
-    details text,								-- json with address / guidance, triggers
-	repeat boolean,
-	repeat_count integer default 0,
-	email text,
-	guidance text,
-	p_id integer REFERENCES project(id),
-	location_trigger text
-);
-SELECT AddGeometryColumn('task_log', 'scheduled_point', 4326, 'POINT', 2);
-SELECT AddGeometryColumn('task_log', 'actual_point', 4326, 'POINT', 2);
-ALTER TABLE public.task_log OWNER TO ws;
+-- Deprecated
+--CREATE TABLE public.assignments (
+--	id integer NOT NULL DEFAULT nextval('assignment_id_seq'),
+--	assigned_by integer,
+--	assignee integer,
+--	status text NOT NULL,
+--	task_id integer,
+--	assigned_date date,
+--	submitted_date timestamp with time zone,
+--	last_status_changed_date date,
+--	PRIMARY KEY (id),
+--	CONSTRAINT assignee FOREIGN KEY (assignee)
+--  REFERENCES users (id) MATCH SIMPLE
+--      ON UPDATE NO ACTION ON DELETE CASCADE,
+--  	CONSTRAINT assigner FOREIGN KEY (assigned_by)
+--      REFERENCES users (id) MATCH SIMPLE
+--      ON UPDATE NO ACTION ON DELETE NO ACTION,
+--    CONSTRAINT task_cons FOREIGN KEY (task_id)
+--      REFERENCES tasks (id) MATCH SIMPLE
+--      ON UPDATE NO ACTION ON DELETE CASCADE
+--);
+--ALTER TABLE public.assignments OWNER TO ws;
 
 -- Table to manage state of user downloads of forms
 DROP SEQUENCE IF EXISTS form_downloads_id_seq CASCADE;
@@ -841,10 +832,12 @@ CREATE TABLE public.form_downloads (
 ALTER TABLE public.form_downloads OWNER TO ws;
 
 -- Tables to manage task completion and user location
+-- Deprecate - use tasks
 DROP SEQUENCE IF EXISTS task_completion_id_seq CASCADE;
 CREATE SEQUENCE task_completion_id_seq START 1;
 ALTER TABLE task_completion_id_seq OWNER TO ws;
 
+-- deprecate use tasks
 DROP TABLE IF EXISTS public.task_completion CASCADE;
 CREATE TABLE public.task_completion (
 	id integer DEFAULT nextval('task_completion_id_seq') NOT NULL PRIMARY KEY,
