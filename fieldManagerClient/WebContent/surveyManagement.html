@@ -219,9 +219,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					<form role="form" id="uploadForm" name="uploadForm" accept-charset="utf-8"
 						  class="ui-body ui-body-a ui-corner-all">
 						<fieldset id="templateUpload">
-							<input id="surveyId" type="hidden" name="surveyId" value="" style="display:none;"/>
-							<input id="projectId" type="hidden" name="projectId" value="" style="display:none;"/>
-							<input id="uploadAction" type="hidden" name="action" value="" style="display:none;"/>
 							<div class="form-group notreplace">
 								<label for="templateName"><span data-lang="c_name" class="lang control-label">Name</span>:</label>
 								<input id="templateName" class="form-control" type="text" name="templateName" maxlength="100" required />
@@ -230,13 +227,17 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 								<label for="file"><span data-lang="c_file" class="lang control-label">file</span></label>
 								<input type="file" class="form-control" name="tname" id="file" required/>
 							</div>
+
 							<div class="form-group notreplace">
 								<label for="group"><span data-lang="sr_g" class="lang control-label">group</span></label>
-								<select id="group"></select>
+								<select id="group" name="groupsurvey"></select>
 							</div>
-
+							<input id="surveyId" type="hidden" name="surveyId" value="" style="display:none;"/>
+							<input id="projectId" type="hidden" name="projectId" value="" style="display:none;"/>
+							<input id="uploadAction" type="hidden" name="action" value="" style="display:none;"/>
 						</fieldset>
 					</form>
+
 
 				</div>
 			</div>
