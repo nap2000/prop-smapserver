@@ -6,7 +6,6 @@
 vacuum analyze;
 
 -- Upgrade to:  13.08 from 13.07 =======
-alter table tasks add column existing_record integer;
 
 -- Upgrade to:  13.09 from 13.08 =======
 -- None
@@ -916,3 +915,55 @@ alter table csvtable add column non_unique_key boolean default false;
 alter table csvtable add column sqldef text;
 
 alter table assignments add column submitted_date timestamp with time zone;
+
+-- Upgrade to 18.06
+
+-- update tasks table
+alter table tasks drop column type;
+alter table tasks drop column geo_type;
+alter table tasks drop column assigned_by;
+alter table tasks drop column from_date;
+alter table tasks drop column geo_linestring;
+alter table tasks drop column geo_polygon;
+
+alter table tasks add column deleted boolean default false;
+alter table tasks add column created_at timestamp with time zone;
+alter table tasks add column deleted_at timestamp with time zone;
+
+alter table tasks alter column schedule_at type timestamp with time zone;
+alter table tasks alter column schedule_finish type timestamp with time zone;
+
+SELECT AddGeometryColumn('tasks', 'geo_point_actual', 4326, 'POINT', 2);
+
+alter table tasks add column p_name text;
+update tasks t set p_name = (select name from project p where p.id = t.p_id ) where t.p_name is null;
+
+alter table tasks add column survey_name text;
+update tasks t set survey_name = (select display_name from survey s where s.s_id = t.form_id ) where t.survey_name is null;
+
+alter table tasks add column tg_name text;
+update tasks t set tg_name = (select name from task_group tg where tg.tg_id = t.tg_id ) where t.tg_name is null;
+
+alter table tasks drop constraint tasks_form_id_fkey;
+alter table tasks drop constraint tasks_tg_id_fkey;
+alter table tasks drop constraint tasks_p_id_fkey;
+
+-- update assignments table
+alter table assignments drop column assigned_by;
+alter table assignments drop column  last_status_changed_date;
+
+alter table assignments add column assignee_name text;
+update assignments a set assignee_name = (select name from users u where u.id = a.assignee ) where a.assignee_name is null;
+
+alter table assignments add column deleted_date timestamp with time zone;
+alter table assignments rename column submitted_date to completed_date;
+
+alter table assignments drop constraint assignee;
+alter table assignments drop constraint assigner;
+
+
+
+
+
+
+
