@@ -787,11 +787,12 @@ ALTER TABLE public.locations OWNER TO ws;
 CREATE TABLE public.assignments (
 	id integer NOT NULL DEFAULT nextval('assignment_id_seq') PRIMARY KEY,
 	assignee integer,
-	assignee_name text,			-- (new) Name of assigned person
+	assignee_name text,			-- Name of assigned person
 	status text NOT NULL,		-- Current status: accepted || rejected || submitted || deleted	
 	task_id integer REFERENCES tasks(id) ON DELETE CASCADE,
-	assigned_date date timestamp with time zone,
-	completed_date timestamp with time zone,		-- (modified) was submitted_date - Date of submitted || rejected
+	assigned_date timestamp with time zone,
+	completed_date timestamp with time zone,		-- Date of submitted || rejected
+	cancelled_date timestamp with time zone,
 	deleted_date timestamp with time zone
 );
 ALTER TABLE public.assignments OWNER TO ws;
