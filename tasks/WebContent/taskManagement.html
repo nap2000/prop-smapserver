@@ -18,6 +18,8 @@
     <link href="/css/wb/plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet">
     <link href="/css/wb/plugins/fullcalendar/fullcalendar.print.min.css" rel='stylesheet' media='print'>
 
+    <link href="/css/bootstrap-multiselect.css" rel="stylesheet">
+
     <link href="/css/wb/animate.css" rel="stylesheet">
     <link href="/css/wb/style.css" rel="stylesheet">
 
@@ -267,21 +269,36 @@
                                 <div class="col-md-4">
                                     <form role="form" class="form-horizontal">
                                         <div class="form-group">
-                                            <label class="control-label lang col-sm-5" data-lang="t_show"
-                                                   for="users_filter">show for</label>
-                                            <div class="col-sm-7">
-                                                <select class="task_filter input-sm form-control input-s-sm inline"
-                                                        id="users_filter"></select>
+                                            <div class="row">
+                                                <label class="control-label lang col-md-5" data-lang="t_show"
+                                                       for="users_filter">show for</label>
+                                                <div class="col-md-7">
+                                                    <select class="task_filter input-sm form-control input-s-sm inline"
+                                                            id="users_filter"></select>
+                                                </div>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
-                                <div class="col-md-3">
-                                    <label>
-                                        <input type="checkbox" name="taskfilter" value="completed" class="task_filter"
-                                               id="filter_completed" checked="checked"/>
-                                        <span class="lang" data-lang="t_complete">completed tasks</span>
-                                    </label>
+                                <div class="col-md-4">
+                                    <form role="form" class="form-horizontal">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label class="control-label lang col-md-4" data-lang="c_status"
+                                                       for="status_filter">status</label>
+                                                <div class="col-md-8">
+                                                    <select id="status_filter" multiple="multiple">
+                                                        <option class="lang" data-lang="t_u" value="new">u</option>
+                                                        <option class="lang" data-lang="t_assigned" value="accepted"></option>
+                                                        <option class="lang" data-lang="c_completed" value="submitted"></option>
+                                                        <option class="lang" data-lang="rejected" value="rejected"></option>
+                                                        <option class="lang" data-lang="cancelled" value="cancelled"></option>
+                                                        <option class="lang" data-lang="c_deleted" value="deleted"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
 
@@ -302,6 +319,7 @@
                                                     <thead>
                                                     <tr>
                                                         <th></th>
+                                                        <th class="lang" data-lang="c_id">id</th>
                                                         <th class="lang" data-lang="c_form">form</th>
                                                         <th class="lang" data-lang="c_name">name</th>
                                                         <th class="lang" data-lang="c_status">Status</th>

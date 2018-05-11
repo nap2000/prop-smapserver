@@ -56,7 +56,9 @@ requirejs.config({
     	icheck: '../../../../js/libs/wb/plugins/iCheck/icheck.min',
     	calendar: '../../../../js/libs/wb/plugins/fullcalendar/fullcalendar.min',
         es: '../../../../js/libs/wb/plugins/fullcalendar/es',
-    	jquery_ui: '../../../../js/libs/wb/jquery-ui.custom.min'
+    	jquery_ui: '../../../../js/libs/wb/jquery-ui.custom.min',
+        multiselect: '../../../../js/libs/bootstrap-multiselect',
+        knockout: '../../../../js/libs/knockout',
     },
     shim: {
 
@@ -81,6 +83,7 @@ requirejs.config({
     	'icheck': ['jquery'],
     	'calendar': ['jquery_ui'],
     	'jquery_ui': ['jquery'],
+        'multiselect': ['jquery', 'knockout'],
         'es': ['calendar']
 	
     	}
@@ -110,7 +113,8 @@ require([
          'peity',
          'icheck',
          'calendar',
-         'jquery_ui'
+         'jquery_ui',
+	     'multiselect'
          
          ], function($, 
         		 bootstrap, 
