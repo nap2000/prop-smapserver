@@ -97,9 +97,6 @@ ALTER TABLE regions OWNER TO ws;
 
 -- Make deleting of surveys flow through to deleting of tasks
 alter table tasks alter column form_id type integer using (form_id::integer);
-delete from tasks where form_id not in (select s_id from survey);
-alter table tasks drop constraint if exists tasks_form_id_fkey;
-alter table tasks add foreign key (form_id) references survey(s_id) on delete cascade;
 
 -- Changes for survey editor:
 -- alter table question add column list_name text;
@@ -914,7 +911,7 @@ alter table csvtable add column chart boolean default false;
 alter table csvtable add column non_unique_key boolean default false;
 alter table csvtable add column sqldef text;
 
-alter table assignments add column submitted_date timestamp with time zone;
+alter table assignments add column completed_date timestamp with time zone;
 
 -- Upgrade to 18.06
 
@@ -952,9 +949,12 @@ alter table tasks drop constraint tasks_p_id_fkey;
 alter table assignments drop column assigned_by;
 alter table assignments drop column  last_status_changed_date;
 
+alter table assignments alter column assigned_date type timestamp with time zone;
+
 alter table assignments add column assignee_name text;
 update assignments a set assignee_name = (select name from users u where u.id = a.assignee ) where a.assignee_name is null;
 
+alter table assignments add column cancelled_date timestamp with time zone;
 alter table assignments add column deleted_date timestamp with time zone;
 alter table assignments rename column submitted_date to completed_date;
 
