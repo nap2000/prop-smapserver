@@ -6,7 +6,6 @@
 vacuum analyze;
 
 -- Upgrade to:  13.08 from 13.07 =======
-alter table tasks add column existing_record integer;
 
 -- Upgrade to:  13.09 from 13.08 =======
 -- None
@@ -98,9 +97,6 @@ ALTER TABLE regions OWNER TO ws;
 
 -- Make deleting of surveys flow through to deleting of tasks
 alter table tasks alter column form_id type integer using (form_id::integer);
-delete from tasks where form_id not in (select s_id from survey);
-alter table tasks drop constraint if exists tasks_form_id_fkey;
-alter table tasks add foreign key (form_id) references survey(s_id) on delete cascade;
 
 -- Changes for survey editor:
 -- alter table question add column list_name text;
@@ -915,4 +911,60 @@ alter table csvtable add column chart boolean default false;
 alter table csvtable add column non_unique_key boolean default false;
 alter table csvtable add column sqldef text;
 
+alter table assignments add column completed_date timestamp with time zone;
+
+-- Upgrade to 18.06
+
+-- update tasks table
+alter table tasks drop column if exists type;
+alter table tasks drop column if exists geo_type;
+alter table tasks drop column if exists assigned_by;
+alter table tasks drop column if exists from_date;
+alter table tasks drop column if exists geo_linestring;
+alter table tasks drop column if exists geo_polygon;
+
+alter table tasks add column deleted boolean default false;
+alter table tasks add column created_at timestamp with time zone;
+alter table tasks add column deleted_at timestamp with time zone;
+
+alter table tasks alter column schedule_at type timestamp with time zone;
+alter table tasks alter column schedule_finish type timestamp with time zone;
+
+SELECT AddGeometryColumn('tasks', 'geo_point_actual', 4326, 'POINT', 2);
+
+alter table tasks add column p_name text;
+update tasks t set p_name = (select name from project p where p.id = t.p_id ) where t.p_name is null;
+
+alter table tasks add column survey_name text;
+update tasks t set survey_name = (select display_name from survey s where s.s_id = t.form_id ) where t.survey_name is null;
+
+alter table tasks add column tg_name text;
+update tasks t set tg_name = (select name from task_group tg where tg.tg_id = t.tg_id ) where t.tg_name is null;
+
+alter table tasks drop constraint if exists tasks_form_id_fkey;
+alter table tasks drop constraint if exists tasks_tg_id_fkey;
+alter table tasks drop constraint if exists tasks_p_id_fkey;
+
+-- update assignments table
+alter table assignments drop column if exists assigned_by;			
+alter table assignments drop column if exists last_status_changed_date;		
+
+alter table assignments alter column assigned_date type timestamp with time zone;
+
+alter table assignments add column assignee_name text;
+update assignments a set assignee_name = (select name from users u where u.id = a.assignee ) where a.assignee_name is null;
+
+alter table assignments add column cancelled_date timestamp with time zone;
+alter table assignments add column deleted_date timestamp with time zone;
+alter table assignments rename column submitted_date to completed_date;
 alter table assignments add column submitted_date timestamp with time zone;
+
+alter table assignments drop constraint if exists assignee;
+alter table assignments drop constraint if exists assigner;
+
+
+
+
+
+
+
