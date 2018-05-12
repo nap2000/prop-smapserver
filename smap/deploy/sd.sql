@@ -916,12 +916,12 @@ alter table assignments add column completed_date timestamp with time zone;
 -- Upgrade to 18.06
 
 -- update tasks table
-alter table tasks drop column type;
-alter table tasks drop column geo_type;
-alter table tasks drop column assigned_by;
-alter table tasks drop column from_date;
-alter table tasks drop column geo_linestring;
-alter table tasks drop column geo_polygon;
+alter table tasks drop column if exists type;
+alter table tasks drop column if exists geo_type;
+alter table tasks drop column if exists assigned_by;
+alter table tasks drop column if exists from_date;
+alter table tasks drop column if exists geo_linestring;
+alter table tasks drop column if exists geo_polygon;
 
 alter table tasks add column deleted boolean default false;
 alter table tasks add column created_at timestamp with time zone;
@@ -941,13 +941,13 @@ update tasks t set survey_name = (select display_name from survey s where s.s_id
 alter table tasks add column tg_name text;
 update tasks t set tg_name = (select name from task_group tg where tg.tg_id = t.tg_id ) where t.tg_name is null;
 
-alter table tasks drop constraint tasks_form_id_fkey;
-alter table tasks drop constraint tasks_tg_id_fkey;
-alter table tasks drop constraint tasks_p_id_fkey;
+alter table tasks drop constraint if exists tasks_form_id_fkey;
+alter table tasks drop constraint if exists tasks_tg_id_fkey;
+alter table tasks drop constraint if exists tasks_p_id_fkey;
 
 -- update assignments table
-alter table assignments drop column assigned_by;
-alter table assignments drop column  last_status_changed_date;
+alter table assignments drop column if exists assigned_by;			
+alter table assignments drop column if exists last_status_changed_date;		
 
 alter table assignments alter column assigned_date type timestamp with time zone;
 
@@ -957,9 +957,10 @@ update assignments a set assignee_name = (select name from users u where u.id = 
 alter table assignments add column cancelled_date timestamp with time zone;
 alter table assignments add column deleted_date timestamp with time zone;
 alter table assignments rename column submitted_date to completed_date;
+alter table assignments add column submitted_date timestamp with time zone;
 
-alter table assignments drop constraint assignee;
-alter table assignments drop constraint assigner;
+alter table assignments drop constraint if exists assignee;
+alter table assignments drop constraint if exists assigner;
 
 
 

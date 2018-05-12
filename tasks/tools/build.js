@@ -1,7 +1,7 @@
 ({
     appDir: '../WebContent',
     locale: "en",
-//    optimize: 'none',
+    optimize: 'none',
     wrapShim: false,
     waitSeconds: 0,
     baseUrl: 'js/libs',
@@ -36,6 +36,8 @@
         d3v3: '../../../../smapServer/WebContent/js/libs/d3.v3.min',
         //d3cloud: '../../../../smapServer/WebContent/js/libs/d3.layout.cloud',
         d3cloud2: '../../../../smapServer/WebContent/js/libs/d3.layout.cloud2',
+        multiselect: '../../../../smapServer/WebContent/js/libs/bootstrap-multiselect',
+        knockout: '../../../../smapServer/WebContent/js/libs/knockout',
 
 	mapbox: '../../../../smapServer/WebContent/js/libs/mapbox/js/mapbox',
 
