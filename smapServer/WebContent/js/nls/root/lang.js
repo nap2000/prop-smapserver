@@ -271,6 +271,7 @@ define({
     "c_units": "Units",
     "c_duration": "Duration",
     "c_msg": "Message",
+    "c_completed": "Completed",
 
     // File Types
     "ft": "File Type",
@@ -513,6 +514,12 @@ define({
     "t_af": "Create tasks from results submitted after this task group is created",
     "t_ac": "Create tasks from results that have already been submitted",
     "t_start": "Set the start time and duration of the task relative to when it is created or a date in the source survey",
+    "new": "Unassigned",
+    "accepted": "Assigned",
+    "submitted": "Complete",
+    "rejected": "Rejected",
+    "cancelled": "Cancelled",
+    "deleted": "Deleted",
 
     // template load errors
     "e_u_err": "Form Upload Error",

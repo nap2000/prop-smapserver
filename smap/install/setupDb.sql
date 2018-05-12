@@ -712,11 +712,14 @@ DROP TABLE IF EXISTS public.task_group CASCADE;
 DROP SEQUENCE IF EXISTS assignment_id_seq CASCADE;
 CREATE SEQUENCE assignment_id_seq START 1;
 ALTER TABLE assignment_id_seq OWNER TO ws;
-  
+
 DROP SEQUENCE IF EXISTS task_id_seq CASCADE;
 CREATE SEQUENCE task_id_seq START 1;
 ALTER TABLE task_id_seq OWNER TO ws;
 
+DROP SEQUENCE IF EXISTS task_history_seq CASCADE;
+CREATE SEQUENCE task_histoy_seq START 1;
+ALTER TABLE task_history_seq OWNER TO ws;
 
 DROP SEQUENCE IF EXISTS task_group_id_seq CASCADE;
 CREATE SEQUENCE task_group_id_seq START 1;
@@ -731,34 +734,45 @@ CREATE TABLE public.task_group (
     source_s_id integer,			-- The source survey id for quick lookup from notifications engine
     target_s_id integer
 );
-
 ALTER TABLE public.task_group OWNER TO ws;
 
 CREATE TABLE public.tasks (
 	id integer DEFAULT nextval('task_id_seq') NOT NULL PRIMARY KEY,
-	tg_id integer REFERENCES task_group ON DELETE CASCADE,
-	type text,
+	tg_id integer,
+	tg_name text,
+	p_id integer,
+	p_name text,
 	title text,
 	url text,
-	form_id integer REFERENCES survey(s_id) ON DELETE CASCADE,
+	form_id,	
+	survey_name text,
 	initial_data text,
-	schedule_at timestamp,		-- no time zone, all values should be UTC
-	schedule_finish timestamp,
-    from_date date,
-    address text,
-	geo_type text,
+	created_at timestamp with time zone,
+	schedule_at timestamp with time zone,
+	schedule_finish timestamp with time zone,
+	deleted_at timestamp with time zone,
+	address text,
 	update_id text,
 	repeat boolean,
 	repeat_count integer default 0,
 	email text,
 	guidance text,
-	p_id integer REFERENCES project(id),
-	location_trigger text
+	location_trigger text,
+	deleted boolean
 );
-SELECT AddGeometryColumn('tasks', 'geo_linestring', 4326, 'LINESTRING', 2);
-SELECT AddGeometryColumn('tasks', 'geo_polygon', 4326, 'POLYGON', 2);
 SELECT AddGeometryColumn('tasks', 'geo_point', 4326, 'POINT', 2);
+SELECT AddGeometryColumn('tasks', 'geo_point_actual', 4326, 'POINT', 2);
 ALTER TABLE public.tasks OWNER TO ws;
+
+CREATE TABLE public.tasks_history (
+	id integer DEFAULT nextval('task_history_seq') NOT NULL PRIMARY KEY,
+	t_id integer REFERENCES tasks(id) ON DELETE CASCADE,
+	u_id integer,				-- Id of person who made the change
+	u_name text,	
+	when timestamp with time zone,
+	change text
+);
+ALTER TABLE public.tasks_history OWNER TO ws;
 
 CREATE TABLE public.locations (
 	id integer DEFAULT nextval('location_seq') NOT NULL PRIMARY KEY,
@@ -771,24 +785,15 @@ CREATE TABLE public.locations (
 ALTER TABLE public.locations OWNER TO ws;
 
 CREATE TABLE public.assignments (
-	id integer NOT NULL DEFAULT nextval('assignment_id_seq'),
-	assigned_by integer,
+	id integer NOT NULL DEFAULT nextval('assignment_id_seq') PRIMARY KEY,
 	assignee integer,
-	status text NOT NULL,
-	task_id integer,
-	assigned_date date,
-	submitted_date timestamp with time zone,
-	last_status_changed_date date,
-	PRIMARY KEY (id),
-	CONSTRAINT assignee FOREIGN KEY (assignee)
-      REFERENCES users (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE CASCADE,
-  	CONSTRAINT assigner FOREIGN KEY (assigned_by)
-      REFERENCES users (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-    CONSTRAINT task_cons FOREIGN KEY (task_id)
-      REFERENCES tasks (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE CASCADE
+	assignee_name text,			-- Name of assigned person
+	status text NOT NULL,		-- Current status: accepted || rejected || submitted || deleted	
+	task_id integer REFERENCES tasks(id) ON DELETE CASCADE,
+	assigned_date timestamp with time zone,
+	completed_date timestamp with time zone,		-- Date of submitted || rejected
+	cancelled_date timestamp with time zone,
+	deleted_date timestamp with time zone
 );
 ALTER TABLE public.assignments OWNER TO ws;
 
@@ -809,10 +814,12 @@ CREATE TABLE public.form_downloads (
 ALTER TABLE public.form_downloads OWNER TO ws;
 
 -- Tables to manage task completion and user location
+-- Deprecate - use tasks
 DROP SEQUENCE IF EXISTS task_completion_id_seq CASCADE;
 CREATE SEQUENCE task_completion_id_seq START 1;
 ALTER TABLE task_completion_id_seq OWNER TO ws;
 
+-- deprecate use tasks
 DROP TABLE IF EXISTS public.task_completion CASCADE;
 CREATE TABLE public.task_completion (
 	id integer DEFAULT nextval('task_completion_id_seq') NOT NULL PRIMARY KEY,
