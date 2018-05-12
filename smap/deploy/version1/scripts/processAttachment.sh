@@ -22,10 +22,10 @@ if [ x"$type" = ximage ]; then
 	echo "--------------------------------------"
 	echo "Creating thumbnails $destthumbnail from $destfile"
 	rm $destthumbnail
-	sh -c "/usr/bin/convert -thumbnail 100 $destfile $destthumbnail"
+	sh -c "/usr/bin/convert -thumbnail 100 -background white -alpha remove $destfile $destthumbnail"
 # Process the image file with a null processing action to address a bug in iText where some malformed jpegs can't be shown
-	echo "processing image file for iText hack"
-	sh -c "/usr/bin/convert $destfile $destfile"
+	echo "processing image file for iText hack also set background white"
+	sh -c "/usr/bin/convert -background white -alpha remove $destfile $destfile"
 fi
 
 #If content type is "video" create a thumbnail and a flowplayer friendly video
