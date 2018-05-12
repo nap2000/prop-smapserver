@@ -222,7 +222,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 var bulkAction = {
                         action: "assign",
                         userId: $('#users_select_user').val(),
-                        taskIds: getSelectedTaskIds()
+                        tasks: getSelectedTaskIds()
                     },
                     baString = JSON.stringify(bulkAction),
                     url;
@@ -250,6 +250,17 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 });
 
             });
+
+
+            /*
+             * Set up flters
+             */
+            $('#status_filter').multiselect({
+                onChange: function(option, checked, select) {
+                    refreshTableAssignments();
+                }
+            });
+            $('#status_filter').multiselect('selectAll', false).multiselect('updateButtonText');
 
 
             /*
@@ -687,10 +698,10 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                 var bulkAction = {
                     action: "delete",
-                    taskIds: getSelectedTaskIds()
+                    tasks: getSelectedTaskIds()
                 };
 
-                bootbox.confirm(localise.set["msg_confirm_del"] + ' ' + bulkAction.taskIds.length + ' ' + localise.set["m_assign"] +
+                bootbox.confirm(localise.set["msg_confirm_del"] + ' ' + bulkAction.tasks.length + ' ' + localise.set["m_assign"] +
                     '?', function (result) {
                     if (result) {
                         var baString = JSON.stringify(bulkAction),
@@ -725,7 +736,10 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
             // Respond to a new NFC being selected
             $('#nfc_select').change(function () {
-                $('#tp_name').val($(this).find(':selected').text());
+                var tpname = $('#tp_name').val();
+                if(!tpname || tpname.length == 0) {
+                    $('#tp_name').val($(this).find(':selected').text());
+                }
             });
 
             enableUserProfileBS();										// Enable user profile button
@@ -839,15 +853,19 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
          */
         function getSelectedTaskIds() {
 
-            var taskIds = [],
+            var tasks = [],
                 idx;
 
             $('input[type=checkbox]:checked', '#task_table').each(function () {
                 idx = $(this).val();
-                taskIds.push(globals.gTaskList.features[idx].properties.id);
+                tasks.push({
+                    taskId: globals.gTaskList.features[idx].properties.id,
+                    assignmentId: globals.gTaskList.features[idx].properties.a_id
+                });
+
             });
 
-            return taskIds;
+            return tasks;
         }
 
         /*
@@ -1118,7 +1136,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
             $users.empty();
             $('#users_filter').append('<option value="0">' + localise.set["t_au"] + '</options>');
-            $('#users_filter').append('<option value="-1">' + localise.set["t_u"] + '</options>');
+            //$('#users_filter').append('<option value="-1">' + localise.set["t_u"] + '</options>');
 
             $('#users_select_new_task, #users_task_group, #users_select_user, #tp_user')
                 .append('<option value="-1">' + localise.set["t_u"] + '</options>');
@@ -1205,27 +1223,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 }
             }
             return false;
-        }
-
-        /*
-         * Save any changes made to the selected tasks
-         */
-        function saveData(data) {
-
-            var assignString = JSON.stringify(data);
-
-            $.ajax({
-                type: "POST",
-                cache: false,
-                url: "/surveyKPI/assignments",
-                data: {settings: assignString},
-                success: function (data, status) {
-                    refreshAssignmentData();
-                }, error: function (data, status) {
-                    console.log(data);
-                    alert("Error: Failed to update tasks");
-                }
-            });
         }
 
         /*
@@ -1332,9 +1329,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 addHourglass();
                 $.ajax({
                     url: "/surveyKPI/tasks/assignments/" +
-                    globals.gCurrentTaskGroup +
-                    "?user=" + user_filter +
-                    "&completed=" + completed,
+                        globals.gCurrentTaskGroup +
+                        "?user=" + user_filter,
                     cache: false,
                     dataType: 'json',
                     success: function (data) {
@@ -1616,65 +1612,75 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 idx = -1,
                 i;
 
+            // Filter on status
+            var statusFilterArray = $('#status_filter').val();
+            var statusFilter = statusFilterArray ? statusFilterArray.join('') : "";
+
             for (i = 0; i < tasks.length; i++) {
                 task = tasks[i];
-                tab[++idx] = '<tr>';
-                tab[++idx] = addSelectCheckBox(false, i, false);
+                if(statusFilter.indexOf(task.properties.status) >= 0) {
+                    tab[++idx] = '<tr>';
+                    tab[++idx] = addSelectCheckBox(false, i, false);
 
-                tab[++idx] = '<td>';
-                tab[++idx] = task.properties.form_name;
-                tab[++idx] = '</td>';
+                    tab[++idx] = '<td>';
+                    tab[++idx] = task.properties.id;
+                    tab[++idx] = '</td>';
 
-                tab[++idx] = '<td>';			// Task name
-                tab[++idx] = task.properties.name;
-                tab[++idx] = '</td>';
+                    tab[++idx] = '<td>';
+                    tab[++idx] = task.properties.form_name;
+                    tab[++idx] = '</td>';
 
-                tab[++idx] = '<td class="' + getStatusClass(task.properties.status) + '">';	// status
-                tab[++idx] = task.properties.status;
-                tab[++idx] = '</td>';
+                    tab[++idx] = '<td>';			// Task name
+                    tab[++idx] = task.properties.name;
+                    tab[++idx] = '</td>';
 
-                tab[++idx] = '<td>';		// Assignee
-                tab[++idx] = task.properties.assignee_name;
-                tab[++idx] = '</td>';
+                    tab[++idx] = '<td class="' + getStatusClass(task.properties.status) + '">';	// status
+                    tab[++idx] = localise.set[task.properties.status];
+                    tab[++idx] = '</td>';
 
-                tab[++idx] = '<td>';			// NFC
-                if (task.properties.location_trigger && task.properties.location_trigger.length > 0) {
-                    if (task.properties.location_trigger.indexOf('{') == 0) {
-                        tab[++idx] = '<i class="fa fa-crosshairs"></i>';	// Geo fence
-                    } else {
-                        tab[++idx] = '<i class="fa fa-wifi"></i>';			// NFC
+                    tab[++idx] = '<td>';		// Assignee
+                    tab[++idx] = task.properties.assignee_name;
+                    tab[++idx] = '</td>';
+
+                    tab[++idx] = '<td>';			// NFC
+                    if (task.properties.location_trigger && task.properties.location_trigger.length > 0) {
+                        if (task.properties.location_trigger.indexOf('{') == 0) {
+                            tab[++idx] = '<i class="fa fa-crosshairs"></i>';	// Geo fence
+                        } else {
+                            tab[++idx] = '<i class="fa fa-wifi"></i>';			// NFC
+                        }
                     }
+                    tab[++idx] = '</td>';
+
+                    tab[++idx] = '<td>';			// Existing data
+                    if (task.properties.update_id && task.properties.update_id.length > 0) {
+                        tab[++idx] = getInitialDataLink(task.properties.form_id, task.properties.update_id);
+                    }
+                    tab[++idx] = '</td>';
+
+                    tab[++idx] = '<td>';			// Blocked
+                    if (task.properties.blocked) {
+                        tab[++idx] = '<i class="fa fa-ban has_tt" title="Survey Blocked"></i>';	// Survey Blocked
+                    }
+                    tab[++idx] = '</td>';
+
+                    tab[++idx] = '<td>';			// Repeat Count
+                    if (task.properties.repeat) {
+                        tab[++idx] = task.properties.repeat_count;
+                    }
+                    tab[++idx] = '</td>';
+
+                    tab[++idx] = '<td>';		// scheduled
+                    tab[++idx] = localTime(task.properties.from);
+                    tab[++idx] = '<td>';			// edit
+                    tab[++idx] = '<button class="btn btn-default task_edit" value="';
+                    tab[++idx] = i;
+                    tab[++idx] = '" type="button"><i class="fa fa-edit"></i></button>';
+                    tab[++idx] = '</td>';
+
+
+                    tab[++idx] = '</tr>';
                 }
-                tab[++idx] = '</td>';
-
-                tab[++idx] = '<td>';			// Existing data
-                if (task.properties.update_id && task.properties.update_id.length > 0) {
-                    tab[++idx] = getInitialDataLink(task.properties.form_id, task.properties.update_id);
-                }
-                tab[++idx] = '</td>';
-
-                tab[++idx] = '<td>';			// Blocked
-                if (task.properties.blocked) {
-                    tab[++idx] = '<i class="fa fa-ban has_tt" title="Survey Blocked"></i>';	// Survey Blocked
-                }
-                tab[++idx] = '</td>';
-
-                tab[++idx] = '<td>';			// Repeat Count
-                if (task.properties.repeat) {
-                    tab[++idx] = task.properties.repeat_count;
-                }
-                tab[++idx] = '</td>';
-
-                tab[++idx] = '<td>';		// scheduled
-                tab[++idx] = localTime(task.properties.from);
-                tab[++idx] = '<td>';			// edit
-                tab[++idx] = '<button class="btn btn-default task_edit" value="';
-                tab[++idx] = i;
-                tab[++idx] = '" type="button"><i class="fa fa-edit"></i></button>';
-                tab[++idx] = '</td>';
-
-
-                tab[++idx] = '</tr>';
             }
             return tab.join('');
 
