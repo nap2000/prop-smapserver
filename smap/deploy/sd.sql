@@ -871,8 +871,7 @@ ALTER TABLE csvtable OWNER TO ws;
 CREATE SCHEMA csv AUTHORIZATION ws;
 
 ALTER TABLE dashboard_settings add column ds_advanced_filter text;
-drop table sync;											-- Only used in results database
-alter table forward drop constraint forward_s_id_fkey;	-- Notifications may now be transferred to a new survey if survey replaced
+alter table forward drop constraint if exists forward_s_id_fkey;	-- Notifications may now be transferred to a new survey if survey replaced
 
 CREATE SEQUENCE du_seq START 1;
 ALTER SEQUENCE du_seq OWNER TO ws;
@@ -957,7 +956,6 @@ update assignments a set assignee_name = (select name from users u where u.id = 
 alter table assignments add column cancelled_date timestamp with time zone;
 alter table assignments add column deleted_date timestamp with time zone;
 alter table assignments rename column submitted_date to completed_date;
-alter table assignments add column submitted_date timestamp with time zone;
 
 alter table assignments drop constraint if exists assignee;
 alter table assignments drop constraint if exists assigner;
