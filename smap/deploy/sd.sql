@@ -955,7 +955,7 @@ update assignments a set assignee_name = (select name from users u where u.id = 
 
 alter table assignments add column cancelled_date timestamp with time zone;
 alter table assignments add column deleted_date timestamp with time zone;
-alter table assignments rename column submitted_date to completed_date;
+alter table assignments add column completed_date timestamp with time zone;
 
 alter table assignments drop constraint if exists assignee;
 alter table assignments drop constraint if exists assigner;
