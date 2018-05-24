@@ -1657,6 +1657,7 @@ function isBusinessServer() {
 			hostname.indexOf('kontrolid.com') < 0 &&
         	hostname.indexOf('ezpilot') < 0 &&
         	hostname.indexOf('sg.smap.com.au') < 0 &&
+        	hostname.indexOf('dev.smap.com.au') < 0 &&
 			hostname.indexOf('zarkman.com') < 0) {
 		bs = false;
 		$('.bus_only').hide();
