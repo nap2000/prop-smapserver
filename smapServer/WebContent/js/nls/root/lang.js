@@ -906,6 +906,7 @@ define({
     "submissions": "Submissions",
     "disk": "Disk",
     "static map": "Static Map",
+    "rekognition": "AWS Rekognition",
     "org_bill_rpt": "Organisation Usage Report"
 
 
