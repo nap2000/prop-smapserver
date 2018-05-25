@@ -49,9 +49,15 @@ require([
     'bootbox'
 ], function ($, bootstrap, bv, localise, common, bootbox) {
 
+    var gToken;
+
     $(document).ready(function () {
 
         window.bootbox = bootbox;
+        var i,
+            params,
+            pArray = [],
+            param = [];
 
         setCustomSubscriptions();			// Apply custom javascript
         localise.setlang();
@@ -63,11 +69,28 @@ require([
                 validating: 'glyphicon glyphicon-refresh'
             }
         });
-        
+
+        // Get the authentication token if it has been passed in parameters
+        params = location.search.substr(location.search.indexOf("?") + 1)
+        pArray = params.split("&");
+        for (i = 0; i < pArray.length; i++) {
+            param = pArray[i].split("=");
+            if ( param[0] === "token" ) {
+                gToken = param[1];
+            }
+        }
+
+
+        if(gToken) {
+            $('#unsubscribe').show();
+            $('#subscribe').hide();
+        } else {
+            $('#subscribe').hide();
+            $('#unsubscribe').show();
+        }
 
         $('#unsubscribeSubmit').click(function (e) {
             e.preventDefault();
-
 
             var email = $('#admin_email').val(),
                 reg = {
@@ -83,15 +106,11 @@ require([
 
             addHourglass();
             $.ajax({
-                type: "POST",
                 cache: false,
-                url: "/surveyKPI/register",
-                data: {registrationDetails: regString},
+                url: "/surveyKPI/subscriptions/unsubscribe/" + gToken,
                 success: function (data, status) {
                     removeHourglass();
-                    bootbox.alert("Registration accepted.  An email has been sent to " + email + " with a " +
-                        "link that you can use to set your password.");
-                    $('#registerForm')[0].reset();
+                    bootbox.alert(localise.set["msg_uns"]);
                 }, error: function (data, status) {
                     removeHourglass();
                     bootbox.alert("Error: " + data.responseText);

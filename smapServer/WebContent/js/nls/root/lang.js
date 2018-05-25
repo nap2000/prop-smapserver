@@ -453,6 +453,8 @@ define({
     "msg_ds_s": "Download started.  If there is a lot of data then this may take some time please be patient",
     "msg_survey_replaced": "Survey replaced",
     "msg_survey_loaded": "Survey loaded",
+    "msg_reg": "Registration accepted.  An email has been sent to %s1 with a link that you can use to set your password.",
+    "msg_uns": "Unsubscribe sucessful",
 
     // Editor
     "e_b_e": "Base on existing form",
