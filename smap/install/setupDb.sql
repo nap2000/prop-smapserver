@@ -1089,3 +1089,18 @@ create TABLE billing (
 	disk_unit_cost real						-- Cost per GB of disk
 	);
 ALTER TABLE billing OWNER TO ws;
+
+DROP SEQUENCE IF EXISTS people_seq CASCADE;
+CREATE SEQUENCE people_seq START 1;
+ALTER SEQUENCE people_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS people;
+create TABLE people (
+	id integer default nextval('people_seq') constraint pk_people primary key,
+	o_id integer,
+	email text,								
+	unsubscribed boolean default false,
+	uuid text,								-- Uniquely identify this person
+	when_unsubscribed TIMESTAMP WITH TIME ZONE
+	);
+ALTER TABLE people OWNER TO ws;
