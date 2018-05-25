@@ -51,9 +51,9 @@ require([
 $(document).ready(function() {
 	
 	var i,
-	params,
-	pArray = [],
-	param = [];
+		params,
+		pArray = [],
+		param = [];
 	
 	localise.setlang();
 	$('#forgottenPasswordEmail').attr('data-bv-emailaddress-message', localise.set["msg_inv_email"]);
