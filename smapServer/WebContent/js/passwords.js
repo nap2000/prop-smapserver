@@ -149,7 +149,7 @@ $(document).ready(function() {
 			  url: "/surveyKPI/onetimelogon/" + email,
 			  success: function(data, status) {
 				  removeHourglass();
-				  alert(localise.set["msg_es"] + email);
+				  alert(localise.set["msg_es"] + " " + email);
 				  window.location.href="/";
 			  }, error: function(data, status) {
 				  removeHourglass();
