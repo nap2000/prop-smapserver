@@ -272,6 +272,7 @@ define({
     "c_duration": "Duration",
     "c_msg": "Message",
     "c_completed": "Completed",
+    "c_unsubscribe": "Unsubscribe",
 
     // File Types
     "ft": "File Type",
@@ -551,6 +552,7 @@ define({
     "r_y_e": "Your Email",
     "r_y_o": "Organisation Website",
     "r_f": "Registration Form",
+    "r_s": "Subscriptions",
 
     // Monitor
     "mon_l200": "(last 200)",

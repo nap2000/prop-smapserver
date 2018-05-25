@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Registration</title>
+    <title class="lang" data-lang="r_s">subscriptions</title>
 
     <link rel="shortcut icon" href="favicon.ico"/>
     <link rel="stylesheet" href="css/normalize.css"/>
@@ -17,7 +17,7 @@
     }; </script>
     <script src="js/libs/modernizr.js"></script>
     <script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
-    <script data-main="js/register" src="js/libs/require.js"></script>
+    <script data-main="js/subscriptions" src="js/libs/require.js"></script>
 
 </head>
 <body>
@@ -42,20 +42,32 @@
 
 
 <div class="page-header text-center">
-    <h1 class="lang" data-lang="r_f">registration form</h1>
+    <h1 class="lang" data-lang="r_s">subscriptions</h1>
 </div>
 
 <div class="container">
-    <div class="row">
-        <form role="form" method="POST" action="" class="form-horizontal" id="registerForm">
+    <div id="unsubscribe" class="forms row">
+        <form role="form" method="POST" action="" class="form-horizontal" id="unsubscribeForm">
+            <div class="form-group has-error">
+                <div class="col-sm-12 text-center">
+                    <button id="unsubscibeSubmit" type="submit" class="btn btn-default btn-primary lang"
+                            data-lang="c_unsubscribe">unsubscribe
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="subscribe" class="row" style="display:none;">
+        <form role="form" method="POST" action="" class="form-horizontal forms" id="subscribeForm">
 
             <div class="form-group">
                 <label class="col-lg-3 control-label lang" data-lang="r_o_n" for="org_name">organisation name</label>
                 <div class="col-lg-5">
                     <input type="text" class="form-control" name="org_name" id="org_name" required>
-
                 </div>
             </div>
+
 
             <div class="form-group">
                 <label class="col-lg-3 control-label lang" data-lang="r_y_n" for="admin_name">your name</label>

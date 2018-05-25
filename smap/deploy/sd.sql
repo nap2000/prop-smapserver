@@ -960,6 +960,21 @@ alter table assignments add column completed_date timestamp with time zone;
 alter table assignments drop constraint if exists assignee;
 alter table assignments drop constraint if exists assigner;
 
+-- Unsubscribing
+CREATE SEQUENCE people_seq START 1;
+ALTER SEQUENCE people_seq OWNER TO ws;
+
+create TABLE people (
+	id integer default nextval('people_seq') constraint pk_people primary key,
+	o_id integer,
+	email text,								
+	unsubscribed boolean default false,
+	uuid text,								-- Uniquely identify this person
+	when_unsubscribed TIMESTAMP WITH TIME ZONE
+	);
+ALTER TABLE people OWNER TO ws;
+
+
 
 
 
