@@ -89,10 +89,10 @@ require([
                 url: "/surveyKPI/subscriptions/unsubscribe/" + gToken,
                 success: function (data, status) {
                     removeHourglass();
-                    bootbox.alert(localise.set["msg_uns"]);
+                    alert(localise.set["msg_uns"]);
                 }, error: function (data, status) {
                     removeHourglass();
-                    bootbox.alert(data.responseText);
+                    alert(data.responseText);
                 }
             });
         });
