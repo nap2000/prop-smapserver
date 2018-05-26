@@ -47,6 +47,9 @@
             name: '../queries',
         },
         {
+            name: '../subscriptions',
+        },
+        {
             name: '../userTrail',
 	    exclude: [ 'ol3/ol']
         }
