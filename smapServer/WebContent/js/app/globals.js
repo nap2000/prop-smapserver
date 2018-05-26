@@ -546,6 +546,15 @@ define(function () {
                 source: "user"
             },
             {
+                name: "File",
+                type: "file",
+                trans: "c_file",
+                glyphicon: "file",
+                canSelect: true,
+                visible: true,
+                source: "user"
+            },
+            {
                 name: "Unknown Type",
                 glyphicon: "record",
                 canSelect: false
