@@ -73,6 +73,9 @@ function setCustomManage() {
 function setCustomRegister() {
 }
 
+function setCustomSubscriptions() {
+}
+
 function setCustomEdit() {
 }
 
