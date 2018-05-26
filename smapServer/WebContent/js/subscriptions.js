@@ -62,14 +62,6 @@ require([
         setCustomSubscriptions();			// Apply custom javascript
         localise.setlang();
 
-        $('.forms').bootstrapValidator({
-            feedbackIcons: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            }
-        });
-
         // Get the authentication token if it has been passed in parameters
         params = location.search.substr(location.search.indexOf("?") + 1)
         pArray = params.split("&");
@@ -79,7 +71,6 @@ require([
                 gToken = param[1];
             }
         }
-
 
         if(gToken) {
             $('#unsubscribe').show();
@@ -92,18 +83,6 @@ require([
         $('#unsubscribeSubmit').click(function (e) {
             e.preventDefault();
 
-            var email = $('#admin_email').val(),
-                reg = {
-                    email: email,
-                    org_name: $('#org_name').val(),
-                    admin_name: $('#admin_name').val(),
-                    website: $('#website').val()
-                },
-                regString;
-
-            regString = JSON.stringify(reg);
-
-
             addHourglass();
             $.ajax({
                 cache: false,
@@ -113,7 +92,7 @@ require([
                     bootbox.alert(localise.set["msg_uns"]);
                 }, error: function (data, status) {
                     removeHourglass();
-                    bootbox.alert("Error: " + data.responseText);
+                    bootbox.alert(data.responseText);
                 }
             });
         });
