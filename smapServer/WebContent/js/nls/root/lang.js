@@ -273,6 +273,7 @@ define({
     "c_msg": "Message",
     "c_completed": "Completed",
     "c_unsubscribe": "Unsubscribe",
+    "c_subscribe": "Subscribe",
 
     // File Types
     "ft": "File Type",
@@ -455,6 +456,8 @@ define({
     "msg_survey_loaded": "Survey loaded",
     "msg_reg": "Registration accepted.  An email has been sent to %s1 with a link that you can use to set your password.",
     "msg_uns": "Unsubscribe sucessful",
+    "msg_s1": "An email has been sent to the address you provided.  Click on the link to confirm your subscription",
+    "msg_s2": "Subscribed sucessfully",
 
     // Editor
     "e_b_e": "Base on existing form",
