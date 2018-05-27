@@ -272,8 +272,10 @@ define({
     "c_duration": "Duration",
     "c_msg": "Message",
     "c_completed": "Completed",
+    "c_unsubscribed": "Unsubscribed",
     "c_unsubscribe": "Unsubscribe",
     "c_subscribe": "Subscribe",
+    "c_unsent": "Email not sent",
 
     // File Types
     "ft": "File Type",

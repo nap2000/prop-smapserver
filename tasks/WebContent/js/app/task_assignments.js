@@ -152,19 +152,23 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             $('#m_export_xls').click(function () {	// Export to XLS
                 var tz = Intl.DateTimeFormat().resolvedOptions().timeZone,
                     tzParam = "",
-                    url;
+                    url = '/surveyKPI/tasks/xls/' + globals.gCurrentTaskGroup,
+                    hasParam = false,
+                    statusFilterArray = $('#status_filter').val();
 
                 if (globals.gCurrentTaskGroup) {
+
+                    // Add parameters
                     if (tz) {
-                        tzParam = "?tz=" + tz;
+                        url += (hasParam ? '&' : '?') + "tz=" + tz;
+                        hasParam = true;
+                    }
+                    if(statusFilterArray) {
+                        url += (hasParam ? '&' : '?') + 'inc_status=' + statusFilterArray.join(',');
                     }
 
-                    url = '/surveyKPI/tasks/xls/' + globals.gCurrentTaskGroup + tzParam,
-                        name = $('#taskgroup option:selected').text();
-
                     downloadFile(url);
-                    //downloadFile(url, name + ".xlsx",
-                    //	"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
                 } else {
                     alert(localise.set["msg_tg_ns"]);
                 }
