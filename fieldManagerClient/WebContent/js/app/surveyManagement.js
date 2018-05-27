@@ -440,7 +440,9 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             h[++idx] = '<table class="table" style="table-layout:fixed;">';
             h[++idx] = '<thead>';
             h[++idx] = '<tr>';
-            h[++idx] = '<th class="col-md-1"></th>';
+            h[++idx] = '<th class="col-md-1 select_all">';
+            h[++idx] = '<input type="checkbox" name="controls" value="-1"></td>';    // select all
+            h[++idx] = '</th>'
             h[++idx] = '<th class="col-md-5">' + localise.set["c_name"], + '</th>';
             h[++idx] = '<th class="col-md-1">' + localise.set["c_block"] + '</th>';
             h[++idx] = '<th class="col-md-2">' + localise.set["sr_g"] + '</th>';
@@ -530,37 +532,27 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
 
             $surveys.empty().append(h.join(''));
 
+            // Toggle select all
+            $('.select_all').find('input').click(function() {
+                var $this = $(this);
+                var selected = $this.is(':checked');
+
+                $('.control_td').find('input').each(function(){
+                    var $this = $(this);
+                    var index = $this.val();
+                    var survey =  gSurveys[index];
+
+                    if(gShowDeleted && survey.deleted || !gShowDeleted && !survey.delete) {
+                        $this.prop('checked', selected);
+                        surveySelected(selected, index)
+                    }
+                });
+            });
+
+            // Toggle single selection
             $('.control_td').find('input').click(function() {
-
-                if($(this).is(':checked')) {
-                    if(gSurveys[$(this).val()].deleted === false) {
-                        ++gControlDelete;
-                    } else {
-                        ++gControlRestore;
-                    }
-
-                    if(gControlDelete === 1) {
-                        $('#delete_survey').removeClass("disabled");
-                    }
-                    if(gControlRestore === 1) {
-                        $('#un_delete_survey').removeClass("disabled");
-                        $('#erase_survey').removeClass("disabled");
-                    }
-                } else {
-
-                    if(gSurveys[$(this).val()].deleted === false) {
-                        --gControlDelete;
-                    } else {
-                        --gControlRestore;
-                    }
-                    if(gControlDelete === 0) {
-                        $('#delete_survey').addClass("disabled");
-                    }
-                    if(gControlRestore === 0) {
-                        $('#un_delete_survey').addClass("disabled");
-                        $('#erase_survey').addClass("disabled");
-                    }
-                }
+                var $this = $(this);
+                surveySelected($this.is(':checked'), $this.val());
 
             });
 
@@ -901,6 +893,41 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             });
         }
 
+
+        /*
+         * Respond to a survey being selected or unselected
+         */
+        function surveySelected(isChecked, index) {
+            if(isChecked) {
+                if(gSurveys[index].deleted === false) {
+                    ++gControlDelete;
+                } else {
+                    ++gControlRestore;
+                }
+
+                if(gControlDelete === 1) {
+                    $('#delete_survey').removeClass("disabled");
+                }
+                if(gControlRestore === 1) {
+                    $('#un_delete_survey').removeClass("disabled");
+                    $('#erase_survey').removeClass("disabled");
+                }
+            } else {
+
+                if(gSurveys[index].deleted === false) {
+                    --gControlDelete;
+                } else {
+                    --gControlRestore;
+                }
+                if(gControlDelete === 0) {
+                    $('#delete_survey').addClass("disabled");
+                }
+                if(gControlRestore === 0) {
+                    $('#un_delete_survey').addClass("disabled");
+                    $('#erase_survey').addClass("disabled");
+                }
+            }
+        }
 
         function setLinkControls() {
             if(gLinkSurvey.publicLink && gLinkSurvey.publicLink.length > 0) {
