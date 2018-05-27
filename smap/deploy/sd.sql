@@ -970,7 +970,8 @@ create TABLE people (
 	email text,								
 	unsubscribed boolean default false,
 	uuid text,								-- Uniquely identify this person
-	when_unsubscribed TIMESTAMP WITH TIME ZONE
+	when_unsubscribed TIMESTAMP WITH TIME ZONE,
+	when_subscribed TIMESTAMP WITH TIME ZONE
 	);
 ALTER TABLE people OWNER TO ws;
 
