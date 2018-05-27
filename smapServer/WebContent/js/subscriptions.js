@@ -50,6 +50,7 @@ require([
 ], function ($, bootstrap, bv, localise, common, bootbox) {
 
     var gToken;
+    var gSubscribe;
 
     $(document).ready(function () {
 
@@ -58,6 +59,7 @@ require([
             params,
             pArray = [],
             param = [];
+
 
         setCustomSubscriptions();			// Apply custom javascript
         localise.setlang();
@@ -70,14 +72,55 @@ require([
             if ( param[0] === "token" ) {
                 gToken = param[1];
             }
+            if ( param[0] === "subscribe" ) {
+                gSubscribe = param[1];
+            }
         }
 
-        if(gToken) {
+        if(gToken && !gSubscribe) {
+            $('#heading').text(localise.set["c_unsubscribe"]);
             $('#unsubscribe').show();
             $('#subscribe').hide();
+            $('#subscribe2').hide();
+        } else if(gToken && gSubscribe) {
+            $('#heading').text(localise.set["c_subscribe"]);
+            $('#unsubscribe').hide();
+            $('#subscribe').hide();
+            $('#subscribe2').show();
         } else {
-            $('#subscribe').hide();
+            $('#heading').text(localise.set["r_s"]);
+            $('#unsubscribe').hide();
+            $('#subscribe2').hide();
+            $('#subscribe').show();
+        }
+
+        $('#subscribeForm').bootstrapValidator({
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            }
+        });
+
+        $('#subscribeForm input').keyup(function () {
+            validateForm();
+        });
+
+        if(gToken && !gSubscribe) {
+            $('#heading').text(localise.set["c_unsubscribe"]);
             $('#unsubscribe').show();
+            $('#subscribe').hide();
+            $('#subscribe2').hide();
+        } else if(gToken && gSubscribe) {
+            $('#heading').text(localise.set["c_subscribe"]);
+            $('#unsubscribe').hide();
+            $('#subscribe').hide();
+            $('#subscribe2').show();
+        } else {
+            $('#heading').text(localise.set["r_s"]);
+            $('#unsubscribe').hide();
+            $('#subscribe2').hide();
+            $('#subscribe').show();
         }
 
         $('#unsubscribeSubmit').click(function (e) {
@@ -90,6 +133,44 @@ require([
                 success: function (data, status) {
                     removeHourglass();
                     alert(localise.set["msg_uns"]);
+                }, error: function (data, status) {
+                    removeHourglass();
+                    alert(data.responseText);
+                }
+            });
+        });
+
+        $('#subscribeSubmit').click(function (e) {
+            e.preventDefault();
+
+            var email = $('#email').val();
+
+            addHourglass();
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "/surveyKPI/subscriptions/subscribe",
+                data: {email: email},
+                success: function (data, status) {
+                    removeHourglass();
+                    alert(localise.set["msg_s1"]);
+                }, error: function (data, status) {
+                    removeHourglass();
+                    alert(data.responseText);
+                }
+            });
+        });
+
+        $('#subscribe2Submit').click(function (e) {
+            e.preventDefault();
+
+            addHourglass();
+            $.ajax({
+                cache: false,
+                url: "/surveyKPI/subscriptions/subscribe/" + gToken,
+                success: function (data, status) {
+                    removeHourglass();
+                    alert(localise.set["msg_s2"]);
                 }, error: function (data, status) {
                     removeHourglass();
                     alert(data.responseText);
