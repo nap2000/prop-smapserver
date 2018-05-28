@@ -130,8 +130,9 @@ function addAnchors (property, minsize) {
                         + 'Your browser does not support this video type'
                         + '</video>';
                 } else {
+                    style = (media.thumbNail == '/fieldAnalysis/img/link.png') ? "width:32px;" : "width:100%;";
                     output[i] = '<a href="' + media.url
-                        + '" target="_blank"><img style="width:100%;" src="'
+                        + '" target="_blank"><img style="' + style + '" src="'
                         + (minsize ? media.thumbNail : media.url)
 						+ '" alt="Picture"></a>';
                 }
