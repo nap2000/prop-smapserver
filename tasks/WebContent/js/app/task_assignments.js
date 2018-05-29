@@ -197,15 +197,18 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
             getRoles();
             $('.assign_user').show();
-            $('.assign_role').hide();
+            $('.assign_role, .assign_email').hide();
             $('.assign_data').hide();
             $('input[type=radio][name=assign_type]').change(function() {
                 if (this.id == 'assign_user_type') {
                     $('.assign_user').show();
-                    $('.assign_role').hide();
-                } else {
-                    $('.assign_user').hide();
+                    $('.assign_role,.assign_email').hide();
+                } else if (this.id == 'assign_role_type') {
+                    $('.assign_user, .assign_email').hide();
                     $('.assign_role').show();
+                } else {
+                    $('.assign_user, .assign_role').hide();
+                    $('.assign_email').show();
                 }
             });
 

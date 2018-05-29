@@ -749,6 +749,10 @@
                                             <input id="assign_role_type" name="assign_type" type="radio" autocomplete="off">
                                             <span class="lang" data-lang="c_role">role</span>
                                         </label>
+                                        <label class="btn btn-default">
+                                            <input id="assign_email_type" name="assign_type" type="radio" autocomplete="off">
+                                            <span class="lang" data-lang="c_email">email</span>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -768,6 +772,22 @@
                                     <select class="form-control roles_select" id="roles_task_group"></select>
                                 </div>
                             </div>
+
+                            <div class="form-group assign_email">
+                                <div id="notify_emails_cont" class="form-group" data-toggle="tooltip"  data-container="body" title="comma separated list of email addresses">
+                                    <label for="notify_emails" data-lang="c_email" class="lang col-sm-2 control-label">Email</label>
+                                    <div class="col-sm-10">
+                                        <input type="email" id="notify_emails" class="form-control" required multiple placeholder="email addresses">
+                                    </div>
+                                </div>
+                                <div id="email_question_cont" class="form-group" data-toggle="tooltip"  data-container="body" title="question that will contain the email addresses to use">
+                                    <label for="email_question" class="col-sm-2 control-label lang" data-lang="n_eq">email question</label>
+                                    <div class="col-sm-10">
+                                        <select class="selected_question form-control" id="email_question"></select>
+                                    </div>
+                                </div>
+                            </div>
+
 
                             <div class="form-group assign_data" data-container="body">
                                 <label for="assign_data" data-lang="c_data" class="lang col-sm-2 control-label">filter</label>
