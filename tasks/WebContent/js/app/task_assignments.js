@@ -203,11 +203,21 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 if (this.id == 'assign_user_type') {
                     $('.assign_user').show();
                     $('.assign_role,.assign_email').hide();
+                    if($('#users_task_group').val() == -2) {
+                        $('.assign_data').show();
+                    } else {
+                        $('.assign_data').hide();
+                    }
                 } else if (this.id == 'assign_role_type') {
                     $('.assign_user, .assign_email').hide();
                     $('.assign_role').show();
+                    if($('#roles_task_group').val() == -2) {
+                        $('.assign_data').show();
+                    } else {
+                        $('.assign_data').hide();
+                    }
                 } else {
-                    $('.assign_user, .assign_role').hide();
+                    $('.assign_user, .assign_role,.assign_data').hide();
                     $('.assign_email').show();
                 }
             });
@@ -555,7 +565,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                         assignObj["user_id"] = $('#users_task_group option:selected').val(); 		// User assigned to complete the task
                         assignObj["role_id"] = 0;
                         assignObj["fixed_role_id"] = 0;
-                    } else {
+                    } else if(assignType == 'assign_role_type') {
                         assignObj["user_id"] = 0;
                         assignObj["role_id"] = $('#roles_task_group option:selected').val();
                         assignObj["fixed_role_id"] = $('#fixed_role option:selected').val();
@@ -565,6 +575,26 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                             alert(localise.set["msg_val_ad2"]);
                             return;
                         }
+                    } else if(assignType == 'assign_email_type') {
+                        assignObj["user_id"] = 0;
+                        assignObj["role_id"] = 0;
+                        assignObj["fixed_role_id"] = 0;
+                        assignObj["emails"] = $('#assign_emails').val();
+                        assignObj["email_question_id"] = $('#email_question option:selected').val();
+
+                        // Text email must be valid email addresses
+                        var emails = assignObj["emails"];
+                        if(emails && emails.trim().length > 0) {
+                            var emailArray = emails.split(",");
+                            for (i = 0; i < emailArray.length; i++) {
+                                var validEmail = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm;
+                                if (!validEmail.test(emailArray[i])) {
+                                    alert(localise.set["msg_inv_email"]);
+                                    break;
+                                }
+                            }
+                        }
+
                     }
                     if(assignObj["user_id"] == -2 || assignObj["role_id"] == -2) {
                         assignObj["assign_data"] = $('#assign_data').val();
