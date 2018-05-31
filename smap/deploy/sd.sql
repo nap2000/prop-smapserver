@@ -975,7 +975,8 @@ create TABLE people (
 	);
 ALTER TABLE people OWNER TO ws;
 
-
+-- Add email to assignments
+alter table assignments add column email text;
 
 
 
