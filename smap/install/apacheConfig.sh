@@ -1,5 +1,9 @@
 #!/bin/sh
 
+echo "Updating Tomcat configuation"
+tc_server_xml="/etc/tomcat7/server.xml"	
+sudo cp config_files/server.xml $tc_server_xml
+
 echo "Setting up Apache 2.4"
 a_config_dir="/etc/apache2/sites-available"	
 
