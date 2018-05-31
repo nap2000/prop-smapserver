@@ -755,7 +755,6 @@ CREATE TABLE public.tasks (
 	update_id text,
 	repeat boolean,
 	repeat_count integer default 0,
-	email text,
 	guidance text,
 	location_trigger text,
 	deleted boolean
@@ -788,6 +787,7 @@ CREATE TABLE public.assignments (
 	id integer NOT NULL DEFAULT nextval('assignment_id_seq') PRIMARY KEY,
 	assignee integer,
 	assignee_name text,			-- Name of assigned person
+	email text,					-- Email to send the task to
 	status text NOT NULL,		-- Current status: accepted || rejected || submitted || deleted	
 	task_id integer REFERENCES tasks(id) ON DELETE CASCADE,
 	assigned_date timestamp with time zone,

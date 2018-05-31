@@ -197,8 +197,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
             getRoles();
             $('.assign_user').show();
-            $('.assign_role, .assign_email').hide();
-            $('.assign_data').hide();
+            $('.assign_role, .assign_email, .assign_data').hide();
             $('input[type=radio][name=assign_type]').change(function() {
                 if (this.id == 'assign_user_type') {
                     $('.assign_user').show();
@@ -219,6 +218,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 } else {
                     $('.assign_user, .assign_role,.assign_data').hide();
                     $('.assign_email').show();
+                    $('.assign_data').show();
                 }
             });
 
@@ -580,7 +580,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                         assignObj["role_id"] = 0;
                         assignObj["fixed_role_id"] = 0;
                         assignObj["emails"] = $('#assign_emails').val();
-                        assignObj["email_question_id"] = $('#email_question option:selected').val();
 
                         // Text email must be valid email addresses
                         var emails = assignObj["emails"];
@@ -596,7 +595,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                         }
 
                     }
-                    if(assignObj["user_id"] == -2 || assignObj["role_id"] == -2) {
+                    if(assignObj["user_id"] == -2 || assignObj["role_id"] == -2 || assignType == 'assign_email_type') {
                         assignObj["assign_data"] = $('#assign_data').val();
 
                         // validate
