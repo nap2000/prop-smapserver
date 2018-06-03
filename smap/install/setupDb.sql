@@ -845,6 +845,7 @@ CREATE TABLE public.user_trail (
 	event_time TIMESTAMP WITH TIME ZONE
 );
 SELECT AddGeometryColumn('user_trail', 'the_geom', 4326, 'POINT', 2);
+create index idx_user_trail_u_id on user_trail(u_id);
 ALTER TABLE public.user_trail OWNER TO ws;
 
 DROP SEQUENCE IF EXISTS log_report_seq CASCADE;
