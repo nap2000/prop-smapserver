@@ -975,7 +975,8 @@ create TABLE people (
 	);
 ALTER TABLE people OWNER TO ws;
 
-
+-- Improve performance of user_trail and delete opeations on users table
+create index idx_user_trail_u_id on user_trail(u_id);
 
 
 
