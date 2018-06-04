@@ -502,7 +502,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 $('#assign_survey_form')[0].reset();
 
                 $('#assign_user_type').prop('checked', true);
-                $('#assign_role_type').prop('checked', false);
+                $('#assign_role_type, #assign_email_type').prop('checked', false);
                 $('#assign_user_type').closest('label').addClass('active');
                 $('#assign_role_type').closest('label').removeClass('active');
                 $('.assign_user').show();
@@ -599,7 +599,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                         assignObj["assign_data"] = $('#assign_data').val();
 
                         // validate
-                        if (typeof assignObj["assign_data"] === "undefined" || assignObj["assign_data"].trim().length == 0) {
+                        if (typeof assignObj["assign_data"] === "undefined" && assignObj["assign_data"].trim().length == 0) {
                             alert(localise.set["msg_val_ad"]);
                             return;
                         }
@@ -680,8 +680,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                     }
                 });
-
-
             });
 
             /*
@@ -1751,7 +1749,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
             var statusClass = "";
 
-            if (status === "new") {
+            if (status === "new" || status === "unsent" || status === "unsubscribed") {
                 statusClass = "bg-danger";
             } else if (status === "submitted") {
                 statusClass = "bg-success";

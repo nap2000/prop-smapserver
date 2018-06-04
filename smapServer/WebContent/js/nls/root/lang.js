@@ -528,6 +528,8 @@ define({
     "rejected": "Rejected",
     "cancelled": "Cancelled",
     "deleted": "Deleted",
+    "unsent": "Not Sent",
+    "unsubscribed": "Unsubscribed",
 
     // template load errors
     "e_u_err": "Form Upload Error",
