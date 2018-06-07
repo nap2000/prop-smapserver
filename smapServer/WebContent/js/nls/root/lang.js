@@ -277,6 +277,7 @@ define({
     "c_unsubscribe": "Unsubscribe",
     "c_subscribe": "Subscribe",
     "c_unsent": "Email not sent",
+    "c_pending": "Pending",
 
     // File Types
     "ft": "File Type",

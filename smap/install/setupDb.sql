@@ -752,7 +752,8 @@ CREATE TABLE public.tasks (
 	schedule_finish timestamp with time zone,
 	deleted_at timestamp with time zone,
 	address text,
-	update_id text,
+	instance_id,			-- Record on which this task is based
+	update_id text,		-- Record to update
 	repeat boolean,
 	repeat_count integer default 0,
 	guidance text,
