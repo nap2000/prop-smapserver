@@ -42,6 +42,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             gModalMapInitialised = false,	// Set true then the modal map has been initialised
             gIdx = 0,						// Idx set when external task dropped on calendar
             gSelectedCount = 0;
+            gUnsentEmailCount = 0;
 
         $(document).ready(function () {
 
@@ -244,7 +245,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     baString = JSON.stringify(bulkAction),
                     url;
 
-
                 url = "/surveyKPI/tasks/bulk/";
                 url += globals.gCurrentProject + "/" + globals.gCurrentTaskGroup;
 
@@ -260,9 +260,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                         removeHourglass();
                         refreshAssignmentData();
                     }, error: function (data, status) {
-                        console.log(data);
                         removeHourglass();
-                        alert("Error: Failed to update tasks");
+                        alert(localise.set["c_error"] +": " + data.responseText);
                     }
                 });
 
@@ -701,8 +700,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                                 refreshTaskGroupData();
                             }, error: function (data, status) {
                                 removeHourglass();
-                                console.log(data);
-                                alert("Error: Failed to delete task group");
+                                alert(localise.set["c_error"] +": " + data.responseText);
                             }
                         });
                     }
@@ -756,7 +754,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                             }, error: function (data, status) {
                                 console.log(data);
                                 removeHourglass();
-                                alert("Error: Failed to update tasks");
+                                alert(localise.set["c_error"] +": " + data.responseText);
                             }
                         });
                     }
@@ -779,6 +777,10 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             enableUserProfileBS();										// Enable user profile button
             $('#m_refresh').click(function (e) {	// Add refresh action
                 refreshAssignmentData();
+            });
+
+            $('#m_email_unsent').click(function (e) {	// Add email unsent action
+                emailUnsent();
             });
 
             $('#tasks_print').button();									// Add button styling
@@ -898,6 +900,25 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 });
 
             });
+
+            return tasks;
+        }
+
+        /*
+         * Get an array of taskIds that are displayed and an email has not been sent
+         */
+        function getUnsentTaskIds() {
+
+            var tasks = [],
+                idx;
+            for(idx = 0; idx < globals.gTaskList.features.length; idx++) {
+                if (globals.gTaskList.features[idx].properties.status === "unsent") {
+                    tasks.push({
+                        taskId: globals.gTaskList.features[idx].properties.id,
+                        assignmentId: globals.gTaskList.features[idx].properties.a_id
+                    });
+                }
+            }
 
             return tasks;
         }
@@ -1049,7 +1070,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                             if (xhr.readyState == 0 || xhr.status == 0) {
                                 return;  // Not an error
                             } else {
-                                alert("Error: Failed to get options for the question: " + err);
+                                alert(localise.set["c_error"] +": " + err);
                             }
                         }
                     });
@@ -1143,7 +1164,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                                 if (xhr.readyState == 0 || xhr.status == 0) {
                                     return;  // Not an error
                                 } else {
-                                    alert("Error: Failed to get table description: " + err);
+                                    alert(localise.set["c_error"] + ": " + err);
                                 }
                             }
                         });
@@ -1352,12 +1373,45 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
         }
 
         /*
+         * Email unsent tasks
+         */
+        function emailUnsent() {
+
+            var bulkAction = {
+                action: "email_unsent",
+                tasks: getUnsentTaskIds()
+                };
+            var baString = JSON.stringify(bulkAction);
+            var url = "/surveyKPI/tasks/bulk/" + globals.gCurrentProject
+                + "/" + globals.gCurrentTaskGroup;
+
+            $('.for_unsent_email').addClass('disabled');    // Disable send button
+
+            addHourglass();
+            $.ajax({
+                type: "POST",
+                dataType: 'text',
+                cache: false,
+                contentType: "application/json",
+                url: url,
+                data: {tasks: baString},
+                success: function (data, status) {
+                    removeHourglass();
+                    refreshAssignmentData();
+                }, error: function (data, status) {
+                    removeHourglass();
+                    alert(localise.set["c_error"] +": " + data.responseText);
+                }
+            });
+
+        }
+
+        /*
          * Get the assignments from the server
          */
         function refreshAssignmentData() {
 
-            var user_filter = $('#users_filter').val(),
-                completed = $('#filter_completed').is(':checked');
+            var user_filter = $('#users_filter').val();
 
             if (typeof globals.gCurrentTaskGroup !== "undefined" && globals.gCurrentTaskGroup != -1) {
                 addHourglass();
@@ -1406,6 +1460,13 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             if (typeof tasks != "undefined") {
 
                 $('#task_table_body').empty().html(getTableBody(tasks));
+
+                if(gUnsentEmailCount > 0) {
+                    $('.for_unsent_email').removeClass('disabled');
+                } else {
+                    $('.for_unsent_email').addClass('disabled');
+                }
+
 
                 // Respond to selection of a task
                 $('input', '#task_table_body').change(function (event) {
@@ -1646,12 +1707,19 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 idx = -1,
                 i;
 
+            gUnsentEmailCount = 0;
+
             // Filter on status
             var statusFilterArray = $('#status_filter').val();
             var statusFilter = statusFilterArray ? statusFilterArray.join('') : "";
 
             for (i = 0; i < tasks.length; i++) {
                 task = tasks[i];
+
+                if(task.properties.status === "unsent") {
+                    gUnsentEmailCount++;
+                }
+
                 if(statusFilter.indexOf(task.properties.status) >= 0) {
                     tab[++idx] = '<tr>';
                     tab[++idx] = addSelectCheckBox(false, i, false);
