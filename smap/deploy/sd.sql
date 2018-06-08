@@ -977,7 +977,7 @@ ALTER TABLE people OWNER TO ws;
 
 -- Add email to assignments
 alter table assignments add column email text;
-alter table assignments add column temp_user_id text;
+alter table assignments add column action_link text;
 alter table tasks add column instance_id text;			-- ID of the record that prompted this task
 
 -- Improve performance of user_trail and delete opeations on users table
