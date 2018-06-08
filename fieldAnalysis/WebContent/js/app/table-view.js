@@ -473,6 +473,7 @@ function toggleBad($elem, fId, pKey, value, sId, theView) {
  * Also add a function to toggle the "bad" status of a record
  */
 function addRightClickToTable($elem, sId, view) {
+	/*
 	$elem.find('a').off().bind("contextmenu", function(e) {
 		var $this = $(this),
 			mediaObj,
@@ -509,6 +510,7 @@ function addRightClickToTable($elem, sId, view) {
 		setReport(gReport);
 		return false;
 	});
+	*/
 	
 	function toggleBadFn(survey, theView) {
 		$elem.find('.bad_r, .good_r').off().bind("contextmenu", function(e) {

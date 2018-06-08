@@ -220,6 +220,7 @@ define({
     "c_org": "Organisation",
     "c_orgs": "Organisations",
     "c_all_s": "All Surveys",
+    "c_all": "All",
     "c_event": "Event",
     "c_note": "Note",
     "c_server": "Server",
