@@ -1717,6 +1717,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             // Filter on status
             var statusFilterArray = $('#status_filter').val();
             var statusFilter = statusFilterArray ? statusFilterArray.join('') : "";
+            var statusLookup;
 
             for (i = 0; i < tasks.length; i++) {
                 task = tasks[i];
@@ -1742,7 +1743,11 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     tab[++idx] = '</td>';
 
                     tab[++idx] = '<td class="' + getStatusClass(task.properties.status) + '">';	// status
-                    tab[++idx] = localise.set[task.properties.status];
+                    statusLookup = task.properties.status;
+                    if(statusLookup === "error" || statusLookup === "pending") {
+                        statusLookup = "c_" + statusLookup;
+                    }
+                    tab[++idx] = localise.set[statusLookup];
                     tab[++idx] = '</td>';
 
                     tab[++idx] = '<td>';		// Assignee
