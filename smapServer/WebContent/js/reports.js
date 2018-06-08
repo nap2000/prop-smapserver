@@ -76,7 +76,6 @@ require([
 		// Get the user details
 		globals.gIsAdministrator = false;
         getLoggedInUser(projectChanged, false, true, undefined);
-		getReports();
 
 		$('#m_refresh').click(function() {
             getReports();
@@ -445,7 +444,7 @@ require([
                 error: function (xhr, textStatus, err) {
                     removeHourglass();
                     if (xhr.readyState == 0 || xhr.status == 0) {
-                        return;  // Not an error
+                        getReports();
                     } else {
                         alert(localise.set["msg_err_upd"] + " : " + xhr.responseText);
                     }
