@@ -276,7 +276,10 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     refreshTableAssignments();
                 }
             });
-            $('#status_filter').multiselect('selectAll', false).multiselect('updateButtonText');
+            $('#status_filter').multiselect('selectAll', false)
+                .multiselect('deselect', 'deleted')
+                .multiselect('deselect', 'cancelled')
+                .multiselect('updateButtonText');
 
 
             /*
@@ -1411,14 +1414,16 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
          */
         function refreshAssignmentData() {
 
-            var user_filter = $('#users_filter').val();
+            var user_filter = $('#users_filter').val(),
+                completed = $('#filter_completed').is(':checked'),
+                period_filter = $('#period').val();
 
             if (typeof globals.gCurrentTaskGroup !== "undefined" && globals.gCurrentTaskGroup != -1) {
                 addHourglass();
                 $.ajax({
                     url: "/surveyKPI/tasks/assignments/" +
                         globals.gCurrentTaskGroup +
-                        "?user=" + user_filter,
+                        "?user=" + user_filter + "&period=" + period_filter,
                     cache: false,
                     dataType: 'json',
                     success: function (data) {
