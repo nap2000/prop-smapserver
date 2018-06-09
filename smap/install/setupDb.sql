@@ -380,7 +380,7 @@ CREATE TABLE upload_event (
 	survey_notes text,		-- Notes added during completion of the task
 	location_trigger text	-- The trigger for the completion of the task
 	);
-
+create index idx_ue_ident on upload_event(user_name);
 ALTER TABLE upload_event OWNER TO ws;
 
 DROP TABLE IF EXISTS subscriber_event CASCADE;
@@ -393,7 +393,6 @@ CREATE TABLE subscriber_event (
 	reason text
 	);
 CREATE INDEX se_ue_id_sequence ON subscriber_event(ue_id);
-
 ALTER TABLE subscriber_event OWNER TO ws;
 
 DROP TABLE IF EXISTS option CASCADE;
