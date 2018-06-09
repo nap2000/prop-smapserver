@@ -89,7 +89,7 @@ function updateProjectList(addAll, projectId, callback) {
 		updateCurrentProject = true;
 	
 	if(addAll) {
-		h[++idx] = '<option value="0">All</option>';
+		h[++idx] = '<option value="0">' + localise.set["c_all"] + '</option>';
 		updateCurrentProject = false;		
 	}
 	for(i = 0; i < globals.gProjectList.length; i++) {

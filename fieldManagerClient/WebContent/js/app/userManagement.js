@@ -1352,7 +1352,7 @@ function updateRoleTable() {
     h = [];
 	idx = -1;
 
-    h[++idx] = '<option value="-1">All</option>';
+    h[++idx] = '<option value="-1">' + localise.set["c_all"] + '</option>';
     for(i = 0; i < globals.gRoleList.length; i++) {
 
     	role = globals.gRoleList[i];
@@ -1595,7 +1595,7 @@ function updateGroupTable() {
 	h = [],
 	idx = -1;
 	
-	h[++idx] = '<option value="All">All</option>';
+	h[++idx] = '<option value="All">' + localise.set["c_all"] + '</option>';
 	for(i = 0; i < gGroups.length; i++) {
 		if((gGroups[i].id !== 4 || globals.gIsOrgAdministrator) && (gGroups[i].id !== 6 || globals.gIsSecurityAdministrator)) {
 			h[++idx] = '<option value="';
