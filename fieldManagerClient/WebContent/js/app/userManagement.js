@@ -1116,18 +1116,20 @@ function updateUserTable() {
 	h[++idx] = '<col style="width:auto;">';
 	h[++idx] = '<col style="width:160px;">';	
 	h[++idx] = '<col style="width:auto;">';
-	//h[++idx] = '<tr>';
-	//h[++idx] = '<th colspan="3"></th>';
-	//h[++idx] = '<th colspan="3" style="text-align: center;">Forms Submitted</th>';
-	//h[++idx] = '</tr>';
 	h[++idx] = '<tr>';
-	h[++idx] = '<th>Select</th>';
-	h[++idx] = '<th>User Id</th>';
-	h[++idx] = '<th>Name</th>';
-	//h[++idx] = '<th>Email</th>';
-	//h[++idx] = '<th>This Month</th>';
-	//h[++idx] = '<th>Last Month</th>';
-	//h[++idx] = '<th>All Time</th>';
+
+	h[++idx] = '<th>';
+	h[++idx] = localise.set["c_select"];
+	h[++idx] = '</th>';
+
+	h[++idx] = '<th style="text-align: center;">';
+	h[++idx] = localise.set["c_id"];
+	h[++idx] = '</th>';
+
+	h[++idx] = '<th style="text-align: center;">'
+	h[++idx] = localise.set["c_name"];
+	h[++idx] = '</th>';
+
 	h[++idx] = '</tr>';
 	h[++idx] = '</thead>';
 	h[++idx] = '<tbody>';
@@ -1150,21 +1152,9 @@ function updateUserTable() {
 			h[++idx] = '">';
 			h[++idx] = user.ident;
 			h[++idx] = '</button></td>';
-			h[++idx] = '<td>';
+			h[++idx] = '<td style="text-align: center;">';
 			h[++idx] = user.name;
 			h[++idx] = '</td>';
-			//h[++idx] = '<td>';
-			//h[++idx] = user.email;
-			//h[++idx] = '</td>';
-			//h[++idx] = '<td>';
-			//h[++idx] = user.this_month;
-			//h[++idx] = '</td>';
-			//h[++idx] = '<td>';
-			//h[++idx] = user.last_month;
-			//h[++idx] = '</td>';
-			//h[++idx] = '<td>';
-			//h[++idx] = user.all_time;
-			//h[++idx] = '</td>';
 			h[++idx] = '</tr>';
 		}
 	}	
@@ -1362,7 +1352,7 @@ function updateRoleTable() {
     h = [];
 	idx = -1;
 
-    h[++idx] = '<option value="-1">All</option>';
+    h[++idx] = '<option value="-1">' + localise.set["c_all"] + '</option>';
     for(i = 0; i < globals.gRoleList.length; i++) {
 
     	role = globals.gRoleList[i];
@@ -1605,7 +1595,7 @@ function updateGroupTable() {
 	h = [],
 	idx = -1;
 	
-	h[++idx] = '<option value="All">All</option>';
+	h[++idx] = '<option value="All">' + localise.set["c_all"] + '</option>';
 	for(i = 0; i < gGroups.length; i++) {
 		if((gGroups[i].id !== 4 || globals.gIsOrgAdministrator) && (gGroups[i].id !== 6 || globals.gIsSecurityAdministrator)) {
 			h[++idx] = '<option value="';

@@ -508,7 +508,7 @@ require([
 	 	} else {
 	 		$elem.empty();
 	 		if(addAll) {
-	 			$elem.append('<option value="_all">All Surveys</option>');	
+	 			$elem.append('<option value="_all">' + localise.set["c_all_s"] + '</option>');
 	 		}
 	 		
 	 		if(callback) {
