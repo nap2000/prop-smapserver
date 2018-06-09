@@ -825,8 +825,7 @@ function surveyDetailsDone() {
 	
 	// Show message if the survey is blocked
 	if(globals.model.survey.blocked) {
-		bootbox.alert("The survey has been blocked. Changes cannot be saved.  You can unblock the " +
-				"survey on the form management page.");
+		bootbox.alert(localise.set["ed_blocked"]);
 	}
 	
 	/*
