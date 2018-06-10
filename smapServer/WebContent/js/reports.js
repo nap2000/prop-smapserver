@@ -424,6 +424,8 @@ require([
         $('.has_tt').tooltip();
         $('.copyLink').click(function () {
             var copyText = $(this).closest('tr').find('.thelink').get(0);
+
+            // From https://stackoverflow.com/questions/22581345/click-button-copy-to-clipboard-using-jquery
             var $temp = $("<input>");
             $("body").append($temp);
             $temp.val($(copyText).text()).select();
