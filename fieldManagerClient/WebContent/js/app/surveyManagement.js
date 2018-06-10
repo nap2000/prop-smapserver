@@ -289,7 +289,6 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                 copyText.select();
                 document.execCommand("Copy");
 
-                var tooltip = document.getElementById("clTooltip");
                 $('#copyLink').prop('title', localise.set["c_c"] + ": " + copyText.value).tooltip('fixTitle').tooltip('show');
 
             });
