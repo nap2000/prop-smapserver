@@ -386,8 +386,14 @@ require([
                 tab[++idx] = action.name;
                 tab[++idx] = '</td>';
 
-                tab[++idx] = '<td>';			// Anonymous Link
+                tab[++idx] = '<td class="thelink">';			// Anonymous Link
                 tab[++idx] = location.origin + "/surveyKPI/action/" + gReportList[i].ident;
+                tab[++idx] = '</td>';
+
+                tab[++idx] = '<td>';			// Copy Link
+                tab[++idx] = '<button type="button" class="btn btn-default has_tt copyLink" title="Copy Link" value="';
+                tab[++idx] = i;
+                tab[++idx] = '"><i class="fa fa-share-alt"></i></button>';
                 tab[++idx] = '</td>';
 
                 tab[++idx] = '<td>';
@@ -411,6 +417,22 @@ require([
         }
 
 		$reportList.html(tab.join(''));
+
+        /*
+         * Respond to a user clicking copy link
+         */
+        $('.has_tt').tooltip();
+        $('.copyLink').click(function () {
+            var copyText = $(this).closest('tr').find('.thelink').get(0);
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val($(copyText).text()).select();
+            document.execCommand("copy");
+
+            $(this).prop('title', localise.set["c_c"] + ": " + $(copyText).text()).tooltip('fixTitle').tooltip('show');
+            $temp.remove();
+
+        });
 
 		/*
 		 * Action Dropbox
