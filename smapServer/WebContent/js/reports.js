@@ -29,6 +29,12 @@ var gConfig;
 var gReportIdx;
 var gForm = 0;
 
+window.gTasks = {
+    cache: {
+        surveyRoles: {}
+    }
+};
+
 requirejs.config({
     baseUrl: 'js/libs',
     waitSeconds: 0,
@@ -228,21 +234,20 @@ require([
 
 
         // Add roles
-        if (globals.gIsSecurityAdministrator) {
-            var roleIds = [],
-                id;
-            $('input[type=checkbox]:checked', '.role_select_roles').each(function () {
-                id = $(this).val();
-                roleIds.push(id);
-            });
-            if (roleIds.length > 0) {
-                url += "?roles=" + roleIds.join();
-            }
-        }
+        var roleIds = [],
+            id;
+        $('input[type=checkbox]:checked', '.role_select_roles').each(function () {
+            id = $(this).val();
+            roleIds.push(id);
+        });
 
         var url = "/surveyKPI/reporting/link/" + sId
             + "?reportType=" + reportType
             + "&name=" + name;
+
+        if (roleIds.length > 0) {
+            url += "&roles=" + roleIds.join();
+        }
 
         if(filename && filename.trim().length > 0) {
             url += "&filename=" + filename;
@@ -489,6 +494,8 @@ require([
             $('#reportType').val(report.action_details.reportType);
             $('#survey').val(report.action_details.sId);
             surveyChanged(setForm);
+
+            getSurveyRoles(report.action_details.sId, report.action_details.roles);
 
             // Add parameters
             var meta = false;
