@@ -246,6 +246,7 @@ CREATE TABLE users (
 	action_details text,			-- Details of a specific action the user can undertake
 	lastalert text,					-- Time last alert sent to the user
 	seen boolean,					-- True if the user has aknowledged the alert
+	single_submission boolean default false,		-- Only one submission can be accepted by this user
 	created timestamp with time zone
 	);
 CREATE UNIQUE INDEX idx_users_ident ON users(ident);
