@@ -986,6 +986,8 @@ create index idx_user_trail_u_id on user_trail(u_id);
 -- Improve performance of queries that access user ident in upload_event
 create index idx_ue_ident on upload_event(user_name);
 
+alter table users add column single_submission boolean default false;
+
 
 
 
