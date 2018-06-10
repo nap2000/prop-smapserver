@@ -2972,3 +2972,75 @@ function autocollapse() {
 $(document).on('ready', autocollapse);
 $(window).on('resize', autocollapse);
 */
+
+/*
+ * Get the roles for a survey
+ */
+function getSurveyRoles(sId, selectedRoles) {
+
+    if (!gTasks.cache.surveyRoles[sId]) {
+        addHourglass();
+        $.ajax({
+            url: "/surveyKPI/role/survey/" + sId + "?enabled=true",
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                removeHourglass();
+                gTasks.cache.surveyRoles[sId] = data;
+                showRoles(gTasks.cache.surveyRoles[sId], selectedRoles);
+            },
+            error: function (xhr, textStatus, err) {
+
+                removeHourglass();
+                if (xhr.readyState == 0 || xhr.status == 0) {
+                    return;  // Not an error
+                } else {
+                    console.log("Error: Failed to get roles for a survey: " + err);
+                }
+            }
+        });
+    } else {
+        showRoles(gTasks.cache.surveyRoles[sId], selectedRoles);
+    }
+}
+
+/*
+ * Show the roles
+ */
+function showRoles(data, selectedRoles) {
+
+    var h = [],
+        idx = -1,
+        i;
+
+    if (data.length > 0) {
+        for (i = 0; i < data.length; i++) {
+            h[++idx] = '<div class="checkbox">';
+            h[++idx] = '<label><input type="checkbox" value="';
+            h[++idx] = data[i].id;
+            h[++idx] = '"';
+            if(roleSelected(data[i].id, selectedRoles)) {
+            	h[++idx] = ' checked';
+			}
+            h[++idx] = '>"';
+            h[++idx] = data[i].name;
+            h[++idx] = '</label>';
+            h[++idx] = '</div>';
+        }
+        $('.role_select').show();
+        $('.role_select_roles').empty().append(h.join(''));
+    }
+}
+
+function roleSelected(roleId, selectedRoles) {
+	var sel = false;
+	if(selectedRoles) {
+		for(var i = 0; i < selectedRoles.length; i++) {
+			if(selectedRoles[i].id == roleId) {
+				sel = true;
+				break;
+			}
+		}
+	}
+	return sel;
+}

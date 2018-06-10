@@ -404,62 +404,6 @@ require([
 
     });
 
-    /*
-     * Get the roles for a survey
-     */
-    function getSurveyRoles(sId) {
-
-        if (!gTasks.cache.surveyRoles[sId]) {
-            addHourglass();
-            $.ajax({
-                url: "/surveyKPI/role/survey/" + sId + "?enabled=true",
-                dataType: 'json',
-                cache: false,
-                success: function (data) {
-                    removeHourglass();
-                    gTasks.cache.surveyRoles[sId] = data;
-                    showRoles(gTasks.cache.surveyRoles[sId]);
-                },
-                error: function (xhr, textStatus, err) {
-
-                    removeHourglass();
-                    if (xhr.readyState == 0 || xhr.status == 0) {
-                        return;  // Not an error
-                    } else {
-                        console.log("Error: Failed to get roles for a survey: " + err);
-                    }
-                }
-            });
-        } else {
-            showRoles(gTasks.cache.surveyRoles[sId]);
-        }
-    }
-
-    /*
-     * Show the roles
-     */
-    function showRoles(data) {
-
-        var h = [],
-            idx = -1,
-            i;
-
-        if (data.length > 0) {
-            for (i = 0; i < data.length; i++) {
-                h[++idx] = '<div class="checkbox">';
-                h[++idx] = '<label><input type="checkbox" value="';
-                h[++idx] = data[i].id;
-                h[++idx] = '">';
-                h[++idx] = data[i].name;
-                h[++idx] = '</label>';
-                h[++idx] = '</div>';
-            }
-            $('.role_select').show();
-            $('.role_select_roles').empty().append(h.join(''));
-        }
-    }
-
-
     // Generate a file based on chart data
     $('.genfile').click(function () {
 
@@ -1057,9 +1001,7 @@ require([
 
                 $('.shareRecordOnly, .role_select').hide();
                 $('#srLink').val("");
-                if (globals.gIsSecurityAdministrator) {
-                    getSurveyRoles(globals.gCurrentSurvey);
-                }
+                getSurveyRoles(globals.gCurrentSurvey);
                 actioncommon.showEditRecordForm(record, columns, $editForm, $surveyForm);
                 $('.overviewSection').hide();
                 $('.editRecordSection').show();
