@@ -153,6 +153,9 @@ require([
         $('#addReport').click(function(){
             $('#publish_form')[0].reset();
 
+            $('.role_select_roles').empty()
+            getSurveyRoles($('#survey').val(), undefined, true);
+
             // Set button to create
             $('#publishReport').show();
             $('#saveReport').hide();
@@ -315,6 +318,9 @@ require([
     function surveyChanged(callback) {
         var sId = $('#survey').val();
         var dateQuestionId = 0;     // TODO
+
+        getSurveyRoles(sId, undefined, true);
+
         // Set the survey meta data
         var sMeta = globals.gSelector.getSurvey(sId);
         if(!sMeta) {
