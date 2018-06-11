@@ -2976,7 +2976,7 @@ $(window).on('resize', autocollapse);
 /*
  * Get the roles for a survey
  */
-function getSurveyRoles(sId, selectedRoles) {
+function getSurveyRoles(sId, selectedRoles, setall) {
 
     if (!gTasks.cache.surveyRoles[sId]) {
         addHourglass();
@@ -3000,14 +3000,14 @@ function getSurveyRoles(sId, selectedRoles) {
             }
         });
     } else {
-        showRoles(gTasks.cache.surveyRoles[sId], selectedRoles);
+        showRoles(gTasks.cache.surveyRoles[sId], selectedRoles, setall);
     }
 }
 
 /*
  * Show the roles
  */
-function showRoles(data, selectedRoles) {
+function showRoles(data, selectedRoles, setall) {
 
     var h = [],
         idx = -1,
@@ -3019,10 +3019,10 @@ function showRoles(data, selectedRoles) {
             h[++idx] = '<label><input type="checkbox" value="';
             h[++idx] = data[i].id;
             h[++idx] = '"';
-            if(roleSelected(data[i].id, selectedRoles)) {
+            if(setall || roleSelected(data[i].id, selectedRoles)) {
             	h[++idx] = ' checked';
 			}
-            h[++idx] = '>"';
+            h[++idx] = '>';
             h[++idx] = data[i].name;
             h[++idx] = '</label>';
             h[++idx] = '</div>';
