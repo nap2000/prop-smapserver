@@ -100,12 +100,13 @@ $(document).ready(function() {
 	});
 	
 	$('#project_name').change(function() {
+        globals.gCurrentProject = $(this).val();
+        globals.gCurrentSurvey = 0;
 		projectChanged();
  	 });
 	
 	// Set change function on survey
 	$('#survey_name').change(function() {
-		globals.gCurrentSurvey = $(this).val();
 		surveyChanged();
 	});
 	
@@ -128,6 +129,7 @@ function projectChanged() {
 
 function surveyChanged() {
 	gRoles = undefined;
+    globals.gCurrentSurvey = $('#survey_name option:selected').val();
 	$('#survey_name_disp').html($('#survey_name option:selected').text());
 	getSurveyRoles();
 	
@@ -140,32 +142,34 @@ function surveyChanged() {
 }
 
 function getSurveyQuestions(sId) {
-	addHourglass();
-	$.ajax({
-		url: "/surveyKPI/questionList/" + sId + "/none/new?exc_ssc=true",
-		dataType: 'json',
-		cache: false,
-		success: function(data) {
-			removeHourglass();
-			gCache[sId] = data;
-			refreshRFQuestionSelect(gCache[sId]);
-		},
-		error: function(xhr, textStatus, err) {
-			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-	              return;  // Not an error
-			} else {
-				alert(localise.set["msg_err_get_q"] + ": " + err);
-			}
-		}
-	});	
+	if(sId) {
+        addHourglass();
+        $.ajax({
+            url: "/surveyKPI/questionList/" + sId + "/none/new?exc_ssc=true",
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                removeHourglass();
+                gCache[sId] = data;
+                refreshRFQuestionSelect(gCache[sId]);
+            },
+            error: function (xhr, textStatus, err) {
+                removeHourglass();
+                if (xhr.readyState == 0 || xhr.status == 0) {
+                    return;  // Not an error
+                } else {
+                    alert(localise.set["msg_err_get_q"] + ": " + err);
+                }
+            }
+        });
+    }
 }
 
 function getSurveyRoles() {
 	
 	if(gRoles) {
 		refreshView();
-	} else {
+	} else if(globals.gCurrentSurvey) {
 		addHourglass();
 		$.ajax({
 			url: "/surveyKPI/role/survey/" + globals.gCurrentSurvey,
