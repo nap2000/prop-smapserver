@@ -445,35 +445,24 @@
                                 <div class="col-sm-10">
                                     <div class="btn-group" data-toggle="buttons">
                                         <label class="btn btn-default active">
-                                            <input id="tp_user_type" name="assign_type" type="radio" checked autocomplete="off">
+                                            <input class="assign_checkbox user_type_checkbox" id="tp_user_type" name="assign_type" type="radio" checked autocomplete="off">
                                             <span class="lang" data-lang="c_user">user</span>
                                         </label>
                                         <label class="btn btn-default">
-                                            <input id="tp_role_type" name="assign_type" type="radio" autocomplete="off">
-                                            <span class="lang" data-lang="c_role">role</span>
-                                        </label>
-                                        <label class="btn btn-default">
-                                            <input id="tp_email_type" name="assign_type" type="radio" autocomplete="off">
+                                            <input class="assign_checkbox email_type_checkbox" id="tp_email_type" name="assign_type" type="radio" autocomplete="off">
                                             <span class="lang" data-lang="c_email">email</span>
                                         </label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group assign_user">.
+                            <div class="form-group assign_user assign_group">.
                                 <label class="lang col-sm-2 control-label" data-lang="c_user" for="tp_user">user</label>
                                 <div class="col-sm-10">
                                     <select class="users_select form-control" id="tp_user"></select>
                                 </div>
                             </div>
 
-                            <div class="form-group assign_role">
-                                <label for="roles_task_group" class="col-sm-2 control-label lang" data-lang="t_assign_roles">assign role</label>
-                                <div class="col-sm-10">
-                                    <select class="form-control roles_select" id="tp_roles_task_group"></select>
-                                </div>
-                            </div>
-
-                            <div class="form-group assign_email">
+                            <div class="form-group assign_email assign_group">
                                 <div id="tp_notify_emails_cont" class="form-group" data-toggle="tooltip"  data-container="body" title="comma separated list of email addresses">
                                     <label for="tp_assign_emails" data-lang="c_email" class="lang col-sm-2 control-label">Email</label>
                                     <div class="col-sm-10">
@@ -799,15 +788,15 @@
                                 <div class="col-sm-10">
                                     <div class="btn-group" data-toggle="buttons">
                                         <label class="btn btn-default active">
-                                            <input id="assign_user_type" name="assign_type" type="radio" checked autocomplete="off">
+                                            <input class="assign_checkbox user_type_checkbox" id="assign_user_type" name="assign_type" type="radio" checked autocomplete="off">
                                             <span class="lang" data-lang="c_user">user</span>
                                         </label>
                                         <label class="btn btn-default">
-                                            <input id="assign_role_type" name="assign_type" type="radio" autocomplete="off">
+                                            <input class="assign_checkbox role_type_checkbox" id="assign_role_type" name="assign_type" type="radio" autocomplete="off">
                                             <span class="lang" data-lang="c_role">role</span>
                                         </label>
                                         <label class="btn btn-default">
-                                            <input id="assign_email_type" name="assign_type" type="radio" autocomplete="off">
+                                            <input class="assign_checkbox email_type_checkbox" id="assign_email_type" name="assign_type" type="radio" autocomplete="off">
                                             <span class="lang" data-lang="c_email">email</span>
                                         </label>
                                     </div>
@@ -815,7 +804,7 @@
                             </div>
 
 
-                            <div class="form-group assign_user">
+                            <div class="form-group assign_user assign_group">
                                 <label for="users_task_group" class="col-sm-2 control-label lang" data-lang="t_assign">assign
                                     user</label>
                                 <div class="col-sm-10">
@@ -823,14 +812,14 @@
                                 </div>
                             </div>
 
-                            <div class="form-group assign_role">
+                            <div class="form-group assign_role assign_group">
                                 <label for="roles_task_group" class="col-sm-2 control-label lang" data-lang="t_assign_roles">assign role</label>
                                 <div class="col-sm-10">
                                     <select class="form-control roles_select" id="roles_task_group"></select>
                                 </div>
                             </div>
 
-                            <div class="form-group assign_email">
+                            <div class="form-group assign_email assign_group">
                                 <div id="notify_emails_cont" class="form-group" data-toggle="tooltip"  data-container="body" title="comma separated list of email addresses">
                                     <label for="assign_emails" data-lang="c_email" class="lang col-sm-2 control-label">Email</label>
                                     <div class="col-sm-10">
