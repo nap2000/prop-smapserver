@@ -132,10 +132,9 @@ $(document).ready(function() {
     
     // Copy user ident to email if it is a valid email
     $('#user_ident').blur(function(){
-    	var validEmail = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm,
-    		ident = $('#user_ident').val();
+    	var ident = $('#user_ident').val();
     	
-    	if(validEmail.test(ident)) {
+    	if(validateEmails(ident)) {
     		$('#user_email').val(ident);
     	}
     	
@@ -148,8 +147,6 @@ $(document).ready(function() {
 			error = false,
 			securityManagerChecked,
 			validIdent = new RegExp('^[a-z0-9_]+$'),
-			validEmail = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm,
-			validEmail2 = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm,
 			send_email = $('input[name=send_email]:checked', '#send_email_fields').val();
 	
 		// Ignore click if button disabled
@@ -176,7 +173,7 @@ $(document).ready(function() {
 		}
 		
 		// Validations
-		if((!validIdent.test(user.ident) && !validEmail.test(user.ident)) || user.ident.length == 0) {
+		if((!validIdent.test(user.ident) && !validateEmails(user.ident)) || user.ident.length == 0) {
 			alert(localise.set["u_ident"]);
 			$('#user_ident').focus();
 			$('#userDetailsSave').prop("disabled", false);
@@ -189,7 +186,7 @@ $(document).ready(function() {
 			return false;
 		}
 		if(user.email.length > 0) {
-			if(!validEmail2.test(user.email)) {
+			if(!validateEmails(user.email)) {
 				error = true;
                 alert(localise.set["msg_inv_email"]);
 				$('#user_email').focus();
@@ -390,8 +387,7 @@ $(document).ready(function() {
 			organisation = {},
 			error = false,
 			options=[],
-			i,
-			validEmail = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm;
+			i;
 	
 		if(gCurrentOrganisationIndex === -1) {
 			organisation.id = -1;
@@ -426,7 +422,7 @@ $(document).ready(function() {
 			return false;
 		}
 		if(organisation.admin_email.length > 0) {
-    		if(!validEmail.test(organisation.admin_email)) {
+    		if(!validateEmails(organisation.admin_email)) {
 				error = true;
                 alert(localise.set["msg_inv_email"]);
 				$('#o_admin_email').focus();
