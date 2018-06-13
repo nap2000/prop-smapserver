@@ -200,7 +200,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             $('.assign_user').show();
             $('.assign_role, .assign_email, .assign_data').hide();
             $('input[type=radio][name=assign_type]').change(function() {
-                if (this.id == 'assign_user_type') {
+                if (this.id == 'assign_user_type' || this.id == 'tp_user_type') {
                     $('.assign_user').show();
                     $('.assign_role,.assign_email').hide();
                     if($('#users_task_group').val() == -2) {
@@ -208,7 +208,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     } else {
                         $('.assign_data').hide();
                     }
-                } else if (this.id == 'assign_role_type') {
+                } else if (this.id == 'assign_role_type' || this.id == 'tp_role_type') {
                     $('.assign_user, .assign_email').hide();
                     $('.assign_role').show();
                     if($('#roles_task_group').val() == -2) {
