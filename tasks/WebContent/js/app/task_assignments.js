@@ -304,7 +304,20 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 }
                 taskFeature.properties.name = $('#tp_name').val();		// task name
                 taskFeature.properties.form_id = $('#tp_form_name').val();	// form id
-                taskFeature.properties.assignee = $('#tp_user').val();	// assignee
+
+                taskFeature.properties.assign_type = $("input[name='assign_type']:checked", "#task_properties").attr("id");
+                if(taskFeature.properties.assign_type == 'tp_user_type') {
+                    taskFeature.properties.assignee = $('#tp_user').val();
+                } else if(taskFeature.properties.assign_type == 'tp_email_type') {
+                    taskFeature.properties.assignee = 0;
+                    taskFeature.properties.emails = $('#tp_assign_emails').val();
+                    if(!validateEmails(taskFeature.properties.emails)) {
+                        alert(localise.set["msg_inv_email"]);
+                        return false;
+                    }
+                }
+
+
                 taskFeature.properties.repeat = $('#tp_repeat').prop('checked');
 
                 fromDate = $('#tp_from').data("DateTimePicker").date();
@@ -407,21 +420,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     $('#add_current').prop('checked', tgRule.add_current);
                     $('#add_future').prop('checked', tgRule.add_future);
 
-                    if(tgRule.user_id != 0) {
-                        $('#assign_user_type').prop('checked', true);
-                        $('#assign_role_type').prop('checked', false);
-                        $('#assign_user_type').closest('label').addClass('active');
-                        $('#assign_role_type').closest('label').removeClass('active');
-                        $('.assign_user').show();
-                        $('.assign_role').hide();
-                    } else {
-                        $('#assign_user_type').prop('checked', false);
-                        $('#assign_role_type').prop('checked', true);
-                        $('#assign_user_type').closest('label').removeClass('active');
-                        $('#assign_role_type').closest('label').addClass('active');
-                        $('.assign_user').hide();
-                        $('.assign_role').show();
-                    }
+                    setupAssignType(tgRule.user_id, tgRule.role_id)// Set up assign type
+
                     if(tgRule.user_id == -2 || tgRule.role_id == -2) {
                         $('.assign_data').show();
                     } else {
@@ -515,8 +515,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 $('.simple_filter').hide();
                 $('.advanced_filter').hide();
 
-
-
                 // open the modal
                 $('#addTask').find('input,select,#addNewGroupSave').prop('disabled', false);
                 $('#addTaskLabel').text(localise["t_add_group"]);
@@ -562,7 +560,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     assignObj["survey_name"] = $('#survey_to_complete option:selected').text();	// The display name of the survey to complete
                     assignObj["target_survey_id"] = $('#survey_to_complete option:selected').val(); 		// The form id is the survey id of the survey used to complete the task!
 
-                    var assignType = $("input[name='assign_type']:checked").attr("id");
+                    var assignType = $("input[name='assign_type']:checked", "#addTask").attr("id");
                     if(assignType == 'assign_user_type') {
                         assignObj["user_id"] = $('#users_task_group option:selected').val(); 		// User assigned to complete the task
                         assignObj["role_id"] = 0;
@@ -588,14 +586,12 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                         if(emails && emails.trim().length > 0) {
                             var emailArray = emails.split(",");
                             for (i = 0; i < emailArray.length; i++) {
-                                var validEmail = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm;
-                                if (!validEmail.test(emailArray[i])) {
+                                if (!validateEmails(emailArray[i])) {
                                     alert(localise.set["msg_inv_email"]);
                                     break;
                                 }
                             }
                         }
-
                     }
                     if(assignObj["user_id"] == -2 || assignObj["role_id"] == -2 || assignType == 'assign_email_type') {
                         assignObj["assign_data"] = $('#assign_data').val();
@@ -1542,8 +1538,14 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
              */
             $('#tp_repeat').prop('checked', task.repeat);
             $('#tp_name').val(task.name);		// name
-            $('#tp_form_name').val(taskFeature.properties.form_id);	// form id
+            if(isNew) {
+                $('#tp_form_name').val($('#tp_form_name option:first').val());
+            } else {
+                $('#tp_form_name').val(taskFeature.properties.form_id);	// form id
+            }
+            setupAssignType(taskFeature.properties.assignee, 0);
             $('#tp_user').val(taskFeature.properties.assignee);	// assignee
+            $('#tp_assign_emails').val(taskFeature.properties.emails);
             $('#tp_repeat').prop('checked', taskFeature.properties.repeat);
 
             // Set end date first as otherwise since it will be null, it will be defaulted when from date set
@@ -2062,4 +2064,23 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             return events;
         }
 
+        function setupAssignType(user_id, role_id) {
+            $('.assign_group').hide();
+            $('.assign_checkbox').prop('checked', false);
+            $('.assign_checkbox').closest('label').removeClass('active');
+            if(user_id != 0) {
+                $('.user_type_checkbox').prop('checked', true);
+                $('.user_type_checkbox').closest('label').addClass('active');
+                $('.assign_user').show();
+
+            } else  if(role_id != 0) {
+                $('.role_type_checkbox').prop('checked', true);
+                $('.role_type_checkbox').closest('label').addClass('active');
+                $('.assign_role').show();
+            } else {
+                $('.email_type_checkbox').prop('checked', true);
+                $('.email_type_checkbox').closest('label').addClass('active');
+                $('.assign_email').show();
+            }
+        }
     });

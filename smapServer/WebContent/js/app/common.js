@@ -2957,6 +2957,21 @@ function getViewLanguages(view) {
 
 }
 
+function validateEmails(emails) {
+	var valid = true;
+    if(emails && emails.trim().length > 0) {
+        var emailArray = emails.split(",");
+        for (i = 0; i < emailArray.length; i++) {
+            var validEmail = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm;
+            if (!validEmail.test(emailArray[i])) {
+            	valid = false;
+                break;
+            }
+        }
+    }
+    return valid;
+}
+
 /*
  * Prevent the menu bar from extending over two lines
  */
