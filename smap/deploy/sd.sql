@@ -987,6 +987,7 @@ create index idx_user_trail_u_id on user_trail(u_id);
 create index idx_ue_ident on upload_event(user_name);
 
 alter table users add column single_submission boolean default false;
+alter table tasks add column complete_all boolean default false;
 
 
 
