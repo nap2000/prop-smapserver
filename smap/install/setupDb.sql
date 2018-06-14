@@ -758,7 +758,8 @@ CREATE TABLE public.tasks (
 	repeat_count integer default 0,
 	guidance text,
 	location_trigger text,
-	deleted boolean
+	deleted boolean,
+	complete_all boolean default false	-- Set true if all assignments associated to this task need to be completed
 );
 SELECT AddGeometryColumn('tasks', 'geo_point', 4326, 'POINT', 2);
 SELECT AddGeometryColumn('tasks', 'geo_point_actual', 4326, 'POINT', 2);
