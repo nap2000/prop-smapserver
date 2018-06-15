@@ -332,13 +332,18 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 taskFeature.properties.guidance = $('#tp_guidance').val();
 
                 /*
-                 * Convert the geoJson geometry into a WKT location for update
+                 * Convert the geoJson geometry into longitude and latitude for update
                  */
                 if (gCurrentTaskFeature.geometry) {
                     if (gCurrentTaskFeature.geometry.coordinates && gCurrentTaskFeature.geometry.coordinates.length > 1) {
-                        taskFeature.properties.location = "POINT(" + gCurrentTaskFeature.geometry.coordinates.join(" ") + ")";
+                        //taskFeature.properties.location = "POINT(" + gCurrentTaskFeature.geometry.coordinates.join(" ") + ")";  // deprecate
+                        taskFeature.properties.lon = gCurrentTaskFeature.geometry.coordinates.coordinates[0];
+                        taskFeature.properties.lat = gCurrentTaskFeature.geometry.coordinates.coordinates[1];
+
                     } else {
-                        taskFeature.properties.location = "POINT(0 0)";
+                        //taskFeature.properties.location = "POINT(0 0)"; // deprecate
+                        taskFeature.properties.lon = 0;
+                        taskFeature.properties.lat = 0;
                     }
                 }
 
