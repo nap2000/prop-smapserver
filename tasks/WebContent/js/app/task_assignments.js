@@ -687,7 +687,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
             /*
              * Function to delete current task group
-             * Keep
              */
             $('#deleteTaskGroup').click(function () {
 
@@ -712,6 +711,17 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
 
             });
+
+            /*
+             * Function to edit email settings for a task group
+             */
+            $('#emailSettings').click(function () {
+
+                $('#emailDetailsPopup').modal("show");
+
+
+            });
+
 
             /*
              * New Style add task function
