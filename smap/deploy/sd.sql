@@ -988,6 +988,7 @@ create index idx_ue_ident on upload_event(user_name);
 
 alter table users add column single_submission boolean default false;
 alter table tasks add column complete_all boolean default false;
+alter table task_group add column email_details text;
 
 
 

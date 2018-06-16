@@ -732,7 +732,8 @@ CREATE TABLE public.task_group (
     address_params text,
     rule text,					-- The criteria for adding a new task to this group (JSON)
     source_s_id integer,			-- The source survey id for quick lookup from notifications engine
-    target_s_id integer
+    target_s_id integer,
+    email_details text
 );
 ALTER TABLE public.task_group OWNER TO ws;
 

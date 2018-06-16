@@ -1051,7 +1051,7 @@
 </div>
 
 <!-- Popup to allow the user to edit email details -->
-<div id="emailDetailsPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addNotificationLabel"
+<div id="emailDetailsPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="emailDetailsLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -1062,10 +1062,18 @@
             </div>
 
             <div class="modal-body">
-                <form id="notification_edit_form" class="form-horizontal" role="form">
+                <form id="emails_details_form" class="form-horizontal" role="form">
 
-                    <div id="email_subject_cont" class="form-group" data-toggle="tooltip" data-container="body"
+                    <div id="email_from_cont" class="form-group" data-toggle="tooltip" data-container="body"
                          title="Subject for the email (optional)">
+                        <label for="email_subject" data-lang="c_from"
+                               class="lang col-sm-2 control-label">from</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="email_from" class="form-control">
+                        </div>
+                    </div>
+                    <div id="email_subject_cont" class="form-group" data-toggle="tooltip" data-container="body"
+                         title="Subject for the email">
                         <label for="email_subject" data-lang="c_subject"
                                class="lang col-sm-2 control-label">subject</label>
                         <div class="col-sm-10">
@@ -1080,12 +1088,11 @@
                         </div>
                     </div>
 
-
                 </form>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">close
                     </button>
-                    <button id="saveNotification" type="button" class="btn btn-primary lang" data-lang="c_save">save
+                    <button id="saveEmailDetails" type="button" class="btn btn-primary lang" data-lang="c_save">save
                     </button>
                 </div>
             </div>

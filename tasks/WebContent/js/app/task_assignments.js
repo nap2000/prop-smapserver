@@ -721,6 +721,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
 
             });
+            $('#saveEmailDetails').click(function(){saveEmailDetails();});
 
 
             /*
@@ -2097,5 +2098,44 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 $('.email_type_checkbox').closest('label').addClass('active');
                 $('.assign_email').show();
             }
+        }
+
+        /*
+         * Save Email Details
+         */
+        function saveEmailDetails() {
+
+            var url,
+                emailDetails ={},
+                emailDetailsString,
+                target = $('#target').val();
+
+            emailDetails.from = $('#email_from').val();
+            emailDetails.subject = $('#email_subject').val();
+            emailDetails.content = $('#email_content').val();
+            emailDetailsString = JSON.stringify(emailDetails);
+
+            addHourglass();
+            $.ajax({
+                type: "POST",
+                dataType: 'text',
+                cache: false,
+                async: false,
+                url: "/surveyKPI/tasks/emaildetails",
+                data: { emaildetails: emailDetailsString },
+                success: function(data, status) {
+                    removeHourglass();
+                    $('#emailDetailsPopup').modal("hide");
+                },
+                error: function(xhr, textStatus, err) {
+                    removeHourglass();
+                    if(xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        alert(localise.set["msg_err_save"] + xhr.responseText);
+                    }
+                }
+            });
+
         }
     });
