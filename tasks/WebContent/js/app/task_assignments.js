@@ -42,6 +42,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             gModalMapInitialised = false,	// Set true then the modal map has been initialised
             gIdx = 0,						// Idx set when external task dropped on calendar
             gSelectedCount = 0;
+            gUnsentEmailCount = 0;
 
         $(document).ready(function () {
 
@@ -197,15 +198,28 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
             getRoles();
             $('.assign_user').show();
-            $('.assign_role').hide();
-            $('.assign_data').hide();
+            $('.assign_role, .assign_email, .assign_data').hide();
             $('input[type=radio][name=assign_type]').change(function() {
-                if (this.id == 'assign_user_type') {
+                if (this.id == 'assign_user_type' || this.id == 'tp_user_type') {
                     $('.assign_user').show();
-                    $('.assign_role').hide();
-                } else {
-                    $('.assign_user').hide();
+                    $('.assign_role,.assign_email').hide();
+                    if($('#users_task_group').val() == -2) {
+                        $('.assign_data').show();
+                    } else {
+                        $('.assign_data').hide();
+                    }
+                } else if (this.id == 'assign_role_type' || this.id == 'tp_role_type') {
+                    $('.assign_user, .assign_email').hide();
                     $('.assign_role').show();
+                    if($('#roles_task_group').val() == -2) {
+                        $('.assign_data').show();
+                    } else {
+                        $('.assign_data').hide();
+                    }
+                } else {
+                    $('.assign_user, .assign_role,.assign_data').hide();
+                    $('.assign_email').show();
+                    $('.assign_data').show();
                 }
             });
 
@@ -231,7 +245,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     baString = JSON.stringify(bulkAction),
                     url;
 
-
                 url = "/surveyKPI/tasks/bulk/";
                 url += globals.gCurrentProject + "/" + globals.gCurrentTaskGroup;
 
@@ -247,9 +260,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                         removeHourglass();
                         refreshAssignmentData();
                     }, error: function (data, status) {
-                        console.log(data);
                         removeHourglass();
-                        alert("Error: Failed to update tasks");
+                        alert(localise.set["c_error"] +": " + data.responseText);
                     }
                 });
 
@@ -292,7 +304,20 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 }
                 taskFeature.properties.name = $('#tp_name').val();		// task name
                 taskFeature.properties.form_id = $('#tp_form_name').val();	// form id
-                taskFeature.properties.assignee = $('#tp_user').val();	// assignee
+
+                taskFeature.properties.assign_type = $("input[name='assign_type']:checked", "#task_properties").attr("id");
+                if(taskFeature.properties.assign_type == 'tp_user_type') {
+                    taskFeature.properties.assignee = $('#tp_user').val();
+                } else if(taskFeature.properties.assign_type == 'tp_email_type') {
+                    taskFeature.properties.assignee = 0;
+                    taskFeature.properties.emails = $('#tp_assign_emails').val();
+                    if(!validateEmails(taskFeature.properties.emails)) {
+                        alert(localise.set["msg_inv_email"]);
+                        return false;
+                    }
+                }
+
+
                 taskFeature.properties.repeat = $('#tp_repeat').prop('checked');
 
                 fromDate = $('#tp_from').data("DateTimePicker").date();
@@ -307,13 +332,18 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 taskFeature.properties.guidance = $('#tp_guidance').val();
 
                 /*
-                 * Convert the geoJson geometry into a WKT location for update
+                 * Convert the geoJson geometry into longitude and latitude for update
                  */
                 if (gCurrentTaskFeature.geometry) {
                     if (gCurrentTaskFeature.geometry.coordinates && gCurrentTaskFeature.geometry.coordinates.length > 1) {
-                        taskFeature.properties.location = "POINT(" + gCurrentTaskFeature.geometry.coordinates.join(" ") + ")";
+                        //taskFeature.properties.location = "POINT(" + gCurrentTaskFeature.geometry.coordinates.join(" ") + ")";  // deprecate
+                        taskFeature.properties.lon = gCurrentTaskFeature.geometry.coordinates.coordinates[0];
+                        taskFeature.properties.lat = gCurrentTaskFeature.geometry.coordinates.coordinates[1];
+
                     } else {
-                        taskFeature.properties.location = "POINT(0 0)";
+                        //taskFeature.properties.location = "POINT(0 0)"; // deprecate
+                        taskFeature.properties.lon = 0;
+                        taskFeature.properties.lat = 0;
                     }
                 }
 
@@ -395,21 +425,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     $('#add_current').prop('checked', tgRule.add_current);
                     $('#add_future').prop('checked', tgRule.add_future);
 
-                    if(tgRule.user_id != 0) {
-                        $('#assign_user_type').prop('checked', true);
-                        $('#assign_role_type').prop('checked', false);
-                        $('#assign_user_type').closest('label').addClass('active');
-                        $('#assign_role_type').closest('label').removeClass('active');
-                        $('.assign_user').show();
-                        $('.assign_role').hide();
-                    } else {
-                        $('#assign_user_type').prop('checked', false);
-                        $('#assign_role_type').prop('checked', true);
-                        $('#assign_user_type').closest('label').removeClass('active');
-                        $('#assign_role_type').closest('label').addClass('active');
-                        $('.assign_user').hide();
-                        $('.assign_role').show();
-                    }
+                    setupAssignType(tgRule.user_id, tgRule.role_id)// Set up assign type
+
                     if(tgRule.user_id == -2 || tgRule.role_id == -2) {
                         $('.assign_data').show();
                     } else {
@@ -492,7 +509,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 $('#assign_survey_form')[0].reset();
 
                 $('#assign_user_type').prop('checked', true);
-                $('#assign_role_type').prop('checked', false);
+                $('#assign_role_type, #assign_email_type').prop('checked', false);
                 $('#assign_user_type').closest('label').addClass('active');
                 $('#assign_role_type').closest('label').removeClass('active');
                 $('.assign_user').show();
@@ -502,8 +519,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 $('#add_task_from_existing').hide();
                 $('.simple_filter').hide();
                 $('.advanced_filter').hide();
-
-
 
                 // open the modal
                 $('#addTask').find('input,select,#addNewGroupSave').prop('disabled', false);
@@ -550,12 +565,12 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     assignObj["survey_name"] = $('#survey_to_complete option:selected').text();	// The display name of the survey to complete
                     assignObj["target_survey_id"] = $('#survey_to_complete option:selected').val(); 		// The form id is the survey id of the survey used to complete the task!
 
-                    var assignType = $("input[name='assign_type']:checked").attr("id");
+                    var assignType = $("input[name='assign_type']:checked", "#addTask").attr("id");
                     if(assignType == 'assign_user_type') {
                         assignObj["user_id"] = $('#users_task_group option:selected').val(); 		// User assigned to complete the task
                         assignObj["role_id"] = 0;
                         assignObj["fixed_role_id"] = 0;
-                    } else {
+                    } else if(assignType == 'assign_role_type') {
                         assignObj["user_id"] = 0;
                         assignObj["role_id"] = $('#roles_task_group option:selected').val();
                         assignObj["fixed_role_id"] = $('#fixed_role option:selected').val();
@@ -565,12 +580,29 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                             alert(localise.set["msg_val_ad2"]);
                             return;
                         }
+                    } else if(assignType == 'assign_email_type') {
+                        assignObj["user_id"] = 0;
+                        assignObj["role_id"] = 0;
+                        assignObj["fixed_role_id"] = 0;
+                        assignObj["emails"] = $('#assign_emails').val();
+
+                        // Text email must be valid email addresses
+                        var emails = assignObj["emails"];
+                        if(emails && emails.trim().length > 0) {
+                            var emailArray = emails.split(",");
+                            for (i = 0; i < emailArray.length; i++) {
+                                if (!validateEmails(emailArray[i])) {
+                                    alert(localise.set["msg_inv_email"]);
+                                    break;
+                                }
+                            }
+                        }
                     }
-                    if(assignObj["user_id"] == -2 || assignObj["role_id"] == -2) {
+                    if(assignObj["user_id"] == -2 || assignObj["role_id"] == -2 || assignType == 'assign_email_type') {
                         assignObj["assign_data"] = $('#assign_data').val();
 
                         // validate
-                        if (typeof assignObj["assign_data"] === "undefined" || assignObj["assign_data"].trim().length == 0) {
+                        if (typeof assignObj["assign_data"] === "undefined" && assignObj["assign_data"].trim().length == 0) {
                             alert(localise.set["msg_val_ad"]);
                             return;
                         }
@@ -651,13 +683,10 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                     }
                 });
-
-
             });
 
             /*
              * Function to delete current task group
-             * Keep
              */
             $('#deleteTaskGroup').click(function () {
 
@@ -674,8 +703,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                                 refreshTaskGroupData();
                             }, error: function (data, status) {
                                 removeHourglass();
-                                console.log(data);
-                                alert("Error: Failed to delete task group");
+                                alert(localise.set["c_error"] +": " + data.responseText);
                             }
                         });
                     }
@@ -683,6 +711,28 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
 
             });
+
+            /*
+             * Function to edit email settings for a task group
+             */
+            $('#emailSettings').click(function () {
+
+                var tg = gTaskGroups[gTaskGroupIndex];
+                var emaildetails = tg.emaildetails;
+
+                $('#email_details_form')[0].reset();
+                if(emaildetails) {
+                    $('#email_from').val(emaildetails.from);
+                    $('#email_subject').val(emaildetails.subject);
+                    $('#email_content').val(emaildetails.content);
+                }
+
+                $('#emailDetailsPopup').modal("show");
+
+
+            });
+            $('#saveEmailDetails').click(function(){saveEmailDetails();});
+
 
             /*
              * New Style add task function
@@ -729,7 +779,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                             }, error: function (data, status) {
                                 console.log(data);
                                 removeHourglass();
-                                alert("Error: Failed to update tasks");
+                                alert(localise.set["c_error"] +": " + data.responseText);
                             }
                         });
                     }
@@ -752,6 +802,10 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             enableUserProfileBS();										// Enable user profile button
             $('#m_refresh').click(function (e) {	// Add refresh action
                 refreshAssignmentData();
+            });
+
+            $('#m_email_unsent').click(function (e) {	// Add email unsent action
+                emailUnsent();
             });
 
             $('#tasks_print').button();									// Add button styling
@@ -871,6 +925,25 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 });
 
             });
+
+            return tasks;
+        }
+
+        /*
+         * Get an array of taskIds that are displayed and an email has not been sent
+         */
+        function getUnsentTaskIds() {
+
+            var tasks = [],
+                idx;
+            for(idx = 0; idx < globals.gTaskList.features.length; idx++) {
+                if (globals.gTaskList.features[idx].properties.status === "unsent") {
+                    tasks.push({
+                        taskId: globals.gTaskList.features[idx].properties.id,
+                        assignmentId: globals.gTaskList.features[idx].properties.a_id
+                    });
+                }
+            }
 
             return tasks;
         }
@@ -1022,7 +1095,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                             if (xhr.readyState == 0 || xhr.status == 0) {
                                 return;  // Not an error
                             } else {
-                                alert("Error: Failed to get options for the question: " + err);
+                                alert(localise.set["c_error"] +": " + err);
                             }
                         }
                     });
@@ -1116,7 +1189,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                                 if (xhr.readyState == 0 || xhr.status == 0) {
                                     return;  // Not an error
                                 } else {
-                                    alert("Error: Failed to get table description: " + err);
+                                    alert(localise.set["c_error"] + ": " + err);
                                 }
                             }
                         });
@@ -1325,6 +1398,40 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
         }
 
         /*
+         * Email unsent tasks
+         */
+        function emailUnsent() {
+
+            var bulkAction = {
+                action: "email_unsent",
+                tasks: getUnsentTaskIds()
+                };
+            var baString = JSON.stringify(bulkAction);
+            var url = "/surveyKPI/tasks/bulk/" + globals.gCurrentProject
+                + "/" + globals.gCurrentTaskGroup;
+
+            $('.for_unsent_email').addClass('disabled');    // Disable send button
+
+            addHourglass();
+            $.ajax({
+                type: "POST",
+                dataType: 'text',
+                cache: false,
+                contentType: "application/json",
+                url: url,
+                data: {tasks: baString},
+                success: function (data, status) {
+                    removeHourglass();
+                    refreshAssignmentData();
+                }, error: function (data, status) {
+                    removeHourglass();
+                    alert(localise.set["c_error"] +": " + data.responseText);
+                }
+            });
+
+        }
+
+        /*
          * Get the assignments from the server
          */
         function refreshAssignmentData() {
@@ -1380,6 +1487,13 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             if (typeof tasks != "undefined") {
 
                 $('#task_table_body').empty().html(getTableBody(tasks));
+
+                if(gUnsentEmailCount > 0) {
+                    $('.for_unsent_email').removeClass('disabled');
+                } else {
+                    $('.for_unsent_email').addClass('disabled');
+                }
+
 
                 // Respond to selection of a task
                 $('input', '#task_table_body').change(function (event) {
@@ -1450,8 +1564,14 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
              */
             $('#tp_repeat').prop('checked', task.repeat);
             $('#tp_name').val(task.name);		// name
-            $('#tp_form_name').val(taskFeature.properties.form_id);	// form id
+            if(isNew) {
+                $('#tp_form_name').val($('#tp_form_name option:first').val());
+            } else {
+                $('#tp_form_name').val(taskFeature.properties.form_id);	// form id
+            }
+            setupAssignType(taskFeature.properties.assignee, 0);
             $('#tp_user').val(taskFeature.properties.assignee);	// assignee
+            $('#tp_assign_emails').val(taskFeature.properties.emails);
             $('#tp_repeat').prop('checked', taskFeature.properties.repeat);
 
             // Set end date first as otherwise since it will be null, it will be defaulted when from date set
@@ -1620,12 +1740,20 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 idx = -1,
                 i;
 
+            gUnsentEmailCount = 0;
+
             // Filter on status
             var statusFilterArray = $('#status_filter').val();
             var statusFilter = statusFilterArray ? statusFilterArray.join('') : "";
+            var statusLookup;
 
             for (i = 0; i < tasks.length; i++) {
                 task = tasks[i];
+
+                if(task.properties.status === "unsent") {
+                    gUnsentEmailCount++;
+                }
+
                 if(statusFilter.indexOf(task.properties.status) >= 0) {
                     tab[++idx] = '<tr>';
                     tab[++idx] = addSelectCheckBox(false, i, false);
@@ -1643,7 +1771,11 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     tab[++idx] = '</td>';
 
                     tab[++idx] = '<td class="' + getStatusClass(task.properties.status) + '">';	// status
-                    tab[++idx] = localise.set[task.properties.status];
+                    statusLookup = task.properties.status;
+                    if(statusLookup === "error" || statusLookup === "pending") {
+                        statusLookup = "c_" + statusLookup;
+                    }
+                    tab[++idx] = localise.set[statusLookup];
                     tab[++idx] = '</td>';
 
                     tab[++idx] = '<td>';		// Assignee
@@ -1723,7 +1855,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
             var statusClass = "";
 
-            if (status === "new") {
+            if (status === "new" || status === "unsent" || status === "unsubscribed") {
                 statusClass = "bg-danger";
             } else if (status === "submitted") {
                 statusClass = "bg-success";
@@ -1958,4 +2090,62 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             return events;
         }
 
+        function setupAssignType(user_id, role_id) {
+            $('.assign_group').hide();
+            $('.assign_checkbox').prop('checked', false);
+            $('.assign_checkbox').closest('label').removeClass('active');
+            if(user_id != 0) {
+                $('.user_type_checkbox').prop('checked', true);
+                $('.user_type_checkbox').closest('label').addClass('active');
+                $('.assign_user').show();
+
+            } else  if(role_id != 0) {
+                $('.role_type_checkbox').prop('checked', true);
+                $('.role_type_checkbox').closest('label').addClass('active');
+                $('.assign_role').show();
+            } else {
+                $('.email_type_checkbox').prop('checked', true);
+                $('.email_type_checkbox').closest('label').addClass('active');
+                $('.assign_email').show();
+            }
+        }
+
+        /*
+         * Save Email Details
+         */
+        function saveEmailDetails() {
+
+            var url,
+                emailDetails ={},
+                emailDetailsString,
+                target = $('#target').val();
+
+            emailDetails.from = $('#email_from').val();
+            emailDetails.subject = $('#email_subject').val();
+            emailDetails.content = $('#email_content').val();
+            emailDetailsString = JSON.stringify(emailDetails);
+
+            addHourglass();
+            $.ajax({
+                type: "POST",
+                dataType: 'text',
+                cache: false,
+                contentType: "application/json",
+                url: "/surveyKPI/tasks/emaildetails/" + globals.gCurrentProject + "/" + globals.gCurrentTaskGroup,
+                data: { emaildetails: emailDetailsString },
+                success: function(data, status) {
+                    removeHourglass();
+                    $('#emailDetailsPopup').modal("hide");
+                },
+                error: function(xhr, textStatus, err) {
+                    removeHourglass();
+                    if(xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        alert(localise.set["msg_err_save"] + xhr.responseText);
+                    }
+                }
+            });
+
+        }
     });

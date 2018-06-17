@@ -9,6 +9,7 @@ define({
     "m_reports_leg": "Legacy Reports",
     "m_reports_new": "New Reports",
     "m_refresh": "Refresh",
+    "m_email_unsent": "Email Unsent",
     "m_export": "Export",
     "m_export_media": "Export with Media",
     "m_discuss": "Discuss",
@@ -277,6 +278,7 @@ define({
     "c_unsubscribe": "Unsubscribe",
     "c_subscribe": "Subscribe",
     "c_unsent": "Email not sent",
+    "c_pending": "Pending",
 
     // File Types
     "ft": "File Type",
@@ -529,6 +531,8 @@ define({
     "rejected": "Rejected",
     "cancelled": "Cancelled",
     "deleted": "Deleted",
+    "unsent": "Not Sent",
+    "unsubscribed": "Unsubscribed",
 
     // template load errors
     "e_u_err": "Form Upload Error",
