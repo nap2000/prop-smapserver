@@ -975,11 +975,20 @@ create TABLE people (
 	);
 ALTER TABLE people OWNER TO ws;
 
+-- Add email to assignments
+alter table assignments add column email text;
+alter table assignments add column action_link text;
+alter table tasks add column instance_id text;			-- ID of the record that prompted this task
+
 -- Improve performance of user_trail and delete opeations on users table
 create index idx_user_trail_u_id on user_trail(u_id);
 
 -- Improve performance of queries that access user ident in upload_event
 create index idx_ue_ident on upload_event(user_name);
+
+alter table users add column single_submission boolean default false;
+alter table tasks add column complete_all boolean default false;
+alter table task_group add column email_details text;
 
 
 

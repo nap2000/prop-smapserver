@@ -246,6 +246,7 @@ CREATE TABLE users (
 	action_details text,			-- Details of a specific action the user can undertake
 	lastalert text,					-- Time last alert sent to the user
 	seen boolean,					-- True if the user has aknowledged the alert
+	single_submission boolean default false,		-- Only one submission can be accepted by this user
 	created timestamp with time zone
 	);
 CREATE UNIQUE INDEX idx_users_ident ON users(ident);
@@ -731,7 +732,8 @@ CREATE TABLE public.task_group (
     address_params text,
     rule text,					-- The criteria for adding a new task to this group (JSON)
     source_s_id integer,			-- The source survey id for quick lookup from notifications engine
-    target_s_id integer
+    target_s_id integer,
+    email_details text
 );
 ALTER TABLE public.task_group OWNER TO ws;
 
@@ -751,13 +753,14 @@ CREATE TABLE public.tasks (
 	schedule_finish timestamp with time zone,
 	deleted_at timestamp with time zone,
 	address text,
-	update_id text,
+	instance_id,			-- Record on which this task is based
+	update_id text,		-- Record to update
 	repeat boolean,
 	repeat_count integer default 0,
-	email text,
 	guidance text,
 	location_trigger text,
-	deleted boolean
+	deleted boolean,
+	complete_all boolean default false	-- Set true if all assignments associated to this task need to be completed
 );
 SELECT AddGeometryColumn('tasks', 'geo_point', 4326, 'POINT', 2);
 SELECT AddGeometryColumn('tasks', 'geo_point_actual', 4326, 'POINT', 2);
@@ -787,8 +790,10 @@ CREATE TABLE public.assignments (
 	id integer NOT NULL DEFAULT nextval('assignment_id_seq') PRIMARY KEY,
 	assignee integer,
 	assignee_name text,			-- Name of assigned person
-	status text NOT NULL,		-- Current status: accepted || rejected || submitted || deleted	
+	email text,					-- Email to send the task to
+	status text NOT NULL,		-- Current status: accepted || rejected || submitted || deleted || unsent || unsubscribed
 	task_id integer REFERENCES tasks(id) ON DELETE CASCADE,
+	action_link text,			-- Used with single shot web form tasks
 	assigned_date timestamp with time zone,
 	completed_date timestamp with time zone,		-- Date of submitted || rejected
 	cancelled_date timestamp with time zone,
