@@ -209,6 +209,8 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                     }
                 });
 
+            } else {
+                alert(localise.set["msg_inv_email"]);
             }
         }
 
@@ -218,15 +220,42 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
         function saveEmail() {
 
             var notification = {};
+            var emails = $('#notify_emails').val();
+            var emailQuestion = $('#email_question').val();
+            var emailMetaItem = $('#email_meta').val();
+            var emailArray;
 
-            notification.target = "email";
-            notification.notifyDetails = {};
-            notification.notifyDetails.emails = $('#notify_emails').val().split(",");
-            notification.notifyDetails.emailQuestion = $('#email_question').val();
-            notification.notifyDetails.emailMeta = $('#email_meta').val();
-            notification.notifyDetails.subject = $('#email_subject').val();
-            notification.notifyDetails.content = $('#email_content').val();
-            notification.notifyDetails.attach = $('#email_attach').val();
+            // validate
+            // Must specifify an email
+            notification.error = false;
+            if((!emails || emails.trim().length == 0) && (!emailQuestion || emailQuestion == "-1")
+                    && (!emailMetaItem || emailMetaItem == "-1")) {
+                notification.error = true;
+                notification.errorMsg = localise.set["msg_inv_email"];
+            }
+
+            // Text email must be valid email addresses
+            if(emails && emails.trim().length > 0) {
+                emailArray = emails.split(",");
+                for (i = 0; i < emailArray.length; i++) {
+                    if (!validateEmails(emailArray[i])) {
+                        notification.error = true;
+                        notification.errorMsg = localise.set["msg_inv_email"];
+                        break;
+                    }
+                }
+            }
+
+            if(!notification.error) {
+                notification.target = "email";
+                notification.notifyDetails = {};
+                notification.notifyDetails.emails = emailArray;
+                notification.notifyDetails.emailQuestion = emailQuestion;
+                notification.notifyDetails.emailMeta = emailMetaItem;
+                notification.notifyDetails.subject = $('#email_subject').val();
+                notification.notifyDetails.content = $('#email_content').val();
+                notification.notifyDetails.attach = $('#email_attach').val();
+            }
 
             return notification;
         }
@@ -615,6 +644,9 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 h[++idx] = data[i].target;
                 h[++idx] = '</td>';
 
+                if(!data[i].notifyDetails.emails) {
+                    data[i].notifyDetails.emails = [];
+                }
                 // details
                 h[++idx] = '<td>';
                 if(data[i].target === "email" && data[i].notifyDetails) {
@@ -631,7 +663,8 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                             }
                             h[++idx] = localise.set["msg_n1"];
                         }
-                        if(data[i].notifyDetails.emailMeta && data[i].notifyDetails.emailMeta.length > 0) {
+                        if(data[i].notifyDetails.emailMeta && data[i].notifyDetails.emailMeta.length > 0
+                                && data[i].notifyDetails.emailMeta != "-1") {
                             if(notifyEmail || (data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0)) {
                                 h[++idx] = ', '
                             }
