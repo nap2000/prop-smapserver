@@ -717,6 +717,16 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
              */
             $('#emailSettings').click(function () {
 
+                var tg = gTaskGroups[gTaskGroupIndex];
+                var emaildetails = tg.emaildetails;
+
+                $('#email_details_form')[0].reset();
+                if(emaildetails) {
+                    $('#email_from').val(emaildetails.from);
+                    $('#email_subject').val(emaildetails.subject);
+                    $('#email_content').val(emaildetails.content);
+                }
+
                 $('#emailDetailsPopup').modal("show");
 
 
@@ -2120,8 +2130,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 type: "POST",
                 dataType: 'text',
                 cache: false,
-                async: false,
-                url: "/surveyKPI/tasks/emaildetails",
+                contentType: "application/json",
+                url: "/surveyKPI/tasks/emaildetails/" + globals.gCurrentProject + "/" + globals.gCurrentTaskGroup,
                 data: { emaildetails: emailDetailsString },
                 success: function(data, status) {
                     removeHourglass();
