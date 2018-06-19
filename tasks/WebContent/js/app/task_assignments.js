@@ -1772,7 +1772,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                     tab[++idx] = '<td class="' + getStatusClass(task.properties.status) + '">';	// status
                     statusLookup = task.properties.status;
-                    if(statusLookup === "error" || statusLookup === "pending") {
+                    if(statusLookup === "error" || statusLookup === "pending" || statusLookup === "blocked") {
                         statusLookup = "c_" + statusLookup;
                     }
                     tab[++idx] = localise.set[statusLookup];
@@ -1855,12 +1855,14 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
             var statusClass = "";
 
-            if (status === "new" || status === "unsent" || status === "unsubscribed") {
+            if (status === "new" || status === "unsent" || status === "unsubscribed" || status === "blocked") {
                 statusClass = "bg-danger";
             } else if (status === "submitted") {
                 statusClass = "bg-success";
             } else if (status === "accepted") {
                 statusClass = "bg-warning";
+            } else {
+                statusClass = "bg-success";
             }
             return statusClass;
         }

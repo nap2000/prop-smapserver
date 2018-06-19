@@ -451,7 +451,9 @@ $(document).ready(function() {
 				organisation.allow_twitter = true;
 			} else if(options[i] === "can_edit") {
 				organisation.can_edit = true;
-			} else if(options[i] === "ft_sync_incomplete") {
+			} else if(options[i] === "email_task") {
+                organisation.email_task = true;
+            } else if(options[i] === "ft_sync_incomplete") {
 				organisation.ft_sync_incomplete = true;
 			}
 		}
@@ -951,7 +953,9 @@ function openOrganisationDialog(existing, organisationIndex) {
 				this.checked = org.allow_twitter;
 			} else if($(this).val() === "can_edit") {
 				this.checked = org.can_edit;
-			} else if($(this).val() === "ft_sync_incomplete") {
+			} else if($(this).val() === "email_task") {
+                this.checked = org.email_task;
+            } else if($(this).val() === "ft_sync_incomplete") {
 				this.checked = org.ft_sync_incomplete;
 			} else if($(this).val() === "ft_odk_style_menus") {
 				this.checked = org.ft_odk_style_menus;

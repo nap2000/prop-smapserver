@@ -116,6 +116,7 @@ create TABLE organisation (
 	allow_facebook boolean,
 	allow_twitter boolean,
 	can_edit boolean,
+	email_task boolean;
 	ft_delete text,
 	ft_send_location text,
 	ft_sync_incomplete boolean,
