@@ -779,6 +779,7 @@ define({
     "u_det_o_email": "Email Options",
     "u_det_o_other": "Other Options",
     "u_other_edit": "Allow editing of results",
+    "u_email_tasks": "Allow sending of task emails",
     "u_mb_k": "Mapbox Key",
     "u_g_k": "Google Maps Key",
     "u_smtp": "Smtp Host",
