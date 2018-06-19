@@ -188,7 +188,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             });
             $('.file-inputs').bootstrapFileInput();
 
-            $('.assign_data').hide();
             $('#users_task_group, #roles_task_group').change(function() {
                 if($(this).val() == -2) {
                     $('.assign_data').show();
@@ -428,9 +427,10 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     $('#add_current').prop('checked', tgRule.add_current);
                     $('#add_future').prop('checked', tgRule.add_future);
 
-                    setupAssignType(tgRule.user_id, tgRule.role_id)// Set up assign type
+                    setupAssignType(tgRule.user_id, tgRule.role_id);    // Set up assign type
 
-                    if(tgRule.user_id == -2 || tgRule.role_id == -2) {
+                    if(tgRule.user_id == -2 || tgRule.role_id == -2 ||
+                            (tgRule.user_id == 0 && tgRule.role_id == 0)) {
                         $('.assign_data').show();
                     } else {
                         $('.assign_data').hide();
