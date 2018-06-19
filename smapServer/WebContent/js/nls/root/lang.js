@@ -463,6 +463,7 @@ define({
     "msg_uns": "Unsubscribe sucessful",
     "msg_s1": "An email has been sent to the address you provided.  Click on the link to confirm your subscription",
     "msg_s2": "Subscribed sucessfully",
+    "msg_s3": "Enter your email address to subscribe to emails",
 
     // Editor
     "e_b_e": "Base on existing form",
