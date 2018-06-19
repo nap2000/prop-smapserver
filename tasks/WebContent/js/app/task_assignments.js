@@ -32,6 +32,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
         // The following globals are only in this java script file
         var gTasks,					// Object containing the task data retrieved from the database
             gTaskGroupIndex = -1,	// Currently selected task group
+            gUpdateTaskGroupIndex,  // A task group being edited
             gTaskGroups,            // Current list of task groups
             gTaskParams = [],		// Parameters for a new task
             gFilterqType,			// The type of the filter question select, select1, int, string
@@ -398,6 +399,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                 // Clear form
                 $('#assign_survey_form')[0].reset();
+                gUpdateTaskGroupIndex = gTaskGroupIndex;
 
                 var tg = gTaskGroups[gTaskGroupIndex];
                 var rule = gTaskGroups[gTaskGroupIndex].rule;
@@ -420,6 +422,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     $('#roles_task_group').val(tgRule.role_id);
                     $('#assign_data').val(tgRule.assign_data);
                     $('#fixed_role').val(tgRule.fixed_role_id);
+                    $('#assign_emails').val(tgRule.emails);
                     $('#survey').val(tg.source_s_id);
                     $('#update_results').prop('checked', tgRule.update_results);
                     $('#add_current').prop('checked', tgRule.add_current);
@@ -484,8 +487,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                 surveyChanged(filterQuestion);    // Set survey related parameters
 
-                // open the modal read only
-                $('#addTask').find('input,select,#addNewGroupSave').prop('disabled', true);
+                // open the modal for update
+                $('#add_current').prop('disabled', true);
                 $('#addTaskLabel').text(localise["t_edit_group"]);
 
 
@@ -507,6 +510,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                 // Clear form
                 $('#assign_survey_form')[0].reset();
+                gUpdateTaskGroupIndex = -1;
 
                 $('#assign_user_type').prop('checked', true);
                 $('#assign_role_type, #assign_email_type').prop('checked', false);
@@ -521,7 +525,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 $('.advanced_filter').hide();
 
                 // open the modal
-                $('#addTask').find('input,select,#addNewGroupSave').prop('disabled', false);
+                $('#addTask').find('input,select, #addNewGroupSave').prop('disabled', false);
                 $('#addTaskLabel').text(localise["t_add_group"]);
                 $('#addTask').modal("show");
 
@@ -529,7 +533,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
 
             /*
-             * Create a new group,
+             * Create a new group or save the edited task group,
              *  optionally populated with tasks generated from existing survey results
              *  or from an XLS file
              */
@@ -538,10 +542,13 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     assignString,
                     url,
                     filterObj = {},
-                    filterqId,
-                    filteroId,
                     source_survey,
-                    taskGroup;
+                    taskGroup,
+                    tgId = -1;
+
+                if(gUpdateTaskGroupIndex > -1) {
+                    tgId = gTaskGroups[gTaskGroupIndex].tg_id;
+                }
 
                 // validation
                 if (!validDates()) {
@@ -661,29 +668,57 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 globals.gCurrentUserId = undefined;
                 globals.gCurrentUserName = undefined;
 
-                addHourglass();
-                $.ajax({
-                    type: "POST",
-                    url: "/surveyKPI/assignments/addSurvey/" + globals.gCurrentProject,
-                    cache: false,
-                    data: {settings: assignString},
-                    dataType: 'json',
-                    success: function (data, status) {
-                        removeHourglass();
-                        $('#addTask').modal("hide");
-                        globals.gCurrentTaskGroup = data.tg_id;
-                        refreshTaskGroupData();
-                    }, error: function (data, status) {
-                        removeHourglass();
-                        if (data.responseText.indexOf("<html>") !== 0) {
-                            alert(localise.set["c_error"] + " : " + data.responseText);
-                        } else {
-                            alert(localise.set["msg_err_upd"]);
-                        }
+                if(gUpdateTaskGroupIndex < 0) {
+                    // Add new task group
+                    addHourglass();
+                    $.ajax({
+                        type: "POST",
+                        url: "/surveyKPI/assignments/addSurvey/" + globals.gCurrentProject,
+                        cache: false,
+                        data: {settings: assignString},
+                        dataType: 'json',
+                        success: function (data, status) {
+                            removeHourglass();
+                            $('#addTask').modal("hide");
+                            globals.gCurrentTaskGroup = data.tg_id;
+                            refreshTaskGroupData();
+                        }, error: function (data, status) {
+                            removeHourglass();
+                            if (data.responseText.indexOf("<html>") !== 0) {
+                                alert(localise.set["c_error"] + " : " + data.responseText);
+                            } else {
+                                alert(localise.set["msg_err_upd"]);
+                            }
 
-                    }
-                });
+                        }
+                    });
+                } else {
+                    // update task group
+                    addHourglass();
+                    $.ajax({
+                        type: "POST",
+                        url: "/surveyKPI/assignments/updatetaskgroup/" + globals.gCurrentProject + "/" + tgId,
+                        cache: false,
+                        data: {settings: assignString},
+                        dataType: 'json',
+                        success: function (data, status) {
+                            removeHourglass();
+                            $('#addTask').modal("hide");
+                            globals.gCurrentTaskGroup = data.tg_id;
+                            refreshTaskGroupData();
+                        }, error: function (data, status) {
+                            removeHourglass();
+                            if (data.responseText.indexOf("<html>") !== 0) {
+                                alert(localise.set["c_error"] + " : " + data.responseText);
+                            } else {
+                                alert(localise.set["msg_err_upd"]);
+                            }
+
+                        }
+                    });
+                }
             });
+
 
             /*
              * Function to delete current task group
