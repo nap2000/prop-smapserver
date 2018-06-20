@@ -96,7 +96,12 @@ $(document).ready(function() {
 		$('#formsPanel').show();
 		$('#userPanel').hide();
     })
-	
+
+    // Refresh menu
+    $('#m_refresh').click(function () {
+        projectSet();
+    });
+
     /*
 	 * Save the user details
 	 * There is some overlap between this and saving the user profile
