@@ -425,7 +425,7 @@ $(document).ready(function() {
 					if(xhr.readyState == 0 || xhr.status == 0) {
 			              return;  // Not an error
 					} else {
-						alert("Error: Failed to save languages: " + xhr.responseText);
+						alert(localise.set["msg_err_save"] + " " + xhr.responseText);
 					}
 				}
 		});
@@ -453,7 +453,7 @@ $(document).ready(function() {
 					if(xhr.readyState == 0 || xhr.status == 0) {
 			              return;  // Not an error
 					} else {
-						alert("Error: Failed to save pulldata settings: " + xhr.responseText);
+						alert(localise.set["msg_err_save"] + ' ' + xhr.responseText);
 					}
 				}
 		});

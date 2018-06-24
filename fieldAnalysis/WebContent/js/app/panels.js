@@ -860,7 +860,6 @@ function savePanels(newPanel) {
 			  getPanels(globals.gCurrentProject);
 		  }, error: function(data, status) {
 			  removeHourglass();
-			  console.log("Error: Failed to save panel");
 			  // Fail silently - not a big deal if settings can't be saved
 		  }
 	});
