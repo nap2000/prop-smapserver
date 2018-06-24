@@ -204,7 +204,6 @@ function saveCurrentProject(projectId, surveyId, taskGroupId) {
 				  removeHourglass();
 			  }, error: function(data, status) {
 				  removeHourglass();
-				  console.log("Error: Failed to save current project");
 			  }
 		});
 	}

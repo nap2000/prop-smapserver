@@ -219,7 +219,7 @@ function saveTranslations(callback) {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 	              return;  // Not an error
 			} else {
-				alert("Error: Failed to save translations: " + err);
+				alert(localise.set["msg_err_save"] + ' ' + err);
 			}
 					
 			if(typeof responseFn === "function") { 
