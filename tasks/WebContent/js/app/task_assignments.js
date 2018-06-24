@@ -2172,6 +2172,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 data: { emaildetails: emailDetailsString },
                 success: function(data, status) {
                     removeHourglass();
+                    refreshTaskGroupData();
                     $('#emailDetailsPopup').modal("hide");
                 },
                 error: function(xhr, textStatus, err) {
