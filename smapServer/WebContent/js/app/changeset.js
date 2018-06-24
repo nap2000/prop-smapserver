@@ -209,7 +209,7 @@ define([
                     if(xhr.readyState == 0 || xhr.status == 0) {
                         // Not an error
                     } else {
-                        bootbox.alert("Error: Failed to save survey: " + err);
+                        bootbox.alert(localise.set["msg_err_save"] + ' ' + err);
                     }
                 }
             });
