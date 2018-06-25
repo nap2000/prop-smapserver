@@ -485,6 +485,15 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     $('#add_task_from_existing').hide();
                 }
 
+                // Set email details
+                var emaildetails = tg.emaildetails;
+                if(emaildetails) {
+                    $('#email_from').val(emaildetails.from);
+                    $('#email_subject').val(emaildetails.subject);
+                    $('#email_content').val(emaildetails.content);
+                }
+
+
                 surveyChanged(filterQuestion);    // Set survey related parameters
 
                 // open the modal for update
@@ -664,6 +673,13 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                 }
 
+                // Add email details
+                assignObj["emailDetails"] = {
+                    from: $('#email_from').val(),
+                    subject: $('#email_subject').val(),
+                    content: $('#email_content').val()
+                }
+
                 assignString = JSON.stringify(assignObj);
                 globals.gCurrentUserId = undefined;
                 globals.gCurrentUserName = undefined;
@@ -746,28 +762,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
 
             });
-
-            /*
-             * Function to edit email settings for a task group
-             */
-            $('#emailSettings').click(function () {
-
-                var tg = gTaskGroups[gTaskGroupIndex];
-                var emaildetails = tg.emaildetails;
-
-                $('#email_details_form')[0].reset();
-                if(emaildetails) {
-                    $('#email_from').val(emaildetails.from);
-                    $('#email_subject').val(emaildetails.subject);
-                    $('#email_content').val(emaildetails.content);
-                }
-
-                $('#emailDetailsPopup').modal("show");
-
-
-            });
-            $('#saveEmailDetails').click(function(){saveEmailDetails();});
-
 
             /*
              * New Style add task function
@@ -2147,43 +2141,4 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             }
         }
 
-        /*
-         * Save Email Details
-         */
-        function saveEmailDetails() {
-
-            var url,
-                emailDetails ={},
-                emailDetailsString,
-                target = $('#target').val();
-
-            emailDetails.from = $('#email_from').val();
-            emailDetails.subject = $('#email_subject').val();
-            emailDetails.content = $('#email_content').val();
-            emailDetailsString = JSON.stringify(emailDetails);
-
-            addHourglass();
-            $.ajax({
-                type: "POST",
-                dataType: 'text',
-                cache: false,
-                contentType: "application/json",
-                url: "/surveyKPI/tasks/emaildetails/" + globals.gCurrentProject + "/" + globals.gCurrentTaskGroup,
-                data: { emaildetails: emailDetailsString },
-                success: function(data, status) {
-                    removeHourglass();
-                    refreshTaskGroupData();
-                    $('#emailDetailsPopup').modal("hide");
-                },
-                error: function(xhr, textStatus, err) {
-                    removeHourglass();
-                    if(xhr.readyState == 0 || xhr.status == 0) {
-                        return;  // Not an error
-                    } else {
-                        alert(localise.set["msg_err_save"] + xhr.responseText);
-                    }
-                }
-            });
-
-        }
     });
