@@ -170,13 +170,6 @@
                                     </div>
                                 </a>
                             </li>
-                            <li>
-                                <a type="button" class="btn for_is_tg" href="#" id="emailSettings">
-                                    <div>
-                                        <span class="lang" data-lang="u_det_o_email">email</span>
-                                    </div>
-                                </a>
-                            </li>
 
                         </ul>
                     </li>
@@ -909,6 +902,34 @@
 
                         </div>
 
+                        <div class="well">
+                            <p class="lang" data-lang="u_det_o_email"></p>
+
+                            <div id="email_from_cont" class="form-group" data-toggle="tooltip" data-container="body"
+                                 title="Subject for the email (optional)">
+                                <label for="email_subject" data-lang="c_from"
+                                       class="lang col-sm-2 control-label">from</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="email_from" class="form-control">
+                                </div>
+                            </div>
+                            <div id="email_subject_cont" class="form-group" data-toggle="tooltip" data-container="body"
+                                 title="Subject for the email">
+                                <label for="email_subject" data-lang="c_subject"
+                                       class="lang col-sm-2 control-label">subject</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="email_subject" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group" data-toggle="tooltip" data-container="body">
+                                <label for="email_content" data-lang="c_content"
+                                       class="lang col-sm-2 control-label">content</label>
+                                <div class="col-sm-10">
+                                    <textarea id="email_content" class="labelProp form-control"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                 </form>
@@ -1045,56 +1066,6 @@
                 </button>
                 <button id="importTaskGroupGo" type="button" class="btn btn-primary lang" data-lang="m_import">import
                 </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Popup to allow the user to edit email details -->
-<div id="emailDetailsPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="emailDetailsLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title lang" id="emailDetailsLabel" data-lang="u_det_o_email">add</h4>
-            </div>
-
-            <div class="modal-body">
-                <form id="email_details_form" class="form-horizontal" role="form">
-
-                    <div id="email_from_cont" class="form-group" data-toggle="tooltip" data-container="body"
-                         title="Subject for the email (optional)">
-                        <label for="email_subject" data-lang="c_from"
-                               class="lang col-sm-2 control-label">from</label>
-                        <div class="col-sm-10">
-                            <input type="text" id="email_from" class="form-control">
-                        </div>
-                    </div>
-                    <div id="email_subject_cont" class="form-group" data-toggle="tooltip" data-container="body"
-                         title="Subject for the email">
-                        <label for="email_subject" data-lang="c_subject"
-                               class="lang col-sm-2 control-label">subject</label>
-                        <div class="col-sm-10">
-                            <input type="text" id="email_subject" class="form-control">
-                        </div>
-                    </div>
-                    <div class="form-group" data-toggle="tooltip" data-container="body">
-                        <label for="email_content" data-lang="c_content"
-                               class="lang col-sm-2 control-label">content</label>
-                        <div class="col-sm-10">
-                            <textarea id="email_content" class="labelProp form-control"></textarea>
-                        </div>
-                    </div>
-
-                </form>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">close
-                    </button>
-                    <button id="saveEmailDetails" type="button" class="btn btn-primary lang" data-lang="c_save">save
-                    </button>
-                </div>
             </div>
         </div>
     </div>
