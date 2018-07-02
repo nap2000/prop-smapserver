@@ -966,7 +966,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             var tasks = [],
                 idx;
             for(idx = 0; idx < globals.gTaskList.features.length; idx++) {
-                if (globals.gTaskList.features[idx].properties.status === "unsent") {
+                if (globals.gTaskList.features[idx].properties.status === "unsent" || globals.gTaskList.features[idx].properties.status === "blocked") {
                     tasks.push({
                         taskId: globals.gTaskList.features[idx].properties.id,
                         assignmentId: globals.gTaskList.features[idx].properties.a_id
@@ -1454,6 +1454,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     refreshAssignmentData();
                 }, error: function (data, status) {
                     removeHourglass();
+                    refreshAssignmentData();
                     alert(localise.set["c_error"] +": " + data.responseText);
                 }
             });
@@ -1779,7 +1780,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             for (i = 0; i < tasks.length; i++) {
                 task = tasks[i];
 
-                if(task.properties.status === "unsent") {
+                if(task.properties.status === "unsent" || task.properties.status === "blocked") {
                     gUnsentEmailCount++;
                 }
 
