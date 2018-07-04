@@ -111,6 +111,11 @@ fi
 # Delete temporary files
 rm -rf /smap/temp/*
 
+# Restart Servers
+service postgresql start
+service tomcat7 start
+service apache2 start
+
 if [ $u1604 -eq 0 ]; then
 service subscribers start
 service subscribers_fwd start
@@ -119,11 +124,6 @@ if [ $u1604 -eq 1 ]; then
 systemctl start subscribers
 systemctl start subscribers_fwd
 fi
-
-# Restart Servers
-service postgresql start
-service tomcat7 start
-service apache2 start
 
 # Hosted Only
 # Start disk monitor

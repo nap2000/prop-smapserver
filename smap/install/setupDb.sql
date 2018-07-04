@@ -116,7 +116,7 @@ create TABLE organisation (
 	allow_facebook boolean,
 	allow_twitter boolean,
 	can_edit boolean,
-	email_task boolean;
+	email_task boolean,
 	ft_delete text,
 	ft_send_location text,
 	ft_sync_incomplete boolean,
@@ -746,7 +746,7 @@ CREATE TABLE public.tasks (
 	p_name text,
 	title text,
 	url text,
-	form_id,	
+	form_id integer,	
 	survey_name text,
 	initial_data text,
 	created_at timestamp with time zone,
@@ -754,8 +754,8 @@ CREATE TABLE public.tasks (
 	schedule_finish timestamp with time zone,
 	deleted_at timestamp with time zone,
 	address text,
-	instance_id,			-- Record on which this task is based
-	update_id text,		-- Record to update
+	instance_id text,			-- Record on which this task is based
+	update_id text,			-- Record to update
 	repeat boolean,
 	repeat_count integer default 0,
 	guidance text,
@@ -1055,7 +1055,7 @@ create TABLE csvtable (
 	survey boolean default false,	-- Set true if the data actually comes from a survey
 	user_ident text,						-- Survey data from a survey needs tohave access authenticated so RBAC can be applied
 	chart boolean default false,		-- Set true if the data is for a chart
-	non_unique_key default false,	-- Set true if the data does not have a unique key
+	non_unique_key boolean default false,	-- Set true if the data does not have a unique key
 	sqldef text,						-- The sql definition			
 	ts_initialised TIMESTAMP WITH TIME ZONE
 	);
