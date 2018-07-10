@@ -17,20 +17,35 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 	$(document).ready(function() {
 
+        var url = "http://localhost/api/v1/data/s83_2988?geojson=yes";
+        $.ajax({
+            url: url,
+            dataType: 'json',
+            username: "neil",
+            password: "neil",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader ("Authorization", "Basic " + btoa("neil" + ":" + "neil"));
+            },
+            success: function(data) {
+
+                $('#logger').append("completed test service\n");
+
+            }
+        });
+
+
+
         (function () {
             var myConnector = tableau.makeConnector();
+
 
             myConnector.getSchema = function (schemaCallback) {
                 var cols = [{
                     id: "id",
                     dataType: tableau.dataTypeEnum.string
                 }, {
-                    id: "mag",
-                    alias: "magnitude",
-                    dataType: tableau.dataTypeEnum.float
-                }, {
-                    id: "title",
-                    alias: "title",
+                    id: "name",
+                    alias: "Name",
                     dataType: tableau.dataTypeEnum.string
                 }, {
                     id: "location",
@@ -38,8 +53,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
                 }];
 
                 var tableSchema = {
-                    id: "earthquakeFeed",
-                    alias: "Earthquakes with magnitude greater than 4.5 in the last seven days",
+                    id: "geopoint",
+                    alias: "Some data",
                     columns: cols
                 };
 
@@ -47,30 +62,58 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
             };
 
             myConnector.getData = function (table, doneCallback) {
-                $.getJSON("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson", function(resp) {
-                    var feat = resp.features,
-                        tableData = [];
 
-                    // Iterate over the JSON object
-                    for (var i = 0, len = feat.length; i < len; i++) {
-                        tableData.push({
-                            "id": feat[i].id,
-                            "mag": feat[i].properties.mag,
-                            "title": feat[i].properties.title,
-                            "location": feat[i].geometry
-                        });
-                    }
-
-                    table.appendRows(tableData);
+                function reqListener () {
+                    console.log(this.responseText);
                     doneCallback();
+                }
+
+                var oReq = new XMLHttpRequest();
+                oReq.addEventListener("load", reqListener);
+                oReq.setRequestHeader("Authorization", "Basic " + btoa("neil" + ":" + "neil"));
+                oReq.open("GET", "http://localhost/api/v1/data/s83_2988?geojson=yes");
+                oReq.send();
+
+                return;
+                $.ajax({
+                    url: 'http://localhost/api/v1/data/s83_2988?geojson=yes',
+                    dataType: 'json',
+                    username: "neil",
+                    password: "neil",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader ("Authorization", "Basic " + btoa("neil" + ":" + "neil"));
+                    },
+                    success: function(data) {
+
+                        var feat = data.features,
+                            tableData = [];
+
+                        // Iterate over the JSON object
+                        for (var i = 0, len = feat.length; i < len; i++) {
+                            tableData.push({
+                                "id": feat[i].id,
+                                "name": feat[i].properties.name,
+                                "location": feat[i].geometry
+                            });
+                        }
+
+                        table.appendRows(tableData);
+                        doneCallback();
+
+                    },
+                    error: function(data) {
+                        $('#logger').append("Error requesting data: " + data + "\n");
+                    }
                 });
+
+
             };
 
             tableau.registerConnector(myConnector);
         })();
 
         $('#submitButton').click(function () {
-            tableau.connectionName = "USGS Earthquake Feed";
+            tableau.connectionName = "Smap Data";
             tableau.submit();
         });
 	});
