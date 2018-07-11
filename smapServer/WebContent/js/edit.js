@@ -288,7 +288,6 @@ $(document).ready(function() {
 		gTempPulldata.push({
 			survey: "",
 			data_key: "",
-			repeats: false,
 			deleted: false
 		});
 		updatePulldataView();
@@ -2203,7 +2202,6 @@ function updatePulldataView() {
 	h[++idx] = '<tr>';
 	h[++idx] = '<th>' + localise.set["c_survey"], + '</th>';
 	h[++idx] = '<th>' + localise.set["ed_dk"] + '</th>';
-	h[++idx] = '<th>' + localise.set["c_repeats"] + '</th>';
 	h[++idx] = '<th>' + localise.set["c_ident"] + '</th>';
 	h[++idx] = '</tr>';
 	h[++idx] = '</thead>';
@@ -2233,6 +2231,7 @@ function updatePulldataView() {
 			h[++idx] = '</td>';
 			
 			// Repeats
+			/*
 			h[++idx] = '<td>';
 		      h[++idx] = '<input type="checkbox" class="pd_repeats" data-idx="';
 		      h[++idx] = i;
@@ -2244,8 +2243,10 @@ function updatePulldataView() {
 		      h[++idx] = '';
 		      h[++idx] = '"> ';
 			h[++idx] = '</td>';
+			*/
 			
 			// Identifier
+			/*
 			h[++idx] = '<td>';
 			h[++idx] = '<input type="text" data-idx="';
 			h[++idx] = i;
@@ -2253,6 +2254,7 @@ function updatePulldataView() {
 			h[++idx] = "linked_s_pd_" + pulldata[i].survey;
 			h[++idx] = '"';
 			h[++idx] = '</td>';
+			*/
 		
 			// actions
 			h[++idx] = '<td>';
@@ -2284,11 +2286,6 @@ function updatePulldataView() {
 	$(".pd_data_key", $selector).change(function(){
 		var idx = $(this).data("idx");
 		gTempPulldata[idx].data_key = $(this).val();
-	});
-	
-	$(".pd_repeats", $selector).change(function(){
-		var idx = $(this).data("idx");
-		gTempPulldata[idx].repeats = $(this).prop('checked');
 	});
 
     $(".rm_pulldata", $selector).click(function(){
@@ -2448,8 +2445,6 @@ function getSurveyForms(sId, callback) {
 				if(typeof callback === "function") {
 					callback(data);
 				}
-				
-
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();

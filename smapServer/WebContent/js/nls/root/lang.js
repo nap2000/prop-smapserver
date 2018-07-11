@@ -83,6 +83,7 @@ define({
     "c_lang": "Language",
     "c_langs": "Languages",
     "c_pulldata": "Pulldata",
+    "c_pulldata_r": "Repeating Pulldata",
     "c_orientation": "Orientation",
     "c_password": "Password",
     "c_c_p": "Confirm Password",
@@ -464,6 +465,7 @@ define({
     "msg_s1": "An email has been sent to the address you provided.  Click on the link to confirm your subscription",
     "msg_s2": "Subscribed sucessfully",
     "msg_s3": "Enter your email address to subscribe to emails",
+    "msg_pd_key": "Specify a data key ",
 
     // Editor
     "e_b_e": "Base on existing form",

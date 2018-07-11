@@ -55,6 +55,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             globals.gRegions = undefined;
 
             localise.setlang();		// Localise HTML
+            $('#email_subject').prop('placeholder', localise.set['n_esc']);
+            $('#tp_assign_emails, #assign_emails').prop('placeholder', localise.set['n_cs_e']);
 
             $("#side-menu").metisMenu();
 
@@ -191,6 +193,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             $('#users_task_group, #roles_task_group').change(function() {
                 if($(this).val() == -2) {
                     $('.assign_data').show();
+                    $('#assign_data').prop('placeholder', "");
                 } else {
                     $('.assign_data').hide();
                 }
@@ -204,6 +207,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     $('.assign_user').show();
                     $('.assign_role,.assign_email').hide();
                     if($('#users_task_group').val() == -2) {
+                        $('#assign_data').prop('placeholder', "");
                         $('.assign_data').show();
                     } else {
                         $('.assign_data').hide();
@@ -212,6 +216,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     $('.assign_user, .assign_email').hide();
                     $('.assign_role').show();
                     if($('#roles_task_group').val() == -2) {
+                        $('#assign_data').prop('placeholder', "");
                         $('.assign_data').show();
                     } else {
                         $('.assign_data').hide();
@@ -219,6 +224,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 } else {
                     $('.assign_user, .assign_role,.assign_data').hide();
                     $('.assign_email').show();
+                    $('#assign_data').prop('placeholder', localise.set['n_eqc']);
                     $('.assign_data').show();
                 }
             });
@@ -488,7 +494,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 // Set email details
                 var emaildetails = tg.emaildetails;
                 if(emaildetails) {
-                    $('#email_from').val(emaildetails.from);
                     $('#email_subject').val(emaildetails.subject);
                     $('#email_content').val(emaildetails.content);
                 }
@@ -675,7 +680,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                 // Add email details
                 assignObj["emailDetails"] = {
-                    from: $('#email_from').val(),
                     subject: $('#email_subject').val(),
                     content: $('#email_content').val()
                 }
