@@ -18,9 +18,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -28,7 +25,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.olingo.server.api.OData;
@@ -42,12 +38,11 @@ import model.DemoEdmProvider;
 /*
  * Provides access to collected data
  */
-@Path("/svc")
+@Path("/scv")
 public class Data extends Application {
 	
 	@GET
-	@Path("/x")
-	@Produces("application/json")
+	@Path("/scv")
 	public Response getData(@Context HttpServletRequest request, @Context HttpServletResponse response) { 
 		Response r = null;
 		try {
