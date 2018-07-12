@@ -760,7 +760,7 @@ function regionURL(region) {
 }
 
 function resultsURL (sId, qId, dateId, groupId, groupType, geoTable, fn, lang, timeGroup,
-                     startDate, endDate, qId_is_calc, filter) {
+                     startDate, endDate, qId_is_calc, filter, advanced_filter) {
 
     var url = "/surveyKPI/results/";
     url += sId;
@@ -809,6 +809,10 @@ function resultsURL (sId, qId, dateId, groupId, groupType, geoTable, fn, lang, t
 
     if(typeof filter !== "undefined") {
         url+= "&filter=" + filter;
+    }
+
+    if(typeof advanced_filter !== "undefined") {
+        url+= "&advanced_filter=" + advanced_filter;
     }
 
     return url;
