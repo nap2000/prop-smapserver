@@ -14,8 +14,8 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
-  <servlet-mapping>
+  <servlet-mapping> 
     <servlet-name>Jersey REST Service</servlet-name>
-    <url-pattern>/svc/*</url-pattern>
+    <url-pattern>/odata/*</url-pattern>
   </servlet-mapping>
 </web-app>

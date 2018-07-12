@@ -287,7 +287,7 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 	 			fromDate, toDate, qId_is_calc) {
 			
 			var url = resultsURL (sId, data, dateId, groupId, groupType, groupRegion, fn, lang, timeGroup, 
-					fromDate, toDate, qId_is_calc, view.filter );
+					fromDate, toDate, qId_is_calc, view.filter, view.advanced_filter );
 			
 			addHourglass();
 
@@ -307,7 +307,7 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 	  				if(xhr.readyState == 0 || xhr.status == 0) {
 	  		              return;  // Not an error
 	  				} else {
-	  					alert("Error: Failed to get results: " + err);
+	  					alert(localise.set["c_error"] + ": " + xhr.responseText);
 	  				}
 	  			}
 			});
