@@ -33,6 +33,7 @@ import org.apache.olingo.server.api.ServiceMetadata;
 import org.apache.olingo.server.api.edmx.EdmxReference;
 
 import model.DemoEdmProvider;
+import model.DemoEntityCollectionProcessor;
 
 
 /*
@@ -50,7 +51,7 @@ public class Data extends Application {
 		      OData odata = OData.newInstance();
 		      ServiceMetadata edm = odata.createServiceMetadata(new DemoEdmProvider(), new ArrayList<EdmxReference>());
 		      ODataHttpHandler handler = odata.createHandler(edm);
-		      //handler.register(new DemoEntityCollectionProcessor());
+		      handler.register(new DemoEntityCollectionProcessor());
 
 		      // let the handler do the work
 		      handler.process(request, response);
