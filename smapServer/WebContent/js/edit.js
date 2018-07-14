@@ -2202,7 +2202,7 @@ function updatePulldataView() {
 	h[++idx] = '<tr>';
 	h[++idx] = '<th>' + localise.set["c_survey"], + '</th>';
 	h[++idx] = '<th>' + localise.set["ed_dk"] + '</th>';
-	h[++idx] = '<th>' + localise.set["c_ident"] + '</th>';
+	h[++idx] = '<th>' + localise.set["c_del"] + '</th>';
 	h[++idx] = '</tr>';
 	h[++idx] = '</thead>';
 	h[++idx] = '<tbody class="table-striped">';
