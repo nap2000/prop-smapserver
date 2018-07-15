@@ -31,6 +31,7 @@ import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 import org.apache.olingo.server.api.uri.UriResourceProperty;
 
 import data.Storage;
+import data.SurveyStorage;
 
 public class DemoPrimitiveProcessor implements PrimitiveProcessor {
 
