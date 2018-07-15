@@ -27,6 +27,7 @@ import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 
 import data.Storage;
+import data.SurveyStorage;
 
 public class DemoEntityProcessor implements EntityProcessor {
 

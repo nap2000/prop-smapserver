@@ -101,4 +101,8 @@ public class Util {
 
         return true;
     }
+    
+    public static String convertFormToEntityName(String formName) {
+    		return formName + " item";
+    }
 }

@@ -11,11 +11,20 @@
 		</servlet> <servlet-mapping> <servlet-name>Jersey REST Service</servlet-name> 
 		<url-pattern>/odata/*</url-pattern> </servlet-mapping> -->
 	<servlet>
+		<servlet-name>Tutorial</servlet-name>
+		<servlet-class>odataApi.OdataDemo</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+		<servlet-mapping>
+		<servlet-name>Tutorial</servlet-name>
+		<url-pattern>/odataDemo.svc/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
 		<servlet-name>Odata</servlet-name>
 		<servlet-class>odataApi.Odata</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-
 	<servlet-mapping>
 		<servlet-name>Odata</servlet-name>
 		<url-pattern>/odata.svc/*</url-pattern>

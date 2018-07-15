@@ -23,7 +23,7 @@ public class DemoEdmProvider extends CsdlAbstractEdmProvider {
 	public static final String NAMESPACE = "OData.Demo";
 
 	// EDM Container
-	public static final String CONTAINER_NAME = "Container";
+	public static final String CONTAINER_NAME = "ContainerX";
 	public static final FullQualifiedName CONTAINER = new FullQualifiedName(NAMESPACE, CONTAINER_NAME);
 
 	// Entity Types Names

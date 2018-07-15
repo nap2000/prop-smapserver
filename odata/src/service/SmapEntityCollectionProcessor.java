@@ -31,16 +31,15 @@ import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 
-import data.Storage;
 import data.SurveyStorage;
 
-public class DemoEntityCollectionProcessor implements EntityCollectionProcessor {
+public class SmapEntityCollectionProcessor implements EntityCollectionProcessor {
 
 	private OData odata;
 	private ServiceMetadata serviceMetadata;
-	private Storage storage;
+	private SurveyStorage storage;
 	
-	public DemoEntityCollectionProcessor(Storage storage) {
+	public SmapEntityCollectionProcessor(SurveyStorage storage) {
         this.storage = storage;
     }
 	
