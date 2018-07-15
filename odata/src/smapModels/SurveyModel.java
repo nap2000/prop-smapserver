@@ -23,10 +23,11 @@ public class SurveyModel {
 	ResourceBundle localisation;
 	Locale locale;
 	String namespace;
-	String user;
 	
+	public String user;	
 	public int sId;																// Survey Id
 	public String surveyName;													// Survey Name
+	public String urlprefix;														// Url prefix fo images
 	public HashMap<String, SurveyForm> forms = new HashMap<> ();					// Forms keyed on their name
 	public HashMap<FullQualifiedName, SurveyForm> fqnForms = new HashMap<> ();	// Forms keyed on the FQN of their entity type
 	
@@ -36,7 +37,8 @@ public class SurveyModel {
 			Locale locale, 
 			int sId, 
 			String namespace, 
-			String user) throws Exception {
+			String user,
+			String urlprefix) throws Exception {
 		
 		this.sd = sd;
 		this.cResults = cResults;
@@ -45,7 +47,8 @@ public class SurveyModel {
 		this.sId = sId;
 		this.namespace = namespace;	
 		this.user = user;
-		
+		this.urlprefix = urlprefix;
+		 
 		getSurvey();
 		getForms();
 	}
