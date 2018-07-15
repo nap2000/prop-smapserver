@@ -107,8 +107,18 @@ public class SurveyEdmProvider extends CsdlAbstractEdmProvider {
 
 			ArrayList<CsdlProperty> props = new ArrayList<> ();
 			for(TableColumn tc : f.columns) {
-				props.add(new CsdlProperty().setName(tc.name)
-						.setType(EdmPrimitiveTypeKind.String.getFullQualifiedName()));
+				System.out.println("Add to model: " + tc.name + " : " + tc.type);
+				
+				// Defaults
+				String name = tc.name;
+				String csdlType = EdmPrimitiveTypeKind.String.getFullQualifiedName().toString();
+							
+				if(name.equals("prikey")) {
+					name = "ID";
+					csdlType = EdmPrimitiveTypeKind.Int32.getFullQualifiedName().toString();
+				}
+								
+				props.add(new CsdlProperty().setName(name).setType(csdlType));
 			}
 			// create EntityType properties
 			/*
