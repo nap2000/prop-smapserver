@@ -60,7 +60,12 @@ public class SmapEntityCollectionProcessor implements EntityCollectionProcessor 
 
 		  // 2nd: fetch the data from backend for this requested EntitySetName
 		  // it has to be delivered as EntitySet object
-		  EntityCollection entitySet = storage.readEntitySetData(edmEntitySet);
+		  EntityCollection entitySet = null;
+		  try {
+			  entitySet = storage.readEntitySetData(edmEntitySet);
+		  } catch (Exception e) {
+			  throw new ODataApplicationException(e.getMessage(), 0, storage.locale);
+		  }
 
 		  // 3rd: create a serializer based on the requested format (json)
 		  ODataSerializer serializer = odata.createSerializer(responseFormat);

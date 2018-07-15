@@ -79,9 +79,10 @@ public class Odata extends HttpServlet {
 			// Create an internal model for this survey 
 			cResults = ResultsDataSource.getConnection(connectionString);
 			SurveyModel surveyModel = new SurveyModel(sd, cResults, localisation, locale, sId, namespace,
-					request.getRemoteUser());
+					request.getRemoteUser(),
+					GeneralUtilityMethods.getUrlPrefix(request));
 			
-			SurveyStorage storage = new SurveyStorage(surveyModel);	
+			SurveyStorage storage = new SurveyStorage(sd, cResults, locale, localisation, surveyModel);	
 
 			// create odata handler and configure it with CsdlEdmProvider and Processor
 			OData odata = OData.newInstance();
