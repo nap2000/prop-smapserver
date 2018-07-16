@@ -32,7 +32,7 @@ import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 
 import data.Storage;
-import data.SurveyStorage;
+import data.PortalStorage;
 
 public class DemoEntityCollectionProcessor implements EntityCollectionProcessor {
 

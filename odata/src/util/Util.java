@@ -1,14 +1,20 @@
 package util;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.EntityCollection;
+import org.apache.olingo.commons.api.data.Property;
+import org.apache.olingo.commons.api.edm.Edm;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.EdmEntityType;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveType;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeException;
+import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.edm.EdmProperty;
 import org.apache.olingo.commons.api.edm.EdmType;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
@@ -17,8 +23,13 @@ import org.apache.olingo.server.api.uri.UriInfoResource;
 import org.apache.olingo.server.api.uri.UriParameter;
 import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
+import org.smap.sdal.managers.EmailManager;
+import org.smap.sdal.model.KeyFilter;
 
 public class Util {
+	
+	private static Logger log =
+			Logger.getLogger(EmailManager.class.getName());
 
     public static EdmEntitySet getEdmEntitySet(UriInfoResource uriInfo) throws ODataApplicationException {
 
@@ -53,6 +64,40 @@ public class Util {
     }
 
 
+    public static ArrayList<KeyFilter> getKeyFilter(EdmEntityType edmEntityType,  List<UriParameter> keyParams) {
+    		ArrayList<KeyFilter> filters = new ArrayList<> ();
+    		
+    		 for (final UriParameter key : keyParams) {
+    			 KeyFilter kf = new KeyFilter();
+    			 kf.name = key.getName();
+    			 EdmProperty edmKeyProperty = (EdmProperty) edmEntityType.getProperty(kf.name);
+    			 EdmPrimitiveType edmType = (EdmPrimitiveType)edmKeyProperty.getType();
+    			 kf.sValue = key.getText();  			 
+    			
+    			 String type = edmType.getName();
+    			 if(type.equals(EdmPrimitiveTypeKind.Int32.name())) {
+    				 try {
+    					 kf.iValue = Integer.valueOf(kf.sValue);
+    				 } catch(Exception e) {
+    					 log.info("Failed to convert " + kf.sValue + " to integer");
+    					 log.log(Level.SEVERE, "Messaging Exception");
+    				 }
+    			 }
+    			 
+    			 // Adjust for usage in backend system
+    			 if(kf.name.equals("ID")) {
+    				 kf.name = "prikey";
+    			 }
+    			 
+    			 filters.add(kf);
+    			 
+ 
+
+    		 }
+    		 
+    		return filters;
+    }
+    
     public static boolean entityMatchesAllKeys(EdmEntityType edmEntityType, Entity rt_entity,  List<UriParameter> keyParams)
                                                 throws ODataApplicationException {
 
