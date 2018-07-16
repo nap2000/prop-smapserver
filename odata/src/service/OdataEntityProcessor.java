@@ -2,6 +2,8 @@ package service;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.olingo.commons.api.data.ContextURL;
 import org.apache.olingo.commons.api.data.Entity;
@@ -25,17 +27,21 @@ import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriParameter;
 import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
+import org.smap.sdal.managers.EmailManager;
 
 import data.Storage;
 import data.PortalStorage;
 
-public class DemoEntityProcessor implements EntityProcessor {
+public class OdataEntityProcessor implements EntityProcessor {
 
+	private static Logger log =
+			Logger.getLogger(EmailManager.class.getName());
+	
 	private OData odata;
 	private ServiceMetadata serviceMetadata;
-	private Storage storage;
+	private PortalStorage storage;
 
-	public DemoEntityProcessor(Storage storage) {
+	public OdataEntityProcessor(PortalStorage storage) {
 		this.storage = storage;
 	}
 
@@ -72,7 +78,13 @@ public class DemoEntityProcessor implements EntityProcessor {
 
 		// 2. retrieve the data from backend
 		List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
-		Entity entity = storage.readEntityData(edmEntitySet, keyPredicates);
+		Entity entity = null;
+		try {
+			entity = storage.readEntityData(edmEntitySet, keyPredicates);
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "Error reading entity data", e);
+			throw new ODataApplicationException(e.getMessage(), 0, storage.locale);
+		}
 
 		// 3. serialize
 		EdmEntityType entityType = edmEntitySet.getEntityType();

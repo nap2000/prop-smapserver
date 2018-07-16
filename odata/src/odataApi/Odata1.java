@@ -26,13 +26,14 @@ import org.smap.sdal.Utilities.ResultsDataSource;
 import org.smap.sdal.Utilities.SDDataSource;
 import org.smap.sdal.managers.SurveyManager;
 
-import data.SurveyStorage;
+import data.PortalStorage;
 import model.DemoEdmProvider;
 import model.OdataEdmProvider;
 import service.DemoEntityCollectionProcessor;
 import service.DemoEntityProcessor;
 import service.DemoPrimitiveProcessor;
-import service.SmapEntityCollectionProcessor;
+import service.OdataEntityCollectionProcessor;
+import service.OdataEntityProcessor;
 import smapModels.PortalModel;
 
 public class Odata1 extends HttpServlet {
@@ -80,7 +81,7 @@ public class Odata1 extends HttpServlet {
 					request.getRemoteUser(),
 					GeneralUtilityMethods.getUrlPrefix(request));
 			
-			SurveyStorage storage = new SurveyStorage(sd, cResults, locale, localisation, surveyModel);	
+			PortalStorage storage = new PortalStorage(sd, cResults, locale, localisation, surveyModel);	
 
 			// create odata handler and configure it with CsdlEdmProvider and Processor
 			OData odata = OData.newInstance();
@@ -88,8 +89,8 @@ public class Odata1 extends HttpServlet {
 					new ArrayList<EdmxReference>());
 			
 			ODataHttpHandler handler = odata.createHandler(edm);
-			handler.register(new SmapEntityCollectionProcessor(storage));
-			//handler.register(new DemoEntityProcessor(storage));
+			handler.register(new OdataEntityCollectionProcessor(storage));
+			handler.register(new OdataEntityProcessor(storage));
 			//handler.register(new DemoPrimitiveProcessor(storage));
 
 			// let the handler do the work
