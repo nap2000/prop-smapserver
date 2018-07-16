@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -36,12 +37,12 @@ import service.OdataEntityCollectionProcessor;
 import service.OdataEntityProcessor;
 import smapModels.PortalModel;
 
-public class Odata1 extends HttpServlet {
+public class Odata extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static final String namespace = "OData.Smap";
 	Authorise a = null;
 
-	public Odata1 () {
+	public Odata () {
 		ArrayList<String> authorisationsSuper = new ArrayList<String> ();	
 		authorisationsSuper.add(Authorise.ANALYST);
 		authorisationsSuper.add(Authorise.VIEW_DATA);
@@ -65,14 +66,16 @@ public class Odata1 extends HttpServlet {
 			// End authorisation
 
 			/*
-			 * Each end point will have its own container name
-			 * This end point is for Portal 1
-			 * There will be a unique description for the contents of this portal view
+			 * Each end point will has its own container name
+			 * These are defined as parameters in web.xml
+			 * However all the servlets point to this class
 			 */
-			String container_name = "Portal1";
+			String servletPath = request.getServletPath();
+			String container_name = servletPath.substring(1, servletPath.indexOf('.'));
+			System.out.println("Container Name: " + container_name);
 			
 			/*
-			 * TODO get the description of the portal
+			 * TODO get the portal definition
 			 * For now just retrieve all visible surveys
 			 */
 			// Create an internal model for the surveys that the user has access to
