@@ -21,13 +21,13 @@
 	</servlet-mapping>
 	
 	<servlet>
-		<servlet-name>Odata</servlet-name>
-		<servlet-class>odataApi.Odata</servlet-class>
+		<servlet-name>Odata1</servlet-name>
+		<servlet-class>odataApi.Odata1</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>Odata</servlet-name>
-		<url-pattern>/odata.svc/*</url-pattern>
+		<servlet-name>Odata1</servlet-name>
+		<url-pattern>/odata1.svc/*</url-pattern>
 	</servlet-mapping>
 
 </web-app>

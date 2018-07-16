@@ -14,5 +14,5 @@ public class SurveyForm {
 	public int parentQuestionIndex;
 	public String tableName;			// Name of the table that holds the results for this form
 	public ArrayList<TableColumn> columns;
-
+	public SurveyModel survey;	// Link to the survey that defines this form
 }
