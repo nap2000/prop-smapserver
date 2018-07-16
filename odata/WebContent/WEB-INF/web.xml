@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xmlns="http://oracle.com/webfolder/technetwork/jsc/xml/ns/javaee/web-app_3_0.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
 	<display-name>odata</display-name>
-	<!-- <servlet> <servlet-name>Jersey REST Service</servlet-name> <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class> 
-		<init-param> <param-name>com.sun.jersey.config.property.packages</param-name> 
-		<param-value>odataApi</param-value> </init-param> <init-param> <param-name>jersey.config.server.tracing</param-name> 
-		<param-value>ALL</param-value> </init-param> <load-on-startup>1</load-on-startup> 
-		</servlet> <servlet-mapping> <servlet-name>Jersey REST Service</servlet-name> 
-		<url-pattern>/odata/*</url-pattern> </servlet-mapping> -->
 	<servlet>
 		<servlet-name>Tutorial</servlet-name>
 		<servlet-class>odataApi.OdataDemo</servlet-class>
@@ -21,13 +15,35 @@
 	</servlet-mapping>
 	
 	<servlet>
-		<servlet-name>Odata1</servlet-name>
-		<servlet-class>odataApi.Odata1</servlet-class>
+		<servlet-name>Odata</servlet-name>
+		<servlet-class>odataApi.Odata</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	
 	<servlet-mapping>
-		<servlet-name>Odata1</servlet-name>
-		<url-pattern>/odata1.svc/*</url-pattern>
+		<servlet-name>Odata</servlet-name>
+		<url-pattern>/my_portal1.svc/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Odata</servlet-name>
+		<url-pattern>/my_portal2.svc/*</url-pattern>
+	</servlet-mapping>
+		<servlet-mapping>
+		<servlet-name>Odata</servlet-name>
+		<url-pattern>/my_portal3.svc/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>Odata</servlet-name>
+		<url-pattern>/shared_portal1.svc/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Odata</servlet-name>
+		<url-pattern>/shared_portal2.svc/*</url-pattern>
+	</servlet-mapping>
+		<servlet-mapping>
+		<servlet-name>Odata</servlet-name>
+		<url-pattern>/shared_portal3.svc/*</url-pattern>
 	</servlet-mapping>
 
 </web-app>
