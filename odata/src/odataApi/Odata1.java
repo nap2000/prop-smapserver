@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.apache.olingo.server.api.OData;
 import org.apache.olingo.server.api.ODataHttpHandler;
 import org.apache.olingo.server.api.ServiceMetadata;
@@ -27,19 +28,19 @@ import org.smap.sdal.managers.SurveyManager;
 
 import data.SurveyStorage;
 import model.DemoEdmProvider;
-import model.SurveyEdmProvider;
+import model.OdataEdmProvider;
 import service.DemoEntityCollectionProcessor;
 import service.DemoEntityProcessor;
 import service.DemoPrimitiveProcessor;
 import service.SmapEntityCollectionProcessor;
-import smapModels.SurveyModel;
+import smapModels.PortalModel;
 
-public class Odata extends HttpServlet {
+public class Odata1 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static final String namespace = "OData.Smap";
 	Authorise a = null;
 
-	public Odata () {
+	public Odata1 () {
 		ArrayList<String> authorisationsSuper = new ArrayList<String> ();	
 		authorisationsSuper.add(Authorise.ANALYST);
 		authorisationsSuper.add(Authorise.VIEW_DATA);
@@ -52,33 +53,30 @@ public class Odata extends HttpServlet {
 		
 		Connection sd = null;
 		Connection cResults = null;
-		String connectionString = "odata survey service";
+		String connectionString = "odata service";
 		try {
 			Locale locale = request.getLocale();
 			ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);
 			
-			System.out.println("Session: " + request.getSession(false));
-			System.out.println("Locale: " + locale.toString());
-			String survey= request.getParameter("survey");	// Will be the container
-			if(survey == null) {
-				throw new ApplicationException(localisation.getString("odata_sns"));
-			}
-			
 			// Authorisation - Access
 			sd = SDDataSource.getConnection(connectionString);
 			a.isAuthorised(sd, request.getRemoteUser());
-			int sId = GeneralUtilityMethods.getSurveyId(sd, survey);
-			if(sId == 0) {
-				String msg = localisation.getString("odata_snf");
-				msg = msg.replaceFirst("%s1", survey);
-				throw new ApplicationException(msg);
-			}
-			a.isValidSurvey(sd, request.getRemoteUser(), sId, false, false);
 			// End authorisation
+
+			/*
+			 * Each end point will have its own container name
+			 * This end point is for Portal 1
+			 * There will be a unique description for the contents of this portal view
+			 */
+			String container_name = "Portal1";
 			
-			// Create an internal model for this survey 
+			/*
+			 * TODO get the description of the portal
+			 * For now just retrieve all visible surveys
+			 */
+			// Create an internal model for the surveys that the user has access to
 			cResults = ResultsDataSource.getConnection(connectionString);
-			SurveyModel surveyModel = new SurveyModel(sd, cResults, localisation, locale, sId, namespace,
+			PortalModel surveyModel = new PortalModel(sd, cResults, localisation, locale, namespace,
 					request.getRemoteUser(),
 					GeneralUtilityMethods.getUrlPrefix(request));
 			
@@ -86,7 +84,7 @@ public class Odata extends HttpServlet {
 
 			// create odata handler and configure it with CsdlEdmProvider and Processor
 			OData odata = OData.newInstance();
-			ServiceMetadata edm = odata.createServiceMetadata(new SurveyEdmProvider(surveyModel, namespace), 
+			ServiceMetadata edm = odata.createServiceMetadata(new OdataEdmProvider(surveyModel, namespace,  container_name), 
 					new ArrayList<EdmxReference>());
 			
 			ODataHttpHandler handler = odata.createHandler(edm);

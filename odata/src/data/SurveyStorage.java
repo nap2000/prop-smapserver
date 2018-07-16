@@ -26,20 +26,20 @@ import org.smap.sdal.model.TableColumn;
 
 import model.DemoEdmProvider;
 import smapModels.SurveyForm;
-import smapModels.SurveyModel;
+import smapModels.PortalModel;
 import util.Util;
 
 public class SurveyStorage {
 
 	private List<Entity> productList = new ArrayList<Entity>();
 
-	public SurveyModel surveyModel;
+	public PortalModel surveyModel;
 	public ResourceBundle localisation;
 	public Connection sd;
 	public Connection cResults;
 	public Locale locale;
 
-	public SurveyStorage(Connection sd, Connection cResults, Locale locale, ResourceBundle localisation, SurveyModel surveyModel) {
+	public SurveyStorage(Connection sd, Connection cResults, Locale locale, ResourceBundle localisation, PortalModel surveyModel) {
 		this.sd = sd;
 		this.cResults = cResults;
 		this.surveyModel = surveyModel;
@@ -62,7 +62,7 @@ public class SurveyStorage {
 			try {
 				// Get Prepared Statment
 				TableDataManager tdm = new TableDataManager(localisation);
-				pstmt = tdm.getPreparedStatement(sd, cResults, form.columns, surveyModel.urlprefix, surveyModel.sId,
+				pstmt = tdm.getPreparedStatement(sd, cResults, form.columns, surveyModel.urlprefix, form.survey.id,
 						form.tableName, 0, // Parent key - set to zero to return all
 						null, // HRK if not null will restrict to a specific HRK
 						surveyModel.user, null, // Column name to sort on

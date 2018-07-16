@@ -18,11 +18,12 @@ import org.apache.olingo.commons.api.edm.provider.CsdlSchema;
 import org.apache.olingo.commons.api.ex.ODataException;
 import org.smap.sdal.model.TableColumn;
 
-import smapModels.SurveyForm;
 import smapModels.SurveyModel;
+import smapModels.SurveyForm;
+import smapModels.PortalModel;
 import util.Util;
 
-public class SurveyEdmProvider extends CsdlAbstractEdmProvider {
+public class OdataEdmProvider extends CsdlAbstractEdmProvider {
 	// Service Namespace
 	//public static final String NAMESPACE = "OData.Smap";
 
@@ -39,14 +40,14 @@ public class SurveyEdmProvider extends CsdlAbstractEdmProvider {
 
 	String container_name;
 	FullQualifiedName container; 		
-	SurveyModel model;
+	PortalModel model;
 	String namespace;
 
-	public SurveyEdmProvider(SurveyModel model, String namespace) {
+	public OdataEdmProvider(PortalModel model, String namespace, String container_name) {
 		this.model = model;
-		this.namespace = namespace;		
-		container_name = model.surveyName;
-		container = new FullQualifiedName(namespace, container_name);
+		this.namespace = namespace;	
+		this.container_name = container_name;
+		this.container = new FullQualifiedName(namespace, container_name);
 	}
 
 	@Override
