@@ -150,7 +150,7 @@ public class PortalModel {
 				true,		// include other meta data
 				true,		// include preloads
 				true,		// include instancename
-				true,		// include survey duration
+				false,		// include survey duration
 				false,
 				false,		// TODO include HXL
 				false		// Audit?
