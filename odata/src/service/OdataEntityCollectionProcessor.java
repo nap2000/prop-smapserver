@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.olingo.commons.api.data.ContextURL;
 import org.apache.olingo.commons.api.data.Entity;
@@ -30,11 +32,15 @@ import org.apache.olingo.server.api.serializer.SerializerResult;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
+import org.smap.sdal.managers.EmailManager;
 
 import data.PortalStorage;
 
 public class OdataEntityCollectionProcessor implements EntityCollectionProcessor {
 
+	private static Logger log =
+			Logger.getLogger(EmailManager.class.getName());
+	
 	private OData odata;
 	private ServiceMetadata serviceMetadata;
 	private PortalStorage storage;
@@ -64,6 +70,7 @@ public class OdataEntityCollectionProcessor implements EntityCollectionProcessor
 		  try {
 			  entitySet = storage.readEntitySetData(edmEntitySet);
 		  } catch (Exception e) {
+			  log.log(Level.SEVERE, "Messaging Exception", e);
 			  throw new ODataApplicationException(e.getMessage(), 0, storage.locale);
 		  }
 
