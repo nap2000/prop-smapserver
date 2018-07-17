@@ -3,13 +3,19 @@ package data;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
+import java.util.logging.Logger;
 
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.EntityCollection;
@@ -17,10 +23,13 @@ import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.data.ValueType;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.EdmEntityType;
+import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.ex.ODataRuntimeException;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
+import org.smap.sdal.constants.SmapQuestionTypes;
+import org.smap.sdal.managers.EmailManager;
 import org.smap.sdal.managers.TableDataManager;
 import org.smap.sdal.model.KeyFilter;
 import org.smap.sdal.model.TableColumn;
@@ -32,8 +41,9 @@ import util.Util;
 
 public class PortalStorage {
 
-	private List<Entity> productList = new ArrayList<Entity>();
-
+	private static Logger log =
+			Logger.getLogger(EmailManager.class.getName());
+	
 	public PortalModel surveyModel;
 	public ResourceBundle localisation;
 	public Connection sd;
@@ -152,64 +162,6 @@ public class PortalStorage {
 
 	/* INTERNAL */
 
-	private EntityCollection getProducts() {
-		EntityCollection retEntitySet = new EntityCollection();
-
-		for (Entity productEntity : this.productList) {
-			retEntitySet.getEntities().add(productEntity);
-		}
-
-		return retEntitySet;
-	}
-
-	private Entity getProduct(EdmEntityType edmEntityType, List<UriParameter> keyParams)
-			throws ODataApplicationException {
-
-		// the list of entities at runtime
-		EntityCollection entitySet = getProducts();
-
-		/* generic approach to find the requested entity */
-		Entity requestedEntity = Util.findEntity(edmEntityType, entitySet, keyParams);
-
-		if (requestedEntity == null) {
-			// this variable is null if our data doesn't contain an entity for the requested
-			// key
-			// Throw suitable exception
-			throw new ODataApplicationException("Entity for requested key doesn't exist",
-					HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ENGLISH);
-		}
-
-		return requestedEntity;
-	}
-
-	
-	
-	/* HELPER */
-	private void initSampleData() {
-
-		// add some sample product entities
-		final Entity e1 = new Entity().addProperty(new Property(null, "ID", ValueType.PRIMITIVE, 1))
-				.addProperty(new Property(null, "Name", ValueType.PRIMITIVE, "Notebook Basic 15"))
-				.addProperty(new Property(null, "Description", ValueType.PRIMITIVE,
-						"Notebook Basic, 1.7GHz - 15 XGA - 1024MB DDR2 SDRAM - 40GB"));
-		e1.setId(createId("Products", 1));
-		productList.add(e1);
-
-		final Entity e2 = new Entity().addProperty(new Property(null, "ID", ValueType.PRIMITIVE, 2))
-				.addProperty(new Property(null, "Name", ValueType.PRIMITIVE, "1UMTS PDA"))
-				.addProperty(new Property(null, "Description", ValueType.PRIMITIVE,
-						"Ultrafast 3G UMTS/HSDPA Pocket PC, supports GSM network"));
-		e2.setId(createId("Products", 1));
-		productList.add(e2);
-
-		final Entity e3 = new Entity().addProperty(new Property(null, "ID", ValueType.PRIMITIVE, 3))
-				.addProperty(new Property(null, "Name", ValueType.PRIMITIVE, "Ergo Screen"))
-				.addProperty(new Property(null, "Description", ValueType.PRIMITIVE,
-						"19 Optimum Resolution 1024 x 768 @ 85Hz, resolution 1280 x 960"));
-		e3.setId(createId("Products", 1));
-		productList.add(e3);
-	}
-
 	private URI createId(String entitySetName, Object id) {
 		try {
 			return new URI(entitySetName + "(" + String.valueOf(id) + ")");
@@ -225,7 +177,7 @@ public class PortalStorage {
 		
 		for (TableColumn c : form.columns) {
 			String name = c.humanName;
-			String type = "string";
+			String type = c.type;
 			
 			if(name.equals("prikey")) {
 				prikey = rs.getInt(idx);
@@ -233,13 +185,26 @@ public class PortalStorage {
 				type = "int";
 			}
 				
-			if(type.equals("int")) {
+			System.out.println("Get Entity. Type: " + idx + " : " + name + " : " + type);
+			
+			if(type.equals(SmapQuestionTypes.INT)) {
 				int iValue = rs.getInt(idx++);
 				System.out.println("        Add Int Property: " + name + " : " + iValue);
 				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, iValue));
-			} else {
+			} else if(type.equals(SmapQuestionTypes.DATETIME)) {
+				//Timestamp dateValue = rs.getTimestamp(idx++);		// TODO
+				String dateValue = rs.getString(idx++);
+				System.out.println("        Add Date Property: " + name + " : " + dateValue);
+				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, dateValue));
+			
+			} else if(type.equalsIgnoreCase(SmapQuestionTypes.STRING) ||
+						type.equalsIgnoreCase(SmapQuestionTypes.SELECT1)) {
 				String sValue = rs.getString(idx++);
 				System.out.println("        Add String Property: " + name + " : " + sValue);
+				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, sValue));
+			} else {
+				log.info("Error: Unknown table column type: " + type + " processing as string");
+				String sValue = rs.getString(idx++);
 				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, sValue));
 			}
 		}

@@ -23,6 +23,7 @@ import org.apache.olingo.server.api.uri.UriInfoResource;
 import org.apache.olingo.server.api.uri.UriParameter;
 import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
+import org.smap.sdal.constants.SmapQuestionTypes;
 import org.smap.sdal.managers.EmailManager;
 import org.smap.sdal.model.KeyFilter;
 
@@ -149,5 +150,25 @@ public class Util {
     
     public static String convertFormToEntityName(String formName) {
     		return formName + " item";
+    }
+    
+    public static String getCsdlType(String smapType) {
+    	
+    		String csdlType = null;
+    		
+    		if(smapType.equals(SmapQuestionTypes.STRING)) {
+    			csdlType = EdmPrimitiveTypeKind.String.getFullQualifiedName().toString();
+    		} else if(smapType.equals(SmapQuestionTypes.INT)) {
+    			csdlType = EdmPrimitiveTypeKind.Int32.getFullQualifiedName().toString();
+    		} else if(smapType.equals(SmapQuestionTypes.SELECT1)) {
+    			csdlType = EdmPrimitiveTypeKind.String.getFullQualifiedName().toString();
+    		} else if(smapType.equals(SmapQuestionTypes.DATETIME)) {
+    			//csdlType = EdmPrimitiveTypeKind.DateTimeOffset.getFullQualifiedName().toString();	// TODO
+    			csdlType = EdmPrimitiveTypeKind.String.getFullQualifiedName().toString();
+    		} else {
+    			log.info("Error: Unknown smap question type, setting csdl type to String: " + smapType);
+    			csdlType = EdmPrimitiveTypeKind.String.getFullQualifiedName().toString();
+    		}
+    		return csdlType;
     }
 }

@@ -24,19 +24,6 @@ import smapModels.PortalModel;
 import util.Util;
 
 public class OdataEdmProvider extends CsdlAbstractEdmProvider {
-	// Service Namespace
-	//public static final String NAMESPACE = "OData.Smap";
-
-	// EDM Container
-	//public static final String CONTAINER_NAME = "Container";
-	//public static final FullQualifiedName CONTAINER = new FullQualifiedName(NAMESPACE, CONTAINER_NAME);
-
-	// Entity Types Names
-	//public static final String ET_PRODUCT_NAME = "Product";
-	//public static final FullQualifiedName ET_PRODUCT_FQN = new FullQualifiedName(NAMESPACE, ET_PRODUCT_NAME);
-
-	// Entity Set Names
-	//public static final String ES_PRODUCTS_NAME = "Products";
 
 	String container_name;
 	FullQualifiedName container; 		
@@ -112,25 +99,18 @@ public class OdataEdmProvider extends CsdlAbstractEdmProvider {
 				
 				// Defaults
 				String name = tc.name;
-				String csdlType = EdmPrimitiveTypeKind.String.getFullQualifiedName().toString();
+				String csdlType = null;
 							
 				if(name.equals("prikey")) {
 					name = "ID";
 					csdlType = EdmPrimitiveTypeKind.Int32.getFullQualifiedName().toString();
+				} else {
+					csdlType = Util.getCsdlType(tc.type);
 				}
 								
 				props.add(new CsdlProperty().setName(name).setType(csdlType));
 			}
-			// create EntityType properties
-			/*
-			CsdlProperty id = new CsdlProperty().setName("ID")
-					.setType(EdmPrimitiveTypeKind.Int32.getFullQualifiedName());
-			CsdlProperty name = new CsdlProperty().setName("Name")
-					.setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
-			CsdlProperty description = new CsdlProperty().setName("Description")
-					.setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
-					*/
-
+		
 			// create CsdlPropertyRef for Key element
 			CsdlPropertyRef propertyRef = new CsdlPropertyRef();
 			propertyRef.setName("ID");
