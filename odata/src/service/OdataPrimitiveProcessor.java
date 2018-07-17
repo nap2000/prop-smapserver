@@ -33,7 +33,6 @@ import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 import org.apache.olingo.server.api.uri.UriResourceProperty;
 import org.smap.sdal.managers.EmailManager;
 
-import data.Storage;
 import data.PortalStorage;
 
 public class OdataPrimitiveProcessor implements PrimitiveProcessor {

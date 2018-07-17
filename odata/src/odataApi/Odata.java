@@ -3,36 +3,23 @@ package odataApi;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.apache.olingo.server.api.OData;
 import org.apache.olingo.server.api.ODataHttpHandler;
 import org.apache.olingo.server.api.ServiceMetadata;
 import org.apache.olingo.server.api.edmx.EdmxReference;
-import org.smap.sdal.Utilities.ApplicationException;
 import org.smap.sdal.Utilities.Authorise;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
 import org.smap.sdal.Utilities.ResultsDataSource;
 import org.smap.sdal.Utilities.SDDataSource;
-import org.smap.sdal.managers.SurveyManager;
-
 import data.PortalStorage;
-import model.DemoEdmProvider;
 import model.OdataEdmProvider;
-import service.DemoEntityCollectionProcessor;
-import service.DemoEntityProcessor;
-import service.DemoPrimitiveProcessor;
 import service.OdataEntityCollectionProcessor;
 import service.OdataEntityProcessor;
 import service.OdataPrimitiveProcessor;

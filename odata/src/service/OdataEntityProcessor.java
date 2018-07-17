@@ -29,7 +29,6 @@ import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 import org.smap.sdal.managers.EmailManager;
 
-import data.Storage;
 import data.PortalStorage;
 
 public class OdataEntityProcessor implements EntityProcessor {
