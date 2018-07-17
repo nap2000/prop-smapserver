@@ -35,6 +35,7 @@ import service.DemoEntityProcessor;
 import service.DemoPrimitiveProcessor;
 import service.OdataEntityCollectionProcessor;
 import service.OdataEntityProcessor;
+import service.OdataPrimitiveProcessor;
 import smapModels.PortalModel;
 
 public class Odata extends HttpServlet {
@@ -94,7 +95,7 @@ public class Odata extends HttpServlet {
 			ODataHttpHandler handler = odata.createHandler(edm);
 			handler.register(new OdataEntityCollectionProcessor(storage));
 			handler.register(new OdataEntityProcessor(storage));
-			//handler.register(new DemoPrimitiveProcessor(storage));
+			handler.register(new OdataPrimitiveProcessor(storage));
 
 			// let the handler do the work
 			handler.process(request, response);
