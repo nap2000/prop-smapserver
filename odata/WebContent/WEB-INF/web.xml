@@ -4,15 +4,6 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
 	<display-name>odata</display-name>
-	<servlet>
-		<servlet-name>Tutorial</servlet-name>
-		<servlet-class>odataApi.OdataDemo</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-		<servlet-mapping>
-		<servlet-name>Tutorial</servlet-name>
-		<url-pattern>/odataDemo.svc/*</url-pattern>
-	</servlet-mapping>
 	
 	<servlet>
 		<servlet-name>Odata</servlet-name>
