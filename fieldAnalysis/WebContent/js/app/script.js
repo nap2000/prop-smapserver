@@ -413,7 +413,7 @@ function exportSurveyChanged() {
         language = $('#export_language').val();
 
 
-        if(!languages) {
+        if(!languages || languages.length == 0) {
             getLanguageList(sId, addMediaPickList);		// Retrieve the languages and questions for the default language
         } else {
             setSurveyViewLanguages(languages, undefined, '#settings_language', false );
