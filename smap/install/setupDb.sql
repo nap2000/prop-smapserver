@@ -358,6 +358,7 @@ insert into user_project (u_id, p_id) values (1 , 1);
 DROP TABLE IF EXISTS upload_event CASCADE;
 CREATE TABLE upload_event (
 	ue_id INTEGER DEFAULT NEXTVAL('ue_seq') CONSTRAINT pk_upload_event PRIMARY KEY,
+	results_db_applied boolean default false,	-- Speed up for most common subscriber
 	s_id INTEGER,
 	ident text,	-- Identifier used by survey
 	p_id INTEGER,
@@ -383,6 +384,7 @@ CREATE TABLE upload_event (
 	location_trigger text	-- The trigger for the completion of the task
 	);
 create index idx_ue_ident on upload_event(user_name);
+CREATE INDEX idx_ue_results_db ON upload_event(results_db_applied);
 ALTER TABLE upload_event OWNER TO ws;
 
 DROP TABLE IF EXISTS subscriber_event CASCADE;
