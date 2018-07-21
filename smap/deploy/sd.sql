@@ -994,8 +994,8 @@ alter table organisation add column email_task boolean;
 
 -- Speed up loading of data into results db
 alter table upload_event add column results_db_applied boolean default false;
-create index idx_ue_ident on upload_event(results_db_applied);
-update upload_event set results_db_applied = 'true' where ue_id in (select ue_id from subscriber_event where subscriber = 'results_db');
+create index idx_ue_applied on upload_event(results_db_applied);
+update upload_event set results_db_applied = 'true' where not results_db_applied and ue_id in (select ue_id from subscriber_event where subscriber = 'results_db');
 
 
 
