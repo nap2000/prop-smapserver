@@ -34,7 +34,6 @@ import org.smap.sdal.managers.TableDataManager;
 import org.smap.sdal.model.KeyFilter;
 import org.smap.sdal.model.TableColumn;
 
-import model.DemoEdmProvider;
 import smapModels.SurveyForm;
 import smapModels.PortalModel;
 import util.Util;

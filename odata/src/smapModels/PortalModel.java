@@ -80,7 +80,9 @@ public class PortalModel {
 				sm.name = rs.getString("display_name");
 				
 				getForms(sm);
+				getSubformLinks(sm);
 			}
+			
 			
 		} finally {
 			if(pstmt != null) {try {pstmt.close();}catch(Exception e) {}}
@@ -125,10 +127,34 @@ public class PortalModel {
 				forms.put(f.name, f);
 				FullQualifiedName fqn = new FullQualifiedName(namespace, Util.convertFormToEntityName(f.name));
 				fqnForms.put(fqn, f);
-				
+				sm.forms.add(f);				
 			}
+			
 		} finally {
 			if(pstmt != null) {try {pstmt.close();}catch(Exception e) {}}
+		}
+	}
+	
+	private void getSubformLinks(SurveyModel sm) {
+		
+		/*
+		 * Now we have all the forms in the survey add the 1 to many relationships
+		 */
+		if(sm.forms.size() > 1) {
+			for(SurveyForm f : sm.forms) {
+				System.out.println("========= From form:   " + f.name + " : " + f.id);
+				for(SurveyForm targetForm : sm.forms) {
+					System.out.println("       To form:   " + targetForm.name + " : " + targetForm.parentform);
+					if(targetForm.parentform == f.id) {
+						System.out.println("      Adding");
+						SurveyNavigation sn = new SurveyNavigation();
+						sn.name = targetForm.name;
+						sn.targetForm = targetForm;
+						f.navigation.add(sn);
+						break;
+					}
+				}
+			}
 		}
 	}
 	
@@ -156,4 +182,5 @@ public class PortalModel {
 				false		// Audit?
 				);
 	}
+	
 }
