@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +19,8 @@ import org.smap.sdal.Utilities.Authorise;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
 import org.smap.sdal.Utilities.ResultsDataSource;
 import org.smap.sdal.Utilities.SDDataSource;
+import org.smap.sdal.managers.EmailManager;
+
 import data.PortalStorage;
 import model.OdataEdmProvider;
 import service.OdataEntityCollectionProcessor;
@@ -29,6 +32,9 @@ public class Odata extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static final String namespace = "OData.Smap";
 	Authorise a = null;
+	
+	private static Logger log =
+			Logger.getLogger(EmailManager.class.getName());
 
 	public Odata () {
 		ArrayList<String> authorisationsSuper = new ArrayList<String> ();	

@@ -37,8 +37,9 @@ public class Util {
         List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
          // To get the entity set we have to interpret all URI segments
         if (!(resourcePaths.get(0) instanceof UriResourceEntitySet)) {
-            throw new ODataApplicationException("Invalid resource type for first segment.",
-                                    HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(),Locale.ENGLISH);
+        	ODataApplicationException e = new ODataApplicationException("Invalid resource type for first segment.",
+                    HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(),Locale.ENGLISH);
+        		log.log(Level.SEVERE, e.getMessage(), e);
         }
 
         UriResourceEntitySet uriResource = (UriResourceEntitySet) resourcePaths.get(0);
@@ -81,7 +82,7 @@ public class Util {
     					 kf.iValue = Integer.valueOf(kf.sValue);
     				 } catch(Exception e) {
     					 log.info("Failed to convert " + kf.sValue + " to integer");
-    					 log.log(Level.SEVERE, "Messaging Exception");
+    					 log.log(Level.SEVERE, e.getMessage(), e);
     				 }
     			 }
     			 
@@ -91,8 +92,6 @@ public class Util {
     			 }
     			 
     			 filters.add(kf);
-    			 
- 
 
     		 }
     		 
@@ -130,8 +129,10 @@ public class Util {
                 valueAsString = edmPrimitiveType.valueToString(valueObject, isNullable, maxLength,
                                                                 precision, scale, isUnicode);
             } catch (EdmPrimitiveTypeException e) {
-                throw new ODataApplicationException("Failed to retrieve String value",
+            		ODataApplicationException ex = new ODataApplicationException("Failed to retrieve String value",
                                              HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode(),Locale.ENGLISH, e);
+            		log.log(Level.SEVERE, ex.getMessage(), ex);
+            		throw ex;
             }
 
             if (valueAsString == null){
