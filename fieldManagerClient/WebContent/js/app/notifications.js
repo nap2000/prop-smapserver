@@ -644,7 +644,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 h[++idx] = data[i].target;
                 h[++idx] = '</td>';
 
-                if(!data[i].notifyDetails.emails) {
+                if(data[i].notifyDetails && !data[i].notifyDetails.emails) {
                     data[i].notifyDetails.emails = [];
                 }
                 // details
