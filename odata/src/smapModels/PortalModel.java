@@ -125,6 +125,7 @@ public class PortalModel {
 				f.survey = sm;
 				// Add the form to the hashmaps that reference it
 				forms.put(f.name, f);
+				
 				FullQualifiedName fqn = new FullQualifiedName(namespace, Util.convertFormToEntityName(f.name));
 				fqnForms.put(fqn, f);
 				sm.forms.add(f);				
@@ -138,19 +139,29 @@ public class PortalModel {
 	private void getSubformLinks(SurveyModel sm) {
 		
 		/*
-		 * Now we have all the forms in the survey add the 1 to many relationships
+		 * Now we have all the forms in the survey add the relationships between forms in the survey
 		 */
 		if(sm.forms.size() > 1) {
 			for(SurveyForm f : sm.forms) {
-				System.out.println("========= From form:   " + f.name + " : " + f.id);
 				for(SurveyForm targetForm : sm.forms) {
-					System.out.println("       To form:   " + targetForm.name + " : " + targetForm.parentform);
 					if(targetForm.parentform == f.id) {
-						System.out.println("      Adding");
+						System.out.println("========= From form:   " + f.name + " : " + f.id);
+						System.out.println("       To form:   " + targetForm.name + " : " + targetForm.parentform);
+						
 						SurveyNavigation sn = new SurveyNavigation();
 						sn.name = targetForm.name;
+						sn.navType = sn.ONE_TO_MANY;
 						sn.targetForm = targetForm;
+						sn.nullable = true;
 						f.navigation.add(sn);
+						
+						SurveyNavigation sn_back = new SurveyNavigation();
+						sn_back.name = f.name;
+						sn_back.navType = sn.MANY_TO_ONE;
+						sn_back.targetForm = f;
+						sn.nullable = false;
+						targetForm.navigation.add(sn_back);					
+						
 						break;
 					}
 				}
