@@ -24,6 +24,7 @@ import org.apache.olingo.commons.api.data.ValueType;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.EdmEntityType;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
+import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.apache.olingo.commons.api.ex.ODataRuntimeException;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.apache.olingo.server.api.ODataApplicationException;
@@ -71,7 +72,8 @@ public class PortalStorage {
 				// Get Prepared Statment
 				TableDataManager tdm = new TableDataManager(localisation);
 				pstmt = tdm.getPreparedStatement(sd, cResults, form.columns, surveyModel.urlprefix, form.survey.id,
-						form.tableName, 0, // Parent key - set to zero to return all
+						form.tableName, 
+						0, // Parent key - set to zero to return all
 						null, // HRK if not null will restrict to a specific HRK
 						surveyModel.user, null, // Column name to sort on
 						null, // Sort direction asc or desc
@@ -127,7 +129,8 @@ public class PortalStorage {
 				// Get Prepared Statement
 				TableDataManager tdm = new TableDataManager(localisation);
 				pstmt = tdm.getPreparedStatement(sd, cResults, form.columns, surveyModel.urlprefix, form.survey.id,
-						form.tableName, 0, // Parent key - set to zero to return all
+						form.tableName, 
+						0, // Parent key - set to zero to return all
 						null, // HRK if not null will restrict to a specific HRK
 						surveyModel.user, null, // Column name to sort on
 						null, // Sort direction asc or desc
@@ -158,6 +161,58 @@ public class PortalStorage {
 
 		return entity;
 	}
+	
+	 public EntityCollection getRelatedEntityCollection(Entity sourceEntity, EdmEntitySet targetEntitySet) throws SQLException, Exception {
+		    EntityCollection navigationTargetEntityCollection = new EntityCollection();
+
+		    String esName = targetEntitySet.getName();
+			SurveyForm form = surveyModel.forms.get(esName);
+		    if (form != null) {
+				PreparedStatement pstmt = null;
+				try {
+					 int parkey = (Integer) sourceEntity.getProperty("ID").getValue();
+					// Get Prepared Statement
+					TableDataManager tdm = new TableDataManager(localisation);
+					pstmt = tdm.getPreparedStatement(sd, cResults, form.columns, surveyModel.urlprefix, form.survey.id,
+							form.tableName, 
+							parkey, // Parent key - set to zero to return all
+							null, // HRK if not null will restrict to a specific HRK
+							surveyModel.user, null, // Column name to sort on
+							null, // Sort direction asc or desc
+							false, // Set true to get managed form columns
+							false, // Group only used when finding duplicate records
+							false, // Kobo only, if true translate column names to kobo names
+							0, // Start primary key
+							0, // Number of records to return
+							(form.parentform != 0), // get the parent key
+							0, // Start parent key
+							false, // Super user
+							false, // Return records greater than or equal to primary key
+							"no", // include bad
+							null, // no custom filter
+							null // Add key filters
+					);
+					
+					ResultSet rs = pstmt.executeQuery();
+					while(rs.next()) {
+						Entity e = getEntity(rs, form);
+						
+						navigationTargetEntityCollection.getEntities().add(e);
+					}
+					
+				} finally {
+					try {
+						if (pstmt != null) {	pstmt.close();}} catch (SQLException e) {}
+				}
+		    }
+				
+		    if (navigationTargetEntityCollection.getEntities().isEmpty()) {
+		      return null;
+		    }
+
+		    return navigationTargetEntityCollection;
+
+	 }
 
 	/* INTERNAL */
 
