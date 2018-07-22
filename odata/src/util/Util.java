@@ -10,8 +10,10 @@ import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.EntityCollection;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.edm.Edm;
+import org.apache.olingo.commons.api.edm.EdmBindingTarget;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.EdmEntityType;
+import org.apache.olingo.commons.api.edm.EdmNavigationProperty;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveType;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeException;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
@@ -171,5 +173,14 @@ public class Util {
     			csdlType = EdmPrimitiveTypeKind.String.getFullQualifiedName().toString();
     		}
     		return csdlType;
+    }
+    
+    public static EdmEntitySet getNavigationTargetEntitySet(EdmEntitySet startEdmEntitySet, EdmNavigationProperty edmNavigationProperty) {
+    		EdmEntitySet navigationTargetEntitySet = null;
+    		EdmBindingTarget edmBindingTarget = startEdmEntitySet.getRelatedBindingTarget(edmNavigationProperty.getName());
+    		if(edmBindingTarget instanceof EdmEntitySet){
+    			navigationTargetEntitySet = (EdmEntitySet)edmBindingTarget;
+    		}
+    		return navigationTargetEntitySet;
     }
 }

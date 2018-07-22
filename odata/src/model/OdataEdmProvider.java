@@ -149,21 +149,29 @@ public class OdataEdmProvider extends CsdlAbstractEdmProvider {
 				
 				/*
 				 * Get the navigation properties
-				 * 1 to many relationships
-				 */
+				 */			
 				List<CsdlNavigationProperty> navPropList = new ArrayList<CsdlNavigationProperty>();
+				
+				/*
+				 * Parent to child form relationships
+				 */
 				if(f.navigation.size() > 0) {
 					System.out.println("================ Adding navigation for: " + f.name);
 					for(SurveyNavigation sn : f.navigation) {
-						System.out.println("xxx Nav: " + sn.name + " : " + 
-								Util.convertFormToEntityName(sn.name) + " : " + Util.convertFormToEntityName(f.name));
+						
+						String name = sn.isOneToMany() ? sn.name : Util.convertFormToEntityName(sn.name);
+						String type = Util.convertFormToEntityName(sn.name);
+						String partnerName = sn.isOneToMany() ? Util.convertFormToEntityName(f.name) : f.name;
+						
+						System.out.println("xxx Nav: " + name + " : " + type + " : " + partnerName);
 						CsdlNavigationProperty navProp = new CsdlNavigationProperty()
-	                            .setName(sn.name)
-	                            .setType(new FullQualifiedName(namespace, Util.convertFormToEntityName(sn.name)))		// Entity type
+	                            .setName(name)
+	                            .setType(new FullQualifiedName(namespace, type))		// Entity type
 	                            .setNullable(sn.nullable)
 	                            .setCollection(true)
-	                            .setPartner(Util.convertFormToEntityName(f.name));
+	                            .setPartner(partnerName);
 						navPropList.add(navProp);
+						
 					}
 				}
 				
