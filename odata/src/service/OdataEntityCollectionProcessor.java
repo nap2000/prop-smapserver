@@ -63,82 +63,86 @@ public class OdataEntityCollectionProcessor implements EntityCollectionProcessor
 	public void readEntityCollection(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType responseFormat)
 		    throws ODataApplicationException, SerializerException {
 		
-		EdmEntitySet responseEdmEntitySet = null; // for building ContextURL
-		EntityCollection responseEntityCollection = null; // for the response body
-		
-		// 1st retrieve the requested EntitySet from the uriInfo
-		List<UriResource> resourceParts = uriInfo.getUriResourceParts();
-		int segmentCount = resourceParts.size();
-		
-		UriResource uriResource = resourceParts.get(0); // the first segment is the EntitySet
-		if (! (uriResource instanceof UriResourceEntitySet)) {
-		    throw new ODataApplicationException("Only EntitySet is supported", HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(),storage.locale);
-		}
-		
-		UriResourceEntitySet uriResourceEntitySet = (UriResourceEntitySet) uriResource;
-		EdmEntitySet startEdmEntitySet = uriResourceEntitySet.getEntitySet();
-
-		if(segmentCount == 1){ // this is the case for: DemoService/DemoService.svc/Categories
-		    responseEdmEntitySet = startEdmEntitySet; // first (and only) entitySet
-		    // 2nd: fetch the data from backend for this requested EntitySetName
-		    // it has to be delivered as EntitySet object
-		    try {
-		    		responseEntityCollection = storage.readEntitySetData(startEdmEntitySet);
-		    } catch (Exception e) {
-		    		log.log(Level.SEVERE, "Messaging Exception", e);
-		    		throw new ODataApplicationException(e.getMessage(), 0, storage.locale);
-		    }
-		} else if (segmentCount == 2){ //navigation: e.g. DemoService.svc/Categories(3)/Products
-		    UriResource lastSegment = resourceParts.get(1); // don't support more complex URIs
-		    if(lastSegment instanceof UriResourceNavigation){
-		        UriResourceNavigation uriResourceNavigation = (UriResourceNavigation)lastSegment;
-		        EdmNavigationProperty edmNavigationProperty = uriResourceNavigation.getProperty();
-		        EdmEntityType targetEntityType = edmNavigationProperty.getType();
-		        responseEdmEntitySet = Util.getNavigationTargetEntitySet(startEdmEntitySet, edmNavigationProperty);
-
-		        // 2nd: fetch the data from backend
-		        // first fetch the entity where the first segment of the URI points to
-		        // e.g. Categories(3)/Products first find the single entity: Category(3)
-		        List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
-		        Entity sourceEntity = null;
-		        try {
-		        		sourceEntity = storage.readEntityData(startEdmEntitySet, keyPredicates);
-		        } catch(Exception e) {
+		try {
+			EdmEntitySet responseEdmEntitySet = null; // for building ContextURL
+			EntityCollection responseEntityCollection = null; // for the response body
+			
+			// 1st retrieve the requested EntitySet from the uriInfo
+			List<UriResource> resourceParts = uriInfo.getUriResourceParts();
+			int segmentCount = resourceParts.size();
+			
+			UriResource uriResource = resourceParts.get(0); // the first segment is the EntitySet
+			if (! (uriResource instanceof UriResourceEntitySet)) {
+			    throw new ODataApplicationException("Only EntitySet is supported", HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(),storage.locale);
+			}
+			
+			UriResourceEntitySet uriResourceEntitySet = (UriResourceEntitySet) uriResource;
+			EdmEntitySet startEdmEntitySet = uriResourceEntitySet.getEntitySet();
+	
+			if(segmentCount == 1){ // this is the case for: DemoService/DemoService.svc/Categories
+			    responseEdmEntitySet = startEdmEntitySet; // first (and only) entitySet
+			    // 2nd: fetch the data from backend for this requested EntitySetName
+			    // it has to be delivered as EntitySet object
+			    try {
+			    		responseEntityCollection = storage.readEntitySetData(startEdmEntitySet);
+			    } catch (Exception e) {
+			    		log.log(Level.SEVERE, "Messaging Exception", e);
+			    		throw new ODataApplicationException(e.getMessage(), 0, storage.locale);
+			    }
+			} else if (segmentCount == 2){ //navigation: e.g. DemoService.svc/Categories(3)/Products
+			    UriResource lastSegment = resourceParts.get(1); // don't support more complex URIs
+			    if(lastSegment instanceof UriResourceNavigation){
+			        UriResourceNavigation uriResourceNavigation = (UriResourceNavigation)lastSegment;
+			        EdmNavigationProperty edmNavigationProperty = uriResourceNavigation.getProperty();
+			        responseEdmEntitySet = Util.getNavigationTargetEntitySet(startEdmEntitySet, edmNavigationProperty);
+	
+			        // 2nd: fetch the data from backend
+			        // first fetch the entity where the first segment of the URI points to
+			        // e.g. Categories(3)/Products first find the single entity: Category(3)
+			        List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
+			        Entity sourceEntity = null;
+			        try {
+			        		sourceEntity = storage.readEntityData(startEdmEntitySet, keyPredicates);
+			        } catch(Exception e) {
+			        		log.log(Level.SEVERE, e.getMessage(), e);
+			        		throw new ODataApplicationException(e.getMessage(), 0, storage.locale);
+			        }
+			        // error handling for e.g.  DemoService.svc/Categories(99)/Products
+			        if(sourceEntity == null) {
+			            throw new ODataApplicationException("Entity not found.", HttpStatusCode.NOT_FOUND.getStatusCode(), storage.locale);
+			        }
+			        // then fetch the entity collection where the entity navigates to
+			        try {
+			        		responseEntityCollection = storage.getRelatedEntityCollection(sourceEntity, responseEdmEntitySet);
+			        } catch(Exception e) {
 		        		log.log(Level.SEVERE, e.getMessage(), e);
 		        		throw new ODataApplicationException(e.getMessage(), 0, storage.locale);
 		        }
-		        // error handling for e.g.  DemoService.svc/Categories(99)/Products
-		        if(sourceEntity == null) {
-		            throw new ODataApplicationException("Entity not found.", HttpStatusCode.NOT_FOUND.getStatusCode(), storage.locale);
-		        }
-		        // then fetch the entity collection where the entity navigates to
-		        try {
-		        		responseEntityCollection = storage.getRelatedEntityCollection(sourceEntity, responseEdmEntitySet);
-		        } catch(Exception e) {
-	        		log.log(Level.SEVERE, e.getMessage(), e);
-	        		throw new ODataApplicationException(e.getMessage(), 0, storage.locale);
-	        }
-		    }
-		} else{ // this would be the case for e.g. Products(1)/Category/Products
-		    throw new ODataApplicationException("Not supported", HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(), storage.locale);
+			    }
+			} else{ // this would be the case for e.g. Products(1)/Category/Products
+			    throw new ODataApplicationException("Not supported", HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(), storage.locale);
+			}
+	
+			  // 3rd: create a serializer based on the requested format (json)
+			  ODataSerializer serializer = odata.createSerializer(responseFormat);
+	
+			  // 4th: Now serialize the content: transform from the EntitySet object to InputStream
+			  EdmEntityType edmEntityType = responseEdmEntitySet.getEntityType();
+			  ContextURL contextUrl = ContextURL.with().entitySet(responseEdmEntitySet).build();
+			  final String id = request.getRawBaseUri() + "/" + responseEdmEntitySet.getName();
+	
+			  EntityCollectionSerializerOptions opts = EntityCollectionSerializerOptions.with().id(id).contextURL(contextUrl).build();
+			  SerializerResult serializerResult = serializer.entityCollection(serviceMetadata, edmEntityType, responseEntityCollection, opts);
+			  InputStream serializedContent = serializerResult.getContent();
+	
+			  // Finally: configure the response object: set the body, headers and status code
+			  response.setContent(serializedContent);
+			  response.setStatusCode(HttpStatusCode.OK.getStatusCode());
+			  response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
+		} catch (Exception e) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+			throw e;
 		}
-
-		  // 3rd: create a serializer based on the requested format (json)
-		  ODataSerializer serializer = odata.createSerializer(responseFormat);
-
-		  // 4th: Now serialize the content: transform from the EntitySet object to InputStream
-		  EdmEntityType edmEntityType = responseEdmEntitySet.getEntityType();
-		  ContextURL contextUrl = ContextURL.with().entitySet(responseEdmEntitySet).build();
-		  final String id = request.getRawBaseUri() + "/" + responseEdmEntitySet.getName();
-
-		  EntityCollectionSerializerOptions opts = EntityCollectionSerializerOptions.with().id(id).contextURL(contextUrl).build();
-		  SerializerResult serializerResult = serializer.entityCollection(serviceMetadata, edmEntityType, responseEntityCollection, opts);
-		  InputStream serializedContent = serializerResult.getContent();
-
-		  // Finally: configure the response object: set the body, headers and status code
-		  response.setContent(serializedContent);
-		  response.setStatusCode(HttpStatusCode.OK.getStatusCode());
-		  response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
 	}
 
