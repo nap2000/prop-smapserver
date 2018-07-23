@@ -92,13 +92,6 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             // Upload File
             $('#submitFileGroup').click( function(e) {
 
-                file = $('#templateName').val();
-
-                if(!file || file.trim().length == 0) {
-                    alert(localise.set["msg_val_nm"]);
-                    return false;
-                }
-
                 if(!gReplace) {
                     $('#surveyId').val($('#group').val());
                 }
@@ -845,6 +838,12 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             var f = document.forms.namedItem("uploadForm");
             var formData = new FormData(f);
             var url;
+
+            file = $('#templateName').val();
+            if(!file || file.trim().length == 0) {
+                $('#up_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(localise.set["msg_val_nm"]);
+                return false;
+            }
 
             url = '/surveyKPI/upload/surveytemplate';
 
