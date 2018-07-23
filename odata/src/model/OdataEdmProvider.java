@@ -117,7 +117,6 @@ public class OdataEdmProvider extends CsdlAbstractEdmProvider {
 		
 		CsdlEntityType entityType = null;
 		
-		System.out.println("--------------Entity type name: " + entityTypeName.toString());
 		if(entityTypeName.toString().equals("OData.Smap.visits")) {
 			System.out.println("THis is it");
 		}
@@ -130,12 +129,13 @@ public class OdataEdmProvider extends CsdlAbstractEdmProvider {
 				 */
 				ArrayList<CsdlProperty> props = new ArrayList<> ();
 				for(TableColumn tc : f.columns) {
-					System.out.println("Add to model: " + tc.name + " : " + tc.type);
+					
+					System.out.println("Prop: " + tc.humanName + " : " + tc.type + " : " + tc.displayName);
 					
 					// Defaults
 					String name = tc.name;
 					String csdlType = null;
-								
+						
 					if(name.equals("prikey")) {
 						name = "ID";
 						csdlType = EdmPrimitiveTypeKind.Int32.getFullQualifiedName().toString();
@@ -156,7 +156,6 @@ public class OdataEdmProvider extends CsdlAbstractEdmProvider {
 				 * Parent to child form relationships
 				 */
 				if(f.navigation.size() > 0) {
-					System.out.println("================ Adding navigation for: " + f.name);
 					for(SurveyNavigation sn : f.navigation) {
 						
 						String name = sn.isOneToMany() ? sn.name : Util.convertFormToEntityName(sn.name);

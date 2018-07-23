@@ -230,31 +230,28 @@ public class PortalStorage {
 		Entity e = new Entity();
 		
 		for (TableColumn c : form.columns) {
-			String name = c.humanName;
+			String name = c.name;
 			String type = c.type;
 			
 			if(name.equals("prikey")) {
-				prikey = rs.getInt(idx);
 				name = "ID";
+				prikey = rs.getInt(idx);
+				type = "int";
+			} else if(name.equals("parkey")) {
 				type = "int";
 			}
-				
-			System.out.println("Get Entity. Type: " + idx + " : " + name + " : " + type);
 			
 			if(type.equals(SmapQuestionTypes.INT)) {
 				int iValue = rs.getInt(idx++);
-				System.out.println("        Add Int Property: " + name + " : " + iValue);
 				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, iValue));
 			} else if(type.equals(SmapQuestionTypes.DATETIME)) {
 				//Timestamp dateValue = rs.getTimestamp(idx++);		// TODO
 				String dateValue = rs.getString(idx++);
-				System.out.println("        Add Date Property: " + name + " : " + dateValue);
 				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, dateValue));
 			
 			} else if(type.equalsIgnoreCase(SmapQuestionTypes.STRING) ||
 						type.equalsIgnoreCase(SmapQuestionTypes.SELECT1)) {
 				String sValue = rs.getString(idx++);
-				System.out.println("        Add String Property: " + name + " : " + sValue);
 				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, sValue));
 			} else {
 				log.info("Error: Unknown table column type: " + type + " processing as string");
