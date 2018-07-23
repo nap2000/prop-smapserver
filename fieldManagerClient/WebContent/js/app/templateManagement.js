@@ -115,9 +115,9 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                         // Check for warnings in the form
                         if(data && data.warnings && data.warnings.length > 0) {
                             $('#up_warnings').show().html(warningMsgToHtml(data));
-                                }
+                        }
 
-                            },
+                    },
                     error: function(xhr, textStatus, err) {
                         removeHourglass();
                         if(xhr.readyState == 0 || xhr.status == 0) {
