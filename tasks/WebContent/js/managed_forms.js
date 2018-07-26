@@ -29,7 +29,7 @@ if (Modernizr.localstorage) {
 requirejs.config({
     baseUrl: 'js/libs',
     locale: gUserLocale,
-    waitSeconds: 0,
+    waitSeconds: 60,
     paths: {
         app: '../app',
         i18n: '../../../../js/libs/i18n',
