@@ -3,7 +3,7 @@
     locale: "en",
 //    optimize: 'none',
     wrapShim: false,
-    waitSeconds: 0,
+    waitSeconds: 60,
     baseUrl: 'js/libs',
     paths: {
     	app: '../app',
