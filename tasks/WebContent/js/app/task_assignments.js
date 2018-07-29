@@ -343,8 +343,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 if (gCurrentTaskFeature.geometry) {
                     if (gCurrentTaskFeature.geometry.coordinates && gCurrentTaskFeature.geometry.coordinates.length > 1) {
                         //taskFeature.properties.location = "POINT(" + gCurrentTaskFeature.geometry.coordinates.join(" ") + ")";  // deprecate
-                        taskFeature.properties.lon = gCurrentTaskFeature.geometry.coordinates.coordinates[0];
-                        taskFeature.properties.lat = gCurrentTaskFeature.geometry.coordinates.coordinates[1];
+                        taskFeature.properties.lon = gCurrentTaskFeature.geometry.coordinates[0];
+                        taskFeature.properties.lat = gCurrentTaskFeature.geometry.coordinates[1];
 
                     } else {
                         //taskFeature.properties.location = "POINT(0 0)"; // deprecate
