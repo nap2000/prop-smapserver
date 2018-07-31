@@ -1889,7 +1889,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
             var statusClass = "";
 
-            if (status === "new" || status === "unsent" || status === "unsubscribed" || status === "blocked") {
+            if (status === "new" || status === "unsent" || status === "unsubscribed"
+                || status === "blocked" || status === "rejected") {
                 statusClass = "bg-danger";
             } else if (status === "submitted") {
                 statusClass = "bg-success";
