@@ -1414,7 +1414,7 @@ define([
                 for(j = 0; j < forms[i].questions.length; j++) {
                     question = forms[i].questions[j];
                     if(!question.deleted &&  !question.soft_deleted &&
-                        question.type.indexOf("select") === 0 &&
+                        (question.type.indexOf("select") === 0 || question.type === "rank") &&
                         question.list_name === list) {
 
                         nameArray.push(question.name);
@@ -1683,7 +1683,7 @@ define([
                 valid = true,
                 survey;
 
-            if(item.type.indexOf('select') === 0) {
+            if(item.type.indexOf('select') === 0 || item.type === "rank") {
                 if(typeof globals.model.survey.optionLists[item.list_name] === "undefined") {
                     valid = false;
                 }
