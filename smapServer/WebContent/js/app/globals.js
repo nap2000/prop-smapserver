@@ -555,6 +555,15 @@ define(function () {
                 source: "user"
             },
             {
+                name: "Rank",
+                type: "rank",
+                trans: "c_rank",
+                glyphicon: "sort-by-attributes",
+                canSelect: true,
+                visible: true,
+                source: "user"
+            },
+            {
                 name: "Unknown Type",
                 glyphicon: "record",
                 canSelect: false
