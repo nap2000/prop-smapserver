@@ -651,7 +651,8 @@ define([
 							 */
                             if(property.prop === "type" || property.prop === "name") {
 
-                                if(property.newVal.indexOf("select") == 0 || question.type.indexOf("select") == 0) {	// Select question
+                                if(property.newVal.indexOf("select") == 0 || question.type.indexOf("select") == 0 ||
+                                    property.newVal === "rank" || question.type === "rank") {	// Select question
 
                                     // Ensure there is a list name for this question
                                     if(!question.list_name && question.name) {

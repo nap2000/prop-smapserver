@@ -74,6 +74,7 @@ define({
     "c_type": "Type",
     "c_file": "File",
     "c_host": "Host",
+    "c_rank": "Rank",
     "c_user": "User",
     "c_projects": "Projects",
     "c_email": "Email",

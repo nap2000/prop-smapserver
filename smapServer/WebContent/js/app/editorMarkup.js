@@ -117,7 +117,7 @@ define([
 							h[++idx] = '<a button tabindex="-1" class="btn btn-default" data-toggle="collapse"  href="#collapse';
 							h[++idx] = globals.gElementIndex;
 							h[++idx]='"><span class="glyphicon glyphicon-chevron-down edit_icon"></span></a>';
-						} else if(question.type.indexOf("select") === 0) {
+						} else if(question.type.indexOf("select") === 0 || question.type === "rank") {
 						
 							h[++idx] = '<a button tabindex="-1" class="btn btn-default edit_choice" ';
 							h[++idx]='"><span class="glyphicon glyphicon-edit edit_icon"></span></a>';
@@ -136,7 +136,7 @@ define([
 		h[++idx] = '<div id="collapse';
 		h[++idx] = globals.gElementIndex;
 		h[++idx] = '" class="panel-body collapse';
-		if(question.type.indexOf("select") === 0) {
+		if(question.type.indexOf("select") === 0 || question.type === "rank") {
 			h[++idx] = ' selectquestion';
 		}
 		h[++idx] = '">';
