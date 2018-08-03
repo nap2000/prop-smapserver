@@ -71,6 +71,7 @@ define(
     "c_type": "Tipo",
     "c_file": "Archivo",
     "c_host": "Servidor",
+    "c_rank": "Ordenar",
     "c_user": "Usuario",
     "c_projects": "Proyectos",
     "c_email": "Email",
