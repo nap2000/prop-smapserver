@@ -2957,7 +2957,8 @@ function getViewLanguages(view) {
 }
 
 function validateEmails(emails) {
-	var valid = true;
+	var valid = true,
+		i;
     if(emails && emails.trim().length > 0) {
         var emailArray = emails.split(",");
         for (i = 0; i < emailArray.length; i++) {
