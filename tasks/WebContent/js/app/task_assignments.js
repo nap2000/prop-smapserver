@@ -611,7 +611,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                         var emails = assignObj["emails"];
                         if(emails && emails.trim().length > 0) {
                             var emailArray = emails.split(",");
-                            for (i = 0; i < emailArray.length; i++) {
+                            for (var i = 0; i < emailArray.length; i++) {
                                 if (!validateEmails(emailArray[i])) {
                                     alert(localise.set["msg_inv_email"]);
                                     break;
