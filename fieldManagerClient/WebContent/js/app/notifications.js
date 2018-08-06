@@ -224,6 +224,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
             var emailQuestion = $('#email_question').val();
             var emailMetaItem = $('#email_meta').val();
             var emailArray;
+            var i;
 
             // validate
             // Must specifify an email
