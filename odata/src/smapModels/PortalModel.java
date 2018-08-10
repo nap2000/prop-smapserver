@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 
 import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
+import org.smap.sdal.model.Action;
 import org.smap.sdal.model.Form;
 import org.smap.sdal.model.TableColumn;
 
@@ -63,15 +64,16 @@ public class PortalModel {
 				+ "and p.o_id = u.o_id "
 				+ "and u.ident = ? "
 				+ "and s.hidden = 'false' "
-				+ "and s.deleted = 'false'");
+				+ "and s.deleted = 'false' ");
 		
 		sql.append(GeneralUtilityMethods.getSurveyRBAC());
 		
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = sd.prepareStatement(sql.toString());
-			pstmt.setString(1, user);
-			pstmt.setString(2, user);		// RBAC
+			int paramIdx = 1;
+			pstmt.setString(paramIdx++, user);
+			pstmt.setString(paramIdx++, user);		// RBAC
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				SurveyModel sm = new SurveyModel();
