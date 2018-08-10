@@ -19,7 +19,9 @@ import org.smap.sdal.Utilities.Authorise;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
 import org.smap.sdal.Utilities.ResultsDataSource;
 import org.smap.sdal.Utilities.SDDataSource;
+import org.smap.sdal.managers.ActionManager;
 import org.smap.sdal.managers.EmailManager;
+import org.smap.sdal.model.Action;
 
 import data.PortalStorage;
 import model.OdataEdmProvider;
@@ -27,21 +29,25 @@ import service.OdataEntityCollectionProcessor;
 import service.OdataEntityProcessor;
 import service.OdataPrimitiveProcessor;
 import smapModels.PortalModel;
+import smapModels.ReportModel;
 
+/*
+ * Alows anonymous access to odata end point
+ */
 public class OdataAction extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static final String namespace = "OData.Smap";
-	Authorise a = null;
 	
 	private static Logger log =
 			Logger.getLogger(EmailManager.class.getName());
 
+	Authorise auth = null;
+	
 	public OdataAction () {
-		ArrayList<String> authorisationsSuper = new ArrayList<String> ();	
-		authorisationsSuper.add(Authorise.ANALYST);
-		authorisationsSuper.add(Authorise.VIEW_DATA);
-		authorisationsSuper.add(Authorise.ADMIN);
-		a = new Authorise(authorisationsSuper, null);	
+		ArrayList<String> authorisations = new ArrayList<String>();
+		authorisations.add(Authorise.ANALYST);
+		authorisations.add(Authorise.MANAGE); // Enumerators with MANAGE access can process managed forms
+		auth = new Authorise(authorisations, null);
 	}
 	
 	protected void service(final HttpServletRequest request, final HttpServletResponse response)
@@ -49,49 +55,61 @@ public class OdataAction extends HttpServlet {
 		
 		Connection sd = null;
 		Connection cResults = null;
-		String connectionString = "odata service";
+		String connectionString = "odata action service";
 		try {
 			Locale locale = request.getLocale();
 			ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);
-			
-			// Authorisation - Access
-			sd = SDDataSource.getConnection(connectionString);
-			a.isAuthorised(sd, request.getRemoteUser());
-			// End authorisation
 
 			/*
-			 * Each end point will has its own container name
-			 * These are defined as parameters in web.xml
-			 * However all the servlets point to this class
+			 * Get the key that identifies the action 
 			 */
-			String servletPath = request.getServletPath();
-			String container_name = servletPath.substring(1, servletPath.indexOf('.'));
-			System.out.println("Container Name: " + container_name);
+			String urlPath = request.getRequestURL().toString().trim();
+			if(urlPath.endsWith("/")) { // Remove any trailing slashes
+				urlPath = urlPath.substring(0, urlPath.length() - 1);
+			}
+			String userIdent = urlPath.substring(urlPath.lastIndexOf('/') + 1);
+			System.out.println("Action Name: " + userIdent);
 			
-			/*
-			 * TODO get the portal definition
-			 * For now just retrieve all visible surveys
-			 */
+			// 1. Get details on the action to be performed using the userIdent (Action Name)
+			sd = SDDataSource.getConnection(connectionString);
+			ActionManager am = new ActionManager();
+			Action a = am.getAction(sd, userIdent);
+			
+			// 2. If temporary user does not exist then throw exception
+			if (a == null) {
+				throw new Exception(localisation.getString("mf_adnf"));
+			}
+			
+			// Authorisation - Access Don't validate user rights as this is for an anonymous report
+			auth.isValidSurvey(sd, userIdent, a.sId, false, false);
+			// End Authorisation
+						
+			String container_name = a.name;		// Get from action
+			
 			// Create an internal model for the surveys that the user has access to
 			cResults = ResultsDataSource.getConnection(connectionString);
-			PortalModel surveyModel = new PortalModel(sd, cResults, localisation, locale, namespace,
+			String basePath = GeneralUtilityMethods.getBasePath(request);	
+			ReportModel reportModel = new ReportModel(sd, cResults, localisation, locale, namespace,
+					a,
 					request.getRemoteUser(),
-					GeneralUtilityMethods.getUrlPrefix(request));
+					GeneralUtilityMethods.getUrlPrefix(request),
+					basePath);
 			
-			PortalStorage storage = new PortalStorage(sd, cResults, locale, localisation, surveyModel);	
+			System.out.println("Report Model created");
+			//PortalStorage storage = new ReportStorage(sd, cResults, locale, localisation, a);	
 
 			// create odata handler and configure it with CsdlEdmProvider and Processor
-			OData odata = OData.newInstance();
-			ServiceMetadata edm = odata.createServiceMetadata(new OdataEdmProvider(surveyModel, namespace,  container_name), 
-					new ArrayList<EdmxReference>());
+			//OData odata = OData.newInstance();
+			//ServiceMetadata edm = odata.createServiceMetadata(new OdataEdmProvider(surveyModel, namespace,  container_name), 
+			//		new ArrayList<EdmxReference>());
 			
-			ODataHttpHandler handler = odata.createHandler(edm);
-			handler.register(new OdataEntityCollectionProcessor(storage));
-			handler.register(new OdataEntityProcessor(storage));
-			handler.register(new OdataPrimitiveProcessor(storage));
+			//ODataHttpHandler handler = odata.createHandler(edm);
+			//handler.register(new OdataEntityCollectionProcessor(storage));
+			//handler.register(new OdataEntityProcessor(storage));
+			//handler.register(new OdataPrimitiveProcessor(storage));
 
 			// let the handler do the work
-			handler.process(request, response);
+			//handler.process(request, response);
 		} catch (Exception e) {
 			throw new ServletException(e);
 		} finally {
