@@ -33,11 +33,14 @@ import org.smap.sdal.constants.SmapQuestionTypes;
 import org.smap.sdal.managers.EmailManager;
 import org.smap.sdal.managers.TableDataManager;
 import org.smap.sdal.model.Action;
+import org.smap.sdal.model.ColDesc;
 import org.smap.sdal.model.KeyFilter;
+import org.smap.sdal.model.SqlDesc;
 import org.smap.sdal.model.TableColumn;
 
 import smapModels.SurveyForm;
 import smapModels.PortalModel;
+import smapModels.ReportModel;
 import util.Util;
 
 public class ReportStorage {
@@ -50,13 +53,15 @@ public class ReportStorage {
 	public Connection sd;
 	public Connection cResults;
 	public Locale locale;
+	public ReportModel reportModel;
 
-	public ReportStorage(Connection sd, Connection cResults, Locale locale, ResourceBundle localisation, Action action) {
+	public ReportStorage(Connection sd, Connection cResults, Locale locale, ResourceBundle localisation, Action action, ReportModel reportModel) {
 		this.sd = sd;
 		this.cResults = cResults;
 		this.action = action;
 		this.locale = locale;
 		this.localisation = localisation;
+		this.reportModel = reportModel;
 	}
 
 	/* PUBLIC FACADE */
@@ -66,36 +71,17 @@ public class ReportStorage {
 		EntityCollection retEntitySet = new EntityCollection();
 		
 		String esName = edmEntitySet.getName();
-		SurveyForm form = surveyModel.forms.get(esName);
-		if (form != null) {
+		if (reportModel.sqlDesc != null) {
 			PreparedStatement pstmt = null;
 			try {
 				// Get Prepared Statment
 				TableDataManager tdm = new TableDataManager(localisation);
-				pstmt = tdm.getPreparedStatement(sd, cResults, form.columns, surveyModel.urlprefix, form.survey.id,
-						form.tableName, 
-						0, // Parent key - set to zero to return all
-						null, // HRK if not null will restrict to a specific HRK
-						surveyModel.user, null, // Column name to sort on
-						null, // Sort direction asc or desc
-						false, // Set true to get managed form columns
-						false, // Group only used when finding duplicate records
-						false, // Kobo only, if true translate column names to kobo names
-						0, // Start primary key
-						0, // Number of records to return
-						(form.parentform != 0), // get the parent key
-						0, // Start parent key
-						false, // Super user
-						false, // Return records greater than or equal to primary key
-						"no", // include bad
-						null, // no custom filter
-						null // no key filter
-				);
+				pstmt = cResults.prepareStatement(reportModel.sqlDesc.sql);
 				
 				ResultSet rs = pstmt.executeQuery();
 				while(rs.next()) {
 					System.out.println("Record: ");
-					Entity e = getEntity(rs, form);
+					Entity e = getEntity(rs, reportModel.sqlDesc);
 					
 					retEntitySet.getEntities().add(e);
 				}
@@ -112,7 +98,7 @@ public class ReportStorage {
 
 		return null;
 	}
-
+/*
 	public Entity readEntityData(EdmEntitySet edmEntitySet, List<UriParameter> keyParams)
 			throws SQLException, Exception {
 
@@ -162,58 +148,7 @@ public class ReportStorage {
 
 		return entity;
 	}
-	
-	 public EntityCollection getRelatedEntityCollection(Entity sourceEntity, EdmEntitySet targetEntitySet) throws SQLException, Exception {
-		    EntityCollection navigationTargetEntityCollection = new EntityCollection();
-
-		    String esName = targetEntitySet.getName();
-			SurveyForm form = surveyModel.forms.get(esName);
-		    if (form != null) {
-				PreparedStatement pstmt = null;
-				try {
-					 int parkey = (Integer) sourceEntity.getProperty("ID").getValue();
-					// Get Prepared Statement
-					TableDataManager tdm = new TableDataManager(localisation);
-					pstmt = tdm.getPreparedStatement(sd, cResults, form.columns, surveyModel.urlprefix, form.survey.id,
-							form.tableName, 
-							parkey, // Parent key - set to zero to return all
-							null, // HRK if not null will restrict to a specific HRK
-							surveyModel.user, null, // Column name to sort on
-							null, // Sort direction asc or desc
-							false, // Set true to get managed form columns
-							false, // Group only used when finding duplicate records
-							false, // Kobo only, if true translate column names to kobo names
-							0, // Start primary key
-							0, // Number of records to return
-							(form.parentform != 0), // get the parent key
-							0, // Start parent key
-							false, // Super user
-							false, // Return records greater than or equal to primary key
-							"no", // include bad
-							null, // no custom filter
-							null // Add key filters
-					);
-					
-					ResultSet rs = pstmt.executeQuery();
-					while(rs.next()) {
-						Entity e = getEntity(rs, form);
-						
-						navigationTargetEntityCollection.getEntities().add(e);
-					}
-					
-				} finally {
-					try {
-						if (pstmt != null) {	pstmt.close();}} catch (SQLException e) {}
-				}
-		    }
-				
-		    if (navigationTargetEntityCollection.getEntities().isEmpty()) {
-		      return null;
-		    }
-
-		    return navigationTargetEntityCollection;
-
-	 }
+	*/
 
 	/* INTERNAL */
 
@@ -225,14 +160,14 @@ public class ReportStorage {
 		}
 	}
 	
-	private Entity getEntity(ResultSet rs, SurveyForm form) throws SQLException {
+	private Entity getEntity(ResultSet rs, SqlDesc sqlDesc) throws SQLException {
 		int idx = 1;
 		int prikey = 0;
 		Entity e = new Entity();
 		
-		for (TableColumn c : form.columns) {
+		for (ColDesc c : sqlDesc.colNames) {
 			String name = c.name;
-			String type = c.type;
+			String type = c.qType;
 			
 			if(name.equals("prikey")) {
 				name = "ID";
@@ -260,7 +195,7 @@ public class ReportStorage {
 				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, sValue));
 			}
 		}
-		e.setId(createId(form.name, prikey));
+		e.setId(createId(reportModel.actionIdent, prikey));
 		
 		return e;
 	}

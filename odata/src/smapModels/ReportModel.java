@@ -28,12 +28,13 @@ public class ReportModel {
 	ResourceBundle localisation;
 	Locale locale;
 	String namespace;
-	Action action;
 	
-	public String user;						// Survey Id
+	public String actionIdent;
+	public Action action;
+	public String user;						// User Ident
 	public String urlprefix;					// Url prefix for images
 	public String basePath;
-	SqlDesc sqlDesc;
+	public SqlDesc sqlDesc;
 	HashMap<ArrayList<OptionDesc>, String> labelListMap = new  HashMap<> ();
 	
 	public ReportModel(Connection sd, 
@@ -42,9 +43,9 @@ public class ReportModel {
 			Locale locale, 
 			String namespace, 
 			Action action,
-			String user,
 			String urlprefix,
-			String basePath) throws Exception {
+			String basePath,
+			String actionIdent) throws Exception {
 		
 		this.sd = sd;
 		this.cResults = cResults;
@@ -52,9 +53,9 @@ public class ReportModel {
 		this.locale = locale;
 		this.namespace = namespace;	
 		this.action = action;
-		this.user = user;
 		this.urlprefix = urlprefix;
 		this.basePath = basePath;
+		this.actionIdent = actionIdent;
 				
 		/*
 		 * Get the list of forms and surveys to be exported

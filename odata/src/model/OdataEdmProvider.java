@@ -1,7 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,7 +22,6 @@ import org.apache.olingo.commons.api.ex.ODataException;
 import org.smap.sdal.managers.EmailManager;
 import org.smap.sdal.model.TableColumn;
 
-import smapModels.SurveyModel;
 import smapModels.SurveyNavigation;
 import smapModels.SurveyForm;
 import smapModels.PortalModel;
