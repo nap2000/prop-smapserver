@@ -408,9 +408,11 @@ require([
                 tab[++idx] = '</td>';
 
                 tab[++idx] = '<td>';			// Copy odata Link
-                tab[++idx] = '<button type="button" class="btn btn-default has_tt copyLinkOdata" title="Copy OData Link" value="';
-                tab[++idx] = i;
-                tab[++idx] = '">OData</button>';
+                if(gReportList[i].action_details.reportType === "xlsx") {
+                    tab[++idx] = '<button type="button" class="btn btn-default has_tt copyLinkOdata" title="Copy OData Link" value="';
+                    tab[++idx] = i;
+                    tab[++idx] = '">OData</button>';
+                }
                 tab[++idx] = '</td>';
 
                 tab[++idx] = '<td>';
