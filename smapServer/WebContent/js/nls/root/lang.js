@@ -268,6 +268,7 @@ define({
     "c_phone": "Phone Number",
     "c_rep_type": "Sub Form",
     "c_cl": "Copy Link",
+    "c_codl": "Copy OData Link",
     "c_cb": "Copy to clipboard",
     "c_c": "Copied",
     "c_quantity": "Quantity",
