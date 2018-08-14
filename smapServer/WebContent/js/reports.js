@@ -407,6 +407,12 @@ require([
                 tab[++idx] = '"><i class="fa fa-share-alt"></i></button>';
                 tab[++idx] = '</td>';
 
+                tab[++idx] = '<td>';			// Copy odata Link
+                tab[++idx] = '<button type="button" class="btn btn-default has_tt copyLinkOdata" title="Copy OData Link" value="';
+                tab[++idx] = i;
+                tab[++idx] = '">OData</button>';
+                tab[++idx] = '</td>';
+
                 tab[++idx] = '<td>';
                 tab[++idx] = '<div class="dropdown">';
                 tab[++idx] = '<button id="dropdownMenu' + i + '" class="btn btn-default dropdown-toggle report_action" data-toggle="dropdown"  type="button" aria-haspopup="true" aria-expanded="false">';
@@ -446,9 +452,27 @@ require([
             $temp.remove();
 
         });
+        $('.copyLinkOdata').click(function () {
+            var $this = $(this);
+            var i = $this.closest('tr').data("idx");
+            var link = location.origin + "/odata/action.svc/" + gReportList[i].action_details.name;
+
+
+            // From https://stackoverflow.com/questions/22581345/click-button-copy-to-clipboard-using-jquery
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val(link).select();
+            document.execCommand("copy");
+
+            $(this).prop('title', localise.set["c_c"] + ": " + link).tooltip('fixTitle').tooltip('show');
+            $temp.remove();
+
+        });
+
+
 
 		/*
-		 * Action Dropbox
+		 * Action Dropbox<td>…</td>
 		 */
 		var $dropdown = $('#contextMenu');
         $reportList.find('.report_action').click(function() {
