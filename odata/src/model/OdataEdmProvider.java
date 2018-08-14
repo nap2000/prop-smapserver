@@ -115,9 +115,6 @@ public class OdataEdmProvider extends CsdlAbstractEdmProvider {
 		
 		CsdlEntityType entityType = null;
 		
-		if(entityTypeName.toString().equals("OData.Smap.visits")) {
-			System.out.println("THis is it");
-		}
 		try {
 			SurveyForm f = model.fqnForms.get(entityTypeName);
 			if (f != null) {

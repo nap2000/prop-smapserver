@@ -25,6 +25,7 @@ import org.smap.sdal.Utilities.SDDataSource;
 import org.smap.sdal.managers.ActionManager;
 import org.smap.sdal.managers.EmailManager;
 import org.smap.sdal.model.Action;
+import org.smap.sdal.model.User;
 
 import data.PortalStorage;
 import data.ReportStorage;
@@ -66,55 +67,34 @@ public class OdataAction extends HttpServlet {
 			Locale locale = request.getLocale();
 			ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);
 
-			/*
-			 * Get the key that identifies the action 
-			 */
-			String servletUrl = request.getServletPath();
-			String urlPath = request.getRequestURL().toString().trim();
-			if(urlPath.endsWith("/")) { // Remove any trailing slashes 
-				urlPath = urlPath.substring(0, urlPath.length() - 1);
-			}
-			
-			// Remove base path
-			String entitySetName = urlPath.substring(urlPath.indexOf(servletUrl) + servletUrl.length() + 1);
-			// Remove anything after the user ident
-			int idx =  entitySetName.indexOf('/');
-			if(idx > 0) {
-				entitySetName = entitySetName.substring(0, entitySetName.indexOf('/'));
-			}
-			/*
-			 * Odata does not support GUUIds as entitySet names hence the GUID in the URL has had it's dashes replaced by underscores
-			 * Convert them back in order to look up the Action
-			 */
-			
-			String actionIdent = entitySetName.replace('_', '-');
-			// 1. Get details on the action to be performed using the userIdent (Action Name)
+			// Authorisation - Access
 			sd = SDDataSource.getConnection(connectionString);
-			ActionManager am = new ActionManager();
-			Action a = am.getAction(sd, actionIdent);
+			auth.isAuthorised(sd, request.getRemoteUser());
+			// End authorisation
 			
-			// 2. If the action details do not exist then throw exception
-			if (a == null) {
-				throw new Exception(localisation.getString("mf_adnf"));
-			}
+			String container_name = "reports";
 			
-			// Authorisation - Access Don't validate user rights as this is for an anonymous report
-			auth.isValidSurvey(sd, actionIdent, a.sId, false, false);
-			// End Authorisation
-				
-			String container_name = a.name;		// report Name
-			
-			// Create an internal model for the surveys that the user has access to
+			/*
+			 * Get the available reports and create the odata model
+			 */
 			cResults = ResultsDataSource.getConnection(connectionString);
 			String basePath = GeneralUtilityMethods.getBasePath(request);	
+			int oId = GeneralUtilityMethods.getOrganisationId(sd, request.getRemoteUser(), 0);
+			ActionManager am = new ActionManager();	
+			ArrayList<User> tempUsers = am.getTemporaryUsers(sd, oId, "report", 0, 0);
+			
+				
+
+			
+			// Create an internal model for the surveys that the user has access to
+
 			ReportModel reportModel = new ReportModel(sd, cResults, localisation, locale, namespace,
-					a,
+					tempUsers,
 					GeneralUtilityMethods.getUrlPrefix(request),
-					basePath,
-					entitySetName);
+					basePath);
 			
 			System.out.println("Report Model created");
-			ReportStorage storage = new ReportStorage(sd, cResults, locale, localisation, a, reportModel);	
+			ReportStorage storage = new ReportStorage(sd, cResults, locale, localisation, reportModel);	
 
 			// create odata handler and configure it with CsdlEdmProvider and Processor
 			OData odata = OData.newInstance();
