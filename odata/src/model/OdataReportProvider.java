@@ -28,6 +28,7 @@ import smapModels.SurveyModel;
 import smapModels.SurveyNavigation;
 import smapModels.SurveyForm;
 import smapModels.PortalModel;
+import smapModels.ReportDetails;
 import smapModels.ReportModel;
 import util.Util;
 
@@ -53,7 +54,9 @@ public class OdataReportProvider extends CsdlAbstractEdmProvider {
 
 		// create EntitySets
 		List<CsdlEntitySet> entitySets = new ArrayList<CsdlEntitySet>();
-		entitySets.add(getEntitySet(container, model.actionIdent));
+		for (String name : model.reports.keySet()) {
+			entitySets.add(getEntitySet(container, name));
+		}
 
 		// create EntityContainer
 		CsdlEntityContainer entityContainer = new CsdlEntityContainer();
@@ -100,16 +103,14 @@ public class OdataReportProvider extends CsdlAbstractEdmProvider {
 		
 		CsdlEntityType entityType = null;
 		
-		if(entityTypeName.toString().equals("OData.Smap.visits")) {
-			System.out.println("THis is it");
-		}
+		ReportDetails rd = model.fqnReports.get(entityTypeName);
 		try {
 			
 			/*
 			 * Get the column properties
 			 */
 			ArrayList<CsdlProperty> props = new ArrayList<> ();
-			for(ColDesc tc : model.sqlDesc.colNames) {
+			for(ColDesc tc : rd.sqlDesc.colNames) {
 					
 				System.out.println("Prop: " + tc.humanName + " : " + tc.qType + " : " + tc.question_name);
 					
@@ -140,7 +141,7 @@ public class OdataReportProvider extends CsdlAbstractEdmProvider {
 
 			// configure EntityType
 			entityType = new CsdlEntityType();
-			entityType.setName(Util.convertFormToEntityName(model.actionIdent));
+			entityType.setName(Util.convertFormToEntityName(rd.entitySetName));
 			entityType.setProperties(props);
 			entityType.setKey(Collections.singletonList(propertyRef));
 			if(navPropList.size() > 0) {
@@ -167,8 +168,9 @@ public class OdataReportProvider extends CsdlAbstractEdmProvider {
 	
 			// add EntityTypes
 			List<CsdlEntityType> entityTypes = new ArrayList<CsdlEntityType>();
-			FullQualifiedName fqn = new FullQualifiedName(namespace, Util.convertFormToEntityName(model.actionIdent));
-			entityTypes.add(getEntityType(fqn));
+			for(FullQualifiedName fqn : model.fqnReports.keySet()) {
+				entityTypes.add(getEntityType(fqn));
+			}
 			
 			schema.setEntityTypes(entityTypes);
 	

@@ -40,6 +40,7 @@ import org.smap.sdal.model.TableColumn;
 
 import smapModels.SurveyForm;
 import smapModels.PortalModel;
+import smapModels.ReportDetails;
 import smapModels.ReportModel;
 import util.Util;
 
@@ -48,17 +49,16 @@ public class ReportStorage {
 	private static Logger log =
 			Logger.getLogger(EmailManager.class.getName());
 	
-	public Action action;
+	//public Action action;
 	public ResourceBundle localisation;
 	public Connection sd;
 	public Connection cResults;
 	public Locale locale;
 	public ReportModel reportModel;
 
-	public ReportStorage(Connection sd, Connection cResults, Locale locale, ResourceBundle localisation, Action action, ReportModel reportModel) {
+	public ReportStorage(Connection sd, Connection cResults, Locale locale, ResourceBundle localisation, ReportModel reportModel) {
 		this.sd = sd;
 		this.cResults = cResults;
-		this.action = action;
 		this.locale = locale;
 		this.localisation = localisation;
 		this.reportModel = reportModel;
@@ -71,17 +71,17 @@ public class ReportStorage {
 		EntityCollection retEntitySet = new EntityCollection();
 		
 		String esName = edmEntitySet.getName();
-		if (reportModel.sqlDesc != null) {
+		ReportDetails rd = reportModel.reports.get(esName);
+		if (rd.sqlDesc != null) {
 			PreparedStatement pstmt = null;
 			try {
 				// Get Prepared Statment
-				TableDataManager tdm = new TableDataManager(localisation);
-				pstmt = cResults.prepareStatement(reportModel.sqlDesc.sql);
+				pstmt = cResults.prepareStatement(rd.sqlDesc.sql);
 				
 				ResultSet rs = pstmt.executeQuery();
 				while(rs.next()) {
 					System.out.println("Record: ");
-					Entity e = getEntity(rs, reportModel.sqlDesc);
+					Entity e = getEntity(rs, rd.sqlDesc, esName);
 					
 					retEntitySet.getEntities().add(e);
 				}
@@ -160,7 +160,7 @@ public class ReportStorage {
 		}
 	}
 	
-	private Entity getEntity(ResultSet rs, SqlDesc sqlDesc) throws SQLException {
+	private Entity getEntity(ResultSet rs, SqlDesc sqlDesc, String esName) throws SQLException {
 		int idx = 1;
 		int prikey = 0;
 		Entity e = new Entity();
@@ -195,7 +195,7 @@ public class ReportStorage {
 				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, sValue));
 			}
 		}
-		e.setId(createId(reportModel.actionIdent, prikey));
+		e.setId(createId(esName, prikey));
 		
 		return e;
 	}
