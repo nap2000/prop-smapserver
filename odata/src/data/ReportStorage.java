@@ -189,7 +189,10 @@ public class ReportStorage {
 						type.equalsIgnoreCase(SmapQuestionTypes.SELECT1)) {
 				String sValue = rs.getString(idx++);
 				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, sValue));
-			} else {
+			} else if(type.equalsIgnoreCase("geometry")) {
+					String sValue = rs.getString(idx++);
+			e.addProperty(new Property(null, name, ValueType.PRIMITIVE, sValue));
+		}else {
 				log.info("Error: Unknown table column type: " + type + " processing as string");
 				String sValue = rs.getString(idx++);
 				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, sValue));
