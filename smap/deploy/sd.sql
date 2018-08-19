@@ -1000,6 +1000,7 @@ update upload_event set results_db_applied = 'true' where not results_db_applied
 -- Prevent spamming
 alter table people add column when_requested_subscribe TIMESTAMP WITH TIME ZONE;
 
+alter table form add column replace boolean default false;
 
 
 
