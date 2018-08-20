@@ -153,7 +153,13 @@ $(document).ready(function() {
 				  window.location.href="/";
 			  }, error: function(data, status) {
 				  removeHourglass();
-				  alert("Error: " + data.responseText); 
+				  var msg = data.responseText;
+				  var idx1 = msg.indexOf('ApplicationException:');
+				  var idx2 = msg.indexOf('</h1>');
+				  if(idx1 > 0 && idx2 > idx1) {
+				  	msg = msg.substring(idx1, idx2);
+				  }
+				  alert(localise.set["c_error"] + ": " + msg);
 			  }
 		});
 	

@@ -102,10 +102,6 @@ require([
             }
         });
 
-        $('#subscribeForm input').keyup(function () {
-            validateForm();
-        });
-
         if(gToken && !gSubscribe) {
             $('#heading').text(localise.set["c_unsubscribe"]);
             $('#unsubscribe').show();

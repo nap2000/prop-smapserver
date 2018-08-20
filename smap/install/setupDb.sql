@@ -485,7 +485,8 @@ CREATE TABLE form (
 	path text,
 	form_index int default -1,					-- Temporary data used by the online editor
 	reference boolean default false,
-	merge boolean default false
+	merge boolean default false,
+	replace boolean default false
 	);
 ALTER TABLE form OWNER TO ws;
 
@@ -1110,6 +1111,7 @@ create TABLE people (
 	unsubscribed boolean default false,
 	uuid text,								-- Uniquely identify this person
 	when_unsubscribed TIMESTAMP WITH TIME ZONE,
-	when_subscribed TIMESTAMP WITH TIME ZONE
+	when_subscribed TIMESTAMP WITH TIME ZONE,
+	when_requested_subscribe TIMESTAMP WITH TIME ZONE		-- prevent spamming
 	);
 ALTER TABLE people OWNER TO ws;
