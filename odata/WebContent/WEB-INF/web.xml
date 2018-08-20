@@ -10,6 +10,11 @@
 		<servlet-class>odataApi.Odata</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	<servlet>
+		<servlet-name>OdataAction</servlet-name>
+		<servlet-class>odataApi.OdataAction</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 	
 	<servlet-mapping>
 		<servlet-name>Odata</servlet-name>
@@ -35,6 +40,11 @@
 		<servlet-mapping>
 		<servlet-name>Odata</servlet-name>
 		<url-pattern>/shared_portal3.svc/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>OdataAction</servlet-name>
+		<url-pattern>/action.svc/*</url-pattern>
 	</servlet-mapping>
 
 </web-app>
