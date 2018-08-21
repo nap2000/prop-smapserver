@@ -583,8 +583,10 @@ $('#download_pdf').click(function () {
 	if(orientation === "landscape") {
 		docURL += "&landscape=true";
 	}
+
+	downloadFile(docURL);
 	
-	window.location.href = docURL;
+	//window.location.href = docURL;
 	$('#instance_functions_popup').dialog("close");
 });
 
