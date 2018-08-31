@@ -122,7 +122,7 @@ public class PortalModel {
 				f.tableName = rs.getString("table_name");
 				
 				// Add the columns
-				f.columns = getColumns(sm.id, f.id, f.parentform, f.tableName);
+				f.columns = getColumns(sm.id, f.id, f.parentform, f.tableName, sm.ident);
 				
 				f.survey = sm;
 				// Add the form to the hashmaps that reference it
@@ -171,13 +171,14 @@ public class PortalModel {
 		}
 	}
 	
-	private ArrayList<TableColumn> getColumns(int sId, int fId, int parentform, String tableName) throws Exception {
+	private ArrayList<TableColumn> getColumns(int sId, int fId, int parentform, String tableName, String surveyIdent) throws Exception {
 		return GeneralUtilityMethods.getColumnsInForm(
 				sd,
 				cResults,
 				localisation,
 				"none",
 				sId,
+				surveyIdent,
 				user,
 				parentform,
 				fId,
