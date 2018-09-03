@@ -1650,8 +1650,16 @@ function openForm(type) {
 function isBusinessServer() {
 
 	var hostname = location.hostname;
-	var bs;
-	
+	var bs = true;
+
+	if(hostname.indexOf('smap.com.au') > 0) {
+		bs = false;
+	}
+    if(hostname.indexOf('sg.smap.com.au') >= 0 ||
+        	hostname.indexOf('dev.smap.com.au') >= 0) {
+        bs = true;
+    }
+    /*
 	if(hostname !== 'localhost' &&
 			hostname.indexOf('kontrolid.com') < 0 &&
         	hostname.indexOf('ezpilot') < 0 &&
@@ -1662,6 +1670,11 @@ function isBusinessServer() {
 		$('.bus_only').hide();
 	} else {
 		bs = true;
+	}
+	*/
+    
+    if(bs) {
+        $('.bus_only').show();
 	}
 	return bs;
 }
