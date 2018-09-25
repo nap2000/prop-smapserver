@@ -12,19 +12,30 @@ config="auto"
 clean="true"
 filelocn="/smap"
 
-CATALINA_HOME=/usr/share/tomcat7
-sd="survey_definitions"														# Postgres config survey definitions db name
-results="results"															# Postgres config results db name
-tc_server_xml="/etc/tomcat7/server.xml"										# Tomcat config
-tc_context_xml="/etc/tomcat7/context.xml"									# Tomcat config
-tc_logging="/var/lib/tomcat7/conf/logging.properties"						# Tomcat config
-a_config_dir="/etc/apache2/sites-available"									# Apache config	
-a_config_conf="/etc/apache2/apache2.conf"									# Apache config
-a_config_prefork_conf="/etc/apache2/mods-available/mpm_prefork.conf"		# Apache 2.4 config
+# Set flag for ubuntu version
+u1404=`lsb_release -r | grep -c "14\.04"`
+u1604=`lsb_release -r | grep -c "16\.04"`
+u1804=`lsb_release -r | grep -c "18\.04"`
+
+if [ $u1804 -eq 1 ]; then
+    TOMCAT_VERSION=tomcat8
+else
+    TOMCAT_VERSION=tomcat8
+fi
+
+CATALINA_HOME=/usr/share/$TOMCAT_VERSION
+sd="survey_definitions"										# Postgres config survey definitions db name
+results="results"										# Postgres config results db name
+tc_server_xml="/etc/$TOMCAT_VERSION/server.xml"							# Tomcat config
+tc_context_xml="/etc/$TOMCAT_VERSION/context.xml"						# Tomcat config
+tc_logging="/var/lib/$TOMCAT_VERSION/conf/logging.properties"					# Tomcat config
+a_config_dir="/etc/apache2/sites-available"							# Apache config	
+a_config_conf="/etc/apache2/apache2.conf"							# Apache config
+a_config_prefork_conf="/etc/apache2/mods-available/mpm_prefork.conf"				# Apache 2.4 config
 a_default_xml="/etc/apache2/sites-available/default"						# Apache config
-a_default_ssl_xml="/etc/apache2/sites-available/default-ssl"				# Apache config
-upstart_dir="/etc/init"														# Subscriber config for Ubuntu 14.04
-service_dir="/etc/systemd/system"											# Subscriber config for Ubuntu 16.04
+a_default_ssl_xml="/etc/apache2/sites-available/default-ssl"					# Apache config
+upstart_dir="/etc/init"										# Subscriber config for Ubuntu 14.04
+service_dir="/etc/systemd/system"								# Subscriber config for Ubuntu 16.04
 
 echo "Setting up your server to run Smap"
 echo "If you have already installed Smap and just want to upgrade you need to run deploy.sh and not this script"
@@ -36,16 +47,6 @@ case $choice in
         n|N) break;;
         y|Y)
 
-echo '##### 0. check configuration'
-# Set flag if this is apache2.4
-a24=`sudo apachectl -version | grep -c "2\.4"`
-if [ $a24 -eq 0 ]; then	
-	echo "%%%%%% Warning: Apache configuration files for Apache 2.4 will be installed. You may need to change these for your version of Apache web server"
-fi
-
-# Set flag for ubuntu 16.04
-u1604=`lsb_release -r | grep -c "16\.04"`
-
 echo '##### 1. Update Ubuntu'
 sudo apt-get update
 sudo apt-get upgrade -y
@@ -55,7 +56,7 @@ sudo apt-get install ntp
 echo '##### 2. Install Apache' 
 sudo apt-get install apache2 apache2-doc apache2-utils -y
 #sudo apt-get install apache2-mpm-worker apache2-doc apache2-utils -y
-sudo apt-get install libaprutil1-dbd-pgsql -y
+sudo apt-get install libaprutil2-dbd-pgsql -y
 sudo a2enmod auth_digest
 sudo a2enmod expires
 sudo a2enmod authn_dbd
@@ -69,9 +70,19 @@ sudo mkdir /var/www/smap/fieldAnalysis
 sudo mkdir /var/www/smap/OpenLayers
 
 echo '##### 3. Install Tomcat'
-sudo apt-get install tomcat7 -y
+if [ $u1804 -eq 1 ]; then
+    sudo apt-get install $TOMCAT_VERSION -y
+else
+    sudo apt-get install $TOMCAT_VERSION -y
+fi
 
 echo '##### 5. Install Postgres / Postgis'
+
+# Install Postgres for Ubuntu 18.04
+if [ $u1804 -eq 1 ]; then
+PGV=10
+sudo apt-get install postgresql postgresql-contrib postgis -y
+fi
 
 # Install Postgres for Ubuntu 16.04
 if [ $u1604 -eq 1 ]; then
@@ -80,7 +91,7 @@ sudo apt-get install postgresql postgresql-contrib postgis postgresql-$PGV-postg
 fi
 
 # Install Postgres for Ubuntu 14.04
-if [ $u1604 -eq 0 ]; then
+if [ $u1404 -eq 1 ]; then
 PGV=9.3
 sudo apt-get install postgresql postgresql-contrib postgis postgresql-$PGV-postgis-2.1 -y
 sudo apt-get install postgresql-server-dev-9.3 -y
@@ -104,13 +115,13 @@ sudo mkdir $filelocn/misc
 sudo mkdir $filelocn/temp
 sudo mkdir $filelocn/bin
 
-sudo chown -R tomcat7 $filelocn
+sudo chown -R $TOMCAT_VERSION $filelocn
 sudo chmod -R 0777 $filelocn/attachments
 sudo chmod -R 0777 $filelocn/media
 sudo chmod -R 0777 $filelocn/uploadedSurveys
 
-sudo mkdir /usr/share/tomcat7/.aws
-sudo chown -R tomcat7 /usr/share/tomcat7/.aws
+sudo mkdir /usr/share/$TOMCAT_VERSION/.aws
+sudo chown -R $TOMCAT_VERSION /usr/share/$TOMCAT_VERSION/.aws
 
 # If auto configuration is set then copy the pre-set configuration files to their target destination
 
@@ -119,7 +130,7 @@ then
 	echo '##### 7. Copying configuration files'
 
 	sudo service apache2 stop
-	sudo service tomcat7 stop
+	sudo service $TOMCAT_VERSION stop
 	sudo service postgresql stop
 
 	echo '# copy postgres conf file'
@@ -303,13 +314,13 @@ echo '##### 19. Update miscelaneous file configurations'
 
 echo '##### Add file location to tomcat configuration'
 
-sudo cp /var/lib/tomcat7/conf/web.xml /var/lib/tomcat7/conf/web.xml.bu
+sudo cp /var/lib/$TOMCAT_VERSION/conf/web.xml /var/lib/$TOMCAT_VERSION/conf/web.xml.bu
 
 sudo sed -i "/<\/web-app>/i \
 <context-param>\n\
    <param-name>au.com.smap.files<\/param-name>\n\
    <param-value>$filelocn</param-value>\n\
-<\/context-param>" /var/lib/tomcat7/conf/web.xml
+<\/context-param>" /var/lib/$TOMCAT_VERSION/conf/web.xml
 
 echo '##### Add shared memory setting to sysctl.conf'
 
@@ -318,8 +329,8 @@ echo "kernel.shmmax=67068800" | sudo tee -a /etc/sysctl.conf
 # TODO add "-Djava.net.preferIPv4Stack=true" to JAVA_OPTS
 
 echo '##### Increase shared memory available to tomcat'
-sudo cp /etc/default/tomcat7  /etc/default/tomcat7.bu
-sudo sed -i "s#-Xmx128m#-Xmx512m#g" /etc/default/tomcat7
+sudo cp /etc/default/$TOMCAT_VERSION  /etc/default/$TOMCAT_VERSION.bu
+sudo sed -i "s#-Xmx128m#-Xmx512m#g" /etc/default/$TOMCAT_VERSION
 
 echo '##### Allow logon to postgres authenticated by md5 - used to export shape files'
 # This could be better written as it is not idempotent, each time the install script is run an additional line will be changed
@@ -329,7 +340,7 @@ sudo mv x /etc/postgresql/$PGV/main/pg_hba.conf
 
 echo '##### . Start the servers'
 sudo service postgresql start
-sudo service tomcat7 start
+sudo service $TOMCAT_VERSION start
 sudo service apache2 start
 
 echo '##### 20. Enable export to shape files, kmz files and pdf files'
