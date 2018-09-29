@@ -3041,6 +3041,7 @@ function showRoles(data, selectedRoles, setall) {
         idx = -1,
         i;
 
+    $('.role_select_roles').empty();
     if (data.length > 0) {
         for (i = 0; i < data.length; i++) {
             h[++idx] = '<div class="checkbox">';
@@ -3056,7 +3057,7 @@ function showRoles(data, selectedRoles, setall) {
             h[++idx] = '</div>';
         }
         $('.role_select').show();
-        $('.role_select_roles').empty().append(h.join(''));
+        $('.role_select_roles').append(h.join(''));
     }
 }
 
