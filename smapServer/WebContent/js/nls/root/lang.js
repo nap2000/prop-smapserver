@@ -790,6 +790,7 @@ define({
     "u_smtp": "Smtp Host",
     "u_e_dom": "Email Domain",
     "u_e_nm": "Email user name",
+    "u_e_si": "Server Identifier",
     "u_e_p": "Email password",
     "u_e_port": "Email Server port",
     "u_h_e": "Email to get Help",
