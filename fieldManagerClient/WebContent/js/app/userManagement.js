@@ -411,6 +411,7 @@ $(document).ready(function() {
 		organisation.default_email_content = $('#o_default_email_content').val();
 		organisation.locale = $('#o_language').val();
 		organisation.timeZone = $('#o_tz').val();
+        organisation.server_description = $('#o_server_description').val();
 	
 		if(typeof organisation.email_port !== "number") {
 			organisation.email_port = 0;
@@ -943,6 +944,7 @@ function openOrganisationDialog(existing, organisationIndex) {
 		$('#o_email_password').val(org.email_password);
 		$('#o_email_port').val(org.email_port);
 		$('#o_default_email_content').val(org.default_email_content);
+        $('#o_server_description').val(org.server_description);
 		$('.puboption').each(function() {
 			console.log("option: " + $(this).val() );
 			if($(this).val() === "email") {
