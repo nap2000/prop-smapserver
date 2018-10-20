@@ -506,6 +506,7 @@ $(document).ready(function() {
         device.ft_send_location = $('#ft_send_location').val();
         device.ft_send = $('#ft_send').val();
         device.ft_delete = $('#ft_delete').val();
+        device.ft_image_size = $('#ft_image_size').val();
         device.ft_number_tasks = $('#ft_number_tasks').val();
 
         options = $(".devoption:checked").map(function(){
@@ -976,6 +977,7 @@ function openOrganisationDialog(existing, organisationIndex) {
         $('#ft_send').val(org.ft_send);
         $('#ft_send_location').val(org.ft_send_location);
         $('#ft_delete').val(org.ft_delete);
+        $('#ft_image_size').val(org.ft_image_size);
 		gOrgId = org.id;
 		setBannerLogo(org.id);
 
@@ -1835,6 +1837,7 @@ function moveToOrganisations (orgId, users, projects) {
                 $('#ft_send').val(device.ft_send);
                 $('#ft_send_location').val(device.ft_send_location);
                 $('#ft_delete').val(device.ft_delete);
+                $('#ft_image_size').val(device.ft_image_size);
                 $('#ft_number_tasks').val(device.ft_number_tasks);
 
             },

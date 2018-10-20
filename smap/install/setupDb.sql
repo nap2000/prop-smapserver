@@ -118,6 +118,7 @@ create TABLE organisation (
 	can_edit boolean,
 	email_task boolean,
 	ft_delete text,
+	ft_image_size text,
 	ft_send_location text,
 	ft_sync_incomplete boolean,
 	ft_odk_style_menus boolean default true,
