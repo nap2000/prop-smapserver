@@ -1002,7 +1002,9 @@ alter table people add column when_requested_subscribe TIMESTAMP WITH TIME ZONE;
 
 alter table form add column replace boolean default false;
 alter table organisation add column server_description text;
+
 alter table organisation add column ft_image_size text;
+update organisation set ft_image_size = 'not set' where ft_image_size is null;
 
 
 
