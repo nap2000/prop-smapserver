@@ -1006,5 +1006,24 @@ alter table organisation add column server_description text;
 alter table organisation add column ft_image_size text;
 update organisation set ft_image_size = 'not set' where ft_image_size is null;
 
+-- Foreign keys
+CREATE SEQUENCE apply_foreign_keys_seq START 1;
+ALTER SEQUENCE apply_foreign_keys_seq OWNER TO ws;
+
+create TABLE apply_foreign_keys (
+	id integer default nextval('apply_foreign_keys_seq') constraint pk_apply_foreign_keys primary key,
+	update_id text,
+	s_id integer REFERENCES survey(s_id) ON DELETE CASCADE,
+	qname text,
+	instanceid text,
+	prikey integer,
+	table_name text,
+	applied boolean default false,
+	comment text,
+	ts_created TIMESTAMP WITH TIME ZONE,
+	ts_applied TIMESTAMP WITH TIME ZONE
+	);
+ALTER TABLE apply_foreign_keys OWNER TO ws;
+
 
 
