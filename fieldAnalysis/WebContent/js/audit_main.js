@@ -58,4 +58,6 @@ require([
          'localise', 
          'app/review_audit'
          
-         ], function($, jquery_ui, rmm, common, globals, localise) {});
+         ], function($, jquery_ui, rmm, common, globals, localise) {
+	setCustomAudit();
+});
