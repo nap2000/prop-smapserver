@@ -63,4 +63,6 @@ require([
          'localise', 
          'app/review'
          
-         ], function($, jquery_ui, modernizr, rmm, common, globals, localise) {});
+         ], function($, jquery_ui, modernizr, rmm, common, globals, localise) {
+    setCustomReview();
+});
