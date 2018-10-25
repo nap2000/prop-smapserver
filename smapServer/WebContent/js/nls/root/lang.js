@@ -720,6 +720,7 @@ define({
     "ed_c_add_q": "Added question %s1 with type %s2",
     "ed_c_add_o": "Added choice %s1 to choice list: %s2",
     "ed_c_settings": "Settings changed",
+    "ed_mmf": "Manage Media Files For this Form",
 
 
     // Managed Forms
