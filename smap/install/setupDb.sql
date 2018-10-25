@@ -96,7 +96,8 @@ create TABLE server (
 	document_sync boolean,
 	doc_server text,
 	doc_server_user text,
-	doc_server_password text
+	doc_server_password text,
+	keep_erased_days intege default 0
 	);
 ALTER TABLE server OWNER TO ws;
 
