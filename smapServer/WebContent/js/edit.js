@@ -301,8 +301,7 @@ $(document).ready(function() {
 		// Set up media dialog to manage loading and deleting of media
 		$('.mediaManage').show();
 		$('.mediaSelect').hide();
-		$('#mediaModalLabel').html("Manage Media Files For this Form. " +
-				"Note organisation level media files now found under <b>Shared Resources</b> in admin module.");
+		$('#mediaModalLabel').html(localise.set["ed_mmf"]);
 		$('#mediaModal table').off();
 		$('#surveyPanel, #orgPanel').find('tr').removeClass('success');
 		
