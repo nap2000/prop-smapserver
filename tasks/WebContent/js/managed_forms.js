@@ -401,6 +401,9 @@ require([
             }
         });
 
+        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        $('#timezone').html(localise.set["c_tz"] + ": " + tz);
+
 
     });
 
@@ -547,6 +550,8 @@ require([
 
         }
 
+        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
         data = getTableData(globals.gMainTable,
             gTasks.cache.surveyConfig[globals.gViewId].columns);
 
@@ -573,7 +578,7 @@ require([
                 chartData = chart.getXLSData(alldata);
             }
 
-            generateFile(url, filename, format, mime, data, globals.gCurrentSurvey, managedId, title, project, charts, chartData, settings);
+            generateFile(url, filename, format, mime, data, globals.gCurrentSurvey, managedId, title, project, charts, chartData, settings, tz);
         } else {
             var countImages = $('.svg-container svg').length;
             $('.svg-container svg').each(function (index) {
@@ -593,7 +598,7 @@ require([
                     charts.push(chart);
                     countImages--;
                     if (countImages <= 0) {
-                        generateFile(url, filename, format, mime, undefined, globals.gCurrentSurvey, managedId, title, project, charts, chartData, settings);
+                        generateFile(url, filename, format, mime, undefined, globals.gCurrentSurvey, managedId, title, project, charts, chartData, settings, tz);
                     }
                 });
 
@@ -886,8 +891,11 @@ require([
 
 
         url += "&format=dt";
-        url += "&merge_select_multiple=yes"
+        url += "&merge_select_multiple=yes";
         url += "&sort=prikey&dirn=desc";
+
+        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        url += "&tz=" + tz;
 
         $.fn.dataTable.ext.errMode = 'none';
 
@@ -1127,6 +1135,9 @@ require([
     function showDuplicateData(sId) {
 
         var url = '/api/v1/data/similar/' + sId + '/' + getSearchCriteria() + "?format=dt";
+        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        url += "&tz=" + tz;
+
         globals.gMainTable.ajax.url(url).load();
 
     }
@@ -1415,6 +1426,8 @@ require([
         } else if (item.type === "link") {
             url += item.sId + "?mgmt=" + managed + "&form=" + item.fId + "&hrk=" + item.hrk;
         }
+        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        url += "&tz=" + tz;
 
         addHourglass();
         $.ajax({
