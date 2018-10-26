@@ -2167,7 +2167,7 @@ function downloadFileErrorCheck() {
 /*
  * Post data to be converted into a file
  */
-function generateFile(url, filename, format, mime, data, sId, managedId, title, project, charts, chartData, settings) {
+function generateFile(url, filename, format, mime, data, sId, managedId, title, project, charts, chartData, settings, tz) {
 
 	var payload = "sId=" + sId;
 	payload += "&format=" + format;
@@ -2192,6 +2192,9 @@ function generateFile(url, filename, format, mime, data, sId, managedId, title, 
 	}
 	if(settings) {
 		payload += "&settings=" + encodeURIComponent(JSON.stringify(settings));
+	}
+	if(tz) {
+        payload += "&tz=" + encodeURIComponent(JSON.stringify(tz));
 	}
 	payload = payload.replace(/%20/g, '+');
 	

@@ -64,6 +64,7 @@ public class PortalStorage {
 
 		EntityCollection retEntitySet = new EntityCollection();
 		
+		String tz = "UTC";
 		String esName = edmEntitySet.getName();
 		SurveyForm form = surveyModel.forms.get(esName);
 		if (form != null) {
@@ -88,7 +89,8 @@ public class PortalStorage {
 						false, // Return records greater than or equal to primary key
 						"no", // include bad
 						null, // no custom filter
-						null // no key filter
+						null, // no key filter
+						tz
 				);
 				
 				ResultSet rs = pstmt.executeQuery();
@@ -116,6 +118,7 @@ public class PortalStorage {
 			throws SQLException, Exception {
 
 		Entity entity = null;
+		String tz = "UTC";
 		
 		EdmEntityType edmEntityType = edmEntitySet.getEntityType();
 		String esName = edmEntitySet.getName();
@@ -145,7 +148,8 @@ public class PortalStorage {
 						false, // Return records greater than or equal to primary key
 						"no", // include bad
 						null, // no custom filter
-						keyFilters // Add key filters
+						keyFilters, // Add key filters
+						tz
 				);
 				
 				ResultSet rs = pstmt.executeQuery();
@@ -166,6 +170,8 @@ public class PortalStorage {
 		    EntityCollection navigationTargetEntityCollection = new EntityCollection();
 
 		    String esName = targetEntitySet.getName();
+		    String tz = "UTC";
+		    
 			SurveyForm form = surveyModel.forms.get(esName);
 		    if (form != null) {
 				PreparedStatement pstmt = null;
@@ -190,7 +196,8 @@ public class PortalStorage {
 							false, // Return records greater than or equal to primary key
 							"no", // include bad
 							null, // no custom filter
-							null // Add key filters
+							null, // Add key filters
+							tz
 					);
 					
 					ResultSet rs = pstmt.executeQuery();
