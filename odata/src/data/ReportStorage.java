@@ -3,18 +3,12 @@ package data;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.TimeZone;
 import java.util.logging.Logger;
 
 import org.apache.olingo.commons.api.data.Entity;
@@ -22,27 +16,13 @@ import org.apache.olingo.commons.api.data.EntityCollection;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.data.ValueType;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
-import org.apache.olingo.commons.api.edm.EdmEntityType;
-import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
-import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.apache.olingo.commons.api.ex.ODataRuntimeException;
-import org.apache.olingo.commons.api.http.HttpStatusCode;
-import org.apache.olingo.server.api.ODataApplicationException;
-import org.apache.olingo.server.api.uri.UriParameter;
 import org.smap.sdal.constants.SmapQuestionTypes;
 import org.smap.sdal.managers.EmailManager;
-import org.smap.sdal.managers.TableDataManager;
-import org.smap.sdal.model.Action;
 import org.smap.sdal.model.ColDesc;
-import org.smap.sdal.model.KeyFilter;
 import org.smap.sdal.model.SqlDesc;
-import org.smap.sdal.model.TableColumn;
-
-import smapModels.SurveyForm;
-import smapModels.PortalModel;
 import smapModels.ReportDetails;
 import smapModels.ReportModel;
-import util.Util;
 
 public class ReportStorage {
 
