@@ -182,7 +182,8 @@ public class ReportStorage {
 				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, iValue));
 			} else if(type.equals(SmapQuestionTypes.DATETIME)) {
 				//Timestamp dateValue = rs.getTimestamp(idx++);		// TODO
-				String dateValue = rs.getString(idx++);
+				//String dateValue = rs.getString(idx++);
+				Timestamp dateValue = rs.getTimestamp(idx++);
 				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, dateValue));
 			
 			} else if(type.equalsIgnoreCase(SmapQuestionTypes.STRING) ||
