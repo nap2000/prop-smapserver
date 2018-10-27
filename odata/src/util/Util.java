@@ -166,8 +166,7 @@ public class Util {
     		} else if(smapType.equals(SmapQuestionTypes.SELECT1)) {
     			csdlType = EdmPrimitiveTypeKind.String.getFullQualifiedName().toString();
     		} else if(smapType.equals(SmapQuestionTypes.DATETIME)) {
-    			//csdlType = EdmPrimitiveTypeKind.DateTimeOffset.getFullQualifiedName().toString();	// TODO
-    			csdlType = EdmPrimitiveTypeKind.String.getFullQualifiedName().toString();
+    			csdlType = EdmPrimitiveTypeKind.DateTimeOffset.getFullQualifiedName().toString();	
     		} else {
     			log.info("Error: Unknown smap question type, setting csdl type to String: " + smapType);
     			csdlType = EdmPrimitiveTypeKind.String.getFullQualifiedName().toString();
