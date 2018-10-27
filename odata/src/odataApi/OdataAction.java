@@ -16,31 +16,21 @@ import org.apache.olingo.commons.api.edmx.EdmxReference;
 import org.apache.olingo.server.api.OData;
 import org.apache.olingo.server.api.ODataHttpHandler;
 import org.apache.olingo.server.api.ServiceMetadata;
-import org.apache.olingo.server.api.debug.DebugResponseHelper;
-import org.apache.olingo.server.api.debug.DefaultDebugSupport;
-import org.apache.olingo.server.core.debug.DebugResponseHelperImpl;
 import org.smap.sdal.Utilities.Authorise;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
 import org.smap.sdal.Utilities.ResultsDataSource;
 import org.smap.sdal.Utilities.SDDataSource;
 import org.smap.sdal.managers.ActionManager;
 import org.smap.sdal.managers.EmailManager;
-import org.smap.sdal.model.Action;
 import org.smap.sdal.model.User;
 
-import data.PortalStorage;
 import data.ReportStorage;
-import model.OdataEdmProvider;
 import model.OdataReportProvider;
-import service.OdataEntityCollectionProcessor;
-import service.OdataEntityProcessor;
-import service.OdataPrimitiveProcessor;
 import service.OdataReportEntityCollectionProcessor;
-import smapModels.PortalModel;
 import smapModels.ReportModel;
 
 /*
- * Alows anonymous access to odata end point
+ * Allows anonymous access to odata end point
  */
 public class OdataAction extends HttpServlet {
 	private static final long serialVersionUID = 1L;
