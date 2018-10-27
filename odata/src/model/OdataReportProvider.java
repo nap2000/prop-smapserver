@@ -122,7 +122,7 @@ public class OdataReportProvider extends CsdlAbstractEdmProvider {
 					name = "ID";
 					csdlType = EdmPrimitiveTypeKind.Int32.getFullQualifiedName().toString();
 				} else {
-					csdlType = Util.getCsdlType(tc.qType);
+					csdlType = Util.getCsdlType(tc.qType, model.tableau);
 				}
 								
 				props.add(new CsdlProperty().setName(name).setType(csdlType));
