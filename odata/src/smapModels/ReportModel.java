@@ -37,7 +37,7 @@ public class ReportModel {
 	public String user;						// User Ident
 	public String urlprefix;					// Url prefix for images
 	public String basePath;
-	public boolean tableau = false;
+	public boolean odata2 = false;
 	
 	public HashMap<String, ReportDetails> reports = new HashMap<>();
 	public HashMap<FullQualifiedName, ReportDetails> fqnReports = new HashMap<>();
@@ -91,8 +91,8 @@ public class ReportModel {
 						fId = Integer.parseInt(p.v);
 					} else if(p.k.equals("split_locn")) {
 						split_locn = Boolean.parseBoolean(p.v);
-					} else if(p.k.equals("tableau")) {
-						this.tableau = true;
+					} else if(p.k.equals("odata2")) {
+						this.odata2 = true;
 					} else if(p.k.equals("merge_select_multiple")) {
 						merge_select_multiple = Boolean.parseBoolean(p.v);
 					} else if(p.k.equals("language")) {

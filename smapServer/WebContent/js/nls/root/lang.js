@@ -319,7 +319,7 @@ define({
     "a_exp_leg2": "Output format:",
     "a_exp_notes": "Export notes:",
     "a_exp_meta": "Include Meta Data:",
-    "a_exp_tableau": "Restrict Odata types to those supported by Tableau:",
+    "a_exp_odata2": "Restrict Odata types to those supported by OData 2:",
     "a_exp_split": "Split lat / lon:",
     "a_exp_merge": "Compress select multiples:",
     "a_sel_ways": "Select ways (if any):",
