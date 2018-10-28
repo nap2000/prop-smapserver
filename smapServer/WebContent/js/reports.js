@@ -200,7 +200,7 @@ require([
         var name = $('#r_name').val();
         var reportType = $('#reportType').val();
         var includeMeta = $('#includeMeta').prop('checked');
-        var tableauData = $('#tableauData').prop('checked');
+        var odata2Data = $('#odata2Data').prop('checked');
         var split_locn = $('#splitlocn').prop('checked');
         var merge_select_multiple = $('#mergeSelectMultiple').prop('checked');
         var landscape = $('#orient_landscape').prop('checked');
@@ -262,8 +262,8 @@ require([
         if(includeMeta) {
             url += "&meta=true";
         }
-        if(tableauData) {
-            url += "&tableau=true";
+        if(odata2Data) {
+            url += "&odata2=true";
         }
         if(split_locn) {
             url += "&split_locn=true";
@@ -536,7 +536,7 @@ require([
             // Add parameters
             var meta = false;
             var split_locn = false;
-            var tableau_data = false;
+            var odata2_data = false;
             var merge_select_multiple = false;
             var embed_images = false;
             var language = "none";
@@ -559,9 +559,9 @@ require([
                     if(param.v === "true") {
                         split_locn = true;
                     }
-                } else if(param.k === "tableau") {
+                } else if(param.k === "odata2") {
                     if(param.v === "true") {
-                        tableau_data = true;
+                        odata2_data = true;
                     }
                 } else if(param.k === "merge_select_multiple") {
                     if(param.v === "true") {
@@ -589,7 +589,7 @@ require([
             }
             $('#includeMeta').prop('checked', meta);
             $('#splitlocn').prop('checked', split_locn);
-            $('#tableauData').prop('checked', tableau_data);
+            $('#odata2Data').prop('checked', odata2_data);
             $('#mergeSelectMultiple').prop('checked', merge_select_multiple);
             $('#embedImages').prop('checked', embed_images);
             if(landscape) {

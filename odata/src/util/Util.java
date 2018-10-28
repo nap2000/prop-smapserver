@@ -155,22 +155,35 @@ public class Util {
     		return formName + " item";
     }
     
-    public static String getCsdlType(String smapType, boolean tableau) {
+    public static String getCsdlType(String smapType, boolean odata2) {
     	
     		String csdlType = null;
     		
+    		System.out.println("Type:" + smapType + ":");
     		if(smapType.equals(SmapQuestionTypes.STRING)) {
     			csdlType = EdmPrimitiveTypeKind.String.getFullQualifiedName().toString();
+    		
     		} else if(smapType.equals(SmapQuestionTypes.INT)) {
     			csdlType = EdmPrimitiveTypeKind.Int32.getFullQualifiedName().toString();
+    		
     		} else if(smapType.equals(SmapQuestionTypes.SELECT1)) {
     			csdlType = EdmPrimitiveTypeKind.String.getFullQualifiedName().toString();
+    		
+    		} else if(smapType.equals(SmapQuestionTypes.DATE)) {
+    			csdlType = EdmPrimitiveTypeKind.Date.getFullQualifiedName().toString();
+    		
+    		} else if(smapType.equals(SmapQuestionTypes.DECIMAL)) {
+    			csdlType = EdmPrimitiveTypeKind.Double.getFullQualifiedName().toString();
+    		
     		} else if(smapType.equals(SmapQuestionTypes.DATETIME)) {
-    			if(tableau) {
-    				csdlType = EdmPrimitiveTypeKind.Date.getFullQualifiedName().toString();	// DateTimeOffset not suppoted by tableau
+    			if(odata2) {
+    				csdlType = EdmPrimitiveTypeKind.Date.getFullQualifiedName().toString();	// DateTimeOffset not supported by odata2
     			} else {
     				csdlType = EdmPrimitiveTypeKind.DateTimeOffset.getFullQualifiedName().toString();	
     			}    			
+    		} else if(smapType.equals("geometry")) {
+    			csdlType = EdmPrimitiveTypeKind.GeographyPoint.getFullQualifiedName().toString();
+    		
     		} else {
     			log.info("Error: Unknown smap question type, setting csdl type to String: " + smapType);
     			csdlType = EdmPrimitiveTypeKind.String.getFullQualifiedName().toString();
