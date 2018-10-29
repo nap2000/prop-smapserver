@@ -1475,9 +1475,13 @@ function questionMetaURL (sId, lang, qId) {
  */
 function getSurveyDetails(callback, get_changes) {
 
+    var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 	var url="/surveyKPI/surveys/" + globals.gCurrentSurvey;
 	if(get_changes) {
 		url += "?get_changes=true";
+        url += "&tz=" + tz;
+	} else {
+        url += "?tz=" + tz;
 	}
 
 	if(!globals.gCurrentSurvey) {
