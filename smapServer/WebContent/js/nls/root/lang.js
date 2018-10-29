@@ -469,6 +469,7 @@ define({
     "msg_s2": "Subscribed sucessfully",
     "msg_s3": "Enter your email address to subscribe to emails",
     "msg_pd_key": "Specify a data key ",
+    "msg_one_role": "At least one role must be selected",
 
     // Editor
     "e_b_e": "Base on existing form",
