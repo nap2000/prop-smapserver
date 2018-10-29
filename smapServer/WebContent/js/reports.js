@@ -244,6 +244,11 @@ require([
             id = $(this).val();
             roleIds.push(id);
         });
+        // Validation - ensure at least one role is selected
+        if(gTasks.cache.surveyRoles[sId].length > 0  && roleIds.length == 0) {
+            alert(window.localise.set["msg_one_role"]);
+            return;
+        }
 
         var url = "/surveyKPI/reporting/link/" + sId
             + "?reportType=" + reportType
