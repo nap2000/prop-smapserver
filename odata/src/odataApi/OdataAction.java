@@ -74,9 +74,6 @@ public class OdataAction extends HttpServlet {
 			ActionManager am = new ActionManager();	
 			ArrayList<User> tempUsers = am.getTemporaryUsers(sd, oId, "report", 0, 0);
 			
-				
-
-			
 			// Create an internal model for the surveys that the user has access to
 
 			ReportModel reportModel = new ReportModel(sd, cResults, localisation, locale, namespace,
