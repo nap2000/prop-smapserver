@@ -466,7 +466,8 @@ require([
         $('.copyLinkOdata').click(function () {
             var $this = $(this);
             var i = $this.closest('tr').data("idx");
-            var link = location.origin + "/odata/action.svc/" + gReportList[i].action_details.name;
+            var modId = gReportList[i].ident.replace(/-/g, '_');
+            var link = location.origin + "/odata/action.svc/" + modId;
 
 
             // From https://stackoverflow.com/questions/22581345/click-button-copy-to-clipboard-using-jquery
