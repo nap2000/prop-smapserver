@@ -33,7 +33,7 @@ public class ReportModel {
 	Locale locale;
 	String namespace;
 	
-	public ArrayList<User> tempUsers;
+	public Action action;
 	public String user;						// User Ident
 	public String urlprefix;					// Url prefix for images
 	public String basePath;
@@ -47,16 +47,17 @@ public class ReportModel {
 			ResourceBundle localisation, 
 			Locale locale, 
 			String namespace, 
-			ArrayList<User> tempUsers,
+			Action action,
 			String urlprefix,
-			String basePath) throws Exception {
+			String basePath,
+			String reportIdent) throws Exception {
 		
 		this.sd = sd;
 		this.cResults = cResults;
 		this.localisation = localisation;
 		this.locale = locale;
 		this.namespace = namespace;	
-		this.tempUsers = tempUsers;
+		this.action = action;
 		this.urlprefix = urlprefix;
 		this.basePath = basePath;
 				
@@ -65,100 +66,97 @@ public class ReportModel {
 		 */
 		ActionManager am = new ActionManager();	
 		
-		for(User u : tempUsers) {
-			Action action = am.getAction(sd, u.ident);
-			if(action != null) {
-				ArrayList<QueryForm> queryList = null;
-				QueryManager qm = new QueryManager();	
-				
-				int fId = 0;
-				boolean split_locn = false;
-				boolean merge_select_multiple = false;
-				String language = "none";
-				boolean exp_ro = false;
-				boolean embedImages = false;
-				boolean landscape = false;
-				boolean excludeParents = false;
-				boolean hxl = false;	
-				Date startDate = null;
-				Date endDate = null;	
-				int dateId = 0;
-				String filter = null;
-				boolean meta = false;				// Done
-				
-				for(KeyValueSimp p : action.parameters) {
-					if(p.k.equals("form")) {
-						fId = Integer.parseInt(p.v);
-					} else if(p.k.equals("split_locn")) {
-						split_locn = Boolean.parseBoolean(p.v);
-					} else if(p.k.equals("odata2")) {
-						this.odata2 = true;
-					} else if(p.k.equals("merge_select_multiple")) {
-						merge_select_multiple = Boolean.parseBoolean(p.v);
-					} else if(p.k.equals("language")) {
-						language = p.v;
-					} else if(p.k.equals("exp_ro")) {
-						exp_ro = Boolean.parseBoolean(p.v);
-					} else if(p.k.equals("embed_images")) {
-						embedImages = Boolean.parseBoolean(p.v);
-					} else if(p.k.equals("excludeParents")) {
-						excludeParents = Boolean.parseBoolean(p.v);
-					} else if(p.k.equals("hxl")) {
-						hxl = Boolean.parseBoolean(p.v);
-					} else if(p.k.equals("startDate")) {
-						startDate = Date.valueOf(p.v);
-					} else if(p.k.equals("endDate")) {
-						endDate = Date.valueOf(p.v);
-					} else if(p.k.equals("dateId")) {
-						dateId = Integer.parseInt(p.v);
-					} else if(p.k.equals("filter")) {
-						filter = p.v;
-					} else if(p.k.equals("meta")) {
-						meta = Boolean.parseBoolean(p.v);
-					} else if(p.k.equals("landscape")) {
-						landscape = Boolean.parseBoolean(p.v);
-					}
+		if(action != null) {
+			ArrayList<QueryForm> queryList = null;
+			QueryManager qm = new QueryManager();	
+			
+			int fId = 0;
+			boolean split_locn = false;
+			boolean merge_select_multiple = false;
+			String language = "none";
+			boolean exp_ro = false;
+			boolean embedImages = false;
+			boolean landscape = false;
+			boolean excludeParents = false;
+			boolean hxl = false;	
+			Date startDate = null;
+			Date endDate = null;	
+			int dateId = 0;
+			String filter = null;
+			boolean meta = false;				// Done
+			
+			for(KeyValueSimp p : action.parameters) {
+				if(p.k.equals("form")) {
+					fId = Integer.parseInt(p.v);
+				} else if(p.k.equals("split_locn")) {
+					split_locn = Boolean.parseBoolean(p.v);
+				} else if(p.k.equals("odata2")) {
+					this.odata2 = true;
+				} else if(p.k.equals("merge_select_multiple")) {
+					merge_select_multiple = Boolean.parseBoolean(p.v);
+				} else if(p.k.equals("language")) {
+					language = p.v;
+				} else if(p.k.equals("exp_ro")) {
+					exp_ro = Boolean.parseBoolean(p.v);
+				} else if(p.k.equals("embed_images")) {
+					embedImages = Boolean.parseBoolean(p.v);
+				} else if(p.k.equals("excludeParents")) {
+					excludeParents = Boolean.parseBoolean(p.v);
+				} else if(p.k.equals("hxl")) {
+					hxl = Boolean.parseBoolean(p.v);
+				} else if(p.k.equals("startDate")) {
+					startDate = Date.valueOf(p.v);
+				} else if(p.k.equals("endDate")) {
+					endDate = Date.valueOf(p.v);
+				} else if(p.k.equals("dateId")) {
+					dateId = Integer.parseInt(p.v);
+				} else if(p.k.equals("filter")) {
+					filter = p.v;
+				} else if(p.k.equals("meta")) {
+					meta = Boolean.parseBoolean(p.v);
+				} else if(p.k.equals("landscape")) {
+					landscape = Boolean.parseBoolean(p.v);
 				}
-				
-				queryList = qm.getFormList(sd, action.sId, fId);		// Get a form list for this survey / form combo
-
-				QueryForm startingForm = qm.getQueryTree(sd, queryList);	// Convert the query list into a tree
-
-				// Get the SQL for this query
-				ReportDetails rd = new ReportDetails();
-				rd.entitySetName = action.name;
-				rd.sqlDesc = QueryGenerator.gen(sd, 
-						cResults,
-						localisation,
-						action.sId,
-						fId,
-						"none",						// Set language to none 
-						SmapExportTypes.XLSX, 		// TODO
-						urlprefix, 
-						true,
-						false,						// export read only
-						false,						// excludeParents
-						rd.labelListMap,
-						false,
-						false,
-						null,
-						null,
-						null,
-						user,
-						null,					// statDate
-						null,					// endDate
-						-1,						// dateId
-						false,					// Super user - always apply filters
-						startingForm,
-						null,					// filter
-						meta,					// meta
-						false);
-				reports.put(action.name, rd);
-				
-				FullQualifiedName fqn = new FullQualifiedName(namespace, Util.convertFormToEntityName(action.name));
-				fqnReports.put(fqn, rd);
 			}
-		}	
+			
+			queryList = qm.getFormList(sd, action.sId, fId);		// Get a form list for this survey / form combo
+
+			QueryForm startingForm = qm.getQueryTree(sd, queryList);	// Convert the query list into a tree
+
+			// Get the SQL for this query
+			ReportDetails rd = new ReportDetails();
+			rd.entitySetName = action.name;
+			rd.sqlDesc = QueryGenerator.gen(sd, 
+					cResults,
+					localisation,
+					action.sId,
+					fId,
+					"none",						// Set language to none 
+					SmapExportTypes.XLSX, 		// TODO
+					urlprefix, 
+					true,
+					false,						// export read only
+					false,						// excludeParents
+					rd.labelListMap,
+					false,
+					false,
+					null,
+					null,
+					null,
+					user,
+					null,					// statDate
+					null,					// endDate
+					-1,						// dateId
+					false,					// Super user - always apply filters
+					startingForm,
+					null,					// filter
+					meta,					// meta
+					false);
+			reports.put(reportIdent, rd);
+			
+			FullQualifiedName fqn = new FullQualifiedName(namespace, Util.convertFormToEntityName(reportIdent));
+			fqnReports.put(fqn, rd);
+		}
 		
 	
 	}
