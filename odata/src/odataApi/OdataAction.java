@@ -62,6 +62,12 @@ public class OdataAction extends HttpServlet {
 			// Authorisation - Access
 			sd = SDDataSource.getConnection(connectionString);
 			auth.isAuthorised(sd, request.getRemoteUser());
+			
+			String uri = request.getRequestURI();
+			String reportIdent = uri.substring(uri.lastIndexOf('/') + 1);	
+			String ident = reportIdent.replaceAll("_", "-");								// UUID modified to be valid URL for odata
+			// Do we need to validate the report? Or are we going full no user credentials
+			//auth.isValidReport(sd, request.getRemoteUser(), ident);
 			// End authorisation
 			
 			String container_name = "reports";
@@ -71,10 +77,7 @@ public class OdataAction extends HttpServlet {
 			 */
 			cResults = ResultsDataSource.getConnection(connectionString);
 			String basePath = GeneralUtilityMethods.getBasePath(request);	
-			int oId = GeneralUtilityMethods.getOrganisationId(sd, request.getRemoteUser(), 0);
-			String uri = request.getRequestURI();
-			String reportIdent = uri.substring(uri.lastIndexOf('/') + 1);	
-			String ident = reportIdent.replaceAll("_", "-");								// UUID modified to be valid URL for odata
+
 			ActionManager am = new ActionManager();	
 			Action action = am.getAction(sd, ident);
 			
@@ -85,7 +88,6 @@ public class OdataAction extends HttpServlet {
 					GeneralUtilityMethods.getUrlPrefix(request),
 					basePath, reportIdent);
 			
-			System.out.println("Report Model created");
 			ReportStorage storage = new ReportStorage(sd, cResults, locale, localisation, reportModel);	
 
 			// create odata handler and configure it with CsdlEdmProvider and Processor
@@ -101,7 +103,6 @@ public class OdataAction extends HttpServlet {
 			//handler.register(new OdataPrimitiveProcessor(storage));
 
 			// let the handler do the work
-			System.out.println("URL:" + request.getRequestURI());
 			handler.process(request, response);
 		} catch (Exception e) {
 			throw new ServletException(e);
