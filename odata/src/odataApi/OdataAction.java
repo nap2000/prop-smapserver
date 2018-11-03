@@ -22,6 +22,7 @@ import org.smap.sdal.Utilities.ResultsDataSource;
 import org.smap.sdal.Utilities.SDDataSource;
 import org.smap.sdal.managers.ActionManager;
 import org.smap.sdal.managers.EmailManager;
+import org.smap.sdal.model.Action;
 import org.smap.sdal.model.User;
 
 import data.ReportStorage;
@@ -71,15 +72,18 @@ public class OdataAction extends HttpServlet {
 			cResults = ResultsDataSource.getConnection(connectionString);
 			String basePath = GeneralUtilityMethods.getBasePath(request);	
 			int oId = GeneralUtilityMethods.getOrganisationId(sd, request.getRemoteUser(), 0);
+			String uri = request.getRequestURI();
+			String reportIdent = uri.substring(uri.lastIndexOf('/') + 1);	
+			String ident = reportIdent.replaceAll("_", "-");								// UUID modified to be valid URL for odata
 			ActionManager am = new ActionManager();	
-			ArrayList<User> tempUsers = am.getTemporaryUsers(sd, oId, "report", 0, 0);
+			Action action = am.getAction(sd, ident);
 			
 			// Create an internal model for the surveys that the user has access to
 
 			ReportModel reportModel = new ReportModel(sd, cResults, localisation, locale, namespace,
-					tempUsers,
+					action,
 					GeneralUtilityMethods.getUrlPrefix(request),
-					basePath);
+					basePath, reportIdent);
 			
 			System.out.println("Report Model created");
 			ReportStorage storage = new ReportStorage(sd, cResults, locale, localisation, reportModel);	
