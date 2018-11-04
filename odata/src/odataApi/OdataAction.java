@@ -16,6 +16,7 @@ import org.apache.olingo.commons.api.edmx.EdmxReference;
 import org.apache.olingo.server.api.OData;
 import org.apache.olingo.server.api.ODataHttpHandler;
 import org.apache.olingo.server.api.ServiceMetadata;
+import org.smap.sdal.Utilities.ApplicationException;
 import org.smap.sdal.Utilities.Authorise;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
 import org.smap.sdal.Utilities.ResultsDataSource;
@@ -66,6 +67,7 @@ public class OdataAction extends HttpServlet {
 			String uri = request.getRequestURI();
 			String reportIdent = uri.substring(uri.lastIndexOf('/') + 1);	
 			String ident = reportIdent.replaceAll("_", "-");								// UUID modified to be valid URL for odata
+			System.out.println("============= uri::::::::::: " + uri);
 			// Do we need to validate the report? Or are we going full no user credentials
 			//auth.isValidReport(sd, request.getRemoteUser(), ident);
 			// End authorisation
@@ -78,15 +80,18 @@ public class OdataAction extends HttpServlet {
 			cResults = ResultsDataSource.getConnection(connectionString);
 			String basePath = GeneralUtilityMethods.getBasePath(request);	
 
-			ActionManager am = new ActionManager();	
-			Action action = am.getAction(sd, ident);
+			//ActionManager am = new ActionManager();	
+			//Action action = am.getAction(sd, ident);
+			//if(action == null) {
+			//	throw new ApplicationException("Report not found");
+			//}
 			
 			// Create an internal model for the surveys that the user has access to
 
 			ReportModel reportModel = new ReportModel(sd, cResults, localisation, locale, namespace,
-					action,
 					GeneralUtilityMethods.getUrlPrefix(request),
-					basePath, reportIdent);
+					basePath, 
+					request.getRemoteUser());
 			
 			ReportStorage storage = new ReportStorage(sd, cResults, locale, localisation, reportModel);	
 
