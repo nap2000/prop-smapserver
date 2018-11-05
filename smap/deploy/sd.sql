@@ -1026,6 +1026,7 @@ create TABLE apply_foreign_keys (
 ALTER TABLE apply_foreign_keys OWNER TO ws;
 
 alter table server add column keep_erased_days integer default 0;
+alter table organisation add column sensitive_data text;
 
 
 

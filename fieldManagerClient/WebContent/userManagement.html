@@ -77,6 +77,7 @@
         <li id="organisationTab" role="presentation" class="restrict_role org_role"><a href="#" class="lang" data-lang="c_orgs">orgs</a></li>
         <li id="serverTab" role="presentation" class="restrict_role org_role"><a href="#" class="lang" data-lang="c_server">server</a></li>
 		<li id="deviceTab" role="presentation"><a href="#" class="lang" data-lang="u_det_o_ft">fieldTask</a></li>
+		<li id="sensitiveTab" role="presentation" class="restrict_role security_role"><a href="#" class="lang" data-lang="u_sens_data">sensitive data</a></li>
     </ul>
 	
 	
@@ -322,7 +323,29 @@
 		</div>
 		<button id="saveServer" class="btn btn-success lang" data-lang="c_save">save</button>
 	</div>
-	
+
+	<!-- The container for documenting sensitive data -->
+	<div id="sensitivePanel" style="display:none;" class="usertab">
+
+		<div class="well">
+			<div class="container">
+				<form role="form" class="form-horizontal" id="sensitive_form">
+					<div class="form-group">
+						<label for="sens_sig" data-lang="u_sens_sq" class="lang control-label col-sm-4">signature</label>
+						<div class="col-sm-6">
+							<select class="form-control" id="sens_sig">
+								<option class="lang" data-lang="u_sens_nr" value="none"></option>
+								<option class="lang" data-lang="u_sens_ao" value="original_image_size">admin only</option>
+							</select>
+						</div>
+					</div>
+
+
+				</form>
+			</div>
+		</div>
+		<button id="saveSensitive" class="btn btn-success lang" data-lang="c_save">save</button>
+	</div>
 	
 	
 </div>

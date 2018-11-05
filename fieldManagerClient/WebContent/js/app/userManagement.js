@@ -126,6 +126,13 @@ $(document).ready(function() {
         $(".usertab").hide();
         $('#devicePanel').show();
     })
+    $('#sensitiveTab a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+
+        $(".usertab").hide();
+        $('#sensitivePanel').show();
+    })
     
     // Style the upload buttons
     $('.file-inputs').bootstrapFileInput();

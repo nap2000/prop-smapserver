@@ -137,10 +137,11 @@ create TABLE organisation (
 	email_port integer,
 	default_email_content text,
 	website text,
-	locale text,				-- default locale for the organisation
+	locale text,					-- default locale for the organisation
 	timezone text,				-- default timezone for the organisation
 	billing_enabled boolean default false,
 	server_description text,
+	sensitive_data,				-- Questions that should be stored more securely
 	changed_ts TIMESTAMP WITH TIME ZONE
 	);
 CREATE UNIQUE INDEX idx_organisation ON organisation(name);
