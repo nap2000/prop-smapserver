@@ -42,6 +42,7 @@ $(document).ready(function() {
 	getProjects();
 	getLoggedInUser(userKnown, false, false, getOrganisations);
 	getDeviceSettings();
+	getSensitiveSettings();
 	
 	getAvailableTimeZones($('#o_tz'), showTimeZones);
 	
@@ -384,7 +385,39 @@ $(document).ready(function() {
 		});   		
 
     });
-    
+
+    $('#saveSensitive').click(function() {
+
+    	var sensitiveObj = {
+    		signature: $('#sens_sig').val()
+		};
+
+        var sensitiveString = JSON.stringify(sensitiveObj);
+    	addHourglass();
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            cache: false,
+            url: "/surveyKPI/organisationList/sensitive",
+            data: { sensitive: sensitiveString },
+            success: function(data, status) {
+                removeHourglass();
+                getSensitiveSettings();
+                $('#org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+            },
+            error: function(xhr, textStatus, err) {
+                removeHourglass();
+
+                if(xhr.readyState == 0 || xhr.status == 0) {
+                    $('#org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+                    return;  // Not an error
+                } else {
+                    var msg = xhr.responseText;
+                    alert(localise.set["msg_err_upd"] + msg);
+                }
+            }
+        });
+    });
     
     /*
      * Save the organisation details
@@ -1817,7 +1850,7 @@ function moveToOrganisations (orgId, users, projects) {
 }
 
     /*
-     * Show the organisation dialog
+     * Get the device settings
      */
     function getDeviceSettings() {
 
@@ -1857,9 +1890,32 @@ function moveToOrganisations (orgId, users, projects) {
                 }
             }
         });
+    }
 
+    /*
+     * Get the sensitive question settings
+     */
+    function getSensitiveSettings() {
 
+        addHourglass();
+        $.ajax({
+            url: "/surveyKPI/organisationList/sensitive",
+            dataType: 'json',
+            cache: false,
+            success: function(sensitive) {
+                removeHourglass();
+                $('#sens_sig').val(sensitive.signature);
 
+            },
+            error: function(xhr, textStatus, err) {
+                removeHourglass();
+                if(xhr.readyState == 0 || xhr.status == 0) {
+                    return;  // Not an error
+                } else {
+                    alert(localise.set["c_error"] + ": " + err);
+                }
+            }
+        });
     }
 
 });
