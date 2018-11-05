@@ -808,6 +808,10 @@ define({
     "u_chg": "Changed by",
     "u_usage": "Usage Report",
     "u_sms_url": "SMS Url",
+    "u_sens_data": "Sensitive Data",
+    "u_sens_ao": "Admin Only",
+    "u_sens_sq": "Signature Questions",
+    "u_sens_nr": "No restrictions",
 
     // Browse Results
     "br_ci": "Case Insensitive",
