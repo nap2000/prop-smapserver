@@ -1028,5 +1028,15 @@ ALTER TABLE apply_foreign_keys OWNER TO ws;
 alter table server add column keep_erased_days integer default 0;
 alter table organisation add column sensitive_data text;
 
+-- Organisation select
+CREATE SEQUENCE user_organisation_seq START 1;
+ALTER SEQUENCE user_organisation_seq OWNER TO ws;
+
+create TABLE user_organisation (
+	id INTEGER DEFAULT NEXTVAL('user_organisation_seq') CONSTRAINT pk_user_organisation PRIMARY KEY,
+	u_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+	o_id INTEGER REFERENCES organisation(id) ON DELETE CASCADE
+	);
+ALTER TABLE user_organisation OWNER TO ws;
 
 
