@@ -256,6 +256,9 @@ $(document).ready(function() {
 		$('#user_roles').find('input:checked').each(function(index) {
 			user.roles[index] = {id: $(this).val()};
 		});
+        $('#user_orgs').find('input:checked').each(function(index) {
+            user.orgs[index] = {id: $(this).val()};
+        });
 		userList[0] = user;
 		writeUserDetails(userList, $('#create_user_popup'));	// Save the user details to the database
  		
@@ -797,11 +800,13 @@ function openUserDialog(existing, userIndex) {
 		$user_groups = $('#user_groups'),
 		$user_projects = $('#user_projects'),
 		$user_roles = $('#user_roles'),
+        $user_orgs = $('#user_orgs'),
 		h,
 		idx,
 		filter_group, 
 		filter_project,
-		filter_role;
+		filter_role,
+		filter_org;
 	
 	gCurrentUserIndex = userIndex;
 	
@@ -885,6 +890,29 @@ function openUserDialog(existing, userIndex) {
 		}
 		$user_roles.empty().append(h.join(''));
 	}
+
+    // Add organisations
+    if(gOrganisationList) {
+        h = [];
+        idx = -1;
+        for(i = 0; i < gOrganisationList.length; i++) {
+            h[++idx] = '<div class="checkbox"><label>';
+            h[++idx] = '<input type="checkbox"';
+            h[++idx] = ' name="user_orgs_cb"';
+            h[++idx] = ' value="';
+            h[++idx] = gOrganisationList[i].id + '"';
+           if(existing) {
+
+                if(hasId(gUsers[userIndex].orgs, gOrganisationList[i].id)) {
+                    h[++idx] = ' checked="checked"';
+                }
+            }
+            h[++idx] = '/>';
+            h[++idx] = gOrganisationList[i].name;
+            h[++idx] = '</label></div>';
+        }
+        $user_orgs.empty().append(h.join(''));
+    }
 	
 	$('#user_create_form')[0].reset();
 	if(!existing) {
