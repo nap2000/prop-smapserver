@@ -237,6 +237,7 @@ $(document).ready(function() {
 		user.groups = [];
 		user.projects = [];
 		user.roles= [];
+        user.orgs= [];
 		securityManagerChecked = false;
 		$('#user_groups').find('input:checked').each(function(index) {
 			var val = $(this).val();
