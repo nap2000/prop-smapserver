@@ -242,6 +242,7 @@ function updateUserDetails(data, getOrganisationsFn) {
 			  $('#reset_me_password_fields').show();
 			  $('#password_me_fields').hide();
 			  addLanguageOptions($('.language_select'), data.language);
+			  addOrganisationOptions($('.organisation_select'), data.o_id, data.orgs);
 			  $('#me_name').val(data.name);
 			  $('#me_email').val(data.email);
 				
@@ -395,6 +396,25 @@ function addLanguageOptions($elem, current) {
 	}
 }
 
+function addOrganisationOptions($elem, current, orgs) {
+
+    var h = [],
+        idx = -1,
+        i;
+
+    for(i = 0; i < orgs.length; i++) {
+        h[++idx] = '<option value="';
+        h[++idx] = orgs[i].id;
+        h[++idx] = '">';
+        h[++idx] = orgs[i].name;
+        h[++idx] = '</option>';
+    }
+    $elem.html(h.join(''));
+    if(current) {
+        $elem.val(current);
+    }
+}
+
 /*
  * Enable the user profile button
  */
@@ -530,6 +550,7 @@ function enableUserProfileBS () {
 		user.current_project_id = 0;	// Tell service to ignore project id and update other details
 		user.current_survey_id = 0;
 		user.current_task_group_id = 0;
+
 		saveCurrentUser(user);			// Save the updated user details to disk	 
 	});
 
