@@ -311,7 +311,8 @@ DROP TABLE IF EXISTS user_organisation CASCADE;
 create TABLE user_organisation (
 	id INTEGER DEFAULT NEXTVAL('user_organisation_seq') CONSTRAINT pk_user_organisation PRIMARY KEY,
 	u_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-	o_id INTEGER REFERENCES organisation(id) ON DELETE CASCADE
+	o_id INTEGER REFERENCES organisation(id) ON DELETE CASCADE,
+	settings text
 	);
 ALTER TABLE user_organisation OWNER TO ws;
 
