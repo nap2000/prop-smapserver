@@ -1038,6 +1038,7 @@ create TABLE user_organisation (
 	o_id INTEGER REFERENCES organisation(id) ON DELETE CASCADE,
 	settings text
 	);
+CREATE UNIQUE INDEX idx_user_organisation ON user_organisation(u_id,o_id);
 ALTER TABLE user_organisation OWNER TO ws;
 
 
