@@ -42,6 +42,7 @@ define(function () {
         gSendTrail: 'off',
         gViewIdx: 0,
         gSelector: new Selector(),
+        gOrgId: 0,
 
         gRegions: undefined,
         gRegion: {},

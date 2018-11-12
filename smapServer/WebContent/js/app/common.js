@@ -228,11 +228,14 @@ function updateUserDetails(data, getOrganisationsFn) {
 	if(data.language && data.language !== gUserLocale) {
 		localStorage.setItem('user_locale', data.language);
 		location.reload();
+	} else if(data.o_id != globals.gOrgId) {
+        location.reload();
 	}
+
 	globals.gLoggedInUser = data;
+	globals.gOrgId = data.o_id;
 	
 	if(bootstrap_enabled) {
-
 			
 		$('#modify_me_popup').on('show.bs.modal', function (event) {
 			  var $this = $(this)
@@ -258,6 +261,7 @@ function updateUserDetails(data, getOrganisationsFn) {
 			$('#reset_me_password_fields').show();
 			$('#password_me_fields').hide();
 			addLanguageOptions($('.language_select'), data.language);
+            addOrganisationOptions($('.organisation_select'), data.o_id, data.orgs);
 			$('#me_name').val(data.name);
 			$('#me_email').val(data.email);
 			
@@ -463,6 +467,12 @@ function enableUserProfile () {
 		        		user.current_project_id = 0;	// Tell service to ignore project id and update other details
 		        		user.current_survey_id = 0;
 		        		user.current_task_group_id = 0;
+
+                        user.current_org_id = $('#me_organisation').val();
+                        if(user.current_org_id == globals.gOrgId) {
+                            users.current_org_id = 0;	// No change
+                        }
+
 		        		saveCurrentUser(user);			// Save the updated user details to disk
 		        		$(this).dialog("close");
 		        	}, 
@@ -546,7 +556,11 @@ function enableUserProfileBS () {
 		} else {
 			user.password = undefined;
 		}
-		
+
+		user.current_org_id = $('#me_organisation').val();
+		if(user.current_org_id == globals.gOrgId) {
+			user.current_org_id = 0;	// No change
+		}
 		user.current_project_id = 0;	// Tell service to ignore project id and update other details
 		user.current_survey_id = 0;
 		user.current_task_group_id = 0;
@@ -580,6 +594,9 @@ function saveCurrentUser(user) {
 		  data: { user: userString },
 		  success: function(data, status) {
 			  removeHourglass();
+			  if(user.current_org_id > 0) {
+                  user.o_id = user.current_org_id;		// Assume org has been updated
+              }
 			  updateUserDetails(user, undefined);
 		  }, error: function(data, status) {
 			  removeHourglass();
@@ -647,6 +664,7 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 			globals.gSendTrail = data.ft_send_location;
 			globals.gAlertSeen = data.seen;		// Alerts have been acknowledged
 			globals.gLastAlertTime = data.lastalert;
+			globals.gOrgId = data.o_id;
 			
 			if(!hideUserDetails) {
 				updateUserDetails(data, getOrganisationsFn);
