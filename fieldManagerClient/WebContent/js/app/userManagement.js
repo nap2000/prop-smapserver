@@ -828,7 +828,7 @@ function openUserDialog(existing, userIndex) {
 			if(filter_group === gGroups[i].name) {
 				h[++idx] = ' checked="checked"';
 			} else if(existing) {
-				if(hasName(gUsers[userIndex].groups, gGroups[i].name)) {
+				if(hasId(gUsers[userIndex].groups, gGroups[i].id)) {
 					h[++idx] = ' checked="checked"';
 				}
 			}
