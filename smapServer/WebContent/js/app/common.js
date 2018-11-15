@@ -275,29 +275,32 @@ function updateUserDetails(data, getOrganisationsFn) {
 	 */
 	if(groups) {
 		for(i = 0; i < groups.length; i++) {
-			if(groups[i].name === "admin") {
+			if(groups[i].id === globals.GROUP_ADMIN) {
 				globals.gIsAdministrator = true;
                 if(data.billing_enabled) {
                     globals.gOrgBillingData = true;
                 }
-			}
-			if(groups[i].name === "org admin") {
+
+			} else if(groups[i].id === globals.GROUP_ORG_ADMIN) {
 				globals.gIsOrgAdministrator = true;
 				globals.gBillingData = true;
-			}
-			if(groups[i].name === "security") {
+
+			} else if(groups[i].id === globals.GROUP_SECURITY) {
 				globals.gIsSecurityAdministrator = true;
-			}
-			if(groups[i].name === "analyst") {
+
+			} else if(groups[i].id === globals.GROUP_ENTERPRISE) {
+                globals.gIsEnterpriseAdministrator = true;
+
+            } else if(groups[i].id === globals.GROUP_ANALYST) {
 				globals.gIsAnalyst = true;
-			}
-			if(groups[i].name === "manage") {
+
+			} else if(groups[i].id === globals.GROUP_MANAGE) {
 				globals.gIsManage = true;
-			}
-			if(groups[i].name === "enum") {
+
+			} else if(groups[i].id === globals.GROUP_ENUM) {
 				globals.gIsEnum = true;
-			}
-            if(groups[i].name === "view data") {
+
+			} else if(groups[i].id === globals.GROUP_VIEW_DATA) {
                 globals.gViewData = true;
             }
 		}
