@@ -38,7 +38,6 @@ $(document).ready(function() {
 	localise.setlang();		// Localise HTML
 	
 	getUsers();
-	getGroups();
 	getProjects();
 	getLoggedInUser(userKnown, false, false, getOrganisations);
 	getDeviceSettings();
@@ -695,6 +694,7 @@ $(document).ready(function() {
 
 
 function userKnown() {
+    getGroups();
 	if(globals.gIsOrgAdministrator || globals.gIsSecurityAdministrator) {
 		getRoles(updateRoleTable);
 	}
@@ -816,8 +816,10 @@ function openUserDialog(existing, userIndex) {
 	h = [];
 	idx = -1;
 	for(i = 0; i < gGroups.length; i++) {
-		if((gGroups[i].id !== 4 || globals.gIsOrgAdministrator) && 
-				(gGroups[i].id !== 6 || globals.gIsOrgAdministrator || globals.gIsSecurityAdministrator)) {
+		if((gGroups[i].id !== globals.GROUP_ORG_ADMIN || globals.gIsOrgAdministrator) &&
+				(gGroups[i].id !== globals.GROUP_SECURITY || globals.gIsOrgAdministrator || globals.gIsSecurityAdministrator) &&
+            	(gGroups[i].id != globals.GROUP_ENTERPRISE || globals.gIsEnterpriseAdministrator)
+		) {
 			h[++idx] = '<div class="checkbox"><label>';
 			h[++idx] = '<input type="checkbox" id="'; 
 			h[++idx] = 'user_groups_cb' + i;
@@ -1670,7 +1672,10 @@ function updateGroupTable() {
 	
 	h[++idx] = '<option value="All">' + localise.set["c_all"] + '</option>';
 	for(i = 0; i < gGroups.length; i++) {
-		if((gGroups[i].id !== 4 || globals.gIsOrgAdministrator) && (gGroups[i].id !== 6 || globals.gIsSecurityAdministrator)) {
+		if((gGroups[i].id != globals.GROUP_ORG_ADMIN || globals.gIsOrgAdministrator) &&
+				(gGroups[i].id != globals.GROUP_SECURITY || globals.gIsSecurityAdministrator || globals.gIsOrgAdministrator) &&
+                (gGroups[i].id != globals.GROUP_ENTERPRISE || globals.gIsEnterpriseAdministrator)
+			) {
 			h[++idx] = '<option value="';
 			h[++idx] = gGroups[i].name;
 			h[++idx] = '">';

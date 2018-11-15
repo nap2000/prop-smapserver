@@ -889,19 +889,6 @@ create TABLE disk_usage (
 ALTER TABLE disk_usage OWNER TO ws;
 
 -- Upgrade to 18.05
-CREATE SEQUENCE bill_seq START 1;
-ALTER SEQUENCE bill_seq OWNER TO ws;
-
-create TABLE billing (
-	id integer default nextval('bill_seq') constraint pk_billing primary key,
-	o_id integer,
-	apply_from TIMESTAMP WITH TIME ZONE,		-- Date that the billing applies from
-	free_submissions integer,				-- Number of free submissions available
-	submission_unit_cost real,				-- Cost per submission
-	free_disk integer,						-- Free disk available
-	disk_unit_cost real						-- Cost per GB of disk
-	);
-ALTER TABLE billing OWNER TO ws;
 alter table organisation add column billing_enabled boolean default false;
 
 alter table csvtable add column survey boolean default false;
@@ -1041,4 +1028,23 @@ create TABLE user_organisation (
 CREATE UNIQUE INDEX idx_user_organisation ON user_organisation(u_id,o_id);
 ALTER TABLE user_organisation OWNER TO ws;
 
+-- Billing upgrade
+drop table if exists billing;
+drop sequence if exists bill_seq;
+
+CREATE SEQUENCE bill_rates_seq START 1;
+ALTER SEQUENCE bill_rates_seq OWNER TO ws;
+
+create table bill_rates (
+	id integer default nextval('bill_rates_seq') constraint pk_bill_rates primary key,
+	o_id integer,	-- If 0 then all organisations (In enterprise or server)
+	e_id integer,	-- If 0 then all enterprises (ie server level)
+	rates text,		-- json object
+	created_by tex
+	ts_created TIMESTAMP WITH TIME ZONE,
+	ts_applies_from TIMESTAMP WITH TIME ZONE
+	);
+alter table bill_rates OWNER TO ws;
+
+insert into groups(id,name) values(8,'enterprise admin');
 

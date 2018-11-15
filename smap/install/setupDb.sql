@@ -358,6 +358,7 @@ insert into groups(id,name) values(4,'org admin');
 insert into groups(id,name) values(5,'manage');
 insert into groups(id,name) values(6,'security');
 insert into groups(id,name) values(7,'view data');
+insert into groups(id,name) values(8,'enterprise admin');
 
 insert into user_group (u_id, g_id) values (1, 1);
 insert into user_group (u_id, g_id) values (1, 2);
@@ -366,6 +367,7 @@ insert into user_group (u_id, g_id) values (1, 4);
 insert into user_group (u_id, g_id) values (1, 5);
 insert into user_group (u_id, g_id) values (1, 6);
 insert into user_group (u_id, g_id) values (1, 7);
+insert into user_group (u_id, g_id) values (1, 8);
 
 insert into project (id, o_id, name) values (1, 1, 'A project');
 
@@ -1100,22 +1102,6 @@ create TABLE disk_usage (
 	);
 ALTER TABLE disk_usage OWNER TO ws;
 
-DROP SEQUENCE IF EXISTS bill_seq CASCADE;
-CREATE SEQUENCE bill_seq START 1;
-ALTER SEQUENCE bill_seq OWNER TO ws;
-
-DROP TABLE IF EXISTS billing CASCADE;
-create TABLE billing (
-	id integer default nextval('bill_seq') constraint pk_billing primary key,
-	o_id integer,
-	apply_from TIMESTAMP WITH TIME ZONE,		-- Date that the billing applies from
-	free_submissions integer,				-- Number of free submissions available
-	submission_unit_cost real,				-- Cost per submission
-	free_disk integer,						-- Free disk available
-	disk_unit_cost real						-- Cost per GB of disk
-	);
-ALTER TABLE billing OWNER TO ws;
-
 DROP SEQUENCE IF EXISTS people_seq CASCADE;
 CREATE SEQUENCE people_seq START 1;
 ALTER SEQUENCE people_seq OWNER TO ws;
@@ -1152,3 +1138,20 @@ create TABLE apply_foreign_keys (
 	ts_applied TIMESTAMP WITH TIME ZONE
 	);
 ALTER TABLE apply_foreign_keys OWNER TO ws;
+
+-- billing
+DROP SEQUENCE IF EXISTS bill_rates_seq CASCADE;
+CREATE SEQUENCE bill_rates_seq START 1;
+ALTER SEQUENCE bill_rates_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS bill_rates;
+create TABLE bill_rates (
+	id integer default nextval('bill_rates_seq') constraint pk_bill_rates primary key,
+	o_id integer,	-- If 0 then all organisations (In enterprise or server)
+	e_id integer,	-- If 0 then all enterprises (ie server level)
+	rates text,		-- json object
+	created_by tex
+	ts_created TIMESTAMP WITH TIME ZONE,
+	ts_applies_from TIMESTAMP WITH TIME ZONE
+	);
+ALTER TABLE bill_rates OWNER TO ws;
