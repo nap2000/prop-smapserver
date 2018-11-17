@@ -20,24 +20,14 @@ define(['jquery','localise', 'common', 'globals',
         'bootbox', 
         'moment',
         'datetimepicker'], function($, lang, common, globals, bootbox, moment) {
-	
-var gUsers,
-	gGroups,
-	gOrganisationList,
-	gControlCount,			// Number of users that have been set - used to enable / disable control buttons
-	gControlProjectCount,	// Number of projects that have been set - used to enable / disable control buttons
-	gControlOrganisationCount,
-	gCurrentProjectIndex,	// Set while editing a projects details
-	gCurrentRoleIndex,	// Set while editing a user role details
-	gCurrentOrganisationIndex,
-	gCurrentUserIndex,		// Set while editing a users details
-	gOrgId;
+
+    var gLevel;
 
 	$(document).ready(function() {
 
 		localise.setlang();		// Localise HTML
 
-		getLoggedInUser(undefined, false, false, undefined);
+		getLoggedInUser(userKnown, false, false, undefined);
 
 		getAvailableTimeZones($('#o_tz'), showTimeZones);
 
@@ -102,9 +92,55 @@ var gUsers,
             $('#organisationBillPanel').show();
         });
 
+        $('#billLevel').change(function () {
+            levelChanged();
+        });
+
 		enableUserProfileBS();	// Allow user to reset their own profile
 
 	});
+
+	function userKnown() {
+        var h = [],
+            idx = -1,
+            level;
+
+	    if(globals.gIsOrgAdministrator || globals.gIsEnterpriseAdministrator || globals.gIsServerOwner) {
+            if(globals.gIsServerOwner) {
+                h[++idx] = '<option value="owner">';
+                h[++idx] = localise.set["u_server_owner"];
+                h[++idx] = '</option>';
+                level = "owner";
+            }
+            if(globals.gIsEnterpriseAdministrator) {
+                h[++idx] = '<option value="ent">';
+                h[++idx] = localise.set["u_ent_admin"];
+                h[++idx] = '</option>';
+                if(!level) {
+                    level = "ent";
+                }
+            }
+            if(globals.gIsOrgAdministrator) {
+                h[++idx] = '<option value="org">';
+                h[++idx] = localise.set["u_org_admin"];
+                h[++idx] = '</option>';
+                if(!level) {
+                    level = "org";
+                }
+            }
+            $('#billLevel').html(h.join(''));
+            $('#billLevel').val(level);
+            gLevel = level;
+	        $(".showHierarchy").show();
+        } else {
+	        gLevel = "ind_org";
+        }
+        getBillDetails();
+    }
+
+    function levelChanged() {
+	    gLevel =  $('#billLevel').val();
+    }
 
 	function getBillDetails() {
         var usageMsec = $('#usageDate').data("DateTimePicker").date(),

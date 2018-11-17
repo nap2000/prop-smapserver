@@ -818,7 +818,8 @@ function openUserDialog(existing, userIndex) {
 	for(i = 0; i < gGroups.length; i++) {
 		if((gGroups[i].id !== globals.GROUP_ORG_ADMIN || globals.gIsOrgAdministrator) &&
 				(gGroups[i].id !== globals.GROUP_SECURITY || globals.gIsOrgAdministrator || globals.gIsSecurityAdministrator) &&
-            	(gGroups[i].id != globals.GROUP_ENTERPRISE || globals.gIsEnterpriseAdministrator)
+            	(gGroups[i].id != globals.GROUP_ENTERPRISE || globals.gIsEnterpriseAdministrator) &&
+            	gGroups[i].id !== globals.GROUP_OWNER
 		) {
 			h[++idx] = '<div class="checkbox"><label>';
 			h[++idx] = '<input type="checkbox" id="'; 
@@ -1674,7 +1675,8 @@ function updateGroupTable() {
 	for(i = 0; i < gGroups.length; i++) {
 		if((gGroups[i].id != globals.GROUP_ORG_ADMIN || globals.gIsOrgAdministrator) &&
 				(gGroups[i].id != globals.GROUP_SECURITY || globals.gIsSecurityAdministrator || globals.gIsOrgAdministrator) &&
-                (gGroups[i].id != globals.GROUP_ENTERPRISE || globals.gIsEnterpriseAdministrator)
+                (gGroups[i].id != globals.GROUP_ENTERPRISE || globals.gIsEnterpriseAdministrator) &&
+            	gGroups[i].id != globals.GROUP_OWNER
 			) {
 			h[++idx] = '<option value="';
 			h[++idx] = gGroups[i].name;

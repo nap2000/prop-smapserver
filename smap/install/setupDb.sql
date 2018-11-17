@@ -359,6 +359,7 @@ insert into groups(id,name) values(5,'manage');
 insert into groups(id,name) values(6,'security');
 insert into groups(id,name) values(7,'view data');
 insert into groups(id,name) values(8,'enterprise admin');
+insert into groups(id,name) values(9,'server owner');
 
 insert into user_group (u_id, g_id) values (1, 1);
 insert into user_group (u_id, g_id) values (1, 2);
