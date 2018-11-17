@@ -31,6 +31,7 @@ define(function () {
         GROUP_SECURITY: 6,
         GROUP_VIEW_DATA: 7,
         GROUP_ENTERPRISE : 8,
+        GROUP_OWNER : 9,
 
         gProjectList: undefined,
         gRoleList: undefined,
@@ -47,6 +48,7 @@ define(function () {
         gIsOrgAdministrator: false,
         gIsSecurityAdministrator: false,
         gIsEnterpriseAdministrator: false,
+        gIsServerOwner: false,
         gViewData: false,
         gBillingData: false,
         gOrgBillingData: false,
