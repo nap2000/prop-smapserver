@@ -1547,22 +1547,19 @@ function updateOrganisationList() {
 		i, organisation,
 		h = [],
 		idx = -1;
-	
-	for(i = 0; i < gOrganisationList.length; i++) {
-		organisation = gOrganisationList[i];
-		if(organisation.name !== globals.gLoggedInUser.organisation_name) {
-		
-			h[++idx] = '<option value="';
-			h[++idx] = organisation.id;
-			h[++idx] = '">';
-			h[++idx] = organisation.name;
-			h[++idx] = '</option>';
-		}
-		
-	}	
+
+    for(i = 0; i < gOrganisationList.length; i++) {
+        organisation = gOrganisationList[i];
+
+        h[++idx] = '<option value="';
+        h[++idx] = organisation.id;
+        h[++idx] = '">';
+        h[++idx] = organisation.name;
+        h[++idx] = '</option>'
+    }
 	
 	$organisationSelect.empty().append(h.join(''));
-
+    $organisationSelect.val(globals.gOrgId);
 }
 
 // Return true if the item with the name is in the list
