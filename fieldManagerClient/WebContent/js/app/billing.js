@@ -21,7 +21,8 @@ define(['jquery','localise', 'common', 'globals',
         'moment',
         'datetimepicker'], function($, lang, common, globals, bootbox, moment) {
 
-    var gLevel;
+    var gLevel,
+        gOrganisationList;
 
 	$(document).ready(function() {
 
@@ -140,6 +141,13 @@ define(['jquery','localise', 'common', 'globals',
 
     function levelChanged() {
 	    gLevel =  $('#billLevel').val();
+        $(".showOrganisation").hide();
+	    if(gLevel === "org") {
+	        $(".showOrganisation").show();
+            if(!gOrganisationList) {
+                getOrganisations();
+            }
+        }
     }
 
 	function getBillDetails() {
@@ -223,6 +231,41 @@ define(['jquery','localise', 'common', 'globals',
         return h.join('');
 	}
 
+	function getOrganisations() {
+
+        addHourglass();
+        $.ajax({
+            type: 'GET',
+            cache: false,
+            url: "/surveyKPI/organisationList",
+            success: function(data, status) {
+                removeHourglass();
+                gOrganisationList = data;
+                if(data && data.length > 0) {
+                    var h = [],
+                        idx = -1,
+                        i;
+
+                    for(i = 0; i < data.length; i++) {
+                        h[++idx] = '<option value="';
+                        h[++idx] = i;
+                        h[++idx] = '">';
+                        h[++idx] = data[i].name;
+                        h[++idx] = '</option>';
+                    }
+                    $('.organisation_select').html(h.join(''));
+                }
+            }, error: function(xhr, textStatus, err) {
+                removeHourglass();
+                if(xhr.readyState == 0 || xhr.status == 0) {
+                    return;  // Not an error
+                } else {
+                    var msg = err;
+                    alert(localise.set["msg_err_upd"] + msg);
+                }
+            }
+        });
+    }
 
 });
 	
