@@ -302,6 +302,8 @@ function updateUserDetails(data, getOrganisationsFn) {
 
 			} else if(groups[i].id === globals.GROUP_VIEW_DATA) {
                 globals.gViewData = true;
+            } else if(groups[i].id === globals.GROUP_OWNER) {
+                globals.gIsServerOwner = true;
             }
 		}
 	}

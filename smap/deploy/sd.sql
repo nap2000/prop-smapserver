@@ -1047,4 +1047,5 @@ create table bill_rates (
 alter table bill_rates OWNER TO ws;
 
 insert into groups(id,name) values(8,'enterprise admin');
+insert into groups(id,name) values(9,'server owner');
 

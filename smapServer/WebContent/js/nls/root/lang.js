@@ -50,6 +50,7 @@ define({
     "m_billing": "Billing",
     "m_billing_server": "Server Billing",
     "m_billing_orgs": "Organisations Billing",
+    "m_bill_level": "Bill Level",
 
     // Smap Server
     "ss_welcome": "Welcome to Smap Server Version:",
@@ -812,6 +813,9 @@ define({
     "u_sens_ao": "Admin Only",
     "u_sens_sq": "Signature Questions",
     "u_sens_nr": "No restrictions",
+    "u_org_admin": "Organisation Administrator",
+    "u_ent_admin": "Enterprise Administator",
+    "u_server_owner": "Server Owner",
 
     // Browse Results
     "br_ci": "Case Insensitive",
