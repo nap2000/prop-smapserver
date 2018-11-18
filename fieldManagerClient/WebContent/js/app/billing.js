@@ -83,15 +83,15 @@ define(['jquery','localise', 'common', 'globals',
             $(this).tab('show');
 
             $(".billtab").hide();
-            $('#serverBillPanel').show();
+            $('#ratesPanel').show();
 
         });
-        $('#organisationBillTab a').click(function (e) {
+        $('#ratesTab a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
 
             $(".billtab").hide();
-            $('#organisationBillPanel').show();
+            $('#ratesPanel').show();
         });
 
         $('#billLevel').change(function () {
