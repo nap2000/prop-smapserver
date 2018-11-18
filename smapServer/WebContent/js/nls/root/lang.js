@@ -48,6 +48,7 @@ define({
     "m_info": "Info",
     "m_os": "Oversight",
     "m_billing": "Billing",
+    "m_rates": "Rates",
     "m_billing_server": "Server Billing",
     "m_billing_orgs": "Organisations Billing",
     "m_bill_level": "Bill Level",
