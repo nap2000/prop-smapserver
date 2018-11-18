@@ -945,7 +945,8 @@ define({
     "disk": "Disk",
     "static map": "Static Map",
     "rekognition": "AWS Rekognition",
-    "org_bill_rpt": "Organisation Usage Report"
+    "org_bill_rpt": "Organisation Usage Report",
+    "bill_enable": "Enable Billing"
 
 
 });

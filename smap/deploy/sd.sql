@@ -1028,6 +1028,8 @@ create TABLE user_organisation (
 CREATE UNIQUE INDEX idx_user_organisation ON user_organisation(u_id,o_id);
 ALTER TABLE user_organisation OWNER TO ws;
 
+-- Version 18.12
+
 -- Billing upgrade
 drop table if exists billing;
 drop sequence if exists bill_seq;
@@ -1048,4 +1050,9 @@ alter table bill_rates OWNER TO ws;
 
 insert into groups(id,name) values(8,'enterprise admin');
 insert into groups(id,name) values(9,'server owner');
+
+-- Save org id and enterprise id on upload
+alter table upload_event add column o_id integer default 0;
+alter table upload_event add column e_id integer default 0;
+update upload_event ue set o_id = (select p.o_id from project p where p.id = ue.p_id); 
 
