@@ -61,8 +61,9 @@ define(['jquery','localise', 'common', 'globals',
         $('#usageDate').on("dp.change", function () {
         	getBillDetails();
 		});
-
-        getBillDetails();
+        $('#organisation').change(function(){
+           getBillDetails();
+        });
 
         $('#org_bill_rpt').click(function (e) {
             var usageMsec = $('#usageDate').data("DateTimePicker").date(),
@@ -136,18 +137,28 @@ define(['jquery','localise', 'common', 'globals',
         } else {
 	        gLevel = "ind_org";
         }
-        getBillDetails();
+        levelChanged();
+	    if(gLevel !== "org") {
+            getBillDetails();
+        }
     }
 
     function levelChanged() {
 	    gLevel =  $('#billLevel').val();
-        $(".showOrganisation").hide();
+        $(".showOrganisation,.showManager").hide();
 	    if(gLevel === "org") {
 	        $(".showOrganisation").show();
             if(!gOrganisationList) {
                 getOrganisations();
             }
         }
+        if(globals.gIsServerOwner ||
+                (globals.gIsEnterpriseAdministrator && gLevel !== "owner") ||
+                (globals.gIsOrgAdministrator && gLevel === "org")
+                ) {
+            $(".showManager").show();
+        }
+
     }
 
 	function getBillDetails() {
@@ -156,8 +167,15 @@ define(['jquery','localise', 'common', 'globals',
 			url,
             month = d.getMonth() + 1,
             year = d.getFullYear(),
+            url,
+            orgIdx;
 
-		url = "/surveyKPI/billing?org=0&year=" + year + "&month=" + month;
+        url = "/surveyKPI/billing?year=" + year + "&month=" + month;
+        if(gLevel === "org") {
+            orgIdx = $('#organisation').val();
+            url += "&org=" + gOrganisationList[orgIdx].id;
+        }
+
         addHourglass();
         $.ajax({
             url: url,
@@ -249,12 +267,17 @@ define(['jquery','localise', 'common', 'globals',
                     for(i = 0; i < data.length; i++) {
                         h[++idx] = '<option value="';
                         h[++idx] = i;
-                        h[++idx] = '">';
+                        h[++idx] = '"';
+                        if(i == 0 ) {
+                            h[++idx] = ' selected="seelcted"'
+                        }
+                        h[++idx] = '>';
                         h[++idx] = data[i].name;
                         h[++idx] = '</option>';
                     }
                     $('.organisation_select').html(h.join(''));
                 }
+                getBillDetails();
             }, error: function(xhr, textStatus, err) {
                 removeHourglass();
                 if(xhr.readyState == 0 || xhr.status == 0) {

@@ -381,7 +381,9 @@ CREATE TABLE upload_event (
 	results_db_applied boolean default false,	-- Speed up for most common subscriber
 	s_id INTEGER,
 	ident text,	-- Identifier used by survey
-	p_id INTEGER,
+	p_id integer,
+	o_id integer default 0,	-- Record organisation at time of upload for billing purposes
+	e_id, integer default 0,	-- Record enterprise for billing
 	upload_time TIMESTAMP WITH TIME ZONE,
 	user_name text,
 	file_name text,
