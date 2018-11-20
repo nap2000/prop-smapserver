@@ -2,8 +2,6 @@ package smapModels;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -17,10 +15,7 @@ import org.smap.sdal.managers.ActionManager;
 import org.smap.sdal.managers.QueryManager;
 import org.smap.sdal.model.Action;
 import org.smap.sdal.model.KeyValueSimp;
-import org.smap.sdal.model.OptionDesc;
 import org.smap.sdal.model.QueryForm;
-import org.smap.sdal.model.SqlDesc;
-import org.smap.sdal.model.TableColumn;
 import org.smap.sdal.model.User;
 
 import util.Util;

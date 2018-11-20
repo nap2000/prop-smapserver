@@ -28,7 +28,7 @@ var gUsers,
 	gControlProjectCount,	// Number of projects that have been set - used to enable / disable control buttons
 	gControlOrganisationCount,
 	gCurrentProjectIndex,	// Set while editing a projects details
-	gCurrentRoleIndex,	// Set while editing a user role details
+	gCurrentRoleIndex,		// Set while editing a user role details
 	gCurrentOrganisationIndex,
 	gCurrentUserIndex,		// Set while editing a users details
 	gOrgId;
@@ -1077,8 +1077,12 @@ function writeUserDetails(userList, $dialog) {
 		  success: function(data, status) {
 			  removeHourglass();
 			  $('#userDetailsSave').prop("disabled", false);
-			  getUsers();
-			  $dialog.modal("hide");
+              if(userList[0].ident == globals.gLoggedInUser.ident) {	// Restart if a user updated their own settings
+                  location.reload();
+              } else {
+                  getUsers();
+                  $dialog.modal("hide");
+              }
 		  }, error: function(xhr, textStatus, err) {
 			  removeHourglass();
 			  $('#userDetailsSave').prop("disabled", false);
