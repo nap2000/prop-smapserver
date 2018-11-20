@@ -55,7 +55,9 @@ public class ReportModel {
 		this.namespace = namespace;	
 		this.urlprefix = urlprefix;
 		this.basePath = basePath;
-				
+			
+		String tz = "UTC";		// Default to UTC
+		
 		/*
 		 * Get the list of forms and surveys to be exported
 		 */
@@ -151,7 +153,8 @@ public class ReportModel {
 						startingForm,
 						null,					// filter
 						meta,					// meta
-						false);
+						false,
+						tz);
 				reports.put(odataIdent, rd);
 				
 				FullQualifiedName fqn = new FullQualifiedName(namespace, Util.convertFormToEntityName(odataIdent));
