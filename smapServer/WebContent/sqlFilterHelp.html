@@ -212,6 +212,12 @@
 	   				font-variant: normal; font-weight: normal; position: absolute; margin-left: -1em;
 	   				padding-right: 0.5em; margin-bottom: 2em;">Date Calculations</a>
             </h1>
+            <h2>Date Formats</h2>
+            <ul>
+                <li>'yyyy-mm-dd'</li>
+            </ul>
+            Hence the thirty first of January, 2018 would be:  '2018-01-31'
+
             <h2>Date Intervals</h2>
 
             <ul>
@@ -254,12 +260,13 @@
                 <li>_upload_time (The date that the survey was uploaded to the server)</li>
                 <li>_start (The time the survey was started)</li>
                 <li>_end (The time the survey ended)</li>
+                <li>${_hrk} (The generated unique key for the record)</li>
+                <li>${_device} (The device identifier that submitted the results)</li>
             </ul>
             <b>Examples</b>
             <ul>
                 <li>${image} empty</li>
                 <li>_upload_time > '2017-01-23'</li>
-                <li></li>
             </ul>
 
         </div>
