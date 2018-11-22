@@ -209,7 +209,8 @@ function initialiseDialogs() {
                             queryName = $('#export_query option:selected').text(),
                             includeMeta=$('#includeMeta').prop("checked"),
                             filename,
-                            filter = $('#ad_filter').val();
+                            filter = $('#ad_filter').val(),
+                            tz = $('#e_tz').val();
 
                         // Set the filename of the exported file
                         if(exportQuerySel) {
@@ -323,9 +324,9 @@ function initialiseDialogs() {
 
                                 url = exportXlsxSurveyURL(sId, displayName, language, split_locn,
                                     form, exportReadOnly, merge_select_multiple, embedImages, incHxl,
-                                    exp_from_date, exp_to_date, dateQuestionId, filter, includeMeta);
+                                    exp_from_date, exp_to_date, dateQuestionId, filter, includeMeta, tz);
                             } else {
-                                // Legacy XLS export
+                                // Legacy html xlsx export
                                 forms = $(':checkbox:checked', '.selectforms').map(function () {
                                     return this.value;
                                 }).get();
@@ -341,7 +342,7 @@ function initialiseDialogs() {
                                 }
                                 url = exportSurveyURL(sId, displayName, language, format, split_locn,
                                     forms, exportReadOnly, merge_select_multiple, xlstype, embedImages, incHxl,
-                                    exp_from_date, exp_to_date, dateQuestionId, filter);
+                                    exp_from_date, exp_to_date, dateQuestionId, filter, tz);
                             }
                         }
 
@@ -930,7 +931,8 @@ function exportSurveyURL (
     exp_from_date,
     exp_to_date,
     dateQuestionId,
-    filter) {
+    filter,
+    tz) {
 
     var url;
     if(xlstype === "html") {
@@ -984,6 +986,10 @@ function exportSurveyURL (
         url += '&filter=' + fixedEncodeURIComponent(filter);
     }
 
+    if(tz) {
+        url += '&tz=' + tz;
+    }
+
     return url;
 }
 
@@ -1004,7 +1010,8 @@ function exportXlsxSurveyURL (
     exp_to_date,
     dateQuestionId,
     filter,
-    includeMeta) {
+    includeMeta,
+    tz) {
 
     var url = "/surveyKPI/exportxlsx/";
 
@@ -1048,6 +1055,10 @@ function exportXlsxSurveyURL (
     if(includeMeta) {
         url += "&meta=true";
     }
+
+	if(tz) {
+		url += "&tz=" + tz;
+	}
 
     return url;
 }

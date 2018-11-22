@@ -610,7 +610,7 @@ function getAvailableTimeZones($elem, callback) {
 	$.ajax({
 		url: "/surveyKPI/utility/timezones",
 		contentType: "application/json",
-		cache: false,
+		cache: true,
 		success: function(data) {
 			removeHourglass();
 
@@ -640,7 +640,7 @@ function showTimeZones($elem, timeZones) {
 		h[++idx] = '<option value="';
 		h[++idx] = tz.id;
 		h[++idx] = '">';
-		h[++idx] = tz.offset;
+		h[++idx] = tz.name;
 		h[++idx] = '</option>';
 	}
 	$elem.empty().html(h.join(''));
