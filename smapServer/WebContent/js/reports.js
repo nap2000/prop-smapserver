@@ -87,6 +87,8 @@ require([
             getReports();
 		});
 
+		getAvailableTimeZones($('#e_tz'), showTimeZones);
+
         $('#generateReport').click(function() {
         	var i;
         	var filename;
@@ -95,30 +97,6 @@ require([
         	var url;
         	var action = gReportList[gReportIdx].action_details;
 
-
-        	/*
-        	for(i = 0; i < gConfig.length; i++) {
-        		val = $('#param_' + gConfig[i].name).val();
-
-        		// Validate
-        		if(gConfig[i].required && (typeof val === "undefined" || val.trim().length === 0)) {
-                    $('#alert').html(localise.set['ed_req'] + " : " + localise.set[gConfig[i].trans])
-        			$('#alert').show();
-        			return false;
-                }
-
-                if(gConfig[i].name === "filename") {
-                    filename = val;
-                } else {
-                    params.push({
-                        key: gConfig[i].name,
-                        val: val
-                    })
-                }
-
-                gReportList[gReportIdx].savedParams[gConfig[i].name] = val;
-			}
-			*/
             $('#alert').hide();
 
             url = getReportUrl(action.reportType, action.sId, action.filename);
@@ -133,7 +111,6 @@ require([
                     url += params[i].k + '=' + params[i].v;
                 }
             }
-
 
             $('#report_popup').modal("hide");
             window.location.href = url;
@@ -206,6 +183,7 @@ require([
         var landscape = $('#orient_landscape').prop('checked');
         var embed_images = $('#embedImages').prop('checked');
         var language = $('#export_language').val();
+		var tz = $('#e_tz').val();
         var dateId = $('#export_date_question').val();
         var exp_from_date = undefined;
         var exp_to_date = undefined;
@@ -294,6 +272,9 @@ require([
         if(language != "none") {
             url += "&language=" + language;
         }
+		if(tz) {
+			url += "&tz=" + tz;
+		}
         if(filter && filter.length > 0) {
             url += "&filter=" + filter;
         }
@@ -579,6 +560,8 @@ require([
                     }
                 } else if(param.k === "language") {
                     language = param.v;
+                } else if(param.k === "tz") {
+	                tz = param.v;
                 } else if(param.k === "filter") {
                     filter = param.v;
                 } else if(param.k === "dateId") {
@@ -604,6 +587,9 @@ require([
                 $("#orient_portrait").prop("checked",true);
             }
             $('#export_language').val(language);
+            if(tz) {
+	            $('#e_tz').val(tz);
+            }
             $('#tg_ad_filter').val(filter);
             if(dateId) {
                 $('#export_date_question').val(dateId);

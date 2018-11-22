@@ -889,7 +889,6 @@ require([
             url += "&group=true";
         }
 
-
         url += "&format=dt";
         url += "&merge_select_multiple=yes";
         url += "&sort=prikey&dirn=desc";
