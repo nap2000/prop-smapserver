@@ -352,7 +352,7 @@ define({
 	"a_ni": "You need to enable loading tasks for this form in the form settings in the editor page",
 	"a_nx": "New XLSX",
 	"a_lx": "Legacy XLSX",
-	"a_lh": "Legacy HTML",
+	"a_lh": "Legacy XLS / HTML",
 
 
 	// Messages
