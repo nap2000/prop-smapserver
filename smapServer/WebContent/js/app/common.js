@@ -22,9 +22,9 @@ var gWait = 0;		// This javascript file only
  * Convert a choice list name into a valid jquery class name
  */
 function jq(choiceList) {
-	
+
 	var c;
-	
+
 	c = choiceList.replace( /(:|\.|\[|\]|,)/g, "\\$1" );
 	return c;
 }
@@ -39,14 +39,14 @@ function addPendingTask(taskId, assignmentId, status, source) {
 	var i,
 		duplicate = false,
 		assignment;
-	
+
 	assignment = {
-			assignment_id: assignmentId,
-			assignment_status: status,
-			task_id: taskId			
-			};
+		assignment_id: assignmentId,
+		assignment_status: status,
+		task_id: taskId
+	};
 	globals.gPendingUpdates.push(assignment);
-	
+
 	if(source === "table") {
 		updateMapTaskSelections(taskId, true);
 	} else if(source === "map") {
@@ -83,14 +83,14 @@ function removePendingTask(taskId, source) {
 function updateProjectList(addAll, projectId, callback) {
 
 	var $projectSelect = $('.project_list'),
-		i, 
+		i,
 		h = [],
 		idx = -1,
 		updateCurrentProject = true;
-	
+
 	if(addAll) {
 		h[++idx] = '<option value="0">' + localise.set["c_all"] + '</option>';
-		updateCurrentProject = false;		
+		updateCurrentProject = false;
 	}
 	for(i = 0; i < globals.gProjectList.length; i++) {
 		h[++idx] = '<option value="';
@@ -98,35 +98,35 @@ function updateProjectList(addAll, projectId, callback) {
 		h[++idx] = '">';
 		h[++idx] = globals.gProjectList[i].name;
 		h[++idx] = '</option>';
-		
+
 		if(globals.gProjectList[i].id === projectId) {
 			updateCurrentProject = false;
 		}
 	}
 	$projectSelect.empty().append(h.join(''));
 
-	// If for some reason the user's default project is no longer available then 
+	// If for some reason the user's default project is no longer available then
 	//  set the default project to the first project in the list
 	//  if the list is empty then set the default project to undefined
-	if(updateCurrentProject && globals.gProjectList[0]) {	
+	if(updateCurrentProject && globals.gProjectList[0]) {
 		globals.gCurrentProject = globals.gProjectList[0].id;		// Update the current project id
 		globals.gCurrentSurvey = -1;
 		globals.gCurrentTaskGroup = undefined;
-	} else if(updateCurrentProject) {	
+	} else if(updateCurrentProject) {
 		globals.gCurrentProject = -1;		// Update the current project id
 		globals.gCurrentSurvey = -1;
 		globals.gCurrentTaskGroup = undefined;
 	}
-	
-	saveCurrentProject(globals.gCurrentProject, 
-			globals.gCurrentSurvey, 
-			globals.gCurrentTaskGroup);
-	
+
+	saveCurrentProject(globals.gCurrentProject,
+		globals.gCurrentSurvey,
+		globals.gCurrentTaskGroup);
+
 	if(!addAll) {
 		$projectSelect.val(globals.gCurrentProject);			// Set the initial project value
 		$('#projectId').val(globals.gCurrentProject);			// Set the project value for the hidden field in template upload
 	}
-	
+
 	if(typeof callback !== "undefined") {
 		callback(globals.gCurrentProject);				// Call the callback with the correct current project
 	}
@@ -149,32 +149,32 @@ function getMyProjects(projectId, callback, getAll) {
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
 			if(xhr.readyState == 0 || xhr.status == 0) {
-	              return;  // Not an error
+				return;  // Not an error
 			} else {
 				alert("Error: Failed to get list of projects: " + err);
 			}
 		}
-	});	
+	});
 }
 
 /*
  * Save the time of the last alert for the user
  */
 function saveLastAlert(lastAlert, seen) {
-	
+
 	var alertStatus = {
-			lastalert: lastAlert,
-			seen: seen
-		}
-	
+		lastalert: lastAlert,
+		seen: seen
+	}
+
 	$.ajax({
-		  type: "POST",
-		  contentType: "application/json",
-		  url: "/surveyKPI/user/alertstatus",
-		  cache: false,
-		  data: {
-			  alertstatus: JSON.stringify(alertStatus)
-		  }
+		type: "POST",
+		contentType: "application/json",
+		url: "/surveyKPI/user/alertstatus",
+		cache: false,
+		data: {
+			alertstatus: JSON.stringify(alertStatus)
+		}
 	});
 }
 
@@ -184,27 +184,27 @@ function saveLastAlert(lastAlert, seen) {
 function saveCurrentProject(projectId, surveyId, taskGroupId) {
 
 	if(surveyId > 0 || projectId > 0 || taskGroupId > 0) {
-		
+
 		var user = {
-				current_project_id: projectId,
-				current_survey_id: surveyId,
-				current_task_group_id: taskGroupId
-				};
-		
+			current_project_id: projectId,
+			current_survey_id: surveyId,
+			current_task_group_id: taskGroupId
+		};
+
 		var userString = JSON.stringify(user);
-		
+
 		addHourglass();
 		$.ajax({
-			  type: "POST",
-			  contentType: "application/json",
-			  url: "/surveyKPI/user",
-			  cache: false,
-			  data: { user: userString },
-			  success: function(data, status) {
-				  removeHourglass();
-			  }, error: function(data, status) {
-				  removeHourglass();
-			  }
+			type: "POST",
+			contentType: "application/json",
+			url: "/surveyKPI/user",
+			cache: false,
+			data: { user: userString },
+			success: function(data, status) {
+				removeHourglass();
+			}, error: function(data, status) {
+				removeHourglass();
+			}
 		});
 	}
 }
@@ -220,56 +220,56 @@ function saveCurrentProject(projectId, surveyId, taskGroupId) {
  * Update the user details on the page
  */
 function updateUserDetails(data, getOrganisationsFn) {
-	
+
 	var groups = data.groups,
 		i,
 		bootstrap_enabled = (typeof $().modal == 'function');
-	
+
 	if(data.language && data.language !== gUserLocale) {
 		localStorage.setItem('user_locale', data.language);
 		location.reload();
 	} else if(data.o_id != globals.gOrgId) {
-        location.reload();
+		location.reload();
 	}
 
 	globals.gLoggedInUser = data;
 	globals.gOrgId = data.o_id;
-	
-	if(bootstrap_enabled) {
-			
-		$('#modify_me_popup').on('show.bs.modal', function (event) {
-			  var $this = $(this)
-			  $this.find('.modal-title').text(data.ident + "@" + data.organisation_name)
-			  
-			  $('#me_edit_form')[0].reset();
-			  $('#reset_me_password_fields').show();
-			  $('#password_me_fields').hide();
-			  addLanguageOptions($('.language_select'), data.language);
-			  addOrganisationOptions($('.organisation_select'), data.o_id, data.orgs);
-			  $('#me_name').val(data.name);
-			  $('#me_email').val(data.email);
-				
-			  $(".navbar-collapse").removeClass("in").addClass("collapse");	// Remove drop down menu
-			});
 
-		
-	} else {
-		$('#username').html(data.name).button({ label: data.name + " @" + data.organisation_name, 
-				icons: { primary: "ui-icon-person" }}).off().click(function(){
+	if(bootstrap_enabled) {
+
+		$('#modify_me_popup').on('show.bs.modal', function (event) {
+			var $this = $(this)
+			$this.find('.modal-title').text(data.ident + "@" + data.organisation_name)
+
 			$('#me_edit_form')[0].reset();
-			
 			$('#reset_me_password_fields').show();
 			$('#password_me_fields').hide();
 			addLanguageOptions($('.language_select'), data.language);
-            addOrganisationOptions($('.organisation_select'), data.o_id, data.orgs);
+			addOrganisationOptions($('.organisation_select'), data.o_id, data.orgs);
 			$('#me_name').val(data.name);
 			$('#me_email').val(data.email);
-			
+
+			$(".navbar-collapse").removeClass("in").addClass("collapse");	// Remove drop down menu
+		});
+
+
+	} else {
+		$('#username').html(data.name).button({ label: data.name + " @" + data.organisation_name,
+			icons: { primary: "ui-icon-person" }}).off().click(function(){
+			$('#me_edit_form')[0].reset();
+
+			$('#reset_me_password_fields').show();
+			$('#password_me_fields').hide();
+			addLanguageOptions($('.language_select'), data.language);
+			addOrganisationOptions($('.organisation_select'), data.o_id, data.orgs);
+			$('#me_name').val(data.name);
+			$('#me_email').val(data.email);
+
 			$('#modify_me_popup').dialog("option", "title", data.name + "@" + data.organisation_name);
 			$('#modify_me_popup').dialog("open");
 		});
 	}
-	
+
 	/*
 	 * Show restricted functions
 	 */
@@ -277,6 +277,7 @@ function updateUserDetails(data, getOrganisationsFn) {
 		for(i = 0; i < groups.length; i++) {
 			if(groups[i].id === globals.GROUP_ADMIN) {
 				globals.gIsAdministrator = true;
+
                 if(data.billing_enabled) {
                     globals.gOrgBillingData = true;
                 }
@@ -307,7 +308,7 @@ function updateUserDetails(data, getOrganisationsFn) {
             }
 		}
 	}
-	
+
 	// Only show items relevant to a user
 	$('.restrict_role').hide();
 	if(globals.gIsEnum) {
@@ -316,80 +317,80 @@ function updateUserDetails(data, getOrganisationsFn) {
 	if(globals.gIsAnalyst) {
 		$('.analyst_role').show();
 	}
-    if(globals.gViewData) {
-        $('.data_role').show();
-    }
-    if(globals.gIsAdministrator) {
+	if(globals.gViewData) {
+		$('.data_role').show();
+	}
+	if(globals.gIsAdministrator) {
 		$('.admin_role').show();
-	} 
+	}
 	if(globals.gIsManage) {
 		$('.manage_role').show();
 	}
 	if(globals.gIsSecurityAdministrator) {
 		$('.security_role').show();
-	} 
+	}
 	if(globals.gIsOrgAdministrator) {
 		$('.org_role').show();
 		if(typeof getOrganisationsFn === "function") {
 			getOrganisationsFn();
 		}
 	}
-    if(globals.gBillingData || globals.gOrgBillingData) {
-        $('.billing_role').show();
-    }
-	
+	if(globals.gBillingData || globals.gOrgBillingData) {
+		$('.billing_role').show();
+	}
+
 	// Other conditional elements
 	if(globals.gSendTrail === 'off') {
 		$('.user_trail').hide();
 	}
 	isBusinessServer();		// Reset server specific menus
-	
+
 	// 	Customer configurable details - the configurable part is TODO
 	$('#my_name').val(data.name);			// Add the name to the configurable list
-	
+
 	if(data.settings) {
 		var userDetails = JSON.parse(data.settings);
 		$('#my_title').val(userDetails.title);
 		$('#my_license').val(userDetails.license);
 		$('#my_signature').attr("src", "/surveyKPI/file/" + data.signature + "/users?type=sig");
 	}
-	
+
 	// Hide any menus that have been disabled by custom java scripts
 	$('.perm_dis_menu').hide();
 }
 
 function addLanguageOptions($elem, current) {
-	
+
 	var h = [],
 		idx = -1,
 		i,
 		languages = [
-		             {
-			            locale: "ar",
-			            name: "Arabic"
-			         },
-		             {
-		            	locale: "en",
-		            	name: "English"
-		             },
-		             {
-			            locale: "fr",
-			            name: "French"
-			         },
-			         {
-				         locale: "hi",
-				         name: "Hindi"
-					 },
-			         {
-			         	locale: "pt",
-			            name: "Portugese"
-					 },
-			         {
-				        locale: "es",
-				        name: "Spanish"
-			         }
+			{
+				locale: "ar",
+				name: "Arabic"
+			},
+			{
+				locale: "en",
+				name: "English"
+			},
+			{
+				locale: "fr",
+				name: "French"
+			},
+			{
+				locale: "hi",
+				name: "Hindi"
+			},
+			{
+				locale: "pt",
+				name: "Portugese"
+			},
+			{
+				locale: "es",
+				name: "Spanish"
+			}
 		];
-	
+
 	for(i = 0; i < languages.length; i++) {
 		h[++idx] = '<option value="';
 		h[++idx] = languages[i].locale;
@@ -399,37 +400,37 @@ function addLanguageOptions($elem, current) {
 	}
 	$elem.html(h.join(''));
 	if(current) {
-        $elem.val(current);
-    } else {
-        $elem.val("en");
+		$elem.val(current);
+	} else {
+		$elem.val("en");
 	}
 }
 
 function addOrganisationOptions($elem, current, orgs) {
 
-    var h = [],
-        idx = -1,
-        i;
+	var h = [],
+		idx = -1,
+		i;
 
-    for(i = 0; i < orgs.length; i++) {
-        h[++idx] = '<option value="';
-        h[++idx] = orgs[i].id;
-        h[++idx] = '">';
-        h[++idx] = orgs[i].name;
-        h[++idx] = '</option>';
-    }
-    $elem.html(h.join(''));
-    if(current) {
-        $elem.val(current);
-    }
+	for(i = 0; i < orgs.length; i++) {
+		h[++idx] = '<option value="';
+		h[++idx] = orgs[i].id;
+		h[++idx] = '">';
+		h[++idx] = orgs[i].name;
+		h[++idx] = '</option>';
+	}
+	$elem.html(h.join(''));
+	if(current) {
+		$elem.val(current);
+	}
 }
 
 /*
  * Enable the user profile button
  */
 function enableUserProfile () {
-	 // Initialise the dialog for the user to edit their own account details
-	 $('#modify_me_popup').dialog(
+	// Initialise the dialog for the user to edit their own account details
+	$('#modify_me_popup').dialog(
 		{
 			autoOpen: false, closeOnEscape:true, draggable:true, modal:true,
 			title:"User Profile",
@@ -438,70 +439,70 @@ function enableUserProfile () {
 			height:350,
 			zIndex: 2000,
 			buttons: [
-		        {
-		        	text: "Cancel",
-		        	click: function() {
-		        		
-		        		$(this).dialog("close");
-		        	}
-		        }, {
-		        	text: "Save",
-		        	click: function() {
+				{
+					text: "Cancel",
+					click: function() {
 
-		        		var user = globals.gLoggedInUser,
-		        			userList = [],
-		        			error = false,
-		        			userList;
-		        		
-		        		user.name = $('#me_name').val();
-		        		user.language = $('#me_language').val();
-		        		user.email = $('#me_email').val();
-		        		if($('#me_password').is(':visible')) {
-		        			user.password = $('#me_password').val();
-		        			if($('#me_password_confirm').val() !== user.password) {
-		        				error = true;
-		        				user.password = undefined;
-		        				alert("Passwords do not match");
-		        				$('#me_password').focus();
-		        				return false;
-		        			}
-		        		} else {
-		        			user.password = undefined;
-		        		}
-		        		
-		        		user.current_project_id = 0;	// Tell service to ignore project id and update other details
-		        		user.current_survey_id = 0;
-		        		user.current_task_group_id = 0;
+						$(this).dialog("close");
+					}
+				}, {
+					text: "Save",
+					click: function() {
 
-                        user.current_org_id = $('#me_organisation').val();
-                        if(user.current_org_id == globals.gOrgId) {
-                            users.current_org_id = 0;	// No change
-                        }
+						var user = globals.gLoggedInUser,
+							userList = [],
+							error = false,
+							userList;
 
-		        		saveCurrentUser(user);			// Save the updated user details to disk
-		        		$(this).dialog("close");
-		        	}, 
-		        }, {
-		        	text: "Logout",
-		        	click: function() {
-		        		logout();
-		        		$(this).dialog("close");
-		        	}
-		        	
-		        }
+						user.name = $('#me_name').val();
+						user.language = $('#me_language').val();
+						user.email = $('#me_email').val();
+						if($('#me_password').is(':visible')) {
+							user.password = $('#me_password').val();
+							if($('#me_password_confirm').val() !== user.password) {
+								error = true;
+								user.password = undefined;
+								alert("Passwords do not match");
+								$('#me_password').focus();
+								return false;
+							}
+						} else {
+							user.password = undefined;
+						}
+
+						user.current_project_id = 0;	// Tell service to ignore project id and update other details
+						user.current_survey_id = 0;
+						user.current_task_group_id = 0;
+
+						user.current_org_id = $('#me_organisation').val();
+						if(user.current_org_id == globals.gOrgId) {
+							users.current_org_id = 0;	// No change
+						}
+
+						saveCurrentUser(user);			// Save the updated user details to disk
+						$(this).dialog("close");
+					},
+				}, {
+					text: "Logout",
+					click: function() {
+						logout();
+						$(this).dialog("close");
+					}
+
+				}
 			]
 		}
-	 );
-	 
+	);
 
-	 // Initialise the reset password checkbox
-	 $('#reset_me_password').click(function () {
-		 if($(this).is(':checked')) {
-			 $('#password_me_fields').show();
-		 } else {
-			 $('#password_me_fields').hide();
-		 }
-	 });
+
+	// Initialise the reset password checkbox
+	$('#reset_me_password').click(function () {
+		if($(this).is(':checked')) {
+			$('#password_me_fields').show();
+		} else {
+			$('#password_me_fields').hide();
+		}
+	});
 }
 
 /*
@@ -509,14 +510,14 @@ function enableUserProfile () {
  */
 function logout() {
 	jQuery.ajax({
-	    type: "GET",
+		type: "GET",
 		cache: false,
-	    url: "/surveyKPI/logout",
-	    beforeSend: function(xhr){xhr.setRequestHeader("Authorization","Basic YXNkc2E6");},
-	    username: "shkdhasfkhd",
-	    password: "sieinkdnfkdf",
-	    error: function(data, status) {
-			  window.location.href="/logout.html";
+		url: "/surveyKPI/logout",
+		beforeSend: function(xhr){xhr.setRequestHeader("Authorization","Basic YXNkc2E6");},
+		username: "shkdhasfkhd",
+		password: "sieinkdnfkdf",
+		error: function(data, status) {
+			window.location.href="/logout.html";
 		},
 		success: function(data,status) {
 			window.location.href="/logout.html";
@@ -528,24 +529,24 @@ function logout() {
  * Enable the user profile button
  */
 function enableUserProfileBS () {
-	
+
 
 	/*
 	 * User logout
 	 */
-	$('#userProfileLogout').click(function() {	
+	$('#userProfileLogout').click(function() {
 		logout();
 	});
-	
+
 	/*
 	 * Save the user profile
 	 */
 	$('#userProfileSave').click(function() {
 		var user = globals.gLoggedInUser,
-		userList = [],
-		error = false,
-		userList;
-		
+			userList = [],
+			error = false,
+			userList;
+
 		user.name = $('#me_name').val();
 		user.language = $('#me_language').val();
 		user.email = $('#me_email').val();
@@ -570,18 +571,18 @@ function enableUserProfileBS () {
 		user.current_survey_id = 0;
 		user.current_task_group_id = 0;
 
-		saveCurrentUser(user);			// Save the updated user details to disk	 
+		saveCurrentUser(user);			// Save the updated user details to disk
 	});
 
-	
-	 // Initialise the reset password checkbox
-	 $('#reset_me_password').click(function () {
-		 if($(this).is(':checked')) {
-			 $('#password_me_fields').show();
-		 } else {
-			 $('#password_me_fields').hide();
-		 }
-	 });
+
+	// Initialise the reset password checkbox
+	$('#reset_me_password').click(function () {
+		if($(this).is(':checked')) {
+			$('#password_me_fields').show();
+		} else {
+			$('#password_me_fields').hide();
+		}
+	});
 }
 
 /*
@@ -592,21 +593,21 @@ function saveCurrentUser(user) {
 	var userString = JSON.stringify(user);
 	addHourglass();
 	$.ajax({
-		  type: "POST",
-		  cache: false,
-		  contentType: "application/json",
-		  url: "/surveyKPI/user",
-		  data: { user: userString },
-		  success: function(data, status) {
-			  removeHourglass();
-			  if(user.current_org_id > 0) {
-                  user.o_id = user.current_org_id;		// Assume org has been updated
-              }
-			  updateUserDetails(user, undefined);
-		  }, error: function(data, status) {
-			  removeHourglass();
-			  alert("Error profile not saved"); 
-		  }
+		type: "POST",
+		cache: false,
+		contentType: "application/json",
+		url: "/surveyKPI/user",
+		data: { user: userString },
+		success: function(data, status) {
+			removeHourglass();
+			if(user.current_org_id > 0) {
+				user.o_id = user.current_org_id;		// Assume org has been updated
+			}
+			updateUserDetails(user, undefined);
+		}, error: function(data, status) {
+			removeHourglass();
+			alert("Error profile not saved");
+		}
 	});
 }
 
@@ -615,10 +616,10 @@ function getAvailableTimeZones($elem, callback) {
 	$.ajax({
 		url: "/surveyKPI/utility/timezones",
 		contentType: "application/json",
-		cache: false,
+		cache: true,
 		success: function(data) {
 			removeHourglass();
-		
+
 			if(typeof callback == "function") {
 				callback($elem, data);
 			}
@@ -627,28 +628,30 @@ function getAvailableTimeZones($elem, callback) {
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
 			if(xhr.readyState == 0 || xhr.status == 0) {
-	              return;  // Not an error
+				return;  // Not an error
 			} else {
 				alert("Error: Failed to get available time zones: " + err);
 			}
 		}
-	});	
+	});
 }
 
 function showTimeZones($elem, timeZones) {
 	var h =[],
 		idx = -1,
 		i;
-	
+
 	for (i = 0; i < timeZones.length; i++) {
 		tz = timeZones[i];
 		h[++idx] = '<option value="';
 		h[++idx] = tz.id;
 		h[++idx] = '">';
-		h[++idx] = tz.offset;
+		h[++idx] = tz.name;
 		h[++idx] = '</option>';
 	}
 	$elem.empty().html(h.join(''));
+	var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+	$elem.val(tz);   // Set time zone
 }
 
 function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hideUserDetails, dontGetCurrentSurvey) {
@@ -659,9 +662,9 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 		cache: false,
 		success: function(data) {
 			removeHourglass();
-		
+
 			globals.gServerCanSendEmail = data.sendEmail;
-			
+
 			globals.gEmailEnabled = data.allow_email;
 			globals.gFacebookEnabled = data.allow_facebook;
 			globals.gTwitterEnabled = data.allow_twitter;
@@ -670,20 +673,20 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 			globals.gAlertSeen = data.seen;		// Alerts have been acknowledged
 			globals.gLastAlertTime = data.lastalert;
 			globals.gOrgId = data.o_id;
-			
+
 			if(!hideUserDetails) {
 				updateUserDetails(data, getOrganisationsFn);
 			}
-			
+
 			if(!dontGetCurrentSurvey) {	// Hack, on edit screen current survey is set as parameter not from the user's defaults
 				globals.gCurrentSurvey = data.current_survey_id;
 			}
 			globals.gCurrentProject = data.current_project_id;
 			globals.gCurrentTaskGroup = data.current_task_group_id;
 			$('#projectId').val(globals.gCurrentProject);		// Set the project value for the hidden field in template upload
-			
+
 			if(getProjects) {
-				getMyProjects(globals.gCurrentProject, callback, getAll);	// Get projects 
+				getMyProjects(globals.gCurrentProject, callback, getAll);	// Get projects
 			} else {
 				if(typeof callback !== "undefined") {
 					callback(globals.gCurrentSurvey);				// Call the callback with the correct current project
@@ -699,10 +702,10 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
 			if(xhr.readyState == 0 || xhr.status == 0) {
-	              return;  // Not an error
+				return;  // Not an error
 			} else {
 				console.log("Error: Failed to get user details: " + err);
-				
+
 				var msg = localise.set["c_error"] + ": ";
 				if(err && err.indexOf('Unauthorized') >= 0) {
 					msg += localise.set["c_auth"];
@@ -712,31 +715,31 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 				alert(msg);
 			}
 		}
-	});	
+	});
 }
 
 /*
  * Get the users queries
  */
 function getQueries(published) {
- 	
+
 	var url="/surveyKPI/query" + (published ? "?published=true" : "");
 
- 	addHourglass();
+	addHourglass();
 
 	$.ajax({
 		url: url,
 		dataType: 'json',
 		cache: false,
 		success: function(data) {
- 			var h = [],
- 				idx = -1,
- 				i,
- 				item,
- 				$elem = $('#export_query');
- 				
+			var h = [],
+				idx = -1,
+				i,
+				item,
+				$elem = $('#export_query');
+
 			removeHourglass();
-			
+
 			if(data && data.length > 0) {
 				for(i = 0; i < data.length; i++) {
 					item = data[i];
@@ -744,23 +747,23 @@ function getQueries(published) {
 					h[++idx] = item.id;
 					h[++idx] = '">';
 					h[++idx] = '<td>';
-					h[++idx] = item.name;	
+					h[++idx] = item.name;
 					h[++idx] = '</option>';
 				}
 			}
-			
+
 			$elem.html(h.join(''));
-			
+
 		}, error: function(xhr, textStatus, err) {
- 				
- 				removeHourglass();
- 				if(xhr.readyState == 0 || xhr.status == 0) {
- 		              return;  // Not an error
- 				} else {
- 					alert("Error: Failed to get list of queriess: " + err);
- 				}
- 			}
- 		});	 
+
+			removeHourglass();
+			if(xhr.readyState == 0 || xhr.status == 0) {
+				return;  // Not an error
+			} else {
+				alert("Error: Failed to get list of queriess: " + err);
+			}
+		}
+	});
 }
 
 /*
@@ -774,48 +777,48 @@ function getQueries(published) {
  * Writes status to   .upload_file_msg
  */
 function uploadFiles(url, formName, callback1, param, callback2) {
-   	
+
 	var f = document.forms.namedItem(formName),
 		formData = new FormData(f);
-	
+
 	url = addUrlParam(url, "getlist=true");
 	addHourglass();
 	$('#submitFiles').addClass('disabled');
-    $.ajax({
-        url: url,
-        type: 'POST',
-        xhr: function () {
-        	var myXhr = $.ajaxSettings.xhr();
-    		if(myXhr.upload){ 
-    			myXhr.upload.addEventListener('progress', progressFn, false); 
-    		}
-    		return myXhr;
-        },
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData:false,
-        success: function(data) {
+	$.ajax({
+		url: url,
+		type: 'POST',
+		xhr: function () {
+			var myXhr = $.ajaxSettings.xhr();
+			if(myXhr.upload){
+				myXhr.upload.addEventListener('progress', progressFn, false);
+			}
+			return myXhr;
+		},
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData:false,
+		success: function(data) {
 			removeHourglass();
 			$('#submitFiles').removeClass('disabled');
 			var callbackParam = param,
 				cb1 = callback1,
 				cb2 = callback2;
-	       	$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html(localise.set["c_success"]);
-        	if(typeof cb1 === "function") {
-        		cb1(data, callbackParam);
-        	}
-        	if(typeof cb2 === "function") {
-        		cb2(data);
-        	}
-        	document.forms.namedItem(formName).reset();
-        	
-        },
-        error: function(xhr, textStatus, err) {
+			$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html(localise.set["c_success"]);
+			if(typeof cb1 === "function") {
+				cb1(data, callbackParam);
+			}
+			if(typeof cb2 === "function") {
+				cb2(data);
+			}
+			document.forms.namedItem(formName).reset();
+
+		},
+		error: function(xhr, textStatus, err) {
 			removeHourglass();
 			$('#submitFiles').removeClass('disabled');
 			if(xhr.readyState == 0 || xhr.status == 0) {
-	              return;  // Not an error
+				return;  // Not an error
 			} else {
 				var msg = xhr.responseText;
 				if(msg && msg.indexOf("no tags") >= 0) {
@@ -826,8 +829,8 @@ function uploadFiles(url, formName, callback1, param, callback2) {
 				$('.upload_file_msg').removeClass('alert-success').addClass('alert-danger').html(msg);
 
 			}
-        }
-    });
+		}
+	});
 }
 
 /*
@@ -847,9 +850,9 @@ function addUrlParam(url, param) {
  */
 function progressFn(e) {
 	if(e.lengthComputable){
-        var w = (100.0 * e.loaded) / e.total;
-        $('.progress-bar').css('width', w+'%').attr('aria-valuenow', w); 
-    }
+		var w = (100.0 * e.loaded) / e.total;
+		$('.progress-bar').css('width', w+'%').attr('aria-valuenow', w);
+	}
 }
 
 /*
@@ -864,30 +867,30 @@ function refreshMediaViewManage(data, sId) {
  * Refresh the view of any attached media if the available media items has changed
  */
 function refreshMediaView(data, sId) {
-	
+
 	var i,
 		survey = globals.model.survey,
 		$element,
 		h = [],
 		idx = -1,
 		files;
-	
+
 	if(survey && sId) {
 		// Set the display name
 		$('.formName').html(survey.displayName);
 		$('#survey_id').val(sId);
 		gSId = sId;
 	}
-	
+
 	if(data) {
 		files = data.files;
-		
+
 		if(sId) {
 			$element = $('#filesSurvey');
 		} else {
 			$element = $('#filesOrg');
 		}
-		
+
 		for(i = 0; i < files.length; i++){
 			h[++idx] = '<tr class="';
 			h[++idx] = files[i].type;
@@ -910,51 +913,51 @@ function refreshMediaView(data, sId) {
 			h[++idx] = '</a>';
 			h[++idx] = '</td>';
 			h[++idx] = '<td class="filename">';
-				h[++idx] = '<p>';
-				h[++idx] = files[i].name;
-				h[++idx] = '</p>';
+			h[++idx] = '<p>';
+			h[++idx] = files[i].name;
+			h[++idx] = '</p>';
 			h[++idx] = '</td>';
 			h[++idx] = '<td class="mediaManage">';
-				h[++idx] = '<p>';
-				h[++idx] = files[i].size;
-				h[++idx] = '</p>';
+			h[++idx] = '<p>';
+			h[++idx] = files[i].size;
+			h[++idx] = '</p>';
 			h[++idx] = '</td>';
 			h[++idx] = '<td class="mediaManage">';
-				h[++idx] = '<button class="media_del btn btn-danger" data-url="';
-				h[++idx] = files[i].deleteUrl;
-				h[++idx] = '">';
-				h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> '
-				h[++idx] = localise.set['c_del'];
-				h[++idx] = '</button>';
+			h[++idx] = '<button class="media_del btn btn-danger" data-url="';
+			h[++idx] = files[i].deleteUrl;
+			h[++idx] = '">';
+			h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> '
+			h[++idx] = localise.set['c_del'];
+			h[++idx] = '</button>';
 			h[++idx] = '</td>';
 			h[++idx] = '<td class="mediaSelect">';
-				h[++idx] = '<button class="mediaAdd btn btn-success">';
-				h[++idx] = '<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> '
-					h[++idx] = localise.set['c_add'];
-				h[++idx] = '</button>';
+			h[++idx] = '<button class="mediaAdd btn btn-success">';
+			h[++idx] = '<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> '
+			h[++idx] = localise.set['c_add'];
+			h[++idx] = '</button>';
 			h[++idx] = '</td>';
-			
-			
+
+
 			h[++idx] = '</tr>';
-			
+
 		}
-		
+
 
 		$element.html(h.join(""));
-	
+
 		$('.media_del', $element).click(function () {
 			var surveyId = sId,
 				url = $(this).data('url'),
 				idx = url.lastIndexOf('/'),
 				filename = url.substring(idx + 1);
-			
+
 			if(confirm(localise.set["msg_confirm_del"] + filename)) {
 				delete_media(url, surveyId);
 			}
 		});
-	
-	}	
-	
+
+	}
+
 	// If this is the organisational view we can refresh the list of choices for selecting vector maps
 	if(!sId) {
 		refreshVectorSelects(data);
@@ -965,7 +968,7 @@ function refreshMediaView(data, sId) {
  * Refresh the vector select lists
  */
 function refreshVectorSelects(data) {
-	
+
 	var i,
 		$vectorData = $('#vector_data'),
 		$vectorStyle = $('#vector_style'),
@@ -974,10 +977,10 @@ function refreshVectorSelects(data) {
 		h_s = [],
 		idx_s = -1,
 		files;
-	
+
 	if(data) {
 		files = data.files;
-		
+
 		for(i = 0; i < files.length; i++){
 			if(files[i].type === "geojson") {
 				h_d[++idx_d] = '<option value="';
@@ -986,23 +989,23 @@ function refreshVectorSelects(data) {
 				h_d[++idx_d] = files[i].name;
 				h_d[++idx_d] = '</option>';
 			}
-			
+
 			if(files[i].type === "TODO") {
 				h_s[++idx_s] = '<option value="';
 				h_s[++idx_s] = files[i].name;
 				h_s[++idx_s] = '">';
 				h_s[++idx_s] = files[i].name;
 				h_s[++idx_s] = '</option>';
-			}	
-			
+			}
+
 		}
-		
+
 
 		$vectorData.html(h_d.join(""));
 		$vectorStyle.html(h_s.join(""));
-	
-	
-	}	
+
+
+	}
 }
 
 function addAudioIcon() {
@@ -1012,7 +1015,7 @@ function addAudioIcon() {
 	h[++idx] = '<span class="has_tt" title="Audio">';
 	h[++idx] = '<span class="glyphicon glyphicon-volume-up edit_type"></span>';
 	h[++idx] = '</span>';
-	
+
 	return h.join('');
 }
 
@@ -1023,17 +1026,17 @@ function addVectorMapIcon() {
 	h[++idx] = '<span class="has_tt" title="Audio">';
 	h[++idx] = '<span class="glyphicon glyphicon glyphicon-map-marker edit_type"></span>';
 	h[++idx] = '</span>';
-	
+
 	return h.join('');
 }
 
 function getFilesFromServer(url, sId, callback) {
-	
+
 	if(sId) {
 		gSId = sId;
 		url += '?survey_id=' + sId;
 	}
-	
+
 	addHourglass();
 	$.ajax({
 		url: url,
@@ -1048,12 +1051,12 @@ function getFilesFromServer(url, sId, callback) {
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
 			if(xhr.readyState == 0 || xhr.status == 0) {
-	              return;  // Not an error
+				return;  // Not an error
 			} else {
 				$('.upload_file_msg').removeClass('alert-success').addClass('alert-danger').html("Error: " + err);
 			}
 		}
-	});	
+	});
 }
 
 /*
@@ -1069,18 +1072,18 @@ function delete_media(url, sId) {
 			removeHourglass();
 			var surveyId = sId;
 			refreshMediaViewManage(data, surveyId);
-	
+
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
 			if(xhr.readyState == 0 || xhr.status == 0) {
-	              return;  // Not an error
+				return;  // Not an error
 			} else {
 				$('.upload_file_msg').removeClass('alert-success').addClass('alert-danger').html("Error: " + err);
 			}
 		}
-	});	
-	
+	});
+
 }
 /*
  * ===============================================================
@@ -1117,7 +1120,7 @@ function removeHourglass() {
  * Load the forms from the server
  */
 function loadSurveys(projectId, selector, getDeleted, addAll, callback) {
-	
+
 	var url="/surveyKPI/surveys?projectId=" + projectId + "&blocked=true",
 		$elem,
 		selector_disable_blocked,
@@ -1125,16 +1128,16 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback) {
 		idx = -1,
 		i,
 		item;
-	
+
 	if(selector === undefined) {
 		selector = ".survey_select";	// Update the entire class of survey select controls
 	}
 	selector_disable_blocked = selector + ".disable_blocked";
 	$elem = $(selector);
 	$elem_disable_blocked = $(selector_disable_blocked);
-	
+
 	if(typeof projectId !== "undefined" && projectId != -1 && projectId != 0) {
-		
+
 		if(getDeleted) {
 			url+="&deleted=true";
 		}
@@ -1145,15 +1148,15 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback) {
 			dataType: 'json',
 			cache: false,
 			success: function(data) {
-				
+
 				removeHourglass();
 				$elem.empty();
 				if(addAll) {
 					h[++idx] = '<option value="_all">';
 					h[++idx] = localise.set["c_all_s"];		// All Surveys
-					h[++idx] = '</option>';	
+					h[++idx] = '</option>';
 				}
-				
+
 				for(i = 0; i < data.length; i++) {
 					item = data[i];
 					h[++idx] = '<option';
@@ -1172,32 +1175,32 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback) {
 
 				$elem.empty().append(h.join(''));
 				$("option.blocked", $elem_disable_blocked).attr("disabled", "disabled");
-				
+
 				//globals.gCurrentSurvey = $elem.val();   // TODO set to current global survey
 				if(globals.gCurrentSurvey > 0) {
 					$elem.val(globals.gCurrentSurvey);
 				}
-				
+
 				if(typeof callback == "function") {
 					callback();
 				}
 			},
 			error: function(xhr, textStatus, err) {
-				
+
 				removeHourglass();
 				if(xhr.readyState == 0 || xhr.status == 0) {
-		              return;  // Not an error
+					return;  // Not an error
 				} else {
 					console.log("Error: Failed to get list of surveys: " + err);
 				}
 			}
-		});	
+		});
 	} else {
 		$elem.empty();
 		if(addAll) {
-			$elem.append('<option value="_all">All Surveys</option>');	
+			$elem.append('<option value="_all">All Surveys</option>');
 		}
-		
+
 		if(callback) {
 			callback();
 		}
@@ -1209,7 +1212,7 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback) {
  * Load the surveys from the server
  */
 function loadForms(surveyId, selector) {
-	
+
 	var url="/surveyKPI/surveys/forms?surveyId=" + surveyId,
 		$elem,
 		selector_disable_blocked,
@@ -1217,12 +1220,12 @@ function loadForms(surveyId, selector) {
 		idx = -1,
 		i,
 		item;
-	
+
 	if(selector === undefined) {
 		selector = ".form_select";	// Update the entire class of form select controls
 	}
 	$elem = $(selector);
-	
+
 
 	addHourglass();
 
@@ -1231,10 +1234,10 @@ function loadForms(surveyId, selector) {
 		dataType: 'json',
 		cache: false,
 		success: function(data) {
-			
+
 			removeHourglass();
 			$elem.empty();
-			
+
 			for(i = 0; i < data.length; i++) {
 				item = data[i];
 				h[++idx] = '<option';
@@ -1246,29 +1249,29 @@ function loadForms(surveyId, selector) {
 			}
 
 			$elem.empty().append(h.join(''));
-			
+
 			if(globals.gCurrentForm > 0) {
 				$elem.val(globals.gCurrentForm);
 			}
-			
-		
+
+
 		},
 		error: function(xhr, textStatus, err) {
-			
+
 			removeHourglass();
 			if(xhr.readyState == 0 || xhr.status == 0) {
-	              return;  // Not an error
+				return;  // Not an error
 			} else {
 				console.log("Error: Failed to get list of forms: " + err);
 			}
 		}
-	});	
-	
+	});
+
 }
 
 // Common Function to get the language and question list (for the default language)
 function getLanguageList(sId, callback, addNone, selector, setGroupList, filterQuestion) {
-	
+
 	if(typeof sId === "undefined") {
 		sId = globals.gCurrentSurvey;
 	}
@@ -1276,7 +1279,7 @@ function getLanguageList(sId, callback, addNone, selector, setGroupList, filterQ
 	if(typeof filterQuestion === "undefined") {
 		filterQuestion = "-1";
 	}
-	
+
 	function getAsyncLanguageList(sId, theCallback, selector, filterQuestion) {
 		addHourglass();
 		$.ajax({
@@ -1289,11 +1292,11 @@ function getLanguageList(sId, callback, addNone, selector, setGroupList, filterQ
 				if(selector) {
 					setSurveyViewLanguages(data, undefined, selector, addNone);
 				} else {
-					setSurveyViewLanguages(data, undefined, '#settings_language', false);	
+					setSurveyViewLanguages(data, undefined, '#settings_language', false);
 					setSurveyViewLanguages(data, undefined, '#export_language', true);
 					setSurveyViewLanguages(data, undefined, '#language_name', false);
 				}
-				
+
 				if(data[0]) {
 					var dateqId = $('#task_start').val();
 					getQuestionList(sId, data[0], filterQuestion, "-1", theCallback, setGroupList, undefined, dateqId);	// Default language to the first in the list
@@ -1302,19 +1305,19 @@ function getLanguageList(sId, callback, addNone, selector, setGroupList, filterQ
 						theCallback();
 					}
 				}
-				
+
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
 				if(xhr.readyState == 0 || xhr.status == 0) {
-		              return;  // Not an error
+					return;  // Not an error
 				} else {
 					alert("Error: Failed to get list of languages: " + err);
 				}
 			}
-		});	
+		});
 	}
-	
+
 	getAsyncLanguageList(sId, callback, selector, filterQuestion);
 }
 
@@ -1322,7 +1325,7 @@ function getLanguageList(sId, callback, addNone, selector, setGroupList, filterQ
 function getQuestionList(sId, language, qId, groupId, callback, setGroupList, view, dateqId) {
 
 	function getAsyncQuestionList(sId, language, theCallback, groupId, qId, view, dateqId) {
-	
+
 		addHourglass();
 		$.ajax({
 			url: questionListUrl(sId, language, true),
@@ -1332,7 +1335,7 @@ function getQuestionList(sId, language, qId, groupId, callback, setGroupList, vi
 				removeHourglass();
 				globals.gSelector.setSurveyQuestions(sId, language, data);
 				setSurveyViewQuestions(data, qId, view, dateqId);
-	
+
 				if(setGroupList && typeof setSurveyViewQuestionGroups === "function") {
 					setSurveyViewQuestionGroups(data, groupId);
 				}
@@ -1343,14 +1346,14 @@ function getQuestionList(sId, language, qId, groupId, callback, setGroupList, vi
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
 				if(xhr.readyState == 0 || xhr.status == 0) {
-		              return;  // Not an error
+					return;  // Not an error
 				} else {
 					alert("Error: Failed to get list of questions: " + err);
 				}
 			}
-		});	
+		});
 	}
-	
+
 	getAsyncQuestionList(sId, language, callback, groupId, qId, view, dateqId);
 }
 
@@ -1384,16 +1387,16 @@ function setSurveyViewLanguages(list, language,elem, addNone) {
 
 	var $languageSelect = $(elem),
 		i;
-	
+
 	$languageSelect.empty();
 	if(addNone) {
 		$languageSelect.append('<option value="none">None</option>');
 	}
-	
+
 	for(i = 0; i < list.length; i++) {
 		$languageSelect.append('<option value="' + list[i] + '">' + list[i] + '</option>');
 	}
-	
+
 	if(language) {
 		$languageSelect.val(language);
 	}
@@ -1401,16 +1404,16 @@ function setSurveyViewLanguages(list, language,elem, addNone) {
 
 // Set the question list in the survey view control
 function setSurveyViewQuestions(list, qId, view, dateqId) {
-	
+
 	var $questionSelect = $('.selected_question'),
 		$dateQuestions = $('.date_questions'),
 		label;
-	
+
 	$questionSelect.empty();
 	$questionSelect.append('<option value="-1">' + localise.set["c_none"] + '</option>');
 
-    $dateQuestions.empty();
-    $dateQuestions.append('<option value="-1">' + localise.set["ed_i_c"] + '</option>');
+	$dateQuestions.empty();
+	$dateQuestions.append('<option value="-1">' + localise.set["ed_i_c"] + '</option>');
 
 	if(list) {
 		$.each(list, function(j, item) {
@@ -1424,8 +1427,8 @@ function setSurveyViewQuestions(list, qId, view, dateqId) {
 			} else {
 				$questionSelect.append('<option value="' + item.id + '">' + item.name + " : " + label + '</option>');
 				if(item.type === 'timestamp' || item.type === 'dateTime' || item.type == 'date') {
-                    $dateQuestions.append('<option value="' + item.id + '">' + item.name + " : " + label + '</option>');
-                }
+					$dateQuestions.append('<option value="' + item.id + '">' + item.name + " : " + label + '</option>');
+				}
 			}
 		});
 	}
@@ -1433,10 +1436,10 @@ function setSurveyViewQuestions(list, qId, view, dateqId) {
 		qId = "-1";
 	}
 	$questionSelect.val(qId);
-    if(!dateqId) {
-        dateqId = "-1";
-    }
-    $dateQuestions.val(dateqId);
+	if(!dateqId) {
+		dateqId = "-1";
+	}
+	$dateQuestions.val(dateqId);
 	if(view) {
 		setFilterFromView(view);	// Set the filter dialog settings
 	}
@@ -1446,23 +1449,23 @@ function setSurveyViewQuestions(list, qId, view, dateqId) {
 // Set the meta list in the survey view control
 function setSurveyViewMeta(list, metaItem) {
 
-    var $metaSelect = $('.selected_meta'),
-        item,
+	var $metaSelect = $('.selected_meta'),
+		item,
 		i;
 
-    $metaSelect.empty();
-    $metaSelect.append('<option value="-1">None</option>');
+	$metaSelect.empty();
+	$metaSelect.append('<option value="-1">None</option>');
 
-    if(list) {
-    	for(i = 0; i < list.length; i++) {
-    		item = list[i];
+	if(list) {
+		for(i = 0; i < list.length; i++) {
+			item = list[i];
 			$metaSelect.append('<option value="' + item.name + '">' + item.name + '</option>');
-        }
-    }
-    if(!metaItem) {
-        metaItem = "-1";
-    }
-    $metaSelect.val(metaItem);
+		}
+	}
+	if(!metaItem) {
+		metaItem = "-1";
+	}
+	$metaSelect.val(metaItem);
 
 
 }
@@ -1484,15 +1487,15 @@ function languageListUrl (sId) {
  */
 function questionListUrl (sId, language, exc_read_only) {
 
-	var url = "/surveyKPI/questionList/", 
+	var url = "/surveyKPI/questionList/",
 		ro_text;
-	
+
 	if(exc_read_only) {
 		ro_text = "true";
 	} else {
 		ro_text = "false";
 	}
-	
+
 	url += sId;
 	url += "/" + language;
 	url += "?exc_read_only=" + ro_text;
@@ -1519,13 +1522,13 @@ function questionMetaURL (sId, lang, qId) {
  */
 function getSurveyDetails(callback, get_changes) {
 
-    var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+	var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 	var url="/surveyKPI/surveys/" + globals.gCurrentSurvey;
 	if(get_changes) {
 		url += "?get_changes=true";
-        url += "&tz=" + tz;
+		url += "&tz=" + tz;
 	} else {
-        url += "?tz=" + tz;
+		url += "?tz=" + tz;
 	}
 
 	if(!globals.gCurrentSurvey) {
@@ -1541,7 +1544,7 @@ function getSurveyDetails(callback, get_changes) {
 				globals.model.setSurveyData(data);
 				globals.model.setSettings();
 				setLanguages(data.languages, callback);
-				
+
 				if(typeof callback == "function") {
 					callback();
 				}
@@ -1549,26 +1552,26 @@ function getSurveyDetails(callback, get_changes) {
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
 				if(xhr.readyState == 0 || xhr.status == 0) {
-		              return;  // Not an error
+					return;  // Not an error
 				} else {
 					if(xhr.status == 404) {
 						// The current survey has probably been deleted or the user no longer has access
 						globals.gCurrentSurvey = undefined;
-						return;		
+						return;
 					}
 					alert("Error: Failed to get survey: " + err);
 				}
 			}
-		});	
+		});
 	}
-		
+
 }
-	
+
 /*
  * Set the languages for the editor
  */
 function setLanguages(languages, languageCallback) {
-	
+
 	var h = [],
 		h2 = [],
 		idx = -1,
@@ -1578,7 +1581,7 @@ function setLanguages(languages, languageCallback) {
 		$lang1 = $('#language1'),
 		$lang2 = $('#language2'),
 		i;
-	
+
 	globals.gLanguage1 = 0;	// Language indexes used for translations
 	globals.gLanguage2 = 0;
 	if(languages.length > 1) {
@@ -1593,24 +1596,24 @@ function setLanguages(languages, languageCallback) {
 		h[++idx] = languages[i].name;
 		h[++idx] = '</a>';
 		h[++idx] = '</li>';
-		
+
 		h2[++idx2] = '<option value="';
 		h2[++idx2] = i;
 		h2[++idx2] = '">';
 		h2[++idx2] = languages[i].name;
 		h2[++idx2] = '</option>';
 	}
-	
+
 	$lang_menu.empty().append(h.join(""));
 	$lang.empty().append(h2.join(""));
-	
+
 	$('#langSelected').html(languages[ globals.gLanguage].name);
 	$('.language_menu_list a').click(function() {
 		globals.gLanguage = $(this).data("lang");
 		$('#langSelected').html(languages[ globals.gLanguage].name);
 		languageCallback();
- 	 });
-	
+	});
+
 	$lang1.val(globals.gLanguage1);
 	$lang2.val(globals.gLanguage2)
 }
@@ -1621,19 +1624,19 @@ function setLanguages(languages, languageCallback) {
 function createNewSurvey(name, existing, existing_survey, shared_results, callback) {
 
 	console.log("create new: " + existing + " : " + existing_survey + " : " + shared_results);
-	
+
 	var url="/surveyKPI/surveys/new/" + globals.gCurrentProject + "/" + name;
 	if(!existing) {
 		existing_survey = 0;
-	} 
-	
+	}
+
 	addHourglass();
 	$.ajax({
 		type: "POST",
 		url: url,
 		cache: false,
 		dataType: 'json',
-		data: { 
+		data: {
 			existing: existing,
 			existing_survey: existing_survey,
 			existing_form: 0,
@@ -1646,11 +1649,11 @@ function createNewSurvey(name, existing, existing_survey, shared_results, callba
 			globals.model.setSurveyData(data);
 			globals.model.setSettings();
 			globals.gCurrentSurvey = data.id;
-			
+
 			saveCurrentProject(-1, globals.gCurrentSurvey, undefined);	// Save the current survey id
-			
+
 			setLanguages(data.languages, callback);
-			
+
 			if(typeof callback == "function") {
 				callback();
 			}
@@ -1658,19 +1661,19 @@ function createNewSurvey(name, existing, existing_survey, shared_results, callba
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
 			if(xhr.readyState == 0 || xhr.status == 0) {
-	              return;  // Not an error
+				return;  // Not an error
 			} else {
 				bootbox.alert("Error: Failed to create survey: " + xhr.responseText);
 			}
 		}
-	});	
+	});
 }
 
 /*
  * Open a form for editing
  */
 function openForm(type) {
-	
+
 	$('.reusing_form').hide();
 	$('#base_on_existing').prop('checked', false);
 	$('#shared_results').prop('checked', false);
@@ -1680,13 +1683,13 @@ function openForm(type) {
 		$('.new_form').show();
 		$('#openSurveyLabel').html(localise.set["tm_g_new"]);
 		$('#get_form').html(localise.set["c_create"]);
-		globals.gExistingSurvey = false; 
+		globals.gExistingSurvey = false;
 	} else {
 		$('.existing_form').show();
 		$('.new_form').hide();
 		$('#openSurveyLabel').html(localise.set["tm_g_open"]);
 		$('#get_form').html(localise.set["m_open"]);
-		globals.gExistingSurvey = true; 
+		globals.gExistingSurvey = true;
 	}
 	$('#openFormModal').modal('show');
 
@@ -1703,16 +1706,16 @@ function isBusinessServer() {
 	if(hostname.indexOf('smap.com.au') > 0) {
 		bs = false;
 	}
-    if(hostname.indexOf('sg.smap.com.au') >= 0 ||
-        	hostname.indexOf('dev.smap.com.au') >= 0) {
-        bs = true;
-    }
-    /*
+	if(hostname.indexOf('sg.smap.com.au') >= 0 ||
+		hostname.indexOf('dev.smap.com.au') >= 0) {
+		bs = true;
+	}
+	/*
 	if(hostname !== 'localhost' &&
 			hostname.indexOf('kontrolid.com') < 0 &&
-        	hostname.indexOf('ezpilot') < 0 &&
-        	hostname.indexOf('sg.smap.com.au') < 0 &&
-        	hostname.indexOf('dev.smap.com.au') < 0 &&
+			hostname.indexOf('ezpilot') < 0 &&
+			hostname.indexOf('sg.smap.com.au') < 0 &&
+			hostname.indexOf('dev.smap.com.au') < 0 &&
 			hostname.indexOf('zarkman.com') < 0) {
 		bs = false;
 		$('.bus_only').hide();
@@ -1720,9 +1723,9 @@ function isBusinessServer() {
 		bs = true;
 	}
 	*/
-    
-    if(bs) {
-        $('.bus_only').show();
+
+	if(bs) {
+		$('.bus_only').show();
 	}
 	return bs;
 }
@@ -1733,13 +1736,13 @@ function isBusinessServer() {
 function isSelfRegistrationServer() {
 	var hostname = location.hostname;
 	var sr = true;
-	
+
 	if(hostname !== 'localhost' &&
-			hostname !== 'sg.smap.com.au' &&
-			hostname.indexOf('reachnettechnologies.com') < 0 &&
-			hostname.indexOf('.icanreach.com') < 0 &&
-			hostname.indexOf('encontactone.com') < 0 &&
-			hostname !== 'app.kontrolid.com') {
+		hostname !== 'sg.smap.com.au' &&
+		hostname.indexOf('reachnettechnologies.com') < 0 &&
+		hostname.indexOf('.icanreach.com') < 0 &&
+		hostname.indexOf('encontactone.com') < 0 &&
+		hostname !== 'app.kontrolid.com') {
 		sr = false;
 	}
 	return sr;
@@ -1753,31 +1756,31 @@ function validDates() {
 		$d2 = $('#endDate'),
 		d1 = $d1.data("DateTimePicker").date(),
 		d2 = $d2.data("DateTimePicker").date()
-			
+
 	if(!d1 || !d1.isValid()) {
 		$('#ut_alert').show().text("Invalid Start Date");
 		setTimeout(function() {
 			$('.form-control', '#startDate').focus();
-	    }, 0);		
+		}, 0);
 		return false;
 	}
-	
+
 	if(!d2 || !d2.isValid()) {
 		$('#ut_alert').show().text("Invalid End Date");
 		setTimeout(function() {
 			$('.form-control', '#endDate').focus();
-	    }, 0);	
+		}, 0);
 		return false;
 	}
-	
+
 	if(d1 > d2) {
 		$('#ut_alert').show().text("End date must be greater than or the same as the start date");
 		setTimeout(function() {
 			$('.form-control', '#startDate').focus();
-	    }, 0);	
+		}, 0);
 		return false;
 	}
-	
+
 	$('#ut_alert').hide();
 	return true;
 }
@@ -1786,10 +1789,10 @@ function validDates() {
  * Convert a date into UTC
  */
 function getUtcDate($element, start, end) {
-	
+
 	var theDate,
 		utcDate;
-	
+
 	if(start) {
 		theDate = $element.data("DateTimePicker").date().startOf('day');
 	} else if (end) {
@@ -1797,12 +1800,12 @@ function getUtcDate($element, start, end) {
 	} else {
 		theDate = $element.data("DateTimePicker").date();
 	}
-	
+
 	utcDate = moment.utc(theDate);
-	
+
 	console.log("date:" + theDate.format("YYYY-MM-DD HH:mm:ss"));
 	console.log("UTC:" + utcDate.format("YYYY-MM-DD HH:mm:ss"));
-	
+
 	return utcDate.valueOf();
 
 }
@@ -1811,33 +1814,33 @@ function getUtcDate($element, start, end) {
  * Get a description from a change made in the editor
  */
 function getChangeDescription(change, version) {
-	
+
 	var h =[],
 		idx = -1,
 		oldVal,
 		newVal,
 		forms = globals.model.survey.forms,
 		str;
-	
-	if(change.action === "external option") {		
+
+	if(change.action === "external option") {
 		/*
 		 * Options added from a file
 		 */
-		h[++idx] = 'Choice <span style="color:blue;">'; 
+		h[++idx] = 'Choice <span style="color:blue;">';
 		h[++idx] = change.option.externalLabel;
 		h[++idx] = '</span>';
 		h[++idx] = ' from file: <span style="color:blue;">';
 		h[++idx] = change.fileName;
 		h[++idx] = '</span>';
-		
+
 	}  else if(change.action === "settings_update") {
 		h[++idx] = localise.set["ed_c_settings"];
 		h[++idx] = ' <span style="color:blue;">';
 		h[++idx] = change.msg;
 		h[++idx] = '</span>';
-		
+
 	}  else if(change.action === "update") {
-		
+
 		/*
 		 * Updates to questions and options and list names
 		 */
@@ -1848,19 +1851,19 @@ function getChangeDescription(change, version) {
 			newVal = change.property.newVal;
 			oldVal = change.property.oldVal;
 		}
-		
-		
+
+
 		if(change.property.prop === "name") {
-			
+
 			// Deprecate the following when the structure of these log objects is made consistent
 			if(typeof change.property.type === "optionList" || change.property.type === "unknown") {
 				change.type = "choice list ";
 			}
-			
+
 			h[++idx] = change.property.type;
 			h[++idx] = ' ';
 			h[++idx] = localise.set["msg_ren"],
-			h[++idx] = ': <span style="color:blue;">';
+				h[++idx] = ': <span style="color:blue;">';
 			h[++idx] = newVal;
 			h[++idx] = '</span>';
 			h[++idx] = ' from: <span style="color:red;">';
@@ -1871,12 +1874,12 @@ function getChangeDescription(change, version) {
 			str = str.replace("%s1", '"' + change.property.prop + '"');
 			str = str.replace("%s2", change.property.name);
 			str = str.replace("%s3", '<span style="color:blue;">' + newVal + '</span>');
-            str = str.replace("%s4", '<span style="color:red;">' + oldVal + '</span>');
-            h[++idx] = str;
+			str = str.replace("%s4", '<span style="color:red;">' + oldVal + '</span>');
+			h[++idx] = str;
 		}
-		
+
 	} else if(change.action === "add")  {
-		
+
 		/*
 		 * New questions or options
 		 */
@@ -1894,15 +1897,15 @@ function getChangeDescription(change, version) {
 			} else {
 				typeString = change.question.type;
 			}
-            str = str.replace("%s2", '<span style="color:red;">' + typeString + "</span>");
+			str = str.replace("%s2", '<span style="color:red;">' + typeString + "</span>");
 			h[++idx] = str;
-			
+
 		} else if(change.type === "option" || change.changeType === "option") {	// deprecate checking of changeType
 			/*
 			 * Options added or deleted from the editor
 			 */
-            str = localise.set["ed_c_add_o"];
-            var valueStr = '<span style="color:blue;">' + change.option.value;
+			str = localise.set["ed_c_add_o"];
+			var valueStr = '<span style="color:blue;">' + change.option.value;
 			if(change.option.labels && change.option.labels.length >= 1) {
 				valueStr += ' (';
 				valueStr += change.option.labels[0].text;
@@ -1913,16 +1916,16 @@ function getChangeDescription(change, version) {
 			str = str.replace("%s2", '<span style="color:blue;">' + change.option.optionList + '</span>');
 			h[++idx] = str;
 		}
-		
+
 	}  else if(change.action === "move")  {
-		
+
 		/*
 		 * New questions or options
 		 */
 		h[++idx] = 'Moved ';
-		
+
 		if(change.type === "question" || change.changeType === "question") {  // deprecate checking of changeType){
-			
+
 			h[++idx] = 'question <span style="color:blue;">';
 			h[++idx] = change.question.name;
 			if(change.question.sourceSeq >= 0) {
@@ -1939,11 +1942,11 @@ function getChangeDescription(change, version) {
 			h[++idx] = '</span>';
 			h[++idx] = ' in form ';
 			h[++idx] = forms[change.question.formIndex].name;
-			
-			
+
+
 		} else if(change.type === "option") {
-			
-			h[++idx] = 'choice <span style="color:blue;">'; 
+
+			h[++idx] = 'choice <span style="color:blue;">';
 			h[++idx] = change.option.value;
 			if(change.option.labels && change.option.labels.length >= 1) {
 				h[++idx] = ' (';
@@ -1958,52 +1961,52 @@ function getChangeDescription(change, version) {
 			h[++idx] = change.option.optionList;
 			h[++idx] = '</span>';
 		}
-		
+
 	} else if(change.action === "delete")  {
 
 		if(change.type === "question" || change.changeType === "question"){
 
-            h[++idx] = localise.set["ed_c_del_q"];
+			h[++idx] = localise.set["ed_c_del_q"];
 
-            h[++idx] = ' <span style="color:blue;">';
+			h[++idx] = ' <span style="color:blue;">';
 			h[++idx] = change.question.name;
-			h[++idx] = '</span>'; 
-			
+			h[++idx] = '</span>';
+
 		} else if(change.type === "option") {
 
-            str = localise.set["ed_c_del_o"];
+			str = localise.set["ed_c_del_o"];
 			var valueStr = '<span style="color:blue;">' + change.option.value;
 			if(change.option.labels && change.option.labels.length >= 1) {
-                valueStr  += ' (';
-                valueStr  += change.option.labels[0].text;
-                valueStr  += ')';
+				valueStr  += ' (';
+				valueStr  += change.option.labels[0].text;
+				valueStr  += ')';
 			}
-            valueStr  += '</span>';
-            str = str.replace("%s1", valueStr);
-            str = str.replace("%s2", '<span style="color:blue;">' + change.option.optionList + '</span>');
+			valueStr  += '</span>';
+			str = str.replace("%s1", valueStr);
+			str = str.replace("%s2", '<span style="color:blue;">' + change.option.optionList + '</span>');
 			h[++idx] = str;
 		}
 	} else if(change.action === "set_required")  {
-        h[++idx] = 'All questions set ';
-        if(change.msg.indexOf('not') < 0) {
-            h[++idx] = '<span style="color:blue;">';
-            h[++idx] = 'required';
-            h[++idx] = '</span>';
-        } else {
-            h[++idx] = '<span style="color:red;">';
-            h[++idx] = 'not required';
-            h[++idx] = '</span>';
+		h[++idx] = 'All questions set ';
+		if(change.msg.indexOf('not') < 0) {
+			h[++idx] = '<span style="color:blue;">';
+			h[++idx] = 'required';
+			h[++idx] = '</span>';
+		} else {
+			h[++idx] = '<span style="color:red;">';
+			h[++idx] = 'not required';
+			h[++idx] = '</span>';
 		}
 
 	} else if(change.action === "upload_template")  {
 
 		if(version > 1) {
-            h[++idx] = localise.set["msg_survey_replaced"];
+			h[++idx] = localise.set["msg_survey_replaced"];
 		} else {
-            h[++idx] = localise.set["msg_survey_loaded"];
+			h[++idx] = localise.set["msg_survey_loaded"];
 		}
 
-    } else {
+	} else {
 		h[++idx] = change.type;
 		h[++idx] = ' ';
 		h[++idx] = change.name;
@@ -2034,7 +2037,7 @@ function translateType(input) {
 function getLocations(callback) {
 
 	var url="/surveyKPI/tasks/locations";
-	
+
 	addHourglass();
 	$.ajax({
 		url: url,
@@ -2049,24 +2052,24 @@ function getLocations(callback) {
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
 			if(xhr.readyState == 0 || xhr.status == 0) {
-	              return;  // Not an error
+				return;  // Not an error
 			} else {
 				console.log("Error: Failed to get list of locations: " + err);
 			}
 		}
-	});	
-	
+	});
+
 }
 
 /*
  * Add the locations (NFC tags or geofence) to any drop down lists that use them
  */
 function setLocationList(locns) {
-	
+
 	var h = [],
-	idx = -1,
-	i;
-	
+		idx = -1,
+		i;
+
 	if(locns && locns.length) {
 		h[++idx] = '<option value = "">';
 		h[++idx] = localise.set["c_none"];
@@ -2079,7 +2082,7 @@ function setLocationList(locns) {
 			h[++idx] = '</option>';
 		}
 	}
-	
+
 	$('.nfc_select').append(h.join(""));
 
 }
@@ -2090,17 +2093,17 @@ function setLocationList(locns) {
 function localTimeAsDate(utcTime) {
 	var utcDate,
 		localTime;
-	
+
 	if(utcTime) {
 		if(utcTime.indexOf('+') > 0) {
 			utcDate  = moment.utc(utcTime, 'YYYY-MM-DD HH:mm:ss Z').toDate();
 		} else {
 			utcDate  = moment.utc(utcTime, 'YYYY-MM-DD HH:mm:ss').toDate();
 		}
-    	localTime = moment(utcDate);
+		localTime = moment(utcDate);
 	}
 	return localTime;
-} 
+}
 
 /*
  * Convert a timestamp in UTC to local time
@@ -2108,29 +2111,29 @@ function localTimeAsDate(utcTime) {
 function localTime(utcTime) {
 	var utcDate,
 		localTime;
-	
+
 	if(utcTime) {
 		if(utcTime.indexOf('+') > 0) {
 			utcDate  = moment.utc(utcTime, 'YYYY-MM-DD HH:mm:ss Z').toDate();
 		} else {
 			utcDate  = moment.utc(utcTime, 'YYYY-MM-DD HH:mm:ss').toDate();
 		}
-    	localTime = moment(utcDate).format('YYYY-MM-DD HH:mm:ss');
+		localTime = moment(utcDate).format('YYYY-MM-DD HH:mm:ss');
 	}
 	return localTime;
-} 
+}
 
 /*
  * Convert all timestamps surrounded by smooth braces in the string to local time
  */
 function convertTimesToLocal(elem) {
-	
+
 	var times = [],
 		reg = /\([0-9][0-9][0-9][0-9]_[0-9][0-9]_[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]\)/g,
 		i,
 		time,
 		newTime;
-	
+
 	if (elem) {
 		times = elem.match(reg);
 		if(times) {
@@ -2150,7 +2153,7 @@ function utcTime(localTime) {
 
 	var utcTime,
 		localDate;
-	
+
 	if(localTime) {
 		localDate = moment(localTime).toDate();
 		utcTime =  moment.utc(localDate).format('YYYY-MM-DD HH:mm:ss');
@@ -2170,7 +2173,7 @@ function timeDifference(fromTime, toTime) {
 	var from,
 		to,
 		timeDiff;
-	
+
 	if(fromTime && toTime) {
 		if(fromTime.indexOf('+') > 0) {
 			from  = moment(fromTime, 'YYYY-MM-DD HH:mm:ss Z');
@@ -2182,11 +2185,11 @@ function timeDifference(fromTime, toTime) {
 		} else {
 			to  = moment(toTime, 'YYYY-MM-DD HH:mm:ss');
 		}
-		
-    	timeDiff = moment.duration(to.diff(from));
+
+		timeDiff = moment.duration(to.diff(from));
 	}
 	return timeDiff;
-} 
+}
 
 
 function downloadFile(url) {
@@ -2195,7 +2198,7 @@ function downloadFile(url) {
 	if(url.indexOf("?") < 0) {
 		url += "?";
 	} else {
-        url += "&";
+		url += "&";
 	}
 	url += "_v" + new Date().getTime().toString();
 
@@ -2222,7 +2225,7 @@ function generateFile(url, filename, format, mime, data, sId, managedId, title, 
 	if(managedId) {
 		payload += "&managedId=" + managedId;
 	}
-		
+
 	if(data) {
 		payload += "&data=" + encodeURIComponent(JSON.stringify(data));
 	}
@@ -2242,18 +2245,18 @@ function generateFile(url, filename, format, mime, data, sId, managedId, title, 
 		payload += "&settings=" + encodeURIComponent(JSON.stringify(settings));
 	}
 	if(tz) {
-        payload += "&tz=" + encodeURIComponent(JSON.stringify(tz));
+		payload += "&tz=" + encodeURIComponent(JSON.stringify(tz));
 	}
 	payload = payload.replace(/%20/g, '+');
-	
+
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', url, true);
 	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xhr.responseType = 'blob';
-	 
+
 	xhr.onload = function(e) {
 		if (this.status == 200) {
-		    // get binary data as a response
+			// get binary data as a response
 			var blob = new Blob([this.response], { type: mime });
 			var downloadUrl = URL.createObjectURL(blob);
 			var a = document.createElement("a");
@@ -2261,23 +2264,23 @@ function generateFile(url, filename, format, mime, data, sId, managedId, title, 
 			a.download = filename;
 			document.body.appendChild(a);
 			a.click();
-		    setTimeout(function(){
-		        document.body.removeChild(a);
-		        window.URL.revokeObjectURL(url);  
-		    }, 100);  
-		  } else {
-			  alert(localise.set["c_error"]);
-		  }
+			setTimeout(function(){
+				document.body.removeChild(a);
+				window.URL.revokeObjectURL(url);
+			}, 100);
+		} else {
+			alert(localise.set["c_error"]);
+		}
 	};
-	
+
 	xhr.onerror = function(e) {
-		 alert("Error: Upload Failed");
+		alert("Error: Upload Failed");
 	}
 	if(Pace) {
 		Pace.restart();
 	}
 	xhr.send(payload);
-	
+
 }
 
 /*
@@ -2287,33 +2290,33 @@ function generateFile(url, filename, format, mime, data, sId, managedId, title, 
 function sendReports(url, filename, format, mime, data, sId, managedId, title, project, charts) {
 
 	var update = {
-			sId: sId,
-			format: format,
-			managedId: managedId,
-			data: data,
-			title: title,
-			project: project,
-			charts: charts	
+		sId: sId,
+		format: format,
+		managedId: managedId,
+		data: data,
+		title: title,
+		project: project,
+		charts: charts
 	}
 	var saveString = JSON.stringify(update);
-	
+
 	addHourglass();
 	$.ajax({
-		 type: "POST",
-			  dataType: 'text',
-			  cache: false,
-			  contentType: "application/json",
-			  url: url,
-			  data: { report: saveString },
-			  success: function(data, status) {
-				  removeHourglass();
-				 
-			  }, error: function(data, status) {
-				  removeHourglass();
-				  alert(data.responseText);
-			  }
-		});
-	
+		type: "POST",
+		dataType: 'text',
+		cache: false,
+		contentType: "application/json",
+		url: url,
+		data: { report: saveString },
+		success: function(data, status) {
+			removeHourglass();
+
+		}, error: function(data, status) {
+			removeHourglass();
+			alert(data.responseText);
+		}
+	});
+
 }
 
 /*
@@ -2322,23 +2325,23 @@ function sendReports(url, filename, format, mime, data, sId, managedId, title, p
  * to a java object on the server
  */
 function getTableData(table, columns) {
-	
+
 	var rows = table.rows({
-	    	order:  'current',  // 'current', 'applied', 'index',  'original'
-	    	page:   'all',      // 'all',     'current'
-	    	search: 'applied',     // 'none',    'applied', 'removed'
-		}).data();
-	
+		order:  'current',  // 'current', 'applied', 'index',  'original'
+		page:   'all',      // 'all',     'current'
+		search: 'applied',     // 'none',    'applied', 'removed'
+	}).data();
+
 	var data = [],
 		cols = [],
 		i, j;
-	
+
 	for(i = 0; i < rows.length; i++) {
 		cols = [];
 		for(j = 0; j < columns.length; j++) {
 			var k = columns[j].humanName;
 			var v = rows[i][k];
-			
+
 			if(typeof v !== "string") {
 				v = JSON.stringify(v);
 			}
@@ -2349,17 +2352,17 @@ function getTableData(table, columns) {
 		}
 		data.push(cols);
 	}
-	
+
 	return data;
-	
-	
+
+
 }
 
 /*
  * Get server settings
  */
 function getServerSettings(callback, param) {
-	
+
 	if(!globals.gServerSettings) {
 		addHourglass();
 		$.ajax({
@@ -2375,7 +2378,7 @@ function getServerSettings(callback, param) {
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
 				if(xhr.readyState == 0 || xhr.status == 0) {
-		              return;  // Not an error
+					return;  // Not an error
 				} else {
 					alert("Error: Failed to get server data: " + err);
 				}
@@ -2393,30 +2396,30 @@ function getServerSettings(callback, param) {
  * Get google map api
  */
 function getGoogleMapApi(callback, map) {
-	
+
 	console.log("getGoogleMapApi");
-	
+
 	if(!window.smapLoadedGMaps && !window.smapGMapsLoading) {
 		console.log("about to call server");
-		
+
 		window.smapGMapsLoading = true;
-		
+
 		window.smapGMapsToLoad = [];
 		window.smapGMapsToLoad.push({
 			fn: callback,
 			locn: map
 		});
-		
+
 		addHourglass();
 		$.ajax({
 			url: '/surveyKPI/server',
 			cache: false,
 			success: function(data) {
-				
+
 				globals.gServerSettings = data;
-				
+
 				var callingMap = map;
-				
+
 				removeHourglass();
 				console.log("Retrieved map keys from server");
 
@@ -2425,40 +2428,40 @@ function getGoogleMapApi(callback, map) {
 				if(data.google_key) {
 					key = "?key=" + data.google_key;
 				}
-			    //gElement.src = "//maps.google.com/maps/api/js?v=3.6&amp";
-			    gElement.src = "https://maps.googleapis.com/maps/api/js" + key;
-			    if(typeof callback === "function") {
-			    	gElement.onload = onLoad;
-			    } 
-			    document.getElementsByTagName('head')[0].appendChild(gElement);
-			    
-			    function onLoad() {
-			    	
-			    	var i;
-			    	
-			    	window.smapGMapsLoading = false;
+				//gElement.src = "//maps.google.com/maps/api/js?v=3.6&amp";
+				gElement.src = "https://maps.googleapis.com/maps/api/js" + key;
+				if(typeof callback === "function") {
+					gElement.onload = onLoad;
+				}
+				document.getElementsByTagName('head')[0].appendChild(gElement);
+
+				function onLoad() {
+
+					var i;
+
+					window.smapGMapsLoading = false;
 					window.smapLoadedGMaps = true;
-			    	
-			    	console.log("Google map loaded");
-			    	
-			    	for(i = 0; i < window.smapGMapsToLoad.length; i++) {
-			    		console.log("map callback");
-			    		window.smapGMapsToLoad[i].fn(window.smapGMapsToLoad[i].locn);
-			    	}
-			    	delete window.smapGMapsToLoad;
-			    }
+
+					console.log("Google map loaded");
+
+					for(i = 0; i < window.smapGMapsToLoad.length; i++) {
+						console.log("map callback");
+						window.smapGMapsToLoad[i].fn(window.smapGMapsToLoad[i].locn);
+					}
+					delete window.smapGMapsToLoad;
+				}
 
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
 				if(xhr.readyState == 0 || xhr.status == 0) {
-		              return;  // Not an error
+					return;  // Not an error
 				} else {
 					alert("Error: Failed to get server data: " + err);
 				}
 			}
-		});	
-		
+		});
+
 	} else if(window.smapLoadedGMaps) {
 		console.log("Already loaded calling map callback");
 		callback(map);
@@ -2495,11 +2498,11 @@ function remoteSurveyChanged() {
 function getReports(callback1, callback2, type) {
 
 	var url="/surveyKPI/custom_reports";
-	
+
 	if(type) {
 		url += "?type=" + type;
 	}
-	
+
 	addHourglass();
 	$.ajax({
 		url: url,
@@ -2517,17 +2520,17 @@ function getReports(callback1, callback2, type) {
 			if(typeof cb2 === "function") {
 				cb2(data, cb1, cb2, t);
 			}
-				
+
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
 			if(xhr.readyState == 0 || xhr.status == 0) {
-	              return;  // Not an error
+				return;  // Not an error
 			} else {
 				console.log("Error: Failed to get list of reports: " + err);
 			}
 		}
-	});	
+	});
 
 }
 
@@ -2538,18 +2541,18 @@ function showReportList(data) {
 	var h = [],
 		idx = -1,
 		i;
-	
+
 	removeHourglass();
-	
+
 	if(data.length === 0) {
-		
+
 		// Enable / disable elements specifically for managed forms
 		$('.selectmanaged').show();
 		$('.no_oversight').show();
 	} else {
 		$('.no_oversight').hide();
 		$('.selectmanaged').show();
-		
+
 		h[++idx] = '<option value="0">';
 		h[++idx] = localise.set["c_none"];
 		h[++idx] = '</option>';
@@ -2568,18 +2571,18 @@ function showReportList(data) {
  * Show the Custom Reports in a table
  */
 function refreshCustomReportView(data, callback1, callback2, type) {
-	
+
 	var $selector = $('#cr_list'),
-		i, 
+		i,
 		h = [],
 		idx = -1;
 
 	$('.panel_msg').show();
 	$('#addReportPopup').modal("hide");
-	
+
 	data = data || [];
 	globals.gReports = data;
-	
+
 	h[++idx] = '<table class="table">';
 	h[++idx] = '<thead>';
 	h[++idx] = '<tr>';
@@ -2588,16 +2591,16 @@ function refreshCustomReportView(data, callback1, callback2, type) {
 	h[++idx] = '</tr>';
 	h[++idx] = '</thead>';
 	h[++idx] = '<tbody class="table-striped">';
-	
+
 	for(i = 0; i < data.length; i++) {
-	
+
 		h[++idx] = '<tr>';
-		
+
 		// name
 		h[++idx] = '<td>';
 		h[++idx] = data[i].name;
 		h[++idx] = '</td>';
-	
+
 		// type
 		h[++idx] = '<td>';
 		h[++idx] = data[i].type;
@@ -2605,69 +2608,69 @@ function refreshCustomReportView(data, callback1, callback2, type) {
 
 		// actions
 		h[++idx] = '<td>';
-		
+
 		h[++idx] = '<button type="button" data-idx="';
 		h[++idx] = i;
 		h[++idx] = '" class="btn btn-default btn-sm rm_cr">';
 		h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
-		
+
 		h[++idx] = '<button type="button" data-idx="';
 		h[++idx] = i;
 		h[++idx] = '" class="btn btn-default btn-sm download_cr">';
 		h[++idx] = '<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></button>';
-		
+
 		h[++idx] = '</td>';
 		// end actions
-		
+
 		h[++idx] = '</tr>';
 	}
-	
+
 	h[++idx] = '</tbody>';
 	h[++idx] = '</table>';
-	
+
 	$selector.empty().append(h.join(''));
-	
+
 	$(".rm_cr", $selector).click(function(){
 		var idx = $(this).data("idx");
 		if(confirm(localise.set["msg_confirm_del"] + " " + globals.gReports[idx].name)) {
 			deleteCustomReport(globals.gReports[idx].id, type);
 		}
 	});
-	
+
 	$(".download_cr", $selector).click(function(){
 		var idx = $(this).data("idx");
 		downloadFile("/surveyKPI/custom_reports/xls/" + globals.gReports[idx].id +
-				"?filetype=xls&filename=" + cleanFileName(globals.gReports[idx].name));
+			"?filetype=xls&filename=" + cleanFileName(globals.gReports[idx].name));
 	});
-	
-	
+
+
 }
 
 function deleteCustomReport(id, type) {
-	
+
 	var url = "/surveyKPI/custom_reports/" + id;
 	if(type) {
 		url += "?type=" + type;
 	}
-	
+
 	addHourglass();
 	$.ajax({
-		  type: "DELETE",
-		  url: url,
-		  success: function(data, status) {
-			  removeHourglass();
-			  var t = type;
-			  console.log("delete: " + t + " : " + type);
-			  getReports(refreshCustomReportView, showReportList, t);
-		  },
-		  error: function(xhr, textStatus, err) {
-				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-		              return;  // Not an error
-				} else {
-					alert(localise.set["msg_err_del"] + xhr.responseText);
-				}
+		type: "DELETE",
+		url: url,
+		success: function(data, status) {
+			removeHourglass();
+			var t = type;
+			console.log("delete: " + t + " : " + type);
+			getReports(refreshCustomReportView, showReportList, t);
+		},
+		error: function(xhr, textStatus, err) {
+			removeHourglass();
+			if(xhr.readyState == 0 || xhr.status == 0) {
+				return;  // Not an error
+			} else {
+				alert(localise.set["msg_err_del"] + xhr.responseText);
 			}
+		}
 	});
 }
 
@@ -2690,12 +2693,12 @@ function getRoles(callback) {
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
 			if(xhr.readyState == 0 || xhr.status == 0) {
-	              return;  // Not an error
+				return;  // Not an error
 			} else {
 				alert(localise.set["msg_err_get_r"] + " " + err);
 			}
 		}
-	});	
+	});
 }
 
 /*
@@ -2821,13 +2824,13 @@ function getInterval(seconds) {
  * Clean the filename so that it can be passed in a URL
  */
 function cleanFileName(filename) {
-	
+
 	var n;
-	
+
 	n = filename.replace(/\//g, '_');	// remove slashes from the filename
-	n = n.replace(/[#?&]/g, '_');		// Remove other characters that are not wanted 
+	n = n.replace(/[#?&]/g, '_');		// Remove other characters that are not wanted
 	n = n.replace("'", "", 'g');		// Remove apostrophes
-	
+
 	return n;
 }
 
@@ -2837,14 +2840,14 @@ function cleanFileName(filename) {
 function getLinkedTarget(input) {
 	var lt,
 		values = [];
-	
+
 	if(input) {
-		
+
 		lt = {
-				sId: 0,
-				qId: 0
-			}
-		
+			sId: 0,
+			qId: 0
+		}
+
 		values = input.split("::");
 		if(values.length > 0) {
 			lt.sId = +values[0].trim();
@@ -2853,7 +2856,7 @@ function getLinkedTarget(input) {
 			lt.qId = +values[1].trim();
 		}
 	}
-	
+
 	return lt;
 }
 
@@ -2862,41 +2865,41 @@ function getLinkedTarget(input) {
  */
 function addFormPickList(sMeta, checked_forms) {
 
-    var h = [],
-        idx = -1,
-        i;
+	var h = [],
+		idx = -1,
+		i;
 
-    // Start with the top level form
-    for(i = 0; i < sMeta.forms.length; i++) {
-        if(sMeta.forms[i].p_id == 0) {
-            $(".osmforms").html(addFormToList(sMeta.forms[i], sMeta, 0, true, false, checked_forms));
-            $(".selectforms").html(addFormToList(sMeta.forms[i], sMeta, 0, false, false, checked_forms));
-            $(".shapeforms,.taforms").html(addFormToList(sMeta.forms[i], sMeta, 0, true, true, checked_forms));
-        }
-    }
+	// Start with the top level form
+	for(i = 0; i < sMeta.forms.length; i++) {
+		if(sMeta.forms[i].p_id == 0) {
+			$(".osmforms").html(addFormToList(sMeta.forms[i], sMeta, 0, true, false, checked_forms));
+			$(".selectforms").html(addFormToList(sMeta.forms[i], sMeta, 0, false, false, checked_forms));
+			$(".shapeforms,.taforms").html(addFormToList(sMeta.forms[i], sMeta, 0, true, true, checked_forms));
+		}
+	}
 
-    $("button",".selectforms").click(function() {
-        var $this = $(this),
-            $check = $this.parent().find("input"),
-            val,
-            val_array = [];
+	$("button",".selectforms").click(function() {
+		var $this = $(this),
+			$check = $this.parent().find("input"),
+			val,
+			val_array = [];
 
-        val = $check.val();
-        val_array= val.split(":");
-        if(val_array.length > 1) {
-            if(val_array[1] === "true") {
-                $check.val(val_array[0] + ":false");
-                $this.text("Pivot");
-            } else {
-                $check.val(val_array[0] + ":true");
-                $this.text("Flat");
-            }
-            $this.toggleClass('exportflat');
-            $this.toggleClass('exportpivot');
-        }
+		val = $check.val();
+		val_array= val.split(":");
+		if(val_array.length > 1) {
+			if(val_array[1] === "true") {
+				$check.val(val_array[0] + ":false");
+				$this.text("Pivot");
+			} else {
+				$check.val(val_array[0] + ":true");
+				$this.text("Flat");
+			}
+			$this.toggleClass('exportflat');
+			$this.toggleClass('exportpivot');
+		}
 
-        return false;
-    });
+		return false;
+	});
 }
 
 /*
@@ -2904,136 +2907,136 @@ function addFormPickList(sMeta, checked_forms) {
  */
 function addDatePickList(sMeta, currentDate) {
 
-    var h = [],
-        idx = -1,
-        i,
-        value;
+	var h = [],
+		idx = -1,
+		i,
+		value;
 
-    if(sMeta && sMeta.dates) {
-        for(i = 0; i < sMeta.dates.length; i++) {
+	if(sMeta && sMeta.dates) {
+		for(i = 0; i < sMeta.dates.length; i++) {
 
-            h[++idx] = '<option value="';
-            h[++idx] = sMeta.dates[i].id;
-            h[++idx] = '">';
-            h[++idx] = sMeta.dates[i].name;
-            h[++idx] = '</option>';
+			h[++idx] = '<option value="';
+			h[++idx] = sMeta.dates[i].id;
+			h[++idx] = '">';
+			h[++idx] = sMeta.dates[i].name;
+			h[++idx] = '</option>';
 
-        }
+		}
 
-        $(".date_question").html((h.join('')));
+		$(".date_question").html((h.join('')));
 
-        if(typeof currentDate !== "undefined" && currentDate != 0) {
-            value = currentDate;
-        } else {
-            value = $("#settings_date_question").val();
-        }
-    }
+		if(typeof currentDate !== "undefined" && currentDate != 0) {
+			value = currentDate;
+		} else {
+			value = $("#settings_date_question").val();
+		}
+	}
 }
 
 function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms) {
 
-    var h = [],
-        idx = -1,
-        i,
-        type,
-        checked;
+	var h = [],
+		idx = -1,
+		i,
+		type,
+		checked;
 
-    if (set_radio) {
-        type = "radio";
-    } else {
-        type = "checkbox";
-    }
-
-    // Don't automatically check the forms that hold the points for geopolygon and linestring
-    //if(form.form.substring(0, 10) === "geopolygon" || form.form.substring(0, 13) === "geolinestring") {
-    //    checked = '';
-    //} else {
-    //    checked = 'checked="checked"';
-    //}
-
-    // Set checked value based on previous selections
-	if(set_radio && offset == 0) {
-        checked = 'checked="checked"';
+	if (set_radio) {
+		type = "radio";
 	} else {
-        if (offset == 0 && (!checked_forms || checked_forms.length == 0)) {
-            checked = 'checked="checked"';
-        } else {
-            checked = '';
-        }
-    }
-    if(checked_forms && checked_forms.length > 0) {
-        for(i = 0; i < checked_forms.length; i++) {
-            if(form.f_id == checked_forms[i]) {
-                checked = 'checked="checked"';
-                break;
-            }
-        }
-    } else {}
+		type = "checkbox";
+	}
 
-    //h[++idx] = '<span style="padding-left:';
-    //h[++idx] = offset;
-    //h[++idx] = 'px;">';
-    //h[++idx] = '<input class="osmform" type="' + type + '" ' + checked + ' name="osmform" value="';
+	// Don't automatically check the forms that hold the points for geopolygon and linestring
+	//if(form.form.substring(0, 10) === "geopolygon" || form.form.substring(0, 13) === "geolinestring") {
+	//    checked = '';
+	//} else {
+	//    checked = 'checked="checked"';
+	//}
+
+	// Set checked value based on previous selections
+	if(set_radio && offset == 0) {
+		checked = 'checked="checked"';
+	} else {
+		if (offset == 0 && (!checked_forms || checked_forms.length == 0)) {
+			checked = 'checked="checked"';
+		} else {
+			checked = '';
+		}
+	}
+	if(checked_forms && checked_forms.length > 0) {
+		for(i = 0; i < checked_forms.length; i++) {
+			if(form.f_id == checked_forms[i]) {
+				checked = 'checked="checked"';
+				break;
+			}
+		}
+	} else {}
+
+	//h[++idx] = '<span style="padding-left:';
+	//h[++idx] = offset;
+	//h[++idx] = 'px;">';
+	//h[++idx] = '<input class="osmform" type="' + type + '" ' + checked + ' name="osmform" value="';
 	h[++idx] = '<div class="' + type + '"';
 	h[++idx] = '<span style="padding-left:';
 	h[++idx]= offset + 'px;">';
 	h[++idx] = '<label>';
 	h[++idx] = '<input class="osmform" type="' + type + '" ' + checked + ' name="osmform" value="';
-    h[++idx] = form.f_id;
-    if(!osm) {
-        h[++idx] = ':false"/>';
-    } else {
-        h[++idx] = '">';
-    }
-    h[++idx] = form.form;
-    h[++idx] = '</label>';
-    if(form.p_id != 0 && !osm) {
-        h[++idx] = ' <button class="exportpivot">Pivot</button>';
-    }
-    h[++idx]= '</div>';
+	h[++idx] = form.f_id;
+	if(!osm) {
+		h[++idx] = ':false"/>';
+	} else {
+		h[++idx] = '">';
+	}
+	h[++idx] = form.form;
+	h[++idx] = '</label>';
+	if(form.p_id != 0 && !osm) {
+		h[++idx] = ' <button class="exportpivot">Pivot</button>';
+	}
+	h[++idx]= '</div>';
 
 
 
-    //h[++idx] = '<br/>';
-    //h[++idx] = '</span>';
+	//h[++idx] = '<br/>';
+	//h[++idx] = '</span>';
 
-    // Add the children (recursively)
-    for(i = 0; i < sMeta.forms.length; i++) {
-        if(sMeta.forms[i].p_id != 0  && sMeta.forms[i].p_id == form.f_id) {
-            h[++idx] = addFormToList(sMeta.forms[i], sMeta, offset + 20, osm, set_radio, checked_forms);
-        }
-    }
+	// Add the children (recursively)
+	for(i = 0; i < sMeta.forms.length; i++) {
+		if(sMeta.forms[i].p_id != 0  && sMeta.forms[i].p_id == form.f_id) {
+			h[++idx] = addFormToList(sMeta.forms[i], sMeta, offset + 20, osm, set_radio, checked_forms);
+		}
+	}
 
-    return h.join('');
+	return h.join('');
 }
 
 function getViewLanguages(view) {
 
-    if(view.sId != -1) {
-        var url = languageListUrl(view.sId);
-        $.getJSON(url, function(data) {
-            globals.gSelector.setSurveyLanguages(view.sId, data);
-            setSurveyViewLanguages(data, view.lang, '#settings_language', false);
-            setSurveyViewLanguages(data, view.lang, '#export_language', true);
-        });
-    }
+	if(view.sId != -1) {
+		var url = languageListUrl(view.sId);
+		$.getJSON(url, function(data) {
+			globals.gSelector.setSurveyLanguages(view.sId, data);
+			setSurveyViewLanguages(data, view.lang, '#settings_language', false);
+			setSurveyViewLanguages(data, view.lang, '#export_language', true);
+		});
+	}
 
 }
 
 function validateEmails(emails) {
 	var valid = true,
 		i;
-    if(emails && emails.trim().length > 0) {
-        var emailArray = emails.split(",");
-        for (i = 0; i < emailArray.length; i++) {
-            var validEmail = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm;
-            if (!validEmail.test(emailArray[i])) {
-            	valid = false;
-                break;
-            }
-        }
-    }
-    return valid;
+	if(emails && emails.trim().length > 0) {
+		var emailArray = emails.split(",");
+		for (i = 0; i < emailArray.length; i++) {
+			var validEmail = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm;
+			if (!validEmail.test(emailArray[i])) {
+				valid = false;
+				break;
+			}
+		}
+	}
+	return valid;
 }
 
 /*
@@ -3057,30 +3060,30 @@ $(window).on('resize', autocollapse);
  */
 function getSurveyRoles(sId, selectedRoles, setall) {
 
-    if (!gTasks.cache.surveyRoles[sId]) {
-        addHourglass();
-        $.ajax({
-            url: "/surveyKPI/role/survey/" + sId + "?enabled=true",
-            dataType: 'json',
-            cache: false,
-            success: function (data) {
-                removeHourglass();
-                gTasks.cache.surveyRoles[sId] = data;
-                showRoles(gTasks.cache.surveyRoles[sId], selectedRoles);
-            },
-            error: function (xhr, textStatus, err) {
+	if (!gTasks.cache.surveyRoles[sId]) {
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/role/survey/" + sId + "?enabled=true",
+			dataType: 'json',
+			cache: false,
+			success: function (data) {
+				removeHourglass();
+				gTasks.cache.surveyRoles[sId] = data;
+				showRoles(gTasks.cache.surveyRoles[sId], selectedRoles);
+			},
+			error: function (xhr, textStatus, err) {
 
-                removeHourglass();
-                if (xhr.readyState == 0 || xhr.status == 0) {
-                    return;  // Not an error
-                } else {
-                    console.log("Error: Failed to get roles for a survey: " + err);
-                }
-            }
-        });
-    } else {
-        showRoles(gTasks.cache.surveyRoles[sId], selectedRoles, setall);
-    }
+				removeHourglass();
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					console.log("Error: Failed to get roles for a survey: " + err);
+				}
+			}
+		});
+	} else {
+		showRoles(gTasks.cache.surveyRoles[sId], selectedRoles, setall);
+	}
 }
 
 /*
@@ -3088,28 +3091,28 @@ function getSurveyRoles(sId, selectedRoles, setall) {
  */
 function showRoles(data, selectedRoles, setall) {
 
-    var h = [],
-        idx = -1,
-        i;
+	var h = [],
+		idx = -1,
+		i;
 
-    $('.role_select_roles').empty();
-    if (data.length > 0) {
-        for (i = 0; i < data.length; i++) {
-            h[++idx] = '<div class="checkbox">';
-            h[++idx] = '<label><input type="checkbox" value="';
-            h[++idx] = data[i].id;
-            h[++idx] = '"';
-            if(setall || roleSelected(data[i].id, selectedRoles)) {
-            	h[++idx] = ' checked';
+	$('.role_select_roles').empty();
+	if (data.length > 0) {
+		for (i = 0; i < data.length; i++) {
+			h[++idx] = '<div class="checkbox">';
+			h[++idx] = '<label><input type="checkbox" value="';
+			h[++idx] = data[i].id;
+			h[++idx] = '"';
+			if(setall || roleSelected(data[i].id, selectedRoles)) {
+				h[++idx] = ' checked';
 			}
-            h[++idx] = '>';
-            h[++idx] = data[i].name;
-            h[++idx] = '</label>';
-            h[++idx] = '</div>';
-        }
-        $('.role_select').show();
-        $('.role_select_roles').append(h.join(''));
-    }
+			h[++idx] = '>';
+			h[++idx] = data[i].name;
+			h[++idx] = '</label>';
+			h[++idx] = '</div>';
+		}
+		$('.role_select').show();
+		$('.role_select_roles').append(h.join(''));
+	}
 }
 
 function roleSelected(roleId, selectedRoles) {

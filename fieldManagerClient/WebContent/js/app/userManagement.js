@@ -1080,8 +1080,12 @@ function writeUserDetails(userList, $dialog) {
 		  success: function(data, status) {
 			  removeHourglass();
 			  $('#userDetailsSave').prop("disabled", false);
-			  getUsers();
-			  $dialog.modal("hide");
+				if(userList[0].ident == globals.gLoggedInUser.ident) {	// Restart if a user updated their own settings
+					location.reload();
+				} else {
+			        getUsers();
+			        $dialog.modal("hide");
+				}
 		  }, error: function(xhr, textStatus, err) {
 			  removeHourglass();
 			  $('#userDetailsSave').prop("disabled", false);
@@ -1553,19 +1557,16 @@ function updateOrganisationList() {
 	
 	for(i = 0; i < gOrganisationList.length; i++) {
 		organisation = gOrganisationList[i];
-		if(organisation.name !== globals.gLoggedInUser.organisation_name) {
 		
-			h[++idx] = '<option value="';
-			h[++idx] = organisation.id;
-			h[++idx] = '">';
-			h[++idx] = organisation.name;
-			h[++idx] = '</option>';
-		}
-		
+		h[++idx] = '<option value="';
+		h[++idx] = organisation.id;
+		h[++idx] = '">';
+		h[++idx] = organisation.name;
+		h[++idx] = '</option>'
 	}	
 	
 	$organisationSelect.empty().append(h.join(''));
-
+	$organisationSelect.val(globals.gOrgId);
 }
 
 // Return true if the item with the name is in the list

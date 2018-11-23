@@ -2,8 +2,6 @@ package smapModels;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -17,10 +15,7 @@ import org.smap.sdal.managers.ActionManager;
 import org.smap.sdal.managers.QueryManager;
 import org.smap.sdal.model.Action;
 import org.smap.sdal.model.KeyValueSimp;
-import org.smap.sdal.model.OptionDesc;
 import org.smap.sdal.model.QueryForm;
-import org.smap.sdal.model.SqlDesc;
-import org.smap.sdal.model.TableColumn;
 import org.smap.sdal.model.User;
 
 import util.Util;
@@ -60,11 +55,13 @@ public class ReportModel {
 		this.namespace = namespace;	
 		this.urlprefix = urlprefix;
 		this.basePath = basePath;
-				
+			
+		String tz = "UTC";		// Default to UTC
+		
 		/*
 		 * Get the list of forms and surveys to be exported
 		 */
-		ActionManager am = new ActionManager(localisation);	
+		ActionManager am = new ActionManager(localisation, tz);	
 		int oId = GeneralUtilityMethods.getOrganisationId(sd, user, 0);
 		ArrayList<User> reportList  = am.getTemporaryUsers(sd, oId, "report", 0, 0);		// Should only be reports the user has access to
 		for(User report : reportList) {
@@ -156,7 +153,8 @@ public class ReportModel {
 						startingForm,
 						null,					// filter
 						meta,					// meta
-						false);
+						false,
+						tz);
 				reports.put(odataIdent, rd);
 				
 				FullQualifiedName fqn = new FullQualifiedName(namespace, Util.convertFormToEntityName(odataIdent));
