@@ -132,7 +132,6 @@ $(document).ready(function() {
 
 	getAvailableTimeZones($('#e_tz'), showTimeZones);
 
-    
 	 // Initialse the settings dialog
 	 $('#p_settings').dialog(
 		{
@@ -300,15 +299,15 @@ $(document).ready(function() {
 		
 		getViewSurveys({sId:"-1"});				// Update the survey list to match the new project
  	 });
+
+	var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+	$('#e_tz').val(tz);   // Set time zone
 	
 	enableUserProfile();
 	
 });
 
 function loggedInUserIdentified(projectId) {
-	var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-	$('#e_tz').val(tz);   // Set time zone (per user prefernce TBD)
-
 	getPanels(projectId);
 	//getQueries(true);		// Get Queries accessible to this user including ones published by others
 }
