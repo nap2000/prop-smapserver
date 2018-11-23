@@ -129,10 +129,9 @@ $(document).ready(function() {
     $('.db_settings_add').click(function() { 
     	addNewPanel($(this).val());
     });
-    
-    
-    // ** End Translations **
-    
+
+	getAvailableTimeZones($('#e_tz'), showTimeZones);
+
 	 // Initialse the settings dialog
 	 $('#p_settings').dialog(
 		{
@@ -300,6 +299,9 @@ $(document).ready(function() {
 		
 		getViewSurveys({sId:"-1"});				// Update the survey list to match the new project
  	 });
+
+	var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+	$('#e_tz').val(tz);   // Set time zone
 	
 	enableUserProfile();
 	
