@@ -129,6 +129,8 @@ require([
 
         $('#addReport').click(function(){
             $('#publish_form')[0].reset();
+	        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+	        $('#e_tz').val(tz);   // Set time zone
 
             $('.role_select_roles').empty()
             getSurveyRoles($('#survey').val(), undefined, true);

@@ -644,6 +644,8 @@ function showTimeZones($elem, timeZones) {
 		h[++idx] = '</option>';
 	}
 	$elem.empty().html(h.join(''));
+	var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+	$elem.val(tz);   // Set time zone
 }
 
 function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hideUserDetails, dontGetCurrentSurvey) {
