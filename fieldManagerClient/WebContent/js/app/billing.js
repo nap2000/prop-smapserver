@@ -63,6 +63,7 @@ define(['jquery','localise', 'common', 'globals',
 		});
         $('#organisation').change(function(){
            getBillDetails();
+           getRates();
         });
 
         $('#org_bill_rpt').click(function (e) {
@@ -78,19 +79,19 @@ define(['jquery','localise', 'common', 'globals',
         });
 
         // Set up the tabs
-        $('#serverBillTab a').click(function (e) {
+        $('#billTab a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
 
-            $(".billtab").hide();
-            $('#ratesPanel').show();
+            $("#billPanel").show();
+            $('#ratesPanel').hide();
 
         });
         $('#ratesTab a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
 
-            $(".billtab").hide();
+            $("#billPanel").hide();
             $('#ratesPanel').show();
         });
 
@@ -140,6 +141,7 @@ define(['jquery','localise', 'common', 'globals',
         levelChanged();
 	    if(gLevel !== "org") {
             getBillDetails();
+            getRates();
         }
     }
 
@@ -171,7 +173,7 @@ define(['jquery','localise', 'common', 'globals',
             orgIdx;
 
         url = "/surveyKPI/billing?year=" + year + "&month=" + month;
-        if(gLevel === "org") {
+        if(gLevel === "org" || gLevel === "org_ind") {
             orgIdx = $('#organisation').val();
             url += "&org=" + gOrganisationList[orgIdx].id;
         }
@@ -184,7 +186,7 @@ define(['jquery','localise', 'common', 'globals',
             success: function (data) {
                 removeHourglass();
 				if(data) {
-					populateServerTable(data);
+					populateBillTable(data);
 				}
             },
             error: function (xhr, textStatus, err) {
@@ -198,7 +200,69 @@ define(['jquery','localise', 'common', 'globals',
         });
     }
 
-    function populateServerTable(data) {
+    function getRates() {
+
+		var billLevel = $('#billLevel option:selected').val(),
+			url,
+			msg,
+			levelName,
+			higherName;
+
+	    url = "/surveyKPI/billing/rates";
+	    if(gLevel === "org" || gLevel === "ind_org") {
+		    orgIdx = $('#organisation').val();
+		    url += "?org=" + gOrganisationList[orgIdx].id;
+	    }
+
+	    addHourglass();
+	    $.ajax({
+		    url: url,
+		    dataType: 'json',
+		    cache: false,
+		    success: function (data) {
+			    removeHourglass();
+			    if(data.length > 0) {
+				    populateRatesTable(data);
+				    $('.hasrates').show();
+				    $('.norates').hide();
+			    } else {
+				    if(gLevel === "org" || gLevel === "ind_org") {
+					    levelName = localise.set["c_org"];
+					    higherName = localise.set["c_ent"];
+				    } else if(gLevel === "ent") {
+					    levelName = localise.set["c_ent"];
+					    higherName = localise.set["c_server"];
+				    }
+
+				    msg = localise.set["bill_norates"].replace("%s1", levelName).replace("%s2", higherName);
+				    $('#noratesmsg').html(msg);
+				    $('.hasrates').hide();
+				    $('.norates').show();
+			    }
+		    },
+		    error: function (xhr, textStatus, err) {
+			    removeHourglass();
+			    if (xhr.readyState == 0 || xhr.status == 0) {
+				    return;  // Not an error
+			    } else {
+				    alert(localise.set["c_error"] + ": " + err);
+			    }
+		    }
+	    });
+
+
+    }
+
+	function populateRatesTable(data) {
+		var $elem = $('#rates_table'),
+			h = [],
+			idx = -1;
+
+		alert("Got some rates: " + data.length);
+	}
+
+
+	function populateBillTable(data) {
 		var $elem = $('#billing_table'),
 			h = [],
 			idx = -1,
@@ -278,6 +342,7 @@ define(['jquery','localise', 'common', 'globals',
                     $('.organisation_select').html(h.join(''));
                 }
                 getBillDetails();
+                getRates();
             }, error: function(xhr, textStatus, err) {
                 removeHourglass();
                 if(xhr.readyState == 0 || xhr.status == 0) {
