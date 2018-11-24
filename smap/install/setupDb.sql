@@ -1153,6 +1153,7 @@ create TABLE bill_rates (
 	o_id integer,	-- If 0 then all organisations (In enterprise or server)
 	e_id integer,	-- If 0 then all enterprises (ie server level)
 	rates text,		-- json object
+	currency text,
 	created_by text,
 	ts_created TIMESTAMP WITH TIME ZONE,
 	ts_applies_from TIMESTAMP WITH TIME ZONE
