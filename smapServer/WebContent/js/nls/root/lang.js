@@ -223,6 +223,7 @@ define({
     "c_trans": "Translate",
     "c_org": "Organisation",
     "c_orgs": "Organisations",
+    "c_ent": "Enterprise",
     "c_all_s": "All Surveys",
     "c_all": "All",
     "c_event": "Event",
@@ -947,7 +948,10 @@ define({
     "static map": "Static Map",
     "rekognition": "AWS Rekognition",
     "org_bill_rpt": "Organisation Usage Report",
-    "bill_enable": "Enable Billing"
+    "bill_enable": "Enable Billing",
+    "bill_from": "Applies From",
+    "bill_chg_date": "Date Changed",
+    "bill_norates": "No rates have been set for this %s1. If billing is enabled then the rates for the %s2 will be used"
 
 
 });

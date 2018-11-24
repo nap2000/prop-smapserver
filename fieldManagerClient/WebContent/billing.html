@@ -65,53 +65,53 @@
 <div class="container">
 	<div id="org_alert" class="alert alert-info" role="alert"></div>
 	<ul class="nav nav-pills" role="tablist">
-		<li id="serverBillTab" role="presentation" class="active"><a href="#" class="lang" data-lang="m_billing_server">server billing</a></li>
-		<li id="organisationBillTab" role="presentation"><a href="#" class="lang" data-lang="m_rates">rates</a></li>
+		<li id="billTab" role="presentation" class="active"><a href="#" class="lang" data-lang="m_billing">billing</a></li>
+		<li id="ratesTab" role="presentation"><a href="#" class="lang" data-lang="m_rates">rates</a></li>
 	</ul>
 
-	<!-- The container for details of a server bill -->
-	<div id="serverBillPanel" class="billtab">
-
-		<div class="well" id="filters">
-			<div class="container">
-				<form role="form" class="form-horizontal" id="user_filter_form">
-					<div class="form-group showHierarchy" style="display:none;">
-						<label class="control-label col-sm-4 lang" for="billLevel" data-lang="m_bill_level"></label>
-						<div class="col-sm-4">
-							<select id="billLevel" class="form-control"></select>
-						</div>
+	<div class="well" id="filters">
+		<div class="container">
+			<form role="form" class="form-horizontal" id="user_filter_form">
+				<div class="form-group showHierarchy" style="display:none;">
+					<label class="control-label col-sm-4 lang" for="billLevel" data-lang="m_bill_level"></label>
+					<div class="col-sm-4">
+						<select id="billLevel" class="form-control"></select>
 					</div>
-					<div class="form-group showOrganisation" style="display:none;">
-						<label class="control-label col-sm-4 lang" for="organisation" data-lang="c_org"></label>
-						<div class="col-sm-4">
-							<select id="organisation" class="form-control organisation_select"></select>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label col-sm-4 lang" for="usageDate" data-lang="c_month"></label>
-						<div class="col-sm-4">
-							<div class="input-group date" id='usageDate' >
-								<input type='text' class="form-control" data-date-format="YYYY/MM"/>
-								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-							</div>
-						</div>
-					</div>
-					<div class="form-group showManager" style="display:none;">
-						<label class="control-label col-sm-4 lang" for="enableBilling" data-lang="bill_enable"></label>
-						<div class="col-sm-4">
-							<div class="checkbox">
-								<label>
-									<input type="checkbox" id="enableBilling">
-								</label>
-							</div>
-						</div>
-					</div>
-				</form>
-				<div class="col-sm-3 col-xs-6">
-					<a id="org_bill_rpt" class="btn btn-success lang" type="button" data-lang="org_bill_rpt">report</a>
 				</div>
+				<div class="form-group showOrganisation" style="display:none;">
+					<label class="control-label col-sm-4 lang" for="organisation" data-lang="c_org"></label>
+					<div class="col-sm-4">
+						<select id="organisation" class="form-control organisation_select"></select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-sm-4 lang" for="usageDate" data-lang="c_month"></label>
+					<div class="col-sm-4">
+						<div class="input-group date" id='usageDate' >
+							<input type='text' class="form-control" data-date-format="YYYY/MM"/>
+							<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+						</div>
+					</div>
+				</div>
+				<div class="form-group showManager" style="display:none;">
+					<label class="control-label col-sm-4 lang" for="enableBilling" data-lang="bill_enable"></label>
+					<div class="col-sm-4">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="enableBilling">
+							</label>
+						</div>
+					</div>
+				</div>
+			</form>
+			<div class="col-sm-3 col-xs-6">
+				<a id="org_bill_rpt" class="btn btn-success lang" type="button" data-lang="org_bill_rpt">report</a>
 			</div>
 		</div>
+	</div>
+
+	<!-- The container for details of a server bill -->
+	<div id="billPanel">
 
 		<div class="container">
 			<div class="row">
@@ -137,16 +137,30 @@
 	</div>
 
 	<!-- The container for managing organisation billing -->
-	<div id="ratesPanel" class="billtab">
+	<div id="ratesPanel">
 
-		<div class="well">
-			<div class="container">
-
-			</div>
-		</div>
 
 		<div class="container">
-
+			<div class="row">
+				<div class="col-md-12 col-xs-12 norates">
+					<p id="noratesmsg"></p>
+				</div>
+				<div class="col-md-12 col-xs-12 table-responsive hasrates">
+					<table class="table table-striped">
+						<thead>
+						<tr>
+							<th></th>
+							<th class="lang" data-lang="bill_from">from</th>
+							<th class="lang" data-lang="u_chg">changed by</th>
+							<th class="lang" data-lang="bill_chg_date">date changed</th>
+							<th class="lang" data-lang="m_rates">rates</th>
+							<th class="lang" data-lang="c_action">action</th>
+						</tr>
+						</thead>
+						<tbody id="rates_table"></tbody>
+					</table>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
