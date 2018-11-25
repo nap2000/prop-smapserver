@@ -39,7 +39,8 @@ $(document).ready(function() {
 	
 	getUsers();
 	getProjects();
-	getLoggedInUser(userKnown, false, false, getOrganisations);
+	getLoggedInUser(userKnown, false, false, getOrganisations, false,
+		false, getEnterprises, getServerDetails);
 	getDeviceSettings();
 	getSensitiveSettings();
 	
@@ -125,14 +126,21 @@ $(document).ready(function() {
 
         $(".usertab").hide();
         $('#devicePanel').show();
-    })
+    });
     $('#sensitiveTab a').click(function (e) {
         e.preventDefault();
         $(this).tab('show');
 
         $(".usertab").hide();
         $('#sensitivePanel').show();
-    })
+    });
+	$('#enterpriseTab a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+
+		$(".usertab").hide();
+		$('#enterprisePanel').show();
+	});
     
     // Style the upload buttons
     $('.file-inputs').bootstrapFileInput();
@@ -728,7 +736,6 @@ function getProjects() {
 
 /*
  * Get the list of available organisations from the server
- * Get the server details
  */
 function getOrganisations() {
 
@@ -753,9 +760,38 @@ function getOrganisations() {
 				alert(localise.set["c_error"] + ": " + err);
 			}
 		}
-	});	
-	
-	
+	});
+}
+
+	/*
+	 * Get the list of available enterprises from the server
+	 */
+	function getEnterprises() {
+
+		// Show the current organisation
+		$('#org_alert').text(localise.set["c_org"] + ": " + globals.gLoggedInUser.organisation_name);
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/enterpriseList",
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				gEnterpriseList = data;
+				updateEnterpriseTable();
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["c_error"] + ": " + err);
+				}
+			}
+		});
+	}
+
+function getServerDetails() {
 	// Get the server details
 	addHourglass();
 	$.ajax({
@@ -769,12 +805,12 @@ function getOrganisations() {
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
 			if(xhr.readyState == 0 || xhr.status == 0) {
-	              return;  // Not an error
+				return;  // Not an error
 			} else {
 				alert(localise.set["c_error"] + ": " + err);
 			}
 		}
-	});	
+	});
 }
 
 /*

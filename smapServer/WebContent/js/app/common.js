@@ -219,7 +219,7 @@ function saveCurrentProject(projectId, surveyId, taskGroupId) {
 /*
  * Update the user details on the page
  */
-function updateUserDetails(data, getOrganisationsFn) {
+function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServerDetailsFn) {
 
 	var groups = data.groups,
 		i,
@@ -333,6 +333,15 @@ function updateUserDetails(data, getOrganisationsFn) {
 		$('.org_role').show();
 		if(typeof getOrganisationsFn === "function") {
 			getOrganisationsFn();
+		}
+	}
+	if(globals.gIsEnterpriseAdministrator) {
+		$('.enterprise_role').show();
+		if(typeof getEnterprisesFn === "function") {
+			getEnterprisesFn();
+		}
+		if(typeof getServerDetailsFn === "function") {
+			getServerDetailsFn();
 		}
 	}
 	if(globals.gBillingData || globals.gOrgBillingData) {
@@ -654,7 +663,8 @@ function showTimeZones($elem, timeZones) {
 	$elem.val(tz);   // Set time zone
 }
 
-function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hideUserDetails, dontGetCurrentSurvey) {
+function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hideUserDetails,
+                         dontGetCurrentSurvey, getEnterprisesFn, getServerDetailsFn) {
 	addHourglass();
 	$.ajax({
 		url: "/surveyKPI/user",
@@ -675,7 +685,7 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 			globals.gOrgId = data.o_id;
 
 			if(!hideUserDetails) {
-				updateUserDetails(data, getOrganisationsFn);
+				updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServerDetailsFn);
 			}
 
 			if(!dontGetCurrentSurvey) {	// Hack, on edit screen current survey is set as parameter not from the user's defaults
