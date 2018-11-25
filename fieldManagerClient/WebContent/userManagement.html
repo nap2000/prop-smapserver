@@ -78,6 +78,7 @@
         <li id="serverTab" role="presentation" class="restrict_role org_role"><a href="#" class="lang" data-lang="c_server">server</a></li>
 		<li id="deviceTab" role="presentation"><a href="#" class="lang" data-lang="u_det_o_ft">fieldTask</a></li>
 		<li id="sensitiveTab" role="presentation" class="restrict_role security_role"><a href="#" class="lang" data-lang="u_sens_data">sensitive data</a></li>
+		<li id="enterpriseTab" role="presentation" class="restrict_role enterprise_role"><a href="#" class="lang" data-lang="c_ent">enterprise</a></li>
     </ul>
 	
 	
@@ -132,8 +133,6 @@
     <!-- The container for the list of projects -->
     <div id="projectPanel" style="display:none;" class="usertab">
 
-
-
 		<div id="project_table"></div>
 
 		<button class="btn btn-success lang" id="create_project" data-lang="u_add_p">Add Project</button>
@@ -144,8 +143,6 @@
 	
 	<!-- The container for the list of roles -->
     <div id="rolesPanel" style="display:none;" class="usertab">
-
-
 
 		<div id="role_table"></div>
 
@@ -345,6 +342,14 @@
 			</div>
 		</div>
 		<button id="saveSensitive" class="btn btn-success lang" data-lang="c_save">save</button>
+	</div>
+
+	<!-- The container for the list of enterprises -->
+	<div id="enterprisePanel" style="display:none;" class="usertab">
+
+		<div id="enterprise_table"></div>
+		<button id="create_enterprise" class="btn btn-success lang" data-lang="u_add_e">add enterprise</button>
+		<button class="btn btn-danger lang" id="delete_enterprise"  data-lang="u_del_e">delete enterprise</button>
 	</div>
 	
 	
