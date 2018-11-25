@@ -769,10 +769,10 @@ function getOrganisations() {
 	function getEnterprises() {
 
 		// Show the current organisation
-		$('#org_alert').text(localise.set["c_org"] + ": " + globals.gLoggedInUser.organisation_name);
+		var url = addTimeZoneToUrl("/surveyKPI/enterpriseList");
 		addHourglass();
 		$.ajax({
-			url: "/surveyKPI/enterpriseList",
+			url: url,
 			dataType: 'json',
 			cache: false,
 			success: function(data) {
@@ -1580,6 +1580,75 @@ function updateOrganisationTable() {
 	});
 
 }
+
+	/*
+	 * Update the organisation table with the latest organisation data
+	 */
+	function updateEnterpriseTable() {
+
+		$('#enterprise_controls').find('button').addClass("disabled");
+
+		var $enterpriseTable = $('#enterprise_table'),
+			i, enterprise,
+			h = [],
+			idx = -1;
+
+		h[++idx] = '<table class="table table-striped">';
+		h[++idx] = '<thead>';
+		h[++idx] = '<tr>';
+		h[++idx] = '<th></th>';
+		h[++idx] = '<th>';
+		h[++idx] = localise.set["c_id"];	// Id
+		h[++idx] = '</th>';
+		h[++idx] = '<th>';
+		h[++idx] = localise.set["c_name"];	// Name
+		h[++idx] = '</th>';
+		h[++idx] = '<th>';
+		h[++idx] = localise.set["u_chg"];	// Changed by
+		h[++idx] = '</th>';
+		h[++idx] = '<th>';
+		h[++idx] = localise.set["bill_chg_date"] +
+			' (' + Intl.DateTimeFormat().resolvedOptions().timeZone + ')';	// Changed time
+		h[++idx] = '</th>';
+
+		h[++idx] = '</tr>';
+		h[++idx] = '</thead>';
+		h[++idx] = '<tbody>';
+
+
+		for(i = 0; i < gEnterpriseList.length; i++) {
+			enterprise = gEnterpriseList[i];
+
+			h[++idx] = '<tr>';
+			h[++idx] = '<td class="control_td"><input type="checkbox" name="controls" value="';
+			h[++idx] = i;
+			h[++idx] = '"></td>';
+			h[++idx] = '<td>';
+			h[++idx] = enterprise.id;
+			h[++idx] = '</td>';
+			h[++idx] = '<td class="user_edit_td"><button style="width:100%;" class="btn btn-default enterprise_edit" value="';
+			h[++idx] = i;
+			h[++idx] = '">';
+			h[++idx] = enterprise.name;
+			h[++idx] = '</button></td>';
+			h[++idx] = '<td>';
+			h[++idx] = enterprise.changed_by;
+			h[++idx] = '</td>';
+			h[++idx] = '<td>';
+			h[++idx] = enterprise.changed_ts;
+			h[++idx] = '</td>';
+			h[++idx] = '</tr>';
+		}
+
+		h[++idx] = '</tbody>';
+		h[++idx] = '</table>';
+
+		$enterpriseTable.empty().append(h.join(''));
+		$('.enterprise_edit').click(function() {
+			openEnterpriseDialog(true, $(this).val());
+		});
+
+	}
 
 /*
  * Update simple organisation selects

@@ -663,6 +663,19 @@ function showTimeZones($elem, timeZones) {
 	$elem.val(tz);   // Set time zone
 }
 
+function addTimeZoneToUrl(url) {
+	if(url) {
+		if(url.indexOf("?") > 0) {
+			url += "&";
+		} else {
+			url += "?";
+		}
+		url += "tz=";
+		url += Intl.DateTimeFormat().resolvedOptions().timeZone;
+	}
+	return url;
+}
+
 function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hideUserDetails,
                          dontGetCurrentSurvey, getEnterprisesFn, getServerDetailsFn) {
 	addHourglass();
