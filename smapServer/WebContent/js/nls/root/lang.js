@@ -762,6 +762,8 @@ define({
     "u_del_p": "Delete Project",
     "u_add_o": "Add Organisation",
     "u_del_o": "Delete Organisation",
+	"u_add_e": "Add Enterprise",
+	"u_del_e": "Delete Enterprise",
     "u_add_r": "Add Role",
     "u_edit_r": "Edit Role",
     "u_del_r": "Delete Role",
