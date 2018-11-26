@@ -473,6 +473,7 @@ define({
     "msg_s3": "Enter your email address to subscribe to emails",
     "msg_pd_key": "Specify a data key ",
     "msg_one_role": "At least one role must be selected",
+    "msg_dup_name": "Duplicate name",
 
     // Editor
     "e_b_e": "Base on existing form",

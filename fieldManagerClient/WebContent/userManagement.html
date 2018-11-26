@@ -684,6 +684,36 @@
 
 </div>
 
+<!-- Modal to allow the user to edit an enterprise details -->
+<div id="create_enterprise_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createEnterpriseLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title lang" id="createEnterpriseLabel" data-lang="u_det_o">org details</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form" role="form" class="form-horizontal" id="enterprise_create_form">
+
+					<div class="form-group">
+						<label for="e_name" data-lang="c_name" class="lang col-sm-2 control-label">name</label>
+						<div class="col-sm-10">
+							<input type="text" id="e_name" class="form-control" tabindex="1" required><br/>
+						</div>
+					</div>
+
+				</form>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close" tabindex="13">Close</button>
+				<button id="enterpriseSave" type="button" class="btn btn-primary lang" data-lang="c_save" tabindex="12">Save</button>
+			</div>
+		</div>
+	</div>
+
+</div>
+
 <!-- Modal to allow users and projects to be moved to a new organisation -->
 <div id="move_to_organisation_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="moveOrganisationLabel" aria-hidden="true">
 	<div class="modal-dialog">
