@@ -2038,6 +2038,47 @@ define(['jquery','localise', 'common', 'globals',
 	}
 
 	/*
+     * Delete the selected enterprises
+     */
+	function deleteEnterprises () {
+
+		var enterprises = [],
+			decision = false,
+			h = [],
+			i = -1,
+			entIdx;
+
+		$('#enterprise_table').find('input:checked').each(function(index) {
+			entIdx = $(this).val();
+			enterprises[index] = {id: gEnterpriseList[entIdx].id, name: gEnterpriseList[entIdx].name};
+			h[++i] = gEnterpriseList[entIdx].name;
+		});
+
+
+		decision = confirm(localise.set["msg_del_ents"] + "\n" + h.join());
+		if (decision === true) {
+			addHourglass();
+			$.ajax({
+				type: "DELETE",
+				contentType: "application/json",
+				url: "/surveyKPI/enterpriseList",
+				data: { data: JSON.stringify(enterprises) },
+				success: function(data, status) {
+					removeHourglass();
+					getEnterprises();
+				}, error: function(data, status) {
+					removeHourglass();
+					if(data && data.responseText) {
+						alert(data.responseText);
+					} else {
+						alert(localise.set["msg_err_del"]);
+					}
+				}
+			});
+		}
+	}
+
+	/*
 	 * Switch to the selected organisation
 	 */
 	function moveToOrganisations (orgId, users, projects) {
