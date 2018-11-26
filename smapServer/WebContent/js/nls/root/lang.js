@@ -419,6 +419,7 @@ define({
     "msg_del_projects": "Are you sure you want to delete these projects?",
     "msg_del_roles": "Are you sure you want to delete these roles?",
     "msg_del_orgs": "Are you sure you want to delete these organisations?",
+	"msg_del_ents": "Are you sure you want to delete these enterprises?",
     "msg_del_q": "Are you sure you want to delete this question?",
     "msg_del_cl": "Are you sure you want to delete this choice list?",
     "msg_del_c": "Are you sure you want to delete this choice?",
