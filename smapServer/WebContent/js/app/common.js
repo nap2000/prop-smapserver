@@ -483,9 +483,9 @@ function enableUserProfile () {
 						user.current_survey_id = 0;
 						user.current_task_group_id = 0;
 
-						user.current_org_id = $('#me_organisation').val();
-						if(user.current_org_id == globals.gOrgId) {
-							users.current_org_id = 0;	// No change
+						user.o_id = $('#me_organisation').val();
+						if(user.o_id == globals.gOrgId) {
+							users.o_id = 0;	// No change
 						}
 
 						saveCurrentUser(user);			// Save the updated user details to disk
@@ -572,9 +572,9 @@ function enableUserProfileBS () {
 			user.password = undefined;
 		}
 
-		user.current_org_id = $('#me_organisation').val();
-		if(user.current_org_id == globals.gOrgId) {
-			user.current_org_id = 0;	// No change
+		user.o_id = $('#me_organisation').val();
+		if(user.o_id == globals.gOrgId) {
+			user.o_id = 0;	// No change
 		}
 		user.current_project_id = 0;	// Tell service to ignore project id and update other details
 		user.current_survey_id = 0;
@@ -609,9 +609,6 @@ function saveCurrentUser(user) {
 		data: { user: userString },
 		success: function(data, status) {
 			removeHourglass();
-			if(user.current_org_id > 0) {
-				user.o_id = user.current_org_id;		// Assume org has been updated
-			}
 			updateUserDetails(user, undefined);
 		}, error: function(data, status) {
 			removeHourglass();
