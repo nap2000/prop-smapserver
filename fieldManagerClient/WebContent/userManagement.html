@@ -121,7 +121,7 @@
 			   	<div class="col-md-12 col-xs-12">
 					<button class="btn btn-success lang" id="create_user" data-lang="u_add">add</button>
 					<button class="btn btn-danger lang" id="delete_user" data-lang="u_del">del</button>
-					<button class="btn btn-warning restrict_role org_role move_to_org lang" data-lang="u_mv">move</button>
+					<button class="btn btn-warning restrict_role org_role move_to_organisation lang" data-lang="u_mv">move</button>
 				</div>
 			</div>
 		</div>
@@ -137,7 +137,7 @@
 
 		<button class="btn btn-success lang" id="create_project" data-lang="u_add_p">Add Project</button>
 		<button class="btn btn-danger lang" id="delete_project" data-lang="u_del_p">Delete Project</button>
-		<button class="btn btn-warning restrict_role org_role move_to_org lang" data-lang="u_mv">move</button>
+		<button class="btn btn-warning restrict_role org_role move_to_organisation lang" data-lang="u_mv">move</button>
 
 	</div>
 	
@@ -720,12 +720,12 @@
    		<div class="modal-content">
    			<div class="modal-header">
      			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     			<h4 class="modal-title" id="moveOrganisationLabel">Organisation Details</h4>
+     			<h4 class="modal-title lang" id="moveOrganisationLabel" data-lang="u_mv">move</h4>
    			</div>
 		    <div class="modal-body">
 				<form id="organisation_move_form">
 					<div class="form-group">
-						<label for="target_organisation" class="lang col-sm-2 control-label">Organisation</label>
+						<label for="target_organisation" class="lang col-sm-2 control-label" data-lang="c_org">organisation</label>
 						<div class="col-sm-10">
 							<select class="organisation_select form-control" id="target_organisation"></select>
 						</div>
