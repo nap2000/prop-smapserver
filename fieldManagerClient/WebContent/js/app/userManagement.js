@@ -697,10 +697,10 @@ define(['jquery','localise', 'common', 'globals',
 				hasProjects = false,
 				keepProjects = false;
 
-			h[++i] = "Are you sure you want to move these ";
+			h[++i] = localise.set["u_check_mv"];
 			$('#user_table').find('input:checked').each(function(index) {
 				if(!hasUsers) {
-					h[++i] = "users (";
+					h[++i] = localise.set["m_user"] + " (";
 					hasUsers = true;
 				} else {
 					h[++i] = ",";
@@ -838,6 +838,7 @@ define(['jquery','localise', 'common', 'globals',
 				removeHourglass();
 				gEnterpriseList = data;
 				updateEnterpriseTable();
+				updateEnterpriseList();
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
@@ -1567,9 +1568,6 @@ define(['jquery','localise', 'common', 'globals',
 	 */
 	function updateOrganisationTable() {
 
-		gControlOrganisationCount = 0;
-		$('#organisation_controls').find('button').addClass("disabled");
-
 		var $organisationTable = $('#organisation_table'),
 			i, organisation,
 			h = [],
@@ -1637,22 +1635,6 @@ define(['jquery','localise', 'common', 'globals',
 		$('.usage_report', '#organisation_table').click(function () {
 			gCurrentOrganisationIndex = $(this).val();
 			$('#get_usage_popup').modal("show");
-		});
-		$('#organisation_table .control_td').find('input').click(function () {
-			if ($(this).is(':checked')) {
-
-				++gControlOrganisationCount;
-				if (gControlOrganisationCount === 1) {
-					$('.move_to_organisation').removeClass("disabled");
-				}
-			} else {
-
-				--gControlOrganisationCount;
-				if (gControlOrganisationCount === 0) {
-					$('.move_to_organisation').addClass("disabled");
-				}
-			}
-
 		});
 
 	}
@@ -1726,7 +1708,6 @@ define(['jquery','localise', 'common', 'globals',
 
 	}
 
-
 	/*
 	 * Update simple organisation selects
 	 */
@@ -1749,6 +1730,30 @@ define(['jquery','localise', 'common', 'globals',
 
 		$organisationSelect.empty().append(h.join(''));
 		$organisationSelect.val(globals.gOrgId);
+	}
+
+	/*
+ * Update simple enterprise selects
+ */
+	function updateEnterpriseList() {
+
+		var $enterpriseSelect = $('.enterprise_select'),
+			i, enterprise,
+			h = [],
+			idx = -1;
+
+		for(i = 0; i < gEnterpriseList.length; i++) {
+			enterprise = gEnterpriseList[i];
+
+			h[++idx] = '<option value="';
+			h[++idx] = enterprise.id;
+			h[++idx] = '">';
+			h[++idx] = enterprise.name;
+			h[++idx] = '</option>'
+		}
+
+		$enterpriseSelect.empty().append(h.join(''));
+		$enterpriseSelect.val(globals.gEntId);
 	}
 
 // Return true if the item with the name is in the list
@@ -2079,7 +2084,7 @@ define(['jquery','localise', 'common', 'globals',
 	}
 
 	/*
-	 * Switch to the selected organisation
+	 * Move the provided users and projects to the selected organisation
 	 */
 	function moveToOrganisations (orgId, users, projects) {
 
@@ -2106,7 +2111,6 @@ define(['jquery','localise', 'common', 'globals',
 				}
 			}
 		});
-
 	}
 
 	/*
