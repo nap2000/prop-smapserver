@@ -1318,6 +1318,11 @@ define(['jquery','localise', 'common', 'globals',
 		h[++idx] = localise.set["c_name"];
 		h[++idx] = '</th>';
 
+		h[++idx] = '<th style="text-align: center;">'
+		h[++idx] = localise.set["u_co"];
+		h[++idx] = '</th>';
+
+
 		h[++idx] = '</tr>';
 		h[++idx] = '</thead>';
 		h[++idx] = '<tbody>';
@@ -1342,6 +1347,9 @@ define(['jquery','localise', 'common', 'globals',
 				h[++idx] = '</button></td>';
 				h[++idx] = '<td style="text-align: center;">';
 				h[++idx] = user.name;
+				h[++idx] = '</td>';
+				h[++idx] = '<td style="text-align: center;">';
+				h[++idx] = user.o_name;
 				h[++idx] = '</td>';
 				h[++idx] = '</tr>';
 			}
