@@ -760,6 +760,7 @@ define({
     "u_add": "Add User",
     "u_del": "Delete User",
     "u_mv": "Move To Organisation",
+	"u_mv_ent": "Move To Enterprise",
     "u_add_p": "Add Project",
     "u_del_p": "Delete Project",
     "u_add_o": "Add Organisation",
@@ -822,6 +823,8 @@ define({
     "u_org_admin": "Organisation Administrator",
     "u_ent_admin": "Enterprise Administator",
     "u_server_owner": "Server Owner",
+	"u_check_mv_p": "Are you sure you want to move the following projects (%s1) to %s2",
+    "u_co": "Current Organisation",
 
     // Browse Results
     "br_ci": "Case Insensitive",
