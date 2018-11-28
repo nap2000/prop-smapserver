@@ -90,6 +90,7 @@ define({
     "c_orientation": "Orientation",
     "c_password": "Password",
     "c_c_p": "Confirm Password",
+    "c_c_d": "Confirm Delete",
     "c_r_p": "Reset Password",
     "c_en": "Enable",
     "c_loc_f": "Local Form:",
@@ -285,6 +286,7 @@ define({
     "c_subscribe": "Subscribe",
     "c_unsent": "Email not sent",
     "c_pending": "Pending",
+    "c_ok": "OK",
 
     // File Types
     "ft": "File Type",
@@ -404,6 +406,8 @@ define({
     "msg_err_cert": "Remote server does not have a signed certificate, try using http:// instead of https://",
     "msg_no_edit_rep": "You cannot edit a record that has been replaced by another record",
     "msg_confirm_del": "Are you sure you want to delete",
+	"msg_confirm_del_one": "Delete %s1 only from %s2",
+	"msg_confirm_del_all": "Delete %s1 from all organisations: %s2",
     "msg_confirm_tasks": "this group and all of its tasks?",
     "msg_del_r": "Are you sure you want to delete these regions?",
     "msg_erase": "Are you sure you want to permanently erase these surveys and all of their data?",
@@ -825,6 +829,7 @@ define({
     "u_server_owner": "Server Owner",
 	"u_check_mv_p": "Are you sure you want to move the following projects (%s1) to %s2",
     "u_co": "Current Organisation",
+    "u_gr": "Get report",
 
     // Browse Results
     "br_ci": "Case Insensitive",

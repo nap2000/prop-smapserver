@@ -742,6 +742,13 @@ define(['jquery','localise', 'common', 'globals',
 			}
 		});
 
+		// Respond to confirmation of a delete that requires the user to consider multiple choices
+		$('#confirmDelUser').click(function () {
+			var confirmValue = $("input[name='confirm_delete']:checked"). val();
+			alert("hi: " + confirmValue);
+			$('#del_user_confirm_popup').modal("hide");
+		});
+
 		enableUserProfileBS();	// Allow user to reset their own profile
 
 	});
@@ -1883,7 +1890,9 @@ define(['jquery','localise', 'common', 'globals',
 
 		var users = [],
 			decision = false,
-			userName;
+			deleteAll = false,
+			userName,
+			i;
 
 		/*
 		$('#user_table').find('input:checked').each(function(index) {
@@ -1895,8 +1904,35 @@ define(['jquery','localise', 'common', 'globals',
 		userName = gUsers[userIdx].name;
 		users[0] = {id: gUsers[userIdx].id};
 
+		if(globals.gIsOrgAdministrator && gUsers[userIdx].orgs.length > 1) {
 
-		decision = confirm(localise.set["msg_confirm_del"] + " " + userName);
+			$('#confirmDelForm')[0].reset();
+			var orgList = '';
+			for(i = 0; i < gUsers[userIdx].orgs.length; i++) {
+				if(orgList.length > 0) {
+					orgList += ', ';
+				}
+				orgList += gUsers[userIdx].orgs[i].name;
+			}
+
+			// Set message for the delete one option
+			var msg_one = localise.set["msg_confirm_del_one"];
+			msg_one = msg_one.replace('%s1', userName);
+			msg_one = msg_one.replace('%s2', $('#me_organisation option:selected').html());
+			$('#confirmDelOne').html(msg_one);
+
+			// Set message for the delete all option
+			var msg_all = localise.set["msg_confirm_del_all"];
+			msg_all = msg_all.replace('%s1', userName);
+			msg_all = msg_all.replace('%s2', orgList);
+			$('#confirmDelAll').html(msg_all);
+
+			$('#del_user_confirm_popup').modal("show");
+			return;
+		} else {
+			decision = confirm(localise.set["msg_confirm_del"] + " " + userName);
+		}
+
 		if (decision === true) {
 			addHourglass();
 			$.ajax({
