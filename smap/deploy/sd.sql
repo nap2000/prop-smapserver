@@ -1044,4 +1044,6 @@ ALTER TABLE user_organisation OWNER TO ws;
 -- Clear all the externalfile options
 delete from option where externalfile = 'true';
 
+alter table forward add column name text;
+
 

@@ -175,6 +175,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 notification.s_id = $('#survey').val();
                 notification.enabled = $('#nt_enabled').is(':checked');
                 notification.filter = $('#not_filter').val();
+	            notification.name = $('#name').val();
 
                 if(gSelectedNotification !== -1) {
                     notification.id = gSelectedNotification;
@@ -357,6 +358,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
 
                 title = localise.set["msg_edit_notification"];
 				$('#target').val(notification.target);
+				$('#name').val(notification.name);
                 setTargetDependencies(notification.target)
 
                 $('#survey').val(notification.s_id);
@@ -619,6 +621,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
             h[++idx] = '<table class="table">';
             h[++idx] = '<thead>';
             h[++idx] = '<tr>';
+	        h[++idx] = '<th>' + localise.set["c_name"], + '</th>';
             h[++idx] = '<th>' + localise.set["c_survey"], + '</th>';
             h[++idx] = '<th>' + localise.set["c_target"] + '</th>';
             h[++idx] = '<th>' + localise.set["c_details"] + '</th>';
@@ -634,6 +637,11 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                     h[++idx] = ' class="disabled"';
                 }
                 h[++idx] = '>';
+
+                // name
+	            h[++idx] = '<td>';
+	            h[++idx] = data[i].name;
+	            h[++idx] = '</td>';
 
                 // survey
                 h[++idx] = '<td>';
