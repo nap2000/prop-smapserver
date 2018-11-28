@@ -25,9 +25,7 @@ define(['jquery','localise', 'common', 'globals',
 		gGroups,
 		gOrganisationList,
 		gEnterpriseList,
-		gControlCount,			// Number of users that have been set - used to enable / disable control buttons
 		gControlProjectCount,	// Number of projects that have been set - used to enable / disable control buttons
-		gControlOrganisationCount,
 		gCurrentProjectIndex,	// Set while editing a projects details
 		gCurrentRoleIndex,	// Set while editing a user role details
 		gCurrentOrganisationIndex,
@@ -56,9 +54,6 @@ define(['jquery','localise', 'common', 'globals',
 		// Set button style and function
 		$('#create_user').click(function () {
 			openUserDialog(false, -1);
-		});
-		$('#delete_user').click(function () {
-			deleteUsers();
 		});
 
 		$('#create_project').click(function () {
@@ -1306,10 +1301,6 @@ define(['jquery','localise', 'common', 'globals',
 		h[++idx] = '<col style="width:auto;">';
 		h[++idx] = '<tr>';
 
-		h[++idx] = '<th>';
-		h[++idx] = localise.set["c_select"];
-		h[++idx] = '</th>';
-
 		h[++idx] = '<th style="text-align: center;">';
 		h[++idx] = localise.set["c_id"];
 		h[++idx] = '</th>';
@@ -1322,6 +1313,9 @@ define(['jquery','localise', 'common', 'globals',
 		h[++idx] = localise.set["u_co"];
 		h[++idx] = '</th>';
 
+		h[++idx] = '<th>';
+		h[++idx] = localise.set["c_action"];
+		h[++idx] = '</th>';
 
 		h[++idx] = '</tr>';
 		h[++idx] = '</thead>';
@@ -1337,9 +1331,6 @@ define(['jquery','localise', 'common', 'globals',
 
 			if (yesGroup && yesProject && yesRole) {
 				h[++idx] = '<tr>';
-				h[++idx] = '<td class="control_td"><input type="checkbox" name="controls" value="';
-				h[++idx] = i;
-				h[++idx] = '"></td>';
 				h[++idx] = '<td class="user_edit_td"><button class="btn btn-default user_edit" style="width:100%;" value="';
 				h[++idx] = i;
 				h[++idx] = '">';
@@ -1351,6 +1342,14 @@ define(['jquery','localise', 'common', 'globals',
 				h[++idx] = '<td style="text-align: center;">';
 				h[++idx] = user.o_name;
 				h[++idx] = '</td>';
+
+				h[++idx] = '<td>';
+				h[++idx] = '<button type="button" data-idx="';
+				h[++idx] = i;
+				h[++idx] = '" class="btn btn-default btn-sm rm_user danger">';
+				h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+				h[++idx] = '</td>';
+
 				h[++idx] = '</tr>';
 			}
 		}
@@ -1362,25 +1361,10 @@ define(['jquery','localise', 'common', 'globals',
 		$('.user_edit').click(function () {
 			openUserDialog(true, $(this).val());
 		});
-		$('#user_table .control_td').find('input').click(function () {
-			if ($(this).is(':checked')) {
 
-				++gControlCount;
-				if (gControlCount === 1) {
-					$('#controls').find('button').removeClass("disabled");
-					$('.move_to_organisation').removeClass("disabled");
-				}
-			} else {
-
-				--gControlCount;
-				if (gControlCount === 0) {
-					$('#controls').find('button').addClass("disabled");
-					if (gControlProjectCount === 0) {
-						$('.move_to_organisation').addClass("disabled");
-					}
-				}
-			}
-
+		$(".rm_user", $('#user_table')).click(function(){
+			var idx = $(this).data("idx");
+			deleteUser(idx);
 		});
 
 	}
@@ -1465,7 +1449,7 @@ define(['jquery','localise', 'common', 'globals',
 				--gControlProjectCount;
 				if (gControlProjectCount === 0) {
 					$('#project_controls').find('button').addClass("disabled");
-					if (gControlCount === 0) {
+					if (gControlProjectCount === 0) {
 						$('.move_to_organisation').addClass("disabled");
 					}
 				}
@@ -1893,23 +1877,26 @@ define(['jquery','localise', 'common', 'globals',
 	}
 
 	/*
-	 * Delete the selected users
+	 * Delete the selected user
 	 */
-	function deleteUsers () {
+	function deleteUser (userIdx) {
 
 		var users = [],
 			decision = false,
-			h = [],
-			i = -1;
+			userName;
 
+		/*
 		$('#user_table').find('input:checked').each(function(index) {
 			userIdx = $(this).val();
 			users[index] = {id: gUsers[userIdx].id};
 			h[++i] = gUsers[userIdx].name;
 		});
+		*/
+		userName = gUsers[userIdx].name;
+		users[0] = {id: gUsers[userIdx].id};
 
 
-		decision = confirm(localise.set["msg_del_users"] +"\n" + h.join());
+		decision = confirm(localise.set["msg_confirm_del"] + " " + userName);
 		if (decision === true) {
 			addHourglass();
 			$.ajax({
