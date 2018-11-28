@@ -1073,3 +1073,9 @@ ALTER TABLE enterprise OWNER TO ws;
 alter table organisation add column e_id integer references enterprise(id) on delete cascade;
 insert into enterprise(id, name, changed_by, changed_ts) values(1, 'Default', '', now());
 update organisation set e_id = 1 where e_id is null;
+
+-- Clear all the externalfile options
+delete from option where externalfile = 'true';
+
+alter table forward add column name text;
+
