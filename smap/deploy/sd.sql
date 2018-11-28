@@ -1041,4 +1041,7 @@ create TABLE user_organisation (
 CREATE UNIQUE INDEX idx_user_organisation ON user_organisation(u_id,o_id);
 ALTER TABLE user_organisation OWNER TO ws;
 
+-- Clear all the externalfile options
+delete from option where externalfile = 'true';
+
 
