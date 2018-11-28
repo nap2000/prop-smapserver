@@ -823,7 +823,7 @@
    		<div class="modal-content">
    			<div class="modal-header">
      			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     			<h4 class="modal-title" id="getUsageLabel">Get PDF of Usage</h4>
+     			<h4 class="modal-title lang" data-lang="u_usage" id="getUsageLabel">usage</h4>
    			</div>
 		    <div class="modal-body">
 		     
@@ -839,8 +839,50 @@
 			</div> 
 			<div class="modal-footer">
             	<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-            	<button id="usageGet" type="button" class="btn btn-primary">Get Pdf</button>
+            	<button id="usageGet" type="button" class="btn btn-primary lang" data-lang="u_gr">get</button>
         	</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal to ask for confirmation of deleting a user from multiple organisations -->
+<div id="del_user_confirm_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delUserLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title lang" id="delUserLabel" data-lang="c_c_d">confirm</h4>
+			</div>
+			<div class="modal-body">
+
+				<form id="confirmDelForm" class="form" role="form">
+					<div class="form-group">
+						<div>
+							<label>
+								<input type="radio" name="confirm_delete" value="delete_one" checked="checked"/>
+								<span id="confirmDelOne">delete one</span>
+							</label>
+						</div>
+						<div>
+							<label>
+								<input  type="radio" name="confirm_delete" value="delete_all" />
+								<span id="confirmDelAll">delete all</span>
+							</label>
+						</div>
+						<div>
+							<label>
+								<input  type="radio" name="confirm_delete" value="cancel" />
+								<span class="lang" data-lang="c_cancel">cancel</span>
+							</label>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="confirmDelUser" type="button" class="btn btn-primary lang" data-lang="c_ok">ok</button>
+			</div>
 		</div>
 	</div>
 </div>
