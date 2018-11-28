@@ -352,6 +352,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 title = localise.set["msg_add_notification"];
 
             document.getElementById("notification_edit_form").reset();
+	        setTargetDependencies("email");
 
             if(typeof idx !== "undefined") {
                 notification = gNotifications[idx];
