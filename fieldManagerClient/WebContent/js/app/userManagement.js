@@ -31,6 +31,7 @@ define(['jquery','localise', 'common', 'globals',
 		gCurrentOrganisationIndex,
 		gCurrentEnterpriseIndex,
 		gCurrentUserIndex,		// Set while editing a users details
+		gCurrentDeleteUsers,    // Users that have been selected for deletion, waiting on approval
 		gOrgId;
 
 	$(document).ready(function() {
@@ -746,6 +747,16 @@ define(['jquery','localise', 'common', 'globals',
 		$('#confirmDelUser').click(function () {
 			var confirmValue = $("input[name='confirm_delete']:checked"). val();
 			alert("hi: " + confirmValue);
+			if(confirmValue === "delete_one") {
+				gCurrentDeleteUsers[0].all = false;
+				callUsersDeleteService(gCurrentDeleteUsers);
+			} else if(confirmValue === "delete_all") {
+				gCurrentDeleteUsers[0].all = true;
+				callUsersDeleteService(gCurrentDeleteUsers);
+			} else {
+				// cancel just ignore
+			}
+
 			$('#del_user_confirm_popup').modal("hide");
 		});
 
@@ -1927,6 +1938,8 @@ define(['jquery','localise', 'common', 'globals',
 			msg_all = msg_all.replace('%s2', orgList);
 			$('#confirmDelAll').html(msg_all);
 
+			gCurrentDeleteUsers = users;      // Save in case they say yes
+
 			$('#del_user_confirm_popup').modal("show");
 			return;
 		} else {
@@ -1934,27 +1947,33 @@ define(['jquery','localise', 'common', 'globals',
 		}
 
 		if (decision === true) {
-			addHourglass();
-			$.ajax({
-				type: "DELETE",
-				contentType: "application/json",
-				url: "/surveyKPI/userList",
-				data: { users: JSON.stringify(users) },
-				success: function(data, status) {
-					removeHourglass();
-					getUsers();
-				}, error: function(data, status) {
-					var msg = localise.set["msg_err_del"];
-					removeHourglass();
-					if(typeof data != "undefined" && typeof data.responseText != "undefined" ) {
-						msg = data.responseText;
-					}
-					alert(msg);
-				}
-			});
+			callUsersDeleteService(users);
 		}
 	}
 
+	/*
+	 * Call the sevice that will delete the users
+	 */
+	function callUsersDeleteService(users) {
+		addHourglass();
+		$.ajax({
+			type: "DELETE",
+			contentType: "application/json",
+			url: "/surveyKPI/userList",
+			data: { users: JSON.stringify(users) },
+			success: function(data, status) {
+				removeHourglass();
+				getUsers();
+			}, error: function(data, status) {
+				var msg = localise.set["msg_err_del"];
+				removeHourglass();
+				if(typeof data != "undefined" && typeof data.responseText != "undefined" ) {
+					msg = data.responseText;
+				}
+				alert(msg);
+			}
+		});
+	}
 	/*
 	 * Delete the selected projects
 	 */
