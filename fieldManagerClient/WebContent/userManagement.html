@@ -107,6 +107,13 @@
 							<select class="form-control role_list" id="role_name"></select>
 						</div>
 					</div>
+
+					<div class="org_role form-group" style="display:none;">
+						<label class="control-label col-sm-4" for="org_name"><span class="lang" data-lang="u_show_o"></span>:</label>
+						<div class="col-sm-4">
+							<select class="form-control org_list" id="org_name"></select>
+						</div>
+					</div>
 				</form>	
 			</div>
 		</div>
@@ -119,7 +126,7 @@
 			</div>
 			<div class="row">	   	
 			   	<div class="col-md-12 col-xs-12">
-					<div id="user_table"></div>	
+					<div id="user_table"  style="margin-top:20px;"></div>
 				</div>
 			</div>
 
@@ -132,7 +139,7 @@
     <!-- The container for the list of projects -->
     <div id="projectPanel" style="display:none;" class="usertab">
 
-		<div id="project_table"></div>
+		<div id="project_table" style="margin-top:20px;"></div>
 
 		<button class="btn btn-success lang" id="create_project" data-lang="u_add_p">Add Project</button>
 		<button class="btn btn-danger lang" id="delete_project" data-lang="u_del_p">Delete Project</button>
@@ -143,7 +150,7 @@
 	<!-- The container for the list of roles -->
     <div id="rolesPanel" style="display:none;" class="usertab">
 
-		<div id="role_table"></div>
+		<div id="role_table" style="margin-top:20px;"></div>
 
 		<button class="btn btn-success lang" id="create_user_role" data-lang="u_add_r">Add Role</button>
 		<button class="btn btn-danger lang" id="delete_role" data-lang="u_del_r">Delete Role</button>
@@ -254,7 +261,7 @@
 	<!-- The container for the list of organisations -->
     <div id="organisationPanel" style="display:none;" class="usertab">
 
-		<div id="organisation_table"></div>
+		<div id="organisation_table"  style="margin-top:20px;"></div>
 		<button id="create_organisation" class="btn btn-success lang" data-lang="u_add_o">Add Organisation</button>
 		<button class="btn btn-danger lang" id="delete_organisation"  data-lang="u_del_o">Delete Organisation</button>
 	</div>
@@ -346,9 +353,8 @@
 	<!-- The container for the list of enterprises -->
 	<div id="enterprisePanel" style="display:none;" class="usertab">
 
-		<div id="enterprise_table"></div>
 		<button id="create_enterprise" class="btn btn-success lang" data-lang="u_add_e">add enterprise</button>
-		<button class="btn btn-danger lang" id="delete_enterprise"  data-lang="u_del_e">delete enterprise</button>
+		<div id="enterprise_table"  style="margin-top:20px;"></div>
 	</div>
 	
 	
