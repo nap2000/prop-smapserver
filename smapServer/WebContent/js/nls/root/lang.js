@@ -761,6 +761,7 @@ define({
     "u_show_u": "Show users with security group",
     "u_show_p": "Show users in project",
     "u_show_r": "Show users with role",
+	"u_show_o": "Show users with organisation",
     "u_add": "Add User",
     "u_del": "Delete User",
     "u_mv": "Move To Organisation",

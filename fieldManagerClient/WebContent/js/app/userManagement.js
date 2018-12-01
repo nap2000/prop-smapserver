@@ -48,7 +48,7 @@ define(['jquery','localise', 'common', 'globals',
 		getAvailableTimeZones($('#o_tz'), showTimeZones);
 
 		// Add change event on group and project filter
-		$('#group_name, #project_name, #role_name').change(function() {
+		$('#group_name, #project_name, #role_name, #org_name').change(function() {
 			updateUserTable();
 		});
 
@@ -83,9 +83,6 @@ define(['jquery','localise', 'common', 'globals',
 
 		$('#create_enterprise').click(function () {
 			openEnterpriseDialog(false, -1);
-		});
-		$('#delete_enterprise').click(function () {
-			deleteEnterprises();
 		});
 
 		// Set up the tabs
@@ -998,6 +995,7 @@ define(['jquery','localise', 'common', 'globals',
 
 		// Add organisations
 		if(gOrganisationList) {
+			filter_org = $('#org_name').val();
 			h = [];
 			idx = -1;
 			for(i = 0; i < gOrganisationList.length; i++) {
@@ -1006,7 +1004,9 @@ define(['jquery','localise', 'common', 'globals',
 				h[++idx] = ' name="user_orgs_cb"';
 				h[++idx] = ' value="';
 				h[++idx] = gOrganisationList[i].id + '"';
-				if(existing) {
+				if(filter_org === gOrganisationList[i].name) {
+					h[++idx] = ' checked="checked"';
+				} else if(existing) {
 
 					if(hasId(gUsers[userIndex].orgs, gOrganisationList[i].id)) {
 						h[++idx] = ' checked="checked"';
@@ -1285,20 +1285,23 @@ define(['jquery','localise', 'common', 'globals',
 			filterGroup = true,
 			filterProject = true,
 			filterRole = true,
+			filterOrg = true,
 			yesGroup,
 			yesProject,
 			yesRole,
+			yesOrg,
 			project,
 			group,
 			projectStr,
-			role;
+			role,
+			org;
 
-		gControlCount = 0;
 		$('#controls').find('button').addClass("disabled");
 
 		group = $('#group_name').val();
 		projectStr = $('#project_name').val();
 		role = $('#role_name').val();
+		org = $('#org_name').val();
 
 		project = Number(projectStr);
 
@@ -1310,6 +1313,9 @@ define(['jquery','localise', 'common', 'globals',
 		}
 		if (!role || role == -1) {
 			filterRole = false;
+		}
+		if (!org || org == -1) {
+			filterOrg = false;
 		}
 
 		h[++idx] = '<table class="table table-striped">';
@@ -1346,8 +1352,9 @@ define(['jquery','localise', 'common', 'globals',
 			yesGroup = !filterGroup || hasName(user.groups, group);
 			yesProject = !filterProject || hasId(user.projects, project);
 			yesRole = !filterRole || hasId(user.roles, +role);
+			yesOrg = !filterOrg || hasId(user.orgs, +org);
 
-			if (yesGroup && yesProject && yesRole) {
+			if (yesGroup && yesProject && yesRole && yesOrg) {
 				h[++idx] = '<tr>';
 				h[++idx] = '<td class="user_edit_td"><button class="btn btn-default user_edit" style="width:100%;" value="';
 				h[++idx] = i;
@@ -1642,6 +1649,29 @@ define(['jquery','localise', 'common', 'globals',
 			$('#get_usage_popup').modal("show");
 		});
 
+		/*
+         * Update the org filter select on the users page
+         */
+		var $orgSelect = $('#org_name');
+
+		h = [];
+		idx = -1;
+
+		h[++idx] = '<option value="-1">' + localise.set["c_all"] + '</option>';
+		for (i = 0; i < gOrganisationList.length; i++) {
+
+			organisation = gOrganisationList[i];
+
+			if ((globals.gIsOrgAdministrator)) {
+				h[++idx] = '<option value="';
+				h[++idx] = organisation.id;
+				h[++idx] = '">';
+				h[++idx] = organisation.name;
+				h[++idx] = '</option>';
+			}
+		}
+		$orgSelect.empty().append(h.join(''));
+		$orgSelect.val("-1");
 	}
 
 	/*
@@ -1659,7 +1689,6 @@ define(['jquery','localise', 'common', 'globals',
 		h[++idx] = '<table class="table table-striped">';
 		h[++idx] = '<thead>';
 		h[++idx] = '<tr>';
-		h[++idx] = '<th></th>';
 		h[++idx] = '<th>';
 		h[++idx] = localise.set["c_id"];	// Id
 		h[++idx] = '</th>';
@@ -1673,7 +1702,9 @@ define(['jquery','localise', 'common', 'globals',
 		h[++idx] = localise.set["bill_chg_date"] +
 			' (' + Intl.DateTimeFormat().resolvedOptions().timeZone + ')';	// Changed time
 		h[++idx] = '</th>';
-
+		h[++idx] = '<th>';
+		h[++idx] = localise.set["c_action"];
+		h[++idx] = '</th>';
 		h[++idx] = '</tr>';
 		h[++idx] = '</thead>';
 		h[++idx] = '<tbody>';
@@ -1683,9 +1714,6 @@ define(['jquery','localise', 'common', 'globals',
 			enterprise = gEnterpriseList[i];
 
 			h[++idx] = '<tr>';
-			h[++idx] = '<td class="control_td"><input type="checkbox" name="controls" value="';
-			h[++idx] = i;
-			h[++idx] = '"></td>';
 			h[++idx] = '<td>';
 			h[++idx] = enterprise.id;
 			h[++idx] = '</td>';
@@ -1700,6 +1728,12 @@ define(['jquery','localise', 'common', 'globals',
 			h[++idx] = '<td>';
 			h[++idx] = enterprise.changed_ts;
 			h[++idx] = '</td>';
+			h[++idx] = '<td>';
+			h[++idx] = '<button type="button" data-idx="';
+			h[++idx] = i;
+			h[++idx] = '" class="btn btn-default btn-sm rm_ent danger">';
+			h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+			h[++idx] = '</td>';
 			h[++idx] = '</tr>';
 		}
 
@@ -1709,6 +1743,11 @@ define(['jquery','localise', 'common', 'globals',
 		$enterpriseTable.empty().append(h.join(''));
 		$('.enterprise_edit').click(function () {
 			openEnterpriseDialog(true, $(this).val());
+		});
+
+		$(".rm_ent", $('#enterprise_table')).click(function(){
+			var idx = $(this).data("idx");
+			deleteEnterprises(idx);
 		});
 
 	}
@@ -2102,22 +2141,17 @@ define(['jquery','localise', 'common', 'globals',
 	/*
      * Delete the selected enterprises
      */
-	function deleteEnterprises () {
+	function deleteEnterprises (entIdx) {
 
 		var enterprises = [],
 			decision = false,
 			h = [],
-			i = -1,
-			entIdx;
+			i = -1;
 
-		$('#enterprise_table').find('input:checked').each(function(index) {
-			entIdx = $(this).val();
-			enterprises[index] = {id: gEnterpriseList[entIdx].id, name: gEnterpriseList[entIdx].name};
-			h[++i] = gEnterpriseList[entIdx].name;
-		});
+		enterprises[0] = {id: gEnterpriseList[entIdx].id, name: gEnterpriseList[entIdx].name};
 
 
-		decision = confirm(localise.set["msg_del_ents"] + "\n" + h.join());
+		decision = confirm(localise.set["msg_del_ents"] + " " + gEnterpriseList[entIdx].name);
 		if (decision === true) {
 			addHourglass();
 			$.ajax({
