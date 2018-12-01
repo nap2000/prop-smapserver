@@ -287,6 +287,7 @@ define({
     "c_unsent": "Email not sent",
     "c_pending": "Pending",
     "c_ok": "OK",
+    "c_move": "Move",
 
     // File Types
     "ft": "File Type",
@@ -819,7 +820,7 @@ define({
     "u_rap": "Restrict access",
     "u_rap_d": "Administrators will be able to assign the selected users only to this project",
     "u_chg": "Changed by",
-    "u_usage": "Usage Report",
+    "u_usage": "Usage",
     "u_sms_url": "SMS Url",
     "u_sens_data": "Sensitive Data",
     "u_sens_ao": "Admin Only",
