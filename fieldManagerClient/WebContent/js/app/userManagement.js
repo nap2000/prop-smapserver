@@ -74,9 +74,7 @@ define(['jquery','localise', 'common', 'globals',
 		$('#create_organisation').click(function () {
 			openOrganisationDialog(false, -1);
 		});
-		$('#delete_organisation').click(function () {
-			deleteOrganisations();
-		});
+
 		$('.move_to_organisation').click(function () {
 			$('#move_to_organisation_popup').modal("show");
 		});
@@ -1589,7 +1587,6 @@ define(['jquery','localise', 'common', 'globals',
 		h[++idx] = '<table class="table table-striped">';
 		h[++idx] = '<thead>';
 		h[++idx] = '<tr>';
-		h[++idx] = '<th></th>';
 		h[++idx] = '<th>';
 		h[++idx] = localise.set["c_id"];	// Id
 		h[++idx] = '</th>';
@@ -1599,11 +1596,9 @@ define(['jquery','localise', 'common', 'globals',
 		h[++idx] = '<th>';
 		h[++idx] = localise.set["u_chg"];	// Changed by
 		h[++idx] = '</th>';
-		if (bs) {
-			h[++idx] = '<th>';
-			h[++idx] = localise.set["u_usage"];	// Changed by
-			h[++idx] = '</th>';
-		}
+		h[++idx] = '<th>';
+		h[++idx] = localise.set["c_action"];	// Action
+		h[++idx] = '</th>';
 		h[++idx] = '</tr>';
 		h[++idx] = '</thead>';
 		h[++idx] = '<tbody>';
@@ -1613,9 +1608,6 @@ define(['jquery','localise', 'common', 'globals',
 			organisation = gOrganisationList[i];
 
 			h[++idx] = '<tr>';
-			h[++idx] = '<td class="control_td"><input type="checkbox" name="controls" value="';
-			h[++idx] = i;
-			h[++idx] = '"></td>';
 			h[++idx] = '<td>';
 			h[++idx] = organisation.id;
 			h[++idx] = '</td>';
@@ -1627,13 +1619,29 @@ define(['jquery','localise', 'common', 'globals',
 			h[++idx] = '<td>';
 			h[++idx] = organisation.changed_by;
 			h[++idx] = '</td>';
+			h[++idx] = '<td class="usage_report_td">';
 			if (bs) {
-				h[++idx] = '<td class="usage_report_td"><button style="width:100%;" class="btn btn-default btn-warning usage_report" value="';
+				h[++idx] = '<button style="margin-right:2px;" class="btn btn-default btn-sm btn-warning usage_report" value="';
 				h[++idx] = i;
 				h[++idx] = '">';
-				h[++idx] = '<span class="glyphicon glyphicon-download" aria-hidden="true"></span>';
-				h[++idx] = '</button></td>';
+				h[++idx] = localise.set["u_usage"];
+				h[++idx] = ' <span class="glyphicon glyphicon-download" aria-hidden="true"></span>';
+				h[++idx] = '</button>';
 			}
+			if(globals.gIsEnterpriseAdministrator) {
+				h[++idx] = '<button style="margin-right:2px;" class="btn btn-default btn-sm btn-info move_org" value="';
+				h[++idx] = i;
+				h[++idx] = '">';
+				h[++idx] = localise.set["c_move"];
+				h[++idx] = ' <span class="glyphicon glyphicon-move" aria-hidden="true"></span>';
+				h[++idx] = '</button>';
+			}
+
+			h[++idx] = '<button type="button" data-idx="';
+			h[++idx] = i;
+			h[++idx] = '" class="btn btn-default btn-sm rm_org danger">';
+			h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+			h[++idx] = '</td>';
 			h[++idx] = '</tr>';
 		}
 
@@ -1647,6 +1655,10 @@ define(['jquery','localise', 'common', 'globals',
 		$('.usage_report', '#organisation_table').click(function () {
 			gCurrentOrganisationIndex = $(this).val();
 			$('#get_usage_popup').modal("show");
+		});
+		$(".rm_org", $('#organisation_table')).click(function(){
+			var idx = $(this).data("idx");
+			deleteOrganisations(idx);
 		});
 
 		/*
@@ -2100,22 +2112,16 @@ define(['jquery','localise', 'common', 'globals',
 	/*
 	 * Delete the selected organisations
 	 */
-	function deleteOrganisations () {
+	function deleteOrganisations (orgIdx) {
 
 		var organisations = [],
 			decision = false,
-			h = [],
-			i = -1,
-			orgIdx;
+			orgName;
 
-		$('#organisation_table').find('input:checked').each(function(index) {
-			orgIdx = $(this).val();
-			organisations[index] = {id: gOrganisationList[orgIdx].id, name: gOrganisationList[orgIdx].name};
-			h[++i] = gOrganisationList[orgIdx].name;
-		});
+		organisations[0] = {id: gOrganisationList[orgIdx].id, name: gOrganisationList[orgIdx].name};
+		orgName = gOrganisationList[orgIdx].name;
 
-
-		decision = confirm(localise.set["msg_del_orgs"] + "\n" + h.join());
+		decision = confirm(localise.set["msg_del_orgs"] + " " + orgName);
 		if (decision === true) {
 			addHourglass();
 			$.ajax({
