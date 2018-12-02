@@ -603,8 +603,8 @@ define(['jquery','localise', 'common', 'globals',
 		});
 
 		/*
-		  * Save the device options
-		  */
+		 * Save the device options
+		 */
 		$('#saveDevice').click(function() {
 			var device = {},
 				error = false,
@@ -680,19 +680,16 @@ define(['jquery','localise', 'common', 'globals',
 		});
 
 		/*
-		 * Move a user to a new organisation
+		 * Move a project to a new organisation
 		 */
 		$('#organisationMove').click(function(){
-			var users = [],
-				projects =[],
-				decision = false,
+			var projects =[],
 				h = [],
 				i = -1,
 				idx,
 				orgId,
 				orgName,
 				hasProjects = false,
-				keepProjects = false,
 				projectsMoving = '',
 				msg;
 
@@ -715,14 +712,37 @@ define(['jquery','localise', 'common', 'globals',
 
 			bootbox.confirm(msg, function(result){
 				if(result) {
-					for(i = 0; i < users.length; i++) {
-						if(users[i].id === globals.gLoggedInUser.id) {
-							users[i].keepProjects = true;
-						} else {
-							users[i].keepProjects = false;
-						}
-					}
 					moveToOrganisations(orgId, projects);
+				}
+			});
+
+		});
+
+		/*
+         * Move an organisation to a new enterprise
+         */
+		$('#enterpriseMove').click(function(){
+			var h = [],
+				i = -1,
+				idx,
+				orgId,
+				orgName,
+				entName,
+				msg;
+
+			orgId = globals.gOrganisationList[gCurrentOrganisationIndex].id;
+			orgName = globals.gOrganisationList[gCurrentOrganisationIndex].name;
+
+			entId = $('#target_enterprise').val();
+			entName = $('#target_enterprise :selected').text();
+
+			msg = localise.set["u_check_mv_o"];
+			msg = msg.replace("%s1", orgName);
+			msg = msg.replace("%s2", entName);
+
+			bootbox.confirm(msg, function(result){
+				if(result) {
+					moveToEnterprise(entId, orgId);
 				}
 			});
 
@@ -1162,7 +1182,7 @@ define(['jquery','localise', 'common', 'globals',
 	}
 
 	/*
-	 * Show the enterprise dialog
+	 * Show the enterprise edit dialog
 	 */
 	function openEnterpriseDialog(existing, enterpriseIndex) {
 
@@ -1660,6 +1680,10 @@ define(['jquery','localise', 'common', 'globals',
 			var idx = $(this).data("idx");
 			deleteOrganisations(idx);
 		});
+		$(".move_org", $('#organisation_table')).click(function(){
+			gCurrentOrganisationIndex = $(this).data("idx");
+			$('#move_to_enterprise_popup').modal("show");
+		});
 
 		/*
          * Update the org filter select on the users page
@@ -1796,7 +1820,7 @@ define(['jquery','localise', 'common', 'globals',
 		}
 
 		$organisationSelect.empty().append(h.join(''));
-		$newOrganisationSelect.empty().append(h.join(''));
+		$newOrganisationSelect.empty().append(hNew.join(''));
 		$organisationSelect.val(globals.gOrgId);
 	}
 
@@ -1806,9 +1830,13 @@ define(['jquery','localise', 'common', 'globals',
 	function updateEnterpriseList() {
 
 		var $enterpriseSelect = $('.enterprise_select'),
+			$newEnterpriseSelect = $('.new_enterprise_select'),
 			i, enterprise,
 			h = [],
-			idx = -1;
+			idx = -1,
+			hNew = [],
+			idxNew = -1,
+			newEnterpriseCount = 0;
 
 		for(i = 0; i < gEnterpriseList.length; i++) {
 			enterprise = gEnterpriseList[i];
@@ -1817,10 +1845,30 @@ define(['jquery','localise', 'common', 'globals',
 			h[++idx] = enterprise.id;
 			h[++idx] = '">';
 			h[++idx] = enterprise.name;
-			h[++idx] = '</option>'
+			h[++idx] = '</option>';
+
+			if(enterprise.id != globals.gEntId) {
+				hNew[++idxNew] = '<option value="';
+				hNew[++idxNew] = enterprise.id;
+				hNew[++idxNew] = '">';
+				hNew[++idxNew] = enterprise.name;
+				hNew[++idxNew] = '</option>';
+				newEnterpriseCount++;
+			}
 		}
 
+		$newEnterpriseSelect.empty().append(hNew.join(''));
+		if(newEnterpriseCount <= 1) {
+			$('.only_one', '#move_to_enterprise_popup').show();
+			$('.many', '#move_to_enterprise_popup').hide();
+			$('#enterpriseMove').addClass("disabled");
+		} else {
+			$('.only_one', '#move_to_enterprise_popup').hide();
+			$('.many', '#move_to_enterprise_popup').show();
+			$('#enterpriseMove').removeClass("disabled");
+		}
 		$enterpriseSelect.empty().append(h.join(''));
+
 		$enterpriseSelect.val(globals.gEntId);
 	}
 
@@ -2181,7 +2229,7 @@ define(['jquery','localise', 'common', 'globals',
 	}
 
 	/*
-	 * Move the provided users and projects to the selected organisation
+	 * Move the provided projects to the selected organisation
 	 */
 	function moveToOrganisations (orgId, projects) {
 
@@ -2194,6 +2242,35 @@ define(['jquery','localise', 'common', 'globals',
 			data: {
 				orgId: orgId,
 				projects: JSON.stringify(projects)
+			},
+			success: function(data, status) {
+				removeHourglass();
+				window.location.reload();
+			}, error: function(data, status) {
+				removeHourglass();
+				if(data && data.responseText) {
+					alert(data.responseText);
+				} else {
+					alert(localise.set["c_error"]);
+				}
+			}
+		});
+	}
+
+	/*
+     * Move the provided users and projects to the selected organisation
+     */
+	function moveToEnterprise (entId, orgId) {
+
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			contentType: "application/json",
+			cache: false,
+			url: "/surveyKPI/organisationList/setEnterprise",
+			data: {
+				entId: entId,
+				orgId: orgId
 			},
 			success: function(data, status) {
 				removeHourglass();
