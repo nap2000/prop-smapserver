@@ -730,8 +730,8 @@ define(['jquery','localise', 'common', 'globals',
 				entName,
 				msg;
 
-			orgId = globals.gOrganisationList[gCurrentOrganisationIndex].id;
-			orgName = globals.gOrganisationList[gCurrentOrganisationIndex].name;
+			orgId = gOrganisationList[gCurrentOrganisationIndex].id;
+			orgName = gOrganisationList[gCurrentOrganisationIndex].name;
 
 			entId = $('#target_enterprise').val();
 			entName = $('#target_enterprise :selected').text();
@@ -1681,7 +1681,7 @@ define(['jquery','localise', 'common', 'globals',
 			deleteOrganisations(idx);
 		});
 		$(".move_org", $('#organisation_table')).click(function(){
-			gCurrentOrganisationIndex = $(this).data("idx");
+			gCurrentOrganisationIndex = $(this).val();
 			$('#move_to_enterprise_popup').modal("show");
 		});
 
@@ -1858,7 +1858,7 @@ define(['jquery','localise', 'common', 'globals',
 		}
 
 		$newEnterpriseSelect.empty().append(hNew.join(''));
-		if(newEnterpriseCount <= 1) {
+		if(newEnterpriseCount < 1) {
 			$('.only_one', '#move_to_enterprise_popup').show();
 			$('.many', '#move_to_enterprise_popup').hide();
 			$('#enterpriseMove').addClass("disabled");
