@@ -1055,7 +1055,7 @@ insert into groups(id,name) values(9,'server owner');
 -- Save org id and enterprise id on upload
 alter table upload_event add column o_id integer default 0;
 alter table upload_event add column e_id integer default 0;
-update upload_event ue set o_id = (select p.o_id from project p where p.id = ue.p_id); 
+update upload_event ue set o_id = (select p.o_id from project p where p.id = ue.p_id) where o_id is null or o_id = 0; 
 
 -- Enterprise
 CREATE SEQUENCE enterprise_seq START 1;
@@ -1072,8 +1072,8 @@ ALTER TABLE enterprise OWNER TO ws;
 
 alter table organisation add column e_id integer references enterprise(id) on delete cascade;
 insert into enterprise(id, name, changed_by, changed_ts) values(1, 'Default', '', now());
-update organisation set e_id = 1 where e_id is null;
-
+update organisation set e_id = 1 where e_id is null or e_id = 0;
+update upload_event set e_id = 1 where e_id is null or e_id = 0;
 -- Clear all the externalfile options
 delete from option where externalfile = 'true';
 
