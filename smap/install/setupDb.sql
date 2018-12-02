@@ -402,6 +402,7 @@ CREATE TABLE upload_event (
 	);
 create index idx_ue_ident on upload_event(user_name);
 CREATE INDEX idx_ue_results_db ON upload_event(results_db_applied);
+CREATE index ue_survey_ident ON upload_event(ident);
 ALTER TABLE upload_event OWNER TO ws;
 
 DROP TABLE IF EXISTS subscriber_event CASCADE;
@@ -974,6 +975,8 @@ create TABLE message (
 	processed_time TIMESTAMP WITH TIME ZONE,
 	status text
 );
+CREATE index msg_outbound ON message(outbound);
+CREATE index msg_processing_time ON message(processed_time);
 ALTER TABLE message OWNER TO ws;
 
 DROP SEQUENCE IF EXISTS custom_query_seq CASCADE;
