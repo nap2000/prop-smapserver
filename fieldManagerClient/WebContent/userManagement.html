@@ -379,7 +379,7 @@
 						<input type="text" id="user_name" required class="form-control">
 
 						<div class="restrict_role org_role">
-							<label for="target_organisation" class="lang control-label" data-lang="u_co">organisation</label>
+							<label for="current_organisation" class="lang control-label" data-lang="u_co">organisation</label>
 							<select class="organisation_select form-control" id="current_organisation"></select>
 						</div>
 
@@ -724,7 +724,7 @@
 
 </div>
 
-<!-- Modal to allow users and projects to be moved to a new organisation -->
+<!-- Modal to allow projects to be moved to a new organisation -->
 <div id="move_to_organisation_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="moveOrganisationLabel" aria-hidden="true">
 	<div class="modal-dialog">
    		<div class="modal-content">
@@ -747,6 +747,35 @@
             	<button id="organisationMove" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_save">Save</button>
         	</div>
         </div>
+	</div>
+</div>
+
+<!-- Modal to allow organisations to be moved to a new enterprise -->
+<div id="move_to_enterprise_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="moveEnterpriseLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title lang" id="moveEnterpriseLabel" data-lang="u_mv_ent">move</h4>
+			</div>
+			<div class="modal-body">
+				<form id="enterprise_move_form">
+					<div class="only_one" style="display:none;">
+						<p class="lang" data-lang="u_only_one_ent"></p>
+					</div>
+					<div class="form-group many">
+						<label for="target_enterprise" class="lang col-sm-2 control-label" data-lang="c_ent">enterprise</label>
+						<div class="col-sm-10">
+							<select class="new_enterprise_select form-control" id="target_enterprise"></select>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="enterpriseMove" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_save">Save</button>
+			</div>
+		</div>
 	</div>
 </div>
 

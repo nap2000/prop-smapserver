@@ -693,6 +693,7 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 			globals.gAlertSeen = data.seen;		// Alerts have been acknowledged
 			globals.gLastAlertTime = data.lastalert;
 			globals.gOrgId = data.o_id;
+			globals.gEntId = data.e_id;
 
 			if(!hideUserDetails) {
 				updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServerDetailsFn);
