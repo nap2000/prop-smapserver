@@ -454,7 +454,9 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
             var $surveys = $('#survey_table'),
                 i, survey,
                 h = [],
-                idx = -1;
+                idx = -1,
+                hSel = [],
+                selIdx = -1;
 
             h[++idx] = '<table class="table" style="table-layout:fixed;">';
             h[++idx] = '<thead>';
@@ -543,6 +545,16 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
                     h[++idx] = '</td>';
 
                     h[++idx] = '</tr>';
+
+                    /*
+                     * Create html for survey select controls
+                     */
+                    hSel[++selIdx] = '<option value="';
+	                hSel[++selIdx] = survey.ident;
+	                hSel[++selIdx] = '">';
+	                hSel[++selIdx] = survey.displayName;
+	                hSel[++selIdx] = '</option>';
+
                 }
             }
 
@@ -641,6 +653,10 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
                 $('#download_template').modal('show');
             });
 
+            /*
+             * Populate survey select controls
+             */
+            $('.survey_select').html(hSel.join(''));
 
         }
 
@@ -965,7 +981,6 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
             }
         }
 
-
         /*
          * Reports
          */
@@ -986,5 +1001,13 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
 		    downloadFile(url);
 
 	    }
+
+	    function executeFormAccessReport() {
+
+		    var formIdent = $('#survey_access').val();
+
+		    downloadFile("/surveyKPI/adminreport/formaccess/" + formIdent);
+	    }
+
 
     });
