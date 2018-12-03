@@ -100,7 +100,15 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 				<li id="m_help"><a
 						href="https://docs.google.com/folderview?id=0B5_SmpWlQYxvNExwSFV5X051Yjg&usp=docslist_api#" target="_blank">
 					<i class="fa fa-info-circle"></i> <span
-						class="nav-label lang" data-lang="m_help">help</span></a></li>
+						class="nav-label lang" data-lang="m_help">help</span></a>
+				</li>
+				<li class="nav-divider"></li>
+				<li id="m_usage_report" class="restrict_role admin_role analyst_role"><a
+						href="#"><i class="fa fa-book"></i> <span
+						class="nav-label lang" data-lang="u_usage">usage</span></a></li>
+				<li id="m_form_access_report" class="restrict_role admin_role analyst_role"><a
+						href="#"><i class="fa fa-book"></i> <span
+						class="nav-label lang" data-lang="u_access">access</span></a></li>
 
 			</ul>
 		</div>
@@ -384,6 +392,59 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
 					<button id="downloadFile" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_download">Download</button>
 				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Reports -->
+<!-- Parameters for usage report -->
+<div id="usage_report_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dtLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title lang" data-lang="u_usage"></h4>
+			</div>
+			<div class="modal-body">
+
+				<form role="form" class="form-horizontal">
+					<div class="form-group">
+						<label for="usageDate" data-lang="c_month" class="lang col-sm-2 control-label">month</label>
+						<div class="col-sm-10">
+							<div class='input-group date' id='usageDate' data-toggle="tooltip"  data-container="body" title="Month and Year of report">
+								<input type='text' class="form-control" data-date-format="YYYY/MM"/>
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" id="usage_by_project"><span data-lang="rep_usage_project" class="lang">project/span>
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" id="usage_by_survey"><span data-lang="rep_usage_survey" class="lang">survey/span>
+								</label>
+							</div>
+						</div>
+					</div>
+				</form>
+
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="usage_report_save" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_create">create</button>
 			</div>
 		</div>
 	</div>

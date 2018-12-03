@@ -820,7 +820,8 @@ define({
     "u_rap": "Restrict access",
     "u_rap_d": "Administrators will be able to assign the selected users only to this project",
     "u_chg": "Changed by",
-    "u_usage": "Usage",
+	"u_usage": "Usage Report",
+	"u_access": "Form Access Report",
     "u_sms_url": "SMS Url",
     "u_sens_data": "Sensitive Data",
     "u_sens_ao": "Admin Only",
@@ -967,7 +968,11 @@ define({
     "bill_enable": "Enable Billing",
     "bill_from": "Applies From",
     "bill_chg_date": "Date Changed",
-    "bill_norates": "No rates have been set for this %s1. If billing is enabled then the rates for the %s2 will be used"
+    "bill_norates": "No rates have been set for this %s1. If billing is enabled then the rates for the %s2 will be used",
+
+	// Reports
+	"rep_usage_project": "Usage by project",
+	"rep_usage_survey": "Usage by survey"
 
 
 });
