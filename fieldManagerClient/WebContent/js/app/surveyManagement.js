@@ -16,7 +16,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
+define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'datetimepicker'],
     function($, lang, common, globals, bootstrap, moment) {
 
         var	gSurveys,		// Only in this java script file
@@ -288,6 +288,33 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             $('#copyLink').mouseout(function () {
                 $('#copyLink').prop('title', localise.set["c_cb"]).tooltip('fixTitle');
             });
+
+            /*
+             * Reports
+             */
+            $('#m_usage_report').click(function(){
+                $('#usage_report_popup').modal("show");
+            });
+            $('#usage_report_save').click(function(){
+                executeUsageReport();
+            });
+	        $('#m_form_access_report').click(function(){
+		        $('#form_access_report_popup').modal("show");
+	        });
+	        $('#form_access_report_save').click(function(){
+		        executeFormAccessReport();
+	        });
+
+	        /*
+             * Add date time picker to usage date
+             */
+	        moment.locale();
+	        $('#usageDate').datetimepicker({
+		        useCurrent: false,
+		        format: "MM/YYYY",
+		        viewMode: "months",
+		        locale: gUserLocale || 'en'
+	        }).data("DateTimePicker").date(moment());
 
             enableUserProfileBS();
 
@@ -750,7 +777,9 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             }
         }
 
-// Delete the template
+        /*
+         * Delete the template
+         */
         function executeDelete(template, delTables, hard) {
 
             var delURL = "/surveyKPI/survey/" + template;
@@ -784,7 +813,6 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
          * TODO: Using DELETE to un-delete has to violate innumerable laws of REST!!!!
          * TODO: Presumably the use of DELETE to do a soft delete is also problematic
          */
-
         function executeUnDelete(template) {
 
             var url = "/surveyKPI/survey/" + template + "?undelete=true";
@@ -938,5 +966,25 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
         }
 
 
+        /*
+         * Reports
+         */
+	    function executeUsageReport() {
+
+		    var usageMsec = $('#usageDate').data("DateTimePicker").date(),
+			    d = new Date(usageMsec),
+			    month = d.getMonth() + 1,
+			    year = d.getFullYear(),
+                url,
+                usageByProject = $('#usage_by_project').prop('checked'),
+                usageBySurvey = $('#usage_by_survey').prop('checked');
+
+		    url = "/surveyKPI/adminreport/usage/" + year + "/" + month;
+		    url += usageByProject ? "?project=true" : "?project=false";
+		    url += usageBySurvey ? "&survey=true" : "&survey=false";
+
+		    downloadFile(url);
+
+	    }
 
     });

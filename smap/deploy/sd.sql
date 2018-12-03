@@ -1079,3 +1079,10 @@ delete from option where externalfile = 'true';
 
 alter table forward add column name text;
 
+-- Performance patches for message
+CREATE index msg_outbound ON message(outbound);
+CREATE index msg_processing_time ON message(processed_time);
+
+-- Performance patches for upload event when checking for duplicate error messages
+CREATE index ue_survey_ident ON upload_event(ident);
+

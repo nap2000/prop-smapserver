@@ -254,7 +254,7 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 
 
 	} else {
-		$('#username').html(data.name).button({ label: data.name + " @" + data.organisation_name,
+		$('#username').html(data.name).button({ label: data.name,
 			icons: { primary: "ui-icon-person" }}).off().click(function(){
 			$('#me_edit_form')[0].reset();
 
