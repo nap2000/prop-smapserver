@@ -1383,7 +1383,7 @@ define(['jquery','localise', 'common', 'globals',
 				h[++idx] = user.name;
 				h[++idx] = '</td>';
 				h[++idx] = '<td style="text-align: center;">';
-				h[++idx] = user.o_name;
+				h[++idx] = user.current_org_name;
 				h[++idx] = '</td>';
 
 				h[++idx] = '<td>';
