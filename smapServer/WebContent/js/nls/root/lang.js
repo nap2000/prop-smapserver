@@ -807,6 +807,7 @@ define({
 	"u_rap_d": "Administrators will be able to assign the selected users only to this project",
 	"u_chg": "Changed by",
 	"u_usage": "Usage Report",
+	"u_access": "Form Access Report",
 	"u_sms_url": "SMS Url",
 	"u_sens_data": "Sensitive Data",
 	"u_sens_ao": "Admin Only",
@@ -941,7 +942,11 @@ define({
 	"disk": "Disk",
 	"static map": "Static Map",
 	"rekognition": "AWS Rekognition",
-	"org_bill_rpt": "Organisation Usage Report"
+	"org_bill_rpt": "Organisation Usage Report",
+
+	// Reports
+	"rep_usage_project": "Usage by project",
+	"rep_usage_survey": "Usage by survey"
 
 
 });
