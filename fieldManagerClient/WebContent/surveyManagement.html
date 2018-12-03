@@ -450,5 +450,31 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 	</div>
 </div>
 
+<!-- Parameters for form access report -->
+<div id="form_access_report_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dtLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title lang" data-lang="u_access"></h4>
+			</div>
+			<div class="modal-body">
+
+				<form role="form" class="form-horizontal">
+					<div class="form-group">
+						<label class="lang col-sm-4 control-label" data-lang="c_survey" for="survey_access">survey</label>
+						<div class="col-sm-8">
+							<select class="survey_select form-control" id="survey_access"></select>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="form_access_report_save" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_create">create</button>
+			</div>
+		</div>
+	</div>
+</div>
 </body>
 </html>
