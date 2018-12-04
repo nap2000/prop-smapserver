@@ -889,19 +889,6 @@ create TABLE disk_usage (
 ALTER TABLE disk_usage OWNER TO ws;
 
 -- Upgrade to 18.05
-CREATE SEQUENCE bill_seq START 1;
-ALTER SEQUENCE bill_seq OWNER TO ws;
-
-create TABLE billing (
-	id integer default nextval('bill_seq') constraint pk_billing primary key,
-	o_id integer,
-	apply_from TIMESTAMP WITH TIME ZONE,		-- Date that the billing applies from
-	free_submissions integer,				-- Number of free submissions available
-	submission_unit_cost real,				-- Cost per submission
-	free_disk integer,						-- Free disk available
-	disk_unit_cost real						-- Cost per GB of disk
-	);
-ALTER TABLE billing OWNER TO ws;
 alter table organisation add column billing_enabled boolean default false;
 
 alter table csvtable add column survey boolean default false;
@@ -1041,6 +1028,52 @@ create TABLE user_organisation (
 CREATE UNIQUE INDEX idx_user_organisation ON user_organisation(u_id,o_id);
 ALTER TABLE user_organisation OWNER TO ws;
 
+-- Version 18.12
+
+-- Billing upgrade
+drop table if exists billing;
+drop sequence if exists bill_seq;
+
+CREATE SEQUENCE bill_rates_seq START 1;
+ALTER SEQUENCE bill_rates_seq OWNER TO ws;
+
+create table bill_rates (
+	id integer default nextval('bill_rates_seq') constraint pk_bill_rates primary key,
+	o_id integer,	-- If 0 then all organisations (In enterprise or server)
+	e_id integer,	-- If 0 then all enterprises (ie server level)
+	rates text,		-- json object
+	currency text,
+	created_by text,
+	ts_created TIMESTAMP WITH TIME ZONE,
+	ts_applies_from TIMESTAMP WITH TIME ZONE
+	);
+alter table bill_rates OWNER TO ws;
+
+insert into groups(id,name) values(8,'enterprise admin');
+insert into groups(id,name) values(9,'server owner');
+
+-- Save org id and enterprise id on upload
+alter table upload_event add column o_id integer default 0;
+alter table upload_event add column e_id integer default 0;
+update upload_event ue set o_id = (select p.o_id from project p where p.id = ue.p_id) where o_id is null or o_id = 0; 
+
+-- Enterprise
+CREATE SEQUENCE enterprise_seq START 1;
+ALTER SEQUENCE enterprise_seq OWNER TO ws;
+
+create TABLE enterprise (
+	id INTEGER DEFAULT NEXTVAL('enterprise_seq') CONSTRAINT pk_enterprise PRIMARY KEY,
+	name text,
+	changed_by text,
+	changed_ts TIMESTAMP WITH TIME ZONE
+	);
+CREATE UNIQUE INDEX idx_enterprise ON enterprise(name);
+ALTER TABLE enterprise OWNER TO ws;
+
+alter table organisation add column e_id integer references enterprise(id) on delete cascade;
+insert into enterprise(id, name, changed_by, changed_ts) values(1, 'Default', '', now());
+update organisation set e_id = 1 where e_id is null or e_id = 0;
+update upload_event set e_id = 1 where e_id is null or e_id = 0;
 -- Clear all the externalfile options
 delete from option where externalfile = 'true';
 

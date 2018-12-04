@@ -101,6 +101,20 @@ create TABLE server (
 	);
 ALTER TABLE server OWNER TO ws;
 
+DROP SEQUENCE IF EXISTS enterprise_seq CASCADE;
+CREATE SEQUENCE enterprise_seq START 1;
+ALTER SEQUENCE enterprise_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS enterprise CASCADE;
+create TABLE enterprise (
+	id INTEGER DEFAULT NEXTVAL('enterprise_seq') CONSTRAINT pk_enterprise PRIMARY KEY,
+	name text,
+	changed_by text,
+	changed_ts TIMESTAMP WITH TIME ZONE
+	);
+CREATE UNIQUE INDEX idx_enterprise ON enterprise(name);
+ALTER TABLE enterprise OWNER TO ws;
+
 DROP SEQUENCE IF EXISTS organisation_seq CASCADE;
 CREATE SEQUENCE organisation_seq START 10;
 ALTER SEQUENCE organisation_seq OWNER TO ws;
@@ -108,6 +122,7 @@ ALTER SEQUENCE organisation_seq OWNER TO ws;
 DROP TABLE IF EXISTS organisation CASCADE;
 create TABLE organisation (
 	id INTEGER DEFAULT NEXTVAL('organisation_seq') CONSTRAINT pk_organisation PRIMARY KEY,
+	e_id integer references enterprise(id) on delete cascade,
 	name text,
 	company_name text,
 	company_address text,
@@ -289,6 +304,7 @@ create TABLE user_group (
 	u_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
 	g_id INTEGER REFERENCES groups(id) ON DELETE CASCADE
 	);
+CREATE UNIQUE INDEX idx_user_group ON user_group(u_id,g_id);
 ALTER TABLE user_group OWNER TO ws;
 	
 DROP SEQUENCE IF EXISTS user_project_seq CASCADE;
@@ -346,7 +362,8 @@ create TABLE user_role (
 ALTER TABLE user_role OWNER TO ws;
 
 -- Create an administrator and set up defaul values
-insert into organisation(id, name, allow_email, allow_facebook, allow_twitter) values(1, 'Smap', 'true', 'true', 'true');
+insert into enterprise(id, name, changed_by, changed_ts) values(1, 'Default', '', now());
+insert into organisation(id, name, enterprise) values(1, 'Smap', 1);
 
 insert into users (id, ident, realm, password, o_id, name, email) 
 	values (1, 'admin', 'smap', '9f12895fe9898cc306c45c9d3fcbc3d6', 1, 'Administrator', '');
@@ -358,6 +375,8 @@ insert into groups(id,name) values(4,'org admin');
 insert into groups(id,name) values(5,'manage');
 insert into groups(id,name) values(6,'security');
 insert into groups(id,name) values(7,'view data');
+insert into groups(id,name) values(8,'enterprise admin');
+insert into groups(id,name) values(9,'server owner');
 
 insert into user_group (u_id, g_id) values (1, 1);
 insert into user_group (u_id, g_id) values (1, 2);
@@ -366,6 +385,8 @@ insert into user_group (u_id, g_id) values (1, 4);
 insert into user_group (u_id, g_id) values (1, 5);
 insert into user_group (u_id, g_id) values (1, 6);
 insert into user_group (u_id, g_id) values (1, 7);
+insert into user_group (u_id, g_id) values (1, 8);
+insert into user_group (u_id, g_id) values (1, 9);
 
 insert into project (id, o_id, name) values (1, 1, 'A project');
 
@@ -378,7 +399,9 @@ CREATE TABLE upload_event (
 	results_db_applied boolean default false,	-- Speed up for most common subscriber
 	s_id INTEGER,
 	ident text,	-- Identifier used by survey
-	p_id INTEGER,
+	p_id integer,
+	o_id integer default 0,	-- Record organisation at time of upload for billing purposes
+	e_id, integer default 0,	-- Record enterprise for billing
 	upload_time TIMESTAMP WITH TIME ZONE,
 	user_name text,
 	file_name text,
@@ -1104,22 +1127,6 @@ create TABLE disk_usage (
 	);
 ALTER TABLE disk_usage OWNER TO ws;
 
-DROP SEQUENCE IF EXISTS bill_seq CASCADE;
-CREATE SEQUENCE bill_seq START 1;
-ALTER SEQUENCE bill_seq OWNER TO ws;
-
-DROP TABLE IF EXISTS billing CASCADE;
-create TABLE billing (
-	id integer default nextval('bill_seq') constraint pk_billing primary key,
-	o_id integer,
-	apply_from TIMESTAMP WITH TIME ZONE,		-- Date that the billing applies from
-	free_submissions integer,				-- Number of free submissions available
-	submission_unit_cost real,				-- Cost per submission
-	free_disk integer,						-- Free disk available
-	disk_unit_cost real						-- Cost per GB of disk
-	);
-ALTER TABLE billing OWNER TO ws;
-
 DROP SEQUENCE IF EXISTS people_seq CASCADE;
 CREATE SEQUENCE people_seq START 1;
 ALTER SEQUENCE people_seq OWNER TO ws;
@@ -1156,3 +1163,21 @@ create TABLE apply_foreign_keys (
 	ts_applied TIMESTAMP WITH TIME ZONE
 	);
 ALTER TABLE apply_foreign_keys OWNER TO ws;
+
+-- billing
+DROP SEQUENCE IF EXISTS bill_rates_seq CASCADE;
+CREATE SEQUENCE bill_rates_seq START 1;
+ALTER SEQUENCE bill_rates_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS bill_rates;
+create TABLE bill_rates (
+	id integer default nextval('bill_rates_seq') constraint pk_bill_rates primary key,
+	o_id integer,	-- If 0 then all organisations (In enterprise or server)
+	e_id integer,	-- If 0 then all enterprises (ie server level)
+	rates text,		-- json object
+	currency text,
+	created_by text,
+	ts_created TIMESTAMP WITH TIME ZONE,
+	ts_applies_from TIMESTAMP WITH TIME ZONE
+	);
+ALTER TABLE bill_rates OWNER TO ws;

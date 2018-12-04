@@ -22,6 +22,17 @@
 define(function () {
     window.globals = {
 
+        // Security groups
+        GROUP_ADMIN: 1,
+        GROUP_ANALYST: 2,
+        GROUP_ENUM: 3,
+        GROUP_ORG_ADMIN : 4,
+        GROUP_MANAGE: 5,
+        GROUP_SECURITY: 6,
+        GROUP_VIEW_DATA: 7,
+        GROUP_ENTERPRISE : 8,
+        GROUP_OWNER : 9,
+
         gProjectList: undefined,
         gRoleList: undefined,
         gCurrentProject: 0,
@@ -36,6 +47,8 @@ define(function () {
         gIsManage: false,
         gIsOrgAdministrator: false,
         gIsSecurityAdministrator: false,
+        gIsEnterpriseAdministrator: false,
+        gIsServerOwner: false,
         gViewData: false,
         gBillingData: false,
         gOrgBillingData: false,
