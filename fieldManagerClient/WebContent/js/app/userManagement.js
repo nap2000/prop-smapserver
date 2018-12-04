@@ -183,9 +183,9 @@ define(['jquery','localise', 'common', 'globals',
 			user.email = $('#user_email').val();
 			var newOrgId = $('#current_organisation').val();
 			if(newOrgId !== globals.gOrgId) {
-				user.newCurrentOrgId = $('#current_organisation').val();
+				user.o_id = $('#current_organisation').val();
 			} else {
-				user.newCurrentOrgId = 0;
+				user.o_id = 0;
 			}
 
 			if(gCurrentUserIndex === -1 && send_email == "send_email") {
