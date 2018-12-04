@@ -78,6 +78,7 @@
         <li id="serverTab" role="presentation" class="restrict_role org_role"><a href="#" class="lang" data-lang="c_server">server</a></li>
 		<li id="deviceTab" role="presentation"><a href="#" class="lang" data-lang="u_det_o_ft">fieldTask</a></li>
 		<li id="sensitiveTab" role="presentation" class="restrict_role security_role"><a href="#" class="lang" data-lang="u_sens_data">sensitive data</a></li>
+		<li id="enterpriseTab" role="presentation" class="restrict_role enterprise_role"><a href="#" class="lang" data-lang="c_ent">enterprise</a></li>
     </ul>
 	
 	
@@ -106,23 +107,29 @@
 							<select class="form-control role_list" id="role_name"></select>
 						</div>
 					</div>
+
+					<div class="org_role form-group" style="display:none;">
+						<label class="control-label col-sm-4" for="org_name"><span class="lang" data-lang="u_show_o"></span>:</label>
+						<div class="col-sm-4">
+							<select class="form-control org_list" id="org_name"></select>
+						</div>
+					</div>
 				</form>	
 			</div>
 		</div>
 		
 		<div class="container">
-			<div class="row">	   	
-			   	<div class="col-md-12 col-xs-12">
-					<div id="user_table"></div>	
-				</div>
-			</div>
-			<div class="row">	   	
-			   	<div class="col-md-12 col-xs-12">
+			<div class="row">
+				<div class="col-md-12 col-xs-12">
 					<button class="btn btn-success lang" id="create_user" data-lang="u_add">add</button>
-					<button class="btn btn-danger lang" id="delete_user" data-lang="u_del">del</button>
-					<button class="btn btn-warning restrict_role org_role move_to_org lang" data-lang="u_mv">move</button>
 				</div>
 			</div>
+			<div class="row">	   	
+			   	<div class="col-md-12 col-xs-12">
+					<div id="user_table"  style="margin-top:20px;"></div>
+				</div>
+			</div>
+
 		</div>
 		<div class="col-md-12 text-center">
 			<img id="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
@@ -132,22 +139,18 @@
     <!-- The container for the list of projects -->
     <div id="projectPanel" style="display:none;" class="usertab">
 
-
-
-		<div id="project_table"></div>
+		<div id="project_table" style="margin-top:20px;"></div>
 
 		<button class="btn btn-success lang" id="create_project" data-lang="u_add_p">Add Project</button>
 		<button class="btn btn-danger lang" id="delete_project" data-lang="u_del_p">Delete Project</button>
-		<button class="btn btn-warning restrict_role org_role move_to_org lang" data-lang="u_mv">move</button>
+		<button class="btn btn-warning restrict_role org_role move_to_organisation lang" data-lang="u_mv">move</button>
 
 	</div>
 	
 	<!-- The container for the list of roles -->
     <div id="rolesPanel" style="display:none;" class="usertab">
 
-
-
-		<div id="role_table"></div>
+		<div id="role_table" style="margin-top:20px;"></div>
 
 		<button class="btn btn-success lang" id="create_user_role" data-lang="u_add_r">Add Role</button>
 		<button class="btn btn-danger lang" id="delete_role" data-lang="u_del_r">Delete Role</button>
@@ -258,9 +261,9 @@
 	<!-- The container for the list of organisations -->
     <div id="organisationPanel" style="display:none;" class="usertab">
 
-		<div id="organisation_table"></div>
 		<button id="create_organisation" class="btn btn-success lang" data-lang="u_add_o">Add Organisation</button>
-		<button class="btn btn-danger lang" id="delete_organisation"  data-lang="u_del_o">Delete Organisation</button>
+		<div id="organisation_table"  style="margin-top:20px;"></div>
+
 	</div>
 	
 	<!-- The container for the server details -->
@@ -346,6 +349,13 @@
 		</div>
 		<button id="saveSensitive" class="btn btn-success lang" data-lang="c_save">save</button>
 	</div>
+
+	<!-- The container for the list of enterprises -->
+	<div id="enterprisePanel" style="display:none;" class="usertab">
+
+		<button id="create_enterprise" class="btn btn-success lang" data-lang="u_add_e">add enterprise</button>
+		<div id="enterprise_table"  style="margin-top:20px;"></div>
+	</div>
 	
 	
 </div>
@@ -368,7 +378,12 @@
 						<label for="user_name" data-lang="c_name" class="lang control-label">Name</label>
 						<input type="text" id="user_name" required class="form-control">
 
-						<label for="user_email" data-lang="c_email" class="lang control-label">Email</label>
+						<div class="restrict_role org_role">
+							<label for="current_organisation" class="lang control-label" data-lang="u_co">organisation</label>
+							<select class="organisation_select form-control" id="current_organisation"></select>
+						</div>
+
+					<label for="user_email" data-lang="c_email" class="lang control-label">Email</label>
 						<input type="email" class="form-control" id="user_email" 
 								placeholder="Enter email" 
 								pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$">
@@ -679,20 +694,50 @@
 
 </div>
 
-<!-- Modal to allow users and projects to be moved to a new organisation -->
+<!-- Modal to allow the user to edit an enterprise details -->
+<div id="create_enterprise_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createEnterpriseLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title lang" id="createEnterpriseLabel" data-lang="u_det_o">org details</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form" role="form" class="form-horizontal" id="enterprise_create_form">
+
+					<div class="form-group">
+						<label for="e_name" data-lang="c_name" class="lang col-sm-2 control-label">name</label>
+						<div class="col-sm-10">
+							<input type="text" id="e_name" class="form-control" tabindex="1" required><br/>
+						</div>
+					</div>
+
+				</form>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close" tabindex="13">Close</button>
+				<button id="enterpriseSave" type="button" class="btn btn-primary lang" data-lang="c_save" tabindex="12">Save</button>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<!-- Modal to allow projects to be moved to a new organisation -->
 <div id="move_to_organisation_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="moveOrganisationLabel" aria-hidden="true">
 	<div class="modal-dialog">
    		<div class="modal-content">
    			<div class="modal-header">
      			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     			<h4 class="modal-title" id="moveOrganisationLabel">Organisation Details</h4>
+     			<h4 class="modal-title lang" id="moveOrganisationLabel" data-lang="u_mv">move</h4>
    			</div>
 		    <div class="modal-body">
 				<form id="organisation_move_form">
 					<div class="form-group">
-						<label for="target_organisation" class="lang col-sm-2 control-label">Organisation</label>
+						<label for="target_organisation" class="lang col-sm-2 control-label" data-lang="c_org">organisation</label>
 						<div class="col-sm-10">
-							<select class="organisation_select form-control" id="target_organisation"></select>
+							<select class="new_organisation_select form-control" id="target_organisation"></select>
 						</div>
 					</div>
 				</form>	
@@ -702,6 +747,35 @@
             	<button id="organisationMove" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_save">Save</button>
         	</div>
         </div>
+	</div>
+</div>
+
+<!-- Modal to allow organisations to be moved to a new enterprise -->
+<div id="move_to_enterprise_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="moveEnterpriseLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title lang" id="moveEnterpriseLabel" data-lang="u_mv_ent">move</h4>
+			</div>
+			<div class="modal-body">
+				<form id="enterprise_move_form">
+					<div class="only_one" style="display:none;">
+						<p class="lang" data-lang="u_only_one_ent"></p>
+					</div>
+					<div class="form-group many">
+						<label for="target_enterprise" class="lang col-sm-2 control-label" data-lang="c_ent">enterprise</label>
+						<div class="col-sm-10">
+							<select class="new_enterprise_select form-control" id="target_enterprise"></select>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="enterpriseMove" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_save">Save</button>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -784,7 +858,7 @@
    		<div class="modal-content">
    			<div class="modal-header">
      			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     			<h4 class="modal-title" id="getUsageLabel">Get PDF of Usage</h4>
+     			<h4 class="modal-title lang" data-lang="u_usage" id="getUsageLabel">usage</h4>
    			</div>
 		    <div class="modal-body">
 		     
@@ -800,8 +874,50 @@
 			</div> 
 			<div class="modal-footer">
             	<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-            	<button id="usageGet" type="button" class="btn btn-primary">Get Pdf</button>
+            	<button id="usageGet" type="button" class="btn btn-primary lang" data-lang="u_gr">get</button>
         	</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal to ask for confirmation of deleting a user from multiple organisations -->
+<div id="del_user_confirm_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delUserLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title lang" id="delUserLabel" data-lang="c_c_d">confirm</h4>
+			</div>
+			<div class="modal-body">
+
+				<form id="confirmDelForm" class="form" role="form">
+					<div class="form-group">
+						<div>
+							<label>
+								<input type="radio" name="confirm_delete" value="delete_one" checked="checked"/>
+								<span id="confirmDelOne">delete one</span>
+							</label>
+						</div>
+						<div>
+							<label>
+								<input  type="radio" name="confirm_delete" value="delete_all" />
+								<span id="confirmDelAll">delete all</span>
+							</label>
+						</div>
+						<div>
+							<label>
+								<input  type="radio" name="confirm_delete" value="cancel" />
+								<span class="lang" data-lang="c_cancel">cancel</span>
+							</label>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="confirmDelUser" type="button" class="btn btn-primary lang" data-lang="c_ok">ok</button>
+			</div>
 		</div>
 	</div>
 </div>
