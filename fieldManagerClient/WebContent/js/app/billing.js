@@ -20,24 +20,15 @@ define(['jquery','localise', 'common', 'globals',
         'bootbox', 
         'moment',
         'datetimepicker'], function($, lang, common, globals, bootbox, moment) {
-	
-var gUsers,
-	gGroups,
-	gOrganisationList,
-	gControlCount,			// Number of users that have been set - used to enable / disable control buttons
-	gControlProjectCount,	// Number of projects that have been set - used to enable / disable control buttons
-	gControlOrganisationCount,
-	gCurrentProjectIndex,	// Set while editing a projects details
-	gCurrentRoleIndex,	// Set while editing a user role details
-	gCurrentOrganisationIndex,
-	gCurrentUserIndex,		// Set while editing a users details
-	gOrgId;
+
+    var gLevel,
+        gOrganisationList;
 
 	$(document).ready(function() {
 
 		localise.setlang();		// Localise HTML
 
-		getLoggedInUser(undefined, false, false, undefined);
+		getLoggedInUser(userKnown, false, false, undefined);
 
 		getAvailableTimeZones($('#o_tz'), showTimeZones);
 
@@ -70,8 +61,10 @@ var gUsers,
         $('#usageDate').on("dp.change", function () {
         	getBillDetails();
 		});
-
-        getBillDetails();
+        $('#organisation').change(function(){
+           getBillDetails();
+           getRates();
+        });
 
         $('#org_bill_rpt').click(function (e) {
             var usageMsec = $('#usageDate').data("DateTimePicker").date(),
@@ -86,25 +79,89 @@ var gUsers,
         });
 
         // Set up the tabs
-        $('#serverBillTab a').click(function (e) {
+        $('#billTab a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
 
-            $(".billtab").hide();
-            $('#serverBillPanel').show();
+            $("#billPanel").show();
+            $('#ratesPanel').hide();
 
         });
-        $('#organisationBillTab a').click(function (e) {
+        $('#ratesTab a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
 
-            $(".billtab").hide();
-            $('#organisationBillPanel').show();
+            $("#billPanel").hide();
+            $('#ratesPanel').show();
+        });
+
+        $('#billLevel').change(function () {
+            levelChanged();
         });
 
 		enableUserProfileBS();	// Allow user to reset their own profile
 
 	});
+
+	function userKnown() {
+        var h = [],
+            idx = -1,
+            level;
+
+	    if(globals.gIsOrgAdministrator || globals.gIsEnterpriseAdministrator || globals.gIsServerOwner) {
+            if(globals.gIsServerOwner) {
+                h[++idx] = '<option value="owner">';
+                h[++idx] = localise.set["u_server_owner"];
+                h[++idx] = '</option>';
+                level = "owner";
+            }
+            if(globals.gIsEnterpriseAdministrator) {
+                h[++idx] = '<option value="ent">';
+                h[++idx] = localise.set["u_ent_admin"];
+                h[++idx] = '</option>';
+                if(!level) {
+                    level = "ent";
+                }
+            }
+            if(globals.gIsOrgAdministrator) {
+                h[++idx] = '<option value="org">';
+                h[++idx] = localise.set["u_org_admin"];
+                h[++idx] = '</option>';
+                if(!level) {
+                    level = "org";
+                }
+            }
+            $('#billLevel').html(h.join(''));
+            $('#billLevel').val(level);
+            gLevel = level;
+	        $(".showHierarchy").show();
+        } else {
+	        gLevel = "ind_org";
+        }
+        levelChanged();
+	    if(gLevel !== "org") {
+            getBillDetails();
+            getRates();
+        }
+    }
+
+    function levelChanged() {
+	    gLevel =  $('#billLevel').val();
+        $(".showOrganisation,.showManager").hide();
+	    if(gLevel === "org") {
+	        $(".showOrganisation").show();
+            if(!gOrganisationList) {
+                getOrganisations();
+            }
+        }
+        if(globals.gIsServerOwner ||
+                (globals.gIsEnterpriseAdministrator && gLevel !== "owner") ||
+                (globals.gIsOrgAdministrator && gLevel === "org")
+                ) {
+            $(".showManager").show();
+        }
+
+    }
 
 	function getBillDetails() {
         var usageMsec = $('#usageDate').data("DateTimePicker").date(),
@@ -112,8 +169,15 @@ var gUsers,
 			url,
             month = d.getMonth() + 1,
             year = d.getFullYear(),
+            url,
+            orgIdx;
 
-		url = "/surveyKPI/billing?org=0&year=" + year + "&month=" + month;
+        url = "/surveyKPI/billing?year=" + year + "&month=" + month;
+        if(gLevel === "org" || gLevel === "org_ind") {
+            orgIdx = $('#organisation').val();
+            url += "&org=" + gOrganisationList[orgIdx].id;
+        }
+
         addHourglass();
         $.ajax({
             url: url,
@@ -122,7 +186,7 @@ var gUsers,
             success: function (data) {
                 removeHourglass();
 				if(data) {
-					populateServerTable(data);
+					populateBillTable(data);
 				}
             },
             error: function (xhr, textStatus, err) {
@@ -136,7 +200,69 @@ var gUsers,
         });
     }
 
-    function populateServerTable(data) {
+    function getRates() {
+
+		var billLevel = $('#billLevel option:selected').val(),
+			url,
+			msg,
+			levelName,
+			higherName;
+
+	    url = "/surveyKPI/billing/rates";
+	    if(gLevel === "org" || gLevel === "ind_org") {
+		    orgIdx = $('#organisation').val();
+		    url += "?org=" + gOrganisationList[orgIdx].id;
+	    }
+
+	    addHourglass();
+	    $.ajax({
+		    url: url,
+		    dataType: 'json',
+		    cache: false,
+		    success: function (data) {
+			    removeHourglass();
+			    if(data.length > 0) {
+				    populateRatesTable(data);
+				    $('.hasrates').show();
+				    $('.norates').hide();
+			    } else {
+				    if(gLevel === "org" || gLevel === "ind_org") {
+					    levelName = localise.set["c_org"];
+					    higherName = localise.set["c_ent"];
+				    } else if(gLevel === "ent") {
+					    levelName = localise.set["c_ent"];
+					    higherName = localise.set["c_server"];
+				    }
+
+				    msg = localise.set["bill_norates"].replace("%s1", levelName).replace("%s2", higherName);
+				    $('#noratesmsg').html(msg);
+				    $('.hasrates').hide();
+				    $('.norates').show();
+			    }
+		    },
+		    error: function (xhr, textStatus, err) {
+			    removeHourglass();
+			    if (xhr.readyState == 0 || xhr.status == 0) {
+				    return;  // Not an error
+			    } else {
+				    alert(localise.set["c_error"] + ": " + err);
+			    }
+		    }
+	    });
+
+
+    }
+
+	function populateRatesTable(data) {
+		var $elem = $('#rates_table'),
+			h = [],
+			idx = -1;
+
+		alert("Got some rates: " + data.length);
+	}
+
+
+	function populateBillTable(data) {
 		var $elem = $('#billing_table'),
 			h = [],
 			idx = -1,
@@ -187,6 +313,47 @@ var gUsers,
         return h.join('');
 	}
 
+	function getOrganisations() {
+
+        addHourglass();
+        $.ajax({
+            type: 'GET',
+            cache: false,
+            url: "/surveyKPI/organisationList",
+            success: function(data, status) {
+                removeHourglass();
+                gOrganisationList = data;
+                if(data && data.length > 0) {
+                    var h = [],
+                        idx = -1,
+                        i;
+
+                    for(i = 0; i < data.length; i++) {
+                        h[++idx] = '<option value="';
+                        h[++idx] = i;
+                        h[++idx] = '"';
+                        if(i == 0 ) {
+                            h[++idx] = ' selected="seelcted"'
+                        }
+                        h[++idx] = '>';
+                        h[++idx] = data[i].name;
+                        h[++idx] = '</option>';
+                    }
+                    $('.organisation_select').html(h.join(''));
+                }
+                getBillDetails();
+                getRates();
+            }, error: function(xhr, textStatus, err) {
+                removeHourglass();
+                if(xhr.readyState == 0 || xhr.status == 0) {
+                    return;  // Not an error
+                } else {
+                    var msg = err;
+                    alert(localise.set["msg_err_upd"] + msg);
+                }
+            }
+        });
+    }
 
 });
 	

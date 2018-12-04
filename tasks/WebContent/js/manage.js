@@ -330,7 +330,9 @@ require([
 				 h[++idx] = '</th>';
 			 }
 		 }
-		 h[++idx] = '<th>Action</th>';
+		 h[++idx] = '<th>';
+		 h[++idx] = localise.set["c_action"];
+		 h[++idx] = '</th>';
 		 h[++idx] = '</tr>';
 		 h[++idx] = '</thead>';
 		 

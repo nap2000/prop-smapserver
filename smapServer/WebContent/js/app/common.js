@@ -219,7 +219,7 @@ function saveCurrentProject(projectId, surveyId, taskGroupId) {
 /*
  * Update the user details on the page
  */
-function updateUserDetails(data, getOrganisationsFn) {
+function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServerDetailsFn) {
 
 	var groups = data.groups,
 		i,
@@ -275,31 +275,37 @@ function updateUserDetails(data, getOrganisationsFn) {
 	 */
 	if(groups) {
 		for(i = 0; i < groups.length; i++) {
-			if(groups[i].name === "admin") {
+			if(groups[i].id === globals.GROUP_ADMIN) {
 				globals.gIsAdministrator = true;
-				if(data.billing_enabled) {
-					globals.gOrgBillingData = true;
-				}
-			}
-			if(groups[i].name === "org admin") {
+
+                if(data.billing_enabled) {
+                    globals.gOrgBillingData = true;
+                }
+
+			} else if(groups[i].id === globals.GROUP_ORG_ADMIN) {
 				globals.gIsOrgAdministrator = true;
 				globals.gBillingData = true;
-			}
-			if(groups[i].name === "security") {
+
+			} else if(groups[i].id === globals.GROUP_SECURITY) {
 				globals.gIsSecurityAdministrator = true;
-			}
-			if(groups[i].name === "analyst") {
+
+			} else if(groups[i].id === globals.GROUP_ENTERPRISE) {
+                globals.gIsEnterpriseAdministrator = true;
+
+            } else if(groups[i].id === globals.GROUP_ANALYST) {
 				globals.gIsAnalyst = true;
-			}
-			if(groups[i].name === "manage") {
+
+			} else if(groups[i].id === globals.GROUP_MANAGE) {
 				globals.gIsManage = true;
-			}
-			if(groups[i].name === "enum") {
+
+			} else if(groups[i].id === globals.GROUP_ENUM) {
 				globals.gIsEnum = true;
-			}
-			if(groups[i].name === "view data") {
-				globals.gViewData = true;
-			}
+
+			} else if(groups[i].id === globals.GROUP_VIEW_DATA) {
+                globals.gViewData = true;
+            } else if(groups[i].id === globals.GROUP_OWNER) {
+                globals.gIsServerOwner = true;
+            }
 		}
 	}
 
@@ -327,6 +333,15 @@ function updateUserDetails(data, getOrganisationsFn) {
 		$('.org_role').show();
 		if(typeof getOrganisationsFn === "function") {
 			getOrganisationsFn();
+		}
+	}
+	if(globals.gIsEnterpriseAdministrator) {
+		$('.enterprise_role').show();
+		if(typeof getEnterprisesFn === "function") {
+			getEnterprisesFn();
+		}
+		if(typeof getServerDetailsFn === "function") {
+			getServerDetailsFn();
 		}
 	}
 	if(globals.gBillingData || globals.gOrgBillingData) {
@@ -468,9 +483,9 @@ function enableUserProfile () {
 						user.current_survey_id = 0;
 						user.current_task_group_id = 0;
 
-						user.current_org_id = $('#me_organisation').val();
-						if(user.current_org_id == globals.gOrgId) {
-							users.current_org_id = 0;	// No change
+						user.o_id = $('#me_organisation').val();
+						if(user.o_id == globals.gOrgId) {
+							users.o_id = 0;	// No change
 						}
 
 						saveCurrentUser(user);			// Save the updated user details to disk
@@ -557,9 +572,9 @@ function enableUserProfileBS () {
 			user.password = undefined;
 		}
 
-		user.current_org_id = $('#me_organisation').val();
-		if(user.current_org_id == globals.gOrgId) {
-			user.current_org_id = 0;	// No change
+		user.o_id = $('#me_organisation').val();
+		if(user.o_id == globals.gOrgId) {
+			user.o_id = 0;	// No change
 		}
 		user.current_project_id = 0;	// Tell service to ignore project id and update other details
 		user.current_survey_id = 0;
@@ -594,9 +609,6 @@ function saveCurrentUser(user) {
 		data: { user: userString },
 		success: function(data, status) {
 			removeHourglass();
-			if(user.current_org_id > 0) {
-				user.o_id = user.current_org_id;		// Assume org has been updated
-			}
 			updateUserDetails(user, undefined);
 		}, error: function(data, status) {
 			removeHourglass();
@@ -648,7 +660,21 @@ function showTimeZones($elem, timeZones) {
 	$elem.val(tz);   // Set time zone
 }
 
-function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hideUserDetails, dontGetCurrentSurvey) {
+function addTimeZoneToUrl(url) {
+	if(url) {
+		if(url.indexOf("?") > 0) {
+			url += "&";
+		} else {
+			url += "?";
+		}
+		url += "tz=";
+		url += Intl.DateTimeFormat().resolvedOptions().timeZone;
+	}
+	return url;
+}
+
+function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hideUserDetails,
+                         dontGetCurrentSurvey, getEnterprisesFn, getServerDetailsFn) {
 	addHourglass();
 	$.ajax({
 		url: "/surveyKPI/user",
@@ -667,9 +693,10 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 			globals.gAlertSeen = data.seen;		// Alerts have been acknowledged
 			globals.gLastAlertTime = data.lastalert;
 			globals.gOrgId = data.o_id;
+			globals.gEntId = data.e_id;
 
 			if(!hideUserDetails) {
-				updateUserDetails(data, getOrganisationsFn);
+				updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServerDetailsFn);
 			}
 
 			if(!dontGetCurrentSurvey) {	// Hack, on edit screen current survey is set as parameter not from the user's defaults
