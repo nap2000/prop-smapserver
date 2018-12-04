@@ -344,7 +344,9 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 			getServerDetailsFn();
 		}
 	}
-	if(globals.gBillingData || globals.gOrgBillingData) {
+
+	//TODO set logic for enabling disabling billing
+	if(isBusinessServer() && (globals.gBillingData || globals.gOrgBillingData)) {
 		$('.billing_role').show();
 	}
 
@@ -352,7 +354,6 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 	if(globals.gSendTrail === 'off') {
 		$('.user_trail').hide();
 	}
-	isBusinessServer();		// Reset server specific menus
 
 	// 	Customer configurable details - the configurable part is TODO
 	$('#my_name').val(data.name);			// Add the name to the configurable list
@@ -1757,9 +1758,9 @@ function isBusinessServer() {
 	}
 	*/
 
-	if(bs) {
-		$('.bus_only').show();
-	}
+	//if(bs) {
+	//	$('.bus_only').show();
+	//}
 	return bs;
 }
 
