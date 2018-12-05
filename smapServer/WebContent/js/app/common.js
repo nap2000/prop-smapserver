@@ -2157,31 +2157,6 @@ function localTime(utcTime) {
 	return localTime;
 }
 
-/*
- * Convert all timestamps surrounded by smooth braces in the string to local time
- */
-function convertTimesToLocal(elem) {
-
-	var times = [],
-		reg = /\([0-9][0-9][0-9][0-9]_[0-9][0-9]_[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]\)/g,
-		i,
-		time,
-		newTime;
-
-	if (elem) {
-		times = elem.match(reg);
-		if(times) {
-			for(i = 0; i < times.length; i++) {
-				if(times[i].length > 3) {
-					time = times[i].substring(1, times[i].length - 1);		// Remove the brackets
-					newTime = localTime(time);
-					elem = elem.replace(time, newTime);
-				}
-			}
-		}
-	}
-	return elem;
-}
 
 function utcTime(localTime) {
 
@@ -2198,6 +2173,21 @@ function utcTime(localTime) {
 
 function getUtcOffset() {
 	return moment().utcOffset();
+}
+
+function formatLocalTime(localTime) {
+	var l;
+	if(localTime.indexOf('+') > 0) {
+		l = moment(localTime, 'YYYY-MM-DD HH:mm:ss Z').toDate();
+	} else {
+		l = moment(localTime, 'YYYY-MM-DD HH:mm:ss').toDate();
+	}
+	var lf = moment(l).format('YYYY-MM-DD HH:mm:ss');
+
+	if(lf === 'Invalid date') {
+		lf = '';
+	}
+	return lf;
 }
 
 /*
