@@ -1086,3 +1086,4 @@ CREATE index msg_processing_time ON message(processed_time);
 -- Performance patches for upload event when checking for duplicate error messages
 CREATE index ue_survey_ident ON upload_event(ident);
 
+alter table users add column timezone text;
