@@ -485,6 +485,8 @@ function enableUserProfile () {
 						user.current_survey_id = 0;
 						user.current_task_group_id = 0;
 
+						user.timezone = $('#e_tz').val();
+
 						user.o_id = $('#me_organisation').val();
 						if(user.o_id == globals.gOrgId) {
 							users.o_id = 0;	// No change
@@ -578,6 +580,8 @@ function enableUserProfileBS () {
 		if(user.o_id == globals.gOrgId) {
 			user.o_id = 0;	// No change
 		}
+
+		user.timezone = $('#e_tz').val();
 		user.current_project_id = 0;	// Tell service to ignore project id and update other details
 		user.current_survey_id = 0;
 		user.current_task_group_id = 0;

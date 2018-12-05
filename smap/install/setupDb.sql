@@ -255,6 +255,7 @@ CREATE TABLE users (
 	email text,
 	device_id text,
 	max_dist_km integer,
+	timezone text,
 	user_role text,
 	current_project_id integer,		-- Set to the last project the user selected
 	current_survey_id integer,		-- Set to the last survey the user selected
