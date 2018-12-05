@@ -246,6 +246,7 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 			$('#password_me_fields').hide();
 			addLanguageOptions($('.language_select'), data.language);
 			addOrganisationOptions($('.organisation_select'), data.o_id, data.orgs);
+			getAvailableTimeZones($('.timezone_select'), showTimeZones);
 			$('#me_name').val(data.name);
 			$('#me_email').val(data.email);
 

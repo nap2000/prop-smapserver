@@ -130,8 +130,6 @@ $(document).ready(function() {
     	addNewPanel($(this).val());
     });
 
-	getAvailableTimeZones($('#e_tz'), showTimeZones);
-
 	 // Initialse the settings dialog
 	 $('#p_settings').dialog(
 		{
