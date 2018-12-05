@@ -197,7 +197,7 @@ function saveCurrentProject(projectId, surveyId, taskGroupId) {
 		$.ajax({
 			type: "POST",
 			contentType: "application/json",
-			url: "/surveyKPI/user",
+			url: "/surveyKPI/user/currentproject",
 			cache: false,
 			data: { user: userString },
 			success: function(data, status) {
