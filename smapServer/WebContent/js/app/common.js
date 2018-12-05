@@ -611,14 +611,15 @@ function saveCurrentUser(user) {
 		type: "POST",
 		cache: false,
 		contentType: "application/json",
+		dataType: 'json',
 		url: "/surveyKPI/user",
 		data: { user: userString },
-		success: function(data, status) {
+		success: function(data) {
 			removeHourglass();
-			updateUserDetails(user, undefined);
+			updateUserDetails(data, undefined);
 		}, error: function(data, status) {
 			removeHourglass();
-			alert("Error profile not saved");
+			alert(localise.set["c_error"]);
 		}
 	});
 }
@@ -642,7 +643,7 @@ function getAvailableTimeZones($elem, callback) {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 				return;  // Not an error
 			} else {
-				alert("Error: Failed to get available time zones: " + err);
+				alert(localise.set["c_error"] + ": " + err);
 			}
 		}
 	});
