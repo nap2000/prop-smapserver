@@ -56,6 +56,7 @@ define(function () {
         gViewIdx: 0,
         gSelector: new Selector(),
         gOrgId: 0,
+        gTimezone: undefined,
 
         gRegions: undefined,
         gRegion: {},
