@@ -109,6 +109,7 @@ require([
 			bs = isBusinessServer();
 
 		setCustomManage();		// Apply custom javascript
+		 setupUserProfile();
 		localise.setlang();		// Localise HTML
 		 
 		// Get the parameters and show a management survey if required

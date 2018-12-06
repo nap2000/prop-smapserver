@@ -77,6 +77,7 @@ require([
 	$(document).ready(function() {
 
         setCustomReports();			// Apply custom javascript
+		setupUserProfile();
 		localise.setlang();		// Localise HTML
 
 		// Get the user details
@@ -86,8 +87,6 @@ require([
 		$('#m_refresh').click(function() {
             getReports();
 		});
-
-		getAvailableTimeZones($('#e_tz'), showTimeZones);
 
         $('#generateReport').click(function() {
         	var i;
@@ -129,8 +128,6 @@ require([
 
         $('#addReport').click(function(){
             $('#publish_form')[0].reset();
-	        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-	        $('#e_tz').val(tz);   // Set time zone
 
             $('.role_select_roles').empty()
             getSurveyRoles($('#survey').val(), undefined, true);
@@ -185,7 +182,7 @@ require([
         var landscape = $('#orient_landscape').prop('checked');
         var embed_images = $('#embedImages').prop('checked');
         var language = $('#export_language').val();
-		var tz = $('#e_tz').val();
+		var tz = $('#e_tz').val();                      // Since the export is being saved use a local version of tz
         var dateId = $('#export_date_question').val();
         var exp_from_date = undefined;
         var exp_to_date = undefined;

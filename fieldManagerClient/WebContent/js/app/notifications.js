@@ -33,6 +33,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
             $('#email_question_cont').prop('title', localise.set['n_eqc']);
             $('#email_subject_cont').prop('placeholder', localise.set['n_esc']);
 
+	        setupUserProfile();
             localise.setlang();		// Localise HTML
 
             // Get Notification Types for this server

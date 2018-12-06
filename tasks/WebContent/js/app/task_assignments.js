@@ -54,6 +54,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             globals.gRegion = {};	// Initialise global values
             globals.gRegions = undefined;
 
+	        setupUserProfile();
             localise.setlang();		// Localise HTML
             $('#email_subject').prop('placeholder', localise.set['n_esc']);
             $('#tp_assign_emails, #assign_emails').prop('placeholder', localise.set['n_cs_e']);

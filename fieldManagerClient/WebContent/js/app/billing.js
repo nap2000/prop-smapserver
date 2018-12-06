@@ -26,11 +26,10 @@ define(['jquery','localise', 'common', 'globals',
 
 	$(document).ready(function() {
 
+		setupUserProfile();
 		localise.setlang();		// Localise HTML
 
 		getLoggedInUser(userKnown, false, false, undefined);
-
-		getAvailableTimeZones($('#o_tz'), showTimeZones);
 
 		/*
 		 * Set focus to first element on opening modals

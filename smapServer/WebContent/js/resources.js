@@ -55,6 +55,7 @@ require([
 $(document).ready(function() {
 
     setCustomResources();			// Apply custom javascript
+	setupUserProfile();
 	var bs = isBusinessServer();
 	localise.setlang();		// Localise HTML
 	$('#map_name').attr("placeholder", localise.set["sr_m_ph"]);
