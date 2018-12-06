@@ -115,6 +115,7 @@ require([
 	$(document).ready(function() {
 
         setCustomLogs();
+		setupUserProfile();
 		localise.setlang();		// Localise HTML
 		
 		getLoggedInUser(undefined, false, true, undefined);
