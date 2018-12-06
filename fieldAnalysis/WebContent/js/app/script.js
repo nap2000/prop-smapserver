@@ -209,8 +209,7 @@ function initialiseDialogs() {
                             queryName = $('#export_query option:selected').text(),
                             includeMeta=$('#includeMeta').prop("checked"),
                             filename,
-                            filter = $('#ad_filter').val(),
-                            tz = $('#e_tz').val();
+                            filter = $('#ad_filter').val();
 
                         // Set the filename of the exported file
                         if(exportQuerySel) {

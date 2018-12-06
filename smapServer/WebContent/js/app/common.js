@@ -246,7 +246,6 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 			$('#password_me_fields').hide();
 			addLanguageOptions($('.language_select'), data.language);
 			addOrganisationOptions($('.organisation_select'), data.o_id, data.orgs);
-			getAvailableTimeZones($('.timezone_select'), showTimeZones);
 			$('#me_name').val(data.name);
 			$('#me_email').val(data.email);
 
@@ -485,7 +484,7 @@ function enableUserProfile () {
 						user.current_survey_id = 0;
 						user.current_task_group_id = 0;
 
-						user.timezone = $('#e_tz').val();
+						user.timezone = $('#u_tz').val();
 
 						user.o_id = $('#me_organisation').val();
 						if(user.o_id == globals.gOrgId) {
@@ -581,7 +580,9 @@ function enableUserProfileBS () {
 			user.o_id = 0;	// No change
 		}
 
-		user.timezone = $('#e_tz').val();
+		globals.gTimezone = $('#u_tz').val();
+		user.timezone = globals.gTimezone;
+
 		user.current_project_id = 0;	// Tell service to ignore project id and update other details
 		user.current_survey_id = 0;
 		user.current_task_group_id = 0;
@@ -624,7 +625,7 @@ function saveCurrentUser(user) {
 	});
 }
 
-function getAvailableTimeZones($elem, callback) {
+function getAvailableTimeZones(callback) {
 	addHourglass();
 	$.ajax({
 		url: "/surveyKPI/utility/timezones",
@@ -634,7 +635,7 @@ function getAvailableTimeZones($elem, callback) {
 			removeHourglass();
 
 			if(typeof callback == "function") {
-				callback($elem, data);
+				callback(data);
 			}
 
 		},
@@ -649,10 +650,11 @@ function getAvailableTimeZones($elem, callback) {
 	});
 }
 
-function showTimeZones($elem, timeZones) {
+function showTimeZones(timeZones) {
 	var h =[],
 		idx = -1,
-		i;
+		i,
+		tz;
 
 	for (i = 0; i < timeZones.length; i++) {
 		tz = timeZones[i];
@@ -662,9 +664,13 @@ function showTimeZones($elem, timeZones) {
 		h[++idx] = tz.name;
 		h[++idx] = '</option>';
 	}
-	$elem.empty().html(h.join(''));
-	var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-	$elem.val(tz);   // Set time zone
+	$('.timezone_select').empty().html(h.join(''));
+	if(globals.gTimezone) {
+		tz = globals.gTimezone;
+	} else {
+		tz = Intl.DateTimeFormat().resolvedOptions().timeZone;      // Browser timezone
+	}
+	$('#u_tz').val(tz);   // Set time zone in user profile
 }
 
 function addTimeZoneToUrl(url) {
@@ -678,6 +684,13 @@ function addTimeZoneToUrl(url) {
 		url += Intl.DateTimeFormat().resolvedOptions().timeZone;
 	}
 	return url;
+}
+
+/*
+ * Create the user profile dialog and get any data it needs
+ */
+function setupUserProfile() {
+	getAvailableTimeZones(showTimeZones);
 }
 
 function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hideUserDetails,
@@ -702,6 +715,9 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 			globals.gOrgId = data.o_id;
 			globals.gEntId = data.e_id;
 
+			globals.gTimezone = data.timezone;
+			$('#u_tz').val(data.timezone);
+
 			if(!hideUserDetails) {
 				updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServerDetailsFn);
 			}
@@ -722,7 +738,7 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 			}
 
 			// Add hack to show beta functions. There should be a user setting of beta tester
-			if(data.name.indexOf("Penman") >= 0 || data.name.indexOf("Torraco") >= 0) {
+			if(data.name &&(data.name.indexOf("Penman") >= 0 || data.name.indexOf("Torrado") >= 0)) {
 				$('.beta').show();
 			}
 
