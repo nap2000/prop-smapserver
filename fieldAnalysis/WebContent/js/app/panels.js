@@ -45,8 +45,6 @@ var hexp1 = '<img class="pExpand" value="';
 var hexp2 = '" src="img/expand.png"/>';
 var hset1 = '<img class="pSettings" value="';
 var hset2 = '" src="img/settings16.png"/>';
-var hrep1 = '<img class="pReport" value="';
-var hrep2 = '" src="img/report.png"/>';
 
 var hmap1 = '<a class="slide" href="#slideLeft">\<</a>';
 var hmap2 = '<div style="height: 100%; width: 100%;" >';
@@ -122,7 +120,8 @@ $(document).ready(function() {
 	
 	window.moment = moment;	// Required as common.js not part of module
 	window.extended_model = extended_model;
-	
+
+	setupUserProfile();
 	localise.setlang();		// Localise HTML
 	
     // Add a new panel button click
@@ -299,7 +298,7 @@ $(document).ready(function() {
  	 });
 
 	var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-	$('#e_tz').val(tz);   // Set time zone
+	$('#u_tz').val(tz);   // Set time zone
 	
 	enableUserProfile();
 	
@@ -445,10 +444,6 @@ function addTriggers() {
 		delPanel($(this));
 	});
 	
-	$('.pReport').off().click(function() {	// Export a panel
-		exportReport($(this));
-	});
-	
 	$('.slide').off().click(function() {	// Slide left right panels
 		slide($(this));
 	});
@@ -544,9 +539,6 @@ function createPanel(idx, $panels, title, surveyName) {
 	h[++i] = hset1;
 	h[++i] = idx;
 	h[++i] = hset2;
-	h[++i] = hrep1;
-	h[++i] = idx;
-	h[++i] = hrep2;
 	h[++i] = hdiv2;
 	h[++i] = hcont;
 	h[++i] = hdiv2;
@@ -663,98 +655,6 @@ function setPanelType(type, idx, period, qId) {
 	if(!globals.gIsAnalyst) {
 		$('.pfoot').hide();
 	}
-	
-}
-
-// Handle export item to report
-function exportReport($this) {
-	
-	var $data, map,
-		html,
-		viewIdx = $this.attr("value"),
-		views = globals.gSelector.getViews(),
-		canvas, canvasData, item,
-		csvValue,
-		format, num,
-		i,
-		items,
-		multiLayers = [];		// Extension of results to allow for multiple map layers
-	
-	// Get the report item and add it to the report dialog
-	if(views[viewIdx].type == "graph")  {
-		
-		//var canvas = $('#chartdiv' + views[viewIdx].pId).jqplotToImage(0, 0);
-		canvas = jqplotToImg($('#chartdiv' + views[viewIdx].pId));
-		canvasData = canvas.toDataURL();
-		gReport = {
-				title: views[viewIdx].title, 
-				smap: {
-					data_gen_capture: canvasData,
-					data_gen: JSON.stringify(views[viewIdx].results),
-					data_gen_type: "graph",
-					sId: views[viewIdx].sId
-				},
-				type: "data_url",
-				action: "new"
-				};
-		
-	} else if(views[viewIdx].type == "table"){
-		
-		$data = $('#table_panel' + views[viewIdx].pId).find('table');
-		csvValue = $data.table2CSV({delivery:'value'});
-		
-		gReport = {
-				title: views[viewIdx].title, 
-				type: 'rich',
-				smap: {
-					data_gen_type: "table",
-					data_gen: JSON.stringify(views[viewIdx].results),
-					data_gen_capture: csvValue,
-					sId: views[viewIdx].sId
-				},
-				type: "data_url",
-				html: html,
-				width: 500,
-				height: 800,
-				action: "new"
-		};
-		
-	} else if(views[viewIdx].type == "map") {
-		
-		// Add the layers from the selected panel
-		for(i = 0; i < views[viewIdx].results.length; i++) {
-			multiLayers.push(views[viewIdx].results[i]);
-		}
-		// Add the layers from other panels that may be displayed on this map
-		for(i = 0; i < views.length; i++) {
-			if(i !== viewIdx && views[i].state != "deleted"  && views[i].layerId === views[viewIdx].id) {
-				for(j = 0; j < views[i].results.length; j++) {
-					multiLayers.push(views[i].results[j]);
-				}
-			}
-		}
-		
-		gReport = {
-				title: views[viewIdx].title, 
-				width: 1024,
-				height: 768,
-				smap: {
-					data_gen_type: "map",
-					data_gen: JSON.stringify(multiLayers),
-					data_bounds: views[viewIdx].bounds,		// TODO include bounds from other layers
-					sId: views[viewIdx].sId
-				},
-				type: "data_url",
-				action: "new"
-		};
-		
-		
-	} else {
-		alert("Reports can only be created from graphs, tables, maps and images");
-	}
-	
-	$('#reportContainer').dialog("open");
-	setReport(gReport);
 	
 }
 
