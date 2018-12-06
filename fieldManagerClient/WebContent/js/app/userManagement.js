@@ -37,6 +37,7 @@ define(['jquery','localise', 'common', 'globals',
 	$(document).ready(function() {
 
 		localise.setlang();		// Localise HTML
+		setupUserProfile();
 
 		getUsers();
 		getProjects();
@@ -44,8 +45,6 @@ define(['jquery','localise', 'common', 'globals',
 			false, getEnterprises, getServerDetails);
 		getDeviceSettings();
 		getSensitiveSettings();
-
-		getAvailableTimeZones($('#o_tz'), showTimeZones);
 
 		// Add change event on group and project filter
 		$('#group_name, #project_name, #role_name, #org_name').change(function() {

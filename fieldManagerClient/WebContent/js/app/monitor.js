@@ -24,6 +24,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
 
         $(document).ready(function() {
 
+	        setupUserProfile();
             window.moment = moment;
 
             localise.setlang();		// Localise HTML

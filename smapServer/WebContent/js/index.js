@@ -28,7 +28,8 @@ require(['jquery', 'bootstrap.min', 'app/localise', 'app/common','app/globals'],
 		i,
 		loggedin=false,
 		androidVersion;
-	
+
+	setupUserProfile();
 	localise.setlang();
 	
 	/*

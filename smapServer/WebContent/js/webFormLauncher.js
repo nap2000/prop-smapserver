@@ -62,6 +62,7 @@ require([
 $(document).ready(function() {
 
     setCustomWebForms();			// Apply custom javascript
+	setupUserProfile();
 	localise.setlang();		// Localise HTML
 	
 	// Get the user details
