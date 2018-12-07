@@ -23,8 +23,6 @@ public class Billing {
 			CheckDisk cd = new CheckDisk();
 			cd.check(sd, "/smap");
 			
-			CheckSubmissions cs = new CheckSubmissions();
-			
 		} catch (ApplicationException e) {		
 			System.out.println("        " + e.getMessage());	
 		} catch (Exception e) {	

@@ -24,15 +24,15 @@ public class CheckDisk {
 	public void check(Connection sd, String basePath) throws SQLException, ApplicationException, IOException {
 		System.out.println("Checking disk");
 		
-		String sql = "select o.id as oId, o.name as name, p.id as pId, s.ident as ident "
+		String sql = "select o.e_id as eId, o.id as oId, o.name as name, p.id as pId, s.ident as ident "
 				+ "from organisation o, project p, survey s "
 				+ "where o.id = p.o_id "
 				+ "and p.id = s.p_id "
 				+ "order by o.id, p.id asc";
 		PreparedStatement pstmt = null;
 		
-		String sqlWrite = "insert into disk_usage (o_id, total, upload, media, template, attachments, when_measured) "
-				+ "values(?, ?, ?, ?, ?, ?, now())";
+		String sqlWrite = "insert into disk_usage (e_id, o_id, total, upload, media, template, attachments, when_measured) "
+				+ "values(?, ?, ?, ?, ?, ?, ?, now())";
 		PreparedStatement pstmtWrite = null;
 		
 		
@@ -48,7 +48,7 @@ public class CheckDisk {
 			 */
 			File p = new File("/smap");
 			long pSize = p.getTotalSpace() / 1000000;	// MB
-			writeUsage(pstmtWrite, 0, pSize, 0, 0, 0, 0);
+			writeUsage(pstmtWrite, 0, 0, pSize, 0, 0, 0, 0);
 			System.out.println("Total usage: " + pSize);
 			
 			pstmt = sd.prepareStatement(sql);
@@ -56,19 +56,21 @@ public class CheckDisk {
 			
 			int currentProject = -1;
 			int currentOrg = -1;
+			int eId = -1;
 			String currentOrgName = null;
 			long uploadSize = 0;
 			long mediaSize = 0;
 			long templateSize = 0;
 			long attachmentsSize = 0;
 			while(rs.next()) {
+				eId = rs.getInt("eId");
 				int oId = rs.getInt("oId");
 				int pId = rs.getInt("pId");
 				String organisation = rs.getString("name");
 				String surveyIdent = rs.getString("ident");
 				
 				if(currentOrg >= 0 && oId != currentOrg) {
-					writeUsage(pstmtWrite, currentOrg, pSize, uploadSize, mediaSize, templateSize, attachmentsSize);
+					writeUsage(pstmtWrite, eId, currentOrg, pSize, uploadSize, mediaSize, templateSize, attachmentsSize);
 					System.out.println("Usage for organisation: " + currentOrgName + " : " 
 							+ uploadSize + " : " + mediaSize + " : " + templateSize + " ; " + attachmentsSize);
 					
@@ -97,7 +99,7 @@ public class CheckDisk {
 				attachmentsSize += getDirUsage(attachmentsDir);
 		
 			}
-			writeUsage(pstmtWrite, currentOrg, pSize, uploadSize, mediaSize, templateSize, attachmentsSize);
+			writeUsage(pstmtWrite, eId, currentOrg, pSize, uploadSize, mediaSize, templateSize, attachmentsSize);
 			System.out.println("Usage for organisation: " + currentOrgName + " : " + uploadSize + " : " + mediaSize + " : " + templateSize);
 			
 			
@@ -108,14 +110,15 @@ public class CheckDisk {
 	}
 	
 	
-	private void writeUsage(PreparedStatement pstmt, int org, long totalSize, long uploadSize, long mediaSize, 
+	private void writeUsage(PreparedStatement pstmt, int ent, int org, long totalSize, long uploadSize, long mediaSize, 
 			long templateSize, long attachmentsSize) throws SQLException {
 		pstmt.setInt(1, org);
-		pstmt.setLong(2, totalSize);
-		pstmt.setLong(3, uploadSize);
-		pstmt.setLong(4, mediaSize);
-		pstmt.setLong(5, templateSize);
-		pstmt.setLong(6, attachmentsSize);
+		pstmt.setInt(2, ent);
+		pstmt.setLong(3, totalSize);
+		pstmt.setLong(4, uploadSize);
+		pstmt.setLong(5, mediaSize);
+		pstmt.setLong(6, templateSize);
+		pstmt.setLong(7, attachmentsSize);
 		pstmt.executeUpdate();
 	}
 	
