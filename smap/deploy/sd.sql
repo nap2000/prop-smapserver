@@ -1049,6 +1049,9 @@ create table bill_rates (
 	);
 alter table bill_rates OWNER TO ws;
 
+alter table disk_usage add column e_id integer default 0;
+update disk_usage set e_id = 0 where e_id is null;
+
 insert into groups(id,name) values(8,'enterprise admin');
 insert into groups(id,name) values(9,'server owner');
 
@@ -1087,3 +1090,6 @@ CREATE index msg_processing_time ON message(processed_time);
 CREATE index ue_survey_ident ON upload_event(ident);
 
 alter table users add column timezone text;
+
+-- Make sure we can't create duplicate billing rate entries
+create unique index idx_bill_rates on bill_rates(o_id, e_id, ts_applies_from);

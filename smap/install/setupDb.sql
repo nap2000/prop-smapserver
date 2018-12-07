@@ -1118,6 +1118,7 @@ ALTER SEQUENCE du_seq OWNER TO ws;
 DROP TABLE IF EXISTS disk_usage CASCADE;
 create TABLE disk_usage (
 	id integer default nextval('du_seq') constraint  pk_diskusage primary key,
+	e_id integer,
 	o_id integer,
 	total bigint,					-- Total disk usage
 	upload bigint,					-- Disk used in upload directory
@@ -1173,12 +1174,13 @@ ALTER SEQUENCE bill_rates_seq OWNER TO ws;
 DROP TABLE IF EXISTS bill_rates;
 create TABLE bill_rates (
 	id integer default nextval('bill_rates_seq') constraint pk_bill_rates primary key,
-	o_id integer,	-- If 0 then all organisations (In enterprise or server)
-	e_id integer,	-- If 0 then all enterprises (ie server level)
-	rates text,		-- json object
+	o_id integer default 0,	-- If 0 then all organisations (In enterprise or server)
+	e_id integer default 0,	-- If 0 then all enterprises (ie server level)
+	rates text,				-- json object
 	currency text,
 	created_by text,
 	ts_created TIMESTAMP WITH TIME ZONE,
 	ts_applies_from TIMESTAMP WITH TIME ZONE
 	);
+create unique index idx_bill_rates on bill_rates(o_id, e_id, ts_applies_from);
 ALTER TABLE bill_rates OWNER TO ws;

@@ -127,4 +127,5 @@ fi
 
 # Hosted Only
 # Start disk monitor
+sudo -u postgres psql -f ./rates.sql -q -d survey_definitions 2>&1 
 sudo -u ubuntu ~ubuntu/smap/deploy/manage.sh
