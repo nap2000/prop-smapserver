@@ -1735,7 +1735,7 @@ define(['jquery','localise', 'common', 'globals',
 		h[++idx] = '</th>';
 		h[++idx] = '<th>';
 		h[++idx] = localise.set["bill_chg_date"] +
-			' (' + Intl.DateTimeFormat().resolvedOptions().timeZone + ')';	// Changed time
+			' (' + globals.gTimezone + ')';	// Changed time
 		h[++idx] = '</th>';
 		h[++idx] = '<th>';
 		h[++idx] = localise.set["c_action"];

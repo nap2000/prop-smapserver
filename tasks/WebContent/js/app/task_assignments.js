@@ -165,7 +165,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                     // Add parameters
                     if (tz) {
-                        url += (hasParam ? '&' : '?') + "tz=" + tz;
+                        url += (hasParam ? '&' : '?') + "tz=" + encodeURIComponent(tz);
                         hasParam = true;
                     }
                     if(statusFilterArray) {
