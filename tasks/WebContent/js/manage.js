@@ -105,8 +105,7 @@ require([
 			pArray = [],
 			param = [],
 			openingNew = false,
-			dont_get_current_survey = true,
-			bs = isBusinessServer();
+			dont_get_current_survey = true;
 
 		setCustomManage();		// Apply custom javascript
 		 setupUserProfile();

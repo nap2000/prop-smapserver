@@ -301,9 +301,6 @@ define(['jquery','localise', 'common', 'globals',
 			locale: gUserLocale || 'en'
 		}).data("DateTimePicker").date(moment());
 
-
-		isBusinessServer();
-
 		/*
 		 * Save a project details
 		 */
