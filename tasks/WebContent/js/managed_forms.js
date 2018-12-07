@@ -895,7 +895,7 @@ require([
         url += "&sort=prikey&dirn=desc";
 
         var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        url += "&tz=" + tz;
+        url += "&tz=" + encodeURIComponent(tz);
 
         $.fn.dataTable.ext.errMode = 'none';
 
@@ -1136,7 +1136,7 @@ require([
 
         var url = '/api/v1/data/similar/' + sId + '/' + getSearchCriteria() + "?format=dt";
         var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        url += "&tz=" + tz;
+        url += "&tz=" + encodeURIComponent(tz);
 
         globals.gMainTable.ajax.url(url).load();
 
@@ -1427,7 +1427,7 @@ require([
             url += item.sId + "?mgmt=" + managed + "&form=" + item.fId + "&hrk=" + item.hrk;
         }
         var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        url += "&tz=" + tz;
+        url += "&tz=" + encodeURIComponent(tz);
 
         addHourglass();
         $.ajax({

@@ -897,7 +897,7 @@ function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bB
     }
 
 	if(tz) {
-		url += '&tz=' + tz;
+		url += '&tz=' + encodeURIComponent(tz);
 	}
 
     return url;
@@ -990,7 +990,7 @@ function exportSurveyURL (
     }
 
     if(tz) {
-        url += '&tz=' + tz;
+        url += '&tz=' + encodeURIComponent(tz);
     }
 
     return url;
@@ -1060,7 +1060,7 @@ function exportXlsxSurveyURL (
     }
 
 	if(tz) {
-		url += "&tz=" + tz;
+		url += "&tz=" + encodeURIComponent(tz);
 	}
 
     return url;
