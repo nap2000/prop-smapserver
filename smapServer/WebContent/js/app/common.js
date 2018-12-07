@@ -681,7 +681,7 @@ function addTimeZoneToUrl(url) {
 			url += "?";
 		}
 		url += "tz=";
-		url += Intl.DateTimeFormat().resolvedOptions().timeZone;
+		url += encodeURIComponent(globals.gTimezone);
 	}
 	return url;
 }
@@ -715,8 +715,12 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 			globals.gOrgId = data.o_id;
 			globals.gEntId = data.e_id;
 
-			globals.gTimezone = data.timezone;
-			$('#u_tz').val(data.timezone);
+			if(data.timezone) {
+				globals.gTimezone = data.timezone;
+			} else {
+				globals.gTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+			}
+			$('#u_tz').val(globals.gTimezone);
 
 			if(!hideUserDetails) {
 				updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServerDetailsFn);
@@ -1578,7 +1582,7 @@ function questionMetaURL (sId, lang, qId) {
  */
 function getSurveyDetails(callback, get_changes) {
 
-	var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+	var tz = globals.gTimezone;
 	var url="/surveyKPI/surveys/" + globals.gCurrentSurvey;
 	if(get_changes) {
 		url += "?get_changes=true";

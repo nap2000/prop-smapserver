@@ -270,8 +270,7 @@ require([
 	 function getManagedData(sId) {
 		 
 		 var url = '/api/v1/data/' + sId + "?mgmt=true";
-         var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-         url += "&tz=" + encodeURIComponent(tz);
+         url += "&tz=" + encodeURIComponent(globals.gTimezone);
 
 		 addHourglass();
 		 $.ajax({
