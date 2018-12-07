@@ -128,6 +128,7 @@ require([
 
         $('#addReport').click(function(){
             $('#publish_form')[0].reset();
+            $('#e_tz').val(globals.gTimezone);
 
             $('.role_select_roles').empty()
             getSurveyRoles($('#survey').val(), undefined, true);
@@ -272,7 +273,7 @@ require([
             url += "&language=" + language;
         }
 		if(tz) {
-			url += "&tz=" + tz;
+			url += "&tz=" + encodeURIComponent(tz);
 		}
         if(filter && filter.length > 0) {
             url += "&filter=" + filter;

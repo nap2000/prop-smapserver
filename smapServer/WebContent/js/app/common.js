@@ -1582,9 +1582,9 @@ function getSurveyDetails(callback, get_changes) {
 	var url="/surveyKPI/surveys/" + globals.gCurrentSurvey;
 	if(get_changes) {
 		url += "?get_changes=true";
-		url += "&tz=" + tz;
+		url += "&tz=" + encodeURIComponent(tz);
 	} else {
-		url += "?tz=" + tz;
+		url += "?tz=" + encodeURIComponent(tz);
 	}
 
 	if(!globals.gCurrentSurvey) {
