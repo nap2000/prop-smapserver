@@ -271,7 +271,7 @@ require([
 		 
 		 var url = '/api/v1/data/' + sId + "?mgmt=true";
          var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-         url += "&tz=" + tz;
+         url += "&tz=" + encodeURIComponent(tz);
 
 		 addHourglass();
 		 $.ajax({
