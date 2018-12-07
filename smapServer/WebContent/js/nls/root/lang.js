@@ -964,6 +964,8 @@ define({
     "disk": "Disk",
     "static map": "Static Map",
     "rekognition": "AWS Rekognition",
+	"static_map": "Mapbox Static Map",
+	"monthly": "Monthly Charge",
     "org_bill_rpt": "Organisation Usage Report",
     "bill_enable": "Enable Billing",
     "bill_from": "Applies From",
