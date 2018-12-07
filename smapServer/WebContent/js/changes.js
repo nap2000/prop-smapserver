@@ -152,7 +152,7 @@ function setChangesHtml($element, survey) {
 				h[++idx] = '<th>';
 					h[++idx] = localise.set["ed_dt"];
 					h[++idx] = ' (';
-					h[++idx] = Intl.DateTimeFormat().resolvedOptions().timeZone;
+					h[++idx] = globals.gTimezone;
 					h[++idx] = ')';
 				h[++idx] = '</th>';
 

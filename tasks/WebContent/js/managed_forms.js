@@ -402,8 +402,7 @@ require([
             }
         });
 
-        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        $('#timezone').html(localise.set["c_tz"] + ": " + tz);
+        $('#timezone').html(localise.set["c_tz"] + ": " + globals.gTimezone);
 
 
     });
@@ -551,7 +550,7 @@ require([
 
         }
 
-        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        var tz = globals.gTimezone;
 
         data = getTableData(globals.gMainTable,
             gTasks.cache.surveyConfig[globals.gViewId].columns);
@@ -894,8 +893,7 @@ require([
         url += "&merge_select_multiple=yes";
         url += "&sort=prikey&dirn=desc";
 
-        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        url += "&tz=" + encodeURIComponent(tz);
+        url += "&tz=" + encodeURIComponent(globals.gTimezone);
 
         $.fn.dataTable.ext.errMode = 'none';
 
@@ -1135,8 +1133,7 @@ require([
     function showDuplicateData(sId) {
 
         var url = '/api/v1/data/similar/' + sId + '/' + getSearchCriteria() + "?format=dt";
-        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        url += "&tz=" + encodeURIComponent(tz);
+        url += "&tz=" + encodeURIComponent(globals.gTimezone);
 
         globals.gMainTable.ajax.url(url).load();
 
@@ -1426,8 +1423,7 @@ require([
         } else if (item.type === "link") {
             url += item.sId + "?mgmt=" + managed + "&form=" + item.fId + "&hrk=" + item.hrk;
         }
-        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        url += "&tz=" + encodeURIComponent(tz);
+        url += "&tz=" + encodeURIComponent(globals.gTimezone);
 
         addHourglass();
         $.ajax({
