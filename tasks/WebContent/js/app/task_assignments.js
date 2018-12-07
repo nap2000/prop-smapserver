@@ -47,8 +47,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
         $(document).ready(function () {
 
-            var bs = isBusinessServer();
-
             window.moment = moment;		// Make moment global for use by common.js
 
             globals.gRegion = {};	// Initialise global values
