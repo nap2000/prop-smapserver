@@ -151,8 +151,7 @@ require([
             pArray = [],
             param = [],
             openingNew = false,
-            dont_get_current_survey = true,
-            bs = isBusinessServer();
+            dont_get_current_survey = true;
 
         window.chart = chart;
         window.moment = moment;
