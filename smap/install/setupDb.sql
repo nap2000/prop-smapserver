@@ -110,6 +110,7 @@ create TABLE enterprise (
 	id INTEGER DEFAULT NEXTVAL('enterprise_seq') CONSTRAINT pk_enterprise PRIMARY KEY,
 	name text,
 	changed_by text,
+	billing_enabled default false,
 	changed_ts TIMESTAMP WITH TIME ZONE
 	);
 CREATE UNIQUE INDEX idx_enterprise ON enterprise(name);
