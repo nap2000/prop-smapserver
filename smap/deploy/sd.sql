@@ -1095,3 +1095,4 @@ alter table users add column timezone text;
 create unique index idx_bill_rates on bill_rates(o_id, e_id, ts_applies_from);
 
 alter table enterprise add column billing_enabled boolean default false;
+alter table server add column billing_enabled boolean default false;
