@@ -259,8 +259,6 @@ define(['jquery','localise', 'common', 'globals',
 		var $elem = $('#rates_table'),
 			h = [],
 			idx = -1;
-
-		alert("Got some rates: " + data.length);
 	}
 
 

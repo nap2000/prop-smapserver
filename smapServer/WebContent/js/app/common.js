@@ -291,6 +291,7 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 
 			} else if(groups[i].id === globals.GROUP_ENTERPRISE) {
                 globals.gIsEnterpriseAdministrator = true;
+				globals.gBillingData = true;
 
             } else if(groups[i].id === globals.GROUP_ANALYST) {
 				globals.gIsAnalyst = true;
@@ -303,6 +304,7 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 
 			} else if(groups[i].id === globals.GROUP_VIEW_DATA) {
                 globals.gViewData = true;
+
             } else if(groups[i].id === globals.GROUP_OWNER) {
                 globals.gIsServerOwner = true;
             }
