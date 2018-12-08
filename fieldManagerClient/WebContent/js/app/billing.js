@@ -107,13 +107,14 @@ define(['jquery','localise', 'common', 'globals',
             level;
 
 	    if(globals.gIsOrgAdministrator || globals.gIsEnterpriseAdministrator || globals.gIsServerOwner) {
-            if(globals.gIsServerOwner) {
+
+	    	if(globals.gIsServerOwner || globals.gIsEnterpriseAdministrator) {
                 h[++idx] = '<option value="owner">';
-                h[++idx] = localise.set["u_server_owner"];
+                h[++idx] = localise.set["server"];
                 h[++idx] = '</option>';
                 level = "owner";
             }
-            if(globals.gIsEnterpriseAdministrator) {
+            if(globals.gIsEnterpriseAdministrator || globals.gIsOrgAdministrator) {
                 h[++idx] = '<option value="ent">';
                 h[++idx] = localise.set["u_ent_admin"];
                 h[++idx] = '</option>';
