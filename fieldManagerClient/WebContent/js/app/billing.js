@@ -97,6 +97,28 @@ define(['jquery','localise', 'common', 'globals',
             levelChanged();
         });
 
+        $('#enableBilling').change(function(){
+        	var enabled = $(this).is(':checked');
+	        var enabledString = enabled ? "true" : "false";
+	        addHourglass();
+	        $.ajax({
+		        type: "POST",
+		        cache: false,
+		        contentType: "application/json",
+		        url: "/surveyKPI/billing/enable",
+		        data: {
+		        	enabled: enabledString,
+			        level: gLevel
+		        },
+		        success: function(data) {
+			        removeHourglass();
+		        }, error: function(data, status) {
+			        removeHourglass();
+			        alert(localise.set["c_error"] + ": " + data.statusText);
+		        }
+	        });
+        });
+
 		enableUserProfileBS();	// Allow user to reset their own profile
 
 	});
