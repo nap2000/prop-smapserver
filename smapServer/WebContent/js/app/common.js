@@ -489,10 +489,11 @@ function enableUserProfile () {
 						user.current_task_group_id = 0;
 
 						user.timezone = $('#u_tz').val();
+						globals.gTimezone = user.timezone;
 
 						user.o_id = $('#me_organisation').val();
 						if(user.o_id == globals.gOrgId) {
-							users.o_id = 0;	// No change
+							user.o_id = 0;	// No change
 						}
 
 						saveCurrentUser(user);			// Save the updated user details to disk

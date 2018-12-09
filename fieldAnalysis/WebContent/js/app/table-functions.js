@@ -284,7 +284,7 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 						} else if(key === "_complete") {
 							val = (val === "f") ? "No" : "Yes";
 						} else if(type === "dateTime") {
-							val = formatLocalTime(val);
+							//val = formatLocalTime(val);  all good
 						}
 						gTab[++gIdx] = '<td ' + params + '>';
 						// If the value is zero and this is a select multiple then show a blank
