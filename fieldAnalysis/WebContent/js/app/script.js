@@ -323,7 +323,7 @@ function initialiseDialogs() {
 
                                 url = exportXlsxSurveyURL(sId, displayName, language, split_locn,
                                     form, exportReadOnly, merge_select_multiple, embedImages, incHxl,
-                                    exp_from_date, exp_to_date, dateQuestionId, filter, includeMeta, tz);
+                                    exp_from_date, exp_to_date, dateQuestionId, filter, includeMeta, globals.gTimezone);
                             } else {
                                 // Legacy html xlsx export
                                 forms = $(':checkbox:checked', '.selectforms').map(function () {
