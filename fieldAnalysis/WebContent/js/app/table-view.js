@@ -407,10 +407,6 @@ function setTableQuestion(view) {
 		$selHead.html(localise.set["an_nd"]);
 	}
 	
-	// Enable the export and hide the delete button
-	//$selFoot.find('.tExport').button().click(function() {
-	//	exportTable($(this), view);
-	//});
 	$selFoot.find('.tExport,.tExportMedia').hide();		// Export of table level data from question view no longer supported
 	$selFoot.find('.tImport').hide();
 	$selFoot.find('.tDelete').hide();
@@ -473,44 +469,6 @@ function toggleBad($elem, fId, pKey, value, sId, theView) {
  * Also add a function to toggle the "bad" status of a record
  */
 function addRightClickToTable($elem, sId, view) {
-	/*
-	$elem.find('a').off().bind("contextmenu", function(e) {
-		var $this = $(this),
-			mediaObj,
-			mediaType,
-			media = $this.attr("href"),
-			thumbnail = $this.find('img').attr("src");
-		
-		gReport = {
-			smap: {
-				sId: sId
-			},
-			url: media, 
-			title: "media", 
-			url: media,
-			thumbnail_url: thumbnail,
-			action: "new"
-		};
-		
-		if(thumbnail.indexOf("audio-icon") > -1) {
-			mediaType = "audio";
-		} else {
-			mediaObj = getMedia(media);
-			mediaType = mediaObj.type;
-			if(mediaType === "image") {
-				mediaType = "photo";		// Photo used instead of image in reports as per oembed
-			}
-		}
-		
-		gReport.type = mediaType;
-		gReport.smap.data_gen_type = mediaType;
-
-		$('#report_title').val(gReport.title);
-		$('#reportContainer').dialog("open");
-		setReport(gReport);
-		return false;
-	});
-	*/
 	
 	function toggleBadFn(survey, theView) {
 		$elem.find('.bad_r, .good_r').off().bind("contextmenu", function(e) {
