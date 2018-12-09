@@ -480,6 +480,7 @@ define({
     "msg_pd_key": "Specify a data key ",
     "msg_one_role": "At least one role must be selected",
     "msg_dup_name": "Duplicate name",
+    "msg_prev_select": "There are no previous select questions to get values from. You may want to set a custom filter",
 
     // Editor
     "e_b_e": "Base on existing form",
