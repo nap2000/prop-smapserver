@@ -248,6 +248,7 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 			addOrganisationOptions($('.organisation_select'), data.o_id, data.orgs);
 			$('#me_name').val(data.name);
 			$('#me_email').val(data.email);
+			$('#u_tz').val(globals.gTimezone);
 
 			$(".navbar-collapse").removeClass("in").addClass("collapse");	// Remove drop down menu
 		});
@@ -264,6 +265,7 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 			addOrganisationOptions($('.organisation_select'), data.o_id, data.orgs);
 			$('#me_name').val(data.name);
 			$('#me_email').val(data.email);
+			$('#u_tz').val(globals.gTimezone);
 
 			$('#modify_me_popup').dialog("option", "title", data.name + "@" + data.organisation_name);
 			$('#modify_me_popup').dialog("open");
@@ -667,12 +669,10 @@ function showTimeZones(timeZones) {
 		h[++idx] = '</option>';
 	}
 	$('.timezone_select').empty().html(h.join(''));
-	if(globals.gTimezone) {
-		tz = globals.gTimezone;
-	} else {
-		tz = Intl.DateTimeFormat().resolvedOptions().timeZone;      // Browser timezone
+	if(!globals.gTimezone) {
+		globals.gTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;      // Browser timezone
 	}
-	$('#u_tz').val(tz);   // Set time zone in user profile
+	$('#u_tz').val(globals.gTimezone);   // Set time zone in user profile
 }
 
 function addTimeZoneToUrl(url) {

@@ -296,9 +296,6 @@ $(document).ready(function() {
 		
 		getViewSurveys({sId:"-1"});				// Update the survey list to match the new project
  	 });
-
-	var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-	$('#u_tz').val(tz);   // Set time zone
 	
 	enableUserProfile();
 	
