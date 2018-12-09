@@ -406,7 +406,7 @@ function setTableQuestion(view) {
 	} else {
 		$selHead.html(localise.set["an_nd"]);
 	}
-	
+
 	$selFoot.find('.tExport,.tExportMedia').hide();		// Export of table level data from question view no longer supported
 	$selFoot.find('.tImport').hide();
 	$selFoot.find('.tDelete').hide();

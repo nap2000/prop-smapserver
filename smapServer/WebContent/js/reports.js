@@ -531,6 +531,7 @@ require([
             var exp_from_date;
             var exp_to_date;
             var filter;
+            var tz;
             var landscape;
             for(i = 0; i < report.action_details.parameters.length; i++) {
                 var param = report.action_details.parameters[i];
