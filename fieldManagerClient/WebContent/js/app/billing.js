@@ -22,7 +22,9 @@ define(['jquery','localise', 'common', 'globals',
         'datetimepicker'], function($, lang, common, globals, bootbox, moment) {
 
     var gLevel,
-        gOrganisationList;
+        gOrganisationList,
+	    gEnterpriseList,
+	    gEnabled;
 
 	$(document).ready(function() {
 
@@ -100,6 +102,15 @@ define(['jquery','localise', 'common', 'globals',
         $('#enableBilling').change(function(){
         	var enabled = $(this).is(':checked');
 	        var enabledString = enabled ? "true" : "false";
+	        var idx = 0;
+	        var id = 0;
+	        if(gLevel === "org") {
+				idx = $('#organisation').val();
+				id = gOrganisationList[idx].id;
+	        } else if(gLevel === "ent") {
+		        idx = $('#enterprise').val();
+		        id = gEnterpriseList[idx].id;
+	        }
 	        addHourglass();
 	        $.ajax({
 		        type: "POST",
@@ -108,7 +119,8 @@ define(['jquery','localise', 'common', 'globals',
 		        url: "/surveyKPI/billing/enable",
 		        data: {
 		        	enabled: enabledString,
-			        level: gLevel
+			        level: gLevel,
+			        id: id
 		        },
 		        success: function(data) {
 			        removeHourglass();
@@ -173,13 +185,20 @@ define(['jquery','localise', 'common', 'globals',
             if(!gOrganisationList) {
                 getOrganisations();
             }
-        }
+        } else if(gLevel === "ent") {
+		    $(".showEnterprise").show();
+		    if(!gEnterpriseList) {
+			    getEnterprises();
+		    }
+	    }
+
         if(globals.gIsServerOwner ||
                 (globals.gIsEnterpriseAdministrator && gLevel !== "owner") ||
                 (globals.gIsOrgAdministrator && gLevel === "org")
                 ) {
             $(".showManager").show();
         }
+
         if(!dontGetBillDetails) {
 	        getBillDetails();
         }
@@ -211,6 +230,9 @@ define(['jquery','localise', 'common', 'globals',
             success: function (data) {
                 removeHourglass();
 				if(data) {
+					gEnabled = data.enabled;
+					$('#enableBilling').prop('checked', gEnabled);
+
 					populateBillTable(data);
 				}
             },
@@ -356,7 +378,7 @@ define(['jquery','localise', 'common', 'globals',
                         h[++idx] = i;
                         h[++idx] = '"';
                         if(i == 0 ) {
-                            h[++idx] = ' selected="seelcted"'
+                            h[++idx] = ' selected="selected"'
                         }
                         h[++idx] = '>';
                         h[++idx] = data[i].name;
@@ -376,6 +398,47 @@ define(['jquery','localise', 'common', 'globals',
             }
         });
     }
+
+	function getEnterprises() {
+
+		addHourglass();
+		$.ajax({
+			type: 'GET',
+			cache: false,
+			url: "/surveyKPI/enterpriseList",
+			success: function(data, status) {
+				removeHourglass();
+				gEnterpriseList = data;
+				if(data && data.length > 0) {
+					var h = [],
+						idx = -1,
+						i;
+
+					for(i = 0; i < data.length; i++) {
+						h[++idx] = '<option value="';
+						h[++idx] = i;
+						h[++idx] = '"';
+						if(i == 0 ) {
+							h[++idx] = ' selected="selected"'
+						}
+						h[++idx] = '>';
+						h[++idx] = data[i].name;
+						h[++idx] = '</option>';
+					}
+					$('.enterprise_select').html(h.join(''));
+				}
+				getBillDetails();
+			}, error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					var msg = err;
+					alert(localise.set["msg_err_upd"] + msg);
+				}
+			}
+		});
+	}
 
 });
 	
