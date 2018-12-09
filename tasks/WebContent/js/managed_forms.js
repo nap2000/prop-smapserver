@@ -401,8 +401,6 @@ require([
             }
         });
 
-        $('#timezone').html(localise.set["c_tz"] + ": " + globals.gTimezone);
-
 
     });
 
