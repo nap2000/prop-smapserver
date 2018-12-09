@@ -999,7 +999,7 @@ function respondToEventsChoices($context) {
 		
 		// Show an error and set the filter to none if the user chose cascade when there are no previous select questions
 		if (filterType === "cascade" && $('#previousSelect option').length == 0) {
-			alert("Error; There are no previous select questions to get values from. You may want to set a custom filter.");
+			alert(localise.set["c_error"] + ": " + localise.set["msg_prev_select"]);
 			filterType = "none";
 			$('#filterType').val(filterType);
 		}
