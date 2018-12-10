@@ -972,6 +972,7 @@ define({
     "bill_from": "Applies From",
     "bill_chg_date": "Date Changed",
     "bill_norates": "No rates have been set for this %s1. If billing is enabled then the rates for the %s2 will be used",
+	"billing_disabled_msg": "Billing has been disabled",
 
 	// Reports
 	"rep_usage_project": "Usage by project",

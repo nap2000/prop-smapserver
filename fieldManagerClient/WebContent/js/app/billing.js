@@ -100,8 +100,8 @@ define(['jquery','localise', 'common', 'globals',
         });
 
         $('#enableBilling').change(function(){
-        	var enabled = $(this).is(':checked');
-	        var enabledString = enabled ? "true" : "false";
+        	gEnabled = $(this).is(':checked');
+	        var enabledString = gEnabled ? "true" : "false";
 	        var idx = 0;
 	        var id = 0;
 	        if(gLevel === "org") {
@@ -111,6 +111,18 @@ define(['jquery','localise', 'common', 'globals',
 		        idx = $('#enterprise').val();
 		        id = gEnterpriseList[idx].id;
 	        }
+
+	        if(gEnabled) {
+	        	$('.billing_enabled').show();
+		        $('.billing_disabled').hide();
+	        } else {
+		        $('.billing_enabled').hide();
+		        $('.billing_disabled').show();
+	        }
+
+	        /*
+	         * Store the changed value
+	         */
 	        addHourglass();
 	        $.ajax({
 		        type: "POST",
@@ -212,7 +224,8 @@ define(['jquery','localise', 'common', 'globals',
             month = d.getMonth() + 1,
             year = d.getFullYear(),
             url,
-            orgIdx;
+            orgIdx,
+	        entIdx
 
 		getRates();
 
@@ -220,6 +233,9 @@ define(['jquery','localise', 'common', 'globals',
         if(gLevel === "org" || gLevel === "org_ind") {
             orgIdx = $('#organisation').val();
             url += "&org=" + gOrganisationList[orgIdx].id;
+        } else  if(gLevel === "ent") {
+	        entIdx = $('#enterprise').val();
+	        url += "&ent=" + gEnterpriseList[entIdx].id;
         }
 
         addHourglass();
@@ -232,6 +248,13 @@ define(['jquery','localise', 'common', 'globals',
 				if(data) {
 					gEnabled = data.enabled;
 					$('#enableBilling').prop('checked', gEnabled);
+					if(gEnabled) {
+						$('.billing_enabled').show();
+						$('.billing_disabled').hide();
+					} else {
+						$('.billing_enabled').hide();
+						$('.billing_disabled').show();
+					}
 
 					populateBillTable(data);
 				}
