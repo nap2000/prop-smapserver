@@ -869,13 +869,13 @@ function addSharedMaps(map, sharedMaps) {
 						key = localise.set["c_user"];  // "Submitted By";
 					} else if (key === "_start") {
 						key = localise.set["_start"] + " (" + localise.set["c_lt"] +")"; // "Start Survey";
-						value = localTime(value);
+						// No change to value
 					} else if (key === "_end") {
 						key = key = localise.set["_end"] + " (" + localise.set["c_lt"] +")";  // "End Survey";
-						value = localTime(value);
+						// No change to value
 					} else if (key === "Upload Time") {
-						key = key = localise.set[key] + " (" + localise.set["c_lt"] +")"; 
-						value = localTime(value);
+						key = key = localise.set[key] + " (" + localise.set["c_lt"] +")";
+						// No change to value
 					} else if (key === "_bad") {
 						key = localise.set["a_mb"];  // "Marked Bad";
 						if(value === "t") {
@@ -902,7 +902,7 @@ function addSharedMaps(map, sharedMaps) {
 									value_c = localise.set["c_no"];
 								}
 							} else if (key_orig === "_start" || key_orig === "_end" || key_orig === "Upload Time") {
-								value_c = localTime(value_c);
+								// No change to value
 							}
 							h[++idx] = '<td>' + addAnchors(value_c, true).join(',') + '</td>';
 						}
