@@ -354,7 +354,11 @@ require([
 				if(xhr.readyState == 0 || xhr.status == 0) {
 					  return;  // Not an error
 				} else {
-				    alert(localise.set["error"] + ": " + xhr.responseText);
+				    var msg = xhr.responseText;
+				    if(msg.indexOf("404 - Not Found") >= 0) {
+				        msg = localise.set["msg_no_proj"];
+                    }
+				    alert(localise.set["error"] + ": " + msg);
 				}
 			}
 		});
