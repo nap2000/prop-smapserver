@@ -175,6 +175,7 @@ create TABLE log (
 	log_time TIMESTAMP WITH TIME ZONE,
 	s_id integer,
 	o_id integer REFERENCES organisation(id) ON DELETE CASCADE,
+	e_id integer,
 	user_ident text,
 	event text,	
 	note text
