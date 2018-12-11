@@ -62,7 +62,7 @@ define(['jquery','localise', 'common', 'globals',
         $('#usageDate').on("dp.change", function () {
         	getBillDetails();
 		});
-        $('#organisation').change(function(){
+        $('#organisation, #enterprise').change(function(){
            getBillDetails();
         });
 
