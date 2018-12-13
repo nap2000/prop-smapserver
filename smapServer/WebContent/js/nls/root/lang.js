@@ -359,6 +359,7 @@ define({
     "a_nx": "New XLSX",
     "a_lx": "Legacy XLSX",
 	"a_lh": "Legacy XLS / HTML",
+	"a_ua": "User Activity",
 
 
     // Messages

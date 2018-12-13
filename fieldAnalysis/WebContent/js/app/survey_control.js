@@ -158,8 +158,9 @@ function copyView(v) {
 			fn: v.fn,
 			filter: v.filter,
 			dateQuestionId: v.dateQuestionId,
-        	advanced_filter: v.advanced_filter
-	}
+        	advanced_filter: v.advanced_filter,
+			subject_type: v.subject_type
+	};
 	
 	return cp;
 }
@@ -295,6 +296,16 @@ function typeChangeEvent(type) {
 	if(oldType === "map") {
 		gSurveyControlView.groupQuestionId = undefined;
 	}
+
+	/*
+	 * Hide / show panel type dependent fields
+	 */
+	$('.map_only, .table_only').hide();
+	if(type === "table") {
+		$('.table_only').show();
+	} else if(type === "map") {
+		$('.map_only', '#p_settings').show();
+	}
 	
 	if(type == "map") {
 		var regions = globals.gSelector.getRegionList();
@@ -310,7 +321,7 @@ function typeChangeEvent(type) {
 				getGeometryQuestion(surveyId, qMeta.f_id); 
 			}
 		}
-		$('.map_only', '#p_settings').show();
+
 	} else {
 		 	 
 		questions = globals.gSelector.getSurveyQuestions(surveyId, language);
@@ -320,7 +331,6 @@ function typeChangeEvent(type) {
 			setSurveyViewQuestionGroups();	// Clear the existing list
 		}
 		$('#display_panel').val("-1");					// Only maps can be displayed on a different panel to the one on which they are specified
-		$('.map_only').hide();
 	}
 	
 	// Enable the timeseries select if appropriate
@@ -559,12 +569,20 @@ function setSurveyViewControl(view) {
 			}
 		}
 	}
-	if(view.type == "map") {
+
+	$('.map_only, .table_only').hide();
+	if(view.type === "map") {
 		$('.map_only').show();
 		$display_panel.val(view.layerId);
-	} else {
-		$('.map_only').hide();
+	} else if(view.type === "table") {
+		$('.table_only').show();
 	}
+
+	// Subject type
+	if(!view.subject_type) {
+		view.subject_type = "survey";
+	}
+	$('#subject_type').val(view.subject_type);
 	
 	// Question
 	$('#settings_question').removeAttr("disabled");
