@@ -300,13 +300,15 @@
 	<div id="p_settings" style="display:none;">
 		<form>
 			<fieldset class="ui-widget-content">
-				<label for="settings_type" class="lang" data-lang="a_type">Chart Type</label>
-				<select id="settings_type">
-					<option value="map" class="lang" data-lang="c_map">Map</option>
- 					<option value="table" class="lang" data-lang="c_table">Table</option>
-					<option value="graph" class="lang" data-lang="c_graph">Graph</option>
-					<option value="media" class="lang" data-lang="c_images">Images</option>
-				</select><br/>
+				<div class="subject_survey_only">
+					<label for="settings_type" class="lang" data-lang="a_type">Chart Type</label>
+					<select id="settings_type">
+						<option value="map" class="lang" data-lang="c_map">Map</option>
+						<option value="table" class="lang" data-lang="c_table">Table</option>
+						<option value="graph" class="lang" data-lang="c_graph">Graph</option>
+						<option value="media" class="lang" data-lang="c_images">Images</option>
+					</select>
+				</div>
 				<div class="table_only" style="display:none;">
 					<label for="subject_type" class="lang" data-lang="c_subject">subject</label>
 					<select id="subject_type">
@@ -322,12 +324,22 @@
 					<select id="display_panel"></select><br/>
 				</span>
 			</fieldset>	
-			<fieldset class="ui-widget-content">
+			<fieldset class="ui-widget-content subject_survey_only">
 				<legend class="ui-widget-header ui-corner-all lang" data-lang="a_ss">Select Survey</legend>
-				<label for="settings_survey" class="lang" data-lang="c_survey">Survey</label>
-				<select id="settings_survey"></select><br/>
+				<div class="subject_survey_only">
+					<label for="settings_survey" class="lang" data-lang="c_survey">Survey</label>
+					<select id="settings_survey"></select><br/>
+				</div>
+			</fieldset>
+			<fieldset class="ui-widget-content subject_user_only">
+				<legend class="ui-widget-header ui-corner-all lang subject_user_only" data-lang="c_user">user</legend>
+				<div class="subject_user_only">
+					<label for="settings_user" class="lang" data-lang="c_user">user</label>
+					<select id="settings_user"></select>
+				</div>
+			</fieldset>
 			</fieldset>	
-			<fieldset class="ui-widget-content">
+			<fieldset class="ui-widget-content subject_survey_only">
 				<legend class="ui-widget-header ui-corner-all lang" data-lang="a_sq">Select Question</legend>
 				<label for="settings_language" class="lang" data-lang="c_lang">Language</label>
 				<select id="settings_language"></select>
