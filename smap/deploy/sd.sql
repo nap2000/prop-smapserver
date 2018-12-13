@@ -1098,3 +1098,4 @@ alter table enterprise add column billing_enabled boolean default false;
 alter table server add column billing_enabled boolean default false;
 alter table log add column e_id integer;
 update log set e_id = 1 where e_id is null or e_id = 0;
+alter table dashboard_settings add column ds_subject_type text;

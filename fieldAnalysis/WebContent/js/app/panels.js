@@ -240,6 +240,7 @@ $(document).ready(function() {
 						view.question = $('#settings_question option:selected').text();
 		        		view.lang = $('#settings_language option:selected').val();
 		        		view.fn = $('#q1_function option:selected').val();
+				        view.subject_type = $('#subject_type option:selected').val();
 		        		
 		        		view.key_words = $('#settings_key_words').val();
 		        		
