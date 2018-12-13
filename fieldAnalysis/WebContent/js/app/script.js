@@ -341,7 +341,7 @@ function initialiseDialogs() {
                                 }
                                 url = exportSurveyURL(sId, displayName, language, format, split_locn,
                                     forms, exportReadOnly, merge_select_multiple, xlstype, embedImages, incHxl,
-                                    exp_from_date, exp_to_date, dateQuestionId, filter, tz);
+                                    exp_from_date, exp_to_date, dateQuestionId, filter, globals.gTimezone);
                             }
                         }
 
