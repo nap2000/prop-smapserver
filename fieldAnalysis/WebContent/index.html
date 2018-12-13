@@ -306,7 +306,15 @@
  					<option value="table" class="lang" data-lang="c_table">Table</option>
 					<option value="graph" class="lang" data-lang="c_graph">Graph</option>
 					<option value="media" class="lang" data-lang="c_images">Images</option>
-				</select><br/>	
+				</select><br/>
+				<div class="table_only" style="display:none;">
+					<label for="subject_type" class="lang" data-lang="c_subject">subject</label>
+					<select id="subject_type">
+						<option value="survey" class="lang" data-lang="c_survey">survey</option>
+						<option value="user" class="lang" data-lang="a_ua">user</option>
+					</select>
+				</div>
+
 				<label for="settings_title" class="lang" data-lang="c_title">Title</label>
 				<input type="text" id="settings_title"/><br/>
 				<span class="map_only" style="display:none;">
