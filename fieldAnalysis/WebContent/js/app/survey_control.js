@@ -39,6 +39,11 @@ $(document).ready(function() {
 	$('#settings_language').change(function() {	
  	 	languageChangeEvent();
  	 });
+
+	// Add change function on language select
+	$('#subject_type').change(function() {
+		subjectTypeChangeEvent();
+	});
 	
 	// Add change function on question select
 	$('#settings_question').change(function() {
@@ -411,6 +416,19 @@ function languageChangeEvent() {
 	}	
 }
 
+//Selected language has changed
+function subjectTypeChangeEvent() {
+
+	var subjectType = $('#subject_type option:selected').val();
+
+	$('.subject_survey_only, .subject_user_only').hide();
+	if(subjectType === "survey") {
+		$('.subject_survey_only').show();
+	} else {
+		$('.subject_user_only').show();
+	}
+}
+
 // Selected question has changed
 function questionChangeEvent(sId, qId, question) {
 
@@ -582,6 +600,13 @@ function setSurveyViewControl(view) {
 	if(!view.subject_type) {
 		view.subject_type = "survey";
 	}
+	$('.subject_survey_only, .subject_user_only').hide();
+	if(view.subject_type === "survey") {
+		$('.subject_survey_only').show();
+	} else {
+		$('.subject_user_only').show();
+	}
+
 	$('#subject_type').val(view.subject_type);
 	
 	// Question
