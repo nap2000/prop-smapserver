@@ -42,7 +42,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             gMapInitialised = false,		// Set true when the map pane has been initialised
             gModalMapInitialised = false,	// Set true then the modal map has been initialised
             gIdx = 0,						// Idx set when external task dropped on calendar
-            gSelectedCount = 0;
+            gSelectedCount = 0,
             gUnsentEmailCount = 0;
 
         $(document).ready(function () {
