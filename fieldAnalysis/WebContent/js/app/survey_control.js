@@ -63,7 +63,9 @@ $(document).ready(function() {
 	 // Add datepicker functionality TODO Bootstrap
 	 $('#from_date').datepicker({ dateFormat: "yy-mm-dd" });
 	 $('#to_date').datepicker({ dateFormat: "yy-mm-dd" });
-	 
+
+	 getUsers();
+
 	 /*
 	  * Question filter
 	  */
@@ -992,4 +994,40 @@ function getViewRegions(view) {
 			}
 		}
 	});		
+}
+
+/*
+ * Get the list of users from the server
+ */
+function getUsers(projectId) {
+	var $users = $('#settings_user'),
+		i, user,
+		h = [],
+		idx = -1;
+
+	$users.empty();
+	$.ajax({
+		url: "/surveyKPI/userList/simple",
+		cache: false,
+		success: function (data) {
+
+			for (i = 0; i < data.length; i++) {
+				user = data[i];
+
+				h[++idx] = '<option value="';
+				h[++idx] = user.id;
+				h[++idx] = '">';
+				h[++idx] = user.name;
+				h[++idx] = '</option>';
+			}
+			$users.append(h.join(''));
+		},
+		error: function (xhr, textStatus, err) {
+			if (xhr.readyState == 0 || xhr.status == 0) {
+				return;  // Not an error
+			} else {
+				alert(localise.set["c_error"] + err);
+			}
+		}
+	});
 }
