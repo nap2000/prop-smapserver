@@ -912,7 +912,7 @@ function userItemsURL (view, start_key, rec_limit, filter, dateId, startDate,
 
 	var url = "/surveyKPI/items/user/";
 
-	url += view.userId;
+	url += view.uId;
 
 	url += "?start_key=" + start_key;
 	if(rec_limit) {

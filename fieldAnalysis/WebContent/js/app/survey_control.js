@@ -148,6 +148,7 @@ function copyView(v) {
 			seq: v.seq,
 			sName: v.sName,
 			sId: v.sId,
+			uId: v.uId,
 			region: v.region,
 			question: v.question,
 			qId_is_calc: v.qId_is_calc,
