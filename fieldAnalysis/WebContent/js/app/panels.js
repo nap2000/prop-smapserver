@@ -155,6 +155,7 @@ $(document).ready(function() {
 		        			qMeta, groupMeta,
 		        			qId,
 		        			sId,
+					        subjectType,
 		        			qId_is_calc = false;
 		        		
 		        		// Check that the meta data for the question has been retrieved
@@ -174,9 +175,10 @@ $(document).ready(function() {
 		        				qId = calcs[1];
 		        				qId_is_calc = true;
 		        			}
-	 					} 
+	 					}
+		        		subjectType = $('#subject_type option:selected').val();
 						sId  = $('#settings_survey option:selected').val();
-		        		if(sId == "-1") {
+		        		if(subjectType !== "user" && sId == "-1") {
 							//alert("You must select a survey");
 							alert(localise.set["msg_sel_survey"]);
 		        			return false;
@@ -240,7 +242,7 @@ $(document).ready(function() {
 						view.question = $('#settings_question option:selected').text();
 		        		view.lang = $('#settings_language option:selected').val();
 		        		view.fn = $('#q1_function option:selected').val();
-				        view.subject_type = $('#subject_type option:selected').val();
+				        view.subject_type = subjectType;
 		        		
 		        		view.key_words = $('#settings_key_words').val();
 		        		

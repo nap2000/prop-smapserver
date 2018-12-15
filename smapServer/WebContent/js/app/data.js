@@ -191,10 +191,6 @@ function getExtendedSurveyMetaSE(sId, callback) {
 //Get data at the survey level
  function getSurveyDataSE(sId, view) {
  	
- 	var formItems = globals.gSelector.getFormItems(sId);
- 		//hasData = false,
- 		//idx;
- 	
 	view.tableCount = 0;
 	view.results = [];
  	
@@ -213,7 +209,7 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 	
 	// For table all of survey views. page the results and include "bad records"
 	if(f_view.type === "table") {
-		rec_limit = 200;
+		rec_limit = globals.REC_LIMIT;
 		bBad = true;
 	} else {
 		rec_limit = 0;
@@ -279,7 +275,78 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 	});
  		
 }
-	
+
+/*
+  * Get the survey level data for a specific table
+  */
+function getUserData(view, start_rec) {
+
+	// For table all of survey views. page the results and include "bad records"
+	if(view.type === "table") {
+		rec_limit = globals.REC_LIMIT;
+	} else {
+		rec_limit = 0;
+	}
+
+	start_rec = start_rec || 0;
+
+	var i,
+		tz = globals.gTimezone;
+
+	url = userItemsURL(view, start_rec, rec_limit,  view.filter,
+		view.dateQuestionId, view.fromDate, view.toDate,
+		view.advanced_filter,
+		tz);
+
+	addHourglass();
+	$.ajax({
+		url: url,
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			// Add meta data to results
+			// TODO XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+			removeHourglass();
+			data.source = "survey";
+			data.sId = f_sId;
+			data.table = true;
+			data.fId = fId;
+			data.survey = survey;
+
+			// Record starting records for each table so that "less" will work
+			if(typeof f_view.start_recs === "undefined") {
+				f_view.start_recs = {};
+			}
+			if(typeof f_view.start_recs[fId] === "undefined") {
+				f_view.start_recs[fId] = [];
+			}
+			f_view.start_recs[fId].push(start_rec);
+
+			globals.gSelector.addDataItem(url, data);
+			f_view.tableCount--;
+
+			if(replace) {
+				for(i = 0; i < f_view.results.length; i++) {
+					if(f_view.results[i].fId === fId) {
+						f_view.results[i] = data;
+						break;
+					}
+				}
+			} else {
+				f_view.results[f_view.tableCount] = data;
+			}
+			if(f_view.tableCount === 0) {
+				refreshData(f_view, "survey");	// Update the views with the new survey data after all services have returned
+			}
+
+		},
+		error: function(data) {
+			removeHourglass();
+		}
+	});
+
+}
+
  /*
   * Get the data for the specified question
   * The current view is updated with the results
