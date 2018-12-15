@@ -33,6 +33,8 @@ define(function () {
         GROUP_ENTERPRISE : 8,
         GROUP_OWNER : 9,
 
+        REC_LIMIT: 200,     // Page size for table views in analysis
+
         gProjectList: undefined,
         gRoleList: undefined,
         gCurrentProject: 0,

@@ -734,18 +734,22 @@ function refreshAnalysisData() {
 
 //Get the data for the specified view
 function getData(view) {
-	
-	if(view.qId != "-1") {			// Question level results
-		getResults(view);
-		
-	} else {				// Whole of survey results
-		var sMeta = globals.gSelector.getSurvey(view.sId);
-		if(!sMeta) {
-			 getSurveyMetaSE(view.sId, view, true, false, true, view.dateQuestionId);
-		 } else {
-			addDatePickList(sMeta);
-			getSurveyDataSE(view.sId, view);	
-		 }
+
+	if(view.subject_type === "survey") {
+		if (view.qId != "-1") {			// Question level results
+			getResults(view);
+
+		} else {				// Whole of survey results
+			var sMeta = globals.gSelector.getSurvey(view.sId);
+			if (!sMeta) {
+				getSurveyMetaSE(view.sId, view, true, false, true, view.dateQuestionId);
+			} else {
+				addDatePickList(sMeta);
+				getSurveyDataSE(view.sId, view);
+			}
+		}
+	} else if(view.subject_type === "user") {
+		getUserData(view, 0);       // Start from the first record
 	}
 }
 
@@ -856,7 +860,7 @@ function getTextValues(sId, qId, value) {
 	              return;  // Not an error
 			} else {
 				console.log("Error: Failed to get values for question filter: " + err);
-				alert(localise.set["c_error"] + " " + xhr.responseText);
+				alert(xhr.responseText);
 			}
 		}
 	});	
@@ -1026,7 +1030,7 @@ function getUsers(projectId) {
 			if (xhr.readyState == 0 || xhr.status == 0) {
 				return;  // Not an error
 			} else {
-				alert(localise.set["c_error"] + err);
+				alert(err);
 			}
 		}
 	});
