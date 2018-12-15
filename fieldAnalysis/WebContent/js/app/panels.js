@@ -155,6 +155,7 @@ $(document).ready(function() {
 		        			qMeta, groupMeta,
 		        			qId,
 		        			sId,
+					        uId,
 					        subjectType,
 		        			qId_is_calc = false;
 		        		
@@ -177,12 +178,15 @@ $(document).ready(function() {
 		        			}
 	 					}
 		        		subjectType = $('#subject_type option:selected').val();
-						sId  = $('#settings_survey option:selected').val();
+
+		        		sId  = $('#settings_survey option:selected').val();
 		        		if(subjectType !== "user" && sId == "-1") {
 							//alert("You must select a survey");
 							alert(localise.set["msg_sel_survey"]);
 		        			return false;
 		        		}
+		        		uId = $('#settings_user option:selected').val();
+
 		        		if(newType == "graph" && qId == "-1") {
 							//alert("You must select a question to show on a graph");
 		        			alert(localise.set["msg_sel_q"]);
@@ -194,6 +198,7 @@ $(document).ready(function() {
 						view = views[globals.gViewIdx];
 
 						view.sId  = sId;
+						view.uId = uId;
 						view.qId = qId;
 						view.qId_is_calc = qId_is_calc;
 						
