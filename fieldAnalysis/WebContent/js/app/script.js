@@ -847,9 +847,10 @@ function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bB
                        endDate, advanced_filter, tz) {
 
     var url = "/surveyKPI/items/";
+	var ampersand = false;
 
     url += form;
-    ampersand = false;
+
     if(getFeatures == "no") {
         if(ampersand) {
             url += "&";
@@ -901,6 +902,48 @@ function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bB
 	}
 
     return url;
+}
+
+/**
+ * Web service handler for retrieving user access data in a table
+ */
+function userItemsURL (view, start_key, rec_limit, filter, dateId, startDate,
+                       endDate, advanced_filter, tz) {
+
+	var url = "/surveyKPI/items/user/";
+
+	url += view.userId;
+
+	url += "?start_key=" + start_key;
+	if(rec_limit) {
+		url += "&rec_limit=" + rec_limit;
+	}
+
+	if(typeof filter !== "undefined") {
+		url+= "&filter=" + filter;
+	}
+
+	if(dateId != null) {
+		url += "&dateId=" + dateId;
+	}
+
+	if(typeof startDate !== "undefined" && startDate.length > 0) {
+		url+= "&startDate=" + startDate;
+	}
+
+	if(typeof endDate !== "undefined" && endDate.length > 0) {
+		url+= "&endDate=" + endDate;
+	}
+
+	if(typeof advanced_filter !== "undefined" && advanced_filter.length > 0) {
+		url+= "&advanced_filter=" + advanced_filter;
+	}
+
+	if(tz) {
+		url += '&tz=' + encodeURIComponent(tz);
+	}
+
+	return url;
 }
 
 /*
