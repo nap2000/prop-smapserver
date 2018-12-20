@@ -344,6 +344,9 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 		if(typeof getEnterprisesFn === "function") {
 			getEnterprisesFn();
 		}
+	}
+	if(globals.gIsServerOwner) {
+		$('.owner_role').show();
 		if(typeof getServerDetailsFn === "function") {
 			getServerDetailsFn();
 		}
