@@ -353,9 +353,7 @@ function generateUserTable(elementId, data, disp_desc, user_ident, uId) {
 		gTab[++gIdx] = ' ';
 		gTab[++gIdx] = " " + localise.set["a_oo"] + " ";
 		gTab[++gIdx] = data.totals.total_count;
-		gTab[++gIdx] = ', ';
-		gTab[++gIdx] = data.totals.bad_count;
-		gTab[++gIdx] = ' ' + localise.set["a_mb"] + ")";
+		gTab[++gIdx] = ')';
 	}
 
 	gTab[++gIdx] = '</p>';
@@ -435,13 +433,12 @@ function generateUserTable(elementId, data, disp_desc, user_ident, uId) {
 		if(typeof globals !== "undefined" && globals.gCanEdit) {
 			// Add a button to edit the survey data in web forms
 			gTab[++gIdx] = '<td>';
-			if(groups[i].properties.parkey == "0") {
 				gTab[++gIdx] = '<div class="menu_button btn context_table dropdown-toggle" type="button" data-toggle="dropdown" data-pkey="';
 				gTab[++gIdx] = 'xxxxxxxxxxx';
 				gTab[++gIdx] = '" data-ident="';
-				gTab[++gIdx] = survey_ident;
+				gTab[++gIdx] = groups[i].properties.survey_ident;
 				gTab[++gIdx] = '" data-id="';
-				gTab[++gIdx] = sId;
+				gTab[++gIdx] = groups[i].properties.survey_ident;
 				gTab[++gIdx] = '" data-instanceid="';
 				if(groups[i].properties.instanceid) {
 					gTab[++gIdx] = groups[i].properties.instanceid;
@@ -449,7 +446,6 @@ function generateUserTable(elementId, data, disp_desc, user_ident, uId) {
 					gTab[++gIdx] = groups[i].properties._instanceid;		// Legacy instanceid name
 				}
 				gTab[++gIdx] = '"><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span></div>';
-			}
 			gTab[++gIdx] = '</td>';
 		}
 		gTab[++gIdx] = '<td>';
