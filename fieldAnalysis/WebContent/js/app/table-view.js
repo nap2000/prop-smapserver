@@ -584,7 +584,11 @@ function addRightClickToTable($elem, sId, view) {
 				$('#download_edit').button("disable");
 			} else {
 				$('#download_edit').button("enable");
-				$('#download_edit').attr("href", "/webForm/" + survey_ident + "?datakey=prikey&datakeyvalue="+pkey);
+				if(view.subject_type === "survey") {
+					$('#download_edit').attr("href", "/webForm/" + survey_ident + "?datakey=prikey&datakeyvalue=" + pkey);
+				} else if(view.subject_type === "user") {
+					$('#download_edit').attr("href", "/webForm/" + survey_ident + "?datakey=instanceid&datakeyvalue=" + instanceid);
+				}
 				$('#download_edit').click(function () {
                     $('#instance_functions_popup').dialog("close");
 				});
