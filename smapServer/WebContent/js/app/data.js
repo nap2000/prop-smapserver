@@ -277,7 +277,7 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 }
 
 /*
-  * Get the survey level data for a specific table
+  * Get the usage data for a specific user
   */
 function getUserData(view, start_rec) {
 
@@ -304,44 +304,34 @@ function getUserData(view, start_rec) {
 		dataType: 'json',
 		cache: false,
 		success: function(data) {
-			// Add meta data to results
-			// TODO XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+			// Add data to results
 			removeHourglass();
-			data.source = "survey";
-			data.sId = f_sId;
+			data.source = "user";
+			//data.sId = f_sId;
 			data.table = true;
-			data.fId = fId;
-			data.survey = survey;
+			//data.fId = fId;
+			//data.survey = survey;
 
-			// Record starting records for each table so that "less" will work
-			if(typeof f_view.start_recs === "undefined") {
-				f_view.start_recs = {};
+			if(typeof view.start_recs === "undefined") {
+				view.start_recs = {};
 			}
-			if(typeof f_view.start_recs[fId] === "undefined") {
-				f_view.start_recs[fId] = [];
+			if(typeof view.start_recs[0] === "undefined") {
+				view.start_recs[0] = [];
 			}
-			f_view.start_recs[fId].push(start_rec);
+			view.start_recs[0].push(start_rec);
 
 			globals.gSelector.addDataItem(url, data);
-			f_view.tableCount--;
+			view.results = [];
+			view.results[0] = data;
 
-			if(replace) {
-				for(i = 0; i < f_view.results.length; i++) {
-					if(f_view.results[i].fId === fId) {
-						f_view.results[i] = data;
-						break;
-					}
-				}
-			} else {
-				f_view.results[f_view.tableCount] = data;
-			}
-			if(f_view.tableCount === 0) {
-				refreshData(f_view, "survey");	// Update the views with the new survey data after all services have returned
-			}
+
+			refreshData(view, "user");	// Update the views with the new usage data
+
 
 		},
 		error: function(data) {
 			removeHourglass();
+			alert(data.message);
 		}
 	});
 
@@ -434,36 +424,52 @@ function getUserData(view, start_rec) {
  	if(surveyLevel === "survey") {
  		
  		switch(outputView.type) {
- 		case "map":
- 			
- 			setMap(outputView, secondaryLayer);
- 			break;
- 		case "table":
- 			setTableSurvey(outputView);
- 			break;
- 		case "media":
- 			setMediaSurvey(outputView);
- 			break;
- 		case "graph":
- 			setGraphSurvey(outputView);
- 			break;
+	        case "map":
+
+	            setMap(outputView, secondaryLayer);
+	            break;
+	        case "table":
+	            setTableSurvey(outputView);
+	            break;
+	        case "media":
+	            setMediaSurvey(outputView);
+	            break;
+	        case "graph":
+	            setGraphSurvey(outputView);
+	            break;
  		}
- 	} else {
+ 	} if(surveyLevel === "user") {
+
+		 switch(outputView.type) {
+			 case "map":
+				 setUserMap(outputView, secondaryLayer);        // TODO
+				 break;
+			 case "table":
+				 setUserTableSurvey(outputView);                // TODO
+				 break;
+			 case "media":
+				 setUserMediaSurvey(outputView);                // TODO
+				 break;
+			 case "graph":
+				 setUserGraphSurvey(outputView);                // TODO
+				 break;
+		 }
+	 } else {
  		
  		switch(outputView.type) {
- 		case "map":
- 			setMap(outputView, secondaryLayer);
- 			break;
- 		case "table":
- 			setTableQuestion(outputView);
- 			break;
- 		case "media":
- 			setMediaQuestion(outputView);
- 			break;
- 		case "graph":
- 			newSetGraphQuestion(outputView);	
- 			break;
- 		}	
+	        case "map":
+	            setMap(outputView, secondaryLayer);
+	            break;
+	        case "table":
+	            setTableQuestion(outputView);
+	            break;
+	        case "media":
+	            setMediaQuestion(outputView);
+	            break;
+	        case "graph":
+	            newSetGraphQuestion(outputView);
+	            break;
+	        }
  	}
 
  }

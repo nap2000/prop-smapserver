@@ -177,6 +177,45 @@ function setTableSurvey(view) {
 	
 }
 
+function setUserTableSurvey(view) {
+
+	var $selHead = $('#p' + view.pId).find('.phead'),
+		$selMain = $('#table_panel' + view.pId),
+		$selFoot = $('#p' + view.pId).find('.pfoot'),
+		$tabSelect,
+		idx,
+		i,
+		data = view.results;
+
+	$selHead.empty();
+	$selMain.empty();
+
+
+
+	showUserTable(view);
+
+	/*
+	 * Enable the dialog to create a PDF of an instance or edit in WebForms
+	 */
+	$('#instance_functions_popup').dialog(
+		{
+			autoOpen: false, closeOnEscape:true, draggable:true, model:true,
+			show:"drop",
+			zIndex: 2000,
+			buttons: [
+				{
+					text: "Ok",
+					click: function() {
+						$(this).dialog("close");
+					}
+				}
+			]
+		}
+	);
+	$('#download_edit, #download_pdf').button();
+
+}
+
 /*
  * Import data
  */
@@ -359,6 +398,30 @@ function showTable(tableIdx, view, tableItems, fId, survey_ident) {
 	}
 }
 
+function showUserTable(view) {
+
+	var elemMain = 'table_panel' + view.pId,
+		$selMain = $('#'+ elemMain),
+		tableItems = view.results[0];
+
+	$selMain.empty();
+
+	if(tableItems && tableItems.features && tableItems.features.length > 0) {
+		generateUserTable(elemMain, tableItems, view.user_ident, view.uId);
+		addRightClickToTable($selMain, view.sId, view);
+		$selMain.find('table').tablesorter();
+		addMoreLessUserButtons($selMain, view);
+	} else {
+		if(typeof tableItems.message !== "undefined" && tableItems.message.trim().length > 0) {
+			$selMain.html(tableItems.message);
+		} else if(typeof tableItems.totals !== "undefined" && tableItems.totals.total_count > 0) {
+			$selMain.html(localise.set["an_nmd"]);
+		} else {
+			$selMain.html(localise.set["an_nd"]);
+		}
+	}
+}
+
 function addMoreLessButtons($elem, tView, fId, tItems) {
 	$elem.find('.get_less').button().click(function() {
 		tView.tableCount = 1;
@@ -369,6 +432,18 @@ function addMoreLessButtons($elem, tView, fId, tItems) {
 	$elem.find('.get_more').button().click(function() {
 		tView.tableCount = 1;
 		processSurveyData(fId, tView.sId, tView, tItems.survey, true, parseInt($(this).val()));
+	});
+	$elem.find('.get_less_dis, .get_more_dis').button({ disabled: true });
+}
+
+function addMoreLessUserButtons($elem, view) {
+	$elem.find('.get_less').button().click(function() {
+		var currentStart = view.start_recs[0].pop();
+		var newStart = view.start_recs[0].pop();
+		getUserData(view, newStart);
+	});
+	$elem.find('.get_more').button().click(function() {
+		getUserData(view, parseInt($(this).val()));
 	});
 	$elem.find('.get_less_dis, .get_more_dis').button({ disabled: true });
 }
