@@ -438,7 +438,7 @@ function getUserData(view, start_rec) {
 	            setGraphSurvey(outputView);
 	            break;
  		}
- 	} if(surveyLevel === "user") {
+ 	} else if(surveyLevel === "user") {
 
 		 switch(outputView.type) {
 			 case "map":
