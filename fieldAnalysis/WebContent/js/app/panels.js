@@ -243,7 +243,11 @@ $(document).ready(function() {
 						if(view.layerId != "-1") {
 							view.state = "minimised";
 						}
-						view.sName = $('#settings_survey option:selected').text();
+						if(subject_type === "survey") {
+							view.sName = $('#settings_survey option:selected').text();
+						} else {
+							view.sName = $('#settings_user option:selected').text();
+						}
 						view.question = $('#settings_question option:selected').text();
 		        		view.lang = $('#settings_language option:selected').val();
 		        		view.fn = $('#q1_function option:selected').val();
