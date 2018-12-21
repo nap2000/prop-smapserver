@@ -432,9 +432,8 @@ function generateUserTable(elementId, data, disp_desc, user_ident, uId) {
 		if(typeof globals !== "undefined" && globals.gCanEdit) {
 			// Add a button to edit the survey data in web forms
 			gTab[++gIdx] = '<td>';
-				gTab[++gIdx] = '<div class="menu_button btn context_table dropdown-toggle" type="button" data-toggle="dropdown" data-pkey="';
-				gTab[++gIdx] = 'xxxxxxxxxxx';
-				gTab[++gIdx] = '" data-ident="';
+				gTab[++gIdx] = '<div class="menu_button btn context_table dropdown-toggle" type="button" data-toggle="dropdown"';
+				gTab[++gIdx] = ' data-ident="';
 				gTab[++gIdx] = groups[i].properties.survey_ident;
 				gTab[++gIdx] = '" data-id="';
 				gTab[++gIdx] = groups[i].properties.s_id;

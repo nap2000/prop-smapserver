@@ -391,7 +391,7 @@ function refreshPanels() {
 	
 	for(i = 0; i < views.length; i++) {
 		if(views[i].state != "deleted") {
-			createPanel(i, $panels, views[i].title, views[i].sName);
+			createPanel(i, $panels, views[i].title, views[i].sName, views[i].subject_type);
 			setPanelType(views[i].type, i, views[i].timeGroup, views[i].qId);
 			getData(views[i]);		
 		}
@@ -481,7 +481,7 @@ function addNewPanel(type) {
 	gExpandedPanelSeq = idx;	// Make sure this panel is shown as expanded when the panels are initially refreshed. This happens after panel creation
 
 	var $panels = $('#panels');
-	createPanel(idx, $panels, views[idx].title, views[idx].sName);
+	createPanel(idx, $panels, views[idx].title, views[idx].sName, views[idx].subject_type);
 	setPanelType(views[idx].type, idx, views[idx].timeGroup, views[idx].qId);
 	addTriggers();
 	gNewPanel = true;
@@ -520,15 +520,18 @@ function delPanel($this, idx) {
 
 
 // Create a single panel 
-function createPanel(idx, $panels, title, surveyName) {
-	
+function createPanel(idx, $panels, title, surveyName, subject_type) {
 	
 	var h = [],
 		i = -1;
 	
 	// If the Chart title is the default "New Chart" then set to the survey name
-	if(title === "New Chart") {
-		title = surveyName;
+	if(title === "" || title === "New Chart") {
+		if(subject_type === "survey") {
+			title = surveyName;
+		} else {
+			title = localise.set["a_ua"] + ": " + surveyName;
+		}
 	}
 
 	

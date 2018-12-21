@@ -573,6 +573,11 @@ function setSurveyViewControl(view) {
 	if(view.sId) {
 		$('#settings_survey').val(view.sId);
 	}
+
+	$('#settings_user').prop("disabled", false);
+	if(view.uId) {
+		$('#settings_user').val(view.uId);
+	}
 	
 	$('#settings_language').prop("disabled", false);
 	if(view.lang) {
