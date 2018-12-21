@@ -907,8 +907,8 @@ function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bB
 /**
  * Web service handler for retrieving user access data in a table
  */
-function userItemsURL (view, start_key, rec_limit, filter, dateId, startDate,
-                       endDate, advanced_filter, tz) {
+function userItemsURL (view, start_key, rec_limit, filter, startDate,
+                       endDate, tz) {
 
 	var url = "/surveyKPI/items/user/";
 
@@ -923,20 +923,12 @@ function userItemsURL (view, start_key, rec_limit, filter, dateId, startDate,
 		url+= "&filter=" + filter;
 	}
 
-	if(dateId != null) {
-		url += "&dateId=" + dateId;
-	}
-
 	if(typeof startDate !== "undefined" && startDate.length > 0) {
 		url+= "&startDate=" + startDate;
 	}
 
 	if(typeof endDate !== "undefined" && endDate.length > 0) {
 		url+= "&endDate=" + endDate;
-	}
-
-	if(typeof advanced_filter !== "undefined" && advanced_filter.length > 0) {
-		url+= "&advanced_filter=" + advanced_filter;
 	}
 
 	if(tz) {

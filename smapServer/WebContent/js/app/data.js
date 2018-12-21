@@ -293,10 +293,7 @@ function getUserData(view, start_rec) {
 	var i,
 		tz = globals.gTimezone;
 
-	url = userItemsURL(view, start_rec, rec_limit,  view.filter,
-		view.dateQuestionId, view.fromDate, view.toDate,
-		view.advanced_filter,
-		tz);
+	url = userItemsURL(view, start_rec, rec_limit,  view.filter, view.fromDate, view.toDate,tz);
 
 	addHourglass();
 	$.ajax({
