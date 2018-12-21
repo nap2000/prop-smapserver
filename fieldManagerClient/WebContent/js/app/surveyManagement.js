@@ -24,7 +24,8 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
             gControlDelete,
             gControlRestore,
             gShowDeleted = false,
-            gSelectedTemplate,          // survey id of current template TODO - Use survey ident as per table view
+            gSelectedTemplateId,            // survey id of current template
+            gSelectedTemplateIdent,         // survey ident of current template
             gSelectedTemplateName,
             gRemote_host,
             gRemote_user,
@@ -112,14 +113,14 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
                 orientation = $("input[name='orientation']:checked", "#download_template").val();
 
                 if(type === "pdf") {
-                    docURL = "/surveyKPI/pdf/" + gSelectedTemplate + "?filename=" + gSelectedTemplateName + "&language=" + language;
+                    docURL = "/surveyKPI/pdf/" + gSelectedTemplateIdent + "?filename=" + gSelectedTemplateName + "&language=" + language;
                     if(orientation === "landscape") {
                         docURL += "&landscape=true";
                     }
                 } else if(type === "xls_edited") {
-                    docURL = "/surveyKPI/xlsForm/" + gSelectedTemplate + "?filetype=" + "xlsx";
+                    docURL = "/surveyKPI/xlsForm/" + gSelectedTemplateId + "?filetype=" + "xlsx";
                 } else {
-                    docURL = "/surveyKPI/survey/" + gSelectedTemplate + "/download?type=" + type + "&language=" + language;
+                    docURL = "/surveyKPI/survey/" + gSelectedTemplateId + "/download?type=" + type + "&language=" + language;
                 }
                 window.location.href = docURL;
             });
@@ -631,8 +632,9 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
                     surveyVersion = gSurveys[surveyIndex].version,
                     loadedFromXLS = gSurveys[surveyIndex].loadedFromXLS;
 
-                gSelectedTemplate = $(this).val();
-                $.getJSON("/surveyKPI/languages/" + gSelectedTemplate, function(data) {
+                gSelectedTemplateId = $(this).val();
+                gSelectedTemplateIdent = gSurveys[surveyIndex].ident;
+                $.getJSON("/surveyKPI/languages/" + gSelectedTemplateId, function(data) {
 
                     var $languageSelect = $('#download_language');
                     $languageSelect.empty();
