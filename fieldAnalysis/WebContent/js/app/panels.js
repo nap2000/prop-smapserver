@@ -521,7 +521,7 @@ function delPanel($this, idx) {
 
 // Create a single panel 
 function createPanel(idx, $panels, title, surveyName, subject_type) {
-	
+
 	var h = [],
 		i = -1;
 	
@@ -534,7 +534,6 @@ function createPanel(idx, $panels, title, surveyName, subject_type) {
 		}
 	}
 
-	
 	h[++i] = hstart;
 	h[++i] = idx;
 	h[++i] = hstart2;
