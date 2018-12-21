@@ -24,7 +24,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
             gControlDelete,
             gControlRestore,
             gShowDeleted = false,
-            gSelectedTemplate,
+            gSelectedTemplate,          // survey id of current template TODO - Use survey ident as per table view
             gSelectedTemplateName,
             gRemote_host,
             gRemote_user,

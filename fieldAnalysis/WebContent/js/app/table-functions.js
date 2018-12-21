@@ -199,8 +199,7 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 		for(i = 0; i < groups.length; i++) {
 			
 			gTab[++gIdx] = '<tr>';
-			
-			
+
 			if(isGrouped && !isPeriod) {
 				gTab[++gIdx] = '<td>';
 				gTab[++gIdx] = groups[i].properties.group_label;
@@ -438,7 +437,7 @@ function generateUserTable(elementId, data, disp_desc, user_ident, uId) {
 				gTab[++gIdx] = '" data-ident="';
 				gTab[++gIdx] = groups[i].properties.survey_ident;
 				gTab[++gIdx] = '" data-id="';
-				gTab[++gIdx] = groups[i].properties.survey_ident;
+				gTab[++gIdx] = groups[i].properties.s_id;
 				gTab[++gIdx] = '" data-instanceid="';
 				if(groups[i].properties.instanceid) {
 					gTab[++gIdx] = groups[i].properties.instanceid;

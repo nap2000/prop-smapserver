@@ -19,7 +19,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Show an entire survey in a table
  */
-var gSelectedTemplate,
+var gSelectedTemplate,          // Survey ident of the current template
 	gInstanceId;
 
 function setTableSurvey(view) {
@@ -577,7 +577,7 @@ function addRightClickToTable($elem, sId, view) {
 				});
 			});
 			
-			gSelectedTemplate = sId;
+			gSelectedTemplate = survey_ident;
 			gInstanceId = instanceid;
 			
 			if((isBad && isReplaced) || !globals.gIsAnalyst) {
