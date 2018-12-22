@@ -281,7 +281,7 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
   */
 function getUserData(view, start_rec) {
 
-	// For table all of survey views. page the results and include "bad records"
+	// For table all of survey views. page the results
 	if(view.type === "table") {
 		rec_limit = globals.REC_LIMIT;
 	} else {
@@ -291,46 +291,60 @@ function getUserData(view, start_rec) {
 	start_rec = start_rec || 0;
 
 	var i,
-		tz = globals.gTimezone;
+		tz = globals.gTimezone,
+		data;
 
 	url = userItemsURL(view, start_rec, rec_limit,  view.filter, view.fromDate, view.toDate,tz);
+	data = globals.gSelector.getItem(url);      // check cache
 
-	addHourglass();
-	$.ajax({
-		url: url,
-		dataType: 'json',
-		cache: false,
-		success: function(data) {
-			// Add data to results
-			removeHourglass();
-			data.source = "user";
-			//data.sId = f_sId;
-			data.table = true;
-			//data.fId = fId;
-			//data.survey = survey;
-
-			if(typeof view.start_recs === "undefined") {
-				view.start_recs = {};
-			}
-			if(typeof view.start_recs[0] === "undefined") {
-				view.start_recs[0] = [];
-			}
-			view.start_recs[0].push(start_rec);
-
-			globals.gSelector.addDataItem(url, data);
-			view.results = [];
-			view.results[0] = data;
-
-
-			refreshData(view, "user");	// Update the views with the new usage data
-
-
-		},
-		error: function(data) {
-			removeHourglass();
-			alert(data.message);
+	if(data) {
+		if (typeof view.start_recs === "undefined") {
+			view.start_recs = {};
 		}
-	});
+		if (typeof view.start_recs[0] === "undefined") {
+			view.start_recs[0] = [];
+		}
+		view.start_recs[0].push(start_rec);
+		view.results = [];
+		view.results[0] = data;
+		refreshData(view, "user");
+	} else {
+
+		function getAsyncData(dataUrl) {
+			addHourglass();
+			$.ajax({
+				url: dataUrl,
+				dataType: 'json',
+				cache: false,
+				success: function (data) {
+					// Add data to results
+					removeHourglass();
+					data.source = "user";
+					data.table = true;
+
+					if (typeof view.start_recs === "undefined") {
+						view.start_recs = {};
+					}
+					if (typeof view.start_recs[0] === "undefined") {
+						view.start_recs[0] = [];
+					}
+					view.start_recs[0].push(start_rec);
+
+					globals.gSelector.addDataItem(dataUrl, data);
+					view.results = [];
+					view.results[0] = data;
+
+					refreshData(view, "user");	// Update the views with the new usage data
+
+				},
+				error: function (data) {
+					removeHourglass();
+					alert(data.message);
+				}
+			});
+		}
+		getAsyncData(url);
+	}
 
 }
 
@@ -439,7 +453,7 @@ function getUserData(view, start_rec) {
 
 		 switch(outputView.type) {
 			 case "map":
-				 setUserMap(outputView, secondaryLayer);        // TODO
+				 setMap(outputView, secondaryLayer);        // TODO
 				 break;
 			 case "table":
 				 setUserTableSurvey(outputView);                // TODO
