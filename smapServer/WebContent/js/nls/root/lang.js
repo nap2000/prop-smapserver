@@ -361,6 +361,28 @@ define({
 	"a_lh": "Legacy XLS / HTML",
 	"a_ua": "User Activity",
 
+    "a_dd_sl": "Shows the results",
+    "a_dd_ocha_map": "Shows the location of responses to %s1 in the question '%s2' in survey '%s3'.",
+	"a_dd_percent_map": "Shows the percentage of responses that selected %s1 in the question '%s2' in survey '%s3'.",
+	"a_dd_average_map": "Shows the average of responses to %s1 in the question '%s2' in survey '%s3'.",
+	"a_dd_count_map": "Shows the count of responses to %s1 in the question '%s2' in survey '%s3'.",
+	"a_dd_total_map": "Shows the total of responses to %s1 in the question '%s2' in survey '%s3'.",
+	"a_dd_none_map": "Shows the responses to %s1 in the question '%s2' in survey '%s3'.",
+	"a_dd_ocha_table": "Shows the location of responses to each choice in the question '%s2' in survey '%s3'.",
+	"a_dd_percent_table": "Shows the percentage of responses that selected each choice in the question '%s2' in survey '%s3'.",
+	"a_dd_average_table": "Shows the average of responses to each choice in the question '%s2' in survey '%s3'.",
+	"a_dd_count_table": "Shows the count of responses to each choice in the question '%s2' in survey '%s3'.",
+	"a_dd_total_table": "Shows the total of responses to each choice in the question '%s2' in survey '%s3'.",
+	"a_dd_none_table": "Shows the responses to each choice in the question '%s2' in survey '%s3'.",
+
+    "a_dd_units": "(units are %s1)",
+
+    "a_dd_group": "Grouped by the responses to the question '%s1'.",
+	"a_dd_group_interval": "Grouped by the responses to the question '%s1' and by '%s2'.",
+	"a_dd_interval": "Grouped by '%s1'",
+
+    "a_dd_where": "<b>Where %s1 equals %s2</b>",
+
 
     // Messages
     "msg_pk_sel": "You can only select the record identifier if you have selected the \"Update a different question\" checkbox",
