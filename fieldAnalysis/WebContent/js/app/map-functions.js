@@ -839,12 +839,20 @@ function addSharedMaps(map, sharedMaps) {
 			if(clusterData) {
 				for(i = 0; i < clusterData.length; i++) {
 					h[++idx] = '<td>';
-					h[++idx] = clusterData[i].attributes.prikeys[0];
+					if(clusterData[i].attributes.prikeys) {
+						h[++idx] = clusterData[i].attributes.prikeys[0];        // Survey data
+					} else {
+						h[++idx] = clusterData[i].attributes.prikey;            // Usage data
+					}
 					h[++idx] = '</td>';
 				}
 			} else {
 				h[++idx] = '<td>';
-				h[++idx] = aDataItem.prikeys[0];
+				if(aDataItem.prikeys) {
+					h[++idx] = aDataItem.prikeys[0];    // survey data
+				} else {
+					h[++idx] = aDataItem.prikey;        // usage data
+				}
 				h[++idx] = '</td>';
 			}
 			h[++idx] = '</thead>';

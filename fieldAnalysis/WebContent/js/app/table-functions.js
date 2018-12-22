@@ -345,7 +345,7 @@ function generateUserTable(elementId, data, disp_desc, user_ident, uId) {
 		gTab[++gIdx] = title;
 	}
 	if(typeof data.totals !== "undefined") {
-		gTab[++gIdx] = '(';
+		gTab[++gIdx] = ' (';
 		gTab[++gIdx] = data.totals.filtered_count;
 		gTab[++gIdx] = ' ';
 		gTab[++gIdx] = data.totals.filtered_count == 1 ? localise.set["c_record"] : localise.set["c_records"];
