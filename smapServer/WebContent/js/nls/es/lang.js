@@ -350,6 +350,7 @@ define(
     "a_lx": "XLS Anterior",
     "a_lh": "XLS Anterior / HTML",
     "a_ua": "Actividad del Usuario",
+    "a_tc": "Este Gráfico",
     "a_dd_sl": "Muestra los resultados",
     "a_dd_ocha_map": "Muestra la ubicación de las respuestas a %s1 en la pregunta '%s2' del formulario '%s3'.",
     "a_dd_percent_map": "Muestra el porcentaje de respuestas seleccionadas  %s1 en la pregunta '%s2' de formulario '%s3'.",
