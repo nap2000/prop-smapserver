@@ -197,6 +197,8 @@ public class MyAssignments extends Application {
 			Locale locale = new Locale(GeneralUtilityMethods.getUserLanguage(sd, request, request.getRemoteUser()));
 			ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);
 			
+			String tz = "UTC";
+			
 			String sqlDeleteCancelled = "update assignments set status = 'deleted', deleted_date = now() where id = ?";
 			pstmtDeleteCancelled = sd.prepareStatement(sqlDeleteCancelled);
 			String sqlNumberTasks = "select ft_number_tasks from organisation where id = ?";
@@ -324,7 +326,7 @@ public class MyAssignments extends Application {
 			/*
 			 * Get the complete list of forms accessible by this user
 			 */
-			SurveyManager sm = new SurveyManager(localisation);
+			SurveyManager sm = new SurveyManager(localisation, "UTC");
 			ArrayList<org.smap.sdal.model.Survey> surveys = sm.getSurveys(sd, pstmt,
 					userName,
 					false, 
@@ -371,7 +373,7 @@ public class MyAssignments extends Application {
 	
 						log.info("CSV File is:  " + dirPath + " : directory path created");
 	
-						efm.createLinkedFile(sd, cRel, survey.id, m.fileName , filepath, userName);
+						efm.createLinkedFile(sd, cRel, survey.id, m.fileName , filepath, userName, tz);
 					}
 				}
 
@@ -383,7 +385,7 @@ public class MyAssignments extends Application {
 				fl.project = survey.projectName;
 				fl.pid = survey.pId;
 				fl.tasks_only = survey.projectTasksOnly;
-				fl.hasManifest = translationMgr.hasManifest(sd, userName, survey.id);
+				fl.hasManifest = hasManifest;
 
 				// If a new manifest then mark the form dirty so it will be checked to see if it needs to be downloaded
 				if(hasManifest) {
@@ -407,7 +409,8 @@ public class MyAssignments extends Application {
 					+ "o.ft_specify_instancename, "
 					+ "o.ft_admin_menu, "
 					+ "o.ft_review_final, "
-					+ "o.ft_send "
+					+ "o.ft_send,"
+					+ "o.ft_image_size "
 					+ "from organisation o, users u "
 					+ "where u.o_id = o.id "
 					+ "and u.ident = ?");
@@ -432,6 +435,7 @@ public class MyAssignments extends Application {
 				tr.settings.ft_send = resultSet.getString(8);
 				tr.settings.ft_send_wifi = Organisation.get_ft_send_wifi(tr.settings.ft_send);
 				tr.settings.ft_send_wifi_cell = Organisation.get_ft_send_wifi_cell(tr.settings.ft_send);
+				tr.settings.ft_image_size = resultSet.getString(9);
 				tr.settings.ft_location_trigger = true;
 			}
 

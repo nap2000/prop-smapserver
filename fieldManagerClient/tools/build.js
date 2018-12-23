@@ -34,14 +34,8 @@
     },
     dir: '../fieldManager',
     modules: [
-        {
-            name: '../templatemanagement_main',
-        },
  	{
             name: '../surveymanagement_main',
-        },
-        {
-            name: '../oversight_main',
         },
         {
             name: '../usermanagement_main',

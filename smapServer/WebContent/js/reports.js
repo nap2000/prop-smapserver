@@ -77,6 +77,7 @@ require([
 	$(document).ready(function() {
 
         setCustomReports();			// Apply custom javascript
+		setupUserProfile();
 		localise.setlang();		// Localise HTML
 
 		// Get the user details
@@ -95,30 +96,6 @@ require([
         	var url;
         	var action = gReportList[gReportIdx].action_details;
 
-
-        	/*
-        	for(i = 0; i < gConfig.length; i++) {
-        		val = $('#param_' + gConfig[i].name).val();
-
-        		// Validate
-        		if(gConfig[i].required && (typeof val === "undefined" || val.trim().length === 0)) {
-                    $('#alert').html(localise.set['ed_req'] + " : " + localise.set[gConfig[i].trans])
-        			$('#alert').show();
-        			return false;
-                }
-
-                if(gConfig[i].name === "filename") {
-                    filename = val;
-                } else {
-                    params.push({
-                        key: gConfig[i].name,
-                        val: val
-                    })
-                }
-
-                gReportList[gReportIdx].savedParams[gConfig[i].name] = val;
-			}
-			*/
             $('#alert').hide();
 
             url = getReportUrl(action.reportType, action.sId, action.filename);
@@ -133,7 +110,6 @@ require([
                     url += params[i].k + '=' + params[i].v;
                 }
             }
-
 
             $('#report_popup').modal("hide");
             window.location.href = url;
@@ -152,6 +128,7 @@ require([
 
         $('#addReport').click(function(){
             $('#publish_form')[0].reset();
+            $('#e_tz').val(globals.gTimezone);
 
             $('.role_select_roles').empty()
             getSurveyRoles($('#survey').val(), undefined, true);
@@ -200,11 +177,13 @@ require([
         var name = $('#r_name').val();
         var reportType = $('#reportType').val();
         var includeMeta = $('#includeMeta').prop('checked');
+        var odata2Data = $('#odata2Data').prop('checked');
         var split_locn = $('#splitlocn').prop('checked');
         var merge_select_multiple = $('#mergeSelectMultiple').prop('checked');
         var landscape = $('#orient_landscape').prop('checked');
         var embed_images = $('#embedImages').prop('checked');
         var language = $('#export_language').val();
+		var tz = $('#e_tz').val();                      // Since the export is being saved use a local version of tz
         var dateId = $('#export_date_question').val();
         var exp_from_date = undefined;
         var exp_to_date = undefined;
@@ -243,6 +222,11 @@ require([
             id = $(this).val();
             roleIds.push(id);
         });
+        // Validation - ensure at least one role is selected
+        if(gTasks.cache.surveyRoles[sId].length > 0  && roleIds.length == 0) {
+            alert(window.localise.set["msg_one_role"]);
+            return;
+        }
 
         var url = "/surveyKPI/reporting/link/" + sId
             + "?reportType=" + reportType
@@ -260,6 +244,9 @@ require([
         }
         if(includeMeta) {
             url += "&meta=true";
+        }
+        if(odata2Data) {
+            url += "&odata2=true";
         }
         if(split_locn) {
             url += "&split_locn=true";
@@ -285,6 +272,9 @@ require([
         if(language != "none") {
             url += "&language=" + language;
         }
+		if(tz) {
+			url += "&tz=" + encodeURIComponent(tz);
+		}
         if(filter && filter.length > 0) {
             url += "&filter=" + filter;
         }
@@ -364,7 +354,11 @@ require([
 				if(xhr.readyState == 0 || xhr.status == 0) {
 					  return;  // Not an error
 				} else {
-				    alert(localise.set["error"] + ": " + xhr.responseText);
+				    var msg = xhr.responseText;
+				    if(msg.indexOf("404 - Not Found") >= 0) {
+				        msg = localise.set["msg_no_proj"];
+                    }
+				    alert(localise.set["error"] + ": " + msg);
 				}
 			}
 		});
@@ -457,7 +451,8 @@ require([
         $('.copyLinkOdata').click(function () {
             var $this = $(this);
             var i = $this.closest('tr').data("idx");
-            var link = location.origin + "/odata/action.svc/" + gReportList[i].action_details.name;
+            var modId = gReportList[i].ident.replace(/-/g, '_');
+            var link = location.origin + "/odata/action.svc/" + modId;
 
 
             // From https://stackoverflow.com/questions/22581345/click-button-copy-to-clipboard-using-jquery
@@ -532,6 +527,7 @@ require([
             // Add parameters
             var meta = false;
             var split_locn = false;
+            var odata2_data = false;
             var merge_select_multiple = false;
             var embed_images = false;
             var language = "none";
@@ -539,6 +535,7 @@ require([
             var exp_from_date;
             var exp_to_date;
             var filter;
+            var tz;
             var landscape;
             for(i = 0; i < report.action_details.parameters.length; i++) {
                 var param = report.action_details.parameters[i];
@@ -554,6 +551,10 @@ require([
                     if(param.v === "true") {
                         split_locn = true;
                     }
+                } else if(param.k === "odata2") {
+                    if(param.v === "true") {
+                        odata2_data = true;
+                    }
                 } else if(param.k === "merge_select_multiple") {
                     if(param.v === "true") {
                         merge_select_multiple = true;
@@ -564,6 +565,8 @@ require([
                     }
                 } else if(param.k === "language") {
                     language = param.v;
+                } else if(param.k === "tz") {
+	                tz = param.v;
                 } else if(param.k === "filter") {
                     filter = param.v;
                 } else if(param.k === "dateId") {
@@ -580,6 +583,7 @@ require([
             }
             $('#includeMeta').prop('checked', meta);
             $('#splitlocn').prop('checked', split_locn);
+            $('#odata2Data').prop('checked', odata2_data);
             $('#mergeSelectMultiple').prop('checked', merge_select_multiple);
             $('#embedImages').prop('checked', embed_images);
             if(landscape) {
@@ -588,6 +592,9 @@ require([
                 $("#orient_portrait").prop("checked",true);
             }
             $('#export_language').val(language);
+            if(tz) {
+	            $('#e_tz').val(tz);
+            }
             $('#tg_ad_filter').val(filter);
             if(dateId) {
                 $('#export_date_question').val(dateId);

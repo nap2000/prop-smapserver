@@ -151,12 +151,12 @@ require([
             pArray = [],
             param = [],
             openingNew = false,
-            dont_get_current_survey = true,
-            bs = isBusinessServer();
+            dont_get_current_survey = true;
 
         window.chart = chart;
         window.moment = moment;
         setCustomManage();
+	    setupUserProfile();
         localise.setlang();		// Localise HTML
 
         // Get the parameters and show a management survey if required
@@ -547,6 +547,8 @@ require([
 
         }
 
+        var tz = globals.gTimezone;
+
         data = getTableData(globals.gMainTable,
             gTasks.cache.surveyConfig[globals.gViewId].columns);
 
@@ -573,7 +575,7 @@ require([
                 chartData = chart.getXLSData(alldata);
             }
 
-            generateFile(url, filename, format, mime, data, globals.gCurrentSurvey, managedId, title, project, charts, chartData, settings);
+            generateFile(url, filename, format, mime, data, globals.gCurrentSurvey, managedId, title, project, charts, chartData, settings, tz);
         } else {
             var countImages = $('.svg-container svg').length;
             $('.svg-container svg').each(function (index) {
@@ -593,7 +595,7 @@ require([
                     charts.push(chart);
                     countImages--;
                     if (countImages <= 0) {
-                        generateFile(url, filename, format, mime, undefined, globals.gCurrentSurvey, managedId, title, project, charts, chartData, settings);
+                        generateFile(url, filename, format, mime, undefined, globals.gCurrentSurvey, managedId, title, project, charts, chartData, settings, tz);
                     }
                 });
 
@@ -884,10 +886,11 @@ require([
             url += "&group=true";
         }
 
-
         url += "&format=dt";
-        url += "&merge_select_multiple=yes"
+        url += "&merge_select_multiple=yes";
         url += "&sort=prikey&dirn=desc";
+
+        url += "&tz=" + encodeURIComponent(globals.gTimezone);
 
         $.fn.dataTable.ext.errMode = 'none';
 
@@ -1127,6 +1130,8 @@ require([
     function showDuplicateData(sId) {
 
         var url = '/api/v1/data/similar/' + sId + '/' + getSearchCriteria() + "?format=dt";
+        url += "&tz=" + encodeURIComponent(globals.gTimezone);
+
         globals.gMainTable.ajax.url(url).load();
 
     }
@@ -1415,6 +1420,7 @@ require([
         } else if (item.type === "link") {
             url += item.sId + "?mgmt=" + managed + "&form=" + item.fId + "&hrk=" + item.hrk;
         }
+        url += "&tz=" + encodeURIComponent(globals.gTimezone);
 
         addHourglass();
         $.ajax({

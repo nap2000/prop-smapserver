@@ -49,6 +49,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
+import org.smap.sdal.Utilities.ApplicationException;
 import org.smap.sdal.Utilities.Authorise;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
 import org.smap.sdal.Utilities.ResultsDataSource;
@@ -158,11 +159,12 @@ public class Data extends Application {
 			@QueryParam("bad") String include_bad,		// yes | only | none Include records marked as bad
 			@QueryParam("audit") String audit_set,		// if yes return audit data
 			@QueryParam("merge_select_multiple") String merge, 	// If set to yes then do not put choices from select multiple questions in separate objects
-			@QueryParam("geojson") String geojson				// if set to yes then format as geoJson
-			) { 
+			@QueryParam("tz") String tz,					// Timezone
+			@QueryParam("geojson") String geojson		// if set to yes then format as geoJson
+			) throws ApplicationException, Exception { 
 		
 		getDataRecords(request, response, sIdent, start, limit, mgmt, group, sort, dirn, formName, start_parkey,
-				parkey, hrk, format, include_bad, audit_set, merge, geojson);
+				parkey, hrk, format, include_bad, audit_set, merge, geojson, tz);
 	}
 	
 	/*
@@ -186,8 +188,9 @@ public class Data extends Application {
 			String include_bad,		// yes | only | none Include records marked as bad
 			String audit_set,		// if yes return audit data
 			String merge, 			// If set to yes then do not put choices from select multiple questions in separate objects
-			String geojson			// If set to yes then render as geoJson rather than the kobo toolbox structure
-			) { 
+			String geojson,			// If set to yes then render as geoJson rather than the kobo toolbox structure
+			String tz				// Timezone
+			) throws ApplicationException, Exception { 
 
 		// Authorisation - Access
 		Connection sd = SDDataSource.getConnection("koboToolboxApi - get data records");
@@ -266,13 +269,16 @@ public class Data extends Application {
 		if(format != null && format.equals("dt")) {
 			isDt = true;
 		}
+		
+		tz = (tz == null) ? "UTC" : tz;
 
 		PrintWriter outWriter = null;
 		try {
 
-			
 			lm.writeLog(sd, sId, request.getRemoteUser(), "view", "Managed Forms or the API. " + (hrk == null ? "" : "Hrk: " + hrk));
 			
+			response.setContentType("text/html; charset=UTF-8");
+			response.setCharacterEncoding("UTF-8");
 			outWriter = response.getWriter();
 			
 			Locale locale = new Locale(GeneralUtilityMethods.getUserLanguage(sd, request, request.getRemoteUser()));
@@ -339,7 +345,8 @@ public class Data extends Application {
 					true,		// include survey duration
 					superUser,
 					false,		// TODO include HXL
-					audit
+					audit,
+					tz
 					);
 
 			if(mgmt) {
@@ -348,7 +355,7 @@ public class Data extends Application {
 				columns.addAll(config.columns);
 			}
 
-			TableDataManager tdm = new TableDataManager(localisation);
+			TableDataManager tdm = new TableDataManager(localisation, tz);
 
 			pstmt = tdm.getPreparedStatement(
 					sd, 
@@ -373,7 +380,8 @@ public class Data extends Application {
 					false,			// Return records greater than or equal to primary key
 					include_bad,
 					null	,			// no custom filter
-					null				// key filter
+					null,			// key filter
+					tz
 					);
 			
 			// Write array start
@@ -503,6 +511,7 @@ public class Data extends Application {
 		PreparedStatement pstmtGetSimilar = null;
 		PreparedStatement pstmtGetData = null;
 
+		String tz = "UTC";
 
 		StringBuffer columnSelect = new StringBuffer();
 		StringBuffer similarWhere = new StringBuffer();
@@ -584,7 +593,8 @@ public class Data extends Application {
 					false,		// Include survey duration
 					superUser,
 					false,		// Only include HXL with CSV and Excel output
-					false
+					false,
+					tz
 					);
 
 			if(mgmt) {
@@ -603,7 +613,7 @@ public class Data extends Application {
 					if(i > 0) {
 						columnSelect.append(",");
 					}
-					columnSelect.append(c.getSqlSelect(urlprefix));
+					columnSelect.append(c.getSqlSelect(urlprefix, tz));
 				}
 
 
@@ -647,11 +657,11 @@ public class Data extends Application {
 								if(stringFnApplies 
 										&& (aSelect[1].equals("lower") 
 												|| aSelect[1].equals("soundex"))) {
-									String s = aSelect[1] +"(" + c.getSqlSelect(urlprefix) + ")";
+									String s = aSelect[1] +"(" + c.getSqlSelect(urlprefix, tz) + ")";
 									columnSelect.append(s);
 									similarWhere.append(s + " = ?");
 								} else {
-									String s = c.getSqlSelect(urlprefix);
+									String s = c.getSqlSelect(urlprefix, tz);
 									columnSelect.append(s);
 									similarWhere.append(s + " = ?");
 								}

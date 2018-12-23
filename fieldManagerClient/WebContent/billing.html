@@ -46,7 +46,7 @@
               <li class="restrict_role enum_role"><a href="/webForm.html"><span class="lang" data-lang="m_data_mod" >Web Forms</span><span class="glyphicon glyphicon-globe pull-right"></span></a></li>
               <li class="restrict_role analyst_role data_role"><a href="/fieldAnalysis/index.html"><span class="lang" data-lang="m_analysis">Analysis</span><span class="glyphicon glyphicon-stats pull-right"></span></a></li>
               <li class="restrict_role admin_role analyst_role"><a href="/tasks/taskManagement.html"><span class="nav-label lang" data-lang="m_assign">assign</span><span class="glyphicon glyphicon-tasks pull-right"></span></a></li>
-			  <li class="restrict_role billing_role bus_only" style="display:none;"><a href="/fieldManager/billing.html"><span class="nav-label lang" data-lang="m_billing">billing</span><span class="glyphicon glyphicon-usd pull-right"></span></a></li>
+			  <li class="restrict_role billing_role" style="display:none;"><a href="/fieldManager/billing.html"><span class="nav-label lang" data-lang="m_billing">billing</span><span class="glyphicon glyphicon-usd pull-right"></span></a></li>
 		  </ul>
         </li>
 		<li id="m_help"><a class="lang" data-lang="m_help" href="https://docs.google.com/folderview?id=0B5_SmpWlQYxvNExwSFV5X051Yjg&usp=docslist_api#" target="_blank">Help</a></li>
@@ -65,39 +65,70 @@
 <div class="container">
 	<div id="org_alert" class="alert alert-info" role="alert"></div>
 	<ul class="nav nav-pills" role="tablist">
-		<li id="serverBillTab" role="presentation" class="active"><a href="#" class="lang" data-lang="m_billing_server">server billing</a></li>
-		<li id="organisationBillTab" role="presentation"><a href="#" class="lang" data-lang="m_billing_orgs">organisation billing</a></li>
+		<li id="billTab" role="presentation" class="active"><a href="#" class="lang" data-lang="m_billing">billing</a></li>
+		<li id="ratesTab" role="presentation"><a href="#" class="lang" data-lang="m_rates">rates</a></li>
 	</ul>
 
-	<!-- The container for details of a server bill -->
-	<div id="serverBillPanel" class="billtab">
-
-		<div class="well" id="filters">
-			<div class="container">
-				<form role="form" class="form-horizontal" id="user_filter_form">
-						<div class="form-group">
-
-							<label class="control-label col-sm-4" for="usageDate"><span class="lang" data-lang="c_month"></span>:</label>
-							<div class="input-group date col-sm-4" id='usageDate' >
-								<input type='text' class="form-control" data-date-format="YYYY/MM"/>
-								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-							</div>
-						</div>
-
-				</form>
-				<div class="col-sm-3 col-xs-6">
-					<a id="org_bill_rpt" class="btn btn-success lang" type="button" data-lang="org_bill_rpt">report</a>
+	<div class="well" id="filters">
+		<div class="container">
+			<form role="form" class="form-horizontal" id="user_filter_form">
+				<div class="form-group showHierarchy" style="display:none;">
+					<label class="control-label col-sm-4 lang" for="billLevel" data-lang="m_bill_level"></label>
+					<div class="col-sm-4">
+						<select id="billLevel" class="form-control"></select>
+					</div>
 				</div>
+				<div class="form-group showOrganisation" style="display:none;">
+					<label class="control-label col-sm-4 lang" for="organisation" data-lang="c_org"></label>
+					<div class="col-sm-4">
+						<select id="organisation" class="form-control organisation_select"></select>
+					</div>
+				</div>
+				<div class="form-group showEnterprise" style="display:none;">
+					<label class="control-label col-sm-4 lang" for="enterprise" data-lang="c_ent"></label>
+					<div class="col-sm-4">
+						<select id="enterprise" class="form-control enterprise_select"></select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-sm-4 lang" for="usageDate" data-lang="c_month"></label>
+					<div class="col-sm-4">
+						<div class="input-group date" id='usageDate' >
+							<input type='text' class="form-control" data-date-format="YYYY/MM"/>
+							<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+						</div>
+					</div>
+				</div>
+				<div class="form-group showManager" style="display:none;">
+					<label class="control-label col-sm-4 lang" for="enableBilling" data-lang="bill_enable"></label>
+					<div class="col-sm-4">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="enableBilling">
+							</label>
+						</div>
+					</div>
+				</div>
+			</form>
+			<div class="col-sm-3 col-xs-6">
+				<a id="org_bill_rpt" class="btn btn-success lang" type="button" data-lang="org_bill_rpt">report</a>
 			</div>
 		</div>
+	</div>
+
+	<!-- The container for biiling information -->
+	<div id="billPanel">
 
 		<div class="container">
 			<div class="row">
-				<div class="col-md-12 col-xs-12 table-responsive">
+				<div class="col-md-12 col-xs-12 billing_disabled">
+					<p class="lang" data-lang="billing_disabled_msg"></p>
+				</div>
+				<div class="col-md-12 col-xs-12 table-responsive billing_enabled">
 					<table class="table table-striped">
 						<thead>
 							<tr>
-								<th></th>;
+								<th></th>
 								<th class="lang" data-lang="c_quantity">quantity</th>
 								<th class="lang" data-lang="c_free">free</th>
 								<th class="lang" data-lang="c_uc">unit cost</th>
@@ -114,17 +145,31 @@
 		</div>
 	</div>
 
-	<!-- The container for managing organisation billing -->
-	<div id="organisationBillPanel" class="billtab">
+	<!-- The container for rating information-->
+	<div id="ratesPanel" style="display:none;">
 
-		<div class="well">
-			<div class="container">
-
-			</div>
-		</div>
 
 		<div class="container">
-
+			<div class="row">
+				<div class="col-md-12 col-xs-12 norates">
+					<p id="noratesmsg"></p>
+				</div>
+				<div class="col-md-12 col-xs-12 table-responsive hasrates">
+					<table class="table table-striped">
+						<thead>
+						<tr>
+							<th></th>
+							<th class="lang" data-lang="bill_from">from</th>
+							<th class="lang" data-lang="u_chg">changed by</th>
+							<th class="lang" data-lang="bill_chg_date">date changed</th>
+							<th class="lang" data-lang="m_rates">rates</th>
+							<th class="lang" data-lang="c_action">action</th>
+						</tr>
+						</thead>
+						<tbody id="rates_table"></tbody>
+					</table>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -158,6 +203,18 @@
 							<input type="email" class="form-control" id="me_email" 
 									placeholder="Enter email" 
 									pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="me_organisation" data-lang="c_org" class="lang col-sm-2 control-label">organisation</label>
+						<div class="col-sm-10">
+							<select id="me_organisation" class="organisation_select form-control"></select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="u_tz" class="col-sm-2 control-label lang" data-lang="c_tz">timezone</label>
+						<div class="col-sm-10">
+							<select class="form-control timezone_select" id="u_tz"></select>
 						</div>
 					</div>
 					<div id="reset_me_password_fields" style="display:none;">

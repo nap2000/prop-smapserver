@@ -115,30 +115,34 @@ require([
 	$(document).ready(function() {
 
         setCustomLogs();
+		setupUserProfile();
 		localise.setlang();		// Localise HTML
 		
 		getLoggedInUser(undefined, false, true, undefined);
 		
 		table = $('#log_table').DataTable({
 			 processing: true,
+			 deferRender: true,
 		     ajax: "/api/v1/log/dt",
 		     columns: [
 		                 { "data": "id" },
 		                 { "data": "log_time" },
-		                 { "data": "sName" },
+		                 { "data": "sName", "width": "200px"  },
 		                 { "data": "userIdent" },
 		                 { "data": "event" },
 		                 { "data": "note" }
 		             ],
 		      order: [[ 0, "desc" ]],
-		      columnDefs: [ {
-		    	 	targets: [1],
-		    	 	render: function ( data, type, full, meta ) {
-		    	 		return localTime(data);
-		    	 	}	 	
-		      	}
+		      columnDefs: [{
+                  targets: [1],
+                  render: function (data, type, full, meta) {
+                      return localTime(data);
+                  }
+              }
 		     ],
 		});
+
+        $('#log_table').find('td').css('white-space','initial').css('word-wrap', 'break-word');
 		
 		$('#m_refresh').click(function(e) {	// Add refresh action
 			table.ajax.reload();

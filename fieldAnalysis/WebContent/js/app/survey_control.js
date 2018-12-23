@@ -39,6 +39,11 @@ $(document).ready(function() {
 	$('#settings_language').change(function() {	
  	 	languageChangeEvent();
  	 });
+
+	// Add change function on language select
+	$('#subject_type').change(function() {
+		subjectTypeChangeEvent();
+	});
 	
 	// Add change function on question select
 	$('#settings_question').change(function() {
@@ -58,7 +63,9 @@ $(document).ready(function() {
 	 // Add datepicker functionality TODO Bootstrap
 	 $('#from_date').datepicker({ dateFormat: "yy-mm-dd" });
 	 $('#to_date').datepicker({ dateFormat: "yy-mm-dd" });
-	 
+
+	 getUsers();
+
 	 /*
 	  * Question filter
 	  */
@@ -141,6 +148,7 @@ function copyView(v) {
 			seq: v.seq,
 			sName: v.sName,
 			sId: v.sId,
+			uId: v.uId,
 			region: v.region,
 			question: v.question,
 			qId_is_calc: v.qId_is_calc,
@@ -158,8 +166,9 @@ function copyView(v) {
 			fn: v.fn,
 			filter: v.filter,
 			dateQuestionId: v.dateQuestionId,
-        	advanced_filter: v.advanced_filter
-	}
+        	advanced_filter: v.advanced_filter,
+			subject_type: v.subject_type
+	};
 	
 	return cp;
 }
@@ -295,6 +304,16 @@ function typeChangeEvent(type) {
 	if(oldType === "map") {
 		gSurveyControlView.groupQuestionId = undefined;
 	}
+
+	/*
+	 * Hide / show panel type dependent fields
+	 */
+	$('.map_only, .table_only').hide();
+	if(type === "table") {
+		$('.table_only').show();
+	} else if(type === "map") {
+		$('.map_only', '#p_settings').show();
+	}
 	
 	if(type == "map") {
 		var regions = globals.gSelector.getRegionList();
@@ -310,7 +329,7 @@ function typeChangeEvent(type) {
 				getGeometryQuestion(surveyId, qMeta.f_id); 
 			}
 		}
-		$('.map_only', '#p_settings').show();
+
 	} else {
 		 	 
 		questions = globals.gSelector.getSurveyQuestions(surveyId, language);
@@ -320,7 +339,6 @@ function typeChangeEvent(type) {
 			setSurveyViewQuestionGroups();	// Clear the existing list
 		}
 		$('#display_panel').val("-1");					// Only maps can be displayed on a different panel to the one on which they are specified
-		$('.map_only').hide();
 	}
 	
 	// Enable the timeseries select if appropriate
@@ -399,6 +417,19 @@ function languageChangeEvent() {
 		}
 		
 	}	
+}
+
+//Selected language has changed
+function subjectTypeChangeEvent() {
+
+	var subjectType = $('#subject_type option:selected').val();
+
+	$('.subject_survey_only, .subject_user_only').hide();
+	if(subjectType === "survey") {
+		$('.subject_survey_only').show();
+	} else {
+		$('.subject_user_only').show();
+	}
 }
 
 // Selected question has changed
@@ -542,6 +573,11 @@ function setSurveyViewControl(view) {
 	if(view.sId) {
 		$('#settings_survey').val(view.sId);
 	}
+
+	$('#settings_user').prop("disabled", false);
+	if(view.uId) {
+		$('#settings_user').val(view.uId);
+	}
 	
 	$('#settings_language').prop("disabled", false);
 	if(view.lang) {
@@ -551,7 +587,7 @@ function setSurveyViewControl(view) {
 	// Display Panel and other map specific fields
 	var views = globals.gSelector.getViews();
 	$display_panel = $('#display_panel');
-	$display_panel.empty().append('<option value="-1">This Chart</option>');
+	$display_panel.empty().append('<option value="-1">' + localise.set["a_tc"] + '</option>');
 	for (var i = 0; i < views.length; i++) {
 		if(views[i].pId != view.pId && views[i].type == "map" && views[i].layerId < 1) {
 			if(views[i].state !== "deleted") {
@@ -559,12 +595,27 @@ function setSurveyViewControl(view) {
 			}
 		}
 	}
-	if(view.type == "map") {
+
+	$('.map_only, .table_only').hide();
+	if(view.type === "map") {
 		$('.map_only').show();
 		$display_panel.val(view.layerId);
-	} else {
-		$('.map_only').hide();
+	} else if(view.type === "table") {
+		$('.table_only').show();
 	}
+
+	// Subject type
+	if(!view.subject_type) {
+		view.subject_type = "survey";
+	}
+	$('.subject_survey_only, .subject_user_only').hide();
+	if(view.subject_type === "survey") {
+		$('.subject_survey_only').show();
+	} else {
+		$('.subject_user_only').show();
+	}
+
+	$('#subject_type').val(view.subject_type);
 	
 	// Question
 	$('#settings_question').removeAttr("disabled");
@@ -610,7 +661,7 @@ function setSurveyViewSurveys(surveyList, sId, elem) {
 
 	var $surveySelect = $(elem);
 	$surveySelect.empty();
-	$surveySelect.append('<option value="-1">None</option>');	// Default is no survey selected
+	$surveySelect.append('<option value="-1">' + localise.set["c_none"] + '</option>');	    // Default is no survey selected
 	$.each(surveyList, function(j, item) {
 		$surveySelect.append('<option value="' + item.id + '">' + item.displayName + '</option>');
 	});
@@ -624,15 +675,13 @@ function setSurveyViewRegions(list, region) {
 
 	var $regionSelect = $('#settings_group');
 	$regionSelect.empty();
-	$regionSelect.append('<option value="None">None</option>');
+	$regionSelect.append('<option value="none">' + localise.set["c_none"] + '</option>');
 	$.each(list, function(j, item) {
 		$regionSelect.append('<option value="' + item.table + '">' + item.name + '</option>');
 	});
 	$regionSelect.val(region);
 	gSurveyControlView.region = region;
 }
-
-
 
 //Set the group list in the survey view control
 function setSurveyViewQuestionGroups(list, groupId) {
@@ -641,7 +690,7 @@ function setSurveyViewQuestionGroups(list, groupId) {
 	var $groupSelect = $('#settings_group'),
 		label;
 	$groupSelect.empty();
-	$groupSelect.append('<option value="-1">None</option>');
+	$groupSelect.append('<option value="-1">' + localise.set["c_none"] + '</option>');
 	if(typeof list !== "undefined") {
 		$.each(list, function(j, item) {
 			if(typeof item.q === "undefined") {
@@ -689,18 +738,22 @@ function refreshAnalysisData() {
 
 //Get the data for the specified view
 function getData(view) {
-	
-	if(view.qId != "-1") {			// Question level results
-		getResults(view);
-		
-	} else {				// Whole of survey results
-		var sMeta = globals.gSelector.getSurvey(view.sId);
-		if(!sMeta) {
-			 getSurveyMetaSE(view.sId, view, true, false, true, view.dateQuestionId);
-		 } else {
-			addDatePickList(sMeta);
-			getSurveyDataSE(view.sId, view);	
-		 }
+
+	if(view.subject_type === "survey") {
+		if (view.qId != "-1") {			// Question level results
+			getResults(view);
+
+		} else {				// Whole of survey results
+			var sMeta = globals.gSelector.getSurvey(view.sId);
+			if (!sMeta) {
+				getSurveyMetaSE(view.sId, view, true, false, true, view.dateQuestionId);
+			} else {
+				addDatePickList(sMeta);
+				getSurveyDataSE(view.sId, view);
+			}
+		}
+	} else if(view.subject_type === "user") {
+		getUserData(view, 0);       // Start from the first record
 	}
 }
 
@@ -713,7 +766,7 @@ function setQ1Functions(type, panelType, defValue) {
 		idx = -1;
 	
 	$fnElem.empty();
-	h[++idx] = '<option value="none">None</option>';
+	h[++idx] = '<option value="none">' + localise.set["c_none"] + '</option>';
 	if(type.substring(0, 6) === "select") {
 		
 		// For select questions the default value should not be "none". Override it here.
@@ -811,7 +864,7 @@ function getTextValues(sId, qId, value) {
 	              return;  // Not an error
 			} else {
 				console.log("Error: Failed to get values for question filter: " + err);
-				alert(localise.set["c_error"] + " " + xhr.responseText);
+				alert(xhr.responseText);
 			}
 		}
 	});	
@@ -949,4 +1002,40 @@ function getViewRegions(view) {
 			}
 		}
 	});		
+}
+
+/*
+ * Get the list of users from the server
+ */
+function getUsers(projectId) {
+	var $users = $('#settings_user'),
+		i, user,
+		h = [],
+		idx = -1;
+
+	$users.empty();
+	$.ajax({
+		url: "/surveyKPI/userList/simple",
+		cache: false,
+		success: function (data) {
+
+			for (i = 0; i < data.length; i++) {
+				user = data[i];
+
+				h[++idx] = '<option value="';
+				h[++idx] = user.id;
+				h[++idx] = '">';
+				h[++idx] = user.name;
+				h[++idx] = '</option>';
+			}
+			$users.append(h.join(''));
+		},
+		error: function (xhr, textStatus, err) {
+			if (xhr.readyState == 0 || xhr.status == 0) {
+				return;  // Not an error
+			} else {
+				alert(err);
+			}
+		}
+	});
 }

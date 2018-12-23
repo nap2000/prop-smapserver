@@ -16,7 +16,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
+define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'datetimepicker'],
     function($, lang, common, globals, bootstrap, moment) {
 
         var	gSurveys,		// Only in this java script file
@@ -24,7 +24,8 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             gControlDelete,
             gControlRestore,
             gShowDeleted = false,
-            gSelectedTemplate,
+            gSelectedTemplateId,            // survey id of current template
+            gSelectedTemplateIdent,         // survey ident of current template
             gSelectedTemplateName,
             gRemote_host,
             gRemote_user,
@@ -34,6 +35,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
 
         $(document).ready(function() {
 
+	        setupUserProfile();
             localise.setlang();		// Localise HTML
 
             /*
@@ -111,14 +113,14 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                 orientation = $("input[name='orientation']:checked", "#download_template").val();
 
                 if(type === "pdf") {
-                    docURL = "/surveyKPI/pdf/" + gSelectedTemplate + "?filename=" + gSelectedTemplateName + "&language=" + language;
+                    docURL = "/surveyKPI/pdf/" + gSelectedTemplateIdent + "?filename=" + gSelectedTemplateName + "&language=" + language;
                     if(orientation === "landscape") {
                         docURL += "&landscape=true";
                     }
                 } else if(type === "xls_edited") {
-                    docURL = "/surveyKPI/xlsForm/" + gSelectedTemplate + "?filetype=" + "xlsx";
+                    docURL = "/surveyKPI/xlsForm/" + gSelectedTemplateId + "?filetype=" + "xlsx";
                 } else {
-                    docURL = "/surveyKPI/survey/" + gSelectedTemplate + "/download?type=" + type + "&language=" + language;
+                    docURL = "/surveyKPI/survey/" + gSelectedTemplateId + "/download?type=" + type + "&language=" + language;
                 }
                 window.location.href = docURL;
             });
@@ -289,6 +291,33 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                 $('#copyLink').prop('title', localise.set["c_cb"]).tooltip('fixTitle');
             });
 
+            /*
+             * Reports
+             */
+            $('#m_usage_report').click(function(){
+                $('#usage_report_popup').modal("show");
+            });
+            $('#usage_report_save').click(function(){
+                executeUsageReport();
+            });
+	        $('#m_form_access_report').click(function(){
+		        $('#form_access_report_popup').modal("show");
+	        });
+	        $('#form_access_report_save').click(function(){
+		        executeFormAccessReport();
+	        });
+
+	        /*
+             * Add date time picker to usage date
+             */
+	        moment.locale();
+	        $('#usageDate').datetimepicker({
+		        useCurrent: false,
+		        format: "MM/YYYY",
+		        viewMode: "months",
+		        locale: gUserLocale || 'en'
+	        }).data("DateTimePicker").date(moment());
+
             enableUserProfileBS();
 
         });
@@ -427,7 +456,9 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             var $surveys = $('#survey_table'),
                 i, survey,
                 h = [],
-                idx = -1;
+                idx = -1,
+                hSel = [],
+                selIdx = -1;
 
             h[++idx] = '<table class="table" style="table-layout:fixed;">';
             h[++idx] = '<thead>';
@@ -516,6 +547,16 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                     h[++idx] = '</td>';
 
                     h[++idx] = '</tr>';
+
+                    /*
+                     * Create html for survey select controls
+                     */
+                    hSel[++selIdx] = '<option value="';
+	                hSel[++selIdx] = survey.ident;
+	                hSel[++selIdx] = '">';
+	                hSel[++selIdx] = survey.displayName;
+	                hSel[++selIdx] = '</option>';
+
                 }
             }
 
@@ -591,8 +632,9 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                     surveyVersion = gSurveys[surveyIndex].version,
                     loadedFromXLS = gSurveys[surveyIndex].loadedFromXLS;
 
-                gSelectedTemplate = $(this).val();
-                $.getJSON("/surveyKPI/languages/" + gSelectedTemplate, function(data) {
+                gSelectedTemplateId = $(this).val();
+                gSelectedTemplateIdent = gSurveys[surveyIndex].ident;
+                $.getJSON("/surveyKPI/languages/" + gSelectedTemplateId, function(data) {
 
                     var $languageSelect = $('#download_language');
                     $languageSelect.empty();
@@ -614,6 +656,10 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
                 $('#download_template').modal('show');
             });
 
+            /*
+             * Populate survey select controls
+             */
+            $('.survey_select').html(hSel.join(''));
 
         }
 
@@ -750,7 +796,9 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             }
         }
 
-// Delete the template
+        /*
+         * Delete the template
+         */
         function executeDelete(template, delTables, hard) {
 
             var delURL = "/surveyKPI/survey/" + template;
@@ -784,7 +832,6 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
          * TODO: Using DELETE to un-delete has to violate innumerable laws of REST!!!!
          * TODO: Presumably the use of DELETE to do a soft delete is also problematic
          */
-
         function executeUnDelete(template) {
 
             var url = "/surveyKPI/survey/" + template + "?undelete=true";
@@ -937,6 +984,33 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment'],
             }
         }
 
+        /*
+         * Reports
+         */
+	    function executeUsageReport() {
+
+		    var usageMsec = $('#usageDate').data("DateTimePicker").date(),
+			    d = new Date(usageMsec),
+			    month = d.getMonth() + 1,
+			    year = d.getFullYear(),
+                url,
+                usageByProject = $('#usage_by_project').prop('checked'),
+                usageBySurvey = $('#usage_by_survey').prop('checked');
+
+		    url = "/surveyKPI/adminreport/usage/" + year + "/" + month;
+		    url += usageByProject ? "?project=true" : "?project=false";
+		    url += usageBySurvey ? "&survey=true" : "&survey=false";
+
+		    downloadFile(url);
+
+	    }
+
+	    function executeFormAccessReport() {
+
+		    var formIdent = $('#survey_access').val();
+
+		    downloadFile("/surveyKPI/adminreport/formaccess/" + formIdent);
+	    }
 
 
     });

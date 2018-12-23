@@ -41,6 +41,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -79,8 +81,10 @@ public class Reports extends Application {
 			@QueryParam("roles") String roles,
 			@QueryParam("filename") String filename,
 			@QueryParam("split_locn") boolean split_locn,
+			@QueryParam("odata2") boolean odata2,
 			@QueryParam("merge_select_multiple") boolean merge_select_multiple,
 			@QueryParam("language") String language,
+			@QueryParam("tz") String tz,
 			@QueryParam("exp_ro") boolean exp_ro,
 			@QueryParam("embedimages") boolean embedImages,
 			@QueryParam("excludeparents") boolean excludeParents,
@@ -109,11 +113,14 @@ public class Reports extends Application {
 		// End Authorisation
 		
 		try {
-
+			// Localisation			
+			Locale locale = new Locale(GeneralUtilityMethods.getUserLanguage(sd, request, request.getRemoteUser()));
+			ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);
+			
 			int oId = GeneralUtilityMethods.getOrganisationId(sd, request.getRemoteUser(), 0);
 			int pId = 0;
 		
-			ActionManager am = new ActionManager();
+			ActionManager am = new ActionManager(localisation, tz);
 			Action action = new Action("report");
 			action.sId = sId;
 			action.pId = pId;	
@@ -130,11 +137,17 @@ public class Reports extends Application {
 			if(split_locn) {
 				action.parameters.add(new KeyValueSimp("split_locn", "true"));
 			}
+			if(odata2) {
+				action.parameters.add(new KeyValueSimp("odata2", "true"));
+			}
 			if(merge_select_multiple) {
 				action.parameters.add(new KeyValueSimp("merge_select_multiple", "true"));
 			}
 			if(language != null) {
 				action.parameters.add(new KeyValueSimp("language", language));
+			}
+			if(tz != null) {
+				action.parameters.add(new KeyValueSimp("tz", tz));
 			}
 			if(exp_ro) {
 				action.parameters.add(new KeyValueSimp("exp_ro", "true"));

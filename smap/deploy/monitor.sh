@@ -1,7 +1,7 @@
 #!/bin/sh
 
 export AWS_CONFIG_FILE=/usr/share/tomcat7/lib/AwsCredentials.properties
-mindisk="4.0"
+mindisk="10.0"
 server=`cat ~/hostname`
 diskalert="false"
 while true; do

@@ -42,18 +42,17 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             gMapInitialised = false,		// Set true when the map pane has been initialised
             gModalMapInitialised = false,	// Set true then the modal map has been initialised
             gIdx = 0,						// Idx set when external task dropped on calendar
-            gSelectedCount = 0;
+            gSelectedCount = 0,
             gUnsentEmailCount = 0;
 
         $(document).ready(function () {
-
-            var bs = isBusinessServer();
 
             window.moment = moment;		// Make moment global for use by common.js
 
             globals.gRegion = {};	// Initialise global values
             globals.gRegions = undefined;
 
+	        setupUserProfile();
             localise.setlang();		// Localise HTML
             $('#email_subject').prop('placeholder', localise.set['n_esc']);
             $('#tp_assign_emails, #assign_emails').prop('placeholder', localise.set['n_cs_e']);
@@ -164,7 +163,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                     // Add parameters
                     if (tz) {
-                        url += (hasParam ? '&' : '?') + "tz=" + tz;
+                        url += (hasParam ? '&' : '?') + "tz=" + encodeURIComponent(tz);
                         hasParam = true;
                     }
                     if(statusFilterArray) {

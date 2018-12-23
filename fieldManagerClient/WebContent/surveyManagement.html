@@ -75,7 +75,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<li class="restrict_role admin_role analyst_role"><a href="/tasks/taskManagement.html"><i
 								class="fa fa-tasks"></i> <span class="nav-label lang" data-lang="m_assign">assign</span></a>
 						</li>
-						<li class="restrict_role billing_role bus_only" style="display:none;"><a href="/fieldManager/billing.html"><i
+						<li class="restrict_role billing_role" style="display:none;"><a href="/fieldManager/billing.html"><i
 								class="fa fa-usd"></i> <span class="nav-label lang" data-lang="m_billing">billing</span></a>
 						</li>
 
@@ -100,7 +100,15 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 				<li id="m_help"><a
 						href="https://docs.google.com/folderview?id=0B5_SmpWlQYxvNExwSFV5X051Yjg&usp=docslist_api#" target="_blank">
 					<i class="fa fa-info-circle"></i> <span
-						class="nav-label lang" data-lang="m_help">help</span></a></li>
+						class="nav-label lang" data-lang="m_help">help</span></a>
+				</li>
+				<li class="nav-divider"></li>
+				<li id="m_usage_report" class="restrict_role admin_role analyst_role"><a
+						href="#"><i class="fa fa-book"></i> <span
+						class="nav-label lang" data-lang="u_usage">usage</span></a></li>
+				<li id="m_form_access_report" class="restrict_role admin_role analyst_role"><a
+						href="#"><i class="fa fa-book"></i> <span
+						class="nav-label lang" data-lang="u_access">access</span></a></li>
 
 			</ul>
 		</div>
@@ -150,7 +158,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						</div>
 						<div class="mgmt_buttons col-md-4 col-xs-12">
 							<button	class="btn btn-primary lang" data-lang="tm_ups" id="submitFile" value="Upload File" >upload</button>
-							<div class="alist"><a class="lang" data-lang="tm_o_u" href="/fieldManager/templateManagement.html">original</a></div>
 						</div>
 						<div class="mgmt_buttons col-md-4 col-xs-12">
 							<a class="btn btn-default lang alist" id="xls_download" type="button" data-lang="tm_g_temp" href="blankform.xlsx">download</a>
@@ -308,6 +315,18 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 								   pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$">
 						</div>
 					</div>
+					<div class="form-group">
+						<label for="me_organisation" data-lang="c_org" class="lang col-sm-2 control-label">organisation</label>
+						<div class="col-sm-10">
+							<select id="me_organisation" class="organisation_select form-control"></select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="u_tz" class="col-sm-2 control-label lang" data-lang="c_tz">timezone</label>
+						<div class="col-sm-10">
+							<select class="form-control timezone_select" id="u_tz"></select>
+						</div>
+					</div>
 					<div id="reset_me_password_fields" style="display:none;">
 						<div class="form-group">
 							<div class="col-sm-offset-2 col-sm-10">
@@ -384,5 +403,86 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 	</div>
 </div>
 
+<!-- Reports -->
+<!-- Parameters for usage report -->
+<div id="usage_report_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dtLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title lang" data-lang="u_usage"></h4>
+			</div>
+			<div class="modal-body">
+
+				<form role="form" class="form-horizontal">
+					<div class="form-group">
+						<label for="usageDate" data-lang="c_month" class="lang col-sm-2 control-label">month</label>
+						<div class="col-sm-10">
+							<div class='input-group date' id='usageDate' data-toggle="tooltip"  data-container="body" title="Month and Year of report">
+								<input type='text' class="form-control" data-date-format="YYYY/MM"/>
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<div class="radio">
+								<label>
+									<input type="radio" name="usage_radio" id="usage_by_user"><span data-lang="c_user" class="lang">user</span>
+								</label>
+							</div>
+							<div class="radio">
+								<label>
+									<input type="radio" name="usage_radio" id="usage_by_project"><span data-lang="rep_usage_project" class="lang">project</span>
+								</label>
+							</div>
+							<div class="radio">
+								<label>
+									<input type="radio" name="usage_radio"  id="usage_by_survey"><span data-lang="rep_usage_survey" class="lang">survey</span>
+								</label>
+							</div>
+						</div>
+					</div>
+				</form>
+
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="usage_report_save" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_create">create</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Parameters for form access report -->
+<div id="form_access_report_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dtLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title lang" data-lang="u_access"></h4>
+			</div>
+			<div class="modal-body">
+
+				<form role="form" class="form-horizontal">
+					<div class="form-group">
+						<label class="lang col-sm-4 control-label" data-lang="c_survey" for="survey_access">survey</label>
+						<div class="col-sm-8">
+							<select class="survey_select form-control" id="survey_access"></select>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="form_access_report_save" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_create">create</button>
+			</div>
+		</div>
+	</div>
+</div>
 </body>
 </html>

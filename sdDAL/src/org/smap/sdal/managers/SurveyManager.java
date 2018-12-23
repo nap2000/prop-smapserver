@@ -20,7 +20,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 package org.smap.sdal.managers;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -39,7 +38,6 @@ import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.smap.sdal.Utilities.ApplicationWarning;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
 import org.smap.sdal.Utilities.UtilityMethodsEmail;
 import org.smap.sdal.model.Action;
@@ -54,7 +52,6 @@ import org.smap.sdal.model.Label;
 import org.smap.sdal.model.InstanceMeta;
 import org.smap.sdal.model.KeyValueSimp;
 import org.smap.sdal.model.Language;
-import org.smap.sdal.model.LanguageItem;
 import org.smap.sdal.model.LinkedSurvey;
 import org.smap.sdal.model.ManifestInfo;
 import org.smap.sdal.model.MetaItem;
@@ -79,11 +76,16 @@ public class SurveyManager {
 			Logger.getLogger(SurveyManager.class.getName());
 
 	LogManager lm = new LogManager();		// Application log
+	String tz;
 
 	private ResourceBundle localisation;
 	
-	public SurveyManager(ResourceBundle l) {
+	public SurveyManager(ResourceBundle l, String tz) {
 		localisation = l;
+		if(tz == null) {
+			tz = "UTC";
+		}
+		this.tz = tz;
 	}
 	
 	public ArrayList<Survey> getSurveys(Connection sd, PreparedStatement pstmt,
@@ -337,11 +339,13 @@ public class SurveyManager {
 				+ "s.exclude_empty,"
 				+ "s.meta,"
 				+ "s.group_survey_id,"
-				+ "s.public_link "
-				+ "from survey s, users u, user_project up, project p "
+				+ "s.public_link, "
+				+ "o.e_id "
+				+ "from survey s, users u, user_project up, project p, organisation o "
 				+ "where u.id = up.u_id "
 				+ "and p.id = up.p_id "
 				+ "and s.p_id = up.p_id "
+				+ "and u.o_id = o.id "
 				+ "and u.ident = ? "
 				+ "and s.s_id = ? ");
 
@@ -362,7 +366,7 @@ public class SurveyManager {
 			log.info("Get Survey info: " + pstmt.toString());
 
 			resultSet = pstmt.executeQuery();	
-			if (resultSet.next()) {								
+			if (resultSet.next()) {							
 
 				s = new Survey();
 				s.setId(resultSet.getInt(1));
@@ -371,7 +375,7 @@ public class SurveyManager {
 				s.setDisplayName(resultSet.getString(4));
 				s.setDeleted(resultSet.getBoolean(5));
 				s.blocked = resultSet.getBoolean(6);
-				s.setPName(resultSet.getString(7));
+				s.setProjectName(resultSet.getString(7));
 				s.setPId(resultSet.getInt(8));
 				s.def_lang = resultSet.getString(9);
 				s.task_file = resultSet.getBoolean(10);
@@ -399,12 +403,15 @@ public class SurveyManager {
 				}
 				s.groupSurveyId = resultSet.getInt(24);
 				s.publicLink = resultSet.getString(25);
+				s.e_id = resultSet.getInt(26);
 				// Get the pdf template
 				File templateFile = GeneralUtilityMethods.getPdfTemplate(basePath, s.displayName, s.p_id);
 				if(templateFile.exists()) {
 					s.pdfTemplateName = templateFile.getName();
 				}
-			} 
+			} else {
+				log.info("Error: survey not found");
+			}
 
 			if(full && s != null) {
 
@@ -779,7 +786,6 @@ public class SurveyManager {
 				+ "o.published "
 				+ "from option o "
 				+ "where o.l_id = ? "
-				+ "and o.externalfile = ? "
 				+ "order by o.seq";
 		PreparedStatement pstmtGetOptions = sd.prepareStatement(sqlGetOptions);
 
@@ -795,7 +801,7 @@ public class SurveyManager {
 				+ "c.c_id, "
 				+ "c.version, "
 				+ "u.name, "
-				+ "c.updated_time, "
+				+ "c.updated_time at time zone '" + tz + "',"
 				+ "c.apply_results, "
 				+ "c.success, "
 				+ "c.msg " 
@@ -837,6 +843,7 @@ public class SurveyManager {
 
 		// Get the Forms
 		pstmtGetForms.setInt(1, s.id);
+		log.info("Get forms: " + pstmtGetForms.toString());
 		rsGetForms = pstmtGetForms.executeQuery();
 
 		while (rsGetForms.next()) {								
@@ -1027,48 +1034,68 @@ public class SurveyManager {
 				external = GeneralUtilityMethods.listHasExternalChoices(sd, s.id, listId);
 			}
 
+			// Get external options if required
+			ArrayList<Option> externalOptions = new ArrayList<> ();
 			if(external) {
 				int qId = GeneralUtilityMethods.getQuestionFromList(sd, s.id, listId);
-				optionList.options = GeneralUtilityMethods.getExternalChoices(sd, 
-						cResults, localisation, user, oId, s.id, qId, null, s.ident);
-			} else {
-				optionList.options = new ArrayList<Option> ();
-				pstmtGetOptions.setInt(1, listId);
-				pstmtGetOptions.setBoolean(2, external);
-				if(idx++ == 0) {
-					log.info("SQL Get options: " + pstmtGetOptions.toString());
-				}
-				rsGetOptions = pstmtGetOptions.executeQuery();
+				externalOptions = GeneralUtilityMethods.getExternalChoices(sd, 
+						cResults, localisation, user, oId, s.id, qId, null, s.ident, tz);
+			} 
+			
+			// Get options from meta definition - insert external if required when not a numeric option
+			optionList.options = new ArrayList<Option> ();
+			pstmtGetOptions.setInt(1, listId);
+			
+			if(idx++ == 0) {
+				log.info("SQL Get options: " + pstmtGetOptions.toString());
+			}
+			rsGetOptions = pstmtGetOptions.executeQuery();
 	
-				Type hmType = new TypeToken<HashMap<String, String>>(){}.getType();		// Used to translate cascade filters json
-				Gson gson=  new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-	
-				while(rsGetOptions.next()) {
-					Option o = new Option();
-					o.id = rsGetOptions.getInt(1);
-					o.value = rsGetOptions.getString(2);
-					o.text_id = rsGetOptions.getString(3);
-					o.externalFile = rsGetOptions.getBoolean(4);
-					String cascade_filters = rsGetOptions.getString(5);
-					if(cascade_filters != null && !cascade_filters.equals("null")) {
-						try {
-							o.cascade_filters = gson.fromJson(cascade_filters, hmType);
-							for (String key : o.cascade_filters.keySet()) {
-								s.filters.put(key, true);
-							}
-	
-						} catch (Exception e) {
-							log.log(Level.SEVERE, e.getMessage(), e);		// Ignore errors as this service does not support the old non json cascade format
+			Type hmType = new TypeToken<HashMap<String, String>>(){}.getType();		// Used to translate cascade filters json
+			Gson gson=  new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+			boolean externalAdded = false;
+			while(rsGetOptions.next()) {
+				Option o = new Option();
+				o.id = rsGetOptions.getInt(1);
+				o.value = rsGetOptions.getString(2);
+				o.text_id = rsGetOptions.getString(3);
+				o.externalFile = rsGetOptions.getBoolean(4);
+				String cascade_filters = rsGetOptions.getString(5);
+				if(cascade_filters != null && !cascade_filters.equals("null")) {
+					try {
+						o.cascade_filters = gson.fromJson(cascade_filters, hmType);
+						for (String key : o.cascade_filters.keySet()) {
+							s.filters.put(key, true);
 						}
-					} else {
-						o.cascade_filters = new HashMap<String, String> ();	// An empty object
-					}
-					o.columnName = rsGetOptions.getString(6);
-					o.published = rsGetOptions.getBoolean(7);
 	
-					// Get the labels for the option
-					UtilityMethodsEmail.getLabels(sd, s, o.text_id, null, o.labels, basePath, oId);
+					} catch (Exception e) {
+						log.log(Level.SEVERE, e.getMessage(), e);		// Ignore errors as this service does not support the old non json cascade format
+					}
+				} else {
+					o.cascade_filters = new HashMap<String, String> ();	// An empty object
+				}
+				o.columnName = rsGetOptions.getString(6);
+				o.published = rsGetOptions.getBoolean(7);
+	
+				// Get the labels for the option
+				UtilityMethodsEmail.getLabels(sd, s, o.text_id, null, o.labels, basePath, oId);
+				
+				// Check for numeric value - if external options are required then a numeric value indicates a static choice
+				boolean isInteger = false;
+				if(external) {
+					try {
+						Integer.parseInt(o.value);
+						isInteger = true;
+					} catch (Exception e) {
+						
+					}
+				}
+				
+				if(!external || isInteger) {
 					optionList.options.add(o);
+				} else if(!externalAdded) {
+					externalAdded = true;		// Don't double up if someone uses a non numeric static by mistake
+					optionList.options.addAll(externalOptions);
 				}
 			}
 
@@ -1170,9 +1197,15 @@ public class SurveyManager {
 				+ "s.managed_id,"
 				+ "s.ident,"
 				+ "s.version,"
-				+ "s.meta "
-				+ "from survey s "
-				+ "where s.ident = ?";
+				+ "s.meta,"
+				+ "p.o_id,"
+				+ "o.e_id "
+				+ "from survey s,"
+				+ "project p,"
+				+ "organisation o "
+				+ "where s.ident = ? "
+				+ "and s.p_id = p.id "
+				+ "and p.o_id = o.id";
 
 
 		PreparedStatement pstmt = null;
@@ -1203,6 +1236,9 @@ public class SurveyManager {
 				} else {
 					getLegacyMeta();
 				}
+				s.o_id = resultSet.getInt(13);
+				s.e_id = resultSet.getInt(14);
+				
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -2503,13 +2539,13 @@ public class SurveyManager {
 		/*
 		 * Retrieve the results record from the database (excluding select questions)
 		 */
-		String sql = null;
+		StringBuffer sql = new StringBuffer("");
 		boolean isTopLevel = false;
 		if(parentKey == 0) {
-			sql = "select prikey, _user ";		// Get user if this is a top level form
+			sql.append("select prikey, _user ");		// Get user if this is a top level form
 			isTopLevel = true;
 		} else {
-			sql = "select prikey ";
+			sql.append("select prikey ");
 		}
 		ArrayList<Question> questions = form.questions;
 		PreparedStatement pstmt = null;
@@ -2562,7 +2598,7 @@ public class SurveyManager {
 								col = q.columnName;
 							}
 
-							sql += "," + col;
+							sql.append(",").append(col);
 						}
 					}
 
@@ -2578,22 +2614,24 @@ public class SurveyManager {
 						if(mi.isPreload) {			
 							if(GeneralUtilityMethods.hasColumn(cResults, form.tableName, mi.columnName)) {
 								mi.published = true;
-								sql += "," + mi.columnName;				
+								sql.append(",").append(mi.columnName);				
 							} 
 						}
 					}
 					// Add instancename which is not in meta
-					sql += "," + "instancename";
+					sql.append(",instancename");
 				}
 				
-				sql += " from " + form.tableName;
+				sql.append(" from ").append(form.tableName);
 				if(parentId == 0) {
-					sql += " where instanceId = ?";
+					sql.append(" where instanceId = ?");
 				} else {
-					sql += " where parkey = ?";
+					sql.append(" where parkey = ?");
 				}
-
-				pstmt = cResults.prepareStatement(sql);	 
+				// Do not include records marked as bad - in particular some child records may have been marked as bad and these should be excluded from pdf reports
+				sql.append(" and not _bad");
+				
+				pstmt = cResults.prepareStatement(sql.toString());	 
 				if(instanceId != null) {
 					pstmt.setString(1, instanceId);;
 				} else {
@@ -2628,10 +2666,6 @@ public class SurveyManager {
 							}
 						}
 						record.add(new Result("instancename", "instancename", resultSet.getString("instancename"), false, fIdx, -1, 0, null, null));
-						
-					}
-					
-					if(form.parentform == 0) {
 						
 					}
 
@@ -3639,7 +3673,7 @@ public class SurveyManager {
 			
 			// Delete or update any reports for this survey
 			Gson gson=  new GsonBuilder().disableHtmlEscaping().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-			ActionManager am = new ActionManager();
+			ActionManager am = new ActionManager(localisation, tz);
 			int o_id = GeneralUtilityMethods.getOrganisationId(sd, user, 0);
 			ArrayList<User> usersToDelete = am.getTemporaryUsers(sd, o_id, null, sId, 0);
 			if(newSurveyId == 0) {

@@ -36,14 +36,17 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
+import org.smap.sdal.Utilities.ApplicationException;
 import org.smap.sdal.Utilities.Authorise;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
 import org.smap.sdal.Utilities.SDDataSource;
 import org.smap.sdal.managers.CsvTableManager;
+import org.smap.sdal.managers.LogManager;
 import org.smap.sdal.managers.OrganisationManager;
 import org.smap.sdal.model.DeviceSettings;
 import org.smap.sdal.model.Organisation;
 import org.smap.sdal.model.Project;
+import org.smap.sdal.model.SensitiveData;
 import org.smap.sdal.model.User;
 
 import com.google.gson.Gson;
@@ -70,9 +73,12 @@ public class OrganisationList extends Application {
 	
 	Authorise a = null;
 	Authorise aAdmin = null;
+	Authorise aSecurity = null;
 
 	private static Logger log =
 			 Logger.getLogger(OrganisationList.class.getName());
+	
+	LogManager lm = new LogManager();		// Application log
 	
 	public OrganisationList() {
 		
@@ -82,6 +88,8 @@ public class OrganisationList extends Application {
 		authorisations.add(Authorise.ANALYST);
 		authorisations.add(Authorise.ADMIN);
 		aAdmin = new Authorise(authorisations, null);
+		
+		aSecurity = new Authorise(null, Authorise.SECURITY);
 	}
 	
 	@GET
@@ -91,8 +99,8 @@ public class OrganisationList extends Application {
 		Response response = null;
 		
 		// Authorisation - Access
-		Connection connectionSD = SDDataSource.getConnection("surveyKPI-OrganisationList-getOrganisations");
-		a.isAuthorised(connectionSD, request.getRemoteUser());
+		Connection sd = SDDataSource.getConnection("surveyKPI-OrganisationList-getOrganisations");
+		a.isAuthorised(sd, request.getRemoteUser());
 		// End Authorisation
 		
 		PreparedStatement pstmt = null;
@@ -124,6 +132,7 @@ public class OrganisationList extends Application {
 					+ "ft_review_final,"
 					+ "ft_send,"
 					+ "ft_number_tasks,"
+					+ "ft_image_size,"
 					+ "changed_by, "
 					+ "changed_ts," 
 					+ "admin_email, "
@@ -135,11 +144,12 @@ public class OrganisationList extends Application {
 					+ "default_email_content, "
 					+ "website, "
 					+ "locale,"
-					+ "timezone "
+					+ "timezone,"
+					+ "server_description "
 					+ "from organisation "
 					+ "order by name asc;";			
 						
-			pstmt = connectionSD.prepareStatement(sql);
+			pstmt = sd.prepareStatement(sql);
 			log.info("Get organisation list: " + pstmt.toString());
 			resultSet = pstmt.executeQuery();
 			
@@ -165,6 +175,7 @@ public class OrganisationList extends Application {
 				org.ft_review_final = resultSet.getBoolean("ft_review_final");
 				org.ft_send = resultSet.getString("ft_send");
 				org.ft_number_tasks = resultSet.getInt("ft_number_tasks");
+				org.ft_image_size = resultSet.getString("ft_image_size");
 				org.changed_by = resultSet.getString("changed_by");
 				org.changed_ts = resultSet.getString("changed_ts");
 				org.admin_email = resultSet.getString("admin_email");
@@ -183,6 +194,7 @@ public class OrganisationList extends Application {
 				if(org.timeZone == null) {
 					org.timeZone = "UTC";
 				}
+				org.server_description = resultSet.getString("server_description");
 				organisations.add(org);
 			}
 	
@@ -198,7 +210,7 @@ public class OrganisationList extends Application {
 		    
 		} finally {
 			try {if (pstmt != null) {pstmt.close();} } catch (SQLException e) {}
-			SDDataSource.closeConnection("surveyKPI-OrganisationList-getOrganisations", connectionSD);
+			SDDataSource.closeConnection("surveyKPI-OrganisationList-getOrganisations", sd);
 		}
 
 		return response;
@@ -208,7 +220,7 @@ public class OrganisationList extends Application {
 	 * Update the organisation details or create a new organisation
 	 */
 	@POST
-	public Response updateOrganisation(@Context HttpServletRequest request) { 
+	public Response updateOrganisation(@Context HttpServletRequest request) throws Exception { 
 		
 		Response response = null;
 		DiskFileItemFactory  fileItemFactory = new DiskFileItemFactory ();	
@@ -216,8 +228,8 @@ public class OrganisationList extends Application {
 		ServletFileUpload uploadHandler = new ServletFileUpload(fileItemFactory);
 		
 		// Authorisation - Access
-		Connection connectionSD = SDDataSource.getConnection("surveyKPI-OrganisationList-updateOrganisation");
-		a.isAuthorised(connectionSD, request.getRemoteUser());
+		Connection sd = SDDataSource.getConnection("surveyKPI-OrganisationList-updateOrganisation");
+		a.isAuthorised(sd, request.getRemoteUser());
 		// End Authorisation
 
 		FileItem logoItem = null;
@@ -273,11 +285,17 @@ public class OrganisationList extends Application {
 			OrganisationManager om = new OrganisationManager();
 			for(int i = 0; i < oArray.size(); i++) {
 				Organisation o = oArray.get(i);
+				
+				if(o.timeZone != null && !o.timeZone.equals("UTC")) {
+					if(!GeneralUtilityMethods.isValidTimezone(sd, o.timeZone)) {
+						throw new ApplicationException("Invalid Timezone: " + o.timeZone);
+					}
+				}
 				if(o.id == -1) {
 					// New organisation
 						
 					om.createOrganisation(
-							connectionSD, 
+							sd, 
 							o, 
 							userIdent, 
 							fileName,
@@ -290,8 +308,10 @@ public class OrganisationList extends Application {
 				} else {
 					// Existing organisation
 
+					a.isOrganisationInEnterprise(sd, request.getRemoteUser(), o.id);
+					
 					om.updateOrganisation(
-							connectionSD, 
+							sd, 
 							o, 
 							userIdent, 
 							fileName,
@@ -318,7 +338,41 @@ public class OrganisationList extends Application {
 			
 		} finally {
 			
-			SDDataSource.closeConnection("surveyKPI-OrganisationList-updateOrganisation", connectionSD);
+			SDDataSource.closeConnection("surveyKPI-OrganisationList-updateOrganisation", sd);
+		}
+		
+		return response;
+	}
+	
+	/*
+	 * Update the sensitive data for for an organisation
+	 */
+	@POST
+	@Path("/sensitive")
+	public Response updateOrganisationSensitiveData(@Context HttpServletRequest request, @FormParam("sensitive") String sensitive) { 
+			
+		Response response = null;	
+		
+		String connectionString = "surveyKPI-updateSensitiveData";
+		// Authorisation - Access
+		Connection sd = SDDataSource.getConnection(connectionString);
+		aSecurity.isAuthorised(sd, request.getRemoteUser());
+		// End Authorisation
+
+		try {
+			SensitiveData sensitiveData = new Gson().fromJson(sensitive, SensitiveData.class);	
+			int oId = GeneralUtilityMethods.getOrganisationId(sd, request.getRemoteUser(), 0);		
+			OrganisationManager om = new OrganisationManager();
+			om.updateSensitiveData(sd, oId, sensitiveData);		
+			
+			response = Response.ok().build();
+				
+		} catch (SQLException e) {
+			response = Response.serverError().entity(e.getMessage()).build();
+			log.log(Level.SEVERE,"Error", e);
+		} finally {
+			
+			SDDataSource.closeConnection(connectionString, sd);
 		}
 		
 		return response;
@@ -330,13 +384,13 @@ public class OrganisationList extends Application {
 		Response response = null;
 		
 		// Authorisation - Access
-		Connection connectionSD = SDDataSource.getConnection("surveyKPI-OrganisationList-getDeviceSettings");
-		aAdmin.isAuthorised(connectionSD, request.getRemoteUser());
+		Connection sd = SDDataSource.getConnection("surveyKPI-OrganisationList-getDeviceSettings");
+		aAdmin.isAuthorised(sd, request.getRemoteUser());
 		// End Authorisation
 		
 		String sql = "select ft_delete, ft_send_location, ft_odk_style_menus, "
 				+ "ft_specify_instancename, ft_admin_menu,"
-				+ "ft_review_final, ft_send, ft_number_tasks "
+				+ "ft_review_final, ft_send, ft_number_tasks, ft_image_size "
 				+ "from organisation "
 				+ "where "
 				+ "id = (select o_id from users where ident = ?)";
@@ -344,7 +398,7 @@ public class OrganisationList extends Application {
 		PreparedStatement pstmt = null;
 		
 		try {
-			pstmt = connectionSD.prepareStatement(sql);	
+			pstmt = sd.prepareStatement(sql);	
 			pstmt.setString(1, request.getRemoteUser());
 					
 			log.info("Get organisation device details: " + pstmt.toString());
@@ -360,6 +414,7 @@ public class OrganisationList extends Application {
 				d.ft_review_final = rs.getBoolean(6);
 				d.ft_send = rs.getString(7);
 				d.ft_number_tasks = rs.getInt(8);
+				d.ft_image_size = rs.getString(9);
 				
 				Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 				String resp = gson.toJson(d);
@@ -368,6 +423,51 @@ public class OrganisationList extends Application {
 				response = Response.serverError().entity("not found").build();
 			}
 			
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, "Exception", e);
+			response = Response.serverError().entity(e.getMessage()).build();
+		} finally {			
+			try {if (pstmt != null) {pstmt.close();} } catch (SQLException e) {	}	
+			SDDataSource.closeConnection("surveyKPI-OrganisationList-getDeviceSettings", sd);
+		}
+		
+		return response;
+	}
+	
+	@GET
+	@Path("/sensitive")
+	public Response getSensitivitySettings(@Context HttpServletRequest request) {
+		Response response = null;
+		
+		String connectionString = "surveyKPI-OrganisationList-getSensitivitySettings";
+		
+		// Authorisation - Access
+		Connection sd = SDDataSource.getConnection(connectionString);
+		aAdmin.isAuthorised(sd, request.getRemoteUser());
+		// End Authorisation
+		
+		String sql = "select sensitive_data "
+				+ "from organisation "
+				+ "where "
+				+ "id = (select o_id from users where ident = ?)";	
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = sd.prepareStatement(sql);	
+			pstmt.setString(1, request.getRemoteUser());
+					
+			log.info("Get organisation sensitivity details: " + pstmt.toString());
+			ResultSet rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				String resp = rs.getString(1);
+				if(resp == null || resp.length() == 0) {
+					resp = "{}";
+				}
+				response = Response.ok(resp).build();
+			} else {
+				response = Response.serverError().entity("{}").build();
+			}
 			
 	
 		} catch (SQLException e) {
@@ -375,7 +475,7 @@ public class OrganisationList extends Application {
 			response = Response.serverError().entity(e.getMessage()).build();
 		} finally {			
 			try {if (pstmt != null) {pstmt.close();} } catch (SQLException e) {	}	
-			SDDataSource.closeConnection("surveyKPI-OrganisationList-getDeviceSettings", connectionSD);
+			SDDataSource.closeConnection(connectionString, sd);
 		}
 		
 		return response;
@@ -388,8 +488,8 @@ public class OrganisationList extends Application {
 		Response response = null;
 		
 		// Authorisation - Access
-		Connection connectionSD = SDDataSource.getConnection("surveyKPI-OrganisationList-updateDeviceSettings");
-		aAdmin.isAuthorised(connectionSD, request.getRemoteUser());
+		Connection sd = SDDataSource.getConnection("surveyKPI-OrganisationList-updateDeviceSettings");
+		aAdmin.isAuthorised(sd, request.getRemoteUser());
 		// End Authorisation
 		
 		String sql = "update organisation set " +
@@ -402,6 +502,7 @@ public class OrganisationList extends Application {
 				" ft_review_final = ?, " +
 				" ft_send = ?, " +
 				" ft_number_tasks = ?, " +
+				" ft_image_size = ?, " +
 				" changed_by = ?, " + 
 				" changed_ts = now() " + 
 				" where " +
@@ -411,7 +512,7 @@ public class OrganisationList extends Application {
 		
 		try {
 			DeviceSettings d = new Gson().fromJson(settings, DeviceSettings.class);
-			pstmt = connectionSD.prepareStatement(sql);
+			pstmt = sd.prepareStatement(sql);
 			pstmt.setString(1, d.ft_delete);
 			pstmt.setString(2, d.ft_send_location);
 			pstmt.setBoolean(3, d.ft_odk_style_menus);
@@ -420,8 +521,9 @@ public class OrganisationList extends Application {
 			pstmt.setBoolean(6, d.ft_review_final);
 			pstmt.setString(7, d.ft_send);
 			pstmt.setInt(8, d.ft_number_tasks);
-			pstmt.setString(9, request.getRemoteUser());
+			pstmt.setString(9, d.ft_image_size);
 			pstmt.setString(10, request.getRemoteUser());
+			pstmt.setString(11, request.getRemoteUser());
 					
 			log.info("Update organisation with device details: " + pstmt.toString());
 			pstmt.executeUpdate();
@@ -433,7 +535,7 @@ public class OrganisationList extends Application {
 			response = Response.serverError().entity(e.getMessage()).build();
 		} finally {			
 			try {if (pstmt != null) {pstmt.close();} } catch (SQLException e) {	}		
-			SDDataSource.closeConnection("surveyKPI-OrganisationList-updateDeviceSettings", connectionSD);
+			SDDataSource.closeConnection("surveyKPI-OrganisationList-updateDeviceSettings", sd);
 		}
 		
 		return response;
@@ -450,8 +552,8 @@ public class OrganisationList extends Application {
 		Response response = null;
 		
 		// Authorisation - Access
-		Connection connectionSD = SDDataSource.getConnection("surveyKPI-OrganisationList-delOrganisation");
-		a.isAuthorised(connectionSD, request.getRemoteUser());
+		Connection sd = SDDataSource.getConnection("surveyKPI-OrganisationList-delOrganisation");
+		a.isAuthorised(sd, request.getRemoteUser());
 		// End Authorisation
 		
 		Type type = new TypeToken<ArrayList<Organisation>>(){}.getType();		
@@ -462,15 +564,16 @@ public class OrganisationList extends Application {
 		try {	
 			
 			// Get the users locale
-			Locale locale = new Locale(GeneralUtilityMethods.getUserLanguage(connectionSD, request, request.getRemoteUser()));
+			Locale locale = new Locale(GeneralUtilityMethods.getUserLanguage(sd, request, request.getRemoteUser()));
 			ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);
 			
 			String sql = null;
 			ResultSet resultSet = null;
-			connectionSD.setAutoCommit(false);
+			sd.setAutoCommit(false);
 				
 			for(int i = 0; i < oArray.size(); i++) {
 				Organisation o = oArray.get(i);
+				a.isOrganisationInEnterprise(sd, request.getRemoteUser(), o.id);
 				
 				/*
 				 * Ensure that there are no undeleted projects with surveys in this organisation
@@ -481,7 +584,7 @@ public class OrganisationList extends Application {
 						" and p.o_id = ? " +
 						" and s.deleted = 'false';";
 					
-				pstmt = connectionSD.prepareStatement(sql);
+				pstmt = sd.prepareStatement(sql);
 				pstmt.setInt(1, o.id);
 				log.info("SQL check for projects in an organisation: " + pstmt.toString());
 				resultSet = pstmt.executeQuery();
@@ -489,7 +592,10 @@ public class OrganisationList extends Application {
 					int count = resultSet.getInt(1);
 					if(count > 0) {
 						log.info("Count of undeleted projects:" + count);
-						throw new Exception("Error: Organisation " + o.name + " has undeleted projects.");
+						log.info("Count of undeleted pganisations:" + count);
+						String msg = localisation.getString("msg_undel_orgs");
+						msg = msg.replace("%s1", o.name);
+						throw new Exception(msg);
 					}
 				} else {
 					throw new Exception("Error getting project count");
@@ -499,13 +605,13 @@ public class OrganisationList extends Application {
 						" WHERE o.id = ?; ";			
 				
 				if(pstmt != null) try{pstmt.close();}catch(Exception e) {}
-				pstmt = connectionSD.prepareStatement(sql);
+				pstmt = sd.prepareStatement(sql);
 				pstmt.setInt(1, o.id);
 				log.info("SQL: " + sql + ":" + o.id);
 				pstmt.executeUpdate();
 				
 			    // Delete the organisation shared resources - not necessary
-			    CsvTableManager tm = new CsvTableManager(connectionSD, localisation);
+			    CsvTableManager tm = new CsvTableManager(sd, localisation);
 			    tm.delete(o.id, 0, null);		
 			    
 				// Delete the organisation folder
@@ -521,21 +627,21 @@ public class OrganisationList extends Application {
 			}
 			
 			response = Response.ok().build();
-			connectionSD.commit();
+			sd.commit();
 				
 		} catch (SQLException e) {
 			String state = e.getSQLState();
 			log.info("Delete organisation: sql state:" + state);
 			response = Response.serverError().entity(e.getMessage()).build();
 			log.log(Level.SEVERE,"Error", e);
-			try { connectionSD.rollback();} catch (Exception ex){log.log(Level.SEVERE,"", ex);}
+			try { sd.rollback();} catch (Exception ex){log.log(Level.SEVERE,"", ex);}
 			
 		} catch (Exception ex) {
 			log.info(ex.getMessage());
 			response = Response.serverError().entity(ex.getMessage()).build();
 			
 			try{
-				connectionSD.rollback();
+				sd.rollback();
 			} catch(Exception e2) {
 				
 			}
@@ -545,14 +651,14 @@ public class OrganisationList extends Application {
 			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
 			try {if (pstmtDrop != null) {pstmtDrop.close();}} catch (SQLException e) {}
 			
-			SDDataSource.closeConnection("surveyKPI-OrganisationList-delOrganisation", connectionSD);
+			SDDataSource.closeConnection("surveyKPI-OrganisationList-delOrganisation", sd);
 		}
 		
 		return response;
 	}
 	
 	/*
-	 * Change the organisation a user belongs to
+	 * Change the organisation a user or project belongs to
 	 */
 	@POST
 	@Path("/setOrganisation")
@@ -563,10 +669,12 @@ public class OrganisationList extends Application {
 			@FormParam("projects") String projects) { 
 		
 		Response response = null;
+		String connectionString = "surveyKPI-OrganisationList-setOrganisation";
 		
 		// Authorisation - Access
-		Connection connectionSD = SDDataSource.getConnection("surveyKPI-OrganisationList-setOrganisation");
-		a.isAuthorised(connectionSD, request.getRemoteUser());
+		Connection sd = SDDataSource.getConnection(connectionString);
+		a.isAuthorised(sd, request.getRemoteUser());
+		a.isOrganisationInEnterprise(sd, request.getRemoteUser(), orgId);
 		// End Authorisation
 		
 		Type type = new TypeToken<ArrayList<User>>(){}.getType();		
@@ -580,7 +688,7 @@ public class OrganisationList extends Application {
 		PreparedStatement pstmt3 = null;
 		PreparedStatement pstmt4 = null;
 		try {	
-			connectionSD.setAutoCommit(false);
+			sd.setAutoCommit(false);
 			
 			String sql = "update users set o_id =  ? " +  
 					" WHERE id = ?; ";			
@@ -592,69 +700,77 @@ public class OrganisationList extends Application {
 					"u_id not in (select id from users where o_id = ?); ";	
 			
 	
-			pstmt = connectionSD.prepareStatement(sql);
-			pstmt2 = connectionSD.prepareStatement(sql2);	
-			pstmt3 = connectionSD.prepareStatement(sql3);	
-			pstmt4 = connectionSD.prepareStatement(sql4);	
+			pstmt = sd.prepareStatement(sql);
+			pstmt2 = sd.prepareStatement(sql2);	
+			pstmt3 = sd.prepareStatement(sql3);	
+			pstmt4 = sd.prepareStatement(sql4);	
 
-			// Move Users
-			for(int i = 0; i < uArray.size(); i++) {
-				pstmt.setInt(1, orgId);
-				pstmt.setInt(2, uArray.get(i).id);
-
-				log.info("Move User: " + pstmt.toString());
-				pstmt.executeUpdate();
-				
-				log.info("userevent: " + request.getRemoteUser() + " : move user : " + uArray.get(i).id + " to: " + orgId);
+			// Move Users = deprecate
+			if(uArray != null) {
+				for(int i = 0; i < uArray.size(); i++) {
+					pstmt.setInt(1, orgId);
+					pstmt.setInt(2, uArray.get(i).id);
+	
+					log.info("Move User: " + pstmt.toString());
+					pstmt.executeUpdate();
+					
+					log.info("userevent: " + request.getRemoteUser() + " : move user : " + uArray.get(i).id + " to: " + orgId);
+				}
 			}
 			
 			// Move Projects
-			for(int i = 0; i < pArray.size(); i++) {
-				pstmt3.setInt(1, orgId);
-				pstmt3.setInt(2, pArray.get(i).id);
-				
-				log.info("Move Project: " + pstmt3.toString());
-				pstmt3.executeUpdate();
-				
-				log.info("userevent: " + request.getRemoteUser() + " : move project : " + pArray.get(i).id + " to: " + orgId);
+			if(pArray != null) {
+				for(int i = 0; i < pArray.size(); i++) {
+					pstmt3.setInt(1, orgId);
+					pstmt3.setInt(2, pArray.get(i).id);
+					
+					log.info("Move Project: " + pstmt3.toString());
+					pstmt3.executeUpdate();
+					
+					log.info("userevent: " + request.getRemoteUser() + " : move project : " + pArray.get(i).id + " to: " + orgId);
+				}
 			}
 			
 			// Remove projects from users if they are in a different organisation
-			for(int i = 0; i < uArray.size(); i++) {
-				
-				if(!uArray.get(i).keepProjects) {	// Org admin users keep all of their projects
-				
-					pstmt2.setInt(1, uArray.get(i).id);
-					pstmt2.setInt(2, orgId);
-					log.info("Delete Links to projects: " + pstmt2.toString());
-					pstmt2.executeUpdate();
+			if(uArray != null) {
+				for(int i = 0; i < uArray.size(); i++) {
+					
+					if(!uArray.get(i).keepProjects) {	// Org admin users keep all of their projects
+					
+						pstmt2.setInt(1, uArray.get(i).id);
+						pstmt2.setInt(2, orgId);
+						log.info("Delete Links to projects: " + pstmt2.toString());
+						pstmt2.executeUpdate();
+					}
 				}
 			}
 			
 			// Move users from projects if they are in a different organisation
-			for(int i = 0; i < pArray.size(); i++) {
-				
-				pstmt4.setInt(1, pArray.get(i).id);
-				pstmt4.setInt(2, orgId);
-				log.info("Delete Links to users: " + pstmt4.toString());
-				pstmt4.executeUpdate();
-
+			if(pArray != null) {
+				for(int i = 0; i < pArray.size(); i++) {
+					
+					pstmt4.setInt(1, pArray.get(i).id);
+					pstmt4.setInt(2, orgId);
+					log.info("Delete Links to users: " + pstmt4.toString());
+					pstmt4.executeUpdate();
+	
+				}
 			}
 			
 			response = Response.ok().build();
-			connectionSD.commit();
+			sd.commit();
 				
 		} catch (SQLException e) {
 			String state = e.getSQLState();
 			log.info("Change organisation. sql state:" + state);
 			response = Response.serverError().entity(e.getMessage()).build();
 			log.log(Level.SEVERE,"Error", e);
-			try { connectionSD.rollback();} catch (Exception ex){log.log(Level.SEVERE,"", ex);}
+			try { sd.rollback();} catch (Exception ex){log.log(Level.SEVERE,"", ex);}
 			
 		} catch (Exception ex) {
 			log.info(ex.getMessage());
 			response = Response.serverError().entity(ex.getMessage()).build();			
-			try{	connectionSD.rollback();	} catch(Exception e2) {}
+			try{	sd.rollback();	} catch(Exception e2) {}
 			
 		} finally {
 			
@@ -663,7 +779,54 @@ public class OrganisationList extends Application {
 			try {if (pstmt3 != null) {pstmt3.close();}	} catch (SQLException e) {}
 			try {if (pstmt4 != null) {pstmt4.close();}	} catch (SQLException e) {}
 			
-			SDDataSource.closeConnection("surveyKPI-OrganisationList-setOrganisation", connectionSD);
+			SDDataSource.closeConnection(connectionString, sd);
+		}
+		
+		return response;
+	}
+	
+	/*
+	 * Change the enterprise and organisation belongs to
+	 */
+	@POST
+	@Path("/setEnterprise")
+	@Consumes("application/json")
+	public Response changeEnterprise(@Context HttpServletRequest request,
+			@FormParam("orgId") int orgId,
+			@FormParam("entId") int entId) throws SQLException { 
+		
+		Response response = null;
+		
+		String connectionString = "surveyKPI-OrganisationList-setEnterprise";
+		
+		// Authorisation - Access
+		Connection sd = SDDataSource.getConnection(connectionString);
+		a.isAuthorised(sd, request.getRemoteUser());
+		// End Authorisation
+		
+		
+		PreparedStatement pstmt = null;
+	
+		try {	
+			
+			String sql = "update organisation set e_id =  ? " +  
+					" WHERE id = ?; ";			
+			
+			pstmt = sd.prepareStatement(sql);
+			pstmt.setInt(1,  entId);
+			pstmt.setInt(2, orgId);
+			pstmt.executeUpdate();
+			log.info("Move organisation: " + pstmt.toString());
+			
+			lm.writeLog(sd, -1, request.getRemoteUser(), LogManager.MOVE_ORGANISATION, "Organisation " + orgId + " moved to enterprise " + entId);
+			
+			response = Response.ok().build();
+				
+		} finally {
+			
+			try {if (pstmt != null) {pstmt.close();}	} catch (SQLException e) {}
+			
+			SDDataSource.closeConnection(connectionString, sd);
 		}
 		
 		return response;

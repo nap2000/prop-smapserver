@@ -20,26 +20,18 @@ define(['jquery','localise', 'common', 'globals',
         'bootbox', 
         'moment',
         'datetimepicker'], function($, lang, common, globals, bootbox, moment) {
-	
-var gUsers,
-	gGroups,
-	gOrganisationList,
-	gControlCount,			// Number of users that have been set - used to enable / disable control buttons
-	gControlProjectCount,	// Number of projects that have been set - used to enable / disable control buttons
-	gControlOrganisationCount,
-	gCurrentProjectIndex,	// Set while editing a projects details
-	gCurrentRoleIndex,	// Set while editing a user role details
-	gCurrentOrganisationIndex,
-	gCurrentUserIndex,		// Set while editing a users details
-	gOrgId;
+
+    var gLevel,
+        gOrganisationList,
+	    gEnterpriseList,
+	    gEnabled;
 
 	$(document).ready(function() {
 
+		setupUserProfile();
 		localise.setlang();		// Localise HTML
 
-		getLoggedInUser(undefined, false, false, undefined);
-
-		getAvailableTimeZones($('#o_tz'), showTimeZones);
+		getLoggedInUser(userKnown, false, false, undefined);
 
 		/*
 		 * Set focus to first element on opening modals
@@ -70,8 +62,9 @@ var gUsers,
         $('#usageDate').on("dp.change", function () {
         	getBillDetails();
 		});
-
-        getBillDetails();
+        $('#organisation, #enterprise').change(function(){
+           getBillDetails();
+        });
 
         $('#org_bill_rpt').click(function (e) {
             var usageMsec = $('#usageDate').data("DateTimePicker").date(),
@@ -86,25 +79,143 @@ var gUsers,
         });
 
         // Set up the tabs
-        $('#serverBillTab a').click(function (e) {
+        $('#billTab a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
 
-            $(".billtab").hide();
-            $('#serverBillPanel').show();
+            $("#billPanel").show();
+            $('#ratesPanel').hide();
 
         });
-        $('#organisationBillTab a').click(function (e) {
+        $('#ratesTab a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
 
-            $(".billtab").hide();
-            $('#organisationBillPanel').show();
+            $("#billPanel").hide();
+            $('#ratesPanel').show();
+        });
+
+        $('#billLevel').change(function () {
+            levelChanged();
+        });
+
+        $('#enableBilling').change(function(){
+        	gEnabled = $(this).is(':checked');
+	        var enabledString = gEnabled ? "true" : "false";
+	        var idx = 0;
+	        var id = 0;
+	        if(gLevel === "org") {
+				idx = $('#organisation').val();
+				id = gOrganisationList[idx].id;
+	        } else if(gLevel === "ent") {
+		        idx = $('#enterprise').val();
+		        id = gEnterpriseList[idx].id;
+	        }
+
+	        if(gEnabled) {
+	        	$('.billing_enabled').show();
+		        $('.billing_disabled').hide();
+	        } else {
+		        $('.billing_enabled').hide();
+		        $('.billing_disabled').show();
+	        }
+
+	        /*
+	         * Store the changed value
+	         */
+	        addHourglass();
+	        $.ajax({
+		        type: "POST",
+		        cache: false,
+		        contentType: "application/json",
+		        url: "/surveyKPI/billing/enable",
+		        data: {
+		        	enabled: enabledString,
+			        level: gLevel,
+			        id: id
+		        },
+		        success: function(data) {
+			        removeHourglass();
+		        }, error: function(data, status) {
+			        removeHourglass();
+			        alert(localise.set["c_error"] + ": " + data.statusText);
+		        }
+	        });
         });
 
 		enableUserProfileBS();	// Allow user to reset their own profile
 
 	});
+
+	function userKnown() {
+        var h = [],
+            idx = -1,
+            level;
+
+	    if(globals.gIsOrgAdministrator || globals.gIsEnterpriseAdministrator || globals.gIsServerOwner) {
+
+	    	if(globals.gIsServerOwner || globals.gIsEnterpriseAdministrator) {
+                h[++idx] = '<option value="owner">';
+                h[++idx] = localise.set["server"];
+                h[++idx] = '</option>';
+                level = "owner";
+            }
+            if(globals.gIsEnterpriseAdministrator || globals.gIsOrgAdministrator) {
+                h[++idx] = '<option value="ent">';
+                h[++idx] = localise.set["u_ent_admin"];
+                h[++idx] = '</option>';
+                if(!level) {
+                    level = "ent";
+                }
+            }
+            if(globals.gIsOrgAdministrator) {
+                h[++idx] = '<option value="org">';
+                h[++idx] = localise.set["u_org_admin"];
+                h[++idx] = '</option>';
+                if(!level) {
+                    level = "org";
+                }
+            }
+            $('#billLevel').html(h.join(''));
+            $('#billLevel').val(level);
+            gLevel = level;
+	        $(".showHierarchy").show();
+        } else {
+	        gLevel = "ind_org";
+        }
+        levelChanged(true);
+	    if(gLevel !== "org") {
+            getBillDetails();
+        }
+    }
+
+    function levelChanged(dontGetBillDetails) {
+	    gLevel =  $('#billLevel').val();
+        $(".showOrganisation,.showManager").hide();
+	    if(gLevel === "org") {
+	        $(".showOrganisation").show();
+            if(!gOrganisationList) {
+                getOrganisations();
+            }
+        } else if(gLevel === "ent") {
+		    $(".showEnterprise").show();
+		    if(!gEnterpriseList) {
+			    getEnterprises();
+		    }
+	    }
+
+        if(globals.gIsServerOwner ||
+                (globals.gIsEnterpriseAdministrator && gLevel !== "owner") ||
+                (globals.gIsOrgAdministrator && gLevel === "org")
+                ) {
+            $(".showManager").show();
+        }
+
+        if(!dontGetBillDetails) {
+	        getBillDetails();
+        }
+
+    }
 
 	function getBillDetails() {
         var usageMsec = $('#usageDate').data("DateTimePicker").date(),
@@ -112,8 +223,21 @@ var gUsers,
 			url,
             month = d.getMonth() + 1,
             year = d.getFullYear(),
+            url,
+            orgIdx,
+	        entIdx
 
-		url = "/surveyKPI/billing?org=0&year=" + year + "&month=" + month;
+		getRates();
+
+        url = "/surveyKPI/billing?year=" + year + "&month=" + month;
+        if(gLevel === "org" || gLevel === "org_ind") {
+            orgIdx = $('#organisation').val();
+            url += "&org=" + gOrganisationList[orgIdx].id;
+        } else  if(gLevel === "ent") {
+	        entIdx = $('#enterprise').val();
+	        url += "&ent=" + gEnterpriseList[entIdx].id;
+        }
+
         addHourglass();
         $.ajax({
             url: url,
@@ -122,7 +246,17 @@ var gUsers,
             success: function (data) {
                 removeHourglass();
 				if(data) {
-					populateServerTable(data);
+					gEnabled = data.enabled;
+					$('#enableBilling').prop('checked', gEnabled);
+					if(gEnabled) {
+						$('.billing_enabled').show();
+						$('.billing_disabled').hide();
+					} else {
+						$('.billing_enabled').hide();
+						$('.billing_disabled').show();
+					}
+
+					populateBillTable(data);
 				}
             },
             error: function (xhr, textStatus, err) {
@@ -136,7 +270,67 @@ var gUsers,
         });
     }
 
-    function populateServerTable(data) {
+    function getRates() {
+
+		var billLevel = $('#billLevel option:selected').val(),
+			url,
+			msg,
+			levelName,
+			higherName;
+
+	    url = "/surveyKPI/billing/rates";
+	    if(gLevel === "org" || gLevel === "ind_org") {
+		    orgIdx = $('#organisation').val();
+		    url += "?org=" + gOrganisationList[orgIdx].id;
+	    }
+
+	    addHourglass();
+	    $.ajax({
+		    url: url,
+		    dataType: 'json',
+		    cache: false,
+		    success: function (data) {
+			    removeHourglass();
+			    if(data.length > 0) {
+				    populateRatesTable(data);
+				    $('.hasrates').show();
+				    $('.norates').hide();
+			    } else {
+				    if(gLevel === "org" || gLevel === "ind_org") {
+					    levelName = localise.set["c_org"];
+					    higherName = localise.set["c_ent"];
+				    } else if(gLevel === "ent") {
+					    levelName = localise.set["c_ent"];
+					    higherName = localise.set["c_server"];
+				    }
+
+				    msg = localise.set["bill_norates"].replace("%s1", levelName).replace("%s2", higherName);
+				    $('#noratesmsg').html(msg);
+				    $('.hasrates').hide();
+				    $('.norates').show();
+			    }
+		    },
+		    error: function (xhr, textStatus, err) {
+			    removeHourglass();
+			    if (xhr.readyState == 0 || xhr.status == 0) {
+				    return;  // Not an error
+			    } else {
+				    alert(localise.set["c_error"] + ": " + err);
+			    }
+		    }
+	    });
+
+
+    }
+
+	function populateRatesTable(data) {
+		var $elem = $('#rates_table'),
+			h = [],
+			idx = -1;
+	}
+
+
+	function populateBillTable(data) {
 		var $elem = $('#billing_table'),
 			h = [],
 			idx = -1,
@@ -187,6 +381,87 @@ var gUsers,
         return h.join('');
 	}
 
+	function getOrganisations() {
+
+        addHourglass();
+        $.ajax({
+            type: 'GET',
+            cache: false,
+            url: "/surveyKPI/organisationList",
+            success: function(data, status) {
+                removeHourglass();
+                gOrganisationList = data;
+                if(data && data.length > 0) {
+                    var h = [],
+                        idx = -1,
+                        i;
+
+                    for(i = 0; i < data.length; i++) {
+                        h[++idx] = '<option value="';
+                        h[++idx] = i;
+                        h[++idx] = '"';
+                        if(i == 0 ) {
+                            h[++idx] = ' selected="selected"'
+                        }
+                        h[++idx] = '>';
+                        h[++idx] = data[i].name;
+                        h[++idx] = '</option>';
+                    }
+                    $('.organisation_select').html(h.join(''));
+                }
+                getBillDetails();
+            }, error: function(xhr, textStatus, err) {
+                removeHourglass();
+                if(xhr.readyState == 0 || xhr.status == 0) {
+                    return;  // Not an error
+                } else {
+                    var msg = err;
+                    alert(localise.set["msg_err_upd"] + msg);
+                }
+            }
+        });
+    }
+
+	function getEnterprises() {
+
+		addHourglass();
+		$.ajax({
+			type: 'GET',
+			cache: false,
+			url: "/surveyKPI/enterpriseList",
+			success: function(data, status) {
+				removeHourglass();
+				gEnterpriseList = data;
+				if(data && data.length > 0) {
+					var h = [],
+						idx = -1,
+						i;
+
+					for(i = 0; i < data.length; i++) {
+						h[++idx] = '<option value="';
+						h[++idx] = i;
+						h[++idx] = '"';
+						if(i == 0 ) {
+							h[++idx] = ' selected="selected"'
+						}
+						h[++idx] = '>';
+						h[++idx] = data[i].name;
+						h[++idx] = '</option>';
+					}
+					$('.enterprise_select').html(h.join(''));
+				}
+				getBillDetails();
+			}, error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					var msg = err;
+					alert(localise.set["msg_err_upd"] + msg);
+				}
+			}
+		});
+	}
 
 });
 	

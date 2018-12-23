@@ -23,9 +23,11 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Color;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -46,12 +48,10 @@ import org.smap.sdal.Utilities.ApplicationException;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
 import org.smap.server.utilities.GetXForm;
 
-import surveyKPI.ExportSurveyXls;
-
 public class XLSUtilities {
 
 	private static Logger log =
-			Logger.getLogger(ExportSurveyXls.class.getName());
+			Logger.getLogger(XLSUtilities.class.getName());
 	/**
 	 * create a library of cell styles
 	 */
@@ -76,6 +76,9 @@ public class XLSUtilities {
 		
 		Font redFont = wb.createFont();
 		redFont.setColor(IndexedColors.RED.getIndex());
+		
+		Font blueFont = wb.createFont();
+		blueFont.setColor(IndexedColors.BLUE.getIndex());
 
 		/*
 		 * Create styles
@@ -101,6 +104,16 @@ public class XLSUtilities {
 		style = wb.createCellStyle();
 		style.setFont(redFont);
 		styles.put("errorStyle", style);
+		
+		style = wb.createCellStyle();
+		style.setFillForegroundColor(HSSFColor.LIGHT_GREEN.index);
+		style.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		styles.put("good", style);
+		
+		style = wb.createCellStyle();
+		style.setFillForegroundColor(HSSFColor.ROSE.index);
+		style.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		styles.put("bad", style);
 		
 		style = wb.createCellStyle();
 		style.setWrapText(true);
@@ -198,6 +211,10 @@ public class XLSUtilities {
 		style.setAlignment(CellStyle.ALIGN_CENTER);
 		style.setFont(boldFont);  
 		styles.put("data_header", style);
+		
+		style = getBaseStyle(wb);
+		style.setFont(boldFont);  
+		styles.put("bold", style);
 
 		return styles;
 	}
@@ -545,7 +562,7 @@ public class XLSUtilities {
      * Validate a survey stored in the database using the javarosa api
      * Will throw an exception on errors
      */
-    public static void javaRosaSurveyValidation(ResourceBundle localisation, int sId, String user) throws Exception {
+    public static void javaRosaSurveyValidation(ResourceBundle localisation, int sId, String user, String tz) throws Exception {
 		
     		class FakePreloadHandler implements IPreloadHandler {
 
@@ -583,7 +600,7 @@ public class XLSUtilities {
 		
 		SurveyTemplate template = new SurveyTemplate(localisation);
 		template.readDatabase(sId, false);
-		GetXForm xForm = new GetXForm(localisation, user);
+		GetXForm xForm = new GetXForm(localisation, user, tz);
 
 		String xmlForm = xForm.get(template, false, true, false, user);
 		InputStream is = new ByteArrayInputStream(xmlForm.getBytes());
