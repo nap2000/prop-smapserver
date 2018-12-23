@@ -360,6 +360,7 @@ define({
     "a_lx": "Legacy XLSX",
 	"a_lh": "Legacy XLS / HTML",
 	"a_ua": "User Activity",
+    "a_tc": "This Chart",
 
     "a_dd_sl": "Shows the results",
     "a_dd_ocha_map": "Shows the location of responses to %s1 in the question '%s2' in survey '%s3'.",

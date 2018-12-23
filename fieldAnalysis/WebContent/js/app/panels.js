@@ -118,8 +118,9 @@ $(document).ready(function() {
 	
 	var aDate;
 	
-	window.moment = moment;	// Required as common.js not part of module
+	window.moment = moment;	                // Required as common.js not part of module
 	window.extended_model = extended_model;
+	window.localise = localise;             // Required as survey control is not part of module
 
 	setupUserProfile();
 	localise.setlang();		// Localise HTML
@@ -232,7 +233,7 @@ $(document).ready(function() {
 						}
 						// Determine if we need to redraw the panel
 						if(newType !== view.type) {
-							setPanelType(newType, globals.gViewIdx, view.timeGroup, view.qId);
+							setPanelType(newType, globals.gViewIdx, view.timeGroup, view.qId, view.subject_type);
 						}
 						if(newTitle !== view.title) {	// Set the new title
 							$('#p' + view.pId).find('span').html(newTitle);
@@ -392,7 +393,7 @@ function refreshPanels() {
 	for(i = 0; i < views.length; i++) {
 		if(views[i].state != "deleted") {
 			createPanel(i, $panels, views[i].title, views[i].sName, views[i].subject_type);
-			setPanelType(views[i].type, i, views[i].timeGroup, views[i].qId);
+			setPanelType(views[i].type, i, views[i].timeGroup, views[i].qId, views[i].subject_type);
 			getData(views[i]);		
 		}
 	}
@@ -475,14 +476,14 @@ function addNewPanel(type) {
 		idx = views.length;
 	}
 
-	views[idx] = {id:-1, seq: idx, state: "shown", title:"New Chart", pId: idx, 
+	views[idx] = {id:-1, seq: idx, state: "shown", title:"", pId: idx,
 			sId:-1, type:type, region:"None", lang:"", qId:"-1", table:"", groupId:-1,
 			groupType:"normal", layerId:"-1"};		
 	gExpandedPanelSeq = idx;	// Make sure this panel is shown as expanded when the panels are initially refreshed. This happens after panel creation
 
 	var $panels = $('#panels');
 	createPanel(idx, $panels, views[idx].title, views[idx].sName, views[idx].subject_type);
-	setPanelType(views[idx].type, idx, views[idx].timeGroup, views[idx].qId);
+	setPanelType(views[idx].type, idx, views[idx].timeGroup, views[idx].qId, views[idx].subject_type);
 	addTriggers();
 	gNewPanel = true;
 	$('#p' + idx).find('.pSettings,.pExpand').trigger('click');		// Make the new panel full screen and edit the settings
@@ -526,7 +527,7 @@ function createPanel(idx, $panels, title, surveyName, subject_type) {
 		i = -1;
 	
 	// If the Chart title is the default "New Chart" then set to the survey name
-	if(title === "" || title === "New Chart") {
+	if(title === "") {
 		if(subject_type === "survey") {
 			title = surveyName;
 		} else {
@@ -559,7 +560,7 @@ function createPanel(idx, $panels, title, surveyName, subject_type) {
 }
 
 //Create a single panel for the passed in view
-function setPanelType(type, idx, period, qId) {
+function setPanelType(type, idx, period, qId, subject_type) {
 	
 	$panelContent = $('#p' + idx).find('.pContent');
 	$panelContent.empty();
@@ -606,7 +607,9 @@ function setPanelType(type, idx, period, qId) {
 		initializeMap(idx);
 		break;
 	case "table":
-		h[++i] = htable1;
+		if(subject_type !== 'user') {
+			h[++i] = htable1;
+		}
 		h[++i] = htable2;
 		h[++i] = idx;
 		h[++i] = htable3;
