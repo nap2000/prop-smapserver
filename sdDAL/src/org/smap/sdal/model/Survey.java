@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
+import org.smap.sdal.Utilities.ApplicationWarning;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
 import org.smap.sdal.Utilities.UtilityMethodsEmail;
 import org.smap.sdal.managers.MessagingManager;
@@ -29,9 +30,9 @@ public class Survey {
 	private static Logger log =Logger.getLogger(Survey.class.getName());
 	
 	public int id;
+	public int e_id;
 	public int o_id;
 	public int p_id;
-	public String pName;
 	public String ident;
 	public String displayName;
 	public String instanceNameDefn;
@@ -75,7 +76,7 @@ public class Survey {
 	// Getters
 	public int getId() {return id;}; 
 	public int getPId() {return p_id;};
-	public String getPName() {return pName;}; 
+	public String getProjectName() {return projectName;}; 
 	public String getIdent() {return ident;};
 	public String getDisplayName() {return displayName;}; 
 	public boolean getDeleted() { return deleted;};
@@ -175,7 +176,6 @@ public class Survey {
 	// Setters
 	public void setId(int v) { id = v;};
 	public void setPId(int v) { p_id = v;};
-	public void setPName(String v) { pName = v;};
 	public void setIdent(String v) { ident = v;};
 	public void setDisplayName(String v) { displayName = v;};
 	public void setDeleted(boolean v) { deleted = v;};
@@ -488,7 +488,7 @@ public class Survey {
 	 */
 	private boolean getExistingCompressedFlag(Connection sd, String tableName, int existingSurveyId, String qName) throws SQLException {
 		boolean compressed = true;
-		String sql = "select compressed from question where qName = ? and f_id = "
+		String sql = "select compressed, qtype from question where qName = ? and f_id = "
 				+ "(select f_id from form where s_id = ? and table_name = ? and not reference)";
 		PreparedStatement pstmt = null;
 		
@@ -498,8 +498,13 @@ public class Survey {
 			pstmt.setInt(2,  existingSurveyId);
 			pstmt.setString(3,  tableName);
 			ResultSet rs = pstmt.executeQuery();
-			if(rs.next()) {
-				compressed = rs.getBoolean(1);
+			if(rs.next()) {				
+				String qType = rs.getString(2);
+				if(qType != null && qType.equals("select")) {
+					compressed = rs.getBoolean(1);
+				} else {
+					compressed = true;		// default to true if we are not updating an existing uncompressed select
+				}
 			}	
 		} finally {
 			if(pstmt != null) {try {pstmt.close();}catch(Exception e) {}}

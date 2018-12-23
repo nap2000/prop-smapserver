@@ -43,13 +43,18 @@ public class TableDataManager {
 
 	private static Logger log = Logger.getLogger(TableDataManager.class.getName());
 	private static ResourceBundle localisation;
+	String tz;
 	
-	public TableDataManager(ResourceBundle l) {
+	public TableDataManager(ResourceBundle l, String tz) {
 		localisation = l;
+		if(tz == null) {
+			tz = "UTC";
+		}
+		this.tz = tz;
 	}
 
 	/*
-	 * Get the current columns
+	 * Get the prepared statment to retrieve the data
 	 */
 	public PreparedStatement getPreparedStatement(
 			Connection sd, 
@@ -74,7 +79,8 @@ public class TableDataManager {
 			boolean specificPrikey, 
 			String include_bad,
 			String customFilter,
-			ArrayList<KeyFilter> keyFilters)
+			ArrayList<KeyFilter> keyFilters,
+			String tz)
 			throws SQLException, Exception {
 
 		StringBuffer columnSelect = new StringBuffer();
@@ -88,12 +94,12 @@ public class TableDataManager {
 			if (i > 0) {
 				columnSelect.append(",");
 			}
-			columnSelect.append(c.getSqlSelect(urlprefix));
+			columnSelect.append(c.getSqlSelect(urlprefix, tz));
 			if (c.calculation != null && c.calculation.params != null) {
 				columnSqlFrags.add(c.calculation);
 			}
 		}
-
+		
 		if (GeneralUtilityMethods.tableExists(cResults, table_name)) {
 			StringBuffer sqlGetData = new StringBuffer("");
 			sqlGetData.append("select ");
@@ -181,7 +187,7 @@ public class TableDataManager {
 
 			// Add parameters in table column selections
 			if (columnSqlFrags.size() > 0) {
-				paramCount = GeneralUtilityMethods.setArrayFragParams(pstmt, columnSqlFrags, paramCount);
+				paramCount = GeneralUtilityMethods.setArrayFragParams(pstmt, columnSqlFrags, paramCount, tz);
 			}
 			pstmt.setInt(paramCount++, start);
 			if (getParkey) {
@@ -194,7 +200,7 @@ public class TableDataManager {
 				pstmt.setString(paramCount++, hrk);
 			}
 			if (hasRbacFilter) {
-				paramCount = GeneralUtilityMethods.setArrayFragParams(pstmt, rfArray, paramCount);
+				paramCount = GeneralUtilityMethods.setArrayFragParams(pstmt, rfArray, paramCount, tz);
 			}
 			
 			// Add key filter parameters
@@ -206,7 +212,6 @@ public class TableDataManager {
 				}
 			}
 
-			log.info("Get data: " + pstmt.toString());
 		} else {
 			throw new ApplicationException("Table does not exist");
 		}

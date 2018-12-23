@@ -41,6 +41,7 @@ import org.smap.sdal.Utilities.ResultsDataSource;
 import org.smap.sdal.Utilities.SDDataSource;
 import org.smap.sdal.managers.LogManager;
 import org.smap.sdal.managers.RoleManager;
+import org.smap.sdal.model.Form;
 import org.smap.sdal.model.SqlFrag;
 
 import com.google.gson.Gson;
@@ -164,6 +165,8 @@ public class Results extends Application {
 		a.isValidSurvey(sd, request.getRemoteUser(), sId, false, superUser);	// Validate that the user can access this survey
 		// End Authorisation
 		
+		String tz = "UTC";		// default to UTC
+		
 		if(groupId != 0) {
 			hasGroup = true;
 		}
@@ -214,7 +217,7 @@ public class Results extends Application {
 			
 			// Get date column information
 			if(dateId != 0) {
-				date = new QuestionInfo(localisation, 
+				date = new QuestionInfo(localisation, tz,
 						sId, dateId, sd, cResults, request.getRemoteUser(), false, lang, urlprefix, oId);
 				q.add(date);
 				tables.add(date.getTableName(), date.getFId(), date.getParentFId());
@@ -223,7 +226,7 @@ public class Results extends Application {
 			
 			// Get group column information
 			if(hasGroup) {
-				group = new QuestionInfo(localisation, sId, groupId, sd,cResults, request.getRemoteUser(), hasGeo, lang, urlprefix, oId);	
+				group = new QuestionInfo(localisation, tz, sId, groupId, sd,cResults, request.getRemoteUser(), hasGeo, lang, urlprefix, oId);	
 				q.add(group);
 				tables.add(group.getTableName(), group.getFId(), group.getParentFId());
 			}
@@ -247,7 +250,7 @@ public class Results extends Application {
 			if(qId_is_calc) {
 				aQ = new QuestionInfo(sId, qId, sd, false, lang, qId_is_calc, urlprefix);
 			} else {
-				aQ = new QuestionInfo(localisation, sId, qId, sd, cResults, request.getRemoteUser(), false, lang, urlprefix, oId);
+				aQ = new QuestionInfo(localisation, tz, sId, qId, sd, cResults, request.getRemoteUser(), false, lang, urlprefix, oId);
 			}
 			q.add(aQ);
 			tables.add(aQ.getTableName(), aQ.getFId(),  aQ.getParentFId());			
@@ -262,7 +265,7 @@ public class Results extends Application {
 				Gson gson=  new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				filter = gson.fromJson(sFilter, type);
 
-				fQ = new QuestionInfo(localisation, sId, filter.qId, sd, cResults, request.getRemoteUser(),  hasGeo, lang, urlprefix, oId);	
+				fQ = new QuestionInfo(localisation, tz, sId, filter.qId, sd, cResults, request.getRemoteUser(),  hasGeo, lang, urlprefix, oId);	
 				q.add(fQ);
 				tables.add(fQ.getTableName(), fQ.getFId(), fQ.getParentFId());
 				sqlFilter = " and " + fQ.getFilterExpression(filter.value, null);
@@ -292,8 +295,14 @@ public class Results extends Application {
 				
 				for(int i = 0; i < advancedFilterFrag.columns.size(); i++) {
 					int rqId = GeneralUtilityMethods.getQuestionIdFromName(sd, sId, advancedFilterFrag.humanNames.get(i));
-					QuestionInfo qaf = new QuestionInfo(sId, rqId, sd);
-					tables.add(qaf.getTableName(), qaf.getFId(), qaf.getParentFId());
+					if(rqId > 0) {
+						QuestionInfo qaf = new QuestionInfo(sId, rqId, sd);
+						tables.add(qaf.getTableName(), qaf.getFId(), qaf.getParentFId());
+					} else {
+						// assume meta and hence include main table
+						Form tlf = GeneralUtilityMethods.getTopLevelForm(sd, sId);
+						tables.add(tlf.tableName, tlf.id, tlf.parentform);
+					}
 				}
 			}		
 			
@@ -388,19 +397,19 @@ public class Results extends Application {
 			int attribIdx = 1;
 			if(dateId != 0) {
 				if(startDate != null) {
-					pstmt.setDate(attribIdx++, startDate);
+					pstmt.setTimestamp(attribIdx++, GeneralUtilityMethods.startOfDay(startDate, tz));
 				}
 				if(endDate != null) {
-					pstmt.setTimestamp(attribIdx++, GeneralUtilityMethods.endOfDay(endDate));
+					pstmt.setTimestamp(attribIdx++, GeneralUtilityMethods.endOfDay(endDate, tz));
 				}
 			}
 			
 			if(advancedFilterFrag != null) {
-				attribIdx = GeneralUtilityMethods.setFragParams(pstmt, advancedFilterFrag, attribIdx);
+				attribIdx = GeneralUtilityMethods.setFragParams(pstmt, advancedFilterFrag, attribIdx, tz);
 			}
 			// RBAC row filter
 			if(hasRbacRowFilter) {
-				attribIdx = GeneralUtilityMethods.setArrayFragParams(pstmt, rfArray, attribIdx);
+				attribIdx = GeneralUtilityMethods.setArrayFragParams(pstmt, rfArray, attribIdx, tz);
 			}
 			ResultSet resultSet = pstmt.executeQuery();
 

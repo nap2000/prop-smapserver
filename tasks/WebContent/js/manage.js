@@ -105,10 +105,10 @@ require([
 			pArray = [],
 			param = [],
 			openingNew = false,
-			dont_get_current_survey = true,
-			bs = isBusinessServer();
+			dont_get_current_survey = true;
 
 		setCustomManage();		// Apply custom javascript
+		 setupUserProfile();
 		localise.setlang();		// Localise HTML
 		 
 		// Get the parameters and show a management survey if required
@@ -269,7 +269,8 @@ require([
 	 function getManagedData(sId) {
 		 
 		 var url = '/api/v1/data/' + sId + "?mgmt=true";
-		 
+         url += "&tz=" + encodeURIComponent(globals.gTimezone);
+
 		 addHourglass();
 		 $.ajax({
 			 url: url,
@@ -328,7 +329,9 @@ require([
 				 h[++idx] = '</th>';
 			 }
 		 }
-		 h[++idx] = '<th>Action</th>';
+		 h[++idx] = '<th>';
+		 h[++idx] = localise.set["c_action"];
+		 h[++idx] = '</th>';
 		 h[++idx] = '</tr>';
 		 h[++idx] = '</thead>';
 		 

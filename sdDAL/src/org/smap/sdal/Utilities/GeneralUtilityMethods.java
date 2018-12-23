@@ -18,11 +18,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,6 +41,7 @@ import org.smap.sdal.constants.SmapQuestionTypes;
 import org.smap.sdal.constants.SmapServerMeta;
 import org.smap.sdal.managers.CsvTableManager;
 import org.smap.sdal.managers.LogManager;
+import org.smap.sdal.managers.OrganisationManager;
 import org.smap.sdal.managers.RoleManager;
 import org.smap.sdal.managers.SurveyManager;
 import org.smap.sdal.managers.SurveyTableManager;
@@ -58,12 +62,14 @@ import org.smap.sdal.model.LanguageItem;
 import org.smap.sdal.model.LinkedTarget;
 import org.smap.sdal.model.ManifestInfo;
 import org.smap.sdal.model.MetaItem;
+import org.smap.sdal.model.MySensitiveData;
 import org.smap.sdal.model.Option;
 import org.smap.sdal.model.Project;
 import org.smap.sdal.model.Question;
 import org.smap.sdal.model.RoleColumnFilter;
 import org.smap.sdal.model.SqlFrag;
 import org.smap.sdal.model.SqlFragParam;
+import org.smap.sdal.model.SqlParam;
 import org.smap.sdal.model.Survey;
 import org.smap.sdal.model.SurveyLinkDetails;
 import org.smap.sdal.model.TableColumn;
@@ -105,6 +111,8 @@ public class GeneralUtilityMethods {
 			"only", "or", "order", "outer", "overlaps", "placing", "primary", "references", "right", "select",
 			"session_user", "similar", "some", "symmetric", "table", "then", "to", "trailing", "true", "union",
 			"unique", "user", "using", "verbose", "when", "where" };
+	
+	 private static final String UTF8_BOM = "\uFEFF";
 
 	/*
 	 * Remove any characters from the name that will prevent it being used as a
@@ -588,12 +596,43 @@ public class GeneralUtilityMethods {
 	}
 
 	/*
+	 * Return true if the user has the enterprise administrator role
+	 */
+	static public boolean isEntUser(Connection con, String ident) throws SQLException {
+
+		String sql = "select count(*) " 
+				+ "from users u, user_group ug " 
+				+ "where u.id = ug.u_id "
+				+ "and ug.g_id = " + Authorise.ENTERPRISE_ID + " "
+				+ "and u.ident = ? ";
+
+		boolean isEnt = false;
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, ident);
+			ResultSet resultSet = pstmt.executeQuery();
+
+			if (resultSet.next()) {
+				isEnt = (resultSet.getInt(1) > 0);
+			}
+		} finally {
+			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
+		}
+
+		return isEnt;
+	}
+	
+	/*
 	 * Return true if the user has the organisational administrator role
 	 */
-	static public boolean isOrgUser(Connection con, String ident) {
+	static public boolean isOrgUser(Connection con, String ident) throws SQLException {
 
-		String sql = "SELECT count(*) " + " FROM users u, user_group ug " + " WHERE u.id = ug.u_id "
-				+ " AND ug.g_id = 4 " + " AND u.ident = ?; ";
+		String sql = "select count(*) " 
+				+ "from users u, user_group ug " 
+				+ "where u.id = ug.u_id "
+				+ "and ug.g_id = " + Authorise.ORG_ID + " "
+				+ "and u.ident = ? ";
 
 		boolean isOrg = false;
 		PreparedStatement pstmt = null;
@@ -605,19 +644,80 @@ public class GeneralUtilityMethods {
 			if (resultSet.next()) {
 				isOrg = (resultSet.getInt(1) > 0);
 			}
-		} catch (Exception e) {
-			log.log(Level.SEVERE, "Error", e);
 		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
 		}
 
 		return isOrg;
+	}
+	
+	/*
+	 * Return true if the user identified by their id has the organisational administrator role
+	 * Also check in the archive as they may not be logged in to this organisation
+	 */
+	static public boolean isOrgUserById(Connection sd, int id, int o_id) throws SQLException {
 
+		String sql = "select count(*) " 
+				+ "from users u, user_group ug " 
+				+ "where u.id = ug.u_id "
+				+ "and ug.g_id = " + Authorise.ORG_ID + " "
+				+ "and u.id = ?"
+				+ "and u.o_id =?";
+
+		boolean isOrg = false;
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = sd.prepareStatement(sql);
+			pstmt.setInt(1, id);
+			pstmt.setInt(2, o_id);
+			ResultSet resultSet = pstmt.executeQuery();
+
+			if (resultSet.next()) {
+				isOrg = (resultSet.getInt(1) > 0);
+			} else {
+				// User is presumably in a different organisation at the moment
+				User u = getArchivedUser(sd, o_id, id);
+				for(UserGroup ug : u.groups) {
+					if(ug.id == Authorise.ORG_ID) {
+						isOrg = true;
+						break;
+					}
+				}
+			}
+		} finally {
+			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
+		}
+
+		return isOrg;
+	}
+	
+	/*
+	 * Return true if the user is an administrator
+	 */
+	static public boolean isAdminUser(Connection con, String ident) {
+
+		String sql = "select count(*) " 
+				+ "from users u, user_group ug " 
+				+ "where u.id = ug.u_id "
+				+ "and ug.g_id = 1 " 
+				+ "and u.ident = ? ";
+
+		boolean isAdmin = false;
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, ident);
+			ResultSet resultSet = pstmt.executeQuery();
+
+			if (resultSet.next()) {
+				isAdmin = (resultSet.getInt(1) > 0);
+			}
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "Error", e);
+		} finally {
+			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
+		}
+		return isAdmin;
 	}
 
 	/*
@@ -626,8 +726,11 @@ public class GeneralUtilityMethods {
 	static public boolean isSuperUser(Connection sd, String user) throws SQLException {
 		boolean superUser = false;
 
-		String sqlGetOrgId = "select count(*) " + "from users u, user_group ug " + "where u.ident = ? "
-				+ "and u.id = ug.u_id " + "and (ug.g_id = 6 or ug.g_id = 4)";
+		String sqlGetOrgId = "select count(*) " 
+				+ "from users u, user_group ug " 
+				+ "where u.ident = ? "
+				+ "and u.id = ug.u_id " 
+				+ "and (ug.g_id = 6 or ug.g_id = 4)";
 
 		PreparedStatement pstmt = null;
 
@@ -640,23 +743,15 @@ public class GeneralUtilityMethods {
 				superUser = (rs.getInt(1) > 0);
 			}
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmt != null) {pstmt.close();}} catch (Exception e) {}
 		}
 
 		return superUser;
 	}
 
 	/*
-	 * Get the organisation id for the user If there is no organisation for that
+	 * Get the current organisation id for the user If there is no organisation for that
 	 * user then use the survey id, this is used when getting the organisation for a
 	 * subscriber log
 	 */
@@ -689,22 +784,9 @@ public class GeneralUtilityMethods {
 				}
 			}
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {
-				if (pstmt1 != null) {
-					pstmt1.close();
-				}
-			} catch (SQLException e) {
-			}
-			try {
-				if (pstmt2 != null) {
-					pstmt2.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmt1 != null) {pstmt1.close();}} catch (Exception e) {	}
+			try {if (pstmt2 != null) {pstmt2.close();}} catch (Exception e) {}
 		}
 
 		return o_id;
@@ -730,16 +812,8 @@ public class GeneralUtilityMethods {
 				o_id = rs.getInt(1);
 			}
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
 		}
 
 		return o_id;
@@ -765,16 +839,9 @@ public class GeneralUtilityMethods {
 				o_id = rs.getInt(1);
 			}
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
 			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-			} catch (SQLException e) {
-			}
+				if (pstmt != null) {	pstmt.close();}} catch (SQLException e) {}
 		}
 
 		return o_id;
@@ -804,11 +871,8 @@ public class GeneralUtilityMethods {
 				o_id = rs.getInt(1);
 			}
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {if (pstmt != null) {pstmt.close();}	} catch (SQLException e) {}
+			try {if (pstmt != null) {pstmt.close();}	} catch (Exception e) {}
 		}
 
 		return o_id;
@@ -930,19 +994,42 @@ public class GeneralUtilityMethods {
 				}
 			}
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmt != null) {pstmt.close();}} catch (Exception e) {}
 		}
 
 		return name;
+	}
+	
+	/*
+	 * Get the organisation time zone for the organisation id
+	 */
+	static public String getOrganisationTZ(Connection sd, int o_id) throws SQLException {
+
+		String sqlGetOrgName = "select o.timezone "
+				+ " from organisation o " 
+				+ " where o.id = ?;";
+
+		PreparedStatement pstmt = null;
+		String tz = null;
+
+		try {
+
+			pstmt = sd.prepareStatement(sqlGetOrgName);
+			pstmt.setInt(1, o_id);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				tz = rs.getString(1);
+				if (tz == null || tz.trim().length() == 0) {
+					tz = "UTC";
+				}
+			}
+
+		} finally {
+			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
+		}
+
+		return tz;
 	}
 
 	/*
@@ -1051,16 +1138,8 @@ public class GeneralUtilityMethods {
 				u_ident = rs.getString(1);
 			}
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmt != null) {pstmt.close();}} catch (Exception e) {}
 		}
 
 		return u_ident;
@@ -1086,16 +1165,8 @@ public class GeneralUtilityMethods {
 				email = rs.getString(1);
 			}
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmt != null) {pstmt.close();}} catch (Exception e) {}
 		}
 
 		return email;
@@ -1117,16 +1188,8 @@ public class GeneralUtilityMethods {
 			pstmt.setInt(2, sId);
 			pstmt.executeUpdate();
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmt != null) {pstmt.close();}} catch (Exception e) {}
 		}
 
 	}
@@ -1150,16 +1213,8 @@ public class GeneralUtilityMethods {
 				serverName = rs.getString(1);
 			}
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
 		}
 
 		return serverName;
@@ -1201,16 +1256,8 @@ public class GeneralUtilityMethods {
 				surveyIdent = rs.getString(1);
 			}
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmt != null) {pstmt.close();}} catch (Exception e) {}
 		}
 
 		return surveyIdent;
@@ -1265,16 +1312,8 @@ public class GeneralUtilityMethods {
 				sId = rs.getInt(1);
 			}
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
 		}
 
 		return sId;
@@ -1302,9 +1341,6 @@ public class GeneralUtilityMethods {
 				surveyName = rs.getString(1);
 			}
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
 			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
 		}
@@ -1335,16 +1371,8 @@ public class GeneralUtilityMethods {
 				surveyName = rs.getString(1);
 			}
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmt != null) {pstmt.close();}} catch (Exception e) {}
 		}
 
 		return surveyName;
@@ -1383,7 +1411,7 @@ public class GeneralUtilityMethods {
 
 	/*
 	 * Return true if the upload error has already been reported This function is
-	 * used to prevent large numbers of duplicate errors beign recorded when
+	 * used to prevent large numbers of duplicate errors being recorded when
 	 * submission of bad results is automatically retried
 	 */
 	public static boolean hasUploadErrorBeenReported(Connection sd, String user, String device, String ident,
@@ -1409,16 +1437,8 @@ public class GeneralUtilityMethods {
 				reported = (rs.getInt(1) > 0) ? true : false;
 			}
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
 		}
 
 		return reported;
@@ -1444,16 +1464,8 @@ public class GeneralUtilityMethods {
 				p_id = rs.getInt(1);
 			}
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
 		}
 
 		return p_id;
@@ -1479,16 +1491,8 @@ public class GeneralUtilityMethods {
 				hrk = rs.getString(1);
 			}
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
 		}
 
 		if(hrk != null && hrk.trim().length() == 0) {
@@ -1535,8 +1539,6 @@ public class GeneralUtilityMethods {
 					qId = rs.getInt(1);
 					log.info("Found qId: " + qId);
 				} else {
-					// throw new Exception("Question not found: " + sId + " : " + formId + " : " +
-					// qName);
 					// Question has been deleted or renamed. Not to worry
 					log.info("Question not found: " + sId + " : " + formId + " : " + qName);
 				}
@@ -1551,16 +1553,8 @@ public class GeneralUtilityMethods {
 				}
 			}
 
-		} catch (Exception e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
 		}
 
 		return qId;
@@ -1583,25 +1577,34 @@ public class GeneralUtilityMethods {
 		PreparedStatement pstmt = null;
 
 		try {
-
-			pstmt = sd.prepareStatement(sql);
-			pstmt.setInt(1, sId);
-			pstmt.setString(2, qName);
-			ResultSet rs = pstmt.executeQuery();
-			if (rs.next()) {
-				column_name = rs.getString(1);
-			}
-
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
-		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
+			
+			if(qName != null) {
+				if(qName.equals("_hrk")) {
+					column_name = "_hrk";
+				} else {
+					pstmt = sd.prepareStatement(sql);
+					pstmt.setInt(1, sId);
+					pstmt.setString(2, qName);
+					ResultSet rs = pstmt.executeQuery();
+					if (rs.next()) {
+						column_name = rs.getString(1);
+					}
 				}
-			} catch (SQLException e) {
+				
+				if(column_name == null) {
+					// Try preloads
+					ArrayList<MetaItem> preloads = getPreloads(sd, sId);
+					for(MetaItem item : preloads) {
+						if(item.name.equals(qName)) {							
+							column_name = item.columnName;
+							break;
+						}
+					}
+				}
 			}
+
+		} finally {
+			try {if (pstmt != null) {	pstmt.close();}} catch (SQLException e) {}
 		}
 
 		return column_name;
@@ -2279,104 +2282,28 @@ public class GeneralUtilityMethods {
 	}
 
 	/*
-	 * Return the columns in a CSV file that have the value and label for the given
-	 * question
-	 */
-	public static ValueLabelColsResp getValueLabelCols(Connection sd, int qId, String qDisplayName, String[] cols)
-			throws Exception {
-
-		ValueLabelColsResp resp = new ValueLabelColsResp();
-
-		if (cols == null) {
-			// No column in this CSV file so there are not going to be any matches
-			String msg = "No columns found in this csv file";
-			lm.writeLog(sd, 0, "", "csv file", msg);
-			throw new Exception(msg);
-		}
-
-		PreparedStatement pstmt = null;
-		String sql = "SELECT o.ovalue, t.value, t.language " 
-				+ "from option o, translation t, question q "
-				+ "where o.label_id = t.text_id " + "and o.l_id = q.l_id " + "and q.q_id = ? "
-				+ "and externalfile ='false' order by t.language asc;";
-
-		try {
-			pstmt = sd.prepareStatement(sql);
-			pstmt.setInt(1, qId);
-			log.info("Get value/label combos: " + pstmt.toString());
-			ResultSet rs = pstmt.executeQuery();
-
-			while (rs.next()) {
-				boolean err = false;
-				ValueLabelCols vlc = new ValueLabelCols();
-
-				String valueName = rs.getString(1);
-				String labelName = rs.getString(2);
-				vlc.language = rs.getString(3);		
-
-				vlc.value = -1;
-				vlc.label = -1;
-				for (int i = 0; i < cols.length; i++) {
-					if (cols[i].toLowerCase().trim().equals(valueName.toLowerCase().trim())) {
-						vlc.value = i;
-					}
-					if (cols[i].toLowerCase().trim().equals(labelName.toLowerCase().trim())) {
-						vlc.label = i;
-					}
-				}
-
-				if (vlc.value == -1) {
-					String msg = "Column " + valueName + " not found in csv file for question " + qDisplayName;
-					lm.writeLog(sd, 0, "", "csv file", msg);
-					err = true;
-					resp.error = true;
-				} else if (vlc.label == -1) {
-					err = true;
-					String msg = "Column " + labelName + " not found in csv file for question " + qDisplayName;
-					lm.writeLog(sd, 0, "", "csv file", msg);
-					resp.error = true;
-				}
-				if(!err) {
-					resp.values.add(vlc);
-				}
-			} 
-		} finally {
-			if (pstmt != null) try {	pstmt.close();} catch (Exception e) {};
-		}
-		return resp;
-	}
-
-	/*
 	 * Get languages that have been used in a survey resulting in a translation
 	 * entry This is used to get languages for surveys loaded from xlfForm prior to
 	 * the creation of the editor After the creation of the editor the available
 	 * languages, some of which may not have any translation entries, are stored in
 	 * the languages table
 	 */
-	public static ArrayList<String> getLanguagesUsedInSurvey(Connection connectionSD, int sId) throws SQLException {
+	public static ArrayList<String> getLanguagesUsedInSurvey(Connection sd, int sId) throws SQLException {
 
-		PreparedStatement pstmtLanguages = null;
+		PreparedStatement pstmt = null;
 
 		ArrayList<String> languages = new ArrayList<String>();
 		try {
 			String sqlLanguages = "select distinct t.language from translation t where s_id = ? order by t.language asc";
-			pstmtLanguages = connectionSD.prepareStatement(sqlLanguages);
+			pstmt = sd.prepareStatement(sqlLanguages);
 
-			pstmtLanguages.setInt(1, sId);
-			ResultSet rs = pstmtLanguages.executeQuery();
+			pstmt.setInt(1, sId);
+			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				languages.add(rs.getString(1));
 			}
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {
-				if (pstmtLanguages != null) {
-					pstmtLanguages.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmt != null) {pstmt.close();	}} catch (SQLException e) {}
 		}
 		return languages;
 	}
@@ -2386,15 +2313,15 @@ public class GeneralUtilityMethods {
 	 */
 	public static ArrayList<Language> getLanguages(Connection sd, int sId) throws SQLException {
 
-		PreparedStatement pstmtLanguages = null;
+		PreparedStatement pstmt = null;
 		ArrayList<Language> languages = new ArrayList<Language>();
 
 		try {
 			String sqlLanguages = "select id, language, seq from language where s_id = ? order by seq asc";
-			pstmtLanguages = sd.prepareStatement(sqlLanguages);
+			pstmt = sd.prepareStatement(sqlLanguages);
 
-			pstmtLanguages.setInt(1, sId);
-			ResultSet rs = pstmtLanguages.executeQuery();
+			pstmt.setInt(1, sId);
+			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				languages.add(new Language(rs.getInt(1), rs.getString(2)));
 			}
@@ -2409,16 +2336,8 @@ public class GeneralUtilityMethods {
 				GeneralUtilityMethods.setLanguages(sd, sId, languages);
 			}
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {
-				if (pstmtLanguages != null) {
-					pstmtLanguages.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
 		}
 
 		return languages;
@@ -2724,29 +2643,31 @@ public class GeneralUtilityMethods {
 	/*
 	 * Get the answer for a specific question and a specific instance
 	 */
-	public static ArrayList<String> getResponseForEmailQuestion(Connection sd, Connection results, int sId, int qId,
+	public static ArrayList<String> getResponseForEmailQuestion(Connection sd, Connection results, int sId, String qName,
 			String instanceId) throws SQLException {
 
 		PreparedStatement pstmtQuestion = null;
 		PreparedStatement pstmtOption = null;
 		PreparedStatement pstmtResults = null;
 
-		String sqlQuestion = "select qType, qName, f_id from question where q_id = ?";
+		String sqlQuestion = "select qType, q_id, f_id from question where qname = ? and f_id in "
+				+ "(select f_id from form where s_id = ?)";
 		String sqlOption = "select o.ovalue, o.column_name from option o, question q where q.q_id = ? and q.l_id = o.l_id";
 
 		String qType = null;
-		String qName = null;
 		int fId = 0;
+		int qId = 0;
 
 		ArrayList<String> responses = new ArrayList<String>();
 		try {
 			pstmtQuestion = sd.prepareStatement(sqlQuestion);
-			pstmtQuestion.setInt(1, qId);
+			pstmtQuestion.setString(1, qName);
+			pstmtQuestion.setInt(2, sId);
 			log.info("GetResponseForQuestion: " + pstmtQuestion.toString());
 			ResultSet rs = pstmtQuestion.executeQuery();
 			if (rs.next()) {
 				qType = rs.getString(1);
-				qName = rs.getString(2);
+				qId = rs.getInt(2);
 				fId = rs.getInt(3);
 
 				ArrayList<String> tableStack = getTableStack(sd, fId);
@@ -3020,7 +2941,8 @@ public class GeneralUtilityMethods {
 			boolean includeSurveyDuration, 
 			boolean superUser,
 			boolean hxl,
-			boolean audit)
+			boolean audit,
+			String tz)
 					throws Exception {
 
 		int oId = GeneralUtilityMethods.getOrganisationId(sd, user, 0);
@@ -3030,6 +2952,10 @@ public class GeneralUtilityMethods {
 		boolean uptodateTable = false; // Set true if the results table has the latest meta data columns
 		TableColumn durationColumn = null;
 
+		// Get sensitive data restrictions
+		OrganisationManager om = new OrganisationManager();
+		MySensitiveData msd = om.getMySensitiveData(sd, user);
+		
 		// Get column restrictions for RBAC
 		StringBuffer colList = new StringBuffer("");
 		if (!superUser) {
@@ -3111,6 +3037,7 @@ public class GeneralUtilityMethods {
 			columnList.add(c);
 		}
 
+		ArrayList<MetaItem> preloads = getPreloads(sd, sId);
 		if (includeSurveyDuration && formParent == 0) {
 			durationColumn = new TableColumn();
 			durationColumn.name = "_duration";
@@ -3118,6 +3045,7 @@ public class GeneralUtilityMethods {
 			durationColumn.displayName = durationColumn.humanName;
 			durationColumn.type = SmapQuestionTypes.DURATION;
 			durationColumn.isMeta = true;
+			getStartEndName(preloads, durationColumn);
 			columnList.add(durationColumn);
 		}
 
@@ -3240,7 +3168,6 @@ public class GeneralUtilityMethods {
 
 			// Add preloads that have been specified in the survey definition
 			if (includePreloads) {
-				ArrayList<MetaItem> preloads = getPreloads(sd, sId);
 				for(MetaItem mi : preloads) {
 					if(mi.isPreload) {
 						c = new TableColumn();
@@ -3320,14 +3247,10 @@ public class GeneralUtilityMethods {
 
 				if (qType.equals("select") && !compressed) {
 
-					// Check if there are any choices from an external csv file in this select
-					// multiple
-					boolean external = GeneralUtilityMethods.hasExternalChoices(sd, qId);
-
 					// Get the choices, either all from an external file or all from an internal
 					// file but not both
 					pstmtSelectMultipleNotCompressed.setInt(1, qId);
-					pstmtSelectMultipleNotCompressed.setBoolean(2, external);
+					pstmtSelectMultipleNotCompressed.setBoolean(2, false);	// no external
 					log.info("Get choices for select multiple question: " + pstmtSelectMultipleNotCompressed.toString());
 					ResultSet rsMultiples = pstmtSelectMultipleNotCompressed.executeQuery();
 
@@ -3383,6 +3306,13 @@ public class GeneralUtilityMethods {
 					c.hxlCode = hxlCode;
 					c.l_id = l_id;
 					c.compressed = compressed;
+				
+					// Check for sensitive data
+					if(msd.signature) {
+						if(qType.equals("image") && appearance != null && appearance.contains("signature")) {
+							continue;
+						}
+					}
 					if (GeneralUtilityMethods.isPropertyType(source_param, question_column_name)) {
 						if (includePreloads) {
 							columnList.add(c);
@@ -3396,7 +3326,7 @@ public class GeneralUtilityMethods {
 						c.choices = new ArrayList<KeyValue> ();	
 						if(GeneralUtilityMethods.hasExternalChoices(sd, qId)) {
 							ArrayList<Option> options = GeneralUtilityMethods.getExternalChoices(sd, 
-									cResults, localisation, user, oId, sId, qId, null, surveyIdent);
+									cResults, localisation, user, oId, sId, qId, null, surveyIdent, tz);
 							if(options != null) {
 								for(Option o : options) {
 									String label ="";
@@ -3439,6 +3369,23 @@ public class GeneralUtilityMethods {
 		columnList.addAll(realQuestions); // Add the real questions after the property questions
 
 		return columnList;
+	}
+	
+	/*
+	 * Get the start duration and end duration names from the preloads
+	 */
+	public static void getStartEndName(ArrayList<MetaItem> preloads, TableColumn durn) {
+		for(MetaItem mi : preloads) {
+			if(mi.isPreload) {
+				if(mi.sourceParam != null) {
+					if(mi.sourceParam.equals("start")) {
+						durn.startName = mi.columnName;
+					} else if(mi.sourceParam.equals("end")) {
+						durn.endName = mi.columnName;
+					}
+				}
+			}
+		}
 	}
 
 	/*
@@ -4022,46 +3969,27 @@ public class GeneralUtilityMethods {
 	 * Check to see if there are any choices from an external file for a question
 	 */
 	public static boolean hasExternalChoices(Connection sd, int qId) throws SQLException {
-
-		boolean external = false;
-		String sqlLegacy = "select count(*) from option o, question q where o.l_id = q.l_id and q.q_id = ? and o.externalfile = 'true';";
-		PreparedStatement pstmtLegacy = null;
 		
+		boolean external = false;
 		PreparedStatement pstmt = null;
 		String sql = "select q.appearance from question q "
 				+ "where q.q_id = ? "
 				+ "and q.appearance like '%search(%'";
 
 		try {
-			// Deprecate need to check appearance
-			pstmtLegacy = sd.prepareStatement(sqlLegacy);
-			pstmtLegacy.setInt(1, qId);
-			ResultSet rs = pstmtLegacy.executeQuery();
-			if (rs.next()) {
-				if (rs.getInt(1) > 0) {
-					external = true;
-				}
-			}
-
-			if(external == false) {
-				// Try new check
-				pstmt = sd.prepareStatement(sql);
+			pstmt = sd.prepareStatement(sql);
 				
-				pstmt.setInt(1, qId);
-				rs = pstmt.executeQuery();
-				if (rs.next()) {			
-					external = true;
-				}
-			}
-
-			
+			pstmt.setInt(1, qId);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {			
+				external = true;
+			}	
 
 		} catch (SQLException e) {
 			log.log(Level.SEVERE, "Error", e);
 			throw e;
 		} finally {
 			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
-			try {if (pstmtLegacy != null) {pstmtLegacy.close();}} catch (SQLException e) {}
 		}
 
 		return external;
@@ -4072,7 +4000,9 @@ public class GeneralUtilityMethods {
 	 */
 	public static int getQuestionIdFromName(Connection sd, int sId, String name) throws SQLException {
 
-		String sql = "select q_id " + "from question q " + "where q.qname = ? "
+		String sql = "select q_id " 
+				+ "from question q " 
+				+ "where q.qname = ? "
 				+ "and q.f_id in (select f_id from form where s_id = ?)";
 
 		int qId = 0;
@@ -4087,19 +4017,40 @@ public class GeneralUtilityMethods {
 				qId = rs.getInt(1);
 			}
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
 		}
 
 		return qId;
+	}
+	
+	/*
+	 * Convert a question id to a question name
+	 */
+	public static String getQuestionNameFromId(Connection sd, int sId, int id) throws SQLException {
+
+		String sql = "select q.qname " 
+				+ "from question q " 
+				+ "where q.q_id = ? "
+				+ "and q.f_id in (select f_id from form where s_id = ?)";
+
+		String qName = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			pstmt = sd.prepareStatement(sql);
+			pstmt.setInt(1, id);
+			pstmt.setInt(2, sId);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				qName = rs.getString(1);
+			}
+
+		} finally {
+			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
+		}
+
+		return qName;
 	}
 
 	/*
@@ -4144,13 +4095,14 @@ public class GeneralUtilityMethods {
 			ResourceBundle localisation, 
 			String remoteUser,
 			int oId, int sId, int qId, ArrayList<String> matches,
-			String surveyIdent) throws Exception {
+			String surveyIdent,
+			String tz) throws Exception {
 
 		ArrayList<Option> choices = new ArrayList<Option> ();		
 		String sql = "select q.external_table, q.l_id from question q where q.q_id = ?";
 		PreparedStatement pstmt = null;
 		
-		String sqlChoices = "select ovalue, label_id from option where l_id = ? and not externalfile order by seq asc";
+		String sqlChoices = "select ovalue, label_id from option where l_id = ? and not externalfile and ovalue !~ '^[0-9]+$'";
 		PreparedStatement pstmtChoices = null;
 			
 		String sqlLabels = "select t.value, t.language " 
@@ -4201,7 +4153,7 @@ public class GeneralUtilityMethods {
 								}
 								// Get data from another form
 								SurveyTableManager stm = new SurveyTableManager(sd, cResults, localisation, oId, sId, filename, remoteUser);
-								stm.initData(pstmt, "all", null, null, null, null, null);
+								stm.initData(pstmt, "all", null, null, null, null, null, tz);
 								
 								Option o = null;
 								while((o = stm.getLineAsOption(ovalue, languageItems)) != null) {
@@ -4428,16 +4380,8 @@ public class GeneralUtilityMethods {
 				name = rs.getString(1);
 			}
 
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
-		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-			} catch (SQLException e) {
-			}
+		}  finally {
+			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
 		}
 
 		return name;
@@ -4483,22 +4427,9 @@ public class GeneralUtilityMethods {
 				listId = rs.getInt(1);
 
 			}
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, "Error", e);
-			throw e;
 		} finally {
-			try {
-				if (pstmtGetListId != null) {
-					pstmtGetListId.close();
-				}
-			} catch (SQLException e) {
-			}
-			try {
-				if (pstmtListName != null) {
-					pstmtListName.close();
-				}
-			} catch (SQLException e) {
-			}
+			try {if (pstmtGetListId != null) {pstmtGetListId.close();}} catch (SQLException e) {}
+			try {if (pstmtListName != null) {pstmtListName.close();}} catch (SQLException e) {}
 		}
 
 		return listId;
@@ -4561,7 +4492,13 @@ public class GeneralUtilityMethods {
 											params = new ArrayList<String>();
 										}
 										params.add(rs.getString(1));
-										params.add(rs.getString(2));
+										String label = rs.getString(2);
+										if(label != null) {
+											String [] multLabels = label.split(",");
+											for(String v : multLabels) {
+												params.add(v.trim());
+											}
+										}
 									}
 								} else {
 									params = getRefQuestionsPulldata(criteria);
@@ -5070,13 +5007,7 @@ public class GeneralUtilityMethods {
 
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "Exception", e);
-		} finally {
-
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-			} catch (SQLException e) {
+		} finally {try {	if (pstmt != null) {	pstmt.close();}} catch (Exception e) {
 			}
 
 		}
@@ -5562,6 +5493,15 @@ public class GeneralUtilityMethods {
 				+ "(s.s_id in (select s_id from users u, user_role ur, survey_role sr where u.ident = ? and sr.enabled = true and u.id = ur.u_id and ur.r_id = sr.r_id)) " // User also has role
 				+ ") ";
 	}
+	
+	/*
+	 * Return the SQL that does survey level Role Based Access Control (modified for use with upload event)
+	 */
+	public static String getSurveyRBACUploadEvent() {
+		return "and ((ue.s_id not in (select s_id from survey_role where enabled = true)) or " // No roles on survey
+				+ "(ue.s_id in (select s_id from users u, user_role ur, survey_role sr where u.ident = ? and sr.enabled = true and u.id = ur.u_id and ur.r_id = sr.r_id)) " // User also has role
+				+ ") ";
+	}
 
 	/*
 	 * Return true if the question column name is in the survey
@@ -5620,17 +5560,43 @@ public class GeneralUtilityMethods {
 
 	/*
 	 * Set the time on a java date to 23:59 and convert to a Timestamp
+	 * Use the passed in timezone as the basis for determining hour
 	 */
-	// Set the time on a date to 23:59
-	public static Timestamp endOfDay(Date d) {
-
-		Calendar cal = Calendar.getInstance();
+	public static Timestamp endOfDay(Date d, String tz) {
+		
+		Calendar cal = new GregorianCalendar();
 		cal.setTime(d);
 		cal.set(Calendar.HOUR_OF_DAY, 23);
 		cal.set(Calendar.MINUTE, 59);
+		
+		TimeZone timeZone = TimeZone.getTimeZone(tz);
+		int offsetFromUTC = timeZone.getOffset(d.getTime());
+		cal.add(Calendar.MILLISECOND, -offsetFromUTC);
+		
 		Timestamp endOfDay = new Timestamp(cal.getTime().getTime());
 
 		return endOfDay;
+	}
+	
+	/*
+	 * Set the time on a java date to 00:00 and convert to a Timestamp
+	 * Use the passed in timezone as the basis for determining hour
+	 */
+	public static Timestamp startOfDay(Date d, String tz) {
+
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(d);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		
+		TimeZone timeZone = TimeZone.getTimeZone(tz);
+		int offsetFromUTC = timeZone.getOffset(d.getTime());
+		
+		// Subtract the offset between the tz and UTC in order to get the UTC time of the calendar value assuming it is in the specified timezone
+		cal.add(Calendar.MILLISECOND, -offsetFromUTC);
+		Timestamp startOfDay = new Timestamp(cal.getTime().getTime());
+
+		return startOfDay;
 	}
 
 	/*
@@ -5936,7 +5902,7 @@ public class GeneralUtilityMethods {
 	/*
 	 * Check to see if the passed in survey response, identified by an instance id, is within the filtered set of responses
 	 */
-	public static boolean testFilter(Connection cResults, ResourceBundle localisation, Survey survey, String filter, String instanceId) throws Exception {
+	public static boolean testFilter(Connection cResults, ResourceBundle localisation, Survey survey, String filter, String instanceId, String tz) throws Exception {
 
 		boolean testResult = false;
 
@@ -5959,7 +5925,7 @@ public class GeneralUtilityMethods {
 			pstmt.setString(1, instanceId);
 
 			int idx = 2;
-			idx = GeneralUtilityMethods.setFragParams(pstmt, frag, idx);
+			idx = GeneralUtilityMethods.setFragParams(pstmt, frag, idx, tz);
 
 			log.info("Evaluate Filter: " + pstmt.toString());
 			ResultSet rs = pstmt.executeQuery();
@@ -5981,7 +5947,7 @@ public class GeneralUtilityMethods {
 	/*
 	 * Return SQL that can be used to filter out records not matching a filter
 	 */
-	public static String getFilterCheck(Connection cResults, ResourceBundle localisation, Survey survey, String filter) throws Exception {
+	public static String getFilterCheck(Connection cResults, ResourceBundle localisation, Survey survey, String filter, String tz) throws Exception {
 
 		String resp = null;
 
@@ -6001,7 +5967,7 @@ public class GeneralUtilityMethods {
 		try {
 			pstmt = cResults.prepareStatement(filterQuery.toString());
 			int idx = 1;
-			idx = GeneralUtilityMethods.setFragParams(pstmt, frag, idx);
+			idx = GeneralUtilityMethods.setFragParams(pstmt, frag, idx, tz);
 
 			resp = pstmt.toString();
 
@@ -6055,9 +6021,9 @@ public class GeneralUtilityMethods {
 	/*
 	 * Set the parameters for an array of sql fragments
 	 */
-	public static int setArrayFragParams(PreparedStatement pstmt, ArrayList<SqlFrag> rfArray, int index) throws Exception {
+	public static int setArrayFragParams(PreparedStatement pstmt, ArrayList<SqlFrag> rfArray, int index, String tz) throws Exception {
 		for(SqlFrag rf : rfArray) {
-			index = setFragParams(pstmt, rf, index);
+			index = setFragParams(pstmt, rf, index, tz);
 		}
 		return index;
 	}
@@ -6065,7 +6031,7 @@ public class GeneralUtilityMethods {
 	/*
 	 * Set the parameters for an array of sql fragments
 	 */
-	public static int setFragParams(PreparedStatement pstmt, SqlFrag frag, int index) throws Exception {
+	public static int setFragParams(PreparedStatement pstmt, SqlFrag frag, int index, String tz) throws Exception {
 		int attribIdx = index;
 		for(int i = 0; i < frag.params.size(); i++) {
 			SqlFragParam p = frag.params.get(i);
@@ -6076,7 +6042,7 @@ public class GeneralUtilityMethods {
 			} else if(p.getType().equals("double")) {
 				pstmt.setDouble(attribIdx++,  p.dValue);
 			} else if(p.getType().equals("date")) {
-				pstmt.setDate(attribIdx++,  java.sql.Date.valueOf(p.sValue));
+				pstmt.setTimestamp(attribIdx++,  startOfDay(java.sql.Date.valueOf(p.sValue), tz));
 			} else {
 				throw new Exception("Unknown parameter type: " + p.getType());
 			}
@@ -6174,6 +6140,8 @@ public class GeneralUtilityMethods {
 
 		if(in != null) {
 			String params = removeSurroundingWhiteSpace(in, '=');
+			params = params.replace('\n', ' ');	// replace new lines with spaces
+			params = params.replace('\r', ' ');	// replace carriage returns with spaces
 
 			String[] pArray = params.split(";");
 			if(pArray.length == 1) {
@@ -6772,8 +6740,9 @@ public class GeneralUtilityMethods {
 	/*
 	 * Create a temporary user
 	 */
-	public static String createTempUser(Connection sd, int oId, String email, String assignee_name, int pId, TaskFeature tf) throws Exception {
-		UserManager um = new UserManager();
+	public static String createTempUser(Connection sd, ResourceBundle localisation, int oId, String email, 
+			String assignee_name, int pId, TaskFeature tf) throws Exception {
+		UserManager um = new UserManager(localisation);
 		String tempUserId = "u" + String.valueOf(UUID.randomUUID());
 		User u = new User();
 		u.ident = tempUserId;
@@ -6866,6 +6835,33 @@ public class GeneralUtilityMethods {
 		}
 		
 		return emailTask;
+
+	}
+	
+	/*
+	 * Return true if timezone is valid
+	 */
+	public static boolean isValidTimezone(Connection sd, String tz) throws Exception {
+		
+		boolean isValid = false;
+		String sql = "select count(*) from pg_timezone_names where name = ?"; 
+		PreparedStatement pstmt = null;
+
+		try {
+			
+			pstmt = sd.prepareStatement(sql);
+			pstmt.setString(1, tz);
+		
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next()) {
+				isValid = rs.getInt(1)> 0;
+			}
+				
+		} finally {
+			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
+		}
+		
+		return isValid;
 
 	}
 	
@@ -7050,6 +7046,51 @@ public class GeneralUtilityMethods {
 		}
 		return isSet;
 	}
+	
+	public static String removeBOM(String in) {
+		
+		if (in.startsWith(UTF8_BOM)) {
+            in = in.substring(1);
+        }
+		return in;
+	}
+	
+	public static int addSqlParams(PreparedStatement pstmt, int idx, ArrayList<SqlParam> params) throws SQLException {
+		if(params != null && params.size() > 0) {
+			for(SqlParam p : params) {
+				if(p.type.equals("string")) {
+					pstmt.setString(idx++, p.vString);
+				} 
+			}
+		}
+		return idx;
+	}
+	
+	public static User getArchivedUser(Connection sd, int oId, int uId) throws SQLException {
+		
+		String sql = "select settings "
+				+ "from user_organisation uo "
+				+ "where o_id = ? "
+				+ "and u_id = ?";
+		PreparedStatement pstmt = null;
+		
+		Gson gson = new GsonBuilder().disableHtmlEscaping().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+		
+		User u = null;
+		try {
+			pstmt = sd.prepareStatement(sql);
+			pstmt.setInt(1, oId);
+			pstmt.setInt(2, uId);			
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next()) {
+				u = gson.fromJson(rs.getString(1), User.class);
+			}
+		} finally {
+			if(pstmt != null) {try{pstmt.close();} catch(Exception e) {}}
+		}
+		return u;
+	}
+	
 
 }
 

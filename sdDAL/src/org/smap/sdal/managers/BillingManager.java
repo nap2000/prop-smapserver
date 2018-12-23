@@ -4,44 +4,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.UUID;
 import java.util.logging.Logger;
 
-import javax.ws.rs.core.Request;
-
-import org.smap.sdal.Utilities.Authorise;
-import org.smap.sdal.Utilities.GeneralUtilityMethods;
-import org.smap.sdal.Utilities.SDDataSource;
-import org.smap.sdal.model.AssignFromSurvey;
+import org.smap.sdal.Utilities.ApplicationException;
 import org.smap.sdal.model.BillLineItem;
 import org.smap.sdal.model.BillingDetail;
-import org.smap.sdal.model.Form;
-import org.smap.sdal.model.KeyValue;
-import org.smap.sdal.model.KeyValueSimp;
-import org.smap.sdal.model.KeyValueTask;
-import org.smap.sdal.model.Location;
-import org.smap.sdal.model.Project;
-import org.smap.sdal.model.SqlFrag;
-import org.smap.sdal.model.Survey;
-import org.smap.sdal.model.TaskAddressSettings;
-import org.smap.sdal.model.TaskBulkAction;
-import org.smap.sdal.model.TaskFeature;
-import org.smap.sdal.model.TaskGroup;
-import org.smap.sdal.model.TaskListGeoJson;
-import org.smap.sdal.model.TaskProperties;
-import org.smap.sdal.model.User;
-import org.smap.sdal.model.UserGroup;
-
+import org.smap.sdal.model.RateDetail;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 /*****************************************************************************
@@ -128,6 +101,7 @@ public class BillingManager {
 				String name = rs.getString(3);
 				
 				BillingDetail bill = new BillingDetail();
+				bill.line = new ArrayList<BillLineItem> ();
 				bill.oId = oId;
 				bill.oName = name;
 				bill.year = year;
@@ -151,12 +125,206 @@ public class BillingManager {
 			try {if (pstmtDisk != null) {pstmtDisk.close();}} catch (SQLException e) {}		
 		}
 
-		
-		
-		
-		
 		return bills;
 		
+	}
+	
+	/*
+	 * Get the rates for the specified enterprise, organisation, year and month
+	 */
+	public RateDetail getRates(
+			Connection sd, 
+			int year,
+			int month,
+			int eId,
+			int oId) throws SQLException, ApplicationException {
+		
+		RateDetail rd = new RateDetail();
+		
+		String sql = "select rates, currency from bill_rates "
+				+ "where o_id = ? "
+				+ "and e_id = ? "
+				+ "and ts_applies_from < ? "
+				+ "order by ts_applies_from desc "
+				+ "limit 1";
+		PreparedStatement pstmt = null;
+		
+		/*
+		 * Get the last set of rates that was created prior to the end of the requested month
+		 * Set the month to the next month and get the latest rates less than that
+		 */
+		if(month >= 12) {
+			month = 1;
+			year++;
+		} else {
+			month++;
+		}
+		LocalDateTime d = LocalDateTime.of(year, month, 1, 0, 0);
+		
+		
+		try {
+			pstmt = sd.prepareStatement(sql);
+			
+			// Try with the passed organisation and enterprise
+			pstmt.setInt(1, oId);
+			pstmt.setInt(2, eId);
+			pstmt.setObject(3, d);
+			log.info("Get rates: " + pstmt.toString());
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next()) {
+				getRates(rs, rd);
+				rd.oId = oId;
+				rd.eId = eId;
+			} else {
+				// Go up one level
+				if(oId > 0) {
+					oId = 0;		// Try the enterprise level rates
+				} else if(eId > 0) {
+					eId = 0;		// Try the server level rates
+				} else {
+					throw new ApplicationException("Rates not found");
+				}
+				pstmt.setInt(1, oId);
+				pstmt.setInt(2, eId);
+				log.info("Get rates2: " + pstmt.toString());
+				rs.close();
+				rs = pstmt.executeQuery();
+				if(rs.next()) {
+					getRates(rs, rd);
+					rd.oId = oId;
+					rd.eId = eId;
+				} else {
+					// Go up a second level
+					if(eId > 0) {
+						eId = 0;		// Try the server level rates
+					} else {
+						throw new ApplicationException("Rates not found");
+					}
+					pstmt.setInt(1, oId);
+					pstmt.setInt(2, eId);
+					log.info("Get rates3: " + pstmt.toString());
+					rs.close();
+					rs = pstmt.executeQuery();
+					if(rs.next()) {
+						getRates(rs, rd);
+						rd.oId = oId;
+						rd.eId = eId;
+					} else {
+						throw new ApplicationException("Rates not found");
+					}
+				}
+			}
+		} catch (ApplicationException e) {
+			rd.oId = -1;
+			rd.eId = -1;
+			log.info("Error: rates not found");
+		} finally {
+			if(pstmt != null) {try{pstmt.close();} catch(Exception e) {}}
+		}
+		
+		if(rd.line == null) {
+			rd.line = new ArrayList<BillLineItem> ();
+		}
+		
+		return rd;
+	
+	}
+	
+	private void getRates(ResultSet rs, RateDetail rd) throws SQLException {
+		Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+		String rString = rs.getString(1);
+		if(rString != null) {					
+			rd.line = gson.fromJson(rString, new TypeToken<ArrayList<BillLineItem>>() {}.getType());
+		}
+		rd.currency = rs.getString(2);
+	}
+	
+	/*
+	 * Get the array of rates for the specified enterprise, organisation
+	 */
+	public ArrayList<RateDetail> getRatesList(
+			Connection sd, 
+			int eId,
+			int oId) throws SQLException {
+		
+		ArrayList<RateDetail> rates = new ArrayList<RateDetail> ();
+		
+		String sql = "select rates, currency from bill_rates "
+				+ "where o_id = ? "
+				+ "and e_id = ? "
+				+ "order by ts_applies_from desc ";
+		PreparedStatement pstmt = null;
+		
+		/*
+		 * Get the last set of rates that was created prior to the end of the requested month
+		 * Set the month to the next month and get the latest rates less than that
+		 */
+	
+		Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+		
+		try {
+			pstmt = sd.prepareStatement(sql);
+			pstmt.setInt(1, oId);
+			pstmt.setInt(2, eId);
+			log.info("Get rates list: " + pstmt.toString());
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				RateDetail rd = new RateDetail();
+				String rString = rs.getString(1);
+				if(rString != null) {					
+					rd.line = gson.fromJson(rString, new TypeToken<ArrayList<BillLineItem>>() {}.getType());
+				}
+				rd.oId = oId;
+				rd.eId = eId;
+				rd.currency = rs.getString(2);
+				rates.add(rd);
+			}
+		} finally {
+			if(pstmt != null) {try{pstmt.close();} catch(Exception e) {}}
+		}
+		
+		return rates;
+	
+	}
+	
+	/*
+	 * Return true if the bill is enabled for this enterprise / organisation / server
+	 */
+	public boolean isBillEnabled(
+			Connection sd, 
+			int eId,
+			int oId) throws SQLException {
+		
+		boolean enabled = true;
+		
+		String sqlServer = "select billing_enabled from server ";
+		String sqlEnterprise = "select billing_enabled from enterprise where id = ? ";
+		String sqlOrganisation = "select billing_enabled from organisation where id = ? ";
+				
+		PreparedStatement pstmt = null;
+
+		try {
+			if(oId == 0 && eId == 0) {
+				pstmt = sd.prepareStatement(sqlServer);
+			} else if(eId > 0) {
+				pstmt = sd.prepareStatement(sqlEnterprise);
+				pstmt.setInt(1, eId);
+			} else if(oId > 0) {
+				pstmt = sd.prepareStatement(sqlOrganisation);
+				pstmt.setInt(1, oId);
+			}
+		
+			log.info("Is billing enabled: " + pstmt.toString());
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				enabled = rs.getBoolean(1);
+			}
+		} finally {
+			if(pstmt != null) {try{pstmt.close();} catch(Exception e) {}}
+		}
+		
+		return enabled;
+	
 	}
 }
 

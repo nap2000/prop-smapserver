@@ -19,7 +19,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Show an entire survey in a table
  */
-var gSelectedTemplate,
+var gSelectedTemplate,          // Survey ident of the current template
 	gInstanceId;
 
 function setTableSurvey(view) {
@@ -175,6 +175,45 @@ function setTableSurvey(view) {
 		}
 	});
 	
+}
+
+function setUserTableSurvey(view) {
+
+	var $selHead = $('#p' + view.pId).find('.phead'),
+		$selMain = $('#table_panel' + view.pId),
+		$selFoot = $('#p' + view.pId).find('.pfoot'),
+		$tabSelect,
+		idx,
+		i,
+		data = view.results;
+
+	$selHead.empty();
+	$selMain.empty();
+
+
+
+	showUserTable(view);
+
+	/*
+	 * Enable the dialog to create a PDF of an instance or edit in WebForms
+	 */
+	$('#instance_functions_popup').dialog(
+		{
+			autoOpen: false, closeOnEscape:true, draggable:true, model:true,
+			show:"drop",
+			zIndex: 2000,
+			buttons: [
+				{
+					text: "Ok",
+					click: function() {
+						$(this).dialog("close");
+					}
+				}
+			]
+		}
+	);
+	$('#download_edit, #download_pdf').button();
+
 }
 
 /*
@@ -359,6 +398,30 @@ function showTable(tableIdx, view, tableItems, fId, survey_ident) {
 	}
 }
 
+function showUserTable(view) {
+
+	var elemMain = 'table_panel' + view.pId,
+		$selMain = $('#'+ elemMain),
+		tableItems = view.results[0];
+
+	$selMain.empty();
+
+	if(tableItems && tableItems.features && tableItems.features.length > 0) {
+		generateUserTable(elemMain, tableItems, view.user_ident, view.uId);
+		addRightClickToTable($selMain, view.sId, view);
+		$selMain.find('table').tablesorter();
+		addMoreLessUserButtons($selMain, view);
+	} else {
+		if(typeof tableItems.message !== "undefined" && tableItems.message.trim().length > 0) {
+			$selMain.html(tableItems.message);
+		} else if(typeof tableItems.totals !== "undefined" && tableItems.totals.total_count > 0) {
+			$selMain.html(localise.set["an_nmd"]);
+		} else {
+			$selMain.html(localise.set["an_nd"]);
+		}
+	}
+}
+
 function addMoreLessButtons($elem, tView, fId, tItems) {
 	$elem.find('.get_less').button().click(function() {
 		tView.tableCount = 1;
@@ -369,6 +432,18 @@ function addMoreLessButtons($elem, tView, fId, tItems) {
 	$elem.find('.get_more').button().click(function() {
 		tView.tableCount = 1;
 		processSurveyData(fId, tView.sId, tView, tItems.survey, true, parseInt($(this).val()));
+	});
+	$elem.find('.get_less_dis, .get_more_dis').button({ disabled: true });
+}
+
+function addMoreLessUserButtons($elem, view) {
+	$elem.find('.get_less').button().click(function() {
+		var currentStart = view.start_recs[0].pop();
+		var newStart = view.start_recs[0].pop();
+		getUserData(view, newStart);
+	});
+	$elem.find('.get_more').button().click(function() {
+		getUserData(view, parseInt($(this).val()));
 	});
 	$elem.find('.get_less_dis, .get_more_dis').button({ disabled: true });
 }
@@ -406,11 +481,7 @@ function setTableQuestion(view) {
 	} else {
 		$selHead.html(localise.set["an_nd"]);
 	}
-	
-	// Enable the export and hide the delete button
-	//$selFoot.find('.tExport').button().click(function() {
-	//	exportTable($(this), view);
-	//});
+
 	$selFoot.find('.tExport,.tExportMedia').hide();		// Export of table level data from question view no longer supported
 	$selFoot.find('.tImport').hide();
 	$selFoot.find('.tDelete').hide();
@@ -473,44 +544,6 @@ function toggleBad($elem, fId, pKey, value, sId, theView) {
  * Also add a function to toggle the "bad" status of a record
  */
 function addRightClickToTable($elem, sId, view) {
-	/*
-	$elem.find('a').off().bind("contextmenu", function(e) {
-		var $this = $(this),
-			mediaObj,
-			mediaType,
-			media = $this.attr("href"),
-			thumbnail = $this.find('img').attr("src");
-		
-		gReport = {
-			smap: {
-				sId: sId
-			},
-			url: media, 
-			title: "media", 
-			url: media,
-			thumbnail_url: thumbnail,
-			action: "new"
-		};
-		
-		if(thumbnail.indexOf("audio-icon") > -1) {
-			mediaType = "audio";
-		} else {
-			mediaObj = getMedia(media);
-			mediaType = mediaObj.type;
-			if(mediaType === "image") {
-				mediaType = "photo";		// Photo used instead of image in reports as per oembed
-			}
-		}
-		
-		gReport.type = mediaType;
-		gReport.smap.data_gen_type = mediaType;
-
-		$('#report_title').val(gReport.title);
-		$('#reportContainer').dialog("open");
-		setReport(gReport);
-		return false;
-	});
-	*/
 	
 	function toggleBadFn(survey, theView) {
 		$elem.find('.bad_r, .good_r').off().bind("contextmenu", function(e) {
@@ -544,14 +577,18 @@ function addRightClickToTable($elem, sId, view) {
 				});
 			});
 			
-			gSelectedTemplate = sId;
+			gSelectedTemplate = survey_ident;
 			gInstanceId = instanceid;
 			
 			if((isBad && isReplaced) || !globals.gIsAnalyst) {
 				$('#download_edit').button("disable");
 			} else {
 				$('#download_edit').button("enable");
-				$('#download_edit').attr("href", "/webForm/" + survey_ident + "?datakey=prikey&datakeyvalue="+pkey);
+				if(view.subject_type === "survey") {
+					$('#download_edit').attr("href", "/webForm/" + survey_ident + "?datakey=prikey&datakeyvalue=" + pkey);
+				} else if(view.subject_type === "user") {
+					$('#download_edit').attr("href", "/webForm/" + survey_ident + "?datakey=instanceid&datakeyvalue=" + instanceid);
+				}
 				$('#download_edit').click(function () {
                     $('#instance_functions_popup').dialog("close");
 				});

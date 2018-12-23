@@ -123,7 +123,9 @@ public class Survey extends Application {
 			// Get the users locale
 			Locale locale = new Locale(GeneralUtilityMethods.getUserLanguage(connectionSD, request, request.getRemoteUser()));
 			ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);
-						
+			
+			String tz = "UTC";	// Set default for timezone
+			
 			String sourceName = null;
 			String display_name = null;
 			String fileBasePath = null;		// File path excluding extensions
@@ -189,7 +191,7 @@ public class Survey extends Application {
 					try {
 						SurveyTemplate template = new SurveyTemplate(localisation);
 						template.readDatabase(sId, false);
-						GetXForm xForm = new GetXForm(localisation, request.getRemoteUser());
+						GetXForm xForm = new GetXForm(localisation, request.getRemoteUser(), tz);
 
 						boolean useNodesets = !type.equals("codebook");		// For codebooks do not create nodesets in the XML
 						String xmlForm = xForm.get(template, false, useNodesets, false, request.getRemoteUser());
@@ -301,12 +303,16 @@ public class Survey extends Application {
 		String sql = "update survey set public_link = ? where s_id = ?";
 		PreparedStatement pstmt = null;
 		try {
-			
+			// Localisation			
+			Locale locale = new Locale(GeneralUtilityMethods.getUserLanguage(sd, request, request.getRemoteUser()));
+			ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);
+						
 			int oId = GeneralUtilityMethods.getOrganisationId(sd, null, sId);
 			int pId = GeneralUtilityMethods.getProjectId(sd, sId);
 			String sIdent = GeneralUtilityMethods.getSurveyIdent(sd, sId);
 			String tempUserId = GeneralUtilityMethods.createTempUser(
 					sd,
+					localisation,
 					oId,
 					null, 
 					"", 
@@ -1052,7 +1058,7 @@ public class Survey extends Application {
 				Locale locale = new Locale(GeneralUtilityMethods.getUserLanguage(sd, request, request.getRemoteUser()));
 				ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);
 				
-				SurveyManager mgr = new SurveyManager(localisation);
+				SurveyManager mgr = new SurveyManager(localisation, "UTC");
 				
 				if(undelete) {				 
 					mgr.restore(sd, sId, request.getRemoteUser());	// Restore the survey

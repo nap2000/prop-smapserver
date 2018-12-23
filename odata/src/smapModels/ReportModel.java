@@ -2,8 +2,6 @@ package smapModels;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -17,10 +15,7 @@ import org.smap.sdal.managers.ActionManager;
 import org.smap.sdal.managers.QueryManager;
 import org.smap.sdal.model.Action;
 import org.smap.sdal.model.KeyValueSimp;
-import org.smap.sdal.model.OptionDesc;
 import org.smap.sdal.model.QueryForm;
-import org.smap.sdal.model.SqlDesc;
-import org.smap.sdal.model.TableColumn;
 import org.smap.sdal.model.User;
 
 import util.Util;
@@ -33,40 +28,47 @@ public class ReportModel {
 	Locale locale;
 	String namespace;
 	
-	public ArrayList<User> tempUsers;
 	public String user;						// User Ident
 	public String urlprefix;					// Url prefix for images
 	public String basePath;
+	public boolean odata2 = false;
 	
 	public HashMap<String, ReportDetails> reports = new HashMap<>();
 	public HashMap<FullQualifiedName, ReportDetails> fqnReports = new HashMap<>();
 	
+	/*
+	 * This model has to contain all of the possible reports that the user has access to
+	 */
 	public ReportModel(Connection sd, 
 			Connection cResults,
 			ResourceBundle localisation, 
 			Locale locale, 
 			String namespace, 
-			ArrayList<User> tempUsers,
 			String urlprefix,
-			String basePath) throws Exception {
+			String basePath,
+			String user) throws Exception {
 		
 		this.sd = sd;
 		this.cResults = cResults;
 		this.localisation = localisation;
 		this.locale = locale;
 		this.namespace = namespace;	
-		this.tempUsers = tempUsers;
 		this.urlprefix = urlprefix;
 		this.basePath = basePath;
-				
+			
+		String tz = "UTC";		// Default to UTC
+		
 		/*
 		 * Get the list of forms and surveys to be exported
 		 */
-		ActionManager am = new ActionManager();	
-		
-		for(User u : tempUsers) {
-			Action action = am.getAction(sd, u.ident);
+		ActionManager am = new ActionManager(localisation, tz);	
+		int oId = GeneralUtilityMethods.getOrganisationId(sd, user, 0);
+		ArrayList<User> reportList  = am.getTemporaryUsers(sd, oId, "report", 0, 0);		// Should only be reports the user has access to
+		for(User report : reportList) {
+			Action action = am.getAction(sd, report.ident);
+			String odataIdent = report.ident.replaceAll("-", "_");
 			if(action != null) {
+				
 				ArrayList<QueryForm> queryList = null;
 				QueryManager qm = new QueryManager();	
 				
@@ -90,6 +92,8 @@ public class ReportModel {
 						fId = Integer.parseInt(p.v);
 					} else if(p.k.equals("split_locn")) {
 						split_locn = Boolean.parseBoolean(p.v);
+					} else if(p.k.equals("odata2")) {
+						this.odata2 = true;
 					} else if(p.k.equals("merge_select_multiple")) {
 						merge_select_multiple = Boolean.parseBoolean(p.v);
 					} else if(p.k.equals("language")) {
@@ -118,12 +122,12 @@ public class ReportModel {
 				}
 				
 				queryList = qm.getFormList(sd, action.sId, fId);		// Get a form list for this survey / form combo
-
+	
 				QueryForm startingForm = qm.getQueryTree(sd, queryList);	// Convert the query list into a tree
-
+	
 				// Get the SQL for this query
 				ReportDetails rd = new ReportDetails();
-				rd.entitySetName = action.name;
+				rd.entitySetName = odataIdent;
 				rd.sqlDesc = QueryGenerator.gen(sd, 
 						cResults,
 						localisation,
@@ -149,13 +153,14 @@ public class ReportModel {
 						startingForm,
 						null,					// filter
 						meta,					// meta
-						false);
-				reports.put(action.name, rd);
+						false,
+						tz);
+				reports.put(odataIdent, rd);
 				
-				FullQualifiedName fqn = new FullQualifiedName(namespace, Util.convertFormToEntityName(action.name));
+				FullQualifiedName fqn = new FullQualifiedName(namespace, Util.convertFormToEntityName(odataIdent));
 				fqnReports.put(fqn, rd);
 			}
-		}	
+		}
 		
 	
 	}

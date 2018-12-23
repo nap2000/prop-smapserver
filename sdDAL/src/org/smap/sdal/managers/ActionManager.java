@@ -64,6 +64,17 @@ public class ActionManager {
 	public final static int PRI_MED = 2;
 	public final static int PRI_HIGH = 1;
 
+	private ResourceBundle localisation;
+	private String tz;
+	
+	public ActionManager(ResourceBundle l, String tz) {
+		localisation = l;
+		if(tz == null) {
+			tz = "UTC";
+		}
+		this.tz = tz;
+	}
+	
 	/*
 	 * Update a data record from an anonymous form
 	 */
@@ -226,7 +237,7 @@ public class ActionManager {
 		String tempUserId = null;
 		String link = null;
 
-		UserManager um = new UserManager();
+		UserManager um = new UserManager(localisation);
 		tempUserId = "u" + String.valueOf(UUID.randomUUID());
 		User u = new User();
 		u.ident = tempUserId;
@@ -379,7 +390,7 @@ public class ActionManager {
 			 * Get the data processing columns
 			 */
 			SurveyViewDefn svd = new SurveyViewDefn();
-			SurveyViewManager svm = new SurveyViewManager(localisation);
+			SurveyViewManager svm = new SurveyViewManager(localisation, tz);
 			svm.getDataProcessingConfig(sd, managedId, svd, null, oId);
 
 			Form f = GeneralUtilityMethods.getTopLevelForm(sd, sId); // Get the table name of the top level form
@@ -557,7 +568,7 @@ public class ActionManager {
 					}			
 				}
 				
-				// Filter out non matching surveys when suvey Id specified
+				// Filter out non matching surveys when survey Id specified
 				if(sId > 0 && (a == null || a.sId != sId)) {
 					continue;
 				}

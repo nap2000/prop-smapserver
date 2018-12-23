@@ -79,6 +79,7 @@ public class CsvTableManager {
 	private final String PKCOL = "_id";
 	private final String ACOL = "_action";
 	private final String TSCOL = "_changed_ts";
+	private final String SORTCOL = "sortby";
 	
 	private final int ADD_ENTRY = 1;
 	private final int UPDATE_ENTRY = 2;
@@ -182,7 +183,7 @@ public class CsvTableManager {
 			}
 				
 			// Get the column headings from the new file
-			String newLine = brNew.readLine();
+			String newLine = GeneralUtilityMethods.removeBOM(brNew.readLine());
 			String cols[] = parser.parseLine(newLine);
 			headers = new ArrayList<CsvHeader> ();
 			for(String n : cols) {
@@ -285,6 +286,7 @@ public class CsvTableManager {
 			/*
 			 * 3. Upload the data
 			 */
+			delta = false;			// XXXX temporarily disable delta's they are not used yet and there is a risk that they could go wrong
 			if(delta) {
 				remove(listDel);
 				insert(listAdd);
@@ -520,7 +522,7 @@ public class CsvTableManager {
 		PreparedStatement pstmt = null;
 		try {
 			String cValue = GeneralUtilityMethods.cleanNameNoRand(ovalue);
-			StringBuffer sql = new StringBuffer("select distinct ");
+			StringBuffer sql = new StringBuffer("select ");
 			sql.append(cValue);
 			for(LanguageItem item : items) {
 				if(item.text.contains(",")) {
@@ -533,8 +535,11 @@ public class CsvTableManager {
 				}
 			}
 			sql.append(" from ").append(table);
+			sql.append(" where ");
+			// Eliminate deleted entries
+			sql.append("not _action=").append(DELETE_ENTRY);
 			if(matches != null && matches.size() > 0) {
-				sql.append(" where ").append(cValue).append(" in (");
+				sql.append(" and ").append(cValue).append(" in (");
 				int idx = 0;
 				for(int i = 0; i < matches.size(); i++) {
 					if(idx++ > 0) {
@@ -543,7 +548,14 @@ public class CsvTableManager {
 					sql.append("?");
 				}
 				sql.append(")");
-			}			
+			}
+			
+			if(GeneralUtilityMethods.hasColumn(sd, "csv" + tableId, SORTCOL)) {
+				sql.append(" order by ").append(SORTCOL).append(" asc");
+			} else {
+				sql.append(" order by ").append(PKCOL).append(" asc");
+			}
+			
 			pstmt = sd.prepareStatement(sql.toString());		
 			if(matches != null && matches.size() > 0) {
 				int idx = 1;
@@ -553,32 +565,36 @@ public class CsvTableManager {
 			}
 			log.info("Get CSV values: " + pstmt.toString());
 			ResultSet rsx = pstmt.executeQuery();
+			HashMap<String, String> choicesLoaded = new HashMap<String, String> ();
 			
 			while(rsx.next()) {
 				int idx = 1;
 				Option o = new Option();
 				o.value = rsx.getString(idx++);
-				o.labels = new ArrayList<Label> ();
-				o.externalLabel = items;
-				o.externalFile = true;
-				for(LanguageItem item : items) {
-					Label l = new Label();
-					if(item.text.contains(",")) {
-						String[] comp = item.text.split(",");
-						l.text = "";
-						for(int i = 0; i < comp.length; i++) {
-							if(i > 0) {
-								l.text += ", ";
+				if(choicesLoaded.get(o.value) == null) {
+					o.labels = new ArrayList<Label> ();
+					o.externalLabel = items;
+					o.externalFile = true;
+					for(LanguageItem item : items) {
+						Label l = new Label();
+						if(item.text.contains(",")) {
+							String[] comp = item.text.split(",");
+							l.text = "";
+							for(int i = 0; i < comp.length; i++) {
+								if(i > 0) {
+									l.text += ", ";
+								}
+								l.text += rsx.getString(idx++);
 							}
-							l.text += rsx.getString(idx++);
+						} else {
+							l.text = rsx.getString(idx++);
 						}
-					} else {
-						l.text = rsx.getString(idx++);
+						o.labels.add(l);
+										
 					}
-					
-					o.labels.add(l);
+					choices.add(o);
+					choicesLoaded.put(o.value, "x");
 				}
-				choices.add(o);
 			}	
 		} catch (Exception e) {
 			log.log(Level.SEVERE, e.getMessage(), e);
@@ -875,6 +891,7 @@ public class CsvTableManager {
 					pstmt.setString(i + 1, data[i]);
 				}
 				pstmt.executeUpdate();
+				log.info("Insert csv values: " + pstmt.toString());
 			}
 			
 		} finally {
@@ -910,11 +927,11 @@ public class CsvTableManager {
 		try {
 			pstmt = sd.prepareStatement(sql.toString());
 			for(String r : records) {
-				System.out.println("Remove record: " + r);
 				String[] data = parser.parseLine(r);
 				for(int i = 0; i < data.length; i++) {
 					pstmt.setString(i + 1, data[i]);
 				}
+				log.info("Remove record: " + pstmt.toString());
 				pstmt.executeUpdate();
 			}
 			

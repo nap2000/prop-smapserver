@@ -48,8 +48,10 @@ define({
     "m_info": "Info",
     "m_os": "Oversight",
     "m_billing": "Billing",
+    "m_rates": "Rates",
     "m_billing_server": "Server Billing",
     "m_billing_orgs": "Organisations Billing",
+    "m_bill_level": "Bill Level",
 
     // Smap Server
     "ss_welcome": "Welcome to Smap Server Version:",
@@ -88,6 +90,7 @@ define({
     "c_orientation": "Orientation",
     "c_password": "Password",
     "c_c_p": "Confirm Password",
+    "c_c_d": "Confirm Delete",
     "c_r_p": "Reset Password",
     "c_en": "Enable",
     "c_loc_f": "Local Form:",
@@ -221,6 +224,7 @@ define({
     "c_trans": "Translate",
     "c_org": "Organisation",
     "c_orgs": "Organisations",
+    "c_ent": "Enterprise",
     "c_all_s": "All Surveys",
     "c_all": "All",
     "c_event": "Event",
@@ -282,6 +286,8 @@ define({
     "c_subscribe": "Subscribe",
     "c_unsent": "Email not sent",
     "c_pending": "Pending",
+    "c_ok": "OK",
+    "c_move": "Move",
 
     // File Types
     "ft": "File Type",
@@ -319,6 +325,7 @@ define({
     "a_exp_leg2": "Output format:",
     "a_exp_notes": "Export notes:",
     "a_exp_meta": "Include Meta Data:",
+    "a_exp_odata2": "Restrict Odata types to those supported by OData 2:",
     "a_exp_split": "Split lat / lon:",
     "a_exp_merge": "Compress select multiples:",
     "a_sel_ways": "Select ways (if any):",
@@ -351,7 +358,31 @@ define({
     "a_ni": "You need to enable loading tasks for this form in the form settings in the editor page",
     "a_nx": "New XLSX",
     "a_lx": "Legacy XLSX",
-    "a_lh": "Legacy HTML",
+	"a_lh": "Legacy XLS / HTML",
+	"a_ua": "User Activity",
+    "a_tc": "This Chart",
+
+    "a_dd_sl": "Shows the results",
+    "a_dd_ocha_map": "Shows the location of responses to %s1 in the question '%s2' in survey '%s3'.",
+	"a_dd_percent_map": "Shows the percentage of responses that selected %s1 in the question '%s2' in survey '%s3'.",
+	"a_dd_average_map": "Shows the average of responses to %s1 in the question '%s2' in survey '%s3'.",
+	"a_dd_count_map": "Shows the count of responses to %s1 in the question '%s2' in survey '%s3'.",
+	"a_dd_total_map": "Shows the total of responses to %s1 in the question '%s2' in survey '%s3'.",
+	"a_dd_none_map": "Shows the responses to %s1 in the question '%s2' in survey '%s3'.",
+	"a_dd_ocha_table": "Shows the location of responses to each choice in the question '%s2' in survey '%s3'.",
+	"a_dd_percent_table": "Shows the percentage of responses that selected each choice in the question '%s2' in survey '%s3'.",
+	"a_dd_average_table": "Shows the average of responses to each choice in the question '%s2' in survey '%s3'.",
+	"a_dd_count_table": "Shows the count of responses to each choice in the question '%s2' in survey '%s3'.",
+	"a_dd_total_table": "Shows the total of responses to each choice in the question '%s2' in survey '%s3'.",
+	"a_dd_none_table": "Shows the responses to each choice in the question '%s2' in survey '%s3'.",
+
+    "a_dd_units": "(units are %s1)",
+
+    "a_dd_group": "Grouped by the responses to the question '%s1'.",
+	"a_dd_group_interval": "Grouped by the responses to the question '%s1' and by '%s2'.",
+	"a_dd_interval": "Grouped by '%s1'",
+
+    "a_dd_where": "<b>Where %s1 equals %s2</b>",
 
 
     // Messages
@@ -400,6 +431,8 @@ define({
     "msg_err_cert": "Remote server does not have a signed certificate, try using http:// instead of https://",
     "msg_no_edit_rep": "You cannot edit a record that has been replaced by another record",
     "msg_confirm_del": "Are you sure you want to delete",
+	"msg_confirm_del_one": "Delete %s1 only from %s2",
+	"msg_confirm_del_all": "Delete %s1 from all organisations: %s2",
     "msg_confirm_tasks": "this group and all of its tasks?",
     "msg_del_r": "Are you sure you want to delete these regions?",
     "msg_erase": "Are you sure you want to permanently erase these surveys and all of their data?",
@@ -415,6 +448,7 @@ define({
     "msg_del_projects": "Are you sure you want to delete these projects?",
     "msg_del_roles": "Are you sure you want to delete these roles?",
     "msg_del_orgs": "Are you sure you want to delete these organisations?",
+	"msg_del_ents": "Are you sure you want to delete these enterprises?",
     "msg_del_q": "Are you sure you want to delete this question?",
     "msg_del_cl": "Are you sure you want to delete this choice list?",
     "msg_del_c": "Are you sure you want to delete this choice?",
@@ -468,6 +502,10 @@ define({
     "msg_s2": "Subscribed sucessfully",
     "msg_s3": "Enter your email address to subscribe to emails",
     "msg_pd_key": "Specify a data key ",
+    "msg_one_role": "At least one role must be selected",
+    "msg_dup_name": "Duplicate name",
+    "msg_prev_select": "There are no previous select questions to get values from. You may want to set a custom filter",
+    "msg_no_proj": "The user has no projects",
 
     // Editor
     "e_b_e": "Base on existing form",
@@ -720,6 +758,7 @@ define({
     "ed_c_add_q": "Added question %s1 with type %s2",
     "ed_c_add_o": "Added choice %s1 to choice list: %s2",
     "ed_c_settings": "Settings changed",
+    "ed_mmf": "Manage Media Files For this Form",
 
 
     // Managed Forms
@@ -749,13 +788,17 @@ define({
     "u_show_u": "Show users with security group",
     "u_show_p": "Show users in project",
     "u_show_r": "Show users with role",
+	"u_show_o": "Show users with organisation",
     "u_add": "Add User",
     "u_del": "Delete User",
     "u_mv": "Move To Organisation",
+	"u_mv_ent": "Move To Enterprise",
     "u_add_p": "Add Project",
     "u_del_p": "Delete Project",
     "u_add_o": "Add Organisation",
     "u_del_o": "Delete Organisation",
+	"u_add_e": "Add Enterprise",
+	"u_del_e": "Delete Enterprise",
     "u_add_r": "Add Role",
     "u_edit_r": "Edit Role",
     "u_del_r": "Delete Role",
@@ -770,6 +813,12 @@ define({
     "u_det_o_rep": "Report Publishing Options",
     "u_det_o_ft": "FieldTask Options",
     "u_ft_del": "Delete submitted results from the phone",
+    "u_ft_img_size": "Maximum pixels of the long edge of an image",
+    "u_ft_img_camera": "Original size from camera",
+    "u_ft_vs": "Very small (640px)",
+    "u_ft_s": "Small (1024px)",
+    "u_ft_m": "Medium (2048px)",
+    "u_ft_l": "Large (3072px)",
     "u_ft_ld": "Send location data on path of user",
     "u_ft_os": "Enable ODK style menus to delete, submit, edit and get new forms",
     "u_ft_am": "Enable ODK Admin menu",
@@ -790,14 +839,28 @@ define({
     "u_smtp": "Smtp Host",
     "u_e_dom": "Email Domain",
     "u_e_nm": "Email user name",
+    "u_e_si": "Server Identifier",
     "u_e_p": "Email password",
     "u_e_port": "Email Server port",
     "u_h_e": "Email to get Help",
     "u_rap": "Restrict access",
     "u_rap_d": "Administrators will be able to assign the selected users only to this project",
     "u_chg": "Changed by",
-    "u_usage": "Usage Report",
+	"u_usage": "Usage Report",
+	"u_access": "Form Access Report",
     "u_sms_url": "SMS Url",
+    "u_sens_data": "Sensitive Data",
+    "u_sens_ao": "Admin Only",
+    "u_sens_sq": "Signature Questions",
+    "u_sens_nr": "No restrictions",
+    "u_org_admin": "Organisation Administrator",
+    "u_ent_admin": "Enterprise Administator",
+    "u_server_owner": "Server Owner",
+	"u_check_mv_p": "Are you sure you want to move the following projects (%s1) to %s2",
+	"u_check_mv_o": "Are you sure you want to move organisation \"%s1\" to enterprise \"%s2\"",
+    "u_only_one_ent": "Only one enterprise has been created.  You need to create another one to move an organisation there",
+    "u_co": "Current Organisation",
+    "u_gr": "Get report",
 
     // Browse Results
     "br_ci": "Case Insensitive",
@@ -927,7 +990,18 @@ define({
     "disk": "Disk",
     "static map": "Static Map",
     "rekognition": "AWS Rekognition",
-    "org_bill_rpt": "Organisation Usage Report"
+	"static_map": "Mapbox Static Map",
+	"monthly": "Monthly Charge",
+    "org_bill_rpt": "Organisation Usage Report",
+    "bill_enable": "Enable Billing",
+    "bill_from": "Applies From",
+    "bill_chg_date": "Date Changed",
+    "bill_norates": "No rates have been set for this %s1. If billing is enabled then the rates for the %s2 will be used",
+	"billing_disabled_msg": "Billing has been disabled",
+
+	// Reports
+	"rep_usage_project": "Usage by project",
+	"rep_usage_survey": "Usage by survey"
 
 
 });

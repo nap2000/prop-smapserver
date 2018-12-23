@@ -76,7 +76,7 @@ public class GetHtml {
 		String basePath = GeneralUtilityMethods.getBasePath(request);
 		Connection sd = SDDataSource.getConnection(connectionString);
 		Connection cResults = ResultsDataSource.getConnection(connectionString);
-		SurveyManager sm = new SurveyManager(localisation);
+		SurveyManager sm = new SurveyManager(localisation, "UTC");
 
 		try {
 
@@ -1312,7 +1312,7 @@ public class GetHtml {
 	}
 
 	/*
-	 * Convert Makdown as per support in Enketo
+	 * Convert Markdown as per support in Enketo
 	 *  Supported
 	 *     links:  [xxx](url)
 	 *     strong: __, ** 

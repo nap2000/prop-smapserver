@@ -33,7 +33,8 @@ define(['jquery', 'jquery_ui', 'localise', 'common', 'globals'], function($, ui,
 	gTextId;			// The id of the selected text question	
 
 $(document).ready(function() {
-	
+
+	setupUserProfile();
 	localise.setlang();		// Localise HTML
 	
 	 /*

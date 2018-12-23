@@ -100,7 +100,7 @@ public class ExternalFileManager {
 	 * Create a linked file
 	 */
 	public boolean createLinkedFile(Connection sd, Connection cRel, int sId, // The survey that contains the manifest item
-			String filename, String filepath, String userName) throws Exception {
+			String filename, String filepath, String userName, String tz) throws Exception {
 
 		ResultSet rs = null;
 		boolean linked_s_pd = false;
@@ -162,7 +162,7 @@ public class ExternalFileManager {
 							if (pulldataIdent.equals("self")) {
 								pulldataIdent = sIdent;
 							}
-							log.info("PulldataIdent: " + pulldataIdent);
+							log.info("PulldataIdent:" + pulldataIdent + ", sIdent:" + sIdent + ":");
 	
 							if (pulldataIdent.equals(sIdent)) {
 								data_key = pdArray.get(i).data_key;
@@ -247,7 +247,7 @@ public class ExternalFileManager {
 				pstmtData = cRel.prepareStatement(sqlDef.sql);
 				int paramCount = 1;
 				if (sqlDef.hasRbacFilter) {
-					paramCount = GeneralUtilityMethods.setArrayFragParams(pstmtData, sqlDef.rfArray, paramCount);
+					paramCount = GeneralUtilityMethods.setArrayFragParams(pstmtData, sqlDef.rfArray, paramCount, tz);
 				}
 
 				// 6. Create the file
@@ -285,7 +285,10 @@ public class ExternalFileManager {
 					String dkv = null;
 					while (rs.next()) {
 						dkv = rs.getString("_data_key");
-						if (dkv != null && !dkv.equals(currentDkv)) {
+						if(dkv == null) {
+							continue;	// Ignore null keys
+						}
+						if (!dkv.equals(currentDkv)) {
 							// A new data key
 							writeRecords(non_unique_key, nonUniqueRecords, bw, currentDkv);
 							nonUniqueRecords = new ArrayList<StringBuilder>();
@@ -469,12 +472,15 @@ public class ExternalFileManager {
 		boolean regenerate = false;
 		boolean tableExists = true;
 
-		String sql = "select count (*) from linked_forms " + "where linked_s_id = ? " + "and linker_s_id = ? "
+		String sql = "select count (*) from linked_forms " 
+				+ "where linked_s_id = ? " 
+				+ "and linker_s_id = ? "
 				+ "and link_file = ? ";
 		PreparedStatement pstmt = null;
 
 		String sqlInsert = "insert into linked_forms "
-				+ "(Linked_s_id, linker_s_id, link_file, user_ident, download_time) " + "values(?, ?, ?, ?, now())";
+				+ "(Linked_s_id, linker_s_id, link_file, user_ident, download_time) " 
+				+ "values(?, ?, ?, ?, now())";
 		PreparedStatement pstmtInsert = null;
 
 		try {
@@ -518,19 +524,8 @@ public class ExternalFileManager {
 
 			}
 		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (Exception e) {
-				}
-			}
-			;
-			if (pstmtInsert != null) {
-				try {
-					pstmtInsert.close();
-				} catch (Exception e) {
-				}
-			}
+			if (pstmt != null) {	try {pstmt.close();} catch (Exception e) {}}
+			if (pstmtInsert != null) {try {pstmtInsert.close();} catch (Exception e) {}}
 		}
 
 		if (tableExists && !fileExists) {

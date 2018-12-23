@@ -33,6 +33,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
             $('#email_question_cont').prop('title', localise.set['n_eqc']);
             $('#email_subject_cont').prop('placeholder', localise.set['n_esc']);
 
+	        setupUserProfile();
             localise.setlang();		// Localise HTML
 
             // Get Notification Types for this server
@@ -95,6 +96,11 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 $('#addNotificationPopup').modal("show");
             });
 
+	        // Set focus on notification name when edit notification is opened
+	        $('#addNotificationPopup').on('shown.bs.modal', function () {
+		        $('#name').focus();
+	        });
+
             // Add response to a source survey being selected
             $('#survey').change(function() {
                 surveyChanged();
@@ -103,7 +109,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
             enableUserProfileBS();
         });
 
-        function surveyChanged(qId, metaItem) {
+        function surveyChanged(qName, metaItem) {
 
             var language = "none",
                 sId = $('#survey').val(),
@@ -111,17 +117,18 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 metaList;
 
             if(sId) {
-                if(!qId) {
-                    qId = "-1";
+                if(!qName) {
+                    qName = "-1";
                 }
 
                 qList = globals.gSelector.getSurveyQuestions(sId, language);
                 metaList = globals.gSelector.getSurveyMeta(sId);
 
                 if(!qList) {
-                    getQuestionList(sId, language, qId, "-1", undefined, false, undefined);
+                    getQuestionList(sId, language, 0, "-1", undefined, false,
+                        undefined, qName);
                 } else {
-                    setSurveyViewQuestions(qList, qId);
+                    setSurveyViewQuestions(qList, undefined, undefined, undefined, qName );
                 }
 
                 if(!metaList) {
@@ -175,6 +182,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 notification.s_id = $('#survey').val();
                 notification.enabled = $('#nt_enabled').is(':checked');
                 notification.filter = $('#not_filter').val();
+	            notification.name = $('#name').val();
 
                 if(gSelectedNotification !== -1) {
                     notification.id = gSelectedNotification;
@@ -221,7 +229,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
 
             var notification = {};
             var emails = $('#notify_emails').val();
-            var emailQuestion = $('#email_question').val();
+            var emailQuestionName = $('#email_question').val();
             var emailMetaItem = $('#email_meta').val();
             var emailArray;
             var i;
@@ -229,7 +237,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
             // validate
             // Must specifify an email
             notification.error = false;
-            if((!emails || emails.trim().length == 0) && (!emailQuestion || emailQuestion == "-1")
+            if((!emails || emails.trim().length == 0) && (!emailQuestionName || emailQuestionName == "-1")
                     && (!emailMetaItem || emailMetaItem == "-1")) {
                 notification.error = true;
                 notification.errorMsg = localise.set["msg_inv_email"];
@@ -251,7 +259,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 notification.target = "email";
                 notification.notifyDetails = {};
                 notification.notifyDetails.emails = emailArray;
-                notification.notifyDetails.emailQuestion = emailQuestion;
+                notification.notifyDetails.emailQuestionName = emailQuestionName;
                 notification.notifyDetails.emailMeta = emailMetaItem;
                 notification.notifyDetails.subject = $('#email_subject').val();
                 notification.notifyDetails.content = $('#email_content').val();
@@ -271,7 +279,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
             notification.target = "sms";
             notification.notifyDetails = {};
             notification.notifyDetails.emails = $('#notify_sms').val().split(",");
-            notification.notifyDetails.emailQuestion = $('#sms_question').val();
+            notification.notifyDetails.emailQuestionName = $('#sms_question').val();
             notification.notifyDetails.content = $('#sms_content').val();
             notification.notifyDetails.attach = $('#sms_attach').val();
 
@@ -351,19 +359,21 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 title = localise.set["msg_add_notification"];
 
             document.getElementById("notification_edit_form").reset();
+	        setTargetDependencies("email");
 
             if(typeof idx !== "undefined") {
                 notification = gNotifications[idx];
 
                 title = localise.set["msg_edit_notification"];
 				$('#target').val(notification.target);
+				$('#name').val(notification.name);
                 setTargetDependencies(notification.target)
 
                 $('#survey').val(notification.s_id);
                 $('#not_filter').val(notification.filter);
                 if(notification.notifyDetails && notification.notifyDetails.emails) {
-                    if(notification.notifyDetails.emailQuestion || notification.notifyDetails.emailMeta) {
-                        surveyChanged(notification.notifyDetails.emailQuestion, notification.notifyDetails.emailMeta);
+                    if(notification.notifyDetails.emailQuestionName || notification.notifyDetails.emailMeta) {
+                        surveyChanged(notification.notifyDetails.emailQuestionName, notification.notifyDetails.emailMeta);
                     }
 
                     if(notification.target == "email") {
@@ -518,8 +528,6 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
 
         }
 
-
-
 		/*
 		 * Get available surveys from a remote host
 		 */
@@ -619,6 +627,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
             h[++idx] = '<table class="table">';
             h[++idx] = '<thead>';
             h[++idx] = '<tr>';
+	        h[++idx] = '<th>' + localise.set["c_name"], + '</th>';
             h[++idx] = '<th>' + localise.set["c_survey"], + '</th>';
             h[++idx] = '<th>' + localise.set["c_target"] + '</th>';
             h[++idx] = '<th>' + localise.set["c_details"] + '</th>';
@@ -634,6 +643,11 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                     h[++idx] = ' class="disabled"';
                 }
                 h[++idx] = '>';
+
+                // name
+	            h[++idx] = '<td>';
+	            h[++idx] = data[i].name;
+	            h[++idx] = '</td>';
 
                 // survey
                 h[++idx] = '<td>';
@@ -653,11 +667,11 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 if(data[i].target === "email" && data[i].notifyDetails) {
                     var notifyEmail = false;
                     if((data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0)
-                            || (data[i].notifyDetails.emailQuestion && data[i].notifyDetails.emailQuestion > 0)
+                            || (data[i].notifyDetails.emailQuestionName && data[i].notifyDetails.emailQuestionName != "-1")
                             || (data[i].notifyDetails.emailMeta && data[i].notifyDetails.emailMeta.length > 0)) {
 
                         h[++idx] = data[i].notifyDetails.emails.join(",");
-                        if(data[i].notifyDetails.emailQuestion && data[i].notifyDetails.emailQuestion > 0) {
+                        if(data[i].notifyDetails.emailQuestionName && data[i].notifyDetails.emailQuestionName != "-1") {
                             notifyEmail = true;
                             if(data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0) {
                                 h[++idx] = ', '
@@ -679,11 +693,12 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                     h[++idx] = ':';
                     h[++idx] = data[i].remote_s_name;
                 } else if(data[i].target === "sms" && data[i].notifyDetails) {
-                    if((data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0) || (data[i].notifyDetails.emailQuestion && data[i].notifyDetails.emailQuestion > 0)) {
+                    if((data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0) ||
+                            (data[i].notifyDetails.emailQuestionName && data[i].notifyDetails.emailQuestionName != "-1")) {
                         h[++idx] = localise.set["msg_sms_n1"];
                         h[++idx] = ' ';
                         h[++idx] = data[i].notifyDetails.emails.join(",");
-                        if(data[i].notifyDetails.emailQuestion && data[i].notifyDetails.emailQuestion > 0) {
+                        if(data[i].notifyDetails.emailQuestionName && data[i].notifyDetails.emailQuestionName != "-1") {
                             if(data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0) {
                                 h[++idx] = ', '
                             }

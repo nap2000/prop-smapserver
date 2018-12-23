@@ -50,12 +50,14 @@ import org.smap.notifications.interfaces.ImageProcessing;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
 import org.smap.sdal.Utilities.UtilityMethodsEmail;
 import org.smap.sdal.constants.SmapServerMeta;
+import org.smap.sdal.managers.ForeignKeyManager;
 import org.smap.sdal.managers.LogManager;
 import org.smap.sdal.managers.MessagingManager;
 import org.smap.sdal.managers.NotificationManager;
 import org.smap.sdal.managers.TaskManager;
 import org.smap.sdal.model.Audit;
 import org.smap.sdal.model.AutoUpdate;
+import org.smap.sdal.model.ForeignKey;
 import org.smap.sdal.model.Survey;
 import org.smap.server.entities.Form;
 import org.smap.server.entities.SubscriberEvent;
@@ -119,6 +121,7 @@ public class SubRelationalDB extends Subscriber {
 			String surveyNotes, String locationTrigger, String auditFilePath, ResourceBundle l, Survey survey)  {
 
 		localisation = l;
+		tz = "UTC";			// Default default time zone
 		gBasePath = basePath;
 		gFilePath = filePath;
 		gAuditFilePath = auditFilePath;
@@ -161,7 +164,6 @@ public class SubRelationalDB extends Subscriber {
 			Class.forName(dbClassMeta);		 
 			sd = DriverManager.getConnection(databaseMeta, userMeta, passwordMeta);
 			cResults = DriverManager.getConnection(database, user, password);
-			//Authorise a = new Authorise(null, Authorise.ENUM);
 			
 			this.survey = survey;
 
@@ -170,7 +172,14 @@ public class SubRelationalDB extends Subscriber {
 			writeAllTableContent(sd, cResults, instance, remoteUser, server, device, 
 					formStatus, updateId, uploadTime, surveyNotes, 
 					locationTrigger, assignmentId);
+			
 
+			/*
+			 * Apply foreign keys
+			 */
+			ForeignKeyManager fkm = new ForeignKeyManager();
+			fkm.apply(sd, cResults);
+			
 			applyNotifications(sd, cResults, ue_id, remoteUser, server, survey.id, survey.exclude_empty);
 			
 			if(assignmentId > 0) {
@@ -182,7 +191,7 @@ public class SubRelationalDB extends Subscriber {
 			}
 			se.setStatus("success");			
 
-		} catch (SQLInsertException e) {
+		} catch (SQLInsertException e) {  
 
 			se.setStatus("error");
 			se.setReason(e.getMessage());
@@ -191,7 +200,6 @@ public class SubRelationalDB extends Subscriber {
 			e.printStackTrace();
 			se.setStatus("error");
 			se.setReason("Configuration File:" + e.getMessage());
-			return;
 			
 		} finally {
 			try {
@@ -215,7 +223,7 @@ public class SubRelationalDB extends Subscriber {
 
 		return;
 	}
-
+	
 	/*
 	 * Apply any changes to assignment status
 	 */
@@ -372,7 +380,7 @@ public class SubRelationalDB extends Subscriber {
 						excludeEmpty);	
 
 				// Apply Tasks
-				TaskManager tm = new TaskManager(localisation);
+				TaskManager tm = new TaskManager(localisation, tz);
 				tm.updateTasksForSubmission(
 						sd,
 						cResults,
@@ -515,6 +523,7 @@ public class SubRelationalDB extends Subscriber {
 		PreparedStatement pstmtHrk = null;
 		PreparedStatement pstmtAddHrk = null;
 		boolean resAutoCommitSetFalse = false;
+		ArrayList<ForeignKey> foreignKeys = new ArrayList<> ();
 
 		try {
 
@@ -530,6 +539,7 @@ public class SubRelationalDB extends Subscriber {
 				String msg = "Error: Top element name " + topElement.getName() + " in survey did not match a form in the template";
 				throw new Exception(msg);
 			}
+			
 			String hrk = GeneralUtilityMethods.getHrk(sd, sId);
 			boolean hasHrk = (hrk != null);
 			Keys keys = writeTableContent(
@@ -549,7 +559,8 @@ public class SubRelationalDB extends Subscriber {
 					sId,
 					uploadTime,
 					"/main",
-					assignmentId);
+					assignmentId,
+					foreignKeys);
 
 			/*
 			 * Update existing records
@@ -564,6 +575,7 @@ public class SubRelationalDB extends Subscriber {
 				 *  In these cases the key policy will be applied 
 				 */
 
+				log.info("################### Processing straight replacement:" + keyPolicy + ": " + assignmentId );
 				if((keyPolicy == null || keyPolicy.equals("none")) && assignmentId == 0) {
 					if(updateId != null) {
 						log.info("Existing unique id:" + updateId);
@@ -610,6 +622,7 @@ public class SubRelationalDB extends Subscriber {
 			/*
 			 * Apply the key policy
 			 */
+			log.info("################### Processing key policy:" + keyPolicy + ": " + hasHrk + " : " + assignmentId );
 			if(hasHrk && existingKey == 0 && keyPolicy != null && !keyPolicy.equals("none")) {
 				if(keyPolicy.equals("add")) {
 					log.info("Apply add policy - no action");
@@ -622,7 +635,7 @@ public class SubRelationalDB extends Subscriber {
 				}
 			} else if(assignmentId > 0) {
 				// Apply a default key policy of merge
-				log.info("Apply default merge policy to an assignment");
+				log.info("######## Apply default merge policy to an assignment: " + assignmentId);
 				if(updateId != null) {
 					log.info("Existing unique id:" + updateId);
 					existingKey = getKeyFromId(cResults, topElement, updateId);
@@ -636,6 +649,14 @@ public class SubRelationalDB extends Subscriber {
 				}
 			}
 
+			/*
+			 * Record any foreign keys that need to be set between forms
+			 */
+			if(foreignKeys.size() > 0) {
+				ForeignKeyManager fkm = new ForeignKeyManager();
+				fkm.saveKeys(sd, updateId, foreignKeys, sId); 
+			}
+			
 			cResults.commit();
 
 			/*
@@ -698,7 +719,8 @@ public class SubRelationalDB extends Subscriber {
 			int sId,
 			Date uploadTime,
 			String auditPath,
-			int assignmentId) throws SQLException, Exception {
+			int assignmentId,
+			ArrayList<ForeignKey> foreignKeys) throws SQLException, Exception {
 
 		Keys keys = new Keys();
 		PreparedStatement pstmt = null;
@@ -724,7 +746,7 @@ public class SubRelationalDB extends Subscriber {
 				 * if they do not already exist 2) Check if this survey is a duplicate
 				 */
 				keys.duplicateKeys = new ArrayList<Integer>();
-				TableManager tm = new TableManager(localisation);
+				TableManager tm = new TableManager(localisation, tz);
 				if (parent_key == 0) { // top level survey has a parent key of 0
 					
 					// Create new tables
@@ -831,8 +853,8 @@ public class SubRelationalDB extends Subscriber {
 					if (hasAudit) {
 						sql += ", ?";
 					}
-
-					sql += addSqlValues(columns, sIdent, device, server, false, hasAltitude);
+					ArrayList<ForeignKey> thisTableKeys = new ArrayList<> ();
+					sql += addSqlValues(columns, sIdent, device, server, false, hasAltitude, thisTableKeys);
 					sql += ");";
 
 					pstmt = cResults.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -853,6 +875,7 @@ public class SubRelationalDB extends Subscriber {
 							pstmt.setString(stmtIndex++, locationTrigger);
 						}
 						if (hasScheduledStart) {
+							log.info("### Table has scheduled start.  Assignment id is: " + assignmentId);
 							if(assignmentId == 0) {
 								pstmt.setTimestamp(stmtIndex++, null);
 							} else {
@@ -888,6 +911,12 @@ public class SubRelationalDB extends Subscriber {
 						parent_key = rs.getInt(1);
 						keys.newKey = parent_key;
 					}
+					// Add primary key and table name to the foreign keys for this table
+					for(ForeignKey fk : thisTableKeys) {
+						fk.primaryKey = parent_key;
+						fk.tableName = tableName;
+					}
+					foreignKeys.addAll(thisTableKeys);
 				}
 			}
 
@@ -903,7 +932,8 @@ public class SubRelationalDB extends Subscriber {
 					
 					writeTableContent(child, parent_key, sIdent, remoteUser, server, device, uuid, formStatus, version,
 							surveyNotes, locationTrigger, cResults, sd, sId, uploadTime,
-							auditPath + "/" + child.getName() + "[" + recCounter + "]", assignmentId);
+							auditPath + "/" + child.getName() + "[" + recCounter + "]", assignmentId,
+							foreignKeys);
 					recCounter++;
 				}
 			}
@@ -1140,7 +1170,7 @@ public class SubRelationalDB extends Subscriber {
 
 			if(sourceKey > 0) {
 				UtilityMethodsEmail.markRecord(cResults, sd, localisation, table, 
-						true, "Merged with " + prikey, sourceKey, sId, f_id, true, false, user, true);
+						true, "Merged with " + prikey, sourceKey, sId, f_id, true, false, user, true, tz);
 			}
 
 		} finally {
@@ -1342,7 +1372,7 @@ public class SubRelationalDB extends Subscriber {
 					
 					// Mark the record being replaced as bad
 					org.smap.sdal.Utilities.UtilityMethodsEmail.markRecord(cRel, cMeta, localisation, tableName, 
-							true, bad_reason, existingKey, sId, f_id, true, false, user, true);
+							true, bad_reason, existingKey, sId, f_id, true, false, user, true, tz);
 					
 					// Set the hrk of the new record to the hrk of the old record
 					// This can only be done for one old record, possibly there is never more than 1
@@ -1369,7 +1399,7 @@ public class SubRelationalDB extends Subscriber {
 					if(!replacedRecordsAreGood) {
 						bad_reason = localisation.getString("t_rep_bad") + previousKeys;
 						org.smap.sdal.Utilities.UtilityMethodsEmail.markRecord(cRel, cMeta, localisation, tableName, 
-								true, bad_reason, (int) newKey, sId, f_id, true, false, user, true);
+								true, bad_reason, (int) newKey, sId, f_id, true, false, user, true, tz);
 					}
 				}		
 			
@@ -1480,7 +1510,12 @@ public class SubRelationalDB extends Subscriber {
 		return sql;
 	}
 
-	String addSqlValues(List<IE> columns, String sName, String device, String server, boolean phoneOnly, boolean hasAltitude) {
+	String addSqlValues(List<IE> columns, String sName, String device, 
+			String server, 
+			boolean phoneOnly, 
+			boolean hasAltitude,
+			ArrayList<ForeignKey> foreignKeys) {
+		
 		String sql = "";
 		for(IE col : columns) {
 			boolean colPhoneOnly = phoneOnly || col.isPhoneOnly();	// Set phone only if the group is phone only or just this column
@@ -1498,10 +1533,18 @@ public class SubRelationalDB extends Subscriber {
 				}
 			} else if(colType.equals("begin group")) {
 				// Non repeating group, process these child columns at the same level as the parent
-				sql += addSqlValues(col.getQuestions(), sName, device, server, colPhoneOnly, hasAltitude);
+				sql += addSqlValues(col.getQuestions(), sName, device, server, colPhoneOnly, hasAltitude, foreignKeys);
 			} else {
 				sql += "," + getDbString(col, sName, device, server, colPhoneOnly, hasAltitude);
-			}				
+				// Check for a foreign key, the value will start with :::::
+				if(col.getValue() != null && col.getValue().startsWith(":::::") && col.getValue().length() > 5) {
+					ForeignKey fl = new ForeignKey();
+					fl.instanceId = col.getValue().substring(5);
+					fl.qName = col.getName();
+					foreignKeys.add(fl);
+				}
+			}	
+			
 		}
 		return sql;
 	}

@@ -55,7 +55,8 @@ $(document).ready(function() {
 		pArray = [],
 		param = [],
 		dont_get_current_survey;
-	
+
+	setupUserProfile();
 	localise.setlang();		// Localise HTML
 	
 	// Get the user details

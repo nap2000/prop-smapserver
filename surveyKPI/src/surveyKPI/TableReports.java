@@ -99,7 +99,8 @@ public class TableReports extends Application {
 			@FormParam("title") String title,
 			@FormParam("project") String project,
 			@FormParam("chartdata") String chartData,
-			@FormParam("settings") String settingsString
+			@FormParam("settings") String settingsString,
+			@FormParam("tz") String tz
 			) throws Exception { 
 		
 		// Authorisation - Access
@@ -124,7 +125,10 @@ public class TableReports extends Application {
 		}
 		Connection cResults = ResultsDataSource.getConnection("surveyKPI-tables");
 		
-		String tz = "GMT";
+		if(tz == null) {
+			tz = "UTC";
+		}
+		
 		try {
 			
 			// Localisation
@@ -135,7 +139,7 @@ public class TableReports extends Application {
 			ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);
 			
 			// Get columns
-			SurveyViewManager svm = new SurveyViewManager(localisation);
+			SurveyViewManager svm = new SurveyViewManager(localisation, tz);
 			SurveyViewDefn mfc = svm.getSurveyView(sd, cResults, uId, 0, sId, managedId, request.getRemoteUser(), oId, superUser);
 			
 			// Convert data to an array
@@ -178,7 +182,8 @@ public class TableReports extends Application {
 						dArray, 
 						mfc, 
 						localisation, 
-						tz, false,	 // TBD set landscape and paper size from client
+						tz, 
+						false,	 // TBD set landscape and paper size from client
 						request.getRemoteUser(),
 						basePath,
 						title,

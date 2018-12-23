@@ -221,8 +221,8 @@ chmod +x apacheConfig.sh
 cd ../deploy
  
 # Patch pyxform
-sudo sed -i "s/from pyxform import constants/import constants/g" /smap_bin/pyxform/survey.py
+#sudo sed -i "s/from pyxform import constants/import constants/g" /smap_bin/pyxform/survey.py
 
 # update version reference
-new_version="1807"
+new_version="1812"
 echo "$new_version" > ~/smap_version

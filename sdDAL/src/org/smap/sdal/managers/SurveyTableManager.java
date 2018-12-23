@@ -175,7 +175,8 @@ public class SurveyTableManager {
 			String key_value,
 			String selection, 
 			ArrayList<String> arguments, 
-			ArrayList<String> whereColumns
+			ArrayList<String> whereColumns,
+			String tz
 			) throws Exception {
 		
 		if(sqlDef != null && sqlDef.colNames.size() > 0) {
@@ -222,7 +223,7 @@ public class SurveyTableManager {
 			pstmt = cResults.prepareStatement(sql.toString());
 			int paramCount = 1;
 			if (sqlDef.hasRbacFilter) {
-				paramCount = GeneralUtilityMethods.setArrayFragParams(pstmt, sqlDef.rfArray, paramCount);
+				paramCount = GeneralUtilityMethods.setArrayFragParams(pstmt, sqlDef.rfArray, paramCount, tz);
 			}
 			if(type.equals("lookup")) {
 				if(filter.length() > 0) {
@@ -264,7 +265,22 @@ public class SurveyTableManager {
 			line = new ArrayList<KeyValueSimp> ();
 			for (int i = 0; i < sqlDef.colNames.size(); i++) {
 				String qname = sqlDef.qnames.get(i);
-				String value = rs.getString(qname);
+				// support labels separated by commas
+				String [] multQuestions = qname.split(",");
+				String value = "";
+				if(multQuestions.length > 1) {
+					for(String q : multQuestions) {
+						String v = rs.getString(q.trim());
+						if(v != null) {
+							if(value.length() > 0) {
+								value += ", ";
+							}
+							value += v;
+						}
+					}
+				} else {
+					value = rs.getString(qname);
+				}
 				if (value == null) {
 					value = "";
 				}
@@ -573,6 +589,7 @@ public class SurveyTableManager {
 		String linked_s_pd_sel = null;
 		SqlDef sqlDef = new SqlDef();
 		ArrayList<String> colNames = new ArrayList<>();
+		ArrayList<String> validatedQuestionNames = new ArrayList<>();
 		ArrayList<String> subTables = new ArrayList<>();
 		HashMap<Integer, Integer> forms = new HashMap<>();
 		Form topForm = GeneralUtilityMethods.getTopLevelForm(sd, sId);
@@ -611,31 +628,36 @@ public class SurveyTableManager {
 					continue; // Generated not extracted
 				}
 				String colName = null;
-				pstmtGetCol.setString(1, name);
-				log.info("Check presence of col name:" + pstmtGetCol.toString());
-				rs = pstmtGetCol.executeQuery();
-				if (rs.next()) {
-					colName = rs.getString(1);
-					fId = rs.getInt(2);
-				} else if (SmapServerMeta.isServerReferenceMeta(name)) {
-					colName = name; // For columns that are not questions such as _hrk, _device
-					fId = topForm.id;
-				} else {
-					continue; // Name not found
+				String[] multNames = name.split(",");		// Allow for comma separated labels
+				for(String n : multNames) {
+					n = n.trim();
+					pstmtGetCol.setString(1, n);
+					log.info("%%%%%%%%%%%%%%%%%%%%%%% Check presence of col name:" + pstmtGetCol.toString());
+					rs = pstmtGetCol.executeQuery();
+					if (rs.next()) {
+						colName = rs.getString(1);
+						fId = rs.getInt(2);
+					} else if (SmapServerMeta.isServerReferenceMeta(n)) {
+						colName = n; // For columns that are not questions such as _hrk, _device
+						fId = topForm.id;
+					} else {
+						continue; // Name not found
+					}
+					colNames.add(colName);
+					validatedQuestionNames.add(n);
+					forms.put(fId, fId);
+	
+					if (!first) {
+						sql.append(",");
+						order_cols.append(",");
+					}
+					sql.append(colName);
+					sql.append(" as ");
+					sql.append(n);
+					first = false;
+	
+					order_cols.append(colName);
 				}
-				colNames.add(colName);
-				forms.put(fId, fId);
-
-				if (!first) {
-					sql.append(",");
-					order_cols.append(",");
-				}
-				sql.append(colName);
-				sql.append(" as ");
-				sql.append(name);
-				first = false;
-
-				order_cols.append(colName);
 			}
 
 			// 2. Add the tables
@@ -700,7 +722,7 @@ public class SurveyTableManager {
 				} else {
 					orderBy.append(" asc");
 				}
-			} else {
+			} else if(order_cols != null) {
 				// order by the columns
 				orderBy.append(" order by ");
 				orderBy.append(order_cols);
@@ -723,7 +745,7 @@ public class SurveyTableManager {
 
 		sqlDef.sql = sql.toString();
 		sqlDef.colNames = colNames;
-		sqlDef.qnames = qnames;
+		sqlDef.qnames = validatedQuestionNames;
 		return sqlDef;
 	}
 	

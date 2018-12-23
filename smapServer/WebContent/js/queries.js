@@ -92,6 +92,7 @@ var gQueries,
 $(document).ready(function() {
 
     setCustomManage();			// Apply custom javascript
+	setupUserProfile();
 	localise.setlang();		// Localise HTML
 	
 	loadQueries();

@@ -199,8 +199,7 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 		for(i = 0; i < groups.length; i++) {
 			
 			gTab[++gIdx] = '<tr>';
-			
-			
+
 			if(isGrouped && !isPeriod) {
 				gTab[++gIdx] = '<td>';
 				gTab[++gIdx] = groups[i].properties.group_label;
@@ -284,7 +283,7 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 						} else if(key === "_complete") {
 							val = (val === "f") ? "No" : "Yes";
 						} else if(type === "dateTime") {
-							val = localTime(val);
+							//val = formatLocalTime(val);  all good
 						}
 						gTab[++gIdx] = '<td ' + params + '>';
 						// If the value is zero and this is a select multiple then show a blank
@@ -303,6 +302,204 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 	
 		}
 	}
+
+	gTab[++gIdx] = '</tbody></table></div></div></div>';
+	document.getElementById(elementId).innerHTML=gTab.join('');
+	gTab = [];	// Free memory
+
+}
+
+function generateUserTable(elementId, data, disp_desc, user_ident, uId) {
+
+	console.log("generate user table");
+	var i,j,k,
+		groups = data.features,
+		cols = data.cols,
+		types = data.types,
+		groupLabels = data.groups,
+		numberCols,
+		numberGroups,
+		repeatCols = 1,
+		title,
+		val,
+		key,
+		type,
+		params,
+		record = [],
+		curPeriod,
+		curGroup,
+		recordObject = {};
+
+	if(data.formName) {
+		title = data.formName;
+	} else {
+		title = data.question;
+	}
+	if(title === 'Usage') {
+		title = localise.set["a_ua"];
+	}
+
+	// Write information about the table
+	gTab = [];
+	gTab[++gIdx] = '<div><div id="scroll_controls"><p>';
+	if(typeof disp_desc !== "undefined") {
+		gTab[++gIdx] = disp_desc;
+	} else {
+		gTab[++gIdx] = title;
+	}
+	if(typeof data.totals !== "undefined") {
+		gTab[++gIdx] = ' (';
+		gTab[++gIdx] = data.totals.filtered_count;
+		gTab[++gIdx] = ' ';
+		gTab[++gIdx] = data.totals.filtered_count == 1 ? localise.set["c_record"] : localise.set["c_records"];
+		gTab[++gIdx] = ' ';
+		gTab[++gIdx] = " " + localise.set["a_oo"] + " ";
+		gTab[++gIdx] = data.totals.total_count;
+		gTab[++gIdx] = ')';
+	}
+
+	gTab[++gIdx] = '</p>';
+
+	// Add next / previous buttons
+	if(typeof data.totals !== "undefined" && data.totals.returned_count < data.totals.total_count) {
+		gTab[++gIdx] = '<div class="get_less_more">';
+		if(data.totals.start_key > 0) {
+			// Add less
+			gTab[++gIdx] = '<button class="get_less" value="';
+			//gTab[++gIdx] = survey_ident;	// No value required for less
+			gTab[++gIdx] = '">&lt;&lt;&lt;</button>';
+		} else {
+			// Add disabled less
+			gTab[++gIdx] = '<button class="get_less_dis">&lt;&lt;&lt;</button>';
+		}
+		if(data.totals.more_recs > 0) {
+			// Add more
+			gTab[++gIdx] = '<button class="get_more" value="';
+			gTab[++gIdx] = data.totals.max_rec;
+			gTab[++gIdx] = '">&gt;&gt;&gt;</button>';
+		} else {
+			// Add disabled more
+			gTab[++gIdx] = '<button class="get_more_dis">&gt;&gt;&gt;</button>';
+		}
+		gTab[++gIdx] = '</div>';
+	}
+	gTab[++gIdx] = '</div>';	// scroll controls
+
+	if(typeof data.group !== "undefined") {
+		isGrouped = true;
+	}
+	if(typeof data.interval !== "undefined" && data.period !== "none") {
+		isPeriod = true;
+	}
+	gTab[++gIdx] = '<div id="scroll_zone">';
+	gTab[++gIdx] = '<table form="' + data.fId + '" border="1" class="tablesorter">';
+
+	// Write headers
+	gTab[++gIdx] = '<thead>';
+
+	numberCols = cols.length;
+
+	// Add the column headings
+
+	if(typeof globals !== "undefined" && globals.gCanEdit) {
+		gTab[++gIdx] = '<th></th>';			// Add empty header for edit button
+	}
+	gTab[++gIdx] = '<th>Record</th>';
+
+	for(j = 0; j < repeatCols; j++) {
+		for(i = 0; i < numberCols; i++) {
+			if(cols[i] !== "_instanceid" && cols[i] !== "instanceid" && cols[i] !== "_task_key" &&
+				cols[i] !== "_task_replace"&& cols[i] !== "prikey" && cols[i] !== "_modified") {
+				gTab[++gIdx] = '<th>';
+				if(types[i] === "dateTime") {
+					gTab[++gIdx] = cols[i] + ' (' + localise.set["c_lt"] + ')';
+				} else {
+					gTab[++gIdx] = cols[i];
+				}
+				gTab[++gIdx] = '</th>';
+			}
+		}
+	}
+
+	gTab[++gIdx] = '</tr></thead><tbody>';
+
+	/*
+	 * If the data is both grouped by a question and grouped by time then there a single
+	 *  record of data will be spread across multiple feature objects
+	 */
+
+	for(i = 0; i < groups.length; i++) {
+
+		gTab[++gIdx] = '<tr>';
+
+		if(typeof globals !== "undefined" && globals.gCanEdit) {
+			// Add a button to edit the survey data in web forms
+			gTab[++gIdx] = '<td>';
+				gTab[++gIdx] = '<div class="menu_button btn context_table dropdown-toggle" type="button" data-toggle="dropdown"';
+				gTab[++gIdx] = ' data-ident="';
+				gTab[++gIdx] = groups[i].properties.survey_ident;
+				gTab[++gIdx] = '" data-id="';
+				gTab[++gIdx] = groups[i].properties.s_id;
+				gTab[++gIdx] = '" data-instanceid="';
+				if(groups[i].properties.instanceid) {
+					gTab[++gIdx] = groups[i].properties.instanceid;
+				} else {
+					gTab[++gIdx] = groups[i].properties._instanceid;		// Legacy instanceid name
+				}
+				gTab[++gIdx] = '"><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span></div>';
+			gTab[++gIdx] = '</td>';
+		}
+		gTab[++gIdx] = '<td>';
+		gTab[++gIdx] = groups[i].properties.prikey;
+		gTab[++gIdx] = '</td>';
+
+
+		for(k = 0; k < cols.length; k++) {
+
+			params = "";
+			key = cols[k];
+			type = types[k];
+
+			if(key !== "_instanceid" && key !== "instanceid" && key !== "_task_key" &&
+				key !== "_task_replace" && key !== "prikey" && key !== "_modified") {
+				val = groups[i].properties[key];
+				if((key === "the_geom" || key.indexOf("geopolygon") === 0 || key.indexOf("geolinestring") === 0)
+					&& typeof groups[i].geometry !== "undefined") {
+					// Get the value from the geometry
+					val = groups[i].geometry.type + '[' + groups[i].geometry.coordinates + ']';
+				} else if(key === "_bad") {
+					if(val === "f") {
+						params = 'class="good_r" pkey="' + groups[i].properties.prikeys[0] + '"';
+						val = "No";
+					} else {
+						params = 'class="bad_r" pkey="' + groups[i].properties.prikeys[0] + '"';
+						val = "Yes";
+					}
+				} else if(key === "_bad_reason") {
+					if(val && val.indexOf("Replaced by") === 0) {
+						params = 'class="bad_replaced"';
+					}
+				} else if(key === "_complete") {
+					val = (val === "f") ? "No" : "Yes";
+				} else if(type === "dateTime") {
+					//val = formatLocalTime(val);  all good
+				}
+				gTab[++gIdx] = '<td ' + params + '>';
+				// If the value is zero and this is a select multiple then show a blank
+				if(val === "0" && key.trim().indexOf(" ") > 0) {	// Only select multiples can have a space in the key
+					gTab[++gIdx] = "";
+				} else {
+					gTab[++gIdx] = addAnchors(val, true).join(',');
+				}
+				gTab[++gIdx] = '</td>';
+			}
+
+		}
+
+		gTab[++gIdx] = '</tr>';
+
+	}
+
 
 	gTab[++gIdx] = '</tbody></table></div></div></div>';
 	document.getElementById(elementId).innerHTML=gTab.join('');

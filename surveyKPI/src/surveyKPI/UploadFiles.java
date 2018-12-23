@@ -1,8 +1,5 @@
 package surveyKPI;
 
-
-
-
 /*
 This file is part of SMAP.
 
@@ -495,6 +492,8 @@ public class UploadFiles extends Application {
 			Locale locale = new Locale(GeneralUtilityMethods.getUserLanguage(sd, request, request.getRemoteUser()));
 			ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);
 			
+			String tz = "UTC";
+			
 			int oId = GeneralUtilityMethods.getOrganisationId(sd, user, 0);
 			
 			/*
@@ -569,7 +568,7 @@ public class UploadFiles extends Application {
 				throw new ApplicationException(localisation.getString("tu_uft"));
 			}
 			
-			SurveyManager sm = new SurveyManager(localisation);
+			SurveyManager sm = new SurveyManager(localisation, "UTC");
 			Survey existingSurvey = null;
 			String basePath = GeneralUtilityMethods.getBasePath(request);
 			
@@ -604,12 +603,11 @@ public class UploadFiles extends Application {
 				msg = msg.replaceAll("%s1", displayName);
 				throw new ApplicationException(msg);
 			} else if(type.equals("xls") || type.equals("xlsx")) {
-				XLSTemplateUploadManager tum = new XLSTemplateUploadManager();
+				XLSTemplateUploadManager tum = new XLSTemplateUploadManager(localisation, warnings);
 				Survey s = tum.getSurvey(sd, 
 						oId, 
 						type, 
 						fileItem.getInputStream(), 
-						localisation, 
 						displayName,
 						projectId,
 						questionNames,
@@ -646,7 +644,7 @@ public class UploadFiles extends Application {
 				boolean valid = true;
 				String errMsg = null;
 				try {
-					XLSUtilities.javaRosaSurveyValidation(localisation, s.id, request.getRemoteUser());
+					XLSUtilities.javaRosaSurveyValidation(localisation, s.id, request.getRemoteUser(), tz);
 				} catch (Exception e) {
 									
 					String msg = e.getMessage();

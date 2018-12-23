@@ -323,9 +323,9 @@ function initialiseDialogs() {
 
                                 url = exportXlsxSurveyURL(sId, displayName, language, split_locn,
                                     form, exportReadOnly, merge_select_multiple, embedImages, incHxl,
-                                    exp_from_date, exp_to_date, dateQuestionId, filter, includeMeta);
+                                    exp_from_date, exp_to_date, dateQuestionId, filter, includeMeta, globals.gTimezone);
                             } else {
-                                // Legacy XLS export
+                                // Legacy html xlsx export
                                 forms = $(':checkbox:checked', '.selectforms').map(function () {
                                     return this.value;
                                 }).get();
@@ -341,7 +341,7 @@ function initialiseDialogs() {
                                 }
                                 url = exportSurveyURL(sId, displayName, language, format, split_locn,
                                     forms, exportReadOnly, merge_select_multiple, xlstype, embedImages, incHxl,
-                                    exp_from_date, exp_to_date, dateQuestionId, filter);
+                                    exp_from_date, exp_to_date, dateQuestionId, filter, globals.gTimezone);
                             }
                         }
 
@@ -844,12 +844,13 @@ function regionsURL () {
  * @param {string} survey
  */
 function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bBad, filter, dateId, startDate,
-                       endDate, advanced_filter) {
+                       endDate, advanced_filter, tz) {
 
     var url = "/surveyKPI/items/";
+	var ampersand = false;
 
     url += form;
-    ampersand = false;
+
     if(getFeatures == "no") {
         if(ampersand) {
             url += "&";
@@ -896,7 +897,45 @@ function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bB
         url+= "&advanced_filter=" + advanced_filter;
     }
 
+	if(tz) {
+		url += '&tz=' + encodeURIComponent(tz);
+	}
+
     return url;
+}
+
+/**
+ * Web service handler for retrieving user access data in a table
+ */
+function userItemsURL (view, start_key, rec_limit, filter, startDate,
+                       endDate, tz) {
+
+	var url = "/surveyKPI/items/user/";
+
+	url += view.uId;
+
+	url += "?start_key=" + start_key;
+	if(rec_limit) {
+		url += "&rec_limit=" + rec_limit;
+	}
+
+	if(typeof filter !== "undefined") {
+		url+= "&filter=" + filter;
+	}
+
+	if(typeof startDate !== "undefined" && startDate.length > 0) {
+		url+= "&startDate=" + startDate;
+	}
+
+	if(typeof endDate !== "undefined" && endDate.length > 0) {
+		url+= "&endDate=" + endDate;
+	}
+
+	if(tz) {
+		url += '&tz=' + encodeURIComponent(tz);
+	}
+
+	return url;
 }
 
 /*
@@ -930,7 +969,8 @@ function exportSurveyURL (
     exp_from_date,
     exp_to_date,
     dateQuestionId,
-    filter) {
+    filter,
+    tz) {
 
     var url;
     if(xlstype === "html") {
@@ -984,6 +1024,10 @@ function exportSurveyURL (
         url += '&filter=' + fixedEncodeURIComponent(filter);
     }
 
+    if(tz) {
+        url += '&tz=' + encodeURIComponent(tz);
+    }
+
     return url;
 }
 
@@ -1004,7 +1048,8 @@ function exportXlsxSurveyURL (
     exp_to_date,
     dateQuestionId,
     filter,
-    includeMeta) {
+    includeMeta,
+    tz) {
 
     var url = "/surveyKPI/exportxlsx/";
 
@@ -1031,7 +1076,7 @@ function exportXlsxSurveyURL (
         url += "&hxl=" + incHxl;
     }
 
-    if(dateQuestionId > 0 || dateQuestionId == -100) {	// -100 is a pseudo ID for Upload Time
+    if(dateQuestionId > 0 || dateQuestionId <= -100) {	// -100 is a pseudo ID for Upload Time
         url += "&dateId=" + dateQuestionId;
         if(exp_from_date) {
             url += "&from=" + exp_from_date;
@@ -1048,6 +1093,10 @@ function exportXlsxSurveyURL (
     if(includeMeta) {
         url += "&meta=true";
     }
+
+	if(tz) {
+		url += "&tz=" + encodeURIComponent(tz);
+	}
 
     return url;
 }
