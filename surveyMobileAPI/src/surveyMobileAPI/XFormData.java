@@ -144,7 +144,7 @@ public class XFormData {
 					SurveyTemplate template = new SurveyTemplate(localisation);
 					templateName = template.readDatabase(sd, templateName, false);  // Update the template name if the survey has been replaced
 					
-					SurveyManager sm = new SurveyManager(localisation);
+					SurveyManager sm = new SurveyManager(localisation, "UTC");
 					survey = sm.getSurveyId(sd, templateName); // Get the survey id from the templateName / key
 					
 					template.extendInstance(sd, si, false, survey);
@@ -262,6 +262,8 @@ public class XFormData {
 			ue.setFilePath(saveDetails.filePath);
 			ue.setAuditFilePath(auditFilePath);
 			ue.setProjectId(survey.getPId());
+			ue.setOrganisationId(survey.o_id);
+			ue.setEnterpriseId(survey.e_id);
 			ue.setUploadTime(new Date());
 			ue.setFileName(saveDetails.fileName);
 			ue.setSurveyName(survey.getDisplayName());
@@ -302,7 +304,7 @@ public class XFormData {
 				if(rsRepeating.next()) {
 					if(!rsRepeating.getBoolean(1)) {
 						log.info("Deleting temporary user");
-						UserManager um = new UserManager();
+						UserManager um = new UserManager(localisation);
 						um.deleteSingleSubmissionTemporaryUser(sd, user);
 					}
 				}

@@ -106,7 +106,7 @@ public class FormsManifest {
 			Locale locale = new Locale(GeneralUtilityMethods.getUserLanguage(connectionSD, request, request.getRemoteUser()));
 			localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);
 			
-			sm = new SurveyManager(localisation);
+			sm = new SurveyManager(localisation, "UTC");
 			survey = sm.getSurveyId(connectionSD, key);	// Get the survey id from the templateName / key
 		} catch (Exception e) {
 		}
@@ -149,11 +149,13 @@ public class FormsManifest {
 				String sIdent = GeneralUtilityMethods.getSurveyIdent(connectionSD, survey.id);
 				
 				if(m.type.equals("linked")) {
+					log.info("Linked file path: " + m.fileName);
 					filepath = basepath + "/media/" + sIdent+ "/" + 
 							request.getRemoteUser() + "/" + m.fileName;
 					filepath += ".csv";
 					m.fileName += ".csv";
 				} else {
+					log.info("CSV file path: " + m.filePath);
 					filepath = m.filePath;
 				}
 				

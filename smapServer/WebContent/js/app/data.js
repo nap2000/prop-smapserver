@@ -191,10 +191,6 @@ function getExtendedSurveyMetaSE(sId, callback) {
 //Get data at the survey level
  function getSurveyDataSE(sId, view) {
  	
- 	var formItems = globals.gSelector.getFormItems(sId);
- 		//hasData = false,
- 		//idx;
- 	
 	view.tableCount = 0;
 	view.results = [];
  	
@@ -213,7 +209,7 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 	
 	// For table all of survey views. page the results and include "bad records"
 	if(f_view.type === "table") {
-		rec_limit = 200;
+		rec_limit = globals.REC_LIMIT;
 		bBad = true;
 	} else {
 		rec_limit = 0;
@@ -226,8 +222,11 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 	
 	var survey,
 		i,
+		tz = globals.gTimezone;
 		url = formItemsURL(fId, "yes", "no", start_rec, rec_limit, bBad, f_view.filter,
-				f_view.dateQuestionId, f_view.fromDate, f_view.toDate, f_view.advanced_filter);	// Get all records with all features
+				f_view.dateQuestionId, f_view.fromDate, f_view.toDate,
+				f_view.advanced_filter,  // Get all records with all features
+				tz);
 	
 	addHourglass();
  	$.ajax({
@@ -276,7 +275,79 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 	});
  		
 }
-	
+
+/*
+  * Get the usage data for a specific user
+  */
+function getUserData(view, start_rec) {
+
+	// For table all of survey views. page the results
+	if(view.type === "table") {
+		rec_limit = globals.REC_LIMIT;
+	} else {
+		rec_limit = 0;
+	}
+
+	start_rec = start_rec || 0;
+
+	var i,
+		tz = globals.gTimezone,
+		data;
+
+	url = userItemsURL(view, start_rec, rec_limit,  view.filter, view.fromDate, view.toDate,tz);
+	data = globals.gSelector.getItem(url);      // check cache
+
+	if(data) {
+		if (typeof view.start_recs === "undefined") {
+			view.start_recs = {};
+		}
+		if (typeof view.start_recs[0] === "undefined") {
+			view.start_recs[0] = [];
+		}
+		view.start_recs[0].push(start_rec);
+		view.results = [];
+		view.results[0] = data;
+		refreshData(view, "user");
+	} else {
+
+		function getAsyncData(dataUrl) {
+			addHourglass();
+			$.ajax({
+				url: dataUrl,
+				dataType: 'json',
+				cache: false,
+				success: function (data) {
+					// Add data to results
+					removeHourglass();
+					data.source = "user";
+					data.table = true;
+
+					if (typeof view.start_recs === "undefined") {
+						view.start_recs = {};
+					}
+					if (typeof view.start_recs[0] === "undefined") {
+						view.start_recs[0] = [];
+					}
+					view.start_recs[0].push(start_rec);
+
+					globals.gSelector.addDataItem(dataUrl, data);
+					view.results = [];
+					view.results[0] = data;
+
+					refreshData(view, "user");	// Update the views with the new usage data
+
+				},
+				error: function (data) {
+					removeHourglass();
+					alert(data.message);
+				}
+			});
+		}
+		getAsyncData(url);
+	}
+
+}
+
  /*
   * Get the data for the specified question
   * The current view is updated with the results
@@ -364,36 +435,52 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
  	if(surveyLevel === "survey") {
  		
  		switch(outputView.type) {
- 		case "map":
- 			
- 			setMap(outputView, secondaryLayer);
- 			break;
- 		case "table":
- 			setTableSurvey(outputView);
- 			break;
- 		case "media":
- 			setMediaSurvey(outputView);
- 			break;
- 		case "graph":
- 			setGraphSurvey(outputView);
- 			break;
+	        case "map":
+
+	            setMap(outputView, secondaryLayer);
+	            break;
+	        case "table":
+	            setTableSurvey(outputView);
+	            break;
+	        case "media":
+	            setMediaSurvey(outputView);
+	            break;
+	        case "graph":
+	            setGraphSurvey(outputView);
+	            break;
  		}
- 	} else {
+ 	} else if(surveyLevel === "user") {
+
+		 switch(outputView.type) {
+			 case "map":
+				 setMap(outputView, secondaryLayer);        // TODO
+				 break;
+			 case "table":
+				 setUserTableSurvey(outputView);                // TODO
+				 break;
+			 case "media":
+				 setUserMediaSurvey(outputView);                // TODO
+				 break;
+			 case "graph":
+				 setUserGraphSurvey(outputView);                // TODO
+				 break;
+		 }
+	 } else {
  		
  		switch(outputView.type) {
- 		case "map":
- 			setMap(outputView, secondaryLayer);
- 			break;
- 		case "table":
- 			setTableQuestion(outputView);
- 			break;
- 		case "media":
- 			setMediaQuestion(outputView);
- 			break;
- 		case "graph":
- 			newSetGraphQuestion(outputView);	
- 			break;
- 		}	
+	        case "map":
+	            setMap(outputView, secondaryLayer);
+	            break;
+	        case "table":
+	            setTableQuestion(outputView);
+	            break;
+	        case "media":
+	            setMediaQuestion(outputView);
+	            break;
+	        case "graph":
+	            newSetGraphQuestion(outputView);
+	            break;
+	        }
  	}
 
  }

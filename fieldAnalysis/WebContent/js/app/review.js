@@ -35,7 +35,8 @@ var gTextValues,
 define(['jquery', 'jquery_ui', 'localise', 'common', 'globals'], function($, ui, lang, common, globals) {
 
 $(document).ready(function() {
-	
+
+	setupUserProfile();
 	localise.setlang();		// Localise HTML
 	 /*
 	  * Get the user details so we have the default project

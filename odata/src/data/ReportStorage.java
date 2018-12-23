@@ -3,18 +3,12 @@ package data;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.TimeZone;
 import java.util.logging.Logger;
 
 import org.apache.olingo.commons.api.data.Entity;
@@ -22,27 +16,15 @@ import org.apache.olingo.commons.api.data.EntityCollection;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.data.ValueType;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
-import org.apache.olingo.commons.api.edm.EdmEntityType;
-import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
-import org.apache.olingo.commons.api.edm.FullQualifiedName;
+import org.apache.olingo.commons.api.edm.geo.Geospatial.Dimension;
+import org.apache.olingo.commons.api.edm.geo.Point;
 import org.apache.olingo.commons.api.ex.ODataRuntimeException;
-import org.apache.olingo.commons.api.http.HttpStatusCode;
-import org.apache.olingo.server.api.ODataApplicationException;
-import org.apache.olingo.server.api.uri.UriParameter;
 import org.smap.sdal.constants.SmapQuestionTypes;
 import org.smap.sdal.managers.EmailManager;
-import org.smap.sdal.managers.TableDataManager;
-import org.smap.sdal.model.Action;
 import org.smap.sdal.model.ColDesc;
-import org.smap.sdal.model.KeyFilter;
 import org.smap.sdal.model.SqlDesc;
-import org.smap.sdal.model.TableColumn;
-
-import smapModels.SurveyForm;
-import smapModels.PortalModel;
 import smapModels.ReportDetails;
 import smapModels.ReportModel;
-import util.Util;
 
 public class ReportStorage {
 
@@ -178,28 +160,58 @@ public class ReportStorage {
 			}
 			
 			if(type.equals(SmapQuestionTypes.INT)) {
-				int iValue = rs.getInt(idx++);
-				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, iValue));
+				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, rs.getInt(idx++)));
+			
+			} else if(type.equals(SmapQuestionTypes.DECIMAL)) {
+				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, rs.getDouble(idx++)));
+			
+			} else if(type.equals(SmapQuestionTypes.DATE)) {
+				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, rs.getDate(idx++)));			
+			
 			} else if(type.equals(SmapQuestionTypes.DATETIME)) {
-				//Timestamp dateValue = rs.getTimestamp(idx++);		// TODO
-				String dateValue = rs.getString(idx++);
-				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, dateValue));
+				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, rs.getTimestamp(idx++)));			
 			
 			} else if(type.equalsIgnoreCase(SmapQuestionTypes.STRING) ||
-						type.equalsIgnoreCase(SmapQuestionTypes.SELECT1)) {
-				String sValue = rs.getString(idx++);
-				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, sValue));
+						type.equalsIgnoreCase(SmapQuestionTypes.SELECT1) ||
+						type.equalsIgnoreCase(SmapQuestionTypes.CALCULATE)
+						) {
+				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, rs.getString(idx++)));
+			
 			} else if(type.equalsIgnoreCase("geometry")) {
-					String sValue = rs.getString(idx++);
-			e.addProperty(new Property(null, name, ValueType.PRIMITIVE, sValue));
+				
+				Point p = new Point(Dimension.GEOGRAPHY, null);
+				setPoint(p, rs.getString(idx++));
+				System.out.println("Adding point");
+				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, p));
+				System.out.println("Done Adding point");
 		}else {
 				log.info("Error: Unknown table column type: " + type + " processing as string");
-				String sValue = rs.getString(idx++);
+				String sValue = rs.getString(idx++);			
 				e.addProperty(new Property(null, name, ValueType.PRIMITIVE, sValue));
 			}
 		}
 		e.setId(createId(esName, prikey));
 		
 		return e;
+	}
+	
+	void setPoint(Point p, String s) {
+		double x = 0.0;
+		double y = 0.0;
+		if(s != null) {
+			s = s.trim();
+			int idx = s.indexOf('(');
+			if(idx >=0) {
+				s = s.substring(idx + 1, s.length() - 1);
+				String[] coords = s.split(" ");
+				if(coords.length > 1) {
+					x = Double.parseDouble(coords[0]);
+					y = Double.parseDouble(coords[1]);
+				}
+			}
+			
+		}
+		p.setX(x);
+		p.setY(y);
 	}
 }

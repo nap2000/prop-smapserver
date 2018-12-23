@@ -37,9 +37,14 @@ public class ChoiceManager {
 			 Logger.getLogger(ChoiceManager.class.getName());
 
 	private ResourceBundle localisation;
+	private String tz;
 	
-	public ChoiceManager(ResourceBundle l) {
+	public ChoiceManager(ResourceBundle l, String tz) {
 		localisation = l;
+		if(tz == null) {
+			tz = "UTC";
+		}
+		this.tz = tz;
 	}
 	
 	
@@ -57,41 +62,65 @@ public class ChoiceManager {
 			checkLabels = false;
 		}
 		if(checkLabels) {
-			if(!external_choices) {
-				// 1. Search choices which are stored in the survey meta definition
-				int idx = 0;
-				for(String match : matches) {
-					if(idx++ > 0) {
-						labels.append(", ");
-					}
-					labels.append(UtilityMethodsEmail.getSingleLabel(sd, sId, languageName, l_id, match));
+			
+			/*
+			 * 1. Search choices which are stored in the survey meta definition
+			 * If the choices are external then only numeric values are checked
+			 */			 
+			int idx = 0;
+			for(String match : matches) {
+				
+				boolean foundStatic = false;
+				boolean isInteger = false;
+				try {
+					Integer.parseInt(match);
+					isInteger = true;
+				} catch (Exception e) {
+					
 				}
-			} else {
-				// 2. Search choices which are stored in an external table
-				ArrayList<Option> choices = GeneralUtilityMethods.getExternalChoices(sd, cResults, 
-						localisation, user, oId, sId, qId, matches, surveyIdent);
-				int idx = 0;
-				int languageIdx = 0;
-				if(choices != null && choices.size() > 0) {
-					for(Option choice : choices) {
-						if(idx++ == 0) {
-							// Get the language index
-							for(LanguageItem item : choice.externalLabel) {
-								if(languageName == null || languageName.equals("none") || languageName.equals(item.language)) {
-									break;
-								} else {
-									languageIdx++;
-								}
-							}
-						} else {
+
+				// Try for static choices first	
+				if(!external_choices || isInteger) {
+					String label = UtilityMethodsEmail.getSingleLabel(sd, sId, languageName, l_id, match);
+					if(label != null) {
+						if(labels.length() > 0) {
 							labels.append(", ");
 						}
-						if(choice.labels != null && choice.labels.size() > languageIdx) {
-							labels.append(choice.labels.get(languageIdx).text);
+						labels.append(label);
+						foundStatic = true;
+					} 
+				}
+				if(external_choices && !foundStatic) {
+					// 2. Search choices which are stored in an external table
+					ArrayList<String> miniMatch = new ArrayList<> ();
+					miniMatch.add(match);
+					ArrayList<Option> choices = GeneralUtilityMethods.getExternalChoices(sd, cResults, 
+							localisation, user, oId, sId, qId, miniMatch, surveyIdent, tz);
+					idx = 0;
+					int languageIdx = 0;
+					if(choices != null && choices.size() > 0) {
+						for(Option choice : choices) {
+							if(idx++ == 0) {
+								// Get the language index
+								for(LanguageItem item : choice.externalLabel) {
+									if(languageName == null || languageName.equals("none") || languageName.equals(item.language)) {
+										break;
+									} else {
+										languageIdx++;
+									}
+								}
+							}
+							if(choice.labels != null && choice.labels.size() > languageIdx) {
+								if(labels.length() > 0) {
+									labels.append(", ");
+								}
+								labels.append(choice.labels.get(languageIdx).text);
+							}
 						}
-					}
-				}			
+					}			
+				}
 			}
+			
 		}
 		
 		if(labels.length() == 0) {

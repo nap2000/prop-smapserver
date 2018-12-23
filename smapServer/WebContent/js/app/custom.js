@@ -58,6 +58,14 @@ function setCustomDashboard() {
 	// Menus
 }
 
+function setCustomReview() {
+    // Menus
+}
+
+function setCustomAudit() {
+    // Menus
+}
+
 function setCustomUserDashboard() {
 	// Menus
 }

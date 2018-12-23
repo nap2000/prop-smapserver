@@ -45,7 +45,9 @@ import org.smap.sdal.Utilities.UtilityMethodsEmail;
 import org.smap.sdal.constants.SmapServerMeta;
 import org.smap.sdal.managers.LogManager;
 import org.smap.sdal.managers.RoleManager;
+import org.smap.sdal.model.Form;
 import org.smap.sdal.model.SqlFrag;
+import org.smap.sdal.model.SqlParam;
 import org.smap.sdal.model.TableColumn;
 
 import utilities.QuestionInfo;
@@ -57,6 +59,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -64,10 +67,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/*
- * Returns data for the passed in table name
- */
-@Path("/items/{form}")
+@Path("/items")
 public class Items extends Application {
 	
 	Authorise a = null;
@@ -91,6 +91,7 @@ public class Items extends Application {
 	
 	/*
 	 * JSON
+	 * Gets data for the supplied form id
 	 * Usage /surveyKPI/items/{formId}?geom=yes|no&feats=yes|no&mustHaveGeom=yes|no
 	 *   geom=yes  then location information will be returned
 	 *   feats=yes then features associated with geometries will be returned
@@ -100,6 +101,7 @@ public class Items extends Application {
 	 *   	Not return "bad" records unless get_bad is set to true
 	 */
 	@GET
+	@Path("/{form}")
 	@Produces("application/json")
 	public String getTable(@Context HttpServletRequest request,
 			@PathParam("form") int fId, 
@@ -112,7 +114,10 @@ public class Items extends Application {
 			@QueryParam("startDate") Date startDate,
 			@QueryParam("endDate") Date endDate,
 			@QueryParam("filter") String sFilter,
-			@QueryParam("advanced_filter") String advanced_filter) { 
+			@QueryParam("advanced_filter") String advanced_filter,
+			@QueryParam("tz") String tz) { 
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-yyyy HH:mm");
 		
 		JSONObject jo = new JSONObject();
 		boolean bGeom = true;
@@ -149,6 +154,8 @@ public class Items extends Application {
 		
 		lm.writeLog(sd, sId, request.getRemoteUser(), "view", "View Results");
 	
+		tz = (tz == null) ? "UTC" : tz;
+		
 		Tables tables = new Tables(sId);
 		boolean hasRbacRowFilter = false;
 		StringBuffer message = new StringBuffer("");
@@ -220,6 +227,7 @@ public class Items extends Application {
 				}
 				
 				String surveyIdent = GeneralUtilityMethods.getSurveyIdent(sd, sId);
+				ArrayList<SqlParam> params = new ArrayList<SqlParam>();
 				ArrayList<TableColumn> columnList = GeneralUtilityMethods.getColumnsInForm(
 						sd,
 						cResults,
@@ -241,7 +249,8 @@ public class Items extends Application {
 						false,	// Include survey duration
 						superUser,
 						false,		// HXL only include with XLS exports
-						false		// Don't include audit data
+						false,		// Don't include audit data
+						tz
 						);		
 				
 				// Construct a new query that retrieves a geometry object as geoJson
@@ -271,6 +280,10 @@ public class Items extends Application {
 					} else if(c.name.equals("prikey") || c.name.equals("parkey") 
 							|| c.name.equals("_bad") || c.name.equals("_bad_reason")) {
 						cols.append(tName + "." + c.name + " as " +  c.name);
+					
+					} else if(c.type != null && (c.type.equals("date") || c.type.equals("dateTime"))) {
+						cols.append("timezone(?, ").append(tName).append(".").append(c.name).append(") as " +  c.name);
+						params.add(new SqlParam("string", tz));
 						
 					}  else {
 						cols.append(tName + "." + c.name + " as " +  c.name);
@@ -397,8 +410,14 @@ public class Items extends Application {
 					
 					for(int i = 0; i < advancedFilterFrag.columns.size(); i++) {
 						int rqId = GeneralUtilityMethods.getQuestionIdFromName(sd, sId, advancedFilterFrag.humanNames.get(i));
-						QuestionInfo qaf = new QuestionInfo(sId, rqId, sd);
-						tables.add(qaf.getTableName(), qaf.getFId(), qaf.getParentFId());
+						if(rqId > 0) {
+							QuestionInfo qaf = new QuestionInfo(sId, rqId, sd);
+							tables.add(qaf.getTableName(), qaf.getFId(), qaf.getParentFId());
+						} else {
+							// assume meta and hence include main table
+							Form tlf = GeneralUtilityMethods.getTopLevelForm(sd, sId);
+							tables.add(tlf.tableName, tlf.id, tlf.parentform);
+						}
 					}
 				}
 				
@@ -441,7 +460,7 @@ public class Items extends Application {
 				// Get date column information
 				QuestionInfo date = null;
 				if((dateId != 0) && (startDate != null || endDate != null)) {
-					date = new QuestionInfo(localisation, sId, dateId, sd, cResults, request.getRemoteUser(), false, "", urlprefix, oId);	// Not interested in label any language will do
+					date = new QuestionInfo(localisation, tz, sId, dateId, sd, cResults, request.getRemoteUser(), false, "", urlprefix, oId);	// Not interested in label any language will do
 					tables.add(date.getTableName(), date.getFId(), date.getParentFId());
 					log.info("Date name: " + date.getColumnName() + " Date Table: " + date.getTableName());
 				}
@@ -452,7 +471,7 @@ public class Items extends Application {
 				jTotals.put("rec_limit", rec_limit);
 				String sqlLimit = "";
 				if(rec_limit > 0) {
-					sqlLimit = "LIMIT " + rec_limit;
+					sqlLimit = "limit " + rec_limit;
 				}
 				StringBuffer sql2 = new StringBuffer("select distinct ");		// Add distinct as filter by values in a subform would otherwise result in duplicate tables
 				StringBuffer sqlFC = new StringBuffer("select count(*) ");	
@@ -502,21 +521,23 @@ public class Items extends Application {
 					
 					if(pstmt != null) try {pstmt.close();} catch(Exception e) {};
 					pstmt = cResults.prepareStatement(sql);
-					int attribIdx = 1;					
+					
+					int attribIdx = 1;	
+					
 					if(advancedFilterFrag != null) {
-						attribIdx = GeneralUtilityMethods.setFragParams(pstmt, advancedFilterFrag, attribIdx);
+						attribIdx = GeneralUtilityMethods.setFragParams(pstmt, advancedFilterFrag, attribIdx, tz);
 					}		
 					// RBAC row filter
 					if(hasRbacRowFilter) {
-						attribIdx = GeneralUtilityMethods.setArrayFragParams(pstmt, rfArray, attribIdx);
+						attribIdx = GeneralUtilityMethods.setArrayFragParams(pstmt, rfArray, attribIdx, tz);
 					}				
 					// dates
 					if(dateId != 0) {
 						if(startDate != null) {
-							pstmt.setDate(attribIdx++, startDate);
+							pstmt.setTimestamp(attribIdx++, GeneralUtilityMethods.startOfDay(startDate, tz));
 						}
 						if(endDate != null) {
-							pstmt.setTimestamp(attribIdx++, GeneralUtilityMethods.endOfDay(endDate));
+							pstmt.setTimestamp(attribIdx++, GeneralUtilityMethods.endOfDay(endDate, tz));
 						}
 					}
 					log.info("Get the number of filtered records: " + pstmt.toString());
@@ -539,22 +560,25 @@ public class Items extends Application {
 				 */
 				int attribIdx = 1;
 				
+				// Add any parameters in the select
+				attribIdx = GeneralUtilityMethods.addSqlParams(pstmt, attribIdx, params);
+				
 				if(advancedFilterFrag != null) {
-					attribIdx = GeneralUtilityMethods.setFragParams(pstmt, advancedFilterFrag, attribIdx);
+					attribIdx = GeneralUtilityMethods.setFragParams(pstmt, advancedFilterFrag, attribIdx, tz);
 				}
 				
 				// RBAC row filter
 				if(hasRbacRowFilter) {
-					attribIdx = GeneralUtilityMethods.setArrayFragParams(pstmt, rfArray, attribIdx);
+					attribIdx = GeneralUtilityMethods.setArrayFragParams(pstmt, rfArray, attribIdx, tz);
 				}
 				
 				// dates
 				if(dateId != 0) {
 					if(startDate != null) {
-						pstmt.setDate(attribIdx++, startDate);
+						pstmt.setTimestamp(attribIdx++, GeneralUtilityMethods.startOfDay(startDate, tz));
 					}
 					if(endDate != null) {
-						pstmt.setTimestamp(attribIdx++, GeneralUtilityMethods.endOfDay(endDate));
+						pstmt.setTimestamp(attribIdx++, GeneralUtilityMethods.endOfDay(endDate, tz));
 					}
 				}
 				
@@ -570,7 +594,7 @@ public class Items extends Application {
 					
 					jr.put("type", "Feature");
 
-					for(int i = 0; i < colNames.size(); i++) {		
+					for(int i = 0; i < colNames.size(); i++) {	
 						
 						if(i == geomIdx) {							
 							// Add Geometry (assume one geometry type per table)
@@ -642,19 +666,19 @@ public class Items extends Application {
 				attribIdx = 1;
 				
 				if(advancedFilterFrag != null) {
-					attribIdx = GeneralUtilityMethods.setFragParams(pstmt, advancedFilterFrag, attribIdx);
+					attribIdx = GeneralUtilityMethods.setFragParams(pstmt, advancedFilterFrag, attribIdx, tz);
 				}
 				
 				// RBAC row filter
 				if(hasRbacRowFilter) {
-					attribIdx = GeneralUtilityMethods.setArrayFragParams(pstmt, rfArray, attribIdx);
+					attribIdx = GeneralUtilityMethods.setArrayFragParams(pstmt, rfArray, attribIdx, tz);
 				}
 				if(dateId != 0) {
 					if(startDate != null) {
-						pstmt.setDate(attribIdx++, startDate);
+						pstmt.setTimestamp(attribIdx++, GeneralUtilityMethods.startOfDay(startDate, tz));
 					}
 					if(endDate != null) {
-						pstmt.setTimestamp(attribIdx++, GeneralUtilityMethods.endOfDay(endDate));
+						pstmt.setTimestamp(attribIdx++, GeneralUtilityMethods.endOfDay(endDate, tz));
 					}
 				}
 				
@@ -704,10 +728,312 @@ public class Items extends Application {
 	}
 	
 	/*
-	 * Update the settings
+	 * Get the user activity
+	 */
+	@GET
+	@Path("/user/{user}")
+	@Produces("application/json")
+	public String getUserActivity(@Context HttpServletRequest request,
+			@PathParam("user") int uId, 
+			@QueryParam("start_key") int start_key,
+			@QueryParam("rec_limit") int rec_limit,
+			@QueryParam("startDate") Date startDate,
+			@QueryParam("endDate") Date endDate,
+			@QueryParam("filter") String sFilter,
+			@QueryParam("tz") String tz) { 
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-yyyy HH:mm");
+		
+		JSONObject jo = new JSONObject();
+		JSONArray columns = new JSONArray();
+		JSONArray types = new JSONArray();
+		
+		int maxRec = 0;
+		int recCount = 0;	
+	
+		// Authorisation - Access
+		Connection sd = SDDataSource.getConnection("surveyKPI-Items");		
+		a.isAuthorised(sd, request.getRemoteUser());
+		a.isValidUser(sd, request.getRemoteUser(), uId);
+		// End Authorisation
+		
+		lm.writeLog(sd, 0, request.getRemoteUser(), "view", "User Activity for " + uId);
+	
+		tz = (tz == null) ? "UTC" : tz;
+		
+		StringBuffer message = new StringBuffer("");
+		
+		if(uId > 0) {
+			
+			PreparedStatement pstmt = null;
+			
+			int totalCount = 0;
+			 
+			try {
+				
+				// Get the users locale
+				Locale locale = new Locale(GeneralUtilityMethods.getUserLanguage(sd, request, request.getRemoteUser()));
+				ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);
+				
+				String user = GeneralUtilityMethods.getUserIdent(sd, uId);	
+				
+				JSONObject jTotals = new JSONObject();
+				jo.put("totals", jTotals);
+				jTotals.put("start_key", start_key);
+				
+				// Get the number of records
+				String sql = "select count(*) from upload_event where user_name = ?";
+				
+				pstmt = sd.prepareStatement(sql);	
+				pstmt.setString(1, user);
+				log.info("Get the number of records: " + pstmt.toString());	
+				ResultSet resultSet = pstmt.executeQuery();
+				if(resultSet.next()) {
+					totalCount = resultSet.getInt(1);
+					jTotals.put("total_count", totalCount);
+				}
+				
+				StringBuffer sqlPage = new StringBuffer("");
+				StringBuffer sqlFilter = new StringBuffer("");
+				if(start_key > 0) {
+					sqlPage.append(" and ue_id < ").append(start_key);
+				}
+				
+				// Add start and end dates
+				String sqlRestrictToDateRange = GeneralUtilityMethods.getDateRange(startDate, endDate, "upload_time");
+				if(sqlRestrictToDateRange.trim().length() > 0) {
+					if(sqlFilter.length() > 0) {
+						sqlFilter.append(" and ");
+					}
+					sqlFilter.append(sqlRestrictToDateRange);
+				}
+				
+				jTotals.put("rec_limit", rec_limit);
+				String sqlLimit = "";
+				if(rec_limit > 0) {
+					sqlLimit = "limit " + rec_limit;
+				}
+				
+				// Get columns for main select
+				StringBuffer sql2 = new StringBuffer("select ");	
+				sql2.append("ue.ue_id, ue.survey_name, ue.s_id, s.ident, s.original_ident, "
+						+ "ue.instanceid, to_char(timezone(?, upload_time), 'YYYY-MM-DD HH24:MI:SS') as upload_time,"
+						+ "ue.location, p.name as project_name, ue.survey_notes ");
+				sql2.append(" from upload_event ue ");
+				sql2.append("left outer join survey s on ue.s_id = s.s_id ");
+				sql2.append("left outer join project p on ue.p_id = p.id ");
+				
+				// Get count of available records
+				StringBuffer sqlFC = new StringBuffer("select count(*) from upload_event ue ");				
+				
+				StringBuffer whereClause = new StringBuffer("where user_name = ? ");
+				whereClause.append(GeneralUtilityMethods.getSurveyRBACUploadEvent());
+				if(sqlFilter.length() > 0) {
+					whereClause.append(" and ").append(sqlFilter);	
+				}
+				
+				sql2.append(whereClause);
+				if(sqlPage.length() > 0) {
+					sql2.append(sqlPage);
+				}
+				sqlFC.append(whereClause);
+				sql2.append(" order by ue_id desc ").append(sqlLimit);
+				
+				// Get the number of filtered records			
+				if(sqlFC.length() > 0) {
+				
+					if(pstmt != null) try {pstmt.close();} catch(Exception e) {};
+					pstmt = sd.prepareStatement(sqlFC.toString());
+					
+					int attribIdx = 1;	
+					
+					// Add user
+					pstmt.setString(attribIdx++, user);
+					pstmt.setString(attribIdx++, request.getRemoteUser());		// For RBAC
+						
+					// dates
+					if(startDate != null) {
+						pstmt.setTimestamp(attribIdx++, GeneralUtilityMethods.startOfDay(startDate, tz));
+					}
+					if(endDate != null) {
+						pstmt.setTimestamp(attribIdx++, GeneralUtilityMethods.endOfDay(endDate, tz));
+					}
+
+					log.info("Get the number of filtered records: " + pstmt.toString());
+					resultSet = pstmt.executeQuery();
+					if(resultSet.next()) {
+						jTotals.put("filtered_count", resultSet.getInt(1));
+					} else {
+						jTotals.put("filtered_count", 0);
+					}
+				} else {
+					jTotals.put("filtered_count", totalCount);
+				}
+
+				
+				try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
+				pstmt = sd.prepareStatement(sql2.toString());
+				
+				/*
+				 * Set prepared statement values
+				 */
+				int attribIdx = 1;
+				
+				// Add user
+				pstmt.setString(attribIdx++, tz);
+				pstmt.setString(attribIdx++, user);
+				pstmt.setString(attribIdx++, request.getRemoteUser());		// For RBAC
+				
+				
+				// dates
+				if(startDate != null) {
+					pstmt.setTimestamp(attribIdx++, GeneralUtilityMethods.startOfDay(startDate, tz));
+				}
+				if(endDate != null) {
+					pstmt.setTimestamp(attribIdx++, GeneralUtilityMethods.endOfDay(endDate, tz));
+				}
+				
+				// Request the data
+				log.info("Get Usage Data: " + pstmt.toString());
+				resultSet = pstmt.executeQuery();
+	
+				JSONArray ja = new JSONArray();
+				while (resultSet.next()) {
+					JSONObject jr = new JSONObject();
+					JSONObject jp = new JSONObject();
+					
+					jr.put("type", "Feature");
+
+					jp.put("prikey", resultSet.getString("ue_id"));									// prikey
+					jp.put(localisation.getString("a_name"), resultSet.getString("survey_name"));		// survey name
+					jp.put("s_id", resultSet.getString("s_id"));										// survey id
+					
+					// Get the ident of the currently active survey version
+					String ident = resultSet.getString("original_ident");
+					if(ident == null || ident.trim().length() == 0) {
+						ident = resultSet.getString("ident");
+					}
+					jp.put("survey_ident", ident);								// survey ident
+					jp.put("instanceid", resultSet.getString("instanceid"));							// instanceId
+					jp.put(localisation.getString("a_ut"), resultSet.getString("upload_time"));
+					jp.put(localisation.getString("ar_project"), resultSet.getString("project_name"));
+					jp.put(localisation.getString("a_sn"), resultSet.getString("survey_notes"));
+					String location = resultSet.getString("location");
+
+					if(location != null) {							// For map
+						JSONObject jg = null;
+						JSONArray jCoords = new JSONArray();
+						String[] coords = location.split(" ");
+						if(coords.length == 2) {
+							jCoords.put(Double.parseDouble(coords[0]));
+							jCoords.put(Double.parseDouble(coords[1]));
+							jg = new JSONObject();
+							jg.put("type", "Point");
+							jg.put("coordinates", jCoords);
+							jr.put("geometry", jg);
+						} 
+					}
+					jp.put(localisation.getString("a_l"), location);		// For table
+					
+					maxRec = resultSet.getInt("ue_id");				
+
+					jr.put("properties", jp);
+					ja.put(jr);
+					recCount++;
+
+				 }
+				
+				/*
+				 * Add columns and types
+				 */
+				columns.put("prikey");
+				columns.put(localisation.getString("a_name"));
+				columns.put(localisation.getString("ar_project"));
+				columns.put(localisation.getString("a_ut"));
+				columns.put(localisation.getString("a_l"));
+				columns.put(localisation.getString("a_sn"));
+					
+				types.put("integer");
+				types.put("string");
+				types.put("string");
+				types.put("dateTime");
+				types.put("string");	
+				types.put("string");	
+				
+				String maxRecordWhere = "";
+				if(whereClause.length() == 0) {
+					maxRecordWhere = " where ue_id < " + maxRec;
+				} else {
+					maxRecordWhere = whereClause + " and ue_id < " + maxRec;
+				}
+				// Determine if there are more records to be returned
+				sql = "select count(*) from upload_event ue " + maxRecordWhere + ";";
+				try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
+				pstmt = sd.prepareStatement(sql);	
+				
+				// Apply the parameters again
+				attribIdx = 1;
+				
+				// Add user
+				pstmt.setString(attribIdx++, user);
+				pstmt.setString(attribIdx++, request.getRemoteUser());		// For RBAC
+				
+			
+				// dates
+				if(startDate != null) {
+					pstmt.setTimestamp(attribIdx++, GeneralUtilityMethods.startOfDay(startDate, tz));
+				}
+				if(endDate != null) {
+					pstmt.setTimestamp(attribIdx++, GeneralUtilityMethods.endOfDay(endDate, tz));
+				}
+				
+				log.info("Check for more records: " + pstmt.toString());
+				resultSet = pstmt.executeQuery();
+				if(resultSet.next()) {
+					jTotals.put("more_recs", resultSet.getInt(1));
+				}
+				 jTotals.put("max_rec", maxRec);
+				 jTotals.put("returned_count", recCount);
+				 
+				 jo.put("type", "FeatureCollection");
+				 jo.put("features", ja);
+				 jo.put("cols", columns);
+				 jo.put("types", types);
+				 jo.put("formName", "Usage");
+				
+			} catch (SQLException e) {
+			    
+				String msg = e.getMessage();
+				if(msg.contains("does not exist") && !msg.contains("column")) {	// Don't do a stack dump if the table did not exist that just means no one has submitted results yet
+					// Don't do a stack dump if the table did not exist that just means no one has submitted results yet
+				} else {
+					message.append(msg);
+					log.log(Level.SEVERE, message.toString(), e);
+				}
+				
+			} catch (Exception e) {
+				log.log(Level.SEVERE, message.toString(), e);
+				message.append(e.getMessage());
+			} finally {
+				
+				try {if (pstmt != null) {pstmt.close();	}} catch (SQLException e) {	}
+				
+				SDDataSource.closeConnection("surveyKPI-Items", sd);
+			}
+		}
+
+		try {
+			jo.put("message", message);
+		} catch (Exception e) {
+		}
+		return jo.toString();
+	}
+	
+	/*
+	 * Update the bad record status
 	 */
 	@POST
-	@Path("/bad/{key}")
+	@Path("/{form}/bad/{key}")
 	@Consumes("application/json")
 	public Response toggleBad(@Context HttpServletRequest request,
 			@PathParam("form") int fId,
@@ -737,6 +1063,8 @@ public class Items extends Application {
 			Locale locale = new Locale(GeneralUtilityMethods.getUserLanguage(connectionSD, request, request.getRemoteUser()));
 			ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);
 			
+			String tz = "UTC";
+			
 			log.info("New toggle bad");
 			cRel = ResultsDataSource.getConnection("surveyKPI-Items");
 			
@@ -755,7 +1083,7 @@ public class Items extends Application {
 				int pId = tableSet.getInt(2);
 				boolean isChild = pId > 0;
 				UtilityMethodsEmail.markRecord(cRel, connectionSD, localisation, tName, value, 
-						reason, key, sId, fId, false, isChild, request.getRemoteUser(), true);
+						reason, key, sId, fId, false, isChild, request.getRemoteUser(), true, tz);
 			} else {
 				throw new Exception("Could not get form id");
 			}

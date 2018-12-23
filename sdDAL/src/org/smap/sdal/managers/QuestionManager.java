@@ -57,7 +57,7 @@ public class QuestionManager {
 	/*
 	 * These functions are used when adding CSV files. 
 	 * They will add the choices from the CSV files to the survey definition
-	 */
+	 *
 	public ArrayList<Question> getByCSV(Connection sd, 
 			int sId,
 			String csvFileName			
@@ -130,7 +130,7 @@ public class QuestionManager {
 		return questions;
 
 	}
-
+	*/
 
 	/*
 	 * Save a new question
@@ -138,7 +138,7 @@ public class QuestionManager {
 	public void save(Connection sd, Connection cResults, int sId, ArrayList<Question> questions) throws Exception {
 
 		String columnName = null;
-		SurveyManager sm = new SurveyManager(localisation);		// To apply survey level updates resulting from this question change
+		SurveyManager sm = new SurveyManager(localisation, "UTC");		// To apply survey level updates resulting from this question change
 
 		PreparedStatement pstmtInsertQuestion = null;
 		String sql = "insert into question (q_id, "
@@ -913,7 +913,7 @@ public class QuestionManager {
 
 
 
-				SurveyManager sm = new SurveyManager(localisation);
+				SurveyManager sm = new SurveyManager(localisation, "UTC");
 				sm.removeUnusedSurveyManifests(sd, sId);
 
 			}
@@ -1658,7 +1658,7 @@ public class QuestionManager {
 			pstmt.executeUpdate();
 
 			// Update the survey manifest if this question references CSV files
-			SurveyManager sm = new SurveyManager(localisation);	
+			SurveyManager sm = new SurveyManager(localisation, "UTC");	
 			pstmtGetQuestionsForManifest = sd.prepareStatement(sqlGetQuestionsForManifest);
 			pstmtGetQuestionsForManifest.setInt(1, existingFormId);
 			log.info("Getting questions that may affect manifest: " + pstmtGetQuestionsForManifest.toString());

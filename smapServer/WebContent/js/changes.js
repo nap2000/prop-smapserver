@@ -59,7 +59,8 @@ $(document).ready(function() {
 		params,
 		pArray = [],
 		param = [];
-	
+
+	setupUserProfile();
 	localise.setlang();		// Localise HTML
 
 	// Get the user details
@@ -77,21 +78,6 @@ $(document).ready(function() {
 		refreshView(gMode);
 	});
 
-
-	
-	// Add responses to events
-	$('#project_name').change(function() {
-		globals.gCurrentProject = $('#project_name option:selected').val();
-		globals.gCurrentSurvey = -1;
-		globals.gCurrentTaskGroup = undefined;
-		
-		saveCurrentProject(globals.gCurrentProject, 
-				globals.gCurrentSurvey, 
-				globals.gCurrentTaskGroup);
-		
-		getSurveyList();
- 	 });
-	
 	
 	$('.language_list').off().change(function() {
 		globals.gLanguage1 = $('#language1').val();
@@ -104,15 +90,6 @@ $(document).ready(function() {
 	
 	enableUserProfileBS();
 });
-
-function getSurveyList() {
-	console.log("getSurveyList: " + globals.gCurrentSurvey);
-	if(globals.gCurrentSurvey > 0) {
-		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyListDone);
-	} else {
-		loadSurveys(globals.gCurrentProject, undefined, false, false, undefined);
-	}
-}
 
 function surveyListDone() {
 	getSurveyDetails(refreshView, true);
@@ -174,6 +151,9 @@ function setChangesHtml($element, survey) {
 
 				h[++idx] = '<th>';
 					h[++idx] = localise.set["ed_dt"];
+					h[++idx] = ' (';
+					h[++idx] = globals.gTimezone;
+					h[++idx] = ')';
 				h[++idx] = '</th>';
 
 				h[++idx] = '<th>' + localise.set["ft_xls_orig"] + '</th>';

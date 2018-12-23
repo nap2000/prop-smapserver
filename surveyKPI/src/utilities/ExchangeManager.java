@@ -66,8 +66,6 @@ import org.smap.sdal.model.TableColumn;
 
 import com.opencsv.CSVReader;
 
-import surveyKPI.ExportSurveyXls;
-
 /*
  * Handle import export of files
  * Handle the formats created by Smap Exports
@@ -84,11 +82,12 @@ import surveyKPI.ExportSurveyXls;
 public class ExchangeManager {
 	
 	private static Logger log =
-			 Logger.getLogger(ExportSurveyXls.class.getName());
+			 Logger.getLogger(ExchangeManager.class.getName());
 	
 	LogManager lm = new LogManager();		// Application log
 	
 	private ResourceBundle localisation;
+	private String tz;
 	
 	Workbook wb = null;
 	boolean isXLSX = false;
@@ -113,8 +112,12 @@ public class ExchangeManager {
 		}
 	}
 	
-	public ExchangeManager(ResourceBundle l) {
+	public ExchangeManager(ResourceBundle l, String tz) {
 		localisation = l;
+		if(tz == null) {
+			tz = "UTC";
+		}
+		this.tz = tz;
 	}
 	
 	HashMap<String, String> surveyNames = null;
@@ -212,7 +215,8 @@ public class ExchangeManager {
 							false,		// Survey duration
 							superUser,
 							false,
-							false		// Don't include audit data
+							false,		// Don't include audit data
+							tz
 							);
 						
 					// Get the list of spreadsheet columns
@@ -479,21 +483,21 @@ public class ExchangeManager {
 						Column col = columns.get(i);
 						
 						if(col.write) {
-							if(col.type.equals("select")) {
-								for(int j = 0; j < col.choices.size(); j++) {
-									if(addedCol) {
-										sqlInsert.append(",");
-									}
-									sqlInsert.append(col.columnName + "__" + col.choices.get(j).columnName);
-									addedCol = true;
-								}
-							} else {
+							//if(col.type.equals("select")) {		Commented out as assume compressed
+							//	for(int j = 0; j < col.choices.size(); j++) {
+							//		if(addedCol) {
+							//			sqlInsert.append(",");
+							//		}
+							//		sqlInsert.append(col.columnName + "__" + col.choices.get(j).columnName);
+							//		addedCol = true;
+							//	}
+							//} else {
 								if(addedCol) {
 									sqlInsert.append(",");
 								}
 								sqlInsert.append(col.columnName);
 								addedCol = true;
-							}
+							//}
 						}
 	
 					}
@@ -523,16 +527,17 @@ public class ExchangeManager {
 						Column col = columns.get(i);
 						
 						if(col.write) {
-							if(col.type.equals("select")) {
+							//if(col.type.equals("select")) {		// Assume compressed
 								
-								for(int j = 0; j < col.choices.size(); j++) {
-									if(addedCol) {
-										sqlInsert.append(",");
-									}	
-									sqlInsert.append("?");
-									addedCol = true;
-								}
-							} else if(col.type.equals("geoshape")) {
+							//	for(int j = 0; j < col.choices.size(); j++) {
+							//		if(addedCol) {
+							//			sqlInsert.append(",");
+							//		}	
+							//		sqlInsert.append("?");
+							//		addedCol = true;
+							//	}
+							//} else 
+							if(col.type.equals("geoshape")) {
 								if(addedCol) {
 									sqlInsert.append(",");
 								}
@@ -659,24 +664,24 @@ public class ExchangeManager {
 									value = null;
 								}
 								pstmtInsert.setString(index++, value);
-							} else if(col.type.equals("select")) {
-								String [] choices = value.split("\\s");
-								for(int k = 0; k < col.choices.size(); k++) {
-									Option cVal = col.choices.get(k);
-									boolean hasChoice = false;
-									for(int l = 0; l < choices.length; l++) {
-										if(cVal.value.equals(choices[l])) {
-											hasChoice = true;
-											break;
-										}
-									}
-									if(hasChoice) {
-										pstmtInsert.setInt(index++, 1);
-									} else {
-										pstmtInsert.setInt(index++, 0);
-									}
-									
-								}
+							//} else if(col.type.equals("select")) {		assume compressed
+							//	String [] choices = value.split("\\s");
+							//	for(int k = 0; k < col.choices.size(); k++) {
+							//		Option cVal = col.choices.get(k);
+							//		boolean hasChoice = false;
+							//		for(int l = 0; l < choices.length; l++) {
+							//			if(cVal.value.equals(choices[l])) {
+							//				hasChoice = true;
+							//				break;
+							//			}
+							//		}
+							//		if(hasChoice) {
+							//			pstmtInsert.setInt(index++, 1);
+							//		} else {
+							//			pstmtInsert.setInt(index++, 0);
+							//		}
+							//		
+							//	}
 							} else if(col.type.equals("int")) {
 								int iVal = 0;
 								if(notEmpty(value)) {

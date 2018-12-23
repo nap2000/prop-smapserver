@@ -61,6 +61,7 @@ public class Dashboard extends Application {
 		authorisations.add(Authorise.VIEW_DATA);
 		a = new Authorise(authorisations, null);
 	}
+	
 	/*
 	 * Get the dashboard settings
 	 * The survey id is obtained from the survey table based on the survey name stored in the
@@ -93,6 +94,7 @@ public class Dashboard extends Application {
 					"d.ds_state as state," +
 					"d.ds_title as title," +
 					"d.ds_s_id as sId," +
+					"d.ds_u_id as uId," +
 					"d.ds_s_name as sName," +
 					"d.ds_type as type," +
 					"d.ds_layer_id as layerId," +
@@ -113,60 +115,75 @@ public class Dashboard extends Application {
 					"d.ds_to_date as toDate, " +
 					"d.ds_q_is_calc as qId_is_calc, " +
 					"d.ds_filter as filter, " +
-					"d.ds_advanced_filter as advanced_filter " +
+					"d.ds_advanced_filter as advanced_filter, " +
+					"d.ds_subject_type as subject_type " +
 					" from dashboard_settings d, users u, user_project up, survey s " +
 					" where u.id = up.u_id " +
 					" and up.p_id = ? " +
 					" and s.p_id = up.p_id " +
 					" and s.s_id = d.ds_s_id " +
 					" and u.ident = d.ds_user_ident " +	// Restrict to owning user
-					" and u.ident = ? " +
+					" and u.ident = ? "
+					+ "and ds_subject_type = 'survey'" +
+					" order by ds_seq asc";
+			
+			String sqlUser = "select " +
+					"d.ds_id as id," +
+					"d.ds_seq as seq," +
+					"d.ds_state as state," +
+					"d.ds_title as title," +
+					"d.ds_s_id as sId," +
+					"d.ds_u_id as uId," +
+					"d.ds_s_name as sName," +
+					"d.ds_type as type," +
+					"d.ds_layer_id as layerId," +
+					"d.ds_region as region," +
+					"d.ds_lang as lang," +
+					"d.ds_q_id as qId," +
+					"d.ds_date_question_id as dateQuestionId," +
+					"d.ds_question as question," +
+					"d.ds_fn as fn," +
+					"d.ds_table as table, " + 
+					"d.ds_key_words as key_words, " +
+					"d.ds_q1_function as q1_function, " +
+					"d.ds_group_question_id as groupQuestionId, " +
+					"d.ds_group_question_text as groupQuestionText, " +
+					"d.ds_group_type as groupType, " +
+					"d.ds_time_group as timeGroup, " +
+					"d.ds_from_date as fromDate, " +
+					"d.ds_to_date as toDate, " +
+					"d.ds_q_is_calc as qId_is_calc, " +
+					"d.ds_filter as filter, " +
+					"d.ds_advanced_filter as advanced_filter, " +
+					"d.ds_subject_type as subject_type " +
+					" from dashboard_settings d, users u " +
+					" where u.ident = ? "
+					+ "and ds_subject_type = 'user' " +
 					" order by ds_seq asc;";
 			
-			log.info(sql + " : " + projectId + " : " + request.getRemoteUser());
+			// Add Survey panels
 			pstmt = connectionSD.prepareStatement(sql);	
 			pstmt.setInt(1, projectId);
 			pstmt.setString(2, request.getRemoteUser());
 
 			int idx = 0;
+			log.info("Get survey panels: " + pstmt.toString());
 			resultSet = pstmt.executeQuery();
-			while (resultSet.next()) {
-				
-				// Create the new Dashboard object
-				Settings s = new Settings();
+			while (resultSet.next()) {				
+				Settings s = getSettings(resultSet, idx++);
+				sArray.add(s);	
+			}
+			resultSet.close();
+			
+			// Add  user panels
+			try {if (pstmt != null) { pstmt.close();}} catch (SQLException e) {}
+			pstmt = connectionSD.prepareStatement(sqlUser);	
+			pstmt.setString(1, request.getRemoteUser());
 
-				// Populate the new Dashboard settings
-				s.id = resultSet.getInt("id");
-				s.seq = resultSet.getInt("seq");
-				s.state = resultSet.getString("state");
-				s.title = resultSet.getString("title");
-				s.pId = idx;	// panel id
-				s.sId = resultSet.getInt("sId");
-				s.sName = resultSet.getString("sName");
-				s.type = resultSet.getString("type");
-				s.layerId = resultSet.getInt("layerId");
-				s.region = resultSet.getString("region");
-				s.lang = resultSet.getString("lang");
-				s.qId = resultSet.getInt("qId");
-				s.dateQuestionId = resultSet.getInt("dateQuestionId");
-				s.question = resultSet.getString("question");
-				s.fn = resultSet.getString("fn");
-				s.table = resultSet.getString("table");
-				s.key_words = resultSet.getString("key_words");
-				s.q1_function = resultSet.getString("q1_function");
-				s.groupQuestionId = resultSet.getInt("groupQuestionId");
-				s.groupQuestionText = resultSet.getString("groupQuestionText");
-				s.groupType = resultSet.getString("groupType");
-				s.timeGroup = resultSet.getString("timeGroup");
-				s.fromDate = resultSet.getDate("fromDate");
-				s.toDate = resultSet.getDate("toDate");
-				s.qId_is_calc = resultSet.getBoolean("qId_is_calc");
-				s.filter = resultSet.getString("filter");
-				s.advanced_filter = resultSet.getString("advanced_filter");
-				
-				sArray.add(s);
-				
-				idx++;		
+			resultSet = pstmt.executeQuery();
+			while (resultSet.next()) {				
+				Settings s = getSettings(resultSet, idx++);
+				sArray.add(s);	
 			}
 			resultSet.close();
 
@@ -182,7 +199,7 @@ public class Dashboard extends Application {
 			response = Response.serverError().entity(e.getMessage()).build();
 		} finally {
 			
-			try {if (pstmt != null) { pstmt.close();}} catch (SQLException e) {log.log(Level.SEVERE, "Failed to close connection", e);}
+			try {if (pstmt != null) { pstmt.close();}} catch (SQLException e) {}
 			
 			SDDataSource.closeConnection("surveyKPI-Dashboard", connectionSD);
 			
@@ -231,8 +248,8 @@ public class Dashboard extends Application {
 					"ds_state, ds_seq, ds_title, ds_s_id, ds_s_name, ds_type, ds_layer_id, ds_region," +
 					" ds_lang, ds_q_id, ds_date_question_id, ds_question, ds_fn, ds_table, ds_key_words, ds_q1_function, " +
 					" ds_group_question_id, ds_group_question_text, ds_group_type, ds_user_ident, ds_time_group," +
-					" ds_from_date, ds_to_date, ds_q_is_calc, ds_filter, ds_advanced_filter) values (" +
-					"?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";		
+					" ds_from_date, ds_to_date, ds_q_is_calc, ds_filter, ds_advanced_filter, ds_subject_type, ds_u_id) values (" +
+					"?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";		
 			pstmtAddView = connectionSD.prepareStatement(sqlAddView);	 			
 			
 			String sqlReplaceView = "update dashboard_settings set " +
@@ -260,7 +277,9 @@ public class Dashboard extends Application {
 					" ds_to_date = ?," +
 					" ds_q_is_calc = ?," +
 					" ds_filter = ?," +
-					" ds_advanced_filter = ?" +
+					" ds_advanced_filter = ?," +
+					" ds_subject_type = ?, " +
+					" ds_u_id = ? " +
 					" where ds_id = ? " +
 					" and ds_user_ident = ?;";						
 			pstmtReplaceView = connectionSD.prepareStatement(sqlReplaceView);
@@ -308,6 +327,8 @@ public class Dashboard extends Application {
 						pstmtAddView.setBoolean(24, s.qId_is_calc);
 						pstmtAddView.setString(25, s.filter);
 						pstmtAddView.setString(26, s.advanced_filter);
+						pstmtAddView.setString(27, s.subject_type);
+						pstmtAddView.setInt(28, s.uId);
 						log.info("Add view: " + pstmtAddView.toString());
 						pstmtAddView.executeUpdate();		
 
@@ -339,8 +360,10 @@ public class Dashboard extends Application {
 						pstmtReplaceView.setBoolean(23, s.qId_is_calc);
 						pstmtReplaceView.setString(24, s.filter);
 						pstmtReplaceView.setString(25, s.advanced_filter);
-						pstmtReplaceView.setInt(26, s.id);
-						pstmtReplaceView.setString(27, user);
+						pstmtReplaceView.setString(26, s.subject_type);
+						pstmtReplaceView.setInt(27, s.uId);
+						pstmtReplaceView.setInt(28, s.id);
+						pstmtReplaceView.setString(29, user);
 						
 						log.info("Update view: " + pstmtReplaceView.toString());
 						pstmtReplaceView.executeUpdate();
@@ -436,5 +459,42 @@ public class Dashboard extends Application {
 		return response;
 	}
 
+	private Settings getSettings(ResultSet resultSet, int idx) throws SQLException {
+		// Create the new Dashboard object
+		Settings s = new Settings();
+
+		// Populate the new Dashboard settings
+		s.id = resultSet.getInt("id");
+		s.seq = resultSet.getInt("seq");
+		s.state = resultSet.getString("state");
+		s.title = resultSet.getString("title");
+		s.pId = idx;	// panel id
+		s.sId = resultSet.getInt("sId");
+		s.uId = resultSet.getInt("uId");
+		s.sName = resultSet.getString("sName");
+		s.type = resultSet.getString("type");
+		s.layerId = resultSet.getInt("layerId");
+		s.region = resultSet.getString("region");
+		s.lang = resultSet.getString("lang");
+		s.qId = resultSet.getInt("qId");
+		s.dateQuestionId = resultSet.getInt("dateQuestionId");
+		s.question = resultSet.getString("question");
+		s.fn = resultSet.getString("fn");
+		s.table = resultSet.getString("table");
+		s.key_words = resultSet.getString("key_words");
+		s.q1_function = resultSet.getString("q1_function");
+		s.groupQuestionId = resultSet.getInt("groupQuestionId");
+		s.groupQuestionText = resultSet.getString("groupQuestionText");
+		s.groupType = resultSet.getString("groupType");
+		s.timeGroup = resultSet.getString("timeGroup");
+		s.fromDate = resultSet.getDate("fromDate");
+		s.toDate = resultSet.getDate("toDate");
+		s.qId_is_calc = resultSet.getBoolean("qId_is_calc");
+		s.filter = resultSet.getString("filter");
+		s.advanced_filter = resultSet.getString("advanced_filter");
+		s.subject_type = resultSet.getString("subject_type");
+		
+		return s;
+	}
 }
 

@@ -115,12 +115,12 @@ $(document).ready(function() {
 		pArray = [],
 		param = [],
 		openingNew = false,
-		dont_get_current_survey = true,
-		bs = isBusinessServer();
+		dont_get_current_survey = true;
 	
 	window.bootbox = bootbox;
 
     setCustomEdit();
+	setupUserProfile();
 	localise.setlang();		// Localise HTML
 	
 	// Get the parameters and start editing a survey if one was passed as a parameter
@@ -301,8 +301,7 @@ $(document).ready(function() {
 		// Set up media dialog to manage loading and deleting of media
 		$('.mediaManage').show();
 		$('.mediaSelect').hide();
-		$('#mediaModalLabel').html("Manage Media Files For this Form. " +
-				"Note organisation level media files now found under <b>Shared Resources</b> in admin module.");
+		$('#mediaModalLabel').html(localise.set["ed_mmf"]);
 		$('#mediaModal table').off();
 		$('#surveyPanel, #orgPanel').find('tr').removeClass('success');
 		
@@ -1000,7 +999,7 @@ function respondToEventsChoices($context) {
 		
 		// Show an error and set the filter to none if the user chose cascade when there are no previous select questions
 		if (filterType === "cascade" && $('#previousSelect option').length == 0) {
-			alert("Error; There are no previous select questions to get values from. You may want to set a custom filter.");
+			alert(localise.set["c_error"] + ": " + localise.set["msg_prev_select"]);
 			filterType = "none";
 			$('#filterType').val(filterType);
 		}

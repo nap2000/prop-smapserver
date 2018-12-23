@@ -81,6 +81,7 @@ public class TaskManager {
 	LogManager lm = new LogManager(); // Application log
 
 	private ResourceBundle localisation = null;
+	private String tz;
 	
 	private String fullStatusList[] = {
 			"new", 
@@ -106,8 +107,12 @@ public class TaskManager {
 		public Timestamp taskStart = null;			// Start time
 	}
 
-	public TaskManager(ResourceBundle l) {
+	public TaskManager(ResourceBundle l, String tz) {
 		localisation = l;
+		if(tz == null) {
+			tz = "UTC";
+		}
+		this.tz = tz;
 	}
 	
 	/*
@@ -562,7 +567,7 @@ public class TaskManager {
 		String sqlGetRules = "select tg_id, name, rule, address_params, target_s_id from task_group where source_s_id = ?;";
 		PreparedStatement pstmtGetRules = null;
 
-		SurveyManager sm = new SurveyManager(localisation);
+		SurveyManager sm = new SurveyManager(localisation, "UTC");
 		Survey survey = null;
 
 		
@@ -579,49 +584,52 @@ public class TaskManager {
 					// Get the forms - this is required by the test filter
 					survey = sm.getById(sd, cResults, remoteUser, source_s_id, true, "", 
 							instanceId, false, false, true, false, true, "real", 
-							false, false, false, "geojson");
+							false, false, true, "geojson");	// Set super user true so that roles are ignored
 				}
 
 				int tgId = rs.getInt(1);
 				String tgName = rs.getString(2);
 				AssignFromSurvey as = new Gson().fromJson(rs.getString(3), AssignFromSurvey.class);
-				String addressString = rs.getString(4);
-				ArrayList<TaskAddressSettings> address = null;
-				if(addressString != null) {
-					address = new Gson().fromJson(addressString, new TypeToken<ArrayList<TaskAddressSettings>>() {}.getType());
-				}
-				int target_s_id = rs.getInt(5);
-
-				log.info("Assign Survey String: " + rs.getString(3));
-				log.info("userevent: matching rule: " + as.task_group_name + " for survey: " + source_s_id);	// For log
-
-				/*
-				 * Check filter to see if this rule should be fired
-				 * In addition avoid permanent loops of tasks being reassigned after completion
-				 *   Don't fire if form to be updated is the same one that has been submitted 
-				 */
-				boolean fires = false;
-				if(as.add_future  && source_s_id != target_s_id) {
-					log.info("Rule fired however target = source");
-				}
-				
-				if(as.filter != null && as.filter.advanced != null) {
-					fires = GeneralUtilityMethods.testFilter(cResults, localisation, survey, as.filter.advanced, instanceId);
-					if(!fires) {
-						log.info("Rule not fired as filter criteria not met: " + as.filter.advanced);
+				if(as.add_future) {
+					String addressString = rs.getString(4);
+					ArrayList<TaskAddressSettings> address = null;
+					if(addressString != null) {
+						address = new Gson().fromJson(addressString, new TypeToken<ArrayList<TaskAddressSettings>>() {}.getType());
 					}
-				} else {
-					fires = true;
-				}
-				
-
-				if(fires) {
-					log.info("userevent: rule fires: " + (as.filter == null ? "no filter" : "yes filter") + " for survey: " + source_s_id + 
-							" task survey: " + target_s_id);
-					TaskInstanceData tid = getTaskInstanceData(sd, cResults, 
-							source_s_id, instanceId, as, address); // Get data from new submission
-					writeTaskCreatedFromSurveyResults(sd, cResults, as, hostname, tgId, tgName, pId, pName, source_s_id, 
-							target_s_id, tid, instanceId, true, remoteUser);  // Write to the database
+					int target_s_id = rs.getInt(5);
+	
+					log.info("Assign Survey String: " + rs.getString(3));
+					log.info("userevent: matching rule: " + as.task_group_name + " for survey: " + source_s_id);	// For log
+	
+					/*
+					 * Check filter to see if this rule should be fired
+					 * In addition avoid permanent loops of tasks being reassigned after completion
+					 *   Don't fire if form to be updated is the same one that has been submitted 
+					 */
+					boolean fires = false;
+					
+					if(as.filter != null && as.filter.advanced != null) {
+						fires = GeneralUtilityMethods.testFilter(cResults, localisation, survey, as.filter.advanced, instanceId, tz);
+						if(!fires) {
+							log.info("Rule not fired as filter criteria not met: " + as.filter.advanced);
+						}
+					} else {
+						fires = true;
+					}
+					
+					if(fires && source_s_id == target_s_id) {
+						log.info("Rule fired however target survey id = source id (" + source_s_id + ")");
+					}
+					
+	
+					if(fires) {
+						log.info("userevent: rule fires: " + (as.filter == null ? "no filter" : "yes filter") + " for survey: " + source_s_id + 
+								" task survey: " + target_s_id);
+						TaskInstanceData tid = getTaskInstanceData(sd, cResults, 
+								source_s_id, instanceId, as, address); // Get data from new submission
+						writeTaskCreatedFromSurveyResults(sd, cResults, as, hostname, tgId, tgName, pId, pName, source_s_id, 
+								target_s_id, tid, instanceId, true, remoteUser);  // Write to the database
+					}
 				}
 			}
 
@@ -682,7 +690,7 @@ public class TaskManager {
 			if(as.update_results) {
 				initial_data_url = "http://" + hostname + "/instanceXML/" + 
 						targetSurveyIdent + "/0?key=prikey&keyval=" + tid.prikey;					// deprecated
-				targetInstanceId = instanceId;										// New way to identify existing records to be updated
+				targetInstanceId = instanceId;													// New way to identify existing records to be updated
 			}
 
 			/*
@@ -1343,7 +1351,7 @@ public class TaskManager {
 						pstmtSetStatus.setInt(2, aId);
 						pstmtSetStatus.executeUpdate();
 						
-						TaskManager tm = new TaskManager(localisation);
+						TaskManager tm = new TaskManager(localisation, tz);
 						TaskEmailDetails ted = tm.getEmailDetails(sd, tgId);
 						
 						// Create a submission message (The task may or may not have come from a submission)
@@ -1531,13 +1539,10 @@ public class TaskManager {
 	
 	public Timestamp getTaskStartTime(AssignFromSurvey as, Timestamp taskStart) {
 		
-		if(as.taskStart == -1) {									
+		if(as.taskStart == -1 || taskStart == null) {									
 			taskStart = new Timestamp(System.currentTimeMillis());
-		} else {
-			if(taskStart == null) {
-				taskStart = new Timestamp(System.currentTimeMillis());
-			}
-		}
+		} 
+		
 		if(as.taskAfter > 0) {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(taskStart);
@@ -1713,7 +1718,7 @@ public class TaskManager {
 		
 		pstmt.setString(1, title);
 		pstmt.setInt(2,  target_s_id);
-		pstmt.setInt(3,  target_s_id);			// To set suvey name
+		pstmt.setInt(3,  target_s_id);			// To set survey name
 		pstmt.setString(4, formUrl);					
 		pstmt.setString(5, location);			// geopoint
 		pstmt.setString(6, address);
@@ -1971,11 +1976,11 @@ public class TaskManager {
 				status = "unsent";
 			}
 			
-			TaskManager tm = new TaskManager(localisation);
+			TaskManager tm = new TaskManager(localisation, tz);
 			TaskEmailDetails ted = tm.getEmailDetails(sd, tgId);
 			
 			// Create an action this should be (mostly) identical for all emails
-			ActionManager am = new ActionManager();
+			ActionManager am = new ActionManager(localisation, tz);
 			Action action = new Action("task");
 			action.surveyIdent = sIdent;
 			action.pId = pId;
@@ -2102,7 +2107,7 @@ public class TaskManager {
 		}
 		
 		boolean generateBlank =  (msg.instanceId == null) ? true : false;	// If false only show selected options
-		SurveyManager sm = new SurveyManager(localisation);
+		SurveyManager sm = new SurveyManager(localisation, "UTC");
 		Survey survey = sm.getById(sd, cResults, msg.user, msg.sId, true, basePath, 
 				msg.instanceId, true, generateBlank, true, false, true, "real", 
 				false, false, true, "geojson");
@@ -2120,7 +2125,7 @@ public class TaskManager {
 				msg.content = sm.fillStringTemplate(survey, msg.content);
 			}
 			log.info("xxxxxxxxxxxxx2: " + msg.content);
-			TextManager tm = new TextManager(localisation);
+			TextManager tm = new TextManager(localisation, tz);
 			ArrayList<String> text = new ArrayList<> ();
 			text.add(msg.subject);
 			text.add(msg.content);
@@ -2213,7 +2218,8 @@ public class TaskManager {
 											scheme,
 											server,
 											emailKey,
-											localisation);
+											localisation,
+											organisation.server_description);
 									setAssignmentStatus(sd, msg.aId, "accepted");
 								}
 							}
@@ -2268,6 +2274,7 @@ public class TaskManager {
 			pstmt = sd.prepareStatement(sql);
 			pstmt.setString(1, status);
 			pstmt.setInt(2, aId);
+			log.info("Set assignment status: " + pstmt.toString());
 			pstmt.executeUpdate();
 		} finally {
 			if(pstmt != null) {try {pstmt.close();} catch(Exception e) {}}

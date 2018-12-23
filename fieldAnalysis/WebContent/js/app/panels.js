@@ -45,8 +45,6 @@ var hexp1 = '<img class="pExpand" value="';
 var hexp2 = '" src="img/expand.png"/>';
 var hset1 = '<img class="pSettings" value="';
 var hset2 = '" src="img/settings16.png"/>';
-var hrep1 = '<img class="pReport" value="';
-var hrep2 = '" src="img/report.png"/>';
 
 var hmap1 = '<a class="slide" href="#slideLeft">\<</a>';
 var hmap2 = '<div style="height: 100%; width: 100%;" >';
@@ -120,19 +118,18 @@ $(document).ready(function() {
 	
 	var aDate;
 	
-	window.moment = moment;	// Required as common.js not part of module
+	window.moment = moment;	                // Required as common.js not part of module
 	window.extended_model = extended_model;
-	
+	window.localise = localise;             // Required as survey control is not part of module
+
+	setupUserProfile();
 	localise.setlang();		// Localise HTML
 	
     // Add a new panel button click
     $('.db_settings_add').click(function() { 
     	addNewPanel($(this).val());
     });
-    
-    
-    // ** End Translations **
-    
+
 	 // Initialse the settings dialog
 	 $('#p_settings').dialog(
 		{
@@ -159,6 +156,8 @@ $(document).ready(function() {
 		        			qMeta, groupMeta,
 		        			qId,
 		        			sId,
+					        uId,
+					        subjectType,
 		        			qId_is_calc = false;
 		        		
 		        		// Check that the meta data for the question has been retrieved
@@ -178,13 +177,17 @@ $(document).ready(function() {
 		        				qId = calcs[1];
 		        				qId_is_calc = true;
 		        			}
-	 					} 
-						sId  = $('#settings_survey option:selected').val();
-		        		if(sId == "-1") {
+	 					}
+		        		subjectType = $('#subject_type option:selected').val();
+
+		        		sId  = $('#settings_survey option:selected').val();
+		        		if(subjectType !== "user" && sId == "-1") {
 							//alert("You must select a survey");
 							alert(localise.set["msg_sel_survey"]);
 		        			return false;
 		        		}
+		        		uId = $('#settings_user option:selected').val();
+
 		        		if(newType == "graph" && qId == "-1") {
 							//alert("You must select a question to show on a graph");
 		        			alert(localise.set["msg_sel_q"]);
@@ -196,6 +199,7 @@ $(document).ready(function() {
 						view = views[globals.gViewIdx];
 
 						view.sId  = sId;
+						view.uId = uId;
 						view.qId = qId;
 						view.qId_is_calc = qId_is_calc;
 						
@@ -229,7 +233,7 @@ $(document).ready(function() {
 						}
 						// Determine if we need to redraw the panel
 						if(newType !== view.type) {
-							setPanelType(newType, globals.gViewIdx, view.timeGroup, view.qId);
+							setPanelType(newType, globals.gViewIdx, view.timeGroup, view.qId, view.subject_type);
 						}
 						if(newTitle !== view.title) {	// Set the new title
 							$('#p' + view.pId).find('span').html(newTitle);
@@ -240,10 +244,15 @@ $(document).ready(function() {
 						if(view.layerId != "-1") {
 							view.state = "minimised";
 						}
-						view.sName = $('#settings_survey option:selected').text();
+						if(subjectType === "survey") {
+							view.sName = $('#settings_survey option:selected').text();
+						} else {
+							view.sName = $('#settings_user option:selected').text();
+						}
 						view.question = $('#settings_question option:selected').text();
 		        		view.lang = $('#settings_language option:selected').val();
 		        		view.fn = $('#q1_function option:selected').val();
+				        view.subject_type = subjectType;
 		        		
 		        		view.key_words = $('#settings_key_words').val();
 		        		
@@ -383,8 +392,8 @@ function refreshPanels() {
 	
 	for(i = 0; i < views.length; i++) {
 		if(views[i].state != "deleted") {
-			createPanel(i, $panels, views[i].title, views[i].sName);
-			setPanelType(views[i].type, i, views[i].timeGroup, views[i].qId);
+			createPanel(i, $panels, views[i].title, views[i].sName, views[i].subject_type);
+			setPanelType(views[i].type, i, views[i].timeGroup, views[i].qId, views[i].subject_type);
 			getData(views[i]);		
 		}
 	}
@@ -445,10 +454,6 @@ function addTriggers() {
 		delPanel($(this));
 	});
 	
-	$('.pReport').off().click(function() {	// Export a panel
-		exportReport($(this));
-	});
-	
 	$('.slide').off().click(function() {	// Slide left right panels
 		slide($(this));
 	});
@@ -471,14 +476,14 @@ function addNewPanel(type) {
 		idx = views.length;
 	}
 
-	views[idx] = {id:-1, seq: idx, state: "shown", title:"New Chart", pId: idx, 
+	views[idx] = {id:-1, seq: idx, state: "shown", title:"", pId: idx,
 			sId:-1, type:type, region:"None", lang:"", qId:"-1", table:"", groupId:-1,
 			groupType:"normal", layerId:"-1"};		
 	gExpandedPanelSeq = idx;	// Make sure this panel is shown as expanded when the panels are initially refreshed. This happens after panel creation
 
 	var $panels = $('#panels');
-	createPanel(idx, $panels, views[idx].title, views[idx].sName);
-	setPanelType(views[idx].type, idx, views[idx].timeGroup, views[idx].qId);
+	createPanel(idx, $panels, views[idx].title, views[idx].sName, views[idx].subject_type);
+	setPanelType(views[idx].type, idx, views[idx].timeGroup, views[idx].qId, views[idx].subject_type);
 	addTriggers();
 	gNewPanel = true;
 	$('#p' + idx).find('.pSettings,.pExpand').trigger('click');		// Make the new panel full screen and edit the settings
@@ -516,18 +521,20 @@ function delPanel($this, idx) {
 
 
 // Create a single panel 
-function createPanel(idx, $panels, title, surveyName) {
-	
-	
+function createPanel(idx, $panels, title, surveyName, subject_type) {
+
 	var h = [],
 		i = -1;
 	
 	// If the Chart title is the default "New Chart" then set to the survey name
-	if(title === "New Chart") {
-		title = surveyName;
+	if(title === "") {
+		if(subject_type === "survey") {
+			title = surveyName;
+		} else {
+			title = localise.set["a_ua"] + ": " + surveyName;
+		}
 	}
 
-	
 	h[++i] = hstart;
 	h[++i] = idx;
 	h[++i] = hstart2;
@@ -544,9 +551,6 @@ function createPanel(idx, $panels, title, surveyName) {
 	h[++i] = hset1;
 	h[++i] = idx;
 	h[++i] = hset2;
-	h[++i] = hrep1;
-	h[++i] = idx;
-	h[++i] = hrep2;
 	h[++i] = hdiv2;
 	h[++i] = hcont;
 	h[++i] = hdiv2;
@@ -556,7 +560,7 @@ function createPanel(idx, $panels, title, surveyName) {
 }
 
 //Create a single panel for the passed in view
-function setPanelType(type, idx, period, qId) {
+function setPanelType(type, idx, period, qId, subject_type) {
 	
 	$panelContent = $('#p' + idx).find('.pContent');
 	$panelContent.empty();
@@ -603,7 +607,9 @@ function setPanelType(type, idx, period, qId) {
 		initializeMap(idx);
 		break;
 	case "table":
-		h[++i] = htable1;
+		if(subject_type !== 'user') {
+			h[++i] = htable1;
+		}
 		h[++i] = htable2;
 		h[++i] = idx;
 		h[++i] = htable3;
@@ -663,98 +669,6 @@ function setPanelType(type, idx, period, qId) {
 	if(!globals.gIsAnalyst) {
 		$('.pfoot').hide();
 	}
-	
-}
-
-// Handle export item to report
-function exportReport($this) {
-	
-	var $data, map,
-		html,
-		viewIdx = $this.attr("value"),
-		views = globals.gSelector.getViews(),
-		canvas, canvasData, item,
-		csvValue,
-		format, num,
-		i,
-		items,
-		multiLayers = [];		// Extension of results to allow for multiple map layers
-	
-	// Get the report item and add it to the report dialog
-	if(views[viewIdx].type == "graph")  {
-		
-		//var canvas = $('#chartdiv' + views[viewIdx].pId).jqplotToImage(0, 0);
-		canvas = jqplotToImg($('#chartdiv' + views[viewIdx].pId));
-		canvasData = canvas.toDataURL();
-		gReport = {
-				title: views[viewIdx].title, 
-				smap: {
-					data_gen_capture: canvasData,
-					data_gen: JSON.stringify(views[viewIdx].results),
-					data_gen_type: "graph",
-					sId: views[viewIdx].sId
-				},
-				type: "data_url",
-				action: "new"
-				};
-		
-	} else if(views[viewIdx].type == "table"){
-		
-		$data = $('#table_panel' + views[viewIdx].pId).find('table');
-		csvValue = $data.table2CSV({delivery:'value'});
-		
-		gReport = {
-				title: views[viewIdx].title, 
-				type: 'rich',
-				smap: {
-					data_gen_type: "table",
-					data_gen: JSON.stringify(views[viewIdx].results),
-					data_gen_capture: csvValue,
-					sId: views[viewIdx].sId
-				},
-				type: "data_url",
-				html: html,
-				width: 500,
-				height: 800,
-				action: "new"
-		};
-		
-	} else if(views[viewIdx].type == "map") {
-		
-		// Add the layers from the selected panel
-		for(i = 0; i < views[viewIdx].results.length; i++) {
-			multiLayers.push(views[viewIdx].results[i]);
-		}
-		// Add the layers from other panels that may be displayed on this map
-		for(i = 0; i < views.length; i++) {
-			if(i !== viewIdx && views[i].state != "deleted"  && views[i].layerId === views[viewIdx].id) {
-				for(j = 0; j < views[i].results.length; j++) {
-					multiLayers.push(views[i].results[j]);
-				}
-			}
-		}
-		
-		gReport = {
-				title: views[viewIdx].title, 
-				width: 1024,
-				height: 768,
-				smap: {
-					data_gen_type: "map",
-					data_gen: JSON.stringify(multiLayers),
-					data_bounds: views[viewIdx].bounds,		// TODO include bounds from other layers
-					sId: views[viewIdx].sId
-				},
-				type: "data_url",
-				action: "new"
-		};
-		
-		
-	} else {
-		alert("Reports can only be created from graphs, tables, maps and images");
-	}
-	
-	$('#reportContainer').dialog("open");
-	setReport(gReport);
 	
 }
 
@@ -833,18 +747,9 @@ function savePanels(newPanel) {
 	}
 	
 	// Get a deep copy of the views as some properties will need to be deleted so that stringify can work
-	//saveViews = $.extend(true, [], inViews);
 	for(i = 0; i < inViews.length; i++) {
 		saveViews[i] = copyView(inViews[i]);
 	}
-	
-	// Remove view items that should not be saved
-	//for(i = 0; i < saveViews.length; i++) {
-	//	delete saveViews[i].bounds;
-	//	delete saveViews[i].selectResultsControl;
-	//	delete saveViews[i].allLayers;
-	//	delete saveViews[i].results;
-	//}
 
 	viewsString = JSON.stringify(saveViews);
 	addHourglass();
@@ -870,12 +775,8 @@ function savePanels(newPanel) {
  */
 
 function savePanelState(view) {
-	
-	//var saveView = $.extend(true, {}, view);
+
 	var saveView = copyView(view);
-	//delete saveView.allLayers;
-	//delete saveView.bounds;
-	//delete saveView.selectResultsControl;
 	
 	var viewString = JSON.stringify(saveView);
 	$.ajax({

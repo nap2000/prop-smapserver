@@ -109,6 +109,8 @@ public class MessagingManagerApply {
 				Locale locale = new Locale(organisation.locale);
 				ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);
 				
+				String tz = "UTC";		// Default timezone to UTC
+				
 				log.info("++++++ Message: " + topic + " " + description + " : " + data );
 
 				String status = "success";
@@ -160,7 +162,7 @@ public class MessagingManagerApply {
 							msg.user); 
 					
 				} else if(topic.equals("email_task")) {
-					TaskManager tm = new TaskManager(localisation);
+					TaskManager tm = new TaskManager(localisation, tz);
 					if(organisation.email_task) {
 						EmailTaskMessage msg = gson.fromJson(data, EmailTaskMessage.class);	
 						
@@ -221,7 +223,8 @@ public class MessagingManagerApply {
 											"https", 
 											serverName, 
 											emailKey,
-											localisation);
+											localisation,
+											organisation.server_description);
 								}
 							}
 						} catch (Exception e) {

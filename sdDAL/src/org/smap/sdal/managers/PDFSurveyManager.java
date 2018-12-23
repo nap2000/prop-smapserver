@@ -124,6 +124,7 @@ public class PDFSurveyManager {
 	private Connection sd;
 	private Connection cResults;
 	private String user;
+	private String tz;
 	
 	// Other global values
 	int languageIdx = 0;
@@ -153,13 +154,17 @@ public class PDFSurveyManager {
 		HashMap <String, ArrayList<String>> addToList = new HashMap <String, ArrayList<String>>();
 	}
 	
-	public PDFSurveyManager(ResourceBundle l, Connection sd, Connection cResults, Survey s, String u) {
+	public PDFSurveyManager(ResourceBundle l, Connection sd, Connection cResults, Survey s, String u, String tz) {
 		localisation = l;
-		choiceManager = new ChoiceManager(l);
+		choiceManager = new ChoiceManager(l, tz);
 		this.sd = sd;
 		this.cResults = cResults;
 		survey  = s;
 		user = u;
+		if(tz == null) {
+			tz = "UTC";
+		}
+		this.tz = tz;
 	}
 
 	/*
@@ -192,7 +197,7 @@ public class PDFSurveyManager {
 		ServerManager serverManager = new ServerManager();
 		ServerData serverData = serverManager.getServer(sd, localisation);
 
-		UserManager um = new UserManager();
+		UserManager um = new UserManager(localisation);
 		int [] repIndexes = new int[20];		// Assume repeats don't go deeper than 20 levels
 
 		Document document = null;
@@ -330,7 +335,7 @@ public class PDFSurveyManager {
 
 				writer.setInitialLeading(12);	
 
-				writer.setPageEvent(new PdfPageSizer(survey.displayName, survey.pName, 
+				writer.setPageEvent(new PdfPageSizer(survey.displayName, survey.projectName, 
 						user, basePath, null,
 						marginLeft, marginRight, marginTop_2, marginBottom_2)); 
 				document.open();
@@ -387,9 +392,6 @@ public class PDFSurveyManager {
 
 			}
 
-		} catch (Exception e) {
-			log.log(Level.SEVERE, "Exception", e);
-			throw e;
 		} finally {
 			if(document != null) try {document.close();} catch (Exception e) {};
 			if(writer != null) try {writer.close();} catch (Exception e) {};
@@ -526,7 +528,7 @@ public class PDFSurveyManager {
 					if(r.value != null) {
 						// Convert date to local time
 						DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-						df.setTimeZone(TimeZone.getTimeZone("GMT"));
+						df.setTimeZone(TimeZone.getTimeZone("UTC"));
 						Date date = df.parse(r.value);
 						String tzString = null;
 						
@@ -858,6 +860,7 @@ public class PDFSurveyManager {
 									oId);
 	
 							newTable.setWidthPercentage(100);
+							newTable.setKeepTogether(true);
 	
 							// Add a gap if this is the first question of the record
 							// or the previous row was at a different depth
@@ -1253,30 +1256,33 @@ public class PDFSurveyManager {
 			String [] appValues = appearance.split(" ");
 			if(appearance != null) {
 				for(int i = 0; i < appValues.length; i++) {
-					if(appValues[i].startsWith("pdflabelbg")) {
-						setColor(appValues[i], di, true);
-					} else if(appValues[i].startsWith("pdfvaluebg")) {
-						setColor(appValues[i], di, false);
-					} else if(appValues[i].startsWith("pdflabelw")) {
-						setWidths(appValues[i], di);
-					} else if(appValues[i].startsWith("pdfheight")) {
-						setHeight(appValues[i], di);
-					} else if(appValues[i].startsWith("pdfspace")) {
-						setSpace(appValues[i], di);
-					} else if(appValues[i].equals("pdflabelcaps")) {
+					String app = appValues[i].trim().toLowerCase();
+					if(app.startsWith("pdflabelbg")) {
+						setColor(app, di, true);
+					} else if(app.startsWith("pdfvaluebg")) {
+						setColor(app, di, false);
+					} else if(app.startsWith("pdflabelw")) {
+						setWidths(app, di);
+					} else if(app.startsWith("pdfheight")) {
+						setHeight(app, di);
+					} else if(app.startsWith("pdfspace")) {
+						setSpace(app, di);
+					} else if(app.equals("pdflabelcaps")) {
 						di.labelcaps = true;
-					} else if(appValues[i].equals("pdflabelbold")) {
+					} else if(app.equals("pdflabelbold")) {
 						di.labelbold = true;
-					} else if(appValues[i].startsWith("pdfmap")) {			// mapbox map id
-						di.map = getAppValue(appValues[i]);
-					} else if(appValues[i].startsWith("pdflocation")) {
-						di.location = getAppValue(appValues[i]);			// lon,lat,zoom
-					} else if(appValues[i].toLowerCase().startsWith("pdfbarcode")) {
+					} else if(app.startsWith("pdfmap")) {			// mapbox map id
+						di.map = getAppValue(app);
+					} else if(app.startsWith("pdflocation")) {
+						di.location = getAppValue(app);			// lon,lat,zoom
+					} else if(app.startsWith("pdfbarcode")) {
 						di.isBarcode = true;		
-					} else if(appValues[i].toLowerCase().startsWith("pdfzoom")) {
-						di.zoom = getAppValue(appValues[i]);		
-					} else if(appValues[i].toLowerCase().startsWith("pdfhyperlink")) {
+					} else if(app.startsWith("pdfzoom")) {
+						di.zoom = getAppValue(app);		
+					} else if(app.startsWith("pdfhyperlink")) {
 						di.isHyperlink = true;		
+					} else if(app.equals("signature")) {
+						di.isSignature = true;		
 					}
 				}
 			}
@@ -1604,7 +1610,7 @@ public class PDFSurveyManager {
 				if(di.type.equals("dateTime") || di.type.equals("timestamp")) {		// Set date time to local time
 					
 					DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					df.setTimeZone(TimeZone.getTimeZone("GMT"));
+					df.setTimeZone(TimeZone.getTimeZone("UTC"));
 					Date date = df.parse(di.value);
 					String tzString = null;
 					
@@ -1766,25 +1772,12 @@ public class PDFSurveyManager {
 
 				ListItem item = new ListItem(GeneralUtilityMethods.unesc(text), f);
 
-				if(isSelectMultiple) {
-					//if(aChoice.isSet) {
-					//	item.setListSymbol(new Chunk("\uf046", Symbols)); 
-					//	list.add(item);	
-					//} else {
-
-						item.setListSymbol(new Chunk("\uf096", Symbols)); 
-						list.add(item);
-					//}
-
+				if(isSelectMultiple) {	
+					item.setListSymbol(new Chunk("\uf096", Symbols)); 
+					list.add(item);
 				} else {
-					//if(aChoice.isSet) {
-					//	item.setListSymbol(new Chunk("\uf111", Symbols)); 
-					//	list.add(item);
-
-					//} else {
-						item.setListSymbol(new Chunk("\uf10c", Symbols)); 
-						list.add(item);
-					//}
+					item.setListSymbol(new Chunk("\uf10c", Symbols)); 
+					list.add(item);
 				}
 			}
 

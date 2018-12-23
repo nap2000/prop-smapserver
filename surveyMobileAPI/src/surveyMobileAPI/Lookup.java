@@ -131,6 +131,8 @@ public class Lookup extends Application{
 			Locale locale = new Locale(GeneralUtilityMethods.getUserLanguage(sd, request, request.getRemoteUser()));
 			ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);			
 		
+			String tz = "UTC";
+			
 			HashMap<String, String> results = null;
 			int oId = GeneralUtilityMethods.getOrganisationId(sd, request.getRemoteUser(), sId);
 			if(fileName != null) {
@@ -138,7 +140,7 @@ public class Lookup extends Application{
 					// Get data from a survey
 					cResults = ResultsDataSource.getConnection(connectionString);				
 					SurveyTableManager stm = new SurveyTableManager(sd, cResults, localisation, oId, sId, fileName, request.getRemoteUser());
-					stm.initData(pstmt, "lookup", keyColumn, keyValue, null, null, null);
+					stm.initData(pstmt, "lookup", keyColumn, keyValue, null, null, null, tz);
 					results = stm.getLineAsHash();
 				} else {
 					// Get data from a csv file
@@ -208,6 +210,8 @@ public class Lookup extends Application{
 			Locale locale = new Locale(GeneralUtilityMethods.getUserLanguage(sd, request, request.getRemoteUser()));
 			ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);			
 		
+			String tz = "UTC";
+			
 			// Clean the data
 			ArrayList<String> whereColumns = new ArrayList<String> ();
 			if(searchType != null) {
@@ -258,13 +262,21 @@ public class Lookup extends Application{
 					cResults = ResultsDataSource.getConnection(connectionString);				
 					SurveyTableManager stm = new SurveyTableManager(sd, cResults, localisation, oId, sId, fileName, request.getRemoteUser());
 					stm.initData(pstmt, "choices", null, null,
-							selectionString, arguments, whereColumns);
+							selectionString, arguments, whereColumns, tz);
 					
 					HashMap<String, String> line = null;
 					int idx = 0;
 					results = new ArrayList<SelectChoice> ();
 					while((line = stm.getLineAsHash()) != null) {
-						SelectChoice choice = new SelectChoice(line.get(valueColumn), line.get(labelColumns), idx++);
+						String[] lArray = labelColumns.split(",");
+						StringBuffer lOutput = new StringBuffer("");
+						for(String l : lArray) {
+							if(lOutput.length() > 0) {
+								lOutput.append(", ");
+							}
+							lOutput.append(line.get(l.trim()));
+						}
+						SelectChoice choice = new SelectChoice(line.get(valueColumn), lOutput.toString(), idx++);
 						results.add(choice);
 					}
 				} else {

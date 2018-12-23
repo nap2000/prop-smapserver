@@ -39,6 +39,9 @@ public class User {
 	public int current_survey_id;
 	public int current_task_group_id;
 	public int o_id;
+	public int e_id;
+	public String current_org_name;
+	public int current_org_id;
 	public String organisation_name;
 	public String company_name;
 	public String company_address;
@@ -47,17 +50,15 @@ public class User {
 	public ArrayList<UserGroup> groups;
 	public ArrayList<Project> projects;
 	public ArrayList<Role> roles;
+	public ArrayList<Organisation> orgs;
 	public boolean keepProjects;
 	public boolean sendEmail;
-	public int this_month;
-	public int last_month;
-	public int all_time;
 	public boolean delSig;
 	public Action action_details;
 	public String lastalert;
 	public boolean seen;
 	public boolean billing_enabled;
 	public boolean singleSubmission;
-	
-	
+	public boolean all;		// Set on delete when the user should be deleted from all organisations
+	public String timezone;
 }
