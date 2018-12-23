@@ -2953,15 +2953,23 @@ function addDatePickList(sMeta, currentDate) {
 	var h = [],
 		idx = -1,
 		i,
-		value;
+		value,
+		key;
 
 	if(sMeta && sMeta.dates) {
 		for(i = 0; i < sMeta.dates.length; i++) {
 
+			key = sMeta.dates[i].name;
+
 			h[++idx] = '<option value="';
 			h[++idx] = sMeta.dates[i].id;
 			h[++idx] = '">';
-			h[++idx] = sMeta.dates[i].name;
+			if(key === "Upload Time" || key === "_start" || key === "_end") {
+				key = localise.set[key];
+			} else if(key === "Scheduled Start") {
+				key = localise.set["c_scheduled"]
+			}
+			h[++idx] = key;
 			h[++idx] = '</option>';
 
 		}

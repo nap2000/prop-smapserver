@@ -335,6 +335,9 @@ function generateUserTable(elementId, data, disp_desc, user_ident, uId) {
 	} else {
 		title = data.question;
 	}
+	if(title === 'Usage') {
+		title = localise.set["a_ua"];
+	}
 
 	// Write information about the table
 	gTab = [];
