@@ -587,7 +587,7 @@ function setSurveyViewControl(view) {
 	// Display Panel and other map specific fields
 	var views = globals.gSelector.getViews();
 	$display_panel = $('#display_panel');
-	$display_panel.empty().append('<option value="-1">This Chart</option>');
+	$display_panel.empty().append('<option value="-1">' + localise.set["a_tc"] + '</option>');
 	for (var i = 0; i < views.length; i++) {
 		if(views[i].pId != view.pId && views[i].type == "map" && views[i].layerId < 1) {
 			if(views[i].state !== "deleted") {
@@ -661,7 +661,7 @@ function setSurveyViewSurveys(surveyList, sId, elem) {
 
 	var $surveySelect = $(elem);
 	$surveySelect.empty();
-	$surveySelect.append('<option value="-1">None</option>');	// Default is no survey selected
+	$surveySelect.append('<option value="-1">' + localise.set["c_none"] + '</option>');	    // Default is no survey selected
 	$.each(surveyList, function(j, item) {
 		$surveySelect.append('<option value="' + item.id + '">' + item.displayName + '</option>');
 	});
@@ -675,15 +675,13 @@ function setSurveyViewRegions(list, region) {
 
 	var $regionSelect = $('#settings_group');
 	$regionSelect.empty();
-	$regionSelect.append('<option value="None">None</option>');
+	$regionSelect.append('<option value="none">' + localise.set["c_none"] + '</option>');
 	$.each(list, function(j, item) {
 		$regionSelect.append('<option value="' + item.table + '">' + item.name + '</option>');
 	});
 	$regionSelect.val(region);
 	gSurveyControlView.region = region;
 }
-
-
 
 //Set the group list in the survey view control
 function setSurveyViewQuestionGroups(list, groupId) {
@@ -692,7 +690,7 @@ function setSurveyViewQuestionGroups(list, groupId) {
 	var $groupSelect = $('#settings_group'),
 		label;
 	$groupSelect.empty();
-	$groupSelect.append('<option value="-1">None</option>');
+	$groupSelect.append('<option value="-1">' + localise.set["c_none"] + '</option>');
 	if(typeof list !== "undefined") {
 		$.each(list, function(j, item) {
 			if(typeof item.q === "undefined") {
@@ -768,7 +766,7 @@ function setQ1Functions(type, panelType, defValue) {
 		idx = -1;
 	
 	$fnElem.empty();
-	h[++idx] = '<option value="none">None</option>';
+	h[++idx] = '<option value="none">' + localise.set["c_none"] + '</option>';
 	if(type.substring(0, 6) === "select") {
 		
 		// For select questions the default value should not be "none". Override it here.
