@@ -97,7 +97,7 @@ create TABLE server (
 	doc_server text,
 	doc_server_user text,
 	doc_server_password text,
-	keep_erased_days intege default 0,
+	keep_erased_days integer default 0,
 	billing_enabled boolean default false
 	);
 ALTER TABLE server OWNER TO ws;
@@ -111,7 +111,7 @@ create TABLE enterprise (
 	id INTEGER DEFAULT NEXTVAL('enterprise_seq') CONSTRAINT pk_enterprise PRIMARY KEY,
 	name text,
 	changed_by text,
-	billing_enabled default false,
+	billing_enabled boolean default false,
 	changed_ts TIMESTAMP WITH TIME ZONE
 	);
 CREATE UNIQUE INDEX idx_enterprise ON enterprise(name);
@@ -158,7 +158,7 @@ create TABLE organisation (
 	timezone text,				-- default timezone for the organisation
 	billing_enabled boolean default false,
 	server_description text,
-	sensitive_data,				-- Questions that should be stored more securely
+	sensitive_data text,			-- Questions that should be stored more securely
 	changed_ts TIMESTAMP WITH TIME ZONE
 	);
 CREATE UNIQUE INDEX idx_organisation ON organisation(name);
@@ -367,7 +367,7 @@ ALTER TABLE user_role OWNER TO ws;
 
 -- Create an administrator and set up defaul values
 insert into enterprise(id, name, changed_by, changed_ts) values(1, 'Default', '', now());
-insert into organisation(id, name, enterprise) values(1, 'Smap', 1);
+insert into organisation(id, name, e_id) values(1, 'Smap', 1);
 
 insert into users (id, ident, realm, password, o_id, name, email) 
 	values (1, 'admin', 'smap', '9f12895fe9898cc306c45c9d3fcbc3d6', 1, 'Administrator', '');
@@ -405,7 +405,7 @@ CREATE TABLE upload_event (
 	ident text,	-- Identifier used by survey
 	p_id integer,
 	o_id integer default 0,	-- Record organisation at time of upload for billing purposes
-	e_id, integer default 0,	-- Record enterprise for billing
+	e_id integer default 0,	-- Record enterprise for billing
 	upload_time TIMESTAMP WITH TIME ZONE,
 	user_name text,
 	file_name text,
@@ -817,16 +817,6 @@ CREATE TABLE public.tasks (
 SELECT AddGeometryColumn('tasks', 'geo_point', 4326, 'POINT', 2);
 SELECT AddGeometryColumn('tasks', 'geo_point_actual', 4326, 'POINT', 2);
 ALTER TABLE public.tasks OWNER TO ws;
-
-CREATE TABLE public.tasks_history (
-	id integer DEFAULT nextval('task_history_seq') NOT NULL PRIMARY KEY,
-	t_id integer REFERENCES tasks(id) ON DELETE CASCADE,
-	u_id integer,				-- Id of person who made the change
-	u_name text,	
-	when timestamp with time zone,
-	change text
-);
-ALTER TABLE public.tasks_history OWNER TO ws;
 
 CREATE TABLE public.locations (
 	id integer DEFAULT nextval('location_seq') NOT NULL PRIMARY KEY,

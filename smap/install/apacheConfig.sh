@@ -1,7 +1,18 @@
 #!/bin/sh
 
+# Set flag for ubuntu version
+u1404=`lsb_release -r | grep -c "14\.04"`
+u1604=`lsb_release -r | grep -c "16\.04"`
+u1804=`lsb_release -r | grep -c "18\.04"`
+
+if [ $u1804 -eq 1 ]; then
+    TOMCAT_VERSION=tomcat8
+else
+    TOMCAT_VERSION=tomcat7
+fi
+
 echo "Updating Tomcat configuation"
-tc_server_xml="/etc/tomcat7/server.xml"	
+tc_server_xml="/etc/$TOMCAT_VERSION/server.xml"	
 sudo cp config_files/server.xml $tc_server_xml
 
 echo "Setting up Apache 2.4"
