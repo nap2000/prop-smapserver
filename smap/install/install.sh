@@ -52,10 +52,11 @@ sudo apt-get update
 sudo apt-get upgrade -y
 sudo sysctl -w kernel.shmmax=67068800		# 64MB of shared memory
 sudo apt-get install ntp -y
+sudo apt-get install rename -y
 
 echo '##### 2. Install Apache' 
 sudo apt-get install apache2 apache2-doc apache2-utils -y
-sudo apt-get install libaprutil2-dbd-pgsql -y
+sudo apt-get install libaprutil1-dbd-pgsql -y
 sudo a2enmod auth_digest
 sudo a2enmod expires
 sudo a2enmod authn_dbd
