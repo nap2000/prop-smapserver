@@ -1,19 +1,29 @@
 #!/bin/sh
 deploy_from="version1"
+# Set flag for ubuntu version
+u1404=`lsb_release -r | grep -c "14\.04"`
 u1604=`lsb_release -r | grep -c "16\.04"`
+u1804=`lsb_release -r | grep -c "18\.04"`
+
+if [ $u1804 -eq 1 ]; then
+    TOMCAT_VERSION=tomcat8
+else
+    TOMCAT_VERSION=tomcat7
+fi
+
 
 service apache2 stop
-service tomcat7 stop
+service $TOMCAT_VERSION stop
 service postgresql stop
 
 cd $deploy_from
 for f in `ls *.war`
 do
 echo "restarting:" $f
-rm /var/lib/tomcat7/webapps/$f
+rm /var/lib/$TOMCAT_VERSION/webapps/$f
 fdir=`echo $f | sed "s/\([a-zA-Z0-9]*\)\..*/\1/"`
 echo "deleting folder:" $fdir
-rm -rf /var/lib/tomcat7/webapps/$fdir
+rm -rf /var/lib/$TOMCAT_VERSION/webapps/$fdir
 done
 cd ..
 
@@ -53,7 +63,7 @@ cp $deploy_from/fieldTaskPreJellyBean.apk /var/www/smap
 cp $deploy_from/smapUploader.jar /var/www/smap
 cp $deploy_from/fieldTask.apk /var/www/default
 cp -r $deploy_from/smapIcons/WebContent/* /var/www/smap/smapIcons
-cp $deploy_from/*.war /var/lib/tomcat7/webapps
+cp $deploy_from/*.war /var/lib/$TOMCAT_VERSION/webapps
 
 # deploy webforms
 if [ -e $deploy_from/webforms.tgz ]
@@ -89,7 +99,7 @@ cp  $deploy_from/resources/fonts/* /usr/share/fonts/truetype
 chmod +x /smap_bin/*.sh
 
 # Copy aws credentials
-sudo cp  $deploy_from/resources/properties/credentials /usr/share/tomcat7/.aws
+sudo cp  $deploy_from/resources/properties/credentials /usr/share/$TOMCAT_VERSION/.aws
 
 cd /var/log/subscribers
 rm *.log_old
@@ -113,14 +123,18 @@ rm -rf /smap/temp/*
 
 # Restart Servers
 service postgresql start
-service tomcat7 start
+service $TOMCAT_VERSION start
 service apache2 start
 
-if [ $u1604 -eq 0 ]; then
+if [ $u1404 -eq 1 ]; then
 service subscribers start
 service subscribers_fwd start
 fi
 if [ $u1604 -eq 1 ]; then
+systemctl start subscribers
+systemctl start subscribers_fwd
+fi
+if [ $u1804 -eq 1 ]; then
 systemctl start subscribers
 systemctl start subscribers_fwd
 fi
