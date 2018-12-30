@@ -202,6 +202,16 @@ then
 	u1604=`lsb_release -r | grep -c "16\.04"`
 	upstart_dir="/etc/init"			
 	service_dir="/etc/systemd/system"
+	if [ $u1804 -eq 1 ]; then
+		sudo cp ../install/config_files/subscribers.service $service_dir
+		sudo chmod 664 $service_dir/subscribers.service
+		sudo cp ../install/config_files/subscribers_fwd.service $service_dir
+		sudo chmod 664 $service_dir/subscribers_fwd.service
+		
+		sudo sed -i "s#tomcat7#tomcat8#g" $service_dir/subscribers.service
+		sudo sed -i "s#tomcat7#tomcat8#g" $service_dir/subscribers_fwd.service
+	fi
+	
 	if [ $u1604 -eq 1 ]; then
 		sudo cp ../install/config_files/subscribers.service $service_dir
 		sudo chmod 664 $service_dir/subscribers.service
@@ -209,7 +219,7 @@ then
 		sudo chmod 664 $service_dir/subscribers_fwd.service
 	fi
 	
-	if [ $u1604 -eq 0 ]; then
+	if [ $u1404 -eq 1 ]; then
 		sudo cp ../install/config_files/subscribers.conf $upstart_dir
 		sudo cp ../install/config_files/subscribers_fwd.conf $upstart_dir
 	fi
