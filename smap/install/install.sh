@@ -138,7 +138,7 @@ then
 
 	echo '# copy tomcat server file'
 	sudo mv $tc_server_xml $tc_server_xml.bu
-	sudo cp config_files/server.xml $tc_server_xml
+	sudo cp config_files/server.xml.$TOMCAT_VERSION $tc_server_xml
 
 	echo '# copy tomcat context file'
 	sudo mv $tc_context_xml $tc_context_xml.bu
