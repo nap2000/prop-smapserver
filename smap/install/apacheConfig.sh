@@ -13,7 +13,7 @@ fi
 
 echo "Updating Tomcat configuation"
 tc_server_xml="/etc/$TOMCAT_VERSION/server.xml"	
-sudo cp config_files/server.xml $tc_server_xml
+sudo cp config_files/server.xml.$TOMCAT_VERSION $tc_server_xml
 
 echo "Setting up Apache 2.4"
 a_config_dir="/etc/apache2/sites-available"	
