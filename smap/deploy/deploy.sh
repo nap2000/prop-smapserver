@@ -64,6 +64,7 @@ cp $deploy_from/smapUploader.jar /var/www/smap
 cp $deploy_from/fieldTask.apk /var/www/default
 cp -r $deploy_from/smapIcons/WebContent/* /var/www/smap/smapIcons
 cp $deploy_from/*.war /var/lib/$TOMCAT_VERSION/webapps
+chown -R $TOMCAT_VERSION /var/lib/$TOMCAT_VERSION/webapps
 
 # deploy webforms
 if [ -e $deploy_from/webforms.tgz ]
