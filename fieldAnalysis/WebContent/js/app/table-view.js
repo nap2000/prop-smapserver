@@ -52,7 +52,6 @@ function setTableSurvey(view) {
 		});
 	}
 
-	
 	/*
 	 * Add table selector buttons
 	 */
@@ -135,7 +134,16 @@ function setTableSurvey(view) {
 		        {
 		        	text: localise.set["m_import"],
 		        	click: function() {
-		        		importData();
+		        		var importSource = $("input[name='import_source']:checked").val();
+				        var fileSelect = $("#file_select").val();
+				        var form = $('#form_select option:selected').val();
+				        if(importSource === "file" && (!fileSelect || fileSelect.length === 0)) {
+				        	alert(localise.set["msg_val_file"]);
+				        } else if(importSource === "form" && form < 1) {
+					        alert(localise.set["msg_pss"]);
+				        } else {
+					        importData();
+				        }
 		        	}
 		        }
 			]
@@ -157,22 +165,64 @@ function setTableSurvey(view) {
 		if(globals.gSelector.surveys[view.sId].task_file) {
             $('#survey_to_update').val(view.sId);
             $('#survey_to_update_name').text(view.sName);
+			$("input[name='import_source']:checked").val("file");
+			$("#file_select").val("");
 
             $('#load_tasks_alert').hide();
             $('#clear_existing_alert').hide();
+
+			// Set the survey selector
+			var surveyList = globals.gSelector.getSurveyList();
+			if(!surveyList) {	// Surveys have not yet been retrieved
+				var url = "/surveyKPI/surveys?blocked=true";
+
+				if(typeof url !== "undefined") {
+					$.ajax({
+						url: url,
+						cache: false,
+						dataType: 'json',
+						success: function(data) {
+							setSurveyViewSurveys(data, "-1", '#form_select');
+						},
+						error: function(xhr, textStatus, err) {
+							if(xhr.readyState == 0 || xhr.status == 0) {
+								return;  // Not an error
+							} else {
+								$('#status_msg_msg').empty().text("Error: Failed to get a list of surveys");
+								$("#status_msg").dialog("open");
+							}
+						}
+					});
+				}
+			} else {
+				var form = $('#form_select option:selected').val("-1");    // No form selected
+			}
+
             $('#load_data_popup').dialog("open");
-        } else {
+
+		} else {
             alert(localise.set["a_ni"]);
 		}
 	});
 
 	$('#clear_existing').change(function(){
-		var isset = $("#clear_existing:checked").val()
+		var isset = $("#clear_existing:checked").val();
 		if(isset) {
 			$('#clear_existing_alert').show();
 		} else {
 			$('#clear_existing_alert').hide();
 		}
+	});
+
+	$('.import_source').change(function(){
+		var source = $(this).val();
+		$('.import_form,.import_file').hide();
+		if(source === "form") {
+			$('.import_form').show();
+		} else {
+			$('.import_file').show();
+		}
+
 	});
 	
 }
