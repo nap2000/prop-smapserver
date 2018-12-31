@@ -453,25 +453,30 @@
 	<!-- Modal to import data from a file -->
 	<div id="load_data_popup" style="display:none;">
 	
-		<form role="form" class="form-horizontal" enctype="multipart/form-data" name="loadtasks">
+		<form role="form" enctype="multipart/form-data" name="loadtasks">
 
-			<span class="lang" data-lang="c_survey">survey</span>: <span id="survey_to_update_name"></span>
+			<span class="lang" data-lang="c_survey">survey</span>: <span id="survey_to_update_name"></span><br/>
 			<input id="survey_to_update" type="hidden" name="survey" value="-1" style="display:none;">
-			<div class="checkbox">
-				<label>
-					<input type="checkbox" name="clear_existing" value="clear_existing" id="clear_existing">
-						<span class="lang" data-lang="t_ce">clear existing tasks</span>
-				</label>
-			</div>
+			<input type="checkbox" name="clear_existing" value="clear_existing"/> <span data-lang="t_ce" class="lang">clear</span><br/>
+
+			<fieldset>
+				<legend class="lang" data-lang="c_source">Source</legend>
+				<input class="import_source" type="radio" name="import_source" value="file" checked="checked"/> <span data-lang="c_file" class="lang">file</span><br/>
+				<input class="import_source" type="radio" name="import_source" value="form"/> <span data-lang="c_form" class="lang">form</span><br/>
+			</fieldset>
+			<br/>
 			<div id="clear_existing_alert" style="display:none; background-color: #FEFC7C; padding: 5px 2px;" class="lang" role="alert" data-lang="t_ce_warn">This will clear all the existing data</div>
-			<div class="form-group">
-   					<div class="input-group">
-   						<span class="input-group-btn">
-     							<input name="files" title="Add" class="file-inputs" type="file" accept="text/csv, application/zip, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-   						</span>
-  					 	<input type="text" class="upload_file_msg form-control" placeholder="File with tasks...">
- 						</div>
-      			</div>           			
+			<div class="import_file">
+				<div class="input-group">
+					<span class="input-group-btn">
+						<input id="file_select" name="files" title="Add" class="file-inputs" type="file" accept="text/csv, application/zip, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+					</span>
+				</div>
+			</div>
+			<div class="import_form" style="display:none;">
+				<label for="form_select" data-lang="c_form" class="lang">form</label>
+				<select class="form_select" name="import_form" id="form_select"></select><br/>
+			</div>
 		</form>
 		<div id="load_tasks_alert" style="display:none;  padding: 5px 2px;" role="alert"></div>
 					
