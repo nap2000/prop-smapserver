@@ -11,6 +11,8 @@ else
     TOMCAT_VERSION=tomcat7
 fi
 
+# save directory that contains deploy script
+cwd=`pwd`
 
 service apache2 stop
 service $TOMCAT_VERSION stop
@@ -142,5 +144,6 @@ fi
 
 # Hosted Only
 # Start disk monitor
-sudo -u postgres psql -f ./rates.sql -q -d survey_definitions 2>&1 
+cd $cwd
+sudo -u postgres psql -f ./rates.sql -q -d survey_definitions 2>&1 | grep -v duplicate | grep -v "already exists"
 sudo -u ubuntu ~ubuntu/smap/deploy/manage.sh
