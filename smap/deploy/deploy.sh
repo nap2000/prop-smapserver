@@ -14,8 +14,23 @@ fi
 # save directory that contains deploy script
 cwd=`pwd`
 
+#
+# stop services
+#
 service apache2 stop
 service $TOMCAT_VERSION stop
+if [ $u1404 -eq 0 ]; then
+service subscribers stop
+service subscribers_fwd stop
+fi
+if [ $u1604 -eq 1 ]; then
+systemctl stop subscribers
+systemctl stop subscribers_fwd
+fi
+if [ $u1804 -eq 1 ]; then
+systemctl stop subscribers
+systemctl stop subscribers_fwd
+fi
 service postgresql stop
 
 cd $deploy_from
@@ -82,15 +97,6 @@ chown -R www-data:www-data /var/www/smap
 chmod -R o-rwx /var/www/smap
 
 #
-if [ $u1604 -eq 0 ]; then
-service subscribers stop
-service subscribers_fwd stop
-fi
-if [ $u1604 -eq 1 ]; then
-systemctl stop subscribers
-systemctl stop subscribers_fwd
-fi
-
 # smap bin
 cp ../install/subscribers.sh /smap_bin
 cp $deploy_from/subscribers.jar /smap_bin
