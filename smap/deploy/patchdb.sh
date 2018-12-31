@@ -199,7 +199,6 @@ fi
 if [ $version -lt "1612" ]
 then
 	echo '# copy subscriber upstart files'
-	u1604=`lsb_release -r | grep -c "16\.04"`
 	upstart_dir="/etc/init"			
 	service_dir="/etc/systemd/system"
 	if [ $u1804 -eq 1 ]; then
