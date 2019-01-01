@@ -163,10 +163,11 @@ function setTableSurvey(view) {
 	$selFoot.find('.tImport').button().off().click(function() {
 
 		if(globals.gSelector.surveys[view.sId].task_file) {
-            $('#survey_to_update').val(view.sId);
+			document.forms.namedItem("loadtasks").reset();
+			importSourceChanged("file");
+
+			$('#survey_to_update').val(view.sId);
             $('#survey_to_update_name').text(view.sName);
-			$("input[name='import_source']:checked").val("file");
-			$("#file_select").val("");
 
             $('#load_tasks_alert').hide();
             $('#clear_existing_alert').hide();
@@ -215,16 +216,19 @@ function setTableSurvey(view) {
 	});
 
 	$('.import_source').change(function(){
-		var source = $(this).val();
-		$('.import_form,.import_file').hide();
-		if(source === "form") {
-			$('.import_form').show();
-		} else {
-			$('.import_file').show();
-		}
-
+		importSourceChanged($(this).val());
 	});
 	
+}
+
+function importSourceChanged(source) {
+
+	$('.import_form,.import_file').hide();
+	if(source === "form") {
+		$('.import_form').show();
+	} else {
+		$('.import_file').show();
+	}
 }
 
 function setUserTableSurvey(view) {
