@@ -1255,7 +1255,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
             $('#users_task_group').append('<option value="-2">' + localise.set["t_ad"] + '</options>');
             $.ajax({
-                url: "/surveyKPI/userList",
+                url: "/surveyKPI/userList/simple",
                 cache: false,
                 success: function (data) {
 
