@@ -363,6 +363,16 @@ function addUserDetailsPopup() {
 					h[++idx] = '</label>';
 					h[++idx] = '<input type="text" id="me_email" pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"><br/>';
 
+					h[++idx] = '<label for="me_organisation">';
+						h[++idx] = localise.set["c_org"];
+					h[++idx] = '</label>';
+					h[++idx] = '<select class="organisation_select" id="me_organisation"></select><br/>';
+
+					h[++idx] = '<label for="me_enterprise">';
+						h[++idx] = localise.set["c_ent"];
+					h[++idx] = '</label>';
+					h[++idx] = '<div id="me_enterprise"></div><br/>';
+
 					h[++idx] = '<label for="u_tz">';
 						h[++idx] = localise.set["c_tz"];
 					h[++idx] = '</label>';
@@ -425,7 +435,7 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 			addOrganisationOptions($('.organisation_select'), data.o_id, data.orgs);
 			$('#me_name').val(data.name);
 			$('#me_email').val(data.email);
-			$('#me_enterprise').val(data.enterprise_name);
+			$('#me_enterprise').text(globals.gEnterpriseName);
 			$('#u_tz').val(globals.gTimezone);
 
 			$(".navbar-collapse").removeClass("in").addClass("collapse");	// Remove drop down menu
@@ -443,7 +453,7 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 			addOrganisationOptions($('.organisation_select'), data.o_id, data.orgs);
 			$('#me_name').val(data.name);
 			$('#me_email').val(data.email);
-			$('#me_enterprise').val(data.enterprise_name);
+			$('#me_enterprise').text(globals.gEnterpriseName);
 			$('#u_tz').val(globals.gTimezone);
 
 			$('#modify_me_popup').dialog("option", "title", data.name + "@" + data.organisation_name);

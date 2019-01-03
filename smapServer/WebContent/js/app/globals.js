@@ -59,6 +59,7 @@ define(function () {
         gSelector: new Selector(),
         gOrgId: 0,
         gTimezone: undefined,
+	    gEnterpriseName: undefined,
 
         gRegions: undefined,
         gRegion: {},
