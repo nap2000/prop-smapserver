@@ -154,6 +154,10 @@ define(['jquery','localise', 'common', 'globals',
 
 		});
 
+		$('#current_enterprise').change(function(){
+			getOrganisations($(this).val());
+		});
+
 		// Function to save a users details
 		$('#userDetailsSave').click(function(e) {
 			var userList = [],
@@ -182,7 +186,7 @@ define(['jquery','localise', 'common', 'globals',
 			user.email = $('#user_email').val();
 			var newOrgId = $('#current_organisation').val();
 			if(newOrgId !== globals.gOrgId) {
-				user.o_id = $('#current_organisation').val();
+				user.o_id = newOrgId;
 			} else {
 				user.o_id = 0;
 			}
@@ -812,20 +816,32 @@ define(['jquery','localise', 'common', 'globals',
 	/*
 	 * Get the list of available organisations from the server
 	 */
-	function getOrganisations() {
+	function getOrganisations(e_id) {
 
+		var url = "/surveyKPI/organisationList";
+		if(globals.gIsEnterpriseAdministrator && e_id) {
+			url += '?enterprise=' + e_id;
+		}
 		// Show the current organisation
 		$('#org_alert').text(localise.set["c_org"] + ": " + globals.gLoggedInUser.organisation_name);
+
 		addHourglass();
 		$.ajax({
-			url: "/surveyKPI/organisationList",
+			url: url,
 			dataType: 'json',
 			cache: false,
 			success: function(data) {
+				var ent_id = e_id;
 				removeHourglass();
-				gOrganisationList = data;
-				updateOrganisationTable();
-				updateOrganisationList();
+				if(!ent_id) {
+					gOrganisationList = data;
+					updateOrganisationTable();
+					updateOrganisationList();
+				} else {
+					// Just update the single select that can choose a new organisation for a user in a new enterprise
+					updateOrganisationNewEnterpriseList(data);
+				}
+
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
@@ -1054,6 +1070,7 @@ define(['jquery','localise', 'common', 'globals',
 			$('#user_email').val(gUsers[userIndex].email);
 			$('#current_organisation').val(gUsers[userIndex].o_id);
 		}
+		$('#current_enterprise').val(globals.gEntId);
 
 		// Initialise the send email or set password radio buttons
 		if(!existing) {
@@ -1818,6 +1835,30 @@ define(['jquery','localise', 'common', 'globals',
 		$organisationSelect.empty().append(h.join(''));
 		$newOrganisationSelect.empty().append(hNew.join(''));
 		$organisationSelect.val(globals.gOrgId);
+	}
+
+	/*
+     * Update select for organisations when changing a users enterprise
+     */
+	function updateOrganisationNewEnterpriseList(data) {
+
+		var $organisationSelect = $('#current_organisation'),
+			i, organisation,
+			h = [],
+			idx = -1;
+
+		for(i = 0; i < data.length; i++) {
+			organisation = data[i];
+
+			h[++idx] = '<option value="';
+			h[++idx] = organisation.id;
+			h[++idx] = '">';
+			h[++idx] = organisation.name;
+			h[++idx] = '</option>';
+
+		}
+
+		$organisationSelect.empty().append(h.join(''));
 	}
 
 	/*
