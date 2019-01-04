@@ -41,13 +41,19 @@ requirejs.config({
     	common: '../../../../js/app/common',
     	globals: '../../../../js/app/globals',
     	crf: '../../../../js/libs/commonReportFunctions',
-    	lang_location: '../../../../js'
+    	lang_location: '../../../../js',
+	    inspinia: '../../../../js/libs/wb/inspinia',
+	    metismenu: '../../../../js/libs/wb/plugins/metisMenu/jquery.metisMenu',
+	    slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll.min',
     },
     shim: {
        	'bootstrap': ['jquery'],
        	'bootstrapfileinput': ['jquery'],
     	'bootbox': ['bootstrap'],
-    	'common': ['jquery']
+	    'inspinia': ['jquery'],
+    	'common': ['jquery'],
+	    'metismenu': ['jquery'],
+	    'slimscroll': ['jquery']
     	}
     });
 
@@ -59,6 +65,9 @@ require([
          'globals',
          'bootbox',
          'app/billing',
+	     'inspinia',
+		 'metismenu',
+		 'slimscroll',
          'bootstrapfileinput'
          
          ], function($, bootstrap, common, localise, globals) {
