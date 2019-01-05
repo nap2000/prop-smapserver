@@ -512,6 +512,12 @@ define(['jquery','localise', 'common', 'globals',
 					organisation.email_task = true;
 				} else if(options[i] === "ft_sync_incomplete") {
 					organisation.ft_sync_incomplete = true;
+				} else if(options[i] === "can_notify") {
+					organisation.can_notify = true;
+				} else if(options[i] === "can_use_api") {
+					organisation.can_use_api = true;
+				} else if(options[i] === "can_submit") {
+					organisation.can_submit = true;
 				}
 			}
 			organisationList[0] = organisation;
@@ -1167,6 +1173,12 @@ define(['jquery','localise', 'common', 'globals',
 					this.checked = org.email_task;
 				} else if($(this).val() === "ft_sync_incomplete") {
 					this.checked = org.ft_sync_incomplete;
+				} else if($(this).val() === "can_notify") {
+					this.checked = org.can_notify;
+				} else if($(this).val() === "can_use_api") {
+					this.checked = org.can_use_api;
+				} else if($(this).val() === "can_submit") {
+					this.checked = org.can_submit;
 				} else if($(this).val() === "ft_odk_style_menus") {
 					this.checked = org.ft_odk_style_menus;
 				} else if($(this).val() === "ft_odk_style_menus") {
@@ -1675,7 +1687,7 @@ define(['jquery','localise', 'common', 'globals',
 			h[++idx] = i;
 			h[++idx] = '" class="btn btn-default btn-sm organisation_edit warning">';
 			h[++idx] = '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>';
-			
+
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
 			h[++idx] = '" class="btn btn-default btn-sm rm_org danger">';
