@@ -499,6 +499,9 @@ define(['jquery','localise', 'common', 'globals',
 				return $(this).val();
 			}).toArray();
 
+			organisation.can_notify = false;
+			organisation.can_use_api = false;
+			organisation.can_submit = false;
 			for(i = 0; i < options.length; i++) {
 				if(options[i] === "email") {
 					organisation.allow_email = true;
