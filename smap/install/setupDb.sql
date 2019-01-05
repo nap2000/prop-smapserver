@@ -612,6 +612,7 @@ CREATE TABLE option (
 	label_id text,
 	oValue text,
 	column_name text,
+	display_name text,
 	selected BOOLEAN,
 	cascade_filters text,
 	published boolean default false,
