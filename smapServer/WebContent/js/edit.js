@@ -1139,7 +1139,22 @@ function respondToEventsChoices($context) {
 		updateLabel("option", 0, itemIndex, listName, "text", newVal, "", "value") ;
 		
 	});
-	
+
+	// Update the option display name
+	$context.find('.odisplayname').change(function(){
+
+		var $this = $(this),
+			$elem = $this.closest('tr'),
+			listName = $elem.data("list_name"),
+			itemIndex = $elem.data("id"),
+			qname = $elem.data("qname"),
+			newVal = $this.val();
+
+		updateLabel("option", 0, itemIndex, listName, "text", newVal, "", "display_name") ;
+
+	});
+
+
 	// Update the filter values when a custom filter value is changed
 	$context.find('.filter').change(function(){
 		updateFilterValues($(this), false, undefined);

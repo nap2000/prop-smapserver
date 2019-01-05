@@ -424,7 +424,7 @@ li.panel {
 	margin-bottom: 15px;
 }
 
-.qname,.oname, .filter {
+.qname,.oname, .odisplayname, .filter {
 	width: 100%;
 	height: 60px;
 }
