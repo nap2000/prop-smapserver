@@ -1100,3 +1100,9 @@ alter table log add column e_id integer;
 update log set e_id = 1 where e_id is null or e_id = 0;
 alter table dashboard_settings add column ds_subject_type text;
 alter table dashboard_settings add column ds_u_id integer;
+
+-- Organisation permissions
+alter table organisation add column can_notify boolean default true;
+alter table organisation add column can_use_api boolean default true;
+alter table organisation add column can_submit boolean default true;
+update organisation set can_notify = true, can_use_api = true, can_submit = true where can_notify is null;
