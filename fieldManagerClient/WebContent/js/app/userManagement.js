@@ -1653,6 +1653,7 @@ define(['jquery','localise', 'common', 'globals',
 			h[++idx] = organisation.changed_by;
 			h[++idx] = '</td>';
 			h[++idx] = '<td class="usage_report_td">';
+
 			if (bs) {
 				h[++idx] = '<button style="margin-right:2px;" class="btn btn-default btn-sm btn-warning usage_report" value="';
 				h[++idx] = i;
@@ -1670,6 +1671,11 @@ define(['jquery','localise', 'common', 'globals',
 				h[++idx] = '</button>';
 			}
 
+			h[++idx] = '<button type="button" value="';
+			h[++idx] = i;
+			h[++idx] = '" class="btn btn-default btn-sm organisation_edit warning">';
+			h[++idx] = '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>';
+			
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
 			h[++idx] = '" class="btn btn-default btn-sm rm_org danger">';
