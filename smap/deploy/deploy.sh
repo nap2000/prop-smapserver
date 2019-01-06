@@ -19,7 +19,7 @@ cwd=`pwd`
 #
 service apache2 stop
 service $TOMCAT_VERSION stop
-if [ $u1404 -eq 0 ]; then
+if [ $u1404 -eq 1 ]; then
 service subscribers stop
 service subscribers_fwd stop
 fi
