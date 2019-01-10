@@ -476,12 +476,8 @@ function generateUserTable(elementId, data, disp_desc, user_ident, uId) {
 					//val = formatLocalTime(val);  all good
 				}
 				gTab[++gIdx] = '<td ' + params + '>';
-				// If the value is zero and this is a select multiple then show a blank
-				if(val === "0" && key.trim().indexOf(" ") > 0) {	// Only select multiples can have a space in the key
-					gTab[++gIdx] = "";
-				} else {
-					gTab[++gIdx] = addAnchors(val, true).join(',');
-				}
+				gTab[++gIdx] = addAnchors(val, true).join(',');
+
 				gTab[++gIdx] = '</td>';
 			}
 
