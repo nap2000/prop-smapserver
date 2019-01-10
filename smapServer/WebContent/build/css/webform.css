@@ -166,8 +166,20 @@ summary {
     }
 
     .form-header {
-        margin: 5px 0;
-    }
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        /* display: flex; smap lets not do flex */
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+        position: absolute;
+        left: 0;
+        top: -76px;
+        width: 100%;
+        min-height: 69px;
+        margin: 5px 0;      /* smap add margin */
+        padding: 16px 0; }
+
     .form-header .form-language-selector {
         border-right: none;
     }
