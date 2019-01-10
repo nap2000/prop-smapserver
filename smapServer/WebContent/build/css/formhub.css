@@ -323,7 +323,7 @@ body {
 .form-header {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  /* display: flex; smap lets not do flex */
+  display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
