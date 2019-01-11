@@ -426,9 +426,12 @@ CREATE TABLE upload_event (
 	form_status text,
 	notifications_applied boolean,		-- Set after notifications are sent
 	incomplete boolean default false,	-- odk will set this if sending attachments in multiple posts
-	server_name text,  -- Stores the server used to upload the results.  The url's of all attachments will reference this address
+	server_name text,  		-- Stores the server used to upload the results.  The url's of all attachments will reference this address
 	survey_notes text,		-- Notes added during completion of the task
-	location_trigger text	-- The trigger for the completion of the task
+	location_trigger text,	-- The trigger for the completion of the task
+	start_time timestamp with time zone,
+	end_time timestamp with time zone,
+	instance_name text
 	);
 create index idx_ue_ident on upload_event(user_name);
 CREATE INDEX idx_ue_results_db ON upload_event(results_db_applied);
