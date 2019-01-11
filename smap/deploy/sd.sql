@@ -1109,3 +1109,8 @@ update organisation set can_notify = true, can_use_api = true, can_submit = true
 
 -- Add display name to choices
 alter table option add column display_name text;
+
+-- Add additional information to upload event
+alter table upload_event add column start_time timestamp with time zone;
+alter table upload_event add column end_time timestamp with time zone;
+alter table upload_event add column instance_name text;

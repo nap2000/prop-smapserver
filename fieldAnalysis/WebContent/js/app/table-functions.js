@@ -255,11 +255,7 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 								}
 							}
 							gTab[++gIdx] = '<td ' + params + '>';
-							if(val === "0") {
-								gTab[++gIdx] = "";
-							} else {
-								gTab[++gIdx] = addAnchors(val, true).join(',');
-							}
+							gTab[++gIdx] = addAnchors(val, true).join(',');
 							gTab[++gIdx] = '</td>';
 						}
 					} else {
@@ -286,12 +282,7 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 							//val = formatLocalTime(val);  all good
 						}
 						gTab[++gIdx] = '<td ' + params + '>';
-						// If the value is zero and this is a select multiple then show a blank
-						if(val === "0" && key.trim().indexOf(" ") > 0) {	// Only select multiples can have a space in the key
-							gTab[++gIdx] = "";
-						} else {
-							gTab[++gIdx] = addAnchors(val, true).join(',');
-						}
+						gTab[++gIdx] = addAnchors(val, true).join(',');
 						gTab[++gIdx] = '</td>';
 					}
 				}
@@ -485,12 +476,8 @@ function generateUserTable(elementId, data, disp_desc, user_ident, uId) {
 					//val = formatLocalTime(val);  all good
 				}
 				gTab[++gIdx] = '<td ' + params + '>';
-				// If the value is zero and this is a select multiple then show a blank
-				if(val === "0" && key.trim().indexOf(" ") > 0) {	// Only select multiples can have a space in the key
-					gTab[++gIdx] = "";
-				} else {
-					gTab[++gIdx] = addAnchors(val, true).join(',');
-				}
+				gTab[++gIdx] = addAnchors(val, true).join(',');
+
 				gTab[++gIdx] = '</td>';
 			}
 
