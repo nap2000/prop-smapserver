@@ -631,7 +631,13 @@ require([
             var report = gReportList[gReportIdx];
 
             downloadFile(location.origin + "/surveyKPI/action/" + report.ident);
-            alert(localise.set["msg_ds_s"]);
+
+	        $('#main_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_ds_s"]);
+            setTimeout(function (){
+                $( '#main_alert' ).hide();
+            }, 2000);
+
+
         });
 
         /*
