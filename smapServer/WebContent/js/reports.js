@@ -316,7 +316,7 @@ require([
         });
 
         // Validate Roles - ensure at least one role is selected
-        if(gTasks.cache.surveyRoles[sId].length > 0  && repot.roles.length == 0) {
+        if(gTasks.cache.surveyRoles[sId].length > 0  && report.roles.length == 0) {
             alert(window.localise.set["msg_one_role"]);
             return;
         }
@@ -404,7 +404,8 @@ require([
 				k: "tz",
 				v: tz
 			});
-			url += "&tz=" + encodeURIComponent(tz);     // Also add timezone to URL
+			url += (url.indexOf('?') >= 0) ? '&' : '?';
+			url += "tz=" + encodeURIComponent(tz);     // Also add timezone to URL
 		}
 
         if(filter && filter.length > 0) {
