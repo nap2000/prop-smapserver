@@ -168,11 +168,20 @@ require([
             setupReportDialog();
         });
 
+        $('#enabletransform').change(function() {
+	        if($(this).prop('checked')) {
+	            $('.transformenabled').show();
+	        } else {
+		        $('.transformenabled').hide();
+            }
+        });
+
 		enableUserProfileBS();
 	});
 
 	function updateReport(edit) {
 
+		var i;
         var sId = $('#survey').val();
         var name = $('#r_name').val();
         var reportType = $('#reportType').val();
@@ -214,80 +223,204 @@ require([
             return;
         }
 
+        var report = {
+            parameters: [],
+            roles: [],
+            transform: {
+            	transforms: []
+            },
+            name: name,
+            reportType: reportType
+        };
+
+		if(filename && filename.trim().length > 0) {
+			report.filename = filename;
+		}
+
+		/*
+         * Add Transform
+         */
+        report.transform.enabled = $('#enabletransform').prop('checked');
+
+		report.transform.key_questions = [];                                    // Key questions
+		var keyString = $('#t_keys').val();
+		if(keyString) {
+			var keysArray = keyString.split(',');
+			if (keysArray.length > 0) {
+				for (i = 0; i < keysArray.length; i++) {
+					if(keysArray[i].trim().length > 0) {
+						report.transform.key_questions.push(keysArray[i].trim());
+					}
+				}
+			}
+		}
+
+		// Repeating transforms
+		var transforms = {};
+		transforms.valuesQuestion = $('#t_values_question').val();      // values question
+
+		transforms.values = [];                                         // Values
+		var valuesString = $('#t_values').val();
+		if(valuesString) {
+			var valuesArray = valuesString.split(',');
+			if (valuesArray.length > 0) {
+				for (i = 0; i < valuesArray.length; i++) {
+					if(valuesArray[i].trim().length > 0) {
+						transforms.values.push(valuesArray[i].trim());
+					}
+				}
+			}
+		}
+		transforms.wideColumns = [];                                     // Wide Columns
+		var colsString = $('#t_wide_columns').val();
+		if(colsString) {
+			var colsArray = colsString.split(',');
+			if (colsArray.length > 0) {
+				for (i = 0; i < colsArray.length; i++) {
+					if(colsArray[i].trim().length > 0) {
+						transforms.wideColumns.push(colsArray[i].trim());
+					}
+				}
+			}
+		}
+		report.transform.transforms.push(transforms);
+
+		/*
+		 * Validate
+		 */
+        if(report.transform.enabled) {
+	        // Validate keys
+	        if(report.transform.key_questions.length == 0) {
+		        alert(window.localise.set["rep_msg_min_keys"]);
+		        return;
+	        }
+	        if(!report.transform.transforms[0].valuesQuestion) {
+		        alert(window.localise.set["rep_msg_v_q"]);
+		        return;
+	        }
+	        if(report.transform.transforms[0].values.length == 0) {
+		        alert(window.localise.set["rep_msg_min_values"]);
+		        return;
+	        }
+	        if(report.transform.transforms[0].wideColumns.length == 0) {
+		        alert(window.localise.set["rep_msg_min_values"]);
+		        return;
+	        }
+        }
 
         // Add roles
-        var roleIds = [],
-            id;
         $('input[type=checkbox]:checked', '.role_select_roles').each(function () {
-            id = $(this).val();
-            roleIds.push(id);
+            report.roles.push({
+                id: $(this).val()
+            });
         });
-        // Validation - ensure at least one role is selected
-        if(gTasks.cache.surveyRoles[sId].length > 0  && roleIds.length == 0) {
+
+        // Validate Roles - ensure at least one role is selected
+        if(gTasks.cache.surveyRoles[sId].length > 0  && repot.roles.length == 0) {
             alert(window.localise.set["msg_one_role"]);
             return;
         }
 
-        var url = "/surveyKPI/reporting/link/" + sId
-            + "?reportType=" + reportType
-            + "&name=" + name;
-
-        if (roleIds.length > 0) {
-            url += "&roles=" + roleIds.join();
-        }
-
-        if(filename && filename.trim().length > 0) {
-            url += "&filename=" + filename;
-        }
-        if(form > 0) {
-            url += "&form=" + form;
-        }
-        if(includeMeta) {
-            url += "&meta=true";
-        }
-        if(odata2Data) {
-            url += "&odata2=true";
-        }
-        if(split_locn) {
-            url += "&split_locn=true";
-        }
-        if(dateId != 0) {
-            url += "&dateId=" + dateId;
-        }
-        if(exp_from_date) {
-            url += "&from=" + exp_from_date;
-        }
-        if(exp_to_date) {
-            url += "&to=" + exp_to_date;
-        }
-        if(merge_select_multiple) {
-            url += "&merge_select_multiple=true";
-        }
-        if(embed_images) {
-            url += "&embedimages=true";
-        }
-        if(landscape) {
-            url += "&landscape=true";
-        }
-        if(language != "none") {
-            url += "&language=" + language;
-        }
-		if(tz) {
-			url += "&tz=" + encodeURIComponent(tz);
-		}
-        if(filter && filter.length > 0) {
-            url += "&filter=" + filter;
-        }
+        /*
+         * create URL
+         */
+        var url = "/surveyKPI/reporting/link/" + sId;
 
         if(edit) {
-            url += "&ident=" + gReportList[gReportIdx].ident;
+			url += "?ident=" + gReportList[gReportIdx].ident;
+		}
+
+        /*
+         * Add parameters
+         */
+        if(form > 0) {
+            report.parameters.push({
+               k: "form",
+               v: form
+            });
+        }
+        if(includeMeta) {
+	        report.parameters.push({
+		        k: "meta",
+		        v: "true"
+	        });
+        }
+        if(odata2Data) {
+	        report.parameters.push({
+		        k: "odata2",
+		        v: "true"
+	        });
+        }
+        if(split_locn) {
+	        report.parameters.push({
+		        k: "split_locn",
+		        v: "true"
+	        });
+        }
+        if(dateId != 0) {
+	        report.parameters.push({
+		        k: "dateId",
+		        v: dateId
+	        });
+        }
+        if(exp_from_date) {
+	        report.parameters.push({
+		        k: "startDate",
+		        v: exp_from_date
+	        });
+        }
+        if(exp_to_date) {
+	        report.parameters.push({
+		        k: "endDate",
+		        v: exp_to_date
+	        });
+        }
+        if(merge_select_multiple) {
+	        report.parameters.push({
+		        k: "merge_select_multiple",
+		        v: "true"
+	        });
+        }
+        if(embed_images) {
+	        report.parameters.push({
+		        k: "embed_images",
+		        v: "true"
+	        });
+        }
+        if(landscape) {
+	        report.parameters.push({
+		        k: "landscape",
+		        v: "true"
+	        });
+        }
+        if(language != "none") {
+	        report.parameters.push({
+		        k: "language",
+		        v: language
+	        });
+        }
+		if(tz) {
+			report.parameters.push({
+				k: "tz",
+				v: tz
+			});
+			url += "&tz=" + encodeURIComponent(tz);     // Also add timezone to URL
+		}
+
+        if(filter && filter.length > 0) {
+	        report.parameters.push({
+		        k: "filter",
+		        v: filter
+	        });
         }
 
         addHourglass();
         $.ajax({
             url: url,
-            dataType: 'json',
+	        type: "POST",
+	        contentType: "application/json",
             cache: false,
+	        data: { report: JSON.stringify(report) },
             success: function (data) {
 
                 removeHourglass();
@@ -537,6 +670,7 @@ require([
             var filter;
             var tz;
             var landscape;
+            var transform = report.action_details.transform;
             for(i = 0; i < report.action_details.parameters.length; i++) {
                 var param = report.action_details.parameters[i];
 
@@ -614,6 +748,27 @@ require([
                 }).data("DateTimePicker").date(moment(exp_to_date));
             }
 
+            $('.transformenabled').hide();
+            if(transform) {
+	            $('#enabletransform').prop('checked', transform.enabled);
+	            if(transform.enabled) {
+		            $('.transformenabled').show();
+                }
+	            if(transform.key_questions) {
+		            $('#t_keys').val(transform.key_questions.join(', '));
+	            }
+	            var transformDetails = transform.transforms[0];
+	            if(transformDetails) {
+		            $('#t_values_question').val(transformDetails.valuesQuestion);
+		            if(transformDetails.values) {
+			            $('#t_values').val(transformDetails.values.join(', '));
+		            }
+		            if(transformDetails.wideColumns) {
+			            $('#t_wide_columns').val(transformDetails.wideColumns.join(', '));
+		            }
+	            }
+            }
+
             // Set button to save
             $('#publishReport').hide();
             $('#saveReport').show();
@@ -631,7 +786,13 @@ require([
             var report = gReportList[gReportIdx];
 
             downloadFile(location.origin + "/surveyKPI/action/" + report.ident);
-            alert(localise.set["msg_ds_s"]);
+
+	        $('#main_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_ds_s"]);
+            setTimeout(function (){
+                $( '#main_alert' ).hide();
+            }, 2000);
+
+
         });
 
         /*

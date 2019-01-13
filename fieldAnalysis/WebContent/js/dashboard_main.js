@@ -72,7 +72,6 @@ require.config({
     	'app/plugins': ['jquery'],
     	'app/script': ['jquery_ui'],
     	'data': ['jquery'],
-    	'app/reports': ['jquery_ui'],
     	'tablesorter': ['jquery'],
     	'app/panels': ['jquery', 'moment', ],
     	'crf': ['jquery'],
@@ -101,7 +100,6 @@ require(['jquery', 'jquery_ui', 'rmm', 'common', 'localise', 'globals', 'moment'
          'app/plugins',
          'app/script',
          'data',
-         'app/reports',
          'app/panels',
          'pace',
          
