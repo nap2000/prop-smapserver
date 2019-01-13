@@ -1010,7 +1010,9 @@ define({
     "rep_values": "Values",
     "rep_wide_columns": "Wide Columns",
     "rep_msg_min_keys": "You must specify at least one key question if transform is enabled",
-    "rep_msg_v_q": "You must specify a values question if transform is enabled"
+    "rep_msg_v_q": "You must specify a values question if transform is enabled",
+	"rep_msg_min_values": "You must specify at least one value if transform is enabled",
+	"rep_msg_min_wc": "You must specify at least one wide column if transform is enabled"
 
 
 });
