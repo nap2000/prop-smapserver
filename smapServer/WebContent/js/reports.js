@@ -246,19 +246,48 @@ require([
 		var keyString = $('#t_keys').val();
 		if(keyString) {
 			var keysArray = keyString.split(',');
-			if(keysArray.length > 0) {
-				for(i = 0; i < keysArray.length; i++) {
-					report.transform.key_questions.push(keysArray[i].trim());
+			if (keysArray.length > 0) {
+				for (i = 0; i < keysArray.length; i++) {
+					if(keysArray[i].trim().length > 0) {
+						report.transform.key_questions.push(keysArray[i].trim());
+					}
 				}
 			}
-
-			// Repeating transforms
-			var transforms = {};
-
-			transforms.valuesQuestion = $('#t_values_question').val();    // values question
-
-			report.transform.transforms.push(transforms);
 		}
+
+		// Repeating transforms
+		var transforms = {};
+		transforms.valuesQuestion = $('#t_values_question').val();      // values question
+
+		transforms.values = [];                                         // Values
+		var valuesString = $('#t_values').val();
+		if(valuesString) {
+			var valuesArray = valuesString.split(',');
+			if (valuesArray.length > 0) {
+				for (i = 0; i < valuesArray.length; i++) {
+					if(valuesArray[i].trim().length > 0) {
+						transforms.values.push(valuesArray[i].trim());
+					}
+				}
+			}
+		}
+		transforms.wideColumns = [];                                     // Wide Columns
+		var colsString = $('#t_wide_columns').val();
+		if(colsString) {
+			var colsArray = colsString.split(',');
+			if (colsArray.length > 0) {
+				for (i = 0; i < colsArray.length; i++) {
+					if(colsArray[i].trim().length > 0) {
+						transforms.wideColumns.push(colsArray[i].trim());
+					}
+				}
+			}
+		}
+		report.transform.transforms.push(transforms);
+
+		/*
+		 * Validate
+		 */
         if(report.transform.enabled) {
 	        // Validate keys
 	        if(report.transform.key_questions.length == 0) {
@@ -267,6 +296,14 @@ require([
 	        }
 	        if(!report.transform.transforms[0].valuesQuestion) {
 		        alert(window.localise.set["rep_msg_v_q"]);
+		        return;
+	        }
+	        if(report.transform.transforms[0].values.length == 0) {
+		        alert(window.localise.set["rep_msg_min_values"]);
+		        return;
+	        }
+	        if(report.transform.transforms[0].wideColumns.length == 0) {
+		        alert(window.localise.set["rep_msg_min_values"]);
 		        return;
 	        }
         }
@@ -720,7 +757,16 @@ require([
 	            if(transform.key_questions) {
 		            $('#t_keys').val(transform.key_questions.join(', '));
 	            }
-	            $('#t_values_question').val(transform.transforms[0].valuesQuestion);
+	            var transformDetails = transform.transforms[0];
+	            if(transformDetails) {
+		            $('#t_values_question').val(transformDetails.valuesQuestion);
+		            if(transformDetails.values) {
+			            $('#t_values').val(transformDetails.values.join(', '));
+		            }
+		            if(transformDetails.wideColumns) {
+			            $('#t_wide_columns').val(transformDetails.wideColumns.join(', '));
+		            }
+	            }
             }
 
             // Set button to save
