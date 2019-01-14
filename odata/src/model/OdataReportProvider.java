@@ -104,7 +104,7 @@ public class OdataReportProvider extends CsdlAbstractEdmProvider {
 			ArrayList<CsdlProperty> props = new ArrayList<> ();
 			for(ColDesc tc : rd.sqlDesc.column_details) {
 					
-				System.out.println("Prop: " + tc.humanName + " : " + tc.qType + " : " + tc.question_name);
+				System.out.println("Prop: " + tc.displayName + " : " + tc.qType + " : " + tc.question_name);
 					
 				// Defaults
 				String name = tc.column_name;
