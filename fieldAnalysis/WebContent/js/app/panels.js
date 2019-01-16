@@ -188,7 +188,7 @@ $(document).ready(function() {
 		        		}
 		        		uId = $('#settings_user option:selected').val();
 
-		        		if(newType == "graph" && qId == "-1") {
+		        		if(subjectType === "survey" && newType == "graph" && qId == "-1") {
 							//alert("You must select a question to show on a graph");
 		        			alert(localise.set["msg_sel_q"]);
 		        			return false;

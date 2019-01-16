@@ -147,8 +147,8 @@ public class ReportStorage {
 		int prikey = 0;
 		Entity e = new Entity();
 		
-		for (ColDesc c : sqlDesc.colNames) {
-			String name = c.name;
+		for (ColDesc c : sqlDesc.column_details) {
+			String name = c.column_name;
 			String type = c.qType;
 			
 			if(name.equals("prikey")) {

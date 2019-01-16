@@ -1329,10 +1329,12 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
         function userHasAccessToProject(user, projectId) {
             var i;
-            for (i = 0; i < user.projects.length; i++) {
-                if (user.projects[i].id == projectId) {
-                    return true;
-                }
+            if(user.projects) {
+	            for (i = 0; i < user.projects.length; i++) {
+		            if (user.projects[i].id == projectId) {
+			            return true;
+		            }
+	            }
             }
             return false;
         }
