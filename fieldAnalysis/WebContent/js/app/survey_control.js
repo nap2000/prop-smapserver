@@ -308,11 +308,13 @@ function typeChangeEvent(type) {
 	/*
 	 * Hide / show panel type dependent fields
 	 */
-	$('.map_only, .table_only').hide();
+	$('.map_only, .table_only, .graph_only').hide();
 	if(type === "table") {
 		$('.table_only').show();
 	} else if(type === "map") {
 		$('.map_only', '#p_settings').show();
+	} else if(type === "graph") {
+		$('.graph_only').show();
 	}
 	
 	if(type == "map") {
@@ -602,6 +604,8 @@ function setSurveyViewControl(view) {
 		$display_panel.val(view.layerId);
 	} else if(view.type === "table") {
 		$('.table_only').show();
+	} else if(view.type === "graph") {
+		$('.graph_only').show();
 	}
 
 	// Subject type
