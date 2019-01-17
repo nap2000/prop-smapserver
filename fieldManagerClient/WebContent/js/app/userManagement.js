@@ -45,6 +45,7 @@ define(['jquery','localise', 'common', 'globals',
 		getLoggedInUser(userKnown, false, false, getOrganisations, false,
 			false, getEnterprises, getServerDetails);
 		getDeviceSettings();
+		getWebformSettings();
 		getSensitiveSettings();
 
 		// Add change event on group and project filter
@@ -2444,6 +2445,37 @@ define(['jquery','localise', 'common', 'globals',
 			}
 		});
 	}
+
+	/*
+     * Get the webfom settings
+     */
+	function getWebformSettings() {
+
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/organisationList/webform",
+			dataType: 'json',
+			cache: false,
+			success: function(webform) {
+				removeHourglass();
+
+
+				$('input','#wf_page_background').colorpicker('setValue', webform.page_background_color);
+				$('input','#wf_paper_background').colorpicker('setValue', webform.paper_background_color);
+				$('#wf_footer_horizontal_offset').val(webform.footer_horizontal_offset);
+
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["c_error"] + ": " + err);
+				}
+			}
+		});
+	}
+
 
 	/*
 	 * Get the sensitive question settings
