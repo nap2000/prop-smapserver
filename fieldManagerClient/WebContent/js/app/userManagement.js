@@ -19,7 +19,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 define(['jquery','localise', 'common', 'globals',
 	'bootbox',
 	'moment',
-	'datetimepicker'], function($, lang, common, globals, bootbox, moment) {
+	'datetimepicker',
+	'bootstrapcolorpicker'], function($, lang, common, globals, bootbox, moment, datetimepicker, bootstrapcolorpicker) {
 
 	var gUsers,
 		gGroups,
@@ -125,6 +126,13 @@ define(['jquery','localise', 'common', 'globals',
 
 			$(".usertab").hide();
 			$('#devicePanel').show();
+		});
+		$('#webformTab a').click(function (e) {
+			e.preventDefault();
+			$(this).tab('show');
+
+			$(".usertab").hide();
+			$('#webformPanel').show();
 		});
 		$('#sensitiveTab a').click(function (e) {
 			e.preventDefault();
@@ -782,6 +790,13 @@ define(['jquery','localise', 'common', 'globals',
 			}
 
 			$('#del_user_confirm_popup').modal("hide");
+		});
+
+		/*
+		 * Set up colour picker
+		 */
+		$('.colorpicker-component').colorpicker({
+			format: 'hex'
 		});
 
 		enableUserProfileBS();	// Allow user to reset their own profile
