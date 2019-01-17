@@ -92,6 +92,7 @@ define({
     "c_c_p": "Confirm Password",
     "c_c_d": "Confirm Delete",
     "c_r_p": "Reset Password",
+    "c_reset": "Reset",
     "c_en": "Enable",
     "c_loc_f": "Local Form:",
     "c_rem_f": "Remote Form",

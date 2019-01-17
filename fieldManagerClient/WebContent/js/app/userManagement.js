@@ -679,6 +679,15 @@ define(['jquery','localise', 'common', 'globals',
 		});
 
 		/*
+		 * Reset the webform options back to their defaults
+		 */
+		$('#resetWebform').click(function() {
+			$('input','#wf_page_background').colorpicker('setValue', '#fff');
+			$('input','#wf_paper_background').colorpicker('setValue', '#fff');
+			$('#wf_footer_horizontal_offset').val(5);
+		});
+
+		/*
          * Save the webform options
          */
 		$('#saveWebform').click(function() {
@@ -2458,7 +2467,6 @@ define(['jquery','localise', 'common', 'globals',
 			cache: false,
 			success: function(webform) {
 				removeHourglass();
-
 
 				$('input','#wf_page_background').colorpicker('setValue', webform.page_background_color);
 				$('input','#wf_paper_background').colorpicker('setValue', webform.paper_background_color);
