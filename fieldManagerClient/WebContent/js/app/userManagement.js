@@ -678,6 +678,44 @@ define(['jquery','localise', 'common', 'globals',
 		});
 
 		/*
+         * Save the webform options
+         */
+		$('#saveWebform').click(function() {
+			var webform = {},
+				error = false,
+				options=[],
+				i;
+
+			webform.page_background_color = $('input', '#wf_page_background').val();
+			webform.paper_background_color = $('input', '#wf_paper_background').val();
+			webform.footer_horizontal_offset = $('#wf_footer_horizontal_offset').val();
+			webform.footer_horizontal_offset = webform.footer_horizontal_offset || 0;
+
+			$('#org_alert').hide();
+			addHourglass();
+			$.ajax({
+				type: 'POST',
+				data: {settings: JSON.stringify(webform)},
+				cache: false,
+				contentType: "application/json",
+				url: "/surveyKPI/organisationList/webform",
+				success: function(data, status) {
+					removeHourglass();
+					$('#org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+				}, error: function(xhr, textStatus, err) {
+					removeHourglass();
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						var msg = err;
+						$('#org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
+					}
+				}
+			});
+
+		});
+
+		/*
 		 * Get a usage report
 		 */
 		$('#usageGet').click(function() {
@@ -799,6 +837,11 @@ define(['jquery','localise', 'common', 'globals',
 			format: 'hex'
 		});
 
+		$('input').focus(function() {
+			$('#org_alert').hide();
+		});
+
+
 		enableUserProfileBS();	// Allow user to reset their own profile
 
 	});
@@ -847,7 +890,7 @@ define(['jquery','localise', 'common', 'globals',
 			url += '?enterprise=' + e_id;
 		}
 		// Show the current organisation
-		$('#org_alert').text(localise.set["c_org"] + ": " + globals.gLoggedInUser.organisation_name);
+		$('#organisation_name').text(localise.set["c_org"] + ": " + globals.gLoggedInUser.organisation_name);
 
 		addHourglass();
 		$.ajax({
