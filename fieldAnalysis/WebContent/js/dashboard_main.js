@@ -73,7 +73,7 @@ require.config({
     	'app/script': ['jquery_ui'],
     	'data': ['jquery'],
     	'tablesorter': ['jquery'],
-    	'app/panels': ['jquery', 'moment', ],
+    	'app/panels': ['jquery', 'moment'],
     	'crf': ['jquery'],
     	'pace': ['jquery'],
     	'main/jqplot_main': ['jquery']
@@ -104,7 +104,7 @@ require(['jquery', 'jquery_ui', 'rmm', 'common', 'localise', 'globals', 'moment'
          'pace',
          
          'tablesorter',
-         'crf',
+         'crf'
          
          ], function($, jquery_ui, rmm, common, localise, globals, moment) {
     setCustomDashboard();			// Apply custom javascript

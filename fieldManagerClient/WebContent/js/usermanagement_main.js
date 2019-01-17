@@ -38,6 +38,7 @@ requirejs.config({
     	bootstrap: '../../../../js/libs/bootstrap.min',
     	bootbox: '../../../../js/libs/bootbox.min',
     	bootstrapfileinput: '../../../../js/libs/bootstrap.file-input',
+	    bootstrapcolorpicker: '../../../../js/libs/bootstrap-colorpicker.min',
     	common: '../../../../js/app/common',
     	globals: '../../../../js/app/globals',
     	crf: '../../../../js/libs/commonReportFunctions',
@@ -46,6 +47,7 @@ requirejs.config({
     shim: {
        	'bootstrap': ['jquery'],
        	'bootstrapfileinput': ['jquery'],
+	    'bootstrapcolorpicker': ['bootstrap', 'jquery'],
     	'bootbox': ['bootstrap'],
     	'common': ['jquery']
     	}
@@ -59,7 +61,8 @@ require([
          'globals',
          'bootbox',
          'app/userManagement',
-         'bootstrapfileinput'
+         'bootstrapfileinput',
+		 'bootstrapcolorpicker'
          
          ], function($, bootstrap, common, localise, globals) {
 
