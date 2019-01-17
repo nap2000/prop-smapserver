@@ -20,6 +20,7 @@
     	lang_location: '../../../../smapServer/WebContent/js',
 	bootstrap: '../../../../smapServer/WebContent/js/libs/bootstrap.min',
     	bootstrapfileinput: '../../../../smapServer/WebContent/js/libs/bootstrap.file-input',
+    	bootstrapcolorpicker: '../../../../smapServer/WebContent/js/libs/bootstrap-colorpicker.min',
 	bootbox: '../../../../smapServer/WebContent/js/libs/bootbox.min',
 	file_input: '../../../../smapServer/WebContent/js/libs/bootstrap.file-input',
 	moment: '../../../../smapServer/WebContent/js/libs/moment-with-locales.min',
