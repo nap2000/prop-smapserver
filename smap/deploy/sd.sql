@@ -1114,3 +1114,6 @@ alter table option add column display_name text;
 alter table upload_event add column start_time timestamp with time zone;
 alter table upload_event add column end_time timestamp with time zone;
 alter table upload_event add column instance_name text;
+
+-- Webform parameters
+alter table organisation add column webform text;
