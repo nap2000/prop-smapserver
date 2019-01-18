@@ -100,13 +100,13 @@ define([
 
             // Add form group and label
             h[++idx] = '<div class="form-group"><label class="col-md-4 control-label">';
-            h[++idx] = configItem.humanName;
+            h[++idx] = configItem.displayName;
             h[++idx] = '</label>';
 
             // Add Data
             h[++idx] = ' <div class="col-md-8">';
             if (configItem.readonly) {		// Read only text
-                var v = addAnchors(record[configItem.humanName])[0];
+                var v = addAnchors(record[configItem.displayName])[0];
                 if(v && v.indexOf('<') == 0) {
                     h[++idx] = v;
                 } else {
@@ -117,7 +117,7 @@ define([
                 }
 
             } else {
-                h[++idx] = addEditableColumnMarkup(configItem, record[configItem.humanName], itemIndex, first, columns, record);
+                h[++idx] = addEditableColumnMarkup(configItem, record[configItem.displayName], itemIndex, first, columns, record);
                 first = false;
             }
             h[++idx] = '</div>';
@@ -228,7 +228,7 @@ define([
                 col;
             for(i = 0; i < columns.length; i++) {
                 // Hack.  For forms the human name is the question name that has not been modified to act as a database column
-                if((columns[i].mgmt && qname === columns[i].name) || (!columns[i].mgmt && qname === columns[i].humanName)) {
+                if((columns[i].mgmt && qname === columns[i].name) || (!columns[i].mgmt && qname === columns[i].displayName)) {
                     col = columns[i];
                     break;
                 }
@@ -239,7 +239,7 @@ define([
 
 
         function addSourceQuestion(column, record, ref_rows) {
-            var name = column.mgmt ? column.name : column.humanName;        // Name hack
+            var name = column.mgmt ? column.name : column.displayName;        // Name hack
             var v = addAnchors(record[name])[0];
             var h = [];
             var idx = -1;

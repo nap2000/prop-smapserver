@@ -325,7 +325,7 @@ require([
 						 h[++idx] = '<th>';
 					 }
 				 }
-				 h[++idx] = headItem.humanName;
+				 h[++idx] = headItem.displayName;
 				 h[++idx] = '</th>';
 			 }
 		 }
@@ -346,9 +346,9 @@ require([
 				 if(headItem.include) {
 					 h[++idx] = '<td>';
 					 if(headItem.readonly || !headItem.inline) {
-						 h[++idx] = record[headItem.humanName];
+						 h[++idx] = record[headItem.displayName];
 					 } else {
-						 h[++idx] = addEditableColumnMarkup(headItem, record[headItem.humanName], i);
+						 h[++idx] = addEditableColumnMarkup(headItem, record[headItem.displayName], i);
 					 }
 					 h[++idx] = '</td>';
 				 }

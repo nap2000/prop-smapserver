@@ -446,7 +446,7 @@ require([
                 }
 
                 if(cols[i].type === "select") {
-                    var n = cols[i].humanName.split(" - ");         // Handle legacy select multiple
+                    var n = cols[i].displayName.split(" - ");         // Handle legacy select multiple
                     if (n.length > 1) {
                         selectQuestion = n[0];
                         if(selectQuestion === currentSelectQuestion) {
@@ -461,7 +461,7 @@ require([
                 h[++idx] = '<option value="';
                 h[++idx] = i;
                 h[++idx] = '">';
-                h[++idx] = cols[i].type === "select" ? selectQuestion : cols[i].humanName;
+                h[++idx] = cols[i].type === "select" ? selectQuestion : cols[i].displayName;
                 h[++idx] = '</option>';
             }
             $groupBy.empty().append(h.join(''));
@@ -530,7 +530,7 @@ require([
             if(groupIdx != -1) {
                 settings.push({
                     k: "Group By",
-                    v: gTasks.cache.surveyConfig[globals.gViewId].columns[groupIdx].humanName
+                    v: gTasks.cache.surveyConfig[globals.gViewId].columns[groupIdx].displayName
                 });
             }
         }
@@ -708,7 +708,7 @@ require([
                             hide: true,
                             include: true,
                             name: "_group",
-                            humanName: "_group"
+                            displayName: "_group"
                         });
                     }
                     showManagedData(sId, '#content', undefined);
@@ -839,11 +839,11 @@ require([
             }
 
             shownColumns.push({
-                "data": headItem.humanName
+                "data": headItem.displayName
             });
             h[++idx] = '<th>';
             h[++idx] = '<span class="ch">';
-            h[++idx] = headItem.humanName;
+            h[++idx] = headItem.displayName;
             h[++idx] = '</span>';
             h[++idx] = '</th>';
             hfoot[++foot_idx] = '<th></th>';
@@ -1170,7 +1170,7 @@ require([
         if (item.include) {
             h[++idx] = '<div class="setings-item">';
             h[++idx] = '<span>';
-            h[++idx] = item.humanName;
+            h[++idx] = item.displayName;
             h[++idx] = '</span>';
 
             h[++idx] = '<div class="switch">';
@@ -1209,7 +1209,7 @@ require([
 
             h[++idx] = '<div class="col-sm-4">';
             h[++idx] = '<span>';
-            h[++idx] = item.humanName;
+            h[++idx] = item.displayName;
             h[++idx] = '</span>';
             h[++idx] = '</div>';
 
@@ -1599,7 +1599,7 @@ require([
             }
 
             if(d.type === "select") {
-                var n = d.humanName.split(" - ");
+                var n = d.displayName.split(" - ");
                 if (n.length > 1) {
 
                     if (!select_questions[n[0]]) {		// New choice
@@ -1607,14 +1607,14 @@ require([
                         d.select_name = n[0];
                         d.choices = [];
                         d.choiceNames = [];
-                        d.choices.push(d.humanName);
+                        d.choices.push(d.displayName);
                         d.choiceNames.push(d.name);
 
                         select_questions[n[0]] = d;
                         d.chartQuestion = true;
                     } else {
                         var f = select_questions[n[0]];
-                        f.choices.push(d.humanName);
+                        f.choices.push(d.displayName);
                         f.choiceNames.push(d.name);
                         d.chartQuestion = false;
                     }
@@ -1624,7 +1624,7 @@ require([
                     h[++idx] = '<option value="';
                     h[++idx] = i;
                     h[++idx] = '">';
-                    h[++idx] = columns[i].humanName;
+                    h[++idx] = columns[i].displayName;
                     h[++idx] = '</option>';
             }
 

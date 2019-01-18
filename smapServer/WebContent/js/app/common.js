@@ -2573,7 +2573,7 @@ function getTableData(table, columns) {
 	for(i = 0; i < rows.length; i++) {
 		cols = [];
 		for(j = 0; j < columns.length; j++) {
-			var k = columns[j].humanName;
+			var k = columns[j].displayName;
 			var v = rows[i][k];
 
 			if(typeof v !== "string") {
