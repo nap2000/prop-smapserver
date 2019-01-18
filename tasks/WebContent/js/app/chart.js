@@ -200,13 +200,13 @@ define([
                     if (columns[i].chartQuestion) {
 
                         chart = {
-                            title: columns[i].select_name ? columns[i].select_name : columns[i].humanName,
+                            title: columns[i].select_name ? columns[i].select_name : columns[i].displayName,
                             tSeries: false,
                             chart_type: "other",
                             fn: getChartFunction(columns[i].type),
                             groups: [{
-                                name: columns[i].select_name ? columns[i].select_name  : columns[i].humanName,
-                                dataLabel: columns[i].select_name ? columns[i].select_name  : columns[i].humanName,
+                                name: columns[i].select_name ? columns[i].select_name  : columns[i].displayName,
+                                dataLabel: columns[i].select_name ? columns[i].select_name  : columns[i].displayName,
                                 l_id: columns[i].l_id,
                                 type: columns[i].type
                             }
@@ -224,8 +224,8 @@ define([
                         }
                         if(groupIdx != -1) {
                             chart.groups.push({
-                                name: columns[groupIdx].select_name ? columns[groupIdx].select_name  : columns[groupIdx].humanName,
-                                    dataLabel: columns[groupIdx].select_name ? columns[groupIdx].select_name  : columns[groupIdx].humanName,
+                                name: columns[groupIdx].select_name ? columns[groupIdx].select_name  : columns[groupIdx].displayName,
+                                    dataLabel: columns[groupIdx].select_name ? columns[groupIdx].select_name  : columns[groupIdx].displayName,
                                 l_id: columns[groupIdx].l_id,
                                 type: columns[groupIdx].type
                             });
@@ -607,13 +607,13 @@ define([
                         var di = {};
                         di.count = 1;
                         for (j = 0; j < columns.length; j++) {
-                            var val = results[i][columns[j].humanName];
+                            var val = results[i][columns[j].displayName];
                             if(columns[j].l_id > 0) {
                                 if(chart.qlabel) {
                                     val = lookupChoiceLabel(columns[j].l_id, val);  // Convert to the default label
                                 }
                             }
-                            di[columns[j].humanName] = val;
+                            di[columns[j].displayName] = val;
                         }
                         if (!di["Survey Duration"]) {         // Make sure durations have a number
                             di["Survey Duration"] = 0;
@@ -1266,7 +1266,7 @@ define([
                         h[++idx] = '<option value="';
                         h[++idx] = i;
                         h[++idx] = '">';
-                        h[++idx] = columns[i].humanName;
+                        h[++idx] = columns[i].displayName;
                         h[++idx] = '</option>';
                     }
                 }
@@ -1283,7 +1283,7 @@ define([
                         h[++idx] = '<option value="';
                         h[++idx] = i;
                         h[++idx] = '">';
-                        h[++idx] = columns[i].select_name ? columns[i].select_name : columns[i].humanName;
+                        h[++idx] = columns[i].select_name ? columns[i].select_name : columns[i].displayName;
                         h[++idx] = '</option>';
                     }
                 }
@@ -1308,7 +1308,7 @@ define([
                 index = -1;
 
             for (i = 0; i < columns.length; i++) {
-                if (columns[i].humanName === name) {
+                if (columns[i].displayName === name) {
                     index = i;
                     break;
                 }
@@ -1356,8 +1356,8 @@ define([
                     group = {
                         qIdx: qIdx1,
                         type: columns[qIdx1].type,
-                        name: columns[qIdx1].select_name ? columns[qIdx1].select_name : columns[qIdx1].humanName,
-                        dataLabel: columns[qIdx1].select_name ? columns[qIdx1].select_name : columns[qIdx1].humanName,
+                        name: columns[qIdx1].select_name ? columns[qIdx1].select_name : columns[qIdx1].displayName,
+                        dataLabel: columns[qIdx1].select_name ? columns[qIdx1].select_name : columns[qIdx1].displayName,
                         l_id: columns[qIdx1].l_id,
                         choices: columns[qIdx1].choices,
                         choiceNames: columns[qIdx1].choiceNames
@@ -1370,8 +1370,8 @@ define([
                     group = {
                         qIdx: qIdx2,
                         type: columns[qIdx2].type,
-                        name: columns[qIdx2].select_name ? columns[qIdx2].select_name : columns[qIdx2].humanName,
-                        dataLabel: columns[qIdx2].select_name ? columns[qIdx2].select_name : columns[qIdx2].humanName,
+                        name: columns[qIdx2].select_name ? columns[qIdx2].select_name : columns[qIdx2].displayName,
+                        dataLabel: columns[qIdx2].select_name ? columns[qIdx2].select_name : columns[qIdx2].displayName,
                         l_id: columns[qIdx2].l_id,
                         choices: columns[qIdx2].choices,
                         choiceNames: columns[qIdx2].choiceNames
