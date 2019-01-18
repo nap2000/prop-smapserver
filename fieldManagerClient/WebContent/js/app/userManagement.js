@@ -682,7 +682,7 @@ define(['jquery','localise', 'common', 'globals',
 		 * Reset the webform options back to their defaults
 		 */
 		$('#resetWebform').click(function() {
-			$('input','#wf_page_background').colorpicker('setValue', '#fff');
+			$('input','#wf_page_background').colorpicker('setValue', '#f0f0f0');
 			$('input','#wf_paper_background').colorpicker('setValue', '#fff');
 			$('#wf_footer_horizontal_offset').val(5);
 		});
