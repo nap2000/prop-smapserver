@@ -815,6 +815,7 @@ define({
     "u_det_o_ft": "FieldTask Options",
 	"u_det_o_wf": "Webform Options",
     "u_det_pbc": "Page background color",
+	"u_det_paperbc": "Paper background color",
 	"u_det_fp": "Footer position (from right in pixels)",
     "u_ft_del": "Delete submitted results from the phone",
     "u_ft_img_size": "Maximum pixels of the long edge of an image",
