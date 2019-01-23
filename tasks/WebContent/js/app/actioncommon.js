@@ -271,11 +271,11 @@ define([
                 record = gTasks.gSelectedRecord,
                 columns = gTasks.cache.surveyConfig[globals.gViewId].columns,
                 currentValue,
-                name = columns[itemIndex].name,
+                column_name = columns[itemIndex].column_name,
                 i,
                 foundExistingUpdate;
 
-            currentValue = record[columns[itemIndex].name];
+            currentValue = record[columns[itemIndex].displayName];
             if (typeof currentValue === "undefined") {
                 currentValue = "";
             }
@@ -284,7 +284,7 @@ define([
                 // Add new value to array, or update existing
                 foundExistingUpdate = false;
                 for (i = 0; i < gTasks.gUpdate.length; i++) {
-                    if (gTasks.gUpdate[i].name === name) {
+                    if (gTasks.gUpdate[i].name === column_name) {
                         foundExistingUpdate = true;
                         gTasks.gUpdate[i].value = value;
                         break;
@@ -294,7 +294,7 @@ define([
                 if (!foundExistingUpdate) {
                     // Add new value
                     gTasks.gUpdate.push({
-                        name: name,
+                        name: column_name,                 // Update name is the column name
                         value: value,
                         currentValue: currentValue,
                         prikey: gTasks.gPriKey
@@ -304,7 +304,7 @@ define([
             } else {
                 // Delete value from array of updates
                 for (i = 0; i < gTasks.gUpdate.length; i++) {
-                    if (gTasks.gUpdate[i].name === name) {
+                    if (gTasks.gUpdate[i].name === column_name) {
                         gTasks.gUpdate.splice(i, 1);
                         break;
                     }

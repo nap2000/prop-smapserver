@@ -439,7 +439,7 @@ require([
 
                 // Don't use some types to group
                 if(cols[i].type === "image" || cols[i].type === "video" || cols[i].type === "audio"
-                    || cols[i].name === "prikey" || cols[i].name === "the_geom") {
+                    || cols[i].displayName === "prikey" || cols[i].displayName === "the_geom") {
 
                     continue;
 
@@ -549,8 +549,7 @@ require([
 
         var tz = globals.gTimezone;
 
-        data = getTableData(globals.gMainTable,
-            gTasks.cache.surveyConfig[globals.gViewId].columns);
+        data = getTableData(globals.gMainTable, gTasks.cache.surveyConfig[globals.gViewId].columns, format);
 
         if (format === "xlsx") {
             filename = title + ".xlsx";
@@ -1176,7 +1175,7 @@ require([
             h[++idx] = '<div class="switch">';
             h[++idx] = '<input type="checkbox" name="columnSelect"';
             h[++idx] = ' class="columnSelect" value="';
-            h[++idx] = item.name;
+            h[++idx] = item.displayName;
             h[++idx] = '"';
             if(!item.hide) {
             	h[++idx] = ' checked';
@@ -1202,7 +1201,7 @@ require([
             h[++idx] = '<div class="col-sm-1">';
             h[++idx] = '<input type="checkbox" name="columnSelect"';
             h[++idx] = ' class="columnSelect" value="';
-            h[++idx] = item.name;
+            h[++idx] = item.displayName;
             h[++idx] = '"';
             h[++idx] = '>';
             h[++idx] = '</div>';
@@ -1498,7 +1497,7 @@ require([
 
         for (i = 0; i < columns.length; i++) {
             configColumns.push({
-                name: columns[i].name,
+                name: columns[i].displayName,
                 hide: columns[i].hide,
                 barcode: columns[i].barcode,
                 filterValue: columns[i].filterValue,
@@ -1584,10 +1583,10 @@ require([
             var d = columns[i];
 
             if(
-                d.name !== "prikey" &&
-                d.name !== "_upload_time" &&
-                d.name !== "_start" &&
-                d.name !== "_end" &&
+                d.displayName !== "prikey" &&
+                d.displayName !== "_upload_time" &&
+                d.displayName !== "_start" &&
+                d.displayName !== "_end" &&
                 d.type !== "geopoint" &&
                 d.type !== "dateTime" &&
                 d.type !== "time" &&
@@ -1608,14 +1607,14 @@ require([
                         d.choices = [];
                         d.choiceNames = [];
                         d.choices.push(d.displayName);
-                        d.choiceNames.push(d.name);
+                        d.choiceNames.push(d.displayName);
 
                         select_questions[n[0]] = d;
                         d.chartQuestion = true;
                     } else {
                         var f = select_questions[n[0]];
                         f.choices.push(d.displayName);
-                        f.choiceNames.push(d.name);
+                        f.choiceNames.push(d.displayName);
                         d.chartQuestion = false;
                     }
                 }
