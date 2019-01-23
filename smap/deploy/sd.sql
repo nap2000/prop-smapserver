@@ -794,6 +794,7 @@ alter table forward add column filter text;
 -- Upgrade to 17.11
 alter table organisation add column ft_send text;
 alter table organisation add column ft_delete text;
+update organisation set ft_delete = 'not set' where ft_delete is null;
 
 -- Upgrade to 17.12
 alter table server add column document_sync boolean;
@@ -1117,3 +1118,7 @@ alter table upload_event add column instance_name text;
 
 -- Webform parameters
 alter table organisation add column webform text;
+
+-- Backward navigation
+alter table organisation add column ft_backward_navigation text;
+update organisation set ft_backward_navigation = 'not set' where ft_backward_navigation is null;
