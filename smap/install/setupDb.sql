@@ -139,6 +139,7 @@ create TABLE organisation (
 	can_submit boolean default true,
 	email_task boolean,
 	ft_delete text,
+	ft_backward_navigation text,
 	ft_image_size text,
 	ft_send_location text,
 	ft_sync_incomplete boolean,
