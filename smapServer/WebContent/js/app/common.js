@@ -2558,7 +2558,7 @@ function sendReports(url, filename, format, mime, data, sId, managedId, title, p
  * Also convert the JSON object into an array of Key values pairs. This allows easy converion
  * to a java object on the server
  */
-function getTableData(table, columns) {
+function getTableData(table, columns, format) {
 
 	var rows = table.rows({
 		order:  'current',  // 'current', 'applied', 'index',  'original'
@@ -2573,16 +2573,18 @@ function getTableData(table, columns) {
 	for(i = 0; i < rows.length; i++) {
 		cols = [];
 		for(j = 0; j < columns.length; j++) {
-			var k = columns[j].displayName;
-			var v = rows[i][k];
+			if(format === "xlsx" || !columns[j].hide) {
+				var k = columns[j].displayName;
+				var v = rows[i][k];
 
-			if(typeof v !== "string") {
-				v = JSON.stringify(v);
+				if (typeof v !== "string") {
+					v = JSON.stringify(v);
+				}
+				cols.push({
+					k: k,
+					v: v
+				})
 			}
-			cols.push({
-				k: k,
-				v: v
-			})
 		}
 		data.push(cols);
 	}
