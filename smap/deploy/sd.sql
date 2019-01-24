@@ -1117,3 +1117,5 @@ alter table upload_event add column instance_name text;
 
 -- Webform parameters
 alter table organisation add column webform text;
+
+alter table upload_event add column scheduled_start timestamp with time zone;

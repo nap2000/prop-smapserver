@@ -236,6 +236,7 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 		success: function(data) {
 			// Add meta data to results
 			removeHourglass();
+			var theUrl = url;
 			data.source = "survey";
 			data.sId = f_sId;
 			data.table = true;
@@ -251,7 +252,7 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 			}
 			f_view.start_recs[fId].push(start_rec);
 			
-	 		globals.gSelector.addDataItem(url, data);
+	 		globals.gSelector.addDataItem(theUrl, data);
 	 		f_view.tableCount--;
 	 		
 	 		if(replace) {
@@ -294,7 +295,7 @@ function getUserData(view, start_rec) {
 		tz = globals.gTimezone,
 		data;
 
-	url = userItemsURL(view, start_rec, rec_limit,  view.filter, view.fromDate, view.toDate,tz);
+	url = userItemsURL(view, start_rec, rec_limit,  view.filter, view.dateQuestionId, view.fromDate, view.toDate,tz);
 	data = globals.gSelector.getItem(url);      // check cache
 
 	if(data) {
@@ -317,6 +318,7 @@ function getUserData(view, start_rec) {
 				dataType: 'json',
 				cache: false,
 				success: function (data) {
+					var theUrl = dataUrl;
 					// Add data to results
 					removeHourglass();
 					data.source = "user";
@@ -330,7 +332,7 @@ function getUserData(view, start_rec) {
 					}
 					view.start_recs[0].push(start_rec);
 
-					globals.gSelector.addDataItem(dataUrl, data);
+					globals.gSelector.addDataItem(theUrl, data);
 					view.results = [];
 					view.results[0] = data;
 
