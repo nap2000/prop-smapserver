@@ -432,6 +432,7 @@ CREATE TABLE upload_event (
 	location_trigger text,	-- The trigger for the completion of the task
 	start_time timestamp with time zone,
 	end_time timestamp with time zone,
+	scheduled_start timestamp with time zone,
 	instance_name text
 	);
 create index idx_ue_ident on upload_event(user_name);

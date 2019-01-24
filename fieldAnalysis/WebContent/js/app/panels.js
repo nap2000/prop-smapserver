@@ -202,8 +202,12 @@ $(document).ready(function() {
 						view.uId = uId;
 						view.qId = qId;
 						view.qId_is_calc = qId_is_calc;
-						
-						view.dateQuestionId = $('#settings_date_question option:selected').val();
+
+				        if(subjectType === "user") {
+					        view.dateQuestionId = $('#usage_settings_date_question option:selected').val();
+				        } else {
+					        view.dateQuestionId = $('#settings_date_question option:selected').val();
+				        }
 						view.timeGroup = $('#time_group').val();
 						view.fromDate = $('#from_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
 						if(typeof view.fromDate !== "undefined" && view.fromDate.length === 0) {
