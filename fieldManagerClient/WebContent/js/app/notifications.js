@@ -624,46 +624,57 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 idx = -1,
                 updateCurrentProject = true;
 
-            h[++idx] = '<table class="table">';
-            h[++idx] = '<thead>';
-            h[++idx] = '<tr>';
-	        h[++idx] = '<th>' + localise.set["c_name"], + '</th>';
-            h[++idx] = '<th>' + localise.set["c_survey"], + '</th>';
-            h[++idx] = '<th>' + localise.set["c_target"] + '</th>';
-            h[++idx] = '<th>' + localise.set["c_details"] + '</th>';
-            h[++idx] = '<th>' + localise.set["c_action"] + '</th>';
-            h[++idx] = '</tr>';
-            h[++idx] = '</thead>';
-            h[++idx] = '<tbody class="table-striped">';
+	        h[++idx] = '<div class="row"><b>';
+
+	        h[++idx] = '<div class="col-sm-2">';
+	        h[++idx] = localise.set["c_name"];
+	        h[++idx] = '</div>';
+
+	        h[++idx] = '<div class="col-sm-2">';
+            h[++idx] = localise.set["c_survey"];
+	        h[++idx] = '</div>';
+
+	        h[++idx] = '<div class="col-sm-1">';
+	        h[++idx] = localise.set["c_target"];
+	        h[++idx] = '</div>';
+
+	        h[++idx] = '<div class="col-sm-5">';
+            h[++idx] = localise.set["c_details"];
+	        h[++idx] = '</div>';
+
+	        h[++idx] = '<div class="col-sm-2">';
+            h[++idx] = localise.set["c_action"];
+	        h[++idx] = '</div>';
+            h[++idx] = '</b></div>';
 
             for(i = 0; i < data.length; i++) {
 
-                h[++idx] = '<tr';
+                h[++idx] = '<div class="row"';
                 if(!data[i].enabled) {
                     h[++idx] = ' class="disabled"';
                 }
                 h[++idx] = '>';
 
                 // name
-	            h[++idx] = '<td>';
+	            h[++idx] = '<div class="col-sm-2" style="word-wrap: break-word;">';
 	            h[++idx] = data[i].name;
-	            h[++idx] = '</td>';
+	            h[++idx] = '</div>';
 
                 // survey
-                h[++idx] = '<td>';
+	            h[++idx] = '<div class="col-sm-2" style="word-wrap: break-word;">';
                 h[++idx] = data[i].s_name;
-                h[++idx] = '</td>';
+	            h[++idx] = '</div>';
 
                 // target
-                h[++idx] = '<td>';
+	            h[++idx] = '<div class="col-sm-1">';
                 h[++idx] = data[i].target;
-                h[++idx] = '</td>';
+	            h[++idx] = '</div>';
 
                 if(data[i].notifyDetails && !data[i].notifyDetails.emails) {
                     data[i].notifyDetails.emails = [];
                 }
                 // details
-                h[++idx] = '<td>';
+	            h[++idx] = '<div class="col-sm-5" style="word-wrap: break-word;">';
                 if(data[i].target === "email" && data[i].notifyDetails) {
                     var notifyEmail = false;
                     if((data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0)
@@ -706,10 +717,10 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                         }
                     }
                 }
-                h[++idx] = '</td>';
+	            h[++idx] = '</div>';
 
                 // actions
-                h[++idx] = '<td>';
+	            h[++idx] = '<div class="col-sm-2">';
 
                 h[++idx] = '<button type="button" data-idx="';
                 h[++idx] = i;
@@ -721,13 +732,12 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 h[++idx] = '" class="btn btn-default btn-sm rm_not danger">';
                 h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
 
-                h[++idx] = '</td>';
+	            h[++idx] = '</div>';
                 // end actions
 
-                h[++idx] = '</tr>';
+                h[++idx] = '</div>';
             }
-            h[++idx] = '</tbody>';
-            h[++idx] = '</table>';
+
 
             $selector.empty().append(h.join(''));
 
