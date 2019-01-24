@@ -366,8 +366,20 @@
 			</fieldset>	
 			<fieldset class="ui-widget-content">
 				<legend class="ui-widget-header ui-corner-all lang" data-lang="t_df">date filter</legend>
+
+				<label for="usage_settings_date_question" class="lang subject_user_only" data-lang="c_dateq">date question</label>
+				<select class="subject_user_only" id="usage_settings_date_question">
+					<option value="0" class="lang" data-lang="c_none">none</option>
+					<option value="1" class="lang" data-lang="Upload Time">upload</option>
+					<option value="2" class="lang" data-lang="_start">start</option>
+					<option value="3" class="lang" data-lang="_end">end</option>
+					<option value="4" class="lang" data-lang="c_scheduled">scheduled</option>
+				</select>
+
 				<label for="settings_date_question" class="lang subject_survey_only" data-lang="c_dateq">date question</label>
-				<select class="date_question subject_survey_only" id="settings_date_question"></select><br class="subject_survey_only"/><br class="subject_survey_only"/>
+				<select class="date_question subject_survey_only" id="settings_date_question"></select>
+
+				<br/><br/>
 				<label for="from_date" class="lang" data-lang="a_from_date">From date</label>
 				<input type="date" id="from_date"/> <span class="lang" data-lang="c_inclusive">inclusive</span><br/>	
 				<label for="to_date" class="lang" data-lang="a_to_date">To date</label>
