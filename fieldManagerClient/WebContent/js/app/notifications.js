@@ -656,8 +656,9 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 h[++idx] = '>';
 
                 // name
+                var name = (data[i].name && data[i].name.trim().length > 0) ? data[i].name : i;
 	            h[++idx] = '<div class="col-sm-2" style="word-wrap: break-word;">';
-	            h[++idx] = data[i].name;
+	            h[++idx] = name;
 	            h[++idx] = '</div>';
 
                 // survey

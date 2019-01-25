@@ -702,4 +702,7 @@ td.completed, td.submitted {
 	filter:opacity(0.4);
 }
 
+#notification_list .row {
+	margin-top:10px;
+}
 
