@@ -228,3 +228,7 @@ tr.deleted td a {
      padding-top: 10px;
      padding-bottom: 10px;
  }
+
+#notification_list .row {
+    margin-top:10px;
+}
