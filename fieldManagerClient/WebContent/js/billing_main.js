@@ -71,6 +71,7 @@ require([
          'bootstrapfileinput'
          
          ], function($, bootstrap, common, localise, globals) {
+	setCustomBilling();
 
 });
 
