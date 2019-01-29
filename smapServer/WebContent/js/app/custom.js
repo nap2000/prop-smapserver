@@ -101,3 +101,7 @@ function setCustomWebForms() {
 function setCustomLogs() {
 
 }
+
+function setCustomBilling() {
+
+}
