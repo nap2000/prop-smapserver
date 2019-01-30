@@ -818,6 +818,7 @@ define(function () {
                 $('#set_default_language option:selected').text(),
                 $('#task_file').prop('checked'),
                 $('#timing_data').prop('checked'),
+	            $('#hide_on_device').prop('checked'),
                 $('#exclude_empty').prop('checked'),
                 $('#set_hrk').val(),
                 $('#set_key_policy').val()
@@ -832,6 +833,7 @@ define(function () {
                 this.survey.def_lang = current.def_lang;
                 this.survey.task_file = current.task_file;
                 this.survey.timing_data = current.timing_data;
+	            this.survey.hideOnDevice = current.hideOnDevice;
                 this.survey.exclude_empty = current.exclude_empty;
                 this.survey.hrk = current.hrk;
                 this.survey.key_policy = current.key_policy;
@@ -850,6 +852,7 @@ define(function () {
                     this.survey.def_lang,
                     this.survey.task_file,
                     this.survey.timing_data,
+                    this.survey.hideOnDevice,
                     this.survey.exclude_empty,
                     this.survey.hrk,
                     this.survey.key_policy
@@ -864,6 +867,7 @@ define(function () {
                                               def_lang,
                                               task_file,
                                               timing_data,
+                                              hideOnDevice,
                                               exclude_empty,
                                               hrk,
                                               key_policy) {
@@ -882,6 +886,7 @@ define(function () {
                 def_lang: def_lang,
                 task_file: task_file,
                 timing_data: timing_data,
+                hideOnDevice: hideOnDevice,
                 exclude_empty: exclude_empty,
                 hrk: hrk,
                 key_policy: key_policy

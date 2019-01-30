@@ -751,6 +751,7 @@ define({
     "ed_fi": "Form Identifier",
     "ed_dl": "Default Language",
     "ed_td": "Timing Data",
+	"ed_hod": "Hide the form on devices",
     "ed_s_g": "Grid (Web Forms)",
     "ed_s_p": "Pages",
     "ed_c_del_q": "Deleted question",

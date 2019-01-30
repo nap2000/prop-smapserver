@@ -492,7 +492,7 @@ $(document).ready(function() {
 	$('#task_file').change(function() {
 		globals.model.settingsChange();
 	});
-	$('#timing_data').change(function() {
+	$('#timing_data, #hide_on_device').change(function() {
 		globals.model.settingsChange();
 	});
     $('#exclude_empty').change(function() {
@@ -2121,6 +2121,7 @@ function updateSettingsData() {
 	}
 	$('#task_file').prop('checked', globals.model.survey.task_file);
 	$('#timing_data').prop('checked', globals.model.survey.timing_data);
+	$('#hide_on_device').prop('checked', globals.model.survey.hideOnDevice);
     $('#exclude_empty').prop('checked', globals.model.survey.exclude_empty);
 }
 

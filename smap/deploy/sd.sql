@@ -1119,3 +1119,5 @@ alter table upload_event add column instance_name text;
 alter table organisation add column webform text;
 
 alter table upload_event add column scheduled_start timestamp with time zone;
+
+alter table survey add column hide_on_device boolean;
