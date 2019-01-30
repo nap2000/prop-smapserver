@@ -192,7 +192,7 @@ create TABLE project (
 	o_id INTEGER REFERENCES organisation(id) ON DELETE CASCADE,
 	name text,
 	description text,
-	tasks_only boolean default false,	-- When true only tasks will be downloaded to fieldTask
+	tasks_only boolean default false,	-- Deprecated - Set per form instead as (hide_on_device). When true only tasks will be downloaded to fieldTask
 	changed_by text,
 	changed_ts TIMESTAMP WITH TIME ZONE
 	);
@@ -490,7 +490,8 @@ CREATE TABLE survey (
 	meta text,										-- Meta items to collect with this survey
 	public_link text,
 	hidden boolean default false,					-- Updated when a form is replaced
-	original_ident text								-- Updated when a form is replaced
+	original_ident text,								-- Updated when a form is replaced
+	hide_on_device boolean							-- Used when forms are launched from other forms or as tasks to hide the ad-hoc form
 	);
 ALTER TABLE survey OWNER TO ws;
 DROP INDEX IF EXISTS SurveyDisplayName;
