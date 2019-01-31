@@ -162,6 +162,8 @@ define({
     "c_layers": "Layers",
     "c_settings": "Settings",
     "c_start": "Start",
+	"c_end": "End",
+	"c_step": "Step",
     "c_back": "Back",
     "c_target": "Target",
     "c_content": "Content",
@@ -291,6 +293,8 @@ define({
     "c_move": "Move",
     "c_parent_form": "Parent Form",
     "c_child_form": "Child Form (Repeats)",
+    "c_other": "Other",
+    "c_random": "Randomize",
 
     // File Types
     "ft": "File Type",

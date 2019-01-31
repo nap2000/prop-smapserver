@@ -397,6 +397,35 @@ $(document).ready(function() {
         }
 
     });
+
+    /*
+     * Respond to clicking of the save parameters button in the parameters edit modal
+     */
+    $('#parameterSave').click(function() {
+    	var params = [];
+    	var newVal;
+	    var survey = globals.model.survey;
+		var question = survey.forms[globals.gFormIndex].questions[globals.gItemIndex];
+		var i;
+		var paramDetails;
+
+		var qParams = globals.model.qParams[question.type];
+		if(qParams && qParams.length > 0) {
+			for(i = 0; i < qParams.length; i++) {
+				paramDetails = globals.model.paramDetails[qParams[i]];
+				getParam($('#' + paramDetails.field), params, qParams[i], paramDetails.type);
+			}
+		}
+
+	    //getParam($('#p_start'), params, 'start', 'number');
+	    //getParam($('#p_end'), params, 'end', 'number');
+	    //getParam($('#p_step'), params, 'step', 'number');
+	    //getParam($('#p_randomize'), params, 'randomize', 'boolean');
+	    //getParam($('#p_other'), params, undefined, 'text');
+
+    	newVal = params.join(';');
+	    updateLabel("question", globals.gFormIndex, globals.gItemIndex, undefined, "text", newVal, gQname, "parameters");
+    });
 	
 	/*
 	 * Save changes to the language list
@@ -1396,14 +1425,6 @@ function respondToEvents($context) {
 		respondToEventsChoices($context);
 		changeset.updateViewControls();
 
-		/*
-		globals.gSelQuestionProperty = globals.gSelProperty;	// Restore selProperty and selLabel for options
-		globals.gSelProperty = globals.gSelChoiceProperty;
-		globals.gSelQuestionLabel = globals.gSelLabel;	
-		globals.gSelLabel = globals.gSelChoiceLabel;
-		$('#propSelected').html(globals.gSelLabel);
-		*/
-		
 		$('.editorContent').toggle();
 		$('.notoptionslist').hide();
 	});
@@ -1464,6 +1485,88 @@ function respondToEvents($context) {
 			newVal = $this.hasClass("prop_no");		// If set false then newVal will be true
 		}
 		updateLabel(type, formIndex, itemIndex, optionList, labelType, newVal, qname, prop); 
+
+	});
+
+	// Respond to a click on the parameter button
+	$context.find('.parameterButton').off().click(function() {
+
+		var $this = $(this),
+			$li = $this.closest('li'),
+			survey = globals.model.survey;
+
+		var formIndex = $li.data("fid");
+		var itemIndex = $li.data("id");
+		globals.gFormIndex = formIndex;
+		globals.gItemIndex = itemIndex;
+		gQname = $li.data("qname");
+
+		var qType = survey.forms[formIndex].questions[itemIndex].type;
+		var qParams = globals.model.qParams[qType];
+		var paramDetails;
+		var paramArray = [];
+
+		var paramData = $li.find('.labelProp').val();
+		var otherParams = '';
+		var i, j;
+		var pKey;
+		var foundParam;
+
+		if(paramData) {
+			paramArray = paramData.split(';');
+			if(paramArray.length == 0) {
+				paramArray = paramData.split(' ');
+			}
+		}
+
+		/*
+		 * Show any parameter attributes for this question type
+		 */
+		$('#parameter_form')[0].reset();
+		$('.parameter_field').hide();
+		if(qParams && qParams.length > 0) {
+			for (j = 0; j < qParams.length; j++) {
+				paramDetails = globals.model.paramDetails[qParams[j]];
+				$('.' + paramDetails.field).show();
+			}
+		}
+
+		for (i = 0; i < paramArray.length; i++) {
+
+			var p = paramArray[i].split('=');
+			if (p.length > 1) {
+				if(qParams && qParams.length > 0) {
+					foundParam = false;
+					for (j = 0; j < qParams.length; j++) {
+						paramDetails = globals.model.paramDetails[qParams[j]];
+
+						pKey = p[0].trim();
+						if (p[0].trim() === qParams[j]) {
+							foundParam = true;
+							setParam($('#' + paramDetails.field), p[1].trim(), paramDetails.type);
+							break;
+						}
+					}
+
+					if(!foundParam) {
+						if (otherParams.length > 0) {
+							otherParams += '; ';
+						}
+						otherParams += p[0].trim() + '=' + p[1].trim();
+					}
+				}
+			}
+		}
+
+		// Add any parameter values not explicetely set
+		//$('#p_other').val(otherParams);       Not sure if we want to do this
+
+
+		$('#parameterModal').modal({
+			keyboard: true,
+			backdrop: 'static',
+			show: true
+		});
 
 	});
 	
@@ -2633,8 +2736,40 @@ function setNoFilter() {
                     $item.focus();
                 }
 
-
-
             }
+
+            /*
+             * Get the value of a parameter from the parameter dialog
+             */
+            function getParam($elem, params, key, type) {
+				var val;
+				if(type === "boolean") {
+					val = $elem.prop('checked') ? 'yes' : 'no';
+				} else {
+					val = $elem.val();
+				}
+				if(val) {
+					val = val.trim();
+					if(val.length > 0) {
+						if(key) {
+							val = key + '=' + val;
+						}
+						params.push(val);
+					}
+				}
+            }
+
+			/*
+             * Set the value of a parameter in the parameter dialog
+             */
+			function setParam($elem, val, type) {
+				var val;
+				if (type === "boolean") {
+					val = $elem.prop('checked', val == 'yes' || val === 'true');
+				} else {
+					$elem.val(val);
+				}
+			}
+
 
 });

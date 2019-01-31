@@ -360,6 +360,47 @@ define(function () {
         this.savedSettings = undefined;
         this.forcceSettingsChange = false;
 
+        // A list of valid parameters for each question type
+        this.qParams = {
+            string: ['rows'],
+            image: ['max-pixels'],
+            range: ['start', 'end', 'step'],
+            select: ['randomize'],
+            select1: ['randomize'],
+            rank: ['randomize']
+        };
+
+        this.paramDetails = {
+	        rows: {
+	            field: 'p_rows',
+                type: 'integer'
+            },
+            'max-pixels': {
+	            field: 'p_max_pixels',
+                type: 'integer'
+            },
+            start: {
+	            field: 'p_start',
+                type: 'number'
+            },
+	        end: {
+		        field: 'p_end',
+		        type: 'number'
+	        },
+	        step: {
+		        field: 'p_step',
+		        type: 'number'
+	        },
+	        randomize: {
+		        field: 'p_randomize',
+		        type: 'boolean'
+	        },
+	        _other: {
+		        field: 'p_other',
+		        type: 'text'
+	        }
+        };
+
         this.qTypes = [{
             name: "Text",
             trans: "rev_text",
@@ -369,7 +410,7 @@ define(function () {
             visible: true,
 				source: "user",
                 compatTypes: ["select1"]
-        },
+            },
             {
                 name: "Note",
                 type: "note",
