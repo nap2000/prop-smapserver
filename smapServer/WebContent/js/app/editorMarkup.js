@@ -472,6 +472,7 @@ define([
 			    }
 			    h[++idx] = '</span></button>';
 			    h[++idx] = '</div>';
+
 			    /*
 			     * Add the text area for the required response text
 			     */
@@ -614,6 +615,36 @@ define([
 				
 			
 				
+			} else if(selProperty === "parameters" && type === "question") {		// Add selects to get the linked survey, and question
+				h[++idx] = '<div class="row">';
+
+				h[++idx] = '<div class="col-sm-6">';	    // start col
+				h[++idx] = '<button type="button" class="btn btn-primary parameterButton"';
+				h[++idx] = ' data-prop="';
+				h[++idx] = selProperty;
+				h[++idx] = '">';
+				h[++idx] = '<span class="glyphicon glyphicon-edit"></span> ';
+				h[++idx] = localise.set["c_edit"];
+				h[++idx] = '</button>';
+				h[++idx] = '</div>';		// End Col
+
+				/*
+			     * Add the text area to display the parameters
+			     */
+				h[++idx] = '<div class="col-sm-6">';
+				h[++idx] = '<textarea class="labelProp has_tt" readonly title="';
+				h[++idx] = selLabel
+				h[++idx] = '" data-prop="';
+				h[++idx] = selProperty;
+				h[++idx] = '">';
+				h[++idx] = question["parameters"];
+				h[++idx] = '</textarea>';
+				h[++idx] = '</div>';    // End Col
+
+				h[++idx] ='</div>';		// End Row
+
+
+
 			} else if(selProperty === "media" && question.type != "calculate") {
 				h[++idx] = '<div class="row">';
 				if(type === "question" && (question.inMeta || question.source != "user" )) {
