@@ -563,6 +563,26 @@ define(function () {
                 visible: true,
                 source: "user"
             },
+	        {
+		        name: "Parent Form",
+		        type: "parent_form",
+		        trans: "c_parent_form",
+		        glyphicon: "open-file",
+		        text: "Parent Form",
+		        canSelect: true,
+		        visible: true,
+		        source: "user"
+	        },
+	        {
+		        name: "Child Form",
+		        type: "child_form",
+		        trans: "c_child_form",
+		        glyphicon: "save-file",
+		        text: "Child Form",
+		        canSelect: true,
+		        visible: true,
+		        source: "user"
+	        },
             {
                 name: "File",
                 type: "file",

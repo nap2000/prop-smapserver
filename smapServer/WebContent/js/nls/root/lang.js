@@ -289,6 +289,8 @@ define({
     "c_pending": "Pending",
     "c_ok": "OK",
     "c_move": "Move",
+    "c_parent_form": "Parent Form",
+    "c_child_form": "Child Form (Repeats)",
 
     // File Types
     "ft": "File Type",
@@ -693,6 +695,7 @@ define({
     "ed_nl": "Not Linked",
     "ed_r_msg": "Required Text Message",
     "ed_o_o_g": "Only one geometry question can be added to a form",
+	"ed_f_l": "The form to be launched must be specified as a parameter",
     "ed_hrk": "Unique Key",
     "ed_dk": "Data Key",
     "ed_csv": "CSV File",

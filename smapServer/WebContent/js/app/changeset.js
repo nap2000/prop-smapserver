@@ -1584,6 +1584,23 @@ define([
                         isValid = checkParentheisis(container, itemIndex, itemType, item.choice_filter);
                     }
 
+	                if(isValid && (item.type === "child_form" || item.type === "parent_form")) {	// Check that form launch types have a reference form
+
+	                    if(item.parameters && item.parameters.indexOf("form_identifier") >= 0) {
+	                        isValid = true;
+	                    } else {
+	                        isValid = false;
+		                    addValidationError(
+			                    container,
+			                    itemIndex,
+			                    "item",
+			                    localise.set["ed_f_l"],	// Only one geometry question can be added to a form
+			                    itemType,
+			                    "error");
+	                    }
+
+	                }
+
 
                 } else if(itemType === "option") {
                     // Check references to other questions
