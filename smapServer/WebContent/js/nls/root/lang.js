@@ -768,6 +768,8 @@ define({
     "ed_c_add_o": "Added choice %s1 to choice list: %s2",
     "ed_c_settings": "Settings changed",
     "ed_mmf": "Manage Media Files For this Form",
+    "ed_sl": "Survey to launch",
+    "ed_qk": "Question to store the returned key",
 
 
     // Managed Forms

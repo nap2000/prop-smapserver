@@ -367,7 +367,9 @@ define(function () {
             range: ['start', 'end', 'step'],
             select: ['randomize'],
             select1: ['randomize'],
-            rank: ['randomize']
+            rank: ['randomize'],
+            parent_form: ['form_identifier', 'key_question'],
+	        child_form: ['form_identifier', 'key_question']
         };
 
         this.paramDetails = {
@@ -394,6 +396,14 @@ define(function () {
 	        randomize: {
 		        field: 'p_randomize',
 		        type: 'boolean'
+	        },
+	        form_identifier: {
+		        field: 'p_form_identifier',
+		        type: 'select'
+	        },
+	        key_question: {
+		        field: 'p_key_question',
+		        type: 'select'
 	        },
 	        _other: {
 		        field: 'p_other',
