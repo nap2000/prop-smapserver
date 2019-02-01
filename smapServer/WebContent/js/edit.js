@@ -96,12 +96,8 @@ var gUrl,			// url to submit to
 
 // Media Modal Parameters
 var gNewVal,
-	//gSelFormId,
-	//gSelId,
-	//gOptionList,
-	gQname,
 	gElement,
-	gNewVal,
+	gQname,
 	gIsSurveyLevel;
 
 window.moment = moment;
@@ -143,9 +139,13 @@ $(document).ready(function() {
 	/*
 	 * Get location list
 	 */
-	// Get locations
 	getLocations(setLocationList);
-	
+
+	/*
+	 * Get surveys that the user can link to
+	 */
+	getAccessibleSurveys($('.linkable_surveys'), true, true, false);
+
 	/*
 	 * Initialise controls in the open form dialog
 	 */
@@ -417,12 +417,6 @@ $(document).ready(function() {
 			}
 		}
 
-	    //getParam($('#p_start'), params, 'start', 'number');
-	    //getParam($('#p_end'), params, 'end', 'number');
-	    //getParam($('#p_step'), params, 'step', 'number');
-	    //getParam($('#p_randomize'), params, 'randomize', 'boolean');
-	    //getParam($('#p_other'), params, undefined, 'text');
-
     	newVal = params.join(';');
 	    updateLabel("question", globals.gFormIndex, globals.gItemIndex, undefined, "text", newVal, gQname, "parameters");
     });
@@ -457,7 +451,11 @@ $(document).ready(function() {
 				}
 		});
 	});
-	
+
+	$('#p_form_identifier').change(function() {
+		var ident = $(this).val();
+
+	});
 	/*
 	 * Save changes to the pulldata settings
 	 */
@@ -640,7 +638,6 @@ $(document).ready(function() {
 				existing = $('#base_on_existing').prop('checked');
 				existing_project = $('#existing_project').val();
 				existing_survey = $('#survey_name').val();
-				//existing_form = $('#form_name').val();
 				shared_results = $('#shared_results').prop('checked');
 				createNewSurvey(name, existing, existing_survey, shared_results, surveyDetailsDone);
 			}
@@ -1518,6 +1515,14 @@ function respondToEvents($context) {
 				paramArray = paramData.split(' ');
 			}
 		}
+
+		/*
+		 * Add a question select list
+		 */
+		if(qType === "parent_form" || qType === "child_form") {
+			$('#p_key_question').empty().append(getQuestionsAsSelect());
+		}
+
 
 		/*
 		 * Show any parameter attributes for this question type
@@ -2769,6 +2774,64 @@ function setNoFilter() {
 				} else {
 					$elem.val(val);
 				}
+			}
+
+			function getQuestionsAsSelect() {
+
+				var i,
+					survey = globals.model.survey,
+					h = [],
+					idx = -1;
+
+				/*
+				 * Process the questions in the top level form (parent is 0)
+				 *   Questions that are "begin repeat" type will link to sub level forms which are then processed in turn
+				 *
+				 */
+				if(survey) {
+					if(survey.forms && survey.forms.length > 0) {
+						for(i = 0; i < survey.forms.length; i++) {
+							if(survey.forms[i].parentFormIndex == -1) {
+								h[++idx] = getQuestionsFromForm(survey.forms[i], i);
+								break;
+							}
+						}
+					}
+				}
+
+				return h.join("");
+
+			}
+
+			function getQuestionsFromForm(form, formIndex) {
+				var i,
+					question,
+					h = [],
+					idx = -1;
+
+				h[++idx] = '<option value="">';
+				h[++idx] = localise.set["c_none"];
+				h[++idx] = '</option>';
+
+				if(form) {
+
+					for (i = 0; i < form.qSeq.length; i++) {
+						globals.gHasItems = true;
+						question = form.questions[form.qSeq[i]];
+
+						// Ignore property type questions, questions that have been deleted and meta questions like end repeat
+						if (!markup.includeQuestion(question)) {
+							continue;
+						}
+
+						h[++idx] = '<option value="';
+						h[++idx] = question.name;
+						h[++idx] = '">';
+						h[++idx] = question.name;
+						h[++idx] = '</option>';
+					}
+				}
+				return h.join('');
 			}
 
 
