@@ -89,7 +89,6 @@ var	gMode = "survey",
 	gTempPulldata = [],
 	gDragCounter,
 	gDragSourceId;
-
 // Media globals
 var gUrl,			// url to submit to
 	gBaseUrl = '/surveyKPI/upload/media';
@@ -397,6 +396,18 @@ $(document).ready(function() {
         }
 
     });
+
+    /*
+     * Respond to a change in the form to be launched
+     * If the question type is a child form then the list of questions needs to be updated
+     */
+	$('#p_form_identifier').change(function(){
+		var survey = globals.model.survey;
+		var qType = survey.forms[globals.gFormIndex].questions[globals.gItemIndex].type;
+		if(qType === "child_form") {
+			getQuestionsInSurvey($('#p_key_question'), $(this).val(), true);
+		}
+	});
 
     /*
      * Respond to clicking of the save parameters button in the parameters edit modal
@@ -1506,7 +1517,6 @@ function respondToEvents($context) {
 		var paramData = $li.find('.labelProp').val();
 		var otherParams = '';
 		var i, j;
-		var pKey;
 		var foundParam;
 
 		if(paramData) {
@@ -1517,16 +1527,31 @@ function respondToEvents($context) {
 		}
 
 		/*
-		 * Add a question select list
-		 */
-		if(qType === "parent_form" || qType === "child_form") {
+         * Add a question select list
+         */
+		var sIdent = "0";
+		if(qType === "parent_form") {
+			$('#p_key_question_label').html(localise.set["ed_qk"]);
 			$('#p_key_question').empty().append(getQuestionsAsSelect());
+		} else if (qType === "child_form") {
+			$('#p_key_question_label').html(localise.set["ed_qkc"]);
+			// Get the form ident
+			for (i = 0; i < paramArray.length; i++) {
+				var p = paramArray[i].split('=');
+				if (p.length > 1) {
+					if (p[0].trim() === 'form_identifier') {
+						sIdent = p[1].trim();
+						break;
+					}
+				}
+			}
+			getQuestionsInSurvey($('#p_key_question'), sIdent, true);
 		}
 
 
 		/*
-		 * Show any parameter attributes for this question type
-		 */
+         * Show any parameter attributes for this question type
+         */
 		$('#parameter_form')[0].reset();
 		$('.parameter_field').hide();
 		if(qParams && qParams.length > 0) {
@@ -1535,6 +1560,7 @@ function respondToEvents($context) {
 				$('.' + paramDetails.field).show();
 			}
 		}
+
 
 		for (i = 0; i < paramArray.length; i++) {
 
@@ -1545,7 +1571,6 @@ function respondToEvents($context) {
 					for (j = 0; j < qParams.length; j++) {
 						paramDetails = globals.model.paramDetails[qParams[j]];
 
-						pKey = p[0].trim();
 						if (p[0].trim() === qParams[j]) {
 							foundParam = true;
 							setParam($('#' + paramDetails.field), p[1].trim(), paramDetails.type);
@@ -2776,6 +2801,9 @@ function setNoFilter() {
 				}
 			}
 
+			/*
+			 * Get the questions in the form currently being edited as options for a select question
+			 */
 			function getQuestionsAsSelect() {
 
 				var i,
