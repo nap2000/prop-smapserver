@@ -17,6 +17,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 var gWait = 0;		// This javascript file only
+var gCache = {};
+
 
 /*
  * Convert a choice list name into a valid jquery class name
@@ -3430,58 +3432,61 @@ function getAccessibleSurveys($elem, includeNone, includeBlocked, groupsOnly) {
 }
 
  /*
-  * Get all the surveys that a user can access
+  * Get the questions in a survey
   */
-function getQuestionsInSurvey($elem, includeNone, includeBlocked, groupsOnly) {
+function getQuestionsInSurvey($elem, sIdent, includeNone) {
 
-	var url="/surveyKPI/surveys";
-	var hasParam = false;
-	if(includeBlocked) {
-		url += hasParam ? '&' : '?';
-		url += 'blocked=true';
-		hasParam = true;
+	function populateElement($elem, data) {
+		var h = [],
+			idx = -1,
+			i;
+
+		if (includeNone) {
+			h[++idx] = '<option value="0">';
+			h[++idx] = localise.set["c_none"];
+			h[++idx] = '</option>';
+		}
+		for (i = 0; i < data.length; i++) {
+			h[++idx] = '<option value="';
+			h[++idx] = data[i].name;
+			h[++idx] = '">';
+			h[++idx] = data[i].name;
+			h[++idx] = '</option>';
+		}
+		$elem.empty().append(h.join(''));
 	}
-	if(groupsOnly) {
-		url += hasParam ? '&' : '?';
-		url += 'groups=true';
-		hasParam = true;
-	}
 
-	addHourglass();
-	$.ajax({
-		url: url,
-		dataType: 'json',
-		cache: false,
-		success: function(data) {
-			removeHourglass();
-			var h = [],
-				idx = -1,
-				i;
+	if(gCache[sIdent]) {
+		populateElement($elem, gCache[sIdent]);
+	} else {
+		if (sIdent !== "0") {
+			addHourglass();
+			$.ajax({
+				url: "/surveyKPI/questionListIdent/" + sIdent + "/none?exc_ssc=true",
+				dataType: 'json',
+				cache: false,
+				success: function (data) {
+					removeHourglass();
+					var theIdent = sIdent;
+					var $theElem = $elem;
 
-			if(includeNone) {
-				h[++idx] = '<option value="0">';
-				h[++idx] = localise.set["c_none"]
-				h[++idx] = '</option>';
-			}
-			for(i = 0; i < data.length; i++) {
-				h[++idx] = '<option value="';
-				h[++idx] = data[i].ident;
-				h[++idx] = '">';
-				h[++idx] = data[i].projectName;
-				h[++idx] = ' : ';
-				h[++idx] = data[i].displayName;
-				h[++idx] = '</option>';
-			}
-			$elem.empty().append(h.join(''));
+					gCache[theIdent] = data;
+					populateElement($theElem, data);
 
-		},
-		error: function(xhr, textStatus, err) {
-			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				console.log("Error: Failed to get list of surveys: " + err);
+				},
+				error: function (xhr, textStatus, err) {
+					removeHourglass();
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(localise.set["msg_err_get_q"] + ": " + err);
+					}
+				}
+			});
+		} else {
+			if (includeNone) {
+				$elem.empty().append('option value="0">' + localise.set["c_none"] + '</option>');
 			}
 		}
-	});
+	}
 }
