@@ -675,6 +675,7 @@ define({
     // Editor
     "ed_rf": "Reference Form",
     "ed_in": "Instance Name",
+	"ed_io": "Instance Order",
     "ed_ep": "Existing Project",
     "ed_es": "Existing Survey",
     "e_b_e": "Base on existing form",
