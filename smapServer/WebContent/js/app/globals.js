@@ -369,7 +369,8 @@ define(function () {
             select1: ['randomize'],
             rank: ['randomize'],
             parent_form: ['form_identifier', 'key_question'],
-	        child_form: ['form_identifier', 'key_question']
+	        child_form: ['form_identifier', 'key_question'],
+            'begin repeat':['ref']
         };
 
         this.paramDetails = {
@@ -403,6 +404,10 @@ define(function () {
 	        },
 	        key_question: {
 		        field: 'p_key_question',
+		        type: 'select'
+	        },
+	        ref: {
+		        field: 'p_ref',
 		        type: 'select'
 	        },
 	        _other: {
