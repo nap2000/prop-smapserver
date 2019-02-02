@@ -1164,6 +1164,7 @@ create TABLE apply_foreign_keys (
 	instanceid text,
 	prikey integer,
 	table_name text,
+	instanceIdLaunchingForm text,
 	applied boolean default false,
 	comment text,
 	ts_created TIMESTAMP WITH TIME ZONE,
