@@ -1507,9 +1507,10 @@ function respondToEvents($context) {
 		var itemIndex = $li.data("id");
 		globals.gFormIndex = formIndex;
 		globals.gItemIndex = itemIndex;
-		gQname = $li.data("qname");
 
 		var qType = survey.forms[formIndex].questions[itemIndex].type;
+		var qName = survey.forms[formIndex].questions[itemIndex].name;
+		gQname = qName;
 		var qParams = globals.model.qParams[qType];
 		var paramDetails;
 		var paramArray = [];
@@ -1546,6 +1547,8 @@ function respondToEvents($context) {
 				}
 			}
 			getQuestionsInSurvey($('#p_key_question'), sIdent, true);
+		} else if(qType === "begin repeat") {
+			$('#p_ref').empty().append(getFormsAsSelect(qName));
 		}
 
 
@@ -2802,6 +2805,39 @@ function setNoFilter() {
 			}
 
 			/*
+             * Get the forms in the survey as options for a select
+             */
+			function getFormsAsSelect(excludeForm) {
+
+				var i,
+					survey = globals.model.survey,
+					h = [],
+					idx = -1;
+
+				if(survey) {
+					if(survey.forms && survey.forms.length > 0) {
+
+						h[++idx] = '<option value="">';
+						h[++idx] = localise.set["c_none"];
+						h[++idx] = '</option>';
+
+						for(i = 0; i < survey.forms.length; i++) {
+							if(survey.forms[i].name !== excludeForm && survey.forms[i].parentFormIndex != -1) {
+								h[++idx] = '<option value="';
+								h[++idx] = survey.forms[i].name;
+								h[++idx] = '">';
+								h[++idx] = survey.forms[i].name;
+								h[++idx] = '</option>';
+							}
+						}
+					}
+				}
+
+				return h.join("");
+
+			}
+
+			/*
 			 * Get the questions in the form currently being edited as options for a select question
 			 */
 			function getQuestionsAsSelect() {
@@ -2818,6 +2854,11 @@ function setNoFilter() {
 				 */
 				if(survey) {
 					if(survey.forms && survey.forms.length > 0) {
+
+						h[++idx] = '<option value="">';
+						h[++idx] = localise.set["c_none"];
+						h[++idx] = '</option>';
+
 						for(i = 0; i < survey.forms.length; i++) {
 							if(survey.forms[i].parentFormIndex == -1) {
 								h[++idx] = getQuestionsFromForm(survey.forms[i], i);
@@ -2836,10 +2877,6 @@ function setNoFilter() {
 					question,
 					h = [],
 					idx = -1;
-
-				h[++idx] = '<option value="">';
-				h[++idx] = localise.set["c_none"];
-				h[++idx] = '</option>';
 
 				if(form) {
 

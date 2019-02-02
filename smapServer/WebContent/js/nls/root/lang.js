@@ -673,6 +673,7 @@ define({
     "wf_sig": "Signature",
 
     // Editor
+    "ed_rf": "Reference Form",
     "ed_in": "Instance Name",
     "ed_ep": "Existing Project",
     "ed_es": "Existing Survey",
