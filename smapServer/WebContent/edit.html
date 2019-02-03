@@ -704,6 +704,16 @@
 							</div>
 						</div>
 
+						<div class="form-group parameter_field p_chart_type">
+							<label for="p_chart_type" data-lang="a_type" class="lang col-sm-4 control-label">type</label>
+							<div class="col-sm-8">
+								<select id="p_chart_type" class="form-control">
+									<option class="lang" data-lang="bar_h" value="horizontal_bar"></option>
+									<option class="lang" data-lang="line" value="line"></option>
+								</select>
+							</div>
+						</div>
+
 						<div class="form-group parameter_field p_key_policy">
 							<label for="p_key_policy" data-lang="ed_kp" class="lang col-sm-4 control-label">order</label>
 							<div class="col-sm-8">
@@ -715,7 +725,27 @@
 							</div>
 						</div>
 
-						<div class="form-group parameter_field p_other">
+						<div class="form-group parameter_field p_stacked">
+							<div class="col-sm-offset-4 col-sm-8">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" id="p_stacked"><span class="lang" data-lang="stacked">stacked</span>
+									</label>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group parameter_field p_normalized">
+							<div class="col-sm-offset-4 col-sm-8">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" id="p_normalized"><span class="lang" data-lang="normalized">normalized</span>
+									</label>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group p_other">
 							<label for="p_other" data-lang="c_other" class="lang col-sm-4 control-label">other</label>
 							<div class="col-sm-8">
 								<input type="text" id="p_other" class="form-control">
@@ -727,7 +757,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">close</button>
-				<button id="parameterSave" type="button" data-dismiss="modal" class="btn btn-primary lang" data-lang="c_save">save</button>
+				<button id="parameterSave" type="button" class="btn btn-primary lang" data-lang="c_save">save</button>
 			</div>
 		</div>
 	</div>

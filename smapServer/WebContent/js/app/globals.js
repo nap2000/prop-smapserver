@@ -358,7 +358,7 @@ define(function () {
         this.translateChanges = [];
         this.currentTranslateChange = 0;
         this.savedSettings = undefined;
-        this.forcceSettingsChange = false;
+        this.forceSettingsChange = false;
 
         // A list of valid parameters for each question type
         this.qParams = {
@@ -370,7 +370,8 @@ define(function () {
             rank: ['randomize'],
             parent_form: ['form_identifier', 'key_question'],
 	        child_form: ['form_identifier', 'key_question'],
-            'begin repeat':['ref', 'instance_order', 'instance_count', 'key_policy']
+            'begin repeat':['ref', 'instance_order', 'instance_count', 'key_policy'],
+	        chart: ['chart_type', 'stacked', 'normalized']
         };
 
         this.paramDetails = {
@@ -421,6 +422,18 @@ define(function () {
 	        key_policy: {
 		        field: 'p_key_policy',
 		        type: 'select'
+	        },
+	        chart_type: {
+		        field: 'p_chart_type',
+		        type: 'select'
+	        },
+	        stacked: {
+		        field: 'p_stacked',
+		        type: 'boolean'
+	        },
+	        normalized: {
+		        field: 'p_normalized',
+		        type: 'boolean'
 	        },
 	        _other: {
 		        field: 'p_other',
