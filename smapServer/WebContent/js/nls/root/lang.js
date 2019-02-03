@@ -777,6 +777,7 @@ define({
     "ed_sl": "Survey to launch",
     "ed_qk": "Question to store the returned key",
 	"ed_qkc": "Question in the launched form to get this forms key",
+    "ed_sp1": "Show group questions on one page",
 
 
     // Managed Forms

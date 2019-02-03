@@ -615,7 +615,7 @@ define([
 				
 			
 				
-			} else if(selProperty === "parameters" && type === "question") {		// Add selects to get the linked survey, and question
+			} else if(selProperty === "parameters" && type === "question") {		// Add button to select the parameters dialog
 				h[++idx] = '<div class="row">';
 
 				h[++idx] = '<div class="col-sm-6">';	    // start col
@@ -633,7 +633,7 @@ define([
 			     */
 				h[++idx] = '<div class="col-sm-6">';
 				h[++idx] = '<textarea class="labelProp has_tt" readonly title="';
-				h[++idx] = selLabel
+				h[++idx] = selLabel;
 				h[++idx] = '" data-prop="';
 				h[++idx] = selProperty;
 				h[++idx] = '">';
@@ -643,6 +643,35 @@ define([
 
 				h[++idx] ='</div>';		// End Row
 
+
+
+			} else if(selProperty === "appearance" && type === "question") {		// Add button to select the appearance dialog
+				h[++idx] = '<div class="row">';
+
+				h[++idx] = '<div class="col-sm-6">';	    // start col
+				h[++idx] = '<button type="button" class="btn btn-info appearanceButton"';
+				h[++idx] = ' data-prop="';
+				h[++idx] = selProperty;
+				h[++idx] = '">';
+				h[++idx] = '<span class="glyphicon glyphicon-edit"></span> ';
+				h[++idx] = localise.set["c_edit"];
+				h[++idx] = '</button>';
+				h[++idx] = '</div>';		// End Col
+
+				/*
+			     * Add the text area to display the appearances
+			     */
+				h[++idx] = '<div class="col-sm-6">';
+				h[++idx] = '<textarea class="labelProp has_tt" readonly title="';
+				h[++idx] = selLabel;
+				h[++idx] = '" data-prop="';
+				h[++idx] = selProperty;
+				h[++idx] = '">';
+				h[++idx] = question["appearance"];
+				h[++idx] = '</textarea>';
+				h[++idx] = '</div>';    // End Col
+
+				h[++idx] ='</div>';		// End Row
 
 
 			} else if(selProperty === "media" && question.type != "calculate") {
