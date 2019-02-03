@@ -632,6 +632,7 @@ define(['jquery','localise', 'common', 'globals',
 			device.ft_send_location = $('#ft_send_location').val();
 			device.ft_send = $('#ft_send').val();
 			device.ft_delete = $('#ft_delete').val();
+			device.ft_backward_navigation = $('#ft_backward_navigation').val();
 			device.ft_image_size = $('#ft_image_size').val();
 			device.ft_number_tasks = $('#ft_number_tasks').val();
 
@@ -1264,10 +1265,11 @@ define(['jquery','localise', 'common', 'globals',
 			});
 			addLanguageOptions($('#o_language'), org.locale);
 			$('#o_tz').val(org.timeZone);
-			$('#ft_send').val(org.ft_send);
-			$('#ft_send_location').val(org.ft_send_location);
-			$('#ft_delete').val(org.ft_delete);
-			$('#ft_image_size').val(org.ft_image_size);
+			//$('#ft_send').val(org.ft_send);
+			//$('#ft_send_location').val(org.ft_send_location);
+			//$('#ft_delete').val(org.ft_delete);
+			//$('#ft_disable_backward_nav').val(org.ft_de);
+			//$('#ft_image_size').val(org.ft_image_size);
 			gOrgId = org.id;
 			setBannerLogo(org.id);
 
@@ -2440,6 +2442,7 @@ define(['jquery','localise', 'common', 'globals',
 				$('#ft_send').val(device.ft_send);
 				$('#ft_send_location').val(device.ft_send_location);
 				$('#ft_delete').val(device.ft_delete);
+				$('#ft_backward_navigation').val(device.ft_backward_navigation);
 				$('#ft_image_size').val(device.ft_image_size);
 				$('#ft_number_tasks').val(device.ft_number_tasks);
 
