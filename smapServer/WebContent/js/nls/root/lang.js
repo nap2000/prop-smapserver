@@ -514,6 +514,7 @@ define({
     "msg_dup_name": "Duplicate name",
     "msg_prev_select": "There are no previous select questions to get values from. You may want to set a custom filter",
     "msg_no_proj": "The user has no projects",
+    "msg_pformat": "Parameters specified in the other field must be separated by semi colons and contain an equals sign. For example:  a=x;b=y",
 
     // Editor
     "e_b_e": "Base on existing form",
@@ -955,6 +956,8 @@ define({
     "d_rep_def_freq": "Frequency Report",
     "bar_h": "Horizontal Bar Chart",
     "bar_v": "Vertical Bar Chart",
+    "stacked": "Stacked",
+    "normalized": "Normalized",
     "pie": "Pie Chart",
     "line": "Line Chart",
     "wordcloud": "Word Cloud",

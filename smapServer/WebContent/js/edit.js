@@ -419,6 +419,7 @@ $(document).ready(function() {
 		var question = survey.forms[globals.gFormIndex].questions[globals.gItemIndex];
 		var i;
 		var paramDetails;
+		var other;
 
 		var qParams = globals.model.qParams[question.type];
 		if(qParams && qParams.length > 0) {
@@ -427,9 +428,27 @@ $(document).ready(function() {
 				getParam($('#' + paramDetails.field), params, qParams[i], paramDetails.type);
 			}
 		}
+		other=$('#p_other').val();
+		// validate
+		if(other.length > 0) {
+			var oArray = other.split(';');
+			for(i = 0; i < oArray.length; i++) {
+				var oArray2 = oArray[i].split('=');
+				if(oArray2.length != 2) {
+					alert(localise.set["msg_pformat"]);
+					return false;
+				}
+			}
+		}
 
     	newVal = params.join(';');
+    	if(newVal.length > 0 && other.length > 0) {
+    		newVal += ';';
+	    }
+    	newVal += other;
 	    updateLabel("question", globals.gFormIndex, globals.gItemIndex, undefined, "text", newVal, gQname, "parameters");
+
+	    $('#parameterModal').modal("hide");
     });
 	
 	/*
@@ -1592,7 +1611,7 @@ function respondToEvents($context) {
 		}
 
 		// Add any parameter values not explicetely set
-		//$('#p_other').val(otherParams);       Not sure if we want to do this
+		$('#p_other').val(otherParams);       // Not sure if we want to do this
 
 
 		$('#parameterModal').modal({
