@@ -362,13 +362,21 @@ define(function () {
 
 	    // A list of valid appearances for each question type
 	    this.qAppearances = {
-		    'begin group': ['field-list']
+		    'begin group': ['field-list', 'w'],
+		    'string': ['w']
 	    };
 
 	    this.appearanceDetails = {
 		    'field-list': {
 			    field: 'p_field_list',
-			    type: 'boolean'
+			    type: 'boolean',
+                rex: 'field-list'
+		    },
+		    'w': {
+			    field: 'p_width',
+			    type: 'select',
+                rex: 'w9*',
+                value_offset: 1
 		    }
 	    };
 
