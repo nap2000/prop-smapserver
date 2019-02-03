@@ -467,7 +467,7 @@ $(document).ready(function() {
 		if(qAppearances && qAppearances.length > 0) {
 			for(i = 0; i < qAppearances.length; i++) {
 				appearanceDetails = globals.model.appearanceDetails[qAppearances[i]];
-				getAppearance($('#' + appearanceDetails.field), appearances, qAppearances[i], appearanceDetails.type);
+				getAppearance($('#' + appearanceDetails.field), appearances, qAppearances[i], appearanceDetails);
 			}
 		}
 		other=$('#a_other').val();
@@ -1705,10 +1705,7 @@ function respondToEvents($context) {
 					var m = appearanceArray[i].trim().match(appearanceDetails.rex);
 					if (m) {
 						foundAppearance = true;
-						var val;
-						if(appearanceDetails.value_offset) {
-							val = appearanceArray[i].trim().substring(appearanceDetails.value_offset);
-						}
+						var val = m[0].substring(appearanceDetails.value_offset);
 						setAppearance($('#' + appearanceDetails.field), val, appearanceDetails.type);
 						break;
 					}
@@ -2929,12 +2926,20 @@ function setNoFilter() {
 			/*
              * Get the value of an appearance from the appearance dialog
              */
-			function getAppearance($elem, appearances, key, type) {
+			function getAppearance($elem, appearances, key, details) {
 				var val;
-				if(type === "boolean") {
+				if(details.type === "boolean") {
 					val = $elem.prop('checked') ? key : undefined;
-				} else if(type === "select") {
-					val = key + $elem.val();
+				} else if(details.type === "select") {
+					if($elem.val() === details.undef_value) {
+						val = undefined;
+					} else {
+						if (details.valIsAppearance) {
+							val = $elem.val();
+						} else {
+							val = key + $elem.val();
+						}
+					}
 				}
 
 				if(val) {

@@ -362,21 +362,44 @@ define(function () {
 
 	    // A list of valid appearances for each question type
 	    this.qAppearances = {
-		    'begin group': ['field-list', 'w'],
-		    'string': ['w']
+		    'begin group': ['page', 'w'],
+		    string: ['w'],
+		    note: ['w'],
+            select1: ['w'],
+            select: ['w'],
+            image: ['w'],
+            int:['w'],
+		    geopoint:['w'],
+		    audio:['w'],
+		    video:['w'],
+		    barcode:['w'],
+		    date:['w'],
+		    dateTime:['w'],
+		    time:['w'],
+            decimal:['w'],
+		    geotrace:['w'],
+		    geoshape:['w'],
+		    acknowledge:['w'],
+		    range:['w'],
+		    file:['w'],
+		    rank:['w']
 	    };
 
 	    this.appearanceDetails = {
-		    'field-list': {
-			    field: 'p_field_list',
-			    type: 'boolean',
-                rex: 'field-list'
+		    'page': {
+			    field: 'a_page',
+			    type: 'select',
+                rex: 'field-list|table-list',
+                valIsAppearance: true,
+			    value_offset: 0,
+                undef_value: 'none'
 		    },
 		    'w': {
-			    field: 'p_width',
+			    field: 'a_width',
 			    type: 'select',
-                rex: 'w9*',
-                value_offset: 1
+                rex: 'w[1-9]|w1[0-2]',
+                value_offset: 1,
+                undef_value: '0'
 		    }
 	    };
 

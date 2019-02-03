@@ -776,20 +776,21 @@
 				<div class="container-fluid">
 					<form id="appearance_form" role="form" class="form-horizontal">
 
-						<div class="form-group appearance_field p_field_list">
-							<div class="col-sm-offset-4 col-sm-8">
-								<div class="checkbox">
-									<label>
-										<input type="checkbox" id="p_field_list"><span class="lang" data-lang="ed_sp1">page</span>
-									</label>
-								</div>
+						<div class="form-group appearance_field a_page">
+							<label for="a_width" data-lang="ed_pl" class="lang col-sm-4 control-label">page</label>
+							<div class="col-sm-8">
+								<select id="a_page" class="form-control">
+									<option class="lang" data-lang="c_none" value="none">none</option>
+									<option value="field-list">field list</option>
+									<option value="table-list">table list</option>
+								</select>
 							</div>
 						</div>
 
-						<div class="form-group appearance_field p_width">
-							<label for="p_width" data-lang="ed_w" class="lang col-sm-4 control-label">order</label>
+						<div class="form-group appearance_field a_width">
+							<label for="a_width" data-lang="ed_w" class="lang col-sm-4 control-label">order</label>
 							<div class="col-sm-8">
-								<select id="p_width" class="form-control">
+								<select id="a_width" class="form-control">
 									<option class="lang" data-lang="max" value="0">max</option>
 									<option value="1">1</option>
 									<option value="2">2</option>
