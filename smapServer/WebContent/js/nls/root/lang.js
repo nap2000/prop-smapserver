@@ -147,6 +147,7 @@ define({
     "c_date": "Date",
     "c_dateq": "Date Question",
     "c_none": "None",
+
     "c_period": "Period",
     "c_hour": "Hour",
     "c_day": "Day",
@@ -778,6 +779,7 @@ define({
     "ed_qk": "Question to store the returned key",
 	"ed_qkc": "Question in the launched form to get this forms key",
     "ed_sp1": "Show group questions on one page",
+	"ed_w": "Width in webform grid",
 
 
     // Managed Forms

@@ -1702,9 +1702,14 @@ function respondToEvents($context) {
 				for (j = 0; j < qAppearances.length; j++) {
 					appearanceDetails = globals.model.appearanceDetails[qAppearances[j]];
 
-					if (appearanceArray[i].trim() === qAppearances[j]) {
+					var m = appearanceArray[i].trim().match(appearanceDetails.rex);
+					if (m) {
 						foundAppearance = true;
-						setAppearance($('#' + appearanceDetails.field), appearanceArray[i].trim(), appearanceDetails.type);
+						var val;
+						if(appearanceDetails.value_offset) {
+							val = appearanceArray[i].trim().substring(appearanceDetails.value_offset);
+						}
+						setAppearance($('#' + appearanceDetails.field), val, appearanceDetails.type);
 						break;
 					}
 				}
@@ -2928,6 +2933,8 @@ function setNoFilter() {
 				var val;
 				if(type === "boolean") {
 					val = $elem.prop('checked') ? key : undefined;
+				} else if(type === "select") {
+					val = key + $elem.val();
 				}
 
 				if(val) {
