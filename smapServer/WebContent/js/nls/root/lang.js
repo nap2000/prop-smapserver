@@ -210,6 +210,7 @@ define({
     "c_warning": "Warning",
     "c_lt": "Local Time",
     "c_user": "User",
+    "c_standard": "Standard",
     "c_simserial": "Sim Serial Number",
     "c_location": "Location",
     "c_ident": "Identifier",
@@ -276,6 +277,7 @@ define({
     "c_spss": "SPSS / CSV",
     "c_pdf": "PDF",
     "c_phone": "Phone Number",
+	"c_photo": "Photograph",
     "c_rep_type": "Sub Form",
     "c_cl": "Copy Link",
     "c_codl": "Copy OData Link",
@@ -298,6 +300,11 @@ define({
     "c_child_form": "Child Form (Repeats)",
     "c_other": "Other",
     "c_random": "Randomize",
+    "c_annotate": "Annotate",
+    "c_draw": "Draw",
+    "c_field_list": "Field List",
+    "c_table_list": "Table List",
+
 
     // File Types
     "ft": "File Type",
@@ -677,6 +684,7 @@ define({
     "wf_sig": "Signature",
 
     // Editor
+    "ed_as": "Add Search",
     "ed_rf": "Reference Form",
     "ed_in": "Instance Name",
 	"ed_io": "Instance Order",
@@ -741,6 +749,7 @@ define({
     "ed_s1": "Select One",
     "ed_s": "Select Multiple",
     "ed_image": "Image",
+    "ed_image_type": "Image Type",
     "ed_int": "Integer",
     "ed_gps": "GPS Point",
     "ed_calc": "Calculation",

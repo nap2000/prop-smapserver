@@ -773,46 +773,81 @@
 			</div>
 
 			<div class="modal-body">
-				<div class="container-fluid">
-					<form id="appearance_form" role="form" class="form-horizontal">
+				<ul class="nav nav-pills" role="tablist">
+					<li id="standardTab" role="presentation" class="active"><a href="#" class="lang" data-lang="c_standard">standard</a></li>
+					<li id="searchTab" role="presentation"><a href="#" class="lang appearance_field a_search" data-lang="br_s">search</a></li>
+				</ul>
+				<div id="standardPanel" class="appearancetab">
+					<div class="container-fluid">
+						<form id="appearance_form" role="form" class="form-horizontal">
 
-						<div class="form-group appearance_field a_page">
-							<label for="a_width" data-lang="ed_pl" class="lang col-sm-4 control-label">page</label>
-							<div class="col-sm-8">
-								<select id="a_page" class="form-control">
-									<option class="lang" data-lang="c_none" value="none">none</option>
-									<option value="field-list">field list</option>
-									<option value="table-list">table list</option>
-								</select>
+							<div class="form-group appearance_field a_page">
+								<label for="a_width" data-lang="ed_pl" class="lang col-sm-4 control-label">page</label>
+								<div class="col-sm-8">
+									<select id="a_page" class="form-control">
+										<option class="lang" data-lang="c_none" value="none">none</option>
+										<option class="lang" data-lang="c_field_list" value="field-list"></option>
+										<option class="lang" data-lang="c_table_list" value="table-list"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group appearance_field a_image_type">
+								<label for="a_width" data-lang="ed_image_type" class="lang col-sm-4 control-label">image</label>
+								<div class="col-sm-8">
+									<select id="a_image_type" class="form-control">
+										<option class="lang" data-lang="c_photo" value="none"></option>
+										<option class="lang" data-lang="c_annotate" value="annotate"></option>
+										<option class="lang" data-lang="c_draw" value="draw"></option>
+										<option class="lang" data-lang="wf_sig" value="signature"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group appearance_field a_width">
+								<label for="a_width" data-lang="ed_w" class="lang col-sm-4 control-label">order</label>
+								<div class="col-sm-8">
+									<select id="a_width" class="form-control">
+										<option class="lang" data-lang="max" value="0">max</option>
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
+										<option value="6">6</option>
+										<option value="7">7</option>
+										<option value="8">8</option>
+										<option value="9">9</option>
+										<option value="10">10</option>
+										<option value="11">11</option>
+										<option value="12">12</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group a_other">
+								<label for="p_other" data-lang="c_other" class="lang col-sm-4 control-label">other</label>
+								<div class="col-sm-8">
+									<input type="text" id="a_other" class="form-control">
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+
+				<div id="searchPanel" style="display:none;" class="appearancetab">
+					<form id="appearance_search_form" role="form" class="form-horizontal">
+						<div class="form-group">
+							<div class="col-sm-offset-4 col-sm-8">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" id="a_has_search"><span class="lang" data-lang="ed_as">add search</span>
+									</label>
+								</div>
 							</div>
 						</div>
-
-						<div class="form-group appearance_field a_width">
-							<label for="a_width" data-lang="ed_w" class="lang col-sm-4 control-label">order</label>
-							<div class="col-sm-8">
-								<select id="a_width" class="form-control">
-									<option class="lang" data-lang="max" value="0">max</option>
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="3">3</option>
-									<option value="4">4</option>
-									<option value="5">5</option>
-									<option value="6">6</option>
-									<option value="7">7</option>
-									<option value="8">8</option>
-									<option value="9">9</option>
-									<option value="10">10</option>
-									<option value="11">11</option>
-									<option value="12">12</option>
-								</select>
-							</div>
-						</div>
-
-						<div class="form-group a_other">
-							<label for="p_other" data-lang="c_other" class="lang col-sm-4 control-label">other</label>
-							<div class="col-sm-8">
-								<input type="text" id="a_other" class="form-control">
-							</div>
+						<div class="appeaance_search_details" style="display:none;">
+							<p>Details</p>
 						</div>
 					</form>
 				</div>
