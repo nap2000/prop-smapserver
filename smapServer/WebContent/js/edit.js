@@ -412,10 +412,10 @@ $(document).ready(function() {
     /*
      * Respond to clicking of the save parameters button in the parameters edit modal
      */
-    $('#parameterSave').click(function() {
-    	var params = [];
-    	var newVal;
-	    var survey = globals.model.survey;
+	$('#parameterSave').click(function() {
+		var params = [];
+		var newVal;
+		var survey = globals.model.survey;
 		var question = survey.forms[globals.gFormIndex].questions[globals.gItemIndex];
 		var i;
 		var paramDetails;
@@ -441,15 +441,46 @@ $(document).ready(function() {
 			}
 		}
 
-    	newVal = params.join(';');
-    	if(newVal.length > 0 && other.length > 0) {
-    		newVal += ';';
-	    }
-    	newVal += other;
-	    updateLabel("question", globals.gFormIndex, globals.gItemIndex, undefined, "text", newVal, gQname, "parameters");
+		newVal = params.join(';');
+		if(newVal.length > 0 && other.length > 0) {
+			newVal += ';';
+		}
+		newVal += other;
+		updateLabel("question", globals.gFormIndex, globals.gItemIndex, undefined, "text", newVal, gQname, "parameters");
 
-	    $('#parameterModal').modal("hide");
-    });
+		$('#parameterModal').modal("hide");
+	});
+
+	/*
+     * Respond to clicking of the save appearances button in the parameters edit modal
+     */
+	$('#appearanceSave').click(function() {
+		var appearances = [];
+		var newVal;
+		var survey = globals.model.survey;
+		var question = survey.forms[globals.gFormIndex].questions[globals.gItemIndex];
+		var i;
+		var appearanceDetails;
+		var other;
+
+		var qAppearances = globals.model.qAppearances[question.type];
+		if(qAppearances && qAppearances.length > 0) {
+			for(i = 0; i < qAppearances.length; i++) {
+				appearanceDetails = globals.model.appearanceDetails[qAppearances[i]];
+				getAppearance($('#' + appearanceDetails.field), appearances, qAppearances[i], appearanceDetails.type);
+			}
+		}
+		other=$('#a_other').val();
+
+		newVal = appearances.join(' ');
+		if(newVal.length > 0 && other.length > 0) {
+			newVal += ' ';
+		}
+		newVal += other;
+		updateLabel("question", globals.gFormIndex, globals.gItemIndex, undefined, "text", newVal, gQname, "appearance");
+
+		$('#appearanceModal').modal("hide");
+	});
 	
 	/*
 	 * Save changes to the language list
@@ -1588,8 +1619,9 @@ function respondToEvents($context) {
 
 			var p = paramArray[i].split('=');
 			if (p.length > 1) {
+				foundParam = false;
 				if(qParams && qParams.length > 0) {
-					foundParam = false;
+
 					for (j = 0; j < qParams.length; j++) {
 						paramDetails = globals.model.paramDetails[qParams[j]];
 
@@ -1599,13 +1631,13 @@ function respondToEvents($context) {
 							break;
 						}
 					}
+				}
 
-					if(!foundParam) {
-						if (otherParams.length > 0) {
-							otherParams += '; ';
-						}
-						otherParams += p[0].trim() + '=' + p[1].trim();
+				if(!foundParam) {
+					if (otherParams.length > 0) {
+						otherParams += '; ';
 					}
+					otherParams += p[0].trim() + '=' + p[1].trim();
 				}
 			}
 		}
@@ -1621,7 +1653,85 @@ function respondToEvents($context) {
 		});
 
 	});
-	
+
+	// Respond to a click on the appearance button
+	$context.find('.appearanceButton').off().click(function() {
+
+		var $this = $(this),
+			$li = $this.closest('li'),
+			survey = globals.model.survey;
+
+		var formIndex = $li.data("fid");
+		var itemIndex = $li.data("id");
+		globals.gFormIndex = formIndex;
+		globals.gItemIndex = itemIndex;
+
+		var qType = survey.forms[formIndex].questions[itemIndex].type;
+		var qName = survey.forms[formIndex].questions[itemIndex].name;
+		gQname = qName;
+		var qAppearances = globals.model.qAppearances[qType];
+		var appearanceDetails;
+		var appearanceArray = [];
+
+		var appearanceData = $li.find('.labelProp').val();
+		var otherAppearances = '';
+		var i, j;
+		var foundAppearance;
+
+		if(appearanceData) {
+			appearanceArray = appearanceData.split(' ');
+		}
+
+		/*
+         * Show any appearance attributes for this question type
+         */
+		$('#appearance_form')[0].reset();
+		$('.appearance_field').hide();
+		if(qAppearances && qAppearances.length > 0) {
+			for (j = 0; j < qAppearances.length; j++) {
+				appearanceDetails = globals.model.appearanceDetails[qAppearances[j]];
+				$('.' + appearanceDetails.field).show();
+			}
+		}
+
+
+		for (i = 0; i < appearanceArray.length; i++) {
+
+			if (qAppearances && qAppearances.length > 0) {
+				foundAppearance = false;
+				for (j = 0; j < qAppearances.length; j++) {
+					appearanceDetails = globals.model.appearanceDetails[qAppearances[j]];
+
+					if (appearanceArray[i].trim() === qAppearances[j]) {
+						foundAppearance = true;
+						setAppearance($('#' + appearanceDetails.field), appearanceArray[i].trim(), appearanceDetails.type);
+						break;
+					}
+				}
+
+			}
+
+			if (!foundAppearance) {
+				if (otherAppearances.length > 0) {
+					otherAppearances += ' ';
+				}
+				otherAppearances += appearanceArray[i];
+			}
+		}
+
+		// Add any parameter values not explicetely set
+		$('#a_other').val(otherAppearances);       // Not sure if we want to do this
+
+
+		$('#appearanceModal').modal({
+			keyboard: true,
+			backdrop: 'static',
+			show: true
+		});
+
+	});
+
+
 	// Respond to changes on linkedTarget (Survey or Question changed)
 	$context.find('.linkedTarget').off().change(function() {
 
@@ -2812,12 +2922,39 @@ function setNoFilter() {
             }
 
 			/*
+             * Get the value of an appearance from the appearance dialog
+             */
+			function getAppearance($elem, appearances, key, type) {
+				var val;
+				if(type === "boolean") {
+					val = $elem.prop('checked') ? key : undefined;
+				}
+
+				if(val) {
+					val = val.trim();
+					appearances.push(val);
+				}
+			}
+
+			/*
              * Set the value of a parameter in the parameter dialog
              */
 			function setParam($elem, val, type) {
 				var val;
 				if (type === "boolean") {
-					val = $elem.prop('checked', val == 'yes' || val === 'true');
+					$elem.prop('checked', val == 'yes' || val === 'true');
+				} else {
+					$elem.val(val);
+				}
+			}
+
+			/*
+             * Set the value of an appearance in the appearance dialog
+             */
+			function setAppearance($elem, val, type) {
+				var val;
+				if (type === "boolean") {
+					$elem.prop('checked', true);
 				} else {
 					$elem.val(val);
 				}
