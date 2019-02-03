@@ -360,6 +360,18 @@ define(function () {
         this.savedSettings = undefined;
         this.forceSettingsChange = false;
 
+	    // A list of valid appearances for each question type
+	    this.qAppearances = {
+		    'begin group': ['field-list']
+	    };
+
+	    this.appearanceDetails = {
+		    'field-list': {
+			    field: 'p_field_list',
+			    type: 'boolean'
+		    }
+	    };
+
         // A list of valid parameters for each question type
         this.qParams = {
             string: ['rows'],

@@ -763,6 +763,48 @@
 	</div>
 </div>
 
+<!-- Modal for setting appearances -->
+<div id="appearanceModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="typeModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title lang" data-lang="ed_appearance">appearance</h4>
+			</div>
+
+			<div class="modal-body">
+				<div class="container-fluid">
+					<form id="appearance_form" role="form" class="form-horizontal">
+
+						<div class="form-group parameter_field p_field_list">
+							<div class="col-sm-offset-4 col-sm-8">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" id="p_field_list"><span class="lang" data-lang="ed_sp1">page</span>
+									</label>
+								</div>
+							</div>
+						</div>
+
+
+						<div class="form-group a_other">
+							<label for="p_other" data-lang="c_other" class="lang col-sm-4 control-label">other</label>
+							<div class="col-sm-8">
+								<input type="text" id="a_other" class="form-control">
+							</div>
+						</div>
+					</form>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">close</button>
+				<button id="appearanceSave" type="button" class="btn btn-primary lang" data-lang="c_save">save</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- Modal to add/remove a filter -->
 <div id="filterModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
