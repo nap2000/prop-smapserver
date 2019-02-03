@@ -291,7 +291,7 @@ $(document).ready(function() {
 		});
 		updatePulldataView();
 	});
-	
+
 	// Set up view type toggle
 	$('#viewType').attr("data-on", localise.set["c_questions"]).attr("data-off", localise.set["c_choices"]).bootstrapToggle();
 
@@ -449,6 +449,31 @@ $(document).ready(function() {
 		updateLabel("question", globals.gFormIndex, globals.gItemIndex, undefined, "text", newVal, gQname, "parameters");
 
 		$('#parameterModal').modal("hide");
+	});
+
+	// Set up the tabs
+	$('#standardTab a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+
+		$(".appearancetab").hide();
+		$('#standardPanel').show();
+
+	});
+	$('#searchTab a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+
+		$(".appearancetab").hide();
+		$('#searchPanel').show();
+	});
+
+	$('#a_has_search').change(function(){
+		if($(this).is(':checked')) {
+			$('.appeaance_search_details').show();
+		} else {
+			$('.appeaance_search_details').hide();
+		}
 	});
 
 	/*
@@ -1686,7 +1711,10 @@ function respondToEvents($context) {
          * Show any appearance attributes for this question type
          */
 		$('#appearance_form')[0].reset();
-		$('.appearance_field').hide();
+		$('#appearance_search_form')[0].reset();
+		$('.appearance_field, .appearance_search_details').hide();
+		$('#standardTab a').click();
+
 		if(qAppearances && qAppearances.length > 0) {
 			for (j = 0; j < qAppearances.length; j++) {
 				appearanceDetails = globals.model.appearanceDetails[qAppearances[j]];

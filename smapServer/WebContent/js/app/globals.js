@@ -365,9 +365,9 @@ define(function () {
 		    'begin group': ['page', 'w'],
 		    string: ['w'],
 		    note: ['w'],
-            select1: ['w'],
-            select: ['w'],
-            image: ['w'],
+            select1: ['search', 'w'],
+            select: ['search', 'w'],
+            image: ['image_type', 'w'],
             int:['w'],
 		    geopoint:['w'],
 		    audio:['w'],
@@ -393,6 +393,19 @@ define(function () {
                 valIsAppearance: true,
 			    value_offset: 0,
                 undef_value: 'none'
+		    },
+		    'image_type': {
+			    field: 'a_image_type',
+			    type: 'select',
+			    rex: 'annotate|draw|signature',
+			    valIsAppearance: true,
+			    value_offset: 0,
+			    undef_value: 'none'
+		    },
+		    'search': {
+			    field: 'a_search',
+			    type: 'form',
+			    rex: 'search('
 		    },
 		    'w': {
 			    field: 'a_width',
