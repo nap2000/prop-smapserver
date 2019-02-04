@@ -154,7 +154,7 @@ define({
     "c_week": "Week",
     "c_month": "Month",
     "c_year": "Year",
-    "c_matches": "Matches",
+    "c_matches": "matches",
     "c_filter": "Filter",
     "c_inclusive": "Inclusive",
     "c_value": "Value",
@@ -251,6 +251,7 @@ define({
     "c_undef": "Not Defined",
     "c_license": "License Number",
     "c_in": "in",
+	"c_notin": "not in",
     "c_rev": "Reverse",
     "c_for": "For",
     "c_normal": "Normal",
@@ -789,6 +790,11 @@ define({
 	"ed_qkc": "Question in the launched form to get this forms key",
     "ed_pl": "Page Layout",
 	"ed_w": "Width in webform grid",
+    "ed_m": "Filter",
+    "contains": "contains",
+    "startsWith": "startsWith",
+    "endsWith": "endsWith",
+
 
 
     // Managed Forms
