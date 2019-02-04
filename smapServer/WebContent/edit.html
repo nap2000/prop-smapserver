@@ -846,8 +846,34 @@
 								</div>
 							</div>
 						</div>
-						<div class="appeaance_search_details" style="display:none;">
-							<p>Details</p>
+						<div class="appearance_search_details" style="display:none;">
+							<div class="form-group">
+								<label for="a_width" data-lang="c_source" class="lang col-sm-4 control-label">source</label>
+								<div class="col-sm-8">
+									<div class="radio">
+										<label>
+											<input type="radio" name="search_souce" id="a_search_file"><span class="lang" data-lang="c_csv"></span>
+										</label>
+									</div>
+									<div class="radio">
+										<label>
+											<input type="radio" name="search_souce" id="a_search_survey"><span class="lang" data-lang="c_survey"></span>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group search_csv">
+								<label for="a_csv_identifier" data-lang="ed_csv" class="lang col-sm-4 control-label">file</label>
+								<div class="col-sm-8">
+									<select id="a_csv_identifier" class="form-control linkable_files"></select>
+								</div>
+							</div>
+							<div class="form-group search_survey">
+								<label for="a_survey_identifier"data-lang="c_survey" class="lang col-sm-4 control-label">survey</label>
+								<div class="col-sm-8">
+									<select id="a_survey_identifier" class="form-control linkable_surveys"></select>
+								</div>
+							</div>
 						</div>
 					</form>
 				</div>

@@ -141,9 +141,10 @@ $(document).ready(function() {
 	getLocations(setLocationList);
 
 	/*
-	 * Get surveys that the user can link to
+	 * Get surveys and csv files that the user can link to
 	 */
 	getAccessibleSurveys($('.linkable_surveys'), true, true, false);
+	getAccessibleCsvFiles($('.linkable_files'), true);
 
 	/*
 	 * Initialise controls in the open form dialog
@@ -470,9 +471,9 @@ $(document).ready(function() {
 
 	$('#a_has_search').change(function(){
 		if($(this).is(':checked')) {
-			$('.appeaance_search_details').show();
+			$('.appearance_search_details').show();
 		} else {
-			$('.appeaance_search_details').hide();
+			$('.appearance_search_details').hide();
 		}
 	});
 
