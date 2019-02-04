@@ -1763,7 +1763,7 @@ function respondToEvents($context) {
 					if (m) {
 						foundAppearance = true;
 						var val = m[0].substring(appearanceDetails.value_offset);
-						setAppearance($('#' + appearanceDetails.field), val, appearanceDetails.type);
+						setAppearance($('#' + appearanceDetails.field), val, appearanceDetails.type, appearanceArray[i].trim());
 						break;
 					}
 				}
@@ -3043,10 +3043,41 @@ function setNoFilter() {
 			/*
              * Set the value of an appearance in the appearance dialog
              */
-			function setAppearance($elem, val, type) {
+			function setAppearance($elem, val, type, appearance) {
 				var val;
 				if (type === "boolean") {
 					$elem.prop('checked', true);
+				} else if (type === "form") {
+					// Custom - hardcoded
+					if(val === "search(") {
+
+						// Has search so enable the search panel
+						$('#a_has_search').prop('checked', true);
+						$('.appearance_search_details').show();
+
+						// Now check parameters
+						var idx1 = appearance.indexOf('(');
+						var idx2 = appearance.indexOf(')');
+						var params = appearance.substring(idx1 + 1, idx2);
+						var paramsArray = [];
+						if(params) {
+							paramsArray = params.split(',');
+						}
+						if(paramsArray.length > 0) {
+							// 1. First parameter is the filename
+							var filename = paramsArray[0].trim();
+							filename = filename.replace(/'/g, "")
+							if(filename.startsWith('linked_s')) {
+								$('input[type=radio][name=search_source][value=survey]').prop('checked', true);
+								$('#a_survey_identifier').val(filename.subsstring("linked_s".length));
+								$('.search_survey').show();
+							} else {
+								$('input[type=radio][name=search_source][value=csv]').prop('checked', true);
+								$('#a_csv_identifier').val(getIndexOfCsvFilename(filename));
+								$('.search_csv').show();
+							}
+						}
+					}
 				} else {
 					$elem.val(val);
 				}
@@ -3145,6 +3176,17 @@ function setNoFilter() {
 					}
 				}
 				return h.join('');
+			}
+
+			function getIndexOfCsvFilename(filename) {
+				var csvArray = globals.gCsvFiles;
+				var i;
+				for(i = 0; i < csvArray.length; i++) {
+					if(csvArray[i].filename === filename) {
+						return i;
+					}
+				}
+				return undefined;
 			}
 
 });
