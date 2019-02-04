@@ -3534,4 +3534,26 @@ function getQuestionsInSurvey($elem, sIdent, includeNone) {
 			}
 		}
 	}
+
+}
+
+function getQuestionsInCsvFile($elem, index, includeNone) {
+	var h = [],
+		idx = -1,
+		i;
+	var data = globals.gCsvFiles[index].headers;
+
+	if (includeNone) {
+		h[++idx] = '<option value="0">';
+		h[++idx] = localise.set["c_none"];
+		h[++idx] = '</option>';
+	}
+	for (i = 0; i < data.length; i++) {
+		h[++idx] = '<option value="';
+		h[++idx] = data[i].fName;
+		h[++idx] = '">';
+		h[++idx] = data[i].fName;
+		h[++idx] = '</option>';
+	}
+	$elem.empty().append(h.join(''));
 }
