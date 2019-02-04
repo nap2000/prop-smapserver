@@ -627,6 +627,7 @@
 
 			<div class="modal-body">
 				<div class="container-fluid">
+					<div id="parameter_msg" class="alert alert-danger" role="alert" style="display:none;"></div>
 					<form id="parameter_form" role="form" class="form-horizontal">
 						<div class="form-group parameter_field p_max_pixels">
 							<label for="p_max_pixels" data-lang="u_ft_img_size" class="lang col-sm-4 control-label">max</label>
@@ -772,6 +773,7 @@
 				<h4 class="modal-title lang" data-lang="ed_appearance">appearance</h4>
 			</div>
 
+			<div id="appearance_msg" class="alert alert-danger" role="alert" style="display:none;"></div>
 			<div class="modal-body">
 				<ul class="nav nav-pills" role="tablist">
 					<li id="standardTab" role="presentation" class="active"><a href="#" class="lang" data-lang="c_standard">standard</a></li>
@@ -869,9 +871,16 @@
 								</div>
 							</div>
 							<div class="form-group search_survey">
-								<label for="a_survey_identifier"data-lang="c_survey" class="lang col-sm-4 control-label">survey</label>
+								<label for="a_survey_identifier" data-lang="c_survey" class="lang col-sm-4 control-label">survey</label>
 								<div class="col-sm-8">
 									<select id="a_survey_identifier" class="form-control linkable_surveys"></select>
+								</div>
+							</div>
+
+							<div class="form-group search_value">
+								<label for="a_search_value" data-lang="ed_cval" class="lang col-sm-4 control-label">valuey</label>
+								<div class="col-sm-8">
+									<select id="a_search_value" class="form-control"></select>
 								</div>
 							</div>
 						</div>

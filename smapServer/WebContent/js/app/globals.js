@@ -105,6 +105,7 @@ define(function () {
         gShowingChoices: false,
         gMaxOptionList: 0,
         gLatestOptionList: undefined,	// Hack to record the last option list name added
+	    gCsvFiles: undefined,
 
         gListName: undefined,					// Choice Modal parameters, Set if started from choice list view
         gOptionList: undefined,					// The option list name applying to this set of choices
@@ -405,7 +406,7 @@ define(function () {
 		    'search': {
 			    field: 'a_search',
 			    type: 'form',
-			    rex: 'search('
+			    rex: 'search\\('
 		    },
 		    'w': {
 			    field: 'a_width',
