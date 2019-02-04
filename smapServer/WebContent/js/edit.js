@@ -1733,7 +1733,7 @@ function respondToEvents($context) {
 		var foundAppearance;
 
 		if(appearanceData) {
-			appearanceArray = appearanceData.split(' ');
+			appearanceArray = tokenizeAppearance(appearanceData);
 		}
 
 		/*
@@ -1759,11 +1759,11 @@ function respondToEvents($context) {
 				for (j = 0; j < qAppearances.length; j++) {
 					appearanceDetails = globals.model.appearanceDetails[qAppearances[j]];
 
-					var m = appearanceArray[i].trim().match(appearanceDetails.rex);
+					var m = appearanceArray[i].match(appearanceDetails.rex);
 					if (m) {
 						foundAppearance = true;
 						var val = m[0].substring(appearanceDetails.value_offset);
-						setAppearance($('#' + appearanceDetails.field), val, appearanceDetails.type, appearanceArray[i].trim());
+						setAppearance($('#' + appearanceDetails.field), val, appearanceDetails.type, appearanceArray[i]);
 						break;
 					}
 				}
@@ -3001,8 +3001,9 @@ function setNoFilter() {
 					// Handcoded
 					if(details.field === 'a_search') {
 						if($('#a_has_search').is(':checked')) {
-							val = 'search(';
+							val = "search(";        // open
 
+							// filename
 							var filename;
 							var csvfile;
 							var search_source = $('input[type=radio][name=search_source]:checked').val();
@@ -3011,8 +3012,20 @@ function setNoFilter() {
 							} else {
 								csvfile = globals.gCsvFiles[$('#a_csv_identifier').val()];
 								filename = csvfile.filename;
+								var idx = filename.lastIndexOf('.');    // remove the extension
+								if(idx > 0) {
+									filename = filename.substring(0, idx);
+								}
 							}
-							val = "search('" + filename + "')";
+							val += "'" + filename + "'";
+
+							// filter
+							var filter = csvfile = $('#a_match').val();
+							if(filter !== 'none') {
+								val += ", '" + filter + "'";
+							}
+
+							val += ")";    // Close
 							//$('#appearance_msg').show().html(localise.set["msg_pformat"]);
 						} else {
 							val = undefined;
@@ -3066,7 +3079,7 @@ function setNoFilter() {
 						if(paramsArray.length > 0) {
 							// 1. First parameter is the filename
 							var filename = paramsArray[0].trim();
-							filename = filename.replace(/'/g, "")
+							filename = filename.replace(/'/g, "");
 							if(filename.startsWith('linked_s')) {
 								$('input[type=radio][name=search_source][value=survey]').prop('checked', true);
 								$('#a_survey_identifier').val(filename.subsstring("linked_s".length));
@@ -3076,6 +3089,14 @@ function setNoFilter() {
 								$('#a_csv_identifier').val(getIndexOfCsvFilename(filename));
 								$('.search_csv').show();
 							}
+
+							if(paramsArray.length > 1) {
+								// 2. Second parameter is the filter
+								var filter = paramsArray[1].trim();
+								filter = filter.replace(/'/g, "");
+								$('#a_match').val(filter);
+							}
+
 						}
 					}
 				} else {
@@ -3181,6 +3202,8 @@ function setNoFilter() {
 			function getIndexOfCsvFilename(filename) {
 				var csvArray = globals.gCsvFiles;
 				var i;
+
+				filename += ".csv";     // The filename in the csvArray includes the extension
 				for(i = 0; i < csvArray.length; i++) {
 					if(csvArray[i].filename === filename) {
 						return i;

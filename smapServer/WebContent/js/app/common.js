@@ -3557,3 +3557,55 @@ function getQuestionsInCsvFile($elem, index, includeNone) {
 	}
 	$elem.empty().append(h.join(''));
 }
+
+function tokenizeAppearance(input) {
+	var chunks = [];
+	var tokens = [];
+	var chunkTokens = [];
+	var i;
+	var j;
+	var chunk;
+
+	// only search needs special treatment
+	var idx1 = input.indexOf('search');
+	if(idx1 >= 0) {
+		chunks.push({
+			val:input.substring(0, idx1),
+			type: "text"
+		});
+		if(idx1 < input.length) {
+			var idx2 = input.indexOf(')', idx1 + 1);
+			if(idx2 >= 0) {
+				chunks.push({
+					val: input.substring(idx1, idx2 + 1),
+					type: "fn"
+				});
+				if(idx2 < input.length) {
+					chunks.push({
+						val: input.substring(idx2 + 1),
+						type: "text"
+					});
+				}
+			}
+		}
+	} else {
+		chunks.push({
+			val: input,
+			type: "text"
+		});
+	}
+	for(i = 0; i < chunks.length; i++) {
+		chunk = chunks[i].val.trim();
+		if(chunk.length > 0) {
+			if(chunks[i].type === "text") {
+				chunkTokens = chunk.split(/(\s+)/);
+			} else {
+				chunkTokens.push(chunk);
+			}
+			for(j = 0; j < chunkTokens.length; j++) {
+				tokens.push(chunkTokens[j].trim());
+			}
+		}
+	}
+	return tokens;
+}
