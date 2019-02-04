@@ -477,6 +477,16 @@ $(document).ready(function() {
 		}
 	});
 
+	$('.search_csv, .search_survey').hide();
+	$('input[type=radio][name=search_source]').change(function(){
+		$('.search_csv, .search_survey').hide();
+		if(this.value == "survey") {
+			$('.search_survey').show();
+		} else {
+			$('.search_csv').show();
+		}
+	});
+
 	/*
      * Respond to clicking of the save appearances button in the parameters edit modal
      */
