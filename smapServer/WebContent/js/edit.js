@@ -422,6 +422,7 @@ $(document).ready(function() {
 		var paramDetails;
 		var other;
 
+		$('#parameter_msg').hide();
 		var qParams = globals.model.qParams[question.type];
 		if(qParams && qParams.length > 0) {
 			for(i = 0; i < qParams.length; i++) {
@@ -436,7 +437,7 @@ $(document).ready(function() {
 			for(i = 0; i < oArray.length; i++) {
 				var oArray2 = oArray[i].split('=');
 				if(oArray2.length != 2) {
-					alert(localise.set["msg_pformat"]);
+					$('#parameter_msg').show().html(localise.set["msg_pformat"]);
 					return false;
 				}
 			}
@@ -488,7 +489,21 @@ $(document).ready(function() {
 	});
 
 	/*
-     * Respond to clicking of the save appearances button in the parameters edit modal
+     * Respond to a change in the form that is to be searched
+     * If the question type is a child form then the list of questions needs to be updated
+     */
+	$('#a_survey_identifier, #a_csv_identifier').change(function(){
+		var survey = globals.model.survey;
+		var search_source = $('input[type=radio][name=search_source]:checked').val();
+		if(search_source === "survey") {
+			getQuestionsInSurvey($('#a_search_value'), $(this).val(), true);
+		} else {
+			getQuestionsInCsvFile($('#a_search_value'), $(this).val(), true);
+		}
+	});
+
+	/*
+     * Respond to clicking of the save appearances button in the appearance edit modal
      */
 	$('#appearanceSave').click(function() {
 		var appearances = [];
@@ -499,11 +514,14 @@ $(document).ready(function() {
 		var appearanceDetails;
 		var other;
 
+		$('#appearance_msg').hide();
 		var qAppearances = globals.model.qAppearances[question.type];
 		if(qAppearances && qAppearances.length > 0) {
 			for(i = 0; i < qAppearances.length; i++) {
 				appearanceDetails = globals.model.appearanceDetails[qAppearances[i]];
-				getAppearance($('#' + appearanceDetails.field), appearances, qAppearances[i], appearanceDetails);
+				if(!getAppearance($('#' + appearanceDetails.field), appearances, qAppearances[i], appearanceDetails)) {
+					return false;       // getAppearance returns false if there is an error
+				}
 			}
 		}
 		other=$('#a_other').val();
@@ -2979,12 +2997,35 @@ function setNoFilter() {
 							val = key + $elem.val();
 						}
 					}
+				} else if(details.type === "form") {
+					// Handcoded
+					if(details.field === 'a_search') {
+						if($('#a_has_search').is(':checked')) {
+							val = 'search(';
+
+							var filename;
+							var csvfile;
+							var search_source = $('input[type=radio][name=search_source]:checked').val();
+							if(search_source === "survey") {
+								filename = 'linked_' + $('#a_survey_identifier').val();
+							} else {
+								csvfile = globals.gCsvFiles[$('#a_csv_identifier').val()];
+								filename = csvfile.filename;
+							}
+							val = "search('" + filename + "')";
+							//$('#appearance_msg').show().html(localise.set["msg_pformat"]);
+						} else {
+							val = undefined;
+						}
+					}
 				}
 
 				if(val) {
 					val = val.trim();
 					appearances.push(val);
 				}
+
+				return true;
 			}
 
 			/*
@@ -3105,6 +3146,5 @@ function setNoFilter() {
 				}
 				return h.join('');
 			}
-
 
 });
