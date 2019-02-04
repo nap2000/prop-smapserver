@@ -3431,6 +3431,51 @@ function getAccessibleSurveys($elem, includeNone, includeBlocked, groupsOnly) {
 	});
 }
 
+/*
+ * Get all the csv files that a user can access
+ */
+function getAccessibleCsvFiles($elem, includeNone) {
+
+	var url="/surveyKPI/csv/files";
+
+	addHourglass();
+	$.ajax({
+		url: url,
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			removeHourglass();
+			globals.gCsvFiles = data;
+			var h = [],
+				idx = -1,
+				i;
+
+			if(includeNone) {
+				h[++idx] = '<option value="-1">';
+				h[++idx] = localise.set["c_none"]
+				h[++idx] = '</option>';
+			}
+			for(i = 0; i < data.length; i++) {
+				h[++idx] = '<option value="';
+				h[++idx] = i;
+				h[++idx] = '">';
+				h[++idx] = data[i].filename;
+				h[++idx] = '</option>';
+			}
+			$elem.empty().append(h.join(''));
+
+		},
+		error: function(xhr, textStatus, err) {
+			removeHourglass();
+			if(xhr.readyState == 0 || xhr.status == 0) {
+				return;  // Not an error
+			} else {
+				console.log("Error: Failed to get list of csv files: " + err);
+			}
+		}
+	});
+}
+
  /*
   * Get the questions in a survey
   */
