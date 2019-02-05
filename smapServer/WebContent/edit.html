@@ -880,13 +880,12 @@
 
 							<!-- TODO initially lets leave these set in the choices sheet
 							<div class="form-group search_value">
-								<label for="a_search_value" data-lang="ed_cval" class="lang col-sm-4 control-label">valuey</label>
+								<label for="a_search_value" data-lang="ed_cval" class="lang col-sm-4 control-label">value</label>
 								<div class="col-sm-8">
-									<select id="a_search_value" class="form-control"></select>
+									<select id="a_search_value" class="form-control column_select"></select>
 								</div>
 							</div>
 							-->
-
 
 							<div class="form-group a_match">
 								<label for="a_width" data-lang="ed_m" class="lang col-sm-4 control-label">match</label>
@@ -902,6 +901,26 @@
 									</select>
 								</div>
 							</div>
+
+							<div class="form-group has_filter">
+								<label for="a_filter_column" data-lang="ed_fc" class="lang col-sm-4 control-label">filter column</label>
+								<div class="col-sm-8">
+									<select id="a_filter_column" class="form-control column_select"></select>
+								</div>
+							</div>
+
+							<div class="form-group has_filter">
+								<label for="a_filter_value" data-lang="ed_fv" class="lang control-label col-sm-4"></label>
+								<div class="col-sm-8">
+									<div class="input-group mb-3">
+										<div id="a_filter_value" class="input-group-prepend">
+											<select id="a_filter_value_sel" class="custom-select questions_in_form"></select>
+											<input type="text" id="a_filter_value_static">
+										</div>
+									</div>
+								</div>
+							</div>
+
 						</div>
 					</form>
 				</div>
