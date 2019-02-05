@@ -478,6 +478,16 @@ $(document).ready(function() {
 		}
 	});
 
+	$('#a_filter_column').change(function(){
+		var val = $(this).val();
+		if(val === "0") {
+			$(".has_filter, .a_second_filter_column, .has_second_filter").hide();
+		} else {
+			$(".has_filter").show();
+		}
+	});
+
+
 	$('.search_csv, .search_survey').hide();
 	$('input[type=radio][name=search_source]').change(function(){
 		$('.search_csv, .search_survey').hide();
@@ -3029,24 +3039,27 @@ function setNoFilter() {
 							}
 							val += "'" + filename + "'";
 
-							// filter
+							// first filter
+							var filterColumn = $('#a_filter_column').val().trim();
 							var filter = $('#a_match').val();
-							if(filter !== 'none') {
-								val += ", '" + filter + "'";
-
-								// filter column
-								var filterColumn = $('#a_filter_column').val().trim();
-								if(filterColumn === '0') {
+							var filterValue;
+							var secondFilterColumn;
+							var secondFilterValue;
+							if(filterColumn !== '0') {
+								if(filter === 'none') {
 									msg = localise.set["msg_filter_col"];
-									msg = msg.replace('%s1', filter);
+									msg = msg.replace('%s1', filterColumn);
 									$('#appearance_msg').show().html(msg);
 									return false;
 								} else {
-									val += ", '" + filterColumn + "'";
+									val += ", '" + filter + "'";
 								}
 
-								// filter Value
-								var filterValue = $('#a_filter_value_static').val().trim();
+								// first filter column
+								val += ", '" + filterColumn + "'";
+
+								// first filter Value
+								filterValue = $('#a_filter_value_static').val().trim();
 								if(filterValue.indexOf('${') === 0) {
 									// question value
 									// TODO check that question is in survey
@@ -3055,7 +3068,26 @@ function setNoFilter() {
 									filterValue = "'" + filterValue + "'";      // add quotes
 								}
 								val += ", " + filterValue;
+
+								// second filter
+								secondFilterColumn = $('#a_second_filter_column').val();
+								if(secondFilterColumn !== '0') {
+									val += ", '" + filter + "'";
+
+									// second filter Value
+									secondFilterValue = $('#a_second_filter_value_static').val().trim();
+									if(secondFilterValue.indexOf('${') === 0) {
+										// question value
+										// TODO check that question is in survey
+									} else {
+										// static value
+										secondFilterValue = "'" + secondFilterValue + "'";      // add quotes
+									}
+									val += ", " + secondFilterValue;
+								}
 							}
+
+
 
 							val += ")";    // Close
 							//$('#appearance_msg').show().html(localise.set["msg_pformat"]);
@@ -3112,6 +3144,11 @@ function setNoFilter() {
 							paramsArray = params.split(',');
 						}
 						if(paramsArray.length > 0) {
+							var filter;
+							var filter_column;
+							var filter_value;
+							var second_filter_column;
+
 							// 1. First parameter is the filename
 							var filename = paramsArray[0].trim();
 							filename = filename.replace(/'/g, "");
@@ -3128,25 +3165,42 @@ function setNoFilter() {
 								getQuestionsInCsvFile($('.column_select'), csvIndex, true);
 							}
 
+							filter = 'none';    // default
 							if(paramsArray.length > 1) {
 								// Second parameter is the filter
-								var filter = paramsArray[1].trim();
+								filter = paramsArray[1].trim();
 								filter = filter.replace(/'/g, "");
 								$('#a_match').val(filter);
 							}
 
+							$(".has_filter, .a_second_filter_column, .has_second_filter").hide();
 							if(paramsArray.length > 2) {
 								// Third parameter is the filter column
-								var filter_column = paramsArray[2].trim();
+								filter_column = paramsArray[2].trim();
 								filter_column = filter_column.replace(/'/g, "");
 								$('#a_filter_column').val(filter_column);
+								if(filter_column !== "0") {
+									$(".has_filter, .a_second_filter_column").show();
+								}
 							}
 
 							if(paramsArray.length > 3) {
 								// Fourth parameter is the filter value
-								var filter_value = paramsArray[3].trim();
+								filter_value = paramsArray[3].trim();
 								filter_value = filter_value.replace(/'/g, "");
 								$('#a_filter_value_static').val(filter_value);
+							}
+
+							$('.has_second_filter').hide();
+							if(paramsArray.length > 4) {
+								// Fifth parameter is the second filter column
+								second_filter_column = paramsArray[4].trim();
+								second_filter_column = second_filter_column.replace(/'/g, "");
+								$('#a_second_filter_column').val(second_filter_column);
+
+								if(second_filter_column !== '0') {
+									$('.has_second_filter').show();
+								}
 							}
 
 						}

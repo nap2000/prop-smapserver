@@ -193,7 +193,7 @@ ALTER TABLE public.user_trail OWNER TO ws;
 
 update users set email = null where trim(email) = '';
 
-alter table assignments drop constraint assignee;
+alter table assignments drop constraint if exists assignee;
 alter table assignments add constraint assignee FOREIGN KEY (assignee)
 	REFERENCES users (id) MATCH SIMPLE
 	ON UPDATE NO ACTION ON DELETE CASCADE;
