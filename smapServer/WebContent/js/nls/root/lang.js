@@ -525,7 +525,7 @@ define({
     "msg_prev_select": "There are no previous select questions to get values from. You may want to set a custom filter",
     "msg_no_proj": "The user has no projects",
     "msg_pformat": "Parameters specified in the other field must be separated by semi colons and contain an equals sign. For example:  a=x;b=y",
-    "msg_filter_col": "You have specified a filter of %s1 hence you need to specify a column in the csv file to filter on",
+    "msg_filter_col": "You have specified a filter Column of '%s1', hence you need to specify a filter to apply",
 
     // Editor
     "e_b_e": "Base on existing form",
@@ -741,6 +741,7 @@ define({
     "ed_clab": "Choice Label",
     "ed_cval": "Choice Value",
     "ed_fv": "Filter Value",
+	"ed_sfv": "Second Filter Value",
     "ed_choice_f": "Choice Filter",
 	"ed_vc": "Choice names must only contain letters, numbers. underscores, dashes and periods",
 	"ed_vq": "The question name must start with a letter, underscore or colon and only contain letters, numbers, underscores, dashes and periods",
@@ -793,6 +794,7 @@ define({
 	"ed_w": "Width in webform grid",
     "ed_m": "Filter",
     "ed_fc": "Filter Column",
+	"ed_sfc": "Second Filter Column",
     "contains": "contains",
     "startsWith": "startsWith",
     "endsWith": "endsWith",

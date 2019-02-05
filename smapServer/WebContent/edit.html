@@ -773,7 +773,6 @@
 				<h4 class="modal-title lang" data-lang="ed_appearance">appearance</h4>
 			</div>
 
-			<div id="appearance_msg" class="alert alert-danger" role="alert" style="display:none;"></div>
 			<div class="modal-body">
 				<ul class="nav nav-pills" role="tablist">
 					<li id="standardTab" role="presentation" class="active"><a href="#" class="lang" data-lang="c_standard">standard</a></li>
@@ -887,8 +886,15 @@
 							</div>
 							-->
 
-							<div class="form-group a_match">
-								<label for="a_width" data-lang="ed_m" class="lang col-sm-4 control-label">match</label>
+							<div class="form-group a_filter_column">
+								<label for="a_filter_column" data-lang="ed_fc" class="lang col-sm-4 control-label">filter column</label>
+								<div class="col-sm-8">
+									<select id="a_filter_column" class="form-control column_select"></select>
+								</div>
+							</div>
+
+							<div class="form-group has_filter">
+								<label for="a_match" data-lang="ed_m" class="lang col-sm-4 control-label">match</label>
 								<div class="col-sm-8">
 									<select id="a_match" class="form-control">
 										<option class="lang" data-lang="c_none" value="none"></option>
@@ -899,13 +905,6 @@
 										<option class="lang" data-lang="c_in" value="in"></option>
 										<option class="lang" data-lang="c_notin" value="not in"></option>
 									</select>
-								</div>
-							</div>
-
-							<div class="form-group has_filter">
-								<label for="a_filter_column" data-lang="ed_fc" class="lang col-sm-4 control-label">filter column</label>
-								<div class="col-sm-8">
-									<select id="a_filter_column" class="form-control column_select"></select>
 								</div>
 							</div>
 
@@ -921,9 +920,31 @@
 								</div>
 							</div>
 
+							<div class="form-group a_second_filter_column">
+								<label for="a_second_filter_column" data-lang="ed_sfc" class="lang col-sm-4 control-label">second filter</label>
+								<div class="col-sm-8">
+									<select id="a_second_filter_column" class="form-control column_select"></select>
+								</div>
+							</div>
+
+							<div class="form-group has_second_filter">
+								<label for="a_filter_value" data-lang="ed_sfv" class="lang control-label col-sm-4"></label>
+								<div class="col-sm-8">
+									<div class="input-group mb-3">
+										<div id="a_second_filter_value" class="input-group-prepend">
+											<select id="a_second_filter_value_sel" class="custom-select questions_in_form"></select>
+											<input type="text" id="a_second_filter_value_static">
+										</div>
+									</div>
+								</div>
+							</div>
+
+
 						</div>
 					</form>
 				</div>
+
+				<div id="appearance_msg" class="alert alert-danger" role="alert" style="display:none;"></div>
 
 			</div>
 			<div class="modal-footer">
