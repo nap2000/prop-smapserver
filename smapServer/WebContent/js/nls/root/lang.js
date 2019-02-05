@@ -525,6 +525,7 @@ define({
     "msg_prev_select": "There are no previous select questions to get values from. You may want to set a custom filter",
     "msg_no_proj": "The user has no projects",
     "msg_pformat": "Parameters specified in the other field must be separated by semi colons and contain an equals sign. For example:  a=x;b=y",
+    "msg_filter_col": "You have specified a filter of %s1 hence you need to specify a column in the csv file to filter on",
 
     // Editor
     "e_b_e": "Base on existing form",
@@ -791,6 +792,7 @@ define({
     "ed_pl": "Page Layout",
 	"ed_w": "Width in webform grid",
     "ed_m": "Filter",
+    "ed_fc": "Filter Column",
     "contains": "contains",
     "startsWith": "startsWith",
     "endsWith": "endsWith",

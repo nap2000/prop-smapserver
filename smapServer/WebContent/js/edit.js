@@ -489,6 +489,13 @@ $(document).ready(function() {
 	});
 
 	/*
+	 * Respond to a change in the question used as the value for a search filter
+	 */
+	$('#a_filter_value_sel').change(function(){
+		$('#a_filter_value_static').val('${' + $(this).val() + '}')
+	});
+
+	/*
      * Respond to a change in the form that is to be searched
      * If the question type is a child form then the list of questions needs to be updated
      */
@@ -496,10 +503,11 @@ $(document).ready(function() {
 		var survey = globals.model.survey;
 		var search_source = $('input[type=radio][name=search_source]:checked').val();
 		if(search_source === "survey") {
-			getQuestionsInSurvey($('#a_search_value'), $(this).val(), true);
+			getQuestionsInSurvey($('.column_select'), $(this).val(), true);
 		} else {
-			getQuestionsInCsvFile($('#a_search_value'), $(this).val(), true);
+			getQuestionsInCsvFile($('.column_select'), $(this).val(), true);
 		}
+
 	});
 
 	/*
@@ -2984,7 +2992,9 @@ function setNoFilter() {
              * Get the value of an appearance from the appearance dialog
              */
 			function getAppearance($elem, appearances, key, details) {
-				var val;
+				var val,
+					msg;
+
 				if(details.type === "boolean") {
 					val = $elem.prop('checked') ? key : undefined;
 				} else if(details.type === "select") {
@@ -3020,9 +3030,31 @@ function setNoFilter() {
 							val += "'" + filename + "'";
 
 							// filter
-							var filter = csvfile = $('#a_match').val();
+							var filter = $('#a_match').val();
 							if(filter !== 'none') {
 								val += ", '" + filter + "'";
+
+								// filter column
+								var filterColumn = $('#a_filter_column').val().trim();
+								if(filterColumn === '0') {
+									msg = localise.set["msg_filter_col"];
+									msg = msg.replace('%s1', filter);
+									$('#appearance_msg').show().html(msg);
+									return false;
+								} else {
+									val += ", '" + filterColumn + "'";
+								}
+
+								// filter Value
+								var filterValue = $('#a_filter_value_static').val().trim();
+								if(filterValue.indexOf('${') === 0) {
+									// question value
+									// TODO check that question is in survey
+								} else {
+									// static value
+									filterValue = "'" + filterValue + "'";      // add quotes
+								}
+								val += ", " + filterValue;
 							}
 
 							val += ")";    // Close
@@ -3068,6 +3100,9 @@ function setNoFilter() {
 						$('#a_has_search').prop('checked', true);
 						$('.appearance_search_details').show();
 
+						// Get questions to seelct from this survey
+						$('.questions_in_form').empty().append(getQuestionsAsSelect(localise.set["c_question"] + "..."));
+
 						// Now check parameters
 						var idx1 = appearance.indexOf('(');
 						var idx2 = appearance.indexOf(')');
@@ -3082,19 +3117,36 @@ function setNoFilter() {
 							filename = filename.replace(/'/g, "");
 							if(filename.startsWith('linked_s')) {
 								$('input[type=radio][name=search_source][value=survey]').prop('checked', true);
-								$('#a_survey_identifier').val(filename.subsstring("linked_s".length));
+								$('#a_survey_identifier').val(filename.substring("linked_s".length));
 								$('.search_survey').show();
+								getQuestionsInSurvey($('.column_select'), filename, true);
 							} else {
+								var csvIndex = getIndexOfCsvFilename(filename);
 								$('input[type=radio][name=search_source][value=csv]').prop('checked', true);
-								$('#a_csv_identifier').val(getIndexOfCsvFilename(filename));
+								$('#a_csv_identifier').val(csvIndex);
 								$('.search_csv').show();
+								getQuestionsInCsvFile($('.column_select'), csvIndex, true);
 							}
 
 							if(paramsArray.length > 1) {
-								// 2. Second parameter is the filter
+								// Second parameter is the filter
 								var filter = paramsArray[1].trim();
 								filter = filter.replace(/'/g, "");
 								$('#a_match').val(filter);
+							}
+
+							if(paramsArray.length > 2) {
+								// Third parameter is the filter column
+								var filter_column = paramsArray[2].trim();
+								filter_column = filter_column.replace(/'/g, "");
+								$('#a_filter_column').val(filter_column);
+							}
+
+							if(paramsArray.length > 3) {
+								// Fourth parameter is the filter value
+								var filter_value = paramsArray[3].trim();
+								filter_value = filter_value.replace(/'/g, "");
+								$('#a_filter_value_static').val(filter_value);
 							}
 
 						}
@@ -3140,7 +3192,7 @@ function setNoFilter() {
 			/*
 			 * Get the questions in the form currently being edited as options for a select question
 			 */
-			function getQuestionsAsSelect() {
+			function getQuestionsAsSelect(noneText) {
 
 				var i,
 					survey = globals.model.survey,
@@ -3156,7 +3208,11 @@ function setNoFilter() {
 					if(survey.forms && survey.forms.length > 0) {
 
 						h[++idx] = '<option value="">';
-						h[++idx] = localise.set["c_none"];
+						if(!noneText) {
+							h[++idx] = localise.set["c_none"];
+						} else {
+							h[++idx] = noneText;
+						}
 						h[++idx] = '</option>';
 
 						for(i = 0; i < survey.forms.length; i++) {
