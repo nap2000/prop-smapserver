@@ -381,7 +381,7 @@ define(function () {
 		    geotrace:['w'],
 		    geoshape:['w'],
 		    acknowledge:['w'],
-		    range:['w'],
+		    range:['w', 'rating'],
 		    file:['w'],
 		    rank:['w']
 	    };
@@ -407,6 +407,11 @@ define(function () {
 			    field: 'a_search',
 			    type: 'form',
 			    rex: 'search\\('
+		    },
+		    'rating': {
+			    field: 'a_rating',
+			    type: 'boolean',
+			    rex: 'rating'
 		    },
 		    'w': {
 			    field: 'a_width',
