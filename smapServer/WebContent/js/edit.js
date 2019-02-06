@@ -470,7 +470,7 @@ $(document).ready(function() {
 		$('#searchPanel').show();
 	});
 
-	$('#a_has_search, #a_filter_column').change(function(){
+	$('#a_has_search, #a_filter_column, #a_second_filter_column').change(function(){
 		showSearchElements();
 	});
 
@@ -1748,12 +1748,18 @@ function respondToEvents($context) {
 		$('.appearance_field, .appearance_search_details').hide();
 		$('#standardTab a').click();
 
+		/*
+		 * Show form controls relevant for this question type
+		 */
 		if(qAppearances && qAppearances.length > 0) {
 			for (j = 0; j < qAppearances.length; j++) {
 				appearanceDetails = globals.model.appearanceDetails[qAppearances[j]];
 				$('.' + appearanceDetails.field).show();
 			}
 		}
+
+		// Get questions to select from this survey
+		$('.questions_in_form').empty().append(getQuestionsAsSelect(localise.set["c_question"] + "..."));
 
 
 		for (i = 0; i < appearanceArray.length; i++) {
@@ -3116,10 +3122,6 @@ function setNoFilter() {
 
 						// Has search so enable the search panel
 						$('#a_has_search').prop('checked', true);
-						$('.appearance_search_details').show();
-
-						// Get questions to seelct from this survey
-						$('.questions_in_form').empty().append(getQuestionsAsSelect(localise.set["c_question"] + "..."));
 
 						// Now check parameters
 						var idx1 = appearance.indexOf('(');
@@ -3165,9 +3167,6 @@ function setNoFilter() {
 								filter_column = paramsArray[2].trim();
 								filter_column = filter_column.replace(/'/g, "");
 								$('#a_filter_column').val(filter_column);
-								if(filter_column !== "0") {
-									$(".has_filter, .a_second_filter_column").show();
-								}
 							}
 
 							if(paramsArray.length > 3) {
@@ -3183,13 +3182,10 @@ function setNoFilter() {
 								second_filter_column = paramsArray[4].trim();
 								second_filter_column = second_filter_column.replace(/'/g, "");
 								$('#a_second_filter_column').val(second_filter_column);
-
-								if(second_filter_column !== '0') {
-									$('.has_second_filter').show();
-								}
 							}
 
 						}
+						showSearchElements();
 					}
 				} else {
 					$elem.val(val);
@@ -3312,6 +3308,7 @@ function setNoFilter() {
 
 				var hasSearch = $('#a_has_search').is(':checked');
 				var aFilterColumn = $('#a_filter_column').val();
+				var aSecondFilterColumn = $('#a_second_filter_column').val();
 
 				if(hasSearch) {
 					$('.appearance_search_details').show();
@@ -3319,7 +3316,13 @@ function setNoFilter() {
 					if(!aFilterColumn || aFilterColumn === "0") {
 						$(".has_filter, .a_second_filter_column, .has_second_filter").hide();
 					} else {
-						$(".has_filter").show();
+						$(".has_filter, .a_second_filter_column").show();
+					}
+
+					if(!aSecondFilterColumn || aSecondFilterColumn === "0") {
+						$('.has_second_filter').hide();
+					} else {
+						$('.has_second_filter').show();
 					}
 
 				} else {
