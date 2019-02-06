@@ -78,6 +78,7 @@ define({
     "c_host": "Host",
     "c_rank": "Rank",
     "c_user": "User",
+    "c_vertical": "Vertical",
     "c_projects": "Projects",
     "c_email": "Email",
     "c_sms": "SMS",
@@ -687,6 +688,9 @@ define({
 
     // Editor
     "ed_r": "Rating",
+	"ed_bear": "Bearing",
+	"ed_sep": "Thousands Separator",
+	"ed_pick": "Picker",
     "ed_as": "Add Search",
     "ed_rf": "Reference Form",
     "ed_in": "Instance Name",

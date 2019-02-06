@@ -364,12 +364,12 @@ define(function () {
 	    // A list of valid appearances for each question type
 	    this.qAppearances = {
 		    'begin group': ['page', 'w'],
-		    string: ['w'],
+		    string: ['thousands-sep', 'w'],
 		    note: ['w'],
             select1: ['search', 'w'],
             select: ['search', 'w'],
             image: ['image_type', 'w'],
-            int:['w'],
+            int:['thousands-sep', 'w'],
 		    geopoint:['w'],
 		    audio:['w'],
 		    video:['w'],
@@ -377,11 +377,11 @@ define(function () {
 		    date:['w'],
 		    dateTime:['w'],
 		    time:['w'],
-            decimal:['w'],
+            decimal:['thousands-sep', 'bearing', 'w'],
 		    geotrace:['w'],
 		    geoshape:['w'],
 		    acknowledge:['w'],
-		    range:['w', 'rating'],
+		    range:['w', 'rating', 'vertical', 'picker'],
 		    file:['w'],
 		    rank:['w']
 	    };
@@ -412,6 +412,26 @@ define(function () {
 			    field: 'a_rating',
 			    type: 'boolean',
 			    rex: 'rating'
+		    },
+		    'vertical': {
+			    field: 'a_vertical',
+			    type: 'boolean',
+			    rex: 'vertical'
+		    },
+		    'picker': {
+			    field: 'a_picker',
+			    type: 'boolean',
+			    rex: 'picker'
+		    },
+		    'bearing': {
+			    field: 'a_bearing',
+			    type: 'boolean',
+			    rex: 'bearing'
+		    },
+		    'thousands-sep': {
+			    field: 'a_sep',
+			    type: 'boolean',
+			    rex: 'thousands-sep'
 		    },
 		    'w': {
 			    field: 'a_width',
