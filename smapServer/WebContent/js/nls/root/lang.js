@@ -686,6 +686,7 @@ define({
     "wf_sig": "Signature",
 
     // Editor
+    "ed_r": "Rating",
     "ed_as": "Add Search",
     "ed_rf": "Reference Form",
     "ed_in": "Instance Name",
