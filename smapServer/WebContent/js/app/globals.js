@@ -364,7 +364,7 @@ define(function () {
 	    // A list of valid appearances for each question type
 	    this.qAppearances = {
 		    'begin group': ['page', 'w'],
-		    string: ['thousands-sep', 'w'],
+		    string: ['numbers', 'thousands-sep', 'w'],
 		    note: ['w'],
             select1: ['search', 'w'],
             select: ['search', 'w'],
@@ -374,8 +374,8 @@ define(function () {
 		    audio:['w'],
 		    video:['w'],
 		    barcode:['w'],
-		    date:['w'],
-		    dateTime:['w'],
+		    date:['date_type', 'w'],
+		    dateTime:['no-calendar', 'w'],
 		    time:['w'],
             decimal:['thousands-sep', 'bearing', 'w'],
 		    geotrace:['w'],
@@ -402,6 +402,19 @@ define(function () {
 			    valIsAppearance: true,
 			    value_offset: 0,
 			    undef_value: 'none'
+		    },
+		    'date_type': {
+			    field: 'a_date_type',
+			    type: 'select',
+			    rex: 'no-calendar|month-year|year|coptic|ethiopian|islamic',
+			    valIsAppearance: true,
+			    value_offset: 0,
+			    undef_value: 'none'
+		    },
+		    'no-calendar': {
+			    field: 'a_no_calendar',
+			    type: 'boolean',
+			    rex: 'no-calendar'
 		    },
 		    'search': {
 			    field: 'a_search',
@@ -432,6 +445,11 @@ define(function () {
 			    field: 'a_sep',
 			    type: 'boolean',
 			    rex: 'thousands-sep'
+		    },
+		    'numbers': {
+			    field: 'a_numbers',
+			    type: 'boolean',
+			    rex: 'numbers'
 		    },
 		    'w': {
 			    field: 'a_width',
@@ -656,7 +674,7 @@ define(function () {
                 name: "Date and Time",
                 type: "dateTime",
                 trans: "ed_dt",
-                glyphicon: "calendar",
+                glyphicon: "calendar, time",
                 canSelect: true,
                 visible: true,
                 source: "user"
