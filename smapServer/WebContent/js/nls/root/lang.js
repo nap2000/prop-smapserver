@@ -689,6 +689,7 @@ define({
 
     // Editor
 	"ed_date_type": "Date Type",
+	"ed_select_type": "Select Type",
     "ed_nc": "No Calendar",
 	"ed_my": "Month and Year",
 	"ed_bikram": "Nepali",
@@ -699,6 +700,12 @@ define({
 	"ed_bear": "Bearing",
 	"ed_sep": "Thousands Separator",
     "ed_sn": "Show numbers keyboard",
+    "ed_numb_cols": "Number of Columns",
+	"ed_min": "Minimal",
+	"ed_adv": "Auto Advance",
+	"ed_ac": "Auto Complete",
+	"ed_compact": "Compact",
+	"ed_compact_adv": "Compact with auto advance",
 	"ed_pick": "Picker",
     "ed_as": "Add Search",
     "ed_rf": "Reference Form",
