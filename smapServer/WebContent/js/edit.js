@@ -476,7 +476,7 @@ $(document).ready(function() {
 	});
 
 	// Validate on value change
-	$('#a_sep, #a_numbers').change(function(){
+	$('#a_sep, #a_numbers, #a_select1_type').change(function(){
 		checkForAppearanceWarnings();
 	});
 
@@ -1766,7 +1766,13 @@ function respondToEvents($context) {
 		if(qAppearances && qAppearances.length > 0) {
 			for (j = 0; j < qAppearances.length; j++) {
 				appearanceDetails = globals.model.appearanceDetails[qAppearances[j]];
-				$('.' + appearanceDetails.field).show();
+				if(qAppearances[j] === 'w') {
+					if(globals.model.survey.surveyClass === "theme-grid") {
+						$('.' + appearanceDetails.field).show(); // Only show width if style is for grid
+					}
+				} else {
+					$('.' + appearanceDetails.field).show();
+				}
 			}
 		}
 
@@ -1783,10 +1789,12 @@ function respondToEvents($context) {
 
 					var m = appearanceArray[i].match(appearanceDetails.rex);
 					if (m) {
-						foundAppearance = true;
-						var val = m[0].substring(appearanceDetails.value_offset);
-						setAppearance($('#' + appearanceDetails.field), val, appearanceDetails.type, appearanceArray[i]);
-						break;
+						if(globals.model.survey.surveyClass === "theme-grid" || qAppearances[j] !== 'w') {
+							foundAppearance = true;
+							var val = m[0].substring(appearanceDetails.value_offset);
+							setAppearance($('#' + appearanceDetails.field), val, appearanceDetails.type, appearanceArray[i]);
+							break;
+						}
 					}
 				}
 
@@ -3097,6 +3105,20 @@ function setNoFilter() {
 						} else {
 							val = undefined;
 						}
+					} else if(details.field === 'a_select1_type') {
+						var s1Val = $elem.val();
+						if(s1Val === 'none') {
+							val = undefined;
+						} else if (s1Val === 'compact' || s1Val === 'quickcompact') {
+							var numberColumns = $('#a_number_columns').val();
+							if(numberColumns === '') {
+								val = s1Val;
+							} else {
+								val = s1Val + '-' + numberColumns;
+							}
+						} else {
+							val = s1Val;
+						}
 					}
 				}
 
@@ -3198,6 +3220,14 @@ function setNoFilter() {
 
 						}
 						showSearchElements();
+					} else if(val === 'compact' || val === 'quickcompact') {
+						var paramsArray = appearance.split('-');
+						$elem.val(paramsArray[0]);
+						if(paramsArray.length > 0) {
+							$('#a_number_columns').val(paramsArray[1]);
+						}
+						$('.a_number_columns').show();
+
 					}
 				} else {
 					$elem.val(val);
@@ -3366,6 +3396,18 @@ function setNoFilter() {
 					$('#appearance_msg').removeClass('alert-danger').addClass('alert-warning').show().html(warningMsg);
 				} else {
 					$('#appearance_msg').hide();
+				}
+
+				/*
+				 * Show / hide controls
+				 */
+				if(qtype === 'select1') {
+					var select1Type = $('#a_select1_type').val();
+					if(select1Type === 'compact' || select1Type === 'quickcompact') {
+						$('.a_number_columns').show();
+					} else {
+						$('.a_number_columns').hide();
+					}
 				}
 
 			}

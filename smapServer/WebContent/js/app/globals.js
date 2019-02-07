@@ -366,7 +366,7 @@ define(function () {
 		    'begin group': ['page', 'w'],
 		    string: ['numbers', 'thousands-sep', 'w'],
 		    note: ['w'],
-            select1: ['search', 'w'],
+            select1: ['select1_type', 'search', 'w'],
             select: ['search', 'w'],
             image: ['image_type', 'w'],
             int:['thousands-sep', 'w'],
@@ -402,6 +402,11 @@ define(function () {
 			    valIsAppearance: true,
 			    value_offset: 0,
 			    undef_value: 'none'
+		    },
+		    'select1_type': {
+			    field: 'a_select1_type',
+			    type: 'form',
+			    rex: 'minimal|quick$|autocomplete|compact|quickcompact'
 		    },
 		    'date_type': {
 			    field: 'a_date_type',
