@@ -3105,7 +3105,7 @@ function setNoFilter() {
 						} else {
 							val = undefined;
 						}
-					} else if(details.field === 'a_select1_type') {
+					} else if(details.field === 'a_select1_type' || details.field === 'a_select_type') {
 						var s1Val = $elem.val();
 						if(s1Val === 'none') {
 							val = undefined;
@@ -3228,6 +3228,8 @@ function setNoFilter() {
 						}
 						$('.a_number_columns').show();
 
+					} else {
+						$elem.val(val);
 					}
 				} else {
 					$elem.val(val);
