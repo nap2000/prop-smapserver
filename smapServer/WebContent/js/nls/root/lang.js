@@ -527,6 +527,7 @@ define({
     "msg_no_proj": "The user has no projects",
     "msg_pformat": "Parameters specified in the other field must be separated by semi colons and contain an equals sign. For example:  a=x;b=y",
     "msg_filter_col": "You have specified a filter Column of '%s1', hence you need to specify a filter to apply",
+    "msg_numb_ts": "Thousands separator will have no affect unless numbers is also selected",
 
     // Editor
     "e_b_e": "Base on existing form",
@@ -687,9 +688,17 @@ define({
     "wf_sig": "Signature",
 
     // Editor
+	"ed_date_type": "Date Type",
+    "ed_nc": "No Calendar",
+	"ed_my": "Month and Year",
+	"ed_bikram": "Nepali",
+	"ed_coptic": "Coptic",
+	"ed_ethiopian": "Ethiopian",
+	"ed_islamic": "Islamic",
     "ed_r": "Rating",
 	"ed_bear": "Bearing",
 	"ed_sep": "Thousands Separator",
+    "ed_sn": "Show numbers keyboard",
 	"ed_pick": "Picker",
     "ed_as": "Add Search",
     "ed_rf": "Reference Form",

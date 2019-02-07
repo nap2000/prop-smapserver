@@ -97,6 +97,7 @@ var gUrl,			// url to submit to
 var gNewVal,
 	gElement,
 	gQname,
+	gQType,
 	gIsSurveyLevel;
 
 window.moment = moment;
@@ -474,6 +475,11 @@ $(document).ready(function() {
 		showSearchElements();
 	});
 
+	// Validate on value change
+	$('#a_sep, #a_numbers').change(function(){
+		checkForAppearanceWarnings();
+	});
+
 	$('.search_csv, .search_survey').hide();
 	$('input[type=radio][name=search_source]').change(function(){
 		$('.search_csv, .search_survey').hide();
@@ -523,7 +529,7 @@ $(document).ready(function() {
 		if(qAppearances && qAppearances.length > 0) {
 			for(i = 0; i < qAppearances.length; i++) {
 				appearanceDetails = globals.model.appearanceDetails[qAppearances[i]];
-				if(!getAppearance($('#' + appearanceDetails.field), appearances, qAppearances[i], appearanceDetails)) {
+				if(!getAppearance($('#' + appearanceDetails.field), appearances, qAppearances[i], appearanceDetails, question.type)) {
 					return false;       // getAppearance returns false if there is an error
 				}
 			}
@@ -878,7 +884,8 @@ function setAllRequired(required) {
 
 //Set up question type dialog
 function setupQuestionTypes($elem, columns, draggable, currentType) {
-	var i,
+	var i,j,
+		tArray,
 		types = globals.model.qTypes,
 		h = [],
 		idx = -1,
@@ -902,9 +909,13 @@ function setupQuestionTypes($elem, columns, draggable, currentType) {
 			h[++idx] = types[i].type;
 			h[++idx] = '">';
 			if(types[i].glyphicon) {
-				h[++idx] = '<span class="glyphicon glyphicon-';
-				h[++idx] = types[i].glyphicon; 
-				h[++idx] = ' edit_type_select"></span><br/>';
+				tArray = types[i].glyphicon.split(',');
+				for(j = 0; j < tArray.length; j++) {
+					h[++idx] = '<span class="glyphicon glyphicon-';
+					h[++idx] = tArray[j].trim();
+					h[++idx] = ' edit_type_select"></span>';
+				}
+				h[++idx] = '<br/>';
 			} else if(types[i].image) {
 				h[++idx] = '<img class="edit_image_select" src="';
 				h[++idx] = types[i].image; 
@@ -1727,6 +1738,7 @@ function respondToEvents($context) {
 		var qType = survey.forms[formIndex].questions[itemIndex].type;
 		var qName = survey.forms[formIndex].questions[itemIndex].name;
 		gQname = qName;
+		gQType = qType;
 		var qAppearances = globals.model.qAppearances[qType];
 		var appearanceDetails;
 		var appearanceArray = [];
@@ -2993,7 +3005,7 @@ function setNoFilter() {
 			/*
              * Get the value of an appearance from the appearance dialog
              */
-			function getAppearance($elem, appearances, key, details) {
+			function getAppearance($elem, appearances, key, details, qtype) {
 				var val,
 					msg;
 
@@ -3041,7 +3053,7 @@ function setNoFilter() {
 								if(filter === 'none') {
 									msg = localise.set["msg_filter_col"];
 									msg = msg.replace('%s1', filterColumn);
-									$('#appearance_msg').show().html(msg);
+									$('#appearance_msg').removeClass('alert-warning').addClass('alert-danger').show().html(msg);
 									return false;
 								} else {
 									val += ", '" + filter + "'";
@@ -3082,7 +3094,6 @@ function setNoFilter() {
 
 
 							val += ")";    // Close
-							//$('#appearance_msg').show().html(localise.set["msg_pformat"]);
 						} else {
 							val = undefined;
 						}
@@ -3094,7 +3105,8 @@ function setNoFilter() {
 					appearances.push(val);
 				}
 
-				return true;
+				return validateAppearance(qtype, appearances, $('#appearance_msg'));
+
 			}
 
 			/*
@@ -3333,4 +3345,36 @@ function setNoFilter() {
 
 			}
 
+			function checkForAppearanceWarnings() {
+				var warningMsg = '';
+				var i;
+				var msg;
+				var qtype = gQType;
+
+				if(qtype === 'string') {
+					var ts = $('#a_sep').is(':checked');
+					var numbers = $('#a_numbers').is(':checked');
+					if(ts && !numbers) {
+						if(warningMsg.length > 0) {
+							warningMsg += '. ';
+						}
+						warningMsg += localise.set["msg_numb_ts"];
+					}
+				}
+
+				if(warningMsg.length > 0) {
+					$('#appearance_msg').removeClass('alert-danger').addClass('alert-warning').show().html(warningMsg);
+				} else {
+					$('#appearance_msg').hide();
+				}
+
+			}
+
+			/*
+			 * Check for errors before returning
+			 * TODO
+			 */
+			function validateAppearance() {
+				return true;
+			}
 });

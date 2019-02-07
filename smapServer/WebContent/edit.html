@@ -805,6 +805,32 @@
 								</div>
 							</div>
 
+							<div class="form-group appearance_field a_date_type">
+								<label for="a_width" data-lang="ed_date_type" class="lang col-sm-4 control-label">date</label>
+								<div class="col-sm-8">
+									<select id="a_date_type" class="form-control">
+										<option class="lang" data-lang="c_normal" value="none"></option>
+										<option class="lang" data-lang="ed_nc" value="no-calendar"></option>
+										<option class="lang" data-lang="ed_my" value="month-year"></option>
+										<option class="lang" data-lang="c_year" value="year"></option>
+										<option class="lang" data-lang="ed_bikram" value="bikram-sambat"></option>
+										<option class="lang" data-lang="ed_coptic" value="coptic"></option>
+										<option class="lang" data-lang="ed_ethiopian" value="ethiopian"></option>
+										<option class="lang" data-lang="ed_islamic" value="islamic"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group appearance_field a_no_calendar">
+								<div class="col-sm-offset-4 col-sm-8">
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" id="a_no_calendar"><span class="lang" data-lang="ed_nc">no cal</span>
+										</label>
+									</div>
+								</div>
+							</div>
+
 							<div class="form-group appearance_field a_rating">
 								<div class="col-sm-offset-4 col-sm-8">
 									<div class="checkbox">
@@ -840,6 +866,16 @@
 									<div class="checkbox">
 										<label>
 											<input type="checkbox" id="a_bearing"><span class="lang" data-lang="ed_bear">bearing</span>
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group appearance_field a_numbers">
+								<div class="col-sm-offset-4 col-sm-8">
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" id="a_numbers"><span class="lang" data-lang="ed_sn">numbers</span>
 										</label>
 									</div>
 								</div>
@@ -948,10 +984,10 @@
 								<div class="col-sm-8">
 									<select id="a_match" class="form-control">
 										<option class="lang" data-lang="c_none" value="none"></option>
+										<option class="lang" data-lang="c_matches" value="matches"></option>
 										<option class="lang" data-lang="contains" value="contains"></option>
 										<option class="lang" data-lang="startsWith" value="startsWith"></option>
-										<option class="lang" data-lang="endsWith" value="endsWith"></option>
-										<option class="lang" data-lang="c_matches" value="matches"></option>
+										<option class="lang" data-lang="endsWith" value="endsWith"></option
 										<option class="lang" data-lang="c_in" value="in"></option>
 										<option class="lang" data-lang="c_notin" value="not in"></option>
 									</select>

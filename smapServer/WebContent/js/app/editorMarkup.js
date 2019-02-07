@@ -376,6 +376,8 @@ define([
 	function addQType(type) {
 		
 		var i,
+			j,
+			tArray,
 			types = globals.model.qTypes,
 			h = [],
 			idx = -1,
@@ -388,9 +390,12 @@ define([
 				h[++idx] = name;
 				h[++idx] = '">';
 				if(types[i].glyphicon) {
-					h[++idx] = '<span class="glyphicon glyphicon-';
-					h[++idx] = types[i].glyphicon; 
-					h[++idx] = ' edit_type"></span>';
+					tArray = types[i].glyphicon.split(',');
+					for(j = 0; j < tArray.length; j++) {
+						h[++idx] = '<span class="glyphicon glyphicon-';
+						h[++idx] = tArray[j].trim();
+						h[++idx] = ' edit_type"></span>';
+					}
 				} else if(types[i].image) {
 					h[++idx] = '<img class="edit_image" src="';
 					h[++idx] = types[i].image; 
