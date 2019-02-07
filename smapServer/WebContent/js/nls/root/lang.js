@@ -706,6 +706,7 @@ define({
 	"ed_ac": "Auto Complete",
 	"ed_compact": "Compact",
 	"ed_compact_adv": "Compact with auto advance",
+	"ed_image_map": "Image Map",
 	"ed_pick": "Picker",
     "ed_as": "Add Search",
     "ed_rf": "Reference Form",

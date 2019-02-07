@@ -367,7 +367,7 @@ define(function () {
 		    string: ['numbers', 'thousands-sep', 'w'],
 		    note: ['w'],
             select1: ['select1_type', 'search', 'w'],
-            select: ['search', 'w'],
+            select: ['select_type', 'search', 'w'],
             image: ['image_type', 'w'],
             int:['thousands-sep', 'w'],
 		    geopoint:['w'],
@@ -406,7 +406,12 @@ define(function () {
 		    'select1_type': {
 			    field: 'a_select1_type',
 			    type: 'form',
-			    rex: 'minimal|quick$|autocomplete|compact|quickcompact'
+			    rex: 'minimal|quick$|autocomplete|compact|quickcompact|image-map'
+		    },
+		    'select_type': {
+			    field: 'a_select_type',
+			    type: 'form',
+			    rex: 'minimal|autocomplete|compact|image-map'
 		    },
 		    'date_type': {
 			    field: 'a_date_type',
