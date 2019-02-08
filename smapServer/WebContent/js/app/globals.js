@@ -393,7 +393,7 @@ define(function () {
                 rex: 'field-list|table-list',
                 valIsAppearance: true,
 			    value_offset: 0,
-                undef_value: 'none'
+                undef_value: ''
 		    },
 		    'image_type': {
 			    field: 'a_image_type',
@@ -401,7 +401,7 @@ define(function () {
 			    rex: 'annotate|draw|signature',
 			    valIsAppearance: true,
 			    value_offset: 0,
-			    undef_value: 'none'
+			    undef_value: ''
 		    },
 		    'select1_type': {
 			    field: 'a_select1_type',
@@ -419,7 +419,7 @@ define(function () {
 			    rex: 'no-calendar|month-year|year|coptic|ethiopian|islamic',
 			    valIsAppearance: true,
 			    value_offset: 0,
-			    undef_value: 'none'
+			    undef_value: ''
 		    },
 		    'no-calendar': {
 			    field: 'a_no_calendar',
@@ -466,7 +466,7 @@ define(function () {
 			    type: 'select',
                 rex: 'w[1-9]|w1[0-2]',
                 value_offset: 1,
-                undef_value: '0'
+                undef_value: ''
 		    }
 	    };
 
