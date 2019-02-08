@@ -471,23 +471,16 @@ $(document).ready(function() {
 		$('#searchPanel').show();
 	});
 
-	$('#a_has_search, #a_filter_column, #a_second_filter_column').change(function(){
+	// Hide and show search elements
+	$('#a_has_search, #a_filter_column, #a_second_filter_column, #a_csv_identifier, ' +
+		'#a_survey_identifier, input[type=radio][name=search_source],' +
+		'#a_search_value, #a_search_label').change(function(){
 		showSearchElements();
 	});
 
 	// Validate on value change
 	$('#a_sep, #a_numbers, #a_select1_type').change(function(){
 		checkForAppearanceWarnings();
-	});
-
-	$('.search_csv, .search_survey').hide();
-	$('input[type=radio][name=search_source]').change(function(){
-		$('.search_csv, .search_survey').hide();
-		if(this.value == "survey") {
-			$('.search_survey').show();
-		} else {
-			$('.search_csv').show();
-		}
 	});
 
 	/*
@@ -1779,6 +1772,9 @@ function respondToEvents($context) {
 		// Get questions to select from this survey
 		$('.questions_in_form').empty().append(getQuestionsAsSelect(localise.set["c_question"] + "..."));
 
+		// Add value and label(s) from choices list or they may already be specified as temporary appearance values
+		addLabelControls();
+
 
 		for (i = 0; i < appearanceArray.length; i++) {
 
@@ -3040,16 +3036,36 @@ function setNoFilter() {
 							var csvfile;
 							var search_source = $('input[type=radio][name=search_source]:checked').val();
 							if(search_source === "survey") {
+								if($('#a_survey_identifier').val() === '') {
+									showAppearanceError(localise.set["msg_search_source2"]);
+								}
 								filename = 'linked_' + $('#a_survey_identifier').val();
-							} else {
+							} else if(search_source === "csv") {
+								if($('#a_csv_identifier').val() === '') {
+									showAppearanceError(localise.set["msg_search_source2"]);
+								}
 								csvfile = globals.gCsvFiles[$('#a_csv_identifier').val()];
 								filename = csvfile.filename;
 								var idx = filename.lastIndexOf('.');    // remove the extension
 								if(idx > 0) {
 									filename = filename.substring(0, idx);
 								}
+							} else {
+								showAppearanceError(localise.set["msg_search_source"]);
+								return false;
 							}
 							val += "'" + filename + "'";
+
+							/*
+							 * Add dummy appearances for choice value and choice labels
+							 */
+							var searchValue = $('#a_search_value').val();
+							if(!searchValue || searchValue.trim().length == 0) {
+								showAppearanceError(localise.set["msg_choice_value"]);
+								return false;
+							} else {
+								appearances.push('_search_value::' + searchValue);
+							}
 
 							// first filter
 							var filterColumn = $('#a_filter_column').val().trim();
@@ -3057,8 +3073,8 @@ function setNoFilter() {
 							var filterValue;
 							var secondFilterColumn;
 							var secondFilterValue;
-							if(filterColumn !== '0') {
-								if(filter === 'none') {
+							if(filterColumn !== '') {
+								if(filter === '') {
 									msg = localise.set["msg_filter_col"];
 									msg = msg.replace('%s1', filterColumn);
 									$('#appearance_msg').removeClass('alert-warning').addClass('alert-danger').show().html(msg);
@@ -3083,7 +3099,7 @@ function setNoFilter() {
 
 								// second filter
 								secondFilterColumn = $('#a_second_filter_column').val();
-								if(secondFilterColumn !== '0') {
+								if(secondFilterColumn !== '') {
 									val += ", '" + filter + "'";
 
 									// second filter Value
@@ -3107,7 +3123,7 @@ function setNoFilter() {
 						}
 					} else if(details.field === 'a_select1_type' || details.field === 'a_select_type') {
 						var s1Val = $elem.val();
-						if(s1Val === 'none') {
+						if(s1Val === '') {
 							val = undefined;
 						} else if (s1Val === 'compact' || s1Val === 'quickcompact') {
 							var numberColumns = $('#a_number_columns').val();
@@ -3187,7 +3203,7 @@ function setNoFilter() {
 								getQuestionsInCsvFile($('.column_select'), csvIndex, true);
 							}
 
-							filter = 'none';    // default
+							filter = '';    // default
 							if(paramsArray.length > 1) {
 								// Second parameter is the filter
 								filter = paramsArray[1].trim();
@@ -3353,17 +3369,43 @@ function setNoFilter() {
 				var hasSearch = $('#a_has_search').is(':checked');
 				var aFilterColumn = $('#a_filter_column').val();
 				var aSecondFilterColumn = $('#a_second_filter_column').val();
+				var searchSource = $('input[type=radio][name=search_source]:checked').val();
+				var searchChoiceValue = $('#a_search_value').val();
+				var fileIdentifier;
+
+				$('#appearance_msg').hide();
 
 				if(hasSearch) {
 					$('.appearance_search_details').show();
 
-					if(!aFilterColumn || aFilterColumn === "0") {
+					$('.search_csv, .search_survey').hide();
+					if(searchSource == "survey") {
+						$('.search_survey').show();
+						fileIdentifier = $('#a_survey_identifier').val();
+					} else if(searchSource == "csv") {
+						$('.search_csv').show();
+						fileIdentifier = $('#a_csv_identifier').val();
+					}
+
+					if(!fileIdentifier || fileIdentifier === '') {
+						$('.a_choice_values').hide();
+					} else {
+						$('.a_choice_values').show();
+					}
+
+					if(!searchChoiceValue || searchChoiceValue === '') {
+						$('.a_filter_column').hide();
+					} else {
+						$('.a_filter_column').show();
+					}
+
+					if(!aFilterColumn || aFilterColumn === "") {
 						$(".has_filter, .a_second_filter_column, .has_second_filter").hide();
 					} else {
 						$(".has_filter, .a_second_filter_column").show();
 					}
 
-					if(!aSecondFilterColumn || aSecondFilterColumn === "0") {
+					if(!aSecondFilterColumn || aSecondFilterColumn === "") {
 						$('.has_second_filter').hide();
 					} else {
 						$('.has_second_filter').show();
@@ -3420,5 +3462,37 @@ function setNoFilter() {
 			 */
 			function validateAppearance() {
 				return true;
+			}
+
+			/*
+			 * Add a label control for each language
+			 */
+			function addLabelControls() {
+				var languages = globals.model.survey.languages;
+				var i;
+				var h = [];
+				var idx = -1;
+				var labelControlId;
+
+				for (i = 0; i < languages.length; i++) {
+					labelControlId = 'a_search_label::' + i;
+					h[++idx] = '<div class="form-group search_label">';
+						h[++idx] = '<label for="';
+						h[++idx] = labelControlId;
+						h[++idx] = '" class="col-sm-4 control-label">';
+						h[++idx] = languages[i].name;
+						h[++idx] = '</label>';
+					h[++idx] = '<div class="col-sm-8">';
+					h[++idx] = '<select id="';
+						h[++idx] = labelControlId;
+						h[++idx] = '" class="form-control column_select"></select>';
+					h[++idx] = '</div>';
+					h[++idx] = '</div>';
+				}
+				$('#search_label_list').empty().append(h.join(''));
+			}
+
+			function showAppearanceError(msg) {
+				$('#appearance_msg').removeClass('alert-warning').addClass('alert-danger').show().html(msg);
 			}
 });

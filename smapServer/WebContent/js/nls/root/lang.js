@@ -528,6 +528,9 @@ define({
     "msg_pformat": "Parameters specified in the other field must be separated by semi colons and contain an equals sign. For example:  a=x;b=y",
     "msg_filter_col": "You have specified a filter Column of '%s1', hence you need to specify a filter to apply",
     "msg_numb_ts": "Thousands separator will have no affect unless numbers is also selected",
+    "msg_choice_value": "The choice value must be specified",
+	"msg_search_source": "You must select either survey or csv as the souce of the choice data",
+    "msg_search_source2": "The source file or survey must be selected",
 
     // Editor
     "e_b_e": "Base on existing form",
@@ -760,6 +763,7 @@ define({
     "ed_csp": "Previous Selection",
     "ed_cf": "Custom Filter",
     "ed_afc": "Add Filter Column",
+	"ed_clabs": "Choice Labels",
     "ed_clab": "Choice Label",
     "ed_cval": "Choice Value",
     "ed_fv": "Filter Value",
