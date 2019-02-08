@@ -3404,7 +3404,7 @@ function getAccessibleSurveys($elem, includeNone, includeBlocked, groupsOnly) {
 				i;
 
 			if(includeNone) {
-				h[++idx] = '<option value="0">';
+				h[++idx] = '<option value="">';
 				h[++idx] = localise.set["c_none"]
 				h[++idx] = '</option>';
 			}
@@ -3451,7 +3451,7 @@ function getAccessibleCsvFiles($elem, includeNone) {
 				i;
 
 			if(includeNone) {
-				h[++idx] = '<option value="-1">';
+				h[++idx] = '<option value="">';
 				h[++idx] = localise.set["c_none"]
 				h[++idx] = '</option>';
 			}
@@ -3487,7 +3487,7 @@ function getQuestionsInSurvey($elem, sIdent, includeNone) {
 			i;
 
 		if (includeNone) {
-			h[++idx] = '<option value="0">';
+			h[++idx] = '<option value="">';
 			h[++idx] = localise.set["c_none"];
 			h[++idx] = '</option>';
 		}
@@ -3544,7 +3544,7 @@ function getQuestionsInCsvFile($elem, index, includeNone) {
 	var data = globals.gCsvFiles[index].headers;
 
 	if (includeNone) {
-		h[++idx] = '<option value="0">';
+		h[++idx] = '<option value="">';
 		h[++idx] = localise.set["c_none"];
 		h[++idx] = '</option>';
 	}

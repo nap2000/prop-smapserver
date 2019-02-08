@@ -786,7 +786,7 @@
 								<label for="a_width" data-lang="ed_pl" class="lang col-sm-4 control-label">page</label>
 								<div class="col-sm-8">
 									<select id="a_page" class="form-control">
-										<option class="lang" data-lang="c_none" value="none">none</option>
+										<option class="lang" data-lang="c_none" value=""></option>
 										<option class="lang" data-lang="c_field_list" value="field-list"></option>
 										<option class="lang" data-lang="c_table_list" value="table-list"></option>
 									</select>
@@ -797,7 +797,7 @@
 								<label for="a_width" data-lang="ed_image_type" class="lang col-sm-4 control-label">image</label>
 								<div class="col-sm-8">
 									<select id="a_image_type" class="form-control">
-										<option class="lang" data-lang="c_photo" value="none"></option>
+										<option class="lang" data-lang="c_photo" value=""></option>
 										<option class="lang" data-lang="c_annotate" value="annotate"></option>
 										<option class="lang" data-lang="c_draw" value="draw"></option>
 										<option class="lang" data-lang="wf_sig" value="signature"></option>
@@ -809,7 +809,7 @@
 								<label for="a_width" data-lang="ed_date_type" class="lang col-sm-4 control-label">date</label>
 								<div class="col-sm-8">
 									<select id="a_date_type" class="form-control">
-										<option class="lang" data-lang="c_normal" value="none"></option>
+										<option class="lang" data-lang="c_normal" value=""></option>
 										<option class="lang" data-lang="ed_nc" value="no-calendar"></option>
 										<option class="lang" data-lang="ed_my" value="month-year"></option>
 										<option class="lang" data-lang="c_year" value="year"></option>
@@ -825,7 +825,7 @@
 								<label for="a_select1_type" data-lang="ed_select_type" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<select id="a_select1_type" class="form-control">
-										<option class="lang" data-lang="c_normal" value="none"></option>
+										<option class="lang" data-lang="c_normal" value=""></option>
 										<option class="lang" data-lang="ed_min" value="minimal"></option>
 										<option class="lang" data-lang="ed_adv" value="quick"></option>
 										<option class="lang" data-lang="ed_ac" value="autocomplete"></option>
@@ -840,7 +840,7 @@
 								<label for="a_select_type" data-lang="ed_select_type" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<select id="a_select_type" class="form-control">
-										<option class="lang" data-lang="c_normal" value="none"></option>
+										<option class="lang" data-lang="c_normal" value=""></option>
 										<option class="lang" data-lang="ed_min" value="minimal"></option>
 										<option class="lang" data-lang="ed_ac" value="autocomplete"></option>
 										<option class="lang" data-lang="ed_compact" value="compact"></option>
@@ -944,7 +944,7 @@
 								<label for="a_width" data-lang="ed_w" class="lang col-sm-4 control-label">order</label>
 								<div class="col-sm-8">
 									<select id="a_width" class="form-control">
-										<option class="lang" data-lang="max" value="0">max</option>
+										<option class="lang" data-lang="max" value="">max</option>
 										<option value="1">1</option>
 										<option value="2">2</option>
 										<option value="3">3</option>
@@ -1012,14 +1012,23 @@
 								</div>
 							</div>
 
-							<!-- TODO initially lets leave these set in the choices sheet
-							<div class="form-group search_value">
-								<label for="a_search_value" data-lang="ed_cval" class="lang col-sm-4 control-label">value</label>
+
+							<div class="form-group search_value a_choice_values">
+								<label for="a_search_value" data-lang="ed_cval" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<select id="a_search_value" class="form-control column_select"></select>
 								</div>
 							</div>
-							-->
+
+							<div class="well a_choice_values" style="display:none;">
+								<div class="form-group search_label">
+									<label data-lang="ed_clabs" class="lang col-sm-4 control-label"></label>
+								</div>
+
+								<div id="search_label_list">
+
+								</div>
+							</div>
 
 							<div class="form-group a_filter_column">
 								<label for="a_filter_column" data-lang="ed_fc" class="lang col-sm-4 control-label">filter column</label>
@@ -1032,7 +1041,7 @@
 								<label for="a_match" data-lang="ed_m" class="lang col-sm-4 control-label">match</label>
 								<div class="col-sm-8">
 									<select id="a_match" class="form-control">
-										<option class="lang" data-lang="c_none" value="none"></option>
+										<option class="lang" data-lang="c_none" value=""></option>
 										<option class="lang" data-lang="c_matches" value="matches"></option>
 										<option class="lang" data-lang="contains" value="contains"></option>
 										<option class="lang" data-lang="startsWith" value="startsWith"></option>
