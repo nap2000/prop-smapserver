@@ -509,8 +509,10 @@ $(document).ready(function() {
      * Respond to clicking of the save appearances button in the appearance edit modal
      */
 	$('#appearanceSave').click(function() {
-		var appearances = [];
+		var appearances = [];       // Array of appearance values taken from dialog
+		var app_choices = [];       // Dummy appearances for choice value and labels
 		var newVal;
+		var newAppChoiceVal;
 		var survey = globals.model.survey;
 		var question = survey.forms[globals.gFormIndex].questions[globals.gItemIndex];
 		var i;
@@ -518,11 +520,14 @@ $(document).ready(function() {
 		var other;
 
 		$('#appearance_msg').hide();
+		/*
+		 * Get the appearance values from the dialog
+		 */
 		var qAppearances = globals.model.qAppearances[question.type];
 		if(qAppearances && qAppearances.length > 0) {
 			for(i = 0; i < qAppearances.length; i++) {
 				appearanceDetails = globals.model.appearanceDetails[qAppearances[i]];
-				if(!getAppearance($('#' + appearanceDetails.field), appearances, qAppearances[i], appearanceDetails, question.type)) {
+				if(!getAppearance($('#' + appearanceDetails.field), appearances, qAppearances[i], appearanceDetails, question.type, app_choices)) {
 					return false;       // getAppearance returns false if there is an error
 				}
 			}
@@ -536,6 +541,9 @@ $(document).ready(function() {
 		newVal += other;
 		updateLabel("question", globals.gFormIndex, globals.gItemIndex, undefined, "text", newVal, gQname, "appearance");
 
+		// Save the updated settings for search choices
+		newAppChoiceVal = app_choices.join(' ');
+		updateLabel("question", globals.gFormIndex, globals.gItemIndex, undefined, "text", newAppChoiceVal, gQname, "app_choices");
 		$('#appearanceModal').modal("hide");
 	});
 	
@@ -1728,21 +1736,27 @@ function respondToEvents($context) {
 		globals.gFormIndex = formIndex;
 		globals.gItemIndex = itemIndex;
 
-		var qType = survey.forms[formIndex].questions[itemIndex].type;
-		var qName = survey.forms[formIndex].questions[itemIndex].name;
+		var question = survey.forms[formIndex].questions[itemIndex];
+		var qType = question.type;
+		var qName = question.name;
 		gQname = qName;
 		gQType = qType;
 		var qAppearances = globals.model.qAppearances[qType];
 		var appearanceDetails;
 		var appearanceArray = [];
+		var appChoiceArray = [];
 
 		var appearanceData = $li.find('.labelProp').val();
+		var app_choices = question.app_choices;
 		var otherAppearances = '';
 		var i, j;
 		var foundAppearance;
 
 		if(appearanceData) {
 			appearanceArray = tokenizeAppearance(appearanceData);
+		}
+		if(app_choices) {
+			appChoiceArray = app_choices.split(' ');
 		}
 
 		/*
@@ -1788,7 +1802,7 @@ function respondToEvents($context) {
 						if(globals.model.survey.surveyClass === "theme-grid" || qAppearances[j] !== 'w') {
 							foundAppearance = true;
 							var val = m[0].substring(appearanceDetails.value_offset);
-							setAppearance($('#' + appearanceDetails.field), val, appearanceDetails.type, appearanceArray[i]);
+							setAppearance($('#' + appearanceDetails.field), val, appearanceDetails.type, appearanceArray[i], question, survey);
 							break;
 						}
 					}
@@ -1804,7 +1818,22 @@ function respondToEvents($context) {
 			}
 		}
 
-		// Add any parameter values not explicetely set
+		/*
+		 * Add appearance values for app choices
+		 */
+		var langIdx = 0;
+		for(i = 0; i < appChoiceArray.length; i++) {
+			var ace = appChoiceArray[i].split('::');
+			if(ace.length > 1) {
+				if(ace[0] === '_sv') {
+					$('#a_search_value').val(ace[1]);
+				} else if(ace[0] === '_sl' && ace.length > 2) {
+					$('#a_search_label' + langIdx++).val(ace[2]);
+				}
+			}
+		}
+
+		// Add any appearance values not explicetely set
 		$('#a_other').val(otherAppearances);       // Not sure if we want to do this
 
 
@@ -3009,9 +3038,10 @@ function setNoFilter() {
 			/*
              * Get the value of an appearance from the appearance dialog
              */
-			function getAppearance($elem, appearances, key, details, qtype) {
+			function getAppearance($elem, appearances, key, details, qtype, app_choices) {
 				var val,
-					msg;
+					msg,
+					i;
 
 				if(details.type === "boolean") {
 					val = $elem.prop('checked') ? key : undefined;
@@ -3057,15 +3087,25 @@ function setNoFilter() {
 							val += "'" + filename + "'";
 
 							/*
-							 * Add dummy appearances for choice value and choice labels
+							 * Add dummy appearances in app_choices for choice value and choice labels
+							 *
 							 */
 							var searchValue = $('#a_search_value').val();
 							if(!searchValue || searchValue.trim().length == 0) {
 								showAppearanceError(localise.set["msg_choice_value"]);
 								return false;
 							} else {
-								appearances.push('_search_value::' + searchValue);
+								app_choices.push('_sv::' + searchValue);
 							}
+							var languages = globals.model.survey.languages;
+							for(i = 0; i < languages.length; i++) {
+								var labelValue = $('#a_search_label' + i).val();
+								if(!labelValue || labelValue.trim().length == 0) {
+									labelValue = searchValue;
+								}
+								app_choices.push('_sl::' + languages[i].name + '::' +   labelValue);
+							}
+
 
 							// first filter
 							var filterColumn = $('#a_filter_column').val().trim();
@@ -3162,7 +3202,7 @@ function setNoFilter() {
 			/*
              * Set the value of an appearance in the appearance dialog
              */
-			function setAppearance($elem, val, type, appearance) {
+			function setAppearance($elem, val, type, appearance, question, survey) {
 				var val;
 				if (type === "boolean") {
 					$elem.prop('checked', true);
@@ -3233,8 +3273,31 @@ function setNoFilter() {
 								second_filter_column = second_filter_column.replace(/'/g, "");
 								$('#a_second_filter_column').val(second_filter_column);
 							}
+						}
+						/*
+                         * Add the choice values
+                         */
+						var optionList = survey.optionLists[question.list_name];
+						if(optionList && optionList.options.length > 0) {
+							var i;
+							for(i = 0; i < optionList.options.length; i++) {
+								var v = optionList.options[i].value;
+								if(typeof v === 'number') {
+									continue;
+								} else if(typeof v === 'string') {
+									// Apply this choice
+									$('#a_search_value').val(v);
+									var choiceIdx = 0;
+									var labels = optionList.options[i].labels;
+									for(choiceIdx = 0; choiceIdx <  optionList.options[i].labels.length; choiceIdx++) {
+										$('#a_search_label' + choiceIdx).val(labels[choiceIdx].text);
+									}
+									break;
+								}
+							}
 
 						}
+
 						showSearchElements();
 					} else if(val === 'compact' || val === 'quickcompact') {
 						var paramsArray = appearance.split('-');
@@ -3414,9 +3477,6 @@ function setNoFilter() {
 				} else {
 					$('.appearance_search_details').hide();
 				}
-
-
-
 			}
 
 			function checkForAppearanceWarnings() {
@@ -3475,7 +3535,7 @@ function setNoFilter() {
 				var labelControlId;
 
 				for (i = 0; i < languages.length; i++) {
-					labelControlId = 'a_search_label::' + i;
+					labelControlId = 'a_search_label' + i;
 					h[++idx] = '<div class="form-group search_label">';
 						h[++idx] = '<label for="';
 						h[++idx] = labelControlId;
