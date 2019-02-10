@@ -489,6 +489,9 @@ $(document).ready(function() {
 	$('#a_filter_value_sel').change(function(){
 		$('#a_filter_value_static').val('${' + $(this).val() + '}')
 	});
+	$('#a_second_filter_value_sel').change(function(){
+		$('#a_second_filter_value_static').val('${' + $(this).val() + '}')
+	});
 
 	/*
      * Respond to a change in the form that is to be searched
@@ -3140,7 +3143,7 @@ function setNoFilter() {
 								// second filter
 								secondFilterColumn = $('#a_second_filter_column').val();
 								if(secondFilterColumn !== '') {
-									val += ", '" + filter + "'";
+									val += ", '" + secondFilterColumn + "'";
 
 									// second filter Value
 									secondFilterValue = $('#a_second_filter_value_static').val().trim();
@@ -3226,6 +3229,7 @@ function setNoFilter() {
 							var filter_column;
 							var filter_value;
 							var second_filter_column;
+							var second_filter_value;
 
 							// 1. First parameter is the filename
 							var filename = paramsArray[0].trim();
@@ -3251,7 +3255,6 @@ function setNoFilter() {
 								$('#a_match').val(filter);
 							}
 
-							$(".has_filter, .a_second_filter_column, .has_second_filter").hide();
 							if(paramsArray.length > 2) {
 								// Third parameter is the filter column
 								filter_column = paramsArray[2].trim();
@@ -3266,13 +3269,22 @@ function setNoFilter() {
 								$('#a_filter_value_static').val(filter_value);
 							}
 
-							$('.has_second_filter').hide();
 							if(paramsArray.length > 4) {
 								// Fifth parameter is the second filter column
 								second_filter_column = paramsArray[4].trim();
 								second_filter_column = second_filter_column.replace(/'/g, "");
 								$('#a_second_filter_column').val(second_filter_column);
 							}
+
+
+							if(paramsArray.length > 5) {
+								// Sixth parameter is the filter value
+								second_filter_value = paramsArray[5].trim();
+								second_filter_value = second_filter_value.replace(/'/g, "");
+								$('#a_second_filter_value_static').val(second_filter_value);
+							}
+
+
 						}
 						/*
                          * Add the choice values
@@ -3282,9 +3294,7 @@ function setNoFilter() {
 							var i;
 							for(i = 0; i < optionList.options.length; i++) {
 								var v = optionList.options[i].value;
-								if(typeof v === 'number') {
-									continue;
-								} else if(typeof v === 'string') {
+								if(isNaN(v)) {
 									// Apply this choice
 									$('#a_search_value').val(v);
 									var choiceIdx = 0;
@@ -3293,6 +3303,8 @@ function setNoFilter() {
 										$('#a_search_label' + choiceIdx).val(labels[choiceIdx].text);
 									}
 									break;
+								} else {
+									continue;   // Purely numeric must be a static choice
 								}
 							}
 
