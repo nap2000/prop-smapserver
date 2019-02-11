@@ -154,7 +154,18 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 				gTab[++gIdx] = '<th>';
 				var translatedName = cols[i];
 				if(translatedName.indexOf('_') == 0) {
-					translatedName = localise.set[translatedName];
+					if(translatedName === "_device") {
+						translatedName = localise.set["c_device"];
+					} else if(translatedName === "_bad") {
+						translatedName = localise.set["a_mb"];
+					} else if(translatedName === "_bad_reason") {
+						translatedName = localise.set["c_reason"];
+					} else {
+						translatedName = localise.set[translatedName];
+					}
+				}
+				if(translatedName === 'the_geom') {
+					translatedName = localise.set["c_location"];
 				}
 				if(types[i] === "dateTime") {
 					gTab[++gIdx] = translatedName + ' (' + localise.set["c_lt"] + ')';

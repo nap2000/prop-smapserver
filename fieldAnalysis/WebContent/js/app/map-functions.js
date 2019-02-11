@@ -884,6 +884,9 @@ function addSharedMaps(map, sharedMaps) {
 					} else if (key === "Upload Time") {
 						key = key = localise.set[key] + " (" + localise.set["c_lt"] +")";
 						// No change to value
+					} else if (key === "_scheduled_start") {
+						key = key = localise.set[key] + " (" + localise.set["c_lt"] +")";
+						// No change to value
 					} else if (key === "_bad") {
 						key = localise.set["a_mb"];  // "Marked Bad";
 						if(value === "t") {
