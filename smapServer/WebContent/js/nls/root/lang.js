@@ -691,6 +691,7 @@ define({
     "wf_sig": "Signature",
 
     // Editor
+	"ed_l_bold": "Make label bold",
 	"ed_caps": "Make label all capitals",
 	"ed_npb": "New Page Before",
 	"ed_sa": "Spacing above",
