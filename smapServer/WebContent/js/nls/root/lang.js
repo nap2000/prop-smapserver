@@ -691,6 +691,8 @@ define({
     "wf_sig": "Signature",
 
     // Editor
+	"ed_caps": "Make label all capitals",
+	"ed_npb": "New Page Before",
 	"ed_sa": "Spacing above",
 	"ed_bgc": "Label Background Colour",
 	"ed_vbgc": "Value Background Colour",

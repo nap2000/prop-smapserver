@@ -592,7 +592,12 @@ $(document).ready(function() {
 		if($('#a_pdfspace').val() && $('#a_pdfspace').val() !== '') {
 			appearances.push('pdfspace_' + $('#a_pdfspace').val());
 		}
-
+		if($('#a_pdfnewpage').prop('checked')) {
+			appearances.push('pdfnewpage');
+		}
+		if($('#a_pdflabelcaps').prop('checked')) {
+			appearances.push('pdflabelcaps');
+		}
 
 		/*
 		 * Add other
@@ -1925,12 +1930,21 @@ function respondToEvents($context) {
 					colour += pdfa[3];
 				}
 				$('input', '#a_pdfvaluebg').colorpicker('setValue', colour);
+
 			} else if(appearanceArray[i].indexOf('pdfspace_') === 0) {
 				pdfa = appearanceArray[i].split('_');
 				if(pdfa.length > 1) {
 					$('#a_pdfspace').val(pdfa[1]);
 					foundAppearance = true;
 				}
+
+			} else if(appearanceArray[i] === 'pdfnewpage') {
+				$('#a_pdfnewpage').prop('checked', true);
+				foundAppearance = true;
+
+			} else if(appearanceArray[i] === 'pdflabelcaps') {
+				$('#a_pdflabelcaps').prop('checked', true);
+				foundAppearance = true;
 			}
 
 			/*
