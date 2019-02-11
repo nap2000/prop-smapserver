@@ -105,6 +105,7 @@ define(function () {
         gShowingChoices: false,
         gMaxOptionList: 0,
         gLatestOptionList: undefined,	// Hack to record the last option list name added
+	    gCsvFiles: undefined,
 
         gListName: undefined,					// Choice Modal parameters, Set if started from choice list view
         gOptionList: undefined,					// The option list name applying to this set of choices
@@ -360,6 +361,115 @@ define(function () {
         this.savedSettings = undefined;
         this.forceSettingsChange = false;
 
+	    // A list of valid appearances for each question type
+	    this.qAppearances = {
+		    'begin group': ['page', 'w'],
+		    string: ['numbers', 'thousands-sep', 'w'],
+		    note: ['w'],
+            select1: ['select1_type', 'search', 'w'],
+            select: ['select_type', 'search', 'w'],
+            image: ['image_type', 'w'],
+            int:['thousands-sep', 'w'],
+		    geopoint:['w'],
+		    audio:['w'],
+		    video:['w'],
+		    barcode:['w'],
+		    date:['date_type', 'w'],
+		    dateTime:['no-calendar', 'w'],
+		    time:['w'],
+            decimal:['thousands-sep', 'bearing', 'w'],
+		    geotrace:['w'],
+		    geoshape:['w'],
+		    acknowledge:['w'],
+		    range:['w', 'rating', 'vertical', 'picker'],
+		    file:['w'],
+		    rank:['w']
+	    };
+
+	    this.appearanceDetails = {
+		    'page': {
+			    field: 'a_page',
+			    type: 'select',
+                rex: 'field-list|table-list',
+                valIsAppearance: true,
+			    value_offset: 0,
+                undef_value: ''
+		    },
+		    'image_type': {
+			    field: 'a_image_type',
+			    type: 'select',
+			    rex: 'annotate|draw|signature',
+			    valIsAppearance: true,
+			    value_offset: 0,
+			    undef_value: ''
+		    },
+		    'select1_type': {
+			    field: 'a_select1_type',
+			    type: 'form',
+			    rex: 'minimal|quick$|autocomplete|compact|quickcompact|image-map'
+		    },
+		    'select_type': {
+			    field: 'a_select_type',
+			    type: 'form',
+			    rex: 'minimal|autocomplete|compact|image-map'
+		    },
+		    'date_type': {
+			    field: 'a_date_type',
+			    type: 'select',
+			    rex: 'no-calendar|month-year|year|coptic|ethiopian|islamic',
+			    valIsAppearance: true,
+			    value_offset: 0,
+			    undef_value: ''
+		    },
+		    'no-calendar': {
+			    field: 'a_no_calendar',
+			    type: 'boolean',
+			    rex: 'no-calendar'
+		    },
+		    'search': {
+			    field: 'a_search',
+			    type: 'form',
+			    rex: 'search\\('
+		    },
+		    'rating': {
+			    field: 'a_rating',
+			    type: 'boolean',
+			    rex: 'rating'
+		    },
+		    'vertical': {
+			    field: 'a_vertical',
+			    type: 'boolean',
+			    rex: 'vertical'
+		    },
+		    'picker': {
+			    field: 'a_picker',
+			    type: 'boolean',
+			    rex: 'picker'
+		    },
+		    'bearing': {
+			    field: 'a_bearing',
+			    type: 'boolean',
+			    rex: 'bearing'
+		    },
+		    'thousands-sep': {
+			    field: 'a_sep',
+			    type: 'boolean',
+			    rex: 'thousands-sep'
+		    },
+		    'numbers': {
+			    field: 'a_numbers',
+			    type: 'boolean',
+			    rex: 'numbers'
+		    },
+		    'w': {
+			    field: 'a_width',
+			    type: 'select',
+                rex: 'w[1-9]|w1[0-2]',
+                value_offset: 1,
+                undef_value: ''
+		    }
+	    };
+
         // A list of valid parameters for each question type
         this.qParams = {
             string: ['rows'],
@@ -574,7 +684,7 @@ define(function () {
                 name: "Date and Time",
                 type: "dateTime",
                 trans: "ed_dt",
-                glyphicon: "calendar",
+                glyphicon: "calendar, time",
                 canSelect: true,
                 visible: true,
                 source: "user"
