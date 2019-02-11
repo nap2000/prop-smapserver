@@ -152,10 +152,14 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 			if(cols[i] !== "_instanceid" && cols[i] !== "instanceid" && cols[i] !== "_task_key" && 
 					cols[i] !== "_task_replace"&& cols[i] !== "prikey" && cols[i] !== "_modified") {
 				gTab[++gIdx] = '<th>';
+				var translatedName = cols[i];
+				if(translatedName.indexOf('_') == 0) {
+					translatedName = localise.set[translatedName];
+				}
 				if(types[i] === "dateTime") {
-					gTab[++gIdx] = cols[i] + ' (' + localise.set["c_lt"] + ')';
+					gTab[++gIdx] = translatedName + ' (' + localise.set["c_lt"] + ')';
 				} else {
-					gTab[++gIdx] = cols[i];
+					gTab[++gIdx] = translatedName;
 				}
 				gTab[++gIdx] = '</th>';
 			}
