@@ -376,6 +376,8 @@ define([
 	function addQType(type) {
 		
 		var i,
+			j,
+			tArray,
 			types = globals.model.qTypes,
 			h = [],
 			idx = -1,
@@ -388,9 +390,12 @@ define([
 				h[++idx] = name;
 				h[++idx] = '">';
 				if(types[i].glyphicon) {
-					h[++idx] = '<span class="glyphicon glyphicon-';
-					h[++idx] = types[i].glyphicon; 
-					h[++idx] = ' edit_type"></span>';
+					tArray = types[i].glyphicon.split(',');
+					for(j = 0; j < tArray.length; j++) {
+						h[++idx] = '<span class="glyphicon glyphicon-';
+						h[++idx] = tArray[j].trim();
+						h[++idx] = ' edit_type"></span>';
+					}
 				} else if(types[i].image) {
 					h[++idx] = '<img class="edit_image" src="';
 					h[++idx] = types[i].image; 
@@ -615,7 +620,7 @@ define([
 				
 			
 				
-			} else if(selProperty === "parameters" && type === "question") {		// Add selects to get the linked survey, and question
+			} else if(selProperty === "parameters" && type === "question") {		// Add button to select the parameters dialog
 				h[++idx] = '<div class="row">';
 
 				h[++idx] = '<div class="col-sm-6">';	    // start col
@@ -633,7 +638,7 @@ define([
 			     */
 				h[++idx] = '<div class="col-sm-6">';
 				h[++idx] = '<textarea class="labelProp has_tt" readonly title="';
-				h[++idx] = selLabel
+				h[++idx] = selLabel;
 				h[++idx] = '" data-prop="';
 				h[++idx] = selProperty;
 				h[++idx] = '">';
@@ -643,6 +648,35 @@ define([
 
 				h[++idx] ='</div>';		// End Row
 
+
+
+			} else if(selProperty === "appearance" && type === "question") {		// Add button to select the appearance dialog
+				h[++idx] = '<div class="row">';
+
+				h[++idx] = '<div class="col-sm-6">';	    // start col
+				h[++idx] = '<button type="button" class="btn btn-info appearanceButton"';
+				h[++idx] = ' data-prop="';
+				h[++idx] = selProperty;
+				h[++idx] = '">';
+				h[++idx] = '<span class="glyphicon glyphicon-edit"></span> ';
+				h[++idx] = localise.set["c_edit"];
+				h[++idx] = '</button>';
+				h[++idx] = '</div>';		// End Col
+
+				/*
+			     * Add the text area to display the appearances
+			     */
+				h[++idx] = '<div class="col-sm-6">';
+				h[++idx] = '<textarea class="labelProp has_tt" readonly title="';
+				h[++idx] = selLabel;
+				h[++idx] = '" data-prop="';
+				h[++idx] = selProperty;
+				h[++idx] = '">';
+				h[++idx] = question["appearance"];
+				h[++idx] = '</textarea>';
+				h[++idx] = '</div>';    // End Col
+
+				h[++idx] ='</div>';		// End Row
 
 
 			} else if(selProperty === "media" && question.type != "calculate") {
