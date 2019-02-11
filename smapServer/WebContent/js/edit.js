@@ -598,6 +598,9 @@ $(document).ready(function() {
 		if($('#a_pdflabelcaps').prop('checked')) {
 			appearances.push('pdflabelcaps');
 		}
+		if($('#a_pdflabelbold').prop('checked')) {
+			appearances.push('pdflabelbold');
+		}
 
 		/*
 		 * Add other
@@ -1944,6 +1947,9 @@ function respondToEvents($context) {
 
 			} else if(appearanceArray[i] === 'pdflabelcaps') {
 				$('#a_pdflabelcaps').prop('checked', true);
+				foundAppearance = true;
+			} else if(appearanceArray[i] === 'pdflabelbold') {
+				$('#a_pdflabelbold').prop('checked', true);
 				foundAppearance = true;
 			}
 
