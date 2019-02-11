@@ -356,7 +356,7 @@ li .panel-body {
 
 .question_type {
 	background-color: #fff;
-	height: 60px;
+	min-height: 60px;
 }
 .question_type.disabled {
 	opacity: 0.4;

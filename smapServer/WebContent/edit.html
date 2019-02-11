@@ -18,6 +18,7 @@
 	<link rel="stylesheet" href="css/normalize.css" />
 	<link rel="stylesheet" href="/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="/css/bootstrap-toggle.min.css" />
+	<link rel="stylesheet" href="/css/bootstrap-colorpicker.min.css" />
 	<link rel="stylesheet" href="/css/smap-bs.css" type="text/css">
 
 	<script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
@@ -627,6 +628,7 @@
 
 			<div class="modal-body">
 				<div class="container-fluid">
+					<div id="parameter_msg" class="alert alert-danger" role="alert" style="display:none;"></div>
 					<form id="parameter_form" role="form" class="form-horizontal">
 						<div class="form-group parameter_field p_max_pixels">
 							<label for="p_max_pixels" data-lang="u_ft_img_size" class="lang col-sm-4 control-label">max</label>
@@ -758,6 +760,406 @@
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">close</button>
 				<button id="parameterSave" type="button" class="btn btn-primary lang" data-lang="c_save">save</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal for setting appearances -->
+<div id="appearanceModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="typeModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title lang" data-lang="ed_appearance">appearance</h4>
+			</div>
+
+			<div class="modal-body">
+				<ul class="nav nav-pills" role="tablist">
+					<li id="standardTab" role="presentation" class="active"><a href="#" class="lang" data-lang="c_standard">standard</a></li>
+					<li id="searchTab" role="presentation"><a href="#" class="lang appearance_field a_search" data-lang="br_s">search</a></li>
+					<li id="pdfTab" role="presentation"><a href="#" class="lang appearance_field a_search" data-lang="ed_pdf_layout">pdf</a></li>
+				</ul>
+				<div id="standardPanel" class="appearancetab">
+					<div class="container-fluid">
+						<form id="appearance_form" role="form" class="form-horizontal">
+
+							<div class="form-group appearance_field a_page">
+								<label for="a_width" data-lang="ed_pl" class="lang col-sm-4 control-label">page</label>
+								<div class="col-sm-8">
+									<select id="a_page" class="form-control">
+										<option class="lang" data-lang="c_none" value=""></option>
+										<option class="lang" data-lang="c_field_list" value="field-list"></option>
+										<option class="lang" data-lang="c_table_list" value="table-list"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group appearance_field a_image_type">
+								<label for="a_width" data-lang="ed_image_type" class="lang col-sm-4 control-label">image</label>
+								<div class="col-sm-8">
+									<select id="a_image_type" class="form-control">
+										<option class="lang" data-lang="c_photo" value=""></option>
+										<option class="lang" data-lang="c_annotate" value="annotate"></option>
+										<option class="lang" data-lang="c_draw" value="draw"></option>
+										<option class="lang" data-lang="wf_sig" value="signature"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group appearance_field a_date_type">
+								<label for="a_width" data-lang="ed_date_type" class="lang col-sm-4 control-label">date</label>
+								<div class="col-sm-8">
+									<select id="a_date_type" class="form-control">
+										<option class="lang" data-lang="c_normal" value=""></option>
+										<option class="lang" data-lang="ed_nc" value="no-calendar"></option>
+										<option class="lang" data-lang="ed_my" value="month-year"></option>
+										<option class="lang" data-lang="c_year" value="year"></option>
+										<option class="lang" data-lang="ed_bikram" value="bikram-sambat"></option>
+										<option class="lang" data-lang="ed_coptic" value="coptic"></option>
+										<option class="lang" data-lang="ed_ethiopian" value="ethiopian"></option>
+										<option class="lang" data-lang="ed_islamic" value="islamic"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group appearance_field a_select1_type">
+								<label for="a_select1_type" data-lang="ed_select_type" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-8">
+									<select id="a_select1_type" class="form-control">
+										<option class="lang" data-lang="c_normal" value=""></option>
+										<option class="lang" data-lang="ed_min" value="minimal"></option>
+										<option class="lang" data-lang="ed_adv" value="quick"></option>
+										<option class="lang" data-lang="ed_ac" value="autocomplete"></option>
+										<option class="lang" data-lang="ed_compact" value="compact"></option>
+										<option class="lang" data-lang="ed_compact_adv" value="quickcompact"></option>
+										<option class="lang" data-lang="ed_image_map" value="image-map"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group appearance_field a_select_type">
+								<label for="a_select_type" data-lang="ed_select_type" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-8">
+									<select id="a_select_type" class="form-control">
+										<option class="lang" data-lang="c_normal" value=""></option>
+										<option class="lang" data-lang="ed_min" value="minimal"></option>
+										<option class="lang" data-lang="ed_ac" value="autocomplete"></option>
+										<option class="lang" data-lang="ed_compact" value="compact"></option>
+										<option class="lang" data-lang="ed_image_map" value="image-map"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group appearance_field a_number_columns">
+								<label for="a_number_columns" data-lang="ed_numb_cols" class="lang col-sm-4 control-label">cols</label>
+								<div class="col-sm-8">
+									<select id="a_number_columns" class="form-control">
+										<option class="lang" data-lang="max" value="">max</option>
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
+										<option value="6">6</option>
+										<option value="7">7</option>
+										<option value="8">8</option>
+										<option value="9">9</option>
+										<option value="10">10</option>
+										<option value="11">11</option>
+										<option value="12">12</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group appearance_field a_no_calendar">
+								<div class="col-sm-offset-4 col-sm-8">
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" id="a_no_calendar"><span class="lang" data-lang="ed_nc">no cal</span>
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group appearance_field a_rating">
+								<div class="col-sm-offset-4 col-sm-8">
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" id="a_rating"><span class="lang" data-lang="ed_r">rating</span>
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group appearance_field a_picker">
+								<div class="col-sm-offset-4 col-sm-8">
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" id="a_picker"><span class="lang" data-lang="ed_pick">picker</span>
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group appearance_field a_vertical">
+								<div class="col-sm-offset-4 col-sm-8">
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" id="a_vertical"><span class="lang" data-lang="c_vertical">vertical</span>
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group appearance_field a_bearing">
+								<div class="col-sm-offset-4 col-sm-8">
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" id="a_bearing"><span class="lang" data-lang="ed_bear">bearing</span>
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group appearance_field a_numbers">
+								<div class="col-sm-offset-4 col-sm-8">
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" id="a_numbers"><span class="lang" data-lang="ed_sn">numbers</span>
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group appearance_field a_sep">
+								<div class="col-sm-offset-4 col-sm-8">
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" id="a_sep"><span class="lang" data-lang="ed_sep">sep</span>
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group appearance_field a_width">
+								<label for="a_width" data-lang="ed_w" class="lang col-sm-4 control-label">order</label>
+								<div class="col-sm-8">
+									<select id="a_width" class="form-control">
+										<option class="lang" data-lang="max" value="">max</option>
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
+										<option value="6">6</option>
+										<option value="7">7</option>
+										<option value="8">8</option>
+										<option value="9">9</option>
+										<option value="10">10</option>
+										<option value="11">11</option>
+										<option value="12">12</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group a_other">
+								<label for="p_other" data-lang="c_other" class="lang col-sm-4 control-label">other</label>
+								<div class="col-sm-8">
+									<input type="text" id="a_other" class="form-control">
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+
+				<div id="pdfPanel" style="display:none;" class="appearancetab">
+					<form id="appearance_pdf_form" role="form" class="form-horizontal">
+
+						<div class="form-group">
+							<div class="col-sm-offset-4 col-sm-8">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" id="a_pdfno"><span class="lang" data-lang="ed_pdfno">hide</span>
+									</label>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group pdf_appearance_field">
+							<label for="a_pdf_lw" data-lang="ed_lw" class="lang col-sm-4 control-label">width</label>
+							<div class="col-sm-8">
+								<select id="a_pdf_lw" class="form-control">
+									<option class="lang" data-lang="c_default" value="">default</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group pdf_appearance_field">
+							<label for="a_pdfheight" data-lang="ed_height" class="lang col-sm-4 control-label">height</label>
+							<div class="col-sm-8">
+								<input type="number" id="a_pdfheight">
+							</div>
+						</div>
+
+						<div class="form-group pdf_appearance_field">
+							<label for="a_pdflabelbg" data-lang="ed_bgc" class="lang control-label col-sm-4">background</label>
+							<div class="col-sm-6">
+								<div id="a_pdflabelbg" class="input-group colorpicker-component">
+									<input type="text" value="#ffffff" class="form-control" />
+									<span class="input-group-addon"><i></i></span>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group pdf_appearance_field">
+							<label for="a_pdfvaluebg" data-lang="ed_vbgc" class="lang control-label col-sm-4">value background</label>
+							<div class="col-sm-6">
+								<div id="a_pdfvaluebg" class="input-group colorpicker-component">
+									<input type="text" value="#ffffff" class="form-control" />
+									<span class="input-group-addon"><i></i></span>
+								</div>
+							</div>
+						</div>
+
+					</form>
+				</div>
+
+				<div id="searchPanel" style="display:none;" class="appearancetab">
+					<form id="appearance_search_form" role="form" class="form-horizontal">
+
+						<div class="form-group">
+							<div class="col-sm-offset-4 col-sm-8">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" id="a_has_search"><span class="lang" data-lang="ed_as">add search</span>
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="appearance_search_details" style="display:none;">
+							<div class="form-group">
+								<label for="a_width" data-lang="c_source" class="lang col-sm-4 control-label">source</label>
+								<div class="col-sm-8" id="a_source">
+									<div class="radio">
+										<label>
+											<input type="radio" name="search_source" value="csv"><span class="lang" data-lang="c_csv"></span>
+										</label>
+									</div>
+									<div class="radio">
+										<label>
+											<input type="radio" name="search_source" value="survey"><span class="lang" data-lang="c_survey"></span>
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group search_csv">
+								<label for="a_csv_identifier" data-lang="ed_csv" class="lang col-sm-4 control-label">file</label>
+								<div class="col-sm-8">
+									<select id="a_csv_identifier" class="form-control linkable_files"></select>
+								</div>
+							</div>
+
+							<div class="form-group search_survey">
+								<label for="a_survey_identifier" data-lang="c_survey" class="lang col-sm-4 control-label">survey</label>
+								<div class="col-sm-8">
+									<select id="a_survey_identifier" class="form-control linkable_surveys"></select>
+								</div>
+							</div>
+
+
+							<div class="form-group search_value a_choice_values">
+								<label for="a_search_value" data-lang="ed_cval" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-8">
+									<select id="a_search_value" class="form-control column_select"></select>
+								</div>
+							</div>
+
+							<div class="well a_choice_values" style="display:none;">
+								<div class="form-group search_label">
+									<label data-lang="ed_clabs" class="lang col-sm-4 control-label"></label>
+								</div>
+
+								<div id="search_label_list">
+
+								</div>
+							</div>
+
+							<div class="form-group a_filter_column">
+								<label for="a_filter_column" data-lang="ed_fc" class="lang col-sm-4 control-label">filter column</label>
+								<div class="col-sm-8">
+									<select id="a_filter_column" class="form-control column_select"></select>
+								</div>
+							</div>
+
+							<div class="form-group has_filter">
+								<label for="a_match" data-lang="ed_m" class="lang col-sm-4 control-label">match</label>
+								<div class="col-sm-8">
+									<select id="a_match" class="form-control">
+										<option class="lang" data-lang="c_none" value=""></option>
+										<option class="lang" data-lang="c_matches" value="matches"></option>
+										<option class="lang" data-lang="contains" value="contains"></option>
+										<option class="lang" data-lang="startsWith" value="startsWith"></option>
+										<option class="lang" data-lang="endsWith" value="endsWith"></option
+										<option class="lang" data-lang="c_in" value="in"></option>
+										<option class="lang" data-lang="c_notin" value="not in"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group has_filter">
+								<label for="a_filter_value" data-lang="ed_fv" class="lang control-label col-sm-4"></label>
+								<div class="col-sm-8">
+									<div class="input-group mb-3">
+										<div id="a_filter_value" class="input-group-prepend">
+											<select id="a_filter_value_sel" class="custom-select questions_in_form"></select>
+											<input type="text" id="a_filter_value_static">
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group a_second_filter_column">
+								<label for="a_second_filter_column" data-lang="ed_sfc" class="lang col-sm-4 control-label">second filter</label>
+								<div class="col-sm-8">
+									<select id="a_second_filter_column" class="form-control column_select"></select>
+								</div>
+							</div>
+
+							<div class="form-group has_second_filter">
+								<label for="a_filter_value" data-lang="ed_sfv" class="lang control-label col-sm-4"></label>
+								<div class="col-sm-8">
+									<div class="input-group mb-3">
+										<div id="a_second_filter_value" class="input-group-prepend">
+											<select id="a_second_filter_value_sel" class="custom-select questions_in_form"></select>
+											<input type="text" id="a_second_filter_value_static">
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+						</div>
+					</form>
+				</div>
+
+				<div id="appearance_msg" class="alert alert-danger" role="alert" style="display:none;"></div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">close</button>
+				<button id="appearanceSave" type="button" class="btn btn-primary lang" data-lang="c_save">save</button>
 			</div>
 		</div>
 	</div>

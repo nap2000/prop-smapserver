@@ -3404,7 +3404,7 @@ function getAccessibleSurveys($elem, includeNone, includeBlocked, groupsOnly) {
 				i;
 
 			if(includeNone) {
-				h[++idx] = '<option value="0">';
+				h[++idx] = '<option value="">';
 				h[++idx] = localise.set["c_none"]
 				h[++idx] = '</option>';
 			}
@@ -3431,6 +3431,51 @@ function getAccessibleSurveys($elem, includeNone, includeBlocked, groupsOnly) {
 	});
 }
 
+/*
+ * Get all the csv files that a user can access
+ */
+function getAccessibleCsvFiles($elem, includeNone) {
+
+	var url="/surveyKPI/csv/files";
+
+	addHourglass();
+	$.ajax({
+		url: url,
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			removeHourglass();
+			globals.gCsvFiles = data;
+			var h = [],
+				idx = -1,
+				i;
+
+			if(includeNone) {
+				h[++idx] = '<option value="">';
+				h[++idx] = localise.set["c_none"]
+				h[++idx] = '</option>';
+			}
+			for(i = 0; i < data.length; i++) {
+				h[++idx] = '<option value="';
+				h[++idx] = i;
+				h[++idx] = '">';
+				h[++idx] = data[i].filename;
+				h[++idx] = '</option>';
+			}
+			$elem.empty().append(h.join(''));
+
+		},
+		error: function(xhr, textStatus, err) {
+			removeHourglass();
+			if(xhr.readyState == 0 || xhr.status == 0) {
+				return;  // Not an error
+			} else {
+				console.log("Error: Failed to get list of csv files: " + err);
+			}
+		}
+	});
+}
+
  /*
   * Get the questions in a survey
   */
@@ -3442,7 +3487,7 @@ function getQuestionsInSurvey($elem, sIdent, includeNone) {
 			i;
 
 		if (includeNone) {
-			h[++idx] = '<option value="0">';
+			h[++idx] = '<option value="">';
 			h[++idx] = localise.set["c_none"];
 			h[++idx] = '</option>';
 		}
@@ -3489,4 +3534,78 @@ function getQuestionsInSurvey($elem, sIdent, includeNone) {
 			}
 		}
 	}
+
+}
+
+function getQuestionsInCsvFile($elem, index, includeNone) {
+	var h = [],
+		idx = -1,
+		i;
+	var data = globals.gCsvFiles[index].headers;
+
+	if (includeNone) {
+		h[++idx] = '<option value="">';
+		h[++idx] = localise.set["c_none"];
+		h[++idx] = '</option>';
+	}
+	for (i = 0; i < data.length; i++) {
+		h[++idx] = '<option value="';
+		h[++idx] = data[i].fName;
+		h[++idx] = '">';
+		h[++idx] = data[i].fName;
+		h[++idx] = '</option>';
+	}
+	$elem.empty().append(h.join(''));
+}
+
+function tokenizeAppearance(input) {
+	var chunks = [];
+	var tokens = [];
+	var chunkTokens = [];
+	var i;
+	var j;
+	var chunk;
+
+	// only search needs special treatment
+	var idx1 = input.indexOf('search');
+	if(idx1 >= 0) {
+		chunks.push({
+			val:input.substring(0, idx1),
+			type: "text"
+		});
+		if(idx1 < input.length) {
+			var idx2 = input.indexOf(')', idx1 + 1);
+			if(idx2 >= 0) {
+				chunks.push({
+					val: input.substring(idx1, idx2 + 1),
+					type: "fn"
+				});
+				if(idx2 < input.length) {
+					chunks.push({
+						val: input.substring(idx2 + 1),
+						type: "text"
+					});
+				}
+			}
+		}
+	} else {
+		chunks.push({
+			val: input,
+			type: "text"
+		});
+	}
+	for(i = 0; i < chunks.length; i++) {
+		chunk = chunks[i].val.trim();
+		if(chunk.length > 0) {
+			if(chunks[i].type === "text") {
+				chunkTokens = chunk.split(/(\s+)/);
+			} else {
+				chunkTokens.push(chunk);
+			}
+			for(j = 0; j < chunkTokens.length; j++) {
+				tokens.push(chunkTokens[j].trim());
+			}
+		}
+	}
+	return tokens;
 }

@@ -92,14 +92,14 @@ define(['jquery','localise', 'common', 'globals',
 			$(".usertab").hide();
 			$('#userPanel').show();
 
-		})
+		});
 		$('#projectsTab a').click(function (e) {
 			e.preventDefault();
 			$(this).tab('show');
 
 			$(".usertab").hide();
 			$('#projectPanel').show();
-		})
+		});
 		$('#organisationTab a').click(function (e) {
 			e.preventDefault();
 			$(this).tab('show');
@@ -120,7 +120,7 @@ define(['jquery','localise', 'common', 'globals',
 
 			$(".usertab").hide();
 			$('#rolesPanel').show();
-		})
+		});
 		$('#deviceTab a').click(function (e) {
 			e.preventDefault();
 			$(this).tab('show');

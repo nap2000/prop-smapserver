@@ -32,7 +32,8 @@ require.config({
     	toggle: 'bootstrap-toggle.min',
     	moment: 'moment-with-locales.min',
     	lang_location: '..',
-    	icheck: '/wb/plugins/iCheck/icheck.min'
+    	icheck: '/wb/plugins/iCheck/icheck.min',
+	    bootstrapcolorpicker: 'bootstrap-colorpicker.min',
 
     },
     shim: {
@@ -42,6 +43,7 @@ require.config({
         'bootstrap.file-input': ['bootstrap.min'],
     	'bootbox': ['bootstrap.min'],
        	'toggle': ['bootstrap.min'],
+	    'bootstrapcolorpicker': ['bootstrap', 'jquery'],
     	'icheck': ['jquery']
         
     }
@@ -63,6 +65,7 @@ require([
          'app/changeset',
          'app/option',
          'moment',
+		 'bootstrapcolorpicker',
          'icheck'], 
 		function(
 				$, 
@@ -79,6 +82,7 @@ require([
 				markup,
 				changeset,
 				option,
+				bootstrapcolorpicker,
 				moment) {
 
 
@@ -97,6 +101,7 @@ var gUrl,			// url to submit to
 var gNewVal,
 	gElement,
 	gQname,
+	gQType,
 	gIsSurveyLevel;
 
 window.moment = moment;
@@ -141,9 +146,10 @@ $(document).ready(function() {
 	getLocations(setLocationList);
 
 	/*
-	 * Get surveys that the user can link to
+	 * Get surveys and csv files that the user can link to
 	 */
 	getAccessibleSurveys($('.linkable_surveys'), true, true, false);
+	getAccessibleCsvFiles($('.linkable_files'), true);
 
 	/*
 	 * Initialise controls in the open form dialog
@@ -291,7 +297,7 @@ $(document).ready(function() {
 		});
 		updatePulldataView();
 	});
-	
+
 	// Set up view type toggle
 	$('#viewType').attr("data-on", localise.set["c_questions"]).attr("data-off", localise.set["c_choices"]).bootstrapToggle();
 
@@ -412,15 +418,16 @@ $(document).ready(function() {
     /*
      * Respond to clicking of the save parameters button in the parameters edit modal
      */
-    $('#parameterSave').click(function() {
-    	var params = [];
-    	var newVal;
-	    var survey = globals.model.survey;
+	$('#parameterSave').click(function() {
+		var params = [];
+		var newVal;
+		var survey = globals.model.survey;
 		var question = survey.forms[globals.gFormIndex].questions[globals.gItemIndex];
 		var i;
 		var paramDetails;
 		var other;
 
+		$('#parameter_msg').hide();
 		var qParams = globals.model.qParams[question.type];
 		if(qParams && qParams.length > 0) {
 			for(i = 0; i < qParams.length; i++) {
@@ -435,21 +442,172 @@ $(document).ready(function() {
 			for(i = 0; i < oArray.length; i++) {
 				var oArray2 = oArray[i].split('=');
 				if(oArray2.length != 2) {
-					alert(localise.set["msg_pformat"]);
+					$('#parameter_msg').show().html(localise.set["msg_pformat"]);
 					return false;
 				}
 			}
 		}
 
-    	newVal = params.join(';');
-    	if(newVal.length > 0 && other.length > 0) {
-    		newVal += ';';
-	    }
-    	newVal += other;
-	    updateLabel("question", globals.gFormIndex, globals.gItemIndex, undefined, "text", newVal, gQname, "parameters");
+		newVal = params.join(';');
+		if(newVal.length > 0 && other.length > 0) {
+			newVal += ';';
+		}
+		newVal += other;
+		updateLabel("question", globals.gFormIndex, globals.gItemIndex, undefined, "text", newVal, gQname, "parameters");
 
-	    $('#parameterModal').modal("hide");
-    });
+		$('#parameterModal').modal("hide");
+	});
+
+	/*
+     * Set up colour picker
+     */
+	$('.colorpicker-component').colorpicker({
+		format: 'hex'
+	});
+
+	// Set up the tabs
+	$('#standardTab a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+
+		$(".appearancetab").hide();
+		$('#standardPanel').show();
+
+	});
+	$('#searchTab a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+
+		$(".appearancetab").hide();
+		$('#searchPanel').show();
+	});
+
+	$('#pdfTab a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+
+		$(".appearancetab").hide();
+		$('#pdfPanel').show();
+	});
+
+	// Hide and show search elements
+	$('#a_has_search, #a_filter_column, #a_second_filter_column, #a_csv_identifier, ' +
+		'#a_survey_identifier, input[type=radio][name=search_source],' +
+		'#a_search_value, #a_search_label').change(function() {
+		showSearchElements();
+	});
+	$('#a_pdfno').change(function() {
+		if($(this).prop('checked')) {
+			$('.pdf_appearance_field').hide();
+		} else {
+			$('.pdf_appearance_field').show();
+		}
+	});
+
+	// Validate on value change
+	$('#a_sep, #a_numbers, #a_select1_type').change(function(){
+		checkForAppearanceWarnings();
+	});
+
+	/*
+	 * Respond to a change in the question used as the value for a search filter
+	 */
+	$('#a_filter_value_sel').change(function(){
+		$('#a_filter_value_static').val('${' + $(this).val() + '}')
+	});
+	$('#a_second_filter_value_sel').change(function(){
+		$('#a_second_filter_value_static').val('${' + $(this).val() + '}')
+	});
+
+	/*
+     * Respond to a change in the form that is to be searched
+     * If the question type is a child form then the list of questions needs to be updated
+     */
+	$('#a_survey_identifier, #a_csv_identifier').change(function(){
+		var survey = globals.model.survey;
+		var search_source = $('input[type=radio][name=search_source]:checked').val();
+		if(search_source === "survey") {
+			getQuestionsInSurvey($('.column_select'), $(this).val(), true);
+		} else {
+			getQuestionsInCsvFile($('.column_select'), $(this).val(), true);
+		}
+
+	});
+
+	/*
+     * Respond to clicking of the save appearances button in the appearance edit modal
+     */
+	$('#appearanceSave').click(function() {
+		var appearances = [];       // Array of appearance values taken from dialog
+		var app_choices = [];       // Dummy appearances for choice value and labels
+		var newVal;
+		var newAppChoiceVal;
+		var survey = globals.model.survey;
+		var question = survey.forms[globals.gFormIndex].questions[globals.gItemIndex];
+		var i;
+		var appearanceDetails;
+		var other;
+
+		$('#appearance_msg').hide();
+		/*
+		 * Get the appearance values from the dialog
+		 */
+		var qAppearances = globals.model.qAppearances[question.type];
+		if(qAppearances && qAppearances.length > 0) {
+			for(i = 0; i < qAppearances.length; i++) {
+				appearanceDetails = globals.model.appearanceDetails[qAppearances[i]];
+				if(!getAppearance($('#' + appearanceDetails.field), appearances, qAppearances[i], appearanceDetails, question.type, app_choices)) {
+					return false;       // getAppearance returns false if there is an error
+				}
+			}
+		}
+
+		/*
+		 * Get common appearance values
+		 */
+		var colour
+		if($('#a_pdfno').prop('checked')) {
+			appearances.push('pdfno');
+		}
+		if($('#a_pdf_lw').val() !== '') {
+			appearances.push('pdflabelw_' + $('#a_pdf_lw').val());
+		}
+		if($('#a_pdfheight').val() && $('#a_pdfheight').val() !== '') {
+			appearances.push('pdfheight_' + $('#a_pdfheight').val());
+		}
+		colour = $('input', '#a_pdflabelbg').val();
+		if(colour && colour !== '#ffffff') {
+			 var c1 = colour.substring(1,3);
+			 var c2 = colour.substring(3,5);
+			 var c3 = colour.substring(5,7);
+			 appearances.push('pdflabelbg_' + c1 + '_' + c2 + '_' +c3);
+		}
+		colour = $('input', '#a_pdfvaluebg').val();
+		if(colour && colour !== '#ffffff') {
+			var c1 = colour.substring(1,3);
+			var c2 = colour.substring(3,5);
+			var c3 = colour.substring(5,7);
+			appearances.push('pdfvaluebg_' + c1 + '_' + c2 + '_' +c3);
+		}
+
+
+		/*
+		 * Add other
+		 */
+		other=$('#a_other').val();
+
+		newVal = appearances.join(' ');
+		if(newVal.length > 0 && other.length > 0) {
+			newVal += ' ';
+		}
+		newVal += other;
+		updateLabel("question", globals.gFormIndex, globals.gItemIndex, undefined, "text", newVal, gQname, "appearance");
+
+		// Save the updated settings for search choices
+		newAppChoiceVal = app_choices.join(' ');
+		updateLabel("question", globals.gFormIndex, globals.gItemIndex, undefined, "text", newAppChoiceVal, gQname, "app_choices");
+		$('#appearanceModal').modal("hide");
+	});
 	
 	/*
 	 * Save changes to the language list
@@ -789,7 +947,8 @@ function setAllRequired(required) {
 
 //Set up question type dialog
 function setupQuestionTypes($elem, columns, draggable, currentType) {
-	var i,
+	var i,j,
+		tArray,
 		types = globals.model.qTypes,
 		h = [],
 		idx = -1,
@@ -813,9 +972,13 @@ function setupQuestionTypes($elem, columns, draggable, currentType) {
 			h[++idx] = types[i].type;
 			h[++idx] = '">';
 			if(types[i].glyphicon) {
-				h[++idx] = '<span class="glyphicon glyphicon-';
-				h[++idx] = types[i].glyphicon; 
-				h[++idx] = ' edit_type_select"></span><br/>';
+				tArray = types[i].glyphicon.split(',');
+				for(j = 0; j < tArray.length; j++) {
+					h[++idx] = '<span class="glyphicon glyphicon-';
+					h[++idx] = tArray[j].trim();
+					h[++idx] = ' edit_type_select"></span>';
+				}
+				h[++idx] = '<br/>';
 			} else if(types[i].image) {
 				h[++idx] = '<img class="edit_image_select" src="';
 				h[++idx] = types[i].image; 
@@ -1588,8 +1751,9 @@ function respondToEvents($context) {
 
 			var p = paramArray[i].split('=');
 			if (p.length > 1) {
+				foundParam = false;
 				if(qParams && qParams.length > 0) {
-					foundParam = false;
+
 					for (j = 0; j < qParams.length; j++) {
 						paramDetails = globals.model.paramDetails[qParams[j]];
 
@@ -1599,13 +1763,13 @@ function respondToEvents($context) {
 							break;
 						}
 					}
+				}
 
-					if(!foundParam) {
-						if (otherParams.length > 0) {
-							otherParams += '; ';
-						}
-						otherParams += p[0].trim() + '=' + p[1].trim();
+				if(!foundParam) {
+					if (otherParams.length > 0) {
+						otherParams += '; ';
 					}
+					otherParams += p[0].trim() + '=' + p[1].trim();
 				}
 			}
 		}
@@ -1621,7 +1785,183 @@ function respondToEvents($context) {
 		});
 
 	});
-	
+
+	// Respond to a click on the appearance button
+	$context.find('.appearanceButton').off().click(function() {
+
+		var $this = $(this),
+			$li = $this.closest('li'),
+			survey = globals.model.survey;
+
+		var formIndex = $li.data("fid");
+		var itemIndex = $li.data("id");
+		globals.gFormIndex = formIndex;
+		globals.gItemIndex = itemIndex;
+
+		var question = survey.forms[formIndex].questions[itemIndex];
+		var qType = question.type;
+		var qName = question.name;
+		gQname = qName;
+		gQType = qType;
+		var qAppearances = globals.model.qAppearances[qType];
+		var appearanceDetails;
+		var appearanceArray = [];
+		var appChoiceArray = [];
+
+		var appearanceData = $li.find('.labelProp').val();
+		var app_choices = question.app_choices;
+		var otherAppearances = '';
+		var i, j;
+		var foundAppearance;
+
+		if(appearanceData) {
+			appearanceArray = tokenizeAppearance(appearanceData);
+		}
+		if(app_choices) {
+			appChoiceArray = app_choices.split(' ');
+		}
+
+		/*
+         * Show any appearance attributes for this question type
+         */
+		$('#appearance_form')[0].reset();
+		$('#appearance_search_form')[0].reset();
+		$('#appearance_pdf_form')[0].reset();
+		$('.appearance_field, .appearance_search_details').hide();
+		$('.pdf_appearance_field').show();
+		$('#standardTab a').click();
+
+		/*
+		 * Show form controls relevant for this question type
+		 */
+		if(qAppearances && qAppearances.length > 0) {
+			for (j = 0; j < qAppearances.length; j++) {
+				appearanceDetails = globals.model.appearanceDetails[qAppearances[j]];
+				if(qAppearances[j] === 'w') {
+					if(globals.model.survey.surveyClass === "theme-grid") {
+						$('.' + appearanceDetails.field).show(); // Only show width if style is for grid
+					}
+				} else {
+					$('.' + appearanceDetails.field).show();
+				}
+			}
+		}
+
+		// Get questions to select from this survey
+		$('.questions_in_form').empty().append(getQuestionsAsSelect(localise.set["c_question"] + "..."));
+
+		// Add value and label(s) from choices list or they may already be specified as temporary appearance values
+		addLabelControls();
+
+
+		for (i = 0; i < appearanceArray.length; i++) {
+
+			if (qAppearances && qAppearances.length > 0) {
+				foundAppearance = false;
+				for (j = 0; j < qAppearances.length; j++) {
+					appearanceDetails = globals.model.appearanceDetails[qAppearances[j]];
+
+					var m = appearanceArray[i].match(appearanceDetails.rex);
+					if (m) {
+						if(globals.model.survey.surveyClass === "theme-grid" || qAppearances[j] !== 'w') {
+							foundAppearance = true;
+							var val = m[0].substring(appearanceDetails.value_offset);
+							setAppearance($('#' + appearanceDetails.field), val, appearanceDetails.type, appearanceArray[i], question, survey);
+							break;
+						}
+					}
+				}
+
+			}
+
+			/*
+			 * Check for common appearances that are set on every questions type
+			 */
+			var pdfa;
+			var colour;
+			if(appearanceArray[i] === 'pdfno') {
+				$('#a_pdfno').prop('checked', true);
+				$('.pdf_appearance_field').hide();
+				foundAppearance = true;
+			} else if(appearanceArray[i].indexOf('pdflabelw_') === 0) {
+				pdfa = appearanceArray[i].split('_');
+				if(pdfa.length > 1) {
+					$('#a_pdf_lw').val(pdfa[1]);
+					foundAppearance = true;
+				}
+			} else if(appearanceArray[i].indexOf('pdfheight_') === 0) {
+				pdfa = appearanceArray[i].split('_');
+				if(pdfa.length > 1) {
+					$('#a_pdfheight').val(pdfa[1]);
+					foundAppearance = true;
+				}
+			} else if(appearanceArray[i].indexOf('pdflabelbg_') === 0) {
+				pdfa = appearanceArray[i].split('_');
+				foundAppearance = true;
+				if(pdfa.length > 1) {
+					colour = '#' + pdfa[1];
+				}
+				if(pdfa.length > 2) {
+					colour += pdfa[2];
+				}
+				if(pdfa.length > 3) {
+					colour += pdfa[3];
+				}
+				$('input', '#a_pdflabelbg').colorpicker('setValue', colour);
+			}  else if(appearanceArray[i].indexOf('pdfvaluebg_') === 0) {
+				pdfa = appearanceArray[i].split('_');
+				foundAppearance = true;
+				if(pdfa.length > 1) {
+					colour = '#' + pdfa[1];
+				}
+				if(pdfa.length > 2) {
+					colour += pdfa[2];
+				}
+				if(pdfa.length > 3) {
+					colour += pdfa[3];
+				}
+				$('input', '#a_pdfvaluebg').colorpicker('setValue', colour);
+			}
+
+			/*
+			 * Add other
+			 */
+			if (!foundAppearance) {
+				if (otherAppearances.length > 0) {
+					otherAppearances += ' ';
+				}
+				otherAppearances += appearanceArray[i];
+			}
+		}
+
+		/*
+		 * Add appearance values for app choices
+		 */
+		var langIdx = 0;
+		for(i = 0; i < appChoiceArray.length; i++) {
+			var ace = appChoiceArray[i].split('::');
+			if(ace.length > 1) {
+				if(ace[0] === '_sv') {
+					$('#a_search_value').val(ace[1]);
+				} else if(ace[0] === '_sl' && ace.length > 2) {
+					$('#a_search_label' + langIdx++).val(ace[2]);
+				}
+			}
+		}
+
+		// Add any appearance values not explicetely set
+		$('#a_other').val(otherAppearances);       // Not sure if we want to do this
+
+
+		$('#appearanceModal').modal({
+			keyboard: true,
+			backdrop: 'static',
+			show: true
+		});
+
+	});
+
+
 	// Respond to changes on linkedTarget (Survey or Question changed)
 	$context.find('.linkedTarget').off().change(function() {
 
@@ -2812,12 +3152,289 @@ function setNoFilter() {
             }
 
 			/*
+             * Get the value of an appearance from the appearance dialog
+             */
+			function getAppearance($elem, appearances, key, details, qtype, app_choices) {
+				var val,
+					msg,
+					i;
+
+				if(details.type === "boolean") {
+					val = $elem.prop('checked') ? key : undefined;
+				} else if(details.type === "select") {
+					if($elem.val() === details.undef_value) {
+						val = undefined;
+					} else {
+						if (details.valIsAppearance) {
+							val = $elem.val();
+						} else {
+							val = key + $elem.val();
+						}
+					}
+				} else if(details.type === "form") {
+					// Handcoded
+					if(details.field === 'a_search') {
+						if($('#a_has_search').is(':checked')) {
+							val = "search(";        // open
+
+							// filename
+							var filename;
+							var csvfile;
+							var search_source = $('input[type=radio][name=search_source]:checked').val();
+							if(search_source === "survey") {
+								if($('#a_survey_identifier').val() === '') {
+									showAppearanceError(localise.set["msg_search_source2"]);
+								}
+								filename = 'linked_' + $('#a_survey_identifier').val();
+							} else if(search_source === "csv") {
+								if($('#a_csv_identifier').val() === '') {
+									showAppearanceError(localise.set["msg_search_source2"]);
+								}
+								csvfile = globals.gCsvFiles[$('#a_csv_identifier').val()];
+								filename = csvfile.filename;
+								var idx = filename.lastIndexOf('.');    // remove the extension
+								if(idx > 0) {
+									filename = filename.substring(0, idx);
+								}
+							} else {
+								showAppearanceError(localise.set["msg_search_source"]);
+								return false;
+							}
+							val += "'" + filename + "'";
+
+							/*
+							 * Add dummy appearances in app_choices for choice value and choice labels
+							 *
+							 */
+							var searchValue = $('#a_search_value').val();
+							if(!searchValue || searchValue.trim().length == 0) {
+								showAppearanceError(localise.set["msg_choice_value"]);
+								return false;
+							} else {
+								app_choices.push('_sv::' + searchValue);
+							}
+							var languages = globals.model.survey.languages;
+							for(i = 0; i < languages.length; i++) {
+								var labelValue = $('#a_search_label' + i).val();
+								if(!labelValue || labelValue.trim().length == 0) {
+									labelValue = searchValue;
+								}
+								app_choices.push('_sl::' + languages[i].name + '::' +   labelValue);
+							}
+
+
+							// first filter
+							var filterColumn = $('#a_filter_column').val().trim();
+							var filter = $('#a_match').val();
+							var filterValue;
+							var secondFilterColumn;
+							var secondFilterValue;
+							if(filterColumn !== '') {
+								if(filter === '') {
+									msg = localise.set["msg_filter_col"];
+									msg = msg.replace('%s1', filterColumn);
+									$('#appearance_msg').removeClass('alert-warning').addClass('alert-danger').show().html(msg);
+									return false;
+								} else {
+									val += ", '" + filter + "'";
+								}
+
+								// first filter column
+								val += ", '" + filterColumn + "'";
+
+								// first filter Value
+								filterValue = $('#a_filter_value_static').val().trim();
+								if(filterValue.indexOf('${') === 0) {
+									// question value
+									// TODO check that question is in survey
+								} else {
+									// static value
+									filterValue = "'" + filterValue + "'";      // add quotes
+								}
+								val += ", " + filterValue;
+
+								// second filter
+								secondFilterColumn = $('#a_second_filter_column').val();
+								if(secondFilterColumn !== '') {
+									val += ", '" + secondFilterColumn + "'";
+
+									// second filter Value
+									secondFilterValue = $('#a_second_filter_value_static').val().trim();
+									if(secondFilterValue.indexOf('${') === 0) {
+										// question value
+										// TODO check that question is in survey
+									} else {
+										// static value
+										secondFilterValue = "'" + secondFilterValue + "'";      // add quotes
+									}
+									val += ", " + secondFilterValue;
+								}
+							}
+
+
+
+							val += ")";    // Close
+						} else {
+							val = undefined;
+						}
+					} else if(details.field === 'a_select1_type' || details.field === 'a_select_type') {
+						var s1Val = $elem.val();
+						if(s1Val === '') {
+							val = undefined;
+						} else if (s1Val === 'compact' || s1Val === 'quickcompact') {
+							var numberColumns = $('#a_number_columns').val();
+							if(numberColumns === '') {
+								val = s1Val;
+							} else {
+								val = s1Val + '-' + numberColumns;
+							}
+						} else {
+							val = s1Val;
+						}
+					}
+				}
+
+				if(val) {
+					val = val.trim();
+					appearances.push(val);
+				}
+
+				return validateAppearance(qtype, appearances, $('#appearance_msg'));
+
+			}
+
+			/*
              * Set the value of a parameter in the parameter dialog
              */
 			function setParam($elem, val, type) {
 				var val;
 				if (type === "boolean") {
-					val = $elem.prop('checked', val == 'yes' || val === 'true');
+					$elem.prop('checked', val == 'yes' || val === 'true');
+				} else {
+					$elem.val(val);
+				}
+			}
+
+			/*
+             * Set the value of an appearance in the appearance dialog
+             */
+			function setAppearance($elem, val, type, appearance, question, survey) {
+				var val;
+				if (type === "boolean") {
+					$elem.prop('checked', true);
+				} else if (type === "form") {
+					// Custom - hardcoded
+					if(val === "search(") {
+
+						// Has search so enable the search panel
+						$('#a_has_search').prop('checked', true);
+
+						// Now check parameters
+						var idx1 = appearance.indexOf('(');
+						var idx2 = appearance.indexOf(')');
+						var params = appearance.substring(idx1 + 1, idx2);
+						var paramsArray = [];
+						if(params) {
+							paramsArray = params.split(',');
+						}
+						if(paramsArray.length > 0) {
+							var filter;
+							var filter_column;
+							var filter_value;
+							var second_filter_column;
+							var second_filter_value;
+
+							// 1. First parameter is the filename
+							var filename = paramsArray[0].trim();
+							filename = filename.replace(/'/g, "");
+							if(filename.startsWith('linked_s')) {
+								$('input[type=radio][name=search_source][value=survey]').prop('checked', true);
+								$('#a_survey_identifier').val(filename.substring("linked_s".length));
+								$('.search_survey').show();
+								getQuestionsInSurvey($('.column_select'), filename, true);
+							} else {
+								var csvIndex = getIndexOfCsvFilename(filename);
+								$('input[type=radio][name=search_source][value=csv]').prop('checked', true);
+								$('#a_csv_identifier').val(csvIndex);
+								$('.search_csv').show();
+								getQuestionsInCsvFile($('.column_select'), csvIndex, true);
+							}
+
+							filter = '';    // default
+							if(paramsArray.length > 1) {
+								// Second parameter is the filter
+								filter = paramsArray[1].trim();
+								filter = filter.replace(/'/g, "");
+								$('#a_match').val(filter);
+							}
+
+							if(paramsArray.length > 2) {
+								// Third parameter is the filter column
+								filter_column = paramsArray[2].trim();
+								filter_column = filter_column.replace(/'/g, "");
+								$('#a_filter_column').val(filter_column);
+							}
+
+							if(paramsArray.length > 3) {
+								// Fourth parameter is the filter value
+								filter_value = paramsArray[3].trim();
+								filter_value = filter_value.replace(/'/g, "");
+								$('#a_filter_value_static').val(filter_value);
+							}
+
+							if(paramsArray.length > 4) {
+								// Fifth parameter is the second filter column
+								second_filter_column = paramsArray[4].trim();
+								second_filter_column = second_filter_column.replace(/'/g, "");
+								$('#a_second_filter_column').val(second_filter_column);
+							}
+
+
+							if(paramsArray.length > 5) {
+								// Sixth parameter is the filter value
+								second_filter_value = paramsArray[5].trim();
+								second_filter_value = second_filter_value.replace(/'/g, "");
+								$('#a_second_filter_value_static').val(second_filter_value);
+							}
+
+
+						}
+						/*
+                         * Add the choice values
+                         */
+						var optionList = survey.optionLists[question.list_name];
+						if(optionList && optionList.options.length > 0) {
+							var i;
+							for(i = 0; i < optionList.options.length; i++) {
+								var v = optionList.options[i].value;
+								if(isNaN(v)) {
+									// Apply this choice
+									$('#a_search_value').val(v);
+									var choiceIdx = 0;
+									var labels = optionList.options[i].labels;
+									for(choiceIdx = 0; choiceIdx <  optionList.options[i].labels.length; choiceIdx++) {
+										$('#a_search_label' + choiceIdx).val(labels[choiceIdx].text);
+									}
+									break;
+								} else {
+									continue;   // Purely numeric must be a static choice
+								}
+							}
+
+						}
+
+						showSearchElements();
+					} else if(val === 'compact' || val === 'quickcompact') {
+						var paramsArray = appearance.split('-');
+						$elem.val(paramsArray[0]);
+						if(paramsArray.length > 0) {
+							$('#a_number_columns').val(paramsArray[1]);
+						}
+						$('.a_number_columns').show();
+
+					} else {
+						$elem.val(val);
+					}
 				} else {
 					$elem.val(val);
 				}
@@ -2859,7 +3476,7 @@ function setNoFilter() {
 			/*
 			 * Get the questions in the form currently being edited as options for a select question
 			 */
-			function getQuestionsAsSelect() {
+			function getQuestionsAsSelect(noneText) {
 
 				var i,
 					survey = globals.model.survey,
@@ -2875,7 +3492,11 @@ function setNoFilter() {
 					if(survey.forms && survey.forms.length > 0) {
 
 						h[++idx] = '<option value="">';
-						h[++idx] = localise.set["c_none"];
+						if(!noneText) {
+							h[++idx] = localise.set["c_none"];
+						} else {
+							h[++idx] = noneText;
+						}
 						h[++idx] = '</option>';
 
 						for(i = 0; i < survey.forms.length; i++) {
@@ -2918,5 +3539,145 @@ function setNoFilter() {
 				return h.join('');
 			}
 
+			function getIndexOfCsvFilename(filename) {
+				var csvArray = globals.gCsvFiles;
+				var i;
 
+				filename += ".csv";     // The filename in the csvArray includes the extension
+				for(i = 0; i < csvArray.length; i++) {
+					if(csvArray[i].filename === filename) {
+						return i;
+					}
+				}
+				return undefined;
+			}
+
+			function showSearchElements(hasSearch) {
+
+				var hasSearch = $('#a_has_search').is(':checked');
+				var aFilterColumn = $('#a_filter_column').val();
+				var aSecondFilterColumn = $('#a_second_filter_column').val();
+				var searchSource = $('input[type=radio][name=search_source]:checked').val();
+				var searchChoiceValue = $('#a_search_value').val();
+				var fileIdentifier;
+
+				$('#appearance_msg').hide();
+
+				if(hasSearch) {
+					$('.appearance_search_details').show();
+
+					$('.search_csv, .search_survey').hide();
+					if(searchSource == "survey") {
+						$('.search_survey').show();
+						fileIdentifier = $('#a_survey_identifier').val();
+					} else if(searchSource == "csv") {
+						$('.search_csv').show();
+						fileIdentifier = $('#a_csv_identifier').val();
+					}
+
+					if(!fileIdentifier || fileIdentifier === '') {
+						$('.a_choice_values').hide();
+					} else {
+						$('.a_choice_values').show();
+					}
+
+					if(!searchChoiceValue || searchChoiceValue === '') {
+						$('.a_filter_column').hide();
+					} else {
+						$('.a_filter_column').show();
+					}
+
+					if(!aFilterColumn || aFilterColumn === "") {
+						$(".has_filter, .a_second_filter_column, .has_second_filter").hide();
+					} else {
+						$(".has_filter, .a_second_filter_column").show();
+					}
+
+					if(!aSecondFilterColumn || aSecondFilterColumn === "") {
+						$('.has_second_filter').hide();
+					} else {
+						$('.has_second_filter').show();
+					}
+
+				} else {
+					$('.appearance_search_details').hide();
+				}
+			}
+
+			function checkForAppearanceWarnings() {
+				var warningMsg = '';
+				var i;
+				var msg;
+				var qtype = gQType;
+
+				if(qtype === 'string') {
+					var ts = $('#a_sep').is(':checked');
+					var numbers = $('#a_numbers').is(':checked');
+					if(ts && !numbers) {
+						if(warningMsg.length > 0) {
+							warningMsg += '. ';
+						}
+						warningMsg += localise.set["msg_numb_ts"];
+					}
+				}
+
+				if(warningMsg.length > 0) {
+					$('#appearance_msg').removeClass('alert-danger').addClass('alert-warning').show().html(warningMsg);
+				} else {
+					$('#appearance_msg').hide();
+				}
+
+				/*
+				 * Show / hide controls
+				 */
+				if(qtype === 'select1') {
+					var select1Type = $('#a_select1_type').val();
+					if(select1Type === 'compact' || select1Type === 'quickcompact') {
+						$('.a_number_columns').show();
+					} else {
+						$('.a_number_columns').hide();
+					}
+				}
+
+			}
+
+			/*
+			 * Check for errors before returning
+			 * TODO
+			 */
+			function validateAppearance() {
+				return true;
+			}
+
+			/*
+			 * Add a label control for each language
+			 */
+			function addLabelControls() {
+				var languages = globals.model.survey.languages;
+				var i;
+				var h = [];
+				var idx = -1;
+				var labelControlId;
+
+				for (i = 0; i < languages.length; i++) {
+					labelControlId = 'a_search_label' + i;
+					h[++idx] = '<div class="form-group search_label">';
+						h[++idx] = '<label for="';
+						h[++idx] = labelControlId;
+						h[++idx] = '" class="col-sm-4 control-label">';
+						h[++idx] = languages[i].name;
+						h[++idx] = '</label>';
+					h[++idx] = '<div class="col-sm-8">';
+					h[++idx] = '<select id="';
+						h[++idx] = labelControlId;
+						h[++idx] = '" class="form-control column_select"></select>';
+					h[++idx] = '</div>';
+					h[++idx] = '</div>';
+				}
+				$('#search_label_list').empty().append(h.join(''));
+			}
+
+			function showAppearanceError(msg) {
+				$('#appearance_msg').removeClass('alert-warning').addClass('alert-danger').show().html(msg);
+			}
 });
