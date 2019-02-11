@@ -17,6 +17,7 @@
 	toggle: 'bootstrap-toggle.min',
 	bootstrap: 'bootstrap.min',
         bootstrapfileinput: 'bootstrap.file-input',
+    	bootstrapcolorpicker: '../../../../smapServer/WebContent/js/libs/bootstrap-colorpicker.min',
         inspinia: 'wb/inspinia',
 	metismenu: 'wb/plugins/metisMenu/jquery.metisMenu',
 	slimscroll: 'wb/plugins/slimscroll/jquery.slimscroll.min',
