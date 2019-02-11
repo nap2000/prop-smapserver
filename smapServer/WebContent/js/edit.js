@@ -582,6 +582,13 @@ $(document).ready(function() {
 			 var c3 = colour.substring(5,7);
 			 appearances.push('pdflabelbg_' + c1 + '_' + c2 + '_' +c3);
 		}
+		colour = $('input', '#a_pdfvaluebg').val();
+		if(colour && colour !== '#ffffff') {
+			var c1 = colour.substring(1,3);
+			var c2 = colour.substring(3,5);
+			var c3 = colour.substring(5,7);
+			appearances.push('pdfvaluebg_' + c1 + '_' + c2 + '_' +c3);
+		}
 
 
 		/*
@@ -1901,6 +1908,19 @@ function respondToEvents($context) {
 					colour += pdfa[3];
 				}
 				$('input', '#a_pdflabelbg').colorpicker('setValue', colour);
+			}  else if(appearanceArray[i].indexOf('pdfvaluebg_') === 0) {
+				pdfa = appearanceArray[i].split('_');
+				foundAppearance = true;
+				if(pdfa.length > 1) {
+					colour = '#' + pdfa[1];
+				}
+				if(pdfa.length > 2) {
+					colour += pdfa[2];
+				}
+				if(pdfa.length > 3) {
+					colour += pdfa[3];
+				}
+				$('input', '#a_pdfvaluebg').colorpicker('setValue', colour);
 			}
 
 			/*
