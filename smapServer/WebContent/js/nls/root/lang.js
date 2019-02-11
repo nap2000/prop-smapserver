@@ -402,6 +402,10 @@ define({
 	"a_dd_interval": "Grouped by '%s1'",
 
     "a_dd_where": "<b>Where %s1 equals %s2</b>",
+    "_bad": "Bad",
+    "_bad_reason": "Bad Reason",
+    "_scheduled_start": "Scheduled Start",
+	"_device": "Device",
 
 
     // Messages
