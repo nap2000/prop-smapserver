@@ -589,6 +589,9 @@ $(document).ready(function() {
 			var c3 = colour.substring(5,7);
 			appearances.push('pdfvaluebg_' + c1 + '_' + c2 + '_' +c3);
 		}
+		if($('#a_pdfspace').val() && $('#a_pdfspace').val() !== '') {
+			appearances.push('pdfspace_' + $('#a_pdfspace').val());
+		}
 
 
 		/*
@@ -1827,6 +1830,7 @@ function respondToEvents($context) {
 		$('#appearance_form')[0].reset();
 		$('#appearance_search_form')[0].reset();
 		$('#appearance_pdf_form')[0].reset();
+		$('input','.colorpicker-component').colorpicker('setValue', '#ffffff');
 		$('.appearance_field, .appearance_search_details').hide();
 		$('.pdf_appearance_field').show();
 		$('#standardTab a').click();
@@ -1921,6 +1925,12 @@ function respondToEvents($context) {
 					colour += pdfa[3];
 				}
 				$('input', '#a_pdfvaluebg').colorpicker('setValue', colour);
+			} else if(appearanceArray[i].indexOf('pdfspace_') === 0) {
+				pdfa = appearanceArray[i].split('_');
+				if(pdfa.length > 1) {
+					$('#a_pdfspace').val(pdfa[1]);
+					foundAppearance = true;
+				}
 			}
 
 			/*
