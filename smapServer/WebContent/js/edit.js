@@ -32,7 +32,8 @@ require.config({
     	toggle: 'bootstrap-toggle.min',
     	moment: 'moment-with-locales.min',
     	lang_location: '..',
-    	icheck: '/wb/plugins/iCheck/icheck.min'
+    	icheck: '/wb/plugins/iCheck/icheck.min',
+	    bootstrapcolorpicker: 'bootstrap-colorpicker.min',
 
     },
     shim: {
@@ -42,6 +43,7 @@ require.config({
         'bootstrap.file-input': ['bootstrap.min'],
     	'bootbox': ['bootstrap.min'],
        	'toggle': ['bootstrap.min'],
+	    'bootstrapcolorpicker': ['bootstrap', 'jquery'],
     	'icheck': ['jquery']
         
     }
@@ -63,6 +65,7 @@ require([
          'app/changeset',
          'app/option',
          'moment',
+		 'bootstrapcolorpicker',
          'icheck'], 
 		function(
 				$, 
@@ -79,6 +82,7 @@ require([
 				markup,
 				changeset,
 				option,
+				bootstrapcolorpicker,
 				moment) {
 
 
@@ -454,6 +458,13 @@ $(document).ready(function() {
 		$('#parameterModal').modal("hide");
 	});
 
+	/*
+     * Set up colour picker
+     */
+	$('.colorpicker-component').colorpicker({
+		format: 'hex'
+	});
+
 	// Set up the tabs
 	$('#standardTab a').click(function (e) {
 		e.preventDefault();
@@ -471,11 +482,26 @@ $(document).ready(function() {
 		$('#searchPanel').show();
 	});
 
+	$('#pdfTab a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+
+		$(".appearancetab").hide();
+		$('#pdfPanel').show();
+	});
+
 	// Hide and show search elements
 	$('#a_has_search, #a_filter_column, #a_second_filter_column, #a_csv_identifier, ' +
 		'#a_survey_identifier, input[type=radio][name=search_source],' +
-		'#a_search_value, #a_search_label').change(function(){
+		'#a_search_value, #a_search_label').change(function() {
 		showSearchElements();
+	});
+	$('#a_pdfno').change(function() {
+		if($(this).prop('checked')) {
+			$('.pdf_appearance_field').hide();
+		} else {
+			$('.pdf_appearance_field').show();
+		}
 	});
 
 	// Validate on value change
@@ -535,6 +561,32 @@ $(document).ready(function() {
 				}
 			}
 		}
+
+		/*
+		 * Get common appearance values
+		 */
+		var colour
+		if($('#a_pdfno').prop('checked')) {
+			appearances.push('pdfno');
+		}
+		if($('#a_pdf_lw').val() !== '') {
+			appearances.push('pdflabelw_' + $('#a_pdf_lw').val());
+		}
+		if($('#a_pdfheight').val() && $('#a_pdfheight').val() !== '') {
+			appearances.push('pdfheight_' + $('#a_pdfheight').val());
+		}
+		colour = $('input', '#a_pdflabelbg').val();
+		if(colour && colour !== '#ffffff') {
+			 var c1 = colour.substring(1,3);
+			 var c2 = colour.substring(3,5);
+			 var c3 = colour.substring(5,7);
+			 appearances.push('pdflabelbg_' + c1 + '_' + c2 + '_' +c3);
+		}
+
+
+		/*
+		 * Add other
+		 */
 		other=$('#a_other').val();
 
 		newVal = appearances.join(' ');
@@ -1767,7 +1819,9 @@ function respondToEvents($context) {
          */
 		$('#appearance_form')[0].reset();
 		$('#appearance_search_form')[0].reset();
+		$('#appearance_pdf_form')[0].reset();
 		$('.appearance_field, .appearance_search_details').hide();
+		$('.pdf_appearance_field').show();
 		$('#standardTab a').click();
 
 		/*
@@ -1813,6 +1867,45 @@ function respondToEvents($context) {
 
 			}
 
+			/*
+			 * Check for common appearances that are set on every questions type
+			 */
+			var pdfa;
+			var colour;
+			if(appearanceArray[i] === 'pdfno') {
+				$('#a_pdfno').prop('checked', true);
+				$('.pdf_appearance_field').hide();
+				foundAppearance = true;
+			} else if(appearanceArray[i].indexOf('pdflabelw_') === 0) {
+				pdfa = appearanceArray[i].split('_');
+				if(pdfa.length > 1) {
+					$('#a_pdf_lw').val(pdfa[1]);
+					foundAppearance = true;
+				}
+			} else if(appearanceArray[i].indexOf('pdfheight_') === 0) {
+				pdfa = appearanceArray[i].split('_');
+				if(pdfa.length > 1) {
+					$('#a_pdfheight').val(pdfa[1]);
+					foundAppearance = true;
+				}
+			} else if(appearanceArray[i].indexOf('pdflabelbg_') === 0) {
+				pdfa = appearanceArray[i].split('_');
+				foundAppearance = true;
+				if(pdfa.length > 1) {
+					colour = '#' + pdfa[1];
+				}
+				if(pdfa.length > 2) {
+					colour += pdfa[2];
+				}
+				if(pdfa.length > 3) {
+					colour += pdfa[3];
+				}
+				$('input', '#a_pdflabelbg').colorpicker('setValue', colour);
+			}
+
+			/*
+			 * Add other
+			 */
 			if (!foundAppearance) {
 				if (otherAppearances.length > 0) {
 					otherAppearances += ' ';
