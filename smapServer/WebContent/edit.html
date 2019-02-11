@@ -18,6 +18,7 @@
 	<link rel="stylesheet" href="css/normalize.css" />
 	<link rel="stylesheet" href="/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="/css/bootstrap-toggle.min.css" />
+	<link rel="stylesheet" href="/css/bootstrap-colorpicker.min.css" />
 	<link rel="stylesheet" href="/css/smap-bs.css" type="text/css">
 
 	<script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
@@ -777,6 +778,7 @@
 				<ul class="nav nav-pills" role="tablist">
 					<li id="standardTab" role="presentation" class="active"><a href="#" class="lang" data-lang="c_standard">standard</a></li>
 					<li id="searchTab" role="presentation"><a href="#" class="lang appearance_field a_search" data-lang="br_s">search</a></li>
+					<li id="pdfTab" role="presentation"><a href="#" class="lang appearance_field a_search" data-lang="ed_pdf_layout">pdf</a></li>
 				</ul>
 				<div id="standardPanel" class="appearancetab">
 					<div class="container-fluid">
@@ -971,6 +973,58 @@
 					</div>
 				</div>
 
+				<div id="pdfPanel" style="display:none;" class="appearancetab">
+					<form id="appearance_pdf_form" role="form" class="form-horizontal">
+
+						<div class="form-group">
+							<div class="col-sm-offset-4 col-sm-8">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" id="a_pdfno"><span class="lang" data-lang="ed_pdfno">hide</span>
+									</label>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group pdf_appearance_field">
+							<label for="a_pdf_lw" data-lang="ed_lw" class="lang col-sm-4 control-label">width</label>
+							<div class="col-sm-8">
+								<select id="a_pdf_lw" class="form-control">
+									<option class="lang" data-lang="c_default" value="">default</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group pdf_appearance_field">
+							<label for="a_pdfheight" data-lang="ed_height" class="lang col-sm-4 control-label">height</label>
+							<div class="col-sm-8">
+								<input type="number" id="a_pdfheight">
+							</div>
+						</div>
+
+						<div class="form-group pdf_appearance_field">
+							<label for="a_pdflabelbg" data-lang="ed_bgc" class="lang control-label col-sm-4">background</label>
+							<div class="col-sm-6">
+								<div id="a_pdflabelbg" class="input-group colorpicker-component">
+									<input type="text" value="#ffffff" class="form-control" />
+									<span class="input-group-addon"><i></i></span>
+								</div>
+							</div>
+						</div>
+
+					</form>
+				</div>
+
 				<div id="searchPanel" style="display:none;" class="appearancetab">
 					<form id="appearance_search_form" role="form" class="form-horizontal">
 
@@ -999,12 +1053,14 @@
 									</div>
 								</div>
 							</div>
+
 							<div class="form-group search_csv">
 								<label for="a_csv_identifier" data-lang="ed_csv" class="lang col-sm-4 control-label">file</label>
 								<div class="col-sm-8">
 									<select id="a_csv_identifier" class="form-control linkable_files"></select>
 								</div>
 							</div>
+
 							<div class="form-group search_survey">
 								<label for="a_survey_identifier" data-lang="c_survey" class="lang col-sm-4 control-label">survey</label>
 								<div class="col-sm-8">

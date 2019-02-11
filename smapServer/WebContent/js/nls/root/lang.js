@@ -691,6 +691,11 @@ define({
     "wf_sig": "Signature",
 
     // Editor
+	"ed_bgc": "Background Colour",
+	"ed_height": "Height allowed for answer",
+    "ed_lw": "Width of label",
+	"ed_pdf_layout": "PDF Layout",
+	"ed_pdfno": "Hide question in pdf export",
 	"ed_date_type": "Date Type",
 	"ed_select_type": "Select Type",
     "ed_nc": "No Calendar",
