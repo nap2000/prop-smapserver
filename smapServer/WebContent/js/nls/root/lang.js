@@ -691,7 +691,8 @@ define({
     "wf_sig": "Signature",
 
     // Editor
-	"ed_bgc": "Background Colour",
+	"ed_bgc": "Label Background Colour",
+	"ed_vbgc": "Value Background Colour",
 	"ed_height": "Height allowed for answer",
     "ed_lw": "Width of label",
 	"ed_pdf_layout": "PDF Layout",
