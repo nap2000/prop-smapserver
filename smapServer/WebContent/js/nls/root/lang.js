@@ -693,6 +693,8 @@ define({
     "wf_sig": "Signature",
 
     // Editor
+	"ed_add_to": "Append to question",
+	"ed_col_width": "width of column %s1",
 	"ed_l_bold": "Make label bold",
 	"ed_caps": "Make label all capitals",
 	"ed_npb": "New Page Before",
