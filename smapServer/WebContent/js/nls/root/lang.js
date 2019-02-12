@@ -531,6 +531,8 @@ define({
     "msg_choice_value": "The choice value must be specified",
 	"msg_search_source": "You must select either survey or csv as the souce of the choice data",
     "msg_search_source2": "The source file or survey must be selected",
+	"msg_pdfcols_count": "The total width of all the columns must add up to 10",
+	"msg_pdfcols_width": "A column width must be between 1 and 10 inclusive",
 
     // Editor
     "e_b_e": "Base on existing form",
@@ -699,6 +701,7 @@ define({
 	"ed_vbgc": "Value Background Colour",
 	"ed_height": "Height allowed for answer",
     "ed_lw": "Width of label",
+    "ed_pdfcols_help": "There can be a maximum of 10 columns. The widths of the columns must add up to 10.",
 	"ed_pdf_layout": "PDF Layout",
 	"ed_pdfno": "Hide question in pdf export",
 	"ed_date_type": "Date Type",

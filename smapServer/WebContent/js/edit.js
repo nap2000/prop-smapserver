@@ -503,6 +503,17 @@ $(document).ready(function() {
 			$('.pdf_appearance_field').show();
 		}
 	});
+	$('#a_pdfcols_number').change(function() {
+		var val = $(this).val();
+		var i;
+
+		$('.pdfcols').hide();
+		if($(this).val() !== '') {
+			for(i = 1; i <= val; i++) {
+				$('.pdfcols' + i).show();
+			}
+		}
+	});
 
 	// Validate on value change
 	$('#a_sep, #a_numbers, #a_select1_type').change(function(){
@@ -574,6 +585,27 @@ $(document).ready(function() {
 		}
 		if($('#a_pdfheight').val() && $('#a_pdfheight').val() !== '') {
 			appearances.push('pdfheight_' + $('#a_pdfheight').val());
+		}
+		var pdfcolsnumber = $('#a_pdfcols_number').val();
+		if(pdfcolsnumber && pdfcolsnumber !== '') {
+			var pdfcols = 'pdfcols';
+			var pdfcolscount = +0;
+			for(i = 1; i<= pdfcolsnumber; i++) {
+				var col_i = $('#a_pdfcols_' + i).val();
+				pdfcolscount += +col_i;
+				pdfcols += '_' + col_i;
+				if(+col_i > 10 || +col_i < 1) {
+					showAppearanceError(localise.set["msg_pdfcols_width"]);
+					$('#a_pdfcols_' + i).focus();
+					return false;
+				}
+			}
+			if(pdfcolscount !== 10) {
+				showAppearanceError(localise.set["msg_pdfcols_count"]);
+				$('#a_pdfcols_1').focus();
+				return false;
+			}
+			appearances.push(pdfcols);
 		}
 		colour = $('input', '#a_pdflabelbg').val();
 		if(colour && colour !== '#ffffff') {
@@ -1841,6 +1873,7 @@ function respondToEvents($context) {
 		$('input','.colorpicker-component').colorpicker('setValue', '#ffffff');
 		$('.appearance_field, .appearance_search_details').hide();
 		$('.pdf_appearance_field').show();
+		$('.pdfcols').hide();
 		$('#standardTab a').click();
 
 		/*
@@ -1951,6 +1984,21 @@ function respondToEvents($context) {
 			} else if(appearanceArray[i] === 'pdflabelbold') {
 				$('#a_pdflabelbold').prop('checked', true);
 				foundAppearance = true;
+			} else if(appearanceArray[i].indexOf('pdfcols_') === 0) {
+				pdfa = appearanceArray[i].split('_');
+				foundAppearance = true;
+				if(pdfa.length > 1) {
+					$('.pdfcols').hide();
+					$('#a_pdfcols_number').val(pdfa.length - 1);
+					for (j = 1; j <= pdfa.length - 1; j++) {
+						$('#a_pdfcols_' + j).val(pdfa[j])
+						$('.pdfcols' + j).show();
+					}
+
+
+				}
+
+
 			}
 
 			/*
