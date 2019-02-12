@@ -107,6 +107,7 @@ define([
                 if(refresh) {
                     if(change.question || change.changeType === "optionlist" || (change.property && change.property.type === "question")) {
                         $context = markup.refresh();
+	                    validateAll();
                     } else {
                         $context = option.createChoiceView();
                         var survey = globals.model.survey;
