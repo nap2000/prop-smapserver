@@ -511,6 +511,7 @@ $(document).ready(function() {
 		if($(this).val() !== '') {
 			for(i = 1; i <= val; i++) {
 				$('.pdfcols' + i).show();
+				$('#a_pdfcols_' + i + '_l').html(localise.set["ed_col_width"].replace('%s1', i));
 			}
 		}
 	});
@@ -632,6 +633,9 @@ $(document).ready(function() {
 		}
 		if($('#a_pdflabelbold').prop('checked')) {
 			appearances.push('pdflabelbold');
+		}
+		if($('#a_pdfaddto').val() !== '') {
+			appearances.push('pdfaddto_' + $('#a_pdfaddto').val());
 		}
 
 		/*
@@ -1875,6 +1879,7 @@ function respondToEvents($context) {
 		$('.pdf_appearance_field').show();
 		$('.pdfcols').hide();
 		$('#standardTab a').click();
+		$('#a_pdfaddto').empty().append(getQuestionsAsSelect());
 
 		/*
 		 * Show form controls relevant for this question type
@@ -1991,14 +1996,17 @@ function respondToEvents($context) {
 					$('.pdfcols').hide();
 					$('#a_pdfcols_number').val(pdfa.length - 1);
 					for (j = 1; j <= pdfa.length - 1; j++) {
+						$('#a_pdfcols_' + j + '_l').html(localise.set["ed_col_width"].replace('%s1', j));
 						$('#a_pdfcols_' + j).val(pdfa[j])
 						$('.pdfcols' + j).show();
 					}
-
-
 				}
-
-
+			} else if(appearanceArray[i].indexOf('pdfaddto_') === 0) {
+				pdfa = appearanceArray[i].split('_');
+				if(pdfa.length > 1) {
+					$('#a_pdfaddto').val(pdfa[1]);
+					foundAppearance = true;
+				}
 			}
 
 			/*
