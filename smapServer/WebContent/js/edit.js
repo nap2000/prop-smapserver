@@ -1169,6 +1169,8 @@ function refreshForm() {
 		respondToEvents($context);
 	}
 
+	changeset.validateAll();
+
 }
 
 			/*
