@@ -1602,6 +1602,36 @@ define([
 
 	                }
 
+	                if(isValid && item.type === "begin repeat") {	// Check that a repeat group has children
+
+	                    var itemx = item;
+		                var childFormIndex = getSubFormIndex(item.formIndex, itemIndex);
+		                var questions = survey.forms[childFormIndex].questions;
+                        var isEmpty = true;
+
+                        if(questions.length > 0) {
+                            for(j = 0; j < questions.length; j++) {
+                                if(questions[j].type !== 'calculate') {
+                                    isEmpty = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if(isEmpty) {
+	                        isValid = false;
+	                        addValidationError(
+		                        container,
+		                        itemIndex,
+		                        "item",
+		                        localise.set["ed_emp_rep"],
+		                        itemType,
+		                        "error");
+                        }
+
+
+	                }
+
 
                 } else if(itemType === "option") {
                     // Check references to other questions
