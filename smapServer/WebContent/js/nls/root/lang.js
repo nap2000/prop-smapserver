@@ -757,6 +757,7 @@ define({
     "ed_r_msg": "Required Text Message",
     "ed_o_o_g": "Only one geometry question can be added to a form",
 	"ed_f_l": "The form to be launched must be specified as a parameter",
+	"ed_emp_rep": "Sub forms must have at least one visible question.  Ie calculate questions are not visible.",
     "ed_hrk": "Unique Key",
     "ed_dk": "Data Key",
     "ed_csv": "CSV File",
