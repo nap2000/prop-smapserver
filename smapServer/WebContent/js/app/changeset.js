@@ -1628,8 +1628,46 @@ define([
 		                        itemType,
 		                        "error");
                         }
+	                }
 
+	                if(isValid && item.type === "begin group") {	// Check that a group has children
 
+		                var endName = item.name + "_groupEnd";
+		                var questions = survey.forms[item.formIndex].questions;
+		                var qSeq = survey.forms[item.formIndex].qSeq;
+		                var isEmpty = true;
+		                var inGroup = false;
+
+		                /*
+						 * Get the questions to move
+						 */
+		                for(j = 0; j < qSeq.length; j++) {
+
+		                    if(inGroup === true) {
+			                    if (questions[qSeq[j]].name.toLowerCase() === endName.toLowerCase()) {
+				                    break;
+			                    } else if (questions[qSeq[j]].type !== 'calculate') {
+				                    isEmpty = false;
+				                    break;
+			                    }
+		                    }
+
+			                if(qSeq[j] === itemIndex) {
+				                inGroup = true;
+			                }
+
+		                }
+
+		                if(isEmpty) {
+			                isValid = false;
+			                addValidationError(
+				                container,
+				                itemIndex,
+				                "item",
+				                localise.set["ed_emp_rep"],
+				                itemType,
+				                "error");
+		                }
 	                }
 
 
