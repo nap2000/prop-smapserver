@@ -1128,3 +1128,6 @@ alter table apply_foreign_keys add column instanceIdLaunchingForm text;
 -- Backward navigation
 alter table organisation add column ft_backward_navigation text;
 update organisation set ft_backward_navigation = 'not set' where ft_backward_navigation is null;
+
+-- Upgrade to 19.02
+alter table survey add column audit_location_data boolean;

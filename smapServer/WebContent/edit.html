@@ -252,14 +252,27 @@
 						</div>
 					</div>
 
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
-							<div class="checkbox">
-								<label>
-									<input type="checkbox" id="timing_data" tabindex="5"><span class="lang" data-lang="ed_td">timing data</span>
-								</label>
+					<div class="well">
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" id="timing_data" tabindex="5"><span class="lang" data-lang="ed_td">timing data</span>
+									</label>
+								</div>
 							</div>
 						</div>
+
+						<div class="form-group audit_location_data" style="display:none;">
+							<div class="col-sm-offset-2 col-sm-10">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" id="audit_location_data"><span class="lang" data-lang="ed_rl">record location</span>
+									</label>
+								</div>
+							</div>
+						</div>
+
 					</div>
 
 					<div class="form-group">
@@ -761,8 +774,8 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">close</button>
-				<button id="parameterSave" type="button" class="btn btn-primary lang" data-lang="c_save">save</button>
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_cancel">cancel</button>
+				<button id="parameterSave" type="button" class="btn btn-primary lang" data-lang="c_done">done</button>
 			</div>
 		</div>
 	</div>
@@ -1297,8 +1310,8 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">close</button>
-				<button id="appearanceSave" type="button" class="btn btn-primary lang" data-lang="c_save">save</button>
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_cancel">cancel</button>
+				<button id="appearanceSave" type="button" class="btn btn-primary lang" data-lang="c_done">done</button>
 			</div>
 		</div>
 	</div>
