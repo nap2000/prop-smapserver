@@ -762,7 +762,15 @@ $(document).ready(function() {
 	$('#task_file').change(function() {
 		globals.model.settingsChange();
 	});
-	$('#timing_data, #hide_on_device').change(function() {
+	$('#timing_data').change(function() {
+		if($(this).is(':checked')) {
+			$('.audit_location_data').show();
+		} else {
+			$('.audit_location_data').hide();
+		}
+		globals.model.settingsChange();
+	});
+	$('#hide_on_device, #audit_location_data').change(function() {
 		globals.model.settingsChange();
 	});
     $('#exclude_empty').change(function() {
@@ -2713,6 +2721,12 @@ function updateSettingsData() {
 	}
 	$('#task_file').prop('checked', globals.model.survey.task_file);
 	$('#timing_data').prop('checked', globals.model.survey.timing_data);
+	if(globals.model.survey.timing_data) {
+		$('.audit_location_data').show();
+	} else {
+		$('.audit_location_data').hide();
+	}
+	$('#audit_location_data').prop('checked', globals.model.survey.audit_location_data);
 	$('#hide_on_device').prop('checked', globals.model.survey.hideOnDevice);
     $('#exclude_empty').prop('checked', globals.model.survey.exclude_empty);
 }
