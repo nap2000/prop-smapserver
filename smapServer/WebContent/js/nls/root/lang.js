@@ -115,6 +115,7 @@ define({
     "c_test": "Test",
     "c_validate": "Validate",
     "c_close": "Close",
+	"c_likert": "Likert",
     "c_logout": "Logout",
     "c_block": "Block",
     "c_blocked": "Blocked",

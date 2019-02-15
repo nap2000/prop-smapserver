@@ -366,7 +366,7 @@ define(function () {
 		    'begin group': ['page', 'w'],
 		    string: ['numbers', 'thousands-sep', 'w'],
 		    note: ['w'],
-            select1: ['select1_type', 'search', 'w'],
+            select1: ['select1_type', 'search', 'likert', 'w'],
             select: ['select_type', 'search', 'w'],
             image: ['image_type', 'w'],
             int:['thousands-sep', 'w'],
@@ -433,6 +433,11 @@ define(function () {
 		    },
 		    'rating': {
 			    field: 'a_rating',
+			    type: 'boolean',
+			    rex: 'rating'
+		    },
+		    'likert': {
+			    field: 'a_likert',
 			    type: 'boolean',
 			    rex: 'rating'
 		    },
