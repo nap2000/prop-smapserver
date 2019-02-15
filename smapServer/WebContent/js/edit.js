@@ -3470,10 +3470,11 @@ function setNoFilter() {
 							var filename = paramsArray[0].trim();
 							filename = filename.replace(/'/g, "");
 							if(filename.startsWith('linked_s')) {
+								var sIdent = filename.substring("linked_s".length - 1);
 								$('input[type=radio][name=search_source][value=survey]').prop('checked', true);
-								$('#a_survey_identifier').val(filename.substring("linked_s".length));
+								$('#a_survey_identifier').val(sIdent);
 								$('.search_survey').show();
-								getQuestionsInSurvey($('.column_select'), filename, true);
+								getQuestionsInSurvey($('.column_select'), sIdent, true);
 							} else {
 								var csvIndex = getIndexOfCsvFilename(filename);
 								$('input[type=radio][name=search_source][value=csv]').prop('checked', true);
