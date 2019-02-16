@@ -472,7 +472,8 @@ CREATE TABLE survey (
 	display_name text not null,
 	def_lang text,
 	task_file boolean,								-- allow loading of tasks from a file
-	timing_data boolean,							-- collect timing data on the phone
+	timing_data boolean,								-- collect timing data on the phone
+	audit_location_data boolean,						-- collect location data on the phone
 	class text,
 	model text,										-- JSON model of the survey for thingsat
 	manifest text,									-- JSON set of manifest information for the survey

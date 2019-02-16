@@ -432,7 +432,9 @@ $(document).ready(function() {
 		if(qParams && qParams.length > 0) {
 			for(i = 0; i < qParams.length; i++) {
 				paramDetails = globals.model.paramDetails[qParams[i]];
-				getParam($('#' + paramDetails.field), params, qParams[i], paramDetails.type);
+				if(!getParam($('#' + paramDetails.field), params, qParams[i], paramDetails.type)) {
+					return false;
+				}
 			}
 		}
 		other=$('#p_other').val();
@@ -491,7 +493,7 @@ $(document).ready(function() {
 	});
 
 	// Hide and show search elements
-	$('#a_has_search, #a_filter_column, #a_second_filter_column, #a_csv_identifier, ' +
+	$('#a_filter_column, #a_second_filter_column, #a_csv_identifier, ' +
 		'#a_survey_identifier, input[type=radio][name=search_source],' +
 		'#a_search_value, #a_search_label').change(function() {
 		showSearchElements();
@@ -585,7 +587,13 @@ $(document).ready(function() {
 			appearances.push('pdflabelw_' + $('#a_pdf_lw').val());
 		}
 		if($('#a_pdfheight').val() && $('#a_pdfheight').val() !== '') {
-			appearances.push('pdfheight_' + $('#a_pdfheight').val());
+			var pdfHeight = $('#a_pdfheight').val();
+			if(pdfHeight < 0) {
+				showAppearanceError(localise.set["ed_gt_0"]);
+				$('#a_pdfheight').focus();
+				return false;
+			}
+			appearances.push('pdfheight_' + pdfHeight);
 		}
 		var pdfcolsnumber = $('#a_pdfcols_number').val();
 		if(pdfcolsnumber && pdfcolsnumber !== '') {
@@ -754,7 +762,15 @@ $(document).ready(function() {
 	$('#task_file').change(function() {
 		globals.model.settingsChange();
 	});
-	$('#timing_data, #hide_on_device').change(function() {
+	$('#timing_data').change(function() {
+		if($(this).is(':checked')) {
+			$('.audit_location_data').show();
+		} else {
+			$('.audit_location_data').hide();
+		}
+		globals.model.settingsChange();
+	});
+	$('#hide_on_device, #audit_location_data').change(function() {
 		globals.model.settingsChange();
 	});
     $('#exclude_empty').change(function() {
@@ -2041,6 +2057,7 @@ function respondToEvents($context) {
 		$('#a_other').val(otherAppearances);       // Not sure if we want to do this
 
 
+		$('#appearance_msg').hide();
 		$('#appearanceModal').modal({
 			keyboard: true,
 			backdrop: 'static',
@@ -2704,6 +2721,12 @@ function updateSettingsData() {
 	}
 	$('#task_file').prop('checked', globals.model.survey.task_file);
 	$('#timing_data').prop('checked', globals.model.survey.timing_data);
+	if(globals.model.survey.timing_data) {
+		$('.audit_location_data').show();
+	} else {
+		$('.audit_location_data').hide();
+	}
+	$('#audit_location_data').prop('checked', globals.model.survey.audit_location_data);
 	$('#hide_on_device').prop('checked', globals.model.survey.hideOnDevice);
     $('#exclude_empty').prop('checked', globals.model.survey.exclude_empty);
 }
@@ -3231,12 +3254,23 @@ function setNoFilter() {
 				if(val) {
 					val = val.trim();
 					if(val.length > 0) {
+						// validate
+						if(key === 'max-pixels') {
+							if(val <= 0) {
+								showParameterError(localise.set["ed_gt_0"]);
+								$('#p_max_pixels').focus();
+								return false;
+							}
+						}
+
+						// Save parameter
 						if(key) {
 							val = key + '=' + val;
 						}
 						params.push(val);
 					}
 				}
+				return true;
             }
 
 			/*
@@ -3262,21 +3296,24 @@ function setNoFilter() {
 				} else if(details.type === "form") {
 					// Handcoded
 					if(details.field === 'a_search') {
-						if($('#a_has_search').is(':checked')) {
+						var search_source = $('input[type=radio][name=search_source]:checked').val();
+						if(search_source !== 'worksheet') {
 							val = "search(";        // open
 
 							// filename
 							var filename;
 							var csvfile;
-							var search_source = $('input[type=radio][name=search_source]:checked').val();
+
 							if(search_source === "survey") {
 								if($('#a_survey_identifier').val() === '') {
 									showAppearanceError(localise.set["msg_search_source2"]);
+									return false;
 								}
 								filename = 'linked_' + $('#a_survey_identifier').val();
 							} else if(search_source === "csv") {
 								if($('#a_csv_identifier').val() === '') {
 									showAppearanceError(localise.set["msg_search_source2"]);
+									return false;
 								}
 								csvfile = globals.gCsvFiles[$('#a_csv_identifier').val()];
 								filename = csvfile.filename;
@@ -3414,9 +3451,6 @@ function setNoFilter() {
 					// Custom - hardcoded
 					if(val === "search(") {
 
-						// Has search so enable the search panel
-						$('#a_has_search').prop('checked', true);
-
 						// Now check parameters
 						var idx1 = appearance.indexOf('(');
 						var idx2 = appearance.indexOf(')');
@@ -3436,16 +3470,19 @@ function setNoFilter() {
 							var filename = paramsArray[0].trim();
 							filename = filename.replace(/'/g, "");
 							if(filename.startsWith('linked_s')) {
+								var sIdent = filename.substring("linked_s".length - 1);
 								$('input[type=radio][name=search_source][value=survey]').prop('checked', true);
-								$('#a_survey_identifier').val(filename.substring("linked_s".length));
+								$('#a_survey_identifier').val(sIdent);
 								$('.search_survey').show();
-								getQuestionsInSurvey($('.column_select'), filename, true);
+								getQuestionsInSurvey($('.column_select'), sIdent, true);
 							} else {
 								var csvIndex = getIndexOfCsvFilename(filename);
 								$('input[type=radio][name=search_source][value=csv]').prop('checked', true);
 								$('#a_csv_identifier').val(csvIndex);
 								$('.search_csv').show();
-								getQuestionsInCsvFile($('.column_select'), csvIndex, true);
+								if(csvIndex) {
+									getQuestionsInCsvFile($('.column_select'), csvIndex, true);
+								}
 							}
 
 							filter = '';    // default
@@ -3640,14 +3677,18 @@ function setNoFilter() {
 				return undefined;
 			}
 
-			function showSearchElements(hasSearch) {
+			function showSearchElements() {
 
-				var hasSearch = $('#a_has_search').is(':checked');
 				var aFilterColumn = $('#a_filter_column').val();
 				var aSecondFilterColumn = $('#a_second_filter_column').val();
 				var searchSource = $('input[type=radio][name=search_source]:checked').val();
 				var searchChoiceValue = $('#a_search_value').val();
 				var fileIdentifier;
+				var hasSearch;
+
+				if(searchSource && searchSource !== '' && searchSource !== 'worksheet') {
+					hasSearch =true;
+				}
 
 				$('#appearance_msg').hide();
 
@@ -3767,5 +3808,8 @@ function setNoFilter() {
 
 			function showAppearanceError(msg) {
 				$('#appearance_msg').removeClass('alert-warning').addClass('alert-danger').show().html(msg);
+			}
+			function showParameterError(msg) {
+				$('#parameter_msg').removeClass('alert-warning').addClass('alert-danger').show().html(msg);
 			}
 });

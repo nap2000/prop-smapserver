@@ -366,7 +366,7 @@ define(function () {
 		    'begin group': ['page', 'w'],
 		    string: ['numbers', 'thousands-sep', 'w'],
 		    note: ['w'],
-            select1: ['select1_type', 'search', 'w'],
+            select1: ['select1_type', 'search', 'likert', 'w'],
             select: ['select_type', 'search', 'w'],
             image: ['image_type', 'w'],
             int:['thousands-sep', 'w'],
@@ -433,6 +433,11 @@ define(function () {
 		    },
 		    'rating': {
 			    field: 'a_rating',
+			    type: 'boolean',
+			    rex: 'rating'
+		    },
+		    'likert': {
+			    field: 'a_likert',
 			    type: 'boolean',
 			    rex: 'rating'
 		    },
@@ -1029,6 +1034,7 @@ define(function () {
                 $('#set_default_language option:selected').text(),
                 $('#task_file').prop('checked'),
                 $('#timing_data').prop('checked'),
+	            $('#audit_location_data').prop('checked'),
 	            $('#hide_on_device').prop('checked'),
                 $('#exclude_empty').prop('checked'),
                 $('#set_hrk').val(),
@@ -1044,6 +1050,7 @@ define(function () {
                 this.survey.def_lang = current.def_lang;
                 this.survey.task_file = current.task_file;
                 this.survey.timing_data = current.timing_data;
+	            this.survey.audit_location_data = current.audit_location_data;
 	            this.survey.hideOnDevice = current.hideOnDevice;
                 this.survey.exclude_empty = current.exclude_empty;
                 this.survey.hrk = current.hrk;
@@ -1063,6 +1070,7 @@ define(function () {
                     this.survey.def_lang,
                     this.survey.task_file,
                     this.survey.timing_data,
+	                this.survey.audit_location_data,
                     this.survey.hideOnDevice,
                     this.survey.exclude_empty,
                     this.survey.hrk,
@@ -1078,6 +1086,7 @@ define(function () {
                                               def_lang,
                                               task_file,
                                               timing_data,
+                                              audit_location_data,
                                               hideOnDevice,
                                               exclude_empty,
                                               hrk,
@@ -1097,6 +1106,7 @@ define(function () {
                 def_lang: def_lang,
                 task_file: task_file,
                 timing_data: timing_data,
+	            audit_location_data: audit_location_data,
                 hideOnDevice: hideOnDevice,
                 exclude_empty: exclude_empty,
                 hrk: hrk,
