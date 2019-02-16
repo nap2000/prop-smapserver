@@ -368,11 +368,11 @@ define(function () {
 		    note: ['w'],
             select1: ['select1_type', 'search', 'likert', 'w'],
             select: ['select_type', 'search', 'w'],
-            image: ['image_type', 'w'],
+            image: ['image_type', 'selfie', 'w'],
             int:['thousands-sep', 'w'],
 		    geopoint:['w'],
 		    audio:['w'],
-		    video:['w'],
+		    video:['selfie', 'w'],
 		    barcode:['w'],
 		    date:['date_type', 'w'],
 		    dateTime:['no-calendar', 'w'],
@@ -440,6 +440,11 @@ define(function () {
 			    field: 'a_likert',
 			    type: 'boolean',
 			    rex: 'rating'
+		    },
+		    'selfie': {
+			    field: 'a_selfie',
+			    type: 'boolean',
+			    rex: 'selfie'
 		    },
 		    'vertical': {
 			    field: 'a_vertical',
