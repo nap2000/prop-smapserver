@@ -252,14 +252,27 @@
 						</div>
 					</div>
 
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
-							<div class="checkbox">
-								<label>
-									<input type="checkbox" id="timing_data" tabindex="5"><span class="lang" data-lang="ed_td">timing data</span>
-								</label>
+					<div class="well">
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" id="timing_data" tabindex="5"><span class="lang" data-lang="ed_td">timing data</span>
+									</label>
+								</div>
 							</div>
 						</div>
+
+						<div class="form-group audit_location_data" style="display:none;">
+							<div class="col-sm-offset-2 col-sm-10">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" id="audit_location_data"><span class="lang" data-lang="ed_rl">record location</span>
+									</label>
+								</div>
+							</div>
+						</div>
+
 					</div>
 
 					<div class="form-group">
@@ -628,7 +641,7 @@
 
 			<div class="modal-body">
 				<div class="container-fluid">
-					<div id="parameter_msg" class="alert alert-danger" role="alert" style="display:none;"></div>
+
 					<form id="parameter_form" role="form" class="form-horizontal">
 						<div class="form-group parameter_field p_max_pixels">
 							<label for="p_max_pixels" data-lang="u_ft_img_size" class="lang col-sm-4 control-label">max</label>
@@ -754,12 +767,15 @@
 							</div>
 						</div>
 					</form>
+
+					<div id="parameter_msg" class="alert alert-danger" role="alert" style="display:none;"></div>
+
 				</div>
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">close</button>
-				<button id="parameterSave" type="button" class="btn btn-primary lang" data-lang="c_save">save</button>
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_cancel">cancel</button>
+				<button id="parameterSave" type="button" class="btn btn-primary lang" data-lang="c_done">done</button>
 			</div>
 		</div>
 	</div>
@@ -877,6 +893,16 @@
 									<div class="checkbox">
 										<label>
 											<input type="checkbox" id="a_no_calendar"><span class="lang" data-lang="ed_nc">no cal</span>
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group appearance_field a_likert">
+								<div class="col-sm-offset-4 col-sm-8">
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" id="a_likert"><span class="lang" data-lang="c_likert">likert</span>
 										</label>
 									</div>
 								</div>
@@ -1147,7 +1173,7 @@
 							<div class="col-sm-offset-4 col-sm-8">
 								<div class="checkbox">
 									<label>
-										<input type="checkbox" id="a_pdflabelcaps"><span class="lang" data-lang="ed_caps">label caps</span>
+										<input type="checkbox" id="a_pdflabelcaps"><span class="lang" data-lang="ed_caps"></span>
 									</label>
 								</div>
 							</div>
@@ -1157,7 +1183,7 @@
 							<div class="col-sm-offset-4 col-sm-8">
 								<div class="checkbox">
 									<label>
-										<input type="checkbox" id="a_pdflabelbold"><span class="lang" data-lang="ed_caps">label caps</span>
+										<input type="checkbox" id="a_pdflabelbold"><span class="lang" data-lang="ed_l_bold"></span>
 									</label>
 								</div>
 							</div>
@@ -1177,30 +1203,28 @@
 					<form id="appearance_search_form" role="form" class="form-horizontal">
 
 						<div class="form-group">
-							<div class="col-sm-offset-4 col-sm-8">
-								<div class="checkbox">
+							<label for="a_width" data-lang="c_source" class="lang col-sm-4 control-label">source</label>
+							<div class="col-sm-8" id="a_source">
+								<div class="radio">
 									<label>
-										<input type="checkbox" id="a_has_search"><span class="lang" data-lang="ed_as">add search</span>
+										<input type="radio" name="search_source" value="worksheet" checked="checked"><span class="lang" data-lang="ed_cws"></span>
+									</label>
+								</div>
+								<div class="radio">
+									<label>
+										<input type="radio" name="search_source" value="csv"><span class="lang" data-lang="c_csv"></span>
+									</label>
+								</div>
+								<div class="radio">
+									<label>
+										<input type="radio" name="search_source" value="survey"><span class="lang" data-lang="c_survey"></span>
 									</label>
 								</div>
 							</div>
 						</div>
+
+
 						<div class="appearance_search_details" style="display:none;">
-							<div class="form-group">
-								<label for="a_width" data-lang="c_source" class="lang col-sm-4 control-label">source</label>
-								<div class="col-sm-8" id="a_source">
-									<div class="radio">
-										<label>
-											<input type="radio" name="search_source" value="csv"><span class="lang" data-lang="c_csv"></span>
-										</label>
-									</div>
-									<div class="radio">
-										<label>
-											<input type="radio" name="search_source" value="survey"><span class="lang" data-lang="c_survey"></span>
-										</label>
-									</div>
-								</div>
-							</div>
 
 							<div class="form-group search_csv">
 								<label for="a_csv_identifier" data-lang="ed_csv" class="lang col-sm-4 control-label">file</label>
@@ -1249,7 +1273,7 @@
 										<option class="lang" data-lang="c_matches" value="matches"></option>
 										<option class="lang" data-lang="contains" value="contains"></option>
 										<option class="lang" data-lang="startsWith" value="startsWith"></option>
-										<option class="lang" data-lang="endsWith" value="endsWith"></option
+										<option class="lang" data-lang="endsWith" value="endsWith"></option>
 										<option class="lang" data-lang="c_in" value="in"></option>
 										<option class="lang" data-lang="c_notin" value="not in"></option>
 									</select>
@@ -1296,8 +1320,8 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">close</button>
-				<button id="appearanceSave" type="button" class="btn btn-primary lang" data-lang="c_save">save</button>
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_cancel">cancel</button>
+				<button id="appearanceSave" type="button" class="btn btn-primary lang" data-lang="c_done">done</button>
 			</div>
 		</div>
 	</div>
