@@ -84,13 +84,13 @@ cp $deploy_from/*.war /var/lib/$TOMCAT_VERSION/webapps
 chown -R $TOMCAT_VERSION /var/lib/$TOMCAT_VERSION/webapps
 
 # deploy webforms
-if [ -e $deploy_from/webforms.tgz ]
-then
-	echo "Updating webforms"
-        rm -rf /var/www/smap/webforms
-        mkdir /var/www/smap/webforms
-        tar -xzf $deploy_from/webforms.tgz -C /var/www/smap/
-fi
+#if [ -e $deploy_from/webforms.tgz ]
+#then
+#	echo "Updating webforms"
+#        rm -rf /var/www/smap/webforms
+#        mkdir /var/www/smap/webforms
+#        tar -xzf $deploy_from/webforms.tgz -C /var/www/smap/
+#fi
 
 # change owner for apache web directory
 chown -R www-data:www-data /var/www/smap

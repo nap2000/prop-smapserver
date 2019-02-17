@@ -368,12 +368,12 @@ define(function () {
 		    note: ['w'],
             select1: ['select1_type', 'search', 'likert', 'w'],
             select: ['select_type', 'search', 'w'],
-            image: ['image_type', 'selfie', 'w'],
+            image: ['image_type', 'selfie', 'new', 'w'],
             int:['thousands-sep', 'w'],
 		    geopoint:['w'],
 		    audio:['w'],
 		    video:['selfie', 'w'],
-		    barcode:['w'],
+		    barcode:['read_nfc', 'w'],
 		    date:['date_type', 'w'],
 		    dateTime:['no-calendar', 'w'],
 		    time:['w'],
@@ -439,12 +439,22 @@ define(function () {
 		    'likert': {
 			    field: 'a_likert',
 			    type: 'boolean',
-			    rex: 'rating'
+			    rex: 'likert'
 		    },
 		    'selfie': {
 			    field: 'a_selfie',
 			    type: 'boolean',
 			    rex: 'selfie'
+		    },
+		    'new': {
+			    field: 'a_new',
+			    type: 'boolean',
+			    rex: 'new'
+		    },
+		    'read_nfc': {
+			    field: 'a_read_nfc',
+			    type: 'boolean',
+			    rex: 'read_nfc'
 		    },
 		    'vertical': {
 			    field: 'a_vertical',

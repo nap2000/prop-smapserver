@@ -529,6 +529,8 @@ define({
     "msg_pformat": "Parameters specified in the other field must be separated by semi colons and contain an equals sign. For example:  a=x;b=y",
     "msg_filter_col": "You have specified a filter Column of '%s1', hence you need to specify a filter to apply",
     "msg_numb_ts": "Thousands separator will have no affect unless numbers is also selected",
+	"msg_warn_likert": "Likert only works on webforms,  you can also try \"range\" type questions which work on fieldTask and Webforms",
+	"msg_warn_likert_n": "Likert only works with the normal select type",
     "msg_choice_value": "The choice value must be specified",
 	"msg_search_source": "You must select either survey or csv as the souce of the choice data",
     "msg_search_source2": "The source file or survey must be selected",
@@ -695,6 +697,8 @@ define({
 
     // Editor
 	"ed_selfie": "Open camera in selfie mode",
+    "ed_new": "Require a new picture be taken",
+	"ed_read_nfc": "Read an NFC tag insgtead of a barcode",
     "ed_gt_0": "must be greater than 0, or not set",
 	"ed_add_to": "Append to question",
 	"ed_col_width": "width of column %s1",
@@ -760,7 +764,7 @@ define({
     "ed_r_msg": "Required Text Message",
     "ed_o_o_g": "Only one geometry question can be added to a form",
 	"ed_f_l": "The form to be launched must be specified as a parameter",
-	"ed_emp_rep": "Sub forms and groups must have at least one visible question.  Ie calculate questions are not visible.",
+	"ed_emp_rep": "Sub forms and groups should have at least one visible question.  Calculate questions are not considered visible.",
     "ed_hrk": "Unique Key",
     "ed_dk": "Data Key",
     "ed_csv": "CSV File",
