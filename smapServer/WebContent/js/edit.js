@@ -519,7 +519,7 @@ $(document).ready(function() {
 	});
 
 	// Validate on value change
-	$('#a_sep, #a_numbers, #a_select1_type').change(function(){
+	$('#a_sep, #a_numbers, #a_select1_type, #a_likert').change(function(){
 		checkForAppearanceWarnings();
 	});
 
@@ -3740,6 +3740,7 @@ function setNoFilter() {
 				var qtype = gQType;
 
 				if(qtype === 'string') {
+					// Warn if thousands separator is used without numbers on a text question
 					var ts = $('#a_sep').is(':checked');
 					var numbers = $('#a_numbers').is(':checked');
 					if(ts && !numbers) {
@@ -3747,6 +3748,25 @@ function setNoFilter() {
 							warningMsg += '. ';
 						}
 						warningMsg += localise.set["msg_numb_ts"];
+					}
+
+				}
+
+				if(qtype === 'select1') {
+					// Warn if likert appearance is used
+					var select1Type = $('#a_select1_type').val();
+					var likert = $('#a_likert').is(':checked');
+					if(likert) {
+						if(warningMsg.length > 0) {
+							warningMsg += '. ';
+						}
+						warningMsg += localise.set["msg_warn_likert"];
+					}
+					if(likert && select1Type !== '') {
+						if(warningMsg.length > 0) {
+							warningMsg += '. ';
+						}
+						warningMsg += localise.set["msg_warn_likert_n"];
 					}
 				}
 
