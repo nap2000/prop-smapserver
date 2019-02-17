@@ -1626,7 +1626,7 @@ define([
 		                        "item",
 		                        localise.set["ed_emp_rep"],
 		                        itemType,
-		                        "error");
+		                        "warning");
                         }
 	                }
 
@@ -1666,7 +1666,7 @@ define([
 				                "item",
 				                localise.set["ed_emp_rep"],
 				                itemType,
-				                "error");
+				                "warning");
 		                }
 	                }
 
