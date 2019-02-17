@@ -642,6 +642,15 @@ $(document).ready(function() {
 		if($('#a_pdflabelbold').prop('checked')) {
 			appearances.push('pdflabelbold');
 		}
+		if($('#a_pdfapp').prop('checked')) {
+			appearances.push('pdfapp');
+		}
+		if($('#a_pdfbarcode').prop('checked')) {
+			appearances.push('pdfbarcode');
+		}
+		if($('#a_pdfhyperlink').prop('checked')) {
+			appearances.push('pdfhyperlink');
+		}
 		if($('#a_pdfaddto').val() !== '') {
 			appearances.push('pdfaddto_' + $('#a_pdfaddto').val());
 		}
@@ -1898,6 +1907,11 @@ function respondToEvents($context) {
 		$('.pdfcols').hide();
 		$('#standardTab a').click();
 		$('#a_pdfaddto').empty().append(getQuestionsAsSelect());
+		if(qType === 'image') {
+			$('.a_pdfhyperlink').show();
+		} else {
+			$('.a_pdfhyperlink').hide();
+		}
 
 		/*
 		 * Show form controls relevant for this question type
@@ -2006,6 +2020,15 @@ function respondToEvents($context) {
 				foundAppearance = true;
 			} else if(appearanceArray[i] === 'pdflabelbold') {
 				$('#a_pdflabelbold').prop('checked', true);
+				foundAppearance = true;
+			} else if(appearanceArray[i] === 'pdfapp') {
+				$('#a_pdfapp').prop('checked', true);
+				foundAppearance = true;
+			} else if(appearanceArray[i] === 'pdfbarcode') {
+				$('#a_pdfbarcode').prop('checked', true);
+				foundAppearance = true;
+			} else if(appearanceArray[i] === 'pdfhyperlink') {
+				$('#a_pdfhyperlink').prop('checked', true);
 				foundAppearance = true;
 			} else if(appearanceArray[i].indexOf('pdfcols_') === 0) {
 				pdfa = appearanceArray[i].split('_');
