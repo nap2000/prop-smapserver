@@ -64,8 +64,8 @@ require([
          'app/editorMarkup',
          'app/changeset',
          'app/option',
-         'moment',
 		 'bootstrapcolorpicker',
+		 'moment',
          'icheck'], 
 		function(
 				$, 
@@ -104,8 +104,6 @@ var gNewVal,
 	gQType,
 	gIsSurveyLevel;
 
-window.moment = moment;
-
 'use strict';
 
 $(document).ready(function() {
@@ -118,6 +116,7 @@ $(document).ready(function() {
 		dont_get_current_survey = true;
 	
 	window.bootbox = bootbox;
+	window.moment = moment;
 
     setCustomEdit();
 	setupUserProfile();
