@@ -370,7 +370,7 @@ define(function () {
             select: ['select_type', 'search', 'w'],
             image: ['image_type', 'selfie', 'new', 'w'],
             int:['thousands-sep', 'w'],
-		    geopoint:['w'],
+		    geopoint:['placement-map', 'w'],
 		    audio:['w'],
 		    video:['selfie', 'w'],
 		    barcode:['read_nfc', 'w'],
@@ -425,6 +425,11 @@ define(function () {
 			    field: 'a_no_calendar',
 			    type: 'boolean',
 			    rex: 'no-calendar'
+		    },
+		    'placement-map': {
+			    field: 'a_placement-map',
+			    type: 'boolean',
+			    rex: 'placement-map'
 		    },
 		    'search': {
 			    field: 'a_search',

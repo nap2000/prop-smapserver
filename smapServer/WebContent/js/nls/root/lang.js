@@ -705,6 +705,7 @@ define({
 	"ed_barcode": "Show as a barcode",
 	"ed_hyperlink": "Show a hyperlink to the image",
 	"ed_col_width": "width of column %s1",
+	"ed_place_map": "Allow the user to select their location from a map",
 	"ed_l_bold": "Make label bold",
 	"ed_caps": "Make label all capitals",
 	"ed_npb": "New Page Before",
