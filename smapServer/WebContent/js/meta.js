@@ -19,147 +19,185 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 var gUserLocale = navigator.language;
 if (Modernizr.localstorage) {
 	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
+}
 
 "use strict";
 require.config({
-    baseUrl: 'js/libs',
-    waitSeconds: 0,
-    locale: gUserLocale,
-    paths: {
-    	app: '../app',
-    	jquery: 'jquery-2.1.1',
-    	lang_location: '..'
-    },
-    shim: {
-    	'app/common': ['jquery'],
-        'bootstrap.min': ['jquery'],
-        'jquery.autosize.min': ['jquery']
-    }
+	baseUrl: 'js/libs',
+	waitSeconds: 0,
+	locale: gUserLocale,
+	paths: {
+		app: '../app',
+		jquery: 'jquery-2.1.1',
+		lang_location: '..'
+	},
+	shim: {
+		'app/common': ['jquery'],
+		'bootstrap.min': ['jquery'],
+		'jquery.autosize.min': ['jquery']
+	}
 });
 
 require([
-         'jquery',
-         'app/common', 
-         'bootstrap.min', 
-         'modernizr',
-         'app/localise',
-         'app/ssc',
-         'app/globals',
-         'jquery.autosize.min'], 
-		function($, common, bootstrap, modernizr, lang, ssc, globals) {
+		'jquery',
+		'app/common',
+		'bootstrap.min',
+		'modernizr',
+		'app/localise',
+		'app/ssc',
+		'app/globals',
+		'jquery.autosize.min'],
+	function($, common, bootstrap, modernizr, lang, ssc, globals) {
 
 
-var	gMode = "survey",
-	gTempQuestions = [];
+		var	gMode = "survey",
+			gTempQuestions = [];
 
-$(document).ready(function() {
-	
-	var i,
-		params,
-		pArray = [],
-		param = [];
+		$(document).ready(function() {
 
-	setupUserProfile();
-	localise.setlang();		// Localise HTML
+			var i,
+				params,
+				pArray = [],
+				param = [];
 
-	// Get the user details
-	globals.gIsAdministrator = false;
-	getLoggedInUser(surveyListDone, false, true, undefined, false, false);
+			setupUserProfile();
+			localise.setlang();		// Localise HTML
 
-	// Add menu functions
-	$('#m_open').off().click(function() {	// Open an existing form
-		openForm("existing");
-	});
+			// Get the user details
+			globals.gIsAdministrator = false;
+			getLoggedInUser(surveyListDone, false, true, undefined, false, false);
 
-	// Add menu functions
-	$('#m_simple_edit').off().click(function() {	// Edit a survey
-		gMode = "simple_edit";
-		refreshView(gMode);
-	});
+			// Add menu functions
+			$('#m_open').off().click(function() {	// Open an existing form
+				openForm("existing");
+			});
 
-	$('#addPreload').off().click(function() {
-		$('#addModal').modal('show');
-	})
+			// Add menu functions
+			$('#m_simple_edit').off().click(function() {	// Edit a survey
+				gMode = "simple_edit";
+				refreshView(gMode);
+			});
 
-	$('#saveMetaItem').click(function() {
-        var name = $('#item_name').val();
-        var type = $('#item_type').val();
-    });
+			$('#addPreload').off().click(function() {
+				$('#metaForm')[0].reset();
+				$('#addModal').modal('show');
+			})
 
-	// Add responses to events
-	$('#project_name').change(function() {
-		globals.gCurrentProject = $('#project_name option:selected').val();
-		globals.gCurrentSurvey = -1;
-		globals.gCurrentTaskGroup = undefined;
+			$('#saveMetaItem').click(function() {
+				var item = {
+					name: $('#item_name').val(),
+					type: $('#item_type').val()
+				}
+				addNewMetaItem(item, surveyListDone)
 
-		saveCurrentProject(globals.gCurrentProject,
-				globals.gCurrentSurvey,
-				globals.gCurrentTaskGroup);
+				$('#addModal').modal("hide");
+			});
 
-		getSurveyList();
-	});
-	
-	enableUserProfileBS();
-});
+			// Add responses to events
+			$('#project_name').change(function() {
+				globals.gCurrentProject = $('#project_name option:selected').val();
+				globals.gCurrentSurvey = -1;
+				globals.gCurrentTaskGroup = undefined;
 
-function getSurveyList() {
-	console.log("getSurveyList: " + globals.gCurrentSurvey);
-	if(globals.gCurrentSurvey > 0) {
-		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyListDone);
-	} else {
-		loadSurveys(globals.gCurrentProject, undefined, false, false, undefined);
-	}
-}
+				saveCurrentProject(globals.gCurrentProject,
+					globals.gCurrentSurvey,
+					globals.gCurrentTaskGroup);
 
-function surveyListDone() {
-	getSurveyDetails(refreshView, true);
-}
+				getSurveyList();
+			});
 
-function refreshView() {
-	setChangesHtml($('#meta'), globals.model.survey);
-}
+			enableUserProfileBS();
+		});
 
-
-/*
- * Convert change log JSON to html
- */
-function setChangesHtml($element, survey) {
-	var h =[],
-		idx = -1,
-		i;
-	
-	if(!survey) {
-		$('#errormesg').html("<strong>No Changes</strong> Create or select a survey to see meta items");
-		$('#infobox').show();
-	} else {
-
-		h[++idx] = '<table class="table table-striped">';
-
-		for(i = 0; i < survey.meta.length; i++) {
-
-			if(survey.meta[i].isPreload) {
-                h[++idx] = '<tr>';
-                h[++idx] = '<td>';
-                h[++idx] = survey.meta[i].sourceParam;
-                h[++idx] = '</td>';
-                h[++idx] = '<td>';
-                h[++idx] = survey.meta[i].name;
-                h[++idx] = '</td>';
-                h[++idx] = '<td>';
-                h[++idx] = '<button type="button" data-idx="';
-                h[++idx] = i;
-                h[++idx] = '" class="btn btn-default btn-sm rm_preload danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
-                h[++idx] = '</td>';
-                h[++idx] = '</tr>';
-            }
+		function getSurveyList() {
+			console.log("getSurveyList: " + globals.gCurrentSurvey);
+			if(globals.gCurrentSurvey > 0) {
+				loadSurveys(globals.gCurrentProject, undefined, false, false, surveyListDone);
+			} else {
+				loadSurveys(globals.gCurrentProject, undefined, false, false, undefined);
+			}
 		}
 
-	} 
-	
-	$element.html(h.join(''));
+		function surveyListDone() {
+			getSurveyDetails(refreshView, true);
+		}
 
-}
+		function refreshView() {
+			setChangesHtml($('#meta'), globals.model.survey);
+		}
 
-});
+
+		/*
+		 * Convert list of meta items to html
+		 */
+		function setChangesHtml($element, survey) {
+			var h =[],
+				idx = -1,
+				i;
+
+			if(!survey) {
+				$('#errormesg').html("<strong>No Changes</strong> Create or select a survey to see meta items");
+				$('#infobox').show();
+			} else {
+
+				h[++idx] = '<table class="table table-striped">';
+
+				for(i = 0; i < survey.meta.length; i++) {
+
+					if(survey.meta[i].isPreload) {
+						h[++idx] = '<tr>';
+						h[++idx] = '<td>';
+						h[++idx] = survey.meta[i].sourceParam;
+						h[++idx] = '</td>';
+						h[++idx] = '<td>';
+						h[++idx] = survey.meta[i].name;
+						h[++idx] = '</td>';
+						h[++idx] = '<td>';
+						h[++idx] = '<button type="button" data-idx="';
+						h[++idx] = i;
+						h[++idx] = '" class="btn btn-default btn-sm rm_preload danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+						h[++idx] = '</td>';
+						h[++idx] = '</tr>';
+					}
+				}
+
+			}
+
+			$element.html(h.join(''));
+
+		}
+
+		function addNewMetaItem(item, callback) {
+
+			var url="/surveyKPI/surveys/add_meta/" + globals.model.survey.ident;
+			var itemString = JSON.stringify(item);
+
+			addHourglass();
+			$.ajax({
+				type: "POST",
+				url: url,
+				cache: false,
+				dataType: 'json',
+				data: {
+					item: itemString
+				},
+				success: function(data) {
+					removeHourglass();
+
+					if(typeof callback == "function") {
+						callback();
+					}
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						bootbox.alert(localise.set["c_error"] + xhr.responseText);
+					}
+				}
+			});
+		}
+
+	});
 
