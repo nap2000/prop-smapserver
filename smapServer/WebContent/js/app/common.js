@@ -1923,7 +1923,7 @@ function createNewSurvey(name, existing, existing_survey, shared_results, callba
 			if(xhr.readyState == 0 || xhr.status == 0) {
 				return;  // Not an error
 			} else {
-				bootbox.alert("Error: Failed to create survey: " + xhr.responseText);
+				bootbox.alert(localise.set["c_error"] + xhr.responseText);
 			}
 		}
 	});
