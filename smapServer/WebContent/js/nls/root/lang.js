@@ -295,6 +295,7 @@ define({
     "c_unsubscribed": "Unsubscribed",
     "c_unsubscribe": "Unsubscribe",
     "c_subscribe": "Subscribe",
+	"c_subscriberid": "Subscriber Id",
     "c_unsent": "Email not sent",
     "c_pending": "Pending",
     "c_ok": "OK",

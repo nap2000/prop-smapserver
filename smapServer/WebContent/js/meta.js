@@ -47,7 +47,7 @@ require([
 		'app/ssc',
 		'app/globals',
 		'jquery.autosize.min'],
-	function($, common, bootstrap, modernizr, lang, ssc, globals) {
+	function($, common, bootstrap, modernizr, localise, ssc, globals) {
 
 
 		var	gMode = "survey",
@@ -84,11 +84,22 @@ require([
 			})
 
 			$('#saveMetaItem').click(function() {
+
 				var item = {
 					name: $('#item_name').val(),
-					type: $('#item_type').val()
+					display_name: $('#item_display_name').val(),
+					sourceParam: $('#item_source_param').val()
 				}
-				addNewMetaItem(item, surveyListDone)
+
+				// Appearances
+				var app = [];
+				var pdfNo = $('#a_pdfno').prop('checked');
+				if(pdfNo) {
+					app.push('pdfno');
+				}
+				var appearances = app.join(' ');
+
+				editNewMetaItem(item, appearances, surveyListDone);
 
 				$('#addModal').modal("hide");
 			});
@@ -126,19 +137,54 @@ require([
 			setChangesHtml($('#meta'), globals.model.survey);
 		}
 
-
 		/*
 		 * Convert list of meta items to html
 		 */
 		function setChangesHtml($element, survey) {
 			var h =[],
 				idx = -1,
-				i;
+				i,
+				j;
 
 			if(!survey) {
 				$('#errormesg').html("<strong>No Changes</strong> Create or select a survey to see meta items");
 				$('#infobox').show();
 			} else {
+
+				var metaList =[
+					{
+						value: "start",
+						label: "c_start"
+					},
+					{
+						value: "end",
+						label: "c_end"
+					},
+					{
+						value: "deviceid",
+						label: "c_device"
+					},
+					{
+						value: "subscriberid",
+						label: "c_subscriberid"
+					},
+					{
+						value: "simserial",
+						label: "c_simserial"
+					},
+					{
+						value: "phonenumber",
+						label: "c_phone"
+					},
+					{
+						value: "username",
+						label: "c_user"
+					},
+					{
+						value: "email",
+						label: "c_email"
+					}
+				];
 
 				h[++idx] = '<table class="table table-striped">';
 
@@ -159,15 +205,39 @@ require([
 						h[++idx] = '</td>';
 						h[++idx] = '</tr>';
 					}
+
+					for(j = 0; j < metaList.length; j++) {
+						if(metaList[j].soourceParam === survey.meta[i].sourceParam) {
+							metaList[j].metaIndex = i;
+							metaList[j].set = true;
+							break;
+						}
+					}
 				}
 
 			}
 
 			$element.html(h.join(''));
 
+			/*
+			 * Add a dropdown to select a new preload
+			 */
+			h = [];
+			idx = -1;
+			for(j = 0; j < metaList.length; j++) {
+				if(!metaList[j].set) {
+					h[++idx] = '<option value="';
+					h[++idx] = metaList[j].value;
+					h[++idx] = '">';
+					h[++idx] = localise.set[metaList[j].label];
+					h[++idx] = '</option>';
+				}
+			}
+			$('#item_source_param').html(h.join(''));
+
 		}
 
-		function addNewMetaItem(item, callback) {
+		function editNewMetaItem(item, appearances, callback) {
 
 			var url="/surveyKPI/surveys/add_meta/" + globals.model.survey.ident;
 			var itemString = JSON.stringify(item);
@@ -179,7 +249,8 @@ require([
 				cache: false,
 				dataType: 'json',
 				data: {
-					item: itemString
+					item: itemString,
+					appearances: appearances
 				},
 				success: function(data) {
 					removeHourglass();
@@ -193,7 +264,7 @@ require([
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						bootbox.alert(localise.set["c_error"] + xhr.responseText);
+						alert(localise.set["c_error"] + xhr.responseText);
 					}
 				}
 			});
