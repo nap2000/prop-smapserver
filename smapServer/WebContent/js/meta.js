@@ -51,14 +51,9 @@ require([
 
 
 		var	gMode = "survey",
-			gTempQuestions = [];
+			gIdx;;
 
 		$(document).ready(function() {
-
-			var i,
-				params,
-				pArray = [],
-				param = [];
 
 			setupUserProfile();
 			localise.setlang();		// Localise HTML
@@ -236,13 +231,11 @@ require([
 			h = [];
 			idx = -1;
 			for(j = 0; j < metaList.length; j++) {
-				if(!metaList[j].set) {
-					h[++idx] = '<option value="';
-					h[++idx] = metaList[j].value;
-					h[++idx] = '">';
-					h[++idx] = localise.set[metaList[j].label];
-					h[++idx] = '</option>';
-				}
+				h[++idx] = '<option value="';
+				h[++idx] = metaList[j].value;
+				h[++idx] = '">';
+				h[++idx] = localise.set[metaList[j].label];
+				h[++idx] = '</option>';
 			}
 			$('#item_source_param').html(h.join(''));
 
@@ -255,8 +248,8 @@ require([
 			$('.edit_preload', $element).click(function(){
 
 				var metaList = globals.model.survey.meta;
-				var idx = $(this).data("idx");
-				var item = metaList[idx];
+				gIdx = $(this).data("idx");
+				var item = metaList[gIdx];
 				var i;
 
 				$('#metaForm')[0].reset();
