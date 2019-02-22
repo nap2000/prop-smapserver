@@ -81,7 +81,7 @@ require([
 			$('#addPreload').off().click(function() {
 				$('#metaForm')[0].reset();
 				$('#addModal').modal('show');
-			})
+			});
 
 			$('#saveMetaItem').click(function() {
 
@@ -89,17 +89,17 @@ require([
 					name: $('#item_name').val(),
 					display_name: $('#item_display_name').val(),
 					sourceParam: $('#item_source_param').val()
-				}
+				};
 
-				// Appearances
-				var app = [];
+				// Settings
+				var set = [];
 				var pdfNo = $('#a_pdfno').prop('checked');
 				if(pdfNo) {
-					app.push('pdfno');
+					set.push('pdfno');
 				}
-				var appearances = app.join(' ');
+				item.settings = set.join(' ');
 
-				editNewMetaItem(item, appearances, surveyListDone);
+				updateMetaItem(item, surveyListDone);
 
 				$('#addModal').modal("hide");
 			});
@@ -145,6 +145,8 @@ require([
 				idx = -1,
 				i,
 				j;
+
+			$('.formName').html(survey.displayName);
 
 			if(!survey) {
 				$('#errormesg').html("<strong>No Changes</strong> Create or select a survey to see meta items");
@@ -199,9 +201,18 @@ require([
 						h[++idx] = survey.meta[i].name;
 						h[++idx] = '</td>';
 						h[++idx] = '<td>';
+						h[++idx] = survey.meta[i].display_name;
+						h[++idx] = '</td>';
+						h[++idx] = '<td>';
+						h[++idx] = survey.meta[i].settings;
+						h[++idx] = '</td>';
+						h[++idx] = '<td>';
 						h[++idx] = '<button type="button" data-idx="';
 						h[++idx] = i;
-						h[++idx] = '" class="btn btn-default btn-sm rm_preload danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+						h[++idx] = '" class="btn btn-primary btn-sm edit_preload"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>';
+						h[++idx] = '<button type="button" data-idx="';
+						h[++idx] = i;
+						h[++idx] = '" style="margin-left:2px;" class="btn btn-default btn-sm rm_preload danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
 						h[++idx] = '</td>';
 						h[++idx] = '</tr>';
 					}
@@ -235,9 +246,38 @@ require([
 			}
 			$('#item_source_param').html(h.join(''));
 
+			/*
+			 * Add a response to actions
+			 */
+			$('.rm_preload', $element).click(function(){
+				alert('delete me');
+			});
+			$('.edit_preload', $element).click(function(){
+
+				var metaList = globals.model.survey.meta;
+				var idx = $(this).data("idx");
+				var item = metaList[idx];
+				var i;
+
+				$('#metaForm')[0].reset();
+				$('#item_name').val(item.name);
+				$('#item_display_name').val(item.display_name);
+				$('#item_source_param').val(item.sourceParam);
+
+				if(item.settings) {
+					var set = item.settings.split(' ');
+					for(i = 0; i < set.length; i++) {
+						if(set[i] === 'pdfno') {
+							$('#a_pdfno').prop('checked', true);
+						}
+					}
+				}
+				$('#addModal').modal('show');
+			});
+
 		}
 
-		function editNewMetaItem(item, appearances, callback) {
+		function updateMetaItem(item, callback) {
 
 			var url="/surveyKPI/surveys/add_meta/" + globals.model.survey.ident;
 			var itemString = JSON.stringify(item);
@@ -247,10 +287,8 @@ require([
 				type: "POST",
 				url: url,
 				cache: false,
-				dataType: 'json',
 				data: {
-					item: itemString,
-					appearances: appearances
+					item: itemString
 				},
 				success: function(data) {
 					removeHourglass();
