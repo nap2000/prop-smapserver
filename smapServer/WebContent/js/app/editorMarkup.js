@@ -320,7 +320,7 @@ define([
 	
 		h[++idx] = '<button tabindex="-1" id="addnew_optionlist" ';
 		h[++idx] = 'type="button" class="add_option_list add_button add_after_button add_final_button btn">';
-		h[++idx] = 'Add New Choice List'; 	
+		h[++idx] = localise.set["ed_ancl"];
 		h[++idx] = '</button>';
 		h[++idx] = '</li>';
 		

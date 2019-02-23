@@ -786,6 +786,7 @@ define({
     "ed_ab": "Add Before",
     "ed_aa": "Add After",
     "ed_aq": "Add New Question",
+    "ed_ancl": "Add New Choice List",
     "ed_anc": "Add New Choice",
     "ed_cs": "Cascading Select",
     "ed_cspq": "Previous Select Question",
