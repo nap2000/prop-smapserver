@@ -248,7 +248,7 @@ require([
 			});
 
 			$('.edit_preload', $element).click(function(){
-				
+
 				gIdx = $(this).data("idx");
 				var item = globals.model.survey.meta[gIdx];
 				var i;
