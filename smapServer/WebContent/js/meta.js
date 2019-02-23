@@ -213,7 +213,7 @@ require([
 					}
 
 					for(j = 0; j < metaList.length; j++) {
-						if(metaList[j].soourceParam === survey.meta[i].sourceParam) {
+						if(metaList[j].sourceParam === survey.meta[i].sourceParam) {
 							metaList[j].metaIndex = i;
 							metaList[j].set = true;
 							break;
@@ -243,13 +243,14 @@ require([
 			 * Add a response to actions
 			 */
 			$('.rm_preload', $element).click(function(){
-				alert('delete me');
+				var item = globals.model.survey.meta[$(this).data("idx")];
+				deleteMetaItem(item.sourceParam, surveyListDone);
 			});
-			$('.edit_preload', $element).click(function(){
 
-				var metaList = globals.model.survey.meta;
+			$('.edit_preload', $element).click(function(){
+				
 				gIdx = $(this).data("idx");
-				var item = metaList[gIdx];
+				var item = globals.model.survey.meta[gIdx];
 				var i;
 
 				$('#metaForm')[0].reset();
@@ -283,6 +284,33 @@ require([
 				data: {
 					item: itemString
 				},
+				success: function(data) {
+					removeHourglass();
+
+					if(typeof callback == "function") {
+						callback();
+					}
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(localise.set["c_error"] + xhr.responseText);
+					}
+				}
+			});
+		}
+
+		function deleteMetaItem(sourceParam, callback) {
+
+			var url="/surveyKPI/surveys/meta/" + globals.model.survey.ident + "/" + sourceParam;
+
+			addHourglass();
+			$.ajax({
+				type: "DELETE",
+				url: url,
+				cache: false,
 				success: function(data) {
 					removeHourglass();
 
