@@ -156,7 +156,7 @@ function setChangesHtml($element, survey) {
 					h[++idx] = ')';
 				h[++idx] = '</th>';
 
-				h[++idx] = '<th>' + localise.set["ft_xls_orig"] + '</th>';
+				h[++idx] = '<th>' + localise.set["c_file"] + '</th>';
 				h[++idx] = '<th>' + localise.set["c_msg"] + '</th>';
 			h[++idx] = '</tr>';
 		h[++idx] = '</thead>';
