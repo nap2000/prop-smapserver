@@ -308,12 +308,13 @@ define({
     "c_draw": "Draw",
     "c_field_list": "Field List",
     "c_table_list": "Table List",
+    "c_recover": "Recover Previous File",
 
 
     // File Types
     "ft": "File Type",
     "ft_xls": "XLS Form",
-    "ft_xls_orig": "Original XLS file",
+    "ft_xls_orig": "Original file",
     "ft_xml": "XML Form",
     "ft_codebook": "Codebook",
     "ft_pdf": "PDF Template",

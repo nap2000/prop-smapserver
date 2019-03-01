@@ -176,8 +176,13 @@ function setChangesHtml($element, survey) {
 				if(fnIndex >= 0) {
 					filename = filename.substr(fnIndex + 1);
 				}
-                filehtml = '<a href="/surveyKPI/survey/' + changes[i].change.origSId + '/download?type=xls">'
-					+ filename + '</a>';
+				var url = null;
+				if(filename.indexOf("_template.pdf") > 0) {
+					url = '/surveyKPI/file/' + filename + '/surveyPdfTemplate/' + changes[i].change.origSId + '?archive=true';
+				} else {
+					url = '/surveyKPI/survey/' + changes[i].change.origSId + '/download?type=xls';
+				}
+                filehtml = '<a href="' + url + '">' + filename + '</a>';
 			}
 			h[++idx] = '<tr class="change_';
 					h[++idx] = status;
