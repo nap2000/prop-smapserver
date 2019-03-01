@@ -796,6 +796,9 @@ $(document).ready(function() {
     $('#downloadPdfTemplate').off().click(function() {
         downloadFile("/surveyKPI/file/pdf/surveyPdfTemplate/" + gSId);
     });
+	$('#prevPdfTemplate').off().click(function() {
+		downloadFile("/surveyKPI/file/pdf/surveyPdfTemplate/" + gSId + '?recovery=true');
+	});
     $('#set_key_policy').change(function() {
         globals.model.settingsChange();
     });
