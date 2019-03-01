@@ -1274,6 +1274,7 @@ define(['jquery','localise', 'common', 'globals',
 			setBannerLogo(org.id);
 
 		} else {
+			$('#o_tz').val('UTC');
 			addLanguageOptions($('#o_language'), undefined);
 		}
 		$('#create_organisation_popup').modal("show");
