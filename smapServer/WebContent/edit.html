@@ -118,10 +118,10 @@
 				</li>
 				<li class="notoptionslist"><input id="viewType" type="checkbox" checked
 												  data-onstyle="primary" data-offstyle="info"></li>
-				<li><a type="button" tabindex="-1"  class="btn btn-success lang disabled m_save_survey" disabled="disabled">
+				<li><a type="button" class="btn btn-success lang disabled m_save_survey" disabled="disabled">
 					<span class="lang" data-lang="c_save">Save</span>
 					<span class="badge">0</span></a></li>
-				<li><a type="button" tabindex="-1"  data-lang="c_test"
+				<li><a type="button" data-lang="c_test"
 					   class="btn btn-primary lang m_test_survey" href='javascript:void(0)' target="_blank">Test</a></li>
 
 				<!--
@@ -186,7 +186,7 @@
 </div>
 
 <!-- Setting Dialog -->
-<div id="settingsModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="settingsLabel" aria-hidden="true">
+<div id="settingsModal" class="modal fade" role="dialog" aria-labelledby="settingsLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -246,7 +246,7 @@
 						<div class="col-sm-offset-2 col-sm-10">
 							<div class="checkbox">
 								<label>
-									<input type="checkbox" id="task_file" tabindex="5"><span class="lang" data-lang="ed_ld">allow import</span>
+									<input type="checkbox" id="task_file"><span class="lang" data-lang="ed_ld">allow import</span>
 								</label>
 							</div>
 						</div>
@@ -257,7 +257,7 @@
 							<div class="col-sm-offset-2 col-sm-10">
 								<div class="checkbox">
 									<label>
-										<input type="checkbox" id="timing_data" tabindex="5"><span class="lang" data-lang="ed_td">timing data</span>
+										<input type="checkbox" id="timing_data"><span class="lang" data-lang="ed_td">timing data</span>
 									</label>
 								</div>
 							</div>
@@ -279,7 +279,7 @@
 						<div class="col-sm-offset-2 col-sm-10">
 							<div class="checkbox">
 								<label>
-									<input type="checkbox" id="hide_on_device" tabindex="6"><span class="lang" data-lang="ed_hod">hide</span>
+									<input type="checkbox" id="hide_on_device"><span class="lang" data-lang="ed_hod">hide</span>
 								</label>
 							</div>
 						</div>
@@ -289,7 +289,7 @@
 						<div class="col-sm-offset-2 col-sm-10">
 							<div class="checkbox">
 								<label>
-									<input type="checkbox" id="exclude_empty" tabindex="7"><span class="lang" data-lang="ed_ee">exclude empty</span>
+									<input type="checkbox" id="exclude_empty"><span class="lang" data-lang="ed_ee">exclude empty</span>
 								</label>
 							</div>
 						</div>
@@ -333,7 +333,7 @@
 </div>
 
 <!-- Keys Dialog -->
-<div id="keysModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="keysLabel" aria-hidden="true">
+<div id="keysModal" class="modal fade" role="dialog" aria-labelledby="keysLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -378,7 +378,7 @@
 </div>
 
 <!-- Info Dialog -->
-<div id="infoModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="infoLabel" aria-hidden="true">
+<div id="infoModal" class="modal fade" role="dialog" aria-labelledby="infoLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -449,7 +449,7 @@
 </div>
 
 <!-- Modals -->
-<div id="openFormModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="openFormLabel" aria-hidden="true">
+<div id="openFormModal" class="modal fade" role="dialog" aria-labelledby="openFormLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -467,7 +467,7 @@
 					<div class="form-group new_form" style="display:none;">
 						<label for="new_form_name" data-lang="c_name" class="lang col-sm-2 control-label">Name</label>
 						<div class="col-sm-10">
-							<input type="text" id="new_form_name" required class="form-control">
+							<input type="text" id="new_form_name" value="" autofocus required class="form-control">
 						</div>
 					</div>
 					<div class="form-group new_form" style="display:none;">
@@ -521,7 +521,7 @@
 
 
 <!-- Modal for managing media -->
-<div id="mediaModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mediaModalLabel" aria-hidden="true">
+<div id="mediaModal" class="modal fade" role="dialog" aria-labelledby="mediaModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -614,7 +614,7 @@
 </div>
 
 <!-- Modal for setting question type -->
-<div id="typeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="typeModalLabel" aria-hidden="true">
+<div id="typeModal" class="modal fade" role="dialog" aria-labelledby="typeModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -636,7 +636,7 @@
 </div>
 
 <!-- Modal for setting parameters -->
-<div id="parameterModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="typeModalLabel" aria-hidden="true">
+<div id="parameterModal" class="modal fade" role="dialog" aria-labelledby="typeModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -787,7 +787,7 @@
 </div>
 
 <!-- Modal for setting appearances -->
-<div id="appearanceModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="typeModalLabel" aria-hidden="true">
+<div id="appearanceModal" class="modal fade" role="dialog" aria-labelledby="typeModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -1403,7 +1403,7 @@
 </div>
 
 <!-- Modal to add/remove a filter -->
-<div id="filterModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
+<div id="filterModal" class="modal fade" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -1434,7 +1434,7 @@
 
 
 <!-- Model to edit languages -->
-<div id="editLanguageModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editLanguageLabel" aria-hidden="true">
+<div id="editLanguageModal" class="modal fade" role="dialog" aria-labelledby="editLanguageLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -1466,7 +1466,7 @@
 </div>
 
 <!-- Model to edit pull data settings -->
-<div id="pulldataModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="pulldataLabel" aria-hidden="true">
+<div id="pulldataModal" class="modal fade" role="dialog" aria-labelledby="pulldataLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">

@@ -947,8 +947,7 @@ $(document).ready(function() {
 	
 	setupQuestionTypes($('#dialog_types'), 2, false, undefined);		// Double column, not draggable for change type dialog
 	setupQuestionTypes($('#toolbar_types'), 1, true, undefined);		// Single column, draggable for toolbar
-	
-	// Set focus on survey name when create form modal is opened
+
 	$('#openFormModal').on('shown.bs.modal', function () {
 		$('#new_form_name').focus();
 	});
