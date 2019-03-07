@@ -119,6 +119,7 @@ public class CheckDisk {
 		pstmt.setLong(5, mediaSize);
 		pstmt.setLong(6, templateSize);
 		pstmt.setLong(7, attachmentsSize);
+		System.out.println(pstmt.toString());
 		pstmt.executeUpdate();
 	}
 	
