@@ -112,8 +112,8 @@ public class CheckDisk {
 	
 	private void writeUsage(PreparedStatement pstmt, int ent, int org, long totalSize, long uploadSize, long mediaSize, 
 			long templateSize, long attachmentsSize) throws SQLException {
-		pstmt.setInt(1, org);
-		pstmt.setInt(2, ent);
+		pstmt.setInt(1, ent);
+		pstmt.setInt(2, org);
 		pstmt.setLong(3, totalSize);
 		pstmt.setLong(4, uploadSize);
 		pstmt.setLong(5, mediaSize);
