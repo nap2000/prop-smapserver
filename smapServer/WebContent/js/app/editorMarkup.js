@@ -447,7 +447,7 @@ define([
 		var h = [],
 			idx = -1,
 			i,
-			linkedSurveys = globals.model.survey.linkedSurveys,
+			//linkedSurveys = globals.model.survey.linkedSurveys,
 			selProperty = globals.gSelProperty,
 			selLabel = globals.gSelLabel,
 			naMedia = '<div class="naMedia text-center">' + localise.set["ed_namedia"] + '</div>';
@@ -546,80 +546,79 @@ define([
 					h[++idx] = '</button>';
 					
 				h[++idx] = '</div>';
-				
-			} else if(selProperty === "linked_target" && type === "question") {		// Add selects to get the linked survey, and question				
-				h[++idx] = '<div class="row">';
-				
-				h[++idx] = '<div class="col-xs-6">';	// Start checkbox column
-			    h[++idx] = '<button type="button" class="btn labelButton ';
-			    if(question[selProperty]) {
-			    	h[++idx] = 'prop_yes" ';
-			    } else {
-			    	h[++idx] = 'prop_no" ';
-			    }
-			    h[++idx] = ' data-prop="';
-				h[++idx] = selProperty;
-				h[++idx] = '">';
-				h[++idx] = '<span class="glyphicon ';
-				if(question[selProperty]) {
-			    	h[++idx] = 'glyphicon-ok-sign"> ';
-			    	h[++idx] = localise.set["ed_l"];
-			    } else {
-			    	h[++idx] = 'glyphicon-remove-sign"> ';
-			    	h[++idx] = localise.set["ed_nl"];
-			    }
-			    h[++idx] = '</span></button>';
-			    h[++idx] = '</div>';
-			    
-			    /*
-			     * Add the select questions
-			     */
-			    var  linkedTarget = getLinkedTarget(question[selProperty]);
-			    h[++idx] = '<div class="col-xs-6">';	// Start select column
-			    h[++idx] = '<div';
-			    if(!question[selProperty]) {
-			    	h[++idx] = ' style="display:none;"';
-			    }
-			    h[++idx] = '>';
-			    
-			    // Linked survey
-			   
-				h[++idx] = '<div class="form-group">';
-				h[++idx] = '<select class="form-control linkedTarget linkedSurvey"';
-				h[++idx] = ' data-prop="';
-					h[++idx] = selProperty;
-				h[++idx] = '">';
-				for(i = 0; i < linkedSurveys.length; i++) {
-					h[++idx] = '<option value="';
-					h[++idx] = linkedSurveys[i].id;
-					h[++idx] = '"';
-					if((question[selProperty] && linkedTarget && linkedTarget.sId == linkedSurveys[i].id) || 
-							(!question[selProperty] && i == 0)) {
-						h[++idx] = ' selected';
-					} 
-					h[++idx] = '>';
-					h[++idx] = linkedSurveys[i].name;
-					h[++idx] = '</option>';
-				}
-				h[++idx] = '</select>';
-				h[++idx] = '</div>';	// Form Group
-				
-			    // Linked question
-				h[++idx] = '<div class="form-group">';
-				h[++idx] = '<select class="form-control linkedTarget linkedQuestion"';
-				h[++idx] = ' data-prop="linked_target">';
-				if(question[selProperty] && linkedTarget) {
-					getLinkedQuestions(questionId, linkedTarget.sId, linkedTarget.qId);
-				}
-				h[++idx] = '</select>';
-				h[++idx] = '</div>';	// Form Group
-				h[++idx] = '</div>';	// Show / No show
 
-				h[++idx] ='</div>';		// End Col 
-				h[++idx] ='</div>';		// End Row
-				
-			
-				
+
+			//} else if(selProperty === "linked_target" && type === "question") {		// Add selects to get the linked survey, and question
+			//	h[++idx] = '<div class="row">';
+			//
+			//	h[++idx] = '<div class="col-xs-6">';	// Start checkbox column
+			//    h[++idx] = '<button type="button" class="btn labelButton ';
+			//    if(question[selProperty]) {
+			//    	h[++idx] = 'prop_yes" ';
+			//    } else {
+			//    	h[++idx] = 'prop_no" ';
+			//    }
+			//    h[++idx] = ' data-prop="';
+			//	h[++idx] = selProperty;
+			//	h[++idx] = '">';
+			//	h[++idx] = '<span class="glyphicon ';
+			//	if(question[selProperty]) {
+			//    	h[++idx] = 'glyphicon-ok-sign"> ';
+			//    	h[++idx] = localise.set["ed_l"];
+			//    } else {
+			//    	h[++idx] = 'glyphicon-remove-sign"> ';
+			//    	h[++idx] = localise.set["ed_nl"];
+			//    }
+			//    h[++idx] = '</span></button>';
+			//    h[++idx] = '</div>';
+			//
+			//    /*
+			//     * Add the select questions
+			//     */
+			//    var  linkedTarget = getLinkedTarget(question[selProperty]);
+			//    h[++idx] = '<div class="col-xs-6">';	// Start select column
+			//    h[++idx] = '<div';
+			//    if(!question[selProperty]) {
+			//    	h[++idx] = ' style="display:none;"';
+			//    }
+			//    h[++idx] = '>';
+			//
+			//    // Linked survey
+			//
+			//	h[++idx] = '<div class="form-group">';
+			//	h[++idx] = '<select class="form-control linkedTarget linkedSurvey"';
+			//	h[++idx] = ' data-prop="';
+			//		h[++idx] = selProperty;
+			//	h[++idx] = '">';
+			//	for(i = 0; i < linkedSurveys.length; i++) {
+			//		h[++idx] = '<option value="';
+			//		h[++idx] = linkedSurveys[i].id;
+			//		h[++idx] = '"';
+			//		if((question[selProperty] && linkedTarget && linkedTarget.sId == linkedSurveys[i].id) ||
+			//				(!question[selProperty] && i == 0)) {
+			//			h[++idx] = ' selected';
+			//		}
+			//		h[++idx] = '>';
+			//		h[++idx] = linkedSurveys[i].name;
+			//		h[++idx] = '</option>';
+			//	}
+			//	h[++idx] = '</select>';
+			//	h[++idx] = '</div>';	// Form Group
+			//
+			//    // Linked question
+			//	h[++idx] = '<div class="form-group">';
+			//	h[++idx] = '<select class="form-control linkedTarget linkedQuestion"';
+			//	h[++idx] = ' data-prop="linked_target">';
+			//	if(question[selProperty] && linkedTarget) {
+			//		getLinkedQuestions(questionId, linkedTarget.sId, linkedTarget.qId);
+			//	}
+			//	h[++idx] = '</select>';
+			//	h[++idx] = '</div>';	// Form Group
+			//	h[++idx] = '</div>';	// Show / No show
+			//
+			//	h[++idx] ='</div>';		// End Col
+			//	h[++idx] ='</div>';		// End Row
+
 			} else if(selProperty === "parameters" && type === "question") {		// Add button to select the parameters dialog
 				h[++idx] = '<div class="row">';
 
