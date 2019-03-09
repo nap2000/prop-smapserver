@@ -57,11 +57,14 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
 
             // Set change function target
             $('#target').change(function() {
-                var target = $(this).val();
-
-                setTargetDependencies(target);
+                setTargetDependencies($(this).val());
             });
             setTargetDependencies("email");
+
+	        // Set change function attach
+	        $('#email_attach').change(function() {
+	            setAttachDependencies($(this).val());
+	        });
 
             // Enable the save notifications function
             $('#saveNotification').click(function(){saveNotification();});
@@ -150,6 +153,14 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 $('.sms_options').show();
                 $('.email_options, .forward_options').hide();
             }
+        }
+
+        function setAttachDependencies(attach) {
+	        if(attach === "pdf" || attach === "pdf_landscape") {
+		        $('.pdf_options').show();
+	        } else  {
+		        $('.pdf_options').hide();
+	        }
         }
 
         function projectSet() {
@@ -264,6 +275,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 notification.notifyDetails.subject = $('#email_subject').val();
                 notification.notifyDetails.content = $('#email_content').val();
                 notification.notifyDetails.attach = $('#email_attach').val();
+	            notification.notifyDetails.include_references = $('#include_references').prop('checked');
             }
 
             return notification;
@@ -360,6 +372,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
 
             document.getElementById("notification_edit_form").reset();
 	        setTargetDependencies("email");
+	        setAttachDependencies();
 
             if(typeof idx !== "undefined") {
                 notification = gNotifications[idx];
@@ -368,6 +381,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
 				$('#target').val(notification.target);
 				$('#name').val(notification.name);
                 setTargetDependencies(notification.target)
+	            setAttachDependencies(notification.notifyDetails.attach);
 
                 $('#survey').val(notification.s_id);
                 $('#not_filter').val(notification.filter);
@@ -381,6 +395,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                         $('#email_subject').val(notification.notifyDetails.subject);
                         $('#email_content').val(notification.notifyDetails.content);
                         $('#email_attach').val(notification.notifyDetails.attach);
+	                    $('#include_references').prop('checked', notification.notifyDetails.include_references);
                     } else if(notification.target == "sms") {
                         $('#notify_sms').val(notification.notifyDetails.emails.join(","));
                         $('#sms_content').val(notification.notifyDetails.content);
@@ -398,6 +413,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 } else {
                     $('#nt_enabled').prop('checked', false);
                 }
+
                 gUpdateFwdPassword = false;
                 gSelectedNotification = notification.id;
             } else {
