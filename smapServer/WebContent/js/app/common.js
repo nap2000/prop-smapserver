@@ -3193,13 +3193,6 @@ function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms) {
 		type = "checkbox";
 	}
 
-	// Don't automatically check the forms that hold the points for geopolygon and linestring
-	//if(form.form.substring(0, 10) === "geopolygon" || form.form.substring(0, 13) === "geolinestring") {
-	//    checked = '';
-	//} else {
-	//    checked = 'checked="checked"';
-	//}
-
 	// Set checked value based on previous selections
 	if(set_radio && offset == 0) {
 		checked = 'checked="checked"';
@@ -3219,10 +3212,6 @@ function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms) {
 		}
 	} else {}
 
-	//h[++idx] = '<span style="padding-left:';
-	//h[++idx] = offset;
-	//h[++idx] = 'px;">';
-	//h[++idx] = '<input class="osmform" type="' + type + '" ' + checked + ' name="osmform" value="';
 	h[++idx] = '<div class="' + type + '"';
 	h[++idx] = '<span style="padding-left:';
 	h[++idx]= offset + 'px;">';
@@ -3240,11 +3229,6 @@ function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms) {
 		h[++idx] = ' <button class="exportpivot">Pivot</button>';
 	}
 	h[++idx]= '</div>';
-
-
-
-	//h[++idx] = '<br/>';
-	//h[++idx] = '</span>';
 
 	// Add the children (recursively)
 	for(i = 0; i < sMeta.forms.length; i++) {
