@@ -1010,6 +1010,7 @@ define({
     "n_eq": "Email question",
     "n_eqc": "Question that will contain the email addresses to use",
     "n_esc": "Subject for the email (optional)",
+    "n_inc_ref": "Include referenced surveys",
 
     // Roles
     "ro_fr": "Filter rows",
