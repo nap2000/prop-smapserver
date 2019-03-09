@@ -106,16 +106,21 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
                 var docURL,
                     language,
                     orientation,
-                    type;
+                    type,
+	                include_references;
 
                 type = $("input[name='download_type']:checked", "#download_template").val();
                 language = $('#download_language option:selected').val();
                 orientation = $("input[name='orientation']:checked", "#download_template").val();
+	            include_references = $("#include_references", "#download_template").prop('checked');
 
                 if(type === "pdf") {
                     docURL = "/surveyKPI/pdf/" + gSelectedTemplateIdent + "?filename=" + gSelectedTemplateName + "&language=" + language;
                     if(orientation === "landscape") {
                         docURL += "&landscape=true";
+                    }
+                    if(include_references) {
+	                    docURL += "&reference_surveys=true";
                     }
                 } else if(type === "xls_edited") {
                     docURL = "/surveyKPI/xlsForm/" + gSelectedTemplateId + "?filetype=" + "xlsx";
@@ -161,9 +166,9 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
                     $('#download_language_div').hide();
                 }
                 if(type === "pdf") {
-                    $('#download_orientation_div').show();
+                    $('.pdf_elements').show();
                 } else {
-                    $('#download_orientation_div').hide();
+                    $('.pdf_elements').hide();
                 }
             });
 
@@ -652,7 +657,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
                     $('#dtorigxls').hide();
                 }
                 $('form', '#download_template')[0].reset();
-                $('#download_language_div, #download_orientation_div').hide();
+                $('#download_language_div, .pdf_elements').hide();
                 $('#download_template').modal('show');
             });
 

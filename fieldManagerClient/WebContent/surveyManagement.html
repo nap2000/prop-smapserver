@@ -294,25 +294,46 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 				<h4 class="modal-title" id="dtLabel"></h4>
 			</div>
 			<div class="modal-body">
-				<form role="form">
+				<form role="form" class="form-horizontal">
 					<fieldset>
-						<legend class="lang" data-lang="ft">type</legend>
-						<input type="radio" name="download_type" value="xls_edited" checked="checked"/> <span data-lang="ft_xls" class="lang">latest XLS</span>
-						(<span class="lang" data-lang="c_version"></span>: <span id="dtversion"></span>)<br/>
-						<span id="dtorigxls"><input type="radio" name="download_type" value="xls"/> <span data-lang="ft_xls_orig" class="lang">original XLS</span> 
-							(<span class="lang" data-lang="c_version"></span>: 1)<br/></span>
-						<input type="radio" name="download_type" value="xml"/> <span data-lang="ft_xml" class="lang">XML Form</span><br/>
-						<input type="radio" name="download_type" value="codebook"/> <span data-lang="ft_codebook" class="lang">Codebook</span><br/>
-						<input type="radio" name="download_type" value="pdf"/> <span data-lang="ft_pdf" class="lang">PDF Template</span><br/>
+						<legend class="lang" data-lang="c_download">type</legend>
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<input type="radio" name="download_type" value="xls_edited" checked="checked"/> <span data-lang="ft_xls" class="lang">latest XLS</span>
+								(<span class="lang" data-lang="c_version"></span>: <span id="dtversion"></span>)<br/>
+								<span id="dtorigxls"><input type="radio" name="download_type" value="xls"/> <span data-lang="ft_xls_orig" class="lang">original XLS</span>
+									(<span class="lang" data-lang="c_version"></span>: 1)<br/></span>
+								<input type="radio" name="download_type" value="xml"/> <span data-lang="ft_xml" class="lang">XML Form</span><br/>
+								<input type="radio" name="download_type" value="codebook"/> <span data-lang="ft_codebook" class="lang">Codebook</span><br/>
+								<input type="radio" name="download_type" value="pdf"/> <span data-lang="ft_pdf" class="lang">PDF Template</span><br/>
+							</div>
+						</div>
 					</fieldset>
-					<div id="download_language_div">
-						<label for="download_language" data-lang="c_lang" class="lang col-sm-2 control-label">Language</label>
-						<select id="download_language" class="form-control"></select>
-					</div>
-					<div id="download_orientation_div">
-						<input type="radio" name="orientation" value="portrait" checked="checked"/> <span data-lang="c_portrait" class="lang">Portrait</span><br/>
-						<input type="radio" name="orientation" value="landscape"/> <span data-lang="c_landscape" class="lang">Landscape</span><br/>
-					</div>
+					<fieldset>
+						<legend class="lang" data-lang="c_options"></legend>
+						<div id="download_language_div" class="form-group">
+							<label for="download_language" data-lang="c_lang" class="lang col-sm-2 control-label">Language</label>
+							<div class="col-sm-10">
+								<select id="download_language" class="form-control"></select>
+							</div>
+						</div>
+						<div class="form-group pdf_elements">
+							<div class="col-sm-offset-2 col-sm-10">
+								<input type="radio" name="orientation" value="portrait" checked="checked"/> <span data-lang="c_portrait" class="lang">Portrait</span><br/>
+								<input type="radio" name="orientation" value="landscape"/> <span data-lang="c_landscape" class="lang">Landscape</span><br/>
+							</div>
+						</div>
+						<div class="form-group pdf_elements">
+							<div class="col-sm-offset-2 col-sm-10">
+								<div class="checkbox">
+									<label>
+										<input id="include_references" type="checkbox" name="include_references" value="include_references"/>
+										<span class="lang" data-lang="n_inc_ref">inc reference surveys</span><br/>
+									</label>
+								</div>
+							</div>
+						</div>
+					</fieldset>
 
 				</form>
 				<div class="modal-footer">
