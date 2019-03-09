@@ -660,12 +660,16 @@ function addRightClickToTable($elem, sId, view) {
 }
 
 $('#download_pdf').click(function () {
+
 	var docURL,
-	language,
-	orientation;
+		language,
+		orientation,
+		include_references
 
 	language = $('#download_language option:selected').val();
 	orientation = $("input[name='orientation']:checked", "#instance_functions_popup").val();
+	include_references = $("#include_references", "#instance_functions_popup").prop('checked');
+
 
 	docURL = "/surveyKPI/pdf/" + gSelectedTemplate 
 		+ "?language=" + language 
@@ -673,6 +677,9 @@ $('#download_pdf').click(function () {
 		+ "&utcOffset=" + getUtcOffset();
 	if(orientation === "landscape") {
 		docURL += "&landscape=true";
+	}
+	if(include_references) {
+		docURL += "&reference_surveys=true";
 	}
 
 	downloadFile(docURL);
