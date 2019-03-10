@@ -28,4 +28,5 @@ aws s3 cp $file.gpg s3://smap2/$final_file
 rm $file.gpg
 
 # Synchronise other files
-aws s3 sync /smap s3://{bucket identifier}-smap --exclude "temp/*"
+bucket=`cat ~ubuntu/bucket`
+aws s3 sync /smap s3://$bucket --exclude "temp/*"

@@ -114,6 +114,7 @@ function setTableSurvey(view) {
 
     $selFoot.find('.tRestore').button().off().click(function() {
         restoreAllTables(view.sId);
+        alert(localise.set["msg_restore_started"]);
     });
 	
 	/*
