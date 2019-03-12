@@ -602,7 +602,8 @@ CREATE TABLE question (
 	linked_target text,					-- Id of a survey whose hrk is populated here
 	compressed boolean default false,	-- Will put all answers to select multiples into a single column
 	external_choices text,				-- Set to yes if choices are external
-	external_table text					-- The table containing the external choices
+	external_table text,					-- The table containing the external choices
+	intent text							-- ODK intent attribute
 	);
 ALTER TABLE question OWNER TO ws;
 CREATE INDEX qtext_id_sequence ON question(qtext_id);
