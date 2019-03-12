@@ -621,6 +621,17 @@ define(['jquery','localise', 'common', 'globals',
 		});
 
 		/*
+		 * Respond to change on password profile combo
+		 */
+		$('#ft_login_policy1').change(function() {
+			if($(this).val() === 'periodic') {
+				$('.pw_timeout').show();
+			} else {
+				$('.pw_timeout').hide();
+			}
+		});
+
+		/*
 		 * Save the device options
 		 */
 		$('#saveDevice').click(function() {
@@ -635,6 +646,15 @@ define(['jquery','localise', 'common', 'globals',
 			device.ft_backward_navigation = $('#ft_backward_navigation').val();
 			device.ft_image_size = $('#ft_image_size').val();
 			device.ft_number_tasks = $('#ft_number_tasks').val();
+
+			var pw_policy1 = $('#ft_login_policy1').val();
+			if(pw_policy1 === 'never') {
+				device.ft_pw_policy = -1;
+			} else if(pw_policy1 === 'always') {
+				device.ft_pw_policy = 0;
+			} else {
+				device.ft_pw_policy = $('#ft_login_policy2').val();
+			}
 
 			options = $(".devoption:checked").map(function(){
 				return $(this).val();
@@ -1265,11 +1285,7 @@ define(['jquery','localise', 'common', 'globals',
 			});
 			addLanguageOptions($('#o_language'), org.locale);
 			$('#o_tz').val(org.timeZone);
-			//$('#ft_send').val(org.ft_send);
-			//$('#ft_send_location').val(org.ft_send_location);
-			//$('#ft_delete').val(org.ft_delete);
-			//$('#ft_disable_backward_nav').val(org.ft_de);
-			//$('#ft_image_size').val(org.ft_image_size);
+
 			gOrgId = org.id;
 			setBannerLogo(org.id);
 
@@ -2447,6 +2463,18 @@ define(['jquery','localise', 'common', 'globals',
 				$('#ft_image_size').val(device.ft_image_size);
 				$('#ft_number_tasks').val(device.ft_number_tasks);
 
+				if(device.ft_pw_policy > 0) {
+					$('#ft_login_policy1').val("periodic");
+					$('#ft_login_policy2').val(device.ft_pw_policy );
+					$('.pw_timeout').show();
+				} else {
+					if(device.ft_pw_policy < 0) {
+						$('#ft_login_policy1').val("never");
+					} else {
+						$('#ft_login_policy1').val("always");       // policy == 0
+					}
+					$('.pw_timeout').hide();
+				}
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();

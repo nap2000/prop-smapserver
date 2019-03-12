@@ -148,6 +148,7 @@ create TABLE organisation (
 	ft_admin_menu boolean default false,
 	ft_review_final boolean default true,
 	ft_send text,
+	ft_pw_policy integer default -1,
 	ft_number_tasks integer default 20,
 	changed_by text,
 	admin_email text,
