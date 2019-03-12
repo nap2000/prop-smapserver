@@ -149,7 +149,6 @@ define({
     "c_date": "Date",
     "c_dateq": "Date Question",
     "c_none": "None",
-
     "c_period": "Period",
     "c_hour": "Hour",
     "c_day": "Day",
@@ -309,7 +308,6 @@ define({
     "c_field_list": "Field List",
     "c_table_list": "Table List",
     "c_recover": "Recover Previous File",
-
 
     // File Types
     "ft": "File Type",
@@ -934,6 +932,11 @@ define({
     "u_ft_sop": "Set on phone",
     "u_ft_tasks": "Maximum number of tasks to download",
 	"u_ft_back_nav": "Backward navigation",
+	"u_ft_pw_timeout": "Number of days before password expiry",
+    "u_ft_pw_policy": "Password policy",
+	"u_ft_never": "Never require logon",
+	"u_ft_always": "Always require logon on application start",
+	"u_ft_periodically": "Require logon after password expiry",
     "u_det_o_email": "Email Options",
     "u_det_o_other": "Other Options",
     "u_other_edit": "Allow editing of results",
