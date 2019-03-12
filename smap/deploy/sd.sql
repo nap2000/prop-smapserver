@@ -1133,3 +1133,6 @@ update organisation set ft_send = 'not set' where ft_send is null;
 -- Upgrade to 19.02
 alter table survey add column audit_location_data boolean;
 update organisation set ft_send_location = 'not set' where ft_send_location is null;
+
+-- Upgrade tp 19.03
+alter table question add column intent text;
