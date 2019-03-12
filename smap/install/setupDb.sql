@@ -689,7 +689,7 @@ CREATE TABLE translation (
 	s_id INTEGER REFERENCES survey ON DELETE CASCADE,
 	language text,
 	text_id text,
-	type char(5),
+	type text,
 	value text,
 	external boolean default false
 	);

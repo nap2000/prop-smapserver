@@ -1137,3 +1137,4 @@ update organisation set ft_send_location = 'not set' where ft_send_location is n
 -- Upgrade tp 19.03
 alter table question add column intent text;
 alter table organisation add column ft_pw_policy integer default -1;
+alter table translation alter column type type text;
