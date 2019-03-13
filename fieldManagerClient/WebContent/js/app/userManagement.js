@@ -87,6 +87,7 @@ define(['jquery','localise', 'common', 'globals',
 		// Set up the tabs
 		$('#usersTab a').click(function (e) {
 			e.preventDefault();
+			$('.org_alert').hide();
 			$(this).tab('show');
 
 			$(".usertab").hide();
@@ -95,6 +96,7 @@ define(['jquery','localise', 'common', 'globals',
 		});
 		$('#projectsTab a').click(function (e) {
 			e.preventDefault();
+			$('.org_alert').hide();
 			$(this).tab('show');
 
 			$(".usertab").hide();
@@ -102,6 +104,7 @@ define(['jquery','localise', 'common', 'globals',
 		});
 		$('#organisationTab a').click(function (e) {
 			e.preventDefault();
+			$('.org_alert').hide();
 			$(this).tab('show');
 
 			$(".usertab").hide();
@@ -109,6 +112,7 @@ define(['jquery','localise', 'common', 'globals',
 		});
 		$('#serverTab a').click(function (e) {
 			e.preventDefault();
+			$('.org_alert').hide();
 			$(this).tab('show');
 
 			$(".usertab").hide();
@@ -116,6 +120,7 @@ define(['jquery','localise', 'common', 'globals',
 		});
 		$('#roleTab a').click(function (e) {
 			e.preventDefault();
+			$('.org_alert').hide();
 			$(this).tab('show');
 
 			$(".usertab").hide();
@@ -123,6 +128,7 @@ define(['jquery','localise', 'common', 'globals',
 		});
 		$('#deviceTab a').click(function (e) {
 			e.preventDefault();
+			$('.org_alert').hide();
 			$(this).tab('show');
 
 			$(".usertab").hide();
@@ -130,6 +136,7 @@ define(['jquery','localise', 'common', 'globals',
 		});
 		$('#webformTab a').click(function (e) {
 			e.preventDefault();
+			$('.org_alert').hide();
 			$(this).tab('show');
 
 			$(".usertab").hide();
@@ -137,6 +144,7 @@ define(['jquery','localise', 'common', 'globals',
 		});
 		$('#sensitiveTab a').click(function (e) {
 			e.preventDefault();
+			$('.org_alert').hide();
 			$(this).tab('show');
 
 			$(".usertab").hide();
@@ -144,6 +152,7 @@ define(['jquery','localise', 'common', 'globals',
 		});
 		$('#enterpriseTab a').click(function (e) {
 			e.preventDefault();
+			$('.org_alert').hide();
 			$(this).tab('show');
 
 			$(".usertab").hide();
@@ -430,13 +439,13 @@ define(['jquery','localise', 'common', 'globals',
 				success: function(data, status) {
 					removeHourglass();
 					getSensitiveSettings();
-					$('#org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+					$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
 
 					if(xhr.readyState == 0 || xhr.status == 0) {
-						$('#org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+						$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
 						return;  // Not an error
 					} else {
 						var msg = xhr.responseText;
@@ -674,7 +683,7 @@ define(['jquery','localise', 'common', 'globals',
 
 			var deviceString = JSON.stringify(device);
 
-			$('#org_alert').hide();
+			$('.org_alert').hide();
 			addHourglass();
 			$.ajax({
 				type: 'POST',
@@ -684,7 +693,7 @@ define(['jquery','localise', 'common', 'globals',
 				url: "/surveyKPI/organisationList/device",
 				success: function(data, status) {
 					removeHourglass();
-					$('#org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+					$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
 					getDeviceSettings();
 				}, error: function(xhr, textStatus, err) {
 					removeHourglass();
@@ -692,7 +701,7 @@ define(['jquery','localise', 'common', 'globals',
 						return;  // Not an error
 					} else {
 						var msg = err;
-						$('#org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
+						$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
 					}
 				}
 			});
@@ -722,7 +731,7 @@ define(['jquery','localise', 'common', 'globals',
 			webform.footer_horizontal_offset = $('#wf_footer_horizontal_offset').val();
 			webform.footer_horizontal_offset = webform.footer_horizontal_offset || 0;
 
-			$('#org_alert').hide();
+			$('.org_alert').hide();
 			addHourglass();
 			$.ajax({
 				type: 'POST',
@@ -732,14 +741,14 @@ define(['jquery','localise', 'common', 'globals',
 				url: "/surveyKPI/organisationList/webform",
 				success: function(data, status) {
 					removeHourglass();
-					$('#org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+					$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
 				}, error: function(xhr, textStatus, err) {
 					removeHourglass();
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
 						var msg = err;
-						$('#org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
+						$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
 					}
 				}
 			});
@@ -869,7 +878,7 @@ define(['jquery','localise', 'common', 'globals',
 		});
 
 		$('input').focus(function() {
-			$('#org_alert').hide();
+			$('.org_alert').hide();
 		});
 
 
@@ -1386,7 +1395,7 @@ define(['jquery','localise', 'common', 'globals',
 
 		var serverString = JSON.stringify(server);
 
-		$('#org_alert').hide();
+		$('.org_alert').hide();
 		addHourglass();
 		$.ajax({
 			type: "POST",
@@ -1396,11 +1405,11 @@ define(['jquery','localise', 'common', 'globals',
 			url: url,
 			success: function (data, status) {
 				removeHourglass();
-				$('#org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["c_saved"]);
+				$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["c_saved"]);
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
-				$('#org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["t_ens"] + xhr.responseText);
+				$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["t_ens"] + xhr.responseText);
 
 			}
 		});
