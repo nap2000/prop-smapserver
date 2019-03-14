@@ -1015,6 +1015,7 @@ define({
     "n_eqc": "Question that will contain the email addresses to use",
     "n_esc": "Subject for the email (optional)",
     "n_inc_ref": "Include referenced surveys",
+	"n_lo": "Only reference data from forms that were launched from this form",
 
     // Roles
     "ro_fr": "Filter rows",
