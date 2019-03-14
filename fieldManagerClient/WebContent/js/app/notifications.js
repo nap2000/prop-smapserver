@@ -276,6 +276,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                 notification.notifyDetails.content = $('#email_content').val();
                 notification.notifyDetails.attach = $('#email_attach').val();
 	            notification.notifyDetails.include_references = $('#include_references').prop('checked');
+	            notification.notifyDetails.launched_only = $('#launched_only').prop('checked');
             }
 
             return notification;
@@ -396,6 +397,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
                         $('#email_content').val(notification.notifyDetails.content);
                         $('#email_attach').val(notification.notifyDetails.attach);
 	                    $('#include_references').prop('checked', notification.notifyDetails.include_references);
+	                    $('#launched_only').prop('checked', notification.notifyDetails.launched_only);
                     } else if(notification.target == "sms") {
                         $('#notify_sms').val(notification.notifyDetails.emails.join(","));
                         $('#sms_content').val(notification.notifyDetails.content);

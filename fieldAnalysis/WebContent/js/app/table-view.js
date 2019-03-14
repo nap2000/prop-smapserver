@@ -665,11 +665,13 @@ $('#download_pdf').click(function () {
 	var docURL,
 		language,
 		orientation,
-		include_references
+		include_references,
+		launched_only
 
 	language = $('#download_language option:selected').val();
 	orientation = $("input[name='orientation']:checked", "#instance_functions_popup").val();
 	include_references = $("#include_references", "#instance_functions_popup").prop('checked');
+	launched_only = $("#launched_only", "#instance_functions_popup").prop('checked');
 
 
 	docURL = "/surveyKPI/pdf/" + gSelectedTemplate 
@@ -681,6 +683,9 @@ $('#download_pdf').click(function () {
 	}
 	if(include_references) {
 		docURL += "&reference_surveys=true";
+	}
+	if(launched_only) {
+		docURL += "&launched_only=true";
 	}
 
 	downloadFile(docURL);
