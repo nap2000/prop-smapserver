@@ -936,7 +936,7 @@ define({
     "u_ft_pw_policy": "Password policy",
 	"u_ft_never": "Never require logon",
 	"u_ft_always": "Always require logon on application start",
-	"u_ft_periodically": "Require logon after password expiry",
+	"u_ft_periodically": "Require logon periodically",
     "u_det_o_email": "Email Options",
     "u_det_o_other": "Other Options",
     "u_other_edit": "Allow editing of results",
