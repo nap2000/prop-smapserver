@@ -599,6 +599,7 @@ define({
     "t_af": "Create tasks from results submitted after this task group is created",
     "t_ac": "Create tasks from results that have already been submitted",
     "t_start": "Set the start time and duration of the task relative to when it is created or a date in the source survey",
+    "t_all": "All tasks",
     "new": "Unassigned",
     "accepted": "Assigned",
     "submitted": "Complete",

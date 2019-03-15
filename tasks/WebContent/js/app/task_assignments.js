@@ -939,6 +939,35 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     }
                 }
             });
+
+            /*
+		     * Reports
+		     */
+	        $('#m_all_tasks_report').click(function(){
+		        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone,
+			        tzParam = "",
+			        url = '/surveyKPI/tasks/xls/0',
+			        hasParam = false,
+			        statusFilterArray = $('#status_filter').val(),
+			        period_filter = $('#period').val();
+
+		        // Add parameters
+                if (tz) {
+	                url += (hasParam ? '&' : '?') + "tz=" + encodeURIComponent(tz);
+	                hasParam = true;
+                }
+		        if(statusFilterArray) {
+			        url += (hasParam ? '&' : '?') + 'inc_status=' + statusFilterArray.join(',');
+			        hasParam = true;
+		        }
+		        if(period_filter) {
+			        url += (hasParam ? '&' : '?') + 'period=' + period_filter;
+			        hasParam = true;
+		        }
+
+                downloadFile(url);
+
+	        });
         });
 
         /*
