@@ -176,11 +176,8 @@ $(document).ready(function() {
  	 });
 	
 	// Add responses to changing parameters
-	$('#startDate,#endDate').change(function(e) {	
-		if(validDates()) {
-			getData();
-			return true;
-		} 
+	$('#startDate,#endDate').on("dp.change", function(e) {
+		getData();
  	 });
 
 
