@@ -83,7 +83,7 @@ define(['jquery','localise', 'common', 'globals',
             e.preventDefault();
             $(this).tab('show');
 
-            $("#billPanel").show();
+            $("#billPanel, .billOnly").show();
             $('#ratesPanel').hide();
 
         });
@@ -91,7 +91,7 @@ define(['jquery','localise', 'common', 'globals',
             e.preventDefault();
             $(this).tab('show');
 
-            $("#billPanel").hide();
+            $("#billPanel, .billOnly").hide();
             $('#ratesPanel').show();
         });
 
@@ -276,13 +276,25 @@ define(['jquery','localise', 'common', 'globals',
 			url,
 			msg,
 			levelName,
-			higherName;
+			higherName,
+			hasParam = false;
 
 	    url = "/surveyKPI/billing/rates";
-	    if(gLevel === "org" || gLevel === "ind_org") {
+	    if(gLevel === "org" || gLevel === "org_ind") {
 		    orgIdx = $('#organisation').val();
-		    url += "?org=" + gOrganisationList[orgIdx].id;
+		    url += (hasParam ? '&' : '?')  + "org=" + gOrganisationList[orgIdx].id;
+		    hasParam = true;
+	    } else  if(gLevel === "ent") {
+		    entIdx = $('#enterprise').val();
+		    url += (hasParam ? '&' : '?')  + "ent=" + gEnterpriseList[entIdx].id;
+		    hasParam = true;
 	    }
+
+	    if (globals.gTimezone) {
+		    url += (hasParam ? '&' : '?') + "tz=" + encodeURIComponent(globals.gTimezone);
+		    hasParam = true;
+	    }
+
 
 	    addHourglass();
 	    $.ajax({
@@ -323,10 +335,58 @@ define(['jquery','localise', 'common', 'globals',
 
     }
 
-	function populateRatesTable(data) {
+	function populateRatesTable(rates) {
 		var $elem = $('#rates_table'),
 			h = [],
-			idx = -1;
+			idx = -1,
+			i,
+			j;
+
+		if(rates) {
+			for (i = 0; i < rates.length; i++) {
+				h[++idx] = '<tr>';
+
+				h[++idx] = '<td></td>';     // status
+
+				h[++idx] = '<td>';			// Applies From
+				h[++idx] = rates[i].appliesFrom.year + '-' + rates[i].appliesFrom.month + '-' + rates[i].appliesFrom.day;
+				h[++idx] = '</td>';
+
+				h[++idx] = '<td>';			// Changed By
+				h[++idx] = rates[i].modifiedBy;
+				h[++idx] = '</td>';
+
+				h[++idx] = '<td>';			// Created date
+				h[++idx] = rates[i].modified.date.year + '-' + rates[i].modified.date.month + '-' + rates[i].modified.date.day
+					+ ' ' + rates[i].modified.time.hour + ':' + rates[i].modified.time.minute;
+				h[++idx] = '</td>';
+
+				h[++idx] = '<td>';			// Line Items
+				for(j = 0; j < rates[i].line.length; j++) {
+					var line = rates[i].line[j];
+					h[++idx] = localise.set[line.name] + ": " + line.unitCost + " (" + localise.set["free"] + ": " + line.free + ")<br/>";
+				}
+				h[++idx] = '</td>';
+
+				h[++idx] = '<td>';			// Line Items
+					h[++idx] = '<button type="button" class="btn btn-danger delrate ';
+					if(rates[i].eId == 0 && rates[i].oId == 0) {
+						h[++idx] = 'disabled';
+					}
+					h[++idx] = '" data-idx="';
+					h[++idx] = i;
+					h[++idx] = '"><i class="glyphicon glyphicon-trash" aria-hidden=true"></i></button>';
+				h[++idx] = '</td>';
+
+				h[++idx] = '</tr>';
+			}
+			$elem.empty().append(h.join(''));
+
+			$(".delrate", $('#ates_table')).click(function(){
+				var idx = $(this).data("idx");
+				deleteRate(idx);
+			});
+		}
 	}
 
 
