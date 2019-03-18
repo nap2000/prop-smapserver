@@ -146,7 +146,7 @@ function getSurveyQuestions(sId) {
 	if(sId) {
         addHourglass();
         $.ajax({
-            url: "/surveyKPI/questionList/" + sId + "/none/new?exc_ssc=true",
+            url: "/surveyKPI/questionList/" + sId + "/none/new?exc_ssc=true&inc_meta=true",
             dataType: 'json',
             cache: false,
             success: function (data) {
@@ -206,10 +206,17 @@ function refreshRFQuestionSelect(questions) {
 		if(questions[i].toplevel) {			// Only allow top level form questions in row filter
 			h[++idx] = '<option value="';
 			h[++idx] = questions[i].name;
-			h[++idx] = '">';
+			h[++idx] = '"';
+			if (questions[i].id < 0) {       // Show meta in blue
+				h[++idx] = ' style="color:blue"';
+			}
+			h[++idx] = '>';
 			h[++idx] = questions[i].name;
+
 			h[++idx] = '</option>';
+
 		}
+
 	}
 	$element.empty().append(h.join(''));
 	
