@@ -698,6 +698,7 @@ define({
     "wf_sig": "Signature",
 
     // Editor
+	"ed_hidden": "Hide in FieldTask",
 	"ed_selfie": "Open camera in selfie mode",
     "ed_new": "Require a new picture be taken",
 	"ed_read_nfc": "Read an NFC tag insgtead of a barcode",
