@@ -578,7 +578,10 @@ $(document).ready(function() {
 		/*
 		 * Get common appearance values
 		 */
-		var colour
+		var colour;
+		if($('#a_hidden').prop('checked')) {
+			appearances.push('hidden');
+		}
 		if($('#a_pdfno').prop('checked')) {
 			appearances.push('pdfno');
 		}
@@ -1962,7 +1965,10 @@ function respondToEvents($context) {
 			 */
 			var pdfa;
 			var colour;
-			if(appearanceArray[i] === 'pdfno') {
+			if(appearanceArray[i] === 'hidden') {
+				$('#a_hidden').prop('checked', true);
+				foundAppearance = true;
+			} else if(appearanceArray[i] === 'pdfno') {
 				$('#a_pdfno').prop('checked', true);
 				$('.pdf_appearance_field').hide();
 				foundAppearance = true;
