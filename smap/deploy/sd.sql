@@ -1134,7 +1134,13 @@ update organisation set ft_send = 'not set' where ft_send is null;
 alter table survey add column audit_location_data boolean;
 update organisation set ft_send_location = 'not set' where ft_send_location is null;
 
--- Upgrade tp 19.03
+-- Upgrade to 19.03
 alter table question add column intent text;
 alter table organisation add column ft_pw_policy integer default -1;
 alter table translation alter column type type text;
+
+-- Upgrade to 19.04
+alter table tasks add column initial_data_source text;
+update tasks set initial_data_source = 'none' where initial_data_source is null and update_id is null;
+update tasks set initial_data_source = 'survey' where initial_data_source is null and update_id is not null;
+update tasks set initial_data = 'null' where initial_data_source is null or initial_data_source != 'task';
