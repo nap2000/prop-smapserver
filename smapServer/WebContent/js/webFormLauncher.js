@@ -309,21 +309,27 @@ function completeSurveyList(surveyList, filterProjectId) {
 				}
 				h[++idx] = '" href="/webForm/';
 				h[++idx] = taskList[i].task.form_id;
-				if(taskList[i].task.initial_data) {
+
+				var hasParam = false;
+				if(taskList[i].task.update_id) {
 					// Add the initial data parameters
-					params = taskList[i].task.initial_data;
-					params = params.substring(params.indexOf('?'));
-					// TODO Hack to fix inconsistency in parameter names between webforms and fieldTask
-					params = params.replace("key=", "datakey=");
-					params = params.replace("keyval=", "datakeyvalue=");
-					h[++idx] = params;
-					// Add the assignment id
-					h[++idx] = '&assignment_id=';
-				} else {	// Launch the form without data
-					// Add the assignment id
-					h[++idx] = '?assignment_id=';
+					//params = taskList[i].task.initial_data;
+					//params = params.substring(params.indexOf('?'));
+					//params = params.replace("key=", "datakey=");
+					//params = params.replace("keyval=", "datakeyvalue=");
+					//h[++idx] = params;
+
+					h[++idx] = (hasParam ? '&' : '?');
+					h[++idx] = 'datakey=instanceid&datakeyvalue=';
+					h[++idx] = taskList[i].task.update_id;
+					hasParam = true;
+
 				}
-				h[++idx] = taskList[i].assignment.assignment_id; 
+				// Add the assignment id
+				h[++idx] = (hasParam ? '&' : '?');
+				h[++idx] = 'assignment_id=';
+				h[++idx] = taskList[i].assignment.assignment_id;
+
 				h[++idx] = '">';
 				h[++idx] = taskList[i].task.title + " (task id: " + taskList[i].task.id + ")";
 				h[++idx] = '</a>';	
