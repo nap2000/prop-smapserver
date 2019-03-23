@@ -274,7 +274,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
 
             /*
-             * Set up flters
+             * Set up filters
              */
             $('#status_filter').multiselect({
                 onChange: function(option, checked, select) {
@@ -291,19 +291,20 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
              * Update the properties of a task
              */
             $('#taskPropertiesSave').off().click(function () {
-                var url = "/surveyKPI/tasks/task/",
+                var url = "/api/v1/tasks/new",
                     taskFeature = {
                         properties: {}
                     },
                     fromDate,
                     toDate;
 
-                url += globals.gCurrentProject + "/" + globals.gCurrentTaskGroup;
-
                 taskFeature = $.extend(true, {}, gCurrentTaskFeature);
                 /*
                  * Set the properties of the taskFeature from the dialog
                  */
+                taskFeature.properties.pid = globals.gCurrentProject;
+                taskFeature.properties.tg_id = globals.gCurrentTaskGroup;
+
                 if (!taskFeature.properties.id || taskFeature.properties.id == "") {
                     taskFeature.properties["id"] = 0;
                 }
