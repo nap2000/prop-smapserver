@@ -653,8 +653,13 @@ define(['jquery','localise', 'common', 'globals',
 			device.ft_send = $('#ft_send').val();
 			device.ft_delete = $('#ft_delete').val();
 			device.ft_backward_navigation = $('#ft_backward_navigation').val();
+			device.ft_navigation = $('#ft_navigation').val();
 			device.ft_image_size = $('#ft_image_size').val();
+
 			device.ft_number_tasks = $('#ft_number_tasks').val();
+			if(typeof device.ft_number_tasks === "undefined" || device.ft_number_tasks == '') {
+				device.ft_number_tasks = 20;
+			}
 
 			var pw_policy1 = $('#ft_login_policy1').val();
 			if(pw_policy1 === 'never') {
@@ -2469,6 +2474,7 @@ define(['jquery','localise', 'common', 'globals',
 				$('#ft_send_location').val(device.ft_send_location);
 				$('#ft_delete').val(device.ft_delete);
 				$('#ft_backward_navigation').val(device.ft_backward_navigation);
+				$('#ft_navigation').val(device.ft_navigation);
 				$('#ft_image_size').val(device.ft_image_size);
 				$('#ft_number_tasks').val(device.ft_number_tasks);
 

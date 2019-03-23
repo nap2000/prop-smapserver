@@ -1134,7 +1134,11 @@ update organisation set ft_send = 'not set' where ft_send is null;
 alter table survey add column audit_location_data boolean;
 update organisation set ft_send_location = 'not set' where ft_send_location is null;
 
--- Upgrade tp 19.03
+-- Upgrade to 19.03
 alter table question add column intent text;
 alter table organisation add column ft_pw_policy integer default -1;
 alter table translation alter column type type text;
+
+-- Upgrade to 19.04
+alter table organisation add column ft_navigation text;
+update organisation set ft_navigation = 'not set' where ft_navigation is null;
