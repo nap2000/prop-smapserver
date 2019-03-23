@@ -311,19 +311,20 @@ function completeSurveyList(surveyList, filterProjectId) {
 				h[++idx] = taskList[i].task.form_id;
 
 				var hasParam = false;
-				if(taskList[i].task.update_id) {
-					// Add the initial data parameters
-					//params = taskList[i].task.initial_data;
-					//params = params.substring(params.indexOf('?'));
-					//params = params.replace("key=", "datakey=");
-					//params = params.replace("keyval=", "datakeyvalue=");
-					//h[++idx] = params;
+				if(taskList[i].task.initial_data_source) {
+					if (taskList[i].task.initial_data_source === 'survey' && taskList[i].task.update_id) {
 
-					h[++idx] = (hasParam ? '&' : '?');
-					h[++idx] = 'datakey=instanceid&datakeyvalue=';
-					h[++idx] = taskList[i].task.update_id;
-					hasParam = true;
+						h[++idx] = (hasParam ? '&' : '?');
+						h[++idx] = 'datakey=instanceid&datakeyvalue=';
+						h[++idx] = taskList[i].task.update_id;
+						hasParam = true;
 
+					} else if (taskList[i].task.initial_data_source === 'task') {
+						h[++idx] = (hasParam ? '&' : '?');
+						h[++idx] = 'taskkey=';
+						h[++idx] = taskList[i].task.id;
+						hasParam = true;
+					}
 				}
 				// Add the assignment id
 				h[++idx] = (hasParam ? '&' : '?');
