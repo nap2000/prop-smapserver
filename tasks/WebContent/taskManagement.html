@@ -755,14 +755,23 @@
                             </div>
                         </div>
 
-                        <div class="checkbox">
-                            <label>
-                                <input id="update_results" type="checkbox" name="update_results"
-                                       value="update_results"/>
-                                <span class="lang" data-lang="t_ue">update existing</span>
-                            </label>
-                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label lang" data-lang="t_id">initial</label>
+                            <div class="col-sm-10">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" id="id_blank" name="initial_data" value="blank" checked="checked"><span data-lang="t_nid" class="lang"></span>
+                                    </label><br/>
+                                    <label>
+                                        <input type="radio" id="id_prepopulate" name="initial_data" value="prepopulate"><span data-lang="t_pp" class="lang"></span>
+                                    </label><br/>
+                                    <label>
+                                        <input type="radio" id="id_update_results" name="initial_data" value="update_results"><span data-lang="t_ue" class="lang"></span>
+                                    </label><br/>
+                                </div>
+                            </div>
 
+                        </div>
 
                         <div class="checkbox">
                             <label>
