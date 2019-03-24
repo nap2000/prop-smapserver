@@ -572,6 +572,8 @@ define({
     "t_sn": "Set Numeric Value",
     "t_st": "Set Text Value",
     "t_ue": "Update Existing Results",
+	"t_pp": "Pre-populate form with existing data",
+    "t_nid": "No initial data",
     "t_ap": "Address Parameters",
     "t_nfc": "NFC or Location",
     "t_assigned": "Assigned",
