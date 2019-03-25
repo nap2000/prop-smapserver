@@ -654,7 +654,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 	                } else {
 		                assignObj["blank"] = true;
                     }
-	                
+
 	                //assignObj["update_results"] = $('#update_results').is(':checked'); 			// Set to true if the survey is to be updated
 
                     // Add filter if filter checkbox has been checked
