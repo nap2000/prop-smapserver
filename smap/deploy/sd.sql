@@ -1147,3 +1147,17 @@ update tasks set initial_data = null where initial_data_source is null or initia
 
 alter table organisation add column ft_navigation text;
 update organisation set ft_navigation = 'not set' where ft_navigation is null;
+
+CREATE SEQUENCE last_refresh_seq START 1;
+ALTER SEQUENCE last_refresh_seq OWNER TO ws;
+
+create TABLE last_refresh (
+	id integer default nextval('last_refresh_seq') constraint pk_last_refresh primary key,
+	o_id integer,
+	user_ident text,
+	refresh_time TIMESTAMP WITH TIME ZONE
+	);
+SELECT AddGeometryColumn('last_refresh', 'geo_point', 4326, 'POINT', 2);
+ALTER TABLE last_refresh OWNER TO ws;
+
+alter table task_group add column dl_dist integer;
