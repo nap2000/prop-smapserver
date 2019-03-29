@@ -274,7 +274,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
 
             /*
-             * Set up flters
+             * Set up filters
              */
             $('#status_filter').multiselect({
                 onChange: function(option, checked, select) {
@@ -291,19 +291,20 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
              * Update the properties of a task
              */
             $('#taskPropertiesSave').off().click(function () {
-                var url = "/surveyKPI/tasks/task/",
+                var url = "/api/v1/tasks/new",
                     taskFeature = {
                         properties: {}
                     },
                     fromDate,
                     toDate;
 
-                url += globals.gCurrentProject + "/" + globals.gCurrentTaskGroup;
-
                 taskFeature = $.extend(true, {}, gCurrentTaskFeature);
                 /*
                  * Set the properties of the taskFeature from the dialog
                  */
+                taskFeature.properties.pid = globals.gCurrentProject;
+                taskFeature.properties.tg_id = globals.gCurrentTaskGroup;
+
                 if (!taskFeature.properties.id || taskFeature.properties.id == "") {
                     taskFeature.properties["id"] = 0;
                 }
@@ -428,7 +429,13 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     $('#fixed_role').val(tgRule.fixed_role_id);
                     $('#assign_emails').val(tgRule.emails);
                     $('#survey').val(tg.source_s_id);
-                    $('#update_results').prop('checked', tgRule.update_results);
+                    if(tgRule.update_results) {
+	                    $('#id_update_results').prop('checked', true);
+                    } else if(tgRule.prepopulate) {
+	                    $('#id_prepopulate').prop('checked', true);
+                    } else  {
+	                    $('#id_blank').prop('checked', true);
+                    }
                     $('#add_current').prop('checked', tgRule.add_current);
                     $('#add_future').prop('checked', tgRule.add_future);
 
@@ -635,7 +642,20 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     assignObj["source_survey_id"] = source_survey;
                     assignObj["address_columns"] = removeUnselected(gTaskParams);
                     assignObj["source_survey_name"] = $('#survey option:selected').text();		// The display name of the survey that will provide the source locations and initial data
-                    assignObj["update_results"] = $('#update_results').is(':checked'); 			// Set to true if the survey is to be updated
+
+	                var initial_data = $("input[name='initial_data']:checked"). val();
+	                assignObj["prepopulate"] = false;
+	                assignObj["update_results"] = false;
+	                assignObj["blank"] = false;
+	                if(initial_data === "prepopulate") {
+	                    assignObj["prepopulate"] = true;
+                    }  if(initial_data === "update_results") {
+		                assignObj["update_results"] = true;
+	                } else {
+		                assignObj["blank"] = true;
+                    }
+
+	                //assignObj["update_results"] = $('#update_results').is(':checked'); 			// Set to true if the survey is to be updated
 
                     // Add filter if filter checkbox has been checked
                     if ($('#filter_results').is(':checked')) {
