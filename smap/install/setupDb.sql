@@ -800,7 +800,8 @@ CREATE TABLE public.task_group (
     rule text,					-- The criteria for adding a new task to this group (JSON)
     source_s_id integer,			-- The source survey id for quick lookup from notifications engine
     target_s_id integer,
-    email_details text
+    email_details text,
+    dl_dist integer				-- Distance in meters at which tasks will be downloaded
 );
 ALTER TABLE public.task_group OWNER TO ws;
 
@@ -1195,3 +1196,18 @@ create TABLE bill_rates (
 	);
 create unique index idx_bill_rates on bill_rates(o_id, e_id, ts_applies_from);
 ALTER TABLE bill_rates OWNER TO ws;
+
+-- Audit
+DROP SEQUENCE IF EXISTS last_refresh_seq CASCADE;
+CREATE SEQUENCE last_refresh_seq START 1;
+ALTER SEQUENCE last_refresh_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS last_refresh;
+create TABLE last_refresh (
+	id integer default nextval('last_refresh_seq') constraint pk_last_refresh primary key,
+	o_id integer,
+	user_ident text,
+	refresh_time TIMESTAMP WITH TIME ZONE
+	);
+SELECT AddGeometryColumn('last_refresh', 'geo_point', 4326, 'POINT', 2);
+ALTER TABLE last_refresh OWNER TO ws;

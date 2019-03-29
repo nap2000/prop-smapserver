@@ -415,6 +415,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 var tgRule = JSON.parse(rule);
 
                 $('#task_group_name').val(tgRule.task_group_name);
+                $('#t_dl_dist').val(tgRule.dl_dist);
 
                 // If added from a survey
                 var filterQuestion = "-1";
@@ -578,13 +579,22 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 taskGroup = $('#task_group_name').val();
                 if (!taskGroup || taskGroup.trim() === "") {
                     alert(localise.set["msg_val_nm"]);
+                    $('#task_group_name').focus();
                     return;
                 }
 
+                var dl_dist = $('#t_dl_dist').val();
+                dl_dist = 0 || +dl_dist;
+                if (dl_dist && dl_dist < 10) {
+                    alert(localise.set["msg_val_dl_dist"]);
+                    $('#t_dl_dist').focus();
+                    return;
+                }
 
                 updateTaskParams();
 
-                assignObj["task_group_name"] = $('#task_group_name').val();	// The Name of the task group
+                assignObj["task_group_name"] = taskGroup;	// The Name of the task group
+                assignObj["dl_dist"] = dl_dist;	            // Download distance
                 assignObj["project_name"] = $('#project_select option:selected').text();	// The name of the project that this survey is in
 
                 if ($('#add_from_survey').is(':checked')) {
