@@ -814,14 +814,14 @@ CREATE TABLE public.tasks (
 	url text,
 	form_id integer,	
 	survey_name text,
-	initial_data text,
 	created_at timestamp with time zone,
 	schedule_at timestamp with time zone,
 	schedule_finish timestamp with time zone,
 	deleted_at timestamp with time zone,
 	address text,
-	instance_id text,			-- Record on which this task is based
-	update_id text,			-- Record to update
+	update_id text,				-- Record to update
+	initial_data_source text,	-- none || survey || task
+	initial_data text,			-- Contains InstanceJson of data if data source is task
 	repeat boolean,
 	repeat_count integer default 0,
 	guidance text,
