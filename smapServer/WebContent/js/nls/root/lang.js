@@ -187,6 +187,7 @@ define({
     "c_required": "Make Required",
     "c_not_required": "Make Not Required",
     "c_del_sel": "Delete Selected",
+    "c_assign_sel": "Set Selected as Assigned",
     "c_print": "Print",
     "c_repeat": "Repeat",
     "c_repeats": "Repeats",
