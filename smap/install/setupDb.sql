@@ -800,8 +800,7 @@ CREATE TABLE public.task_group (
     rule text,					-- The criteria for adding a new task to this group (JSON)
     source_s_id integer,			-- The source survey id for quick lookup from notifications engine
     target_s_id integer,
-    email_details text,
-    dl_dist integer				-- Distance in meters at which tasks will be downloaded
+    email_details text
 );
 ALTER TABLE public.task_group OWNER TO ws;
 
@@ -828,7 +827,8 @@ CREATE TABLE public.tasks (
 	guidance text,
 	location_trigger text,
 	deleted boolean,
-	complete_all boolean default false	-- Set true if all assignments associated to this task need to be completed
+	complete_all boolean default false,	-- Set true if all assignments associated to this task need to be completed
+	dl_dist integer						-- Distance in meters at which task will be downloaded
 );
 SELECT AddGeometryColumn('tasks', 'geo_point', 4326, 'POINT', 2);
 SELECT AddGeometryColumn('tasks', 'geo_point_actual', 4326, 'POINT', 2);
