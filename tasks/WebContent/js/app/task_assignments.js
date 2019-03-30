@@ -43,7 +43,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             gModalMapInitialised = false,	// Set true then the modal map has been initialised
             gIdx = 0,						// Idx set when external task dropped on calendar
             gSelectedCount = 0,
-            gUnsentEmailCount = 0;
+            gUnsentEmailCount = 0,
+            MIN_DOWNLOAD_RANGE = 10;
 
         $(document).ready(function () {
 
@@ -237,6 +238,38 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 $('#assign_user').modal("show");
             });
 
+            // Add a trigger to set a task as assigned
+            $('#setStatus').click(function () {
+                var bulkAction = {
+                        action: "status",
+                        tasks: getSelectedTaskIds()
+                    },
+                    baString = JSON.stringify(bulkAction),
+                    url;
+
+                url = "/surveyKPI/tasks/bulk/";
+                url += globals.gCurrentProject + "/" + globals.gCurrentTaskGroup;
+
+                addHourglass();
+                $.ajax({
+                    type: "POST",
+                    dataType: 'text',
+                    cache: false,
+                    contentType: "application/json",
+                    url: url,
+                    data: {tasks: baString},
+                    success: function (data, status) {
+                        removeHourglass();
+                        refreshAssignmentData();
+                    }, error: function (data, status) {
+                        removeHourglass();
+                        alert(localise.set["c_error"] +": " + data.responseText);
+                    }
+                });
+
+
+            });
+
             /*
              * Save the assigned user
              */
@@ -329,13 +362,14 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 fromDate = $('#tp_from').data("DateTimePicker").date();
                 toDate = $('#tp_to').data("DateTimePicker").date();
                 if (fromDate) {
-                    taskFeature.properties.from = utcTime(fromDate.format("YYYY-MM-DD HH:mm"));
+                    taskFeature.properties.from = utcTime(fromDate.format("YYYY-MM-DD HH:mm:ss"));
                 }
                 if (toDate) {
-                    taskFeature.properties.to = utcTime(toDate.format("YYYY-MM-DD HH:mm"));
+                    taskFeature.properties.to = utcTime(toDate.format("YYYY-MM-DD HH:mm:ss"));
                 }
                 taskFeature.properties.location_trigger = $('#nfc_select').val();
                 taskFeature.properties.guidance = $('#tp_guidance').val();
+                taskFeature.properties.dl_dist = $('#tp_dl_dist').val();
 
                 /*
                  * Convert the geoJson geometry into longitude and latitude for update
@@ -356,15 +390,17 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 // TODO task update details (updating existing record)
 
                 // Validations
-                /*
-                 if(taskFeature.properties["repeat"]) || user.ident.length == 0) {
-                 alert("User ident must be specified and either be an email address or " +
-                 "only include lowercase characters from a-z and numbers.  No spaces.");
-                 $('#user_ident').focus();
-                 $('#userDetailsSave').prop("disabled", false);
-                 return false;
-                 }
-                 */
+                if(typeof taskFeature.properties.dl_dist === "undefined") {
+                    taskFeature.properties.dl_dist = 0;
+                } else {
+                    taskFeature.properties.dl_dist = +taskFeature.properties.dl_dist;
+                }
+                if (taskFeature.properties.dl_dist && taskFeature.properties.dl_dist < MIN_DOWNLOAD_RANGE) {
+                    alert(localise.set["msg_val_dl_dist"]);
+                    $('#tp_dl_dist').focus();
+                    return;
+                }
+
 
                 tfString = JSON.stringify(taskFeature);
 
@@ -584,8 +620,12 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 }
 
                 var dl_dist = $('#t_dl_dist').val();
-                dl_dist = 0 || +dl_dist;
-                if (dl_dist && dl_dist < 10) {
+                if(typeof dl_dist === "undefined") {
+                    dl_dist = 0;
+                } else {
+                    dl_dist = +dl_dist;
+                }
+                if (dl_dist && dl_dist < MIN_DOWNLOAD_RANGE) {
                     alert(localise.set["msg_val_dl_dist"]);
                     $('#t_dl_dist').focus();
                     return;
@@ -904,13 +944,13 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                 if (startDateLocal) {
 
-                    gCurrentTaskFeature.properties.from = utcTime(startDateLocal.format("YYYY-MM-DD HH:mm"));
+                    gCurrentTaskFeature.properties.from = utcTime(startDateLocal.format("YYYY-MM-DD HH:mm:ss"));
 
                     if (!endDateLocal) {
                         newEndDate = startDateLocal.add(1, 'hours');
                     } else {
                         if (originalEnd && originalStart) {
-                            duration = moment(originalEnd, "YYYY-MM-DD HH:mm").diff(moment(originalStart, "YYYY-MM-DD HH:mm"), 'hours');
+                            duration = moment(originalEnd, "YYYY-MM-DD HH:mm:ss").diff(moment(originalStart, "YYYY-MM-DD HH:mm:ss"), 'hours');
                         } else {
                             duration = 1;
                         }
@@ -932,7 +972,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                 var endDateLocal = $('#tp_to').data("DateTimePicker").date();
 
-                gCurrentTaskFeature.properties.to = utcTime(endDateLocal.format("YYYY-MM-DD HH:mm"));
+                gCurrentTaskFeature.properties.to = utcTime(endDateLocal.format("YYYY-MM-DD HH:mm:ss"));
 
             });
 
@@ -1685,6 +1725,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             if (task.update_id && task.update_id.length > 0) {
                 $('#initial_data').html(getInitialDataLink(task.form_id, task.update_id));
             }
+            $('#tp_dl_dist').val(task.dl_dist);
 
             $('#task_properties').modal("show");
 
@@ -2040,8 +2081,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     var feature = {
                         properties: {
                             id: globals.gTaskList.features[event.taskIdx].properties.id,
-                            from: utcTime(event.start.format("YYYY-MM-DD HH:mm")),
-                            to: utcTime(event.end.format("YYYY-MM-DD HH:mm"))
+                            from: utcTime(event.start.format("YYYY-MM-DD HH:mm:ss")),
+                            to: utcTime(event.end.format("YYYY-MM-DD HH:mm:ss"))
                         }
                     };
                     updateWhen(feature, revertFunc, event.taskIdx);
@@ -2050,8 +2091,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     var feature = {
                         properties: {
                             id: globals.gTaskList.features[event.taskIdx].properties.id,
-                            from: utcTime(event.start.format("YYYY-MM-DD HH:mm")),
-                            to: utcTime(event.end.format("YYYY-MM-DD HH:mm"))
+                            from: utcTime(event.start.format("YYYY-MM-DD HH:mm:ss")),
+                            to: utcTime(event.end.format("YYYY-MM-DD HH:mm:ss"))
                         }
                     };
                     updateWhen(feature, revertFunc, event.taskIdx);
@@ -2072,8 +2113,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                         }
                     };
 
-                    globals.gTaskList.features[event.taskIdx].from = utcTime(event.start.format("YYYY-MM-DD HH:mm"));
-                    globals.gTaskList.features[event.taskIdx].to = utcTime(event.end.format("YYYY-MM-DD HH:mm"));
+                    globals.gTaskList.features[event.taskIdx].from = utcTime(event.start.format("YYYY-MM-DD HH:mm:ss"));
+                    globals.gTaskList.features[event.taskIdx].to = utcTime(event.end.format("YYYY-MM-DD HH:mm:ss"));
                     updateWhen(feature, undefined, event.taskIdx);
                 },
                 drop: function () {

@@ -136,12 +136,17 @@
                             </li>
                             <li>
                                 <a type="button" class="btn for_selected" href="#" id="assignUser">
-                                    <span class="lang" data-lang="t_assign">add task</span>
+                                    <span class="lang" data-lang="t_assign"></span>
                                 </a>
                             </li>
                             <li>
                                 <a type="button" class="btn for_selected" href="#" id="deleteTasks">
-                                    <span class="lang" data-lang="c_del_sel">del tasks</span>
+                                    <span class="lang" data-lang="c_del_sel"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a type="button" class="btn for_selected" href="#" id="setStatus">
+                                    <span class="lang" data-lang="c_assign_sel"></span>
                                 </a>
                             </li>
 
@@ -489,7 +494,7 @@
                             <div class="col-sm-10">
                                 <div class='input-group date' id='tp_from' data-toggle="tooltip" data-container="body"
                                      title="Scheduled date in local time zone">
-                                    <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm">
+                                    <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
                                     <span class="input-group-addon"><span
                                             class="glyphicon glyphicon-calendar"></span></span>
                                 </div>
@@ -500,7 +505,7 @@
                             <div class="col-sm-10">
                                 <div class='input-group date' id='tp_to' data-toggle="tooltip" data-container="body"
                                      title="Finish time">
-                                    <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm">
+                                    <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
                                     <span class="input-group-addon"><span
                                             class="glyphicon glyphicon-calendar"></span></span>
                                 </div>
@@ -533,6 +538,17 @@
                             <label class="col-sm-2 control-label lang" data-lang="c_location">locn</label>
                             <div class="col-sm-10">
                                 <div id="mapModal"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="lang col-sm-2 control-label lang" data-lang="t_dl_dist"
+                                   for="tp_dl_dist"></label>
+                            <div class="col-sm-3">
+                                <input type="integer" class="form-control" id="tp_dl_dist">
+                            </div>
+                            <div class="col-sm-7">
+                                <span class="lang" data-lang="t_dl_dist_i"></span>
                             </div>
                         </div>
                     </form>
@@ -599,17 +615,6 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="lang col-sm-2 control-label lang" data-lang="t_dl_dist"
-                               for="t_dl_dist"></label>
-                        <div class="col-sm-3">
-                            <input type="integer" class="form-control" id="t_dl_dist">
-                        </div>
-                        <div class="col-sm-7">
-                            <span class="lang" data-lang="t_dl_dist_i"></span>
-                        </div>
-                    </div>
-
                     <div class="checkbox">
                         <label>
                             <input type="checkbox" name="add_from_survey" value="add_from_survey" id="add_from_survey">
@@ -618,6 +623,7 @@
                     </div>
 
                     <div id="add_task_from_existing" style="display:none;">
+
                         <div class="form-group">
                             <label for="project_select" class="col-sm-2 control-label lang" data-lang="t_ep">existing
                                 project</label>
@@ -941,6 +947,17 @@
                                 <div class="col-sm-10">
                                     <textarea id="email_content" class="labelProp form-control"></textarea>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="lang col-sm-2 control-label lang" data-lang="t_dl_dist"
+                                   for="t_dl_dist"></label>
+                            <div class="col-sm-3">
+                                <input type="integer" class="form-control" id="t_dl_dist">
+                            </div>
+                            <div class="col-sm-7">
+                                <span class="lang" data-lang="t_dl_dist_i"></span>
                             </div>
                         </div>
 
