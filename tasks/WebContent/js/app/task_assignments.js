@@ -431,7 +431,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                 /*
                  * Make sure we have a current task group to edit
-                 * The option should be greyed out if this is the case
+                 * The option should be greyed out if this is not the case
                  */
                 if (!gTaskGroups || gTaskGroups.length == 0) {
                     alert("No task group to edit");
@@ -542,7 +542,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 }
 
 
-                surveyChanged(filterQuestion);    // Set survey related parameters
+                surveyChanged(filterQuestion, tgRule.address_columns);    // Set survey related parameters
 
                 // open the modal for update
                 $('#add_current').prop('disabled', true);
@@ -1143,7 +1143,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
         }
 
-        function surveyChanged(filterQuestion) {
+        function surveyChanged(filterQuestion, address_columns) {
             var sId = $('#survey').val();
 
             if(typeof filterQuestion === "undefined") {
@@ -1151,7 +1151,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             }
             $('#filter_option').empty();
             getLanguageList(sId, questionChanged, false, '#filter_language', false, filterQuestion);
-            setAddressOptions();
+            setAddressOptions(address_columns);
         }
 
         function languageChanged() {
@@ -1255,7 +1255,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
         /*
          * Add the columns that the user can select to create address information
          */
-        function setAddressOptions() {
+        function setAddressOptions(address_columns) {
 
             var sId = $('#survey').val(),
                 j,
@@ -1283,7 +1283,9 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                                     sMedia,
                                     h = [],
                                     idx = -1,
-                                    i, j;
+                                    i, j,k,
+                                    selected,
+                                    isBarcode;
                                 removeHourglass();
 
                                 gTaskParams = [];
@@ -1302,10 +1304,22 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                                         } else {
                                             isMedia = false;
                                         }
+
+                                        if(address_columns) {
+                                            selected = false;
+                                            isBarcode = false;
+                                            for(k = 0; k < address_columns.length; k++) {
+                                               if(address_columns[k].name === colname) {
+                                                   selected = address_columns[k].selected;
+                                                   isBarcode = address_columns[k].isBarcode;
+                                                   break;
+                                               }
+                                            }
+                                        }
                                         gTaskParams[j++] = {
-                                            selected: false,
+                                            selected: selected,
                                             name: colname,
-                                            isBarcode: false,
+                                            isBarcode: isBarcode,
                                             isMedia: isMedia
                                         };
 
