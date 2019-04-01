@@ -1537,23 +1537,7 @@ function getLanguageList(sId, callback, addNone, selector, setGroupList, filterQ
 			success: function(data) {
 				removeHourglass();
 				globals.gSelector.setSurveyLanguages(sId, data);
-				if(selector) {
-					setSurveyViewLanguages(data, undefined, selector, addNone);
-				} else {
-					setSurveyViewLanguages(data, undefined, '#settings_language', false);
-					setSurveyViewLanguages(data, undefined, '#export_language', true);
-					setSurveyViewLanguages(data, undefined, '#language_name', false);
-				}
-
-				if(data[0]) {
-					var dateqId = $('#task_start').val();
-					getQuestionList(sId, data[0], filterQuestion, "-1", theCallback, setGroupList, undefined, dateqId);	// Default language to the first in the list
-				} else {
-					if(typeof theCallback === "function") {
-						theCallback();
-					}
-				}
-
+				retrievedLanguages(sId, selector, data, theCallback, filterQuestion, setGroupList, addNone);
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
@@ -1566,7 +1550,34 @@ function getLanguageList(sId, callback, addNone, selector, setGroupList, filterQ
 		});
 	}
 
-	getAsyncLanguageList(sId, callback, selector, filterQuestion);
+	var data = globals.gSelector.getSurveyLanguages(sId);
+	if(data) {
+		retrievedLanguages(sId, selector, data, callback, filterQuestion, setGroupList, addNone);
+	} else {
+		getAsyncLanguageList(sId, callback, selector, filterQuestion);
+	}
+}
+
+/*
+ * Called after languages have been retrieved
+ */
+function retrievedLanguages(sId, selector, data, theCallback, filterQuestion, setGroupList, addNone) {
+	if(selector) {
+		setSurveyViewLanguages(data, undefined, selector, addNone);
+	} else {
+		setSurveyViewLanguages(data, undefined, '#settings_language', false);
+		setSurveyViewLanguages(data, undefined, '#export_language', true);
+		setSurveyViewLanguages(data, undefined, '#language_name', false);
+	}
+
+	if(data[0]) {
+		var dateqId = $('#task_start').val();
+		getQuestionList(sId, data[0], filterQuestion, "-1", theCallback, setGroupList, undefined, dateqId);	// Default language to the first in the list
+	} else {
+		if(typeof theCallback === "function") {
+			theCallback();
+		}
+	}
 }
 
 //Function to get the question list
