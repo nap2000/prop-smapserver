@@ -402,7 +402,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 }
 
 
-                tfString = JSON.stringify(taskFeature);
+                var tpString = JSON.stringify(taskFeature.properties);
 
                 addHourglass();
                 $.ajax({
@@ -411,7 +411,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     cache: false,
                     contentType: "application/json",
                     url: url,
-                    data: {task: tfString},
+                    data: {task: tpString},
                     success: function (data, status) {
                         removeHourglass();
                         $('#task_properties').modal("hide");
@@ -1305,9 +1305,9 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                                             isMedia = false;
                                         }
 
+                                        selected = false;
+                                        isBarcode = false;
                                         if(address_columns) {
-                                            selected = false;
-                                            isBarcode = false;
                                             for(k = 0; k < address_columns.length; k++) {
                                                if(address_columns[k].name === colname) {
                                                    selected = address_columns[k].selected;
