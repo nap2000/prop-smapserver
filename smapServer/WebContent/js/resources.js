@@ -259,7 +259,7 @@ function edit_map(idx) {
 		title = localise.set["msg_edit_map"],
 		
 		$('#map_name').val(map.name);
-		$('#map_type').val(map_name);
+		$('#map_type').val(map.type);
 		$('#map_description').val(map.description);
 		
 		$('#map_zoom').val(map.config.zoom);
