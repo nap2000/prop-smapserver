@@ -1000,11 +1000,13 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
 			    year = d.getFullYear(),
                 url,
                 usageByProject = $('#usage_by_project').prop('checked'),
-                usageBySurvey = $('#usage_by_survey').prop('checked');
+                usageBySurvey = $('#usage_by_survey').prop('checked'),
+                usageByDevice = $('#usage_by_device').prop('checked');
 
 		    url = "/surveyKPI/adminreport/usage/" + year + "/" + month;
 		    url += usageByProject ? "?project=true" : "?project=false";
 		    url += usageBySurvey ? "&survey=true" : "&survey=false";
+            url += usageByDevice ? "&device=true" : "&device=false";
 
 		    downloadFile(url);
 

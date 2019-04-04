@@ -1129,6 +1129,7 @@ define({
 	// Reports
 	"rep_usage_project": "Usage by project",
 	"rep_usage_survey": "Usage by survey",
+    "rep_usage_device": "Usage by device",
     "rep_values_question": "Values Question",
     "rep_values": "Values",
     "rep_wide_columns": "Wide Columns",
