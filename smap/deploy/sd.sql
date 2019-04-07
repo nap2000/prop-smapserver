@@ -1160,5 +1160,10 @@ create TABLE last_refresh (
 SELECT AddGeometryColumn('last_refresh', 'geo_point', 4326, 'POINT', 2);
 ALTER TABLE last_refresh OWNER TO ws;
 
-alter table tasks add column dl_dist integer;
-update tasks set dl_dist = 0 where dl_dist is null;
+-- Change dl_dist to show_dist in tasks
+alter table tasks add column show_dist integer;
+update tasks set show_dist = dl_dist where show_dist is null;
+update tasks set show_dist = 0 where show_dist is null;
+--alter table tasks drop column dl_dist;  -- Keep tempoarily in case a deployment needs to be reversed
+
+alter table task_group add column dl_dist integer;
