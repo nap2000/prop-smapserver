@@ -44,7 +44,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             gIdx = 0,						// Idx set when external task dropped on calendar
             gSelectedCount = 0,
             gUnsentEmailCount = 0,
-            MIN_DOWNLOAD_RANGE = 10;
+            MIN_DOWNLOAD_RANGE = 100,
+            MIN_SHOW_RANGE = 10;
 
         $(document).ready(function () {
 
@@ -369,7 +370,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 }
                 taskFeature.properties.location_trigger = $('#nfc_select').val();
                 taskFeature.properties.guidance = $('#tp_guidance').val();
-                taskFeature.properties.dl_dist = $('#tp_dl_dist').val();
+                taskFeature.properties.show_dist = $('#tp_show_dist').val();
 
                 /*
                  * Convert the geoJson geometry into longitude and latitude for update
@@ -390,14 +391,14 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 // TODO task update details (updating existing record)
 
                 // Validations
-                if(typeof taskFeature.properties.dl_dist === "undefined") {
-                    taskFeature.properties.dl_dist = 0;
+                if(typeof taskFeature.properties.show_dist === "undefined") {
+                    taskFeature.properties.show_dist = 0;
                 } else {
-                    taskFeature.properties.dl_dist = +taskFeature.properties.dl_dist;
+                    taskFeature.properties.show_dist = +taskFeature.properties.show_dist;
                 }
-                if (taskFeature.properties.dl_dist && taskFeature.properties.dl_dist < MIN_DOWNLOAD_RANGE) {
-                    alert(localise.set["msg_val_dl_dist"]);
-                    $('#tp_dl_dist').focus();
+                if (taskFeature.properties.show_dist && taskFeature.properties.show_dist < MIN_SHOW_RANGE) {
+                    alert(localise.set["msg_val_show_dist"]);
+                    $('#tp_show_dist').focus();
                     return;
                 }
 
@@ -452,6 +453,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                 $('#task_group_name').val(tgRule.task_group_name);
                 $('#t_dl_dist').val(tgRule.dl_dist);
+                $('#t_show_dist').val(tgRule.show_dist);
 
                 // If added from a survey
                 var filterQuestion = "-1";
@@ -631,10 +633,23 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     return;
                 }
 
+                var show_dist = $('#t_show_dist').val();
+                if(typeof show_dist === "undefined") {
+                    show_dist = 0;
+                } else {
+                    show_dist = +show_dist;
+                }
+                if (show_dist && show_dist < MIN_SHOW_RANGE) {
+                    alert(localise.set["msg_val_show_dist"]);
+                    $('#t_show_dist').focus();
+                    return;
+                }
+
                 updateTaskParams();
 
                 assignObj["task_group_name"] = taskGroup;	// The Name of the task group
                 assignObj["dl_dist"] = dl_dist;	            // Download distance
+                assignObj["show_dist"] = show_dist;	        // Show distance
                 assignObj["project_name"] = $('#project_select option:selected').text();	// The name of the project that this survey is in
 
                 if ($('#add_from_survey').is(':checked')) {
@@ -1739,7 +1754,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             if (task.update_id && task.update_id.length > 0) {
                 $('#initial_data').html(getInitialDataLink(task.form_id, task.update_id));
             }
-            $('#tp_dl_dist').val(task.dl_dist);
+            $('#tp_show_dist').val(task.show_dist);
 
             $('#task_properties').modal("show");
 
