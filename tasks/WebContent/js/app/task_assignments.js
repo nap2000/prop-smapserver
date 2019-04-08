@@ -1912,7 +1912,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             var statusLookup;
 
             for (i = 0; i < tasks.length; i++) {
-                task = tasks[i];
+                var task = tasks[i];
 
                 if(task.properties.status === "unsent" || task.properties.status === "blocked") {
                     gUnsentEmailCount++;
@@ -1958,7 +1958,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                     tab[++idx] = '<td>';			// Existing data
                     if (task.properties.update_id && task.properties.update_id.length > 0) {
-                        tab[++idx] = getInitialDataLink(task.properties.form_id, task.properties.update_id);
+                        tab[++idx] = getInitialDataLink(task);
                     }
                     tab[++idx] = '</td>';
 
@@ -1990,12 +1990,16 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
         }
 
-        function getInitialDataLink(form_id, update_id) {
+        function getInitialDataLink(task) {
             var tab = [];
             idx = -1;
 
             tab[++idx] = '<a href="';
-            tab[++idx] = getWebFormUrl(task.properties.form_ident, task.properties.update_id);
+            tab[++idx] = getWebFormUrl(task.properties.form_ident,
+                task.properties.update_id,
+                task.properties.initial_data_source,
+                task.properties.id,
+                task.properties.a_id);
             tab[++idx] = '" target="_blank">'
             tab[++idx] = '<i class="fa fa-file-text"></i>';	// Edit existing data
             tab[++idx] = '</a>';
@@ -2003,14 +2007,26 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             return tab.join('');
         }
 
-        function getWebFormUrl(form_ident, update_id) {
-            var url;
+        function getWebFormUrl(form_ident, update_id, initial_data_source, taskId, assignmentId) {
+            var url,
+                hasParams = false;
+
+            initial_data_souce = initial_data_source || 'none';
 
             url = "/webForm/" + form_ident;
-            if (update_id) {
+
+            if (update_id && initial_data_source === 'survey') {
                 url += "?datakey=instanceid&datakeyvalue=" + update_id;
                 url += "&viewOnly=true"
+                hasParams = true;
+            } else {
+                url += '?taskkey=';
+                url += taskId;          // todo
+                hasParams = true;
             }
+            url += (hasParams ? '&' : '?');
+            url += 'assignment_id=';
+            url += assignmentId;       // todo
 
             return url;
         }
