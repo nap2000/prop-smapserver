@@ -1062,6 +1062,7 @@ define(
     "billing_disabled_msg": "Se ha deshabilitado la facturación",
     "rep_usage_project": "Uso por proyecto",
     "rep_usage_survey": "Uso por formulario",
+    "rep_usage_device": "Uso por dispositivo",
     "rep_values_question": "Pregunta de Valores",
     "rep_values": "Valores",
     "rep_wide_columns": "Columnas a lo ancho",
