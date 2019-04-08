@@ -2021,12 +2021,12 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 hasParams = true;
             } else {
                 url += '?taskkey=';
-                url += taskId;          // todo
+                url += taskId;
                 hasParams = true;
             }
             url += (hasParams ? '&' : '?');
             url += 'assignment_id=';
-            url += assignmentId;       // todo
+            url += assignmentId;
 
             return url;
         }
