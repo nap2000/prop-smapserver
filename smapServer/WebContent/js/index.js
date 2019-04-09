@@ -28,9 +28,6 @@ require(['jquery', 'bootstrap.min', 'app/localise', 'app/common','app/globals'],
 		i,
 		loggedin=false,
 		androidVersion;
-
-	setupUserProfile();
-	localise.setlang();
 	
 	/*
 	 * If the user is logged in then get their details
@@ -52,6 +49,8 @@ require(['jquery', 'bootstrap.min', 'app/localise', 'app/common','app/globals'],
 	 * which depend on their authorisation level
 	 */
 	if(loggedin) {
+		setupUserProfile();
+		localise.setlang();
 		$('.loggedin').show();
 		$('.notloggedin').hide();
 	} else {
