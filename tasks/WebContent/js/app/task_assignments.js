@@ -1752,7 +1752,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 $('#tp_guidance').val(task.address);    // Initialise with address data
             }
             if (task.update_id && task.update_id.length > 0) {
-                $('#initial_data').html(getInitialDataLink(task.form_id, task.update_id));
+                $('#initial_data').html(getInitialDataLink(taskFeature));
             }
             $('#tp_show_dist').val(task.show_dist);
 
