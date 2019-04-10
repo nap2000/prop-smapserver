@@ -37,7 +37,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             gTaskParams = [],		// Parameters for a new task
             gFilterqType,			// The type of the filter question select, select1, int, string
             gCurrentTaskFeature,	// Currently edited task feature
-            gClickOnMapEnabled = false,		// Listen to clicks on the map
             gCalendarInitialised = false,	// Set true when the calendar pane has been initialised
             gMapInitialised = false,		// Set true when the map pane has been initialised
             gModalMapInitialised = false,	// Set true then the modal map has been initialised
@@ -1780,8 +1779,6 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 addDraggableMarker('mapModal',
                     new L.LatLng(gCurrentTaskFeature.geometry.coordinates[1], gCurrentTaskFeature.geometry.coordinates[0]),
                     onDragEnd);
-            } else {
-                gClickOnMapEnabled = true;
             }
         }
 
@@ -1792,17 +1789,12 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             var x = 1,
                 coords = [];
 
-            if (gClickOnMapEnabled) {
+            coords[0] = latlng.lng;
+            coords[1] = latlng.lat;
 
-                gClickOnMapEnabled = false;
+            gCurrentTaskFeature.geometry.coordinates = coords;
+            addDraggableMarker('mapModal', latlng, onDragEnd);
 
-                coords[0] = latlng.lng;
-                coords[1] = latlng.lat;
-
-                gCurrentTaskFeature.geometry.coordinates = coords;
-                addDraggableMarker('mapModal', latlng, onDragEnd);
-
-            }
         }
 
         /*
