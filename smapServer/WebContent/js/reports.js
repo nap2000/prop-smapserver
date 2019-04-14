@@ -535,6 +535,7 @@ require([
                 tab[++idx] = '"><i class="fa fa-share-alt"></i></button>';
                 tab[++idx] = '</td>';
 
+                /*
                 tab[++idx] = '<td>';			// Copy odata Link
                 if(gReportList[i].action_details.reportType === "xlsx") {
                     tab[++idx] = '<button type="button" class="btn btn-default has_tt copyLinkOdata" title="Copy OData Link" value="';
@@ -542,6 +543,7 @@ require([
                     tab[++idx] = '">OData</button>';
                 }
                 tab[++idx] = '</td>';
+                 */
 
                 tab[++idx] = '<td>';
                 tab[++idx] = '<div class="dropdown">';
@@ -582,6 +584,7 @@ require([
             $temp.remove();
 
         });
+        /*
         $('.copyLinkOdata').click(function () {
             var $this = $(this);
             var i = $this.closest('tr').data("idx");
@@ -599,11 +602,12 @@ require([
             $temp.remove();
 
         });
+         */
 
 
 
 		/*
-		 * Action Dropbox<td>…</td>
+		 * Action Dropbox
 		 */
 		var $dropdown = $('#contextMenu');
         $reportList.find('.report_action').click(function() {
