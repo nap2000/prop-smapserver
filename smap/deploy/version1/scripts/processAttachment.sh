@@ -42,11 +42,22 @@ if [ x"$type" = xvideo ]; then
 	sh -c "flvtool2 -UP $destflv"
 fi
 
-#If content type is "audio" create a a flowplayer friendly video
+#If content type is "audio" create a flowplayer friendly video
 if [ x"$type" = xaudio ]; then
 	echo "--------------------------------------"
 	echo "Creating flash movie and adding meta data"
 	rm $destflv
 	sh -c "/usr/bin/ffmpeg -i $destfile -ar 22050 -f flv $destflv"
 	sh -c "flvtool2 -UP $destflv"
+fi
+
+# If there is an s3 bucket available then sync files to it
+if [ -f ~ubuntu/bucket ]; then
+	prefix="/smap"
+	relPath=${destdir#"$prefix"}
+	awsPath="s3://`cat ~ubuntu/bucket`$relPath"
+	region=`cat ~ubuntu/region`
+
+	echo "/usr/local/bin/aws s3 sync --region $region $destdir $awsPath"
+	/usr/local/bin/aws s3 sync --region $region $destdir $awsPath
 fi
