@@ -51,13 +51,26 @@ if [ x"$type" = xaudio ]; then
 	sh -c "flvtool2 -UP $destflv"
 fi
 
-# If there is an s3 bucket available then sync files to it
+# If there is an s3 bucket available then send files to it
 if [ -f ~ubuntu/bucket ]; then
-	prefix="/smap"
-	relPath=${destdir#"$prefix"}
-	awsPath="s3://`cat ~ubuntu/bucket`$relPath"
-	region=`cat ~ubuntu/region`
 
-	echo "/usr/local/bin/aws s3 sync --region $region $destdir $awsPath"
-	/usr/local/bin/aws s3 sync --region $region $destdir $awsPath
+        prefix="/smap"
+        region=`cat ~ubuntu/region`
+
+        if [ -f  $destfile ]; then
+                relPath=${destfile#"$prefix"}
+                awsPath="s3://`cat ~ubuntu/bucket`$relPath"
+                /usr/local/bin/aws s3 --region $region cp $destfile $awsPath
+        fi
+        if [ -f  $destthumbnail ]; then
+                relPath=${destthumbnail#"$prefix"}
+                awsPath="s3://`cat ~ubuntu/bucket`$relPath"
+                /usr/local/bin/aws s3 --region $region cp $destthumbnail $awsPath
+        fi
+        if [ -f  $destflv ]; then
+                relPath=${destflv#"$prefix"}
+                awsPath="s3://`cat ~ubuntu/bucket`$relPath"
+                /usr/local/bin/aws s3 cp --region $region $destflv $awsPath
+        fi
+
 fi
