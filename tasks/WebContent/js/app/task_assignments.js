@@ -324,7 +324,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
              * Update the properties of a task
              */
             $('#taskPropertiesSave').off().click(function () {
-                var url = "/api/v1/tasks/new",
+                var url = "/api/v1/tasks",
                     taskFeature = {
                         properties: {}
                     },
