@@ -503,8 +503,9 @@ define(function () {
             select: ['randomize'],
             select1: ['randomize'],
             rank: ['randomize'],
-            parent_form: ['form_identifier', 'key_question'],
-	        child_form: ['form_identifier', 'key_question'],
+            parent_form: ['form_identifier', 'key_question', 'auto'],
+	        child_form: ['form_identifier', 'key_question', 'auto'],
+	        geopoint: ['auto'],
             'begin repeat':['ref', 'instance_order', 'instance_count', 'key_policy'],
 	        chart: ['chart_type', 'stacked', 'normalized']
         };
@@ -532,6 +533,10 @@ define(function () {
 	        },
 	        randomize: {
 		        field: 'p_randomize',
+		        type: 'boolean'
+	        },
+	        auto: {
+		        field: 'p_auto',
 		        type: 'boolean'
 	        },
 	        form_identifier: {
