@@ -681,6 +681,8 @@ define(['jquery','localise', 'common', 'globals',
 					device.ft_specify_instancename = true;
 				} else if(options[i] === "ft_admin_menu") {
 					device.ft_admin_menu = true;
+				} else if(options[i] === "ft_exit_track_menu") {
+					device.ft_exit_track_menu = true;
 				} else if(options[i] === "ft_review_final") {
 					device.ft_review_final = true;
 				}
@@ -1293,6 +1295,8 @@ define(['jquery','localise', 'common', 'globals',
 					this.checked = org.ft_specify_instancename;
 				} else if($(this).val() === "ft_admin_menu") {
 					this.checked = org.ft_admin_menu;
+				} else if($(this).val() === "ft_exit_track_menu") {
+					this.checked = org.ft_exit_track_menu;
 				} else if($(this).val() === "ft_review_final") {
 					this.checked = org.ft_review_final;
 				}
@@ -2465,6 +2469,8 @@ define(['jquery','localise', 'common', 'globals',
 						this.checked = device.ft_specify_instancename;
 					} else if($(this).val() === "ft_admin_menu") {
 						this.checked = device.ft_admin_menu;
+					} else if($(this).val() === "ft_exit_track_menu") {
+						this.checked = device.ft_exit_track_menu;
 					} else if($(this).val() === "ft_review_final") {
 						this.checked = device.ft_review_final;
 					}
