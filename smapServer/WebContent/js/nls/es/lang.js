@@ -890,6 +890,7 @@ define(
     "u_ft_ld": "Enviar datos del recorrido del usuario",
     "u_ft_os": "Habilita opciones de Enviar, Borrar, Editar y Nuevos formularios.",
     "u_ft_am": "Habilitar Menú de Administración",
+    "u_ft_ex": "Deshabilitar opción Salir",
     "u_ft_in": "Permitir especificar el nombre de instancia",
     "u_ft_rv": "Permite la edición de formularios finalizados.",
     "u_ft_as": "Sincronizar Automáticamente",
