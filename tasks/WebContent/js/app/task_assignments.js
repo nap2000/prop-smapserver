@@ -443,12 +443,12 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 gUpdateTaskGroupIndex = gTaskGroupIndex;
 
                 var tg = gTaskGroups[gTaskGroupIndex];
-                var rule = gTaskGroups[gTaskGroupIndex].rule;
-                if(typeof rule === "undefined") {
+                var tgRule = gTaskGroups[gTaskGroupIndex].rule;
+                if(typeof tgRule === "undefined") {
                     alert(localise.set["msg_tg_rd"]);
                     return;
                 }
-                var tgRule = JSON.parse(rule);
+
 
                 $('#task_group_name').val(tgRule.task_group_name);
                 $('#t_dl_dist').val(tgRule.dl_dist);
@@ -547,7 +547,8 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                 // open the modal for update
                 $('#add_current').prop('disabled', true);
-                $('#addTaskLabel').text(localise["t_edit_group"]);
+                $('#addTaskLabel').text(localise.set["t_edit_group"]);
+                $('#tg_id').html(tg.tg_id);
 
 
                 $('#addTask').modal("show");
@@ -584,7 +585,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
                 // open the modal
                 $('#addTask').find('input,select, #addNewGroupSave').prop('disabled', false);
-                $('#addTaskLabel').text(localise["t_add_group"]);
+                $('#addTaskLabel').text(localise.set["t_add_group"]);
                 $('#addTask').modal("show");
 
             });
