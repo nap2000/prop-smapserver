@@ -2392,10 +2392,6 @@ function utcTime(localTime) {
 
 }
 
-function getUtcOffset() {
-	return moment().utcOffset();
-}
-
 function formatLocalTime(localTime) {
 	var l;
 	if(localTime.indexOf('+') > 0) {
