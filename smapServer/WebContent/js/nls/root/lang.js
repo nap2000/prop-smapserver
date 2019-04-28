@@ -710,7 +710,7 @@ define({
 	"ed_hidden": "Hide in mobile app",
 	"ed_selfie": "Open camera in selfie mode",
     "ed_new": "Require a new picture be taken",
-	"ed_read_nfc": "Read an NFC tag insgtead of a barcode",
+	"ed_read_nfc": "Read an NFC tag instead of a barcode",
     "ed_gt_0": "must be greater than 0, or not set",
 	"ed_add_to": "Append to question",
     "ed_app": "Put in an appendix",
