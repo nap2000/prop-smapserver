@@ -88,6 +88,7 @@ $(document).ready(function() {
 		}
 	);
 	$('#filter_button').button().click(function() {
+		$('#filter_dialog').dialog( "option", "title", localise.set["a_fbv"] );
 		$("#filter_dialog").dialog("open");
 		return false;
 	});
