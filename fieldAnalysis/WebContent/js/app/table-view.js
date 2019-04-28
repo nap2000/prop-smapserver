@@ -677,7 +677,7 @@ $('#download_pdf').click(function () {
 	docURL = "/surveyKPI/pdf/" + gSelectedTemplate 
 		+ "?language=" + language 
 		+ "&instance=" + gInstanceId
-		+ "&utcOffset=" + getUtcOffset();
+		+ "&tz=" + globals.gTimezone;
 	if(orientation === "landscape") {
 		docURL += "&landscape=true";
 	}
