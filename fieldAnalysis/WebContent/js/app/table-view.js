@@ -673,7 +673,6 @@ $('#download_pdf').click(function () {
 	include_references = $("#include_references", "#instance_functions_popup").prop('checked');
 	launched_only = $("#launched_only", "#instance_functions_popup").prop('checked');
 
-
 	docURL = "/surveyKPI/pdf/" + gSelectedTemplate 
 		+ "?language=" + language 
 		+ "&instance=" + gInstanceId
