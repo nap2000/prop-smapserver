@@ -724,6 +724,7 @@ define({
 	"ed_sa": "Spacing above",
 	"ed_bgc": "Label Background Colour",
 	"ed_vbgc": "Value Background Colour",
+    "ed_mc": "Marker Colour",
 	"ed_height": "Height allowed for answer",
     "ed_lw": "Width of label",
     "ed_pdfcols_help": "There can be a maximum of 10 columns. The widths of the columns must add up to 10.",
