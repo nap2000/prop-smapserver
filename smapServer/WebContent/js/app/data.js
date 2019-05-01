@@ -295,7 +295,7 @@ function getUserData(view, start_rec) {
 		tz = globals.gTimezone,
 		data;
 
-	url = userItemsURL(view, start_rec, rec_limit,  view.filter, view.dateQuestionId, view.fromDate, view.toDate,tz);
+	url = userItemsURL(view, start_rec, rec_limit,  view.dateQuestionId, view.fromDate, view.toDate,tz);
 	data = globals.gSelector.getItem(url);      // check cache
 
 	if(data) {
