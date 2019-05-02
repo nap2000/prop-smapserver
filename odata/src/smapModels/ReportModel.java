@@ -62,7 +62,7 @@ public class ReportModel {
 		 * Get the list of forms and surveys to be exported
 		 */
 		ActionManager am = new ActionManager(localisation, tz);	
-		int oId = GeneralUtilityMethods.getOrganisationId(sd, user, 0);
+		int oId = GeneralUtilityMethods.getOrganisationId(sd, user);
 		ArrayList<User> reportList  = am.getTemporaryUsers(sd, oId, "report", 0, 0);		// Should only be reports the user has access to
 		for(User report : reportList) {
 			Action action = am.getAction(sd, report.ident);
