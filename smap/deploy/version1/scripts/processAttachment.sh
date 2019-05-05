@@ -60,17 +60,17 @@ if [ -f ~ubuntu/bucket ]; then
         if [ -f  $destfile ]; then
                 relPath=${destfile#"$prefix"}
                 awsPath="s3://`cat ~ubuntu/bucket`$relPath"
-                /usr/local/bin/aws s3 --region $region cp $destfile $awsPath
+                /usr/bin/aws s3 --region $region cp $destfile $awsPath
         fi
         if [ -f  $destthumbnail ]; then
                 relPath=${destthumbnail#"$prefix"}
                 awsPath="s3://`cat ~ubuntu/bucket`$relPath"
-                /usr/local/bin/aws s3 --region $region cp $destthumbnail $awsPath
+                /usr/bin/aws s3 --region $region cp $destthumbnail $awsPath
         fi
         if [ -f  $destflv ]; then
                 relPath=${destflv#"$prefix"}
                 awsPath="s3://`cat ~ubuntu/bucket`$relPath"
-                /usr/local/bin/aws s3 cp --region $region $destflv $awsPath
+                /usr/bin/aws s3 cp --region $region $destflv $awsPath
         fi
 
 fi
