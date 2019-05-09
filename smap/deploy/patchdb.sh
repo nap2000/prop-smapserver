@@ -1,6 +1,9 @@
 #!/bin/sh
 deploy_from="version1"
 
+# Apply security updates
+unattended-upgrades
+
 # Set flag for ubuntu version
 u1404=`lsb_release -r | grep -c "14\.04"`
 u1604=`lsb_release -r | grep -c "16\.04"`
