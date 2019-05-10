@@ -87,12 +87,13 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
     <ul class="nav nav-pills tab_controls" role="tablist">
         <li id="mediaTab" role="presentation" class="active"><a href="#" class="lang" data-lang="sr_res">images</a></li>
         <li id="mapTab" role="presentation"><a href="#" class="lang" data-lang="c_maps">maps</a></li>
-        <li id="nfcTab" role="presentation"><a href="#" class="lang" data-lang="sr_nfc">tags</a></li>  <!-- Hidden unless business server -->
-        <li id="crTab" role="presentation"><a href="#" class="lang" data-lang="sr_cr">os</a></li>  <!-- Hidden unless business server -->
+        <li id="nfcTab" role="presentation"><a href="#" class="lang" data-lang="sr_nfc">tags</a></li>
+		<li id="locationsTab" role="presentation"><a href="#" class="lang" data-lang="m_locations"></a></li>
+		<!--<li id="crTab" role="presentation"><a href="#" class="lang" data-lang="sr_cr">os</a></li>-->
     
     </ul>
     
-    <div id="mediaPanel" >
+    <div class="resourcePanel" id="mediaPanel" >
 		<div class="container">
 			   	<!-- The file upload form used as target for the file upload widget -->
    				<form enctype="multipart/form-data" name="fileupload">
@@ -169,7 +170,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 		</div>
 	</div>
 		
-	<div id="mapPanel" style="display:none;">
+	<div class="resourcePanel" id="mapPanel" style="display:none;">
 		<div class="container">
 			<div class = "well">	
 				<a id="addMap" type="button" class="btn btn-default lang" data-lang="msg_add_map" aria-label="Add Map">add</a>
@@ -180,7 +181,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 		</div>
     </div>
     
-    <div id="nfcPanel" style="display:none;">
+    <div class="resourcePanel" id="nfcPanel" style="display:none;">
 		<div class="container">
 		  	<!-- The file upload form used as target for the file upload widget -->
   			<form enctype="multipart/form-data" name="nfcupload">
@@ -228,41 +229,68 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 		   
 			<!-- The container for the uploaded Survey files -->
 			<div id="nfcListPanel" class="col-lg-10">
-		    	<h4 class="lang" data-lang="sr_fn">file</h4>
-						    
-				<div class="table-responsive">
-		   			<table role="presentation" class="table table-striped col-md-10">
-		   				<thead>
-		   					<tr>
-		   						<th class="lang" data-lang="c_type">type</th>
-		   						<th class="lang" data-lang="sr_g">group</th>
-		   						<th>UID</th>
-		   						<th class="lang" data-lang="c_name">name</th>
-		   					</tr>
-		   				</thead>
-		   				<tbody id="nfcList">
-		   				</tbody>
-		    		</table>
-		    	</div>
+				<div class="row">
+					<form role="form">
+						<label class="lang col-sm-4 control-label" data-lang="sr_g" for="nfc_group"></label>
+						<div class="col-sm-8">
+							<select class="nfc_group_list form-control" id="nfc_group"></select>
+						</div>
+					</form>
+				</div>
+
+				<div class="row">
+					<div class="table-responsive">
+						<table role="presentation" class="table table-striped col-md-10">
+							<thead>
+								<tr>
+									<th class="lang" data-lang="c_type">type</th>
+									<th class="lang" data-lang="sr_g">group</th>
+									<th>UID</th>
+									<th class="lang" data-lang="c_name">name</th>
+								</tr>
+							</thead>
+							<tbody id="nfcList">
+							</tbody>
+						</table>
+					</div>
+				</div>
 	    	</div>
 		</div>
     </div>
+
+	<div class="resourcePanel" id="locationPanel" style="display:none;">
+		<div class="container">
+			<!-- The file upload form used as target for the file upload widget -->
+
+			<div class="col-md-12 text-center">
+				<img class="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
+			</div>
+
+			<!-- Status -->
+			<div class="upload_file_msg alert alert-success mediaManage" role="alert"></div>
+
+		</div>
+	</div>
+
+
+	<!--
+    <div class="resourcePanel"  id="crPanel" style="display:none;">
     
-    <div id="crPanel" style="display:none;">
-    
-    <div class="container">
-		
-    	<div class="container">
-    		<div class="panel_msg upload_file_msg alert alert-success mediaManage" role="alert"></div>
-			<div class = "well">	
-				<a id="addReport" type="button" class="btn btn-default lang" data-lang="c_add" aria-label="Add Report">add</a>
-				<div class="table-responsive">
-					<div id = "cr_list"></div>
-						
+		<div class="container">
+
+			<div class="container">
+				<div class="panel_msg upload_file_msg alert alert-success mediaManage" role="alert"></div>
+				<div class = "well">
+					<a id="addReport" type="button" class="btn btn-default lang" data-lang="c_add" aria-label="Add Report">add</a>
+					<div class="table-responsive">
+						<div id = "cr_list"></div>
+
+					</div>
 				</div>
 			</div>
 		</div>
-    </div>
+	</div>
+	-->
 </div>
 
 <!-- Popup to allow the user to add a map -->
