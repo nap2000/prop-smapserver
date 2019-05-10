@@ -50,7 +50,9 @@ require([
 
 	var gMaps,
 		gMapVersion,
-		gMapId;
+		gMapId,
+		gTags,          // NFC tags
+		gCurrentGroup;
 	
 $(document).ready(function() {
 
@@ -71,49 +73,59 @@ $(document).ready(function() {
 	
 	// Set up the tabs
 	if(bs) {
-		getLocations(refreshLocationView);
+		getLocations(loadedNfcData);
 	}
     $('#mediaTab a').click(function (e) {
     	e.preventDefault();
     	$(this).tab('show');
-    		
-		$('#mapPanel').hide();
-	   	$('#nfcPanel').hide();
+
+    	$('.resourcePanel').hide();
 		$('#mediaPanel').show();
-		$('#crPanel').hide();
 		
 		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
     });
     $('#mapTab a').click(function (e) {
     	e.preventDefault();
     	$(this).tab('show');
-    		  	  
-		$('#mapPanel').show();
+
+	    $('.resourcePanel').hide();
 	   	$('#nfcPanel').hide();
-		$('#mediaPanel').hide();
-		$('#crPanel').hide();
 		
 		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
     });
     $('#nfcTab a').click(function (e) {
     	e.preventDefault();
     	$(this).tab('show');
-    	
+
+	    $('.resourcePanel').hide();
     	$('#nfcPanel').show();
-		$('#mapPanel').hide();
-		$('#mediaPanel').hide();
-		$('#osPanel').hide();
 		
 		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
     });
+	$('#nfcTab a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+
+		$('.resourcePanel').hide();
+		$('#nfcPanel').show();
+
+		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
+	});
+	$('#locationsTab a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+
+		$('.resourcePanel').hide();
+		$('#locationPanel').show();
+
+		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
+	});
     $('#crTab a').click(function (e) {
     	e.preventDefault();
     	$(this).tab('show');
-    	
+
+	    $('.resourcePanel').hide();
     	$('#crPanel').show();
-    	$('#nfcPanel').hide();
-		$('#mapPanel').hide();
-		$('#mediaPanel').hide();
 		
 		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
     })
@@ -151,7 +163,7 @@ $(document).ready(function() {
     // Respond to nfc upload
     $('#submitNfcFiles').click( function() {
     	if(!$('#submitNfcFiles').hasClass('disabled')) {
-    		uploadFiles('/surveyKPI/tasks/locations/upload', "nfcupload", refreshLocationView, undefined, undefined);
+    		uploadFiles('/surveyKPI/tasks/locations/upload', "nfcupload", loadedNfcData, undefined, undefined);
     	}
     });
     
@@ -163,6 +175,10 @@ $(document).ready(function() {
     		//downloadFile('/surveyKPI/tasks/locations/download', "locations.xlsx", 
     			//	"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     	}
+    });
+
+    $('#nfc_group').change(function() {
+	    refreshNfcView();
     });
     
     /*
@@ -477,41 +493,84 @@ function delete_map(id) {
 /*
  * Show the NFC tags
  */
-function refreshLocationView(tags) {
+function loadedNfcData(tags) {
+	gTags = tags;
+	refreshNfcGroups();
+	refreshNfcView();
+}
+
+/*
+ * update NFC group list
+ */
+function refreshNfcGroups() {
+
+	var g,
+		h = [],
+		idx = -1,
+		i;
+
+	if(gTags) {
+		for(i = 0; i < gTags.length; i++) {
+			if (g !== gTags[i].group) {
+
+				g = gTags[i].group;
+				h[++idx] = '<option';
+				if (typeof gCurrentGroup === "undefined") {
+					gCurrentGroup = g;
+				}
+				if (gCurrentGroup === g) {
+					h[++idx] = ' selected';
+				}
+				h[++idx] = ' value="';
+				h[++idx] = g;
+				h[++idx] = '">';
+				h[++idx] = g;
+				h[++idx] = '</option>';
+			}
+		}
+	}
+
+	$('.nfc_group_list').html(h.join(""));
+}
+
+function refreshNfcView() {
 	
 	var i,
 		survey = globals.model.survey,
 		$element,
 		h = [],
-		idx = -1;
+		idx = -1,
+		currentGroup = $('#nfc_group').val();
 
-	if(tags) {
+	if(gTags) {
 
 		$element = $('#nfcList');
-		
-		h[++idx] = '<tr>';
-		
-		for(i = 0; i < tags.length; i++){
-			h[++idx] = '<tr>';
-			
-			h[++idx] = '<td>';
-			h[++idx] = tags[i].type;
-			h[++idx] = '</td>';
-			
-			h[++idx] = '<td>';
-			h[++idx] = tags[i].group;
-			h[++idx] = '</td>';
-			
-			h[++idx] = '<td>';
-			h[++idx] = tags[i].uid;
-			h[++idx] = '</td>';
-		
-			h[++idx] = '<td>';
-			h[++idx] = tags[i].name;
-			h[++idx] = '</td>';
-			
-			
-			h[++idx] = '</tr>';
+
+
+		for(i = 0; i < gTags.length; i++){
+
+			if(currentGroup === gTags[i].group) {
+				h[++idx] = '<tr>';
+
+				h[++idx] = '<td>';
+				h[++idx] = gTags[i].type;
+				h[++idx] = '</td>';
+
+				h[++idx] = '<td>';
+				h[++idx] = gTags[i].group;
+				h[++idx] = '</td>';
+
+				h[++idx] = '<td>';
+				h[++idx] = gTags[i].uid;
+				h[++idx] = '</td>';
+
+				h[++idx] = '<td>';
+				h[++idx] = gTags[i].name;
+				h[++idx] = '</td>';
+
+
+				h[++idx] = '</tr>';
+			}
 			
 		}
 		
