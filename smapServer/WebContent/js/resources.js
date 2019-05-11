@@ -163,23 +163,34 @@ $(document).ready(function() {
     // Respond to nfc upload
     $('#submitNfcFiles').click( function() {
     	if(!$('#submitNfcFiles').hasClass('disabled')) {
-    		uploadFiles('/surveyKPI/tasks/locations/upload', "nfcupload", loadedNfcData, undefined, undefined);
+    		uploadFiles('/surveyKPI/tasks/locations/upload/nfc', "nfcupload", loadedNfcData, undefined, undefined);
     	}
     });
     
     // Respond to nfc download
     $('#downloadNfcFiles').click( function() {
     	if(!$('#downloadNfcFiles').hasClass('disabled')) {
-		
-    		downloadFile('/surveyKPI/tasks/locations/download');
-    		//downloadFile('/surveyKPI/tasks/locations/download', "locations.xlsx", 
-    			//	"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    		downloadFile('/surveyKPI/tasks/nfc/download');
     	}
     });
 
     $('#nfc_group').change(function() {
 	    refreshNfcView();
     });
+
+	// Respond to locations upload
+	$('#submitLocationsFiles').click( function() {
+		if(!$('#submitLocationsFiles').hasClass('disabled')) {
+			uploadFiles('/surveyKPI/tasks/locations/upload/locations', "nfcupload", loadedNfcData, undefined, undefined);
+		}
+	});
+
+	// Respond to locations download
+	$('#downloadLocationsFiles').click( function() {
+		if(!$('#downloadLocationsFiles').hasClass('disabled')) {
+			downloadFile('/surveyKPI/tasks/locations/download');
+		}
+	});
     
     /*
      * Set up maps tab
