@@ -489,33 +489,22 @@ function loadedLocationData(tags) {
  */
 function refreshLocationGroups() {
 
-	var g,
+	var g = undefined,
 		h = [],
 		idx = -1,
-		i,
-		include;
+		i;
 
 	var includeNfc = $('#includeNfc').prop('checked'),
 		includeGeo = $('#includeGeo').prop('checked');
 
 	if(gTags) {
 		for(i = 0; i < gTags.length; i++) {
+			if(includeLocation(includeNfc, includeGeo, gTags[i].uid, gTags[i].lat, gTags[i].lon)) {
 
-			/*
-			 * Apply filters
-			 */
-			include = false;
-			if(includeNfc && typeof gTags[i].uid !== 'undefined' && gTags[i].uid !== '') {
-				include = true;
-			}
-			if(!include && includeGeo && gTags[i].lat != 0 && gTags[i].lon != 0) {
-				include = true;
-			}
-
-			if(include) {
-				if (g !== gTags[i].group) {
+				if (g != gTags[i].group) {
 
 					g = gTags[i].group;
+
 					h[++idx] = '<option';
 					if (typeof gCurrentGroup === "undefined") {
 						gCurrentGroup = g;
@@ -543,8 +532,7 @@ function refreshLocationView() {
 		$element,
 		h = [],
 		idx = -1,
-		currentGroup = $('#location_group').val(),
-		include;
+		currentGroup = $('#location_group').val();
 
 	var includeNfc = $('#includeNfc').prop('checked'),
 		includeGeo = $('#includeGeo').prop('checked');
@@ -558,18 +546,7 @@ function refreshLocationView() {
 
 			if(currentGroup === gTags[i].group) {
 
-				/*
-				 * Apply filters
-				 */
-				include = false;
-				if(includeNfc && typeof gTags[i].uid !== 'undefined' && gTags[i].uid !== '') {
-					include = true;
-				}
-				if(!include && includeGeo && typeof gTags[i].lat !== 'undefined' && typeof gTags[i].lon !== 'undefined') {
-					include = true;
-				}
-
-				if(include) {
+				if(includeLocation(includeNfc, includeGeo, gTags[i].uid, gTags[i].lat, gTags[i].lon)) {
 					h[++idx] = '<tr>';
 
 					h[++idx] = '<td>';
@@ -597,6 +574,19 @@ function refreshLocationView() {
 	
 		$element.html(h.join(""));
 	}
+}
+
+function includeLocation(includeNfc, includeGeo, uid, lat, lon) {
+	var include = false;
+
+	if(includeNfc && typeof uid !== 'undefined' && uid !== '') {
+		include = true;
+	}
+	if(!include && includeGeo && lat != 0 && lon != 0) {
+		include = true;
+	}
+
+	return include;
 }
 
 });
