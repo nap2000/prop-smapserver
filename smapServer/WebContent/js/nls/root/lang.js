@@ -1002,6 +1002,7 @@ define({
     // Shared Resources
     "sr_res": "Images Video Audio and CSV Files",
     "sr_nfc": "NFC Tags",
+    "sr_geo": "Geographic locations",
     "ar_af": "Add Files",
     "sr_g": "Group",
     "sr_fn": "File Name",
