@@ -161,7 +161,7 @@ $(document).ready(function() {
 	    refreshLocationView();
     });
 	$('#includeNfc, #includeGeo').change(function() {
-		refreshLocationGroups();
+		refreshLocationGroups(gTags, false);
 		refreshLocationView();
 	});
     
@@ -480,49 +480,8 @@ function delete_map(id) {
 function loadedLocationData(tags) {
 
 	gTags = tags;
-	refreshLocationGroups();
+	refreshLocationGroups(gTags, false);
 	refreshLocationView();
-}
-
-/*
- * update NFC group list
- */
-function refreshLocationGroups() {
-
-	var g = undefined,
-		h = [],
-		idx = -1,
-		i;
-
-	var includeNfc = $('#includeNfc').prop('checked'),
-		includeGeo = $('#includeGeo').prop('checked');
-
-	if(gTags) {
-		for(i = 0; i < gTags.length; i++) {
-			if(includeLocation(includeNfc, includeGeo, gTags[i].uid, gTags[i].lat, gTags[i].lon)) {
-
-				if (g != gTags[i].group) {
-
-					g = gTags[i].group;
-
-					h[++idx] = '<option';
-					if (typeof gCurrentGroup === "undefined") {
-						gCurrentGroup = g;
-					}
-					if (gCurrentGroup === g) {
-						h[++idx] = ' selected';
-					}
-					h[++idx] = ' value="';
-					h[++idx] = g;
-					h[++idx] = '">';
-					h[++idx] = g;
-					h[++idx] = '</option>';
-				}
-			}
-		}
-	}
-
-	$('.location_group_list').html(h.join(""));
 }
 
 function refreshLocationView() {

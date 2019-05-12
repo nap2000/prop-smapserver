@@ -578,7 +578,7 @@ define({
 	"t_pp": "Pre-populate form with existing data",
     "t_nid": "No initial data",
     "t_ap": "Address Parameters",
-    "t_nfc": "NFC",
+    "t_nfc": "NFC / Location",
     "t_assigned": "Assigned",
     "t_fl": "File Loaded",
     "t_tl": "Template Loaded",
