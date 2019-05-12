@@ -1031,7 +1031,7 @@ function uploadFiles(url, formName, callback1, param, callback2) {
 
 	url = addUrlParam(url, "getlist=true");
 	addHourglass();
-	$('#submitFiles').addClass('disabled');
+	$('.submitFiles').addClass('disabled');
 	$.ajax({
 		url: url,
 		type: 'POST',
@@ -1048,7 +1048,7 @@ function uploadFiles(url, formName, callback1, param, callback2) {
 		processData:false,
 		success: function(data) {
 			removeHourglass();
-			$('#submitFiles').removeClass('disabled');
+			$('.submitFiles').removeClass('disabled');
 			var callbackParam = param,
 				cb1 = callback1,
 				cb2 = callback2;
@@ -1064,7 +1064,7 @@ function uploadFiles(url, formName, callback1, param, callback2) {
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			$('#submitFiles').removeClass('disabled');
+			$('.submitFiles').removeClass('disabled');
 			if(xhr.readyState == 0 || xhr.status == 0) {
 				return;  // Not an error
 			} else {
