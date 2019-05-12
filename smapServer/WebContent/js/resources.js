@@ -73,7 +73,7 @@ $(document).ready(function() {
 	
 	// Set up the tabs
 	if(bs) {
-		getLocations(loadedNfcData);
+		getLocations(loadedLocationData);
 	}
     $('#mediaTab a').click(function (e) {
     	e.preventDefault();
@@ -89,37 +89,20 @@ $(document).ready(function() {
     	$(this).tab('show');
 
 	    $('.resourcePanel').hide();
-	   	$('#nfcPanel').hide();
+	   	$('#mapPanel').show();
 		
 		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
     });
-    $('#nfcTab a').click(function (e) {
+    $('#locationTab a').click(function (e) {
     	e.preventDefault();
     	$(this).tab('show');
 
 	    $('.resourcePanel').hide();
-    	$('#nfcPanel').show();
+    	$('#locationPanel').show();
 		
 		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
     });
-	$('#nfcTab a').click(function (e) {
-		e.preventDefault();
-		$(this).tab('show');
 
-		$('.resourcePanel').hide();
-		$('#nfcPanel').show();
-
-		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
-	});
-	$('#locationsTab a').click(function (e) {
-		e.preventDefault();
-		$(this).tab('show');
-
-		$('.resourcePanel').hide();
-		$('#locationPanel').show();
-
-		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
-	});
     $('#crTab a').click(function (e) {
     	e.preventDefault();
     	$(this).tab('show');
@@ -160,36 +143,26 @@ $(document).ready(function() {
     	uploadFiles('/surveyKPI/upload/lqasreport', "crupload", refreshCustomReportView, undefined, undefined);
     });
     
-    // Respond to nfc upload
-    $('#submitNfcFiles').click( function() {
-    	if(!$('#submitNfcFiles').hasClass('disabled')) {
-    		uploadFiles('/surveyKPI/tasks/locations/upload/nfc', "nfcupload", loadedNfcData, undefined, undefined);
+    // Respond to location upload
+    $('#submitLocationFiles').click( function() {
+    	if(!$('#submitLocationFiles').hasClass('disabled')) {
+    		uploadFiles('/surveyKPI/tasks/locations/upload', "locationupload", loadedLocationData, undefined, undefined);
     	}
     });
     
-    // Respond to nfc download
-    $('#downloadNfcFiles').click( function() {
-    	if(!$('#downloadNfcFiles').hasClass('disabled')) {
-    		downloadFile('/surveyKPI/tasks/nfc/download');
+    // Respond to location download
+    $('#downloadLocationFiles').click( function() {
+    	if(!$('#downloadLocationFiles').hasClass('disabled')) {
+    		downloadFile('/surveyKPI/tasks/locations/download');
     	}
     });
 
-    $('#nfc_group').change(function() {
-	    refreshNfcView();
+    $('#location_group').change(function() {
+	    refreshLocationView();
     });
-
-	// Respond to locations upload
-	$('#submitLocationsFiles').click( function() {
-		if(!$('#submitLocationsFiles').hasClass('disabled')) {
-			uploadFiles('/surveyKPI/tasks/locations/upload/locations', "nfcupload", loadedNfcData, undefined, undefined);
-		}
-	});
-
-	// Respond to locations download
-	$('#downloadLocationsFiles').click( function() {
-		if(!$('#downloadLocationsFiles').hasClass('disabled')) {
-			downloadFile('/surveyKPI/tasks/locations/download');
-		}
+	$('#includeNfc, #includeGeo').change(function() {
+		refreshLocationGroups();
+		refreshLocationView();
 	});
     
     /*
@@ -211,7 +184,7 @@ $(document).ready(function() {
 	getMaps();
 	
 	/*
-	 * Set up nfc tabs
+	 * Set up location tabs
 	 */
 	$('#addNfc').click(function(){
 		$('#addMapPopup').modal("show");
@@ -504,83 +477,119 @@ function delete_map(id) {
 /*
  * Show the NFC tags
  */
-function loadedNfcData(tags) {
+function loadedLocationData(tags) {
+
 	gTags = tags;
-	refreshNfcGroups();
-	refreshNfcView();
+	refreshLocationGroups();
+	refreshLocationView();
 }
 
 /*
  * update NFC group list
  */
-function refreshNfcGroups() {
+function refreshLocationGroups() {
 
 	var g,
 		h = [],
 		idx = -1,
-		i;
+		i,
+		include;
+
+	var includeNfc = $('#includeNfc').prop('checked'),
+		includeGeo = $('#includeGeo').prop('checked');
 
 	if(gTags) {
 		for(i = 0; i < gTags.length; i++) {
-			if (g !== gTags[i].group) {
 
-				g = gTags[i].group;
-				h[++idx] = '<option';
-				if (typeof gCurrentGroup === "undefined") {
-					gCurrentGroup = g;
+			/*
+			 * Apply filters
+			 */
+			include = false;
+			if(includeNfc && typeof gTags[i].uid !== 'undefined' && gTags[i].uid !== '') {
+				include = true;
+			}
+			if(!include && includeGeo && gTags[i].lat != 0 && gTags[i].lon != 0) {
+				include = true;
+			}
+
+			if(include) {
+				if (g !== gTags[i].group) {
+
+					g = gTags[i].group;
+					h[++idx] = '<option';
+					if (typeof gCurrentGroup === "undefined") {
+						gCurrentGroup = g;
+					}
+					if (gCurrentGroup === g) {
+						h[++idx] = ' selected';
+					}
+					h[++idx] = ' value="';
+					h[++idx] = g;
+					h[++idx] = '">';
+					h[++idx] = g;
+					h[++idx] = '</option>';
 				}
-				if (gCurrentGroup === g) {
-					h[++idx] = ' selected';
-				}
-				h[++idx] = ' value="';
-				h[++idx] = g;
-				h[++idx] = '">';
-				h[++idx] = g;
-				h[++idx] = '</option>';
 			}
 		}
 	}
 
-	$('.nfc_group_list').html(h.join(""));
+	$('.location_group_list').html(h.join(""));
 }
 
-function refreshNfcView() {
+function refreshLocationView() {
 	
 	var i,
 		survey = globals.model.survey,
 		$element,
 		h = [],
 		idx = -1,
-		currentGroup = $('#nfc_group').val();
+		currentGroup = $('#location_group').val(),
+		include;
+
+	var includeNfc = $('#includeNfc').prop('checked'),
+		includeGeo = $('#includeGeo').prop('checked');
 
 	if(gTags) {
 
-		$element = $('#nfcList');
+		$element = $('#locationList');
 
 
 		for(i = 0; i < gTags.length; i++){
 
 			if(currentGroup === gTags[i].group) {
-				h[++idx] = '<tr>';
 
-				h[++idx] = '<td>';
-				h[++idx] = gTags[i].type;
-				h[++idx] = '</td>';
+				/*
+				 * Apply filters
+				 */
+				include = false;
+				if(includeNfc && typeof gTags[i].uid !== 'undefined' && gTags[i].uid !== '') {
+					include = true;
+				}
+				if(!include && includeGeo && typeof gTags[i].lat !== 'undefined' && typeof gTags[i].lon !== 'undefined') {
+					include = true;
+				}
 
-				h[++idx] = '<td>';
-				h[++idx] = gTags[i].group;
-				h[++idx] = '</td>';
+				if(include) {
+					h[++idx] = '<tr>';
 
-				h[++idx] = '<td>';
-				h[++idx] = gTags[i].uid;
-				h[++idx] = '</td>';
+					h[++idx] = '<td>';
+					h[++idx] = gTags[i].type;
+					h[++idx] = '</td>';
 
-				h[++idx] = '<td>';
-				h[++idx] = gTags[i].name;
-				h[++idx] = '</td>';
+					h[++idx] = '<td>';
+					h[++idx] = gTags[i].group;
+					h[++idx] = '</td>';
 
+					h[++idx] = '<td>';
+					h[++idx] = gTags[i].uid;
+					h[++idx] = '</td>';
 
-				h[++idx] = '</tr>';
+					h[++idx] = '<td>';
+					h[++idx] = gTags[i].name;
+					h[++idx] = '</td>';
+
+					h[++idx] = '</tr>';
+				}
 			}
 			
 		}
