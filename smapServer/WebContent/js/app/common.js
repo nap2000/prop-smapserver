@@ -2317,6 +2317,56 @@ function getLocations(callback) {
 }
 
 /*
+ * update Location group list
+ */
+function refreshLocationGroups(tags, includeAll) {
+
+	var g = undefined,
+		h = [],
+		idx = -1,
+		i;
+
+	var includeNfc = $('#includeNfc').prop('checked'),
+		includeGeo = $('#includeGeo').prop('checked');
+
+	if(tags) {
+		for(i = 0; i < tags.length; i++) {
+			if(includeAll || includeLocation(includeNfc, includeGeo, tags[i].uid, tags[i].lat, tags[i].lon)) {
+
+				if (g != tags[i].group) {
+
+					g = tags[i].group;
+					if (typeof gCurrentGroup === "undefined") {
+						gCurrentGroup = g;
+					}
+
+					if(includeAll) {
+						if (gCurrentGroup === g) {
+							$('.location_group_list_sel').text(g);
+						}
+						h[++idx] = '<li>';
+						h[++idx] = g;
+						h[++idx] = '</li>';
+					} else {
+						h[++idx] = '<option';
+						if (gCurrentGroup === g) {
+							h[++idx] = ' selected';
+						}
+						h[++idx] = ' value="';
+						h[++idx] = g;
+						h[++idx] = '">';
+						h[++idx] = g;
+						h[++idx] = '</option>';
+					}
+				}
+			}
+		}
+	}
+
+	$('.location_group_list').html(h.join(""));
+}
+
+/*
  * Add the locations (NFC tags or geofence) to any drop down lists that use them
  */
 function setLocationList(locns) {
@@ -2338,7 +2388,7 @@ function setLocationList(locns) {
 		}
 	}
 
-	$('.nfc_select').append(h.join(""));
+	$('.location_select').append(h.join(""));
 
 }
 

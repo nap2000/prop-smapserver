@@ -16,6 +16,7 @@
 
  */
 
+var gCurrentGroup;
 var gUserLocale = navigator.language;
 if (Modernizr.localstorage) {
     gUserLocale = localStorage.getItem('user_locale') || navigator.language;
@@ -68,7 +69,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             });
 
             // Get locations
-            getLocations(setLocationList);
+            getLocations(processLocationList);
 
             /*
              * Change function on source project when tasks are being copied from an existing survey
@@ -367,7 +368,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 if (toDate) {
                     taskFeature.properties.to = utcTime(toDate.format("YYYY-MM-DD HH:mm:ss"));
                 }
-                taskFeature.properties.location_trigger = $('#nfc_select').val();
+                taskFeature.properties.location_trigger = $('#location_select').val();
                 taskFeature.properties.guidance = $('#tp_guidance').val();
                 taskFeature.properties.show_dist = $('#tp_show_dist').val();
 
@@ -909,7 +910,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
             });
 
             // Respond to a new NFC being selected
-            $('#nfc_select').change(function () {
+            $('#location_select').change(function () {
                 var tpname = $('#tp_name').val();
                 if(!tpname || tpname.length == 0) {
                     $('#tp_name').val($(this).find(':selected').text());
@@ -1745,7 +1746,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 $('#tp_from').data("DateTimePicker").date(localTime(task.from));
             }
 
-            $('#nfc_select').val(task.location_trigger);
+            $('#location_select').val(task.location_trigger);
             if(task.guidance) {
                 $('#tp_guidance').val(task.guidance);
             } else {
@@ -2042,6 +2043,14 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
         }
 
         /*
+         * Process a list of locations
+         */
+        function processLocationList(tags) {
+            refreshLocationGroups(tags, true);
+            setLocationList(tags);
+        }
+
+        /*
          * Import a task group from a spreadsheet
          */
         function importTaskGroup() {
@@ -2067,7 +2076,7 @@ define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     $('#import_taskgroup').modal("hide");
                     $('#load_tasks_alert').show().removeClass('alert-danger').addClass('alert-success').empty("");
                     refreshAssignmentData();
-                    getLocations(setLocationList);	// Refresh the location data since new locations may have been loaded
+                    getLocations(processLocationList);	// Refresh the location data since new locations may have been loaded
                 },
                 error: function (xhr, textStatus, err) {
                     removeHourglass();
