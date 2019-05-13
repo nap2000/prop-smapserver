@@ -40,7 +40,8 @@ requirejs.config({
     	datetimepicker: '../../../../js/libs/bootstrap-datetimepicker.min',
     	common: '../../../../js/app/common',
     	globals: '../../../../js/app/globals',
-    	bootstrap: '../../../../js/libs/bootstrap.bundle.v4.min',
+	    popper: '../../../../js/libs/popper.v1.12.9.min',
+	    bootstrap: '../../../../js/libs/bootstrap.v4.min',
     	bootbox: '../../../../js/libs/bootbox.min',
     	crf: '../../../../js/libs/commonReportFunctions',
     	lang_location: '../../../../js',
@@ -48,7 +49,7 @@ requirejs.config({
     	mapbox_app: '../../../../js/app/mapbox_app',
     	
     	mapbox: '../../../../js/libs/mapbox/js/mapbox',
-    	inspinia: '../../../../js/libs/wb/inspinia',
+    	inspinia: '../../../../js/libs/wb/inspinia.v2.9.2',
     	metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu',
     	slimscroll: '../../../../js/libs/wb/slimscroll/jquery.slimscroll.min',
     	pace: '../../../../js/libs/wb/pace/pace.min',
@@ -64,7 +65,7 @@ requirejs.config({
 
     	'common': ['jquery'],
     	'datetimepicker': ['moment'],
-    	'bootstrap': ['jquery'],
+    	'bootstrap': ['jquery', 'popper'],
     	'bootbox': ['bootstrap'],
     	'jquery-barcode': ['jquery'],
     	'app/plugins': ['jquery'],
@@ -76,7 +77,7 @@ requirejs.config({
             exports: 'L'
         },
         
-    	'inspinia': ['jquery'],
+    	'inspinia': ['bootstrap', 'jquery', 'popper'],
     	'metismenu': ['jquery'],
     	'slimscroll': ['jquery'],
     	'peity': ['jquery'],
@@ -91,6 +92,7 @@ requirejs.config({
 
 require([
          'jquery',
+         'popper',
          'bootstrap',
          'common', 
          'localise', 
@@ -105,7 +107,6 @@ require([
          'datetimepicker',
          'file_input',
          'mapbox_app',
-         
          'inspinia',
          'metismenu',
          'slimscroll',
@@ -117,6 +118,7 @@ require([
 	     'multiselect'
          
          ], function($,
+        		 Popper,
         		 bootstrap,
         		 common, 
         		 localise, 

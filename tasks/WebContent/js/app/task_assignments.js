@@ -22,12 +22,12 @@ if (Modernizr.localstorage) {
     gUserLocale = localStorage.getItem('user_locale') || navigator.language;
 }
 
-define(['jquery', 'bootstrap', 'mapbox_app', 'common', 'localise',
+define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
         'bootbox',
         'moment',
         'datetimepicker'
     ],
-    function ($, bootstrap, mapbox_app, common, lang, bootbox, moment, datetimepicker) {
+    function ($, Popper, bootstrap, mapbox_app, common, lang, bootbox, moment, datetimepicker) {
 
 
         // The following globals are only in this java script file
