@@ -40,7 +40,7 @@ requirejs.config({
     	datetimepicker: '../../../../js/libs/bootstrap-datetimepicker.min',
     	common: '../../../../js/app/common',
     	globals: '../../../../js/app/globals',
-    	bootstrap: '../../../../js/libs/bootstrap.min',
+    	bootstrap: '../../../../js/libs/bootstrap.bundle.v4.min',
     	bootbox: '../../../../js/libs/bootbox.min',
     	crf: '../../../../js/libs/commonReportFunctions',
     	lang_location: '../../../../js',
@@ -116,8 +116,8 @@ require([
          'jquery_ui',
 	     'multiselect'
          
-         ], function($, 
-        		 bootstrap, 
+         ], function($,
+        		 bootstrap,
         		 common, 
         		 localise, 
         		 globals, 
