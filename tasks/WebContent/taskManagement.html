@@ -23,7 +23,7 @@
     <link href="/css/wb/animate.css" rel="stylesheet">
     <link href="/css/wb/style.v2.9.1.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="/css/smap-wb.css" type="text/css">
+    <link href="/css/smap-wb.css" type="text/css" rel="stylesheet" >
     <link href="/js/libs/mapbox/css/mapbox.css" rel="stylesheet">
 
     <script> if (!window.console) console = {
@@ -130,22 +130,22 @@
                         </a>
                         <ul class="dropdown-menu dropdown-alerts">
                             <li>
-                                <a type="button" class="btn for_is_tg" href="#" id="addSingleTask">
+                                <a class="dropdown-item for_is_tg" href="#" id="addSingleTask">
                                     <span class="lang" data-lang="t_add_task">add task</span>
                                 </a>
                             </li>
                             <li>
-                                <a type="button" class="btn for_selected" href="#" id="assignUser">
+                                <a class="dropdown-item for_selected" href="#" id="assignUser">
                                     <span class="lang" data-lang="t_assign"></span>
                                 </a>
                             </li>
                             <li>
-                                <a type="button" class="btn for_selected" href="#" id="deleteTasks">
+                                <a class="dropdown-item for_selected" href="#" id="deleteTasks">
                                     <span class="lang" data-lang="c_del_sel"></span>
                                 </a>
                             </li>
                             <li>
-                                <a type="button" class="btn for_selected" href="#" id="setStatus">
+                                <a class="dropdown-item for_selected" href="#" id="setStatus">
                                     <span class="lang" data-lang="c_assign_sel"></span>
                                 </a>
                             </li>
@@ -158,21 +158,21 @@
                         </a>
                         <ul class="dropdown-menu dropdown-alerts">
                             <li>
-                                <a type="button" class="btn" href="#" id="addTaskGroup">
+                                <a class="dropdown-item" href="#" id="addTaskGroup">
                                     <div>
                                         <span class="lang" data-lang="t_add_group">add task group</span>
                                     </div>
                                 </a>
                             </li>
                             <li>
-                                <a type="button" class="btn for_is_tg" href="#" id="editTaskGroup">
+                                <a class="dropdown-item for_is_tg" href="#" id="editTaskGroup">
                                     <div>
                                         <span class="lang" data-lang="t_edit_group">edit task group</span>
                                     </div>
                                 </a>
                             </li>
                             <li>
-                                <a type="button" class="btn for_is_tg" href="#" id="deleteTaskGroup">
+                                <a class="dropdown-item for_is_tg" href="#" id="deleteTaskGroup">
                                     <div>
                                         <span class="lang" data-lang="t_del_group">del task group</span>
                                     </div>
@@ -181,9 +181,9 @@
 
                         </ul>
                     </li>
-                    <li><a type="button" class="btn" href="#" id="zoomData"><span class="lang" data-lang="c_zoom_data">zoom to data</span></a></li>
-                    <li><a type="button" class="btn" href="#" id="m_refresh"><span class="lang" data-lang="m_refresh">refresh</span></a></li>
-                    <li><a type="button" class="btn for_unsent_email" href="#" id="m_email_unsent"><span class="lang" data-lang="m_email_unsent">email unsent</span></a></li>
+                    <li><a href="#" id="zoomData"><span class="lang" data-lang="c_zoom_data">zoom to data</span></a></li>
+                    <li><a href="#" id="m_refresh"><span class="lang" data-lang="m_refresh">refresh</span></a></li>
+                    <li><a class="for_unsent_email" href="#" id="m_email_unsent"><span class="lang" data-lang="m_email_unsent">email unsent</span></a></li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="fa fa-file"></i> <span class="lang" data-lang="c_file">file</span>
@@ -527,32 +527,34 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
-                            <label class="col-sm-2 control-label lang" data-lang="t_nfc"
-                                   for="location_select"></label>
-                            <div class="col-sm-10">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <button type="button" class="btn btn-outline-secondary"><span class="location_group_list_sel"></span></button>
-                                        <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <span class="sr-only">Toggle Dropdown</span></button>
-                                        <div class="dropdown-menu location_group_list" id="location_group">
+                        <div class="well">
+                            <div class="form-group row">
+                                <label class="col-sm-2 control-label lang" data-lang="t_nfc"
+                                       for="location_select"></label>
+                                <div class="col-sm-10">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <button type="button" class="btn btn-outline-secondary"><span class="location_group_list_sel"></span></button>
+                                            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="sr-only">Toggle Dropdown</span></button>
+                                            <div class="dropdown-menu location_group_list" id="location_group">
+                                            </div>
                                         </div>
+                                        <select class="form-control location_select" id="location_select" name="location_trigger"></select>
+                                        <span class="input-group-btn">
+                                                        <button class="btn btn-outline-secondary" type="button">
+                                                            <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+                                                        </button>
+                                                    </span>
                                     </div>
-                                    <select class="form-control location_select" id="location_select" name="location_trigger"></select>
-                                    <span class="input-group-btn">
-                                                    <button class="btn btn-outline-secondary" type="button">
-                                                        <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
-                                                    </button>
-                                                </span>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="form-group row">
-                            <label class="col-sm-2 control-label lang" data-lang="c_location">locn</label>
-                            <div class="col-sm-10">
-                                <div id="mapModal"></div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 control-label lang" data-lang="c_location">locn</label>
+                                <div class="col-sm-10">
+                                    <div id="mapModal"></div>
+                                </div>
                             </div>
                         </div>
 
