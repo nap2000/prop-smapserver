@@ -41,7 +41,7 @@ requirejs.config({
     	common: '../../../../js/app/common',
     	globals: '../../../../js/app/globals',
 	    popper: '../../../../js/libs/popper.v1.12.9.min',
-	    bootstrap: '../../../../js/libs/bootstrap.v4.min',
+	    bootstrap: '../../../../js/libs/bootstrap.bundle.v4.min',
     	bootbox: '../../../../js/libs/bootbox.min',
     	crf: '../../../../js/libs/commonReportFunctions',
     	lang_location: '../../../../js',
