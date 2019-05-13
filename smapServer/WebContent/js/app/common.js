@@ -2344,9 +2344,9 @@ function refreshLocationGroups(tags, includeAll) {
 						if (gCurrentGroup === g) {
 							$('.location_group_list_sel').text(g);
 						}
-						h[++idx] = '<li>';
+						h[++idx] = '<a class="dropdown-item" href="#">';
 						h[++idx] = g;
-						h[++idx] = '</li>';
+						h[++idx] = '</a>';
 					} else {
 						h[++idx] = '<option';
 						if (gCurrentGroup === g) {

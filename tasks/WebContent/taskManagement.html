@@ -434,14 +434,14 @@
                     <h4 class="modal-title" id="taskPropLabel"></h4>
                 </div>
                 <div class="modal-body">
-                    <form role="form" class="form-horizontal" name="taskProperties">
-                        <div class="form-group">
+                    <form role="form" name="taskProperties">
+                        <div class="form-group row">
                             <label class="col-sm-2 control-label lang" data-lang="c_name" for="tp_name">name</label>
                             <div class="col-sm-10">
                                 <input id="tp_name" type='text' class="form-control" name="taskTitle">
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <label class="lang col-sm-2 control-label" data-lang="c_survey"
                                    for="tp_form_name">survey</label>
                             <div class="col-sm-10">
@@ -449,7 +449,7 @@
                             </div>
                         </div>
                         <div class="well">
-                            <div class="form-group">
+                            <div class="form-group row">
                                 <label class="col-sm-2 control-label lang" data-lang="assign_type">assign type</label>
                                 <div class="col-sm-10">
                                     <div class="btn-group" data-toggle="buttons">
@@ -464,14 +464,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group assign_user assign_group">.
+                            <div class="form-group assign_user assign_group row">.
                                 <label class="lang col-sm-2 control-label" data-lang="c_user" for="tp_user">user</label>
                                 <div class="col-sm-10">
                                     <select class="users_select form-control" id="tp_user"></select>
                                 </div>
                             </div>
 
-                            <div class="form-group assign_email assign_group">
+                            <div class="form-group assign_email assign_group row">
                                 <div id="tp_notify_emails_cont" class="form-group" data-container="body">
                                     <label for="tp_assign_emails" data-lang="c_email" class="lang col-sm-2 control-label">Email</label>
                                     <div class="col-sm-10">
@@ -481,7 +481,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group row">
                             <label class="col-sm-2 control-label lang" data-lang="c_repeat" for="users_select_user">repeat</label>
                             <div class="col-sm-10">
                                 <div class="checkbox">
@@ -489,7 +489,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <label class="col-sm-2 control-label lang" data-lang="c_from" for="tp_from">from</label>
                             <div class="col-sm-10">
                                 <div class='input-group date' id='tp_from' data-toggle="tooltip" data-container="body"
@@ -500,7 +500,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <label class="col-sm-2 control-label lang" data-lang="c_to" for="tp_to">to</label>
                             <div class="col-sm-10">
                                 <div class='input-group date' id='tp_to' data-toggle="tooltip" data-container="body"
@@ -512,14 +512,14 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group row">
                             <label class="col-sm-2 control-label lang" data-lang="t_g" for="tp_guidance">guide</label>
                             <div class="col-sm-10">
                                 <input id="tp_guidance" type='text' class="form-control" name="guidance">
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group row">
                             <label class="col-sm-2 control-label lang" data-lang="t_id"
                                    for="initial_data">initial</label>
                             <div class="col-sm-10">
@@ -527,39 +527,36 @@
                             </div>
                         </div>
 
-                        <div class="well">
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label lang" data-lang="t_nfc"
-                                       for="location_select"></label>
-                                <div class="col-sm-10">
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-btn">
-                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <span class="location_group_list_sel"></span> <span class="caret"></span></button>
-                                            <ul class="dropdown-menu location_group_list" id="location_group">
-                                                <li><a href="#">Action</a></li>
-                                            </ul>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label lang" data-lang="t_nfc"
+                                   for="location_select"></label>
+                            <div class="col-sm-10">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <button type="button" class="btn btn-outline-secondary"><span class="location_group_list_sel"></span></button>
+                                        <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="sr-only">Toggle Dropdown</span></button>
+                                        <div class="dropdown-menu location_group_list" id="location_group">
                                         </div>
-                                        <select class="form-control location_select" id="location_select" name="location_trigger"></select>
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-outline-secondary" type="button">
-                                                <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
-                                            </button>
-                                        </span>
                                     </div>
-                                </div>
-
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label lang" data-lang="c_location">locn</label>
-                                <div class="col-sm-10">
-                                    <div id="mapModal"></div>
+                                    <select class="form-control location_select" id="location_select" name="location_trigger"></select>
+                                    <span class="input-group-btn">
+                                                    <button class="btn btn-outline-secondary" type="button">
+                                                        <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+                                                    </button>
+                                                </span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label lang" data-lang="c_location">locn</label>
+                            <div class="col-sm-10">
+                                <div id="mapModal"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label class="lang col-sm-2 control-label lang" data-lang="t_show_dist"
                                    for="tp_show_dist"></label>
                             <div class="col-sm-3">
