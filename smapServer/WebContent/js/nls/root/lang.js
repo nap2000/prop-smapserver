@@ -309,6 +309,8 @@ define({
     "c_field_list": "Field List",
     "c_table_list": "Table List",
     "c_recover": "Recover Previous File",
+    "c_lat": "Latitude",
+    "c_lon": "Longitude",
 
     // File Types
     "ft": "File Type",
@@ -1002,6 +1004,7 @@ define({
     // Shared Resources
     "sr_res": "Images Video Audio and CSV Files",
     "sr_nfc": "NFC Tags",
+    "sr_uid": "NFC UID",
     "sr_geo": "Geographic locations",
     "ar_af": "Add Files",
     "sr_g": "Group",

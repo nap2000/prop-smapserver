@@ -1171,3 +1171,4 @@ alter table task_group add column dl_dist integer;
 -- 19.05
 alter table organisation add column ft_exit_track_menu boolean default false;
 update organisation set ft_exit_track_menu = false where ft_exit_track_menu is null;
+SELECT AddGeometryColumn('locations', 'the_geom', 4326, 'POINT', 2);
