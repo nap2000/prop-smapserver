@@ -844,6 +844,7 @@ CREATE TABLE public.locations (
 	name text,
 	uid text
 );
+SELECT AddGeometryColumn('locations', 'the_geom', 4326, 'POINT', 2);
 ALTER TABLE public.locations OWNER TO ws;
 
 CREATE TABLE public.assignments (
