@@ -16,7 +16,9 @@
 
  */
 
-var gCurrentGroup;
+var gCurrentGroup,
+    gTags;
+
 var gUserLocale = navigator.language;
 if (Modernizr.localstorage) {
     gUserLocale = localStorage.getItem('user_locale') || navigator.language;
@@ -2046,8 +2048,17 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
          * Process a list of locations
          */
         function processLocationList(tags) {
+            gTags = tags;
             refreshLocationGroups(tags, true);
             setLocationList(tags);
+
+            // Respond to a location group being selected
+            $('.dropdown-item', '#location_group').click(function () {
+                gCurrentGroup = $(this).text();
+                $('.location_group_list_sel').text(gCurrentGroup);
+                setLocationList(gTags);
+
+            });
         }
 
         /*

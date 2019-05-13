@@ -524,6 +524,14 @@ function refreshLocationView() {
 					h[++idx] = gTags[i].name;
 					h[++idx] = '</td>';
 
+					h[++idx] = '<td>';
+					h[++idx] = gTags[i].lat == "0" ? '' : gTags[i].lat;
+					h[++idx] = '</td>';
+
+					h[++idx] = '<td>';
+					h[++idx] = gTags[i].lon == "0" ? '' : gTags[i].lon;
+					h[++idx] = '</td>';
+
 					h[++idx] = '</tr>';
 				}
 			}
@@ -533,19 +541,6 @@ function refreshLocationView() {
 	
 		$element.html(h.join(""));
 	}
-}
-
-function includeLocation(includeNfc, includeGeo, uid, lat, lon) {
-	var include = false;
-
-	if(includeNfc && typeof uid !== 'undefined' && uid !== '') {
-		include = true;
-	}
-	if(!include && includeGeo && lat != 0 && lon != 0) {
-		include = true;
-	}
-
-	return include;
 }
 
 });

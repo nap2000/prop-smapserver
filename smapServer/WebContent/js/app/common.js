@@ -2363,7 +2363,7 @@ function refreshLocationGroups(tags, includeAll) {
 		}
 	}
 
-	$('.location_group_list').html(h.join(""));
+	$('.location_group_list').empty().html(h.join(""));
 }
 
 /*
@@ -2376,20 +2376,38 @@ function setLocationList(locns) {
 		i;
 
 	if(locns && locns.length) {
-		h[++idx] = '<option value = "">';
+		h[++idx] = '<option value="-1">';
 		h[++idx] = localise.set["c_none"];
 		h[++idx] = '</option>';
 		for(i = 0; i < locns.length; i++) {
-			h[++idx] = '<option value = "';
-			h[++idx] = locns[i].uid;
-			h[++idx] = '">';
-			h[++idx] = locns[i].name;
-			h[++idx] = '</option>';
+			if(locns[i].group === gCurrentGroup) {
+				h[++idx] = '<option value="';
+				h[++idx] = i;
+				h[++idx] = '">';
+				h[++idx] = locns[i].name;
+				h[++idx] = '</option>';
+			}
 		}
 	}
 
-	$('.location_select').append(h.join(""));
+	$('.location_select').empty().append(h.join(""));
 
+}
+
+/*
+ * Test for whether or not a location should be shown in the resource page
+ */
+function includeLocation(includeNfc, includeGeo, uid, lat, lon) {
+	var include = false;
+
+	if(includeNfc && typeof uid !== 'undefined' && uid !== '') {
+		include = true;
+	}
+	if(!include && includeGeo && lat != 0 && lon != 0) {
+		include = true;
+	}
+
+	return include;
 }
 
 /*
