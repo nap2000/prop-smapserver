@@ -498,6 +498,7 @@ define(function () {
         // A list of valid parameters for each question type
         this.qParams = {
             string: ['rows'],
+	        barcode: ['auto'],
             image: ['max-pixels'],
             range: ['start', 'end', 'step'],
             select: ['randomize'],
