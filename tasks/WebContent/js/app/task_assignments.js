@@ -950,14 +950,6 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 updateTaskParams();
             });
 
-            // Respond to a new NFC being selected
-            $('#location_select').change(function () {
-                var tpname = $('#tp_name').val();
-                if(!tpname || tpname.length == 0) {
-                    $('#tp_name').val($(this).find(':selected').text());
-                }
-            });
-
             enableUserProfileBS();										// Enable user profile button
             $('#m_refresh').click(function (e) {	// Add refresh action
                 refreshAssignmentData();
@@ -1837,6 +1829,7 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
             gCurrentTaskFeature.geometry.coordinates = coords;
             addDraggableMarker('mapModal', latlng, onDragEnd);
+            $('#location_save').prop('disabled', false);
 
         }
 
@@ -1851,6 +1844,7 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
             coords[1] = latlng.lat;
 
             gCurrentTaskFeature.geometry.coordinates = coords;
+            $('#location_save').prop('disabled', false);
         }
 
         /*
@@ -2108,6 +2102,7 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
             // Clear old values
             clearDraggableMarker('mapModal');
             $('#nfc_uid').val("");
+            $('#location_save').prop('disabled', 'true');
 
             if(idx != -1) {
                 $('#nfc_uid').val(gTags[idx].uid);
@@ -2119,7 +2114,13 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 }
             }
             zoomToFeatureLayer('mapModal');
+        });
 
+        /*
+         * respond to change in the nfc uid
+         */
+        $('#nfc_uid').keyup(function(){
+            $('#location_save').prop('disabled', false);
         });
 
         /*
