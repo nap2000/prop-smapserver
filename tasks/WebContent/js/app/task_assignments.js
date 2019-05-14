@@ -2057,9 +2057,31 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 gCurrentGroup = $(this).text();
                 $('.location_group_list_sel').text(gCurrentGroup);
                 setLocationList(gTags);
-
             });
         }
+
+        /*
+         * Respond to a location being selected
+         */
+        $('#location_select').change(function () {
+            var idx = $(this).val();
+
+            // Clear old values
+            clearDraggableMarker('mapModal');
+            $('#nfc_uid').val("");
+
+            if(idx != -1) {
+                $('#nfc_uid').val(gTags[idx].uid);
+                var lat = gTags[idx].lat;
+                var lon = gTags[idx].lon;
+                if (lon || lat) {
+                    clearDraggableMarker('mapModal');
+                    addDraggableMarker('mapModal', new L.LatLng(lat, lon), onDragEnd);
+                }
+            }
+            zoomToFeatureLayer('mapModal');
+
+        });
 
         /*
          * Import a task group from a spreadsheet

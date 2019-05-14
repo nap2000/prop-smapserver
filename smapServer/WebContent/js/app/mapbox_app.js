@@ -187,6 +187,7 @@ function clearDraggableMarker(elementId) {
 	if(gDraggableMarker) {
 		mapData[elementId].map.removeLayer(gDraggableMarker);
 	}
+	gDraggableMarker = undefined;
 }
 
 /*
@@ -223,8 +224,10 @@ function zoomToFeatureLayer(elementId) {
 	var thisMapData = mapData[elementId];
 	
 	var flBounds = thisMapData.featureLayer.getBounds(),
+		bounds,
 		validFlBounds = false,
-		validUserLocation = false;
+		validUserLocation = false,
+		validMarkerLocation = false;
 	
 	if(flBounds) {
 		validFlBounds = flBounds.isValid();
@@ -232,13 +235,32 @@ function zoomToFeatureLayer(elementId) {
 	if(gUserLocation) {
 		validUserLocation = gUserLocation.isValid();
 	}
-	
-	if(validUserLocation && validFlBounds) {
-		thisMapData.map.fitBounds(flBounds.extend(gUserLocation));
-	} else if(validFlBounds) {
-		thisMapData.map.fitBounds(flBounds);
-	} else if(validUserLocation) {
-		thisMapData.map.fitBounds(gUserLocation);
+	if(gDraggableMarker) {
+		validMarkerLocation = true;
 	}
+
+	// set initial bounds
+	if(validFlBounds) {
+		bounds = flBounds;
+	} else if(validUserLocation) {
+		bounds = gUserLocation;
+	} else if(validMarkerLocation) {
+		bounds = gDraggableMarker.geometry.coordinates;
+	}
+
+	if(bounds) {
+		// Extend bounds
+		if(validUserLocation) {
+			bounds = bounds.extend(gUserLocation);
+		}
+		if(validMarkerLocation) {
+			bounds = bounds.extend(gDraggableMarker.getLatLng());
+		}
+
+		// Fit to bounds
+		thisMapData.map.fitBounds(bounds);
+	}
+	
+
 }
 
