@@ -499,7 +499,9 @@ define(function () {
         this.qParams = {
             string: ['rows'],
 	        barcode: ['auto'],
-            image: ['max-pixels'],
+            image: ['max-pixels', 'auto'],
+	        video: ['auto'],
+	        audio: ['auto'],
             range: ['start', 'end', 'step'],
             select: ['randomize'],
             select1: ['randomize'],
