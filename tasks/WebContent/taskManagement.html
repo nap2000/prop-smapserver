@@ -233,32 +233,25 @@
         <!-- Header Row -->
         <div class="row wrapper border-bottom white-bg page-heading">
             <div class="col-sm-2">
-                <h2 class="lang" data-lang="m_task_m">manage</h2>
+                <h2 class="lang" data-lang="m_task_m"></h2>
             </div>
-            <div class="col-sm-5">
-                <div class="row">
-                    <form role="form" class="heading-element">
-                        <div class="form-group row">
-                            <label class="lang col-sm-4 col-form-label" data-lang="c_project"
-                                   for="project_name">project</label>
-                            <div class="col-sm-8">
-                                <select class="project_list form-control" id="project_name"></select>
+            <div class="col-sm-10">
+                    <form class="form-inline" role="form">
+                            <div class="col-sm-6 pt-4">
+                                <div class="form-group row">
+                                    <label class="lang col-md-4"  data-lang="c_project"  for="project_name"></label>
+                                    <select class="project_list form-control form-control-lg col-md-8" id="project_name"></select>
+                                </div>
                             </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="col-sm-5">
-                <div class="row">
-                    <form role="form" class="heading-element">
-                        <div class="form-group row">
-                            <label class="lang col-sm-4 col-form-label" data-lang="t_tg" for="taskgroup">task group</label>
-                            <div class="col-sm-8">
-                                <select class="form-control" id="taskgroup"></select>
+                            <div class="col-sm-6 pt-4">
+                                <div class="form-group row">
+                                    <label class="lang col-md-4" data-lang="t_tg" for="taskgroup"></label>
+                                    <select class="form-control col-md-8 form-control-lg" id="taskgroup"></select>
+                                </div>
                             </div>
-                        </div>
+
                     </form>
-                </div>
+
             </div>
         </div>
 
@@ -456,16 +449,6 @@
                                     <div class="btn-group" role="group" aria-label="select assignment type">
                                         <button id="tp_user_type" type="button" class="btn btn-outline-secondary assign_type lang active" data-lang="c_user"></button>
                                         <button id="tp_email_type" type="button" class="btn btn-outline-secondary assign_type lang" data-lang="c_email"></button>
-                                        <!--
-                                        <label class="btn btn-default active">
-                                            <input class="assign_checkbox user_type_checkbox" id="tp_user_type" name="assign_type" type="radio" checked autocomplete="off">
-                                            <span class="lang" data-lang="c_user">user</span>
-                                        </label>
-                                        <label class="btn btn-default">
-                                            <input class="assign_checkbox email_type_checkbox" id="tp_email_type" name="assign_type" type="radio" autocomplete="off">
-                                            <span class="lang" data-lang="c_email">email</span>
-                                        </label>
-                                        -->
                                     </div>
                                 </div>
                             </div>
