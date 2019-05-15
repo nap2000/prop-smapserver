@@ -1013,6 +1013,11 @@ define({
     "sr_m_d": "Enter a description for this map (optional)",
     "sr_m_mb": "For Mapbox this identifies the map, for example: mapbox.light",
     "sr_cr": "Custom Reports",
+    "sr_al": "Use Anonymous Location in Task",
+    "sr_ul": "Update Existing Location",
+    "sr_nl": "Save as New Location",
+    "sr_sl": "Save Location",
+    "sr_si": "The NFC UID and GPS coordinates that you specify here can be saves as a named location or used in the task as an anonymous location",
 
     // languages
     "ar": "Arabic",
