@@ -1829,7 +1829,8 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
 
             gCurrentTaskFeature.geometry.coordinates = coords;
             addDraggableMarker('mapModal', latlng, onDragEnd);
-            $('#location_save').prop('disabled', false);
+            setupSaveLocation();
+            $('#location_save_panel').show();
 
         }
 
@@ -1844,7 +1845,8 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
             coords[1] = latlng.lat;
 
             gCurrentTaskFeature.geometry.coordinates = coords;
-            $('#location_save').prop('disabled', false);
+            setupSaveLocation();
+            $('#location_save_panel').show();
         }
 
         /*
@@ -2102,7 +2104,7 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
             // Clear old values
             clearDraggableMarker('mapModal');
             $('#nfc_uid').val("");
-            $('#location_save').prop('disabled', 'true');
+            $('#location_save_panel').hide();
 
             if(idx != -1) {
                 $('#nfc_uid').val(gTags[idx].uid);
@@ -2120,7 +2122,15 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
          * respond to change in the nfc uid
          */
         $('#nfc_uid').keyup(function(){
-            $('#location_save').prop('disabled', false);
+            setupSaveLocation();
+            $('#location_save_panel').show();
+        });
+
+        /*
+         * respond to selection of a save type
+         */
+        $("input[name='location_save']", '#location_save_panel').change(function() {
+            setupSaveLocation();
         });
 
         /*
@@ -2365,6 +2375,31 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 $('.email_type_checkbox').prop('checked', true);
                 $('.email_type_checkbox').closest('label').addClass('active');
                 $('.assign_email').show();
+            }
+        }
+
+        /*
+         * Setup controls in save location panel
+         */
+        function setupSaveLocation() {
+            var val = $("input[name='location_save']:checked", '#location_save_panel').val();
+            var locationIdx = $('#location_select').val();
+            var groupSave = $('#locationGroupSave').val();
+
+            if (locationIdx >= 0) {
+                $('#location_save_ul').prop('disabled', false);
+            } else {
+                $('#location_save_ul').prop('disabled', true);
+            }
+
+            if(val == 'nl') {
+                if(!groupSave || groupSave.trim().length === 0) {
+                    $('#locationGroupSave').val($('.location_group_list_sel').text());
+                }
+                $('.update_only').show();
+            } else {
+                $('.update_only').hide();
+                $('#locationGroupSave').val('');
             }
         }
 
