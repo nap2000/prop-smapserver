@@ -17,7 +17,9 @@
  */
 
 var gCurrentGroup,
-    gTags;
+    gCurrentLocation = '-1',
+    gTags,
+    gSaveType = '';
 
 var gUserLocale = navigator.language;
 if (Modernizr.localstorage) {
@@ -414,6 +416,21 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 taskFeature.properties.show_dist = $('#tp_show_dist').val();
 
                 /*
+                 * Save location group and location name
+                 */
+                var locationIdx = $('#location_select').val();
+                if(locationIdx == "-1" || gSaveType == "al") {
+                    taskFeature.properties.location_group = undefined;
+                    taskFeature.properties.location_name = undefined;
+                } else if(gSaveType == "nl") {
+                    taskFeature.properties.location_group = $('locationGroupSave').val();
+                    taskFeature.properties.location_name = $('locationSave').val();
+                } else {
+                    taskFeature.properties.location_group = $('.location_group_list_sel').text();
+                    taskFeature.properties.location_name = gTags[locationIdx].name;
+                }
+
+                /*
                  * Convert the geoJson geometry into longitude and latitude for update
                  */
                 if (gCurrentTaskFeature.geometry) {
@@ -593,6 +610,7 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 $('#tg_id').html(tg.tg_id);
 
 
+                $('.tg_edit_only').show();
                 $('#addTask').modal("show");
 
             });
@@ -628,6 +646,7 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 // open the modal
                 $('#addTask').find('input,select, #addNewGroupSave').prop('disabled', false);
                 $('#addTaskLabel').text(localise.set["t_add_group"]);
+                $('.tg_edit_only').hide();
                 $('#addTask').modal("show");
 
             });
@@ -1779,7 +1798,7 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 $('#tp_from').data("DateTimePicker").date(localTime(task.from));
             }
 
-            $('#location_select').val(task.location_trigger);
+            //$('#location_select').val(task.location_trigger);   TODO
             if(task.guidance) {
                 $('#tp_guidance').val(task.guidance);
             } else {
@@ -2085,13 +2104,14 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
         function processLocationList(tags) {
             gTags = tags;
             refreshLocationGroups(tags, true);
-            setLocationList(tags);
+            setLocationList(tags, gCurrentLocation);
 
             // Respond to a location group being selected
             $('.dropdown-item', '#location_group').click(function () {
                 gCurrentGroup = $(this).text();
+                gCurrentLocation = '-1';
                 $('.location_group_list_sel').text(gCurrentGroup);
-                setLocationList(gTags);
+                setLocationList(gTags, gCurrentLocation);
             });
         }
 
@@ -2105,6 +2125,7 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
             clearDraggableMarker('mapModal');
             $('#nfc_uid').val("");
             $('#location_save_panel').hide();
+            gSaveType = '';
 
             if(idx != -1) {
                 $('#nfc_uid').val(gTags[idx].uid);
@@ -2114,6 +2135,8 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     clearDraggableMarker('mapModal');
                     addDraggableMarker('mapModal', new L.LatLng(lat, lon), onDragEnd);
                 }
+                gCurrentTaskFeature.geometry.coordinates[0] = lon;
+                gCurrentTaskFeature.geometry.coordinates[1] = lat;
             }
             zoomToFeatureLayer('mapModal');
         });
@@ -2385,6 +2408,11 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
             var val = $("input[name='location_save']:checked", '#location_save_panel').val();
             var locationIdx = $('#location_select').val();
             var groupSave = $('#locationGroupSave').val();
+
+            if(!val || val === '') {
+                $('#location_save_al').prop('checked', true);      // default
+            }
+            gSaveType = val;
 
             if (locationIdx >= 0) {
                 $('#location_save_ul').prop('disabled', false);
