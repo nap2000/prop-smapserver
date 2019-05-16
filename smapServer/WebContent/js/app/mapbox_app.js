@@ -245,7 +245,7 @@ function zoomToFeatureLayer(elementId) {
 	} else if(validUserLocation) {
 		bounds = gUserLocation;
 	} else if(validMarkerLocation) {
-		bounds = gDraggableMarker.geometry.coordinates;
+		bounds = gDraggableMarker.getLatLng();
 	}
 
 	if(bounds) {

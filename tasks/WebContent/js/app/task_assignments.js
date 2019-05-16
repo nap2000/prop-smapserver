@@ -429,6 +429,7 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
                     taskFeature.properties.location_group = $('.location_group_list_sel').text();
                     taskFeature.properties.location_name = gTags[locationIdx].name;
                 }
+                taskFeature.properties.save_type = gSaveType;
 
                 /*
                  * Convert the geoJson geometry into longitude and latitude for update
@@ -1816,6 +1817,7 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
             }
             $('#tp_show_dist').val(task.show_dist);
 
+            $('#location_save_panel').hide();
             $('#task_properties').modal("show");
 
             if (!gModalMapInitialised) {
