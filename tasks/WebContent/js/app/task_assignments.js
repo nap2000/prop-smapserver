@@ -411,7 +411,7 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 if (toDate) {
                     taskFeature.properties.to = utcTime(toDate.format("YYYY-MM-DD HH:mm:ss"));
                 }
-                taskFeature.properties.location_trigger = $('#location_select').val();
+                taskFeature.properties.location_trigger = $('#nfc_uid').val();
                 taskFeature.properties.guidance = $('#tp_guidance').val();
                 taskFeature.properties.show_dist = $('#tp_show_dist').val();
 
@@ -1798,7 +1798,14 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
                 $('#tp_from').data("DateTimePicker").date(localTime(task.from));
             }
 
-            //$('#location_select').val(task.location_trigger);   TODO
+            $('#nfc_uid').val(task.location_trigger);
+            gCurrentGroup = task.location_group;
+            gCurrentLocation = getLocationIndex(task.location_name);
+            if(gCurrentGroup && gCurrentGroup != '') {
+                $('.location_group_list_sel').text(gCurrentGroup);
+                setLocationList(gTags, gCurrentLocation);
+            }
+
             if(task.guidance) {
                 $('#tp_guidance').val(task.guidance);
             } else {
@@ -2431,4 +2438,23 @@ define(['jquery', 'popper', 'bootstrap', 'mapbox_app', 'common', 'localise',
             }
         }
 
+        /*
+         * Convert a location name into a location index
+         */
+        function getLocationIndex(name) {
+            var idx = -1,
+                i;
+
+            if(gTags) {
+                for(i = 0; i < gTags.length; i++) {
+                    if(gTags[i].name == name) {
+                        idx = i;
+                        break;
+                    }
+
+                }
+            }
+            return idx;
+
+        }
     });
