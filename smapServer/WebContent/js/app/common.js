@@ -2369,7 +2369,7 @@ function refreshLocationGroups(tags, includeAll) {
 /*
  * Add the locations (NFC tags or geofence) to any drop down lists that use them
  */
-function setLocationList(locns) {
+function setLocationList(locns, current) {
 
 	var h = [],
 		idx = -1,
@@ -2391,6 +2391,8 @@ function setLocationList(locns) {
 	}
 
 	$('.location_select').empty().append(h.join(""));
+	$('.location_select option:selected').val(current);
+
 
 }
 
