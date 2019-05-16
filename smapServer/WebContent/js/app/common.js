@@ -2391,7 +2391,7 @@ function setLocationList(locns, current) {
 	}
 
 	$('.location_select').empty().append(h.join(""));
-	$('.location_select option:selected').val(current);
+	$('.location_select').val(current);
 
 
 }
