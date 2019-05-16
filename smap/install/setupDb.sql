@@ -828,6 +828,8 @@ CREATE TABLE public.tasks (
 	repeat_count integer default 0,
 	guidance text,
 	location_trigger text,
+	location_group text,
+	location_name text,
 	deleted boolean,
 	complete_all boolean default false,	-- Set true if all assignments associated to this task need to be completed
 	show_dist integer						-- Distance in meters at which task will be downloaded
