@@ -236,21 +236,21 @@
                 <h2 class="lang" data-lang="m_task_m"></h2>
             </div>
             <div class="col-sm-10">
-                    <form class="form-inline" role="form">
-                            <div class="col-sm-6 pt-4">
-                                <div class="form-group row">
-                                    <label class="lang col-md-4"  data-lang="c_project"  for="project_name"></label>
-                                    <select class="project_list form-control form-control-lg col-md-8" id="project_name"></select>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 pt-4">
-                                <div class="form-group row">
-                                    <label class="lang col-md-4" data-lang="t_tg" for="taskgroup"></label>
-                                    <select class="form-control col-md-8 form-control-lg" id="taskgroup"></select>
-                                </div>
-                            </div>
+                <form class="form-inline" role="form">
+                    <div class="col-sm-6 pt-4">
+                        <div class="form-group row">
+                            <label class="lang col-md-4"  data-lang="c_project"  for="project_name"></label>
+                            <select class="project_list form-control form-control-lg col-md-8" id="project_name"></select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 pt-4">
+                        <div class="form-group row">
+                            <label class="lang col-md-4" data-lang="t_tg" for="taskgroup"></label>
+                            <select class="form-control col-md-8 form-control-lg" id="taskgroup"></select>
+                        </div>
+                    </div>
 
-                    </form>
+                </form>
 
             </div>
         </div>
@@ -411,230 +411,230 @@
                 </div>
             </div>
         </div>
-        </div>
     </div>
+</div>
 
-    <!-- Popup to show features when a user clicks on a geometry item
-    <div id="features" class="feature-panel-right"></div>
-    -->
+<!-- Popup to show features when a user clicks on a geometry item
+<div id="features" class="feature-panel-right"></div>
+-->
 
-    <!-- Modal to show task properties and allow them to be edited -->
-    <div id="task_properties" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="taskPropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="taskPropLabel"></h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                </div>
-                    <div class="modal-body">
-                        <div class="container-fluid">
-                        <form role="form" name="taskProperties">
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="c_name" for="tp_name">name</label>
-                                <div class="col-sm-10">
-                                    <input id="tp_name" type='text' class="form-control" name="taskTitle">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="lang col-sm-2 col-form-label" data-lang="c_survey" for="tp_form_name"></label>
-                                <div class="col-sm-10">
-                                    <select class="survey_select disable_blocked form-control" id="tp_form_name"></select>
-                                </div>
-                            </div>
-                            <div class="well">
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label lang" data-lang="assign_type"></label>
-                                    <div class="col-sm-10">
-                                        <div class="btn-group" role="group" aria-label="select assignment type">
-                                            <button id="tp_user_type" type="button" class="btn btn-outline-secondary assign_type lang active" data-lang="c_user"></button>
-                                            <button id="tp_email_type" type="button" class="btn btn-outline-secondary assign_type lang" data-lang="c_email"></button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group assign_user assign_group row">.
-                                    <label class="lang col-sm-2 col-form-label" data-lang="c_user" for="tp_user"></label>
-                                    <div class="col-sm-9">
-                                        <select class="users_select form-control" id="tp_user"></select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group assign_email assign_group row">
-                                    <label class="lang col-sm-2 col-form-label" for="tp_assign_emails" data-lang="c_email" ></label>
-                                    <div class="col-sm-10">
-                                        <input type="email" id="tp_assign_emails" class="form-control" required multiple placeholder="">
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="c_repeat" for="users_select_user">repeat</label>
-                                <div class="col-sm-10">
-                                    <div class="checkbox">
-                                        <input type="checkbox" name="repeat" value="repeat" id="tp_repeat">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="c_from" for="tp_from">from</label>
-                                <div class="col-sm-10">
-                                    <div class='input-group date' id='tp_from' data-toggle="tooltip" data-container="body"
-                                         title="Scheduled date in local time zone">
-                                        <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
-                                        <span class="input-group-addon"><span
-                                                class="glyphicon glyphicon-calendar"></span></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="c_to" for="tp_to">to</label>
-                                <div class="col-sm-10">
-                                    <div class='input-group date' id='tp_to' data-toggle="tooltip" data-container="body"
-                                         title="Finish time">
-                                        <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
-                                        <span class="input-group-addon"><span
-                                                class="glyphicon glyphicon-calendar"></span></span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="t_g" for="tp_guidance">guide</label>
-                                <div class="col-sm-10">
-                                    <input id="tp_guidance" type='text' class="form-control" name="guidance">
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="t_id"
-                                       for="initial_data">initial</label>
-                                <div class="col-sm-10">
-                                    <div id="initial_data"></div>
-                                </div>
-                            </div>
-
-                            <div class="well">
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label lang" data-lang="t_nfc"
-                                           for="location_select"></label>
-                                    <div class="col-sm-10">
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <button type="button" class="btn btn-outline-secondary"><span class="location_group_list_sel"></span></button>
-                                                <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <span class="sr-only">Toggle Dropdown</span></button>
-                                                <div class="dropdown-menu location_group_list" id="location_group"></div>
-                                            </div>
-                                            <select class="form-control location_select" id="location_select" name="location_trigger"></select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label lang" data-lang="sr_uid" for="nfc_uid"></label>
-                                    <div class="col-sm-10">
-                                        <input id="nfc_uid" type='text' class="form-control">
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label lang" data-lang="c_location">locn</label>
-                                    <div class="col-sm-10">
-                                        <div id="mapModal"></div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row" id="location_save_panel" style="display:none;">
-                                    <label class="col-sm-2 col-form-label lang" data-lang="sr_sl">locn</label>
-                                    <div class="col-sm-10">
-                                        <div class="well2">
-                                            <p class="lang" data-lang="sr_si"></p>
-                                            <form>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="location_save" id="location_save_al" value="al">
-                                                    <label class="form-check-label lang" data-lang="sr_al" for="location_save_al">
-                                                    </label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="location_save" id="location_save_ul" value="ul">
-                                                    <label class="form-check-label lang" data-lang="sr_ul" for="location_save_ul">
-                                                    </label>
-                                                </div>
-                                                <div class="form-check disabled">
-                                                    <input class="form-check-input" type="radio" name="location_save" id="location_save_nl" value="nl">
-                                                    <label class="form-check-label lang" data-lang="sr_nl" for="location_save_nl">
-                                                    </label>
-                                                </div>
-                                                <div class="form-group row update_only">
-                                                    <label for="locationGroupSave" class="col-sm-2 col-form-label lang" data-lang="sr_g"></label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="locationGroupSave">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row update_only">
-                                                    <label for="locationSave" class="col-sm-2 col-form-label lang" data-lang="c_name"></label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="locationSave">
-                                                    </div>
-                                                </div>
-
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="lang col-sm-2 col-form-label lang" data-lang="t_show_dist"
-                                       for="tp_show_dist"></label>
-                                <div class="col-sm-3">
-                                    <input type="integer" class="form-control" id="tp_show_dist">
-                                </div>
-                                <div class="col-sm-7">
-                                    <span class="lang" data-lang="t_show_dist_i"></span>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
-                    </button>
-                    <button id="taskPropertiesSave" type="button" class="btn btn-primary lang" data-lang="c_save">Save
-                    </button>
-                </div>
+<!-- Modal to show task properties and allow them to be edited -->
+<div id="task_properties" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="taskPropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="taskPropLabel"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
             </div>
-        </div>
-    </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form role="form" name="taskProperties">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label lang" data-lang="c_name" for="tp_name">name</label>
+                            <div class="col-sm-10">
+                                <input id="tp_name" type='text' class="form-control" name="taskTitle">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="lang col-sm-2 col-form-label" data-lang="c_survey" for="tp_form_name"></label>
+                            <div class="col-sm-10">
+                                <select class="survey_select disable_blocked form-control" id="tp_form_name"></select>
+                            </div>
+                        </div>
+                        <div class="well">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label lang" data-lang="assign_type"></label>
+                                <div class="col-sm-10">
+                                    <div class="btn-group" role="group" aria-label="select assignment type">
+                                        <button id="tp_user_type" type="button" class="btn btn-outline-secondary assign_type lang active" data-lang="c_user"></button>
+                                        <button id="tp_email_type" type="button" class="btn btn-outline-secondary assign_type lang" data-lang="c_email"></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group assign_user assign_group row">.
+                                <label class="lang col-sm-2 col-form-label" data-lang="c_user" for="tp_user"></label>
+                                <div class="col-sm-9">
+                                    <select class="users_select form-control" id="tp_user"></select>
+                                </div>
+                            </div>
 
-    <!-- Modal to assign a user to a task-->
-    <div id="assign_user" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="assignUserLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title lang" data-lang="t_assign" id="assignUserLabel"></h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body">
-                    <p class="single lang" data-lang="t_choose_user">choose user</p>
-                    <form class="form" role="form" id="user_assign_form">
-                        <label class="col-form-label lang" data-lang="c_user" for="users_select_user">user</label>
-                        <select class="form-control users_select" id="users_select_user"></select>
+                            <div class="form-group assign_email assign_group row">
+                                <label class="lang col-sm-2 col-form-label" for="tp_assign_emails" data-lang="c_email" ></label>
+                                <div class="col-sm-10">
+                                    <input type="email" id="tp_assign_emails" class="form-control" required multiple placeholder="">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label lang" data-lang="c_repeat" for="users_select_user">repeat</label>
+                            <div class="col-sm-10">
+                                <div class="checkbox">
+                                    <input type="checkbox" name="repeat" value="repeat" id="tp_repeat">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label lang" data-lang="c_from" for="tp_from">from</label>
+                            <div class="col-sm-10">
+                                <div class='input-group date' id='tp_from' data-toggle="tooltip" data-container="body"
+                                     title="Scheduled date in local time zone">
+                                    <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
+                                    <span class="input-group-addon"><span
+                                            class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label lang" data-lang="c_to" for="tp_to">to</label>
+                            <div class="col-sm-10">
+                                <div class='input-group date' id='tp_to' data-toggle="tooltip" data-container="body"
+                                     title="Finish time">
+                                    <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
+                                    <span class="input-group-addon"><span
+                                            class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label lang" data-lang="t_g" for="tp_guidance">guide</label>
+                            <div class="col-sm-10">
+                                <input id="tp_guidance" type='text' class="form-control" name="guidance">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label lang" data-lang="t_id"
+                                   for="initial_data">initial</label>
+                            <div class="col-sm-10">
+                                <div id="initial_data"></div>
+                            </div>
+                        </div>
+
+                        <div class="well">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label lang" data-lang="t_nfc"
+                                       for="location_select"></label>
+                                <div class="col-sm-10">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <button type="button" class="btn btn-outline-secondary"><span class="location_group_list_sel"></span></button>
+                                            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="sr-only">Toggle Dropdown</span></button>
+                                            <div class="dropdown-menu location_group_list" id="location_group"></div>
+                                        </div>
+                                        <select class="form-control location_select" id="location_select" name="location_trigger"></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label lang" data-lang="sr_uid" for="nfc_uid"></label>
+                                <div class="col-sm-10">
+                                    <input id="nfc_uid" type='text' class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label lang" data-lang="c_location">locn</label>
+                                <div class="col-sm-10">
+                                    <div id="mapModal"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row" id="location_save_panel" style="display:none;">
+                                <label class="col-sm-2 col-form-label lang" data-lang="sr_sl">locn</label>
+                                <div class="col-sm-10">
+                                    <div class="well2">
+                                        <p class="lang" data-lang="sr_si"></p>
+                                        <form>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="location_save" id="location_save_al" value="al">
+                                                <label class="form-check-label lang" data-lang="sr_al" for="location_save_al">
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="location_save" id="location_save_ul" value="ul">
+                                                <label class="form-check-label lang" data-lang="sr_ul" for="location_save_ul">
+                                                </label>
+                                            </div>
+                                            <div class="form-check disabled">
+                                                <input class="form-check-input" type="radio" name="location_save" id="location_save_nl" value="nl">
+                                                <label class="form-check-label lang" data-lang="sr_nl" for="location_save_nl">
+                                                </label>
+                                            </div>
+                                            <div class="form-group row update_only">
+                                                <label for="locationGroupSave" class="col-sm-2 col-form-label lang" data-lang="sr_g"></label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="locationGroupSave">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row update_only">
+                                                <label for="locationSave" class="col-sm-2 col-form-label lang" data-lang="c_name"></label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="locationSave">
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="lang col-sm-2 col-form-label lang" data-lang="t_show_dist"
+                                   for="tp_show_dist"></label>
+                            <div class="col-sm-3">
+                                <input type="integer" class="form-control" id="tp_show_dist">
+                            </div>
+                            <div class="col-sm-7">
+                                <span class="lang" data-lang="t_show_dist_i"></span>
+                            </div>
+                        </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
-                    </button>
-                    <button id="assignUserSave" type="button" class="btn btn-primary lang" data-dismiss="modal"
-                            data-lang="c_save">Save
-                    </button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
+                </button>
+                <button id="taskPropertiesSave" type="button" class="btn btn-primary lang" data-lang="c_save">Save
+                </button>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Modal to assign a user to a task-->
+<div id="assign_user" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="assignUserLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title lang" data-lang="t_assign" id="assignUserLabel"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <p class="single lang" data-lang="t_choose_user">choose user</p>
+                <form class="form" role="form" id="user_assign_form">
+                    <label class="col-form-label lang" data-lang="c_user" for="users_select_user">user</label>
+                    <select class="form-control users_select" id="users_select_user"></select>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
+                </button>
+                <button id="assignUserSave" type="button" class="btn btn-primary lang" data-dismiss="modal"
+                        data-lang="c_save">Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </div>    <!-- #wrapper -->
 
@@ -660,8 +660,8 @@
             </div>
             <div class="modal-body">
 
-                <form role="form" class="form-horizontal" id="assign_survey_form">
-                    <div class="form-group">
+                <form role="form" id="assign_survey_form">
+                    <div class="form-group row">
                         <label class="lang col-sm-2 col-form-label lang" data-lang="c_name"
                                for="task_group_name">name</label>
                         <div class="col-sm-10">
@@ -669,7 +669,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group row">
                         <label class="lang col-sm-2 col-form-label lang" data-lang="t_dl_dist"
                                for="t_dl_dist"></label>
                         <div class="col-sm-3">
@@ -689,7 +689,7 @@
 
                     <div id="add_task_from_existing" style="display:none;">
 
-                        <div class="form-group">
+                        <div class="form-group row">
                             <label for="project_select" class="col-sm-2 col-form-label lang" data-lang="t_ep">existing
                                 project</label>
                             <div class="col-sm-10">
@@ -697,7 +697,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group row">
                             <label for="survey" class="col-sm-2 col-form-label lang" data-lang="t_es">existing
                                 survey</label>
                             <div class="col-sm-10">
@@ -724,14 +724,14 @@
 
 
                         <div class="simple_filter well" style="display:none;">
-                            <div class="form-group">
+                            <div class="form-group row">
                                 <label for="filter_language" class="col-sm-2 col-form-label lang" data-lang="c_lang">Language</label>
                                 <div class="col-sm-10">
                                     <select id="filter_language" class="form-control"></select>
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group row">
                                 <label for="filter_question" class="col-sm-2 col-form-label lang" data-lang="t_fq">Filter
                                     by question</label>
                                 <div class="col-sm-10">
@@ -740,7 +740,7 @@
                             </div>
 
                             <div class="filter_option_only" style="display:none;">
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <label class="col-sm-2 col-form-label lang" data-lang="t_so" for="filter_option">selected
                                         option</label>
                                     <div class="col-sm-10">
@@ -750,7 +750,7 @@
                             </div>
 
                             <div class="filter_integer_only" style="display:none;">
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <label class="col-sm-2 col-form-label lang" for="filter_integer"
                                            data-lang="t_sn">numeric
                                         value</label>
@@ -762,7 +762,7 @@
                             </div>
 
                             <div class="filter_text_only" style="display:none;">
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <label class="col-sm-2 col-form-label lang" for="filter_text" data-lang="t_st">text
                                         value</label>
                                     <div class="col-sm-10">
@@ -773,7 +773,7 @@
 
                             <div class="filter_date_only" style="display:none;">
 
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <label class="col-sm-2 col-form-label lang" for="startDate"
                                            data-lang="c_from">from</label>
                                     <div class="col-sm-10">
@@ -786,7 +786,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <label class="col-sm-2 col-form-label lang" for="endDate"
                                            data-lang="c_to">to</label>
                                     <div class="col-sm-10">
@@ -803,7 +803,7 @@
                             </div>
                         </div>
                         <div class="advanced_filter well" style="display:none;">
-                            <div class="form-group" data-container="body">
+                            <div class="form-group row" data-container="body">
                                 <label for="tg_ad_filter" data-lang="c_filter" class="lang col-sm-2 col-form-label">filter</label>
                                 <div class="col-sm-10">
                                     <div class="input-group">
@@ -837,7 +837,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group row">
                             <label class="col-sm-2 col-form-label lang" data-lang="t_id">initial</label>
                             <div class="col-sm-10">
                                 <div class="radio">
@@ -868,7 +868,7 @@
                             </label>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group row">
                             <label for="survey_to_complete" class="col-sm-2 col-form-label lang" data-lang="t_ns">New
                                 Survey</label>
                             <div class="col-sm-10">
@@ -878,7 +878,7 @@
                         </div>
 
                         <div class="well">
-                            <div class="form-group">
+                            <div class="form-group row">
                                 <label class="col-sm-2 col-form-label lang" data-lang="t_assign_type">assign type</label>
                                 <div class="col-sm-10">
                                     <div class="btn-group" data-toggle="buttons">
@@ -899,7 +899,7 @@
                             </div>
 
 
-                            <div class="form-group assign_user assign_group">
+                            <div class="form-group assign_user assign_group row">
                                 <label for="users_task_group" class="col-sm-2 col-form-label lang" data-lang="t_assign">assign
                                     user</label>
                                 <div class="col-sm-10">
@@ -907,24 +907,22 @@
                                 </div>
                             </div>
 
-                            <div class="form-group assign_role assign_group">
+                            <div class="form-group assign_role assign_group row">
                                 <label for="roles_task_group" class="col-sm-2 col-form-label lang" data-lang="t_assign_roles">assign role</label>
                                 <div class="col-sm-10">
                                     <select class="form-control roles_select" id="roles_task_group"></select>
                                 </div>
                             </div>
 
-                            <div class="form-group assign_email assign_group">
-                                <div id="notify_emails_cont" class="form-group" data-container="body">
-                                    <label for="assign_emails" data-lang="c_email" class="lang col-sm-2 col-form-label">Email</label>
-                                    <div class="col-sm-10">
-                                        <input type="email" id="assign_emails" class="form-control" required multiple placeholder="">
-                                    </div>
+                            <div class="form-group assign_email assign_group row">
+                                <label for="assign_emails" data-lang="c_email" class="lang col-sm-2 col-form-label">Email</label>
+                                <div class="col-sm-10">
+                                    <input type="email" id="assign_emails" class="form-control" required multiple placeholder="">
                                 </div>
                             </div>
 
 
-                            <div class="form-group assign_data" data-container="body">
+                            <div class="form-group assign_data row" data-container="body">
                                 <label for="assign_data" data-lang="c_data" class="lang col-sm-2 col-form-label">filter</label>
                                 <div class="col-sm-10">
                                     <div class="input-group">
@@ -938,7 +936,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group assign_role">
+                            <div class="form-group assign_role row">
                                 <label for="roles_task_group" class="col-sm-2 col-form-label lang" data-lang="t_fixed_role">fixed role</label>
                                 <div class="col-sm-10">
                                     <select class="form-control" id="fixed_role"></select>
@@ -950,21 +948,21 @@
                         <div class="well">
                             <p class="lang" data-lang="t_start"></p>
 
-                            <div class="form-group">
+                            <div class="form-group row">
                                 <label for="task_start" class="col-sm-2 col-form-label lang" data-lang="c_start">start</label>
                                 <div class="col-sm-10">
                                     <select class="form-control date_questions" id="task_start"></select>
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group row">
                                 <label for="task_after" class="col-sm-2 col-form-label lang" data-lang="c_after">after</label>
                                 <div class="col-sm-10">
                                     <input type="number" id="task_after" class="form-control" value="0">
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group row">
                                 <label for="task_units" class="col-sm-2 col-form-label lang" data-lang="c_units">units</label>
                                 <div class="col-sm-10">
                                     <select class="form-control" id="task_units">
@@ -976,14 +974,14 @@
                             </div>
 
 
-                            <div class="form-group">
+                            <div class="form-group row">
                                 <label for="task_duration" class="col-sm-2 col-form-label lang" data-lang="c_duration">after</label>
                                 <div class="col-sm-10">
                                     <input type="number" id="task_duration" class="form-control" value="0">
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group row">
                                 <label for="duration_units" class="col-sm-2 col-form-label lang" data-lang="c_units">units</label>
                                 <div class="col-sm-10">
                                     <select class="form-control" id="duration_units">
@@ -999,14 +997,14 @@
                         <div class="well assign_email">
                             <p class="lang" data-lang="u_det_o_email"></p>
 
-                            <div id="email_subject_cont" class="form-group" data-container="body">
+                            <div id="email_subject_cont" class="form-group row" data-container="body">
                                 <label for="email_subject" data-lang="c_subject"
                                        class="lang col-sm-2 col-form-label">subject</label>
                                 <div class="col-sm-10">
                                     <input type="text" id="email_subject" class="form-control" placeholder="">
                                 </div>
                             </div>
-                            <div class="form-group" data-toggle="tooltip" data-container="body">
+                            <div class="form-group row" data-toggle="tooltip" data-container="body">
                                 <label for="email_content" data-lang="c_content"
                                        class="lang col-sm-2 col-form-label">content</label>
                                 <div class="col-sm-10">
@@ -1015,7 +1013,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group row">
                             <label class="lang col-sm-2 col-form-label lang" data-lang="t_show_dist"
                                    for="t_show_dist"></label>
                             <div class="col-sm-3">
@@ -1045,17 +1043,18 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title lang" id="importLabel" data-lang="m_import">import</h4>
+
+                <h4 class="modal-title lang" id="importLabel" data-lang="m_import"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+
             </div>
             <div class="modal-body">
-                <form role="form" class="form-horizontal" enctype="multipart/form-data" name="loadtasks">
-
+                <form role="form" enctype="multipart/form-data" name="loadtasks">
 
                     <input id="tg_to_import" type="hidden" name="tg" value="-1" style="display:none;">
 
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="input-group">
      						<span class="input-group-btn">
        							<input name="files" title="Add" class="file-inputs" type="file"
@@ -1064,7 +1063,7 @@
                             <input type="text" class="upload_file_msg form-control">
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <label class="col-sm-4 col-form-label lang" data-lang="t_ce" for="tg_clear">clear</label>
                         <div class="col-sm-8">
                             <div class="checkbox">
