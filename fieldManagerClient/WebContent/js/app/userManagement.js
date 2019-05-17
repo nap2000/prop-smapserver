@@ -667,7 +667,11 @@ define(['jquery','localise', 'common', 'globals',
 			} else if(pw_policy1 === 'always') {
 				device.ft_pw_policy = 0;
 			} else {
-				device.ft_pw_policy = $('#ft_login_policy2').val();
+				device.ft_pw_policy = parseInt($('#ft_login_policy2').val());
+				if(!Number.isInteger(device.ft_pw_policy) || device.ft_pw_policy <= 0) {
+					alert(localise.set["msg_pe"]);
+					return false;
+				}
 			}
 
 			options = $(".devoption:checked").map(function(){
