@@ -541,7 +541,8 @@ define({
     "msg_search_source2": "The source file or survey must be selected",
 	"msg_pdfcols_count": "The total width of all the columns must add up to 10",
 	"msg_pdfcols_width": "A column width must be between 1 and 10 inclusive",
-	"msg_restore_started": "Restoration of the survey data has started.  Press refresh to see progress.  This process may take minutes if the files to be retrieved are in off site storage",
+	"msg_pe": "The number of days before password expiry must be an integer greater than 0",
+    "msg_restore_started": "Restoration of the survey data has started.  Press refresh to see progress.  This process may take minutes if the files to be retrieved are in off site storage",
 
     // Editor
     "e_b_e": "Base on existing form",
