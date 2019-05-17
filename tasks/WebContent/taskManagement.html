@@ -786,7 +786,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
+                                <div class="form-group row mt-3">
                                     <label class="col-sm-2 col-form-label lang" for="endDate"
                                            data-lang="c_to">to</label>
                                     <div class="col-sm-10">
@@ -802,7 +802,7 @@
                                      role="alert"></div>
                             </div>
                         </div>
-                        <div class="advanced_filter well" style="display:none;">
+                        <div class="advanced_filter well mt-3" style="display:none;">
                             <div class="form-group row" data-container="body">
                                 <label for="tg_ad_filter" data-lang="c_filter" class="lang col-sm-2 col-form-label">filter</label>
                                 <div class="col-sm-10">
@@ -818,54 +818,57 @@
                             </div>
                         </div>
 
-                        <div class="panel-group" role="tablist" aria-multiselectable="true">
+                        <div class="panel-group mt-3" role="tablist" aria-multiselectable="true">
                             <div class="panel panel-default">
                                 <div class="panel-heading" role="tab" id="headingTaskParams">
-                                    <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#show_task_params"
-                                           href="#collapseTaskParams"
+                                    <h4>
+                                        <a data-toggle="collapse" href="#collapseTaskParams"
                                            aria-expanded="true" aria-controls="collapseLayers" class="lang"
                                            data-lang="t_ap">
-                                            address parameters
                                         </a>
                                     </h4>
                                 </div>
-                                <div id="collapseTaskParams" class="panel-collapse collapse" role="tabpanel"
-                                     aria-labelledby="headingOne">
-                                    <div class="task_params_table" id="task_params_table_main"></div>
+                                <div id="collapseTaskParams" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+                                    <div class="card card-body task_params_table" id="task_params_table_main"></div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label lang" data-lang="t_id">initial</label>
+                        <div class="form-group row mt-3">
+                            <label class="col-sm-2 col-form-label lang" data-lang="t_id"></label>
                             <div class="col-sm-10">
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" id="id_blank" name="initial_data" value="blank" checked="checked"><span data-lang="t_nid" class="lang"></span>
-                                    </label><br/>
-                                    <label>
-                                        <input type="radio" id="id_prepopulate" name="initial_data" value="prepopulate"><span data-lang="t_pp" class="lang"></span>
-                                    </label><br/>
-                                    <label>
-                                        <input type="radio" id="id_update_results" name="initial_data" value="update_results"><span data-lang="t_ue" class="lang"></span>
-                                    </label><br/>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="initial_data" id="id_blank" value="blank" checked>
+                                    <label class="form-check-label lang" for="id_blank" data-lang="t_nid"></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="initial_data" id="id_prepopulate" value="prepopulate">
+                                    <label class="form-check-label lang" data-lang="t_pp" for="id_prepopulate"></label>
+                                </div>
+                                <div class="form-check disabled">
+                                    <input class="form-check-input" type="radio" name="initial_data" id="id_update_results" value="update_results">
+                                    <label class="form-check-label lang" data-lang="t_ue" for="id_update_results"></label>
                                 </div>
                             </div>
 
                         </div>
 
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="add_current" value="add_current" id="add_current">
-                                <span class="lang" data-lang="t_ac">current</span>
-                            </label>
-                        </div>
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="add_future" value="add_future" id="add_future">
-                                <span class="lang" data-lang="t_af">future</span>
-                            </label>
+                        <div class="form-group row mt-3">
+                            <label class="col-sm-2 col-form-label lang" data-lang="c_apply"></label>
+                            <div class="col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="add_current" value="add_current" id="add_current">
+                                        <span class="lang" data-lang="t_ac"></span>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="add_future" value="add_future" id="add_future">
+                                        <span class="lang" data-lang="t_af"></span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form-group row">
@@ -879,21 +882,12 @@
 
                         <div class="well">
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="t_assign_type">assign type</label>
+                                <label class="col-sm-2 col-form-label lang" data-lang="t_assign_type"></label>
                                 <div class="col-sm-10">
-                                    <div class="btn-group" data-toggle="buttons">
-                                        <label class="btn btn-default active">
-                                            <input class="assign_checkbox user_type_checkbox" id="assign_user_type" name="assign_type" type="radio" checked autocomplete="off">
-                                            <span class="lang" data-lang="c_user">user</span>
-                                        </label>
-                                        <label class="btn btn-default">
-                                            <input class="assign_checkbox role_type_checkbox" id="assign_role_type" name="assign_type" type="radio" autocomplete="off">
-                                            <span class="lang" data-lang="c_role">role</span>
-                                        </label>
-                                        <label class="btn btn-default">
-                                            <input class="assign_checkbox email_type_checkbox" id="assign_email_type" name="assign_type" type="radio" autocomplete="off">
-                                            <span class="lang" data-lang="c_email">email</span>
-                                        </label>
+                                    <div class="btn-group" role="group" aria-label="select assignment type">
+                                        <button id="assign_user_type" type="button" class="btn btn-outline-secondary assign_type lang active user_type_checkbox" data-lang="c_user"></button>
+                                        <button id="assign_role_type" type="button" class="btn btn-outline-secondary assign_type lang role_type_checkbox" data-lang="c_role"></button>
+                                        <button id="assign_email_type" type="button" class="btn btn-outline-secondary assign_type lang email_type_checkbox" data-lang="c_email"></button>
                                     </div>
                                 </div>
                             </div>
