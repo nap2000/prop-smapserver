@@ -808,11 +808,11 @@ function resultsURL (sId, qId, dateId, groupId, groupType, geoTable, fn, lang, t
     }
 
     if(typeof filter !== "undefined") {
-        url+= "&filter=" + filter;
+        url+= "&filter=" + encodeURIComponent(filter);
     }
 
     if(typeof advanced_filter !== "undefined") {
-        url+= "&advanced_filter=" + advanced_filter;
+        url+= "&advanced_filter=" + encodeURIComponent(advanced_filter);
     }
 
     return url;
@@ -878,7 +878,7 @@ function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bB
     }
 
     if(typeof filter !== "undefined") {
-        url+= "&filter=" + filter;
+        url+= "&filter=" + encodeURIComponent(filter);
     }
 
     if(dateId != null) {
@@ -894,7 +894,7 @@ function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bB
     }
 
     if(typeof advanced_filter !== "undefined" && advanced_filter.length > 0) {
-        url+= "&advanced_filter=" + advanced_filter;
+        url+= "&advanced_filter=" + encodeURIComponent(advanced_filter);
     }
 
 	if(tz) {
