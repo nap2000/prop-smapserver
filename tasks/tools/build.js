@@ -1,7 +1,7 @@
 ({
     appDir: '../WebContent',
     locale: "en",
-    optimize: 'none',
+//    optimize: 'none',
     wrapShim: false,
     waitSeconds: 60,
     baseUrl: 'js/libs',
@@ -30,7 +30,7 @@
     	bootstrapfileinput: '../../../../smapServer/WebContent/js/libs/bootstrap.file-input',
 	bootbox: '../../../../smapServer/WebContent/js/libs/bootbox.min',
 	file_input: '../../../../smapServer/WebContent/js/libs/bootstrap.file-input',
-	moment: '../../../../smapServer/WebContent/js/libs/moment-with-locales.min',
+	moment: '../../../../smapServer/WebContent/js/libs/moment-with-locales.2.24.0',
 	datetimepicker: '../../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker.min',
 	rmm: '../../../../smapServer/WebContent/js/libs/responsivemobilemenu',
 	d3: '../../../../smapServer/WebContent/js/libs/d3.v4',
@@ -44,7 +44,7 @@
 
 	inspinia: '../../../../smapServer/WebContent/js/libs/wb/inspinia.v2.9.2',
 	jquery_ui: '../../../../smapServer/WebContent/js/libs/wb/jquery-ui-1.10.4.min',
-	metismenu: '../../../../smapServer/WebContent/js/libs/wb/plugins/metisMenu/jquery.metisMenu',
+	metismenu: '../../../../smapServer/WebContent/js/libs/wb/plugins/metisMenu/jquery.metisMenu.2.7.7',
 	slimscroll: '../../../../smapServer/WebContent/js/libs/wb/plugins/slimscroll/jquery.slimscroll.min',
 	sweetalert: '../../../../smapServer/WebContent/js/libs/wb/plugins/sweetalert/sweetalert.min',
 	pace: '../../../../smapServer/WebContent/js/libs/wb/plugins/pace/pace.min',
@@ -57,7 +57,8 @@
     dir: '../tasks',
     modules: [
         {
-            name: '../taskManagement'
+            name: '../taskManagement',
+	    exclude: ['jquery']
         },
         {
             name: '../managed_forms'
