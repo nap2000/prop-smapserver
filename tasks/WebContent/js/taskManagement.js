@@ -80,7 +80,6 @@ requirejs.config({
     	'slimscroll': ['jquery'],
     	'peity': ['jquery'],
     	'icheck': ['jquery'],
-    	'calendar': ['jquery_ui'],
         'multiselect': ['jquery', 'knockout'],
         'es': ['calendar']
 	
@@ -285,7 +284,17 @@ require([
 		$(('#importTaskGroupGo')).click(function () {
 			importTaskGroup();
 		});
-		//$('.file-inputs').bootstrapFileInput();
+
+		// Respond to selection of a file for upload
+		$('.custom-file-label').attr('data-browse', localise.set["c_browse"]);
+		$('.custom-file-input').on('change',function(){
+			var fileName = $(this).val();
+			var endPath = fileName.lastIndexOf("\\");
+			if(endPath > 0) {
+				fileName = fileName.substring(endPath + 1);
+			}
+			$(this).next('.custom-file-label').html(fileName);
+		})
 
 		$('#users_task_group, #roles_task_group').change(function() {
 			if($(this).val() == -2) {
@@ -2261,8 +2270,7 @@ require([
 	 * Import a task group from a spreadsheet
 	 */
 	function importTaskGroup() {
-		var url = '/surveyKPI/tasks/xls/' + globals.gCurrentProject,
-			name = $('#taskgroup option:selected').text();
+		var url = '/surveyKPI/tasks/xls/' + globals.gCurrentProject;
 
 		$('#tg_to_import').val(globals.gCurrentTaskGroup);
 		var f = document.forms.namedItem("loadtasks");
