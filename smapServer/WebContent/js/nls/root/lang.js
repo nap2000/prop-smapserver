@@ -311,6 +311,7 @@ define({
     "c_recover": "Recover Previous File",
     "c_lat": "Latitude",
     "c_lon": "Longitude",
+    "c_browse": "Browse",
 
     // File Types
     "ft": "File Type",
