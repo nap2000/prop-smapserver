@@ -344,35 +344,6 @@ require([
 			$('.assign_data').show();
 		});
 
-		/*
-		$('input[type=radio][name=assign_type]').change(function() {
-			if (this.id == 'assign_user_type' || this.id == 'tp_user_type') {
-				$('.assign_user').show();
-				$('.assign_role,.assign_email').hide();
-				if($('#users_task_group').val() == -2) {
-					$('#assign_data').prop('placeholder', "");
-					$('.assign_data').show();
-				} else {
-					$('.assign_data').hide();
-				}
-			} else if (this.id == 'assign_role_type' || this.id == 'tp_role_type') {
-				$('.assign_user, .assign_email').hide();
-				$('.assign_role').show();
-				if($('#roles_task_group').val() == -2) {
-					$('#assign_data').prop('placeholder', "");
-					$('.assign_data').show();
-				} else {
-					$('.assign_data').hide();
-				}
-			} else {
-				$('.assign_user, .assign_role,.assign_data').hide();
-				$('.assign_email').show();
-				$('#assign_data').prop('placeholder', localise.set['n_eqc']);
-				$('.assign_data').show();
-			}
-		});
-		*/
-
 
 		// Add a trigger to open the modal that bulk assigns a user to tasks
 		$('#assignUser').click(function () {
@@ -489,7 +460,7 @@ require([
 			taskFeature.properties.name = $('#tp_name').val();		// task name
 			taskFeature.properties.form_id = $('#tp_form_name').val();	// form id
 
-			taskFeature.properties.assign_type = $("input[name='assign_type']:checked", "#task_properties").attr("id");
+			taskFeature.properties.assign_type = $("button.assign_type.active", "#task_properties").attr("id");
 			if(taskFeature.properties.assign_type == 'tp_user_type') {
 				taskFeature.properties.assignee = $('#tp_user').val();
 			} else if(taskFeature.properties.assign_type == 'tp_email_type') {
@@ -638,7 +609,7 @@ require([
 				$('#add_current').prop('checked', tgRule.add_current);
 				$('#add_future').prop('checked', tgRule.add_future);
 
-				setupAssignType(tgRule.user_id, tgRule.role_id);    // Set up assign type
+				setupAssignType(tgRule.user_id, tgRule.role_id, tgRule.emails);    // Set up assign type
 
 				if(tgRule.user_id == -2 || tgRule.role_id == -2 ||
 					(tgRule.user_id == 0 && tgRule.role_id == 0)) {
@@ -1887,7 +1858,7 @@ require([
 		} else {
 			$('#tp_form_name').val(taskFeature.properties.form_id);	// form id
 		}
-		setupAssignType(taskFeature.properties.assignee, 0);
+		setupAssignType(taskFeature.properties.assignee, 0, taskFeature.properties.emails);
 		$('#tp_user').val(taskFeature.properties.assignee);	// assignee
 		$('#tp_assign_emails').val(taskFeature.properties.emails);
 		$('#tp_repeat').prop('checked', taskFeature.properties.repeat);
@@ -2490,23 +2461,21 @@ require([
 		return events;
 	}
 
-	function setupAssignType(user_id, role_id) {
+	function setupAssignType(user_id, role_id, emails) {
 		$('.assign_group').hide();
-		$('.assign_checkbox').prop('checked', false);
-		$('.assign_checkbox').closest('label').removeClass('active');
+		$('.assign_type').removeClass('active');
 		if(user_id != 0) {
-			$('.user_type_checkbox').prop('checked', true);
-			$('.user_type_checkbox').closest('label').addClass('active');
+			$('.user_type_checkbox').addClass('active');
 			$('.assign_user').show();
-
 		} else  if(role_id != 0) {
-			$('.role_type_checkbox').prop('checked', true);
-			$('.role_type_checkbox').closest('label').addClass('active');
+			$('.role_type_checkbox').addClass('active');
 			$('.assign_role').show();
-		} else {
-			$('.email_type_checkbox').prop('checked', true);
-			$('.email_type_checkbox').closest('label').addClass('active');
+		} else if(typeof emails !== "undefined" && emails.trim().length > 0) {
+			$('.email_type_checkbox').addClass('active');
 			$('.assign_email').show();
+		} else {        // Default to user
+			$('.user_type_checkbox').addClass('active');
+			$('.assign_user').show();
 		}
 	}
 
