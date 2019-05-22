@@ -35,85 +35,51 @@ requirejs.config({
      	async: '../../../../js/libs/async',
      	localise: '../../../../js/app/localise',
     	jquery: '../../../../js/libs/jquery-2.1.1',
+	    globals: '../../../../js/app/globals',
     	modernizr: '../../../../js/libs/modernizr',
-    	moment: '../../../../js/libs/moment-with-locales.min',
-    	datetimepicker: '../../../../js/libs/bootstrap-datetimepicker.min',
+	    moment: '../../../../js/libs/moment-with-locales.2.24.0',
     	datatables: '../../../../js/libs/DataTables/datatables',
     	'datatables.net': '../../../../js/libs/DataTables/DataTables/js/datatables.net',
     	'datatables.net-bs': '../../../../js/libs/DataTables/DataTables/js/datatables.bootstrap',
     	common: '../../../../js/app/common',
-    	globals: '../../../../js/app/globals',
     	bootstrap: '../../../../js/libs/bootstrap.min',
-    	bootbox: '../../../../js/libs/bootbox.min',
-    	crf: '../../../../js/libs/commonReportFunctions',
     	lang_location: '../../../../js',
-    	file_input: '../../../../js/libs/bootstrap.file-input',
-    	mapbox_app: '../../../../js/app/mapbox_app',
-    	
-    	mapbox: '../../../../js/libs/mapbox/js/mapbox',
-    	inspinia: '../../../../js/libs/wb/inspinia',
     	metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu',
-    	slimscroll: '../../../../js/libs/wb/slimscroll/jquery.slimscroll.min',
-    	pace: '../../../../js/libs/wb/pace/pace.min',
-    	peity: '../../../../js/libs/wb/peity/jquery.peity.min',
-    	icheck: '../../../../js/libs/wb/plugins/iCheck/icheck.min',
-    	calendar: '../../../../js/libs/wb/plugins/fullcalendar/fullcalendar.min',
-    	jquery_ui: '../../../../js/libs/wb/jquery-ui.custom.min'
+    	pace: '../../../../js/libs/wb/pace/pace.min'
     },
     shim: {
 
     	'common': ['jquery'],
-    	'datetimepicker': ['moment'],
     	'bootstrap': ['jquery'],
-    	'bootbox': ['bootstrap'],
-    	'crf': ['jquery'],
-    	'file_input': ['jquery'],
     	'datatables': ['jquery', 'bootstrap'],
-    	'inspinia': ['jquery'],
-    	'metismenu': ['jquery'],
-    	'slimscroll': ['jquery'],
-    	'peity': ['jquery'],
-    	'icheck': ['jquery']
-
-	
+    	'metismenu': ['jquery']
     	}
     });
 
 require([
          'jquery',
          'bootstrap',
-         'common', 
-         'localise', 
-         'globals',
-         'bootbox',
-         'crf',
-         'moment',
-         'datetimepicker',
+         'common',
+         'localise',
+		 'globals',
          'datatables.net-bs',
-         'file_input',     
-         'inspinia',
+		 'moment',
          'metismenu',
-         'slimscroll',
-         'pace',
-         'peity',
-         'icheck'
-         
-         ], function($, 
-        		 bootstrap, 
-        		 common, 
-        		 localise, 
-        		 globals, 
-        		 bootbox, 
-        		 crf, 
-        		 moment,
-        		 datetimepicker,
-        		 datatables) {
-	
-	window.moment = moment;
+         'pace'
+
+         ], function($,
+        		 bootstrap,
+        		 common,
+        		 localise,
+        		 globals,
+        		 datatables,
+		         moment) {
+
 	var table;
 	
 	$(document).ready(function() {
 
+		window.moment = moment;		// Make moment global for use by common.js
         setCustomLogs();
 		setupUserProfile();
 		localise.setlang();		// Localise HTML

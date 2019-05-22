@@ -31,7 +31,7 @@
 	bootbox: '../../../../smapServer/WebContent/js/libs/bootbox.min',
 	file_input: '../../../../smapServer/WebContent/js/libs/bootstrap.file-input',
 	moment: '../../../../smapServer/WebContent/js/libs/moment-with-locales.2.24.0',
-	datetimepicker: '../../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker.min',
+	datetimepicker: '../../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-4.17.47',
 	rmm: '../../../../smapServer/WebContent/js/libs/responsivemobilemenu',
 	d3: '../../../../smapServer/WebContent/js/libs/d3.v4',
         d3v3: '../../../../smapServer/WebContent/js/libs/d3.v3.min',
@@ -70,7 +70,8 @@
             name: '../manage'
         },
         {
-            name: '../log'
+            name: '../log',
+	    exclude: ['jquery']
         }
 
     ]

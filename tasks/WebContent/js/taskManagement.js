@@ -42,7 +42,7 @@ requirejs.config({
     	jquery: '../../../../js/libs/jquery-2.1.1',
     	modernizr: '../../../../js/libs/modernizr',
     	moment: '../../../../js/libs/moment-with-locales.2.24.0',
-    	datetimepicker: '../../../../js/libs/bootstrap-datetimepicker.min',
+    	datetimepicker: '../../../../js/libs/bootstrap-datetimepicker-4.17.47',
     	common: '../../../../js/app/common',
     	globals: '../../../../js/app/globals',
 	    popper: '../../../../js/libs/popper.v1.12.9.min',
