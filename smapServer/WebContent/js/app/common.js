@@ -406,6 +406,134 @@ function addUserDetailsPopup() {
 }
 
 /*
+ * Add user details popup to the page
+ */
+function addUserDetailsPopupBootstrap4() {
+	var	h =[],
+		idx = -1;
+
+	h[++idx] = '<div id="modify_me_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modifyMeLabel" aria-hidden="true">';
+	h[++idx] = '<div class="modal-dialog modal-lg">';
+	h[++idx] = '<div class="modal-content">';
+	h[++idx] = '<div class="modal-header">';
+	h[++idx] = '<h4 class="modal-title" id="modifyMeLabel"></h4>';
+	h[++idx] = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+	h[++idx] = '</div>';    // modal-headers
+
+	h[++idx] = '<div class="modal-body">';
+	h[++idx] = '<form role="form" id="me_edit_form">';
+	h[++idx] = '<div class="form-group row">';
+	h[++idx] = '<label for="me_name" class="col-sm-2 control-label">';
+	h[++idx] = localise.set["c_name"];
+	h[++idx] = '</label>';
+	h[++idx] = '<div class="col-sm-10">';
+	h[++idx] = '<input type="text" id="me_name" required class="form-control">';
+	h[++idx] = '</div>';
+	h[++idx] = '</div>';
+
+	h[++idx] = '<div class="form-group row">';
+	h[++idx] = '<label for="me_language" class="col-sm-2 control-label">';
+	h[++idx] = localise.set["c_lang"];
+	h[++idx] = '</label>';
+	h[++idx] = '<div class="col-sm-10">';
+	h[++idx] = '<select id="me_language" class="language_select form-control"></select>';
+	h[++idx] = '</div>';
+	h[++idx] = '</div>';
+
+	h[++idx] = '<div class="form-group row">';
+	h[++idx] = '<label for="me_email" class="col-sm-2 control-label">';
+	h[++idx] = localise.set["c_email"];
+	h[++idx] = '</label>';
+	h[++idx] = '<div class="col-sm-10">';
+	h[++idx] = '<input type="email" class="form-control" id="me_email"';
+	h[++idx] = ' placeholder="Enter email"';
+	h[++idx] = ' pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$">';
+	h[++idx] = '</div>';
+	h[++idx] = '</div>';
+
+	h[++idx] = '<div class="form-group row">';
+	h[++idx] = '<label for="me_organisation" class="col-sm-2 control-label">';
+	h[++idx] = localise.set["c_org"];
+	h[++idx] = '</label>';
+	h[++idx] = '<div class="col-sm-10">';
+	h[++idx] = '<select id="me_organisation" class="organisation_select form-control"></select>';
+	h[++idx] = '</div>';
+	h[++idx] = '</div>';
+
+	h[++idx] = '<div class="form-group row">';
+	h[++idx] = '<label for="me_enterprise" class="col-sm-2 control-label">';
+	h[++idx] = localise.set["c_ent"];
+	h[++idx] = '</label>';
+	h[++idx] = '<div class="col-sm-10">';
+	h[++idx] = '<div id="me_enterprise" class="form-control"></div>';
+	h[++idx] = '</div>';
+	h[++idx] = '</div>';
+
+	h[++idx] = '<div class="form-group row">';
+	h[++idx] = '<label for="u_tz" class="col-sm-2 control-label">';
+	h[++idx] = localise.set["c_tz"];
+	h[++idx] = '</label>';
+	h[++idx] = '<div class="col-sm-10">';
+	h[++idx] = '<select class="form-control timezone_select" id="u_tz"></select>';
+	h[++idx] = '</div>';
+	h[++idx] = '</div>';
+
+	h[++idx] = '<div id="reset_me_password_fields" style="display:none;">';
+	h[++idx] = '<div class="form-group row">';
+	h[++idx] = '<label class="col-form-label col-sm-2">';
+	h[++idx] = localise.set["c_r_p"];
+	h[++idx] = '</label>';
+	h[++idx] = '<div class="col-sm-10">';
+	h[++idx] = '<div class="checkbox">';
+	h[++idx] = '<input type="checkbox" id="reset_me_password">';
+	h[++idx] = '</div>';        // checkbox
+	h[++idx] = '</div>';        // col-sm-10
+	h[++idx] = '</div>';        // form-group
+	h[++idx] = '</div>';        // reset password fields
+
+	h[++idx] = '<div id="password_me_fields" style="display:none;">';
+	h[++idx] = '<div class="form-group row">';
+	h[++idx] = '<label for="me_password" class="col-sm-2 control-label">';
+	h[++idx] = localise.set["c_password"];
+	h[++idx] = '</label>';
+	h[++idx] = '<div class="col-sm-10">';
+	h[++idx] = '<input id="me_password" type="password" placeholder="Password" class="form-control">';
+	h[++idx] = '</div>';
+	h[++idx] = '</div>';
+
+	h[++idx] = '<div class="form-group row">';
+	h[++idx] = '<label for="me_password_confirm" class="col-sm-2 control-label">';
+	h[++idx] = localise.set["c_c_p"];
+	h[++idx] = '</label>';
+	h[++idx] = '<div class="col-sm-10">';
+	h[++idx] = '<input id="me_password_confirm" type="password" placeholder="Password" class="form-control">';
+	h[++idx] = '</div>';
+	h[++idx] = '</div>';
+	h[++idx] = '</div>';
+	h[++idx] = '</form>';
+	h[++idx] = '</div>';    // modal body
+
+	h[++idx] = '<div class="modal-footer">';
+	h[++idx] = '<button type="button" class="btn btn-default" data-dismiss="modal">';
+	h[++idx] = localise.set["c_close"];
+	h[++idx] = '</button>';
+
+	h[++idx] = '<button id="userProfileLogout"type="button" class="btn btn-default" data-dismiss="modal">';
+	h[++idx] = localise.set["c_logout"];
+	h[++idx] = '</button>';
+
+	h[++idx] = '<button id="userProfileSave" type="button" class="btn btn-primary" data-dismiss="modal">';
+	h[++idx] = localise.set["c_save"];
+	h[++idx] = '</button>';
+	h[++idx] = '</div>';    // modal - footer
+	h[++idx] = '</div>';        // modal - content
+	h[++idx] = '</div>';            // modal - dialog
+	h[++idx] = '</div>';                // popup
+
+	$(document.body).append(h.join(''));
+}
+
+/*
  * Update the user details on the page
  */
 function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServerDetailsFn) {
@@ -887,8 +1015,12 @@ function addTimeZoneToUrl(url) {
 /*
  * Create the user profile dialog and get any data it needs
  */
-function setupUserProfile() {
-	addUserDetailsPopup();
+function setupUserProfile(bs4) {
+	if(bs4) {
+		addUserDetailsPopupBootstrap4();
+	} else {
+		addUserDetailsPopup();
+	}
 	getAvailableTimeZones(showTimeZones);
 }
 
@@ -2927,12 +3059,12 @@ function refreshCustomReportView(data, callback1, callback2, type) {
 		h[++idx] = '<button type="button" data-idx="';
 		h[++idx] = i;
 		h[++idx] = '" class="btn btn-default btn-sm rm_cr">';
-		h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+		h[++idx] = '<i class="fa fa-trash-o"></i></button>';
 
 		h[++idx] = '<button type="button" data-idx="';
 		h[++idx] = i;
 		h[++idx] = '" class="btn btn-default btn-sm download_cr">';
-		h[++idx] = '<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></button>';
+		h[++idx] = '<i class="fa fa-download"></i></button>';
 
 		h[++idx] = '</td>';
 		// end actions

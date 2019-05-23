@@ -39,16 +39,10 @@ requirejs.config({
     	modernizr: '../../../../js/libs/modernizr',
     	common: '../../../../js/app/common',
     	globals: '../../../../js/app/globals',
-    	bootstrap: '../../../../js/libs/bootstrap.min',
-    	crf: '../../../../js/libs/commonReportFunctions',
+	    bootstrap: '../../../../js/libs/bootstrap.bundle.v4.min',
     	lang_location: '../../../../js',
-    	file_input: '../../../../js/libs/bootstrap.file-input',
-    	mapbox_app: '../../../../js/app/mapbox_app',
     	datetimepicker: '../../../../js/libs/bootstrap-datetimepicker.min',
-    	
-    	inspinia: '../../../../js/libs/wb/inspinia',
     	metismenu: '../../../../js/libs/wb/plugins/metisMenu/jquery.metisMenu',
-    	slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll.min',
     	pace: '../../../../js/libs/wb/plugins/pace/pace.min',
     	footable: '../../../../js/libs/wb/plugins/footable/footable.all.min'
     },
@@ -57,12 +51,7 @@ requirejs.config({
     	'common': ['jquery'],
     	'datetimepicker': ['moment'],
     	'bootstrap': ['jquery'],
-    	'app/plugins': ['jquery'],
-    	'crf': ['jquery'],
-    	'file_input': ['jquery'],
-    	'inspinia': ['jquery'],
     	'metismenu': ['jquery'],
-    	'slimscroll': ['jquery'],
     	'footable': ['jquery']
 	
     	}
@@ -74,9 +63,7 @@ require([
          'common', 
          'localise', 
          'globals',
-         'inspinia',
          'metismenu',
-         'slimscroll',
          'pace',
          'footable',
          'datetimepicker',
@@ -108,8 +95,11 @@ require([
 			dont_get_current_survey = true;
 
 		setCustomManage();		// Apply custom javascript
-		 setupUserProfile();
+		 setupUserProfile(true);
 		localise.setlang();		// Localise HTML
+		 $('#report_name').prop('placeholder', localise.set["c_name"]);
+
+		 $("#side-menu").metisMenu();
 		 
 		// Get the parameters and show a management survey if required
 		params = location.search.substr(location.search.indexOf("?") + 1)
@@ -211,12 +201,16 @@ require([
 	    });
 	    
 		// Change function on file selected
+		$('.custom-file-label').attr('data-browse', localise.set["c_browse"]);
 		$('#report_file').change(function(){
 			var reportName = $('#report_name').val(),
 				$this = $(this),
 				fileName = $this[0].files[0].name,
 				newReportName;
-			
+
+			$(this).next('.custom-file-label').html(fileName);
+
+
 			$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
 			
 			if(reportName && reportName.trim().length > 0) {
@@ -465,7 +459,7 @@ require([
  			 				hT[++idxT] = '<button type="button" data-idx="';
  			 				hT[++idxT] = i;
  			 				hT[++idxT] = '" class="btn btn-default btn-sm edit_link btn-info">';
- 			 				hT[++idxT] = '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>';
+ 			 				hT[++idxT] = '<i class="fa fa-edit"></i></button>';
  			 				
  			 				hT[++idxT] = '</td>';
  			 				// end actions

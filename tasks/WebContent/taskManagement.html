@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
 
-    <title class="lang" data-lang="m_assign">tasks</title>
+    <title class="lang" data-lang="m_assign"></title>
 
     <link href="/css/bootstrap.v4.min.css" rel="stylesheet">
     <link href="/font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -59,24 +59,24 @@
             <ul class="nav metismenu" id="side-menu">
                 <li>
                     <a id="username" data-toggle="modal" data-target="#modify_me_popup" aria-label="User">
-                        <i class="glyphicon glyphicon-user" aria-hidden="true"></i> <span class="lang"
-                                                                                          data-lang="m_user_profile"></span></a>
+                        <i class="glyphicon glyphicon-user" aria-hidden="true"></i>
+                        <span class="lang" data-lang="m_user_profile"></span></a>
                 </li>
                 <li>
                     <a href="#" id="m_modules_inspinia" aria-expanded="false"><i class="fa fa-th-large"></i> <span
                             class="lang" data-lang="m_modules">modules</span></a>
                     <ul class="nav nav-second-level" aria-expanded="false">
 
-                        <li><a class="lang" data-lang="m_home" href="/?loggedin=yes">home</a></li>
+                        <li><a class="lang" data-lang="m_home" href="/?loggedin=yes"></a></li>
                         <li class="restrict_role admin_role analyst_role"><a href="/edit.html"><i
-                                class="glyphicon glyphicon-edit"></i> <span class="lang" data-lang="c_edit">Edit</span></a>
+                                class="glyphicon glyphicon-edit"></i> <span class="lang" data-lang="c_edit"></span></a>
                         </li>
                         <li class="restrict_role admin_role analyst_role"><a
                                 href="/fieldManager/surveyManagement.html"><i class="glyphicon glyphicon-wrench"></i>
                             <span class="lang" data-lang="m_admin">Admin</span></a></li>
-                        <li class="restrict_role enum_role"><a href="/webForm.html"><i
-                                class="glyphicon glyphicon-globe"></i> <span class="nav-label lang"
-                                                                             data-lang="m_data_mod">web forms</span></a>
+                        <li class="restrict_role enum_role"><a href="/webForm.html">
+                            <i class="glyphicon glyphicon-globe"></i>
+                            <span class="nav-label lang" data-lang="m_data_mod"></span></a>
                         </li>
                         <li class="restrict_role analyst_role"><a href="/fieldAnalysis/index.html"><i
                                 class="glyphicon glyphicon-stats"></i> <span class="nav-label lang"
@@ -330,15 +330,12 @@
 
                             <div class="tabs-container">
                                 <ul class="nav nav-tabs">
-                                    <li class="active"><a data-toggle="tab" href="#table-view"> <i
-                                            class="fa fa-list"></i></a></li>
-                                    <li class=""><a data-toggle="tab" href="#map-view"><i class="fa fa-globe"></i></a>
-                                    </li>
-                                    <li class=""><a data-toggle="tab" href="#cal-view"><i
-                                            class="fa fa-calendar"></i></a></li>
+                                    <li><a class="nav-link active" data-toggle="tab" href="#table-view"> <i class="fa fa-list"></i></a></li>
+                                    <li><a class="nav-link" data-toggle="tab" href="#map-view"><i class="fa fa-globe"></i></a></li>
+                                    <li><a class="nav-link" data-toggle="tab" href="#cal-view"><i class="fa fa-calendar"></i></a></li>
                                 </ul>
                                 <div class="tab-content">
-                                    <div id="table-view" class="tab-pane active">
+                                    <div id="table-view" class="tab-pane active" role="tabpanel">
                                         <div class="panel-body">
                                             <div class="table-responsive">
                                                 <table id="task_table" class="table table-striped">
@@ -365,7 +362,7 @@
                                         </div>
                                     </div>
 
-                                    <div id="map-view" class="tab-pane">
+                                    <div id="map-view" class="tab-pane" role="tabpanel">
                                         <div class="panel-body">
 
                                             <div class="panel panel-default">
@@ -376,7 +373,7 @@
                                         </div>
                                     </div>
 
-                                    <div id="cal-view" class="tab-pane">
+                                    <div id="cal-view" class="tab-pane" role="tabpanel">
                                         <div class="panel-body">
                                             <div class="col-sm-12">
                                                 <div class="row animated fadeInDown">
@@ -470,7 +467,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label lang" data-lang="c_repeat" for="users_select_user">repeat</label>
+                            <label class="col-sm-2 col-form-label lang" data-lang="c_repeat" for="users_select_user"></label>
                             <div class="col-sm-10">
                                 <div class="checkbox">
                                     <input type="checkbox" name="repeat" value="repeat" id="tp_repeat">
@@ -478,7 +475,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label lang" data-lang="c_from" for="tp_from">from</label>
+                            <label class="col-sm-2 col-form-label lang" data-lang="c_from" for="tp_from"></label>
                             <div class="col-sm-10">
                                 <div class='input-group date' id='tp_from' data-toggle="tooltip" data-container="body"
                                      title="Scheduled date in local time zone">
@@ -489,7 +486,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label lang" data-lang="c_to" for="tp_to">to</label>
+                            <label class="col-sm-2 col-form-label lang" data-lang="c_to" for="tp_to"></label>
                             <div class="col-sm-10">
                                 <div class='input-group date' id='tp_to' data-toggle="tooltip" data-container="body"
                                      title="Finish time">
@@ -1033,8 +1030,7 @@
 </div>
 
 <!-- Modal to import data from a file -->
-<div id="import_taskgroup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importLabel"
-     aria-hidden="true">
+<div id="import_taskgroup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -1049,23 +1045,11 @@
 
                     <input id="tg_to_import" type="hidden" name="tg" value="-1" style="display:none;">
 
-                    <!--
-                    <div class="form-group row">
-                        <div class="input-group">
-     						<span class="input-group-btn">
-       							<input name="files" title="Add" class="file-inputs" type="file"
-                                       accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel.sheet.macroEnabled.12">
-     						</span>
-                            <input type="text" class="upload_file_msg form-control">
-                        </div>
-                    </div>
-                    -->
-
                     <div class="form-group custom-file">
                         <div class="custom-file">
-                            <input name="files" type="file" class="custom-file-input" id="exampleInputFile"
+                            <input name="files" type="file" class="custom-file-input"
                                    accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel.sheet.macroEnabled.12">
-                            <label class="custom-file-label lang" data-lang="c_file" for="exampleInputFile" data-browse="xx"></label>
+                            <label id="importTasksLabel" class="custom-file-label lang" data-lang="c_file" data-browse=""></label>
                         </div>
                     </div>
 
@@ -1073,17 +1057,6 @@
                         <input type="checkbox" class="custom-control-input" name="tg_clear" value="true" id="tg_clear">
                         <label class="custom-control-label lang mt-3" data-lang="t_ce" for="tg_clear"></label>
                     </div>
-
-                    <!--
-                    <div class="form-check row">
-                        <label class="col-sm-4 form-check-label col-form-label lang" data-lang="t_ce" for="tg_clear">clear</label>
-                        <div class="col-sm-8">
-                            <div class="checkbox">
-                                <input class="form-check-input" type="checkbox" name="tg_clear" value="true" id="tg_clear">
-                            </div>
-                        </div>
-                    </div>
-                    -->
 
 
                 </form>
