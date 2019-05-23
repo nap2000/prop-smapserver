@@ -1,7 +1,7 @@
 ({
     appDir: '../WebContent',
     locale: "en",
-//    optimize: 'none',
+    optimize: 'none',
     wrapShim: false,
     waitSeconds: 60,
     baseUrl: 'js/libs',
@@ -67,7 +67,8 @@
             name: '../action_forms'
         },
         {
-            name: '../manage'
+            name: '../manage',
+	    exclude: ['jquery']
         },
         {
             name: '../log',
