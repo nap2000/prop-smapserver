@@ -19,6 +19,7 @@
     	crf: '../../../../smapServer/WebContent/js/libs/commonReportFunctions',
     	lang_location: '../../../../smapServer/WebContent/js',
 	datatables: '../../../../smapServer/WebContent/js/libs/DataTables/datatables.min',
+	datatables_b4: '../../../../smapServer/WebContent/js/libs/datatables.b4.min',
 	'datatables.net': '../../../../smapServer/WebContent/js/libs/DataTables/DataTables/js/jquery.dataTables',
 	'datatables.net-bs': '../../../../smapServer/WebContent/js/libs/DataTables/DataTables/js/dataTables.bootstrap',
 	'datatables.select': '../../../../smapServer/WebContent/js/libs/DataTables/Select/js/dataTables.select.min',
@@ -72,7 +73,7 @@
         },
         {
             name: '../log',
-	    exclude: ['jquery']
+	    exclude: ['jquery', 'bootstrap', 'datatables_b4']
         }
 
     ]
