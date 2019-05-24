@@ -37,16 +37,13 @@ requirejs.config({
     paths: {
      	app: '../app',
      	i18n: '../../../../js/libs/i18n',
-     	async: '../../../../js/libs/async',
      	localise: '../../../../js/app/localise',
-    	jquery: '../../../../js/libs/jquery-2.1.1',
     	modernizr: '../../../../js/libs/modernizr',
     	moment: '../../../../js/libs/moment-with-locales.2.24.0',
     	datetimepicker: '../../../../js/libs/bootstrap-datetimepicker-4.17.47',
     	common: '../../../../js/app/common',
     	globals: '../../../../js/app/globals',
 	    popper: '../../../../js/libs/popper.v1.12.9.min',
-	    bootstrap: '../../../../js/libs/bootstrap.bundle.v4.min',
     	bootbox: '../../../../js/libs/bootbox.min',
     	crf: '../../../../js/libs/commonReportFunctions',
     	lang_location: '../../../../js',
@@ -54,21 +51,18 @@ requirejs.config({
     	
     	mapbox: '../../../../js/libs/mapbox/js/mapbox',
     	metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu',
-    	slimscroll: '../../../../js/libs/wb/slimscroll/jquery.slimscroll.min',
     	pace: '../../../../js/libs/wb/pace/pace.min',
     	peity: '../../../../js/libs/wb/peity/jquery.peity.min',
     	icheck: '../../../../js/libs/wb/plugins/iCheck/icheck.min',
     	calendar: '../../../../js/libs/wb/plugins/fullcalendar/fullcalendar.min',
         es: '../../../../js/libs/wb/plugins/fullcalendar/es',
         multiselect: '../../../../js/libs/bootstrap-multiselect',
-        knockout: '../../../../js/libs/knockout',
+        knockout: '../../../../js/libs/knockout'
     },
     shim: {
 
     	'common': ['jquery'],
     	'datetimepicker': ['moment'],
-    	'bootstrap': ['jquery', 'popper'],
-    	'bootbox': ['bootstrap'],
     	'jquery-barcode': ['jquery'],
     	'app/plugins': ['jquery'],
     	'crf': ['jquery'],
@@ -77,7 +71,6 @@ requirejs.config({
             exports: 'L'
         },
     	'metismenu': ['jquery'],
-    	'slimscroll': ['jquery'],
     	'peity': ['jquery'],
     	'icheck': ['jquery'],
         'multiselect': ['jquery', 'knockout'],
@@ -89,7 +82,6 @@ requirejs.config({
 require([
          'jquery',
          'popper',
-         'bootstrap',
          'common', 
          'localise', 
          'globals',
@@ -102,7 +94,6 @@ require([
          'datetimepicker',
          'mapbox_app',
          'metismenu',
-         'slimscroll',
          'pace',
          'peity',
          'icheck',
@@ -111,7 +102,6 @@ require([
          
          ], function($,
         		 Popper,
-        		 bootstrap,
         		 common, 
         		 localise, 
         		 globals, 
