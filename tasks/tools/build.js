@@ -59,7 +59,7 @@
     modules: [
         {
             name: '../taskManagement',
-	    exclude: ['jquery']
+	    exclude: ['jquery', 'bootstrap']
         },
         {
             name: '../managed_forms'

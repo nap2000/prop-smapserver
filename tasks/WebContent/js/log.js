@@ -34,13 +34,10 @@ requirejs.config({
      	i18n: '../../../../js/libs/i18n',
      	async: '../../../../js/libs/async',
      	localise: '../../../../js/app/localise',
-    	//jquery: '../../../../js/libs/jquery-3.4.1.min',
 	    globals: '../../../../js/app/globals',
     	modernizr: '../../../../js/libs/modernizr',
 	    moment: '../../../../js/libs/moment-with-locales.2.24.0',
-    	datatables_b4: '../../../../js/libs/datatables.b4.min',
     	common: '../../../../js/app/common',
-    	bootstrap: '../../../../js/libs/bootstrap.bundle.v4.min',
     	lang_location: '../../../../js',
     	metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu',
     	pace: '../../../../js/libs/wb/pace/pace.min'
@@ -49,28 +46,23 @@ requirejs.config({
 
     	'common': ['jquery'],
     	'bootstrap': ['jquery'],
-    	//'datatables_b4': ['jquery', 'bootstrap'],
     	'metismenu': ['jquery']
     	}
     });
 
 require([
          'jquery',
-         //'bootstrap',
          'common',
          'localise',
 		 'globals',
-         //'datatables_b4',
 		 'moment',
          'metismenu',
          'pace'
 
          ], function($,
-        		// bootstrap,
         		 common,
         		 localise,
         		 globals,
-        		// datatables,
 		         moment) {
 
 	var table;
