@@ -35,11 +35,9 @@ requirejs.config({
      	i18n: '../../../../js/libs/i18n',
      	async: '../../../../js/libs/async',
      	localise: '../../../../js/app/localise',
-    	jquery: '../../../../js/libs/jquery-2.1.1',
     	modernizr: '../../../../js/libs/modernizr',
     	common: '../../../../js/app/common',
     	globals: '../../../../js/app/globals',
-	    bootstrap: '../../../../js/libs/bootstrap.bundle.v4.min',
     	lang_location: '../../../../js',
     	datetimepicker: '../../../../js/libs/bootstrap-datetimepicker.min',
     	metismenu: '../../../../js/libs/wb/plugins/metisMenu/jquery.metisMenu',
@@ -47,10 +45,8 @@ requirejs.config({
     	footable: '../../../../js/libs/wb/plugins/footable/footable.all.min'
     },
     shim: {
-
     	'common': ['jquery'],
     	'datetimepicker': ['moment'],
-    	'bootstrap': ['jquery'],
     	'metismenu': ['jquery'],
     	'footable': ['jquery']
 	
@@ -59,7 +55,6 @@ requirejs.config({
 
 require([
          'jquery',
-         'bootstrap',
          'common', 
          'localise', 
          'globals',
@@ -68,8 +63,7 @@ require([
          'footable',
          'datetimepicker',
          
-         ], function($, 
-        		 bootstrap, 
+         ], function($,
         		 common, 
         		 localise, 
         		 globals) {

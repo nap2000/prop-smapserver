@@ -69,7 +69,7 @@
         },
         {
             name: '../manage',
-	    exclude: ['jquery']
+	    exclude: ['jquery', 'bootstrap']
         },
         {
             name: '../log',
