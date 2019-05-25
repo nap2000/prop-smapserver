@@ -1172,6 +1172,9 @@ alter table task_group add column dl_dist integer;
 alter table organisation add column ft_exit_track_menu boolean default false;
 update organisation set ft_exit_track_menu = false where ft_exit_track_menu is null;
 SELECT AddGeometryColumn('locations', 'the_geom', 4326, 'POINT', 2);
+CREATE UNIQUE INDEX location_index ON locations(locn_group, name);
 
 alter table tasks add column location_group text;
 alter table tasks add column location_name text;
+
+
