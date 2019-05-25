@@ -847,6 +847,7 @@ CREATE TABLE public.locations (
 	uid text
 );
 SELECT AddGeometryColumn('locations', 'the_geom', 4326, 'POINT', 2);
+CREATE UNIQUE INDEX location_index ON locations(locn_group, name);
 ALTER TABLE public.locations OWNER TO ws;
 
 CREATE TABLE public.assignments (
