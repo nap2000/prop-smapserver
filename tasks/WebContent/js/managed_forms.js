@@ -32,10 +32,10 @@ requirejs.config({
     waitSeconds: 60,
     paths: {
         app: '../app',
+	    jquery: '../../../../js/libs/jquery-2.1.1',
         i18n: '../../../../js/libs/i18n',
         async: '../../../../js/libs/async',
         localise: '../../../../js/app/localise',
-        jquery: '../../../../js/libs/jquery-2.1.1',
         modernizr: '../../../../js/libs/modernizr',
         common: '../../../../js/app/common',
         globals: '../../../../js/app/globals',
@@ -53,9 +53,9 @@ requirejs.config({
         inspinia: '../../../../js/libs/wb/inspinia',
         svgsave: '../../../../js/libs/saveSvgAsPng',
         metismenu: '../../../../js/libs/wb/plugins/metisMenu/jquery.metisMenu',
-        slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll.min',
         pace: '../../../../js/libs/wb/plugins/pace/pace.min',
-        qrcode: '../../../../js/libs/jquery-qrcode-0.14.0.min'
+        qrcode: '../../../../js/libs/jquery-qrcode-0.14.0.min',
+	    slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll.min'
 
     },
     shim: {
@@ -69,10 +69,10 @@ requirejs.config({
         'inspinia': ['jquery'],
         'metismenu': ['jquery'],
         'icheck': ['jquery'],
-        'slimscroll': ['jquery'],
         'datatables': ['jquery', 'bootstrap'],
         'app/chart': ['jquery'],
         'qrcode': ['jquery'],
+	    'slimscroll': ['jquery'],
         'toggle': ['bootstrap.min']
     }
 });
@@ -92,13 +92,13 @@ require([
     'datatables.select',
     'inspinia',
     'metismenu',
-    'slimscroll',
     'pace',
     'datetimepicker',
     'icheck',
     'crf',
     'qrcode',
-    'toggle'
+    'toggle',
+	'slimscroll'
 
 ], function ($,
              bootstrap,
