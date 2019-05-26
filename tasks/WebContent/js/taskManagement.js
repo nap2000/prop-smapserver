@@ -485,8 +485,8 @@ require([
 				taskFeature.properties.location_group = undefined;
 				taskFeature.properties.location_name = undefined;
 			} else if(gSaveType == "nl") {
-				taskFeature.properties.location_group = $('locationGroupSave').val();
-				taskFeature.properties.location_name = $('locationSave').val();
+				taskFeature.properties.location_group = $('#locationGroupSave').val();
+				taskFeature.properties.location_name = $('#locationSave').val();
 			} else {
 				taskFeature.properties.location_group = $('.location_group_list_sel').text();
 				taskFeature.properties.location_name = gTags[locationIdx].name;
