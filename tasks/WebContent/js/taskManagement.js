@@ -538,6 +538,7 @@ require([
 					removeHourglass();
 					$('#task_properties').modal("hide");
 					refreshAssignmentData();
+					getLocations(processLocationList);
 				},
 				error: function (xhr, textStatus, err) {
 
