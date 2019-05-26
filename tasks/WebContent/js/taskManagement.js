@@ -782,7 +782,7 @@ require([
 				assignObj["survey_name"] = $('#survey_to_complete option:selected').text();	// The display name of the survey to complete
 				assignObj["target_survey_id"] = $('#survey_to_complete option:selected').val(); 		// The form id is the survey id of the survey used to complete the task!
 
-				var assignType = $("input[name='assign_type']:checked", "#addTask").attr("id");
+				var assignType = $("button.assign_type.active", "#addTask").attr("id");
 				if(assignType == 'assign_user_type') {
 					assignObj["user_id"] = $('#users_task_group option:selected').val(); 		// User assigned to complete the task
 					assignObj["role_id"] = 0;
