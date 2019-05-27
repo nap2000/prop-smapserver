@@ -481,15 +481,15 @@ require([
 			 * Save location group and location name
 			 */
 			var locationIdx = $('#location_select').val();
-			if(locationIdx == "-1" || gSaveType == "al") {
-				taskFeature.properties.location_group = undefined;
-				taskFeature.properties.location_name = undefined;
-			} else if(gSaveType == "nl") {
+			if(gSaveType == "nl") {
 				taskFeature.properties.location_group = $('#locationGroupSave').val();
 				taskFeature.properties.location_name = $('#locationSave').val();
-			} else {
+			} else if(gSaveType == "ul" && locationIdx != "-1") {
 				taskFeature.properties.location_group = $('.location_group_list_sel').text();
 				taskFeature.properties.location_name = gTags[locationIdx].name;
+			} else {
+				taskFeature.properties.location_group = undefined;
+				taskFeature.properties.location_name = undefined;
 			}
 			taskFeature.properties.save_type = gSaveType;
 
