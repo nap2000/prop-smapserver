@@ -1,5 +1,14 @@
 #!/bin/sh
 
+if [ "$2" = wf ]
+then
+	echo "building webforms"
+	pushd ~/git/webform
+	grunt develop
+	popd
+	./enk_up.sh
+fi
+
 if [ "$1" != develop ]
 then
 	# Minify webform bundle
@@ -15,7 +24,7 @@ then
 fi
 
 # Minify the smap server code
-echo "--------------------------- minify smap sever code"
+echo "--------------------------- minify smap server code"
 node tools/r.js -o tools/build.js
 
 export COPYFILE_DISABLE=true
