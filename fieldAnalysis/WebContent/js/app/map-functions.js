@@ -175,9 +175,15 @@ function addLayer(data, pId1, pId2, view, title, map) {
 		displayElement = document.getElementById('p' + pId1).getElementsByClassName('l' + pId2)[0];
 		if(typeof displayElement === "undefined") {
 			// Add this layers description to the overall description
+
+			var filterDescription = ' (' + localise.set["a_filter"] + ')';
+			filterDescription = filterDescription.replace('%s1', data.totals.returned_count);
+			filterDescription = filterDescription.replace('%s2', data.totals.filtered_count);
+
 			currentDisplayDescription += '<span class="l' + pId2 + '"><p>Layer(' + title + '): ' + 
 			getDisplayDescription(fn, "map", data.survey, data.question, data.group, data.option, data.qtype, 
 					data.date_question, data.start, data.end, data.interval, data.units, data.filter) +
+					filterDescription +
 			"</p></span>";
 			document.getElementById('p' + pId1).getElementsByClassName('r_description')[0].innerHTML =
 				currentDisplayDescription;
