@@ -211,6 +211,9 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 	if(f_view.type === "table") {
 		rec_limit = globals.REC_LIMIT;
 		bBad = true;
+	} else if(f_view.type === "map") {
+		rec_limit = globals.MAP_REC_LIMIT;
+		bBad = false;
 	} else {
 		rec_limit = 0;
 		bBad = false;

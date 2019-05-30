@@ -399,6 +399,7 @@ define({
 	"a_dd_count_table": "Shows the count of responses to each choice in the question '%s2' in survey '%s3'.",
 	"a_dd_total_table": "Shows the total of responses to each choice in the question '%s2' in survey '%s3'.",
 	"a_dd_none_table": "Shows the responses to each choice in the question '%s2' in survey '%s3'.",
+    "a_filter": "Showing %s1 records out of %s2",
 
     "a_dd_units": "(units are %s1)",
 
