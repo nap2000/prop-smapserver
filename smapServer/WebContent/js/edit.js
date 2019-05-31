@@ -142,7 +142,7 @@ $(document).ready(function() {
 	/*
 	 * Get location list
 	 */
-	getLocations(setLocationList);
+	//getLocations(setLocationList);
 
 	/*
 	 * Get surveys and csv files that the user can link to
