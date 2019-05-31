@@ -700,7 +700,6 @@
 			    			<div id="collapsePublishingOptions" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">      					
 					
 								<div class="checkbox"><label><input type="checkbox" name="puboption" value="email" class="puboption" tabindex="3" /> <span  class="lang" data-lang="c_email">email</span></label></div>
-								<!-- <div class="checkbox"><label><input type="checkbox" name="puboption" value="facebook" class="puboption" tabindex="4" /> Facebook</label></div> -->
 								<div class="checkbox"><label><input type="checkbox" name="puboption" value="twitter" class="puboption" tabindex="5" /> <span class="lang" data-lang="c_twitter">twitter</span></label></div>
 							</div>
 								
@@ -774,6 +773,12 @@
 				<form enctype="multipart/form-data" name="organisationsave" id="organisation_logo_form">
 					<fieldset>
 						<legend>Appearance:</legend>
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" name="set_as_theme" class="puboption" value="set_as_theme"/>
+								<span  class="lang" data-lang="u_sat">email</span>
+							</label>
+						</div>
 						<input id="orgSettings" type="hidden" name="settings" >
 						<label for="o_banner_logo" class="lang col-sm-2 control-label">Banner Logo: </label>
 						<div class="col-sm-10">

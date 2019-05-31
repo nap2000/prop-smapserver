@@ -1046,6 +1046,7 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 			globals.gOrgId = data.o_id;
 			globals.gEntId = data.e_id;
 			globals.gEnterpriseName = data.enterprise_name;
+			globals.gSetAsTheme = data.set_as_theme;
 
 			if(data.timezone) {
 				globals.gTimezone = data.timezone;

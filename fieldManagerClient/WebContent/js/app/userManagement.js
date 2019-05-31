@@ -520,6 +520,7 @@ define(['jquery','localise', 'common', 'globals',
 			organisation.can_notify = false;
 			organisation.can_use_api = false;
 			organisation.can_submit = false;
+			organisation.set_as_theme = false;
 			for(i = 0; i < options.length; i++) {
 				if(options[i] === "email") {
 					organisation.allow_email = true;
@@ -539,6 +540,8 @@ define(['jquery','localise', 'common', 'globals',
 					organisation.can_use_api = true;
 				} else if(options[i] === "can_submit") {
 					organisation.can_submit = true;
+				} else if(options[i] === "set_as_theme") {
+					organisation.set_as_theme = true;
 				}
 			}
 			organisationList[0] = organisation;
@@ -1303,6 +1306,8 @@ define(['jquery','localise', 'common', 'globals',
 					this.checked = org.ft_exit_track_menu;
 				} else if($(this).val() === "ft_review_final") {
 					this.checked = org.ft_review_final;
+				} else if($(this).val() === "set_as_theme") {
+					this.checked = org.set_as_theme;
 				}
 			});
 			addLanguageOptions($('#o_language'), org.locale);
