@@ -61,6 +61,7 @@ define(function () {
         gOrgId: 0,
         gTimezone: undefined,
 	    gEnterpriseName: undefined,
+	    gSetAsTheme: undefined,
 
         gRegions: undefined,
         gRegion: {},
