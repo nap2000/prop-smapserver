@@ -137,6 +137,7 @@ create TABLE organisation (
 	can_notify boolean default true,
 	can_use_api boolean default true,
 	can_submit boolean default true,
+	set_as_theme boolean default false,
 	email_task boolean,
 	ft_delete text,
 	ft_backward_navigation text,

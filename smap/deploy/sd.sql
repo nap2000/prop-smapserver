@@ -1177,4 +1177,7 @@ CREATE UNIQUE INDEX location_index ON locations(locn_group, name);
 alter table tasks add column location_group text;
 alter table tasks add column location_name text;
 
+-- 19.06
+alter table organisation add column set_as_theme boolean default false;
+
 
