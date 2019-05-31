@@ -3802,3 +3802,11 @@ function tokenizeAppearance(input) {
 	}
 	return tokens;
 }
+
+function setOrganisationTheme() {
+	if(globals.gOrgId > 0) {
+		$('.banner_logo').attr("src", "/media/organisation/" + globals.gOrgId + '/settings/bannerLogo');
+	} else {
+		setCustomBannerLogo();
+	}
+}

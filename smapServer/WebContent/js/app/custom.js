@@ -105,3 +105,7 @@ function setCustomLogs() {
 function setCustomBilling() {
 
 }
+
+function setCustomBannerLogo() {
+    $('.banner_logo').attr("src", "/images/cropped-blog1.jpg");
+}
