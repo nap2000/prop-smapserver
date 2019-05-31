@@ -993,6 +993,7 @@ define({
     "u_only_one_ent": "Only one enterprise has been created.  You need to create another one to move an organisation there",
     "u_co": "Current Organisation",
     "u_gr": "Get report",
+    "u_sat": "Set as Theme",
 
     // Browse Results
     "br_ci": "Case Insensitive",
