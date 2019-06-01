@@ -168,14 +168,14 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
     			</div>
     			
 		    <div class="modal-body">
-				<form id="notification_edit_form" class="form-horizontal" role="form">
-					<div class="form-group">
+				<form id="notification_edit_form">
+					<div class="form-group row">
 						<label class="lang col-sm-2 control-label" data-lang="c_name" for="name"></label>
 						<div class="col-sm-10">
 							<input type="text" id="name" class="form-control">
 						</div>
 					</div>
-					<div class="form-group">
+					<div class="form-group row">
 						<label class="lang col-sm-2 control-label" data-lang="c_trigger" for="trigger"></label>
 						<div class="col-sm-10">
 							<select class="form-control" id="trigger">
@@ -184,20 +184,20 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 							</select>
 						</div>
 					</div>
-					<div class="form-group">
+					<div class="form-group row">
 						<label class="lang col-sm-2 control-label" data-lang="c_target" for="target"></label>
 						<div class="col-sm-10">
 							<select class="form-control" id="target"></select>
 						</div>
 					</div>
-					<div class="form-group">
+					<div class="form-group row">
 						<label for="survey" class="lang col-sm-2 control-label" data-lang="c_survey"></label>
 						<div class="col-sm-10">
 							<select id="survey" class="survey_select form-control"></select>
 						</div>
 					</div>
 
-					<div class="form-group" data-container="body">
+					<div class="form-group row" data-container="body">
 						<label for="not_filter" data-lang="c_filter" class="lang col-sm-2 control-label"></label>
 						<div class="col-sm-10">
 							<div class="input-group">
@@ -212,25 +212,25 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					</div>
 
 					<div class="forward_options" style="display:none;">
-						<div class="form-group">
+						<div class="form-group row">
 							<label for="fwd_host" data-lang="c_host" class="lang col-sm-2 control-label">Host</label>
 							<div class="col-sm-10">
 								<input type="text" id="fwd_host" class="form-control" required>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="form-group row">
 							<label for="fwd_user" data-lang="c_user" class="lang col-sm-2 control-label">User</label>
 							<div class="col-sm-10">
 								<input type="text" id="fwd_user" class="form-control" required>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="form-group row">
 							<label for="fwd_password" data-lang="c_password" class="lang col-sm-2 control-label">Password</label>
 							<div class="col-sm-10">
 								<input id="fwd_password" type="password" class="form-control" placeholder="Password" required>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="form-group row">
 							<label for="fwd_rem_survey" data-lang="c_rem_f" class="lang col-sm-2 control-label">Remote Form</label>
 							<div class="col-sm-5">
 								<select id="fwd_rem_survey" class="form-control"></select>
@@ -239,14 +239,14 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 								<input id="fwd_rem_survey_nm" class="form-control">
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="form-group row">
 							<div class="col-sm-offset-2 col-sm-10">
 								<button id="fwd_upd_rem_survey" type="button" class="btn btn-default lang"  data-lang="tm_ref_f">Refresh Form List</button>
 							</div>
 						</div>
 					</div>
 					<div class="well email_options" style="display:none;">
-						<div class="form-group" >
+						<div class="form-group row" >
 							<label class="lang col-sm-2 control-label" data-lang="c_attach" for="email_attach">Attach</label>
 							<div class="col-sm-10">
 								<select class="form-control" id="email_attach">
@@ -258,7 +258,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 							</div>
 						</div>
 
-						<div class="form-group pdf_options" style="display:none;">
+						<div class="form-group pdf_options row" style="display:none;">
 							<div class="col-sm-offset-2 col-sm-10">
 								<div class="checkbox">
 									<label>
@@ -269,7 +269,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 							</div>
 						</div>
 
-						<div class="form-group pdf_options" style="display:none;">
+						<div class="form-group pdf_options row" style="display:none;">
 							<div class="col-sm-offset-2 col-sm-10">
 								<div class="checkbox">
 									<label>
@@ -283,31 +283,31 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 					<div class="email_options" style="display:none;">
 
-						<div id="notify_emails_cont" class="form-group" data-toggle="tooltip"  data-container="body" title="comma separated list of email addresses">
+						<div id="notify_emails_cont" class="form-group row" data-toggle="tooltip"  data-container="body" title="comma separated list of email addresses">
 							<label for="notify_emails" data-lang="c_email" class="lang col-sm-2 control-label">Email</label>
 							<div class="col-sm-10">
 								<input type="email" id="notify_emails" class="form-control" required multiple placeholder="email addresses">
 							</div>
 						</div>
-						<div id="email_question_cont" class="form-group" data-toggle="tooltip"  data-container="body" title="question that will contain the email addresses to use">
+						<div id="email_question_cont" class="form-group row" data-toggle="tooltip"  data-container="body" title="question that will contain the email addresses to use">
 							<label for="email_question" class="col-sm-2 control-label lang" data-lang="n_eq">email question</label>
 							<div class="col-sm-10">
 								<select class="selected_name_question form-control" id="email_question"></select>
 							</div>
 						</div>
-						<div id="email_meta_cont" class="form-group" data-toggle="tooltip"  data-container="body" title="Meta item or preload that will contain an email address to use">
+						<div id="email_meta_cont" class="form-group row" data-toggle="tooltip"  data-container="body" title="Meta item or preload that will contain an email address to use">
 							<label for="email_meta" class="col-sm-2 control-label lang" data-lang="n_ep">email meta</label>
 							<div class="col-sm-10">
 								<select class="selected_meta form-control" id="email_meta"></select>
 							</div>
 						</div>
-						<div id="email_subject_cont" class="form-group" data-toggle="tooltip"  data-container="body" title="Subject for the email (optional)">
+						<div id="email_subject_cont" class="form-group row" data-toggle="tooltip"  data-container="body" title="Subject for the email (optional)">
 							<label for="email_subject" data-lang="c_subject" class="lang col-sm-2 control-label">subject</label>
 							<div class="col-sm-10">
 								<input type="text" id="email_subject" class="form-control">
 							</div>
 						</div>
-						<div class="form-group" data-toggle="tooltip"  data-container="body">
+						<div class="form-group row" data-toggle="tooltip"  data-container="body">
 							<label for="email_content" data-lang="c_content" class="lang col-sm-2 control-label">content</label>
 							<div class="col-sm-10">
 								<textarea id="email_content" class="labelProp form-control"></textarea>
@@ -316,36 +316,32 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					</div>
 
 					<div class="sms_options" style="display:none;">
-						<div class="form-group" data-toggle="tooltip"  data-container="body" title="Comma separated list of email addresses">
+						<div class="form-group row" data-toggle="tooltip"  data-container="body" title="Comma separated list of email addresses">
 							<label for="notify_sms" data-lang="c_sms" class="lang col-sm-2 control-label">SMS</label>
 							<div class="col-sm-10">
 								<input type="tel" id="notify_sms" class="form-control" required multiple placeholder="SMS Number">
 							</div>
 						</div>
-						<div class="form-group" data-toggle="tooltip"  data-container="body" title="Question that will contain the SMS numbers to use">
+						<div class="form-group row" data-toggle="tooltip"  data-container="body" title="Question that will contain the SMS numbers to use">
 							<label for="sms_question" class="col-sm-2 control-label lang" data-lang="n_smsq">sms question</label>
 							<div class="col-sm-10">
 								<select class="selected_name_question form-control" id="sms_question"></select>
 							</div>
 						</div>
 
-						<div class="form-group" data-toggle="tooltip"  data-container="body" title="SMS content.">
+						<div class="form-group row" data-toggle="tooltip"  data-container="body" title="SMS content.">
 							<label for="sms_content" data-lang="c_content" class="lang col-sm-2 control-label">content</label>
 							<div class="col-sm-10">
 								<textarea id="sms_content" class="labelProp form-control" placeholder="SMS content"></textarea>
 							</div>
 						</div>
 					</div>
-						
-										
-					<div class="col-sm-offset-2 col-sm-10">
-						<div class="checkbox">
-							<label>
-								<input type="checkbox" id="nt_enabled" name="nt_enabled"
-									value="nt_enabled" checked="checked"><span data-lang="c_enabled" class="lang">enabled</span>
-							</label>
-						</div>
+
+					<div class="col-sm-10 offset-sm-2 custom-control custom-checkbox mb-4">
+						<input type="checkbox" class="custom-control-input" name="nt_enabled" value="nt_enabled" id="nt_enabled">
+						<label class="custom-control-label lang mt-3" data-lang="c_enabled" for="nt_enabled"></label>
 					</div>
+
 				</form>
 				<div class="modal-footer">
                 	<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">close</button>
