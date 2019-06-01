@@ -98,6 +98,12 @@ require([
 			projectSet();
 		});
 
+		// Set change function trigger
+		$('#trigger').change(function() {
+			setTriggerDependencies($(this).val());
+		});
+		setTriggerDependencies("submission");
+
 		// Set change function target
 		$('#target').change(function() {
 			setTargetDependencies($(this).val());
@@ -247,6 +253,7 @@ require([
 			notification.enabled = $('#nt_enabled').is(':checked');
 			notification.filter = $('#not_filter').val();
 			notification.name = $('#name').val();
+			notification.trigger = $('#trigger').val();
 
 			if(gSelectedNotification !== -1) {
 				notification.id = gSelectedNotification;
@@ -709,10 +716,14 @@ require([
 		h[++idx] = '</div>';
 
 		h[++idx] = '<div class="col-sm-1">';
+		h[++idx] = localise.set["c_trigger"];
+		h[++idx] = '</div>';
+
+		h[++idx] = '<div class="col-sm-1">';
 		h[++idx] = localise.set["c_target"];
 		h[++idx] = '</div>';
 
-		h[++idx] = '<div class="col-sm-5">';
+		h[++idx] = '<div class="col-sm-4">';
 		h[++idx] = localise.set["c_details"];
 		h[++idx] = '</div>';
 
@@ -740,16 +751,21 @@ require([
 			h[++idx] = data[i].s_name;
 			h[++idx] = '</div>';
 
+			// trigger
+			h[++idx] = '<div class="col-sm-1">';
+			h[++idx] = localise.set[data[i].trigger];
+			h[++idx] = '</div>';
+
 			// target
 			h[++idx] = '<div class="col-sm-1">';
-			h[++idx] = data[i].target;
+			h[++idx] = localise.set["c_" + data[i].target];
 			h[++idx] = '</div>';
 
 			if(data[i].notifyDetails && !data[i].notifyDetails.emails) {
 				data[i].notifyDetails.emails = [];
 			}
 			// details
-			h[++idx] = '<div class="col-sm-5" style="word-wrap: break-word;">';
+			h[++idx] = '<div class="col-sm-4" style="word-wrap: break-word;">';
 			if(data[i].target === "email" && data[i].notifyDetails) {
 				var notifyEmail = false;
 				if((data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0)
