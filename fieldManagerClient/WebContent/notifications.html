@@ -121,108 +121,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 				</div>
 
 				<ul class="nav navbar-top-links navbar-right">
-
-					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-							<span class="lang" data-lang="t_tasks">Tasks</span>
-						</a>
-						<ul class="dropdown-menu dropdown-alerts">
-							<li>
-								<a class="dropdown-item for_is_tg" href="#" id="addSingleTask">
-									<span class="lang" data-lang="t_add_task">add task</span>
-								</a>
-							</li>
-							<li>
-								<a class="dropdown-item for_selected" href="#" id="assignUser">
-									<span class="lang" data-lang="t_assign"></span>
-								</a>
-							</li>
-							<li>
-								<a class="dropdown-item for_selected" href="#" id="deleteTasks">
-									<span class="lang" data-lang="c_del_sel"></span>
-								</a>
-							</li>
-							<li>
-								<a class="dropdown-item for_selected" href="#" id="setStatus">
-									<span class="lang" data-lang="c_assign_sel"></span>
-								</a>
-							</li>
-
-						</ul>
-					</li>
-					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-							<span class="lang" data-lang="t_tg">Task Group</span>
-						</a>
-						<ul class="dropdown-menu dropdown-alerts">
-							<li>
-								<a class="dropdown-item" href="#" id="addTaskGroup">
-									<div>
-										<span class="lang" data-lang="t_add_group">add task group</span>
-									</div>
-								</a>
-							</li>
-							<li>
-								<a class="dropdown-item for_is_tg" href="#" id="editTaskGroup">
-									<div>
-										<span class="lang" data-lang="t_edit_group">edit task group</span>
-									</div>
-								</a>
-							</li>
-							<li>
-								<a class="dropdown-item for_is_tg" href="#" id="deleteTaskGroup">
-									<div>
-										<span class="lang" data-lang="t_del_group">del task group</span>
-									</div>
-								</a>
-							</li>
-
-						</ul>
-					</li>
-					<li><a href="#" id="zoomData"><span class="lang" data-lang="c_zoom_data">zoom to data</span></a></li>
-					<li><a href="#" id="m_refresh"><span class="lang" data-lang="m_refresh">refresh</span></a></li>
-					<li><a class="for_unsent_email" href="#" id="m_email_unsent"><span class="lang" data-lang="m_email_unsent">email unsent</span></a></li>
-					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-							<i class="fa fa-file"></i> <span class="lang" data-lang="c_file">file</span>
-						</a>
-						<ul class="dropdown-menu dropdown-alerts">
-							<li>
-								<a href="#" id="m_export_pdf">
-									<div>
-										<span class="lang" data-lang="m_export">export</span> PDF
-										<i class="fa fa-file-pdf-o pull-right"></i>
-									</div>
-								</a>
-							</li>
-							<li>
-								<a href="#" id="m_export_xls">
-									<div>
-										<span class="lang" data-lang="m_export">export</span> XLS
-										<i class="fa fa-file-excel-o pull-right"></i>
-									</div>
-								</a>
-							</li>
-							<li class="divider"></li>
-							<li>
-								<a href="#" class="for_is_tg" id="m_import_xls">
-									<div>
-										<span class="lang" data-lang="m_import">import</span> XLS
-										<i class="fa fa-file-excel-o pull-right"></i>
-									</div>
-								</a>
-							</li>
-							<li class="divider"></li>
-							<li>
-								<a href="/tasks_template.xlsx" id="xls_download">
-									<div>
-										<span class="lang" data-lang="tm_g_temp">download</span>
-										<i class="fa fa-file-excel-o pull-right"></i>
-									</div>
-								</a>
-							</li>
-						</ul>
-					</li>
 				</ul>
 
 			</nav>
@@ -231,7 +129,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 		<!-- Header Row -->
 		<div class="row wrapper border-bottom white-bg page-heading">
 			<div class="col-sm-2">
-				<h2 class="lang" data-lang="m_task_m"></h2>
+				<h2 class="lang" data-lang="m_notify"></h2>
 			</div>
 			<div class="col-sm-10">
 				<form class="form-inline" role="form">
@@ -241,13 +139,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 							<select class="project_list form-control form-control-lg col-md-8" id="project_name"></select>
 						</div>
 					</div>
-					<div class="col-sm-6 pt-4">
-						<div class="form-group row">
-							<label class="lang col-md-4" data-lang="t_tg" for="taskgroup"></label>
-							<select class="form-control col-md-8 form-control-lg" id="taskgroup"></select>
-						</div>
-					</div>
-
 				</form>
 
 			</div>
@@ -255,22 +146,9 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 
 		<div class="wrapper wrapper-content animated fadeInRight">
-			<div class="row">
-				<div class="col-md-6 col-xs-12" id="sidebar">
-						<div id="filters">
-							<form role="form" class="form-horizontal" id="service_filter_form">
-								<label class="lang col-sm-4 control-label" data-lang="c_project" for="project_name">Select Project</label>
-								<div class="col-sm-8">
-									<select class="project_list form-control" id="project_name"></select>
-								</div>
-							</form>
-						</div>
-				</div>
-			</div>
-			<div class = "well">
-				<a id="addNotification" type="button" class="btn btn-default lang" aria-label="Add Notification" data-lang="c_add">add</a>
-				<div id="notification_list"></div>
-			</div>
+			<a id="addNotification" type="button" class="btn btn-default lang" aria-label="Add Notification" data-lang="c_add">add</a>
+			<div id="notification_list"></div>
+
 			<div class="col-md-12 text-center">
 				<img id="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
 			</div>
@@ -284,8 +162,9 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 	<div class="modal-dialog">
    		<div class="modal-content">
     			<div class="modal-header">
-      				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-      				<h4 class="modal-title lang" id="addNotificationLabel" data-lang="msg_add_notification">add</h4>
+      				<h4 class="modal-title lang" id="addNotificationLabel" data-lang="msg_add_notification"></h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+							aria-hidden="true">&times;</span></button>
     			</div>
     			
 		    <div class="modal-body">
