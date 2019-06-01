@@ -19,6 +19,7 @@
     	openlayers: '../../../../smapServer/WebContent/js/libs/OpenLayers/OpenLayers',
     	lang_location: '../../../../smapServer/WebContent/js',
 	bootstrap: '../../../../smapServer/WebContent/js/libs/bootstrap.min',
+	bootstrap_v4: '../../../../smapServer/WebContent/js/libs/bootstrap.bundle.v4.min',
     	bootstrapfileinput: '../../../../smapServer/WebContent/js/libs/bootstrap.file-input',
     	bootstrapcolorpicker: '../../../../smapServer/WebContent/js/libs/bootstrap-colorpicker.min',
 	bootbox: '../../../../smapServer/WebContent/js/libs/bootbox.min',
@@ -46,6 +47,7 @@
         },
         {
             name: '../notifications_main',
+	    exclude: ['jquery', 'bootstrap']
         },
         {
             name: '../billing_main',
