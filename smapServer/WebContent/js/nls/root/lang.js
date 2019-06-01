@@ -313,7 +313,6 @@ define({
     "c_lat": "Latitude",
     "c_lon": "Longitude",
     "c_browse": "Browse",
-    "c_submission": "Submission",
 
     // File Types
     "ft": "File Type",
@@ -1048,7 +1047,8 @@ define({
     "n_esc": "Subject for the email (optional)",
     "n_inc_ref": "Include referenced surveys",
 	"n_lo": "Only reference data from forms that were launched from this form",
-    "n_tr": "Task Reminder",
+    "task_reminder": "Task Reminder",
+    "submission": "Submission",
 
     // Roles
     "ro_fr": "Filter rows",

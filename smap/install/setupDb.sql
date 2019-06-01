@@ -658,6 +658,7 @@ CREATE TABLE forward (
 	name text,
 	enabled boolean,
 	filter text,
+	trigger text,
 	target text,
 	remote_s_id text,
 	remote_s_name text,
