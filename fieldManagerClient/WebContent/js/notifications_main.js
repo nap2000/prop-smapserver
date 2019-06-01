@@ -34,18 +34,17 @@ requirejs.config({
      	i18n: '../../../../js/libs/i18n',
      	async: '../../../../js/libs/async',
      	localise: '../../../../js/app/localise',
-    	jquery: '../../../../js/libs/jquery-2.1.1',
     	modernizr: '../../../../js/libs/modernizr',
     	common: '../../../../js/app/common',
     	globals: '../../../../js/app/globals',
     	tablesorter: '../../../../js/libs/tablesorter',
-    	bootstrap: '../../../../js/libs/bootstrap.min',
-    	lang_location: '../../../../js'
+    	lang_location: '../../../../js',
+	    metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu'
     },
     shim: {
-    	'bootstrap': ['jquery'],
     	'common': ['jquery'],
-    	'tablesorter': ['jquery']
+    	'tablesorter': ['jquery'],
+	    'metismenu': ['jquery'],
 	
     	}
     });
@@ -55,11 +54,11 @@ require([
          'common', 
          'localise', 
          'globals',
-         'bootstrap',
          'app/notifications',  
-         'tablesorter'
+         'tablesorter',
+		 'metismenu'
          
-         ], function($, common, localise, globals, bootstrap) {
+         ], function($, common, localise, globals) {
 
     setCustomNotifications();			// Apply custom javascript
 });
