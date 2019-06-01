@@ -685,7 +685,7 @@ require([
 			idx = -1,
 			updateCurrentProject = true;
 
-		h[++idx] = '<div class="row"><b>';
+		h[++idx] = '<b><div class="row">';
 
 		h[++idx] = '<div class="col-sm-2">';
 		h[++idx] = localise.set["c_name"];
@@ -706,7 +706,7 @@ require([
 		h[++idx] = '<div class="col-sm-2">';
 		h[++idx] = localise.set["c_action"];
 		h[++idx] = '</div>';
-		h[++idx] = '</b></div>';
+		h[++idx] = '</div></b>';        // Header row
 
 		for(i = 0; i < data.length; i++) {
 
