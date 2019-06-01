@@ -1179,7 +1179,12 @@ alter table tasks add column location_name text;
 
 -- 19.06
 alter table organisation add column set_as_theme boolean default false;
+
 alter table forward add column trigger text;
 update forward set trigger = 'submission' where trigger is null;
+
+alter table forward add column tg_id integer default 0;
+alter table forward add column period text;
+
 
 
