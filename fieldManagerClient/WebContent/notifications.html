@@ -159,7 +159,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 	
 <!-- Popup to allow the user to add a notification -->
 <div id="addNotificationPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addNotificationLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-lg">
    		<div class="modal-content">
     			<div class="modal-header">
       				<h4 class="modal-title lang" id="addNotificationLabel" data-lang="msg_add_notification"></h4>
@@ -170,26 +170,35 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 		    <div class="modal-body">
 				<form id="notification_edit_form" class="form-horizontal" role="form">
 					<div class="form-group">
-						<label class="lang col-sm-2 control-label" data-lang="c_name" for="name">name</label>
+						<label class="lang col-sm-2 control-label" data-lang="c_name" for="name"></label>
 						<div class="col-sm-10">
 							<input type="text" id="name" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="lang col-sm-2 control-label" data-lang="c_target" for="target">Target</label>
+						<label class="lang col-sm-2 control-label" data-lang="c_trigger" for="trigger"></label>
+						<div class="col-sm-10">
+							<select class="form-control" id="trigger">
+								<option value="submission" selected="selected" class="lang" data-lang="c_submission"></option>
+								<option value="task_reminder" class="lang" data-lang="n_tr"></option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="lang col-sm-2 control-label" data-lang="c_target" for="target"></label>
 						<div class="col-sm-10">
 							<select class="form-control" id="target"></select>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="survey" class="lang col-sm-2 control-label" data-lang="c_survey">survey</label>
+						<label for="survey" class="lang col-sm-2 control-label" data-lang="c_survey"></label>
 						<div class="col-sm-10">
 							<select id="survey" class="survey_select form-control"></select>
 						</div>
 					</div>
 
 					<div class="form-group" data-container="body">
-						<label for="not_filter" data-lang="c_filter" class="lang col-sm-2 control-label">filter</label>
+						<label for="not_filter" data-lang="c_filter" class="lang col-sm-2 control-label"></label>
 						<div class="col-sm-10">
 							<div class="input-group">
 								<input type="text" id="not_filter" class="form-control">

@@ -187,14 +187,24 @@ require([
 
 	function setTargetDependencies(target) {
 		if(target === "email") {
-			$('.email_options').show();
 			$('.forward_options, .sms_options').hide();
+			$('.email_options').show();
 		} else if(target === "forward") {
-			$('.forward_options').show();
 			$('.email_options, .sms_options').hide();
+			$('.forward_options').show();
 		} else if(target === "sms") {
-			$('.sms_options').show();
 			$('.email_options, .forward_options').hide();
+			$('.sms_options').show();
+		}
+	}
+
+	function setTriggerDependencies(trigger) {
+		if(trigger === "submission") {
+			$('.task_reminder_options').hide();
+			$('.submission_options').show();
+		} else if(trigger === "task_reminder") {
+			$('.submission_options').hide();
+			$('.task_reminder_options').show();
 		}
 	}
 
@@ -416,15 +426,18 @@ require([
 
 		document.getElementById("notification_edit_form").reset();
 		setTargetDependencies("email");
+		setTriggerDependencies("submission");
 		setAttachDependencies();
 
 		if(typeof idx !== "undefined") {
 			notification = gNotifications[idx];
 
 			title = localise.set["msg_edit_notification"];
+			$('#trigger').val(notification.trigger);
 			$('#target').val(notification.target);
 			$('#name').val(notification.name);
-			setTargetDependencies(notification.target)
+			setTargetDependencies(notification.target);
+			setTriggerDependencies(notification.trigger)
 			setAttachDependencies(notification.notifyDetails.attach);
 
 			$('#survey').val(notification.s_id);
