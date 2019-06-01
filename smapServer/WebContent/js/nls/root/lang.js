@@ -169,6 +169,7 @@ define({
 	"c_step": "Step",
     "c_back": "Back",
     "c_target": "Target",
+    "c_trigger": "Trigger",
     "c_content": "Content",
     "c_today": "Today",
     "c_attach": "Attach",
@@ -312,6 +313,7 @@ define({
     "c_lat": "Latitude",
     "c_lon": "Longitude",
     "c_browse": "Browse",
+    "c_submission": "Submission",
 
     // File Types
     "ft": "File Type",
@@ -1046,6 +1048,7 @@ define({
     "n_esc": "Subject for the email (optional)",
     "n_inc_ref": "Include referenced surveys",
 	"n_lo": "Only reference data from forms that were launched from this form",
+    "n_tr": "Task Reminder",
 
     // Roles
     "ro_fr": "Filter rows",
