@@ -16,8 +16,8 @@
 
  */
 
-define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
-    function($, lang, common, globals, tablesorter, bootstrap) {
+define(['jquery','localise', 'common', 'globals',  'tablesorter', 'metismenu'],
+    function($, lang, common, globals, tablesorter) {
 
         var	gNotifications,		// Globals in this java script file
 			gNotificationTypes,
@@ -35,6 +35,7 @@ define(['jquery','localise', 'common', 'globals',  'tablesorter', 'bootstrap'],
 
 	        setupUserProfile();
             localise.setlang();		// Localise HTML
+            $("#side-menu").metisMenu();
 
             // Get Notification Types for this server
             getNotificationTypes();
