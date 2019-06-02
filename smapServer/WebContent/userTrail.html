@@ -119,26 +119,6 @@
             <div id="ut_alert" style="display:none;" class="alert alert-danger" role="alert"></div>
             
             <input id="time" type="range" value="0" steps="1" />
-            
-            <!-- Expandable panel to manage layers 
-            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-  				<div class="panel panel-default">
-    				<div class="panel-heading" role="tab" id="headingOne">
-						<h4 class="panel-title">
-					       <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-					         Map Layers
-					       </a>
-					     </h4>
-    				</div>
-    				<div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-      				<div class="panel-body">
-        				<label class="checkbox" for="visible">
-                			<input id="osmVisible" type="checkbox">visibility
-              			</label>
-      				</div>
-    			</div>
-  			</div>
-  			-->
   			
   		</div>
   
@@ -156,86 +136,6 @@
 			<img id="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
 		</div>
 	</div>
-
-<!-- Popup to allow the user to edit their own details
-<div id="modify_me_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modifyMeLabel" aria-hidden="true">
-	<div class="modal-dialog">
-   		<div class="modal-content">
-   			<div class="modal-header">
-     			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     			<h4 class="modal-title" id="modifyMeLabel">New message</h4>
-   			</div>
-		     <div class="modal-body">
-				<form role="form" class="form-horizontal" id="me_edit_form">
-					<div class="form-group">
-						<label for="me_name" data-lang="c_name" class="lang col-sm-2 control-label">Name</label>
-						<div class="col-sm-10">
-							<input type="text" id="me_name" required class="form-control">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="me_language" data-lang="c_lang" class="lang col-sm-2 control-label">Language</label>
-						<div class="col-sm-10">
-							<select id="me_language" class="language_select form-control"></select>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="me_email" data-lang="c_email" class="lang col-sm-2 control-label">Email</label>
-						<div class="col-sm-10">
-							<input type="email" class="form-control" id="me_email" 
-									placeholder="Enter email" 
-									pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="me_organisation" data-lang="c_org" class="lang col-sm-2 control-label">organisation</label>
-						<div class="col-sm-10">
-							<select id="me_organisation" class="organisation_select form-control"></select>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="u_tz" class="col-sm-2 control-label lang" data-lang="c_tz">timezone</label>
-						<div class="col-sm-10">
-							<select class="form-control timezone_select" id="u_tz"></select>
-						</div>
-					</div>
-					<div id="reset_me_password_fields" style="display:none;">
-						<div class="form-group">
-							<div class="col-sm-offset-2 col-sm-10">
-								<div class="checkbox">
-									<label>
-										<input type="checkbox" id="reset_me_password"><span data-lang="c_r_p" class="lang">Reset Password</span>
-									</label>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div id="password_me_fields" style="display:none;">
-						<div class="form-group">
-							<label for="me_password" data-lang="c_password" class="lang col-sm-2 control-label">Password</label>
-							<div class="col-sm-10">
-								<input id="me_password" type="password" placeholder="Password" class="form-control">
-							</div>
-						</div>	
-						<div class="form-group">
-							<label for="me_password_confirm" data-lang="c_c_p" class="lang col-sm-2 control-label">Confirm Password</label>
-							<div class="col-sm-10">
-								<input id="me_password_confirm" type="password" placeholder="Password" class="form-control">
-							</div>
-						</div>	
-					</div>		
-				</form>	
-			</div>
-
-			<div class="modal-footer">
-            	<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-            	<button id="userProfileLogout"type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_logout">Logout</button>
-            	<button id="userProfileSave" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_save">Save</button>
-        	</div>
-		</div>
-	</div>
-</div>
--->
 
 </body>
 </html>
