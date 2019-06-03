@@ -412,6 +412,7 @@ define({
     "_scheduled_start": "Scheduled Start",
 
     // Messages
+    "msg_pc": "The reminder interval must be greater than zero",
     "msg_pk_sel": "You can only select the record identifier if you have selected the \"Update a different question\" checkbox",
     "msg_wait": "Waiting for a response from the server. Please try again in a few seconds",
     "msg_reason": "Please provide a reason: ",
@@ -481,6 +482,7 @@ define({
     "msg_del_cl": "Are you sure you want to delete this choice list?",
     "msg_del_c": "Are you sure you want to delete this choice?",
     "msg_rep_f": "Are you sure you want to replace this choice filter",
+    "msg_del_not": "Are you sure you want to delete notification",
     "msg_n_v": "Not valid",
     "msg_u_f": "Error upload failed",
     "msg_u_nt": "No nfc tags found",
@@ -1049,6 +1051,7 @@ define({
 	"n_lo": "Only reference data from forms that were launched from this form",
     "task_reminder": "Task Reminder",
     "submission": "Submission",
+    "n_p": "Send reminder after",
 
     // Roles
     "ro_fr": "Filter rows",
@@ -1090,6 +1093,7 @@ define({
     "d_sec": "Seconds",
     "d_min": "Minutes",
     "d_hour": "Hours",
+    "d_day": "Days",
     "d_c_day": "Count by day",
     "d_c_month": "Coount by month",
     "d_c_year": "Count by year",

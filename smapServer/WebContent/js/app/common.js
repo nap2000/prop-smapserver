@@ -1498,7 +1498,7 @@ function removeHourglass() {
  */
 
 /*
- * Load the forms from the server
+ * Load the surveys from the server
  */
 function loadSurveys(projectId, selector, getDeleted, addAll, callback) {
 
@@ -3809,5 +3809,49 @@ function setOrganisationTheme() {
 		$('.banner_logo').attr("src", "/media/organisation/" + globals.gOrgId + '/settings/bannerLogo');
 	} else {
 		setCustomBannerLogo();
+	}
+}
+
+function populateTaskGroupList() {
+	if (typeof globals.gCurrentProject !== "undefined" && globals.gCurrentProject != -1) {
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/tasks/taskgroups/" + globals.gCurrentProject,
+			cache: false,
+			dataType: 'json',
+			success: function (taskgroups) {
+				removeHourglass();
+
+				var h = [],
+					idx = -1,
+					i,
+					grp,
+					firstTg,
+					hasCurrentTg = false;
+
+				gTaskGroups = taskgroups;   // Keep the task group list
+
+				if (typeof taskgroups != "undefined" && taskgroups.length > 0) {
+
+					for (i = 0; i < taskgroups.length; i++) {
+						grp = taskgroups[i];
+						h[++idx] = '<option value="';
+						h[++idx] = i;
+						h[++idx] = '">';
+						h[++idx] = grp.name;
+						h[++idx] = '</option>';
+					}
+				}
+				$('.task_group_select').html(h.join(''));
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert("Failed to get task group data");
+				}
+			}
+		});
 	}
 }
