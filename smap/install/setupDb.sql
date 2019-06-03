@@ -32,6 +32,10 @@ DROP SEQUENCE IF EXISTS forward_seq CASCADE;
 CREATE SEQUENCE forward_seq START 1;
 ALTER SEQUENCE forward_seq OWNER TO ws;
 
+DROP SEQUENCE IF EXISTS reminder_seq CASCADE;
+CREATE SEQUENCE reminder_seq START 1;
+ALTER SEQUENCE reminder_seq OWNER TO ws;
+
 DROP SEQUENCE IF EXISTS notification_log_seq CASCADE;
 CREATE SEQUENCE notification_log_seq START 1;
 ALTER SEQUENCE notification_log_seq OWNER TO ws;
@@ -671,6 +675,16 @@ CREATE TABLE forward (
 	);
 ALTER TABLE forward OWNER TO ws;
 CREATE UNIQUE INDEX ForwardDest ON forward(s_id, remote_s_id, remote_host);
+
+-- Record sending of notification reminders
+DROP TABLE IF EXISTS reminder;
+CREATE TABLE reminder (
+	id integer DEFAULT NEXTVAL('reminder_seq') CONSTRAINT pk_reminder PRIMARY KEY,
+	n_id integer references forward(id) ON DELETE CASCADE,
+	a_id integer references assignments(id) ON DELETE CASCADE,
+	reminder_date timestamp with time zone
+	);
+ALTER TABLE reminder OWNER TO ws;
 
 -- Log of all sent notifications (except for forwards which are recorded by the forward subscriber)
 DROP TABLE IF EXISTS notification_log;
