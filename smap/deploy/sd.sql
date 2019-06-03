@@ -1186,5 +1186,14 @@ update forward set trigger = 'submission' where trigger is null;
 alter table forward add column tg_id integer default 0;
 alter table forward add column period text;
 
+CREATE SEQUENCE reminder_seq START 1;
+ALTER SEQUENCE reminder_seq OWNER TO ws;
 
+CREATE TABLE reminder (
+	id integer DEFAULT NEXTVAL('reminder_seq') CONSTRAINT pk_reminder PRIMARY KEY,
+	n_id integer references forward(id) ON DELETE CASCADE,
+	a_id integer references assignments(id) ON DELETE CASCADE,
+	reminder_date timestamp with time zone
+	);
+ALTER TABLE reminder OWNER TO ws;
 

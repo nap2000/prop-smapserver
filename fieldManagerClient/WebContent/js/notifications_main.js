@@ -868,8 +868,8 @@ require([
 
 		$(".rm_not", $selector).click(function(){
 			var idx = $(this).data("idx");
-			if(gTaskGroups.length > 0 && idx < gTaskGroups.length) {
-				if (confirm(localise.set["msg_del_not"] + ' ' + gTaskGroups[idx].name)) {
+			if(gNotifications.length > 0 && idx < gNotifications.length) {
+				if (confirm(localise.set["msg_del_not"] + ' ' + gNotifications[idx].name)) {
 					delete_notification(gNotifications[idx].id);
 				}
 			}
