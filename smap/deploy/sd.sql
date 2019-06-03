@@ -96,7 +96,7 @@ ALTER TABLE regions OWNER TO ws;
 -- Upgrade to:  14.08 from 14.05 =======
 
 -- Make deleting of surveys flow through to deleting of tasks
-alter table tasks alter column form_id type integer using (form_id::integer);
+-- alter table tasks alter column form_id type integer using (form_id::integer); -- form_id replaced with survey_ident
 
 -- Changes for survey editor:
 -- alter table question add column list_name text;
@@ -922,8 +922,7 @@ SELECT AddGeometryColumn('tasks', 'geo_point_actual', 4326, 'POINT', 2);
 alter table tasks add column p_name text;
 update tasks t set p_name = (select name from project p where p.id = t.p_id ) where t.p_name is null;
 
-alter table tasks add column survey_name text;
-update tasks t set survey_name = (select display_name from survey s where s.s_id = t.form_id ) where t.survey_name is null;
+alter table tasks add column survey_name text; 
 
 alter table tasks add column tg_name text;
 update tasks t set tg_name = (select name from task_group tg where tg.tg_id = t.tg_id ) where t.tg_name is null;
@@ -1197,3 +1196,6 @@ CREATE TABLE reminder (
 	);
 ALTER TABLE reminder OWNER TO ws;
 
+alter table tasks add column survey_ident text;
+update tasks t set survey_ident = (select ident from survey s where s.s_id = t.form_id ) where t.survey_ident is null;
+update tasks t set survey_name = (select display_name from survey s where s.ident = t.survey_ident ) where t.survey_name is null;
