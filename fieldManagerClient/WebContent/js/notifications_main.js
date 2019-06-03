@@ -23,7 +23,9 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 var gUserLocale = navigator.language;
 if (Modernizr.localstorage) {
 	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
+}
+
+var gTaskGroups;
 
 requirejs.config({
     baseUrl: 'js/libs',
@@ -224,6 +226,7 @@ require([
 
 	function projectSet() {
 
+		populateTaskGroupList();
 		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged);			// Get surveys
 		getNotifications(globals.gCurrentProject);
 	}
@@ -249,11 +252,28 @@ require([
 
 		if(!notification.error) {
 
+			notification.trigger = $('#trigger').val();
 			notification.s_id = $('#survey').val();
 			notification.enabled = $('#nt_enabled').is(':checked');
 			notification.filter = $('#not_filter').val();
 			notification.name = $('#name').val();
-			notification.trigger = $('#trigger').val();
+
+			if(notification.trigger === 'task_reminder') {
+				var idx = $('#task_group').val();
+				if(gTaskGroups.length > 0 && idx < gTaskGroups.length) {
+					notification.tgId = gTaskGroups[idx].tg_id;
+				}
+				var periodCount = $('#r_period').val();
+				notification.period = periodCount + ' ' + $('#period_list_sel').val();
+
+				// Validate
+				if(!periodCount || periodCount <= 0) {
+					alert(localise.set["msg_pc"]);
+					return(-1);
+				}
+				console.log("Reminder for tg: " + notification.tgId + ' after ' + notification.period);
+			}
+
 
 			if(gSelectedNotification !== -1) {
 				notification.id = gSelectedNotification;
@@ -449,6 +469,17 @@ require([
 
 			$('#survey').val(notification.s_id);
 			$('#not_filter').val(notification.filter);
+
+			// reminder settings
+			$('#task_group').val(getTaskGroupIndex(notification.tgId));
+			if((notification.period)) {
+				var periodArray = notification.period.split(" ");
+				if(periodArray.length > 1) {
+					$('#r_period').val(periodArray[0]);
+					$('#period_list_sel').val(periodArray[1]);
+				}
+			}
+
 			if(notification.notifyDetails && notification.notifyDetails.emails) {
 				if(notification.notifyDetails.emailQuestionName || notification.notifyDetails.emailMeta) {
 					surveyChanged(notification.notifyDetails.emailQuestionName, notification.notifyDetails.emailMeta);
@@ -486,6 +517,9 @@ require([
 			$('#fwd_host').val(gRemote_host);	// Set the values to the ones last used
 			$('#fwd_user').val(gRemote_user);
 
+			// Reminders
+			$('#r_period').val(1);
+			$('#period_list_sel').val('days');
 			$('#nt_enabled').prop('checked',true);
 			gUpdateFwdPassword = true;
 			gSelectedNotification = -1;
@@ -834,7 +868,11 @@ require([
 
 		$(".rm_not", $selector).click(function(){
 			var idx = $(this).data("idx");
-			delete_notification(gNotifications[idx].id);
+			if(gTaskGroups.length > 0 && idx < gTaskGroups.length) {
+				if (confirm(localise.set["msg_del_not"] + ' ' + gTaskGroups[idx].name)) {
+					delete_notification(gNotifications[idx].id);
+				}
+			}
 		});
 
 		$(".edit_not", $selector).click(function(){
@@ -843,6 +881,18 @@ require([
 			$('#addNotificationPopup').modal("show");
 		});
 
+	}
+
+	function getTaskGroupIndex(tgId) {
+		var i;
+		if(gTaskGroups && gTaskGroups.length > 0 && tgId) {
+			for(i = 0; i < gTaskGroups.length; i++) {
+				if(gTaskGroups[i].tg_id == tgId) {
+					return i;
+				}
+			}
+		}
+		return 0;
 	}
 });
 

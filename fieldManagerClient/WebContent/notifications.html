@@ -146,7 +146,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 
 		<div class="wrapper wrapper-content animated fadeInRight">
-			<a id="addNotification" type="button" class="btn btn-default lang" aria-label="Add Notification" data-lang="c_add">add</a>
+			<a id="addNotification" type="button" class="btn btn-primary lang" aria-label="Add Notification" data-lang="c_add">add</a>
 			<div id="notification_list"></div>
 
 			<div class="col-md-12 text-center">
@@ -184,12 +184,42 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 							</select>
 						</div>
 					</div>
+
 					<div class="form-group row">
 						<label class="lang col-sm-2 control-label" data-lang="c_target" for="target"></label>
 						<div class="col-sm-10">
 							<select class="form-control" id="target"></select>
 						</div>
 					</div>
+
+					<!-- Reminder specific fields -->
+					<div class="well task_reminder_options" style="display:none;">
+
+						<div class="form-group row">
+							<label for="survey" class="lang col-sm-2 control-label" data-lang="t_tg"></label>
+							<div class="col-sm-10">
+								<select id="task_group" class="task_group_select form-control"></select>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label class="col-sm-2 col-form-label lang" data-lang="n_p" for="r_period"></label>
+							<div class="col-sm-10">
+								<div class="input-group mb-3">
+
+									<input type="number" min="1" class="form-control" id="r_period">
+									<div class="input-group-append">
+										<select id="period_list_sel" class="period_list_sel form-control">
+											<option class="lang" data-lang="d_min" value="minutes"></option>
+											<option class="lang" data-lang="d_hour" value="hours"></option>
+											<option class="lang" data-lang="d_day" value="days"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
 					<div class="form-group row">
 						<label for="survey" class="lang col-sm-2 control-label" data-lang="c_survey"></label>
 						<div class="col-sm-10">
