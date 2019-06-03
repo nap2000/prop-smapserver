@@ -832,7 +832,7 @@ CREATE TABLE public.tasks (
 	p_name text,
 	title text,
 	url text,
-	form_id integer,	
+	survey_ident text,	
 	survey_name text,
 	created_at timestamp with time zone,
 	schedule_at timestamp with time zone,
