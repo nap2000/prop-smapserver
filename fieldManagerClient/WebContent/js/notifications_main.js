@@ -745,12 +745,12 @@ require([
 		h[++idx] = localise.set["c_name"];
 		h[++idx] = '</div>';
 
-		h[++idx] = '<div class="col-sm-2">';
-		h[++idx] = localise.set["c_survey"];
-		h[++idx] = '</div>';
-
 		h[++idx] = '<div class="col-sm-1">';
 		h[++idx] = localise.set["c_trigger"];
+		h[++idx] = '</div>';
+
+		h[++idx] = '<div class="col-sm-2">';
+		h[++idx] = localise.set["c_survey_tg"];
 		h[++idx] = '</div>';
 
 		h[++idx] = '<div class="col-sm-1">';
@@ -780,14 +780,18 @@ require([
 			h[++idx] = name;
 			h[++idx] = '</div>';
 
-			// survey
-			h[++idx] = '<div class="col-sm-2" style="word-wrap: break-word;">';
-			h[++idx] = data[i].s_name;
-			h[++idx] = '</div>';
-
 			// trigger
 			h[++idx] = '<div class="col-sm-1">';
 			h[++idx] = localise.set[data[i].trigger];
+			h[++idx] = '</div>';
+
+			// survey / task group
+			h[++idx] = '<div class="col-sm-2" style="word-wrap: break-word;">';
+			if(data[i].trigger === "submission") {
+				h[++idx] = data[i].s_name;
+			} else {
+				h[++idx] = data[i].tg_name;
+			}
 			h[++idx] = '</div>';
 
 			// target

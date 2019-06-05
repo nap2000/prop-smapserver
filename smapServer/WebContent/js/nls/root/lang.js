@@ -146,6 +146,7 @@ define({
     "c_include": "Include",
     "c_unique": "Unique",
     "c_survey": "Survey",
+    "c_survey_tg": "Survey / Task Group",
     "c_date": "Date",
     "c_dateq": "Date Question",
     "c_none": "None",
@@ -1053,6 +1054,7 @@ define({
     "task_reminder": "Task Reminder",
     "submission": "Submission",
     "n_p": "Send reminder after",
+    "n_oa": "Email original assignee",
 
     // Roles
     "ro_fr": "Filter rows",
