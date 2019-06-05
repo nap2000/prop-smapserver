@@ -1065,6 +1065,7 @@ define(function () {
                 $('#task_file').prop('checked'),
                 $('#timing_data').prop('checked'),
 	            $('#audit_location_data').prop('checked'),
+	            $('#track_changes').prop('checked'),
 	            $('#hide_on_device').prop('checked'),
                 $('#exclude_empty').prop('checked'),
                 $('#set_hrk').val(),
@@ -1081,6 +1082,7 @@ define(function () {
                 this.survey.task_file = current.task_file;
                 this.survey.timing_data = current.timing_data;
 	            this.survey.audit_location_data = current.audit_location_data;
+	            this.survey.track_changes = current.track_changes;
 	            this.survey.hideOnDevice = current.hideOnDevice;
                 this.survey.exclude_empty = current.exclude_empty;
                 this.survey.hrk = current.hrk;
@@ -1101,6 +1103,7 @@ define(function () {
                     this.survey.task_file,
                     this.survey.timing_data,
 	                this.survey.audit_location_data,
+	                this.survey.track_changes,
                     this.survey.hideOnDevice,
                     this.survey.exclude_empty,
                     this.survey.hrk,
@@ -1117,6 +1120,7 @@ define(function () {
                                               task_file,
                                               timing_data,
                                               audit_location_data,
+                                              track_changes,
                                               hideOnDevice,
                                               exclude_empty,
                                               hrk,
@@ -1137,6 +1141,7 @@ define(function () {
                 task_file: task_file,
                 timing_data: timing_data,
 	            audit_location_data: audit_location_data,
+	            track_changes: track_changes,
                 hideOnDevice: hideOnDevice,
                 exclude_empty: exclude_empty,
                 hrk: hrk,
