@@ -719,6 +719,9 @@ require([
 
 			h[++idx] = '<option value="';
 			h[++idx] = data[i];
+			if(data[i] === 'forward') {
+				h[++idx] = '" class="submission_options';
+			}
 			h[++idx] = '">';
 			h[++idx] = localise.set["c_" + data[i]];
 			h[++idx] = '</option>';
