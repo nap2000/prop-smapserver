@@ -1055,6 +1055,7 @@ define({
     "submission": "Submission",
     "n_p": "Send reminder after",
     "n_oa": "Email original assignee",
+    "n_ap": "Add placeholder",
 
     // Roles
     "ro_fr": "Filter rows",
