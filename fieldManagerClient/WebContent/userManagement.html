@@ -1,461 +1,482 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>User Management</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
 
+	<title class="lang" data-lang="m_users"></title>
 
-<link rel="stylesheet" href="/css/normalize.css" />
-<link rel="stylesheet" href="/css/bootstrap.min.css" /> 
-<link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css" />
-<link rel="stylesheet" href="/css/bootstrap-colorpicker.min.css" />
-<link rel="stylesheet" href="/css/smap-bs.css" type="text/css">
+	<link href="/css/normalize.css" rel="stylesheet" />
+	<link href="/css/bootstrap.v4.min.css" rel="stylesheet">
+	<link href="/font-awesome/css/font-awesome.css" rel="stylesheet">
+	<link href="/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+	<link href="/css/bootstrap-colorpicker.min.css" rel="stylesheet" />
+	<link href="/css/wb/animate.css" rel="stylesheet">
+	<link href="/css/wb/style.v2.9.1.css" rel="stylesheet">
+	<link href="/css/smap-wb.css" type="text/css" rel="stylesheet" >
 
-	
-<script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
-<script src="/js/libs/modernizr.js"></script>
-<script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
-<script data-main="js/usermanagement_main" src="/js/libs/require.js"></script>
+	<script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
+	<script src="/js/libs/modernizr.js"></script>
+	<script src="/js/libs/jquery-2.1.1.js"></script>
+	<script src="/js/libs/bootstrap.bundle.v4.min.js"></script>
+	<script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
+	<script data-main="js/usermanagement_main" src="/js/libs/require.js"></script>
 
 </head>
 <body>
 
-<header class="navbar navbar-default navbar-static-top noPrint" role="banner">
-  <div class="container">
-    <div class="navbar-header">
-      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a href="#" class="navbar-brand">
-      	<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
-     	<span class="lang" data-lang="m_user" >Users</span>
-      </a>
-    </div>
-	<nav class="collapse navbar-collapse" role="navigation">
-      <ul class="nav navbar-nav navbar-right">
-      	<li id="m_modules" class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="lang" data-lang="m_modules">Modules</span> <span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            
-              <li><a class="lang" data-lang="m_home" href="/?loggedin=yes">home</a></li>
-              <li class="restrict_role admin_role analyst_role"><a href="/edit.html"><span class="lang" data-lang="c_edit">Edit</span><span class="glyphicon glyphicon-edit pull-right"></span></a></li>
-              <li class="restrict_role admin_role analyst_role"><a href="/fieldManager/surveyManagement.html"><span class="lang" data-lang="m_admin">Admin</span><span class="glyphicon glyphicon-wrench pull-right"></span></a></li>
-              <li class="restrict_role enum_role"><a href="/webForm.html"><span class="lang" data-lang="m_data_mod" >Web Forms</span><span class="glyphicon glyphicon-globe pull-right"></span></a></li>
-              <li class="restrict_role analyst_role data_role"><a href="/fieldAnalysis/index.html"><span class="lang" data-lang="m_analysis">Analysis</span><span class="glyphicon glyphicon-stats pull-right"></span></a></li>
-              <li class="restrict_role admin_role analyst_role"><a href="/tasks/taskManagement.html"><span class="nav-label lang" data-lang="m_assign">assign</span><span class="glyphicon glyphicon-tasks pull-right"></span></a></li>
-			  <li class="restrict_role billing_role" style="display:none;"><a href="/fieldManager/billing.html"><span class="nav-label lang" data-lang="m_billing">billing</span><span class="glyphicon glyphicon-usd pull-right"></span></a></li>
-		  </ul>
-        </li>  
-        <li id="m_tm" class="restrict_role admin_role analyst_role"><a class="lang" data-lang="m_tm" href="/fieldManager/surveyManagement.html">Forms</a></li>
-		<li id="m_monitor" class="restrict_role admin_role analyst_role"><a class="lang" data-lang="m_monitor" href="/fieldManager/monitor.html">Monitoring</a></li>
-		<li id="m_resources" class="restrict_role admin_role analyst_role"><a class="lang" data-lang="m_resources" href="/resources.html">Resources</a></li>
-		<li id="m_os"><a href="/tasks/oversight.html"><span class="lang" data-lang="m_os">oversight</span></a></li>
-		<li id="m_logs"><a href="/tasks/log.html"><i class="fa fa-ticket"></i> <span class="lang" data-lang="m_logs">logs</span></a></li>	
-		<li id="m_help"><a class="lang" data-lang="m_help" href="https://docs.google.com/folderview?id=0B5_SmpWlQYxvNExwSFV5X051Yjg&usp=docslist_api#" target="_blank">Help</a></li>
-        <li>
-         	<a id="username" type="button" class="btn btn-default" data-toggle="modal" data-target="#modify_me_popup" aria-label="User">
-			<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-			</a>
-		</li>
-      </ul>
-      	
-	</nav>
+	<div id="wrapper">
+		<nav class="navbar-default navbar-static-side noPrint" role="navigation">
+		  <div>
+			  <ul class="nav metismenu" id="side-menu">
+				  <li>
+					  <a id="username" data-toggle="modal" data-target="#modify_me_popup" aria-label="User">
+						  <i class="glyphicon glyphicon-user" aria-hidden="true"></i>
+						  <span class="lang" data-lang="m_user_profile"></span></a>
+				  </li>
+				  <li>
+					  <a href="#" id="m_modules_inspinia" aria-expanded="false"><i class="fa fa-th-large"></i> <span
+							  class="lang" data-lang="m_modules">modules</span></a>
+					  <ul class="nav nav-second-level" aria-expanded="false">
 
-  </div>
-</header>
+						  <li><a class="lang" data-lang="m_home" href="/?loggedin=yes"></a></li>
+						  <li class="restrict_role admin_role analyst_role"><a href="/edit.html"><i
+								  class="glyphicon glyphicon-edit"></i> <span class="lang" data-lang="c_edit"></span></a>
+						  </li>
+						  <li class="restrict_role admin_role analyst_role"><a
+								  href="/fieldManager/surveyManagement.html"><i class="glyphicon glyphicon-wrench"></i>
+							  <span class="lang" data-lang="m_admin">Admin</span></a></li>
+						  <li class="restrict_role enum_role"><a href="/webForm.html">
+							  <i class="glyphicon glyphicon-globe"></i>
+							  <span class="nav-label lang" data-lang="m_data_mod"></span></a>
+						  </li>
+						  <li class="restrict_role analyst_role"><a href="/fieldAnalysis/index.html"><i
+								  class="glyphicon glyphicon-stats"></i> <span class="nav-label lang"
+																			   data-lang="m_analysis">Analysis</span></a>
+						  </li>
+						  <li class="restrict_role admin_role analyst_role"><a href="/tasks/taskManagement.html"><i
+								  class="fa fa-tasks"></i> <span class="nav-label lang" data-lang="m_assign">assign</span></a>
+						  </li>
+						  <li class="restrict_role billing_role" style="display:none;"><a href="/fieldManager/billing.html"><i
+								  class="fa fa-usd"></i> <span class="nav-label lang" data-lang="m_billing">billing</span></a>
+						  </li>
+					  </ul>
+				  </li>
 
-<div class="container">
+				  <li id="m_tm" class="restrict_role admin_role analyst_role"><a
+						  href="/fieldManager/surveyManagement.html"><i class="fa fa-envelope"></i> <span
+						  class="nav-label lang" data-lang="m_tm"></span></a></li>
+				  <li id="m_monitor" class="restrict_role admin_role analyst_role"><a
+						  href="/fieldManager/monitor.html"><i class="fa fa-envelope"></i> <span
+						  class="nav-label lang" data-lang="m_monitor"></span></a></li>
+				  <li id="m_resources" class="restrict_role admin_role analyst_role"><a
+						  href="/resources.html"><i class="fa fa-envelope"></i> <span
+						  class="nav-label lang" data-lang="m_resources"></span></a></li>
+				  <li id="m_os" class="restrict_role admin_role analyst_role"><a
+						  href="/tasks/oversight.html"><i class="fa fa-envelope"></i> <span
+						  class="nav-label lang" data-lang="m_os"></span></a></li>
+				  <li id="m_logs" class="restrict_role admin_role analyst_role"><a
+						  href="/tasks/log.html"><i class="fa fa-envelope"></i> <span
+						  class="nav-label lang" data-lang="m_logs"></span></a></li>
+				  <li id="m_help"><a
+						  href="https://docs.google.com/folderview?id=0B5_SmpWlQYxvNExwSFV5X051Yjg&usp=docslist_api#"
+						  target="_blank"><i class="fa fa-info-circle"></i> <span class="lang"
+																				  data-lang="m_help">help</span></a></li>
+				</li>
+			  </ul>
+		  </div>
 
-	<div id="organisation_name" class="alert alert-info" role="alert"></div>
-    <ul class="nav nav-pills" role="tablist">
-        <li id="usersTab" role="presentation" class="active"><a href="#" class="lang" data-lang="m_user">users</a></li>
-        <li id="projectsTab" role="presentation"><a href="#" class="lang" data-lang="c_projects">projects</a></li>
-        <li id="roleTab" class="restrict_role org_role security_role" role="presentation"><a href="#" class="lang" data-lang="c_roles">roles</a></li>
-        <li id="organisationTab" role="presentation" class="restrict_role org_role"><a href="#" class="lang" data-lang="c_orgs">orgs</a></li>
-        <li id="serverTab" role="presentation" class="restrict_role owner_role"><a href="#" class="lang" data-lang="c_server">server</a></li>
-		<li id="deviceTab" role="presentation"><a href="#" class="lang" data-lang="u_det_o_ft">fieldTask</a></li>
-		<li id="webformTab" role="presentation"><a href="#" class="lang" data-lang="u_det_o_wf">web forms</a></li>
-		<li id="sensitiveTab" role="presentation" class="restrict_role security_role"><a href="#" class="lang" data-lang="u_sens_data">sensitive data</a></li>
-		<li id="enterpriseTab" role="presentation" class="restrict_role enterprise_role"><a href="#" class="lang" data-lang="c_ent">enterprise</a></li>
-    </ul>
-	
-	
-	<!-- The container for the user list -->
-    <div id="userPanel" class="usertab">
-	    
-		<div class="well" id="filters">
-			<div class="container">
-				<form role="form" class="form-horizontal" id="user_filter_form">
-					<div class="form-group">
-						<label class="control-label col-sm-4" for="group_name"><span class="lang" data-lang="u_show_u"></span>:</label>
-						<div class="col-sm-4">
-							<select class="form-control" id="group_name"></select>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label col-sm-4" for="project_name"><span class="lang" data-lang="u_show_p"></span>:</label>
-						<div class="col-sm-4">
-							<select class="form-control project_list" id="project_name"></select>
-						</div>
-					</div>
+		</nav>
 
-					<div class="security_role form-group" style="display:none;">
-						<label class="control-label col-sm-4" for="role_name"><span class="lang" data-lang="u_show_r"></span>:</label>
-						<div class="col-sm-4">
-							<select class="form-control role_list" id="role_name"></select>
-						</div>
-					</div>
-
-					<div class="org_role form-group" style="display:none;">
-						<label class="control-label col-sm-4" for="org_name"><span class="lang" data-lang="u_show_o"></span>:</label>
-						<div class="col-sm-4">
-							<select class="form-control org_list" id="org_name"></select>
-						</div>
-					</div>
-				</form>	
-			</div>
-		</div>
-
-		<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
 		<div class="container">
-			<div class="row">
-				<div class="col-md-12 col-xs-12">
-					<button class="btn btn-success lang" id="create_user" data-lang="u_add">add</button>
+
+			<div id="organisation_name" class="alert alert-info" role="alert"></div>
+			<ul class="nav nav-pills" role="tablist">
+				<li id="usersTab" role="presentation" class="active"><a href="#" class="lang" data-lang="m_user">users</a></li>
+				<li id="projectsTab" role="presentation"><a href="#" class="lang" data-lang="c_projects">projects</a></li>
+				<li id="roleTab" class="restrict_role org_role security_role" role="presentation"><a href="#" class="lang" data-lang="c_roles">roles</a></li>
+				<li id="organisationTab" role="presentation" class="restrict_role org_role"><a href="#" class="lang" data-lang="c_orgs">orgs</a></li>
+				<li id="serverTab" role="presentation" class="restrict_role owner_role"><a href="#" class="lang" data-lang="c_server">server</a></li>
+				<li id="deviceTab" role="presentation"><a href="#" class="lang" data-lang="u_det_o_ft">fieldTask</a></li>
+				<li id="webformTab" role="presentation"><a href="#" class="lang" data-lang="u_det_o_wf">web forms</a></li>
+				<li id="sensitiveTab" role="presentation" class="restrict_role security_role"><a href="#" class="lang" data-lang="u_sens_data">sensitive data</a></li>
+				<li id="enterpriseTab" role="presentation" class="restrict_role enterprise_role"><a href="#" class="lang" data-lang="c_ent">enterprise</a></li>
+			</ul>
+
+
+			<!-- The container for the user list -->
+			<div id="userPanel" class="usertab">
+
+				<div class="well" id="filters">
+					<div class="container">
+						<form role="form" class="form-horizontal" id="user_filter_form">
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="group_name"><span class="lang" data-lang="u_show_u"></span>:</label>
+								<div class="col-sm-4">
+									<select class="form-control" id="group_name"></select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="project_name"><span class="lang" data-lang="u_show_p"></span>:</label>
+								<div class="col-sm-4">
+									<select class="form-control project_list" id="project_name"></select>
+								</div>
+							</div>
+
+							<div class="security_role form-group" style="display:none;">
+								<label class="control-label col-sm-4" for="role_name"><span class="lang" data-lang="u_show_r"></span>:</label>
+								<div class="col-sm-4">
+									<select class="form-control role_list" id="role_name"></select>
+								</div>
+							</div>
+
+							<div class="org_role form-group" style="display:none;">
+								<label class="control-label col-sm-4" for="org_name"><span class="lang" data-lang="u_show_o"></span>:</label>
+								<div class="col-sm-4">
+									<select class="form-control org_list" id="org_name"></select>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+
+				<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12 col-xs-12">
+							<button class="btn btn-success lang" id="create_user" data-lang="u_add">add</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12 col-xs-12">
+							<div id="user_table"  style="margin-top:20px;"></div>
+						</div>
+					</div>
+
+				</div>
+				<div class="col-md-12 text-center">
+					<img id="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
 				</div>
 			</div>
-			<div class="row">	   	
-			   	<div class="col-md-12 col-xs-12">
-					<div id="user_table"  style="margin-top:20px;"></div>
+
+			<!-- The container for the list of projects -->
+			<div id="projectPanel" style="display:none;" class="usertab">
+
+				<div id="project_table" style="margin-top:20px;"></div>
+
+				<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
+				<button class="btn btn-success lang" id="create_project" data-lang="u_add_p">Add Project</button>
+				<button class="btn btn-danger lang" id="delete_project" data-lang="u_del_p">Delete Project</button>
+				<button class="btn btn-warning restrict_role org_role move_to_organisation lang" data-lang="u_mv">move</button>
+
+			</div>
+
+			<!-- The container for the list of roles -->
+			<div id="rolesPanel" style="display:none;" class="usertab">
+
+				<div id="role_table" style="margin-top:20px;"></div>
+
+				<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
+				<button class="btn btn-success lang" id="create_user_role" data-lang="u_add_r">Add Role</button>
+				<button class="btn btn-danger lang" id="delete_role" data-lang="u_del_r">Delete Role</button>
+
+			</div>
+
+			<!-- The container for device settings -->
+			<div id="devicePanel" style="display:none;" class="usertab">
+
+				<div class="well">
+					<div class="container">
+						<form role="form" class="form-horizontal" id="device_form">
+
+							<div class="form-group">
+								<label data-lang="u_ft_rv" class="lang col-sm-4 control-label">tasks</label>
+								<div class="col-sm-6">
+									<div class="checkbox">
+										<input type="checkbox" name="devoption" class="devoption" value="ft_review_final">
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="ft_send" data-lang="u_ft_as" class="lang control-label col-sm-4">synchronise</label>
+								<div class="col-sm-6">
+									<select class="form-control" id="ft_send">
+										<option class="lang" data-lang="u_ft_sop" value="not set"></option>
+										<option class="lang" data-lang="c_off" value="off"></option>
+										<option class="lang" data-lang="u_ft_sw" value="wifi_only"></option>
+										<option class="lang" data-lang="u_ft_sw_c" value="wifi_and_cellular"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="ft_delete" data-lang="u_ft_del" class="lang control-label col-sm-4">delete</label>
+								<div class="col-sm-6">
+									<select class="form-control" id="ft_delete">
+										<option class="lang" data-lang="u_ft_sop" value="not set"></option>
+										<option class="lang" data-lang="c_off" value="off"></option>
+										<option class="lang" data-lang="c_on" value="on"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="ft_backward_navigation" data-lang="u_ft_back_nav" class="lang control-label col-sm-4">backward</label>
+								<div class="col-sm-6">
+									<select class="form-control" id="ft_backward_navigation">
+										<option class="lang" data-lang="u_ft_sop" value="not set"></option>
+										<option class="lang" data-lang="c_dis" value="disable"></option>
+										<option class="lang" data-lang="c_en" value="enable"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="ft_navigation" data-lang="u_ft_nav" class="lang control-label col-sm-4">nav</label>
+								<div class="col-sm-6">
+									<select class="form-control" id="ft_navigation">
+										<option class="lang" data-lang="u_ft_sop" value="not set"></option>
+										<option class="lang" data-lang="u_ft_swipes" value="swipe"></option>
+										<option class="lang" data-lang="u_ft_buttons" value="buttons"></option>
+										<option class="lang" data-lang="u_ft_swipes_buttons" value="swipe_buttons"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="ft_image_size" data-lang="u_ft_img_size" class="lang control-label col-sm-4">image size</label>
+								<div class="col-sm-6">
+									<select class="form-control" id="ft_image_size">
+										<option class="lang" data-lang="u_ft_sop" value="not set"></option>
+										<option class="lang" data-lang="u_ft_img_camera" value="original_image_size">camera</option>
+										<option class="lang" data-lang="u_ft_vs" value="very_small">very small</option>
+										<option class="lang" data-lang="u_ft_s" value="small">small</option>
+										<option class="lang" data-lang="u_ft_m" value="medium">medium</option>
+										<option class="lang" data-lang="u_ft_l" value="large">large</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="ft_login_policy1" data-lang="u_ft_pw_policy" class="lang control-label col-sm-4"></label>
+								<div class="col-sm-6">
+									<select class="form-control" id="ft_login_policy1">
+										<option class="lang" data-lang="u_ft_never" value="never"></option>
+										<option class="lang" data-lang="u_ft_always" value="always"></option>
+										<option class="lang" data-lang="u_ft_periodically" value="periodic"></option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group  pw_timeout" style="display:none;">
+								<label for="ft_login_policy2" data-lang="u_ft_pw_timeout" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-6">
+									<div class="form-control">
+										<input type="number" id="ft_login_policy2">
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="ft_number_tasks" data-lang="u_ft_tasks" class="lang col-sm-4 control-label">max tasks</label>
+								<div class="col-sm-6">
+									<div class="form-control">
+										<input type="number" id="ft_number_tasks">
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label data-lang="u_ft_os" class="lang col-sm-4 control-label">odk menus</label>
+								<div class="col-sm-6">
+									<div class="checkbox">
+										<input type="checkbox" name="devoption" class="devoption" value="ft_odk_style_menus">
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label data-lang="u_ft_am" class="lang col-sm-4 control-label">admin menu</label>
+								<div class="col-sm-6">
+									<div class="checkbox">
+										<input type="checkbox" name="devoption" class="devoption" value="ft_admin_menu">
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label data-lang="u_ft_ex" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-6">
+									<div class="checkbox">
+										<input type="checkbox" name="devoption" class="devoption" value="ft_exit_track_menu">
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label data-lang="u_ft_in" class="lang col-sm-4 control-label">instance name</label>
+								<div class="col-sm-6">
+									<div class="checkbox">
+										<input type="checkbox" name="devoption" class="devoption" value="ft_specify_instancename">
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="ft_send_location" data-lang="u_ft_ld" class="lang control-label col-sm-4">location</label>
+								<div class="col-sm-6">
+									<select class="form-control" id="ft_send_location">
+										<option class="lang" data-lang="u_ft_sop" value="not set"></option>
+										<option class="lang" data-lang="c_off" value="off"></option>
+										<option class="lang" data-lang="c_on" value="on"></option>
+									</select>
+								</div>
+							</div>
+						</form>
+					</div>
 				</div>
+				<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
+				<button id="saveDevice" class="btn btn-success lang" data-lang="c_save">save</button>
+			</div>
+
+			<!-- The container for webform settings -->
+			<div id="webformPanel" style="display:none;" class="usertab">
+
+				<div class="well">
+					<div class="container">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label for="wf_page_background" data-lang="u_det_pbc" class="lang control-label col-sm-4">page</label>
+								<div class="col-sm-6">
+									<div id="wf_page_background" class="input-group colorpicker-component">
+										<input type="text" value="#000000" class="form-control" />
+										<span class="input-group-addon"><i></i></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="wf_paper_background" data-lang="u_det_paperbc" class="lang control-label col-sm-4">page</label>
+								<div class="col-sm-6">
+									<div id="wf_paper_background" class="input-group colorpicker-component">
+										<input type="text" value="#000000" class="form-control" />
+										<span class="input-group-addon"><i></i></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="wf_footer_horizontal_offset" data-lang="u_det_fp" class="lang control-label col-sm-4">page</label>
+								<div class="col-sm-6">
+									<input id="wf_footer_horizontal_offset" type="number" class="form-control" />
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
+				<button id="saveWebform" class="btn btn-success lang" data-lang="c_save">save</button>
+				<button id="resetWebform" class="btn btn-warning lang" data-lang="c_reset">save</button>
+			</div>
+
+			<!-- The container for the list of organisations -->
+			<div id="organisationPanel" style="display:none;" class="usertab">
+
+				<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
+				<button id="create_organisation" class="btn btn-success lang" data-lang="u_add_o">Add Organisation</button>
+				<div id="organisation_table"  style="margin-top:20px;"></div>
+
+			</div>
+
+			<!-- The container for the server details -->
+			<div id="serverPanel" style="display:none;" class="usertab">
+
+				<div class="well">
+					<div class="container">
+						<form role="form" class="form-horizontal" id="server_form">
+							<div class="form-group">
+								<label for="mapbox_key" data-lang="u_mb_k" class="lang control-label col-sm-4">mapbox</label>
+								<div class="col-sm-6">
+									<input type="text" id="mapbox_key" required class="form-control">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="google_key" data-lang="u_g_k" class="lang control-label col-sm-4">google</label>
+								<div class="col-sm-6">
+									<input type="text" id="google_key" required class="form-control">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="s_smtp_host" data-lang="u_smtp" class="lang col-sm-4 control-label">smtp</label>
+								<div class="col-sm-6">
+									<input class="form-control" type="text" id="s_smtp_host" tabindex="10">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="s_email_domain" data-lang="u_e_dom" class="lang col-sm-4 control-label">email dom</label>
+								<div class="col-sm-6">
+									<input class="form-control" type="text" id="s_email_domain" tabindex="11">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="s_email_user" data-lang="u_e_nm" class="lang col-sm-4 control-label">email name</label>
+								<div class="col-sm-6">
+									<input class="form-control" type="text" id="s_email_user" tabindex="12">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="s_email_password"  data-lang="u_e_p" class="lang col-sm-4 control-label">email pwd</label>
+								<div class="col-sm-6">
+									<input class="form-control" type="password" id="s_email_password" tabindex="13">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="s_email_port" data-lang="u_e_port" class="lang col-sm-4 control-label">email port</label>
+								<div class="col-sm-6">
+									<input class="form-control" type="text" id="s_email_port" tabindex="14">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="s_sms_url" data-lang="u_sms_url" class="lang col-sm-4 control-label">sms</label>
+								<div class="col-sm-6">
+									<input class="form-control" type="text" id="s_sms_url" tabindex="15">
+								</div>
+							</div>
+
+						</form>
+					</div>
+				</div>
+				<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
+				<button id="saveServer" class="btn btn-success lang" data-lang="c_save">save</button>
+			</div>
+
+			<!-- The container for documenting sensitive data -->
+			<div id="sensitivePanel" style="display:none;" class="usertab">
+
+				<div class="well">
+					<div class="container">
+						<form role="form" class="form-horizontal" id="sensitive_form">
+							<div class="form-group">
+								<label for="sens_sig" data-lang="u_sens_sq" class="lang control-label col-sm-4">signature</label>
+								<div class="col-sm-6">
+									<select class="form-control" id="sens_sig">
+										<option class="lang" data-lang="u_sens_nr" value="none"></option>
+										<option class="lang" data-lang="u_sens_ao" value="admin_only">admin only</option>
+									</select>
+								</div>
+							</div>
+
+
+						</form>
+					</div>
+				</div>
+				<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
+				<button id="saveSensitive" class="btn btn-success lang" data-lang="c_save">save</button>
+			</div>
+
+			<!-- The container for the list of enterprises -->
+			<div id="enterprisePanel" style="display:none;" class="usertab">
+
+				<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
+				<button id="create_enterprise" class="btn btn-success lang" data-lang="u_add_e">add enterprise</button>
+				<div id="enterprise_table"  style="margin-top:20px;"></div>
 			</div>
 
 		</div>
-		<div class="col-md-12 text-center">
-			<img id="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
-		</div>
 	</div>
-
-    <!-- The container for the list of projects -->
-    <div id="projectPanel" style="display:none;" class="usertab">
-
-		<div id="project_table" style="margin-top:20px;"></div>
-
-		<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
-		<button class="btn btn-success lang" id="create_project" data-lang="u_add_p">Add Project</button>
-		<button class="btn btn-danger lang" id="delete_project" data-lang="u_del_p">Delete Project</button>
-		<button class="btn btn-warning restrict_role org_role move_to_organisation lang" data-lang="u_mv">move</button>
-
-	</div>
-	
-	<!-- The container for the list of roles -->
-    <div id="rolesPanel" style="display:none;" class="usertab">
-
-		<div id="role_table" style="margin-top:20px;"></div>
-
-		<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
-		<button class="btn btn-success lang" id="create_user_role" data-lang="u_add_r">Add Role</button>
-		<button class="btn btn-danger lang" id="delete_role" data-lang="u_del_r">Delete Role</button>
-
-	</div>
-
-	<!-- The container for device settings -->
-	<div id="devicePanel" style="display:none;" class="usertab">
-
-		<div class="well">
-			<div class="container">
-				<form role="form" class="form-horizontal" id="device_form">
-
-					<div class="form-group">
-						<label data-lang="u_ft_rv" class="lang col-sm-4 control-label">tasks</label>
-						<div class="col-sm-6">
-							<div class="checkbox">
-								<input type="checkbox" name="devoption" class="devoption" value="ft_review_final">
-							</div>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<label for="ft_send" data-lang="u_ft_as" class="lang control-label col-sm-4">synchronise</label>
-						<div class="col-sm-6">
-							<select class="form-control" id="ft_send">
-								<option class="lang" data-lang="u_ft_sop" value="not set"></option>
-								<option class="lang" data-lang="c_off" value="off"></option>
-								<option class="lang" data-lang="u_ft_sw" value="wifi_only"></option>
-								<option class="lang" data-lang="u_ft_sw_c" value="wifi_and_cellular"></option>
-							</select>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<label for="ft_delete" data-lang="u_ft_del" class="lang control-label col-sm-4">delete</label>
-						<div class="col-sm-6">
-							<select class="form-control" id="ft_delete">
-								<option class="lang" data-lang="u_ft_sop" value="not set"></option>
-								<option class="lang" data-lang="c_off" value="off"></option>
-								<option class="lang" data-lang="c_on" value="on"></option>
-							</select>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<label for="ft_backward_navigation" data-lang="u_ft_back_nav" class="lang control-label col-sm-4">backward</label>
-						<div class="col-sm-6">
-							<select class="form-control" id="ft_backward_navigation">
-								<option class="lang" data-lang="u_ft_sop" value="not set"></option>
-								<option class="lang" data-lang="c_dis" value="disable"></option>
-								<option class="lang" data-lang="c_en" value="enable"></option>
-							</select>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<label for="ft_navigation" data-lang="u_ft_nav" class="lang control-label col-sm-4">nav</label>
-						<div class="col-sm-6">
-							<select class="form-control" id="ft_navigation">
-								<option class="lang" data-lang="u_ft_sop" value="not set"></option>
-								<option class="lang" data-lang="u_ft_swipes" value="swipe"></option>
-								<option class="lang" data-lang="u_ft_buttons" value="buttons"></option>
-								<option class="lang" data-lang="u_ft_swipes_buttons" value="swipe_buttons"></option>
-							</select>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<label for="ft_image_size" data-lang="u_ft_img_size" class="lang control-label col-sm-4">image size</label>
-						<div class="col-sm-6">
-							<select class="form-control" id="ft_image_size">
-								<option class="lang" data-lang="u_ft_sop" value="not set"></option>
-								<option class="lang" data-lang="u_ft_img_camera" value="original_image_size">camera</option>
-								<option class="lang" data-lang="u_ft_vs" value="very_small">very small</option>
-								<option class="lang" data-lang="u_ft_s" value="small">small</option>
-								<option class="lang" data-lang="u_ft_m" value="medium">medium</option>
-								<option class="lang" data-lang="u_ft_l" value="large">large</option>
-							</select>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<label for="ft_login_policy1" data-lang="u_ft_pw_policy" class="lang control-label col-sm-4"></label>
-						<div class="col-sm-6">
-							<select class="form-control" id="ft_login_policy1">
-								<option class="lang" data-lang="u_ft_never" value="never"></option>
-								<option class="lang" data-lang="u_ft_always" value="always"></option>
-								<option class="lang" data-lang="u_ft_periodically" value="periodic"></option>
-							</select>
-						</div>
-					</div>
-					<div class="form-group  pw_timeout" style="display:none;">
-						<label for="ft_login_policy2" data-lang="u_ft_pw_timeout" class="lang col-sm-4 control-label"></label>
-						<div class="col-sm-6">
-							<div class="form-control">
-								<input type="number" id="ft_login_policy2">
-							</div>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<label for="ft_number_tasks" data-lang="u_ft_tasks" class="lang col-sm-4 control-label">max tasks</label>
-						<div class="col-sm-6">
-							<div class="form-control">
-								<input type="number" id="ft_number_tasks">
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label data-lang="u_ft_os" class="lang col-sm-4 control-label">odk menus</label>
-						<div class="col-sm-6">
-							<div class="checkbox">
-								<input type="checkbox" name="devoption" class="devoption" value="ft_odk_style_menus">
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label data-lang="u_ft_am" class="lang col-sm-4 control-label">admin menu</label>
-						<div class="col-sm-6">
-							<div class="checkbox">
-								<input type="checkbox" name="devoption" class="devoption" value="ft_admin_menu">
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label data-lang="u_ft_ex" class="lang col-sm-4 control-label"></label>
-						<div class="col-sm-6">
-							<div class="checkbox">
-								<input type="checkbox" name="devoption" class="devoption" value="ft_exit_track_menu">
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label data-lang="u_ft_in" class="lang col-sm-4 control-label">instance name</label>
-						<div class="col-sm-6">
-							<div class="checkbox">
-								<input type="checkbox" name="devoption" class="devoption" value="ft_specify_instancename">
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="ft_send_location" data-lang="u_ft_ld" class="lang control-label col-sm-4">location</label>
-						<div class="col-sm-6">
-							<select class="form-control" id="ft_send_location">
-								<option class="lang" data-lang="u_ft_sop" value="not set"></option>
-								<option class="lang" data-lang="c_off" value="off"></option>
-								<option class="lang" data-lang="c_on" value="on"></option>
-							</select>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-		<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
-		<button id="saveDevice" class="btn btn-success lang" data-lang="c_save">save</button>
-	</div>
-
-	<!-- The container for webform settings -->
-	<div id="webformPanel" style="display:none;" class="usertab">
-
-		<div class="well">
-			<div class="container">
-				<form role="form" class="form-horizontal">
-					<div class="form-group">
-						<label for="wf_page_background" data-lang="u_det_pbc" class="lang control-label col-sm-4">page</label>
-						<div class="col-sm-6">
-							<div id="wf_page_background" class="input-group colorpicker-component">
-								<input type="text" value="#000000" class="form-control" />
-								<span class="input-group-addon"><i></i></span>
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="wf_paper_background" data-lang="u_det_paperbc" class="lang control-label col-sm-4">page</label>
-						<div class="col-sm-6">
-							<div id="wf_paper_background" class="input-group colorpicker-component">
-								<input type="text" value="#000000" class="form-control" />
-								<span class="input-group-addon"><i></i></span>
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="wf_footer_horizontal_offset" data-lang="u_det_fp" class="lang control-label col-sm-4">page</label>
-						<div class="col-sm-6">
-							<input id="wf_footer_horizontal_offset" type="number" class="form-control" />
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-		<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
-		<button id="saveWebform" class="btn btn-success lang" data-lang="c_save">save</button>
-		<button id="resetWebform" class="btn btn-warning lang" data-lang="c_reset">save</button>
-	</div>
-
-	<!-- The container for the list of organisations -->
-    <div id="organisationPanel" style="display:none;" class="usertab">
-
-		<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
-		<button id="create_organisation" class="btn btn-success lang" data-lang="u_add_o">Add Organisation</button>
-		<div id="organisation_table"  style="margin-top:20px;"></div>
-
-	</div>
-	
-	<!-- The container for the server details -->
-    <div id="serverPanel" style="display:none;" class="usertab">
-
-		<div class="well">
-			<div class="container">
-				<form role="form" class="form-horizontal" id="server_form">
-					<div class="form-group">
-						<label for="mapbox_key" data-lang="u_mb_k" class="lang control-label col-sm-4">mapbox</label>
-						<div class="col-sm-6">
-							<input type="text" id="mapbox_key" required class="form-control">
-						</div>		
-					</div>
-					<div class="form-group">
-						<label for="google_key" data-lang="u_g_k" class="lang control-label col-sm-4">google</label>
-						<div class="col-sm-6">
-							<input type="text" id="google_key" required class="form-control">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="s_smtp_host" data-lang="u_smtp" class="lang col-sm-4 control-label">smtp</label>
-						<div class="col-sm-6">
-							<input class="form-control" type="text" id="s_smtp_host" tabindex="10">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="s_email_domain" data-lang="u_e_dom" class="lang col-sm-4 control-label">email dom</label>
-						<div class="col-sm-6">
-							<input class="form-control" type="text" id="s_email_domain" tabindex="11">
-						</div>
-					</div>		
-					<div class="form-group">
-						<label for="s_email_user" data-lang="u_e_nm" class="lang col-sm-4 control-label">email name</label>
-						<div class="col-sm-6">
-							<input class="form-control" type="text" id="s_email_user" tabindex="12">
-						</div>
-					</div>	
-					<div class="form-group">
-						<label for="s_email_password"  data-lang="u_e_p" class="lang col-sm-4 control-label">email pwd</label>
-						<div class="col-sm-6">
-							<input class="form-control" type="password" id="s_email_password" tabindex="13">
-						</div>
-					</div>	
-					<div class="form-group">
-						<label for="s_email_port" data-lang="u_e_port" class="lang col-sm-4 control-label">email port</label>
-						<div class="col-sm-6">
-							<input class="form-control" type="text" id="s_email_port" tabindex="14">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="s_sms_url" data-lang="u_sms_url" class="lang col-sm-4 control-label">sms</label>
-						<div class="col-sm-6">
-							<input class="form-control" type="text" id="s_sms_url" tabindex="15">
-						</div>
-					</div>
-
-				</form>	
-			</div>
-		</div>
-		<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
-		<button id="saveServer" class="btn btn-success lang" data-lang="c_save">save</button>
-	</div>
-
-	<!-- The container for documenting sensitive data -->
-	<div id="sensitivePanel" style="display:none;" class="usertab">
-
-		<div class="well">
-			<div class="container">
-				<form role="form" class="form-horizontal" id="sensitive_form">
-					<div class="form-group">
-						<label for="sens_sig" data-lang="u_sens_sq" class="lang control-label col-sm-4">signature</label>
-						<div class="col-sm-6">
-							<select class="form-control" id="sens_sig">
-								<option class="lang" data-lang="u_sens_nr" value="none"></option>
-								<option class="lang" data-lang="u_sens_ao" value="admin_only">admin only</option>
-							</select>
-						</div>
-					</div>
-
-
-				</form>
-			</div>
-		</div>
-		<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
-		<button id="saveSensitive" class="btn btn-success lang" data-lang="c_save">save</button>
-	</div>
-
-	<!-- The container for the list of enterprises -->
-	<div id="enterprisePanel" style="display:none;" class="usertab">
-
-		<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
-		<button id="create_enterprise" class="btn btn-success lang" data-lang="u_add_e">add enterprise</button>
-		<div id="enterprise_table"  style="margin-top:20px;"></div>
-	</div>
-	
-</div>
 
 	
 <!-- Modal to allow the editing of a user's details -->
