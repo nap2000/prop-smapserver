@@ -77,7 +77,7 @@ require([
 		$('#email_question_cont').prop('title', localise.set['n_eqc']);
 		$('#email_subject_cont').prop('placeholder', localise.set['n_esc']);
 
-		setupUserProfile();
+		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
 		$("#side-menu").metisMenu();
 
