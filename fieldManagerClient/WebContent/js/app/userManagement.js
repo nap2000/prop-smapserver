@@ -20,7 +20,9 @@ define(['jquery','localise', 'common', 'globals',
 	'bootbox',
 	'moment',
 	'datetimepicker',
-	'bootstrapcolorpicker'], function($, lang, common, globals, bootbox, moment, datetimepicker, bootstrapcolorpicker) {
+	'bootstrapcolorpicker',
+	'metismenu'
+], function($, lang, common, globals, bootbox, moment, datetimepicker, bootstrapcolorpicker) {
 
 	var gUsers,
 		gGroups,
@@ -36,6 +38,8 @@ define(['jquery','localise', 'common', 'globals',
 		gOrgId;
 
 	$(document).ready(function() {
+
+		$("#side-menu").metisMenu();
 
 		localise.setlang();		// Localise HTML
 		setupUserProfile();

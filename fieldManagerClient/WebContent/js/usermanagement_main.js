@@ -34,37 +34,34 @@ requirejs.config({
      	i18n: '../../../../js/libs/i18n',
      	async: '../../../../js/libs/async',
      	localise: '../../../../js/app/localise',
-    	jquery: '../../../../js/libs/jquery-2.1.1',
-    	bootstrap: '../../../../js/libs/bootstrap.min',
-    	bootbox: '../../../../js/libs/bootbox.min',
     	bootstrapfileinput: '../../../../js/libs/bootstrap.file-input',
 	    bootstrapcolorpicker: '../../../../js/libs/bootstrap-colorpicker.min',
     	common: '../../../../js/app/common',
     	globals: '../../../../js/app/globals',
     	crf: '../../../../js/libs/commonReportFunctions',
+	    metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu',
     	lang_location: '../../../../js'
     },
     shim: {
        	'bootstrap': ['jquery'],
        	'bootstrapfileinput': ['jquery'],
 	    'bootstrapcolorpicker': ['bootstrap', 'jquery'],
-    	'bootbox': ['bootstrap'],
-    	'common': ['jquery']
+    	'common': ['jquery'],
+	    'metismenu': ['jquery']
     	}
     });
 
 require([
-         'jquery', 
-         'bootstrap', 
+         'jquery',
          'common', 
          'localise', 
          'globals',
-         'bootbox',
          'app/userManagement',
          'bootstrapfileinput',
-		 'bootstrapcolorpicker'
+		 'bootstrapcolorpicker',
+		 'metismenu'
          
-         ], function($, bootstrap, common, localise, globals) {
+         ], function($, common, localise, globals) {
 
     setCustomUserMgmt();			// Apply custom javascript
 
