@@ -334,34 +334,49 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 							</div>
 						</div>
 						<div id="email_meta_cont" class="form-group row submission_options" data-toggle="tooltip"  data-container="body" title="Meta item or preload that will contain an email address to use">
-							<label for="email_meta" class="col-sm-2 control-label lang" data-lang="n_ep">email meta</label>
+							<label for="email_meta" class="col-sm-2 control-label lang" data-lang="n_ep"></label>
 							<div class="col-sm-10">
 								<select class="selected_meta form-control" id="email_meta"></select>
 							</div>
 						</div>
 						<div id="email_subject_cont" class="form-group row" data-toggle="tooltip"  data-container="body" title="Subject for the email (optional)">
-							<label for="email_subject" data-lang="c_subject" class="lang col-sm-2 control-label">subject</label>
+							<label for="email_subject" data-lang="c_subject" class="lang col-sm-2 control-label"></label>
 							<div class="col-sm-10">
 								<input type="text" id="email_subject" class="form-control">
 							</div>
 						</div>
-						<div class="form-group row" data-toggle="tooltip"  data-container="body">
-							<label for="email_content" data-lang="c_content" class="lang col-sm-2 control-label">content</label>
-							<div class="col-sm-10">
-								<textarea id="email_content" class="labelProp form-control"></textarea>
+						<div class="well">
+							<div class="form-group row" data-toggle="tooltip"  data-container="body">
+								<label for="email_content" data-lang="c_content" class="lang col-sm-2 control-label"></label>
+								<div class="col-sm-10">
+									<textarea id="email_content" class="labelProp form-control"></textarea>
+								</div>
+							</div>
+							<div class="form-group task_reminder_options row">
+								<label for="email_content_ap" data-lang="n_ap" class="lang col-sm-2 control-label"></label>
+								<div class="col-sm-8">
+									<select id="email_content_ap" class="labelProp form-control">
+										<option class="lang" data-lang="c_task" value="${task_webform}"></option>
+										<option class="lang" data-lang="t_assigned" value="${assignee_name}"></option>
+										<option class="lang" data-lang="c_scheduled" value="${scheduled}"></option>
+									</select>
+								</div>
+								<div class="col-sm-2">
+									<button id="email_content_ap_insert" type="button" class="btn btn-info lang" data-lang="c_insert"></button>
+								</div>
 							</div>
 						</div>
 					</div>
 
 					<div class="sms_options" style="display:none;">
 						<div class="form-group row" data-toggle="tooltip"  data-container="body" title="Comma separated list of email addresses">
-							<label for="notify_sms" data-lang="c_sms" class="lang col-sm-2 control-label">SMS</label>
+							<label for="notify_sms" data-lang="c_sms" class="lang col-sm-2 control-label"></label>
 							<div class="col-sm-10">
 								<input type="tel" id="notify_sms" class="form-control" required multiple placeholder="SMS Number">
 							</div>
 						</div>
 						<div class="form-group row" data-toggle="tooltip"  data-container="body" title="Question that will contain the SMS numbers to use">
-							<label for="sms_question" class="col-sm-2 control-label lang" data-lang="n_smsq">sms question</label>
+							<label for="sms_question" class="col-sm-2 control-label lang" data-lang="n_smsq"></label>
 							<div class="col-sm-10">
 								<select class="selected_name_question form-control" id="sms_question"></select>
 							</div>

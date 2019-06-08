@@ -160,6 +160,13 @@ require([
 			surveyChanged();
 		});
 
+		$('#email_content_ap_insert').click(function() {
+			var current = $('#email_content').val();
+			$('#email_content').val(current
+				+ (current.length > 0 ? " " : "")
+				+ $('#email_content_ap option:selected').val());
+		});
+
 		enableUserProfileBS();
 	});
 
@@ -213,6 +220,8 @@ require([
 		} else if(trigger === "task_reminder") {
 			$('.submission_options').hide();
 			$('.task_reminder_options').show();
+			$('#target').val('email');
+			setTargetDependencies('email');
 		}
 	}
 
