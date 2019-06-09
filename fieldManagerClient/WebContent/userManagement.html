@@ -64,19 +64,19 @@
 				  </li>
 
 				  <li id="m_tm" class="restrict_role admin_role analyst_role"><a
-						  href="/fieldManager/surveyManagement.html"><i class="fa fa-envelope"></i> <span
+						  href="/fieldManager/surveyManagement.html"><i class="glyphicon glyphicon-wrench"></i> <span
 						  class="nav-label lang" data-lang="m_tm"></span></a></li>
 				  <li id="m_monitor" class="restrict_role admin_role analyst_role"><a
-						  href="/fieldManager/monitor.html"><i class="fa fa-envelope"></i> <span
+						  href="/fieldManager/monitor.html"><i class="fa fa-heartbeat"></i> <span
 						  class="nav-label lang" data-lang="m_monitor"></span></a></li>
 				  <li id="m_resources" class="restrict_role admin_role analyst_role"><a
-						  href="/resources.html"><i class="fa fa-envelope"></i> <span
+						  href="/resources.html"><i class="fa fa-database"></i></i> <span
 						  class="nav-label lang" data-lang="m_resources"></span></a></li>
 				  <li id="m_os" class="restrict_role admin_role analyst_role"><a
 						  href="/tasks/oversight.html"><i class="fa fa-envelope"></i> <span
 						  class="nav-label lang" data-lang="m_os"></span></a></li>
 				  <li id="m_logs" class="restrict_role admin_role analyst_role"><a
-						  href="/tasks/log.html"><i class="fa fa-envelope"></i> <span
+						  href="/tasks/log.html"><i class="fa fa-ticket"></i> <span
 						  class="nav-label lang" data-lang="m_logs"></span></a></li>
 				  <li id="m_help"><a
 						  href="https://docs.google.com/folderview?id=0B5_SmpWlQYxvNExwSFV5X051Yjg&usp=docslist_api#"
@@ -96,7 +96,6 @@
 					<div class="navbar-header">
 						<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i></a>
 					</div>
-					<h2 class="navbar-left"><span class="lang" data-lang="m_user"></span>: <span id="organisation_name"></span></h2>
 
 					<ul class="nav navbar-top-links navbar-right">
 					</ul>
@@ -199,9 +198,9 @@
 
 				<div class="well">
 					<div class="container">
-						<form role="form" class="form-horizontal" id="device_form">
+						<form id="device_form">
 
-							<div class="form-group">
+							<div class="form-group row">
 								<label data-lang="u_ft_rv" class="lang col-sm-4 control-label">tasks</label>
 								<div class="col-sm-6">
 									<div class="checkbox">
@@ -210,7 +209,7 @@
 								</div>
 							</div>
 
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="ft_send" data-lang="u_ft_as" class="lang control-label col-sm-4">synchronise</label>
 								<div class="col-sm-6">
 									<select class="form-control" id="ft_send">
@@ -222,7 +221,7 @@
 								</div>
 							</div>
 
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="ft_delete" data-lang="u_ft_del" class="lang control-label col-sm-4">delete</label>
 								<div class="col-sm-6">
 									<select class="form-control" id="ft_delete">
@@ -233,7 +232,7 @@
 								</div>
 							</div>
 
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="ft_backward_navigation" data-lang="u_ft_back_nav" class="lang control-label col-sm-4">backward</label>
 								<div class="col-sm-6">
 									<select class="form-control" id="ft_backward_navigation">
@@ -244,7 +243,7 @@
 								</div>
 							</div>
 
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="ft_navigation" data-lang="u_ft_nav" class="lang control-label col-sm-4">nav</label>
 								<div class="col-sm-6">
 									<select class="form-control" id="ft_navigation">
@@ -256,7 +255,7 @@
 								</div>
 							</div>
 
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="ft_image_size" data-lang="u_ft_img_size" class="lang control-label col-sm-4">image size</label>
 								<div class="col-sm-6">
 									<select class="form-control" id="ft_image_size">
@@ -270,7 +269,7 @@
 								</div>
 							</div>
 
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="ft_login_policy1" data-lang="u_ft_pw_policy" class="lang control-label col-sm-4"></label>
 								<div class="col-sm-6">
 									<select class="form-control" id="ft_login_policy1">
@@ -280,7 +279,7 @@
 									</select>
 								</div>
 							</div>
-							<div class="form-group  pw_timeout" style="display:none;">
+							<div class="form-group row pw_timeout" style="display:none;">
 								<label for="ft_login_policy2" data-lang="u_ft_pw_timeout" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-6">
 									<div class="form-control">
@@ -289,7 +288,7 @@
 								</div>
 							</div>
 
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="ft_number_tasks" data-lang="u_ft_tasks" class="lang col-sm-4 control-label">max tasks</label>
 								<div class="col-sm-6">
 									<div class="form-control">
@@ -297,7 +296,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group">
+							<div class="form-group row">
 								<label data-lang="u_ft_os" class="lang col-sm-4 control-label">odk menus</label>
 								<div class="col-sm-6">
 									<div class="checkbox">
@@ -305,7 +304,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group">
+							<div class="form-group row">
 								<label data-lang="u_ft_am" class="lang col-sm-4 control-label">admin menu</label>
 								<div class="col-sm-6">
 									<div class="checkbox">
@@ -313,7 +312,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group">
+							<div class="form-group row">
 								<label data-lang="u_ft_ex" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-6">
 									<div class="checkbox">
@@ -321,7 +320,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group">
+							<div class="form-group row">
 								<label data-lang="u_ft_in" class="lang col-sm-4 control-label">instance name</label>
 								<div class="col-sm-6">
 									<div class="checkbox">
@@ -329,7 +328,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="ft_send_location" data-lang="u_ft_ld" class="lang control-label col-sm-4">location</label>
 								<div class="col-sm-6">
 									<select class="form-control" id="ft_send_location">
@@ -351,8 +350,8 @@
 
 				<div class="well">
 					<div class="container">
-						<form role="form" class="form-horizontal">
-							<div class="form-group">
+						<form role="form">
+							<div class="form-group row">
 								<label for="wf_page_background" data-lang="u_det_pbc" class="lang control-label col-sm-4">page</label>
 								<div class="col-sm-6">
 									<div id="wf_page_background" class="input-group colorpicker-component">
@@ -361,7 +360,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="wf_paper_background" data-lang="u_det_paperbc" class="lang control-label col-sm-4">page</label>
 								<div class="col-sm-6">
 									<div id="wf_paper_background" class="input-group colorpicker-component">
@@ -370,7 +369,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="wf_footer_horizontal_offset" data-lang="u_det_fp" class="lang control-label col-sm-4">page</label>
 								<div class="col-sm-6">
 									<input id="wf_footer_horizontal_offset" type="number" class="form-control" />
@@ -388,7 +387,7 @@
 			<div id="organisationPanel" style="display:none;" class="usertab">
 
 				<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
-				<button id="create_organisation" class="btn btn-success lang" data-lang="u_add_o">Add Organisation</button>
+				<button id="create_organisation" class="btn btn-success lang" data-lang="u_add_o"></button>
 				<div id="organisation_table"  style="margin-top:20px;"></div>
 
 			</div>
@@ -398,50 +397,50 @@
 
 				<div class="well">
 					<div class="container">
-						<form role="form" class="form-horizontal" id="server_form">
-							<div class="form-group">
-								<label for="mapbox_key" data-lang="u_mb_k" class="lang control-label col-sm-4">mapbox</label>
+						<form role="form" id="server_form">
+							<div class="form-group row">
+								<label for="mapbox_key" data-lang="u_mb_k" class="lang control-label col-sm-4"></label>
 								<div class="col-sm-6">
 									<input type="text" id="mapbox_key" required class="form-control">
 								</div>
 							</div>
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="google_key" data-lang="u_g_k" class="lang control-label col-sm-4">google</label>
 								<div class="col-sm-6">
 									<input type="text" id="google_key" required class="form-control">
 								</div>
 							</div>
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="s_smtp_host" data-lang="u_smtp" class="lang col-sm-4 control-label">smtp</label>
 								<div class="col-sm-6">
 									<input class="form-control" type="text" id="s_smtp_host" tabindex="10">
 								</div>
 							</div>
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="s_email_domain" data-lang="u_e_dom" class="lang col-sm-4 control-label">email dom</label>
 								<div class="col-sm-6">
 									<input class="form-control" type="text" id="s_email_domain" tabindex="11">
 								</div>
 							</div>
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="s_email_user" data-lang="u_e_nm" class="lang col-sm-4 control-label">email name</label>
 								<div class="col-sm-6">
 									<input class="form-control" type="text" id="s_email_user" tabindex="12">
 								</div>
 							</div>
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="s_email_password"  data-lang="u_e_p" class="lang col-sm-4 control-label">email pwd</label>
 								<div class="col-sm-6">
 									<input class="form-control" type="password" id="s_email_password" tabindex="13">
 								</div>
 							</div>
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="s_email_port" data-lang="u_e_port" class="lang col-sm-4 control-label">email port</label>
 								<div class="col-sm-6">
 									<input class="form-control" type="text" id="s_email_port" tabindex="14">
 								</div>
 							</div>
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="s_sms_url" data-lang="u_sms_url" class="lang col-sm-4 control-label">sms</label>
 								<div class="col-sm-6">
 									<input class="form-control" type="text" id="s_sms_url" tabindex="15">
@@ -460,8 +459,8 @@
 
 				<div class="well">
 					<div class="container">
-						<form role="form" class="form-horizontal" id="sensitive_form">
-							<div class="form-group">
+						<form id="sensitive_form">
+							<div class="form-group row">
 								<label for="sens_sig" data-lang="u_sens_sq" class="lang control-label col-sm-4">signature</label>
 								<div class="col-sm-6">
 									<select class="form-control" id="sens_sig">
@@ -600,39 +599,38 @@
 	<div class="modal-dialog">
    		<div class="modal-content">
    			<div class="modal-header">
-     			<a type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></a>
-     			<h4 class="modal-title lang" data-lang="u_det_p">project details</h4>
+     			<h4 class="modal-title lang" data-lang="u_det_p"></h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+						aria-hidden="true">&times;</span></button>
    			</div>
 		    <div class="modal-body">
 		     
-				<form class="form form-horizontal" onsubmit="return false;" role="form" id="project_create_form">	
-					<div class="form-group">
-						<label for="p_name" data-lang="c_name" class="lang col-sm-2 control-label">name</label>
+				<form class="form" onsubmit="return false;" id="project_create_form">
+					<div class="form-group row">
+						<label for="p_name" data-lang="c_name" class="lang col-sm-2 control-label"></label>
 						<div class="col-sm-10">
 							<input type="text" id="p_name" class="form-control" required tabindex="1"><br/>
 						</div> 
 					</div>
-					<div class="form-group">
-						<label for="p_desc" data-lang="c_desc" class="lang col-sm-2 control-label">Desc</label>
+					<div class="form-group row">
+						<label for="p_desc" data-lang="c_desc" class="lang col-sm-2 control-label"></label>
 						<div class="col-sm-10">
 							<textarea type="text" id="p_desc" class="form-control" tabindex="2"></textarea>
 							<br/>
 						</div> 
 					</div>
-					<div class="form-group">
-						<label for="p_tasks_only" data-lang="t_tasks_only" class="lang col-sm-2 control-label">tasks</label>
-						<div class="col-sm-10">
-							<div class="checkbox">
-								<input type="checkbox" id="p_tasks_only">
-							</div>
+					<div class="form-group row">
+						<div class="custom-control custom-checkbox">
+							<input type="checkbox" class="custom-control-input" id="p_tasks_only">
+							<label for="p_tasks_only" data-lang="t_tasks_only" class="lang custom-control-label"></label>
 						</div>
 					</div>
 				</form>	
 				
 			</div> 
 			<div class="modal-footer">
-            	<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close">Close</button>
-            	<button id="projectSave" type="button" class="btn btn-primary lang btn-default" data-lang="c_save">Save</button>
+            	<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close"></button>
+            	<button id="projectSave" type="button" class="btn btn-primary lang btn-default" data-lang="c_save"></button>
         	</div>
 		</div>
 	</div>
