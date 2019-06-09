@@ -999,6 +999,7 @@ define({
     "u_co": "Current Organisation",
     "u_gr": "Get report",
     "u_sat": "Set as Theme",
+    "u_bl": "Banner Logo (Height 50px)",
 
     // Browse Results
     "br_ci": "Case Insensitive",
