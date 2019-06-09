@@ -3855,3 +3855,17 @@ function populateTaskGroupList() {
 		});
 	}
 }
+
+/*
+ * Show a loaded file as an image
+ * From https://codepen.io/adamrifai/pen/YXdEwz
+ */
+function displayAsImage(file, img) {
+
+	var imgURL = URL.createObjectURL(file);
+	img.onload = function() {
+		URL.revokeObjectURL(imgURL);
+	};
+
+	img.src = imgURL;
+}

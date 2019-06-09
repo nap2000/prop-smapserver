@@ -345,6 +345,13 @@ require([
 
 		});
 
+		/*
+		 * Setting organisation theme
+		 */
+		$('#change_banner_logo').change(function(){
+			displayAsImage($(this)[0].files[0], $('#o_banner_logo')[0]);
+		});
+
 		// Function to save a users details
 		$('#saveServer').click(function(e) {
 			writeServerDetails();
