@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta charset="utf-8">
 
 	<title class="lang" data-lang="m_users"></title>
@@ -694,147 +694,165 @@
 							</div>
 						</div>
 					</fieldset>
-					<div class="panel-group" role="tablist" aria-multiselectable="true">
- 							<div class="panel panel-default">
-   							<div class="panel-heading" role="tab" id="companyDetails">
-								<h4 class="panel-title">
-					       			<a data-toggle="collapse" data-parent="#show_publishing_params" href="#collapseCompanyDetails" aria-expanded="true" aria-controls="collapseLayers">
+					<div aria-multiselectable="true">
+ 							<div class="card">
+   							<div class="card-header" role="tab" id="companyDetails">
+								<h4 class="card-title">
+					       			<a class="card-link" data-toggle="collapse" href="#collapseCompanyDetails" aria-expanded="true" aria-controls="collapseLayers">
 					         				<span class="lang" data-lang="u_det_o">org details</span>
 					       			</a>
 				     			</h4>
    							</div>
-			    			<div id="collapseCompanyDetails" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">      					
-					
-								<label for="o_company_name" data-lang="c_company_name" class="lang control-label">org name</label>
-								<input type="text" id="o_company_name" class="form-control" tabindex="2"><br/>
-								
-								<label for="o_company_address" class="lang control-label" data-lang="c_company_addr">org address</label>
-								<input type="text" id="o_company_address" class="form-control" tabindex="3"><br/>
-								
-								<label for="o_company_phone" class="lang control-label" data-lang="c_company_phone">org phone</label>
-								<input type="text" id="o_company_phone" class="form-control" tabindex="3"><br/>
-						
-								<label for="o_company_email" class="lang control-label" data-lang="c_company_email">org email</label>
-								<input type="text" id="o_company_email" class="form-control" tabindex="4"><br/>
-							
+			    			<div id="collapseCompanyDetails" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+								<div class="card-body">
+									<label for="o_company_name" data-lang="c_company_name" class="lang control-label">org name</label>
+									<input type="text" id="o_company_name" class="form-control" tabindex="2"><br/>
+
+									<label for="o_company_address" class="lang control-label" data-lang="c_company_addr">org address</label>
+									<input type="text" id="o_company_address" class="form-control" tabindex="3"><br/>
+
+									<label for="o_company_phone" class="lang control-label" data-lang="c_company_phone">org phone</label>
+									<input type="text" id="o_company_phone" class="form-control" tabindex="3"><br/>
+
+									<label for="o_company_email" class="lang control-label" data-lang="c_company_email">org email</label>
+									<input type="text" id="o_company_email" class="form-control" tabindex="4"><br/>
+								</div>
 							</div>
 								
 						</div>
 					</div>
 					
-					<div class="panel-group" role="tablist" aria-multiselectable="true">
- 							<div class="panel panel-default">
-   							<div class="panel-heading" role="tab" id="publishingOptions">
-								<h4 class="panel-title">
-					       			<a data-toggle="collapse" data-parent="#show_publishing_params" href="#collapsePublishingOptions" aria-expanded="true" aria-controls="collapseLayers">		
+					<div aria-multiselectable="true">
+ 							<div class="card">
+   							<div class="card-header" role="tab" id="publishingOptions">
+								<h4 class="card-title">
+					       			<a class="card-link" data-toggle="collapse" href="#collapsePublishingOptions" aria-expanded="true" aria-controls="collapseLayers">
 					         			<span class="lang" data-lang="u_det_o_rep">report options</span>
 					       			</a>
 				     			</h4>
    							</div>
-			    			<div id="collapsePublishingOptions" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">      					
-					
-								<div class="checkbox"><label><input type="checkbox" name="puboption" value="email" class="puboption" tabindex="3" /> <span  class="lang" data-lang="c_email">email</span></label></div>
-								<div class="checkbox"><label><input type="checkbox" name="puboption" value="twitter" class="puboption" tabindex="5" /> <span class="lang" data-lang="c_twitter">twitter</span></label></div>
+			    			<div id="collapsePublishingOptions" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+								<div class="card-body">
+									<div class="checkbox"><label><input type="checkbox" name="puboption" value="email" class="puboption" tabindex="3" /> <span  class="lang" data-lang="c_email">email</span></label></div>
+									<div class="checkbox"><label><input type="checkbox" name="puboption" value="twitter" class="puboption" tabindex="5" /> <span class="lang" data-lang="c_twitter">twitter</span></label></div>
+								</div>
 							</div>
-								
 						</div>
 					</div>
 
-					<div class="panel-group" role="tablist" aria-multiselectable="true">
- 							<div class="panel panel-default">
-   							<div class="panel-heading" role="tab" id="emailOptions">
-								<h4 class="panel-title">
-					       			<a data-toggle="collapse" data-parent="#show_email_params" href="#collapseEmailOptions" aria-expanded="true" aria-controls="collapseLayers">
+					<div aria-multiselectable="true">
+ 							<div class="card">
+   							<div class="card-header" role="tab" id="emailOptions">
+								<h4 class="card-title">
+					       			<a class="card-link" data-toggle="collapse" href="#collapseEmailOptions" aria-expanded="true" aria-controls="collapseLayers">
 					         			<span class="lang" data-lang="u_det_o_email">email options</span>
 					       			</a>
 				     			</h4>
    							</div>
-			    			<div id="collapseEmailOptions" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">      					
-					
-								<label for="o_admin_email" data-lang="u_h_e" class="lang control-label">help email</label>
-								<input class="form-control" type="text" id="o_admin_email" tabindex="9">
+			    			<div id="collapseEmailOptions" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+								<div class="card-body">
+									<label for="o_admin_email" data-lang="u_h_e" class="lang control-label">help email</label>
+									<input class="form-control" type="text" id="o_admin_email" tabindex="9">
 
-								<label for="o_smtp_host" data-lang="u_smtp" class="lang col-sm-4 control-label">smtp</label>
-								<input class="form-control" type="text" id="o_smtp_host" tabindex="10">
-								
-								<label for="o_email_domain" data-lang="u_e_dom" class="lang col-sm-4 control-label">domain</label>
-								<input class="form-control" type="text" id="o_email_domain" tabindex="11">
-								
-								<label for="o_email_user" data-lang="u_e_nm" class="lang col-sm-4 control-label">user name</label>
-								<input class="form-control" type="text" id="o_email_user" tabindex="12">
-								
-								<label for="o_email_password" data-lang="u_e_p" class="lang col-sm-4 control-label">Email password: </label>
-								<input class="form-control" type="password" id="o_email_password" tabindex="13">
-								
-								<label for="o_email_port" data-lang="u_e_port" class="lang col-sm-4 control-label">port</label>
-								<input class="form-control" type="text" id="o_email_port" tabindex="14">
-								
-								<label for="o_default_email_content" data-lang="c_content" class="lang col-sm-4 control-label">content</label>
-								<textarea id="o_default_email_content" class="labelProp form-control" placeholder="Default Email content"></textarea>
+									<label for="o_smtp_host" data-lang="u_smtp" class="lang col-sm-4 control-label">smtp</label>
+									<input class="form-control" type="text" id="o_smtp_host" tabindex="10">
 
-								<label for="o_server_description" data-lang="u_e_si" class="lang col-sm-4 control-label">server identification</label>
-								<textarea id="o_server_description" class="labelProp form-control" placeholder="Server Identifier"></textarea>
+									<label for="o_email_domain" data-lang="u_e_dom" class="lang col-sm-4 control-label">domain</label>
+									<input class="form-control" type="text" id="o_email_domain" tabindex="11">
+
+									<label for="o_email_user" data-lang="u_e_nm" class="lang col-sm-4 control-label">user name</label>
+									<input class="form-control" type="text" id="o_email_user" tabindex="12">
+
+									<label for="o_email_password" data-lang="u_e_p" class="lang col-sm-4 control-label">Email password: </label>
+									<input class="form-control" type="password" id="o_email_password" tabindex="13">
+
+									<label for="o_email_port" data-lang="u_e_port" class="lang col-sm-4 control-label">port</label>
+									<input class="form-control" type="text" id="o_email_port" tabindex="14">
+
+									<label for="o_default_email_content" data-lang="c_content" class="lang col-sm-4 control-label">content</label>
+									<textarea id="o_default_email_content" class="labelProp form-control" placeholder="Default Email content"></textarea>
+
+									<label for="o_server_description" data-lang="u_e_si" class="lang col-sm-4 control-label">server identification</label>
+									<textarea id="o_server_description" class="labelProp form-control" placeholder="Server Identifier"></textarea>
+
+								</div>
 							</div>
 								
 						</div>
 					</div>
-					
-					<div class="panel-group" role="tablist" aria-multiselectable="true">
- 							<div class="panel panel-default">
-   							<div class="panel-heading" role="tab" id="otherOptions">
-								<h4 class="panel-title">
-					       			<a data-toggle="collapse" data-parent="#show_fieldtask_params" href="#collapseOtherOptions" aria-expanded="true" aria-controls="collapseLayers">
-					         			<span class="lang" data-lang="u_det_o_other">other options</span>
-					       			</a>
-				     			</h4>
-   							</div>
-			    			<div id="collapseOtherOptions" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-								<div class="checkbox"><label><input type="checkbox" checked="checked" name="puboption" value="can_edit" class="puboption" tabindex="8"/> <span class="lang" data-lang="u_other_edit">results editing</span></label></div>
-								<div class="checkbox"><label><input type="checkbox" checked="checked" name="puboption2" value="email_task" class="puboption" tabindex="9"/> <span class="lang" data-lang="u_email_tasks">email tasks</span></label></div>
-								<div class="checkbox"><label><input type="checkbox" checked="checked" name="puboption3" value="can_notify" class="puboption" tabindex="10"/> <span class="lang" data-lang="u_notifications">notifications</span></label></div>
-								<div class="checkbox"><label><input type="checkbox" checked="checked" name="puboption4" value="can_use_api" class="puboption" tabindex="11"/> <span class="lang" data-lang="u_use_api">api</span></label></div>
-								<div class="checkbox"><label><input type="checkbox" checked="checked" name="puboption5" value="can_submit" class="puboption" tabindex="12"/> <span class="lang" data-lang="u_submissions">submissions</span></label></div>
-								<label for="o_tz" data-lang="c_tz" class="lang control-label">tz</label>
-								<select class="form-control timezone_select" id="o_tz"></select>
-								<label for="o_language" data-lang="c_lang" class="lang control-label">lang</label>
-								<select class="form-control" id="o_language"></select>		
+
+					<div aria-multiselectable="true">
+						<div class="card">
+							<div class="card-header" role="tab" id="otherOptions">
+								<h4 class="card-title">
+									<a class="card-link" data-toggle="collapse" href="#collapseOtherOptions" aria-expanded="true" aria-controls="collapseLayers">
+										<span class="lang" data-lang="u_det_o_other"></span>
+									</a>
+								</h4>
+							</div>
+							<div id="collapseOtherOptions" class="collapse" aria-labelledby="headingOne">
+								<div class="card-body">
+									<div class="checkbox"><label><input type="checkbox" checked="checked" name="puboption" value="can_edit" class="puboption" tabindex="8"/> <span class="lang" data-lang="u_other_edit">results editing</span></label></div>
+									<div class="checkbox"><label><input type="checkbox" checked="checked" name="puboption2" value="email_task" class="puboption" tabindex="9"/> <span class="lang" data-lang="u_email_tasks">email tasks</span></label></div>
+									<div class="checkbox"><label><input type="checkbox" checked="checked" name="puboption3" value="can_notify" class="puboption" tabindex="10"/> <span class="lang" data-lang="u_notifications">notifications</span></label></div>
+									<div class="checkbox"><label><input type="checkbox" checked="checked" name="puboption4" value="can_use_api" class="puboption" tabindex="11"/> <span class="lang" data-lang="u_use_api">api</span></label></div>
+									<div class="checkbox"><label><input type="checkbox" checked="checked" name="puboption5" value="can_submit" class="puboption" tabindex="12"/> <span class="lang" data-lang="u_submissions">submissions</span></label></div>
+									<label for="o_tz" data-lang="c_tz" class="lang control-label">tz</label>
+									<select class="form-control timezone_select" id="o_tz"></select>
+									<label for="o_language" data-lang="c_lang" class="lang control-label">lang</label>
+									<select class="form-control" id="o_language"></select>
+								</div>
 							</div>
 						</div>
 					</div>
-						
-					
-				</form>	
-				<form enctype="multipart/form-data" name="organisationsave" id="organisation_logo_form">
-					<fieldset>
-						<legend>Appearance:</legend>
-						<div class="checkbox">
-							<label>
-								<input type="checkbox" name="set_as_theme" class="puboption" value="set_as_theme"/>
-								<span  class="lang" data-lang="u_sat"></span>
-							</label>
-						</div>
-						<input id="orgSettings" type="hidden" name="settings" >
-						<div class="form-group row">
-							<label for="o_banner_logo" class="lang col-sm-2 control-label" data-lang="u_bl"></label>
-							<div class="col-sm-6">
-								<img id="o_banner_logo" class="" src="" onerror='if(this.src.indexOf("smap_logo.png") < 0) this.src="/images/smap_logo.png";' style="width:100%;">
-							</div>
-							<div class="input-group-btn col-sm-4">
-      							<input id="change_banner_logo" name="banner_logo" title="Add" class="file-inputs" type="file" accept="image/png, image/jpeg, image/gif">
-    						</div>
-						</div>
-						<div class="form-group row">
-							<label for="o_banner_logo" class="lang col-sm-2 control-label" data-lang="u_ml"></label>
-							<div class="col-sm-6">
-								<img id="o_main_logo" class="" src="" style="width:100%;">
-							</div>
-							<div class="input-group-btn col-sm-4">
-								<input id="change_main_logo" name="main_logo" title="Add" class="file-inputs" type="file" accept="image/png, image/jpeg, image/gif">
-							</div>
-						</div>
-         				          			
-					</fieldset>
 				</form>
+				<div aria-multiselectable="true">
+					<div class="card">
+						<div class="card-header" role="tab" id="appearanceOptions">
+							<h4 class="card-title">
+								<a class="card-link" data-toggle="collapse" href="#collapseAppearanceOptions" aria-expanded="true" aria-controls="collapseLayers">
+									<span class="lang" data-lang="ed_appearance"></span>
+								</a>
+							</h4>
+						</div>
+						<div id="collapseAppearanceOptions" class="collapse" aria-labelledby="headingOne">
+							<div class="card-body">
+
+								<form enctype="multipart/form-data" name="organisationsave" id="organisation_logo_form">
+									<fieldset>
+										<legend class="lang" data-lang="ed_appearance"></legend>
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" name="set_as_theme" class="puboption" value="set_as_theme"/>
+												<span  class="lang" data-lang="u_sat"></span>
+											</label>
+										</div>
+										<input id="orgSettings" type="hidden" name="settings" >
+										<div class="form-group row">
+											<label for="o_banner_logo" class="lang col-sm-2 control-label" data-lang="u_bl"></label>
+											<div class="col-sm-6">
+												<img id="o_banner_logo" class="" src="" onerror='if(this.src.indexOf("smap_logo.png") < 0) this.src="/images/smap_logo.png";' style="width:100%;">
+											</div>
+											<div class="input-group-btn col-sm-4">
+												<input id="change_banner_logo" name="banner_logo" title="Add" class="file-inputs" type="file" accept="image/png, image/jpeg, image/gif">
+											</div>
+										</div>
+										<div class="form-group row">
+											<label for="o_banner_logo" class="lang col-sm-2 control-label" data-lang="u_ml"></label>
+											<div class="col-sm-6">
+												<img id="o_main_logo" class="" src="" style="width:100%;">
+											</div>
+											<div class="input-group-btn col-sm-4">
+												<input id="change_main_logo" name="main_logo" title="Add" class="file-inputs" type="file" accept="image/png, image/jpeg, image/gif">
+											</div>
+										</div>
+
+									</fieldset>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="modal-footer">
             	<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close" tabindex="13">Close</button>
