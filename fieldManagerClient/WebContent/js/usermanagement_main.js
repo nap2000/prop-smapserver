@@ -23,45 +23,45 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 var gUserLocale = navigator.language;
 if (Modernizr.localstorage) {
 	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
+}
 
 requirejs.config({
-    baseUrl: 'js/libs',
-    locale: gUserLocale,
-    waitSeconds: 0,
-    paths: {
-     	app: '../app',
-     	i18n: '../../../../js/libs/i18n',
-     	async: '../../../../js/libs/async',
-     	localise: '../../../../js/app/localise',
-	    bootstrapcolorpicker: '../../../../js/libs/bootstrap-colorpicker.min',
-	    datetimepicker: '../../../../js/libs/bootstrap-datetimepicker-4.17.47',
-    	common: '../../../../js/app/common',
-    	globals: '../../../../js/app/globals',
-    	crf: '../../../../js/libs/commonReportFunctions',
-	    metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu',
-	    moment: '../../../../js/libs/moment-with-locales.2.24.0',
-    	lang_location: '../../../../js'
-    },
-    shim: {
-	    'bootstrapcolorpicker': ['jquery'],
-	    'datetimepicker': ['moment'],
-    	'common': ['jquery'],
-	    'metismenu': ['jquery']
-    	}
-    });
+	baseUrl: 'js/libs',
+	locale: gUserLocale,
+	waitSeconds: 0,
+	paths: {
+		app: '../app',
+		i18n: '../../../../js/libs/i18n',
+		async: '../../../../js/libs/async',
+		localise: '../../../../js/app/localise',
+		bootstrapcolorpicker: '../../../../js/libs/bootstrap-colorpicker.min',
+		datetimepicker: '../../../../js/libs/bootstrap-datetimepicker-4.17.47',
+		common: '../../../../js/app/common',
+		globals: '../../../../js/app/globals',
+		crf: '../../../../js/libs/commonReportFunctions',
+		metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu',
+		moment: '../../../../js/libs/moment-with-locales.2.24.0',
+		lang_location: '../../../../js'
+	},
+	shim: {
+		'bootstrapcolorpicker': ['jquery'],
+		'datetimepicker': ['moment'],
+		'common': ['jquery'],
+		'metismenu': ['jquery']
+	}
+});
 
 require([
-         'jquery',
-         'common', 
-         'localise', 
-         'globals',
-		 'moment',
-		 'bootstrapcolorpicker',
-		 'datetimepicker',
-		 'metismenu'
-         
-         ], function($, common, localise, globals, moment) {
+	'jquery',
+	'common',
+	'localise',
+	'globals',
+	'moment',
+	'bootstrapcolorpicker',
+	'datetimepicker',
+	'metismenu'
+
+], function($, common, localise, globals, moment) {
 
 	var gUsers,
 		gGroups,
