@@ -676,17 +676,18 @@
 
 <!-- Modal to allow the user to edit an organisation details -->
 <div id="create_organisation_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrganisationLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-lg">
    		<div class="modal-content">
    			<div class="modal-header">
-     			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     			<h4 class="modal-title lang" id="createOrganisationLabel" data-lang="u_det_o">org details</h4>
+				<h4 class="modal-title lang" data-lang="u_det_o" id="createOrganisationLabel"></h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+						aria-hidden="true">&times;</span></button>
    			</div>
 		    <div class="modal-body">
-				<form class="form" role="form" class="form-horizontal" id="organisation_create_form">
+				<form role="form" id="organisation_create_form">
 
 					<fieldset>
-						<div class="form-group">
+						<div class="form-group row">
 							<label for="o_name" data-lang="c_name" class="lang col-sm-2 control-label">name</label>
 							<div class="col-sm-10">
 								<input type="text" id="o_name" class="form-control" tabindex="1" required><br/>
@@ -809,21 +810,19 @@
 						<div class="checkbox">
 							<label>
 								<input type="checkbox" name="set_as_theme" class="puboption" value="set_as_theme"/>
-								<span  class="lang" data-lang="u_sat">email</span>
+								<span  class="lang" data-lang="u_sat"></span>
 							</label>
 						</div>
 						<input id="orgSettings" type="hidden" name="settings" >
-						<label for="o_banner_logo" class="lang col-sm-2 control-label">Banner Logo: </label>
-						<div class="col-sm-10">
-							<img id="o_banner_logo" class="form-control" src="" onerror='if(this.src.indexOf("smap_logo.png") < 0) this.src="/images/smap_logo.png";' ><br/>
+						<div class="form-group row">
+							<label for="o_banner_logo" class="lang col-sm-2 control-label" data-lang="u_bl"></label>
+							<div class="col-sm-6">
+								<img id="o_banner_logo" class="" src="" onerror='if(this.src.indexOf("smap_logo.png") < 0) this.src="/images/smap_logo.png";' style="width:100%;">
+							</div>
+							<div class="input-group-btn col-sm-4">
+      							<input id="change_banner_logo" name="files" title="Add" class="file-inputs" type="file" accept="image/png, image/jpeg, image/gif">
+    						</div>
 						</div>
-						
-    					<div class="input-group">
-    						<span class="input-group-btn">
-      							<input name="files" title="Add" class="file-inputs" type="file" accept="image/png, image/jpeg, image/gif">
-    						</span>
-   					 		<input type="text" class="upload_file_msg form-control" placeholder="New Banner...">
-  						</div>
          				          			
 					</fieldset>
 				</form>
