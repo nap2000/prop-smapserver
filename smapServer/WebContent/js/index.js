@@ -54,7 +54,7 @@ require(['jquery', 'bootstrap.min', 'app/localise', 'app/common','app/globals'],
 		$('.loggedin').show();
 		$('.notloggedin').hide();
 	} else {
-		setCustomBannerLogo();
+		setCustomMainLogo();
 		$('.restrict_role').hide();
 		$('.notloggedin').show();
 		$('.loggedin').hide();

@@ -106,6 +106,6 @@ function setCustomBilling() {
 
 }
 
-function setCustomBannerLogo() {
-    $('.banner_logo').attr("src", "/images/cropped-blog1.jpg");
+function setCustomMainLogo() {
+    $('.main_logo').attr("src", "/images/cropped-blog1.jpg");
 }
