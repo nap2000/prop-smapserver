@@ -1000,6 +1000,7 @@ define({
     "u_gr": "Get report",
     "u_sat": "Set as Theme",
     "u_bl": "Banner Logo (Height 50px)",
+    "u_ml": "Main Logo",
 
     // Browse Results
     "br_ci": "Case Insensitive",
