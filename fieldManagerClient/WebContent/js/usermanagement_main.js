@@ -34,17 +34,18 @@ requirejs.config({
      	i18n: '../../../../js/libs/i18n',
      	async: '../../../../js/libs/async',
      	localise: '../../../../js/app/localise',
-    	bootstrapfileinput: '../../../../js/libs/bootstrap.file-input',
 	    bootstrapcolorpicker: '../../../../js/libs/bootstrap-colorpicker.min',
+	    datetimepicker: '../../../../js/libs/bootstrap-datetimepicker-4.17.47',
     	common: '../../../../js/app/common',
     	globals: '../../../../js/app/globals',
     	crf: '../../../../js/libs/commonReportFunctions',
 	    metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu',
+	    moment: '../../../../js/libs/moment-with-locales.2.24.0',
     	lang_location: '../../../../js'
     },
     shim: {
-       	'bootstrapfileinput': ['jquery'],
 	    'bootstrapcolorpicker': ['jquery'],
+	    'datetimepicker': ['moment'],
     	'common': ['jquery'],
 	    'metismenu': ['jquery']
     	}
@@ -55,13 +56,12 @@ require([
          'common', 
          'localise', 
          'globals',
-         'bootstrapfileinput',
+		 'moment',
 		 'bootstrapcolorpicker',
+		 'datetimepicker',
 		 'metismenu'
          
-         ], function($, common, localise, globals) {
-
-    setCustomUserMgmt();			// Apply custom javascript
+         ], function($, common, localise, globals, moment) {
 
 	var gUsers,
 		gGroups,
@@ -79,9 +79,11 @@ require([
 	$(document).ready(function() {
 
 		$("#side-menu").metisMenu();
+		setCustomUserMgmt();			// Apply custom javascript
 
 		localise.setlang();		// Localise HTML
-		setupUserProfile();
+		setupUserProfile(true);
+		window.moment = moment;		// Make moment global for use by common.js
 
 		getUsers();
 		getProjects();
@@ -203,7 +205,7 @@ require([
 		});
 
 		// Style the upload buttons
-		$('.file-inputs').bootstrapFileInput();
+		//$('.file-inputs').bootstrapFileInput();  todo
 
 		// Copy user ident to email if it is a valid email
 		$('#user_ident').blur(function(){
