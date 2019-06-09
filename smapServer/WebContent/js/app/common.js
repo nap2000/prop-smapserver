@@ -3806,9 +3806,9 @@ function tokenizeAppearance(input) {
 
 function setOrganisationTheme() {
 	if(globals.gSetAsTheme && globals.gOrgId > 0) {
-		$('.banner_logo').attr("src", "/media/organisation/" + globals.gOrgId + '/settings/bannerLogo');
+		$('.banner_logo').attr("src", "/media/organisation/" + globals.gOrgId + '/settings/mainLogo');
 	} else {
-		setCustomBannerLogo();
+		setCustomMainLogo();
 	}
 }
 
