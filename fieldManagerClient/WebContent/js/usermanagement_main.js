@@ -1125,8 +1125,8 @@ require([
 				(gGroups[i].id != globals.GROUP_ENTERPRISE || globals.gIsEnterpriseAdministrator) &&
 				gGroups[i].id !== globals.GROUP_OWNER
 			) {
-				h[++idx] = '<div class="checkbox"><label>';
-				h[++idx] = '<input type="checkbox" id="';
+				h[++idx] = '<div class="custom-control custom-checkbox">';
+				h[++idx] = '<input type="checkbox" class="custom-control-input" id="';
 				h[++idx] = 'user_groups_cb' + i;
 				h[++idx] = '" name="';
 				h[++idx] = 'user_groups_cb';
@@ -1140,8 +1140,11 @@ require([
 					}
 				}
 				h[++idx] = '/> ';
+				h[++idx] = '<label class="custom-control-label" for="';
+				h[++idx] = 'user_groups_cb' + i;
+				h[++idx] = '">';
 				h[++idx] = gGroups[i].name;
-				h[++idx] =	 '</label></div>';
+				h[++idx] = '</label></div>';
 
 			}
 		}
@@ -1152,8 +1155,8 @@ require([
 		h = [];
 		idx = -1;
 		for(i = 0; i < globals.gProjectList.length; i++) {
-			h[++idx] = '<div class="checkbox"><label>';
-			h[++idx] = '<input type="checkbox" id="';
+			h[++idx] = '<div class="custom-control custom-checkbox">';
+			h[++idx] = '<input type="checkbox" class="custom-control-input" id="';
 			h[++idx] = 'user_projects_cb' + i;
 			h[++idx] = '" name="';
 			h[++idx] = 'user_projects_cb';
@@ -1168,6 +1171,9 @@ require([
 				}
 			}
 			h[++idx] = '/>';
+			h[++idx] = '<label class="custom-control-label" for="';
+			h[++idx] = 'user_projects_cb' + i;
+			h[++idx] = '">';
 			h[++idx] = globals.gProjectList[i].name;
 			h[++idx] = '</label></div>';
 		}
@@ -1179,20 +1185,23 @@ require([
 			h = [];
 			idx = -1;
 			for(i = 0; i < globals.gRoleList.length; i++) {
-				h[++idx] = '<div class="checkbox"><label>';
-				h[++idx] = '<input type="checkbox"';
-				h[++idx] = ' name="user_roles_cb"';
+				h[++idx] = '<div class="custom-control custom-checkbox">';
+				h[++idx] = '<input type="checkbox" class="custom-control-input" id="';
+				h[++idx] = 'user_roles_cb' + i;
+				h[++idx] = '" name="user_roles_cb"';
 				h[++idx] = ' value="';
 				h[++idx] = globals.gRoleList[i].id + '"';
 				if(filter_role === globals.gRoleList[i].name) {
 					h[++idx] = ' checked="checked"';
 				} else if(existing) {
-
 					if(hasId(gUsers[userIndex].roles, globals.gRoleList[i].id)) {
 						h[++idx] = ' checked="checked"';
 					}
 				}
 				h[++idx] = '/>';
+				h[++idx] = '<label class="custom-control-label" for="';
+				h[++idx] = 'user_roles_cb' + i;
+				h[++idx] = '">';
 				h[++idx] = globals.gRoleList[i].name;
 				h[++idx] = '</label></div>';
 			}
@@ -1205,9 +1214,10 @@ require([
 			h = [];
 			idx = -1;
 			for(i = 0; i < gOrganisationList.length; i++) {
-				h[++idx] = '<div class="checkbox"><label>';
-				h[++idx] = '<input type="checkbox"';
-				h[++idx] = ' name="user_orgs_cb"';
+				h[++idx] = '<div class="custom-control custom-checkbox">';
+				h[++idx] = '<input type="checkbox" class="custom-control-input" id="';
+				h[++idx] = 'user_orgs_cb' + i;
+				h[++idx] = '" name="user_orgs_cb"';
 				h[++idx] = ' value="';
 				h[++idx] = gOrganisationList[i].id + '"';
 				if(filter_org === gOrganisationList[i].name) {
@@ -1219,6 +1229,9 @@ require([
 					}
 				}
 				h[++idx] = '/>';
+				h[++idx] = '<label class="custom-control-label" for="';
+				h[++idx] = 'user_orgs_cb' + i;
+				h[++idx] = '">';
 				h[++idx] = gOrganisationList[i].name;
 				h[++idx] = '</label></div>';
 			}
