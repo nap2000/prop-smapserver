@@ -1369,7 +1369,7 @@ require([
 			$('#o_tz').val(org.timeZone);
 
 			gOrgId = org.id;
-			setBannerLogo(org.id);
+			setLogos(org.id);
 
 		} else {
 			$('#o_tz').val('UTC');
@@ -1394,9 +1394,10 @@ require([
 		$('#create_enterprise_popup').modal("show");
 	}
 
-	function setBannerLogo(orgId) {
+	function setLogos(orgId) {
 		var d = new Date();
 		$('#o_banner_logo').attr("src", "/surveyKPI/file/bannerLogo/organisation?settings=true&org=" + orgId + "&" + d.valueOf());
+		$('#o_main_logo').attr("src", "/surveyKPI/file/mainLogo/organisation?settings=true&org=" + orgId + "&" + d.valueOf());
 	}
 
 	/*
