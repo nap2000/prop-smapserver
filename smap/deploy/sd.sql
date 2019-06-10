@@ -1200,3 +1200,7 @@ ALTER TABLE reminder OWNER TO ws;
 alter table tasks add column survey_ident text;
 update tasks t set survey_ident = (select ident from survey s where s.s_id = t.form_id ) where t.survey_ident is null;
 update tasks t set survey_name = (select display_name from survey s where s.ident = t.survey_ident ) where t.survey_name is null;
+
+-- Upgrade 19.07
+alter table organisation add column navbar_color text;
+update organisation set navbar_color = '#2c3c28' where navbar_color is null;

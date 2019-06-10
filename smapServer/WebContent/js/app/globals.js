@@ -62,6 +62,7 @@ define(function () {
         gTimezone: undefined,
 	    gEnterpriseName: undefined,
 	    gSetAsTheme: undefined,
+	    gNavbarColor: undefined,
 
         gRegions: undefined,
         gRegion: {},

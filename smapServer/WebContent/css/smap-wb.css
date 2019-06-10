@@ -263,3 +263,7 @@ tr.deleted td a {
     background-color: #fff;
     border: 1px solid #dee2e6;
 }
+
+.colorpicker-visible {
+    z-index: 20000;
+}
