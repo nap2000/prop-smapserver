@@ -38,7 +38,7 @@ require(['jquery', 'bootstrap.min', 'app/localise', 'app/common','app/globals'],
 		param = pArray[i].split("=");
 		if(param.length > 1) {
 			if ( param[0] === "loggedin" && param[1] === "yes" ) {
-				getLoggedInUser(setOrganisationTheme, false, false, undefined, false, false);
+				getLoggedInUser(undefined, false, false, undefined, false, false);
 				loggedin = true;
 			} 
 		}

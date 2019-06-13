@@ -848,6 +848,8 @@ function enableUserProfile () {
  * Logout function
  */
 function logout() {
+	localStorage.setItem('navbar_color', undefined);
+	localStorage.setItem('main_logo', undefined);
 	jQuery.ajax({
 		type: "GET",
 		cache: false,
@@ -1066,6 +1068,8 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 			globals.gCurrentProject = data.current_project_id;
 			globals.gCurrentTaskGroup = data.current_task_group_id;
 			$('#projectId').val(globals.gCurrentProject);		// Set the project value for the hidden field in template upload
+
+			setOrganisationTheme();
 
 			if(getProjects) {
 				getMyProjects(globals.gCurrentProject, callback, getAll);	// Get projects
@@ -3806,10 +3810,30 @@ function tokenizeAppearance(input) {
 }
 
 function setOrganisationTheme() {
+
 	if(globals.gSetAsTheme && globals.gOrgId > 0) {
-		$('.banner_logo').attr("src", "/media/organisation/" + globals.gOrgId + '/settings/mainLogo');
-		alert('Navbar color: ' + globals.gNavbarColor);
+
+		var mainLogoSrc = localStorage.getItem("main_logo");
+		var logo = "/media/organisation/" + globals.gOrgId + '/settings/mainLogo';
+		if(mainLogoSrc !== logo) {
+			localStorage.setItem('main_logo', logo);
+			$('.main_logo').attr("src", "/media/organisation/" + globals.gOrgId + '/settings/mainLogo');
+		}
+
+		// navbar color
+		var navbarColor = localStorage.getItem("navbar_color");
+		if(navbarColor !== globals.gNavbarColor) {
+			localStorage.setItem('navbar_color', globals.gNavbarColor);
+			$("head").append('<style id="navbar_color">header.navbar-default { background-color: ' + globals.gNavbarColor + '}</style>');
+		}
 	} else {
+		// remove styles
+		var navbarColorElement = document. getElementById("navbar_color");
+		navbarColorElement.parentNode.removeChild(navbarColorElement);
+		localStorage.setItem('navbar_color', undefined);
+		localStorage.setItem('main_logo', undefined);
+
+		// Set the default logo
 		setCustomMainLogo();
 	}
 }
