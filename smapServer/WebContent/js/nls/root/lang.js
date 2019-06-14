@@ -929,6 +929,7 @@ define({
     "u_det_p": "Project Details",
     "u_det_ur": "User Role Details",
     "u_det_o": "Organisation Details",
+    "u_det_e": "Enterprise Details",
     "u_det_o_rep": "Report Publishing Options",
     "u_det_o_ft": "Mobile App Options",
 	"u_det_o_wf": "Webform Options",
@@ -999,8 +1000,9 @@ define({
     "u_co": "Current Organisation",
     "u_gr": "Get report",
     "u_sat": "Set as Theme",
-    "u_bl": "Banner Logo (Height 50px)",
+    "u_bl": "WebForm Banner Logo (Height 50px)",
     "u_ml": "Main Logo",
+    "u_nbc": "Navigation bar color",
 
     // Browse Results
     "br_ci": "Case Insensitive",
