@@ -599,6 +599,8 @@ require([
 					organisation.set_as_theme = true;
 				}
 			}
+			organisation.navbar_color = $('input', '#o_navbar_color').val();
+
 			organisationList[0] = organisation;
 			var organisationString = JSON.stringify(organisationList);
 
@@ -1342,6 +1344,7 @@ require([
 			$('#o_email_port').val(org.email_port);
 			$('#o_default_email_content').val(org.default_email_content);
 			$('#o_server_description').val(org.server_description);
+			$('input','#o_navbar_color').colorpicker('setValue', org.navbar_color);
 			$('.puboption').each(function() {
 				console.log("option: " + $(this).val() );
 				if($(this).val() === "email") {

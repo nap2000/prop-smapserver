@@ -706,3 +706,7 @@ td.completed, td.submitted {
 	margin-top:10px;
 }
 
+.colorpicker-visible {
+	z-index: 20000;
+}
+
