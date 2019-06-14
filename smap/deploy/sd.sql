@@ -1199,3 +1199,5 @@ ALTER TABLE reminder OWNER TO ws;
 alter table tasks add column survey_ident text;
 update tasks t set survey_ident = (select ident from survey s where s.s_id = t.form_id ) where t.survey_ident is null;
 update tasks t set survey_name = (select display_name from survey s where s.ident = t.survey_ident ) where t.survey_name is null;
+
+alter table notification_log add column type text;
