@@ -690,7 +690,8 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 h[++i] = '<th>' + localise.set["c_errors"] + '</th>';
 
             } else {
-                h[++i] = '<th>Id</th>';
+                h[++i] = '<th>' + localise.set["c_id"] + '</th>';
+                h[++i] = '<th>' + localise.set["c_type"] + '</th>';
                 h[++i] = '<th>' + localise.set["c_details"] + '</th>';
                 h[++i] = '<th>' + localise.set["c_status"] + '</th>';
                 h[++i] = '<th>' + localise.set["mon_fr"] + '</th>';
@@ -711,6 +712,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 } else {
 
                     h[++i] = '<td>' + features[j].properties.id + '</td>';
+                    h[++i] = '<td>' + (features[j].properties.type ? features[j].properties.type : '') + '</td>';
                     h[++i] = '<td>' + features[j].properties.notify_details + '</td>';
                     status = features[j].properties.status;
                     h[++i] = '<td class="' + status + '">' + localise.set[features[j].properties.status] + '</td>';
