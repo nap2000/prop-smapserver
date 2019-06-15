@@ -830,9 +830,6 @@ $(document).ready(function() {
 		return true;
 	});
 	
-	
-	enableUserProfileBS();
-	
 	/*
 	 * Add check prior to the user leaving the screen
 	 */

@@ -135,8 +135,7 @@ $(document).ready(function() {
 		saveCurrentProject(globals.gCurrentProject, globals.gCurrentSurvey);	// Save the current survey id
 		getSurveyDetails(refreshView);
  	 });
-	
-	enableUserProfileBS();
+
 });
 
 function getSurveyList() {

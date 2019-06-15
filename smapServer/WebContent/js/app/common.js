@@ -403,6 +403,9 @@ function addUserDetailsPopup() {
 		h[++idx] = '</div>';
 	}
 	$(document.body).append(h.join(''));
+	if(bootstrap_enabled) {
+		enableUserProfileBS();
+	}
 }
 
 /*
@@ -531,6 +534,8 @@ function addUserDetailsPopupBootstrap4() {
 	h[++idx] = '</div>';                // popup
 
 	$(document.body).append(h.join(''));
+
+	enableUserProfileBS();
 }
 
 /*

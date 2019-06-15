@@ -180,8 +180,6 @@ require([
         globals.gIsAdministrator = false;
         getLoggedInUser(refreshData, false, true, undefined, false, dont_get_current_survey);
 
-        enableUserProfileBS();										// Enable user profile button
-
         // Get the report definition
 
         // Set change function on projects
