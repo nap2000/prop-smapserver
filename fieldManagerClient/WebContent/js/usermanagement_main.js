@@ -112,9 +112,6 @@ require([
 		$('#create_project').click(function () {
 			openProjectDialog(false, -1);
 		});
-		$('#delete_project').click(function () {
-			deleteProjects();
-		});
 
 		$('#create_user_role').click(function () {
 			openRoleDialog(false, -1);
@@ -1552,7 +1549,8 @@ require([
 			filterOrg = false;
 		}
 
-		h[++idx] = '<table class="table table-striped table-responsive-sm">';
+		h[++idx] = '<div class="table-responsive">';
+		h[++idx] = '<table class="table table-striped">';
 		h[++idx] = '<caption>' + localise.set["m_user"] + '</caption>';
 		h[++idx] = '<thead>';
 		h[++idx] = '<tr>';
@@ -1603,7 +1601,7 @@ require([
 				h[++idx] = '<td>';
 				h[++idx] = '<button type="button" data-idx="';
 				h[++idx] = i;
-				h[++idx] = '" class="btn btn-default btn-sm rm_user danger">';
+				h[++idx] = '" class="btn btn-default btn-sm rm_user btn-danger">';
 				h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
 				h[++idx] = '</td>';
 
@@ -1613,6 +1611,7 @@ require([
 
 		h[++idx] = '</tbody>';
 		h[++idx] = '</table>';
+		h[++idx] = '</div>';        // responsive
 
 		$userTable.empty().append(h.join(''));
 		$('.user_edit').click(function () {
@@ -1640,24 +1639,23 @@ require([
 			h = [],
 			idx = -1;
 
+		h[++idx] = '<div class="table-responsive">';
 		h[++idx] = '<table class="table table-striped">';
-		h[++idx] = '<colgroup>';
-		h[++idx] = '<col style="width:auto;">';
-		h[++idx] = '<col style="width:auto;">';
-		h[++idx] = '<col style="width:160px;">';
-		h[++idx] = '<col style="width:auto;">';
-		h[++idx] = '</colgroup>';
+		h[++idx] = '<caption>' + localise.set["c_projects"] + '</caption>';
 		h[++idx] = '<thead>';
 		h[++idx] = '<tr>';
 		h[++idx] = '<th></th>';
-		h[++idx] = '<th>';
+		h[++idx] = '<th scope="col">';
 		h[++idx] = localise.set["c_id"];	// Project Id
 		h[++idx] = '</th>';
-		h[++idx] = '<th>';
+		h[++idx] = '<th scope="col">';
 		h[++idx] = localise.set["c_name"];	// Name
 		h[++idx] = '</th>';
-		h[++idx] = '<th>';
+		h[++idx] = '<th scope="col">';
 		h[++idx] = localise.set["u_chg"];	// Changed by
+		h[++idx] = '</th>';
+		h[++idx] = '<th scope="col">';
+		h[++idx] = localise.set["c_action"];
 		h[++idx] = '</th>';
 		h[++idx] = '</tr>';
 		h[++idx] = '</thead>';
@@ -1683,16 +1681,30 @@ require([
 			h[++idx] = project.changed_by;
 			h[++idx] = '</td>';
 
+			h[++idx] = '<td>';
+			h[++idx] = '<button type="button" data-idx="';
+			h[++idx] = i;
+			h[++idx] = '" class="btn btn-default btn-sm rm_project btn-danger">';
+			h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+			h[++idx] = '</td>';
+
 			h[++idx] = '</tr>';
 		}
 
 		h[++idx] = '</tbody>';
 		h[++idx] = '</table>';
+		h[++idx] = '</div>';        // responsive
 
 		$projectTable.empty().append(h.join('')).find('table');
 		$('.project_edit').click(function () {
 			openProjectDialog(true, $(this).val());
 		});
+
+		$(".rm_project", $('#project_table')).click(function(){
+			var idx = $(this).data("idx");
+			deleteProject(idx);
+		});
+
 		$('#project_table .control_td').find('input').click(function () {
 			if ($(this).is(':checked')) {
 
@@ -2320,23 +2332,14 @@ require([
 	/*
 	 * Delete the selected projects
 	 */
-	function deleteProjects () {
+	function deleteProject (projectIdx) {
 
 		var projects = [],
-			decision = false,
-			h = [],
-			i = -1,
-			projectIdx,
-			$dialog;
+			decision = false;
 
-		$('#project_table').find('input:checked').each(function(index) {
-			projectIdx = $(this).val();
-			projects[index] = {id: globals.gProjectList[projectIdx].id};
-			h[++i] = globals.gProjectList[projectIdx].name;
-		});
+		projects[0] = {id: globals.gProjectList[projectIdx].id};
 
-
-		decision = confirm(localise.set["msg_del_projects"] + "\n" + h.join());
+		decision = confirm(localise.set["msg_del_projects"] + ' ' + globals.gProjectList[projectIdx].name);
 		if (decision === true) {
 			addHourglass();
 			$.ajax({
