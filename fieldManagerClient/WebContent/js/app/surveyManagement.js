@@ -323,8 +323,6 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
 		        locale: gUserLocale || 'en'
 	        }).data("DateTimePicker").date(moment());
 
-            enableUserProfileBS();
-
         });
 
 

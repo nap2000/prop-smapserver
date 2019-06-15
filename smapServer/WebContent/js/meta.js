@@ -112,7 +112,6 @@ require([
 				getSurveyList();
 			});
 
-			enableUserProfileBS();
 		});
 
 		function getSurveyList() {

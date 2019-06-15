@@ -957,9 +957,6 @@ require([
 			$('.org_alert').hide();
 		});
 
-
-		enableUserProfileBS();	// Allow user to reset their own profile
-
 	});
 
 

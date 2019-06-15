@@ -176,7 +176,6 @@ require([
             }
         });
 
-		enableUserProfileBS();
 	});
 
 	function updateReport(edit) {

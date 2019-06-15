@@ -229,8 +229,7 @@ $(document).ready(function() {
 			$('#report_name').val(newReportName);
 		}
 	});
-	
-	enableUserProfileBS();
+
 });
 
 function showMapDialogSections(type) {
