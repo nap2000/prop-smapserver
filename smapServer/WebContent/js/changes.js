@@ -85,10 +85,7 @@ $(document).ready(function() {
 		refreshView(gMode);
 		//$('#set_language').foundation('reveal', 'close');
  	 });
-	
 
-	
-	enableUserProfileBS();
 });
 
 function surveyListDone() {

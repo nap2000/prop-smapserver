@@ -119,8 +119,7 @@ $(document).ready(function() {
 				+ $('#filter_row_aq option:selected').val()
 				+ "} ");
 	});
-	
-	enableUserProfileBS();
+
 	
 });
 

@@ -1033,7 +1033,6 @@ require([
 			updateTaskParams();
 		});
 
-		enableUserProfileBS();										// Enable user profile button
 		$('#m_refresh').click(function (e) {	// Add refresh action
 			refreshAssignmentData();
 		});

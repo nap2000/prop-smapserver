@@ -143,8 +143,6 @@ define(['jquery','localise', 'common', 'globals',
 	        });
         });
 
-		enableUserProfileBS();	// Allow user to reset their own profile
-
 	});
 
 	function userKnown() {
