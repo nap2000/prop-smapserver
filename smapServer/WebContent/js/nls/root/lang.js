@@ -475,7 +475,7 @@ define({
     "msg_del_data2": "Are you really sure?",
     "msg_del_rep": "Are you sure you want to delete this report?",
     "msg_del_users": "Are you sure you want to delete these users?",
-    "msg_del_projects": "Are you sure you want to delete these projects?",
+    "msg_del_projects": "Are you sure you want to delete this project?",
     "msg_del_roles": "Are you sure you want to delete these roles?",
     "msg_del_orgs": "Are you sure you want to delete these organisations?",
 	"msg_del_ents": "Are you sure you want to delete these enterprises?",
