@@ -41,13 +41,17 @@ requirejs.config({
 		crf: '../../../../js/libs/commonReportFunctions',
 		metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu',
 		moment: '../../../../js/libs/moment-with-locales.2.24.0',
+		inspinia_v2_9_2: '../../../../js/libs/wb/inspinia.v2.9.2',
+		slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll',
 		lang_location: '../../../../js'
 	},
 	shim: {
 		'bootstrapcolorpicker': ['jquery'],
+		'slimscroll': ['jquery'],
 		'datetimepicker': ['moment'],
 		'common': ['jquery'],
-		'metismenu': ['jquery']
+		'metismenu': ['jquery', 'slimscroll'],
+		'inspinia_v2_9_2': ['jquery', 'slimscroll', 'metismenu']
 	}
 });
 
@@ -57,9 +61,11 @@ require([
 	'localise',
 	'globals',
 	'moment',
+	'slimscroll',
 	'bootstrapcolorpicker',
 	'datetimepicker',
-	'metismenu'
+	'metismenu',
+	'inspinia_v2_9_2'
 
 ], function($, common, localise, globals, moment) {
 
@@ -927,7 +933,6 @@ require([
 		// Respond to confirmation of a delete that requires the user to consider multiple choices
 		$('#confirmDelUser').click(function () {
 			var confirmValue = $("input[name='confirm_delete']:checked"). val();
-			alert("hi: " + confirmValue);
 			if(confirmValue === "delete_one") {
 				gCurrentDeleteUsers[0].all = false;
 				callUsersDeleteService(gCurrentDeleteUsers);
@@ -1550,26 +1555,24 @@ require([
 			filterOrg = false;
 		}
 
-		h[++idx] = '<table class="table table-striped">';
+		h[++idx] = '<table class="table table-striped table-responsive-sm">';
+		h[++idx] = '<caption>' + localise.set["m_user"] + '</caption>';
 		h[++idx] = '<thead>';
-		h[++idx] = '<col style="width:auto;">';
-		h[++idx] = '<col style="width:160px;">';
-		h[++idx] = '<col style="width:auto;">';
 		h[++idx] = '<tr>';
 
-		h[++idx] = '<th style="text-align: center;">';
+		h[++idx] = '<th scope="col" style="text-align: center;">';
 		h[++idx] = localise.set["c_id"];
 		h[++idx] = '</th>';
 
-		h[++idx] = '<th style="text-align: center;">'
+		h[++idx] = '<th scope="col" style="text-align: center;">'
 		h[++idx] = localise.set["c_name"];
 		h[++idx] = '</th>';
 
-		h[++idx] = '<th style="text-align: center;">'
+		h[++idx] = '<th scope="col" style="text-align: center;">'
 		h[++idx] = localise.set["u_co"];
 		h[++idx] = '</th>';
 
-		h[++idx] = '<th>';
+		h[++idx] = '<th scope="col">';
 		h[++idx] = localise.set["c_action"];
 		h[++idx] = '</th>';
 
