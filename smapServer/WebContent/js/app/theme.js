@@ -20,23 +20,28 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Set page themes
  */
-var navbarColor = localStorage.getItem("navbar_color");
-var navbarLight = LightenDarkenColor(navbarColor, 20);
-if(navbarColor) {
-    var head = document.getElementsByTagName('head')[0];
-    var style = document.createElement('style');
-    style.setAttribute("id", "navbar_color");
+try {
+    var navbarColor = localStorage.getItem("navbar_color");
+    var navbarLight = LightenDarkenColor(navbarColor, 20);
+    if(navbarColor) {
+        var head = document.getElementsByTagName('head')[0];
+        var style = document.createElement('style');
+        style.setAttribute("id", "navbar_color");
 
-    // header.navbar-default legacy WB banner
-    // #header legacy jquery UI banner
-    // Other elements are for current navbar
-    style.innerHTML = 'header.navbar-default, #header, body, .mini-navbar, .nav-second-level, .nav > li.active, .navbar-default .nav > li > a:focus '
-        + '{ background-color: ' + navbarColor + '; background: ' + navbarColor + '}'
-        + ' .navbar-default .nav > li > a:hover, ul.nav-second-level, .canvas-menu.mini-navbar .nav-second-level '
-        + '{ background-color: ' + navbarLight + '; background: ' + navbarLight + '}';
+        // header.navbar-default legacy WB banner
+        // #header legacy jquery UI banner
+        // Other elements are for current navbar
+        style.innerHTML = 'header.navbar-default, #header, body, .mini-navbar, .nav-second-level, .nav > li.active, .navbar-default .nav > li > a:focus '
+            + '{ background-color: ' + navbarColor + '; background: ' + navbarColor + '}'
+            + ' .navbar-default .nav > li > a:hover, ul.nav-second-level, .canvas-menu.mini-navbar .nav-second-level '
+            + '{ background-color: ' + navbarLight + '; background: ' + navbarLight + '}';
 
-    head.appendChild(style);
+        head.appendChild(style);
+    }
+} catch (e) {
+
 }
+
 
 // From https://css-tricks.com/snippets/javascript/lighten-darken-color/
 function LightenDarkenColor(col, amt) {
