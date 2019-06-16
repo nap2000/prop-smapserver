@@ -3834,7 +3834,6 @@ function setOrganisationTheme() {
 		var navbarColor = getFromLocalStorage("navbar_color");
 		if(navbarColor !== globals.gNavbarColor) {
 			setInLocalStorage('navbar_color', globals.gNavbarColor);
-			$("head").append('<style id="navbar_color">header.navbar-default { background-color: ' + globals.gNavbarColor + '}</style>');
 		}
 	} else {
 		// remove styles
