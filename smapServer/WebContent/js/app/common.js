@@ -3854,7 +3854,7 @@ function setOrganisationTheme() {
 function getFromLocalStorage(key) {
 	var value;
 	try {
-		value = localStorage.getItem("main_logo");
+		value = localStorage.getItem(key);
 	} catch (e) {
 
 	}

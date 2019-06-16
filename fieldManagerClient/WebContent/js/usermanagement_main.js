@@ -140,7 +140,7 @@ require([
 
 			$(".usertab").hide();
 			$('#userPanel').show();
-
+			setInLocalStorage("currentTab", '#usersTab a');
 		});
 		$('#projectsTab a').click(function (e) {
 			e.preventDefault();
@@ -149,6 +149,7 @@ require([
 
 			$(".usertab").hide();
 			$('#projectPanel').show();
+			setInLocalStorage("currentTab", '#projectsTab a');
 		});
 		$('#organisationTab a').click(function (e) {
 			e.preventDefault();
@@ -157,6 +158,7 @@ require([
 
 			$(".usertab").hide();
 			$('#organisationPanel').show();
+			setInLocalStorage("currentTab", '#organisationTab a');
 		});
 		$('#serverTab a').click(function (e) {
 			e.preventDefault();
@@ -165,6 +167,7 @@ require([
 
 			$(".usertab").hide();
 			$('#serverPanel').show();
+			setInLocalStorage("currentTab", '#serverTab a');
 		});
 		$('#roleTab a').click(function (e) {
 			e.preventDefault();
@@ -173,6 +176,7 @@ require([
 
 			$(".usertab").hide();
 			$('#rolesPanel').show();
+			setInLocalStorage("currentTab", '#roleTab a');
 		});
 		$('#deviceTab a').click(function (e) {
 			e.preventDefault();
@@ -181,6 +185,7 @@ require([
 
 			$(".usertab").hide();
 			$('#devicePanel').show();
+			setInLocalStorage("currentTab", '#deviceTab a');
 		});
 		$('#webformTab a').click(function (e) {
 			e.preventDefault();
@@ -189,6 +194,7 @@ require([
 
 			$(".usertab").hide();
 			$('#webformPanel').show();
+			setInLocalStorage("currentTab", '#webformTab a');
 		});
 		$('#sensitiveTab a').click(function (e) {
 			e.preventDefault();
@@ -197,6 +203,7 @@ require([
 
 			$(".usertab").hide();
 			$('#sensitivePanel').show();
+			setInLocalStorage("currentTab", '#sensitiveTab a');
 		});
 		$('#enterpriseTab a').click(function (e) {
 			e.preventDefault();
@@ -205,6 +212,7 @@ require([
 
 			$(".usertab").hide();
 			$('#enterprisePanel').show();
+			setInLocalStorage("currentTab", '#enterpriseTab a');
 		});
 
 		// Style the upload buttons
@@ -953,6 +961,12 @@ require([
 		$('input').focus(function() {
 			$('.org_alert').hide();
 		});
+
+		// Set page defaults
+		var currentTab = getFromLocalStorage("currentTab");
+		if(currentTab) {
+			$(currentTab).trigger('click');
+		}
 
 	});
 
