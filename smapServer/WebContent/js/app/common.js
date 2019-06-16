@@ -548,8 +548,13 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 		bootstrap_enabled = (typeof $().modal == 'function');
 
 	if(data.language && data.language !== gUserLocale) {
-		localStorage.setItem('user_locale', data.language);
-		location.reload();
+		try {
+			localStorage.setItem('user_locale', data.language);  // Write to storage may be disabled
+			location.reload();
+		} catch (e) {
+
+		}
+
 	} else if(data.o_id != globals.gOrgId) {
 		location.reload();
 	}
@@ -3818,28 +3823,49 @@ function setOrganisationTheme() {
 
 	if(globals.gSetAsTheme && globals.gOrgId > 0) {
 
-		var mainLogoSrc = localStorage.getItem("main_logo");
+		var mainLogoSrc = getFromLocalStorage("main_logo");
 		var logo = "/media/organisation/" + globals.gOrgId + '/settings/mainLogo';
 		if(mainLogoSrc !== logo) {
-			localStorage.setItem('main_logo', logo);
+			setInLocalStorage('main_logo', logo);
 			$('.main_logo').attr("src", "/media/organisation/" + globals.gOrgId + '/settings/mainLogo');
 		}
 
 		// navbar color
-		var navbarColor = localStorage.getItem("navbar_color");
+		var navbarColor = getFromLocalStorage("navbar_color");
 		if(navbarColor !== globals.gNavbarColor) {
-			localStorage.setItem('navbar_color', globals.gNavbarColor);
+			setInLocalStorage('navbar_color', globals.gNavbarColor);
 			$("head").append('<style id="navbar_color">header.navbar-default { background-color: ' + globals.gNavbarColor + '}</style>');
 		}
 	} else {
 		// remove styles
 		var navbarColorElement = document. getElementById("navbar_color");
 		navbarColorElement.parentNode.removeChild(navbarColorElement);
-		localStorage.setItem('navbar_color', undefined);
-		localStorage.setItem('main_logo', undefined);
+		setInLocalStorage('navbar_color', undefined);
+		setInLocalStorage('main_logo', undefined);
 
 		// Set the default logo
 		setCustomMainLogo();
+	}
+}
+
+/*
+ * Surround get / set from local storage in case user has disabled local sorage reading in browser settings
+ */
+function getFromLocalStorage(key) {
+	var value;
+	try {
+		value = localStorage.getItem("main_logo");
+	} catch (e) {
+
+	}
+	return value;
+}
+
+function setInLocalStorage(key, value) {
+	try {
+		localStorage.setItem(key, value);
+	} catch(e) {
+
 	}
 }
 
