@@ -116,9 +116,6 @@ require([
 		$('#create_user_role').click(function () {
 			openRoleDialog(false, -1);
 		});
-		$('#delete_role').click(function () {
-			deleteRoles();
-		});
 
 		$('#create_organisation').click(function () {
 			openOrganisationDialog(false, -1);
@@ -1753,24 +1750,22 @@ require([
 			h = [],
 			idx = -1;
 
+		h[++idx] = '<div class="table-responsive">';
 		h[++idx] = '<table class="table table-striped">';
-		h[++idx] = '<colgroup>';
-		h[++idx] = '<col style="width:auto;">';
-		h[++idx] = '<col style="width:auto;">';
-		h[++idx] = '<col style="width:160px;">';
-		h[++idx] = '<col style="width:auto;">';
-		h[++idx] = '</colgroup>';
 		h[++idx] = '<thead>';
 		h[++idx] = '<tr>';
 		h[++idx] = '<th></th>';
-		h[++idx] = '<th>';
+		h[++idx] = '<th scope="col">';
 		h[++idx] = localise.set["c_id"];	// Id
 		h[++idx] = '</th>';
-		h[++idx] = '<th>';
+		h[++idx] = '<th scope="col">';
 		h[++idx] = localise.set["c_name"];	// Name
 		h[++idx] = '</th>';
-		h[++idx] = '<th>';
+		h[++idx] = '<th scope="col">';
 		h[++idx] = localise.set["u_chg"];	// Changed by
+		h[++idx] = '</th>';
+		h[++idx] = '<th scope="col">';
+		h[++idx] = localise.set["c_action"];
 		h[++idx] = '</th>';
 		h[++idx] = '</tr>';
 		h[++idx] = '</thead>';
@@ -1796,15 +1791,29 @@ require([
 			h[++idx] = role.changed_by;
 			h[++idx] = '</td>';
 
+			h[++idx] = '<td>';
+			h[++idx] = '<button type="button" data-idx="';
+			h[++idx] = i;
+			h[++idx] = '" class="btn btn-default btn-sm rm_role btn-danger">';
+			h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+			h[++idx] = '</td>';
+
 			h[++idx] = '</tr>';
 		}
 
 		h[++idx] = '</tbody>';
 		h[++idx] = '</table>';
+		h[++idx] = '</div>';        // responsive
 
 		$tab.empty().append(h.join(''));
+
 		$('.role_edit', $tab).click(function () {
 			openRoleDialog(true, $(this).val());
+		});
+
+		$(".rm_role", $('#role_table')).click(function(){
+			var idx = $(this).data("idx");
+			deleteRole(idx);
 		});
 
 		/*
@@ -2379,43 +2388,36 @@ require([
 	/*
 	 * Delete the roles
 	 */
-	function deleteRoles () {
+	function deleteRole (roleIdx) {
 
 		var roles = [],
 			decision = false,
-			h = [],
-			i = -1,
-			roleIdx,
 			$dialog;
 
-		$('#role_table').find('input:checked').each(function(index) {
-			roleIdx = $(this).val();
-			roles[index] = {id: globals.gRoleList[roleIdx].id};
-			h[++i] = globals.gRoleList[roleIdx].name;
-		});
+		roles[0] = {id: globals.gRoleList[roleIdx].id};
 
-
-		decision = confirm(localise.set["msg_del_roles"] + "\n" + h.join());
-		if (decision === true) {
-			addHourglass();
-			$.ajax({
-				type: "DELETE",
-				contentType: "application/json",
-				url: "/surveyKPI/role/roles",
-				data: { roles: JSON.stringify(roles) },
-				success: function(data, status) {
-					removeHourglass();
-					getRoles(updateRoleTable);
-				}, error: function(data, status) {
-					removeHourglass();
-					if(data && data.responseText) {
-						alert(data.responseText);
-					} else {
-						alert(localise.set["msg_err_del"]);
+		bootbox.confirm(localise.set["msg_del_roles"] +  ' ' + globals.gRoleList[roleIdx].name, function(decision) {
+			if (decision === true) {
+				addHourglass();
+				$.ajax({
+					type: "DELETE",
+					contentType: "application/json",
+					url: "/surveyKPI/role/roles",
+					data: { roles: JSON.stringify(roles) },
+					success: function(data, status) {
+						removeHourglass();
+						getRoles(updateRoleTable);
+					}, error: function(data, status) {
+						removeHourglass();
+						if(data && data.responseText) {
+							alert(data.responseText);
+						} else {
+							alert(localise.set["msg_err_del"]);
+						}
 					}
-				}
-			});
-		}
+				});
+			}
+		});
 	}
 
 	/*
