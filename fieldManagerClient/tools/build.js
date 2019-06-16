@@ -23,13 +23,15 @@
     	bootstrapfileinput: '../../../../smapServer/WebContent/js/libs/bootstrap.file-input',
     	bootstrapcolorpicker: '../../../../smapServer/WebContent/js/libs/bootstrap-colorpicker.min',
 	bootbox: '../../../../smapServer/WebContent/js/libs/bootbox.min',
+	bootbox: '../../../../smapServer/WebContent/js/libs/bootbox.min',
 	file_input: '../../../../smapServer/WebContent/js/libs/bootstrap.file-input',
 	moment: '../../../../smapServer/WebContent/js/libs/moment-with-locales.min',
 	datetimepicker: '../../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker.min',
 	rmm: '../../../../smapServer/WebContent/js/libs/responsivemobilemenu',
 	inspinia: '../../../../smapServer/WebContent/js/libs/wb/inspinia',
+	inspinia_v2_9_2: '../../../../smapServer/WebContent/js/libs/wb/inspinia.v2.9.2',
         metismenu: '../../../../smapServer/WebContent/js/libs/wb/plugins/metisMenu/jquery.metisMenu',
-        slimscroll: '../../../../smapServer/WebContent/js/libs/wb/plugins/slimscroll/jquery.slimscroll.min',
+        slimscroll: '../../../../smapServer/WebContent/js/libs/wb/plugins/slimscroll/jquery.slimscroll',
         pace: '../../../../smapServer/WebContent/js/libs/wb/plugins/pace/pace.min',
 
 
