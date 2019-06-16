@@ -1853,6 +1853,7 @@ require([
 			idx = -1,
 			bs = isBusinessServer();
 
+		h[++idx] = '<div class="table-responsive">';
 		h[++idx] = '<table class="table table-striped">';
 		h[++idx] = '<thead>';
 		h[++idx] = '<tr>';
@@ -1914,7 +1915,7 @@ require([
 
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-default btn-sm rm_org danger">';
+			h[++idx] = '" class="btn btn-default btn-sm rm_org btn-danger">';
 			h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
 			h[++idx] = '</td>';
 			h[++idx] = '</tr>';
@@ -1922,6 +1923,7 @@ require([
 
 		h[++idx] = '</tbody>';
 		h[++idx] = '</table>';
+		h[++idx] = '</div>';        // responsive
 
 		$organisationTable.empty().append(h.join(''));
 		$('.organisation_edit').click(function () {
