@@ -3838,7 +3838,9 @@ function setOrganisationTheme() {
 	} else {
 		// remove styles
 		var navbarColorElement = document. getElementById("navbar_color");
-		navbarColorElement.parentNode.removeChild(navbarColorElement);
+		if(navbarColorElement) {
+			navbarColorElement.parentNode.removeChild(navbarColorElement);
+		}
 		setInLocalStorage('navbar_color', undefined);
 		setInLocalStorage('main_logo', undefined);
 
