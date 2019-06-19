@@ -57,7 +57,7 @@
 		<div class="container-fluid">	
 			<div class="row">
 				<div class="col-sm-10 col-md-offset-1">
-					<img id="main_logo" class="main_logo maxwidth" src="" onerror="if(this.src.indexOf('cropped-blog1.jpg') < 0) this.src='/images/cropped-blog1.jpg';"/>
+					<img id="main_logo" class="main_logo maxwidth" src="" />
 					<h1 class="text-center"><span class="lang" data-lang="ss_welcome">Welcome</span> 19.06</h1>
 					<h4 class="text-center"><a href="http://blog.smap.com.au/version-19-06/"><span class="lang" data-lang="ss_welcome2">Description:</span> </a></h4>
 				</div>
@@ -109,6 +109,7 @@
 	var mainLogo = localStorage.getItem("main_logo");
 	if(mainLogo) {
 		var img = document.getElementById('main_logo');
+		console.log("Logo: " + mainLogo);
 		img.setAttribute("src", mainLogo);
 	}
 </script>
