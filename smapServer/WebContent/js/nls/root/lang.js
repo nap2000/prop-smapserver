@@ -972,6 +972,7 @@ define({
 	"u_use_api": "Allow API access",
 	"u_submissions": "Allow submissions",
 	"u_notifications": "Allow notifications",
+    "u_sms": "Allow SMS",
     "u_mb_k": "Mapbox Key",
     "u_g_k": "Google Maps Key",
     "u_smtp": "Smtp Host",
