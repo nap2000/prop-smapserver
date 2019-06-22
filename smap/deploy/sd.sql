@@ -1205,3 +1205,4 @@ alter table notification_log add column type text;
 -- Upgrade 19.07
 alter table organisation add column navbar_color text;
 update organisation set navbar_color = '#2c3c28' where navbar_color is null;
+alter table organisation add column can_sms boolean default false;
