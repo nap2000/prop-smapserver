@@ -580,9 +580,15 @@ require([
 				return $(this).val();
 			}).toArray();
 
+			organisation.allow_email = false;
+			organisation.allow_facebook = false;
+			organisation.allow_twitter = false;
+			organisation.can_edit = false;
+			organisation.email_task = false;
 			organisation.can_notify = false;
 			organisation.can_use_api = false;
 			organisation.can_submit = false;
+			organisation.can_sms = false;
 			organisation.set_as_theme = false;
 			for(i = 0; i < options.length; i++) {
 				if(options[i] === "email") {
@@ -605,6 +611,8 @@ require([
 					organisation.can_submit = true;
 				} else if(options[i] === "set_as_theme") {
 					organisation.set_as_theme = true;
+				} else if(options[i] === "can_sms") {
+					organisation.can_sms = true;
 				}
 			}
 			organisation.navbar_color = $('input', '#o_navbar_color').val();
@@ -1375,6 +1383,8 @@ require([
 					this.checked = org.can_use_api;
 				} else if($(this).val() === "can_submit") {
 					this.checked = org.can_submit;
+				} else if($(this).val() === "can_sms") {
+					this.checked = org.can_sms;
 				} else if($(this).val() === "ft_odk_style_menus") {
 					this.checked = org.ft_odk_style_menus;
 				} else if($(this).val() === "ft_odk_style_menus") {
