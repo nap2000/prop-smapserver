@@ -680,7 +680,7 @@ function addSharedMaps(map, sharedMaps) {
 			layer = sharedMaps[i];
 			
 			if(layer.type === "mapbox") {
-				layerUrl = "http://a.tiles.mapbox.com/v4/" + layer.config.mapid + "/${z}/${x}/${y}.png?access_token=" + globals.gServerSettings.mapbox_default;
+				layerUrl = "http://a.tiles.mapbox.com/v4/" + layer.config.mapid + "/${z}/${x}/${y}.png?access_token=" + globals.gMapboxDefault;
 				map.addLayer(new OpenLayers.Layer.XYZ(layer.name,
 					    [layerUrl], {
 					    sphericalMercator: true,

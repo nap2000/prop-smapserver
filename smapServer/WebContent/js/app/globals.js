@@ -127,7 +127,7 @@ define(function () {
         gMapLayersShown: false,
         gViewId: 0,						// Current survey view
 
-        gServerSettings: undefined,		// Server Settings
+        gMapboxDefault: undefined,		// Mapbox key
         
         model: new Model()
 
