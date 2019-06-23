@@ -2824,16 +2824,16 @@ function getTableData(table, columns, format) {
 /*
  * Get server settings
  */
-function getServerSettings(callback, param) {
+function getMapboxDefault(callback, param) {
 
-	if(!globals.gServerSettings) {
+	if(!globals.gMapboxDefault) {
 		addHourglass();
 		$.ajax({
-			url: '/surveyKPI/server',
+			url: '/surveyKPI/server/mapbox',
 			cache: false,
 			success: function(data) {
 				removeHourglass();
-				globals.gServerSettings = data;
+				globals.gMapboxDefault = data;
 				if(typeof callback === "function") {
 					callback(param);
 				}
@@ -2843,7 +2843,7 @@ function getServerSettings(callback, param) {
 				if(xhr.readyState == 0 || xhr.status == 0) {
 					return;  // Not an error
 				} else {
-					alert("Error: Failed to get server data: " + err);
+					alert(localise.set["error"] + ": " + err);
 				}
 			}
 		});
@@ -2875,21 +2875,17 @@ function getGoogleMapApi(callback, map) {
 
 		addHourglass();
 		$.ajax({
-			url: '/surveyKPI/server',
+			url: '/surveyKPI/server/googlemaps',
 			cache: false,
 			success: function(data) {
-
-				globals.gServerSettings = data;
-
-				var callingMap = map;
 
 				removeHourglass();
 				console.log("Retrieved map keys from server");
 
 				var gElement = document.createElement('script');
 				var key = "";
-				if(data.google_key) {
-					key = "?key=" + data.google_key;
+				if(data) {
+					key = "?key=" + data;
 				}
 				//gElement.src = "//maps.google.com/maps/api/js?v=3.6&amp";
 				gElement.src = "https://maps.googleapis.com/maps/api/js" + key;
@@ -2920,7 +2916,8 @@ function getGoogleMapApi(callback, map) {
 				if(xhr.readyState == 0 || xhr.status == 0) {
 					return;  // Not an error
 				} else {
-					alert("Error: Failed to get server data: " + err);
+					alert(localise.set["error"] + " " + err);
+
 				}
 			}
 		});

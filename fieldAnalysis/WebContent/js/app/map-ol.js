@@ -100,7 +100,7 @@ function initializeMap(idx){
 	// Add additional maps specified in the shared resources page
 	var sharedMaps = globals.gSelector.getSharedMaps();
 	if(!sharedMaps) {
-		getServerSettings(getSharedMaps, map);
+		getMapboxDefault(getSharedMaps, map);
 	} else {
 		addSharedMaps(map, sharedMaps)
 	}

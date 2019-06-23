@@ -32,12 +32,12 @@ function initialiseMap(elementId, zoom, setUserLocation, callbackClick, callback
 	if(!L.mapbox.accessToken) {
 		addHourglass();
 		$.ajax({
-			url: '/surveyKPI/server',
+			url: '/surveyKPI/server/mapbox',
 			cache: false,
 			success: function(data) {
 				removeHourglass();
-				if(data.mapbox_default) {
-					L.mapbox.accessToken = data.mapbox_default;
+				if(data) {
+					L.mapbox.accessToken = data;
 					initialiseMapKeySet(elementId, zoom, setUserLocation, callbackClick, callbackInitialised);
 				} else {
 					alert("mapbox key not set");
