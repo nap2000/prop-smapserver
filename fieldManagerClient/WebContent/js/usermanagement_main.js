@@ -80,7 +80,8 @@ require([
 		gCurrentEnterpriseIndex,
 		gCurrentUserIndex,		// Set while editing a users details
 		gCurrentDeleteUsers,    // Users that have been selected for deletion, waiting on approval
-		gOrgId;
+		gOrgId,
+		gSmsType;
 
 	$(document).ready(function() {
 
@@ -91,6 +92,7 @@ require([
 		setupUserProfile(true);
 		window.moment = moment;		// Make moment global for use by common.js
 
+		getSmsType();
 		getUsers();
 		getProjects();
 		getLoggedInUser(userKnown, false, false, getOrganisations, false,
@@ -1101,6 +1103,27 @@ require([
 		});
 	}
 
+	function getSmsType() {
+		// Get the server details
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/server/sms",
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				gSmsType = data;
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["c_error"] + ": " + err);
+				}
+			}
+		});
+	}
+
 	/*
 	 * Populate the server tab
 	 */
@@ -1340,6 +1363,12 @@ require([
 	 * Show the organisation dialog
 	 */
 	function openOrganisationDialog(existing, organisationIndex) {
+
+		if(gSmsType && gSmsType === "aws") {
+			$('.awsSmsOnly').show();
+		} else {
+			$('.awsSmsOnly').hide();
+		}
 
 		var org = gOrganisationList[organisationIndex];
 		gCurrentOrganisationIndex = organisationIndex;
