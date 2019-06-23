@@ -1720,7 +1720,7 @@ function retrievedLanguages(sId, selector, data, theCallback, filterQuestion, se
 
 	if(data[0]) {
 		var dateqId = $('#task_start').val();
-		getQuestionList(sId, data[0], filterQuestion, "-1", theCallback, setGroupList, undefined, dateqId);	// Default language to the first in the list
+		getQuestionList(sId, data[0], filterQuestion, "-1", theCallback, setGroupList, undefined, dateqId, undefined);	// Default language to the first in the list
 	} else {
 		if(typeof theCallback === "function") {
 			theCallback();
@@ -1761,7 +1761,7 @@ function getQuestionList(sId, language, qId, groupId, callback, setGroupList, vi
 		});
 	}
 
-	getAsyncQuestionList(sId, language, callback, groupId, qId, view, dateqId);
+	getAsyncQuestionList(sId, language, callback, groupId, qId, view, dateqId, qName);
 }
 
 //Function to get the meta list

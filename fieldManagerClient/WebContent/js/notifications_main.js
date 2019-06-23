@@ -72,11 +72,6 @@ require([
 
 		setCustomNotifications();			// Apply custom javascript
 
-		$('#notify_emails_cont').prop('title', localise.set['n_cs_e']);
-		$('#notify_emails').prop('placeholder', localise.set['n_ea']);
-		$('#email_question_cont').prop('title', localise.set['n_eqc']);
-		$('#email_subject_cont').prop('placeholder', localise.set['n_esc']);
-
 		setupUserProfile(true);
 		localise.setlang();		    // Localise HTML
 		$("#side-menu").metisMenu();
@@ -185,7 +180,7 @@ require([
 
 			if(!qList) {
 				getQuestionList(sId, language, 0, "-1", undefined, false,
-					undefined, qName);
+					undefined, undefined, qName);
 			} else {
 				setSurveyViewQuestions(qList, undefined, undefined, undefined, qName );
 			}
@@ -380,6 +375,7 @@ require([
 		notification.notifyDetails = {};
 		notification.notifyDetails.emails = $('#notify_sms').val().split(",");
 		notification.notifyDetails.emailQuestionName = $('#sms_question').val();
+		notification.notifyDetails.subject = $('#sms_sender_id').val();
 		notification.notifyDetails.content = $('#sms_content').val();
 		notification.notifyDetails.attach = $('#sms_attach').val();
 
@@ -487,22 +483,27 @@ require([
 				}
 			}
 
-			if(notification.notifyDetails && notification.notifyDetails.emails) {
+			if(notification.notifyDetails) {
 				if(notification.notifyDetails.emailQuestionName || notification.notifyDetails.emailMeta) {
 					surveyChanged(notification.notifyDetails.emailQuestionName, notification.notifyDetails.emailMeta);
 				}
 
 				if(notification.target == "email") {
-					$('#notify_emails').val(notification.notifyDetails.emails.join(","));
+					if(notification.notifyDetails.emails) {
+						$('#notify_emails').val(notification.notifyDetails.emails.join(","));
+					}
 					$('#email_subject').val(notification.notifyDetails.subject);
 					$('#email_content').val(notification.notifyDetails.content);
 					$('#email_attach').val(notification.notifyDetails.attach);
 					$('#include_references').prop('checked', notification.notifyDetails.include_references);
 					$('#launched_only').prop('checked', notification.notifyDetails.launched_only);
 				} else if(notification.target == "sms") {
-					$('#notify_sms').val(notification.notifyDetails.emails.join(","));
+					if(notification.notifyDetails.emails) {
+						$('#notify_sms').val(notification.notifyDetails.emails.join(","));
+					}
 					$('#sms_content').val(notification.notifyDetails.content);
 					$('#sms_attach').val(notification.notifyDetails.attach);
+					$('#sms_sender_id').val(notification.notifyDetails.subject);
 				}
 			}
 			$('#fwd_rem_survey_id').val(notification.remote_s_ident);
