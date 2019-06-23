@@ -1295,7 +1295,7 @@ require([
 		qList = globals.gSelector.getSurveyQuestions(sId, language);
 
 		if (!qList) {
-			getQuestionList(sId, language, "-1", "-1", questionChanged, false, undefined, dateqId);
+			getQuestionList(sId, language, "-1", "-1", questionChanged, false, undefined, dateqId, undefined);
 		} else {
 			setSurveyViewQuestions(qList, qId, undefined, dateqId);
 		}
