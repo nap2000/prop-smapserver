@@ -78,7 +78,7 @@ require([
 		$('#email_subject_cont').prop('placeholder', localise.set['n_esc']);
 
 		setupUserProfile(true);
-		localise.setlang();		// Localise HTML
+		localise.setlang();		    // Localise HTML
 		$("#side-menu").metisMenu();
 
 		// Get Notification Types for this server
