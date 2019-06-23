@@ -92,7 +92,7 @@ define([
                 // Add additional maps specified in the shared resources page
                 var sharedMaps = globals.gSelector.getSharedMaps();
                 if(!sharedMaps) {
-                    getServerSettings(getSharedMapsOL3, gMap);
+                    getMapboxDefault(getSharedMapsOL3, gMap);
                 } else {
                     addSharedMapsOL3(gMap, sharedMaps)
                 }
@@ -463,8 +463,8 @@ define([
                     layer = sharedMaps[i];
 
                     if(layer.type === "mapbox") {
-                        //layerUrl = 'http://api.tiles.mapbox.com/v4/' + layer.config.mapid + ".jsonp?access_token=" + globals.gServerSettings.mapbox_default;
-                        layerUrl = "http://a.tiles.mapbox.com/v4/" + layer.config.mapid + "/{z}/{x}/{y}.png?access_token=" + globals.gServerSettings.mapbox_default;
+                        //layerUrl = 'http://api.tiles.mapbox.com/v4/' + layer.config.mapid + ".jsonp?access_token=" + globals.gMapboxDefault;
+                        layerUrl = "http://a.tiles.mapbox.com/v4/" + layer.config.mapid + "/{z}/{x}/{y}.png?access_token=" + globals.gMapboxDefault;
                         baseLayers.unshift(new ol.layer.Tile( {
                             title: layer.name,
                             type: 'base',
