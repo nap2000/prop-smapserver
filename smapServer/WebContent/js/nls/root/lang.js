@@ -1061,6 +1061,13 @@ define({
     "n_p": "Send reminder after",
     "n_oa": "Email original assignee",
     "n_ap": "Add placeholder",
+    "n_si": "SMS Sender Id",
+    "n_sms_n_tt": "Comma separated list of phone numbers in format +ccnnnnnnnnnn",
+    "n_sms_q_tt": "Question that will contain the SMS numbers to use",
+    "n_e_n_tt": "comma separated list of email addresses",
+    "n_e_q_tt": "question that will contain the email addresses to use",
+    "n_e_p_tt": "Meta item or preload that will contain an email address to use",
+    "n_e_subj_tt": "Subject for the email (optional)",
 
     // Roles
     "ro_fr": "Filter rows",
