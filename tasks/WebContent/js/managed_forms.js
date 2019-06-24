@@ -562,11 +562,8 @@ require([
         }
 
         if (format !== "image") {
-            if (isBrowseResults || isDuplicates) {
-                managedId = 0;
-            } else {
-                managedId = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].managed_id;
-            }
+
+            managedId = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].managed_id;
 
             if (format === "xlsx") {
                 chartData = chart.getXLSData(alldata);
@@ -738,13 +735,9 @@ require([
         if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
 
             saveCurrentProject(-1, globals.gCurrentSurvey);
-            if (isManagedForms) {
-                getSurveyView(0, globals.gCurrentSurvey,
-                    gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].managed_id,
-                    0);
-            } else {
-                getSurveyView(0, globals.gCurrentSurvey, 0, 0);
-            }
+            getSurveyView(0, globals.gCurrentSurvey,
+                gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].managed_id, 0);
+
 
             $('.main_survey').html($('#survey_name option:selected').text());
 
@@ -873,11 +866,7 @@ require([
         var url = '/api/v1/data/';
         url += sId;
 
-        if (isManagedForms) {
-            url += "?mgmt=true";
-        } else {
-            url += "?mgmt=false";
-        }
+        url += "?mgmt=true";
 
         if (isDuplicates) {
             url += "&group=true";
@@ -989,7 +978,7 @@ require([
         globals.gMainTable
             .off('select').on('select', function (e, dt, type, indexes) {
             var rowData = globals.gMainTable.rows(indexes).data().toArray();
-            if (isManagedForms) {
+            if (true) {         // was only used if managed forms
                 window.location.hash="#edit";
                 gTasks.gSelectedRecord = rowData[0];
                 //$('#editRecord').modal("show"); xxxx
@@ -1005,10 +994,7 @@ require([
                 actioncommon.showEditRecordForm(record, columns, $editForm, $surveyForm);
                 $('.overviewSection').hide();
                 $('.editRecordSection').show();
-            } else if (isBrowseResults) {
-                // TODO check if the user has maintain privilege
             }
-            //alert(JSON.stringify( rowData ));
         });
 
         // Highlight data conditionally, set barcodes
@@ -1269,7 +1255,7 @@ require([
 
                     for (i = 0; i < data.length; i++) {
                         item = data[i];
-                        if (item.managed_id > 0 || isBrowseResults || isDuplicates) {
+                        if (true) {     // Previously filtered out non managed forms if it was the managed forms page
                             h[++idx] = '<option value="';
                             h[++idx] = i;
                             h[++idx] = '">';
@@ -1408,7 +1394,7 @@ require([
     function getRelatedTable(tableId, item) {
 
         var url,
-            managed = isManagedForms ? "true" : "false";
+            managed =  "true";
 
         var url = "/api/v1/data/";
 
