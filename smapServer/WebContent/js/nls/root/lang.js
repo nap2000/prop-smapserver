@@ -14,7 +14,6 @@ define({
     "m_export_media": "Export with Media",
     "m_discuss": "Discuss",
     "m_modify": "Modify",
-    "m_data_mod": "Web Forms",
     "m_web_forms": "Web Forms",
     "m_docs": "Documentation",
     "m_monitor": "Monitoring",
