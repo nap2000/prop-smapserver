@@ -45,6 +45,17 @@ define([
 
         function setLayers(layers) {
             gLayers = layers;
+            if(gLayers.length == 0) {
+                // Add default data layer
+                var layer = {
+                    title: "title",
+                    local: true,
+                    clump: false
+                };
+                gLayers.push(layer);
+                refreshLayer(gLayers.length - 1);
+                saveToServer(gLayers);
+            }
             showLayerSelections();
         }
 
