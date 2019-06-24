@@ -970,7 +970,7 @@ require([
 
         // Respond to an error
         globals.gMainTable.on('error.dt', function (e, settings, techNote, message) {
-            alert('An error has been reported by DataTables: ', message);
+            alert(localise.set["c_error"] + ": " + message);
             gRefreshingData = false;
         });
 
@@ -1297,7 +1297,7 @@ require([
                     if (xhr.readyState == 0 || xhr.status == 0) {
                         return;  // Not an error
                     } else {
-                        console.log("Error: Failed to get list of surveys: " + err);
+                        console.log(localise.set["c_error"] + ": " + err);
                     }
                 }
             });
@@ -1351,7 +1351,7 @@ require([
                 if (xhr.readyState == 0 || xhr.status == 0) {
                     return;  // Not an error
                 } else {
-                    alert("Error failed to get related data:" + sId);
+                    alert(localise.set["c_error"] + sId);
                 }
             }
         });
@@ -1421,7 +1421,7 @@ require([
                 if (xhr.readyState == 0 || xhr.status == 0) {
                     return;  // Not an error
                 } else {
-                    alert("Error failed to get table of related data:" + url);
+                    alert(localise.set["c_error"] + ": " + url);
                 }
             }
         });
@@ -1518,33 +1518,6 @@ require([
             }
         });
     }
-
-    /*
-     * Save the report definition as opposed to saveConfig which saves the data table filter settings
-     *
-    function saveReport(report) {
-
-
-        var saveString = JSON.stringify(report);
-
-        addHourglass();
-        $.ajax({
-            type: "POST",
-            dataType: 'text',
-            cache: false,
-            contentType: "application/json",
-            url: "/surveyKPI/managed/config/" + globals.gCurrentSurvey + "/db",
-            data: {settings: saveString},
-            success: function (data, status) {
-                removeHourglass();
-                $('#right-sidebar').removeClass("sidebar-open");
-            }, error: function (data, status) {
-                removeHourglass();
-                alert(data.responseText);
-            }
-        });
-    }
-    */
 
     /*
      * Perform initialisation after the data and the survey view configuration have been loaded
