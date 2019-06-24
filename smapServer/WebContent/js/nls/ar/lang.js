@@ -11,7 +11,6 @@ define(
     "m_export": "تصدير",
     "m_discuss": "مناقشة",
     "m_modify": "تعديل",
-    "m_data_mod": "نماذج الويب",
     "m_web_forms": "نماذج الويب",
     "m_docs": "توثيق ",
     "m_monitor": "مراقبة ",
