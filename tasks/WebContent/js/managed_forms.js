@@ -142,6 +142,7 @@ require([
         setCustomManage();
 	    setupUserProfile();
         localise.setlang();		// Localise HTML
+        $("#side-menu").metisMenu();
 
         // Get the parameters and show a management survey if required
         params = location.search.substr(location.search.indexOf("?") + 1)
