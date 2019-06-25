@@ -70,12 +70,11 @@
                                                                                           data-lang="m_user_profile"></span></a>
                 </li>
                 <li>
-                    <a href="#" id="m_modules_inspinia"><i class="fa fa-th-large"></i> <span class="lang"
-                                                                                             data-lang="m_modules">modules</span><span
-                            class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level animated fadeInRight m-t-xs">
+                    <a href="#" id="m_modules_inspinia" aria-expanded="false"><i class="fa fa-th-large"></i> <span
+                            class="lang" data-lang="m_modules"></span></a>
+                    <ul class="nav nav-second-level" aria-expanded="false">
 
-                        <li><a class="lang" data-lang="m_home" href="/?loggedin=yes">home</a></li>
+                        <li><a class="lang" data-lang="m_home" href="/?loggedin=yes"></a></li>
                         <li class="restrict_role admin_role analyst_role"><a href="/edit.html"><i
                                 class="glyphicon glyphicon-edit"></i> <span class="lang" data-lang="c_edit"></span></a>
                         </li>
@@ -212,11 +211,11 @@
                                     <label class="custom-control-label lang" data-lang="c_heatmap" for="heatmap"></label>
                                 </div>
 
-                                <a class="targetSpecific mapOnly" id="showlayers" style="display:none;">
+                                <div class="targetSpecific mapOnly custom-control custom-switch custom-control-inline" style="display:none;">
+                                    <input type="checkbox" class="custom-control-input" id="showlayers">
+                                    <label class="custom-control-label lang" data-lang="d_layers" for="showlayers"></label>
+                                </div>
 
-                                    <i class="btn btn-info fa fa-align-justify fa-lg"> <span class="nav-label lang"
-                                                                                             data-lang="d_layers"></span></i>
-                                </a>
                                 <a class="targetSpecific chartOnly" id="m_add_chart" style="display:none;">
                                     <i class="btn btn-success fa fa-bar-chart-o fa-lg"> <span class="nav-label lang"
                                                                                               data-lang="d_add_c"></span></i>
@@ -263,11 +262,13 @@
                                                     <div class="col-md-4 map_layers" style="display:none;">
                                                         <div class="ibox float-e-margins">
                                                             <div class="ibox-title">
-                                                                <h5 class="lang" data-lang="c_map_layers">layers</h5>
-                                                                <a id="m_add_layer" class="pull-right">
-                                                                    <i class="btn btn-success fa fa-bar-map-o fa-lg">
-                                                                        <span class="nav-label lang" data-lang="d_add">add</span></i>
-                                                                </a>
+                                                                <h5 class="lang" data-lang="c_map_layers"></h5>
+                                                                <div class="pull-right">
+                                                                    <a id="m_add_layer">
+                                                                        <i class="btn btn-success fa fa-bar-map-o fa-lg">
+                                                                            <span class="nav-label lang" data-lang="d_add"></span></i>
+                                                                    </a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div id="layerSelect">
