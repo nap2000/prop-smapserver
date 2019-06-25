@@ -23,6 +23,7 @@
 	'datatables.net': '../../../../smapServer/WebContent/js/libs/DataTables/DataTables/js/jquery.dataTables',
 	'datatables.net-bs': '../../../../smapServer/WebContent/js/libs/DataTables/DataTables/js/dataTables.bootstrap',
 	'datatables.select': '../../../../smapServer/WebContent/js/libs/DataTables/Select/js/dataTables.select.min',
+	'datatables.select.v1.3.0': '../../../../smapServer/WebContent/js/libs/DataTables/Select/js/dataTables.select.v1.3.0.min',
 	toggle: '../../../../smapServer/WebContent/js/libs/bootstrap-toggle.min',
 	qrcode: '../../../../smapServer/WebContent/js/libs/jquery-qrcode-0.14.0.min',
 	svgsave: '../../../../smapServer/WebContent/js/libs/saveSvgAsPng',
@@ -64,7 +65,8 @@
 	    exclude: ['jquery', 'bootstrap']
         },
         {
-            name: '../managed_forms'
+            name: '../managed_forms',
+	    exclude: ['jquery', 'bootstrap', 'datatables_b4']
         },
         {
             name: '../action_forms'
