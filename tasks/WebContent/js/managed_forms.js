@@ -363,18 +363,17 @@ require([
          */
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             var target = $(e.target).attr("href") // activated tab
-            $('#showlayers').hide();
-            $('#m_add_chart').hide();
+            $('.targetSpecific').hide();
             gMapView = false;
             gChartView = false;
             gTimingView = false;
             if (target === '#map-view') {
                 map.init();
-                $('#showlayers').show();
+                $('.mapOnly').show();
                 gMapView = true;
             } else if(target === '#chart-view') {
                 chart.init(true, false);
-                $('#m_add_chart').show();
+                $('.chartOnly').show();
                 gChartView = true;
             } else if(target === '#timing-view') {
                 chart.init(false, true);
