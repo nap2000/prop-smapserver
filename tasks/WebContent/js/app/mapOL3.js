@@ -92,7 +92,8 @@ define([
                     view: new ol.View(
                         {
                             center: ol.proj.transform([0.0, 0.0], 'EPSG:4326', 'EPSG:3857'),
-                            zoom: 1
+                            zoom: 1,
+                            maxZoom: 21
                         }
                     )
 
