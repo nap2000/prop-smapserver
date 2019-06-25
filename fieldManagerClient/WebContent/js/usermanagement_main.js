@@ -1158,7 +1158,6 @@ require([
 
 		gCurrentUserIndex = userIndex;
 
-
 		filter_group = $('#group_name').val();
 		h = [];
 		idx = -1;
