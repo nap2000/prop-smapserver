@@ -45,25 +45,33 @@ define([
 
         function setLayers(layers) {
             gLayers = layers;
-            if(gLayers.length == 0) {
-                // Add default data layer
-                var layer = {
-                    title: localise.set["c_data"],
-                    local: true,
-                    clump: false,
-                    enabled: true
-                };
+            // Add default data layer
+            var layer = {
+                title: localise.set["c_data"],
+                local: true,
+                clump: undefined,
+                enabled: true,
+                fixed: true
+            };
+            if(gLayers.length < 2) {
                 gLayers.push(layer);
-                layer = {
-                    title: localise.set["c_heatmap"],
-                    local: true,
-                    clump: true,
-                    enabled: true
-                };
-                gLayers.push(layer);
-                refreshAllLayers(gLayers.length - 1);
-                saveToServer(gLayers);
+            } else {
+                gLayers[0] = layer;     // replace
             }
+            layer = {
+                title: localise.set["c_heatmap"],
+                local: true,
+                clump: "heatmap",
+                enabled: false,
+                fixed: true
+            };
+            if(gLayers.length < 2) {
+                gLayers.push(layer);
+            } else {
+                gLayers[1] = layer;     // replace
+            }
+            refreshAllLayers(gLayers.length - 1);
+            saveToServer(gLayers);
             showLayerSelections();
         }
 
@@ -179,7 +187,11 @@ define([
                 h[++idx] = '<td>';      // Delete
                 h[++idx] = '<button type="button" data-idx="';
                 h[++idx] = i;
-                h[++idx] = '" class="btn btn-default btn-sm rm_layer danger">';
+                h[++idx] = '" class="btn btn-default btn-sm rm_layer danger"';
+                if(gLayers[i].fixed) {
+                    h[++idx] = ' disabled';
+                }
+                h[++idx] = '>';
                 h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
                 h[++idx] = '</td>';
 
@@ -198,6 +210,16 @@ define([
                 gLayers.splice(idx, 1);
                 saveToServer(gLayers);
                 showLayerSelections();
+            });
+
+            $('.layerSelect').change(function() {
+                var $this = $(this);
+                var index = $(this).val();
+               if($this.prop('checked')) {
+                   showLayer(index);
+               } else {
+                   hideLayer(index);
+               }
             });
         }
 
@@ -294,7 +316,9 @@ define([
                 });
             }
 
-            gMap.addLayer(gVectorLayers[index]);
+            if(layer.enabled) {
+                gMap.addLayer(gVectorLayers[index]);
+            }
             gMap.getView().fit(gVectorSources[index].getExtent(), gMap.getSize());
         }
 
@@ -306,7 +330,16 @@ define([
                 gVectorLayers.splice(index, 1);
             }
 
+        }
 
+        function hideLayer(index) {
+            gMap.removeLayer(gVectorLayers[index]);
+            saveToServer(gLayers);
+        }
+
+        function showLayer(index) {
+            gMap.addLayer(gVectorLayers[index]);
+            saveToServer(gLayers);
         }
 
         /*
