@@ -48,12 +48,20 @@ define([
             if(gLayers.length == 0) {
                 // Add default data layer
                 var layer = {
-                    title: "title",
+                    title: localise.set["c_data"],
                     local: true,
-                    clump: false
+                    clump: false,
+                    enabled: true
                 };
                 gLayers.push(layer);
-                refreshLayer(gLayers.length - 1);
+                layer = {
+                    title: localise.set["c_heatmap"],
+                    local: true,
+                    clump: true,
+                    enabled: true
+                };
+                gLayers.push(layer);
+                refreshAllLayers(gLayers.length - 1);
                 saveToServer(gLayers);
             }
             showLayerSelections();
@@ -153,16 +161,20 @@ define([
                 h[++idx] = '<tr>';
 
                 h[++idx] = '<td>';      // Select
-                h[++idx] = '<div class="switch">';
-                h[++idx] = '<input type="checkbox" name="columnSelect"';
-                h[++idx] = ' class="layerSelect" value="';
+                h[++idx] = '<div class="switch custom-control custom-checkbox">';
+                h[++idx] = '<input type="checkbox" class="custom-control-input layerSelect" name="columnSelect"';
+                if(gLayers[i].enabled) {
+                    h[++idx] = 'checked="checked"';
+                }
+                h[++idx] = ' value="';
                 h[++idx] = i;
                 h[++idx] = '"';
+                h[++idx] = ' id="layer' + i + '"';
                 h[++idx] = '>';
-                h[++idx] = '</div>';
-                h[++idx] = '</td>';
-                h[++idx] = '<td>';      // Name
+                h[++idx] = '<label class="custom-control-label" for="layer' + i + '">';
                 h[++idx] = gLayers[i].title;
+                h[++idx] = '</label>';
+                h[++idx] = '</div>';
                 h[++idx] = '</td>';
                 h[++idx] = '<td>';      // Delete
                 h[++idx] = '<button type="button" data-idx="';
@@ -176,18 +188,16 @@ define([
 
 
             $('#layerSelect tbody').empty().html(h.join(''));
-            $('input', '#layerSelect tbody').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green'
-            });
+            //$('input', '#layerSelect tbody').iCheck({
+            //    checkboxClass: 'icheckbox_square-green',
+            //    radioClass: 'iradio_square-green'
+            //});
             $('.rm_layer', '#layerSelect tbody').click(function() {
                 var idx = $(this).data("idx");
                 deleteLayer(idx);
                 gLayers.splice(idx, 1);
                 saveToServer(gLayers);
                 showLayerSelections();
-
-
             });
         }
 
