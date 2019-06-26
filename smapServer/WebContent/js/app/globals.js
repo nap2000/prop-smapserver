@@ -419,7 +419,7 @@ define(function () {
 		    'date_type': {
 			    field: 'a_date_type',
 			    type: 'select',
-			    rex: 'no-calendar|month-year|year|coptic|ethiopian|islamic',
+			    rex: 'no-calendar|month-year|year|coptic|ethiopian|islamic|myanmar',
 			    valIsAppearance: true,
 			    value_offset: 0,
 			    undef_value: ''
