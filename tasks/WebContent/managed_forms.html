@@ -122,8 +122,9 @@
                 <div class="navbar-header">
                     <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i>
                     </a>
-
                 </div>
+                <h2 class="lang overviewSection" data-lang="c_records"></h2>
+                <h2 class="lang editRecordSection" data-lang="c_record" style="display:none;"></h2>
 
                 <ul class="nav navbar-top-links navbar-right">
 
@@ -142,55 +143,42 @@
             </nav>
         </div>
 
-        <!-- Header Row -->
+        <!-- Header Row - Filtering goes here-->
         <div class="row wrapper border-bottom white-bg page-heading">
-            <div class="col-sm-2">
-                <h2 class="lang" data-lang="c_records"></h2>
-            </div>
-            <div class="col-sm-10">
-                <form class="form-inline" role="form">
-                    <div class="col-sm-6 pt-4">
-                        <div class="form-group row">
-                            <label class="lang col-md-4"  data-lang="c_project"  for="project_name"></label>
-                            <select class="project_list form-control form-control-lg col-md-8" id="project_name"></select>
-                        </div>
+
+            <div class="col-sm-5 pt-4 overviewSection">
+                <form class="form" role="form">
+                    <div class="form-group row">
+                        <label class="lang col-md-4"  data-lang="c_project"  for="project_name"></label>
+                        <select class="project_list form-control form-control-lg col-md-8" id="project_name"></select>
                     </div>
-                    <div class="col-sm-6 pt-4">
-                        <div class="form-group row">
-                            <label class="lang col-md-4" data-lang="c_survey" for="survey_name"></label>
-                            <select class="survey_select form-control col-md-8 form-control-lg" id="survey_name"></select>
-                        </div>
+                    <div class="form-group row">
+                        <label class="lang col-md-4" data-lang="c_survey" for="survey_name"></label>
+                        <select class="survey_select form-control col-md-8 form-control-lg" id="survey_name"></select>
                     </div>
 
                 </form>
 
             </div>
 
-            <div class="col-sm-12">
-                <form class="form-inline" role="form">
-                    <div class="col-sm-4">
-                        <div class="form-group row">
-                            <label class="lang col-sm-4 control-label" data-lang="c_dateq" for="filter_from">date</label>
-                            <div class="col-sm-8">
-                                <select class="form-control" id="date_question"></select>
-                            </div>
+            <div class="col-sm-5 pt-4 overviewSection">
+                <form class="form" role="form">
+                    <div class="form-group row">
+                        <label class="lang col-sm-4 control-label" data-lang="c_dateq" for="filter_from">date</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="date_question"></select>
                         </div>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="form-group row">
-                            <label class="lang col-sm-4 control-label" data-lang="a_from_date"
-                                   for="filter_from">from</label>
-                            <div class="col-sm-8">
-                                <input type="date" class="hasDatepicker survey_select form-control" id="filter_from">
-                            </div>
+                    <div class="form-group row">
+                        <label class="lang col-sm-4 control-label" data-lang="a_from_date" for="filter_from">from</label>
+                        <div class="col-sm-8">
+                            <input type="date" class="hasDatepicker survey_select form-control" id="filter_from">
                         </div>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="form-group row">
-                            <label class="lang col-sm-4 control-label" data-lang="a_to_date" for="filter_to">to</label>
-                            <div class="col-sm-8">
-                                <input type="date" class="hasDatepicker survey_select form-control" id="filter_to">
-                            </div>
+                    <div class="form-group row">
+                        <label class="lang col-sm-4 control-label" data-lang="a_to_date" for="filter_to">to</label>
+                        <div class="col-sm-8">
+                            <input type="date" class="hasDatepicker survey_select form-control" id="filter_to">
                         </div>
                     </div>
                 </form>
