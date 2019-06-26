@@ -46,6 +46,7 @@ requirejs.config({
         icheck: '../../../../js/libs/wb/plugins/iCheck/icheck.min',
         svgsave: '../../../../js/libs/saveSvgAsPng',
         metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu',
+        inspinia: '../../../../js/libs/wb/inspinia.v2.9.2',
         pace: '../../../../js/libs/wb/plugins/pace/pace.min',
         qrcode: '../../../../js/libs/jquery-qrcode-0.14.0.min',
 	    slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll.min'
@@ -63,7 +64,8 @@ requirejs.config({
         'app/chart': ['jquery'],
         'qrcode': ['jquery'],
 	    'slimscroll': ['jquery'],
-        'toggle': ['bootstrap.min']
+        'toggle': ['bootstrap.min'],
+        'inspinia': ['jquery']
     }
 });
 
@@ -84,7 +86,8 @@ require([
     'crf',
     'qrcode',
     'toggle',
-	'slimscroll'
+	'slimscroll',
+    'inspinia'
 
 ], function ($,
              common,
@@ -141,7 +144,6 @@ require([
         setCustomManage();
 	    setupUserProfile();
         localise.setlang();		// Localise HTML
-        $("#side-menu").metisMenu();
 
         // Get the parameters and show a management survey if required
         params = location.search.substr(location.search.indexOf("?") + 1)
@@ -725,7 +727,7 @@ require([
             $('.main_survey').html($('#survey_name option:selected').text());
 
         } else {
-            // No managed surveys in this project
+            // No surveys in this project
             $('#content').empty();
             gRefreshingData = false;
         }
