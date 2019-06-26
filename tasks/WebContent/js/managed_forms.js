@@ -893,7 +893,7 @@ require([
                     if (columns[colIdx].filter || columns[colIdx].type === "select1") {
                         var select = $('<select class="form-control"/>')
                             .appendTo(
-                                globals.gMainTable.column(colIdx).footer()
+                                globals.gMainTable.column(colIdx).header()
                             )
                             .on('change', function () {
                                 var val = $(this).val();
