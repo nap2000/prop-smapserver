@@ -127,7 +127,6 @@ require([
         gDirn: undefined
     }
 
-
     $(document).ready(function () {
 
         var i,
@@ -369,7 +368,7 @@ require([
             gChartView = false;
             gTimingView = false;
             if (target === '#map-view') {
-                map.init();
+                map.init(featureSelected);
                 $('.mapOnly').show();
                 gMapView = true;
             } else if(target === '#chart-view') {
@@ -961,24 +960,7 @@ require([
         // Respond to selection of a row
         globals.gMainTable
             .off('select').on('select', function (e, dt, type, indexes) {
-            var rowData = globals.gMainTable.rows(indexes).data().toArray();
-            if (true) {         // was only used if managed forms
-                window.location.hash="#edit";
-                gTasks.gSelectedRecord = rowData[0];
-                //$('#editRecord').modal("show"); xxxx
-                var
-                    record = gTasks.gSelectedRecord,
-                    columns = gTasks.cache.surveyConfig[globals.gViewId].columns,
-                    $editForm = $('#editRecordForm'),
-                    $surveyForm = $('#surveyForm');
-
-                $('.shareRecordOnly, .role_select').hide();
-                $('#srLink').val("");
-                getSurveyRoles(globals.gCurrentSurvey);
-                actioncommon.showEditRecordForm(record, columns, $editForm, $surveyForm);
-                $('.overviewSection').hide();
-                $('.editRecordSection').show();
-            }
+                recordSelected(indexes);
         });
 
         // Highlight data conditionally, set barcodes
@@ -1582,6 +1564,40 @@ require([
         }
         $('.overviewSection').show();
         $('.editRecordSection').hide();
+    }
+
+    /*
+     * Respond to a map feature being selected
+     */
+    function featureSelected(event) {
+        if(event.selected.length == 1) {
+            var feature = event.selected[0];
+            var index = feature.get('record');
+            var indexes = [];
+            indexes.push(index);
+            recordSelected(indexes);
+        }
+    }
+
+    /*
+     * Respond to a record of data being selected
+     */
+    function recordSelected(indexes) {
+        var rowData = globals.gMainTable.rows(indexes).data().toArray();
+        window.location.hash="#edit";
+        gTasks.gSelectedRecord = rowData[0];
+        var
+            record = gTasks.gSelectedRecord,
+            columns = gTasks.cache.surveyConfig[globals.gViewId].columns,
+            $editForm = $('#editRecordForm'),
+            $surveyForm = $('#surveyForm');
+
+        $('.shareRecordOnly, .role_select').hide();
+        $('#srLink').val("");
+        getSurveyRoles(globals.gCurrentSurvey);
+        actioncommon.showEditRecordForm(record, columns, $editForm, $surveyForm);
+        $('.overviewSection').hide();
+        $('.editRecordSection').show();
     }
 
 });

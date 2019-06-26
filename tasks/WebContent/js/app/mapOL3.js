@@ -29,11 +29,13 @@ define([
         'icheck'],
     function ($, modernizr, lang, globals) {
 
+
         var gMap,
             gLayers = [],
             gVectorSources = [],
             gVectorLayers = [],
-            gMapUpdatePending = true;
+            gMapUpdatePending = true,
+            gSelectFeature;
 
         return {
             init: init,
@@ -72,10 +74,11 @@ define([
             }
             refreshAllLayers(gLayers.length - 1);
             saveToServer(gLayers);
+
             showLayerSelections();
         }
 
-        function init() {
+        function init(selectCallback) {
 
             // Create osm layer
             var osm = new ol.layer.Tile({source: new ol.source.OSM()});
@@ -147,6 +150,19 @@ define([
                         gMap.updateSize();
                     }
                 });
+
+                // Respond to clicks
+                // select interaction working on "click"
+                gSelectFeature = new ol.interaction.Select({
+                    condition: ol.events.condition.singleClick,
+                    layers: function (layer) {
+                        // defines layer from which features are selectable
+                        return layer.get('id') == 'base';
+                    }
+                });
+                gMap.addInteraction(gSelectFeature);
+                gSelectFeature.on('select', selectCallback, this);
+
             }
 
             if (gMapUpdatePending) {
@@ -307,12 +323,14 @@ define([
             if (layer.clump === "heatmap") {
                 gVectorLayers[index] = new ol.layer.Heatmap({
                     source: gVectorSources[index],
-                    radius: 5
+                    radius: 5,
+                    id: 'heatmap'
                 });
             } else {
                 gVectorLayers[index] = new ol.layer.Vector({
                     source: gVectorSources[index],
-                    style: [defaultStyle]
+                    style: [defaultStyle],
+                    id: 'base'
                 });
             }
 
@@ -432,7 +450,9 @@ define([
                             "type": "Feature",
                             //"geometry": {"type": "Point", "coordinates": results[i]._geolocation},
                             "geometry": results[i]._geolocation,
-                            "properties": {}
+                            "properties": {
+                                record: i
+                            }
                         });
                 }
             }
