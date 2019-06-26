@@ -124,7 +124,7 @@
                     </a>
                 </div>
                 <h2 class="lang overviewSection" data-lang="c_records"></h2>
-                <h2 class="lang editRecordSection" data-lang="c_record" style="display:none;"></h2>
+                <h2 class="lang editRecordSection" data-lang="c_record"></h2>
 
                 <ul class="nav navbar-top-links navbar-right">
 
@@ -146,8 +146,9 @@
         <!-- Header Row - Filtering goes here-->
         <div class="row wrapper border-bottom white-bg page-heading">
 
-            <div class="col-sm-5 pt-4 overviewSection">
-                <form class="form" role="form">
+            <!-- record listing commands and filters -->
+            <div class="col-sm-4 pt-4 overviewSection border-right">
+                <form class="form pr-1" role="form">
                     <div class="form-group row">
                         <label class="lang col-md-4"  data-lang="c_project"  for="project_name"></label>
                         <select class="project_list form-control form-control-lg col-md-8" id="project_name"></select>
@@ -161,7 +162,7 @@
 
             </div>
 
-            <div class="col-sm-5 pt-4 overviewSection">
+            <div class="col-sm-4 pt-4 overviewSection">
                 <form class="form" role="form">
                     <div class="form-group row">
                         <label class="lang col-sm-4 control-label" data-lang="c_dateq" for="filter_from">date</label>
@@ -183,6 +184,17 @@
                     </div>
                 </form>
             </div>
+
+            <!-- record editing commands -->
+            <div class="col-sm-4 pt-4 editRecordSection border-right">
+                <form class="form" role="form">
+                    <div class="custom-control custom-switch custom-control-inline">
+                        <input type="checkbox" class="custom-control-input" id="lockRecord">
+                        <label class="custom-control-label lang" data-lang="mf_lock" for="lockRecord"></label>
+                    </div>
+                </form>
+            </div>
+
         </div>
 
         <div class="wrapper wrapper-content animated fadeInRight">
@@ -297,7 +309,7 @@
                 </div>
             </div>
 
-            <div class="row editRecordSection" style="display:none;">
+            <div class="row editRecordSection">
                 <div class="col-md-12">
                     <div class="ibox float-e-margins">
                         <div class="ibox-content">
@@ -313,7 +325,7 @@
                             <div class="row">
                                 <div class="col-sm-6 b-r showFormData">
                                     <h3 class="m-t-none m-b lang" data-lang="mf_fd"></h3>
-                                    <form id="surveyForm" role="form" class="form-horizontal">
+                                    <form id="surveyForm" role="form">
 
                                     </form>
                                 </div>

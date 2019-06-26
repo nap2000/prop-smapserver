@@ -99,7 +99,7 @@ define([
                 idx = -1;
 
             // Add form group and label
-            h[++idx] = '<div class="form-group"><label class="col-md-4 control-label">';
+            h[++idx] = '<div class="form-group row"><label class="col-md-4 control-label">';
             h[++idx] = configItem.displayName;
             h[++idx] = '</label>';
 

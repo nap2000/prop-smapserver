@@ -897,6 +897,8 @@ define({
     "mf_ld": "Layer details",
     "mf_tr": "A title is required",
     "mf_sr": "Summary Report",
+    "mf_lock": "Lock for editing",
+    "mf_rel": "Release",
 
     // Logout
     "lo_back": "Back",
