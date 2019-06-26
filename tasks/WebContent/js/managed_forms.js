@@ -145,6 +145,8 @@ require([
 	    setupUserProfile();
         localise.setlang();		// Localise HTML
 
+        $('.editRecordSection').hide();
+
         // Get the parameters and show a management survey if required
         params = location.search.substr(location.search.indexOf("?") + 1)
         pArray = params.split("&");
@@ -1026,7 +1028,7 @@ require([
         });
 
         // Respond to date filter changes
-        $('#filter_from, #filter_to').focusout(function () {
+        $('#filter_from, #filter_to').change(function () {
             globals.gMainTable.draw();
         });
         $('#date_question').change(function () {
