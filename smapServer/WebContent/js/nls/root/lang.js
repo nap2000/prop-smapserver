@@ -747,6 +747,7 @@ define({
 	"ed_coptic": "Coptic",
 	"ed_ethiopian": "Ethiopian",
 	"ed_islamic": "Islamic",
+    "ed_myanmar": "Myanmar",
     "ed_r": "Rating",
 	"ed_bear": "Bearing",
 	"ed_sep": "Thousands Separator",
