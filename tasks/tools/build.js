@@ -1,7 +1,7 @@
 ({
     appDir: '../WebContent',
     locale: "en",
-//    optimize: 'none',
+    optimize: 'none',
     wrapShim: false,
     waitSeconds: 60,
     baseUrl: 'js/libs',
@@ -46,6 +46,7 @@
 	mapbox: '../../../../smapServer/WebContent/js/libs/mapbox/js/mapbox',
 
 	inspinia: '../../../../smapServer/WebContent/js/libs/wb/inspinia.v2.9.2',
+	'wb-setup': '../../../../smapServer/WebContent/js/libs/wb/wb-setup',
 	jquery_ui: '../../../../smapServer/WebContent/js/libs/wb/jquery-ui-1.10.4.min',
 	metismenu: '../../../../smapServer/WebContent/js/libs/wb/plugins/metisMenu/jquery.metisMenu',
 	metismenu_v4: '../../../../smapServer/WebContent/js/libs/wb/plugins/metisMenu/jquery.metisMenu.2.7.7',

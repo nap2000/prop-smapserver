@@ -46,6 +46,20 @@ define([
         };
 
         function setLayers(layers) {
+
+            var i;
+
+            /*
+             * Delete existing layers
+             */
+            if(gLayers) {
+                for(i = 0; i < gLayers.length; i++) {
+                    deleteLayer(i);
+                }
+            }
+            /*
+             * Add new layers
+             */
             gLayers = layers;
             // Add default data layer
             var layer = {
@@ -269,6 +283,7 @@ define([
                     }).data();
 
                     for (i = 0; i < gLayers.length; i++) {
+                        deleteLayer(i);
                         updateSingleLayer(i, results);
                     }
                 }
