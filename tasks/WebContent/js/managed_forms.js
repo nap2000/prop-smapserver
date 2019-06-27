@@ -944,8 +944,6 @@ require([
 
                 gRefreshingData = false;
                 initialise();
-                map.refreshAllLayers(gMapView);
-                chart.refreshAllCharts(gChartView, gTimingView, true);
 
                 columns = gTasks.cache.surveyConfig[globals.gViewId].columns;
                 parameters = gTasks.cache.surveyConfig[globals.gViewId].parameters;
@@ -1088,6 +1086,10 @@ require([
                     });
                 }
             }
+
+            // Refresh the other views that depend on the displayed rows
+            map.refreshAllLayers(gMapView);
+            chart.refreshAllCharts(gChartView, gTimingView, true);
 
         });
 
