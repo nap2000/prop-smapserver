@@ -252,6 +252,30 @@ require([
         });
 
         /*
+         * Release a record
+         */
+        $('#m_release').click(function() {
+
+            var url = "/surveyKPI/managed/release/" + globals.gCurrentSurvey + "/" + gTasks.gSelectedRecord.instanceid;
+            addHourglass();
+            $.ajax({
+                type: "POST",
+                dataType: 'text',
+                contentType: "application/json",
+                cache: false,
+                url: url,
+                success: function (data, status) {
+                    removeHourglass();
+                    globals.gMainTable.ajax.reload();
+                    globals.gMainTable.row(gTasks.gSelectedRecord.instanceid);      // Reselect the row
+                }, error: function (data, status) {
+                    removeHourglass();
+                    alert(data.responseText);
+                }
+            });
+        });
+
+        /*
          * Save a record of data in managed forms
          */
         $('#saveRecord').click(function () {
