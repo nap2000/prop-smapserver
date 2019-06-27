@@ -143,7 +143,7 @@ require([
         window.chart = chart;
         window.moment = moment;
         setCustomManage();
-	    setupUserProfile();
+	    setupUserProfile(true);
         localise.setlang();		// Localise HTML
 
         $('.editRecordSection, .selectedOnly').hide();
@@ -215,7 +215,40 @@ require([
          * Edit a record
          */
         $('#m_edit').click(function() {
-            editRecord();
+            var columns = gTasks.cache.surveyConfig[globals.gViewId].columns;
+
+            window.location.hash="#edit";
+            $('.shareRecordOnly, .role_select').hide();
+            $('#srLink').val("");
+            getSurveyRoles(globals.gCurrentSurvey);
+            actioncommon.showEditRecordForm(gTasks.gSelectedRecord, columns, $('#editRecordForm'), $('#surveyForm'));
+
+            $('.overviewSection').hide();
+            $('.editRecordSection').show();
+        });
+
+        /*
+         * Lock a record for editing by this user
+         */
+        $('#m_lock').click(function() {
+
+            var url = "/surveyKPI/managed/lock/" + globals.gCurrentSurvey + "/" + gTasks.gSelectedRecord.instanceid;
+            addHourglass();
+            $.ajax({
+                type: "POST",
+                dataType: 'text',
+                contentType: "application/json",
+                cache: false,
+                url: url,
+                success: function (data, status) {
+                    removeHourglass();
+                    globals.gMainTable.ajax.reload();
+                    globals.gMainTable.row(gTasks.gSelectedRecord.instanceid);      // Reselect the row
+                }, error: function (data, status) {
+                    removeHourglass();
+                    alert(data.responseText);
+                }
+            });
         });
 
         /*
@@ -882,6 +915,7 @@ require([
             select: {
                 selector: 'td:not(:first-child)'
             },
+            rowId: 'instanceid',
             ajax: url,
             columns: shownColumns,
             order: [0],
@@ -1581,32 +1615,21 @@ require([
      */
     function recordUnSelected() {
         gSelectedIndexes = [];
+        gTasks.gSelectedRecord = undefined;
         $('.selectedOnly').hide();
     }
 
     function recordSelected(indexes) {
         gSelectedIndexes = indexes;
+        gTasks.gSelectedRecord = globals.gMainTable.rows(gSelectedIndexes).data().toArray()[0];
         $('.selectedOnly').hide();
-        $('.assigned').show();
-    }
-
-    function editRecord() {
-
-        var rowData = globals.gMainTable.rows(gSelectedIndexes).data().toArray();
-        window.location.hash="#edit";
-        gTasks.gSelectedRecord = rowData[0];
-        var
-            record = gTasks.gSelectedRecord,
-            columns = gTasks.cache.surveyConfig[globals.gViewId].columns,
-            $editForm = $('#editRecordForm'),
-            $surveyForm = $('#surveyForm');
-
-        $('.shareRecordOnly, .role_select').hide();
-        $('#srLink').val("");
-        getSurveyRoles(globals.gCurrentSurvey);
-        actioncommon.showEditRecordForm(record, columns, $editForm, $surveyForm);
-        $('.overviewSection').hide();
-        $('.editRecordSection').show();
+        if(gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned === globals.gLoggedInUser) {
+            $('.assigned').show();
+        } else if(gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned !== globals.gLoggedInUser) {
+            $('.assigned_other').show();
+        } else {
+            $('.not_assigned').show();
+        }
     }
 
 });
