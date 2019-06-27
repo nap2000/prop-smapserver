@@ -112,6 +112,7 @@ require([
     var gTimingView = false;        // Set true when the timing view is shown
     var gRefreshingData = false;    // Prevent double click on  refresh button
     var gSelectedIndexes = [];      // Array of selected row indexes
+    var gAssignedCol = 0;           // Column that contains the assignment status
 
     window.gTasks = {
         cache: {
@@ -669,49 +670,87 @@ require([
 
 
     /*
-     * Add date filtering to datatable
+     * Add filtering by date et al to datatable
      */
     if (!isDuplicates) {
         $.fn.dataTableExt.afnFiltering.push(
             function (oSettings, aData, iDataIndex) {
-                var fromDate = document.getElementById('filter_from').value,
-                    toDate = document.getElementById('filter_to').value,
-                    dateCol = $('#date_question').val();
 
-                var dateParts = [],
-                    dataDate,
-                    dataDateVal;
-
-                fromDate = fromDate.replace(/\-/g, "");
-                toDate = toDate.replace(/\-/g, "");
-
-                dataDateVal = aData[dateCol];
-
-                if (dataDateVal) {
-                    dataDate = dataDateVal.replace(/\-/g, "");
-                    dateParts = dataDate.split(" ");
-                    if (dateParts.length > 0) {
-                        dataDate = dateParts[0];
-                    }
-
-                    if (fromDate === "" && toDate === "") {
-                        return true;
-                    }
-                    if (fromDate === "" && toDate >= dataDate) {
-                        return true;
-                    } else if (toDate === "" && fromDate <= dataDate) {
-                        return true;
-                    } else if (fromDate <= dataDate && toDate >= dataDate) {
-                        return true;
-                    }
-
+                if(filterOutAssignments(aData)) {
                     return false;
-                } else {
-                    return true;
                 }
+                if(filterOutDate(aData)) {
+                    return false;
+                }
+                return true;
 
             }
         );
+    }
+
+    /*
+     * Test if this record should be filtered out based on its assignement
+     */
+    function filterOutAssignments(aData) {
+        var myRecords = $('#my_records').prop('checked'),
+            unassignedRecords = $('#unassigned_records').prop('checked'),
+            otherRecords = $('#other_records').prop('checked');
+
+        if(myRecords && unassignedRecords && otherRecords) {
+            return false;
+        }
+
+        var assignment = aData[gAssignedCol];
+        if(myRecords && assignment === globals.gLoggedInUser.ident) {
+            return false;
+        }
+        if(unassignedRecords && assignment === '') {
+            return false;
+        }
+        if(otherRecords && assignment !== '' && assignment !== globals.gLoggedInUser.ident) {
+            return false;
+        }
+        return true;
+    }
+
+    /*
+     * Test if this record should be filter out based on its date
+     */
+    function filterOutDate(aData) {
+        var fromDate = document.getElementById('filter_from').value,
+            toDate = document.getElementById('filter_to').value,
+            dateCol = $('#date_question').val(),
+            dateParts = [],
+            dataDate,
+            dataDateVal;
+
+        fromDate = fromDate.replace(/\-/g, "");
+        toDate = toDate.replace(/\-/g, "");
+
+        dataDateVal = aData[dateCol];
+
+        if (dataDateVal) {
+            dataDate = dataDateVal.replace(/\-/g, "");
+            dateParts = dataDate.split(" ");
+            if (dateParts.length > 0) {
+                dataDate = dateParts[0];
+            }
+
+            if (fromDate === "" && toDate === "") {
+                return false;
+            }
+            if (fromDate === "" && toDate >= dataDate) {
+                return false;
+            } else if (toDate === "" && fromDate <= dataDate) {
+                return false;
+            } else if (fromDate <= dataDate && toDate >= dataDate) {
+                return false;
+            }
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /*
@@ -1093,8 +1132,8 @@ require([
 
         });
 
-        // Respond to date filter changes
-        $('#date_question, #filter_from, #filter_to').change(function () {
+        // Respond to filter changes
+        $('.table_filter').change(function () {
             globals.gMainTable.draw();
         });
 
@@ -1596,6 +1635,8 @@ require([
                     h[++idx] = '">';
                     h[++idx] = columns[i].displayName;
                     h[++idx] = '</option>';
+            } else if (d.displayName === '_assigned') {
+                gAssignedCol = i;
             }
 
 

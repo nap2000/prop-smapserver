@@ -899,6 +899,9 @@ define({
     "mf_sr": "Summary Report",
     "mf_lock": "Lock for editing",
     "mf_rel": "Release",
+    "mf_mr": "My records",
+    "mf_ur": "Unassigned records",
+    "mf_or": "Other records",
 
     // Logout
     "lo_back": "Back",
