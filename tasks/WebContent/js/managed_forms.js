@@ -113,6 +113,7 @@ require([
     var gChartView = false;         // Set true when the chart view is shown
     var gTimingView = false;        // Set true when the timing view is shown
     var gRefreshingData = false;    // Prevent double click on  refresh button
+    var gSelectedIndexes = [];      // Array of selected row indexes
 
     window.gTasks = {
         cache: {
@@ -145,7 +146,7 @@ require([
 	    setupUserProfile();
         localise.setlang();		// Localise HTML
 
-        $('.editRecordSection').hide();
+        $('.editRecordSection, .selectedOnly').hide();
 
         // Get the parameters and show a management survey if required
         params = location.search.substr(location.search.indexOf("?") + 1)
@@ -208,6 +209,13 @@ require([
                 $('.showFormData').hide();
                 $('.showMgmtData').addClass('col-sm-12').removeClass('col-sm-6');
             }
+        });
+
+        /*
+         * Edit a record
+         */
+        $('#m_edit').click(function() {
+            editRecord();
         });
 
         /*
@@ -870,7 +878,10 @@ require([
         // Create data table
         globals.gMainTable = $table.DataTable({
             processing: true,
-            select: true,
+            responsive: true,
+            select: {
+                selector: 'td:not(:first-child)'
+            },
             ajax: url,
             columns: shownColumns,
             order: [0],
@@ -938,7 +949,7 @@ require([
                 {
                     targets: "_all",
                     render: function (data, type, full, meta) {
-                        return addAnchors(data, true);
+                        return addAnchors(data, true).join(',');
                     }
                 },
                 {
@@ -962,9 +973,11 @@ require([
         });
 
         // Respond to selection of a row
-        globals.gMainTable
-            .off('select').on('select', function (e, dt, type, indexes) {
+        globals.gMainTable.off('select').on('select', function (e, dt, type, indexes) {
                 recordSelected(indexes);
+        });
+        globals.gMainTable.off('deselect').on('deselect', function (e, dt, type, indexes) {
+            $('.selectedOnly').hide();
         });
 
         // Highlight data conditionally, set barcodes
@@ -1028,10 +1041,7 @@ require([
         });
 
         // Respond to date filter changes
-        $('#filter_from, #filter_to').change(function () {
-            globals.gMainTable.draw();
-        });
-        $('#date_question').change(function () {
+        $('#date_question, #filter_from, #filter_to').change(function () {
             globals.gMainTable.draw();
         });
 
@@ -1044,25 +1054,6 @@ require([
          * Settings
          */
         $('#tab-columns-content, #tab-barcode-content').html(hColSort.join(''));
-
-        // Set checkboxes in column sort section of settings
-
-        /* performance problem if these are enabled
-        $('input', '#tab-columns-content,#tab-barcode-content').iCheck({
-            checkboxClass: 'icheckbox_square-green',
-            radioClass: 'iradio_square-green'
-        });
-        $('input', '#tab-columns-content').each(function (index) {
-            if (!columns[index + 1].hide) {
-                $(this).iCheck('check');
-            }
-        });
-        $('input', '#tab-barcode-content').each(function (index) {
-            if (columns[index + 1].barcode) {
-                $(this).iCheck('check');
-            }
-        });
-        */
 
         /*
          * Duplicates modal
@@ -1580,14 +1571,28 @@ require([
             var indexes = [];
             indexes.push(index);
             recordSelected(indexes);
+        } else {
+            recordUnSelected();
         }
     }
 
     /*
      * Respond to a record of data being selected
      */
+    function recordUnSelected() {
+        gSelectedIndexes = [];
+        $('.selectedOnly').hide();
+    }
+
     function recordSelected(indexes) {
-        var rowData = globals.gMainTable.rows(indexes).data().toArray();
+        gSelectedIndexes = indexes;
+        $('.selectedOnly').hide();
+        $('.assigned').show();
+    }
+
+    function editRecord() {
+
+        var rowData = globals.gMainTable.rows(gSelectedIndexes).data().toArray();
         window.location.hash="#edit";
         gTasks.gSelectedRecord = rowData[0];
         var
