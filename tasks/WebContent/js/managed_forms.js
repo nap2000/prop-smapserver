@@ -107,9 +107,7 @@ require([
      *    Override settings where names match
      */
 
-    var gDataLoaded = false,
-        gConfigLoaded = false,
-        gMapView = false;           // Set true when the map tab is shown
+    var gMapView = false;           // Set true when the map tab is shown
     var gChartView = false;         // Set true when the chart view is shown
     var gTimingView = false;        // Set true when the timing view is shown
     var gRefreshingData = false;    // Prevent double click on  refresh button
@@ -192,8 +190,6 @@ require([
 
         $('#exitEditRecord').click(function() {
             window.history.back();
-            //exitEdit();
-            //history.popstate();
         });
 
         window.addEventListener("popstate", function(e) {
@@ -232,7 +228,7 @@ require([
          */
         $('#m_lock').click(function() {
 
-            var url = "/surveyKPI/managed/lock/" + globals.gCurrentSurvey + "/" + gTasks.gSelectedRecord.instanceid;
+            var url = "/surveyKPI/managed/lock/" + globals.gCurrentSurvey;
             addHourglass();
             $.ajax({
                 type: "POST",
@@ -240,10 +236,11 @@ require([
                 contentType: "application/json",
                 cache: false,
                 url: url,
+                data: {record: gTasks.gSelectedRecord.instanceid},
                 success: function (data, status) {
                     removeHourglass();
                     globals.gMainTable.ajax.reload();
-                    globals.gMainTable.row(gTasks.gSelectedRecord.instanceid);      // Reselect the row
+                    globals.gMainTable.row(gTasks.gSelectedRecord.instanceid.replace(':', '\\:'));      // Reselect the row, escape the :
                 }, error: function (data, status) {
                     removeHourglass();
                     alert(data.responseText);
@@ -256,7 +253,7 @@ require([
          */
         $('#m_release').click(function() {
 
-            var url = "/surveyKPI/managed/release/" + globals.gCurrentSurvey + "/" + gTasks.gSelectedRecord.instanceid;
+            var url = "/surveyKPI/managed/release/" + globals.gCurrentSurvey;
             addHourglass();
             $.ajax({
                 type: "POST",
@@ -264,6 +261,7 @@ require([
                 contentType: "application/json",
                 cache: false,
                 url: url,
+                data: {record: gTasks.gSelectedRecord.instanceid},
                 success: function (data, status) {
                     removeHourglass();
                     globals.gMainTable.ajax.reload();
@@ -401,7 +399,7 @@ require([
 
             if (typeof masterRecord != "undefined") {
                 // 1. Hide results other than this primary result
-                showManagedData(globals.gCurrentSurvey, '#content', masterRecord);
+                showManagedData(globals.gCurrentSurvey);
 
                 // 2. Get related surveys and show it
                 getRelatedList(globals.gCurrentSurvey, masterRecord);
@@ -432,6 +430,7 @@ require([
          */
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             var target = $(e.target).attr("href") // activated tab
+            console.log("tab:::: " + target);
             $('.targetSpecific').hide();
             gMapView = false;
             gChartView = false;
@@ -736,17 +735,14 @@ require([
                 dataType: 'json',
                 success: function (data) {
                     removeHourglass();
-                    gConfigLoaded = true;
+
                     globals.gViewId = data.viewId;
                     gTasks.cache.surveyConfig[globals.gViewId] = data;
 
+                    showManagedData(sId);
+
                     map.setLayers(data.layers);
                     chart.setCharts(data.charts);
-                    if (gDataLoaded) {
-                        map.refreshAllLayers(gMapView);
-                        chart.refreshAllCharts(gChartView, gTimingView, true);
-                        initialise();
-                    }
 
                     // Add a config item for the group value if this is a duplicates search
                     if (isDuplicates) {
@@ -757,20 +753,23 @@ require([
                             displayName: "_group"
                         });
                     }
-                    showManagedData(sId, '#content', undefined);
                 },
                 error: function (xhr, textStatus, err) {
                     removeHourglass();
+                    map.deleteLayers();
+                    //if (globals.gMainTable) {
+                    //    globals.gMainTable.destroy(true);
+                    //}
                     gRefreshingData = false;
                     if (xhr.readyState == 0 || xhr.status == 0) {
                         return;  // Not an error
                     } else {
-                        alert("Error failed to get column names from survey: " + sId + " " + xhr.responseText);
+                        alert(localise.set["error"] + ": " + xhr.responseText);
                     }
                 }
             });
         } else {
-            showManagedData(sId, '#content', undefined);
+            showManagedData(sId);
         }
     }
 
@@ -779,17 +778,15 @@ require([
      */
     function surveyChanged() {
 
-        gDataLoaded = false;
-        gConfigLoaded = false;
 
         globals.gViewId = 0;        // TODO remember views set for each survey and restore
 
+        $('.editRecordSection, .selectedOnly').hide();
         if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
 
             saveCurrentProject(-1, globals.gCurrentSurvey);
             getSurveyView(0, globals.gCurrentSurvey,
                 gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].managed_id, 0);
-
 
             $('.main_survey').html($('#survey_name option:selected').text());
 
@@ -837,7 +834,7 @@ require([
      * Show the survey data along with the management columns
      * If masterRecord is specified then only show that record
      */
-    function showManagedData(sId, content, masterRecord) {
+    function showManagedData(sId) {
 
         var x = 1,
             columns = gTasks.cache.surveyConfig[globals.gViewId].columns,
@@ -944,13 +941,12 @@ require([
             columns: shownColumns,
             order: [0],
             initComplete: function (settings, json) {
-                gDataLoaded = true;
+
                 gRefreshingData = false;
-                if (gConfigLoaded) {
-                    initialise();
-                    map.refreshAllLayers(gMapView);
-                    chart.refreshAllCharts(gChartView, gTimingView, true);
-                }
+                initialise();
+                map.refreshAllLayers(gMapView);
+                chart.refreshAllCharts(gChartView, gTimingView, true);
+
                 columns = gTasks.cache.surveyConfig[globals.gViewId].columns;
                 parameters = gTasks.cache.surveyConfig[globals.gViewId].parameters;
 
@@ -960,21 +956,21 @@ require([
                     $('.showMgmtData').addClass('col-sm-12').removeClass('col-sm-6');
                 }
 
-                globals.gMainTable.columns().flatten().each(function (colIdx) {
+                this.api().columns().flatten().each(function (colIdx) {
                     if (columns[colIdx].filter || columns[colIdx].type === "select1") {
                         var select = $('<select class="form-control"/>')
                             .appendTo(
-                                globals.gMainTable.column(colIdx).header()
+                                this.api().column(colIdx).header()
                             )
                             .on('change', function () {
                                 var val = $(this).val();
                                 if (val == '') {
-                                    globals.gMainTable
+                                    this.api()
                                         .column(colIdx)
                                         .search(val)
                                         .draw();
                                 } else {
-                                    globals.gMainTable
+                                    this.api()
                                         .column(colIdx)
                                         .search("^" + $(this).val() + "$", true, false, false)
                                         .draw();
@@ -984,7 +980,7 @@ require([
 
                         select.append($('<option value=""></option>'));
 
-                        globals.gMainTable
+                        this.api()
                             .column(colIdx)
                             .cache('search')
                             .sort()
@@ -1055,9 +1051,6 @@ require([
                         last = group;
                     }
                 });
-            } else {
-                chart.refreshAllCharts(gChartView, gTimingView, false);
-                map.refreshAllLayers(gMapView);
             }
 
             columns = gTasks.cache.surveyConfig[globals.gViewId].columns;
@@ -1431,7 +1424,7 @@ require([
             dataType: 'json',
             success: function (data) {
                 removeHourglass();
-                showManagedData(globals.gCurrentSurvey, '#' + tableId, undefined)
+                showManagedData(globals.gCurrentSurvey)
 
 
             },

@@ -42,21 +42,29 @@ define([
             setLayers: setLayers,
             refreshLayer: refreshLayer,
             refreshAllLayers: refreshAllLayers,
-            saveLayer: saveLayer
+            saveLayer: saveLayer,
+            deleteLayers: deleteLayers
         };
 
-        function setLayers(layers) {
-
-            var i;
-
-            /*
-             * Delete existing layers
-             */
+        function deleteLayers() {
             if(gLayers) {
                 for(i = 0; i < gLayers.length; i++) {
                     deleteLayer(i);
                 }
             }
+        }
+
+        function setLayers(layers) {
+
+            var i;
+
+            console.log("====== set layers: ");
+
+            /*
+             * Delete existing layers
+             */
+            deleteLayers();
+
             /*
              * Add new layers
              */
@@ -86,7 +94,6 @@ define([
             } else {
                 gLayers[1] = layer;     // replace
             }
-            refreshAllLayers(gLayers.length - 1);
             saveToServer(gLayers);
 
             showLayerSelections();
@@ -94,11 +101,11 @@ define([
 
         function init(selectCallback) {
 
-            // Create osm layer
-            var osm = new ol.layer.Tile({source: new ol.source.OSM()});
-
             // Add the map
             if (!gMap) {
+                // Create osm layer
+                var osm = new ol.layer.Tile({source: new ol.source.OSM()});
+
                 gMap = new ol.Map({
                     target: 'map',
                     layers: [
@@ -273,6 +280,7 @@ define([
          * Redisplay all layers
          */
         function refreshAllLayers(mapView) {
+            console.log("====== refresh all layers: " + mapView);
             if (mapView) {
                 if (gMap) {
                     var i;
