@@ -132,6 +132,7 @@ require([
 
     $(document).ready(function () {
 
+        /*
         var i,
             params,
             pArray = [],
@@ -139,15 +140,19 @@ require([
             openingNew = false,
             dont_get_current_survey = true;
 
+         */
+
         window.chart = chart;
         window.moment = moment;
         setCustomManage();
 	    setupUserProfile(true);
         localise.setlang();		// Localise HTML
+        userDefaults();
 
         $('.editRecordSection, .selectedOnly').hide();
 
         // Get the parameters and show a management survey if required
+        /*
         params = location.search.substr(location.search.indexOf("?") + 1)
         pArray = params.split("&");
         dont_get_current_survey = false;
@@ -163,10 +168,11 @@ require([
                 // TODO display list of
             }
         }
+        */
 
         // Get the user details
         globals.gIsAdministrator = false;
-        getLoggedInUser(refreshData, false, true, undefined, false, dont_get_current_survey);
+        getLoggedInUser(refreshData, false, true, undefined, false, false);
 
         // Get the report definition
 
@@ -1690,6 +1696,20 @@ require([
         } else {
             $('.not_assigned').show();
         }
+
+        if(globals.gIsAdministrator) {
+            $('.assigned_admin').show();
+        }
+    }
+
+    /*
+     * Set up the user defaults on the page
+     * TODO restore these from local session storage
+     */
+    function userDefaults() {
+        $('#my_records').prop('checked', true);
+        $('#unassigned_records').prop('checked', true);
+        $('#other_records').prop('checked', true);
     }
 
 });
