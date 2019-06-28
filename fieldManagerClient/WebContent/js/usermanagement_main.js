@@ -2220,17 +2220,9 @@ require([
 	 */
 	function getUsers() {
 
-		var month,		// Month and year that submissions for each user are to be calculated
-			year,
-			today;
-
-		today = new Date();
-		month = today.getMonth() + 1;	// Server works from 1 - 12
-		year = today.getFullYear();
-
 		addHourglass();
 		$.ajax({
-			url: "/surveyKPI/userList?year=" + year + "&month=" + month,
+			url: "/surveyKPI/userList",
 			dataType: 'json',
 			cache: false,
 			success: function(data) {
