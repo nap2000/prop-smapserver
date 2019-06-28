@@ -184,7 +184,7 @@ require([
         // Set change function on survey
         $('#survey_name').change(function () {
             gTasks.gSelectedSurveyIndex = $(this).val();
-            globals.gCurrentSurvey = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].id;
+            globals.gCurrentSurvey = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].id;  // TODO remove
             surveyChanged();
         });
 
@@ -231,6 +231,13 @@ require([
         });
 
         /*
+         * Open the dialog to assign a user to a record
+         */
+        $('#m_assign_to').click(function() {
+            $('#userAssign').modal("show");
+        });
+
+        /*
          * Lock a record for editing by this user
          */
         $('#m_lock').click(function() {
@@ -253,6 +260,32 @@ require([
                     alert(data.responseText);
                 }
             });
+        });
+        /*
+	     * Lock a record for editing by this user
+	     */
+        $('#assignUserSave').click(function() {
+
+            var url = "/surveyKPI/managed/assign/" + globals.gCurrentSurvey + "/" + $('#user_to_assign').val();
+
+            addHourglass();
+            $.ajax({
+                type: "POST",
+                dataType: 'text',
+                contentType: "application/json",
+                cache: false,
+                url: url,
+                data: {record: gTasks.gSelectedRecord.instanceid},
+                success: function (data, status) {
+                    removeHourglass();
+                    globals.gMainTable.ajax.reload();
+                    globals.gMainTable.row(gTasks.gSelectedRecord.instanceid.replace(':', '\\:'));      // Reselect the row, escape the :
+                }, error: function (data, status) {
+                    removeHourglass();
+                    alert(data.responseText);
+                }
+            });
+
         });
 
         /*
@@ -825,6 +858,8 @@ require([
 
 
         globals.gViewId = 0;        // TODO remember views set for each survey and restore
+
+        getEligibleUsers();
 
         $('.editRecordSection, .selectedOnly').hide();
         if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
@@ -1710,6 +1745,49 @@ require([
         $('#my_records').prop('checked', true);
         $('#unassigned_records').prop('checked', true);
         $('#other_records').prop('checked', true);
+    }
+
+    /*
+	 * Get the list of users from the server
+	 */
+    function getEligibleUsers() {
+
+        if(globals.gCurrentSurvey) {
+            addHourglass();
+            $.ajax({
+                url: "/surveyKPI/userList/survey/" + globals.gCurrentSurvey,
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                    removeHourglass();
+
+                    var h = [],
+                        idx = -1,
+                        $elem = $('#user_to_assign');
+
+                    $elem.empty();
+                    if(data && data.length > 0) {
+                        for(i = 0; i < data.length; i++) {
+                            h[++idx] = '<option value="';
+                            h[++idx] = data[i].ident;
+                            h[++idx] = '">';
+                            h[++idx] = data[i].name;
+                            h[++idx] = '</option>';
+                        }
+                        $elem.html(h.join(''));
+                    }
+
+                },
+                error: function (xhr, textStatus, err) {
+                    removeHourglass();
+                    if (xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        alert(localise.set["error"] + ": " + err);
+                    }
+                }
+            });
+        }
     }
 
 });
