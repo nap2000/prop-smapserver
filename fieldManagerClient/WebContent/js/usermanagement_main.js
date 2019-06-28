@@ -617,7 +617,7 @@ require([
 					organisation.can_sms = true;
 				}
 			}
-			organisation.navbar_color = $('input', '#o_navbar_color').val();
+			organisation.navbar_color = $('#o_navbar_color').val();
 
 			organisationList[0] = organisation;
 			var organisationString = JSON.stringify(organisationList);
@@ -801,8 +801,8 @@ require([
 		 * Reset the webform options back to their defaults
 		 */
 		$('#resetWebform').click(function() {
-			$('input','#wf_page_background').colorpicker('setValue', '#f0f0f0');
-			$('input','#wf_paper_background').colorpicker('setValue', '#fff');
+			$('#wf_page_background').colorpicker('setValue', '#f0f0f0');
+			$('#wf_paper_background').colorpicker('setValue', '#fff');
 			$('#wf_footer_horizontal_offset').val(5);
 		});
 
@@ -815,8 +815,8 @@ require([
 				options=[],
 				i;
 
-			webform.page_background_color = $('input', '#wf_page_background').val();
-			webform.paper_background_color = $('input', '#wf_paper_background').val();
+			webform.page_background_color = $('#wf_page_background').val();
+			webform.paper_background_color = $('#wf_paper_background').val();
 			webform.footer_horizontal_offset = $('#wf_footer_horizontal_offset').val();
 			webform.footer_horizontal_offset = webform.footer_horizontal_offset || 0;
 
@@ -1167,7 +1167,7 @@ require([
 				(gGroups[i].id != globals.GROUP_ENTERPRISE || globals.gIsEnterpriseAdministrator) &&
 				gGroups[i].id !== globals.GROUP_OWNER
 			) {
-				h[++idx] = '<div class="custom-control custom-checkbox">';
+				h[++idx] = '<div class="custom-control custom-checkbox ml-2">';
 				h[++idx] = '<input type="checkbox" class="custom-control-input" id="';
 				h[++idx] = 'user_groups_cb' + i;
 				h[++idx] = '" name="';
@@ -1197,7 +1197,7 @@ require([
 		h = [];
 		idx = -1;
 		for(i = 0; i < globals.gProjectList.length; i++) {
-			h[++idx] = '<div class="custom-control custom-checkbox">';
+			h[++idx] = '<div class="custom-control custom-checkbox ml-2">';
 			h[++idx] = '<input type="checkbox" class="custom-control-input" id="';
 			h[++idx] = 'user_projects_cb' + i;
 			h[++idx] = '" name="';
@@ -1227,7 +1227,7 @@ require([
 			h = [];
 			idx = -1;
 			for(i = 0; i < globals.gRoleList.length; i++) {
-				h[++idx] = '<div class="custom-control custom-checkbox">';
+				h[++idx] = '<div class="custom-control custom-checkbox ml-2">';
 				h[++idx] = '<input type="checkbox" class="custom-control-input" id="';
 				h[++idx] = 'user_roles_cb' + i;
 				h[++idx] = '" name="user_roles_cb"';
@@ -1256,7 +1256,7 @@ require([
 			h = [];
 			idx = -1;
 			for(i = 0; i < gOrganisationList.length; i++) {
-				h[++idx] = '<div class="custom-control custom-checkbox">';
+				h[++idx] = '<div class="custom-control custom-checkbox ml-2">';
 				h[++idx] = '<input type="checkbox" class="custom-control-input" id="';
 				h[++idx] = 'user_orgs_cb' + i;
 				h[++idx] = '" name="user_orgs_cb"';
@@ -1390,7 +1390,7 @@ require([
 			$('#o_email_port').val(org.email_port);
 			$('#o_default_email_content').val(org.default_email_content);
 			$('#o_server_description').val(org.server_description);
-			$('input','#o_navbar_color').colorpicker('setValue', org.navbar_color);
+			$('#o_navbar_color').colorpicker('setValue', org.navbar_color);
 			$('.puboption').each(function() {
 				console.log("option: " + $(this).val() );
 				if($(this).val() === "email") {
@@ -2661,8 +2661,8 @@ require([
 			success: function(webform) {
 				removeHourglass();
 
-				$('input','#wf_page_background').colorpicker('setValue', webform.page_background_color);
-				$('input','#wf_paper_background').colorpicker('setValue', webform.paper_background_color);
+				$('#wf_page_background').colorpicker('setValue', webform.page_background_color);
+				$('#wf_paper_background').colorpicker('setValue', webform.paper_background_color);
 				$('#wf_footer_horizontal_offset').val(webform.footer_horizontal_offset);
 
 			},
