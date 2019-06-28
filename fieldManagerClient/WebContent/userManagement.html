@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta charset="utf-8">
 
-	<title class="lang" data-lang="m_users"></title>
+	<title class="lang" data-lang="m_users">users</title>
 
 	<link href="/css/normalize.css" rel="stylesheet" />
 	<link href="/css/bootstrap.v4.min.css" rel="stylesheet">
@@ -15,7 +15,7 @@
 	<link href="/css/wb/style.v2.9.1.css" rel="stylesheet">
 	<link href="/css/smap-wb.css" type="text/css" rel="stylesheet" >
 
-	<script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
+	<script> if (!window.console) console = {log: function() {}}; </script>
 	<script src="/js/libs/modernizr.js"></script>
 	<script src="/js/app/theme.js"></script>
 	<script src="/js/libs/jquery-2.1.1.js"></script>
@@ -29,7 +29,7 @@
 <body>
 
 	<div id="wrapper">
-		<nav class="navbar-default navbar-static-side" role="navigation">
+		<nav class="navbar-default navbar-static-side">
 		  <div class="sidebar-collapse">
 			  <ul class="nav metismenu" id="side-menu">
 				  <li>
@@ -73,7 +73,7 @@
 						  href="/fieldManager/monitor.html"><i class="fa fa-heartbeat"></i> <span
 						  class="nav-label lang" data-lang="m_monitor"></span></a></li>
 				  <li id="m_resources" class="restrict_role admin_role analyst_role"><a
-						  href="/resources.html"><i class="fa fa-database"></i></i> <span
+						  href="/resources.html"><i class="fa fa-database"></i> <span
 						  class="nav-label lang" data-lang="m_resources"></span></a></li>
 				  <li id="m_os" class="restrict_role admin_role analyst_role"><a
 						  href="/tasks/oversight.html"><i class="fa fa-envelope"></i> <span
@@ -85,7 +85,6 @@
 						  href="https://docs.google.com/folderview?id=0B5_SmpWlQYxvNExwSFV5X051Yjg&usp=docslist_api#"
 						  target="_blank"><i class="fa fa-info-circle"></i> <span class="lang"
 																				  data-lang="m_help">help</span></a></li>
-				</li>
 			  </ul>
 		  </div>
 
@@ -95,7 +94,7 @@
 
 			<!-- Navbar Row -->
 			<div class="row border-bottom">
-				<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+				<nav class="navbar navbar-static-top" style="margin-bottom: 0">
 					<div class="navbar-header">
 						<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i></a>
 					</div>
@@ -231,10 +230,10 @@
 								<label for="ft_send" data-lang="u_ft_as" class="lang control-label col-sm-4">synchronise</label>
 								<div class="col-sm-6">
 									<select class="form-control" id="ft_send">
-										<option class="lang" data-lang="u_ft_sop" value="not set"></option>
-										<option class="lang" data-lang="c_off" value="off"></option>
-										<option class="lang" data-lang="u_ft_sw" value="wifi_only"></option>
-										<option class="lang" data-lang="u_ft_sw_c" value="wifi_and_cellular"></option>
+										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+										<option class="lang" data-lang="c_off" value="off">off</option>
+										<option class="lang" data-lang="u_ft_sw" value="wifi_only">wifi</option>
+										<option class="lang" data-lang="u_ft_sw_c" value="wifi_and_cellular">wifi cell</option>
 									</select>
 								</div>
 							</div>
@@ -243,9 +242,9 @@
 								<label for="ft_delete" data-lang="u_ft_del" class="lang control-label col-sm-4">delete</label>
 								<div class="col-sm-6">
 									<select class="form-control" id="ft_delete">
-										<option class="lang" data-lang="u_ft_sop" value="not set"></option>
-										<option class="lang" data-lang="c_off" value="off"></option>
-										<option class="lang" data-lang="c_on" value="on"></option>
+										<option class="lang" data-lang="u_ft_sop" value="not set">nd</option>
+										<option class="lang" data-lang="c_off" value="off">off</option>
+										<option class="lang" data-lang="c_on" value="on">on</option>
 									</select>
 								</div>
 							</div>
@@ -254,9 +253,9 @@
 								<label for="ft_backward_navigation" data-lang="u_ft_back_nav" class="lang control-label col-sm-4">backward</label>
 								<div class="col-sm-6">
 									<select class="form-control" id="ft_backward_navigation">
-										<option class="lang" data-lang="u_ft_sop" value="not set"></option>
-										<option class="lang" data-lang="c_dis" value="disable"></option>
-										<option class="lang" data-lang="c_en" value="enable"></option>
+										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+										<option class="lang" data-lang="c_dis" value="disable">disable</option>
+										<option class="lang" data-lang="c_en" value="enable">enable</option>
 									</select>
 								</div>
 							</div>
@@ -265,10 +264,10 @@
 								<label for="ft_navigation" data-lang="u_ft_nav" class="lang control-label col-sm-4">nav</label>
 								<div class="col-sm-6">
 									<select class="form-control" id="ft_navigation">
-										<option class="lang" data-lang="u_ft_sop" value="not set"></option>
-										<option class="lang" data-lang="u_ft_swipes" value="swipe"></option>
-										<option class="lang" data-lang="u_ft_buttons" value="buttons"></option>
-										<option class="lang" data-lang="u_ft_swipes_buttons" value="swipe_buttons"></option>
+										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+										<option class="lang" data-lang="u_ft_swipes" value="swipe">swipe</option>
+										<option class="lang" data-lang="u_ft_buttons" value="buttons">buttons</option>
+										<option class="lang" data-lang="u_ft_swipes_buttons" value="swipe_buttons">swipe and buttons</option>
 									</select>
 								</div>
 							</div>
@@ -277,7 +276,7 @@
 								<label for="ft_image_size" data-lang="u_ft_img_size" class="lang control-label col-sm-4">image size</label>
 								<div class="col-sm-6">
 									<select class="form-control" id="ft_image_size">
-										<option class="lang" data-lang="u_ft_sop" value="not set"></option>
+										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
 										<option class="lang" data-lang="u_ft_img_camera" value="original_image_size">camera</option>
 										<option class="lang" data-lang="u_ft_vs" value="very_small">very small</option>
 										<option class="lang" data-lang="u_ft_s" value="small">small</option>
@@ -291,9 +290,9 @@
 								<label for="ft_login_policy1" data-lang="u_ft_pw_policy" class="lang control-label col-sm-4"></label>
 								<div class="col-sm-6">
 									<select class="form-control" id="ft_login_policy1">
-										<option class="lang" data-lang="u_ft_never" value="never"></option>
-										<option class="lang" data-lang="u_ft_always" value="always"></option>
-										<option class="lang" data-lang="u_ft_periodically" value="periodic"></option>
+										<option class="lang" data-lang="u_ft_never" value="never">never</option>
+										<option class="lang" data-lang="u_ft_always" value="always">always</option>
+										<option class="lang" data-lang="u_ft_periodically" value="periodic">periodic</option>
 									</select>
 								</div>
 							</div>
@@ -350,9 +349,9 @@
 								<label for="ft_send_location" data-lang="u_ft_ld" class="lang control-label col-sm-4">location</label>
 								<div class="col-sm-6">
 									<select class="form-control" id="ft_send_location">
-										<option class="lang" data-lang="u_ft_sop" value="not set"></option>
-										<option class="lang" data-lang="c_off" value="off"></option>
-										<option class="lang" data-lang="c_on" value="on"></option>
+										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+										<option class="lang" data-lang="c_off" value="off">off</option>
+										<option class="lang" data-lang="c_on" value="on">on</option>
 									</select>
 								</div>
 							</div>
@@ -368,12 +367,12 @@
 
 				<div class="well">
 					<div class="container">
-						<form role="form">
+						<form>
 							<div class="form-group row">
 								<label for="wf_page_background" data-lang="u_det_pbc" class="lang control-label col-sm-4">page</label>
 								<div class="col-sm-6">
-									<div id="wf_page_background" class="input-group colorpicker-component">
-										<input type="text" value="#000000" class="form-control" />
+									<div class="input-group colorpicker-component">
+										<input id="wf_page_background" type="text" value="#000000" class="form-control" />
 										<span class="input-group-addon"><i></i></span>
 									</div>
 								</div>
@@ -381,8 +380,8 @@
 							<div class="form-group row">
 								<label for="wf_paper_background" data-lang="u_det_paperbc" class="lang control-label col-sm-4">page</label>
 								<div class="col-sm-6">
-									<div id="wf_paper_background" class="input-group colorpicker-component">
-										<input type="text" value="#000000" class="form-control" />
+									<div class="input-group colorpicker-component">
+										<input id="wf_paper_background" type="text" value="#000000" class="form-control" />
 										<span class="input-group-addon"><i></i></span>
 									</div>
 								</div>
@@ -415,7 +414,7 @@
 
 				<div class="well">
 					<div class="container">
-						<form role="form" id="server_form">
+						<form id="server_form">
 							<div class="form-group row">
 								<label for="mapbox_key" data-lang="u_mb_k" class="lang control-label col-sm-4"></label>
 								<div class="col-sm-6">
@@ -482,7 +481,7 @@
 								<label for="sens_sig" data-lang="u_sens_sq" class="lang control-label col-sm-4">signature</label>
 								<div class="col-sm-6">
 									<select class="form-control" id="sens_sig">
-										<option class="lang" data-lang="u_sens_nr" value="none"></option>
+										<option class="lang" data-lang="u_sens_nr" value="none">none</option>
 										<option class="lang" data-lang="u_sens_ao" value="admin_only">admin only</option>
 									</select>
 								</div>
@@ -513,13 +512,13 @@
 	<div class="modal-dialog modal-lg">
    		<div class="modal-content">
    			<div class="modal-header">
-				<h4 class="modal-title lang" id="modifyUserLabel" data-lang="u_det"></h4>
+				<h4 class="modal-title lang" id="modifyUserLabel" data-lang="u_det">user</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
 						aria-hidden="true">&times;</span></button>
    			</div>
 		     <div class="modal-body row">
      			<div class="col-md-6">
-					<form role="form" class="form" id="user_create_form">
+					<form class="form" id="user_create_form">
 						<label for="user_ident" class="control-label mt-3"><b class="lang" data-lang="u_ident"></b></label>
 						<input type="text" id="user_ident" required pattern="[a-z0-9_]+" class="form-control">
 							
@@ -582,20 +581,20 @@
 					<div class="right_panel">
 						<div class="bg-danger">
 							<form>
-								<b><h3 class="lang" data-lang="u_sg"></h3></b>
+								<h3 class="ml-2 pt-2"><b><span class="lang" data-lang="u_sg">user groups</span></b></h3>
 								<div id = "user_groups"></div>
 							</form>
 						</div>
 						<div class="bg-warning">
-							<h3 class="lang" data-lang="c_projects"></h3>
+							<h3 class="lang ml-2 pt-2" data-lang="c_projects">projects</h3>
 							<div id = "user_projects"></div>
 						</div>
 						<div id="user_roles_section" class="bg-info restrict_role org_role security_role" >
-							<h3 class="lang" data-lang="c_roles"></h3>
+							<h3 class="lang ml-2 pt-2" data-lang="c_roles">roles</h3>
 							<div id = "user_roles"></div>
 						</div>
 						<div id="user_orgs_section" class="bg-danger restrict_role org_role" >
-							<h3 class="lang" data-lang="c_orgs"></h3>
+							<h3 class="lang ml-2 pt-2" data-lang="c_orgs">orgs</h3>
 							<div id = "user_orgs"></div>
 						</div>
 
@@ -617,7 +616,7 @@
 	<div class="modal-dialog">
    		<div class="modal-content">
    			<div class="modal-header">
-     			<h4 class="modal-title lang" data-lang="u_det_p"></h4>
+     			<h4 id="createProjectLabel" class="modal-title lang" data-lang="u_det_p">project</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
 						aria-hidden="true">&times;</span></button>
    			</div>
@@ -633,7 +632,7 @@
 					<div class="form-group row">
 						<label for="p_desc" data-lang="c_desc" class="lang col-sm-2 control-label"></label>
 						<div class="col-sm-10">
-							<textarea type="text" id="p_desc" class="form-control" tabindex="2"></textarea>
+							<textarea id="p_desc" class="form-control" tabindex="2"></textarea>
 							<br/>
 						</div> 
 					</div>
@@ -655,17 +654,17 @@
 </div>
 
 <!-- Modal to allow the user to edit a user role details -->
-<div id="create_role_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createUserRoleLabel" aria-hidden="true">
+<div id="create_role_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createRoleLabel" aria-hidden="true">
 	<div class="modal-dialog">
    		<div class="modal-content">
    			<div class="modal-header">
-				<h4 class="modal-title lang" data-lang="u_det_ur" id="createProjectLabel"></h4>
+				<h4 class="modal-title lang" data-lang="u_det_ur" id="createRoleLabel">role</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
 						aria-hidden="true">&times;</span></button>
    			</div>
 		    <div class="modal-body">
 		     
-				<form class="form" onsubmit="return false;" role="form" id="role_create_form">
+				<form class="form" onsubmit="return false;" id="role_create_form">
 					<div class="form-group row">
 						<label for="ur_name" data-lang="c_name" class="lang col-sm-2 control-label"></label>
 						<div class="col-sm-10">
@@ -675,7 +674,7 @@
 					<div class="form-group row">
 						<label for="ur_desc" data-lang="c_desc" class="lang col-sm-2 control-label"></label>
 						<div class="col-sm-10">
-							<textarea type="text" id="ur_desc" class="form-control" tabindex="2"></textarea>
+							<textarea id="ur_desc" class="form-control" tabindex="2"></textarea>
 						</div> 
 					</div>
 					
@@ -695,12 +694,12 @@
 	<div class="modal-dialog modal-lg">
    		<div class="modal-content">
    			<div class="modal-header">
-				<h4 class="modal-title lang" data-lang="u_det_o" id="createOrganisationLabel"></h4>
+				<h4 class="modal-title lang" data-lang="u_det_o" id="createOrganisationLabel">organisation</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
 						aria-hidden="true">&times;</span></button>
    			</div>
 		    <div class="modal-body">
-				<form role="form" id="organisation_create_form">
+				<form id="organisation_create_form">
 
 					<fieldset>
 						<div class="form-group row">
@@ -710,16 +709,16 @@
 							</div>
 						</div>
 					</fieldset>
-					<div aria-multiselectable="true">
- 							<div class="card">
-   							<div class="card-header" role="tab" id="companyDetails">
+					<div>
+						<div class="card">
+   							<div class="card-header" id="companyDetails">
 								<h4 class="card-title">
-					       			<a class="card-link" data-toggle="collapse" href="#collapseCompanyDetails" aria-expanded="true" aria-controls="collapseLayers">
+					       			<a class="card-link" data-toggle="collapse" role="button" href="#collapseCompanyDetails" aria-expanded="false" aria-controls="collapseCompanyDetails">
 					         				<span class="lang" data-lang="u_det_o">org details</span>
 					       			</a>
 				     			</h4>
    							</div>
-			    			<div id="collapseCompanyDetails" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+			    			<div id="collapseCompanyDetails" class="collapse" role="tabpanel" aria-labelledby="companyDetails">
 								<div class="card-body">
 									<label for="o_company_name" data-lang="c_company_name" class="lang control-label">org name</label>
 									<input type="text" id="o_company_name" class="form-control" tabindex="2"><br/>
@@ -738,16 +737,16 @@
 						</div>
 					</div>
 					
-					<div aria-multiselectable="true">
- 							<div class="card">
-   							<div class="card-header" role="tab" id="publishingOptions">
+					<div>
+						<div class="card">
+   							<div class="card-header" id="publishingOptions">
 								<h4 class="card-title">
-					       			<a class="card-link" data-toggle="collapse" href="#collapsePublishingOptions" aria-expanded="true" aria-controls="collapseLayers">
+					       			<a class="card-link" data-toggle="collapse" role="button" href="#collapsePublishingOptions" aria-expanded="false" aria-controls="collapsePublishingOptions">
 					         			<span class="lang" data-lang="u_det_o_rep">report options</span>
 					       			</a>
 				     			</h4>
    							</div>
-			    			<div id="collapsePublishingOptions" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+			    			<div id="collapsePublishingOptions" class="collapse" role="tabpanel" aria-expanded="false" aria-labelledby="publishingOptions">
 								<div class="card-body">
 									<div class="checkbox"><label><input type="checkbox" name="puboption" value="email" class="puboption" tabindex="3" /> <span  class="lang" data-lang="c_email">email</span></label></div>
 									<div class="checkbox"><label><input type="checkbox" name="puboption" value="twitter" class="puboption" tabindex="5" /> <span class="lang" data-lang="c_twitter">twitter</span></label></div>
@@ -756,16 +755,16 @@
 						</div>
 					</div>
 
-					<div aria-multiselectable="true">
- 							<div class="card">
-   							<div class="card-header" role="tab" id="emailOptions">
+					<div>
+						<div class="card">
+   							<div class="card-header" id="emailOptions">
 								<h4 class="card-title">
-					       			<a class="card-link" data-toggle="collapse" href="#collapseEmailOptions" aria-expanded="true" aria-controls="collapseLayers">
+					       			<a class="card-link" data-toggle="collapse" role="button" href="#collapseEmailOptions" aria-expanded="false" aria-controls="collapseEmailOptions">
 					         			<span class="lang" data-lang="u_det_o_email">email options</span>
 					       			</a>
 				     			</h4>
    							</div>
-			    			<div id="collapseEmailOptions" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+			    			<div id="collapseEmailOptions" class="collapse" role="tabpanel" aria-labelledby="emailOptions">
 								<div class="card-body">
 									<label for="o_admin_email" data-lang="u_h_e" class="lang control-label">help email</label>
 									<input class="form-control" type="text" id="o_admin_email" tabindex="9">
@@ -797,16 +796,16 @@
 						</div>
 					</div>
 
-					<div aria-multiselectable="true">
+					<div>
 						<div class="card">
-							<div class="card-header" role="tab" id="otherOptions">
+							<div class="card-header" id="otherOptions">
 								<h4 class="card-title">
-									<a class="card-link" data-toggle="collapse" href="#collapseOtherOptions" aria-expanded="true" aria-controls="collapseLayers">
-										<span class="lang" data-lang="u_det_o_other"></span>
+									<a class="card-link" data-toggle="collapse" role="button" href="#collapseOtherOptions" aria-expanded="false" aria-controls="collapseOtherOptions">
+										<span class="lang" data-lang="u_det_o_other">other</span>
 									</a>
 								</h4>
 							</div>
-							<div id="collapseOtherOptions" class="collapse" aria-labelledby="headingOne">
+							<div id="collapseOtherOptions" class="collapse" aria-labelledby="otherOptions">
 								<div class="card-body">
 
 									<div class="custom-control custom-checkbox">
@@ -860,16 +859,16 @@
 						</div>
 					</div>
 				</form>
-				<div aria-multiselectable="true">
+				<div>
 					<div class="card">
-						<div class="card-header" role="tab" id="appearanceOptions">
+						<div class="card-header" id="appearanceOptions">
 							<h4 class="card-title">
-								<a class="card-link" data-toggle="collapse" href="#collapseAppearanceOptions" aria-expanded="true" aria-controls="collapseLayers">
-									<span class="lang" data-lang="ed_appearance"></span>
+								<a class="card-link" data-toggle="collapse" role="button" href="#collapseAppearanceOptions" aria-expanded="false" aria-controls="collapseAppearanceOptions">
+									<span class="lang" data-lang="ed_appearance">appearance</span>
 								</a>
 							</h4>
 						</div>
-						<div id="collapseAppearanceOptions" class="collapse" aria-labelledby="headingOne">
+						<div id="collapseAppearanceOptions" class="collapse" aria-labelledby="appearanceOptions">
 							<div class="card-body">
 
 								<form enctype="multipart/form-data" name="organisationsave" id="organisation_logo_form">
@@ -877,9 +876,9 @@
 										<legend class="lang" data-lang="ed_appearance"></legend>
 										<input id="orgSettings" type="hidden" name="settings" >
 										<div class="form-group row">
-											<label for="o_banner_logo" class="lang col-sm-2 control-label" data-lang="u_bl"></label>
+											<label for="o_banner_logo" class="lang col-sm-2 control-label" data-lang="u_bl">logo</label>
 											<div class="col-sm-6">
-												<img id="o_banner_logo" class="" src="" onerror='if(this.src.indexOf("smap_logo.png") < 0) this.src="/images/smap_logo.png";' style="width:100%;">
+												<img id="o_banner_logo" alt="not found" src="x" onerror='if(this.src.indexOf("smap_logo.png") < 0) this.src="/images/smap_logo.png";' style="width:100%;">
 											</div>
 											<div class="input-group-btn col-sm-4">
 												<input id="change_banner_logo" name="banner_logo" title="Add" class="file-inputs" type="file" accept="image/png, image/jpeg, image/gif">
@@ -894,9 +893,9 @@
 												</label>
 											</div>
 											<div class="form-group row">
-												<label for="o_banner_logo" class="lang col-sm-2 control-label mt-3" data-lang="u_ml"></label>
+												<label for="o_main_logo" class="lang col-sm-2 control-label mt-3" data-lang="u_ml"></label>
 												<div class="col-sm-6">
-													<img id="o_main_logo" class="" src="" style="width:100%;">
+													<img id="o_main_logo" alt="nf" src="#" style="width:100%;">
 												</div>
 												<div class="input-group-btn col-sm-4">
 													<input id="change_main_logo" name="main_logo" title="Add" class="file-inputs" type="file" accept="image/png, image/jpeg, image/gif">
@@ -905,8 +904,8 @@
 											<div class="form-group row">
 												<label for="o_navbar_color" data-lang="u_nbc" class="lang control-label col-sm-2"></label>
 												<div class="col-sm-10">
-													<div id="o_navbar_color" class="input-group colorpicker-component">
-														<input type="text" value="#000000" class="form-control" />
+													<div class="input-group colorpicker-component">
+														<input id="o_navbar_color" type="text" value="#000000" class="form-control" />
 														<span class="input-group-addon"><i></i></span>
 													</div>
 												</div>
@@ -934,7 +933,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title lang" id="createEnterpriseLabel" data-lang="u_det_e"></h4>
+				<h4 class="modal-title lang" id="createEnterpriseLabel" data-lang="u_det_e">ent</h4>
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
 			</div>
 			<div class="modal-body">
@@ -990,7 +989,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title lang" id="moveEnterpriseLabel" data-lang="u_mv_ent"></h4>
+				<h4 class="modal-title lang" id="moveEnterpriseLabel" data-lang="u_mv_ent">move</h4>
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 			</div>
 			<div class="modal-body">
@@ -1052,7 +1051,7 @@
 			</div>
 			<div class="modal-body">
 
-				<form id="confirmDelForm" class="form" role="form">
+				<form id="confirmDelForm" class="form">
 					<div class="form-group">
 						<div>
 							<label>
