@@ -441,61 +441,7 @@
 
 </div>
 
-<!-- Modal to edit a record
-<div id="editRecord" class="modal fade" aria-hidden="true">
-    <div class="modal-dialog custom-modal-width">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                        class="sr-only">Close</span></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-6 b-r"><h3 class="m-t-none m-b lang" data-lang="mf_fd">form data</h3>
 
-                        <form id="surveyForm" role="form" class="form-horizontal">
-
-                        </form>
-                    </div>
-                    <div class="col-sm-6 b-r"><h3 class="m-t-none m-b lang" data-lang="mf_md">mgmt data</h3>
-
-                        <form id="editRecordForm" role="form" class="form-horizontal">
-
-                        </form>
-                        <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">
-                            Close
-                        </button>
-                        <button id="saveRecord" type="button" class="btn btn-primary lang" data-dismiss="modal"
-                                data-lang="c_save">Save
-                        </button>
-                        <button id="shareRecord" type="button" class="btn btn-info"><span class="lang"
-                                                                                          data-lang="n_share">get link</span>
-                        </button>
-                        <div class="shareRecordOnly well">
-                            <form role="form" class="form-horizontal">
-                                <div class="form-group role_select">
-                                    <h4 class="lang" data-lang="c_roles">roles</h4>
-                                    <div class="role_select_roles"></div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="input-group">
-										<span class="input-group-btn">
-        									<button id="getSharedRecord" class="btn btn-info" type="button"><i
-                                                    class="fa fa-share-alt"></i></button>
-      									</span>
-                                        <input type="text" id="srLink" required class="form-control" readonly>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
--->
 <!-- Modal to edit a chart widget -->
 <div id="editChart" class="modal fade" aria-hidden="true">
     <div class="modal-dialog custom-modal-width">
@@ -624,41 +570,41 @@
     <div class="modal-dialog custom-modal-width">
         <div class="modal-content">
             <div class="modal-header">
-                <!--  <button id="shareRecord" type="button" class="btn btn-info"><i class="fa fa-share-alt"></i> <span class="lang" data-lang="n_share">get link</span></button> -->
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-sm-12 b-r"><h3 class="m-t-none m-b lang" data-lang="mf_ld">layer details</h3>
+                    <div class="col-sm-12 b-r">
+                        <h3 class="m-t-none m-b lang" data-lang="mf_ld"></h3>
 
                         <form id="mapForm" role="form" class="form-horizontal">
 
-                            <div class="form-group">
+                            <div class="form-group row">
                                 <label class="lang col-sm-2 control-label" data-lang="c_title"
-                                       for="ml_title">title</label>
+                                       for="ml_title"></label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control title" id="ml_title" required>
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group row">
                                 <div class="col-sm-offset-2 col-sm-10">
                                     <div class="checkbox">
                                         <label>
                                             <input type="checkbox" id="usecurrent_tabledata" checked><span
-                                                data-lang="br_cd" class="lang">current table data</span>
+                                                data-lang="br_cd" class="lang"></span>
                                         </label>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group row">
                                 <div class="col-sm-offset-2 col-sm-10">
                                     <div class="radio">
                                         <label>
                                             <input type="radio" value="normal" id="clump_normal" name="clump"
-                                                   checked><span data-lang="c_normal" class="lang">normal</span>
+                                                   checked><span data-lang="c_normal" class="lang"></span>
                                         </label>
                                     </div>
                                 </div>
@@ -666,7 +612,7 @@
                                     <div class="radio">
                                         <label>
                                             <input type="radio" value="heatmap" id="clump_heatmap" name="clump"><span
-                                                data-lang="c_heatmap" class="lang">heatmap</span>
+                                                data-lang="c_heatmap" class="lang"></span>
                                         </label>
                                     </div>
                                 </div>
@@ -699,9 +645,41 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
-                </button>
-                <button id="addLayerSave" type="button" class="btn btn-primary lang" data-lang="c_save">Save</button>
+                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
+                <button id="addLayerSave" type="button" class="btn btn-primary lang" data-lang="c_save"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal to assign a user -->
+<div id="userAssign" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog custom-modal-width">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title lang" data-lang="t_assign"></h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only"></span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 b-r">
+
+                        <form role="form">
+
+                            <div class="form-group row">
+                                <select id="user_to_assign" class="custom-select"></select>
+                            </div>
+
+                        </form>
+                        <div id="assignUserInfo" style="word-wrap:break-word; display:none;" class="alert" role="alert"></div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
+                <button id="assignUserSave" type="button" data-dismiss="modal" class="btn btn-primary lang " data-lang="c_save"></button>
             </div>
         </div>
     </div>
