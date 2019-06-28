@@ -16,14 +16,13 @@ You should have received a copy of the GNU General Public License
 along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<html>
+<html lang="en">
 <head>
 
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title class="lang" data-lang="m_notify"></title>
+	<title class="lang" data-lang="m_notify">notify</title>
 
 	<link href="/css/bootstrap.v4.min.css" rel="stylesheet">
 	<link href="/font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -35,21 +34,19 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 	
-	<script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
+	<script> if (!window.console) console = {log: function() {}}; </script>
 	<script src="/js/libs/modernizr.js"></script>
 	<script src="/js/app/theme.js"></script>
 	<script src="/js/libs/jquery-2.1.1.js"></script>
 	<script src="/js/libs/bootstrap.bundle.v4.min.js"></script>
 	<script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
-	<script data-main="js/notifications_main" src="/js/libs/require.js"></script>
-
-	<title class="lang" data-lang="m_notify"></title>
+	<script src="/js/libs/require.js" data-main="js/notifications_main"></script>
 
 </head>
 <body>
 
 <div id="wrapper">
-	<nav class="navbar-default navbar-static-side noPrint" role="navigation">
+	<nav class="navbar-default navbar-static-side noPrint">
 		<div>
 			<ul class="nav metismenu" id="side-menu">
 				<li>
@@ -114,7 +111,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 		<!-- Navbar Row -->
 		<div class="row border-bottom">
-			<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+			<nav class="navbar navbar-static-top" style="margin-bottom: 0">
 				<div class="navbar-header">
 					<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i>
 					</a>
@@ -130,10 +127,10 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 		<!-- Header Row -->
 		<div class="row wrapper border-bottom white-bg page-heading">
 			<div class="col-sm-2">
-				<h2 class="lang" data-lang="m_notify"></h2>
+				<h2 class="lang" data-lang="m_notify">notify</h2>
 			</div>
 			<div class="col-sm-10">
-				<form class="form-inline" role="form">
+				<form class="form-inline">
 					<div class="col-sm-6 pt-4">
 						<div class="form-group row">
 							<label class="lang col-md-4"  data-lang="c_project"  for="project_name"></label>
@@ -147,7 +144,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 
 		<div class="wrapper wrapper-content animated fadeInRight">
-			<a id="addNotification" type="button" class="btn btn-primary lang" aria-label="Add Notification" data-lang="c_add">add</a>
+			<button id="addNotification" type="button" class="btn btn-primary lang" aria-label="Add Notification" data-lang="c_add">add</button>
 			<div id="notification_list"></div>
 
 			<div class="col-md-12 text-center">
@@ -163,7 +160,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 	<div class="modal-dialog modal-lg">
    		<div class="modal-content">
     			<div class="modal-header">
-      				<h4 class="modal-title lang" id="addNotificationLabel" data-lang="msg_add_notification"></h4>
+      				<h4 class="modal-title lang" id="addNotificationLabel" data-lang="msg_add_notification">add</h4>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
 							aria-hidden="true">&times;</span></button>
     			</div>
@@ -180,8 +177,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<label class="lang col-sm-2 control-label" data-lang="c_trigger" for="trigger"></label>
 						<div class="col-sm-10">
 							<select class="form-control" id="trigger">
-								<option value="submission" selected="selected" class="lang" data-lang="submission"></option>
-								<option value="task_reminder" class="lang" data-lang="task_reminder"></option>
+								<option value="submission" selected="selected" class="lang" data-lang="submission">submission</option>
+								<option value="task_reminder" class="lang" data-lang="task_reminder">reminder</option>
 							</select>
 						</div>
 					</div>
@@ -211,9 +208,9 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 									<input type="number" min="1" class="form-control" id="r_period">
 									<div class="input-group-append">
 										<select id="period_list_sel" class="period_list_sel form-control">
-											<option class="lang" data-lang="d_min" value="minutes"></option>
-											<option class="lang" data-lang="d_hour" value="hours"></option>
-											<option class="lang" data-lang="d_day" value="days"></option>
+											<option class="lang" data-lang="d_min" value="minutes">minutes</option>
+											<option class="lang" data-lang="d_hour" value="hours">hours</option>
+											<option class="lang" data-lang="d_day" value="days">day</option>
 										</select>
 									</div>
 								</div>
@@ -357,9 +354,9 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 								<label for="email_content_ap" data-lang="n_ap" class="lang col-sm-2 control-label"></label>
 								<div class="col-sm-8">
 									<select id="email_content_ap" class="labelProp form-control">
-										<option class="lang" data-lang="c_task" value="${task_webform}"></option>
-										<option class="lang" data-lang="t_assigned" value="${assignee_name}"></option>
-										<option class="lang" data-lang="c_scheduled" value="${scheduled}"></option>
+										<option class="lang" data-lang="c_task" value="${task_webform}">webform</option>
+										<option class="lang" data-lang="t_assigned" value="${assignee_name}">assigned</option>
+										<option class="lang" data-lang="c_scheduled" value="${scheduled}">scheduled</option>
 									</select>
 								</div>
 								<div class="col-sm-2">
@@ -373,7 +370,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<div class="form-group row lang_tt" data-lang_tt="n_sms_n_tt" data-toggle="tooltip"  data-container="body" title="">
 							<label for="notify_sms" data-lang="c_sms" class="lang col-sm-2 control-label"></label>
 							<div class="col-sm-10">
-								<input type="tel" id="notify_sms" class="form-control" required multiple>
+								<input type="tel" id="notify_sms" class="form-control" required>
 							</div>
 						</div>
 						<div class="form-group row lang_tt" data-lang_tt="n_sms_q_tt" data-toggle="tooltip"  data-container="body" title="">
@@ -409,9 +406,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 			</div>
 		</div>
 	</div>
-</div>
-
-
 </div>
 
 </body>
