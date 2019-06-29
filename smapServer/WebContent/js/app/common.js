@@ -3924,3 +3924,14 @@ function displayAsImage(file, img) {
 
 	img.src = imgURL;
 }
+
+/*
+ * If debug=yes is passed as a parameter then enable debuging statement
+ */
+function enableDebugging() {
+
+	if(location.search.indexOf("debug=yes") >= 0) {
+		$(document).on('click', function(e) { console.log(e.target) });
+	}
+
+}
