@@ -173,7 +173,13 @@ function addAnchors (property, minsize) {
 		media,
 		i,
 		style = '';
-	
+
+	if(typeof property.type !== "undefined") {
+		// Geospatial
+		return [ property.coordinates ];
+
+	}
+
 	if( Object.prototype.toString.call(property) !== '[object Array]' ) {
 		property = [ property ];
 	}
