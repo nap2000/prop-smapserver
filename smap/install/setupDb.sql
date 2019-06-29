@@ -4,6 +4,10 @@ DROP SEQUENCE IF EXISTS sc_seq CASCADE;
 CREATE SEQUENCE sc_seq START 1;
 ALTER SEQUENCE sc_seq OWNER TO ws;
 
+DROP SEQUENCE IF EXISTS re_seq CASCADE;
+CREATE SEQUENCE re_seq START 1;
+ALTER SEQUENCE re_seq OWNER TO ws;
+
 DROP SEQUENCE IF EXISTS s_seq CASCADE;
 CREATE SEQUENCE s_seq START 1;
 ALTER SEQUENCE s_seq OWNER TO ws;
@@ -508,24 +512,50 @@ CREATE TABLE survey (
 	);
 ALTER TABLE survey OWNER TO ws;
 DROP INDEX IF EXISTS SurveyDisplayName;
--- CREATE UNIQUE INDEX SurveyDisplayName ON survey(p_id, display_name);
 DROP INDEX IF EXISTS SurveyKey;
 CREATE UNIQUE INDEX SurveyKey ON survey(ident);
 
 DROP TABLE IF EXISTS survey_change CASCADE;
 CREATE TABLE survey_change (
 	c_id integer DEFAULT NEXTVAL('sc_seq') CONSTRAINT pk_survey_changes PRIMARY KEY,
-	s_id integer REFERENCES survey ON DELETE CASCADE,	-- Survey containing this version		
+	s_id integer REFERENCES survey ON DELETE CASCADE,		-- Survey containing this version
 	version integer,								-- Version of survey with these changes
 	changes text,								-- Changes as json object
 	apply_results boolean default false,			-- Set to true if the results tables need to be updated	
-	success boolean default false,				-- Set true of the update was a success
+	success boolean default false,				-- Set true if the update was a success
 	msg text,									-- Error messages
 	user_id integer,								-- Person who made the changes
 	visible boolean default true,				-- set false if the change should not be displayed 				
 	updated_time TIMESTAMP WITH TIME ZONE		-- Time and date of change
 	);
 ALTER TABLE survey_change OWNER TO ws;
+
+-- record events on data records by HRK or instanceid if HRK not set
+-- Events include
+--     submission (reference data in data table keyed on instanceid)
+--     managed form update
+--     Data cleaning (reference data in .......
+--     Task status change  (reference data in tasks)
+--     Task completed (reference data in tasks,   submission)
+--     Message sent (reference data in messages and notifications)
+--     Record assignment status changes
+DROP TABLE IF EXISTS record_event CASCADE;
+CREATE TABLE record_event (
+	id integer DEFAULT NEXTVAL('re_seq') CONSTRAINT pk_record_changes PRIMARY KEY,
+	table_name text,								-- Main table containing unique key	
+	hrk text,									-- HRK of change or notification
+	instanceid text,								-- instance of change or notification	
+	event text,									-- created || change || task || reminder || deleted
+	details text,								-- Details of the event as json object	
+	success boolean default false,				-- Set true of the event was a success
+	msg text,									-- Error messages
+	changed_by integer,							-- Person who made a change	
+	change_survey text,							-- Survey ident that applied the change
+	change_survey_version integer,				-- Survey version that made the change		
+	event_time TIMESTAMP WITH TIME ZONE			-- Time and date of event
+	);
+ALTER TABLE survey_change OWNER TO ws;
+
 
 DROP TABLE IF EXISTS custom_report CASCADE;
 CREATE TABLE custom_report (
