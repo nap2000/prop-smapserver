@@ -543,7 +543,7 @@ DROP TABLE IF EXISTS record_event CASCADE;
 CREATE TABLE record_event (
 	id integer DEFAULT NEXTVAL('re_seq') CONSTRAINT pk_record_changes PRIMARY KEY,
 	table_name text,								-- Main table containing unique key	
-	hrk text,									-- HRK of change or notification
+	key text,									-- HRK of change or notification
 	instanceid text,								-- instance of change or notification	
 	event text,									-- created || change || task || reminder || deleted
 	details text,								-- Details of the event as json object	
@@ -554,7 +554,7 @@ CREATE TABLE record_event (
 	change_survey_version integer,				-- Survey version that made the change		
 	event_time TIMESTAMP WITH TIME ZONE			-- Time and date of event
 	);
-ALTER TABLE survey_change OWNER TO ws;
+ALTER TABLE record_event OWNER TO ws;
 
 
 DROP TABLE IF EXISTS custom_report CASCADE;
