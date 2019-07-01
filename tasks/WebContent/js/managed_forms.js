@@ -119,7 +119,8 @@ require([
             surveyConfig: {},
             managedData: {},
             surveyList: {},
-            surveyRoles: {}
+            surveyRoles: {},
+            recordChanges: {}
         },
         gSelectedRecord: undefined,
         gSelectedSurveyIndex: undefined,
@@ -224,6 +225,7 @@ require([
             $('.shareRecordOnly, .role_select').hide();
             $('#srLink').val("");
             getSurveyRoles(globals.gCurrentSurvey);
+            getRecordChanges(gTasks.gSelectedRecord);
             actioncommon.showEditRecordForm(gTasks.gSelectedRecord, columns, $('#editRecordForm'), $('#surveyForm'));
 
             $('.overviewSection').hide();
@@ -884,8 +886,11 @@ require([
 
         if(!gRefreshingData) {
             gRefreshingData = true;
+            gTasks.cache.surveyConfig = {};
             gTasks.cache.managedData = {};
             gTasks.cache.surveyList = {};
+            gTasks.cache.surveyRoles = {};
+            gTasks.cache.recordChanges = {};
 
             // Get the list of available surveys
             loadManagedSurveys(globals.gCurrentProject, surveyChanged);
@@ -1776,6 +1781,44 @@ require([
                         }
                         $elem.html(h.join(''));
                     }
+
+                },
+                error: function (xhr, textStatus, err) {
+                    removeHourglass();
+                    if (xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        alert(localise.set["error"] + ": " + err);
+                    }
+                }
+            });
+        }
+    }
+
+    /*
+     * Get the list of changes to this record from the server
+     */
+    function getRecordChanges(record) {
+
+        var hrk = record["Key"];
+        var instanceId = record["instanceid"];
+        var key;
+
+        if(hrk && hk.trim.length > 0) {
+            key = hrk;
+        } else {
+            key = instanceId;
+        }
+
+        if(globals.gCurrentSurvey) {
+            addHourglass();
+            $.ajax({
+                url: "/api/v1/data/changes/" + globals.gCurrentSurvey + "/" + key,
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                    removeHourglass();
+
 
                 },
                 error: function (xhr, textStatus, err) {
