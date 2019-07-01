@@ -84,7 +84,7 @@
                                                                              data-lang="m_admin"></span></a></li>
                         <li class="restrict_role enum_role"><a href="/webForm.html"><i
                                 class="glyphicon glyphicon-globe"></i> <span class="nav-label lang"
-                                                                             data-lang="m_dash"></span></span>
+                                                                             data-lang="m_console"></span></span>
                         </a></li>
                         <li class="restrict_role analyst_role"><a href="/fieldAnalysis/index.html"><i
                                 class="glyphicon glyphicon-stats"></i> <span class="nav-label lang"
@@ -185,7 +185,7 @@
                 </form>
             </div>
 
-            <div class="col-sm-4 pt-4 oveviewSection">
+            <div class="col-sm-4 pt-4 overviewSection">
                 <form class="form" role="form">
 
                     <div class="custom-control custom-switch">
@@ -205,7 +205,11 @@
 
             <!-- record editing commands -->
             <div class="col-sm-4 pt-4 editRecordSection border-right">
-
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input table_filter"
+                           name="formdata" value="yes" id="er_form_data" checked="checked">
+                    <label class="custom-control-label lang" data-lang="mf_fd" for="er_form_data"></label>
+                </div>
             </div>
 
         </div>
@@ -332,57 +336,66 @@
                 <div class="col-md-12">
                     <div class="ibox float-e-margins">
                         <div class="ibox-content">
-                            <div class="row border-bottom">
-                                <div class="col-md-12 manageFormData">
-                                    <label>
-                                        <input type="checkbox" name="formdata" value="yes" id="er_form_data" checked="checked" />
-                                        <span class="lang" data-lang="mf_fd"></span>
-                                    </label>
-                                </div>
-                            </div>
+                            <div id="recordEditInfo" class="alert alert-success" style="display:none;"></div>
+                            <ul class="nav nav-pills nav-fill">
+                                <li class="nav-item"><a data-toggle="tab" href="#data-view" class="active nav-link"><i class="fa fa-list"></i> <span class="lang" data-lang="c_data"></span></a></li>
+                                <li class="nav-item"><a data-toggle="tab" href="#changes-view" class="nav-link"><i class="fa fa-edit"></i> <span class="lang" data-lang="c_changes"></span></a></li>
+                            </ul>
 
-                            <div class="row">
-                                <div class="col-sm-6 b-r showFormData">
-                                    <h3 class="m-t-none m-b lang" data-lang="mf_fd"></h3>
-                                    <form id="surveyForm" role="form">
 
-                                    </form>
-                                </div>
-                                <div class="col-sm-6 b-r showMgmtData"><h3 class="m-t-none m-b lang" data-lang="mf_md">mgmt data</h3>
 
-                                    <form id="editRecordForm" role="form" class="form-horizontal">
+                                <div class="tabs-container container-fluid">
+                                    <div class="tab-content">
+                                        <div id="data-view" role="tabpanel" class="tab-pane active">
+                                            <div class="panel-body">
+                                                <div class="row">
 
-                                    </form>
-                                    <button id="exitEditRecord" type="button" class="btn btn-default lang" data-lang="c_back">
-                                        back
-                                    </button>
-                                    <button id="saveRecord" type="button" class="btn btn-primary lang"
-                                            data-dismiss="modal"
-                                            data-lang="c_save">Save
-                                    </button>
-                                    <button id="shareRecord" type="button" class="btn btn-info"><span class="lang"
-                                                                                                      data-lang="n_share">get link</span>
-                                    </button>
-                                    <div class="shareRecordOnly well">
-                                        <form role="form" class="form-horizontal">
-                                            <div class="form-group role_select">
-                                                <h4 class="lang" data-lang="c_roles">roles</h4>
-                                                <div class="role_select_roles"></div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="input-group">
-                                                    <span class="input-group-btn">
-                                                        <button id="getSharedRecord" class="btn btn-info" type="button"><i
-                                                                class="fa fa-share-alt"></i></button>
-                                                    </span>
-                                                    <input type="text" id="srLink" required class="form-control"
-                                                           readonly>
+                                                    <div class="col-sm-6 b-r showFormData">
+                                                        <h3 class="m-t-none m-b lang" data-lang="mf_fd"></h3>
+                                                        <form id="surveyForm"></form>
+                                                    </div>
+                                                    <div class="col-sm-6 b-r showMgmtData"><h3 class="m-t-none m-b lang" data-lang="mf_md">mgmt data</h3>
+
+                                                        <form id="editRecordForm"></form>
+
+                                                        <button id="exitEditRecord" type="button" class="btn btn-default lang" data-lang="c_back">
+                                                            back
+                                                        </button>
+                                                        <button id="saveRecord" type="button" class="btn btn-primary lang"
+                                                                data-dismiss="modal"
+                                                                data-lang="c_save">Save
+                                                        </button>
+                                                        <button id="shareRecord" type="button" class="btn btn-info"><span class="lang"
+                                                                                                                          data-lang="n_share">get link</span>
+                                                        </button>
+                                                        <div class="shareRecordOnly well">
+                                                            <form role="form" class="form-horizontal">
+                                                                <div class="form-group role_select">
+                                                                    <h4 class="lang" data-lang="c_roles">roles</h4>
+                                                                    <div class="role_select_roles"></div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-btn">
+                                                                            <button id="getSharedRecord" class="btn btn-info" type="button"><i
+                                                                                    class="fa fa-share-alt"></i></button>
+                                                                        </span>
+                                                                        <input type="text" id="srLink" required class="form-control" readonly>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </form>
+                                        </div>
+                                        <div id="changes-view" role="tabpanel" class="tab-pane active">
+                                            <div class="panel-body">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+
                         </div>
                     </div>
                 </div>
