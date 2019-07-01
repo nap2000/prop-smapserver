@@ -342,59 +342,57 @@
                                 <li class="nav-item"><a data-toggle="tab" href="#changes-view" class="nav-link"><i class="fa fa-edit"></i> <span class="lang" data-lang="c_changes"></span></a></li>
                             </ul>
 
+                            <div class="tabs-container container-fluid">
+                                <div class="tab-content">
+                                    <div id="data-view" role="tabpanel" class="tab-pane active">
+                                        <div class="panel-body">
+                                            <div class="row">
 
+                                                <div class="col-sm-6 b-r showFormData">
+                                                    <h3 class="m-t-none m-b lang" data-lang="mf_fd"></h3>
+                                                    <form id="surveyForm"></form>
+                                                </div>
+                                                <div class="col-sm-6 b-r showMgmtData"><h3 class="m-t-none m-b lang" data-lang="mf_md">mgmt data</h3>
 
-                                <div class="tabs-container container-fluid">
-                                    <div class="tab-content">
-                                        <div id="data-view" role="tabpanel" class="tab-pane active">
-                                            <div class="panel-body">
-                                                <div class="row">
+                                                    <form id="editRecordForm"></form>
 
-                                                    <div class="col-sm-6 b-r showFormData">
-                                                        <h3 class="m-t-none m-b lang" data-lang="mf_fd"></h3>
-                                                        <form id="surveyForm"></form>
-                                                    </div>
-                                                    <div class="col-sm-6 b-r showMgmtData"><h3 class="m-t-none m-b lang" data-lang="mf_md">mgmt data</h3>
-
-                                                        <form id="editRecordForm"></form>
-
-                                                        <button id="exitEditRecord" type="button" class="btn btn-default lang" data-lang="c_back">
-                                                            back
-                                                        </button>
-                                                        <button id="saveRecord" type="button" class="btn btn-primary lang"
-                                                                data-dismiss="modal"
-                                                                data-lang="c_save">Save
-                                                        </button>
-                                                        <button id="shareRecord" type="button" class="btn btn-info"><span class="lang"
-                                                                                                                          data-lang="n_share">get link</span>
-                                                        </button>
-                                                        <div class="shareRecordOnly well">
-                                                            <form role="form" class="form-horizontal">
-                                                                <div class="form-group role_select">
-                                                                    <h4 class="lang" data-lang="c_roles">roles</h4>
-                                                                    <div class="role_select_roles"></div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <div class="input-group">
+                                                    <button id="exitEditRecord" type="button" class="btn btn-default lang" data-lang="c_back">
+                                                        back
+                                                    </button>
+                                                    <button id="saveRecord" type="button" class="btn btn-primary lang"
+                                                            data-dismiss="modal"
+                                                            data-lang="c_save">Save
+                                                    </button>
+                                                    <button id="shareRecord" type="button" class="btn btn-info"><span class="lang"
+                                                                                                                      data-lang="n_share">get link</span>
+                                                    </button>
+                                                    <div class="shareRecordOnly well">
+                                                        <form role="form" class="form-horizontal">
+                                                            <div class="form-group role_select">
+                                                                <h4 class="lang" data-lang="c_roles">roles</h4>
+                                                                <div class="role_select_roles"></div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <div class="input-group">
                                                                         <span class="input-group-btn">
                                                                             <button id="getSharedRecord" class="btn btn-info" type="button"><i
                                                                                     class="fa fa-share-alt"></i></button>
                                                                         </span>
-                                                                        <input type="text" id="srLink" required class="form-control" readonly>
-                                                                    </div>
+                                                                    <input type="text" id="srLink" required class="form-control" readonly>
                                                                 </div>
-                                                            </form>
-                                                        </div>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="changes-view" role="tabpanel" class="tab-pane active">
-                                            <div class="panel-body">
-                                            </div>
+                                    </div>
+                                    <div id="changes-view" role="tabpanel" class="tab-pane active">
+                                        <div class="panel-body">
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
                         </div>
                     </div>
