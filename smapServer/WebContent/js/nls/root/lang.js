@@ -39,6 +39,7 @@ define({
     "m_br": "Browse Results",
     "m_manage": "Manage",
     "m_dash": "Dashboard",
+    "m_console": "Console",
     "m_s_m_f": "Setup Managed Forms",
     "m_task_m": "Task Management",
     "m_user_profile": "User Profile",
