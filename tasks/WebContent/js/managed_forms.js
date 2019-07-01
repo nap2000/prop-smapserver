@@ -1819,6 +1819,28 @@ require([
                 success: function (data) {
                     removeHourglass();
 
+                    var h = [],
+                        idx = -1,
+                        $elem = $('#changes'),
+                        i;
+
+                    // Add header
+                    h[++idx] = '<div class="row">';
+                    h[++idx] = '<div class="col-sm-2">';
+                    h[++idx] = localise.set["u_chg"];
+                    h[++idx] = '</div>';    // User name
+                    h[++idx] = '</div>';    // Header row
+                    if(data && data.length > 0) {
+                        for(i = 0; i < data.length; i++) {
+                            h[++idx] = '<div class="row">';
+                            h[++idx] = '<div class="col-sm-2">';    // user
+                            h[++idx] = data[i].userName;
+                            h[++idx] = '</div>';    // user
+                            h[++idx] = '</div>';    // row
+                        }
+                    }
+                    $elem.empty().html(h.join(''));
+
 
                 },
                 error: function (xhr, textStatus, err) {
