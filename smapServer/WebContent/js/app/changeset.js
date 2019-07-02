@@ -1639,7 +1639,7 @@ define([
 		                var inGroup = false;
 
 		                /*
-						 * Get the questions to move
+						 * Get the questions in the group
 						 */
 		                for(j = 0; j < qSeq.length; j++) {
 
