@@ -29,7 +29,8 @@ define([
     function ($, modernizr, lang, globals) {
 
         return {
-            showEditRecordForm: showEditRecordForm
+            showEditRecordForm: showEditRecordForm,
+            addCellMarkup: addCellMarkup
         };
 
         /*
@@ -106,16 +107,7 @@ define([
             // Add Data
             h[++idx] = ' <div class="col-md-8">';
             if (configItem.readonly) {		// Read only text
-                var v = addAnchors(record[configItem.displayName])[0];
-                if(v && v.indexOf('<') == 0) {
-                    h[++idx] = v;
-                } else {
-                    h[++idx] = ' <textarea readonly style="overflow-y:scroll;" rows=1';
-                    h[++idx] = ' class="form-control">';
-                    h[++idx] = v;
-                    h[++idx] = '</textarea>';
-                }
-
+                addCellMarkup(record[configItem.displayName]);
             } else {
                 h[++idx] = addEditableColumnMarkup(configItem, record[configItem.displayName], itemIndex, first, columns, record);
                 first = false;
@@ -316,5 +308,24 @@ define([
             } else {
                 $('#saveRecord').prop("disabled", true);
             }
+        }
+
+        /*
+         * Add markup for a single cell
+         */
+        function addCellMarkup(input) {
+            var v = addAnchors(input)[0],
+                h = [],
+                idx = -1;
+            if(v && v.indexOf('<') == 0) {
+                h[++idx] = v;
+            } else {
+                h[++idx] = ' <textarea readonly style="overflow-y:scroll;" rows=1';
+                h[++idx] = ' class="form-control">';
+                h[++idx] = v;
+                h[++idx] = '</textarea>';
+            }
+            return h.join('');
+
         }
     });

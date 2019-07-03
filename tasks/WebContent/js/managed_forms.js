@@ -1825,20 +1825,35 @@ require([
                         i;
 
                     // Add header
-                    h[++idx] = '<div class="row">';
-                    h[++idx] = '<div class="col-sm-2">';
+                    h[++idx] = '<thead>';
+                    h[++idx] = '<tr>';
+                    h[++idx] = '<th>';
                     h[++idx] = localise.set["u_chg"];
-                    h[++idx] = '</div>';    // User name
-                    h[++idx] = '</div>';    // Header row
+                    h[++idx] = '</th>';
+                    h[++idx] = '<th>';
+                    h[++idx] = localise.set["c_details"];
+                    h[++idx] = '</th>';
+                    h[++idx] = '</tr>';
+                    h[++idx] = '</thead>';
+
+                    h[++idx] = '<tbody>';
                     if(data && data.length > 0) {
                         for(i = 0; i < data.length; i++) {
-                            h[++idx] = '<div class="row">';
-                            h[++idx] = '<div class="col-sm-2">';    // user
+                            h[++idx] = '<tr>';
+
+                            h[++idx] = '<td>';    // user
                             h[++idx] = data[i].userName;
-                            h[++idx] = '</div>';    // user
-                            h[++idx] = '</div>';    // row
+                            h[++idx] = '</td>';
+
+                            h[++idx] = '<td>';    // Changes
+                            h[++idx] = getChangeCard(data[i].changes);
+                            h[++idx] = '</td>';
+
+                            h[++idx] = '</tr>';    // row
+
                         }
                     }
+                    h[++idx] = '</tbody>';
                     $elem.empty().html(h.join(''));
 
 
@@ -1853,6 +1868,59 @@ require([
                 }
             });
         }
+    }
+
+    /*
+     * Convert a list of changes into a bs4 card
+     */
+    function getChangeCard(changes) {
+        var h = [],
+            idx = -1,
+            i;
+
+        h[++idx] = '<div class="card bg-white">';
+
+        h[++idx] = '<div class="card-header" id="headingOne">';
+        h[++idx] = '<h5 class="mb-0">';
+        h[++idx] = '<button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">';
+        h[++idx] = changes.length + ' '  + localise.set["c_changes"];
+        h[++idx] = '</button>';
+        h[++idx] = '</h5>';
+        h[++idx] = '</div>';    // Header
+
+        h[++idx] = '<div id="collapseOne" class="collapse" aria-labelledby="headingOne">';
+        h[++idx] = '<div class="card-body">';
+
+        for(i = 0; i < changes.length; i++)  {
+            h[++idx] = '<div class="row">';
+
+            h[++idx] = '<div class="col-md-3">';
+            h[++idx] = changes[i].col;
+            h[++idx] = '</div>';
+
+            h[++idx] = '<div class="col-md-4">';
+            h[++idx] = actioncommon.addCellMarkup(changes[i].oldVal);
+            h[++idx] = '</div>';
+
+            h[++idx] = '<div class="col-md-1">';        // Separator
+            h[++idx] = '<i class="fa fa-arrow-right" aria-hidden="true"></i>';
+            h[++idx] = '</div>';
+
+            h[++idx] = '<div class="col-md-4">';
+            h[++idx] = actioncommon.addCellMarkup(changes[i].newVal);
+            h[++idx] = '</div>';
+
+            h[++idx] = '</div>';        // row
+        }
+        h[++idx] = '</div>';
+
+
+        h[++idx] = '</div>';        // body
+        h[++idx] = '</div>';        // collapse
+
+        h[++idx] = '</div>';        // card
+
+        return h.join('');
     }
 
 });
