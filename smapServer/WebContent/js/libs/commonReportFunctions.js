@@ -174,7 +174,7 @@ function addAnchors (property, minsize) {
 		i,
 		style = '';
 
-	if(typeof property.type !== "undefined") {
+	if(property && typeof property.type !== "undefined") {
 		// Geospatial
 		return [ property.coordinates ];
 
