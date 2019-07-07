@@ -2765,7 +2765,7 @@ function updateSettingsData() {
 	if(globals.model.survey.key_policy) {
         $('#set_key_policy').val(globals.model.survey.key_policy);
     } else {
-        $('#set_key_policy').val("none");
+        $('#set_key_policy').val("replace");
 	}
 	$('#task_file').prop('checked', globals.model.survey.task_file);
 	$('#timing_data').prop('checked', globals.model.survey.timing_data);
