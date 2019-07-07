@@ -1891,7 +1891,16 @@ require([
         h[++idx] = '<div id="collapseOne" class="collapse" aria-labelledby="headingOne">';
         h[++idx] = '<div class="card-body">';
 
+        var baseUrl = window.location.protocol + "//" + window.location.host + "/";
         for(i = 0; i < changes.length; i++)  {
+
+            var newVal = changes[i].newVal;
+            var oldVal = changes[i].oldVal;
+            var type = changes[i].type;
+            if(type === 'image') {
+                newVal = baseUrl + newVal;
+                oldVal = baseUrl + oldVal;
+            }
             h[++idx] = '<div class="row">';
 
             h[++idx] = '<div class="col-md-3">';
@@ -1899,7 +1908,7 @@ require([
             h[++idx] = '</div>';
 
             h[++idx] = '<div class="col-md-4">';
-            h[++idx] = actioncommon.addCellMarkup(changes[i].oldVal);
+            h[++idx] = actioncommon.addCellMarkup(oldVal);
             h[++idx] = '</div>';
 
             h[++idx] = '<div class="col-md-1">';        // Separator
@@ -1907,7 +1916,7 @@ require([
             h[++idx] = '</div>';
 
             h[++idx] = '<div class="col-md-4">';
-            h[++idx] = actioncommon.addCellMarkup(changes[i].newVal);
+            h[++idx] = actioncommon.addCellMarkup(newVal);
             h[++idx] = '</div>';
 
             h[++idx] = '</div>';        // row
