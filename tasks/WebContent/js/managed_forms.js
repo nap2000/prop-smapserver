@@ -1846,7 +1846,7 @@ require([
                             h[++idx] = '</td>';
 
                             h[++idx] = '<td>';    // Changes
-                            h[++idx] = getChangeCard(data[i].changes);
+                            h[++idx] = getChangeCard(data[i].changes, i);
                             h[++idx] = '</td>';
 
                             h[++idx] = '</tr>';    // row
@@ -1873,55 +1873,125 @@ require([
     /*
      * Convert a list of changes into a bs4 card
      */
-    function getChangeCard(changes) {
+    function getChangeCard(changes, index) {
         var h = [],
             idx = -1,
-            i;
+            i, j;
 
         h[++idx] = '<div class="card bg-white">';
 
-        h[++idx] = '<div class="card-header" id="headingOne">';
+        h[++idx] = '<div class="card-header" id="heading_';
+        h[++idx] = index;
+        h[++idx] = '">';
         h[++idx] = '<h5 class="mb-0">';
-        h[++idx] = '<button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">';
+        h[++idx] = '<button class="btn btn-link" data-toggle="collapse" data-target="#collapse_';
+        h[++idx] = index;
+        h[++idx] = '" aria-expanded="false" aria-controls="collapse_';
+        h[++idx] = index;
+        h[++idx] = '">';
         h[++idx] = changes.length + ' '  + localise.set["c_changes"];
         h[++idx] = '</button>';
         h[++idx] = '</h5>';
         h[++idx] = '</div>';    // Header
 
-        h[++idx] = '<div id="collapseOne" class="collapse" aria-labelledby="headingOne">';
+        h[++idx] = '<div id="collapse_';
+        h[++idx] = index;
+        h[++idx] = '" class="collapse" aria-labelledby="heading_';
+        h[++idx] = index;
+        h[++idx] = '">';
         h[++idx] = '<div class="card-body">';
 
         var baseUrl = window.location.protocol + "//" + window.location.host + "/";
         for(i = 0; i < changes.length; i++)  {
 
-            var newVal = changes[i].newVal;
-            var oldVal = changes[i].oldVal;
-            var type = changes[i].type;
-            if(type === 'image') {
-                newVal = baseUrl + newVal;
-                oldVal = baseUrl + oldVal;
-            }
             h[++idx] = '<div class="row">';
 
-            h[++idx] = '<div class="col-md-3">';
-            h[++idx] = changes[i].col;
-            h[++idx] = '</div>';
+            var type = changes[i].type;
+            if(type === 'begin repeat') {
+                var changeArray = changes[i].changes;
+                var id;
 
-            h[++idx] = '<div class="col-md-4">';
-            h[++idx] = actioncommon.addCellMarkup(oldVal);
-            h[++idx] = '</div>';
+                h[++idx] = '<div class="col-md-12">';
 
-            h[++idx] = '<div class="col-md-1">';        // Separator
-            h[++idx] = '<i class="fa fa-arrow-right" aria-hidden="true"></i>';
-            h[++idx] = '</div>';
+                // Add the tab nav links
+                h[++idx] = '<ul class="nav nav-tabs" role="tablist">';
+                for(j = 0; j < changeArray.length; j++) {
+                    id = i + '_' + j;
 
-            h[++idx] = '<div class="col-md-4">';
-            h[++idx] = actioncommon.addCellMarkup(newVal);
-            h[++idx] = '</div>';
+                    h[++idx] = '<li class="nav-item">';
+                        h[++idx] = '<a class="nav-link ';
+                        if(j == 0) {
+                            h[++idx] = 'active';
+                        }
+                        h[++idx] = '" id="chgtab_';
+                        h[++idx] = id;
+                        h[++idx] = '" data-toggle="tab" href="#chgpanel_';
+                        h[++idx] = id;
+                        h[++idx] = '" role="tab" aria-controls="chgpanel_';
+                        h[++idx] = id;
+                        h[++idx] = '" aria-selected="';
+                        if(j == 0) {
+                            h[++idx] = 'true';
+                        } else {
+                            h[++idx] = 'false';
+                        }
+                        h[++idx] = '">';
+                        h[++idx] = j;
+                        h[++idx] = '</a>';
+                    h[++idx] = '</li>';
+                }
+                h[++idx] = '</ul>';
+
+                // Add the tab panels
+                h[++idx] = '<div class="tab-content">';
+
+                for(j = 0; j < changeArray.length; j++) {
+                    id = i + '_' + j;
+
+                    h[++idx] = '<div class="tab-pane fade';
+                    if(j == 0) {
+                        h[++idx] = ' show active';
+                    }
+                    h[++idx] = '" id="chgpanel_';
+                    h[++idx] = id;
+                    h[++idx] = '" role="tabpanel" aria-labelledby="chgtab_';
+                    h[++idx] = id;
+                    h[++idx] = '">';
+                    h[++idx] = getChangeCard(changeArray[j], id);
+                    h[++idx] = '</div>';
+                }
+                h[++idx] = '</div>';        // Tab content
+                h[++idx] = '</div>';        // The column
+
+
+            } else {
+
+                var newVal = changes[i].newVal;
+                var oldVal = changes[i].oldVal;
+                if(type === 'image') {
+                    newVal = baseUrl + newVal;
+                    oldVal = baseUrl + oldVal;
+                }
+
+                h[++idx] = '<div class="col-md-3">';
+                h[++idx] = changes[i].col;
+                h[++idx] = '</div>';
+
+                h[++idx] = '<div class="col-md-4">';
+                h[++idx] = actioncommon.addCellMarkup(oldVal);
+                h[++idx] = '</div>';
+
+                h[++idx] = '<div class="col-md-1">';        // Separator
+                h[++idx] = '<i class="fa fa-arrow-right" aria-hidden="true"></i>';
+                h[++idx] = '</div>';
+
+                h[++idx] = '<div class="col-md-4">';
+                h[++idx] = actioncommon.addCellMarkup(newVal);
+                h[++idx] = '</div>';
+            }
 
             h[++idx] = '</div>';        // row
         }
-        h[++idx] = '</div>';
 
 
         h[++idx] = '</div>';        // body
