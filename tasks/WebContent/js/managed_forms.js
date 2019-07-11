@@ -432,6 +432,10 @@ require([
             refreshData();
         });
 
+        $('#refreshRecord').click(function () {
+            getRecordChanges(gTasks.gSelectedRecord);
+        });
+
         /*
          * Set up the action menu functions
          */
@@ -1800,20 +1804,10 @@ require([
      */
     function getRecordChanges(record) {
 
-        var hrk = record["Key"];
-        var instanceId = record["instanceid"];
-        var key;
-
-        if(hrk && hk.trim.length > 0) {
-            key = hrk;
-        } else {
-            key = instanceId;
-        }
-
         if(globals.gCurrentSurvey) {
             addHourglass();
             $.ajax({
-                url: "/api/v1/data/changes/" + globals.gCurrentSurvey + "/" + key,
+                url: "/api/v1/data/changes/" + globals.gCurrentSurvey + "/" + record["instanceid"],
                 dataType: 'json',
                 cache: false,
                 success: function (data) {
