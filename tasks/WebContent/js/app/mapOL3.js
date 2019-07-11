@@ -43,7 +43,8 @@ define([
             refreshLayer: refreshLayer,
             refreshAllLayers: refreshAllLayers,
             saveLayer: saveLayer,
-            deleteLayers: deleteLayers
+            deleteLayers: deleteLayers,
+            initDynamicMap: initDynamicMap
         };
 
         function deleteLayers() {
@@ -589,6 +590,71 @@ define([
                     */
                 }
             }
+        }
+
+        /*
+         ********************************
+         * Functions for dynamic maps
+         */
+
+        function initDynamicMap (config) {
+
+            // Add the map
+            if (!config.map) {
+                // Create osm layer
+                var osm = new ol.layer.Tile({source: new ol.source.OSM()});
+
+                config.map = new ol.Map({
+                    target: config.id,
+                    layers: [
+                        new ol.layer.Group({
+                            'title': 'Base maps',
+                            layers: [
+                                new ol.layer.Tile({
+                                    title: 'HOT',
+                                    type: 'base',
+                                    visible: true,
+                                    source: new ol.source.OSM({
+                                        url: 'http://{a-c}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
+                                    })
+                                }),
+                                new ol.layer.Tile({
+                                    title: 'OSM',
+                                    type: 'base',
+                                    visible: true,
+                                    source: new ol.source.OSM()
+                                })
+                            ]
+                        })
+                    ],
+                    view: new ol.View(
+                        {
+                            center: ol.proj.transform([0.0, 0.0], 'EPSG:4326', 'EPSG:3857'),
+                            zoom: 1,
+                            maxZoom: 21
+                        }
+                    )
+
+
+                });
+
+
+                // Add additional maps specified in the shared resources page
+                var sharedMaps = globals.gSelector.getSharedMaps();
+                if(!sharedMaps) {
+                    getMapboxDefault(getSharedMapsOL3, config.map);
+                } else {
+                    addSharedMapsOL3(config.map, sharedMaps)
+                }
+
+                var layerSwitcher = new ol.control.LayerSwitcher({
+                    tipLabel: 'Legend' // Optional label for button
+                });
+                config.map.addControl(layerSwitcher);
+
+            }
+
+
         }
 
     });

@@ -1813,6 +1813,8 @@ require([
                 success: function (data) {
                     removeHourglass();
 
+                    globals.gRecordChangeMaps = [];     // Initialise the list of maps we are going to show
+
                     var h = [],
                         idx = -1,
                         $elem = $('#changes'),
@@ -1850,6 +1852,7 @@ require([
                     h[++idx] = '</tbody>';
                     $elem.empty().html(h.join(''));
 
+                    actioncommon.initialiseDynamicMaps(globals.gRecordChangeMaps);
 
                 },
                 error: function (xhr, textStatus, err) {

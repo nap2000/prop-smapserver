@@ -124,6 +124,8 @@ define(function () {
         gMainTable: undefined,			// Data tables
         gReports: undefined,			// reports
         gCharts: {},					// charts
+	    gRecordMaps: [],                // Maps shown when editing a record
+	    gRecordChangeMaps: [],          // Maps shown when viewing change history
         gMapLayersShown: false,
         gViewId: 0,						// Current survey view
 
