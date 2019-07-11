@@ -25,12 +25,14 @@ define([
         'jquery',
         'modernizr',
         'localise',
-        'globals'],
-    function ($, modernizr, lang, globals) {
+        'globals',
+        'app/mapOL3'],
+    function ($, modernizr, lang, globals, map) {
 
         return {
             showEditRecordForm: showEditRecordForm,
-            addCellMarkup: addCellMarkup
+            addCellMarkup: addCellMarkup,
+            initialiseDynamicMaps: initialiseDynamicMaps
         };
 
         /*
@@ -47,6 +49,7 @@ define([
                 first = true;
 
             //gTasks.gCurrentIndex = index;
+            globals.gRecordMaps = [];     // Initialise the list of maps we are going to show
             gTasks.gPriKey = record["prikey"];
 
             // Clear the update array
@@ -75,6 +78,9 @@ define([
                 useCurrent: false,
                 showTodayButton: true
             });
+
+            // Set up the map fields
+            initialiseDynamicMaps(globals.gRecordMaps);
 
             // Respond to changes in the data by creating an update object
             $editForm.find('.form-control').bind("click propertychange paste change keyup input", function () {
@@ -107,7 +113,13 @@ define([
             // Add Data
             h[++idx] = ' <div class="col-md-8">';
             if (configItem.readonly) {		// Read only text
-                addCellMarkup(record[configItem.displayName]);
+                if(configItem.type === 'geopoint') {
+                    h[++idx] = addCellMap(true,
+                        globals.gRecordMaps, configItem, record[configItem.displayName],
+                        undefined, undefined, undefined, undefined);
+                } else {
+                    h[++idx] = addCellMarkup(record[configItem.displayName]);
+                }
             } else {
                 h[++idx] = addEditableColumnMarkup(configItem, record[configItem.displayName], itemIndex, first, columns, record);
                 first = false;
@@ -211,6 +223,27 @@ define([
             } else {
                 h[++idx] = value;
             }
+
+            return h.join('');
+        }
+
+        /*
+         * Add the markup for a map
+         */
+        function addCellMap(readOnly, maps, column, value) {
+            var h = [],
+                idx = -1;
+
+            var config = {
+                readOnly: readOnly,
+                id: "recordMaps_" + maps.length
+            }
+
+            h[++idx] = '<div id="';
+            h[++idx] = config.id;
+            h[++idx] = '" class="small_map"></div>';
+
+            maps.push(config);
 
             return h.join('');
         }
@@ -326,6 +359,18 @@ define([
                 h[++idx] = '</textarea>';
             }
             return h.join('');
+
+        }
+
+        /*
+	     * Initialise maps
+	     */
+        function initialiseDynamicMaps(maps) {
+            var i;
+
+            for(i = 0; i < maps.length; i++) {
+                map.initDynamicMap(maps[i]);
+            }
 
         }
     });
