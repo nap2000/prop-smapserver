@@ -32,6 +32,7 @@ define([
         return {
             showEditRecordForm: showEditRecordForm,
             addCellMarkup: addCellMarkup,
+            addCellMap: addCellMap,
             initialiseDynamicMaps: initialiseDynamicMaps
         };
 
@@ -114,9 +115,12 @@ define([
             h[++idx] = ' <div class="col-md-8">';
             if (configItem.readonly) {		// Read only text
                 if(configItem.type === 'geopoint') {
-                    h[++idx] = addCellMap(true,
-                        globals.gRecordMaps, configItem, record[configItem.displayName],
-                        undefined, undefined, undefined, undefined);
+                    h[++idx] = addCellMap(
+                        true,
+                        'record_maps_',
+                        globals.gRecordMaps,
+                        configItem, record[configItem.displayName],
+                        undefined);
                 } else {
                     h[++idx] = addCellMarkup(record[configItem.displayName]);
                 }
@@ -230,13 +234,30 @@ define([
         /*
          * Add the markup for a map
          */
-        function addCellMap(readOnly, maps, column, value) {
+        function addCellMap(readOnly, idbase, maps, column, currentValue, oldValue) {
             var h = [],
                 idx = -1;
 
+            if(typeof currentValue === "string") {
+                try {
+                    currentValue = JSON.parse(currentValue);
+                } catch(err) {
+
+                }
+            }
+            if(typeof oldValue === "string") {
+                try {
+                    oldValue = JSON.parse(oldValue);
+                } catch (err) {
+
+                }
+            }
+
             var config = {
                 readOnly: readOnly,
-                id: "recordMaps_" + maps.length
+                id: idbase + maps.length,
+                currentValue: currentValue,
+                oldValue: oldValue
             }
 
             h[++idx] = '<div id="';
