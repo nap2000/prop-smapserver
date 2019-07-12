@@ -114,7 +114,7 @@ define([
             // Add Data
             h[++idx] = ' <div class="col-md-8">';
             if (configItem.readonly) {		// Read only text
-                if(configItem.type === 'geopoint') {
+                if(configItem.type === 'geopoint' || configItem.type === 'geoshape' || configItem.type === 'geotrace') {
                     h[++idx] = addCellMap(
                         true,
                         'record_maps_',
