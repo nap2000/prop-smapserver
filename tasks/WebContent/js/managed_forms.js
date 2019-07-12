@@ -226,10 +226,10 @@ require([
             $('#srLink').val("");
             getSurveyRoles(globals.gCurrentSurvey);
             getRecordChanges(gTasks.gSelectedRecord);
-            actioncommon.showEditRecordForm(gTasks.gSelectedRecord, columns, $('#editRecordForm'), $('#surveyForm'));
 
             $('.overviewSection').hide();
             $('.editRecordSection').show();
+            actioncommon.showEditRecordForm(gTasks.gSelectedRecord, columns, $('#editRecordForm'), $('#surveyForm'));
         });
 
         /*
@@ -1852,7 +1852,14 @@ require([
                     h[++idx] = '</tbody>';
                     $elem.empty().html(h.join(''));
 
-                    actioncommon.initialiseDynamicMaps(globals.gRecordChangeMaps);
+                    $('.change_card').on('shown.bs.collapse', function() {
+                        var $this = $(this);
+                        $('.card-body > .row > .small_map', $this).each(function(){
+                           console.log($(this).attr("id"));
+                            actioncommon.initialiseDynamicMaps(globals.gRecordChangeMaps, $(this).attr("id"));
+                        });
+                    });
+
 
                 },
                 error: function (xhr, textStatus, err) {
@@ -1893,7 +1900,7 @@ require([
 
         h[++idx] = '<div id="collapse_';
         h[++idx] = index;
-        h[++idx] = '" class="collapse" aria-labelledby="heading_';
+        h[++idx] = '" class="collapse change_card" aria-labelledby="heading_';
         h[++idx] = index;
         h[++idx] = '">';
         h[++idx] = '<div class="card-body">';
@@ -1970,7 +1977,7 @@ require([
                     oldVal = baseUrl + oldVal;
                 }
 
-                if(type === 'geopoint') {
+                if(type === 'geopoint' || type === 'geoshape' || type === 'geotrace') {
                     h[++idx] = actioncommon.addCellMap(true, 'change_maps_',
                         globals.gRecordChangeMaps, changes[i], newVal, oldVal);
                 } else {

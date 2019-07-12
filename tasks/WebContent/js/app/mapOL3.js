@@ -669,20 +669,26 @@ define([
                     var styleFn = function(feature, resolution) {
 
                         var pointFill;
+                        var areaFill;
+                        var line;
 
                         if(feature.get('type')=== 'current') {
                             pointFill = 'rgba(255, 0, 0, 1.0)';
+                            areaFill = 'rgba(255, 100, 50, 0.3)';
+                            line = 'rgba(255, 10, 10, 0.8)';
                         } else if(feature.get('type')=== 'old') {
                             pointFill = 'rgba(0, 0, 255, 1.0)';
+                            areaFill = 'rgba(50, 100, 255, 0.3)';
+                            line = 'rgba(10, 10, 255, 0.8)';
                         }
 
                         return [new ol.style.Style({
                             fill: new ol.style.Fill({
-                                color: 'rgba(255, 100, 50, 0.3)'
+                                color: areaFill
                             }),
                             stroke: new ol.style.Stroke({
                                 width: 2,
-                                color: 'rgba(255, 10, 10, 0.8)'
+                                color: line
                             }),
                             image: new ol.style.Circle({
                                 fill: new ol.style.Fill({
