@@ -104,8 +104,6 @@ define([
 
             // Add the map
             if (!gMap) {
-                // Create osm layer
-                var osm = new ol.layer.Tile({source: new ol.source.OSM()});
 
                 gMap = new ol.Map({
                     target: 'map',
@@ -318,7 +316,7 @@ define([
                 }),
                 stroke: new ol.style.Stroke({
                     width: 2,
-                    color: 'rgba(255, 100, 50, 0.8)'
+                    color: 'rgba(255, 10, 10, 0.8)'
                 }),
                 image: new ol.style.Circle({
                     fill: new ol.style.Fill({
@@ -329,7 +327,7 @@ define([
                         color: 'rgba(255, 255, 255, 0.8)'
                     }),
                     radius: 7
-                }),
+                })
             });
 
             if (!gVectorSources[index]) {
@@ -601,8 +599,6 @@ define([
 
             // Add the map
             if (!config.map) {
-                // Create osm layer
-                var osm = new ol.layer.Tile({source: new ol.source.OSM()});
 
                 config.map = new ol.Map({
                     target: config.id,
@@ -635,17 +631,66 @@ define([
                         }
                     )
 
-
                 });
 
+                // Add the vectors
 
-                // Add additional maps specified in the shared resources page
-                var sharedMaps = globals.gSelector.getSharedMaps();
-                if(!sharedMaps) {
-                    getMapboxDefault(getSharedMapsOL3, config.map);
-                } else {
-                    addSharedMapsOL3(config.map, sharedMaps)
+                var currentStyle = new ol.style.Style({
+                    fill: new ol.style.Fill({
+                        color: 'rgba(255, 100, 50, 0.3)'
+                    }),
+                    stroke: new ol.style.Stroke({
+                        width: 2,
+                        color: 'rgba(255, 10, 10, 0.8)'
+                    }),
+                    image: new ol.style.Circle({
+                        fill: new ol.style.Fill({
+                            color: 'rgba(255, 0, 0, 0.8)'
+                        }),
+                        stroke: new ol.style.Stroke({
+                            width: 1,
+                            color: 'rgba(255, 255, 255, 0.8)'
+                        }),
+                        radius: 7
+                    })
+                });
+
+                // Add the vector layer
+
+                var features = [];
+                if(config.currentValue) {
+                    var currentValue = {
+                        "type": "Feature",
+                        "geometry": config.currentValue,
+                        "properties": {
+                            "type": "current"
+                        }
+                    };
+
+                    features.push(currentValue);
                 }
+
+                var collection = {
+                    "type": "FeatureCollection",
+                    features: features
+                }
+
+                if(collection.features.length > 0) {
+                    var source = new ol.source.Vector();
+                    source.addFeatures((new ol.format.GeoJSON()).readFeatures(collection,
+                        {
+                            dataProjection: 'EPSG:4326',
+                            featureProjection: 'EPSG:3857'
+                        }));
+                    var layer = new ol.layer.Vector({
+                        source: source,
+                        style: [currentStyle]
+                    });
+                    config.map.addLayer(layer);
+
+                    config.map.getView().fit(source.getExtent(), config.map.getSize());
+                }
+
 
                 var layerSwitcher = new ol.control.LayerSwitcher({
                     tipLabel: 'Legend' // Optional label for button
