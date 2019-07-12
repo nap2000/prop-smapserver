@@ -262,7 +262,11 @@ define([
 
             h[++idx] = '<div id="';
             h[++idx] = config.id;
-            h[++idx] = '" class="small_map"></div>';
+            h[++idx] = '" class="small_map">';
+            h[++idx] = '<div id="tooltip_';
+            h[++idx] = config.id;
+            h[++idx] = '"></div>'
+            h[++idx] = '</div>';
 
             maps.push(config);
 
@@ -386,11 +390,13 @@ define([
         /*
 	     * Initialise maps
 	     */
-        function initialiseDynamicMaps(maps) {
+        function initialiseDynamicMaps(maps, mapId) {
             var i;
 
             for(i = 0; i < maps.length; i++) {
-                map.initDynamicMap(maps[i]);
+                if(!mapId || mapId === maps[i].id) {
+                    map.initDynamicMap(maps[i]);
+                }
             }
 
         }
