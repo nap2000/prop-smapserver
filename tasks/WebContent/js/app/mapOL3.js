@@ -320,7 +320,7 @@ define([
                 }),
                 image: new ol.style.Circle({
                     fill: new ol.style.Fill({
-                        color: 'rgba(255, 0, 0, 0.5)'
+                        color: 'rgba(255, 0, 0, 1.0)'
                     }),
                     stroke: new ol.style.Stroke({
                         width: 1,
@@ -633,41 +633,31 @@ define([
 
                 });
 
-                // Add the vectors
-
-                var currentStyle = new ol.style.Style({
-                    fill: new ol.style.Fill({
-                        color: 'rgba(255, 100, 50, 0.3)'
-                    }),
-                    stroke: new ol.style.Stroke({
-                        width: 2,
-                        color: 'rgba(255, 10, 10, 0.8)'
-                    }),
-                    image: new ol.style.Circle({
-                        fill: new ol.style.Fill({
-                            color: 'rgba(255, 0, 0, 0.8)'
-                        }),
-                        stroke: new ol.style.Stroke({
-                            width: 1,
-                            color: 'rgba(255, 255, 255, 0.8)'
-                        }),
-                        radius: 7
-                    })
-                });
-
                 // Add the vector layer
-
                 var features = [];
                 if(config.currentValue) {
                     var currentValue = {
                         "type": "Feature",
                         "geometry": config.currentValue,
                         "properties": {
-                            "type": "current"
+                            "type": "current",
+                            "label": localise.set["c_to"]
                         }
                     };
 
                     features.push(currentValue);
+                }
+                if(config.oldValue) {
+                    var oldValue = {
+                        "type": "Feature",
+                        "geometry": config.oldValue,
+                        "properties": {
+                            "type": "old",
+                            "label": localise.set["c_from"]
+                        }
+                    };
+
+                    features.push(oldValue);
                 }
 
                 var collection = {
@@ -676,19 +666,87 @@ define([
                 }
 
                 if(collection.features.length > 0) {
-                    var source = new ol.source.Vector();
-                    source.addFeatures((new ol.format.GeoJSON()).readFeatures(collection,
-                        {
-                            dataProjection: 'EPSG:4326',
-                            featureProjection: 'EPSG:3857'
-                        }));
-                    var layer = new ol.layer.Vector({
-                        source: source,
-                        style: [currentStyle]
-                    });
-                    config.map.addLayer(layer);
+                    var styleFn = function(feature, resolution) {
 
-                    config.map.getView().fit(source.getExtent(), config.map.getSize());
+                        var pointFill;
+
+                        if(feature.get('type')=== 'current') {
+                            pointFill = 'rgba(255, 0, 0, 1.0)';
+                        } else if(feature.get('type')=== 'old') {
+                            pointFill = 'rgba(0, 0, 255, 1.0)';
+                        }
+
+                        return [new ol.style.Style({
+                            fill: new ol.style.Fill({
+                                color: 'rgba(255, 100, 50, 0.3)'
+                            }),
+                            stroke: new ol.style.Stroke({
+                                width: 2,
+                                color: 'rgba(255, 10, 10, 0.8)'
+                            }),
+                            image: new ol.style.Circle({
+                                fill: new ol.style.Fill({
+                                    color: pointFill
+                                }),
+                                stroke: new ol.style.Stroke({
+                                    width: 2,
+                                    color: 'rgba(100, 100, 100, 0.8)'
+                                }),
+                                radius: 7
+                            })
+                        })];
+                    };
+
+                    var source = new ol.source.Vector();
+                    try {
+                        source.addFeatures((new ol.format.GeoJSON()).readFeatures(collection,
+                            {
+                                dataProjection: 'EPSG:4326',
+                                featureProjection: 'EPSG:3857'
+                            }));
+
+                        var layer = new ol.layer.Vector({
+                            source: source,
+                            style: styleFn
+                        });
+                        config.map.addLayer(layer);
+
+                        config.map.getView().fit(source.getExtent(), config.map.getSize());
+
+                        /*
+                         * Add events
+                         */
+                        config.map.on('click', function(evt) {
+
+                            var noFeature = true;
+                            var map = config.map;
+                            var $tooltip = $('#tooltip_' + config.id);
+
+                            map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+
+                                $tooltip.html(feature.getProperties().label);
+                                $tooltip.css(
+                                    {
+                                        position:"absolute",
+                                        left:evt.pixel[0],
+                                        top:evt.pixel[1],
+                                        "z-index": 20000,
+                                        "background-color": "white",
+                                        "padding": 2
+                                    }).show();
+                                noFeature = false;
+
+                            });
+                            if(noFeature) {
+                                $tooltip.hide();
+                            }
+
+                        });
+
+                    } catch(err) {
+
+                    }
+
                 }
 
 
@@ -697,6 +755,8 @@ define([
                 });
                 config.map.addControl(layerSwitcher);
 
+            } else {
+                console.log('Map ' + config.id + ' already initialised');
             }
 
 
