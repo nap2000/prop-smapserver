@@ -1970,21 +1970,27 @@ require([
                     oldVal = baseUrl + oldVal;
                 }
 
-                h[++idx] = '<div class="col-md-3">';
-                h[++idx] = changes[i].col;
-                h[++idx] = '</div>';
+                if(type === 'geopoint') {
+                    h[++idx] = actioncommon.addCellMap(true, 'change_maps_',
+                        globals.gRecordChangeMaps, changes[i], newVal, oldVal);
+                } else {
 
-                h[++idx] = '<div class="col-md-4">';
-                h[++idx] = actioncommon.addCellMarkup(oldVal);
-                h[++idx] = '</div>';
+                    h[++idx] = '<div class="col-md-3">';
+                    h[++idx] = changes[i].col;
+                    h[++idx] = '</div>';
 
-                h[++idx] = '<div class="col-md-1">';        // Separator
-                h[++idx] = '<i class="fa fa-arrow-right" aria-hidden="true"></i>';
-                h[++idx] = '</div>';
+                    h[++idx] = '<div class="col-md-4">';
+                    h[++idx] = actioncommon.addCellMarkup(oldVal);
+                    h[++idx] = '</div>';
 
-                h[++idx] = '<div class="col-md-4">';
-                h[++idx] = actioncommon.addCellMarkup(newVal);
-                h[++idx] = '</div>';
+                    h[++idx] = '<div class="col-md-1">';        // Separator
+                    h[++idx] = '<i class="fa fa-arrow-right" aria-hidden="true"></i>';
+                    h[++idx] = '</div>';
+
+                    h[++idx] = '<div class="col-md-4">';
+                    h[++idx] = actioncommon.addCellMarkup(newVal);
+                    h[++idx] = '</div>';
+                }
             }
 
             h[++idx] = '</div>';        // row
