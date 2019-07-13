@@ -1269,3 +1269,17 @@ create TABLE last_refresh (
 	);
 SELECT AddGeometryColumn('last_refresh', 'geo_point', 4326, 'POINT', 2);
 ALTER TABLE last_refresh OWNER TO ws;
+
+-- Group Surveys
+DROP SEQUENCE IF EXISTS group_survey_seq CASCADE;
+CREATE SEQUENCE group_survey_seq START 1;
+ALTER SEQUENCE group_survey_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS group_survey;
+create TABLE group_survey (
+	id integer default nextval('group_survey_seq') constraint pk_group_survey primary key,
+	u_ident text REFERENCES users(ident) ON DELETE CASCADE,
+	s_id integer REFERENCES survey(s_id) ON DELETE CASCADE,
+	group_ident text REFERENCES survey(ident) ON DELETE CASCADE
+	);
+ALTER TABLE group_survey OWNER TO ws;
