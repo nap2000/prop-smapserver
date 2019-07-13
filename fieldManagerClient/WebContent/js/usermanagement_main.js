@@ -160,6 +160,15 @@ require([
 			$('#organisationPanel').show();
 			setInLocalStorage("currentTab", '#organisationTab a');
 		});
+		$('#myOrganisationTab a').click(function (e) {
+			e.preventDefault();
+			$('.my_org_alert').hide();
+			$(this).tab('show');
+
+			$(".usertab").hide();
+			$('#myOrganisationPanel').show();
+			setInLocalStorage("currentTab", '#myOrganisationTab a');
+		});
 		$('#serverTab a').click(function (e) {
 			e.preventDefault();
 			$('.org_alert').hide();
@@ -981,9 +990,13 @@ require([
 
 	function userKnown() {
 		getGroups();
+		if(globals.gIsOrgAdministrator) {
+			$('#myOrganisationTab').hide();
+		}
 		if(globals.gIsOrgAdministrator || globals.gIsSecurityAdministrator) {
 			getRoles(updateRoleTable);
 		}
+
 	}
 
 	/*
