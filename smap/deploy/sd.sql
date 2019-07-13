@@ -1211,3 +1211,14 @@ alter table organisation add column can_sms boolean default false;
 update survey set key_policy = 'merge' where key_policy = 'none';
 update survey set key_policy = 'merge' where key_policy = 'add';
 
+CREATE SEQUENCE group_survey_seq START 1;
+ALTER SEQUENCE group_survey_seq OWNER TO ws;
+
+create TABLE group_survey (
+	id integer default nextval('group_survey_seq') constraint pk_group_survey primary key,
+	u_ident text REFERENCES users(ident) ON DELETE CASCADE,
+	s_id integer REFERENCES survey(s_id) ON DELETE CASCADE,
+	group_ident text REFERENCES survey(ident) ON DELETE CASCADE
+	);
+ALTER TABLE group_survey OWNER TO ws;
+

@@ -211,6 +211,35 @@ function saveCurrentProject(projectId, surveyId, taskGroupId) {
 	}
 }
 
+/*
+ * Save the current relationship between survey and surveyGroup
+ */
+function saveCurrentGroupSurvey(surveyId, groupSurvey) {
+
+	if (surveyId > 0) {
+
+		var groupSurvey = {
+			sId: surveyId,
+			groupIdent: groupSurvey
+		};
+
+		var groupString = JSON.stringify(groupSurvey);
+
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			contentType: "application/json",
+			url: "/surveyKPI/user/groupsurvey",
+			cache: false,
+			data: {groupSurvey: groupString},
+			success: function (data, status) {
+				removeHourglass();
+			}, error: function (data, status) {
+				removeHourglass();
+			}
+		});
+	}
+}
 
 /*
  * ===============================================================
@@ -1078,6 +1107,9 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 			globals.gCurrentProject = data.current_project_id;
 			globals.gCurrentTaskGroup = data.current_task_group_id;
 			$('#projectId').val(globals.gCurrentProject);		// Set the project value for the hidden field in template upload
+			if(data.groupSurveys) {
+				globals.gGroupSurveys = data.groupSurveys;
+			}
 
 			setOrganisationTheme();
 

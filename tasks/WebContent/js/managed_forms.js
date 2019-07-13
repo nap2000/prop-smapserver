@@ -120,7 +120,8 @@ require([
             managedData: {},
             surveyList: {},
             surveyRoles: {},
-            recordChanges: {}
+            recordChanges: {},
+            groupSurveys: {}
         },
         gSelectedRecord: undefined,
         gSelectedSurveyIndex: undefined,
@@ -186,6 +187,12 @@ require([
         $('#survey_name').change(function () {
             gTasks.gSelectedSurveyIndex = $(this).val();
             globals.gCurrentSurvey = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].id;  // TODO remove
+            surveyChanged();
+        });
+
+        // Set change function on group survey
+        $('#group_survey').change(function () {
+            globals.gSurveyGroupSurveys[globals.gCurrentSurvey] = $(this).val();
             surveyChanged();
         });
 
@@ -871,8 +878,10 @@ require([
         if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
 
             saveCurrentProject(-1, globals.gCurrentSurvey);
+
             getSurveyView(0, globals.gCurrentSurvey,
-                gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].managed_id, 0);
+                    gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].managed_id, 0,
+                    globals.gGroupSurveys[globals.gCurrentSurvey]);
 
             $('.main_survey').html($('#survey_name option:selected').text());
 
@@ -895,9 +904,13 @@ require([
             gTasks.cache.surveyList = {};
             gTasks.cache.surveyRoles = {};
             gTasks.cache.recordChanges = {};
+            gTasks.cache.groupForms = {};
 
             // Get the list of available surveys
             loadManagedSurveys(globals.gCurrentProject, surveyChanged);
+            if(globals.gCurrentSurvey > 0) {
+                getGroupForms(globals.gCurrentSurvey);
+            }
         }
 
     }
@@ -1358,24 +1371,22 @@ require([
 
                     for (i = 0; i < data.length; i++) {
                         item = data[i];
-                        if (true) {     // Previously filtered out non managed forms if it was the managed forms page
-                            h[++idx] = '<option value="';
-                            h[++idx] = i;
-                            h[++idx] = '">';
-                            h[++idx] = item.displayName;
-                            h[++idx] = '</option>';
 
-                            if (firstSurvey) {
-                                firstSurveyId = item.id;
-                                firstSurveyIndex = i;
-                                firstSurvey = false;
-                            }
+                        h[++idx] = '<option value="';
+                        h[++idx] = i;
+                        h[++idx] = '">';
+                        h[++idx] = item.displayName;
+                        h[++idx] = '</option>';
 
-                            if (item.id === globals.gCurrentSurvey) {
-                                gTasks.gSelectedSurveyIndex = i;
-                            }
+                        if (firstSurvey) {
+                            firstSurveyId = item.id;
+                            firstSurveyIndex = i;
+                            firstSurvey = false;
                         }
 
+                        if (item.id === globals.gCurrentSurvey) {
+                            gTasks.gSelectedSurveyIndex = i;
+                        }
                     }
 
                     $elemSurveys.empty().html(h.join(''));
@@ -1407,6 +1418,104 @@ require([
         } else {
             gRefreshingData = false;
         }
+    }
+
+    /*
+     * Get Forms in the current surveys group
+     */
+    function getGroupForms(surveyId) {
+
+        if (typeof surveyId !== "undefined" && surveyId > 0) {
+
+            if(gTasks.cache.groupSurveys[surveyId]) {
+                groupsRetrieved(gTasks.cache.groupSurveys[surveyId]);
+            } else {
+
+                var url = "/surveyKPI/surveyResults/" + surveyId + "/groups",
+                    survey = surveyId;
+
+                addHourglass();
+                $.ajax({
+                    url: url,
+                    dataType: 'json',
+                    cache: false,
+                    success: function (data) {
+                        removeHourglass();
+                        gTasks.cache.groupSurveys[survey] = data;
+                        groupsRetrieved(data);
+                    },
+                    error: function (xhr, textStatus, err) {
+                        removeHourglass();
+                        if (xhr.readyState == 0 || xhr.status == 0) {
+                            return;  // Not an error
+                        } else {
+                            console.log(localise.set["c_error"] + ": " + err);
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    /*
+     * Update the group selector
+     */
+    function groupsRetrieved(data) {
+
+        var $elemGroups = $('#group_survey');
+
+        var i,
+            item,
+            h = [],
+            idx = -1;
+
+        h[++idx] = '<option value="';
+        h[++idx] = '">';
+        h[++idx] = localise.set["c_none"];
+        h[++idx] = '</option>';
+        
+        for (i = 0; i < data.length; i++) {
+            item = data[i];
+
+            if (item.sId !== globals.gCurrentSurvey) {       // Don't include current survey
+
+                h[++idx] = '<option value="';
+                h[++idx] = item.surveyIdent;
+                h[++idx] = '">';
+                h[++idx] = item.surveyName;
+                h[++idx] = '</option>';
+
+            }
+        }
+
+        $elemGroups.empty().html(h.join(''));
+
+        /*
+		 * Set the value
+		 */
+        if(globals.gCurrentSurvey > 0 && globals.gSurveyGroupSurveys
+                && globals.gSurveyGroupSurveys[globals.gCurrentSurvey]
+                && globals.gSurveyGroupSurveys[globals.gCurrentSurvey] != "") {
+
+            var val = globals.gSurveyGroupSurveys[globals.gCurrentSurvey];
+            var exists = false;
+            for(i = 0; i < data.length; i++) {
+                if(data[i].surveyIdent === val) {
+                    exists = true;
+                    break;
+                }
+                if(exists) {
+                    $elemGroups.val(val);
+                } else {
+                    $elemGroups.val("");
+                    saveCurrentGroupSurvey(globals.gCurrentSurvey, "");
+                    surveyChanged();
+                }
+            }
+        } else {
+            $elemGroups.val("");        // None
+        }
+
     }
 
     /*

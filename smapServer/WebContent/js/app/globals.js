@@ -40,6 +40,7 @@ define(function () {
         gRoleList: undefined,
         gCurrentProject: 0,
         gCurrentSurvey: 0,
+	    gGroupSurveys: {},
         gCurrentForm: 0,
         gCurrentLayer: undefined,
         gLoggedInUser: undefined,
