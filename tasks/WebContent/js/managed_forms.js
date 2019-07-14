@@ -879,13 +879,7 @@ require([
         if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
 
             saveCurrentProject(-1, globals.gCurrentSurvey);
-
-            getSurveyView(0, globals.gCurrentSurvey,
-                    gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].managed_id,   // deprecate
-                    0,
-                    globals.gGroupSurveys[globals.gCurrentSurvey]);     // GroupSurvey
-
-            $('.main_survey').html($('#survey_name option:selected').text());
+            getGroupForms(globals.gCurrentSurvey);
 
         } else {
             // No surveys in this project
@@ -912,10 +906,6 @@ require([
 
             $('.main_survey').html($('#survey_name option:selected').text());
 
-        } else {
-            // No surveys in this project
-            $('#content').empty();
-            gRefreshingData = false;
         }
     }
 
@@ -935,9 +925,6 @@ require([
 
             // Get the list of available surveys
             loadManagedSurveys(globals.gCurrentProject, surveyChanged);
-            if(globals.gCurrentSurvey > 0) {
-                getGroupForms(globals.gCurrentSurvey);
-            }
         }
 
     }
@@ -1452,6 +1439,8 @@ require([
      */
     function getGroupForms(surveyId) {
 
+        groupSurveyChanged();       // Can finally retrieve the data
+
         if (typeof surveyId !== "undefined" && surveyId > 0) {
 
             if(gTasks.cache.groupSurveys[surveyId]) {
@@ -1488,6 +1477,7 @@ require([
      * Update the group selector
      */
     function groupsRetrieved(data) {
+
 
         var $elemGroups = $('#group_survey');
 
