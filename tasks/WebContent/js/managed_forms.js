@@ -192,8 +192,8 @@ require([
 
         // Set change function on group survey
         $('#group_survey').change(function () {
-            globals.gSurveyGroupSurveys[globals.gCurrentSurvey] = $(this).val();
-            surveyChanged();
+            globals.gGroupSurveys[globals.gCurrentSurvey] = $(this).val();
+            groupSurveyChanged();
         });
 
         /*
@@ -808,13 +808,14 @@ require([
     /*
      * Get the survey view (mini dashboard for a single survey)
      */
-    function getSurveyView(viewId, sId, managedId, queryId) {
+    function getSurveyView(viewId, sId, managedId, queryId, groupSurveyIdent) {
 
-        var url;
-
-        url = '/surveyKPI/surveyview/' + viewId;
+        var url = '/surveyKPI/surveyview/' + viewId;
         url += '?survey=' + sId;
         url += '&managed=' + managedId;
+        if(groupSurveyIdent && groupSurveyIdent != "") {
+            url += '&groupSurvey=' + groupSurveyIdent;
+        }
         url += '&query=' + queryId;		// ignore for moment, ie note caching is done only on survey index
 
         if (!globals.gViewId || !gTasks.cache.surveyConfig[globals.gViewId]) {
@@ -880,8 +881,34 @@ require([
             saveCurrentProject(-1, globals.gCurrentSurvey);
 
             getSurveyView(0, globals.gCurrentSurvey,
-                    gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].managed_id, 0,
-                    globals.gGroupSurveys[globals.gCurrentSurvey]);
+                    gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].managed_id,   // deprecate
+                    0,
+                    globals.gGroupSurveys[globals.gCurrentSurvey]);     // GroupSurvey
+
+            $('.main_survey').html($('#survey_name option:selected').text());
+
+        } else {
+            // No surveys in this project
+            $('#content').empty();
+            gRefreshingData = false;
+        }
+    }
+
+    /*
+     * Function called when the current survey is changed
+     */
+    function groupSurveyChanged() {
+
+        globals.gViewId = 0;        // TODO remember views set for each survey and restore
+
+        if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
+
+            saveCurrentGroupSurvey(globals.gCurrentSurvey, globals.gGroupSurveys[globals.gCurrentSurvey]);
+
+            getSurveyView(0, globals.gCurrentSurvey,
+                gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].managed_id,   // deprecate
+                0,
+                globals.gGroupSurveys[globals.gCurrentSurvey]);     // GroupSurvey
 
             $('.main_survey').html($('#survey_name option:selected').text());
 
@@ -1473,7 +1500,7 @@ require([
         h[++idx] = '">';
         h[++idx] = localise.set["c_none"];
         h[++idx] = '</option>';
-        
+
         for (i = 0; i < data.length; i++) {
             item = data[i];
 
@@ -1493,11 +1520,11 @@ require([
         /*
 		 * Set the value
 		 */
-        if(globals.gCurrentSurvey > 0 && globals.gSurveyGroupSurveys
-                && globals.gSurveyGroupSurveys[globals.gCurrentSurvey]
-                && globals.gSurveyGroupSurveys[globals.gCurrentSurvey] != "") {
+        if(globals.gCurrentSurvey > 0 && globals.gGroupSurveys
+                && globals.gGroupSurveys[globals.gCurrentSurvey]
+                && globals.gGroupSurveys[globals.gCurrentSurvey] != "") {
 
-            var val = globals.gSurveyGroupSurveys[globals.gCurrentSurvey];
+            var val = globals.gGroupSurveys[globals.gCurrentSurvey];
             var exists = false;
             for(i = 0; i < data.length; i++) {
                 if(data[i].surveyIdent === val) {
@@ -1508,8 +1535,7 @@ require([
                     $elemGroups.val(val);
                 } else {
                     $elemGroups.val("");
-                    saveCurrentGroupSurvey(globals.gCurrentSurvey, "");
-                    surveyChanged();
+                    groupSurveyChanged();
                 }
             }
         } else {
