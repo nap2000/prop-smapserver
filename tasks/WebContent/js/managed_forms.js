@@ -1030,8 +1030,11 @@ require([
          */
         var url = '/api/v1/data/';
         url += sId;
-
         url += "?mgmt=true";
+
+        if(globals.gGroupSurveys[globals.gCurrentSurvey] && globals.gGroupSurveys[globals.gCurrentSurvey] != "") {
+            url += "&groupSurvey=" + globals.gGroupSurveys[globals.gCurrentSurvey];
+        }
 
         if (isDuplicates) {
             url += "&group=true";
@@ -1517,16 +1520,16 @@ require([
             var val = globals.gGroupSurveys[globals.gCurrentSurvey];
             var exists = false;
             for(i = 0; i < data.length; i++) {
-                if(data[i].surveyIdent === val) {
+                if (data[i].surveyIdent === val) {
                     exists = true;
                     break;
                 }
-                if(exists) {
-                    $elemGroups.val(val);
-                } else {
-                    $elemGroups.val("");
-                    groupSurveyChanged();
-                }
+            }
+            if(exists) {
+                $elemGroups.val(val);
+            } else {
+                $elemGroups.val("");
+                groupSurveyChanged();
             }
         } else {
             $elemGroups.val("");        // None
