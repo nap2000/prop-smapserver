@@ -1075,6 +1075,8 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 		success: function(data) {
 			removeHourglass();
 
+			var i;
+
 			globals.gServerCanSendEmail = data.sendEmail;
 
 			globals.gEmailEnabled = data.allow_email;
@@ -1108,7 +1110,9 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 			globals.gCurrentTaskGroup = data.current_task_group_id;
 			$('#projectId').val(globals.gCurrentProject);		// Set the project value for the hidden field in template upload
 			if(data.groupSurveys) {
-				globals.gGroupSurveys = data.groupSurveys;
+				for(i = 0; i < data.groupSurveys.length; i++) {
+					globals.gGroupSurveys[data.groupSurveys[i].sId] = data.groupSurveys[i].groupIdent;
+				}
 			}
 
 			setOrganisationTheme();
