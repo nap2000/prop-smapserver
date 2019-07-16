@@ -1449,10 +1449,10 @@ define([
                 data: {chartView: saveString},
                 success: function (data, status) {
                     removeHourglass();
-                    if(globals.gViewId != data.viewId) {  // Store data under new viewId
-                        gTasks.cache.surveyConfig[data.viewId] = gTasks.cache.surveyConfig[globals.gViewId];
-                        globals.gViewId = data.viewId;
-                    }
+                    //if(globals.gViewId != data.viewId) {  // Store data under new viewId
+                    //    gTasks.cache.surveyConfig[data.viewId] = gTasks.cache.surveyConfig[globals.gViewId];
+                    //    globals.gViewId = data.viewId;
+                    //}
 
 
                 }, error: function (data, status) {
