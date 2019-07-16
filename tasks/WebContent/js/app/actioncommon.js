@@ -319,7 +319,7 @@ define([
                 itemIndex = $this.data("item"),
                 value = $this.val(),
                 record = gTasks.gSelectedRecord,
-                columns = gTasks.cache.surveyConfig[globals.gViewId].columns,
+                columns = gTasks.cache.currentData.schema.columns,
                 currentValue,
                 column_name = columns[itemIndex].column_name,
                 i,
