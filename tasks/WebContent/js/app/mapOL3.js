@@ -95,7 +95,6 @@ define([
             } else {
                 gLayers[1] = layer;     // replace
             }
-            saveToServer(gLayers);
 
             showLayerSelections();
         }

@@ -335,14 +335,13 @@ require([
                 dataType: 'text',
                 contentType: "application/json",
                 cache: false,
-                url: "/surveyKPI/managed/update/" + globals.gCurrentSurvey + "/" + gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].managed_id,
+                url: "/surveyKPI/managed/update_gs/" + globals.gCurrentSurvey + "/" + globals.gGroupSurveys[globals.gCurrentSurvey],
                 data: {settings: saveString},
                 success: function (data, status) {
                     removeHourglass();
                     gTasks.gUpdate = [];
-                    $('#saveRecord').prop("disabled", true);
-
-                    globals.gMainTable.ajax.reload();
+                    showManagedData(globals.gCurrentSurvey, refreshTable, true);
+                    window.history.back();
                 }, error: function (data, status) {
                     removeHourglass();
                     alert(data.responseText);
@@ -902,7 +901,7 @@ require([
 
             saveCurrentGroupSurvey(globals.gCurrentSurvey, globals.gGroupSurveys[globals.gCurrentSurvey]);
 
-            showManagedData(globals.gCurrentSurvey);
+            showManagedData(globals.gCurrentSurvey, showTable, false);
 
             //getSurveyView(0, globals.gCurrentSurvey,
             //    gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].managed_id,   // deprecate
@@ -955,39 +954,16 @@ require([
 
     /*
      * Show the survey data along with the management columns
-     * If masterRecord is specified then only show that record
      */
-    function showManagedData(sId) {
+    function showManagedData(sId, callback, clearCache) {
 
-        var x = 1,
-            columns,
-            parameters,
-            shownColumns = [],
-            hiddenColumns = [],
-            visibleColumns = [],
-            h = [],
-            idx = -1,
-            hfoot = [],
-            foot_idx = -1,
-            i, j,
-            colIdx = 0,
-            $table = $("#trackingTable"),
-            doneFirst = false,
-            headItem,
-            hColSort = [],
-            hDups = [],
-            hColSortIdx = -1,
-            hDupsIdx = -1,
-            groupSurvey;
-
+        var groupSurvey;
 
         if(globals.gGroupSurveys[globals.gCurrentSurvey] && globals.gGroupSurveys[globals.gCurrentSurvey] != "") {
             groupSurvey = globals.gGroupSurveys[globals.gCurrentSurvey];
         }
 
-        var json = getData(sId, groupSurvey);
-
-
+        getData(sId, groupSurvey, callback, clearCache);
     }
 
     /*
@@ -1006,7 +982,6 @@ require([
             hfoot = [],
             foot_idx = -1,
             i, j,
-            colIdx = 0,
             $table = $("#trackingTable"),
             doneFirst = false,
             headItem,
@@ -1045,8 +1020,6 @@ require([
             h[++idx] = '</span>';
             h[++idx] = '</th>';
             hfoot[++foot_idx] = '<th></th>';
-            headItem.colIdx = colIdx;
-            colIdx++;
 
             if (headItem.hide) {
                 hiddenColumns.push(i);
@@ -1088,7 +1061,6 @@ require([
             order: [0],
             initComplete: function (settings, json) {
 
-                gRefreshingData = false;
                 initialise();
 
                 //columns = gTasks.cache.surveyConfig[globals.gViewId].columns;
@@ -1210,6 +1182,15 @@ require([
             });
         }
 
+    }
+
+    /*
+     * Refresh the data in the table
+     */
+    function refreshTable(dataSet) {
+        globals.gMainTable.clear();
+        globals.gMainTable.rows.add(dataSet.data).draw(false);
+        globals.gMainTable.row(gTasks.gSelectedRecord.instanceid);      // Reselect the row
     }
 
     /*
@@ -2113,12 +2094,12 @@ require([
     }
 
 
-    function getData(sId, groupSurvey) {
+    function getData(sId, groupSurvey, callback, clearCache) {
 
         var key = sId + "_" + groupSurvey;
 
         // First Check the Cache
-        if(gTasks.cache.data[key]) {
+        if(!clearCache && gTasks.cache.data[key]) {
             gTasks.cache.currentData = gTasks.cache.data[key];
             showTable(gTasks.cache.data[key]);
         } else {
@@ -2150,7 +2131,12 @@ require([
                 cache: false,
                 success: function (data) {
                     removeHourglass();
-                    gTasks.cache.data[key] = data;
+                    gRefreshingData = false;
+
+                    var theKey = key;
+                    var theCallback = callback;
+
+                    gTasks.cache.data[theKey] = data;
                     gTasks.cache.currentData = data;
 
                     map.setLayers(gTasks.cache.currentData.schema.layers);
@@ -2166,10 +2152,11 @@ require([
                         });
                     }
 
-                    showTable(data);
+                    theCallback(data);
                 },
                 error: function (xhr, textStatus, err) {
                     removeHourglass();
+                    gRefreshingData = false;
                     if (xhr.readyState == 0 || xhr.status == 0) {
                         return;  // Not an error
                     } else {
@@ -2199,18 +2186,18 @@ require([
             });
         }
 
-        columns = gTasks.cache.currentData.schema.columns;
+        var columns = gTasks.cache.currentData.schema.columns;
 
         for (i = 0; i < columns.length; i++) {
-            headItem = columns[i];
+            var headItem = columns[i];
 
             // Highlighting
             if (headItem.markup) {
-                $(globals.gMainTable.column(headItem.colIdx).nodes()).each(function (index) {
+                $(globals.gMainTable.column(i).nodes()).each(function (index) {
                     var $this = $(this),
                         v = $this.text();
 
-                    for (j = 0; j < headItem.markup.length; j++) {
+                    for (var j = 0; j < headItem.markup.length; j++) {
                         if (headItem.markup[j].value == v) {
                             $this.addClass(headItem.markup[j].classes);
                         }
@@ -2221,7 +2208,7 @@ require([
 
             // Barcode
             if (headItem.barcode) {
-                $(globals.gMainTable.column(headItem.colIdx).nodes()).each(function (index) {
+                $(globals.gMainTable.column(i).nodes()).each(function (index) {
                     var $this = $(this),
                         opt = {
                             render: 'div',
