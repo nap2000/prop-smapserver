@@ -116,12 +116,14 @@ require([
 
     window.gTasks = {
         cache: {
-            surveyConfig: {},
+            //surveyConfig: {},
             managedData: {},
             surveyList: {},
             surveyRoles: {},
             recordChanges: {},
-            groupSurveys: {}
+            groupSurveys: {},
+            currentData: undefined,
+            data: {}
         },
         gSelectedRecord: undefined,
         gSelectedSurveyIndex: undefined,
@@ -226,7 +228,7 @@ require([
          * Edit a record
          */
         $('#m_edit').click(function() {
-            var columns = gTasks.cache.surveyConfig[globals.gViewId].columns;
+            var columns = gTasks.cache.currentData.schema.columns;
 
             window.location.hash="#edit";
             $('.shareRecordOnly, .role_select').hide();
@@ -403,7 +405,7 @@ require([
         $('#applyColumns').click(function () {
 
             var
-                config = gTasks.cache.surveyConfig[globals.gViewId],
+                config = gTasks.cache.currentData.schema,
                 $this;
 
             $('input', '#tab-columns-content').each(function (index) {
@@ -421,7 +423,7 @@ require([
         $('#applyBarcodes').click(function () {
 
             var
-                config = gTasks.cache.surveyConfig[globals.gViewId],
+                config = gTasks.cache.currentData.schema,
                 $this;
 
             $('input', '#tab-barcode-content').each(function (index) {
@@ -525,8 +527,8 @@ require([
     // Generate an xls file of basic counts for all data
     $('.genxlsfileall').click(function () {
         var $groupBy = $('#srf_group')
-        if(gTasks.cache.surveyConfig[globals.gViewId] &&  $groupBy.html().length == 0) {
-            var cols = gTasks.cache.surveyConfig[globals.gViewId].columns;
+        if(gTasks.cache.currentData.schema &&  $groupBy.html().length == 0) {
+            var cols = gTasks.cache.currentData.schema.columns;
             var h = [];
             var idx = -1;
             var i;
@@ -632,7 +634,7 @@ require([
             if(groupIdx != -1) {
                 settings.push({
                     k: "Group By",
-                    v: gTasks.cache.surveyConfig[globals.gViewId].columns[groupIdx].displayName
+                    v: gTasks.cache.currentData.schema.columns[groupIdx].displayName
                 });
             }
         }
@@ -651,7 +653,7 @@ require([
 
         var tz = globals.gTimezone;
 
-        data = getTableData(globals.gMainTable, gTasks.cache.surveyConfig[globals.gViewId].columns, format);
+        data = getTableData(globals.gMainTable, gTasks.cache.currentData.schema.columns, format);
 
         if (format === "xlsx") {
             filename = title + ".xlsx";
@@ -807,7 +809,7 @@ require([
 
     /*
      * Get the survey view (mini dashboard for a single survey)
-     */
+     *
     function getSurveyView(viewId, sId, managedId, queryId, groupSurveyIdent) {
 
         var url = '/surveyKPI/surveyview/' + viewId;
@@ -864,6 +866,7 @@ require([
             showManagedData(sId);
         }
     }
+    */
 
     /*
      * Function called when the current survey is changed
@@ -899,10 +902,12 @@ require([
 
             saveCurrentGroupSurvey(globals.gCurrentSurvey, globals.gGroupSurveys[globals.gCurrentSurvey]);
 
-            getSurveyView(0, globals.gCurrentSurvey,
-                gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].managed_id,   // deprecate
-                0,
-                globals.gGroupSurveys[globals.gCurrentSurvey]);     // GroupSurvey
+            showManagedData(globals.gCurrentSurvey);
+
+            //getSurveyView(0, globals.gCurrentSurvey,
+            //    gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].managed_id,   // deprecate
+            //    0,
+            //    globals.gGroupSurveys[globals.gCurrentSurvey]);     // GroupSurvey
 
             $('.main_survey').html($('#survey_name option:selected').text());
 
@@ -916,12 +921,14 @@ require([
 
         if(!gRefreshingData) {
             gRefreshingData = true;
-            gTasks.cache.surveyConfig = {};
+            //gTasks.cache.surveyConfig = {};
             gTasks.cache.managedData = {};
             gTasks.cache.surveyList = {};
             gTasks.cache.surveyRoles = {};
             gTasks.cache.recordChanges = {};
             gTasks.cache.groupForms = {};
+            gTasks.cache.currentData = undefined;
+            gTasks.cache.data = {};
 
             // Get the list of available surveys
             loadManagedSurveys(globals.gCurrentProject, surveyChanged);
@@ -953,7 +960,43 @@ require([
     function showManagedData(sId) {
 
         var x = 1,
-            columns = gTasks.cache.surveyConfig[globals.gViewId].columns,
+            columns,
+            parameters,
+            shownColumns = [],
+            hiddenColumns = [],
+            visibleColumns = [],
+            h = [],
+            idx = -1,
+            hfoot = [],
+            foot_idx = -1,
+            i, j,
+            colIdx = 0,
+            $table = $("#trackingTable"),
+            doneFirst = false,
+            headItem,
+            hColSort = [],
+            hDups = [],
+            hColSortIdx = -1,
+            hDupsIdx = -1,
+            groupSurvey;
+
+
+        if(globals.gGroupSurveys[globals.gCurrentSurvey] && globals.gGroupSurveys[globals.gCurrentSurvey] != "") {
+            groupSurvey = globals.gGroupSurveys[globals.gCurrentSurvey];
+        }
+
+        var json = getData(sId, groupSurvey);
+
+
+    }
+
+    /*
+     * Show the table
+     */
+    function showTable(dataSet) {
+
+        var x = 1,
+            columns = dataSet.schema.columns,
             parameters,
             shownColumns = [],
             hiddenColumns = [],
@@ -1012,6 +1055,8 @@ require([
             }
         }
         h[++idx] = '</tr>';
+
+
         h[++idx] = '</thead>';
         h[++idx] = '<tfoot>';
         h[++idx] = '<tr>';
@@ -1028,24 +1073,6 @@ require([
         /*
          * Apply data tables
          */
-        var url = '/api/v1/data/';
-        url += sId;
-        url += "?mgmt=true";
-
-        if(globals.gGroupSurveys[globals.gCurrentSurvey] && globals.gGroupSurveys[globals.gCurrentSurvey] != "") {
-            url += "&groupSurvey=" + globals.gGroupSurveys[globals.gCurrentSurvey];
-        }
-
-        if (isDuplicates) {
-            url += "&group=true";
-        }
-
-        url += "&format=dt";
-        url += "&merge_select_multiple=yes";
-        url += "&sort=prikey&dirn=desc";
-
-        url += "&tz=" + encodeURIComponent(globals.gTimezone);
-
         $.fn.dataTable.ext.errMode = 'none';
 
         // Create data table
@@ -1056,7 +1083,7 @@ require([
                 selector: 'td:not(:first-child)'
             },
             rowId: 'instanceid',
-            ajax: url,
+            data: dataSet.data,
             columns: shownColumns,
             order: [0],
             initComplete: function (settings, json) {
@@ -1064,8 +1091,8 @@ require([
                 gRefreshingData = false;
                 initialise();
 
-                columns = gTasks.cache.surveyConfig[globals.gViewId].columns;
-                parameters = gTasks.cache.surveyConfig[globals.gViewId].parameters;
+                //columns = gTasks.cache.surveyConfig[globals.gViewId].columns;
+                //parameters = gTasks.cache.surveyConfig[globals.gViewId].parameters;
 
                 if(parameters && parameters.form_data === 'off') {
                     $('.manageFormData').hide();
@@ -1145,71 +1172,16 @@ require([
 
         // Respond to selection of a row
         globals.gMainTable.off('select').on('select', function (e, dt, type, indexes) {
-                recordSelected(indexes);
+            recordSelected(indexes);
         });
         globals.gMainTable.off('deselect').on('deselect', function (e, dt, type, indexes) {
             $('.selectedOnly').hide();
         });
 
         // Highlight data conditionally, set barcodes
+        tableOnDraw();
         globals.gMainTable.off('draw').on('draw', function () {
-
-            if (isDuplicates) {
-
-                var rows = globals.gMainTable.rows({page: 'current'}).nodes();
-                var last = null;
-
-                globals.gMainTable.column(0, {page: 'current'}).data().each(function (group, i) {
-                    if (last !== group) {
-                        $(rows).eq(i).before(
-                            '<tr class="group"><td colspan="5">' + group + '</td></tr>'
-                        );
-
-                        last = group;
-                    }
-                });
-            }
-
-            columns = gTasks.cache.surveyConfig[globals.gViewId].columns;
-
-            for (i = 0; i < columns.length; i++) {
-                headItem = columns[i];
-
-                // Highlighting
-                if (headItem.markup) {
-                    $(globals.gMainTable.column(headItem.colIdx).nodes()).each(function (index) {
-                        var $this = $(this),
-                            v = $this.text();
-
-                        for (j = 0; j < headItem.markup.length; j++) {
-                            if (headItem.markup[j].value == v) {
-                                $this.addClass(headItem.markup[j].classes);
-                            }
-                        }
-
-                    });
-                }
-
-                // Barcode
-                if (headItem.barcode) {
-                    $(globals.gMainTable.column(headItem.colIdx).nodes()).each(function (index) {
-                        var $this = $(this),
-                            opt = {
-                                render: 'div',
-                                size: 100,
-                                text: $this.text()
-                            }
-
-                        $this.empty().qrcode(opt);
-
-                    });
-                }
-            }
-
-            // Refresh the other views that depend on the displayed rows
-            map.refreshAllLayers(gMapView);
-            chart.refreshAllCharts(gChartView, gTimingView, true);
-
+            tableOnDraw();
         });
 
         // Respond to filter changes
@@ -1683,7 +1655,7 @@ require([
     function saveFilter(column, value) {
 
         var
-            config = gTasks.cache.surveyConfig[globals.gViewId],
+            config = gTasks.cache.currentData.schema,
             i;
 
         if (value == '') {
@@ -1707,7 +1679,7 @@ require([
      */
     function saveConfig() {
         var configColumns = [],
-            columns = gTasks.cache.surveyConfig[globals.gViewId].columns,
+            columns = gTasks.cache.currentData.schema.columns,
             i;
 
         for (i = 0; i < columns.length; i++) {
@@ -1756,7 +1728,7 @@ require([
     function initialise() {
 
 
-        var columns = gTasks.cache.surveyConfig[globals.gViewId].columns,
+        var columns = gTasks.cache.currentData.schema.columns,
             i,
             h = [],
             idx = -1,
@@ -2138,6 +2110,134 @@ require([
         h[++idx] = '</div>';        // card
 
         return h.join('');
+    }
+
+
+    function getData(sId, groupSurvey) {
+
+        var key = sId + "_" + groupSurvey;
+
+        // First Check the Cache
+        if(gTasks.cache.data[key]) {
+            gTasks.cache.currentData = gTasks.cache.data[key];
+            showTable(gTasks.cache.data[key]);
+        } else {
+
+            var url = '/api/v1/data/';
+            url += sId;
+            url += "?mgmt=true";
+
+            if (groupSurvey) {
+                url += "&groupSurvey=" + groupSurvey;
+            }
+
+            if (isDuplicates) {
+                url += "&group=true";
+            }
+
+            url += "&format=dt";
+            url += "&schema=true";
+            url += "&view=0";                       // TODO
+            url += "&merge_select_multiple=yes";
+            url += "&sort=prikey&dirn=desc";
+
+            url += "&tz=" + encodeURIComponent(globals.gTimezone);
+
+            addHourglass();
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                    removeHourglass();
+                    gTasks.cache.data[key] = data;
+                    gTasks.cache.currentData = data;
+
+                    map.setLayers(gTasks.cache.currentData.schema.layers);
+                    chart.setCharts(gTasks.cache.currentData.schema.charts);
+
+                    // Add a config item for the group value if this is a duplicates search
+                    if (isDuplicates) {
+                        gTasks.cache.currentData.schema.columns.unshift({
+                            hide: true,
+                            include: true,
+                            name: "_group",
+                            displayName: "_group"
+                        });
+                    }
+
+                    showTable(data);
+                },
+                error: function (xhr, textStatus, err) {
+                    removeHourglass();
+                    if (xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        console.log(localise.set["error"] + ": " + err);
+                    }
+                }
+            });
+        }
+
+
+    }
+
+    function tableOnDraw() {
+        if (isDuplicates) {
+
+            var rows = globals.gMainTable.rows({page: 'current'}).nodes();
+            var last = null;
+
+            globals.gMainTable.column(0, {page: 'current'}).data().each(function (group, i) {
+                if (last !== group) {
+                    $(rows).eq(i).before(
+                        '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+                    );
+
+                    last = group;
+                }
+            });
+        }
+
+        columns = gTasks.cache.currentData.schema.columns;
+
+        for (i = 0; i < columns.length; i++) {
+            headItem = columns[i];
+
+            // Highlighting
+            if (headItem.markup) {
+                $(globals.gMainTable.column(headItem.colIdx).nodes()).each(function (index) {
+                    var $this = $(this),
+                        v = $this.text();
+
+                    for (j = 0; j < headItem.markup.length; j++) {
+                        if (headItem.markup[j].value == v) {
+                            $this.addClass(headItem.markup[j].classes);
+                        }
+                    }
+
+                });
+            }
+
+            // Barcode
+            if (headItem.barcode) {
+                $(globals.gMainTable.column(headItem.colIdx).nodes()).each(function (index) {
+                    var $this = $(this),
+                        opt = {
+                            render: 'div',
+                            size: 100,
+                            text: $this.text()
+                        }
+
+                    $this.empty().qrcode(opt);
+
+                });
+            }
+        }
+
+        // Refresh the views that depend on the displayed rows
+        map.refreshAllLayers(gMapView);
+        chart.refreshAllCharts(gChartView, gTimingView, true);
     }
 
 });
