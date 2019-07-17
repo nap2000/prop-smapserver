@@ -15,10 +15,6 @@
 
  */
 
-/*
- * Chart functions
- */
-
 "use strict";
 
 define([
@@ -84,14 +80,25 @@ define([
             initialiseDynamicMaps(globals.gRecordMaps);
 
             // Respond to changes in the data by creating an update object
-            $editForm.find('.form-control').bind("click propertychange paste change keyup input", function () {
-                dataChanged($(this));
+            $editForm.find('.form-control, select').bind("click propertychange paste change keyup input", function () {
+                var $this = $(this);
+                var config = {
+                    itemIndex: $this.data("item"),
+                    value: $this.val()
+                }
+                dataChanged(config);
             });
             $editForm.find('.date').on("dp.change", function () {
-                dataChanged($(this).find('input'));
+                var $this = $(this).find('input');
+                var config = {
+                    itemIndex: $this.data("item"),
+                    value: $this.val()
+                }
+                dataChanged(config);
             });
-            $editForm.find('select').change(function () {
-                dataChanged($(this));
+            $('#editRecordForm').on("smap::geopoint", function (event, config) {
+                console.log("New geopoint");
+                dataChanged(config);
             });
 
             // Set focus to first editable data item
@@ -120,7 +127,8 @@ define([
                     'record_maps_',
                     globals.gRecordMaps,
                     configItem, record[configItem.displayName],
-                    undefined);
+                    undefined,
+                    itemIndex);
             }
 
             if (configItem.readonly) {		// Read only text
@@ -235,7 +243,7 @@ define([
         /*
          * Add the markup for a map
          */
-        function addCellMap(readOnly, idbase, maps, column, currentValue, oldValue) {
+        function addCellMap(readOnly, idbase, maps, column, currentValue, oldValue, itemIndex) {
             var h = [],
                 idx = -1;
 
@@ -264,6 +272,8 @@ define([
 
             h[++idx] = '<div id="';
             h[++idx] = config.id;
+            h[++idx] = '" data-item="';
+            h[++idx] = itemIndex;
             h[++idx] = '" class="small_map">';
             h[++idx] = '<div id="tooltip_';
             h[++idx] = config.id;
@@ -315,11 +325,11 @@ define([
         /*
          * User has changed a managed value
          */
-        function dataChanged($this) {
+        function dataChanged(config) {
 
             var
-                itemIndex = $this.data("item"),
-                value = $this.val(),
+                itemIndex = config.itemIndex,
+                value = config.value,
                 record = gTasks.gSelectedRecord,
                 columns = gTasks.cache.currentData.schema.columns,
                 currentValue,
@@ -330,6 +340,12 @@ define([
             currentValue = record[columns[itemIndex].displayName];
             if (typeof currentValue === "undefined") {
                 currentValue = "";
+            }
+            if(typeof currentValue === "object") {
+                currentValue = JSON.stringify(currentValue);
+            }
+            if(typeof value === "object") {
+                value = JSON.stringify(value);
             }
 
             if (currentValue !== value) {
