@@ -639,14 +639,14 @@ define([
                         "type": "Feature",
                         "geometry": config.currentValue,
                         "properties": {
-                            "type": "current",
+                            "type": (config.readOnly ? "current" : "old"),      // If editable then set the curent value as the old
                             "label": localise.set["c_to"]
                         }
                     };
 
                     features.push(currentValue);
                 }
-                if(config.oldValue) {
+                if(config.readOnly && config.oldValue) {       // Only care about old value if we are reviewing and not editing
                     var oldValue = {
                         "type": "Feature",
                         "geometry": config.oldValue,
@@ -723,6 +723,7 @@ define([
                          */
                         config.map.on('click', function(evt) {
 
+                            var self = this;
                             var noFeature = true;
                             var map = config.map;
                             var $tooltip = $('#tooltip_' + config.id);
@@ -744,6 +745,42 @@ define([
                             });
                             if(noFeature) {
                                 $tooltip.hide();
+
+                                if(!config.readOnly) {
+                                    var coord = ol.proj.transform(evt.coordinate, "EPSG:900913", 'EPSG:4326');
+
+                                    var newValue = {
+                                        "type": "Feature",
+                                        "geometry": {
+                                            type: "POINT",
+                                            coordinates: coord
+                                        },
+                                        "properties": {
+                                            "type": "current",
+                                            "label": localise.set["c_to"]
+                                        }
+                                    };
+
+                                    if(self.selectLayer !== undefined){
+                                        self.selectGeometry.setCoordinates(evt.coordinate);
+                                    } else {
+                                        self.selectGeometry = new ol.geom.Point(evt.coordinate);
+                                        var selectFeature = new ol.Feature({
+                                            geometry: self.selectGeometry,
+                                            type: "current",
+                                            label: localise.set["c_to"]
+                                        });
+                                        var selectSource = new ol.source.Vector({
+                                            features: [selectFeature]
+                                        });
+                                        self.selectLayer = new ol.layer.Vector({
+                                            source: selectSource,
+                                            style: styleFn
+                                        });
+                                        config.map.addLayer(self.selectLayer);
+                                    }
+
+                                }
                             }
 
                         });

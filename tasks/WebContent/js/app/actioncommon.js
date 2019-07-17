@@ -113,17 +113,18 @@ define([
 
             // Add Data
             h[++idx] = ' <div class="col-md-8">';
+
+            if(configItem.type === 'geopoint' || configItem.type === 'geoshape' || configItem.type === 'geotrace') {
+                h[++idx] = addCellMap(
+                    configItem.readonly,
+                    'record_maps_',
+                    globals.gRecordMaps,
+                    configItem, record[configItem.displayName],
+                    undefined);
+            }
+
             if (configItem.readonly) {		// Read only text
-                if(configItem.type === 'geopoint' || configItem.type === 'geoshape' || configItem.type === 'geotrace') {
-                    h[++idx] = addCellMap(
-                        true,
-                        'record_maps_',
-                        globals.gRecordMaps,
-                        configItem, record[configItem.displayName],
-                        undefined);
-                } else {
-                    h[++idx] = addCellMarkup(record[configItem.displayName]);
-                }
+                h[++idx] = addCellMarkup(record[configItem.displayName]);
             } else {
                 h[++idx] = addEditableColumnMarkup(configItem, record[configItem.displayName], itemIndex, first, columns, record);
                 first = false;
@@ -217,7 +218,7 @@ define([
                         }
                         h[++idx] = ' value="';
                         h[++idx] = column.choices[i].k;
-                        h[++idx] = '">'
+                        h[++idx] = '">';
                         h[++idx] = column.choices[i].v;
                         h[++idx] = '</option>';
                     }
@@ -238,6 +239,7 @@ define([
             var h = [],
                 idx = -1;
 
+            // Make sure values are JSON objects
             if(typeof currentValue === "string") {
                 try {
                     currentValue = JSON.parse(currentValue);
