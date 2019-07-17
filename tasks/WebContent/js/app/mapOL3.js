@@ -726,7 +726,8 @@ define([
                             var self = this;
                             var noFeature = true;
                             var map = config.map;
-                            var $tooltip = $('#tooltip_' + config.id);
+                            var id = config.id;
+                            var $tooltip = $('#tooltip_' + id);
 
                             map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
 
@@ -743,23 +744,21 @@ define([
                                 noFeature = false;
 
                             });
+
                             if(noFeature) {
                                 $tooltip.hide();
 
                                 if(!config.readOnly) {
                                     var coord = ol.proj.transform(evt.coordinate, "EPSG:900913", 'EPSG:4326');
-
                                     var newValue = {
-                                        "type": "Feature",
-                                        "geometry": {
-                                            type: "POINT",
-                                            coordinates: coord
-                                        },
-                                        "properties": {
-                                            "type": "current",
-                                            "label": localise.set["c_to"]
+                                        itemIndex: $('#' + id).data('item'),
+                                        value: {
+                                            coordinates: coord,
+                                            type: "Point"
                                         }
                                     };
+
+                                    $('#editRecordForm').trigger( "smap::geopoint", newValue );
 
                                     if(self.selectLayer !== undefined){
                                         self.selectGeometry.setCoordinates(evt.coordinate);
@@ -777,7 +776,7 @@ define([
                                             source: selectSource,
                                             style: styleFn
                                         });
-                                        config.map.addLayer(self.selectLayer);
+                                        map.addLayer(self.selectLayer);
                                     }
 
                                 }
