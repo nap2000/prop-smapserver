@@ -1908,6 +1908,17 @@ require([
                     h[++idx] = localise.set["u_chg"];
                     h[++idx] = '</th>';
                     h[++idx] = '<th>';
+                    h[++idx] = localise.set["c_survey"];
+                    h[++idx] = '</th>';
+                    h[++idx] = '<th>';
+                    h[++idx] = localise.set["c_date"];
+                    if(data.length > 0) {
+                        h[++idx] = ' (';
+                        h[++idx] = data[0].tz;
+                        h[++idx] = ')';
+                    }
+                    h[++idx] = '</th>';
+                    h[++idx] = '<th>';
                     h[++idx] = localise.set["c_details"];
                     h[++idx] = '</th>';
                     h[++idx] = '</tr>';
@@ -1920,6 +1931,14 @@ require([
 
                             h[++idx] = '<td>';    // user
                             h[++idx] = data[i].userName;
+                            h[++idx] = '</td>';
+
+                            h[++idx] = '<td>';    // Survey
+                            h[++idx] = data[i].surveyName + ' v' + data[i].surveyVersion;
+                            h[++idx] = '</td>';
+
+                            h[++idx] = '<td>';    // when
+                            h[++idx] = data[i].eventTime;
                             h[++idx] = '</td>';
 
                             h[++idx] = '<td>';    // Changes
