@@ -198,6 +198,11 @@ require([
             groupSurveyChanged();
         });
 
+        // Set change function on advanced filter
+        $('#advanced_filter').change(function () {
+            showManagedData(globals.gCurrentSurvey, showTable, true);
+        });
+
         /*
          * Setup dialog to change the current survey
          */
@@ -891,7 +896,7 @@ require([
     }
 
     /*
-     * Function called when the current survey is changed
+     * Function called when the current group survey is changed
      */
     function groupSurveyChanged() {
 
@@ -2133,6 +2138,11 @@ require([
 
             if (isDuplicates) {
                 url += "&group=true";
+            }
+
+            var filter = $('#advanced_filter').val();
+            if(filter && filter.trim().length > 0) {
+                url += "&filter=" + encodeURIComponent(filter);
             }
 
             url += "&format=dt";
