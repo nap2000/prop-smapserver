@@ -203,6 +203,11 @@ require([
             showManagedData(globals.gCurrentSurvey, showTable, true);
         });
 
+        // Set change function on limit
+        $('#limit').change(function () {
+            showManagedData(globals.gCurrentSurvey, showTable, true);
+        });
+
         /*
          * Setup dialog to change the current survey
          */
@@ -2141,6 +2146,20 @@ require([
             }
 
             var filter = $('#advanced_filter').val();
+            if(filter && filter.trim().length > 0) {
+                url += "&filter=" + encodeURIComponent(filter);
+            }
+
+            var limit = $('#limit').val();
+            var iLimit = 0;
+            if(limit && limit.trim().length > 0) {
+                try {
+                    iLimit = parseInt(limit);
+                    url += "&limit=" + iLimit;
+                } catch (err) {
+                    alert(err);
+                }
+            }
             if(filter && filter.trim().length > 0) {
                 url += "&filter=" + encodeURIComponent(filter);
             }

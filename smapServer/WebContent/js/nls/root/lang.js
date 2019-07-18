@@ -903,6 +903,7 @@ define({
     "mf_mr": "My records",
     "mf_ur": "Unassigned records",
     "mf_or": "Other records",
+    "mf_max": "Max records",
 
     // Logout
     "lo_back": "Back",
