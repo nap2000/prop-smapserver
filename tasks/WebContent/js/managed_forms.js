@@ -742,9 +742,9 @@ require([
                 if(filterOutAssignments(aData)) {
                     return false;
                 }
-                if(filterOutDate(aData)) {
-                    return false;
-                }
+                //if(filterOutDate(aData)) {
+                //    return false;
+                //}
                 return true;
 
             }
@@ -778,7 +778,7 @@ require([
 
     /*
      * Test if this record should be filter out based on its date
-     */
+     * Replaced by filtering on the server
     function filterOutDate(aData) {
         var fromDate = document.getElementById('filter_from').value,
             toDate = document.getElementById('filter_to').value,
@@ -815,6 +815,7 @@ require([
             return false;
         }
     }
+    */
 
     /*
      * Get the survey view (mini dashboard for a single survey)
@@ -1167,8 +1168,8 @@ require([
         });
 
         // Respond to filter changes
-        $('.table_filter').change(function () {
-            globals.gMainTable.draw();
+        $('.table_filter').focusout(function () {
+            showManagedData(globals.gCurrentSurvey, showTable, true);
         });
 
         // Respond to change of search
@@ -2145,11 +2146,15 @@ require([
                 url += "&group=true";
             }
 
-            var filter = $('#advanced_filter').val();
-            if(filter && filter.trim().length > 0) {
-                url += "&filter=" + encodeURIComponent(filter);
-            }
+            /*
+             * date filtering
+             */
+            var fromDate = document.getElementById('filter_from').value,
+                toDate = document.getElementById('filter_to').value,
+                dateCol = $('#date_question').val();
 
+
+            // Limit number of records returned
             var limit = $('#limit').val();
             var iLimit = 0;
             if(limit && limit.trim().length > 0) {
@@ -2160,6 +2165,9 @@ require([
                     alert(err);
                 }
             }
+
+            // Advanced filter
+            var filter = $('#advanced_filter').val();
             if(filter && filter.trim().length > 0) {
                 url += "&filter=" + encodeURIComponent(filter);
             }
