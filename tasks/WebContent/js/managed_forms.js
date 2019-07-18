@@ -1773,7 +1773,7 @@ require([
             } else if(d.type === "dateTime" || d.type === "date") {
 
                     h[++idx] = '<option value="';
-                    h[++idx] = i;
+                    h[++idx] = columns[i].column_name;
                     h[++idx] = '">';
                     h[++idx] = columns[i].displayName;
                     h[++idx] = '</option>';
@@ -2151,7 +2151,18 @@ require([
              */
             var fromDate = document.getElementById('filter_from').value,
                 toDate = document.getElementById('filter_to').value,
-                dateCol = $('#date_question').val();
+                dateName = $('#date_question').val();
+            var dateSet = (fromDate && fromDate.trim().length) || (toDate && toDate.trim().length);
+
+            if(dateSet && dateName && dateName.trim().length) {
+                url += "&dateName=" + dateName;
+                if(fromDate && fromDate.trim().length) {
+                    url += "&startDate=" + fromDate;
+                }
+                if(toDate && toDate.trim().length) {
+                    url += "&endDate=" + toDate;
+                }
+            }
 
 
             // Limit number of records returned
