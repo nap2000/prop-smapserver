@@ -878,6 +878,7 @@ CREATE TABLE public.assignments (
 	assignee_name text,			-- Name of assigned person
 	email text,					-- Email to send the task to
 	status text NOT NULL,		-- Current status: accepted || rejected || submitted || deleted || unsent || unsubscribed
+	comment text,
 	task_id integer REFERENCES tasks(id) ON DELETE CASCADE,
 	action_link text,			-- Used with single shot web form tasks
 	assigned_date timestamp with time zone,
