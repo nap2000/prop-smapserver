@@ -194,6 +194,11 @@ require([
             surveyChanged();
         });
 
+        // Set change function on advanced filter
+        $('#advanced_filter').change(function () {
+            surveyChanged();
+        });
+
         /*
          * Setup dialog to change the current survey
          */
@@ -883,6 +888,10 @@ require([
             url += "&group=true";
         }
 
+        var filter = $('#advanced_filter').val();
+        if(filter && filter.trim().length > 0) {
+            url += "&filter=" + encodeURIComponent(filter);
+        }
         url += "&format=dt";
         url += "&merge_select_multiple=yes";
         url += "&sort=prikey&dirn=desc";
