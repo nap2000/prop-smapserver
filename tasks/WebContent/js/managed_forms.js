@@ -113,6 +113,7 @@ require([
     var gRefreshingData = false;    // Prevent double click on  refresh button
     var gSelectedIndexes = [];      // Array of selected row indexes
     var gAssignedCol = 0;           // Column that contains the assignment status
+    var gGetSettings = false;        // Use the settings from the database rather than the client
 
     window.gTasks = {
         cache: {
@@ -189,6 +190,7 @@ require([
         $('#survey_name').change(function () {
             gTasks.gSelectedSurveyIndex = $(this).val();
             globals.gCurrentSurvey = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].id;  // TODO remove
+            gGetSettings = true;
             surveyChanged();
         });
 
@@ -939,6 +941,8 @@ require([
             gTasks.cache.groupForms = {};
             gTasks.cache.currentData = undefined;
             gTasks.cache.data = {};
+
+            gGetSettings = true;
 
             // Get the list of available surveys
             loadManagedSurveys(globals.gCurrentProject, surveyChanged);
@@ -2149,38 +2153,41 @@ require([
             /*
              * date filtering
              */
-            var fromDate = document.getElementById('filter_from').value,
-                toDate = document.getElementById('filter_to').value,
-                dateName = $('#date_question').val();
-            var dateSet = (fromDate && fromDate.trim().length) || (toDate && toDate.trim().length);
+            if(!gGetSettings) {
+                var fromDate = document.getElementById('filter_from').value,
+                    toDate = document.getElementById('filter_to').value,
+                    dateName = $('#date_question').val();
+                var dateSet = (fromDate && fromDate.trim().length) || (toDate && toDate.trim().length);
 
-            if(dateSet && dateName && dateName.trim().length) {
-                url += "&dateName=" + dateName;
-                if(fromDate && fromDate.trim().length) {
-                    url += "&startDate=" + fromDate;
+                if (dateSet && dateName && dateName.trim().length) {
+                    url += "&dateName=" + dateName;
+                    if (fromDate && fromDate.trim().length) {
+                        url += "&startDate=" + fromDate;
+                    }
+                    if (toDate && toDate.trim().length) {
+                        url += "&endDate=" + toDate;
+                    }
                 }
-                if(toDate && toDate.trim().length) {
-                    url += "&endDate=" + toDate;
+
+                // Limit number of records returned
+                var limit = $('#limit').val();
+                var iLimit = 0;
+                if (limit && limit.trim().length > 0) {
+                    try {
+                        iLimit = parseInt(limit);
+                        url += "&limit=" + iLimit;
+                    } catch (err) {
+                        alert(err);
+                    }
                 }
-            }
 
-
-            // Limit number of records returned
-            var limit = $('#limit').val();
-            var iLimit = 0;
-            if(limit && limit.trim().length > 0) {
-                try {
-                    iLimit = parseInt(limit);
-                    url += "&limit=" + iLimit;
-                } catch (err) {
-                    alert(err);
+                // Advanced filter
+                var filter = $('#advanced_filter').val();
+                if (filter && filter.trim().length > 0) {
+                    url += "&filter=" + encodeURIComponent(filter);
                 }
-            }
-
-            // Advanced filter
-            var filter = $('#advanced_filter').val();
-            if(filter && filter.trim().length > 0) {
-                url += "&filter=" + encodeURIComponent(filter);
+            } else {
+                url += "&getSettings=true";
             }
 
             url += "&format=dt";
@@ -2199,6 +2206,7 @@ require([
                 success: function (data) {
                     removeHourglass();
                     gRefreshingData = false;
+                    gGetSettings = false;
 
                     var theKey = key;
                     var theCallback = callback;
@@ -2206,6 +2214,7 @@ require([
                     gTasks.cache.data[theKey] = data;
                     gTasks.cache.currentData = data;
 
+                    updateSettings(gTasks.cache.currentData.settings);
                     map.setLayers(gTasks.cache.currentData.schema.layers);
                     chart.setCharts(gTasks.cache.currentData.schema.charts);
 
@@ -2224,6 +2233,7 @@ require([
                 error: function (xhr, textStatus, err) {
                     removeHourglass();
                     gRefreshingData = false;
+                    gGetSettings = false;
                     if (xhr.readyState == 0 || xhr.status == 0) {
                         return;  // Not an error
                     } else {
@@ -2292,6 +2302,21 @@ require([
         // Refresh the views that depend on the displayed rows
         map.refreshAllLayers(gMapView);
         chart.refreshAllCharts(gChartView, gTimingView, true);
+    }
+
+
+    /*
+     * If settings were requested from the server then update the setting fields
+     */
+    function updateSettings(settings) {
+        if(settings) {
+
+            $('#filter_from').val(settings.startDate);
+            $('#filter_to').val(settings.toDate);
+            $('#date_question').val(settings.dateName);
+            $('#limit').val(settings.limit);
+            $('#advanced_filter').val(settings.filter);
+        }
     }
 
 });
