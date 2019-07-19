@@ -1235,3 +1235,4 @@ ALTER SEQUENCE survey_settings_seq OWNER TO ws;
 );
 ALTER TABLE survey_settings OWNER TO ws;
 
+alter table assignments add column comment text;
