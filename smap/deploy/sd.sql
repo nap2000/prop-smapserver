@@ -692,44 +692,44 @@ create TABLE custom_query (
 ALTER TABLE custom_query OWNER TO ws;
 
 -- Create view tables
-CREATE SEQUENCE survey_view_seq START 1;
-ALTER SEQUENCE survey_view_seq OWNER TO ws;
+--CREATE SEQUENCE survey_view_seq START 1;
+--ALTER SEQUENCE survey_view_seq OWNER TO ws;
 
-create TABLE survey_view (
-	id integer DEFAULT NEXTVAL('survey_view_seq') CONSTRAINT pk_survey_view PRIMARY KEY,
-	s_id integer,		-- optional survey id
-	m_id integer,		-- optional managed id requires s_id to be set
-	query_id integer,	-- optional query id
-	view text
-);
-ALTER TABLE survey_view OWNER TO ws;
+--create TABLE survey_view (
+--	id integer DEFAULT NEXTVAL('survey_view_seq') CONSTRAINT pk_survey_view PRIMARY KEY,
+--	s_id integer,		-- optional survey id
+--	m_id integer,		-- optional managed id requires s_id to be set
+--	query_id integer,	-- optional query id
+--	view text
+--);
+--ALTER TABLE survey_view OWNER TO ws;
 
-CREATE SEQUENCE user_view_seq START 1;
-ALTER SEQUENCE user_view_seq OWNER TO ws;
+--CREATE SEQUENCE user_view_seq START 1;
+--ALTER SEQUENCE user_view_seq OWNER TO ws;
 
-create TABLE user_view (
-	id INTEGER DEFAULT NEXTVAL('user_view_seq') CONSTRAINT pk_user_view PRIMARY KEY,
-	u_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-	v_id INTEGER REFERENCES survey_view(id) ON DELETE CASCADE,
-	access text		-- read || write || owner
-	);
-ALTER TABLE user_view OWNER TO ws;
+--create TABLE user_view (
+--	id INTEGER DEFAULT NEXTVAL('user_view_seq') CONSTRAINT pk_user_view PRIMARY KEY,
+--	u_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+--	v_id INTEGER REFERENCES survey_view(id) ON DELETE CASCADE,
+--	access text		-- read || write || owner
+--	);
+--ALTER TABLE user_view OWNER TO ws;
 
-CREATE SEQUENCE default_user_view_seq START 1;
-ALTER SEQUENCE default_user_view_seq OWNER TO ws;
+--CREATE SEQUENCE default_user_view_seq START 1;
+--ALTER SEQUENCE default_user_view_seq OWNER TO ws;
 
-create TABLE default_user_view (
-	id INTEGER DEFAULT NEXTVAL('default_user_view_seq') CONSTRAINT pk_default_user_view PRIMARY KEY,
-	u_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-	s_id integer,		-- survey id
-	m_id integer,		-- managed id requires s_id to be set
-	query_id integer,	-- query id
-	v_id integer REFERENCES survey_view(id) ON DELETE CASCADE		-- view id
-	);
-ALTER TABLE default_user_view OWNER TO ws;
+--create TABLE default_user_view (
+--	id INTEGER DEFAULT NEXTVAL('default_user_view_seq') CONSTRAINT pk_default_user_view PRIMARY KEY,
+--	u_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+--	s_id integer,		-- survey id
+--	m_id integer,		-- managed id requires s_id to be set
+--	query_id integer,	-- query id
+--	v_id integer REFERENCES survey_view(id) ON DELETE CASCADE		-- view id
+--	);
+--ALTER TABLE default_user_view OWNER TO ws;
 
-alter TABLE survey_view add column map_view text;
-alter TABLE survey_view add column chart_view text;
+--alter TABLE survey_view add column map_view text;
+--alter TABLE survey_view add column chart_view text;
 
 CREATE SEQUENCE message_seq START 1;
 ALTER SEQUENCE message_seq OWNER TO ws;
@@ -1221,4 +1221,17 @@ create TABLE group_survey (
 	group_ident text REFERENCES survey(ident) ON DELETE CASCADE
 	);
 ALTER TABLE group_survey OWNER TO ws;
+
+CREATE SEQUENCE survey_settings_seq START 1;
+ALTER SEQUENCE survey_settings_seq OWNER TO ws;
+
+ create TABLE survey_settings (
+	id integer DEFAULT NEXTVAL('survey_settings_seq') CONSTRAINT pk_survey_settings PRIMARY KEY,
+	s_ident text,		-- Survey ident
+	u_id integer,		-- User
+	view text,			-- Overall view (json)
+	map_view text,		-- Map view data
+	chart_view text		-- Chart view data	
+);
+ALTER TABLE survey_settings OWNER TO ws;
 
