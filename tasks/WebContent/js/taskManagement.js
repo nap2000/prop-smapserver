@@ -2067,6 +2067,10 @@ require([
 				tab[++idx] = task.properties.assignee_name;
 				tab[++idx] = '</td>';
 
+				tab[++idx] = '<td>';		// Comment
+				tab[++idx] = task.properties.comment;
+				tab[++idx] = '</td>';
+
 				tab[++idx] = '<td>';			// NFC
 				if (task.properties.location_trigger && task.properties.location_trigger.length > 0) {
 					if (task.properties.location_trigger.indexOf('{') == 0) {
