@@ -276,8 +276,7 @@ require([
                 data: {record: gTasks.gSelectedRecord.instanceid},
                 success: function (data, status) {
                     removeHourglass();
-                    globals.gMainTable.ajax.reload();
-                    globals.gMainTable.row(gTasks.gSelectedRecord.instanceid.replace(':', '\\:'));      // Reselect the row, escape the :
+                    showManagedData(globals.gCurrentSurvey, showTable, true);
                 }, error: function (data, status) {
                     removeHourglass();
                     alert(data.responseText);
@@ -301,8 +300,7 @@ require([
                 data: {record: gTasks.gSelectedRecord.instanceid},
                 success: function (data, status) {
                     removeHourglass();
-                    globals.gMainTable.ajax.reload();
-                    globals.gMainTable.row(gTasks.gSelectedRecord.instanceid.replace(':', '\\:'));      // Reselect the row, escape the :
+                    showManagedData(globals.gCurrentSurvey, showTable, true);
                 }, error: function (data, status) {
                     removeHourglass();
                     alert(data.responseText);
@@ -327,8 +325,7 @@ require([
                 data: {record: gTasks.gSelectedRecord.instanceid},
                 success: function (data, status) {
                     removeHourglass();
-                    globals.gMainTable.ajax.reload();
-                    globals.gMainTable.row(gTasks.gSelectedRecord.instanceid);      // Reselect the row
+                    showManagedData(globals.gCurrentSurvey, showTable, true);
                 }, error: function (data, status) {
                     removeHourglass();
                     alert(data.responseText);
@@ -442,7 +439,7 @@ require([
                 config.columns[index + 1].barcode = $this.is(':checked');		// Ignore prikey
 
             });
-            globals.gMainTable.ajax.reload(); // redraw
+            showManagedData(globals.gCurrentSurvey, showTable, false); // redraw
             saveConfig(config);
 
         });
@@ -1077,6 +1074,10 @@ require([
             initComplete: function (settings, json) {
 
                 initialise();
+
+                if(gTasks.gSelectedRecord && gTasks.gSelectedRecord.instanceid) {
+                    globals.gMainTable.row(gTasks.gSelectedRecord.instanceid.replace(':', '\\:'));      // Reselect the row, escape the :
+                }
 
                 //columns = gTasks.cache.surveyConfig[globals.gViewId].columns;
                 //parameters = gTasks.cache.surveyConfig[globals.gViewId].parameters;
@@ -1957,7 +1958,11 @@ require([
                             h[++idx] = '</td>';
 
                             h[++idx] = '<td>';    // Changes
-                            h[++idx] = getChangeCard(data[i].changes, i);
+                            if(data[i].event === 'changes' && data[i].changes) {
+                                h[++idx] = getChangeCard(data[i].changes, i);
+                            } else   if(data[i].event === 'task' && data[i].description) {
+                                h[++idx] = data[i].description;
+                            }
                             h[++idx] = '</td>';
 
                             h[++idx] = '</tr>';    // row
