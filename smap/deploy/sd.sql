@@ -1236,3 +1236,23 @@ ALTER SEQUENCE survey_settings_seq OWNER TO ws;
 ALTER TABLE survey_settings OWNER TO ws;
 
 alter table assignments add column comment text;
+
+CREATE SEQUENCE re_seq START 1;
+ALTER SEQUENCE re_seq OWNER TO ws;
+
+CREATE TABLE record_event (
+	id integer DEFAULT NEXTVAL('re_seq') CONSTRAINT pk_record_changes PRIMARY KEY,
+	table_name text,								-- Main table containing unique key	
+	key text,									-- HRK of change or notification
+	instanceid text,								-- instance of change or notification	
+	event text,									-- created || change || task || reminder || deleted
+	details text,								-- Details of the event as json object	
+	description text,
+	success boolean default false,				-- Set true of the event was a success
+	msg text,									-- Error messages
+	changed_by integer,							-- Person who made a change	
+	change_survey text,							-- Survey ident that applied the change
+	change_survey_version integer,				-- Survey version that made the change		
+	event_time TIMESTAMP WITH TIME ZONE			-- Time and date of event
+	);
+ALTER TABLE record_event OWNER TO ws;

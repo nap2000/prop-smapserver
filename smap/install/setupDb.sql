@@ -547,6 +547,7 @@ CREATE TABLE record_event (
 	instanceid text,								-- instance of change or notification	
 	event text,									-- created || change || task || reminder || deleted
 	details text,								-- Details of the event as json object	
+	description text,
 	success boolean default false,				-- Set true of the event was a success
 	msg text,									-- Error messages
 	changed_by integer,							-- Person who made a change	
