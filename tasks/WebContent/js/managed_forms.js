@@ -2025,7 +2025,7 @@ require([
         var baseUrl = window.location.protocol + "//" + window.location.host + "/";
         for(i = 0; i < changes.length; i++)  {
 
-            h[++idx] = '<div class="row">';
+            h[++idx] = '<div class="row mt-1">';
 
             var type = changes[i].type;
             if(type === 'begin repeat') {
