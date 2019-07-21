@@ -35,7 +35,7 @@ define([
         /*
          * Add HTML to show a form to edit a record
          */
-        function showEditRecordForm(record, columns, $editForm, $surveyForm) {
+        function showEditRecordForm(record, columns, $editForm, $surveyForm, editable) {
             var
                 h = [],
                 idx = -1,
@@ -57,9 +57,9 @@ define([
                 configItem = columns[i];
 
                 if (configItem.mgmt) {
-                    h[++idx] = getEditMarkup(configItem, i, first, record, columns);
+                    h[++idx] = getEditMarkup(configItem, i, first, record, columns, editable);
                 } else {
-                    m[++cnt] = getEditMarkup(configItem, i, first, record, columns);
+                    m[++cnt] = getEditMarkup(configItem, i, first, record, columns, editable);
                 }
                 if (!configItem.readonly) {
                     first = false;
@@ -108,7 +108,7 @@ define([
         /*
          * Get the markup to edit the record
          */
-        function getEditMarkup(configItem, itemIndex, first, record, columns) {
+        function getEditMarkup(configItem, itemIndex, first, record, columns, editable) {
 
             var h = [],
                 idx = -1;
@@ -123,7 +123,7 @@ define([
 
             if(configItem.type === 'geopoint' || configItem.type === 'geoshape' || configItem.type === 'geotrace') {
                 h[++idx] = addCellMap(
-                    configItem.readonly,
+                    configItem.readonly || !editable,
                     'record_maps_',
                     globals.gRecordMaps,
                     configItem, record[configItem.displayName],
@@ -131,7 +131,7 @@ define([
                     itemIndex);
             }
 
-            if (configItem.readonly) {		// Read only text
+            if (configItem.readonly || !editable) {		// Read only text
                 h[++idx] = addCellMarkup(record[configItem.displayName]);
             } else {
                 h[++idx] = addEditableColumnMarkup(configItem, record[configItem.displayName], itemIndex, first, columns, record);
