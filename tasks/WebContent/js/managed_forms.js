@@ -240,17 +240,14 @@ require([
          * Edit a record
          */
         $('#m_edit').click(function() {
-            var columns = gTasks.cache.currentData.schema.columns;
+            showRecord(true);
+        });
 
-            window.location.hash="#edit";
-            $('.shareRecordOnly, .role_select').hide();
-            $('#srLink').val("");
-            getSurveyRoles(globals.gCurrentSurvey);
-            getRecordChanges(gTasks.gSelectedRecord);
-
-            $('.overviewSection').hide();
-            $('.editRecordSection').show();
-            actioncommon.showEditRecordForm(gTasks.gSelectedRecord, columns, $('#editRecordForm'), $('#surveyForm'));
+        /*
+	     * View a record
+	     */
+        $('#m_view').click(function() {
+            showRecord(false);
         });
 
         /*
@@ -2322,6 +2319,29 @@ require([
             $('#limit').val(settings.limit);
             $('#advanced_filter').val(settings.filter);
         }
+    }
+
+    /*
+     * Show a records details
+     */
+    function showRecord(editable) {
+        var columns = gTasks.cache.currentData.schema.columns;
+
+        window.location.hash="#edit";
+        $('.shareRecordOnly, .role_select').hide();
+        $('#srLink').val("");
+        getSurveyRoles(globals.gCurrentSurvey);
+        getRecordChanges(gTasks.gSelectedRecord);
+
+        $('.overviewSection').hide();
+        $('.editRecordSection').show();
+
+        if(editable) {
+            $('#saveRecord').removeClass('disabled');
+        } else {
+            $('#saveRecord').addClass('disabled');
+        }
+        actioncommon.showEditRecordForm(gTasks.gSelectedRecord, columns, $('#editRecordForm'), $('#surveyForm'), editable);
     }
 
 });
