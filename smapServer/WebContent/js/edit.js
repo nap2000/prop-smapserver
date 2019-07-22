@@ -220,7 +220,10 @@ $(document).ready(function() {
 	$('.m_save_survey').off().click(function() {	// Save a survey to the server
 		changeset.validateAll();
 		if(globals.model.survey.blocked) {
-			bootbox.alert(localise.set["ed_blocked"]);
+			bootbox.alert({
+				locale: gUserLocale,
+				message: localise.set["ed_blocked"]
+			});
 		} else {
 			if(changeset.numberIssues("error") === 0) {
 				changeset.save(surveyListDone);
