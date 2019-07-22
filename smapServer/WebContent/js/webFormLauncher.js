@@ -32,38 +32,36 @@ requirejs.config({
     locale: gUserLocale,
     paths: {
     	app: '../app',
-    	jquery: '../../../../js/libs/jquery-2.1.1',
+	    jquery: 'jquery',
+	    metismenu: 'wb/metisMenu/jquery.metisMenu',
        	lang_location: '../'
     },
     shim: {
     	'app/common': ['jquery'],
-    	'bootstrap.min': ['jquery'],
     	'icheck': ['jquery'],
-       	'inspinia': ['jquery'],
     	'metismenu': ['jquery'],
     	'slimscroll': ['jquery']
     }
 });
 
 require([
-         'jquery', 
-         'bootstrap.min',
+         'jquery',
          'app/common', 
          'app/globals',
          'app/localise',
-         'bootstrapfileinput',
-         'inspinia',
+		 'bootstrapfileinput',
          'metismenu',
          'slimscroll',
          'pace',
          'icheck'
-         ], function($, bootstrap, common, globals, localise, bsfi) {
+         ], function($, common, globals, localise) {
 
 $(document).ready(function() {
 
     setCustomWebForms();			// Apply custom javascript
-	setupUserProfile();
+	setupUserProfile(true);
 	localise.setlang();		// Localise HTML
+	$("#side-menu").metisMenu();
 	
 	// Get the user details
 	globals.gIsAdministrator = false;
@@ -300,7 +298,8 @@ function completeSurveyList(surveyList, filterProjectId) {
 		for(i = 0; i < taskList.length; i++) {
 			if(!filterProjectId || filterProjectId == taskList[i].task.pid) {
 				repeat = taskList[i].task.repeat;	// Can complete the task multiple times
-				h[++idx] = '<a role="button" class="task btn btn-warning btn-block btn-lg" target="_blank" data-repeat="';
+				h[++idx] = '<div class="btn-group btn-group-lg d-flex" role="group" aria-label="Button group for task selection or rejection">';
+				h[++idx] = '<button class="task btn btn-warning w-100" type="button" target="_blank" data-repeat="';
 				if(repeat) {
 					h[++idx] = 'true';
 				} else {
@@ -332,7 +331,12 @@ function completeSurveyList(surveyList, filterProjectId) {
 
 				h[++idx] = '">';
 				h[++idx] = taskList[i].task.title + " (task id: " + taskList[i].task.id + ")";
-				h[++idx] = '</a>';	
+				h[++idx] = '</button>';
+
+				// Add button with additional options
+				h[++idx] = '<button class="btn btn-info w-100" type="button">Button</button>';
+
+				h[++idx] = '</div>';        // input group
 			} 
 		}
 	}
