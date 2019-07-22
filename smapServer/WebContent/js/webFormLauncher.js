@@ -299,7 +299,10 @@ function completeSurveyList(surveyList, filterProjectId) {
 			if(!filterProjectId || filterProjectId == taskList[i].task.pid) {
 				repeat = taskList[i].task.repeat;	// Can complete the task multiple times
 				h[++idx] = '<div class="btn-group btn-group-lg d-flex" role="group" aria-label="Button group for task selection or rejection">';
-				h[++idx] = '<button class="task btn btn-warning w-100" type="button" target="_blank" data-repeat="';
+				h[++idx] = '<a id="a_';
+				h[++idx] = taskList[i].assignment.assignment_id;
+				h[++idx] = '" class="task btn btn-warning w-80" role="button" target="_blank" data-repeat="';
+
 				if(repeat) {
 					h[++idx] = 'true';
 				} else {
@@ -331,10 +334,17 @@ function completeSurveyList(surveyList, filterProjectId) {
 
 				h[++idx] = '">';
 				h[++idx] = taskList[i].task.title + " (task id: " + taskList[i].task.id + ")";
-				h[++idx] = '</button>';
+				h[++idx] = '</a>';
 
 				// Add button with additional options
-				h[++idx] = '<button class="btn btn-info w-100" type="button">Button</button>';
+				h[++idx] = '<button ';
+				h[++idx] = 	'id="a_r_' + taskList[i].assignment.assignment_id;
+				h[++idx] = '" class="btn btn-info w-20 reject" type="button"';
+				h[++idx] = '" data-aid="';
+				h[++idx] = taskList[i].assignment.assignment_id;
+				h[++idx] = '">';
+				h[++idx] = localise.set["c_reject"]
+				h[++idx] = '</button>';
 
 				h[++idx] = '</div>';        // input group
 			} 
@@ -348,8 +358,60 @@ function completeSurveyList(surveyList, filterProjectId) {
 		
 		if(!repeat) {
 			$this.removeClass('btn-warning').addClass('btn-success');		// Mark task as done
+			$this.addClass('disabled');
+			$this.closest(".btn-group").find(".reject").addClass("disabled");
 		}
 	});
+
+	$formList.find('.reject').off().click(function(){
+		var $this = $(this);
+
+		if(!$this.hasClass('disabled')) {
+			reject($this.data("aid"));
+		}
+	});
+}
+
+function reject(aid) {
+
+	bootbox.prompt({
+		title: localise.set["a_res"],
+		centerVertical: true,
+		locale: gUserLocale,
+		callback: function(result){
+			console.log(result);
+
+			var assignment = {
+				assignment_id: aid,
+				assignment_status: 'rejected',
+				task_comment: result
+			}
+			var assignmentString = JSON.stringify(assignment);
+
+			addHourglass();
+			$.ajax({
+				type: "POST",
+				data: {assignment: assignmentString},
+				cache: false,
+				contentType: "application/json",
+				url: "/surveyKPI/myassignments/update_status",
+				success: function(data, status) {
+					removeHourglass();
+					$('#a_' + aid).removeClass('btn-warning').addClass('btn-danger');
+					$('#a_r_' + aid).addClass('disabled');
+
+
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+					$('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
+
+				}
+			});
+		}
+	});
+
+
 }
 
 });

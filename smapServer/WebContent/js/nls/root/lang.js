@@ -314,6 +314,7 @@ define({
     "c_lat": "Latitude",
     "c_lon": "Longitude",
     "c_browse": "Browse",
+    "c_reject": "Reject",
 
     // File Types
     "ft": "File Type",
