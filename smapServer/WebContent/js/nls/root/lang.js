@@ -315,6 +315,7 @@ define({
     "c_lon": "Longitude",
     "c_browse": "Browse",
     "c_reject": "Reject",
+    "c_history": "History",
 
     // File Types
     "ft": "File Type",
