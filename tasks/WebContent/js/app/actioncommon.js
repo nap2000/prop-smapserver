@@ -129,9 +129,7 @@ define([
                     configItem, record[configItem.displayName],
                     undefined,
                     itemIndex);
-            }
-
-            if (configItem.readonly || !editable) {		// Read only text
+            } else if (configItem.readonly || !editable) {		// Read only text
                 h[++idx] = addCellMarkup(record[configItem.displayName]);
             } else {
                 h[++idx] = addEditableColumnMarkup(configItem, record[configItem.displayName], itemIndex, first, columns, record);
@@ -277,7 +275,7 @@ define([
             h[++idx] = '" class="small_map">';
             h[++idx] = '<div id="tooltip_';
             h[++idx] = config.id;
-            h[++idx] = '"></div>'
+            h[++idx] = '"></div>';
             h[++idx] = '</div>';
 
             maps.push(config);
