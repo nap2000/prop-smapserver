@@ -1932,6 +1932,9 @@ require([
                     }
                     h[++idx] = '</th>';
                     h[++idx] = '<th>';
+                    h[++idx] = localise.set["c_event"];
+                    h[++idx] = '</th>';
+                    h[++idx] = '<th>';
                     h[++idx] = localise.set["c_details"];
                     h[++idx] = '</th>';
                     h[++idx] = '</tr>';
@@ -1947,11 +1950,15 @@ require([
                             h[++idx] = '</td>';
 
                             h[++idx] = '<td>';    // Survey
-                            h[++idx] = data[i].surveyName + ' v' + data[i].surveyVersion;
+                            h[++idx] = data[i].surveyName + ' (' + data[i].surveyVersion + ')';
                             h[++idx] = '</td>';
 
                             h[++idx] = '<td>';    // when
                             h[++idx] = data[i].eventTime;
+                            h[++idx] = '</td>';
+
+                            h[++idx] = '<td>';    // event
+                            h[++idx] = localise.set[data[i].event];
                             h[++idx] = '</td>';
 
                             h[++idx] = '<td>';    // Changes
