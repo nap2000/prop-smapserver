@@ -713,6 +713,8 @@ define({
     "max": "Max",
     "min": "Min",
     "sum": "Sum",
+    "changes": "Update",
+    "task": "Task",
 
     // Web forms
     "wf_sig": "Signature",
