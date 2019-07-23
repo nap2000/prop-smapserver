@@ -418,6 +418,8 @@ require([
 		$('#status_filter').multiselect({
 			onChange: function(option, checked, select) {
 				refreshTableAssignments();
+				refreshMainMap();
+				updateCalendar();
 			}
 		});
 		$('#status_filter').multiselect('selectAll', false)
@@ -2424,29 +2426,38 @@ require([
 		var tasks = tasks = globals.gTaskList.features,
 			events = [],
 			event = {},
-			h = [];
-		idx = -1;
+			h = [],
+			idx = -1,
+			task,
+			i;
+
+		// Filter on status
+		var statusFilterArray = $('#status_filter').val();
+		var statusFilter = statusFilterArray ? statusFilterArray.join('') : "";
+		var statusLookup;
 
 		for (i = 0; i < tasks.length; i++) {
 			task = tasks[i].properties;
-			if (task.from) {
-				event = {
-					title: task.name,
-					start: localTimeAsDate(task.from),
-					allDay: false,
-					taskIdx: i
-				};
-				if (task.to) {
-					event.end = localTimeAsDate(task.to)
+			if(statusFilter.indexOf(task.status) >= 0) {
+				if (task.from) {
+					event = {
+						title: task.name,
+						start: localTimeAsDate(task.from),
+						allDay: false,
+						taskIdx: i
+					};
+					if (task.to) {
+						event.end = localTimeAsDate(task.to)
+					}
+					events.push(event);
+				} else {
+					h[++idx] = '<div class="external-event navy-bg" data-idx="';
+					h[++idx] = i;
+					h[++idx] = '" data-start="09:00" data-duration = "01:00"';
+					h[++idx] = '>';
+					h[++idx] = task.name;
+					h[++idx] = '</div>';
 				}
-				events.push(event);
-			} else {
-				h[++idx] = '<div class="external-event navy-bg" data-idx="';
-				h[++idx] = i;
-				h[++idx] = '" data-start="09:00" data-duration = "01:00"';
-				h[++idx] = '>';
-				h[++idx] = task.name;
-				h[++idx] = '</div>';
 			}
 		}
 
