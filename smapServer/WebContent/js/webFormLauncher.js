@@ -224,7 +224,6 @@ function projectSet() {
 	//getAlerts();
 }
 
-
 function getSurveysForList(projectId) {
 
 	url="/surveyKPI/myassignments";

@@ -1246,7 +1246,8 @@ CREATE TABLE record_event (
 	key text,									-- HRK of change or notification
 	instanceid text,								-- instance of change or notification	
 	event text,									-- created || change || task || reminder || deleted
-	details text,								-- Details of the event as json object	
+	changes text,								-- Details of the change as json object	
+	task text,									-- Details of task changes as json object
 	description text,
 	success boolean default false,				-- Set true of the event was a success
 	msg text,									-- Error messages
