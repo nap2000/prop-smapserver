@@ -172,10 +172,28 @@ function initialiseMapKeySet(elementId, zoom, setUserLocation, callbackClick, ca
  * Assignment specific
  */
 function refreshMapAssignments(elementId, taskList) {
-	var thisMapData = mapData[elementId];
-	
+	var thisMapData = mapData[elementId],
+		i;
+
+	// Filter on status
+	var statusFilterArray = $('#status_filter').val();
+	var statusFilter = statusFilterArray ? statusFilterArray.join('') : "";
+	var statusLookup;
+
+	var filteredGeoJson = {
+		type: "FeatureCollection",
+		features: []
+	};
+
+	// Filter out the tasks
+	for (i = 0; i < taskList.features.length; i++) {
+		if(statusFilter.indexOf(taskList.features[i].properties.status) >= 0) {
+			filteredGeoJson.features.push(taskList.features[i]);
+		}
+	}
+
 	if(thisMapData) {
-		thisMapData.featureLayer.setGeoJSON(taskList);
+		thisMapData.featureLayer.setGeoJSON(filteredGeoJson);
 		zoomToFeatureLayer(elementId);
 	}
 }
