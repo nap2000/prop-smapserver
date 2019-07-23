@@ -79,22 +79,6 @@ $(document).ready(function() {
 				globals.gCurrentSurvey, 
 				globals.gCurrentTaskGroup);
  	 });
-	
-	// Set up the tabs
-    $('#userTab a').click(function (e) {
-    	e.preventDefault();
-    	$(this).tab('show');
-    		
-		$('#formsPanel').hide();
-		$('#userPanel').show();
-    })
-    $('#formsTab a').click(function (e) {
-    	e.preventDefault();
-    	$(this).tab('show');
-    		  	  
-		$('#formsPanel').show();
-		$('#userPanel').hide();
-    })
 
     // Refresh menu
     $('#m_refresh').click(function () {
@@ -270,92 +254,124 @@ function getSurveysForList(projectId) {
  * Fill in the survey list
  */
 function completeSurveyList(surveyList, filterProjectId) {
-	
+
+	var i,
+		h = [],
+		idx = -1,
+		formList = surveyList.forms,
+		taskList = surveyList.data;
+
+
+
+	// Add the tasks
+	if (taskList) {
+		addTaskList(taskList, filterProjectId);
+	} else {
+		$('#tasks_count').html('(0)');
+		$('#task_list').html('');
+	}
+
+	// Add the forms
+	if (formList) {
+		addFormList(formList, filterProjectId);
+	} else {
+		$('#forms_count').html('(0)');
+		$('#form_list').html('');
+	}
+}
+
+function addFormList(formList, filterProjectId) {
 	var i,
 		h = [],
 		idx = -1,
 		$formList = $('#form_list'),
-		formList = surveyList.forms,
-		taskList = surveyList.data,
-		params,
-		repeat;
+		count = 0;
 
-	// Add the forms
-	if(formList) {
-		for(i = 0; i < formList.length; i++) {
-			if(!filterProjectId || filterProjectId == formList[i].pid) {
-				h[++idx] = '<a role="button" class="btn btn-primary btn-block btn-lg" target="_blank" href="/webForm/';
-				h[++idx] = formList[i].ident;
-				h[++idx] = '">';
-				h[++idx] = formList[i].name;
-				h[++idx] = '</a>';	
-			} 
+	for(i = 0; i < formList.length; i++) {
+		if(!filterProjectId || filterProjectId == formList[i].pid) {
+			h[++idx] = '<a role="button" class="btn btn-primary btn-block btn-lg" target="_blank" href="/webForm/';
+			h[++idx] = formList[i].ident;
+			h[++idx] = '">';
+			h[++idx] = formList[i].name;
+			h[++idx] = '</a>';
+			count++;
 		}
 	}
-	
-	// Add the tasks
-	if(taskList) {
-		for(i = 0; i < taskList.length; i++) {
-			if(!filterProjectId || filterProjectId == taskList[i].task.pid) {
-				repeat = taskList[i].task.repeat;	// Can complete the task multiple times
-				h[++idx] = '<div class="btn-group btn-group-lg d-flex" role="group" aria-label="Button group for task selection or rejection">';
-				h[++idx] = '<a id="a_';
-				h[++idx] = taskList[i].assignment.assignment_id;
-				h[++idx] = '" class="task btn btn-warning w-80" role="button" target="_blank" data-repeat="';
-
-				if(repeat) {
-					h[++idx] = 'true';
-				} else {
-					h[++idx] = 'false';
-				}
-				h[++idx] = '" href="/webForm/';
-				h[++idx] = taskList[i].task.form_id;
-
-				var hasParam = false;
-				if(taskList[i].task.initial_data_source) {
-					if (taskList[i].task.initial_data_source === 'survey' && taskList[i].task.update_id) {
-
-						h[++idx] = (hasParam ? '&' : '?');
-						h[++idx] = 'datakey=instanceid&datakeyvalue=';
-						h[++idx] = taskList[i].task.update_id;
-						hasParam = true;
-
-					} else if (taskList[i].task.initial_data_source === 'task') {
-						h[++idx] = (hasParam ? '&' : '?');
-						h[++idx] = 'taskkey=';
-						h[++idx] = taskList[i].task.id;
-						hasParam = true;
-					}
-				}
-				// Add the assignment id
-				h[++idx] = (hasParam ? '&' : '?');
-				h[++idx] = 'assignment_id=';
-				h[++idx] = taskList[i].assignment.assignment_id;
-
-				h[++idx] = '">';
-				h[++idx] = taskList[i].task.title + " (task id: " + taskList[i].task.id + ")";
-				h[++idx] = '</a>';
-
-				// Add button with additional options
-				h[++idx] = '<button ';
-				h[++idx] = 	'id="a_r_' + taskList[i].assignment.assignment_id;
-				h[++idx] = '" class="btn btn-info w-20 reject" type="button"';
-				h[++idx] = '" data-aid="';
-				h[++idx] = taskList[i].assignment.assignment_id;
-				h[++idx] = '">';
-				h[++idx] = localise.set["c_reject"]
-				h[++idx] = '</button>';
-
-				h[++idx] = '</div>';        // input group
-			} 
-		}
-	}
-	
+	$('#forms_count').html('(' + count+ ')');
 	$formList.html(h.join(''));
-	$formList.find('.task').off().click(function(){
+}
+
+function addTaskList(taskList, filterProjectId) {
+	var i,
+		h = [],
+		idx = -1,
+		$taskList = $('#task_list'),
+		count = 0;
+
+	for(i = 0; i < taskList.length; i++) {
+
+		if(!filterProjectId || filterProjectId == taskList[i].task.pid) {
+			repeat = taskList[i].task.repeat;	// Can complete the task multiple times
+			h[++idx] = '<div class="btn-group btn-group-lg d-flex" role="group" aria-label="Button group for task selection or rejection">';
+			h[++idx] = '<a id="a_';
+			h[++idx] = taskList[i].assignment.assignment_id;
+			h[++idx] = '" class="task btn btn-warning w-80" role="button" target="_blank" data-repeat="';
+
+			if(repeat) {
+				h[++idx] = 'true';
+			} else {
+				h[++idx] = 'false';
+			}
+			h[++idx] = '" href="/webForm/';
+			h[++idx] = taskList[i].task.form_id;
+
+			var hasParam = false;
+			if(taskList[i].task.initial_data_source) {
+				if (taskList[i].task.initial_data_source === 'survey' && taskList[i].task.update_id) {
+
+					h[++idx] = (hasParam ? '&' : '?');
+					h[++idx] = 'datakey=instanceid&datakeyvalue=';
+					h[++idx] = taskList[i].task.update_id;
+					hasParam = true;
+
+				} else if (taskList[i].task.initial_data_source === 'task') {
+					h[++idx] = (hasParam ? '&' : '?');
+					h[++idx] = 'taskkey=';
+					h[++idx] = taskList[i].task.id;
+					hasParam = true;
+				}
+			}
+			// Add the assignment id
+			h[++idx] = (hasParam ? '&' : '?');
+			h[++idx] = 'assignment_id=';
+			h[++idx] = taskList[i].assignment.assignment_id;
+
+			h[++idx] = '">';
+			h[++idx] = taskList[i].task.title + " (task id: " + taskList[i].task.id + ")";
+			h[++idx] = '</a>';
+
+			// Add button with additional options
+			h[++idx] = '<button ';
+			h[++idx] = 	'id="a_r_' + taskList[i].assignment.assignment_id;
+			h[++idx] = '" class="btn btn-info w-20 reject" type="button"';
+			h[++idx] = '" data-aid="';
+			h[++idx] = taskList[i].assignment.assignment_id;
+			h[++idx] = '">';
+			h[++idx] = localise.set["c_reject"]
+			h[++idx] = '</button>';
+
+			h[++idx] = '</div>';        // input group
+			count++;
+		}
+	}
+
+	$('#tasks_count').html('(' + taskList.length + ')');
+	$taskList.html(h.join(''));
+
+	$taskList.find('.task').off().click(function(){
 		var $this = $(this),
 			repeat = $this.data("repeat");
-		
+
 		if(!repeat) {
 			$this.removeClass('btn-warning').addClass('btn-success');		// Mark task as done
 			$this.addClass('disabled');
@@ -363,7 +379,7 @@ function completeSurveyList(surveyList, filterProjectId) {
 		}
 	});
 
-	$formList.find('.reject').off().click(function(){
+	$taskList.find('.reject').off().click(function(){
 		var $this = $(this);
 
 		if(!$this.hasClass('disabled')) {
@@ -371,6 +387,7 @@ function completeSurveyList(surveyList, filterProjectId) {
 		}
 	});
 }
+
 
 function reject(aid) {
 
