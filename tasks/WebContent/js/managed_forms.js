@@ -1814,7 +1814,7 @@ require([
                     h[++idx] = '<thead>';
                     h[++idx] = '<tr>';
                     h[++idx] = '<th>';
-                    h[++idx] = localise.set["u_chg"];
+                    h[++idx] = localise.set["c_user"];
                     h[++idx] = '</th>';
                     h[++idx] = '<th>';
                     h[++idx] = localise.set["c_survey"];
@@ -1861,7 +1861,7 @@ require([
                             if(data[i].event === 'changes' && data[i].changes) {
                                 h[++idx] = getChangeCard(data[i].changes, i);
                             } else   if(data[i].event === 'task' && data[i].description) {
-                                h[++idx] = data[i].description;
+                                h[++idx] = getTaskInfo(data[i].task);
                             }
                             h[++idx] = '</td>';
 
@@ -1892,6 +1892,47 @@ require([
                 }
             });
         }
+    }
+
+    /*
+     * Get task info
+     */
+    function getTaskInfo(task) {
+        var h = [],
+            idx = -1;
+
+        console.log(JSON.stringify(task));
+
+        h[++idx] = localise.set["c_id"];
+        h[++idx] = ': ';
+        h[++idx] = task.id;
+
+        h[++idx] = '<br/>';
+        h[++idx] = localise.set["c_name"];
+        h[++idx] = ': ';
+
+        // We only need the name up to the first ":".  If the name has colons in it then it has probably been created
+        // automatically from existign data using project name and survey name.  However for the per record view just the
+        // Task group name is enough
+
+        var name = task.name;
+        if(name.indexOf(':') > 0) {
+            name = name.substring(0, name.indexOf(':'));
+        }
+        h[++idx] = name;
+
+        h[++idx] = '<br/>';
+        h[++idx] = localise.set["t_assigned"];
+        h[++idx] = ': ';
+        h[++idx] = task.assigned;
+
+        h[++idx] = '<br/>';
+        h[++idx] = localise.set["c_status"];
+        h[++idx] = ': ';
+        h[++idx] = localise.set[task.status];
+
+        return h.join('');
+
     }
 
     /*
