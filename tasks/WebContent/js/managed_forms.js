@@ -114,6 +114,7 @@ require([
     var gSelectedIndexes = [];      // Array of selected row indexes
     var gAssignedCol = 0;           // Column that contains the assignment status
     var gGetSettings = false;        // Use the settings from the database rather than the client
+    var gLocalDefaults = {};
 
     window.gTasks = {
         cache: {
@@ -137,16 +138,6 @@ require([
 
     $(document).ready(function () {
 
-        /*
-        var i,
-            params,
-            pArray = [],
-            param = [],
-            openingNew = false,
-            dont_get_current_survey = true;
-
-         */
-
         window.chart = chart;
         window.moment = moment;
         setCustomManage();
@@ -154,32 +145,30 @@ require([
         localise.setlang();		// Localise HTML
         userDefaults();
 
-        $('.editRecordSection, .selectedOnly').hide();
+        // Set page defaults
+        var def = getFromLocalStorage("console");
+        if(def) {
+            try {
+                gLocalDefaults = JSON.parse(def);
 
-        // Get the parameters and show a management survey if required
-        /*
-        params = location.search.substr(location.search.indexOf("?") + 1)
-        pArray = params.split("&");
-        dont_get_current_survey = false;
-        for (i = 0; i < pArray.length; i++) {
-            param = pArray[i].split("=");
-            if (param[0] === "id") {
-                dont_get_current_survey = true;		// Use the passed in survey id
-                globals.gCurrentSurvey = param[1];
-                saveCurrentProject(-1, globals.gCurrentSurvey);	// Save the current survey id
-            } else if (param[0] === "new") {
-                dont_get_current_survey = true;		// Don't set the current survey from the users defaults
-                globals.gCurrentSurvey = -1;
-                // TODO display list of
+                if(gLocalDefaults) {
+                    $('#my_records').prop('checked', gLocalDefaults.myRecords);
+                    $('#unassigned_records').prop('checked', gLocalDefaults.unassignedRecords);
+                    $('#other_records').prop('checked', gLocalDefaults.otherRecords);
+                } else {
+                    gLocalDefaults = {};
+                }
+
+            } catch (err) {
+                gLocalDefaults = {};
             }
         }
-        */
+
+        $('.editRecordSection, .selectedOnly').hide();
 
         // Get the user details
         globals.gIsAdministrator = false;
         getLoggedInUser(refreshData, false, true, undefined, false, false);
-
-        // Get the report definition
 
         // Set change function on projects
         $('#project_name').change(function () {
@@ -490,6 +479,7 @@ require([
          */
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             var target = $(e.target).attr("href") // activated tab
+
             console.log("tab:::: " + target);
             $('.targetSpecific').hide();
             gMapView = false;
@@ -510,8 +500,7 @@ require([
             }
         });
 
-
-    });
+    });         // End of document ready
 
     // Generate a file based on chart data
     $('.genfile').click(function () {
@@ -773,108 +762,6 @@ require([
     }
 
     /*
-     * Test if this record should be filter out based on its date
-     * Replaced by filtering on the server
-    function filterOutDate(aData) {
-        var fromDate = document.getElementById('filter_from').value,
-            toDate = document.getElementById('filter_to').value,
-            dateCol = $('#date_question').val(),
-            dateParts = [],
-            dataDate,
-            dataDateVal;
-
-        fromDate = fromDate.replace(/\-/g, "");
-        toDate = toDate.replace(/\-/g, "");
-
-        dataDateVal = aData[dateCol];
-
-        if (dataDateVal) {
-            dataDate = dataDateVal.replace(/\-/g, "");
-            dateParts = dataDate.split(" ");
-            if (dateParts.length > 0) {
-                dataDate = dateParts[0];
-            }
-
-            if (fromDate === "" && toDate === "") {
-                return false;
-            }
-            if (fromDate === "" && toDate >= dataDate) {
-                return false;
-            } else if (toDate === "" && fromDate <= dataDate) {
-                return false;
-            } else if (fromDate <= dataDate && toDate >= dataDate) {
-                return false;
-            }
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-    */
-
-    /*
-     * Get the survey view (mini dashboard for a single survey)
-     *
-    function getSurveyView(viewId, sId, managedId, queryId, groupSurveyIdent) {
-
-        var url = '/surveyKPI/surveyview/' + viewId;
-        url += '?survey=' + sId;
-        url += '&managed=' + managedId;
-        if(groupSurveyIdent && groupSurveyIdent != "") {
-            url += '&groupSurvey=' + groupSurveyIdent;
-        }
-        url += '&query=' + queryId;		// ignore for moment, ie note caching is done only on survey index
-
-        if (!globals.gViewId || !gTasks.cache.surveyConfig[globals.gViewId]) {
-
-            addHourglass();
-            $.ajax({
-                url: url,
-                cache: false,
-                dataType: 'json',
-                success: function (data) {
-                    removeHourglass();
-
-                    globals.gViewId = data.viewId;
-                    gTasks.cache.surveyConfig[globals.gViewId] = data;
-
-                    showManagedData(sId);
-
-                    map.setLayers(data.layers);
-                    chart.setCharts(data.charts);
-
-                    // Add a config item for the group value if this is a duplicates search
-                    if (isDuplicates) {
-                        data.columns.unshift({
-                            hide: true,
-                            include: true,
-                            name: "_group",
-                            displayName: "_group"
-                        });
-                    }
-                },
-                error: function (xhr, textStatus, err) {
-                    removeHourglass();
-                    map.deleteLayers();
-                    //if (globals.gMainTable) {
-                    //    globals.gMainTable.destroy(true);
-                    //}
-                    gRefreshingData = false;
-                    if (xhr.readyState == 0 || xhr.status == 0) {
-                        return;  // Not an error
-                    } else {
-                        alert(localise.set["error"] + ": " + xhr.responseText);
-                    }
-                }
-            });
-        } else {
-            showManagedData(sId);
-        }
-    }
-    */
-
-    /*
      * Function called when the current survey is changed
      */
     function surveyChanged() {
@@ -1070,8 +957,6 @@ require([
             order: [0],
             initComplete: function (settings, json) {
 
-                initialise();
-
                 if(gTasks.gSelectedRecord && gTasks.gSelectedRecord.instanceid) {
                     globals.gMainTable.row(gTasks.gSelectedRecord.instanceid.replace(':', '\\:'));      // Reselect the row, escape the :
                 }
@@ -1169,9 +1054,19 @@ require([
             tableOnDraw();
         });
 
-        // Respond to filter changes
+        // Respond to filter changes that require the sever to be queried
         $('.table_filter').focusout(function () {
             showManagedData(globals.gCurrentSurvey, showTable, true);
+        });
+
+        // Respond to changes that filter data on assignment
+        $('.assign_filter').change(function () {
+            globals.gMainTable.draw();
+
+            gLocalDefaults.myRecords = $('#my_records').prop('checked');
+            gLocalDefaults.unassignedRecords = $('#unassigned_records').prop('checked');
+            gLocalDefaults.otherRecords = $('#other_records').prop('checked');
+            setInLocalStorage("console", JSON.stringify(gLocalDefaults));
         });
 
         // Respond to change of search
@@ -1717,7 +1612,7 @@ require([
     }
 
     /*
-     * Perform initialisation after the data and the survey view configuration have been loaded
+     * Perform initialisation after the data has been loaded
      */
     function initialise() {
 
@@ -2236,6 +2131,9 @@ require([
                             displayName: "_group"
                         });
                     }
+
+                    // Initialise the column settings
+                    initialise();
 
                     theCallback(data);
                 },

@@ -198,15 +198,15 @@
                 <form class="form" role="form">
 
                     <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input table_filter" id="my_records">
+                        <input type="checkbox" class="custom-control-input assign_filter" id="my_records">
                         <label class="custom-control-label lang" data-lang="mf_mr" for="my_records"></label>
                     </div>
                     <div class="custom-control custom-switch ">
-                        <input type="checkbox" class="custom-control-input table_filter" id="unassigned_records">
+                        <input type="checkbox" class="custom-control-input assign_filter" id="unassigned_records">
                         <label class="custom-control-label lang" data-lang="mf_ur" for="unassigned_records"></label>
                     </div>
                     <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input table_filter" id="other_records">
+                        <input type="checkbox" class="custom-control-input assign_filter" id="other_records">
                         <label class="custom-control-label lang" data-lang="mf_or" for="other_records"></label>
                     </div>
 
@@ -277,18 +277,18 @@
                         </div>
                         <div class="ibox-content">
                             <div id="dashboardInfo" class="alert alert-success" style="display:none;"></div>
-                            <ul class="nav nav-pills nav-fill">
-                                <li class="nav-item"><a data-toggle="tab" href="#table-view" class="active nav-link"><i class="fa fa-list"></i> <span class="lang" data-lang="c_table"></span></a></li>
-                                <li class="nav-item"><a data-toggle="tab" href="#map-view" class="nav-link"><i class="fa fa-globe"></i> <span class="lang" data-lang="c_map"></span></a></li>
-                                <li class="nav-item"><a data-toggle="tab" href="#chart-view" class="nav-link"><i class="fa fa-bar-chart"></i> <span class="lang" data-lang="c_chart"></span></a></li>
-                                <li class="nav-item" style="display:none;"><a data-toggle="tab" href="#timing-view" class="nav-link"><i class="fa fa-clock-o"></i></a></li>
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item"><a data-toggle="tab" id="set-table-view" href="#table-view" role="tab" class="active nav-link"><i class="fa fa-list"></i> <span class="lang" data-lang="c_table"></span></a></li>
+                                <li class="nav-item"><a data-toggle="tab" id="set-map-view"href="#map-view" role="tab" class="nav-link"><i class="fa fa-globe"></i> <span class="lang" data-lang="c_map"></span></a></li>
+                                <li class="nav-item"><a data-toggle="tab" id="set-chart-view"href="#chart-view" role="tab" class="nav-link"><i class="fa fa-bar-chart"></i> <span class="lang" data-lang="c_chart"></span></a></li>
+                                <li class="nav-item" style="display:none;"><a data-toggle="tab" id="set-timing-view" href="#timing-view" role="tab" class="nav-link"><i class="fa fa-clock-o"></i></a></li>
                             </ul>
 
                             <div class="row">
 
                                 <div class="tabs-container container-fluid">
                                     <div class="tab-content">
-                                        <div id="table-view" role="tabpanel" class="tab-pane active">
+                                        <div id="table-view" role="tabpanel" class="tab-pane active show fade">
                                             <div class="panel-body">
                                                 <div id="table_content" class="col-md-12 dash_views">
                                                     <div class="sk-spinner sk-spinner-wave">
@@ -305,7 +305,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="map-view"  role="tabpanel" class="tab-pane">
+                                        <div id="map-view"  role="tabpanel" class="tab-pane fade">
                                             <div class="panel-body">
                                                 <div class="row">
                                                     <div class="col-md-4 map_layers" style="display:none;">
@@ -342,14 +342,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="chart-view"  role="tabpanel" class="tab-pane">
+                                        <div id="chart-view"  role="tabpanel" class="tab-pane fade">
                                             <div class="panel-body">
                                                 <div id="chartcontent">
                                                     <div class="row" id="chartrow"></div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="timing-view"  role="tabpanel" class="tab-pane" style="display:none;">
+                                        <div id="timing-view"  role="tabpanel" class="tab-pane fade" style="display:none;">
                                             <div class="panel-body">
                                                 <div id="timingcontent">
                                                     <div class="row" id="timingrow"></div>
