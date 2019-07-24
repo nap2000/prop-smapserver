@@ -1952,9 +1952,16 @@ require([
 		h[++idx] = '<table class="table table-striped">';
 		h[++idx] = '<thead>';
 		h[++idx] = '<tr>';
-		h[++idx] = '<th>Selected</th>';
-		h[++idx] = '<th>Parameter Name</th>';
-		h[++idx] = '<th>Barcode</th>';
+		h[++idx] = '<th>';
+		h[++idx] = localise.set["c_select"];
+		h[++idx] = '</th>';
+		h[++idx] = '<th>';
+		h[++idx] = localise.set["c_question"];
+		h[++idx] = '</th>';
+		// remove setting of barcode checkbox.  This feeature probably needs to be added back into PDF export
+		//h[++idx] = '<th>';
+		//h[++idx] = localise.set["ed_bc"];
+		//h[++idx] = '</th>';
 		h[++idx] = '</tr>';
 		h[++idx] = '</thead>';
 		h[++idx] = '<tbody>';
@@ -1971,13 +1978,13 @@ require([
 				}
 				h[++idx] = '></td>';
 				h[++idx] = '<td class="task_name">' + gTaskParams[i].name + '</td>';
-				h[++idx] = '<td class="task_isBarcode"><input type="checkbox" name="isBarcode" value="';
-				h[++idx] = gTaskParams[i].name;
-				h[++idx] = '" ';
-				if (gTaskParams[i].isBarcode !== false) {
-					h[++idx] = 'checked="checked"';
-				}
-				h[++idx] = '></td>';
+				//h[++idx] = '<td class="task_isBarcode"><input type="checkbox" name="isBarcode" value="';
+				//h[++idx] = gTaskParams[i].name;
+				//h[++idx] = '" ';
+				//if (gTaskParams[i].isBarcode !== false) {
+				//	h[++idx] = 'checked="checked"';
+				//}
+				//h[++idx] = '></td>';
 				h[++idx] = '</tr>';
 			}
 
