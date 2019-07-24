@@ -109,7 +109,7 @@
 				<li id="projectsTab" class="nav-item" ><a href="#" class="nav-link lang" data-lang="c_projects"></a></li>
 				<li id="roleTab" class="nav-item restrict_role org_role security_role"><a href="#" class="nav-link lang" data-lang="c_roles">roles</a></li>
 				<li id="organisationTab" class="nav-item restrict_role org_role"><a href="#" class="nav-link lang" data-lang="c_orgs"></a></li>
-				<li id="myOrganisationTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="c_org"></a></li>
+				<li id="appearanceTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="ed_appearance"></a></li>
 				<li id="serverTab" class="nav-item restrict_role owner_role"><a href="#" class="nav-link lang" data-lang="c_server"></a></li>
 				<li id="deviceTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="u_det_o_ft"></a></li>
 				<li id="webformTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="u_det_o_wf"></a></li>
@@ -410,10 +410,46 @@
 
 			</div>
 
-			<!-- The container for the users current oganisation -->
-			<div id="myOrganisationPanel" style="display:none;" class="usertab">
+			<!-- The container for appearance settings -->
+			<div id="appearancePanel" style="display:none;" class="usertab">
+
+				<form enctype="multipart/form-data" name="appearancesave" id="appearance_logo_form">
+					<fieldset>
+						<legend class="lang" data-lang="ed_appearance"></legend>
+						<input id="appearanceSettings" type="hidden" name="settings" >
+
+						<div class="well">
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" id="app_set_as_theme" name="set_as_theme" value="set_as_theme">
+								<label class="custom-control-label" for="app_set_as_theme">
+									<span data-lang="u_sat" class="lang"></span>
+								</label>
+							</div>
+							<div class="form-group row">
+								<label for="app_main_logo" class="lang col-sm-2 control-label mt-3" data-lang="u_ml"></label>
+								<div class="col-sm-6">
+									<img id="app_main_logo" alt="nf" src="#" style="width:100%;">
+								</div>
+								<div class="input-group-btn col-sm-4">
+									<input id="app_change_main_logo" name="main_logo" title="Add" class="file-inputs" type="file" accept="image/png, image/jpeg, image/gif">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="app_navbar_color" data-lang="u_nbc" class="lang control-label col-sm-2"></label>
+								<div class="col-sm-10">
+									<div class="input-group colorpicker-component">
+										<input id="app_navbar_color" type="text" value="#000000" class="form-control" />
+										<span class="input-group-addon"><i></i></span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</fieldset>
+				</form>
 
 				<div class="my_org_alert alert alert-success" role="alert" style="display:none;"></div>
+				<button id="saveAppearance" class="btn btn-success lang" data-lang="c_save">save</button>
 
 			</div>
 
