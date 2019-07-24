@@ -316,6 +316,7 @@ define({
     "c_browse": "Browse",
     "c_reject": "Reject",
     "c_history": "History",
+    "c_events": "Events",
 
     // File Types
     "ft": "File Type",
