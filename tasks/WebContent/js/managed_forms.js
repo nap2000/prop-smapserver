@@ -431,12 +431,13 @@ require([
         });
 
         // Refresh menu
-        $('#m_refresh').click(function () {
-            refreshData();
-        });
-
-        $('#refreshRecord').click(function () {
-            getRecordChanges(gTasks.gSelectedRecord);
+        $('#m_refresh').click(function (e) {
+            e.preventDefault();
+            if(window.location.hash === "#edit") {
+                getRecordChanges(gTasks.gSelectedRecord);
+            } else {
+                refreshData();
+            }
         });
 
         /*
