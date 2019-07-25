@@ -346,7 +346,7 @@ function addTaskList(taskList, filterProjectId) {
 			h[++idx] = taskList[i].assignment.assignment_id;
 
 			h[++idx] = '">';
-			h[++idx] = taskList[i].task.title + " (task id: " + taskList[i].task.id + ")";
+			h[++idx] = taskList[i].task.title + " (" + localise.set["c_id"] + ": " + taskList[i].assignment.assignment_id + ")";
 			h[++idx] = '</a>';
 
 			// Add button with additional options
