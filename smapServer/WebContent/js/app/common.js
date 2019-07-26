@@ -3971,3 +3971,170 @@ function enableDebugging() {
 	}
 
 }
+
+/*
+ * ----------------------------------------------------
+ * Common task fuctions shared between task managmeent page and console
+ */
+function setupAssignType(user_id, role_id, emails) {
+	$('.assign_group').hide();
+	$('.assign_type').removeClass('active');
+	if(user_id != 0) {
+		$('.user_type_checkbox').addClass('active');
+		$('.assign_user').show();
+	} else  if(role_id != 0) {
+		$('.role_type_checkbox').addClass('active');
+		$('.assign_role').show();
+	} else if(typeof emails !== "undefined" && emails.trim().length > 0) {
+		$('.email_type_checkbox').addClass('active');
+		$('.assign_email').show();
+	} else {        // Default to user
+		$('.user_type_checkbox').addClass('active');
+		$('.assign_user').show();
+	}
+}
+
+// Convert a location name into a location index
+function getLocationIndex(name, tags) {
+	var idx = -1,
+		i;
+
+	if(tags) {
+		for(i = 0; i < tags.length; i++) {
+			if(tags[i].name == name) {
+				idx = i;
+				break;
+			}
+
+		}
+	}
+	return idx;
+
+}
+
+function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback) {
+	var url = "/api/v1/tasks",
+		taskFeature = {
+			properties: {}
+		},
+		fromDate,
+		toDate;
+
+	taskFeature = $.extend(true, {}, currentTaskFeature);
+	/*
+	 * Set the properties of the taskFeature from the dialog
+	 */
+	taskFeature.properties.pid = globals.gCurrentProject;
+	taskFeature.properties.tg_id = globals.gCurrentTaskGroup;
+
+	if (!taskFeature.properties.id || taskFeature.properties.id == "") {
+		taskFeature.properties["id"] = 0;
+	}
+	taskFeature.properties.name = $('#tp_name').val();		// task name
+	if(isConsole) {
+		taskFeature.properties.survey_ident = $('#tp_form_name').val();	// form id
+	} else {
+		// old fashioned
+		taskFeature.properties.form_id = $('#tp_form_name').val();	// form id
+	}
+
+	taskFeature.properties.assign_type = $("button.assign_type.active", "#task_properties").attr("id");
+	if(taskFeature.properties.assign_type == 'tp_user_type') {
+		taskFeature.properties.assignee = $('#tp_user').val();
+	} else if(taskFeature.properties.assign_type == 'tp_email_type') {
+		taskFeature.properties.assignee = 0;
+		taskFeature.properties.emails = $('#tp_assign_emails').val();
+		if(!validateEmails(taskFeature.properties.emails)) {
+			alert(localise.set["msg_inv_email"]);
+			return false;
+		}
+	}
+
+	if(isConsole) {
+		taskFeature.properties.update_id = updateId;
+	}
+
+	taskFeature.properties.repeat = $('#tp_repeat').prop('checked');
+
+	fromDate = $('#tp_from').data("DateTimePicker").date();
+	toDate = $('#tp_to').data("DateTimePicker").date();
+	if (fromDate) {
+		taskFeature.properties.from = utcTime(fromDate.format("YYYY-MM-DD HH:mm:ss"));
+	}
+	if (toDate) {
+		taskFeature.properties.to = utcTime(toDate.format("YYYY-MM-DD HH:mm:ss"));
+	}
+	taskFeature.properties.location_trigger = $('#nfc_uid').val();
+	taskFeature.properties.guidance = $('#tp_guidance').val();
+	taskFeature.properties.show_dist = $('#tp_show_dist').val();
+
+	/*
+	 * Save location group and location name
+	 */
+	var locationIdx = $('#location_select').val();
+	if(saveType == "nl") {
+		taskFeature.properties.location_group = $('#locationGroupSave').val();
+		taskFeature.properties.location_name = $('#locationSave').val();
+	} else if(saveType == "ul" && locationIdx != "-1") {
+		taskFeature.properties.location_group = $('.location_group_list_sel').text();
+		taskFeature.properties.location_name = gTags[locationIdx].name;
+	} else {
+		taskFeature.properties.location_group = undefined;
+		taskFeature.properties.location_name = undefined;
+	}
+	taskFeature.properties.save_type = saveType;
+
+	/*
+	 * Convert the geoJson geometry into longitude and latitude for update
+	 */
+	if (currentTaskFeature.geometry) {
+		if (currentTaskFeature.geometry.coordinates && currentTaskFeature.geometry.coordinates.length > 1) {
+			//taskFeature.properties.location = "POINT(" + gCurrentTaskFeature.geometry.coordinates.join(" ") + ")";  // deprecate
+			taskFeature.properties.lon = currentTaskFeature.geometry.coordinates[0];
+			taskFeature.properties.lat = currentTaskFeature.geometry.coordinates[1];
+
+		} else {
+			//taskFeature.properties.location = "POINT(0 0)"; // deprecate
+			taskFeature.properties.lon = 0;
+			taskFeature.properties.lat = 0;
+		}
+	}
+
+	// TODO task update details (updating existing record)
+
+	// Validations
+	if(typeof taskFeature.properties.show_dist === "undefined") {
+		taskFeature.properties.show_dist = 0;
+	} else {
+		taskFeature.properties.show_dist = +taskFeature.properties.show_dist;
+	}
+	if (taskFeature.properties.show_dist && taskFeature.properties.show_dist < MIN_SHOW_RANGE) {
+		alert(localise.set["msg_val_show_dist"]);
+		$('#tp_show_dist').focus();
+		return;
+	}
+
+
+	var tpString = JSON.stringify(taskFeature.properties);
+
+	addHourglass();
+	$.ajax({
+		type: "POST",
+		dataType: 'text',
+		cache: false,
+		contentType: "application/json",
+		url: url,
+		data: {task: tpString},
+		success: function (data, status) {
+			removeHourglass();
+			$('#task_properties').modal("hide");
+			callback();
+		},
+		error: function (xhr, textStatus, err) {
+
+			removeHourglass();
+			alert(localise.set["msg_err_upd"] + xhr.responseText);
+
+		}
+	});
+}

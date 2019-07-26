@@ -790,7 +790,6 @@ define([
 
                 }
 
-
                 var layerSwitcher = new ol.control.LayerSwitcher({
                     tipLabel: 'Legend' // Optional label for button
                 });
