@@ -20,11 +20,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * Purpose: Manage the panels that display graphs, maps etc of results data
  */
 
-var gCurrentGroup,
-	gCurrentLocation = '-1',
-	gTags,
-	gSaveType = '';
-
 var gUserLocale = navigator.language;
 if (Modernizr.localstorage) {
 	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
@@ -129,6 +124,11 @@ require([
 		gUnsentEmailCount = 0,
 		MIN_DOWNLOAD_RANGE = 100,
 		MIN_SHOW_RANGE = 10;
+
+	var gCurrentGroup,
+		gCurrentLocation = '-1',
+		gTags,
+		gSaveType = '';
 
 	$(document).ready(function () {
 
@@ -432,124 +432,9 @@ require([
 		 * Update the properties of a task
 		 */
 		$('#taskPropertiesSave').off().click(function () {
-			var url = "/api/v1/tasks",
-				taskFeature = {
-					properties: {}
-				},
-				fromDate,
-				toDate;
+			saveTask(false, gCurrentTaskFeature, gSaveType, undefined, doneTaskSave);
 
-			taskFeature = $.extend(true, {}, gCurrentTaskFeature);
-			/*
-			 * Set the properties of the taskFeature from the dialog
-			 */
-			taskFeature.properties.pid = globals.gCurrentProject;
-			taskFeature.properties.tg_id = globals.gCurrentTaskGroup;
-
-			if (!taskFeature.properties.id || taskFeature.properties.id == "") {
-				taskFeature.properties["id"] = 0;
-			}
-			taskFeature.properties.name = $('#tp_name').val();		// task name
-			taskFeature.properties.form_id = $('#tp_form_name').val();	// form id
-
-			taskFeature.properties.assign_type = $("button.assign_type.active", "#task_properties").attr("id");
-			if(taskFeature.properties.assign_type == 'tp_user_type') {
-				taskFeature.properties.assignee = $('#tp_user').val();
-			} else if(taskFeature.properties.assign_type == 'tp_email_type') {
-				taskFeature.properties.assignee = 0;
-				taskFeature.properties.emails = $('#tp_assign_emails').val();
-				if(!validateEmails(taskFeature.properties.emails)) {
-					alert(localise.set["msg_inv_email"]);
-					return false;
-				}
-			}
-
-
-			taskFeature.properties.repeat = $('#tp_repeat').prop('checked');
-
-			fromDate = $('#tp_from').data("DateTimePicker").date();
-			toDate = $('#tp_to').data("DateTimePicker").date();
-			if (fromDate) {
-				taskFeature.properties.from = utcTime(fromDate.format("YYYY-MM-DD HH:mm:ss"));
-			}
-			if (toDate) {
-				taskFeature.properties.to = utcTime(toDate.format("YYYY-MM-DD HH:mm:ss"));
-			}
-			taskFeature.properties.location_trigger = $('#nfc_uid').val();
-			taskFeature.properties.guidance = $('#tp_guidance').val();
-			taskFeature.properties.show_dist = $('#tp_show_dist').val();
-
-			/*
-			 * Save location group and location name
-			 */
-			var locationIdx = $('#location_select').val();
-			if(gSaveType == "nl") {
-				taskFeature.properties.location_group = $('#locationGroupSave').val();
-				taskFeature.properties.location_name = $('#locationSave').val();
-			} else if(gSaveType == "ul" && locationIdx != "-1") {
-				taskFeature.properties.location_group = $('.location_group_list_sel').text();
-				taskFeature.properties.location_name = gTags[locationIdx].name;
-			} else {
-				taskFeature.properties.location_group = undefined;
-				taskFeature.properties.location_name = undefined;
-			}
-			taskFeature.properties.save_type = gSaveType;
-
-			/*
-			 * Convert the geoJson geometry into longitude and latitude for update
-			 */
-			if (gCurrentTaskFeature.geometry) {
-				if (gCurrentTaskFeature.geometry.coordinates && gCurrentTaskFeature.geometry.coordinates.length > 1) {
-					//taskFeature.properties.location = "POINT(" + gCurrentTaskFeature.geometry.coordinates.join(" ") + ")";  // deprecate
-					taskFeature.properties.lon = gCurrentTaskFeature.geometry.coordinates[0];
-					taskFeature.properties.lat = gCurrentTaskFeature.geometry.coordinates[1];
-
-				} else {
-					//taskFeature.properties.location = "POINT(0 0)"; // deprecate
-					taskFeature.properties.lon = 0;
-					taskFeature.properties.lat = 0;
-				}
-			}
-
-			// TODO task update details (updating existing record)
-
-			// Validations
-			if(typeof taskFeature.properties.show_dist === "undefined") {
-				taskFeature.properties.show_dist = 0;
-			} else {
-				taskFeature.properties.show_dist = +taskFeature.properties.show_dist;
-			}
-			if (taskFeature.properties.show_dist && taskFeature.properties.show_dist < MIN_SHOW_RANGE) {
-				alert(localise.set["msg_val_show_dist"]);
-				$('#tp_show_dist').focus();
-				return;
-			}
-
-
-			var tpString = JSON.stringify(taskFeature.properties);
-
-			addHourglass();
-			$.ajax({
-				type: "POST",
-				dataType: 'text',
-				cache: false,
-				contentType: "application/json",
-				url: url,
-				data: {task: tpString},
-				success: function (data, status) {
-					removeHourglass();
-					$('#task_properties').modal("hide");
-					refreshAssignmentData();
-					getLocations(processLocationList);
-				},
-				error: function (xhr, textStatus, err) {
-
-					removeHourglass();
-					alert(localise.set["msg_err_upd"] + xhr.responseText);
-
-				}
-			});
-		})
+		});
 
 		$('#editTaskGroup').click(function () {
 			var s_id = $('#survey').val();
@@ -1865,7 +1750,7 @@ require([
 
 		$('#nfc_uid').val(task.location_trigger);
 		gCurrentGroup = task.location_group;
-		gCurrentLocation = getLocationIndex(task.location_name);
+		gCurrentLocation = getLocationIndex(task.location_name, gTags);
 		if(gCurrentGroup && gCurrentGroup != '') {
 			$('.location_group_list_sel').text(gCurrentGroup);
 			setLocationList(gTags, gCurrentLocation);
@@ -2473,24 +2358,6 @@ require([
 		return events;
 	}
 
-	function setupAssignType(user_id, role_id, emails) {
-		$('.assign_group').hide();
-		$('.assign_type').removeClass('active');
-		if(user_id != 0) {
-			$('.user_type_checkbox').addClass('active');
-			$('.assign_user').show();
-		} else  if(role_id != 0) {
-			$('.role_type_checkbox').addClass('active');
-			$('.assign_role').show();
-		} else if(typeof emails !== "undefined" && emails.trim().length > 0) {
-			$('.email_type_checkbox').addClass('active');
-			$('.assign_email').show();
-		} else {        // Default to user
-			$('.user_type_checkbox').addClass('active');
-			$('.assign_user').show();
-		}
-	}
-
 	/*
 	 * Setup controls in save location panel
 	 */
@@ -2522,23 +2389,11 @@ require([
 	}
 
 	/*
-	 * Convert a location name into a location index
+	 * Callback after saving a task
 	 */
-	function getLocationIndex(name) {
-		var idx = -1,
-			i;
-
-		if(gTags) {
-			for(i = 0; i < gTags.length; i++) {
-				if(gTags[i].name == name) {
-					idx = i;
-					break;
-				}
-
-			}
-		}
-		return idx;
-
+	function doneTaskSave() {
+		refreshAssignmentData();
+		getLocations(processLocationList);
 	}
 
 });
