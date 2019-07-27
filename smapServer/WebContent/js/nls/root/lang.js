@@ -987,6 +987,7 @@ define({
     "u_rap_d": "Administrators will be able to assign the selected users only to this project",
     "u_chg": "Changed by",
 	"u_usage": "Usage Report",
+    "u_notification": "Notification Report",
 	"u_access": "Form Access Report",
     "u_sms_url": "SMS Url",
     "u_sens_data": "Sensitive Data",
