@@ -4196,3 +4196,68 @@ function userHasAccessToProject(user, projectId) {
 	}
 	return false;
 }
+
+function setupTaskDialog() {
+	$('#tp_email_type, #assign_email_type').click(function() {
+		$('.assign_type').removeClass('active');
+		$(this).addClass('active');
+
+		$('.assign_user, .assign_role,.assign_data').hide();
+		$('.assign_email').show();
+		$('#assign_data').prop('placeholder', localise.set['n_eqc']);
+		$('.assign_data').show();
+	});
+
+	$('#tp_from').datetimepicker({
+		useCurrent: false,
+		locale: gUserLocale || 'en'
+	});
+
+	$('#tp_to').datetimepicker({
+		useCurrent: false,
+		locale: gUserLocale || 'en'
+	});
+
+	$('#tp_from').on("dp.change", function () {
+
+		var startDateLocal = $(this).data("DateTimePicker").date(),
+			endDateLocal = $('#tp_to').data("DateTimePicker").date(),
+			originalStart = gCurrentTaskFeature.properties.from,
+			originalEnd = gCurrentTaskFeature.properties.to,
+			newEndDate,
+			duration;
+
+		if (startDateLocal) {
+
+			gCurrentTaskFeature.properties.from = utcTime(startDateLocal.format("YYYY-MM-DD HH:mm:ss"));
+
+			if (!endDateLocal) {
+				newEndDate = startDateLocal.add(1, 'hours');
+			} else {
+				if (originalEnd && originalStart) {
+					duration = moment(originalEnd, "YYYY-MM-DD HH:mm:ss").diff(moment(originalStart, "YYYY-MM-DD HH:mm:ss"), 'hours');
+				} else {
+					duration = 1;
+				}
+				newEndDate = startDateLocal.add(duration, 'hours');
+			}
+		} else {
+			if (!endDate) {
+				return;
+			} else {
+				// Clear the end date
+			}
+		}
+
+		$('#tp_to').data("DateTimePicker").date(newEndDate);
+
+	});
+
+	$('#tp_to').on("dp.change", function () {
+
+		var endDateLocal = $('#tp_to').data("DateTimePicker").date();
+
+		gCurrentTaskFeature.properties.to = utcTime(endDateLocal.format("YYYY-MM-DD HH:mm:ss"));
+
+	});
+}
