@@ -905,6 +905,7 @@ require([
 
             // Get the list of available surveys
             loadManagedSurveys(globals.gCurrentProject, surveyChanged);
+            getTaskUsers(globals.gCurrentProject);	// Get the users that have access to this project
         }
 
     }
