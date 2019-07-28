@@ -895,7 +895,7 @@ define({
     "mf_bc_i": "Select the columns that you want to see as barcodes in the table and in reports",
     "mf_st": "Submission Tracking",
     "mf_gr": "Get related",
-    "mf_of": "Oversight Form",
+    "mf_of": "Oversight Survey",
     "mf_no": "There are no oversight forms. They can be added in the \"Available Oversight Forms\" tab",
     "mf_sel": "Select the form that you want to manage and the oversight form that you want to manage it with.",
     "mf_ao": "Available oversight forms",
