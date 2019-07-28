@@ -311,6 +311,9 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
 	        $('#form_access_report_save').click(function(){
 		        executeFormAccessReport();
 	        });
+            $('#m_notification_report').click(function(){
+                executeNotificationReport();
+            });
 
 	        /*
              * Add date time picker to usage date
@@ -1016,6 +1019,12 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
 
 		    downloadFile("/surveyKPI/adminreport/formaccess/" + formIdent);
 	    }
+
+        function executeNotificationReport() {
+
+            downloadFile("/surveyKPI/adminreport/notifications/");
+        }
+
 
 
     });
