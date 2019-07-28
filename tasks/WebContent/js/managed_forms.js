@@ -124,8 +124,7 @@ require([
     };
 
     var gCurrentGroup,
-        gCurrentLocation = '-1',
-        gSaveType = '';
+        gCurrentLocation = '-1';
 
     window.gTasks = {
         cache: {
@@ -145,7 +144,10 @@ require([
         gPriKey: undefined,
         gSort: undefined,
         gDirn: undefined
-    }
+    };
+    window.gCurrentTaskFeature; // Currently edited task feature, hack to support shared functions with console
+    window.gSaveType = '';
+
 
     $(document).ready(function () {
 
@@ -219,6 +221,18 @@ require([
 
         $('#exitEditRecord').click(function() {
             window.history.back();
+        });
+
+        setupTaskDialog();
+        /*
+         * Update the properties of a task
+         */
+        $('#taskPropertiesSave').off().click(function () {
+            var instance;
+            if(typeof gTasks !== "undefined" && gTasks.gSelectedRecord) {
+                instance = gTasks.gSelectedRecord.instanceid;
+            }
+            saveTask(true, gCurrentTaskFeature, gSaveType, instance, doneTaskSave);
         });
 
         window.addEventListener("popstate", function(e) {
@@ -403,72 +417,6 @@ require([
             });
 
         });
-
-        /*
-	     * Update the properties of a task
-	     */
-        $('#taskPropertiesSave').off().click(function () {
-            saveTask(true, gCurrentTaskFeature, gSaveType, gTasks.gSelectedRecord.instanceid, doneTaskSave);
-        });
-
-        /*
-         * ---------------- Copied from task management
-         * Initialise the date time fields of the task editor
-         */
-        $('#tp_from').datetimepicker({
-            useCurrent: false,
-            locale: gUserLocale || 'en'
-        });
-
-        $('#tp_to').datetimepicker({
-            useCurrent: false,
-            locale: gUserLocale || 'en'
-        });
-
-        $('#tp_from').on("dp.change", function () {
-
-            var startDateLocal = $(this).data("DateTimePicker").date(),
-                endDateLocal = $('#tp_to').data("DateTimePicker").date(),
-                originalStart = gCurrentTaskFeature.properties.from,
-                originalEnd = gCurrentTaskFeature.properties.to,
-                newEndDate,
-                duration;
-
-            if (startDateLocal) {
-
-                gCurrentTaskFeature.properties.from = utcTime(startDateLocal.format("YYYY-MM-DD HH:mm:ss"));
-
-                if (!endDateLocal) {
-                    newEndDate = startDateLocal.add(1, 'hours');
-                } else {
-                    if (originalEnd && originalStart) {
-                        duration = moment(originalEnd, "YYYY-MM-DD HH:mm:ss").diff(moment(originalStart, "YYYY-MM-DD HH:mm:ss"), 'hours');
-                    } else {
-                        duration = 1;
-                    }
-                    newEndDate = startDateLocal.add(duration, 'hours');
-                }
-            } else {
-                if (!endDate) {
-                    return;
-                } else {
-                    // Clear the end date
-                }
-            }
-
-            $('#tp_to').data("DateTimePicker").date(newEndDate);
-
-        });
-
-        $('#tp_to').on("dp.change", function () {
-
-            var endDateLocal = $('#tp_to').data("DateTimePicker").date();
-
-            gCurrentTaskFeature.properties.to = utcTime(endDateLocal.format("YYYY-MM-DD HH:mm:ss"));
-
-        });
-
-        // End of copy from task management
 
         /*
          * Save changes to the table columns that are shown
