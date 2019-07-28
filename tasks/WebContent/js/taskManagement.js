@@ -109,13 +109,11 @@ require([
 
 
 	// The following globals are only in this java script file
-	var gTasks,					// Object containing the task data retrieved from the database
-		gTaskGroupIndex = -1,	// Currently selected task group
+	var gTaskGroupIndex = -1,	// Currently selected task group
 		gUpdateTaskGroupIndex,  // A task group being edited
 		gTaskGroups,            // Current list of task groups
 		gTaskParams = [],		// Parameters for a new task
 		gFilterqType,			// The type of the filter question select, select1, int, string
-		gCurrentTaskFeature,	// Currently edited task feature
 		gCalendarInitialised = false,	// Set true when the calendar pane has been initialised
 		gMapInitialised = false,		// Set true when the map pane has been initialised
 		gModalMapInitialised = false,	// Set true then the modal map has been initialised
@@ -127,14 +125,16 @@ require([
 
 	var gCurrentGroup,
 		gCurrentLocation = '-1',
-		gTags,
-		gSaveType = '';
+		gTags;
 
 	$(document).ready(function () {
 
 		setCustomAssignments();			// Apply custom javascript
 
 		window.moment = moment;		// Make moment global for use by common.js
+
+		window.gCurrentTaskFeature; // Currently edited task feature, hack to support shared functions with console
+		window.gSaveType = '';
 
 		globals.gRegion = {};	// Initialise global values
 		globals.gRegions = undefined;
@@ -324,14 +324,10 @@ require([
 				$('.assign_data').hide();
 			}
 		});
-		$('#tp_email_type, #assign_email_type').click(function() {
-			$('.assign_type').removeClass('active');
-			$(this).addClass('active');
 
-			$('.assign_user, .assign_role,.assign_data').hide();
-			$('.assign_email').show();
-			$('#assign_data').prop('placeholder', localise.set['n_eqc']);
-			$('.assign_data').show();
+		setupTaskDialog();
+		$('#taskPropertiesSave').off().click(function () {
+			saveTask(false, gCurrentTaskFeature, gSaveType, undefined, doneTaskSave);
 		});
 
 
@@ -427,14 +423,6 @@ require([
 			.multiselect('deselect', 'cancelled')
 			.multiselect('updateButtonText');
 
-
-		/*
-		 * Update the properties of a task
-		 */
-		$('#taskPropertiesSave').off().click(function () {
-			saveTask(false, gCurrentTaskFeature, gSaveType, undefined, doneTaskSave);
-
-		});
 
 		$('#editTaskGroup').click(function () {
 			var s_id = $('#survey').val();
@@ -940,59 +928,6 @@ require([
 			useCurrent: false,
 			locale: gUserLocale || 'en'
 		}).data("DateTimePicker").date(moment());
-
-		$('#tp_from').datetimepicker({
-			useCurrent: false,
-			locale: gUserLocale || 'en'
-		});
-
-		$('#tp_to').datetimepicker({
-			useCurrent: false,
-			locale: gUserLocale || 'en'
-		});
-
-		$('#tp_from').on("dp.change", function () {
-
-			var startDateLocal = $(this).data("DateTimePicker").date(),
-				endDateLocal = $('#tp_to').data("DateTimePicker").date(),
-				originalStart = gCurrentTaskFeature.properties.from,
-				originalEnd = gCurrentTaskFeature.properties.to,
-				newEndDate,
-				duration;
-
-			if (startDateLocal) {
-
-				gCurrentTaskFeature.properties.from = utcTime(startDateLocal.format("YYYY-MM-DD HH:mm:ss"));
-
-				if (!endDateLocal) {
-					newEndDate = startDateLocal.add(1, 'hours');
-				} else {
-					if (originalEnd && originalStart) {
-						duration = moment(originalEnd, "YYYY-MM-DD HH:mm:ss").diff(moment(originalStart, "YYYY-MM-DD HH:mm:ss"), 'hours');
-					} else {
-						duration = 1;
-					}
-					newEndDate = startDateLocal.add(duration, 'hours');
-				}
-			} else {
-				if (!endDate) {
-					return;
-				} else {
-					// Clear the end date
-				}
-			}
-
-			$('#tp_to').data("DateTimePicker").date(newEndDate);
-
-		});
-
-		$('#tp_to').on("dp.change", function () {
-
-			var endDateLocal = $('#tp_to').data("DateTimePicker").date();
-
-			gCurrentTaskFeature.properties.to = utcTime(endDateLocal.format("YYYY-MM-DD HH:mm:ss"));
-
-		});
 
 		/*
 		 * Set focus to first element on opening modals
