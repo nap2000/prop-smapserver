@@ -4138,3 +4138,61 @@ function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback) {
 		}
 	});
 }
+
+/*
+ * Get the list of users from the server so they can be assigned to tasks
+ */
+function getTaskUsers(projectId) {
+	var $users = $('.users_select,#users_filter'),
+		i, user,
+		h = [],
+		idx = -1;
+
+	$users.empty();
+	$('#users_filter').append('<option value="0">' + localise.set["t_au"] + '</options>');
+	//$('#users_filter').append('<option value="-1">' + localise.set["t_u"] + '</options>');
+
+	$('#users_select_new_task, #users_task_group, #users_select_user, #tp_user')
+		.append('<option value="-1">' + localise.set["t_u"] + '</options>');
+
+	$('#users_task_group').append('<option value="-2">' + localise.set["t_ad"] + '</options>');
+	$.ajax({
+		url: "/surveyKPI/userList",
+		cache: false,
+		success: function (data) {
+
+			for (i = 0; i < data.length; i++) {
+				user = data[i];
+				// Check that this user has access to the project
+
+				if (!projectId || userHasAccessToProject(user, projectId)) {
+					h[++idx] = '<option value="';
+					h[++idx] = user.id;
+					h[++idx] = '">';
+					h[++idx] = user.name;
+					h[++idx] = '</option>';
+				}
+			}
+			$users.append(h.join(''));
+		},
+		error: function (xhr, textStatus, err) {
+			if (xhr.readyState == 0 || xhr.status == 0) {
+				return;  // Not an error
+			} else {
+				alert(localise.set["c_error"] + err);
+			}
+		}
+	});
+}
+
+function userHasAccessToProject(user, projectId) {
+	var i;
+	if(user.projects) {
+		for (i = 0; i < user.projects.length; i++) {
+			if (user.projects[i].id == projectId) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
