@@ -4052,6 +4052,7 @@ function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback) {
 
 	if(isConsole) {
 		taskFeature.properties.update_id = updateId;
+		taskFeature.properties.initial_data_source = 'survey';
 	}
 
 	taskFeature.properties.repeat = $('#tp_repeat').prop('checked');
