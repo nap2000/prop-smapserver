@@ -5023,28 +5023,23 @@ table.table-mail tr td {
 .white-bg {
   background-color: #ffffff;
 }
-.blue-bg,
-.bg-success {
+.blue-bg {
   background-color: #1c84c6 !important;
   color: #ffffff;
 }
-.navy-bg,
-.bg-primary {
+.navy-bg {
   background-color: #1ab394 !important;
   color: #ffffff;
 }
-.lazur-bg,
-.bg-info {
+.lazur-bg {
   background-color: #23c6c8 !important;
   color: #ffffff;
 }
-.yellow-bg,
-.bg-warning {
+.yellow-bg {
   background-color: #f8ac59 !important;
   color: #ffffff;
 }
-.red-bg,
-.bg-danger {
+.red-bg {
   background-color: #ed5565 !important;
   color: #ffffff;
 }
