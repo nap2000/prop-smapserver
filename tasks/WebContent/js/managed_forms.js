@@ -1799,7 +1799,7 @@ require([
      */
     function getRecordChanges(record) {
 
-        if(globals.gCurrentSurvey) {
+        if(record && globals.gCurrentSurvey) {
             addHourglass();
             $.ajax({
                 url: "/api/v1/data/changes/" + globals.gCurrentSurvey + "/" + record["instanceid"],
