@@ -1893,6 +1893,9 @@ require([
                     h[++idx] = localise.set["c_event"];
                     h[++idx] = '</th>';
                     h[++idx] = '<th>';
+                    h[++idx] = localise.set["c_status"];
+                    h[++idx] = '</th>';
+                    h[++idx] = '<th>';
                     h[++idx] = localise.set["c_details"];
                     h[++idx] = '</th>';
                     h[++idx] = '</tr>';
@@ -1917,6 +1920,10 @@ require([
 
                             h[++idx] = '<td>';    // event
                             h[++idx] = localise.set[data[i].event];
+                            h[++idx] = '</td>';
+
+                            h[++idx] = '<td>';    // event
+                            h[++idx] = localise.set[data[i].status];
                             h[++idx] = '</td>';
 
                             h[++idx] = '<td>';    // Changes
@@ -1989,11 +1996,6 @@ require([
         h[++idx] = localise.set["t_assigned"];
         h[++idx] = ': ';
         h[++idx] = task.assigned;
-
-        h[++idx] = '<br/>';
-        h[++idx] = localise.set["c_status"];
-        h[++idx] = ': ';
-        h[++idx] = localise.set[task.status];
 
         return h.join('');
 
