@@ -1922,8 +1922,10 @@ require([
                             h[++idx] = '<td>';    // Changes
                             if(data[i].event === 'changes' && data[i].changes) {
                                 h[++idx] = getChangeCard(data[i].changes, i);
-                            } else   if(data[i].event === 'task' && data[i].description) {
+                            } else   if(data[i].event === 'task' && data[i].task) {
                                 h[++idx] = getTaskInfo(data[i].task);
+                            } else {
+                                h[++idx] = data[i].description;
                             }
                             h[++idx] = '</td>';
 
@@ -2460,7 +2462,7 @@ require([
 	 * Callback after saving a task
 	 */
     function doneTaskSave() {
-      // TODO
+        getRecordChanges(gTasks.gSelectedRecord);
     }
 
 
