@@ -4261,4 +4261,22 @@ function setupTaskDialog() {
 		gCurrentTaskFeature.properties.to = utcTime(endDateLocal.format("YYYY-MM-DD HH:mm:ss"));
 
 	});
+
+}
+
+function getStatusClass(status) {
+
+	var statusClass = "";
+
+	if (status === "new" || status === "unsent" || status === "unsubscribed"
+		|| status === "blocked" || status === "rejected") {
+		statusClass = "bg-danger";
+	} else if (status === "submitted") {
+		statusClass = "bg-success";
+	} else if (status === "accepted") {
+		statusClass = "bg-warning";
+	} else {
+		statusClass = "bg-success";
+	}
+	return statusClass;
 }

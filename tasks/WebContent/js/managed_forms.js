@@ -465,22 +465,6 @@ require([
             }
         });
 
-        /*
-         * Set up the action menu functions
-         */
-        $('#getRelated').click(function () {
-
-            var masterRecord = getSelectedRecord();
-
-            if (typeof masterRecord != "undefined") {
-                // 1. Hide results other than this primary result
-                showManagedData(globals.gCurrentSurvey);
-
-                // 2. Get related surveys and show it
-                getRelatedList(globals.gCurrentSurvey, masterRecord);
-            }
-        });
-
         // Add a new chart
         $('#m_add_chart').click(function () {
             $('#chartInfo').hide();
@@ -984,10 +968,6 @@ require([
             order: [0],
             initComplete: function (settings, json) {
 
-                if(gTasks.gSelectedRecord && gTasks.gSelectedRecord.instanceid) {
-                    globals.gMainTable.row(gTasks.gSelectedRecord.instanceid.replace(':', '\\:'));      // Reselect the row, escape the :
-                }
-
                 //columns = gTasks.cache.surveyConfig[globals.gViewId].columns;
                 //parameters = gTasks.cache.surveyConfig[globals.gViewId].parameters;
 
@@ -1477,43 +1457,6 @@ require([
     }
 
     /*
-     * Get data related to the currently selected record
-     */
-    function getRelatedList(sId, masterRecord) {
-        var record = gTasks.gSelectedRecord;
-
-        var url = '/surveyKPI/managed/connected/' + sId + '/0/' + record.prikey;
-
-        $('#relatedData').empty();
-        addHourglass();
-        $.ajax({
-            url: url,
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                removeHourglass();
-
-                var i;
-
-                for (i = 0; i < data.length; i++) {
-                    showRelated(i, data[i]);
-                }
-
-
-            },
-            error: function (xhr, textStatus, err) {
-                removeHourglass();
-                if (xhr.readyState == 0 || xhr.status == 0) {
-                    return;  // Not an error
-                } else {
-                    alert(localise.set["c_error"] + sId);
-                }
-            }
-        });
-
-    }
-
-    /*
      * Show a related data item
      */
     function showRelated(itemIndex, item) {
@@ -1922,7 +1865,9 @@ require([
                             h[++idx] = localise.set[data[i].event];
                             h[++idx] = '</td>';
 
-                            h[++idx] = '<td>';    // event
+                            h[++idx] = '<td class="';    // status
+                            h[++idx] = getStatusClass(data[i].status);
+                            h[++idx] = '">';
                             h[++idx] = localise.set[data[i].status];
                             h[++idx] = '</td>';
 
@@ -2317,6 +2262,10 @@ require([
         // Refresh the views that depend on the displayed rows
         map.refreshAllLayers(gMapView);
         chart.refreshAllCharts(gChartView, gTimingView, true);
+
+        if(gTasks.gSelectedRecord && gTasks.gSelectedRecord.instanceid) {
+            globals.gMainTable.row('#' + gTasks.gSelectedRecord.instanceid).select();      // Reselect the row, escape the :
+        }
     }
 
 
