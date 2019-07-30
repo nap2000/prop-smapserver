@@ -663,45 +663,45 @@ define([
                 var collection = {
                     "type": "FeatureCollection",
                     features: features
-                }
+                };
+                var styleFn = function(feature, resolution) {
 
-                if(collection.features.length > 0) {
-                    var styleFn = function(feature, resolution) {
+                    var pointFill;
+                    var areaFill;
+                    var line;
 
-                        var pointFill;
-                        var areaFill;
-                        var line;
+                    if(feature.get('type')=== 'current') {
+                        pointFill = 'rgba(255, 0, 0, 1.0)';
+                        areaFill = 'rgba(255, 100, 50, 0.3)';
+                        line = 'rgba(255, 10, 10, 0.8)';
+                    } else if(feature.get('type')=== 'old') {
+                        pointFill = 'rgba(0, 0, 255, 1.0)';
+                        areaFill = 'rgba(50, 100, 255, 0.3)';
+                        line = 'rgba(10, 10, 255, 0.8)';
+                    }
 
-                        if(feature.get('type')=== 'current') {
-                            pointFill = 'rgba(255, 0, 0, 1.0)';
-                            areaFill = 'rgba(255, 100, 50, 0.3)';
-                            line = 'rgba(255, 10, 10, 0.8)';
-                        } else if(feature.get('type')=== 'old') {
-                            pointFill = 'rgba(0, 0, 255, 1.0)';
-                            areaFill = 'rgba(50, 100, 255, 0.3)';
-                            line = 'rgba(10, 10, 255, 0.8)';
-                        }
-
-                        return [new ol.style.Style({
+                    return [new ol.style.Style({
+                        fill: new ol.style.Fill({
+                            color: areaFill
+                        }),
+                        stroke: new ol.style.Stroke({
+                            width: 2,
+                            color: line
+                        }),
+                        image: new ol.style.Circle({
                             fill: new ol.style.Fill({
-                                color: areaFill
+                                color: pointFill
                             }),
                             stroke: new ol.style.Stroke({
                                 width: 2,
-                                color: line
+                                color: 'rgba(100, 100, 100, 0.8)'
                             }),
-                            image: new ol.style.Circle({
-                                fill: new ol.style.Fill({
-                                    color: pointFill
-                                }),
-                                stroke: new ol.style.Stroke({
-                                    width: 2,
-                                    color: 'rgba(100, 100, 100, 0.8)'
-                                }),
-                                radius: 7
-                            })
-                        })];
-                    };
+                            radius: 7
+                        })
+                    })];
+                };
+
+                if(collection.features.length > 0) {
 
                     var source = new ol.source.Vector();
                     try {
@@ -718,72 +718,6 @@ define([
                         config.map.addLayer(layer);
 
                         config.map.getView().fit(source.getExtent(), config.map.getSize());
-
-                        /*
-                         * Add events
-                         */
-                        config.map.on('click', function(evt) {
-
-                            var self = this;
-                            var noFeature = true;
-                            var map = config.map;
-                            var id = config.id;
-                            var $tooltip = $('#tooltip_' + id);
-
-                            map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
-
-                                $tooltip.html(feature.getProperties().label);
-                                $tooltip.css(
-                                    {
-                                        position:"absolute",
-                                        left:evt.pixel[0],
-                                        top:evt.pixel[1],
-                                        "z-index": 20000,
-                                        "background-color": "white",
-                                        "padding": 2
-                                    }).show();
-                                noFeature = false;
-
-                            });
-
-                            if(noFeature) {
-                                $tooltip.hide();
-
-                                if(!config.readOnly) {
-                                    var coord = ol.proj.transform(evt.coordinate, "EPSG:900913", 'EPSG:4326');
-                                    var newValue = {
-                                        itemIndex: $('#' + id).data('item'),
-                                        value: {
-                                            coordinates: coord,
-                                            type: "Point"
-                                        }
-                                    };
-
-                                    $('#editRecordForm').trigger( "smap::geopoint", newValue );
-
-                                    if(self.selectLayer !== undefined){
-                                        self.selectGeometry.setCoordinates(evt.coordinate);
-                                    } else {
-                                        self.selectGeometry = new ol.geom.Point(evt.coordinate);
-                                        var selectFeature = new ol.Feature({
-                                            geometry: self.selectGeometry,
-                                            type: "current",
-                                            label: localise.set["c_to"]
-                                        });
-                                        var selectSource = new ol.source.Vector({
-                                            features: [selectFeature]
-                                        });
-                                        self.selectLayer = new ol.layer.Vector({
-                                            source: selectSource,
-                                            style: styleFn
-                                        });
-                                        map.addLayer(self.selectLayer);
-                                    }
-
-                                }
-                            }
-
-                        });
 
                     } catch(err) {
 
@@ -837,6 +771,78 @@ define([
                     });
 
                 }
+
+                /*
+                 * Add events
+                 */
+                config.map.on('click', function(evt) {
+
+                    var self = this;
+                    var noFeature = true;
+                    var map = config.map;
+                    var id = config.id;
+                    var $tooltip = $('#tooltip_' + id);
+
+                    map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+
+                        $tooltip.html(feature.getProperties().label);
+                        $tooltip.css(
+                            {
+                                position:"absolute",
+                                left:evt.pixel[0],
+                                top:evt.pixel[1],
+                                "z-index": 20000,
+                                "background-color": "white",
+                                "padding": 2
+                            }).show();
+                        noFeature = false;
+
+                    });
+
+                    if(noFeature) {
+                        $tooltip.hide();
+
+                        if(!config.readOnly) {
+                            var coord = ol.proj.transform(evt.coordinate, "EPSG:900913", 'EPSG:4326');
+                            var newValue = {
+                                itemIndex: $('#' + id).data('item'),
+                                value: {
+                                    coordinates: coord,
+                                    type: "Point"
+                                }
+                            };
+
+                            if(config.task) {
+                                $('#taskPropertiesForm').trigger("smap_task::geopoint", newValue);
+                            } else {
+                                if(newValue.itemIndex) {
+                                    $('#editRecordForm').trigger("smap::geopoint", newValue);
+                                }
+                            }
+
+                            if(self.selectLayer !== undefined){
+                                self.selectGeometry.setCoordinates(evt.coordinate);
+                            } else {
+                                self.selectGeometry = new ol.geom.Point(evt.coordinate);
+                                var selectFeature = new ol.Feature({
+                                    geometry: self.selectGeometry,
+                                    type: "current",
+                                    label: localise.set["c_to"]
+                                });
+                                var selectSource = new ol.source.Vector({
+                                    features: [selectFeature]
+                                });
+                                self.selectLayer = new ol.layer.Vector({
+                                    source: selectSource,
+                                    style: styleFn
+                                });
+                                map.addLayer(self.selectLayer);
+                            }
+
+                        }
+                    }
+
+                });
 
             } else {
                 console.log('Map ' + config.id + ' already initialised');
