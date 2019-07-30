@@ -486,6 +486,7 @@ require([
 
         // Respond to a new task location being clicked
         $('#taskPropertiesForm').on("smap_task::geopoint", function (event, config) {
+            gCurrentTaskFeature.geometry = config.value;
             console.log("New task geopoint");
         });
 
@@ -2355,7 +2356,8 @@ require([
         var task = {},
             taskFeature = {
                 geometry: {
-                    coordinates: []
+                    coordinates: [],
+                    type: 'Point'
                 },
                 properties: {}
             };
