@@ -1254,7 +1254,9 @@ CREATE TABLE record_event (
 	msg text,									-- Error messages
 	changed_by integer,							-- Person who made a change	
 	change_survey text,							-- Survey ident that applied the change
-	change_survey_version integer,				-- Survey version that made the change		
+	change_survey_version integer,				-- Survey version that made the change
+	assignment_id integer,						-- Record if this is an task event	
+	task_id integer,								-- Record if this is an task event			
 	event_time TIMESTAMP WITH TIME ZONE			-- Time and date of event
 	);
 ALTER TABLE record_event OWNER TO ws;

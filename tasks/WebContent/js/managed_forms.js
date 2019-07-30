@@ -1802,7 +1802,8 @@ require([
         if(record && globals.gCurrentSurvey) {
             addHourglass();
             $.ajax({
-                url: "/api/v1/data/changes/" + globals.gCurrentSurvey + "/" + record["instanceid"],
+                url: "/api/v1/data/changes/" + globals.gCurrentSurvey + "/" + record["instanceid"] +
+                    '?tz=' + encodeURIComponent(globals.gTimezone),
                 dataType: 'json',
                 cache: false,
                 success: function (data) {
@@ -1915,32 +1916,59 @@ require([
      */
     function getTaskInfo(task) {
         var h = [],
-            idx = -1;
+            idx = -1,
+            i,
+            events = task.taskEvents,
+            assignmentId,
+            addBreak;
 
         console.log(JSON.stringify(task));
 
         h[++idx] = localise.set["c_id"];
         h[++idx] = ': ';
-        h[++idx] = task.id;
-
+        h[++idx] = task.assignmentId;
         h[++idx] = '<br/>';
-        h[++idx] = localise.set["c_name"];
-        h[++idx] = ': ';
 
-        // We only need the name up to the first ":".  If the name has colons in it then it has probably been created
-        // automatically from existign data using project name and survey name.  However for the per record view just the
-        // Task group name is enough
-
-        var name = task.name;
-        if(name.indexOf(':') > 0) {
-            name = name.substring(0, name.indexOf(':'));
+        if(events) {
+            for(i = 0; i < events.length; i++) {
+                h[++idx] = localTime(events[i].when);
+                h[++idx] = '<div class="ml-4">';
+                if(events[i].status) {
+                    addBreak = true;
+                    h[++idx] = localise.set["c_status"];
+                    h[++idx] = ': ';
+                    h[++idx] = localise.set[events[i].status];
+                }
+                if(events[i].assigned) {
+                    if(addBreak) {
+                        h[++idx] = '<br/>';
+                    }
+                    addBreak = true;
+                    h[++idx] = localise.set["t_assigned"];
+                    h[++idx] = ': ';
+                    h[++idx] = events[i].assigned;
+                }
+                if(events[i].name) {
+                    if(addBreak) {
+                        h[++idx] = '<br/>';
+                    }
+                    addBreak = true;
+                    h[++idx] = localise.set["c_name"];
+                    h[++idx] = ': ';
+                    // We only need the name up to the first ":".  If the name has colons in it then it has probably been created
+                    // automatically from existing data using project name and survey name.  However for the per record view just the
+                    // Task group name is enough
+                    var name = events[i].name;
+                    if(name.indexOf(':') > 0) {
+                        name = name.substring(0, name.indexOf(':'));
+                    }
+                    h[++idx] = name;
+                }
+                h[++idx] = '</div>';
+            }
         }
-        h[++idx] = name;
 
-        h[++idx] = '<br/>';
-        h[++idx] = localise.set["t_assigned"];
-        h[++idx] = ': ';
-        h[++idx] = task.assigned;
+
 
         return h.join('');
 
