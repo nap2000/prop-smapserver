@@ -120,7 +120,8 @@ require([
     var gModalMapInitialised;
     var gTaskMapConfig = {
         id: 'mapModal',
-        map: undefined
+        map: undefined,
+        task: true
     };
 
     var gCurrentGroup,
@@ -483,6 +484,11 @@ require([
             map.saveLayer();
         });
 
+        // Respond to a new task location being clicked
+        $('#taskPropertiesForm').on("smap_task::geopoint", function (event, config) {
+            console.log("New task geopoint");
+        });
+
         /*
          * Take action on tab change to initialise tab contents
          * Refer: http://stackoverflow.com/questions/20705905/bootstrap-3-jquery-event-for-active-tab-change
@@ -705,7 +711,6 @@ require([
 
             });
         }
-
     }
 
     /*
