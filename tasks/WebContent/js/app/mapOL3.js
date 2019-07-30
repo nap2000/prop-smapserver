@@ -589,12 +589,13 @@ define([
             }
         }
 
+
         /*
          ********************************
          * Functions for dynamic maps
          */
 
-        function initDynamicMap (config) {
+        function initDynamicMap (config, setUserLocation) {
 
             // Add the map
             if (!config.map) {
@@ -794,6 +795,48 @@ define([
                     tipLabel: 'Legend' // Optional label for button
                 });
                 config.map.addControl(layerSwitcher);
+
+
+                if(setUserLocation) {
+                    config.geolocation = new ol.Geolocation({
+                        projection: config.map.getView().getProjection(),
+                        tracking: true,
+                        trackingOptions: {
+                            enableHighAccuracy: true,
+                            maximumAge: 2000
+                        }
+                    });
+
+                    var iconStyle = new ol.style.Style({
+                        image: new ol.style.Icon(({
+                            anchor: [0.5, 46],
+                            anchorXUnits: 'fraction',
+                            anchorYUnits: 'pixels',
+                            opacity: 0.75,
+                            src: '/js/libs/OpenLayers/img/marker-gold.png'
+                        }))
+                    });
+
+                    // add an empty iconFeature to the source of the layer
+                    var iconFeature = new ol.Feature();
+                    var iconSource = new ol.source.Vector({
+                        features: [iconFeature]
+                    });
+                    var iconLayer = new ol.layer.Vector({
+                        source: iconSource,
+                        style : iconStyle
+                    });
+                    config.map.addLayer(iconLayer);
+
+                    config.geolocation.on('change', function() {
+                        var pos = config.geolocation.getPosition();
+                        var view = config.map.getView();
+                        iconFeature.setGeometry(new ol.geom.Point(pos));
+                        view.setCenter(pos);
+                        view.setZoom(18);
+                    });
+
+                }
 
             } else {
                 console.log('Map ' + config.id + ' already initialised');
