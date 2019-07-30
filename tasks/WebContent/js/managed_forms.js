@@ -2424,7 +2424,7 @@ require([
 
         if (!gModalMapInitialised) {
             setTimeout(function () {
-                map.initDynamicMap(gTaskMapConfig);
+                map.initDynamicMap(gTaskMapConfig, true);
                 //initialiseMap('mapModal', 14,
                 //    !gCurrentTaskFeature.geometry.coordinates[0] && !gCurrentTaskFeature.geometry.coordinates[1], 		// Show user location if there is no task location
                 //    clickOnMap, modalMapReady);
