@@ -1249,6 +1249,7 @@ CREATE TABLE record_event (
 	event text,									-- created || change || task || reminder || deleted
 	changes text,								-- Details of the change as json object	
 	task text,									-- Details of task changes as json object
+	notification text,							-- Details of notification as json object
 	description text,
 	success boolean default false,				-- Set true of the event was a success
 	msg text,									-- Error messages
