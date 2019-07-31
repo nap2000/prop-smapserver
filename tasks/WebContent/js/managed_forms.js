@@ -527,17 +527,16 @@ require([
             var idx = $(this).val();
 
             // Clear old values
-            map.clearSelectFeatures(gTaskMapConfig);
             $('#nfc_uid').val("");
             $('#location_save_panel').hide();
-            gSaveType = '';
+            window.gSaveType = '';
 
             if(idx != -1) {
                 $('#nfc_uid').val(gTags[idx].uid);
                 var lat = gTags[idx].lat;
                 var lon = gTags[idx].lon;
                 if (lon || lat) {
-                   map.setSelectedCoords(gTaskMapConfig, lon, lat);
+                   map.setSelectedFeature(gTaskMapConfig, undefined, lon, lat, true);
 
                 }
                 gCurrentTaskFeature.geometry.coordinates[0] = lon;
@@ -2441,7 +2440,7 @@ require([
         gCurrentLocation = getLocationIndex(task.location_name, gTags);
         if(gCurrentGroup && gCurrentGroup != '') {
             $('.location_group_list_sel').text(gCurrentGroup);
-            setLocationList(gTags, gCurrentLocation);
+            setLocationList(gTags, gCurrentLocation, gCurrentGroup);
         }
 
         if(task.guidance) {
@@ -2486,14 +2485,14 @@ require([
     function processLocationList(tags) {
         gTags = tags;
         refreshLocationGroups(tags, true);
-        setLocationList(tags, gCurrentLocation);
+        setLocationList(tags, gCurrentLocation, gCurrentGroup);
 
         // Respond to a location group being selected
         $('.dropdown-item', '#location_group').click(function () {
             gCurrentGroup = $(this).text();
             gCurrentLocation = '-1';
             $('.location_group_list_sel').text(gCurrentGroup);
-            setLocationList(gTags, gCurrentLocation);
+            setLocationList(gTags, gCurrentLocation, gCurrentGroup);
         });
     }
 

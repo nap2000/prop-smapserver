@@ -1630,7 +1630,7 @@ require([
 		gCurrentLocation = getLocationIndex(task.location_name, gTags);
 		if(gCurrentGroup && gCurrentGroup != '') {
 			$('.location_group_list_sel').text(gCurrentGroup);
-			setLocationList(gTags, gCurrentLocation);
+			setLocationList(gTags, gCurrentLocation, gCurrentGroup);
 		}
 
 		if(task.guidance) {
@@ -1933,14 +1933,14 @@ require([
 	function processLocationList(tags) {
 		gTags = tags;
 		refreshLocationGroups(tags, true);
-		setLocationList(tags, gCurrentLocation);
+		setLocationList(tags, gCurrentLocation, gCurrentGroup);
 
 		// Respond to a location group being selected
 		$('.dropdown-item', '#location_group').click(function () {
 			gCurrentGroup = $(this).text();
 			gCurrentLocation = '-1';
 			$('.location_group_list_sel').text(gCurrentGroup);
-			setLocationList(gTags, gCurrentLocation);
+			setLocationList(gTags, gCurrentLocation, gCurrentGroup);
 		});
 	}
 

@@ -46,8 +46,7 @@ define([
             deleteLayers: deleteLayers,
             initDynamicMap: initDynamicMap,
             clearSelectFeatures: clearSelectFeatures,
-            setSelectedFeature: setSelectedFeature,
-            setSelectedCoords: setSelectedCoords
+            setSelectedFeature: setSelectedFeature
         };
 
         function deleteLayers() {
@@ -825,7 +824,7 @@ define([
                                 }
                             }
 
-                            setSelectedFeature(config, evt.coordinate);
+                            setSelectedFeature(config, evt.coordinate, undefined, undefined, false);
 
                         }
                     }
@@ -850,7 +849,16 @@ define([
 
         }
 
-        function setSelectedFeature(config, coordinate) {
+        function setSelectedFeature(config, coordinate, lon, lat, recenter) {
+
+            if(!coordinate) {
+                var coord = [];
+                coord.push(lon);
+                coord.push(lat);
+                // Convert lat lon to coordinates
+                coordinate = ol.proj.transform(coord,'EPSG:4326', "EPSG:900913");
+
+            }
             if(config.selectLayer !== undefined) {
                 config.selectGeometry.setCoordinates(coordinate);
             } else {
@@ -869,49 +877,11 @@ define([
                 });
                 config.map.addLayer(config.selectLayer);
             }
-        }
-
-        function setSelectedCoords(config, lon, lat) {
-
-            var collection = {
-                "type": "FeatureCollection",
-                features: []
-            };
-
-            var value = {
-                "type": "Feature",
-                "geometry": {
-                    type: "Point",
-                    coordinates: []
-                }, properties: {
-                    "type": "current"
-                }
-            };
-            value.geometry.coordinates.push(lon);
-            value.geometry.coordinates.push(lat);
-
-            collection.features.push(value);
-
-            config.selectSource = new ol.source.Vector();
-            try {
-                config.selectSource.addFeatures((new ol.format.GeoJSON()).readFeatures(collection,
-                    {
-                        dataProjection: 'EPSG:4326',
-                        featureProjection: 'EPSG:3857'
-                    }));
-
-                config.layer = new ol.layer.Vector({
-                    source: config.selectSource,
-                    style: gStyleFn
-                });
-                config.map.addLayer(config.layer);
-
+            if(recenter) {
                 config.map.getView().fit(config.selectSource.getExtent(), config.map.getSize());
-
-            } catch(err) {
-                console.log(err);
             }
         }
+
 
     });
 
