@@ -44,7 +44,10 @@ define([
             refreshAllLayers: refreshAllLayers,
             saveLayer: saveLayer,
             deleteLayers: deleteLayers,
-            initDynamicMap: initDynamicMap
+            initDynamicMap: initDynamicMap,
+            clearSelectFeatures: clearSelectFeatures,
+            setSelectedFeature: setSelectedFeature,
+            setSelectedCoords: setSelectedCoords
         };
 
         function deleteLayers() {
@@ -664,7 +667,7 @@ define([
                     "type": "FeatureCollection",
                     features: features
                 };
-                var styleFn = function(feature, resolution) {
+                window.gStyleFn = function(feature, resolution) {
 
                     var pointFill;
                     var areaFill;
@@ -678,6 +681,10 @@ define([
                         pointFill = 'rgba(0, 0, 255, 1.0)';
                         areaFill = 'rgba(50, 100, 255, 0.3)';
                         line = 'rgba(10, 10, 255, 0.8)';
+                    } else {
+                        pointFill = 'rgba(0, 255, 255, 1.0)';
+                        areaFill = 'rgba(10, 200, 255, 0.3)';
+                        line = 'rgba(10, 200, 255, 0.8)';
                     }
 
                     return [new ol.style.Style({
@@ -713,7 +720,7 @@ define([
 
                         var layer = new ol.layer.Vector({
                             source: source,
-                            style: styleFn
+                            style: gStyleFn
                         });
                         config.map.addLayer(layer);
 
@@ -743,10 +750,10 @@ define([
 
                     var iconStyle = new ol.style.Style({
                         image: new ol.style.Icon(({
-                            anchor: [0.5, 46],
+                            anchor: [0.5, 25],
                             anchorXUnits: 'fraction',
                             anchorYUnits: 'pixels',
-                            opacity: 0.75,
+                            opacity: 1.0,
                             src: '/js/libs/OpenLayers/img/marker-gold.png'
                         }))
                     });
@@ -777,13 +784,11 @@ define([
                  */
                 config.map.on('click', function(evt) {
 
-                    var self = this;
                     var noFeature = true;
-                    var map = config.map;
                     var id = config.id;
                     var $tooltip = $('#tooltip_' + id);
 
-                    map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+                    config.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
 
                         $tooltip.html(feature.getProperties().label);
                         $tooltip.css(
@@ -820,24 +825,7 @@ define([
                                 }
                             }
 
-                            if(self.selectLayer !== undefined){
-                                self.selectGeometry.setCoordinates(evt.coordinate);
-                            } else {
-                                self.selectGeometry = new ol.geom.Point(evt.coordinate);
-                                var selectFeature = new ol.Feature({
-                                    geometry: self.selectGeometry,
-                                    type: "current",
-                                    label: localise.set["c_to"]
-                                });
-                                var selectSource = new ol.source.Vector({
-                                    features: [selectFeature]
-                                });
-                                self.selectLayer = new ol.layer.Vector({
-                                    source: selectSource,
-                                    style: styleFn
-                                });
-                                map.addLayer(self.selectLayer);
-                            }
+                            setSelectedFeature(config, evt.coordinate);
 
                         }
                     }
@@ -849,6 +837,80 @@ define([
             }
 
 
+        }
+
+        function clearSelectFeatures(config) {
+            if(config.selectSource) {
+                config.selectSource.clear();
+                config.map.removeLayer(config.selectLayer);
+                config.selectGeometry = undefined;
+                config.selectSource = undefined;
+                config.selectLayer = undefined;
+            }
+
+        }
+
+        function setSelectedFeature(config, coordinate) {
+            if(config.selectLayer !== undefined) {
+                config.selectGeometry.setCoordinates(coordinate);
+            } else {
+                config.selectGeometry = new ol.geom.Point(coordinate);
+                var selectFeature = new ol.Feature({
+                    geometry: config.selectGeometry,
+                    type: "current",
+                    label: localise.set["c_to"]
+                });
+                config.selectSource = new ol.source.Vector({
+                    features: [selectFeature]
+                });
+                config.selectLayer = new ol.layer.Vector({
+                    source: config.selectSource,
+                    style: gStyleFn
+                });
+                config.map.addLayer(config.selectLayer);
+            }
+        }
+
+        function setSelectedCoords(config, lon, lat) {
+
+            var collection = {
+                "type": "FeatureCollection",
+                features: []
+            };
+
+            var value = {
+                "type": "Feature",
+                "geometry": {
+                    type: "Point",
+                    coordinates: []
+                }, properties: {
+                    "type": "current"
+                }
+            };
+            value.geometry.coordinates.push(lon);
+            value.geometry.coordinates.push(lat);
+
+            collection.features.push(value);
+
+            config.selectSource = new ol.source.Vector();
+            try {
+                config.selectSource.addFeatures((new ol.format.GeoJSON()).readFeatures(collection,
+                    {
+                        dataProjection: 'EPSG:4326',
+                        featureProjection: 'EPSG:3857'
+                    }));
+
+                config.layer = new ol.layer.Vector({
+                    source: config.selectSource,
+                    style: gStyleFn
+                });
+                config.map.addLayer(config.layer);
+
+                config.map.getView().fit(config.selectSource.getExtent(), config.map.getSize());
+
+            } catch(err) {
+                console.log(err);
+            }
         }
 
     });

@@ -189,6 +189,9 @@ require([
             projectChanged();
         });
 
+        // Get locations
+        getLocations(processLocationList);
+
         // Set change function on survey
         $('#survey_name').change(function () {
             gTasks.gSelectedSurveyIndex = $(this).val();
@@ -514,6 +517,31 @@ require([
                 chart.init(false, true);
                 $('#m_add_chart').show();
                 gTimingView = true;
+            }
+        });
+
+        /*
+         * Respond to a location being selected
+         */
+        $('#location_select').change(function () {
+            var idx = $(this).val();
+
+            // Clear old values
+            map.clearSelectFeatures(gTaskMapConfig);
+            $('#nfc_uid').val("");
+            $('#location_save_panel').hide();
+            gSaveType = '';
+
+            if(idx != -1) {
+                $('#nfc_uid').val(gTags[idx].uid);
+                var lat = gTags[idx].lat;
+                var lon = gTags[idx].lon;
+                if (lon || lat) {
+                   map.setSelectedCoords(gTaskMapConfig, lon, lat);
+
+                }
+                gCurrentTaskFeature.geometry.coordinates[0] = lon;
+                gCurrentTaskFeature.geometry.coordinates[1] = lat;
             }
         });
 
@@ -2449,8 +2477,25 @@ require([
 	 */
     function doneTaskSave() {
         getRecordChanges(gTasks.gSelectedRecord);
+        getLocations(processLocationList);
     }
 
+    /*
+	 * Process a list of locations
+	 */
+    function processLocationList(tags) {
+        gTags = tags;
+        refreshLocationGroups(tags, true);
+        setLocationList(tags, gCurrentLocation);
+
+        // Respond to a location group being selected
+        $('.dropdown-item', '#location_group').click(function () {
+            gCurrentGroup = $(this).text();
+            gCurrentLocation = '-1';
+            $('.location_group_list_sel').text(gCurrentGroup);
+            setLocationList(gTags, gCurrentLocation);
+        });
+    }
 
 });
 
