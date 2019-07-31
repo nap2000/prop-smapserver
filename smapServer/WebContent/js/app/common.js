@@ -2553,7 +2553,7 @@ function refreshLocationGroups(tags, includeAll) {
 /*
  * Add the locations (NFC tags or geofence) to any drop down lists that use them
  */
-function setLocationList(locns, current) {
+function setLocationList(locns, current, currentGroup) {
 
 	var h = [],
 		idx = -1,
@@ -2564,7 +2564,7 @@ function setLocationList(locns, current) {
 		h[++idx] = localise.set["c_none"];
 		h[++idx] = '</option>';
 		for(i = 0; i < locns.length; i++) {
-			if(locns[i].group === gCurrentGroup) {
+			if(locns[i].group === currentGroup) {
 				h[++idx] = '<option value="';
 				h[++idx] = i;
 				h[++idx] = '">';
