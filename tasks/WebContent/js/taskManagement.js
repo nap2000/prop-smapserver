@@ -1961,7 +1961,7 @@ require([
 			var lat = gTags[idx].lat;
 			var lon = gTags[idx].lon;
 			if (lon || lat) {
-				clearDraggableMarker('mapModal');
+				//clearDraggableMarker('mapModal');
 				addDraggableMarker('mapModal', new L.LatLng(lat, lon), onDragEnd);
 			}
 			gCurrentTaskFeature.geometry.coordinates[0] = lon;
