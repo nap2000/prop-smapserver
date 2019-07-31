@@ -298,33 +298,6 @@ require([
 		getRoles();
 		$('.assign_user').show();
 		$('.assign_role, .assign_email, .assign_data').hide();
-		$('#tp_user_type, #assign_user_type').click(function() {
-			$('.assign_type').removeClass('active');
-			$(this).addClass('active');
-
-			$('.assign_user').show();
-			$('.assign_role,.assign_email').hide();
-			if($('#users_task_group').val() == -2) {
-				$('#assign_data').prop('placeholder', "");
-				$('.assign_data').show();
-			} else {
-				$('.assign_data').hide();
-			}
-		});
-		$('#tp_role_type, #assign_role_type').click(function() {
-			$('.assign_type').removeClass('active');
-			$(this).addClass('active');
-
-			$('.assign_user, .assign_email').hide();
-			$('.assign_role').show();
-			if($('#roles_task_group').val() == -2) {
-				$('#assign_data').prop('placeholder', "");
-				$('.assign_data').show();
-			} else {
-				$('.assign_data').hide();
-			}
-		});
-
 		setupTaskDialog();
 		$('#taskPropertiesSave').off().click(function () {
 			saveTask(false, gCurrentTaskFeature, gSaveType, undefined, doneTaskSave);
