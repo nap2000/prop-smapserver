@@ -248,9 +248,8 @@
 
             <div class="col-sm-4 pt-4 editRecordSection border-right">
                 <button class="editRecordSection lang btn btn-primary" data-lang="t_add_task" id="addTask"></button>
+                <button class="editRecordSection lang btn btn-primary" data-lang="msg_add_notification" id="addNotification"></button>
             </div>
-
-
 
         </div>
 
@@ -917,6 +916,259 @@
                 </button>
                 <button id="taskPropertiesSave" type="button" class="btn btn-primary lang" data-lang="c_save">Save
                 </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Popup to allow the user to add a notification -->
+<div id="addNotificationPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addNotificationLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title lang" id="addNotificationLabel" data-lang="msg_add_notification">add</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="notification_edit_form">
+                    <div class="form-group row">
+                        <label class="lang col-sm-2 control-label" data-lang="c_name" for="name"></label>
+                        <div class="col-sm-10">
+                            <input type="text" id="name" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="lang col-sm-2 control-label" data-lang="c_trigger" for="trigger"></label>
+                        <div class="col-sm-10">
+                            <select class="form-control" id="trigger">
+                                <option value="submission" selected="selected" class="lang" data-lang="submission">submission</option>
+                                <option value="task_reminder" class="lang" data-lang="task_reminder">reminder</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="lang col-sm-2 control-label" data-lang="c_target" for="target"></label>
+                        <div class="col-sm-10">
+                            <select class="form-control" id="target"></select>
+                        </div>
+                    </div>
+
+                    <!-- Reminder specific fields -->
+                    <div class="well task_reminder_options" style="display:none;">
+
+                        <div class="form-group row">
+                            <label for="survey" class="lang col-sm-2 control-label" data-lang="t_tg"></label>
+                            <div class="col-sm-10">
+                                <select id="task_group" class="task_group_select form-control"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label lang" data-lang="n_p" for="r_period"></label>
+                            <div class="col-sm-10">
+                                <div class="input-group mb-3">
+
+                                    <input type="number" min="1" class="form-control" id="r_period">
+                                    <div class="input-group-append">
+                                        <select id="period_list_sel" class="period_list_sel form-control">
+                                            <option class="lang" data-lang="d_min" value="minutes">minutes</option>
+                                            <option class="lang" data-lang="d_hour" value="hours">hours</option>
+                                            <option class="lang" data-lang="d_day" value="days">day</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--
+						<div class="col-sm-10 offset-sm-2 custom-control custom-checkbox mb-4">
+							<input type="checkbox" class="custom-control-input" id="r_email_original_assignee" name="email_original_assignee" value="email_original_assignee">
+							<label class="custom-control-label lang" data-lang="n_oa" for="r_email_original_assignee"></label>
+						</div>
+						-->
+
+                    </div>
+
+                    <div class="submission_options form-group row">
+                        <label for="survey" class="lang col-sm-2 control-label" data-lang="c_survey"></label>
+                        <div class="col-sm-10">
+                            <select id="survey" class="survey_select form-control"></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" data-container="body">
+                        <label for="not_filter" data-lang="c_filter" class="lang col-sm-2 control-label"></label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <input type="text" id="not_filter" class="form-control">
+                                <span class="input-group-addon">
+									<a href="/sqlFilterHelp.html" target="_blank">
+										<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+									</a>
+								</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="forward_options" style="display:none;">
+                        <div class="form-group row">
+                            <label for="fwd_host" data-lang="c_host" class="lang col-sm-2 control-label">Host</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="fwd_host" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="fwd_user" data-lang="c_user" class="lang col-sm-2 control-label"></label>
+                            <div class="col-sm-10">
+                                <input type="text" id="fwd_user" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="fwd_password" data-lang="c_password" class="lang col-sm-2 control-label"></label>
+                            <div class="col-sm-10">
+                                <input id="fwd_password" type="password" class="form-control lang_ph" data-lang_ph="c_password" placeholder="" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="fwd_rem_survey" data-lang="c_rem_f" class="lang col-sm-2 control-label"></label>
+                            <div class="col-sm-5">
+                                <select id="fwd_rem_survey" class="form-control"></select>
+                            </div>
+                            <div class="col-sm-5">
+                                <input id="fwd_rem_survey_nm" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button id="fwd_upd_rem_survey" type="button" class="btn btn-default lang"  data-lang="tm_ref_f"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="well email_options submission_options" style="display:none;">
+                        <div class="form-group row" >
+                            <label class="lang col-sm-2 control-label" data-lang="c_attach" for="email_attach"></label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="email_attach">
+                                    <option value="none" class="lang" data-lang="c_none">none</option>
+                                    <option value="webform" class="lang" data-lang="n_wf">web form</option>
+                                    <option value="pdf" class="lang" data-lang="n_pdfp">pdf p</option>
+                                    <option value="pdf_landscape" class="lang" data-lang="n_pdfl">pdf l</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group pdf_options submission_options row" style="display:none;">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="include_references" name="include_references"
+                                               value="include_references"><span data-lang="n_inc_ref" class="lang"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group pdf_options submission_options row" style="display:none;">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="launched_only" name="launched_only"
+                                               value="launched_only"><span data-lang="n_lo" class="lang"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="email_options" style="display:none;">
+
+                        <div id="notify_emails_cont" class="form-group row lang_tt" data-lang_tt="n_cs_e" data-toggle="tooltip"  data-container="body" title="">
+                            <label for="notify_emails" data-lang="c_email" class="lang col-sm-2 control-label"></label>
+                            <div class="col-sm-10">
+                                <input type="email" id="notify_emails" class="form-control lang_ph" data-lang_ph="n_ea" required multiple placeholder="">
+                            </div>
+                        </div>
+                        <div id="email_question_cont" class="form-group row submission_options lang_tt" data-lang_tt="n_eqc" data-toggle="tooltip"  data-container="body" title="">
+                            <label for="email_question" class="col-sm-2 control-label lang" data-lang="n_eq"></label>
+                            <div class="col-sm-10">
+                                <select class="selected_name_question form-control" id="email_question"></select>
+                            </div>
+                        </div>
+                        <div id="email_meta_cont" class="form-group row submission_options lang_tt" data-lang_tt="n_e_p_tt" data-toggle="tooltip"  data-container="body" title="">
+                            <label for="email_meta" class="col-sm-2 control-label lang" data-lang="n_ep"></label>
+                            <div class="col-sm-10">
+                                <select class="selected_meta form-control" id="email_meta"></select>
+                            </div>
+                        </div>
+                        <div id="email_subject_cont" class="form-group row lang_tt" data-lang_tt="n_esc" data-toggle="tooltip"  data-container="body" title="">
+                            <label for="email_subject" data-lang="c_subject" class="lang col-sm-2 control-label"></label>
+                            <div class="col-sm-10">
+                                <input type="text" id="email_subject" class="form-control">
+                            </div>
+                        </div>
+                        <div class="well">
+                            <div class="form-group row" data-toggle="tooltip"  data-container="body">
+                                <label for="email_content" data-lang="c_content" class="lang col-sm-2 control-label"></label>
+                                <div class="col-sm-10">
+                                    <textarea id="email_content" class="labelProp form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group task_reminder_options row">
+                                <label for="email_content_ap" data-lang="n_ap" class="lang col-sm-2 control-label"></label>
+                                <div class="col-sm-8">
+                                    <select id="email_content_ap" class="labelProp form-control">
+                                        <option class="lang" data-lang="c_task" value="${task_webform}">webform</option>
+                                        <option class="lang" data-lang="t_assigned" value="${assignee_name}">assigned</option>
+                                        <option class="lang" data-lang="c_scheduled" value="${scheduled}">scheduled</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button id="email_content_ap_insert" type="button" class="btn btn-info lang" data-lang="c_insert"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sms_options" style="display:none;">
+                        <div class="form-group row lang_tt" data-lang_tt="n_sms_n_tt" data-toggle="tooltip"  data-container="body" title="">
+                            <label for="notify_sms" data-lang="c_sms" class="lang col-sm-2 control-label"></label>
+                            <div class="col-sm-10">
+                                <input type="tel" id="notify_sms" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group row lang_tt" data-lang_tt="n_sms_q_tt" data-toggle="tooltip"  data-container="body" title="">
+                            <label for="sms_question" class="col-sm-2 control-label lang" data-lang="n_smsq"></label>
+                            <div class="col-sm-10">
+                                <select class="selected_name_question form-control" id="sms_question"></select>
+                            </div>
+                        </div>
+                        <div class="form-group row" data-container="body">
+                            <label for="notify_sms" data-lang="n_si" class="lang col-sm-2 control-label"></label>
+                            <div class="col-sm-10">
+                                <input type="text" id="sms_sender_id" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row" data-container="body">
+                            <label for="sms_content" data-lang="c_content" class="lang col-sm-2 control-label"></label>
+                            <div class="col-sm-10">
+                                <textarea id="sms_content" class="labelProp form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-10 offset-sm-2 custom-control custom-checkbox mb-4">
+                        <input type="checkbox" class="custom-control-input" name="nt_enabled" value="nt_enabled" id="nt_enabled">
+                        <label class="custom-control-label lang mt-3" data-lang="c_enabled" for="nt_enabled"></label>
+                    </div>
+
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
+                    <button id="saveNotification" type="button" class="btn btn-primary lang" data-lang="c_save"></button>
+                </div>
             </div>
         </div>
     </div>
