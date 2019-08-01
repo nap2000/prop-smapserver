@@ -64,9 +64,7 @@ require([
 	var	gNotifications,		// Globals in this java script file
 		gNotificationTypes,
 		gUpdateFwdPassword,
-		gSelectedNotification = -1,
-		gRemote_host,
-		gRemote_user;
+		gSelectedNotification = -1;
 
 	$(document).ready(function() {
 
@@ -190,39 +188,6 @@ require([
 			} else {
 				setSurveyViewMeta(metaList, metaItem);
 			}
-		}
-	}
-
-	function setTargetDependencies(target) {
-		if(target === "email") {
-			$('.forward_options, .sms_options').hide();
-			$('.email_options').show();
-		} else if(target === "forward") {
-			$('.email_options, .sms_options').hide();
-			$('.forward_options').show();
-		} else if(target === "sms") {
-			$('.email_options, .forward_options').hide();
-			$('.sms_options').show();
-		}
-	}
-
-	function setTriggerDependencies(trigger) {
-		if(trigger === "submission") {
-			$('.task_reminder_options').hide();
-			$('.submission_options').show();
-		} else if(trigger === "task_reminder") {
-			$('.submission_options').hide();
-			$('.task_reminder_options').show();
-			$('#target').val('email');
-			setTargetDependencies('email');
-		}
-	}
-
-	function setAttachDependencies(attach) {
-		if(attach === "pdf" || attach === "pdf_landscape") {
-			$('.pdf_options').show();
-		} else  {
-			$('.pdf_options').hide();
 		}
 	}
 
@@ -439,101 +404,14 @@ require([
 			notification.update_password = gUpdateFwdPassword;
 
 			// Save the values temporarily entered by the user
-			gRemote_host = host;
-			gRemote_user = $('#fwd_user').val();
+			window.gRemote_host = host;
+			window.gRemote_user = $('#fwd_user').val();
 
 		} else {
 			notification.error = true;
 		}
 
 		return notification;
-	}
-
-	function edit_notification(idx) {
-
-		var notification,
-			title = localise.set["msg_add_notification"];
-
-		document.getElementById("notification_edit_form").reset();
-		setTargetDependencies("email");
-		setTriggerDependencies("submission");
-		setAttachDependencies();
-
-		if(typeof idx !== "undefined") {
-			notification = gNotifications[idx];
-
-			title = localise.set["msg_edit_notification"];
-			$('#trigger').val(notification.trigger);
-			$('#target').val(notification.target);
-			$('#name').val(notification.name);
-			setTargetDependencies(notification.target);
-			setTriggerDependencies(notification.trigger)
-			setAttachDependencies(notification.notifyDetails.attach);
-
-			$('#survey').val(notification.s_id);
-			$('#not_filter').val(notification.filter);
-
-			// reminder settings
-			$('#task_group').val(getTaskGroupIndex(notification.tgId));
-			if((notification.period)) {
-				var periodArray = notification.period.split(" ");
-				if(periodArray.length > 1) {
-					$('#r_period').val(periodArray[0]);
-					$('#period_list_sel').val(periodArray[1]);
-				}
-			}
-
-			if(notification.notifyDetails) {
-				if(notification.notifyDetails.emailQuestionName || notification.notifyDetails.emailMeta) {
-					surveyChanged(notification.notifyDetails.emailQuestionName, notification.notifyDetails.emailMeta);
-				}
-
-				if(notification.target == "email") {
-					if(notification.notifyDetails.emails) {
-						$('#notify_emails').val(notification.notifyDetails.emails.join(","));
-					}
-					$('#email_subject').val(notification.notifyDetails.subject);
-					$('#email_content').val(notification.notifyDetails.content);
-					$('#email_attach').val(notification.notifyDetails.attach);
-					$('#include_references').prop('checked', notification.notifyDetails.include_references);
-					$('#launched_only').prop('checked', notification.notifyDetails.launched_only);
-				} else if(notification.target == "sms") {
-					if(notification.notifyDetails.emails) {
-						$('#notify_sms').val(notification.notifyDetails.emails.join(","));
-					}
-					$('#sms_content').val(notification.notifyDetails.content);
-					$('#sms_attach').val(notification.notifyDetails.attach);
-					$('#sms_sender_id').val(notification.notifyDetails.subject);
-				}
-			}
-			$('#fwd_rem_survey_id').val(notification.remote_s_ident);
-			$('#fwd_rem_survey_nm').val(notification.remote_s_name);
-			$('#fwd_user').val(notification.remote_user);
-			// Password not returned from server - leave blank
-
-			$('#fwd_host').val(notification.remote_host);
-			if(notification.enabled) {
-				$('#nt_enabled').prop('checked',true);
-			} else {
-				$('#nt_enabled').prop('checked', false);
-			}
-
-			gUpdateFwdPassword = false;
-			gSelectedNotification = notification.id;
-		} else {
-
-			$('#fwd_host').val(gRemote_host);	// Set the values to the ones last used
-			$('#fwd_user').val(gRemote_user);
-
-			// Reminders
-			$('#r_period').val(1);
-			$('#period_list_sel').val('days');
-			$('#nt_enabled').prop('checked',true);
-			gUpdateFwdPassword = true;
-			gSelectedNotification = -1;
-		}
-		$('#addNotificationLabel').html(title);
-
 	}
 
 	/*

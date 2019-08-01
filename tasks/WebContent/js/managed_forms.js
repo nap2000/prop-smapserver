@@ -2433,6 +2433,11 @@ require([
         editTask(true, task, taskFeature);
     });
 
+    $('#addNotification').click(function(){
+        edit_notification();
+        $('#addNotificationPopup').modal("show");
+    });
+
     /*
 	 * Edit an existing task or create a new one
 	 */
