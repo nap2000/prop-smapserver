@@ -147,6 +147,7 @@ require([
         gDirn: undefined
     };
     window.gCurrentTaskFeature; // Currently edited task feature, hack to support shared functions with console
+    window.gUpdateFwdPassword = undefined;
     window.gSaveType = '';
 
 
@@ -192,6 +193,9 @@ require([
         // Get locations
         getLocations(processLocationList);
 
+        // Get Notification Types for this server
+        getNotificationTypes();
+
         // Set change function on survey
         $('#survey_name').change(function () {
             gTasks.gSelectedSurveyIndex = $(this).val();
@@ -228,6 +232,11 @@ require([
         });
 
         setupTaskDialog();
+        setupNotificationDialog();
+
+        // Enable the save notifications function
+        $('#saveNotification').click(function(){sendImmediateNotification();});
+
         /*
          * Update the properties of a task
          */
@@ -1450,7 +1459,7 @@ require([
      * Update a selector that is used for any group form
      */
     function setGroupSelector(data) {
-        var $elemGroups = $('#tp_form_name');
+        var $elemGroups = $('#tp_form_name, .survey_select');
 
 
         var i,
@@ -2540,6 +2549,84 @@ require([
             $('.location_group_list_sel').text(gCurrentGroup);
             setLocationList(gTags, gCurrentLocation, gCurrentGroup);
         });
+    }
+
+    /*
+     * Save a notification
+     */
+    function sendImmediateNotification() {
+
+        var url,
+            notification,
+            $dialog,
+            notificationString,
+            target = $('#target').val();
+
+        if(target === "email") {
+            notification = saveEmail();
+        } else if(target === "forward") {
+            notification = saveForward();
+        } else if(target === "sms") {
+            notification = saveSMS();
+        } else if(target === "document") {
+            notification = saveDocument();
+        }
+
+        if(!notification.error) {
+
+            notification.trigger = $('#trigger').val();
+            notification.sIdent = $('#survey').val();
+            notification.enabled = $('#nt_enabled').is(':checked');
+            notification.filter = $('#not_filter').val();
+            notification.name = $('#name').val();
+            notification.instanceId = gTasks.gSelectedRecord.instanceid;
+
+            if(notification.trigger === 'task_reminder') {
+                var idx = $('#task_group').val();
+                if(gTaskGroups.length > 0 && idx < gTaskGroups.length) {
+                    notification.tgId = gTaskGroups[idx].tg_id;
+                }
+                var periodCount = $('#r_period').val();
+                notification.period = periodCount + ' ' + $('#period_list_sel').val();
+
+                // Validate
+                if(!periodCount || periodCount <= 0) {
+                    alert(localise.set["msg_pc"]);
+                    return(-1);
+                }
+                console.log("Reminder for tg: " + notification.tgId + ' after ' + notification.period);
+            }
+
+            url = "/surveyKPI/notifications/immediate";
+
+
+            notificationString = JSON.stringify(notification);
+            $dialog = $(this);
+            addHourglass();
+            $.ajax({
+                type: "POST",
+                dataType: 'text',
+                cache: false,
+                async: false,
+                url: url,
+                data: { notification: notificationString },
+                success: function(data, status) {
+                    removeHourglass();
+                    $('#addNotificationPopup').modal("hide");
+                },
+                error: function(xhr, textStatus, err) {
+                    removeHourglass();
+                    if(xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        alert(localise.set["msg_err_save"] + xhr.responseText);
+                    }
+                }
+            });
+
+        } else {
+            alert(localise.set["msg_inv_email"]);
+        }
     }
 
 });
