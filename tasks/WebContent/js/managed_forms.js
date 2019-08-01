@@ -1852,6 +1852,7 @@ require([
                     // Add header
                     h[++idx] = '<thead>';
                     h[++idx] = '<tr>';
+                    h[++idx] = '<th></th>';     // icon
                     h[++idx] = '<th>';
                     h[++idx] = localise.set["c_user"];
                     h[++idx] = '</th>';
@@ -1883,6 +1884,24 @@ require([
                         for(i = 0; i < data.length; i++) {
                             h[++idx] = '<tr>';
 
+                            h[++idx] = '<td>';
+                            if(data[i].event === 'task') {
+                                h[++idx] = '<i class="fa fa-lg fa-tasks fa-2x"></i>';
+                            } else if(data[i].event === 'created' || data[i].event === 'changes') {
+                                h[++idx] = '<i style="line-height: 1.5em;" class="fa fa-lg fa-inbox fa-2x"></i>';
+                            } else  if(data[i].event === 'notification') {
+                                if(data[i].notification && data[i].notification.target === 'sms') {
+                                    // From http://jsfiddle.net/4Bacg/
+                                    h[++idx] = '<span style="line-height: 1.5em; text-align: center; margin-top: -7px; margin-right: 0.3em;" class="fa-stack fa-lg pull-left">';
+                                    h[++idx] = '<i class="fa fa-flip-horizontal fa-comment-o fa-stack-2x"></i>';
+                                    h[++idx] = '<i style="font-size: 10px; line-height: 1em;">sms</i>';
+                                    h[++idx] = '</span>';
+                                } else {
+                                    h[++idx] = '<i class="fa fa-lg fa-envelope-o fa-2x"></i>';
+                                }
+                            }
+
+                            h[++idx] = '</td>';
                             h[++idx] = '<td>';    // user
                             h[++idx] = data[i].userName;
                             h[++idx] = '</td>';
@@ -1910,6 +1929,8 @@ require([
                                 h[++idx] = getChangeCard(data[i].changes, i);
                             } else   if(data[i].event === 'task' && data[i].task) {
                                 h[++idx] = getTaskInfo(data[i].task);
+                            } else   if(data[i].event === 'notification' && data[i].notification) {
+                                h[++idx] = getNotificationInfo(data[i].notification);
                             } else {
                                 h[++idx] = data[i].description;
                             }
@@ -2001,7 +2022,27 @@ require([
             }
         }
 
+        return h.join('');
+    }
 
+    /*
+     * Get notification info
+     */
+    function getNotificationInfo(n) {
+        var h = [],
+            idx = -1;
+
+        console.log(JSON.stringify(n));
+
+        h[++idx] = localise.set["c_target"];
+        h[++idx] = ': ';
+        h[++idx] = n.target;
+        h[++idx] = '<br/>';
+
+        h[++idx] = localise.set["c_to"];
+        h[++idx] = ': ';
+        h[++idx] = n.emails.join(',');
+        h[++idx] = '<br/>';
 
         return h.join('');
 

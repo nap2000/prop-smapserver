@@ -716,6 +716,8 @@ define({
     "sum": "Sum",
     "changes": "Update",
     "task": "Task",
+    "notification": "Notification",
+    "created": "Created",
 
     // Web forms
     "wf_sig": "Signature",
