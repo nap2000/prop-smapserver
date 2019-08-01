@@ -1459,7 +1459,7 @@ require([
      * Update a selector that is used for any group form
      */
     function setGroupSelector(data) {
-        var $elemGroups = $('#tp_form_name, .survey_select');
+        var $elemGroups = $('#tp_form_name, #survey');
 
 
         var i,
