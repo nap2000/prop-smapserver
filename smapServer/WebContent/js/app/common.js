@@ -4314,8 +4314,7 @@ function getStatusClass(status) {
  */
 function edit_notification(idx) {
 
-	var notification,
-		title = localise.set["msg_add_notification"];
+	var notification;
 
 	document.getElementById("notification_edit_form").reset();
 	setTargetDependencies("email");
@@ -4395,7 +4394,6 @@ function edit_notification(idx) {
 		window.gUpdateFwdPassword = true;
 		window.gSelectedNotification = -1;
 	}
-	$('#addNotificationLabel').html(title);
 
 }
 
