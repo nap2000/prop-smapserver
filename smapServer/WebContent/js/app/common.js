@@ -4381,8 +4381,8 @@ function edit_notification(idx) {
 			$('#nt_enabled').prop('checked', false);
 		}
 
-		gUpdateFwdPassword = false;
-		gSelectedNotification = notification.id;
+		window.gUpdateFwdPassword = false;
+		window.gSelectedNotification = notification.id;
 	} else {
 
 		$('#fwd_host').val(window.gRemote_host);	// Set the values to the ones last used
@@ -4392,8 +4392,8 @@ function edit_notification(idx) {
 		$('#r_period').val(1);
 		$('#period_list_sel').val('days');
 		$('#nt_enabled').prop('checked',true);
-		gUpdateFwdPassword = true;
-		gSelectedNotification = -1;
+		window.gUpdateFwdPassword = true;
+		window.gSelectedNotification = -1;
 	}
 	$('#addNotificationLabel').html(title);
 
@@ -4430,4 +4430,241 @@ function setAttachDependencies(attach) {
 	} else  {
 		$('.pdf_options').hide();
 	}
+}
+
+/*
+	 * Update the notification list
+	 */
+function updateNotificationTypes(data) {
+
+	var $selector=$('#target'),
+		i,
+		h = [],
+		idx = -1;
+
+	for(i = 0; i < data.length; i++) {
+
+		h[++idx] = '<option value="';
+		h[++idx] = data[i];
+		if(data[i] === 'forward') {
+			h[++idx] = '" class="submission_options';
+		}
+		h[++idx] = '">';
+		h[++idx] = localise.set["c_" + data[i]];
+		h[++idx] = '</option>';
+	}
+
+	$selector.empty().append(h.join(''));
+
+}
+
+/*
+ * Load the existing notifications from the server
+ */
+function getNotificationTypes() {
+
+	addHourglass();
+	$.ajax({
+		url: '/surveyKPI/notifications/types',
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			removeHourglass();
+			window.gNotificationTypes = data;
+			if(data) {
+				updateNotificationTypes(data);
+			}
+		},
+		error: function(xhr, textStatus, err) {
+			removeHourglass();
+			if(xhr.readyState == 0 || xhr.status == 0) {
+				return;  // Not an error
+			} else {
+				console.log("Error: Failed to get list of notification types: " + err);
+			}
+		}
+	});
+}
+
+function setupNotificationDialog() {
+	// Set change function trigger
+	$('#trigger').change(function() {
+		setTriggerDependencies($(this).val());
+	});
+	setTriggerDependencies("submission");
+
+	// Set change function target
+	$('#target').change(function() {
+		setTargetDependencies($(this).val());
+	});
+	setTargetDependencies("email");
+
+	// Set change function attach
+	$('#email_attach').change(function() {
+		setAttachDependencies($(this).val());
+	});
+
+	// Set focus on notification name when edit notification is opened
+	$('#addNotificationPopup').on('shown.bs.modal', function () {
+		$('#name').focus();
+	});
+
+	/*
+	 * Functions for forwarding
+	 */
+	$('#fwd_host').change(function(){
+		var host = $(this).val();
+		if(host.length === 0) {
+			return false;
+		} else if(host.substr(0, 4) !== "http") {
+			alert(localise.set["msg_val_prot"]);
+			return false;
+		}
+	});
+
+	$('#fwd_password').change(function(){
+		window.gUpdateFwdPassword = true;
+	});
+
+	$('#fwd_upd_rem_survey').click(function(){
+		getRemoteSurveys();
+	});
+
+	$('#fwd_rem_survey').change(function(){
+		remoteSurveyChanged();
+	});
+}
+
+/*
+ * Process a save notification when the target is "email"
+ */
+function saveEmail() {
+
+	var notification = {};
+	var emails = $('#notify_emails').val();
+	var emailQuestionName = $('#email_question').val();
+	var emailMetaItem = $('#email_meta').val();
+	var emailArray;
+	var i;
+
+	// validate
+	// Must specifify an email
+	notification.error = false;
+	if((!emails || emails.trim().length == 0) && (!emailQuestionName || emailQuestionName == "-1")
+		&& (!emailMetaItem || emailMetaItem == "-1")) {
+		notification.error = true;
+		notification.errorMsg = localise.set["msg_inv_email"];
+	}
+
+	// Text email must be valid email addresses
+	if(emails && emails.trim().length > 0) {
+		emailArray = emails.split(",");
+		for (i = 0; i < emailArray.length; i++) {
+			if (!validateEmails(emailArray[i])) {
+				notification.error = true;
+				notification.errorMsg = localise.set["msg_inv_email"];
+				break;
+			}
+		}
+	}
+
+	if(!notification.error) {
+		notification.target = "email";
+		notification.notifyDetails = {};
+		notification.notifyDetails.emails = emailArray;
+		notification.notifyDetails.emailQuestionName = emailQuestionName;
+		notification.notifyDetails.emailMeta = emailMetaItem;
+		notification.notifyDetails.subject = $('#email_subject').val();
+		notification.notifyDetails.content = $('#email_content').val();
+		notification.notifyDetails.attach = $('#email_attach').val();
+		notification.notifyDetails.include_references = $('#include_references').prop('checked');
+		notification.notifyDetails.launched_only = $('#launched_only').prop('checked');
+	}
+
+	return notification;
+}
+
+/*
+ * Process a save notification when the target is "sms"
+ */
+function saveSMS() {
+
+	var notification = {};
+
+	notification.target = "sms";
+	notification.notifyDetails = {};
+	notification.notifyDetails.emails = $('#notify_sms').val().split(",");
+	notification.notifyDetails.emailQuestionName = $('#sms_question').val();
+	notification.notifyDetails.subject = $('#sms_sender_id').val();
+	notification.notifyDetails.content = $('#sms_content').val();
+	notification.notifyDetails.attach = $('#sms_attach').val();
+
+	return notification;
+}
+
+/*
+ * Process a save notification when the target is "document"
+ */
+function saveDocument() {
+
+	var notification = {};
+
+	notification.target = "document";
+	notification.notifyDetails = {};
+
+
+	return notification;
+}
+
+/*
+ * Process a save notification when the target is "forward"
+ */
+function saveForward() {
+
+	var error = false,
+		remote_s_ident,
+		host,
+		$dialog,
+		rem_survey_id,
+		rem_survey_nm,
+		notification = {};
+
+	host = $('#fwd_host').val();
+	remote_s_ident = $('#fwd_rem_survey :selected').val();
+	remote_s_nm = $('#fwd_rem_survey :selected').text();
+
+	// Remove any trailing slashes from the host
+	if(host.substr(-1) == '/') {
+		host = host.substr(0, host.length - 1);
+	}
+
+	if(typeof remote_s_ident === "undefined" || remote_s_ident.length == 0) {
+		error = true;
+		alert(localise.set["msg_val_rf"]);
+
+	} else if(host.substr(0, 4) !== "http") {
+		error = true;
+		alert(localise.set["msg_val_prot"]);
+		$('#fwd_host').focus();
+	}
+
+	if(!error) {
+
+		notification.target = "forward";
+		notification.remote_s_ident = remote_s_ident;
+		notification.remote_s_name = remote_s_nm;
+		notification.remote_user = $('#fwd_user').val();
+		notification.remote_password = $('#fwd_password').val();
+		notification.remote_host = host;
+		notification.update_password = window.gUpdateFwdPassword;
+
+		// Save the values temporarily entered by the user
+		window.gRemote_host = host;
+		window.gRemote_user = $('#fwd_user').val();
+
+	} else {
+		notification.error = true;
+	}
+
+	return notification;
 }
