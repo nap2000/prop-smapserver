@@ -4295,7 +4295,7 @@ function getStatusClass(status) {
 
 	var statusClass = "";
 
-	if (status === "new" || status === "unsent" || status === "unsubscribed"
+	if (status === "error" || status === "new" || status === "unsent" || status === "unsubscribed"
 		|| status === "blocked" || status === "rejected") {
 		statusClass = "bg-danger";
 	} else if (status === "submitted" || status === "success") {
