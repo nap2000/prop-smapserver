@@ -1862,28 +1862,31 @@ require([
                     h[++idx] = '<thead>';
                     h[++idx] = '<tr>';
                     h[++idx] = '<th></th>';     // icon
-                    h[++idx] = '<th>';
+                    h[++idx] = '<th class="mincol">';
                     h[++idx] = localise.set["c_user"];
                     h[++idx] = '</th>';
-                    h[++idx] = '<th>';
+                    h[++idx] = '<th class="mincol">';
                     h[++idx] = localise.set["c_survey"];
                     h[++idx] = '</th>';
-                    h[++idx] = '<th>';
+                    h[++idx] = '<th class="mincol">';
                     h[++idx] = localise.set["c_date"];
-                    if(data.length > 0) {
-                        h[++idx] = ' (';
-                        h[++idx] = data[0].tz;
-                        h[++idx] = ')';
-                    }
+                    //if(data.length > 0) {
+                    //    h[++idx] = ' (';
+                    //    h[++idx] = data[0].tz;
+                    //    h[++idx] = ')';
+                    //}
                     h[++idx] = '</th>';
-                    h[++idx] = '<th>';
+                    h[++idx] = '<th class="mincol">';
                     h[++idx] = localise.set["c_event"];
                     h[++idx] = '</th>';
-                    h[++idx] = '<th>';
+                    h[++idx] = '<th class="mincol">';
                     h[++idx] = localise.set["c_status"];
                     h[++idx] = '</th>';
                     h[++idx] = '<th>';
                     h[++idx] = localise.set["c_details"];
+                    h[++idx] = '</th>';
+                    h[++idx] = '<th class="mincol">';
+                    h[++idx] = localise.set["c_action"];
                     h[++idx] = '</th>';
                     h[++idx] = '</tr>';
                     h[++idx] = '</thead>';
@@ -1911,23 +1914,23 @@ require([
                             }
 
                             h[++idx] = '</td>';
-                            h[++idx] = '<td>';    // user
+                            h[++idx] = '<td class="mincol">';    // user
                             h[++idx] = data[i].userName;
                             h[++idx] = '</td>';
 
-                            h[++idx] = '<td>';    // Survey
+                            h[++idx] = '<td class="mincol">';    // Survey
                             h[++idx] = data[i].surveyName + ' (' + data[i].surveyVersion + ')';
                             h[++idx] = '</td>';
 
-                            h[++idx] = '<td>';    // when
+                            h[++idx] = '<td class="mincol">';    // when
                             h[++idx] = data[i].eventTime;
                             h[++idx] = '</td>';
 
-                            h[++idx] = '<td>';    // event
+                            h[++idx] = '<td class="mincol">';    // event
                             h[++idx] = localise.set[data[i].event];
                             h[++idx] = '</td>';
 
-                            h[++idx] = '<td class="';    // status
+                            h[++idx] = '<td class="mincol ';    // status
                             h[++idx] = getStatusClass(data[i].status);
                             h[++idx] = '">';
                             h[++idx] = localise.set[data[i].status];
@@ -1945,6 +1948,14 @@ require([
                             }
                             h[++idx] = '</td>';
 
+                            h[++idx] = '<td class="mincol">';    // Action
+                            if(data[i].event === 'notification' && data[i].notification) {
+                                h[++idx] = '<button class="btn btn-secondary">';
+                                h[++idx] = localise.set["c_resend"];
+                                h[++idx] = '</button>';
+                            }
+                            h[++idx] = '</td>';
+
                             h[++idx] = '</tr>';    // row
 
                         }
@@ -1959,6 +1970,14 @@ require([
                             actioncommon.initialiseDynamicMaps(globals.gRecordChangeMaps, $(this).attr("id"));
                         });
                     });
+                    $('.change_card').on('show.bs.collapse', function() {
+                        $('.mincol').hide();
+                    });
+                    $('.change_card').on('hidden.bs.collapse', function() {
+                        $('.mincol').show();
+                    });
+
+
 
 
                 },
@@ -2043,6 +2062,7 @@ require([
 
         console.log(JSON.stringify(n));
 
+        h[++idx] = '<p>';
         h[++idx] = localise.set["c_target"];
         h[++idx] = ': ';
         h[++idx] = n.target;
@@ -2052,7 +2072,7 @@ require([
         h[++idx] = ': ';
         h[++idx] = n.emails.join(',');
         h[++idx] = '<br/>';
-
+        h[++idx] = '</p>';
         return h.join('');
 
     }
@@ -2071,7 +2091,7 @@ require([
         h[++idx] = index;
         h[++idx] = '">';
         h[++idx] = '<h5 class="mb-0">';
-        h[++idx] = '<button class="btn btn-link" data-toggle="collapse" data-target="#collapse_';
+        h[++idx] = '<button class="btn btn-link card-button" data-toggle="collapse" data-target="#collapse_';
         h[++idx] = index;
         h[++idx] = '" aria-expanded="false" aria-controls="collapse_';
         h[++idx] = index;

@@ -317,6 +317,7 @@ define({
     "c_reject": "Reject",
     "c_history": "History",
     "c_events": "Events",
+    "c_resend": "Resend",
 
     // File Types
     "ft": "File Type",
