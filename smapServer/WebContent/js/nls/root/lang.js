@@ -441,6 +441,7 @@ define({
     "msg_pwd_m": "Passwords do not match",
     "msg_add_notification": "Add Notification",
     "msg_edit_notification": "Edit Notification",
+    "msg_send_notification": "Send Notification",
     "msg_nn": "No notifications",
     "msg_add_map": "Add Map",
     "msg_edit_map": "Edit Map",
