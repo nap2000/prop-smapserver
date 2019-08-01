@@ -939,6 +939,7 @@
                             <input type="text" id="name" class="form-control">
                         </div>
                     </div>
+                    <!-- Not used in console
                     <div class="form-group row">
                         <label class="lang col-sm-2 control-label" data-lang="c_trigger" for="trigger"></label>
                         <div class="col-sm-10">
@@ -948,6 +949,7 @@
                             </select>
                         </div>
                     </div>
+                    -->
 
                     <div class="form-group row">
                         <label class="lang col-sm-2 control-label" data-lang="c_target" for="target"></label>
@@ -956,7 +958,7 @@
                         </div>
                     </div>
 
-                    <!-- Reminder specific fields -->
+                    <!-- Reminder specific fields
                     <div class="well task_reminder_options" style="display:none;">
 
                         <div class="form-group row">
@@ -983,14 +985,8 @@
                             </div>
                         </div>
 
-                        <!--
-						<div class="col-sm-10 offset-sm-2 custom-control custom-checkbox mb-4">
-							<input type="checkbox" class="custom-control-input" id="r_email_original_assignee" name="email_original_assignee" value="email_original_assignee">
-							<label class="custom-control-label lang" data-lang="n_oa" for="r_email_original_assignee"></label>
-						</div>
-						-->
-
                     </div>
+                    -->
 
                     <div class="submission_options form-group row">
                         <label for="survey" class="lang col-sm-2 control-label" data-lang="c_survey"></label>
@@ -999,6 +995,7 @@
                         </div>
                     </div>
 
+                    <!-- Not used in console
                     <div class="form-group row" data-container="body">
                         <label for="not_filter" data-lang="c_filter" class="lang col-sm-2 control-label"></label>
                         <div class="col-sm-10">
@@ -1012,6 +1009,7 @@
                             </div>
                         </div>
                     </div>
+                    -->
 
                     <div class="forward_options" style="display:none;">
                         <div class="form-group row">
@@ -1091,6 +1089,8 @@
                                 <input type="email" id="notify_emails" class="form-control lang_ph" data-lang_ph="n_ea" required multiple placeholder="">
                             </div>
                         </div>
+
+                        <!-- Not used in console
                         <div id="email_question_cont" class="form-group row submission_options lang_tt" data-lang_tt="n_eqc" data-toggle="tooltip"  data-container="body" title="">
                             <label for="email_question" class="col-sm-2 control-label lang" data-lang="n_eq"></label>
                             <div class="col-sm-10">
@@ -1103,6 +1103,8 @@
                                 <select class="selected_meta form-control" id="email_meta"></select>
                             </div>
                         </div>
+                        -->
+
                         <div id="email_subject_cont" class="form-group row lang_tt" data-lang_tt="n_esc" data-toggle="tooltip"  data-container="body" title="">
                             <label for="email_subject" data-lang="c_subject" class="lang col-sm-2 control-label"></label>
                             <div class="col-sm-10">
@@ -1139,12 +1141,15 @@
                                 <input type="tel" id="notify_sms" class="form-control" required>
                             </div>
                         </div>
+
+                        <!-- Not used in console
                         <div class="form-group row lang_tt" data-lang_tt="n_sms_q_tt" data-toggle="tooltip"  data-container="body" title="">
                             <label for="sms_question" class="col-sm-2 control-label lang" data-lang="n_smsq"></label>
                             <div class="col-sm-10">
                                 <select class="selected_name_question form-control" id="sms_question"></select>
                             </div>
                         </div>
+                        -->
                         <div class="form-group row" data-container="body">
                             <label for="notify_sms" data-lang="n_si" class="lang col-sm-2 control-label"></label>
                             <div class="col-sm-10">
@@ -1159,10 +1164,12 @@
                         </div>
                     </div>
 
+                    <!-- Not used in console where notifications are immediate
                     <div class="col-sm-10 offset-sm-2 custom-control custom-checkbox mb-4">
                         <input type="checkbox" class="custom-control-input" name="nt_enabled" value="nt_enabled" id="nt_enabled">
                         <label class="custom-control-label lang mt-3" data-lang="c_enabled" for="nt_enabled"></label>
                     </div>
+                    -->
 
                 </form>
                 <div class="modal-footer">

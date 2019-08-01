@@ -20,7 +20,6 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
     function($, lang, common, globals, bootstrap, moment) {
 
         var	gSurveys,		// Only in this java script file
-            gUpdateFwdPassword,
             gControlDelete,
             gControlRestore,
             gShowDeleted = false,
