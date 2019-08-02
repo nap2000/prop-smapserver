@@ -1952,7 +1952,7 @@ require([
                             } else   if(data[i].event === 'task' && data[i].task) {
                                 h[++idx] = getTaskInfo(data[i].task);
                             } else   if(data[i].event === 'notification' && data[i].notification) {
-                                h[++idx] = getNotificationInfo(data[i].notification);
+                                h[++idx] = getNotificationInfo(data[i].notification, data[i].description);
                             } else {
                                 h[++idx] = data[i].description;
                             }
@@ -2089,7 +2089,7 @@ require([
     /*
      * Get notification info
      */
-    function getNotificationInfo(n) {
+    function getNotificationInfo(n, description) {
         var h = [],
             idx = -1;
 
@@ -2105,7 +2105,13 @@ require([
         h[++idx] = ': ';
         h[++idx] = n.emails.join(',');
         h[++idx] = '<br/>';
+
+        if(description) {
+            h[++idx] = description;
+            h[++idx] = '<br/>';
+        }
         h[++idx] = '</p>';
+
         return h.join('');
 
     }

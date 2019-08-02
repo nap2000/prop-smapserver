@@ -25,8 +25,6 @@ if (Modernizr.localstorage) {
 	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
 }
 
-var gTaskGroups;
-
 "use strict";
 requirejs.config({
     baseUrl: 'js/libs',
@@ -65,6 +63,7 @@ require([
 	window.gUpdateFwdPassword = undefined;
 	window.gSelectedNotification = -1;
 	window.gNotifications = undefined;
+	window.gTaskGroups = undefined;
 
 	$(document).ready(function() {
 
@@ -115,36 +114,6 @@ require([
 				+ $('#email_content_ap option:selected').val());
 		});
 	});
-
-	function surveyChanged(qName, metaItem) {
-
-		var language = "none",
-			sId = $('#survey').val(),
-			qList,
-			metaList;
-
-		if(sId) {
-			if(!qName) {
-				qName = "-1";
-			}
-
-			qList = globals.gSelector.getSurveyQuestions(sId, language);
-			metaList = globals.gSelector.getSurveyMeta(sId);
-
-			if(!qList) {
-				getQuestionList(sId, language, 0, "-1", undefined, false,
-					undefined, undefined, qName);
-			} else {
-				setSurveyViewQuestions(qList, undefined, undefined, undefined, qName );
-			}
-
-			if(!metaList) {
-				getMetaList(sId, metaItem);
-			} else {
-				setSurveyViewMeta(metaList, metaItem);
-			}
-		}
-	}
 
 	function projectSet() {
 
@@ -543,16 +512,6 @@ require([
 
 	}
 
-	function getTaskGroupIndex(tgId) {
-		var i;
-		if(gTaskGroups && gTaskGroups.length > 0 && tgId) {
-			for(i = 0; i < gTaskGroups.length; i++) {
-				if(gTaskGroups[i].tg_id == tgId) {
-					return i;
-				}
-			}
-		}
-		return 0;
-	}
+
 });
 
