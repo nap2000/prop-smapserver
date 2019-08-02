@@ -62,10 +62,9 @@ require([
          
          ], function($, common, localise, globals) {
 
-	var	gNotifications;		// Globals in this java script file
-
 	window.gUpdateFwdPassword = undefined;
 	window.gSelectedNotification = -1;
+	window.gNotifications = undefined;
 
 	$(document).ready(function() {
 
@@ -253,7 +252,7 @@ require([
 				cache: false,
 				success: function(data) {
 					removeHourglass();
-					gNotifications = data;
+					window.gNotifications = data;
 					if(data) {
 						updateNotificationList(data);
 					}
@@ -529,9 +528,9 @@ require([
 
 		$(".rm_not", $selector).click(function(){
 			var idx = $(this).data("idx");
-			if(gNotifications.length > 0 && idx < gNotifications.length) {
-				if (confirm(localise.set["msg_del_not"] + ' ' + gNotifications[idx].name)) {
-					delete_notification(gNotifications[idx].id);
+			if(window.gNotifications.length > 0 && idx < window.gNotifications.length) {
+				if (confirm(localise.set["msg_del_not"] + ' ' + window.gNotifications[idx].name)) {
+					delete_notification(window.gNotifications[idx].id);
 				}
 			}
 		});

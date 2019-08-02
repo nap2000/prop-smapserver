@@ -149,6 +149,8 @@ require([
     window.gCurrentTaskFeature; // Currently edited task feature, hack to support shared functions with console
     window.gUpdateFwdPassword = undefined;
     window.gSaveType = '';
+    window.gNotifications = undefined;
+    window.gChanges = [];
 
 
     $(document).ready(function () {
@@ -1019,38 +1021,46 @@ require([
                     $('.showMgmtData').addClass('col-sm-12').removeClass('col-sm-6');
                 }
 
-                this.api().columns().flatten().each(function (colIdx) {
+                this.api().columns().every(function (colIdx) {
                     if (columns[colIdx].filter || columns[colIdx].type === "select1") {
+                        var column = this;
                         var select = $('<select class="form-control"/>')
-                            .appendTo(
-                                this.api().column(colIdx).header()
-                            )
+                            .appendTo( $(column.footer()).empty() )
                             .on('change', function () {
-                                var val = $(this).val();
-                                if (val == '') {
-                                    this.api()
-                                        .column(colIdx)
-                                        .search(val)
-                                        .draw();
-                                } else {
-                                    this.api()
-                                        .column(colIdx)
-                                        .search("^" + $(this).val() + "$", true, false, false)
-                                        .draw();
-                                }
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                    $(this).val()
+                                );
+
+                                column
+                                    .search( val ? '^'+val+'$' : '', true, false )
+                                    .draw();
+
+                                //if (val == '') {
+                                //    this.api()
+                                //        .column(colIdx)
+                                //        .search(val)
+                                //        .draw();
+                                //} else {
+                                //    this.api()
+                                //        .column(colIdx)
+                                //        .search("^" + $(this).val() + "$", true, false, false)
+                                //        .draw();
+                                //}
                                 saveFilter(colIdx, val);
                             });
 
-                        select.append($('<option value=""></option>'));
+                        column.data().unique().sort().each( function ( d, j ) {
+                            select.append( '<option value="'+d+'">'+d+'</option>' )
+                        } );
 
-                        this.api()
-                            .column(colIdx)
-                            .cache('search')
-                            .sort()
-                            .unique()
-                            .each(function (d) {
-                                select.append($('<option value="' + d + '">' + d + '</option>'));
-                            });
+                        //this.api()
+                        //    .column(colIdx)
+                        //    .cache('search')
+                        //    .sort()
+                        //    .unique()
+                        //    .each(function (d) {
+                        //        select.append($('<option value="' + d + '">' + d + '</option>'));
+                        //    });
 
 
                         // Set current value
@@ -1850,7 +1860,7 @@ require([
                 cache: false,
                 success: function (data) {
                     removeHourglass();
-
+                    window.gChanges = data;
                     globals.gRecordChangeMaps = [];     // Initialise the list of maps we are going to show
 
                     var h = [],
@@ -1950,7 +1960,9 @@ require([
 
                             h[++idx] = '<td class="mincol">';    // Action
                             if(data[i].event === 'notification' && data[i].notification) {
-                                h[++idx] = '<button class="btn btn-secondary">';
+                                h[++idx] = '<button class="btn btn-secondary edit_notification" data-idx="';
+                                h[++idx] = i;
+                                h[++idx] = '">';
                                 h[++idx] = localise.set["c_resend"];
                                 h[++idx] = '</button>';
                             }
@@ -1977,6 +1989,27 @@ require([
                         $('.mincol').show();
                     });
 
+                    $('.edit_notification').click(function(){
+                        var n = {
+                            notifyDetails: {
+
+                            }
+                        };
+                        var idx = $(this).data("idx");
+                        var nMessage = window.gChanges[idx].notification
+                        n.target = nMessage.target;
+                        n.s_id = nMessage.survey_ident;     // Confusing yes - for notifications this is still id, wheras for console this is the ident
+                        n.notifyDetails.subject = nMessage.subject;
+                        n.notifyDetails.content = nMessage.content;
+                        n.notifyDetails.attach = nMessage.attach;
+                        n.notifyDetails.emails = nMessage.emails;
+                        window.gNotifications = [];
+                        window.gNotifications.push(n);
+
+                        $('#saveNotification').html(localise.set["c_resend"]);
+                        edit_notification(0, true);
+                        $('#addNotificationPopup').modal("show");
+                    });
 
 
 
