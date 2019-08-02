@@ -3920,7 +3920,7 @@ function populateTaskGroupList() {
 					firstTg,
 					hasCurrentTg = false;
 
-				gTaskGroups = taskgroups;   // Keep the task group list
+				window.gTaskGroups = taskgroups;   // Keep the task group list
 
 				if (typeof taskgroups != "undefined" && taskgroups.length > 0) {
 
@@ -4672,4 +4672,46 @@ function saveForward() {
 	}
 
 	return notification;
+}
+
+function getTaskGroupIndex(tgId) {
+	var i;
+	if(gTaskGroups && gTaskGroups.length > 0 && tgId) {
+		for(i = 0; i < gTaskGroups.length; i++) {
+			if(gTaskGroups[i].tg_id == tgId) {
+				return i;
+			}
+		}
+	}
+	return 0;
+}
+
+function surveyChanged(qName, metaItem) {
+
+	var language = "none",
+		sId = $('#survey').val(),
+		qList,
+		metaList;
+
+	if(sId) {
+		if(!qName) {
+			qName = "-1";
+		}
+
+		qList = globals.gSelector.getSurveyQuestions(sId, language);
+		metaList = globals.gSelector.getSurveyMeta(sId);
+
+		if(!qList) {
+			getQuestionList(sId, language, 0, "-1", undefined, false,
+				undefined, undefined, qName);
+		} else {
+			setSurveyViewQuestions(qList, undefined, undefined, undefined, qName );
+		}
+
+		if(!metaList) {
+			getMetaList(sId, metaItem);
+		} else {
+			setSurveyViewMeta(metaList, metaItem);
+		}
+	}
 }
