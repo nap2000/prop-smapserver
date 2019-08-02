@@ -4312,7 +4312,7 @@ function getStatusClass(status) {
  *------------------------------------------------------------------
  * Common notification functions shared between console and notifications
  */
-function edit_notification(idx) {
+function edit_notification(idx, console) {
 
 	var notification;
 
@@ -4322,7 +4322,7 @@ function edit_notification(idx) {
 	setAttachDependencies();
 
 	if(typeof idx !== "undefined") {
-		notification = gNotifications[idx];
+		notification = window.gNotifications[idx];
 
 		title = localise.set["msg_edit_notification"];
 		$('#trigger').val(notification.trigger);
@@ -4336,22 +4336,24 @@ function edit_notification(idx) {
 		$('#not_filter').val(notification.filter);
 
 		// reminder settings
-		$('#task_group').val(getTaskGroupIndex(notification.tgId));
-		if((notification.period)) {
-			var periodArray = notification.period.split(" ");
-			if(periodArray.length > 1) {
-				$('#r_period').val(periodArray[0]);
-				$('#period_list_sel').val(periodArray[1]);
+		if (!console) {
+			$('#task_group').val(getTaskGroupIndex(notification.tgId));
+			if ((notification.period)) {
+				var periodArray = notification.period.split(" ");
+				if (periodArray.length > 1) {
+					$('#r_period').val(periodArray[0]);
+					$('#period_list_sel').val(periodArray[1]);
+				}
 			}
 		}
 
-		if(notification.notifyDetails) {
-			if(notification.notifyDetails.emailQuestionName || notification.notifyDetails.emailMeta) {
+		if (notification.notifyDetails) {
+			if (notification.notifyDetails.emailQuestionName || notification.notifyDetails.emailMeta) {
 				surveyChanged(notification.notifyDetails.emailQuestionName, notification.notifyDetails.emailMeta);
 			}
 
-			if(notification.target == "email") {
-				if(notification.notifyDetails.emails) {
+			if (notification.target == "email") {
+				if (notification.notifyDetails.emails) {
 					$('#notify_emails').val(notification.notifyDetails.emails.join(","));
 				}
 				$('#email_subject').val(notification.notifyDetails.subject);
@@ -4359,8 +4361,8 @@ function edit_notification(idx) {
 				$('#email_attach').val(notification.notifyDetails.attach);
 				$('#include_references').prop('checked', notification.notifyDetails.include_references);
 				$('#launched_only').prop('checked', notification.notifyDetails.launched_only);
-			} else if(notification.target == "sms") {
-				if(notification.notifyDetails.emails) {
+			} else if (notification.target == "sms") {
+				if (notification.notifyDetails.emails) {
 					$('#notify_sms').val(notification.notifyDetails.emails.join(","));
 				}
 				$('#sms_content').val(notification.notifyDetails.content);
@@ -4368,16 +4370,21 @@ function edit_notification(idx) {
 				$('#sms_sender_id').val(notification.notifyDetails.subject);
 			}
 		}
-		$('#fwd_rem_survey_id').val(notification.remote_s_ident);
-		$('#fwd_rem_survey_nm').val(notification.remote_s_name);
-		$('#fwd_user').val(notification.remote_user);
-		// Password not returned from server - leave blank
+		if (!console) {
+			$('#fwd_rem_survey_id').val(notification.remote_s_ident);
+			$('#fwd_rem_survey_nm').val(notification.remote_s_name);
+			$('#fwd_user').val(notification.remote_user);
+			// Password not returned from server - leave blank
 
-		$('#fwd_host').val(notification.remote_host);
-		if(notification.enabled) {
-			$('#nt_enabled').prop('checked',true);
-		} else {
-			$('#nt_enabled').prop('checked', false);
+			$('#fwd_host').val(notification.remote_host);
+		}
+
+		if (!console) {
+			if (notification.enabled) {
+				$('#nt_enabled').prop('checked', true);
+			} else {
+				$('#nt_enabled').prop('checked', false);
+			}
 		}
 
 		window.gUpdateFwdPassword = false;
