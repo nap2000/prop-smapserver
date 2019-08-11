@@ -220,7 +220,10 @@ $(document).ready(function() {
 	$('.m_save_survey').off().click(function() {	// Save a survey to the server
 		changeset.validateAll();
 		if(globals.model.survey.blocked) {
-			bootbox.alert(localise.set["ed_blocked"]);
+			bootbox.alert({
+				locale: gUserLocale,
+				message: localise.set["ed_blocked"]
+			});
 		} else {
 			if(changeset.numberIssues("error") === 0) {
 				changeset.save(surveyListDone);
@@ -2765,7 +2768,7 @@ function updateSettingsData() {
 	if(globals.model.survey.key_policy) {
         $('#set_key_policy').val(globals.model.survey.key_policy);
     } else {
-        $('#set_key_policy').val("none");
+        $('#set_key_policy').val("replace");
 	}
 	$('#task_file').prop('checked', globals.model.survey.task_file);
 	$('#timing_data').prop('checked', globals.model.survey.timing_data);

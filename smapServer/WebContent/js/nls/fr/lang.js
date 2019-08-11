@@ -15,7 +15,6 @@ define(
     "m_export_media": "Export with Media",
     "m_discuss": "Discuter",
     "m_modify": "Modifier",
-    "m_data_mod": "Formulaires Web",
     "m_web_forms": "Formulaires Web",
     "m_docs": "Documentation",
     "m_monitor": "Surveillance",

@@ -40,6 +40,7 @@ define(function () {
         gRoleList: undefined,
         gCurrentProject: 0,
         gCurrentSurvey: 0,
+	    gGroupSurveys: {},
         gCurrentForm: 0,
         gCurrentLayer: undefined,
         gLoggedInUser: undefined,
@@ -124,6 +125,8 @@ define(function () {
         gMainTable: undefined,			// Data tables
         gReports: undefined,			// reports
         gCharts: {},					// charts
+	    gRecordMaps: [],                // Maps shown when editing a record
+	    gRecordChangeMaps: [],          // Maps shown when viewing change history
         gMapLayersShown: false,
         gViewId: 0,						// Current survey view
 

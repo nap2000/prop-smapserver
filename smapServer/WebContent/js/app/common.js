@@ -211,6 +211,35 @@ function saveCurrentProject(projectId, surveyId, taskGroupId) {
 	}
 }
 
+/*
+ * Save the current relationship between survey and surveyGroup
+ */
+function saveCurrentGroupSurvey(surveyId, groupSurvey) {
+
+	if (surveyId > 0) {
+
+		var groupSurvey = {
+			sId: surveyId,
+			groupIdent: groupSurvey
+		};
+
+		var groupString = JSON.stringify(groupSurvey);
+
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			contentType: "application/json",
+			url: "/surveyKPI/user/groupsurvey",
+			cache: false,
+			data: {groupSurvey: groupString},
+			success: function (data, status) {
+				removeHourglass();
+			}, error: function (data, status) {
+				removeHourglass();
+			}
+		});
+	}
+}
 
 /*
  * ===============================================================
@@ -1046,6 +1075,8 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 		success: function(data) {
 			removeHourglass();
 
+			var i;
+
 			globals.gServerCanSendEmail = data.sendEmail;
 
 			globals.gEmailEnabled = data.allow_email;
@@ -1078,6 +1109,11 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 			globals.gCurrentProject = data.current_project_id;
 			globals.gCurrentTaskGroup = data.current_task_group_id;
 			$('#projectId').val(globals.gCurrentProject);		// Set the project value for the hidden field in template upload
+			if(data.groupSurveys) {
+				for(i = 0; i < data.groupSurveys.length; i++) {
+					globals.gGroupSurveys[data.groupSurveys[i].sId] = data.groupSurveys[i].groupIdent;
+				}
+			}
 
 			setOrganisationTheme();
 
@@ -2517,7 +2553,7 @@ function refreshLocationGroups(tags, includeAll) {
 /*
  * Add the locations (NFC tags or geofence) to any drop down lists that use them
  */
-function setLocationList(locns, current) {
+function setLocationList(locns, current, currentGroup) {
 
 	var h = [],
 		idx = -1,
@@ -2528,7 +2564,7 @@ function setLocationList(locns, current) {
 		h[++idx] = localise.set["c_none"];
 		h[++idx] = '</option>';
 		for(i = 0; i < locns.length; i++) {
-			if(locns[i].group === gCurrentGroup) {
+			if(locns[i].group === currentGroup) {
 				h[++idx] = '<option value="';
 				h[++idx] = i;
 				h[++idx] = '">';
@@ -3884,7 +3920,7 @@ function populateTaskGroupList() {
 					firstTg,
 					hasCurrentTg = false;
 
-				gTaskGroups = taskgroups;   // Keep the task group list
+				window.gTaskGroups = taskgroups;   // Keep the task group list
 
 				if (typeof taskgroups != "undefined" && taskgroups.length > 0) {
 
@@ -3934,4 +3970,748 @@ function enableDebugging() {
 		$(document).on('click', function(e) { console.log(e.target) });
 	}
 
+}
+
+/*
+ * ----------------------------------------------------
+ * Common task fuctions shared between task managmeent page and console
+ */
+function setupAssignType(user_id, role_id, emails) {
+	$('.assign_group').hide();
+	$('.assign_type').removeClass('active');
+	if(user_id != 0) {
+		$('.user_type_checkbox').addClass('active');
+		$('.assign_user').show();
+	} else  if(role_id != 0) {
+		$('.role_type_checkbox').addClass('active');
+		$('.assign_role').show();
+	} else if(typeof emails !== "undefined" && emails.trim().length > 0) {
+		$('.email_type_checkbox').addClass('active');
+		$('.assign_email').show();
+	} else {        // Default to user
+		$('.user_type_checkbox').addClass('active');
+		$('.assign_user').show();
+	}
+}
+
+// Convert a location name into a location index
+function getLocationIndex(name, tags) {
+	var idx = -1,
+		i;
+
+	if(tags) {
+		for(i = 0; i < tags.length; i++) {
+			if(tags[i].name == name) {
+				idx = i;
+				break;
+			}
+
+		}
+	}
+	return idx;
+
+}
+
+function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback) {
+	var url = "/api/v1/tasks",
+		taskFeature = {
+			properties: {}
+		},
+		fromDate,
+		toDate,
+		MIN_SHOW_RANGE = 10;
+
+	taskFeature = $.extend(true, {}, currentTaskFeature);
+	/*
+	 * Set the properties of the taskFeature from the dialog
+	 */
+	taskFeature.properties.pid = globals.gCurrentProject;
+	taskFeature.properties.tg_id = globals.gCurrentTaskGroup;
+
+	if (!taskFeature.properties.id || taskFeature.properties.id == "") {
+		taskFeature.properties["id"] = 0;
+	}
+	taskFeature.properties.name = $('#tp_name').val();		// task name
+	if(isConsole) {
+		taskFeature.properties.survey_ident = $('#tp_form_name').val();	// form id
+	} else {
+		// old fashioned
+		taskFeature.properties.form_id = $('#tp_form_name').val();	// form id
+	}
+
+	taskFeature.properties.assign_type = $("button.assign_type.active", "#task_properties").attr("id");
+	if(taskFeature.properties.assign_type == 'tp_user_type') {
+		taskFeature.properties.assignee = $('#tp_user').val();
+	} else if(taskFeature.properties.assign_type == 'tp_email_type') {
+		taskFeature.properties.assignee = 0;
+		taskFeature.properties.emails = $('#tp_assign_emails').val();
+		if(!validateEmails(taskFeature.properties.emails)) {
+			alert(localise.set["msg_inv_email"]);
+			return false;
+		}
+	}
+
+	if(isConsole) {
+		taskFeature.properties.update_id = updateId;
+		taskFeature.properties.initial_data_source = 'survey';
+	}
+
+	taskFeature.properties.repeat = $('#tp_repeat').prop('checked');
+
+	fromDate = $('#tp_from').data("DateTimePicker").date();
+	toDate = $('#tp_to').data("DateTimePicker").date();
+	if (fromDate) {
+		taskFeature.properties.from = utcTime(fromDate.format("YYYY-MM-DD HH:mm:ss"));
+	}
+	if (toDate) {
+		taskFeature.properties.to = utcTime(toDate.format("YYYY-MM-DD HH:mm:ss"));
+	}
+	taskFeature.properties.location_trigger = $('#nfc_uid').val();
+	taskFeature.properties.guidance = $('#tp_guidance').val();
+	taskFeature.properties.show_dist = $('#tp_show_dist').val();
+
+	/*
+	 * Save location group and location name
+	 */
+	var locationIdx = $('#location_select').val();
+	if(saveType == "nl") {
+		taskFeature.properties.location_group = $('#locationGroupSave').val();
+		taskFeature.properties.location_name = $('#locationSave').val();
+	} else if(saveType == "ul" && locationIdx != "-1") {
+		taskFeature.properties.location_group = $('.location_group_list_sel').text();
+		taskFeature.properties.location_name = gTags[locationIdx].name;
+	} else {
+		taskFeature.properties.location_group = undefined;
+		taskFeature.properties.location_name = undefined;
+	}
+	taskFeature.properties.save_type = saveType;
+
+	/*
+	 * Convert the geoJson geometry into longitude and latitude for update
+	 */
+	if (currentTaskFeature.geometry) {
+		if (currentTaskFeature.geometry.coordinates && currentTaskFeature.geometry.coordinates.length > 1) {
+			//taskFeature.properties.location = "POINT(" + gCurrentTaskFeature.geometry.coordinates.join(" ") + ")";  // deprecate
+			taskFeature.properties.lon = currentTaskFeature.geometry.coordinates[0];
+			taskFeature.properties.lat = currentTaskFeature.geometry.coordinates[1];
+
+		} else {
+			//taskFeature.properties.location = "POINT(0 0)"; // deprecate
+			taskFeature.properties.lon = 0;
+			taskFeature.properties.lat = 0;
+		}
+	}
+
+	// TODO task update details (updating existing record)
+
+	// Validations
+	if(typeof taskFeature.properties.show_dist === "undefined") {
+		taskFeature.properties.show_dist = 0;
+	} else {
+		taskFeature.properties.show_dist = +taskFeature.properties.show_dist;
+	}
+	if (taskFeature.properties.show_dist && taskFeature.properties.show_dist < MIN_SHOW_RANGE) {
+		alert(localise.set["msg_val_show_dist"]);
+		$('#tp_show_dist').focus();
+		return;
+	}
+
+
+	var tpString = JSON.stringify(taskFeature.properties);
+
+	addHourglass();
+	$.ajax({
+		type: "POST",
+		dataType: 'text',
+		cache: false,
+		contentType: "application/json",
+		url: url,
+		data: {task: tpString},
+		success: function (data, status) {
+			removeHourglass();
+			$('#task_properties').modal("hide");
+			callback();
+		},
+		error: function (xhr, textStatus, err) {
+
+			removeHourglass();
+			alert(localise.set["msg_err_upd"] + xhr.responseText);
+
+		}
+	});
+}
+
+/*
+ * Get the list of users from the server so they can be assigned to tasks
+ */
+function getTaskUsers(projectId) {
+	var $users = $('.users_select,#users_filter'),
+		i, user,
+		h = [],
+		idx = -1;
+
+	$users.empty();
+	$('#users_filter').append('<option value="0">' + localise.set["t_au"] + '</options>');
+	//$('#users_filter').append('<option value="-1">' + localise.set["t_u"] + '</options>');
+
+	$('#users_select_new_task, #users_task_group, #users_select_user, #tp_user')
+		.append('<option value="-1">' + localise.set["t_u"] + '</options>');
+
+	$('#users_task_group').append('<option value="-2">' + localise.set["t_ad"] + '</options>');
+	$.ajax({
+		url: "/surveyKPI/userList",
+		cache: false,
+		success: function (data) {
+
+			for (i = 0; i < data.length; i++) {
+				user = data[i];
+				// Check that this user has access to the project
+
+				if (!projectId || userHasAccessToProject(user, projectId)) {
+					h[++idx] = '<option value="';
+					h[++idx] = user.id;
+					h[++idx] = '">';
+					h[++idx] = user.name;
+					h[++idx] = '</option>';
+				}
+			}
+			$users.append(h.join(''));
+		},
+		error: function (xhr, textStatus, err) {
+			if (xhr.readyState == 0 || xhr.status == 0) {
+				return;  // Not an error
+			} else {
+				alert(localise.set["c_error"] + err);
+			}
+		}
+	});
+}
+
+function userHasAccessToProject(user, projectId) {
+	var i;
+	if(user.projects) {
+		for (i = 0; i < user.projects.length; i++) {
+			if (user.projects[i].id == projectId) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+function setupTaskDialog() {
+	$('#tp_email_type, #assign_email_type').click(function() {
+		$('.assign_type').removeClass('active');
+		$(this).addClass('active');
+
+		$('.assign_user, .assign_role,.assign_data').hide();
+		$('.assign_email').show();
+		$('#assign_data').prop('placeholder', localise.set['n_eqc']);
+		$('.assign_data').show();
+	});
+	$('#tp_user_type, #assign_user_type').click(function() {
+		$('.assign_type').removeClass('active');
+		$(this).addClass('active');
+
+		$('.assign_user').show();
+		$('.assign_role,.assign_email').hide();
+		if($('#users_task_group').val() == -2) {
+			$('#assign_data').prop('placeholder', "");
+			$('.assign_data').show();
+		} else {
+			$('.assign_data').hide();
+		}
+	});
+	$('#tp_role_type, #assign_role_type').click(function() {
+		$('.assign_type').removeClass('active');
+		$(this).addClass('active');
+
+		$('.assign_user, .assign_email').hide();
+		$('.assign_role').show();
+		if($('#roles_task_group').val() == -2) {
+			$('#assign_data').prop('placeholder', "");
+			$('.assign_data').show();
+		} else {
+			$('.assign_data').hide();
+		}
+	});
+
+	$('#tp_from').datetimepicker({
+		useCurrent: false,
+		locale: gUserLocale || 'en'
+	});
+
+	$('#tp_to').datetimepicker({
+		useCurrent: false,
+		locale: gUserLocale || 'en'
+	});
+
+	$('#tp_from').on("dp.change", function () {
+
+		var startDateLocal = $(this).data("DateTimePicker").date(),
+			endDateLocal = $('#tp_to').data("DateTimePicker").date(),
+			originalStart = gCurrentTaskFeature.properties.from,
+			originalEnd = gCurrentTaskFeature.properties.to,
+			newEndDate,
+			duration;
+
+		if (startDateLocal) {
+
+			gCurrentTaskFeature.properties.from = utcTime(startDateLocal.format("YYYY-MM-DD HH:mm:ss"));
+
+			if (!endDateLocal) {
+				newEndDate = startDateLocal.add(1, 'hours');
+			} else {
+				if (originalEnd && originalStart) {
+					duration = moment(originalEnd, "YYYY-MM-DD HH:mm:ss").diff(moment(originalStart, "YYYY-MM-DD HH:mm:ss"), 'hours');
+				} else {
+					duration = 1;
+				}
+				newEndDate = startDateLocal.add(duration, 'hours');
+			}
+		} else {
+			if (!endDate) {
+				return;
+			} else {
+				// Clear the end date
+			}
+		}
+
+		$('#tp_to').data("DateTimePicker").date(newEndDate);
+
+	});
+
+	$('#tp_to').on("dp.change", function () {
+
+		var endDateLocal = $('#tp_to').data("DateTimePicker").date();
+
+		gCurrentTaskFeature.properties.to = utcTime(endDateLocal.format("YYYY-MM-DD HH:mm:ss"));
+
+	});
+
+}
+
+function getStatusClass(status) {
+
+	var statusClass = "";
+
+	if (status === "error" || status === "new" || status === "unsent" || status === "unsubscribed"
+		|| status === "blocked" || status === "rejected") {
+		statusClass = "bg-danger";
+	} else if (status === "submitted" || status === "success") {
+		statusClass = "bg-success";
+	} else if (status === "accepted") {
+		statusClass = "bg-warning";
+	} else {
+		statusClass = "bg-success";
+	}
+	return statusClass;
+}
+
+/*
+ *------------------------------------------------------------------
+ * Common notification functions shared between console and notifications
+ */
+function edit_notification(idx, console) {
+
+	var notification;
+
+	document.getElementById("notification_edit_form").reset();
+	setTargetDependencies("email");
+	setTriggerDependencies("submission");
+	setAttachDependencies();
+
+	if(typeof idx !== "undefined") {
+		notification = window.gNotifications[idx];
+
+		title = localise.set["msg_edit_notification"];
+		$('#trigger').val(notification.trigger);
+		$('#target').val(notification.target);
+		$('#name').val(notification.name);
+		setTargetDependencies(notification.target);
+		setTriggerDependencies(notification.trigger)
+		setAttachDependencies(notification.notifyDetails.attach);
+
+		$('#survey').val(notification.s_id);
+		$('#not_filter').val(notification.filter);
+
+		// reminder settings
+		if (!console) {
+			$('#task_group').val(getTaskGroupIndex(notification.tgId));
+			if ((notification.period)) {
+				var periodArray = notification.period.split(" ");
+				if (periodArray.length > 1) {
+					$('#r_period').val(periodArray[0]);
+					$('#period_list_sel').val(periodArray[1]);
+				}
+			}
+		}
+
+		if (notification.notifyDetails) {
+			if (notification.notifyDetails.emailQuestionName || notification.notifyDetails.emailMeta) {
+				surveyChanged(notification.notifyDetails.emailQuestionName, notification.notifyDetails.emailMeta);
+			}
+
+			if (notification.target == "email") {
+				if (notification.notifyDetails.emails) {
+					$('#notify_emails').val(notification.notifyDetails.emails.join(","));
+				}
+				$('#email_subject').val(notification.notifyDetails.subject);
+				$('#email_content').val(notification.notifyDetails.content);
+				$('#email_attach').val(notification.notifyDetails.attach);
+				$('#include_references').prop('checked', notification.notifyDetails.include_references);
+				$('#launched_only').prop('checked', notification.notifyDetails.launched_only);
+			} else if (notification.target == "sms") {
+				if (notification.notifyDetails.emails) {
+					$('#notify_sms').val(notification.notifyDetails.emails.join(","));
+				}
+				$('#sms_content').val(notification.notifyDetails.content);
+				$('#sms_attach').val(notification.notifyDetails.attach);
+				$('#sms_sender_id').val(notification.notifyDetails.subject);
+			}
+		}
+		if (!console) {
+			$('#fwd_rem_survey_id').val(notification.remote_s_ident);
+			$('#fwd_rem_survey_nm').val(notification.remote_s_name);
+			$('#fwd_user').val(notification.remote_user);
+			// Password not returned from server - leave blank
+
+			$('#fwd_host').val(notification.remote_host);
+		}
+
+		if (!console) {
+			if (notification.enabled) {
+				$('#nt_enabled').prop('checked', true);
+			} else {
+				$('#nt_enabled').prop('checked', false);
+			}
+		}
+
+		window.gUpdateFwdPassword = false;
+		window.gSelectedNotification = notification.id;
+	} else {
+
+		$('#fwd_host').val(window.gRemote_host);	// Set the values to the ones last used
+		$('#fwd_user').val(window.gRemote_user);
+
+		// Reminders
+		$('#r_period').val(1);
+		$('#period_list_sel').val('days');
+		$('#nt_enabled').prop('checked',true);
+		window.gUpdateFwdPassword = true;
+		window.gSelectedNotification = -1;
+	}
+
+}
+
+function setTargetDependencies(target) {
+	if(target === "email") {
+		$('.forward_options, .sms_options').hide();
+		$('.email_options').show();
+	} else if(target === "forward") {
+		$('.email_options, .sms_options').hide();
+		$('.forward_options').show();
+	} else if(target === "sms") {
+		$('.email_options, .forward_options').hide();
+		$('.sms_options').show();
+	}
+}
+
+function setTriggerDependencies(trigger) {
+	if(trigger === "submission") {
+		$('.task_reminder_options').hide();
+		$('.submission_options').show();
+	} else if(trigger === "task_reminder") {
+		$('.submission_options').hide();
+		$('.task_reminder_options').show();
+		$('#target').val('email');
+		setTargetDependencies('email');
+	}
+}
+
+function setAttachDependencies(attach) {
+	if(attach === "pdf" || attach === "pdf_landscape") {
+		$('.pdf_options').show();
+	} else  {
+		$('.pdf_options').hide();
+	}
+}
+
+/*
+	 * Update the notification list
+	 */
+function updateNotificationTypes(data) {
+
+	var $selector=$('#target'),
+		i,
+		h = [],
+		idx = -1;
+
+	for(i = 0; i < data.length; i++) {
+
+		h[++idx] = '<option value="';
+		h[++idx] = data[i];
+		if(data[i] === 'forward') {
+			h[++idx] = '" class="submission_options';
+		}
+		h[++idx] = '">';
+		h[++idx] = localise.set["c_" + data[i]];
+		h[++idx] = '</option>';
+	}
+
+	$selector.empty().append(h.join(''));
+
+}
+
+/*
+ * Load the existing notifications from the server
+ */
+function getNotificationTypes() {
+
+	addHourglass();
+	$.ajax({
+		url: '/surveyKPI/notifications/types',
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			removeHourglass();
+			window.gNotificationTypes = data;
+			if(data) {
+				updateNotificationTypes(data);
+			}
+		},
+		error: function(xhr, textStatus, err) {
+			removeHourglass();
+			if(xhr.readyState == 0 || xhr.status == 0) {
+				return;  // Not an error
+			} else {
+				console.log("Error: Failed to get list of notification types: " + err);
+			}
+		}
+	});
+}
+
+function setupNotificationDialog() {
+	// Set change function trigger
+	$('#trigger').change(function() {
+		setTriggerDependencies($(this).val());
+	});
+	setTriggerDependencies("submission");
+
+	// Set change function target
+	$('#target').change(function() {
+		setTargetDependencies($(this).val());
+	});
+	setTargetDependencies("email");
+
+	// Set change function attach
+	$('#email_attach').change(function() {
+		setAttachDependencies($(this).val());
+	});
+
+	// Set focus on notification name when edit notification is opened
+	$('#addNotificationPopup').on('shown.bs.modal', function () {
+		$('#name').focus();
+	});
+
+	/*
+	 * Functions for forwarding
+	 */
+	$('#fwd_host').change(function(){
+		var host = $(this).val();
+		if(host.length === 0) {
+			return false;
+		} else if(host.substr(0, 4) !== "http") {
+			alert(localise.set["msg_val_prot"]);
+			return false;
+		}
+	});
+
+	$('#fwd_password').change(function(){
+		window.gUpdateFwdPassword = true;
+	});
+
+	$('#fwd_upd_rem_survey').click(function(){
+		getRemoteSurveys();
+	});
+
+	$('#fwd_rem_survey').change(function(){
+		remoteSurveyChanged();
+	});
+}
+
+/*
+ * Process a save notification when the target is "email"
+ */
+function saveEmail() {
+
+	var notification = {};
+	var emails = $('#notify_emails').val();
+	var emailQuestionName = $('#email_question').val();
+	var emailMetaItem = $('#email_meta').val();
+	var emailArray;
+	var i;
+
+	// validate
+	// Must specifify an email
+	notification.error = false;
+	if((!emails || emails.trim().length == 0) && (!emailQuestionName || emailQuestionName == "-1")
+		&& (!emailMetaItem || emailMetaItem == "-1")) {
+		notification.error = true;
+		notification.errorMsg = localise.set["msg_inv_email"];
+	}
+
+	// Text email must be valid email addresses
+	if(emails && emails.trim().length > 0) {
+		emailArray = emails.split(",");
+		for (i = 0; i < emailArray.length; i++) {
+			if (!validateEmails(emailArray[i])) {
+				notification.error = true;
+				notification.errorMsg = localise.set["msg_inv_email"];
+				break;
+			}
+		}
+	}
+
+	if(!notification.error) {
+		notification.target = "email";
+		notification.notifyDetails = {};
+		notification.notifyDetails.emails = emailArray;
+		notification.notifyDetails.emailQuestionName = emailQuestionName;
+		notification.notifyDetails.emailMeta = emailMetaItem;
+		notification.notifyDetails.subject = $('#email_subject').val();
+		notification.notifyDetails.content = $('#email_content').val();
+		notification.notifyDetails.attach = $('#email_attach').val();
+		notification.notifyDetails.include_references = $('#include_references').prop('checked');
+		notification.notifyDetails.launched_only = $('#launched_only').prop('checked');
+	}
+
+	return notification;
+}
+
+/*
+ * Process a save notification when the target is "sms"
+ */
+function saveSMS() {
+
+	var notification = {};
+
+	notification.target = "sms";
+	notification.notifyDetails = {};
+	notification.notifyDetails.emails = $('#notify_sms').val().split(",");
+	notification.notifyDetails.emailQuestionName = $('#sms_question').val();
+	notification.notifyDetails.subject = $('#sms_sender_id').val();
+	notification.notifyDetails.content = $('#sms_content').val();
+	notification.notifyDetails.attach = $('#sms_attach').val();
+
+	return notification;
+}
+
+/*
+ * Process a save notification when the target is "document"
+ */
+function saveDocument() {
+
+	var notification = {};
+
+	notification.target = "document";
+	notification.notifyDetails = {};
+
+
+	return notification;
+}
+
+/*
+ * Process a save notification when the target is "forward"
+ */
+function saveForward() {
+
+	var error = false,
+		remote_s_ident,
+		host,
+		$dialog,
+		rem_survey_id,
+		rem_survey_nm,
+		notification = {};
+
+	host = $('#fwd_host').val();
+	remote_s_ident = $('#fwd_rem_survey :selected').val();
+	remote_s_nm = $('#fwd_rem_survey :selected').text();
+
+	// Remove any trailing slashes from the host
+	if(host.substr(-1) == '/') {
+		host = host.substr(0, host.length - 1);
+	}
+
+	if(typeof remote_s_ident === "undefined" || remote_s_ident.length == 0) {
+		error = true;
+		alert(localise.set["msg_val_rf"]);
+
+	} else if(host.substr(0, 4) !== "http") {
+		error = true;
+		alert(localise.set["msg_val_prot"]);
+		$('#fwd_host').focus();
+	}
+
+	if(!error) {
+
+		notification.target = "forward";
+		notification.remote_s_ident = remote_s_ident;
+		notification.remote_s_name = remote_s_nm;
+		notification.remote_user = $('#fwd_user').val();
+		notification.remote_password = $('#fwd_password').val();
+		notification.remote_host = host;
+		notification.update_password = window.gUpdateFwdPassword;
+
+		// Save the values temporarily entered by the user
+		window.gRemote_host = host;
+		window.gRemote_user = $('#fwd_user').val();
+
+	} else {
+		notification.error = true;
+	}
+
+	return notification;
+}
+
+function getTaskGroupIndex(tgId) {
+	var i;
+	if(gTaskGroups && gTaskGroups.length > 0 && tgId) {
+		for(i = 0; i < gTaskGroups.length; i++) {
+			if(gTaskGroups[i].tg_id == tgId) {
+				return i;
+			}
+		}
+	}
+	return 0;
+}
+
+function surveyChanged(qName, metaItem) {
+
+	var language = "none",
+		sId = $('#survey').val(),
+		qList,
+		metaList;
+
+	if(sId) {
+		if(!qName) {
+			qName = "-1";
+		}
+
+		qList = globals.gSelector.getSurveyQuestions(sId, language);
+		metaList = globals.gSelector.getSurveyMeta(sId);
+
+		if(!qList) {
+			getQuestionList(sId, language, 0, "-1", undefined, false,
+				undefined, undefined, qName);
+		} else {
+			setSurveyViewQuestions(qList, undefined, undefined, undefined, qName );
+		}
+
+		if(!metaList) {
+			getMetaList(sId, metaItem);
+		} else {
+			setSurveyViewMeta(metaList, metaItem);
+		}
+	}
 }
