@@ -100,6 +100,7 @@ require([
 			false, getEnterprises, getServerDetails);
 		getDeviceSettings();
 		getWebformSettings();
+		getAppearanceSettings();
 		getSensitiveSettings();
 
 		// Add change event on group and project filter
@@ -160,14 +161,14 @@ require([
 			$('#organisationPanel').show();
 			setInLocalStorage("currentTab", '#organisationTab a');
 		});
-		$('#myOrganisationTab a').click(function (e) {
+		$('#appearanceTab a').click(function (e) {
 			e.preventDefault();
 			$('.my_org_alert').hide();
 			$(this).tab('show');
 
 			$(".usertab").hide();
-			$('#myOrganisationPanel').show();
-			setInLocalStorage("currentTab", '#myOrganisationTab a');
+			$('#appearancePanel').show();
+			setInLocalStorage("currentTab", '#appearanceTab a');
 		});
 		$('#serverTab a').click(function (e) {
 			e.preventDefault();
@@ -535,7 +536,9 @@ require([
 		 */
 		$('#organisationSave').click(function() {
 			var organisationList = [],
-				organisation = {},
+				organisation = {
+					appearance: {}
+				},
 				error = false,
 				options=[],
 				i;
@@ -601,7 +604,7 @@ require([
 			organisation.can_use_api = false;
 			organisation.can_submit = false;
 			organisation.can_sms = false;
-			organisation.set_as_theme = false;
+			organisation.appearance.set_as_theme = false;
 			for(i = 0; i < options.length; i++) {
 				if(options[i] === "email") {
 					organisation.allow_email = true;
@@ -622,12 +625,12 @@ require([
 				} else if(options[i] === "can_submit") {
 					organisation.can_submit = true;
 				} else if(options[i] === "set_as_theme") {
-					organisation.set_as_theme = true;
+					organisation.appearance.set_as_theme = true;
 				} else if(options[i] === "can_sms") {
 					organisation.can_sms = true;
 				}
 			}
-			organisation.navbar_color = $('#o_navbar_color').val();
+			organisation.appearance.navbar_color = $('#o_navbar_color').val();
 
 			organisationList[0] = organisation;
 			var organisationString = JSON.stringify(organisationList);
@@ -855,6 +858,39 @@ require([
 		});
 
 		/*
+         * Save the appearance options
+         */
+		$('#saveAppearance').click(function() {
+			var appearance = {
+				set_as_theme: $('#app_set_as_theme').prop('checked'),
+				navbar_color: $('#app_navbar_color').val()
+			};
+
+			$('.org_alert').hide();
+			addHourglass();
+			$.ajax({
+				type: 'POST',
+				data: {settings: JSON.stringify(appearance)},
+				cache: false,
+				contentType: "application/json",
+				url: "/surveyKPI/organisationList/appearance",
+				success: function(data, status) {
+					removeHourglass();
+					$('.my_org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+				}, error: function(xhr, textStatus, err) {
+					removeHourglass();
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						var msg = err;
+						$('.my_org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
+					}
+				}
+			});
+
+		});
+
+		/*
 		 * Get a usage report
 		 */
 		$('#usageGet').click(function() {
@@ -991,7 +1027,7 @@ require([
 	function userKnown() {
 		getGroups();
 		if(globals.gIsOrgAdministrator) {
-			$('#myOrganisationTab').hide();
+			$('#appearanceTab').hide();
 		}
 		if(globals.gIsOrgAdministrator || globals.gIsSecurityAdministrator) {
 			getRoles(updateRoleTable);
@@ -1404,7 +1440,7 @@ require([
 			$('#o_email_port').val(org.email_port);
 			$('#o_default_email_content').val(org.default_email_content);
 			$('#o_server_description').val(org.server_description);
-			$('#o_navbar_color').colorpicker('setValue', org.navbar_color);
+			$('#o_navbar_color').colorpicker('setValue', org.appearance.navbar_color);
 			$('.puboption').each(function() {
 				console.log("option: " + $(this).val() );
 				if($(this).val() === "email") {
@@ -1440,7 +1476,7 @@ require([
 				} else if($(this).val() === "ft_review_final") {
 					this.checked = org.ft_review_final;
 				} else if($(this).val() === "set_as_theme") {
-					this.checked = org.set_as_theme;
+					this.checked = org.appearance.set_as_theme;
 				}
 			});
 			addLanguageOptions($('#o_language'), org.locale);
@@ -2234,17 +2270,9 @@ require([
 	 */
 	function getUsers() {
 
-		var month,		// Month and year that submissions for each user are to be calculated
-			year,
-			today;
-
-		today = new Date();
-		month = today.getMonth() + 1;	// Server works from 1 - 12
-		year = today.getFullYear();
-
 		addHourglass();
 		$.ajax({
-			url: "/surveyKPI/userList?year=" + year + "&month=" + month,
+			url: "/surveyKPI/userList",
 			dataType: 'json',
 			cache: false,
 			success: function(data) {
@@ -2663,7 +2691,7 @@ require([
 	}
 
 	/*
-     * Get the webfom settings
+     * Get the webform settings that can be modified by an administrator settings
      */
 	function getWebformSettings() {
 
@@ -2678,6 +2706,34 @@ require([
 				$('#wf_page_background').colorpicker('setValue', webform.page_background_color);
 				$('#wf_paper_background').colorpicker('setValue', webform.paper_background_color);
 				$('#wf_footer_horizontal_offset').val(webform.footer_horizontal_offset);
+
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["c_error"] + ": " + err);
+				}
+			}
+		});
+	}
+
+	/*
+     * Get the appearance settings that can be modified by an administrator settings
+     */
+	function getAppearanceSettings() {
+
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/organisationList/appearance",
+			dataType: 'json',
+			cache: false,
+			success: function(appearance) {
+				removeHourglass();
+
+				$('#app_set_as_theme').prop('checked', appearance.set_as_theme);
+				$('#app_navbar_color').colorpicker('setValue', appearance.navbar_color);
 
 			},
 			error: function(xhr, textStatus, err) {

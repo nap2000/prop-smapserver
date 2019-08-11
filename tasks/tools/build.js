@@ -1,7 +1,7 @@
 ({
     appDir: '../WebContent',
     locale: "en",
-//    optimize: 'none',
+    optimize: 'none',
     wrapShim: false,
     waitSeconds: 60,
     baseUrl: 'js/libs',
@@ -23,6 +23,7 @@
 	'datatables.net': '../../../../smapServer/WebContent/js/libs/DataTables/DataTables/js/jquery.dataTables',
 	'datatables.net-bs': '../../../../smapServer/WebContent/js/libs/DataTables/DataTables/js/dataTables.bootstrap',
 	'datatables.select': '../../../../smapServer/WebContent/js/libs/DataTables/Select/js/dataTables.select.min',
+	'datatables.select.v1.3.0': '../../../../smapServer/WebContent/js/libs/DataTables/Select/js/dataTables.select.v1.3.0.min',
 	toggle: '../../../../smapServer/WebContent/js/libs/bootstrap-toggle.min',
 	qrcode: '../../../../smapServer/WebContent/js/libs/jquery-qrcode-0.14.0.min',
 	svgsave: '../../../../smapServer/WebContent/js/libs/saveSvgAsPng',
@@ -45,6 +46,7 @@
 	mapbox: '../../../../smapServer/WebContent/js/libs/mapbox/js/mapbox',
 
 	inspinia: '../../../../smapServer/WebContent/js/libs/wb/inspinia.v2.9.2',
+	'wb-setup': '../../../../smapServer/WebContent/js/libs/wb/wb-setup',
 	jquery_ui: '../../../../smapServer/WebContent/js/libs/wb/jquery-ui-1.10.4.min',
 	metismenu: '../../../../smapServer/WebContent/js/libs/wb/plugins/metisMenu/jquery.metisMenu',
 	metismenu_v4: '../../../../smapServer/WebContent/js/libs/wb/plugins/metisMenu/jquery.metisMenu.2.7.7',
@@ -64,7 +66,8 @@
 	    exclude: ['jquery', 'bootstrap']
         },
         {
-            name: '../managed_forms'
+            name: '../managed_forms',
+	    exclude: ['jquery', 'bootstrap', 'datatables_b4']
         },
         {
             name: '../action_forms'

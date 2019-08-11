@@ -131,7 +131,7 @@ function surveyChanged() {
 	gRoles = undefined;
     globals.gCurrentSurvey = $('#survey_name option:selected').val();
 	$('#survey_name_disp').html($('#survey_name option:selected').text());
-	getSurveyRoles();
+	getAllRolesForSurvey();
 	
 	if(!gCache[globals.gCurrentSurvey]) {
 		getSurveyQuestions(globals.gCurrentSurvey);
@@ -165,7 +165,7 @@ function getSurveyQuestions(sId) {
     }
 }
 
-function getSurveyRoles() {
+function getAllRolesForSurvey() {
 	
 	if(gRoles) {
 		refreshView();

@@ -195,7 +195,7 @@ define([
 
             if(alldata) {
                 // Create an array of dummy charts that will generate the counts
-                var columns = gTasks.cache.surveyConfig[globals.gViewId].columns;
+                var columns = gTasks.cache.currentData.schema.columns;
                 for (i = 0; i < columns.length; i++) {
                     if (columns[i].chartQuestion) {
 
@@ -586,7 +586,7 @@ define([
          */
         function processData(results, chart, dataLength) {
             var i, j,
-                columns = gTasks.cache.surveyConfig[globals.gViewId].columns,
+                columns = gTasks.cache.currentData.schema.columns,
                 datalabel = chart.qlabel ? 'label' : 'name';
 
             if (!gTasks.cache.surveyConfig[globals.gViewId].processedData) {
@@ -1092,7 +1092,7 @@ define([
          */
         function initialiseWidgetDialog() {
 
-            var columns = gTasks.cache.surveyConfig[globals.gViewId].columns,
+            var columns = gTasks.cachecurrentData.schema.columns,
                 q1, q2;
 
             $('#ew_tseries').prop("checked", gEdChart.tSeries);
@@ -1132,7 +1132,7 @@ define([
          */
         function addFunctions() {
 
-            var columns = gTasks.cache.surveyConfig[globals.gViewId].columns;
+            var columns = gTasks.cachecurrentData.schema.columns;
             var qIdx1 = $("#ew_question1").val();
             var addNumeric = false;
             var addNonNumeric = false;
@@ -1253,7 +1253,7 @@ define([
         function addQuestions(defValue1, defValue2) {
 
             var tSeries = $('#ew_tseries').prop("checked");
-            var columns = gTasks.cache.surveyConfig[globals.gViewId].columns;
+            var columns = gTasks.cache.currentData.schema.columns;
             var h = [];
             var idx = -1;
             var i;
@@ -1304,7 +1304,7 @@ define([
          */
         function getFullIndex(name) {
             var i = 0,
-                columns = gTasks.cache.surveyConfig[globals.gViewId].columns,
+                columns = gTasks.cache.currentData.schema.columns,
                 index = -1;
 
             for (i = 0; i < columns.length; i++) {
@@ -1326,7 +1326,7 @@ define([
                 qIdx2,
                 group;
 
-            var columns = gTasks.cache.surveyConfig[globals.gViewId].columns;
+            var columns = gTasks.cache.currentData.schema.columns;
             var oldWidth = gEdChart.width;
 
             var title = $('#ew_title').val();
@@ -1449,10 +1449,10 @@ define([
                 data: {chartView: saveString},
                 success: function (data, status) {
                     removeHourglass();
-                    if(globals.gViewId != data.viewId) {  // Store data under new viewId
-                        gTasks.cache.surveyConfig[data.viewId] = gTasks.cache.surveyConfig[globals.gViewId];
-                        globals.gViewId = data.viewId;
-                    }
+                    //if(globals.gViewId != data.viewId) {  // Store data under new viewId
+                    //    gTasks.cache.surveyConfig[data.viewId] = gTasks.cache.surveyConfig[globals.gViewId];
+                    //    globals.gViewId = data.viewId;
+                    //}
 
 
                 }, error: function (data, status) {

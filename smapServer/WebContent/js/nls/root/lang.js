@@ -14,7 +14,6 @@ define({
     "m_export_media": "Export with Media",
     "m_discuss": "Discuss",
     "m_modify": "Modify",
-    "m_data_mod": "Web Forms",
     "m_web_forms": "Web Forms",
     "m_docs": "Documentation",
     "m_monitor": "Monitoring",
@@ -40,6 +39,7 @@ define({
     "m_br": "Browse Results",
     "m_manage": "Manage",
     "m_dash": "Dashboard",
+    "m_console": "Console",
     "m_s_m_f": "Setup Managed Forms",
     "m_task_m": "Task Management",
     "m_user_profile": "User Profile",
@@ -314,6 +314,10 @@ define({
     "c_lat": "Latitude",
     "c_lon": "Longitude",
     "c_browse": "Browse",
+    "c_reject": "Reject",
+    "c_history": "History",
+    "c_events": "Events",
+    "c_resend": "Resend",
 
     // File Types
     "ft": "File Type",
@@ -438,6 +442,7 @@ define({
     "msg_pwd_m": "Passwords do not match",
     "msg_add_notification": "Add Notification",
     "msg_edit_notification": "Edit Notification",
+    "msg_send_notification": "Send Notification",
     "msg_nn": "No notifications",
     "msg_add_map": "Add Map",
     "msg_edit_map": "Edit Map",
@@ -711,6 +716,10 @@ define({
     "max": "Max",
     "min": "Min",
     "sum": "Sum",
+    "changes": "Update",
+    "task": "Task",
+    "notification": "Notification",
+    "created": "Created",
 
     // Web forms
     "wf_sig": "Signature",
@@ -890,7 +899,7 @@ define({
     "mf_bc_i": "Select the columns that you want to see as barcodes in the table and in reports",
     "mf_st": "Submission Tracking",
     "mf_gr": "Get related",
-    "mf_of": "Oversight Form",
+    "mf_of": "Oversight Survey",
     "mf_no": "There are no oversight forms. They can be added in the \"Available Oversight Forms\" tab",
     "mf_sel": "Select the form that you want to manage and the oversight form that you want to manage it with.",
     "mf_ao": "Available oversight forms",
@@ -898,6 +907,12 @@ define({
     "mf_ld": "Layer details",
     "mf_tr": "A title is required",
     "mf_sr": "Summary Report",
+    "mf_lock": "Lock for editing",
+    "mf_rel": "Release",
+    "mf_mr": "My records",
+    "mf_ur": "Unassigned records",
+    "mf_or": "Other records",
+    "mf_max": "Max records",
 
     // Logout
     "lo_back": "Back",
