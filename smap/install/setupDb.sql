@@ -4,6 +4,10 @@ DROP SEQUENCE IF EXISTS sc_seq CASCADE;
 CREATE SEQUENCE sc_seq START 1;
 ALTER SEQUENCE sc_seq OWNER TO ws;
 
+DROP SEQUENCE IF EXISTS re_seq CASCADE;
+CREATE SEQUENCE re_seq START 1;
+ALTER SEQUENCE re_seq OWNER TO ws;
+
 DROP SEQUENCE IF EXISTS s_seq CASCADE;
 CREATE SEQUENCE s_seq START 1;
 ALTER SEQUENCE s_seq OWNER TO ws;
@@ -508,24 +512,56 @@ CREATE TABLE survey (
 	);
 ALTER TABLE survey OWNER TO ws;
 DROP INDEX IF EXISTS SurveyDisplayName;
--- CREATE UNIQUE INDEX SurveyDisplayName ON survey(p_id, display_name);
 DROP INDEX IF EXISTS SurveyKey;
 CREATE UNIQUE INDEX SurveyKey ON survey(ident);
 
 DROP TABLE IF EXISTS survey_change CASCADE;
 CREATE TABLE survey_change (
 	c_id integer DEFAULT NEXTVAL('sc_seq') CONSTRAINT pk_survey_changes PRIMARY KEY,
-	s_id integer REFERENCES survey ON DELETE CASCADE,	-- Survey containing this version		
+	s_id integer REFERENCES survey ON DELETE CASCADE,		-- Survey containing this version
 	version integer,								-- Version of survey with these changes
 	changes text,								-- Changes as json object
 	apply_results boolean default false,			-- Set to true if the results tables need to be updated	
-	success boolean default false,				-- Set true of the update was a success
+	success boolean default false,				-- Set true if the update was a success
 	msg text,									-- Error messages
 	user_id integer,								-- Person who made the changes
 	visible boolean default true,				-- set false if the change should not be displayed 				
 	updated_time TIMESTAMP WITH TIME ZONE		-- Time and date of change
 	);
 ALTER TABLE survey_change OWNER TO ws;
+
+-- record events on data records by HRK or instanceid if HRK not set
+-- Events include
+--     submission (reference data in data table keyed on instanceid)
+--     managed form update
+--     Data cleaning (reference data in .......
+--     Task status change  (reference data in tasks)
+--     Task completed (reference data in tasks,   submission)
+--     Message sent (reference data in messages and notifications)
+--     Record assignment status changes
+DROP TABLE IF EXISTS record_event CASCADE;
+CREATE TABLE record_event (
+	id integer DEFAULT NEXTVAL('re_seq') CONSTRAINT pk_record_changes PRIMARY KEY,
+	table_name text,								-- Main table containing unique key	
+	key text,									-- HRK of change or notification
+	instanceid text,								-- instance of change or notification	
+	event text,									-- created || change || task || reminder || deleted
+	status text,									-- Status of event - determines how it is displayed
+	changes text,								-- Details of the change as json object	
+	task text,									-- Details of task changes as json object
+	notification text,							-- Details of notification as json object
+	description text,
+	success boolean default false,				-- Set true of the event was a success
+	msg text,									-- Error messages
+	changed_by integer,							-- Person who made a change	
+	change_survey text,							-- Survey ident that applied the change
+	change_survey_version integer,				-- Survey version that made the change	
+	assignment_id integer,						-- Record if this is an task event	
+	task_id integer,								-- Record if this is an task event	
+	event_time TIMESTAMP WITH TIME ZONE			-- Time and date of event
+	);
+ALTER TABLE record_event OWNER TO ws;
+
 
 DROP TABLE IF EXISTS custom_report CASCADE;
 CREATE TABLE custom_report (
@@ -1057,50 +1093,65 @@ create TABLE custom_query (
 );
 ALTER TABLE custom_query OWNER TO ws;
 
-DROP SEQUENCE IF EXISTS survey_view_seq CASCADE;
-CREATE SEQUENCE survey_view_seq START 1;
-ALTER SEQUENCE survey_view_seq OWNER TO ws;
+DROP SEQUENCE IF EXISTS survey_settings_seq CASCADE;
+CREATE SEQUENCE survey_settings_seq START 1;
+ALTER SEQUENCE survey_settings_seq OWNER TO ws;
 
-DROP TABLE IF EXISTS survey_view CASCADE;
-create TABLE survey_view (
-	id integer DEFAULT NEXTVAL('survey_view_seq') CONSTRAINT pk_survey_view PRIMARY KEY,
-	s_id integer,		-- optional survey id
-	m_id integer,		-- optional managed id requires s_id to be set
-	query_id integer,	-- optional query id
-	view text,			-- Table view data
+DROP TABLE IF EXISTS survey_settings CASCADE;
+ create TABLE survey_settings (
+	id integer DEFAULT NEXTVAL('survey_settings_seq') CONSTRAINT pk_survey_settings PRIMARY KEY,
+	s_ident text,		-- Survey ident
+	u_id integer,		-- User
+	view text,			-- Overall view (json)
 	map_view text,		-- Map view data
-	chart_view text		-- Chart view data
-	
+	chart_view text		-- Chart view data	
 );
-ALTER TABLE survey_view OWNER TO ws;
+ALTER TABLE survey_settings OWNER TO ws;
 
-DROP SEQUENCE IF EXISTS user_view_seq CASCADE;
-CREATE SEQUENCE user_view_seq START 1;
-ALTER SEQUENCE user_view_seq OWNER TO ws;
+--DROP SEQUENCE IF EXISTS survey_view_seq CASCADE;
+--CREATE SEQUENCE survey_view_seq START 1;
+--ALTER SEQUENCE survey_view_seq OWNER TO ws;
 
-DROP TABLE IF EXISTS user_view CASCADE;
-create TABLE user_view (
-	id INTEGER DEFAULT NEXTVAL('user_view_seq') CONSTRAINT pk_user_view PRIMARY KEY,
-	u_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-	v_id INTEGER REFERENCES survey_view(id) ON DELETE CASCADE,
-	access TEXT		-- read || write || write
-	);
-ALTER TABLE user_view OWNER TO ws;
+-- DROP TABLE IF EXISTS survey_view CASCADE;
+-- create TABLE survey_view (
+--	id integer DEFAULT NEXTVAL('survey_view_seq') CONSTRAINT pk_survey_view PRIMARY KEY,
+--	s_id integer,		-- optional survey id
+--	m_id integer,		-- optional managed id requires s_id to be set
+--	query_id integer,	-- optional query id
+--	view text,			-- Table view data
+--	map_view text,		-- Map view data
+--	chart_view text		-- Chart view data
+	
+--);
+--ALTER TABLE survey_view OWNER TO ws;
 
-DROP SEQUENCE IF EXISTS default_user_view_seq CASCADE;
-CREATE SEQUENCE default_user_view_seq START 1;
-ALTER SEQUENCE default_user_view_seq OWNER TO ws;
+--DROP SEQUENCE IF EXISTS user_view_seq CASCADE;
+--CREATE SEQUENCE user_view_seq START 1;
+--ALTER SEQUENCE user_view_seq OWNER TO ws;
 
-DROP TABLE IF EXISTS default_user_view CASCADE;
-create TABLE default_user_view (
-	id INTEGER DEFAULT NEXTVAL('default_user_view_seq') CONSTRAINT pk_default_user_view PRIMARY KEY,
-	u_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-	s_id integer,		-- survey id
-	m_id integer,		-- managed id requires s_id to be set
-	query_id integer,	-- query id
-	v_id integer REFERENCES survey_view(id) ON DELETE CASCADE		-- view id
-	);
-ALTER TABLE default_user_view OWNER TO ws;
+--DROP TABLE IF EXISTS user_view CASCADE;
+--create TABLE user_view (
+--	id INTEGER DEFAULT NEXTVAL('user_view_seq') CONSTRAINT pk_user_view PRIMARY KEY,
+--	u_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+--	v_id INTEGER REFERENCES survey_view(id) ON DELETE CASCADE,
+--	access TEXT		-- read || write || write
+--	);
+--ALTER TABLE user_view OWNER TO ws;
+
+--DROP SEQUENCE IF EXISTS default_user_view_seq CASCADE;
+--CREATE SEQUENCE default_user_view_seq START 1;
+--ALTER SEQUENCE default_user_view_seq OWNER TO ws;
+
+--DROP TABLE IF EXISTS default_user_view CASCADE;
+--create TABLE default_user_view (
+--	id INTEGER DEFAULT NEXTVAL('default_user_view_seq') CONSTRAINT pk_default_user_view PRIMARY KEY,
+--	u_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+--	s_id integer,		-- survey id
+--	m_id integer,		-- managed id requires s_id to be set
+--	query_id integer,	-- query id
+--	v_id integer REFERENCES survey_view(id) ON DELETE CASCADE		-- view id
+--	);
+--ALTER TABLE default_user_view OWNER TO ws;
 
 DROP SEQUENCE IF EXISTS report_seq CASCADE;
 CREATE SEQUENCE report_seq START 1;
@@ -1240,3 +1291,17 @@ create TABLE last_refresh (
 	);
 SELECT AddGeometryColumn('last_refresh', 'geo_point', 4326, 'POINT', 2);
 ALTER TABLE last_refresh OWNER TO ws;
+
+-- Group Surveys
+DROP SEQUENCE IF EXISTS group_survey_seq CASCADE;
+CREATE SEQUENCE group_survey_seq START 1;
+ALTER SEQUENCE group_survey_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS group_survey;
+create TABLE group_survey (
+	id integer default nextval('group_survey_seq') constraint pk_group_survey primary key,
+	u_ident text REFERENCES users(ident) ON DELETE CASCADE,
+	s_id integer REFERENCES survey(s_id) ON DELETE CASCADE,
+	group_ident text REFERENCES survey(ident) ON DELETE CASCADE
+	);
+ALTER TABLE group_survey OWNER TO ws;

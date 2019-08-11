@@ -15,27 +15,27 @@
 
  */
 
-/*
- * Chart functions
- */
-
 "use strict";
 
 define([
         'jquery',
         'modernizr',
         'localise',
-        'globals'],
-    function ($, modernizr, lang, globals) {
+        'globals',
+        'app/mapOL3'],
+    function ($, modernizr, lang, globals, map) {
 
         return {
-            showEditRecordForm: showEditRecordForm
+            showEditRecordForm: showEditRecordForm,
+            addCellMarkup: addCellMarkup,
+            addCellMap: addCellMap,
+            initialiseDynamicMaps: initialiseDynamicMaps
         };
 
         /*
          * Add HTML to show a form to edit a record
          */
-        function showEditRecordForm(record, columns, $editForm, $surveyForm) {
+        function showEditRecordForm(record, columns, $editForm, $surveyForm, editable) {
             var
                 h = [],
                 idx = -1,
@@ -46,6 +46,7 @@ define([
                 first = true;
 
             //gTasks.gCurrentIndex = index;
+            globals.gRecordMaps = [];     // Initialise the list of maps we are going to show
             gTasks.gPriKey = record["prikey"];
 
             // Clear the update array
@@ -56,9 +57,9 @@ define([
                 configItem = columns[i];
 
                 if (configItem.mgmt) {
-                    h[++idx] = getEditMarkup(configItem, i, first, record, columns);
+                    h[++idx] = getEditMarkup(configItem, i, first, record, columns, editable);
                 } else {
-                    m[++cnt] = getEditMarkup(configItem, i, first, record, columns);
+                    m[++cnt] = getEditMarkup(configItem, i, first, record, columns, editable);
                 }
                 if (!configItem.readonly) {
                     first = false;
@@ -75,15 +76,29 @@ define([
                 showTodayButton: true
             });
 
+            // Set up the map fields
+            initialiseDynamicMaps(globals.gRecordMaps);
+
             // Respond to changes in the data by creating an update object
-            $editForm.find('.form-control').bind("click propertychange paste change keyup input", function () {
-                dataChanged($(this));
+            $editForm.find('.form-control, select').bind("click propertychange paste change keyup input", function () {
+                var $this = $(this);
+                var config = {
+                    itemIndex: $this.data("item"),
+                    value: $this.val()
+                }
+                dataChanged(config);
             });
             $editForm.find('.date').on("dp.change", function () {
-                dataChanged($(this).find('input'));
+                var $this = $(this).find('input');
+                var config = {
+                    itemIndex: $this.data("item"),
+                    value: $this.val()
+                }
+                dataChanged(config);
             });
-            $editForm.find('select').change(function () {
-                dataChanged($(this));
+            $('#editRecordForm').on("smap::geopoint", function (event, config) {
+                console.log("New geopoint");
+                dataChanged(config);
             });
 
             // Set focus to first editable data item
@@ -93,29 +108,29 @@ define([
         /*
          * Get the markup to edit the record
          */
-        function getEditMarkup(configItem, itemIndex, first, record, columns) {
+        function getEditMarkup(configItem, itemIndex, first, record, columns, editable) {
 
             var h = [],
                 idx = -1;
 
             // Add form group and label
-            h[++idx] = '<div class="form-group"><label class="col-md-4 control-label">';
+            h[++idx] = '<div class="form-group row"><label class="col-md-4 control-label">';
             h[++idx] = configItem.displayName;
             h[++idx] = '</label>';
 
             // Add Data
             h[++idx] = ' <div class="col-md-8">';
-            if (configItem.readonly) {		// Read only text
-                var v = addAnchors(record[configItem.displayName])[0];
-                if(v && v.indexOf('<') == 0) {
-                    h[++idx] = v;
-                } else {
-                    h[++idx] = ' <textarea readonly style="overflow-y:scroll;" rows=1';
-                    h[++idx] = ' class="form-control">';
-                    h[++idx] = v;
-                    h[++idx] = '</textarea>';
-                }
 
+            if(configItem.type === 'geopoint' || configItem.type === 'geoshape' || configItem.type === 'geotrace') {
+                h[++idx] = addCellMap(
+                    configItem.readonly || !editable,
+                    'record_maps_',
+                    globals.gRecordMaps,
+                    configItem, record[configItem.displayName],
+                    undefined,
+                    itemIndex);
+            } else if (configItem.readonly || !editable) {		// Read only text
+                h[++idx] = addCellMarkup(record[configItem.displayName]);
             } else {
                 h[++idx] = addEditableColumnMarkup(configItem, record[configItem.displayName], itemIndex, first, columns, record);
                 first = false;
@@ -209,7 +224,7 @@ define([
                         }
                         h[++idx] = ' value="';
                         h[++idx] = column.choices[i].k;
-                        h[++idx] = '">'
+                        h[++idx] = '">';
                         h[++idx] = column.choices[i].v;
                         h[++idx] = '</option>';
                     }
@@ -219,6 +234,51 @@ define([
             } else {
                 h[++idx] = value;
             }
+
+            return h.join('');
+        }
+
+        /*
+         * Add the markup for a map
+         */
+        function addCellMap(readOnly, idbase, maps, column, currentValue, oldValue, itemIndex) {
+            var h = [],
+                idx = -1;
+
+            // Make sure values are JSON objects
+            if(typeof currentValue === "string") {
+                try {
+                    currentValue = JSON.parse(currentValue);
+                } catch(err) {
+
+                }
+            }
+            if(typeof oldValue === "string") {
+                try {
+                    oldValue = JSON.parse(oldValue);
+                } catch (err) {
+
+                }
+            }
+
+            var config = {
+                readOnly: readOnly,
+                id: idbase + maps.length,
+                currentValue: currentValue,
+                oldValue: oldValue
+            }
+
+            h[++idx] = '<div id="';
+            h[++idx] = config.id;
+            h[++idx] = '" data-item="';
+            h[++idx] = itemIndex;
+            h[++idx] = '" class="small_map">';
+            h[++idx] = '<div id="tooltip_';
+            h[++idx] = config.id;
+            h[++idx] = '"></div>';
+            h[++idx] = '</div>';
+
+            maps.push(config);
 
             return h.join('');
         }
@@ -263,13 +323,13 @@ define([
         /*
          * User has changed a managed value
          */
-        function dataChanged($this) {
+        function dataChanged(config) {
 
             var
-                itemIndex = $this.data("item"),
-                value = $this.val(),
+                itemIndex = config.itemIndex,
+                value = config.value,
                 record = gTasks.gSelectedRecord,
-                columns = gTasks.cache.surveyConfig[globals.gViewId].columns,
+                columns = gTasks.cache.currentData.schema.columns,
                 currentValue,
                 column_name = columns[itemIndex].column_name,
                 i,
@@ -278,6 +338,12 @@ define([
             currentValue = record[columns[itemIndex].displayName];
             if (typeof currentValue === "undefined") {
                 currentValue = "";
+            }
+            if(typeof currentValue === "object") {
+                currentValue = JSON.stringify(currentValue);
+            }
+            if(typeof value === "object") {
+                value = JSON.stringify(value);
             }
 
             if (currentValue !== value) {
@@ -316,5 +382,38 @@ define([
             } else {
                 $('#saveRecord').prop("disabled", true);
             }
+        }
+
+        /*
+         * Add markup for a single cell
+         */
+        function addCellMarkup(input) {
+            var v = addAnchors(input)[0],
+                h = [],
+                idx = -1;
+            if(v && v.indexOf('<') == 0) {
+                h[++idx] = v;
+            } else {
+                h[++idx] = ' <textarea readonly style="overflow-y:scroll;" rows=1';
+                h[++idx] = ' class="form-control">';
+                h[++idx] = v;
+                h[++idx] = '</textarea>';
+            }
+            return h.join('');
+
+        }
+
+        /*
+	     * Initialise maps
+	     */
+        function initialiseDynamicMaps(maps, mapId) {
+            var i;
+
+            for(i = 0; i < maps.length; i++) {
+                if(!mapId || mapId === maps[i].id) {
+                    map.initDynamicMap(maps[i]);
+                }
+            }
+
         }
     });

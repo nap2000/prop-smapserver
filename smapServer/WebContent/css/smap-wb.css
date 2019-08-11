@@ -267,3 +267,15 @@ tr.deleted td a {
 .colorpicker-visible {
     z-index: 20000;
 }
+
+/*
+ * Modifications to inspinia
+ */
+/* smap add for contrast on pills */
+ul.nav-pills > li > a {
+    color: #111;
+    font-weight: 600;
+    padding: 14px 20px 14px 25px;
+    display: block;
+}
+

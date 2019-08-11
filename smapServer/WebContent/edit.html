@@ -52,7 +52,7 @@
 						<li><a class="lang" data-lang="m_home" href="/?loggedin=yes">home</a></li>
 						<li class="disabled restrict_role admin_role analyst_role"><a href='javascript:void(0)'><span class="lang" data-lang="c_edit">Edit</span><span class="glyphicon glyphicon-edit pull-right"></span></a></li>
 						<li class="restrict_role admin_role analyst_role"><a href="/fieldManager/surveyManagement.html"><span class="lang" data-lang="m_admin">admin</span><span class="glyphicon glyphicon-wrench pull-right"></span></a></li>
-						<li class="restrict_role enum_role"><a href="/webForm.html"><span class="lang" data-lang="m_data_mod" >Web Forms</span><span class="glyphicon glyphicon-globe pull-right"></span></a></li>
+						<li class="restrict_role enum_role"><a href="/webForm.html"><span class="lang" data-lang="m_console" ></span><span class="glyphicon glyphicon-globe pull-right"></span></a></li>
 						<li class="restrict_role analyst_role"><a href="/fieldAnalysis/index.html"><span class="lang" data-lang="m_analysis">Analysis</span><span class="glyphicon glyphicon-stats pull-right"></span></a></li>
 						<li class="restrict_role admin_role analyst_role"><a href="/tasks/taskManagement.html"><span class="nav-label lang" data-lang="m_assign">assign</span><span class="glyphicon glyphicon-tasks pull-right"></span></a></li>
 						<li class="restrict_role billing_role" style="display:none;"><a href="/fieldManager/billing.html"><span class="nav-label lang" data-lang="m_billing">billing</span><span class="glyphicon glyphicon-usd pull-right"></span></a></li>
@@ -354,13 +354,12 @@
 				<form role="form" class="form-horizontal">
 
 					<div class="form-group">
-						<label for="set_key_policy" class="lang col-sm-2 control-label" data-lang="ed_kp">key policy</label>
+						<label for="set_key_policy" class="lang col-sm-2 control-label" data-lang="ed_kp">kp</label>
 						<div class="col-sm-10">
 							<select id="set_key_policy" class="form-control">
-								<option value="none" class="lang" data-lang="c_none">none</option>
-								<option value="add" class="lang" data-lang="c_add">add</option>
-								<option value="merge" class="lang" data-lang="c_merge">merge</option>
-								<option value="discard" class="lang" data-lang="c_discard">discard</option>
+								<option value="replace" class="lang" data-lang="c_replace">r</option>
+								<option value="merge" class="lang" data-lang="c_merge">m</option>
+								<option value="discard" class="lang" data-lang="c_discard">d</option>
 							</select>
 						</div>
 					</div>
