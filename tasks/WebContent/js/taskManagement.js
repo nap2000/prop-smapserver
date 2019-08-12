@@ -1767,7 +1767,8 @@ require([
 		var surveyName,
 			tab = [],
 			idx = -1,
-			i;
+			i,
+			statusClass;
 
 		gUnsentEmailCount = 0;
 
@@ -1799,10 +1800,13 @@ require([
 				tab[++idx] = task.properties.name;
 				tab[++idx] = '</td>';
 
-				tab[++idx] = '<td class="' + getStatusClass(task.properties.status) + '">';	// status
+				statusClass = getStatusClass(task.properties.status, task.properties.to);
+				tab[++idx] = '<td class="' + statusClass + '">';	// status
 				statusLookup = task.properties.status;
 				if(statusLookup === "error" || statusLookup === "pending" || statusLookup === "blocked") {
 					statusLookup = "c_" + statusLookup;
+				} else if (statusClass == "bg-primary") {
+					statusLookup = "c_late";
 				}
 				tab[++idx] = localise.set[statusLookup];
 				tab[++idx] = '</td>';

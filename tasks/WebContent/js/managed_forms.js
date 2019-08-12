@@ -1886,7 +1886,9 @@ require([
                     var h = [],
                         idx = -1,
                         $elem = $('#changes'),
-                        i;
+                        i,
+                        finish,
+                        statusClass;
 
                     var includeTasks = $('#er_show_tasks').is(':checked');
                     var includeNotifications = $('#er_show_notifications').is(':checked');
@@ -1969,9 +1971,16 @@ require([
                                 h[++idx] = '</td>';
 
                                 h[++idx] = '<td class="mincol ';    // status
-                                h[++idx] = getStatusClass(data[i].status);
+                                finish = getFinish(data[i]);
+                                statusClass = getStatusClass(data[i].status, finish);
+                                h[++idx] = statusClass;
                                 h[++idx] = '">';
-                                h[++idx] = localise.set[data[i].status];
+                                if(statusClass == 'bg-primary') {
+                                    h[++idx] = localise.set["c_late"];
+                                } else {
+                                    h[++idx] = localise.set[data[i].status];
+                                }
+
                                 h[++idx] = '</td>';
 
                                 h[++idx] = '<td>';    // Changes
@@ -2056,6 +2065,27 @@ require([
     }
 
     /*
+     * Get the current schdule to date from a task
+     */
+    function getFinish(data) {
+        var events,
+            i,
+            finish;
+
+        if(data.task) {
+            events = data.task.taskEvents;
+            // Get the last set finish time
+            for(i = events.length - 1; i >= 0; i--) {
+                if(events[i].schedule_finish) {
+                    finish = events[i].schedule_finish;
+                    break;
+                }
+            }
+        }
+        return finish;
+    }
+
+    /*
      * Get task info
      */
     function getTaskInfo(task) {
@@ -2091,6 +2121,24 @@ require([
                     h[++idx] = localise.set["t_assigned"];
                     h[++idx] = ': ';
                     h[++idx] = events[i].assigned;
+                }
+                if(events[i].schedule_at) {
+                    if(addBreak) {
+                        h[++idx] = '<br/>';
+                    }
+                    addBreak = true;
+                    h[++idx] = localise.set["c_from"];
+                    h[++idx] = ': ';
+                    h[++idx] = localTime(events[i].schedule_at);
+                }
+                if(events[i].schedule_finish) {
+                    if(addBreak) {
+                        h[++idx] = '<br/>';
+                    }
+                    addBreak = true;
+                    h[++idx] = localise.set["c_to"];
+                    h[++idx] = ': ';
+                    h[++idx] = localTime(events[i].schedule_finish);
                 }
                 if(events[i].name) {
                     if(addBreak) {

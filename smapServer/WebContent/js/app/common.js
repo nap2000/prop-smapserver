@@ -2646,44 +2646,22 @@ function utcTime(localTime) {
 
 }
 
-function formatLocalTime(localTime) {
-	var l;
-	if(localTime.indexOf('+') > 0) {
-		l = moment(localTime, 'YYYY-MM-DD HH:mm:ss Z').toDate();
-	} else {
-		l = moment(localTime, 'YYYY-MM-DD HH:mm:ss').toDate();
-	}
-	var lf = moment(l).format('YYYY-MM-DD HH:mm:ss');
+function isLate(finish) {
 
-	if(lf === 'Invalid date') {
-		lf = '';
-	}
-	return lf;
-}
+	var late = false,
+		current = new Date(),
+		finishDate,
+		localFinish;
 
-/*
- * Get the difference between 2 times
- */
-function timeDifference(fromTime, toTime) {
-	var from,
-		to,
-		timeDiff;
-
-	if(fromTime && toTime) {
-		if(fromTime.indexOf('+') > 0) {
-			from  = moment(fromTime, 'YYYY-MM-DD HH:mm:ss Z');
-		} else {
-			from  = moment.utc(fromTime, 'YYYY-MM-DD HH:mm:ss');
+	if(finish) {
+		localFinish = localTime(finish);
+		finishDate = new Date(localFinish);
+		if(current > finishDate) {
+			late = true;
 		}
-		if(toTime.indexOf('+') > 0) {
-			to  = moment(toTime, 'YYYY-MM-DD HH:mm:ss Z');
-		} else {
-			to  = moment(toTime, 'YYYY-MM-DD HH:mm:ss');
-		}
-
-		timeDiff = moment.duration(to.diff(from));
 	}
-	return timeDiff;
+	return late;
+
 }
 
 
@@ -4291,7 +4269,7 @@ function setupTaskDialog() {
 
 }
 
-function getStatusClass(status) {
+function getStatusClass(status, finish) {
 
 	var statusClass = "";
 
@@ -4301,7 +4279,11 @@ function getStatusClass(status) {
 	} else if (status === "submitted" || status === "success") {
 		statusClass = "bg-success";
 	} else if (status === "accepted") {
-		statusClass = "bg-warning";
+		if (isLate(finish)) {
+			statusClass = "bg-primary";
+		} else {
+			statusClass = "bg-warning";
+		}
 	} else {
 		statusClass = "bg-success";
 	}
