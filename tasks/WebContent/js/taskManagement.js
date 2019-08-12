@@ -1789,7 +1789,7 @@ require([
 				tab[++idx] = addSelectCheckBox(false, i, false);
 
 				tab[++idx] = '<td>';
-				tab[++idx] = task.properties.id;
+				tab[++idx] = task.properties.a_id;
 				tab[++idx] = '</td>';
 
 				tab[++idx] = '<td>';
