@@ -508,7 +508,7 @@ require([
          * Take action on tab change to initialise tab contents
          * Refer: http://stackoverflow.com/questions/20705905/bootstrap-3-jquery-event-for-active-tab-change
          */
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        $('a[data-toggle="tab"]', '#mainTabs').on('shown.bs.tab', function (e) {
             var target = $(e.target).attr("href") // activated tab
 
             console.log("tab:::: " + target);
@@ -530,6 +530,19 @@ require([
                 gTimingView = true;
             }
         });
+
+        $('a[data-toggle="tab"]', '#editTabs').on('shown.bs.tab', function (e) {
+            var target = $(e.target).attr("href") // activated tab
+
+            $('.historyView,.dataView').hide();
+
+            if (target === '#data-view') {
+                $('.dataView').show();
+            } else if(target === '#changes-view') {
+                $('.historyView').show();
+            }
+        });
+
 
         /*
          * Respond to a location being selected
@@ -553,6 +566,13 @@ require([
                 gCurrentTaskFeature.geometry.coordinates[0] = lon;
                 gCurrentTaskFeature.geometry.coordinates[1] = lat;
             }
+        });
+
+        /*
+         * Callback when history filter changes
+         */
+        $('.changes_filter').change(function () {
+            getRecordChanges(gTasks.gSelectedRecord);
         });
 
     });         // End of document ready
@@ -1868,6 +1888,10 @@ require([
                         $elem = $('#changes'),
                         i;
 
+                    var includeTasks = $('#er_show_tasks').is(':checked');
+                    var includeNotifications = $('#er_show_notifications').is(':checked');
+                    var includeChanges = $('#er_show_changes').is(':checked');
+
                     // Add header
                     h[++idx] = '<thead>';
                     h[++idx] = '<tr>';
@@ -1904,71 +1928,76 @@ require([
                     h[++idx] = '<tbody>';
                     if(data && data.length > 0) {
                         for(i = 0; i < data.length; i++) {
-                            h[++idx] = '<tr>';
 
-                            h[++idx] = '<td>';
-                            if(data[i].event === 'task') {
-                                h[++idx] = '<i class="fa fa-lg fa-tasks fa-2x"></i>';
-                            } else if(data[i].event === 'created' || data[i].event === 'changes') {
-                                h[++idx] = '<i style="line-height: 1.5em;" class="fa fa-lg fa-inbox fa-2x"></i>';
-                            } else  if(data[i].event === 'notification') {
-                                if(data[i].notification && data[i].notification.target === 'sms') {
-                                    // From http://jsfiddle.net/4Bacg/
-                                    h[++idx] = '<span style="line-height: 1.5em; text-align: center; margin-top: -7px; margin-right: 0.3em;" class="fa-stack fa-lg pull-left">';
-                                    h[++idx] = '<i class="fa fa-flip-horizontal fa-comment-o fa-stack-2x"></i>';
-                                    h[++idx] = '<i style="font-size: 10px; line-height: 1em;">sms</i>';
-                                    h[++idx] = '</span>';
-                                } else {
-                                    h[++idx] = '<i class="fa fa-lg fa-envelope-o fa-2x"></i>';
+                            if((includeChanges && (data[i].event === 'changes' || data[i].event === 'created')) ||
+                                (includeTasks && data[i].event === 'task') ||
+                                (includeNotifications && data[i].event === 'notification')) {
+                                h[++idx] = '<tr>';
+
+                                h[++idx] = '<td>';
+                                if (data[i].event === 'task') {
+                                    h[++idx] = '<i class="fa fa-lg fa-tasks fa-2x"></i>';
+                                } else if (data[i].event === 'created' || data[i].event === 'changes') {
+                                    h[++idx] = '<i style="line-height: 1.5em;" class="fa fa-lg fa-inbox fa-2x"></i>';
+                                } else if (data[i].event === 'notification') {
+                                    if (data[i].notification && data[i].notification.target === 'sms') {
+                                        // From http://jsfiddle.net/4Bacg/
+                                        h[++idx] = '<span style="line-height: 1.5em; text-align: center; margin-top: -7px; margin-right: 0.3em;" class="fa-stack fa-lg pull-left">';
+                                        h[++idx] = '<i class="fa fa-flip-horizontal fa-comment-o fa-stack-2x"></i>';
+                                        h[++idx] = '<i style="font-size: 10px; line-height: 1em;">sms</i>';
+                                        h[++idx] = '</span>';
+                                    } else {
+                                        h[++idx] = '<i class="fa fa-lg fa-envelope-o fa-2x"></i>';
+                                    }
                                 }
-                            }
 
-                            h[++idx] = '</td>';
-                            h[++idx] = '<td class="mincol">';    // user
-                            h[++idx] = data[i].userName;
-                            h[++idx] = '</td>';
+                                h[++idx] = '</td>';
+                                h[++idx] = '<td class="mincol">';    // user
+                                h[++idx] = data[i].userName;
+                                h[++idx] = '</td>';
 
-                            h[++idx] = '<td class="mincol">';    // Survey
-                            h[++idx] = data[i].surveyName + ' (' + data[i].surveyVersion + ')';
-                            h[++idx] = '</td>';
+                                h[++idx] = '<td class="mincol">';    // Survey
+                                h[++idx] = data[i].surveyName + ' (' + data[i].surveyVersion + ')';
+                                h[++idx] = '</td>';
 
-                            h[++idx] = '<td class="mincol">';    // when
-                            h[++idx] = data[i].eventTime;
-                            h[++idx] = '</td>';
+                                h[++idx] = '<td class="mincol">';    // when
+                                h[++idx] = data[i].eventTime;
+                                h[++idx] = '</td>';
 
-                            h[++idx] = '<td class="mincol">';    // event
-                            h[++idx] = localise.set[data[i].event];
-                            h[++idx] = '</td>';
+                                h[++idx] = '<td class="mincol">';    // event
+                                h[++idx] = localise.set[data[i].event];
+                                h[++idx] = '</td>';
 
-                            h[++idx] = '<td class="mincol ';    // status
-                            h[++idx] = getStatusClass(data[i].status);
-                            h[++idx] = '">';
-                            h[++idx] = localise.set[data[i].status];
-                            h[++idx] = '</td>';
-
-                            h[++idx] = '<td>';    // Changes
-                            if(data[i].event === 'changes' && data[i].changes) {
-                                h[++idx] = getChangeCard(data[i].changes, i);
-                            } else   if(data[i].event === 'task' && data[i].task) {
-                                h[++idx] = getTaskInfo(data[i].task);
-                            } else   if(data[i].event === 'notification' && data[i].notification) {
-                                h[++idx] = getNotificationInfo(data[i].notification, data[i].description);
-                            } else {
-                                h[++idx] = data[i].description;
-                            }
-                            h[++idx] = '</td>';
-
-                            h[++idx] = '<td class="mincol">';    // Action
-                            if(data[i].event === 'notification' && data[i].notification) {
-                                h[++idx] = '<button class="btn btn-secondary edit_notification" data-idx="';
-                                h[++idx] = i;
+                                h[++idx] = '<td class="mincol ';    // status
+                                h[++idx] = getStatusClass(data[i].status);
                                 h[++idx] = '">';
-                                h[++idx] = localise.set["c_resend"];
-                                h[++idx] = '</button>';
-                            }
-                            h[++idx] = '</td>';
+                                h[++idx] = localise.set[data[i].status];
+                                h[++idx] = '</td>';
 
-                            h[++idx] = '</tr>';    // row
+                                h[++idx] = '<td>';    // Changes
+                                if (data[i].event === 'changes' && data[i].changes) {
+                                    h[++idx] = getChangeCard(data[i].changes, i);
+                                } else if (data[i].event === 'task' && data[i].task) {
+                                    h[++idx] = getTaskInfo(data[i].task);
+                                } else if (data[i].event === 'notification' && data[i].notification) {
+                                    h[++idx] = getNotificationInfo(data[i].notification, data[i].description);
+                                } else {
+                                    h[++idx] = data[i].description;
+                                }
+                                h[++idx] = '</td>';
+
+                                h[++idx] = '<td class="mincol">';    // Action
+                                if (data[i].event === 'notification' && data[i].notification) {
+                                    h[++idx] = '<button class="btn btn-secondary edit_notification" data-idx="';
+                                    h[++idx] = i;
+                                    h[++idx] = '">';
+                                    h[++idx] = localise.set["c_resend"];
+                                    h[++idx] = '</button>';
+                                }
+                                h[++idx] = '</td>';
+
+                                h[++idx] = '</tr>';    // row
+                            }
 
                         }
                     }

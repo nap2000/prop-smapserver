@@ -236,10 +236,26 @@
 
             <!-- record editing commands -->
             <div class="col-sm-4 pt-4 editRecordSection border-right">
-                <div class="custom-control custom-switch">
+                <div class="custom-control custom-switch dataView">
                     <input type="checkbox" class="custom-control-input table_filter"
                            name="formdata" value="yes" id="er_form_data" checked="checked">
                     <label class="custom-control-label lang" data-lang="mf_fd" for="er_form_data"></label>
+                </div>
+
+                <div class="custom-control custom-switch historyView" style="display:none">
+                    <input type="checkbox" class="custom-control-input changes_filter"
+                           name="showtasks" value="yes" id="er_show_tasks" checked="checked">
+                    <label class="custom-control-label lang" data-lang="t_tasks" for="er_show_tasks"></label>
+                </div>
+                <div class="custom-control custom-switch historyView" style="display:none">
+                    <input type="checkbox" class="custom-control-input changes_filter"
+                           name="showNotifications" value="yes" id="er_show_notifications" checked="checked">
+                    <label class="custom-control-label lang" data-lang="m_notify" for="er_show_notifications"></label>
+                </div>
+                <div class="custom-control custom-switch historyView" style="display:none">
+                    <input type="checkbox" class="custom-control-input changes_filter"
+                           name="showChanges" value="yes" id="er_show_changes" checked="checked">
+                    <label class="custom-control-label lang" data-lang="c_changes" for="er_show_changes"></label>
                 </div>
             </div>
 
@@ -284,7 +300,7 @@
                         </div>
                         <div class="ibox-content">
                             <div id="dashboardInfo" class="alert alert-success" style="display:none;"></div>
-                            <ul class="nav nav-tabs" role="tablist">
+                            <ul id="mainTabs" class="nav nav-tabs" role="tablist">
                                 <li class="nav-item"><a data-toggle="tab" id="set-table-view" href="#table-view" role="tab" class="active nav-link"><i class="fa fa-list"></i> <span class="lang" data-lang="c_table"></span></a></li>
                                 <li class="nav-item"><a data-toggle="tab" id="set-map-view"href="#map-view" role="tab" class="nav-link"><i class="fa fa-globe"></i> <span class="lang" data-lang="c_map"></span></a></li>
                                 <li class="nav-item"><a data-toggle="tab" id="set-chart-view"href="#chart-view" role="tab" class="nav-link"><i class="fa fa-bar-chart"></i> <span class="lang" data-lang="c_chart"></span></a></li>
@@ -376,7 +392,7 @@
                     <div class="ibox float-e-margins">
                         <div class="ibox-content">
                             <div id="recordEditInfo" class="alert alert-success" style="display:none;"></div>
-                            <ul class="nav nav-tabs" role="tablist">
+                            <ul id="editTabs" class="nav nav-tabs" role="tablist">
                                 <li class="nav-item"><a data-toggle="tab" href="#data-view" class="active nav-link"><i class="fa fa-list"></i> <span class="lang" data-lang="c_data"></span></a></li>
                                 <li class="nav-item"><a data-toggle="tab" href="#changes-view" class="nav-link"><i class="fa fa-edit"></i> <span class="lang" data-lang="c_history"></span></a></li>
                             </ul>
