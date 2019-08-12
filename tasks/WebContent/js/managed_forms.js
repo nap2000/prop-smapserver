@@ -2002,6 +2002,12 @@ require([
                                     h[++idx] = '">';
                                     h[++idx] = localise.set["c_resend"];
                                     h[++idx] = '</button>';
+                                } else  if (data[i].event === 'task' && data[i].task) {
+                                    h[++idx] = '<button class="btn btn-secondary edit_task" data-idx="';
+                                    h[++idx] = i;
+                                    h[++idx] = '">';
+                                    h[++idx] = localise.set["t_edit_task"];
+                                    h[++idx] = '</button>';
                                 }
                                 h[++idx] = '</td>';
 
@@ -2049,6 +2055,29 @@ require([
                         $('#addNotificationPopup').modal("show");
                     });
 
+                    $('.edit_task').click(function(){
+
+
+                        var idx = $(this).data("idx");
+                        var task = window.gChanges[idx].task;
+                        alert("Edit task");
+                        /*
+                        var nMessage = window.gChanges[idx].notification
+                        n.target = nMessage.target;
+                        n.s_id = nMessage.survey_ident;     // Confusing yes - for notifications this is still id, wheras for console this is the ident
+                        n.notifyDetails.subject = nMessage.subject;
+                        n.notifyDetails.content = nMessage.content;
+                        n.notifyDetails.attach = nMessage.attach;
+                        n.notifyDetails.emails = nMessage.emails;
+                        window.gNotifications = [];
+                        window.gNotifications.push(n);
+
+                        $('#saveNotification').html(localise.set["c_resend"]);
+                        edit_notification(0, true);
+                        $('#addNotificationPopup').modal("show");
+
+                         */
+                    });
 
 
                 },
@@ -2592,10 +2621,9 @@ require([
 
         console.log("open edit task: " + task.from);
 
-        gCurrentTaskFeature = taskFeature;      // TODO
+        window.gCurrentTaskFeature = taskFeature;
 
         $('form[name="taskProperties"]')[0].reset();
-        // clearDraggableMarker('mapModal'); TODO
 
         if (isNew) {
             $('#taskPropLabel').html(localise.set["t_add_task"]);
@@ -2650,9 +2678,6 @@ require([
         if (!gModalMapInitialised) {
             setTimeout(function () {
                 map.initDynamicMap(gTaskMapConfig, true);
-                //initialiseMap('mapModal', 14,
-                //    !gCurrentTaskFeature.geometry.coordinates[0] && !gCurrentTaskFeature.geometry.coordinates[1], 		// Show user location if there is no task location
-                //    clickOnMap, modalMapReady);
             }, 500);
             gModalMapInitialised = true;
         } else {
