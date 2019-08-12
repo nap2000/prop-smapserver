@@ -4020,6 +4020,7 @@ function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback) {
 	taskFeature.properties.assign_type = $("button.assign_type.active", "#task_properties").attr("id");
 	if(taskFeature.properties.assign_type == 'tp_user_type') {
 		taskFeature.properties.assignee = $('#tp_user').val();
+		taskFeature.properties.emails = undefined;
 	} else if(taskFeature.properties.assign_type == 'tp_email_type') {
 		taskFeature.properties.assignee = 0;
 		taskFeature.properties.emails = $('#tp_assign_emails').val();
