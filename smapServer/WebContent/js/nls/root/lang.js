@@ -318,6 +318,7 @@ define({
     "c_history": "History",
     "c_events": "Events",
     "c_resend": "Resend",
+    "c_late": "Late",
 
     // File Types
     "ft": "File Type",
