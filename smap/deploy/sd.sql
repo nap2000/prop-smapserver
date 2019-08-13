@@ -1261,3 +1261,5 @@ CREATE TABLE record_event (
 	event_time TIMESTAMP WITH TIME ZONE			-- Time and date of event
 	);
 ALTER TABLE record_event OWNER TO ws;
+
+alter table survey add column pdf_template text;
