@@ -4012,9 +4012,11 @@ function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback) {
 	taskFeature.properties.name = $('#tp_name').val();		// task name
 	if(isConsole) {
 		taskFeature.properties.survey_ident = $('#tp_form_name').val();	// form id
+		taskFeature.properties.form_id = undefined;
 	} else {
 		// old fashioned
 		taskFeature.properties.form_id = $('#tp_form_name').val();	// form id
+		taskFeature.properties.survey_ident = undefined;
 	}
 
 	taskFeature.properties.assign_type = $("button.assign_type.active", "#task_properties").attr("id");
@@ -4697,4 +4699,45 @@ function surveyChanged(qName, metaItem) {
 			setSurveyViewMeta(metaList, metaItem);
 		}
 	}
+}
+
+function getInitialDataLink(task) {
+	var tab = [];
+	idx = -1;
+
+	tab[++idx] = '<a href="';
+	tab[++idx] = getWebFormUrl(task.properties.form_ident,
+		task.properties.update_id,
+		task.properties.initial_data_source,
+		task.properties.id,
+		task.properties.a_id);
+	tab[++idx] = '" target="_blank">'
+	tab[++idx] = '<i class="fa fa-file-text"></i>';	// Edit existing data
+	tab[++idx] = '</a>';
+
+	return tab.join('');
+}
+
+function getWebFormUrl(form_ident, update_id, initial_data_source, taskId, assignmentId) {
+	var url,
+		hasParams = false;
+
+	initial_data_souce = initial_data_source || 'none';
+
+	url = "/webForm/" + form_ident;
+
+	if (update_id && initial_data_source === 'survey') {
+		url += "?datakey=instanceid&datakeyvalue=" + update_id;
+		url += "&viewOnly=true"
+		hasParams = true;
+	} else {
+		url += '?taskkey=';
+		url += taskId;
+		hasParams = true;
+	}
+	url += (hasParams ? '&' : '?');
+	url += 'assignment_id=';
+	url += assignmentId;
+
+	return url;
 }
