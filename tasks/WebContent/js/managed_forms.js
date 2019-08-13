@@ -2060,7 +2060,42 @@ require([
 
                         var idx = $(this).data("idx");
                         var task = window.gChanges[idx].task;
-                        alert("Edit task");
+                        // Get the task details and then open the editor dialog
+
+                        $.ajax({
+                            url: "/api/v1/tasks/assignment/" + task.assignmentId,
+                            dataType: 'json',
+                            cache: false,
+                            success: function (data) {
+                                var task = data,
+                                    taskFeature = {
+                                        geometry: {
+                                            coordinates: [],
+                                            type: 'Point'
+                                        },
+                                        properties: {}
+                                    };
+                                taskFeature.geometry.coordinates.push(task.lon);
+                                taskFeature.geometry.coordinates.push(task.lat);
+                                taskFeature.properties.form_id = task.survey_ident;
+                                taskFeature.properties.assignee = task.assignee;
+                                taskFeature.properties.emails = task.emails;
+                                taskFeature.properties.repeat = task.repeat;
+                                taskFeature.properties.id = task.id;
+                                taskFeature.properties.a_id = task.a_id;
+
+                                editTask(false, task, taskFeature);
+                            },
+                            error: function (xhr, textStatus, err) {
+                                removeHourglass();
+                                if (xhr.readyState == 0 || xhr.status == 0) {
+                                    return;  // Not an error
+                                } else {
+                                    console.log(localise.set["c_error"] + ": " + err);
+                                }
+                            }
+                        });
+
                         /*
                         var nMessage = window.gChanges[idx].notification
                         n.target = nMessage.target;
@@ -2124,8 +2159,6 @@ require([
             events = task.taskEvents,
             assignmentId,
             addBreak;
-
-        console.log(JSON.stringify(task));
 
         h[++idx] = localise.set["c_id"];
         h[++idx] = ': ';
@@ -2198,8 +2231,6 @@ require([
     function getNotificationInfo(n, description) {
         var h = [],
             idx = -1;
-
-        console.log(JSON.stringify(n));
 
         h[++idx] = '<p>';
         h[++idx] = localise.set["c_target"];
