@@ -645,6 +645,15 @@ $(document).ready(function() {
 		if($('#a_pdfspace').val() && $('#a_pdfspace').val() !== '') {
 			appearances.push('pdfspace_' + $('#a_pdfspace').val());
 		}
+		if($('#a_pdfzoom').val() && $('#a_pdfzoom').val() !== '') {
+			var zoom = $('#a_pdfzoom').val();
+			if(zoom < 1 || zoom > 20) {
+				showAppearanceError(localise.set["msg_pdfinv_zoom"]);
+				$('#a_pdfzoom').focus();
+				return false;
+			}
+			appearances.push('pdfzoom_' + zoom);
+		}
 		if($('#a_pdfnewpage').prop('checked')) {
 			appearances.push('pdfnewpage');
 		}
@@ -2036,6 +2045,13 @@ function respondToEvents($context) {
 				pdfa = appearanceArray[i].split('_');
 				if(pdfa.length > 1) {
 					$('#a_pdfspace').val(pdfa[1]);
+					foundAppearance = true;
+				}
+
+			} else if(appearanceArray[i].indexOf('pdfzoom_') === 0) {
+				pdfa = appearanceArray[i].split('_');
+				if(pdfa.length > 1) {
+					$('#a_pdfzoom').val(pdfa[1]);
 					foundAppearance = true;
 				}
 
