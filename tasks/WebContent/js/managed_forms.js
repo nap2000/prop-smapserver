@@ -455,7 +455,7 @@ require([
             });
 
             updateVisibleColumns(config.columns);
-            saveConfig(config);
+            saveColumns();
 
         });
 
@@ -1642,46 +1642,31 @@ require([
 
     /*
      * Update the saved configuration
-     *  This includes information on specific charts that are added to the survey whereas the report save below
-     *  is for the base report.
      */
-    function saveConfig() {
-        var configColumns = [],
+    function saveColumns() {
+        var configColumns = {},
             columns = gTasks.cache.currentData.schema.columns,
             i;
 
         for (i = 0; i < columns.length; i++) {
-            configColumns.push({
-                name: columns[i].displayName,
-                hide: columns[i].hide,
-                barcode: columns[i].barcode,
-                filterValue: columns[i].filterValue,
-                chart_type: columns[i].chart_type,
-                width: columns[i].width ? columns[i].width : 6
-            });
+            configColumns[columns[i].displayName] = {
+                hide: columns[i].hide
+            };
         }
 
         var saveView = JSON.stringify(configColumns);
-        var viewId = globals.gViewId || 0;
-        var url = "/surveyKPI/surveyview/" + viewId;
-        url += '?survey=' + globals.gCurrentSurvey;
-        url += '&managed=' + 0;						// TODO
-        url += '&query=' + 0;							// TODO
+
+        var url = "/surveyKPI/survey/" + globals.gCurrentSurvey + "/console_settings/columns";
 
         addHourglass();
         $.ajax({
             type: "POST",
-            dataType: 'json',
             cache: false,
             contentType: "application/json",
             url: url,
-            data: {view: saveView},
+            data: {columns: saveView},
             success: function (data, status) {
                 removeHourglass();
-                if(globals.gViewId != data.viewId) {  // Store data under new viewId
-                    gTasks.cache.surveyConfig[data.viewId] = gTasks.cache.surveyConfig[globals.gViewId];
-                    globals.gViewId = data.viewId;
-                }
                 $('#right-sidebar').removeClass("sidebar-open");
             }, error: function (data, status) {
                 removeHourglass();
