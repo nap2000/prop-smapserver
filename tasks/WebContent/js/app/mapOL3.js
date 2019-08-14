@@ -312,26 +312,6 @@ define([
 
             var layer = gLayers[index];
             var geoJson = getGeoJson(results, layer);		// Get a geoson of data
-            //var styles = getStyles(layer);					// Get the styles
-            var defaultStyle = new ol.style.Style({
-                fill: new ol.style.Fill({
-                    color: 'rgba(255, 100, 50, 0.3)'
-                }),
-                stroke: new ol.style.Stroke({
-                    width: 2,
-                    color: 'rgba(255, 10, 10, 0.8)'
-                }),
-                image: new ol.style.Circle({
-                    fill: new ol.style.Fill({
-                        color: 'rgba(255, 0, 0, 1.0)'
-                    }),
-                    stroke: new ol.style.Stroke({
-                        width: 1,
-                        color: 'rgba(255, 255, 255, 0.8)'
-                    }),
-                    radius: 7
-                })
-            });
 
             if (!gVectorSources[index]) {
                 gVectorSources[index] = new ol.source.Vector();
@@ -354,7 +334,7 @@ define([
             } else {
                 gVectorLayers[index] = new ol.layer.Vector({
                     source: gVectorSources[index],
-                    style: [defaultStyle],
+                    style: window.gStyleFn,
                     id: 'base'
                 });
             }
@@ -473,7 +453,8 @@ define([
                             //"geometry": {"type": "Point", "coordinates": results[i]._geolocation},
                             "geometry": results[i]._geolocation,
                             "properties": {
-                                record: i
+                                record: i,
+                                _assigned: results[i]._assigned
                             }
                         });
                 }
@@ -638,11 +619,11 @@ define([
                     var areaFill;
                     var line;
 
-                    if(feature.get('type')=== 'current') {
+                    if(feature.get('type')=== 'current' || feature.get('_assigned')=== globals.gLoggedInUser.ident) {
                         pointFill = 'rgba(255, 0, 0, 1.0)';
                         areaFill = 'rgba(255, 100, 50, 0.3)';
                         line = 'rgba(255, 10, 10, 0.8)';
-                    } else if(feature.get('type')=== 'old') {
+                    } else if(feature.get('type')=== 'old' || feature.get('_assigned') === '') {
                         pointFill = 'rgba(0, 0, 255, 1.0)';
                         areaFill = 'rgba(50, 100, 255, 0.3)';
                         line = 'rgba(10, 10, 255, 0.8)';
@@ -804,9 +785,6 @@ define([
 
                 if(mainMap) {
                     gMap = config.map;
-                    if (gMapUpdatePending) {
-                        refreshAllLayers(true,  config.map);
-                    }
                     showLayerSelections(config.map);
 
                     $('#showlayers').click(function () {
@@ -825,6 +803,10 @@ define([
 
             } else {
                 console.log('Map ' + config.id + ' already initialised');
+            }
+
+            if (mainMap && gMapUpdatePending) {
+                refreshAllLayers(true,  config.map);
             }
 
 
