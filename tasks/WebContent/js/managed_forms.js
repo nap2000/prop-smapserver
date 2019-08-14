@@ -439,6 +439,43 @@ require([
 
         });
 
+        /*
+         * Save changes to the table columns that are shown
+         */
+        $('#applyColumns').click(function () {
+
+            var
+                config = gTasks.cache.currentData.schema,
+                $this;
+
+            $('input', '#tab-columns-content').each(function (index) {
+                $this = $(this);
+                config.columns[index + 1].hide = !$this.is(':checked');		// Ignore prikey
+
+            });
+
+            updateVisibleColumns(config.columns);
+            saveConfig(config);
+
+        });
+
+        // Save changes to the barcodes that are shown
+        $('#applyBarcodes').click(function () {
+
+            var
+                config = gTasks.cache.currentData.schema,
+                $this;
+
+            $('input', '#tab-barcode-content').each(function (index) {
+                $this = $(this);
+                config.columns[index + 1].barcode = $this.is(':checked');		// Ignore prikey
+
+            });
+            showManagedData(globals.gCurrentSurvey, showTable, false); // redraw
+            saveConfig(config);
+
+        });
+
         // Refresh menu
         $('#m_refresh').click(function (e) {
             e.preventDefault();
@@ -1600,6 +1637,57 @@ require([
             }
         }
 
+        saveConfig(config);
+    }
+
+    /*
+     * Update the saved configuration
+     *  This includes information on specific charts that are added to the survey whereas the report save below
+     *  is for the base report.
+     */
+    function saveConfig() {
+        var configColumns = [],
+            columns = gTasks.cache.currentData.schema.columns,
+            i;
+
+        for (i = 0; i < columns.length; i++) {
+            configColumns.push({
+                name: columns[i].displayName,
+                hide: columns[i].hide,
+                barcode: columns[i].barcode,
+                filterValue: columns[i].filterValue,
+                chart_type: columns[i].chart_type,
+                width: columns[i].width ? columns[i].width : 6
+            });
+        }
+
+        var saveView = JSON.stringify(configColumns);
+        var viewId = globals.gViewId || 0;
+        var url = "/surveyKPI/surveyview/" + viewId;
+        url += '?survey=' + globals.gCurrentSurvey;
+        url += '&managed=' + 0;						// TODO
+        url += '&query=' + 0;							// TODO
+
+        addHourglass();
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            cache: false,
+            contentType: "application/json",
+            url: url,
+            data: {view: saveView},
+            success: function (data, status) {
+                removeHourglass();
+                if(globals.gViewId != data.viewId) {  // Store data under new viewId
+                    gTasks.cache.surveyConfig[data.viewId] = gTasks.cache.surveyConfig[globals.gViewId];
+                    globals.gViewId = data.viewId;
+                }
+                $('#right-sidebar').removeClass("sidebar-open");
+            }, error: function (data, status) {
+                removeHourglass();
+                alert(data.responseText);
+            }
+        });
     }
 
     /*
