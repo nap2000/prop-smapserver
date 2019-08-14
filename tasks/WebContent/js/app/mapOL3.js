@@ -38,7 +38,7 @@ define([
             gSelectFeature;
 
         return {
-            init: init,
+            //init: init,
             setLayers: setLayers,
             refreshLayer: refreshLayer,
             refreshAllLayers: refreshAllLayers,
@@ -57,7 +57,7 @@ define([
             }
         }
 
-        function setLayers(layers) {
+        function setLayers(layers, map) {
 
             var i;
 
@@ -98,9 +98,10 @@ define([
                 gLayers[1] = layer;     // replace
             }
 
-            showLayerSelections();
-        }
+            showLayerSelections(map);
+        };
 
+        /*
         function init(selectCallback) {
 
             // Add the map
@@ -193,11 +194,13 @@ define([
 
 
         }
+        */
+
 
         /*
          * Show layer selections on the screen
          */
-        function showLayerSelections() {
+        function showLayerSelections(map) {
             var h = [],
                 idx = -1,
                 i;
@@ -245,17 +248,16 @@ define([
                 var idx = $(this).data("idx");
                 deleteLayer(idx);
                 gLayers.splice(idx, 1);
-                saveToServer(gLayers);
-                showLayerSelections();
+                showLayerSelections(gMap);
             });
 
             $('.layerSelect').change(function() {
                 var $this = $(this);
                 var index = $(this).val();
                if($this.prop('checked')) {
-                   showLayer(index);
+                   showLayer(index, map);
                } else {
-                   hideLayer(index);
+                   hideLayer(index, map);
                }
             });
         }
@@ -263,26 +265,26 @@ define([
         /*
          * Redisplay a single layer
          */
-        function refreshLayer(index) {
+        function refreshLayer(index, map) {
 
-            if (gMap) {
+            if (gOverallMapConfig.map) {
                 var results = globals.gMainTable.rows({
                     order: 'current',  // 'current', 'applied', 'index',  'original'
                     page: 'all',      // 'all',     'current'
                     search: 'applied',     // 'none',    'applied', 'removed'
                 }).data();
 
-                updateSingleLayer(index, results);
+                updateSingleLayer(index, results, map);
             }
         }
 
         /*
          * Redisplay all layers
          */
-        function refreshAllLayers(mapView) {
+        function refreshAllLayers(mapView, map) {
             console.log("====== refresh all layers: " + mapView);
             if (mapView) {
-                if (gMap) {
+                if (map) {
                     var i;
                     var results = globals.gMainTable.rows({
                         order: 'current',  // 'current', 'applied', 'index',  'original'
@@ -292,7 +294,7 @@ define([
 
                     for (i = 0; i < gLayers.length; i++) {
                         deleteLayer(i);
-                        updateSingleLayer(i, results);
+                        updateSingleLayer(i, results, map);
                     }
                 }
                 gMapUpdatePending = false;
@@ -306,7 +308,7 @@ define([
          * This function is called by both refreshLayer and refreshAllLayers as refreshLayer has to do some setup
          *  that is also done by refreshAllLayers
          */
-        function updateSingleLayer(index, results) {
+        function updateSingleLayer(index, results, map) {
 
             var layer = gLayers[index];
             var geoJson = getGeoJson(results, layer);		// Get a geoson of data
@@ -358,9 +360,9 @@ define([
             }
 
             if(layer.enabled) {
-                gMap.addLayer(gVectorLayers[index]);
+                map.addLayer(gVectorLayers[index]);
             }
-            gMap.getView().fit(gVectorSources[index].getExtent(), gMap.getSize());
+            map.getView().fit(gVectorSources[index].getExtent(), map.getSize());
         }
 
         function deleteLayer(index) {
@@ -374,19 +376,17 @@ define([
         }
 
         function hideLayer(index) {
-            gMap.removeLayer(gVectorLayers[index]);
-            saveToServer(gLayers);
+            map.removeLayer(gVectorLayers[index]);
         }
 
-        function showLayer(index) {
-            gMap.addLayer(gVectorLayers[index]);
-            saveToServer(gLayers);
+        function showLayer(index, map) {
+            map.addLayer(gVectorLayers[index]);
         }
 
         /*
          * Save a layer after the user specifies it in the layer dialog
          */
-        function saveLayer() {
+        function saveLayer(map) {
 
             var title = $('#ml_title').val(),
                 local = $('#usecurrent_tabledata').is(':checked'),
@@ -405,9 +405,8 @@ define([
             gLayers.push(layer);
             $('#layerEdit').modal("hide");	// All good close the modal
 
-            refreshLayer(gLayers.length - 1);
-            saveToServer(gLayers);
-            showLayerSelections();
+            refreshLayer(gLayers.length - 1, map);
+            showLayerSelections(map);
 
         };
 
@@ -481,39 +480,6 @@ define([
             }
 
             return geoJson;
-        }
-
-        /*
-         * Save the layers to the server
-         */
-        function saveToServer(layers) {
-
-            var saveString = JSON.stringify(layers);
-            var viewId = globals.gViewId || 0;
-            var url = "/surveyKPI/surveyview/" + viewId;
-            url += '?survey=' + globals.gCurrentSurvey;
-            url += '&managed=' + 0;
-            url += '&query=' + 0;
-
-            addHourglass();
-            $.ajax({
-                type: "POST",
-                dataType: 'json',
-                contentType: "application/json",
-                cache: false,
-                url: url,
-                data: {mapView: saveString},
-                success: function (data, status) {
-                    removeHourglass();
-                    //if(globals.gViewId != data.viewId) {  // Store data under new viewId
-                    //    gTasks.cache.surveyConfig[data.viewId] = gTasks.cache.surveyConfig[globals.gViewId];
-                    //    globals.gViewId = data.viewId;
-                    //}
-                }, error: function (data, status) {
-                    removeHourglass();
-                    alert(localise.set["msg_err_save"] + " " + data.responseText);
-                }
-            });
         }
 
         /*
@@ -597,7 +563,7 @@ define([
          * Functions for dynamic maps
          */
 
-        function initDynamicMap (config, setUserLocation) {
+        function initDynamicMap (config, setUserLocation, selectCallback, mainMap) {
 
             // Add the map
             if (!config.map) {
@@ -789,7 +755,8 @@ define([
 
                     config.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
 
-                        $tooltip.html(feature.getProperties().label);
+                        var properties = feature.getProperties();
+                        $tooltip.html(properties.label);
                         $tooltip.css(
                             {
                                 position:"absolute",
@@ -800,6 +767,10 @@ define([
                                 "padding": 2
                             }).show();
                         noFeature = false;
+
+                        if(selectCallback) {
+                            selectCallback(properties);
+                        }
 
                     });
 
@@ -830,6 +801,27 @@ define([
                     }
 
                 });
+
+                if(mainMap) {
+                    gMap = config.map;
+                    if (gMapUpdatePending) {
+                        refreshAllLayers(true,  config.map);
+                    }
+                    showLayerSelections(config.map);
+
+                    $('#showlayers').click(function () {
+                        globals.gMapLayersShown = !globals.gMapLayersShown;
+                        if (globals.gMapLayersShown) {
+                            $('#map_content').removeClass("col-md-12").addClass("col-md-8");
+                            $('.map_layers').show();
+                            gMap.updateSize();
+                        } else {
+                            $('#map_content').removeClass("col-md-8").addClass("col-md-12");
+                            $('.map_layers').hide();
+                            gMap.updateSize();
+                        }
+                    });
+                }
 
             } else {
                 console.log('Map ' + config.id + ' already initialised');

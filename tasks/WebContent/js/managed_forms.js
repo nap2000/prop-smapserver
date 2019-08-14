@@ -116,6 +116,12 @@ require([
     var gGetSettings = false;        // Use the settings from the database rather than the client
     var gLocalDefaults = {};
 
+    var gOverallMapConfig = {       // overall map
+        id: 'map',
+        map: undefined,
+        task: false
+    };
+
     var gTags;                      // Task Map
     var gModalMapInitialised;
     var gTaskMapConfig = {
@@ -433,43 +439,6 @@ require([
 
         });
 
-        /*
-         * Save changes to the table columns that are shown
-         */
-        $('#applyColumns').click(function () {
-
-            var
-                config = gTasks.cache.currentData.schema,
-                $this;
-
-            $('input', '#tab-columns-content').each(function (index) {
-                $this = $(this);
-                config.columns[index + 1].hide = !$this.is(':checked');		// Ignore prikey
-
-            });
-
-            updateVisibleColumns(config.columns);
-            saveConfig(config);
-
-        });
-
-        // Save changes to the barcodes that are shown
-        $('#applyBarcodes').click(function () {
-
-            var
-                config = gTasks.cache.currentData.schema,
-                $this;
-
-            $('input', '#tab-barcode-content').each(function (index) {
-                $this = $(this);
-                config.columns[index + 1].barcode = $this.is(':checked');		// Ignore prikey
-
-            });
-            showManagedData(globals.gCurrentSurvey, showTable, false); // redraw
-            saveConfig(config);
-
-        });
-
         // Refresh menu
         $('#m_refresh').click(function (e) {
             e.preventDefault();
@@ -495,7 +464,7 @@ require([
 
         // Respond to save on a layer edit dialog
         $('#addLayerSave').click(function () {
-            map.saveLayer();
+            map.saveLayer(gOverallMapConfig.map);
         });
 
         // Respond to a new task location being clicked
@@ -517,7 +486,7 @@ require([
             gChartView = false;
             gTimingView = false;
             if (target === '#map-view') {
-                map.init(featureSelected);
+                map.initDynamicMap(gOverallMapConfig, false, featureSelected, true);
                 $('.mapOnly').show();
                 gMapView = true;
             } else if(target === '#chart-view') {
@@ -870,11 +839,6 @@ require([
             saveCurrentGroupSurvey(globals.gCurrentSurvey, globals.gGroupSurveys[globals.gCurrentSurvey]);
 
             showManagedData(globals.gCurrentSurvey, showTable, false);
-
-            //getSurveyView(0, globals.gCurrentSurvey,
-            //    gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].managed_id,   // deprecate
-            //    0,
-            //    globals.gGroupSurveys[globals.gCurrentSurvey]);     // GroupSurvey
 
             $('.main_survey').html($('#survey_name option:selected').text());
 
@@ -1636,57 +1600,6 @@ require([
             }
         }
 
-        saveConfig(config);
-    }
-
-    /*
-     * Update the saved configuration
-     *  This includes information on specific charts that are added to the survey whereas the report save below
-     *  is for the base report.
-     */
-    function saveConfig() {
-        var configColumns = [],
-            columns = gTasks.cache.currentData.schema.columns,
-            i;
-
-        for (i = 0; i < columns.length; i++) {
-            configColumns.push({
-                name: columns[i].displayName,
-                hide: columns[i].hide,
-                barcode: columns[i].barcode,
-                filterValue: columns[i].filterValue,
-                chart_type: columns[i].chart_type,
-                width: columns[i].width ? columns[i].width : 6
-            });
-        }
-
-        var saveView = JSON.stringify(configColumns);
-        var viewId = globals.gViewId || 0;
-        var url = "/surveyKPI/surveyview/" + viewId;
-        url += '?survey=' + globals.gCurrentSurvey;
-        url += '&managed=' + 0;						// TODO
-        url += '&query=' + 0;							// TODO
-
-        addHourglass();
-        $.ajax({
-            type: "POST",
-            dataType: 'json',
-            cache: false,
-            contentType: "application/json",
-            url: url,
-            data: {view: saveView},
-            success: function (data, status) {
-                removeHourglass();
-                if(globals.gViewId != data.viewId) {  // Store data under new viewId
-                    gTasks.cache.surveyConfig[data.viewId] = gTasks.cache.surveyConfig[globals.gViewId];
-                    globals.gViewId = data.viewId;
-                }
-                $('#right-sidebar').removeClass("sidebar-open");
-            }, error: function (data, status) {
-                removeHourglass();
-                alert(data.responseText);
-            }
-        });
     }
 
     /*
@@ -1775,10 +1688,9 @@ require([
     /*
      * Respond to a map feature being selected
      */
-    function featureSelected(event) {
-        if(event.selected.length == 1) {
-            var feature = event.selected[0];
-            var index = feature.get('record');
+    function featureSelected(properties) {
+        if(properties) {
+            var index = properties.record;
             var indexes = [];
             indexes.push(index);
             recordSelected(indexes);
@@ -2681,7 +2593,7 @@ require([
         }
 
         // Refresh the views that depend on the displayed rows
-        map.refreshAllLayers(gMapView);
+        map.refreshAllLayers(gMapView, gOverallMapConfig.map);
         chart.refreshAllCharts(gChartView, gTimingView, true);
 
         if(gTasks.gSelectedRecord && gTasks.gSelectedRecord.instanceid) {
@@ -2822,8 +2734,8 @@ require([
 
         if (!gModalMapInitialised) {
             setTimeout(function () {
-                map.initDynamicMap(gTaskMapConfig, true);
-            }, 500);
+                map.initDynamicMap(gTaskMapConfig, true, undefined, false);
+            }, 0);
             gModalMapInitialised = true;
         } else {
             //gClickOnMapenabled = false;     // TODO
