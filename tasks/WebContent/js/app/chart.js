@@ -1400,7 +1400,6 @@ define([
                 if (!replaced) {
                     gCharts.push(gEdChart);
                 }
-                saveToServer(gCharts);
 
                 $('#editChart').modal("hide");	// All good close the modal
 
@@ -1424,42 +1423,6 @@ define([
             gIsNewChart = true;
             initialiseWidgetDialog();
             $('#editChart').modal("show");
-        }
-
-
-        /*
-         * Save the layers to the server
-         */
-        function saveToServer(charts) {
-
-            var saveString = JSON.stringify(charts);
-            var viewId = globals.gViewId || 0;
-            var url = "/surveyKPI/surveyview/" + viewId;
-            url += '?survey=' + globals.gCurrentSurvey;
-            url += '&managed=' + 0;
-            url += '&query=' + 0;
-
-            addHourglass();
-            $.ajax({
-                type: "POST",
-                dataType: 'json',
-                contentType: "application/json",
-                cache: false,
-                url: url,
-                data: {chartView: saveString},
-                success: function (data, status) {
-                    removeHourglass();
-                    //if(globals.gViewId != data.viewId) {  // Store data under new viewId
-                    //    gTasks.cache.surveyConfig[data.viewId] = gTasks.cache.surveyConfig[globals.gViewId];
-                    //    globals.gViewId = data.viewId;
-                    //}
-
-
-                }, error: function (data, status) {
-                    removeHourglass();
-                    alert(localise.set["msg_err_save"] + " " + data.responseText);
-                }
-            });
         }
 
         function disableElem(elem) {
