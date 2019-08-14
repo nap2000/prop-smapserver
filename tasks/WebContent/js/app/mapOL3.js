@@ -454,6 +454,7 @@ define([
                             "geometry": results[i]._geolocation,
                             "properties": {
                                 record: i,
+                                main: true,
                                 _assigned: results[i]._assigned
                             }
                         });
@@ -619,19 +620,31 @@ define([
                     var areaFill;
                     var line;
 
-                    if(feature.get('type')=== 'current' || feature.get('_assigned')=== globals.gLoggedInUser.ident) {
-                        pointFill = 'rgba(255, 0, 0, 1.0)';
-                        areaFill = 'rgba(255, 100, 50, 0.3)';
-                        line = 'rgba(255, 10, 10, 0.8)';
-                    } else if(feature.get('type')=== 'old' || feature.get('_assigned') === '') {
-                        pointFill = 'rgba(0, 0, 255, 1.0)';
-                        areaFill = 'rgba(50, 100, 255, 0.3)';
-                        line = 'rgba(10, 10, 255, 0.8)';
+                    if(feature.get('main')) {
+                        if(feature.get('_assigned')=== globals.gLoggedInUser.ident) {
+                            pointFill = 'rgba(0, 0, 255, 1.0)';
+                        } else if(feature.get('_assigned') === '') {
+                            pointFill = 'rgba(255, 165, 0, 1.0)';
+                        } else {
+                            pointFill = 'rgba(255, 255, 255, 1.0)';
+                        }
+                        line = 'rgba(255, 255, 255, 0.8)';
                     } else {
-                        pointFill = 'rgba(0, 255, 255, 1.0)';
-                        areaFill = 'rgba(10, 200, 255, 0.3)';
-                        line = 'rgba(10, 200, 255, 0.8)';
+                        if (feature.get('type') === 'current') {
+                            pointFill = 'rgba(255, 0, 0, 1.0)';
+                            areaFill = 'rgba(255, 100, 50, 0.3)';
+                            line = 'rgba(255, 10, 10, 0.8)';
+                        } else if (feature.get('type') === 'old') {
+                            pointFill = 'rgba(0, 0, 255, 1.0)';
+                            areaFill = 'rgba(50, 100, 255, 0.3)';
+                            line = 'rgba(10, 10, 255, 0.8)';
+                        } else {
+                            pointFill = 'rgba(0, 255, 255, 1.0)';
+                            areaFill = 'rgba(10, 200, 255, 0.3)';
+                            line = 'rgba(10, 200, 255, 0.8)';
+                        }
                     }
+
 
                     return [new ol.style.Style({
                         fill: new ol.style.Fill({
