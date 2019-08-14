@@ -1987,7 +1987,7 @@ require([
                                 if (data[i].event === 'changes' && data[i].changes) {
                                     h[++idx] = getChangeCard(data[i].changes, i);
                                 } else if (data[i].event === 'task' && data[i].task) {
-                                    h[++idx] = getTaskInfo(data[i].task);
+                                    h[++idx] = getTaskCard(data[i].task, i);
                                 } else if (data[i].event === 'notification' && data[i].notification) {
                                     h[++idx] = getNotificationInfo(data[i].notification, data[i].description);
                                 } else {
@@ -2152,79 +2152,193 @@ require([
     /*
      * Get task info
      */
-    function getTaskInfo(task) {
+    function getTaskCard(task, index) {
         var h = [],
             idx = -1,
             i,
             events = task.taskEvents,
-            assignmentId,
-            addBreak;
+            addBreak,
+            state = getTaskState(task),
+            current,
+            taskHistory,
+            event;
+
+        current = state.current;
+        taskHistory = state.history;
+
+
+        h[++idx] = '<div class="card bg-white">';
+
+        h[++idx] = '<div class="card-header" id="task_heading_';
+        h[++idx] = index;
+        h[++idx] = '">';
+        h[++idx] = '<h5 class="mb-0">';
+        h[++idx] = '<button class="btn btn-link card-button" data-toggle="collapse" data-target="#task_collapse_';
+        h[++idx] = index;
+        h[++idx] = '" aria-expanded="false" aria-controls="task_collapse_';
+        h[++idx] = index;
+        h[++idx] = '">';
 
         h[++idx] = localise.set["c_id"];
         h[++idx] = ': ';
         h[++idx] = task.assignmentId;
-        h[++idx] = '<br/>';
+        if(current.assigned) {
+            h[++idx] = '<br/>';
+            h[++idx] = localise.set["t_assigned"];
+            h[++idx] = ': ';
+            h[++idx] = current.assigned;
+        }
+        if(current.name) {
+            h[++idx] = '<br/>';
+            h[++idx] = localise.set["c_name"];
+            h[++idx] = ': ';
+            h[++idx] = current.name;
+        }
 
-        if(events) {
-            for(i = 0; i < events.length; i++) {
-                h[++idx] = localTime(events[i].when);
+        h[++idx] = '</button>';
+        h[++idx] = '</h5>';
+        h[++idx] = '</div>';    // Header
+
+        h[++idx] = '<div id="task_collapse_';
+        h[++idx] = index;
+        h[++idx] = '" class="collapse change_card" aria-labelledby="task_heading_';
+        h[++idx] = index;
+        h[++idx] = '">';
+        h[++idx] = '<div class="card-body">';
+
+        //----------------- Start card body
+        if(taskHistory && taskHistory.length > 0) {
+            for(i = events.length - 1; i >= 0; i--) {
+                event = taskHistory[i];
+
+                h[++idx] = event.when;
                 h[++idx] = '<div class="ml-4">';
-                if(events[i].status) {
+                if(event.status) {
                     addBreak = true;
                     h[++idx] = localise.set["c_status"];
                     h[++idx] = ': ';
-                    h[++idx] = localise.set[events[i].status];
+                    h[++idx] = localise.set[event.status];
                 }
-                if(events[i].assigned) {
+                if(event.assigned) {
                     if(addBreak) {
                         h[++idx] = '<br/>';
                     }
                     addBreak = true;
                     h[++idx] = localise.set["t_assigned"];
                     h[++idx] = ': ';
-                    h[++idx] = events[i].assigned;
+                    h[++idx] = event.assigned;
                 }
-                if(events[i].schedule_at) {
+                if(event.schedule_at) {
                     if(addBreak) {
                         h[++idx] = '<br/>';
                     }
                     addBreak = true;
                     h[++idx] = localise.set["c_from"];
                     h[++idx] = ': ';
-                    h[++idx] = localTime(events[i].schedule_at);
+                    h[++idx] = event.schedule_at;
                 }
-                if(events[i].schedule_finish) {
+                if(event.schedule_finish) {
                     if(addBreak) {
                         h[++idx] = '<br/>';
                     }
                     addBreak = true;
                     h[++idx] = localise.set["c_to"];
                     h[++idx] = ': ';
-                    h[++idx] = localTime(events[i].schedule_finish);
+                    h[++idx] = event.schedule_finish;
                 }
-                if(events[i].name) {
+                if(event.name) {
                     if(addBreak) {
                         h[++idx] = '<br/>';
                     }
                     addBreak = true;
                     h[++idx] = localise.set["c_name"];
                     h[++idx] = ': ';
-                    // We only need the name up to the first ":".  If the name has colons in it then it has probably been created
-                    // automatically from existing data using project name and survey name.  However for the per record view just the
-                    // Task group name is enough
-                    var name = events[i].name;
-                    if(name.indexOf(':') > 0) {
-                        name = name.substring(0, name.indexOf(':'));
-                    }
-                    h[++idx] = name;
+                    h[++idx] = event.name;
                 }
                 h[++idx] = '</div>';
             }
         }
+        // ------------ End card body
+
+
+        h[++idx] = '</div>';        // body
+        h[++idx] = '</div>';        // collapse
+
+        h[++idx] = '</div>';        // card
+
 
         return h.join('');
     }
 
+    /*
+     * Convert task events into a task state
+     */
+    function getTaskState(task) {
+
+        var i,
+            events = task.taskEvents,
+            event,
+            historyItem,
+            state = {
+                current: {},
+                history: []
+            };
+
+
+        if(events && events.length > 0) {
+
+            // Set current starting from the latest
+            for(i = events.length - 1; i >= 0; i--) {
+                event = events[i];
+
+                if (i == events.length - 1) {
+                    state.current = JSON.parse(JSON.stringify(event))
+                } else {
+                    if (!state.current.status) {
+                        state.current.status = event.status;
+                    }
+                    if (!state.assigned) {
+                        state.current.assigned = event.assigned;
+                    }
+                }
+            }
+
+            // Set history starting from the first and only recording changes
+            for(i = 0; i < events.length; i++) {
+
+                event = events[i];
+                historyItem = {};
+
+                historyItem.when = localTime(event.when);
+
+                if(i == 0 || event.status !== events[i - 1].status) {
+                    historyItem.status = event.status;
+                }
+                if(i == 0 || event.assigned !== events[i - 1].assigned) {
+                    historyItem.assigned = event.assigned;
+                }
+                if(i == 0 || event.schedule_at !== events[i - 1].schedule_at) {
+                    historyItem.schedule_at = localTime(event.schedule_at);
+                }
+                if(i == 0 || event.schedule_finish !== events[i - 1].schedule_finish) {
+                    historyItem.schedule_finish = localTime(event.schedule_finish);
+                }
+
+                // We only need the name up to the first ":".  If the name has colons in it then it has probably been created
+                // automatically from existing data using project name and survey name.  However for the per record view just the
+                // Task group name is enough
+                if(i == 0 || event.name !== events[i - 1].name) {
+                    historyItem.name = event.name;
+                    if (historyItem.name.indexOf(':') > 0) {
+                        historyItem.name = historyItem.name.substring(0, historyItem.name.indexOf(':'));
+                    }
+                }
+
+                state.history.push(historyItem);
+            }
+        }
+        return state;
+    }
     /*
      * Get notification info
      */
