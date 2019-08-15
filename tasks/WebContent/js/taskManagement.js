@@ -129,6 +129,8 @@ require([
 
 	$(document).ready(function () {
 
+		var i;
+
 		setCustomAssignments();			// Apply custom javascript
 
 		window.moment = moment;		// Make moment global for use by common.js
@@ -386,16 +388,26 @@ require([
 		 */
 		$('#status_filter').multiselect({
 			onChange: function(option, checked, select) {
+				setInLocalStorage("status_filter",$('#status_filter').val() );
 				refreshTableAssignments();
 				refreshMainMap();
 				updateCalendar();
 			}
 		});
-		$('#status_filter').multiselect('selectAll', false)
-			.multiselect('deselect', 'deleted')
-			.multiselect('deselect', 'cancelled')
-			.multiselect('updateButtonText');
-
+		var statusSelections = getFromLocalStorage("status_filter");
+		if(statusSelections) {
+			var statusArray = statusSelections.split(",");
+			$('#status_filter').multiselect('deselectAll', false);
+			for (i = 0; i < statusArray.length; i++) {
+				$('#status_filter').multiselect('select', statusArray[i])
+					.multiselect('refresh');
+			}
+		} else {
+			$('#status_filter').multiselect('selectAll', false)
+				.multiselect('deselect', 'deleted')
+				.multiselect('deselect', 'cancelled')
+				.multiselect('updateButtonText');
+		}
 
 		$('#editTaskGroup').click(function () {
 			var s_id = $('#survey').val();
@@ -1784,7 +1796,7 @@ require([
 				gUnsentEmailCount++;
 			}
 
-			if(statusFilter.indexOf(task.properties.status) >= 0) {
+			if(includeByStatus(statusFilter, task)) {
 				tab[++idx] = '<tr>';
 				tab[++idx] = addSelectCheckBox(false, i, false);
 
@@ -1861,6 +1873,22 @@ require([
 		}
 		return tab.join('');
 
+	}
+
+	/*
+	 * Check to see if the status of the task means it should be included
+	 */
+	function includeByStatus(statusFilter, task) {
+
+		var include = statusFilter.indexOf(task.properties.status) >= 0;
+		if(!include) {
+			// check for late
+			if(task.properties.status === 'accepted' && isLate(task.properties.to) && statusFilter.indexOf("late") >= 0) {
+				include = true;
+
+			}
+		}
+		return include;
 	}
 
 	/*
