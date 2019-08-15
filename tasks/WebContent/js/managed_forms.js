@@ -1649,7 +1649,7 @@ require([
             i;
 
         for (i = 0; i < columns.length; i++) {
-            configColumns[columns[i].displayName] = {
+            configColumns[columns[i].column_name] = {
                 hide: columns[i].hide
             };
         }
