@@ -1876,22 +1876,6 @@ require([
 	}
 
 	/*
-	 * Check to see if the status of the task means it should be included
-	 */
-	function includeByStatus(statusFilter, task) {
-
-		var include = statusFilter.indexOf(task.properties.status) >= 0;
-		if(!include) {
-			// check for late
-			if(task.properties.status === 'accepted' && isLate(task.properties.to) && statusFilter.indexOf("late") >= 0) {
-				include = true;
-
-			}
-		}
-		return include;
-	}
-
-	/*
 	 * Process a list of locations
 	 */
 	function processLocationList(tags) {
@@ -2154,7 +2138,7 @@ require([
 
 		for (i = 0; i < tasks.length; i++) {
 			task = tasks[i].properties;
-			if(statusFilter.indexOf(task.status) >= 0) {
+			if(includeByStatus(statusFilter, tasks[i])) {
 				if (task.from) {
 					event = {
 						title: task.name,

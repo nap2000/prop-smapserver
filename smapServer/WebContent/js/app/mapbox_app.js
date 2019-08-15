@@ -187,7 +187,7 @@ function refreshMapAssignments(elementId, taskList) {
 
 	// Filter out the tasks
 	for (i = 0; i < taskList.features.length; i++) {
-		if(statusFilter.indexOf(taskList.features[i].properties.status) >= 0) {
+		if(includeByStatus(statusFilter, taskList.features[i])) {
 			filteredGeoJson.features.push(taskList.features[i]);
 		}
 	}
