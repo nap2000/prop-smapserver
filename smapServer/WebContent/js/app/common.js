@@ -4741,3 +4741,19 @@ function getWebFormUrl(form_ident, update_id, initial_data_source, taskId, assig
 
 	return url;
 }
+
+/*
+ * Check to see if the status of the task means it should be included
+ */
+function includeByStatus(statusFilter, task) {
+
+	var include = statusFilter.indexOf(task.properties.status) >= 0;
+	if(!include) {
+		// check for late
+		if(task.properties.status === 'accepted' && isLate(task.properties.to) && statusFilter.indexOf("late") >= 0) {
+			include = true;
+
+		}
+	}
+	return include;
+}
