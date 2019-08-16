@@ -152,6 +152,8 @@ require([
 
 		// Set change function on projects
 		$('#project_name').change(function () {
+			globals.gCurrentSurvey = -1;
+			globals.gCurrentTaskGroup = undefined;
 			projectChanged();
 		});
 
@@ -1066,8 +1068,6 @@ require([
 	function projectChanged() {
 
 		globals.gCurrentProject = $('#project_name option:selected').val();
-		globals.gCurrentSurvey = -1;
-		globals.gCurrentTaskGroup = undefined;
 
 		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged);			// Get surveys
 		refreshTaskGroupData();		// Get the task groups from the server
@@ -1084,12 +1084,14 @@ require([
 	function surveyChanged(filterQuestion, address_columns) {
 		var sId = $('#survey').val();
 
-		if(typeof filterQuestion === "undefined") {
-			filterQuestion = "-1";
+		if(sId) {
+			if (typeof filterQuestion === "undefined") {
+				filterQuestion = "-1";
+			}
+			$('#filter_option').empty();
+			getLanguageList(sId, questionChanged, false, '#filter_language', false, filterQuestion);
+			setAddressOptions(address_columns);
 		}
-		$('#filter_option').empty();
-		getLanguageList(sId, questionChanged, false, '#filter_language', false, filterQuestion);
-		setAddressOptions(address_columns);
 	}
 
 	function languageChanged() {
@@ -1629,6 +1631,18 @@ require([
 		$('#tp_show_dist').val(task.show_dist);
 
 		$('#location_save_panel').hide();
+
+		if(!isNew && task.update_id) {
+			$('#tp_show_console').removeClass('disabled');
+			var link = "/tasks/managed_forms.html?id=" + taskFeature.properties.form_id
+				+ "&instanceid=" + taskFeature.properties.update_id;
+			$('#tp_show_console').prop("href", link);
+		} else {
+			$('#tp_show_console').prop("href", "#");
+			$('#tp_show_console').addClass('disabled');
+		}
+
+		// Show modal
 		$('#task_properties').modal("show");
 
 		if (!gModalMapInitialised) {

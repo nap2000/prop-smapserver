@@ -625,6 +625,7 @@ define({
     "t_dl_dist_i": "The user will need to be within this distance from the geographic center of the tasks in this task group before they will be downloaded onto their device",
     "t_show_dist": "Show distance (meters)",
     "t_show_dist_i": "The user will need to be within this distance from the task before it is displayed on their device",
+    "t_show_console": "Show in console",
     "new": "Unassigned",
     "accepted": "Assigned",
     "submitted": "Complete",
@@ -760,6 +761,7 @@ define({
 	"ed_ethiopian": "Ethiopian",
 	"ed_islamic": "Islamic",
     "ed_myanmar": "Myanmar",
+    "ed_persian": "Persian",
     "ed_r": "Rating",
 	"ed_bear": "Bearing",
 	"ed_sep": "Thousands Separator",
@@ -916,6 +918,8 @@ define({
     "mf_ur": "Unassigned records",
     "mf_or": "Other records",
     "mf_max": "Max records",
+    "mf_clear": "Clear single record view",
+
 
     // Logout
     "lo_back": "Back",

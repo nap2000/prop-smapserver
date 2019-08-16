@@ -189,9 +189,27 @@ require([
 
         $('.editRecordSection, .selectedOnly').hide();
 
+        // Get the parameters and start editing a survey if one was passed as a parameter
+        var params = location.search.substr(location.search.indexOf("?") + 1);
+        var pArray = params.split("&");
+        var dont_get_current_survey = false;
+        $('.srview').hide();
+        for (i = 0; i < pArray.length; i++) {
+            var param = pArray[i].split("=");
+            if ( param[0] === "id" ) {
+                dont_get_current_survey = true;		// Use the passed in survey id
+                globals.gCurrentSurvey = param[1];
+                saveCurrentProject(-1, globals.gCurrentSurvey, undefined);	// Save the current survey id
+            } else if ( param[0] === "instanceid" ) {
+                globals.gCurrentInstance = param[1];
+                $('.mrview').hide();
+                $('.srview').show();
+            }
+        }
+
         // Get the user details
         globals.gIsAdministrator = false;
-        getLoggedInUser(refreshData, false, true, undefined, false, false);
+        getLoggedInUser(refreshData, false, true, undefined, false, dont_get_current_survey);
 
         // Set change function on projects
         $('#project_name').change(function () {
@@ -203,6 +221,14 @@ require([
 
         // Get Notification Types for this server
         getNotificationTypes();
+
+        // Set response to clearing single record view
+        $('#clear_srview').click(function() {
+            globals.gCurrentInstance = undefined;
+            $('.srview').hide();
+            $('.mrview').show();
+            refreshData();
+        });
 
         // Set change function on survey
         $('#survey_name').change(function () {
@@ -1342,7 +1368,7 @@ require([
                             firstSurvey = false;
                         }
 
-                        if (item.id === globals.gCurrentSurvey) {
+                        if (item.id == globals.gCurrentSurvey) {
                             gTasks.gSelectedSurveyIndex = i;
                         }
                     }
@@ -1754,8 +1780,8 @@ require([
                 return;
             }
         }
-        $('.overviewSection').show();
-        $('.editRecordSection').hide();
+        $('.overviewSection,.mrview').show();
+        $('.editRecordSection,.srview').hide();
     }
 
     /*
@@ -2195,7 +2221,7 @@ require([
         if(taskHistory && taskHistory.length > 0) {
             for(i = events.length - 1; i >= 0; i--) {
                 event = taskHistory[i];
-
+                addBreak = false;
                 h[++idx] = event.when;
                 h[++idx] = '<div class="ml-4">';
                 if(event.status) {
@@ -2282,10 +2308,17 @@ require([
                     if (!state.current.status) {
                         state.current.status = event.status;
                     }
-                    if (!state.assigned) {
+                    if (!state.current.assigned) {
                         state.current.assigned = event.assigned;
                     }
+                    if (!state.current.name) {
+                        state.current.name = event.name;
+                    }
                 }
+            }
+
+            if (state.current.name && state.current.name.indexOf(':') > 0) {
+                state.current.name = state.current.name.substring(0, state.current.name.indexOf(':'));
             }
 
             // Set history starting from the first and only recording changes
@@ -2314,7 +2347,7 @@ require([
                 // Task group name is enough
                 if(i == 0 || event.name !== events[i - 1].name) {
                     historyItem.name = event.name;
-                    if (historyItem.name.indexOf(':') > 0) {
+                    if (historyItem.name && historyItem.name.indexOf(':') > 0) {
                         historyItem.name = historyItem.name.substring(0, historyItem.name.indexOf(':'));
                     }
                 }
@@ -2511,6 +2544,10 @@ require([
 
             if (isDuplicates) {
                 url += "&group=true";
+            }
+
+            if(globals.gCurrentInstance) {
+                url += "&instanceid=" + globals.gCurrentInstance;
             }
 
             /*
