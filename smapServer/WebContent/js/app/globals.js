@@ -83,6 +83,7 @@ define(function () {
         gCurrentTaskGroup: undefined,
         gTaskList: undefined,
         gCurrentSurveyIndex: 0,
+	    gCurrentInstance: undefined,
         gAlertSeen: false,
         gLastAlertTime: undefined,
 
@@ -422,7 +423,7 @@ define(function () {
 		    'date_type': {
 			    field: 'a_date_type',
 			    type: 'select',
-			    rex: 'no-calendar|month-year|year|coptic|ethiopian|islamic|myanmar',
+			    rex: 'no-calendar|month-year|year|coptic|ethiopian|islamic|myanmar|persian',
 			    valIsAppearance: true,
 			    value_offset: 0,
 			    undef_value: ''
