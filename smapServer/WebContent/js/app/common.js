@@ -1728,7 +1728,7 @@ function getLanguageList(sId, callback, addNone, selector, setGroupList, filterQ
 				if(xhr.readyState == 0 || xhr.status == 0) {
 					return;  // Not an error
 				} else {
-					alert("Error: Failed to get list of languages: " + err);
+					alert(localise.set["c_error"] + ": " + err);
 				}
 			}
 		});
@@ -4706,7 +4706,7 @@ function getInitialDataLink(task) {
 	idx = -1;
 
 	tab[++idx] = '<a href="';
-	tab[++idx] = getWebFormUrl(task.properties.form_ident,
+	tab[++idx] = getWebFormUrl(task.properties.survey_ident,
 		task.properties.update_id,
 		task.properties.initial_data_source,
 		task.properties.id,
