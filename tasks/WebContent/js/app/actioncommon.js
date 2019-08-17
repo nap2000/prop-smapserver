@@ -161,33 +161,7 @@ define([
                 h[++idx] = addSourceQuestion(sourceColumn, record, column.parameters.rows);
             }
 
-            if (column.type === "text") {
-                if(column.parameters && column.parameters.rows) {
-                    h[++idx] = ' <textarea rows=';
-                    h[++idx] = column.parameters.rows;
-                    h[++idx] = ' class="form-control editable" ';
-                    h[++idx] = '" data-item="';
-                    h[++idx] = itemIndex;
-                    if (first) {
-                        h[++idx] = '" autofocus>';
-                    } else {
-                        h[++idx] = '">';
-                    }
-                    h[++idx] = value;
-                    h[++idx] = '</textarea>';
-                } else {
-                    h[++idx] = ' <input type="text"';
-                    h[++idx] = '" class="form-control editable" value="';
-                    h[++idx] = value;
-                    h[++idx] = '" data-item="';
-                    h[++idx] = itemIndex;
-                    if (first) {
-                        h[++idx] = '" autofocus/>';
-                    } else {
-                        h[++idx] = '"/>';
-                    }
-                }
-            } else if (column.type === "decimal" || column.type === "integer") {
+            if (column.type === "decimal" || column.type === "integer") {
                 h[++idx] = ' <input type="number"';
                 h[++idx] = '" class="form-control editable" value="';
                 h[++idx] = value;
@@ -231,8 +205,41 @@ define([
                 }
                 h[++idx] = '</select>';
 
-            } else {
-                h[++idx] = value;
+            } else {        // Text + Default
+
+                var v = addAnchors(value)[0],
+                    h = [],
+                    idx = -1;
+                if(v && v.indexOf('<') == 0) {
+                    h[++idx] = v;
+                } else {
+                    if(column.parameters && column.parameters.rows) {
+                        h[++idx] = ' <textarea rows=';
+                        h[++idx] = column.parameters.rows;
+                        h[++idx] = ' class="form-control editable" ';
+                        h[++idx] = '" data-item="';
+                        h[++idx] = itemIndex;
+                        if (first) {
+                            h[++idx] = '" autofocus>';
+                        } else {
+                            h[++idx] = '">';
+                        }
+                        h[++idx] = value;
+                        h[++idx] = '</textarea>';
+                    } else {
+                        h[++idx] = ' <input type="text"';
+                        h[++idx] = '" class="form-control editable" value="';
+                        h[++idx] = value;
+                        h[++idx] = '" data-item="';
+                        h[++idx] = itemIndex;
+                        if (first) {
+                            h[++idx] = '" autofocus/>';
+                        } else {
+                            h[++idx] = '"/>';
+                        }
+                    }
+                }
+                
             }
 
             return h.join('');
