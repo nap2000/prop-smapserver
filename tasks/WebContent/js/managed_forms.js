@@ -2071,10 +2071,11 @@ require([
 
                         var idx = $(this).data("idx");
                         var task = window.gChanges[idx].task;
+                        var url = "/api/v1/tasks/assignment/" + task.assignmentId + "?taskid=" + task.taskId;
                         // Get the task details and then open the editor dialog
 
                         $.ajax({
-                            url: "/api/v1/tasks/assignment/" + task.assignmentId,
+                            url: url,
                             dataType: 'json',
                             cache: false,
                             success: function (data) {
