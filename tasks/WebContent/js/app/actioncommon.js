@@ -239,7 +239,7 @@ define([
                         }
                     }
                 }
-                
+
             }
 
             return h.join('');
