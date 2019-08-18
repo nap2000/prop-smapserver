@@ -107,7 +107,7 @@ require([
 
     window.gTasks = {
         cache: {
-            surveyConfig: {},				// keep
+            currentData: {},
             managedData: {},
             surveyList: {}					// keep
         },
@@ -131,8 +131,9 @@ require([
          *  as the code is shared.  However there not really a need for caching in this module.
          */
         globals.gViewId = 0;
-        gTasks.cache.surveyConfig[globals.gViewId] = {};
-        gTasks.cache.surveyConfig[globals.gViewId].columns = gSurveyConfig.columns;
+        gTasks.cache.currentData = {};
+        gTasks.cache.currentData.schema = {};
+        gTasks.cache.currentData.schema.columns = gSurveyConfig.columns;
         gTasks.gSelectedRecord = gRecord[0];
 
         $('#er_form_data').change(function(){
