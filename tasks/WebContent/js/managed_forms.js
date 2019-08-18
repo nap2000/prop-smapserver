@@ -426,10 +426,12 @@ require([
 
         $('#getSharedRecord').click(function () {
 
-            var url = "/surveyKPI/managed/actionlink/" +
-                globals.gCurrentSurvey + "/" +
-                gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].managed_id + "/" +
-                gTasks.gPriKey;
+            var groupSurvey = globals.gGroupSurveys[globals.gCurrentSurvey];
+
+            var url = "/surveyKPI/managed/actionlink/" + globals.gCurrentSurvey + "/" + gTasks.gPriKey;
+            if(groupSurvey && groupSurvey !== "") {
+                url += "?groupSurvey=" + groupSurvey;
+            }
 
             if (globals.gIsSecurityAdministrator) {
                 var roleIds = [],
