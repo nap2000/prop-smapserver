@@ -411,7 +411,7 @@ require([
                     $('.re_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
                 }, error: function (data, status) {
                     removeHourglass();
-                    $('.my_org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + data.responseText);
+                    $('.re_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + data.responseText);
                 }
             });
         });
