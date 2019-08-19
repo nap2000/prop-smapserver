@@ -262,6 +262,7 @@ require([
         });
 
         $('#exitEditRecord').click(function() {
+            showManagedData(globals.gCurrentSurvey, showTable, true);
             window.history.back();
         });
 
