@@ -2378,7 +2378,7 @@ require([
 
         h[++idx] = localise.set["c_to"];
         h[++idx] = ': ';
-        h[++idx] = n.emails.join(',');
+        h[++idx] = n.emails ? n.emails.join(',') : '';
         h[++idx] = '<br/>';
 
         if(description) {
