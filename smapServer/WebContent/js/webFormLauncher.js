@@ -364,7 +364,7 @@ function addTaskList(taskList, filterProjectId) {
 		}
 	}
 
-	$('#tasks_count').html('(' + taskList.length + ')');
+	$('#tasks_count').html('(' + count + ')');
 	$taskList.html(h.join(''));
 
 	$taskList.find('.task').off().click(function(){
