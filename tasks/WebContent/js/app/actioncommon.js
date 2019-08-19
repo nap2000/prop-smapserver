@@ -161,9 +161,12 @@ define([
                 h[++idx] = addSourceQuestion(sourceColumn, record, column.parameters.rows);
             }
 
-            if (column.type === "decimal" || column.type === "integer") {
+            if (column.type === "decimal" || column.type === "integer"  || column.type === "int") {
                 h[++idx] = ' <input type="number"';
-                h[++idx] = '" class="form-control editable" value="';
+                if(column.type === "integer"  || column.type === "int") {
+                    h[++idx] = ' step="1"';
+                }
+                h[++idx] = ' class="form-control editable" value="';
                 h[++idx] = value;
                 h[++idx] = '" data-item="';
                 h[++idx] = itemIndex;
