@@ -389,6 +389,8 @@ define([
             } else {
                 $('#saveRecord').prop("disabled", true);
             }
+
+            $('.re_alert').hide();
         }
 
         /*
