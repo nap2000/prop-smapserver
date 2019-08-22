@@ -22,7 +22,8 @@ define([
         'modernizr',
         'localise',
         'globals',
-        'app/mapOL3'],
+        'app/mapOL3',
+        'multiselect'],
     function ($, modernizr, lang, globals, map) {
 
         return {
@@ -77,17 +78,34 @@ define([
                 showTodayButton: true
             });
 
+            // Set up multi selects
+            $('.select', $editForm).multiselect({
+                onChange: function(option, checked, select) {
+
+                    var $sel = option.closest('select');
+                    var itemIndex = $sel.data("item");
+                    var val = $sel.val().join(' ');
+                    var config = {
+                        itemIndex: itemIndex,
+                        value: val
+                    }
+                    dataChanged(config);
+                }
+            });
+
             // Set up the map fields
             initialiseDynamicMaps(globals.gRecordMaps);
 
             // Respond to changes in the data by creating an update object
             $editForm.find('.form-control, select').bind("click propertychange paste change keyup input", function () {
-                var $this = $(this);
-                var config = {
-                    itemIndex: $this.data("item"),
-                    value: $this.val()
+                if(!$(this).hasClass('select')) { // Ignore select multiples
+                    var $this = $(this);
+                    var config = {
+                        itemIndex: $this.data("item"),
+                        value: $this.val()
+                    }
+                    dataChanged(config);
                 }
-                dataChanged(config);
             });
             $editForm.find('.date').on("dp.change", function () {
                 var $this = $(this).find('input');
@@ -151,7 +169,8 @@ define([
             var h = [],
                 idx = -1,
                 i,
-                sourceColumn;
+                sourceColumn,
+                vArray;
 
             // Check for a source column
             if(column.parameters && column.parameters.source) {
@@ -189,17 +208,33 @@ define([
                 }
                 h[++idx] = '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
                 h[++idx] = '</div>';
-            } else if (column.type === "select1" || column.type === "select_one") {
-                h[++idx] = ' <select class="form-control editable" ';
+            } else if (column.type === "select1" || column.type === "select" || column.type === "select_one") {
+                h[++idx] = ' <select class="form-control editable ';
+                if (column.type === "select") {
+                    h[++idx] = ' select';
+                }
                 h[++idx] = '" data-item="';
                 h[++idx] = itemIndex;
-                h[++idx] = '">';
+                h[++idx] = '"';
+                if (column.type === "select") {
+                    h[++idx] = ' multiple="multiple"'
+                }
+                h[++idx] = '>';
                 var choices = getChoiceList(schema, column.l_id);
                 if (choices) {
+                    if (column.type === "select") {
+                        vArray = value.split(' ');
+                    }
                     for (i = 0; i < choices.length; i++) {
                         h[++idx] = '<option';
-                        if (choices[i].k === value) {
-                            h[++idx] = ' selected="selected"'
+                        if (column.type === "select") {
+                            if(vArray.indexOf(choices[i].k) > -1) {
+                                h[++idx] = ' selected="selected"';
+                            }
+                        } else {
+                            if (choices[i].k === value) {
+                                h[++idx] = ' selected="selected"';
+                            }
                         }
                         h[++idx] = ' value="';
                         h[++idx] = choices[i].k;
