@@ -2736,7 +2736,6 @@ require([
      * Show a records details
      */
     function showRecord(editable) {
-        var columns = gTasks.cache.currentData.schema.columns;
 
         window.location.hash="#edit";
         $('.shareRecordOnly, .role_select').hide();
@@ -2752,7 +2751,7 @@ require([
         } else {
             $('#saveRecord').addClass('disabled');
         }
-        actioncommon.showEditRecordForm(gTasks.gSelectedRecord, columns, $('#editRecordForm'), $('#surveyForm'), editable);
+        actioncommon.showEditRecordForm(gTasks.gSelectedRecord, gTasks.cache.currentData.schema, $('#editRecordForm'), $('#surveyForm'), editable);
     }
 
 

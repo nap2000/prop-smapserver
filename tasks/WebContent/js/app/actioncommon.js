@@ -35,7 +35,7 @@ define([
         /*
          * Add HTML to show a form to edit a record
          */
-        function showEditRecordForm(record, columns, $editForm, $surveyForm, editable) {
+        function showEditRecordForm(record, schema, $editForm, $surveyForm, editable) {
             var
                 h = [],
                 idx = -1,
@@ -43,7 +43,8 @@ define([
                 cnt = -1,
                 i,
                 configItem,
-                first = true;
+                first = true,
+                columns = schema.columns;
 
             //gTasks.gCurrentIndex = index;
             globals.gRecordMaps = [];     // Initialise the list of maps we are going to show
@@ -57,9 +58,9 @@ define([
                 configItem = columns[i];
 
                 if (configItem.mgmt) {
-                    h[++idx] = getEditMarkup(configItem, i, first, record, columns, editable);
+                    h[++idx] = getEditMarkup(configItem, i, first, record, schema, editable);
                 } else {
-                    m[++cnt] = getEditMarkup(configItem, i, first, record, columns, editable);
+                    m[++cnt] = getEditMarkup(configItem, i, first, record, schema, editable);
                 }
                 if (!configItem.readonly) {
                     first = false;
@@ -108,7 +109,7 @@ define([
         /*
          * Get the markup to edit the record
          */
-        function getEditMarkup(configItem, itemIndex, first, record, columns, editable) {
+        function getEditMarkup(configItem, itemIndex, first, record, schema, editable) {
 
             var h = [],
                 idx = -1;
@@ -132,7 +133,7 @@ define([
             } else if (configItem.readonly || !editable) {		// Read only text
                 h[++idx] = addCellMarkup(record[configItem.displayName]);
             } else {
-                h[++idx] = addEditableColumnMarkup(configItem, record[configItem.displayName], itemIndex, first, columns, record);
+                h[++idx] = addEditableColumnMarkup(configItem, record[configItem.displayName], itemIndex, first, schema, record);
                 first = false;
             }
             h[++idx] = '</div>';
@@ -146,7 +147,7 @@ define([
         /*
          * Add the markup for an editable column
          */
-        function addEditableColumnMarkup(column, value, itemIndex, first, columns, record) {
+        function addEditableColumnMarkup(column, value, itemIndex, first, schema, record) {
             var h = [],
                 idx = -1,
                 i,
@@ -154,7 +155,7 @@ define([
 
             // Check for a source column
             if(column.parameters && column.parameters.source) {
-                var sourceColumn = getColumn(column.parameters.source, columns);
+                var sourceColumn = getColumn(column.parameters.source, schema.columns);
             }
 
             if(sourceColumn) {
@@ -188,21 +189,22 @@ define([
                 }
                 h[++idx] = '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
                 h[++idx] = '</div>';
-            } else if (column.type === "select_one") {
+            } else if (column.type === "select1" || column.type === "select_one") {
                 h[++idx] = ' <select class="form-control editable" ';
                 h[++idx] = '" data-item="';
                 h[++idx] = itemIndex;
                 h[++idx] = '">';
-                if (column.choices) {
-                    for (i = 0; i < column.choices.length; i++) {
+                var choices = getChoiceList(schema, column.l_id);
+                if (choices) {
+                    for (i = 0; i < choices.length; i++) {
                         h[++idx] = '<option';
-                        if (column.choices[i].k === value) {
+                        if (choices[i].k === value) {
                             h[++idx] = ' selected="selected"'
                         }
                         h[++idx] = ' value="';
-                        h[++idx] = column.choices[i].k;
+                        h[++idx] = choices[i].k;
                         h[++idx] = '">';
-                        h[++idx] = column.choices[i].v;
+                        h[++idx] = choices[i].v;
                         h[++idx] = '</option>';
                     }
                 }
@@ -246,6 +248,20 @@ define([
             }
 
             return h.join('');
+        }
+
+        /*
+         * Get the choicelist for a select question
+         */
+        function getChoiceList(schema, listId) {
+            var i;
+            if(schema && schema.choiceLists && schema.choiceLists.length) {
+                for (i = 0; i < schema.choiceLists.length; i++) {
+                    if (schema.choiceLists[i].l_id === listId) {
+                        return schema.choiceLists[i].choices;
+                    }
+                }
+            }
         }
 
         /*
