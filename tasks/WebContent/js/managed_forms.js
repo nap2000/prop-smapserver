@@ -49,6 +49,8 @@ requirejs.config({
         inspinia: '../../../../js/libs/wb/inspinia.v2.9.2',
         pace: '../../../../js/libs/wb/plugins/pace/pace.min',
         qrcode: '../../../../js/libs/jquery-qrcode-0.14.0.min',
+        multiselect: '../../../../js/libs/bootstrap-multiselect',
+        knockout: '../../../../js/libs/knockout',
 	    slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll.min'
 
     },
@@ -65,7 +67,8 @@ requirejs.config({
         'qrcode': ['jquery'],
 	    'slimscroll': ['jquery'],
         'toggle': ['bootstrap.min'],
-        'inspinia': ['jquery']
+        'inspinia': ['jquery'],
+        'multiselect': ['jquery', 'knockout']
     }
 });
 
@@ -87,7 +90,8 @@ require([
     'qrcode',
     'toggle',
 	'slimscroll',
-    'inspinia'
+    'inspinia',
+    'multiselect'
 
 ], function ($,
              common,
@@ -882,7 +886,7 @@ require([
 
         getEligibleUsers();
 
-        $('.editRecordSection, .selectedOnly').hide();
+        $('.editRecordSection, .selectedOnly, .re_alert').hide();
         if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
 
             saveCurrentProject(-1, globals.gCurrentSurvey);
@@ -1783,10 +1787,12 @@ require([
         if(gTasks.gUpdate.length > 0) {
             if (!confirm(localise.set["c_unsav"])) {
                 return;
+            } else {
+                gTasks.gUpdate = [];
             }
         }
         $('.overviewSection,.mrview').show();
-        $('.editRecordSection,.srview').hide();
+        $('.editRecordSection,.srview,.re_alert').hide();
     }
 
     /*
