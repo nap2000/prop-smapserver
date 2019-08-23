@@ -4281,6 +4281,8 @@ function getStatusClass(status, finish) {
 		statusClass = "bg-danger";
 	} else if (status === "submitted" || status === "success") {
 		statusClass = "bg-success";
+	} else if (status === "late") {
+		statusClass = "bg-primary";
 	} else if (status === "accepted") {
 		if (isLate(finish)) {
 			statusClass = "bg-primary";
