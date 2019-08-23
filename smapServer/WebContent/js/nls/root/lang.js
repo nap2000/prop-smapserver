@@ -319,6 +319,7 @@ define({
     "c_events": "Events",
     "c_resend": "Resend",
     "c_late": "Late",
+    "c_custom": "Custom",
 
     // File Types
     "ft": "File Type",
@@ -997,6 +998,8 @@ define({
 	"u_notifications": "Allow notifications",
     "u_sms": "Allow SMS",
     "u_mb_k": "Mapbox Key",
+    "u_mb_a": "Mapbox Account",
+    "u_mb_s": "Mapbox Style Id",
     "u_g_k": "Google Maps Key",
     "u_smtp": "Smtp Host",
     "u_e_dom": "Email Domain",
@@ -1177,7 +1180,6 @@ define({
     "server": "Server",
     "submissions": "Submissions",
     "disk": "Disk",
-    "static map": "Static Map",
     "rekognition": "AWS Rekognition",
 	"static_map": "Mapbox Static Map",
 	"monthly": "Monthly Charge",

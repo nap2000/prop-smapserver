@@ -507,6 +507,14 @@ $(document).ready(function() {
 			$('.pdf_appearance_field').show();
 		}
 	});
+	$('#a_pdfmap').change(function() {
+		var map=$(this).val();
+		if(map === 'custom') {
+			$('.pdf_custom_map').show();
+		} else {
+			$('.pdf_custom_map').hide();
+		}
+	});
 	$('#a_pdfcols_number').change(function() {
 		var val = $(this).val();
 		var i;
@@ -674,6 +682,14 @@ $(document).ready(function() {
 		}
 		if($('#a_pdfaddto').val() !== '') {
 			appearances.push('pdfaddto_' + $('#a_pdfaddto').val());
+		}
+		var pdfmap = $('#a_pdfmap').val();
+		if (pdfmap !== 'default') {
+			appearances.push('pdfmap_' + pdfmap);
+			if (pdfmap === 'custom') {
+				appearances.push('pdfcustommap_' + $('#a_pdfcustommap').val());
+				appearances.push('pdfaccount_' + $('#a_pdfaccount').val());
+			}
 		}
 
 		/*
@@ -1932,6 +1948,7 @@ function respondToEvents($context) {
 		} else {
 			$('.a_pdfhyperlink').hide();
 		}
+		$('.pdf_custom_map').hide();
 
 		/*
 		 * Show form controls relevant for this question type
@@ -2090,6 +2107,27 @@ function respondToEvents($context) {
 				pdfa = appearanceArray[i].split('_');
 				if(pdfa.length > 1) {
 					$('#a_pdfaddto').val(pdfa[1]);
+					foundAppearance = true;
+				}
+			} else if(appearanceArray[i].indexOf('pdfmap_') === 0) {
+				pdfa = appearanceArray[i].split('_');
+				if(pdfa.length > 1) {
+					$('#a_pdfmap').val(pdfa[1]);
+					if(pdfa[1] === 'custom') {
+						$('.pdf_custom_map').show();
+					}
+					foundAppearance = true;
+				}
+			} else if(appearanceArray[i].indexOf('pdfcustommap_') === 0) {
+				pdfa = appearanceArray[i].split('_');
+				if(pdfa.length > 1) {
+					$('#a_pdfcustommap').val(pdfa[1]);
+					foundAppearance = true;
+				}
+			} else if(appearanceArray[i].indexOf('pdfaccount_') === 0) {
+				pdfa = appearanceArray[i].split('_');
+				if(pdfa.length > 1) {
+					$('#a_pdfaccount').val(pdfa[1]);
 					foundAppearance = true;
 				}
 			}
