@@ -40,7 +40,14 @@ echo "Current Smap Version is $version"
 
 # Apply database patches
 echo "applying patches to survey_definitions"
+
+if [ $version -lt "1908" ]
+then
+sudo -u postgres psql -f ./sd_pre_1908.sql -q -d survey_definitions 2>&1 | grep -v "already exists" | grep -v "duplicate key" | grep -vi "addgeometrycolumn" | grep -v "implicit index" | grep -v "skipping" | grep -v "is duplicated" | grep -v "create unique index" | grep -v CONTEXT
+fi
+
 sudo -u postgres psql -f ./sd.sql -q -d survey_definitions 2>&1 | grep -v "already exists" | grep -v "duplicate key" | grep -vi "addgeometrycolumn" | grep -v "implicit index" | grep -v "skipping" | grep -v "is duplicated" | grep -v "create unique index" | grep -v CONTEXT
+
 echo "applying patches to results"
 sudo -u postgres psql -f ./results.sql -q -d results 2>&1 | grep -v "already exists"
 
