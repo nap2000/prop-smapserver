@@ -1593,6 +1593,7 @@ require([
 		 * Set up data
 		 */
 		$('#tp_repeat').prop('checked', task.repeat);
+		$('#tp_pol').prop('checked', task.complete_all);
 		$('#tp_name').val(task.name);		// name
 		if(isNew) {
 			$('#tp_form_name').val($('#tp_form_name option:first').val());
@@ -1603,6 +1604,7 @@ require([
 		$('#tp_user').val(taskFeature.properties.assignee);	// assignee
 		$('#tp_assign_emails').val(taskFeature.properties.emails);
 		$('#tp_repeat').prop('checked', taskFeature.properties.repeat);
+		$('#tp_pol').prop('checked', taskFeature.properties.complete_all);
 
 		// Set end date first as otherwise since it will be null, it will be defaulted when from date set
 		if (task.to) {

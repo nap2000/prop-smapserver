@@ -4002,7 +4002,7 @@ function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback) {
 	taskFeature = $.extend(true, {}, currentTaskFeature);
 	taskFeature.properties.assignee_ident = undefined;
 	taskFeature.properties.assignee_name = undefined;
-	
+
 	/*
 	 * Set the properties of the taskFeature from the dialog
 	 */
@@ -4041,6 +4041,7 @@ function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback) {
 	}
 
 	taskFeature.properties.repeat = $('#tp_repeat').prop('checked');
+	taskFeature.properties.complete_all = $('#tp_pol').prop('checked');
 
 	fromDate = $('#tp_from').data("DateTimePicker").date();
 	toDate = $('#tp_to').data("DateTimePicker").date();

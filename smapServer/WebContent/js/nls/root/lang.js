@@ -613,6 +613,7 @@ define({
     "t_n_s": "Tasks without start time",
     "t_drag": "Drag a task and drop onto calendar",
     "t_g": "Guidance",
+    "t_pol": "Complete All",
     "t_ass_done": "Have you completed this assignment?",
     "t_defn": "Task Group Definition",
     "t_au": "All Users",

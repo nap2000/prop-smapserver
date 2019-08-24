@@ -1226,3 +1226,5 @@ alter table survey add column pdf_template text;
 
 alter table survey_settings add column columns text;
 update question set appearance = replace(appearance, 'mapbox.streets-satellite', 'satellite-v9') where appearance like '%mapbox.streets-satellite%';
+
+alter table task_group add column complete_all boolean;

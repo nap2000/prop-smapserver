@@ -861,7 +861,8 @@ CREATE TABLE public.task_group (
     source_s_id integer,			-- The source survey id for quick lookup from notifications engine
     target_s_id integer,
     email_details text,
-    dl_dist integer				-- Download distance, same value is in the rule, needed here for selects
+    dl_dist integer,				-- Download distance, same value is in the rule, needed here for selects
+    complete_all boolean			-- Set true if all assignements of a task must be completed
 );
 ALTER TABLE public.task_group OWNER TO ws;
 
