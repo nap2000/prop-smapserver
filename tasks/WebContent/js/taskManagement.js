@@ -562,6 +562,7 @@ require([
 			$('#assign_role_type, #assign_email_type').prop('checked', false);
 			$('#assign_user_type').closest('label').addClass('active');
 			$('#assign_role_type').closest('label').removeClass('active');
+			$('#assign_pol').prop('checked', true);
 			$('.assign_user').show();
 			$('.assign_role').hide();
 
@@ -1587,15 +1588,16 @@ require([
 
 		if (isNew) {
 			$('#taskPropLabel').html(localise.set["t_add_task"]);
+			$('#tp_pol').prop('checked', true);
 		} else {
 			$('#taskPropLabel').html(localise.set["t_edit_task"]);
+			$('#tp_pol').prop('checked', task.complete_all);
 		}
 
 		/*
 		 * Set up data
 		 */
 		$('#tp_repeat').prop('checked', task.repeat);
-		$('#tp_pol').prop('checked', task.complete_all);
 		$('#tp_name').val(task.name);		// name
 		if(isNew) {
 			$('#tp_form_name').val($('#tp_form_name option:first').val());

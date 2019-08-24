@@ -2805,8 +2805,10 @@ require([
 
         if (isNew) {
             $('#taskPropLabel').html(localise.set["t_add_task"]);
+            $('#tp_pol').prop('checked', true);
         } else {
             $('#taskPropLabel').html(localise.set["t_edit_task"]);
+            $('#tp_pol').prop('checked', task.complete_all);
         }
 
         /*
