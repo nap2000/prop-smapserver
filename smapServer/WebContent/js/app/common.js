@@ -4000,6 +4000,9 @@ function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback) {
 		MIN_SHOW_RANGE = 10;
 
 	taskFeature = $.extend(true, {}, currentTaskFeature);
+	taskFeature.properties.assignee_ident = undefined;
+	taskFeature.properties.assignee_name = undefined;
+	
 	/*
 	 * Set the properties of the taskFeature from the dialog
 	 */
