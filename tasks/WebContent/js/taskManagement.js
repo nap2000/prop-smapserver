@@ -461,6 +461,7 @@ require([
 				}
 				$('#add_current').prop('checked', tgRule.add_current);
 				$('#add_future').prop('checked', tgRule.add_future);
+				$('#assign_pol').prop('checked', tgRule.complete_all);
 
 				setupAssignType(tgRule.user_id, tgRule.role_id, tgRule.emails);    // Set up assign type
 
@@ -734,6 +735,7 @@ require([
 				// Set flag to indicate if tasks should be created from data submitted before the task group creation, after or both
 				assignObj["add_current"] = $('#add_current').is(':checked');
 				assignObj["add_future"] = $('#add_future').is(':checked');
+				assignObj["complete_all"] = $('#assign_pol').is(':checked');
 
 				if (!assignObj["add_current"] && !assignObj["add_future"]) {
 					alert(localise.set["msg_ab_ns"]);
