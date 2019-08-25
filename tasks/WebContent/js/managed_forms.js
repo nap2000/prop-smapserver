@@ -2647,8 +2647,16 @@ require([
                 },
                 error: function (xhr, textStatus, err) {
                     removeHourglass();
+
+                    if (globals.gMainTable) {
+                        globals.gMainTable.destroy();
+                        globals.gMainTable = undefined;
+                    }
+                    $("#trackingTable").empty();
+
                     gRefreshingData = false;
                     gGetSettings = false;
+
                     if (xhr.readyState == 0 || xhr.status == 0) {
                         return;  // Not an error
                     } else {
