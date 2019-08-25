@@ -4280,7 +4280,7 @@ function getStatusClass(status, finish) {
 
 	var statusClass = "";
 
-	if (status === status === "new") {
+	if (status === "new") {
 		statusClass = "bg-info";
 	} else if (status === "submitted" || status === "success") {
 		statusClass = "bg-success";
