@@ -560,8 +560,8 @@ require([
 
 			$('#assign_user_type').prop('checked', true);
 			$('#assign_role_type, #assign_email_type').prop('checked', false);
-			$('#assign_user_type').closest('label').addClass('active');
-			$('#assign_role_type').closest('label').removeClass('active');
+			$('#assign_user_type').addClass('active');
+			$('#assign_role_type').removeClass('active');
 			$('#assign_pol').prop('checked', true);
 			$('.assign_user').show();
 			$('.assign_role').hide();
