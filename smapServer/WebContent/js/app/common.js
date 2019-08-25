@@ -4280,9 +4280,8 @@ function getStatusClass(status, finish) {
 
 	var statusClass = "";
 
-	if (status === "error" || status === "new" || status === "unsent" || status === "unsubscribed"
-		|| status === "blocked" || status === "rejected" || status === "cancelled") {
-		statusClass = "bg-danger";
+	if (status === status === "new") {
+		statusClass = "bg-info";
 	} else if (status === "submitted" || status === "success") {
 		statusClass = "bg-success";
 	} else if (status === "late") {
@@ -4293,6 +4292,9 @@ function getStatusClass(status, finish) {
 		} else {
 			statusClass = "bg-warning";
 		}
+	} else 	if (status === "error" || status === "unsent" || status === "unsubscribed"
+		|| status === "blocked" || status === "rejected" || status === "cancelled" || status === "deleted") {
+		statusClass = "bg-danger";
 	} else {
 		statusClass = "bg-success";
 	}
