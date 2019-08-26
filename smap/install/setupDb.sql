@@ -609,6 +609,7 @@ CREATE TABLE question (
 	q_id INTEGER DEFAULT NEXTVAL('q_seq') CONSTRAINT pk_question PRIMARY KEY,
 	f_id INTEGER REFERENCES form ON DELETE CASCADE,
 	l_id integer default 0,
+	style_id integer dfault 0,
 	seq INTEGER,
 	qName text NOT NULL,						-- Name that conforms to ODK restrictions
 	column_name text,							-- Name of column in results table, qname with postgres constraints
@@ -1263,3 +1264,17 @@ create TABLE group_survey (
 	group_ident text REFERENCES survey(ident) ON DELETE CASCADE
 	);
 ALTER TABLE group_survey OWNER TO ws;
+
+-- Survey Styles
+DROP SEQUENCE IF EXISTS style_seq CASCADE;
+CREATE SEQUENCE style_seq START 1;
+ALTER SEQUENCE style_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS style;
+create TABLE style (
+	id integer default nextval('style_seq') constraint pk_style primary key,
+	s_ident text REFERENCES survey(ident) ON DELETE CASCADE,
+	name text,
+	style text	-- json
+	);
+ALTER TABLE style OWNER TO ws;
