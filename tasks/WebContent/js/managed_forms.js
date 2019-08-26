@@ -284,7 +284,7 @@ require([
             if(typeof gTasks !== "undefined" && gTasks.gSelectedRecord) {
                 instance = gTasks.gSelectedRecord.instanceid;
             }
-            saveTask(true, gCurrentTaskFeature, gSaveType, instance, doneTaskSave);
+            saveTask(true, gCurrentTaskFeature, gSaveType, instance, doneTaskSave, 0);
         });
 
         window.addEventListener("popstate", function(e) {
@@ -2773,6 +2773,10 @@ require([
         $('#srLink').val("");
         getSurveyRoles(globals.gCurrentSurvey);
         getRecordChanges(gTasks.gSelectedRecord);
+
+        var sIdent = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].ident;
+        var instanceId = gTasks.gSelectedRecord.instanceid;
+        $('.launchwebform').prop("href", "/webForm/" + sIdent + "?datakey=instanceid&datakeyvalue=" + instanceId);
 
         $('.overviewSection').hide();
         $('.editRecordSection').show();
