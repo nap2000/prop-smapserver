@@ -4008,7 +4008,7 @@ function getLocationIndex(name, tags) {
 
 }
 
-function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback) {
+function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback, tg_id) {
 	var url = "/api/v1/tasks",
 		taskFeature = {
 			properties: {}
@@ -4025,7 +4025,7 @@ function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback) {
 	 * Set the properties of the taskFeature from the dialog
 	 */
 	taskFeature.properties.pid = globals.gCurrentProject;
-	taskFeature.properties.tg_id = globals.gCurrentTaskGroup;
+	taskFeature.properties.tg_id = tg_id;
 
 	if (!taskFeature.properties.id || taskFeature.properties.id == "") {
 		taskFeature.properties["id"] = 0;
