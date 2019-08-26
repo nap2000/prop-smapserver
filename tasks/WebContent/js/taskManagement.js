@@ -304,7 +304,7 @@ require([
 		$('.assign_role, .assign_email, .assign_data').hide();
 		setupTaskDialog();
 		$('#taskPropertiesSave').off().click(function () {
-			saveTask(false, gCurrentTaskFeature, gSaveType, undefined, doneTaskSave);
+			saveTask(false, gCurrentTaskFeature, gSaveType, undefined, doneTaskSave, globals.gCurrentTaskGroup);
 		});
 
 
