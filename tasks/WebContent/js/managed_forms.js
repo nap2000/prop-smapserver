@@ -237,7 +237,7 @@ require([
         // Set change function on survey
         $('#survey_name').change(function () {
             gTasks.gSelectedSurveyIndex = $(this).val();
-            globals.gCurrentSurvey = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].id;  // TODO remove
+            globals.gCurrentSurvey = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].id;
             gGetSettings = true;
             surveyChanged();
         });
@@ -470,6 +470,22 @@ require([
                 }
             });
 
+        });
+
+        $('.genrecordpdf').click(function ()  {
+            $('#genPdfPopup').modal("show");
+        });
+
+        $('#genPdf').click(function() {
+
+            var language = $('#pdf_language option:selected').val();
+            var orientation = $("#pdf_orientation").val();
+            var include_references = $("#pdf_include_references").prop('checked');
+            var launched_only = $("#pdf_launched_only").prop('checked');
+            var sIdent = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].ident;
+            var instanceId = gTasks.gSelectedRecord.instanceid;
+
+            downloadPdf(language, orientation, include_references, launched_only, sIdent, instanceId);
         });
 
         /*
@@ -889,6 +905,7 @@ require([
         $('.editRecordSection, .selectedOnly, .re_alert').hide();
         if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
 
+            getLanguageList(globals.gCurrentSurvey, undefined, false, '.language_sel', false, -1);
             saveCurrentProject(-1, globals.gCurrentSurvey);
             getGroupForms(globals.gCurrentSurvey);
 

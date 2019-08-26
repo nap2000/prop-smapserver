@@ -2664,6 +2664,24 @@ function isLate(finish) {
 
 }
 
+function downloadPdf(language, orientation, include_references, launched_only, sIdent, instanceId) {
+
+	var docURL = "/surveyKPI/pdf/" + sIdent
+		+ "?language=" + language
+		+ "&instance=" + instanceId
+		+ "&tz=" + globals.gTimezone;
+	if(orientation === "landscape") {
+		docURL += "&landscape=true";
+	}
+	if(include_references) {
+		docURL += "&reference_surveys=true";
+	}
+	if(launched_only) {
+		docURL += "&launched_only=true";
+	}
+
+	downloadFile(docURL);
+}
 
 function downloadFile(url) {
 

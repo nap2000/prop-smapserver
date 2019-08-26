@@ -92,7 +92,7 @@
                                 href="/fieldManager/surveyManagement.html"><i
                                 class="glyphicon glyphicon-wrench"></i><span class="lang"
                                                                              data-lang="m_admin"></span></a></li>
-                        <li class="restrict_role enum_role"><a href="/tasks/managed_forms.html"><i
+                        <li class="restrict_role manage_role"><a href="/tasks/managed_forms.html"><i
                                 class="glyphicon glyphicon-globe"></i> <span class="nav-label lang"
                                                                              data-lang="m_console"></span></span>
                         </a></li>
@@ -266,6 +266,8 @@
             </div>
 
             <div class="col-sm-4 pt-4 editRecordSection border-right">
+                <button class="genrecordpdf btn btn-danger"><i class="fa fa-file-pdf"></i></button>
+                <button class="launchwebform btn btn-success restrict_role enum_role"><i class="fa fa-globe"></i></button>
             </div>
 
             <div class="col-sm-4 pt-4 editRecordSection border-right">
@@ -299,7 +301,7 @@
                                 <button class="selectedOnly assigned_admin lang btn btn-warning" type="button" data-lang="t_assign" id="m_assign_to"></button>
 
                                 <!--<button class="genfile pdf btn btn-danger"><i class="fa fa-file-pdf-o fa-lg"></i></button>-->
-                                <button class="genfile xls btn btn-success "><i class="fa fa-file-excel-o fa-lg"></i></button>
+                                <button class="genfile xls btn btn-success "><i class="fa fa-file-excel fa-lg"></i></button>
                                 <!--<button class="genfile image btn btn-warning"><i class="fa fa-file-image-o fa-lg"></i></button>-->
                             </div>
 
@@ -965,24 +967,6 @@
             <div class="modal-body">
                 <form id="notification_edit_form">
 
-                    <!-- Not used in console
-                    <div class="form-group row">
-                        <label class="lang col-sm-2 control-label" data-lang="c_name" for="name"></label>
-                        <div class="col-sm-10">
-                            <input type="text" id="name" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label class="lang col-sm-2 control-label" data-lang="c_trigger" for="trigger"></label>
-                        <div class="col-sm-10">
-                            <select class="form-control" id="trigger">
-                                <option value="submission" selected="selected" class="lang" data-lang="submission">submission</option>
-                                <option value="task_reminder" class="lang" data-lang="task_reminder">reminder</option>
-                            </select>
-                        </div>
-                    </div>
-                    -->
 
                     <div class="form-group row">
                         <label class="lang col-sm-2 control-label" data-lang="c_target" for="target"></label>
@@ -991,35 +975,6 @@
                         </div>
                     </div>
 
-                    <!-- Reminder specific fields
-                    <div class="well task_reminder_options" style="display:none;">
-
-                        <div class="form-group row">
-                            <label for="survey" class="lang col-sm-2 control-label" data-lang="t_tg"></label>
-                            <div class="col-sm-10">
-                                <select id="task_group" class="task_group_select form-control"></select>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label lang" data-lang="n_p" for="r_period"></label>
-                            <div class="col-sm-10">
-                                <div class="input-group mb-3">
-
-                                    <input type="number" min="1" class="form-control" id="r_period">
-                                    <div class="input-group-append">
-                                        <select id="period_list_sel" class="period_list_sel form-control">
-                                            <option class="lang" data-lang="d_min" value="minutes">minutes</option>
-                                            <option class="lang" data-lang="d_hour" value="hours">hours</option>
-                                            <option class="lang" data-lang="d_day" value="days">day</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    -->
 
                     <div class="submission_options form-group row">
                         <label for="survey" class="lang col-sm-2 control-label" data-lang="c_survey"></label>
@@ -1027,22 +982,6 @@
                             <select id="survey" class="form-control"></select>
                         </div>
                     </div>
-
-                    <!-- Not used in console
-                    <div class="form-group row" data-container="body">
-                        <label for="not_filter" data-lang="c_filter" class="lang col-sm-2 control-label"></label>
-                        <div class="col-sm-10">
-                            <div class="input-group">
-                                <input type="text" id="not_filter" class="form-control">
-                                <span class="input-group-addon">
-									<a href="/sqlFilterHelp.html" target="_blank">
-										<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-									</a>
-								</span>
-                            </div>
-                        </div>
-                    </div>
-                    -->
 
                     <div class="forward_options" style="display:none;">
                         <div class="form-group row">
@@ -1123,21 +1062,6 @@
                             </div>
                         </div>
 
-                        <!-- Not used in console
-                        <div id="email_question_cont" class="form-group row submission_options lang_tt" data-lang_tt="n_eqc" data-toggle="tooltip"  data-container="body" title="">
-                            <label for="email_question" class="col-sm-2 control-label lang" data-lang="n_eq"></label>
-                            <div class="col-sm-10">
-                                <select class="selected_name_question form-control" id="email_question"></select>
-                            </div>
-                        </div>
-                        <div id="email_meta_cont" class="form-group row submission_options lang_tt" data-lang_tt="n_e_p_tt" data-toggle="tooltip"  data-container="body" title="">
-                            <label for="email_meta" class="col-sm-2 control-label lang" data-lang="n_ep"></label>
-                            <div class="col-sm-10">
-                                <select class="selected_meta form-control" id="email_meta"></select>
-                            </div>
-                        </div>
-                        -->
-
                         <div id="email_subject_cont" class="form-group row lang_tt" data-lang_tt="n_esc" data-toggle="tooltip"  data-container="body" title="">
                             <label for="email_subject" data-lang="c_subject" class="lang col-sm-2 control-label"></label>
                             <div class="col-sm-10">
@@ -1175,14 +1099,6 @@
                             </div>
                         </div>
 
-                        <!-- Not used in console
-                        <div class="form-group row lang_tt" data-lang_tt="n_sms_q_tt" data-toggle="tooltip"  data-container="body" title="">
-                            <label for="sms_question" class="col-sm-2 control-label lang" data-lang="n_smsq"></label>
-                            <div class="col-sm-10">
-                                <select class="selected_name_question form-control" id="sms_question"></select>
-                            </div>
-                        </div>
-                        -->
                         <div class="form-group row" data-container="body">
                             <label for="notify_sms" data-lang="n_si" class="lang col-sm-2 control-label"></label>
                             <div class="col-sm-10">
@@ -1197,17 +1113,72 @@
                         </div>
                     </div>
 
-                    <!-- Not used in console where notifications are immediate
-                    <div class="col-sm-10 offset-sm-2 custom-control custom-checkbox mb-4">
-                        <input type="checkbox" class="custom-control-input" name="nt_enabled" value="nt_enabled" id="nt_enabled">
-                        <label class="custom-control-label lang mt-3" data-lang="c_enabled" for="nt_enabled"></label>
-                    </div>
-                    -->
 
                 </form>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
                     <button id="saveNotification" type="button" class="btn btn-primary lang" data-lang="c_save"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Popup to allow the user to generate a PDF -->
+<div id="genPdfPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="genpdfLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title lang" id="genpdfLabel" data-lang="d_d_pdf">pdf</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="genpdf_form">
+
+                    <div class="form-group row" >
+                        <label class="lang col-sm-2 control-label" data-lang="c_orientation" for="pdf_orientation"></label>
+                        <div class="col-sm-10">
+                            <select class="form-control" id="pdf_orientation">
+                                <option value="pdf" class="lang" data-lang="n_pdfp">pdf p</option>
+                                <option value="pdf_landscape" class="lang" data-lang="n_pdfl">pdf l</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" >
+                        <label class="lang col-sm-2 control-label" data-lang="c_lang" for="pdf_language"></label>
+                        <div class="col-sm-10">
+                            <select class="form-control language_sel" id="pdf_language">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label lang" data-lang="n_inc_ref" for="pdf_include_references"></label>
+                        <div class="col-sm-6">
+                            <div class="checkbox">
+                                <input type="checkbox" id="pdf_include_references">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label lang" data-lang="n_lo" for="pdf_launched_only"></label>
+                        <div class="col-sm-6">
+                            <div class="checkbox">
+                                <input type="checkbox" id="pdf_launched_only">
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
+                    <button id="genPdf" type="button" data-dismiss="modal" class="btn btn-primary lang" data-lang="c_save"></button>
                 </div>
             </div>
         </div>
