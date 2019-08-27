@@ -10,7 +10,7 @@ ALTER SEQUENCE style_seq OWNER TO ws;
 
 create TABLE style (
 	id integer default nextval('style_seq') constraint pk_style primary key,
-	s_ident text REFERENCES survey(ident) ON DELETE CASCADE,
+	s_id integer REFERENCES survey(s_id) ON DELETE CASCADE,
 	name text,
 	style text	-- json
 	);
