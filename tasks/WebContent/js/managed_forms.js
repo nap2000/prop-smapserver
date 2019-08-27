@@ -2716,7 +2716,7 @@ require([
 
                     for (var j = 0; j < headItem.markup.length; j++) {
                         if (headItem.markup[j].value == v) {
-                            $this.addClass(headItem.markup[j].classes);
+                            $this.addClass(getColorClass(headItem.markup[j].classes));
                         }
                     }
 
@@ -2748,6 +2748,19 @@ require([
         }
     }
 
+    function getColorClass(color) {
+        if(color === 'yellow') {
+            return 'bg-warning';
+        } else if(color === 'blue') {
+            return 'bg-info';
+        } else if(color === 'red') {
+            return 'bg-danger';
+        } else if(color === 'red') {
+            return 'bg-danger';
+        } else if(color === 'green') {
+            return 'bg-success';
+        }
+    }
 
     /*
      * If settings were requested from the server then update the setting fields
