@@ -1330,6 +1330,12 @@ function refreshMediaView(data, sId) {
 			h[++idx] = '<td class="preview">';
 			h[++idx] = '<a target="_blank" href="';
 			h[++idx] = files[i].url;
+			if(files[i].url.indexOf("?") < 0) {     // Add some random text to prevent caching on identical file names
+				h[++idx] = "?";
+			} else {
+				h[++idx] = "&";
+			}
+			h[++idx] = "_v" + new Date().getTime().toString();
 			h[++idx] = '">';
 			if(files[i].type == "audio") {
 				h[++idx] = addAudioIcon();
