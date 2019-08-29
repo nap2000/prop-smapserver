@@ -592,14 +592,14 @@ define(function () {
         };
 
         this.qTypes = [{
-            name: "Text",
-            trans: "rev_text",
-            type: "string",
-            glyphicon: "font",
-            canSelect: true,
-            visible: true,
-				source: "user",
-                compatTypes: ["select1"]
+	            name: "Text",
+	            trans: "rev_text",
+	            type: "string",
+	            glyphicon: "font",
+	            canSelect: true,
+	            visible: true,
+		        source: "user",
+		        compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note"]
             },
             {
                 name: "Note",
@@ -608,7 +608,8 @@ define(function () {
                 glyphicon: "pencil",
                 canSelect: true,
                 visible: true,
-                source: "user"
+                source: "user",
+	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note"]
             },
             {
                 name: "Select One",
@@ -618,7 +619,7 @@ define(function () {
                 canSelect: true,
                 visible: true,
 				source: "user",
-                compatTypes: ["string"]
+	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note"]
             },
             {
                 name: "Select Multiple",
@@ -627,7 +628,8 @@ define(function () {
                 image: "/images/select_64.png",
                 canSelect: true,
                 visible: true,
-                source: "user"
+                source: "user",
+	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note"]
             },
             {
                 name: "Form",
@@ -682,7 +684,8 @@ define(function () {
                 image: "/images/calc_64.png",
                 canSelect: true,
                 visible: true,
-                source: "user"
+                source: "user",
+	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note"]
             },
             {
                 name: "Audio",
@@ -782,7 +785,8 @@ define(function () {
                 text: "Range",
                 canSelect: true,
                 visible: true,
-                source: "user"
+                source: "user",
+	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note"]
             },
             {
                 name: "Chart",
@@ -840,7 +844,8 @@ define(function () {
 		        image: "/images/server_calc_64.png",
 		        canSelect: true,
 		        visible: true,
-		        source: "user"
+		        source: "user",
+		        compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note"]
 	        },
             {
                 name: "Unknown Type",
