@@ -1679,8 +1679,7 @@ define([
                 if(!isValid) {
                     updateModelWithErrorStatus(container, itemIndex, itemType);	// Update model and DOM
                 }
-
-
+                
 				/*
 				 * If there were no errors check for warnings
 				 * Only do this on validateAll as otherwise it is just annoying to get the warnings
