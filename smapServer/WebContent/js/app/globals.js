@@ -832,6 +832,16 @@ define(function () {
                 visible: true,
                 source: "user"
             },
+	        {
+		        name: "Server Calculation",
+		        type: "server_calculate",
+		        trans: "ed_s_calc",
+		        calculation: true,
+		        image: "/images/server_calc_64.png",
+		        canSelect: true,
+		        visible: true,
+		        source: "user"
+	        },
             {
                 name: "Unknown Type",
                 glyphicon: "record",
