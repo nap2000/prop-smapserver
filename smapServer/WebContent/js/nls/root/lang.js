@@ -892,6 +892,7 @@ define({
     "ed_m": "Filter",
     "ed_fc": "Filter Column",
 	"ed_sfc": "Second Filter Column",
+    "ed_addcalc": "Add calculation here",
     "contains": "contains",
     "startsWith": "startsWith",
     "endsWith": "endsWith",
