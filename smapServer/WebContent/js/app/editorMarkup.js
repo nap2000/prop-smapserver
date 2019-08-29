@@ -705,11 +705,11 @@ define([
 
 		} else {
 			h[++idx] = '<textarea class="labelProp has_tt';
-			if(question.type === 'calculate' && selProperty !== "appearance" && selProperty !== "parameters" && selProperty !== "display_name") {
+			if((question.type === 'calculate' || question.type === 'server_calculate') && selProperty !== "appearance" && selProperty !== "parameters" && selProperty !== "display_name") {
 				h[++idx] = ' calculate';
 			}
 			h[++idx] = '" title="';
-			if(question.type === 'calculate' && selProperty !== "appearance" && selProperty !== "parameters" && selProperty !== "display_name") {
+			if((question.type === 'calculate' || question.type === 'server_calculate') && selProperty !== "appearance" && selProperty !== "parameters" && selProperty !== "display_name") {
 				h[++idx] = 'Add calculation here';
 			} else {
 				h[++idx] = type === "option" ? "Choice Label" : selLabel;
@@ -732,6 +732,10 @@ define([
 				h[++idx] = '>';
 				if(question.type === 'calculate' && selProperty !== "appearance" && selProperty !== "parameters" && selProperty !== "display_name") {
 					h[++idx] = question.calculation;
+				} else if(question.type === 'server_calculate' && selProperty !== "appearance" && selProperty !== "parameters" && selProperty !== "display_name") {
+					if(question.server_calculation && question.server_calculation.expression) {
+						h[++idx] = question.server_calculation.expression;
+					}
 				} else {
 					if(selProperty === "label") { 
 						h[++idx] = question.labels[globals.gLanguage].text;
