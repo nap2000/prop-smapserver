@@ -17,3 +17,4 @@ create TABLE style (
 ALTER TABLE style OWNER TO ws;
 
 alter table question add column style_id integer default 0;
+alter table question add column server_calculate text;

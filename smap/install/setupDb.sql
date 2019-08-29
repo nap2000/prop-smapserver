@@ -629,6 +629,7 @@ CREATE TABLE question (
 	mandatory BOOLEAN default false,
 	relevant text,
 	calculate text,
+	server_calculate text,				-- JSON
 	qConstraint text,
 	constraint_msg text,
 	required_msg text,
