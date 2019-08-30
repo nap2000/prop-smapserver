@@ -1085,9 +1085,6 @@ require([
             order: [0],
             initComplete: function (settings, json) {
 
-                //columns = gTasks.cache.surveyConfig[globals.gViewId].columns;
-                //parameters = gTasks.cache.surveyConfig[globals.gViewId].parameters;
-
                 if(parameters && parameters.form_data === 'off') {
                     $('.manageFormData').hide();
                     $('.showFormData').hide();
@@ -1108,33 +1105,12 @@ require([
                                     .search( val ? '^'+val+'$' : '', true, false )
                                     .draw();
 
-                                //if (val == '') {
-                                //    this.api()
-                                //        .column(colIdx)
-                                //        .search(val)
-                                //        .draw();
-                                //} else {
-                                //    this.api()
-                                //        .column(colIdx)
-                                //        .search("^" + $(this).val() + "$", true, false, false)
-                                //        .draw();
-                                //}
                                 saveFilter(colIdx, val);
                             });
 
                         column.data().unique().sort().each( function ( d, j ) {
                             select.append( '<option value="'+d+'">'+d+'</option>' )
                         } );
-
-                        //this.api()
-                        //    .column(colIdx)
-                        //    .cache('search')
-                        //    .sort()
-                        //    .unique()
-                        //    .each(function (d) {
-                        //        select.append($('<option value="' + d + '">' + d + '</option>'));
-                        //    });
-
 
                         // Set current value
                         if (columns[colIdx].filterValue) {
@@ -1159,7 +1135,7 @@ require([
                 {
                     visible: true,
                     "targets": visibleColumns
-                },
+                }
             ],
             language: {
                 url: localise.dt()
@@ -1225,15 +1201,6 @@ require([
     }
 
     /*
-     * Refresh the data in the table
-     */
-    function refreshTable(dataSet) {
-        globals.gMainTable.clear();
-        globals.gMainTable.rows.add(dataSet.data).draw(false);
-        globals.gMainTable.row(gTasks.gSelectedRecord.instanceid);      // Reselect the row
-    }
-
-    /*
      * Show duplicates data
      */
     function showDuplicateData(sId) {
@@ -1262,7 +1229,6 @@ require([
                 fn = $this.closest('.row').find('select').val();
                 criteria += $this.val() + '::' + fn;
             }
-
 
         });
 
@@ -1484,7 +1450,6 @@ require([
      */
     function setOversightSelector(data) {
         var $elemGroups = $('#group_survey');
-
 
         var i,
             item,
@@ -2744,7 +2709,7 @@ require([
         chart.refreshAllCharts(gChartView, gTimingView, true);
 
         if(gTasks.gSelectedRecord && gTasks.gSelectedRecord.instanceid) {
-            globals.gMainTable.row('#' + gTasks.gSelectedRecord.instanceid).select();      // Reselect the row, escape the :
+            globals.gMainTable.row('#' + escSelector(gTasks.gSelectedRecord.instanceid)).select();      // Reselect the row, escape the :
         }
     }
 
@@ -3012,6 +2977,12 @@ require([
         } else {
             alert(localise.set["msg_inv_email"]);
         }
+    }
+
+    function escSelector(input) {
+        var output = input.replace(/:/g, '\\:');
+        console.log(output);
+        return output;
     }
 
 });
