@@ -139,7 +139,7 @@ require([
 
     window.gTasks = {
         cache: {
-            //surveyConfig: {},
+            surveyConfig: {},
             managedData: {},
             surveyList: {},
             surveyRoles: {},

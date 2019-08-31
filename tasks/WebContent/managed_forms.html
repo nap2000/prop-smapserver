@@ -115,6 +115,8 @@
                         class="lang" data-lang="m_web_forms"></span></a></li>
                 <li id="m_rep" class="restrict_role admin_role analyst_role"><a href="/reports.html"><i
                         class="fa fa-table"></i> <span class="lang" data-lang="m_reports"></span></a></li>
+                <li id="m_summary_report" class="restrict_role admin_role analyst_role data_role"><a href="#" class="genxlsfileall">
+                    <i class="fa fa-file-excel"></i> <span class="lang" data-lang="mf_sr">summary</span></a></li>
                 <li id="m_help"><a href="/mfHelp.html" target="_blank"><i class="fa fa-info-circle"></i> <span
                         class="lang" data-lang="m_help"></span></a></li>
 
@@ -1185,5 +1187,65 @@
     </div>
 </div>
 
+<!-- Modal to create an overview report -->
+<div id="overviewReport" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog custom-modal-width modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">close</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 b-r">
+                        <h3 class="m-t-none m-b lang" data-lang="a_rd">report definition</h3>
+
+                        <form id="summaryReportForm">
+
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label" for="srf_text_fn">
+                                    <span class="lang" data-lang="a_fn">fn</span><span> </span><span class="lang" data-lang="br_tf">text</span></label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" id="srf_text_fn">
+                                        <option class="lang" value="count" data-lang="count">count</option>
+                                        <option class="lang" value="percent" data-lang="percent">percent</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label" for="srf_num_fn">
+                                    <span class="lang" data-lang="a_fn">fn</span><span> </span><span class="lang" data-lang="br_nf">text</span></label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" id="srf_num_fn">
+                                        <option class="lang" value="average" data-lang="average">average</option>
+                                        <option class="lang" value="min" data-lang="min">min</option>
+                                        <option class="lang" value="max" data-lang="max">max</option>
+                                        <option class="lang" value="sum" data-lang="sum">sum</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="srf_group">
+                                    <span class="lang" data-lang="a_gb">group</span></label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" id="srf_group"></select>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
+                </button>
+                <button id="overviewReportSave" type="button" class="btn btn-primary lang" data-lang="m_export">export</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
