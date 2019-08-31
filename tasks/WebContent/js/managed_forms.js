@@ -1075,7 +1075,7 @@ require([
         // Create data table
         globals.gMainTable = $table.DataTable({
             processing: true,
-            scrollY: '50vh',
+            scrollY: '80vh',
             scrollX: true,
             scrollCollapse: true,
             select: {
