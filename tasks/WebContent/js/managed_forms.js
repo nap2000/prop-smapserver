@@ -1075,7 +1075,9 @@ require([
         // Create data table
         globals.gMainTable = $table.DataTable({
             processing: true,
-            responsive: true,
+            scrollY: '50vh',
+            scrollX: true,
+            scrollCollapse: true,
             select: {
                 selector: 'td:not(:first-child)'
             },
