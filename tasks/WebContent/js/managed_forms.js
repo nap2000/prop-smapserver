@@ -2602,30 +2602,36 @@ require([
                     gRefreshingData = false;
                     gGetSettings = false;
 
-                    var theKey = key;
-                    var theCallback = callback;
+                    if(data && data.status === "error") {
+                        alert(data.msg);
+                    } else if(data && data.status === "ok") {
+                        // Continue presumably there is no data
+                    } else {
+                        var theKey = key;
+                        var theCallback = callback;
 
-                    gTasks.cache.data[theKey] = data;
-                    gTasks.cache.currentData = data;
+                        gTasks.cache.data[theKey] = data;
+                        gTasks.cache.currentData = data;
 
-                    updateSettings(gTasks.cache.currentData.settings);
-                    map.setLayers(gTasks.cache.currentData.schema.layers);
-                    chart.setCharts(gTasks.cache.currentData.schema.charts);
+                        updateSettings(gTasks.cache.currentData.settings);
+                        map.setLayers(gTasks.cache.currentData.schema.layers);
+                        chart.setCharts(gTasks.cache.currentData.schema.charts);
 
-                    // Add a config item for the group value if this is a duplicates search
-                    if (isDuplicates) {
-                        gTasks.cache.currentData.schema.columns.unshift({
-                            hide: true,
-                            include: true,
-                            name: "_group",
-                            displayName: "_group"
-                        });
+                        // Add a config item for the group value if this is a duplicates search
+                        if (isDuplicates) {
+                            gTasks.cache.currentData.schema.columns.unshift({
+                                hide: true,
+                                include: true,
+                                name: "_group",
+                                displayName: "_group"
+                            });
+                        }
+
+                        // Initialise the column settings
+                        initialise();
+
+                        theCallback(data);
                     }
-
-                    // Initialise the column settings
-                    initialise();
-
-                    theCallback(data);
                 },
                 error: function (xhr, textStatus, err) {
                     removeHourglass();
@@ -2642,7 +2648,7 @@ require([
                     if (xhr.readyState == 0 || xhr.status == 0) {
                         return;  // Not an error
                     } else {
-                        console.log(localise.set["error"] + ": " + err);
+                        alert(localise.set["error"] + ": " + err);
                     }
                 }
             });
