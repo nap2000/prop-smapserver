@@ -346,6 +346,7 @@ require([
                 }
             });
         });
+
         /*
 	     * Lock a record for editing by this user
 	     */
@@ -631,6 +632,20 @@ require([
         $('.changes_filter').change(function () {
             getRecordChanges(gTasks.gSelectedRecord);
         });
+
+        /*
+         * SHow and hide the controls
+         */
+        $('#hideFilters').click(function(){
+            $('.filtersShown').hide();
+            $('.filtersHidden').show();
+        });
+
+        $('#showFilters').click(function(){
+            $('.filtersShown').show();
+            $('.filtersHidden').hide();
+        });
+
 
     });         // End of document ready
 

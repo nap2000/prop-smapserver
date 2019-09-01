@@ -139,6 +139,12 @@
 
                 <ul class="nav navbar-top-links navbar-right">
 
+                    <li class="filtersShown">
+                        <a href="#" id="hideFilters"><span class="lang" data-lang="mf_hc">h</span></a>
+                    </li>
+                    <li class="filtersHidden" style="display:none;">
+                        <a href="#" id="showFilters"><span class="lang" data-lang="mf_sc">s</span></a>
+                    </li>
                     <li class="editRecordSection">
                         <a href="#" id="exitEditRecord"><span class="lang" data-lang="c_back">r</span></a>
                     </li>
@@ -157,7 +163,7 @@
         </div>
 
         <!-- Header Row - Filtering goes here-->
-        <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="row wrapper border-bottom white-bg page-heading filtersShown">
 
             <!-- record listing commands and filters -->
             <div class="col-sm-4 pt-4 overviewSection border-right">
