@@ -1030,13 +1030,12 @@ require([
             hDupsIdx = -1;
 
 
-        if (globals.gMainTable) {
+        if ( $.fn.dataTable.isDataTable( $table) ) {
             globals.gMainTable.destroy();
         }
 
         // Add table
-        h[++idx] = '<div class="table-responsive">';
-        h[++idx] = '<table id="trackingTable" class="table table-striped">';
+        h[++idx] = '<table id="trackingTable" class="table table-striped" width="100%">';
 
         // Add head
         h[++idx] = '<thead>';
@@ -1078,7 +1077,6 @@ require([
 
         // close table
         h[++idx] = '</table>';
-        h[++idx] = '</div>';
 
         $table.empty().html(h.join(''));
 
@@ -1090,12 +1088,12 @@ require([
         // Create data table
         globals.gMainTable = $table.DataTable({
             processing: true,
-            scrollY: '80vh',
+            scrollY: '70vh',
             scrollX: true,
             scrollCollapse: true,
-            fixedColumns: {
-                leftColumns: 2
-            },
+            //fixedColumns: {
+            //    leftColumns: 2
+            //},
             select: {
                 selector: 'td:not(:first-child)'
             },
