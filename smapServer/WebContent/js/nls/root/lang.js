@@ -923,6 +923,8 @@ define({
     "mf_or": "Other records",
     "mf_max": "Max records",
     "mf_clear": "Clear single record view",
+    "mf_sc": "Show Controls",
+    "mf_hc": "Hide Controls",
 
 
     // Logout
