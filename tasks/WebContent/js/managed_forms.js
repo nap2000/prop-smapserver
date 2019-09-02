@@ -265,7 +265,7 @@ require([
             $("#surveySelect").modal("show");
         });
 
-        $('#exitEditRecord').click(function() {
+        $('.exitEditRecord').click(function() {
             showManagedData(globals.gCurrentSurvey, showTable, true);
             window.history.back();
         });
