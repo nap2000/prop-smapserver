@@ -261,6 +261,12 @@ require([
 					url += (hasParam ? '&' : '?') + 'inc_status=' + statusFilterArray.join(',');
 				}
 
+				period_filter = $('#period').val();
+				if(period_filter) {
+					url += (hasParam ? '&' : '?') + 'period=' + period_filter;
+					hasParam = true;
+				}
+
 				downloadFile(url);
 
 			} else {
