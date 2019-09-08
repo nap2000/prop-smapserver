@@ -1514,6 +1514,7 @@ require([
                 $elemGroups.val(val);
             } else {
                 $elemGroups.val("");
+                globals.gGroupSurveys[globals.gCurrentSurvey] = undefined;
                 groupSurveyChanged();
             }
         } else {
