@@ -2717,12 +2717,12 @@ function downloadFileErrorCheck() {
 /*
  * Post data to be converted into a file
  */
-function generateFile(url, filename, format, mime, data, sId, managedId, title, project, charts, chartData, settings, tz) {
+function generateFile(url, filename, format, mime, data, sId, groupSurvey, title, project, charts, chartData, settings, tz) {
 
 	var payload = "sId=" + sId;
 	payload += "&format=" + format;
-	if(managedId) {
-		payload += "&managedId=" + managedId;
+	if(groupSurvey) {
+		payload += "&groupSurvey=" + groupSurvey;
 	}
 
 	if(data) {
