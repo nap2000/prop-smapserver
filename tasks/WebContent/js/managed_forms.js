@@ -728,7 +728,7 @@ require([
             mime,
             data,
             settings = [],
-            managedId,
+            groupSurvey,
             title = $('#survey_name option:selected').text(),
             project = $('#project_name option:selected').text(),
             charts = [],
@@ -808,15 +808,17 @@ require([
             mime = "application/zip";
         }
 
-        if (format !== "image") {
+        if(globals.gGroupSurveys[globals.gCurrentSurvey] && globals.gGroupSurveys[globals.gCurrentSurvey] != "") {
+            groupSurvey = globals.gGroupSurveys[globals.gCurrentSurvey];
+        }
 
-            managedId = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].managed_id;
+        if (format !== "image") {
 
             if (format === "xlsx") {
                 chartData = chart.getXLSData(alldata);
             }
 
-            generateFile(url, filename, format, mime, data, globals.gCurrentSurvey, managedId, title, project, charts, chartData, settings, tz);
+            generateFile(url, filename, format, mime, data, globals.gCurrentSurvey, groupSurvey, title, project, charts, chartData, settings, tz);
         } else {
             var countImages = $('.svg-container svg').length;
             $('.svg-container svg').each(function (index) {
@@ -836,7 +838,7 @@ require([
                     charts.push(chart);
                     countImages--;
                     if (countImages <= 0) {
-                        generateFile(url, filename, format, mime, undefined, globals.gCurrentSurvey, managedId, title, project, charts, chartData, settings, tz);
+                        generateFile(url, filename, format, mime, undefined, globals.gCurrentSurvey, groupSurvey, title, project, charts, chartData, settings, tz);
                     }
                 });
 
