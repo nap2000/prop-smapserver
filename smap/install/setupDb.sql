@@ -1247,10 +1247,25 @@ create TABLE last_refresh (
 	id integer default nextval('last_refresh_seq') constraint pk_last_refresh primary key,
 	o_id integer,
 	user_ident text,
-	refresh_time TIMESTAMP WITH TIME ZONE
+	refresh_time TIMESTAMP WITH TIME ZONE,
+	device_time TIMESTAMP WITH TIME ZONE
 	);
 SELECT AddGeometryColumn('last_refresh', 'geo_point', 4326, 'POINT', 2);
 ALTER TABLE last_refresh OWNER TO ws;
+
+DROP SEQUENCE IF EXISTS last_refresh_log_seq CASCADE;
+CREATE SEQUENCE last_refresh_log_seq START 1;
+ALTER SEQUENCE last_refresh_log_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS last_refresh_log;
+create TABLE last_refresh_log (
+	id integer default nextval('last_refresh_log_seq') constraint pk_last_refresh_log primary key,
+	o_id integer,
+	user_ident text,
+	refresh_time TIMESTAMP WITH TIME ZONE,
+	device_time TIMESTAMP WITH TIME ZONE
+	);
+ALTER TABLE last_refresh_log OWNER TO ws;
 
 -- Group Surveys
 DROP SEQUENCE IF EXISTS group_survey_seq CASCADE;
