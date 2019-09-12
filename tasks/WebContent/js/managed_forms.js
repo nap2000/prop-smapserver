@@ -2742,6 +2742,19 @@ require([
 
                 });
             }
+
+            // Deleted
+            if(headItem.del_col) {
+                $(globals.gMainTable.column(i).nodes()).each(function (index) {
+                    var $this = $(this);
+                    if($this.text() === "t") {
+                        $this.text(localise.set["c_yes"]);
+                        $this.addClass('bg-danger');
+                    } else {
+                        $this.text(localise.set["c_no"]);
+                    }
+                });
+            }
         }
 
         // Refresh the views that depend on the displayed rows
