@@ -258,6 +258,11 @@ require([
             showManagedData(globals.gCurrentSurvey, showTable, true);
         });
 
+        // Set change function on show deleted
+        $('#include_bad').change(function () {
+            showManagedData(globals.gCurrentSurvey, showTable, true);
+        });
+
         /*
          * Setup dialog to change the current survey
          */
@@ -760,6 +765,10 @@ require([
         settings.push({
             k: localise.set["a_to_date"],
             v: $('#filter_to').val()
+        });
+        settings.push({
+            k: localise.set["c_deleted"],
+            v: $('#include_bad').prop('checked') ? localise.set["c_yes"] : localise.set["c_no"]
         });
         if(format === "xlsx" && alldata) {
             settings.push({
@@ -2584,6 +2593,10 @@ require([
                     }
                 }
 
+                if($('#include_bad').prop('checked')) {
+                    url += "&bad=yes";
+                }
+
                 // Limit number of records returned
                 var limit = $('#limit').val();
                 var iLimit = 0;
@@ -2765,6 +2778,7 @@ require([
             $('#date_question').val(settings.dateName);
             $('#limit').val(settings.limit);
             $('#advanced_filter').val(settings.filter);
+            $('#include_bad').prop('checked', settings.include_bad === "yes");
         }
     }
 
