@@ -117,8 +117,10 @@ require([
     var gRefreshingData = false;    // Prevent double click on  refresh button
     var gSelectedIndexes = [];      // Array of selected row indexes
     var gAssignedCol = 0;           // Column that contains the assignment status
-    var gGetSettings = false;        // Use the settings from the database rather than the client
+    var gGetSettings = false;       // Use the settings from the database rather than the client
     var gDeleteColumn = -1;         // The index of the column that indicates if the record is deleted
+    var gDeleteReasonColumn = -1;   // The index of the column that has the reason for a delete
+    var gBad;                       // A boolean indicating the direction of toggle of a deleted state
     var gLocalDefaults = {};
 
     var gOverallMapConfig = {       // overall map
@@ -338,7 +340,39 @@ require([
          * Delete a record
          */
         $('#m_delete').click(function() {
-            $('#deleteRecord').modal("show");
+            toggleRecord(localise.set["c_del"], true);
+        });
+
+        /*
+         * UnDelete a record
+         */
+        $('#m_undelete').click(function() {
+            toggleRecord(localise.set["c_undel"], false);
+        });
+
+        $('#toggleRecordSave').click(function(){
+            var url = "/surveyKPI/items/" + globals.gCurrentSurvey + "/survey/bad/" + gTasks.gSelectedRecord.instanceid;
+            var reason = $('#toggle_reason').val();
+            addHourglass();
+
+            $.ajax({
+                type: "POST",
+                dataType: 'text',
+                contentType: "application/json",
+                cache: false,
+                url: url,
+                data: {
+                    value: gBad,
+                    reason: reason
+                },
+                success: function (data, status) {
+                    removeHourglass();
+                    refreshData();
+                }, error: function (data, status) {
+                    removeHourglass();
+                    alert(data.responseText);
+                }
+            });
         });
 
         /*
@@ -366,7 +400,7 @@ require([
         });
 
         /*
-	     * Lock a record for editing by this user
+	     * Assign a user
 	     */
         $('#assignUserSave').click(function() {
 
@@ -2722,6 +2756,7 @@ require([
 
     function tableOnDraw() {
         gDeleteColumn = -1;
+        gDeleteReasonColumn = -1;
 
         if (isDuplicates) {
 
@@ -2786,6 +2821,8 @@ require([
                         $this.text(localise.set["c_no"]);
                     }
                 });
+            } else if(headItem.del_reason_col) {
+                gDeleteReasonColumn = i;
             }
         }
 
@@ -3069,6 +3106,20 @@ require([
         var output = input.replace(/:/g, '\\:');
         console.log(output);
         return output;
+    }
+
+    function toggleRecord(title, bad) {
+        var columns = gTasks.cache.currentData.schema.columns;
+
+        gBad = bad;
+
+        if(gDeleteReasonColumn >= 0) {
+            $('#toggle_reason').val(gTasks.gSelectedRecord[columns[gDeleteReasonColumn].displayName]);
+        } else {
+            $('#toggle_reason').val("");
+        }
+        $('#toggleRecordTitle, #toggleRecordSave').text(title);
+        $('#toggleRecord').modal("show");
     }
 
 });

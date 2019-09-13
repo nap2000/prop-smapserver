@@ -788,12 +788,12 @@
     </div>
 </div>
 
-<!-- Modal to delete a record -->
-<div id="deleteRecord" class="modal fade" aria-hidden="true">
+<!-- Modal to delete / restore a record -->
+<div id="toggleRecord" class="modal fade" aria-hidden="true">
     <div class="modal-dialog custom-modal-width">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title lang" data-lang="c_del"></h4>
+                <h4 id="toggleRecordTitle" class="modal-title"></h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only"></span></button>
             </div>
@@ -806,7 +806,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label lang" data-lang="c_reason" for="delete_reason">r</label>
                                 <div class="col-sm-10">
-                                    <input id="delete_reason" type='text' class="form-control" name="taskTitle">
+                                    <input id="toggle_reason" type='text' class="form-control" name="taskTitle">
                                 </div>
                             </div>
 
@@ -817,7 +817,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
-                <button id="deleteRecordSave" type="button" data-dismiss="modal" class="btn btn-primary lang " data-lang="c_del"></button>
+                <button id="toggleRecordSave" type="button" data-dismiss="modal" class="btn btn-primary"></button>
             </div>
         </div>
     </div>
