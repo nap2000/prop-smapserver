@@ -102,6 +102,7 @@ define({
     "c_enabled": "Enabled",
     "c_edit": "Edit",
     "c_del": "Delete",
+    "c_undel": "Undelete",
     "c_del_data": "Delete Data",
     "c_res_data": "Restore Data",
     "c_download": "Download",
