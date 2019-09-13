@@ -326,7 +326,19 @@ require([
          * Open the dialog to assign a user to a record
          */
         $('#m_assign_to').click(function() {
+            if(gTasks.gSelectedRecord._assigned) {
+                $('#user_to_assign').val(gTasks.gSelectedRecord._assigned);
+            } else {
+                $('#user_to_assign').val("_none");
+            }
             $('#userAssign').modal("show");
+        });
+
+        /*
+         * Delete a record
+         */
+        $('#m_delete').click(function() {
+            $('#deleteRecord').modal("show");
         });
 
         /*
@@ -1888,6 +1900,11 @@ require([
                         $elem = $('#user_to_assign');
 
                     $elem.empty();
+
+                    h[++idx] = '<option value="_none">';
+                    h[++idx] = localise.set["c_none"];
+                    h[++idx] = '</option>';
+
                     if(data && data.length > 0) {
                         for(i = 0; i < data.length; i++) {
                             h[++idx] = '<option value="';
