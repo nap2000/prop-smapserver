@@ -118,6 +118,7 @@ require([
     var gSelectedIndexes = [];      // Array of selected row indexes
     var gAssignedCol = 0;           // Column that contains the assignment status
     var gGetSettings = false;        // Use the settings from the database rather than the client
+    var gDeleteColumn = -1;         // The index of the column that indicates if the record is deleted
     var gLocalDefaults = {};
 
     var gOverallMapConfig = {       // overall map
@@ -1831,6 +1832,9 @@ require([
     }
 
     function recordSelected(indexes) {
+
+        var assignedOther = false;
+
         gSelectedIndexes = indexes;
         gTasks.gSelectedRecord = globals.gMainTable.rows(gSelectedIndexes).data().toArray()[0];
         $('.selectedOnly').hide();
@@ -1838,8 +1842,16 @@ require([
             $('.assigned').show();
         } else if(gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned !== globals.gLoggedInUser.ident) {
             $('.assigned_other').show();
+            assignedOther = true;
         } else {
             $('.not_assigned').show();
+        }
+
+        var columns = gTasks.cache.currentData.schema.columns;
+        if(!assignedOther && (gDeleteColumn < 0 || gTasks.gSelectedRecord[columns[gDeleteColumn].displayName] === 'f')) {
+            $('.not_deleted').show();
+        } else  if(!assignedOther && gDeleteColumn >= 0 && gTasks.gSelectedRecord[columns[gDeleteColumn].displayName] === 't') {
+            $('.deleted').show();
         }
 
         if(globals.gIsAdministrator) {
@@ -2692,6 +2704,8 @@ require([
     }
 
     function tableOnDraw() {
+        gDeleteColumn = -1;
+
         if (isDuplicates) {
 
             var rows = globals.gMainTable.rows({page: 'current'}).nodes();
@@ -2745,6 +2759,7 @@ require([
 
             // Deleted
             if(headItem.del_col) {
+                gDeleteColumn = i;
                 $(globals.gMainTable.column(i).nodes()).each(function (index) {
                     var $this = $(this);
                     if($this.text() === "t") {
