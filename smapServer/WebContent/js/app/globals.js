@@ -41,6 +41,7 @@ define(function () {
         gCurrentProject: 0,
         gCurrentSurvey: 0,
 	    gGroupSurveys: {},
+	    gSubForms: {},
         gCurrentForm: 0,
         gCurrentLayer: undefined,
         gLoggedInUser: undefined,
