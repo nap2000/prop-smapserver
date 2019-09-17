@@ -691,11 +691,13 @@ require([
         $('#hideFilters').click(function(){
             $('.filtersShown').hide();
             $('.filtersHidden').show();
+            return false;
         });
 
         $('#showFilters').click(function(){
             $('.filtersShown').show();
             $('.filtersHidden').hide();
+            return false;
         });
 
 
