@@ -251,6 +251,12 @@ require([
             groupSurveyChanged();
         });
 
+        // Set change function on sub form
+        $('#sub_form').change(function () {
+            globals.gSubForms[globals.gCurrentSurvey] = $(this).val();
+            subFormChanged();
+        });
+
         // Set change function on advanced filter
         $('#advanced_filter').change(function () {
             showManagedData(globals.gCurrentSurvey, showTable, true);
@@ -996,15 +1002,25 @@ require([
      */
     function groupSurveyChanged() {
 
-        globals.gViewId = 0;        // TODO remember views set for each survey and restore
-
         if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
 
             saveCurrentGroupSurvey(globals.gCurrentSurvey, globals.gGroupSurveys[globals.gCurrentSurvey]);
 
             showManagedData(globals.gCurrentSurvey, showTable, false);
 
-            $('.main_survey').html($('#survey_name option:selected').text());
+        }
+    }
+
+    /*
+     * Function called when the current sub form is changed
+  */
+    function subFormChanged() {
+
+        if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
+
+            // saveCurrentSubForm(globals.gCurrentSurvey, globals.gSubForms[globals.gCurrentSurvey]);  TODO
+
+            showManagedData(globals.gCurrentSurvey, showTable, false);
 
         }
     }
@@ -1056,13 +1072,21 @@ require([
      */
     function showManagedData(sId, callback, clearCache) {
 
-        var groupSurvey;
+        var groupSurvey,
+            subForm;
 
         if(globals.gGroupSurveys[globals.gCurrentSurvey] && globals.gGroupSurveys[globals.gCurrentSurvey] != "") {
             groupSurvey = globals.gGroupSurveys[globals.gCurrentSurvey];
         }
 
-        getData(sId, groupSurvey, callback, clearCache);
+        if(globals.gSubForms[globals.gCurrentSurvey] && globals.gSubForms[globals.gCurrentSurvey] != "") {
+            subForm = globals.gSubForms[globals.gCurrentSurvey];
+            if(subForm === '_none') {
+                subForm = undefined;
+            }
+        }
+
+        getData(sId, groupSurvey, subForm, callback, clearCache);
     }
 
     /*
@@ -2642,9 +2666,9 @@ require([
     }
 
 
-    function getData(sId, groupSurvey, callback, clearCache) {
+    function getData(sId, groupSurvey, subForm, callback, clearCache) {
 
-        var key = sId + "_" + groupSurvey;
+        var key = sId + "_" + groupSurvey + "_" + (typeof subForm === "undefind" ? "" : subForm);
 
         // First Check the Cache
         if(!clearCache && gTasks.cache.data[key]) {
@@ -2658,6 +2682,10 @@ require([
 
             if (groupSurvey) {
                 url += "&groupSurvey=" + groupSurvey;
+            }
+
+            if(subForm) {
+                url += "&form=" + subForm;
             }
 
             if (isDuplicates) {
