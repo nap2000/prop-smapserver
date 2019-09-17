@@ -1607,6 +1607,35 @@ require([
 
         $elemGroups.empty().html(h.join(''));
 
+    }
+
+    /*
+     * Update the pick list of forms
+     */
+    function updateFormList(data) {
+        var $elem = $('#sub_form');
+
+        var i,
+            h = [],
+            idx = -1;
+
+        h[++idx] = '<option value="_none">';
+        h[++idx] = localise.set["c_none"];
+        h[++idx] = '</option>';
+
+        if(data && data.length) {
+            for (i = 0; i < data.length; i++) {
+
+                h[++idx] = '<option value="';
+                h[++idx] = data[i];
+                h[++idx] = '">';
+                h[++idx] = data[i];
+                h[++idx] = '</option>';
+            }
+        }
+
+        $elem.empty().html(h.join(''));
+
 
     }
 
@@ -2715,6 +2744,7 @@ require([
                         updateSettings(gTasks.cache.currentData.settings);
                         map.setLayers(gTasks.cache.currentData.schema.layers);
                         chart.setCharts(gTasks.cache.currentData.schema.charts);
+                        updateFormList(gTasks.cache.currentData.forms);
 
                         // Add a config item for the group value if this is a duplicates search
                         if (isDuplicates) {
