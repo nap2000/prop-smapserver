@@ -214,13 +214,14 @@ function saveCurrentProject(projectId, surveyId, taskGroupId) {
 /*
  * Save the current relationship between survey and surveyGroup
  */
-function saveCurrentGroupSurvey(surveyId, groupSurvey) {
+function saveCurrentGroupSurvey(surveyId, gs, fName) {
 
 	if (surveyId > 0) {
 
 		var groupSurvey = {
 			sId: surveyId,
-			groupIdent: groupSurvey
+			groupIdent: gs,
+			fName: fName
 		};
 
 		var groupString = JSON.stringify(groupSurvey);
@@ -1112,6 +1113,7 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 			if(data.groupSurveys) {
 				for(i = 0; i < data.groupSurveys.length; i++) {
 					globals.gGroupSurveys[data.groupSurveys[i].sId] = data.groupSurveys[i].groupIdent;
+					globals.gSubForms[data.groupSurveys[i].sId] = data.groupSurveys[i].fName;
 				}
 			}
 
