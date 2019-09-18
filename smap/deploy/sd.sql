@@ -32,3 +32,5 @@ create TABLE last_refresh_log (
 	device_time TIMESTAMP WITH TIME ZONE
 	);
 ALTER TABLE last_refresh_log OWNER TO ws;
+
+alter table group_survey add column f_name text;
