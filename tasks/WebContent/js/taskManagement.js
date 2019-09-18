@@ -550,15 +550,6 @@ require([
 
 		// Add new Task Group
 		$('#addTaskGroup').click(function () {
-			var s_id = $('#survey').val();
-
-			/*
-			 * Make sure we have the survey id
-			 */
-			if (typeof s_id === "undefined" || s_id === null) {
-				alert(localise.set["msg_err_wait"]);
-				return;
-			}
 
 			// Clear form
 			$('#assign_survey_form')[0].reset();

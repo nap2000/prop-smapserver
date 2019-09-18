@@ -1598,6 +1598,9 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback) {
 				for(i = 0; i < data.length; i++) {
 					item = data[i];
 					h[++idx] = '<option';
+					if(i == 0) {
+						h[++idx] = ' selected="selected"';
+					}
 					if(item.blocked) {
 						h[++idx] = ' class="blocked"';
 					}
