@@ -1277,7 +1277,8 @@ create TABLE group_survey (
 	id integer default nextval('group_survey_seq') constraint pk_group_survey primary key,
 	u_ident text REFERENCES users(ident) ON DELETE CASCADE,
 	s_id integer REFERENCES survey(s_id) ON DELETE CASCADE,
-	group_ident text REFERENCES survey(ident) ON DELETE CASCADE
+	group_ident text REFERENCES survey(ident) ON DELETE CASCADE,
+	f_name text
 	);
 ALTER TABLE group_survey OWNER TO ws;
 

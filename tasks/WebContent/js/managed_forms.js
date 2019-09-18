@@ -1004,7 +1004,9 @@ require([
 
         if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
 
-            saveCurrentGroupSurvey(globals.gCurrentSurvey, globals.gGroupSurveys[globals.gCurrentSurvey]);
+            saveCurrentGroupSurvey(globals.gCurrentSurvey,
+                globals.gGroupSurveys[globals.gCurrentSurvey],
+                globals.gSubForms[globals.gCurrentSurvey]);
 
             showManagedData(globals.gCurrentSurvey, showTable, false);
 
@@ -1017,11 +1019,10 @@ require([
     function subFormChanged() {
 
         if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
-
-            // saveCurrentSubForm(globals.gCurrentSurvey, globals.gSubForms[globals.gCurrentSurvey]);  TODO
-
+            saveCurrentGroupSurvey(globals.gCurrentSurvey,
+                globals.gGroupSurveys[globals.gCurrentSurvey],
+                globals.gSubForms[globals.gCurrentSurvey]);
             showManagedData(globals.gCurrentSurvey, showTable, false);
-
         }
     }
 
@@ -1659,6 +1660,9 @@ require([
         }
 
         $elem.empty().html(h.join(''));
+        if(globals.gSubForms[globals.gCurrentSurvey]) {
+            $elem.val(globals.gSubForms[globals.gCurrentSurvey]);
+        }
 
 
     }
