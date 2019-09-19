@@ -469,7 +469,11 @@ require([
                 contentType: "application/json",
                 cache: false,
                 url: "/surveyKPI/managed/update_gs/" + globals.gCurrentSurvey + "/" + globals.gGroupSurveys[globals.gCurrentSurvey],
-                data: {settings: saveString},
+                data: {
+                    settings: saveString,
+                    instanceid: gTasks.gSelectedRecord.instanceid,
+                    groupForm: globals.gSubForms[globals.gCurrentSurvey]
+                },
                 success: function (data, status) {
                     removeHourglass();
                     gTasks.gUpdate = [];
