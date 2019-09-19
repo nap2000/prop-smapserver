@@ -394,7 +394,9 @@ require([
                 contentType: "application/json",
                 cache: false,
                 url: url,
-                data: {record: gTasks.gSelectedRecord.instanceid},
+                data: {
+                    record: gTasks.gSelectedRecord.instanceid
+                },
                 success: function (data, status) {
                     removeHourglass();
                     showManagedData(globals.gCurrentSurvey, showTable, true);
