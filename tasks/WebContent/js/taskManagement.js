@@ -1822,7 +1822,7 @@ require([
 				tab[++idx] = '</td>';
 
 				tab[++idx] = '<td>';
-				tab[++idx] = task.properties.form_name;
+				tab[++idx] = task.properties.survey_name;
 				tab[++idx] = '</td>';
 
 				tab[++idx] = '<td>';			// Task name
