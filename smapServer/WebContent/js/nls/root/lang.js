@@ -193,6 +193,7 @@ define({
     "c_assign_sel": "Set Selected as Assigned",
     "c_print": "Print",
     "c_repeat": "Repeat",
+	"c_persist": "Persist",
     "c_repeats": "Repeats",
     "c_scheduled": "Scheduled",
     "c_t_c": "terms and conditions",
@@ -558,6 +559,7 @@ define({
 	"msg_pdfcols_width": "A column width must be between 1 and 10 inclusive",
 	"msg_pe": "The number of days before password expiry must be an integer greater than 0",
     "msg_restore_started": "Restoration of the survey data has started.  Press refresh to see progress.  This process may take minutes if the files to be retrieved are in off site storage",
+	"msg_persist": "Persistent tasks stay on the device even after they are completed. The user should reject the task when they have finished with it",
 
     // Editor
     "e_b_e": "Base on existing form",
