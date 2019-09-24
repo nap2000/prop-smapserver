@@ -3750,7 +3750,9 @@ function getQuestionsInSurvey($elem, sIdent, includeNone) {
 		$elem.empty().append(h.join(''));
 	}
 
-	if(gCache[sIdent]) {
+	if(sIdent === 'self') {
+		populateElement($elem, globals.model.survey.forms[globals.gFormIndex].questions);
+	} else if(gCache[sIdent]) {
 		populateElement($elem, gCache[sIdent]);
 	} else {
 		if (sIdent !== "0") {
