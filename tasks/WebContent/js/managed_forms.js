@@ -1141,7 +1141,7 @@ require([
             }
 
             shownColumns.push({
-                "data": headItem.displayName
+                "data": headItem.column_name
             });
             h[++idx] = '<th>';
             h[++idx] = '<span class="ch">';
