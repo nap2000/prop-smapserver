@@ -279,3 +279,12 @@ ul.nav-pills > li > a {
     display: block;
 }
 
+.bg-brown {
+    background-color: #a05635 !important;
+}
+
+a.bg-brown:hover, a.bg-danger:focus,
+button.bg-brown:hover,
+button.bg-brown:focus {
+    background-color: #905635 !important;
+}
