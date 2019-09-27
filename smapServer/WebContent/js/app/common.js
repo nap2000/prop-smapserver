@@ -4217,12 +4217,12 @@ function getStatusClass(status, finish) {
 	} else if (status === "submitted" || status === "success") {
 		statusClass = "bg-success";
 	} else if (status === "late") {
-		statusClass = "bg-primary";
+		statusClass = "bg-danger";
 	} else if (status === "accepted" || status === "pending") {
 		statusClass = "bg-warning";
 	} else 	if (status === "error" || status === "unsent" || status === "unsubscribed"
 		|| status === "blocked" || status === "rejected" || status === "cancelled" || status === "deleted") {
-		statusClass = "bg-danger";
+		statusClass = "bg-brown";
 	} else {
 		statusClass = "bg-success";
 	}

@@ -2137,7 +2137,7 @@ require([
                                 statusClass = getStatusClass(data[i].status, finish);
                                 h[++idx] = statusClass;
                                 h[++idx] = '">';
-                                if(statusClass == 'bg-primary') {
+                                if(statusClass == 'bg-danger') {
                                     h[++idx] = localise.set["c_late"];
                                 } else {
                                     h[++idx] = localise.set[data[i].status];

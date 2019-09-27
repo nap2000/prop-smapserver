@@ -1834,7 +1834,7 @@ require([
 				statusLookup = task.properties.status;
 				if(statusLookup === "error" || statusLookup === "pending" || statusLookup === "blocked") {
 					statusLookup = "c_" + statusLookup;
-				} else if (statusClass == "bg-primary") {
+				} else if (statusClass == "bg-danger") {
 					statusLookup = "c_late";
 				}
 				tab[++idx] = localise.set[statusLookup];
