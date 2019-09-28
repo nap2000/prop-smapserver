@@ -1204,7 +1204,7 @@ require([
                     if (columns[colIdx].filter || columns[colIdx].type === "select1") {
                         var column = this;
                         var select = $('<select class="form-control"/>')
-                            .appendTo( $(column.footer()).empty() )
+                            .appendTo( $(column.footer()).empty())
                             .on('change', function () {
                                 var val = $.fn.dataTable.util.escapeRegex(
                                     $(this).val()
@@ -1217,6 +1217,7 @@ require([
                                 saveFilter(colIdx, val);
                             });
 
+                        select.append( '<option value=""></option>' );
                         column.data().unique().sort().each( function ( d, j ) {
                             select.append( '<option value="'+d+'">'+d+'</option>' )
                         } );
