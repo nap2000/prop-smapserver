@@ -470,7 +470,7 @@ require([
                 cache: false,
                 url: "/surveyKPI/managed/update_gs/" + globals.gCurrentSurvey + "/" + globals.gGroupSurveys[globals.gCurrentSurvey],
                 data: {
-                    settings: saveString,
+                    updates: saveString,
                     instanceid: gTasks.gSelectedRecord.instanceid,
                     groupForm: globals.gSubForms[globals.gCurrentSurvey]
                 },
@@ -2646,7 +2646,11 @@ require([
                 } else {
 
                     h[++idx] = '<div class="col-md-3">';
-                    h[++idx] = changes[i].col;
+                    if(changes[i].displayName) {
+                        h[++idx] = changes[i].displayName;
+                    } else {
+                        h[++idx] = changes[i].col;
+                    }
                     h[++idx] = '</div>';
 
                     h[++idx] = '<div class="col-md-4">';
