@@ -145,13 +145,13 @@ define([
                     configItem.readonly || !editable,
                     'record_maps_',
                     globals.gRecordMaps,
-                    configItem, record[configItem.displayName],
+                    configItem, record[configItem.column_name],
                     undefined,
                     itemIndex);
             } else if (configItem.readonly || !editable) {		// Read only text
-                h[++idx] = addCellMarkup(record[configItem.displayName]);
+                h[++idx] = addCellMarkup(record[configItem.column_name]);
             } else {
-                h[++idx] = addEditableColumnMarkup(configItem, record[configItem.displayName], itemIndex, first, schema, record);
+                h[++idx] = addEditableColumnMarkup(configItem, record[configItem.column_name], itemIndex, first, schema, record);
                 first = false;
             }
             h[++idx] = '</div>';
@@ -360,7 +360,7 @@ define([
 
 
         function addSourceQuestion(column, record, ref_rows) {
-            var name = column.mgmt ? column.name : column.displayName;        // Name hack
+            var name = column.mgmt ? column.name : column.column_name;        // Name hack
             var v = addAnchors(record[name])[0];
             var h = [];
             var idx = -1;
@@ -393,10 +393,11 @@ define([
                 columns = gTasks.cache.currentData.schema.columns,
                 currentValue,
                 column_name = columns[itemIndex].column_name,
+                displayName = columns[itemIndex].displayName,
                 i,
                 foundExistingUpdate;
 
-            currentValue = record[columns[itemIndex].displayName];
+            currentValue = record[columns[itemIndex].column_name];
             if (typeof currentValue === "undefined") {
                 currentValue = "";
             }
@@ -422,6 +423,7 @@ define([
                     // Add new value
                     gTasks.gUpdate.push({
                         name: column_name,                 // Update name is the column name
+                        displayName: displayName,
                         value: value,
                         currentValue: currentValue,
                         prikey: gTasks.gPriKey
