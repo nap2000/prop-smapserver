@@ -2847,7 +2847,7 @@ function getTableData(table, columns, format) {
 		for(j = 0; j < columns.length; j++) {
 			if(format === "xlsx" || !columns[j].hide) {
 				var k = columns[j].displayName;
-				var v = rows[i][k];
+				var v = rows[i][columns[j].column_name];
 
 				if (typeof v !== "string") {
 					v = JSON.stringify(v);
