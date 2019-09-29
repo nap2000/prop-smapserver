@@ -795,6 +795,7 @@ require([
             data,
             settings = [],
             groupSurvey,
+            subForm,
             title = $('#survey_name option:selected').text(),
             project = $('#project_name option:selected').text(),
             charts = [],
@@ -881,6 +882,12 @@ require([
         if(globals.gGroupSurveys[globals.gCurrentSurvey] && globals.gGroupSurveys[globals.gCurrentSurvey] != "") {
             groupSurvey = globals.gGroupSurveys[globals.gCurrentSurvey];
         }
+        if(globals.gSubForms[globals.gCurrentSurvey] && globals.gSubForms[globals.gCurrentSurvey] != "") {
+            subForm = globals.gSubForms[globals.gCurrentSurvey];
+            if(subForm === '_none') {
+                subForm = undefined;
+            }
+        }
 
         if (format !== "image") {
 
@@ -888,7 +895,10 @@ require([
                 chartData = chart.getXLSData(alldata);
             }
 
-            generateFile(url, filename, format, mime, data, globals.gCurrentSurvey, groupSurvey, title, project, charts, chartData, settings, tz);
+            generateFile(url, filename, format, mime, data, globals.gCurrentSurvey, groupSurvey, title, project, charts, chartData,
+                settings,
+                tz,
+                subForm);      // formName
         } else {
             var countImages = $('.svg-container svg').length;
             $('.svg-container svg').each(function (index) {
@@ -904,11 +914,13 @@ require([
                     var chart = {
                         image: uri,
                         title: title
-                    }
+                    };
                     charts.push(chart);
                     countImages--;
                     if (countImages <= 0) {
-                        generateFile(url, filename, format, mime, undefined, globals.gCurrentSurvey, groupSurvey, title, project, charts, chartData, settings, tz);
+                        generateFile(url, filename, format, mime, undefined, globals.gCurrentSurvey,
+                            groupSurvey, title, project,
+                            charts, chartData, settings, tz, subForm);
                     }
                 });
 
