@@ -2722,14 +2722,16 @@ function downloadFileErrorCheck() {
 /*
  * Post data to be converted into a file
  */
-function generateFile(url, filename, format, mime, data, sId, groupSurvey, title, project, charts, chartData, settings, tz) {
+function generateFile(url, filename, format, mime, data, sId, groupSurvey, title, project, charts, chartData, settings, tz, form) {
 
 	var payload = "sId=" + sId;
 	payload += "&format=" + format;
 	if(groupSurvey) {
 		payload += "&groupSurvey=" + groupSurvey;
 	}
-
+	if(form) {
+		payload += "&form=" + form;
+	}
 	if(data) {
 		payload += "&data=" + encodeURIComponent(JSON.stringify(data));
 	}
