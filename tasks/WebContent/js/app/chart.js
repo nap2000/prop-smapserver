@@ -607,7 +607,7 @@ define([
                         var di = {};
                         di.count = 1;
                         for (j = 0; j < columns.length; j++) {
-                            var val = results[i][columns[j].displayName];
+                            var val = results[i][columns[j].column_name];
                             if(columns[j].l_id > 0) {
                                 if(chart.qlabel) {
                                     val = lookupChoiceLabel(columns[j].l_id, val);  // Convert to the default label
