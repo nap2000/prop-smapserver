@@ -3060,14 +3060,18 @@ function updateLabel(type, formIndex, itemIndex, optionList, element, newVal, qn
 	 * property type is type, name or display name
 	 */
 	if(typeof questionType !== "undefined"
-			&& questionType === "calculate"
+			&& (questionType === "calculate" || questionType === "server_calculate")
 			&& prop !== "name"
         	&& prop !== "type"
 			&& prop !== "display_name"
 			&& prop !== "appearance"
         	&& prop !== "parameters") {	// Whatever the property for a calculation type the label field contains the calculation expression
 		changeType = "property";
-		prop = "calculation";
+		if(questionType === "calculate") {
+			prop = "calculation";
+		} else {
+			prop = "server_calculate";
+		}
 	} else {
 		if(prop === "label" || prop === "media" || prop === "hint")
 			changeType = "label";
