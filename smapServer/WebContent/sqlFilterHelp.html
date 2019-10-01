@@ -241,7 +241,7 @@
             <b>Examples</b>
             <ul>
                 <li>${_upload_time} > ( {allocated_time} + {2_days} )</li>
-                <li>${_start} + interval {7_days}</li>
+                <li>${_start} + {7_days}</li>
                 <li>${_start} + {7_days} + {20_minutes} </li>
                 <li>${_start} + {23:23:23}</li>
                 <li>now() - ${_upload_time} < {2_days}</li>
@@ -256,7 +256,7 @@
             <h2>Special Terms</h2>
 
             <ul>
-                <li>is null (Test to see if an answer was no given to a media or geopoint question)</li>
+                <li>is null (Test to see if an answer was <b>not</b> given to a media or geopoint question)</li>
                 <li>is not null (Test to see if an answer was given to a media or geopoint question)</li>
                 <li>_upload_time (The date that the survey was uploaded to the server)</li>
                 <li>_start (The time the survey was started)</li>
