@@ -36,3 +36,5 @@ ALTER TABLE last_refresh_log OWNER TO ws;
 alter table group_survey add column f_name text;
 
 CREATE UNIQUE INDEX record_event_key ON record_event(key);
+
+update question set source = 'user' where source is null and qtype = 'server_calculate';
