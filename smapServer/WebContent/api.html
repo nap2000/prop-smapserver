@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+
+    <title class="lang" data-lang="c_api">api</title>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="/css/wb/plugins/iCheck/custom.css" rel="stylesheet">
+
+    <link href="/css/wb/animate.css" rel="stylesheet">
+    <link href="/css/wb/style.css" rel="stylesheet">
+    <link href="/css/smap-wb.css" rel="stylesheet">
+
+    <script> if (!window.console) console = {
+        log: function () {
+        }
+    }; </script>
+
+    <script src="/js/libs/modernizr.js"></script>
+    <script src="/js/app/theme.js"></script>
+    <script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
+
+    <script data-main="js/api" src="/js/libs/require.js"></script>
+
+</head>
+<body>
+
+<div id="wrapper">
+
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div>
+            <ul class="nav metismenu" id="side-menu">
+
+                <li>
+                    <a id="username" data-toggle="modal" data-target="#modify_me_popup" aria-label="User">
+                        <i class="glyphicon glyphicon-user" aria-hidden="true"></i> <span class="lang"
+                                                                                          data-lang="m_user_profile"></span></a>
+                </li>
+                <li>
+                    <a href="#" id="m_modules_inspinia" aria-expanded="false"><i class="fa fa-th-large"></i> <span
+                            class="lang" data-lang="m_modules">modules</span></a>
+                    <ul class="nav nav-second-level" aria-expanded="false">
+
+                        <li class="restrict_role admin_role analyst_role"><a class="lang" data-lang="m_home"
+                                                                             href="/?loggedin=yes">home</a></li>
+                        <li class="restrict_role admin_role analyst_role"><a href="/edit.html"><i
+                                class="glyphicon glyphicon-edit"></i> <span class="lang" data-lang="c_edit">Edit</span></a>
+                        </li>
+                        <li class="restrict_role admin_role analyst_role"><a
+                                href="/fieldManager/surveyManagement.html"><i class="glyphicon glyphicon-wrench"></i>
+                            <span class="lang" data-lang="m_admin"></span></a></li>
+                        <li class="restrict_role manage_role disabled admin_role analyst_role"><a href="/tasks/managed_forms.html"><i
+                                class="glyphicon glyphicon-globe"></i> <span class="nav-label lang"
+                                                                             data-lang="m_console"></span>
+                        </a></li>
+                        <li class="restrict_role analyst_role data_role"><a href="/fieldAnalysis/index.html"><i
+                                class="glyphicon glyphicon-stats"></i> <span class="nav-label lang"
+                                                                             data-lang="m_analysis">Analysis</span></a>
+                        </li>
+                        <li class="restrict_role admin_role analyst_role manage_role"><a href="/tasks/taskManagement.html"><i
+                                class="fa fa-tasks"></i> <span class="nav-label lang" data-lang="m_assign">assign</span></a>
+                        </li>
+                        <li class="restrict_role admin_role analyst_role"><a href="/api.html">
+                            <i class="far fa-arrow-alt-circle-right"></i> <span class="nav-label lang" data-lang="c_api">api</span></a>
+                        </li>
+                        <li class="restrict_role billing_role" style="display:none;"><a href="/fieldManager/billing.html">
+                            <i class="fas fa-dollar-sign"></i> <span class="nav-label lang" data-lang="m_billing">billing</span></a>
+                        </li>
+                    </ul>
+                </li>
+
+
+            </ul>
+        </div>
+
+    </nav>
+
+    <div id="page-wrapper" class="gray-bg">
+
+        <!-- Navbar Row -->
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i>
+                    </a>
+
+                </div>
+
+            </nav>
+        </div>
+
+        <!-- Header Row -->
+        <div class="row wrapper border-bottom white-bg page-heading">
+            <div class="row">
+                <div class="col-sm-2">
+                    <h2 class="lang" data-lang="c_api_builder">api</h2>
+                </div>
+            </div>
+            <div class="row">
+                <form role="form" class="form-horizontal heading-element">
+                    <label class="lang col-sm-4 control-label" data-lang="c_api"
+                           for="api">api</label>
+                    <div class="col-sm-8">
+                        <select class="form-control" id="api">
+                            <option value="data" class="lang" data-lang="c_data"></option>
+                            <!--<option value="audit" class="lang" data-lang="c_audit"></option>-->
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="row">
+                <form role="form" class="form-horizontal heading-element">
+                    <label class="lang col-sm-4 control-label" data-lang="c_format"
+                           for="format">format</label>
+                    <div class="col-sm-8">
+                        <select class="form-control" id="format">
+                            <option value="json" class="lang" data-lang="c_json"></option>
+                            <option value="csv" class="lang" data-lang="c_csv"></option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="row">
+                <form role="form" class="form-horizontal heading-element">
+                    <label class="lang col-sm-4 control-label" data-lang="c_project"
+                           for="project_name">project</label>
+                    <div class="col-sm-8">
+                        <select class="project_list form-control" id="project_name"></select>
+                    </div>
+                </form>
+
+            </div>
+            <div class="row project_selected" style="display:none;">
+                <form role="form" class="form-horizontal heading-element">
+                    <label class="lang col-sm-4 control-label" data-lang="c_survey"
+                           for="survey">survey</label>
+                    <div class="col-sm-8">
+                        <select class="survey_select form-control" id="survey"></select>
+                    </div>
+                </form>
+            </div>
+
+            <div class="row project_selected" style="display:none;">
+                <form role="form" class="form-horizontal heading-element">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <div class="checkbox">
+                            <label>
+                                <input class="options" type="checkbox" id="option_audit"><span class="lang" data-lang="c_audit">audit</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <div class="checkbox">
+                            <label>
+                                <input class="options" type="checkbox" id="option_links"><span class="lang" data-lang="c_links">links</span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+
+        <!-- Main panel -->
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <div id="main_alert" style="display:none; word-wrap:break-word;" class="alert alert-success" role="alert"></div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="lang col-sm-2" data-lang="c_url">url</div>
+                                <div class="lang col-sm-8">
+                                    <a href="#" id="url" target="_blank"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

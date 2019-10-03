@@ -40,6 +40,9 @@
             name: '../reports',
         },
         {
+            name: '../api',
+        },
+        {
             name: '../passwords',
         },
         {
