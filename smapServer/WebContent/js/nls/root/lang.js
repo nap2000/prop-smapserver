@@ -60,6 +60,11 @@ define({
     "ss_su": "Get Smap Uploader",
 
     // Common
+    "c_api_builder": "API Builder",
+    "c_api": "API",
+    "c_links": "Links",
+    "c_audit": "Audit",
+    "c_url": "URL",
     "c_apply": "Apply",
     "c_desc": "Description",
     "c_default": "Default",
@@ -247,6 +252,7 @@ define({
     "c_create": "Create",
     "c_generate": "Generate",
     "c_imp_xls": "Import Spreadsheet",
+    "c_format": "Format",
     "c_xlstype": "Excel Format",
     "c_roles": "Roles",
     "c_s_roles": "Survey Roles",
@@ -276,6 +282,8 @@ define({
     "c_alink": "Anonymous Link",
     "c_excel": "Excel",
     "c_csv": "CSV",
+    "c_json": "JSON",
+    "c_geojson": "GeoJSON",
     "c_osm": "Openstreetmap",
     "c_shape": "Shape",
     "c_kml": "KML / KMZ",
