@@ -2787,6 +2787,8 @@ require([
 
                     if(data && data.status === "error") {
                         alert(data.msg);
+                    } else if(data.data && data.data[0] && data.data[0].status === "error") {
+                        alert(data.data[0].msg);
                     } else if(data && data.status === "ok") {
                         // Continue presumably there is no data
                     } else {
