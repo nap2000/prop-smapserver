@@ -3070,7 +3070,10 @@ function updateLabel(type, formIndex, itemIndex, optionList, element, newVal, qn
 		if(questionType === "calculate") {
 			prop = "calculation";
 		} else {
-			prop = "server_calculate";
+			prop = "server_calculation";
+			newVal = {
+				expression: newVal
+			}
 		}
 	} else {
 		if(prop === "label" || prop === "media" || prop === "hint")
