@@ -58,7 +58,6 @@ $(document).ready(function() {
 
     setCustomResources();			// Apply custom javascript
 	setupUserProfile();
-	var bs = isBusinessServer();
 	localise.setlang();		// Localise HTML
 	$('#map_name').attr("placeholder", localise.set["sr_m_ph"]);
 	$('#map_description').attr("placeholder", localise.set["sr_m_d"]);
@@ -72,9 +71,8 @@ $(document).ready(function() {
 	getFilesFromServer('/surveyKPI/upload/media', undefined, refreshMediaViewManage);		// Get files available to the entire organisation
 	
 	// Set up the tabs
-	if(bs) {
-		getLocations(loadedLocationData);
-	}
+	getLocations(loadedLocationData);
+
     $('#mediaTab a').click(function (e) {
     	e.preventDefault();
     	$(this).tab('show');
