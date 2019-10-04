@@ -1114,7 +1114,7 @@ require([
     function showTable(dataSet) {
 
         var x = 1,
-            columns = dataSet.schema.columns,
+            columns,
             parameters,
             shownColumns = [],
             hiddenColumns = [],
@@ -1133,8 +1133,14 @@ require([
             hDupsIdx = -1;
 
 
-        if ( $.fn.dataTable.isDataTable( $table) ) {
+        if ( $.fn.dataTable.isDataTable( $table) && globals.gMainTable) {
             globals.gMainTable.destroy();
+        }
+
+        if(dataSet.schema) {
+            columns = dataSet.schema.columns;
+        } else {
+            columns = [];
         }
 
         // Add table
@@ -2785,15 +2791,21 @@ require([
                     gRefreshingData = false;
                     gGetSettings = false;
 
+                    var theCallback = callback;
                     if(data && data.status === "error") {
                         alert(data.msg);
+                        clearTable();
+                        return;
                     } else if(data.data && data.data[0] && data.data[0].status === "error") {
                         alert(data.data[0].msg);
+                        clearTable();
+                        return;
                     } else if(data && data.status === "ok") {
                         // Continue presumably there is no data
+                        clearTable();
+                        return;
                     } else {
                         var theKey = key;
-                        var theCallback = callback;
 
                         gTasks.cache.data[theKey] = data;
                         gTasks.cache.currentData = data;
@@ -3209,6 +3221,13 @@ require([
         }
         $('#toggleRecordTitle, #toggleRecordSave').text(title);
         $('#toggleRecord').modal("show");
+    }
+
+    function clearTable() {
+        if ( $.fn.dataTable.isDataTable( $("#trackingTable")) && globals.gMainTable) {
+            globals.gMainTable.destroy();
+        }
+        $("#trackingTable").empty()
     }
 
 });
