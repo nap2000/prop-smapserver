@@ -140,9 +140,27 @@ define([
 
             var url="/surveyKPI/surveys/save/" + globals.gCurrentSurvey,
                 changesString,
-                changesInSeq = resequenceChangeSet(globals.changes);
+                changesInSeq = resequenceChangeSet(globals.changes),
+                i, j,
+                item;
 
-
+            // newVal and oldVal cannot be objects so if this is a property update
+            // for a server calculation then they need to be stringified
+            if(changesInSeq) {
+                for(i = 0; i < changesInSeq.length; i++) {
+                    if(changesInSeq[i].changeType === "property") {
+                        for(j = 0; j < changesInSeq[i].items.length; j++) {
+                            item = changesInSeq[i].items[j];
+                            if(item.property) {
+                                if(item.property.oldVal) {
+                                    item.property.oldVal = JSON.stringify(item.property.oldVal);
+                                    item.property.newVal = JSON.stringify(item.property.newVal);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             changesString = JSON.stringify(changesInSeq);
             setHasChanges(0);
             globals.gSaveInProgress = true;
