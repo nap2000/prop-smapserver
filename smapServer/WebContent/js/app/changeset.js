@@ -151,9 +151,11 @@ define([
                     if(changesInSeq[i].changeType === "property") {
                         for(j = 0; j < changesInSeq[i].items.length; j++) {
                             item = changesInSeq[i].items[j];
-                            if(item.property) {
+                            if(item.property && item.property.prop == 'server_calculation') {
                                 if(item.property.oldVal) {
                                     item.property.oldVal = JSON.stringify(item.property.oldVal);
+                                }
+                                if(item.property.newVal) {
                                     item.property.newVal = JSON.stringify(item.property.newVal);
                                 }
                             }
