@@ -86,6 +86,12 @@ require([
 					sourceParam: $('#item_source_param').val()
 				};
 
+				// Validate
+				if(!item.name || item.name.trim().length === 0) {
+					alert(localise.set["msg_val_nm"]);
+					return;
+				}
+
 				// Settings
 				var set = [];
 				var pdfNo = $('#a_pdfno').prop('checked');
