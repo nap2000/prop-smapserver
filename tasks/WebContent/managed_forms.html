@@ -159,7 +159,7 @@
                         <a href="#" id="m_refresh"><span class="lang" data-lang="m_refresh">r</span></a>
                     </li>
                     <li>
-                        <a class="right-sidebar-toggle">
+                        <a id="show_settings">
                             <i class="fa fa-cog"></i>
                         </a>
                     </li>
@@ -495,54 +495,6 @@
                 </div>
             </div>
 
-        </div>
-    </div>
-
-    <div id="right-sidebar" class="animated">
-        <div class="sidebar-container">
-
-            <ul class="nav nav-tabs navs-3">
-
-                <li class="active"><a data-toggle="tab" href="#tab-1"><i class="fa fa-sort-amount-desc"></i></a></li>
-                <li><a data-toggle="tab" href="#tab-2"><i class="fa fa-qrcode"></i></a></li>
-
-            </ul>
-
-            <div class="tab-content">
-
-                <div id="tab-1" class="tab-pane active">
-
-                    <div class="sidebar-title">
-                        <h3><span class="lang" data-lang="mf_sc">sort</span></h3>
-                        <small><i class="fa fa-tim"></i> <span class="lang" data-lang="mf_sc_i"></span></small>
-                    </div>
-
-                    <div id="tab-columns-content"></div>
-
-                    <div class="sidebar-content">
-                        <button id="applyColumns" type="button" class="btn btn-primary lang" data-lang="c_apply">apply
-                        </button>
-
-                    </div>
-
-                </div>
-
-                <div id="tab-2" class="tab-pane">
-                    <div class="sidebar-title">
-                        <h3><span class="lang" data-lang="mf_qr">qr</span></h3>
-                        <small><i class="fa fa-tim"></i> <span class="lang" data-lang="mf_bc_i"></span></small>
-                    </div>
-
-                    <div id="tab-barcode-content"></div>
-
-                    <div class="sidebar-content">
-                        <button id="applyBarcodes" type="button" class="btn btn-primary lang" data-lang="c_apply">
-                            apply
-                        </button>
-
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -1312,6 +1264,32 @@
                 <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
                 </button>
                 <button id="overviewReportSave" type="button" class="btn btn-primary lang" data-lang="m_export">export</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Popup to allow the user to select the visible columns -->
+<div id="settingsPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="genpdfLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title lang" data-lang="c_settings">pdf</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-8"><b><span class="lang" data-lang="c_cols"></span></b></div>
+                    <div class="col-sm-2"><b><span class="lang" data-lang="c_show"></span></b></div>
+                    <div class="col-sm-2"><b><span class="lang" data-lang="ed_bc"></span></b></div>
+                </div>
+                <div id="tab-columns-content"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
+                <button id="saveSettings" type="button" data-dismiss="modal" class="btn btn-primary lang" data-lang="c_save"></button>
             </div>
         </div>
     </div>

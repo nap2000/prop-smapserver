@@ -554,39 +554,36 @@ require([
         });
 
         /*
+         * show the settings dialog
+         */
+        $('#show_settings').click(function() {
+            $('#settingsPopup').modal("show");
+        });
+
+        /*
          * Save changes to the table columns that are shown
          */
-        $('#applyColumns').click(function () {
+        $('#saveSettings').click(function () {
 
             var
                 config = gTasks.cache.currentData.schema,
                 $this;
 
-            $('input', '#tab-columns-content').each(function (index) {
+            $('input.columnSelect', '#tab-columns-content').each(function (index) {
                 $this = $(this);
                 config.columns[index + 1].hide = !$this.is(':checked');		// Ignore prikey
+            });
+
+            $('input.barcodeSelect', '#tab-columns-content').each(function (index) {
+                $this = $(this);
+                config.columns[index + 1].barcode = $this.is(':checked');		// Ignore prikey
 
             });
 
             updateVisibleColumns(config.columns);
             saveColumns();
 
-        });
-
-        // Save changes to the barcodes that are shown
-        $('#applyBarcodes').click(function () {
-
-            var
-                config = gTasks.cache.currentData.schema,
-                $this;
-
-            $('input', '#tab-barcode-content').each(function (index) {
-                $this = $(this);
-                config.columns[index + 1].barcode = $this.is(':checked');		// Ignore prikey
-
-            });
             showManagedData(globals.gCurrentSurvey, showTable, false); // redraw
-            saveConfig(config);
 
         });
 
@@ -1313,7 +1310,7 @@ require([
         /*
          * Settings
          */
-        $('#tab-columns-content, #tab-barcode-content').html(hColSort.join(''));
+        $('#tab-columns-content').html(hColSort.join(''));
 
         /*
          * Duplicates modal
@@ -1371,11 +1368,12 @@ require([
             idx = -1;
 
         if (item.include) {
-            h[++idx] = '<div class="setings-item">';
-            h[++idx] = '<span>';
+            h[++idx] = '<div class="row">';
+            h[++idx] = '<div class="col-sm-8">';
             h[++idx] = item.displayName;
-            h[++idx] = '</span>';
+            h[++idx] = '</div>';
 
+            h[++idx] = '<div class="col-sm-2">';
             h[++idx] = '<div class="switch">';
             h[++idx] = '<input type="checkbox" name="columnSelect"';
             h[++idx] = ' class="columnSelect" value="';
@@ -1386,6 +1384,21 @@ require([
             }
             h[++idx] = '>';
             h[++idx] = '</div>';
+            h[++idx] = '</div>';
+
+            h[++idx] = '<div class="col-sm-2">';
+            h[++idx] = '<div class="switch">';
+            h[++idx] = '<input type="checkbox" name="barcodeSelect"';
+            h[++idx] = ' class="barcodeSelect" value="';
+            h[++idx] = item.displayName;
+            h[++idx] = '"';
+            if(item.barcode) {
+                h[++idx] = ' checked';
+            }
+            h[++idx] = '>';
+            h[++idx] = '</div>';
+            h[++idx] = '</div>';
+
             h[++idx] = '</div>';
         }
         return h.join('');
@@ -1828,7 +1841,8 @@ require([
 
         for (i = 0; i < columns.length; i++) {
             configColumns[columns[i].column_name] = {
-                hide: columns[i].hide
+                hide: columns[i].hide,
+                barcode: columns[i].barcode
             };
         }
 
