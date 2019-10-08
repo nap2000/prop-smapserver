@@ -185,6 +185,10 @@ require([
 					{
 						value: "email",
 						label: "c_email"
+					},
+					{
+						value: "start-geopoint",
+						label: "c_location"
 					}
 				];
 
