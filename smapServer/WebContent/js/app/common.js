@@ -711,6 +711,11 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 		}
 	}
 
+	if(globals.gTraining) {
+		$('#train_link').prop("href", globals.gTraining);
+		$('#m_training').show();
+	}
+
 	//TODO set logic for enabling disabling billing
 	if(isBusinessServer() && (globals.gBillingData || globals.gOrgBillingData)) {
 		$('.billing_role').show();
@@ -1092,6 +1097,7 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 			globals.gEnterpriseName = data.enterprise_name;
 			globals.gSetAsTheme = data.set_as_theme;
 			globals.gNavbarColor = data.navbar_color;
+			globals.gTraining = data.training;
 
 			if(data.timezone) {
 				globals.gTimezone = data.timezone;

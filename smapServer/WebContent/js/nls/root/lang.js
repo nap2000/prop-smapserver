@@ -21,6 +21,7 @@ define({
     "m_assign": "Tasks",
     "m_query": "Queries",
     "m_help": "Help",
+    "m_train": "Training",
     "m_forgot_password": "Forgot Password",
     "m_register": "Register",
     "m_locations": "Locations",
