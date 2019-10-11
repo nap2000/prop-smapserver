@@ -178,6 +178,7 @@ create TABLE organisation (
 	sensitive_data text,			-- Questions that should be stored more securely
 	webform text,				-- Webform options
 	navbar_color text,
+	training text,
 	changed_ts TIMESTAMP WITH TIME ZONE
 	);
 CREATE UNIQUE INDEX idx_organisation ON organisation(name);
