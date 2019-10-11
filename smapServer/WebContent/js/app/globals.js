@@ -132,6 +132,8 @@ define(function () {
         gMapLayersShown: false,
         gViewId: 0,						// Current survey view
 
+	    gTraining: undefined,
+
         gMapboxDefault: undefined,		// Mapbox key
         
         model: new Model()
