@@ -286,7 +286,7 @@ CREATE TABLE users (
 	one_time_password varchar(36),	-- For password reset
 	one_time_password_expiry timestamp with time zone,		-- Time and date one time password expires
 	password_reset boolean default false,	-- Set true if the user has reset their password
-	o_id integer REFERENCES organisation(id) ON DELETE CASCADE,
+	o_id integer REFERENCES organisation(id),
 	action_details text,			-- Details of a specific action the user can undertake
 	lastalert text,					-- Time last alert sent to the user
 	seen boolean,					-- True if the user has aknowledged the alert

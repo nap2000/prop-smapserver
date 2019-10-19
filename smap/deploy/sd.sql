@@ -40,3 +40,5 @@ CREATE UNIQUE INDEX record_event_key ON record_event(key);
 update question set source = null where qtype = 'server_calculate' and source is not null;
 
 alter table organisation add column training text;
+
+alter table users drop constraint users_o_id_fkey;
