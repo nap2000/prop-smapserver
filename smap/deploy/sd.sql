@@ -42,3 +42,6 @@ alter table organisation add column training text;
 alter table users drop constraint users_o_id_fkey;
 
 alter table organisation add column ft_prevent_disable_track boolean default false;
+
+-- Duplicates are allowed
+drop index record_event_key;
