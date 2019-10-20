@@ -156,6 +156,7 @@ create TABLE organisation (
 	ft_sync_incomplete boolean,
 	ft_odk_style_menus boolean default true,
 	ft_specify_instancename boolean default false,
+	ft_prevent_disable_track boolean default false,
 	ft_admin_menu boolean default false,
 	ft_exit_track_menu boolean default false,
 	ft_review_final boolean default true,

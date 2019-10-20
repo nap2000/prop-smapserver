@@ -979,6 +979,7 @@ define({
 	"u_det_paperbc": "Paper background color",
 	"u_det_fp": "Footer position (from right in pixels)",
     "u_ft_del": "Delete submitted results from the phone",
+    "u_ft_prev_track_dis": "Prevent the disabling of location tracking",
     "u_ft_img_size": "Maximum pixels of the long edge of an image",
     "u_ft_img_camera": "Original size from camera",
     "u_ft_vs": "Very small (640px)",
