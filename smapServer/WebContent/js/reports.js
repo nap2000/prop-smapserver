@@ -534,16 +534,6 @@ require([
                 tab[++idx] = '"><i class="fa fa-share-alt"></i></button>';
                 tab[++idx] = '</td>';
 
-                /*
-                tab[++idx] = '<td>';			// Copy odata Link
-                if(gReportList[i].action_details.reportType === "xlsx") {
-                    tab[++idx] = '<button type="button" class="btn btn-default has_tt copyLinkOdata" title="Copy OData Link" value="';
-                    tab[++idx] = i;
-                    tab[++idx] = '">OData</button>';
-                }
-                tab[++idx] = '</td>';
-                 */
-
                 tab[++idx] = '<td>';
                 tab[++idx] = '<div class="dropdown">';
                 tab[++idx] = '<button id="dropdownMenu' + i + '" class="btn btn-default dropdown-toggle report_action" data-toggle="dropdown"  type="button" aria-haspopup="true" aria-expanded="false">';
