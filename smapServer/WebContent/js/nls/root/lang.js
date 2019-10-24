@@ -668,7 +668,7 @@ define({
     "e_val": "Validation error",
     "e_circ": "Check for circular references",
     "e_in_q": "in question",
-    "e_h_c1": "A 'relevant' statement for question is potentially referring to  itself instead of referring to another question",
+    "e_h_c1": "A 'relevant or calculation or choice filter' for question is referring to  itself instead of referring to another question",
     "e_h_c2": "Relevant statements are evaluated before a question is asked so they cannot refer to their own questions",
     "e_brackets": "Mismatched brackets in function",
     "e_text": "Error with the following text:",
