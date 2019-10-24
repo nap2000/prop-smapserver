@@ -611,7 +611,7 @@ CREATE TABLE question (
 	q_id INTEGER DEFAULT NEXTVAL('q_seq') CONSTRAINT pk_question PRIMARY KEY,
 	f_id INTEGER REFERENCES form ON DELETE CASCADE,
 	l_id integer default 0,
-	style_id integer dfault 0,
+	style_id integer default 0,
 	seq INTEGER,
 	qName text NOT NULL,						-- Name that conforms to ODK restrictions
 	column_name text,							-- Name of column in results table, qname with postgres constraints
@@ -1297,3 +1297,32 @@ create TABLE style (
 	style text	-- json
 	);
 ALTER TABLE style OWNER TO ws;
+
+DROP SEQUENCE IF EXISTS reminder_seq CASCADE;
+CREATE SEQUENCE reminder_seq START 1;
+ALTER SEQUENCE reminder_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS reminder;
+CREATE TABLE reminder (
+	id integer DEFAULT NEXTVAL('reminder_seq') CONSTRAINT pk_reminder PRIMARY KEY,
+	n_id integer references forward(id) ON DELETE CASCADE,
+	a_id integer references assignments(id) ON DELETE CASCADE,
+	reminder_date timestamp with time zone
+	);
+ALTER TABLE reminder OWNER TO ws;
+
+DROP SEQUENCE IF EXISTS survey_settings_seq CASCADE;
+CREATE SEQUENCE survey_settings_seq START 1;
+ALTER SEQUENCE survey_settings_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS survey_settings;
+create TABLE survey_settings (
+	id integer DEFAULT NEXTVAL('survey_settings_seq') CONSTRAINT pk_survey_settings PRIMARY KEY,
+	s_ident text,		-- Survey ident
+	u_id integer,		-- User
+	view text,			-- Overall view (json)
+	map_view text,		-- Map view data
+	chart_view text,		-- Chart view data
+	columns text	
+);
+ALTER TABLE survey_settings OWNER TO ws;
