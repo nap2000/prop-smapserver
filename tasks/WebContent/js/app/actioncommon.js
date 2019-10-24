@@ -60,9 +60,10 @@ define([
 
                 if (configItem.mgmt) {
                     h[++idx] = getEditMarkup(configItem, i, first, record, schema, editable);
-                } else {
-                    m[++cnt] = getEditMarkup(configItem, i, first, record, schema, editable);
-                }
+                } //else {
+                // Always add the read only original
+                m[++cnt] = getEditMarkup(configItem, i, first, record, schema, editable);
+                //}
                 if (!configItem.readonly) {
                     first = false;
                 }
@@ -84,7 +85,10 @@ define([
 
                     var $sel = option.closest('select');
                     var itemIndex = $sel.data("item");
-                    var val = $sel.val().join(' ');
+                    var val = '';
+                    if ($sel.val()) {
+                        val = $sel.val().join(' ');
+                    }
                     var config = {
                         itemIndex: itemIndex,
                         value: val
@@ -220,6 +224,12 @@ define([
                     h[++idx] = ' multiple="multiple"'
                 }
                 h[++idx] = '>';
+
+                // Add the empty choice
+                if (column.type !== "select") {
+                    h[++idx] = '<option value=""></option>';
+                }
+
                 var choices = getChoiceList(schema, column.l_id);
                 if (choices) {
                     if (column.type === "select") {
