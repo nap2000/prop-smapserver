@@ -1562,6 +1562,7 @@ define([
 
                     // Check references to other questions
                     isValid = checkReferences(container, itemIndex, itemType, item);
+                    isValid = checkSelfReferences(container, itemIndex, itemType, item);
 
                     // Check for multiple geom types in a single form
                     if(isValid) {
@@ -1907,7 +1908,7 @@ define([
                         var otherItem = form.questions[j];
                         var questionType = otherItem.type;
                         if (!otherItem.deleted && !otherItem.soft_deleted && questionType !== "end group") {
-                            if (!(i === container && j === itemIndex)) {	// Don't test the question against itself!
+                            //if (!(i === container && j === itemIndex)) {	// Don't test the question against itself!
                                 otherItem = form.questions[j];
 
                                 for (name in refQuestions) {
@@ -1918,7 +1919,7 @@ define([
                                         }
                                     }
                                 }
-                            }
+                            //}
                         }
                     }
                 }
@@ -1949,6 +1950,67 @@ define([
                         }
                     }
                 }
+            }
+
+            return true;
+
+        }
+
+        /*
+         * Return false if the calculation is not valid
+         */
+        function checkSelfReferences(container, itemIndex, itemType, item) {
+
+            var refQuestions = {},
+                survey = globals.model.survey,
+                form,
+                i, j,
+                name;
+
+            // Get a list of references to other where self cannot be references
+            if(itemType  === "question") {
+                getReferenceNames(item.relevant, refQuestions);
+                getReferenceNames(item.calculation, refQuestions);
+                getReferenceNames(item.choice_filter, refQuestions);
+            }
+            for(i = 0; i < item.labels.length; i++) {
+                var text = item.labels[i].text;
+                if(typeof text === "string") {
+                    getReferenceNames(item.labels[i].text, refQuestions);
+                }
+            }
+
+            var refCount = 0;
+            for (name in refQuestions) {
+                if (refQuestions.hasOwnProperty(name)) {
+                    refCount++;
+                }
+            }
+
+            if(refCount > 0) {
+
+                form = survey.forms[container];
+                var otherItem = form.questions[itemIndex];
+                var questionType = otherItem.type;
+                if (!otherItem.deleted && !otherItem.soft_deleted && questionType !== "end group") {
+
+                    for (name in refQuestions) {
+                        if (refQuestions.hasOwnProperty(name)) {
+                            if (name === otherItem.name) {
+                                addValidationError(
+                                    container,
+                                    itemIndex,
+                                    "item",
+                                    localise.set["c_question"] + " ${" + name + "} " + localise.set["e_h_c1"],
+                                    itemType,
+                                    "error");
+                                return false;
+                            }
+                        }
+                    }
+
+                }
+
             }
 
             return true;
