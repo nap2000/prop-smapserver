@@ -479,7 +479,9 @@ button {
 .or-required-msg,
 .or-relevant-msg,
 .option-wrapper .itemset-template,
-.itemset-labels {
+.itemset-labels,
+.or-hint.or-form-guidance,
+.or-hint.or-form-guidance.active {
   display: none; }
 
 .or > h3,
