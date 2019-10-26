@@ -646,7 +646,7 @@ define(
     "e_val": "Error de Validación",
     "e_circ": "Revise por referencias circulares",
     "e_in_q": "en pregunta",
-    "e_h_c1": "Una declaración 'relevant´en una pregunta se está refiriendo a ella misma en vez de a otra pregunta.",
+    "e_h_c1": "Una relevancia, o cálculo o filtro de selección se esta refiriendo a si mismo, en vez de referirse a otra pregunta.",
     "e_h_c2": "Declaraciones relevantes se están evaluando antes de una pregunta que si es ejecutada no podrá referirse a sus propias preguntas.",
     "e_brackets": "Falta cerrar corchetes en una función",
     "e_text": "Error en el siguiente texto:",
