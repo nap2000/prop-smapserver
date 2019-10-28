@@ -43,7 +43,6 @@ requirejs.config({
         lang_location: '../../../../js',
         file_input: '../../../../js/libs/bootstrap.file-input',
         datetimepicker: '../../../../js/libs/bootstrap-datetimepicker.min',
-        icheck: '../../../../js/libs/wb/plugins/iCheck/icheck.min',
         svgsave: '../../../../js/libs/saveSvgAsPng',
         metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu',
         inspinia: '../../../../js/libs/wb/inspinia.v2.9.2',
@@ -62,7 +61,6 @@ requirejs.config({
         'crf': ['jquery'],
         'file_input': ['jquery'],
         'metismenu': ['jquery'],
-        'icheck': ['jquery'],
         'app/chart': ['jquery'],
         'qrcode': ['jquery'],
 	    'slimscroll': ['jquery'],
@@ -85,12 +83,10 @@ require([
     'metismenu',
     'pace',
     'datetimepicker',
-    'icheck',
     'crf',
     'qrcode',
     'toggle',
 	'slimscroll',
-    'inspinia',
     'multiselect'
 
 ], function ($,
@@ -1317,10 +1313,6 @@ require([
          */
         if(isDuplicates) {
             $('#duplicateSelect').html(hDups.join(''));
-            $('input', '#duplicateSelect').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green'
-            });
         }
 
     }
