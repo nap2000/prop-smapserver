@@ -945,7 +945,7 @@ require([
 			} else if (target === '#map-view') {
 				if (!gMapInitialised) {
 					gMapInitialised = true;
-					initialiseMap('map', 1, true, undefined, refreshMainMap);
+					initialiseMap('map', 1, true, mapViewClicked, refreshMainMap);
 				}
 			}
 		});
@@ -1024,6 +1024,14 @@ require([
 	 */
 	function refreshMainMap() {
 		refreshMapAssignments('map', globals.gTaskList);
+	}
+
+	function mapViewClicked(data) {
+		console.log(data.layer.feature.properties);
+		var taskFeature = data.layer.feature,
+			task = data.layer.feature.properties;
+
+		editTask(false, task, taskFeature);
 	}
 
 	/*
@@ -1676,9 +1684,10 @@ require([
 	/*
 	 * Respond to a click on the modal map
 	 */
-	function clickOnMap(latlng) {
+	function clickOnMap(data) {
 		var x = 1,
-			coords = [];
+			coords = [],
+			latlng = data.latlng;
 
 		coords[0] = latlng.lng;
 		coords[1] = latlng.lat;
