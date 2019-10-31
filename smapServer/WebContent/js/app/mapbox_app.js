@@ -77,13 +77,13 @@ function initialiseMapKeySet(elementId, zoom, setUserLocation, callbackClick, ca
 	if(setUserLocation) {
 		thisMapData.gLocationLayer = L.mapbox.featureLayer().addTo(thisMapData.map);
 	}
-	thisMapData.featureLayer = L.mapbox.featureLayer(undefined, {
+	thisMapData.featureLayer = L.mapbox.featureLayer('tasks', {
 	    pointToLayer: function(feature, latlon) {
 	    	
 	    	var option = {
 	    		    radius: 8,
-	    		    weight: 5,
-	    		    stroke: false,
+	    		    weight: 1,
+	    		    stroke: true,
 	    		    opacity: 1,
 	    		    fillOpacity: 0.8,
 	    		    draggable: true
@@ -99,17 +99,18 @@ function initialiseMapKeySet(elementId, zoom, setUserLocation, callbackClick, ca
 		    		option.fillColor = "#0000ff";
 		    	} else if(feature.properties.status === "accepted") {
 		    		option.fillColor = "#ffff00";
-		    	} else if(feature.properties.status === "accepted") {
-		    		option.fillColor = "#ffff00";
 		    	} else if(feature.properties.status === "submitted") {
 		    		option.fillColor = "#009933";
-		    	} else {
+		    	} else if(feature.properties.status === "late") {
+			        option.fillColor = "#FF0000";
+		        } else {
 		    		option.fillColor = "#fff";
 		    	}
 	    	}
 	    	
 	    	if(feature.properties.selected) {
 	    		option.stroke = true;
+			    weight: 5,
 	    		option.color = "#ff9900";
 	    	}
 	    	
@@ -117,6 +118,10 @@ function initialiseMapKeySet(elementId, zoom, setUserLocation, callbackClick, ca
 	        	return L.circleMarker(latlon, option);
 	    	}
 	    }
+	}).on('click', function(data) {
+		if(typeof callbackClick === "function") {
+			callbackClick(data);
+		}
 	});
 	
 	/*
@@ -124,7 +129,7 @@ function initialiseMapKeySet(elementId, zoom, setUserLocation, callbackClick, ca
 	 */
 	if(typeof callbackClick === "function") {
 		thisMapData.map.on('click', function(data) {
-			callbackClick(data.latlng);
+			callbackClick(data);
 		});
 	}
 	
