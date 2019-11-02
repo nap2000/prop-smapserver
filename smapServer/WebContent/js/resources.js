@@ -506,10 +506,6 @@ function refreshLocationView() {
 					h[++idx] = '<tr>';
 
 					h[++idx] = '<td>';
-					h[++idx] = gTags[i].type;
-					h[++idx] = '</td>';
-
-					h[++idx] = '<td>';
 					h[++idx] = gTags[i].group;
 					h[++idx] = '</td>';
 
