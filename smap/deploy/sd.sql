@@ -45,3 +45,6 @@ alter table organisation add column ft_prevent_disable_track boolean default fal
 
 -- Duplicates are allowed
 drop index record_event_key;
+
+alter table task_group add column assign_auto boolean;
+alter table tasks add column assign_auto boolean;

@@ -626,6 +626,8 @@ define({
     "t_drag": "Drag a task and drop onto calendar",
     "t_g": "Guidance",
     "t_pol": "Complete All",
+    "t_auto": "Allow users to assign themselves (if unassigned)",
+    "t_auto2": "Self Assign",
     "t_ass_done": "Have you completed this assignment?",
     "t_defn": "Task Group Definition",
     "t_au": "All Users",
