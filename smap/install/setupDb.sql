@@ -866,7 +866,8 @@ CREATE TABLE public.task_group (
     target_s_id integer,
     email_details text,
     dl_dist integer,				-- Download distance, same value is in the rule, needed here for selects
-    complete_all boolean			-- Set true if all assignements of a task must be completed
+    complete_all boolean	,		-- Set true if all assignements of a task must be completed
+    assign_auto boolean		-- Set true if the user can assign themselves to an unassigned task
 );
 ALTER TABLE public.task_group OWNER TO ws;
 
@@ -896,6 +897,7 @@ CREATE TABLE public.tasks (
 	location_name text,
 	deleted boolean,
 	complete_all boolean default false,	-- Set true if all assignments associated to this task need to be completed
+	assign_auto boolean default false,	-- Set true if users can assign themselvs to this task
 	show_dist integer						-- Distance in meters at which task will be downloaded
 );
 SELECT AddGeometryColumn('tasks', 'geo_point', 4326, 'POINT', 2);
