@@ -1565,8 +1565,6 @@ require([
 		});
 	}
 
-
-
 	/*
 	 * Update the server with the server config
 	 */

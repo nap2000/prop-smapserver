@@ -3043,9 +3043,12 @@ require([
         if (isNew) {
             $('#taskPropLabel').html(localise.set["t_add_task"]);
             $('#tp_pol').prop('checked', true);
+            $('#tp_assign_auto').prop('checked', false);
+
         } else {
             $('#taskPropLabel').html(localise.set["t_edit_task"]);
             $('#tp_pol').prop('checked', task.complete_all);
+            $('#tp_assign_auto').prop('checked', task.assign_auto);
         }
 
         /*
@@ -3053,6 +3056,7 @@ require([
 		 */
         $('#tp_repeat').prop('checked', task.repeat);
         $('#tp_pol').prop('checked', task.complete_all);
+        $('#tp_assign_auto').prop('checked', task.assign_auto);
         $('#tp_name').val(task.name);		// name
         if(isNew) {
             $('#tp_form_name').val($('#tp_form_name option:first').val());
@@ -3064,6 +3068,7 @@ require([
         $('#tp_assign_emails').val(taskFeature.properties.emails);
         $('#tp_repeat').prop('checked', taskFeature.properties.repeat);
         $('#tp_pol').prop('checked', taskFeature.properties.complete_all);
+        $('#tp_assign_auto').prop('checked', taskFeature.properties.assign_auto);
 
         // Set end date first as otherwise since it will be null, it will be defaulted when from date set
         if (task.to) {
