@@ -283,8 +283,18 @@ ul.nav-pills > li > a {
     background-color: #a05635 !important;
 }
 
-a.bg-brown:hover, a.bg-danger:focus,
+a.bg-brown:hover, a.bg-brown:focus,
 button.bg-brown:hover,
 button.bg-brown:focus {
     background-color: #905635 !important;
+}
+
+.bg-orange {
+    background-color: #FF6347 !important;
+}
+
+a.bg-orange:hover, a.bg-orange:focus,
+button.bg-orange:hover,
+button.bg-orange:focus {
+    background-color: #FF4500 !important;
 }
