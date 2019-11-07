@@ -2159,11 +2159,13 @@ require([
 
                                 h[++idx] = '<td class="mincol ';    // status
                                 finish = getFinish(data[i]);
-                                statusClass = getStatusClass(data[i].status, finish);
+                                statusClass = getStatusClass(data[i].status, data[i].assign_auto);
                                 h[++idx] = statusClass;
                                 h[++idx] = '">';
                                 if(statusClass == 'bg-danger') {
                                     h[++idx] = localise.set["c_late"];
+                                } if(statusClass == 'bg-orange') {
+                                    h[++idx] = localise.set["t_auto2"];
                                 } else {
                                     h[++idx] = localise.set[data[i].status];
                                 }
@@ -2189,7 +2191,7 @@ require([
                                     h[++idx] = '">';
                                     h[++idx] = localise.set["c_resend"];
                                     h[++idx] = '</button>';
-                                } else  if (data[i].event === 'task' && data[i].task) {
+                                } else  if (data[i].event === 'task' && data[i].task && data[i].status !== 'cancelled') {
                                     h[++idx] = '<button class="btn btn-secondary edit_task" data-idx="';
                                     h[++idx] = i;
                                     h[++idx] = '">';

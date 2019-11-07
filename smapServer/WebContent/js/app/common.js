@@ -4217,12 +4217,16 @@ function setupTaskDialog() {
 
 }
 
-function getStatusClass(status, finish) {
+function getStatusClass(status, assign_auto) {
 
 	var statusClass = "";
 
 	if (status === "new") {
-		statusClass = "bg-info";
+		if(assign_auto) {
+			statusClass = "bg-orange";
+		} else {
+			statusClass = "bg-info";
+		}
 	} else if (status === "submitted" || status === "success") {
 		statusClass = "bg-success";
 	} else if (status === "late") {
