@@ -911,11 +911,11 @@ ALTER TABLE public.tasks OWNER TO ws;
 
 CREATE TABLE public.task_rejected (
 	id integer DEFAULT nextval('task_rejected_seq') NOT NULL PRIMARY KEY,
-	t_id integer,    -- task id
+	a_id integer REFERENCES assignments(id) ON DELETE CASCADE,    -- assignment id
 	ident text,		 -- user identifier
 	rejected_at timestamp with time zone
 );
-CREATE UNIQUE INDEX taskRejected ON task_rejected(t_id, ident);
+CREATE UNIQUE INDEX taskRejected ON task_rejected(a_id, ident);
 ALTER TABLE public.task_rejected OWNER TO ws;
 
 CREATE TABLE public.locations (
