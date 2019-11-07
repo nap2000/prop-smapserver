@@ -48,3 +48,15 @@ drop index record_event_key;
 
 alter table task_group add column assign_auto boolean;
 alter table tasks add column assign_auto boolean;
+
+CREATE SEQUENCE task_rejected_seq START 1;
+ALTER TABLE task_rejected_seq OWNER TO ws;
+
+CREATE TABLE public.task_rejected (
+	id integer DEFAULT nextval('task_rejected_seq') NOT NULL PRIMARY KEY,
+	t_id integer,    -- task id
+	ident text,		 -- user identifier
+	rejected_at timestamp with time zone
+);
+ALTER TABLE public.task_rejected OWNER TO ws;
+CREATE UNIQUE INDEX taskRejected ON task_rejected(t_id, ident);
