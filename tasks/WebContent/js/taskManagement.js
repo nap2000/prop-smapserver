@@ -1844,13 +1844,15 @@ require([
 				tab[++idx] = task.properties.name;
 				tab[++idx] = '</td>';
 
-				statusClass = getStatusClass(task.properties.status, task.properties.to);
+				statusClass = getStatusClass(task.properties.status, task.properties.assign_auto);
 				tab[++idx] = '<td class="' + statusClass + '">';	// status
 				statusLookup = task.properties.status;
 				if(statusLookup === "error" || statusLookup === "pending" || statusLookup === "blocked") {
 					statusLookup = "c_" + statusLookup;
 				} else if (statusClass == "bg-danger") {
 					statusLookup = "c_late";
+				} else if (statusClass == "bg-orange") {
+					statusLookup = "t_auto2";
 				}
 				tab[++idx] = localise.set[statusLookup];
 				tab[++idx] = '</td>';
