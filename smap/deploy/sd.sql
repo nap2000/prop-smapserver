@@ -54,9 +54,9 @@ ALTER TABLE task_rejected_seq OWNER TO ws;
 
 CREATE TABLE public.task_rejected (
 	id integer DEFAULT nextval('task_rejected_seq') NOT NULL PRIMARY KEY,
-	t_id integer,    -- task id
+	a_id integer REFERENCES assignments(id),    -- assignment id
 	ident text,		 -- user identifier
 	rejected_at timestamp with time zone
 );
 ALTER TABLE public.task_rejected OWNER TO ws;
-CREATE UNIQUE INDEX taskRejected ON task_rejected(t_id, ident);
+CREATE UNIQUE INDEX taskRejected ON task_rejected(a_id, ident);
