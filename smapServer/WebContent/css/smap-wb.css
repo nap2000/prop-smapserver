@@ -290,11 +290,11 @@ button.bg-brown:focus {
 }
 
 .bg-orange {
-    background-color: #FF6347 !important;
+    background-color: #FFA500 !important;
 }
 
 a.bg-orange:hover, a.bg-orange:focus,
 button.bg-orange:hover,
 button.bg-orange:focus {
-    background-color: #FF4500 !important;
+    background-color: #CC9300 !important;
 }
