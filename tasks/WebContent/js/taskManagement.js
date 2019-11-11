@@ -468,6 +468,7 @@ require([
 				$('#add_current').prop('checked', tgRule.add_current);
 				$('#add_future').prop('checked', tgRule.add_future);
 				$('#assign_pol').prop('checked', tgRule.complete_all);
+				$('#assign_auto').prop('checked', tgRule.assign_auto);
 
 				setupAssignType(tgRule.user_id, tgRule.role_id, tgRule.emails);    // Set up assign type
 
@@ -560,6 +561,7 @@ require([
 			$('#assign_user_type').addClass('active');
 			$('#assign_role_type').removeClass('active');
 			$('#assign_pol').prop('checked', true);
+			$('#assign_auto').prop('checked', false);
 			$('.assign_user').show();
 			$('.assign_role').hide();
 
@@ -734,6 +736,7 @@ require([
 				assignObj["add_current"] = $('#add_current').is(':checked');
 				assignObj["add_future"] = $('#add_future').is(':checked');
 				assignObj["complete_all"] = $('#assign_pol').is(':checked');
+				assignObj["assign_auto"] = $('#assign_auto').is(':checked');
 
 				if (!assignObj["add_current"] && !assignObj["add_future"]) {
 					alert(localise.set["msg_ab_ns"]);
@@ -1594,9 +1597,11 @@ require([
 		if (isNew) {
 			$('#taskPropLabel').html(localise.set["t_add_task"]);
 			$('#tp_pol').prop('checked', true);
+			$('#tp_assign_auto').prop('checked', false);
 		} else {
 			$('#taskPropLabel').html(localise.set["t_edit_task"]);
 			$('#tp_pol').prop('checked', task.complete_all);
+			$('#tp_assign_auto').prop('checked', task.assign_auto);
 		}
 
 		/*
@@ -1614,6 +1619,7 @@ require([
 		$('#tp_assign_emails').val(taskFeature.properties.emails);
 		$('#tp_repeat').prop('checked', taskFeature.properties.repeat);
 		$('#tp_pol').prop('checked', taskFeature.properties.complete_all);
+		$('#tp_assign_auto').prop('checked', taskFeature.properties.assign_auto);
 
 		// Set end date first as otherwise since it will be null, it will be defaulted when from date set
 		if (task.to) {
@@ -1838,13 +1844,15 @@ require([
 				tab[++idx] = task.properties.name;
 				tab[++idx] = '</td>';
 
-				statusClass = getStatusClass(task.properties.status, task.properties.to);
+				statusClass = getStatusClass(task.properties.status, task.properties.assign_auto);
 				tab[++idx] = '<td class="' + statusClass + '">';	// status
 				statusLookup = task.properties.status;
 				if(statusLookup === "error" || statusLookup === "pending" || statusLookup === "blocked") {
 					statusLookup = "c_" + statusLookup;
 				} else if (statusClass == "bg-danger") {
 					statusLookup = "c_late";
+				} else if (statusClass == "bg-orange") {
+					statusLookup = "t_auto2";
 				}
 				tab[++idx] = localise.set[statusLookup];
 				tab[++idx] = '</td>';

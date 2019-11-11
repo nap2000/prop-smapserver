@@ -2159,11 +2159,13 @@ require([
 
                                 h[++idx] = '<td class="mincol ';    // status
                                 finish = getFinish(data[i]);
-                                statusClass = getStatusClass(data[i].status, finish);
+                                statusClass = getStatusClass(data[i].status, data[i].assign_auto);
                                 h[++idx] = statusClass;
                                 h[++idx] = '">';
                                 if(statusClass == 'bg-danger') {
                                     h[++idx] = localise.set["c_late"];
+                                } if(statusClass == 'bg-orange') {
+                                    h[++idx] = localise.set["t_auto2"];
                                 } else {
                                     h[++idx] = localise.set[data[i].status];
                                 }
@@ -2189,7 +2191,7 @@ require([
                                     h[++idx] = '">';
                                     h[++idx] = localise.set["c_resend"];
                                     h[++idx] = '</button>';
-                                } else  if (data[i].event === 'task' && data[i].task) {
+                                } else  if (data[i].event === 'task' && data[i].task && data[i].status !== 'cancelled') {
                                     h[++idx] = '<button class="btn btn-secondary edit_task" data-idx="';
                                     h[++idx] = i;
                                     h[++idx] = '">';
@@ -3043,9 +3045,12 @@ require([
         if (isNew) {
             $('#taskPropLabel').html(localise.set["t_add_task"]);
             $('#tp_pol').prop('checked', true);
+            $('#tp_assign_auto').prop('checked', false);
+
         } else {
             $('#taskPropLabel').html(localise.set["t_edit_task"]);
             $('#tp_pol').prop('checked', task.complete_all);
+            $('#tp_assign_auto').prop('checked', task.assign_auto);
         }
 
         /*
@@ -3053,6 +3058,7 @@ require([
 		 */
         $('#tp_repeat').prop('checked', task.repeat);
         $('#tp_pol').prop('checked', task.complete_all);
+        $('#tp_assign_auto').prop('checked', task.assign_auto);
         $('#tp_name').val(task.name);		// name
         if(isNew) {
             $('#tp_form_name').val($('#tp_form_name option:first').val());
@@ -3064,6 +3070,7 @@ require([
         $('#tp_assign_emails').val(taskFeature.properties.emails);
         $('#tp_repeat').prop('checked', taskFeature.properties.repeat);
         $('#tp_pol').prop('checked', taskFeature.properties.complete_all);
+        $('#tp_assign_auto').prop('checked', taskFeature.properties.assign_auto);
 
         // Set end date first as otherwise since it will be null, it will be defaulted when from date set
         if (task.to) {

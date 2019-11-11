@@ -3982,6 +3982,7 @@ function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback, t
 
 	taskFeature.properties.repeat = $('#tp_repeat').prop('checked');
 	taskFeature.properties.complete_all = $('#tp_pol').prop('checked');
+	taskFeature.properties.assign_auto = $('#tp_assign_auto').prop('checked');
 
 	fromDate = $('#tp_from').data("DateTimePicker").date();
 	toDate = $('#tp_to').data("DateTimePicker").date();
@@ -4216,12 +4217,16 @@ function setupTaskDialog() {
 
 }
 
-function getStatusClass(status, finish) {
+function getStatusClass(status, assign_auto) {
 
 	var statusClass = "";
 
 	if (status === "new") {
-		statusClass = "bg-info";
+		if(assign_auto) {
+			statusClass = "bg-orange";
+		} else {
+			statusClass = "bg-info";
+		}
 	} else if (status === "submitted" || status === "success") {
 		statusClass = "bg-success";
 	} else if (status === "late") {
