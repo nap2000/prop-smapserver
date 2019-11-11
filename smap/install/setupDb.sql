@@ -837,6 +837,7 @@ ALTER TABLE general_settings OWNER TO ws;
 --- Task Management -----------------------------------
 -- Cleanup old tables  
 DROP TABLE IF EXISTS public.tasks CASCADE;
+DROP TABLE IF EXISTS public.task_rejected CASCADE;
 DROP TABLE IF EXISTS public.assignments CASCADE;
 DROP TABLE IF EXISTS public.task_group CASCADE;
 
@@ -847,6 +848,10 @@ ALTER TABLE assignment_id_seq OWNER TO ws;
 DROP SEQUENCE IF EXISTS task_id_seq CASCADE;
 CREATE SEQUENCE task_id_seq START 1;
 ALTER TABLE task_id_seq OWNER TO ws;
+
+DROP SEQUENCE IF EXISTS task_rejected_seq CASCADE;
+CREATE SEQUENCE task_rejected_seq START 1;
+ALTER TABLE task_rejected_seq OWNER TO ws;
 
 DROP SEQUENCE IF EXISTS task_history_seq CASCADE;
 CREATE SEQUENCE task_histoy_seq START 1;
@@ -866,7 +871,8 @@ CREATE TABLE public.task_group (
     target_s_id integer,
     email_details text,
     dl_dist integer,				-- Download distance, same value is in the rule, needed here for selects
-    complete_all boolean			-- Set true if all assignements of a task must be completed
+    complete_all boolean	,		-- Set true if all assignements of a task must be completed
+    assign_auto boolean		-- Set true if the user can assign themselves to an unassigned task
 );
 ALTER TABLE public.task_group OWNER TO ws;
 
@@ -896,11 +902,21 @@ CREATE TABLE public.tasks (
 	location_name text,
 	deleted boolean,
 	complete_all boolean default false,	-- Set true if all assignments associated to this task need to be completed
+	assign_auto boolean default false,	-- Set true if users can assign themselvs to this task
 	show_dist integer						-- Distance in meters at which task will be downloaded
 );
 SELECT AddGeometryColumn('tasks', 'geo_point', 4326, 'POINT', 2);
 SELECT AddGeometryColumn('tasks', 'geo_point_actual', 4326, 'POINT', 2);
 ALTER TABLE public.tasks OWNER TO ws;
+
+CREATE TABLE public.task_rejected (
+	id integer DEFAULT nextval('task_rejected_seq') NOT NULL PRIMARY KEY,
+	a_id integer REFERENCES assignments(id) ON DELETE CASCADE,    -- assignment id
+	ident text,		 -- user identifier
+	rejected_at timestamp with time zone
+);
+CREATE UNIQUE INDEX taskRejected ON task_rejected(a_id, ident);
+ALTER TABLE public.task_rejected OWNER TO ws;
 
 CREATE TABLE public.locations (
 	id integer DEFAULT nextval('location_seq') NOT NULL PRIMARY KEY,
