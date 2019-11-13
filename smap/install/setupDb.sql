@@ -500,7 +500,7 @@ CREATE TABLE survey (
 	auto_updates text,								-- Contains the auto updates that need to be applied for this survey
 	loaded_from_xls boolean default false,			-- Set true if the survey was initially loaded from an XLS Form
 	hrk text,										-- human readable key
-	key_policy text,								-- Whether to discard, add or merge duplicates of the HRK
+	key_policy text,									-- Whether to discard, append, replace or merge duplicates of the HRK
 	based_on text,									-- Survey and form this survey was based on
 	group_survey_id integer default 0,
 	pulldata text,									-- Settings to customise pulling data from another survey into a csv file
