@@ -893,8 +893,14 @@ function enableUserProfile () {
  * Logout function
  */
 function logout() {
-	localStorage.setItem('navbar_color', undefined);
-	localStorage.setItem('main_logo', undefined);
+
+	try {
+		localStorage.setItem('navbar_color', undefined);
+		localStorage.setItem('main_logo', undefined);
+	} catch (e) {
+
+	}
+
 	jQuery.ajax({
 		type: "GET",
 		cache: false,
