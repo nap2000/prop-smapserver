@@ -1984,10 +1984,12 @@ require([
         }
 
         var columns = gTasks.cache.currentData.schema.columns;
-        if(!assignedOther && (gDeleteColumn < 0 || gTasks.gSelectedRecord[columns[gDeleteColumn].displayName] === 'f')) {
-            $('.not_deleted').show();
-        } else  if(!assignedOther && gDeleteColumn >= 0 && gTasks.gSelectedRecord[columns[gDeleteColumn].displayName] === 't') {
-            $('.deleted').show();
+        if(!assignedOther) {
+            if ((gDeleteColumn < 0 || gTasks.gSelectedRecord[columns[gDeleteColumn].question_name] === 'f')) {
+                $('.not_deleted').show();
+            } else if (gDeleteColumn >= 0 && gTasks.gSelectedRecord[columns[gDeleteColumn].question_name] === 't') {
+                $('.deleted').show();
+            }
         }
 
         if(globals.gIsAdministrator) {
