@@ -1058,9 +1058,9 @@ define({
     "enum": "Enumerator",
     "manage": "Manage",
     "org admin": "Organisational Admin",
-    "security": "Secuity Manager",
+    "security": "Security Manager",
     "view data": "View Data",
-    "view own data": "View own data",
+    "view own data": "View Own Data",
 
     // Browse Results
     "br_ci": "Case Insensitive",
