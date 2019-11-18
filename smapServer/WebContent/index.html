@@ -106,11 +106,15 @@
 
 </body>
 <script>
-	var mainLogo = localStorage.getItem("main_logo");
-	if(mainLogo) {
-		var img = document.getElementById('main_logo');
-		console.log("Logo: " + mainLogo);
-		img.setAttribute("src", mainLogo);
+	try {
+		var mainLogo = localStorage.getItem("main_logo");
+		if (mainLogo) {
+			var img = document.getElementById('main_logo');
+			console.log("Logo: " + mainLogo);
+			img.setAttribute("src", mainLogo);
+		}
+	} catch (e) {
+
 	}
 </script>
 </html>

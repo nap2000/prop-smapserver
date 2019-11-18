@@ -1237,7 +1237,7 @@ require([
 				h[++idx] = '<label class="custom-control-label" for="';
 				h[++idx] = 'user_groups_cb' + i;
 				h[++idx] = '">';
-				h[++idx] = gGroups[i].name;
+				h[++idx] = localise.set[gGroups[i].name];
 				h[++idx] = '</label></div>';
 
 			}
@@ -2348,7 +2348,7 @@ require([
 				h[++idx] = '<option value="';
 				h[++idx] = gGroups[i].name;
 				h[++idx] = '">';
-				h[++idx] = gGroups[i].name;
+				h[++idx] = localise.set[gGroups[i].name];
 				h[++idx] = '</option>';
 			}
 		}

@@ -60,3 +60,5 @@ CREATE TABLE public.task_rejected (
 );
 ALTER TABLE public.task_rejected OWNER TO ws;
 CREATE UNIQUE INDEX taskRejected ON task_rejected(a_id, ident);
+
+insert into groups(id,name) values(10,'view own data');
