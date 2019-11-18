@@ -1052,6 +1052,15 @@ define({
     "u_bl": "WebForm Banner Logo (Height 50px)",
     "u_ml": "Main Logo",
     "u_nbc": "Navigation bar color",
+    "admin": "Administrator",
+    "analyst": "Analyst",
+    "enterprise admin": "Enterprise Admin",
+    "enum": "Enumerator",
+    "manage": "Manage",
+    "org admin": "Organisational Admin",
+    "security": "Security Manager",
+    "view data": "View Data",
+    "view own data": "View Own Data",
 
     // Browse Results
     "br_ci": "Case Insensitive",
