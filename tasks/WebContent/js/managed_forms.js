@@ -118,6 +118,8 @@ require([
     var gDeleteReasonColumn = -1;   // The index of the column that has the reason for a delete
     var gBad;                       // A boolean indicating the direction of toggle of a deleted state
     var gLocalDefaults = {};
+    var gDrillDownParentForm;                 // Set to name of selected form
+    var gDrillDownExists;
 
     var gOverallMapConfig = {       // overall map
         id: 'map',
@@ -1682,9 +1684,9 @@ require([
             for (i = 0; i < data.length; i++) {
 
                 h[++idx] = '<option value="';
-                h[++idx] = data[i];
+                h[++idx] = data[i].name;
                 h[++idx] = '">';
-                h[++idx] = data[i];
+                h[++idx] = data[i].name;
                 h[++idx] = '</option>';
             }
         }
@@ -1694,6 +1696,38 @@ require([
             $elem.val(globals.gSubForms[globals.gCurrentSurvey]);
         }
 
+    }
+
+    /*
+     * Update the drill down list of forms
+     */
+    function updateDrillDownFormList() {
+        var $drillDown = $('#drill_down'),
+            data = gTasks.cache.currentData.forms;
+
+        var i,
+            h = [],
+            idx = -1;
+
+        gDrillDownExists = false;
+
+        if(data && data.length) {
+
+            for (i = 0; i < data.length; i++) {
+                // Add to drill down
+                if (gDrillDownParentForm && data[i].parentName == gDrillDownParentForm) {
+                    h[++idx] = '<option value="';
+                    h[++idx] = data[i].name;
+                    h[++idx] = '">';
+                    h[++idx] = data[i].name;
+                    h[++idx] = '</option>';
+                    gDrillDownExists = true;
+                }
+            }
+
+        }
+
+        $drillDown.empty().html(h.join(''));
 
     }
 
@@ -1994,6 +2028,21 @@ require([
 
         if(globals.gIsAdministrator) {
             $('.assigned_admin').show();
+        }
+
+        // Set up the drill down
+        $('.dd_only').hide();
+        if(!gDrillDownParentForm) {
+            gDrillDownParentForm = $('#sub_form').val();
+            if(gDrillDownParentForm === "_none") {
+                gDrillDownParentForm = "main";
+            }
+        }
+        if(gTasks.cache.currentData.forms.length > 0) {
+            updateDrillDownFormList();
+            if(gDrillDownExists) {
+                $('.dd_only').show();
+            }
         }
     }
 
