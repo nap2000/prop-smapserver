@@ -120,6 +120,7 @@ require([
     var gLocalDefaults = {};
     var gDrillDownParentForm;                 // Set to name of selected form
     var gDrillDownExists;
+    var gDrillDownStack = [];
 
     var gOverallMapConfig = {       // overall map
         id: 'map',
@@ -252,6 +253,15 @@ require([
         // Set change function on sub form
         $('#sub_form').change(function () {
             globals.gSubForms[globals.gCurrentSurvey] = $(this).val();
+            subFormChanged();
+        });
+
+        // Set change function on drill down
+        $('#drill_down').change(function () {
+            var form = $(this).val();
+            gDrillDownParentForm = form;
+            gDrillDownStack.push(gTasks.gSelectedRecord.prikey);
+            globals.gSubForms[globals.gCurrentSurvey] = form;
             subFormChanged();
         });
 
@@ -1285,7 +1295,7 @@ require([
             tableOnDraw();
         });
 
-        // Respond to filter changes that require the sever to be queried
+        // Respond to filter changes that require the server to be queried
         $('.table_filter').focusout(function () {
             showManagedData(globals.gCurrentSurvey, showTable, true);
         });
@@ -1744,75 +1754,6 @@ require([
         });
 
         return idx;
-    }
-
-    /*
-     * Show a related data item
-     */
-    function showRelated(itemIndex, item) {
-        var h = [],
-            idx = -1,
-            tableId = "relTable" + itemIndex;
-
-        h[++idx] = '<div class="row">'
-        h[++idx] = '<div class="col-md-12">';
-        h[++idx] = '<div class="ibox float-e-margins">';
-        h[++idx] = '<div class="ibox-title">';
-        h[++idx] = '<h5>';
-        h[++idx] = '</h5>';
-        h[++idx] = '</div>';
-        h[++idx] = '<div class="ibox-content">';
-        h[++idx] = '<div class="row">';
-        h[++idx] = '<div class="col-md-12">';
-        h[++idx] = '<table id="';
-        h[++idx] = tableId;
-        h[++idx] = '" class="table table-striped table-responsive toggle-arrow-tiny" data-page-size="8">';
-        h[++idx] = '</table>';
-        h[++idx] = '</div>';
-        h[++idx] = '</div>';
-        h[++idx] = '</div>';
-        h[++idx] = '</div>';
-        h[++idx] = '</div>';
-        h[++idx] = '</div>';
-
-        $('#relatedData').append(h.join(""));
-        getRelatedTable(tableId, item)
-    }
-
-    function getRelatedTable(tableId, item) {
-
-        var url,
-            managed =  "true";
-
-        var url = "/api/v1/data/";
-
-        if (item.type === "child") {
-            url += globals.gCurrentSurvey + "?mgmt=" + managed + "&form=" + item.fId + "&parkey=" + item.parkey;
-        } else if (item.type === "link") {
-            url += item.sId + "?mgmt=" + managed + "&form=" + item.fId + "&hrk=" + item.hrk;
-        }
-        url += "&tz=" + encodeURIComponent(globals.gTimezone);
-
-        addHourglass();
-        $.ajax({
-            url: url,
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                removeHourglass();
-                showManagedData(globals.gCurrentSurvey)
-
-
-            },
-            error: function (xhr, textStatus, err) {
-                removeHourglass();
-                if (xhr.readyState == 0 || xhr.status == 0) {
-                    return;  // Not an error
-                } else {
-                    alert(localise.set["c_error"] + ": " + url);
-                }
-            }
-        });
     }
 
     function updateVisibleColumns(cols) {
@@ -2760,7 +2701,8 @@ require([
 
     function getData(sId, groupSurvey, subForm, callback, clearCache) {
 
-        var key = sId + "_" + groupSurvey + "_" + (typeof subForm === "undefind" ? "" : subForm);
+        var key = sId + "_" + groupSurvey + "_" + (typeof subForm === "undefind" ? "" : subForm)
+            + (gDrillDownStack.length === 0 ? "" : ("_" + gDrillDownStack[gDrillDownStack.length - 1]));
 
         // First Check the Cache
         if(!clearCache && gTasks.cache.data[key]) {
@@ -2778,6 +2720,11 @@ require([
 
             if(subForm) {
                 url += "&form=" + subForm;
+
+                // Check for drill down
+                if(gDrillDownStack.length > 0) {
+                    url += "&parkey=" + gDrillDownStack[gDrillDownStack.length - 1];
+                }
             }
 
             if (isDuplicates) {
