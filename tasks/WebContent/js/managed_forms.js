@@ -124,6 +124,7 @@ require([
     var gDrillDownStack = [];
     var gDrillDownFormStack = [];
     var gDrillDownType;                         // sub_form or survey
+	var gDrillDownSurvey;                       // Survey Id to drill down to
 
 
     var gOverallMapConfig = {       // overall map
@@ -1120,27 +1121,29 @@ require([
 
         if(gDrillDownParentForm && gDrillDownType !== "sub_form") {
 
-            alert("Survey drill down: " + gDrillDownType);
+            alert("Survey drill down: " + gDrillDownType + " : " + gDrillDownSurvey);
 
+            sId = gDrillDownSurvey;
+            
         } else {
-
-            // Set survey
-            if (globals.gGroupSurveys[globals.gCurrentSurvey] && globals.gGroupSurveys[globals.gCurrentSurvey] != "") {
-                groupSurvey = globals.gGroupSurveys[globals.gCurrentSurvey];
-            }
 
             // Set subform
             if(gDrillDownParentForm) {
                 subForm = gDrillDownParentForm;
             } else {
-                if (globals.gSubForms[globals.gCurrentSurvey] && globals.gSubForms[globals.gCurrentSurvey] != "") {
-                    subForm = globals.gSubForms[globals.gCurrentSurvey];
+                if (globals.gSubForms[sId] && globals.gSubForms[sId] != "") {
+                    subForm = globals.gSubForms[sId];
                     if (subForm === '_none') {
                         subForm = undefined;
                     }
                 }
             }
         }
+
+	    // Set Group survey
+	    if (globals.gGroupSurveys[sId] && globals.gGroupSurveys[sId] != "") {
+		    groupSurvey = globals.gGroupSurveys[sId];
+	    }
 
         getData(sId, groupSurvey, subForm, callback, clearCache);
     }
@@ -1764,7 +1767,15 @@ require([
                     h[++idx] = '"';
                     h[++idx] = ' data-type="';
                     h[++idx] = data[i].type;
-                    h[++idx] = '">';
+	                h[++idx] = '"';
+
+                    if(data[i].surveyId) {
+	                    h[++idx] = ' data-survey="';
+	                    h[++idx] = data[i].type;
+	                    h[++idx] = '"';
+                    }
+
+                    h[++idx] = '>';
                     h[++idx] = data[i].name;
                     h[++idx] = '</a>';
 
@@ -1772,6 +1783,7 @@ require([
                     if(!setDefault) {
                         $('#dd_form').html(data[i].name);
                         gDrillDownType = data[i].type;
+	                    gDrillDownSurvey = data[i].surveyId;
                         setDefault = true;
                     }
                 }
@@ -1786,6 +1798,7 @@ require([
             var $this = $(this);
             $('#dd_form').html($this.data("form"));
             gDrillDownType = $this.data("type");
+	        gDrillDownSurvey = $this.data("survey");
             drillDown();
         });
 
@@ -3298,6 +3311,7 @@ require([
         gDrillDownParentForm = undefined;
         gDrillDownExists = undefined;
         gDrillDownType = undefined;
+	    gDrillDownSurvey = undefined;
         gDrillDownStack = [];
         gDrillDownFormStack = [];
     }
