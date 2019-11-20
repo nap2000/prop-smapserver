@@ -1233,7 +1233,8 @@ define({
 	"rep_msg_min_wc": "You must specify at least one wide column if transform is enabled",
 
     // Console
-    "co_dd": "Drill Down"
+    "co_dd": "Drill Down",
+    "co_up": "Up"
 
 
 });
