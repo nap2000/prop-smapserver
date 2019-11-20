@@ -123,6 +123,7 @@ require([
     var gDrillDownExists;
     var gDrillDownStack = [];
     var gDrillDownFormStack = [];
+    var gDrillDownType;                         // sub_form or survey
 
 
     var gOverallMapConfig = {       // overall map
@@ -1117,17 +1118,26 @@ require([
         var groupSurvey,
             subForm;
 
-        if(globals.gGroupSurveys[globals.gCurrentSurvey] && globals.gGroupSurveys[globals.gCurrentSurvey] != "") {
-            groupSurvey = globals.gGroupSurveys[globals.gCurrentSurvey];
-        }
+        if(gDrillDownParentForm && gDrillDownType !== "sub_form") {
 
-        if(gDrillDownParentForm) {
-            subForm = gDrillDownParentForm;
+            alert("Survey drill down: " + gDrillDownType);
+
         } else {
-            if (globals.gSubForms[globals.gCurrentSurvey] && globals.gSubForms[globals.gCurrentSurvey] != "") {
-                subForm = globals.gSubForms[globals.gCurrentSurvey];
-                if (subForm === '_none') {
-                    subForm = undefined;
+
+            // Set survey
+            if (globals.gGroupSurveys[globals.gCurrentSurvey] && globals.gGroupSurveys[globals.gCurrentSurvey] != "") {
+                groupSurvey = globals.gGroupSurveys[globals.gCurrentSurvey];
+            }
+
+            // Set subform
+            if(gDrillDownParentForm) {
+                subForm = gDrillDownParentForm;
+            } else {
+                if (globals.gSubForms[globals.gCurrentSurvey] && globals.gSubForms[globals.gCurrentSurvey] != "") {
+                    subForm = globals.gSubForms[globals.gCurrentSurvey];
+                    if (subForm === '_none') {
+                        subForm = undefined;
+                    }
                 }
             }
         }
@@ -1751,18 +1761,21 @@ require([
                 if (gDrillDownParentForm && data[i].parentName == gDrillDownParentForm) {
                     h[++idx] = '<a class="dropdown-item dd_form" href="#" data-form="';
                     h[++idx] = data[i].name;
+                    h[++idx] = '"';
+                    h[++idx] = ' data-type="';
+                    h[++idx] = data[i].type;
                     h[++idx] = '">';
                     h[++idx] = data[i].name;
                     h[++idx] = '</a>';
 
                     gDrillDownExists = true;
                     if(!setDefault) {
-                        $('#dd_form').html(data[0].name);
+                        $('#dd_form').html(data[i].name);
+                        gDrillDownType = data[i].type;
                         setDefault = true;
                     }
                 }
             }
-
 
         }
 
@@ -1770,8 +1783,10 @@ require([
 
         // Respond to selection of a form to drill down to:
         $('.dd_form', $drillDown).click(function(){
-           $('#dd_form').html($(this).data("form"));
-           drillDown();
+            var $this = $(this);
+            $('#dd_form').html($this.data("form"));
+            gDrillDownType = $this.data("type");
+            drillDown();
         });
 
     }
@@ -2739,7 +2754,7 @@ require([
 
     function getData(sId, groupSurvey, subForm, callback, clearCache) {
 
-        var key = sId + "_" + groupSurvey + "_" + (typeof subForm === "undefind" ? "" : subForm)
+        var key = sId + "_" + groupSurvey + "_" + (typeof subForm === "undefined" ? "" : subForm)
             + (gDrillDownStack.length === 0 ? "" : ("_" + gDrillDownStack[gDrillDownStack.length - 1]));
 
         // First Check the Cache
@@ -3282,6 +3297,7 @@ require([
     function clearDrillDown() {
         gDrillDownParentForm = undefined;
         gDrillDownExists = undefined;
+        gDrillDownType = undefined;
         gDrillDownStack = [];
         gDrillDownFormStack = [];
     }
