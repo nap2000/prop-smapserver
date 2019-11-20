@@ -257,12 +257,14 @@ require([
         });
 
         // Set change function on drill down
-        $('#drill_down').change(function () {
-            var form = $(this).val();
-            gDrillDownParentForm = form;
-            gDrillDownStack.push(gTasks.gSelectedRecord.prikey);
-            globals.gSubForms[globals.gCurrentSurvey] = form;
-            subFormChanged();
+        $('#drill_down').click(function () {
+            var form = $('#dd_form').html();
+            if(form !== "") {
+                gDrillDownParentForm = form;
+                gDrillDownStack.push(gTasks.gSelectedRecord.prikey);
+                globals.gSubForms[globals.gCurrentSurvey] = form;
+                subFormChanged();
+            }
         });
 
         // Set change function on advanced filter
@@ -1712,7 +1714,7 @@ require([
      * Update the drill down list of forms
      */
     function updateDrillDownFormList() {
-        var $drillDown = $('#drill_down'),
+        var $drillDown = $('#drill_down_list'),
             data = gTasks.cache.currentData.forms;
 
         var i,
@@ -1726,11 +1728,11 @@ require([
             for (i = 0; i < data.length; i++) {
                 // Add to drill down
                 if (gDrillDownParentForm && data[i].parentName == gDrillDownParentForm) {
-                    h[++idx] = '<option value="';
+                    h[++idx] = '<a class="dropdown-item dd_form" href="#" data-form="';
                     h[++idx] = data[i].name;
                     h[++idx] = '">';
                     h[++idx] = data[i].name;
-                    h[++idx] = '</option>';
+                    h[++idx] = '</a>';
                     gDrillDownExists = true;
                 }
             }
@@ -1738,6 +1740,11 @@ require([
         }
 
         $drillDown.empty().html(h.join(''));
+
+        // Respond to selection of a form to drill down to:
+        $('.dd_form', $drillDown).click(function(){
+           $('#dd_form').html($(this).data("form"));
+        });
 
     }
 
