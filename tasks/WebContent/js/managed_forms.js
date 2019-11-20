@@ -118,9 +118,12 @@ require([
     var gDeleteReasonColumn = -1;   // The index of the column that has the reason for a delete
     var gBad;                       // A boolean indicating the direction of toggle of a deleted state
     var gLocalDefaults = {};
+
     var gDrillDownParentForm;                 // Set to name of selected form
     var gDrillDownExists;
     var gDrillDownStack = [];
+    var gDrillDownFormStack = [];
+
 
     var gOverallMapConfig = {       // overall map
         id: 'map',
@@ -253,18 +256,31 @@ require([
         // Set change function on sub form
         $('#sub_form').change(function () {
             globals.gSubForms[globals.gCurrentSurvey] = $(this).val();
+            clearDrillDown();
             subFormChanged();
         });
 
         // Set change function on drill down
         $('#drill_down').click(function () {
-            var form = $('#dd_form').html();
-            if(form !== "") {
-                gDrillDownParentForm = form;
-                gDrillDownStack.push(gTasks.gSelectedRecord.prikey);
-                globals.gSubForms[globals.gCurrentSurvey] = form;
-                subFormChanged();
+          drillDown();
+        });
+
+        // Set change function on drill up
+        $('#drill_up').click(function () {
+
+            if(gDrillDownFormStack.length > 0) {
+                gDrillDownParentForm = gDrillDownFormStack.pop();
+                gDrillDownStack.pop();      // Don't need to record the popped prikey
+            } else {
+                gDrillDownParentForm = undefined;
             }
+
+            if(gDrillDownFormStack.length === 0) {
+                clearDrillDown();
+            }
+
+            subFormChanged();
+
         });
 
         // Set change function on advanced filter
@@ -1105,10 +1121,14 @@ require([
             groupSurvey = globals.gGroupSurveys[globals.gCurrentSurvey];
         }
 
-        if(globals.gSubForms[globals.gCurrentSurvey] && globals.gSubForms[globals.gCurrentSurvey] != "") {
-            subForm = globals.gSubForms[globals.gCurrentSurvey];
-            if(subForm === '_none') {
-                subForm = undefined;
+        if(gDrillDownParentForm) {
+            subForm = gDrillDownParentForm;
+        } else {
+            if (globals.gSubForms[globals.gCurrentSurvey] && globals.gSubForms[globals.gCurrentSurvey] != "") {
+                subForm = globals.gSubForms[globals.gCurrentSurvey];
+                if (subForm === '_none') {
+                    subForm = undefined;
+                }
             }
         }
 
@@ -1719,7 +1739,8 @@ require([
 
         var i,
             h = [],
-            idx = -1;
+            idx = -1,
+            setDefault = false;
 
         gDrillDownExists = false;
 
@@ -1733,9 +1754,15 @@ require([
                     h[++idx] = '">';
                     h[++idx] = data[i].name;
                     h[++idx] = '</a>';
+
                     gDrillDownExists = true;
+                    if(!setDefault) {
+                        $('#dd_form').html(data[0].name);
+                        setDefault = true;
+                    }
                 }
             }
+
 
         }
 
@@ -1744,6 +1771,7 @@ require([
         // Respond to selection of a form to drill down to:
         $('.dd_form', $drillDown).click(function(){
            $('#dd_form').html($(this).data("form"));
+           drillDown();
         });
 
     }
@@ -1979,7 +2007,10 @@ require([
         }
 
         // Set up the drill down
-        $('.dd_only').hide();
+        $('.dd_only,.du_only').hide();
+        if(gDrillDownFormStack.length > 0) {
+            $('.du_only').show();
+        }
         if(!gDrillDownParentForm) {
             gDrillDownParentForm = $('#sub_form').val();
             if(gDrillDownParentForm === "_none") {
@@ -3246,6 +3277,25 @@ require([
             globals.gMainTable.destroy();
         }
         $("#trackingTable").empty()
+    }
+
+    function clearDrillDown() {
+        gDrillDownParentForm = undefined;
+        gDrillDownExists = undefined;
+        gDrillDownStack = [];
+        gDrillDownFormStack = [];
+    }
+
+    function drillDown() {
+        var form = $('#dd_form').html();
+        if(form !== "") {
+            gDrillDownParentForm = form;
+            gDrillDownFormStack.push(form);
+            gDrillDownStack.push(gTasks.gSelectedRecord.prikey);
+            subFormChanged();
+
+            $('.du_only').show();
+        }
     }
 
 });
