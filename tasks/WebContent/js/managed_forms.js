@@ -119,13 +119,8 @@ require([
     var gBad;                       // A boolean indicating the direction of toggle of a deleted state
     var gLocalDefaults = {};
 
-    var gDrillDownParentForm;                 // Set to name of selected form
-    var gDrillDownExists;
+    var gDrillDownNext;                 // Next drill down state if drill down is selected
     var gDrillDownStack = [];
-    var gDrillDownFormStack = [];
-    var gDrillDownType;                         // sub_form or survey
-	var gDrillDownSurvey;                       // Survey Id to drill down to
-
 
     var gOverallMapConfig = {       // overall map
         id: 'map',
@@ -198,7 +193,7 @@ require([
             }
         }
 
-        $('.editRecordSection, .selectedOnly').hide();
+        $('.editRecordSection, .selectedOnly, .dd_only').hide();
 
         // Get the parameters and start editing a survey if one was passed as a parameter
         var params = location.search.substr(location.search.indexOf("?") + 1);
@@ -246,6 +241,7 @@ require([
             gTasks.gSelectedSurveyIndex = $(this).val();
             globals.gCurrentSurvey = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].id;
             gGetSettings = true;
+	        clearDrillDown();
             surveyChanged();
         });
 
@@ -270,15 +266,8 @@ require([
         // Set change function on drill up
         $('#drill_up').click(function () {
 
-            if(gDrillDownFormStack.length > 0) {
-                gDrillDownParentForm = gDrillDownFormStack.pop();
-                gDrillDownStack.pop();      // Don't need to record the popped prikey
-            } else {
-                gDrillDownParentForm = undefined;
-            }
-
-            if(gDrillDownFormStack.length === 0) {
-                clearDrillDown();
+            if(gDrillDownStack.length > 0) {
+                gDrillDownNext = gDrillDownStack.pop();
             }
 
             subFormChanged();
@@ -1026,7 +1015,7 @@ require([
 
         getEligibleUsers();
 
-        $('.editRecordSection, .selectedOnly, .re_alert').hide();
+        $('.editRecordSection, .selectedOnly, .re_alert, .dd_only').hide();
         if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
 
             getLanguageList(globals.gCurrentSurvey, undefined, false, '.language_sel', false, -1);
@@ -1117,19 +1106,22 @@ require([
     function showManagedData(sId, callback, clearCache) {
 
         var groupSurvey,
-            subForm;
+            subForm,
+	        drillDownState;
 
-        if(gDrillDownParentForm && gDrillDownType !== "sub_form") {
+        if(gDrillDownStack.length > 0) {
+        	drillDownState = gDrillDownStack[gDrillDownStack.length  - 1];
+        }
 
-            alert("Survey drill down: " + gDrillDownType + " : " + gDrillDownSurvey);
+        if(drillDownState && drillDownState.type !== "sub_form") {
 
-            sId = gDrillDownSurvey;
-            
+            sId = drillDownState.survey;
+
         } else {
 
             // Set subform
-            if(gDrillDownParentForm) {
-                subForm = gDrillDownParentForm;
+            if(drillDownState) {
+                subForm = drillDownState.form;
             } else {
                 if (globals.gSubForms[sId] && globals.gSubForms[sId] != "") {
                     subForm = globals.gSubForms[sId];
@@ -1321,7 +1313,7 @@ require([
             recordSelected(indexes);
         });
         globals.gMainTable.off('deselect').on('deselect', function (e, dt, type, indexes) {
-            $('.selectedOnly').hide();
+            $('.selectedOnly, .dd_only').hide();
         });
 
         // Highlight data conditionally, set barcodes
@@ -1753,15 +1745,31 @@ require([
         var i,
             h = [],
             idx = -1,
-            setDefault = false;
+            setDefault = false,
+	        parentForm,
+	        drillDownState;
 
-        gDrillDownExists = false;
+        if(gDrillDownStack.length > 0) {
+        	drillDownState = gDrillDownStack[gDrillDownStack.length - 1];
+        }
+
+        if(drillDownState) {
+        	parentForm = drillDownState.form;
+        } else {
+		    parentForm = $('#sub_form').val();
+		    if(parentForm === "_none") {
+			    parentForm = "main";
+		    }
+	    }
+
+	    $('#dd_form').html("");
+	    gDrillDownNext = undefined;
 
         if(data && data.length) {
 
             for (i = 0; i < data.length; i++) {
                 // Add to drill down
-                if (gDrillDownParentForm && data[i].parentName == gDrillDownParentForm) {
+                if (parentForm && data[i].parentName == parentForm) {
                     h[++idx] = '<a class="dropdown-item dd_form" href="#" data-form="';
                     h[++idx] = data[i].name;
                     h[++idx] = '"';
@@ -1775,15 +1783,25 @@ require([
 	                    h[++idx] = '"';
                     }
 
+	                if(data[i].filter) {
+		                h[++idx] = ' data-filter="';
+		                h[++idx] = data[i].filter;
+		                h[++idx] = '"';
+	                }
+
                     h[++idx] = '>';
                     h[++idx] = data[i].name;
                     h[++idx] = '</a>';
 
-                    gDrillDownExists = true;
                     if(!setDefault) {
                         $('#dd_form').html(data[i].name);
-                        gDrillDownType = data[i].type;
-	                    gDrillDownSurvey = data[i].surveyId;
+
+                        gDrillDownNext = {
+	                        form: data[i].name,
+	                        type: data[i].type,
+	                        survey: data[i].surveyId,
+	                        filter: data[i].filter
+                        }
                         setDefault = true;
                     }
                 }
@@ -1797,8 +1815,12 @@ require([
         $('.dd_form', $drillDown).click(function(){
             var $this = $(this);
             $('#dd_form').html($this.data("form"));
-            gDrillDownType = $this.data("type");
-	        gDrillDownSurvey = $this.data("survey");
+            gDrillDownNext = {
+	            form: $this.data("form"),
+	            type: $this.data("type"),
+	            survey: $this.data("survey"),
+	            filter: $this.data("filter")
+            }
             drillDown();
         });
 
@@ -1997,21 +2019,24 @@ require([
     }
 
     /*
-     * Respond to a record of data being selected
+     * Respond to a record of data being unselected
      */
     function recordUnSelected() {
         gSelectedIndexes = [];
         gTasks.gSelectedRecord = undefined;
-        $('.selectedOnly').hide();
+        $('.selectedOnly, .dd_only').hide();
     }
 
+    /*
+     * Respond to a record of data being selected
+     */
     function recordSelected(indexes) {
 
         var assignedOther = false;
 
         gSelectedIndexes = indexes;
         gTasks.gSelectedRecord = globals.gMainTable.rows(gSelectedIndexes).data().toArray()[0];
-        $('.selectedOnly').hide();
+        $('.selectedOnly, .dd_only').hide();
         if(gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned === globals.gLoggedInUser.ident) {
             $('.assigned').show();
         } else if(gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned !== globals.gLoggedInUser.ident) {
@@ -2036,21 +2061,15 @@ require([
 
         // Set up the drill down
         $('.dd_only,.du_only').hide();
-        if(gDrillDownFormStack.length > 0) {
+        if(gDrillDownStack.length > 0) {
             $('.du_only').show();
         }
-        if(!gDrillDownParentForm) {
-            gDrillDownParentForm = $('#sub_form').val();
-            if(gDrillDownParentForm === "_none") {
-                gDrillDownParentForm = "main";
-            }
+
+        updateDrillDownFormList();
+        if(gDrillDownNext) {
+        	$('.dd_only').show();
         }
-        if(gTasks.cache.currentData.forms.length > 0) {
-            updateDrillDownFormList();
-            if(gDrillDownExists) {
-                $('.dd_only').show();
-            }
-        }
+
     }
 
     /*
@@ -2767,161 +2786,172 @@ require([
 
     function getData(sId, groupSurvey, subForm, callback, clearCache) {
 
-        var key = sId + "_" + groupSurvey + "_" + (typeof subForm === "undefined" ? "" : subForm)
-            + (gDrillDownStack.length === 0 ? "" : ("_" + gDrillDownStack[gDrillDownStack.length - 1]));
+    	var filter;
 
-        // First Check the Cache
-        if(!clearCache && gTasks.cache.data[key]) {
-            gTasks.cache.currentData = gTasks.cache.data[key];
-            showTable(gTasks.cache.data[key]);
-        } else {
+	    var url = '/api/v1/data/';
+	    url += sId;
+	    url += "?mgmt=true";
 
-            var url = '/api/v1/data/';
-            url += sId;
-            url += "?mgmt=true";
+	    if (groupSurvey) {
+		    url += "&groupSurvey=" + groupSurvey;
+	    }
 
-            if (groupSurvey) {
-                url += "&groupSurvey=" + groupSurvey;
-            }
+	    if(subForm) {
+		    url += "&form=" + subForm;
 
-            if(subForm) {
-                url += "&form=" + subForm;
+		    // Check for drill down
+		    if(gDrillDownStack.length > 0) {
+			    url += "&parkey=" + gDrillDownStack[gDrillDownStack.length - 1].record;
+		    }
+	    }
 
-                // Check for drill down
-                if(gDrillDownStack.length > 0) {
-                    url += "&parkey=" + gDrillDownStack[gDrillDownStack.length - 1];
-                }
-            }
+	    if (isDuplicates) {
+		    url += "&group=true";
+	    }
 
-            if (isDuplicates) {
-                url += "&group=true";
-            }
+	    if(globals.gCurrentInstance) {
+		    url += "&instanceid=" + globals.gCurrentInstance;
+	    }
 
-            if(globals.gCurrentInstance) {
-                url += "&instanceid=" + globals.gCurrentInstance;
-            }
+	    /*
+		 * date filtering
+		 */
+	    if(!gGetSettings) {
+		    var fromDate = document.getElementById('filter_from').value,
+			    toDate = document.getElementById('filter_to').value,
+			    dateName = $('#date_question').val();
+		    var dateSet = (fromDate && fromDate.trim().length) || (toDate && toDate.trim().length);
 
-            /*
-             * date filtering
-             */
-            if(!gGetSettings) {
-                var fromDate = document.getElementById('filter_from').value,
-                    toDate = document.getElementById('filter_to').value,
-                    dateName = $('#date_question').val();
-                var dateSet = (fromDate && fromDate.trim().length) || (toDate && toDate.trim().length);
+		    if (dateSet && dateName && dateName.trim().length) {
+			    url += "&dateName=" + dateName;
+			    if (fromDate && fromDate.trim().length) {
+				    url += "&startDate=" + fromDate;
+			    }
+			    if (toDate && toDate.trim().length) {
+				    url += "&endDate=" + toDate;
+			    }
+		    }
 
-                if (dateSet && dateName && dateName.trim().length) {
-                    url += "&dateName=" + dateName;
-                    if (fromDate && fromDate.trim().length) {
-                        url += "&startDate=" + fromDate;
-                    }
-                    if (toDate && toDate.trim().length) {
-                        url += "&endDate=" + toDate;
-                    }
-                }
+		    if($('#include_bad').prop('checked')) {
+			    url += "&bad=yes";
+		    }
 
-                if($('#include_bad').prop('checked')) {
-                    url += "&bad=yes";
-                }
+		    // Limit number of records returned
+		    var limit = $('#limit').val();
+		    var iLimit = 0;
+		    if (limit && limit.trim().length > 0) {
+			    try {
+				    iLimit = parseInt(limit);
+				    url += "&limit=" + iLimit;
+			    } catch (err) {
+				    alert(err);
+			    }
+		    }
 
-                // Limit number of records returned
-                var limit = $('#limit').val();
-                var iLimit = 0;
-                if (limit && limit.trim().length > 0) {
-                    try {
-                        iLimit = parseInt(limit);
-                        url += "&limit=" + iLimit;
-                    } catch (err) {
-                        alert(err);
-                    }
-                }
+		    // Advanced filter
+		    filter = $('#advanced_filter').val();
+		    // Apply combined filter
+		    if (filter && filter.trim().length > 0) {
+			    url += "&filter=" + encodeURIComponent(filter);
+		    }
 
-                // Advanced filter
-                var filter = $('#advanced_filter').val();
-                if (filter && filter.trim().length > 0) {
-                    url += "&filter=" + encodeURIComponent(filter);
-                }
-            } else {
-                url += "&getSettings=true";
-            }
+		    // Drill Down Filter
+		    if(gDrillDownStack.length > 0) {
+			    var stackObj = gDrillDownStack[gDrillDownStack.length - 1];
 
-            url += "&format=dt";
-            url += "&schema=true";
-            url += "&view=0";                       // TODO
-            url += "&merge_select_multiple=yes";
-            url += "&sort=prikey&dirn=desc";
+			    if(stackObj.filter) {
+				    url += "&dd_filter=" + encodeURIComponent(stackObj.filter);
+			    }
+		    }
 
-            url += "&tz=" + encodeURIComponent(globals.gTimezone);
 
-            addHourglass();
-            $.ajax({
-                url: url,
-                dataType: 'json',
-                cache: false,
-                success: function (data) {
-                    removeHourglass();
-                    gRefreshingData = false;
-                    gGetSettings = false;
+	    } else {
+		    url += "&getSettings=true";
+	    }
 
-                    var theCallback = callback;
-                    if(data && data.status === "error") {
-                        alert(data.msg);
-                        clearTable();
-                        return;
-                    } else if(data.data && data.data[0] && data.data[0].status === "error") {
-                        alert(data.data[0].msg);
-                        clearTable();
-                        return;
-                    } else if(data && data.status === "ok") {
-                        // Continue presumably there is no data
-                        clearTable();
-                        return;
-                    } else {
-                        var theKey = key;
+	    url += "&format=dt";
+	    url += "&schema=true";
+	    url += "&view=0";                       // TODO
+	    url += "&merge_select_multiple=yes";
+	    url += "&sort=prikey&dirn=desc";
 
-                        gTasks.cache.data[theKey] = data;
-                        gTasks.cache.currentData = data;
+	    url += "&tz=" + encodeURIComponent(globals.gTimezone);
 
-                        updateSettings(gTasks.cache.currentData.settings);
-                        map.setLayers(gTasks.cache.currentData.schema.layers);
-                        chart.setCharts(gTasks.cache.currentData.schema.charts);
-                        updateFormList(gTasks.cache.currentData.forms);
+	    // First Check the Cache
+	    if(!clearCache && gTasks.cache.data[url]) {
+		    gTasks.cache.currentData = gTasks.cache.data[url];
+		    showTable(gTasks.cache.data[url]);
+	    } else {
 
-                        // Add a config item for the group value if this is a duplicates search
-                        if (isDuplicates) {
-                            gTasks.cache.currentData.schema.columns.unshift({
-                                hide: true,
-                                include: true,
-                                name: "_group",
-                                displayName: "_group"
-                            });
-                        }
+		    addHourglass();
+		    $.ajax({
+			    url: url,
+			    dataType: 'json',
+			    cache: false,
+			    success: function (data) {
+				    removeHourglass();
+				    gRefreshingData = false;
+				    gGetSettings = false;
 
-                        // Initialise the column settings
-                        initialise();
+				    var theCallback = callback;
+				    if(data && data.status === "error") {
+					    alert(data.msg);
+					    clearTable();
+					    return;
+				    } else if(data.data && data.data[0] && data.data[0].status === "error") {
+					    alert(data.data[0].msg);
+					    clearTable();
+					    return;
+				    } else if(data && data.status === "ok") {
+					    // Continue presumably there is no data
+					    clearTable();
+					    return;
+				    } else {
+					    var theKey = url;
 
-                        theCallback(data);
-                    }
-                },
-                error: function (xhr, textStatus, err) {
-                    removeHourglass();
+					    gTasks.cache.data[theKey] = data;
+					    gTasks.cache.currentData = data;
 
-                    if (globals.gMainTable) {
-                        globals.gMainTable.destroy();
-                        globals.gMainTable = undefined;
-                    }
-                    $("#trackingTable").empty();
+					    updateSettings(gTasks.cache.currentData.settings);
+					    map.setLayers(gTasks.cache.currentData.schema.layers);
+					    chart.setCharts(gTasks.cache.currentData.schema.charts);
+					    updateFormList(gTasks.cache.currentData.forms);
 
-                    gRefreshingData = false;
-                    gGetSettings = false;
+					    // Add a config item for the group value if this is a duplicates search
+					    if (isDuplicates) {
+						    gTasks.cache.currentData.schema.columns.unshift({
+							    hide: true,
+							    include: true,
+							    name: "_group",
+							    displayName: "_group"
+						    });
+					    }
 
-                    if (xhr.readyState == 0 || xhr.status == 0) {
-                        return;  // Not an error
-                    } else {
-                        alert(localise.set["error"] + ": " + err);
-                    }
-                }
-            });
+					    // Initialise the column settings
+					    initialise();
+
+					    theCallback(data);
+				    }
+			    },
+			    error: function (xhr, textStatus, err) {
+				    removeHourglass();
+
+				    if (globals.gMainTable) {
+					    globals.gMainTable.destroy();
+					    globals.gMainTable = undefined;
+				    }
+				    $("#trackingTable").empty();
+
+				    gRefreshingData = false;
+				    gGetSettings = false;
+
+				    if (xhr.readyState == 0 || xhr.status == 0) {
+					    return;  // Not an error
+				    } else {
+					    alert(localise.set["error"] + ": " + err);
+				    }
+			    }
+		    });
         }
 
 
@@ -3250,7 +3280,6 @@ require([
 
             url = "/surveyKPI/notifications/immediate";
 
-
             notificationString = JSON.stringify(notification);
             $dialog = $(this);
             addHourglass();
@@ -3308,20 +3337,26 @@ require([
     }
 
     function clearDrillDown() {
-        gDrillDownParentForm = undefined;
-        gDrillDownExists = undefined;
-        gDrillDownType = undefined;
-	    gDrillDownSurvey = undefined;
-        gDrillDownStack = [];
-        gDrillDownFormStack = [];
+	    $('.dd_only,.du_only').hide();
+        gDrillDownNext = undefined;
+	    gDrillDownStack = [];
     }
 
     function drillDown() {
         var form = $('#dd_form').html();
         if(form !== "") {
-            gDrillDownParentForm = form;
-            gDrillDownFormStack.push(form);
-            gDrillDownStack.push(gTasks.gSelectedRecord.prikey);
+
+	        gDrillDownNext.record = gTasks.gSelectedRecord.prikey;
+	        if(gDrillDownNext.filter) {
+		        gDrillDownNext.filter = gDrillDownNext.filter.replace("'x'", "'" + gTasks.gSelectedRecord.prikey + "'");
+	        }
+            gDrillDownStack.push(gDrillDownNext);
+
+	        updateDrillDownFormList();
+	        if(gDrillDownNext) {
+	        	$('.dd_only').show();
+	        }
+
             subFormChanged();
 
             $('.du_only').show();
