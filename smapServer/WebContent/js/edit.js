@@ -1825,7 +1825,7 @@ function respondToEvents($context) {
 		var sIdent = "0";
 		if(qType === "parent_form") {
 			$('#p_key_question_label').html(localise.set["ed_qk"]);
-			$('#p_key_question').empty().append(getQuestionsAsSelect());
+			$('#p_key_question').empty().append(getQuestionsAsSelect("", true));
 		} else if (qType === "child_form") {
 			$('#p_key_question_label').html(localise.set["ed_qkc"]);
 			// Get the form ident
@@ -1942,7 +1942,7 @@ function respondToEvents($context) {
 		$('.pdf_appearance_field').show();
 		$('.pdfcols').hide();
 		$('#standardTab a').click();
-		$('#a_pdfaddto').empty().append(getQuestionsAsSelect());
+		$('#a_pdfaddto').empty().append(getQuestionsAsSelect("", false));
 		if(qType === 'image') {
 			$('.a_pdfhyperlink').show();
 		} else {
@@ -1967,7 +1967,7 @@ function respondToEvents($context) {
 		}
 
 		// Get questions to select from this survey
-		$('.questions_in_form').empty().append(getQuestionsAsSelect(localise.set["c_question"] + "..."));
+		$('.questions_in_form').empty().append(getQuestionsAsSelect(localise.set["c_question"] + "...", false));
 
 		// Add value and label(s) from choices list or they may already be specified as temporary appearance values
 		addLabelControls();
@@ -3714,7 +3714,7 @@ function setNoFilter() {
 			/*
 			 * Get the questions in the form currently being edited as options for a select question
 			 */
-			function getQuestionsAsSelect(noneText) {
+			function getQuestionsAsSelect(noneText, textOnly) {
 
 				var i,
 					survey = globals.model.survey,
@@ -3739,7 +3739,7 @@ function setNoFilter() {
 
 						for(i = 0; i < survey.forms.length; i++) {
 							if(survey.forms[i].parentFormIndex == -1) {
-								h[++idx] = getQuestionsFromForm(survey.forms[i], i);
+								h[++idx] = getQuestionsFromForm(survey.forms[i], i, textOnly);
 								break;
 							}
 						}
@@ -3750,7 +3750,7 @@ function setNoFilter() {
 
 			}
 
-			function getQuestionsFromForm(form, formIndex) {
+			function getQuestionsFromForm(form, formIndex, textOnly) {
 				var i,
 					question,
 					h = [],
@@ -3767,11 +3767,13 @@ function setNoFilter() {
 							continue;
 						}
 
-						h[++idx] = '<option value="';
-						h[++idx] = question.name;
-						h[++idx] = '">';
-						h[++idx] = question.name;
-						h[++idx] = '</option>';
+						if(!textOnly || isTextStorageType(question.type)) {
+							h[++idx] = '<option value="';
+							h[++idx] = question.name;
+							h[++idx] = '">';
+							h[++idx] = question.name;
+							h[++idx] = '</option>';
+						}
 					}
 				}
 				return h.join('');
