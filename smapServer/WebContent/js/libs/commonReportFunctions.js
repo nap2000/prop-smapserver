@@ -219,8 +219,16 @@ function addAnchors (property, minsize) {
                     + '" download style="color:#0000FF;">' + localise.set["c_download"] + '</a>';
 			}
 	
-		} else { 
-			output[i] = property[i];
+		} else {
+		    if (typeof property[i] === "object") {      // From: https://stackoverflow.com/questions/11182924/how-to-check-if-javascript-object-is-json
+				output[i] = JSON.stringify(property[i]);
+				if(output[i] === "{}") {
+					output[i] = "";
+				}
+		    } else {
+			    output[i] = property[i];
+		    }
+
 		}
 	} 
 	
