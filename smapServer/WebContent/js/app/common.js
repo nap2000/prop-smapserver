@@ -2306,6 +2306,11 @@ function getChangeDescription(change, version) {
 		h[++idx] = change.msg;
 		h[++idx] = '</span>';
 
+	} else if(change.action === "del_preload") {
+		h[++idx] = ' <span style="color:red;">';
+		h[++idx] = change.msg;
+		h[++idx] = '</span>';
+
 	} else if(change.action === "update") {
 
 		/*
