@@ -3653,7 +3653,7 @@ function getAccessibleCsvFiles($elem, includeNone) {
  /*
   * Get the questions in a survey
   */
-function getQuestionsInSurvey($elem, sIdent, includeNone) {
+function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly) {
 
 	function populateElement($elem, data) {
 		var h = [],
@@ -3666,11 +3666,13 @@ function getQuestionsInSurvey($elem, sIdent, includeNone) {
 			h[++idx] = '</option>';
 		}
 		for (i = 0; i < data.length; i++) {
-			h[++idx] = '<option value="';
-			h[++idx] = data[i].name;
-			h[++idx] = '">';
-			h[++idx] = data[i].name;
-			h[++idx] = '</option>';
+			if(!textOnly || isTextStorageType(data[i].type)) {
+				h[++idx] = '<option value="';
+				h[++idx] = data[i].name;
+				h[++idx] = '">';
+				h[++idx] = data[i].name;
+				h[++idx] = '</option>';
+			}
 		}
 		$elem.empty().append(h.join(''));
 	}
