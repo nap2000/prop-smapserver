@@ -413,7 +413,7 @@ $(document).ready(function() {
 		var survey = globals.model.survey;
 		var qType = survey.forms[globals.gFormIndex].questions[globals.gItemIndex].type;
 		if(qType === "child_form") {
-			getQuestionsInSurvey($('#p_key_question'), $(this).val(), true);
+			getQuestionsInSurvey($('#p_key_question'), $(this).val(), true, true);
 		}
 	});
 
@@ -551,7 +551,7 @@ $(document).ready(function() {
 		var survey = globals.model.survey;
 		var search_source = $('input[type=radio][name=search_source]:checked').val();
 		if(search_source === "survey") {
-			getQuestionsInSurvey($('.column_select'), $(this).val(), true);
+			getQuestionsInSurvey($('.column_select'), $(this).val(), true, false);
 		} else {
 			getQuestionsInCsvFile($('.column_select'), $(this).val(), true);
 		}
@@ -1838,7 +1838,7 @@ function respondToEvents($context) {
 					}
 				}
 			}
-			getQuestionsInSurvey($('#p_key_question'), sIdent, true);
+			getQuestionsInSurvey($('#p_key_question'), sIdent, true, true);
 		} else if(qType === "begin repeat") {
 			$('#p_ref').empty().append(getFormsAsSelect(qName));
 		}
@@ -3587,7 +3587,7 @@ function setNoFilter() {
 								$('input[type=radio][name=search_source][value=survey]').prop('checked', true);
 								$('#a_survey_identifier').val(sIdent);
 								$('.search_survey').show();
-								getQuestionsInSurvey($('.column_select'), sIdent, true);
+								getQuestionsInSurvey($('.column_select'), sIdent, true, false);
 							} else {
 								var csvIndex = getIndexOfCsvFilename(filename);
 								$('input[type=radio][name=search_source][value=csv]').prop('checked', true);
