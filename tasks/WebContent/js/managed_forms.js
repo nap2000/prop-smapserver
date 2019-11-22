@@ -1783,9 +1783,9 @@ require([
 	                    h[++idx] = '"';
                     }
 
-	                if(data[i].filter) {
-		                h[++idx] = ' data-filter="';
-		                h[++idx] = data[i].filter;
+	                if(data[i].keyQuestion) {
+		                h[++idx] = ' data-key="';
+		                h[++idx] = data[i].keyQuestion;
 		                h[++idx] = '"';
 	                }
 
@@ -1800,7 +1800,7 @@ require([
 	                        form: data[i].name,
 	                        type: data[i].type,
 	                        survey: data[i].surveyId,
-	                        filter: data[i].filter
+	                        key: data[i].keyQuestion
                         }
                         setDefault = true;
                     }
@@ -1819,7 +1819,7 @@ require([
 	            form: $this.data("form"),
 	            type: $this.data("type"),
 	            survey: $this.data("survey"),
-	            filter: $this.data("filter")
+	            key: $this.data("key")
             }
             drillDown();
         });
@@ -2855,13 +2855,16 @@ require([
 			    url += "&filter=" + encodeURIComponent(filter);
 		    }
 
-		    // Drill Down Filter
+		    // Drill Down Filters for launched forms
 		    if(gDrillDownStack.length > 0) {
 			    var stackObj = gDrillDownStack[gDrillDownStack.length - 1];
 
-			    if(stackObj.filter) {
-				    url += "&dd_filter=" + encodeURIComponent(stackObj.filter);
-			    }
+			    if(stackObj.type === "child_form" && stackObj.key) {
+				    url += "&dd_filter=" + encodeURIComponent("${" + stackObj.key + "} = '" + stackObj.record + "'");
+			    } else if(stackObj.type === "parent_form" && stackObj.key) {
+			        var keyValue = gTasks.gSelectedRecord[stackObj.key];
+			        url += "&prikey=" + keyValue;
+                }
 		    }
 
 
@@ -3347,9 +3350,6 @@ require([
         if(form !== "") {
 
 	        gDrillDownNext.record = gTasks.gSelectedRecord.prikey;
-	        if(gDrillDownNext.filter) {
-		        gDrillDownNext.filter = gDrillDownNext.filter.replace("'x'", "'" + gTasks.gSelectedRecord.prikey + "'");
-	        }
             gDrillDownStack.push(gDrillDownNext);
 
 	        updateDrillDownFormList();
