@@ -2860,10 +2860,25 @@ require([
 			    var stackObj = gDrillDownStack[gDrillDownStack.length - 1];
 
 			    if(stackObj.type === "child_form" && stackObj.key) {
-				    url += "&dd_filter=" + encodeURIComponent("${" + stackObj.key + "} = '" + stackObj.record + "'");
+			        /*
+			         * The filter will select those records where the key question is equal to either the
+			         * primary key of this survey or its key
+			         */
+			        var filter = "(${" + stackObj.key + "} = '" + stackObj.record + "'";
+			        if(stackObj.key_value) {
+			            filter += "or ${" + stackObj.key + "} = '" + stackObj.key_value + "')"
+                    } else {
+			            filter += ")";
+                    }
+				    url += "&dd_filter=" + encodeURIComponent(filter);
 			    } else if(stackObj.type === "parent_form" && stackObj.key) {
 			        var keyValue = gTasks.gSelectedRecord[stackObj.key];
-			        url += "&prikey=" + keyValue;
+
+			        if(keyValue) {
+                        if (stackObj.key_value) {
+                            url += "&dd_hrk=" + keyValue;
+                        }
+                    }
                 }
 		    }
 
@@ -3349,7 +3364,18 @@ require([
         var form = $('#dd_form').html();
         if(form !== "") {
 
-	        gDrillDownNext.record = gTasks.gSelectedRecord.prikey;
+            gDrillDownNext.record = gTasks.gSelectedRecord.prikey;
+            if (gDrillDownNext.type === 'child_form') {
+                gDrillDownNext.key_value = gTasks.gSelectedRecord._hrk;     // Drill down to child using HRK of this, the parent form
+            } else {
+                gDrillDownNext.key_value = gTasks.gSelectedRecord[gDrillDownNext.key];     // Drill down to parent using its HRK, this is the child form
+            }
+
+            // Set the key_value to undefined if it is zero length
+	        if(gDrillDownNext.key_value.length === 0) {
+                gDrillDownNext.key_value = undefined;
+            }
+
             gDrillDownStack.push(gDrillDownNext);
 
 	        updateDrillDownFormList();
