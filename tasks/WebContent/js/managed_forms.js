@@ -119,6 +119,9 @@ require([
     var gBad;                       // A boolean indicating the direction of toggle of a deleted state
     var gLocalDefaults = {};
 
+    var gDrillDownNext;                 // Next drill down state if drill down is selected
+    var gDrillDownStack = [];
+
     var gOverallMapConfig = {       // overall map
         id: 'map',
         map: undefined,
@@ -190,7 +193,7 @@ require([
             }
         }
 
-        $('.editRecordSection, .selectedOnly').hide();
+        $('.editRecordSection, .selectedOnly, .dd_only').hide();
 
         // Get the parameters and start editing a survey if one was passed as a parameter
         var params = location.search.substr(location.search.indexOf("?") + 1);
@@ -238,6 +241,7 @@ require([
             gTasks.gSelectedSurveyIndex = $(this).val();
             globals.gCurrentSurvey = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].id;
             gGetSettings = true;
+	        clearDrillDown();
             surveyChanged();
         });
 
@@ -250,7 +254,24 @@ require([
         // Set change function on sub form
         $('#sub_form').change(function () {
             globals.gSubForms[globals.gCurrentSurvey] = $(this).val();
+            clearDrillDown();
             subFormChanged();
+        });
+
+        // Set change function on drill down
+        $('#drill_down').click(function () {
+          drillDown();
+        });
+
+        // Set change function on drill up
+        $('#drill_up').click(function () {
+
+            if(gDrillDownStack.length > 0) {
+                gDrillDownNext = gDrillDownStack.pop();
+            }
+
+            subFormChanged();
+
         });
 
         // Set change function on advanced filter
@@ -994,7 +1015,7 @@ require([
 
         getEligibleUsers();
 
-        $('.editRecordSection, .selectedOnly, .re_alert').hide();
+        $('.editRecordSection, .selectedOnly, .re_alert, .dd_only').hide();
         if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
 
             getLanguageList(globals.gCurrentSurvey, undefined, false, '.language_sel', false, -1);
@@ -1085,18 +1106,36 @@ require([
     function showManagedData(sId, callback, clearCache) {
 
         var groupSurvey,
-            subForm;
+            subForm,
+	        drillDownState;
 
-        if(globals.gGroupSurveys[globals.gCurrentSurvey] && globals.gGroupSurveys[globals.gCurrentSurvey] != "") {
-            groupSurvey = globals.gGroupSurveys[globals.gCurrentSurvey];
+        if(gDrillDownStack.length > 0) {
+        	drillDownState = gDrillDownStack[gDrillDownStack.length  - 1];
         }
 
-        if(globals.gSubForms[globals.gCurrentSurvey] && globals.gSubForms[globals.gCurrentSurvey] != "") {
-            subForm = globals.gSubForms[globals.gCurrentSurvey];
-            if(subForm === '_none') {
-                subForm = undefined;
+        if(drillDownState && drillDownState.type !== "sub_form") {
+
+            sId = drillDownState.survey;
+
+        } else {
+
+            // Set subform
+            if(drillDownState) {
+                subForm = drillDownState.form;
+            } else {
+                if (globals.gSubForms[sId] && globals.gSubForms[sId] != "") {
+                    subForm = globals.gSubForms[sId];
+                    if (subForm === '_none') {
+                        subForm = undefined;
+                    }
+                }
             }
         }
+
+	    // Set Group survey
+	    if (globals.gGroupSurveys[sId] && globals.gGroupSurveys[sId] != "") {
+		    groupSurvey = globals.gGroupSurveys[sId];
+	    }
 
         getData(sId, groupSurvey, subForm, callback, clearCache);
     }
@@ -1274,7 +1313,7 @@ require([
             recordSelected(indexes);
         });
         globals.gMainTable.off('deselect').on('deselect', function (e, dt, type, indexes) {
-            $('.selectedOnly').hide();
+            $('.selectedOnly, .dd_only').hide();
         });
 
         // Highlight data conditionally, set barcodes
@@ -1283,7 +1322,7 @@ require([
             tableOnDraw();
         });
 
-        // Respond to filter changes that require the sever to be queried
+        // Respond to filter changes that require the server to be queried
         $('.table_filter').focusout(function () {
             showManagedData(globals.gCurrentSurvey, showTable, true);
         });
@@ -1682,9 +1721,9 @@ require([
             for (i = 0; i < data.length; i++) {
 
                 h[++idx] = '<option value="';
-                h[++idx] = data[i];
+                h[++idx] = data[i].name;
                 h[++idx] = '">';
-                h[++idx] = data[i];
+                h[++idx] = data[i].name;
                 h[++idx] = '</option>';
             }
         }
@@ -1694,6 +1733,96 @@ require([
             $elem.val(globals.gSubForms[globals.gCurrentSurvey]);
         }
 
+    }
+
+    /*
+     * Update the drill down list of forms
+     */
+    function updateDrillDownFormList() {
+        var $drillDown = $('#drill_down_list'),
+            data = gTasks.cache.currentData.forms;
+
+        var i,
+            h = [],
+            idx = -1,
+            setDefault = false,
+	        parentForm,
+	        drillDownState;
+
+        if(gDrillDownStack.length > 0) {
+        	drillDownState = gDrillDownStack[gDrillDownStack.length - 1];
+        }
+
+        if(drillDownState) {
+        	parentForm = drillDownState.form;
+        } else {
+		    parentForm = $('#sub_form').val();
+		    if(parentForm === "_none") {
+			    parentForm = "main";
+		    }
+	    }
+
+	    $('#dd_form').html("");
+	    gDrillDownNext = undefined;
+
+        if(data && data.length) {
+
+            for (i = 0; i < data.length; i++) {
+                // Add to drill down
+                if (parentForm && data[i].parentName == parentForm) {
+                    h[++idx] = '<a class="dropdown-item dd_form" href="#" data-form="';
+                    h[++idx] = data[i].name;
+                    h[++idx] = '"';
+                    h[++idx] = ' data-type="';
+                    h[++idx] = data[i].type;
+	                h[++idx] = '"';
+
+                    if(data[i].surveyId) {
+	                    h[++idx] = ' data-survey="';
+	                    h[++idx] = data[i].type;
+	                    h[++idx] = '"';
+                    }
+
+	                if(data[i].keyQuestion) {
+		                h[++idx] = ' data-key="';
+		                h[++idx] = data[i].keyQuestion;
+		                h[++idx] = '"';
+	                }
+
+                    h[++idx] = '>';
+                    h[++idx] = data[i].name;
+                    h[++idx] = '</a>';
+
+                    if(!setDefault) {
+                        $('#dd_form').html(data[i].name);
+
+                        gDrillDownNext = {
+	                        form: data[i].name,
+	                        type: data[i].type,
+	                        survey: data[i].surveyId,
+	                        key: data[i].keyQuestion
+                        }
+                        setDefault = true;
+                    }
+                }
+            }
+
+        }
+
+        $drillDown.empty().html(h.join(''));
+
+        // Respond to selection of a form to drill down to:
+        $('.dd_form', $drillDown).click(function(){
+            var $this = $(this);
+            $('#dd_form').html($this.data("form"));
+            gDrillDownNext = {
+	            form: $this.data("form"),
+	            type: $this.data("type"),
+	            survey: $this.data("survey"),
+	            key: $this.data("key")
+            }
+            drillDown();
+        });
 
     }
 
@@ -1710,75 +1839,6 @@ require([
         });
 
         return idx;
-    }
-
-    /*
-     * Show a related data item
-     */
-    function showRelated(itemIndex, item) {
-        var h = [],
-            idx = -1,
-            tableId = "relTable" + itemIndex;
-
-        h[++idx] = '<div class="row">'
-        h[++idx] = '<div class="col-md-12">';
-        h[++idx] = '<div class="ibox float-e-margins">';
-        h[++idx] = '<div class="ibox-title">';
-        h[++idx] = '<h5>';
-        h[++idx] = '</h5>';
-        h[++idx] = '</div>';
-        h[++idx] = '<div class="ibox-content">';
-        h[++idx] = '<div class="row">';
-        h[++idx] = '<div class="col-md-12">';
-        h[++idx] = '<table id="';
-        h[++idx] = tableId;
-        h[++idx] = '" class="table table-striped table-responsive toggle-arrow-tiny" data-page-size="8">';
-        h[++idx] = '</table>';
-        h[++idx] = '</div>';
-        h[++idx] = '</div>';
-        h[++idx] = '</div>';
-        h[++idx] = '</div>';
-        h[++idx] = '</div>';
-        h[++idx] = '</div>';
-
-        $('#relatedData').append(h.join(""));
-        getRelatedTable(tableId, item)
-    }
-
-    function getRelatedTable(tableId, item) {
-
-        var url,
-            managed =  "true";
-
-        var url = "/api/v1/data/";
-
-        if (item.type === "child") {
-            url += globals.gCurrentSurvey + "?mgmt=" + managed + "&form=" + item.fId + "&parkey=" + item.parkey;
-        } else if (item.type === "link") {
-            url += item.sId + "?mgmt=" + managed + "&form=" + item.fId + "&hrk=" + item.hrk;
-        }
-        url += "&tz=" + encodeURIComponent(globals.gTimezone);
-
-        addHourglass();
-        $.ajax({
-            url: url,
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                removeHourglass();
-                showManagedData(globals.gCurrentSurvey)
-
-
-            },
-            error: function (xhr, textStatus, err) {
-                removeHourglass();
-                if (xhr.readyState == 0 || xhr.status == 0) {
-                    return;  // Not an error
-                } else {
-                    alert(localise.set["c_error"] + ": " + url);
-                }
-            }
-        });
     }
 
     function updateVisibleColumns(cols) {
@@ -1959,21 +2019,24 @@ require([
     }
 
     /*
-     * Respond to a record of data being selected
+     * Respond to a record of data being unselected
      */
     function recordUnSelected() {
         gSelectedIndexes = [];
         gTasks.gSelectedRecord = undefined;
-        $('.selectedOnly').hide();
+        $('.selectedOnly, .dd_only').hide();
     }
 
+    /*
+     * Respond to a record of data being selected
+     */
     function recordSelected(indexes) {
 
         var assignedOther = false;
 
         gSelectedIndexes = indexes;
         gTasks.gSelectedRecord = globals.gMainTable.rows(gSelectedIndexes).data().toArray()[0];
-        $('.selectedOnly').hide();
+        $('.selectedOnly, .dd_only').hide();
         if(gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned === globals.gLoggedInUser.ident) {
             $('.assigned').show();
         } else if(gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned !== globals.gLoggedInUser.ident) {
@@ -1995,6 +2058,18 @@ require([
         if(globals.gIsAdministrator) {
             $('.assigned_admin').show();
         }
+
+        // Set up the drill down
+        $('.dd_only,.du_only').hide();
+        if(gDrillDownStack.length > 0) {
+            $('.du_only').show();
+        }
+
+        updateDrillDownFormList();
+        if(gDrillDownNext) {
+        	$('.dd_only').show();
+        }
+
     }
 
     /*
@@ -2711,155 +2786,190 @@ require([
 
     function getData(sId, groupSurvey, subForm, callback, clearCache) {
 
-        var key = sId + "_" + groupSurvey + "_" + (typeof subForm === "undefind" ? "" : subForm);
+    	var filter;
 
-        // First Check the Cache
-        if(!clearCache && gTasks.cache.data[key]) {
-            gTasks.cache.currentData = gTasks.cache.data[key];
-            showTable(gTasks.cache.data[key]);
-        } else {
+	    var url = '/api/v1/data/';
+	    url += sId;
+	    url += "?mgmt=true";
 
-            var url = '/api/v1/data/';
-            url += sId;
-            url += "?mgmt=true";
+	    if (groupSurvey) {
+		    url += "&groupSurvey=" + groupSurvey;
+	    }
 
-            if (groupSurvey) {
-                url += "&groupSurvey=" + groupSurvey;
-            }
+	    if(subForm) {
+		    url += "&form=" + subForm;
 
-            if(subForm) {
-                url += "&form=" + subForm;
-            }
+		    // Check for drill down
+		    if(gDrillDownStack.length > 0) {
+			    url += "&parkey=" + gDrillDownStack[gDrillDownStack.length - 1].record;
+		    }
+	    }
 
-            if (isDuplicates) {
-                url += "&group=true";
-            }
+	    if (isDuplicates) {
+		    url += "&group=true";
+	    }
 
-            if(globals.gCurrentInstance) {
-                url += "&instanceid=" + globals.gCurrentInstance;
-            }
+	    if(globals.gCurrentInstance) {
+		    url += "&instanceid=" + globals.gCurrentInstance;
+	    }
 
-            /*
-             * date filtering
-             */
-            if(!gGetSettings) {
-                var fromDate = document.getElementById('filter_from').value,
-                    toDate = document.getElementById('filter_to').value,
-                    dateName = $('#date_question').val();
-                var dateSet = (fromDate && fromDate.trim().length) || (toDate && toDate.trim().length);
+	    /*
+		 * date filtering
+		 */
+	    if(!gGetSettings) {
+		    var fromDate = document.getElementById('filter_from').value,
+			    toDate = document.getElementById('filter_to').value,
+			    dateName = $('#date_question').val();
+		    var dateSet = (fromDate && fromDate.trim().length) || (toDate && toDate.trim().length);
 
-                if (dateSet && dateName && dateName.trim().length) {
-                    url += "&dateName=" + dateName;
-                    if (fromDate && fromDate.trim().length) {
-                        url += "&startDate=" + fromDate;
-                    }
-                    if (toDate && toDate.trim().length) {
-                        url += "&endDate=" + toDate;
-                    }
-                }
+		    if (dateSet && dateName && dateName.trim().length) {
+			    url += "&dateName=" + dateName;
+			    if (fromDate && fromDate.trim().length) {
+				    url += "&startDate=" + fromDate;
+			    }
+			    if (toDate && toDate.trim().length) {
+				    url += "&endDate=" + toDate;
+			    }
+		    }
 
-                if($('#include_bad').prop('checked')) {
-                    url += "&bad=yes";
-                }
+		    if($('#include_bad').prop('checked')) {
+			    url += "&bad=yes";
+		    }
 
-                // Limit number of records returned
-                var limit = $('#limit').val();
-                var iLimit = 0;
-                if (limit && limit.trim().length > 0) {
-                    try {
-                        iLimit = parseInt(limit);
-                        url += "&limit=" + iLimit;
-                    } catch (err) {
-                        alert(err);
-                    }
-                }
+		    // Limit number of records returned
+		    var limit = $('#limit').val();
+		    var iLimit = 0;
+		    if (limit && limit.trim().length > 0) {
+			    try {
+				    iLimit = parseInt(limit);
+				    url += "&limit=" + iLimit;
+			    } catch (err) {
+				    alert(err);
+			    }
+		    }
 
-                // Advanced filter
-                var filter = $('#advanced_filter').val();
-                if (filter && filter.trim().length > 0) {
-                    url += "&filter=" + encodeURIComponent(filter);
-                }
-            } else {
-                url += "&getSettings=true";
-            }
+		    // Advanced filter
+		    filter = $('#advanced_filter').val();
+		    // Apply combined filter
+		    if (filter && filter.trim().length > 0) {
+			    url += "&filter=" + encodeURIComponent(filter);
+		    }
 
-            url += "&format=dt";
-            url += "&schema=true";
-            url += "&view=0";                       // TODO
-            url += "&merge_select_multiple=yes";
-            url += "&sort=prikey&dirn=desc";
+		    // Drill Down Filters for launched forms
+		    if(gDrillDownStack.length > 0) {
+			    var stackObj = gDrillDownStack[gDrillDownStack.length - 1];
 
-            url += "&tz=" + encodeURIComponent(globals.gTimezone);
-
-            addHourglass();
-            $.ajax({
-                url: url,
-                dataType: 'json',
-                cache: false,
-                success: function (data) {
-                    removeHourglass();
-                    gRefreshingData = false;
-                    gGetSettings = false;
-
-                    var theCallback = callback;
-                    if(data && data.status === "error") {
-                        alert(data.msg);
-                        clearTable();
-                        return;
-                    } else if(data.data && data.data[0] && data.data[0].status === "error") {
-                        alert(data.data[0].msg);
-                        clearTable();
-                        return;
-                    } else if(data && data.status === "ok") {
-                        // Continue presumably there is no data
-                        clearTable();
-                        return;
+			    if(stackObj.type === "child_form" && stackObj.key) {
+			        /*
+			         * The filter will select those records where the key question is equal to either the
+			         * primary key of this survey or its key
+			         */
+			        var filter = "(${" + stackObj.key + "} = '" + stackObj.record + "'";
+			        if(stackObj.key_value) {
+			            filter += "or ${" + stackObj.key + "} = '" + stackObj.key_value + "')"
                     } else {
-                        var theKey = key;
+			            filter += ")";
+                    }
+				    url += "&dd_filter=" + encodeURIComponent(filter);
+			    } else if(stackObj.type === "parent_form" && stackObj.key) {
+			        var keyValue = gTasks.gSelectedRecord[stackObj.key];
 
-                        gTasks.cache.data[theKey] = data;
-                        gTasks.cache.currentData = data;
-
-                        updateSettings(gTasks.cache.currentData.settings);
-                        map.setLayers(gTasks.cache.currentData.schema.layers);
-                        chart.setCharts(gTasks.cache.currentData.schema.charts);
-                        updateFormList(gTasks.cache.currentData.forms);
-
-                        // Add a config item for the group value if this is a duplicates search
-                        if (isDuplicates) {
-                            gTasks.cache.currentData.schema.columns.unshift({
-                                hide: true,
-                                include: true,
-                                name: "_group",
-                                displayName: "_group"
-                            });
+			        if(keyValue) {
+                        if (stackObj.key_value) {
+                            url += "&dd_hrk=" + keyValue;
                         }
-
-                        // Initialise the column settings
-                        initialise();
-
-                        theCallback(data);
-                    }
-                },
-                error: function (xhr, textStatus, err) {
-                    removeHourglass();
-
-                    if (globals.gMainTable) {
-                        globals.gMainTable.destroy();
-                        globals.gMainTable = undefined;
-                    }
-                    $("#trackingTable").empty();
-
-                    gRefreshingData = false;
-                    gGetSettings = false;
-
-                    if (xhr.readyState == 0 || xhr.status == 0) {
-                        return;  // Not an error
-                    } else {
-                        alert(localise.set["error"] + ": " + err);
                     }
                 }
-            });
+		    }
+
+
+	    } else {
+		    url += "&getSettings=true";
+	    }
+
+	    url += "&format=dt";
+	    url += "&schema=true";
+	    url += "&view=0";                       // TODO
+	    url += "&merge_select_multiple=yes";
+	    url += "&sort=prikey&dirn=desc";
+
+	    url += "&tz=" + encodeURIComponent(globals.gTimezone);
+
+	    // First Check the Cache
+	    if(!clearCache && gTasks.cache.data[url]) {
+		    gTasks.cache.currentData = gTasks.cache.data[url];
+		    showTable(gTasks.cache.data[url]);
+	    } else {
+
+		    addHourglass();
+		    $.ajax({
+			    url: url,
+			    dataType: 'json',
+			    cache: false,
+			    success: function (data) {
+				    removeHourglass();
+				    gRefreshingData = false;
+				    gGetSettings = false;
+
+				    var theCallback = callback;
+				    if(data && data.status === "error") {
+					    alert(data.msg);
+					    clearTable();
+					    return;
+				    } else if(data.data && data.data[0] && data.data[0].status === "error") {
+					    alert(data.data[0].msg);
+					    clearTable();
+					    return;
+				    } else if(data && data.status === "ok") {
+					    // Continue presumably there is no data
+					    clearTable();
+					    return;
+				    } else {
+					    var theKey = url;
+
+					    gTasks.cache.data[theKey] = data;
+					    gTasks.cache.currentData = data;
+
+					    updateSettings(gTasks.cache.currentData.settings);
+					    map.setLayers(gTasks.cache.currentData.schema.layers);
+					    chart.setCharts(gTasks.cache.currentData.schema.charts);
+					    updateFormList(gTasks.cache.currentData.forms);
+
+					    // Add a config item for the group value if this is a duplicates search
+					    if (isDuplicates) {
+						    gTasks.cache.currentData.schema.columns.unshift({
+							    hide: true,
+							    include: true,
+							    name: "_group",
+							    displayName: "_group"
+						    });
+					    }
+
+					    // Initialise the column settings
+					    initialise();
+
+					    theCallback(data);
+				    }
+			    },
+			    error: function (xhr, textStatus, err) {
+				    removeHourglass();
+
+				    if (globals.gMainTable) {
+					    globals.gMainTable.destroy();
+					    globals.gMainTable = undefined;
+				    }
+				    $("#trackingTable").empty();
+
+				    gRefreshingData = false;
+				    gGetSettings = false;
+
+				    if (xhr.readyState == 0 || xhr.status == 0) {
+					    return;  // Not an error
+				    } else {
+					    alert(localise.set["error"] + ": " + err);
+				    }
+			    }
+		    });
         }
 
 
@@ -3188,7 +3298,6 @@ require([
 
             url = "/surveyKPI/notifications/immediate";
 
-
             notificationString = JSON.stringify(notification);
             $dialog = $(this);
             addHourglass();
@@ -3243,6 +3352,41 @@ require([
             globals.gMainTable.destroy();
         }
         $("#trackingTable").empty()
+    }
+
+    function clearDrillDown() {
+	    $('.dd_only,.du_only').hide();
+        gDrillDownNext = undefined;
+	    gDrillDownStack = [];
+    }
+
+    function drillDown() {
+        var form = $('#dd_form').html();
+        if(form !== "") {
+
+            gDrillDownNext.record = gTasks.gSelectedRecord.prikey;
+            if (gDrillDownNext.type === 'child_form') {
+                gDrillDownNext.key_value = gTasks.gSelectedRecord._hrk;     // Drill down to child using HRK of this, the parent form
+            } else {
+                gDrillDownNext.key_value = gTasks.gSelectedRecord[gDrillDownNext.key];     // Drill down to parent using its HRK, this is the child form
+            }
+
+            // Set the key_value to undefined if it is zero length
+	        if(gDrillDownNext.key_value && gDrillDownNext.key_value.length === 0) {
+                gDrillDownNext.key_value = undefined;
+            }
+
+            gDrillDownStack.push(gDrillDownNext);
+
+	        updateDrillDownFormList();
+	        if(gDrillDownNext) {
+	        	$('.dd_only').show();
+	        }
+
+            subFormChanged();
+
+            $('.du_only').show();
+        }
     }
 
 });
