@@ -3372,7 +3372,7 @@ require([
             }
 
             // Set the key_value to undefined if it is zero length
-	        if(gDrillDownNext.key_value.length === 0) {
+	        if(gDrillDownNext.key_value && gDrillDownNext.key_value.length === 0) {
                 gDrillDownNext.key_value = undefined;
             }
 
