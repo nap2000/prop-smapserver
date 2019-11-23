@@ -2301,7 +2301,17 @@ function getChangeDescription(change, version) {
 		h[++idx] = change.msg;
 		h[++idx] = '</span>';
 
-	}  else if(change.action === "update") {
+	}  else if(change.action === "add_preload") {
+		h[++idx] = ' <span style="color:blue;">';
+		h[++idx] = change.msg;
+		h[++idx] = '</span>';
+
+	} else if(change.action === "del_preload") {
+		h[++idx] = ' <span style="color:red;">';
+		h[++idx] = change.msg;
+		h[++idx] = '</span>';
+
+	} else if(change.action === "update") {
 
 		/*
 		 * Updates to questions and options and list names
@@ -3643,7 +3653,7 @@ function getAccessibleCsvFiles($elem, includeNone) {
  /*
   * Get the questions in a survey
   */
-function getQuestionsInSurvey($elem, sIdent, includeNone) {
+function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly) {
 
 	function populateElement($elem, data) {
 		var h = [],
@@ -3656,11 +3666,13 @@ function getQuestionsInSurvey($elem, sIdent, includeNone) {
 			h[++idx] = '</option>';
 		}
 		for (i = 0; i < data.length; i++) {
-			h[++idx] = '<option value="';
-			h[++idx] = data[i].name;
-			h[++idx] = '">';
-			h[++idx] = data[i].name;
-			h[++idx] = '</option>';
+			if(!textOnly || isTextStorageType(data[i].type)) {
+				h[++idx] = '<option value="';
+				h[++idx] = data[i].name;
+				h[++idx] = '">';
+				h[++idx] = data[i].name;
+				h[++idx] = '</option>';
+			}
 		}
 		$elem.empty().append(h.join(''));
 	}
@@ -3992,12 +4004,24 @@ function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback, t
 
 	fromDate = $('#tp_from').data("DateTimePicker").date();
 	toDate = $('#tp_to').data("DateTimePicker").date();
+
+	// Validate dates
+	if(toDate && !fromDate) {       // Can't have a to date without a from date
+		alert(localise.set["msg_no_from"]);
+		return false;
+	}
+	if(toDate && fromDate && fromDate > toDate) {       // To date must be after from date
+		alert(localise.set["msg_sel_dates"]);
+		return false;
+	}
+
 	if (fromDate) {
 		taskFeature.properties.from = utcTime(fromDate.format("YYYY-MM-DD HH:mm:ss"));
 	}
 	if (toDate) {
 		taskFeature.properties.to = utcTime(toDate.format("YYYY-MM-DD HH:mm:ss"));
 	}
+
 	taskFeature.properties.location_trigger = $('#nfc_uid').val();
 	taskFeature.properties.guidance = $('#tp_guidance').val();
 	taskFeature.properties.show_dist = $('#tp_show_dist').val();
@@ -4189,35 +4213,14 @@ function setupTaskDialog() {
 
 		if (startDateLocal) {
 
-			gCurrentTaskFeature.properties.from = utcTime(startDateLocal.format("YYYY-MM-DD HH:mm:ss"));
-
-			if (!endDateLocal) {
-				newEndDate = startDateLocal.add(1, 'hours');
-			} else {
-				if (originalEnd && originalStart) {
-					duration = moment(originalEnd, "YYYY-MM-DD HH:mm:ss").diff(moment(originalStart, "YYYY-MM-DD HH:mm:ss"), 'hours');
-				} else {
-					duration = 1;
-				}
+			if (originalEnd && originalStart) {
+				duration = moment(originalEnd, "YYYY-MM-DD HH:mm:ss").diff(moment(originalStart, "YYYY-MM-DD HH:mm:ss"), 'hours');
 				newEndDate = startDateLocal.add(duration, 'hours');
-			}
-		} else {
-			if (!endDate) {
-				return;
-			} else {
-				// Clear the end date
+				$('#tp_to').data("DateTimePicker").date(newEndDate);
 			}
 		}
 
-		$('#tp_to').data("DateTimePicker").date(newEndDate);
 
-	});
-
-	$('#tp_to').on("dp.change", function () {
-
-		var endDateLocal = $('#tp_to').data("DateTimePicker").date();
-
-		gCurrentTaskFeature.properties.to = utcTime(endDateLocal.format("YYYY-MM-DD HH:mm:ss"));
 
 	});
 
@@ -4711,4 +4714,12 @@ function includeByStatus(statusFilter, task) {
 		}
 	}
 	return include;
+}
+
+/*
+ * Return true if this qustion stores its data in a text type column
+ */
+function isTextStorageType(type) {
+	return type === "string" || type === "select1" || type === "barcode" || type === "calculate"
+		|| type === "child_form" || type === "parent_form";
 }
