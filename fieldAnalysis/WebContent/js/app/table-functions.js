@@ -275,7 +275,7 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 						}
 					} else {
 						val = groups[i].properties[key];
-						if((key === "the_geom" || key.indexOf("geopolygon") === 0 || key.indexOf("geolinestring") === 0) 
+						if((type === "geopoint" || key === "the_geom" || key.indexOf("geopolygon") === 0 || key.indexOf("geolinestring") === 0)
 								&& typeof groups[i].geometry !== "undefined") {
 							// Get the value from the geometry
 							val = groups[i].geometry.type + '[' + groups[i].geometry.coordinates + ']';
