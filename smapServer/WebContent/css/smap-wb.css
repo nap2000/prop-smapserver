@@ -298,3 +298,7 @@ button.bg-orange:hover,
 button.bg-orange:focus {
     background-color: #CC9300 !important;
 }
+
+.ibox-tools a {
+    color: #040404 !important;
+}
