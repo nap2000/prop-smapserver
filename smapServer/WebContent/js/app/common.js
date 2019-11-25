@@ -2797,7 +2797,7 @@ function generateFile(url, filename, format, mime, data, sId, groupSurvey, title
 				window.URL.revokeObjectURL(url);
 			}, 100);
 		} else {
-			alert(localise.set["c_error"]);
+			alert(localise.set["c_error"] + ": " + this.statusText);
 		}
 	};
 
