@@ -3038,7 +3038,7 @@ require([
                     if($this.text() === "t") {
                         $this.text(localise.set["c_yes"]);
                         $this.addClass('bg-danger');
-                    } else {
+                    } else  if($this.text() === "f") {
                         $this.text(localise.set["c_no"]);
                     }
                 });
