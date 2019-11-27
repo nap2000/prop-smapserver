@@ -657,7 +657,7 @@ require([
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						var msg = err;
+						var msg = (xhr.responseText) ? xhr.responseText : err;
 						if(msg.indexOf("Conflict") >= 0) {
 							msg = localise.set["msg_dup_name"];
 						}
