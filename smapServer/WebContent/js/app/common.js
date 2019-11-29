@@ -666,7 +666,10 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 			} else if(groups[i].id === globals.GROUP_VIEW_DATA) {
                 globals.gViewData = true;
 
-            } else if(groups[i].id === globals.GROUP_OWNER) {
+            } else if(groups[i].id === globals.GROUP_MANAGE_TASKS) {
+				globals.gManageTasks = true;
+
+			} else if(groups[i].id === globals.GROUP_OWNER) {
                 globals.gIsServerOwner = true;
             }
 		}
@@ -682,6 +685,9 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 	}
 	if(globals.gViewData) {
 		$('.data_role').show();
+	}
+	if(globals.gManageTasks) {
+		$('.task_role').show();
 	}
 	if(globals.gIsAdministrator) {
 		$('.admin_role').show();

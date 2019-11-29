@@ -1057,10 +1057,11 @@ define({
     "analyst": "Analyst",
     "enterprise admin": "Enterprise Admin",
     "enum": "Enumerator",
-    "manage": "Manage",
+    "manage": "Manage Data",
     "org admin": "Organisational Admin",
     "security": "Security Manager",
     "view data": "View Data",
+    "manage tasks": "Manage Tasks",
     "view own data": "View Own Data",
 
     // Browse Results

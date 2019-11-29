@@ -403,6 +403,7 @@ insert into groups(id,name) values(7,'view data');
 insert into groups(id,name) values(8,'enterprise admin');
 insert into groups(id,name) values(9,'server owner');
 insert into groups(id,name) values(10,'view own data');
+insert into groups(id,name) values(11,'manage tasks');
 
 insert into user_group (u_id, g_id) values (1, 1);
 insert into user_group (u_id, g_id) values (1, 2);
@@ -414,6 +415,7 @@ insert into user_group (u_id, g_id) values (1, 7);
 insert into user_group (u_id, g_id) values (1, 8);
 insert into user_group (u_id, g_id) values (1, 9);
 insert into user_group (u_id, g_id) values (1, 10);
+insert into user_group (u_id, g_id) values (1, 11);
 
 insert into project (id, o_id, name) values (1, 1, 'A project');
 
