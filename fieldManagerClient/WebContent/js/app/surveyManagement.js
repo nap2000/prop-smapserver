@@ -354,17 +354,31 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
             var groups = globals.gLoggedInUser.groups,
                 group,
                 redirect = true,
+                redirectEnum = false,
+                redirectTasks = false,
+                redirectManage = false,
                 i;
 
             for (i = 0; i < groups.length; i++) {
                 group = groups[i];
                 if(group.name === "admin" || group.name === "analyst") {
                     redirect = false;
-                    break;
+                } else if(group.name === "enum") {
+                    redirectEnum = true;
+                } else if(group.name === "manage tasks") {
+                    redirectTasks = true;
+                } else if(group.name === "manage") {
+                    redirectManage = true;
                 }
             }
             if(redirect) {
-                window.location.href = "/webForm.html";
+                if(redirectEnum) {
+                    window.location.href = "/webForm.html";
+                } else if(redirectTasks) {
+                    window.location.href = "/tasks/taskManagement.html";
+                } else if(redirectManage) {
+                    window.location.href = "/tasks/managed_forms.html";
+                }
             }
 
             getSurveys(globals.gCurrentProject);			// Get surveys

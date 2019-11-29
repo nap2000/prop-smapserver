@@ -32,6 +32,8 @@ define(function () {
         GROUP_VIEW_DATA: 7,
         GROUP_ENTERPRISE : 8,
         GROUP_OWNER : 9,
+		GROUP_VIEW_OWN_DATA : 10,
+	    GROUP_MANAGE_TASKS : 11,
 
         REC_LIMIT: 200,     // Page size for table views in analysis
 	    MAP_REC_LIMIT: 1000,    // Max size for map views in analysis
@@ -55,6 +57,7 @@ define(function () {
         gIsEnterpriseAdministrator: false,
         gIsServerOwner: false,
         gViewData: false,
+	    gManageTasks: false,
         gBillingData: false,
         gOrgBillingData: false,
         gSendTrail: 'off',
