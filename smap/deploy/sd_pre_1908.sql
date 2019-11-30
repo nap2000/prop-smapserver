@@ -1117,9 +1117,6 @@ ALTER TABLE last_refresh OWNER TO ws;
 
 -- Change dl_dist to show_dist in tasks
 alter table tasks add column show_dist integer;
-update tasks set show_dist = dl_dist where show_dist is null;
---update tasks set show_dist = 0 where show_dist is null;
---alter table tasks drop column dl_dist;  -- Keep tempoarily in case a deployment needs to be reversed
 
 alter table task_group add column dl_dist integer;
 
