@@ -162,6 +162,9 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 						translatedName = localise.set["c_reason"];
 					} else {
 						translatedName = localise.set[translatedName];
+						if(!translatedName || translatedName.trim().length === 0) {
+							translatedName = cols[i];
+						}
 					}
 				}
 				if(translatedName === 'the_geom') {
