@@ -1720,11 +1720,13 @@ require([
         if(data && data.length) {
             for (i = 0; i < data.length; i++) {
 
-                h[++idx] = '<option value="';
-                h[++idx] = data[i].name;
-                h[++idx] = '">';
-                h[++idx] = data[i].name;
-                h[++idx] = '</option>';
+                if(data[i].type === 'sub_form') {
+                    h[++idx] = '<option value="';
+                    h[++idx] = data[i].name;
+                    h[++idx] = '">';
+                    h[++idx] = data[i].name;
+                    h[++idx] = '</option>';
+                }
             }
         }
 
