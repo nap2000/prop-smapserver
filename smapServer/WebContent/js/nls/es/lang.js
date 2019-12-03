@@ -1011,7 +1011,7 @@ define(
     "analyst": "Gestión de Formularios, Análisis y Tareas",
     "enterprise admin": "Admin. Nivel Empresas",
     "enum": "Captura de Datos Móvil y Web",
-    "manage": "Gestión de Datos y Formularios",
+    "manage": "Consola - Formularios de Supervisión",
     "org admin": "Admin. Nivel Organizaciones",
     "security": "Gestión de Roles",
     "view data": "Análisis - Sólo Visualizar Datos",
