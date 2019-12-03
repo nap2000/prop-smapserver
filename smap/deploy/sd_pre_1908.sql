@@ -1161,8 +1161,8 @@ alter table organisation add column navbar_color text;
 update organisation set navbar_color = '#2c3c28' where navbar_color is null;
 alter table organisation add column can_sms boolean default false;
 
--- Default key policy is now 'none', policy of 'add' is to be replaced with 'merge' as it is no longer supported
-update survey set key_policy = 'merge' where key_policy = 'add';
+-- Default key policy is now 'none', policy of 'add' is to be replaced with 'none' as it is no longer supported
+update survey set key_policy = 'none' where key_policy = 'add';
 
 CREATE SEQUENCE group_survey_seq START 1;
 ALTER SEQUENCE group_survey_seq OWNER TO ws;
