@@ -1113,26 +1113,24 @@ require([
         	drillDownState = gDrillDownStack[gDrillDownStack.length  - 1];
         }
 
-        if(drillDownState && drillDownState.type !== "sub_form") {
-
+        if(drillDownState) {
             sId = drillDownState.survey;
+        }
 
+        // Set subform
+        if(drillDownState && drillDownState.type === "sub_form") {
+            subForm = drillDownState.form;
         } else {
-
-            // Set subform
-            if(drillDownState) {
-                subForm = drillDownState.form;
-            } else {
-                if (globals.gSubForms[sId] && globals.gSubForms[sId] != "") {
-                    subForm = globals.gSubForms[sId];
-                    if (subForm === '_none') {
-                        subForm = undefined;
-                    }
+            if (globals.gSubForms[sId] && globals.gSubForms[sId] != "") {
+                subForm = globals.gSubForms[sId];
+                if (subForm === '_none') {
+                    subForm = undefined;
                 }
             }
         }
 
-	    // Set Group survey
+
+        // Set Group survey
 	    if (globals.gGroupSurveys[sId] && globals.gGroupSurveys[sId] != "") {
 		    groupSurvey = globals.gGroupSurveys[sId];
 	    }
@@ -1720,11 +1718,13 @@ require([
         if(data && data.length) {
             for (i = 0; i < data.length; i++) {
 
-                h[++idx] = '<option value="';
-                h[++idx] = data[i].name;
-                h[++idx] = '">';
-                h[++idx] = data[i].name;
-                h[++idx] = '</option>';
+                if(data[i].type === 'sub_form') {
+                    h[++idx] = '<option value="';
+                    h[++idx] = data[i].name;
+                    h[++idx] = '">';
+                    h[++idx] = data[i].name;
+                    h[++idx] = '</option>';
+                }
             }
         }
 
@@ -1754,7 +1754,11 @@ require([
         }
 
         if(drillDownState) {
-        	parentForm = drillDownState.form;
+            if(drillDownState.type === 'sub_form') {
+                parentForm = drillDownState.form;
+            } else {
+                parentForm = "main";
+            }
         } else {
 		    parentForm = $('#sub_form').val();
 		    if(parentForm === "_none") {
