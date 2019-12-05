@@ -64,6 +64,7 @@ require([
 	window.gSelectedNotification = -1;
 	window.gNotifications = undefined;
 	window.gTaskGroups = undefined;
+	window.oversightSurveys = {};
 
 	$(document).ready(function() {
 
@@ -105,6 +106,7 @@ require([
 		// Add response to a source survey being selected
 		$('#survey').change(function() {
 			surveyChanged();
+			getOversightSurveys($('#survey').val());
 		});
 
 		$('#email_content_ap_insert').click(function() {
@@ -511,7 +513,6 @@ require([
 		});
 
 	}
-
 
 });
 

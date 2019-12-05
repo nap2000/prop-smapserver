@@ -1124,6 +1124,8 @@ define({
     "n_sms_n_tt": "Comma separated list of phone numbers in format +ccnnnnnnnnnn",
     "n_sms_q_tt": "Question that will contain the SMS numbers to use",
     "n_e_p_tt": "Meta item or preload that will contain an email address to use",
+    "n_uq": "Update Question",
+    "n_no_oversight": "There are no oversight surveys that can be used to update the data in the console",
 
     // Roles
     "ro_fr": "Filter rows",

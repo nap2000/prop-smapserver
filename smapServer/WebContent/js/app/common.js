@@ -4368,13 +4368,17 @@ function setTargetDependencies(target) {
 
 function setTriggerDependencies(trigger) {
 	if(trigger === "submission") {
-		$('.task_reminder_options').hide();
+		$('.task_reminder_options,.update_options').hide();
 		$('.submission_options').show();
 	} else if(trigger === "task_reminder") {
-		$('.submission_options').hide();
+		$('.submission_options, .update_options').hide();
 		$('.task_reminder_options').show();
 		$('#target').val('email');
 		setTargetDependencies('email');
+	} else if(trigger === "console_update") {
+		getOversightSurveys($('#survey').val());
+		$('.task_reminder_options').hide();
+		$('.update_options, .submission_options').show();
 	}
 }
 
@@ -4728,4 +4732,70 @@ function includeByStatus(statusFilter, task) {
 function isTextStorageType(type) {
 	return type === "string" || type === "select1" || type === "barcode" || type === "calculate"
 		|| type === "child_form" || type === "parent_form";
+}
+
+/*
+ * Get oversight surveys
+ */
+function getOversightSurveys(surveyId) {
+
+	var url = "/surveyKPI/surveyResults/" + surveyId + "/groups",
+		survey = surveyId;
+
+	if(surveyId > 0) {
+		addHourglass();
+
+		if(window.oversightSurveys[surveyId]) {
+			showOversightSurveys(window.oversightSurveys[surveyId]);
+		} else {
+			$.ajax({
+				url: url,
+				dataType: 'json',
+				cache: false,
+				success: function (data) {
+					removeHourglass();
+					window.oversightSurveys[surveyId] = data;
+					showOversightSurveys(data);
+				},
+				error: function (xhr, textStatus, err) {
+					removeHourglass();
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						console.log(localise.set["c_error"] + ": " + err);
+					}
+				}
+			});
+		}
+	}
+}
+
+function showOversightSurveys(data) {
+	var i,
+		item,
+		h = [],
+		idx = -1,
+		surveyId = $('#survey').val(),
+		count = 0;
+
+	for (i = 0; i < data.length; i++) {
+		item = data[i];
+
+		if (item.sId != surveyId) {
+			h[++idx] = '<option value="';
+			h[++idx] = item.surveyIdent;
+			h[++idx] = '">';
+			h[++idx] = item.surveyName;
+			h[++idx] = '</option>';
+			count++;
+		}
+	}
+
+	if(count == 0) {
+		$('.update_options_msg').html(localise.set["n_no_oversight"]);
+		$('.update_options_msg').show();
+	} else {
+		$('.update_options_msg').hide();
+	}
+	$('#group_survey').empty().html(h.join(''));
 }
