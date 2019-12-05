@@ -719,7 +719,9 @@ CREATE TABLE forward (
 	remote_host text,
 	notify_details	text	,			-- JSON string
 	tg_id integer default 0,			-- Reminder notifications
-	period text						-- Reminder notifications
+	period text,						-- Reminder notifications
+	update_question text,				-- Update notifications
+	update_value
 	);
 ALTER TABLE forward OWNER TO ws;
 CREATE UNIQUE INDEX ForwardDest ON forward(s_id, remote_s_id, remote_host);
