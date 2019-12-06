@@ -64,5 +64,6 @@ CREATE UNIQUE INDEX taskRejected ON task_rejected(a_id, ident);
 insert into groups(id,name) values(10,'view own data');
 insert into groups(id,name) values(11,'manage tasks');
 
+alter table forward add column update_survey text references survey(ident) on delete cascade;
 alter table forward add column update_question text;
 alter table forward add column update_value text;

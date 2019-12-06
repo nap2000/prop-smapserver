@@ -720,8 +720,9 @@ CREATE TABLE forward (
 	notify_details	text	,			-- JSON string
 	tg_id integer default 0,			-- Reminder notifications
 	period text,						-- Reminder notifications
+	update_survey text references survey(ident) on delete cascade,
 	update_question text,				-- Update notifications
-	update_value
+	update_value text
 	);
 ALTER TABLE forward OWNER TO ws;
 CREATE UNIQUE INDEX ForwardDest ON forward(s_id, remote_s_id, remote_host);
