@@ -65,6 +65,7 @@ require([
 	window.gNotifications = undefined;
 	window.gTaskGroups = undefined;
 	window.oversightSurveys = {};
+	window.oversightQuestions = {};
 
 	$(document).ready(function() {
 
@@ -108,6 +109,12 @@ require([
 			surveyChanged();
 			getOversightSurveys($('#survey').val());
 		});
+
+		// Add response to an oversight survey being selected
+		$('#group_survey').change(function() {
+			getOversightQuestionList($('#group_survey').val())
+		});
+
 
 		$('#email_content_ap_insert').click(function() {
 			var current = $('#email_content').val();
