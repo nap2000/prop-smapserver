@@ -1125,6 +1125,7 @@ define({
     "n_sms_q_tt": "Question that will contain the SMS numbers to use",
     "n_e_p_tt": "Meta item or preload that will contain an email address to use",
     "n_uq": "Update Question",
+    "n_uv": "Update Value",
     "n_no_oversight": "There are no oversight surveys that can be used to update the data in the console",
 
     // Roles
