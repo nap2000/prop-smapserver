@@ -173,7 +173,28 @@ require([
 					alert(localise.set["msg_pc"]);
 					return(-1);
 				}
-				console.log("Reminder for tg: " + notification.tgId + ' after ' + notification.period);
+			}
+
+			if(notification.trigger === 'console_update') {
+				var updateQuestion = $('#update_question').val();
+				var updateValue = $('#update_value').val();
+				var updateSurvey = $('#group_survey').val();
+
+				// Validate
+				if(!updateQuestion || updateQuestion.trim().length == 0) {
+					alert(localise.set["n_nq"]);
+					return(-1);
+				}
+
+				if(!updateValue || updateValue.trim().length == 0) {
+					alert(localise.set["n_nv"]);
+					return(-1);
+				}
+
+				notification.updateSurvey = updateSurvey;
+				notification.updateQuestion = updateQuestion;
+				notification.updateValue = updateValue;
+
 			}
 
 
@@ -192,7 +213,7 @@ require([
 				type: "POST",
 				dataType: 'text',
 				cache: false,
-				async: false,
+				async: true,
 				url: url,
 				data: { notification: notificationString },
 				success: function(data, status) {
@@ -422,6 +443,8 @@ require([
 			// survey / task group
 			h[++idx] = '<div class="col-sm-2" style="word-wrap: break-word;">';
 			if(data[i].trigger === "submission") {
+				h[++idx] = data[i].s_name;
+			} else if(data[i].trigger === "console_update") {
 				h[++idx] = data[i].s_name;
 			} else {
 				h[++idx] = data[i].tg_name;
