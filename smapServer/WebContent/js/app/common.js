@@ -4778,6 +4778,8 @@ function showOversightSurveys(data) {
 		surveyId = $('#survey').val(),
 		count = 0;
 
+	$('#group_survey_questions').empty();
+
 	for (i = 0; i < data.length; i++) {
 		item = data[i];
 
@@ -4787,6 +4789,10 @@ function showOversightSurveys(data) {
 			h[++idx] = '">';
 			h[++idx] = item.surveyName;
 			h[++idx] = '</option>';
+
+			if(count == 0) {
+				getOversightQuestionList(item.surveyIdent);
+			}
 			count++;
 		}
 	}
@@ -4798,4 +4804,56 @@ function showOversightSurveys(data) {
 		$('.update_options_msg').hide();
 	}
 	$('#group_survey').empty().html(h.join(''));
+}
+
+//Function to get the question list
+function getOversightQuestionList(sIdent) {
+
+	var url = "/surveyKPI/questionListIdent/" + sIdent + "/none?exc_read_only=false&inc_meta=false";
+
+	if(window.oversightQuestions[sIdent]) {
+		showOversightQuestions(window.oversightQuestions[sIdent]);
+	} else {
+		addHourglass();
+		$.ajax({
+			url: url,
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				window.oversightQuestions[sIdent] = data;
+				showOversightQuestions(data);
+
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert("Error: Failed to get list of questions: " + err);
+				}
+			}
+		});
+	}
+
+}
+
+function showOversightQuestions(data) {
+	var i,
+		item,
+		h = [],
+		idx = -1;
+
+	for (i = 0; i < data.length; i++) {
+		item = data[i];
+
+		h[++idx] = '<option value="';
+		h[++idx] = item.name;
+		h[++idx] = '">';
+		h[++idx] = item.name;
+		h[++idx] = '</option>';
+
+	}
+
+	$('#group_survey_questions').empty().html(h.join(''));
 }
