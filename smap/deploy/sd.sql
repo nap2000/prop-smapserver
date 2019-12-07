@@ -67,3 +67,6 @@ insert into groups(id,name) values(11,'manage tasks');
 alter table forward add column update_survey text references survey(ident) on delete cascade;
 alter table forward add column update_question text;
 alter table forward add column update_value text;
+
+alter table survey add column data_survey boolean default true;
+alter table survey add column oversight_survey boolean default true;
