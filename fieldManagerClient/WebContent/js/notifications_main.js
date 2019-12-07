@@ -66,6 +66,8 @@ require([
 	window.gTaskGroups = undefined;
 	window.oversightSurveys = {};
 	window.oversightQuestions = {};
+	window.gSelectedOversightQuestion = undefined;
+	window.gSelectedOversightSurvey = undefined;
 
 	$(document).ready(function() {
 

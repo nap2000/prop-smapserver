@@ -4278,11 +4278,16 @@ function edit_notification(idx, console) {
 		$('#target').val(notification.target);
 		$('#name').val(notification.name);
 		setTargetDependencies(notification.target);
+
+		gSelectedOversightQuestion = notification.updateQuestion;
+		gSelectedOversightSurvey = notification.updateSurvey;
 		setTriggerDependencies(notification.trigger)
+
 		setAttachDependencies(notification.notifyDetails.attach);
 
 		$('#survey').val(notification.s_id);
 		$('#not_filter').val(notification.filter);
+		$('#update_value').val(notification.updateValue);
 
 		// reminder settings
 		if (!console) {
@@ -4804,6 +4809,9 @@ function showOversightSurveys(data) {
 		$('.update_options_msg').hide();
 	}
 	$('#group_survey').empty().html(h.join(''));
+	if(gSelectedOversightSurvey) {
+		$('#group_survey').val(gSelectedOversightSurvey);
+	}
 }
 
 //Function to get the question list
@@ -4856,4 +4864,7 @@ function showOversightQuestions(data) {
 	}
 
 	$('#update_question').empty().html(h.join(''));
+	if(gSelectedOversightQuestion) {
+		$('#update_question').val(gSelectedOversightQuestion);
+	}
 }
