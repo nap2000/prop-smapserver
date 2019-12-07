@@ -1093,6 +1093,8 @@ define(function () {
 	            $('#audit_location_data').prop('checked'),
 	            $('#track_changes').prop('checked'),
 	            $('#hide_on_device').prop('checked'),
+	            $('#data_survey').prop('checked'),
+	            $('#oversight_survey').prop('checked'),
                 $('#exclude_empty').prop('checked'),
                 $('#set_hrk').val(),
                 $('#set_key_policy').val()
@@ -1110,6 +1112,8 @@ define(function () {
 	            this.survey.audit_location_data = current.audit_location_data;
 	            this.survey.track_changes = current.track_changes;
 	            this.survey.hideOnDevice = current.hideOnDevice;
+	            this.survey.dataSurvey = current.dataSurvey;
+	            this.survey.oversightSurvey = current.oversightSurvey;
                 this.survey.exclude_empty = current.exclude_empty;
                 this.survey.hrk = current.hrk;
                 this.survey.key_policy = current.key_policy;
@@ -1131,6 +1135,8 @@ define(function () {
 	                this.survey.audit_location_data,
 	                this.survey.track_changes,
                     this.survey.hideOnDevice,
+	                this.survey.dataSurvey,
+	                this.survey.oversightSurvey,
                     this.survey.exclude_empty,
                     this.survey.hrk,
                     this.survey.key_policy
@@ -1148,6 +1154,8 @@ define(function () {
                                               audit_location_data,
                                               track_changes,
                                               hideOnDevice,
+                                              dataSurvey,
+                                              oversightSurvey,
                                               exclude_empty,
                                               hrk,
                                               key_policy) {
@@ -1169,6 +1177,8 @@ define(function () {
 	            audit_location_data: audit_location_data,
 	            track_changes: track_changes,
                 hideOnDevice: hideOnDevice,
+	            dataSurvey: dataSurvey,
+	            oversightSurvey: oversightSurvey,
                 exclude_empty: exclude_empty,
                 hrk: hrk,
                 key_policy: key_policy

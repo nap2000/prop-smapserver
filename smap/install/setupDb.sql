@@ -515,7 +515,9 @@ CREATE TABLE survey (
 	hidden boolean default false,					-- Updated when a form is replaced
 	original_ident text,								-- Updated when a form is replaced
 	hide_on_device boolean,							-- Used when forms are launched from other forms or as tasks to hide the ad-hoc form
-	pdf_template text
+	pdf_template text,
+	data_survey boolean default true,
+	oversight_survey boolean default true
 	);
 ALTER TABLE survey OWNER TO ws;
 DROP INDEX IF EXISTS SurveyDisplayName;
