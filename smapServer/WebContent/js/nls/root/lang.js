@@ -911,8 +911,8 @@ define({
     "contains": "contains",
     "startsWith": "startsWith",
     "endsWith": "endsWith",
-
-
+    "ed_ds": "Data Survey",
+    "ed_os": "Oversight Survey",
 
     // Managed Forms
     "mf_id": "Include Deleted",
