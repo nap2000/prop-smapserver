@@ -1518,20 +1518,22 @@ require([
                     for (i = 0; i < data.length; i++) {
                         item = data[i];
 
-                        h[++idx] = '<option value="';
-                        h[++idx] = i;
-                        h[++idx] = '">';
-                        h[++idx] = item.displayName;
-                        h[++idx] = '</option>';
+                        if(item.dataSurvey) {
+                            h[++idx] = '<option value="';
+                            h[++idx] = i;
+                            h[++idx] = '">';
+                            h[++idx] = item.displayName;
+                            h[++idx] = '</option>';
 
-                        if (firstSurvey) {
-                            firstSurveyId = item.id;
-                            firstSurveyIndex = i;
-                            firstSurvey = false;
-                        }
+                            if (firstSurvey) {
+                                firstSurveyId = item.id;
+                                firstSurveyIndex = i;
+                                firstSurvey = false;
+                            }
 
-                        if (item.id == globals.gCurrentSurvey) {
-                            gTasks.gSelectedSurveyIndex = i;
+                            if (item.id == globals.gCurrentSurvey) {
+                                gTasks.gSelectedSurveyIndex = i;
+                            }
                         }
                     }
 
@@ -1616,7 +1618,7 @@ require([
     }
 
     /*
-     * Update a selector that is used for ovesight forms and does not include current form
+     * Update a selector that is used for oversight forms and does not include current form
      */
     function setOversightSelector(data) {
         var $elemGroups = $('#group_survey');
@@ -1634,7 +1636,7 @@ require([
         for (i = 0; i < data.length; i++) {
             item = data[i];
 
-            if (item.sId !== globals.gCurrentSurvey) {       // Don't include current survey
+            if (item.sId !== globals.gCurrentSurvey && item.oversightSurvey) {       // Don't include current survey
 
                 h[++idx] = '<option value="';
                 h[++idx] = item.surveyIdent;
@@ -1675,7 +1677,7 @@ require([
     }
 
     /*
-     * Update a selector that is used for any group form
+     * Update a selector that is used for any data survey in a group
      */
     function setGroupSelector(data) {
         var $elemGroups = $('#tp_form_name, #survey');
@@ -1689,11 +1691,13 @@ require([
         for (i = 0; i < data.length; i++) {
             item = data[i];
 
-            h[++idx] = '<option value="';
-            h[++idx] = item.surveyIdent;
-            h[++idx] = '">';
-            h[++idx] = item.surveyName;
-            h[++idx] = '</option>';
+            if (item.dataSurvey) {
+                h[++idx] = '<option value="';
+                h[++idx] = item.surveyIdent;
+                h[++idx] = '">';
+                h[++idx] = item.surveyName;
+                h[++idx] = '</option>';
+            }
 
         }
 
