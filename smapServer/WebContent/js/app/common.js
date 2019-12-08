@@ -1585,7 +1585,8 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback) {
 		h = [],
 		idx = -1,
 		i,
-		item;
+		item,
+		count = 0;
 
 	if(selector === undefined) {
 		selector = ".survey_select";	// Update the entire class of survey select controls
@@ -1617,21 +1618,23 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback) {
 
 				for(i = 0; i < data.length; i++) {
 					item = data[i];
-					h[++idx] = '<option';
-					if(i == 0) {
-						h[++idx] = ' selected="selected"';
+					if(item.dataSurvey) {
+						h[++idx] = '<option';
+						if (count++ == 0) {
+							h[++idx] = ' selected="selected"';
+						}
+						if (item.blocked) {
+							h[++idx] = ' class="blocked"';
+						}
+						h[++idx] = ' value="';
+						h[++idx] = item.id;
+						h[++idx] = '">';
+						h[++idx] = item.displayName;
+						if (item.blocked) {
+							h[++idx] = ' (' + localise.set["c_blocked"] + ')';
+						}
+						h[++idx] = '</option>';
 					}
-					if(item.blocked) {
-						h[++idx] = ' class="blocked"';
-					}
-					h[++idx] = ' value="';
-					h[++idx] = item.id;
-					h[++idx] = '">';
-					h[++idx] = item.displayName;
-					if(item.blocked) {
-						h[++idx] = ' (' + localise.set["c_blocked"] + ')';
-					}
-					h[++idx] = '</option>';
 				}
 
 				$elem.empty().append(h.join(''));
@@ -4788,7 +4791,7 @@ function showOversightSurveys(data) {
 	for (i = 0; i < data.length; i++) {
 		item = data[i];
 
-		if (item.sId != surveyId) {
+		if (item.oversightSurvey && item.sId != surveyId) {
 			h[++idx] = '<option value="';
 			h[++idx] = item.surveyIdent;
 			h[++idx] = '">';
