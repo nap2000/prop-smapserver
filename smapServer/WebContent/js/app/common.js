@@ -1579,21 +1579,11 @@ function removeHourglass() {
  */
 function loadSurveys(projectId, selector, getDeleted, addAll, callback) {
 
-	var url="/surveyKPI/surveys?projectId=" + projectId + "&blocked=true",
-		$elem,
-		selector_disable_blocked,
-		h = [],
-		idx = -1,
-		i,
-		item,
-		count = 0;
+	var url="/surveyKPI/surveys?projectId=" + projectId + "&blocked=true";
 
 	if(selector === undefined) {
 		selector = ".survey_select";	// Update the entire class of survey select controls
 	}
-	selector_disable_blocked = selector + ".disable_blocked";
-	$elem = $(selector);
-	$elem_disable_blocked = $(selector_disable_blocked);
 
 	if(typeof projectId !== "undefined" && projectId != -1 && projectId != 0) {
 
@@ -1607,43 +1597,14 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback) {
 			dataType: 'json',
 			cache: false,
 			success: function(data) {
+				var sel = selector;
+				var all = addAll;
 
 				removeHourglass();
-				$elem.empty();
-				if(addAll) {
-					h[++idx] = '<option value="_all">';
-					h[++idx] = localise.set["c_all_s"];		// All Surveys
-					h[++idx] = '</option>';
-				}
 
-				for(i = 0; i < data.length; i++) {
-					item = data[i];
-					if(item.dataSurvey) {
-						h[++idx] = '<option';
-						if (count++ == 0) {
-							h[++idx] = ' selected="selected"';
-						}
-						if (item.blocked) {
-							h[++idx] = ' class="blocked"';
-						}
-						h[++idx] = ' value="';
-						h[++idx] = item.id;
-						h[++idx] = '">';
-						h[++idx] = item.displayName;
-						if (item.blocked) {
-							h[++idx] = ' (' + localise.set["c_blocked"] + ')';
-						}
-						h[++idx] = '</option>';
-					}
-				}
-
-				$elem.empty().append(h.join(''));
-				$("option.blocked", $elem_disable_blocked).attr("disabled", "disabled");
-
-				//globals.gCurrentSurvey = $elem.val();   // TODO set to current global survey
-				if(globals.gCurrentSurvey > 0) {
-					$elem.val(globals.gCurrentSurvey);
-				}
+				showSurveyList(data, sel + ".data_survey", all, true, false);
+				showSurveyList(data, sel + ".oversight_survey", all, false, true);
+				showSurveyList(data, sel + ".data_oversight_survey", all,true, true);
 
 				if(typeof callback == "function") {
 					callback();
@@ -1669,6 +1630,58 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback) {
 			callback();
 		}
 
+	}
+}
+
+/*
+ * Show the surveys in select boxes
+ */
+function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey) {
+
+	var i,
+		item,
+		h = [],
+		idx = -1,
+		count = 0,
+		$elem,
+		$elem_disable_blocked;
+
+	$elem = $(selector);
+	$elem_disable_blocked = $(selector + ".disable_blocked");
+
+	$elem.empty();
+	if(addAll) {
+		h[++idx] = '<option value="_all">';
+		h[++idx] = localise.set["c_all_s"];		// All Surveys
+		h[++idx] = '</option>';
+	}
+
+	for(i = 0; i < data.length; i++) {
+		item = data[i];
+		if(item.dataSurvey && dataSurvey || item.oversightSurvey && oversightSurvey) {
+			h[++idx] = '<option';
+			if (count++ == 0) {
+				h[++idx] = ' selected="selected"';
+			}
+			if (item.blocked) {
+				h[++idx] = ' class="blocked"';
+			}
+			h[++idx] = ' value="';
+			h[++idx] = item.id;
+			h[++idx] = '">';
+			h[++idx] = item.displayName;
+			if (item.blocked) {
+				h[++idx] = ' (' + localise.set["c_blocked"] + ')';
+			}
+			h[++idx] = '</option>';
+		}
+	}
+
+	$elem.empty().append(h.join(''));
+	$("option.blocked", $elem_disable_blocked).attr("disabled", "disabled");
+
+	if(globals.gCurrentSurvey > 0) {
+		$elem.val(globals.gCurrentSurvey);
 	}
 }
 
