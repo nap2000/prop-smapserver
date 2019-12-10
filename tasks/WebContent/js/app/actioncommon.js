@@ -62,7 +62,7 @@ define([
                     h[++idx] = getEditMarkup(configItem, i, first, record, schema, editable);
                 } //else {
                 // Always add the read only original
-                m[++cnt] = getEditMarkup(configItem, i, first, record, schema, editable);
+                m[++cnt] = getEditMarkup(configItem, i, first, record, schema, false);
                 //}
                 if (!configItem.readonly) {
                     first = false;
