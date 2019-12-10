@@ -329,6 +329,7 @@ function importData() {
 function deleteAllTables(sId) {
 
 	// Get the groups
+	addHourglass();
     $.ajax({
         url: "/surveyKPI/surveyResults/" + sId + "/groups",
         cache: false,
