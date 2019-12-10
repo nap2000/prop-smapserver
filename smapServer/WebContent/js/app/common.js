@@ -1644,7 +1644,8 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey) {
 		idx = -1,
 		count = 0,
 		$elem,
-		$elem_disable_blocked;
+		$elem_disable_blocked,
+		selValue;
 
 	$elem = $(selector);
 	$elem_disable_blocked = $(selector + ".disable_blocked");
@@ -1661,7 +1662,7 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey) {
 		if(item.dataSurvey && dataSurvey || item.oversightSurvey && oversightSurvey) {
 			h[++idx] = '<option';
 			if (count++ == 0) {
-				h[++idx] = ' selected="selected"';
+				selValue = item.id;
 			}
 			if (item.blocked) {
 				h[++idx] = ' class="blocked"';
@@ -1678,6 +1679,7 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey) {
 	}
 
 	$elem.empty().append(h.join(''));
+	$elem.val(selValue);
 	$("option.blocked", $elem_disable_blocked).attr("disabled", "disabled");
 
 	if(globals.gCurrentSurvey > 0) {
@@ -4301,7 +4303,7 @@ function edit_notification(idx, console) {
 
 		setAttachDependencies(notification.notifyDetails.attach);
 
-		$('#survey').val(notification.s_id);
+		$('#survey').val(notification.s_id).change();
 		$('#not_filter').val(notification.filter);
 		$('#update_value').val(notification.updateValue);
 
@@ -4363,6 +4365,8 @@ function edit_notification(idx, console) {
 
 		$('#fwd_host').val(window.gRemote_host);	// Set the values to the ones last used
 		$('#fwd_user').val(window.gRemote_user);
+
+		$('#survey').change();
 
 		// Reminders
 		$('#r_period').val(1);
