@@ -4768,11 +4768,11 @@ function getOversightSurveys(surveyId) {
 		survey = surveyId;
 
 	if(surveyId > 0) {
-		addHourglass();
 
 		if(window.oversightSurveys[surveyId]) {
 			showOversightSurveys(window.oversightSurveys[surveyId]);
 		} else {
+			addHourglass();
 			$.ajax({
 				url: url,
 				dataType: 'json',
