@@ -493,7 +493,18 @@ require([
                 },
                 success: function (data, status) {
                     removeHourglass();
+
+                    // Update the current values
+                    var i,
+                        record = gTasks.gSelectedRecord,
+                        columns = gTasks.cache.currentData.schema.columns;
+                    for(i = 0; i < gTasks.gUpdate.length; i++) {
+                        record[columns[gTasks.gUpdate[i].itemIndex].column_name]  = gTasks.gUpdate[i].value;
+                    }
+
                     gTasks.gUpdate = [];
+                    $('#saveRecord').prop("disabled", true);
+
                     getRecordChanges(gTasks.gSelectedRecord);
                     $('.re_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
                 }, error: function (data, status) {

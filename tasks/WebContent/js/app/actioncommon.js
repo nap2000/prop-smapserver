@@ -436,7 +436,8 @@ define([
                         displayName: displayName,
                         value: value,
                         currentValue: currentValue,
-                        prikey: gTasks.gPriKey
+                        prikey: gTasks.gPriKey,
+                        itemIndex: itemIndex
                     });
                 }
 
