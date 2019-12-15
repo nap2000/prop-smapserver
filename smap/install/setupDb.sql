@@ -388,7 +388,7 @@ ALTER TABLE user_role OWNER TO ws;
 
 -- Create an administrator and set up defaul values
 insert into enterprise(id, name, changed_by, changed_ts) values(1, 'Default', '', now());
-insert into organisation(id, name, e_id) values(1, 'Smap', 1);
+insert into organisation(id, name, e_id, can_edit) values(1, 'Smap', 1, 'true');
 
 insert into users (id, ident, realm, password, o_id, name, email) 
 	values (1, 'admin', 'smap', '9f12895fe9898cc306c45c9d3fcbc3d6', 1, 'Administrator', '');
