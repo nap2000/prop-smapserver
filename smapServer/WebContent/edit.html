@@ -64,7 +64,6 @@
 						<li><a id="c_save" class="m_save_survey lang" href='javascript:void(0)' data-lang="c_save">save</a></li>
 						<li><a id="m_open" href='javascript:void(0)' class="lang" data-lang="m_open">open</a></li>
 						<li><a id="m_new" href='javascript:void(0)' class="lang" data-lang="m_new">New</a></li>
-						<li class="disabled"><a id="m_import" href='javascript:void(0)' class="lang" data-lang="m_import">import</a></li>
 						<li role="presentation" class="divider"></li>
 						<li><a id="m_languages" class="lang m_languages" data-lang="c_langs" href='javascript:void(0)'>languages</a></li>
 						<li><a id="m_pulldata" class="lang" data-lang="c_pulldata_r" href='javascript:void(0)'>pulldata</a></li>
@@ -299,6 +298,26 @@
 						<div class="col-sm-offset-2 col-sm-10">
 							<div class="checkbox">
 								<label>
+									<input type="checkbox" id="data_survey"><span class="lang" data-lang="ed_ds"></span>
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" id="oversight_survey"><span class="lang" data-lang="ed_os"></span>
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<div class="checkbox">
+								<label>
 									<input type="checkbox" id="exclude_empty"><span class="lang" data-lang="ed_ee">exclude empty</span>
 								</label>
 							</div>
@@ -498,7 +517,7 @@
 					<div class="form-group existing_form reusing_form">
 						<label for="survey_name" class="lang col-sm-2 control-label" data-lang="ed_es">survey</label>
 						<div class="col-sm-10">
-							<select id="survey_name" class="survey_select form-control"></select>
+							<select id="survey_name" class="survey_select data_oversight_survey form-control"></select>
 						</div>
 					</div>
 					<div class="form-group reusing_form" style="display:none;">
