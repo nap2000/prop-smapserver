@@ -1579,20 +1579,11 @@ function removeHourglass() {
  */
 function loadSurveys(projectId, selector, getDeleted, addAll, callback) {
 
-	var url="/surveyKPI/surveys?projectId=" + projectId + "&blocked=true",
-		$elem,
-		selector_disable_blocked,
-		h = [],
-		idx = -1,
-		i,
-		item;
+	var url="/surveyKPI/surveys?projectId=" + projectId + "&blocked=true";
 
 	if(selector === undefined) {
 		selector = ".survey_select";	// Update the entire class of survey select controls
 	}
-	selector_disable_blocked = selector + ".disable_blocked";
-	$elem = $(selector);
-	$elem_disable_blocked = $(selector_disable_blocked);
 
 	if(typeof projectId !== "undefined" && projectId != -1 && projectId != 0) {
 
@@ -1606,41 +1597,14 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback) {
 			dataType: 'json',
 			cache: false,
 			success: function(data) {
+				var sel = selector;
+				var all = addAll;
 
 				removeHourglass();
-				$elem.empty();
-				if(addAll) {
-					h[++idx] = '<option value="_all">';
-					h[++idx] = localise.set["c_all_s"];		// All Surveys
-					h[++idx] = '</option>';
-				}
 
-				for(i = 0; i < data.length; i++) {
-					item = data[i];
-					h[++idx] = '<option';
-					if(i == 0) {
-						h[++idx] = ' selected="selected"';
-					}
-					if(item.blocked) {
-						h[++idx] = ' class="blocked"';
-					}
-					h[++idx] = ' value="';
-					h[++idx] = item.id;
-					h[++idx] = '">';
-					h[++idx] = item.displayName;
-					if(item.blocked) {
-						h[++idx] = ' (' + localise.set["c_blocked"] + ')';
-					}
-					h[++idx] = '</option>';
-				}
-
-				$elem.empty().append(h.join(''));
-				$("option.blocked", $elem_disable_blocked).attr("disabled", "disabled");
-
-				//globals.gCurrentSurvey = $elem.val();   // TODO set to current global survey
-				if(globals.gCurrentSurvey > 0) {
-					$elem.val(globals.gCurrentSurvey);
-				}
+				showSurveyList(data, sel + ".data_survey", all, true, false);
+				showSurveyList(data, sel + ".oversight_survey", all, false, true);
+				showSurveyList(data, sel + ".data_oversight_survey", all,true, true);
 
 				if(typeof callback == "function") {
 					callback();
@@ -1666,6 +1630,60 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback) {
 			callback();
 		}
 
+	}
+}
+
+/*
+ * Show the surveys in select boxes
+ */
+function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey) {
+
+	var i,
+		item,
+		h = [],
+		idx = -1,
+		count = 0,
+		$elem,
+		$elem_disable_blocked,
+		selValue;
+
+	$elem = $(selector);
+	$elem_disable_blocked = $(selector + ".disable_blocked");
+
+	$elem.empty();
+	if(addAll) {
+		h[++idx] = '<option value="_all">';
+		h[++idx] = localise.set["c_all_s"];		// All Surveys
+		h[++idx] = '</option>';
+	}
+
+	for(i = 0; i < data.length; i++) {
+		item = data[i];
+		if(item.dataSurvey && dataSurvey || item.oversightSurvey && oversightSurvey) {
+			h[++idx] = '<option';
+			if (count++ == 0) {
+				selValue = item.id;
+			}
+			if (item.blocked) {
+				h[++idx] = ' class="blocked"';
+			}
+			h[++idx] = ' value="';
+			h[++idx] = item.id;
+			h[++idx] = '">';
+			h[++idx] = item.displayName;
+			if (item.blocked) {
+				h[++idx] = ' (' + localise.set["c_blocked"] + ')';
+			}
+			h[++idx] = '</option>';
+		}
+	}
+
+	$elem.empty().append(h.join(''));
+	$elem.val(selValue);
+	$("option.blocked", $elem_disable_blocked).attr("disabled", "disabled");
+
+	if(globals.gCurrentSurvey > 0) {
+		$elem.val(globals.gCurrentSurvey);
 	}
 }
 
@@ -4278,11 +4296,16 @@ function edit_notification(idx, console) {
 		$('#target').val(notification.target);
 		$('#name').val(notification.name);
 		setTargetDependencies(notification.target);
+
+		gSelectedOversightQuestion = notification.updateQuestion;
+		gSelectedOversightSurvey = notification.updateSurvey;
 		setTriggerDependencies(notification.trigger)
+
 		setAttachDependencies(notification.notifyDetails.attach);
 
-		$('#survey').val(notification.s_id);
+		$('#survey').val(notification.s_id).change();
 		$('#not_filter').val(notification.filter);
+		$('#update_value').val(notification.updateValue);
 
 		// reminder settings
 		if (!console) {
@@ -4343,6 +4366,8 @@ function edit_notification(idx, console) {
 		$('#fwd_host').val(window.gRemote_host);	// Set the values to the ones last used
 		$('#fwd_user').val(window.gRemote_user);
 
+		$('#survey').change();
+
 		// Reminders
 		$('#r_period').val(1);
 		$('#period_list_sel').val('days');
@@ -4368,13 +4393,17 @@ function setTargetDependencies(target) {
 
 function setTriggerDependencies(trigger) {
 	if(trigger === "submission") {
-		$('.task_reminder_options').hide();
+		$('.task_reminder_options,.update_options').hide();
 		$('.submission_options').show();
 	} else if(trigger === "task_reminder") {
-		$('.submission_options').hide();
+		$('.submission_options, .update_options').hide();
 		$('.task_reminder_options').show();
 		$('#target').val('email');
 		setTargetDependencies('email');
+	} else if(trigger === "console_update") {
+		getOversightSurveys($('#survey').val());
+		$('.task_reminder_options').hide();
+		$('.update_options, .submission_options').show();
 	}
 }
 
@@ -4728,4 +4757,134 @@ function includeByStatus(statusFilter, task) {
 function isTextStorageType(type) {
 	return type === "string" || type === "select1" || type === "barcode" || type === "calculate"
 		|| type === "child_form" || type === "parent_form";
+}
+
+/*
+ * Get oversight surveys
+ */
+function getOversightSurveys(surveyId) {
+
+	var url = "/surveyKPI/surveyResults/" + surveyId + "/groups",
+		survey = surveyId;
+
+	if(surveyId > 0) {
+
+		if(window.oversightSurveys[surveyId]) {
+			showOversightSurveys(window.oversightSurveys[surveyId]);
+		} else {
+			addHourglass();
+			$.ajax({
+				url: url,
+				dataType: 'json',
+				cache: false,
+				success: function (data) {
+					removeHourglass();
+					window.oversightSurveys[surveyId] = data;
+					showOversightSurveys(data);
+				},
+				error: function (xhr, textStatus, err) {
+					removeHourglass();
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						console.log(localise.set["c_error"] + ": " + err);
+					}
+				}
+			});
+		}
+	}
+}
+
+function showOversightSurveys(data) {
+	var i,
+		item,
+		h = [],
+		idx = -1,
+		surveyId = $('#survey').val(),
+		count = 0;
+
+	$('#group_survey_questions').empty();
+
+	for (i = 0; i < data.length; i++) {
+		item = data[i];
+
+		if (item.oversightSurvey && item.sId != surveyId) {
+			h[++idx] = '<option value="';
+			h[++idx] = item.surveyIdent;
+			h[++idx] = '">';
+			h[++idx] = item.surveyName;
+			h[++idx] = '</option>';
+
+			if(count == 0) {
+				getOversightQuestionList(item.surveyIdent);
+			}
+			count++;
+		}
+	}
+
+	if(count == 0) {
+		$('.update_options_msg').html(localise.set["n_no_oversight"]);
+		$('.update_options_msg').show();
+	} else {
+		$('.update_options_msg').hide();
+	}
+	$('#group_survey').empty().html(h.join(''));
+	if(gSelectedOversightSurvey) {
+		$('#group_survey').val(gSelectedOversightSurvey);
+	}
+}
+
+//Function to get the question list
+function getOversightQuestionList(sIdent) {
+
+	var url = "/surveyKPI/questionListIdent/" + sIdent + "/none?exc_read_only=false&inc_meta=false";
+
+	if(window.oversightQuestions[sIdent]) {
+		showOversightQuestions(window.oversightQuestions[sIdent]);
+	} else {
+		addHourglass();
+		$.ajax({
+			url: url,
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				window.oversightQuestions[sIdent] = data;
+				showOversightQuestions(data);
+
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert("Error: Failed to get list of questions: " + err);
+				}
+			}
+		});
+	}
+
+}
+
+function showOversightQuestions(data) {
+	var i,
+		item,
+		h = [],
+		idx = -1;
+
+	for (i = 0; i < data.length; i++) {
+		item = data[i];
+
+		h[++idx] = '<option value="';
+		h[++idx] = item.name;
+		h[++idx] = '">';
+		h[++idx] = item.name;
+		h[++idx] = '</option>';
+
+	}
+
+	$('#update_question').empty().html(h.join(''));
+	if(gSelectedOversightQuestion) {
+		$('#update_question').val(gSelectedOversightQuestion);
+	}
 }

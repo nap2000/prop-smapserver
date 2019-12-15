@@ -64,6 +64,10 @@ require([
 	window.gSelectedNotification = -1;
 	window.gNotifications = undefined;
 	window.gTaskGroups = undefined;
+	window.oversightSurveys = {};
+	window.oversightQuestions = {};
+	window.gSelectedOversightQuestion = undefined;
+	window.gSelectedOversightSurvey = undefined;
 
 	$(document).ready(function() {
 
@@ -105,7 +109,14 @@ require([
 		// Add response to a source survey being selected
 		$('#survey').change(function() {
 			surveyChanged();
+			getOversightSurveys($('#survey').val());
 		});
+
+		// Add response to an oversight survey being selected
+		$('#group_survey').change(function() {
+			getOversightQuestionList($('#group_survey').val())
+		});
+
 
 		$('#email_content_ap_insert').click(function() {
 			var current = $('#email_content').val();
@@ -164,7 +175,28 @@ require([
 					alert(localise.set["msg_pc"]);
 					return(-1);
 				}
-				console.log("Reminder for tg: " + notification.tgId + ' after ' + notification.period);
+			}
+
+			if(notification.trigger === 'console_update') {
+				var updateQuestion = $('#update_question').val();
+				var updateValue = $('#update_value').val();
+				var updateSurvey = $('#group_survey').val();
+
+				// Validate
+				if(!updateQuestion || updateQuestion.trim().length == 0) {
+					alert(localise.set["n_nq"]);
+					return(-1);
+				}
+
+				if(!updateValue || updateValue.trim().length == 0) {
+					alert(localise.set["n_nv"]);
+					return(-1);
+				}
+
+				notification.updateSurvey = updateSurvey;
+				notification.updateQuestion = updateQuestion;
+				notification.updateValue = updateValue;
+
 			}
 
 
@@ -183,7 +215,7 @@ require([
 				type: "POST",
 				dataType: 'text',
 				cache: false,
-				async: false,
+				async: true,
 				url: url,
 				data: { notification: notificationString },
 				success: function(data, status) {
@@ -414,6 +446,8 @@ require([
 			h[++idx] = '<div class="col-sm-2" style="word-wrap: break-word;">';
 			if(data[i].trigger === "submission") {
 				h[++idx] = data[i].s_name;
+			} else if(data[i].trigger === "console_update") {
+				h[++idx] = data[i].s_name;
 			} else {
 				h[++idx] = data[i].tg_name;
 			}
@@ -511,7 +545,6 @@ require([
 		});
 
 	}
-
 
 });
 

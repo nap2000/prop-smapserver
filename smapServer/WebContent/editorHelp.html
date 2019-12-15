@@ -234,70 +234,7 @@
 				</ol>
 				
 	   		</div>
-	   		
-	   		
-	   		
-	   		<div class="bs-docs-section">
-	   			<h1 id="linking_surveys" class="page-header">
-	   				<a class="anchorjs-link " href="#errors" aria-label="Anchor link for: errors" 
-	   				data-anchorjs-icon="" style="font-family: anchorjs-icons; font-style: normal; 
-	   				font-variant: normal; font-weight: normal; position: absolute; margin-left: -1em; 
-	   				padding-right: 0.5em;">Linking Surveys</a>
-	   			</h1>
-	   			<p>Forms can be linked for analysis.  For example if you have a form that collects data on assets and another form that 
-	   			collects information on faults with these assets, then if they are linked, you can view the asset details while reviewing a fault, or view the 
-	   			faults while reviewing an asset.</p>
-	   			
-	   			<h3>Specifying a unique key</h3>
-	   			<p>When you complete a form you can link the results to a record in another form by specifying that form's 
-	   			unique key. This unique key is specified in the form settings.  This will cause a unique value to
-	   			to be created for each record in the form. In a second form you can then select a question that will store
-	   			this unique key.</p>
-	   			
-	   			<h3>Telling the system that the answer to a question is another forms unique key</h3>
-	   			<p>By telling the system that two forms are linked additional analysis is possible.  You can link, or unlink, a question
-	   			to another form by selecting the property "Linked Survey".  Clicking on "unlinked" or "linked" button and then,
-	   			if linking, select the form to link to.</p>
-	   			<img src="images/help/linked.jpg" class="img-responsive">
-	   			
-	  			<h3>Filling in the key question</h3>
-	   			<p>In the above example, when you are filling in the details of a fault you will need to specify the unique key of the
-	   			asset. You can do this in the following ways. How this is done will depend on the type of the question that
-	   			stores the unique key.
-	   			<ul>
-	   				<li>Text question.  Simply write in the key.  Presumably a printout of assets and their keys will have been 
-	   				made available.  Or perhaps the key will be written on the asset.</li>
-	   				<li>Barcode question.  Similar to the text approach except that the key can be enter more reliably by swiping
-	   				with a barcode</li>
-	   				<li>Select the link using a select_one type question</li> 
-	   			</ul>
-	   			
-	   			<h3>Specifying the link using a select_one question</h3>
-	   			<p>The approach is the same as that used for getting data from CSV files.</p> 
-	   			<ol>
-	   				<li>Add a search function to the appearance field</li>
-	   				<li>Where the file name usually goes write the word 'linked_' followed by the form identifier 
-	   				which you will find in the settings dialog of form</li>
-	   				<li>As you do when searching data in a CSV file create a choice whose value and 
-	   				label are the question names in the linked file that contain the value and label for the select.
-	   				Since we want to link to another form the value will be '_hrk' which is the name of the unique key</li>
-	   				
-	   				<li>Examples: 
-	   					<ul>
-	   						<li>search('linked_s1_1346')</li>
-	   					</ul>
-	   				</li>
-	   			</ol>
-	   			
-	   			of a select question.</p>
-	   			
-	   			<h2>Security</h2>
-	   			<p>To link forms you will need to be a member of both of the projects containing the forms.</p>
-	   			<p>To add a select question to a form that uses data from another form to get its unique key then you
-	   			need to be a member of both of the projects containing the forms.</p>
-	   			
-	   			
-	   		</div>
+
 	   		
 	   		<div class="bs-docs-section">
 	   			<h1 id="errors" class="page-header">
@@ -860,7 +797,6 @@
 	  					<a href="#adding_question">Adding questions and choices</a>
 	  					<a href="#question_properties">Question labels, Constraints and other properties</a>
 	  					<a href="#filters">Choice Filters</a>
-	  					<a href="#linking_surveys">Linking Surveys</a>
 	  					<a href="#errors">Validation</a>
 	  					<a href="#testing">Trying out your survey</a>
 	  					<a href="#publishing">Publishing and un-publishing your survey</a>
