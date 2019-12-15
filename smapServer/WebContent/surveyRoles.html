@@ -51,13 +51,7 @@
             <li class="restrict_role analyst_role data_role"><a href="/fieldAnalysis/index.html"><span class="lang" data-lang="m_analysis">Analysis</span><span class="glyphicon glyphicon-stats pull-right"></span></a></li>
             <li class="restrict_role admin_role analyst_role manage_role task_role"><a href="/tasks/taskManagement.html"><span class="nav-label lang" data-lang="m_assign">manage</span><span class="glyphicon glyphicon-tasks pull-right"></span></a></li>
           </ul>
-        </li> 
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="lang" data-lang="c_file">File</span> <span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a id="c_save" href="#">Save</a></li>
-          </ul>
-        </li> 
+        </li>
  
  		<li><a id="m_form" class="lang" data-lang="c_form" href="/edit.html">form</a>
 		<li><a id="m_translate" class="lang" data-lang="c_trans" href="translate.html">translate</a>
@@ -79,7 +73,7 @@
   
 <div class="container">
 	<div class="row">	   	
-	   	<div class="col-md-6 col-xs-12" id="sidebar">
+	   	<div class="col-md-6 col-xs-12">
 				<form role="form" class="form-horizontal">
 					<label class="lang col-sm-4 control-label" data-lang="c_project" for="project_name">Select Project</label>
 					<div class="col-sm-8">
@@ -87,12 +81,12 @@
 					</div>
 				</form>	
 		</div>
-		<div class="col-md-6 col-xs-12" id="sidebar">
+		<div class="col-md-6 col-xs-12">
 			<div id="filters">
 				<form role="form" class="form-horizontal">
 					<label class="lang col-sm-4 control-label" data-lang="c_survey" for="survey_name">Select Project</label>
 					<div class="col-sm-8">
-						<select class="survey_select form-control" id="survey_name"></select>
+						<select class="survey_select data_oversight_survey form-control" id="survey_name"></select>
 					</div>
 				</form>	
 			</div>

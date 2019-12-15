@@ -911,8 +911,8 @@ define({
     "contains": "contains",
     "startsWith": "startsWith",
     "endsWith": "endsWith",
-
-
+    "ed_ds": "Data Survey",
+    "ed_os": "Oversight Survey",
 
     // Managed Forms
     "mf_id": "Include Deleted",
@@ -1117,6 +1117,7 @@ define({
 	"n_lo": "Only reference data from forms that were launched from this form",
     "task_reminder": "Task Reminder",
     "submission": "Submission",
+    "console_update": "Update",
     "n_p": "Send reminder after",
     "n_oa": "Email original assignee",
     "n_ap": "Add placeholder",
@@ -1124,6 +1125,11 @@ define({
     "n_sms_n_tt": "Comma separated list of phone numbers in format +ccnnnnnnnnnn",
     "n_sms_q_tt": "Question that will contain the SMS numbers to use",
     "n_e_p_tt": "Meta item or preload that will contain an email address to use",
+    "n_uq": "Update Question",
+    "n_uv": "Update Value",
+    "n_no_oversight": "There are no oversight surveys that can be used to update the data in the console",
+    "n_nv": "A value for the update must be specified",
+    "n_nq": "An update question must be specified",
 
     // Roles
     "ro_fr": "Filter rows",
