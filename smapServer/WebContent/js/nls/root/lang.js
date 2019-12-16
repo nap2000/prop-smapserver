@@ -1117,7 +1117,7 @@ define({
 	"n_lo": "Only reference data from forms that were launched from this form",
     "task_reminder": "Task Reminder",
     "submission": "Submission",
-    "console_update": "Update",
+    "console_update": "Console Update",
     "n_p": "Send reminder after",
     "n_oa": "Email original assignee",
     "n_ap": "Add placeholder",
