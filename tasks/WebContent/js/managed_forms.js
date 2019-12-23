@@ -1185,7 +1185,7 @@ require([
         }
 
         // Add table
-        h[++idx] = '<table id="trackingTable" class="table table-striped" width="100%">';
+        h[++idx] = '<table id="trackingTable" style="width:100%">';
 
         // Add head
         h[++idx] = '<thead>';
@@ -1370,10 +1370,13 @@ require([
      */
     function showDuplicateData(sId) {
 
-        var url = '/api/v1/data/similar/' + sId + '/' + getSearchCriteria() + "?format=dt";
+        var searchCriteria = getSearchCriteria();
+        var url = '/api/v1/data/similar/' + sId + '/' + searchCriteria + "?format=dt";
         url += "&tz=" + encodeURIComponent(globals.gTimezone);
 
-        globals.gMainTable.ajax.url(url).load();
+        if(searchCriteria && searchCriteria.length > 0) {
+            globals.gMainTable.ajax.url(url).load();
+        }
 
     }
 
@@ -3004,7 +3007,7 @@ require([
             var last = null;
 
             globals.gMainTable.column(0, {page: 'current'}).data().each(function (group, i) {
-                if (last !== group) {
+                if (group && last !== group) {
                     $(rows).eq(i).before(
                         '<tr class="group"><td colspan="5">' + group + '</td></tr>'
                     );
