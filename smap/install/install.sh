@@ -351,7 +351,11 @@ sudo apt-get install ttf-dejavu -y
 # Add a file containing the version number
 echo "1908" > ~/smap_version
 
-echo '##### 21. Deploy Smap'
+echo '##### 21. Add postgres and apache to tomcat group'
+sudo usermod -a -G $TOMCAT_VERSION postgres
+sudo usermod -a -G $TOMCAT_VERSION www-data
+
+echo '##### 22. Deploy Smap'
 cd ../deploy
 chmod +x patchdb.sh
 sudo ./patchdb.sh
