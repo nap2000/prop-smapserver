@@ -108,7 +108,11 @@ cp  $deploy_from/resources/fonts/* /usr/share/fonts/truetype
 chmod +x /smap_bin/*.sh
 
 # Copy aws credentials
-sudo cp  $deploy_from/resources/properties/credentials /usr/share/$TOMCAT_VERSION/.aws
+if [ $u1804 -eq 1 ]; then
+    sudo cp  $deploy_from/resources/properties/credentials /var/lib/$TOMCAT_VERSION/.aws
+else
+    sudo cp  $deploy_from/resources/properties/credentials /usr/share/$TOMCAT_VERSION/.aws
+fi
 
 cd /var/log/subscribers
 rm *.log_old
