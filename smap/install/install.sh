@@ -119,8 +119,13 @@ sudo chmod -R 0777 $filelocn/attachments
 sudo chmod -R 0777 $filelocn/media
 sudo chmod -R 0777 $filelocn/uploadedSurveys
 
-sudo mkdir /usr/share/$TOMCAT_VERSION/.aws
-sudo chown -R $TOMCAT_VERSION /usr/share/$TOMCAT_VERSION/.aws
+if [ $u1804 -eq 1 ]; then
+    sudo mkdir /var/lib/$TOMCAT_VERSION/.aws
+    sudo chown -R $TOMCAT_VERSION /var/lib/$TOMCAT_VERSION/.aws
+else
+    sudo mkdir /usr/share/$TOMCAT_VERSION/.aws
+    sudo chown -R $TOMCAT_VERSION /usr/share/$TOMCAT_VERSION/.aws
+fi
 
 # If auto configuration is set then copy the pre-set configuration files to their target destination
 
