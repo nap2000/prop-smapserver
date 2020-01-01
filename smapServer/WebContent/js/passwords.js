@@ -155,7 +155,7 @@ $(document).ready(function() {
 				  removeHourglass();
 				  var msg = data.responseText;
 				  var idx1 = msg.indexOf('ApplicationException:');
-				  var idx2 = msg.indexOf('</h1>');
+				  var idx2 = msg.indexOf('<', idx1);
 				  if(idx1 > 0 && idx2 > idx1) {
 				  	msg = msg.substring(idx1, idx2);
 				  }
