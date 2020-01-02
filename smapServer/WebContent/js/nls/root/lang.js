@@ -249,6 +249,7 @@ define({
     "c_note": "Note",
     "c_server": "Server",
     "c_cols": "Columns",
+    "c_cols_packed": "Packed Columns",
     "c_add": "Add",
     "c_create": "Create",
     "c_generate": "Generate",
@@ -913,6 +914,7 @@ define({
     "endsWith": "endsWith",
     "ed_ds": "Data Survey",
     "ed_os": "Oversight Survey",
+    "ed_nb": "No Buttons",
 
     // Managed Forms
     "mf_id": "Include Deleted",

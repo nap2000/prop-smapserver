@@ -379,8 +379,8 @@ define(function () {
 		    'begin group': ['page', 'w'],
 		    string: ['numbers', 'thousands-sep', 'w'],
 		    note: ['w'],
-            select1: ['select1_type', 'search', 'likert', 'w'],
-            select: ['select_type', 'search', 'w'],
+            select1: ['select1_type', 'search', 'likert', 'no-buttons', 'w'],
+            select: ['select_type', 'search', 'no-buttons', 'w'],
             image: ['image_type', 'selfie', 'new', 'w'],
             int:['thousands-sep', 'w'],
 		    geopoint:['placement-map', 'w'],
@@ -419,12 +419,12 @@ define(function () {
 		    'select1_type': {
 			    field: 'a_select1_type',
 			    type: 'form',
-			    rex: 'minimal|quick$|autocomplete|compact|quickcompact|image-map'
+			    rex: 'minimal|quick$|autocomplete|columns|quickcompact|image-map'
 		    },
 		    'select_type': {
 			    field: 'a_select_type',
 			    type: 'form',
-			    rex: 'minimal|autocomplete|compact|image-map'
+			    rex: 'minimal|autocomplete|columns|image-map'
 		    },
 		    'date_type': {
 			    field: 'a_date_type',
@@ -458,6 +458,11 @@ define(function () {
 			    field: 'a_likert',
 			    type: 'boolean',
 			    rex: 'likert'
+		    },
+		    'no-buttons': {
+			    field: 'a_no_buttons',
+			    type: 'boolean',
+			    rex: 'no-buttons'
 		    },
 		    'selfie': {
 			    field: 'a_selfie',
