@@ -3521,7 +3521,7 @@ function setNoFilter() {
 						var s1Val = $elem.val();
 						if(s1Val === '') {
 							val = undefined;
-						} else if (s1Val === 'compact' || s1Val === 'quickcompact') {
+						} else if (s1Val === 'columns' || s1Val === 'quickcompact') {
 							var numberColumns = $('#a_number_columns').val();
 							if(numberColumns === '') {
 								val = s1Val;
@@ -3664,7 +3664,7 @@ function setNoFilter() {
 						}
 
 						showSearchElements();
-					} else if(val === 'compact' || val === 'quickcompact') {
+					} else if(val === 'columns' || val === 'quickcompact') {
 						var paramsArray = appearance.split('-');
 						$elem.val(paramsArray[0]);
 						if(paramsArray.length > 0) {
@@ -3898,10 +3898,15 @@ function setNoFilter() {
 				 */
 				if(qtype === 'select1') {
 					var select1Type = $('#a_select1_type').val();
-					if(select1Type === 'compact' || select1Type === 'quickcompact') {
+					if(select1Type === 'columns' || select1Type === 'quickcompact') {
 						$('.a_number_columns').show();
 					} else {
 						$('.a_number_columns').hide();
+					}
+					if(select1Type === 'columns' || select1Type === 'columns-pack') {
+						$('.a_no_buttons').show();
+					} else {
+						$('.a_no_buttons').hide();
 					}
 				}
 
