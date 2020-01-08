@@ -1380,6 +1380,7 @@ require([
 	 */
 	function openProjectDialog(existing, projectIndex) {
 
+		var $p_user_projects = $('#p_user_projects');
 		gCurrentProjectIndex = projectIndex;
 
 
@@ -1389,6 +1390,36 @@ require([
 			$('#p_desc').val(globals.gProjectList[projectIndex].desc);
 			$('#p_tasks_only').prop('checked', globals.gProjectList[projectIndex].tasks_only);
 		}
+
+		// Add users
+		filter_project = $('#project_name').val();
+		h = [];
+		idx = -1;
+		for (i = 0; i < gUsers.length; i++) {
+			user = gUsers[i];
+
+			yesProject = hasId(user.projects, globals.gProjectList[projectIndex].id);
+
+
+			h[++idx] = '<div class="custom-control custom-checkbox ml-2">';
+			h[++idx] = '<input type="checkbox" class="custom-control-input" id="';
+			h[++idx] = 'user_projects_cb' + i;
+			h[++idx] = '" name="';
+			h[++idx] = 'user_projects_cb';
+			h[++idx] = '" value="';
+			h[++idx] = user.id + '"';
+			if(yesProject) {
+				h[++idx] = ' checked="checked"';
+			}
+			h[++idx] = '/>';
+			h[++idx] = '<label class="custom-control-label" for="';
+			h[++idx] = 'user_projects_cb' + i;
+			h[++idx] = '">';
+			h[++idx] = user.name;
+			h[++idx] = '</label></div>';
+		}
+
+		$p_user_projects.empty().append(h.join(''));
 
 		$('#create_project_popup').modal("show");
 	}
