@@ -417,6 +417,11 @@ require([
 			project.desc = $('#p_desc').val();
 			project.tasks_only = $('#p_tasks_only').is(':checked');
 
+			project.users = [];
+			$('#p_user_projects').find('input:checked').each(function(index) {
+				project.users[index] = $(this).val();
+			});
+
 			projectList[0] = project;
 			var projectString = JSON.stringify(projectList);
 
