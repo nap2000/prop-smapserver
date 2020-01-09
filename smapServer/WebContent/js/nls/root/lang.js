@@ -404,6 +404,7 @@ define({
     "a_lx": "Legacy XLSX",
 	"a_lh": "Legacy XLS / HTML",
 	"a_ua": "User Activity",
+    "a_ul": "User Locations",
     "a_tc": "This Chart",
 
     "a_dd_sl": "Shows the results",

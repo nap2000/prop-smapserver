@@ -353,6 +353,81 @@ function getUserData(view, start_rec) {
 
 }
 
+/*
+  * Get the location data for users
+  */
+function getUserLocationsData(view, start_rec) {
+
+	view.pId = globals.gCurrentProject;
+
+	// For table all of survey views. page the results
+	if(view.type === "table") {
+		rec_limit = globals.REC_LIMIT;
+	} else {
+		rec_limit = 0;
+	}
+
+	start_rec = start_rec || 0;
+
+	var i,
+		tz = globals.gTimezone,
+		data;
+
+	url = userLocationsItemsURL(view, start_rec, rec_limit,tz);
+	data = globals.gSelector.getItem(url);      // check cache
+
+	if(data) {
+		if (typeof view.start_recs === "undefined") {
+			view.start_recs = {};
+		}
+		if (typeof view.start_recs[0] === "undefined") {
+			view.start_recs[0] = [];
+		}
+		view.start_recs[0].push(start_rec);
+		view.results = [];
+		view.results[0] = data;
+		refreshData(view, "user");
+	} else {
+
+		function getAsyncData(dataUrl) {
+			addHourglass();
+			$.ajax({
+				url: dataUrl,
+				dataType: 'json',
+				cache: false,
+				success: function (data) {
+					var theUrl = dataUrl;
+					// Add data to results
+					removeHourglass();
+					data.source = "user";
+					data.table = true;
+
+					if (typeof view.start_recs === "undefined") {
+						view.start_recs = {};
+					}
+					if (typeof view.start_recs[0] === "undefined") {
+						view.start_recs[0] = [];
+					}
+					view.start_recs[0].push(start_rec);
+
+					globals.gSelector.addDataItem(theUrl, data);
+					view.results = [];
+					view.results[0] = data;
+
+					refreshData(view, "user");	// Update the views with the new usage data
+
+				},
+				error: function (data) {
+					removeHourglass();
+					alert(data.message);
+				}
+			});
+		}
+		getAsyncData(url);
+	}
+
+}
+
  /*
   * Get the data for the specified question
   * The current view is updated with the results
