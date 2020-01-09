@@ -944,8 +944,8 @@ function userItemsURL (view, start_key, rec_limit, dateId, startDate,
 function userLocationsItemsURL (view, start_key, rec_limit, tz) {
 
     var url = "/surveyKPI/items/user_locations/";
-
-    url += view.pId;
+    
+    url += globals.gCurrentProject;
 
     url += "?start_key=" + start_key;
     if(rec_limit) {
