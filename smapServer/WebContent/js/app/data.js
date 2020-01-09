@@ -358,8 +358,6 @@ function getUserData(view, start_rec) {
   */
 function getUserLocationsData(view, start_rec) {
 
-	view.pId = globals.gCurrentProject;
-
 	// For table all of survey views. page the results
 	if(view.type === "table") {
 		rec_limit = globals.REC_LIMIT;
