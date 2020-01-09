@@ -938,6 +938,27 @@ function userItemsURL (view, start_key, rec_limit, dateId, startDate,
 	return url;
 }
 
+/**
+ * Web service handler for retrieving user location data
+ */
+function userLocationsItemsURL (view, start_key, rec_limit, tz) {
+
+    var url = "/surveyKPI/items/user_locations/";
+
+    url += view.pId;
+
+    url += "?start_key=" + start_key;
+    if(rec_limit) {
+        url += "&rec_limit=" + rec_limit;
+    }
+
+    if(tz) {
+        url += '&tz=' + encodeURIComponent(tz);
+    }
+
+    return url;
+}
+
 /*
  * Web service handler for exporting a table
  * @param {string} table

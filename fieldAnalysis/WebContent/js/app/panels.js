@@ -181,15 +181,13 @@ $(document).ready(function() {
 		        		subjectType = $('#subject_type option:selected').val();
 
 		        		sId  = $('#settings_survey option:selected').val();
-		        		if(subjectType !== "user" && sId == "-1") {
-							//alert("You must select a survey");
+		        		if(subjectType === "survey" && sId == "-1") {
 							alert(localise.set["msg_sel_survey"]);
 		        			return false;
 		        		}
 		        		uId = $('#settings_user option:selected').val();
 
 		        		if(subjectType === "survey" && newType == "graph" && qId == "-1") {
-							//alert("You must select a question to show on a graph");
 		        			alert(localise.set["msg_sel_q"]);
 		        			return false;
 						}
@@ -282,7 +280,7 @@ $(document).ready(function() {
 		        		
 		        		view.filter = getFilter();
 		        		view.advanced_filter = $('#set_ad_filter').val();
-		        		
+
 		        		savePanels(view);	// Save to the database
 			        	$(this).dialog("close");
 		        	}
@@ -534,8 +532,10 @@ function createPanel(idx, $panels, title, surveyName, subject_type) {
 	if(title === "") {
 		if(subject_type === "survey") {
 			title = surveyName;
-		} else {
+		} else if(subject_type === "user") {
 			title = localise.set["a_ua"] + ": " + surveyName;
+		} else {
+			title = localise.set["a_ul"];
 		}
 	}
 
@@ -611,7 +611,7 @@ function setPanelType(type, idx, period, qId, subject_type) {
 		initializeMap(idx);
 		break;
 	case "table":
-		if(subject_type !== 'user') {
+		if(subject_type === 'survey') {
 			h[++i] = htable1;
 		}
 		h[++i] = htable2;
