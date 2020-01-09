@@ -427,11 +427,13 @@ function subjectTypeChangeEvent() {
 
 	var subjectType = $('#subject_type option:selected').val();
 
-	$('.subject_survey_only, .subject_user_only').hide();
+	$('.subject_survey_only, .subject_user_only, .subject_user_location').hide();
 	if(subjectType === "survey") {
 		$('.subject_survey_only').show();
-	} else {
+	} else if(subjectType === "user") {
 		$('.subject_user_only').show();
+	} else {
+		$('.subject_user_location_only').show();
 	}
 }
 
@@ -613,11 +615,13 @@ function setSurveyViewControl(view) {
 	if(!view.subject_type) {
 		view.subject_type = "survey";
 	}
-	$('.subject_survey_only, .subject_user_only').hide();
+	$('.subject_survey_only, .subject_user_only, .subject_user_location').hide();
 	if(view.subject_type === "survey") {
 		$('.subject_survey_only').show();
-	} else {
+	} else if(view.subject_type === "user") {
 		$('.subject_user_only').show();
+	} else {
+		$('.subject_user_location_only').show();
 	}
 
 	$('#subject_type').val(view.subject_type);
@@ -759,6 +763,8 @@ function getData(view) {
 		}
 	} else if(view.subject_type === "user") {
 		getUserData(view, 0);       // Start from the first record
+	} else if(view.subject_type === "user_locations") {
+		getUserLocationsData(view, 0);
 	}
 }
 
