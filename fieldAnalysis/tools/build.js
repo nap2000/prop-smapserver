@@ -4,7 +4,6 @@
     wrapShim: false,
     waitSeconds: 0,
     baseUrl: 'js/libs',
-//    removeCombined: true,
     paths: {
     	app: '../app',
     	main: '..',
