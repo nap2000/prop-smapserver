@@ -401,7 +401,8 @@ function loadFeatures(map, key, item, ext_g, bounds, layers, isPeriod, md) {
 				pointRadius: "${radius}",
 				fillOpacity: 0.6,
 				strokeWidth: "${width}",
-				label: "${count}"
+				label: "${count}",
+				labelXOffset: "${xOffset}"
 			}, {
                 context: {
                     width: function(feature) {
@@ -421,8 +422,22 @@ function loadFeatures(map, key, item, ext_g, bounds, layers, isPeriod, md) {
                         return pix;
                     },
                     count: function(feature) {
-                    	return (feature.cluster) ? feature.attributes.count : "";
-                    }
+                    	if(feature.cluster) {
+                    		return feature.attributes.count
+	                    } else if(feature.attributes._label) {
+                    		return feature.attributes._label
+	                    } else {
+                    		return "";
+	                    }
+                    	//return (feature.cluster) ? feature.attributes.count : "";
+                    },
+	                xOffset: function(feature) {
+		                if (feature.attributes._label) {
+			                return 20;
+		                } else {
+			                return 0;
+		                }
+	                }
                 }
 			});
 		selectStyle = new OpenLayers.Style(

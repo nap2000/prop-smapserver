@@ -399,6 +399,7 @@ function getUserLocationsData(view, start_rec) {
 					removeHourglass();
 					data.source = "user";
 					data.table = true;
+					data.fn="location";
 
 					if (typeof view.start_recs === "undefined") {
 						view.start_recs = {};

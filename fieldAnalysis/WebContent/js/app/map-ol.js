@@ -112,7 +112,9 @@ function initializeMap(idx){
 	map.addControl(new OpenLayers.Control.LayerSwitcher({div: document.getElementById("mLayers" + idx)}));			
 	
 	// Add a zoom to data button
-	$('#mLayers' + idx).append('<button type="button" value="' + idx + '" id="zoom_to_data' + idx + '">Zoom to data</button>');
+	$('#mLayers' + idx).append('<button type="button" value="' + idx + '" id="zoom_to_data' + idx + '">' +
+		localise.set["c_zoom_data"] +
+	    '</button>');
 	$('#zoom_to_data' + idx).button().click(function() {
 		zoomToData(globals.gSelector.getMap($(this).val()));
 	});
