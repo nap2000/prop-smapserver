@@ -402,7 +402,8 @@ function loadFeatures(map, key, item, ext_g, bounds, layers, isPeriod, md) {
 				fillOpacity: 0.6,
 				strokeWidth: "${width}",
 				label: "${count}",
-				labelXOffset: "${xOffset}"
+				labelXOffset: "${xOffset}",
+				fontColor: "red"
 			}, {
                 context: {
                     width: function(feature) {
