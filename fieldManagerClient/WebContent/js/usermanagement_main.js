@@ -1403,7 +1403,10 @@ require([
 		for (i = 0; i < gUsers.length; i++) {
 			user = gUsers[i];
 
-			yesProject = hasId(user.projects, globals.gProjectList[projectIndex].id);
+			yesProject = false;
+			if(globals.gProjectList.length > 0) {
+				yesProject = hasId(user.projects, globals.gProjectList[projectIndex].id);
+			}
 
 
 			h[++idx] = '<div class="custom-control custom-checkbox ml-2">';
