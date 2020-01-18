@@ -1292,6 +1292,7 @@ create TABLE last_refresh_log (
 	refresh_time TIMESTAMP WITH TIME ZONE,
 	device_time TIMESTAMP WITH TIME ZONE
 	);
+SELECT AddGeometryColumn('last_refresh_log', 'geo_point', 4326, 'POINT', 2);
 ALTER TABLE last_refresh_log OWNER TO ws;
 
 -- Group Surveys
