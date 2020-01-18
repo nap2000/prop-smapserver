@@ -1404,7 +1404,7 @@ require([
 			user = gUsers[i];
 
 			yesProject = false;
-			if(globals.gProjectList.length > 0) {
+			if(globals.gProjectList.length > 0 && projectIndex >= 0 && projectIndex < globals.gProjectList.length) {
 				yesProject = hasId(user.projects, globals.gProjectList[projectIndex].id);
 			}
 
