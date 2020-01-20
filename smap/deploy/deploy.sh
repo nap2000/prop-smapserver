@@ -131,9 +131,6 @@ then
         cp -v ~/custom/subscribers/default/* /smap_bin/default
 fi
 
-# Delete temporary files
-rm -rf /smap/temp/*
-
 # Restart Servers
 service postgresql start
 service $TOMCAT_VERSION start
