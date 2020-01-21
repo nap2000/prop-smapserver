@@ -8,8 +8,11 @@ unattended-upgrades
 u1404=`lsb_release -r | grep -c "14\.04"`
 u1604=`lsb_release -r | grep -c "16\.04"`
 u1804=`lsb_release -r | grep -c "18\.04"`
+u1902=`lsb_release -r | grep -c "18\.04"`
 
-if [ $u1804 -eq 1 ]; then
+if [ $u1902 -eq 1 ]; then
+    TOMCAT_VERSION=tomcat8
+elif [ $u1804 -eq 1 ]; then
     TOMCAT_VERSION=tomcat8
 else
     TOMCAT_VERSION=tomcat7
@@ -212,6 +215,16 @@ then
 	echo '# copy subscriber upstart files'
 	upstart_dir="/etc/init"			
 	service_dir="/etc/systemd/system"
+	if [ $u1902 -eq 1 ]; then
+		sudo cp ../install/config_files/subscribers.service $service_dir
+		sudo chmod 664 $service_dir/subscribers.service
+		sudo cp ../install/config_files/subscribers_fwd.service $service_dir
+		sudo chmod 664 $service_dir/subscribers_fwd.service
+		
+		sudo sed -i "s#tomcat7#tomcat8#g" $service_dir/subscribers.service
+		sudo sed -i "s#tomcat7#tomcat8#g" $service_dir/subscribers_fwd.service
+	fi
+	
 	if [ $u1804 -eq 1 ]; then
 		sudo cp ../install/config_files/subscribers.service $service_dir
 		sudo chmod 664 $service_dir/subscribers.service
@@ -234,12 +247,6 @@ then
 		sudo cp ../install/config_files/subscribers_fwd.conf $upstart_dir
 	fi
 
-fi
-
-# version 17.10
-if [ ! -e /usr/share/$TOMCAT_VERSION/.aws ]
-then
-sudo mkdir /usr/share/$TOMCAT_VERSION/.aws
 fi
 
 
