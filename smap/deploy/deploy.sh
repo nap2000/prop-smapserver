@@ -4,8 +4,11 @@ deploy_from="version1"
 u1404=`lsb_release -r | grep -c "14\.04"`
 u1604=`lsb_release -r | grep -c "16\.04"`
 u1804=`lsb_release -r | grep -c "18\.04"`
+u1902=`lsb_release -r | grep -c "19\.02"`
 
-if [ $u1804 -eq 1 ]; then
+if [ $u1902 -eq 1 ]; then
+    TOMCAT_VERSION=tomcat8
+elif [ $u1804 -eq 1 ]; then
     TOMCAT_VERSION=tomcat8
 else
     TOMCAT_VERSION=tomcat7
@@ -28,6 +31,10 @@ systemctl stop subscribers
 systemctl stop subscribers_fwd
 fi
 if [ $u1804 -eq 1 ]; then
+systemctl stop subscribers
+systemctl stop subscribers_fwd
+fi
+if [ $u1902 -eq 1 ]; then
 systemctl stop subscribers
 systemctl stop subscribers_fwd
 fi
@@ -83,15 +90,6 @@ cp -r $deploy_from/smapIcons/WebContent/* /var/www/smap/smapIcons
 cp $deploy_from/*.war /var/lib/$TOMCAT_VERSION/webapps
 chown -R $TOMCAT_VERSION /var/lib/$TOMCAT_VERSION/webapps
 
-# deploy webforms
-#if [ -e $deploy_from/webforms.tgz ]
-#then
-#	echo "Updating webforms"
-#        rm -rf /var/www/smap/webforms
-#        mkdir /var/www/smap/webforms
-#        tar -xzf $deploy_from/webforms.tgz -C /var/www/smap/
-#fi
-
 # change owner for apache web directory
 chown -R www-data:www-data /var/www/smap
 chmod -R o-rwx /var/www/smap
@@ -108,7 +106,9 @@ cp  $deploy_from/resources/fonts/* /usr/share/fonts/truetype
 chmod +x /smap_bin/*.sh
 
 # Copy aws credentials
-if [ $u1804 -eq 1 ]; then
+if [ $u1902 -eq 1 ]; then
+    sudo cp  $deploy_from/resources/properties/credentials /var/lib/$TOMCAT_VERSION/.aws
+elif [ $u1804 -eq 1 ]; then
     sudo cp  $deploy_from/resources/properties/credentials /var/lib/$TOMCAT_VERSION/.aws
 else
     sudo cp  $deploy_from/resources/properties/credentials /usr/share/$TOMCAT_VERSION/.aws
@@ -145,6 +145,10 @@ systemctl start subscribers
 systemctl start subscribers_fwd
 fi
 if [ $u1804 -eq 1 ]; then
+systemctl start subscribers
+systemctl start subscribers_fwd
+fi
+if [ $u1902 -eq 1 ]; then
 systemctl start subscribers
 systemctl start subscribers_fwd
 fi
