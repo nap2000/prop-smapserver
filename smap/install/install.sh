@@ -16,8 +16,11 @@ filelocn="/smap"
 u1404=`lsb_release -r | grep -c "14\.04"`
 u1604=`lsb_release -r | grep -c "16\.04"`
 u1804=`lsb_release -r | grep -c "18\.04"`
+u1902=`lsb_release -r | grep -c "19\.02"`
 
-if [ $u1804 -eq 1 ]; then
+if [ $u1902 -eq 1 ]; then
+    TOMCAT_VERSION=tomcat9
+elif [ $u1804 -eq 1 ]; then
     TOMCAT_VERSION=tomcat8
 else
     TOMCAT_VERSION=tomcat7
@@ -74,23 +77,30 @@ sudo apt-get install $TOMCAT_VERSION -y
 
 echo '##### 5. Install Postgres / Postgis'
 
+# Install Postgres for Ubuntu 19.02
+if [ $u1902 -eq 1 ]; then
+    echo 'installing postgres'
+    PGV=11
+    sudo apt-get install postgresql postgresql-contrib postgis -y
+fi
+
 # Install Postgres for Ubuntu 18.04
 if [ $u1804 -eq 1 ]; then
-    echo 'installing postgres 10'
+    echo 'installing postgres'
     PGV=10
     sudo apt-get install postgresql postgresql-contrib postgis -y
 fi
 
 # Install Postgres for Ubuntu 16.04
 if [ $u1604 -eq 1 ]; then
-    echo 'installing postgres 10'
+    echo 'installing postgres'
     PGV=9.5
     sudo apt-get install postgresql postgresql-contrib postgis postgresql-$PGV-postgis-2.2 -y
 fi
 
 # Install Postgres for Ubuntu 14.04
 if [ $u1404 -eq 1 ]; then
-    echo 'installing postgres 10'
+    echo 'installing postgres'
     PGV=9.3
     sudo apt-get install postgresql postgresql-contrib postgis postgresql-$PGV-postgis-2.1 -y
     sudo apt-get install postgresql-server-dev-9.3 -y
@@ -119,7 +129,10 @@ sudo chmod -R 0777 $filelocn/attachments
 sudo chmod -R 0777 $filelocn/media
 sudo chmod -R 0777 $filelocn/uploadedSurveys
 
-if [ $u1804 -eq 1 ]; then
+if [ $u1902 -eq 1 ]; then
+    sudo mkdir /var/lib/$TOMCAT_VERSION/.aws
+    sudo chown -R $TOMCAT_VERSION /var/lib/$TOMCAT_VERSION/.aws
+elif [ $u1804 -eq 1 ]; then
     sudo mkdir /var/lib/$TOMCAT_VERSION/.aws
     sudo chown -R $TOMCAT_VERSION /var/lib/$TOMCAT_VERSION/.aws
 else
@@ -175,6 +188,16 @@ then
 	sudo ./apacheConfig.sh
 
 	echo '# copy subscriber upstart files'
+	if [ $u1902 -eq 1 ]; then
+		sudo cp config_files/subscribers.service $service_dir
+		sudo chmod 664 $service_dir/subscribers.service
+		sudo cp config_files/subscribers_fwd.service $service_dir
+		sudo chmod 664 $service_dir/subscribers_fwd.service
+		
+		sudo systemctl enable subscribers.service
+		sudo systemctl enable subscribers_fwd.service
+	fi
+
 	if [ $u1804 -eq 1 ]; then
 		sudo cp config_files/subscribers.service $service_dir
 		sudo chmod 664 $service_dir/subscribers.service
