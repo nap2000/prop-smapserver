@@ -16,9 +16,9 @@ filelocn="/smap"
 u1404=`lsb_release -r | grep -c "14\.04"`
 u1604=`lsb_release -r | grep -c "16\.04"`
 u1804=`lsb_release -r | grep -c "18\.04"`
-u1902=`lsb_release -r | grep -c "19\.02"`
+u1910=`lsb_release -r | grep -c "19\.10"`
 
-if [ $u1902 -eq 1 ]; then
+if [ $u1910 -eq 1 ]; then
     TOMCAT_VERSION=tomcat9
 elif [ $u1804 -eq 1 ]; then
     TOMCAT_VERSION=tomcat8
@@ -78,7 +78,7 @@ sudo apt-get install $TOMCAT_VERSION -y
 echo '##### 5. Install Postgres / Postgis'
 
 # Install Postgres for Ubuntu 19.02
-if [ $u1902 -eq 1 ]; then
+if [ $u1910 -eq 1 ]; then
     echo 'installing postgres'
     PGV=11
     sudo apt-get install postgresql postgresql-contrib postgis -y
@@ -129,7 +129,7 @@ sudo chmod -R 0777 $filelocn/attachments
 sudo chmod -R 0777 $filelocn/media
 sudo chmod -R 0777 $filelocn/uploadedSurveys
 
-if [ $u1902 -eq 1 ]; then
+if [ $u1910 -eq 1 ]; then
     sudo mkdir /var/lib/$TOMCAT_VERSION/.aws
     sudo chown -R $TOMCAT_VERSION /var/lib/$TOMCAT_VERSION/.aws
 elif [ $u1804 -eq 1 ]; then
@@ -188,7 +188,7 @@ then
 	sudo ./apacheConfig.sh
 
 	echo '# copy subscriber upstart files'
-	if [ $u1902 -eq 1 ]; then
+	if [ $u1910 -eq 1 ]; then
 		sudo cp config_files/subscribers.service $service_dir
 		sudo chmod 664 $service_dir/subscribers.service
 		sudo cp config_files/subscribers_fwd.service $service_dir

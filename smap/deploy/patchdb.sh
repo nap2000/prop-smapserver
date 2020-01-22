@@ -8,9 +8,9 @@ unattended-upgrades
 u1404=`lsb_release -r | grep -c "14\.04"`
 u1604=`lsb_release -r | grep -c "16\.04"`
 u1804=`lsb_release -r | grep -c "18\.04"`
-u1902=`lsb_release -r | grep -c "18\.04"`
+u1910=`lsb_release -r | grep -c "19\.10"`
 
-if [ $u1902 -eq 1 ]; then
+if [ $u1910 -eq 1 ]; then
     TOMCAT_VERSION=tomcat8
 elif [ $u1804 -eq 1 ]; then
     TOMCAT_VERSION=tomcat8
@@ -215,7 +215,7 @@ then
 	echo '# copy subscriber upstart files'
 	upstart_dir="/etc/init"			
 	service_dir="/etc/systemd/system"
-	if [ $u1902 -eq 1 ]; then
+	if [ $u1910 -eq 1 ]; then
 		sudo cp ../install/config_files/subscribers.service $service_dir
 		sudo chmod 664 $service_dir/subscribers.service
 		sudo cp ../install/config_files/subscribers_fwd.service $service_dir
