@@ -18,6 +18,20 @@ u1604=`lsb_release -r | grep -c "16\.04"`
 u1804=`lsb_release -r | grep -c "18\.04"`
 u1910=`lsb_release -r | grep -c "19\.10"`
 
+# Check that this version of ubuntu is supported
+if [ $u1910 -eq 1 ]; then
+    echo "Installing on Ubuntu 19.10"
+elif [ $u1804 -eq 1 ]; then
+    echo "Installing on Ubuntu 18.04"
+elif [ $u1604 -eq 1 ]; then
+    echo "Installing on Ubuntu 16.04"
+elif [ $u1404 -eq 1 ]; then
+    echo "Installing on Ubuntu 14.04"
+else
+    echo "Unsupported version of Ubuntu, you need 19.10, 18.04, 16.04 or 14.04"
+    exit 1;
+fi
+
 if [ $u1910 -eq 1 ]; then
     TOMCAT_VERSION=tomcat9
 elif [ $u1804 -eq 1 ]; then
