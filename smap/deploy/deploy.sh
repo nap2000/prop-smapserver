@@ -4,10 +4,10 @@ deploy_from="version1"
 u1404=`lsb_release -r | grep -c "14\.04"`
 u1604=`lsb_release -r | grep -c "16\.04"`
 u1804=`lsb_release -r | grep -c "18\.04"`
-u1902=`lsb_release -r | grep -c "19\.02"`
+u1910=`lsb_release -r | grep -c "19\.10"`
 
-if [ $u1902 -eq 1 ]; then
-    TOMCAT_VERSION=tomcat8
+if [ $u1910 -eq 1 ]; then
+    TOMCAT_VERSION=tomcat9
 elif [ $u1804 -eq 1 ]; then
     TOMCAT_VERSION=tomcat8
 else
@@ -34,7 +34,7 @@ if [ $u1804 -eq 1 ]; then
 systemctl stop subscribers
 systemctl stop subscribers_fwd
 fi
-if [ $u1902 -eq 1 ]; then
+if [ $u1910 -eq 1 ]; then
 systemctl stop subscribers
 systemctl stop subscribers_fwd
 fi
@@ -106,7 +106,7 @@ cp  $deploy_from/resources/fonts/* /usr/share/fonts/truetype
 chmod +x /smap_bin/*.sh
 
 # Copy aws credentials
-if [ $u1902 -eq 1 ]; then
+if [ $u1910 -eq 1 ]; then
     sudo cp  $deploy_from/resources/properties/credentials /var/lib/$TOMCAT_VERSION/.aws
 elif [ $u1804 -eq 1 ]; then
     sudo cp  $deploy_from/resources/properties/credentials /var/lib/$TOMCAT_VERSION/.aws
@@ -148,7 +148,7 @@ if [ $u1804 -eq 1 ]; then
 systemctl start subscribers
 systemctl start subscribers_fwd
 fi
-if [ $u1902 -eq 1 ]; then
+if [ $u1910 -eq 1 ]; then
 systemctl start subscribers
 systemctl start subscribers_fwd
 fi
