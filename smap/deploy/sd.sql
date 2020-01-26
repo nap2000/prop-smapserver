@@ -70,3 +70,5 @@ alter table forward add column update_value text;
 
 alter table survey add column data_survey boolean default true;
 alter table survey add column oversight_survey boolean default true;
+
+SELECT AddGeometryColumn('last_refresh_log', 'geo_point', 4326, 'POINT', 2);
