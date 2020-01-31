@@ -1217,6 +1217,7 @@ create TABLE people (
 	o_id integer,
 	email text,								
 	unsubscribed boolean default false,
+	opted_in boolean,
 	uuid text,								-- Uniquely identify this person
 	when_unsubscribed TIMESTAMP WITH TIME ZONE,
 	when_subscribed TIMESTAMP WITH TIME ZONE,
