@@ -72,3 +72,8 @@ alter table survey add column data_survey boolean default true;
 alter table survey add column oversight_survey boolean default true;
 
 SELECT AddGeometryColumn('last_refresh_log', 'geo_point', 4326, 'POINT', 2);
+
+-- Opt In to emails
+-- Default to true for existing email addresses
+alter table people add column opted_in boolean;
+update people set opted_in = 'true' where opted_in is null;
