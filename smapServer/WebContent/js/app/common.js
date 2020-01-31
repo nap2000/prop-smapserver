@@ -1621,6 +1621,7 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback) {
 			}
 		});
 	} else {
+		var $elem = $('.data_survey, .oversight_survey, .data_oversight_survey');
 		$elem.empty();
 		if(addAll) {
 			$elem.append('<option value="_all">All Surveys</option>');
