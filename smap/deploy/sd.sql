@@ -76,4 +76,22 @@ SELECT AddGeometryColumn('last_refresh_log', 'geo_point', 4326, 'POINT', 2);
 -- Opt In to emails
 -- Default to true for existing email addresses
 alter table people add column opted_in boolean;
+alter table people add column opted_in_sent TIMESTAMP WITH TIME ZONE;
 update people set opted_in = 'true' where opted_in is null;
+
+CREATE SEQUENCE pending_message_seq START 1;
+ALTER SEQUENCE pending_message_seq OWNER TO ws;
+
+create TABLE pending_message (
+	id integer DEFAULT NEXTVAL('pending_message_seq') CONSTRAINT pk_pending_message PRIMARY KEY,
+	o_id integer REFERENCES organisation(id) ON DELETE CASCADE,
+	email text,
+	topic text,
+	description text,
+	data text,
+	created_time TIMESTAMP WITH TIME ZONE,
+	processed_time TIMESTAMP WITH TIME ZONE,
+	status text
+);
+CREATE index pending_message_email ON pending_message(email);
+ALTER TABLE pending_message OWNER TO ws;
