@@ -1085,6 +1085,25 @@ create TABLE alert (
 );
 ALTER TABLE alert OWNER TO ws;
 
+DROP SEQUENCE IF EXISTS pending_message_seq CASCADE;
+CREATE SEQUENCE pending_message_seq START 1;
+ALTER SEQUENCE pending_message_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS pending_message CASCADE;
+create TABLE pending_message (
+	id integer DEFAULT NEXTVAL('pending_message_seq') CONSTRAINT pk_pending_message PRIMARY KEY,
+	o_id integer REFERENCES organisation(id) ON DELETE CASCADE,
+	email text,
+	topic text,
+	description text,
+	data text,
+	created_time TIMESTAMP WITH TIME ZONE,
+	processed_time TIMESTAMP WITH TIME ZONE,
+	status text
+);
+CREATE index pending_message_email ON pending_message(email);
+ALTER TABLE pending_message OWNER TO ws;
+
 DROP SEQUENCE IF EXISTS message_seq CASCADE;
 CREATE SEQUENCE message_seq START 1;
 ALTER SEQUENCE message_seq OWNER TO ws;
@@ -1218,6 +1237,7 @@ create TABLE people (
 	email text,								
 	unsubscribed boolean default false,
 	opted_in boolean,
+	opted_in_sent TIMESTAMP WITH TIME ZONE,
 	uuid text,								-- Uniquely identify this person
 	when_unsubscribed TIMESTAMP WITH TIME ZONE,
 	when_subscribed TIMESTAMP WITH TIME ZONE,
