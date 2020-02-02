@@ -71,8 +71,7 @@ require([
             param = pArray[i].split("=");
             if ( param[0] === "token" ) {
                 gToken = param[1];
-            }
-            if ( param[0] === "subscribe" ) {
+            } else if ( param[0] === "subscribe" ) {
                 gSubscribe = param[1];
             }
         }
