@@ -490,7 +490,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                         if(showSourceE === "forms") {
                             refreshFormsTable(data);
                         } else if(showSourceE === "notifications" || showSourceE === "optin_msg") {
-                            refreshNotificationsTable(data, showType);
+                            refreshNotificationsTable(data, showType, showSourceE);
                         } else {
                             refreshTable(data, showType);
                             if(showTypeE !== "totals") {
@@ -667,7 +667,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
 
         }
 
-        function refreshNotificationsTable(data, showType) {
+        function refreshNotificationsTable(data, showType, source) {
 
             var features = data.features,
                 $elem = $("#events tbody"),
@@ -699,8 +699,16 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
 
             } else {
                 h[++i] = '<th>' + localise.set["c_id"] + '</th>';
-                h[++i] = '<th>' + localise.set["c_type"] + '</th>';
-                h[++i] = '<th>' + localise.set["c_details"] + '</th>';
+                if(source === "optin_msg") {
+
+                } else {
+                    h[++i] = '<th>' + localise.set["c_type"] + '</th>';
+                }
+                if(source === "optin_msg") {
+                    h[++i] = '<th>' + localise.set["c_email"] + '</th>';
+                } else {
+                    h[++i] = '<th>' + localise.set["c_details"] + '</th>';
+                }
                 h[++i] = '<th>' + localise.set["c_status"] + '</th>';
                 h[++i] = '<th>' + localise.set["mon_fr"] + '</th>';
                 h[++i] = '<th>' + localise.set["c_lt"] + '</th>';
@@ -720,8 +728,16 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 } else {
 
                     h[++i] = '<td>' + features[j].properties.id + '</td>';
-                    h[++i] = '<td>' + (features[j].properties.type ? features[j].properties.type : '') + '</td>';
-                    h[++i] = '<td>' + features[j].properties.notify_details + '</td>';
+                    if(source === "optin_msg") {
+                        // Empty
+                    } else {
+                        h[++i] = '<td>' + (features[j].properties.type ? features[j].properties.type : '') + '</td>';
+                    }
+                    if(source === "optin_msg") {
+                        h[++i] = '<td>' + features[j].properties.email + '</td>';
+                    } else {
+                        h[++i] = '<td>' + features[j].properties.notify_details + '</td>';
+                    }
                     status = features[j].properties.status;
                     h[++i] = '<td class="' + status + '">' + localise.set[features[j].properties.status] + '</td>';
                     if(features[j].properties.status_details) {
@@ -730,14 +746,22 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                         h[++i] = '<td></td>';
                     }
                     h[++i] = '<td>' + localTime(features[j].properties.event_time) + '</td>';
-                    if(status === "error" && features[j].properties.message_id) {
-                        h[++i] = '<td><button class="retry_button" value="';
-                        h[++i] = features[j].properties.message_id;
+                    if(source === "optin_msg") {
+                        h[++i] = '<td><button class="optin_retry_button" value="';
+                        h[++i] = features[j].properties.id;
                         h[++i] = '">';
                         h[++i] = localise.set["c_retry"];
                         h[++i] = '</button></td>';
                     } else {
-                        h[++i] = '<td></td>';
+                        if (status === "error" && features[j].properties.message_id) {
+                            h[++i] = '<td><button class="retry_button" value="';
+                            h[++i] = features[j].properties.message_id;
+                            h[++i] = '">';
+                            h[++i] = localise.set["c_retry"];
+                            h[++i] = '</button></td>';
+                        } else {
+                            h[++i] = '<td></td>';
+                        }
                     }
 
                 }
@@ -754,6 +778,30 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 addHourglass();
                 $.ajax({
                     url: "/surveyKPI/eventList/retry/" + messageId,
+                    dataType: 'json',
+                    cache: false,
+                    success: function() {
+                        removeHourglass();
+                    },
+                    error: function(xhr, textStatus, err) {
+                        removeHourglass();
+                        if(xhr.readyState == 0 || xhr.status == 0) {
+                            return;  // Not an error
+                        } else {
+                            alert("Failed reset message notification");
+                        }
+                    }
+                });
+            });
+
+            $('.optin_retry_button', $elem).button().click(function() {
+                var $this = $(this);
+                var id = $this.val();
+                $this.closest('tr').remove();
+
+                addHourglass();
+                $.ajax({
+                    url: "/surveyKPI/eventList/optin_retry/" + id,
                     dataType: 'json',
                     cache: false,
                     success: function() {
