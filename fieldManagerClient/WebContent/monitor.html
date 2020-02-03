@@ -44,17 +44,18 @@
 		<form id="mon_controls">
 			<fieldset id="showsource" class="ui-widget-content">
 				<legend class="ui-widget-header ui-corner-all lang" data-lang="c_source">source</legend>
-				<input type="radio" name="showsource" value="forms" checked="checked"/> <span class="lang" data-lang="m_tm">forms</span><br/>
-				<input type="radio" name="showsource" value="uploaded" /> <span class="lang" data-lang="c_submitted">submitted</span><br/> 
-				<input type="radio" name="showsource" value="forwarded"/> <span class="lang" data-lang="c_forwarded">forwarded</span><br/>  
-				<input type="radio" name="showsource" value="notifications"/> <span class="lang" data-lang="m_notify">notifications</span><br/>  
+				<input type="radio" name="showsource" value="forms" checked="checked"/> <span class="lang" data-lang="m_tm">f</span><br/>
+				<input type="radio" name="showsource" value="uploaded" /> <span class="lang" data-lang="c_submitted">s</span><br/>
+				<input type="radio" name="showsource" value="forwarded"/> <span class="lang" data-lang="c_forwarded">f</span><br/>
+				<input type="radio" name="showsource" value="notifications"/> <span class="lang" data-lang="m_notify">n</span><br/>
+				<input type="radio" name="showsource" value="optin_msg"/> <span class="lang" data-lang="mon_optin_msg">opt</span><br/>
 			</fieldset>
 			<fieldset id="showtype" class="ui-widget-content">
 				<legend class="ui-widget-header ui-corner-all lang" data-lang="c_show">show</legend>
 				<input type="radio" name="showtype" value="totals" checked="checked"/> <span class="lang" data-lang="c_totals">totals</span><br/> 
 				<input type="radio" name="showtype" value="instances"/> <span class="lang" data-lang="c_instances">instances</span> <span class="lang" data-lang="mon_l200">last 200</span><br/>  
 			</fieldset>
-			<fieldset class="ui-widget-content">
+			<fieldset class="ui-widget-content showproject">
 				<legend class="ui-widget-header ui-corner-all lang" data-lang="c_data">data</legend>
 				<label for="project_name" class="lang" data-lang="c_project">Project</label>
 				<select class="project_list" id="project_name"></select><br/>

@@ -711,6 +711,7 @@ define({
     "mon_pi": "Phone Identifier",
     "mon_fr": "Failure Reason",
     "mon_file": "File with raw results",
+    "mon_optin_msg": "Opt in messages",
     "error": "Error",
     "success": "Success",
 
