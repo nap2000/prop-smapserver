@@ -126,6 +126,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
                 } else {
                     docURL = "/surveyKPI/survey/" + gSelectedTemplateId + "/download?type=" + type + "&language=" + language;
                 }
+                docURL += "&_v=" + new Date().getTime().toString();    // add a cache buster
                 window.location.href = docURL;
             });
 
