@@ -325,6 +325,12 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 $('#showtype, #showstatus').show();
             }
 
+            if(showSource === "optin_msg") {
+                $('.showproject').hide();
+            } else {
+                $('.showproject').show();
+            }
+
             if(typeof survey === "undefined" || survey === "_all" || showType === "instances") {
                 $('#groupsurvey').hide();
             } else {
@@ -425,6 +431,8 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 var url;
                 if(showSourceE === "notifications") {
                     url = "/surveyKPI/eventList/notifications/" + projectId + "/" + surveyId;
+                } else  if(showSourceE === "optin_msg") {
+                    url = "/surveyKPI/eventList/optin";
                 } else {
                     url = "/surveyKPI/eventList/" + projectId + "/" + surveyId;
                 }
@@ -481,7 +489,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                         }
                         if(showSourceE === "forms") {
                             refreshFormsTable(data);
-                        } else if(showSourceE === "notifications") {
+                        } else if(showSourceE === "notifications" || showSourceE === "optin_msg") {
                             refreshNotificationsTable(data, showType);
                         } else {
                             refreshTable(data, showType);
