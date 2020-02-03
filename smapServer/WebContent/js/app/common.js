@@ -2749,7 +2749,7 @@ function downloadFile(url) {
 	} else {
 		url += "&";
 	}
-	url += "_v" + new Date().getTime().toString();
+	url += "_v=" + new Date().getTime().toString();
 
 	$("body").append("<iframe src='" + url + "' style='display: none;' ></iframe>");
 	// Check for errors allow 5 seconds for an error to be returned
