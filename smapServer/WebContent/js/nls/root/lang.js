@@ -712,6 +712,7 @@ define({
     "mon_fr": "Failure Reason",
     "mon_file": "File with raw results",
     "mon_optin_msg": "Opt in messages",
+    "mon_send_count": "Send Count",
     "error": "Error",
     "success": "Success",
 
