@@ -700,7 +700,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
             } else {
                 h[++i] = '<th>' + localise.set["c_id"] + '</th>';
                 if(source === "optin_msg") {
-
+                    h[++i] = '<th>' + localise.set["mon_send_count"] + '</th>';
                 } else {
                     h[++i] = '<th>' + localise.set["c_type"] + '</th>';
                 }
@@ -729,7 +729,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
 
                     h[++i] = '<td>' + features[j].properties.id + '</td>';
                     if(source === "optin_msg") {
-                        // Empty
+                        h[++i] = '<td>' + features[j].properties.opted_in_count + '</td>';
                     } else {
                         h[++i] = '<td>' + (features[j].properties.type ? features[j].properties.type : '') + '</td>';
                     }

@@ -77,6 +77,7 @@ SELECT AddGeometryColumn('last_refresh_log', 'geo_point', 4326, 'POINT', 2);
 -- Default to true for existing email addresses
 alter table people add column opted_in boolean;
 alter table people add column opted_in_sent TIMESTAMP WITH TIME ZONE;
+alter table people add column opted_in_count integer default 0;
 alter table people add column opted_in_status text;
 alter table people add column opted_in_status_msg text;
 update people set opted_in = 'true' where opted_in is null;

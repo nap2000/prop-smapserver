@@ -1238,6 +1238,7 @@ create TABLE people (
 	unsubscribed boolean default false,
 	opted_in boolean,
 	opted_in_sent TIMESTAMP WITH TIME ZONE,
+	opted_in_count integer default 0,
 	opted_in_status text,
 	opted_in_status_msg text,
 	uuid text,								-- Uniquely identify this person
