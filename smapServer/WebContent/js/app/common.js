@@ -3839,7 +3839,9 @@ function setOrganisationTheme() {
 		setInLocalStorage('main_logo', undefined);
 
 		// Set the default logo
-		setCustomMainLogo();
+		if(typeof setCustomMainLogo === "function") {
+			setCustomMainLogo();
+		}
 	}
 }
 
