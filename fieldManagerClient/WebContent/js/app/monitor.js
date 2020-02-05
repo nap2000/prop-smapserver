@@ -701,6 +701,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 h[++i] = '<th>' + localise.set["c_id"] + '</th>';
                 if(source === "optin_msg") {
                     h[++i] = '<th>' + localise.set["mon_send_count"] + '</th>';
+                    h[++i] = '<th>' + localise.set["mon_pending_count"] + '</th>';
                 } else {
                     h[++i] = '<th>' + localise.set["c_type"] + '</th>';
                 }
@@ -730,6 +731,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                     h[++i] = '<td>' + features[j].properties.id + '</td>';
                     if(source === "optin_msg") {
                         h[++i] = '<td>' + features[j].properties.opted_in_count + '</td>';
+                        h[++i] = '<td>' + features[j].properties.pending_count + '</td>';
                     } else {
                         h[++i] = '<td>' + (features[j].properties.type ? features[j].properties.type : '') + '</td>';
                     }
@@ -797,7 +799,6 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
             $('.optin_retry_button', $elem).button().click(function() {
                 var $this = $(this);
                 var id = $this.val();
-                $this.closest('tr').remove();
 
                 addHourglass();
                 $.ajax({
@@ -806,6 +807,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                     cache: false,
                     success: function() {
                         removeHourglass();
+                        refreshData(globals.gCurrentProject, $('#survey option:selected').val());
                     },
                     error: function(xhr, textStatus, err) {
                         removeHourglass();
