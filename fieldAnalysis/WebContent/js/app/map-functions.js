@@ -403,7 +403,9 @@ function loadFeatures(map, key, item, ext_g, bounds, layers, isPeriod, md) {
 				strokeWidth: "${width}",
 				label: "${count}",
 				labelXOffset: "${xOffset}",
-				fontColor: "red"
+				labelYOffset: "${yOffset}",
+				fontColor: "red",
+				fontSize: "${fontSize}"
 			}, {
                 context: {
                     width: function(feature) {
@@ -437,6 +439,20 @@ function loadFeatures(map, key, item, ext_g, bounds, layers, isPeriod, md) {
 			                return 20;
 		                } else {
 			                return 0;
+		                }
+	                },
+	                yOffset: function(feature) {
+		                if (feature.attributes._label) {
+			                return -10;
+		                } else {
+			                return 0;
+		                }
+	                },
+	                fontSize: function(feature) {
+		                if (feature.attributes._label) {
+			                return 16;
+		                } else {
+			                return 8;
 		                }
 	                }
                 }
