@@ -77,7 +77,7 @@ $(document).ready(function() {
 	});
 	
 	$('.save_form').off().click(function() {	// Save a survey to Smap
-		saveTranslations(getSurveyDetails());
+		saveTranslations(getSurveyDetails(undefined, false, true));
 	});
 	
 	$('#m_settings').off().click(function() {	// Get a survey from Smap
@@ -133,7 +133,7 @@ $(document).ready(function() {
 	$('#get_form').off().click(function() {
 		globals.gCurrentSurvey = $('#survey_name option:selected').val();
 		saveCurrentProject(globals.gCurrentProject, globals.gCurrentSurvey);	// Save the current survey id
-		getSurveyDetails(refreshView);
+		getSurveyDetails(refreshView, false, true);
  	 });
 
 });
@@ -148,7 +148,7 @@ function getSurveyList() {
 }
 
 function surveyListDone() {
-	getSurveyDetails(refreshView, refreshView);
+	getSurveyDetails(refreshView, false, true);
 }
 
 
