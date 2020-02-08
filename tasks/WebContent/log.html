@@ -94,7 +94,7 @@
 	            <div class="col-md-12">
 	            	<div class="ibox float-e-margins">
 	            		<div class="ibox-title">
-	                    	<h5 class="lang" data-lang="m_logs">log</h5>
+	                    	<h5 class="lang" data-lang="r_s">subs</h5>
 	                    	<div class="ibox-tools">
 	                        	<a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
 	                        </div>
@@ -141,135 +141,6 @@
 
 
 <img id="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
-
-<!-- Popup to show features when a user clicks on a geometry item 
-<div id="features" class="feature-panel-right"></div>
--->
-
-
-<!-- Modal to allow the user to edit their own details
-<div id="modify_me_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modifyMeLabel" aria-hidden="true">
-	<div class="modal-dialog">
-   		<div class="modal-content">
-   			<div class="modal-header">
-     			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     			<h4 class="modal-title lang" id="modifyMeLabel"></h4>
-   			</div>
-		     <div class="modal-body">
-				<form role="form" class="form-horizontal" id="me_edit_form">
-					<div class="form-group">
-						<label for="me_name" data-lang="c_name" class="lang col-sm-2 control-label">Name</label>
-						<div class="col-sm-10">
-							<input type="text" id="me_name" required class="form-control">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="me_language" data-lang="c_lang" class="lang col-sm-2 control-label">Language</label>
-						<div class="col-sm-10">
-							<select id="me_language" class="language_select form-control"></select>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="me_email" data-lang="c_email" class="lang col-sm-2 control-label">Email</label>
-						<div class="col-sm-10">
-							<input type="email" class="form-control" id="me_email" 
-									placeholder="Enter email" 
-									pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="me_organisation" data-lang="c_org" class="lang col-sm-2 control-label">organisation</label>
-						<div class="col-sm-10">
-							<select id="me_organisation" class="organisation_select form-control"></select>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="u_tz" class="col-sm-2 control-label lang" data-lang="c_tz">timezone</label>
-						<div class="col-sm-10">
-							<select class="form-control timezone_select" id="u_tz"></select>
-						</div>
-					</div>
-					<div id="reset_me_password_fields" style="display:none;">
-						<div class="form-group">
-							<div class="col-sm-offset-2 col-sm-10">
-								<div class="checkbox">
-									<label>
-										<input type="checkbox" id="reset_me_password"><span data-lang="c_r_p" class="lang">Reset Password</span>
-									</label>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div id="password_me_fields" style="display:none;">
-						<div class="form-group">
-							<label for="me_password" data-lang="c_password" class="lang col-sm-2 control-label">Password</label>
-							<div class="col-sm-10">
-								<input id="me_password" type="password" placeholder="Password" class="form-control">
-							</div>
-						</div>	
-						<div class="form-group">
-							<label for="me_password_confirm" data-lang="c_c_p" class="lang col-sm-2 control-label">Confirm Password</label>
-							<div class="col-sm-10">
-								<input id="me_password_confirm" type="password" placeholder="Password" class="form-control">
-							</div>
-						</div>	
-					</div>		
-				</form>	
-			</div>
-
-			<div class="modal-footer">
-            	<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-            	<button id="userProfileLogout"type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_logout">Logout</button>
-            	<button id="userProfileSave" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_save">Save</button>
-        	</div>
-		</div>
-	</div>
-</div>
--->
-
-<!-- Modal to import data from a file -->
-<div id="import_taskgroup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importLabel" aria-hidden="true">
-	<div class="modal-dialog">
-   		<div class="modal-content">
-   			<div class="modal-header">
-     			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     			<h4 class="modal-title lang" id="importLabel" data-lang="m_import">import</h4>
-   			</div>
-		    <div class="modal-body">
-				<form role="form" class="form-horizontal" enctype="multipart/form-data" name="loadtasks">
- 
-		
-					<input id="tg_to_import" type="hidden" name="tg" value="-1" style="display:none;">
-					
-					<div class="form-group">
-     					<div class="input-group">
-     						<span class="input-group-btn">
-       							<input name="files" title="Add" class="file-inputs" type="file"
-									   accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel.sheet.macroEnabled.12">
-     						</span>
-    					 	<input type="text" class="upload_file_msg form-control">
-   						</div>
-        			</div> 
-        			<div class="form-group">
-						<label class="col-sm-4 control-label lang" data-lang="t_ce" for="tg_clear">clear</label>
-						<div class="col-sm-8">
-							<div class="checkbox">
-								<input type="checkbox" name="tg_clear" value="true" id="tg_clear">
-							</div>
-						</div>
-					</div>          			
-
-					  			
-				</form>
-				<div id="load_tasks_alert" style="display:none; background-color: #FEFC7C; padding: 5px 2px;" role="alert"></div>
-			</div>
-			<div class="modal-footer">
-            	<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-            	<button id="importTaskGroupGo" type="button" class="btn btn-primary lang" data-lang="m_import">import</button>
-        	</div> 
-        </div>
-	</div>
-</div>
 
 </body>
 </html>
