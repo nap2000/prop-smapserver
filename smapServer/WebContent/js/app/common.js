@@ -2023,7 +2023,7 @@ function questionMetaURL (sId, lang, qId) {
 /*
  * Get a survey details - depends on globals being set
  */
-function getSurveyDetails(callback, get_changes) {
+function getSurveyDetails(callback, get_changes, hide_soft_deleted) {
 
 	var tz = globals.gTimezone;
 	var url="/surveyKPI/surveys/" + globals.gCurrentSurvey;
@@ -2032,6 +2032,9 @@ function getSurveyDetails(callback, get_changes) {
 		url += "&tz=" + encodeURIComponent(tz);
 	} else {
 		url += "?tz=" + encodeURIComponent(tz);
+	}
+	if(hide_soft_deleted) {
+		url += "&get_soft_delete=false";
 	}
 
 	if(!globals.gCurrentSurvey) {
