@@ -69,36 +69,24 @@ require([
 	
 	$(document).ready(function() {
 
-		window.moment = moment;		// Make moment global for use by common.js
-        setCustomLogs();
+        setCustomSubs();
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
 
 		$("#side-menu").metisMenu()
 
-		getLoggedInUser(undefined, false, true, undefined);
-		
-		table = $('#log_table').DataTable({
+		getLoggedInUser(undefined, false, false, undefined);
+
+		table = $('#sub_table').DataTable({
 			 processing: true,
 			 deferRender: true,
-		     ajax: "/api/v1/log/dt",
+		     ajax: "/api/v1/subscriptions/dt",
 		     columns: [
-		                 { "data": "id" },
-		                 { "data": "log_time" },
-		                 { "data": "sName", "width": "200px"  },
-		                 { "data": "userIdent" },
-		                 { "data": "event" },
-		                 { "data": "note" }
+		                 { "data": "email" },
+		                 { "data": "status"  }
 		             ],
-		      order: [[ 0, "desc" ]],
-		      columnDefs: [{
-                  targets: [1],
-                  render: function (data, type, full, meta) {
-                      return localTime(data);
-                  }
-              }
-		     ],
-			initComplete: function () {
+		      order: [[ 0, "asc" ]],
+			  initComplete: function () {
 				this.api().columns().every( function () {
 					var column = this;
 					var select = $('<select><option value=""></option></select>')
@@ -119,14 +107,14 @@ require([
 				} );
 
 			}
+
 		});
 
-        $('#log_table').find('td').css('white-space','initial').css('word-wrap', 'break-word');
+        $('#sub_table').find('td').css('white-space','initial').css('word-wrap', 'break-word');
 		
 		$('#m_refresh').click(function(e) {	// Add refresh action
 			table.ajax.reload();
-		}); 
-
+		});
 			
 		
 	});
