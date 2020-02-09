@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta charset="utf-8">
 
-	<title class="lang" data-lang="m_logs">Logs</title>
+	<title class="lang" data-lang="r_s">subs</title>
 
     <link href="/css/bootstrap.v4.min.css" rel="stylesheet">
     <link href="/font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -28,7 +28,7 @@
 	<script src="/js/libs/bootstrap.bundle.v4.min.js"></script>
 	<script src="/js/libs/datatables.b4.min.js"></script>
 	<script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
-	<script data-main="js/log" src="/js/libs/require.js"></script>
+	<script data-main="js/subscriptions" src="/js/libs/require.js"></script>
 
 </head>
 <body>
@@ -56,17 +56,17 @@
 						  <i class="fas fa-dollar-sign"></i> <span class="nav-label lang" data-lang="m_billing">billing</span></a>
 					  </li>
 				  </ul>
-		        </li> 
+		        </li>
 
-	        <li id="m_monitor" class="restrict_role admin_role analyst_role"><a class="lang" data-lang="m_monitor" href="/fieldManager/monitor.html">Monitoring</a></li>
-			<li id="m_user" class="restrict_role admin_role"><a class="lang" data-lang="m_user" href="/fieldManager/userManagement.html">Users</a></li>
-			<li id="m_resources" class="restrict_role admin_role analyst_role"><a class="lang" data-lang="m_resources" href="/resources.html">Resources</a></li>
+				<li id="m_tm"><a class="lang" data-lang="m_tm" href="/fieldManager/surveyManagement.html" target="_top">fm</a></li>
+	        	<li id="m_monitor" class="restrict_role admin_role analyst_role"><a class="lang" data-lang="m_monitor" href="/fieldManager/monitor.html">Monitoring</a></li>
+				<li id="m_user" class="restrict_role admin_role"><a class="lang" data-lang="m_user" href="/fieldManager/userManagement.html">Users</a></li>
+				<li id="m_resources" class="restrict_role admin_role analyst_role"><a class="lang" data-lang="m_resources" href="/resources.html">Resources</a></li>
 		
-			<li id="m_help"><a href="https://www.smap.com.au/docs" target="_blank"><i class="fa fa-info-circle"></i> <span class="lang" data-lang="m_help">help</span></a></li>
-			<li class="nav-divider"></li>
-			
-			
-	      </ul>
+				<li id="m_help"><a href="https://www.smap.com.au/docs" target="_blank"><i class="fa fa-info-circle"></i> <span class="lang" data-lang="m_help">help</span></a></li>
+				<li class="nav-divider"></li>
+
+	      	</ul>
 		</div>
 		
 	</nav>
@@ -94,7 +94,7 @@
 	            <div class="col-md-12">
 	            	<div class="ibox float-e-margins">
 	            		<div class="ibox-title">
-	                    	<h5 class="lang" data-lang="m_logs">log</h5>
+	                    	<h5 class="lang" data-lang="r_s">subs</h5>
 	                    	<div class="ibox-tools">
 	                        	<a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
 	                        </div>
@@ -106,23 +106,15 @@
 							<div id="table-view" class="tab-pane active">
 		                		<div class="panel-body">
 		                    		<div class="table-responsive">
-		                                <table id="log_table" class="table table-striped" width="100%" cellspacing="0">
+		                                <table id="sub_table" class="table table-striped" width="100%" cellspacing="0">
 		                                    <thead>
 		                                    <tr>
-		                                    	<th></th>	<!-- id -->
-		                                        <th class="lang" data-lang="c_date">date</th>
-		                                        <th class="lang" data-lang="c_survey" style="width:200px;">survey</th>
-		                                        <th class="lang" data-lang="c_user">user</th>
-		                                        <th class="lang" data-lang="c_event">event</th>
-		                                      	<th class="lang" data-lang="c_note">note</th>
+		                                        <th class="lang" data-lang="c_email">email</th>
+		                                        <th class="lang" data-lang="c_status">status</th>
 		                                    </tr>
 		                                    </thead>
 		                                    <tfoot>
 		                                     <tr>
-		                                    	<th></th>	<!-- id -->
-		                                    	<th></th>
-		                                    	<th></th>
-		                                    	<th></th>
 		                                    	<th></th>
 		                                    	<th></th>
 		                                    </tr>

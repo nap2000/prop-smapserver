@@ -79,7 +79,11 @@
         {
             name: '../log',
 	    exclude: ['jquery', 'bootstrap', 'datatables_b4']
-        }
+        },
+        {
+            name: '../subscriptions',
+	    exclude: ['jquery', 'bootstrap', 'datatables_b4']
+	}
 
     ]
 })

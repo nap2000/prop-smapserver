@@ -102,6 +102,10 @@ function setCustomLogs() {
 
 }
 
+function setCustomSubs() {
+
+}
+
 function setCustomBilling() {
 
 }
