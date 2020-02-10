@@ -81,7 +81,7 @@
 	    exclude: ['jquery', 'bootstrap', 'datatables_b4']
         },
         {
-            name: '../subscriptions',
+            name: '../manage_subscriptions',
 	    exclude: ['jquery', 'bootstrap', 'datatables_b4']
 	}
 
