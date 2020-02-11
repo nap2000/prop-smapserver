@@ -190,16 +190,6 @@ function setMap(view, secondaryLayer) {
 		$btn,
 		selectedButton = -1;
 	
-	
-	// If this is a "refresh" then clear any existing buttons
-	// But first get the currently selected button so it can be preserved	TODO - Tricky with multiple layers each of which can have a selected button
-	//$btn = $dataButtons.find('label.ui-state-active').next();
-	//if($btn.length) {
-	//	selectedButton=$btn.val();
-	//}
-	
-	//$dataButtons.empty();
-	
 	// Add the layer(s) for the selected panel
 	if(!secondaryLayer) {
 		

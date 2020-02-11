@@ -377,6 +377,10 @@ function loadFeatures(map, key, item, ext_g, bounds, layers, isPeriod, md) {
 	if(featuresObj.constructor != Array) {
         featuresObj = [featuresObj];
     }
+
+	if(featuresObj.length == 0) {
+		return;
+	}
 	
 	var defaultStyle = undefined,
 		selectStyle = undefined,
