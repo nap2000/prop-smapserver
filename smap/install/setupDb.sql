@@ -457,7 +457,7 @@ CREATE TABLE upload_event (
 	instance_name text
 	);
 create index idx_ue_ident on upload_event(user_name);
-CREATE INDEX idx_ue_results_db ON upload_event(results_db_applied);
+create index idx_ue_applied on upload_event (status, incomplete, results_db_applied);
 CREATE index ue_survey_ident ON upload_event(ident);
 ALTER TABLE upload_event OWNER TO ws;
 
