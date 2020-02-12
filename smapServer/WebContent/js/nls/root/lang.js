@@ -1042,6 +1042,7 @@ define({
 	"u_usage": "Usage Report",
     "u_notification": "Notification Report",
 	"u_access": "Form Access Report",
+    "u_r_u": "Resource Usage Report",
     "u_sms_url": "SMS Url",
     "u_sens_data": "Sensitive Data",
     "u_sens_ao": "Admin Only",
