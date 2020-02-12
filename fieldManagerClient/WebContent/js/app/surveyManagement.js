@@ -314,6 +314,9 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
             $('#m_notification_report').click(function(){
                 executeNotificationReport();
             });
+            $('#m_resource_usage_report').click(function(){
+                executeResourceUsageReport();
+            });
 
 	        /*
              * Add date time picker to usage date
@@ -1037,6 +1040,11 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
         function executeNotificationReport() {
 
             downloadFile("/surveyKPI/adminreport/notifications/");
+        }
+
+        function executeResourceUsageReport() {
+
+            downloadFile("/surveyKPI/adminreport/resourceusage/");
         }
 
 

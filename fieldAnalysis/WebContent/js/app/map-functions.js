@@ -381,7 +381,7 @@ function loadFeatures(map, key, item, ext_g, bounds, layers, isPeriod, md) {
 	if(featuresObj.length == 0) {
 		return;
 	}
-	
+
 	var defaultStyle = undefined,
 		selectStyle = undefined,
 		colour_lookup = undefined;
