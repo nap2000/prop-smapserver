@@ -998,6 +998,7 @@ define(
     "u_usage": "Reporte de Uso",
     "u_notification": "Reporte de Notificaciones",
     "u_access": "Reporte de Acceso a Formularios",
+    "u_r_u": "Resource Usage Report",
     "u_sms_url": "Servicio SMS",
     "u_sens_data": "Datos Sensibles",
     "u_sens_ao": "Sólo Admin",
