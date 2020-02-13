@@ -628,6 +628,7 @@ CREATE TABLE question (
 	question text,
 	qtext_id text,
 	defaultAnswer text,
+	set_value text,
 	info text,
 	infotext_id text,
 	visible BOOLEAN default true,
