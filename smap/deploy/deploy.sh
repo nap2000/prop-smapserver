@@ -20,7 +20,7 @@ cwd=`pwd`
 #
 # stop services
 #
-apachectl -k graceful-stop
+service apache2 stop
 service $TOMCAT_VERSION stop
 if [ $u1404 -eq 1 ]; then
 service subscribers stop
