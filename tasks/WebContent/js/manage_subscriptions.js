@@ -84,7 +84,7 @@ require([
 		     columns: [
 		     	    { "data": "email" },
 			        { "data": "name" },
-			        { "data": "status"  }
+			        { "data": "status_loc"  }
 			     ],
 		      order: [[ 0, "asc" ]],
 			  initComplete: function () {
