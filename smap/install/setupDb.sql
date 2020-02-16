@@ -1235,7 +1235,8 @@ DROP TABLE IF EXISTS people;
 create TABLE people (
 	id integer default nextval('people_seq') constraint pk_people primary key,
 	o_id integer,
-	email text,								
+	email text,		
+	name text,
 	unsubscribed boolean default false,
 	opted_in boolean,
 	opted_in_sent TIMESTAMP WITH TIME ZONE,

@@ -99,8 +99,10 @@
 	            		<div class="ibox-title">
 	                    	<h5 class="lang" data-lang="r_s">subs</h5>
 	                    	<div class="ibox-tools">
-	                        	<a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-	                        </div>
+								<button class="selectedOnly lang btn btn-danger" data-lang="c_del" id="m_delete"></button>
+								<button class="selectedOnly lang btn btn-primary" data-lang="c_edit" id="m_edit"></button>
+								<button class="genfile xls btn btn-success "><i class="fa fa-file-excel fa-lg"></i></button>
+							</div>
 	                  
 	                	</div>
 	                	
@@ -113,14 +115,16 @@
 		                                    <thead>
 		                                    <tr>
 		                                        <th class="lang" data-lang="c_email">email</th>
+												<th class="lang" data-lang="c_name">n</th>
 		                                        <th class="lang" data-lang="c_status">status</th>
 		                                    </tr>
 		                                    </thead>
 		                                    <tfoot>
-		                                     <tr>
-		                                    	<th></th>
-		                                    	<th></th>
-		                                    </tr>
+												<tr>
+													<th></th>
+													<th></th>
+													<th></th>
+		                                    	</tr>
 		                                    </tfoot>
 		                                </table>
 		                            </div>

@@ -80,11 +80,12 @@ require([
 		table = $('#sub_table').DataTable({
 			 processing: true,
 			 deferRender: true,
-		     ajax: "/api/v1/subscriptions/dt",
+		     ajax: "/api/v1/subscriptions?dt=true",
 		     columns: [
-		                 { "data": "email" },
-		                 { "data": "status"  }
-		             ],
+		     	    { "data": "email" },
+			        { "data": "name" },
+			        { "data": "status"  }
+			     ],
 		      order: [[ 0, "asc" ]],
 			  initComplete: function () {
 				this.api().columns().every( function () {
