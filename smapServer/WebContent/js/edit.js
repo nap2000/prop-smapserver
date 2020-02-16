@@ -1234,29 +1234,29 @@ function refreshForm() {
 
 }
 
-			/*
-			 * Refresh the featured properties part of the form
-			 */
-            function refreshFeaturedProperties() {
+/*
+ * Refresh the featured properties part of the form
+ */
+function refreshFeaturedProperties() {
 
-                var $context,
-                    survey,
-                    question;
+	var $context,
+		survey,
+		question;
 
-                if(globals.gShowingChoices) {
-                    survey = globals.model.survey;
-                    if(typeof globals.gFormIndex !== "undefined") {
-                        question = survey.forms[globals.gFormIndex].questions[globals.gItemIndex];
-                    }
-                    option.addOptionTable(question, globals.gFormIndex, globals.gListName);
-                    option.setupChoiceView($('#filterType').val());
-                    respondToEventsChoices($('#optionTable'));
-                } else {
-                    $context = markup.refreshFeaturedProperties();
-                    respondToEvents($context);
-                }
+	if(globals.gShowingChoices) {
+		survey = globals.model.survey;
+		if(typeof globals.gFormIndex !== "undefined") {
+			question = survey.forms[globals.gFormIndex].questions[globals.gItemIndex];
+		}
+		option.addOptionTable(question, globals.gFormIndex, globals.gListName);
+		option.setupChoiceView($('#filterType').val());
+		respondToEventsChoices($('#optionTable'));
+	} else {
+		$context = markup.refreshQuestionFeaturedProperties();
+		respondToEvents($context);
+	}
 
-            }
+}
 
 /*
  * The passed in context is for a list of choices
@@ -3412,8 +3412,13 @@ function setNoFilter() {
 					// Handcoded
 					if(details.field === 'a_search') {
 						var search_source = $('input[type=radio][name=search_source]:checked').val();
+						var search_access = $('input[type=radio][name=search_access]:checked').val();
 						if(search_source !== 'worksheet') {
-							val = "search(";        // open
+							if(search_access === 'online') {
+								val = "lookup_choices(";
+							} else {
+								val = "search(";
+							}
 
 							// filename
 							var filename;
@@ -3564,7 +3569,7 @@ function setNoFilter() {
 					$elem.prop('checked', true);
 				} else if (type === "form") {
 					// Custom - hardcoded
-					if(val === "search(") {
+					if(val === "search(" || val === "lookup_choices(") {
 
 						// Now check parameters
 						var idx1 = appearance.indexOf('(');
@@ -3661,6 +3666,15 @@ function setNoFilter() {
 								}
 							}
 
+						}
+
+						/*
+						 * Set the access value
+						 */
+						if(val === "search(") {
+							$('input[type=radio][name=search_access][value=offline]').prop('checked', true);
+						} else {
+							$('input[type=radio][name=search_access][value=online]').prop('checked', true);
 						}
 
 						showSearchElements();

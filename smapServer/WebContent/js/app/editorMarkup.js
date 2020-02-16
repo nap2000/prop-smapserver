@@ -41,7 +41,7 @@ define([
 		includeQuestion: includeQuestion,
 		addQuestionSequence: addQuestionSequence,
 		getLinkedQuestions: getLinkedQuestions,
-		refreshFeaturedProperties: refreshFeaturedProperties
+		refreshQuestionFeaturedProperties: refreshQuestionFeaturedProperties
 	};
 	
 	/*
@@ -920,7 +920,7 @@ define([
 	/*
 	 * Refresh the featured properties
 	 */
-	function refreshFeaturedProperties() {
+	function refreshQuestionFeaturedProperties() {
 
         var survey = globals.model.survey;
 
@@ -936,7 +936,7 @@ define([
 
         return $('#formList');
 	}
-	
+
 	/*
 	 * Show the choice List view
 	 */

@@ -205,6 +205,7 @@ define([
 							
 				h[++idx] = '</td>';	// End of option name and label cell
 
+				/*
 				// Add option display_name cell
 				h[++idx] = '<td>';
 
@@ -217,7 +218,8 @@ define([
 					h[++idx] = '">';
 
 				h[++idx] = '</td>';	// End of option display_name and label cell
-			
+				*/
+
 				h[++idx] = addFilterColumnBody(option.cascade_filters);
 				h[++idx] = addOptionLabel(option);
 				
@@ -493,14 +495,20 @@ define([
 				h[++idx] = localise.set["ed_cval"];
 				h[++idx] = '</th>';
 
-				h[++idx] = '<th>';
-				h[++idx] = localise.set["ed_dn"];
-				h[++idx] = '</th>';
+				//h[++idx] = '<th>';
+				//h[++idx] = localise.set["ed_dn"];
+				//h[++idx] = '</th>';
 
 				h[++idx] = addFilterColumnHeadings();
 				
 				h[++idx] = '<th>';
-				h[++idx] = localise.set["ed_clab"];
+				if(globals.gSelProperty === 'media') {
+					h[++idx] = localise.set["c_media"];
+				} else if(globals.gSelProperty === 'display_name') {
+					h[++idx] = localise.set["ed_dn"];
+				} else {
+					h[++idx] = localise.set["ed_clab"];
+				}
 				h[++idx] = '</th>';
 				
 			h[++idx] = '</tr></thead>';
@@ -567,6 +575,15 @@ define([
 						option.labels[globals.gLanguage].audio, 
 						option.labels[globals.gLanguage].audioUrl, 
 						option.labels[globals.gLanguage].audioThumb);	
+
+			} else if(selProperty === "display_name") {
+				h[++idx] = '<textarea class="odisplayname has_tt" title="';
+				h[++idx] = localise.set["ed_dn"];
+				h[++idx] = '">';
+				h[++idx] = option.display_name;
+				h[++idx] = '</textarea>';
+				h[++idx] = addOptionErrorMsg(option.errorMsg);
+
 			} else {
 				h[++idx] = '<textarea class="labelProp has_tt" title="';
 				h[++idx] = localise.set["ed_clab"];

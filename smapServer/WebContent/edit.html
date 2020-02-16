@@ -110,7 +110,7 @@
 						<li class="q_only"><a data-prop="autoplay" href='javascript:void(0)'  class="lang" data-lang="ed_ap">auto play</a></li>
 						<li class="q_only"><a data-prop="accuracy" href='javascript:void(0)'  class="lang" data-lang="ed_at">accuracy</a></li>
 						<li class="q_only"><a data-prop="readonly" href='javascript:void(0)'  class="lang" data-lang="ed_ro">Read Only</a></li>
-						<li class="q_only"><a data-prop="display_name" href='javascript:void(0)'  class="lang" data-lang="ed_dn">display name</a></li>
+						<li><a data-prop="display_name" href='javascript:void(0)'  class="lang" data-lang="ed_dn">display name</a></li>
 						<li class="q_only"><a data-prop="defaultanswer" href='javascript:void(0)'  class="lang" data-lang="c_default">default</a></li>
 						<li class="q_only"><a data-prop="calculation" href='javascript:void(0)'  class="lang" data-lang="ed_calc">calculation</a></li>
 					</ul>
@@ -1382,7 +1382,7 @@
 					<form id="appearance_search_form" role="form" class="form-horizontal">
 
 						<div class="form-group">
-							<label for="a_width" data-lang="c_source" class="lang col-sm-4 control-label">source</label>
+							<label for="a_source" data-lang="c_source" class="lang col-sm-4 control-label">source</label>
 							<div class="col-sm-8" id="a_source">
 								<div class="radio">
 									<label>
@@ -1402,6 +1402,21 @@
 							</div>
 						</div>
 
+						<div class="form-group appearance_search_details">
+							<label for="a_access" data-lang="c_access" class="lang col-sm-4 control-label">ac</label>
+							<div class="col-sm-8" id="a_access">
+								<div class="radio">
+									<label>
+										<input type="radio" name="search_access" value="offline" checked="checked"><span class="lang" data-lang="ed_offline"></span>
+									</label>
+								</div>
+								<div class="radio">
+									<label>
+										<input type="radio" name="search_access" value="online"><span class="lang" data-lang="ed_online"></span>
+									</label>
+								</div>
+							</div>
+						</div>
 
 						<div class="appearance_search_details" style="display:none;">
 
