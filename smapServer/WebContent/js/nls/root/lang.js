@@ -333,6 +333,7 @@ define({
     "c_late": "Late",
     "c_custom": "Custom",
     "c_access": "Access",
+    "c_person": "Person",
 
     // File Types
     "ft": "File Type",
