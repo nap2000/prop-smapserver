@@ -234,7 +234,7 @@ require([
 			});
 
 		} else {
-			alert(localise.set["msg_inv_email"]);
+			alert(notification.errorMsg);
 		}
 	}
 
