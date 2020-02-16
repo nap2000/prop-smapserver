@@ -332,6 +332,7 @@ define({
     "c_resend": "Resend",
     "c_late": "Late",
     "c_custom": "Custom",
+    "c_access": "Access",
 
     // File Types
     "ft": "File Type",
@@ -919,6 +920,8 @@ define({
     "ed_ds": "Data Survey",
     "ed_os": "Oversight Survey",
     "ed_nb": "No Buttons",
+    "ed_offline": "Offline and Online",
+    "ed_online": "Online Only",
 
     // Managed Forms
     "mf_id": "Include Deleted",

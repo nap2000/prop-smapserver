@@ -447,7 +447,7 @@ define(function () {
 		    'search': {
 			    field: 'a_search',
 			    type: 'form',
-			    rex: 'search\\('
+			    rex: 'search\\(|lookup_choices\\('
 		    },
 		    'rating': {
 			    field: 'a_rating',
