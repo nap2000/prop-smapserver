@@ -100,3 +100,4 @@ CREATE index pending_message_email ON pending_message(email);
 ALTER TABLE pending_message OWNER TO ws;
 
 alter table question add column set_value text;
+alter table people add column name text;
