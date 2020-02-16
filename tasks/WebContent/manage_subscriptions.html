@@ -99,6 +99,7 @@
 	            		<div class="ibox-title">
 	                    	<h5 class="lang" data-lang="r_s">subs</h5>
 	                    	<div class="ibox-tools">
+								<!--<button class="lang btn btn-success" data-lang="c_add" id="m_add"></button>-->
 								<!--
 								<button class="selectedOnly lang btn btn-danger" data-lang="c_del" id="m_delete"></button>
 								<button class="selectedOnly lang btn btn-primary" data-lang="c_edit" id="m_edit"></button>
@@ -142,6 +143,43 @@
 
 
 <img id="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
+
+<!-- Popup to allow the user to add a person -->
+<div id="addPersonPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addPersonLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title lang" id="addPersonLabel" data-lang="c_person">add</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+						aria-hidden="true">&times;</span></button>
+			</div>
+
+			<div class="modal-body">
+				<form id="person_edit_form">
+
+					<div class="form-group row">
+						<label class="lang col-sm-2 control-label" data-lang="c_email" for="p_email"></label>
+						<div class="col-sm-10">
+							<input type="text" id="p_email" class="form-control">
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label class="lang col-sm-2 control-label" data-lang="c_name" for="p_name"></label>
+						<div class="col-sm-10">
+							<input type="text" id="p_name" class="form-control">
+						</div>
+					</div>
+
+				</form>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
+					<button id="savePerson" type="button" class="btn btn-primary lang" data-lang="c_save"></button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 </body>
 </html>

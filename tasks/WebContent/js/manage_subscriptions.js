@@ -66,6 +66,7 @@ require([
 		         moment) {
 
 	var table;
+	window.gSelectedPerson = -1;
 	
 	$(document).ready(function() {
 
@@ -116,11 +117,94 @@ require([
 		$('#m_refresh').click(function(e) {	// Add refresh action
 			table.ajax.reload();
 		});
-			
+
+		$('#m_add').click(function(){
+			window.gSelectedPerson = -1;    // Add new
+			$('#addPersonPopup').modal("show");
+		});
+
+		$('#savePerson').click(function(){savePerson();});
 		
 	});
-	
 
+	/*
+	 * Save a person
+	 */
+	function savePerson() {
+
+		var url,
+			person = {},
+			personString,
+			$dialog,
+			errorMsg;
+
+		person.email = $('#p_email').val();
+		person.name = $('#p_name').val();
+
+		/*
+		 * Validation
+		 *
+		 * email
+		 */
+
+		if(person.email && person.email.trim().length > 0) {
+			var emailArray = person.email.split(",");
+			if(emailArray.length > 1) {
+				errorMsg = localise.set["msg_inv_email"];
+			}
+			if (!validateEmails(email)) {
+				errorMsg = localise.set["msg_inv_email"];
+			}
+		} else {
+			errorMsg = localise.set["msg_inv_email"];
+		}
+
+		// name
+		if(!errorMsg) {
+			if(!person.name || person.name.trim().length == 0) {
+				errorMsg = localise.set["msg_val_name"];
+			}
+		}
+
+		if(!errorMsg) {
+
+			if(window.gSelectedPerson !== -1) {
+				person.id = window.gSelectedNotification;
+				url = "/surveyKPI/notifications/update";
+			} else {
+				url = "/surveyKPI/notifications/add";
+			}
+
+
+			notificationString = JSON.stringify(notification);
+			$dialog = $(this);
+			addHourglass();
+			$.ajax({
+				type: "POST",
+				dataType: 'text',
+				cache: false,
+				async: true,
+				url: url,
+				data: { notification: notificationString },
+				success: function(data, status) {
+					removeHourglass();
+					getNotifications(globals.gCurrentProject);
+					$('#addNotificationPopup').modal("hide");
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(localise.set["msg_err_save"] + xhr.responseText);
+					}
+				}
+			});
+
+		} else {
+			alert(errorMsg);
+		}
+	}
 
 });
 
