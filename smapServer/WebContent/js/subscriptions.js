@@ -76,20 +76,15 @@ require([
             }
         }
 
+        $('.hideme').hide();
         if(gToken && !gSubscribe) {
             $('#heading').text(localise.set["c_unsubscribe"]);
             $('#unsubscribe').show();
-            $('#subscribe').hide();
-            $('#subscribe2').hide();
         } else if(gToken && gSubscribe) {
             $('#heading').text(localise.set["c_subscribe"]);
-            $('#unsubscribe').hide();
-            $('#subscribe').hide();
             $('#subscribe2').show();
         } else {
             $('#heading').text(localise.set["r_s"]);
-            $('#unsubscribe').hide();
-            $('#subscribe2').hide();
             $('#subscribe').show();
         }
 
@@ -101,23 +96,7 @@ require([
             }
         });
 
-        if(gToken && !gSubscribe) {
-            $('#heading').text(localise.set["c_unsubscribe"]);
-            $('#unsubscribe').show();
-            $('#subscribe').hide();
-            $('#subscribe2').hide();
-        } else if(gToken && gSubscribe) {
-            $('#heading').text(localise.set["c_subscribe"]);
-            $('#unsubscribe').hide();
-            $('#subscribe').hide();
-            $('#subscribe2').show();
-        } else {
-            $('#heading').text(localise.set["r_s"]);
-            $('#unsubscribe').hide();
-            $('#subscribe2').hide();
-            $('#subscribe').show();
-        }
-
+        // Unsubscribe
         $('#unsubscribeSubmit').click(function (e) {
             e.preventDefault();
 
@@ -135,6 +114,46 @@ require([
             });
         });
 
+        // subscribe with a token
+        $('#subscribe2Submit').click(function (e) {
+            e.preventDefault();
+
+            addHourglass();
+            $.ajax({
+                cache: false,
+                url: "/surveyKPI/subscriptions/subscribe/" + gToken,
+                success: function (data, status) {
+                    removeHourglass();
+                    alert(localise.set["msg_s2"]);
+                }, error: function (data, status) {
+                    removeHourglass();
+                    alert(data.responseText);
+                }
+            });
+        });
+
+        // Validate email as part of self subscription
+        $('#validateEmail').click(function (e) {
+            e.preventDefault();
+
+            var email = $('#email').val();
+
+            addHourglass();
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "/surveyKPI/subscriptions/validateEmail/" + encodeURIComponent(email),
+                success: function (data, status) {
+                    removeHourglass();
+                    alert("Yo Valid Email");
+                }, error: function (data, status) {
+                    removeHourglass();
+                    alert(data.responseText);
+                }
+            });
+        });
+
+        // Self subscribe
         $('#subscribeSubmit').click(function (e) {
             e.preventDefault();
 
@@ -155,24 +174,6 @@ require([
                 }
             });
         });
-
-        $('#subscribe2Submit').click(function (e) {
-            e.preventDefault();
-
-            addHourglass();
-            $.ajax({
-                cache: false,
-                url: "/surveyKPI/subscriptions/subscribe/" + gToken,
-                success: function (data, status) {
-                    removeHourglass();
-                    alert(localise.set["msg_s2"]);
-                }, error: function (data, status) {
-                    removeHourglass();
-                    alert(data.responseText);
-                }
-            });
-        });
-
 
     });
 
