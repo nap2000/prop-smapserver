@@ -16,6 +16,7 @@
 
 	<link href="/css/smap-wb.css" rel="stylesheet">
 	<link href="/css/dataTables.fontAwesome.css" rel="stylesheet" >
+	<link href="/js/libs/DataTablesFixedColumns/datatables.min.css" rel="stylesheet">
 
 	<script> if (!window.console) console = {log: function() {}}; </script>
  
@@ -23,7 +24,7 @@
 	<script src="/js/app/theme.js"></script>
 	<script src="/js/libs/jquery-2.1.1.js"></script>
 	<script src="/js/libs/bootstrap.bundle.v4.min.js"></script>
-	<script src="/js/libs/datatables.b4.min.js"></script>
+	<script src="/js/libs/DataTablesFixedColumns/datatables.min.js"></script>
 	<script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
 	<script data-main="js/manage_subscriptions" src="/js/libs/require.js"></script>
 
@@ -99,10 +100,9 @@
 	            		<div class="ibox-title">
 	                    	<h5 class="lang" data-lang="r_s">subs</h5>
 	                    	<div class="ibox-tools">
-								<!--<button class="lang btn btn-success" data-lang="c_add" id="m_add"></button>-->
+								<button class="lang btn btn-success" data-lang="c_add" id="m_add"></button>
+								<button class="selectedOnly lang btn btn-primary" style="display:none;" data-lang="c_edit" id="m_edit"></button>
 								<!--
-								<button class="selectedOnly lang btn btn-danger" data-lang="c_del" id="m_delete"></button>
-								<button class="selectedOnly lang btn btn-primary" data-lang="c_edit" id="m_edit"></button>
 								<button class="genfile xls btn btn-success "><i class="fa fa-file-excel fa-lg"></i></button>
 								-->
 							</div>

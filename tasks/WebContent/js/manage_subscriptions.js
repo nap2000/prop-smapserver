@@ -66,7 +66,9 @@ require([
 		         moment) {
 
 	var table;
-	window.gSelectedPerson = -1;
+	var gSelectedIndexes;
+	var gSelectedRecord;
+	var gSelectedId;
 	
 	$(document).ready(function() {
 
@@ -79,9 +81,13 @@ require([
 		getLoggedInUser(undefined, false, false, undefined);
 
 		table = $('#sub_table').DataTable({
-			 processing: true,
-			 deferRender: true,
+			processing: true,
+			scrollY: '70vh',
+			scrollX: true,
+			scrollCollapse: true,
 		     ajax: "/api/v1/subscriptions?dt=true",
+			 select: true,
+			 rowId: 'email',
 		     columns: [
 		     	    { "data": "email" },
 			        { "data": "name" },
@@ -113,20 +119,52 @@ require([
 		});
 
         $('#sub_table').find('td').css('white-space','initial').css('word-wrap', 'break-word');
-		
+
+		// Respond to selection of a row
+		table.off('select').on('select', function (e, dt, type, indexes) {
+			recordSelected(indexes);
+		});
+		table.off('deselect').on('deselect', function (e, dt, type, indexes) {
+			$('.selectedOnly').hide();
+		});
+
 		$('#m_refresh').click(function(e) {	// Add refresh action
 			table.ajax.reload();
 		});
 
 		$('#m_add').click(function(){
-			window.gSelectedPerson = -1;    // Add new
+			gSelectedId = -1;
+			initPersonDialog(-1);
 			$('#addPersonPopup').modal("show");
 		});
+
+		$('#m_edit').click(function(){
+			gSelectedId = gSelectedRecord.id;
+			initPersonDialog(gSelectedRecord.id);
+			$('#addPersonPopup').modal("show");
+		});
+
 
 		$('#savePerson').click(function(){savePerson();});
 		
 	});
 
+	/*
+	 * Initialise the dialog
+	 */
+	function initPersonDialog(idx) {
+
+		if(idx > 0) {
+			// existing
+			$('#p_email').val(gSelectedRecord.email);
+			$('#p_name').val(gSelectedRecord.name);
+		} else {
+			// new
+			$('#p_email').val("");
+			$('#p_name').val("");
+		}
+
+	}
 	/*
 	 * Save a person
 	 */
@@ -135,7 +173,6 @@ require([
 		var url,
 			person = {},
 			personString,
-			$dialog,
 			errorMsg;
 
 		person.email = $('#p_email').val();
@@ -152,7 +189,7 @@ require([
 			if(emailArray.length > 1) {
 				errorMsg = localise.set["msg_inv_email"];
 			}
-			if (!validateEmails(email)) {
+			if (!validateEmails(person.email)) {
 				errorMsg = localise.set["msg_inv_email"];
 			}
 		} else {
@@ -168,16 +205,10 @@ require([
 
 		if(!errorMsg) {
 
-			if(window.gSelectedPerson !== -1) {
-				person.id = window.gSelectedNotification;
-				url = "/surveyKPI/notifications/update";
-			} else {
-				url = "/surveyKPI/notifications/add";
-			}
+			person.id = gSelectedId;
+			personString = JSON.stringify(person);
+			url = '/surveyKPI/people'
 
-
-			notificationString = JSON.stringify(notification);
-			$dialog = $(this);
 			addHourglass();
 			$.ajax({
 				type: "POST",
@@ -185,11 +216,11 @@ require([
 				cache: false,
 				async: true,
 				url: url,
-				data: { notification: notificationString },
+				data: { person: personString },
 				success: function(data, status) {
 					removeHourglass();
-					getNotifications(globals.gCurrentProject);
-					$('#addNotificationPopup').modal("hide");
+					table.ajax.reload();
+					$('#addPersonPopup').modal("hide");
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
@@ -206,5 +237,10 @@ require([
 		}
 	}
 
+	function recordSelected(indexes) {
+		$('.selectedOnly').show();
+		gSelectedIndexes = indexes;
+		gSelectedRecord = table.rows(gSelectedIndexes).data().toArray()[0];
+	}
 });
 
