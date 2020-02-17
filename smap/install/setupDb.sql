@@ -146,6 +146,7 @@ create TABLE organisation (
 	can_use_api boolean default true,
 	can_submit boolean default true,
 	can_sms boolean default false,
+	send_optin boolean default true,
 	set_as_theme boolean default false,
 	email_task boolean,
 	ft_delete text,
