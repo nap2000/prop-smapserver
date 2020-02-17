@@ -101,3 +101,5 @@ ALTER TABLE pending_message OWNER TO ws;
 
 alter table question add column set_value text;
 alter table people add column name text;
+
+create unique index idx_people on people(o_id, email);

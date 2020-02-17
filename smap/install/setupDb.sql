@@ -1248,6 +1248,7 @@ create TABLE people (
 	when_subscribed TIMESTAMP WITH TIME ZONE,
 	when_requested_subscribe TIMESTAMP WITH TIME ZONE		-- prevent spamming
 	);
+create unique index idx_people on people(o_id, email);
 ALTER TABLE people OWNER TO ws;
 
 DROP SEQUENCE IF EXISTS apply_foreign_keys_seq CASCADE;
