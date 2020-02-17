@@ -656,7 +656,6 @@ require([
         $('a[data-toggle="tab"]', '#mainTabs').on('shown.bs.tab', function (e) {
             var target = $(e.target).attr("href") // activated tab
 
-            console.log("tab:::: " + target);
             $('.targetSpecific').hide();
             gMapView = false;
             gChartView = false;
