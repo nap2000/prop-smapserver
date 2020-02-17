@@ -1065,6 +1065,7 @@ define({
     "u_bl": "WebForm Banner Logo (Height 50px)",
     "u_ml": "Main Logo",
     "u_nbc": "Navigation bar color",
+    "u_eoi": "Enable Opt In",
     "admin": "Administrator",
     "analyst": "Analyst",
     "enterprise admin": "Enterprise Admin",
