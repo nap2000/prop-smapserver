@@ -609,6 +609,7 @@ require([
 			organisation.can_use_api = false;
 			organisation.can_submit = false;
 			organisation.can_sms = false;
+			organisation.send_optin = false;
 			organisation.appearance.set_as_theme = false;
 			for(i = 0; i < options.length; i++) {
 				if(options[i] === "email") {
@@ -633,6 +634,8 @@ require([
 					organisation.appearance.set_as_theme = true;
 				} else if(options[i] === "can_sms") {
 					organisation.can_sms = true;
+				} else if(options[i] === "send_optin") {
+					organisation.send_optin = true;
 				}
 			}
 			organisation.appearance.navbar_color = $('#o_navbar_color').val();
@@ -1504,6 +1507,8 @@ require([
 					this.checked = org.can_submit;
 				} else if($(this).val() === "can_sms") {
 					this.checked = org.can_sms;
+				} else if($(this).val() === "send_optin") {
+					this.checked = org.send_optin;
 				} else if($(this).val() === "ft_odk_style_menus") {
 					this.checked = org.ft_odk_style_menus;
 				} else if($(this).val() === "ft_odk_style_menus") {
