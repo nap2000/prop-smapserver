@@ -51,6 +51,7 @@ require([
 
     var gToken;
     var gSubscribe;
+    var gOrgList;
 
     $(document).ready(function () {
 
@@ -142,32 +143,19 @@ require([
             $.ajax({
                 cache: false,
                 type: "GET",
+                dataType: 'json',
                 url: "/surveyKPI/subscriptions/validateEmail/" + encodeURIComponent(email),
                 success: function (data, status) {
                     removeHourglass();
-                    alert("Yo Valid Email");
-                }, error: function (data, status) {
-                    removeHourglass();
-                    alert(data.responseText);
-                }
-            });
-        });
+                    if(data && data.length > 0) {
+                        $('#org_list').show();
+                        $('#org_empty').hide();
+                        updateOrgList(data);
+                    } else {
+                        $('#org_list').hide();
+                        $('#org_empty').show();
 
-        // Self subscribe
-        $('#subscribeSubmit').click(function (e) {
-            e.preventDefault();
-
-            var email = $('#email').val();
-
-            addHourglass();
-            $.ajax({
-                cache: false,
-                type: "POST",
-                url: "/surveyKPI/subscriptions/subscribe",
-                data: {email: email},
-                success: function (data, status) {
-                    removeHourglass();
-                    alert(localise.set["msg_s1"]);
+                    }
                 }, error: function (data, status) {
                     removeHourglass();
                     alert(data.responseText);
@@ -178,6 +166,88 @@ require([
     });
 
 
+    /*
+     * Update the oganisation list
+     */
+    function updateOrgList(data) {
+
+        var $selector=$('#org_list'),
+            i,
+            h = [],
+            idx = -1;
+
+        gOrgList = data;
+
+        h[++idx] = '<div class="well mt-2">';
+
+        h[++idx] = '<b><div class="row">';
+
+        h[++idx] = '<div class="col-lg-4 col-xs-8">';
+        h[++idx] = localise.set["r_o_n"];
+        h[++idx] = '</div>';
+
+
+        h[++idx] = '<div class="col-lg-2 col-xs-4">';
+        h[++idx] = '</div>';
+
+        h[++idx] = '</div></b>';        // Header row
+
+        for(i = 0; i < data.length; i++) {
+
+            h[++idx] = '<div class="row">';
+
+            // name
+            h[++idx] = '<div class="col-lg-4 col-xs-8">';
+            h[++idx] = data[i].name;
+            h[++idx] = '</div>';
+
+            // actions
+            h[++idx] = '<div class="col-lg-2 col-xs-4">';
+
+            h[++idx] = '<button type="button" value="';
+            h[++idx] = i;
+            h[++idx] = '" class="btn btn-default btn-sm subscribe_org">';
+            h[++idx] = localise.set["c_subscribe"];
+            h[++idx] = '</button>';
+
+            h[++idx] = '</div>';            // end actions
+
+            h[++idx] = '</div>';            // end row
+        }
+        h[++idx] = '</div>';
+
+        $selector.empty().append(h.join(''));
+
+
+        // Self subscribe
+        $('.subscribe_org').click(function (e) {
+            e.preventDefault();
+
+            alert($(this).val());
+
+            var email = $('#email').val();
+            var oId = gOrgList[$(this).val()].id;
+
+            addHourglass();
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "/surveyKPI/subscriptions/subscribe",
+                data: {
+                    email: email,
+                    oId: oId
+                },
+                success: function (data, status) {
+                    removeHourglass();
+                    alert(localise.set["msg_s1"]);
+                }, error: function (data, status) {
+                    removeHourglass();
+                    alert(data.responseText);
+                }
+            });
+        });
+
+    }
 
 });
 
