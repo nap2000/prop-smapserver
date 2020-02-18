@@ -223,8 +223,6 @@ require([
         $('.subscribe_org').click(function (e) {
             e.preventDefault();
 
-            alert($(this).val());
-
             var email = $('#email').val();
             var oId = gOrgList[$(this).val()].id;
 
