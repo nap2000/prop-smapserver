@@ -12,6 +12,8 @@ define({
     "m_email_unsent": "Email Unsent",
     "m_export": "Export",
     "m_export_media": "Export with Media",
+    "m_backup": "Backup",
+    "m_backup_media": "Backup with Media",
     "m_discuss": "Discuss",
     "m_modify": "Modify",
     "m_web_forms": "Web Forms",
@@ -334,6 +336,9 @@ define({
     "c_custom": "Custom",
     "c_access": "Access",
     "c_person": "Person",
+    "c_people": "People",
+    "c_teams": "Teams",
+    "c_mailouts": "Mail outs",
 
     // File Types
     "ft": "File Type",
