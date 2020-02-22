@@ -95,7 +95,7 @@
 
         	</nav>
         </div>
-        
+
 		<div class="wrapper wrapper-content animated fadeInRight">
 
             <div class="row">
@@ -114,26 +114,45 @@
 	                	</div>
 	                	
 	                	<div class="ibox-content">
-			
-							<div id="table-view" class="tab-pane active">
-		                		<div class="panel-body">
-		                    		<div class="table-responsive">
-		                                <table id="sub_table" class="table table-striped" width="100%" cellspacing="0">
-		                                    <thead>
-		                                    <tr>
-		                                        <th class="lang" data-lang="c_email">email</th>
-												<th class="lang" data-lang="c_name">n</th>
-		                                        <th class="lang" data-lang="c_status">status</th>
-		                                    </tr>
-		                                    </thead>
-		                                    <tfoot>
-												<tr>
-													<th></th>
-													<th></th>
-													<th></th>
-		                                    	</tr>
-		                                    </tfoot>
-		                                </table>
+
+							<ul id="mainTabs" class="nav nav-tabs" role="tablist">
+								<li class="nav-item"><a data-toggle="tab" id="set-people-view" href="#people-view" role="tab" class="active nav-link"><i class="fa fa-user"></i> <span class="lang" data-lang="c_people"></span></a></li>
+								<li class="nav-item"><a data-toggle="tab" id="set-team-view"href="#team-view" role="tab" class="nav-link"><i class="fa fa-user-plus"></i> <span class="lang" data-lang="c_teams"></span></a></li>
+							</ul>
+
+							<div class="row">
+
+								<div class="tabs-container container-fluid">
+									<div class="tab-content">
+										<div id="people-view" role="tabpanel" class="tab-pane active show fade">
+											<div class="panel-body">
+
+		                    					<div class="table-responsive">
+		                                			<table id="sub_table" class="table table-striped" width="100%" cellspacing="0">
+		                                    			<thead>
+															<tr>
+																<th class="lang" data-lang="c_email">email</th>
+																<th class="lang" data-lang="c_name">n</th>
+																<th class="lang" data-lang="c_status">status</th>
+															</tr>
+														</thead>
+														<tfoot>
+															<tr>
+																<th></th>
+																<th></th>
+																<th></th>
+															</tr>
+														</tfoot>
+													</table>
+												</div>
+											</div>
+										</div>
+										<div id="team-view"  role="tabpanel" class="tab-pane fade">
+											<div class="panel-body">
+												<div class="row">
+												</div>
+											</div>
+										</div>
 		                            </div>
 		                    	</div>
 							</div>
