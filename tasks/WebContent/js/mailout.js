@@ -285,9 +285,30 @@ require([
 			dataType: 'json',
 			cache: false,
 			success: function(data) {
-
 				removeHourglass();
+				var h = [],
+					idx = -1,
+					i,
+					count = 0,
+					item,
+					selValue;
 
+				if(data) {
+					for (i = 0; i < data.length; i++) {
+						item = data[i];
+						h[++idx] = '<option';
+						if (count++ == 0) {
+							selValue = item.id;
+						}
+						h[++idx] = ' value="';
+						h[++idx] = item.id;
+						h[++idx] = '">';
+						h[++idx] = item.name;
+						h[++idx] = '</option>';
+					}
+				}
+				$('#mailout').empty().append(h.join(''));
+				$('#mailout').val(selValue);
 
 			},
 			error: function(xhr, textStatus, err) {
