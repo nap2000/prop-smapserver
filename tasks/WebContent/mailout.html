@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+
+	<title class="lang" data-lang="r_s">subs</title>
+
+	<link href="/css/datatables.b4.css" rel="stylesheet" >
+    <link href="/css/bootstrap.v4.min.css" rel="stylesheet">
+    <link href="/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <link href="/css/wb/animate.css" rel="stylesheet">
+    <link href="/css/wb/style.v2.9.1.css" rel="stylesheet">
+
+	<link href="/css/smap-wb.css" rel="stylesheet">
+	<link href="/css/dataTables.fontAwesome.css" rel="stylesheet" >
+	<link href="/js/libs/DataTablesFixedColumns/datatables.min.css" rel="stylesheet">
+
+	<script> if (!window.console) console = {log: function() {}}; </script>
+ 
+	<script src="/js/libs/modernizr.js"></script>
+	<script src="/js/app/theme.js"></script>
+	<script src="/js/libs/jquery-2.1.1.js"></script>
+	<script src="/js/libs/bootstrap.bundle.v4.min.js"></script>
+	<script src="/js/libs/DataTablesFixedColumns/datatables.min.js"></script>
+	<script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
+	<script data-main="js/mailout" src="/js/libs/require.js"></script>
+
+</head>
+<body>
+
+<div id="wrapper">
+
+	<nav class="navbar-default navbar-static-side noPrint" role="navigation">
+		<div>
+	    	<ul class="nav metismenu" id="side-menu">
+				<li>
+         			<a href="#"  id="username" data-toggle="modal" data-target="#modify_me_popup" aria-label="User">
+							<i class="glyphicon glyphicon-user" aria-hidden="true"></i> <span class="lang" data-lang="m_user_profile"></span></a>
+				</li>
+		      	<li>
+		          <a href="#" id="m_modules_inspinia"  aria-expanded="false"><i class="fa fa-th-large"></i> <span class="lang" data-lang="m_modules">modules</span></a>
+		          <ul class="nav nav-second-level" aria-expanded="false">
+		            
+		            <li><a class="lang" data-lang="m_home" href="/?loggedin=yes">home</a></li>
+		            <li class="restrict_role admin_role analyst_role"><a href="/edit.html"><i class="glyphicon glyphicon-edit"></i> <span class="lang" data-lang="c_edit">Edit</span></a></li>
+		            <li class="restrict_role admin_role analyst_role"><a href="/fieldManager/surveyManagement.html"><i class="glyphicon glyphicon-wrench"></i> <span class="lang" data-lang="m_admin">Admin</span></a></li>
+					  <li class="restrict_role manage_role admin_role analyst_role"><a href="/webForm.html"><i
+							  class="glyphicon glyphicon-globe"></i> <span class="nav-label lang"
+																		   data-lang="m_web_forms"></span></span>
+					  </a></li>
+					  <li class="restrict_role manage_role admin_role analyst_role"><a href="/tasks/managed_forms.html"><i class="glyphicon glyphicon-dashboard"></i> <span class="nav-label lang" data-lang="m_console"></span></a></li>
+		            <li class="restrict_role analyst_role"><a href="/fieldAnalysis/index.html"><i class="glyphicon glyphicon-stats"></i> <span class="nav-label lang" data-lang="m_analysis">Analysis</span></a></li>
+			        <li class="restrict_role admin_role analyst_role manage_role task_role"><a href="/tasks/taskManagement.html"><i class="fa fa-tasks"></i> <span class="nav-label lang" data-lang="m_assign">assign</span></a></li>
+					  <li class="restrict_role billing_role" style="display:none;"><a href="/fieldManager/billing.html">
+						  <i class="fas fa-dollar-sign"></i> <span class="nav-label lang" data-lang="m_billing">billing</span></a>
+					  </li>
+				  </ul>
+		        </li>
+
+				<li id="m_assign" class="restrict_role admin_role analyst_role manage_role task_role"><a
+						href="/tasks/taskManagement.html"><i class="fa fa-tasks"></i> <span
+						class="nav-label lang" data-lang="m_assign"></span></a></li>
+				<li id="m_notify" class="restrict_role admin_role analyst_role"><a
+						href="/fieldManager/notifications.html"><i class="fa fa-envelope"></i> <span
+						class="nav-label lang" data-lang="m_notify"></span></a></li>
+	        	<li id="m_monitor" class="restrict_role admin_role analyst_role"><a class="lang" data-lang="m_monitor" href="/fieldManager/monitor.html">Monitoring</a></li>
+				<li id="m_subscribe"><a href="/subscriptions.html"><i
+						class="fa fa-map-o"></i> <span class="nav-label lang"
+													   data-lang="c_subscribe"></span></a></li>
+		
+				<li id="m_help"><a href="https://www.smap.com.au/docs" target="_blank"><i class="fa fa-info-circle"></i> <span class="lang" data-lang="m_help">help</span></a></li>
+				<li class="nav-divider"></li>
+
+	      	</ul>
+		</div>
+		
+	</nav>
+
+	<div id="page-wrapper" class="gray-bg">
+	
+	    <!-- Navbar Row -->
+    	<div class="row border-bottom">
+        	<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+        		<div class="navbar-header">
+            		<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+            		
+        		</div>
+				<h2 class="lang overviewSection" data-lang="c_mailouts"></h2>
+	            <ul class="nav navbar-top-links navbar-right">
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+							<span class="lang" data-lang="c_mailouts">m</span>
+						</a>
+						<ul class="dropdown-menu dropdown-alerts">
+							<li>
+								<a class="dropdown-item" href="#" id="m_add">
+									<div>
+										<span class="lang" data-lang="c_add">add</span>
+									</div>
+								</a>
+							</li>
+
+						</ul>
+					</li>
+	           		<li><a href="#" id="m_refresh"><span class="lang" data-lang="m_refresh">refresh</span></a></li>		       
+	            </ul>
+
+        	</nav>
+        </div>
+
+		<!-- Header Row -->
+		<div class="row wrapper border-bottom white-bg page-heading">
+			<div class="col-sm-12">
+				<form class="form-inline" role="form">
+					<div class="col-sm-4 pt-4">
+						<div class="form-group row">
+							<label class="lang col-md-4"  data-lang="c_project"  for="project_name"></label>
+							<select class="project_list form-control form-control-lg col-md-8" id="project_name"></select>
+						</div>
+					</div>
+					<div class="col-sm-4 pt-4">
+						<div class="form-group row">
+							<label class="lang col-md-4" data-lang="c_survey" for="survey_name"></label>
+							<select class="form-control col-md-8 form-control-lg data_survey survey_select" id="survey_name"></select>
+						</div>
+					</div>
+
+					<div class="col-sm-4 pt-4">
+						<div class="form-group row">
+							<label class="lang col-md-4" data-lang="c_mailout" for="mailout"></label>
+							<select class="form-control col-md-8 form-control-lg" id="mailout"></select>
+						</div>
+					</div>
+
+				</form>
+
+			</div>
+		</div>
+
+		<div class="wrapper wrapper-content animated fadeInRight">
+
+            <div class="row">
+	            <div class="col-md-12">
+	            	<div class="ibox float-e-margins">
+	            		<div class="ibox-title">
+	                    	<h5 class="lang" data-lang="c_emails">e</h5>
+	                    	<div class="ibox-tools">
+								<!--
+								<button class="lang btn btn-success" data-lang="c_add" id="m_add"></button>
+								<button class="selectedOnly lang btn btn-primary" style="display:none;" data-lang="c_edit" id="m_edit"></button>
+								<button class="genfile xls btn btn-success "><i class="fa fa-file-excel fa-lg"></i></button>
+								-->
+							</div>
+	                  
+	                	</div>
+	                	
+	                	<div class="ibox-content">
+
+							<div class="row">
+
+								<div class="tabs-container container-fluid">
+									<div class="panel-body">
+
+										<div class="table-responsive">
+											<table id="sub_table" class="table table-striped" width="100%" cellspacing="0">
+												<thead>
+												<tr>
+													<th class="lang" data-lang="c_email">email</th>
+													<th class="lang" data-lang="c_name">n</th>
+													<th class="lang" data-lang="c_status">status</th>
+												</tr>
+												</thead>
+												<tfoot>
+												<tr>
+													<th></th>
+													<th></th>
+													<th></th>
+												</tr>
+												</tfoot>
+											</table>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<img id="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
+
+<!-- Popup to allow the user to add a mailout -->
+<div id="addMailoutPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addPersonLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title lang" id="addPersonLabel" data-lang="c_person">add</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+						aria-hidden="true">&times;</span></button>
+			</div>
+
+			<div class="modal-body">
+				<form id="mailout_edit_form">
+
+					<div class="form-group row">
+						<label class="lang col-sm-2 control-label" data-lang="c_name" for="p_name"></label>
+						<div class="col-sm-10">
+							<input type="text" id="p_name" class="form-control">
+						</div>
+					</div>
+
+				</form>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
+					<button id="saveMailout" type="button" class="btn btn-primary lang" data-lang="c_save"></button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

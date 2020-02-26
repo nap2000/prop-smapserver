@@ -1577,7 +1577,7 @@ function removeHourglass() {
 /*
  * Load the surveys from the server
  */
-function loadSurveys(projectId, selector, getDeleted, addAll, callback) {
+function loadSurveys(projectId, selector, getDeleted, addAll, callback, showIdent) {
 
 	var url="/surveyKPI/surveys?projectId=" + projectId + "&blocked=true";
 
@@ -1602,9 +1602,9 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback) {
 
 				removeHourglass();
 
-				showSurveyList(data, sel + ".data_survey", all, true, false);
-				showSurveyList(data, sel + ".oversight_survey", all, false, true);
-				showSurveyList(data, sel + ".data_oversight_survey", all,true, true);
+				showSurveyList(data, sel + ".data_survey", all, true, false, showIdent);
+				showSurveyList(data, sel + ".oversight_survey", all, false, true, showIdent);
+				showSurveyList(data, sel + ".data_oversight_survey", all,true, true, showIdent);
 
 				if(typeof callback == "function") {
 					callback();
@@ -1637,7 +1637,7 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback) {
 /*
  * Show the surveys in select boxes
  */
-function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey) {
+function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, useIdent) {
 
 	var i,
 		item,
@@ -1663,13 +1663,13 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey) {
 		if(item.dataSurvey && dataSurvey || item.oversightSurvey && oversightSurvey) {
 			h[++idx] = '<option';
 			if (count++ == 0) {
-				selValue = item.id;
+				selValue = useIdent ? item.ident : item.id;
 			}
 			if (item.blocked) {
 				h[++idx] = ' class="blocked"';
 			}
 			h[++idx] = ' value="';
-			h[++idx] = item.id;
+			h[++idx] = useIdent ? item.ident : item.id;
 			h[++idx] = '">';
 			h[++idx] = item.displayName;
 			if (item.blocked) {
@@ -1683,7 +1683,9 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey) {
 	$elem.val(selValue);
 	$("option.blocked", $elem_disable_blocked).attr("disabled", "disabled");
 
-	if(globals.gCurrentSurvey > 0) {
+	if(useIdent) {
+		//
+	} else if(globals.gCurrentSurvey > 0) {
 		$elem.val(globals.gCurrentSurvey);
 	}
 }

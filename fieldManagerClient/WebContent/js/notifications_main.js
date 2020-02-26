@@ -129,7 +129,7 @@ require([
 	function projectSet() {
 
 		populateTaskGroupList();
-		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged);			// Get surveys
+		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged, false);			// Get surveys
 		getNotifications(globals.gCurrentProject);
 	}
 

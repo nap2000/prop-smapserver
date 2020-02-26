@@ -145,7 +145,7 @@ function enableReversal() {
 }
 
 function getSurveyList() {
-	loadSurveys(globals.gCurrentProject, undefined, false, false, getAuditList);
+	loadSurveys(globals.gCurrentProject, undefined, false, false, getAuditList, false);
 }
 
 

@@ -168,7 +168,7 @@ require([
 		//
 		$('#project_select,#project_name').change(function () {
 			var sourceProject = $('#project_select option:selected').val();
-			loadSurveys(sourceProject, "#survey", false, false, surveyChanged);			// Get surveys
+			loadSurveys(sourceProject, "#survey", false, false, surveyChanged, false);			// Get surveys
 		});
 
 		// Add a trigger to respond to the clicking of "filter tasks"
@@ -1080,7 +1080,7 @@ require([
 
 		globals.gCurrentProject = $('#project_name option:selected').val();
 
-		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged);			// Get surveys
+		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged, false);			// Get surveys
 		refreshTaskGroupData();		// Get the task groups from the server
 
 		saveCurrentProject(globals.gCurrentProject,
