@@ -85,6 +85,7 @@ define(function () {
         gAssignmentsLayer: undefined,
         gPendingUpdates: [],
         gCurrentTaskGroup: undefined,
+	    gCurrentMailout: undefined,
         gTaskList: undefined,
         gCurrentSurveyIndex: 0,
 	    gCurrentInstance: undefined,

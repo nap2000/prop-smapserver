@@ -26,7 +26,7 @@
 	<script src="/js/libs/bootstrap.bundle.v4.min.js"></script>
 	<script src="/js/libs/DataTablesFixedColumns/datatables.min.js"></script>
 	<script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
-	<script data-main="js/manage_subscriptions" src="/js/libs/require.js"></script>
+	<script data-main="js/people" src="/js/libs/require.js"></script>
 
 </head>
 <body>
@@ -102,7 +102,7 @@
 	            <div class="col-md-12">
 	            	<div class="ibox float-e-margins">
 	            		<div class="ibox-title">
-	                    	<h5 class="lang" data-lang="r_s">subs</h5>
+	                    	<h5 class="lang" data-lang="c_people">people</h5>
 	                    	<div class="ibox-tools">
 								<button class="lang btn btn-success" data-lang="c_add" id="m_add"></button>
 								<button class="selectedOnly lang btn btn-primary" style="display:none;" data-lang="c_edit" id="m_edit"></button>
@@ -115,16 +115,20 @@
 	                	
 	                	<div class="ibox-content">
 
+							<!--
 							<ul id="mainTabs" class="nav nav-tabs" role="tablist">
 								<li class="nav-item"><a data-toggle="tab" id="set-people-view" href="#people-view" role="tab" class="active nav-link"><i class="fa fa-user"></i> <span class="lang" data-lang="c_people"></span></a></li>
 								<li class="nav-item"><a data-toggle="tab" id="set-team-view"href="#team-view" role="tab" class="nav-link"><i class="fa fa-user-plus"></i> <span class="lang" data-lang="c_teams"></span></a></li>
 							</ul>
+							-->
 
 							<div class="row">
 
 								<div class="tabs-container container-fluid">
+									<!--
 									<div class="tab-content">
 										<div id="people-view" role="tabpanel" class="tab-pane active show fade">
+										-->
 											<div class="panel-body">
 
 		                    					<div class="table-responsive">
@@ -146,14 +150,18 @@
 													</table>
 												</div>
 											</div>
-										</div>
-										<div id="team-view"  role="tabpanel" class="tab-pane fade">
-											<div class="panel-body">
-												<div class="row">
-												</div>
-											</div>
-										</div>
-		                            </div>
+									<!--
+</div>
+
+<div id="team-view"  role="tabpanel" class="tab-pane fade">
+	<div class="panel-body">
+		<div class="row">
+		</div>
+	</div>
+</div>
+
+</div>
+-->
 		                    	</div>
 							</div>
 						</div>

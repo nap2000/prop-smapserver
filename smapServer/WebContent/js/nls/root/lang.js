@@ -89,6 +89,7 @@ define({
     "c_vertical": "Vertical",
     "c_projects": "Projects",
     "c_email": "Email",
+    "c_emails": "Emails",
     "c_sms": "SMS",
     "c_document": "Document",
     "c_twitter": "Twitter",
@@ -339,6 +340,7 @@ define({
     "c_people": "People",
     "c_teams": "Teams",
     "c_mailouts": "Mail outs",
+    "c_mailout": "Mail out",
 
     // File Types
     "ft": "File Type",

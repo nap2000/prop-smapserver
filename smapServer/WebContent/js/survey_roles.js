@@ -124,7 +124,7 @@ $(document).ready(function() {
 });
 
 function projectChanged() {
-	loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged);			// Get surveys
+	loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged, false);			// Get surveys
 }
 
 function surveyChanged() {

@@ -950,7 +950,7 @@ $(document).ready(function() {
 	 */
     $('#existing_project').change(function() {
         var existingProject = $('#existing_project option:selected').val();
-        loadSurveys(existingProject, "#survey_name", false, false, undefined);			// Get surveys
+        loadSurveys(existingProject, "#survey_name", false, false, undefined, false);			// Get surveys
     });
 	
 	
@@ -1128,9 +1128,9 @@ function isCompatible(compatTypes, currentType) {
 
 function getSurveyList() {
 	if(globals.gCurrentSurvey > 0) {
-		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyListDone);
+		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyListDone, false);
 	} else {
-		loadSurveys(globals.gCurrentProject, undefined, false, false, undefined);
+		loadSurveys(globals.gCurrentProject, undefined, false, false, undefined, false);
 	}
 }
 

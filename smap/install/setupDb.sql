@@ -1252,6 +1252,32 @@ create TABLE people (
 create unique index idx_people on people(o_id, email);
 ALTER TABLE people OWNER TO ws;
 
+DROP SEQUENCE IF EXISTS mailout_seq CASCADE;
+CREATE SEQUENCE mailout_seq START 1;
+ALTER SEQUENCE mailout_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS mailout;
+create TABLE mailout (
+	id integer default nextval('mailout_seq') constraint pk_mailout primary key,
+	survey_ident text,				-- Survey in mail out
+	name text,						-- Name for the mail out
+	created TIMESTAMP WITH TIME ZONE,
+	modified TIMESTAMP WITH TIME ZONE
+	);
+ALTER TABLE mailout OWNER TO ws;
+
+DROP SEQUENCE IF EXISTS mailout_people_seq CASCADE;
+CREATE SEQUENCE mailout_people_seq START 1;
+ALTER SEQUENCE mailout_people_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS mailout_people;
+create TABLE mailout_people (
+	id integer default nextval('mailout_people_seq') constraint pk_mailout_people primary key,
+	p_id integer,		-- People ID
+	m_id integer		-- Mailout Id
+	);
+ALTER TABLE mailout_people OWNER TO ws;
+
 DROP SEQUENCE IF EXISTS apply_foreign_keys_seq CASCADE;
 CREATE SEQUENCE apply_foreign_keys_seq START 1;
 ALTER SEQUENCE apply_foreign_keys_seq OWNER TO ws;
