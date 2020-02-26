@@ -297,7 +297,7 @@ function enableTextUpdate() {
 }
 
 function getSurveyList() {
-	loadSurveys(globals.gCurrentProject, undefined, false, false, getReviewLanguageList);
+	loadSurveys(globals.gCurrentProject, undefined, false, false, getReviewLanguageList, false);
 }
 
 

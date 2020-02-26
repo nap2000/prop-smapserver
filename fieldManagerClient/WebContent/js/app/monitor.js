@@ -353,7 +353,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
             globals.gCurrentSurvey = -1;
             globals.gCurrentTaskGroup = undefined;
 
-            loadSurveys(globals.gCurrentProject, undefined, false, true);			// Get surveys
+            loadSurveys(globals.gCurrentProject, undefined, false, true, undefined, false);			// Get surveys
 
             saveCurrentProject(globals.gCurrentProject,
                 globals.gCurrentSurvey,

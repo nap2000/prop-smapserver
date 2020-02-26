@@ -878,7 +878,7 @@ require([
         globals.gCurrentSurvey = -1;
         globals.gCurrentTaskGroup = undefined;
 
-        loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged);			// Get surveys
+        loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged, false);			// Get surveys
         getReports();		// Refresh the shown reports
 
         saveCurrentProject(globals.gCurrentProject,
