@@ -69,7 +69,8 @@ require([
 	var gSelectedIndexes;
 	var gSelectedRecord;
 	var gSelectedId;
-	var gMailoutId;
+	var gMailoutId = -1;
+	var gCurrentMailOutId = -1;
 
 	$(document).ready(function() {
 
@@ -103,6 +104,9 @@ require([
 			$('#addMailoutPopup').modal("show");
 		});
 
+		$('#addMailoutPopup').on('shown.bs.modal', function () {
+			$('#mo_name').focus();
+		});
 
 		$('#saveMailout').click(function(){saveMailout();});
 
@@ -114,11 +118,11 @@ require([
 	function initMailoutDialog(action) {
 
 		if(action === 'edit') {
-			$('#p_name').val(gSelectedRecord.name);
+			$('#mo_name').val(gSelectedRecord.name);
 			gMailoutId = $('#mailout').val();
 		} else {
 			// new
-			$('#p_name').val("");
+			$('#mo_name').val("");
 			gMailoutId = -1;
 		}
 
@@ -135,7 +139,7 @@ require([
 
 		mailout.id = gMailoutId;
 		mailout.survey_ident = $('#survey_name').val();
-		mailout.name = $('#p_name').val();
+		mailout.name = $('#mo_name').val();
 
 		/*
 		 * Validation
@@ -164,7 +168,7 @@ require([
 				success: function(data, status) {
 					removeHourglass();
 					$('#addMailoutPopup').modal("hide");
-					mailoutChanged();
+					loadMailouts($('#survey_name').val());
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
@@ -206,6 +210,7 @@ require([
 	 * Function called when the current survey is changed
 	 */
 	function surveyChanged() {
+		gCurrentMailOutId = -1;
 		loadMailouts($('#survey_name').val());
 	}
 
@@ -214,10 +219,13 @@ require([
      */
 	function mailoutChanged() {
 
+		gCurrentMailOutId = $('#mailout').val();
+
+		var url = "/api/v1/mailout/" + gCurrentMailOutId + "?dt=true";
 		if(table) {
-			table.ajax.url("/api/v1/subscriptions?dt=true").load();
+			table.ajax.url(url).load();
 		} else {
-			setMailoutData("/api/v1/subscriptions?dt=true");
+			setMailoutData(url);
 		}
 	}
 
@@ -307,8 +315,13 @@ require([
 						h[++idx] = '</option>';
 					}
 				}
+
 				$('#mailout').empty().append(h.join(''));
-				$('#mailout').val(selValue);
+				if(gCurrentMailOutId > 0) {
+					$('#mailout').val(gCurrentMailOutId);
+				} else {
+					$('#mailout').val(selValue);
+				}
 
 			},
 			error: function(xhr, textStatus, err) {
