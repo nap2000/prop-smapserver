@@ -245,7 +245,7 @@ require([
 	}
 
 	/*
-     * Function called when the mailout is changed
+     * Function called when the mailout is changed or refresh called
      */
 	function mailoutChanged() {
 
@@ -259,6 +259,9 @@ require([
 		}
 	}
 
+	/*
+	 * Create the table that shows mailout instance data
+	 */
 	function setMailoutData(url) {
 
 		table = $('#sub_table').DataTable({
@@ -312,6 +315,9 @@ require([
 	}
 
 
+	/*
+	 * Get the mailouts for the passed in survey
+	 */
 	function loadMailouts(surveyIdent) {
 
 		var url="/surveyKPI/mailout/" + surveyIdent;
