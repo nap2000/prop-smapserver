@@ -1275,7 +1275,8 @@ DROP TABLE IF EXISTS mailout_people;
 create TABLE mailout_people (
 	id integer default nextval('mailout_people_seq') constraint pk_mailout_people primary key,
 	p_id integer,		-- People ID
-	m_id integer		-- Mailout Id
+	m_id integer,		-- Mailout Id,
+	status text			-- Mailout status
 	);
 ALTER TABLE mailout_people OWNER TO ws;
 

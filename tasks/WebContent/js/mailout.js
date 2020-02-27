@@ -110,6 +110,23 @@ require([
 
 		$('#saveMailout').click(function(){saveMailout();});
 
+		$('#m_backup').click(function () {	// Export to XLS
+			var tz = Intl.DateTimeFormat().resolvedOptions().timeZone,
+				tzParam = "",
+				url = '/surveyKPI/mailout/xls/' + $('#mailout').val(),
+				hasParam = false,
+				statusFilterArray = $('#status_filter').val();
+
+			// Add parameters
+			if (tz) {
+				url += (hasParam ? '&' : '?') + "tz=" + encodeURIComponent(tz);
+				hasParam = true;
+			}
+			downloadFile(url);
+
+
+		});
+
 	});
 
 	/*
