@@ -129,4 +129,5 @@ create TABLE mailout_people (
 	m_id integer,		-- Mailout Id
 	status text			-- Mailout status
 	);
+CREATE UNIQUE INDEX idx_mailout_people ON mailout_people(p_id, m_id);	
 ALTER TABLE mailout_people OWNER TO ws;

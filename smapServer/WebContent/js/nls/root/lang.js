@@ -1262,7 +1262,10 @@ define({
 
     // Console
     "co_dd": "Drill Down",
-    "co_up": "Up"
+    "co_up": "Up",
 
+    // Mailouts
+    "mo_ce": "Clear Existing Unsent Emails",
+    "mo_ns": "Mailout not selected",
 
 });

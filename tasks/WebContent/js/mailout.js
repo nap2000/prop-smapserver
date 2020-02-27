@@ -110,6 +110,9 @@ require([
 
 		$('#saveMailout').click(function(){saveMailout();});
 
+		/*
+		 * Backup / Import
+		 */
 		$('#m_backup').click(function () {	// Export to XLS
 			var tz = Intl.DateTimeFormat().resolvedOptions().timeZone,
 				tzParam = "",
@@ -123,8 +126,18 @@ require([
 				hasParam = true;
 			}
 			downloadFile(url);
+		});
 
-
+		$('#m_import_xls').click(function () {	// Import from XLS
+			var mailoutId = $('#mailout').val();
+			if (mailoutId > 0) {
+				$('#import_mailoutpeople').modal("show");
+			} else {
+				alert(localise.set["mo_ns"]);
+			}
+		});
+		$(('#importMailoutGo')).click(function () {
+			importMailout();
 		});
 
 	});
@@ -352,5 +365,43 @@ require([
 			}
 		});
 	}
+
+	/*
+     * Import mailout emails from a spreadsheet
+     */
+	function importMailout() {
+
+		var mailoutId = $('#mailout').val();
+
+		var url = '/surveyKPI/mailout/xls/' + mailoutId;
+
+		var f = document.forms.namedItem("loadMailoutPeople");
+		var formData = new FormData(f);
+
+		$('#load_mailouts_alert').hide();
+
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			data: formData,
+			cache: false,
+			contentType: false,
+			processData: false,
+			url: url,
+			success: function (data, status) {
+				removeHourglass();
+				$('#import_mailoutpeople').modal("hide");
+				$('#load_mailouts_alert').show().removeClass('alert-danger').addClass('alert-success').empty("");
+
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				var msg = xhr.responseText;
+				$('#load_mailouts_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
+
+			}
+		});
+	}
+
 });
 
