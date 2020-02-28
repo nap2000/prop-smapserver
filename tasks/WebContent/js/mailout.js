@@ -140,6 +140,13 @@ require([
 			importMailout();
 		});
 
+		/*
+		 * Send unsent
+		 */
+		$(('#m_send')).click(function () {
+			sendUnsent();
+		});
+
 	});
 
 	/*
@@ -358,6 +365,7 @@ require([
 				} else {
 					$('#mailout').val(selValue);
 				}
+				mailoutChanged();
 
 			},
 			error: function(xhr, textStatus, err) {
@@ -405,6 +413,33 @@ require([
 				var msg = xhr.responseText;
 				$('#load_mailouts_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
 
+			}
+		});
+	}
+
+	/*
+     * Set new emails to pending
+     */
+	function sendUnsent() {
+
+		var mailoutId = $('#mailout').val();
+		var url = '/surveyKPI/mailout/send/' + mailoutId;
+
+		addHourglass();
+		$.ajax({
+			url: url,
+			cache: false,
+			success: function() {
+				mailoutChanged();
+			},
+			error: function(xhr, textStatus, err) {
+
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(err);
+				}
 			}
 		});
 	}
