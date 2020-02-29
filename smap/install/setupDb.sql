@@ -1276,7 +1276,8 @@ create TABLE mailout_people (
 	id integer default nextval('mailout_people_seq') constraint pk_mailout_people primary key,
 	p_id integer,		-- People ID
 	m_id integer,		-- Mailout Id,
-	status text			-- Mailout status
+	status text,		-- Mailout status
+	processed TIMESTAMP WITH TIME ZONE	-- Time converted into a message
 	);
 CREATE UNIQUE INDEX idx_mailout_people ON mailout_people(p_id, m_id);
 ALTER TABLE mailout_people OWNER TO ws;
