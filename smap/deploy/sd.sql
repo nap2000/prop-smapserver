@@ -128,6 +128,7 @@ create TABLE mailout_people (
 	p_id integer,		-- People ID
 	m_id integer,		-- Mailout Id
 	status text,		-- Mailout status
+	status_details text,
 	processed TIMESTAMP WITH TIME ZONE		-- Time converted into a message
 	);
 CREATE UNIQUE INDEX idx_mailout_people ON mailout_people(p_id, m_id);	
