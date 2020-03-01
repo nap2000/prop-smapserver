@@ -136,6 +136,18 @@ require([
 				alert(localise.set["mo_ns"]);
 			}
 		});
+		// Res
+		// pond to selection of a file for upload
+		$('.custom-file-label').attr('data-browse', localise.set["c_browse"]);
+		$('.custom-file-input').on('change',function(){
+			var fileName = $(this).val();
+			var endPath = fileName.lastIndexOf("\\");
+			if(endPath > 0) {
+				fileName = fileName.substring(endPath + 1);
+			}
+			$(this).next('.custom-file-label').html(fileName);
+		})
+
 		$(('#importMailoutGo')).click(function () {
 			importMailout();
 		});
