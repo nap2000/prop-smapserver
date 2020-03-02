@@ -129,7 +129,21 @@ create TABLE mailout_people (
 	m_id integer,		-- Mailout Id
 	status text,		-- Mailout status
 	status_details text,
-	processed TIMESTAMP WITH TIME ZONE		-- Time converted into a message
+	processed TIMESTAMP WITH TIME ZONE,		-- Time converted into a message
+	status_updated TIMESTAMP WITH TIME ZONE	
 	);
 CREATE UNIQUE INDEX idx_mailout_people ON mailout_people(p_id, m_id);	
 ALTER TABLE mailout_people OWNER TO ws;
+
+-- Final status of temporary user
+CREATE SEQUENCE temp_users_final_seq START 1;
+ALTER SEQUENCE temp_users_final_seq OWNER TO ws;
+
+CREATE TABLE temp_users_final (
+	id INTEGER DEFAULT NEXTVAL('temp_users_final_seq') CONSTRAINT pk_temp_users_final PRIMARY KEY,
+	ident text,
+	status text,
+	created timestamp with time zone
+	);
+CREATE UNIQUE INDEX idx_temp_users_final_ident ON temp_users_final(ident);
+ALTER TABLE temp_users_final OWNER TO ws;
