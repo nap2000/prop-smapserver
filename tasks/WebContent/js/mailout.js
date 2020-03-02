@@ -166,9 +166,12 @@ require([
 		 * Send unsent
 		 */
 		$(('#m_send')).click(function () {
-			sendUnsent();
+			sendUnsent(false);
 		});
 
+		$(('#m_retry')).click(function () {
+			sendUnsent(true);
+		});
 	});
 
 	/*
@@ -262,7 +265,7 @@ require([
 		if (table) {
 			table.clear().draw();
 		}
-		
+
 		saveCurrentProject(globals.gCurrentProject,
 			globals.gCurrentSurvey,
 			globals.gCurrentTaskGroup);
@@ -462,12 +465,15 @@ require([
 	/*
      * Set new emails to pending
      */
-	function sendUnsent() {
+	function sendUnsent(retry) {
 
 		var mailoutId = $('#mailout').val();
 		if(mailoutId && mailoutId > 0) {
 			var url = '/surveyKPI/mailout/send/' + mailoutId;
 
+			if(retry) {
+				url += "?retry=true"
+			}
 			addHourglass();
 			$.ajax({
 				url: url,
