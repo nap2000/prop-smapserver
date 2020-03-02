@@ -190,7 +190,7 @@ require([
 
 	}
 	/*
-	 * Save a person
+	 * Save a Mailout
 	 */
 	function saveMailout() {
 
@@ -222,7 +222,7 @@ require([
 			addHourglass();
 			$.ajax({
 				type: "POST",
-				dataType: 'text',
+				dataType: 'json',
 				cache: false,
 				async: true,
 				url: url,
@@ -230,6 +230,7 @@ require([
 				success: function(data, status) {
 					removeHourglass();
 					$('#addMailoutPopup').modal("hide");
+					gCurrentMailOutId = data.id;
 					loadMailouts($('#survey_name').val());
 				},
 				error: function(xhr, textStatus, err) {
@@ -451,6 +452,7 @@ require([
 				removeHourglass();
 				$('#import_mailoutpeople').modal("hide");
 				$('#load_mailouts_alert').show().removeClass('alert-danger').addClass('alert-success').empty("");
+				mailoutChanged(true);
 
 			},
 			error: function (xhr, textStatus, err) {
