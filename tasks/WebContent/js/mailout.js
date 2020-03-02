@@ -89,8 +89,18 @@ require([
 			projectChanged();
 		});
 
+		//Set change function on survey
+		$('#survey_name').change(function () {
+			surveyChanged();
+		});
+
+		//Set change function on mailout id
+		$('#mailout').change(function () {
+			mailoutChanged(true);
+		});
+
 		$('#m_refresh').click(function(e) {	// Add refresh action
-			mailoutChanged();
+			mailoutChanged(true);
 		});
 
 		$('#m_add').click(function(){
@@ -113,7 +123,7 @@ require([
 		/*
 		 * Backup / Import
 		 */
-		$('#m_backup').click(function () {	// Export to XLS
+		$('#m_export_xls').click(function () {	// Export to XLS
 			var tz = Intl.DateTimeFormat().resolvedOptions().timeZone,
 				tzParam = "",
 				url = '/surveyKPI/mailout/xls/' + $('#mailout').val(),
@@ -249,6 +259,10 @@ require([
 
 		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged, true);			// Get surveys
 
+		if (table) {
+			table.clear().draw();
+		}
+		
 		saveCurrentProject(globals.gCurrentProject,
 			globals.gCurrentSurvey,
 			globals.gCurrentTaskGroup);
@@ -260,13 +274,18 @@ require([
 	 */
 	function surveyChanged() {
 		gCurrentMailOutId = -1;
+
+		if (table) {
+			table.clear().draw();
+		}
+
 		loadMailouts($('#survey_name').val());
 	}
 
 	/*
      * Function called when the mailout is changed or refresh called
      */
-	function mailoutChanged() {
+	function mailoutChanged(showMissingMsg) {
 
 		gCurrentMailOutId = $('#mailout').val();
 
@@ -278,8 +297,11 @@ require([
 			} else {
 				setMailoutData(url);
 			}
-		} else {
+		} else if(showMissingMsg) {
 			alert(localise.set["mo_ns"]);
+			if (table) {
+				table.clear().draw();
+			}
 		}
 	}
 
@@ -300,7 +322,8 @@ require([
 			columns: [
 				{ "data": "email" },
 				{ "data": "name" },
-				{ "data": "status_loc"  }
+				{ "data": "status_loc"  },
+				{ "data": "status_details"  }
 			],
 			order: [[ 0, "asc" ]],
 			initComplete: function () {
@@ -384,7 +407,7 @@ require([
 				} else {
 					$mailout.val(selValue);
 				}
-				mailoutChanged();
+				mailoutChanged(false);
 
 			},
 			error: function(xhr, textStatus, err) {
@@ -442,25 +465,27 @@ require([
 	function sendUnsent() {
 
 		var mailoutId = $('#mailout').val();
-		var url = '/surveyKPI/mailout/send/' + mailoutId;
+		if(mailoutId && mailoutId > 0) {
+			var url = '/surveyKPI/mailout/send/' + mailoutId;
 
-		addHourglass();
-		$.ajax({
-			url: url,
-			cache: false,
-			success: function() {
-				mailoutChanged();
-			},
-			error: function(xhr, textStatus, err) {
+			addHourglass();
+			$.ajax({
+				url: url,
+				cache: false,
+				success: function () {
+					mailoutChanged(true);
+				},
+				error: function (xhr, textStatus, err) {
 
-				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert(err);
+					removeHourglass();
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(err);
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 });
