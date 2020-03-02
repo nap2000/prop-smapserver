@@ -130,7 +130,7 @@ require([
 
 		$('#m_import_xls').click(function () {	// Import from XLS
 			var mailoutId = $('#mailout').val();
-			if (mailoutId > 0) {
+			if (mailoutId && mailoutId > 0) {
 				$('#import_mailoutpeople').modal("show");
 			} else {
 				alert(localise.set["mo_ns"]);
@@ -146,7 +146,7 @@ require([
 				fileName = fileName.substring(endPath + 1);
 			}
 			$(this).next('.custom-file-label').html(fileName);
-		})
+		});
 
 		$(('#importMailoutGo')).click(function () {
 			importMailout();
@@ -270,11 +270,16 @@ require([
 
 		gCurrentMailOutId = $('#mailout').val();
 
-		var url = "/api/v1/mailout/" + gCurrentMailOutId + "?dt=true";
-		if(table) {
-			table.ajax.url(url).load();
+		if(gCurrentMailOutId && gCurrentMailOutId > 0) {
+
+			var url = "/api/v1/mailout/" + gCurrentMailOutId + "?dt=true";
+			if (table) {
+				table.ajax.url(url).load();
+			} else {
+				setMailoutData(url);
+			}
 		} else {
-			setMailoutData(url);
+			alert(localise.set["mo_ns"]);
 		}
 	}
 
@@ -283,7 +288,8 @@ require([
 	 */
 	function setMailoutData(url) {
 
-		table = $('#sub_table').DataTable({
+		var $subTable = $('#sub_table');
+		table = $subTable.DataTable({
 			processing: true,
 			scrollY: '70vh',
 			scrollX: true,
@@ -321,7 +327,7 @@ require([
 
 		});
 
-		$('#sub_table').find('td').css('white-space','initial').css('word-wrap', 'break-word');
+		$subTable.find('td').css('white-space','initial').css('word-wrap', 'break-word');
 
 		// Respond to selection of a row
 		table.off('select').on('select', function (e, dt, type, indexes) {
@@ -340,6 +346,7 @@ require([
 	function loadMailouts(surveyIdent) {
 
 		var url="/surveyKPI/mailout/" + surveyIdent;
+		var $mailout = $('#mailout');
 
 		addHourglass();
 
@@ -360,7 +367,7 @@ require([
 					for (i = 0; i < data.length; i++) {
 						item = data[i];
 						h[++idx] = '<option';
-						if (count++ == 0) {
+						if (count++ === 0) {
 							selValue = item.id;
 						}
 						h[++idx] = ' value="';
@@ -371,11 +378,11 @@ require([
 					}
 				}
 
-				$('#mailout').empty().append(h.join(''));
+				$mailout.empty().append(h.join(''));
 				if(gCurrentMailOutId > 0) {
-					$('#mailout').val(gCurrentMailOutId);
+					$mailout.val(gCurrentMailOutId);
 				} else {
-					$('#mailout').val(selValue);
+					$mailout.val(selValue);
 				}
 				mailoutChanged();
 
