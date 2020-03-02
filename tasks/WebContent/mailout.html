@@ -105,7 +105,31 @@
 
 						</ul>
 					</li>
-	           		<li><a href="#" id="m_refresh"><span class="lang" data-lang="m_refresh">refresh</span></a></li>		       
+	           		<li><a href="#" id="m_refresh"><span class="lang" data-lang="m_refresh">refresh</span></a></li>
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+							<i class="fa fa-file"></i> <span class="lang" data-lang="c_file">file</span>
+						</a>
+						<ul class="dropdown-menu dropdown-alerts">
+							<li>
+								<a href="#" id="m_export_xls">
+									<div>
+										<span class="lang" data-lang="m_export">export</span> XLS
+										<i class="fa fa-file-excel-o pull-right"></i>
+									</div>
+								</a>
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a href="#" class="for_is_tg" id="m_import_xls">
+									<div>
+										<span class="lang" data-lang="m_import">import</span> XLS
+										<i class="fa fa-file-excel-o pull-right"></i>
+									</div>
+								</a>
+							</li>
+						</ul>
+					</li>
 	            </ul>
 
         	</nav>
@@ -149,8 +173,6 @@
 	                    	<h5 class="lang" data-lang="c_emails">e</h5>
 	                    	<div class="ibox-tools">
 								<button class="btn btn-success" id="m_send"><span class="lang" data-lang="m_email_unsent"></span> <i class="fa fa-envelope fa-lg"></i></button>
-								<button class="btn btn-success" id="m_backup"><span class="lang" data-lang="m_backup"></span> <i class="fa fa-file-excel fa-lg"></i></button>
-								<button class="selectedOnly btn btn-primary" id="m_import_xls"><span class="lang" data-lang="m_import"></span> <i class="fa fa-file-excel fa-lg"></i></button>
 							</div>
 	                  
 	                	</div>
@@ -169,6 +191,7 @@
 													<th class="lang" data-lang="c_email">email</th>
 													<th class="lang" data-lang="c_name">n</th>
 													<th class="lang" data-lang="c_status">status</th>
+													<th class="lang" data-lang="c_details">details</th>
 												</tr>
 												</thead>
 												<tfoot>
