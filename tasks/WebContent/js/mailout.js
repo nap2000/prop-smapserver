@@ -213,11 +213,15 @@ require([
 	function initMailoutDialog(action) {
 
 		if(action === 'edit') {
-			$('#mo_name').val(gSelectedRecord.name);
-			gMailoutEditIdx = $('#mailout').val();
+			$('#mo_name').val(gMailouts[gCurrentMailOutIdx].name);
+			$('#mo_subject').val(gMailouts[gCurrentMailOutIdx].subject);
+			$('#mo_content').val(gMailouts[gCurrentMailOutIdx].content);
+			gMailoutEditIdx = gCurrentMailOutIdx;
 		} else {
 			// new
 			$('#mo_name').val("");
+			$('#mo_subject').val("");
+			$('#mo_content').val("");
 			gMailoutEditIdx = -1;
 		}
 
@@ -239,6 +243,8 @@ require([
 		}
 		mailout.survey_ident = $('#survey_name').val();
 		mailout.name = $('#mo_name').val();
+		mailout.subject = $('#mo_subject').val();
+		mailout.content = $('#mo_content').val();
 
 		/*
 		 * Validation
@@ -539,9 +545,9 @@ require([
 		var i;
 
 		if (gMailouts && gMailouts.length > 0) {
-			for (i = 0; i < ggMailouts.length; i++) {
+			for (i = 0; i < gMailouts.length; i++) {
 				if(gMailouts[i].id === id) {
-					return id;
+					return i;
 				}
 			}
 		}

@@ -103,6 +103,13 @@
 								</a>
 							</li>
 							<li>
+								<a class="dropdown-item" href="#" id="m_edit">
+									<div>
+										<span class="lang" data-lang="c_edit">edit</span>
+									</div>
+								</a>
+							</li>
+							<li>
 								<a class="dropdown-item" href="#" id="m_delete">
 									<div>
 										<span class="lang" data-lang="c_delete">delete</span>
@@ -228,7 +235,7 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title lang" id="addPersonLabel" data-lang="c_person">add</h4>
+				<h4 class="modal-title lang" id="addPersonLabel" data-lang="c_mailout"></h4>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
 						aria-hidden="true">&times;</span></button>
 			</div>
@@ -240,6 +247,20 @@
 						<label class="lang col-sm-2 control-label" data-lang="c_name" for="mo_name"></label>
 						<div class="col-sm-10">
 							<input type="text" id="mo_name" class="form-control">
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label class="lang col-sm-2 control-label" data-lang="c_subject" for="mo_subject"></label>
+						<div class="col-sm-10">
+							<input type="text" id="mo_subject" class="form-control">
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label class="lang col-sm-2 control-label" data-lang="c_content" for="mo_content"></label>
+						<div class="col-sm-10">
+							<textarea id="mo_content" rows="6" class="form-control"></textarea>
 						</div>
 					</div>
 
