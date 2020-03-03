@@ -1267,6 +1267,7 @@ define({
     // Mailouts
     "mo_ce": "Clear Existing Unsent Emails",
     "mo_ns": "Mailout not selected",
-    "mo_na": "Not Authorised"
+    "mo_na": "Not Authorised",
+    "mo_del": "Are you sure that you want to delete mailout \"%s1\".  Recipients who have already ben sent emails will still be able to respond. "
 
 });
