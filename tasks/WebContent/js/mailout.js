@@ -338,6 +338,9 @@ require([
 
 		if(gCurrentMailOutIdx && gCurrentMailOutIdx >= 0) {
 
+			$('#mo_subject_view').val(gMailouts[gCurrentMailOutIdx].subject);
+			$('#mo_content_view').val(gMailouts[gCurrentMailOutIdx].content);
+
 			var url = "/api/v1/mailout/" + gMailouts[gCurrentMailOutIdx].id + "?dt=true";
 			if (table) {
 				table.ajax.url(url).load();
