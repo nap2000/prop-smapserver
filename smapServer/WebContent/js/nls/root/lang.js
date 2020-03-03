@@ -1273,6 +1273,9 @@ define({
     "mo_se": "System Error",
     "mo_del": "Are you sure that you want to delete mailout \"%s1\".  Recipients who have already been sent emails will still be able to respond. ",
     "mo_import": "Import Emails",
-    "mo_export": "Export Emails"
+    "mo_export": "Export Emails",
+    "mo_subject": "Email Subject",
+    "mo_content": "Email Content",
+    "mo_sent": "Sent"
 
 });
