@@ -128,6 +128,9 @@ require([
 					$('#confirmDeletePopup').modal("hide");
 					gCurrentMailOutIdx = -1;
 					loadMailouts($('#survey_name').val());
+					if (table) {
+						table.clear().draw();
+					}
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
@@ -170,8 +173,8 @@ require([
 		});
 
 		$('#m_import_xls').click(function () {	// Import from XLS
-			var mailoutId = $('#mailout').val();
-			if (mailoutId && mailoutId > 0) {
+
+			if (gCurrentMailOutIdx && gCurrentMailOutIdx >= 0) {
 				$('#import_mailoutpeople').modal("show");
 			} else {
 				alert(localise.set["mo_ns"]);
@@ -445,6 +448,7 @@ require([
 					$mailout.val(gCurrentMailOutIdx);
 				} else {
 					$mailout.val(selValue);
+					gCurrentMailOutIdx = selValue;
 				}
 				mailoutChanged(false);
 
@@ -466,9 +470,7 @@ require([
      */
 	function importMailout() {
 
-		var mailoutIdx = $('#mailout').val();
-
-		var url = '/surveyKPI/mailout/xls/' + gMailouts[mailoutIdx].id;
+		var url = '/surveyKPI/mailout/xls/' + gMailouts[gCurrentMailOutIdx].id;
 
 		var f = document.forms.namedItem("loadMailoutPeople");
 		var formData = new FormData(f);
@@ -504,9 +506,9 @@ require([
      */
 	function sendUnsent(retry) {
 
-		var mailoutId = $('#mailout').val();
-		if(mailoutId && mailoutId > 0) {
-			var url = '/surveyKPI/mailout/send/' + mailoutId;
+		var mailoutIdx = $('#mailout').val();
+		if(mailoutIdx && mailoutIdx >= 0) {
+			var url = '/surveyKPI/mailout/send/' + gMailouts[mailoutIdx].id;
 
 			if(retry) {
 				url += "?retry=true"
