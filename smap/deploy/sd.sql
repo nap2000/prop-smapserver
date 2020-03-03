@@ -125,8 +125,8 @@ ALTER SEQUENCE mailout_people_seq OWNER TO ws;
 
 create TABLE mailout_people (
 	id integer default nextval('mailout_people_seq') constraint pk_mailout_people primary key,
-	p_id integer,		-- People ID
-	m_id integer,		-- Mailout Id
+	p_id integer references people(id) on delete cascade,		-- People ID
+	m_id integer references mailout(id) on delete cascade,		-- Mailout Id,
 	status text,		-- Mailout status
 	status_details text,
 	processed TIMESTAMP WITH TIME ZONE,		-- Time converted into a message

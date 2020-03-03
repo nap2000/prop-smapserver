@@ -35,7 +35,6 @@ requirejs.config({
 		async: '../../../../js/libs/async',
 		localise: '../../../../js/app/localise',
 		globals: '../../../../js/app/globals',
-		modernizr: '../../../../js/libs/modernizr',
 		moment: '../../../../js/libs/moment-with-locales.2.24.0',
 		common: '../../../../js/app/common',
 		lang_location: '../../../../js',
@@ -45,7 +44,6 @@ requirejs.config({
 	shim: {
 
 		'common': ['jquery'],
-		'bootstrap': ['jquery'],
 		'metismenu': ['jquery']
 	}
 });
@@ -69,8 +67,9 @@ require([
 	var gSelectedIndexes;
 	var gSelectedRecord;
 	var gSelectedId;
-	var gMailoutId = -1;
-	var gCurrentMailOutId = -1;
+	var gMailoutEditIdx = -1;
+	var gCurrentMailOutIdx = -1;
+	var gMailouts = [];
 
 	$(document).ready(function() {
 
@@ -107,6 +106,38 @@ require([
 			gSelectedId = -1;
 			initMailoutDialog("add");
 			$('#addMailoutPopup').modal("show");
+		});
+
+		$('#m_delete').click(function(){
+			var msg = localise.set["mo_del"];
+			msg = msg.replace("%s1", gMailouts[gCurrentMailOutIdx].name);
+			$('#confirmDeleteMsg').html(msg);
+			$('#confirmDeletePopup').modal("show");
+		});
+
+		$('#confirmDeleteGo').click(function(){
+			addHourglass();
+			$.ajax({
+				type: "DELETE",
+				cache: false,
+				async: true,
+				url: '/surveyKPI/mailout',
+				data: { mailoutId: gMailouts[gCurrentMailOutIdx].id },
+				success: function(data, status) {
+					removeHourglass();
+					$('#confirmDeletePopup').modal("hide");
+					gCurrentMailOutIdx = -1;
+					loadMailouts($('#survey_name').val());
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(localise.set["msg_err_del"] + xhr.responseText);
+					}
+				}
+			});
 		});
 
 		$('#m_edit').click(function(){
@@ -146,8 +177,7 @@ require([
 				alert(localise.set["mo_ns"]);
 			}
 		});
-		// Res
-		// pond to selection of a file for upload
+		// Respond to selection of a file for upload
 		$('.custom-file-label').attr('data-browse', localise.set["c_browse"]);
 		$('.custom-file-input').on('change',function(){
 			var fileName = $(this).val();
@@ -181,11 +211,11 @@ require([
 
 		if(action === 'edit') {
 			$('#mo_name').val(gSelectedRecord.name);
-			gMailoutId = $('#mailout').val();
+			gMailoutEditIdx = $('#mailout').val();
 		} else {
 			// new
 			$('#mo_name').val("");
-			gMailoutId = -1;
+			gMailoutEditIdx = -1;
 		}
 
 	}
@@ -199,7 +229,11 @@ require([
 			mailoutString,
 			errorMsg;
 
-		mailout.id = gMailoutId;
+		if(gMailoutEditIdx >= 0) {
+			mailout.id = gMailouts[gMailoutEditIdx].id;
+		} else {
+			mailout.id = -1;
+		}
 		mailout.survey_ident = $('#survey_name').val();
 		mailout.name = $('#mo_name').val();
 
@@ -230,7 +264,7 @@ require([
 				success: function(data, status) {
 					removeHourglass();
 					$('#addMailoutPopup').modal("hide");
-					gCurrentMailOutId = data.id;
+					gCurrentMailOutIdx = getMailoutIdx(data.id);
 					loadMailouts($('#survey_name').val());
 				},
 				error: function(xhr, textStatus, err) {
@@ -277,7 +311,7 @@ require([
 	 * Function called when the current survey is changed
 	 */
 	function surveyChanged() {
-		gCurrentMailOutId = -1;
+		gCurrentMailOutIdx = -1;
 
 		if (table) {
 			table.clear().draw();
@@ -291,11 +325,11 @@ require([
      */
 	function mailoutChanged(showMissingMsg) {
 
-		gCurrentMailOutId = $('#mailout').val();
+		gCurrentMailOutIdx = $('#mailout').val();
 
-		if(gCurrentMailOutId && gCurrentMailOutId > 0) {
+		if(gCurrentMailOutIdx && gCurrentMailOutIdx >= 0) {
 
-			var url = "/api/v1/mailout/" + gCurrentMailOutId + "?dt=true";
+			var url = "/api/v1/mailout/" + gMailouts[gCurrentMailOutIdx].id + "?dt=true";
 			if (table) {
 				table.ajax.url(url).load();
 			} else {
@@ -383,6 +417,7 @@ require([
 			cache: false,
 			success: function(data) {
 				removeHourglass();
+				gMailouts = data;
 				var h = [],
 					idx = -1,
 					i,
@@ -395,10 +430,10 @@ require([
 						item = data[i];
 						h[++idx] = '<option';
 						if (count++ === 0) {
-							selValue = item.id;
+							selValue = i;
 						}
 						h[++idx] = ' value="';
-						h[++idx] = item.id;
+						h[++idx] = i;
 						h[++idx] = '">';
 						h[++idx] = item.name;
 						h[++idx] = '</option>';
@@ -406,8 +441,8 @@ require([
 				}
 
 				$mailout.empty().append(h.join(''));
-				if(gCurrentMailOutId > 0) {
-					$mailout.val(gCurrentMailOutId);
+				if(gCurrentMailOutIdx >= 0) {
+					$mailout.val(gCurrentMailOutIdx);
 				} else {
 					$mailout.val(selValue);
 				}
@@ -431,9 +466,9 @@ require([
      */
 	function importMailout() {
 
-		var mailoutId = $('#mailout').val();
+		var mailoutIdx = $('#mailout').val();
 
-		var url = '/surveyKPI/mailout/xls/' + mailoutId;
+		var url = '/surveyKPI/mailout/xls/' + gMailouts[mailoutIdx].id;
 
 		var f = document.forms.namedItem("loadMailoutPeople");
 		var formData = new FormData(f);
@@ -494,6 +529,20 @@ require([
 				}
 			});
 		}
+	}
+
+	function getMailoutIdx(id) {
+		var idx = -1;
+		var i;
+
+		if (gMailouts && gMailouts.length > 0) {
+			for (i = 0; i < ggMailouts.length; i++) {
+				if(gMailouts[i].id === id) {
+					return id;
+				}
+			}
+		}
+		return idx;
 	}
 
 });
