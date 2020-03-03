@@ -1271,11 +1271,13 @@ DROP SEQUENCE IF EXISTS mailout_seq CASCADE;
 CREATE SEQUENCE mailout_seq START 1;
 ALTER SEQUENCE mailout_seq OWNER TO ws;
 
-DROP TABLE IF EXISTS mailout;
+DROP TABLE IF EXISTS mailout cascade;
 create TABLE mailout (
 	id integer default nextval('mailout_seq') constraint pk_mailout primary key,
 	survey_ident text,				-- Survey in mail out
 	name text,						-- Name for the mail out
+	content text,
+	subject text,
 	created TIMESTAMP WITH TIME ZONE,
 	modified TIMESTAMP WITH TIME ZONE
 	);

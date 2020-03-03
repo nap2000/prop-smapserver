@@ -114,6 +114,8 @@ create TABLE mailout (
 	id integer default nextval('mailout_seq') constraint pk_mailout primary key,
 	survey_ident text,				-- Survey in mail out
 	name text,						-- Name for the mail out
+	content text,
+	subject text,
 	created TIMESTAMP WITH TIME ZONE,
 	modified TIMESTAMP WITH TIME ZONE
 	);
