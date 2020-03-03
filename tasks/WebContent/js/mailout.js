@@ -518,6 +518,7 @@ require([
 				url: url,
 				cache: false,
 				success: function () {
+					removeHourglass();
 					mailoutChanged(true);
 				},
 				error: function (xhr, textStatus, err) {
