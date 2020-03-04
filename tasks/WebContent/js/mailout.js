@@ -381,6 +381,9 @@ require([
 		$('#mo_pending').html(0);
 		$('#mo_error').html(0);
 		$('#mo_unsubscribed').html(0);
+
+		$('#mo_subject_view').val("");
+		$('#mo_content_view').val("");
 	}
 
 	/*
