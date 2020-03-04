@@ -234,13 +234,16 @@ require([
 			mailout = {},
 			mailoutString,
 			errorMsg;
+		var $survey = $('#survey_name');
+		var surveyIdx = $survey.val();
+		var surveyIdent = gSurveyList[surveyIdx].ident;
 
 		if(gMailoutEditIdx >= 0) {
 			mailout.id = gMailouts[gMailoutEditIdx].id;
 		} else {
 			mailout.id = -1;
 		}
-		mailout.survey_ident = $('#survey_name').val();
+		mailout.survey_ident = surveyIdent;
 		mailout.name = $('#mo_name').val();
 		mailout.subject = $('#mo_subject').val();
 		mailout.content = $('#mo_content').val();
