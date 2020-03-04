@@ -70,6 +70,7 @@ require([
 	var gMailoutEditIdx = -1;
 	var gCurrentMailOutIdx = -1;
 	var gMailouts = [];
+	var gSurveyList = [];
 
 	$(document).ready(function() {
 
@@ -127,10 +128,8 @@ require([
 					removeHourglass();
 					$('#confirmDeletePopup').modal("hide");
 					gCurrentMailOutIdx = -1;
-					loadMailouts($('#survey_name').val());
-					if (table) {
-						table.clear().draw();
-					}
+					loadMailouts();
+					clearMailoutStatus();
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
@@ -274,7 +273,7 @@ require([
 					removeHourglass();
 					$('#addMailoutPopup').modal("hide");
 					gCurrentMailOutIdx = getMailoutIdx(data.id);
-					loadMailouts($('#survey_name').val());
+					loadMailouts();
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
@@ -304,11 +303,9 @@ require([
 
 		globals.gCurrentProject = $('#project_name option:selected').val();
 
-		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged, true);			// Get surveys
+		loadSurveys(globals.gCurrentProject, undefined, false, false, surveysLoaded, true);			// Get surveys
 
-		if (table) {
-			table.clear().draw();
-		}
+		clearMailoutStatus();
 
 		saveCurrentProject(globals.gCurrentProject,
 			globals.gCurrentSurvey,
@@ -317,16 +314,30 @@ require([
 	}
 
 	/*
+	 * Function called when the list of surveys is loaded
+	 */
+	function surveysLoaded(data) {
+		gSurveyList = data;
+		surveyChanged();
+	}
+
+	/*
 	 * Function called when the current survey is changed
 	 */
 	function surveyChanged() {
+
+		var $survey = $('#survey_name');
+		var surveyIdx = $survey.val();
+
+		globals.gCurrentSurvey = gSurveyList[surveyIdx].id;
 		gCurrentMailOutIdx = -1;
 
-		if (table) {
-			table.clear().draw();
-		}
+		clearMailoutStatus()
+		loadMailouts();
 
-		loadMailouts($('#survey_name').val());
+		saveCurrentProject(globals.gCurrentProject,
+			globals.gCurrentSurvey,
+			globals.gCurrentTaskGroup);
 	}
 
 	/*
@@ -347,12 +358,26 @@ require([
 			} else {
 				setMailoutData(url);
 			}
+
+			loadMailoutTotals();
+
 		} else if(showMissingMsg) {
 			alert(localise.set["mo_ns"]);
-			if (table) {
-				table.clear().draw();
-			}
+			clearMailoutStatus();
 		}
+	}
+
+	function clearMailoutStatus() {
+		if (table) {
+			table.clear().draw();
+		}
+
+		$('#mo_sent').html(0);
+		$('#mo_complete').html(0);
+		$('#mo_unsent').html(0);
+		$('#mo_pending').html(0);
+		$('#mo_error').html(0);
+		$('#mo_unsubscribed').html(0);
 	}
 
 	/*
@@ -416,7 +441,11 @@ require([
 	/*
 	 * Get the mailouts for the passed in survey
 	 */
-	function loadMailouts(surveyIdent) {
+	function loadMailouts() {
+
+		var $survey = $('#survey_name');
+		var surveyIdx = $survey.val();
+		var surveyIdent = gSurveyList[surveyIdx].ident;
 
 		var url="/surveyKPI/mailout/" + surveyIdent;
 		var $mailout = $('#mailout');
@@ -461,6 +490,43 @@ require([
 				}
 				mailoutChanged(false);
 
+			},
+			error: function(xhr, textStatus, err) {
+
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(err);
+				}
+			}
+		});
+	}
+
+	/*
+     * Get the mailout totals for the current mailout
+     */
+	function loadMailoutTotals() {
+
+		var url = "/api/v1/mailout/" + gMailouts[gCurrentMailOutIdx].id + "/totals";
+
+		addHourglass();
+
+		$.ajax({
+			url: url,
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+
+				if(data) {
+					$('#mo_sent').html(data.sent);
+					$('#mo_complete').html(data.complete);
+					$('#mo_unsent').html(data.unsent);
+					$('#mo_pending').html(data.pending);
+					$('#mo_error').html(data.error);
+					$('#mo_unsubscribed').html(data.unsubscribed);
+				}
 			},
 			error: function(xhr, textStatus, err) {
 
