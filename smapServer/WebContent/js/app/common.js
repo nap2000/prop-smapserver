@@ -1577,7 +1577,7 @@ function removeHourglass() {
 /*
  * Load the surveys from the server
  */
-function loadSurveys(projectId, selector, getDeleted, addAll, callback, showIdent) {
+function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx) {
 
 	var url="/surveyKPI/surveys?projectId=" + projectId + "&blocked=true";
 
@@ -1602,12 +1602,12 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback, showIden
 
 				removeHourglass();
 
-				showSurveyList(data, sel + ".data_survey", all, true, false, showIdent);
-				showSurveyList(data, sel + ".oversight_survey", all, false, true, showIdent);
-				showSurveyList(data, sel + ".data_oversight_survey", all,true, true, showIdent);
+				showSurveyList(data, sel + ".data_survey", all, true, false, useIdx);
+				showSurveyList(data, sel + ".oversight_survey", all, false, true, useIdx);
+				showSurveyList(data, sel + ".data_oversight_survey", all,true, true, useIdx);
 
 				if(typeof callback == "function") {
-					callback();
+					callback(data);
 				}
 			},
 			error: function(xhr, textStatus, err) {
@@ -1624,7 +1624,7 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback, showIden
 		var $elem = $('.data_survey, .oversight_survey, .data_oversight_survey');
 		$elem.empty();
 		if(addAll) {
-			$elem.append('<option value="_all">All Surveys</option>');
+			$elem.append('<option value="_all">' + localise.set["c_all_s"] + '</option>');
 		}
 
 		if(callback) {
@@ -1637,7 +1637,7 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback, showIden
 /*
  * Show the surveys in select boxes
  */
-function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, useIdent) {
+function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, useIdx) {
 
 	var i,
 		item,
@@ -1663,13 +1663,13 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 		if(item.dataSurvey && dataSurvey || item.oversightSurvey && oversightSurvey) {
 			h[++idx] = '<option';
 			if (count++ == 0) {
-				selValue = useIdent ? item.ident : item.id;
+				selValue = useIdx ? i : item.id;
 			}
 			if (item.blocked) {
 				h[++idx] = ' class="blocked"';
 			}
 			h[++idx] = ' value="';
-			h[++idx] = useIdent ? item.ident : item.id;
+			h[++idx] = useIdx ? i : item.id;
 			h[++idx] = '">';
 			h[++idx] = item.displayName;
 			if (item.blocked) {
@@ -1677,17 +1677,15 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 			}
 			h[++idx] = '</option>';
 		}
+		if(globals.gCurrentSurvey > 0 && globals.gCurrentSurvey === item.id) {
+			selValue = useIdx ? i : item.id;
+		}
 	}
 
 	$elem.empty().append(h.join(''));
 	$elem.val(selValue);
 	$("option.blocked", $elem_disable_blocked).attr("disabled", "disabled");
 
-	if(useIdent) {
-		//
-	} else if(globals.gCurrentSurvey > 0) {
-		$elem.val(globals.gCurrentSurvey);
-	}
 }
 
 /*
