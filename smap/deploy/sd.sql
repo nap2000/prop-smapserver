@@ -131,6 +131,7 @@ create TABLE mailout_people (
 	m_id integer references mailout(id) on delete cascade,		-- Mailout Id,
 	status text,		-- Mailout status
 	status_details text,
+	initial_data text,
 	processed TIMESTAMP WITH TIME ZONE,		-- Time converted into a message
 	status_updated TIMESTAMP WITH TIME ZONE	
 	);

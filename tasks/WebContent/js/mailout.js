@@ -157,18 +157,23 @@ require([
 		 * Backup / Import
 		 */
 		$('#m_export_xls').click(function () {	// Export to XLS
-			var tz = Intl.DateTimeFormat().resolvedOptions().timeZone,
-				tzParam = "",
-				url = '/surveyKPI/mailout/xls/' + $('#mailout').val(),
-				hasParam = false,
-				statusFilterArray = $('#status_filter').val();
 
-			// Add parameters
-			if (tz) {
-				url += (hasParam ? '&' : '?') + "tz=" + encodeURIComponent(tz);
-				hasParam = true;
+			if(gCurrentMailOutIdx && gCurrentMailOutIdx >= 0) {
+				
+				var tz = Intl.DateTimeFormat().resolvedOptions().timeZone,
+					tzParam = "",
+					url = '/surveyKPI/mailout/xls/' + gMailouts[gCurrentMailOutIdx].id,
+					hasParam = false,
+					statusFilterArray = $('#status_filter').val();
+
+
+				// Add parameters
+				if (tz) {
+					url += (hasParam ? '&' : '?') + "tz=" + encodeURIComponent(tz);
+					hasParam = true;
+				}
+				downloadFile(url);
 			}
-			downloadFile(url);
 		});
 
 		$('#m_import_xls').click(function () {	// Import from XLS
@@ -589,8 +594,7 @@ require([
      */
 	function sendUnsent(retry) {
 
-		var mailoutIdx = $('#mailout').val();
-		if(mailoutIdx && mailoutIdx >= 0) {
+		if(gCurrentMailOutIdx && gCurrentMailOutIdx >= 0) {
 			var url = '/surveyKPI/mailout/send/' + gMailouts[mailoutIdx].id;
 
 			if(retry) {
