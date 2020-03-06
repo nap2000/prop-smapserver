@@ -1278,6 +1278,7 @@ define({
     "mo_export": "Export Emails",
     "mo_subject": "Email Subject",
     "mo_content": "Email Content",
-    "mo_sent": "Sent"
+    "mo_sent": "Sent",
+    "mo_sd": "Status Details"
 
 });

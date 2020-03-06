@@ -488,8 +488,9 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
             h[++idx] = '<tr>';
             h[++idx] = '<th class="col-md-1 select_all">';
             h[++idx] = '<input type="checkbox" name="controls" value="-1"></td>';    // select all
-            h[++idx] = '</th>'
-            h[++idx] = '<th class="col-md-5">' + localise.set["c_name"], + '</th>';
+            h[++idx] = '</th>';
+            h[++idx] = '<th class="col-md-4">' + localise.set["c_name"] + '</th>';
+            h[++idx] = '<th class="col-md-1">' + localise.set["c_version"] + '</th>';
             h[++idx] = '<th class="col-md-1">' + localise.set["c_block"] + '</th>';
             h[++idx] = '<th class="col-md-2">' + localise.set["sr_g"] + '</th>';
             h[++idx] = '<th class="col-md-1">' + localise.set["c_replace"] + '</th>';
@@ -528,6 +529,11 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
                     h[++idx] = '><span style="word-wrap: break-word;">';
                     h[++idx] = survey.displayName;
                     h[++idx] = '</span></a></td>';
+
+                    h[++idx] = '<td>';
+                    h[++idx] = survey.version;
+                    h[++idx] = '</td>';
+
                     h[++idx] = '<td class="control_block"><input type="checkbox" name="block" value="';
                     h[++idx] = survey.id;
                     h[++idx] = '" ';
