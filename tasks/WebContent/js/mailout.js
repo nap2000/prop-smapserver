@@ -360,7 +360,7 @@ require([
 			$('#mo_subject_view').val(gMailouts[gCurrentMailOutIdx].subject);
 			$('#mo_content_view').val(gMailouts[gCurrentMailOutIdx].content);
 
-			var url = "/api/v1/mailout/" + gMailouts[gCurrentMailOutIdx].id + "?dt=true";
+			var url = "/api/v1/mailout/" + gMailouts[gCurrentMailOutIdx].id + "/emails?dt=true";
 			if (table) {
 				table.ajax.url(url).load();
 			} else {
@@ -410,7 +410,8 @@ require([
 				{ "data": "email" },
 				{ "data": "name" },
 				{ "data": "status_loc"  },
-				{ "data": "status_details"  }
+				{ "data": "status_details"  },
+				{ "data": "initial_data"  }
 			],
 			order: [[ 0, "asc" ]],
 			initComplete: function () {
@@ -520,7 +521,7 @@ require([
      */
 	function loadMailoutTotals() {
 
-		var url = "/api/v1/mailout/" + gMailouts[gCurrentMailOutIdx].id + "/totals";
+		var url = "/api/v1/mailout/" + gMailouts[gCurrentMailOutIdx].id + "/emails/totals";
 
 		addHourglass();
 
