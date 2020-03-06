@@ -235,6 +235,7 @@
 	            		<div class="ibox-title">
 	                    	<h5 class="lang" data-lang="c_emails">e</h5>
 	                    	<div class="ibox-tools">
+								<button class="selectedOnly lang btn btn-primary" style="display:none;" data-lang="c_details" id="m_view_details"></button>
 								<button class="btn btn-success" id="m_send"><span class="lang" data-lang="m_email_unsent"></span> <i class="fa fa-envelope fa-lg"></i></button>
 								<button class="btn btn-warning" id="m_retry"><span class="lang" data-lang="c_retry"></span> <i class="fa fa-envelope fa-lg"></i></button>
 							</div>
@@ -255,7 +256,7 @@
 													<th class="lang" data-lang="c_email">email</th>
 													<th class="lang" data-lang="c_name">n</th>
 													<th class="lang" data-lang="c_status">status</th>
-													<th class="lang" data-lang="c_details">details</th>
+													<th class="lang" data-lang="mo_sd">details</th>
 												</tr>
 												</thead>
 												<tfoot>
@@ -357,6 +358,32 @@
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">c</button>
 				<button id="importMailoutGo" type="button" class="btn btn-primary lang" data-lang="m_import">i</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal to view details-->
+<div id="vrd" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="vrdLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+
+				<h4 class="modal-title lang" id="vrdLabell" data-lang="c_details"></h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+						aria-hidden="true">&times;</span></button>
+
+			</div>
+			<div class="modal-body">
+				<form role="form" enctype="multipart/form-data">
+
+					<label class="lang control-label" data-lang="t_id" for="mo_initial_data"></label>
+					<textarea id="mo_initial_data" rows="6" readonly class="form-control"></textarea>
+
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">c</button>
 			</div>
 		</div>
 	</div>
