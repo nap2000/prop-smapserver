@@ -470,7 +470,7 @@ require([
 		var surveyIdx = $survey.val();
 		var surveyIdent = gSurveyList[surveyIdx].ident;
 
-		var url="/surveyKPI/mailout/" + surveyIdent;
+		var url="/api/v1/mailout/" + surveyIdent;
 		var $mailout = $('#mailout');
 
 		addHourglass();
