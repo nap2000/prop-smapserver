@@ -159,7 +159,7 @@ require([
 		$('#m_export_xls').click(function () {	// Export to XLS
 
 			if(gCurrentMailOutIdx && gCurrentMailOutIdx >= 0) {
-				
+
 				var tz = Intl.DateTimeFormat().resolvedOptions().timeZone,
 					tzParam = "",
 					url = '/surveyKPI/mailout/xls/' + gMailouts[gCurrentMailOutIdx].id,
@@ -595,7 +595,7 @@ require([
 	function sendUnsent(retry) {
 
 		if(gCurrentMailOutIdx && gCurrentMailOutIdx >= 0) {
-			var url = '/surveyKPI/mailout/send/' + gMailouts[mailoutIdx].id;
+			var url = '/surveyKPI/mailout/send/' + gMailouts[gCurrentMailOutIdx].id;
 
 			if(retry) {
 				url += "?retry=true"
