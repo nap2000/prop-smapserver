@@ -76,7 +76,7 @@ require([
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
 
-		$("#side-menu").metisMenu()
+		$("#side-menu").metisMenu();
 
 		getLoggedInUser(undefined, false, false, undefined);
 

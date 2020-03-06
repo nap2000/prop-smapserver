@@ -142,6 +142,9 @@ require([
 			});
 		});
 
+		/*
+		 * Edit mailout
+		 */
 		$('#m_edit').click(function(){
 			initMailoutDialog("edit");
 			$('#addMailoutPopup').modal("show");
@@ -152,6 +155,14 @@ require([
 		});
 
 		$('#saveMailout').click(function(){saveMailout();});
+
+		/*
+		 * Record details
+		 */
+		$('#m_view_details').click(function(){
+			$('#mo_initial_data').val(JSON.stringify(gSelectedRecord.initialData, null, 4));
+			$('#vrd').modal("show");
+		});
 
 		/*
 		 * Backup / Import
@@ -411,7 +422,6 @@ require([
 				{ "data": "name" },
 				{ "data": "status_loc"  },
 				{ "data": "status_details"  },
-				{ "data": "initial_data"  }
 			],
 			order: [[ 0, "asc" ]],
 			initComplete: function () {
