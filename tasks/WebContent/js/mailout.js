@@ -278,7 +278,7 @@ require([
 		if(!errorMsg) {
 
 			mailoutString = JSON.stringify(mailout);
-			url = '/surveyKPI/mailout'
+			url = '/api/v1/mailout'
 
 			addHourglass();
 			$.ajax({
@@ -291,8 +291,7 @@ require([
 				success: function(data, status) {
 					removeHourglass();
 					$('#addMailoutPopup').modal("hide");
-					gCurrentMailOutIdx = getMailoutIdx(data.id);
-					loadMailouts();
+					loadMailouts(data.id);
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
@@ -460,11 +459,10 @@ require([
 
 	}
 
-
 	/*
 	 * Get the mailouts for the passed in survey
 	 */
-	function loadMailouts() {
+	function loadMailouts(id) {
 
 		var $survey = $('#survey_name');
 		var surveyIdx = $survey.val();
@@ -505,6 +503,11 @@ require([
 				}
 
 				$mailout.empty().append(h.join(''));
+
+				if(id) {
+					gCurrentMailOutIdx = getMailoutIdx(id);
+				}
+
 				if(gCurrentMailOutIdx >= 0) {
 					$mailout.val(gCurrentMailOutIdx);
 				} else {
@@ -633,7 +636,6 @@ require([
 	}
 
 	function getMailoutIdx(id) {
-		var idx = -1;
 		var i;
 
 		if (gMailouts && gMailouts.length > 0) {
@@ -643,7 +645,7 @@ require([
 				}
 			}
 		}
-		return idx;
+		return -1;
 	}
 
 });
