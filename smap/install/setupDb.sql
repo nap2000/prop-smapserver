@@ -1281,7 +1281,7 @@ create TABLE mailout (
 	created TIMESTAMP WITH TIME ZONE,
 	modified TIMESTAMP WITH TIME ZONE
 	);
-CREATE UNIQUE INDEX idx_mailout_name ON mailout(name);
+CREATE UNIQUE INDEX idx_mailout_name ON mailout(survey_ident, name);
 ALTER TABLE mailout OWNER TO ws;
 
 DROP SEQUENCE IF EXISTS mailout_people_seq CASCADE;
