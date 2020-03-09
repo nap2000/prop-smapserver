@@ -339,9 +339,12 @@ define({
     "c_access": "Access",
     "c_person": "Person",
     "c_people": "People",
+    "c_contacts": "Contacts",
     "c_teams": "Teams",
     "c_mailouts": "Mail outs",
     "c_mailout": "Mail out",
+    "c_campaigns": "Campaigns",
+    "c_campaign": "Campaign",
 
     // File Types
     "ft": "File Type",
