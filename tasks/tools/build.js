@@ -1,7 +1,7 @@
 ({
     appDir: '../WebContent',
     locale: "en",
-//    optimize: 'none',
+    optimize: 'none',
     wrapShim: false,
     waitSeconds: 60,
     baseUrl: 'js/libs',
@@ -81,11 +81,11 @@
 	    exclude: ['jquery', 'bootstrap', 'datatables_b4']
         },
         {
-            name: '../people',
+            name: '../contacts',
 	    exclude: ['jquery', 'bootstrap', 'datatables_b4']
 	},
         {
-            name: '../mailout',
+            name: '../campaign',
 	    exclude: ['jquery', 'bootstrap', 'datatables_b4']
 	}
 
