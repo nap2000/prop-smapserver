@@ -1275,6 +1275,7 @@ define({
     "mo_nf": "The survey form was not found",
     "mo_ss": "This survey form has been sucessfully submitted",
     "mo_exp": "This survey form has expired",
+    "mo_del": "This survey form has been deleted",
     "mo_se": "System Error",
     "mo_del": "Are you sure that you want to delete mailout \"%s1\".  Recipients who have already been sent emails will still be able to respond. ",
     "mo_import": "Import Emails",
