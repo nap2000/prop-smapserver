@@ -150,3 +150,5 @@ CREATE TABLE temp_users_final (
 	);
 CREATE UNIQUE INDEX idx_temp_users_final_ident ON temp_users_final(ident);
 ALTER TABLE temp_users_final OWNER TO ws;
+
+alter table mailout_people add column link text;
