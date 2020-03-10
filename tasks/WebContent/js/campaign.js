@@ -398,6 +398,7 @@ require([
 		$('#mo_error').html(0);
 		$('#mo_unsubscribed').html(0);
 		$('#mo_expired').html(0);
+		$('#mo_manual').html(0);
 
 		$('#mo_subject_view').val("");
 		$('#mo_content_view').val("");
@@ -554,6 +555,7 @@ require([
 					$('#mo_error').html(data.error);
 					$('#mo_unsubscribed').html(data.unsubscribed);
 					$('#mo_expired').html(data.expired);
+					$('#mo_manual').html(data.manual);
 				}
 			},
 			error: function(xhr, textStatus, err) {
