@@ -345,6 +345,7 @@ define({
     "c_mailout": "Mail out",
     "c_campaigns": "Campaigns",
     "c_campaign": "Campaign",
+    "c_manual": "Manual",
 
     // File Types
     "ft": "File Type",
