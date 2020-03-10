@@ -161,6 +161,7 @@ require([
 		 */
 		$('#m_view_details').click(function(){
 			$('#mo_initial_data').val(JSON.stringify(gSelectedRecord.initialData, null, 4));
+			$('#mo_link').val(location.origin + '/webForm' + gSelectedRecord.link);
 			$('#vrd').modal("show");
 		});
 
