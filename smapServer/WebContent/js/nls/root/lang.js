@@ -403,6 +403,7 @@ define({
     "a_to_date": "To date",
     "a_fq": "Filter question",
     "a_res": "Please provide a reason",
+    "a_res_5": "Please provide a reason at least 5 characters long",
     "a_mb": "Marked Bad",
     "a_oo": "out of",
     "a_cm": "Cluster Members",
