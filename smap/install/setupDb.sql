@@ -926,7 +926,7 @@ CREATE TABLE public.tasks (
 	location_trigger text,
 	location_group text,
 	location_name text,
-	deleted boolean,
+	deleted boolean default false,
 	complete_all boolean default false,	-- Set true if all assignments associated to this task need to be completed
 	assign_auto boolean default false,	-- Set true if users can assign themselvs to this task
 	show_dist integer						-- Distance in meters at which task will be downloaded
