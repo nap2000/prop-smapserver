@@ -92,6 +92,16 @@ require([
 					return;
 				}
 
+				if(item.name === "_user" || item.name === "_hrk"
+						|| item.name === "_upload_time"
+						|| item.name === "prikey"
+						|| item.name === "_version") {
+					var msg = localise.set["msg_res_name"];
+					msg = msg.replace("%s1", item.name);
+					alert(msg);
+					return;
+				}
+
 				// Settings
 				var set = [];
 				var pdfNo = $('#a_pdfno').prop('checked');

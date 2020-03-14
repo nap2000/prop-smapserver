@@ -1957,7 +1957,12 @@ function setSurveyViewMeta(list, metaItem) {
 		i;
 
 	$metaSelect.empty();
-	$metaSelect.append('<option value="-1">None</option>');
+
+	// Add none
+	$metaSelect.append('<option value="-1">' + localise.set["c_none"] + '</option>');
+
+	// Add the user who submitted the survey
+	$metaSelect.append('<option value="_user">' + localise.set["c_submitter"] + '</option>');
 
 	if(list) {
 		for(i = 0; i < list.length; i++) {
