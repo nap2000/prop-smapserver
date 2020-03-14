@@ -346,6 +346,7 @@ define({
     "c_campaigns": "Campaigns",
     "c_campaign": "Campaign",
     "c_manual": "Manual",
+    "c_submitter": "Submitter",
 
     // File Types
     "ft": "File Type",
@@ -588,6 +589,7 @@ define({
     "msg_restore_started": "Restoration of the survey data has started.  Press refresh to see progress.  This process may take minutes if the files to be retrieved are in off site storage",
 	"msg_persist": "Persistent tasks stay on the device even after they are completed. The user should reject the task when they have finished with it",
     "msg_no_uns_orgs": "There are no organisations where that email address is unsubscribed",
+    "msg_res_name": "%s1 is a reserved name",
 
     // Editor
     "e_b_e": "Base on existing form",
