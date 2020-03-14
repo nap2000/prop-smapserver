@@ -1114,6 +1114,7 @@ create TABLE pending_message (
 	topic text,
 	description text,
 	data text,
+	message_id integer,
 	created_time TIMESTAMP WITH TIME ZONE,
 	processed_time TIMESTAMP WITH TIME ZONE,
 	status text
