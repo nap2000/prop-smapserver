@@ -358,6 +358,7 @@ create TABLE user_project (
 	u_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
 	p_id INTEGER REFERENCES project(id) ON DELETE CASCADE
 	);
+CREATE INDEX idx_up_u ON user_project(u_id);
 ALTER TABLE user_project OWNER TO ws;
 
 DROP SEQUENCE IF EXISTS user_organisation_seq CASCADE;
