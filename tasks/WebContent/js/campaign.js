@@ -196,6 +196,7 @@ require([
 				alert(localise.set["mo_ns"]);
 			}
 		});
+
 		// Respond to selection of a file for upload
 		$('.custom-file-label').attr('data-browse', localise.set["c_browse"]);
 		$('.custom-file-input').on('change',function(){
