@@ -1031,6 +1031,22 @@ require([
 			$(currentTab).trigger('click');
 		}
 
+		/*
+         * Export / Import Projects
+         */
+		$('#export_project').click(function () {	// Export to XLS
+
+			var url = '/surveyKPI/projectList/xls',
+					hasParam = false;
+
+			downloadFile(url);
+		});
+
+		$('#import_project').click(function () {	// Import from XLS
+			gImportType = "project";
+			$('#import_file').modal("show");
+		});
+
 	});
 
 
