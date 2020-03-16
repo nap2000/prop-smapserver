@@ -1204,5 +1204,43 @@
 	</div>
 </div>
 
+	<!-- Modal to import data from a file -->
+	<div id="import_file" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+
+					<h4 class="modal-title lang" id="importLabel" data-lang="m_import"></h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+							aria-hidden="true">&times;</span></button>
+
+				</div>
+				<div class="modal-body">
+					<form role="form" enctype="multipart/form-data" name="importFile">
+
+						<div class="form-group custom-file">
+							<div class="custom-file">
+								<input name="files" type="file" class="custom-file-input"
+									   accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel.sheet.macroEnabled.12">
+								<label id="importFile" class="custom-file-label lang" data-lang="c_file" data-browse=""></label>
+							</div>
+						</div>
+
+						<div class="custom-control custom-checkbox">
+							<input id="fi_clear" type="checkbox" class="custom-control-input" name="file_clear" value="true" >
+							<label id="fi_clear_label" class="custom-control-label mt-3" for="fi_clear"></label>
+						</div>
+
+
+					</form>
+					<div id="load_file_alert" style="display:none; background-color: #FEFC7C; padding: 5px 2px;" role="alert"></div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">c</button>
+					<button id="importFileGo" type="button" class="btn btn-primary lang" data-lang="m_import">i</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
