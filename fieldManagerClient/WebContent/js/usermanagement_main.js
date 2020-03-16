@@ -1044,11 +1044,68 @@ require([
 
 		$('#import_project').click(function () {	// Import from XLS
 			gImportType = "project";
+			$('#fi_clear_label').html(localise.set["u_clear_p"]);
 			$('#import_file').modal("show");
 		});
 
+		// Respond to selection of a file for upload
+		$('.custom-file-label').attr('data-browse', localise.set["c_browse"]);
+		$('.custom-file-input').on('change',function(){
+			var fileName = $(this).val();
+			var endPath = fileName.lastIndexOf("\\");
+			if(endPath > 0) {
+				fileName = fileName.substring(endPath + 1);
+			}
+			$(this).next('.custom-file-label').html(fileName);
+		});
+
+		$(('#importFileGo')).click(function () {
+			if(gImportType === "project") {
+				importProjects();
+			} else if(gImportType === "User") {
+				importProjects();
+			}
+		});
+
+
 	});
 
+
+	/*
+     * Import projectsfrom a spreadsheet
+     */
+	function importProjects() {
+
+		var url = '/surveyKPI/projectList/xls';
+
+		var f = document.forms.namedItem("importFile");
+		var formData = new FormData(f);
+
+		$('#load_file_alert').hide();
+
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			data: formData,
+			cache: false,
+			contentType: false,
+			processData: false,
+			url: url,
+			success: function (data, status) {
+				removeHourglass();
+				$('#import_file').modal("hide");
+				$('#load_file_alert').show().removeClass('alert-danger').addClass('alert-success').empty("");
+				getProjects();
+
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				var msg = xhr.responseText;
+				$('#load_mailouts_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
+
+			}
+		});
+	}
 
 	function userKnown() {
 		getGroups();
