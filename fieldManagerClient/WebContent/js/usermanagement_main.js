@@ -1063,7 +1063,7 @@ require([
 			if(gImportType === "project") {
 				importProjects();
 			} else if(gImportType === "User") {
-				importProjects();
+				importUsers();
 			}
 		});
 
@@ -1087,21 +1087,22 @@ require([
 		$.ajax({
 			type: "POST",
 			data: formData,
+			dataType: "text",
 			cache: false,
 			contentType: false,
 			processData: false,
 			url: url,
-			success: function (data, status) {
+			success: function (data) {
 				removeHourglass();
-				$('#import_file').modal("hide");
-				$('#load_file_alert').show().removeClass('alert-danger').addClass('alert-success').empty("");
+				$('#load_file_alert').removeClass('alert-danger').addClass('alert-success').html(data);
+				$('#load_file_alert').show();
 				getProjects();
 
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
 				var msg = xhr.responseText;
-				$('#load_mailouts_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
+				$('#load_file_alert').show().removeClass('alert-success').addClass('alert-danger').text(msg);
 
 			}
 		});
