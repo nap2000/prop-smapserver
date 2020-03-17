@@ -211,6 +211,7 @@ create TABLE project (
 	name text,
 	description text,
 	tasks_only boolean default false,	-- Deprecated - Set per form instead as (hide_on_device). When true only tasks will be downloaded to fieldTask
+	imported boolean default false,		-- If set true project was imported from a spreadsheet
 	changed_by text,
 	changed_ts TIMESTAMP WITH TIME ZONE
 	);

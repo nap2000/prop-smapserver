@@ -157,3 +157,5 @@ alter table tasks alter column deleted set default false;
 alter table pending_message add column message_id integer;
 
 CREATE INDEX idx_up_u ON user_project(u_id);
+
+alter table project add column imported boolean default false;
