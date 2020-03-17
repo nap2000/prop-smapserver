@@ -1091,7 +1091,7 @@ define({
     "view data": "View Data",
     "manage tasks": "Manage Tasks",
     "view own data": "View Own Data",
-    "u_clear_p": "Clear existing empty projects",
+    "u_clear_p": "Clear exiting empty imported projects",
 
     // Browse Results
     "br_ci": "Case Insensitive",
