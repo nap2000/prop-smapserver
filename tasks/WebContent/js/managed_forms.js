@@ -1184,7 +1184,7 @@ require([
         }
 
         // Add table
-        h[++idx] = '<table id="trackingTable" style="width:100%">';
+        //h[++idx] = '<table id="trackingTable" style="width:100%">';
 
         // Add head
         h[++idx] = '<thead>';
@@ -1225,7 +1225,7 @@ require([
         h[++idx] = '</tfoot>';
 
         // close table
-        h[++idx] = '</table>';
+       // h[++idx] = '</table>';
 
         $table.empty().html(h.join(''));
 
