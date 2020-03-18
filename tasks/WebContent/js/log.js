@@ -80,6 +80,9 @@ require([
 		
 		table = $('#log_table').DataTable({
 			 processing: true,
+			 scrollY: '70vh',
+			 scrollX: true,
+			 scrollCollapse: true,
 			 deferRender: true,
 		     ajax: "/api/v1/log/dt",
 		     columns: [
@@ -101,21 +104,23 @@ require([
 			initComplete: function () {
 				this.api().columns().every( function () {
 					var column = this;
-					var select = $('<select><option value=""></option></select>')
-						.appendTo( $(column.footer()).empty() )
-						.on( 'change', function () {
-							var val = $.fn.dataTable.util.escapeRegex(
-								$(this).val()
-							);
+					if (column.index() === 2 || column.index() === 3 || column.index() === 4) {
+						var select = $('<select style="width:100%;"><option value=""></option></select>')
+							.appendTo($(column.footer()).empty())
+							.on('change', function () {
+								var val = $.fn.dataTable.util.escapeRegex(
+									$(this).val()
+								);
 
-							column
-								.search( val ? '^'+val+'$' : '', true, false )
-								.draw();
-						} );
+								column
+									.search(val ? '^' + val + '$' : '', true, false)
+									.draw();
+							});
 
-					column.data().unique().sort().each( function ( d, j ) {
-						select.append( '<option value="'+d+'">'+d+'</option>' )
-					} );
+						column.data().unique().sort().each(function (d, j) {
+							select.append('<option value="' + d + '">' + d + '</option>')
+						});
+					}
 				} );
 
 			}

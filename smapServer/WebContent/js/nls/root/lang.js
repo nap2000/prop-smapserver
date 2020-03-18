@@ -339,9 +339,14 @@ define({
     "c_access": "Access",
     "c_person": "Person",
     "c_people": "People",
+    "c_contacts": "Contacts",
     "c_teams": "Teams",
     "c_mailouts": "Mail outs",
     "c_mailout": "Mail out",
+    "c_campaigns": "Campaigns",
+    "c_campaign": "Campaign",
+    "c_manual": "Manual",
+    "c_submitter": "Submitter",
 
     // File Types
     "ft": "File Type",
@@ -399,6 +404,7 @@ define({
     "a_to_date": "To date",
     "a_fq": "Filter question",
     "a_res": "Please provide a reason",
+    "a_res_5": "Please provide a reason at least 5 characters long",
     "a_mb": "Marked Bad",
     "a_oo": "out of",
     "a_cm": "Cluster Members",
@@ -583,6 +589,7 @@ define({
     "msg_restore_started": "Restoration of the survey data has started.  Press refresh to see progress.  This process may take minutes if the files to be retrieved are in off site storage",
 	"msg_persist": "Persistent tasks stay on the device even after they are completed. The user should reject the task when they have finished with it",
     "msg_no_uns_orgs": "There are no organisations where that email address is unsubscribed",
+    "msg_res_name": "%s1 is a reserved name",
 
     // Editor
     "e_b_e": "Base on existing form",
@@ -1272,8 +1279,10 @@ define({
     "mo_nf": "The survey form was not found",
     "mo_ss": "This survey form has been sucessfully submitted",
     "mo_exp": "This survey form has expired",
+    "mo_del_done": "This survey form has been deleted",
     "mo_se": "System Error",
     "mo_del": "Are you sure that you want to delete mailout \"%s1\".  Recipients who have already been sent emails will still be able to respond. ",
+    "mo_blocked": "This survey form has been blocked.  Try again later or contact the administrator to unblock",
     "mo_import": "Import Emails",
     "mo_export": "Export Emails",
     "mo_subject": "Email Subject",

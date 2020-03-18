@@ -17,7 +17,7 @@
 
 	<link href="/css/smap-wb.css" rel="stylesheet">
 
-    <link href="/css/dataTables.b4.min.css" rel="stylesheet" >
+	<link href="/js/libs/DataTablesFixedColumns/datatables.min.css" rel="stylesheet">
 	<link href="/css/dataTables.fontAwesome.css" rel="stylesheet" >
 
 	<script> if (!window.console) console = {log: function() {}}; </script>
@@ -26,7 +26,7 @@
 	<script src="/js/app/theme.js"></script>
 	<script src="/js/libs/jquery-2.1.1.js"></script>
 	<script src="/js/libs/bootstrap.bundle.v4.min.js"></script>
-	<script src="/js/libs/datatables.b4.min.js"></script>
+	<script src="/js/libs/DataTablesFixedColumns/datatables.min.js"></script>
 	<script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
 	<script data-main="js/log" src="/js/libs/require.js"></script>
 
@@ -56,8 +56,9 @@
 						<li class="restrict_role manage_role admin_role analyst_role"><a href="/tasks/managed_forms.html"><i class="glyphicon glyphicon-dashboard"></i> <span class="nav-label lang" data-lang="m_console"></span></a></li>
 						<li class="restrict_role analyst_role"><a href="/fieldAnalysis/index.html"><i class="glyphicon glyphicon-stats"></i> <span class="nav-label lang" data-lang="m_analysis">Analysis</span></a></li>
 						<li class="restrict_role admin_role analyst_role manage_role task_role"><a href="/tasks/taskManagement.html"><i class="fa fa-tasks"></i> <span class="nav-label lang" data-lang="m_assign">assign</span></a></li>
-						<li class="restrict_role admin_role analyst_role"><a href="/tasks/people.html">
-							<i class="fa fa-user"></i> <span class="nav-label lang" data-lang="c_people">people</span></a>
+						<li class="restrict_role admin_role analyst_role" id="c_campaigns"><a
+								href="/tasks/campaign.html"><i class="fa fa-envelope"></i> <span
+								class="nav-label lang" data-lang="c_campaigns">m</span></a></li>
 						<li class="restrict_role billing_role" style="display:none;"><a href="/fieldManager/billing.html">
 							<i class="fas fa-dollar-sign"></i> <span class="nav-label lang" data-lang="m_billing">billing</span></a>
 						</li>
@@ -111,30 +112,39 @@
 			
 							<div id="table-view" class="tab-pane active">
 		                		<div class="panel-body">
-		                    		<div class="table-responsive">
-		                                <table id="log_table" class="table table-striped" width="100%" cellspacing="0">
-		                                    <thead>
-		                                    <tr>
-		                                    	<th></th>	<!-- id -->
-		                                        <th class="lang" data-lang="c_date">date</th>
-		                                        <th class="lang" data-lang="c_survey" style="width:200px;">survey</th>
-		                                        <th class="lang" data-lang="c_user">user</th>
-		                                        <th class="lang" data-lang="c_event">event</th>
-		                                      	<th class="lang" data-lang="c_note">note</th>
-		                                    </tr>
-		                                    </thead>
-		                                    <tfoot>
-		                                     <tr>
-		                                    	<th></th>	<!-- id -->
-		                                    	<th></th>
-		                                    	<th></th>
-		                                    	<th></th>
-		                                    	<th></th>
-		                                    	<th></th>
-		                                    </tr>
-		                                    </tfoot>
-		                                </table>
-		                            </div>
+									<div id="table_content" class="col-md-12 dash_views">
+										<div class="sk-spinner sk-spinner-wave">
+											<div class="sk-rect1"></div>
+											<div class="sk-rect2"></div>
+											<div class="sk-rect3"></div>
+											<div class="sk-rect4"></div>
+											<div class="sk-rect5"></div>
+										</div>
+										<div class="table-responsive">
+											<table id="log_table" class="table table-striped">
+												<thead>
+												<tr>
+													<th></th>	<!-- id -->
+													<th><span class="ch lang" data-lang="c_date">date</span></th>
+													<th><span class="ch lang" data-lang="c_survey">survey</span></th>
+													<th><span class="ch lang" data-lang="c_user">user</span></th>
+													<th><span class="ch lang" data-lang="c_event">event</span></th>
+													<th><span class="ch lang" data-lang="c_note">note</span></th>
+												</tr>
+												</thead>
+												<tfoot>
+												 <tr>
+													<th></th>	<!-- id -->
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+												</tr>
+												</tfoot>
+											</table>
+										</div>
+									</div>
 		                    	</div>
 							</div>
 						</div>

@@ -150,3 +150,10 @@ CREATE TABLE temp_users_final (
 	);
 CREATE UNIQUE INDEX idx_temp_users_final_ident ON temp_users_final(ident);
 ALTER TABLE temp_users_final OWNER TO ws;
+
+alter table mailout_people add column link text;
+
+alter table tasks alter column deleted set default false;
+alter table pending_message add column message_id integer;
+
+CREATE INDEX idx_up_u ON user_project(u_id);

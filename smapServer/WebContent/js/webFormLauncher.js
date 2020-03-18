@@ -82,6 +82,7 @@ $(document).ready(function() {
 
     // Refresh menu
     $('#m_refresh').click(function () {
+	    $('.up_alert').hide();
         projectSet();
     });
 
@@ -160,7 +161,7 @@ function saveUserDetails(formData, key) {
 		url = url + "/key/" + key;
 	}
 	
-	$('#up_alert').hide();
+	$('.up_alert').hide();
 	addHourglass();
 	$.ajax({
 		  type: "POST",
@@ -172,7 +173,7 @@ function saveUserDetails(formData, key) {
 		  success: function(data, status) {
 			  removeHourglass();
 			  var user = JSON.parse(data);
-			  $('#up_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+			  $('.up_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
 			  $('#my_signature').attr("src", user.signature);
 			  $('#my_signature_file').val(undefined);
 		  },
@@ -189,7 +190,7 @@ function saveUserDetails(formData, key) {
 			  if(!originalKey) {
 				  getKey(originalFormData);
 			  } else {
-				 $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
+				 $('.up_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
 			 }
 		  }
 	});
@@ -368,6 +369,7 @@ function addTaskList(taskList, filterProjectId) {
 	$taskList.html(h.join(''));
 
 	$taskList.find('.task').off().click(function(){
+		$('.up_alert').hide();
 		var $this = $(this),
 			repeat = $this.data("repeat");
 
@@ -390,12 +392,19 @@ function addTaskList(taskList, filterProjectId) {
 
 function reject(aid) {
 
+	$('.up_alert').hide();
 	bootbox.prompt({
-		title: localise.set["a_res"],
+		title: localise.set["a_res_5"],
 		centerVertical: true,
 		locale: gUserLocale,
 		callback: function(result){
 			console.log(result);
+
+			// Validate
+			if(!result || result.trim().length < 5) {
+				$('.up_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["a_res_5"]);
+				return;
+			}
 
 			var assignment = {
 				assignment_id: aid,
@@ -420,7 +429,7 @@ function reject(aid) {
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
-					$('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
+					$('.up_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
 
 				}
 			});
