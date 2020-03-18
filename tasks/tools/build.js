@@ -81,11 +81,11 @@
 	    exclude: ['jquery', 'bootstrap', 'datatables_b4']
         },
         {
-            name: '../people',
+            name: '../contacts',
 	    exclude: ['jquery', 'bootstrap', 'datatables_b4']
 	},
         {
-            name: '../mailout',
+            name: '../campaign',
 	    exclude: ['jquery', 'bootstrap', 'datatables_b4']
 	}
 

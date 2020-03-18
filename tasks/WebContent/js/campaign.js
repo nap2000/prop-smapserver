@@ -161,6 +161,7 @@ require([
 		 */
 		$('#m_view_details').click(function(){
 			$('#mo_initial_data').val(JSON.stringify(gSelectedRecord.initialData, null, 4));
+			$('#mo_link').val(gSelectedRecord.url);
 			$('#vrd').modal("show");
 		});
 
@@ -397,6 +398,7 @@ require([
 		$('#mo_error').html(0);
 		$('#mo_unsubscribed').html(0);
 		$('#mo_expired').html(0);
+		$('#mo_manual').html(0);
 
 		$('#mo_subject_view').val("");
 		$('#mo_content_view').val("");
@@ -553,6 +555,7 @@ require([
 					$('#mo_error').html(data.error);
 					$('#mo_unsubscribed').html(data.unsubscribed);
 					$('#mo_expired').html(data.expired);
+					$('#mo_manual').html(data.manual);
 				}
 			},
 			error: function(xhr, textStatus, err) {

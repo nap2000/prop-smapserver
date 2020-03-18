@@ -358,6 +358,7 @@ create TABLE user_project (
 	u_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
 	p_id INTEGER REFERENCES project(id) ON DELETE CASCADE
 	);
+CREATE INDEX idx_up_u ON user_project(u_id);
 ALTER TABLE user_project OWNER TO ws;
 
 DROP SEQUENCE IF EXISTS user_organisation_seq CASCADE;
@@ -926,7 +927,7 @@ CREATE TABLE public.tasks (
 	location_trigger text,
 	location_group text,
 	location_name text,
-	deleted boolean,
+	deleted boolean default false,
 	complete_all boolean default false,	-- Set true if all assignments associated to this task need to be completed
 	assign_auto boolean default false,	-- Set true if users can assign themselvs to this task
 	show_dist integer						-- Distance in meters at which task will be downloaded
@@ -1114,6 +1115,7 @@ create TABLE pending_message (
 	topic text,
 	description text,
 	data text,
+	message_id integer,
 	created_time TIMESTAMP WITH TIME ZONE,
 	processed_time TIMESTAMP WITH TIME ZONE,
 	status text
@@ -1296,6 +1298,7 @@ create TABLE mailout_people (
 	status text,		-- Mailout status
 	status_details text,
 	initial_data text,
+	link text,
 	processed TIMESTAMP WITH TIME ZONE,	-- Time converted into a message
 	status_updated TIMESTAMP WITH TIME ZONE	
 	);
