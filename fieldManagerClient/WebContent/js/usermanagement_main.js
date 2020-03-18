@@ -81,7 +81,8 @@ require([
 		gCurrentUserIndex,		// Set while editing a users details
 		gCurrentDeleteUsers,    // Users that have been selected for deletion, waiting on approval
 		gOrgId,
-		gSmsType;
+		gSmsType,
+		gPanel;
 
 	$(document).ready(function() {
 
@@ -136,93 +137,43 @@ require([
 		// Set up the tabs
 		$('#usersTab a').click(function (e) {
 			e.preventDefault();
-			$('.org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#userPanel').show();
-			setInLocalStorage("currentTab", '#usersTab a');
+			panelChange($(this), 'users');
 		});
 		$('#projectsTab a').click(function (e) {
 			e.preventDefault();
-			$('.org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#projectPanel').show();
-			setInLocalStorage("currentTab", '#projectsTab a');
+			panelChange($(this), 'projects');
 		});
 		$('#organisationTab a').click(function (e) {
 			e.preventDefault();
-			$('.org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#organisationPanel').show();
-			setInLocalStorage("currentTab", '#organisationTab a');
+			panelChange($(this), 'organisation');
 		});
 		$('#appearanceTab a').click(function (e) {
 			e.preventDefault();
-			$('.my_org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#appearancePanel').show();
-			setInLocalStorage("currentTab", '#appearanceTab a');
+			panelChange($(this), 'appearance');
 		});
 		$('#serverTab a').click(function (e) {
 			e.preventDefault();
-			$('.org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#serverPanel').show();
-			setInLocalStorage("currentTab", '#serverTab a');
+			panelChange($(this), 'server');
 		});
 		$('#roleTab a').click(function (e) {
 			e.preventDefault();
-			$('.org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#rolesPanel').show();
-			setInLocalStorage("currentTab", '#roleTab a');
+			panelChange($(this), 'role');
 		});
 		$('#deviceTab a').click(function (e) {
 			e.preventDefault();
-			$('.org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#devicePanel').show();
-			setInLocalStorage("currentTab", '#deviceTab a');
+			panelChange($(this), 'device');
 		});
 		$('#webformTab a').click(function (e) {
 			e.preventDefault();
-			$('.org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#webformPanel').show();
-			setInLocalStorage("currentTab", '#webformTab a');
+			panelChange($(this), 'webform');
 		});
 		$('#sensitiveTab a').click(function (e) {
 			e.preventDefault();
-			$('.org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#sensitivePanel').show();
-			setInLocalStorage("currentTab", '#sensitiveTab a');
+			panelChange($(this), 'sensitive');
 		});
 		$('#enterpriseTab a').click(function (e) {
 			e.preventDefault();
-			$('.org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#enterprisePanel').show();
-			setInLocalStorage("currentTab", '#enterpriseTab a');
+			panelChange($(this), 'enterprise');
 		});
 
 		// Style the upload buttons
@@ -1032,36 +983,32 @@ require([
 		}
 
 		/*
-         * Export / Import Projects
+         * Export
          */
-		$('#export_project').click(function () {	// Export to XLS
+		$('#m_export_xls').click(function () {	// Export to XLS
 
-			var url = '/surveyKPI/projectList/xls',
-					hasParam = false;
+			var url;
+
+			if(gPanel === 'users') {
+				url = '/surveyKPI/userList/xls';
+			} else {
+				url = '/surveyKPI/projectList/xls';
+			}
 
 			downloadFile(url);
-		});
-
-		$('#import_project').click(function () {	// Import from XLS
-			gImportType = "project";
-			$('#fi_clear_label').html(localise.set["u_clear_p"]);
-			$('#import_file').modal("show");
 		});
 
 		/*
-         * Export / Import Users
-         */
-		$('#export_user').click(function () {	// Export to XLS
+		 * import
+		 */
+		$('#m_import_xls').click(function () {	// Import from XLS
+			if(gPanel === 'users') {
+				$('#fi_clear_label').html(localise.set["u_clear_u"]);
+			} else if(gPanel === 'projects') {
+				$('#fi_clear_label').html(localise.set["u_clear_p"]);
+			}
 
-			var url = '/surveyKPI/userList/xls',
-				hasParam = false;
-
-			downloadFile(url);
-		});
-
-		$('#import_user').click(function () {	// Import from XLS
-			gImportType = "user";
-			$('#fi_clear_label').html(localise.set["u_clear_u"]);
+			$('#load_file_alert').hide();
 			$('#import_file').modal("show");
 		});
 
@@ -1077,9 +1024,9 @@ require([
 		});
 
 		$(('#importFileGo')).click(function () {
-			if(gImportType === "project") {
+			if(gPanel === "projects") {
 				importProjects();
-			} else if(gImportType === "User") {
+			} else if(gPanel === "users") {
 				importUsers();
 			}
 		});
@@ -1087,6 +1034,21 @@ require([
 
 	});
 
+	/*
+	 * Respond to a panel being changes
+	 * panelChange($(this), 'userPanel', 'usersTab');
+	 */
+	function panelChange($this, name) {
+		gPanel = name;
+
+		$('.org_alert').hide();
+		$this.tab('show');
+
+		$(".usertab").hide();
+		$('.panel' + name).show();
+		$('#' + name + 'Panel').show();
+		setInLocalStorage("currentTab", '#' + name + 'Tab a');
+	}
 
 	/*
      * Import projects from a spreadsheet
