@@ -1048,6 +1048,23 @@ require([
 			$('#import_file').modal("show");
 		});
 
+		/*
+         * Export / Import Users
+         */
+		$('#export_user').click(function () {	// Export to XLS
+
+			var url = '/surveyKPI/userList/xls',
+				hasParam = false;
+
+			downloadFile(url);
+		});
+
+		$('#import_user').click(function () {	// Import from XLS
+			gImportType = "user";
+			$('#fi_clear_label').html(localise.set["u_clear_u"]);
+			$('#import_file').modal("show");
+		});
+
 		// Respond to selection of a file for upload
 		$('.custom-file-label').attr('data-browse', localise.set["c_browse"]);
 		$('.custom-file-input').on('change',function(){
@@ -1072,7 +1089,7 @@ require([
 
 
 	/*
-     * Import projectsfrom a spreadsheet
+     * Import projects from a spreadsheet
      */
 	function importProjects() {
 
@@ -1097,6 +1114,43 @@ require([
 				$('#load_file_alert').removeClass('alert-danger').addClass('alert-success').html(data);
 				$('#load_file_alert').show();
 				getProjects();
+
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				var msg = xhr.responseText;
+				$('#load_file_alert').show().removeClass('alert-success').addClass('alert-danger').text(msg);
+
+			}
+		});
+	}
+
+	/*
+     * Import userss from a spreadsheet
+     */
+	function importUsers() {
+
+		var url = '/surveyKPI/userList/xls';
+
+		var f = document.forms.namedItem("importFile");
+		var formData = new FormData(f);
+
+		$('#load_file_alert').hide();
+
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			data: formData,
+			dataType: "text",
+			cache: false,
+			contentType: false,
+			processData: false,
+			url: url,
+			success: function (data) {
+				removeHourglass();
+				$('#load_file_alert').removeClass('alert-danger').addClass('alert-success').html(data);
+				$('#load_file_alert').show();
+				getUsers();
 
 			},
 			error: function (xhr, textStatus, err) {
