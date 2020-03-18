@@ -97,6 +97,11 @@ require([
             }
         });
 
+        $('#email').keyup(function() {
+            $('#org_list').hide();
+            $('#org_empty').hide();
+        });
+
         // Unsubscribe
         $('#unsubscribeSubmit').click(function (e) {
             e.preventDefault();
@@ -178,7 +183,7 @@ require([
 
         gOrgList = data;
 
-        h[++idx] = '<div class="well mt-2">';
+        h[++idx] = '<div class="mt-2">';
 
         h[++idx] = '<b><div class="row">';
 

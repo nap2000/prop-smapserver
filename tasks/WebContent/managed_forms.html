@@ -29,18 +29,23 @@
             width: 100%;
         }
 
-        .small_map {
-            height: 200px;
+        #map {
             width: 100%;
-            /*margin: 0 auto;*/
-            position: relative;
+            height: 300px;
+        }
+
+        #mapModal {
+            width: 100%;
+            height: 200px;
         }
     </style>
 
-    <script> if (!window.console) console = {
-        log: function () {
-        }
-    }; </script>
+    <script>
+        if (!window.console) console = {
+            log: function () {
+            }
+        };
+    </script>
 
     <script src="/js/libs/modernizr.js"></script>
     <script src="/js/app/theme.js"></script>
@@ -59,15 +64,7 @@
     <script data-main="js/managed_forms" src="/js/libs/require.js"></script>
 
     <style>
-        #map {
-            width: 100%;
-            height: 300px;
-        }
 
-        #mapModal {
-            width: 100%;
-            height: 200px;
-        }
     </style>
 </head>
 <body>
@@ -111,8 +108,9 @@
                         <li class="restrict_role admin_role analyst_role manage_role task_role"><a href="/tasks/taskManagement.html"><i
                                 class="fa fa-tasks"></i> <span class="nav-label lang" data-lang="m_assign"></span></a>
                         </li>
-                        <li class="restrict_role admin_role analyst_role"><a href="/tasks/people.html">
-                            <i class="fa fa-user"></i> <span class="nav-label lang" data-lang="c_people">people</span></a>
+                        <li class="restrict_role admin_role analyst_role" id="c_campaigns"><a
+                                href="/tasks/campaign.html"><i class="fa fa-envelope"></i> <span
+                                class="nav-label lang" data-lang="c_campaigns">m</span></a></li>
                         <li class="restrict_role billing_role" style="display:none;"><a href="/fieldManager/billing.html">
                             <i class="fas fa-dollar-sign"></i> <span class="nav-label lang" data-lang="m_billing"></span></a>
                         </li>
