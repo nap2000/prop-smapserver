@@ -113,6 +113,15 @@ elif [ $u1804 -eq 1 ]; then
 else
     sudo cp  $deploy_from/resources/properties/credentials /usr/share/$TOMCAT_VERSION/.aws
 fi
+# update existing credentials
+if [ -f $deploy_from/resources/properties/credentials ]
+then
+    for f in `locate .aws/credentials`
+    do
+            echo "processing $f"
+            cp $deploy_from/resources/properties/credentials $f
+    done
+fi
 
 cd /var/log/subscribers
 rm *.log_old
