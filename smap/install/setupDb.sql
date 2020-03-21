@@ -473,7 +473,8 @@ CREATE TABLE upload_event (
 	start_time timestamp with time zone,
 	end_time timestamp with time zone,
 	scheduled_start timestamp with time zone,
-	instance_name text
+	instance_name text,
+	temporary_user boolean default false
 	);
 create index idx_ue_ident on upload_event(user_name);
 create index idx_ue_applied on upload_event (status, incomplete, results_db_applied);
