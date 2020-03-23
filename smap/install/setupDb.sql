@@ -1436,3 +1436,19 @@ create TABLE survey_settings (
 	columns text	
 );
 ALTER TABLE survey_settings OWNER TO ws;
+
+-- Table to manage auto updates via AWS services
+DROP SEQUENCE IF EXISTS auto_update_seq CASCADE;
+CREATE SEQUENCE auto_update_seq START 1;
+ALTER SEQUENCE auto_update_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS auto_update;
+create TABLE auto_update (
+	id integer DEFAULT NEXTVAL('auto_update_seq') CONSTRAINT pk_auto_updates PRIMARY KEY,
+	type text,			-- Image, Audio etc
+	table_name text,	-- Table
+	source_col_name text,
+	target_col_name text,
+	status				-- open || pending || done || error
+);
+ALTER TABLE auto_update OWNER TO ws;
