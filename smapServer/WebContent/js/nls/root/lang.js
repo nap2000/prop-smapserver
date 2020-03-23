@@ -1091,6 +1091,8 @@ define({
     "view data": "View Data",
     "manage tasks": "Manage Tasks",
     "view own data": "View Own Data",
+    "u_clear_p": "Clear exiting empty imported projects",
+    "u_clear_u": "Clear exiting imported users",
 
     // Browse Results
     "br_ci": "Case Insensitive",
@@ -1288,6 +1290,7 @@ define({
     "mo_subject": "Email Subject",
     "mo_content": "Email Content",
     "mo_sent": "Sent",
-    "mo_sd": "Status Details"
+    "mo_sd": "Status Details",
+    "mo_send": "Are you sure you are ready to send the emails?"
 
 });

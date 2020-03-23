@@ -103,7 +103,31 @@
 						<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i></a>
 					</div>
 
-					<ul class="nav navbar-top-links navbar-right">
+					<ul class="nav navbar-top-links navbar-right usertab panelusers panelprojects">
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+								<i class="fa fa-file"></i> <span class="lang" data-lang="c_file">file</span>
+							</a>
+							<ul class="dropdown-menu dropdown-alerts">
+								<li>
+									<a href="#" id="m_export_xls">
+										<div>
+											<span class="lang" data-lang="m_export">export</span> XLS
+											<i class="fa fa-file-excel-o pull-right"></i>
+										</div>
+									</a>
+								</li>
+								<li class="divider"></li>
+								<li>
+									<a href="#" class="for_is_tg" id="m_import_xls">
+										<div>
+											<span class="lang" data-lang="m_import">import</span> XLS
+											<i class="fa fa-file-excel-o pull-right"></i>
+										</div>
+									</a>
+								</li>
+							</ul>
+						</li>
 					</ul>
 				</nav>
 			</div>
@@ -123,7 +147,7 @@
 
 
 			<!-- The container for the user list -->
-			<div id="userPanel" class="usertab mt-4">
+			<div id="usersPanel" class="usertab mt-4">
 
 				<div class="well" id="filters">
 					<div class="container">
@@ -162,7 +186,7 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-md-12 col-xs-12">
-							<button class="btn btn-success lang" id="create_user" data-lang="u_add"></button>
+							<button class="btn btn-success lang mr-2" id="create_user" data-lang="u_add"></button>
 						</div>
 					</div>
 					<div class="row">
@@ -177,13 +201,11 @@
 			</div>
 
 			<!-- The container for the list of projects -->
-			<div id="projectPanel" style="display:none;" class="usertab">
+			<div id="projectsPanel" style="display:none;" class="usertab">
 				<div class="container mt-4">
 					<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
 					<div class="row">
-						<div class="col-md-12 col-xs-12">
-							<button class="btn btn-success lang" id="create_project" data-lang="u_add_p"></button>
-						</div>
+						<button class="btn btn-success lang mr-2" id="create_project" data-lang="u_add_p"></button>
 					</div>
 					<div class="row">
 						<div class="col-md-12 col-xs-12">
@@ -197,7 +219,7 @@
 			</div>
 
 			<!-- The container for the list of roles -->
-			<div id="rolesPanel" style="display:none;" class="usertab">
+			<div id="rolePanel" style="display:none;" class="usertab">
 
 				<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
 				<div class="container">
@@ -1204,5 +1226,44 @@
 	</div>
 </div>
 
+	<!-- Modal to import data from a file -->
+	<div id="import_file" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+
+					<h4 class="modal-title lang" id="importLabel" data-lang="m_import"></h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+							aria-hidden="true">&times;</span></button>
+
+				</div>
+				<div class="modal-body">
+					<form role="form" enctype="multipart/form-data" name="importFile">
+
+						<div class="form-group custom-file">
+							<div class="custom-file">
+								<input name="files" type="file" class="custom-file-input"
+									   accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel.sheet.macroEnabled.12">
+								<label id="importFile" class="custom-file-label lang" data-lang="c_file" data-browse=""></label>
+							</div>
+						</div>
+
+						<div class="custom-control custom-checkbox">
+							<input id="fi_clear" type="checkbox" class="custom-control-input" name="file_clear" value="true" >
+							<label id="fi_clear_label" class="custom-control-label mt-3" for="fi_clear"></label>
+						</div>
+
+					</form>
+
+					<div id="load_file_alert" class="alert"></div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">c</button>
+					<button id="importFileGo" type="button" class="btn btn-primary lang" data-lang="m_import">i</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

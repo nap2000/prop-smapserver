@@ -71,6 +71,7 @@ require([
 	var gCurrentMailOutIdx = -1;
 	var gMailouts = [];
 	var gSurveyList = [];
+	var gRetry;
 
 	$(document).ready(function() {
 
@@ -142,6 +143,10 @@ require([
 			});
 		});
 
+		$('#confirmSendGo').click(function () {
+			sendUnsentGo();
+		});
+
 		/*
 		 * Edit mailout
 		 */
@@ -196,6 +201,7 @@ require([
 				alert(localise.set["mo_ns"]);
 			}
 		});
+
 		// Respond to selection of a file for upload
 		$('.custom-file-label').attr('data-browse', localise.set["c_browse"]);
 		$('.custom-file-input').on('change',function(){
@@ -611,10 +617,17 @@ require([
      */
 	function sendUnsent(retry) {
 
+		gRetry = retry;
+		$('#confirmSendMsg').html(localise.set["mo_send"]);
+		$('#confirmSendPopup').modal("show");
+	}
+
+	function sendUnsentGo() {
+
 		if(gCurrentMailOutIdx && gCurrentMailOutIdx >= 0) {
 			var url = '/surveyKPI/mailout/send/' + gMailouts[gCurrentMailOutIdx].id;
 
-			if(retry) {
+			if(gRetry) {
 				url += "?retry=true"
 			}
 			addHourglass();

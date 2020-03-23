@@ -211,6 +211,7 @@ create TABLE project (
 	name text,
 	description text,
 	tasks_only boolean default false,	-- Deprecated - Set per form instead as (hide_on_device). When true only tasks will be downloaded to fieldTask
+	imported boolean default false,		-- If set true project was imported from a spreadsheet
 	changed_by text,
 	changed_ts TIMESTAMP WITH TIME ZONE
 	);
@@ -264,6 +265,7 @@ CREATE TABLE users (
 	id INTEGER DEFAULT NEXTVAL('users_seq') CONSTRAINT pk_users PRIMARY KEY,
 	ident text,
 	temporary boolean default false,			-- If true will not show in user management page
+	imported boolean default false;				-- user was added using a bult import from a spreadsheet
 	password text,
 	realm text,
 	name text,
@@ -471,7 +473,8 @@ CREATE TABLE upload_event (
 	start_time timestamp with time zone,
 	end_time timestamp with time zone,
 	scheduled_start timestamp with time zone,
-	instance_name text
+	instance_name text,
+	temporary_user boolean default false
 	);
 create index idx_ue_ident on upload_event(user_name);
 create index idx_ue_applied on upload_event (status, incomplete, results_db_applied);
