@@ -138,10 +138,10 @@ sudo mkdir $filelocn/misc
 sudo mkdir $filelocn/temp
 sudo mkdir $filelocn/bin
 
+# Make sure all subdirectories of filelocn are updated even if the latter is a symbolic link
 sudo chown -R $TOMCAT_VERSION $filelocn
-sudo chmod -R 0777 $filelocn/attachments
-sudo chmod -R 0777 $filelocn/media
-sudo chmod -R 0777 $filelocn/uploadedSurveys
+sudo chown -R $TOMCAT_VERSION $filelocn/*
+sudo chmod -R 0777 $filelocn/*
 
 if [ $u1910 -eq 1 ]; then
     sudo mkdir /var/lib/$TOMCAT_VERSION/.aws
