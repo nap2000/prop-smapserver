@@ -3,6 +3,7 @@ export PATH=/usr/local/bin:$PATH
 export HOME=/var/lib/postgresql
 
 # back up the databases on this host
+bucket=`cat ~ubuntu/bucket`
 file="smap_bu.tgz"
 final_file="`cat ~ubuntu/hostname`-`date +\%Y-\%m-\%d`-smap_bu.tgz.gpg"
 rm -rf backups/*
@@ -24,9 +25,8 @@ rm $file
 
 # Copy encrypted file to s3
 echo "copy to s3"
-aws s3 cp $file.gpg s3://smap2/$final_file
+aws s3 cp $file.gpg s3://{db-bu-bucket}/$final_file
 rm $file.gpg
 
 # Synchronise other files
-bucket=`cat ~ubuntu/bucket`
 aws s3 sync /smap s3://$bucket --exclude "temp/*"
