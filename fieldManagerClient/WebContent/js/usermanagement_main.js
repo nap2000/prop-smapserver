@@ -81,7 +81,8 @@ require([
 		gCurrentUserIndex,		// Set while editing a users details
 		gCurrentDeleteUsers,    // Users that have been selected for deletion, waiting on approval
 		gOrgId,
-		gSmsType;
+		gSmsType,
+		gPanel;
 
 	$(document).ready(function() {
 
@@ -136,93 +137,43 @@ require([
 		// Set up the tabs
 		$('#usersTab a').click(function (e) {
 			e.preventDefault();
-			$('.org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#userPanel').show();
-			setInLocalStorage("currentTab", '#usersTab a');
+			panelChange($(this), 'users');
 		});
 		$('#projectsTab a').click(function (e) {
 			e.preventDefault();
-			$('.org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#projectPanel').show();
-			setInLocalStorage("currentTab", '#projectsTab a');
+			panelChange($(this), 'projects');
 		});
 		$('#organisationTab a').click(function (e) {
 			e.preventDefault();
-			$('.org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#organisationPanel').show();
-			setInLocalStorage("currentTab", '#organisationTab a');
+			panelChange($(this), 'organisation');
 		});
 		$('#appearanceTab a').click(function (e) {
 			e.preventDefault();
-			$('.my_org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#appearancePanel').show();
-			setInLocalStorage("currentTab", '#appearanceTab a');
+			panelChange($(this), 'appearance');
 		});
 		$('#serverTab a').click(function (e) {
 			e.preventDefault();
-			$('.org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#serverPanel').show();
-			setInLocalStorage("currentTab", '#serverTab a');
+			panelChange($(this), 'server');
 		});
 		$('#roleTab a').click(function (e) {
 			e.preventDefault();
-			$('.org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#rolesPanel').show();
-			setInLocalStorage("currentTab", '#roleTab a');
+			panelChange($(this), 'role');
 		});
 		$('#deviceTab a').click(function (e) {
 			e.preventDefault();
-			$('.org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#devicePanel').show();
-			setInLocalStorage("currentTab", '#deviceTab a');
+			panelChange($(this), 'device');
 		});
 		$('#webformTab a').click(function (e) {
 			e.preventDefault();
-			$('.org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#webformPanel').show();
-			setInLocalStorage("currentTab", '#webformTab a');
+			panelChange($(this), 'webform');
 		});
 		$('#sensitiveTab a').click(function (e) {
 			e.preventDefault();
-			$('.org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#sensitivePanel').show();
-			setInLocalStorage("currentTab", '#sensitiveTab a');
+			panelChange($(this), 'sensitive');
 		});
 		$('#enterpriseTab a').click(function (e) {
 			e.preventDefault();
-			$('.org_alert').hide();
-			$(this).tab('show');
-
-			$(".usertab").hide();
-			$('#enterprisePanel').show();
-			setInLocalStorage("currentTab", '#enterpriseTab a');
+			panelChange($(this), 'enterprise');
 		});
 
 		// Style the upload buttons
@@ -1031,8 +982,147 @@ require([
 			$(currentTab).trigger('click');
 		}
 
+		/*
+         * Export
+         */
+		$('#m_export_xls').click(function () {	// Export to XLS
+
+			var url;
+
+			if(gPanel === 'users') {
+				url = '/surveyKPI/userList/xls';
+			} else {
+				url = '/surveyKPI/projectList/xls';
+			}
+
+			downloadFile(url);
+		});
+
+		/*
+		 * import
+		 */
+		$('#m_import_xls').click(function () {	// Import from XLS
+			if(gPanel === 'users') {
+				$('#fi_clear_label').html(localise.set["u_clear_u"]);
+			} else if(gPanel === 'projects') {
+				$('#fi_clear_label').html(localise.set["u_clear_p"]);
+			}
+
+			$('#load_file_alert').hide();
+			$('#import_file').modal("show");
+		});
+
+		// Respond to selection of a file for upload
+		$('.custom-file-label').attr('data-browse', localise.set["c_browse"]);
+		$('.custom-file-input').on('change',function(){
+			var fileName = $(this).val();
+			var endPath = fileName.lastIndexOf("\\");
+			if(endPath > 0) {
+				fileName = fileName.substring(endPath + 1);
+			}
+			$(this).next('.custom-file-label').html(fileName);
+		});
+
+		$(('#importFileGo')).click(function () {
+			if(gPanel === "projects") {
+				importProjects();
+			} else if(gPanel === "users") {
+				importUsers();
+			}
+		});
+
+
 	});
 
+	/*
+	 * Respond to a panel being changes
+	 * panelChange($(this), 'userPanel', 'usersTab');
+	 */
+	function panelChange($this, name) {
+		gPanel = name;
+
+		$('.org_alert').hide();
+		$this.tab('show');
+
+		$(".usertab").hide();
+		$('.panel' + name).show();
+		$('#' + name + 'Panel').show();
+		setInLocalStorage("currentTab", '#' + name + 'Tab a');
+	}
+
+	/*
+     * Import projects from a spreadsheet
+     */
+	function importProjects() {
+
+		var url = '/surveyKPI/projectList/xls';
+
+		var f = document.forms.namedItem("importFile");
+		var formData = new FormData(f);
+
+		$('#load_file_alert').hide();
+
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			data: formData,
+			dataType: "text",
+			cache: false,
+			contentType: false,
+			processData: false,
+			url: url,
+			success: function (data) {
+				removeHourglass();
+				$('#load_file_alert').removeClass('alert-danger').addClass('alert-success').html(data);
+				$('#load_file_alert').show();
+				getProjects();
+
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				var msg = xhr.responseText;
+				$('#load_file_alert').show().removeClass('alert-success').addClass('alert-danger').text(msg);
+
+			}
+		});
+	}
+
+	/*
+     * Import userss from a spreadsheet
+     */
+	function importUsers() {
+
+		var url = '/surveyKPI/userList/xls';
+
+		var f = document.forms.namedItem("importFile");
+		var formData = new FormData(f);
+
+		$('#load_file_alert').hide();
+
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			data: formData,
+			dataType: "text",
+			cache: false,
+			contentType: false,
+			processData: false,
+			url: url,
+			success: function (data) {
+				removeHourglass();
+				$('#load_file_alert').removeClass('alert-danger').addClass('alert-success').html(data);
+				$('#load_file_alert').show();
+				getUsers();
+
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				var msg = xhr.responseText;
+				$('#load_file_alert').show().removeClass('alert-success').addClass('alert-danger').text(msg);
+
+			}
+		});
+	}
 
 	function userKnown() {
 		getGroups();
