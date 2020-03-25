@@ -1438,17 +1438,19 @@ create TABLE survey_settings (
 ALTER TABLE survey_settings OWNER TO ws;
 
 -- Table to manage auto updates via AWS services
-DROP SEQUENCE IF EXISTS auto_update_seq CASCADE;
-CREATE SEQUENCE auto_update_seq START 1;
-ALTER SEQUENCE auto_update_seq OWNER TO ws;
+DROP SEQUENCE IF EXISTS au_aws_async_seq CASCADE;
+CREATE SEQUENCE au_aws_async_seq START 1;
+ALTER SEQUENCE au_aws_async_seq OWNER TO ws;
 
-DROP TABLE IF EXISTS auto_update;
-create TABLE auto_update (
-	id integer DEFAULT NEXTVAL('auto_update_seq') CONSTRAINT pk_auto_updates PRIMARY KEY,
-	type text,			-- Image, Audio etc
-	table_name text,	-- Table
-	source_col_name text,
-	target_col_name text,
-	status				-- open || pending || done || error
+DROP TABLE IF EXISTS au_aws_async;
+create TABLE au_aws_async (
+	id integer DEFAULT NEXTVAL('au_aws_async_seq') CONSTRAINT pk_auto_updates PRIMARY KEY,
+	o_id integer,
+	type text,			-- 
+	au_details text,	-- Json representation of AutoUpdate object
+	status text,		-- open || pending || complte || error
+	job text,			-- Unique job identifier
+	results text,		-- Response from AWS
+	started TIMESTAMP WITH TIME ZONE
 );
-ALTER TABLE auto_update OWNER TO ws;
+ALTER TABLE au_aws_async OWNER TO ws;
