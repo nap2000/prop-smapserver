@@ -265,7 +265,7 @@ CREATE TABLE users (
 	id INTEGER DEFAULT NEXTVAL('users_seq') CONSTRAINT pk_users PRIMARY KEY,
 	ident text,
 	temporary boolean default false,			-- If true will not show in user management page
-	imported boolean default false;				-- user was added using a bult import from a spreadsheet
+	imported boolean default false,				-- user was added using a bult import from a spreadsheet
 	password text,
 	realm text,
 	name text,
@@ -1170,14 +1170,14 @@ CREATE SEQUENCE survey_settings_seq START 1;
 ALTER SEQUENCE survey_settings_seq OWNER TO ws;
 
 DROP TABLE IF EXISTS survey_settings CASCADE;
- create TABLE survey_settings (
+create TABLE survey_settings (
 	id integer DEFAULT NEXTVAL('survey_settings_seq') CONSTRAINT pk_survey_settings PRIMARY KEY,
 	s_ident text,		-- Survey ident
 	u_id integer,		-- User
 	view text,			-- Overall view (json)
 	map_view text,		-- Map view data
-	chart_view text,		-- Chart view data	
-	columns				-- Peferred columns from the survey and its group
+	chart_view text,	-- Chart view data	
+	columns text		
 );
 ALTER TABLE survey_settings OWNER TO ws;
 
