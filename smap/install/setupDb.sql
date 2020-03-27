@@ -1437,20 +1437,25 @@ create TABLE survey_settings (
 );
 ALTER TABLE survey_settings OWNER TO ws;
 
--- Table to manage auto updates via AWS services
-DROP SEQUENCE IF EXISTS au_aws_async_seq CASCADE;
-CREATE SEQUENCE au_aws_async_seq START 1;
-ALTER SEQUENCE au_aws_async_seq OWNER TO ws;
+DROP SEQUENCE IF EXISTS aws_async_jobs_seq CASCADE;
+CREATE SEQUENCE aws_async_jobs_seq START 1;
+ALTER SEQUENCE aws_async_jobs_seq OWNER TO ws;
 
-DROP TABLE IF EXISTS au_aws_async;
-create TABLE au_aws_async (
-	id integer DEFAULT NEXTVAL('au_aws_async_seq') CONSTRAINT pk_auto_updates PRIMARY KEY,
+-- Aynchronous AWS jobs deposit the data in an S3 bucket
+-- This S3 object is the definitive and full results and a link to it
+-- will be retaine in the sync table
+DROP TABLE IF EXISTS aws_async_jobs;
+create TABLE aws_async_jobs (
+	id integer DEFAULT NEXTVAL('aws_async_jobs_seq') CONSTRAINT pk_aws_async_jobs PRIMARY KEY,
 	o_id integer,
-	type text,			-- 
-	au_details text,	-- Json representation of AutoUpdate object
-	status text,		-- open || pending || complte || error
-	job text,			-- Unique job identifier
-	results text,		-- Response from AWS
-	started TIMESTAMP WITH TIME ZONE
+	col_name text,			-- Question that initiated this request
+	table_name text,		-- Table containing the data
+	instanceid text,		-- Record identifier
+	type text,				-- AUTO_UPDATE_AUDIO ||
+	update_details text,	-- AutoUpdate object in JSON
+	job text,				-- Unique AWS job identifier
+	status text,			-- open || pending || complete || error
+	results_link text,			-- URI to job results
+	request_initiated TIMESTAMP WITH TIME ZONE
 );
-ALTER TABLE au_aws_async OWNER TO ws;
+ALTER TABLE aws_async_jobs OWNER TO ws;
