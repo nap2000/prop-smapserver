@@ -43,13 +43,13 @@ if [ x"$type" = xvideo ]; then
 fi
 
 #If content type is "audio" create a flowplayer friendly video
-if [ x"$type" = xaudio ]; then
-	echo "--------------------------------------"
-	echo "Creating flash movie and adding meta data"
-	rm $destflv
-	sh -c "/usr/bin/ffmpeg -i $destfile -ar 22050 -f flv $destflv"
-	sh -c "flvtool2 -UP $destflv"
-fi
+#if [ x"$type" = xaudio ]; then
+#	echo "--------------------------------------"
+#	echo "Creating flash movie and adding meta data"
+#	rm $destflv
+#	sh -c "/usr/bin/ffmpeg -i $destfile -ar 22050 -f flv $destflv"
+#	sh -c "flvtool2 -UP $destflv"
+#fi
 
 # If there is an s3 bucket available then send files to it
 if [ -f ~ubuntu/bucket ]; then
