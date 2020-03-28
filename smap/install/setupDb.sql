@@ -1456,6 +1456,7 @@ create TABLE aws_async_jobs (
 	job text,				-- Unique AWS job identifier
 	status text,			-- open || pending || complete || error
 	results_link text,			-- URI to job results
-	request_initiated TIMESTAMP WITH TIME ZONE
+	request_initiated TIMESTAMP WITH TIME ZONE,
+	request_completed TIMESTAMP WITH TIME ZONE
 );
 ALTER TABLE aws_async_jobs OWNER TO ws;
