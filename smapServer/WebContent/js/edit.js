@@ -3600,7 +3600,7 @@ function setNoFilter() {
 								$('input[type=radio][name=search_source][value=csv]').prop('checked', true);
 								$('#a_csv_identifier').val(csvIndex);
 								$('.search_csv').show();
-								if(csvIndex) {
+								if(typeof csvIndex !== "undefined") {
 									getQuestionsInCsvFile($('.column_select'), csvIndex, true);
 								}
 							}
