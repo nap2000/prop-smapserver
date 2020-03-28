@@ -257,9 +257,8 @@ define([
 
             } else {        // Text + Default
 
-                var v = addAnchors(value)[0],
-                    h = [],
-                    idx = -1;
+                var v = addAnchors(value)[0];
+                
                 if(v && v.indexOf('<') == 0) {
                     h[++idx] = v;
                 } else {
