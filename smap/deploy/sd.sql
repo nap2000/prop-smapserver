@@ -162,3 +162,26 @@ alter table project add column imported boolean default false;
 alter table users add column imported boolean default false;
 alter table upload_event add column temporary_user boolean default false;
 update upload_event set temporary_user = 'false' where temporary_user is null;
+
+-- Transcribe
+CREATE SEQUENCE aws_async_jobs_seq START 1;
+ALTER SEQUENCE aws_async_jobs_seq OWNER TO ws;
+
+-- Aynchronous AWS jobs deposit the data in an S3 bucket
+-- This S3 object is the definitive and full results and a link to it
+-- will be retaine in the sync table
+create TABLE aws_async_jobs (
+	id integer DEFAULT NEXTVAL('aws_async_jobs_seq') CONSTRAINT pk_aws_async_jobs PRIMARY KEY,
+	o_id integer,
+	col_name text,			-- Question that initiated this request
+	table_name text,		-- Table containing the data
+	instanceid text,		-- Record identifier
+	type text,				-- AUTO_UPDATE_AUDIO ||
+	update_details text,	-- AutoUpdate object in JSON
+	job text,				-- Unique AWS job identifier
+	status text,			-- open || pending || complete || error
+	results_link text,			-- URI to job results
+	request_initiated TIMESTAMP WITH TIME ZONE,
+	request_completed TIMESTAMP WITH TIME ZONE
+);
+ALTER TABLE aws_async_jobs OWNER TO ws;
