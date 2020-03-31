@@ -3679,12 +3679,16 @@ function setNoFilter() {
 
 						showSearchElements();
 					} else if(val === 'columns' || val === 'quickcompact') {
-						var paramsArray = appearance.split('-');
-						$elem.val(paramsArray[0]);
-						if(paramsArray.length > 0) {
-							$('#a_number_columns').val(paramsArray[1]);
+						if(appearance === 'columns-pack') {
+							$elem.val(appearance);
+						} else {
+							var paramsArray = appearance.split('-');
+							$elem.val(paramsArray[0]);
+							if (paramsArray.length > 0) {
+								$('#a_number_columns').val(paramsArray[1]);
+							}
+							$('.a_number_columns').show();
 						}
-						$('.a_number_columns').show();
 
 					} else {
 						$elem.val(val);
