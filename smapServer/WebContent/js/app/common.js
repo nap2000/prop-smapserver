@@ -3811,10 +3811,13 @@ function tokenizeAppearance(input) {
 			if(chunks[i].type === "text") {
 				chunkTokens = chunk.split(/(\s+)/);
 			} else {
+				chunkTokens = [];
 				chunkTokens.push(chunk);
 			}
 			for(j = 0; j < chunkTokens.length; j++) {
-				tokens.push(chunkTokens[j].trim());
+				if(chunkTokens[j].trim().length > 0) {
+					tokens.push(chunkTokens[j].trim());
+				}
 			}
 		}
 	}
