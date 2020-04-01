@@ -118,6 +118,7 @@ $(document).ready(function() {
     $('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
     
     // Respond to file upload
+	$('.submitFiles').addClass('disabled');
     $('#submitFiles').click( function() {
     	if(!$('#submitFiles').hasClass('disabled')) {
     		uploadFiles('/surveyKPI/upload/media', "fileupload", refreshMediaViewManage, undefined, undefined);

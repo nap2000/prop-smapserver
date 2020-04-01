@@ -901,8 +901,10 @@ $(document).ready(function() {
     /*
      * Submit the files
      */
+	$('.submitFiles').addClass('disabled');
     $('#submitFiles').click( function() {
        	if(!$('#submitFiles').hasClass('disabled')) {
+	        $('.submitFiles').addClass('disabled');
        		uploadFiles(gUrl, "fileupload", refreshMediaViewManage, globals.gCurrentSurvey, undefined);
        	}
     });
