@@ -70,7 +70,7 @@ $(document).ready(function() {
 	
 	// Get the user details
 	globals.gIsAdministrator = false;
-	getLoggedInUser(getSurveyList, false, true, undefined, false, false);
+	getLoggedInUser(surveyListDone, false, true, undefined, false, false);
 	
 	// Add menu functions
 	$('#m_open').off().click(function() {	// Open an existing form
@@ -100,22 +100,9 @@ $(document).ready(function() {
 
 	$('#m_auto_translate').click(function(e) {
 		e.preventDefault();
-		aws.setLanguageSelect();
+		aws.setLanguageSelect($('.translate_select'));
 		$('#autoTranslateModal').modal("show");
 	});
-	
-	// Add responses to events
-	$('#project_name').change(function() {
-		globals.gCurrentProject = $('#project_name option:selected').val();
-		globals.gCurrentSurvey = -1;
-		globals.gCurrentTaskGroup = undefined;
-		
-		saveCurrentProject(globals.gCurrentProject, globals.gCurrentSurvey);	// Save the current project id
-		
-		saveCurrentProject(globals.gCurrentProject, 
-				globals.gCurrentSurvey, 
-				globals.gCurrentTaskGroup);
- 	 });
 	
 	$('.language_list').off().change(function() {
 		globals.gLanguage1 = $('#language1').val();
@@ -143,16 +130,11 @@ $(document).ready(function() {
 		getSurveyDetails(refreshView, false, true);
  	 });
 
-});
+	$('#translateGo').off().click(function() {
+		autoTranslate();
+	});
 
-function getSurveyList() {
-	console.log("getSurveyList: " + globals.gCurrentSurvey);
-	if(globals.gCurrentSurvey > 0) {
-		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyListDone, false);
-	} else {
-		loadSurveys(globals.gCurrentProject, undefined, false, false, undefined, false);
-	}
-}
+});
 
 function surveyListDone() {
 	getSurveyDetails(refreshView, false, true);
@@ -258,7 +240,7 @@ function refreshView() {
 		globals.gLanguage1 = 0;
 	}
 	if(globals.gLanguage2 >= numberLanguages) {
-		globals.gLanguage1 = 0;
+		globals.gLanguage2 = 0;
 	}
 	
 	// Set the display name
@@ -403,5 +385,35 @@ function translateHtmlFixup($element) {
 
 }
 
+function autoTranslate() {
+	var url="/surveyKPI/surveys/translate/" + globals.gCurrentSurvey
+		+ "/" + globals.model.survey.languages[globals.gLanguage1].name
+		+ "/" + globals.model.survey.languages[globals.gLanguage2].name
+		+ "/" + $("#from_lang").val()
+		+ "/" + $('#to_lang').val();
+
+
+	addHourglass();
+	$.ajax({
+		url: url,
+		type: 'PUT',
+		cache: false,
+		success: function() {
+			removeHourglass();
+			getSurveyDetails(undefined, false, true)
+			bootbox.alert("done");
+
+		},
+		error: function(xhr, textStatus, err) {
+			removeHourglass();
+
+			if(xhr.readyState === 0 || xhr.status === 0) {
+				return;  // Not an error
+			} else {
+				alert(localise.set["error"] + ' ' + err);
+			}
+		}
+	});
+}
 
 });
