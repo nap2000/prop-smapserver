@@ -7,157 +7,145 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<title class="lang" data-lang="c_trans"></title>
-	 
+
 	<link rel="shortcut icon" href="favicon.ico" />
 	<link rel="stylesheet" href="css/normalize.css" />
-	<link rel="stylesheet" href="/css/bootstrap.min.css" /> 
+	<link rel="stylesheet" href="/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="/css/app.css" />
 	<!--  <link rel="stylesheet" href="/css/smap-app.css" /> -->
 
 	<link rel="stylesheet" href="/css/smap-bs.css" type="text/css">
 
-    
- 	<script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
+
+	<script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
 	<script src="js/libs/modernizr.js"></script>
 	<script src="/js/app/theme-nobody.js"></script>
-    <script data-main="js/translate" src="js/libs/require.js"></script>
+	<script data-main="js/translate" src="js/libs/require.js"></script>
 </head>
 <body style="padding-top: 50px;">
 
 <header class="navbar navbar-default navbar-fixed-top" role="banner">
-  <div class="container">
-    <div class="navbar-header">
-      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a href="#" class="navbar-brand">
+	<div class="container">
+		<div class="navbar-header">
+			<button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a href="#" class="navbar-brand">
       	<span class="glyphicon glyphicon-edit" aria-hidden="true">
 		</span> <span class="lang" data-lang="c_trans"></span>
-      </a>
-    </div>
-	<nav class="collapse navbar-collapse" role="navigation">
-      <ul class="nav navbar-nav navbar-right">
-      	<li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="lang" data-lang="m_modules">View</span> <span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            
-            <li><a class="lang" data-lang="m_home" href="/?loggedin=yes">home</a></li>
-            <li class="disabled restrict_role admin_role analyst_role"><a href="#"><span class="lang" data-lang="c_edit">Edit</span><span class="glyphicon glyphicon-edit pull-right"></span></a></li>
-            <li class="restrict_role admin_role analyst_role"><a href="/fieldManager/surveyManagement.html"><span class="lang" data-lang="m_admin">Admin</span><span class="glyphicon glyphicon-wrench pull-right"></span></a></li>
-            <li class="restrict_role manage_role admin_role analyst_role"><a href="/tasks/managed_forms.html"><span class="lang" data-lang="m_console" ></span><span class="glyphicon glyphicon-globe pull-right"></span></a></li>
-            <li class="restrict_role analyst_role data_role"><a href="/fieldAnalysis/index.html"><span class="lang" data-lang="m_analysis">Analysis</span><span class="glyphicon glyphicon-stats pull-right"></span></a></li>
-            <li class="restrict_role admin_role analyst_role manage_role task_role"><a href="/tasks/taskManagement.html"><span class="nav-label lang" data-lang="m_assign">assign</span><span class="glyphicon glyphicon-tasks pull-right"></span></a></li>
-			  <li class="restrict_role admin_role analyst_role" id="c_campaigns"><a
-					  href="/tasks/campaign.html"><i class="fa fa-envelope"></i> <span
-					  class="nav-label lang" data-lang="c_campaigns">m</span></a></li>
-          
-          </ul>
-        </li> 
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="lang" data-lang="c_file">File</span> <span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a id="c_save" class="save_form" href="#">Save</a></li>
-          </ul>
-        </li> 
- 
- 		<li><a id="m_form" class="lang" data-lang="c_form" href="/edit.html">form</a>
-		<li><a id="m_calculations" href="/ssc.html" class="lang" data-lang="c_calc">calculations</a></li>
-		<li><a id="m_changes" href="/changes.html" class="lang" data-lang="c_changes">changes</a></li>
-           
-		<!--  
-	   	<li><a id="m_undo" href="#">Undo</a></li>
-	    <li><a id="m_redo" href="#">Redo</a></li>
-		-->
-		
-		<li id="m_help"><a class="lang" data-lang="m_help" href="http://www.smap.com.au/docs/online-editor.html" target="_blank">Help</a></li>
-        <li>
-         	<a id="username" type="button" class="btn btn-default" data-toggle="modal" data-target="#modify_me_popup" aria-label="User">
-			<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 			</a>
-		</li>
-      </ul>
-      	
-	</nav>
-
-  </div>
-</header>
-		
-	
-	<div class="uno" id="main_page">
-	
-		<!-- Informational -->
-		
-		
-
-		<div id="translate"">
-			<div class="statusbar">
-				<div class="row">	
-		  			<div class="col-xs-4 col-sm-6 col-md-4">
-		    			<span class="formName"> </span>	
-		  			</div>
-		  			
-		  			<div class="col-xs-8 col-sm-6 col-md-4">	
-		    			<div id="infobox" class="alert alert-warning alert-dismissible" role="alert" style="display:none;">
-  							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  							<span id="errormesg"></span>
-						</div>
-		  			</div>
-		  			
-		  			<div class="col-md-4 hidden-sm hidden-xs">
-		    			<a type="button" class="btn btn-success lang save_form m_save_survey"><span class="lang" data-lang="c_save">Save</span> <span class="badge">0</span></a>
-		 			 </div>
-		 			</div>
-	 		 </div>
-	 		 <div class="statusbar" style="top: 100px;">
-	 			 	<div class="small-12 medium-6 columns" style="line-height: 30px;">
-						<select id="language1" class="language_list" tabindex="-1"></select>
-					</div>
-					<div class="small-12 medium-6 columns" style="line-height: 30px;">
-						<select id="language2" class="language_list" tabindex="-1"></select>
-					</div>
-			</div>
- 			 <div class="questions translate"></div>
 		</div>
-		
+		<nav class="collapse navbar-collapse" role="navigation">
+			<ul class="nav navbar-nav navbar-right">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="lang" data-lang="m_modules">View</span> <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+
+						<li><a class="lang" data-lang="m_home" href="/?loggedin=yes">home</a></li>
+						<li class="disabled restrict_role admin_role analyst_role"><a href="#"><span class="lang" data-lang="c_edit">Edit</span><span class="glyphicon glyphicon-edit pull-right"></span></a></li>
+						<li class="restrict_role admin_role analyst_role"><a href="/fieldManager/surveyManagement.html"><span class="lang" data-lang="m_admin">Admin</span><span class="glyphicon glyphicon-wrench pull-right"></span></a></li>
+						<li class="restrict_role manage_role admin_role analyst_role"><a href="/webForm.html"><span class="nav-label lang" data-lang="m_web_forms"></span><span
+								class="glyphicon glyphicon-globe pull-right"></span></a></li>
+						<li class="restrict_role manage_role admin_role analyst_role"><a href="/tasks/managed_forms.html"><span class="lang" data-lang="m_console" ></span><span class="glyphicon glyphicon-globe pull-right"></span></a></li>
+						<li class="restrict_role analyst_role data_role"><a href="/fieldAnalysis/index.html"><span class="lang" data-lang="m_analysis">Analysis</span><span class="glyphicon glyphicon-stats pull-right"></span></a></li>
+						<li class="restrict_role admin_role analyst_role manage_role task_role"><a href="/tasks/taskManagement.html"><span class="nav-label lang" data-lang="m_assign">assign</span><span class="glyphicon glyphicon-tasks pull-right"></span></a></li>
+						<li class="restrict_role admin_role analyst_role" id="c_campaigns"><a
+								href="/tasks/campaign.html"><i class="fa fa-envelope"></i> <span
+								class="nav-label lang" data-lang="c_campaigns">m</span></a></li>
+
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="lang" data-lang="c_file">File</span> <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+						<li><a id="c_save" class="save_form" href="#">Save</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href='javascript:void(0)' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="lang" data-lang="c_tools">Tools</span> <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+						<li><a id="m_auto_translate" class="lang" data-lang="svc_at" href="translate.html">translate</a>
+					</ul>
+				</li>
+
+				<li><a id="m_form" class="lang" data-lang="c_form" href="/edit.html">form</a>
+				<li><a id="m_calculations" href="/ssc.html" class="lang" data-lang="c_calc">calculations</a></li>
+				<li><a id="m_changes" href="/changes.html" class="lang" data-lang="c_changes">changes</a></li>
+
+				<!--
+				   <li><a id="m_undo" href="#">Undo</a></li>
+				<li><a id="m_redo" href="#">Redo</a></li>
+				-->
+
+				<li id="m_help"><a class="lang" data-lang="m_help" href="http://www.smap.com.au/docs/online-editor.html" target="_blank">Help</a></li>
+				<li>
+					<a id="username" type="button" class="btn btn-default" data-toggle="modal" data-target="#modify_me_popup" aria-label="User">
+						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+					</a>
+				</li>
+			</ul>
+
+		</nav>
 
 	</div>
-	
-<!-- Modals -->
-<div id="openFormModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="openFormLabel" aria-hidden="true">
+</header>
+
+
+<div class="uno" id="main_page">
+
+	<div id="translate">
+		<div class="statusbar">
+			<div class="row">
+				<div class="col-xs-4 col-sm-6 col-md-4">
+					<span class="formName"> </span>
+				</div>
+
+				<div class="col-xs-8 col-sm-6 col-md-4">
+					<div id="infobox" class="alert alert-warning alert-dismissible" role="alert" style="display:none;">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<span id="errormesg"></span>
+					</div>
+				</div>
+
+				<div class="col-md-4 hidden-sm hidden-xs">
+					<a type="button" class="btn btn-success lang save_form m_save_survey"><span class="lang" data-lang="c_save">Save</span> <span class="badge">0</span></a>
+				</div>
+			</div>
+		</div>
+		<div class="statusbar" style="top: 100px;">
+			<div class="small-12 medium-6 columns" style="line-height: 30px;">
+				<select id="language1" class="language_list" tabindex="-1"></select>
+			</div>
+			<div class="small-12 medium-6 columns" style="line-height: 30px;">
+				<select id="language2" class="language_list" tabindex="-1"></select>
+			</div>
+		</div>
+		<div class="questions translate"></div>
+	</div>
+</div>
+
+<div id="autoTranslateModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="atLabel" aria-hidden="true">
 	<div class="modal-dialog">
-   		<div class="modal-content">
-   			<div class="modal-header">
-     			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     			<h4 class="modal-title" id="openSurveyLabel">Open Form</h4>
-   			</div>
-		     <div class="modal-body">
-		  		<form role="form" class="form-horizontal">
-		  			<div class="form-group">
-						<label for="project_name" class="lang col-sm-2 control-label" data-lang="c_project">Project :</label>
-						<div class="col-sm-10">
-							<select id="project_name" class="project_list form-control"></select>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="survey_name" class="lang col-sm-2 control-label" data-lang="a_exp_leg1">Form</label>
-						<div class="col-sm-10">
-							<select id="survey_name" class="survey_select data_oversight_survey form-control"></select>
-						</div>
-					</div>
-				</form>
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 id="atLabel" class="modal-title lang" data-lang="svc_at">at</h4>
+			</div>
+			<div class="modal-body">
+
 			</div>
 
 			<div class="modal-footer">
-	            <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_cancel">Cancel</button>
-	            <button id="get_form" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="m_open">Open</button>
-	        </div>
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_cancel">c</button>
+				<button id="get_form" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_save">s</button>
+			</div>
 		</div>
 	</div>
-</div>	
-	
+</div>
+
 
 </body>
 </html>
