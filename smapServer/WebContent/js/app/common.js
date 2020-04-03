@@ -1252,7 +1252,6 @@ function uploadFiles(url, formName, callback1, param, callback2) {
 		processData:false,
 		success: function(data) {
 			removeHourglass();
-			$('.submitFiles').removeClass('disabled');
 			var callbackParam = param,
 				cb1 = callback1,
 				cb2 = callback2;
