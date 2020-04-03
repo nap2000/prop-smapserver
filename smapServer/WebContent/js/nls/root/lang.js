@@ -1291,6 +1291,8 @@ define({
     "mo_content": "Email Content",
     "mo_sent": "Sent",
     "mo_sd": "Status Details",
-    "mo_send": "Are you sure you are ready to send the emails?"
+    "mo_send": "Are you sure you are ready to send the emails?",
 
+    // AWS Services
+    "svc_at": "Auto Translate"
 });

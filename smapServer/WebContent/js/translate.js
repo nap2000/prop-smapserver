@@ -96,6 +96,11 @@ $(document).ready(function() {
 		globals.model.redo();
 		refreshView(gMode);
 	});
+
+	$('#m_auto_translate').click(function(e) {
+		e.preventDefault();
+		$('#autoTranslateModal').modal("show");
+	});
 	
 	// Add responses to events
 	$('#project_name').change(function() {
@@ -190,7 +195,7 @@ function saveTranslations(callback) {
 				h[++idx] = '<p>';
 				h[++idx] = data.success;
 				h[++idx] = " changes successfully applied";
-				h[++idx] = '</p>'
+				h[++idx] = '</p>';
 				h[++idx] = '<ol>';
 				for(i = 0; i < data.changeSet.length; i++) {
 					h[++idx] = changeset.addUpdateMessage(data.changeSet[i], false);
@@ -216,7 +221,7 @@ function saveTranslations(callback) {
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
 			
-			if(xhr.readyState == 0 || xhr.status == 0) {
+			if(xhr.readyState === 0 || xhr.status === 0) {
 	              return;  // Not an error
 			} else {
 				alert(localise.set["msg_err_save"] + ' ' + err);
@@ -288,7 +293,7 @@ function refreshView() {
 	// Add all unique options from all option lists
 	for(key in survey.optionLists) {
 
-		var options = survey.optionLists[key].options; 
+		options = survey.optionLists[key].options;
 		for(j = 0; j < options.length; j++) {
 
 			if(options[j].labels[globals.gLanguage1].text) {
