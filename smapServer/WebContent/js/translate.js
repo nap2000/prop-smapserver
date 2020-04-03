@@ -50,8 +50,9 @@ require([
          'app/globals',
          'app/changeset',
          'bootbox',
+         'app/aws',
          'jquery.autosize.min'], 
-		function($, common, bootstrap, modernizr, lang, ssc, globals, changeset, bootbox) {
+		function($, common, bootstrap, modernizr, lang, ssc, globals, changeset, bootbox, aws) {
 
 
 var	gMode = "survey",
@@ -99,6 +100,7 @@ $(document).ready(function() {
 
 	$('#m_auto_translate').click(function(e) {
 		e.preventDefault();
+		aws.setLanguageSelect();
 		$('#autoTranslateModal').modal("show");
 	});
 	
