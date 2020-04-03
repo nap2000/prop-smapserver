@@ -112,8 +112,10 @@ $.fn.bootstrapFileInput = function() {
       // Don't try to show the name if there is none
       if (!fileDesc) {
           $target.addClass('alert-success').removeClass('alert-danger').html("").val("");
+	      $('.submitFiles').addClass('disabled');
           return;
       }
+	    $('.submitFiles').removeClass('disabled');
 
       if($target.hasClass("alert")) {
     	  $target.addClass('alert-success').removeClass('alert-danger').html(fileDesc).val(fileDesc);
