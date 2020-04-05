@@ -144,6 +144,20 @@ require([
 			$('#addPersonPopup').modal("show");
 		});
 
+		$('#m_del').click(function(){
+			gSelectedId = gSelectedRecord.id;
+
+			msg = localise.set["msg_confirm_del"];
+			msg += ": ";
+			msg += gSelectedRecord.name;
+
+			bootbox.confirm(msg, function(result){
+				if(result) {
+					deletePerson(gSelectedId);
+				}
+			});
+		});
+
 
 		$('#savePerson').click(function(){savePerson();});
 		
@@ -165,6 +179,35 @@ require([
 		}
 
 	}
+
+	/*
+	 * Delete the entry for a person
+	 */
+	function deletePerson(id) {
+
+		var url = '/surveyKPI/people/' + id;
+		addHourglass();
+		$.ajax({
+			type: "DELETE",
+			cache: false,
+			async: true,
+			url: url,
+			success: function(data, status) {
+				removeHourglass();
+				table.rows( { selected: true } ).deselect();
+				table.ajax.reload();
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["msg_err_del"] + xhr.responseText);
+				}
+			}
+		});
+	}
+
 	/*
 	 * Save a person
 	 */
