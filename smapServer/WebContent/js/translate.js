@@ -385,10 +385,13 @@ function translateHtmlFixup($element) {
 
 }
 
+/*
+ * Call AWS services to translate automatically
+ */
 function autoTranslate() {
 	var url="/surveyKPI/surveys/translate/" + globals.gCurrentSurvey
-		+ "/" + globals.model.survey.languages[globals.gLanguage1].name
-		+ "/" + globals.model.survey.languages[globals.gLanguage2].name
+		+ "/" + globals.gLanguage1
+		+ "/" + globals.gLanguage2
 		+ "/" + $("#from_lang").val()
 		+ "/" + $('#to_lang').val();
 
