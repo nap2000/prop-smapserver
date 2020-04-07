@@ -2857,7 +2857,8 @@ function updateLanguageView() {
 	h[++idx] = '<thead>';
 	h[++idx] = '<tr>';
 	h[++idx] = '<th>' + localise.set["c_name"], + '</th>';
-	h[++idx] = '<th>' + localise.set["c_desc"] + '</th>';
+	h[++idx] = '<th>' + localise.set["c_code"] + '</th>';
+	h[++idx] = '<th>' + localise.set["c_dirn"] + '</th>';
 	h[++idx] = '</tr>';
 	h[++idx] = '</thead>';
 	h[++idx] = '<tbody class="table-striped">';
@@ -2873,10 +2874,19 @@ function updateLanguageView() {
 			h[++idx] = i;
 			h[++idx] = '" required class="form-control" value="';
 			h[++idx] = languages[i].name;
-			h[++idx] = '"';
+			h[++idx] = '">';
 			h[++idx] = '</td>';
 			
-			// description
+			// code
+			h[++idx] = '<td>';
+			h[++idx] = '<input type="text" data-idx="';
+			h[++idx] = i;
+			h[++idx] = '" class="form-control" value="';
+			h[++idx] = languages[i].code;
+			h[++idx] = '">';
+			h[++idx] = '</td>';
+
+			// direction
 			h[++idx] = '<td>';
 			h[++idx] = '';
 			h[++idx] = '</td>';

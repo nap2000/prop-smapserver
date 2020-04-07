@@ -800,7 +800,9 @@ CREATE TABLE language (
 	id INTEGER DEFAULT NEXTVAL('l_seq') CONSTRAINT pk_language PRIMARY KEY,
 	s_id INTEGER REFERENCES survey ON DELETE CASCADE,
 	seq int,
-	language text	
+	language text,
+	code text,		-- 2 character (or more) language code
+	rtl boolean		-- Set true for right to lft languages
 	);
 ALTER TABLE language OWNER TO ws;
 
