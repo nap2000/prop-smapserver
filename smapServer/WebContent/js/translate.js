@@ -187,7 +187,7 @@ function saveTranslations(callback) {
 				h[++idx] = '<div class="alert alert-success" role="alert">';
 				h[++idx] = '<p>';
 				h[++idx] = data.success;
-				h[++idx] = " changes successfully applied";
+				h[++idx] = " " + localise.set["ed_csa"];
 				h[++idx] = '</p>';
 				h[++idx] = '<ol>';
 				for(i = 0; i < data.changeSet.length; i++) {
@@ -199,7 +199,7 @@ function saveTranslations(callback) {
 			if(data.failed > 0) {
 				h[++idx] = '<div class="alert alert-danger" role="alert">';
 				h[++idx] = data.failed;
-				h[++idx] = " changes failed";
+				h[++idx] = " " + localise.set["ed_csf"];
 				h[++idx] = '<ol>';
 				for(i = 0; i < data.changeSet.length; i++) {
 					h[++idx] = changeset.addUpdateMessage(data.changeSet[i], true);
@@ -412,8 +412,22 @@ function autoTranslate() {
 		cache: false,
 		success: function() {
 			removeHourglass();
-			getSurveyDetails(undefined, false, true)
-			bootbox.alert("done");
+			getSurveyDetails(refreshView, false, true);
+
+			var h = [],
+				idx = -1,
+				msg = localise.set["ed_transd"];
+
+			msg = msg.replace("%s1", globals.model.survey.languages[globals.gLanguage1].name);
+			msg = msg.replace("%s2", globals.model.survey.languages[globals.gLanguage2].name);
+
+			h[++idx] = '<div class="alert alert-success" role="alert">';
+			h[++idx] = '<p>';
+			h[++idx] = msg;
+			h[++idx] = '</p>';
+
+			h[++idx] = '</div>';
+			bootbox.alert(h.join(""));
 
 		},
 		error: function(xhr, textStatus, err) {

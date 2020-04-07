@@ -941,6 +941,9 @@ define({
     "ed_nb": "No Buttons",
     "ed_offline": "Offline and Online",
     "ed_online": "Online Only",
+    "ed_csa": "changes successfully applied",
+    "ed_csf": "changes failed",
+    "ed_transd": "Translations done from language %s1 to language %s2",
 
     // Managed Forms
     "mf_id": "Include Deleted",
