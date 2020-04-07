@@ -200,7 +200,8 @@ create TABLE log (
 	e_id integer,
 	user_ident text,
 	event text,	
-	note text
+	note text,
+	measure int default 0		-- In the case of translate this would be the number of characters
 	);
 ALTER TABLE log OWNER TO ws;
 
@@ -1462,3 +1463,4 @@ create TABLE aws_async_jobs (
 	request_completed TIMESTAMP WITH TIME ZONE
 );
 ALTER TABLE aws_async_jobs OWNER TO ws;
+
