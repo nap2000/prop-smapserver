@@ -463,7 +463,7 @@ function showUserTable(view) {
 	$selMain.empty();
 
 	if(tableItems && tableItems.features && tableItems.features.length > 0) {
-		generateUserTable(elemMain, tableItems, view.user_ident, view.uId);
+		generateUserTable(elemMain, tableItems, view.user_ident, view.uId, view.subject_type);
 		addRightClickToTable($selMain, view.sId, view);
 		$selMain.find('table').tablesorter();
 		addMoreLessUserButtons($selMain, view);
