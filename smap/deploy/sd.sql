@@ -185,3 +185,6 @@ create TABLE aws_async_jobs (
 	request_completed TIMESTAMP WITH TIME ZONE
 );
 ALTER TABLE aws_async_jobs OWNER TO ws;
+
+alter table language add column code text;
+alter table language add column rtl boolean default false; 

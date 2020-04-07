@@ -347,6 +347,8 @@ define({
     "c_campaign": "Campaign",
     "c_manual": "Manual",
     "c_submitter": "Submitter",
+    "c_code": "Code",
+    "c_dirn": "Direction",
 
     // File Types
     "ft": "File Type",
