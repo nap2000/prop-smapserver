@@ -318,7 +318,7 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 
 }
 
-function generateUserTable(elementId, data, disp_desc, user_ident, uId) {
+function generateUserTable(elementId, data, user_ident, uId, subject_type) {
 
 	console.log("generate user table");
 	var i,j,k,
@@ -410,7 +410,7 @@ function generateUserTable(elementId, data, disp_desc, user_ident, uId) {
 
 	// Add the column headings
 
-	if(typeof globals !== "undefined" && globals.gCanEdit) {
+	if(typeof globals !== "undefined" && globals.gCanEdit && subject_type !== 'user_locations') {
 		gTab[++gIdx] = '<th></th>';			// Add empty header for edit button
 	}
 	gTab[++gIdx] = '<th>Record</th>';
@@ -441,7 +441,7 @@ function generateUserTable(elementId, data, disp_desc, user_ident, uId) {
 
 		gTab[++gIdx] = '<tr>';
 
-		if(typeof globals !== "undefined" && globals.gCanEdit) {
+		if(typeof globals !== "undefined" && globals.gCanEdit && subject_type !== 'user_locations') {
 			// Add a button to edit the survey data in web forms
 			gTab[++gIdx] = '<td>';
 				gTab[++gIdx] = '<div class="menu_button btn context_table dropdown-toggle" type="button" data-toggle="dropdown"';
