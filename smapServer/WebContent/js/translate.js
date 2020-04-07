@@ -99,9 +99,18 @@ $(document).ready(function() {
 	});
 
 	$('#m_auto_translate').click(function(e) {
+		var survey = globals.model.survey;
 		e.preventDefault();
-		aws.setLanguageSelect($('.translate_select'));
-		$('#autoTranslateModal').modal("show");
+		if(survey.languages.length > 1) {
+			aws.setLanguageSelect($('.translate_select'));
+			if (survey.languages[globals.gLanguage1].code) {
+				$('#from_lang').val(survey.languages[globals.gLanguage1].code);
+			}
+			if (survey.languages[globals.gLanguage2].code) {
+				$('#to_lang').val(survey.languages[globals.gLanguage2].code);
+			}
+			$('#autoTranslateModal').modal("show");
+		}
 	});
 	
 	$('.language_list').off().change(function() {
