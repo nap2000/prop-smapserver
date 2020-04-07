@@ -2872,7 +2872,7 @@ function updateLanguageView() {
 			h[++idx] = '<td>';
 			h[++idx] = '<input type="text" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" required class="form-control" value="';
+			h[++idx] = '" required class="lname form-control" value="';
 			h[++idx] = languages[i].name;
 			h[++idx] = '">';
 			h[++idx] = '</td>';
@@ -2881,14 +2881,20 @@ function updateLanguageView() {
 			h[++idx] = '<td>';
 			h[++idx] = '<input type="text" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="form-control" value="';
+			h[++idx] = '" class="lcode form-control" value="';
 			h[++idx] = languages[i].code;
 			h[++idx] = '">';
 			h[++idx] = '</td>';
 
 			// direction
 			h[++idx] = '<td>';
-			h[++idx] = '';
+			h[++idx] = '<input type="checkbox" data-idx="';
+			h[++idx] = i;
+			h[++idx] = '" class="ldirn form-control"';
+			if(languages[i].rtl) {
+				h[++idx] = " checked";
+			}
+			h[++idx] = '>';
 			h[++idx] = '</td>';
 			
 		
@@ -2918,11 +2924,23 @@ function updateLanguageView() {
 		updateLanguageView();
 	});
 
-	$("input", $selector).change(function(){
+	$("input.lname", $selector).change(function(){
 		var idx = $(this).data("idx");
 		gTempLanguages[idx].name = $(this).val();
 		updateLanguageView();
+	});
 
+	$("input.lcode", $selector).change(function(){
+		var idx = $(this).data("idx");
+		gTempLanguages[idx].code = $(this).val();
+		updateLanguageView();
+	});
+
+	$("input.ldirn", $selector).change(function(){
+		var idx = $(this).data("idx");
+
+		gTempLanguages[idx].rtl = $(this).prop("checked");
+		updateLanguageView();
 	});
 	
 	
