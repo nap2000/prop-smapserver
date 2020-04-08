@@ -387,6 +387,7 @@ CREATE TABLE public.role (
 	o_id integer REFERENCES organisation(id) ON DELETE CASCADE,
 	name text,
 	description text,
+	imported boolean default false,
 	changed_by text,
 	changed_ts TIMESTAMP WITH TIME ZONE
 );
