@@ -990,12 +990,14 @@ require([
 			var url;
 
 			if(gPanel === 'users') {
-				url = '/surveyKPI/userList/xls';
+				downloadFile('/surveyKPI/userList/xls');
+			} else if(gPanel === 'projects') {
+				downloadFile('/surveyKPI/projectList/xls');
+			} else if(gPanel === 'role') {
+				downloadFile('/surveyKPI/role/xls');
 			} else {
-				url = '/surveyKPI/projectList/xls';
+				alert("Error unknown panel: " + gPanel);    // Would be programming error - no need for translation
 			}
-
-			downloadFile(url);
 		});
 
 		/*
@@ -1006,6 +1008,8 @@ require([
 				$('#fi_clear_label').html(localise.set["u_clear_u"]);
 			} else if(gPanel === 'projects') {
 				$('#fi_clear_label').html(localise.set["u_clear_p"]);
+			} else if(gPanel === 'role') {
+				$('#fi_clear_label').html(localise.set["u_clear_r"]);
 			}
 
 			$('#load_file_alert').hide();
@@ -1025,9 +1029,11 @@ require([
 
 		$(('#importFileGo')).click(function () {
 			if(gPanel === "projects") {
-				importProjects();
+				importXLS('/surveyKPI/projectList/xls', getProjects, undefined);
 			} else if(gPanel === "users") {
-				importUsers();
+				importXLS('/surveyKPI/userList/xls', getUsers, undefined);
+			} else if(gPanel === "role") {
+				importXLS('/surveyKPI/role/xls', getRoles, updateRoleTable);
 			}
 		});
 
@@ -1051,11 +1057,9 @@ require([
 	}
 
 	/*
-     * Import projects from a spreadsheet
+     * Import data from a spreadsheet
      */
-	function importProjects() {
-
-		var url = '/surveyKPI/projectList/xls';
+	function importXLS(url, callback, p1) {
 
 		var f = document.forms.namedItem("importFile");
 		var formData = new FormData(f);
@@ -1073,9 +1077,11 @@ require([
 			url: url,
 			success: function (data) {
 				removeHourglass();
+				var cb = callback;
+				var param1 = p1;
 				$('#load_file_alert').removeClass('alert-danger').addClass('alert-success').html(data);
 				$('#load_file_alert').show();
-				getProjects();
+				cb(param1);
 
 			},
 			error: function (xhr, textStatus, err) {
@@ -1087,42 +1093,6 @@ require([
 		});
 	}
 
-	/*
-     * Import userss from a spreadsheet
-     */
-	function importUsers() {
-
-		var url = '/surveyKPI/userList/xls';
-
-		var f = document.forms.namedItem("importFile");
-		var formData = new FormData(f);
-
-		$('#load_file_alert').hide();
-
-		addHourglass();
-		$.ajax({
-			type: "POST",
-			data: formData,
-			dataType: "text",
-			cache: false,
-			contentType: false,
-			processData: false,
-			url: url,
-			success: function (data) {
-				removeHourglass();
-				$('#load_file_alert').removeClass('alert-danger').addClass('alert-success').html(data);
-				$('#load_file_alert').show();
-				getUsers();
-
-			},
-			error: function (xhr, textStatus, err) {
-				removeHourglass();
-				var msg = xhr.responseText;
-				$('#load_file_alert').show().removeClass('alert-success').addClass('alert-danger').text(msg);
-
-			}
-		});
-	}
 
 	function userKnown() {
 		getGroups();
