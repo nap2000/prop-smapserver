@@ -189,3 +189,4 @@ ALTER TABLE aws_async_jobs OWNER TO ws;
 alter table language add column code text;
 alter table language add column rtl boolean default false; 
 alter table log add column measure integer default 0;
+alter table role add column imported boolean default false;

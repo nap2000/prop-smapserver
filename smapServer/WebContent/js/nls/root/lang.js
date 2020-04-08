@@ -1098,6 +1098,7 @@ define({
     "view own data": "View Own Data",
     "u_clear_p": "Clear exiting empty imported projects",
     "u_clear_u": "Clear exiting imported users",
+    "u_clear_r": "Clear exiting imported roles",
 
     // Browse Results
     "br_ci": "Case Insensitive",
