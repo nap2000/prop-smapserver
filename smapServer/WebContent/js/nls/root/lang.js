@@ -1305,6 +1305,8 @@ define({
     "submissions": "Submissions",
     "disk": "Disk",
     "rekognition": "AWS Rekognition",
+    "translate": "AWS Translate",
+    "transcibe": "AWS Transcribe",
 	"static_map": "Mapbox Static Map",
 	"monthly": "Monthly Charge",
     "org_bill_rpt": "Organisation Usage Report",
