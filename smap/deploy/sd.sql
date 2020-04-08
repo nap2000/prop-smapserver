@@ -162,3 +162,4 @@ alter table project add column imported boolean default false;
 alter table users add column imported boolean default false;
 alter table upload_event add column temporary_user boolean default false;
 update upload_event set temporary_user = 'false' where temporary_user is null;
+alter table role add column imported boolean default false;
