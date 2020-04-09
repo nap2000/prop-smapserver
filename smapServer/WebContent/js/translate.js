@@ -436,7 +436,7 @@ function autoTranslate() {
 			if(xhr.readyState === 0 || xhr.status === 0) {
 				return;  // Not an error
 			} else {
-				alert(localise.set["error"] + ' ' + err);
+				alert(localise.set["error"] + ' ' + xhr.responseText);
 			}
 		}
 	});

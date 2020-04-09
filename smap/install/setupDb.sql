@@ -181,6 +181,7 @@ create TABLE organisation (
 	webform text,				-- Webform options
 	navbar_color text,
 	training text,
+	limits text,				-- JSON object with resource limits
 	changed_ts TIMESTAMP WITH TIME ZONE
 	);
 CREATE UNIQUE INDEX idx_organisation ON organisation(name);
@@ -1465,3 +1466,19 @@ create TABLE aws_async_jobs (
 );
 ALTER TABLE aws_async_jobs OWNER TO ws;
 
+-- Usage counter
+-- Manage usage of costly resources by organisation id
+-- Generally billing will be handled through the log, this table will provide greater performance
+DROP SEQUENCE IF EXISTS resource_usage_seq CASCADE;
+CREATE SEQUENCE resource_usage_seq START 1;
+ALTER SEQUENCE resource_usage_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS resource_usage;
+create TABLE resource_usage (
+	id integer DEFAULT NEXTVAL('resource_usage_seq') CONSTRAINT pk_resource_usage PRIMARY KEY,
+	o_id integer,
+	period text,			-- year - month
+	resource text,			-- Resource identifier
+	int usage				-- Amount of usage
+);
+ALTER TABLE resource_usage OWNER TO ws;
