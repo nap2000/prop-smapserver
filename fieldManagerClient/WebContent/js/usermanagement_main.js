@@ -1644,6 +1644,11 @@ require([
 		}
 		h[++idx] = '</fieldset>';
 		$('#usageLimitsHere').empty().html(h.join(''));
+		if(org.limits) {
+			for (i = 0; i < limitTypes.length; i++) {
+				$('#' + limitTypes[i].id).val((org.limits) ? org.limits[limitTypes[i].name] : 0);
+			}
+		}
 
 		$('#create_organisation_popup').modal("show");
 	}
