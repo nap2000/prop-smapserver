@@ -84,6 +84,24 @@ require([
 		gSmsType,
 		gPanel;
 
+	var limitTypes = [
+		{
+			id: 'o_translate_limit',
+			name: 'translate',
+			label: 'translate'
+		},
+		{
+			id: 'o_transcribe_limit',
+			name: 'transcribe',
+			label: 'transcribe'
+		},
+		{
+			id: 'o_rekognition_limit',
+			name: 'rekognition',
+			label: 'rekognition'
+		},
+		];
+
 	$(document).ready(function() {
 
 		$("#side-menu").metisMenu();
@@ -590,6 +608,12 @@ require([
 				}
 			}
 			organisation.appearance.navbar_color = $('#o_navbar_color').val();
+
+			// Add usage limits
+			organisation.limits = {};
+			for(i = 0; i < limitTypes.length; i++) {
+				organisation.limits[limitTypes[i].name] = $('#' + limitTypes[i].id).val();
+			}
 
 			organisationList[0] = organisation;
 			var organisationString = JSON.stringify(organisationList);
@@ -1516,6 +1540,9 @@ require([
 	 * Show the organisation dialog
 	 */
 	function openOrganisationDialog(existing, organisationIndex) {
+		var i,
+			h = [];
+			idx = -1;
 
 		if(gSmsType && gSmsType === "aws") {
 			$('.awsSmsOnly').show();
@@ -1597,6 +1624,27 @@ require([
 			$('#o_tz').val('UTC');
 			addLanguageOptions($('#o_language'), undefined);
 		}
+
+		// Add usage limits
+		h[++idx] = '<fieldset>';
+		for(i = 0; i < limitTypes.length; i++ ) {
+			h[++idx] = '<div class="form-group row">';
+				h[++idx] = '<label for="';
+				h[++idx] = limitTypes[i].id;
+				h[++idx] = '" class="col-sm-2 control-label">';
+				h[++idx] = localise.set[limitTypes[i].label];
+				h[++idx] = '</label>';
+			h[++idx] = 	'<div class="col-sm-10">';
+				h[++idx] = '<input type="integer" id="'
+				h[++idx] = limitTypes[i].id;
+				h[++idx] = '" class="form-control"><br/>';
+			h[++idx] = '</div>';
+			h[++idx] = '</div>';
+
+		}
+		h[++idx] = '</fieldset>';
+		$('#usageLimitsHere').empty().html(h.join(''));
+
 		$('#create_organisation_popup').modal("show");
 	}
 
