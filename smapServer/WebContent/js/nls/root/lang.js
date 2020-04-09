@@ -1044,6 +1044,7 @@ define({
     "u_ft_swipes_buttons": "Use swipes and buttons",
     "u_det_o_email": "Email Options",
     "u_det_o_other": "Other Options",
+    "u_det_o_limits": "Usage Limits",
     "u_other_edit": "Allow editing of results",
     "u_email_tasks": "Allow sending of task emails",
 	"u_use_api": "Allow API access",
