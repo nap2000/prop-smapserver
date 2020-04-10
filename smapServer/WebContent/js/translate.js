@@ -109,6 +109,7 @@ $(document).ready(function() {
 			if (survey.languages[globals.gLanguage2].code) {
 				$('#to_lang').val(survey.languages[globals.gLanguage2].code);
 			}
+			$('#overwrite').prop("checked", false);
 			$('#autoTranslateModal').modal("show");
 		}
 	});
@@ -398,12 +399,17 @@ function translateHtmlFixup($element) {
  * Call AWS services to translate automatically
  */
 function autoTranslate() {
+
 	var url="/surveyKPI/surveys/translate/" + globals.gCurrentSurvey
 		+ "/" + globals.gLanguage1
 		+ "/" + globals.gLanguage2
 		+ "/" + $("#from_lang").val()
 		+ "/" + $('#to_lang').val();
+	var overwrite = $('#overwrite').prop("checked");
 
+	if(overwrite) {
+		url += "?overwrite=true";
+	}
 
 	addHourglass();
 	$.ajax({
