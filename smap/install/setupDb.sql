@@ -1479,6 +1479,6 @@ create TABLE resource_usage (
 	o_id integer,
 	period text,			-- year - month
 	resource text,			-- Resource identifier
-	int usage				-- Amount of usage
+	usage integer			-- Amount of usage
 );
 ALTER TABLE resource_usage OWNER TO ws;
