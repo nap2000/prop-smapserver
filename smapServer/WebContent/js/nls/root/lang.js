@@ -944,6 +944,7 @@ define({
     "ed_csa": "changes successfully applied",
     "ed_csf": "changes failed",
     "ed_transd": "Translations done from language %s1 to language %s2",
+    "ed_ow": "Overwrite existing translations",
 
     // Managed Forms
     "mf_id": "Include Deleted",
