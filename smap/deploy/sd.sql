@@ -191,3 +191,15 @@ alter table language add column rtl boolean default false;
 alter table log add column measure integer default 0;
 alter table role add column imported boolean default false;
 alter table organisation add column limits text;
+
+CREATE SEQUENCE resource_usage_seq START 1;
+ALTER SEQUENCE resource_usage_seq OWNER TO ws;
+
+create TABLE resource_usage (
+	id integer DEFAULT NEXTVAL('resource_usage_seq') CONSTRAINT pk_resource_usage PRIMARY KEY,
+	o_id integer,
+	period text,			-- year - month
+	resource text,			-- Resource identifier
+	usage integer			-- Amount of usage
+);
+ALTER TABLE resource_usage OWNER TO ws;
