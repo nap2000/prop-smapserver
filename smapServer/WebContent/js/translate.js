@@ -337,8 +337,6 @@ function refreshView() {
 
 /*
  * Convert JSON to html
- * Mustache is preferred however once you start needing helper functions this is more 
- * straightforward
  */
 function setTranslateHtml($element, questions, survey) {
 	var h =[],
