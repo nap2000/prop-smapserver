@@ -23,219 +23,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-var languages = [
-	{
-		code: "ar",
-		trans: true
-	},
-	{
-		code: "en",
-		trans: true
-	},
-	{
-		code: "fr",
-		trans: true
-	},
-	{
-		code: "hi",
-		trans: true
-	},
-	{
-		code: "pt",
-		trans: true
-	},
-	{
-		code: "es",
-		trans: true
-	},
-	{
-		code: "af",
-		trans: true
-	},
-	{
-		code: "sq",
-		trans: true
-	},
-	{
-		code: "am",
-		trans: true
-	},
-	{
-		code: "az",
-		trans: true
-	},
-	{
-		code: "bn",
-		trans: true
-	},
-	{
-		code: "bs",
-		trans: true
-	},
-	{
-		code: "bg",
-		trans: true
-	},	{
-		code: "zh",
-		trans: true
-	},
-	{
-		code: "zh-TW",
-		trans: true
-	},
-	{
-		code: "hr",
-		trans: true
-	},
-	{
-		code: "cs",
-		trans: true
-	},
-	{
-		code: "da",
-		trans: true
-	},
-	{
-		code: "fa-AF",
-		trans: true
-	},
-	{
-		code: "nl",
-		trans: true
-	},
-	{
-		code: "et",
-		trans: true
-	},
-	{
-		code: "fi",
-		trans: true
-	},
-	{
-		code: "fr-CA",
-		trans: true
-	},
-	{
-		code: "ka",
-		trans: true
-	},
-	{
-		code: "de",
-		trans: true
-	},
-	{
-		code: "el",
-		trans: true
-	},
-	{
-		code: "ha",
-		trans: true
-	},
-	{
-		code: "he",
-		trans: true
-	},
-	{
-		code: "hu",
-		trans: true
-	},
-	{
-		code: "id",
-		trans: true
-	},
-	{
-		code: "it",
-		trans: true
-	},
-	{
-		code: "ja",
-		trans: true
-	},
-	{
-		code: "ko",
-		trans: true
-	},
-	{
-		code: "lv",
-		trans: true
-	},
-	{
-		code: "ms",
-		trans: true
-	},
-	{
-		code: "no",
-		trans: true
-	},
-	{
-		code: "fa",
-		trans: true
-	},
-	{
-		code: "ps",
-		trans: true
-	},
-	{
-		code: "pl",
-		trans: true
-	},
-	{
-		code: "ro",
-		trans: true
-	},
-	{
-		code: "ru",
-		trans: true
-	},
-	{
-		code: "sr",
-		trans: true
-	},
-	{
-		code: "sk",
-		trans: true
-	},
-	{
-		code: "sl",
-		trans: true
-	},
-	{
-		code: "so",
-		trans: true
-	},
-	{
-		code: "sw",
-		trans: true
-	},
-	{
-		code: "sv",
-		trans: true
-	},
-	{
-		code: "tl",
-		trans: true
-	},
-	{
-		code: "th",
-		trans: true
-	},
-	{
-		code: "tr",
-		trans: true
-	},
-	{
-		code: "uk",
-		trans: true
-	},
-	{
-		code: "ur",
-		trans: true
-	},
-	{
-		code: "vi",
-		trans: true
-	}
-];
+var gLanguages;
 
 define([
 		'jquery',
@@ -248,19 +36,53 @@ define([
 			setLanguageSelect: setLanguageSelect
 		};
 
-		function setLanguageSelect ($elem) {
+		function setLanguageSelect ($elem, type) {
+
+			if(gLanguages) {
+					updateSelection($elem, type);
+			} else {
+					getLanguages($elem, type);
+			}
+		}
+
+		function updateSelection($elem, type) {
 			var h = [],
 				idx = -1,
 				i;
 
-			for(i = 0; i < languages.length; i++) {
-				h[++idx] = '<option value="';
-				h[++idx] = languages[i].code;
-				h[++idx] = '">';
-				h[++idx] = lang.set[languages[i].code];
-				h[++idx] = '</option>';
+			for(i = 0; i < gLanguages.length; i++) {
+				if(gLanguages[i][type]) {
+					h[++idx] = '<option value="';
+					h[++idx] = gLanguages[i].code;
+					h[++idx] = '">';
+					h[++idx] = gLanguages[i].name;
+					h[++idx] = '</option>';
+				}
 			}
 			$elem.empty().html(h.join(''));
+		}
 
+		function getLanguages($elem, type) {
+			addHourglass();
+			$.ajax({
+				url: "/surveyKPI/language_codes",
+				dataType: 'json',
+				cache: false,
+				success: function(data) {
+					removeHourglass();
+					var $e = $elem;
+					var t = type;
+					gLanguages = data;
+					updateSelection($e, t);
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(localise.set["c_error"] + ": " + err);
+					}
+				}
+			});
 		}
 	});
