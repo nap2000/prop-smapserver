@@ -1482,3 +1482,18 @@ create TABLE resource_usage (
 	usage integer			-- Amount of usage
 );
 ALTER TABLE resource_usage OWNER TO ws;
+
+DROP SEQUENCE IF EXISTS language_codes_seq CASCADE;
+CREATE SEQUENCE language_codes_seq START 1;
+ALTER SEQUENCE language_codes_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS language_codes;
+create TABLE language_codes (
+	id integer DEFAULT NEXTVAL('language_codes_seq') CONSTRAINT pk_language_codes PRIMARY KEY,
+	code text,
+	aws_translate boolean,			-- set yes if supported by translate
+	aws_transcribe boolean,			-- set yes if supported by trancribe
+	transcribe_default boolean		-- true if this is the default language o use for transcribe
+);
+ALTER TABLE language_codes OWNER TO ws;
+create unique index idx_language_codes_code on language_codes(code);
