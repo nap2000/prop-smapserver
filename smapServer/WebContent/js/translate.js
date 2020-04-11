@@ -102,12 +102,16 @@ $(document).ready(function() {
 		var survey = globals.model.survey;
 		e.preventDefault();
 		if(survey.languages.length > 1) {
-			aws.setLanguageSelect($('.translate_select'));
+			aws.setLanguageSelect($('.translate_select'), 'translate');
 			if (survey.languages[globals.gLanguage1].code) {
 				$('#from_lang').val(survey.languages[globals.gLanguage1].code);
+			} else {
+				$('#from_lang').val("en");
 			}
 			if (survey.languages[globals.gLanguage2].code) {
 				$('#to_lang').val(survey.languages[globals.gLanguage2].code);
+			}  else {
+				$('#to_lang').val("en");
 			}
 			$('#overwrite').prop("checked", false);
 			$('#autoTranslateModal').modal("show");
