@@ -2215,7 +2215,14 @@ function respondToEvents($context) {
 			optionList = $li.data("list_name"),
 			qname = $li.data("qname");
 
-		var labelType = prop === "hint" ? "hint" : "text";
+		var labelType;
+		if(prop === "hint") {
+			labelType = "hint";
+		} else if(prop === "constraint_msg") {
+			labelType = "constraint_msg";
+		} else {
+			labelType = "text";
+		}
 		updateLabel("question", formIndex, itemIndex, optionList, labelType, newVal, qname, prop); 
 
 	});
@@ -3108,7 +3115,7 @@ function updateLabel(type, formIndex, itemIndex, optionList, element, newVal, qn
 			}
 		}
 	} else {
-		if(prop === "label" || prop === "media" || prop === "hint")
+		if(prop === "label" || prop === "media" || prop === "hint" || prop === "constraint_msg")
 			changeType = "label";
 		else {
 			changeType = "property";
