@@ -1012,11 +1012,13 @@ define(function () {
 	                if(changedQ[i].constraint_msg) {
 		                label.propType = "constraint_msg";
 		                label.oldVal = item_orig.labels[language][label.propType];
+	                } else if(changedQ[i].hint) {
+		                label.propType = "hint";
+		                label.oldVal = item_orig.labels[language][label.propType];
 	                } else {
 		                label.propType = "text";
 		                label.oldVal = item_orig.labels[language][element];
 	                }
-
 
                 } else {
 	                // For options
