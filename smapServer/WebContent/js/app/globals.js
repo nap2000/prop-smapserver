@@ -1009,9 +1009,17 @@ define(function () {
                     label.prop = "label";
                     label.qId = item.id;
 
-                    // For options
-                } else {
+	                if(changedQ[i].constraint_msg) {
+		                label.propType = "constraint_msg";
+		                label.oldVal = item_orig.labels[language][label.propType];
+	                } else {
+		                label.propType = "text";
+		                label.oldVal = item_orig.labels[language][element];
+	                }
 
+
+                } else {
+	                // For options
                     label.optionList = changedQ[i].optionList;
                     label.optionIdx = changedQ[i].option;
 
@@ -1020,12 +1028,11 @@ define(function () {
 
                     label.type = "option";
                     label.name = item.value;
+	                label.propType = "text";
+	                label.oldVal = item_orig.labels[language][element];
                 }
 
                 label.newVal = newVal;
-                label.oldVal = item_orig.labels[language][element];
-
-                label.propType = "text";
 
                 label.element = element;
                 label.languageName = language;

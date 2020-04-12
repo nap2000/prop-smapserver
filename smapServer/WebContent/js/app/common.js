@@ -2376,7 +2376,11 @@ function getChangeDescription(change, version) {
 			h[++idx] = '</span>';
 		} else {
 			str = localise.set["ed_c_chg_p"];
-			str = str.replace("%s1", '"' + change.property.prop + '"');
+			if(change.property.propType === "constraint_msg") {
+				str = str.replace("%s1", '"' + change.property.propType + '"');
+			} else {
+				str = str.replace("%s1", '"' + change.property.prop + '"');
+			}
 			str = str.replace("%s2", change.property.name);
 			str = str.replace("%s3", '<span style="color:blue;">' + newVal + '</span>');
 			str = str.replace("%s4", '<span style="color:red;">' + oldVal + '</span>');
