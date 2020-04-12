@@ -292,6 +292,28 @@ function refreshView() {
 				}
 			}
 
+			// Hints
+			if(formQuestions[j].labels[globals.gLanguage1].hint) {
+				if((index = $.inArray(formQuestions[j].labels[globals.gLanguage1].hint, itemList)) > -1) {
+					gTempLanguageItems[index].indexes.push({
+						form: i,
+						question: j,
+						hint: true
+					});
+				} else {
+					itemList.push(formQuestions[j].labels[globals.gLanguage1].hint);
+					gTempLanguageItems.push({
+						label_a: formQuestions[j].labels[globals.gLanguage1].hint,
+						label_b: formQuestions[j].labels[globals.gLanguage2].hint,
+						indexes: [{
+							form: i,
+							question: j,
+							hint: true
+						}]
+					});
+				}
+			}
+
 			// Constraint Messages
 			if(formQuestions[j].labels[globals.gLanguage1].constraint_msg) {
 				if((index = $.inArray(formQuestions[j].labels[globals.gLanguage1].constraint_msg, itemList)) > -1) {
