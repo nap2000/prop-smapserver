@@ -102,17 +102,7 @@ $(document).ready(function() {
 		var survey = globals.model.survey;
 		e.preventDefault();
 		if(survey.languages.length > 1) {
-			aws.setLanguageSelect($('.translate_select'), 'translate');
-			if (survey.languages[globals.gLanguage1].code) {
-				$('#from_lang').val(survey.languages[globals.gLanguage1].code);
-			} else {
-				$('#from_lang').val("en");
-			}
-			if (survey.languages[globals.gLanguage2].code) {
-				$('#to_lang').val(survey.languages[globals.gLanguage2].code);
-			}  else {
-				$('#to_lang').val("en");
-			}
+			aws.setLanguageSelect($('.translate_select'), 'translate', setTranslateValues);
 			$('#overwrite').prop("checked", false);
 			$('#autoTranslateModal').modal("show");
 		}
@@ -145,7 +135,9 @@ $(document).ready(function() {
  	 });
 
 	$('#translateGo').off().click(function() {
-		autoTranslate();
+		if(!$(this).hasClass('disabled')) {
+			autoTranslate();
+		}
 	});
 
 });
@@ -154,6 +146,20 @@ function surveyListDone() {
 	getSurveyDetails(refreshView, false, true);
 }
 
+
+function setTranslateValues() {
+	var survey = globals.model.survey;
+	if (survey.languages[globals.gLanguage1].code) {
+		$('#from_lang').val(survey.languages[globals.gLanguage1].code);
+	} else {
+		$('#from_lang').val("en");
+	}
+	if (survey.languages[globals.gLanguage2].code) {
+		$('#to_lang').val(survey.languages[globals.gLanguage2].code);
+	}  else {
+		$('#to_lang').val("en");
+	}
+}
 
 // Save the survey
 function saveTranslations(callback) {
@@ -413,6 +419,8 @@ function autoTranslate() {
 		url += "?overwrite=true";
 	}
 
+	$('#translateGo').addClass("disabled");
+
 	addHourglass();
 	$.ajax({
 		url: url,
@@ -420,6 +428,8 @@ function autoTranslate() {
 		cache: false,
 		success: function() {
 			removeHourglass();
+			$('#autoTranslateModal').modal("hide");
+			$('#translateGo').removeClass("disabled");
 			getSurveyDetails(refreshView, false, true);
 
 			var h = [],
@@ -440,6 +450,7 @@ function autoTranslate() {
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
+			$('#translateGo').removeClass("disabled");
 
 			if(xhr.readyState === 0 || xhr.status === 0) {
 				return;  // Not an error
