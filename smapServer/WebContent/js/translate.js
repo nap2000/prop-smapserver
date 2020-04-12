@@ -56,7 +56,7 @@ require([
 
 
 var	gMode = "survey",
-	gTempQuestions = [];
+	gTempLanguageItems = [];
 
 $(document).ready(function() {
 	
@@ -243,14 +243,14 @@ function refreshView() {
 	
 	var i,
 		j,
-		qList = [],
+		itemList = [],
 		index = -1,
 		survey = globals.model.survey,
 		numberLanguages,
 		key,
 		options = [];
-	
-	gTempQuestions = [];
+
+	gTempLanguageItems = [];
 	
 	if(survey) {
 		numberLanguages = survey.languages.length;
@@ -271,23 +271,44 @@ function refreshView() {
 		console.log("Form name: " + survey.forms[i].name);
 		var formQuestions = survey.forms[i].questions; 
 		for(j = 0; j < formQuestions.length; j++) {
-			
+
+			// Question Labels
 			if(formQuestions[j].labels[globals.gLanguage1].text) {
-				if((index = $.inArray(formQuestions[j].labels[globals.gLanguage1].text, qList)) > -1) {
-					console.log(formQuestions[j].labels[globals.gLanguage1].text);
-					gTempQuestions[index].indexes.push({
+				if((index = $.inArray(formQuestions[j].labels[globals.gLanguage1].text, itemList)) > -1) {
+					gTempLanguageItems[index].indexes.push({
 						form: i,
 						question: j
 					});
-					console.log(gTempQuestions[index]);
 				} else {
-					qList.push(formQuestions[j].labels[globals.gLanguage1].text);
-					gTempQuestions.push({
+					itemList.push(formQuestions[j].labels[globals.gLanguage1].text);
+					gTempLanguageItems.push({
 						label_a: formQuestions[j].labels[globals.gLanguage1].text,
 						label_b: formQuestions[j].labels[globals.gLanguage2].text,
 						indexes: [{
 							form: i,
 							question: j
+						}]
+					});
+				}
+			}
+
+			// Constraint Messages
+			if(formQuestions[j].labels[globals.gLanguage1].constraint_msg) {
+				if((index = $.inArray(formQuestions[j].labels[globals.gLanguage1].constraint_msg, itemList)) > -1) {
+					gTempLanguageItems[index].indexes.push({
+						form: i,
+						question: j,
+						constraint_msg: true
+					});
+				} else {
+					itemList.push(formQuestions[j].labels[globals.gLanguage1].constraint_msg);
+					gTempLanguageItems.push({
+						label_a: formQuestions[j].labels[globals.gLanguage1].constraint_msg,
+						label_b: formQuestions[j].labels[globals.gLanguage2].constraint_msg,
+						indexes: [{
+							form: i,
+							question: j,
+							constraint_msg: true
 						}]
 					});
 				}
@@ -301,16 +322,16 @@ function refreshView() {
 		for(j = 0; j < options.length; j++) {
 
 			if(options[j].labels[globals.gLanguage1].text) {
-				if((index = $.inArray(options[j].labels[globals.gLanguage1].text, qList)) > -1) {
+				if((index = $.inArray(options[j].labels[globals.gLanguage1].text, itemList)) > -1) {
 					console.log(options[j].labels[globals.gLanguage1].text);
-					gTempQuestions[index].indexes.push({
+					gTempLanguageItems[index].indexes.push({
 						optionList: key,
 						option: j
 					});
 					
 				} else {
-					qList.push(options[j].labels[globals.gLanguage1].text);
-					gTempQuestions.push({
+					itemList.push(options[j].labels[globals.gLanguage1].text);
+					gTempLanguageItems.push({
 						label_a: options[j].labels[globals.gLanguage1].text,
 						label_b: options[j].labels[globals.gLanguage2].text,
 						indexes: [{
@@ -322,9 +343,10 @@ function refreshView() {
 			}
 		}
 	}
-	qList = [];		// clear temporary question list	
+	itemList = [];		// clear temporary question list
 
-	setTranslateHtml($('#translate .questions'), gTempQuestions, survey);
+	setTranslateHtml($('#translate .questions'), gTempLanguageItems, survey);
+
 	var questionsedited="0";
 	$(".lang_b").first().focus();
 	$(".lang_b").change(function(){
@@ -332,9 +354,9 @@ function refreshView() {
 		var $this = $(this);
 		var index = $this.data("index");
 		var newVal = $this.val();
-		console.log(gTempQuestions[index]);
+		console.log(gTempLanguageItems[index]);
 		console.log("New val:" + newVal);
-		globals.model.modLabel(globals.gLanguage2, gTempQuestions[index].indexes, newVal, "text", "label");
+		globals.model.modLabel(globals.gLanguage2, gTempLanguageItems[index].indexes, newVal, "text", "label");
 		$('.qcount').empty().append('Translations made: ' + (++questionsedited))
 	});
 
@@ -344,7 +366,7 @@ function refreshView() {
 /*
  * Convert JSON to html
  */
-function setTranslateHtml($element, questions, survey) {
+function setTranslateHtml($element, language_items, survey) {
 	var h =[],
 		idx = -1,
 		i;
@@ -358,12 +380,12 @@ function setTranslateHtml($element, questions, survey) {
 	h[++idx] = '</div>';
 	
 
-	for(i = 0; i < questions.length; i++) {
+	for(i = 0; i < language_items.length; i++) {
 		h[++idx] = '<div class="fullest-width row center ribbonwrapper">';
 			h[++idx] = '<div class="ribbon">';
 				h[++idx] = '<div class="small-12 medium-6 columns">';
 					h[++idx] = '<textarea class="lang_a" tabindex="-1" readonly>';
-						h[++idx] = questions[i].label_a;
+						h[++idx] = language_items[i].label_a;
 					h[++idx] = '</textarea>';
 				h[++idx] = '</div>';
 				h[++idx] = '<div class="small-12 medium-6 columns">';
@@ -372,7 +394,7 @@ function setTranslateHtml($element, questions, survey) {
 						h[++idx] = '" data-index="';
 						h[++idx] = i;
 						h[++idx] = '">';
-						h[++idx] = questions[i].label_b;
+						h[++idx] = language_items[i].label_b;
 					h[++idx] = '</textarea>';
 				h[++idx] = '</div>';	
 			h[++idx] = '</div>';
