@@ -671,6 +671,8 @@ define([
 						h[++idx] = question.labels[globals.gLanguage].text;
 					} else if(selProperty === "hint") { 
 						h[++idx] = question.labels[globals.gLanguage].hint;
+					} else if(selProperty === "constraint_msg") {
+						h[++idx] = question.labels[globals.gLanguage].constraint_msg;
 					} else {
 						h[++idx] = question[selProperty];
 					}
