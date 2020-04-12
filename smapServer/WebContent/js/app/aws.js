@@ -36,16 +36,16 @@ define([
 			setLanguageSelect: setLanguageSelect
 		};
 
-		function setLanguageSelect ($elem, type) {
+		function setLanguageSelect ($elem, type, callback) {
 
 			if(gLanguages) {
-					updateSelection($elem, type);
+					updateSelection($elem, type, callback);
 			} else {
-					getLanguages($elem, type);
+					getLanguages($elem, type, callback);
 			}
 		}
 
-		function updateSelection($elem, type) {
+		function updateSelection($elem, type, callback) {
 			var h = [],
 				idx = -1,
 				i;
@@ -60,9 +60,10 @@ define([
 				}
 			}
 			$elem.empty().html(h.join(''));
+			callback();
 		}
 
-		function getLanguages($elem, type) {
+		function getLanguages($elem, type, callback) {
 			addHourglass();
 			$.ajax({
 				url: "/surveyKPI/language_codes",
@@ -72,8 +73,9 @@ define([
 					removeHourglass();
 					var $e = $elem;
 					var t = type;
+					var cb = callback;
 					gLanguages = data;
-					updateSelection($e, t);
+					updateSelection($e, t, cb);
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
