@@ -100,6 +100,11 @@ require([
 			name: 'rekognition',
 			label: 'rekognition'
 		},
+		{
+			id: 'o_submission_limit',
+			name: 'submissions',
+			label: 'submissions'
+		},
 		];
 
 	$(document).ready(function() {
@@ -612,7 +617,9 @@ require([
 			// Add usage limits
 			organisation.limits = {};
 			for(i = 0; i < limitTypes.length; i++) {
-				organisation.limits[limitTypes[i].name] = $('#' + limitTypes[i].id).val();
+				var limit = $('#' + limitTypes[i].id).val();
+				limit = limit || 0;
+				organisation.limits[limitTypes[i].name] = limit;
 			}
 
 			organisationList[0] = organisation;
