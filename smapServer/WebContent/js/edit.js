@@ -2220,6 +2220,8 @@ function respondToEvents($context) {
 			labelType = "hint";
 		} else if(prop === "constraint_msg") {
 			labelType = "constraint_msg";
+		} else if(prop === "required_msg") {
+			labelType = "required_msg";
 		} else {
 			labelType = "text";
 		}
@@ -3115,7 +3117,7 @@ function updateLabel(type, formIndex, itemIndex, optionList, element, newVal, qn
 			}
 		}
 	} else {
-		if(prop === "label" || prop === "media" || prop === "hint" || prop === "constraint_msg")
+		if(prop === "label" || prop === "media" || prop === "hint" || prop === "constraint_msg" || prop === "required_msg")
 			changeType = "label";
 		else {
 			changeType = "property";

@@ -99,12 +99,16 @@ $(document).ready(function() {
 	});
 
 	$('#m_auto_translate').click(function(e) {
-		var survey = globals.model.survey;
 		e.preventDefault();
-		if(survey.languages.length > 1) {
-			aws.setLanguageSelect($('.translate_select'), 'translate', setTranslateValues);
-			$('#overwrite').prop("checked", false);
-			$('#autoTranslateModal').modal("show");
+		if(!$(this).parent().hasClass("disabled")) {
+			var survey = globals.model.survey;
+			if (survey.languages.length > 1) {
+				aws.setLanguageSelect($('.translate_select'), 'translate', setTranslateValues);
+				$('#overwrite').prop("checked", false);
+				$('#autoTranslateModal').modal("show");
+			}
+		} else {
+			alert(localise.set["ed_sct"]);
 		}
 	});
 	
@@ -331,6 +335,28 @@ function refreshView() {
 							form: i,
 							question: j,
 							constraint_msg: true
+						}]
+					});
+				}
+			}
+
+			// Required Messages
+			if(formQuestions[j].labels[globals.gLanguage1].required_msg) {
+				if((index = $.inArray(formQuestions[j].labels[globals.gLanguage1].required_msg, itemList)) > -1) {
+					gTempLanguageItems[index].indexes.push({
+						form: i,
+						question: j,
+						required_msg: true
+					});
+				} else {
+					itemList.push(formQuestions[j].labels[globals.gLanguage1].required_msg);
+					gTempLanguageItems.push({
+						label_a: formQuestions[j].labels[globals.gLanguage1].required_msg,
+						label_b: formQuestions[j].labels[globals.gLanguage2].required_msg,
+						indexes: [{
+							form: i,
+							question: j,
+							required_msg: true
 						}]
 					});
 				}
