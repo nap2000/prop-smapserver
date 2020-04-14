@@ -992,7 +992,7 @@ define(function () {
                 translation = {
                     changeType: prop,
                     action: "update",
-                    source: "editor",
+                    source: "editor"
 
                 };
 
@@ -1011,6 +1011,9 @@ define(function () {
 
 	                if(changedQ[i].constraint_msg) {
 		                label.propType = "constraint_msg";
+		                label.oldVal = item_orig.labels[language][label.propType];
+	                } else  if(changedQ[i].required_msg) {
+		                label.propType = "required_msg";
 		                label.oldVal = item_orig.labels[language][label.propType];
 	                } else if(changedQ[i].hint) {
 		                label.propType = "hint";
@@ -1068,9 +1071,10 @@ define(function () {
             $('.m_save_survey').find('.badge').html(this.translateChanges.length);
             if (this.translateChanges.length > 0) {
                 $('.m_save_survey').removeClass('disabled').prop('disabled', false);
+	            $('#m_auto_translate').closest('li').addClass("disabled").prop("disabled", true);
             } else {
                 $('.m_save_survey').addClass('disabled').prop('disabled', true);
-                ;
+	            $('#m_auto_translate').closest('li').removeClass("disabled").prop("disabled", false);
             }
         }
 
@@ -1082,7 +1086,7 @@ define(function () {
                 $('.m_save_survey').removeClass('disabled').prop('disabled', false);
             } else {
                 $('.m_save_survey').addClass('disabled').prop('disabled', true);
-                ;
+	            $('#m_auto_translate').closest('li').removeClass("disabled").prop("disabled", false);
             }
         }
 
