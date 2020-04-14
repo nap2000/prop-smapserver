@@ -540,7 +540,8 @@ CREATE TABLE survey (
 	hide_on_device boolean,							-- Used when forms are launched from other forms or as tasks to hide the ad-hoc form
 	pdf_template text,
 	data_survey boolean default true,
-	oversight_survey boolean default true
+	oversight_survey boolean default true,
+	auto_translate boolean default false
 	);
 ALTER TABLE survey OWNER TO ws;
 DROP INDEX IF EXISTS SurveyDisplayName;
