@@ -1049,6 +1049,7 @@ define(
     "view own data": "Sólo Visualizar Datos Propios (API)",
     "u_clear_p": "Borrar los proyectos existentes no incluidos en el archivo.",
     "u_clear_u": "Borrar los usuarios existentes no incluidos en el archivo.",
+    "u_clear_r": "Borrar roles existentes",
     "br_ci": "Indiferente a Mayúsculas y Minúsculas",
     "br_exact": "Coincidencia Exacta",
     "br_cc": "Selecciona las columnas a evaluar por similitudes en los datos. Por cada columna a evaluar se puede seleccionar una función para ampliar el rango de valores que deben coincidir",
@@ -1189,7 +1190,7 @@ define(
     "org_bill_rpt": "Uso por Organización",
     "bill_enable": "Habilitar facturación",
     "bill_from": "Aplica desde",
-    "bill_chg_date": "Fecha cambiada",
+    "bill_chg_date": "Fecha de Actualización",
     "bill_norates": "No se ha establecido tarifas para %s1. Si ha habilitado facturación, entonces se aplicarán las tarifas definidas para %s2",
     "billing_disabled_msg": "Se ha deshabilitado la facturación",
     "rep_usage_project": "Uso por proyecto",
@@ -1219,5 +1220,6 @@ define(
     "mo_subject": "Asunto:",
     "mo_content": "Mensaje:",
     "mo_sent": "Enviado",
-    "mo_sd": "Detalles del estado"
+    "mo_sd": "Detalles del estado",
+    "mo_send": "¿Estás seguro de que estás listo para enviar los correos electrónicos?"
 });
