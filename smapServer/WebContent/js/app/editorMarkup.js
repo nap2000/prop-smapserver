@@ -485,7 +485,7 @@ define([
 			    h[++idx] = '<textarea class="labelProp has_tt" title="';
 			    h[++idx] = localise.set['ed_r_msg'];
 				h[++idx] = '" data-prop="required_msg">';	
-				h[++idx] = question["required_msg"];
+				h[++idx] = question.labels[globals.gLanguage].required_msg;
 				h[++idx] = '</textarea>';
 			    h[++idx] = '</div>';
 			    
@@ -673,8 +673,6 @@ define([
 						h[++idx] = question.labels[globals.gLanguage].hint;
 					} else if(selProperty === "constraint_msg") {
 						h[++idx] = question.labels[globals.gLanguage].constraint_msg;
-					} else if(selProperty === "required_msg") {
-						h[++idx] = question.labels[globals.gLanguage].required_msg;
 					} else if(selProperty === "guidance_hint") {
 						h[++idx] = question.labels[globals.gLanguage].guidance_hint;
 					} else {
