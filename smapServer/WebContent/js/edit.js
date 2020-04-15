@@ -2222,6 +2222,8 @@ function respondToEvents($context) {
 			labelType = "constraint_msg";
 		} else if(prop === "required_msg") {
 			labelType = "required_msg";
+		} else if(prop === "guidance_hint") {
+			labelType = "guidance_hint";
 		} else {
 			labelType = "text";
 		}
@@ -3117,7 +3119,8 @@ function updateLabel(type, formIndex, itemIndex, optionList, element, newVal, qn
 			}
 		}
 	} else {
-		if(prop === "label" || prop === "media" || prop === "hint" || prop === "constraint_msg" || prop === "required_msg")
+		if(prop === "label" || prop === "media" || prop === "hint" || prop === "constraint_msg" || prop === "required_msg"
+				|| prop === "guidance_hint")
 			changeType = "label";
 		else {
 			changeType = "property";

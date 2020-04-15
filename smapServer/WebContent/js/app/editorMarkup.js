@@ -675,6 +675,8 @@ define([
 						h[++idx] = question.labels[globals.gLanguage].constraint_msg;
 					} else if(selProperty === "required_msg") {
 						h[++idx] = question.labels[globals.gLanguage].required_msg;
+					} else if(selProperty === "guidance_hint") {
+						h[++idx] = question.labels[globals.gLanguage].guidance_hint;
 					} else {
 						h[++idx] = question[selProperty];
 					}
