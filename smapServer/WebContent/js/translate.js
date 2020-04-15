@@ -361,6 +361,28 @@ function refreshView() {
 					});
 				}
 			}
+
+			// Guidance Hint
+			if(formQuestions[j].labels[globals.gLanguage1].guidance_hint) {
+				if((index = $.inArray(formQuestions[j].labels[globals.gLanguage1].guidance_hint, itemList)) > -1) {
+					gTempLanguageItems[index].indexes.push({
+						form: i,
+						question: j,
+						guidance_hint: true
+					});
+				} else {
+					itemList.push(formQuestions[j].labels[globals.gLanguage1].guidance_hint);
+					gTempLanguageItems.push({
+						label_a: formQuestions[j].labels[globals.gLanguage1].guidance_hint,
+						label_b: formQuestions[j].labels[globals.gLanguage2].guidance_hint,
+						indexes: [{
+							form: i,
+							question: j,
+							guidance_hint: true
+						}]
+					});
+				}
+			}
 		}
 	}
 	// Add all unique options from all option lists

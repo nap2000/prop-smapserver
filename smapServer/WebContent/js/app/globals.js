@@ -1012,8 +1012,11 @@ define(function () {
 	                if(changedQ[i].constraint_msg) {
 		                label.propType = "constraint_msg";
 		                label.oldVal = item_orig.labels[language][label.propType];
-	                } else  if(changedQ[i].required_msg) {
+	                } else if(changedQ[i].required_msg) {
 		                label.propType = "required_msg";
+		                label.oldVal = item_orig.labels[language][label.propType];
+	                } else if(changedQ[i].guidance_hint) {
+		                label.propType = "guidance_hint";
 		                label.oldVal = item_orig.labels[language][label.propType];
 	                } else if(changedQ[i].hint) {
 		                label.propType = "hint";

@@ -2376,7 +2376,7 @@ function getChangeDescription(change, version) {
 			h[++idx] = '</span>';
 		} else {
 			str = localise.set["ed_c_chg_p"];
-			if(change.property.propType === "constraint_msg" || change.property.propType === "required_msg") {
+			if(change.property.propType === "constraint_msg" || change.property.propType === "required_msg" || change.property.propType === "guidance_hint") {
 				str = str.replace("%s1", '"' + change.property.propType + '"');
 			} else {
 				str = str.replace("%s1", '"' + change.property.prop + '"');
