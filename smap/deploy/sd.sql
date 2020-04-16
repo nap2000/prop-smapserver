@@ -218,3 +218,5 @@ ALTER TABLE language_codes OWNER TO ws;
 create unique index idx_language_codes_code on language_codes(code);
 
 alter table survey add column auto_translate boolean default false;
+
+alter table form add column append boolean default false;
