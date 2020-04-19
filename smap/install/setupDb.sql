@@ -1459,11 +1459,13 @@ create TABLE aws_async_jobs (
 	col_name text,			-- Question that initiated this request
 	table_name text,		-- Table containing the data
 	instanceid text,		-- Record identifier
-	type text,				-- AUTO_UPDATE_AUDIO ||
+	type text,				-- AUTO_UPDATE_AUDIO
+	locale text,			-- Locale of organisation that submitted this job
 	update_details text,	-- AutoUpdate object in JSON
 	job text,				-- Unique AWS job identifier
 	status text,			-- open || pending || complete || error
-	results_link text,			-- URI to job results
+	results_link text,		-- URI to job results
+	duration integer,		-- Duration of audio file in seconds
 	request_initiated TIMESTAMP WITH TIME ZONE,
 	request_completed TIMESTAMP WITH TIME ZONE
 );
