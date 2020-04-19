@@ -694,6 +694,7 @@ CREATE INDEX qtext_id_sequence ON question(qtext_id);
 CREATE INDEX infotext_id_sequence ON question(infotext_id);
 CREATE UNIQUE INDEX qname_index ON question(f_id,qname) where soft_deleted = 'false';
 CREATE INDEX q_f_id ON question(f_id);
+CREATE INDEX idx_question_param ON question (parameters) WHERE (parameters is not null);
 	
 DROP TABLE IF EXISTS option CASCADE;
 CREATE TABLE option (
