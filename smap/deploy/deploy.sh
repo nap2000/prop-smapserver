@@ -145,6 +145,7 @@ service postgresql start
 service $TOMCAT_VERSION start
 service apache2 start
 
+echo "go" > ~ubuntu/subscriber
 if [ $u1404 -eq 1 ]; then
 service subscribers start
 service subscribers_fwd start
