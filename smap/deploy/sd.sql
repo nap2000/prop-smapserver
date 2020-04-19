@@ -222,3 +222,6 @@ alter table survey add column auto_translate boolean default false;
 alter table form add column append boolean default false;
 
 CREATE INDEX idx_question_param ON question (parameters) WHERE (parameters is not null);
+
+alter table aws_async_jobs add column duration integer;
+alter table aws_async_jobs add column locale text;
