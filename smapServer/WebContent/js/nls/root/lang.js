@@ -1265,7 +1265,7 @@ define({
     "translate": "AWS Translate",
     "translate_i": "letters",
     "transcribe": "AWS Transcribe",
-    "transcribe_i": "minutes of audio",
+    "transcribe_i": "seconds of audio",
 	"static_map": "Mapbox Static Map",
 	"monthly": "Monthly Charge",
     "org_bill_rpt": "Organisation Usage Report",
