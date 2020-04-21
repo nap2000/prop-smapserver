@@ -1637,17 +1637,21 @@ require([
 		for(i = 0; i < limitTypes.length; i++ ) {
 			h[++idx] = '<div class="form-group row">';
 				h[++idx] = '<label for="';
-				h[++idx] = limitTypes[i].id;
-				h[++idx] = '" class="col-sm-2 control-label">';
-				h[++idx] = localise.set[limitTypes[i].label];
+					h[++idx] = limitTypes[i].id;
+					h[++idx] = '" class="col-sm-2 control-label">';
+					h[++idx] = localise.set[limitTypes[i].label];
 				h[++idx] = '</label>';
-			h[++idx] = 	'<div class="col-sm-10">';
-				h[++idx] = '<input type="integer" id="'
-				h[++idx] = limitTypes[i].id;
-				h[++idx] = '" class="form-control"><br/>';
+				h[++idx] = 	'<div class="col-sm-5">';
+					h[++idx] = '<input type="integer" id="'
+					h[++idx] = limitTypes[i].id;
+					h[++idx] = '" class="form-control"><br/>';
+				h[++idx] = '</div>';
+				h[++idx] = 	'<div class="col-sm-5">';
+					h[++idx] = '<p>';
+					h[++idx] = localise.set[limitTypes[i].label + "_i"];
+					h[++idx] = '</p>';
+				h[++idx] = '</div>';
 			h[++idx] = '</div>';
-			h[++idx] = '</div>';
-
 		}
 		h[++idx] = '</fieldset>';
 		$('#usageLimitsHere').empty().html(h.join(''));
