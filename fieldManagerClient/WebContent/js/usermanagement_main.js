@@ -88,23 +88,27 @@ require([
 		{
 			id: 'o_translate_limit',
 			name: 'translate',
-			label: 'translate'
+			label: 'translate',
+			default: 5000
 		},
 		{
 			id: 'o_transcribe_limit',
 			name: 'transcribe',
-			label: 'transcribe'
+			label: 'transcribe',
+			default: 500
 		},
 		{
 			id: 'o_rekognition_limit',
 			name: 'rekognition',
-			label: 'rekognition'
+			label: 'rekognition',
+			default: 100
 		},
 		{
 			id: 'o_submission_limit',
 			name: 'submissions',
-			label: 'submissions'
-		},
+			label: 'submissions',
+			default: 0
+		}
 		];
 
 	$(document).ready(function() {
@@ -1560,13 +1564,14 @@ require([
 		var org = gOrganisationList[organisationIndex];
 		gCurrentOrganisationIndex = organisationIndex;
 
-		getCurrentResourceUsage(org.id);
-
 		$('#organisation_create_form')[0].reset();
 		$('#organisation_logo_form')[0].reset();
 		$('#o_banner_logo').attr("src", "/images/smap_logo.png");
 
 		if(existing) {
+
+			getCurrentResourceUsage(org.id);
+
 			$('#o_name').val(org.name);
 			$('#o_company_name').val(org.company_name);
 			$('#o_company_address').val(org.company_address);
@@ -1657,9 +1662,13 @@ require([
 		}
 		h[++idx] = '</fieldset>';
 		$('#usageLimitsHere').empty().html(h.join(''));
-		if(org.limits) {
+		if(org && org.limits) {
 			for (i = 0; i < limitTypes.length; i++) {
 				$('#' + limitTypes[i].id).val((org.limits) ? org.limits[limitTypes[i].name] : 0);
+			}
+		} else {
+			for (i = 0; i < limitTypes.length; i++) {
+				$('#' + limitTypes[i].id).val(limitTypes[i].default);
 			}
 		}
 
