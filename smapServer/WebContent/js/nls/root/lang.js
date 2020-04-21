@@ -349,6 +349,7 @@ define({
     "c_submitter": "Submitter",
     "c_code": "Code",
     "c_dirn": "Direction",
+    "c_current": "Current",
 
     // File Types
     "ft": "File Type",
@@ -1257,7 +1258,7 @@ define({
     "amount": "Amount",
     "server": "Server",
     "submissions": "Submissions",
-    "submissions_i": "Zero is unlimited",
+    "submissions_i": "A limit of zero is unlimited",
     "disk": "Disk",
     "rekognition": "AWS Rekognition",
     "rekognition_i": "images",

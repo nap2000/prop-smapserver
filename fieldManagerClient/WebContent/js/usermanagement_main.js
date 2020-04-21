@@ -1548,7 +1548,7 @@ require([
 	 */
 	function openOrganisationDialog(existing, organisationIndex) {
 		var i,
-			h = [];
+			h = [],
 			idx = -1;
 
 		if(gSmsType && gSmsType === "aws") {
@@ -1559,6 +1559,8 @@ require([
 
 		var org = gOrganisationList[organisationIndex];
 		gCurrentOrganisationIndex = organisationIndex;
+
+		getCurrentResourceUsage(org.id);
 
 		$('#organisation_create_form')[0].reset();
 		$('#organisation_logo_form')[0].reset();
@@ -1647,9 +1649,9 @@ require([
 					h[++idx] = '" class="form-control"><br/>';
 				h[++idx] = '</div>';
 				h[++idx] = 	'<div class="col-sm-5">';
-					h[++idx] = '<p>';
-					h[++idx] = localise.set[limitTypes[i].label + "_i"];
-					h[++idx] = '</p>';
+					h[++idx] = '<p id="';
+					h[++idx] = limitTypes[i].id + "_i";
+					h[++idx] = '"></p>';
 				h[++idx] = '</div>';
 			h[++idx] = '</div>';
 		}
@@ -2456,6 +2458,40 @@ require([
 					return;  // Not an error
 				} else {
 					alert("Error: Failed to get list of users: " + err);
+				}
+			}
+		});
+	}
+
+	/*
+     * Get the usage of protected resources
+     */
+	function getCurrentResourceUsage(oId) {
+
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/billing/usage/" + oId,
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				var i;
+				for(i = 0; i < limitTypes.length; i++ ) {
+					var val = localise.set["c_current"] + ": ";
+					val += data[limitTypes[i].name];
+					val += " (";
+					val += localise.set[limitTypes[i].name + "_i"];
+					val += ")";
+					$("#" + limitTypes[i].id + "_i").html(val);
+				}
+
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert("Error: " + err);
 				}
 			}
 		});
