@@ -593,6 +593,7 @@ define({
 	"msg_persist": "Persistent tasks stay on the device even after they are completed. The user should reject the task when they have finished with it",
     "msg_no_uns_orgs": "There are no organisations where that email address is unsubscribed",
     "msg_res_name": "%s1 is a reserved name",
+    "msg_trans_to": "The translation request request has timed out.  However it should still be working in the background and you can view the results by refreshing the page",
 
     // Editor
     "e_b_e": "Base on existing form",
