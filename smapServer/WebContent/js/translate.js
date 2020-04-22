@@ -518,6 +518,7 @@ function autoTranslate() {
 		url: url,
 		type: 'PUT',
 		cache: false,
+		timeout: 0,
 		success: function() {
 			removeHourglass();
 			$('#autoTranslateModal').modal("hide");
@@ -547,7 +548,7 @@ function autoTranslate() {
 			if(xhr.readyState === 0 || xhr.status === 0) {
 				return;  // Not an error
 			} else {
-				alert(localise.set["error"] + ' ' + xhr.responseText);
+				alert(localise.set["msg_trans_to"]);
 			}
 		}
 	});
