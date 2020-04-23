@@ -115,14 +115,9 @@ $.fn.bootstrapFileInput = function() {
 	      $('.submitFiles').addClass('disabled');
           return;
       }
-	    $('.submitFiles').removeClass('disabled');
+      $('.submitFiles').removeClass('disabled');
+      $target.addClass('alert-success').removeClass('alert-danger').html(fileDesc).val(fileDesc);
 
-      if($target.hasClass("alert")) {
-    	  $target.addClass('alert-success').removeClass('alert-danger').html(fileDesc).val(fileDesc);
-      } else {
-    	  $target.html(fileDesc);
-    	  $target.val(fileDesc);
-      }
       var w = 0;
       $('.progress-bar').css('width', w+'%').attr('aria-valuenow', w); 
    
