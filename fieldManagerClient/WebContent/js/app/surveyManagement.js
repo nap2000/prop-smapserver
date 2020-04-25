@@ -951,6 +951,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
                         getGroupSurveys();
                         $('#up_alert').show().removeClass('alert-danger alert-warning').addClass('alert-success').html(localise.set["t_tl"] + ": " + data.name);
                     }
+                    $('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
 
                 },
                 error: function(xhr, textStatus, err) {
@@ -961,7 +962,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
                         var msg = xhr.responseText;
 
                         $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_u_f"] + ": " + msg);
-
+                        $('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
                     }
                 }
             });
