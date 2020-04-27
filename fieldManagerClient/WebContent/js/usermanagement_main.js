@@ -95,7 +95,7 @@ require([
 			id: 'o_transcribe_limit',
 			name: 'transcribe',
 			label: 'transcribe',
-			default: 500
+			default: 250
 		},
 		{
 			id: 'o_rekognition_limit',

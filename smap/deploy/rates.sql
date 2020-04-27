@@ -9,14 +9,14 @@ values (0,
 		{"item": "2", "name": "disk", "unitCost":"0.25", "free":"20"},
 		{"item": "3", "name": "rekognition", "unitCost":"0.0025", "free":"1000"},
 		{"item": "6", "name": "translate", "unitCost":"0.00003", "free":"50000"},
-		{"item": "7", "name": "transcribe", "unitCost":"0.0008", "free":"1000"},
+		{"item": "7", "name": "transcribe", "unitCost":"0.0008", "free":"2500"},
 		{"item": "4", "name": "static_map", "unitCost":"0", "free":"0"},
 		{"item": "5", "name": "monthly", "unitCost":"50", "free":"0"}
 	]',
 	'USD',
 	'system',
 	now(),
-	'2020-04-03');
+	'2020-04-04');
 	
 insert into bill_rates (o_id, e_id, rates, currency, created_by, ts_created, ts_applies_from) 
 values (0, 
