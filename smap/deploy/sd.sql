@@ -226,4 +226,5 @@ CREATE INDEX idx_question_param ON question (parameters) WHERE (parameters is no
 alter table aws_async_jobs add column duration integer;
 alter table aws_async_jobs add column locale text;
 
-update organisation set limits = '{"transcribe":500,"submissions":0,"rekognition":100,"translate":5000}' where limits is null;
+update organisation set limits = '{"transcribe":250,"submissions":0,"rekognition":100,"translate":5000}' where limits is null;
+update organisation set limits = '{"transcribe":250,"submissions":0,"rekognition":100,"translate":5000}' where limits = '{"transcribe":500,"submissions":0,"rekognition":100,"translate":5000}'
