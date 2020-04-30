@@ -20,7 +20,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * Show an entire survey in a table
  */
 var gSelectedTemplate,          // Survey ident of the current template
-	gInstanceId;
+	gInstanceId,
+	gExportUrl;
 
 function setTableSurvey(view) {
 
@@ -150,15 +151,43 @@ function setTableSurvey(view) {
 			]
 		}
 	);
+
+	/*
+     * Enable the dialog to export data
+     */
+	$('#export_data_popup').dialog(
+		{
+			autoOpen: false, closeOnEscape:true, draggable:true, model:true,
+			show:"drop",
+			zIndex: 2000,
+			buttons: [
+				{
+					text: localise.set["c_close"],
+					click: function() {
+						$(this).dialog("close");
+					}
+				},
+				{
+					text: localise.set["m_export"],
+					click: function() {
+						var fromRecord = $("#exp_from_record").val();
+						var toRecord = $("#exp_to_record").val();
+
+						exportData();
+					}
+				}
+			]
+		}
+	);
 	
 	$selFoot.find('.tExport').button().off().click(function() {
-		var filename = cleanFileName(view.sName);
-		downloadFile("/surveyKPI/surveyexchange/" + view.sId + "/" + filename);
+		gExportUrl = "/surveyKPI/surveyexchange/" + view.sId + "/" + cleanFileName(view.sName);
+		$('#export_data_popup').dialog("open");
 	});
 
     $selFoot.find('.tExportMedia').button().off().click(function() {
-        var filename = cleanFileName(view.sName);
-        downloadFile("/surveyKPI/surveyexchange/" + view.sId + "/" + filename + "?media=true");
+	    gExportUrl = "/surveyKPI/surveyexchange/" + view.sId + "/" + cleanFileName(view.sName) + "?media=true";
+	    $('#export_data_popup').dialog("open");
     });
 	
 	$selFoot.find('.tImport').button().off().click(function() {
@@ -269,6 +298,14 @@ function setUserTableSurvey(view) {
 	);
 	$('#download_edit, #download_pdf').button();
 
+}
+
+/*
+ * Export data
+ */
+function exportData() {
+	downloadFile(gExportUrl);
+	$('#export_data_popup').dialog("close");
 }
 
 /*
