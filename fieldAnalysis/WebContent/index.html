@@ -502,9 +502,14 @@
 
 		<form role="form" enctype="multipart/form-data" name="exportData">
 
-			<span class="lang" data-lang="c_survey">s</span>: <span id="survey_to_export_name"></span><br/>
+			<label for="exp_start_record"><span data-lang="c_start" class="lang"></span> (<span data-lang="c_inclusive" class="lang"></span>)</label>
+			<input type="number" id="exp_start_record">
+			<br/>
+			<label for="exp_end_record"><span data-lang="c_end" class="lang"></span> (<span data-lang="c_inclusive" class="lang"></span>)</label>
+			<input type="number" id="exp_end_record">
 
 		</form>
+		<br/>
 		<div id="export_data_alert" style="display:none;  padding: 5px 2px;" role="alert"></div>
 
 	</div>
