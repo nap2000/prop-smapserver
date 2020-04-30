@@ -449,6 +449,10 @@ define({
 
     "a_dd_where": "<b>Where %s1 equals %s2</b>",
     "_scheduled_start": "Scheduled Start",
+	"a_exp_media_msg": "Exports with media are limited to %s1 records. ",
+	"a_exp_msg": "Exports without media are limited to %s1 records. ",
+	"a_exp_msg2": "You are currently exporting %s2 records. Set the start and end records to conform to this limit",
+	"a_exp_start": "The start record must be less than or equal to the end record",
 
     // Messages
     "msg_pc": "The reminder interval must be greater than zero",

@@ -21,7 +21,11 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  */
 var gSelectedTemplate,          // Survey ident of the current template
 	gInstanceId,
-	gExportUrl;
+	gExportUrl,
+	gMedia,
+	gDataLength,
+	MAX_EXPORT_MEDIA = 1,
+	MAX_EXPORT = 1;
 
 function setTableSurvey(view) {
 
@@ -155,11 +159,14 @@ function setTableSurvey(view) {
 	/*
      * Enable the dialog to export data
      */
+	$('#export_data_alert').hide().removeClass('alert-danger').addClass('alert-success').html("");
 	$('#export_data_popup').dialog(
 		{
 			autoOpen: false, closeOnEscape:true, draggable:true, model:true,
 			show:"drop",
 			zIndex: 2000,
+			width:350,
+			height:350,
 			buttons: [
 				{
 					text: localise.set["c_close"],
@@ -181,13 +188,11 @@ function setTableSurvey(view) {
 	);
 	
 	$selFoot.find('.tExport').button().off().click(function() {
-		gExportUrl = "/surveyKPI/surveyexchange/" + view.sId + "/" + cleanFileName(view.sName);
-		$('#export_data_popup').dialog("open");
+		setupExportDialog(view, false);
 	});
 
     $selFoot.find('.tExportMedia').button().off().click(function() {
-	    gExportUrl = "/surveyKPI/surveyexchange/" + view.sId + "/" + cleanFileName(view.sName) + "?media=true";
-	    $('#export_data_popup').dialog("open");
+		setupExportDialog(view, true);
     });
 	
 	$selFoot.find('.tImport').button().off().click(function() {
@@ -301,11 +306,85 @@ function setUserTableSurvey(view) {
 }
 
 /*
+ * Setup the export dialog
+ */
+function setupExportDialog(view, media) {
+
+	gExportUrl = "/surveyKPI/surveyexchange/" + view.sId + "/" + cleanFileName(view.sName);
+	gMedia = media;
+	gDataLength = view.results[0].features.length;
+
+	validateExport();
+
+	$('#exp_s_name').html(view.sName);
+	$('#export_data_popup').dialog("open");
+	$('#exp_start_record,#exp_end_record').keyup(function() {validateExport()});
+}
+
+/*
+ * Ensure the export data is within bounds
+ */
+function validateExport() {
+
+	var maxLength = gMedia ? MAX_EXPORT_MEDIA : MAX_EXPORT;
+	var msg = localise.set[gMedia ? "a_exp_media_msg" : "a_exp_msg"] + " " + localise.set["a_exp_msg2"];
+	var valid = false;
+	var startRec = $('#exp_start_record').val();
+	var endRec = $('#exp_end_record').val();
+	var length;
+
+	if(typeof endRec === "undefined" || endRec === "") {
+		endRec = gDataLength;
+	}
+	if(typeof startRec === "undefined" || startRec === "") {
+		startRec = 0;
+	} else {
+	}
+
+	length = endRec - startRec;
+
+	if(length > maxLength) {
+		msg = msg.replace("%s1", maxLength);
+		msg = msg.replace("%s2", length);
+		$('#export_data_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
+	} else if(length < 0) {
+		$('#export_data_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["a_exp_start"]);
+	} else {
+		$('#export_data_alert').hide().removeClass('alert-danger').addClass('alert-success').html("");
+		valid = true;
+	}
+	return valid;
+}
+/*
  * Export data
  */
 function exportData() {
-	downloadFile(gExportUrl);
-	$('#export_data_popup').dialog("close");
+	if(validateExport()) {
+
+		var startRec = $('#exp_start_record').val();
+		var endRec = $('#exp_end_record').val();
+		var url = gExportUrl;
+		var hasParam = false;
+
+		if(gMedia) {
+			url += "?media=true";
+			hasParam = true;
+		}
+		if(startRec && startRec !== "") {
+			url += (hasParam ? "&" : "?") + "start=" + startRec;
+			hasParam = true;
+		}
+		if(endRec && endRec !== "") {
+			url += (hasParam ? "&" : "?") + "end=" + endRec;
+			hasParam = true;
+		}
+		downloadFile(url);
+		$('#export_data_popup').dialog("close");
+	}
+}
+
+function getRecordNumber($element) {
+
 }
 
 /*
