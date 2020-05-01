@@ -500,12 +500,13 @@
 	<!-- Modal to export data from a file -->
 	<div id="export_data_popup" style="display:none;">
 
+		<span class="lang" data-lang="c_survey">s</span>: <span id="exp_s_name"></span><br/>
 		<form role="form" enctype="multipart/form-data" name="exportData">
 
-			<label for="exp_start_record"><span data-lang="c_start" class="lang"></span> (<span data-lang="c_inclusive" class="lang"></span>)</label>
+			<label for="exp_start_record"><span data-lang="a_start_pk" class="lang"></span> (<span data-lang="c_inclusive" class="lang"></span>)</label>
 			<input type="number" id="exp_start_record">
 			<br/>
-			<label for="exp_end_record"><span data-lang="c_end" class="lang"></span> (<span data-lang="c_inclusive" class="lang"></span>)</label>
+			<label for="exp_end_record"><span data-lang="a_end_pk" class="lang"></span> (<span data-lang="c_inclusive" class="lang"></span>)</label>
 			<input type="number" id="exp_end_record">
 
 		</form>

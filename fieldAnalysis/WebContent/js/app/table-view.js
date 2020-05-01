@@ -177,9 +177,6 @@ function setTableSurvey(view) {
 				{
 					text: localise.set["m_export"],
 					click: function() {
-						var fromRecord = $("#exp_from_record").val();
-						var toRecord = $("#exp_to_record").val();
-
 						exportData();
 					}
 				}
