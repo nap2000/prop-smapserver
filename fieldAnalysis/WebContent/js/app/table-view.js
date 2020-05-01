@@ -24,7 +24,7 @@ var gSelectedTemplate,          // Survey ident of the current template
 	gExportUrl,
 	gMedia,
 	gDataLength,
-	MAX_EXPORT_MEDIA = 1000,
+	MAX_EXPORT_MEDIA = 500,
 	MAX_EXPORT = 10000;
 
 function setTableSurvey(view) {
