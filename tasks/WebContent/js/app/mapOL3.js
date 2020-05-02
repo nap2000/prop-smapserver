@@ -38,7 +38,6 @@ define([
             gSelectFeature;
 
         return {
-            //init: init,
             setLayers: setLayers,
             refreshLayer: refreshLayer,
             refreshAllLayers: refreshAllLayers,
@@ -100,26 +99,6 @@ define([
 
             showLayerSelections(map);
         };
-
-        /*
-        function init(selectCallback) {
-
-
-                // Respond to clicks
-                // select interaction working on "click"
-                gSelectFeature = new ol.interaction.Select({
-                    condition: ol.events.condition.singleClick,
-                    layers: function (layer) {
-                        // defines layer from which features are selectable
-                        return layer.get('id') == 'base';
-                    }
-                });
-                gMap.addInteraction(gSelectFeature);
-                gSelectFeature.on('select', selectCallback, this);
-
-            }
-
-        */
 
 
         /*
@@ -674,60 +653,78 @@ define([
                 /*
                  * Add events
                  */
-                config.map.on('click', function(evt) {
+                if(mainMap) {
 
-                    var noFeature = true;
-                    var id = config.id;
-                    var $tooltip = $('#tooltip_' + id);
+                    config.map.on('click', function(evt) {
 
-                    config.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+                        $('#features').hide().empty();
 
-                        var properties = feature.getProperties();
-                        $tooltip.html(properties.label);
-                        $tooltip.css(
-                            {
-                                position:"absolute",
-                                left:evt.pixel[0],
-                                top:evt.pixel[1],
-                                "z-index": 20000,
-                                "background-color": "white",
-                                "padding": 2
-                            }).show();
-                        noFeature = false;
-
-                        if(selectCallback) {
+                        if (selectCallback) {
+                            var properties = [];
+                            config.map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+                                properties.push(feature.getProperties());
+                            });
                             selectCallback(properties);
                         }
-
+                        ;
                     });
 
-                    if(noFeature) {
-                        $tooltip.hide();
+                } else {
+                    config.map.on('click', function(evt) {
 
-                        if(!config.readOnly) {
-                            var coord = ol.proj.transform(evt.coordinate, "EPSG:900913", 'EPSG:4326');
-                            var newValue = {
-                                itemIndex: $('#' + id).data('item'),
-                                value: {
-                                    coordinates: coord,
-                                    type: "Point"
-                                }
-                            };
+                        var noFeature = true;
+                        var id = config.id;
+                        var $tooltip = $('#tooltip_' + id);
 
-                            if(config.task) {
-                                $('#taskPropertiesForm').trigger("smap_task::geopoint", newValue);
-                            } else {
-                                if(newValue.itemIndex) {
-                                    $('#editRecordForm').trigger("smap::geopoint", newValue);
-                                }
+                        config.map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+
+                            var properties = feature.getProperties();
+                            $tooltip.html(properties.label);
+                            $tooltip.css(
+                                {
+                                    position: "absolute",
+                                    left: evt.pixel[0],
+                                    top: evt.pixel[1],
+                                    "z-index": 20000,
+                                    "background-color": "white",
+                                    "padding": 2
+                                }).show();
+                            noFeature = false;
+
+                            if (selectCallback) {
+                                selectCallback(properties);
                             }
 
-                            setSelectedFeature(config, evt.coordinate, undefined, undefined, false);
+                        });
 
+                        if (noFeature) {
+                            $tooltip.hide();
+
+                            if (!config.readOnly) {
+                                var coord = ol.proj.transform(evt.coordinate, "EPSG:900913", 'EPSG:4326');
+                                var newValue = {
+                                    itemIndex: $('#' + id).data('item'),
+                                    value: {
+                                        coordinates: coord,
+                                        type: "Point"
+                                    }
+                                };
+
+                                if (config.task) {
+                                    $('#taskPropertiesForm').trigger("smap_task::geopoint", newValue);
+                                } else {
+                                    if (newValue.itemIndex) {
+                                        $('#editRecordForm').trigger("smap::geopoint", newValue);
+                                    }
+                                }
+
+                                setSelectedFeature(config, evt.coordinate, undefined, undefined, false);
+
+                            }
                         }
-                    }
+                    });
 
-                });
+                }
 
                 if(mainMap) {
                     gMap = config.map;
