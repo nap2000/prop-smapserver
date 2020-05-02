@@ -2030,13 +2030,87 @@ require([
      */
     function featureSelected(properties) {
         if(properties) {
-            var index = properties.record;
-            var indexes = [];
-            indexes.push(index);
-            recordSelected(indexes);
+
+            // If one record was selected highlight it
+            if(properties.length === 1) {
+                var index = properties.record;
+                var indexes = [];
+                indexes.push(index);
+                recordSelected(indexes);
+            }
+
+            // Show all data from selected features
+            $('#features').show();
+            showSelectedMapData(properties);
+
         } else {
             recordUnSelected();
+
+            $('#features').hide().empty();
         }
+    }
+
+    /*
+     * Show data from featurds selected on a map
+     */
+    function showSelectedMapData(properties) {
+
+        var schema = gTasks.cache.currentData.schema,
+            $element = $('#features'),
+            columns = schema.columns,
+            configItem,
+            i, j,
+            h = [],
+            idx = -1,
+            records = [];
+
+        h[++idx] = '<div id="feature_data">';
+        if(properties.length > 0) {
+
+            for(i = 0; i < properties.length; i++) {
+                records.push(globals.gMainTable.rows(properties[i].record).data().toArray()[0]);
+            }
+            h[++idx] = '<div class="row">';
+            h[++idx] = '<div class="col-md-12 col-xs-12 table-responsive billing_enabled">';
+            h[++idx] = '<table class="table table-striped">';
+            h[++idx] = '<tbody>';
+            // Add data
+            for (i = 0; i < columns.length; i++) {
+                configItem = columns[i];
+                h[++idx] = '<tr>';
+                h[++idx] = addCell(configItem.displayName);
+                for(j = 0; j < properties.length; j++) {
+                    h[++idx] = addCell(records[j][configItem.column_name]);
+                }
+                h[++idx] = '</tr>';
+            }
+            // End data
+            h[++idx] = '</tbody>';
+            h[++idx] = '</table>';
+            h[++idx] = '</div>';
+            h[++idx] = '</div>';
+        }
+        h[++idx] = '</div>';
+
+        $element.html(h.join(''));
+
+    }
+
+    /*
+	 * Get the markup to show features
+	 */
+    function addCell(item) {
+
+        var h = [],
+            idx = -1;
+
+        // Add form group and label
+        h[++idx] = '<td>';
+        h[++idx] = item;
+        h[++idx] = '</td>';
+
+
+        return h.join('');
     }
 
     /*
@@ -3129,7 +3203,7 @@ require([
         } else {
             $('#saveRecord').addClass('disabled');
         }
-        actioncommon.showEditRecordForm(gTasks.gSelectedRecord, gTasks.cache.currentData.schema, $('#editRecordForm'), $('#surveyForm'), editable);
+        actioncommon.showEditRecordForm(gTasks.gSelectedRecord, gTasks.cache.currentData.schema, $('#editRecordForm'), $('#surveyForm'), editable, true);
     }
 
 

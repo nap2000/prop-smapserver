@@ -141,7 +141,7 @@ require([
         });
 
         // Show the dialog
-        actioncommon.showEditRecordForm(gRecord[0], gSurveyConfig, $editForm, $surveyForm, true);
+        actioncommon.showEditRecordForm(gRecord[0], gSurveyConfig, $editForm, $surveyForm, true, true);
 
 
         $('#saveRecord').click(function () {

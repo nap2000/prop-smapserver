@@ -36,7 +36,7 @@ define([
         /*
          * Add HTML to show a form to edit a record
          */
-        function showEditRecordForm(record, schema, $editForm, $surveyForm, editable) {
+        function showEditRecordForm(record, schema, $editForm, $surveyForm, editable, includeMaps) {
             var
                 h = [],
                 idx = -1,
@@ -69,8 +69,12 @@ define([
                 }
             }
 
-            $editForm.html(h.join(''));
-            $surveyForm.html(m.join(''));
+            if($editForm) {
+                $editForm.html(h.join(''));
+            }
+            if($surveyForm) {
+                $surveyForm.html(m.join(''));
+            }
 
             // Set up date fields
             $editForm.find('.date').datetimepicker({
@@ -98,7 +102,9 @@ define([
             });
 
             // Set up the map fields
-            initialiseDynamicMaps(globals.gRecordMaps);
+            if(includeMaps) {
+                initialiseDynamicMaps(globals.gRecordMaps);
+            }
 
             // Respond to changes in the data by creating an update object
             $editForm.find('.form-control, select').bind("click propertychange paste change keyup input", function () {
