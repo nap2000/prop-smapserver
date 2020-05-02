@@ -302,3 +302,30 @@ button.bg-orange:focus {
 .ibox-tools a {
     color: #040404 !important;
 }
+
+.feature-panel-right {
+    position: fixed;
+    top: 50px;
+    right: 0;
+    display: none;
+    background-color: #E6E6E6;
+    border:1px solid #111111;
+    -moz-border-radius-topleft: 20px;
+    -webkit-border-top-left-radius: 20px;
+    -moz-border-radius-bottomleft: 20px;
+    -webkit-border-bottom-left-radius: 20px;
+    /*width: 200px;
+    height: auto;*/
+    width: 40%;
+    height: 80%;
+    padding: 10px 10px 10px 10px;
+    opacity: .85;
+    z-index:10000;
+    /*overflow: auto;*/
+}
+
+#feature_data {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}

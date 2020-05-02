@@ -742,7 +742,6 @@ function addSharedMaps(map, sharedMaps) {
 
 /*
  * Generate a table with all the properties for a selected item
- * @author	Neil Penman
  */
 (function($) {
 	$.fn.featureSelect = function( data, clusterData ) {
