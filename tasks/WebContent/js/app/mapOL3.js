@@ -104,74 +104,6 @@ define([
         /*
         function init(selectCallback) {
 
-            // Add the map
-            if (!gMap) {
-
-                gMap = new ol.Map({
-                    target: 'map',
-                    layers: [
-                        new ol.layer.Group({
-                            'title': 'Base maps',
-                            layers: [
-                                new ol.layer.Tile({
-                                    title: 'HOT',
-                                    type: 'base',
-                                    visible: true,
-                                    source: new ol.source.OSM({
-                                        url: 'http://{a-c}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
-                                    })
-                                }),
-                                new ol.layer.Tile({
-                                    title: 'OSM',
-                                    type: 'base',
-                                    visible: true,
-                                    source: new ol.source.OSM()
-                                })
-                            ]
-                        })
-                    ],
-                    view: new ol.View(
-                        {
-                            center: ol.proj.transform([0.0, 0.0], 'EPSG:4326', 'EPSG:3857'),
-                            zoom: 1,
-                            maxZoom: 21
-                        }
-                    )
-
-
-                });
-
-
-                // Add additional maps specified in the shared resources page
-                var sharedMaps = globals.gSelector.getSharedMaps();
-                if(!sharedMaps) {
-                    getMapboxDefault(getSharedMapsOL3, gMap);
-                } else {
-                    addSharedMapsOL3(gMap, sharedMaps)
-                }
-
-                var layerSwitcher = new ol.control.LayerSwitcher({
-                    tipLabel: 'Legend' // Optional label for button
-                });
-                gMap.addControl(layerSwitcher);
-
-                $('#layerEdit').on('shown.bs.modal', function () {
-                    $('#ml_title').focus();
-                });
-
-                // Show the layers selector
-                $('#showlayers').click(function () {
-                    globals.gMapLayersShown = !globals.gMapLayersShown;
-                    if (globals.gMapLayersShown) {
-                        $('#map_content').removeClass("col-md-12").addClass("col-md-8");
-                        $('.map_layers').show();
-                        gMap.updateSize();
-                    } else {
-                        $('#map_content').removeClass("col-md-8").addClass("col-md-12");
-                        $('.map_layers').hide();
-                        gMap.updateSize();
-                    }
-                });
 
                 // Respond to clicks
                 // select interaction working on "click"
@@ -187,13 +119,6 @@ define([
 
             }
 
-            if (gMapUpdatePending) {
-                refreshAllLayers(true);
-            }
-            showLayerSelections();
-
-
-        }
         */
 
 
@@ -510,7 +435,7 @@ define([
 
                     if(layer.type === "mapbox") {
                         //layerUrl = 'http://api.tiles.mapbox.com/v4/' + layer.config.mapid + ".jsonp?access_token=" + globals.gMapboxDefault;
-                        layerUrl = "http://a.tiles.mapbox.com/v4/" + layer.config.mapid + "/{z}/{x}/{y}.png?access_token=" + globals.gMapboxDefault;
+                        layerUrl = "https://api.mapbox.com/styles/v1/" + layer.config.mapid + "/tiles/{z}/{x}/{y}?access_token=" + globals.gMapboxDefault;
                         baseLayers.unshift(new ol.layer.Tile( {
                             title: layer.name,
                             type: 'base',
@@ -582,6 +507,14 @@ define([
                     )
 
                 });
+
+                // Add additional maps specified in the shared resources page
+                var sharedMaps = globals.gSelector.getSharedMaps();
+                if(!sharedMaps) {
+                    getMapboxDefault(getSharedMapsOL3, config.map);
+                } else {
+                    addSharedMapsOL3(config.map, sharedMaps)
+                }
 
                 // Add the vector layer
                 var features = [];
