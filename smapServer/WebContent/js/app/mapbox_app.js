@@ -15,10 +15,6 @@ You should have received a copy of the GNU General Public License
 along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-//var map,
-//	featureLayer,
-//	gUserLocation,		// bounds
-//	gLocationLayer;
 
 var gUserLocation,
 	gDraggableMarker,
@@ -64,16 +60,14 @@ function initialiseMap(elementId, zoom, setUserLocation, callbackClick, callback
  * This function does the initialisation once the mapbox key has been set
  */
 function initialiseMapKeySet(elementId, zoom, setUserLocation, callbackClick, callbackInitialised) {
-	
-	var mapboxTiles = L.tileLayer('https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=' + L.mapbox.accessToken, {
-	    attribution: '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-	});
-	
+
 	var thisMapData = {};
 	
 	console.log("initialise map: " + elementId);
 	
-	thisMapData.map = L.mapbox.map(elementId, 'mapbox.streets').setView([0, 0], zoom);
+	thisMapData.map = L.mapbox.map(elementId).setView([0, 0], zoom)
+			.addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11'));
+
 	if(setUserLocation) {
 		thisMapData.gLocationLayer = L.mapbox.featureLayer().addTo(thisMapData.map);
 	}

@@ -1084,7 +1084,7 @@ define(
     "sr_fn": "Nombre de Archivo",
     "sr_m_ph": "Ingrese un nombre para su mapa",
     "sr_m_d": "Ingrese una descripción para este mapa (opcional)",
-    "sr_m_mb": "Para MapBox esto identifica el mapa, por ejemplo: mapbox.light",
+    "sr_m_mb": "Para MapBox esto identifica el mapa, por ejemplo: mapbox/light-v10",
     "sr_cr": "Reportes Personalizados",
     "sr_al": "Usar ubicación anónima en Tarea",
     "sr_ul": "Actualizar ubicación existente",
