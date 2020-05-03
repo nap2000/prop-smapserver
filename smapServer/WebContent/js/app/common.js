@@ -4911,4 +4911,51 @@ function showOversightQuestions(data) {
 	if(gSelectedOversightQuestion) {
 		$('#update_question').val(gSelectedOversightQuestion);
 	}
+
+}
+
+/*
+ * Convert system names for meta data into human names
+ */
+function translateKey(key) {
+	if(key === "_device") {
+		key = localise.set["c_device"];  //"Device";
+	} else if (key === "_user") {
+		key = localise.set["c_user"];  // "Submitted By";
+	} else if (key === "_start") {
+		key = localise.set["_start"] + " (" + localise.set["c_lt"] +")"; // "Start Survey";
+	} else if (key === "_end") {
+		key = key = localise.set["_end"] + " (" + localise.set["c_lt"] +")";  // "End Survey";
+	} else if (key === "Upload Time") {
+		key = key = localise.set[key] + " (" + localise.set["c_lt"] +")";
+	} else if (key === "_scheduled_start") {
+		key = key = localise.set[key] + " (" + localise.set["c_lt"] +")";
+	} else if (key === "_bad") {
+		key = localise.set["a_mb"];         // "Marked Bad";
+	} else if (key === "_bad_reason") {
+		key = localise.set["c_reason"];     // "Reason";
+	} else if (key === "_complete") {
+		key = localise.set["c_complete"];	// "Complete";
+	}
+
+	return key;
+}
+
+/*
+ * Convert system names for meta values into human values
+ */
+function translateKeyValue(key, value) {
+
+	if (key === "_bad") {
+		if(value === "t") {
+			value = localise.set["c_yes"];   // "Yes";
+		} else {
+			value = localise.set["c_no"];   // "No";
+		}
+	} else if (key === "_complete") {
+		value = (value === "t") ? localise.set["c_yes"] : localise.set["c_no"];
+	}
+
+	return value;
+
 }

@@ -736,7 +736,6 @@ require([
             return false;
         });
 
-
     });         // End of document ready
 
     // Generate a file based on chart data
@@ -2033,15 +2032,15 @@ require([
 
             // If one record was selected highlight it
             if(properties.length === 1) {
-                var index = properties.record;
                 var indexes = [];
-                indexes.push(index);
+                indexes.push(properties[0].record);
                 recordSelected(indexes);
             }
 
             // Show all data from selected features
-            $('#features').show();
-            showSelectedMapData(properties);
+            if(properties.length > 0) {
+                showSelectedMapData(properties);
+            }
 
         } else {
             recordUnSelected();
@@ -2064,6 +2063,7 @@ require([
             idx = -1,
             records = [];
 
+        h[++idx] = '<img id="fDel" src="/fieldAnalysis/img/delete.png"/><br/>';
         h[++idx] = '<div id="feature_data">';
         if(properties.length > 0) {
 
@@ -2078,9 +2078,9 @@ require([
             for (i = 0; i < columns.length; i++) {
                 configItem = columns[i];
                 h[++idx] = '<tr>';
-                h[++idx] = addCell(configItem.displayName);
+                h[++idx] = addCell(translateKey(configItem.displayName));
                 for(j = 0; j < properties.length; j++) {
-                    h[++idx] = addCell(records[j][configItem.column_name]);
+                    h[++idx] = addCell(translateKeyValue(configItem.displayName, records[j][configItem.column_name]));
                 }
                 h[++idx] = '</tr>';
             }
@@ -2092,7 +2092,11 @@ require([
         }
         h[++idx] = '</div>';
 
-        $element.html(h.join(''));
+        $element.html(h.join('')).show();
+        $('#fDel', $element).off().click(function() {	// Closing the panel manually
+            $("#features").hide().empty();
+        });
+
 
     }
 

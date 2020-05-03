@@ -458,39 +458,6 @@ function onFeatureSelectOL(feature) {
 	} else {
 		processFeatureSelection(feature);
 	}
-	
-	// Action for assignments
-	/*
-	if(globals.gCurrentUserName && 
-				(feature.attributes.assignment_status === "new" || feature.attributes.assignment_status === "accepted")) {
-			
-		feature.attributes.user_name = globals.gCurrentUserName;
-		feature.attributes.assignment_status = "accepted";	// By pass pending state
-		globals.gAssignmentsLayer.redraw();
-		var user = {id: globals.gCurrentUserId};
-		var assignment = {
-				assignment_id: feature.attributes.assignment_id,
-				assignment_status: "accepted",
-				user: user,
-				task_id: feature.attributes.task_id			
-				};
-		globals.gPendingUpdates.push(assignment);
-		
-	} else if(globals.gDeleteSelected) {
-		
-		deleteFeature(feature);
-
-	}
-	
-	else {
-
-		$("#features").show();		  
-		$("#features").featureSelect(feature.data, feature.cluster);
-		$('#fDel').off().click(function() {	// Closing the panel manually
-			$("#features").hide().empty();
-		});
-	}
-	*/
 
 }
 
