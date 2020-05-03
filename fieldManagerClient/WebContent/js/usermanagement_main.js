@@ -2479,7 +2479,7 @@ require([
 
 		addHourglass();
 		$.ajax({
-			url: "/surveyKPI/billing/usage/" + oId,
+			url: "/surveyKPI/organisationList/usage/" + oId,
 			dataType: 'json',
 			cache: false,
 			success: function(data) {
