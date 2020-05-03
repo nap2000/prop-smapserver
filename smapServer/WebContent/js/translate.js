@@ -440,15 +440,6 @@ function setTranslateHtml($element, language_items, survey) {
 	var h =[],
 		idx = -1,
 		i;
-	
-	h[++idx] = '<div class="ribbon">';
-		h[++idx] = '<div class="large-12 columns">';
-			h[++idx] = '<h1 class="pagetitle"> Translating Survey:<span class="thick">';
-			h[++idx] = survey.displayName;
-			h[++idx] = '</span></h1>';
-		h[++idx] = '</div>';
-	h[++idx] = '</div>';
-	
 
 	for(i = 0; i < language_items.length; i++) {
 		h[++idx] = '<div class="fullest-width row center ribbonwrapper">';
