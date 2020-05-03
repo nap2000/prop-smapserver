@@ -911,36 +911,9 @@ function addSharedMaps(map, sharedMaps) {
 					&& key !== "_task_replace" && key !== "_modified"
 					&& key !== "parkey" && key !== "_instanceid"
 						&& key !== "instanceid") {
-					
-					if(key === "_device") {
-						key = localise.set["c_device"];  //"Device";
-					} else if (key === "_user") {
-						key = localise.set["c_user"];  // "Submitted By";
-					} else if (key === "_start") {
-						key = localise.set["_start"] + " (" + localise.set["c_lt"] +")"; // "Start Survey";
-						// No change to value
-					} else if (key === "_end") {
-						key = key = localise.set["_end"] + " (" + localise.set["c_lt"] +")";  // "End Survey";
-						// No change to value
-					} else if (key === "Upload Time") {
-						key = key = localise.set[key] + " (" + localise.set["c_lt"] +")";
-						// No change to value
-					} else if (key === "_scheduled_start") {
-						key = key = localise.set[key] + " (" + localise.set["c_lt"] +")";
-						// No change to value
-					} else if (key === "_bad") {
-						key = localise.set["a_mb"];  // "Marked Bad";
-						if(value === "t") {
-							value = localise.set["c_yes"];   // "Yes";
-						} else {
-							value = localise.set["c_no"];   // "No";
-						}
-					} else if (key === "_bad_reason") {
-						key = localise.set["c_reason"];     // "Reason";
-					} else if (key === "_complete") {
-						key = localise.set["c_complete"];		// "Complete";
-						value = (value === "t") ? localise.set["c_yes"] : localise.set["c_no"];
-					}
+
+					value = translateKeyValue(key, value);
+					key = translateKey(key);
 					
 					h[++idx] = '<tr>';
 					h[++idx] = '<td>' + key + '</td>';
