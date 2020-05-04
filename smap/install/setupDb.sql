@@ -1502,3 +1502,11 @@ create TABLE language_codes (
 );
 ALTER TABLE language_codes OWNER TO ws;
 create unique index idx_language_codes_code on language_codes(code);
+
+DROP TABLE IF EXISTS email_alerts;
+create TABLE email_alerts (
+	o_id integer,
+	alert_type text,
+	alert_recorded TIMESTAMP WITH TIME ZONE
+);
+ALTER TABLE email_alerts OWNER TO ws;
