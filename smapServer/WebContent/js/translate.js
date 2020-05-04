@@ -539,7 +539,12 @@ function autoTranslate() {
 			if(xhr.readyState === 0 || xhr.status === 0) {
 				return;  // Not an error
 			} else {
-				alert(localise.set["msg_trans_to"]);
+				if(xhr.responseText.indexOf("<html>") > 0) {
+					alert(localise.set["msg_trans_to"]);
+				} else {
+					alert(xhr.responseText);
+				}
+
 			}
 		}
 	});
