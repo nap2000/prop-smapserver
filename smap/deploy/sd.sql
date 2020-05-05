@@ -227,7 +227,7 @@ alter table aws_async_jobs add column duration integer;
 alter table aws_async_jobs add column locale text;
 
 update organisation set limits = '{"transcribe":250,"submissions":0,"rekognition":100,"translate":5000}' where limits is null;
-update organisation set limits = '{"transcribe":250,"submissions":0,"rekognition":100,"translate":5000}' where limits = '{"transcribe":500,"submissions":0,"rekognition":100,"translate":5000}'
+update organisation set limits = '{"transcribe":250,"submissions":0,"rekognition":100,"translate":5000}' where limits = '{"transcribe":500,"submissions":0,"rekognition":100,"translate":5000}';
 
 create TABLE email_alerts (
 	o_id integer,
