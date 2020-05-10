@@ -235,3 +235,5 @@ create TABLE email_alerts (
 	alert_recorded TIMESTAMP WITH TIME ZONE
 );
 ALTER TABLE email_alerts OWNER TO ws;
+
+update question set compressed = true where not qtype = 'select' and not qtype = 'rank'; 
