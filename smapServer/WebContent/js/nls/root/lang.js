@@ -1040,6 +1040,7 @@ define({
     "u_ft_as": "Automatically Synchronise",
     "u_ft_ms": "Manual Synchronisation",
     "u_ft_sw": "WIFI",
+    "u_ft_hrv": "High Resolution Video",
     "u_ft_sw_c": "WIFI and cellular network",
     "u_ft_sop": "Set on phone",
     "u_ft_tasks": "Maximum number of tasks to download",
