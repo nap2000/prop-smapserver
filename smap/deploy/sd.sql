@@ -237,3 +237,6 @@ create TABLE email_alerts (
 ALTER TABLE email_alerts OWNER TO ws;
 
 update question set compressed = true where not qtype = 'select' and not qtype = 'rank'; 
+
+alter table organisation add column ft_high_res_video text;
+update organisation set ft_high_res_video = 'not set' where ft_high_res_video is null;
