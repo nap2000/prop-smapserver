@@ -153,6 +153,7 @@ create TABLE organisation (
 	ft_backward_navigation text,
 	ft_high_res_video text,
 	ft_navigation text,
+	ft_guidance text,
 	ft_image_size text,
 	ft_send_location text,
 	ft_sync_incomplete boolean,
