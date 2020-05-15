@@ -1057,6 +1057,8 @@ define({
     "u_ft_swipes": "Use horizontal swipes",
     "u_ft_buttons": "Use forward/backward buttons",
     "u_ft_swipes_buttons": "Use swipes and buttons",
+    "u_ft_sa": "Yes - always shown",
+    "u_ft_sc": "Yes - collapsed",
     "u_det_o_email": "Email Options",
     "u_det_o_other": "Other Options",
     "u_det_o_limits": "Monthly Usage Limits",

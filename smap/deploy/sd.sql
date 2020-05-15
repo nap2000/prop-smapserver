@@ -240,3 +240,6 @@ update question set compressed = true where not qtype = 'select' and not qtype =
 
 alter table organisation add column ft_high_res_video text;
 update organisation set ft_high_res_video = 'not set' where ft_high_res_video is null;
+
+alter table organisation add column ft_guidance text;
+update organisation set ft_guidance = 'not set' where ft_guidance is null;
