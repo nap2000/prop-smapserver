@@ -740,6 +740,7 @@ require([
 			device.ft_backward_navigation = $('#ft_backward_navigation').val();
 			device.ft_high_res_video = $('#ft_high_res_video').val();
 			device.ft_navigation = $('#ft_navigation').val();
+			device.ft_guidance = $('#ft_guidance').val();
 			device.ft_image_size = $('#ft_image_size').val();
 
 			device.ft_number_tasks = $('#ft_number_tasks').val();
@@ -2888,6 +2889,7 @@ require([
 				$('#ft_backward_navigation').val(device.ft_backward_navigation);
 				$('#ft_high_res_video').val(device.ft_high_res_video);
 				$('#ft_navigation').val(device.ft_navigation);
+				$('#ft_guidance').val(device.ft_guidance);
 				$('#ft_image_size').val(device.ft_image_size);
 				$('#ft_number_tasks').val(device.ft_number_tasks);
 
