@@ -1362,7 +1362,7 @@ function refreshMediaView(data, sId) {
 				h[++idx] = addVectorMapIcon();
 			} else {
 				h[++idx] = '<img width="100" height="100" src="';
-				h[++idx] = files[i].thumbnailUrl;
+				h[++idx] = files[i].thumbnailUrl + addCacheBuster(files[i].thumbnailUrl);
 				h[++idx] = '" alt="';
 				h[++idx] = files[i].name;
 				h[++idx] = '">';
@@ -1493,6 +1493,8 @@ function getFilesFromServer(url, sId, callback) {
 		gSId = sId;
 		url += '?survey_id=' + sId;
 	}
+
+	url += addCacheBuster(url);
 
 	addHourglass();
 	$.ajax({
@@ -4958,4 +4960,14 @@ function translateKeyValue(key, value) {
 
 	return value;
 
+}
+
+function addCacheBuster(url) {
+	var cb;
+	if(url.indexOf("?") >= 0) {
+		cb = "&";
+	} else {
+		cb = "?";
+	}
+	return cb + "_v=" + new Date().getTime().toString();
 }
