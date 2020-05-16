@@ -849,9 +849,9 @@ define([
 			if(thumbUrl || (lcLabel === "image" && url)) {
 				h[++idx] = '<img height="100" width="100" src="';
 				if(thumbUrl) {
-					h[++idx] = thumbUrl;
+					h[++idx] = thumbUrl + addCacheBuster(thumbUrl);;
 				} else {
-					h[++idx] = url;
+					h[++idx] = url + addCacheBuster(url) ;
 				}
 				h[++idx] = '">';
 			} else {
