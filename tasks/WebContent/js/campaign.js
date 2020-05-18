@@ -143,6 +143,10 @@ require([
 			});
 		});
 
+		$('#confirmGenGo').click(function () {
+			generateLinksGo();
+		});
+
 		$('#confirmSendGo').click(function () {
 			sendUnsentGo();
 		});
@@ -215,6 +219,13 @@ require([
 
 		$(('#importMailoutGo')).click(function () {
 			importMailout();
+		});
+
+		/*
+		 * Generate links to complete the webforms
+		 */
+		$(('#m_gen')).click(function () {
+			generateLinks();
 		});
 
 		/*
@@ -610,6 +621,41 @@ require([
 
 			}
 		});
+	}
+
+	/*
+     * Generate links to complete the surveys
+     */
+	function generateLinks() {
+
+		$('#confirmGenMsg').html(localise.set["mo_gen"]);
+		$('#confirmGenPopup').modal("show");
+	}
+
+	function generateLinksGo() {
+
+		if(gCurrentMailOutIdx && gCurrentMailOutIdx >= 0) {
+			var url = '/surveyKPI/mailout/gen/' + gMailouts[gCurrentMailOutIdx].id;
+
+			addHourglass();
+			$.ajax({
+				url: url,
+				cache: false,
+				success: function () {
+					removeHourglass();
+					mailoutChanged(true);
+				},
+				error: function (xhr, textStatus, err) {
+
+					removeHourglass();
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(err);
+					}
+				}
+			});
+		}
 	}
 
 	/*
