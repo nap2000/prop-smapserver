@@ -10,6 +10,7 @@ define({
     "m_reports_new": "New Reports",
     "m_refresh": "Refresh",
     "m_email_unsent": "Email Unsent",
+	"m_email_gen": "Generate Links",
     "m_export": "Export",
     "m_export_media": "Export with Media",
     "m_backup": "Backup",
@@ -1322,6 +1323,7 @@ define({
     "mo_sent": "Sent",
     "mo_sd": "Status Details",
     "mo_send": "Are you sure you are ready to send the emails?",
+    "mo_gen": "Are you sure you are want to generate the links now?  They are created automatically when you use the email unsent button however you can generate them now if you want to send them via a different channel. Once created the links will expire in 30 days.",
 
     // AWS Services
     "svc_at": "Auto Translate",
