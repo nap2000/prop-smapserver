@@ -243,3 +243,8 @@ update organisation set ft_high_res_video = 'not set' where ft_high_res_video is
 
 alter table organisation add column ft_guidance text;
 update organisation set ft_guidance = 'not set' where ft_guidance is null;
+
+alter table organisation add column ft_server_menu boolean default true;
+update organisation set ft_server_menu = true where ft_server_menu is null;
+alter table organisation add column ft_meta_menu boolean default true;
+update organisation set ft_meta_menu = true where ft_meta_menu is null;
