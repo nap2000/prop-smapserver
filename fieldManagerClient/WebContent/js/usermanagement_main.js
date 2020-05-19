@@ -774,6 +774,10 @@ require([
 					device.ft_prevent_disable_track = true;
 				} else if(options[i] === "ft_admin_menu") {
 					device.ft_admin_menu = true;
+				} else if(options[i] === "ft_server_menu") {
+					device.ft_server_menu = true;
+				} else if(options[i] === "ft_meta_menu") {
+					device.ft_meta_menu = true;
 				} else if(options[i] === "ft_exit_track_menu") {
 					device.ft_exit_track_menu = true;
 				} else if(options[i] === "ft_review_final") {
@@ -1628,6 +1632,10 @@ require([
 					this.checked = org.ft_prevent_disable_track;
 				} else if($(this).val() === "ft_admin_menu") {
 					this.checked = org.ft_admin_menu;
+				} else if($(this).val() === "ft_server_menu") {
+					this.checked = org.ft_server_menu;
+				} else if($(this).val() === "ft_meta_menu") {
+					this.checked = org.ft_meta_menu;
 				} else if($(this).val() === "ft_exit_track_menu") {
 					this.checked = org.ft_exit_track_menu;
 				} else if($(this).val() === "ft_review_final") {
@@ -2876,6 +2884,10 @@ require([
 						this.checked = device.ft_prevent_disable_track;
 					} else if($(this).val() === "ft_admin_menu") {
 						this.checked = device.ft_admin_menu;
+					} else if($(this).val() === "ft_server_menu") {
+						this.checked = device.ft_server_menu;
+					} else if($(this).val() === "ft_meta_menu") {
+						this.checked = device.ft_meta_menu;
 					} else if($(this).val() === "ft_exit_track_menu") {
 						this.checked = device.ft_exit_track_menu;
 					} else if($(this).val() === "ft_review_final") {

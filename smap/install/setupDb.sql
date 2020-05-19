@@ -161,6 +161,8 @@ create TABLE organisation (
 	ft_specify_instancename boolean default false,
 	ft_prevent_disable_track boolean default false,
 	ft_admin_menu boolean default false,
+	ft_server_menu boolean default true,
+	ft_meta_menu boolean default true,
 	ft_exit_track_menu boolean default false,
 	ft_review_final boolean default true,
 	ft_send text,

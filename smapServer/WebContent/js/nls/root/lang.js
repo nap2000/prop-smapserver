@@ -1060,6 +1060,8 @@ define({
     "u_ft_swipes_buttons": "Use swipes and buttons",
     "u_ft_sa": "Yes - always shown",
     "u_ft_sc": "Yes - collapsed",
+    "u_ft_ss": "Enable server settings menu",
+    "u_ft_md": "Enable user and identity menu",
     "u_det_o_email": "Email Options",
     "u_det_o_other": "Other Options",
     "u_det_o_limits": "Monthly Usage Limits",
