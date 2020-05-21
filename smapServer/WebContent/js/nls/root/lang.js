@@ -849,6 +849,8 @@ define({
     "ed_req_msg": "Required Message",
     "ed_nreq": "Not Required",
     "ed_ap": "Auto play",
+    "ed_al": "Automatically Annotate",
+    "ed_al2": "Use in oversight forms to automatically annotate images, audio and video",
     "ed_at": "GPS Accuracy Threshold",
     "ed_ls": "Linked Survey",
     "ed_ro": "Read Only",
