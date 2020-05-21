@@ -494,6 +494,22 @@ $(document).ready(function() {
 		$('#pdfPanel').show();
 	});
 
+	// parameter tabs
+	$('#standardParamTab a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+
+		$(".paramtab").hide();
+		$('#standardParamPanel').show();
+	});
+	$('#annotateParamTab a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+
+		$(".paramtab").hide();
+		$('#annotateParamPanel').show();
+	});
+
 	// Hide and show search elements
 	$('#a_filter_column, #a_second_filter_column, #a_csv_identifier, ' +
 		'#a_survey_identifier, input[type=radio][name=search_source],' +
