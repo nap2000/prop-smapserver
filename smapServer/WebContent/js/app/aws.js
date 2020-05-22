@@ -60,7 +60,9 @@ define([
 				}
 			}
 			$elem.empty().html(h.join(''));
-			callback();
+			if(typeof callback === "function") {
+				callback();
+			}
 		}
 
 		function getLanguages($elem, type, callback) {
