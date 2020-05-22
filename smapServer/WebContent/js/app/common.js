@@ -18,6 +18,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 var gWait = 0;		// This javascript file only
 var gCache = {};
+var gCacheGroup = {};
 
 
 /*
@@ -3773,6 +3774,66 @@ function getQuestionsInCsvFile($elem, index, includeNone) {
 		h[++idx] = '</option>';
 	}
 	$elem.empty().append(h.join(''));
+}
+
+/*
+ * Get the questions in a survey
+ */
+function getGroupQuestionsInSurvey($elem, sIdent) {
+
+	function populateElement($elem, data) {
+		var h = [],
+			idx = -1,
+			i;
+
+		h[++idx] = '<option value="">';
+		h[++idx] = localise.set["c_none"];
+		h[++idx] = '</option>';
+
+		for (i = 0; i < data.length; i++) {
+			h[++idx] = '<option value="';
+			h[++idx] = data[i].name;
+			h[++idx] = '">';
+			h[++idx] = data[i].name;
+			h[++idx] = '</option>';
+		}
+		$elem.empty().append(h.join(''));
+	}
+
+	if(gCacheGroup[sIdent]) {
+		populateElement($elem, gCacheGroup[sIdent]);
+	} else {
+		if (sIdent !== "0") {
+			addHourglass();
+			$.ajax({
+				url: "/surveyKPI/questionListIdent/" + sIdent + "/none/group",
+				dataType: 'json',
+				cache: false,
+				success: function (data) {
+					removeHourglass();
+					var theIdent = sIdent;
+					var $theElem = $elem;
+
+					gCacheGroup[theIdent] = data;
+					populateElement($theElem, data);
+
+				},
+				error: function (xhr, textStatus, err) {
+					removeHourglass();
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(localise.set["msg_err_get_q"] + ": " + err);
+					}
+				}
+			});
+		} else {
+			if (includeNone) {
+				$elem.empty().append('option value="0">' + localise.set["c_none"] + '</option>');
+			}
+		}
+	}
+
 }
 
 function tokenizeAppearance(input) {
