@@ -567,7 +567,7 @@ define(function () {
 	        },
 	        source: {
 		        field: 'p_source',
-		        type: 'text'
+		        type: 'select'
 	        },
 	        form_identifier: {
 		        field: 'p_form_identifier',
