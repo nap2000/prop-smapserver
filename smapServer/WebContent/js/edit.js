@@ -571,7 +571,6 @@ $(document).ready(function() {
 		} else {
 			getQuestionsInCsvFile($('.column_select'), $(this).val(), true);
 		}
-
 	});
 
 	/*
@@ -1859,6 +1858,9 @@ function respondToEvents($context) {
 			getQuestionsInSurvey($('#p_key_question'), sIdent, true, true);
 		} else if(qType === "begin repeat") {
 			$('#p_ref').empty().append(getFormsAsSelect(qName));
+		} else {
+			// Get group questions for this current survey - used for selecting the source parameter
+			getGroupQuestionsInSurvey($('.group_column_select'), globals.model.survey.ident);
 		}
 
 
