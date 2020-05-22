@@ -138,11 +138,6 @@ $(document).ready(function() {
 			openForm("new");
 		}
 	}
-	
-	/*
-	 * Get location list
-	 */
-	//getLocations(setLocationList);
 
 	/*
 	 * Get surveys and csv files that the user can link to
@@ -1169,6 +1164,9 @@ function surveyDetailsDone() {
 	if(globals.model.survey.blocked) {
 		bootbox.alert(localise.set["ed_blocked"]);
 	}
+
+	// Get group questions for this current survey - used for selecting the source parameter
+	getGroupQuestionsInSurvey($('.group_column_select'), globals.model.survey.ident);
 	
 	/*
 	 * Refresh the form
@@ -1858,11 +1856,7 @@ function respondToEvents($context) {
 			getQuestionsInSurvey($('#p_key_question'), sIdent, true, true);
 		} else if(qType === "begin repeat") {
 			$('#p_ref').empty().append(getFormsAsSelect(qName));
-		} else {
-			// Get group questions for this current survey - used for selecting the source parameter
-			getGroupQuestionsInSurvey($('.group_column_select'), globals.model.survey.ident);
 		}
-
 
 		/*
          * Show any parameter attributes for this question type
