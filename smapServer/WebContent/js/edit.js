@@ -66,6 +66,7 @@ require([
          'app/option',
 		 'bootstrapcolorpicker',
 		 'moment',
+		 'app/aws',
          'icheck'], 
 		function(
 				$, 
@@ -83,7 +84,8 @@ require([
 				changeset,
 				option,
 				bootstrapcolorpicker,
-				moment) {
+				moment,
+				aws) {
 
 
 var	gMode = "survey",
@@ -102,7 +104,9 @@ var gNewVal,
 	gElement,
 	gQname,
 	gQType,
-	gIsSurveyLevel;
+	gIsSurveyLevel,
+	g_from_lang_val,
+	g_to_lang_val;
 
 'use strict';
 
@@ -110,10 +114,9 @@ $(document).ready(function() {
   
 	var i,
 		params,
-		pArray = [],
+		pArray,
 		param = [],
-		openingNew = false,
-		dont_get_current_survey = true;
+		dont_get_current_survey;
 	
 	window.bootbox = bootbox;
 	window.moment = moment;
@@ -455,6 +458,13 @@ $(document).ready(function() {
 		updateLabel("question", globals.gFormIndex, globals.gItemIndex, undefined, "text", newVal, gQname, "parameters");
 
 		$('#parameterModal').modal("hide");
+	});
+
+	/*
+	 * Change data values that are dependent on the parameter source value
+	 */
+	$('#p_source').change(function() {
+		setLanguageCodes();
 	});
 
 	/*
@@ -1037,6 +1047,19 @@ $(document).ready(function() {
 	
 });
 
+function setLanguageCodes() {
+	var type = $('#p_source').find(':selected').data('type');
+
+	var translateType = (type === "audio" || type === "video") ? "transcribe" : "translate";
+	aws.setLanguageSelect($('.parameter_lang'), translateType, setLanguageCodeVals);
+
+}
+
+function setLanguageCodeVals() {
+	$('#to_lang').val(g_to_lang_val);
+	$('#from_lang').val(g_from_lang_val);
+}
+
 /*
  * Set all the questions to either required or not required
  */
@@ -1166,8 +1189,9 @@ function surveyDetailsDone() {
 	}
 
 	// Get group questions for this current survey - used for selecting the source parameter
+	gCacheGroup[globals.model.survey.ident] = undefined;
 	getGroupQuestionsInSurvey($('.group_column_select'), globals.model.survey.ident);
-	
+
 	/*
 	 * Refresh the form
 	 */
@@ -1193,34 +1217,6 @@ function surveyDetailsDone() {
 	// Set up link to test file
 	$('.m_test_survey').attr("href", "/webForm/" + globals.model.survey.ident);
 	
-}
-
-/*
- * Refresh the options
- */
-function refreshOptions() {
-	
-	var $context = option.createChoiceView(),
-		survey,
-		question;
-
-	// Set the previous choices list box
-	var prevListName = $('#previousSelect').val();
-	if(prevListName) {
-		option.setPreviousChoices(prevListName);
-	}
-	
-	// Show the table of options
-	if(typeof globals.gFormIndex !== "undefined" && typeof globals.gItemIndex !== undefined) {
-		// opened from question
-		survey = globals.model.survey,
-		question = survey.forms[globals.gFormIndex].questions[globals.gItemIndex];
-	}
-	
-	option.addOptionTable(question, globals.gFormIndex, globals.gListName);
-	option.setupChoiceView($('#filterType').val());
-	
-	respondToEventsChoices($context);
 }
 
 /*
@@ -1870,11 +1866,18 @@ function respondToEvents($context) {
 			}
 		}
 
-
+		g_to_lang_val = undefined;
+		g_from_lang_val = undefined;
 		for (i = 0; i < paramArray.length; i++) {
 
 			var p = paramArray[i].split('=');
 			if (p.length > 1) {
+				if(p[0] === "to_lang") {
+					g_to_lang_val = p[1];
+				} else if(p[0] === "from_lang") {
+					g_from_lang_val = p[1];
+				}
+
 				foundParam = false;
 				if(qParams && qParams.length > 0) {
 
@@ -1901,6 +1904,7 @@ function respondToEvents($context) {
 		// Add any parameter values not explicetely set
 		$('#p_other').val(otherParams);       // Not sure if we want to do this
 
+		setLanguageCodes();     // Do this last as it is dependent on the source question type
 
 		$('#parameterModal').modal({
 			keyboard: true,

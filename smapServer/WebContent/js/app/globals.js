@@ -516,7 +516,7 @@ define(function () {
 
         // A list of valid parameters for each question type
         this.qParams = {
-            string: ['rows', 'auto_annotate', 'source'],
+            string: ['rows', 'auto_annotate', 'source', 'from_lang', 'to_lang'],
 	        barcode: ['auto'],
             image: ['max-pixels', 'auto'],
 	        video: ['auto'],
@@ -567,6 +567,14 @@ define(function () {
 	        },
 	        source: {
 		        field: 'p_source',
+		        type: 'select'
+	        },
+	        from_lang: {
+		        field: 'from_lang',
+		        type: 'select'
+	        },
+	        to_lang: {
+		        field: 'to_lang',
 		        type: 'select'
 	        },
 	        form_identifier: {
