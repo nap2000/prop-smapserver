@@ -1053,6 +1053,12 @@ function setLanguageCodes() {
 	var translateType = (type === "audio" || type === "video") ? "transcribe" : "translate";
 	aws.setLanguageSelect($('.parameter_lang'), translateType, setLanguageCodeVals);
 
+	if(translateType === "transcribe") {
+		$('.to_lang_override').hide();
+	} else {
+		$('.to_lang_override').show();
+	}
+
 }
 
 function setLanguageCodeVals() {
