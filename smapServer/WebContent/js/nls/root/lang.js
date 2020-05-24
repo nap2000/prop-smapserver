@@ -851,6 +851,8 @@ define({
     "ed_ap": "Auto play",
     "ed_al": "Automatically Annotate",
     "ed_al2": "Use in oversight forms to automatically annotate images, audio and video",
+	"ed_am": "Medical",
+	"ed_am2": "Use when ransicribing audio that contains medical terms",
     "ed_at": "GPS Accuracy Threshold",
     "ed_ls": "Linked Survey",
     "ed_ro": "Read Only",
