@@ -248,3 +248,5 @@ alter table organisation add column ft_server_menu boolean default true;
 update organisation set ft_server_menu = true where ft_server_menu is null;
 alter table organisation add column ft_meta_menu boolean default true;
 update organisation set ft_meta_menu = true where ft_meta_menu is null;
+
+alter table aws_async_jobs add column medical boolean;
