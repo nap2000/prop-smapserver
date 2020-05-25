@@ -1464,6 +1464,7 @@ create TABLE aws_async_jobs (
 	table_name text,		-- Table containing the data
 	instanceid text,		-- Record identifier
 	type text,				-- AUTO_UPDATE_AUDIO
+	boolean medical,		-- Used with transcribe jobs
 	locale text,			-- Locale of organisation that submitted this job
 	update_details text,	-- AutoUpdate object in JSON
 	job text,				-- Unique AWS job identifier

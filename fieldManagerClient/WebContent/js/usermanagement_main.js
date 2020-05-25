@@ -98,6 +98,12 @@ require([
 			default: 250
 		},
 		{
+			id: 'o_transcribe_medical_limit',
+			name: 'transcribe_medical',
+			label: 'transcribe_medical',
+			default: 80
+		},
+		{
 			id: 'o_rekognition_limit',
 			name: 'rekognition',
 			label: 'rekognition',
