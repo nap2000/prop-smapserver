@@ -1503,7 +1503,8 @@ create TABLE language_codes (
 	code text,
 	aws_translate boolean,			-- set yes if supported by translate
 	aws_transcribe boolean,			-- set yes if supported by trancribe
-	transcribe_default boolean		-- true if this is the default language o use for transcribe
+	transcribe_default boolean,		-- true if this is the default language to use for transcribe
+	transcribe_medical boolean		-- true if this language can be used with transcribe medical
 );
 ALTER TABLE language_codes OWNER TO ws;
 create unique index idx_language_codes_code on language_codes(code);
