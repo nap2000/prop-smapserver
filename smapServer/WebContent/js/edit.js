@@ -1043,7 +1043,11 @@ $(document).ready(function() {
 	$('#content').on('hidden.bs.collapse', function (e) {
 		$('a[href="#' + e.target.id + '"]', '#content').find('.edit_icon').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
 	});
-	
+
+	// Respond to selection of medical parameter type
+	$('#p_medical').change(function() {
+		setLanguageCodes();
+	});
 	
 });
 
@@ -1051,6 +1055,9 @@ function setLanguageCodes() {
 	var type = $('#p_source').find(':selected').data('type');
 
 	var translateType = (type === "audio" || type === "video") ? "transcribe" : "translate";
+	if($('#p_medical').prop("checked")) {
+		translateType = "transcribe_medical";
+	}
 	aws.setLanguageSelect($('.parameter_lang'), translateType, setLanguageCodeVals);
 
 	if(translateType === "transcribe") {

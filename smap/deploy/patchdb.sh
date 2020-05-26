@@ -263,7 +263,7 @@ cd ../deploy
 # Get the AWS language codes
 cp language_codes.csv /smap_bin
 echo "truncate language_codes" | sudo -u postgres psql -d survey_definitions
-echo "COPY language_codes(code, aws_translate, aws_transcribe, transcribe_default) FROM '/smap_bin/language_codes.csv' DELIMITER ',' CSV HEADER;" | sudo -u postgres psql -d survey_definitions
+echo "COPY language_codes(code, aws_translate, aws_transcribe, transcribe_default, transcribe_medical) FROM '/smap_bin/language_codes.csv' DELIMITER ',' CSV HEADER;" | sudo -u postgres psql -d survey_definitions
 
 
 # update version reference
