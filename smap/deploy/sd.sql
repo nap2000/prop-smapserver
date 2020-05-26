@@ -211,8 +211,8 @@ create TABLE language_codes (
 	id integer DEFAULT NEXTVAL('language_codes_seq') CONSTRAINT pk_language_codes PRIMARY KEY,
 	code text,
 	aws_translate boolean,			-- set yes if supported by translate
-	aws_transcribe boolean,			-- set yes if supported by trancribe
-	transcribe_default boolean		-- true if this is the default language o use for transcribe
+	aws_transcribe boolean,			-- set yes if supported by transcribe
+	transcribe_default boolean		-- true if this is the default language to use for transcribe
 );
 ALTER TABLE language_codes OWNER TO ws;
 create unique index idx_language_codes_code on language_codes(code);
@@ -250,3 +250,4 @@ alter table organisation add column ft_meta_menu boolean default true;
 update organisation set ft_meta_menu = true where ft_meta_menu is null;
 
 alter table aws_async_jobs add column medical boolean;
+alter table language_codes add column transcribe_medical boolean;
