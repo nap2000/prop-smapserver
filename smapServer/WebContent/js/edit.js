@@ -1054,16 +1054,20 @@ $(document).ready(function() {
 function setLanguageCodes() {
 	var type = $('#p_source').find(':selected').data('type');
 
-	var translateType = (type === "audio" || type === "video") ? "transcribe" : "translate";
-	if($('#p_medical').prop("checked")) {
+	var translateType;
+	if($('#p_medical').prop("checked") && type === "audio" ) {
 		translateType = "transcribe_medical";
+	} else {
+		translateType = (type === "audio" || type === "video") ? "transcribe" : "translate";
 	}
 	aws.setLanguageSelect($('.parameter_lang'), translateType, setLanguageCodeVals);
 
-	if(translateType === "transcribe") {
+	if(translateType === "transcribe" || translateType === "transcribe_medical") {
 		$('.to_lang_override').hide();
+		$('.p_medical, .p_med_type').show();
 	} else {
 		$('.to_lang_override').show();
+		$('.p_medical, .p_med_type').hide();
 	}
 
 }
