@@ -517,6 +517,7 @@ define(function () {
         // A list of valid parameters for each question type
         this.qParams = {
             string: ['rows', 'auto_annotate', 'source', 'from_lang', 'to_lang', 'medical', 'med_type'],
+	        calculate: ['auto_annotate', 'source', 'from_lang', 'to_lang', 'medical', 'med_type'],
 	        barcode: ['auto'],
             image: ['max-pixels', 'auto'],
 	        video: ['auto'],
