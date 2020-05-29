@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ $# -lt "1" ]; then
-	echo "usage $0 filepath
+	echo "usage $0 filepath"
 fi
 
 echo "================================================="
