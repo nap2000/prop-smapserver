@@ -16,7 +16,7 @@ if [ -f ~ubuntu/bucket ]; then
 	awsPath="s3://`cat ~ubuntu/bucket`/$type/$ident"
 	region=`cat ~ubuntu/region`
 	
-	/usr/local/bin/aws s3 sync --region $region $awsPath $restoreDir
+	/usr/bin/aws s3 sync --region $region $awsPath $restoreDir
 	exitValue=$?
 fi
 	
