@@ -2337,7 +2337,13 @@ function getChangeDescription(change, version) {
 		h[++idx] = change.msg;
 		h[++idx] = '</span>';
 
-	}  else if(change.action === "add_preload") {
+	}   else if(change.action === "language_update") {
+		h[++idx] = localise.set["ed_c_languages"];
+		h[++idx] = ' <span style="color:blue;">';
+		h[++idx] = change.msg;
+		h[++idx] = '</span>';
+
+	} else if(change.action === "add_preload") {
 		h[++idx] = ' <span style="color:blue;">';
 		h[++idx] = change.msg;
 		h[++idx] = '</span>';
