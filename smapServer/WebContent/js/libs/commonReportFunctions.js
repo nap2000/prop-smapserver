@@ -241,7 +241,7 @@ function addAnchors (property, minsize) {
  */
 function getMedia(property) {
 	
-	var idx, name, ext, urlBase, thumbNail, flv, type,
+	var idx, name, ext, urlBase, thumbNail, type,
 		media;
 	
 	if(typeof property === "string" && (property.indexOf("//") === 0 || property.indexOf("http") === 0)) {  // Add links to media files
@@ -257,7 +257,6 @@ function getMedia(property) {
 		idx = name.lastIndexOf(".");
 		ext = name.substring(idx+1).toLowerCase();
 		thumbNail = urlBase + "thumbs/" + name + ".jpg";
-		flv = urlBase + "flv/" + name + ".flv";
 		
 		// Create a media object
 		media = {};
