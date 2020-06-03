@@ -570,7 +570,6 @@ define(
     "msg_pformat": "Parâmetros especificados no outro campo devem ser separados por ponto e vírgula e conter um sinal de igual. Por exemplo: a=x;b=y",
     "msg_filter_col": "Você especificou um filtro de Coluna de '%s1'; portanto, você precisa especificar um filtro para aplicar",
     "msg_numb_ts": "Separador de milhares não terá efeito, a menos que números também seja selecionado",
-    "msg_warn_likert": "Likert funciona apenas em formulários da Web. Você também pode tentar perguntas do tipo \"intervalo\" que funcionam no aplicativo Android e nos Webforms.",
     "msg_warn_likert_n": "Likert funciona apenas com o tipo de seleção normal",
     "msg_choice_value": "O valor da escolha deve ser especificado",
     "msg_search_source": "Você deve selecionar pesquisa ou csv como fonte dos dados de escolha",
