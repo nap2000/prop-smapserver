@@ -571,7 +571,6 @@ define(
     "msg_pformat": "Los parámetros especificados en el campo \"Otros\" deben estar separados por punto y coma y contener un signo igual. Por ejemplo: a=x;b=y",
     "msg_filter_col": "Se ha especificado un filtro de columna '%s1', luego se necesita especificar un filtro para aplicarlo",
     "msg_numb_ts": "Separador de miles sólo aplica si números se ha seleccionado ",
-    "msg_warn_likert": "Likert sólo funciona en Form. Web. Pruebe usando una pregunta tipo \"Rango\" que funciona tando en la aplicación móvil como web",
     "msg_warn_likert_n": "Likert sólo funciona con tipo de selección normal",
     "msg_choice_value": "Se debe especificar el valor de selección ",
     "msg_search_source": "Se debe seleccionar un formulario o un archivo csv como fuente de datos de selección",

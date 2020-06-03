@@ -3966,12 +3966,6 @@ function setNoFilter() {
 					// Warn if likert appearance is used
 					var select1Type = $('#a_select1_type').val();
 					var likert = $('#a_likert').is(':checked');
-					if(likert) {
-						if(warningMsg.length > 0) {
-							warningMsg += '. ';
-						}
-						warningMsg += localise.set["msg_warn_likert"];
-					}
 					if(likert && select1Type !== '') {
 						if(warningMsg.length > 0) {
 							warningMsg += '. ';
