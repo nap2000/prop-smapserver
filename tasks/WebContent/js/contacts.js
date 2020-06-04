@@ -87,7 +87,7 @@ require([
 			scrollCollapse: true,
 		     ajax: "/api/v1/subscriptions?dt=true",
 			 select: true,
-			 rowId: 'email',
+			 rowId: 'id',
 		     columns: [
 		     	    { "data": "email" },
 			        { "data": "name" },
