@@ -201,6 +201,9 @@ require([
 
 			if (gCurrentMailOutIdx && gCurrentMailOutIdx >= 0) {
 				$('#import_mailoutpeople').modal("show");
+				$('.custom-file-input').val("");
+				$('#importMailoutPeopleLabel').html("");
+				$('#loadMailoutPeople')[0].reset();
 			} else {
 				alert(localise.set["mo_ns"]);
 			}
