@@ -82,6 +82,12 @@
         		</div>
 				<h2 class="lang overviewSection" data-lang="c_campaigns"></h2>
 	            <ul class="nav navbar-top-links navbar-right">
+					<li class="filtersShown">
+						<a href="#" id="hideFilters"><span class="lang" data-lang="mf_hc">h</span></a>
+					</li>
+					<li class="filtersHidden" style="display:none;">
+						<a href="#" id="showFilters"><span class="lang" data-lang="mf_sc">s</span></a>
+					</li>
 					<li class="dropdown">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
 							<span class="lang" data-lang="c_campaigns">m</span>
@@ -142,7 +148,7 @@
         </div>
 
 		<!-- Header Row -->
-		<div class="row wrapper border-bottom white-bg page-heading">
+		<div class="row wrapper border-bottom white-bg page-heading filtersShown">
 			<div class="col-sm-12">
 				<form class="form-inline" role="form">
 					<div class="col-sm-4 pt-4">
@@ -173,7 +179,7 @@
 		<div class="wrapper wrapper-content animated fadeInRight">
 
 			<!-- Header Row - Filtering goes here-->
-			<div class="row">
+			<div class="row filtersShown">
 				<div class="col-sm-12">
 					<div class="ibox float-e-margins">
 						<div class="ibox-content">

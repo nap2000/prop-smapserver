@@ -238,6 +238,21 @@ require([
 		$(('#m_retry')).click(function () {
 			sendUnsent(true);
 		});
+
+		/*
+	     * SHow and hide the controls
+	     */
+		$('#hideFilters').click(function(){
+			$('.filtersShown').hide();
+			$('.filtersHidden').show();
+			return false;
+		});
+
+		$('#showFilters').click(function(){
+			$('.filtersShown').show();
+			$('.filtersHidden').hide();
+			return false;
+		});
 	});
 
 	/*
