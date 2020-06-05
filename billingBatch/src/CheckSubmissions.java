@@ -184,7 +184,6 @@ public class CheckSubmissions {
 							FileUtils.forceMkdir(folder);	
 							
 							FileUtils.moveFile(oldFile, newFile);
-							System.out.println("        File moved to: " + newPath);
 						
 							// Update the upload event
 
