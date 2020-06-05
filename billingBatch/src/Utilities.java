@@ -1,7 +1,11 @@
 import java.io.File;
+import java.util.logging.Logger;
 
 public class Utilities {
 
+	private static Logger log =
+			 Logger.getLogger(Utilities.class.getName());
+	
 	public static void deleteDirectory(File d) throws Exception {
 		String[]entries = d.list();
 		for(String e: entries){
@@ -17,10 +21,10 @@ public class Utilities {
 	
 	public static void deleteFile(File f) throws Exception {
 		if(f.getAbsolutePath().startsWith("/smap/uploadedSurveys")) {
-			System.out.println("=========== deleting: " + f.getAbsolutePath());
+			log.info("=========== deleting: " + f.getAbsolutePath());
 			boolean success = f.delete();
 			if(!success) {
-				System.out.println("########### Error failed to delete: " + f.getAbsolutePath());
+				log.info("########### Error failed to delete: " + f.getAbsolutePath());
 			}
 		} else {
 			throw new Exception("Attempting to delete directory outside valid range");

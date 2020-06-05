@@ -2,10 +2,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Logger;
 
 
 public class Billing {
 
+	private static Logger log =
+			 Logger.getLogger(Billing.class.getName());
+	
 	/**
 	 * @param args
 	 */
@@ -24,7 +28,7 @@ public class Billing {
 			cd.check(sd, "/smap");
 			
 		} catch (ApplicationException e) {		
-			System.out.println("        " + e.getMessage());	
+			log.info("        " + e.getMessage());	
 		} catch (Exception e) {	
 			e.printStackTrace();
 		} finally {
