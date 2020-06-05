@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -19,10 +20,13 @@ import org.w3c.dom.NodeList;
 
 
 public class CheckDisk {
+	private static Logger log =
+			 Logger.getLogger(CheckDisk.class.getName());
+	
 	String device = null;
 	
 	public void check(Connection sd, String basePath) throws SQLException, ApplicationException, IOException {
-		System.out.println("Checking disk");
+		log.info("Checking disk");
 		
 		String sql = "select o.e_id as eId, o.id as oId, o.name as name, p.id as pId, s.ident as ident "
 				+ "from organisation o, project p, survey s "
@@ -49,7 +53,7 @@ public class CheckDisk {
 			File p = new File("/smap");
 			long pSize = p.getTotalSpace() / 1000000;	// MB
 			writeUsage(pstmtWrite, 0, 0, pSize, 0, 0, 0, 0);
-			System.out.println("Total usage: " + pSize);
+			log.info("Total usage: " + pSize);
 			
 			pstmt = sd.prepareStatement(sql);
 			ResultSet rs = pstmt.executeQuery();
@@ -71,7 +75,7 @@ public class CheckDisk {
 				
 				if(currentOrg >= 0 && oId != currentOrg) {
 					writeUsage(pstmtWrite, eId, currentOrg, pSize, uploadSize, mediaSize, templateSize, attachmentsSize);
-					System.out.println("Usage for organisation: " + currentOrgName + " : " 
+					log.info("Usage for organisation: " + currentOrgName + " : " 
 							+ uploadSize + " : " + mediaSize + " : " + templateSize + " ; " + attachmentsSize);
 					
 					uploadSize = 0;
@@ -100,7 +104,7 @@ public class CheckDisk {
 		
 			}
 			writeUsage(pstmtWrite, eId, currentOrg, pSize, uploadSize, mediaSize, templateSize, attachmentsSize);
-			System.out.println("Usage for organisation: " + currentOrgName + " : " + uploadSize + " : " + mediaSize + " : " + templateSize);
+			log.info("Usage for organisation: " + currentOrgName + " : " + uploadSize + " : " + mediaSize + " : " + templateSize);
 			
 			
 		} finally {
@@ -119,7 +123,7 @@ public class CheckDisk {
 		pstmt.setLong(5, mediaSize);
 		pstmt.setLong(6, templateSize);
 		pstmt.setLong(7, attachmentsSize);
-		System.out.println(pstmt.toString());
+		log.info(pstmt.toString());
 		pstmt.executeUpdate();
 	}
 	
@@ -161,16 +165,16 @@ public class CheckDisk {
 			int ueId = uploads.getInt("ue_id");
 			
 			if(sId == null) {
-				System.out.println("    Obsolete survey: " + fileName + " not moved");
+				log.info("    Obsolete survey: " + fileName + " not moved");
 			} else {	
 				
 				// Move the xml file
 				File oldFile = new File(basePath + "/uploadedSurveys/" + fileName);
 				
 				if(!oldFile.exists()) {
-					// System.out.println("    Deleted instance: " + fileName + " not moved");
+					// log.info("    Deleted instance: " + fileName + " not moved");
 				} else {
-					System.out.println("    Moving File:" + fileName + " survey Id: " + sId);
+					log.info("    Moving File:" + fileName + " survey Id: " + sId);
 				
 					String instanceDir = String.valueOf(UUID.randomUUID());
 					String surveyPath = basePath + "/uploadedSurveys/" +  sId;
@@ -185,7 +189,7 @@ public class CheckDisk {
 							FileUtils.forceMkdir(folder);	
 							
 							FileUtils.moveFile(oldFile, newFile);
-							System.out.println("        File moved to: " + newPath);
+							log.info("        File moved to: " + newPath);
 						
 							// Update the upload event
 
@@ -220,7 +224,7 @@ public class CheckDisk {
 			String name = n.getNodeName();
 			String content = n.getTextContent();
 			
-			//System.out.println("Node: " + name + " : " + content);
+			//log.info("Node: " + name + " : " + content);
 			// Device always comes before any attachments
 			if(name.equals("_device") || name.equals("device")) {
 				device = content;
@@ -250,11 +254,11 @@ public class CheckDisk {
 		File source = new File(sourceFile);
 		if(source.exists()) {
 			File target = new File(targetFile);
-			System.out.println("        Moving Attachment: " + sourceFile + " to " + targetFile);
+			log.info("        Moving Attachment: " + sourceFile + " to " + targetFile);
 			try {
 				FileUtils.moveFile(source, target);
 			} catch (Exception e) {
-				System.out.println("        Source file not found: " + sourceFile);
+				log.info("        Source file not found: " + sourceFile);
 			}
 		}
 	}
