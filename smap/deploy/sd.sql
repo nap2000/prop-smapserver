@@ -257,8 +257,8 @@ ALTER SEQUENCE autoupdate_questions_seq OWNER TO ws;
 
 create TABLE autoupdate_questions (
 	id integer DEFAULT NEXTVAL('autoupdate_questions_seq') CONSTRAINT pk_autoupdate_questions PRIMARY KEY,
-	q_id integer,
-	s_id integer
+	q_id integer references question(q_id) on delete cascade,
+	s_id integer references survey(s_id) on delete cascade
 );
 ALTER TABLE autoupdate_questions OWNER TO ws;
 
