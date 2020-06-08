@@ -1516,3 +1516,15 @@ create TABLE email_alerts (
 	alert_recorded TIMESTAMP WITH TIME ZONE
 );
 ALTER TABLE email_alerts OWNER TO ws;
+
+DROP SEQUENCE IF EXISTS autoupdate_questions_seq CASCADE;
+CREATE SEQUENCE autoupdate_questions_seq START 1;
+ALTER SEQUENCE autoupdate_questions_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS autoupdate_questions;
+create TABLE autoupdate_questions (
+	id integer DEFAULT NEXTVAL('autoupdate_questions_seq') CONSTRAINT pk_autoupdate_questions PRIMARY KEY,
+	q_id integer,
+	s_id integer
+);
+ALTER TABLE autoupdate_questions OWNER TO ws;
