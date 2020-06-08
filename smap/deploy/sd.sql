@@ -251,3 +251,21 @@ update organisation set ft_meta_menu = true where ft_meta_menu is null;
 
 alter table aws_async_jobs add column medical boolean;
 alter table language_codes add column transcribe_medical boolean;
+
+CREATE SEQUENCE autoupdate_questions_seq START 1;
+ALTER SEQUENCE autoupdate_questions_seq OWNER TO ws;
+
+create TABLE autoupdate_questions (
+	id integer DEFAULT NEXTVAL('autoupdate_questions_seq') CONSTRAINT pk_autoupdate_questions PRIMARY KEY,
+	q_id integer references question(q_id) on delete cascade,
+	s_id integer references survey(s_id) on delete cascade
+);
+ALTER TABLE autoupdate_questions OWNER TO ws;
+
+insert into autoupdate_questions (q_id, s_id) 
+     select q.q_id, f.s_id from question q, form f, survey s 
+     where q.f_id = f.f_id and f.s_id = s.s_id 
+     and not s.deleted and not s.blocked 
+     and q.parameters is not null and q.parameters like '%source=%' 
+     and (q.parameters like '%auto=yes%' or q.parameters like '%auto_annotate=yes%') 
+     and q_id not in (select q_id from autoupdate_questions);
