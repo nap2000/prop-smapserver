@@ -532,16 +532,16 @@ function getUserLocationsData(view, start_rec) {
 
 		 switch(outputView.type) {
 			 case "map":
-				 setMap(outputView, secondaryLayer);        // TODO
+				 setMap(outputView, secondaryLayer);
 				 break;
 			 case "table":
-				 setUserTableSurvey(outputView);                // TODO
+				 setUserTableSurvey(outputView);
 				 break;
 			 case "media":
-				 setUserMediaSurvey(outputView);                // TODO
+				 setUserMediaSurvey(outputView);
 				 break;
 			 case "graph":
-				 setUserGraphSurvey(outputView);                // TODO
+				 setUserGraphSurvey(outputView);
 				 break;
 		 }
 	 } else {
