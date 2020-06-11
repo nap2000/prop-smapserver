@@ -368,7 +368,12 @@ function loadFeatures(map, key, item, ext_g, bounds, layers, isPeriod, md) {
         	'internalProjection': new OpenLayers.Projection("EPSG:900913"),
         	'externalProjection': new OpenLayers.Projection("EPSG:4326")
 		}).read(features);
-	
+
+	var setLabels = false;
+	if(item.source === 'user') {
+		setLabels = true;
+	}
+
 	if(typeof featuresObj === "undefined" || typeof featuresObj === "null" || !featuresObj) {
 		console.log("Error: No features were retrieved from the server");
 		return;
@@ -421,15 +426,23 @@ function loadFeatures(map, key, item, ext_g, bounds, layers, isPeriod, md) {
                             pix = Math.min(feature.attributes.count, 8) + 8;
                             // Set the value to be processed by color lookup rule
                             var newValue = 0;
+                            var newLabel = '';
                             for(var i = 0; i < feature.cluster.length; i++) {
                                 newValue += feature.cluster[i].attributes.value;
+                                if(setLabels) {
+                                	if(newLabel.length > 0) {
+		                                newLabel += ', ';
+	                                }
+	                                newLabel +=  feature.cluster[i].attributes._label;
+                                }
                             }
                             feature.attributes.value = Math.round(newValue / feature.cluster.length);
+                            feature.attributes._label = newLabel;
                         } 
                         return pix;
                     },
                     count: function(feature) {
-                    	if(feature.cluster) {
+                    	if(feature.cluster && !feature.attributes._label) {
                     		return feature.attributes.count
 	                    } else if(feature.attributes._label) {
                     		return feature.attributes._label
@@ -483,12 +496,17 @@ function loadFeatures(map, key, item, ext_g, bounds, layers, isPeriod, md) {
 	if(typeof fn !== "undefined" && fn !== "none" && colour_lookup) {
 		styleMap.addUniqueValueRules("default", "value", colour_lookup);
 	}
-	
+
 	// Compute the bounds 
 	if(bounds) {
-		for (var i = 0; i < featuresObj.length; i++) {
+		var idx = 1;
+		for (var i = featuresObj.length - 1; i >= 0 ; i--) {
 			if(featuresObj[i].geometry) {
 				bounds.extend(featuresObj[i].geometry.getBounds());
+
+				if(setLabels && !featuresObj[i].attributes._label) {
+					featuresObj[i].attributes._label = idx++;
+				}
 			}
 		}
 	}
