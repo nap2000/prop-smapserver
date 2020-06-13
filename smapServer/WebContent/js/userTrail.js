@@ -341,7 +341,8 @@ function getData() {
 		endUtc = moment.utc(endDate);
 		
 	getTrailData(startUtc.valueOf(), endUtc.valueOf());
-	getSurveyLocations(startUtc.valueOf(), endUtc.valueOf());
+
+	getSurveyLocations(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD'));
 
 }
 function getTrailData(startDate, endDate) {
@@ -381,10 +382,11 @@ function getSurveyLocations(startDate, endDate) {
 	var projectId = globals.gCurrentProject,
 		userId = $('#user_list option:selected').val();
 
-	var url = '/surveyKPI/usertrail/surveys?projectId=' + projectId +
-		'&userId=' + userId +
-		'&startDate=' + startDate +
-		'&endDate=' + endDate;
+	var url = '/surveyKPI/items/user/' + userId
+		+ '?start_key=0'
+		+ '&dateId=0'
+		+ '&startDate=' + startDate
+		+ '&endDate=' + endDate;
 	
 	addHourglass();
 	$.ajax({
@@ -402,7 +404,7 @@ function getSurveyLocations(startDate, endDate) {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 	              return;  // Not an error
 			} else {
-				alert("Error: Failed to get user trail: " + err);
+				alert("Error: Failed to get survey locations: " + err);
 			}
 		}
 	});	
@@ -448,19 +450,19 @@ function showSurveyLocations() {
 	gSurveys = [];
 	
 	// Add points
-	for(i = 0; i < gSurveyLocations.surveys.length; i++) {
+	for(i = 0; i < gSurveyLocations.features.length; i++) {
 		
 		var f = new ol.Feature({
-			geometry: new ol.geom.Point(gSurveyLocations.surveys[i].coordinates),
-			name: gSurveyLocations.surveys[i].time
+			geometry: new ol.geom.Point(gSurveyLocations.features[i].geometry),
+			name: gSurveyLocations.features[i].properties['Survey Name']
 		});
 		//f.setStyle(iconStyle);
 		
 		gSurveys.push(f);
-		coords.push(gSurveyLocations.surveys[i].coordinates);
+		coords.push(gSurveyLocations.features[i].geometry);
 	}
 	
-	gSurveyLocationSource.addFeatures(gSurveys);
+	gSurveyLocationSource.addFeatures(gSurveyLocations.features);
 	
 	// TODO fit the extent to the combination of trail data and survey locations
 	gMap.getView().fit(gTrailSource.getExtent(), gMap.getSize());
