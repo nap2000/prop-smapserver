@@ -33,6 +33,7 @@ define({
     "m_view": "View",
     "m_attach": "Load Attachments",
     "m_modules": "Modules",
+    "m_lr": "Local Reports",
     "m_open": "Open",
     "m_new": "New",
     "m_import": "Import",
