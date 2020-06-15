@@ -28,13 +28,13 @@ define(['jquery', 'jquery_ui', 'localise', 'common',
         'globals','app/script', 'rmm', 'app/neo_model', 'moment', 'app/extended_model'], 
 		function($, ui, lang, common, globals, script, rmm, neo_model, moment, extended_model) {
 	
-var hstart = '<li class="ui-state-default pSmall" id="p';
+var hstart = '<div class="col mb-4 ui-state-default pSmall" id="p';
 var hstart2 = '">';
-var hend = '</li>';
+var hend = '</dev>';
 
-var hdiv1 = '<div>';
+var hdiv1 = '<div class="card">';
 var hdiv2 = '</div>';
-var hcont = '<div class="pContent">';
+var hcont = '<div class="card-body pContent">';
 
 var hspan1 = '<span class="panel_title">';
 var hspan2 = '</span>';
@@ -129,6 +129,10 @@ $(document).ready(function() {
     $('.db_settings_add').click(function() { 
     	addNewPanel($(this).val());
     });
+
+	$('#refreshMenu').click(function() {
+		refreshAnalysisData();
+	});
 
 	 // Initialse the settings dialog
 	 $('#p_settings').dialog(
@@ -389,7 +393,7 @@ function refreshPanels() {
 	//dbList = $( "#db_list" ).sortable("toArray"),  ndbl
 	views = globals.gSelector.getViews();
 	
-	$panels = $('#panels');
+	$panels = $('#panel-container');
 	$panels.empty();	// Remove existing panels
 	
 	for(i = 0; i < views.length; i++) {
@@ -483,7 +487,7 @@ function addNewPanel(type) {
 			groupType:"normal", layerId:"-1"};		
 	gExpandedPanelSeq = idx;	// Make sure this panel is shown as expanded when the panels are initially refreshed. This happens after panel creation
 
-	var $panels = $('#panels');
+	var $panels = $('#panel-container');
 	createPanel(idx, $panels, views[idx].title, views[idx].sName, views[idx].subject_type);
 	setPanelType(views[idx].type, idx, views[idx].timeGroup, views[idx].qId, views[idx].subject_type);
 	addTriggers();
@@ -543,19 +547,19 @@ function createPanel(idx, $panels, title, surveyName, subject_type) {
 	h[++i] = idx;
 	h[++i] = hstart2;
 	h[++i] = hdiv1;
-	h[++i] = hdel1;
-	h[++i] = idx;
-	h[++i] = hdel2;
-	h[++i] = hspan1;
-	h[++i] = title;
-	h[++i] = hspan2;
-	h[++i] = hexp1;
-	h[++i] = idx;
-	h[++i] = hexp2;
-	h[++i] = hset1;
-	h[++i] = idx;
-	h[++i] = hset2;
-	h[++i] = hdiv2;
+	//h[++i] = hdel1;
+	//h[++i] = idx;
+	//h[++i] = hdel2;
+	//h[++i] = hspan1;
+	//h[++i] = title;
+	//h[++i] = hspan2;
+	//h[++i] = hexp1;
+	//h[++i] = idx;
+	//h[++i] = hexp2;
+	//h[++i] = hset1;
+	//h[++i] = idx;
+	//h[++i] = hset2;
+	//h[++i] = hdiv2;
 	h[++i] = hcont;
 	h[++i] = hdiv2;
 	h[++i] = hend;
