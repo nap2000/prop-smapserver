@@ -39,14 +39,11 @@ requirejs.config({
         common: '../../../../js/app/common',
         globals: '../../../../js/app/globals',
         lang_location: '../../../../js',
-        inspinia: '../../../../js/libs/wb/inspinia',
-        metismenu: '../../../../js/libs/wb/plugins/metisMenu/jquery.metisMenu',
         slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll.min'
     },
     shim: {
         'common': ['jquery'],
         'inspinia': ['jquery'],
-        'metismenu': ['jquery'],
         'slimscroll': ['jquery']
 
     }
@@ -59,8 +56,6 @@ require([
     'globals',
     'moment',
     'app/surveyManagement',
-    'inspinia',
-    'metismenu',
     'slimscroll',
     'pace'
 
