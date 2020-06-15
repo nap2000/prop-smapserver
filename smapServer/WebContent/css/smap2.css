@@ -1,3 +1,4 @@
+/* Navigation */
 .navbar-smap .navbar-brand {
     background-color: #2C3D29;
     border-color: #e7e7e7;
@@ -74,3 +75,53 @@ button.bg-navbar-smap:hover,
 button.bg-navbar-smap:focus {
     background-color: #1d2124 !important;
 }
+
+/* Field Analysis Cards */
+.pSidebar {
+    height: 100%;
+    width: 25%;
+    display: none;
+    float: right;
+    background: white;
+    overflow: auto;
+    border-style: solid;
+    border-color: grey;
+    border-width: thin;
+    position: absolute;
+    top:0;
+    right:0;
+    z-index: 2000;
+}
+
+.pLarge .pSidebar img {
+    height: 48px
+}
+
+.pSmall .pSidebar img {
+    height: 24px;
+}
+
+.pSidebar label.ui-button, .pSidebar button, .pSidebar .pfoot form input {
+    width: 90%;
+    margin: auto;
+    margin-left: 5px;
+    max-width: none;
+}
+
+.pSidebar h3 {
+    color: #FF5050;
+    clear: both;
+}
+
+.pSidebar input {
+    float: left;
+}
+
+#panel-container {
+    overflow: auto;
+    /*position: relative;*/
+    width: 100%;
+    height: 100%;
+    padding: 0;
+}
+
