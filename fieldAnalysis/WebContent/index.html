@@ -93,20 +93,19 @@
 
 	<!-- Portal -->
 	<div class="container" id="container">
-		
+
 		<div id="main" role="main">
 			<!-- Analysis Panels -->
 			<div style="width:210px; height:32px; float:left; font-size:16px">
 				<label class="lang" data-lang="c_project" for="project_name" style="width:200px; margin-left:5px;">Select Project:</label>
 				<select class="project_list" id="project_name" style="width:200px; margin-left:5px; font-size:16px;"></select>
 			</div>
-			<button type="button" class="db_settings_add ui-priority-primary ui-corner-all hover" value="graph"><img src="img/graph_ico.png" width="32" height="32"/><br/><span class="lang" data-lang="c_graph">Graph</span></button>
-			<button type="button" class="db_settings_add ui-priority-primary ui-corner-all hover" value="map"><img src="img/map_ico2.png" width="32" height="32"/><br/><span class="lang" data-lang="c_map">Map</span></button>
-			<button type="button" class="db_settings_add ui-priority-primary ui-corner-all hover" value="table"><img src="img/table_ico.png" width="32" height="32"/><br/><span class="lang" data-lang="c_table" >Table</span></button>
-			<button type="button" class="db_settings_add ui-priority-primary ui-corner-all hover" value="media"><img src="img/camera.png" width="32" height="32"/><br/><span class="lang" data-lang="c_images">Images</span></button>
-			<div id="panel-container">		
-				<ul id="panels">			
-				</ul>
+			<button type="button" class="db_settings_add btn btn-default" value="graph"><img src="img/graph_ico.png" width="32" height="32"/><br/><span class="lang" data-lang="c_graph">Graph</span></button>
+			<button type="button" class="db_settings_add btn btn-default" value="map"><img src="img/map_ico2.png" width="32" height="32"/><br/><span class="lang" data-lang="c_map">Map</span></button>
+			<button type="button" class="db_settings_add btn btn-default" value="table"><img src="img/table_ico.png" width="32" height="32"/><br/><span class="lang" data-lang="c_table" >Table</span></button>
+			<button type="button" class="db_settings_add btn btn-default" value="media"><img src="img/camera.png" width="32" height="32"/><br/><span class="lang" data-lang="c_images">Images</span></button>
+			<div id="panel-container" class="row row-cols-1 row-cols-md-2">
+
 			</div>
 						
 			<img id="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
