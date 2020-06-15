@@ -483,19 +483,19 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
                 hSel = [],
                 selIdx = -1;
 
-            h[++idx] = '<table class="table" style="table-layout:fixed;">';
+            h[++idx] = '<table class="table">';
             h[++idx] = '<thead>';
             h[++idx] = '<tr>';
-            h[++idx] = '<th class="col-md-1 select_all">';
+            h[++idx] = '<th class="col-xs-1 select_all">';
             h[++idx] = '<input type="checkbox" name="controls" value="-1"></td>';    // select all
             h[++idx] = '</th>';
-            h[++idx] = '<th class="col-md-4">' + localise.set["c_name"] + '</th>';
-            h[++idx] = '<th class="col-md-1">' + localise.set["c_version"] + '</th>';
-            h[++idx] = '<th class="col-md-1">' + localise.set["c_block"] + '</th>';
-            h[++idx] = '<th class="col-md-2">' + localise.set["sr_g"] + '</th>';
-            h[++idx] = '<th class="col-md-1">' + localise.set["c_replace"] + '</th>';
-            h[++idx] = '<th class="col-md-1">' + localise.set["n_share"] + '</th>';
-            h[++idx] = '<th class="col-md-1">' + localise.set["c_download"] + '</th>';
+            h[++idx] = '<th class="col-xs-4">' + localise.set["c_name"] + '</th>';
+            h[++idx] = '<th class="col-xs-1">' + localise.set["c_version"] + '</th>';
+            h[++idx] = '<th class="col-xs-1">' + localise.set["c_block"] + '</th>';
+            h[++idx] = '<th class="col-xs-2">' + localise.set["sr_g"] + '</th>';
+            h[++idx] = '<th class="col-xs-1">' + localise.set["c_replace"] + '</th>';
+            h[++idx] = '<th class="col-xs-1">' + localise.set["n_share"] + '</th>';
+            h[++idx] = '<th class="col-xs-1">' + localise.set["c_download"] + '</th>';
             h[++idx] = '</tr>';
             h[++idx] = '</thead>';
             h[++idx] = '<tbody class="table-striped">';
