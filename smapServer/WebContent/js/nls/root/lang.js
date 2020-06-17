@@ -852,7 +852,7 @@ define({
 	"ed_mat": "Medical Audio Type",
 	"ed_mat_c": "Conversation",
 	"ed_mat_d": "Dictation",
-    "ed_al2": "Use in oversight forms to automatically annotate images, audio and video",
+    "ed_al2": "Use in oversight forms to automatically annotate or translate text, images, audio and video",
 	"ed_am": "Medical",
 	"ed_am2": "Use when transcribing audio that contains medical terms",
     "ed_at": "GPS Accuracy Threshold",
