@@ -124,16 +124,20 @@ require([
         });
 
         $('#addReport').click(function(){
-            $('#publish_form')[0].reset();
-            $('#e_tz').val(globals.gTimezone);
+        	if($('#publicPanel').hasClass('show')) {
+		        $('#publish_form')[0].reset();
+		        $('#e_tz').val(globals.gTimezone);
 
-            $('.role_select_roles').empty()
-            getSurveyRoles($('#survey').val(), undefined, true);
+		        $('.role_select_roles').empty()
+		        getSurveyRoles($('#survey').val(), undefined, true);
 
-            // Set button to create
-            $('#publishReport').show();
-            $('#saveReport').hide();
-            $('#publish_popup').modal("show");
+		        // Set button to create
+		        $('#publishReport').show();
+		        $('#saveReport').hide();
+		        $('#publish_popup').modal("show");
+	        } else if($('#customPanel').hasClass('show')) {
+        		alert('yo');
+	        }
 		});
 
         $('#publishReport').click(function () {
@@ -529,7 +533,9 @@ require([
 	            tab[++idx] = '</td>';
 
                 tab[++idx] = '<td>';			// Copy Link
-                tab[++idx] = '<button type="button" class="btn btn-default has_tt copyLink" title="Copy Link" value="';
+                tab[++idx] = '<button type="button" class="btn btn-default has_tt copyLink" title="';
+                tab[++idx] = localise.set["c_cl"];
+                tab[++idx] = '" value="';
                 tab[++idx] = i;
                 tab[++idx] = '"><i class="fa fa-share-alt"></i></button>';
                 tab[++idx] = '</td>';
@@ -537,7 +543,7 @@ require([
                 tab[++idx] = '<td>';
                 tab[++idx] = '<div class="dropdown">';
                 tab[++idx] = '<button id="dropdownMenu' + i + '" class="btn btn-default dropdown-toggle report_action" data-toggle="dropdown"  type="button" aria-haspopup="true" aria-expanded="false">';
-                tab[++idx] = localise.set["c_action"] + ' <span class="caret"></span>';
+                tab[++idx] = localise.set["c_action"];
                 tab[++idx] = '</button>';
                 tab[++idx] = '<ul class="dropdown-menu" aria-labelledby="dropdownMenu' + i + '">';
                     tab[++idx] = '<li><a class="repGenerate" href="#">' + localise.set["c_generate"] + '</a></li>';
@@ -561,7 +567,8 @@ require([
          */
         $('.has_tt').tooltip();
         $('.copyLink').click(function () {
-            var copyText = $(this).closest('tr').data("link");
+        	var $this = $(this);
+            var copyText = $this.closest('tr').data("link");
 
             // From https://stackoverflow.com/questions/22581345/click-button-copy-to-clipboard-using-jquery
             var $temp = $("<input>");
@@ -569,10 +576,13 @@ require([
 	        $temp.val(copyText).select();
             document.execCommand("copy");
 
-            $(this).prop('title', localise.set["c_c"] + ": " + copyText).tooltip('fixTitle').tooltip('show');
+            $this.attr('title', localise.set["c_c"] + ": " + copyText).tooltip('_fixTitle').tooltip('show');
             $temp.remove();
 
         });
+		$('.copyLink').on('hidden.bs.tooltip', function () {
+			$(this).attr('title', localise.set["c_cl"]).tooltip('_fixTitle');
+		})
         /*
         $('.copyLinkOdata').click(function () {
             var $this = $(this);
