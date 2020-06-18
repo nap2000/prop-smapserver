@@ -41,16 +41,14 @@ requirejs.config({
     locale: gUserLocale,
     paths: {
     	app: '../app',
-    	jquery: '../../../../js/libs/jquery-2.1.1',
+	    jquery: 'jquery',
         moment: 'moment-with-locales.min',
        	lang_location: '../'
     },
     shim: {
     	'app/common': ['jquery'],
         'app/data': ['jquery'],
-    	'bootstrap.min': ['jquery'],
     	'icheck': ['jquery'],
-       	'inspinia': ['jquery'],
     	'metismenu': ['jquery'],
     	'slimscroll': ['jquery'],
         'bootstrap-datetimepicker.min': ['moment']
@@ -58,27 +56,26 @@ requirejs.config({
 });
 
 require([
-         'jquery', 
-         'bootstrap.min',
+         'jquery',
          'app/common',
          'app/globals',
          'app/localise',
          'bootstrapfileinput',
          'moment',
-         'inspinia',
          'metismenu',
          'slimscroll',
          'pace',
          'app/data',
          'icheck',
          'bootstrap-datetimepicker.min'
-         ], function($, bootstrap, common, globals, localise, bsfi, moment) {
+         ], function($, common, globals, localise, bsfi, moment) {
 
 	$(document).ready(function() {
 
         setCustomReports();			// Apply custom javascript
-		setupUserProfile();
+		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
+		$("#side-menu").metisMenu();
 
 		// Get the user details
 		globals.gIsAdministrator = false;

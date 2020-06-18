@@ -6,25 +6,20 @@
 
     <title class="lang" data-lang="m_reports">rep</title>
 
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.v4.min.css" rel="stylesheet">
     <link href="/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/css/wb/animate.css" rel="stylesheet">
     <link href="/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link href="/css/wb/plugins/iCheck/custom.css" rel="stylesheet">
-
-    <link href="/css/wb/animate.css" rel="stylesheet">
-    <link href="/css/wb/style.css" rel="stylesheet">
-    <link href="/js/libs/DataTables/datatables.min.css" rel="stylesheet">
-    <link href="/js/libs/DataTables/Select/css/select.bootstrap.min.css" rel="stylesheet">
-    <link href="/css/dataTables.fontAwesome.css" rel="stylesheet">
+    <link href="/css/wb/style.v2.9.1.css" rel="stylesheet">
     <link href="/css/smap-wb.css" rel="stylesheet">
 
-    <script> if (!window.console) console = {
-        log: function () {
-        }
-    }; </script>
+    <script> if (!window.console) console = {log: function() {}}; </script>
 
     <script src="/js/libs/modernizr.js"></script>
     <script src="/js/app/theme.js"></script>
+    <script src="/js/libs/jquery-2.1.1.js"></script>
+    <script src="/js/libs/bootstrap.bundle.v4.min.js"></script>
     <script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
 
     <script data-main="js/reports" src="/js/libs/require.js"></script>
@@ -122,11 +117,10 @@
             </div>
             <div class="col-sm-5">
                 <div class="row">
-                    <form role="form" class="form-horizontal heading-element">
-                        <label class="lang col-sm-4 control-label" data-lang="c_project"
-                               for="project_name">project</label>
-                        <div class="col-sm-8">
-                            <select class="project_list form-control" id="project_name"></select>
+                    <form role="form" class="form-inline">
+                        <div class="form-group row">
+                            <label class="lang col-md-4"  data-lang="c_project"  for="project_name"></label>
+                            <select class="project_list form-control form-control-lg col-md-8" id="project_name"></select>
                         </div>
                     </form>
                 </div>
@@ -142,21 +136,37 @@
                             <div id="main_alert" style="display:none; word-wrap:break-word;" class="alert alert-success" role="alert"></div>
                         </div>
                         <div class="ibox-content">
-                            <div id="table-view" class="tab-pane active">
-                                <div class="panel-body">
-                                    <div class="table-responsive" style="min-height: 300px;">
-                                        <table id="reports_table" class="table table-responsive table-striped">
-                                            <thead>
-                                            <tr>
-                                                <th class="lang" data-lang="m_report">report</th>
-                                                <th class="lang" data-lang="c_survey">survey</th>
-                                                <th class="lang" data-lang="c_link">generate</th>
-                                                <th class="lang" data-lang="c_action">action</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="report_list">
-                                            </tbody>
-                                        </table>
+                            <div class="tabs-container">
+
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li id="publicTab" class="nav-item"><a class="nav-link active" data-toggle="tab" role="tab" href="#publicPanel"><span class="lang" data-lang="m_reports_public"></span></a></li>
+                                    <li id="customTab" class="nav-item"><a class="nav-link" data-toggle="tab" role="tab" href="#customPanel"><span class="lang" data-lang="sr_cr"></span></a></li>
+                                </ul>
+
+                                <div class="tab-content">
+
+                                    <div id="publicPanel" class="tab-pane show fade active" role="tabpanel">
+                                        <div class="panel-body">
+                                            <div class="table-responsive" style="min-height: 300px;">
+                                                <table id="reports_table" class="table table-responsive table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="lang" data-lang="m_report">report</th>
+                                                        <th class="lang" data-lang="c_survey">survey</th>
+                                                        <th class="lang" data-lang="c_link">generate</th>
+                                                        <th class="lang" data-lang="c_action">action</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="report_list">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div id="customPanel" class="tab-pane fade" role="tabpanel">
+
                                     </div>
                                 </div>
                             </div>
@@ -164,7 +174,6 @@
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 </div>
 
