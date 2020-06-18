@@ -511,22 +511,25 @@ require([
 		if(gReportList) {
             for (i = 0; i < gReportList.length; i++) {
                 var action = gReportList[i].action_details;
+	            var link = location.origin + "/surveyKPI/action/" + gReportList[i].ident;
 
                 tab[++idx] = '<tr data-idx="';
                 tab[++idx] = i;
-                tab[++idx] = '">';
+                tab[++idx] = '" data-link="';
+                tab[++idx] = link;
+	            tab[++idx] = '">';
 
-                tab[++idx] = '<td>';
-                tab[++idx] = action.surveyName;
-                tab[++idx] = '</td>';
+	            tab[++idx] = '<td>';			// Anonymous Link
+	            tab[++idx] = '<a type="button" class="btn btn-block btn-primary" href="';
+	            tab[++idx] = link;
+	            tab[++idx] = '">';
+	            tab[++idx] = action.name;
+	            tab[++idx] = '</a>';
+	            tab[++idx] = '</td>';
 
-                tab[++idx] = '<td>';			// Report Name
-                tab[++idx] = action.name;
-                tab[++idx] = '</td>';
-
-                tab[++idx] = '<td class="thelink">';			// Anonymous Link
-                tab[++idx] = location.origin + "/surveyKPI/action/" + gReportList[i].ident;
-                tab[++idx] = '</td>';
+	            tab[++idx] = '<td>';
+	            tab[++idx] = action.surveyName;
+	            tab[++idx] = '</td>';
 
                 tab[++idx] = '<td>';			// Copy Link
                 tab[++idx] = '<button type="button" class="btn btn-default has_tt copyLink" title="Copy Link" value="';
@@ -561,15 +564,15 @@ require([
          */
         $('.has_tt').tooltip();
         $('.copyLink').click(function () {
-            var copyText = $(this).closest('tr').find('.thelink').get(0);
+            var copyText = $(this).closest('tr').data("link");
 
             // From https://stackoverflow.com/questions/22581345/click-button-copy-to-clipboard-using-jquery
             var $temp = $("<input>");
             $("body").append($temp);
-            $temp.val($(copyText).text()).select();
+	        $temp.val(copyText).select();
             document.execCommand("copy");
 
-            $(this).prop('title', localise.set["c_c"] + ": " + $(copyText).text()).tooltip('fixTitle').tooltip('show');
+            $(this).prop('title', localise.set["c_c"] + ": " + copyText).tooltip('fixTitle').tooltip('show');
             $temp.remove();
 
         });
