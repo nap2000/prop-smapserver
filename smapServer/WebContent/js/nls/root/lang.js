@@ -9,6 +9,7 @@ define({
     "m_reports_org": "Organisation Reports",
     "m_reports_leg": "Legacy Reports",
     "m_reports_new": "New Reports",
+    "m_reports_public": "Public Reports",
     "m_refresh": "Refresh",
     "m_email_unsent": "Email Unsent",
 	"m_email_gen": "Generate Links",
