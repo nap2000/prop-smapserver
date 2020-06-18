@@ -3,6 +3,7 @@ define({
     "m_admin": "Admin",
     "m_tm": "Forms",
     "m_analysis": "Analysis",
+    "m_report": "Report",
     "m_reports": "Reports",
     "m_reports_def": "Default Reports",
     "m_reports_org": "Organisation Reports",
@@ -66,6 +67,7 @@ define({
     // Common
     "c_api_builder": "API Builder",
     "c_api": "API",
+    "c_link": "Link",
     "c_links": "Links",
     "c_audit": "Audit",
     "c_url": "URL",
