@@ -172,6 +172,7 @@ require([
         setCustomManage();
 	    setupUserProfile(true);
         localise.setlang();		// Localise HTML
+        $("#side-menu").metisMenu();
         userDefaults();
 
         // Set page defaults
