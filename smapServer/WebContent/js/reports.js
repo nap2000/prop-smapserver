@@ -124,9 +124,9 @@ require([
         });
 
         $('#addReport').click(function(){
+	        $('#e_tz').val(globals.gTimezone);
         	if($('#publicPanel').hasClass('show')) {
 		        $('#publish_form')[0].reset();
-		        $('#e_tz').val(globals.gTimezone);
 
 		        $('.role_select_roles').empty()
 		        getSurveyRoles($('#survey').val(), undefined, true);
@@ -136,7 +136,14 @@ require([
 		        $('#saveReport').hide();
 		        $('#publish_popup').modal("show");
 	        } else if($('#customPanel').hasClass('show')) {
-        		alert('yo');
+		        $('#custom_form')[0].reset();
+
+		        addCustomReportTypes();
+
+		        // Set button to create
+		        $('#customReport').show();
+		        $('#saveCustomReport').hide();
+		        $('#custom_popup').modal("show");
 	        }
 		});
 
@@ -834,7 +841,7 @@ require([
 			h = [];
 
 			for(i = 0; i < gConfig.length; i++) {
-				h[++idx] = '<div class="form-group">';
+				h[++idx] = '<div class="form-group row">';
 
 				// Label
 				h[++idx] = '<label for="param_';
@@ -931,6 +938,18 @@ require([
         var reportType = $('#reportType').val();
         $('.rt_dependent').hide();
         $('.' + reportType).show();
+    }
+
+    function addCustomReportTypes() {
+
+    	var hostname = location.hostname,
+		    h = [],
+		    idx = -1;
+
+	    $('#customType').empty();
+	    if(hostname == 'tdh.smap.com.au' || hostname === 'localhost') {
+		    $('#customType').html('<option value="dr">Daily</option><option value="mbr">Master Beneficiary</option>');
+	    }
     }
 
 });
