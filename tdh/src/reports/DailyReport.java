@@ -1,7 +1,6 @@
-package tdh;
+package reports;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+
 
 /*
 This file is part of SMAP.
@@ -22,57 +21,30 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
-import org.apache.poi.xddf.usermodel.PresetColor;
-import org.apache.poi.xddf.usermodel.XDDFColor;
-import org.apache.poi.xddf.usermodel.XDDFShapeProperties;
-import org.apache.poi.xddf.usermodel.XDDFSolidFillProperties;
-import org.apache.poi.xddf.usermodel.chart.AxisPosition;
-import org.apache.poi.xddf.usermodel.chart.ChartTypes;
-import org.apache.poi.xddf.usermodel.chart.XDDFBarChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFCategoryAxis;
-import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFChartLegend;
-import org.apache.poi.xddf.usermodel.chart.XDDFDataSource;
-import org.apache.poi.xddf.usermodel.chart.XDDFDataSourcesFactory;
-import org.apache.poi.xddf.usermodel.chart.XDDFSeriesAxis;
-import org.apache.poi.xddf.usermodel.chart.XDDFValueAxis;
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
-import org.apache.poi.xwpf.usermodel.XWPFChart;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTNumDataSource;
 import org.smap.sdal.Utilities.Authorise;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
+import org.smap.sdal.Utilities.ResultsDataSource;
 import org.smap.sdal.Utilities.SDDataSource;
-import org.smap.sdal.managers.MiscPDFManager;
-
-/*
- * Creates a PDF
- * HTML Fragments 
- *   <h3>  - Use for group Labels
- *   .group - group elements
- *   .hint - Hints
- */
+import data.DailyReportsManager;
+import model.DailyReportsConfig;
+import model.ReportColumn;
+import model.ReportMultiColumn;
 
 
 @Path("/report/daily")
@@ -83,11 +55,11 @@ public class DailyReport extends Application {
 	private static Logger log =
 			Logger.getLogger(DailyReport.class.getName());
 
-
 	@GET
 	@Path("/xls")
-	@Produces("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	//@Produces("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 	public Response getMonthly (@Context HttpServletRequest request,
+			@QueryParam("tz") String tz,
 			@Context HttpServletResponse response) {
 
 		String connectionString = "tdh - daily report - xls";
@@ -97,15 +69,49 @@ public class DailyReport extends Application {
 		a.isAuthorised(sd, request.getRemoteUser());		
 		// End Authorisation 
 
+		Connection cResults = null;
 		try {
 			Locale locale = new Locale(GeneralUtilityMethods.getUserLanguage(sd, request, request.getRemoteUser()));
 			ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);
 
+			cResults = ResultsDataSource.getConnection(connectionString);	
+			
+			// Develop
+			DailyReportsConfig config = new DailyReportsConfig();
+			config.sIdent = "s133_4054";
+			config.dateName = "date";
+			config.columns = new ArrayList<> ();
+			config.columns.add(new ReportColumn("activity", "Activity"));
+			config.columns.add(new ReportColumn("activityintheday", "Activity for the day"));
+
+			config.bars = new ArrayList<> ();
+			ReportMultiColumn rmc = new ReportMultiColumn();
+			rmc.name = "girls";
+			rmc.title = "Girls";
+			rmc.columns =  new ArrayList<> ();
+			for(int i = 1; i < 12; i++) {
+				rmc.columns.add("girls_" + i);
+			}
+			config.bars.add(rmc);
+			rmc = new ReportMultiColumn();
+			rmc.name = "boys";
+			rmc.title = "Boys";
+			rmc.columns =  new ArrayList<> ();
+			for(int i = 1; i < 12; i++) {
+				rmc.columns.add("boys_" + i);
+			}
+			config.bars.add(rmc);
+			// End Develop
+			
+			DailyReportsManager drm = new DailyReportsManager(localisation, tz);
+			drm.getDailyReport(sd, cResults, config, 2020, 5);
+			
 		}  catch (Exception e) {
 			log.log(Level.SEVERE, "Exception", e);
 		} finally {
 
 			SDDataSource.closeConnection(connectionString, sd);	
+			ResultsDataSource.closeConnection(connectionString, cResults);	
 
 		}
 		return Response.ok("").build();
