@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>tdh</name>
+	<name>customReports</name>
 	<comment></comment>
 	<projects>
 		<project>sdDAL-P</project>
