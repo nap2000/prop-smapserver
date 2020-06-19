@@ -269,3 +269,20 @@ insert into autoupdate_questions (q_id, s_id)
      and q.parameters is not null and q.parameters like '%source=%' 
      and (q.parameters like '%auto=yes%' or q.parameters like '%auto_annotate=yes%') 
      and q_id not in (select q_id from autoupdate_questions);
+ 
+ -- Custom reports
+CREATE SEQUENCE custom_report_type_seq START 1;
+ALTER SEQUENCE custom_report_type_seq OWNER TO ws;
+
+CREATE TABLE custom_report_type (
+	id integer DEFAULT NEXTVAL('custom_report_type_seq') CONSTRAINT pk_custom_report_type PRIMARY KEY,
+	name text,
+	config text								-- Custom report columns as json object
+	);
+ALTER TABLE custom_report_type OWNER TO ws;
+
+ alter table custom_report add column p_id integer REFERENCES project(id) ON DELETE CASCADE;
+ alter able custom_report drop column type;
+ alter table custom_report add column type_id integer REFERENCES custom_report_type(id) ON DELETE CASCADE;
+ drop index custom_report_name;
+ CREATE UNIQUE INDEX custom_report_name ON custom_report(p_id, name);
