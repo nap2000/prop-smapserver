@@ -75,7 +75,7 @@ import org.smap.sdal.managers.MiscPDFManager;
  */
 
 
-@Path("/report")
+@Path("/report/daily")
 public class DailyReport extends Application {
 
 	Authorise a = new Authorise(null, Authorise.ORG);
@@ -85,11 +85,12 @@ public class DailyReport extends Application {
 
 
 	@GET
-	@Produces("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+	@Path("/xls")
+	@Produces("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 	public Response getMonthly (@Context HttpServletRequest request,
 			@Context HttpServletResponse response) {
 
-		String connectionString = "tdh - daily report";
+		String connectionString = "tdh - daily report - xls";
 
 		// Authorisation - Access
 		Connection sd = SDDataSource.getConnection(connectionString);	
@@ -100,87 +101,6 @@ public class DailyReport extends Application {
 			Locale locale = new Locale(GeneralUtilityMethods.getUserLanguage(sd, request, request.getRemoteUser()));
 			ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);
 
-			XWPFDocument doc = new XWPFDocument();
-			XWPFParagraph p1 = doc.createParagraph();
-
-			p1.setWordWrapped(true);
-			p1.setSpacingAfterLines(1);
-
-			XWPFRun r1 = p1.createRun();
-			String t1 = "Sample Paragraph Post. is a sample Paragraph post. peru-duellmans-poison-dart-frog.";
-			r1.setText(t1);
-			r1.setText("");
-			r1.setText("");
-
-			//create table
-			XWPFTable table = doc.createTable();
-			table.setWidth("100.00%");
-
-			//create first row
-			XWPFTableRow tableRowOne = table.getRow(0);
-			tableRowOne.getCell(0).setText("col one, row one");
-			tableRowOne.addNewTableCell().setText("col two, row one");
-			tableRowOne.addNewTableCell().setText("col three, row one");
-
-			// chart
-			XWPFChart chart = doc.createChart();
-			
-			XDDFChartLegend legend = chart.getOrAddLegend();
-
-            // Use a category axis for the bottom axis.
-            XDDFCategoryAxis bottomAxis = chart.createCategoryAxis(AxisPosition.BOTTOM);
-            bottomAxis.setTitle("x"); // https://stackoverflow.com/questions/32010765
-			XDDFValueAxis leftAxis = chart.createValueAxis(AxisPosition.LEFT);
-            leftAxis.setTitle("f(x)");
-
-            //XDDFDataSource<Double> xs = XDDFDataSourcesFactory..fromNumericCellRange(sheet, new CellRangeAddress(0, 0, 0, NUM_OF_COLUMNS - 1));
-            //XDDFNumericalDataSource<Double> ys1 = XDDFDataSourcesFactory.fromNumericCellRange(sheet, new CellRangeAddress(1, 1, 0, NUM_OF_COLUMNS - 1));
-            //XDDFNumericalDataSource<Double> ys2 = XDDFDataSourcesFactory.fromNumericCellRange(sheet, new CellRangeAddress(2, 2, 0, NUM_OF_COLUMNS - 1));
-
-            XDDFChartData data = chart.createData(ChartTypes.BAR, bottomAxis, leftAxis);
-            //XDDFChartData.Series series1 = data.addSeries(xs, ys1);
-            //series1.setTitle("2x", null); // https://stackoverflow.com/questions/21855842
-            //XDDFChartData.Series series2 = data.addSeries(xs, ys2);
-            //series2.setTitle("3x", null);
-
-            // in order to transform a bar chart into a column chart, you just need to change the bar direction
-            XDDFBarChartData bar = (XDDFBarChartData) data;
-            //bar.setBarDirection(BarDirection.COL);
-            // looking for "Stacked Bar Chart"? uncomment the following line
-            // bar.setBarGrouping(BarGrouping.STACKED);
-
-            solidFillSeries(data, 0, PresetColor.TURQUOISE);
-            solidFillSeries(data, 1, PresetColor.BLUE);
-
-            
-			chart.plot(data);
-			// write to a docx file
-			GeneralUtilityMethods.setFilenameInResponse("report.docx", response);
-			ServletOutputStream fo = null;
-			try {
-				// create .docx file
-				fo = response.getOutputStream();
-
-				// write to the .docx file
-				doc.write(fo);
-			} catch (IOException e) {
-			} finally {
-				if (fo != null) {
-					try {
-						fo.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				if (doc != null) {
-					try {
-						doc.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-
 		}  catch (Exception e) {
 			log.log(Level.SEVERE, "Exception", e);
 		} finally {
@@ -190,17 +110,5 @@ public class DailyReport extends Application {
 		}
 		return Response.ok("").build();
 	}
-	
-	 private static void solidFillSeries(XDDFChartData data, int index, PresetColor color) {
-	        XDDFSolidFillProperties fill = new XDDFSolidFillProperties(XDDFColor.from(color));
-	        XDDFChartData.Series series = data.getSeries().get(index);
-	        XDDFShapeProperties properties = series.getShapeProperties();
-	        if (properties == null) {
-	            properties = new XDDFShapeProperties();
-	        }
-	        //properties.setFillProperties(fill);
-	        series.setShapeProperties(properties);
-	    }
-
 
 }

@@ -25,6 +25,7 @@ if (Modernizr.localstorage) {
 } 
 
 var gReportList = [];
+var gReportTypeList = [];
 var gConfig;
 var gReportIdx;
 var gForm = 0;
@@ -478,7 +479,10 @@ require([
 	 */
 	function getReports() {
 
-		url="/surveyKPI/userList/temporary?action=report&pId=" + globals.gCurrentProject;
+		/*
+		 * Get reports that are accessible via a public link
+		 */
+		var url="/surveyKPI/userList/temporary?action=report&pId=" + globals.gCurrentProject;
 
 		addHourglass();
 		$.ajax({
@@ -500,6 +504,30 @@ require([
 				        msg = localise.set["msg_no_proj"];
                     }
 				    alert(localise.set["error"] + ": " + msg);
+				}
+			}
+		});
+
+		/*
+		 * Get custom report types
+		 */
+		url = '/surveyKPI/custom_reports/types';
+
+		addHourglass();
+		$.ajax({
+			url: url,
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				gReportTypeList = data;
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["error"] + ": " + msg);
 				}
 			}
 		});
@@ -944,12 +972,21 @@ require([
 
     	var hostname = location.hostname,
 		    h = [],
-		    idx = -1;
+		    idx = -1,
+		    i;
 
-	    $('#customType').empty();
-	    if(hostname == 'tdh.smap.com.au' || hostname === 'localhost') {
-		    $('#customType').html('<option value="dr">Daily</option><option value="mbr">Master Beneficiary</option>');
+
+	    if(gReportTypeList && gReportTypeList.length > 0) {
+	    	for(i = 0; i < gReportTypeList.length; i++) {
+	    		h[++idx] = '<option value="';
+	    		h[++idx] = gReportTypeList[i].id;
+	    		h[++idx] = '">';
+			    h[++idx] = gReportTypeList[i].name;
+			    h[++idx] = '</option>';
+		    }
+
 	    }
+	    $('#customType').empty().html(h.join(''));
     }
 
 });
