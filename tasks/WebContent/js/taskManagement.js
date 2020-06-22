@@ -452,11 +452,13 @@ require([
 				$('#add_task_from_existing').show();
 
 				$('#survey_to_complete').val(tg.target_s_id);
+
 				$('#users_task_group').val(tgRule.user_id);
 				$('#roles_task_group').val(tgRule.role_id);
 				$('#assign_data').val(tgRule.assign_data);
 				$('#fixed_role').val(tgRule.fixed_role_id);
 				$('#assign_emails').val(tgRule.emails);
+
 				$('#survey').val(tg.source_s_id);
 				if(tgRule.update_results) {
 					$('#id_update_results').prop('checked', true);
@@ -470,7 +472,7 @@ require([
 				$('#assign_pol').prop('checked', tgRule.complete_all);
 				$('#assign_auto').prop('checked', tgRule.assign_auto);
 
-				setupAssignType(tgRule.user_id, tgRule.role_id, tgRule.emails);    // Set up assign type
+				setupAssignType(tgRule.user_id, tgRule.role_id, tgRule.emails, tgRule.assign_data);    // Set up assign type
 
 				if(tgRule.user_id == -2 || tgRule.role_id == -2 ||
 					(tgRule.user_id == 0 && tgRule.role_id == 0)) {
@@ -1614,7 +1616,7 @@ require([
 		} else {
 			$('#tp_form_name').val(taskFeature.properties.form_id);	// form id
 		}
-		setupAssignType(taskFeature.properties.assignee, 0, taskFeature.properties.emails);
+		setupAssignType(taskFeature.properties.assignee, 0, taskFeature.properties.emails, taskFeature.properties.assign_data);
 		$('#tp_user').val(taskFeature.properties.assignee);	// assignee
 		$('#tp_assign_emails').val(taskFeature.properties.emails);
 		$('#tp_repeat').prop('checked', taskFeature.properties.repeat);
