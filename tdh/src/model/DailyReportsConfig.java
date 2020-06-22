@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class DailyReportsConfig {
 
 	public String sIdent;
-	public String dateName;
+	public String dateColumn;
 	public ArrayList<ReportColumn> columns;
 	public ArrayList<ReportMultiColumn> bars;
 }
