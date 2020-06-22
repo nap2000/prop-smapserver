@@ -4025,7 +4025,7 @@ function enableDebugging() {
  * ----------------------------------------------------
  * Common task fuctions shared between task managmeent page and console
  */
-function setupAssignType(user_id, role_id, emails) {
+function setupAssignType(user_id, role_id, emails, email_question) {
 	$('.assign_group').hide();
 	$('.assign_type').removeClass('active');
 	if(user_id != 0) {
@@ -4034,7 +4034,8 @@ function setupAssignType(user_id, role_id, emails) {
 	} else  if(role_id != 0) {
 		$('.role_type_checkbox').addClass('active');
 		$('.assign_role').show();
-	} else if(typeof emails !== "undefined" && emails.trim().length > 0) {
+	} else if((typeof emails !== "undefined" && emails.trim().length > 0)
+			|| (typeof email_question !== "undefined" && email_question.trim().length > 0)) {
 		$('.email_type_checkbox').addClass('active');
 		$('.assign_email').show();
 	} else {        // Default to user
