@@ -3277,7 +3277,7 @@ require([
         } else {
             $('#tp_form_name').val(taskFeature.properties.form_id);	// form id
         }
-        setupAssignType(taskFeature.properties.assignee, 0, taskFeature.properties.emails);
+        setupAssignType(taskFeature.properties.assignee, 0, taskFeature.properties.emails, taskFeature.properties.assign_data);
         $('#tp_user').val(taskFeature.properties.assignee);	// assignee
         $('#tp_assign_emails').val(taskFeature.properties.emails);
         $('#tp_repeat').prop('checked', taskFeature.properties.repeat);
