@@ -31,7 +31,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
@@ -79,8 +78,9 @@ public class DailyReport extends Application {
 			// Develop
 			DailyReportsConfig config = new DailyReportsConfig();
 			config.sIdent = "s133_4054";
-			config.dateName = "date";
+			config.dateColumn = "date";
 			config.columns = new ArrayList<> ();
+			config.columns.add(new ReportColumn("date", "Date"));
 			config.columns.add(new ReportColumn("activity", "Activity"));
 			config.columns.add(new ReportColumn("activityintheday", "Activity for the day"));
 
@@ -103,13 +103,14 @@ public class DailyReport extends Application {
 			config.bars.add(rmc);
 			// End Develop
 			
+			String filename = GeneralUtilityMethods.getSurveyNameFromIdent(sd, config.sIdent);
 			DailyReportsManager drm = new DailyReportsManager(localisation, tz);
-			drm.getDailyReport(sd, cResults, config, 2020, 5);
+			drm.getDailyReport(sd, cResults, response, filename, config, 2020, 5);
 			
 		}  catch (Exception e) {
 			log.log(Level.SEVERE, "Exception", e);
 		} finally {
-
+			
 			SDDataSource.closeConnection(connectionString, sd);	
 			ResultsDataSource.closeConnection(connectionString, cResults);	
 
