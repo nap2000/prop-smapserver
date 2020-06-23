@@ -29,6 +29,7 @@ var gReportTypeList = [];
 var gConfig;
 var gReportIdx;
 var gForm = 0;
+var gSurveyList;
 
 window.gTasks = {
     cache: {
@@ -130,7 +131,7 @@ require([
 		        $('#publish_form')[0].reset();
 
 		        $('.role_select_roles').empty()
-		        getSurveyRoles($('#survey').val(), undefined, true);
+		        getSurveyRoles(gSurveyList[$('#survey').val()].id, undefined, true);
 
 		        // Set button to create
 		        $('#publishReport').show();
@@ -155,6 +156,14 @@ require([
         $('#saveReport').click(function () {
             updateReport(true);
         });
+
+		$('#customReport').click(function () {
+			updateCustomReport(false);
+		});
+
+		$('#saveCustomReport').click(function () {
+			updateCustomReport(true);
+		});
 
         $('#publish_popup').on('shown.bs.modal', function () {
             $('#exp_from_date').datetimepicker({
@@ -190,7 +199,7 @@ require([
 	function updateReport(edit) {
 
 		var i;
-        var sId = $('#survey').val();
+        var sId = gSurveyList[$('#survey').val()].id;
         var name = $('#r_name').val();
         var reportType = $('#reportType').val();
         var includeMeta = $('#includeMeta').prop('checked');
@@ -447,8 +456,57 @@ require([
         });
     }
 
+	function updateCustomReport(edit) {
+
+		var i;
+		var sIdent = gSurveyList[$('#c_survey').val()].ident;
+		var name = $('#c_name').val();
+		var reportType = $('#customType').val();
+
+		// Validation
+		if(!sIdent) {
+			alert(localise.set["a_exp_leg1"]);
+			return;
+		} else if (!name || name.trim().length == 0) {
+			alert(localise.set["msg_val_nm"]);
+			$('#r_name').focus();
+			return;
+		}
+
+		var report = {
+			sIdent: sIdent
+		};
+
+		/*
+		 * create URL
+		 */
+		var url = "/surveyKPI/custom_reports/" + encodeURIComponent(reportType) + "/" + encodeURIComponent(name);;
+
+		addHourglass();
+		$.ajax({
+			url: url,
+			type: "POST",
+			contentType: "application/json",
+			cache: false,
+			data: { report: JSON.stringify(report) },
+			success: function (data) {
+				removeHourglass();
+				getReports();
+				$('#custom_popup').modal("hide");
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["msg_err_upd"] + " : " + xhr.responseText);
+				}
+			}
+		});
+	}
+
     function surveyChanged(callback) {
-        var sId = $('#survey').val();
+		var sId = gSurveyList[$('#survey').val()].id;
         var dateQuestionId = 0;     // TODO
 
         getSurveyRoles(sId, undefined, true);
@@ -691,7 +749,8 @@ require([
             $('#r_name').val(report.action_details.name);
 
             $('#reportType').val(report.action_details.reportType);
-            $('#survey').val(report.action_details.sId);
+
+            $('#survey').val(getSurveyIndex(report.action_details.sId));
             surveyChanged(setForm);
 
             getSurveyRoles(report.action_details.sId, report.action_details.roles);
@@ -923,7 +982,7 @@ require([
         globals.gCurrentSurvey = -1;
         globals.gCurrentTaskGroup = undefined;
 
-        loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged, false);			// Get surveys
+        loadSurveys(globals.gCurrentProject, undefined, false, false, surveysLoaded, true);			// Get surveys
         getReports();		// Refresh the shown reports
 
         saveCurrentProject(globals.gCurrentProject,
@@ -931,6 +990,11 @@ require([
             globals.gCurrentTaskGroup);
 
     }
+
+	function surveysLoaded(data) {
+		gSurveyList = data;
+		surveyChanged();
+	}
 
     /*
      * Convert a report type into the base of the URL
@@ -989,5 +1053,14 @@ require([
 	    $('#customType').empty().html(h.join(''));
     }
 
+	function getSurveyIndex(sId) {
+		var i;
+		for(i = 0; i < gSurveyList.length; i++) {
+			if(gSurveyList[i].id === sId) {
+				return i;
+			}
+		}
+		return 0;
+	}
 });
 
