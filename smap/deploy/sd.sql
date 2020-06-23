@@ -284,5 +284,6 @@ ALTER TABLE custom_report_type OWNER TO ws;
  alter table custom_report add column p_id integer REFERENCES project(id) ON DELETE CASCADE;
  alter able custom_report drop column type;
  alter table custom_report add column type_id integer REFERENCES custom_report_type(id) ON DELETE CASCADE;
+ alter table custom_report add column  survey_ident text REFERENCES survey(ident) ON DELETE CASCADE;
  drop index custom_report_name;
  CREATE UNIQUE INDEX custom_report_name ON custom_report(p_id, name);
