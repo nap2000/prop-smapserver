@@ -15,13 +15,42 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Chart;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xddf.usermodel.PresetColor;
+import org.apache.poi.xddf.usermodel.XDDFColor;
+import org.apache.poi.xddf.usermodel.XDDFShapeProperties;
+import org.apache.poi.xddf.usermodel.XDDFSolidFillProperties;
+import org.apache.poi.xddf.usermodel.chart.AxisPosition;
+import org.apache.poi.xddf.usermodel.chart.BarDirection;
+import org.apache.poi.xddf.usermodel.chart.BarGrouping;
+import org.apache.poi.xddf.usermodel.chart.ChartTypes;
+import org.apache.poi.xddf.usermodel.chart.LegendPosition;
+import org.apache.poi.xddf.usermodel.chart.XDDFBarChartData;
+import org.apache.poi.xddf.usermodel.chart.XDDFCategoryAxis;
+import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
+import org.apache.poi.xddf.usermodel.chart.XDDFChartLegend;
+import org.apache.poi.xddf.usermodel.chart.XDDFDataSource;
+import org.apache.poi.xddf.usermodel.chart.XDDFDataSourcesFactory;
+import org.apache.poi.xddf.usermodel.chart.XDDFNumericalDataSource;
+import org.apache.poi.xddf.usermodel.chart.XDDFValueAxis;
+import org.apache.poi.xssf.streaming.SXSSFDrawing;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFChart;
+import org.apache.poi.xssf.usermodel.XSSFDrawing;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.smap.sdal.Utilities.ApplicationException;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
 import org.smap.sdal.Utilities.XLSUtilities;
@@ -69,9 +98,12 @@ public class DailyReportsManager {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
-		Workbook wb = null;
-		Sheet sheet = null;
-			
+		XSSFWorkbook wb = null;
+		XSSFSheet sheet = null;
+		
+		int rowNumber = 0;
+		CellStyle errorStyle = null;
+		
 		try {
 			int sId = GeneralUtilityMethods.getSurveyId(sd, config.sIdent);
 			Form tlf = GeneralUtilityMethods.getTopLevelForm(sd, sId);
@@ -126,10 +158,10 @@ public class DailyReportsManager {
 			sb.append(" from ").append(tlf.tableName);
 	
 			
-			wb = new SXSSFWorkbook(10);		// Serialised output
+			wb = new XSSFWorkbook();
 			Map<String, CellStyle> styles = XLSUtilities.createStyles(wb);
 			CellStyle headerStyle = styles.get("header");
-			CellStyle errorStyle = styles.get("error");
+			errorStyle = styles.get("error");
 					
 			sheet = wb.createSheet();
 			
@@ -141,7 +173,6 @@ public class DailyReportsManager {
 			log.info("Get dairly report data: " + pstmt.toString());
 			rs = pstmt.executeQuery();
 			
-			int rowNumber = 0;
 			/*
 			 * Write the title
 			 * TODO
@@ -181,9 +212,10 @@ public class DailyReportsManager {
 			 * Write the chart data
 			 */
 			rowNumber++;
+			int chartDataRow = rowNumber;
 			colNumber = 0;
 			for(ChartItem item : chartItems) {
-				Row row = getChartRow(chartDataRows, sheet, rowNumber, 0);
+				Row row = getChartRow(chartDataRows, sheet, chartDataRow, 0);
 				Cell cell = row.createCell(colNumber + 1);
 				cell.setCellValue(item.theDate);
 				
@@ -193,7 +225,7 @@ public class DailyReportsManager {
 				}
 				
 				for(int i = 0; i < item.bars.size(); i++) {
-					row = getChartRow(chartDataRows, sheet, rowNumber, i + 1);
+					row = getChartRow(chartDataRows, sheet, chartDataRow, i + 1);
 					cell = row.createCell(colNumber + 1);
 					cell.setCellValue(item.bars.get(i));
 					
@@ -204,11 +236,63 @@ public class DailyReportsManager {
 				}
 				colNumber++;
 			}
+			rowNumber += 1 + config.bars.size();
+			
+			/*
+			 * Create the chart
+			 */
+			int startRow = rowNumber++;
+			int endRow = startRow + 10;
+			int endCol = chartItems.size();
+			XSSFDrawing drawing = sheet.createDrawingPatriarch();
+			ClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 0, startRow, endCol, endRow);
+			XSSFChart chart = drawing.createChart(anchor);
+			
+			chart.setTitleText("Chart Title");
+			chart.setTitleOverlay(false);			
+			XDDFChartLegend legend = chart.getOrAddLegend();
+			legend.setPosition(LegendPosition.TOP_RIGHT);
+			
+			XDDFCategoryAxis bottomAxis = chart.createCategoryAxis(AxisPosition.BOTTOM);
+			bottomAxis.setTitle("Date");
+			XDDFValueAxis leftAxis = chart.createValueAxis(AxisPosition.LEFT);
+			leftAxis.setTitle("Count");
+			 
+			XDDFDataSource<String> xs = XDDFDataSourcesFactory.fromStringCellRange(sheet,
+					new CellRangeAddress(chartDataRow, chartDataRow, 1, chartItems.size() + 1));
+
+			XDDFNumericalDataSource<Double> ys1 = XDDFDataSourcesFactory.fromNumericCellRange(sheet,
+					new CellRangeAddress(chartDataRow + 1, chartDataRow + 1, 1, chartItems.size() + 1));
+			 
+			XDDFBarChartData data = (XDDFBarChartData) chart.createData(ChartTypes.BAR, bottomAxis, leftAxis);
+			
+			XDDFChartData.Series series1 = data.addSeries(xs, ys1);
+	        series1.setTitle("xxxx", null); 
+	          
+	        XDDFBarChartData bar = (XDDFBarChartData) data;
+            bar.setBarDirection(BarDirection.COL);
+            bar.setBarGrouping(BarGrouping.STACKED);
+
+            solidFillSeries(data, 0, PresetColor.CHARTREUSE);
+            //solidFillSeries(data, 1, PresetColor.TURQUOISE);
+            
+	        chart.plot(data);
+			
 			cResults.setAutoCommit(true);		// End paging
 			
 		} catch(Exception e) {
 			log.log(Level.SEVERE, e.getMessage(), e);
 			try {cResults.setAutoCommit(true);} catch(Exception ex) {};
+			
+			String msg = e.getMessage();
+			if(msg.contains("does not exist")) {
+				msg = localisation.getString("msg_no_data");
+			}
+			Row dataRow = sheet.createRow(rowNumber + 10);	
+			Cell cell = dataRow.createCell(0);
+			cell.setCellStyle(errorStyle);
+			cell.setCellValue(msg);
+			
 		} finally {
 			
 			try {
@@ -216,7 +300,6 @@ public class DailyReportsManager {
 				wb.write(outputStream);
 				wb.close();
 				outputStream.close();
-				((SXSSFWorkbook) wb).dispose();		// Dispose of temporary files
 			} catch (Exception ex) {
 				log.log(Level.SEVERE, "Error", ex);
 			}
@@ -237,4 +320,15 @@ public class DailyReportsManager {
 		}
 		return row;
 	}
+	
+	private static void solidFillSeries(XDDFChartData data, int index, PresetColor color) {
+        XDDFSolidFillProperties fill = new XDDFSolidFillProperties(XDDFColor.from(color));
+        XDDFChartData.Series series = data.getSeries().get(index);
+        XDDFShapeProperties properties = series.getShapeProperties();
+        if (properties == null) {
+            properties = new XDDFShapeProperties();
+        }
+        properties.setFillProperties(fill);
+        series.setShapeProperties(properties);
+    }
 }
