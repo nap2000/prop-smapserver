@@ -616,6 +616,7 @@ CREATE TABLE custom_report (
 	id integer DEFAULT NEXTVAL('custom_report_seq') CONSTRAINT pk_custom_report PRIMARY KEY,
 	o_id integer REFERENCES organisation(id) ON DELETE CASCADE,
 	p_id integer REFERENCES project(id) ON DELETE CASCADE,
+	survey_ident text REFERENCES survey(ident) ON DELETE CASCADE,
 	name text,
 	type_id text,	REFERENCES custom_report_type(id) ON DELETE CASCADE,
 	config text								-- Custom report columns as json object

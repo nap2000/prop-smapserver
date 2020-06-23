@@ -26,6 +26,7 @@ if (Modernizr.localstorage) {
 
 var gReportList = [];
 var gReportTypeList = [];
+var gCustomReportList = [];
 var gConfig;
 var gReportIdx;
 var gForm = 0;
@@ -480,7 +481,10 @@ require([
 		/*
 		 * create URL
 		 */
-		var url = "/surveyKPI/custom_reports/" + encodeURIComponent(reportType) + "/" + encodeURIComponent(name);;
+		var url = "/surveyKPI/custom_reports/"
+				+ globals.gCurrentProject + "/"
+				+ sIdent + "/"
+				+ reportType + "/" + encodeURIComponent(name);;
 
 		addHourglass();
 		$.ajax({
@@ -565,6 +569,36 @@ require([
 				}
 			}
 		});
+
+		/*
+         * Get custom reports
+         */
+		var url="/surveyKPI/custom_reports?pId=" + globals.gCurrentProject;
+
+		addHourglass();
+		$.ajax({
+			url: url,
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				gCustomReportList = data;
+				completeCustomReportList(data);
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					var msg = xhr.responseText;
+					if(msg.indexOf("404 - Not Found") >= 0) {
+						msg = localise.set["msg_no_proj"];
+					}
+					alert(localise.set["error"] + ": " + msg);
+				}
+			}
+		});
+
 
 		/*
 		 * Get custom report types
@@ -970,6 +1004,62 @@ require([
 
 			$('#report_popup').modal("show");
 		});
+
+	}
+
+	/*
+     * Fill in the custom report list
+     */
+	function completeCustomReportList() {
+
+		var i,
+			tab = [],
+			idx = -1,
+			$reportList = $('#custom_report_list');
+
+		// Add the reports
+		if(gCustomReportList) {
+			for (i = 0; i < gCustomReportList.length; i++) {
+				var report = gCustomReportList[i];
+				var link = location.origin + "/custom/report/" + gCustomReportList[i].id + "/xls";
+
+				tab[++idx] = '<tr data-idx="';
+				tab[++idx] = i;
+				tab[++idx] = '">';
+
+				tab[++idx] = '<td>';
+				tab[++idx] = '<a type="button" class="btn btn-block btn-primary" href="';
+				tab[++idx] = link;
+				tab[++idx] = '">';
+				tab[++idx] = report.name;
+				tab[++idx] = '</a>';
+				tab[++idx] = '</td>';
+
+				tab[++idx] = '<td>';
+				tab[++idx] = report.surveyName;
+				tab[++idx] = '</td>';
+
+				tab[++idx] = '<td>';
+				tab[++idx] = '<div class="dropdown">';
+				tab[++idx] = '<button id="dropdownMenu' + i + '" class="btn btn-default dropdown-toggle report_action" data-toggle="dropdown"  type="button" aria-haspopup="true" aria-expanded="false">';
+				tab[++idx] = localise.set["c_action"];
+				tab[++idx] = '</button>';
+				tab[++idx] = '<ul class="dropdown-menu" aria-labelledby="dropdownMenu' + i + '">';
+				tab[++idx] = '<li><a class="repGenerate" href="#">' + localise.set["c_generate"] + '</a></li>';
+				tab[++idx] = '<li><a class="repEdit" href="#">' + localise.set["c_edit"] + '</a></li>';
+				tab[++idx] = '<li><a class="repDelete" href="#">' + localise.set["c_del"] + '</a></li>';
+				tab[++idx] = '</ul>';
+				tab[++idx] = '</div>';  // Dropdown class
+				tab[++idx] = '</td>';
+				tab[++idx] = '</tr>';
+
+				// Add an object to store parameter values
+				gReportList[i].savedParams = {};
+
+			}
+		}
+
+		$reportList.html(tab.join(''));
 
 	}
 
