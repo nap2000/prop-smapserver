@@ -292,22 +292,10 @@
                                 </div>
                             </div>
 
-                            <!--
-							<div class="form-group rt_dependent xlsx">
-								<div class="col-sm-offset-1 col-sm-10">
-									<div class="checkbox">
-										<label>
-											<input type="checkbox" checked="checked" id="odata2Data"><span data-lang="a_exp_odata2" class="lang">odata2</span>
-										</label>
-									</div>
-								</div>
-							</div>
-							-->
-
                             <div class="form-group row rt_dependent pdf">
                                 <div class="col-sm-offset-1 col-sm-10">
                                     <div class="custom-control custom-radio">
-                                        <input type="radio" class="custom-control-input" id="orient_portrait" name="orientation" value="portrait"" checked="checked"/>
+                                        <input type="radio" class="custom-control-input" id="orient_portrait" name="orientation" value="portrait" checked="checked"/>
                                         <label class="custom-control-label" for="orient_portrait">
                                             <span data-lang="c_portrait" class="lang">portrait</span>
                                         </label>
@@ -527,9 +515,9 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
+                    <h4 class="modal-title lang" data-lang="a_rp" id="reportLabel">parameters</h4>
                     <button type="button" class="close" data-dismiss="modal"><span
                             aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title lang" data-lang="a_rp" id="reportLabel">parameters</h4>
                 </div>
                 <div class="modal-body">
                     <div id="alert" style="display:none; word-wrap:break-word;" class="alert alert-success" role="alert"></div>
@@ -542,6 +530,41 @@
                     <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
                     </button>
                     <button id="generateReport" type="button" class="btn btn-primary lang"
+                            data-lang="c_create">create
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal to launch custom reports -->
+    <div id="custom_report_launch" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="reportLaunchLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title lang" data-lang="a_lcr" id="reportLaunchLabel">launch</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                </div>
+                <div class="modal-body">
+                    <form id="lcr_form">
+                        <div class="form-group row">
+                            <label class="control-label col-sm-4 lang" for="reportMonth" data-lang="c_month"></label>
+                            <div class="col-sm-4">
+                                <div class="input-group date" id='reportMonth' >
+                                    <input type='text' class="form-control" data-date-format="YYYY/MM"/>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
+                    </button>
+                    <button id="generateCustomReport" type="button" class="btn btn-primary lang"
                             data-lang="c_create">create
                     </button>
                 </div>
