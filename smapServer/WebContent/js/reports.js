@@ -195,6 +195,19 @@ require([
             }
         });
 
+		/*
+		 * Add date time picker to report month date
+		 */
+		moment.locale();
+		$('#reportMonth').datetimepicker({
+			useCurrent: false,
+			format: "MM/YYYY",
+			viewMode: "months",
+			locale: gUserLocale || 'en'
+		}).data("DateTimePicker").date(moment());
+
+		$('#generateCustomReport').click(generateCustomReport);
+
 	});
 
 	function updateReport(edit) {
@@ -1028,9 +1041,7 @@ require([
 				tab[++idx] = '">';
 
 				tab[++idx] = '<td>';
-				tab[++idx] = '<a type="button" class="btn btn-block btn-primary" href="';
-				tab[++idx] = link;
-				tab[++idx] = '">';
+				tab[++idx] = '<a type="button" class="btn btn-block btn-primary custom_report" href="#">';
 				tab[++idx] = report.name;
 				tab[++idx] = '</a>';
 				tab[++idx] = '</td>';
@@ -1052,14 +1063,15 @@ require([
 				tab[++idx] = '</div>';  // Dropdown class
 				tab[++idx] = '</td>';
 				tab[++idx] = '</tr>';
-
-				// Add an object to store parameter values
-				gReportList[i].savedParams = {};
-
 			}
 		}
 
 		$reportList.html(tab.join(''));
+
+		// Add response to report being launched
+		$('.custom_report', $reportList).click(function(){
+			$('#custom_report_launch').modal("show");
+		});
 
 	}
 
@@ -1151,6 +1163,10 @@ require([
 			}
 		}
 		return 0;
+	}
+
+	function generateCustomReport() {
+    	alert("hi");
 	}
 });
 
