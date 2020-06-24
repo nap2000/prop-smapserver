@@ -2093,7 +2093,7 @@ define([
             if(itemType === "question") {
                 item = survey.forms[container].questions[itemIndex];
                 $changedRow = $('#question' + container + '_' + itemIndex);
-            } else if(itemType === "option") {
+            } else if(itemType === "option" || itemType === "optionlist") {
                 item = survey.optionLists[container];
                 $changedRow = $('#ol_' + container);
             }
