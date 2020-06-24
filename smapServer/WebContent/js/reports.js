@@ -31,6 +31,7 @@ var gConfig;
 var gReportIdx;
 var gForm = 0;
 var gSurveyList;
+var gCustomReportIndex;
 
 window.gTasks = {
     cache: {
@@ -723,27 +724,6 @@ require([
 		$('.copyLink').on('hidden.bs.tooltip', function () {
 			$(this).attr('title', localise.set["c_cl"]).tooltip('_fixTitle');
 		})
-        /*
-        $('.copyLinkOdata').click(function () {
-            var $this = $(this);
-            var i = $this.closest('tr').data("idx");
-            var modId = gReportList[i].ident.replace(/-/g, '_');
-            var link = location.origin + "/odata/action.svc/" + modId;
-
-
-            // From https://stackoverflow.com/questions/22581345/click-button-copy-to-clipboard-using-jquery
-            var $temp = $("<input>");
-            $("body").append($temp);
-            $temp.val(link).select();
-            document.execCommand("copy");
-
-            $(this).prop('title', localise.set["c_c"] + ": " + link).tooltip('fixTitle').tooltip('show');
-            $temp.remove();
-
-        });
-         */
-
-
 
 		/*
 		 * Action Dropbox
@@ -757,7 +737,7 @@ require([
         /*
          * Delete
          */
-        $('.repDelete').click(function() {
+        $('.repDelete', $reportList).click(function() {
             var $this = $(this);
             gReportIdx = $this.closest('tr').data("idx");
             var report = gReportList[gReportIdx];
@@ -1034,7 +1014,6 @@ require([
 		if(gCustomReportList) {
 			for (i = 0; i < gCustomReportList.length; i++) {
 				var report = gCustomReportList[i];
-				var link = location.origin + "/custom/report/" + gCustomReportList[i].id + "/xls";
 
 				tab[++idx] = '<tr data-idx="';
 				tab[++idx] = i;
@@ -1070,9 +1049,38 @@ require([
 
 		// Add response to report being launched
 		$('.custom_report', $reportList).click(function(){
+			var $this = $(this);
+			gCustomReportIndex = $this.closest('tr').data("idx");
 			$('#custom_report_launch').modal("show");
 		});
 
+		/*
+         * Delete
+         */
+		$('.repDelete', $reportList).click(function() {
+			var $this = $(this);
+			gReportIdx = $this.closest('tr').data("idx");
+			var report = gCustomReportList[gReportIdx];
+
+			addHourglass();
+			$.ajax({
+				url: "/surveyKPI/custom_reports/" + report.id,
+				type: "DELETE",
+				cache: false,
+				success: function (data) {
+					removeHourglass();
+					getReports();
+				},
+				error: function (xhr, textStatus, err) {
+					removeHourglass();
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						getReports();
+					} else {
+						alert(localise.set["msg_err_upd"] + " : " + xhr.responseText);
+					}
+				}
+			});
+		});
 	}
 
     /*
@@ -1166,7 +1174,18 @@ require([
 	}
 
 	function generateCustomReport() {
-    	alert("hi");
+		var usageMsec = $('#reportMonth').data("DateTimePicker").date(),
+			d = new Date(usageMsec),
+			month = d.getMonth() + 1,
+			year = d.getFullYear(),
+			url = "/custom/report/daily/" + gCustomReportList[gCustomReportIndex].id + "/xls";
+
+		url += "?year=" + year;
+		url += "&month=" + month;
+
+		$('#custom_report_launch').modal("hide");
+
+		downloadFile(url);
 	}
 });
 

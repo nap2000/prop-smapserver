@@ -105,6 +105,12 @@ public class DailyReportsManager {
 		CellStyle errorStyle = null;
 		
 		try {
+			wb = new XSSFWorkbook();
+			Map<String, CellStyle> styles = XLSUtilities.createStyles(wb);
+			CellStyle headerStyle = styles.get("header");
+			errorStyle = styles.get("error");					
+			sheet = wb.createSheet();
+			
 			int sId = GeneralUtilityMethods.getSurveyId(sd, config.sIdent);
 			Form tlf = GeneralUtilityMethods.getTopLevelForm(sd, sId);
 			String surveyName = GeneralUtilityMethods.getSurveyName(sd, sId);
@@ -124,13 +130,17 @@ public class DailyReportsManager {
 			/*
 			 * Validate report configuration
 			 * This is required for security as much as error reporting
-			 * TODO for all columns
 			 */
-			if(!GeneralUtilityMethods.hasColumn(cResults, tlf.tableName, config.dateColumn)) {
-				String msg = localisation.getString("qnf").replace("%s1", config.dateColumn).replace("%s2", surveyName);
-				throw new ApplicationException(msg);
+			validateColumn(cResults, tlf.tableName, config.dateColumn, surveyName);
+			for(ReportColumn rc : config.columns) {
+				validateColumn(cResults, tlf.tableName, rc.column, surveyName);
 			}
-	
+			for(ReportMultiColumn bar : config.bars) {
+				for(String name : bar.columns) {
+					validateColumn(cResults, tlf.tableName, name, surveyName);
+				}
+			}
+			
 			/*
 			 * Create query
 			 */
@@ -156,14 +166,9 @@ public class DailyReportsManager {
 			}
 	
 			sb.append(" from ").append(tlf.tableName);
-	
 			
-			wb = new XSSFWorkbook();
-			Map<String, CellStyle> styles = XLSUtilities.createStyles(wb);
-			CellStyle headerStyle = styles.get("header");
-			errorStyle = styles.get("error");
-					
-			sheet = wb.createSheet();
+			sb.append(" where extract(month from ").append(config.dateColumn).append(") = ? ");
+			sb.append(" and extract(year from ").append(config.dateColumn).append(") = ? ");
 			
 			// page the results to reduce memory usage
 			pstmt = cResults.prepareStatement(sb.toString());
@@ -171,6 +176,8 @@ public class DailyReportsManager {
 			pstmt.setFetchSize(100);	
 			
 			log.info("Get dairly report data: " + pstmt.toString());
+			pstmt.setInt(1,  month);
+			pstmt.setInt(2,  year);
 			rs = pstmt.executeQuery();
 			
 			/*
@@ -243,6 +250,7 @@ public class DailyReportsManager {
 			 */
 			int startRow = rowNumber++;
 			int endRow = startRow + 10;
+			rowNumber = endRow + 1;
 			int endCol = chartItems.size();
 			XSSFDrawing drawing = sheet.createDrawingPatriarch();
 			ClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 0, startRow, endCol, endRow);
@@ -288,7 +296,7 @@ public class DailyReportsManager {
 			if(msg.contains("does not exist")) {
 				msg = localisation.getString("msg_no_data");
 			}
-			Row dataRow = sheet.createRow(rowNumber + 10);	
+			Row dataRow = sheet.createRow(rowNumber++);	
 			Cell cell = dataRow.createCell(0);
 			cell.setCellStyle(errorStyle);
 			cell.setCellValue(msg);
@@ -331,4 +339,11 @@ public class DailyReportsManager {
         properties.setFillProperties(fill);
         series.setShapeProperties(properties);
     }
+	
+	private void validateColumn(Connection cResults, String tableName, String col, String surveyName) throws ApplicationException {
+		if(!GeneralUtilityMethods.hasColumn(cResults, tableName, col)) {
+			String msg = localisation.getString("qnf").replace("%s1", col).replace("%s2", surveyName);
+			throw new ApplicationException(msg);
+		}
+	}
 }
