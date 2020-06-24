@@ -73,10 +73,6 @@
             name: '../action_forms'
         },
         {
-            name: '../manage',
-	    exclude: ['jquery', 'bootstrap']
-        },
-        {
             name: '../log',
 	    exclude: ['jquery', 'bootstrap', 'datatables_b4']
         },
