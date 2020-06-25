@@ -194,6 +194,10 @@ public class DailyReportsManager {
 				Cell cell = headerRow.createCell(colNumber++);
 				cell.setCellStyle(headerStyle);
 				cell.setCellValue(rc.heading);
+				
+				if(rc.width > 0) {
+					sheet.setColumnWidth(colNumber - 1, rc.width);
+				}
 			}
 			
 			/*
@@ -251,7 +255,7 @@ public class DailyReportsManager {
 			int startRow = rowNumber++;
 			int endRow = startRow + 10;
 			rowNumber = endRow + 1;
-			int endCol = chartItems.size();
+			int endCol = chartItems.size() + 5;
 			XSSFDrawing drawing = sheet.createDrawingPatriarch();
 			ClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 0, startRow, endCol, endRow);
 			XSSFChart chart = drawing.createChart(anchor);
@@ -266,23 +270,32 @@ public class DailyReportsManager {
 			XDDFValueAxis leftAxis = chart.createValueAxis(AxisPosition.LEFT);
 			leftAxis.setTitle("Count");
 			 
+			
 			XDDFDataSource<String> xs = XDDFDataSourcesFactory.fromStringCellRange(sheet,
-					new CellRangeAddress(chartDataRow, chartDataRow, 1, chartItems.size() + 1));
+					new CellRangeAddress(chartDataRow, chartDataRow, 1, chartItems.size()));
 
-			// Add the bars
-			XDDFBarChartData data = (XDDFBarChartData) chart.createData(ChartTypes.BAR, bottomAxis, leftAxis);
-	        
+			XDDFBarChartData bar = (XDDFBarChartData) chart.createData(ChartTypes.BAR, bottomAxis, leftAxis);
 			for(int i = 0; i < config.bars.size(); i++) {
 				ReportMultiColumn rmc = config.bars.get(i);
-				XDDFChartData.Series series = data.addSeries(xs,XDDFDataSourcesFactory.fromNumericCellRange(sheet,
-						new CellRangeAddress(chartDataRow + 1 + i, chartDataRow + 1 + i, 1, chartItems.size() + 1)));
+				XDDFChartData.Series series = bar.addSeries(xs,XDDFDataSourcesFactory.fromNumericCellRange(sheet,
+						new CellRangeAddress(chartDataRow + 1 + i, chartDataRow + 1 + i, 1, chartItems.size())));
 				series.setTitle(rmc.title, null); 
 			}
-	        chart.plot(data);
+			chart.plot(bar);
+			
+			// correcting the overlap so bars really are stacked and not side by side
+			// From: https://www.roytuts.com/how-to-generate-stacked-bar-chart-or-column-chart-in-excel-using-apache-poi/
+			chart.getCTChart().getPlotArea().getBarChartArray(0).addNewOverlap().setVal((byte) 100);
+						
+			// Add the bars
+			
+			bar.setBarDirection(BarDirection.COL);
+	        bar.setBarGrouping(BarGrouping.STACKED);
+			
+
 	        
-	        XDDFBarChartData bar = (XDDFBarChartData) data;
-	        bar.setBarDirection(BarDirection.COL);
-	        //bar.setBarGrouping(BarGrouping.STACKED);
+			
+	       
 	        
             ArrayList<PresetColor> colors = new ArrayList<PresetColor> ();
             colors.add(PresetColor.CHARTREUSE);
@@ -294,8 +307,9 @@ public class DailyReportsManager {
             	if(col >= colors.size()) {
             		col = 0;
             	}
-	            solidFillSeries(data, i, colors.get(col));
+	            //solidFillSeries(bar, i, colors.get(col));
             }
+            
 			
 			cResults.setAutoCommit(true);		// End paging
 			
@@ -340,7 +354,7 @@ public class DailyReportsManager {
 		return row;
 	}
 	
-	private static void solidFillSeries(XDDFChartData data, int index, PresetColor color) {
+	private static void solidFillSeries(XDDFBarChartData data, int index, PresetColor color) {
         XDDFSolidFillProperties fill = new XDDFSolidFillProperties(XDDFColor.from(color));
         XDDFChartData.Series series = data.getSeries().get(index);
         XDDFShapeProperties properties = series.getShapeProperties();

@@ -111,9 +111,9 @@ public class DailyReport extends Application {
 				// Develop
 				config.dateColumn = "date";
 				config.columns = new ArrayList<> ();
-				config.columns.add(new ReportColumn("date", "Date"));
-				config.columns.add(new ReportColumn("activity", "Activity"));
-				config.columns.add(new ReportColumn("activityintheday", "Activity for the day"));
+				config.columns.add(new ReportColumn("date", "Date", 0));
+				config.columns.add(new ReportColumn("activity", "Activity", 0));
+				config.columns.add(new ReportColumn("activityintheday", "Activity for the day", 0));
 	
 				config.bars = new ArrayList<> ();
 				ReportMultiColumn rmc = new ReportMultiColumn();
