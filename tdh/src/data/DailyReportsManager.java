@@ -269,22 +269,33 @@ public class DailyReportsManager {
 			XDDFDataSource<String> xs = XDDFDataSourcesFactory.fromStringCellRange(sheet,
 					new CellRangeAddress(chartDataRow, chartDataRow, 1, chartItems.size() + 1));
 
-			XDDFNumericalDataSource<Double> ys1 = XDDFDataSourcesFactory.fromNumericCellRange(sheet,
-					new CellRangeAddress(chartDataRow + 1, chartDataRow + 1, 1, chartItems.size() + 1));
-			 
+			// Add the bars
 			XDDFBarChartData data = (XDDFBarChartData) chart.createData(ChartTypes.BAR, bottomAxis, leftAxis);
-			
-			XDDFChartData.Series series1 = data.addSeries(xs, ys1);
-	        series1.setTitle("xxxx", null); 
-	          
-	        XDDFBarChartData bar = (XDDFBarChartData) data;
-            bar.setBarDirection(BarDirection.COL);
-            bar.setBarGrouping(BarGrouping.STACKED);
-
-            solidFillSeries(data, 0, PresetColor.CHARTREUSE);
-            //solidFillSeries(data, 1, PresetColor.TURQUOISE);
-            
+	        
+			for(int i = 0; i < config.bars.size(); i++) {
+				ReportMultiColumn rmc = config.bars.get(i);
+				XDDFChartData.Series series = data.addSeries(xs,XDDFDataSourcesFactory.fromNumericCellRange(sheet,
+						new CellRangeAddress(chartDataRow + 1 + i, chartDataRow + 1 + i, 1, chartItems.size() + 1)));
+				series.setTitle(rmc.title, null); 
+			}
 	        chart.plot(data);
+	        
+	        XDDFBarChartData bar = (XDDFBarChartData) data;
+	        bar.setBarDirection(BarDirection.COL);
+	        //bar.setBarGrouping(BarGrouping.STACKED);
+	        
+            ArrayList<PresetColor> colors = new ArrayList<PresetColor> ();
+            colors.add(PresetColor.CHARTREUSE);
+            colors.add(PresetColor.TURQUOISE);
+            colors.add(PresetColor.CORNFLOWER_BLUE);
+            colors.add(PresetColor.DARK_GREEN);
+            
+            for(int i = 0, col = 0; i < config.bars.size(); i++, col++) {
+            	if(col >= colors.size()) {
+            		col = 0;
+            	}
+	            solidFillSeries(data, i, colors.get(col));
+            }
 			
 			cResults.setAutoCommit(true);		// End paging
 			
