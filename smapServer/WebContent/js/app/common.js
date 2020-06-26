@@ -5041,3 +5041,58 @@ function addCacheBuster(url) {
 	}
 	return cb + "_v=" + new Date().getTime().toString();
 }
+
+function getAppearanceParams(appearance) {
+
+	var response = {};
+
+	var idx1 = appearance.indexOf('(');
+	var idx2 = appearance.indexOf(')');
+	var params = appearance.substring(idx1 + 1, idx2);
+	var paramsArray = [];
+	if(params) {
+		paramsArray = params.split(',');
+	}
+
+	response.length = paramsArray.length;
+	if(paramsArray.length > 0) {
+
+		// 1. First parameter is the filename
+		var filename = paramsArray[0].trim();
+		response.filename = filename.replace(/'/g, "");
+
+		response.filter = '';    // default
+		if(paramsArray.length > 1) {
+			// Second parameter is the filter
+			response.filter = paramsArray[1].trim();
+			response.filter = filter.replace(/'/g, "");
+		}
+
+		if(paramsArray.length > 2) {
+			// Third parameter is the filter column
+			response.filter_column = paramsArray[2].trim();
+			response.filter_column = filter_column.replace(/'/g, "");
+		}
+
+		if(paramsArray.length > 3) {
+			// Fourth parameter is the filter value
+			response.filter_value = paramsArray[3].trim();
+			response.filter_value = filter_value.replace(/'/g, "");
+		}
+
+		if(paramsArray.length > 4) {
+			// Fifth parameter is the second filter column
+			response.second_filter_column = paramsArray[4].trim();
+			response.second_filter_column = second_filter_column.replace(/'/g, "");
+		}
+
+
+		if(paramsArray.length > 5) {
+			// Sixth parameter is the filter value
+			response.second_filter_value = paramsArray[5].trim();
+			response.second_filter_value = second_filter_value.replace(/'/g, "");
+		}
+
+	}
+	return response;
+}
