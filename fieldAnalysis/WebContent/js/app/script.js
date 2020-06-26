@@ -42,7 +42,7 @@ $(document).ready(function() {
         $('#export').dialog("open");
     });
 
-   
+
     // Change event on export dialog survey select
     $('#export_survey').change(function() {
         exportSurveyChanged();
