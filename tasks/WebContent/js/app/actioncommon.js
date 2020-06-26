@@ -19,12 +19,13 @@
 
 define([
         'jquery',
+        'common',
         'modernizr',
         'localise',
         'globals',
         'app/mapOL3',
         'multiselect'],
-    function ($, modernizr, lang, globals, map) {
+    function ($, common, modernizr, lang, globals, map) {
 
         return {
             showEditRecordForm: showEditRecordForm,
@@ -236,7 +237,7 @@ define([
                     h[++idx] = '<option value=""></option>';
                 }
 
-                var choices = getChoiceList(schema, column.l_id);
+                var choices = getChoiceList(schema, column);
                 if (choices) {
                     if (column.type === "select") {
                         vArray = value.split(' ');
@@ -303,12 +304,20 @@ define([
         /*
          * Get the choicelist for a select question
          */
-        function getChoiceList(schema, listId) {
-            var i;
-            if(schema && schema.choiceLists && schema.choiceLists.length) {
-                for (i = 0; i < schema.choiceLists.length; i++) {
-                    if (schema.choiceLists[i].l_id === listId) {
-                        return schema.choiceLists[i].choices;
+        function getChoiceList(schema, col) {
+
+            if(col.appearance && (col.appearance.indexOf('search(') >= 0 || col.appearance.indexOf('lookup_choices(') >= 0)) {
+                // External choices
+                var params = getAppearanceParams(col.appearance)
+            } else {
+                // Local choices
+                var listId = col.l_id;
+                var i;
+                if (schema && schema.choiceLists && schema.choiceLists.length) {
+                    for (i = 0; i < schema.choiceLists.length; i++) {
+                        if (schema.choiceLists[i].l_id === listId) {
+                            return schema.choiceLists[i].choices;
+                        }
                     }
                 }
             }

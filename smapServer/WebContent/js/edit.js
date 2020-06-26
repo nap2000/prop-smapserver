@@ -3645,33 +3645,19 @@ function setNoFilter() {
 				} else if (type === "form") {
 					// Custom - hardcoded
 					if(val === "search(" || val === "lookup_choices(") {
+						var params = getAppearanceParams(appearance);
 
 						// Now check parameters
-						var idx1 = appearance.indexOf('(');
-						var idx2 = appearance.indexOf(')');
-						var params = appearance.substring(idx1 + 1, idx2);
-						var paramsArray = [];
-						if(params) {
-							paramsArray = params.split(',');
-						}
-						if(paramsArray.length > 0) {
-							var filter;
-							var filter_column;
-							var filter_value;
-							var second_filter_column;
-							var second_filter_value;
-
+						if(params.length > 0) {
 							// 1. First parameter is the filename
-							var filename = paramsArray[0].trim();
-							filename = filename.replace(/'/g, "");
-							if(filename.startsWith('linked_s')) {
-								var sIdent = filename.substring("linked_s".length - 1);
+							if(params.filename.startsWith('linked_s')) {
+								var sIdent = params.filename.substring("linked_s".length - 1);
 								$('input[type=radio][name=search_source][value=survey]').prop('checked', true);
 								$('#a_survey_identifier').val(sIdent);
 								$('.search_survey').show();
 								getQuestionsInSurvey($('.column_select'), sIdent, true, false);
 							} else {
-								var csvIndex = getIndexOfCsvFilename(filename);
+								var csvIndex = getIndexOfCsvFilename(params.filename);
 								$('input[type=radio][name=search_source][value=csv]').prop('checked', true);
 								$('#a_csv_identifier').val(csvIndex);
 								$('.search_csv').show();
@@ -3680,43 +3666,26 @@ function setNoFilter() {
 								}
 							}
 
-							filter = '';    // default
-							if(paramsArray.length > 1) {
-								// Second parameter is the filter
-								filter = paramsArray[1].trim();
-								filter = filter.replace(/'/g, "");
-								$('#a_match').val(filter);
+							if(params.length > 1) {
+								$('#a_match').val(params.filter);
 							}
 
-							if(paramsArray.length > 2) {
-								// Third parameter is the filter column
-								filter_column = paramsArray[2].trim();
-								filter_column = filter_column.replace(/'/g, "");
-								$('#a_filter_column').val(filter_column);
+							if(params.length > 2) {
+								$('#a_filter_column').val(params.filter_column);
 							}
 
-							if(paramsArray.length > 3) {
-								// Fourth parameter is the filter value
-								filter_value = paramsArray[3].trim();
-								filter_value = filter_value.replace(/'/g, "");
-								$('#a_filter_value_static').val(filter_value);
+							if(params.length > 3) {
+								$('#a_filter_value_static').val(params.filter_value);
 							}
 
-							if(paramsArray.length > 4) {
-								// Fifth parameter is the second filter column
-								second_filter_column = paramsArray[4].trim();
-								second_filter_column = second_filter_column.replace(/'/g, "");
-								$('#a_second_filter_column').val(second_filter_column);
+							if(params.length > 4) {
+								$('#a_second_filter_column').val(params.second_filter_column);
 							}
 
 
-							if(paramsArray.length > 5) {
-								// Sixth parameter is the filter value
-								second_filter_value = paramsArray[5].trim();
-								second_filter_value = second_filter_value.replace(/'/g, "");
-								$('#a_second_filter_value_static').val(second_filter_value);
+							if(params.length > 5) {
+								$('#a_second_filter_value_static').val(params.second_filter_value);
 							}
-
 
 						}
 						/*
