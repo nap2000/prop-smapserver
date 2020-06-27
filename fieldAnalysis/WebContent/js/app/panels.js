@@ -291,7 +291,10 @@ $(document).ready(function() {
 
 	 // Initialise other dialogs
      initialiseDialogs();
-	
+
+     // auto refresh
+	autoRefresh();
+
 	 /*
 	  * Get the user details so we have the default project
 	  * Then load the available projects for the user and load the panels for the default project
@@ -836,6 +839,13 @@ function getFilter() {
 	 } else {
 		 return undefined;
 	 }
+}
+
+function autoRefresh() {
+	setTimeout(function(){
+		refreshAnalysisData();
+		autoRefresh();
+		}, 60000);
 }
 
 });
