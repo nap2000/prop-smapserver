@@ -180,8 +180,7 @@ define([
             var h = [],
                 idx = -1,
                 i,
-                sourceColumn,
-                vArray;
+                sourceColumn;
 
             // Check for a source column
             if(column.parameters && column.parameters.source) {
@@ -220,7 +219,9 @@ define([
                 h[++idx] = '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
                 h[++idx] = '</div>';
             } else if (column.type === "select1" || column.type === "select" || column.type === "select_one") {
-                h[++idx] = ' <select class="form-control editable ';
+                h[++idx] = ' <select id="select_';
+                h[++idx] = itemIndex;
+                h[++idx] = '" class="form-control editable ';
                 if (column.type === "select") {
                     h[++idx] = ' select';
                 }
@@ -237,28 +238,9 @@ define([
                     h[++idx] = '<option value=""></option>';
                 }
 
-                var choices = getChoiceList(schema, column);
+                var choices = getChoiceList(schema, column, itemIndex, value);
                 if (choices) {
-                    if (column.type === "select") {
-                        vArray = value.split(' ');
-                    }
-                    for (i = 0; i < choices.length; i++) {
-                        h[++idx] = '<option';
-                        if (column.type === "select") {
-                            if(vArray.indexOf(choices[i].k) > -1) {
-                                h[++idx] = ' selected="selected"';
-                            }
-                        } else {
-                            if (choices[i].k === value) {
-                                h[++idx] = ' selected="selected"';
-                            }
-                        }
-                        h[++idx] = ' value="';
-                        h[++idx] = choices[i].k;
-                        h[++idx] = '">';
-                        h[++idx] = choices[i].v;
-                        h[++idx] = '</option>';
-                    }
+                    h[++idx] = getChoicesHTML(column, choices, value, true);
                 }
                 h[++idx] = '</select>';
 
@@ -304,21 +286,70 @@ define([
         /*
          * Get the choicelist for a select question
          */
-        function getChoiceList(schema, col) {
+        function getChoiceList(schema, col, itemIndex, value) {
 
-            if(col.appearance && (col.appearance.indexOf('search(') >= 0 || col.appearance.indexOf('lookup_choices(') >= 0)) {
-                // External choices
-                var params = getAppearanceParams(col.appearance)
-            } else {
-                // Local choices
-                var listId = col.l_id;
-                var i;
-                if (schema && schema.choiceLists && schema.choiceLists.length) {
-                    for (i = 0; i < schema.choiceLists.length; i++) {
-                        if (schema.choiceLists[i].l_id === listId) {
-                            return schema.choiceLists[i].choices;
-                        }
+            // Get the choice list
+            var listId = col.l_id;
+            var i;
+            var choices;
+
+            if (schema && schema.choiceLists && schema.choiceLists.length) {
+                for (i = 0; i < schema.choiceLists.length; i++) {
+                    if (schema.choiceLists[i].l_id === listId) {
+                        choices = schema.choiceLists[i].choices;
                     }
+                }
+            }
+            if(choices.length > 0) {
+
+                if (col.appearance && (col.appearance.indexOf('search(') >= 0 || col.appearance.indexOf('lookup_choices(') >= 0)) {
+                    // External choices
+                    var params = getAppearanceParams(col.appearance)
+                    if (params.length > 0) {
+                        // todo considr fixed values
+                        var sIdent = globals.gGroupSurveys[globals.gCurrentSurvey];
+                        var value_column = choices[0].k;
+                        var label_column = choices[0].v;
+                        var url = '/lookup/choices/' + sIdent + '/' + params.filename + '/' + value_column + '/' + label_column;
+                        // todo add filter parameters
+                        $.ajax({   // Get the existing report details to edit
+                            url: url,
+                            cache: false,
+                            success: function (data, status) {
+                                var el = '#select_' + itemIndex;
+                                var html = getChoicesHTML(col, data, value, false);
+                                $(el).append(html);
+
+                                // Set up multi selects
+                                if(col.type === 'select') {
+                                   $(el).multiselect('rebuild') ({
+                                        onChange: function (option, checked, select) {
+
+                                            var $sel = option.closest('select');
+                                            var itemIndex = $sel.data("item");
+                                            var val = '';
+                                            if ($sel.val()) {
+                                                val = $sel.val().join(' ');
+                                            }
+                                            var config = {
+                                                itemIndex: itemIndex,
+                                                value: val
+                                            }
+                                            dataChanged(config);
+                                        }
+                                    });
+                                }
+
+                            }, error: function (data, status) {
+                                alert(window.localise.set("c_error"));
+                            }
+                        });
+                    } else {
+                        alert("invalid search for: " + col.question_name);
+                    }
+                } else {
+                    // Local choices
+                    return choices;
                 }
             }
         }
@@ -505,5 +536,52 @@ define([
                 }
             }
 
+        }
+
+        /*
+         * Support both internal arrays and external
+         * Internal
+         *    value: k
+         *    label: v
+         * External
+         *    value: value
+         *    label: labelInnerText
+         */
+        function getChoicesHTML(column, choices, value, internal) {
+            var i,
+                idx = -1,
+                h = [],
+                vArray,
+                v,
+                l;
+
+            if (column.type === "select") {
+                vArray = value.split(' ');
+            }
+            for (i = 0; i < choices.length; i++) {
+                if(internal) {
+                    v = choices[i].k;
+                    l = choices[i].v;
+                } else {
+                    v = choices[i].value;
+                    l = choices[i].labelInnerText;
+                }
+                h[++idx] = '<option';
+                if (column.type === "select") {
+                    if (vArray.indexOf(v) > -1) {
+                        h[++idx] = ' selected="selected"';
+                    }
+                } else {
+                    if (v === value) {
+                        h[++idx] = ' selected="selected"';
+                    }
+                }
+                h[++idx] = ' value="';
+                h[++idx] = v;
+                h[++idx] = '">';
+                h[++idx] = l;
+                h[++idx] = '</option>';
+            }
+            return h.join('');
         }
     });
