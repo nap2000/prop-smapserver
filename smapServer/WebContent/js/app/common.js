@@ -1111,6 +1111,7 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 			globals.gSetAsTheme = data.set_as_theme;
 			globals.gNavbarColor = data.navbar_color;
 			globals.gTraining = data.training;
+			globals.gRefreshRate = data.refresh_rate;
 
 			if(data.timezone) {
 				globals.gTimezone = data.timezone;

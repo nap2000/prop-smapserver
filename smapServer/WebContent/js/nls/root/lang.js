@@ -383,7 +383,7 @@ define({
     "tm_o_u": "Original Upload Page",
 
     // Analysis
-    "a_ref_rate": "Analysis auto refresh",
+    "a_ref_rate": "Analysis auto refresh interval",
     "a_exp_title": "Export Results",
     "a_exp_leg1": "Select a survey",
     "a_exp_leg2": "Output format:",

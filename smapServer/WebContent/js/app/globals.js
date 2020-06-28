@@ -137,6 +137,7 @@ define(function () {
         gViewId: 0,						// Current survey view
 
 	    gTraining: undefined,
+	    gRefreshRate: 0,
 
         gMapboxDefault: undefined,		// Mapbox key
         
