@@ -1010,59 +1010,76 @@
 							<div id="collapseOtherOptions" class="collapse" aria-labelledby="otherOptions">
 								<div class="card-body">
 
-									<div class="custom-control custom-checkbox">
-										<input type="checkbox" class="custom-control-input puboption" id="can_edit" value="can_edit" checked="checked">
-										<label class="custom-control-label" for="can_edit">
-											<span data-lang="u_other_edit" class="lang"></span>
-										</label>
-									</div>
+									<form>
+										<div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input puboption" id="can_edit" value="can_edit" checked="checked">
+											<label class="custom-control-label" for="can_edit">
+												<span data-lang="u_other_edit" class="lang"></span>
+											</label>
+										</div>
 
-									<div class="custom-control custom-checkbox">
-										<input type="checkbox" class="custom-control-input puboption" id="email_task" value="email_task" checked="checked">
-										<label class="custom-control-label" for="email_task">
-											<span data-lang="u_email_tasks" class="lang"></span>
-										</label>
-									</div>
+										<div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input puboption" id="email_task" value="email_task" checked="checked">
+											<label class="custom-control-label" for="email_task">
+												<span data-lang="u_email_tasks" class="lang"></span>
+											</label>
+										</div>
 
-									<div class="custom-control custom-checkbox">
-										<input type="checkbox" class="custom-control-input puboption" id="can_notify" value="can_notify" checked="checked">
-										<label class="custom-control-label" for="can_notify">
-											<span data-lang="u_notifications" class="lang"></span>
-										</label>
-									</div>
+										<div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input puboption" id="can_notify" value="can_notify" checked="checked">
+											<label class="custom-control-label" for="can_notify">
+												<span data-lang="u_notifications" class="lang"></span>
+											</label>
+										</div>
 
-									<div class="custom-control custom-checkbox">
-										<input type="checkbox" class="custom-control-input puboption" id="can_use_api" value="can_use_api" checked="checked">
-										<label class="custom-control-label" for="can_use_api">
-											<span data-lang="u_use_api" class="lang"></span>
-										</label>
-									</div>
+										<div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input puboption" id="can_use_api" value="can_use_api" checked="checked">
+											<label class="custom-control-label" for="can_use_api">
+												<span data-lang="u_use_api" class="lang"></span>
+											</label>
+										</div>
 
-									<div class="custom-control custom-checkbox">
-										<input type="checkbox" class="custom-control-input puboption" id="can_submit" value="can_submit" checked="checked">
-										<label class="custom-control-label" for="can_submit">
-											<span data-lang="u_submissions" class="lang"></span>
-										</label>
-									</div>
+										<div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input puboption" id="can_submit" value="can_submit" checked="checked">
+											<label class="custom-control-label" for="can_submit">
+												<span data-lang="u_submissions" class="lang"></span>
+											</label>
+										</div>
 
-									<div class="custom-control custom-checkbox awsSmsOnly">
-										<input type="checkbox" class="custom-control-input puboption" id="can_sms" value="can_sms" checked="checked">
-										<label class="custom-control-label" for="can_sms">
-											<span data-lang="u_sms" class="lang"></span>
-										</label>
-									</div>
+										<div class="custom-control custom-checkbox awsSmsOnly">
+											<input type="checkbox" class="custom-control-input puboption" id="can_sms" value="can_sms" checked="checked">
+											<label class="custom-control-label" for="can_sms">
+												<span data-lang="u_sms" class="lang"></span>
+											</label>
+										</div>
 
-									<div class="custom-control custom-checkbox">
-										<input type="checkbox" class="custom-control-input puboption" id="send_optin" value="send_optin" checked="checked">
-										<label class="custom-control-label" for="send_optin">
-											<span data-lang="u_eoi" class="lang"></span>
-										</label>
-									</div>
+										<div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input puboption" id="send_optin" value="send_optin" checked="checked">
+											<label class="custom-control-label" for="send_optin">
+												<span data-lang="u_eoi" class="lang"></span>
+											</label>
+										</div>
 
-									<label for="o_tz" data-lang="c_tz" class="lang control-label">tz</label>
-									<select class="form-control timezone_select" id="o_tz"></select>
-									<label for="o_language" data-lang="c_lang" class="lang control-label">lang</label>
-									<select class="form-control" id="o_language"></select>
+										<div class="form-group row">
+											<label for="o_tz" data-lang="c_tz" class="lang control-label col-sm-2">tz</label>
+											<div class="col-sm-10">
+												<select class="form-control timezone_select" id="o_tz"></select>
+											</div>
+										</div>
+										<div class="form-group row">
+											<label for="o_language" data-lang="c_lang" class="lang control-label col-sm-2">lang</label>
+											<div class="col-sm-10">
+												<select class="form-control" id="o_language"></select>
+											</div>
+										</div>
+										<div class="form-group row">
+											<label for="o_refresh_rate" data-lang="a_ref_rate" class="lang control-label col-sm-2">ref</label>
+											<div class="col-sm-6">
+												<input type="number" class="form-control" id="o_refresh_rate"></input>
+											</div>
+											<p class="col-sm-4 lang" data-lang="i_m"></p>
+										</div>
+									</form>
 								</div>
 							</div>
 						</div>
