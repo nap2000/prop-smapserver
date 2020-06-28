@@ -269,3 +269,6 @@ insert into autoupdate_questions (q_id, s_id)
      and q.parameters is not null and q.parameters like '%source=%' 
      and (q.parameters like '%auto=yes%' or q.parameters like '%auto_annotate=yes%') 
      and q_id not in (select q_id from autoupdate_questions);
+
+ alter table organisation add column refresh_rate integer default 0;
+ update organisation set refresh_rate = 0 where refresh_rate is null;

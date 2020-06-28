@@ -322,22 +322,7 @@ define([
 
                                 // Set up multi selects
                                 if(col.type === 'select') {
-                                   $(el).multiselect('rebuild') ({
-                                        onChange: function (option, checked, select) {
-
-                                            var $sel = option.closest('select');
-                                            var itemIndex = $sel.data("item");
-                                            var val = '';
-                                            if ($sel.val()) {
-                                                val = $sel.val().join(' ');
-                                            }
-                                            var config = {
-                                                itemIndex: itemIndex,
-                                                value: val
-                                            }
-                                            dataChanged(config);
-                                        }
-                                    });
+                                   $(el).multiselect('rebuild');
                                 }
 
                             }, error: function (data, status) {
