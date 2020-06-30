@@ -238,7 +238,7 @@ define([
                     h[++idx] = '<option value=""></option>';
                 }
 
-                var choices = getChoiceList(schema, column, itemIndex, value);
+                var choices = getChoiceList(schema, column, itemIndex, value, record);
                 if (choices) {
                     h[++idx] = getChoicesHTML(column, choices, value, true);
                 }
@@ -286,7 +286,7 @@ define([
         /*
          * Get the choicelist for a select question
          */
-        function getChoiceList(schema, col, itemIndex, value) {
+        function getChoiceList(schema, col, itemIndex, value, record) {
 
             // Get the choice list
             var listId = col.l_id;
@@ -306,12 +306,32 @@ define([
                     // External choices
                     var params = getAppearanceParams(col.appearance)
                     if (params.length > 0) {
-                        // todo considr fixed values
+                        // todo consider fixed values
                         var sIdent = globals.gGroupSurveys[globals.gCurrentSurvey];
                         var value_column = choices[0].k;
                         var label_column = choices[0].v;
                         var url = '/lookup/choices/' + sIdent + '/' + params.filename + '/' + value_column + '/' + label_column;
-                        // todo add filter parameters
+                        if(typeof params.filter !== "undefined") {
+                            if(typeof params.filter_column !== "undefined" && typeof params.filter_value !== "undefined") {
+                                // Add first filter
+                                url += '?search_type=' + params.filter;
+                                url += '&q_column=' + params.filter_column;
+                                if(params.filter_value.indexOf('${') == 0) {
+                                    params.filter_value = record[params.filter_value.substring(2, params.filter_value.length - 1)];
+                                }
+                                url += '&q_value=' + params.filter_value;
+                                if(typeof params.second_filter_column !== "undefined"
+                                        && typeof params.second_filter_value !== "undefined") {
+                                    url += '&f_column=' + params.second_filter_column;
+                                    if(params.second_filter_value.indexOf('${') == 0) {
+                                        params.second_filter_value = record[params.second_filter_value.substring(2, params.second_filter_value.length - 1)];
+                                    }
+                                    url += '&f_value=' + params.second_filter_value;
+                                }
+                            }
+                        }
+
+
                         $.ajax({   // Get the existing report details to edit
                             url: url,
                             cache: false,
@@ -326,7 +346,7 @@ define([
                                 }
 
                             }, error: function (data, status) {
-                                alert(window.localise.set("c_error"));
+                                alert("Error: " + data.responseText);
                             }
                         });
                     } else {
