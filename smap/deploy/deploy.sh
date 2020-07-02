@@ -104,6 +104,7 @@ cp -r $deploy_from/resources /smap_bin
 cp -r $deploy_from/scripts/* /smap_bin
 cp  $deploy_from/resources/fonts/* /usr/share/fonts/truetype
 chmod +x /smap_bin/*.sh
+chmod +r /usr/share/fonts/truetype/*
 
 # Copy aws credentials
 if [ $u1910 -eq 1 ]; then
