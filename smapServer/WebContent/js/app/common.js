@@ -3700,12 +3700,13 @@ function getAccessibleCsvFiles($elem, includeNone) {
  /*
   * Get the questions in a survey
   */
-function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly) {
+function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly, callback) {
 
 	function populateElement($elem, data) {
 		var h = [],
 			idx = -1,
-			i;
+			i,
+			setValueFn = callback;
 
 		if (includeNone) {
 			h[++idx] = '<option value="">';
@@ -3722,6 +3723,10 @@ function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly) {
 			}
 		}
 		$elem.empty().append(h.join(''));
+
+		if(typeof setValueFn === "function") {
+			setValueFn();
+		}
 	}
 
 	if(sIdent === 'self') {
@@ -3742,7 +3747,6 @@ function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly) {
 
 					gCache[theIdent] = data;
 					populateElement($theElem, data);
-
 				},
 				error: function (xhr, textStatus, err) {
 					removeHourglass();
