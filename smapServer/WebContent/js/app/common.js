@@ -3598,7 +3598,7 @@ function roleSelected(roleId, selectedRoles) {
  /*
   * Get all the surveys that a user can access
   */
-function getAccessibleSurveys($elem, includeNone, includeBlocked, groupsOnly) {
+function getAccessibleSurveys($elem, includeNone, includeBlocked, groupsOnly, includeSelf) {
 
 	var url="/surveyKPI/surveys";
 	var hasParam = false;
@@ -3627,6 +3627,12 @@ function getAccessibleSurveys($elem, includeNone, includeBlocked, groupsOnly) {
 			if(includeNone) {
 				h[++idx] = '<option value="">';
 				h[++idx] = localise.set["c_none"]
+				h[++idx] = '</option>';
+			}
+
+			if(includeSelf) {
+				h[++idx] = '<option value="self">';
+				h[++idx] = localise.set["c_self"]
 				h[++idx] = '</option>';
 			}
 			for(i = 0; i < data.length; i++) {
