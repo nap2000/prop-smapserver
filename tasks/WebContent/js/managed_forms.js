@@ -612,8 +612,6 @@ require([
             updateVisibleColumns(config.columns);
             saveColumns();
 
-            showManagedData(globals.gCurrentSurvey, showTable, false); // redraw
-
         });
 
         // Refresh menu
@@ -1932,6 +1930,7 @@ require([
             data: {columns: saveView},
             success: function (data, status) {
                 removeHourglass();
+	            showManagedData(globals.gCurrentSurvey, showTable, false); // redraw
                 $('#right-sidebar').removeClass("sidebar-open");
             }, error: function (data, status) {
                 removeHourglass();
