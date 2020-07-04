@@ -87,6 +87,7 @@ define({
     "c_host": "Host",
     "c_rank": "Rank",
     "c_user": "User",
+    "c_self": "Self",
     "c_vertical": "Vertical",
     "c_projects": "Projects",
     "c_email": "Email",
