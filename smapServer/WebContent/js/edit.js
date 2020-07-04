@@ -149,7 +149,7 @@ $(document).ready(function() {
 	/*
 	 * Get surveys and csv files that the user can link to
 	 */
-	getAccessibleSurveys($('.linkable_surveys'), true, true, false);
+	getAccessibleSurveys($('.linkable_surveys'), true, true, false, true);
 	getAccessibleCsvFiles($('.linkable_files'), true);
 
 	/*
