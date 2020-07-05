@@ -42,10 +42,6 @@ $(document).ready(function() {
         $('#export').dialog("open");
     });
 
-    /*
-     * Get the list of available custom reports
-     */
-    getCustomReportList();
 
     // Change event on export dialog survey select
     $('#export_survey').change(function() {
@@ -563,30 +559,6 @@ function addMediaPickList() {
         $('.mediaselect').html(h2.join(''));
     }
 
-}
-
-/*
- * Get the list of available projects from the server
- */
-function getCustomReportList() {
-    addHourglass();
-    $.ajax({
-        url: "/surveyKPI/custom_reports?type=oversight&negateType=true",
-        dataType: 'json',
-        cache: false,
-        success: function(data) {
-            removeHourglass();
-            addCustomReportList(data);
-        },
-        error: function(xhr, textStatus, err) {
-            removeHourglass();
-            if(xhr.readyState == 0 || xhr.status == 0) {
-                return;  // Not an error
-            } else {
-                alert("Error: Failed to get list of custom reports: " + err);
-            }
-        }
-    });
 }
 
 /*

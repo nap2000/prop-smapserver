@@ -54,7 +54,6 @@ require([
          'app/localise',
          'app/globals',
          'moment',
-         'ol3/ol',
          'bootstrap-datetimepicker.min'
          
          ], function($, common, bootstrap, localise, globals, moment) {
@@ -120,6 +119,7 @@ $(document).ready(function() {
     setCustomUserTrail();			// Apply custom javascript
 	setupUserProfile();
 	localise.setlang();
+	$('.date').prop("title", localise.set["c_lt"]);
 		
 	// Set up the start and end dates with date picker
 	$('#startDate').datetimepicker({
@@ -156,19 +156,6 @@ $(document).ready(function() {
 	});
 	
 	getLoggedInUser(getUserList, false, true, undefined, false, true);
-	
-	// Add responses to events
-	$('#project_list').change(function() {
-		globals.gCurrentProject = $('#project_list option:selected').val();
-		globals.gCurrentSurvey = -1;
-		globals.gCurrentTaskGroup = undefined;
-		
-		saveCurrentProject(globals.gCurrentProject, 
-				globals.gCurrentSurvey, 
-				globals.gCurrentTaskGroup);
-		
-		getUserList();
- 	 });
 	
 	// Add responses to changing parameters
 	$('#user_list').change(function() {		
@@ -283,31 +270,29 @@ $(document).ready(function() {
 
 
 
-function getUserList() {
-	
-	if(globals.gCurrentProject > 0) { 
+	function getUserList() {
+
 		addHourglass();
 		$.ajax({
-			url: "/surveyKPI/userList/" + globals.gCurrentProject,
+			url: "/surveyKPI/userList",
 			cache: false,
 			dataType: 'json',
 			success: function(data) {
 				removeHourglass();
 				updateUserList(data);
 				getData();
-	
+
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
 				if(xhr.readyState == 0 || xhr.status == 0) {
-		              return;  // Not an error
+					return;  // Not an error
 				} else {
 					alert("Error: Failed to get user list: " + err);
 				}
 			}
-		});	
+		});
 	}
-}
 
 function updateUserList(users, addAll) {
 
@@ -342,7 +327,7 @@ function getData() {
 		
 	getTrailData(startUtc.valueOf(), endUtc.valueOf());
 
-	getSurveyLocations(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD'));
+	//getSurveyLocations(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD'));
 
 }
 function getTrailData(startDate, endDate) {
@@ -350,8 +335,8 @@ function getTrailData(startDate, endDate) {
 	var projectId = globals.gCurrentProject,
 		userId = $('#user_list option:selected').val();
 
-	var url = '/surveyKPI/usertrail/trail?projectId=' + projectId +
-		'&userId=' + userId +
+	var url = '/surveyKPI/usertrail/trail' +
+		'?userId=' + userId +
 		'&startDate=' + startDate +
 		'&endDate=' + endDate;
 	
@@ -456,7 +441,6 @@ function showSurveyLocations() {
 			geometry: new ol.geom.Point(gSurveyLocations.features[i].geometry),
 			name: gSurveyLocations.features[i].properties['Survey Name']
 		});
-		//f.setStyle(iconStyle);
 		
 		gSurveys.push(f);
 		coords.push(gSurveyLocations.features[i].geometry);
