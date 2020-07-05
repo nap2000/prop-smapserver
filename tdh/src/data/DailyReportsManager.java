@@ -175,9 +175,9 @@ public class DailyReportsManager {
 			cResults.setAutoCommit(false);		
 			pstmt.setFetchSize(100);	
 			
-			log.info("Get dairly report data: " + pstmt.toString());
 			pstmt.setInt(1,  month);
 			pstmt.setInt(2,  year);
+			log.info("Get daily report data: " + pstmt.toString());
 			rs = pstmt.executeQuery();
 			
 			/*
@@ -252,63 +252,59 @@ public class DailyReportsManager {
 			/*
 			 * Create the chart
 			 */
-			int startRow = rowNumber++;
-			int endRow = startRow + 10;
-			rowNumber = endRow + 1;
-			int endCol = chartItems.size() + 5;
-			XSSFDrawing drawing = sheet.createDrawingPatriarch();
-			ClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 0, startRow, endCol, endRow);
-			XSSFChart chart = drawing.createChart(anchor);
-			
-			chart.setTitleText("Chart Title");
-			chart.setTitleOverlay(false);			
-			XDDFChartLegend legend = chart.getOrAddLegend();
-			legend.setPosition(LegendPosition.TOP_RIGHT);
-			
-			XDDFCategoryAxis bottomAxis = chart.createCategoryAxis(AxisPosition.BOTTOM);
-			bottomAxis.setTitle("Date");
-			XDDFValueAxis leftAxis = chart.createValueAxis(AxisPosition.LEFT);
-			leftAxis.setTitle("Count");
-			 
-			
-			XDDFDataSource<String> xs = XDDFDataSourcesFactory.fromStringCellRange(sheet,
-					new CellRangeAddress(chartDataRow, chartDataRow, 1, chartItems.size()));
-
-			XDDFBarChartData bar = (XDDFBarChartData) chart.createData(ChartTypes.BAR, bottomAxis, leftAxis);
-			for(int i = 0; i < config.bars.size(); i++) {
-				ReportMultiColumn rmc = config.bars.get(i);
-				XDDFChartData.Series series = bar.addSeries(xs,XDDFDataSourcesFactory.fromNumericCellRange(sheet,
-						new CellRangeAddress(chartDataRow + 1 + i, chartDataRow + 1 + i, 1, chartItems.size())));
-				series.setTitle(rmc.title, null); 
+			if(chartItems.size() > 0) {
+				int startRow = rowNumber++;
+				int endRow = startRow + 10;
+				rowNumber = endRow + 1;
+				int endCol = chartItems.size() + 5;
+				XSSFDrawing drawing = sheet.createDrawingPatriarch();
+				ClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 0, startRow, endCol, endRow);
+				XSSFChart chart = drawing.createChart(anchor);
+				
+				chart.setTitleText("Chart Title");
+				chart.setTitleOverlay(false);			
+				XDDFChartLegend legend = chart.getOrAddLegend();
+				legend.setPosition(LegendPosition.TOP_RIGHT);
+				
+				XDDFCategoryAxis bottomAxis = chart.createCategoryAxis(AxisPosition.BOTTOM);
+				bottomAxis.setTitle("Date");
+				XDDFValueAxis leftAxis = chart.createValueAxis(AxisPosition.LEFT);
+				leftAxis.setTitle("Count");
+			 		
+				XDDFDataSource<String> xs = XDDFDataSourcesFactory.fromStringCellRange(sheet,
+						new CellRangeAddress(chartDataRow, chartDataRow, 1, chartItems.size()));
+	
+				XDDFBarChartData bar = (XDDFBarChartData) chart.createData(ChartTypes.BAR, bottomAxis, leftAxis);
+				for(int i = 0; i < config.bars.size(); i++) {
+					ReportMultiColumn rmc = config.bars.get(i);
+					XDDFChartData.Series series = bar.addSeries(xs,XDDFDataSourcesFactory.fromNumericCellRange(sheet,
+							new CellRangeAddress(chartDataRow + 1 + i, chartDataRow + 1 + i, 1, chartItems.size())));
+					series.setTitle(rmc.title, null); 
+				}
+				chart.plot(bar);
+				
+				// correcting the overlap so bars really are stacked and not side by side
+				// From: https://www.roytuts.com/how-to-generate-stacked-bar-chart-or-column-chart-in-excel-using-apache-poi/
+				chart.getCTChart().getPlotArea().getBarChartArray(0).addNewOverlap().setVal((byte) 100);
+							
+				// Add the bars
+				
+				bar.setBarDirection(BarDirection.COL);
+		        bar.setBarGrouping(BarGrouping.STACKED);
+		        
+	            ArrayList<PresetColor> colors = new ArrayList<PresetColor> ();
+	            colors.add(PresetColor.CHARTREUSE);
+	            colors.add(PresetColor.TURQUOISE);
+	            colors.add(PresetColor.CORNFLOWER_BLUE);
+	            colors.add(PresetColor.DARK_GREEN);
+	            
+	            for(int i = 0, col = 0; i < config.bars.size(); i++, col++) {
+	            	if(col >= colors.size()) {
+	            		col = 0;
+	            	}
+		            //solidFillSeries(bar, i, colors.get(col));
+	            }
 			}
-			chart.plot(bar);
-			
-			// correcting the overlap so bars really are stacked and not side by side
-			// From: https://www.roytuts.com/how-to-generate-stacked-bar-chart-or-column-chart-in-excel-using-apache-poi/
-			chart.getCTChart().getPlotArea().getBarChartArray(0).addNewOverlap().setVal((byte) 100);
-						
-			// Add the bars
-			
-			bar.setBarDirection(BarDirection.COL);
-	        bar.setBarGrouping(BarGrouping.STACKED);
-			
-
-	        
-			
-	       
-	        
-            ArrayList<PresetColor> colors = new ArrayList<PresetColor> ();
-            colors.add(PresetColor.CHARTREUSE);
-            colors.add(PresetColor.TURQUOISE);
-            colors.add(PresetColor.CORNFLOWER_BLUE);
-            colors.add(PresetColor.DARK_GREEN);
-            
-            for(int i = 0, col = 0; i < config.bars.size(); i++, col++) {
-            	if(col >= colors.size()) {
-            		col = 0;
-            	}
-	            //solidFillSeries(bar, i, colors.get(col));
-            }
             
 			
 			cResults.setAutoCommit(true);		// End paging
