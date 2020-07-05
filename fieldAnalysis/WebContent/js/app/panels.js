@@ -291,7 +291,7 @@ $(document).ready(function() {
 
 	 // Initialise other dialogs
      initialiseDialogs();
-	
+
 	 /*
 	  * Get the user details so we have the default project
 	  * Then load the available projects for the user and load the panels for the default project
@@ -318,7 +318,9 @@ $(document).ready(function() {
 
 function loggedInUserIdentified(projectId) {
 	getPanels(projectId);
-	//getQueries(true);		// Get Queries accessible to this user including ones published by others
+	if(globals.gRefreshRate > 0) {
+		autoRefresh();
+	}
 }
 
 /*
@@ -836,6 +838,15 @@ function getFilter() {
 	 } else {
 		 return undefined;
 	 }
+}
+
+function autoRefresh() {
+	console.log("refresh every: " + globals.gRefreshRate + " minutes")
+	setTimeout(function(){
+		console.log("refresh");
+		refreshAnalysisData();
+		autoRefresh();
+		}, 60000 * globals.gRefreshRate);
 }
 
 });
