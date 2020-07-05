@@ -1111,6 +1111,7 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 			globals.gSetAsTheme = data.set_as_theme;
 			globals.gNavbarColor = data.navbar_color;
 			globals.gTraining = data.training;
+			globals.gRefreshRate = data.refresh_rate;
 
 			if(data.timezone) {
 				globals.gTimezone = data.timezone;
@@ -3597,7 +3598,7 @@ function roleSelected(roleId, selectedRoles) {
  /*
   * Get all the surveys that a user can access
   */
-function getAccessibleSurveys($elem, includeNone, includeBlocked, groupsOnly) {
+function getAccessibleSurveys($elem, includeNone, includeBlocked, groupsOnly, includeSelf) {
 
 	var url="/surveyKPI/surveys";
 	var hasParam = false;
@@ -3626,6 +3627,12 @@ function getAccessibleSurveys($elem, includeNone, includeBlocked, groupsOnly) {
 			if(includeNone) {
 				h[++idx] = '<option value="">';
 				h[++idx] = localise.set["c_none"]
+				h[++idx] = '</option>';
+			}
+
+			if(includeSelf) {
+				h[++idx] = '<option value="self">';
+				h[++idx] = localise.set["c_self"]
 				h[++idx] = '</option>';
 			}
 			for(i = 0; i < data.length; i++) {
@@ -3699,12 +3706,13 @@ function getAccessibleCsvFiles($elem, includeNone) {
  /*
   * Get the questions in a survey
   */
-function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly) {
+function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly, callback) {
 
 	function populateElement($elem, data) {
 		var h = [],
 			idx = -1,
-			i;
+			i,
+			setValueFn = callback;
 
 		if (includeNone) {
 			h[++idx] = '<option value="">';
@@ -3721,6 +3729,10 @@ function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly) {
 			}
 		}
 		$elem.empty().append(h.join(''));
+
+		if(typeof setValueFn === "function") {
+			setValueFn();
+		}
 	}
 
 	if(sIdent === 'self') {
@@ -3741,7 +3753,6 @@ function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly) {
 
 					gCache[theIdent] = data;
 					populateElement($theElem, data);
-
 				},
 				error: function (xhr, textStatus, err) {
 					removeHourglass();
@@ -5040,4 +5051,59 @@ function addCacheBuster(url) {
 		cb = "?";
 	}
 	return cb + "_v=" + new Date().getTime().toString();
+}
+
+function getAppearanceParams(appearance) {
+
+	var response = {};
+
+	var idx1 = appearance.indexOf('(');
+	var idx2 = appearance.indexOf(')');
+	var params = appearance.substring(idx1 + 1, idx2);
+	var paramsArray = [];
+	if(params) {
+		paramsArray = params.split(',');
+	}
+
+	response.length = paramsArray.length;
+	if(paramsArray.length > 0) {
+
+		// 1. First parameter is the filename
+		var filename = paramsArray[0].trim();
+		response.filename = filename.replace(/'/g, "");
+
+		response.filter = '';    // default
+		if(paramsArray.length > 1) {
+			// Second parameter is the filter
+			response.filter = paramsArray[1].trim();
+			response.filter = response.filter.replace(/'/g, "");
+		}
+
+		if(paramsArray.length > 2) {
+			// Third parameter is the filter column
+			response.filter_column = paramsArray[2].trim();
+			response.filter_column = response.filter_column.replace(/'/g, "");
+		}
+
+		if(paramsArray.length > 3) {
+			// Fourth parameter is the filter value
+			response.filter_value = paramsArray[3].trim();
+			response.filter_value = response.filter_value.replace(/'/g, "");
+		}
+
+		if(paramsArray.length > 4) {
+			// Fifth parameter is the second filter column
+			response.second_filter_column = paramsArray[4].trim();
+			response.second_filter_column = response.second_filter_column.replace(/'/g, "");
+		}
+
+
+		if(paramsArray.length > 5) {
+			// Sixth parameter is the filter value
+			response.second_filter_value = paramsArray[5].trim();
+			response.second_filter_value = response.second_filter_value.replace(/'/g, "");
+		}
+
+	}
+	return response;
 }

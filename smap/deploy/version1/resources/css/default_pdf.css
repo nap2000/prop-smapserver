@@ -25,6 +25,10 @@ group {
 	font-family: "noto sans bengali", "noto sans bengali bold"; 
 }
 
+.devanagari { 
+	font-family: "noto sans devanagari light", "notosansdevanagari-bold"; 
+}
+
 * { 
 	font-family: "noto sans", "noto sans bold";
 }

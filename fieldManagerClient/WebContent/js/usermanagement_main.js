@@ -553,6 +553,7 @@ require([
 			organisation.email_port = parseInt($('#o_email_port').val());
 			organisation.default_email_content = $('#o_default_email_content').val();
 			organisation.locale = $('#o_language').val();
+			organisation.refresh_rate = $('#o_refresh_rate').val();
 			organisation.timeZone = $('#o_tz').val();
 			organisation.server_description = $('#o_server_description').val();
 
@@ -1652,6 +1653,7 @@ require([
 			});
 			addLanguageOptions($('#o_language'), org.locale);
 			$('#o_tz').val(org.timeZone);
+			$('#o_refresh_rate').val(org.refresh_rate);
 
 			gOrgId = org.id;
 			setLogos(org.id);

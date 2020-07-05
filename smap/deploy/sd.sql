@@ -287,3 +287,6 @@ ALTER TABLE custom_report_type OWNER TO ws;
  alter table custom_report add column  survey_ident text REFERENCES survey(ident) ON DELETE CASCADE;
  drop index custom_report_name;
  CREATE UNIQUE INDEX custom_report_name ON custom_report(p_id, name);
+
+ alter table organisation add column refresh_rate integer default 0;
+ update organisation set refresh_rate = 0 where refresh_rate is null;

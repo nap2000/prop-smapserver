@@ -108,6 +108,10 @@ var gNewVal,
 	g_from_lang_val,
 	g_to_lang_val;
 
+window.gAppChoiceArray = [];
+var gAppearanceQuestion;
+var gAppearanceParams;
+
 'use strict';
 
 $(document).ready(function() {
@@ -145,7 +149,7 @@ $(document).ready(function() {
 	/*
 	 * Get surveys and csv files that the user can link to
 	 */
-	getAccessibleSurveys($('.linkable_surveys'), true, true, false);
+	getAccessibleSurveys($('.linkable_surveys'), true, true, false, true);
 	getAccessibleCsvFiles($('.linkable_files'), true);
 
 	/*
@@ -411,7 +415,7 @@ $(document).ready(function() {
 		var survey = globals.model.survey;
 		var qType = survey.forms[globals.gFormIndex].questions[globals.gItemIndex].type;
 		if(qType === "child_form") {
-			getQuestionsInSurvey($('#p_key_question'), $(this).val(), true, true);
+			getQuestionsInSurvey($('#p_key_question'), $(this).val(), true, true, setAppearanceValues);
 		}
 	});
 
@@ -572,7 +576,7 @@ $(document).ready(function() {
 		var survey = globals.model.survey;
 		var search_source = $('input[type=radio][name=search_source]:checked').val();
 		if(search_source === "survey") {
-			getQuestionsInSurvey($('.column_select'), $(this).val(), true, false);
+			getQuestionsInSurvey($('.column_select'), $(this).val(), true, false, setAppearanceValues);
 		} else {
 			getQuestionsInCsvFile($('.column_select'), $(this).val(), true);
 		}
@@ -1866,7 +1870,7 @@ function respondToEvents($context) {
 					}
 				}
 			}
-			getQuestionsInSurvey($('#p_key_question'), sIdent, true, true);
+			getQuestionsInSurvey($('#p_key_question'), sIdent, true, true, undefined);
 		} else if(qType === "begin repeat") {
 			$('#p_ref').empty().append(getFormsAsSelect(qName));
 		}
@@ -1951,7 +1955,6 @@ function respondToEvents($context) {
 		var qAppearances = globals.model.qAppearances[qType];
 		var appearanceDetails;
 		var appearanceArray = [];
-		var appChoiceArray = [];
 
 		var appearanceData = $li.find('.labelProp').val();
 		var app_choices = question.app_choices;
@@ -1963,7 +1966,7 @@ function respondToEvents($context) {
 			appearanceArray = tokenizeAppearance(appearanceData);
 		}
 		if(app_choices) {
-			appChoiceArray = app_choices.split(' ');
+			window.gAppChoiceArray = app_choices.split(' ');
 		}
 
 		/*
@@ -2181,17 +2184,7 @@ function respondToEvents($context) {
 		/*
 		 * Add appearance values for app choices
 		 */
-		var langIdx = 0;
-		for(i = 0; i < appChoiceArray.length; i++) {
-			var ace = appChoiceArray[i].split('::');
-			if(ace.length > 1) {
-				if(ace[0] === '_sv') {
-					$('#a_search_value').val(ace[1]);
-				} else if(ace[0] === '_sl' && ace.length > 2) {
-					$('#a_search_label' + langIdx++).val(ace[2]);
-				}
-			}
-		}
+		setAppearanceValues();
 
 		// Add any appearance values not explicetely set
 		$('#a_other').val(otherAppearances);       // Not sure if we want to do this
@@ -3645,33 +3638,19 @@ function setNoFilter() {
 				} else if (type === "form") {
 					// Custom - hardcoded
 					if(val === "search(" || val === "lookup_choices(") {
+						var params = getAppearanceParams(appearance);
 
 						// Now check parameters
-						var idx1 = appearance.indexOf('(');
-						var idx2 = appearance.indexOf(')');
-						var params = appearance.substring(idx1 + 1, idx2);
-						var paramsArray = [];
-						if(params) {
-							paramsArray = params.split(',');
-						}
-						if(paramsArray.length > 0) {
-							var filter;
-							var filter_column;
-							var filter_value;
-							var second_filter_column;
-							var second_filter_value;
-
+						if(params.length > 0) {
 							// 1. First parameter is the filename
-							var filename = paramsArray[0].trim();
-							filename = filename.replace(/'/g, "");
-							if(filename.startsWith('linked_s')) {
-								var sIdent = filename.substring("linked_s".length - 1);
+							if(params.filename.startsWith('linked_s')) {
+								var sIdent = params.filename.substring("linked_s".length - 1);
 								$('input[type=radio][name=search_source][value=survey]').prop('checked', true);
 								$('#a_survey_identifier').val(sIdent);
 								$('.search_survey').show();
-								getQuestionsInSurvey($('.column_select'), sIdent, true, false);
+								getQuestionsInSurvey($('.column_select'), sIdent, true, false, setAppearanceValues);
 							} else {
-								var csvIndex = getIndexOfCsvFilename(filename);
+								var csvIndex = getIndexOfCsvFilename(params.filename);
 								$('input[type=radio][name=search_source][value=csv]').prop('checked', true);
 								$('#a_csv_identifier').val(csvIndex);
 								$('.search_csv').show();
@@ -3680,68 +3659,13 @@ function setNoFilter() {
 								}
 							}
 
-							filter = '';    // default
-							if(paramsArray.length > 1) {
-								// Second parameter is the filter
-								filter = paramsArray[1].trim();
-								filter = filter.replace(/'/g, "");
-								$('#a_match').val(filter);
-							}
-
-							if(paramsArray.length > 2) {
-								// Third parameter is the filter column
-								filter_column = paramsArray[2].trim();
-								filter_column = filter_column.replace(/'/g, "");
-								$('#a_filter_column').val(filter_column);
-							}
-
-							if(paramsArray.length > 3) {
-								// Fourth parameter is the filter value
-								filter_value = paramsArray[3].trim();
-								filter_value = filter_value.replace(/'/g, "");
-								$('#a_filter_value_static').val(filter_value);
-							}
-
-							if(paramsArray.length > 4) {
-								// Fifth parameter is the second filter column
-								second_filter_column = paramsArray[4].trim();
-								second_filter_column = second_filter_column.replace(/'/g, "");
-								$('#a_second_filter_column').val(second_filter_column);
-							}
-
-
-							if(paramsArray.length > 5) {
-								// Sixth parameter is the filter value
-								second_filter_value = paramsArray[5].trim();
-								second_filter_value = second_filter_value.replace(/'/g, "");
-								$('#a_second_filter_value_static').val(second_filter_value);
-							}
+							gAppearanceParams = params;
 
 
 						}
-						/*
-                         * Add the choice values
-                         */
-						var optionList = survey.optionLists[question.list_name];
-						if(optionList && optionList.options.length > 0) {
-							var i;
-							for(i = 0; i < optionList.options.length; i++) {
-								var v = optionList.options[i].value;
-								if(isNaN(v)) {
-									// Apply this choice
-									$('#a_search_value').val(v);
-									var choiceIdx = 0;
-									var labels = optionList.options[i].labels;
-									for(choiceIdx = 0; choiceIdx <  optionList.options[i].labels.length; choiceIdx++) {
-										$('#a_search_label' + choiceIdx).val(labels[choiceIdx].text);
-									}
-									break;
-								} else {
-									continue;   // Purely numeric must be a static choice
-								}
-							}
 
-						}
+						gAppearanceQuestion = question;
+						setAppearanceValues();
 
 						/*
 						 * Set the access value
@@ -4040,5 +3964,71 @@ function setNoFilter() {
 			}
 			function showParameterError(msg) {
 				$('#parameter_msg').removeClass('alert-warning').addClass('alert-danger').show().html(msg);
+			}
+
+			/*
+			 * Set values in drop down lists in appearance dialog
+			 */
+			function setAppearanceValues() {
+				var langIdx = 0;
+				for (i = 0; i < window.gAppChoiceArray.length; i++) {
+					var ace = window.gAppChoiceArray[i].split('::');
+					if (ace.length > 1) {
+						if (ace[0] === '_sv') {
+							$('#a_search_value').val(ace[1]);
+						} else if (ace[0] === '_sl' && ace.length > 2) {
+							$('#a_search_label' + langIdx++).val(ace[2]);
+						}
+					}
+				}
+
+				/*
+                 * Add the choice values
+                 */
+				if(gAppearanceQuestion) {
+					var survey = globals.model.survey;
+					var optionList = survey.optionLists[gAppearanceQuestion.list_name];
+					if (optionList && optionList.options.length > 0) {
+						var i;
+						for (i = 0; i < optionList.options.length; i++) {
+							var v = optionList.options[i].value;
+							if (isNaN(v)) {
+								// Apply this choice
+								$('#a_search_value').val(v);
+								var choiceIdx = 0;
+								var labels = optionList.options[i].labels;
+								for (choiceIdx = 0; choiceIdx < optionList.options[i].labels.length; choiceIdx++) {
+									$('#a_search_label' + choiceIdx).val(labels[choiceIdx].text);
+								}
+								break;
+							} else {
+								continue;   // Purely numeric must be a static choice
+							}
+						}
+					}
+
+					if(gAppearanceParams.length > 1) {
+						$('#a_match').val(gAppearanceParams.filter);
+					}
+
+					if(gAppearanceParams.length > 2) {
+						$('#a_filter_column').val(gAppearanceParams.filter_column);
+					}
+
+					if(gAppearanceParams.length > 3) {
+						$('#a_filter_value_static').val(gAppearanceParams.filter_value);
+					}
+
+					if(gAppearanceParams.length > 4) {
+						$('#a_second_filter_column').val(gAppearanceParams.second_filter_column);
+					}
+
+
+					if(gAppearanceParams.length > 5) {
+						$('#a_second_filter_value_static').val(gAppearanceParams.second_filter_value);
+					}
+
+					showSearchElements();
+				}
 			}
 });
