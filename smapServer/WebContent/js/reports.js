@@ -32,7 +32,6 @@ var gReportIdx;
 var gCustomReportIdx;
 var gForm = 0;
 var gSurveyList;
-var gCustomReportIndex;
 
 window.gTasks = {
     cache: {
@@ -124,7 +123,7 @@ require([
         });
 
         // Set change function on surveys
-        $('#survey').change(function() {
+        $('#survey, #c_survey').change(function() {
             surveyChanged(setForm);
         });
 
@@ -145,11 +144,19 @@ require([
 
 		        addCustomReportTypes();
 
+		        $('.custom_section').hide();
+		        $('.custom_type_' + $('#customType').val()).show();
+
 		        // Set button to create
 		        $('#customReport').show();
 		        $('#saveCustomReport').hide();
 		        $('#custom_popup').modal("show");
 	        }
+		});
+
+		$('#customType').change(function(){
+			$('.custom_section').hide();
+			$('.custom_type_' + $('#customType').val()).show();
 		});
 
         $('#publishReport').click(function () {
@@ -490,7 +497,8 @@ require([
 		}
 
 		var report = {
-			sIdent: sIdent
+			sIdent: sIdent,
+			dateColumn: getDateName($('#custom_date_q').val())
 		};
 
 		/*
@@ -528,30 +536,52 @@ require([
 	}
 
     function surveyChanged(callback) {
-		var sId = gSurveyList[$('#survey').val()].id;
-        var dateQuestionId = 0;     // TODO
 
-        getSurveyRoles(sId, undefined, true);
+	    var isCustom = $('#customPanel').hasClass('show');
+		var sId;
+        var dateQuestionId = 0;
+
+	    if(isCustom) {
+		    sId = gSurveyList[$('#survey').val()].id;
+	    } else {
+		    sId = gSurveyList[$('#c_survey').val()].id;
+	    }
+
+	    getSurveyRoles(sId, undefined, true);
 
         // Set the survey meta data
         var sMeta = globals.gSelector.getSurvey(sId);
         if(!sMeta) {
-            getSurveyMetaSE(sId, undefined, false, true, true, dateQuestionId, false, callback);
+	        getSurveyMetaSE(sId, undefined, false, true, true, dateQuestionId, false, callback);
         } else {
-            addFormPickList(sMeta);
-            addDatePickList(sMeta);
+	        addFormPickList(sMeta);
+	        addDatePickList(sMeta);
         }
 
-        var languages = globals.gSelector.getSurveyLanguages(sId);
-        if(typeof languages === "undefined") {
-            var view = {
-                sId: sId
-            }
-            getViewLanguages(view);
-        } else {
-            setSurveyViewLanguages(languages, undefined, '#export_language', true);
-        }
+	    var languages = globals.gSelector.getSurveyLanguages(sId);
+	    if(typeof languages === "undefined") {
+		    var view = {
+			    sId: sId
+		    };
+		    getViewLanguages(view);
+	    } else {
+		    setSurveyViewLanguages(languages, undefined, '#export_language', true);
+	    }
 
+    }
+
+    /*
+     *  Get the name of a date question given its id
+     */
+    function getDateName(id) {
+	    var sMeta = globals.gSelector.getSurvey(gSurveyList[$('#survey').val()].id);
+	    if(sMeta && sMeta.dates) {
+		    for (i = 0; i < sMeta.dates.length; i++) {
+		    	if(sMeta.dates[i].id == id) {
+				    return(sMeta.dates[i].name);
+			    }
+		    }
+	    }
     }
 
 	/*
@@ -1024,7 +1054,7 @@ require([
 				tab[++idx] = '">';
 
 				tab[++idx] = '<td>';
-				tab[++idx] = '<a type="button" class="btn btn-block btn-primary custom_report" href="#">';
+				tab[++idx] = '<a type="button" class="btn btn-block btn-warning custom_report" href="#">';
 				tab[++idx] = report.name;
 				tab[++idx] = '</a>';
 				tab[++idx] = '</td>';
@@ -1054,7 +1084,7 @@ require([
 		// Add response to report being launched
 		$('.custom_report', $reportList).click(function(){
 			var $this = $(this);
-			gCustomReportIndex = $this.closest('tr').data("idx");
+			gCustomReportIdx= $this.closest('tr').data("idx");
 			$('#custom_report_launch').modal("show");
 		});
 
@@ -1212,7 +1242,7 @@ require([
 			d = new Date(usageMsec),
 			month = d.getMonth() + 1,
 			year = d.getFullYear(),
-			url = "/custom/report/daily/" + gCustomReportList[gCustomReportIndex].id + "/xls";
+			url = "/custom/report/daily/" + gCustomReportList[gCustomReportIdx].id + "/xls";
 
 		url += "?year=" + year;
 		url += "&month=" + month;
