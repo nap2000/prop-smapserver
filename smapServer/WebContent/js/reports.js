@@ -29,6 +29,7 @@ var gReportTypeList = [];
 var gCustomReportList = [];
 var gConfig;
 var gReportIdx;
+var gCustomReportIdx;
 var gForm = 0;
 var gSurveyList;
 var gCustomReportIndex;
@@ -498,7 +499,10 @@ require([
 		var url = "/surveyKPI/custom_reports/"
 				+ globals.gCurrentProject + "/"
 				+ sIdent + "/"
-				+ reportType + "/" + encodeURIComponent(name);;
+				+ reportType + "/" + encodeURIComponent(name);
+		if(edit) {
+			url += "?id=" + gCustomReportList[gCustomReportIdx].id;
+		}
 
 		addHourglass();
 		$.ajax({
@@ -765,7 +769,7 @@ require([
             });
         });
 
-        $('.repEdit').click(function() {
+        $('.repEdit', $reportList).click(function() {
             var $this = $(this);
             var i;
 
@@ -1059,8 +1063,8 @@ require([
          */
 		$('.repDelete', $reportList).click(function() {
 			var $this = $(this);
-			gReportIdx = $this.closest('tr').data("idx");
-			var report = gCustomReportList[gReportIdx];
+			gCustomReportIdx = $this.closest('tr').data("idx");
+			var report = gCustomReportList[gCustomReportIdx];
 
 			addHourglass();
 			$.ajax({
@@ -1081,8 +1085,39 @@ require([
 				}
 			});
 		});
+
+		$('.repEdit', $reportList).click(function() {
+			var $this = $(this);
+			var i;
+
+			gCustomReportIdx = $this.closest('tr').data("idx");
+			var report = gCustomReportList[gCustomReportIdx];
+
+			$('#report_params_form')[0].reset();
+
+			// Set button to save
+			$('#customReport').hide();
+			$('#saveCustomReport').show();
+
+			$('#custom_form')[0].reset();
+
+			setupCustomReportDialog(report);
+
+
+			$('#custom_popup').modal("show");
+		});
 	}
 
+	/*
+	 * Initialise the custom repor form
+	 */
+	function setupCustomReportDialog(report) {
+		if(report) {
+			$('#c_name').val(report.name);
+			$('#c_survey').val(gCustomReportIdx);
+		}
+		addCustomReportTypes();
+	}
     /*
      * Function called when the current project is changed
      */
@@ -1148,7 +1183,6 @@ require([
 		    h = [],
 		    idx = -1,
 		    i;
-
 
 	    if(gReportTypeList && gReportTypeList.length > 0) {
 	    	for(i = 0; i < gReportTypeList.length; i++) {
