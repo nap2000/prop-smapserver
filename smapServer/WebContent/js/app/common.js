@@ -3406,7 +3406,7 @@ function addDatePickList(sMeta, currentDate) {
 
 		}
 
-		$(".date_question").html((h.join('')));
+		$(".date_question").empty().html((h.join('')));
 
 		if(typeof currentDate !== "undefined" && currentDate != 0) {
 			value = currentDate;
