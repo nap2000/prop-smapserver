@@ -76,8 +76,12 @@ DROP SEQUENCE IF EXISTS sc_seq CASCADE;
 CREATE SEQUENCE sc_seq START 1;
 ALTER SEQUENCE sc_seq OWNER TO ws;
 
+DROP SEQUENCE IF EXISTS custom_report_type_seq CASCADE;
+CREATE SEQUENCE custom_report_type_seq START 1;
+ALTER SEQUENCE custom_report_type_seq OWNER TO ws;
+
 DROP SEQUENCE IF EXISTS custom_report_seq CASCADE;
-CREATE SEQUENCE custom_report_seq START 2;
+CREATE SEQUENCE custom_report_seq START 1;
 ALTER SEQUENCE custom_report_seq OWNER TO ws;
 
 -- User management
@@ -600,17 +604,26 @@ CREATE TABLE record_event (
 	);
 ALTER TABLE record_event OWNER TO ws;
 
+DROP TABLE IF EXISTS custom_report_type CASCADE;
+CREATE TABLE custom_report_type (
+	id integer DEFAULT NEXTVAL('custom_report_type_seq') CONSTRAINT pk_custom_report_type PRIMARY KEY,
+	name text,
+	config text								-- Custom report columns as json object
+	);
+ALTER TABLE custom_report_type OWNER TO ws;
 
 DROP TABLE IF EXISTS custom_report CASCADE;
 CREATE TABLE custom_report (
 	id integer DEFAULT NEXTVAL('custom_report_seq') CONSTRAINT pk_custom_report PRIMARY KEY,
 	o_id integer REFERENCES organisation(id) ON DELETE CASCADE,
+	p_id integer REFERENCES project(id) ON DELETE CASCADE,
+	survey_ident text REFERENCES survey(ident) ON DELETE CASCADE,
 	name text,
-	type text,								-- oversight || lqas
+	type_id text,	REFERENCES custom_report_type(id) ON DELETE CASCADE,
 	config text								-- Custom report columns as json object
 	);
 ALTER TABLE custom_report OWNER TO ws;
-CREATE UNIQUE INDEX custom_report_name ON custom_report(o_id, name);
+CREATE UNIQUE INDEX custom_report_name ON custom_report(p_id, name);
 
 -- table name is used by "results databases" to store result data for this form
 DROP TABLE IF EXISTS form CASCADE;
