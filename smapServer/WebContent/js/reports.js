@@ -140,10 +140,9 @@ require([
 		        $('#saveReport').hide();
 		        $('#publish_popup').modal("show");
 	        } else if($('#customPanel').hasClass('show')) {
-		        $('#custom_form')[0].reset();
 
+        		$('#custom_form')[0].reset();
 		        addCustomReportTypes();
-
 		        $('.custom_section').hide();
 		        $('.custom_type_' + $('#customType').val()).show();
 
@@ -542,12 +541,12 @@ require([
         var dateQuestionId = 0;
 
 	    if(isCustom) {
-		    sId = gSurveyList[$('#survey').val()].id;
-	    } else {
 		    sId = gSurveyList[$('#c_survey').val()].id;
+		    getQuestionList(sId, "none", 0, "-1", showCustomColumns, false, undefined, undefined, undefined);
+	    } else {
+		    sId = gSurveyList[$('#survey').val()].id;
+		    getSurveyRoles(sId, undefined, true);
 	    }
-
-	    getSurveyRoles(sId, undefined, true);
 
         // Set the survey meta data
         var sMeta = globals.gSelector.getSurvey(sId);
@@ -571,6 +570,13 @@ require([
     }
 
     /*
+     * Update the custom columns in the custom dialog
+     */
+    function showCustomColumns() {
+    	var questions = globals.gSelector.getSurveyQuestions(gSurveyList[$('#c_survey').val()].id, "none");
+    }
+
+    /*
      *  Get the name of a date question given its id
      */
     function getDateName(id) {
@@ -583,6 +589,20 @@ require([
 		    }
 	    }
     }
+
+	/*
+     *  Get the id of a date question given its nae
+     */
+	function getDateId(name) {
+		var sMeta = globals.gSelector.getSurvey(gSurveyList[$('#survey').val()].id);
+		if(sMeta && sMeta.dates) {
+			for (i = 0; i < sMeta.dates.length; i++) {
+				if(sMeta.dates[i].name == name) {
+					return(sMeta.dates[i].id);
+				}
+			}
+		}
+	}
 
 	/*
 	 * Get published reports
@@ -1143,8 +1163,10 @@ require([
 	 */
 	function setupCustomReportDialog(report) {
 		if(report) {
+			var config = JSON.parse(report.config);
 			$('#c_name').val(report.name);
 			$('#c_survey').val(gCustomReportIdx);
+			$('#custom_date_q').val(getDateId(config.dateColumn));
 		}
 		addCustomReportTypes();
 	}
