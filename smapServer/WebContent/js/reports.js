@@ -25,9 +25,13 @@ if (Modernizr.localstorage) {
 } 
 
 var gReportList = [];
+var gReportTypeList = [];
+var gCustomReportList = [];
 var gConfig;
 var gReportIdx;
+var gCustomReportIdx;
 var gForm = 0;
+var gSurveyList;
 
 window.gTasks = {
     cache: {
@@ -41,16 +45,14 @@ requirejs.config({
     locale: gUserLocale,
     paths: {
     	app: '../app',
-    	jquery: '../../../../js/libs/jquery-2.1.1',
+	    jquery: 'jquery',
         moment: 'moment-with-locales.min',
        	lang_location: '../'
     },
     shim: {
     	'app/common': ['jquery'],
         'app/data': ['jquery'],
-    	'bootstrap.min': ['jquery'],
     	'icheck': ['jquery'],
-       	'inspinia': ['jquery'],
     	'metismenu': ['jquery'],
     	'slimscroll': ['jquery'],
         'bootstrap-datetimepicker.min': ['moment']
@@ -58,27 +60,26 @@ requirejs.config({
 });
 
 require([
-         'jquery', 
-         'bootstrap.min',
+         'jquery',
          'app/common',
          'app/globals',
          'app/localise',
          'bootstrapfileinput',
          'moment',
-         'inspinia',
          'metismenu',
          'slimscroll',
          'pace',
          'app/data',
          'icheck',
          'bootstrap-datetimepicker.min'
-         ], function($, bootstrap, common, globals, localise, bsfi, moment) {
+         ], function($, common, globals, localise, bsfi, moment) {
 
 	$(document).ready(function() {
 
         setCustomReports();			// Apply custom javascript
-		setupUserProfile();
+		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
+		$("#side-menu").metisMenu();
 
 		// Get the user details
 		globals.gIsAdministrator = false;
@@ -122,21 +123,40 @@ require([
         });
 
         // Set change function on surveys
-        $('#survey').change(function() {
+        $('#survey, #c_survey').change(function() {
             surveyChanged(setForm);
         });
 
         $('#addReport').click(function(){
-            $('#publish_form')[0].reset();
-            $('#e_tz').val(globals.gTimezone);
+	        $('#e_tz').val(globals.gTimezone);
+        	if($('#publicPanel').hasClass('show')) {
+		        $('#publish_form')[0].reset();
 
-            $('.role_select_roles').empty()
-            getSurveyRoles($('#survey').val(), undefined, true);
+		        $('.role_select_roles').empty()
+		        getSurveyRoles(gSurveyList[$('#survey').val()].id, undefined, true);
 
-            // Set button to create
-            $('#publishReport').show();
-            $('#saveReport').hide();
-            $('#publish_popup').modal("show");
+		        // Set button to create
+		        $('#publishReport').show();
+		        $('#saveReport').hide();
+		        $('#publish_popup').modal("show");
+	        } else if($('#customPanel').hasClass('show')) {
+		        $('#custom_form')[0].reset();
+
+		        addCustomReportTypes();
+
+		        $('.custom_section').hide();
+		        $('.custom_type_' + $('#customType').val()).show();
+
+		        // Set button to create
+		        $('#customReport').show();
+		        $('#saveCustomReport').hide();
+		        $('#custom_popup').modal("show");
+	        }
+		});
+
+		$('#customType').change(function(){
+			$('.custom_section').hide();
+			$('.custom_type_' + $('#customType').val()).show();
 		});
 
         $('#publishReport').click(function () {
@@ -146,6 +166,14 @@ require([
         $('#saveReport').click(function () {
             updateReport(true);
         });
+
+		$('#customReport').click(function () {
+			updateCustomReport(false);
+		});
+
+		$('#saveCustomReport').click(function () {
+			updateCustomReport(true);
+		});
 
         $('#publish_popup').on('shown.bs.modal', function () {
             $('#exp_from_date').datetimepicker({
@@ -176,12 +204,25 @@ require([
             }
         });
 
+		/*
+		 * Add date time picker to report month date
+		 */
+		moment.locale();
+		$('#reportMonth').datetimepicker({
+			useCurrent: false,
+			format: "MM/YYYY",
+			viewMode: "months",
+			locale: gUserLocale || 'en'
+		}).data("DateTimePicker").date(moment());
+
+		$('#generateCustomReport').click(generateCustomReport);
+
 	});
 
 	function updateReport(edit) {
 
 		var i;
-        var sId = $('#survey').val();
+        var sId = gSurveyList[$('#survey').val()].id;
         var name = $('#r_name').val();
         var reportType = $('#reportType').val();
         var includeMeta = $('#includeMeta').prop('checked');
@@ -438,31 +479,109 @@ require([
         });
     }
 
-    function surveyChanged(callback) {
-        var sId = $('#survey').val();
-        var dateQuestionId = 0;     // TODO
+	function updateCustomReport(edit) {
 
-        getSurveyRoles(sId, undefined, true);
+		var i;
+		var sIdent = gSurveyList[$('#c_survey').val()].ident;
+		var name = $('#c_name').val();
+		var reportType = $('#customType').val();
+
+		// Validation
+		if(!sIdent) {
+			alert(localise.set["a_exp_leg1"]);
+			return;
+		} else if (!name || name.trim().length == 0) {
+			alert(localise.set["msg_val_nm"]);
+			$('#r_name').focus();
+			return;
+		}
+
+		var report = {
+			sIdent: sIdent,
+			dateColumn: getDateName($('#custom_date_q').val())
+		};
+
+		/*
+		 * create URL
+		 */
+		var url = "/surveyKPI/custom_reports/"
+				+ globals.gCurrentProject + "/"
+				+ sIdent + "/"
+				+ reportType + "/" + encodeURIComponent(name);
+		if(edit) {
+			url += "?id=" + gCustomReportList[gCustomReportIdx].id;
+		}
+
+		addHourglass();
+		$.ajax({
+			url: url,
+			type: "POST",
+			contentType: "application/json",
+			cache: false,
+			data: { report: JSON.stringify(report) },
+			success: function (data) {
+				removeHourglass();
+				getReports();
+				$('#custom_popup').modal("hide");
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["msg_err_upd"] + " : " + xhr.responseText);
+				}
+			}
+		});
+	}
+
+    function surveyChanged(callback) {
+
+	    var isCustom = $('#customPanel').hasClass('show');
+		var sId;
+        var dateQuestionId = 0;
+
+	    if(isCustom) {
+		    sId = gSurveyList[$('#survey').val()].id;
+	    } else {
+		    sId = gSurveyList[$('#c_survey').val()].id;
+	    }
+
+	    getSurveyRoles(sId, undefined, true);
 
         // Set the survey meta data
         var sMeta = globals.gSelector.getSurvey(sId);
         if(!sMeta) {
-            getSurveyMetaSE(sId, undefined, false, true, true, dateQuestionId, false, callback);
+	        getSurveyMetaSE(sId, undefined, false, true, true, dateQuestionId, false, callback);
         } else {
-            addFormPickList(sMeta);
-            addDatePickList(sMeta);
+	        addFormPickList(sMeta);
+	        addDatePickList(sMeta);
         }
 
-        var languages = globals.gSelector.getSurveyLanguages(sId);
-        if(typeof languages === "undefined") {
-            var view = {
-                sId: sId
-            }
-            getViewLanguages(view);
-        } else {
-            setSurveyViewLanguages(languages, undefined, '#export_language', true);
-        }
+	    var languages = globals.gSelector.getSurveyLanguages(sId);
+	    if(typeof languages === "undefined") {
+		    var view = {
+			    sId: sId
+		    };
+		    getViewLanguages(view);
+	    } else {
+		    setSurveyViewLanguages(languages, undefined, '#export_language', true);
+	    }
 
+    }
+
+    /*
+     *  Get the name of a date question given its id
+     */
+    function getDateName(id) {
+	    var sMeta = globals.gSelector.getSurvey(gSurveyList[$('#survey').val()].id);
+	    if(sMeta && sMeta.dates) {
+		    for (i = 0; i < sMeta.dates.length; i++) {
+		    	if(sMeta.dates[i].id == id) {
+				    return(sMeta.dates[i].name);
+			    }
+		    }
+	    }
     }
 
 	/*
@@ -470,7 +589,10 @@ require([
 	 */
 	function getReports() {
 
-		url="/surveyKPI/userList/temporary?action=report&pId=" + globals.gCurrentProject;
+		/*
+		 * Get reports that are accessible via a public link
+		 */
+		var url="/surveyKPI/userList/temporary?action=report&pId=" + globals.gCurrentProject;
 
 		addHourglass();
 		$.ajax({
@@ -495,6 +617,60 @@ require([
 				}
 			}
 		});
+
+		/*
+         * Get custom reports
+         */
+		var url="/surveyKPI/custom_reports?pId=" + globals.gCurrentProject;
+
+		addHourglass();
+		$.ajax({
+			url: url,
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				gCustomReportList = data;
+				completeCustomReportList(data);
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					var msg = xhr.responseText;
+					if(msg.indexOf("404 - Not Found") >= 0) {
+						msg = localise.set["msg_no_proj"];
+					}
+					alert(localise.set["error"] + ": " + msg);
+				}
+			}
+		});
+
+
+		/*
+		 * Get custom report types
+		 */
+		url = '/surveyKPI/custom_reports/types';
+
+		addHourglass();
+		$.ajax({
+			url: url,
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				gReportTypeList = data;
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["error"] + ": " + msg);
+				}
+			}
+		});
 	}
 
 	/*
@@ -511,25 +687,30 @@ require([
 		if(gReportList) {
             for (i = 0; i < gReportList.length; i++) {
                 var action = gReportList[i].action_details;
+	            var link = location.origin + "/surveyKPI/action/" + gReportList[i].ident;
 
                 tab[++idx] = '<tr data-idx="';
                 tab[++idx] = i;
-                tab[++idx] = '">';
+                tab[++idx] = '" data-link="';
+                tab[++idx] = link;
+	            tab[++idx] = '">';
 
-                tab[++idx] = '<td>';
-                tab[++idx] = action.surveyName;
-                tab[++idx] = '</td>';
+	            tab[++idx] = '<td>';			// Anonymous Link
+	            tab[++idx] = '<a type="button" class="btn btn-block btn-primary" href="';
+	            tab[++idx] = link;
+	            tab[++idx] = '">';
+	            tab[++idx] = action.name;
+	            tab[++idx] = '</a>';
+	            tab[++idx] = '</td>';
 
-                tab[++idx] = '<td>';			// Report Name
-                tab[++idx] = action.name;
-                tab[++idx] = '</td>';
-
-                tab[++idx] = '<td class="thelink">';			// Anonymous Link
-                tab[++idx] = location.origin + "/surveyKPI/action/" + gReportList[i].ident;
-                tab[++idx] = '</td>';
+	            tab[++idx] = '<td>';
+	            tab[++idx] = action.surveyName;
+	            tab[++idx] = '</td>';
 
                 tab[++idx] = '<td>';			// Copy Link
-                tab[++idx] = '<button type="button" class="btn btn-default has_tt copyLink" title="Copy Link" value="';
+                tab[++idx] = '<button type="button" class="btn btn-default has_tt copyLink" title="';
+                tab[++idx] = localise.set["c_cl"];
+                tab[++idx] = '" value="';
                 tab[++idx] = i;
                 tab[++idx] = '"><i class="fa fa-share-alt"></i></button>';
                 tab[++idx] = '</td>';
@@ -537,7 +718,7 @@ require([
                 tab[++idx] = '<td>';
                 tab[++idx] = '<div class="dropdown">';
                 tab[++idx] = '<button id="dropdownMenu' + i + '" class="btn btn-default dropdown-toggle report_action" data-toggle="dropdown"  type="button" aria-haspopup="true" aria-expanded="false">';
-                tab[++idx] = localise.set["c_action"] + ' <span class="caret"></span>';
+                tab[++idx] = localise.set["c_action"];
                 tab[++idx] = '</button>';
                 tab[++idx] = '<ul class="dropdown-menu" aria-labelledby="dropdownMenu' + i + '">';
                     tab[++idx] = '<li><a class="repGenerate" href="#">' + localise.set["c_generate"] + '</a></li>';
@@ -561,39 +742,22 @@ require([
          */
         $('.has_tt').tooltip();
         $('.copyLink').click(function () {
-            var copyText = $(this).closest('tr').find('.thelink').get(0);
+        	var $this = $(this);
+            var copyText = $this.closest('tr').data("link");
 
             // From https://stackoverflow.com/questions/22581345/click-button-copy-to-clipboard-using-jquery
             var $temp = $("<input>");
             $("body").append($temp);
-            $temp.val($(copyText).text()).select();
+	        $temp.val(copyText).select();
             document.execCommand("copy");
 
-            $(this).prop('title', localise.set["c_c"] + ": " + $(copyText).text()).tooltip('fixTitle').tooltip('show');
+            $this.attr('title', localise.set["c_c"] + ": " + copyText).tooltip('_fixTitle').tooltip('show');
             $temp.remove();
 
         });
-        /*
-        $('.copyLinkOdata').click(function () {
-            var $this = $(this);
-            var i = $this.closest('tr').data("idx");
-            var modId = gReportList[i].ident.replace(/-/g, '_');
-            var link = location.origin + "/odata/action.svc/" + modId;
-
-
-            // From https://stackoverflow.com/questions/22581345/click-button-copy-to-clipboard-using-jquery
-            var $temp = $("<input>");
-            $("body").append($temp);
-            $temp.val(link).select();
-            document.execCommand("copy");
-
-            $(this).prop('title', localise.set["c_c"] + ": " + link).tooltip('fixTitle').tooltip('show');
-            $temp.remove();
-
-        });
-         */
-
-
+		$('.copyLink').on('hidden.bs.tooltip', function () {
+			$(this).attr('title', localise.set["c_cl"]).tooltip('_fixTitle');
+		})
 
 		/*
 		 * Action Dropbox
@@ -607,7 +771,7 @@ require([
         /*
          * Delete
          */
-        $('.repDelete').click(function() {
+        $('.repDelete', $reportList).click(function() {
             var $this = $(this);
             gReportIdx = $this.closest('tr').data("idx");
             var report = gReportList[gReportIdx];
@@ -635,7 +799,7 @@ require([
             });
         });
 
-        $('.repEdit').click(function() {
+        $('.repEdit', $reportList).click(function() {
             var $this = $(this);
             var i;
 
@@ -646,7 +810,8 @@ require([
             $('#r_name').val(report.action_details.name);
 
             $('#reportType').val(report.action_details.reportType);
-            $('#survey').val(report.action_details.sId);
+
+            $('#survey').val(getSurveyIndex(report.action_details.sId));
             surveyChanged(setForm);
 
             getSurveyRoles(report.action_details.sId, report.action_details.roles);
@@ -824,7 +989,7 @@ require([
 			h = [];
 
 			for(i = 0; i < gConfig.length; i++) {
-				h[++idx] = '<div class="form-group">';
+				h[++idx] = '<div class="form-group row">';
 
 				// Label
 				h[++idx] = '<label for="param_';
@@ -869,6 +1034,120 @@ require([
 
 	}
 
+	/*
+     * Fill in the custom report list
+     */
+	function completeCustomReportList() {
+
+		var i,
+			tab = [],
+			idx = -1,
+			$reportList = $('#custom_report_list');
+
+		// Add the reports
+		if(gCustomReportList) {
+			for (i = 0; i < gCustomReportList.length; i++) {
+				var report = gCustomReportList[i];
+
+				tab[++idx] = '<tr data-idx="';
+				tab[++idx] = i;
+				tab[++idx] = '">';
+
+				tab[++idx] = '<td>';
+				tab[++idx] = '<a type="button" class="btn btn-block btn-warning custom_report" href="#">';
+				tab[++idx] = report.name;
+				tab[++idx] = '</a>';
+				tab[++idx] = '</td>';
+
+				tab[++idx] = '<td>';
+				tab[++idx] = report.surveyName;
+				tab[++idx] = '</td>';
+
+				tab[++idx] = '<td>';
+				tab[++idx] = '<div class="dropdown">';
+				tab[++idx] = '<button id="dropdownMenu' + i + '" class="btn btn-default dropdown-toggle report_action" data-toggle="dropdown"  type="button" aria-haspopup="true" aria-expanded="false">';
+				tab[++idx] = localise.set["c_action"];
+				tab[++idx] = '</button>';
+				tab[++idx] = '<ul class="dropdown-menu" aria-labelledby="dropdownMenu' + i + '">';
+				tab[++idx] = '<li><a class="repGenerate" href="#">' + localise.set["c_generate"] + '</a></li>';
+				tab[++idx] = '<li><a class="repEdit" href="#">' + localise.set["c_edit"] + '</a></li>';
+				tab[++idx] = '<li><a class="repDelete" href="#">' + localise.set["c_del"] + '</a></li>';
+				tab[++idx] = '</ul>';
+				tab[++idx] = '</div>';  // Dropdown class
+				tab[++idx] = '</td>';
+				tab[++idx] = '</tr>';
+			}
+		}
+
+		$reportList.html(tab.join(''));
+
+		// Add response to report being launched
+		$('.custom_report', $reportList).click(function(){
+			var $this = $(this);
+			gCustomReportIdx= $this.closest('tr').data("idx");
+			$('#custom_report_launch').modal("show");
+		});
+
+		/*
+         * Delete
+         */
+		$('.repDelete', $reportList).click(function() {
+			var $this = $(this);
+			gCustomReportIdx = $this.closest('tr').data("idx");
+			var report = gCustomReportList[gCustomReportIdx];
+
+			addHourglass();
+			$.ajax({
+				url: "/surveyKPI/custom_reports/" + report.id,
+				type: "DELETE",
+				cache: false,
+				success: function (data) {
+					removeHourglass();
+					getReports();
+				},
+				error: function (xhr, textStatus, err) {
+					removeHourglass();
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						getReports();
+					} else {
+						alert(localise.set["msg_err_upd"] + " : " + xhr.responseText);
+					}
+				}
+			});
+		});
+
+		$('.repEdit', $reportList).click(function() {
+			var $this = $(this);
+			var i;
+
+			gCustomReportIdx = $this.closest('tr').data("idx");
+			var report = gCustomReportList[gCustomReportIdx];
+
+			$('#report_params_form')[0].reset();
+
+			// Set button to save
+			$('#customReport').hide();
+			$('#saveCustomReport').show();
+
+			$('#custom_form')[0].reset();
+
+			setupCustomReportDialog(report);
+
+
+			$('#custom_popup').modal("show");
+		});
+	}
+
+	/*
+	 * Initialise the custom repor form
+	 */
+	function setupCustomReportDialog(report) {
+		if(report) {
+			$('#c_name').val(report.name);
+			$('#c_survey').val(gCustomReportIdx);
+		}
+		addCustomReportTypes();
+	}
     /*
      * Function called when the current project is changed
      */
@@ -878,7 +1157,7 @@ require([
         globals.gCurrentSurvey = -1;
         globals.gCurrentTaskGroup = undefined;
 
-        loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged, false);			// Get surveys
+        loadSurveys(globals.gCurrentProject, undefined, false, false, surveysLoaded, true);			// Get surveys
         getReports();		// Refresh the shown reports
 
         saveCurrentProject(globals.gCurrentProject,
@@ -886,6 +1165,11 @@ require([
             globals.gCurrentTaskGroup);
 
     }
+
+	function surveysLoaded(data) {
+		gSurveyList = data;
+		surveyChanged();
+	}
 
     /*
      * Convert a report type into the base of the URL
@@ -923,5 +1207,49 @@ require([
         $('.' + reportType).show();
     }
 
+    function addCustomReportTypes() {
+
+    	var hostname = location.hostname,
+		    h = [],
+		    idx = -1,
+		    i;
+
+	    if(gReportTypeList && gReportTypeList.length > 0) {
+	    	for(i = 0; i < gReportTypeList.length; i++) {
+	    		h[++idx] = '<option value="';
+	    		h[++idx] = gReportTypeList[i].id;
+	    		h[++idx] = '">';
+			    h[++idx] = gReportTypeList[i].name;
+			    h[++idx] = '</option>';
+		    }
+
+	    }
+	    $('#customType').empty().html(h.join(''));
+    }
+
+	function getSurveyIndex(sId) {
+		var i;
+		for(i = 0; i < gSurveyList.length; i++) {
+			if(gSurveyList[i].id === sId) {
+				return i;
+			}
+		}
+		return 0;
+	}
+
+	function generateCustomReport() {
+		var usageMsec = $('#reportMonth').data("DateTimePicker").date(),
+			d = new Date(usageMsec),
+			month = d.getMonth() + 1,
+			year = d.getFullYear(),
+			url = "/custom/report/daily/" + gCustomReportList[gCustomReportIdx].id + "/xls";
+
+		url += "?year=" + year;
+		url += "&month=" + month;
+
+		$('#custom_report_launch').modal("hide");
+
+		downloadFile(url);
+	}
 });
 

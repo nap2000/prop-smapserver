@@ -38,6 +38,7 @@
         },
         {
             name: '../reports',
+	    exclude: ['jquery', 'bootstrap']
         },
         {
             name: '../api',

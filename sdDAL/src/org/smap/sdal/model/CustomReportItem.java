@@ -1,9 +1,5 @@
 package org.smap.sdal.model;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-
 /*
 This file is part of SMAP.
 
@@ -25,5 +21,15 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 public class CustomReportItem {
 	public int id;
 	public String name;
-	public String type;
+	public int typeId;
+	public String config;
+	public String surveyName;
+	
+	public CustomReportItem(int id, String name, int typeId, String config, String surveyName) {
+		this.id = id;
+		this.name = name;
+		this.typeId = typeId;
+		this.config = config;
+		this.surveyName = surveyName;
+	}
 }
