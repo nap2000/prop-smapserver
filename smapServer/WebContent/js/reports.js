@@ -480,6 +480,7 @@ require([
 
 	function updateCustomReport(edit) {
 
+		var questions = globals.gSelector.getSurveyQuestions(gSurveyList[$('#c_survey').val()].id, "none");
 		var i;
 		var sIdent = gSurveyList[$('#c_survey').val()].ident;
 		var name = $('#c_name').val();
@@ -499,6 +500,17 @@ require([
 			sIdent: sIdent,
 			dateColumn: getDateName($('#custom_date_q').val())
 		};
+
+		// Add columns
+		report.columns = [];
+		var cols = $(".c_column:checked").map(function(){
+			return $(this).val();
+		}).toArray();
+		for(i = 0; i < cols.length; i++) {
+			var col = {};
+			col.column = questions[cols[i]].name;
+			report.columns.push(col);
+		}
 
 		/*
 		 * create URL
@@ -573,7 +585,52 @@ require([
      * Update the custom columns in the custom dialog
      */
     function showCustomColumns() {
+    	var i,
+		    idx = -1,
+		    h =[];
     	var questions = globals.gSelector.getSurveyQuestions(gSurveyList[$('#c_survey').val()].id, "none");
+
+	    h[++idx] = '<div class="row">';
+    	h[++idx] = '<div class="col-sm-offset-1 col-sm-1">';
+    	h[++idx] = '</div>';
+	    h[++idx] = '<div class="col-sm-5">';
+	    h[++idx] = localise.set["c_question"];
+	    h[++idx] = '</div>';
+	    h[++idx] = '<div class="col-sm-5">';
+	    h[++idx] = localise.set["rep_ch"];
+	    h[++idx] = '</div>';
+	    h[++idx] = '</div>';
+
+
+    	for(i = 0; i < questions.length; i++) {
+    		h[++idx] = '<div class="row">';
+
+    		// Checkbox
+	        h[++idx] = '<div class="col-sm-offset-1 col-sm-1">';
+	        h[++idx] = '<div class="checkbox">';
+	        h[++idx] = '<input type="checkbox" class="c_column" value="';
+	        h[++idx] = i;
+	        h[++idx] = '">';
+		    h[++idx] = '</div>';
+		    h[++idx] = '</div>';    // end checkbox
+
+		    // Name
+	        h[++idx] = '<div class="col-sm-5">';
+	        h[++idx] = '<span>';
+	        h[++idx] = questions[i].name;
+		    h[++idx] = '</span>';
+		    h[++idx] = '</div>';
+
+		    // Title
+		    h[++idx] = '<div class="col-sm-5">';
+		    h[++idx] = '<input type="text" value="';
+		    h[++idx] = '';
+		    h[++idx] = '" class="form-control" />';
+		    h[++idx] = '</div>';
+
+    		h[++idx] = '</div>';    // end row
+	    }
+    	$('#columnsHere').empty().html(h.join(''));
     }
 
     /*
@@ -957,7 +1014,7 @@ require([
             $('#publish_popup').modal("show");
         });
 
-        $('.repGenerate').click(function() {
+        $('.repGenerate', $reportList).click(function() {
             var $this = $(this);
             var i;
 
@@ -1155,6 +1212,14 @@ require([
 
 
 			$('#custom_popup').modal("show");
+		});
+
+		$('.repGenerate', $reportList).click(function() {
+			var $this = $(this);
+			gCustomReportIdx= $this.closest('tr').data("idx");
+			$('#custom_report_launch').modal("show");
+
+
 		});
 	}
 
