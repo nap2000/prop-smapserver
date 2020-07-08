@@ -109,10 +109,10 @@ public class DailyReport extends Application {
 				DailyReportsConfig config = gson.fromJson(rs.getString("config"), DailyReportsConfig.class);
 				
 				// Develop
-				config.columns = new ArrayList<> ();
-				config.columns.add(new ReportColumn("date", "Date", 0));
-				config.columns.add(new ReportColumn("activity", "Activity", 0));
-				config.columns.add(new ReportColumn("activityintheday", "Activity for the day", 0));
+				//config.columns = new ArrayList<> ();
+				//config.columns.add(new ReportColumn("date", "Date", 0));
+				//config.columns.add(new ReportColumn("activity", "Activity", 0));
+				//config.columns.add(new ReportColumn("activityintheday", "Activity for the day", 0));
 	
 				config.bars = new ArrayList<> ();
 				ReportMultiColumn rmc = new ReportMultiColumn();
