@@ -1227,14 +1227,27 @@ require([
 	 * Initialise the custom repor form
 	 */
 	function setupCustomReportDialog(report) {
+
+		$('#c_survey').val(gCustomReportIdx);
+		surveyChanged();
+
 		if(report) {
 			var config = JSON.parse(report.config);
 			$('#c_name').val(report.name);
-			$('#c_survey').val(gCustomReportIdx);
 			$('#custom_date_q').val(getDateId(config.dateColumn));
+			if(config.columns && config.columns.size > 0) {
+				for(i = 0; i < config.columns; i++) {
+					$(':checkbox[value=' + getQuestionIndex() + '], #columnsHere').prop("checked","true");
+				}
+			}
 		}
 		addCustomReportTypes();
 	}
+
+	function getQuestionIndex() {
+		return 4;
+	}
+
     /*
      * Function called when the current project is changed
      */
