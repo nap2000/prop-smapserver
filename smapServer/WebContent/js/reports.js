@@ -631,6 +631,15 @@ require([
     		h[++idx] = '</div>';    // end row
 	    }
     	$('#columnsHere').empty().html(h.join(''));
+
+	    if(gConfig && gConfig.columns && gConfig.columns.length > 0) {
+		    for(i = 0; i < gConfig.columns.length; i++) {
+			    $('.c_column', '#columnsHere').each(function(){
+				    var $this = $(this);
+			    })
+			    $(':checkbox[value=' + getQuestionIndex(gConfig.columns[i], questions) + ']', '#columnsHere').prop("checked","true");
+		    }
+	    }
     }
 
     /*
@@ -1229,23 +1238,29 @@ require([
 	function setupCustomReportDialog(report) {
 
 		$('#c_survey').val(gCustomReportIdx);
+		if(report) {
+			gConfig = JSON.parse(report.config);
+		} else {
+			gConfig = undefined;
+		}
 		surveyChanged();
 
 		if(report) {
-			var config = JSON.parse(report.config);
 			$('#c_name').val(report.name);
-			$('#custom_date_q').val(getDateId(config.dateColumn));
-			if(config.columns && config.columns.size > 0) {
-				for(i = 0; i < config.columns; i++) {
-					$(':checkbox[value=' + getQuestionIndex() + '], #columnsHere').prop("checked","true");
-				}
-			}
+			$('#custom_date_q').val(getDateId(gConfig.dateColumn));
+
 		}
 		addCustomReportTypes();
 	}
 
-	function getQuestionIndex() {
-		return 4;
+	function getQuestionIndex(col, questions) {
+		var i;
+		for(i = 0; i < questions.length; i++) {
+			if(col.column === questions[i].name) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
     /*
