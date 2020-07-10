@@ -236,7 +236,7 @@ create TABLE email_alerts (
 );
 ALTER TABLE email_alerts OWNER TO ws;
 
-update question set compressed = true where not qtype = 'select' and not qtype = 'rank'; 
+--update question set compressed = true where not qtype = 'select' and not qtype = 'rank'; 
 
 alter table organisation add column ft_high_res_video text;
 update organisation set ft_high_res_video = 'not set' where ft_high_res_video is null;
@@ -282,7 +282,7 @@ CREATE TABLE custom_report_type (
 ALTER TABLE custom_report_type OWNER TO ws;
 
  alter table custom_report add column p_id integer REFERENCES project(id) ON DELETE CASCADE;
- alter able custom_report drop column type;
+ alter table custom_report drop column type;
  alter table custom_report add column type_id integer REFERENCES custom_report_type(id) ON DELETE CASCADE;
  alter table custom_report add column  survey_ident text REFERENCES survey(ident) ON DELETE CASCADE;
  drop index custom_report_name;
