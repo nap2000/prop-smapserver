@@ -24,10 +24,6 @@ $(document).ready(function() {
     /*
      * Enable Menu events
      */
-    $('.rmm').delegate('#refreshMenu', 'click', function(e) {
-        e.preventDefault();
-        refreshAnalysisData();
-    });
 
     $('.rmm').delegate('#exportMenu', 'click', function(e) {
         e.preventDefault();

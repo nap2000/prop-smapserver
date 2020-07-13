@@ -35,21 +35,15 @@ requirejs.config({
         async: '../../../../js/libs/async',
         localise: '../../../../js/app/localise',
         moment: '../../../../js/libs/moment-with-locales.min',
-        jquery: '../../../../js/libs/jquery-2.1.1',
         modernizr: '../../../../js/libs/modernizr',
         common: '../../../../js/app/common',
         globals: '../../../../js/app/globals',
-        bootstrap: '../../../../js/libs/bootstrap.min',
         lang_location: '../../../../js',
-        inspinia: '../../../../js/libs/wb/inspinia',
-        metismenu: '../../../../js/libs/wb/plugins/metisMenu/jquery.metisMenu',
-        slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll.min',
+        slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll.min'
     },
     shim: {
-        'bootstrap': ['jquery'],
         'common': ['jquery'],
         'inspinia': ['jquery'],
-        'metismenu': ['jquery'],
         'slimscroll': ['jquery']
 
     }
@@ -60,15 +54,12 @@ require([
     'common',
     'localise',
     'globals',
-    'bootstrap',
     'moment',
     'app/surveyManagement',
-    'inspinia',
-    'metismenu',
     'slimscroll',
     'pace'
 
-], function($, common, localise, globals, bootstrap, moment) {
+], function($, common, localise, globals, moment) {
 
     window.moment = moment;		// Make moment global for use by common.js
     setCustomTemplateMgmt();
