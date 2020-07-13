@@ -10,17 +10,16 @@ require.config({
     locale: gUserLocale,
     paths: {
     	app: '../app',
-    	jquery: '../../../../js/libs/jquery-2.1.1',
+	    jquery: 'jquery',
     	lang_location: '..'
     },
     shim: {
-    	'bootstrap.min': ['jquery'],
     	'app/common': ['jquery']
     }
 });
 
-require(['jquery', 'bootstrap.min', 'app/localise', 'app/common','app/globals'], 
-		function($, bootstrap, localise, common, globals) {
+require(['jquery', 'app/localise', 'app/common','app/globals'],
+		function($,  localise, common, globals) {
 	
 	var params,
 		pArray = [],
@@ -49,7 +48,7 @@ require(['jquery', 'bootstrap.min', 'app/localise', 'app/common','app/globals'],
 	 * which depend on their authorisation level
 	 */
 	if(loggedin) {
-		setupUserProfile();
+		setupUserProfile(true);
 		localise.setlang();
 		$('.loggedin').show();
 		$('.notloggedin').hide();
