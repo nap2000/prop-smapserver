@@ -51,7 +51,6 @@ import com.google.gson.GsonBuilder;
 
 import data.DailyReportsManager;
 import model.DailyReportsConfig;
-import model.ReportColumn;
 import model.ReportMultiColumn;
 
 

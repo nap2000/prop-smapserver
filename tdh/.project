@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-<<<<<<< HEAD
 	<name>customReports</name>
-=======
-	<name>tdh</name>
->>>>>>> master
 	<comment></comment>
 	<projects>
 		<project>sdDAL-P</project>
