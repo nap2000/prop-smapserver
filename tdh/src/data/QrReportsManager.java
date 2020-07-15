@@ -3,9 +3,14 @@ package data;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.sql.Connection;
@@ -25,9 +30,17 @@ import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFStyle;
+import org.apache.poi.xwpf.usermodel.XWPFStyles;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
 import org.smap.sdal.Utilities.ApplicationException;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
 import org.smap.sdal.managers.LogManager;
@@ -39,7 +52,8 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
-
+import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
+import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import managers.ConfigManager;
 import model.QrReportsConfig;
 import model.ReportColumn;
@@ -72,6 +86,8 @@ public class QrReportsManager {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
+		//File fTemplate = new File("/temp/template.docx");
+		//XWPFDocument doc = new XWPFDocument(new FileInputStream(fTemplate));
 		XWPFDocument doc = new XWPFDocument();
 		ConfigManager cm = new ConfigManager(localisation);
 		
@@ -91,7 +107,7 @@ public class QrReportsManager {
 
 			escapedFileName = escapedFileName.replace("+", " "); // Spaces ok for file name within quotes
 			escapedFileName = escapedFileName.replace("%2C", ","); // Commas ok for file name within quotes
-			GeneralUtilityMethods.setFilenameInResponse(escapedFileName + "." + "xlsx", response); // Set file name
+			GeneralUtilityMethods.setFilenameInResponse(escapedFileName + "." + "docx", response); // Set file name
 			
 			/*
 			 * Validate report configuration
@@ -191,16 +207,14 @@ public class QrReportsManager {
 			}
 			
 			// write to a docx file
-			GeneralUtilityMethods.setFilenameInResponse("report.docx", response);
-			ServletOutputStream fo = null;
+			ServletOutputStream out = null;
 			try {
 				// create .docx file
-				fo = response.getOutputStream();
-
+				out = response.getOutputStream();		
+				
 				// write to the .docx file
-				doc.write(fo);
+				doc.write(out);
 			} finally {
-				if (fo != null) {try {fo.close();} catch (IOException e) {}}
 				if (doc != null) {try {doc.close();} catch (IOException e) {}}
 			}
             
