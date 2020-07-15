@@ -50,6 +50,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import data.DailyReportsManager;
+import managers.ConfigManager;
 import model.DailyReportsConfig;
 import model.ReportMultiColumn;
 
@@ -82,7 +83,6 @@ public class DailyReport extends Application {
 		// End Authorisation 
 		
 		Connection cResults = null;
-		PreparedStatement pstmt = null;
 		try {
 			Locale locale = new Locale(GeneralUtilityMethods.getUserLanguage(sd, request, request.getRemoteUser()));
 			ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);
@@ -97,15 +97,11 @@ public class DailyReport extends Application {
 			Gson gson = new GsonBuilder().disableHtmlEscaping().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 			cResults = ResultsDataSource.getConnection(connectionString);	
 			
-			String sql = "select name, config, type_id, survey_ident "
-					+ "from custom_report "
-					+ "where id = ?";
-			pstmt = sd.prepareStatement(sql);
-			pstmt.setInt(1, id);
-			ResultSet rs = pstmt.executeQuery();
-			if(rs.next()) {
+			ConfigManager cm = new ConfigManager(localisation);
+			String configString = cm.getConfig(sd, id);
+			if(configString != null) {
 			
-				DailyReportsConfig config = gson.fromJson(rs.getString("config"), DailyReportsConfig.class);
+				DailyReportsConfig config = gson.fromJson(configString, DailyReportsConfig.class);
 				
 				// Develop
 				//config.columns = new ArrayList<> ();
@@ -145,7 +141,6 @@ public class DailyReport extends Application {
 			log.log(Level.SEVERE, "Exception", e);
 		} finally {
 			
-			if(pstmt != null) {try{pstmt.close();}catch(Exception e) {}}
 			SDDataSource.closeConnection(connectionString, sd);	
 			ResultsDataSource.closeConnection(connectionString, cResults);	
 
