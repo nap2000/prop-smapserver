@@ -21,6 +21,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -31,10 +32,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -43,10 +47,21 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.smap.sdal.Utilities.Authorise;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
+import org.smap.sdal.Utilities.ResultsDataSource;
 import org.smap.sdal.Utilities.SDDataSource;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-@Path("/report/word")
+import data.DailyReportsManager;
+import data.QrReportsManager;
+import managers.ConfigManager;
+import model.DailyReportsConfig;
+import model.QrReportsConfig;
+import model.ReportColumn;
+
+
+@Path("/report/qr/{id}/word")
 public class DailyReportWord extends Application {
 
 	Authorise a = new Authorise(null, Authorise.ORG);
@@ -58,64 +73,60 @@ public class DailyReportWord extends Application {
 	@GET
 	@Produces("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
 	public Response getMonthly (@Context HttpServletRequest request,
+			@PathParam("id") int id,
+			@QueryParam("tz") String tz,
 			@Context HttpServletResponse response) {
 
-		String connectionString = "tdh - daily report";
+		Response responseVal = null;
+		String connectionString = "tdh - QR report word";
 
 		// Authorisation - Access
 		Connection sd = SDDataSource.getConnection(connectionString);	
 		a.isAuthorised(sd, request.getRemoteUser());		
 		// End Authorisation 
 
+		Connection cResults = null;
 		try {
 			Locale locale = new Locale(GeneralUtilityMethods.getUserLanguage(sd, request, request.getRemoteUser()));
 			ResourceBundle localisation = ResourceBundle.getBundle("org.smap.sdal.resources.SmapResources", locale);
 
-			XWPFDocument doc = new XWPFDocument();
-			XWPFParagraph p1 = doc.createParagraph();
+			Gson gson = new GsonBuilder().disableHtmlEscaping().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+			cResults = ResultsDataSource.getConnection(connectionString);	
+			
+			ConfigManager cm = new ConfigManager(localisation);
+			String configString = cm.getConfig(sd, id);
+			
+			// Dev
+			QrReportsConfig q = new QrReportsConfig();
+			q.sIdent= "s133_4081";
+			q.columns = new ArrayList<ReportColumn> ();
+			q.columns.add(new ReportColumn("class", "Class", 1, true));
+			q.columns.add(new ReportColumn("class", "Class", 1, false));
+			q.columns.add(new ReportColumn("gender", "Gender", 1, false));
+			q.columns.add(new ReportColumn("q5", "Important", 1, false));
+			configString = gson.toJson(q);
+			// End dev
+			
+			if(configString != null) {			
+				QrReportsConfig config = gson.fromJson(configString, QrReportsConfig.class);
 
-			p1.setWordWrapped(true);
-			p1.setSpacingAfterLines(1);
-
-			XWPFRun r1 = p1.createRun();
-			String t1 = "Sample Paragraph Post. is a sample Paragraph post. peru-duellmans-poison-dart-frog.";
-			r1.setText(t1);
-			r1.setText("");
-			r1.setText("");
-
-			//create table
-			XWPFTable table = doc.createTable();
-			table.setWidth("100.00%");
-
-			//create first row
-			XWPFTableRow tableRowOne = table.getRow(0);
-			tableRowOne.getCell(0).setText("col one, row one");
-			tableRowOne.addNewTableCell().setText("col two, row one");
-			tableRowOne.addNewTableCell().setText("col three, row one");
-
-
-			// write to a docx file
-			GeneralUtilityMethods.setFilenameInResponse("report.docx", response);
-			ServletOutputStream fo = null;
-			try {
-				// create .docx file
-				fo = response.getOutputStream();
-
-				// write to the .docx file
-				doc.write(fo);
-			} finally {
-				if (fo != null) {try {fo.close();} catch (IOException e) {}}
-				if (doc != null) {try {doc.close();} catch (IOException e) {}}
+				String filename = GeneralUtilityMethods.getSurveyNameFromIdent(sd, config.sIdent);
+				QrReportsManager qrm = new QrReportsManager(localisation, tz);
+				qrm.getQrReport(sd, cResults, response, filename, config);
+				responseVal = Response.status(Status.OK).entity("").build();
+			} else {
+				responseVal = Response.status(Status.OK).entity("Error: Report not found").build();
 			}
 
 		}  catch (Exception e) {
 			log.log(Level.SEVERE, "Exception", e);
+			responseVal = Response.status(Status.OK).entity(e.getMessage()).build();
 		} finally {
 
 			SDDataSource.closeConnection(connectionString, sd);	
 
 		}
-		return Response.ok("").build();
+		return responseVal;
 	}
 
 
