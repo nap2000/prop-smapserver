@@ -747,6 +747,8 @@ require([
             format = "xlsx";
         } else if ($this.hasClass("pdf")) {
             format = "pdf";
+        } else if ($this.hasClass("docx")) {
+            format = "docx";
         } else {
             format = "image";
         }
