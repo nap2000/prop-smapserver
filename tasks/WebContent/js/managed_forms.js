@@ -609,6 +609,12 @@ require([
 
             });
 
+            $('input.includeText', '#tab-columns-content').each(function (index) {
+                $this = $(this);
+                config.columns[index].includeText = $this.is(':checked');
+
+            });
+
             updateVisibleColumns(config.columns);
             saveColumns();
 
@@ -1414,7 +1420,7 @@ require([
 
         if (item.include || item.column_name === "prikey") {
             h[++idx] = '<div class="row">';
-            h[++idx] = '<div class="col-sm-8">';
+            h[++idx] = '<div class="col-sm-6">';
             h[++idx] = item.displayName;
             h[++idx] = '</div>';
 
@@ -1438,6 +1444,19 @@ require([
             h[++idx] = item.displayName;
             h[++idx] = '"';
             if(item.barcode) {
+                h[++idx] = ' checked';
+            }
+            h[++idx] = '>';
+            h[++idx] = '</div>';
+            h[++idx] = '</div>';
+
+            h[++idx] = '<div class="col-sm-2">';
+            h[++idx] = '<div class="switch">';
+            h[++idx] = '<input type="checkbox" name="includeText"';
+            h[++idx] = ' class="includeText" value="';
+            h[++idx] = item.displayName;
+            h[++idx] = '"';
+            if(item.includeText) {
                 h[++idx] = ' checked';
             }
             h[++idx] = '>';
@@ -1918,7 +1937,9 @@ require([
         for (i = 0; i < columns.length; i++) {
             configColumns[columns[i].column_name] = {
                 hide: columns[i].hide,
-                barcode: columns[i].barcode
+                barcode: columns[i].barcode,
+                includeText: columns[i].includeText
+
             };
         }
 
