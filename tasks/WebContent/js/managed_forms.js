@@ -897,6 +897,9 @@ require([
         } else if (format === "pdf") {
             filename = title + ".pdf";
             mime = "application/pdf";
+        } else if (format === "docx") {
+            filename = title + ".docx";
+            mime = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
         } else {
             // image
             filename = title + ".zip"
