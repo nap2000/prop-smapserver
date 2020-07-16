@@ -600,12 +600,12 @@ require([
 
             $('input.columnSelect', '#tab-columns-content').each(function (index) {
                 $this = $(this);
-                config.columns[index + 1].hide = !$this.is(':checked');		// Ignore prikey
+                config.columns[index].hide = !$this.is(':checked');
             });
 
             $('input.barcodeSelect', '#tab-columns-content').each(function (index) {
                 $this = $(this);
-                config.columns[index + 1].barcode = $this.is(':checked');		// Ignore prikey
+                config.columns[index].barcode = $this.is(':checked');
 
             });
 
@@ -1196,9 +1196,9 @@ require([
         for (i = 0; i < columns.length; i++) {
             headItem = columns[i];
 
-            hColSort[hColSortIdx++] = addToColumnSort(headItem);
+            hColSort[++hColSortIdx] = addToColumnSort(headItem);
             if(isDuplicates) {
-                hDups[hDupsIdx++] = addToDuplicateReportSelect(headItem);
+                hDups[++hDupsIdx] = addToDuplicateReportSelect(headItem);
             }
 
             shownColumns.push({
@@ -1412,7 +1412,7 @@ require([
         var h = [],
             idx = -1;
 
-        if (item.include) {
+        if (item.include || item.column_name === "prikey") {
             h[++idx] = '<div class="row">';
             h[++idx] = '<div class="col-sm-8">';
             h[++idx] = item.displayName;
