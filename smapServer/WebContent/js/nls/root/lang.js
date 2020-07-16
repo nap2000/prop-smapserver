@@ -1323,6 +1323,7 @@ define({
     // Console
     "co_dd": "Drill Down",
     "co_up": "Up",
+    "co_tid": "Include text value in Download",
 
     // Mailouts
     "mo_ce": "Clear Existing Unsent Emails",
