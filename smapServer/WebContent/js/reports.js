@@ -501,6 +501,22 @@ require([
 			dateColumn: getDateName($('#custom_date_q').val())
 		};
 
+		// Add bars
+		report.bars = [];
+		var b1 = $("#custom_bar_1").val();
+		if(b1 && b1 != '-1') {
+			report.bars.push({
+				name: b1
+			})
+		}
+
+		var b2 = $("#custom_bar_2").val();
+		if(b2 && b2 != '-1') {
+			report.bars.push({
+				name: b2
+			})
+		}
+
 		// Add columns
 		report.columns = [];
 		var cols = $(".c_column:checked").map(function(){
@@ -640,6 +656,19 @@ require([
 			    $(':checkbox[value=' + getQuestionIndex(gConfig.columns[i], questions) + ']', '#columnsHere').prop("checked","true");
 		    }
 	    }
+
+		// Show bar selections
+	    var b1 = "-1";
+	    var b2 = "-1";
+	    if(gConfig.bars && gConfig.bars.length > 0) {
+		    b1 = gConfig.bars[0].name;
+
+		    if(gConfig.bars.length > 1) {
+			    b2 = gConfig.bars[1].name;
+		    }
+	    }
+	    $('#custom_bar_1').val(b1);
+	    $('#custom_bar_2').val(b2);
     }
 
     /*
@@ -1248,7 +1277,6 @@ require([
 		if(report) {
 			$('#c_name').val(report.name);
 			$('#custom_date_q').val(getDateId(gConfig.dateColumn));
-
 		}
 		addCustomReportTypes();
 	}
