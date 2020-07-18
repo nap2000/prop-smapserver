@@ -553,7 +553,7 @@ require([
 			organisation.email_port = parseInt($('#o_email_port').val());
 			organisation.default_email_content = $('#o_default_email_content').val();
 			organisation.locale = $('#o_language').val();
-			organisation.refresh_rate = $('#o_refresh_rate').val();
+			organisation.refresh_rate = parseInt($('#o_refresh_rate').val());
 			organisation.timeZone = $('#o_tz').val();
 			organisation.server_description = $('#o_server_description').val();
 
