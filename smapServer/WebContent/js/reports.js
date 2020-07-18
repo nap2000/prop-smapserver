@@ -506,14 +506,16 @@ require([
 		var b1 = $("#custom_bar_1").val();
 		if(b1 && b1 != '-1') {
 			report.bars.push({
-				name: b1
+				name: b1,
+				title: $("#custom_bar_1_title").val()
 			})
 		}
 
 		var b2 = $("#custom_bar_2").val();
 		if(b2 && b2 != '-1') {
 			report.bars.push({
-				name: b2
+				name: b2,
+				title: $("#custom_bar_2_title").val()
 			})
 		}
 
@@ -659,16 +661,22 @@ require([
 
 		// Show bar selections
 	    var b1 = "-1";
+	    var b1_title = "";
 	    var b2 = "-1";
+	    var b2_title = "";
 	    if(gConfig.bars && gConfig.bars.length > 0) {
 		    b1 = gConfig.bars[0].name;
+		    b1_title = gConfig.bars[0].title;
 
 		    if(gConfig.bars.length > 1) {
 			    b2 = gConfig.bars[1].name;
+			    b2_title = gConfig.bars[1].title;
 		    }
 	    }
 	    $('#custom_bar_1').val(b1);
+	    $('#custom_bar_1_title').val(b1_title);
 	    $('#custom_bar_2').val(b2);
+	    $('#custom_bar_2_title').val(b2_title);
     }
 
     /*

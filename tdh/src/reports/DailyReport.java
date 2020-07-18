@@ -110,7 +110,6 @@ public class DailyReport extends Application {
 				SurveyManager sm = new SurveyManager(localisation, tz);
 				for (ReportMultiColumn rmc : config.bars) {
 				
-					rmc.title = rmc.name;
 					rmc.columns =  getBarColumns(sd, sm, request.getRemoteUser(), rmc.name, config.sIdent);
 				}
 				
