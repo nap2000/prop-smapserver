@@ -178,12 +178,7 @@ public class DailyReportsManager {
 			pstmt.setInt(2,  year);
 			log.info("Get daily report data: " + pstmt.toString());
 			rs = pstmt.executeQuery();
-			
-			/*
-			 * Write the title
-			 * TODO
-			 */
-			
+		
 			/*
 			 * Write the header
 			 */
@@ -231,7 +226,7 @@ public class DailyReportsManager {
 				
 				if(colNumber == 0) {
 					cell = row.createCell(colNumber);
-					cell.setCellValue("Date");
+					cell.setCellValue(localisation.getString("c_date"));
 				}
 				
 				for(int i = 0; i < item.bars.size(); i++) {
