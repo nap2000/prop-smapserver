@@ -23,6 +23,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -45,6 +46,10 @@ import org.smap.sdal.Utilities.Authorise;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
 import org.smap.sdal.Utilities.ResultsDataSource;
 import org.smap.sdal.Utilities.SDDataSource;
+import org.smap.sdal.managers.SurveyManager;
+import org.smap.sdal.model.Form;
+import org.smap.sdal.model.Question;
+import org.smap.sdal.model.Survey;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -102,31 +107,12 @@ public class DailyReport extends Application {
 			if(configString != null) {
 			
 				DailyReportsConfig config = gson.fromJson(configString, DailyReportsConfig.class);
+				SurveyManager sm = new SurveyManager(localisation, tz);
+				for (ReportMultiColumn rmc : config.bars) {
 				
-				// Develop
-				//config.columns = new ArrayList<> ();
-				//config.columns.add(new ReportColumn("date", "Date", 0));
-				//config.columns.add(new ReportColumn("activity", "Activity", 0));
-				//config.columns.add(new ReportColumn("activityintheday", "Activity for the day", 0));
-	
-				config.bars = new ArrayList<> ();
-				ReportMultiColumn rmc = new ReportMultiColumn();
-				rmc.name = "girls";
-				rmc.title = "Girls";
-				rmc.columns =  new ArrayList<> ();
-				for(int i = 1; i < 12; i++) {
-					rmc.columns.add("girls_" + i);
+					rmc.title = rmc.name;
+					rmc.columns =  getBarColumns(sd, sm, request.getRemoteUser(), rmc.name, config.sIdent);
 				}
-				config.bars.add(rmc);
-				rmc = new ReportMultiColumn();
-				rmc.name = "boys";
-				rmc.title = "Boys";
-				rmc.columns =  new ArrayList<> ();
-				for(int i = 1; i < 12; i++) {
-					rmc.columns.add("boys_" + i);
-				}
-				config.bars.add(rmc);
-				// End Develop
 				
 				String filename = GeneralUtilityMethods.getSurveyNameFromIdent(sd, config.sIdent);
 				DailyReportsManager drm = new DailyReportsManager(localisation, tz);
@@ -146,6 +132,63 @@ public class DailyReport extends Application {
 
 		}
 		return responseVal;
+	}
+	
+	private ArrayList<String> getBarColumns(Connection sd, SurveyManager sm, String user, String qname, String sIdent) throws SQLException, Exception {
+		ArrayList<String> columns = new ArrayList<>();
+		
+		int sId = GeneralUtilityMethods.getSurveyId(sd, sIdent);
+		Survey s = sm.getById(sd, 
+				null, user, false, sId, true, null, null, 
+				false, 	// get results
+				false, 	// Create dummy values
+				false,  // Get property type questions
+				false,	// getSoftDeleted
+				false,	// getHrk 
+				"internal",	// getExternalOptions
+				false,  // getChangeHistory
+				false,   // getRoles
+				false,  // superUser
+				null, 	// geomFormat
+				false,	// referenceSurveys
+				false,	// onlyGetLaunched
+				false	// mergeDefaultSetValue
+				);
+		
+		int idx = qname.lastIndexOf('_');
+		String base = null;
+		if(idx > 0) {
+			String suffix = qname.substring(idx + 1);
+			try {
+				Integer.parseInt(suffix);
+				base = qname.substring(0, idx);
+			} catch (Exception e) {
+				
+			}
+		}
+		if(base != null) {
+			for(Form f : s.forms) {
+				for(Question q : f.questions) {
+					if(q.published && (q.type.equals("int") || q.type.equals("decimal"))) {
+						if(q.name.startsWith(base)) {
+							idx = qname.lastIndexOf('_');
+							if(idx > 0) {
+								String suffix = qname.substring(idx + 1);
+								try {
+									Integer.parseInt(suffix);
+									columns.add(q.columnName);
+								} catch (Exception e) {
+									
+								}	
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return columns;
+		
 	}
 
 }
