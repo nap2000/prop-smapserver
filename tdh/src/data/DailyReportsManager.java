@@ -124,8 +124,15 @@ public class DailyReportsManager {
 			 * This is required for security as much as error reporting
 			 */
 			cm.validateColumn(cResults, tlf.tableName, config.dateColumn, surveyName);
+			boolean dateColumnIncluded = false;
 			for(ReportColumn rc : config.columns) {
 				cm.validateColumn(cResults, tlf.tableName, rc.column, surveyName);
+				if(config.dateColumn.equals(rc.column)) {
+					dateColumnIncluded = true;
+				}
+			}
+			if(!dateColumnIncluded) {
+				config.columns.add(new ReportColumn(config.dateColumn, config.dateColumn, 0, false));
 			}
 			for(ReportMultiColumn bar : config.bars) {
 				for(String name : bar.columns) {
