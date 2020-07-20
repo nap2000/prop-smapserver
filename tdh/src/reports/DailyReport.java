@@ -21,8 +21,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Locale;
