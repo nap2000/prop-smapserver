@@ -3023,7 +3023,11 @@ require([
 	    // First Check the Cache
 	    if(!clearCache && gTasks.cache.data[url]) {
 		    gTasks.cache.currentData = gTasks.cache.data[url];
-		    showTable(gTasks.cache.data[url]);
+            callback(gTasks.cache.data[url]);
+            updateSettings(gTasks.cache.currentData.settings);
+            map.setLayers(gTasks.cache.currentData.schema.layers);
+            chart.setCharts(gTasks.cache.currentData.schema.charts);
+            updateFormList(gTasks.cache.currentData.forms);
 	    } else {
 
 		    addHourglass();
