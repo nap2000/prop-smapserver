@@ -281,6 +281,8 @@ CREATE TABLE custom_report_type (
 	);
 ALTER TABLE custom_report_type OWNER TO ws;
 
+insert into custom_report_type(name, config) values('Daily', null);
+
  alter table custom_report add column p_id integer REFERENCES project(id) ON DELETE CASCADE;
  alter table custom_report drop column type;
  alter table custom_report add column type_id integer REFERENCES custom_report_type(id) ON DELETE CASCADE;
@@ -290,3 +292,5 @@ ALTER TABLE custom_report_type OWNER TO ws;
 
  alter table organisation add column refresh_rate integer default 0;
  update organisation set refresh_rate = 0 where refresh_rate is null;
+
+  CREATE INDEX record_event_key ON record_event(key);
