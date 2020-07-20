@@ -664,7 +664,7 @@ require([
 	    var b1_title = "";
 	    var b2 = "-1";
 	    var b2_title = "";
-	    if(gConfig.bars && gConfig.bars.length > 0) {
+	    if(gConfig && gConfig.bars && gConfig.bars.length > 0) {
 		    b1 = gConfig.bars[0].name;
 		    b1_title = gConfig.bars[0].title;
 
