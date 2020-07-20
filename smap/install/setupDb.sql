@@ -602,7 +602,9 @@ CREATE TABLE record_event (
 	task_id integer,								-- Record if this is an task event	
 	event_time TIMESTAMP WITH TIME ZONE			-- Time and date of event
 	);
+CREATE INDEX record_event_key ON record_event(key);
 ALTER TABLE record_event OWNER TO ws;
+
 
 DROP TABLE IF EXISTS custom_report_type CASCADE;
 CREATE TABLE custom_report_type (
