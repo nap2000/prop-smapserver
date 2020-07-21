@@ -290,6 +290,11 @@ require([
             showManagedData(globals.gCurrentSurvey, showTable, true);
         });
 
+        // St change function on clearColumns
+        $('#clearColumns').change(function() {
+            $('.columnSelect').prop('checked', ($(this).prop('checked')));
+        });
+
         /*
          * Setup dialog to change the current survey
          */
