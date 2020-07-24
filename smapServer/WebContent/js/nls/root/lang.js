@@ -1348,7 +1348,10 @@ define({
     // AWS Services
     "svc_at": "Auto Translate",
     "svc_from_l": "From Language",
-    "svc_to_l": "To Language"
+    "svc_to_l": "To Language",
+
+    // Logs
+    "log_hr": "Hourly Summary"
 
 
 });
