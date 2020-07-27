@@ -11,7 +11,7 @@
 	<link href="/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 
 	<link href="/css/wb/animate.css" rel="stylesheet">
-	<link href="/css/wb/style.css" rel="stylesheet">
+	<link href="/css/wb/style.v2.9.1.css" rel="stylesheet">
 	<link href="/js/libs/DataTables/datatables.min.css" rel="stylesheet">
 	<link href="/css/bootstrap-toggle.min.css" rel="stylesheet"/>
 	<link href="/css/dataTables.fontAwesome.css" rel="stylesheet" >
@@ -43,19 +43,39 @@
 			<ul class="nav metismenu" id="side-menu">
 
 				<li>
-					<a href="#" id="m_modules_inspinia"><i class="fa fa-th-large"></i> <span class="lang" data-lang="m_modules">modules</span><span class="fa arrow"></span></a>
-					<ul class="nav nav-second-level animated fadeInRight m-t-xs">
+					<a href="#" id="username" data-toggle="modal" data-target="#modify_me_popup" aria-label="User">
+						<i class="glyphicon glyphicon-user" aria-hidden="true"></i> <span class="lang"
+																						  data-lang="m_user_profile"></span></a>
+				</li>
+				<li>
+					<a href="#" id="m_modules_inspinia" aria-expanded="false"><i class="fa fa-th-large"></i> <span
+							class="lang" data-lang="m_modules"></span></a>
+					<ul class="nav nav-second-level" aria-expanded="false">
 
-						<li><a class="lang" data-lang="m_home" href="/?loggedin=yes">home</a></li>
-						<li class="restrict_role admin_role analyst_role"><a href="/edit.html"><i class="glyphicon glyphicon-edit"></i> <span class="lang" data-lang="c_edit">Edit</span></a></li>
-						<li class="restrict_role admin_role analyst_role"><a href="/fieldManager/surveyManagement.html"><i class="glyphicon glyphicon-wrench"></i> <span class="lang" data-lang="m_admin">Admin</span></a></li>
+						<li><a class="lang" data-lang="m_home" href="/?loggedin=yes"></a></li>
+						<li class="restrict_role admin_role analyst_role"><a href="/edit.html"><i
+								class="glyphicon glyphicon-edit"></i> <span class="lang" data-lang="c_edit"></span></a>
+						</li>
+						<li class="restrict_role admin_role analyst_role"><a
+								href="/fieldManager/surveyManagement.html"><i
+								class="glyphicon glyphicon-wrench"></i><span class="lang"
+																			 data-lang="m_admin"></span></a></li>
 						<li class="restrict_role manage_role admin_role analyst_role"><a href="/webForm.html"><i
 								class="glyphicon glyphicon-globe"></i> <span class="nav-label lang"
 																			 data-lang="m_web_forms"></span></span>
 						</a></li>
-						<li class="restrict_role manage_role admin_role analyst_role"><a href="/tasks/managed_forms.html"><i class="glyphicon glyphicon-dashboard"></i> <span class="nav-label lang" data-lang="m_console"></span></span></a></li>
-						<li class="restrict_role analyst_role"><a href="/fieldAnalysis/index.html"><i class="glyphicon glyphicon-stats"></i> <span class="nav-label lang" data-lang="m_analysis">Analysis</span></a></li>
-						<li class="restrict_role admin_role analyst_role manage_role task_role"><a href="/tasks/taskManagement.html"><i class="fa fa-tasks"></i> <span class="nav-label lang" data-lang="m_assign">assign</span></a></li>
+						<li class="restrict_role manage_role admin_role analyst_role"><a href="/tasks/managed_forms.html"><i
+								class="glyphicon glyphicon-dashboard"></i> <span class="nav-label lang"
+																				 data-lang="m_console"></span></span>
+						</a></li>
+						<li class="restrict_role analyst_role"><a href="/fieldAnalysis/index.html"><i
+								class="glyphicon glyphicon-stats"></i> <span class="nav-label lang"
+																			 data-lang="m_analysis"></span></a>
+						</li>
+						<li class="restrict_role admin_role analyst_role manage_role task_role"><a href="/tasks/taskManagement.html"><i
+								class="fa fa-tasks"></i> <span class="nav-label lang" data-lang="m_assign"></span></a>
+						</li>
+						<li id="m_reports" class="restrict_role admin_role analyst_role"><a class="lang" data-lang="m_reports" href="/reports.html" title="Reports">Reports</a></li>
 						<li class="restrict_role admin_role analyst_role" id="c_campaigns"><a
 								href="/tasks/campaign.html"><i class="fa fa-envelope"></i> <span
 								class="nav-label lang" data-lang="c_campaigns">m</span></a></li>
@@ -65,9 +85,16 @@
 					</ul>
 				</li>
 
-				<li id="m_mf" class="restrict_role admin_role manage_role"><a href="/tasks/managed_forms.html"><i class="fas fa-receipt"></i> <span class="lang" data-lang="c_records">r</span></a></li>
-				<li id="m_web_forms" class="restrict_role enum_role"><a href="/webForm.html"><i class="glyphicon glyphicon-globe"></i> <span class="lang" data-lang="m_web_forms">wf</span></a></li>
-				<li id="m_help"><a href="https://www.smap.com.au/docs" target="_blank"><i class="fa fa-info-circle"></i> <span class="lang" data-lang="m_help">h</span></a></li>
+				<li id="m_duplicates" class="restrict_role admin_role"><a href="/tasks/duplicates.html"><i
+						class="fa fa-filter"></i> <span class="lang" data-lang="mon_dup"></span></a></li>
+				<li id="m_web_forms" class="restrict_role enum_role"><a href="/webForm.html"><i class="glyphicon glyphicon-globe"></i><span
+						class="lang" data-lang="m_web_forms"></span></a></li>
+				<li id="m_rep" class="restrict_role admin_role analyst_role"><a href="/reports.html"><i
+						class="fa fa-table"></i> <span class="lang" data-lang="m_reports"></span></a></li>
+				<li id="m_summary_report" class="restrict_role admin_role analyst_role data_role"><a href="#" class="genxlsfileall">
+					<i class="fa fa-file-excel"></i> <span class="lang" data-lang="mf_sr">summary</span></a></li>
+				<li id="m_help"><a href="http://www.smap.com.au/docs/console.html" target="_blank"><i class="fa fa-info-circle"></i> <span
+						class="lang" data-lang="m_help"></span></a></li>
 
 			</ul>
 		</div>
