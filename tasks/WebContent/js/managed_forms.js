@@ -1480,7 +1480,7 @@ require([
         var h = [],
             idx = -1;
 
-        if (item.include) {
+        if (item.include && !item.mgmt) {
             h[++idx] = '<div class="row">';
             //h[++idx] = '<div class="setings-item">';
 
