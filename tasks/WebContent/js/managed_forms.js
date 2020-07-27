@@ -1482,7 +1482,7 @@ require([
 
         if (item.include) {
             h[++idx] = '<div class="row">';
-            h[++idx] = '<div class="setings-item">';
+            //h[++idx] = '<div class="setings-item">';
 
             h[++idx] = '<div class="col-sm-1">';
             h[++idx] = '<input type="checkbox" name="columnSelect"';
@@ -1514,7 +1514,7 @@ require([
             h[++idx] = '</div>';
 
 
-            h[++idx] = '</div>';	// Settings item
+            //h[++idx] = '</div>';	// Settings item
             h[++idx] = '</div>';		// Row
 
         }
@@ -3074,7 +3074,7 @@ require([
 						    gTasks.cache.currentData.schema.columns.unshift({
 							    hide: true,
 							    include: true,
-							    name: "_group",
+							    column_name: "_group",
 							    displayName: "_group"
 						    });
 					    }
@@ -3121,7 +3121,7 @@ require([
             globals.gMainTable.column(0, {page: 'current'}).data().each(function (group, i) {
                 if (group && last !== group) {
                     $(rows).eq(i).before(
-                        '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+                        '<tr class="group" style="background-color: #CCC;"><td colspan="5">' + group + '</td></tr>'
                     );
 
                     last = group;
