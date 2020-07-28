@@ -556,6 +556,7 @@ ALTER TABLE survey OWNER TO ws;
 DROP INDEX IF EXISTS SurveyDisplayName;
 DROP INDEX IF EXISTS SurveyKey;
 CREATE UNIQUE INDEX SurveyKey ON survey(ident);
+CREATE INDEX survey_group_survey_key ON survey(group_survey_id);
 
 DROP TABLE IF EXISTS survey_change CASCADE;
 CREATE TABLE survey_change (
@@ -715,6 +716,7 @@ CREATE INDEX infotext_id_sequence ON question(infotext_id);
 CREATE UNIQUE INDEX qname_index ON question(f_id,qname) where soft_deleted = 'false';
 CREATE INDEX q_f_id ON question(f_id);
 CREATE INDEX idx_question_param ON question (parameters) WHERE (parameters is not null);
+CREATE INDEX question_column_name_key ON question(column_name);
 	
 DROP TABLE IF EXISTS option CASCADE;
 CREATE TABLE option (
