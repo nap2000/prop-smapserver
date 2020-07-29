@@ -1,4 +1,4 @@
-package customReports;
+package surveyKPI;
 
 /*
 This file is part of SMAP.
@@ -43,7 +43,11 @@ import org.smap.sdal.Utilities.Authorise;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
 import org.smap.sdal.Utilities.ResultsDataSource;
 import org.smap.sdal.Utilities.SDDataSource;
+import org.smap.sdal.managers.CustomConfigManager;
+import org.smap.sdal.managers.CustomDailyReportsManager;
 import org.smap.sdal.managers.SurveyManager;
+import org.smap.sdal.model.CustomDailyReportsConfig;
+import org.smap.sdal.model.CustomReportMultiColumn;
 import org.smap.sdal.model.Form;
 import org.smap.sdal.model.Question;
 import org.smap.sdal.model.Survey;
@@ -51,19 +55,14 @@ import org.smap.sdal.model.Survey;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import data.DailyReportsManager;
-import managers.ConfigManager;
-import model.DailyReportsConfig;
-import model.ReportMultiColumn;
-
 
 @Path("/report/daily")
-public class DailyReport extends Application {
+public class CusomDailyReport extends Application {
 
 	Authorise a = new Authorise(null, Authorise.ORG);
 
 	private static Logger log =
-			Logger.getLogger(DailyReport.class.getName());
+			Logger.getLogger(CusomDailyReport.class.getName());
 
 	@GET
 	@Path("/{id}/xls")
@@ -99,19 +98,19 @@ public class DailyReport extends Application {
 			Gson gson = new GsonBuilder().disableHtmlEscaping().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 			cResults = ResultsDataSource.getConnection(connectionString);	
 			
-			ConfigManager cm = new ConfigManager(localisation);
+			CustomConfigManager cm = new CustomConfigManager(localisation);
 			String configString = cm.getConfig(sd, id);
 			if(configString != null) {
 			
-				DailyReportsConfig config = gson.fromJson(configString, DailyReportsConfig.class);
+				CustomDailyReportsConfig config = gson.fromJson(configString, CustomDailyReportsConfig.class);
 				SurveyManager sm = new SurveyManager(localisation, tz);
-				for (ReportMultiColumn rmc : config.bars) {
+				for (CustomReportMultiColumn rmc : config.bars) {
 				
 					rmc.columns =  getBarColumns(sd, sm, request.getRemoteUser(), rmc.name, config.sIdent);
 				}
 				
 				String filename = GeneralUtilityMethods.getSurveyNameFromIdent(sd, config.sIdent);
-				DailyReportsManager drm = new DailyReportsManager(localisation, tz);
+				CustomDailyReportsManager drm = new CustomDailyReportsManager(localisation, tz);
 				drm.getDailyReport(sd, cResults, response, filename, config, year, month);
 				responseVal = Response.status(Status.OK).entity("").build();
 			} else {
