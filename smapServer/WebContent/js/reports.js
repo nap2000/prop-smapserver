@@ -1393,7 +1393,7 @@ require([
 			d = new Date(usageMsec),
 			month = d.getMonth() + 1,
 			year = d.getFullYear(),
-			url = "/custom/report/daily/" + gCustomReportList[gCustomReportIdx].id + "/xls";
+			url = "/surveyKPI/report/daily/" + gCustomReportList[gCustomReportIdx].id + "/xls";
 
 		url += "?year=" + year;
 		url += "&month=" + month;
