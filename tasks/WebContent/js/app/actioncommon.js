@@ -35,6 +35,25 @@ define([
         };
 
         /*
+	     * Refresh any select lists that are dependent on entered values
+         */
+        function refreshSelectLists(schema, record, changedItemIndex) {
+
+            var  columns = schema.columns;
+            var changedItem = columns[changedItemIndex];
+            for (i = 0; i < columns.length; i++) {
+                var column = columns[i];
+                if (column.mgmt) {
+                    if (column.type === "select1" || column.type === "select" || column.type === "select_one") {
+                        var value = record[column.column_name];
+                        getChoiceList(schema, column, i, value, record, changedItem.column_name);
+                    }
+                }
+
+            }
+        }
+
+        /*
          * Add HTML to show a form to edit a record
          */
         function showEditRecordForm(record, schema, $editForm, $surveyForm, editable, includeMaps) {
@@ -116,6 +135,7 @@ define([
                         value: $this.val()
                     }
                     dataChanged(config);
+                    refreshSelectLists(schema, record, $this.data("item"));
                 }
             });
             $editForm.find('.date').on("dp.change", function () {
@@ -238,7 +258,7 @@ define([
                     h[++idx] = '<option value=""></option>';
                 }
 
-                var choices = getChoiceList(schema, column, itemIndex, value, record);
+                var choices = getChoiceList(schema, column, itemIndex, value, record, undefined);
                 if (choices) {
                     h[++idx] = getChoicesHTML(column, choices, value, true);
                 }
@@ -286,7 +306,7 @@ define([
         /*
          * Get the choicelist for a select question
          */
-        function getChoiceList(schema, col, itemIndex, value, record) {
+        function getChoiceList(schema, col, itemIndex, value, record, changed_column) {
 
             // Get the choice list
             var listId = col.l_id;
@@ -297,14 +317,18 @@ define([
                 for (i = 0; i < schema.choiceLists.length; i++) {
                     if (schema.choiceLists[i].l_id === listId) {
                         choices = schema.choiceLists[i].choices;
+                        break;
                     }
                 }
             }
-            if(choices.length > 0) {
+            if(choices && choices.length > 0) {
 
                 if (col.appearance && (col.appearance.indexOf('search(') >= 0 || col.appearance.indexOf('lookup_choices(') >= 0)) {
                     // External choices
-                    var params = getAppearanceParams(col.appearance)
+                    var params = getAppearanceParams(col.appearance);
+                    var changeParam1 = false;
+                    var changeParam2 = false;
+                    var dependentColumn;
                     if (params.length > 0) {
                         // todo consider fixed values
                         var sIdent = globals.gGroupSurveys[globals.gCurrentSurvey];
@@ -317,38 +341,52 @@ define([
                                 url += '?search_type=' + params.filter;
                                 url += '&q_column=' + params.filter_column;
                                 if(params.filter_value.indexOf('${') == 0) {
-                                    params.filter_value = record[params.filter_value.substring(2, params.filter_value.length - 1)];
+                                    dependentColumn = params.filter_value.substring(2, params.filter_value.length - 1);
+                                    params.filter_value = record[dependent_column];
+
+                                    params.filter_value = getUpdate(params.filter_column, params.filter_value);  // Replace the value if there has been an update
+                                    if(changed_column && dependentColumn === changed_column) {        // Set a flag if this refresh in response to a changed value and this param is wha changed
+                                        changeParam1 = true;
+                                    }
                                 }
+
                                 url += '&q_value=' + params.filter_value;
                                 if(typeof params.second_filter_column !== "undefined"
                                         && typeof params.second_filter_value !== "undefined") {
                                     url += '&f_column=' + params.second_filter_column;
                                     if(params.second_filter_value.indexOf('${') == 0) {
-                                        params.second_filter_value = record[params.second_filter_value.substring(2, params.second_filter_value.length - 1)];
+                                        dependentColumn = params.second_filter_value.substring(2, params.second_filter_value.length - 1);
+                                        params.second_filter_value = record[dependentColumn];
+
+                                        params.second_filter_value  = getUpdate(params.second_filter_column, params.second_filter_value);    // Replace the value if there has been an update
+                                        if(changed_column && dependentColumn=== changed_column) {        // Set a flag if this refresh in response to a changed value and this param is wha changed
+                                            changeParam2 = true;
+                                        }
                                     }
                                     url += '&f_value=' + params.second_filter_value;
                                 }
                             }
                         }
 
+                        if(!changed_column || changeParam1 || changeParam2) {
+                            $.ajax({   // Get the existing report details to edit
+                                url: url,
+                                cache: false,
+                                success: function (data, status) {
+                                    var el = '#select_' + itemIndex;
+                                    var html = getChoicesHTML(col, data, value, false);
+                                    $(el).empty().append(html);
 
-                        $.ajax({   // Get the existing report details to edit
-                            url: url,
-                            cache: false,
-                            success: function (data, status) {
-                                var el = '#select_' + itemIndex;
-                                var html = getChoicesHTML(col, data, value, false);
-                                $(el).append(html);
+                                    // Set up multi selects
+                                    if (col.type === 'select') {
+                                        $(el).multiselect('rebuild');
+                                    }
 
-                                // Set up multi selects
-                                if(col.type === 'select') {
-                                   $(el).multiselect('rebuild');
+                                }, error: function (data, status) {
+                                    alert("Error: " + data.responseText);
                                 }
-
-                            }, error: function (data, status) {
-                                alert("Error: " + data.responseText);
-                            }
-                        });
+                            });
+                        }
                     } else {
                         alert("invalid search for: " + col.question_name);
                     }
@@ -357,6 +395,21 @@ define([
                     return choices;
                 }
             }
+        }
+
+        /*
+         * Get an updaed value
+         */
+        function getUpdate(col, def) {
+            if(gTasks.gUpdate && gTasks.gUpdate.length > 0) {
+                var i;
+                for(i = 0; i < gTasks.gUpdate.length; i++) {
+                    if(gTasks.gUpdate[i].name === col) {
+                        return gTasks.gUpdate[i].value;
+                    }
+                }
+            }
+            return def;
         }
 
         /*
