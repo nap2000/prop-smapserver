@@ -213,6 +213,7 @@ create TABLE log (
 	note text,
 	measure int default 0		-- In the case of translate this would be the number of characters
 	);
+CREATE INDEX log_time_key ON log(log_time);
 ALTER TABLE log OWNER TO ws;
 
 DROP TABLE IF EXISTS project CASCADE;
@@ -490,6 +491,7 @@ CREATE TABLE upload_event (
 	);
 create index idx_ue_ident on upload_event(user_name);
 create index idx_ue_applied on upload_event (status, incomplete, results_db_applied);
+create index idx_ue_upload_time on upload_event (upload_time);
 CREATE index ue_survey_ident ON upload_event(ident);
 ALTER TABLE upload_event OWNER TO ws;
 
