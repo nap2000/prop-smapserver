@@ -296,3 +296,6 @@ insert into custom_report_type(name, config) values('Daily', null);
 CREATE INDEX record_event_key ON record_event(key);
 CREATE INDEX survey_group_survey_key ON survey(group_survey_id);
 CREATE INDEX question_column_name_key ON question(column_name);
+
+create index idx_ue_upload_time on upload_event (upload_time);
+CREATE INDEX log_time_key ON log(log_time);
