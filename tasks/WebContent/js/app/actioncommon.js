@@ -342,7 +342,7 @@ define([
                                 url += '&q_column=' + params.filter_column;
                                 if(params.filter_value.indexOf('${') == 0) {
                                     dependentColumn = params.filter_value.substring(2, params.filter_value.length - 1);
-                                    params.filter_value = record[dependent_column];
+                                    params.filter_value = record[dependentColumn];
 
                                     params.filter_value = getUpdate(params.filter_column, params.filter_value);  // Replace the value if there has been an update
                                     if(changed_column && dependentColumn === changed_column) {        // Set a flag if this refresh in response to a changed value and this param is wha changed
