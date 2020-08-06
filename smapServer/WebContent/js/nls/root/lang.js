@@ -1324,6 +1324,7 @@ define({
     "co_dd": "Drill Down",
     "co_up": "Up",
     "co_tid": "Include text value in Download",
+    "co_b": "Bulk Change",
 
     // Mailouts
     "mo_ce": "Clear Existing Unsent Emails",

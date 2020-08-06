@@ -326,7 +326,7 @@
                                                                                               data-lang="d_add_c"></span></i>
                                 </a>
 
-                                <div class="btn-group not_deleted selectedOnly" role="group" aria-label="drill down">
+                                <div class="btn-group not_deleted singleSelectOnly" role="group" aria-label="drill down">
                                     <button type="button" class="lang du_only btn btn-secondary" data-lang="co_up" id="drill_up"></button>
                                     <button type="button" class="dd_only lang btn btn-secondary" data-lang="co_dd" id="drill_down"></button>
                                     <div class="btn-group dd_only" role="group">
@@ -338,19 +338,15 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!--
-                                <div class="dd_only custom-control custom-control-inline">
-                                    <label class="lang" data-lang="co_dd" for="drill_down"></label>
-                                    <select id="drill_down"></select>
-                                </div>
-                                -->
-                                <button class="selectedOnly not_deleted lang btn btn-danger" data-lang="c_del" id="m_delete"></button>
-                                <button class="selectedOnly deleted lang btn btn-info" data-lang="c_undel" id="m_undelete"></button>
-                                <button class="selectedOnly not_assigned lang btn btn-primary" data-lang="mf_lock" id="m_lock"></button>
-                                <button class="selectedOnly assigned lang btn btn-default" data-lang="mf_rel" id="m_release"></button>
-                                <button class="selectedOnly assigned lang btn btn-primary" data-lang="c_edit" id="m_edit"></button>
-                                <button class="selectedOnly assigned_other lang btn btn-primary" data-lang="m_view" id="m_view"></button>
-                                <button class="selectedOnly assigned_admin lang btn btn-warning" type="button" data-lang="t_assign" id="m_assign_to"></button>
+
+                                <button class="singleSelectOnly not_deleted lang btn btn-danger" data-lang="c_del" id="m_delete"></button>
+                                <button class="singleSelectOnly deleted lang btn btn-info" data-lang="c_undel" id="m_undelete"></button>
+                                <button class="singleSelectOnly not_assigned lang btn btn-primary" data-lang="mf_lock" id="m_lock"></button>
+                                <button class="singleSelectOnly assigned lang btn btn-default" data-lang="mf_rel" id="m_release"></button>
+                                <button class="multiSelectOnly lang btn btn-primary" data-lang="co_b" id="m_bulk_edit"></button>
+                                <button class="singleSelectOnly assigned lang btn btn-primary" data-lang="c_edit" id="m_edit"></button>
+                                <button class="singleSelectOnly assigned_other lang btn btn-primary" data-lang="m_view" id="m_view"></button>
+                                <button class="singleSelectOnly assigned_admin lang btn btn-warning" type="button" data-lang="t_assign" id="m_assign_to"></button>
 
                                 <!--<button class="genfile pdf btn btn-danger"><i class="fa fa-file-pdf-o fa-lg"></i></button>-->
                                 <button class="genfile docx btn btn-info"><i class="fa fa-file-word fa-lg"></i></button>
