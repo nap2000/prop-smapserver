@@ -111,7 +111,6 @@ require([
     var gChartView = false;         // Set true when the chart view is shown
     var gTimingView = false;        // Set true when the timing view is shown
     var gRefreshingData = false;    // Prevent double click on  refresh button
-    var gSelectedIndexes = [];      // Array of selected row indexes
     var gAssignedCol = 0;           // Column that contains the assignment status
     var gGetSettings = false;       // Use the settings from the database rather than the client
     var gDeleteColumn = -1;         // The index of the column that indicates if the record is deleted
@@ -148,12 +147,12 @@ require([
             recordChanges: {},
             groupSurveys: {},
             currentData: undefined,
-            data: {}
+            data: {},
+            gSelectedIndexes: []
         },
         gSelectedRecord: undefined,
         gSelectedSurveyIndex: undefined,
         gUpdate: [],
-        gCurrentIndex: undefined,
         gPriKey: undefined,
         gSort: undefined,
         gDirn: undefined
@@ -194,7 +193,7 @@ require([
             }
         }
 
-        $('.editRecordSection, .selectOnly, .singleSelectOnly, .multiSelectOnly, .dd_only').hide();
+        $('.editRecordSection, .bulkEditSection, .selectOnly, .singleSelectOnly, .multiSelectOnly, .dd_only').hide();
 
         // Get the parameters and start editing a survey if one was passed as a parameter
         var params = location.search.substr(location.search.indexOf("?") + 1);
@@ -307,6 +306,11 @@ require([
             window.history.back();
         });
 
+        $('.exitBulkEdit').click(function() {
+            showManagedData(globals.gCurrentSurvey, showTable, true);
+            window.history.back();
+        });
+
         setupTaskDialog();
         setupNotificationDialog();
 
@@ -344,6 +348,10 @@ require([
          */
         $('#m_edit').click(function() {
             showRecord(true);
+        });
+
+        $('#m_bulk_edit').click(function() {
+            showBulkEdit();
         });
 
         /*
@@ -1039,7 +1047,7 @@ require([
 
         getEligibleUsers();
 
-        $('.editRecordSection, .selectedOnly, .singleSelectOnly, .multiSelectOnly, .re_alert, .dd_only').hide();
+        $('.editRecordSection, .bulkEditSection, .selectedOnly, .singleSelectOnly, .multiSelectOnly, .re_alert, .dd_only').hide();
         if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
 
             getLanguageList(globals.gCurrentSurvey, undefined, false, '.language_sel', false, -1);
@@ -2137,7 +2145,7 @@ require([
      * Respond to a record of data being unselected
      */
     function recordUnSelected() {
-        gSelectedIndexes = [];
+        gTasks.gSelectedIndexes = [];
         gTasks.gSelectedRecord = undefined;
         $('.selectOnly, .dd_only').hide();
     }
@@ -2149,28 +2157,31 @@ require([
 
         var assignedOther = false;
 
-        gSelectedIndexes = indexes;
+        gTasks.gSelectedIndexes = indexes;
         gTasks.gSelectedRecord = undefined;
 
         $('.selectOnly, .multiSelectOnly, .singleSelectOnly').hide();
         $('.dd_only,.du_only').hide();
 
-        if(gSelectedIndexes.length === 0) {
+        if(gTasks.gSelectedIndexes.length === 0) {
             /*
 			 * No records are selected
 			 */
         }
-        if(gSelectedIndexes.length > 1) {
+        if(gTasks.gSelectedIndexes.length > 1) {
             /*
              * Multiple records are selected
              */
+
+            // Set seleced record to first record selected
+            gTasks.gSelectedRecord = globals.gMainTable.rows(gTasks.gSelectedIndexes).data().toArray()[0];
             $('.multiSelectOnly').show();
 
         } else {
             /*
 			* Only a single record is selected
 			*/
-            gTasks.gSelectedRecord = globals.gMainTable.rows(gSelectedIndexes).data().toArray()[0];
+            gTasks.gSelectedRecord = globals.gMainTable.rows(gTasks.gSelectedIndexes).data().toArray()[0];
             if (gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned === globals.gLoggedInUser.ident) {
                 $('.assigned').show();
             } else if (gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned !== globals.gLoggedInUser.ident) {
@@ -3250,6 +3261,25 @@ require([
             $('#saveRecord').addClass('disabled');
         }
         actioncommon.showEditRecordForm(gTasks.gSelectedRecord, gTasks.cache.currentData.schema, $('#editRecordForm'), $('#surveyForm'), editable, true);
+    }
+
+    /*
+     * Open a page for bulk editing
+     */
+    function showBulkEdit() {
+
+        window.location.hash="#bulk";
+        $('.shareRecordOnly, .role_select').hide();
+        $('#srLink').val("");
+        getSurveyRoles(globals.gCurrentSurvey);
+
+        var sIdent = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].ident;
+
+
+        $('.overviewSection').hide();
+        $('.bulkEditSection').show();
+
+        actioncommon.showBulkEditForm(gTasks.gSelectedRecord, gTasks.cache.currentData.schema, $('#bulkEditForm'));
     }
 
 
