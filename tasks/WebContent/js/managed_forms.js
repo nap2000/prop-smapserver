@@ -194,7 +194,7 @@ require([
             }
         }
 
-        $('.editRecordSection, .selectedOnly, .dd_only').hide();
+        $('.editRecordSection, .selectOnly, .singleSelectOnly, .multiSelectOnly, .dd_only').hide();
 
         // Get the parameters and start editing a survey if one was passed as a parameter
         var params = location.search.substr(location.search.indexOf("?") + 1);
@@ -1039,7 +1039,7 @@ require([
 
         getEligibleUsers();
 
-        $('.editRecordSection, .selectedOnly, .re_alert, .dd_only').hide();
+        $('.editRecordSection, .selectedOnly, .singleSelectOnly, .multiSelectOnly, .re_alert, .dd_only').hide();
         if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
 
             getLanguageList(globals.gCurrentSurvey, undefined, false, '.language_sel', false, -1);
@@ -1335,7 +1335,7 @@ require([
             recordSelected(indexes);
         });
         globals.gMainTable.off('deselect').on('deselect', function (e, dt, type, indexes) {
-            $('.selectedOnly, .dd_only').hide();
+            recordSelected(indexes);
         });
 
         // Highlight data conditionally, set barcodes
@@ -1874,21 +1874,6 @@ require([
 
     }
 
-    /*
-     * Get the currently selected recoord
-     */
-    function getSelectedRecord() {
-
-        var record,
-            idx;
-
-        $('input[type=radio]:checked', '#content table').each(function () {
-            idx = $(this).val();
-        });
-
-        return idx;
-    }
-
     function updateVisibleColumns(cols) {
         var i,
             hiddenColumns = [],
@@ -2154,7 +2139,7 @@ require([
     function recordUnSelected() {
         gSelectedIndexes = [];
         gTasks.gSelectedRecord = undefined;
-        $('.selectedOnly, .dd_only').hide();
+        $('.selectOnly, .dd_only').hide();
     }
 
     /*
@@ -2165,39 +2150,61 @@ require([
         var assignedOther = false;
 
         gSelectedIndexes = indexes;
-        gTasks.gSelectedRecord = globals.gMainTable.rows(gSelectedIndexes).data().toArray()[0];
-        $('.selectedOnly, .dd_only').hide();
-        if(gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned === globals.gLoggedInUser.ident) {
-            $('.assigned').show();
-        } else if(gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned !== globals.gLoggedInUser.ident) {
-            $('.assigned_other').show();
-            assignedOther = true;
-        } else {
-            $('.not_assigned').show();
-        }
+        gTasks.gSelectedRecord = undefined;
 
-        var columns = gTasks.cache.currentData.schema.columns;
-        if(!assignedOther) {
-            if ((gDeleteColumn < 0 || gTasks.gSelectedRecord[columns[gDeleteColumn].question_name] === 'f')) {
-                $('.not_deleted').show();
-            } else if (gDeleteColumn >= 0 && gTasks.gSelectedRecord[columns[gDeleteColumn].question_name] === 't') {
-                $('.deleted').show();
-            }
-        }
-
-        if(globals.gIsAdministrator) {
-            $('.assigned_admin').show();
-        }
-
-        // Set up the drill down
+        $('.selectOnly, .multiSelectOnly, .singleSelectOnly').hide();
         $('.dd_only,.du_only').hide();
-        if(gDrillDownStack.length > 0) {
-            $('.du_only').show();
-        }
 
-        updateDrillDownFormList();
-        if(gDrillDownNext) {
-        	$('.dd_only').show();
+        if(gSelectedIndexes.length === 0) {
+            /*
+			 * No records are selected
+			 */
+        }
+        if(gSelectedIndexes.length > 1) {
+            /*
+             * Multiple records are selected
+             */
+            $('.multiSelectOnly').show();
+
+        } else {
+            /*
+			* Only a single record is selected
+			*/
+            gTasks.gSelectedRecord = globals.gMainTable.rows(gSelectedIndexes).data().toArray()[0];
+            if (gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned === globals.gLoggedInUser.ident) {
+                $('.assigned').show();
+            } else if (gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned !== globals.gLoggedInUser.ident) {
+                $('.assigned_other').show();
+                assignedOther = true;
+            } else {
+                $('.not_assigned').show();
+            }
+
+            // Set up the drill down
+            $('.dd_only,.du_only').hide();
+
+            if(gDrillDownStack.length > 0) {
+                $('.du_only').show();
+            }
+
+            updateDrillDownFormList();
+            if(gDrillDownNext) {
+                $('.dd_only').show();
+            }
+
+            var columns = gTasks.cache.currentData.schema.columns;
+            if(!assignedOther) {
+                if ((gDeleteColumn < 0 || gTasks.gSelectedRecord[columns[gDeleteColumn].question_name] === 'f')) {
+                    $('.not_deleted').show();
+                } else if (gDeleteColumn >= 0 && gTasks.gSelectedRecord[columns[gDeleteColumn].question_name] === 't') {
+                    $('.deleted').show();
+                }
+            }
+
+            if(globals.gIsAdministrator) {
+                $('.assigned_admin').show();
+            }
+
         }
 
     }
