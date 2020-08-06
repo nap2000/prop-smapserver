@@ -79,7 +79,9 @@ define([
                 configItem = columns[i];
 
                 if (configItem.mgmt) {
+
                     h[++idx] = getEditMarkup(configItem, i, first, record, schema, editable);
+
                 } //else {
                 // Always add the read only original
                 m[++cnt] = getEditMarkup(configItem, i, first, record, schema, false);
@@ -116,7 +118,7 @@ define([
                     var config = {
                         itemIndex: itemIndex,
                         value: val
-                    }
+                    };
                     dataChanged(config);
                 }
             });
@@ -133,7 +135,7 @@ define([
                     var config = {
                         itemIndex: $this.data("item"),
                         value: $this.val()
-                    }
+                    };
                     dataChanged(config);
                     refreshSelectLists(schema, record, $this.data("item"));
                 }
@@ -143,7 +145,7 @@ define([
                 var config = {
                     itemIndex: $this.data("item"),
                     value: $this.val()
-                }
+                };
                 dataChanged(config);
             });
             $('#editRecordForm').on("smap::geopoint", function (event, config) {
@@ -171,11 +173,43 @@ define([
 
 
 
+            // Heading
+            h[++idx] = '<div classs="row">';
+            h[++idx] = '<div class="col-sm-8">';    // set
+            h[++idx] = '<b>' + localise.set["c_question"] + '</b>';
+            h[++idx] = '</div>';    // row
+            h[++idx] = '<div class="col-sm-2">';    // set
+            h[++idx] = '</div>';    // row
+            h[++idx] = '<div class="col-sm-2">';    // unset
+            h[++idx] = '</div>';    // row
+            h[++idx] = '</div>';    // row
             for (i = 0; i < columns.length; i++) {
                 configItem = columns[i];
 
                 if (configItem.mgmt) {
+                    h[++idx] = '<div class="row">';
+                    h[++idx] = '<div class="col-sm-8">';
                     h[++idx] = getEditMarkup(configItem, i, first, record, schema, true);
+                    h[++idx] = '</div>';    // Question column
+                    h[++idx] = '<div class="col-sm-2">';    // set
+                    if(configItem.type === 'select1' || configItem.type === 'select') {
+                        h[++idx] = '<button class="btn btn-primary setbulk" data-idx="';
+                        h[++idx] = i;
+                        h[++idx] = '">';
+                        h[++idx] = localise.set["c_apply"];
+                        h[++idx] = '</button>';
+                    }
+                    h[++idx] = '</div>';    // apply
+                    h[++idx] = '<div class="col-sm-2">';    // unset
+                    if(configItem.type === 'select') {
+                        h[++idx] = '<button class="btn btn-primary setbulk" data-idx="';
+                        h[++idx] = i;
+                        h[++idx] = '">';
+                        h[++idx] = localise.set["c_clear"];
+                        h[++idx] = '</button>';
+                    }
+                    h[++idx] = '</div>';    // apply
+                    h[++idx] = '</div>';    // row
                 }
 
                 if (!configItem.readonly) {
