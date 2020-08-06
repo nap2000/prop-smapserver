@@ -151,6 +151,7 @@ require([
             gSelectedIndexes: []
         },
         gSelectedRecord: undefined,
+        gBulkInstances: [],
         gSelectedSurveyIndex: undefined,
         gUpdate: [],
         gPriKey: undefined,
@@ -491,7 +492,7 @@ require([
         /*
          * Save a record of data in managed forms
          */
-        $('#saveRecord').click(function () {
+        $('.saverecord').click(function () {
             var saveString = JSON.stringify(gTasks.gUpdate);
             addHourglass();
             $.ajax({
@@ -503,6 +504,7 @@ require([
                 data: {
                     updates: saveString,
                     instanceid: gTasks.gSelectedRecord.instanceid,
+                    bulkInstances: gTasks.gBulkInstances,
                     groupForm: globals.gSubForms[globals.gCurrentSurvey]
                 },
                 success: function (data, status) {
@@ -2155,10 +2157,12 @@ require([
      */
     function recordSelected(indexes) {
 
-        var assignedOther = false;
+        var assignedOther = false,
+            i;
 
         gTasks.gSelectedIndexes = indexes;
         gTasks.gSelectedRecord = undefined;
+        gTasks.gBulkInstances = [];
 
         $('.selectOnly, .multiSelectOnly, .singleSelectOnly').hide();
         $('.dd_only,.du_only').hide();
@@ -2175,6 +2179,13 @@ require([
 
             // Set seleced record to first record selected
             gTasks.gSelectedRecord = globals.gMainTable.rows(gTasks.gSelectedIndexes).data().toArray()[0];
+
+            // Store the record indexes that will need to be updated
+            var records = globals.gMainTable.rows(gTasks.gSelectedIndexes).data().toArray();
+            for(i = 0; i < gTasks.gSelectedIndexes.length; i++) {
+                gTasks.gBulkInstances.push(records[i].instanceid);
+            }
+
             $('.multiSelectOnly').show();
 
         } else {
