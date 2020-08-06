@@ -29,6 +29,7 @@ define([
 
         return {
             showEditRecordForm: showEditRecordForm,
+            showBulkEditForm: showBulkEditForm,
             addCellMarkup: addCellMarkup,
             addCellMap: addCellMap,
             initialiseDynamicMaps: initialiseDynamicMaps
@@ -67,7 +68,6 @@ define([
                 first = true,
                 columns = schema.columns;
 
-            //gTasks.gCurrentIndex = index;
             globals.gRecordMaps = [];     // Initialise the list of maps we are going to show
             gTasks.gPriKey = record["prikey"];
 
@@ -156,12 +156,105 @@ define([
         }
 
         /*
+         * Add HTML to allow bulk ediitng
+         */
+        function showBulkEditForm(record, schema, $editForm) {
+            var
+                h = [],
+                idx = -1,
+                m = [],
+                cnt = -1,
+                i,
+                configItem,
+                first = true,
+                columns = schema.columns;
+
+
+
+            for (i = 0; i < columns.length; i++) {
+                configItem = columns[i];
+
+                if (configItem.mgmt) {
+                    h[++idx] = getEditMarkup(configItem, i, first, record, schema, true);
+                }
+
+                if (!configItem.readonly) {
+                    first = false;
+                }
+            }
+
+            if($editForm) {
+                $editForm.html(h.join(''));
+            }
+
+            // Set up date fields
+            $editForm.find('.date').datetimepicker({
+                locale: gUserLocale || 'en',
+                useCurrent: false,
+                showTodayButton: true
+            });
+
+            // Set up multi selects
+            $('.select', $editForm).multiselect({
+                onChange: function(option, checked, select) {
+
+                    var $sel = option.closest('select');
+                    var itemIndex = $sel.data("item");
+                    var val = '';
+                    if ($sel.val()) {
+                        val = $sel.val().join(' ');
+                    }
+                    var config = {
+                        itemIndex: itemIndex,
+                        value: val
+                    }
+                    dataChanged(config);
+                }
+            });
+
+
+
+            // Respond to changes in the data by creating an update object
+            $editForm.find('.form-control, select').bind("click propertychange paste change keyup input", function () {
+                if(!$(this).hasClass('select')) { // Ignore select multiples
+                    var $this = $(this);
+                    var config = {
+                        itemIndex: $this.data("item"),
+                        value: $this.val()
+                    }
+                    dataChanged(config);
+                    refreshSelectLists(schema, record, $this.data("item"));
+                }
+            });
+            $editForm.find('.date').on("dp.change", function () {
+                var $this = $(this).find('input');
+                var config = {
+                    itemIndex: $this.data("item"),
+                    value: $this.val()
+                }
+                dataChanged(config);
+            });
+            $('#editRecordForm').on("smap::geopoint", function (event, config) {
+                console.log("New geopoint");
+                dataChanged(config);
+            });
+
+            // Set focus to first editable data item
+            $editForm.find('[autofocus]').focus();
+        }
+
+        /*
          * Get the markup to edit the record
          */
         function getEditMarkup(configItem, itemIndex, first, record, schema, editable) {
 
             var h = [],
-                idx = -1;
+                idx = -1,
+                value;
+
+            if(record) {
+                value = record[configItem.column_name];
+            }
 
             // Add form group and label
             h[++idx] = '<div class="form-group row"><label class="col-md-4 control-label">';
@@ -176,13 +269,14 @@ define([
                     configItem.readonly || !editable,
                     'record_maps_',
                     globals.gRecordMaps,
-                    configItem, record[configItem.column_name],
+                    configItem,
+                    value,
                     undefined,
                     itemIndex);
             } else if (configItem.readonly || !editable) {		// Read only text
-                h[++idx] = addCellMarkup(record[configItem.column_name]);
+                h[++idx] = addCellMarkup(value);
             } else {
-                h[++idx] = addEditableColumnMarkup(configItem, record[configItem.column_name], itemIndex, first, schema, record);
+                h[++idx] = addEditableColumnMarkup(configItem, value, itemIndex, first, schema, record);
                 first = false;
             }
             h[++idx] = '</div>';
