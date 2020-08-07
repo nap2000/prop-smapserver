@@ -494,6 +494,10 @@ require([
          */
         $('.saverecord').click(function () {
             var saveString = JSON.stringify(gTasks.gUpdate);
+            var biString;
+            if(gTasks.gBulkInstances && gTasks.gBulkInstances.length > 0) {
+                biString =  JSON.stringify(gTasks.gBulkInstances)
+            }
             addHourglass();
             $.ajax({
                 type: "POST",
@@ -504,7 +508,7 @@ require([
                 data: {
                     updates: saveString,
                     instanceid: gTasks.gSelectedRecord.instanceid,
-                    bulkInstances: gTasks.gBulkInstances,
+                    bulkInstances: biString,
                     groupForm: globals.gSubForms[globals.gCurrentSurvey]
                 },
                 success: function (data, status) {
@@ -519,7 +523,7 @@ require([
                     }
 
                     gTasks.gUpdate = [];
-                    $('#saveRecord').prop("disabled", true);
+                    $('.saverecord').prop("disabled", true);
 
                     getRecordChanges(gTasks.gSelectedRecord);
                     $('.re_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
@@ -3267,9 +3271,9 @@ require([
         $('.editRecordSection').show();
 
         if(editable) {
-            $('#saveRecord').removeClass('disabled');
+            $('.saverecord').removeClass('disabled');
         } else {
-            $('#saveRecord').addClass('disabled');
+            $('.savercord').addClass('disabled');
         }
         actioncommon.showEditRecordForm(gTasks.gSelectedRecord, gTasks.cache.currentData.schema, $('#editRecordForm'), $('#surveyForm'), editable, true);
     }
