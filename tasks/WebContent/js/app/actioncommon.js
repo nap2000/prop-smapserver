@@ -250,7 +250,11 @@ define([
                 value;
 
             if(record && setvalue) {
-                value = record[configItem.column_name];
+                var name = configItem.column_name;
+                if(name === "the_geom") {
+                    name = "_geolocation";  // HACK! TODO Sort out names of gometries
+                }
+                value = record[name];
             }
 
             // Add form group and label
