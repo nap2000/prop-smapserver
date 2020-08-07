@@ -493,7 +493,7 @@ define([
         }
 
         /*
-         * Get an updaed value
+         * Get an updated value
          */
         function getUpdate(col, def) {
             if(gTasks.gUpdate && gTasks.gUpdate.length > 0) {
