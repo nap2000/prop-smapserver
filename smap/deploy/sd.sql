@@ -299,3 +299,6 @@ CREATE INDEX question_column_name_key ON question(column_name);
 
 create index idx_ue_upload_time on upload_event (upload_time);
 CREATE INDEX log_time_key ON log(log_time);
+
+alter table organisation add column ft_enable_geofence boolean default false;
+update organisation set ft_enable_geofence = true where ft_send_location is null or ft_send_location = 'not set' or ft_send_location = 'on';
