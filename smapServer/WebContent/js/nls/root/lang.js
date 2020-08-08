@@ -1076,6 +1076,7 @@ define({
     "u_ft_sc": "Yes - collapsed",
     "u_ft_ss": "Enable server settings menu",
     "u_ft_md": "Enable user and identity menu",
+	"u_ft_eg": "Enable Geo-fence",
     "u_det_o_email": "Email Options",
     "u_det_o_other": "Other Options",
     "u_det_o_limits": "Monthly Usage Limits",
