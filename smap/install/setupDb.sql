@@ -164,6 +164,7 @@ create TABLE organisation (
 	ft_odk_style_menus boolean default true,
 	ft_specify_instancename boolean default false,
 	ft_prevent_disable_track boolean default false,
+	ft_enable_geofence boolean default false,
 	ft_admin_menu boolean default false,
 	ft_server_menu boolean default true,
 	ft_meta_menu boolean default true,
@@ -213,6 +214,7 @@ create TABLE log (
 	note text,
 	measure int default 0		-- In the case of translate this would be the number of characters
 	);
+CREATE INDEX log_time_key ON log(log_time);
 ALTER TABLE log OWNER TO ws;
 
 DROP TABLE IF EXISTS project CASCADE;
@@ -490,6 +492,7 @@ CREATE TABLE upload_event (
 	);
 create index idx_ue_ident on upload_event(user_name);
 create index idx_ue_applied on upload_event (status, incomplete, results_db_applied);
+create index idx_ue_upload_time on upload_event (upload_time);
 CREATE index ue_survey_ident ON upload_event(ident);
 ALTER TABLE upload_event OWNER TO ws;
 
@@ -556,6 +559,7 @@ ALTER TABLE survey OWNER TO ws;
 DROP INDEX IF EXISTS SurveyDisplayName;
 DROP INDEX IF EXISTS SurveyKey;
 CREATE UNIQUE INDEX SurveyKey ON survey(ident);
+CREATE INDEX survey_group_survey_key ON survey(group_survey_id);
 
 DROP TABLE IF EXISTS survey_change CASCADE;
 CREATE TABLE survey_change (
@@ -715,6 +719,7 @@ CREATE INDEX infotext_id_sequence ON question(infotext_id);
 CREATE UNIQUE INDEX qname_index ON question(f_id,qname) where soft_deleted = 'false';
 CREATE INDEX q_f_id ON question(f_id);
 CREATE INDEX idx_question_param ON question (parameters) WHERE (parameters is not null);
+CREATE INDEX question_column_name_key ON question(column_name);
 	
 DROP TABLE IF EXISTS option CASCADE;
 CREATE TABLE option (

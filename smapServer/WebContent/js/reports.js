@@ -143,6 +143,7 @@ require([
 
         		$('#custom_form')[0].reset();
 		        addCustomReportTypes();
+		        surveyChanged(setForm);
 		        $('.custom_section').hide();
 		        $('.custom_type_' + $('#customType').val()).show();
 
@@ -498,7 +499,7 @@ require([
 
 		var report = {
 			sIdent: sIdent,
-			dateColumn: getDateName($('#custom_date_q').val())
+			dateColumn: getDateColName($('#custom_date_q').val())
 		};
 
 		// Add bars
@@ -682,12 +683,12 @@ require([
     /*
      *  Get the name of a date question given its id
      */
-    function getDateName(id) {
+    function getDateColName(id) {
 	    var sMeta = globals.gSelector.getSurvey(gSurveyList[$('#survey').val()].id);
 	    if(sMeta && sMeta.dates) {
 		    for (i = 0; i < sMeta.dates.length; i++) {
 		    	if(sMeta.dates[i].id == id) {
-				    return(sMeta.dates[i].name);
+				    return(sMeta.dates[i].col);
 			    }
 		    }
 	    }
@@ -1393,7 +1394,7 @@ require([
 			d = new Date(usageMsec),
 			month = d.getMonth() + 1,
 			year = d.getFullYear(),
-			url = "/custom/report/daily/" + gCustomReportList[gCustomReportIdx].id + "/xls";
+			url = "/surveyKPI/report/daily/" + gCustomReportList[gCustomReportIdx].id + "/xls";
 
 		url += "?year=" + year;
 		url += "&month=" + month;

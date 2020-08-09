@@ -779,6 +779,8 @@ require([
 					device.ft_specify_instancename = true;
 				} else if(options[i] === "ft_prevent_disable_track") {
 					device.ft_prevent_disable_track = true;
+				}  else if(options[i] === "ft_enable_geofence") {
+					device.ft_enable_geofence = true;
 				} else if(options[i] === "ft_admin_menu") {
 					device.ft_admin_menu = true;
 				} else if(options[i] === "ft_server_menu") {
@@ -1637,6 +1639,8 @@ require([
 					this.checked = org.ft_specify_instancename;
 				} else if($(this).val() === "ft_prevent_disable_track") {
 					this.checked = org.ft_prevent_disable_track;
+				} else if($(this).val() === "ft_enable_geofence") {
+					this.checked = org.ft_enable_geofence;
 				} else if($(this).val() === "ft_admin_menu") {
 					this.checked = org.ft_admin_menu;
 				} else if($(this).val() === "ft_server_menu") {
@@ -2890,6 +2894,8 @@ require([
 						this.checked = device.ft_specify_instancename;
 					} else if($(this).val() === "ft_prevent_disable_track") {
 						this.checked = device.ft_prevent_disable_track;
+					} else if($(this).val() === "ft_enable_geofence") {
+						this.checked = device.ft_enable_geofence;
 					} else if($(this).val() === "ft_admin_menu") {
 						this.checked = device.ft_admin_menu;
 					} else if($(this).val() === "ft_server_menu") {

@@ -1,6 +1,4 @@
-package reports;
-
-
+package customReports;
 
 /*
 This file is part of SMAP.
@@ -33,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
@@ -68,7 +67,7 @@ public class DailyReport extends Application {
 
 	@GET
 	@Path("/{id}/xls")
-	//@Produces("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	@Produces("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 	public Response getMonthly (@Context HttpServletRequest request,
 			@PathParam("id") int id,
 			@QueryParam("year") int year,
