@@ -42,6 +42,7 @@
             width: 100%;
             height: 200px;
         }
+
     </style>
 
     <script>
@@ -54,7 +55,7 @@
     <script src="/js/libs/modernizr.js"></script>
     <script src="/js/app/theme.js"></script>
     <script src="/js/libs/d3.v3.min.js"></script>
-    <script src="/js/libs/ol3/ol-debug.js"></script>
+    <script src="/js/libs/ol3/ol.js"></script>
     <script src="/js/libs/ol3/ol3-layerswitcher.js"></script>
     <script src="/js/libs/d3.v4.min.js"></script>
     <script src="/js/libs/dimple.v2.3.0.min.js"></script>
@@ -67,9 +68,6 @@
     </script>
     <script data-main="js/managed_forms" src="/js/libs/require.js"></script>
 
-    <style>
-
-    </style>
 </head>
 <body>
 
@@ -328,7 +326,7 @@
                                                                                               data-lang="d_add_c"></span></i>
                                 </a>
 
-                                <div class="btn-group not_deleted selectedOnly" role="group" aria-label="drill down">
+                                <div class="btn-group not_deleted singleSelectOnly" role="group" aria-label="drill down">
                                     <button type="button" class="lang du_only btn btn-secondary" data-lang="co_up" id="drill_up"></button>
                                     <button type="button" class="dd_only lang btn btn-secondary" data-lang="co_dd" id="drill_down"></button>
                                     <div class="btn-group dd_only" role="group">
@@ -340,19 +338,15 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!--
-                                <div class="dd_only custom-control custom-control-inline">
-                                    <label class="lang" data-lang="co_dd" for="drill_down"></label>
-                                    <select id="drill_down"></select>
-                                </div>
-                                -->
-                                <button class="selectedOnly not_deleted lang btn btn-danger" data-lang="c_del" id="m_delete"></button>
-                                <button class="selectedOnly deleted lang btn btn-info" data-lang="c_undel" id="m_undelete"></button>
-                                <button class="selectedOnly not_assigned lang btn btn-primary" data-lang="mf_lock" id="m_lock"></button>
-                                <button class="selectedOnly assigned lang btn btn-default" data-lang="mf_rel" id="m_release"></button>
-                                <button class="selectedOnly assigned lang btn btn-primary" data-lang="c_edit" id="m_edit"></button>
-                                <button class="selectedOnly assigned_other lang btn btn-primary" data-lang="m_view" id="m_view"></button>
-                                <button class="selectedOnly assigned_admin lang btn btn-warning" type="button" data-lang="t_assign" id="m_assign_to"></button>
+
+                                <button class="singleSelectOnly not_deleted lang btn btn-danger" data-lang="c_del" id="m_delete"></button>
+                                <button class="singleSelectOnly deleted lang btn btn-info" data-lang="c_undel" id="m_undelete"></button>
+                                <button class="singleSelectOnly not_assigned lang btn btn-primary" data-lang="mf_lock" id="m_lock"></button>
+                                <button class="singleSelectOnly assigned lang btn btn-default" data-lang="mf_rel" id="m_release"></button>
+                                <button class="multiSelectOnly lang btn btn-primary" data-lang="co_b" id="m_bulk_edit"></button>
+                                <button class="singleSelectOnly assigned lang btn btn-primary" data-lang="c_edit" id="m_edit"></button>
+                                <button class="singleSelectOnly assigned_other lang btn btn-primary" data-lang="m_view" id="m_view"></button>
+                                <button class="singleSelectOnly assigned_admin lang btn btn-warning" type="button" data-lang="t_assign" id="m_assign_to"></button>
 
                                 <!--<button class="genfile pdf btn btn-danger"><i class="fa fa-file-pdf-o fa-lg"></i></button>-->
                                 <button class="genfile docx btn btn-info"><i class="fa fa-file-word fa-lg"></i></button>
@@ -471,11 +465,11 @@
                                                     <h3 class="m-t-none m-b lang" data-lang="mf_fd"></h3>
                                                     <form id="surveyForm"></form>
                                                 </div>
-                                                <div class="col-sm-6 b-r showMgmtData"><h3 class="m-t-none m-b lang" data-lang="mf_md">mgmt data</h3>
-
+                                                <div class="col-sm-6 b-r showMgmtData">
+                                                    <h3 class="m-t-none m-b lang" data-lang="mf_md">mgmt data</h3>
                                                     <form id="editRecordForm"></form>
 
-                                                    <button id="saveRecord" type="button" class="btn btn-primary lang"
+                                                    <button id="saveRecord" type="button" class="btn btn-primary lang saverecord"
                                                             data-dismiss="modal"
                                                             data-lang="c_save">Save
                                                     </button>
@@ -514,6 +508,49 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row bulkEditSection">
+                <div class="col-md-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-content">
+                            <div id="bulkEditInfo" class="alert alert-success" style="display:none;"></div>
+
+                            <div class="tabs-container container-fluid">
+                                <div class="tab-content">
+                                    <div id="bulk-edit-view" role="tabpanel" class="tab-pane active">
+                                        <div class="panel-body">
+                                            <div class="row">
+
+                                                <div class="col-sm-12 showMgmtData">
+                                                    <div class="row">
+                                                        <div class="col-sm-8"><b><span class="lang" data-lang="c_question"></span></b></div>
+                                                        <div class="col-sm-4"><b><span class="lang" data-lang="c_clear"></span></b></div>
+                                                    </div>
+                                                    <form id="bulkEditForm"></form>
+
+                                                    <button id="saveBulkEdit" type="button" class="btn btn-success lang saverecord"
+                                                            data-dismiss="modal"
+                                                            data-lang="c_save">Save
+                                                    </button>
+
+                                                    <button id="exitBulkEdit" type="button" class="btn btn-primary exitBulkEdit">
+                                                            <span class="lang" data-lang="c_back">exit</span>
+                                                    </button>
+
+                                                    <div class="re_alert alert alert-success" role="alert" style="display:none;"></div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
 

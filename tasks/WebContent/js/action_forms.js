@@ -107,7 +107,6 @@ require([
         },
         gSelectedRecord: undefined,			// keep
         gUpdate: [],
-        gCurrentIndex: undefined,
         gPriKey: undefined,
         gSort: undefined,
         gDirn: undefined
