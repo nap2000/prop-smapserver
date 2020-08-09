@@ -1,4 +1,4 @@
-package reports;
+package customReports;
 
 import java.io.IOException;
 

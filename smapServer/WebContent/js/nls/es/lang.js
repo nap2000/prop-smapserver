@@ -1275,5 +1275,6 @@ define(
     "mo_gen": "¿Estás seguro de que quieres generar los enlaces ahora? Se crean automáticamente cuando utiliza el botón de envío de correo electrónico, sin embargo, puede generarlos ahora si desea enviarlos a través de un canal diferente. Una vez creados, los enlaces caducarán en 30 días.",
     "svc_at": "Traducción automática",
     "svc_from_l": "De Idioma",
-    "svc_to_l": "A idioma"
+    "svc_to_l": "A idioma",
+    "log_hr": "Resúmen de eventos"
 });
