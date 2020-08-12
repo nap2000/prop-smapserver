@@ -267,5 +267,5 @@ echo "COPY language_codes(code, aws_translate, aws_transcribe, transcribe_defaul
 
 
 # update version reference
-new_version="2007"
+new_version="2008"
 echo "$new_version" > ~/smap_version
