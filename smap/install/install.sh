@@ -391,7 +391,7 @@ sudo apt-get install gdal-bin -y
 sudo apt-get install ttf-dejavu -y
 
 # Add a file containing the version number
-echo "2007" > ~/smap_version
+echo "2008" > ~/smap_version
 
 echo '##### 21. Add postgres and apache to tomcat group'
 sudo usermod -a -G $TOMCAT_VERSION postgres
