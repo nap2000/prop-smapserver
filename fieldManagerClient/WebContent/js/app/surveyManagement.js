@@ -494,7 +494,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
             h[++idx] = '<th class="col-md-1">' + localise.set["c_block"] + '</th>';
             h[++idx] = '<th class="col-md-2">' + localise.set["sr_g"] + '</th>';
             h[++idx] = '<th class="col-md-1">' + localise.set["c_replace"] + '</th>';
-            h[++idx] = '<th class="col-md-1">' + localise.set["c_test"] + '</th>';
+            h[++idx] = '<th class="col-md-1">WebForm</th>';
             h[++idx] = '<th class="col-md-1">' + localise.set["c_action"] + '</th>';
             h[++idx] = '</tr>';
             h[++idx] = '</thead>';
