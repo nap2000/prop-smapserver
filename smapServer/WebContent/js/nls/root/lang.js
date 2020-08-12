@@ -812,7 +812,7 @@ define({
 	"ed_select_type": "Select Type",
     "ed_nc": "No Calendar",
 	"ed_my": "Month and Year",
-	"ed_bikram": "Nepali",
+	"ed_bikram": "Bikram Sambat",
 	"ed_coptic": "Coptic",
 	"ed_ethiopian": "Ethiopian",
 	"ed_islamic": "Islamic",
