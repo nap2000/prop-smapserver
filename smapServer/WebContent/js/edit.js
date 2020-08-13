@@ -3889,7 +3889,6 @@ function setNoFilter() {
 						}
 						warningMsg += localise.set["msg_numb_ts"];
 					}
-
 				}
 
 				if(qtype === 'select1') {
