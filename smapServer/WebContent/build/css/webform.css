@@ -26,10 +26,10 @@ html {
 
 body {
     /*IE10*/
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-direction: column;
+    /*display: -ms-flexbox;*/
+    /*display: -webkit-flex;*/
+    /*display: flex;*/
+    /*-webkit-flex-direction: column;
     -ms-flex-direction: column;
     -moz-flex-direction: column;
     flex-direction: column;
@@ -38,13 +38,13 @@ body {
     -moz-flex-wrap: nowrap;
     flex-wrap: nowrap;
     position: relative;
-    min-height: 100%;
+    min-height: 100%;*/
     overflow: auto;
 }
 
-.or {
+/*.or {
     margin-bottom: 20px;
-}
+}*/
 
 .main ul.nav-tabs {
     margin: 20px 0 0 0;
@@ -1276,6 +1276,7 @@ button.close {
     color: #888888; }
 
 
+/* Smap */
 strong {
     font-weight: bold; }
 
@@ -1287,6 +1288,10 @@ label.itemset-template {
     background-color: #fff;
 }
 
-.btn.remove {
+.btn.remove, .btn.search-btn {
     background-color: #fff;
+}
+
+.enketo-power {
+    left: unset;
 }
