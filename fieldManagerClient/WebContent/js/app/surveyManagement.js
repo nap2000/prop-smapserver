@@ -494,8 +494,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
             h[++idx] = '<th class="col-md-1">' + localise.set["c_block"] + '</th>';
             h[++idx] = '<th class="col-md-2">' + localise.set["sr_g"] + '</th>';
             h[++idx] = '<th class="col-md-1">' + localise.set["c_replace"] + '</th>';
-            h[++idx] = '<th class="col-md-1">WebForm</th>';
-            h[++idx] = '<th class="col-md-1">' + localise.set["c_action"] + '</th>';
+            h[++idx] = '<th class="col-md-2">' + localise.set["c_action"] + '</th>';
             h[++idx] = '</tr>';
             h[++idx] = '</thead>';
             h[++idx] = '<tbody class="table-striped">';
@@ -557,16 +556,15 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
                     h[++idx] = '</td>';
 
                     h[++idx] = '<td>';
-                    h[++idx] = '<a class="btn survey_view" href="/webForm/';
+
+                    h[++idx] = '<a class="btn survey_view" href="/webForm/';                    // Webform
                     h[++idx] = survey.ident;
                     h[++idx] = '" target="_blank">'
 
                     h[++idx] = '<i class="fa fa-eye"></i>';
                     h[++idx] = '</a>';
-                    h[++idx] = '</td>';
 
-                    h[++idx] = '<td>';
-                    if(survey.publicLink && survey.publicLink.trim().length > 0) {
+                    if(survey.publicLink && survey.publicLink.trim().length > 0) {              // Link
                         h[++idx] = '<button class="btn btn-primary survey_link" value="';
                     } else {
                         h[++idx] = '<button class="btn btn-info survey_link" value="';
@@ -576,7 +574,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
                     h[++idx] = '<i class="fa fa-share-alt"></i>';
                     h[++idx] = '</button>';
 
-                    h[++idx] = '<button class="btn pdf_td" value="';
+                    h[++idx] = '<button class="btn pdf_td" value="';                            // Download
                     h[++idx] = survey.id;
                     h[++idx] = '"><img src="images/downarrow.png" height="16" width="16"></button>';
                     h[++idx] = '</td>';
