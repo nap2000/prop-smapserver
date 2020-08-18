@@ -1288,10 +1288,15 @@ label.itemset-template {
     background-color: #fff;
 }
 
-.btn.remove, .btn.search-btn {
+.btn.remove {
+    background-color: #fff;
+}
+
+.search-bar button.btn.btn-default, .geo-inputs button.close-chain-btn {
     background-color: #fff;
 }
 
 .enketo-power {
     left: unset;
 }
+

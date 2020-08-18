@@ -18,7 +18,10 @@ then
 	babel WebContent/build/js/webform-bundle.js --out-file WebContent/build/js/webform-bundle.es5.js
 
 	echo "--------------------------- google closure compile"
-	java -jar ~/compiler-latest/closure-compiler-v20190106.jar --js WebContent/build/js/webform-bundle.es5.js --js_output_file WebContent/build/js/webform-bundle.min.js 
+	#java -jar ~/compiler-latest/closure-compiler-v20190106.jar --js WebContent/build/js/webform-bundle.es5.js --js_output_file WebContent/build/js/webform-bundle.min.js 
+
+	# Use whitespace optimisation only as "SIMPLE_OPTIMIZATION" causes code that triggers enabling of widgets to not work
+	java -jar ~/compiler-latest/closure-compiler-v20200719.jar --compilation_level WHITESPACE_ONLY --js WebContent/build/js/webform-bundle.es5.js --js_output_file WebContent/build/js/webform-bundle.min.js 
 
 	rm WebContent/build/js/webform-bundle.es5.js
 fi
