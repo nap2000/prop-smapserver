@@ -33,12 +33,10 @@ requirejs.config({
 	paths: {
 		app: '../app',
 		jquery: 'jquery',
-		metismenu: 'wb/metisMenu/jquery.metisMenu',
 		lang_location: '../'
 	},
 	shim: {
 		'app/common': ['jquery'],
-		'metismenu': ['jquery'],
 		'slimscroll': ['jquery']
 	}
 });
@@ -48,8 +46,6 @@ require([
 	'app/common',
 	'app/globals',
 	'app/localise',
-	'bootstrapfileinput',
-	'metismenu',
 	'slimscroll',
 	'pace'
 ], function($, common, globals, localise) {
@@ -59,7 +55,6 @@ require([
 		setCustomWebForms();			// Apply custom javascript
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
-		$("#side-menu").metisMenu();
 
 		// Get the user details
 		globals.gIsAdministrator = false;
