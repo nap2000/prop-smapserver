@@ -46,9 +46,9 @@ require([
 	'app/common',
 	'app/globals',
 	'app/localise',
-	'slimscroll',
+	'bootstrap',
 	'pace'
-], function($, common, globals, localise) {
+], function($, common, globals, localise, bootstrap) {
 
 	$(document).ready(function() {
 
@@ -186,7 +186,7 @@ require([
 
 			if(!filterProjectId || filterProjectId == taskList[i].task.pid) {
 				repeat = taskList[i].task.repeat;	// Can complete the task multiple times
-				h[++idx] = '<div class="btn-group btn-group-lg d-flex" role="group" aria-label="Button group for task selection or rejection">';
+				h[++idx] = '<div class="btn-group btn-block btn-group-lg d-flex" role="group" aria-label="Button group for task selection or rejection">';
 				h[++idx] = '<a id="a_';
 				h[++idx] = taskList[i].assignment.assignment_id;
 				h[++idx] = '" class="task btn btn-warning w-80" role="button" target="_blank" data-repeat="';

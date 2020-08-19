@@ -8,7 +8,6 @@
 
 	<link href="/css/bootstrap.v4.5.min.css" rel="stylesheet">
 	<link href="/font-awesome/css/font-awesome.css" rel="stylesheet">
-	<link href="/css/wb/style.v2.9.1.css" rel="stylesheet">
 	<link href="/css/smap2.css" rel="stylesheet">
 
 	<script> if (!window.console) console = {log: function() {}}; </script>
@@ -49,7 +48,7 @@
 				</div>
 			</li>
 
-			<li id="m_mf" class="restrict_role admin_role manage_role"><a class="nav-link" href="/tasks/managed_forms.html"><span class="lang" data-lang="c_records">r</span></a></li>
+			<li id="m_mf" class="restrict_role admin_role manage_role"><a class="nav-link" href="/tasks/managed_forms.html"><span class="lang" data-lang="m_console">r</span></a></li>
 			<li id="m_duplicates" class="restrict_role admin_role"><a class="nav-link" href="/tasks/duplicates.html"><span class="lang" data-lang="mon_dup"></span></a></li>
 			<li id="m_refresh"><a class="nav-link" href="/reports.html"><span class="lang" data-lang="m_refresh">r</span></a></li>
 
@@ -82,20 +81,26 @@
 	<div class="card text-center mt-10">
 		<div class="card-header">
 			<ul class="nav nav-tabs card-header-tabs">
-				<li id="formsTab" class="nav-item"><a class="nav-link active" href="#formsPanel"><span class="lang" data-lang="m_web_forms"></span> <span id="forms_count">(0)</span></a></li>
-				<li id="tasksTab" class="nav-item"><a class="nav-link" href="#tasksPanel"><span class="lang" data-lang="t_tasks"></span> <span id="tasks_count">(0)</span></a></li>
+				<li id="formsTab" class="nav-item"><a class="nav-link active" href="#formsPanel" data-toggle="tab" role="tab" aria-controls="formsPanel" aria-selected="true">
+					<span class="lang" data-lang="m_web_forms"></span> <span id="forms_count">(0)</span></a>
+				</li>
+				<li id="tasksTab" class="nav-item"><a class="nav-link" href="#tasksPanel" data-toggle="tab" role="tab" aria-controls="tasksPanel" aria-selected="false">
+					<span class="lang" data-lang="t_tasks"></span> <span id="tasks_count">(0)</span></a>
+				</li>
 			</ul>
 		</div>
 		<div class="card-body">
-			<div id="formsPanel" class="tab-pane show fade active" role="tabpanel">
-				<div class="panel-body">
-					<div id="form_list"></div>
+			<div class="tab-content">
+				<div id="formsPanel" class="tab-pane fade show active" role="tabpanel" aria-labelledby="formsTab">
+					<div class="panel-body">
+						<div id="form_list"></div>
+					</div>
 				</div>
-			</div>
 
-			<div id="tasksPanel" class="tab-pane fade" role="tabpanel">
-				<div class="panel-body">
-					<div id="task_list"></div>
+				<div id="tasksPanel" class="tab-pane fade" role="tabpanel" aria-labelledby="tasksTab">
+					<div class="panel-body">
+						<div id="task_list"></div>
+					</div>
 				</div>
 			</div>
 		</div>
