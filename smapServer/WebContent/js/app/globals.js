@@ -379,7 +379,7 @@ define(function () {
 	    // A list of valid appearances for each question type
 	    this.qAppearances = {
 		    'begin group': ['page', 'w'],
-		    string: ['numbers', 'thousands-sep', 'w'],
+		    string: ['numbers', 'thousands-sep', 'w', 'url'],
 		    note: ['w'],
             select1: ['select1_type', 'search', 'likert', 'no-buttons', 'w'],
             select: ['select_type', 'search', 'no-buttons', 'w'],
@@ -505,6 +505,11 @@ define(function () {
 			    field: 'a_numbers',
 			    type: 'boolean',
 			    rex: 'numbers'
+		    },
+		    'url': {
+			    field: 'a_url',
+			    type: 'boolean',
+			    rex: 'url'
 		    },
 		    'w': {
 			    field: 'a_width',

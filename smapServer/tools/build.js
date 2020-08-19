@@ -5,6 +5,7 @@
     wrapShim: false,
     baseUrl: 'js/libs',
     optimize: 'none',
+    fileExclusionRegExp: /^build$/,
     paths: {
     	jquery: 'jquery-2.1.1',
     	jquery_ui: 'empty:',
@@ -32,6 +33,10 @@
         },
         {
             name: '../edit',
+        },
+        {
+            name: '../myWork',
+	    exclude: ['jquery', 'bootstrap']
         },
         {
             name: '../webFormLauncher',

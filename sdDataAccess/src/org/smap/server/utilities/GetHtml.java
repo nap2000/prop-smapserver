@@ -321,7 +321,7 @@ public class GetHtml {
 						Element extraFieldsetElement = outputDoc.createElement("fieldset");
 						bodyElement.appendChild(extraFieldsetElement);
 
-						addSelectContents(sd, extraFieldsetElement, qLabel, form, true);
+						addSelectContents(sd, extraFieldsetElement, qLabel, form, true, false);
 						currentParent.appendChild(bodyElement);
 					}
 
@@ -345,131 +345,145 @@ public class GetHtml {
 					// Exit the group
 					currentParent = elementStack.pop();
 
-				} else if (q.isSelect()) {
-
-					if (gInTableList) {
-						if (q.appearance == null) {
-							q.appearance = "";
-						}
-						if (!q.appearance.contains("field-list")) {
-							q.appearance = q.appearance.trim();
-							if (q.appearance.length() > 0) {
-								q.appearance += " ";
-							}
-							q.appearance += "list-nolabel";
-						}
-					}
-
-					/*
-					 * Create fieldSet or Label depending on the attributes
-					 */
-					if (minSelect(q.appearance)) {
-						bodyElement = outputDoc.createElement("label");
-						setQuestionClass(q, bodyElement);
-
-						if (hasNodeset(sd, q, form)) {
-							if(q.appearance.contains("minimal") || q.type.equals("select")) {
-								addMinimalContents(sd, bodyElement, q, form, false);		// Not auto complete
-							} else {
-								addMinimalContents(sd, bodyElement, q, form, true);		// For autocomplete
-								//addAutoCompleteContentsItemset(sd, bodyElement, q, form);
-							}
-						} else {
-							addMinimalSelectContents(bodyElement, q, form);
-						}
-						currentParent.appendChild(bodyElement);
-
-					} else {
-						bodyElement = outputDoc.createElement("fieldset");
-						currentParent.appendChild(bodyElement);
-						
-						setQuestionClass(q, bodyElement);
-
-						Element extraFieldsetElement = outputDoc.createElement("fieldset");
-						bodyElement.appendChild(extraFieldsetElement);
-						
-						addSelectContents(sd, extraFieldsetElement, q, form, false);
-						
-						// Add constraint message at end to the outer fieldset
-						addConstraintMsg(q.constraint_msg, null, bodyElement, 0);
-
-					}
-
-				} else if(q.type.equals("acknowledge") || q.type.equals("trigger")) {
-
-					// trigger questions
-					bodyElement = outputDoc.createElement("fieldset");
-					currentParent.appendChild(bodyElement);
-					setQuestionClass(q, bodyElement);
-					
-					// inner fieldSet
-					Element fieldset = outputDoc.createElement("fieldset");
-					bodyElement.appendChild(fieldset);
-					
-					// legend
-					Element legendElement = outputDoc.createElement("legend");
-					fieldset.appendChild(legendElement);
-					
-					// Label
-					addLabels(legendElement, q, form);
-					
-					// control
-					Element controlElement = outputDoc.createElement("div");
-					fieldset.appendChild(controlElement);
-					controlElement.setAttribute("class", "option-wrapper");
-					
-					// Control label
-					Element controlLabel = outputDoc.createElement("label");
-					controlElement.appendChild(controlLabel);
-					
-					// input
-					//addLabelContents(controlLabel, q, form);
-					Element input = outputDoc.createElement("input");
-					controlLabel.appendChild(input);
-					input.setAttribute("value", "OK");
-					input.setAttribute("type", "radio");
-					input.setAttribute("name", paths.get(getRefName(q.name, form)));
-					input.setAttribute("data-name", paths.get(getRefName(q.name, form)));
-					input.setAttribute("data-type-xml", "string");
-					if (q.readonly) {
-						input.setAttribute("readonly", "readonly");
-					}
-					if (q.required) {
-						input.setAttribute("data-required", "true()");
-					}
-					// relevant
-					if (q.relevant != null && q.relevant.trim().length() > 0) {
-						input.setAttribute("data-relevant",
-								UtilityMethods.convertAllxlsNames(q.relevant, false, paths, form.id, true, q.name, false));
-					}
-					if (q.constraint != null && q.constraint.trim().length() > 0) {
-						input.setAttribute("data-constraint",
-								UtilityMethods.convertAllxlsNames(q.constraint, false, paths, form.id, true, q.name, false));
-					}
-					// Dynamic Default
-					if (q.calculation != null && q.calculation.trim().length() > 0) {
-						bodyElement.setAttribute("data-calculate", UtilityMethods.convertAllxlsNames(q.calculation, false, paths, form.id, true, q.name, false));
-					}
-			
-					// option label
-					Element option_label = outputDoc.createElement("span");
-					controlLabel.appendChild(option_label);
-					option_label.setAttribute("class", "option-label active");
-					option_label.setTextContent("OK");
-					
 				} else {
-
-					// Non select question
-					bodyElement = outputDoc.createElement("label");
-					setQuestionClass(q, bodyElement);
-
-					addLabelContents(bodyElement, q, form);
-					currentParent.appendChild(bodyElement);
-
+					processStandardQuestion(sd, form, q, currentParent, false);
 				}
 			}
 		}
 
+	}
+	
+	/*
+	 * Convert a standard question (not a group or repeat) into HTML
+	 */
+	private void processStandardQuestion(Connection sd, Form form, Question q, Element currentParent, boolean hideLabels) throws Exception {
+		
+		Element bodyElement;
+		
+		if (q.isSelect()) {
+
+			if (gInTableList) {
+				if (q.appearance == null) {
+					q.appearance = "";
+				}
+				if (!q.appearance.contains("field-list")) {
+					q.appearance = q.appearance.trim();
+					if (q.appearance.length() > 0) {
+						q.appearance += " ";
+					}
+					q.appearance += "list-nolabel";
+				}
+			}
+
+			/*
+			 * Create fieldSet or Label depending on the attributes
+			 */
+			if (minSelect(q.appearance)) {
+				bodyElement = outputDoc.createElement("label");
+				setQuestionClass(q, bodyElement);
+
+				if (hasNodeset(sd, q, form)) {
+					if(q.appearance.contains("minimal") || q.type.equals("select")) {
+						addMinimalContents(sd, bodyElement, q, form, false, hideLabels);		// Not auto complete
+					} else {
+						addMinimalContents(sd, bodyElement, q, form, true, hideLabels);		// For autocomplete
+						//addAutoCompleteContentsItemset(sd, bodyElement, q, form);
+					}
+				} else {
+					addMinimalSelectContents(bodyElement, q, form, hideLabels);
+				}
+				currentParent.appendChild(bodyElement);
+
+			} else {
+				bodyElement = outputDoc.createElement("fieldset");
+				currentParent.appendChild(bodyElement);
+				
+				setQuestionClass(q, bodyElement);
+
+				Element extraFieldsetElement = outputDoc.createElement("fieldset");
+				bodyElement.appendChild(extraFieldsetElement);
+				
+				addSelectContents(sd, extraFieldsetElement, q, form, false, hideLabels);
+				
+				// Add constraint message at end to the outer fieldset
+				addConstraintMsg(q.constraint_msg, null, bodyElement, 0);
+
+			}
+
+		} else if(q.type.equals("acknowledge") || q.type.equals("trigger")) {
+
+			// trigger questions
+			bodyElement = outputDoc.createElement("fieldset");
+			currentParent.appendChild(bodyElement);
+			setQuestionClass(q, bodyElement);
+			
+			// inner fieldSet
+			Element fieldset = outputDoc.createElement("fieldset");
+			bodyElement.appendChild(fieldset);
+			
+			// legend
+			Element legendElement = outputDoc.createElement("legend");
+			fieldset.appendChild(legendElement);
+			
+			// Label
+			if(!hideLabels) {
+				addLabels(legendElement, q, form);
+			}
+			
+			// control
+			Element controlElement = outputDoc.createElement("div");
+			fieldset.appendChild(controlElement);
+			controlElement.setAttribute("class", "option-wrapper");
+			
+			// Control label
+			Element controlLabel = outputDoc.createElement("label");
+			controlElement.appendChild(controlLabel);
+			
+			// input
+			//addLabelContents(controlLabel, q, form);
+			Element input = outputDoc.createElement("input");
+			controlLabel.appendChild(input);
+			input.setAttribute("value", "OK");
+			input.setAttribute("type", "radio");
+			input.setAttribute("name", paths.get(getRefName(q.name, form)));
+			input.setAttribute("data-name", paths.get(getRefName(q.name, form)));
+			input.setAttribute("data-type-xml", "string");
+			if (q.readonly) {
+				input.setAttribute("readonly", "readonly");
+			}
+			if (q.required) {
+				input.setAttribute("data-required", "true()");
+			}
+			// relevant
+			if (q.relevant != null && q.relevant.trim().length() > 0) {
+				input.setAttribute("data-relevant",
+						UtilityMethods.convertAllxlsNames(q.relevant, false, paths, form.id, true, q.name, false));
+			}
+			if (q.constraint != null && q.constraint.trim().length() > 0) {
+				input.setAttribute("data-constraint",
+						UtilityMethods.convertAllxlsNames(q.constraint, false, paths, form.id, true, q.name, false));
+			}
+			// Dynamic Default
+			if (q.calculation != null && q.calculation.trim().length() > 0) {
+				bodyElement.setAttribute("data-calculate", UtilityMethods.convertAllxlsNames(q.calculation, false, paths, form.id, true, q.name, false));
+			}
+	
+			// option label
+			Element option_label = outputDoc.createElement("span");
+			controlLabel.appendChild(option_label);
+			option_label.setAttribute("class", "option-label active");
+			option_label.setTextContent("OK");
+			
+		} else {
+
+			// Non select question
+			bodyElement = outputDoc.createElement("label");
+			setQuestionClass(q, bodyElement);
+
+			addLabelContents(bodyElement, q, form, hideLabels);
+			currentParent.appendChild(bodyElement);
+
+		}
 	}
 
 	/*
@@ -511,10 +525,15 @@ public class GetHtml {
 			boolean inSearch = false;
 			int brackets = 0;
 			
+			boolean horizontal = false;
 			for (int i = 0; i < appList.length; i++) {
 				if (appList[i] != null && appList[i].trim().length() > 0) {
 					
 					String appItem = appList[i].toLowerCase().trim();
+					
+					if(appItem.equals("horizontal")) {
+						horizontal = true;
+					}
 					
 					if(appItem.startsWith("search(")) {
 						inSearch = true;
@@ -531,6 +550,9 @@ public class GetHtml {
 						}
 					}
 				}
+			}
+			if(horizontal) {
+				classVal.append(" or-appearance-columns");
 			}
 		}
 		elem.setAttribute("class", classVal.toString());
@@ -661,7 +683,7 @@ public class GetHtml {
 				calculation = q.calculation;
 			}
 
-			if (calculation != null && calculation.trim().length() > 0) {
+			if (calculation != null && calculation.trim().length() > 0 &&(q.type.equals("calculate") || q.type.equals("begin repeat"))) {
 
 				calculationLabel = outputDoc.createElement("label");
 				calculationLabel.setAttribute("class", "calculation non-select");
@@ -675,12 +697,13 @@ public class GetHtml {
 				} else {
 					calculationInput.setAttribute("name", paths.get(getRefName(q.name, form)));
 				}
-				
+
 				calculationInput.setAttribute("data-calculate",
 						" " + UtilityMethods.convertAllxlsNames(calculation, false, paths, form.id, true, q.name, false) + " ");
 
 				calculationInput.setAttribute("data-type-xml", "string"); // Always use string for calculate
 				calculationLabel.appendChild(calculationInput);
+
 			}
 			
 			// Process calculations in repeats
@@ -701,10 +724,12 @@ public class GetHtml {
 	 * Add the contents of a select that does not have nodesets - minimal -
 	 * autocomplete - search
 	 */
-	private void addMinimalSelectContents(Element parent, Question q, Form form) throws Exception {
+	private void addMinimalSelectContents(Element parent, Question q, Form form, boolean hideLabels) throws Exception {
 
 		// Add labels
-		addLabels(parent, q, form);
+		if(!hideLabels) {
+			addLabels(parent, q, form);
+		}
 
 		Element textElement = null;
 		// Add input / select
@@ -766,11 +791,13 @@ public class GetHtml {
 	/*
 	 * Add the contents of a select that has nodesets - minimal 
 	 */
-	private void addMinimalContents(Connection sd, Element parent, Question q, Form form, boolean autoComplete) throws Exception {
+	private void addMinimalContents(Connection sd, Element parent, Question q, Form form, boolean autoComplete, boolean hideLabels) throws Exception {
 
 	
 		// Add labels
-		addLabels(parent, q, form);
+		if(!hideLabels) {
+			addLabels(parent, q, form);
+		}
 
 		// Add search
 		Element selectElement = null;
@@ -865,13 +892,13 @@ public class GetHtml {
 	 * Add the contents of a select
 	 * 
 	 */
-	private void addSelectContents(Connection sd, Element parent, Question q, Form form, boolean tableList)
+	private void addSelectContents(Connection sd, Element parent, Question q, Form form, boolean tableList, boolean hideLabels)
 			throws Exception {
 
 		// legend
 		Element bodyElement = outputDoc.createElement("legend");
 		parent.appendChild(bodyElement);
-		if (!tableList) {
+		if (!tableList && !hideLabels) {
 			addLabels(bodyElement, q, form);
 		}
 
@@ -916,10 +943,12 @@ public class GetHtml {
 	/*
 	 * Add the contents of a label
 	 */
-	private void addLabelContents(Element parent, Question q, Form form) throws Exception {
+	private void addLabelContents(Element parent, Question q, Form form, boolean hideLabels) throws Exception {
 
 		// span
-		addLabels(parent, q, form);
+		if(!hideLabels) {
+			addLabels(parent, q, form);
+		}
 
 		/*
 		 * Input
@@ -1139,9 +1168,36 @@ public class GetHtml {
 			}
 
 		}
+		
+		// If this widget is horizontal add filler labels to get spacing right
+		if(hasAppearance(q.appearance, "horizontal")) {
+			int nFillers = 3 - options.size() % 3;
+			
+			if(nFillers < 3 && nFillers > 0) {
+				for(int i = 0;  i < nFillers; i++) {
+					System.out.println(q.name);
+					labelElement = outputDoc.createElement("label");
+					parent.appendChild(labelElement);
+					labelElement.setAttribute("class", "filler");
+				}
+			}
+		}
 
 	}
 
+	private boolean hasAppearance(String app, String test) {
+		boolean result = false;
+		if(app != null) {
+			String[] appComp = app.split(" ");
+			for(int i = 0; i < appComp.length; i++) {
+				if(test.equals(appComp[i])) {
+					return true;
+				}
+			}
+		}
+		return result;
+	}
+	
 	private void addMinimalOptionLabels(Connection sd, Element parent, Question q, Form form) throws Exception {
 
 		ArrayList<Option> options = survey.optionLists.get(q.list_name).options;
@@ -1690,7 +1746,7 @@ public class GetHtml {
 	 */
 	private String getNodeset(Question q, Form form) throws Exception {		
 		String nodeset =  UtilityMethods.getNodeset(true, false, paths, true, q.nodeset, q.appearance, form.id, q.name, 
-				false /*(form.parentform > 0)*/);		// In our version of enketo core multiple relative predicates do not work. use non relative paths. Use relative paths if in a subform
+				false /*(form.parentform > 0)*/);		// XXXXXX In our version of enketo core multiple relative predicates do not work. use non relative paths. Use relative paths if in a subform
 		String adjustedNodeset = GeneralUtilityMethods.addNodesetFunctions(nodeset, 
 				GeneralUtilityMethods.getSurveyParameter("randomize", q.paramArray)); 
 		return adjustedNodeset;

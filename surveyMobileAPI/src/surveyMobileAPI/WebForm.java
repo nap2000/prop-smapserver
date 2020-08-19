@@ -733,8 +733,8 @@ public class WebForm extends Application {
 
 		// head
 		output.append("<head>\n");
-		//output.append(
-		//		"<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,600&subset=latin,cyrillic-ext,cyrillic,greek-ext,greek,vietnamese,latin-ext' rel='stylesheet' type='text/css'>\n");
+		output.append("<link rel=\"preload\" as=\"font\" href=\"/fonts/OpenSans-Bold-webfont.woff\" type=\"font/woff\" crossorigin=\"\">");
+		
 		output.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=Roboto:300,400,500,700\">");
 		output.append("<style type=\"text/css\">.gm-style .gm-style-cc span,.gm-style .gm-style-cc a,.gm-style .gm-style-mtc div{font-size:10px}\n" + 
 				"</style>");
@@ -742,14 +742,13 @@ public class WebForm extends Application {
 		output.append("<style type=\"text/css\">.gm-style-pbc{transition:opacity ease-in-out;background-color:rgba(0,0,0,0.45);text-align:center}.gm-style-pbt{font-size:22px;color:white;font-family:Roboto,Arial,sans-serif;position:relative;margin:0;top:50%;-webkit-transform:translateY(-50%);-ms-transform:translateY(-50%);transform:translateY(-50%)}\n" + 
 				"</style>");
 		
-		if (surveyClass != null && surveyClass.trim().contains("theme-grid")) {
-			output.append("<link type='text/css' href='/build/css/theme-formhub.css' media='all' rel='stylesheet' />\n");
-			output.append("<link type='text/css' href='/build/css/grid.css' media='all' rel='stylesheet' />\n");
+		
+		if (surveyClass != null && surveyClass.trim().contains("theme-grid")) {		
+			output.append("<link type='text/css' href='/build/css/theme-grid.css' media='all' rel='stylesheet' />\n");
 			output.append("<link type='text/css' href='/build/css/grid-print.css' media='print' rel='stylesheet'/>\n");
 		} else {
-			output.append("<link type='text/css' href='/build/css/theme-formhub.css' media='all' rel='stylesheet' />\n");
-			output.append(
-					"<link type='text/css' href='/build/css/theme-formhub.print.css' media='print' rel='stylesheet'/>\n");
+			output.append("<link type='text/css' href='/build/css/formhub.css' media='all' rel='stylesheet' />\n");
+			output.append("<link type='text/css' href='/build/css/theme-formhub.print.css' media='print' rel='stylesheet'/>\n");
 		}
 		output.append("<link type='text/css' href='/build/css/webform.css' media='all' rel='stylesheet' />\n");
 
@@ -770,7 +769,12 @@ public class WebForm extends Application {
 			if((options.button_background_color != null && options.button_background_color.trim().length() > 0) ||
 					(options.button_text_color != null && options.button_text_color.trim().length() > 0)) {
 				
-				output.append(".btn,.btn.disabled, .btn:focus {");
+				output.append(" .btn-primary.disabled, .btn-primary.disabled:hover, .btn-primary.disabled:focus, .btn-primary.disabled:active, .btn-primary.disabled.active, .btn-primary[disabled], .btn-primary[disabled]:hover, .btn-primary[disabled]:focus, .btn-primary[disabled]:active, .btn-primary[disabled].active,\n" + 
+						"  fieldset[disabled] .btn-primary,\n" + 
+						"  fieldset[disabled] .btn-primary:hover,\n" + 
+						"  fieldset[disabled] .btn-primary:focus,\n" + 
+						"  fieldset[disabled] .btn-primary:active,\n" + 
+						"  fieldset[disabled] .btn-primary.active, .btn,.btn.disabled, .btn:focus {");
 				if(options.button_background_color != null && options.button_background_color.trim().length() > 0) {
 					output.append("background-color: " + options.button_background_color +";");
 					output.append("border-color: " + GeneralUtilityMethods.adjustColor(options.button_background_color, 20) +";");
@@ -941,6 +945,7 @@ public class WebForm extends Application {
 		if(debug != null && debug.equals("yes")) {
 			output.append("<script src='/build/js/webform-bundle.js'></script>\n");
 		} else {
+			//output.append("<script src='/build/js/webform-bundle.js'></script>\n");	// TODO Fix compression
 			output.append("<script src='/build/js/webform-bundle.min.js'></script>\n");
 		}
 
@@ -991,7 +996,7 @@ public class WebForm extends Application {
 		output.append("</div>\n");
 		output.append("<div class='modal-footer'>\n");
 		output.append("<span class='self-destruct-timer'></span>\n");
-		output.append("<button class='btn lang' data-lang='alert.default.button' data-dismiss='modal' aria-hidden='true'>Close</button>\n");
+		output.append("<button class='btn btn-primary lang close-dialog' data-lang='alert.default.button' data-dismiss='modal' aria-hidden='true'>Close</button>\n");
 		output.append("</div>\n");
 		output.append("</div>\n");
 		output.append("</div>\n");

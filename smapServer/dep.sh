@@ -1,16 +1,16 @@
 #!/bin/sh
 
-if [ "$2" = wf ]
-then
+#if [ "$2" = wf ]
+#then
 	echo "building webforms"
 	pushd ~/git/webform
 	grunt develop
 	popd
 	./enk_up.sh
-fi
+#fi
 
-if [ "$1" != develop ]
-then
+#if [ "$1" != develop ]
+#then
 	# Minify webform bundle
 	rm WebContent/build/js/webform-bundle.min.js
 
@@ -18,10 +18,13 @@ then
 	babel WebContent/build/js/webform-bundle.js --out-file WebContent/build/js/webform-bundle.es5.js
 
 	echo "--------------------------- google closure compile"
-	java -jar ~/compiler-latest/closure-compiler-v20190106.jar --js WebContent/build/js/webform-bundle.es5.js --js_output_file WebContent/build/js/webform-bundle.min.js 
+	#java -jar ~/compiler-latest/closure-compiler-v20190106.jar --js WebContent/build/js/webform-bundle.es5.js --js_output_file WebContent/build/js/webform-bundle.min.js 
+
+	# Use whitespace optimisation only as "SIMPLE_OPTIMIZATION" causes code that triggers enabling of widgets to not work
+	java -jar ~/compiler-latest/closure-compiler-v20200719.jar --compilation_level WHITESPACE_ONLY --js WebContent/build/js/webform-bundle.es5.js --js_output_file WebContent/build/js/webform-bundle.min.js 
 
 	rm WebContent/build/js/webform-bundle.es5.js
-fi
+#fi
 
 # Minify the smap server code
 echo "--------------------------- minify smap server code"
@@ -29,6 +32,7 @@ node tools/r.js -o tools/build.js
 
 export COPYFILE_DISABLE=true
 # Create a tar file and copy to the deploy directory
+cp -rf WebContent/build smapServer
 cd smapServer
 tar -zcf smapServer.tgz *
 cp smapServer.tgz ~/deploy
