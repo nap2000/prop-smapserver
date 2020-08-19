@@ -111,7 +111,6 @@ require([
     var gChartView = false;         // Set true when the chart view is shown
     var gTimingView = false;        // Set true when the timing view is shown
     var gRefreshingData = false;    // Prevent double click on  refresh button
-    var gSelectedIndexes = [];      // Array of selected row indexes
     var gAssignedCol = 0;           // Column that contains the assignment status
     var gGetSettings = false;       // Use the settings from the database rather than the client
     var gDeleteColumn = -1;         // The index of the column that indicates if the record is deleted
@@ -148,12 +147,13 @@ require([
             recordChanges: {},
             groupSurveys: {},
             currentData: undefined,
-            data: {}
+            data: {},
+            gSelectedIndexes: []
         },
         gSelectedRecord: undefined,
+        gBulkInstances: [],
         gSelectedSurveyIndex: undefined,
         gUpdate: [],
-        gCurrentIndex: undefined,
         gPriKey: undefined,
         gSort: undefined,
         gDirn: undefined
@@ -194,7 +194,7 @@ require([
             }
         }
 
-        $('.editRecordSection, .selectedOnly, .dd_only').hide();
+        $('.editRecordSection, .bulkEditSection, .selectOnly, .singleSelectOnly, .multiSelectOnly, .dd_only').hide();
 
         // Get the parameters and start editing a survey if one was passed as a parameter
         var params = location.search.substr(location.search.indexOf("?") + 1);
@@ -290,6 +290,11 @@ require([
             showManagedData(globals.gCurrentSurvey, showTable, true);
         });
 
+        // St change function on clearColumns
+        $('#clearColumns').change(function() {
+            $('.columnSelect').prop('checked', ($(this).prop('checked')));
+        });
+
         /*
          * Setup dialog to change the current survey
          */
@@ -298,6 +303,11 @@ require([
         });
 
         $('.exitEditRecord').click(function() {
+            showManagedData(globals.gCurrentSurvey, showTable, true);
+            window.history.back();
+        });
+
+        $('.exitBulkEdit').click(function() {
             showManagedData(globals.gCurrentSurvey, showTable, true);
             window.history.back();
         });
@@ -339,6 +349,10 @@ require([
          */
         $('#m_edit').click(function() {
             showRecord(true);
+        });
+
+        $('#m_bulk_edit').click(function() {
+            showBulkEdit();
         });
 
         /*
@@ -478,8 +492,12 @@ require([
         /*
          * Save a record of data in managed forms
          */
-        $('#saveRecord').click(function () {
+        $('.saverecord').click(function () {
             var saveString = JSON.stringify(gTasks.gUpdate);
+            var biString;
+            if(gTasks.gBulkInstances && gTasks.gBulkInstances.length > 0) {
+                biString =  JSON.stringify(gTasks.gBulkInstances)
+            }
             addHourglass();
             $.ajax({
                 type: "POST",
@@ -490,6 +508,7 @@ require([
                 data: {
                     updates: saveString,
                     instanceid: gTasks.gSelectedRecord.instanceid,
+                    bulkInstances: biString,
                     groupForm: globals.gSubForms[globals.gCurrentSurvey]
                 },
                 success: function (data, status) {
@@ -504,7 +523,7 @@ require([
                     }
 
                     gTasks.gUpdate = [];
-                    $('#saveRecord').prop("disabled", true);
+                    $('.saverecord').prop("disabled", true);
 
                     getRecordChanges(gTasks.gSelectedRecord);
                     $('.re_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
@@ -600,12 +619,18 @@ require([
 
             $('input.columnSelect', '#tab-columns-content').each(function (index) {
                 $this = $(this);
-                config.columns[index + 1].hide = !$this.is(':checked');		// Ignore prikey
+                config.columns[index].hide = !$this.is(':checked');
             });
 
             $('input.barcodeSelect', '#tab-columns-content').each(function (index) {
                 $this = $(this);
-                config.columns[index + 1].barcode = $this.is(':checked');		// Ignore prikey
+                config.columns[index].barcode = $this.is(':checked');
+
+            });
+
+            $('input.includeText', '#tab-columns-content').each(function (index) {
+                $this = $(this);
+                config.columns[index].includeText = $this.is(':checked');
 
             });
 
@@ -747,6 +772,8 @@ require([
             format = "xlsx";
         } else if ($this.hasClass("pdf")) {
             format = "pdf";
+        } else if ($this.hasClass("docx")) {
+            format = "docx";
         } else {
             format = "image";
         }
@@ -895,6 +922,9 @@ require([
         } else if (format === "pdf") {
             filename = title + ".pdf";
             mime = "application/pdf";
+        } else if (format === "docx") {
+            filename = title + ".docx";
+            mime = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
         } else {
             // image
             filename = title + ".zip"
@@ -1023,7 +1053,7 @@ require([
 
         getEligibleUsers();
 
-        $('.editRecordSection, .selectedOnly, .re_alert, .dd_only').hide();
+        $('.editRecordSection, .bulkEditSection, .selectedOnly, .singleSelectOnly, .multiSelectOnly, .re_alert, .dd_only').hide();
         if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
 
             getLanguageList(globals.gCurrentSurvey, undefined, false, '.language_sel', false, -1);
@@ -1191,9 +1221,9 @@ require([
         for (i = 0; i < columns.length; i++) {
             headItem = columns[i];
 
-            hColSort[hColSortIdx++] = addToColumnSort(headItem);
+            hColSort[++hColSortIdx] = addToColumnSort(headItem);
             if(isDuplicates) {
-                hDups[hDupsIdx++] = addToDuplicateReportSelect(headItem);
+                hDups[++hDupsIdx] = addToDuplicateReportSelect(headItem);
             }
 
             shownColumns.push({
@@ -1319,7 +1349,7 @@ require([
             recordSelected(indexes);
         });
         globals.gMainTable.off('deselect').on('deselect', function (e, dt, type, indexes) {
-            $('.selectedOnly, .dd_only').hide();
+            recordSelected(indexes);
         });
 
         // Highlight data conditionally, set barcodes
@@ -1407,9 +1437,9 @@ require([
         var h = [],
             idx = -1;
 
-        if (item.include) {
+        if (item.include || item.column_name === "prikey") {
             h[++idx] = '<div class="row">';
-            h[++idx] = '<div class="col-sm-8">';
+            h[++idx] = '<div class="col-sm-6">';
             h[++idx] = item.displayName;
             h[++idx] = '</div>';
 
@@ -1439,6 +1469,19 @@ require([
             h[++idx] = '</div>';
             h[++idx] = '</div>';
 
+            h[++idx] = '<div class="col-sm-2">';
+            h[++idx] = '<div class="switch">';
+            h[++idx] = '<input type="checkbox" name="includeText"';
+            h[++idx] = ' class="includeText" value="';
+            h[++idx] = item.displayName;
+            h[++idx] = '"';
+            if(item.includeText) {
+                h[++idx] = ' checked';
+            }
+            h[++idx] = '>';
+            h[++idx] = '</div>';
+            h[++idx] = '</div>';
+
             h[++idx] = '</div>';
         }
         return h.join('');
@@ -1451,9 +1494,9 @@ require([
         var h = [],
             idx = -1;
 
-        if (item.include) {
+        if (item.include && !item.mgmt) {
             h[++idx] = '<div class="row">';
-            h[++idx] = '<div class="setings-item">';
+            //h[++idx] = '<div class="setings-item">';
 
             h[++idx] = '<div class="col-sm-1">';
             h[++idx] = '<input type="checkbox" name="columnSelect"';
@@ -1485,7 +1528,7 @@ require([
             h[++idx] = '</div>';
 
 
-            h[++idx] = '</div>';	// Settings item
+            //h[++idx] = '</div>';	// Settings item
             h[++idx] = '</div>';		// Row
 
         }
@@ -1845,21 +1888,6 @@ require([
 
     }
 
-    /*
-     * Get the currently selected recoord
-     */
-    function getSelectedRecord() {
-
-        var record,
-            idx;
-
-        $('input[type=radio]:checked', '#content table').each(function () {
-            idx = $(this).val();
-        });
-
-        return idx;
-    }
-
     function updateVisibleColumns(cols) {
         var i,
             hiddenColumns = [],
@@ -1913,7 +1941,9 @@ require([
         for (i = 0; i < columns.length; i++) {
             configColumns[columns[i].column_name] = {
                 hide: columns[i].hide,
-                barcode: columns[i].barcode
+                barcode: columns[i].barcode,
+                includeText: columns[i].includeText
+
             };
         }
 
@@ -2121,9 +2151,9 @@ require([
      * Respond to a record of data being unselected
      */
     function recordUnSelected() {
-        gSelectedIndexes = [];
+        gTasks.gSelectedIndexes = [];
         gTasks.gSelectedRecord = undefined;
-        $('.selectedOnly, .dd_only').hide();
+        $('.selectOnly, .dd_only').hide();
     }
 
     /*
@@ -2131,42 +2161,76 @@ require([
      */
     function recordSelected(indexes) {
 
-        var assignedOther = false;
+        var assignedOther = false,
+            i;
 
-        gSelectedIndexes = indexes;
-        gTasks.gSelectedRecord = globals.gMainTable.rows(gSelectedIndexes).data().toArray()[0];
-        $('.selectedOnly, .dd_only').hide();
-        if(gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned === globals.gLoggedInUser.ident) {
-            $('.assigned').show();
-        } else if(gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned !== globals.gLoggedInUser.ident) {
-            $('.assigned_other').show();
-            assignedOther = true;
-        } else {
-            $('.not_assigned').show();
-        }
+        gTasks.gSelectedIndexes = indexes;
+        gTasks.gSelectedRecord = undefined;
+        gTasks.gBulkInstances = [];
 
-        var columns = gTasks.cache.currentData.schema.columns;
-        if(!assignedOther) {
-            if ((gDeleteColumn < 0 || gTasks.gSelectedRecord[columns[gDeleteColumn].question_name] === 'f')) {
-                $('.not_deleted').show();
-            } else if (gDeleteColumn >= 0 && gTasks.gSelectedRecord[columns[gDeleteColumn].question_name] === 't') {
-                $('.deleted').show();
-            }
-        }
-
-        if(globals.gIsAdministrator) {
-            $('.assigned_admin').show();
-        }
-
-        // Set up the drill down
+        $('.selectOnly, .multiSelectOnly, .singleSelectOnly').hide();
         $('.dd_only,.du_only').hide();
-        if(gDrillDownStack.length > 0) {
-            $('.du_only').show();
-        }
 
-        updateDrillDownFormList();
-        if(gDrillDownNext) {
-        	$('.dd_only').show();
+        if(gTasks.gSelectedIndexes.length === 0) {
+            /*
+			 * No records are selected
+			 */
+        }
+        if(gTasks.gSelectedIndexes.length > 1) {
+            /*
+             * Multiple records are selected
+             */
+
+            // Set seleced record to first record selected
+            gTasks.gSelectedRecord = globals.gMainTable.rows(gTasks.gSelectedIndexes).data().toArray()[0];
+
+            // Store the record indexes that will need to be updated
+            var records = globals.gMainTable.rows(gTasks.gSelectedIndexes).data().toArray();
+            for(i = 0; i < gTasks.gSelectedIndexes.length; i++) {
+                gTasks.gBulkInstances.push(records[i].instanceid);
+            }
+
+            $('.multiSelectOnly').show();
+
+        } else {
+            /*
+			* Only a single record is selected
+			*/
+            gTasks.gSelectedRecord = globals.gMainTable.rows(gTasks.gSelectedIndexes).data().toArray()[0];
+            if (gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned === globals.gLoggedInUser.ident) {
+                $('.assigned').show();
+            } else if (gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned !== globals.gLoggedInUser.ident) {
+                $('.assigned_other').show();
+                assignedOther = true;
+            } else {
+                $('.not_assigned').show();
+            }
+
+            // Set up the drill down
+            $('.dd_only,.du_only').hide();
+
+            if(gDrillDownStack.length > 0) {
+                $('.du_only').show();
+            }
+
+            updateDrillDownFormList();
+            if(gDrillDownNext) {
+                $('.dd_only').show();
+            }
+
+            var columns = gTasks.cache.currentData.schema.columns;
+            if(!assignedOther) {
+                if ((gDeleteColumn < 0 || gTasks.gSelectedRecord[columns[gDeleteColumn].question_name] === 'f')) {
+                    $('.not_deleted').show();
+                } else if (gDeleteColumn >= 0 && gTasks.gSelectedRecord[columns[gDeleteColumn].question_name] === 't') {
+                    $('.deleted').show();
+                }
+            }
+
+            if(globals.gIsAdministrator) {
+                $('.assigned_admin').show();
+            }
+
         }
 
     }
@@ -2997,7 +3061,11 @@ require([
 	    // First Check the Cache
 	    if(!clearCache && gTasks.cache.data[url]) {
 		    gTasks.cache.currentData = gTasks.cache.data[url];
-		    showTable(gTasks.cache.data[url]);
+            callback(gTasks.cache.data[url]);
+            updateSettings(gTasks.cache.currentData.settings);
+            map.setLayers(gTasks.cache.currentData.schema.layers);
+            chart.setCharts(gTasks.cache.currentData.schema.charts);
+            updateFormList(gTasks.cache.currentData.forms);
 	    } else {
 
 		    addHourglass();
@@ -3039,7 +3107,7 @@ require([
 						    gTasks.cache.currentData.schema.columns.unshift({
 							    hide: true,
 							    include: true,
-							    name: "_group",
+							    column_name: "_group",
 							    displayName: "_group"
 						    });
 					    }
@@ -3086,7 +3154,7 @@ require([
             globals.gMainTable.column(0, {page: 'current'}).data().each(function (group, i) {
                 if (group && last !== group) {
                     $(rows).eq(i).before(
-                        '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+                        '<tr class="group" style="background-color: #CCC;"><td colspan="5">' + group + '</td></tr>'
                     );
 
                     last = group;
@@ -3203,11 +3271,30 @@ require([
         $('.editRecordSection').show();
 
         if(editable) {
-            $('#saveRecord').removeClass('disabled');
+            $('.saverecord').removeClass('disabled');
         } else {
-            $('#saveRecord').addClass('disabled');
+            $('.savercord').addClass('disabled');
         }
         actioncommon.showEditRecordForm(gTasks.gSelectedRecord, gTasks.cache.currentData.schema, $('#editRecordForm'), $('#surveyForm'), editable, true);
+    }
+
+    /*
+     * Open a page for bulk editing
+     */
+    function showBulkEdit() {
+
+        window.location.hash="#bulk";
+        $('.shareRecordOnly, .role_select').hide();
+        $('#srLink').val("");
+        getSurveyRoles(globals.gCurrentSurvey);
+
+        var sIdent = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].ident;
+
+
+        $('.overviewSection').hide();
+        $('.bulkEditSection').show();
+
+        actioncommon.showBulkEditForm(gTasks.gSelectedRecord, gTasks.cache.currentData.schema, $('#bulkEditForm'));
     }
 
 

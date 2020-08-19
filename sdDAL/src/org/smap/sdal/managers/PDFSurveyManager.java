@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,6 +55,7 @@ import com.itextpdf.text.List;
 import com.itextpdf.text.ListItem;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.BarcodeQRCode;
 import com.itextpdf.text.pdf.BaseFont;
@@ -347,15 +347,25 @@ public class PDFSurveyManager {
 				} else {
 					document = new Document(PageSize.A4);
 				}
-				document.setMargins(marginLeft, marginRight, marginTop_1, marginBottom_1);
-				writer = PdfWriter.getInstance(document, outputStream);
 
-				writer.setInitialLeading(12);	
-
+				// Get the title
 				String title = survey.getInstanceName();
 				if(title.equals("survey")) {
 					title = survey.displayName;
 				}
+				
+				// Determine the number of rows in the title and adjust the document margins accordingly
+				Font titleFont = new Font();
+				int fontHeight = 18;
+				titleFont.setSize(fontHeight);
+				float width = titleFont.getCalculatedBaseFont(true).getWidthPoint(title, titleFont.getCalculatedSize());
+				Rectangle pageRect = document.getPageSize();
+				// Calculate rows of title and substract 1 as maginTop_1 assumes 1 row already
+				int rows = Math.round((width / (pageRect.getWidth() - marginLeft - marginRight)) + 1) - 1;
+				
+				document.setMargins(marginLeft, marginRight, marginTop_1 + rows * fontHeight, marginBottom_1);
+				writer = PdfWriter.getInstance(document, outputStream);
+				writer.setInitialLeading(12);	
 				
 				writer.setPageEvent(new PdfPageSizer(title, 
 						user, basePath, null,
@@ -388,7 +398,7 @@ public class PDFSurveyManager {
 							);		
 				}
 
-				fillNonTemplateUserDetails(document, user, basePath);
+				fillNonTemplateUserDetails(document, user, basePath, survey.getInstanceMeta().hrk);
 
 				// Add appendix
 				if(gv.hasAppendix) {
@@ -901,14 +911,14 @@ public class PDFSurveyManager {
 				Question question = getQuestionFromResult(sd, r, form);
 				
 				if(question != null) {
-					
 					if(includeResult(r, question, appendix, gv, generateBlank, 
 							standardGeomIndex, startGeopointIndex, j)) {
 						if(question.type.equals("begin group")) {
 							if(question.isNewPage()) {
 								document.newPage();
 							}
-						} else if(question.type.equals("end group")) {
+						}
+						if(question.type.equals("end group")) {
 							//ignore
 						} else {
 
@@ -1026,10 +1036,13 @@ public class PDFSurveyManager {
 				include = false;
 			} else if(r.name.startsWith("meta_group")) {
 				include = false;
-			} else if(r.name.startsWith("_")) {
-				// Don't include questions that start with "_",  these are only added to the letter head
-				//include = false;
 			} else if(r.name.equals("prikey") || r.name.equals("parkey")) {
+				include = false;
+			} else if(r.name.equals("user")  && r.qIdx < 0) {
+				include = false;
+			} else if(r.name.equals("instancename")  && r.qIdx < 0) {
+				include = false;
+			} else if(r.name.equals("_hrk")) {
 				include = false;
 			}
 		}
@@ -1629,8 +1642,12 @@ public class PDFSurveyManager {
 					labelCell.addElement(element);
 				}
 			} catch (Exception e) {
-				log.info("Error parsing: " + html.toString() + " : " + e.getMessage());
-				lm.writeLog(sd, survey.getId(), remoteUser, LogManager.ERROR, e.getMessage() + " for: " + html.toString(), 0);
+				log.log(Level.SEVERE, "Error parsing: " + html.toString() + " : " + e.getMessage(), e);
+				String msg = e.getMessage();
+				if(msg == null) {
+					msg = "Error in PDF generation. Ignoring.";
+				}
+				lm.writeLog(sd, survey.getId(), remoteUser, LogManager.ERROR, msg + " for: " + html.toString(), 0);
 				labelCell.addElement(getPara(html.toString(), di, gv, null, null));
 			}
 		}
@@ -1994,8 +2011,12 @@ public class PDFSurveyManager {
 				try {
 					parser.xmlParser.parse(new StringReader(html));
 				} catch (Exception e) {
-					log.info("Error parsing: " + html.toString() + " : " + e.getMessage());
-					lm.writeLog(sd, survey.getId(), remoteUser, LogManager.ERROR, e.getMessage() + " for: " + html.toString(), 0);
+					log.log(Level.SEVERE, "Error parsing: " + html.toString() + " : " + e.getMessage(), e);
+					String msg = e.getMessage();
+					if(msg == null) {
+						msg = "Error parsing PDF. Ignoring."; 
+					}
+					lm.writeLog(sd, survey.getId(), remoteUser, LogManager.ERROR, msg + " for: " + html.toString(), 0);
 					cell.addElement(getPara(html.toString(), di, gv, null, null));
 				}
 				for(Element element : parser.elements) {					
@@ -2051,7 +2072,7 @@ public class PDFSurveyManager {
 	/*
 	 * Fill in user details for the output when their is no template
 	 */
-	private void fillNonTemplateUserDetails(Document document, User user, String basePath) throws IOException, DocumentException {
+	private void fillNonTemplateUserDetails(Document document, User user, String basePath, String key) throws IOException, DocumentException {
 
 		String settings = user.settings;
 		Type type = new TypeToken<UserSettings>(){}.getType();
@@ -2059,7 +2080,7 @@ public class PDFSurveyManager {
 		UserSettings us = gson.fromJson(settings, type);
 
 		float indent = (float) 20.0;
-		addValue(document, "Completed by:", (float) 0.0);
+		addValue(document, localisation.getString("pdf_completed_by") + ":", (float) 0.0);
 		if(user.signature != null && user.signature.trim().length() > 0) {
 			String fileName = null;
 			try {
@@ -2078,6 +2099,8 @@ public class PDFSurveyManager {
 			}
 		}
 		addValue(document, user.name, indent);
+		addValue(document, localisation.getString("cr_key") + ": ", (float) 0.0);
+		addValue(document, key, indent);
 		addValue(document, user.company_name, indent);
 		if(us != null) {
 			addValue(document, us.title, indent);

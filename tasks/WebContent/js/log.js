@@ -35,15 +35,16 @@ requirejs.config({
      	async: '../../../../js/libs/async',
      	localise: '../../../../js/app/localise',
 	    globals: '../../../../js/app/globals',
-    	modernizr: '../../../../js/libs/modernizr',
 	    moment: '../../../../js/libs/moment-with-locales.2.24.0',
+	    datetimepicker: '../../../../js/libs/bootstrap-datetimepicker-4.17.47',
+    	modernizr: '../../../../js/libs/modernizr',
     	common: '../../../../js/app/common',
     	lang_location: '../../../../js',
     	metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu',
     	pace: '../../../../js/libs/wb/pace/pace.min'
     },
     shim: {
-
+	    'datetimepicker': ['moment'],
     	'common': ['jquery'],
     	'bootstrap': ['jquery'],
     	'metismenu': ['jquery']
@@ -57,6 +58,7 @@ require([
 		 'globals',
 		 'moment',
          'metismenu',
+		 'datetimepicker',
          'pace'
 
          ], function($,
@@ -130,9 +132,37 @@ require([
 		
 		$('#m_refresh').click(function(e) {	// Add refresh action
 			table.ajax.reload();
-		}); 
+		});
 
-			
+		/*
+		 * Reports
+		 */
+		moment.locale();
+		$('#usageDate').datetimepicker({
+			useCurrent: false,
+			locale: gUserLocale || 'en'
+		}).data("DateTimePicker").date(moment());
+
+		$('#m_hourly_sr').click(function(){
+			$('#hourly_sr_popup').modal("show");
+		});
+
+		$('#hourly_sr_save').click(function() {
+			var usageMsec = $('#usageDate').data("DateTimePicker").date(),
+				d = new Date(usageMsec),
+				month = d.getMonth() + 1,
+				year = d.getFullYear(),
+				day = d.getDate(),
+				url;
+
+
+			var tz = globals.gTimezone;
+			url = "/surveyKPI/adminreport/logs/hourly/" + year + "/" + month + "/" + day + '?tz=' + tz;
+
+
+			downloadFile(url);
+
+		});
 		
 	});
 	

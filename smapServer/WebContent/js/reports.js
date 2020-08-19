@@ -143,6 +143,7 @@ require([
 
         		$('#custom_form')[0].reset();
 		        addCustomReportTypes();
+		        surveyChanged(setForm);
 		        $('.custom_section').hide();
 		        $('.custom_type_' + $('#customType').val()).show();
 
@@ -498,8 +499,26 @@ require([
 
 		var report = {
 			sIdent: sIdent,
-			dateColumn: getDateName($('#custom_date_q').val())
+			dateColumn: getDateColName($('#custom_date_q').val())
 		};
+
+		// Add bars
+		report.bars = [];
+		var b1 = $("#custom_bar_1").val();
+		if(b1 && b1 != '-1') {
+			report.bars.push({
+				name: b1,
+				title: $("#custom_bar_1_title").val()
+			})
+		}
+
+		var b2 = $("#custom_bar_2").val();
+		if(b2 && b2 != '-1') {
+			report.bars.push({
+				name: b2,
+				title: $("#custom_bar_2_title").val()
+			})
+		}
 
 		// Add columns
 		report.columns = [];
@@ -640,17 +659,36 @@ require([
 			    $(':checkbox[value=' + getQuestionIndex(gConfig.columns[i], questions) + ']', '#columnsHere').prop("checked","true");
 		    }
 	    }
+
+		// Show bar selections
+	    var b1 = "-1";
+	    var b1_title = "";
+	    var b2 = "-1";
+	    var b2_title = "";
+	    if(gConfig && gConfig.bars && gConfig.bars.length > 0) {
+		    b1 = gConfig.bars[0].name;
+		    b1_title = gConfig.bars[0].title;
+
+		    if(gConfig.bars.length > 1) {
+			    b2 = gConfig.bars[1].name;
+			    b2_title = gConfig.bars[1].title;
+		    }
+	    }
+	    $('#custom_bar_1').val(b1);
+	    $('#custom_bar_1_title').val(b1_title);
+	    $('#custom_bar_2').val(b2);
+	    $('#custom_bar_2_title').val(b2_title);
     }
 
     /*
      *  Get the name of a date question given its id
      */
-    function getDateName(id) {
+    function getDateColName(id) {
 	    var sMeta = globals.gSelector.getSurvey(gSurveyList[$('#survey').val()].id);
 	    if(sMeta && sMeta.dates) {
 		    for (i = 0; i < sMeta.dates.length; i++) {
 		    	if(sMeta.dates[i].id == id) {
-				    return(sMeta.dates[i].name);
+				    return(sMeta.dates[i].col);
 			    }
 		    }
 	    }
@@ -1248,7 +1286,6 @@ require([
 		if(report) {
 			$('#c_name').val(report.name);
 			$('#custom_date_q').val(getDateId(gConfig.dateColumn));
-
 		}
 		addCustomReportTypes();
 	}
@@ -1357,7 +1394,7 @@ require([
 			d = new Date(usageMsec),
 			month = d.getMonth() + 1,
 			year = d.getFullYear(),
-			url = "/custom/report/daily/" + gCustomReportList[gCustomReportIdx].id + "/xls";
+			url = "/surveyKPI/report/daily/" + gCustomReportList[gCustomReportIdx].id + "/xls";
 
 		url += "?year=" + year;
 		url += "&month=" + month;

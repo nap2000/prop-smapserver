@@ -47,6 +47,7 @@ import org.smap.sdal.Utilities.XLSUtilities;
 import org.smap.sdal.managers.LogManager;
 import org.smap.sdal.model.Form;
 
+import managers.ConfigManager;
 import model.DailyReportsConfig;
 import model.ReportColumn;
 import model.ReportMultiColumn;
@@ -93,6 +94,7 @@ public class DailyReportsManager {
 		
 		int rowNumber = 0;
 		CellStyle errorStyle = null;
+		ConfigManager cm = new ConfigManager(localisation);
 		
 		try {
 			wb = new XSSFWorkbook();
@@ -121,13 +123,20 @@ public class DailyReportsManager {
 			 * Validate report configuration
 			 * This is required for security as much as error reporting
 			 */
-			validateColumn(cResults, tlf.tableName, config.dateColumn, surveyName);
+			cm.validateColumn(cResults, tlf.tableName, config.dateColumn, surveyName);
+			boolean dateColumnIncluded = false;
 			for(ReportColumn rc : config.columns) {
-				validateColumn(cResults, tlf.tableName, rc.column, surveyName);
+				cm.validateColumn(cResults, tlf.tableName, rc.column, surveyName);
+				if(config.dateColumn.equals(rc.column)) {
+					dateColumnIncluded = true;
+				}
+			}
+			if(!dateColumnIncluded) {
+				config.columns.add(new ReportColumn(config.dateColumn, config.dateColumn, 0, false));
 			}
 			for(ReportMultiColumn bar : config.bars) {
 				for(String name : bar.columns) {
-					validateColumn(cResults, tlf.tableName, name, surveyName);
+					cm.validateColumn(cResults, tlf.tableName, name, surveyName);
 				}
 			}
 			
@@ -169,12 +178,7 @@ public class DailyReportsManager {
 			pstmt.setInt(2,  year);
 			log.info("Get daily report data: " + pstmt.toString());
 			rs = pstmt.executeQuery();
-			
-			/*
-			 * Write the title
-			 * TODO
-			 */
-			
+		
 			/*
 			 * Write the header
 			 */
@@ -222,7 +226,7 @@ public class DailyReportsManager {
 				
 				if(colNumber == 0) {
 					cell = row.createCell(colNumber);
-					cell.setCellValue("Date");
+					cell.setCellValue(localisation.getString("c_date"));
 				}
 				
 				for(int i = 0; i < item.bars.size(); i++) {
@@ -339,22 +343,5 @@ public class DailyReportsManager {
 		}
 		return row;
 	}
-	
-	private static void solidFillSeries(XDDFBarChartData data, int index, PresetColor color) {
-        XDDFSolidFillProperties fill = new XDDFSolidFillProperties(XDDFColor.from(color));
-        XDDFChartData.Series series = data.getSeries().get(index);
-        XDDFShapeProperties properties = series.getShapeProperties();
-        if (properties == null) {
-            properties = new XDDFShapeProperties();
-        }
-        properties.setFillProperties(fill);
-        series.setShapeProperties(properties);
-    }
-	
-	private void validateColumn(Connection cResults, String tableName, String col, String surveyName) throws ApplicationException {
-		if(!GeneralUtilityMethods.hasColumn(cResults, tableName, col)) {
-			String msg = localisation.getString("qnf").replace("%s1", col).replace("%s2", surveyName);
-			throw new ApplicationException(msg);
-		}
-	}
+
 }

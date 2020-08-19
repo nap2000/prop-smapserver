@@ -649,15 +649,16 @@ public class GetXForm {
 						currentParent.appendChild(questionElement);
 					}
 
-					Element formElement_template = outputDoc.createElement(subForm.getName());
-
-					if (modelInstanceOnly) {
-						formElement_template.setAttribute("template", ""); // The model requires a local name only
-					} else {
-						formElement_template.setAttribute("jr:template", "");
-					}
-					populateForm(sd, outputDoc, formElement_template, INSTANCE, subForm);
-					currentParent.appendChild(formElement_template);
+					// Add template
+					Element template = outputDoc.createElement(subForm.getName());
+					template.setAttribute("jr:template", ""); // The model requires a local name only
+					populateForm(sd, outputDoc, template, INSTANCE, subForm);
+					currentParent.appendChild(template);
+					
+					// Add the real form
+					Element form = outputDoc.createElement(subForm.getName());
+					populateForm(sd, outputDoc, form, INSTANCE, subForm);
+					currentParent.appendChild(form);
 
 				} else if (qType.equals("begin group")) {
 
@@ -1463,7 +1464,7 @@ public class GetXForm {
 		PreparedStatement pstmt = null;
 		ArrayList<KeyValueSimp> line = null;
 		try {
-			stm.initData(pstmt, "all", null, null, null, null, null, tz);
+			stm.initData(pstmt, "all", null, null, null, null, null, tz, null, null);
 			line = stm.getLine();
 			while(line != null) {
 				// process line
@@ -1835,9 +1836,10 @@ public class GetXForm {
 		// Append this new form to its parent (if the parent is null append to output
 		// doc)
 		if (parentElement != null) {
-			if (isTemplate) {
-				currentParent.setAttribute("jr:template", "");
-			}
+			// Template no longer set in data model
+			//if (isTemplate) {
+			//	currentParent.setAttribute("jr:template", "");
+			//}
 			parentElement.appendChild(currentParent);
 		} else {
 			currentParent.setAttribute("id", survey_ident);
@@ -1972,15 +1974,16 @@ public class GetXForm {
 			item = record.get(j);
 
 			if (item.subForm != null) {
-				Instance iSub = null;
 				if(instance != null && instance.repeats != null) {
 					ArrayList<Instance> subInstanceList = instance.repeats.get(item.name);
-					if(subInstanceList.size() > j - 1) {
-						iSub = subInstanceList.get(j - 1);
+					if(subInstanceList.size() > 0) {
+						for(Instance iSub : subInstanceList) {
+							populateTaskDataForm(outputDoc, item.subForm, sd, template, currentParent, sId, 
+									survey_ident, iSub, urlprefix, false, webform);	
+						}
 					}
 				}
-				populateTaskDataForm(outputDoc, item.subForm, sd, template, currentParent, sId, 
-						survey_ident, iSub, urlprefix, false, webform);		
+					
 
 			} else if (item.end_group) {
 				

@@ -553,7 +553,7 @@ require([
 			organisation.email_port = parseInt($('#o_email_port').val());
 			organisation.default_email_content = $('#o_default_email_content').val();
 			organisation.locale = $('#o_language').val();
-			organisation.refresh_rate = $('#o_refresh_rate').val();
+			organisation.refresh_rate = parseInt($('#o_refresh_rate').val());
 			organisation.timeZone = $('#o_tz').val();
 			organisation.server_description = $('#o_server_description').val();
 
@@ -779,6 +779,8 @@ require([
 					device.ft_specify_instancename = true;
 				} else if(options[i] === "ft_prevent_disable_track") {
 					device.ft_prevent_disable_track = true;
+				}  else if(options[i] === "ft_enable_geofence") {
+					device.ft_enable_geofence = true;
 				} else if(options[i] === "ft_admin_menu") {
 					device.ft_admin_menu = true;
 				} else if(options[i] === "ft_server_menu") {
@@ -826,9 +828,9 @@ require([
 			$('#wf_page_background').colorpicker('setValue', '#f0f0f0');
 			$('#wf_paper_background').colorpicker('setValue', '#fff');
 			$('#wf_footer_horizontal_offset').val(5);
-			$('#wf_button_background_color').colorpicker('setValue', '#ce4f07');
+			$('#wf_button_background_color').colorpicker('setValue', '#556B2F');
 			$('#wf_button_text_color').colorpicker('setValue', '#fff');
-			$('#wf_header_text_color').colorpicker('setValue', '#ce4f07');
+			$('#wf_header_text_color').colorpicker('setValue', '#004200');
 		});
 
 		/*
@@ -1637,6 +1639,8 @@ require([
 					this.checked = org.ft_specify_instancename;
 				} else if($(this).val() === "ft_prevent_disable_track") {
 					this.checked = org.ft_prevent_disable_track;
+				} else if($(this).val() === "ft_enable_geofence") {
+					this.checked = org.ft_enable_geofence;
 				} else if($(this).val() === "ft_admin_menu") {
 					this.checked = org.ft_admin_menu;
 				} else if($(this).val() === "ft_server_menu") {
@@ -2890,6 +2894,8 @@ require([
 						this.checked = device.ft_specify_instancename;
 					} else if($(this).val() === "ft_prevent_disable_track") {
 						this.checked = device.ft_prevent_disable_track;
+					} else if($(this).val() === "ft_enable_geofence") {
+						this.checked = device.ft_enable_geofence;
 					} else if($(this).val() === "ft_admin_menu") {
 						this.checked = device.ft_admin_menu;
 					} else if($(this).val() === "ft_server_menu") {
@@ -2956,7 +2962,7 @@ require([
 				if(webform.button_background_color) {
 					$('#wf_button_background_color').colorpicker('setValue', webform.button_background_color);
 				} else {
-					$('#wf_button_background_color').colorpicker('setValue', '#ce4f07');
+					$('#wf_button_background_color').colorpicker('setValue', '#556B2F');
 				}
 				if(webform.button_text_color) {
 					$('#wf_button_text_color').colorpicker('setValue', webform.button_text_color);
@@ -2966,7 +2972,7 @@ require([
 				if(webform.header_text_color) {
 					$('#wf_header_text_color').colorpicker('setValue', webform.header_text_color);
 				} else {
-					$('#wf_header_text_color').colorpicker('setValue', '#ce4f07');
+					$('#wf_header_text_color').colorpicker('setValue', '#004200');
 				}
 
 				$('#wf_footer_horizontal_offset').val(webform.footer_horizontal_offset);
