@@ -35,7 +35,6 @@
         },
         {
             name: '../myWork',
-	    exclude: ['jquery', 'bootstrap']
         },
         {
             name: '../webFormLauncher',
