@@ -111,6 +111,115 @@ public class XLSTemplateUploadManager {
 
 	Survey survey = null;
 
+	private class MatrixWidget {
+		private Question begin;
+		private ArrayList<Question> member = new ArrayList<Question> ();
+		private int rowNumber;
+		
+		public MatrixWidget(Question q, int row) {
+			begin = q;
+			rowNumber = row;
+		}
+		public void addMember(Question q) {
+			member.add(q);
+		}
+		public ArrayList<Question> getExpanded() {
+			ArrayList<Question> expanded = new ArrayList<Question> ();
+			
+			ArrayList<Option> choices = survey.optionLists.get(begin.list_name).options;
+			expanded.addAll(getGroupQuestions(null, begin.name, "header", 1 + 2 * member.size()));
+			for(Option c : choices) {
+				expanded.addAll(getGroupQuestions(c, begin.name, c.value, 1 + 2 * member.size()));
+			}
+			
+			return expanded;
+		}
+		private ArrayList<Question> getGroupQuestions(Option choice, String matrixName, String choiceName, int groupWidth) {
+			ArrayList<Question> questions = new ArrayList<Question> ();
+			
+			Question qb = new Question();
+			qb.type = "begin group";
+			qb.name = matrixName + "_" + choiceName;
+			qb.appearance = "w" + groupWidth;
+			qNameMap.put(qb.name.toLowerCase(), rowNumber);
+			questions.add(qb);
+			
+			Question qb2 = new Question();
+			qb2.type = "note";
+			qb2.source = "user";
+			qb2.name = qb.name + "_note";
+			qb2.columnName = GeneralUtilityMethods.cleanName(qb2.name, true, true, true);
+			qb2.appearance = "w1";
+			if(choice == null) {
+				qb2.labels = copyLabelsFrom(begin.labels, "bold");
+			} else {
+				qb2.labels = copyLabelsFrom(choice.labels, "hash");
+			}
+			qNameMap.put(qb2.name.toLowerCase(), rowNumber);
+			questions.add(qb2);
+			
+			for(Question qm : member) {
+				Question qx = new Question();
+				qx.name = qb.name + "_" + qm.name;
+				qx.source = "user";
+				qx.appearance = "w2";
+				qx.columnName = GeneralUtilityMethods.cleanName(qx.name, true, true, true);
+				if(choice == null) {
+					qx.type = "note";
+					
+					qx.labels = copyLabelsFrom(qm.labels, "bold");
+				} else {
+					qx.type = qm.type;
+					qx.required = qm.required;
+					qx.required_msg = qm.required_msg;
+					qx.relevant = qm.relevant;
+					qx.calculation = qm.calculation;
+					qx.constraint = qm.constraint;
+					qx.constraint_msg = qm.constraint_msg;
+					qx.l_id = qm.l_id;
+					qx.list_name = qm.list_name;
+					qx.display_name = qm.display_name;
+					qx.visible = qm.visible;
+					
+					if(qx.type.startsWith("select")) {
+						qx.appearance += "  horizontal-compact";
+					} else {
+						qx.appearance += "  no-label";
+					}
+					qx.labels = copyLabelsFrom(qm.labels, "empty");
+				}
+				
+				
+				questions.add(qx);
+			}
+			
+			Question qe = new Question();
+			qe.type = "end group";
+			qe.name = qb.name;
+			questions.add(qe);
+			
+			return questions;
+		}
+		
+		private ArrayList<Label> copyLabelsFrom(ArrayList<Label> inLabels, String style) {
+			ArrayList<Label> labels = new ArrayList<Label> ();
+			for(Label l : inLabels) {
+				Label nl = new Label();
+				if(style.equals("bold")) {
+					nl.text = "<h5>" + l.text + "</h5>";
+				} else if(style.equals("hash")) {
+					nl.text = "<h5>" + l.text + "</h5>";
+				} else if(style.equals("empty")) {
+					nl.text = "<span style='display:none'>" + l.text + "</span>";
+				} else {
+					nl.text = l.text;
+				}
+				labels.add(nl);
+			}
+			return labels;
+		}
+	}
+	
 	private class FunctionCheck {
 		String name;
 		int args;
@@ -240,6 +349,9 @@ public class XLSTemplateUploadManager {
 				if(row != null) {
 					int lastCellNum = row.getLastCellNum();	
 					String styleList = XLSUtilities.getTextColumn(row, "list_name", stylesHeader, lastCellNum, null);
+					if(styleList == null) {
+						styleList = XLSUtilities.getTextColumn(row, "list name", stylesHeader, lastCellNum, null);
+					}
 
 					if(styleList != null) {
 						StyleList sl = survey.styleLists.get(styleList);
@@ -635,7 +747,9 @@ public class XLSTemplateUploadManager {
 		survey.forms.add(f);
 		
 		int thisFormIndex = survey.forms.size() - 1;
-
+		boolean inMatrix = false;
+		MatrixWidget matrix = null;
+		
 		while(rowNumSurvey <= lastRowNumSurvey) {
 
 			Row row = surveySheet.getRow(rowNumSurvey++);
@@ -662,7 +776,25 @@ public class XLSTemplateUploadManager {
 						survey.manifest = mi.manifest;
 						
 						validateQuestion(q, rowNumSurvey, thisFormIndex);
-						f.questions.add(q);
+						
+						if(q.type.equals("begin matrix")) {
+							matrix = new MatrixWidget(q, rowNumSurvey);
+							inMatrix = true;
+						} else if(q.type.equals("end matrix")) {
+							// add all questions from matrix object
+							for(Question qm : matrix.getExpanded()) {
+								f.questions.add(qm);
+							}
+							inMatrix = false;
+						} else {
+							if(!inMatrix) {
+								f.questions.add(q);
+							} else {
+								matrix.addMember(q);
+							}
+						}				
+						
+						
 						
 						if(q.type.equals("begin repeat")) {
 							int repeatRowNumber = rowNumSurvey;
@@ -706,6 +838,11 @@ public class XLSTemplateUploadManager {
 		if(q.type.equals("geopoint") || q.type.equals("geotrace") || q.type.equals("geoshape")) {
 			q.name = "the_geom";
 		}	
+		
+		// Get the list name from the list_name column if it has not already been set
+		if(q.list_name == null) {
+			q.list_name = XLSUtilities.getTextColumn(row, "list_name", surveyHeader, lastCellNum, null); 
+		}
 		
 		// 3. Labels
 		getLabels(row, lastCellNum, surveyHeader, q.labels, q.type, false);	
@@ -818,7 +955,6 @@ public class XLSTemplateUploadManager {
 		if(q.style_list == null) {
 			q.style_list = XLSUtilities.getTextColumn(row, "style list", surveyHeader, lastCellNum, null);
 		}
-
 		
 		// Add Column Roles
 		if(columnRoleHeader != null && columnRoleHeader.size() > 0) {
@@ -838,7 +974,7 @@ public class XLSTemplateUploadManager {
 		/*
 		 * Handle Groups
 		 */
-		if(q.type.equals("begin group")) {
+		if(q.type.equals("begin group") || q.type.equals("begin matrix")) {
 			Stack<Question> groupStack = getGroupStack(formIndex);
 			groupStack.push(q);
 			if(q.appearance != null && q.appearance.contains("table-list")) {
@@ -849,7 +985,7 @@ public class XLSTemplateUploadManager {
 				inTableListGroup = false;
 			}
 		}
-		if(q.type.equals("end group")) {
+		if(q.type.equals("end group") || q.type.equals("end matrix")) {
 			Stack<Question> groupStack = getGroupStack(formIndex);
 			if(groupStack.isEmpty()) { 
 				Form f = survey.forms.get(formIndex);
@@ -894,6 +1030,8 @@ public class XLSTemplateUploadManager {
 		// 1. Source
 		if(q.type.equals("begin group") 
 				|| q.type.equals("end group") 
+				|| q.type.equals("begin matrix") 
+				|| q.type.equals("end matrix") 
 				|| q.type.equals("server_calculate") 
 				|| q.type.equals("begin repeat")) {
 			q.source = null;
@@ -992,18 +1130,26 @@ public class XLSTemplateUploadManager {
 					lab.guidance_hint = XLSUtilities.getTextColumn(row, "guidance_hint::" + lang, header, lastCellNum, null);
 				}
 				
+				// Constraint message 
 				if(constraintMsgSet) {
 					lab.constraint_msg = XLSUtilities.getTextColumn(row, XLSFormColumns.CONSTRAINT_MESSAGE + "::" + lang, header, lastCellNum, "-");
 				} else {
 					lab.constraint_msg = XLSUtilities.getTextColumn(row, XLSFormColumns.CONSTRAINT_MESSAGE + "::" + lang, header, lastCellNum, null);
 				}
+				if(lab.constraint_msg == null) {	// use the universal setting
+					lab.constraint_msg = XLSUtilities.getTextColumn(row, XLSFormColumns.CONSTRAINT_MESSAGE, header, lastCellNum, null);
+				}
+				if(lab.constraint_msg == null) {	// use the universal setting
+					lab.constraint_msg = XLSUtilities.getTextColumn(row, "constraint-msg", header, lastCellNum, null);
+				}
 				
+				// Required message
 				if(requiredMsgSet) {
 					lab.required_msg = XLSUtilities.getTextColumn(row, XLSFormColumns.REQUIRED_MESSAGE + "::" + lang, header, lastCellNum, "-");
 				} else {
 					lab.required_msg = XLSUtilities.getTextColumn(row, XLSFormColumns.REQUIRED_MESSAGE + "::" + lang, header, lastCellNum, null);
 				}
-				
+			
 				// image - try various combination of headers
 				lab.image = XLSUtilities.getTextColumn(row, "media::image::" + lang, header, lastCellNum, null);
 				if(lab.image == null) {
@@ -1050,6 +1196,7 @@ public class XLSTemplateUploadManager {
 	private String getDefaultLabel(String type) {
 		String def = "-";
 		if (type.equals("begin group") || type.equals("end group")
+				|| type.equals("begin matrix") || type.equals("end matrix")
 				|| type.equals("begin repeat") || type.equals("end repeat")) {
 			def = null;
 		}
@@ -1134,6 +1281,7 @@ public class XLSTemplateUploadManager {
 				validateGroup(f.questions, q, i);
 			}
 		}
+		
 	}
 	
 	private int validateGroup(ArrayList<Question> questions, Question groupQuestion, int start) throws ApplicationException {
@@ -1175,12 +1323,12 @@ public class XLSTemplateUploadManager {
 			// Check for a valid name
 			throw XLSUtilities.getApplicationException(localisation, "tu_qn", rowNumber, "survey", q.name, null, null);
 
-		} else if(!q.type.equals("end group") && qNameMap.get(q.name.toLowerCase()) != null && !q.name.equals("the_geom")) {
+		} else if(!q.type.equals("end group") && !q.type.equals("end matrix") && qNameMap.get(q.name.toLowerCase()) != null && !q.name.equals("the_geom")) {
 			// Check for a duplicate name
 			throw XLSUtilities.getApplicationException(localisation, "tu_dq", rowNumber, "survey", q.name, null, null);
 
 		}
-		if(!q.type.equals("end group")) {		
+		if(!q.type.equals("end group") && !q.type.equals("end matrix")) {		
 			qNameMap.put(q.name.toLowerCase(), rowNumber);
 		}
 		
@@ -1275,6 +1423,14 @@ public class XLSTemplateUploadManager {
 		if(q.list_name != null) {
 			if(survey.optionLists.get(q.list_name) == null) {
 				throw XLSUtilities.getApplicationException(localisation, "tu_lnf", rowNumber, "survey", q.list_name, null, null);
+			}
+		}
+		
+		// Matrix
+		if(q.type.equals("begin matrix")) {
+			// Missing list
+			if(q.list_name == null) {
+				throw XLSUtilities.getApplicationException(localisation, "tu_mat_list", rowNumSurvey, "survey", null, null, null);
 			}
 		}
 		
@@ -1602,8 +1758,12 @@ public class XLSTemplateUploadManager {
 			out = "end repeat";
 		} else if (type.equals("begin group") || type.equals("begin_group")) {
 			out = "begin group";
+		} else if (type.equals("begin matrix") || type.equals("begin_matrix")) {
+			out = "begin matrix";
 		} else if (type.equals("end group") || type.equals("end_group")) {
 			out = "end group";
+		} else if (type.equals("end matrix") || type.equals("end_matrix")) {
+			out = "end matrix";
 		} else if (type.equals("start")) {
 			out = "start";
 		} else if (type.equals("end")) {

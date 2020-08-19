@@ -29,10 +29,30 @@ define([
 
         return {
             showEditRecordForm: showEditRecordForm,
+            showBulkEditForm: showBulkEditForm,
             addCellMarkup: addCellMarkup,
             addCellMap: addCellMap,
             initialiseDynamicMaps: initialiseDynamicMaps
         };
+
+        /*
+	     * Refresh any select lists that are dependent on entered values
+         */
+        function refreshSelectLists(schema, record, changedItemIndex) {
+
+            var  columns = schema.columns;
+            var changedItem = columns[changedItemIndex];
+            for (i = 0; i < columns.length; i++) {
+                var column = columns[i];
+                if (column.mgmt) {
+                    if (column.type === "select1" || column.type === "select" || column.type === "select_one") {
+                        var value = record[column.column_name];
+                        getChoiceList(schema, column, i, value, record, changedItem.column_name);
+                    }
+                }
+
+            }
+        }
 
         /*
          * Add HTML to show a form to edit a record
@@ -48,22 +68,23 @@ define([
                 first = true,
                 columns = schema.columns;
 
-            //gTasks.gCurrentIndex = index;
             globals.gRecordMaps = [];     // Initialise the list of maps we are going to show
             gTasks.gPriKey = record["prikey"];
 
             // Clear the update array
             gTasks.gUpdate = [];
-            $('#saveRecord').prop("disabled", true);
+            $('.saverecord').prop("disabled", true);
 
             for (i = 0; i < columns.length; i++) {
                 configItem = columns[i];
 
                 if (configItem.mgmt) {
-                    h[++idx] = getEditMarkup(configItem, i, first, record, schema, editable);
+
+                    h[++idx] = getEditMarkup(configItem, i, first, record, schema, editable, true);
+
                 } //else {
                 // Always add the read only original
-                m[++cnt] = getEditMarkup(configItem, i, first, record, schema, false);
+                m[++cnt] = getEditMarkup(configItem, i, first, record, schema, false, true);
                 //}
                 if (!configItem.readonly) {
                     first = false;
@@ -97,7 +118,7 @@ define([
                     var config = {
                         itemIndex: itemIndex,
                         value: val
-                    }
+                    };
                     dataChanged(config);
                 }
             });
@@ -114,8 +135,9 @@ define([
                     var config = {
                         itemIndex: $this.data("item"),
                         value: $this.val()
-                    }
+                    };
                     dataChanged(config);
+                    refreshSelectLists(schema, record, $this.data("item"));
                 }
             });
             $editForm.find('.date').on("dp.change", function () {
@@ -123,7 +145,7 @@ define([
                 var config = {
                     itemIndex: $this.data("item"),
                     value: $this.val()
-                }
+                };
                 dataChanged(config);
             });
             $('#editRecordForm').on("smap::geopoint", function (event, config) {
@@ -136,12 +158,104 @@ define([
         }
 
         /*
+         * Add HTML to allow bulk ediitng
+         */
+        function showBulkEditForm(record, schema, $editForm) {
+            var
+                h = [],
+                idx = -1,
+                m = [],
+                cnt = -1,
+                i,
+                configItem,
+                first = true,
+                columns = schema.columns;
+
+            for (i = 0; i < columns.length; i++) {
+                configItem = columns[i];
+
+                if (configItem.mgmt) {
+                    h[++idx] = '<div class="row bulkquestion">';
+                    h[++idx] = '<div class="col-sm-8">';
+
+                    var cloneItem = JSON.parse(JSON.stringify(configItem));
+                    if(configItem.type === 'select') {
+                        cloneItem.type = 'select1';     // With select multiples the bulk change is to set or clear one value
+                    }
+                    h[++idx] = getEditMarkup(cloneItem, i, first, record, schema, true, false);
+                    h[++idx] = '</div>';    // Question column
+                    h[++idx] = '<div class="col-sm-4">';    // clear
+                    if(configItem.type === 'select') {
+                        h[++idx] = '<div class="switch">';
+                        h[++idx] = '<input type="checkbox" class="selectClear">';
+                        h[++idx] = '</div>';
+                    }
+                    h[++idx] = '</div>';    // clear
+                    h[++idx] = '</div>';    // row
+                }
+
+                if (!configItem.readonly) {
+                    first = false;
+                }
+            }
+
+            if($editForm) {
+                $editForm.html(h.join(''));
+            }
+
+            // Set up date fields
+            $editForm.find('.date').datetimepicker({
+                locale: gUserLocale || 'en',
+                useCurrent: false,
+                showTodayButton: true
+            });
+
+
+            // Respond to changes in the data by creating an update object
+            $editForm.find('.form-control, select').bind("click propertychange paste change keyup input", function () {
+                var $this = $(this);
+                var config = {
+                    itemIndex: $this.data("item"),
+                    value: $this.val(),
+                    clear: $this.closest(".bulkquestion").find(".selectClear").is(':checked')
+                };
+                bulkDataChanged(config);
+            });
+
+            // Respond to changes in a clear checkbox
+            $editForm.find('.selectClear').bind("change", function () {
+                var $this = $(this);
+                var $q = $this.closest(".bulkquestion").find(".form-control")
+                var config = {
+                    itemIndex: $q.data("item"),
+                    value: $q.val(),
+                    clear: $this.is(':checked')
+                };
+
+                bulkDataChanged(config);
+
+            });
+
+            // Set focus to first editable data item
+            $editForm.find('[autofocus]').focus();
+        }
+
+        /*
          * Get the markup to edit the record
          */
-        function getEditMarkup(configItem, itemIndex, first, record, schema, editable) {
+        function getEditMarkup(configItem, itemIndex, first, record, schema, editable, setvalue) {
 
             var h = [],
-                idx = -1;
+                idx = -1,
+                value;
+
+            if(record && setvalue) {
+                var name = configItem.column_name;
+                if(name === "the_geom") {
+                    name = "_geolocation";  // HACK! TODO Sort out names of gometries
+                }
+                value = record[name];
+            }
 
             // Add form group and label
             h[++idx] = '<div class="form-group row"><label class="col-md-4 control-label">';
@@ -156,13 +270,14 @@ define([
                     configItem.readonly || !editable,
                     'record_maps_',
                     globals.gRecordMaps,
-                    configItem, record[configItem.column_name],
+                    configItem,
+                    value,
                     undefined,
                     itemIndex);
             } else if (configItem.readonly || !editable) {		// Read only text
-                h[++idx] = addCellMarkup(record[configItem.column_name]);
+                h[++idx] = addCellMarkup(value);
             } else {
-                h[++idx] = addEditableColumnMarkup(configItem, record[configItem.column_name], itemIndex, first, schema, record);
+                h[++idx] = addEditableColumnMarkup(configItem, value, itemIndex, first, schema, record);
                 first = false;
             }
             h[++idx] = '</div>';
@@ -238,7 +353,7 @@ define([
                     h[++idx] = '<option value=""></option>';
                 }
 
-                var choices = getChoiceList(schema, column, itemIndex, value, record);
+                var choices = getChoiceList(schema, column, itemIndex, value, record, undefined);
                 if (choices) {
                     h[++idx] = getChoicesHTML(column, choices, value, true);
                 }
@@ -286,7 +401,7 @@ define([
         /*
          * Get the choicelist for a select question
          */
-        function getChoiceList(schema, col, itemIndex, value, record) {
+        function getChoiceList(schema, col, itemIndex, value, record, changed_column) {
 
             // Get the choice list
             var listId = col.l_id;
@@ -297,14 +412,18 @@ define([
                 for (i = 0; i < schema.choiceLists.length; i++) {
                     if (schema.choiceLists[i].l_id === listId) {
                         choices = schema.choiceLists[i].choices;
+                        break;
                     }
                 }
             }
-            if(choices.length > 0) {
+            if(choices && choices.length > 0) {
 
                 if (col.appearance && (col.appearance.indexOf('search(') >= 0 || col.appearance.indexOf('lookup_choices(') >= 0)) {
                     // External choices
-                    var params = getAppearanceParams(col.appearance)
+                    var params = getAppearanceParams(col.appearance);
+                    var changeParam1 = false;
+                    var changeParam2 = false;
+                    var dependentColumn;
                     if (params.length > 0) {
                         // todo consider fixed values
                         var sIdent = globals.gGroupSurveys[globals.gCurrentSurvey];
@@ -317,38 +436,52 @@ define([
                                 url += '?search_type=' + params.filter;
                                 url += '&q_column=' + params.filter_column;
                                 if(params.filter_value.indexOf('${') == 0) {
-                                    params.filter_value = record[params.filter_value.substring(2, params.filter_value.length - 1)];
+                                    dependentColumn = params.filter_value.substring(2, params.filter_value.length - 1);
+                                    params.filter_value = record[dependentColumn];
+
+                                    params.filter_value = getUpdate(params.filter_column, params.filter_value);  // Replace the value if there has been an update
+                                    if(changed_column && dependentColumn === changed_column) {        // Set a flag if this refresh in response to a changed value and this param is wha changed
+                                        changeParam1 = true;
+                                    }
                                 }
+
                                 url += '&q_value=' + params.filter_value;
                                 if(typeof params.second_filter_column !== "undefined"
                                         && typeof params.second_filter_value !== "undefined") {
                                     url += '&f_column=' + params.second_filter_column;
                                     if(params.second_filter_value.indexOf('${') == 0) {
-                                        params.second_filter_value = record[params.second_filter_value.substring(2, params.second_filter_value.length - 1)];
+                                        dependentColumn = params.second_filter_value.substring(2, params.second_filter_value.length - 1);
+                                        params.second_filter_value = record[dependentColumn];
+
+                                        params.second_filter_value  = getUpdate(params.second_filter_column, params.second_filter_value);    // Replace the value if there has been an update
+                                        if(changed_column && dependentColumn=== changed_column) {        // Set a flag if this refresh in response to a changed value and this param is wha changed
+                                            changeParam2 = true;
+                                        }
                                     }
                                     url += '&f_value=' + params.second_filter_value;
                                 }
                             }
                         }
 
+                        if(!changed_column || changeParam1 || changeParam2) {
+                            $.ajax({   // Get the existing report details to edit
+                                url: url,
+                                cache: false,
+                                success: function (data, status) {
+                                    var el = '#select_' + itemIndex;
+                                    var html = getChoicesHTML(col, data, value, false);
+                                    $(el).empty().append(html);
 
-                        $.ajax({   // Get the existing report details to edit
-                            url: url,
-                            cache: false,
-                            success: function (data, status) {
-                                var el = '#select_' + itemIndex;
-                                var html = getChoicesHTML(col, data, value, false);
-                                $(el).append(html);
+                                    // Set up multi selects
+                                    if (col.type === 'select') {
+                                        $(el).multiselect('rebuild');
+                                    }
 
-                                // Set up multi selects
-                                if(col.type === 'select') {
-                                   $(el).multiselect('rebuild');
+                                }, error: function (data, status) {
+                                    alert("Error: " + data.responseText);
                                 }
-
-                            }, error: function (data, status) {
-                                alert("Error: " + data.responseText);
-                            }
-                        });
+                            });
+                        }
                     } else {
                         alert("invalid search for: " + col.question_name);
                     }
@@ -357,6 +490,21 @@ define([
                     return choices;
                 }
             }
+        }
+
+        /*
+         * Get an updated value
+         */
+        function getUpdate(col, def) {
+            if(gTasks.gUpdate && gTasks.gUpdate.length > 0) {
+                var i;
+                for(i = 0; i < gTasks.gUpdate.length; i++) {
+                    if(gTasks.gUpdate[i].name === col) {
+                        return gTasks.gUpdate[i].value;
+                    }
+                }
+            }
+            return def;
         }
 
         /*
@@ -486,7 +634,6 @@ define([
                         displayName: displayName,
                         value: value,
                         currentValue: currentValue,
-                        prikey: gTasks.gPriKey,
                         itemIndex: itemIndex
                     });
                 }
@@ -502,9 +649,60 @@ define([
             }
 
             if (gTasks.gUpdate.length > 0) {
-                $('#saveRecord').prop("disabled", false);
+                $('.saverecord').prop("disabled", false);
             } else {
-                $('#saveRecord').prop("disabled", true);
+                $('.saverecord').prop("disabled", true);
+            }
+
+            $('.re_alert').hide();
+        }
+
+        /*
+         * User has changed a bulk managed value
+         */
+        function bulkDataChanged(config) {
+
+            var
+                itemIndex = config.itemIndex,
+                value = config.value,
+                clear = config.clear,
+                columns = gTasks.cache.currentData.schema.columns,
+                column_name = columns[itemIndex].column_name,
+                displayName = columns[itemIndex].displayName,
+                i,
+                foundExistingUpdate;
+
+            if(typeof value === "object") {
+                value = JSON.stringify(value);
+            }
+
+            // Add new value to array, or update existing
+            foundExistingUpdate = false;
+            for (i = 0; i < gTasks.gUpdate.length; i++) {
+                if (gTasks.gUpdate[i].name === column_name) {
+                    foundExistingUpdate = true;
+                    gTasks.gUpdate[i].value = value;
+                    gTasks.gUpdate[i].clear = clear;
+                    break;
+                }
+            }
+
+            if (!foundExistingUpdate) {
+                // Add new value
+                gTasks.gUpdate.push({
+                    name: column_name,
+                    displayName: displayName,
+                    value: value,
+                    clear: clear,
+                    itemIndex: itemIndex
+                });
+            }
+
+
+            if (gTasks.gUpdate.length > 0) {
+                $('.saverecord').prop("disabled", false);
+            } else {
+                $('.saveRecord').prop("disabled", true);
             }
 
             $('.re_alert').hide();

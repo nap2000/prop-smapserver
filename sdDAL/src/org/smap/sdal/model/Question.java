@@ -28,7 +28,7 @@ public class Question {
 	public String hint_id;
 	//public String path;
 	public int l_id;				// Id for listname identifying list of options
-	public String list_name;		// A reference to the list of options (deprecated)
+	public String list_name;		// A reference to the list of options 
 	public int seq;
 	public int sourceSeq;
 	public int sourceFormId;		// The id as stored in the database for the form
@@ -73,11 +73,8 @@ public class Question {
 	public boolean isTableList = false;	// Temporary flag used during HTML generation
 	
 	public String style_list;			// The name of the style applied to this question
-	public int style_id;					// The id of the style as used in the database
+	public int style_id;				// The id of the style as used in the database
 	
-	private static Logger log =
-			 Logger.getLogger(Question.class.getName());
-
 	/*
 	 * Get the selectable choices for this question
 	 *  If the choices came from an external file then one of the choices will be a dummy choice describing the file
