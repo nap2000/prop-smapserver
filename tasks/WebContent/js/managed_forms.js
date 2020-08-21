@@ -2107,6 +2107,9 @@ require([
             // Add data
             for (i = 0; i < columns.length; i++) {
                 configItem = columns[i];
+                if(configItem.displayName === '_geolocation') {
+                    continue;
+                }
                 h[++idx] = '<tr>';
                 h[++idx] = addCell(translateKey(configItem.displayName));
                 for(j = 0; j < properties.length; j++) {
@@ -2140,7 +2143,7 @@ require([
 
         // Add form group and label
         h[++idx] = '<td>';
-        h[++idx] = item;
+        h[++idx] = addAnchors(item, true);
         h[++idx] = '</td>';
 
 
