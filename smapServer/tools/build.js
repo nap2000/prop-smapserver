@@ -34,9 +34,6 @@
             name: '../edit',
         },
         {
-            name: '../myWork',
-        },
-        {
             name: '../webFormLauncher',
 	    exclude: ['jquery', 'bootstrap']
         },
