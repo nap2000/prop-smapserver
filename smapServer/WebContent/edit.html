@@ -91,6 +91,7 @@
 						<li><a id="m_validate" class="lang m_validate" data-lang="c_validate" href='javascript:void(0)'>validate</a></li>
 						<li><a id="m_changes" href="/changes.html" class="lang" data-lang="c_changes">changes</a></li>
 						<li><a id="m_meta" href="/meta.html" class="lang" data-lang="c_meta">meta</a></li>
+						<li><a id="m_slu" href="#" class="lang" data-lang="ed_slu">slu</a></li>
 					</ul>
 				</li>
 				<li class="dropdown">
@@ -1688,6 +1689,26 @@
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
 				<button id="pulldataSave" type="button" class="btn btn-primary lang" data-lang="c_save">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Model to show details on selected ident -->
+<div id="slu" class="modal fade" role="dialog" aria-labelledby="pulldataLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			</div>
+
+			<div class="modal-body">
+				<div id="slu_content" class="container-fluid">
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
 			</div>
 		</div>
 	</div>
