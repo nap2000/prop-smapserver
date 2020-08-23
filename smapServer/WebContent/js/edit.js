@@ -283,7 +283,40 @@ $(document).ready(function() {
 			setAllRequired(false);
 		}
 	});
-	
+
+	$('#m_slu').off().click(function() {
+		var selection = window.getSelection().toString();
+		var ident;
+		if(selection.indexOf('linked_s') == 0) {
+			ident = selection.substring('linked_'.length);
+		} else if(selection.indexOf('linked_pd_s') == 0) {
+			ident = selection.substring('linked_pd_'.length);
+		} else {
+			ident = selection;
+		}
+
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/surveys/summary/" + ident,
+			cache: false,
+			dataType: 'json',
+			success: function(data) {
+				removeHourglass();
+				showSurveySummary(data);
+
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					bootbox.alert(localise.set["msg_err_get_s"] + ":" + xhr.responseText + " : " + ident);
+				}
+			}
+		});
+
+	});
+
 	$('#addLanguage').off().click(function() {
 		gTempLanguages.push({
 			id: -1,
@@ -3340,6 +3373,35 @@ function setCascadeFilter() {
 			globals.gItemIndex, undefined, "text", filter, undefined, "choice_filter");
 }
 
+function showSurveySummary(summary) {
+
+	var h = [],
+		idx = -1;
+
+	h[++idx] = '<p><b>';
+	h[++idx] = localise.set["c_ident"];
+	h[++idx] = "</b>: ";
+	h[++idx] = summary.ident;
+	h[++idx] = '</p>';
+
+
+	h[++idx] = '<p><b>';
+	h[++idx] = localise.set["c_survey"];
+	h[++idx] = "</b>: ";
+	h[++idx] = summary.displayName;
+	h[++idx] = '</p>';
+
+	h[++idx] = '<p><b>';
+	h[++idx] = localise.set["c_project"];
+	h[++idx] = "</b>: ";
+	h[++idx] = summary.projectName;
+	h[++idx] = '</p>';
+
+
+	$('#slu_content').html(h.join(''));
+	$('#slu').modal("show");
+
+}
 /*
  * clear the choice filter
  */

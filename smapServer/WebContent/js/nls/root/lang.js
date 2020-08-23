@@ -950,6 +950,7 @@ define({
     "ed_c_languages": "Languages changed",
     "ed_mmf": "Manage Media Files For this Form",
     "ed_sl": "Survey to launch",
+    "ed_slu": "Survey lookup",
     "ed_qk": "Question to store the returned key",
 	"ed_qkc": "Question in the launched form to get this forms key",
     "ed_pl": "Page Layout",
