@@ -310,7 +310,7 @@ $(document).ready(function() {
 				if(xhr.readyState == 0 || xhr.status == 0) {
 					return;  // Not an error
 				} else {
-					bootbox.alert(localise.set["msg_err_get_s"] + ":" + xhr.responseText + " : " + ident);
+					bootbox.alert(ident + " " + localise.set["msg_not_f"]);
 				}
 			}
 		});
