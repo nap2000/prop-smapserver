@@ -3492,7 +3492,7 @@ function setNoFilter() {
             function getParam($elem, params, key, type) {
 				var val;
 				if(type === "boolean") {
-					val = $elem.prop('checked') ? 'yes' : '';
+					val = $elem.prop('checked') ? 'true' : '';
 				} else {
 					if(key === 'med_type') {
 						if ($('#p_medical').prop("checked")) {
