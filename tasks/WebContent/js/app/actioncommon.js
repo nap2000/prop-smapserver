@@ -535,7 +535,7 @@ define([
                 id: idbase + maps.length,
                 currentValue: currentValue,
                 oldValue: oldValue
-            }
+            };
 
             h[++idx] = '<div id="';
             h[++idx] = config.id;
@@ -605,7 +605,13 @@ define([
                 i,
                 foundExistingUpdate;
 
-            currentValue = record[columns[itemIndex].column_name];
+            if(column_name === "the_geom") {
+                column_name = "_geolocation";       // Hack!!
+            }
+            currentValue = record[column_name];
+            if(column_name === "_geolocation") {
+                column_name = "the_geom";       // Hack!!
+            }
             if (typeof currentValue === "undefined") {
                 currentValue = "";
             }
