@@ -2206,8 +2206,6 @@ require([
             }
 
             // Set up the drill down
-            $('.dd_only,.du_only').hide();
-
             if(gDrillDownStack.length > 0) {
                 $('.du_only').show();
             }
