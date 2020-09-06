@@ -1840,7 +1840,7 @@ require([
 
                     if(data[i].surveyId) {
 	                    h[++idx] = ' data-survey="';
-	                    h[++idx] = data[i].type;
+	                    h[++idx] = data[i].surveyId;
 	                    h[++idx] = '"';
                     }
 
@@ -3141,6 +3141,10 @@ require([
 
     function tableOnDraw() {
         var i;
+
+        if(!globals.gMainTable) {
+            return;     // Table not ready
+        }
 
         gDeleteColumn = -1;
         gDeleteReasonColumn = -1;
