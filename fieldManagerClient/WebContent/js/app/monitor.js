@@ -597,6 +597,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                     h[++i] = '<th>Dest</th>';
                 }
                 h[++i] = '<th>' + localise.set["c_location"] + '</th>';
+                h[++i] = '<th>' + localise.set["c_complete"] + '</th>';
                 h[++i] = '<th>' + localise.set["c_status"] + '</th>';
                 h[++i] = '<th>' + localise.set["mon_fr"] + '</th>';
             }
@@ -650,6 +651,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                         locn = "none";
                     }
                     h[++i] = '<td>' + locn + '</td>';
+                    h[++i] = '<td>' + localise.set[features[j].properties.complete] + '</td>';
                     status = features[j].properties.status;
                     h[++i] = '<td class="' + status + '">' + status + '</td>';
                     reason = features[j].properties.reason;
