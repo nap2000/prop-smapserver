@@ -433,6 +433,22 @@ define([
                         if(typeof params.filter !== "undefined") {
                             if(params.filter === 'eval') {
                                 if (typeof params.expression !== "undefined") {
+                                    // Replace ${question_name} elements with values
+                                    const regex = /\$\{.+?\}/g;
+                                    const found = params.expression.match(regex);
+                                    if(found && found.length > 0) {
+                                        for(i = 0; i < found.length; i++) {
+                                            var token = found[i];
+                                            var tokenq = token.substring(2, token.length - 1);
+                                            var value = record[tokenq];
+                                            var type = getQuestionType(schema, tokenq);
+                                            if(type !== 'int') {
+                                                value = '\'' + value + '\'';
+                                            }
+                                            params.expression = params.expression.replace(token, value);
+                                        }
+                                    }
+
                                     var encodedExpression = encodeURIComponent(params.expression);
                                     // manually encode some characters that are missed by encodeUriComponent and ned to be encoded
                                     encodedExpression = encodedExpression.replace(/\(/g, "%28");
