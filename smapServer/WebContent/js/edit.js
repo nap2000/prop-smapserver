@@ -558,6 +558,15 @@ $(document).ready(function() {
 		'#a_search_value, #a_search_label').change(function() {
 		showSearchElements();
 	});
+	$('.online_appearance_field').hide();
+	$('#a_access').change(function() {
+		var search_access = $('input[type=radio][name=search_access]:checked').val();
+		if(search_access === 'online') {
+			$('.online_appearance_field').show();
+		} else {
+			$('.online_appearance_field').hide();
+		}
+	});
 	$('#a_pdfno').change(function() {
 		if($(this).prop('checked')) {
 			$('.pdf_appearance_field').hide();
