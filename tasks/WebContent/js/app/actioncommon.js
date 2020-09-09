@@ -423,6 +423,7 @@ define([
                     var params = getAppearanceParams(col.appearance);
                     var changeParam1 = false;
                     var changeParam2 = false;
+                    var changeExpr = false;
                     var dependentColumn;
                     if (params.length > 0) {
                         // todo consider fixed values
@@ -439,13 +440,19 @@ define([
                                     if(found && found.length > 0) {
                                         for(i = 0; i < found.length; i++) {
                                             var token = found[i];
-                                            var tokenq = token.substring(2, token.length - 1);
-                                            var value = record[tokenq];
-                                            var type = getQuestionType(schema, tokenq);
+                                            dependentColumn = token.substring(2, token.length - 1);
+                                            var value = record[dependentColumn];
+                                            value = getUpdate(dependentColumn, value);  // Replace the value if there has been an update
+                                            var type = getQuestionType(schema, dependentColumn);
                                             if(type !== 'int') {
                                                 value = '\'' + value + '\'';
                                             }
                                             params.expression = params.expression.replace(token, value);
+
+
+                                            if (changed_column && dependentColumn === changed_column) {        // Set a flag if this refresh in response to a changed value and this param is wha changed
+                                                changeExpr = true;
+                                            }
                                         }
                                     }
 
@@ -454,6 +461,7 @@ define([
                                     encodedExpression = encodedExpression.replace(/\(/g, "%28");
                                     encodedExpression = encodedExpression.replace(/\)/g, "%29");
                                     url += '?expression=' + encodedExpression;
+
                                 }
                             } else {
                                 if (typeof params.filter_column !== "undefined" && typeof params.filter_value !== "undefined") {
@@ -489,7 +497,7 @@ define([
                             }
                         }
 
-                        if(!changed_column || changeParam1 || changeParam2) {
+                        if(!changed_column || changeParam1 || changeParam2 || changeExpr) {
                             $.ajax({   // Get the existing report details to edit
                                 url: url,
                                 cache: false,
