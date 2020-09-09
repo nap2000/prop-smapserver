@@ -431,34 +431,44 @@ define([
                         var label_column = choices[0].v;
                         var url = '/lookup/choices/' + sIdent + '/' + params.filename + '/' + value_column + '/' + label_column;
                         if(typeof params.filter !== "undefined") {
-                            if(typeof params.filter_column !== "undefined" && typeof params.filter_value !== "undefined") {
-                                // Add first filter
-                                url += '?search_type=' + params.filter;
-                                url += '&q_column=' + params.filter_column;
-                                if(params.filter_value.indexOf('${') == 0) {
-                                    dependentColumn = params.filter_value.substring(2, params.filter_value.length - 1);
-                                    params.filter_value = record[dependentColumn];
-
-                                    params.filter_value = getUpdate(params.filter_column, params.filter_value);  // Replace the value if there has been an update
-                                    if(changed_column && dependentColumn === changed_column) {        // Set a flag if this refresh in response to a changed value and this param is wha changed
-                                        changeParam1 = true;
-                                    }
+                            if(params.filter === 'eval') {
+                                if (typeof params.expression !== "undefined") {
+                                    var encodedExpression = encodeURIComponent(params.expression);
+                                    // manually encode some characters that are missed by encodeUriComponent and ned to be encoded
+                                    encodedExpression = encodedExpression.replace(/\(/g, "%28");
+                                    encodedExpression = encodedExpression.replace(/\)/g, "%29");
+                                    url += '?expression=' + encodedExpression;
                                 }
+                            } else {
+                                if (typeof params.filter_column !== "undefined" && typeof params.filter_value !== "undefined") {
+                                    // Add first filter
+                                    url += '?search_type=' + params.filter;
+                                    url += '&q_column=' + params.filter_column;
+                                    if (params.filter_value.indexOf('${') == 0) {
+                                        dependentColumn = params.filter_value.substring(2, params.filter_value.length - 1);
+                                        params.filter_value = record[dependentColumn];
 
-                                url += '&q_value=' + params.filter_value;
-                                if(typeof params.second_filter_column !== "undefined"
-                                        && typeof params.second_filter_value !== "undefined") {
-                                    url += '&f_column=' + params.second_filter_column;
-                                    if(params.second_filter_value.indexOf('${') == 0) {
-                                        dependentColumn = params.second_filter_value.substring(2, params.second_filter_value.length - 1);
-                                        params.second_filter_value = record[dependentColumn];
-
-                                        params.second_filter_value  = getUpdate(params.second_filter_column, params.second_filter_value);    // Replace the value if there has been an update
-                                        if(changed_column && dependentColumn=== changed_column) {        // Set a flag if this refresh in response to a changed value and this param is wha changed
-                                            changeParam2 = true;
+                                        params.filter_value = getUpdate(params.filter_column, params.filter_value);  // Replace the value if there has been an update
+                                        if (changed_column && dependentColumn === changed_column) {        // Set a flag if this refresh in response to a changed value and this param is wha changed
+                                            changeParam1 = true;
                                         }
                                     }
-                                    url += '&f_value=' + params.second_filter_value;
+
+                                    url += '&q_value=' + params.filter_value;
+                                    if (typeof params.second_filter_column !== "undefined"
+                                        && typeof params.second_filter_value !== "undefined") {
+                                        url += '&f_column=' + params.second_filter_column;
+                                        if (params.second_filter_value.indexOf('${') == 0) {
+                                            dependentColumn = params.second_filter_value.substring(2, params.second_filter_value.length - 1);
+                                            params.second_filter_value = record[dependentColumn];
+
+                                            params.second_filter_value = getUpdate(params.second_filter_column, params.second_filter_value);    // Replace the value if there has been an update
+                                            if (changed_column && dependentColumn === changed_column) {        // Set a flag if this refresh in response to a changed value and this param is wha changed
+                                                changeParam2 = true;
+                                            }
+                                        }
+                                        url += '&f_value=' + params.second_filter_value;
+                                    }
                                 }
                             }
                         }
