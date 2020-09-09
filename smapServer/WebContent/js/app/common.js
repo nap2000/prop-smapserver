@@ -5082,8 +5082,14 @@ function getAppearanceParams(appearance) {
 		if(response.filter === 'eval') {
 			if (paramsArray.length > 2) {
 				// Third parameter for an evaluation type function is the expression
-				// For an expression type filter we do not remove any single quotes
+				// For an expression type filter only remove the first and last single quote if they exist
 				response.expression = paramsArray[2].trim();
+				if(response.expression.charAt(0) == '\'') {
+					response.expression = response.expression.substring(1);
+				}
+				if(response.expression.charAt(response.expression.length - 1) == '\'') {
+					response.expression = response.expression.substring(0, response.expression.length - 1);
+				}
 			}
 		} else {
 
@@ -5115,4 +5121,13 @@ function getAppearanceParams(appearance) {
 
 	}
 	return response;
+}
+
+function getQuestionType(schema, qname) {
+	var i;
+	for(i = 0; i < schema.columns.length; i++) {
+		if(schema.columns[i].question_name == qname) {
+			return schema.columns[i].type;
+		}
+	}
 }
