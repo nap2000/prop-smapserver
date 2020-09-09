@@ -5058,7 +5058,7 @@ function getAppearanceParams(appearance) {
 	var response = {};
 
 	var idx1 = appearance.indexOf('(');
-	var idx2 = appearance.indexOf(')');
+	var idx2 = appearance.lastIndexOf(')');
 	var params = appearance.substring(idx1 + 1, idx2);
 	var paramsArray = [];
 	if(params) {
@@ -5079,29 +5079,38 @@ function getAppearanceParams(appearance) {
 			response.filter = response.filter.replace(/'/g, "");
 		}
 
-		if(paramsArray.length > 2) {
-			// Third parameter is the filter column
-			response.filter_column = paramsArray[2].trim();
-			response.filter_column = response.filter_column.replace(/'/g, "");
-		}
+		if(response.filter === 'eval') {
+			if (paramsArray.length > 2) {
+				// Third parameter for an evaluation type function is the expression
+				// For an expression type filter we do not remove any single quotes
+				response.expression = paramsArray[2].trim();
+			}
+		} else {
 
-		if(paramsArray.length > 3) {
-			// Fourth parameter is the filter value
-			response.filter_value = paramsArray[3].trim();
-			response.filter_value = response.filter_value.replace(/'/g, "");
-		}
+			if (paramsArray.length > 2) {
+				// Third parameter is the filter column
+				response.filter_column = paramsArray[2].trim();
+				response.filter_column = response.filter_column.replace(/'/g, "");
+			}
 
-		if(paramsArray.length > 4) {
-			// Fifth parameter is the second filter column
-			response.second_filter_column = paramsArray[4].trim();
-			response.second_filter_column = response.second_filter_column.replace(/'/g, "");
-		}
+			if (paramsArray.length > 3) {
+				// Fourth parameter is the filter value
+				response.filter_value = paramsArray[3].trim();
+				response.filter_value = response.filter_value.replace(/'/g, "");
+			}
+
+			if (paramsArray.length > 4) {
+				// Fifth parameter is the second filter column
+				response.second_filter_column = paramsArray[4].trim();
+				response.second_filter_column = response.second_filter_column.replace(/'/g, "");
+			}
 
 
-		if(paramsArray.length > 5) {
-			// Sixth parameter is the filter value
-			response.second_filter_value = paramsArray[5].trim();
-			response.second_filter_value = response.second_filter_value.replace(/'/g, "");
+			if (paramsArray.length > 5) {
+				// Sixth parameter is the filter value
+				response.second_filter_value = paramsArray[5].trim();
+				response.second_filter_value = response.second_filter_value.replace(/'/g, "");
+			}
 		}
 
 	}
