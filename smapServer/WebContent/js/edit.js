@@ -555,27 +555,10 @@ $(document).ready(function() {
 	// Hide and show search elements
 	$('#a_filter_column, #a_second_filter_column, #a_csv_identifier, ' +
 		'#a_survey_identifier, input[type=radio][name=search_source],' +
-		'#a_search_value, #a_search_label').change(function() {
+		'#a_search_value, #a_search_label, #a_access, #a_fe').change(function() {
 		showSearchElements();
 	});
-	$('.online_appearance_field').hide();
-	$('#a_access').change(function() {
-		var search_access = $('input[type=radio][name=search_access]:checked').val();
-		if(search_access === 'online') {
-			$('.online_appearance_field').show();
-		} else {
-			$('.online_appearance_field').hide();
-		}
-	});
-	$('#a_fe').change(function() {
-		if($(this).prop('checked')) {
-			$('.filter_expression').show();
-			$('.classic_filter').hide();
-		} else {
-			$('.filter_expression').hide();
-			$('.classic_filter').show();
-		}
-	});
+
 	$('#a_pdfno').change(function() {
 		if($(this).prop('checked')) {
 			$('.pdf_appearance_field').hide();
@@ -2079,7 +2062,6 @@ function respondToEvents($context) {
 						}
 					}
 				}
-
 			}
 
 			/*
@@ -3622,51 +3604,62 @@ function setNoFilter() {
 							}
 
 
-							// first filter
-							var filterColumn = $('#a_filter_column').val().trim();
-							var filter = $('#a_match').val();
-							var filterValue;
-							var secondFilterColumn;
-							var secondFilterValue;
-							if(filterColumn !== '') {
-								if(filter === '') {
-									msg = localise.set["msg_filter_col"];
-									msg = msg.replace('%s1', filterColumn);
+							if($('#a_fe').prop('checked')) {
+								var expression = $('#a_fe_val').val();
+								if (expression === '') {
+									msg = localise.set["msg_filter_expr"];
 									$('#appearance_msg').removeClass('alert-warning').addClass('alert-danger').show().html(msg);
 									return false;
 								} else {
-									val += ", '" + filter + "'";
+									val += ", 'eval', '" + expression + "'";
 								}
+							} else {
+								// first filter
+								var filterColumn = $('#a_filter_column').val().trim();
+								var filter = $('#a_match').val();
+								var filterValue;
+								var secondFilterColumn;
+								var secondFilterValue;
+								if (filterColumn !== '') {
+									if (filter === '') {
+										msg = localise.set["msg_filter_col"];
+										msg = msg.replace('%s1', filterColumn);
+										$('#appearance_msg').removeClass('alert-warning').addClass('alert-danger').show().html(msg);
+										return false;
+									} else {
+										val += ", '" + filter + "'";
+									}
 
-								// first filter column
-								val += ", '" + filterColumn + "'";
+									// first filter column
+									val += ", '" + filterColumn + "'";
 
-								// first filter Value
-								filterValue = $('#a_filter_value_static').val().trim();
-								if(filterValue.indexOf('${') === 0) {
-									// question value
-									// TODO check that question is in survey
-								} else {
-									// static value
-									filterValue = "'" + filterValue + "'";      // add quotes
-								}
-								val += ", " + filterValue;
-
-								// second filter
-								secondFilterColumn = $('#a_second_filter_column').val();
-								if(secondFilterColumn !== '') {
-									val += ", '" + secondFilterColumn + "'";
-
-									// second filter Value
-									secondFilterValue = $('#a_second_filter_value_static').val().trim();
-									if(secondFilterValue.indexOf('${') === 0) {
+									// first filter Value
+									filterValue = $('#a_filter_value_static').val().trim();
+									if (filterValue.indexOf('${') === 0) {
 										// question value
 										// TODO check that question is in survey
 									} else {
 										// static value
-										secondFilterValue = "'" + secondFilterValue + "'";      // add quotes
+										filterValue = "'" + filterValue + "'";      // add quotes
 									}
-									val += ", " + secondFilterValue;
+									val += ", " + filterValue;
+
+									// second filter
+									secondFilterColumn = $('#a_second_filter_column').val();
+									if (secondFilterColumn !== '') {
+										val += ", '" + secondFilterColumn + "'";
+
+										// second filter Value
+										secondFilterValue = $('#a_second_filter_value_static').val().trim();
+										if (secondFilterValue.indexOf('${') === 0) {
+											// question value
+											// TODO check that question is in survey
+										} else {
+											// static value
+											secondFilterValue = "'" + secondFilterValue + "'";      // add quotes
+										}
+										val += ", " + secondFilterValue;
+									}
 								}
 							}
 
@@ -3900,15 +3893,23 @@ function setNoFilter() {
 
 			function showSearchElements() {
 
+				var expression = $('#a_fe_val').val();
 				var aFilterColumn = $('#a_filter_column').val();
 				var aSecondFilterColumn = $('#a_second_filter_column').val();
 				var searchSource = $('input[type=radio][name=search_source]:checked').val();
 				var searchChoiceValue = $('#a_search_value').val();
+				var search_access = $('input[type=radio][name=search_access]:checked').val();
 				var fileIdentifier;
 				var hasSearch;
 
 				if(searchSource && searchSource !== '' && searchSource !== 'worksheet') {
 					hasSearch =true;
+				}
+
+				if(search_access === 'online') {
+					$('.online_appearance_field').show();
+				} else {
+					$('.online_appearance_field').hide();
 				}
 
 				$('#appearance_msg').hide();
@@ -3931,22 +3932,30 @@ function setNoFilter() {
 						$('.a_choice_values').show();
 					}
 
-					if(!searchChoiceValue || searchChoiceValue === '') {
-						$('.a_filter_column').hide();
+					if($('#a_fe').prop('checked')) {
+						$('.filter_expression').show();
+						$('.classic_filter').hide();
 					} else {
-						$('.a_filter_column').show();
-					}
+						$('.filter_expression').hide();
+						$('.classic_filter').show();
 
-					if(!aFilterColumn || aFilterColumn === "") {
-						$(".has_filter, .a_second_filter_column, .has_second_filter").hide();
-					} else {
-						$(".has_filter, .a_second_filter_column").show();
-					}
+						if (!searchChoiceValue || searchChoiceValue === '') {
+							$('.a_filter_column').hide();
+						} else {
+							$('.a_filter_column').show();
+						}
 
-					if(!aSecondFilterColumn || aSecondFilterColumn === "") {
-						$('.has_second_filter').hide();
-					} else {
-						$('.has_second_filter').show();
+						if (!aFilterColumn || aFilterColumn === "") {
+							$(".has_filter, .a_second_filter_column, .has_second_filter").hide();
+						} else {
+							$(".has_filter, .a_second_filter_column").show();
+						}
+
+						if (!aSecondFilterColumn || aSecondFilterColumn === "") {
+							$('.has_second_filter').hide();
+						} else {
+							$('.has_second_filter').show();
+						}
 					}
 
 				} else {
@@ -4093,25 +4102,31 @@ function setNoFilter() {
 						}
 					}
 
-					if(gAppearanceParams.length > 1) {
-						$('#a_match').val(gAppearanceParams.filter);
-					}
+					if(gAppearanceParams.expression) {
+						$('#a_fe').prop('checked', true);
+						$('#a_fe_val').val(gAppearanceParams.expression);
+					} else {
+						$('#a_fe').prop('checked', false);
+						if (gAppearanceParams.length > 1) {
+							$('#a_match').val(gAppearanceParams.filter);
+						}
 
-					if(gAppearanceParams.length > 2) {
-						$('#a_filter_column').val(gAppearanceParams.filter_column);
-					}
+						if (gAppearanceParams.length > 2) {
+							$('#a_filter_column').val(gAppearanceParams.filter_column);
+						}
 
-					if(gAppearanceParams.length > 3) {
-						$('#a_filter_value_static').val(gAppearanceParams.filter_value);
-					}
+						if (gAppearanceParams.length > 3) {
+							$('#a_filter_value_static').val(gAppearanceParams.filter_value);
+						}
 
-					if(gAppearanceParams.length > 4) {
-						$('#a_second_filter_column').val(gAppearanceParams.second_filter_column);
-					}
+						if (gAppearanceParams.length > 4) {
+							$('#a_second_filter_column').val(gAppearanceParams.second_filter_column);
+						}
 
 
-					if(gAppearanceParams.length > 5) {
-						$('#a_second_filter_value_static').val(gAppearanceParams.second_filter_value);
+						if (gAppearanceParams.length > 5) {
+							$('#a_second_filter_value_static').val(gAppearanceParams.second_filter_value);
+						}
 					}
 
 					showSearchElements();

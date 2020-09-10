@@ -3863,15 +3863,18 @@ function tokenizeAppearance(input) {
 	var j;
 	var chunk;
 
-	// only search needs special treatment
+	// only search/lookup_choices needs special treatment
 	var idx1 = input.indexOf('search');
+	if(idx1 < 0) {
+		idx1 = input.indexOf('lookup_choices');
+	}
 	if(idx1 >= 0) {
 		chunks.push({
 			val:input.substring(0, idx1),
 			type: "text"
 		});
 		if(idx1 < input.length) {
-			var idx2 = input.indexOf(')', idx1 + 1);
+			var idx2 = input.lastIndexOf(')');
 			if(idx2 >= 0) {
 				chunks.push({
 					val: input.substring(idx1, idx2 + 1),
