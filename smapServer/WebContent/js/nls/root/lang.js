@@ -972,6 +972,7 @@ define({
     "ed_transd": "Translations done from language %s1 to language %s2",
     "ed_ow": "Overwrite existing translations",
     "ed_fe": "Filter Expression",
+    "ed_e": "Expression",
 
     // Managed Forms
     "mf_id": "Include Deleted",
