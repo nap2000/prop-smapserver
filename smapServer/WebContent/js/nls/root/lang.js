@@ -592,6 +592,7 @@ define({
     "msg_no_proj": "The user has no projects",
     "msg_pformat": "Parameters specified in the other field must be separated by semi colons and contain an equals sign. For example:  a=x;b=y",
     "msg_filter_col": "You have specified a filter Column of '%s1', hence you need to specify a filter to apply",
+    "msg_filter_expr": "You must specify an expression for an 'eval' type of search",
     "msg_numb_ts": "Thousands separator will have no affect unless numbers is also selected",
 	"msg_warn_likert_n": "Likert only works with the normal select type",
     "msg_choice_value": "The choice value must be specified",
