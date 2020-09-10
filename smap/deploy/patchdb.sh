@@ -50,7 +50,7 @@ sudo -u postgres psql -f ./sd_pre_1908.sql -q -d survey_definitions 2>&1 | grep 
 fi
 
 echo "applying new patches to survey_definitions"
-sudo -u postgres psql -f ./sd.sql -q -d survey_definitions 2>&1 | grep -v "already exists" | grep -v "duplicate key" | grep -vi "addgeometrycolumn" | grep -v "implicit index" | grep -v "skipping" | grep -v "is duplicated" | grep -v "create unique index" | grep -v CONTEXT
+sudo -u postgres psql -f ./sd.sql -q -d survey_definitions 2>&1 | grep -v "already exists" | grep -v "duplicate key" | grep -vi "addgeometrycolumn" | grep -v "implicit index" | grep -v "skipping" | grep -v "is duplicated" | grep -v "create unique index" | grep -v CONTEXT | grep -v "does not exist"
 
 echo "applying patches to results"
 sudo -u postgres psql -f ./results.sql -q -d results 2>&1 | grep -v "already exists"
