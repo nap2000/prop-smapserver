@@ -567,6 +567,15 @@ $(document).ready(function() {
 			$('.online_appearance_field').hide();
 		}
 	});
+	$('#a_fe').change(function() {
+		if($(this).prop('checked')) {
+			$('.filter_expression').show();
+			$('.classic_filter').hide();
+		} else {
+			$('.filter_expression').hide();
+			$('.classic_filter').show();
+		}
+	});
 	$('#a_pdfno').change(function() {
 		if($(this).prop('checked')) {
 			$('.pdf_appearance_field').hide();
@@ -3738,7 +3747,6 @@ function setNoFilter() {
 
 							gAppearanceParams = params;
 
-
 						}
 
 						gAppearanceQuestion = question;
@@ -3749,8 +3757,10 @@ function setNoFilter() {
 						 */
 						if(val === "search(") {
 							$('input[type=radio][name=search_access][value=offline]').prop('checked', true);
+							$('.online_appearance_field').hide();
 						} else {
 							$('input[type=radio][name=search_access][value=online]').prop('checked', true);
+							$('.online_appearance_field').show();
 						}
 
 						showSearchElements();
