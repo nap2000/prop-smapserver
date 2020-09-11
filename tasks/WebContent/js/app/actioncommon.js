@@ -38,7 +38,7 @@ define([
         /*
 	     * Refresh any select lists that are dependent on entered values
          */
-        function refreshSelectLists(schema, record, changedItemIndex) {
+        function refreshSelectLists(schema, record, changedItemIndex, prefix) {
 
             var  columns = schema.columns;
             var changedItem = columns[changedItemIndex];
@@ -47,7 +47,7 @@ define([
                 if (column.mgmt) {
                     if (column.type === "select1" || column.type === "select" || column.type === "select_one") {
                         var value = record[column.column_name];
-                        getChoiceList(schema, column, i, value, record, changedItem.column_name);
+                        getChoiceList(schema, column, i, value, record, changedItem.column_name, prefix);
                     }
                 }
 
@@ -66,7 +66,8 @@ define([
                 i,
                 configItem,
                 first = true,
-                columns = schema.columns;
+                columns = schema.columns,
+                prefix = 'er';
 
             globals.gRecordMaps = [];     // Initialise the list of maps we are going to show
             gTasks.gPriKey = record["prikey"];
@@ -80,11 +81,11 @@ define([
 
                 if (configItem.mgmt) {
 
-                    h[++idx] = getEditMarkup(configItem, i, first, record, schema, editable, true);
+                    h[++idx] = getEditMarkup(configItem, i, first, record, schema, editable, true, prefix);
 
                 } //else {
                 // Always add the read only original
-                m[++cnt] = getEditMarkup(configItem, i, first, record, schema, false, true);
+                m[++cnt] = getEditMarkup(configItem, i, first, record, schema, false, true, prefix);
                 //}
                 if (!configItem.readonly) {
                     first = false;
@@ -137,7 +138,7 @@ define([
                         value: $this.val()
                     };
                     dataChanged(config);
-                    refreshSelectLists(schema, record, $this.data("item"));
+                    refreshSelectLists(schema, record, $this.data("item"), prefix);
                 }
             });
             $editForm.find('.date').on("dp.change", function () {
@@ -169,7 +170,8 @@ define([
                 i,
                 configItem,
                 first = true,
-                columns = schema.columns;
+                columns = schema.columns,
+                prefix = 'be';
 
             for (i = 0; i < columns.length; i++) {
                 configItem = columns[i];
@@ -182,7 +184,7 @@ define([
                     if(configItem.type === 'select') {
                         cloneItem.type = 'select1';     // With select multiples the bulk change is to set or clear one value
                     }
-                    h[++idx] = getEditMarkup(cloneItem, i, first, record, schema, true, false);
+                    h[++idx] = getEditMarkup(cloneItem, i, first, record, schema, true, false, prefix);
                     h[++idx] = '</div>';    // Question column
                     h[++idx] = '<div class="col-sm-4">';    // clear
                     if(configItem.type === 'select') {
@@ -220,6 +222,7 @@ define([
                     clear: $this.closest(".bulkquestion").find(".selectClear").is(':checked')
                 };
                 bulkDataChanged(config);
+                refreshSelectLists(schema, record, $this.data("item"), prefix);
             });
 
             // Respond to changes in a clear checkbox
@@ -233,7 +236,7 @@ define([
                 };
 
                 bulkDataChanged(config);
-
+                refreshSelectLists(schema, record, $this.data("item"), prefix);
             });
 
             // Set focus to first editable data item
@@ -243,7 +246,7 @@ define([
         /*
          * Get the markup to edit the record
          */
-        function getEditMarkup(configItem, itemIndex, first, record, schema, editable, setvalue) {
+        function getEditMarkup(configItem, itemIndex, first, record, schema, editable, setvalue, prefix) {
 
             var h = [],
                 idx = -1,
@@ -277,7 +280,7 @@ define([
             } else if (configItem.readonly || !editable) {		// Read only text
                 h[++idx] = addCellMarkup(value);
             } else {
-                h[++idx] = addEditableColumnMarkup(configItem, value, itemIndex, first, schema, record);
+                h[++idx] = addEditableColumnMarkup(configItem, value, itemIndex, first, schema, record, prefix);
                 first = false;
             }
             h[++idx] = '</div>';
@@ -291,7 +294,7 @@ define([
         /*
          * Add the markup for an editable column
          */
-        function addEditableColumnMarkup(column, value, itemIndex, first, schema, record) {
+        function addEditableColumnMarkup(column, value, itemIndex, first, schema, record, prefix) {
             var h = [],
                 idx = -1,
                 i,
@@ -335,7 +338,7 @@ define([
                 h[++idx] = '</div>';
             } else if (column.type === "select1" || column.type === "select" || column.type === "select_one") {
                 h[++idx] = ' <select id="select_';
-                h[++idx] = itemIndex;
+                h[++idx] = prefix + itemIndex;
                 h[++idx] = '" class="form-control editable ';
                 if (column.type === "select") {
                     h[++idx] = ' select';
@@ -353,7 +356,7 @@ define([
                     h[++idx] = '<option value=""></option>';
                 }
 
-                var choices = getChoiceList(schema, column, itemIndex, value, record, undefined);
+                var choices = getChoiceList(schema, column, itemIndex, value, record, undefined, prefix);
                 if (choices) {
                     h[++idx] = getChoicesHTML(column, choices, value, true);
                 }
@@ -401,7 +404,7 @@ define([
         /*
          * Get the choicelist for a select question
          */
-        function getChoiceList(schema, col, itemIndex, value, record, changed_column) {
+        function getChoiceList(schema, col, itemIndex, value, record, changed_column, prefix) {
 
             // Get the choice list
             var listId = col.l_id;
@@ -502,7 +505,7 @@ define([
                                 url: url,
                                 cache: false,
                                 success: function (data, status) {
-                                    var el = '#select_' + itemIndex;
+                                    var el = '#select_' + prefix + itemIndex;
                                     var html = getChoicesHTML(col, data, value, false);
                                     $(el).empty().append(html);
 
