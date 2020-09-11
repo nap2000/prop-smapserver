@@ -444,13 +444,13 @@ define([
                                         for(i = 0; i < found.length; i++) {
                                             var token = found[i];
                                             dependentColumn = token.substring(2, token.length - 1);
-                                            var value = record[dependentColumn];
-                                            value = getUpdate(dependentColumn, value);  // Replace the value if there has been an update
+                                            var depValue = record[dependentColumn];
+                                            depValue = getUpdate(dependentColumn, depValue);  // Replace the value if there has been an update
                                             var type = getQuestionType(schema, dependentColumn);
                                             if(type !== 'int') {
-                                                value = '\'' + value + '\'';
+                                                depValue = '\'' + depValue + '\'';
                                             }
-                                            params.expression = params.expression.replace(token, value);
+                                            params.expression = params.expression.replace(token, depValue);
 
 
                                             if (changed_column && dependentColumn === changed_column) {        // Set a flag if this refresh in response to a changed value and this param is wha changed
@@ -506,7 +506,8 @@ define([
                                 cache: false,
                                 success: function (data, status) {
                                     var el = '#select_' + prefix + itemIndex;
-                                    var html = getChoicesHTML(col, data, value, false);
+                                    var selValue = value;
+                                    var html = getChoicesHTML(col, data, selValue, false);
                                     $(el).empty().append(html);
 
                                     // Set up multi selects
