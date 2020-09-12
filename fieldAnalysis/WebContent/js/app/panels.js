@@ -200,6 +200,7 @@ $(document).ready(function() {
 						view.uId = uId;
 						view.qId = qId;
 						view.qId_is_calc = qId_is_calc;
+				        view.inc_ro = $('#settings_inc_ro').prop('checked');
 
 				        if(subjectType === "user") {
 					        view.dateQuestionId = $('#usage_settings_date_question option:selected').val();
@@ -817,9 +818,6 @@ function slide($elem) {
 	}
 }
 
-/*
- * 
- */
 function getFilter() {
 	 var qFilter = $('#filter_question option:selected').val();
 	 var filterValue = $('#filter_value option:selected').val(); 

@@ -168,7 +168,8 @@ function copyView(v) {
 			filter: v.filter,
 			dateQuestionId: v.dateQuestionId,
         	advanced_filter: v.advanced_filter,
-			subject_type: v.subject_type
+			subject_type: v.subject_type,
+		    inc_ro: v.inc_ro
 	};
 	
 	return cp;
@@ -190,6 +191,7 @@ function getViewData(view) {
 	} 
 	
 	$('#settings_title').val(view.title);
+	$('#settings_inc_ro').prop('checked', view.inc_ro);
 	
 	// Set the survey meta data
 	var sMeta = globals.gSelector.getSurvey(view.sId);
