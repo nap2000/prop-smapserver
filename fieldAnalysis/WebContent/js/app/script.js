@@ -816,7 +816,7 @@ function regionsURL () {
  * @param {string} survey
  */
 function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bBad, filter, dateId, startDate,
-                       endDate, advanced_filter, tz) {
+                       endDate, advanced_filter, tz, inc_ro) {
 
     var url = "/surveyKPI/items/";
 	var ampersand = false;
@@ -847,6 +847,10 @@ function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bB
     }
     if(bBad) {
         url += "&get_bad=true";
+    }
+
+    if(inc_ro) {
+        url += "&inc_ro=true";
     }
 
     if(typeof filter !== "undefined") {
