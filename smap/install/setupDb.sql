@@ -873,7 +873,8 @@ CREATE TABLE dashboard_settings (
 	ds_filter text,
 	ds_advanced_filter text,
 	ds_subject_type text,
-	ds_u_id integer
+	ds_u_id integer,
+	ds_inc_ro boolean default false
 	);
 alter table dashboard_settings add constraint ds_user_ident FOREIGN KEY (ds_user_ident)
 	REFERENCES users (ident) MATCH SIMPLE

@@ -302,3 +302,6 @@ CREATE INDEX log_time_key ON log(log_time);
 
 alter table organisation add column ft_enable_geofence boolean default false;
 update organisation set ft_enable_geofence = true where ft_send_location is null or ft_send_location = 'not set' or ft_send_location = 'on';
+
+-- Version 20.09
+alter table dashboard_settings add column ds_inc_ro boolean default false;
