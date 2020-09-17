@@ -4102,30 +4102,32 @@ function setNoFilter() {
 						}
 					}
 
-					if(gAppearanceParams.expression) {
-						$('#a_fe').prop('checked', true);
-						$('#a_fe_val').val(gAppearanceParams.expression);
-					} else {
-						$('#a_fe').prop('checked', false);
-						if (gAppearanceParams.length > 1) {
-							$('#a_match').val(gAppearanceParams.filter);
-						}
+					if(gAppearanceParams) {
+						if(gAppearanceParams.expression) {
+							$('#a_fe').prop('checked', true);
+							$('#a_fe_val').val(gAppearanceParams.expression);
+						} else {
+							$('#a_fe').prop('checked', false);
+							if (gAppearanceParams.length > 1) {
+								$('#a_match').val(gAppearanceParams.filter);
+							}
 
-						if (gAppearanceParams.length > 2) {
-							$('#a_filter_column').val(gAppearanceParams.filter_column);
-						}
+							if (gAppearanceParams.length > 2) {
+								$('#a_filter_column').val(gAppearanceParams.filter_column);
+							}
 
-						if (gAppearanceParams.length > 3) {
-							$('#a_filter_value_static').val(gAppearanceParams.filter_value);
-						}
+							if (gAppearanceParams.length > 3) {
+								$('#a_filter_value_static').val(gAppearanceParams.filter_value);
+							}
 
-						if (gAppearanceParams.length > 4) {
-							$('#a_second_filter_column').val(gAppearanceParams.second_filter_column);
-						}
+							if (gAppearanceParams.length > 4) {
+								$('#a_second_filter_column').val(gAppearanceParams.second_filter_column);
+							}
 
 
-						if (gAppearanceParams.length > 5) {
-							$('#a_second_filter_value_static').val(gAppearanceParams.second_filter_value);
+							if (gAppearanceParams.length > 5) {
+								$('#a_second_filter_value_static').val(gAppearanceParams.second_filter_value);
+							}
 						}
 					}
 
