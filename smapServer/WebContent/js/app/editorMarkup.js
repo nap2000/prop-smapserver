@@ -482,7 +482,7 @@ define([
 			     * Add the text area for the required response text
 			     */
 			    h[++idx] = '<div class="col-sm-6">';
-			    h[++idx] = '<textarea class="labelProp has_tt" title="';
+			    h[++idx] = '<textarea class="labelProp has_tt" tabindex="0" title="';
 			    h[++idx] = localise.set['ed_r_msg'];
 				h[++idx] = '" data-prop="required_msg">';	
 				h[++idx] = question.labels[globals.gLanguage].required_msg;
@@ -633,7 +633,7 @@ define([
 			h[++idx] = '</div>';		// End of row
 
 		} else {
-			h[++idx] = '<textarea class="labelProp has_tt';
+			h[++idx] = '<textarea tabindex="0" class="labelProp has_tt';
 			if((question.type === 'calculate' || question.type === 'server_calculate') && selProperty !== "appearance" && selProperty !== "parameters" && selProperty !== "display_name") {
 				h[++idx] = ' calculate';
 			}

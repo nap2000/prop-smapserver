@@ -1499,7 +1499,7 @@ function respondToEventsChoices($context) {
 	// Mainly a problem with Firefox however in Chrome selecting text by dragging does not work
 	// Refer: http://stackoverflow.com/questions/21680363/prevent-drag-event-to-interfere-with-input-elements-in-firefox-using-html5-drag
 	$context.find('input, textarea').focusin(function() {
-		$(this).closest('.draggable').prop("draggable", false);
+	$(this).closest('.draggable').prop("draggable", false);
 	}).blur(function() {
         $(this).closest('.draggable').prop("draggable", true);
         console.log("blur");
@@ -2313,12 +2313,12 @@ function respondToEvents($context) {
     });
 	
 	// On tab in question name move to the feature input
-	$context.find('.qname').keydown(function(e){
-		if(e.keyCode === 9) {
-			e.preventDefault();
-			$(this).closest('.row').find('.labelProp').focus();
-		}
-	});
+	//$context.find('.qname').keydown(function(e){
+	//	if(e.keyCode === 9 && ! e.shiftKey) {
+	//		e.preventDefault();
+	//		$(this).closest('.row').find('.labelProp').focus();
+	//	}
+	//});
 
 	
 	// validate the question name on every character change
@@ -2719,7 +2719,16 @@ function respondToEvents($context) {
 	
 	});
 
-	
+	// Select text inside text area on tab - from: https://stackoverflow.com/questions/5797539/jquery-select-all-text-from-a-textarea
+	$("textarea").focus(function() {
+		let $this = $(this);
+		$this.select();
+
+		$this.mouseup(function () {
+			$this.unbind("mouseup");
+			return false;
+		});
+	});
 }
 
 /*
@@ -2859,8 +2868,9 @@ function addQuestion($this, type) {
 		var justAddedQuestionID = '#question' + formIndex +  '_' + (forms[formIndex].questions.length - 1);
 		$textArea = $('textarea', justAddedQuestionID);
 		textAreaVal = $textArea.val();
-		$textArea.val("").focus().val(textAreaVal);		// Should set text entry to end of text field	
-		
+		//$textArea.val("").focus().val(textAreaVal);		// Should set text entry to end of text field
+		textArea.focus();
+
 		// Add an end group question if a new group has been created
 		if(type === "begin group") {
 			itemIndex = forms[formIndex].questions.length - 1;
