@@ -804,6 +804,9 @@ define([
 
             if (column.type === "select") {
                 vArray = value.split(' ');
+            } else {
+                // Add the empty option
+                h[++idx] = '<option value=""></option>';
             }
             for (i = 0; i < choices.length; i++) {
                 if(internal) {
