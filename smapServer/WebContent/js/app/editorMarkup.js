@@ -265,14 +265,19 @@ define([
 			h[++idx] = localise.set['ed_aq'];
 			h[++idx] = '">';
 		}
-		h[++idx] = '<button tabindex="-1" id="addnew_';
+		h[++idx] = '<button id="addnew_';
 		h[++idx] = globals.gNewQuestionButtonIndex++;
 		h[++idx] = '" type="button" class="add_question btn dropon ';
 		h[++idx] = addButtonClass;
 		if(globals.gNewQuestionButtonIndex == 1) { // First button in the form
 			h[++idx] = ' first_element ';
-		}	
-		h[++idx] = '" data-locn="';
+		}
+		if(!(topLevelForm && locn === "after")) {
+			h[++idx] = '" tabindex="-1"';
+		} else {
+			h[++idx] = '"';
+		}
+		h[++idx] = ' data-locn="';
 		h[++idx] = locn;
 		h[++idx] = '" data-findex="';
 		h[++idx] = formIndex;
