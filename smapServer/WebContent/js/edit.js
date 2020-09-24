@@ -1162,7 +1162,7 @@ function setupQuestionTypes($elem, columns, draggable, currentType) {
 			h[++idx] = '<div class="col-xs-12 ';
 			h[++idx] = columns === 1 ? '" ' : 'col-md-6" ';
 			h[++idx] = ' style="height:65px;">';	
-			h[++idx] = '<button type="button" class="btn btn-large btn-default question_type_sel full_width_btn';
+			h[++idx] = '<button type="button" tabindex="-1" class="btn btn-large btn-default question_type_sel full_width_btn';
 			if(draggable) {
 				h[++idx] = ' draggable';
 			}
@@ -2869,7 +2869,7 @@ function addQuestion($this, type) {
 		$textArea = $('textarea', justAddedQuestionID);
 		textAreaVal = $textArea.val();
 		//$textArea.val("").focus().val(textAreaVal);		// Should set text entry to end of text field
-		textArea.focus();
+		$textArea.focus();
 
 		// Add an end group question if a new group has been created
 		if(type === "begin group") {
