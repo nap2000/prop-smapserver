@@ -357,7 +357,7 @@ function getUserData(view, start_rec) {
 /*
   * Get the location data for users
   */
-function getUserLocationsData(view, start_rec) {
+function getUserLocationsData(view, start_rec, nocache) {
 
 	// For table all of survey views. page the results
 	if(view.type === "table") {
@@ -375,7 +375,7 @@ function getUserLocationsData(view, start_rec) {
 	url = userLocationsItemsURL(view, start_rec, rec_limit,tz);
 	data = globals.gSelector.getItem(url);      // check cache
 
-	if(data) {
+	if(data && !nocache) {
 		if (typeof view.start_recs === "undefined") {
 			view.start_recs = {};
 		}

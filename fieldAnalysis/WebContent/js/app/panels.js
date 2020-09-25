@@ -842,7 +842,7 @@ function autoRefresh() {
 	console.log("refresh every: " + globals.gRefreshRate + " minutes")
 	setTimeout(function(){
 		console.log("refresh");
-		refreshAnalysisData();
+		autoRefreshAnalysisData();
 		autoRefresh();
 		}, 60000 * globals.gRefreshRate);
 }
