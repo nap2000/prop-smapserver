@@ -747,8 +747,30 @@ function refreshAnalysisData() {
 	
 }
 
+// Refresh the maps and charts only - called when doing automated refresh
+function autoRefreshAnalysisData() {
+
+	//globals.gSelector.clearDataItems();	// clear any cached data
+	//globals.gSelector.clearSurveys();	// Clear the list of surveys and survey definitions
+
+	// Get the view list
+	var	views = globals.gSelector.getViews(),
+		i, j, idx,
+		multiLayerMaps = [];
+
+	for(i = 0; i < views.length; i++) {
+		if(views[i].state != "deleted") {
+			if(views[i].type == "graph" || views[i].type == "map"
+					|| views[i].subject_type === "user_locations") {
+				getData(views[i], true);		// Add the data
+			}
+		}
+	}
+
+}
+
 //Get the data for the specified view
-function getData(view) {
+function getData(view, nocache) {
 
 	if(view.subject_type === "survey") {
 		if (view.qId != "-1") {			// Question level results
@@ -766,7 +788,7 @@ function getData(view) {
 	} else if(view.subject_type === "user") {
 		getUserData(view, 0);       // Start from the first record
 	} else if(view.subject_type === "user_locations") {
-		getUserLocationsData(view, 0);
+		getUserLocationsData(view, 0, nocache);
 	}
 }
 
