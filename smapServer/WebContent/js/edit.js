@@ -18,7 +18,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 var gUserLocale = navigator.language;
 if (Modernizr.localstorage) {
 	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
+}
 
 "use strict";
 require.config({
@@ -45,14 +45,14 @@ require.config({
        	'toggle': ['bootstrap.min'],
 	    'bootstrapcolorpicker': ['bootstrap', 'jquery'],
     	'icheck': ['jquery']
-        
+
     }
 });
 
 require([
          'jquery',
-         'app/common', 
-         'bootstrap.min', 
+         'app/common',
+         'bootstrap.min',
          'app/localise',
          'app/globals',
          'jquery.autosize.min',
@@ -67,15 +67,15 @@ require([
 		 'bootstrapcolorpicker',
 		 'moment',
 		 'app/aws',
-         'icheck'], 
+         'icheck'],
 		function(
-				$, 
-				common, 
-				bootstrap, 
-				lang, 
-				globals, 
-				jqas, 
-				bsfi, 
+				$,
+				common,
+				bootstrap,
+				lang,
+				globals,
+				jqas,
+				bsfi,
 				bootbox,
 				toggle,
 				question,
@@ -94,7 +94,9 @@ var	gMode = "survey",
 	gTempLanguages = [],
 	gTempPulldata = [],
 	gDragCounter,
-	gDragSourceId;
+	gDragSourceId,
+	gSurveyIdents,
+	gSurveyNames;
 // Media globals
 var gUrl,			// url to submit to
 	gBaseUrl = '/surveyKPI/upload/media';
@@ -115,20 +117,20 @@ var gAppearanceParams;
 'use strict';
 
 $(document).ready(function() {
-  
+
 	var i,
 		params,
 		pArray,
 		param = [],
 		dont_get_current_survey;
-	
+
 	window.bootbox = bootbox;
 	window.moment = moment;
 
     setCustomEdit();
 	setupUserProfile();
 	localise.setlang();		// Localise HTML
-	
+
 	// Get the parameters and start editing a survey if one was passed as a parameter
 	params = location.search.substr(location.search.indexOf("?") + 1);
 	pArray = params.split("&");
@@ -163,14 +165,14 @@ $(document).ready(function() {
 			 $('.reusing_form').hide();
 		 }
 	 });
-	 
+
 	 $('#survey_name').change(function(){
 		var $this = $(this);
 		getSurveyForms($this.val(), addForms);
 	 });
-	 
+
 	window.history.pushState('',document.title, document.location.origin + document.location.pathname);	// Strip out the parameters from the href
-	
+
 	// Get the user details
 	globals.gIsAdministrator = false;
 	getLoggedInUser(getSurveyList, false, true, undefined, false, dont_get_current_survey);
@@ -183,10 +185,10 @@ $(document).ready(function() {
 	$('#viewType').change(function() {
 		globals.gIsQuestionView = $(this).prop('checked');
 		changeset.updateViewControls();
-		
+
 		refreshForm();
 	});
-	
+
 	/*
 	 * Refresh the view when the selected property changes
 	 */
@@ -195,9 +197,9 @@ $(document).ready(function() {
 		globals.gSelLabel = $(this).html();
 		globals.gSelProperty = $(this).data("prop")
 		refreshFeaturedProperties();
-		
+
  	 });
-	
+
 	// Add menu functions
 	$('#m_open').off().click(function() {	// Open an existing form
 		if(globals.changes.length > 0) {
@@ -207,7 +209,7 @@ $(document).ready(function() {
 		} else {
 			openForm("existing");
 		}
-		
+
 	});
 	$('#m_new').off().click(function() {	// Open a new form
 		if(globals.changes.length > 0) {
@@ -217,7 +219,7 @@ $(document).ready(function() {
 		} else {
 			openForm("new");
 		}
-		
+
 	});
 	$('.m_save_survey').off().click(function() {	// Save a survey to the server
 		changeset.validateAll();
@@ -238,17 +240,17 @@ $(document).ready(function() {
 	$('#next-error').off().click(function(){
 		nextIssue("error");
 	});
-	
+
 	$('#next-warning').off().click(function(){
 		nextIssue("warning");
 	});
-	
+
 	$('.m_validate').off().click(function() {
 		changeset.validateAll();
 	});
-	
+
 	$('.m_languages').off().click(function() {
-		
+
 		if($(this).closest('li').hasClass('disabled')) {
 			bootbox.alert(localise.set["ed_cml"]);
 		} else {
@@ -257,7 +259,7 @@ $(document).ready(function() {
 			$('#editLanguageModal').modal("show");
 		}
 	});
-	
+
 	$('#m_pulldata').off().click(function() {
 		if(globals.model.survey.pulldata) {
 			gTempPulldata = globals.model.survey.pulldata.slice();
@@ -275,7 +277,7 @@ $(document).ready(function() {
 			setAllRequired(true);
 		}
 	});
-	
+
 	$('#m_not_required').off().click(function() {
 		if($(this).closest('li').hasClass('disabled')) {
 			bootbox.alert(localise.set["ed_csr"]);
@@ -295,27 +297,61 @@ $(document).ready(function() {
 			ident = selection;
 		}
 
-		addHourglass();
-		$.ajax({
-			url: "/surveyKPI/surveys/summary/" + ident,
-			cache: false,
-			dataType: 'json',
-			success: function(data) {
-				removeHourglass();
-				showSurveySummary(data);
+		if(!gSurveyNames) {
+			showSurveySummary(gSurveyNames);
+		} else {
+			addHourglass();
+			$.ajax({
+				url: "/surveyKPI/surveys/summary/" + ident,
+				cache: false,
+				dataType: 'json',
+				success: function (data) {
+					removeHourglass();
+					gSurveyNames = data;
+					showSurveySummary(data);
 
-			},
-			error: function(xhr, textStatus, err) {
-				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					bootbox.alert(ident + " " + localise.set["msg_not_f"]);
+				},
+				error: function (xhr, textStatus, err) {
+					removeHourglass();
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						bootbox.alert(ident + " " + localise.set["msg_not_f"]);
+					}
 				}
-			}
-		});
+			});
+		}
 
 	});
+
+	$('#m_gsi').off().click(function() {
+
+		if(gSurveyIdents) {
+			showSurveyIdentList(gSurveyIdents);
+		} else {
+			addHourglass();
+			$.ajax({
+				url: "/surveyKPI/surveys/idents",
+				cache: false,
+				dataType: 'json',
+				success: function (data) {
+					removeHourglass();
+					gSurveyIdents = data;
+					showSurveyIdentList(data);
+
+				},
+				error: function (xhr, textStatus, err) {
+					removeHourglass();
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						bootbox.alert(ident + " " + localise.set["msg_not_f"]);
+					}
+				}
+			});
+		}
+	});
+
 
 	$('#addLanguage').off().click(function() {
 		gTempLanguages.push({
@@ -325,7 +361,7 @@ $(document).ready(function() {
 		});
 		updateLanguageView();
 	});
-	
+
 	$('#addPulldata').off().click(function() {
 		gTempPulldata.push({
 			survey: "",
@@ -346,32 +382,32 @@ $(document).ready(function() {
 		$('#mediaModalLabel').html(localise.set["ed_mmf"]);
 		$('#mediaModal table').off();
 		$('#surveyPanel, #orgPanel').find('tr').removeClass('success');
-		
+
 		// Make sure all types of media are shown
 		$('tr').show();
 		// Close any drop downmenus
 		$('.dropdown-toggle').parent().removeClass("open");
 		$('.navbar-collapse').removeClass("in");
-		
+
 		// Only form level media is managed here, organisation level media is managed in the shared resources page
 		$('#orgPanel').hide();
 		$('#surveyPanel').show();
 		gUrl = gBaseUrl + '?sId=' + gSId;
     	$('#survey_id').val(gSId);			// Set the survey id in the forms hidden field
     	gIsSurveyLevel = true;
-    	
+
 		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
 		$('#mediaModal').modal('show');
 
 	});
-	
+
 	$('#m_settings').off().click(function() {	// Show the settings dialog
-		
+
 		// Close any drop downmenus
 		$('.dropdown-toggle').parent().removeClass("open");
 		$('.navbar-collapse').removeClass("in");
-		
-		updateSettingsData();		
+
+		updateSettingsData();
 
 		$('#settingsMsg').html("").hide();
 		$('#settingsModal').modal('show');
@@ -399,9 +435,9 @@ $(document).ready(function() {
 		}
 		globals.model.save_settings();
 	});
-	
+
 	$('#m_info').off().click(function() {	// Show the info dialog
-		
+
 		var tableNames ="",
 			i,
 			idx;
@@ -419,15 +455,15 @@ $(document).ready(function() {
 		// Close any drop downmenus
 		$('.dropdown-toggle').parent().removeClass("open");
 		$('.navbar-collapse').removeClass("in");
-		
+
 		$('#i_name').val(globals.model.survey.displayName);
 		$('#i_ident').val(globals.model.survey.ident);
 		$('#i_version').val(globals.model.survey.version);
-		$('#i_created').val(localTime(globals.model.survey.created));		
-		$('#i_based_on').val(globals.model.survey.basedOn);	
+		$('#i_created').val(localTime(globals.model.survey.created));
+		$('#i_based_on').val(globals.model.survey.basedOn);
 		$('#i_table_names').val(tableNames);
         $('#i_id').val(globals.model.survey.id);
-		
+
 		$('#infoModal').modal('show');
 	});
 
@@ -767,7 +803,7 @@ $(document).ready(function() {
 		updateLabel("question", globals.gFormIndex, globals.gItemIndex, undefined, "text", newAppChoiceVal, gQname, "app_choices");
 		$('#appearanceModal').modal("hide");
 	});
-	
+
 	/*
 	 * Save changes to the language list
 	 */
@@ -830,19 +866,19 @@ $(document).ready(function() {
 				}
 		});
 	});
-	
+
 	$('#project_name').change(function() {
 		globals.gCurrentProject = $('#project_name option:selected').val();
 		globals.gCurrentSurvey = -1;
 		globals.gCurrentTaskGroup = undefined;
-		
-		saveCurrentProject(globals.gCurrentProject, 
-				globals.gCurrentSurvey, 
+
+		saveCurrentProject(globals.gCurrentProject,
+				globals.gCurrentSurvey,
 				globals.gCurrentTaskGroup);
-		
+
 		getSurveyList();
  	 });
-	
+
 	// Check for changes in settings
 	$('#set_survey_name, #set_instance_name, #set_hrk').keyup(function(){
 
@@ -915,7 +951,7 @@ $(document).ready(function() {
         }
 		return true;
 	});
-	
+
 	/*
 	 * Add check prior to the user leaving the screen
 	 */
@@ -937,25 +973,25 @@ $(document).ready(function() {
     		gUrl = gBaseUrl + '?sId=' + gSId;
     		$('#survey_id').val(gSId);			// Set the survey id in the forms hidden field
     		gIsSurveyLevel = true;
-    		
+
     		$('#orgPanel').hide();
     		$('#surveyPanel').show();
     	}
     })
-    
+
     $('#orgLevelTab a').click(function (e) {
     	  e.preventDefault();
     	  $(this).tab('show');
     	  gUrl = gBaseUrl;
     	  $('#survey_id').val("");				// clear the survey id in the forms hidden field
   		  gIsSurveyLevel = false;
-    	  
+
     	  $('#orgPanel').show();
     	  $('#surveyPanel').hide();
     })
-    	
+
     $('.file-inputs').bootstrapFileInput();
-    
+
     /*
      * Submit the files
      */
@@ -966,22 +1002,22 @@ $(document).ready(function() {
        		uploadFiles(gUrl, "fileupload", refreshMediaViewManage, globals.gCurrentSurvey, undefined);
        	}
     });
-    
+
     /*
      * Open a new form
      */
 	$('#get_form').off().click(function() {
-		
+
 		var name,
 			existing,
 			existing_survey,
 			existing_project,
 			//existing_form,
 			shared_results;
-		
+
 		if(globals.gCurrentProject > 0) {
 			changeset.setHasChanges(0);		// Clear any existing changes from a previous form
-			
+
 			if(globals.gExistingSurvey) {
 				globals.gCurrentSurvey = $('#survey_name option:selected').val();
 				saveCurrentProject(globals.gCurrentProject, globals.gCurrentSurvey);	// Save the new survey id as the current survey
@@ -1012,8 +1048,8 @@ $(document).ready(function() {
         var existingProject = $('#existing_project option:selected').val();
         loadSurveys(existingProject, "#survey_name", false, false, undefined, false);			// Get surveys
     });
-	
-	
+
+
     /*
      * Save a selected media file
      */
@@ -1028,7 +1064,7 @@ $(document).ready(function() {
 			updateLabel(type, globals.gFormIndex, globals.gSelOptionId, globals.gOptionList, gElement, gNewVal, gQname, "media");
 		}
 	});
-	
+
 	$('#removeMedia').click(function() {
 		var type;
 		if(globals.gOptionList) {
@@ -1037,16 +1073,16 @@ $(document).ready(function() {
 			type = "question";
 		}
 		updateLabel(type, globals.gFormIndex, globals.gSelOptionId, globals.gOptionList, gElement, undefined, gQname, "media");
-		
+
 	});
-	
+
 	setupQuestionTypes($('#dialog_types'), 2, false, undefined);		// Double column, not draggable for change type dialog
 	setupQuestionTypes($('#toolbar_types'), 1, true, undefined);		// Single column, draggable for toolbar
 
 	$('#openFormModal').on('shown.bs.modal', function () {
 		$('#new_form_name').focus();
 	});
-	
+
 	/*
 	 * Toolbar
 	 */
@@ -1055,29 +1091,29 @@ $(document).ready(function() {
 			$finalButton = $('.add_final_button', '#formList');
 		addQuestion($finalButton, type);
 	});
-	
+
 	/*
 	 * Choice Editing
 	 */
 	$('#filterModalSave').off().click(function(){
 		var survey = globals.model.survey,
 			question = survey.forms[globals.gFormIndex].questions[globals.gItemIndex];
-		
+
 		option.addFilter($('#filter_name').val());
 		option.addOptionTable(question, globals.gFormIndex, globals.gListName);
 		option.setupChoiceView($('#filterType').val());
 		option.addFilterSelectList(survey.filters);
 		respondToEventsChoices($('#optionTable'));
 	});
-	
+
 	$("#filterModal").on("shown.bs.modal", function() {
 	    $("#filter_name").focus();
 	});
-	
+
 	$('#content').on('shown.bs.collapse', function (e) {
 		$('a[href="#' + e.target.id + '"]', '#content').find('.edit_icon').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
 	});
-	
+
 	$('#content').on('hidden.bs.collapse', function (e) {
 		$('a[href="#' + e.target.id + '"]', '#content').find('.edit_icon').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
 	});
@@ -1086,7 +1122,7 @@ $(document).ready(function() {
 	$('#p_medical').change(function() {
 		setLanguageCodes();
 	});
-	
+
 });
 
 function setLanguageCodes() {
@@ -1119,7 +1155,7 @@ function setLanguageCodeVals() {
  * Set all the questions to either required or not required
  */
 function setAllRequired(required) {
-	
+
 	addHourglass();
 	$.ajax({
 		  type: "POST",
@@ -1152,16 +1188,16 @@ function setupQuestionTypes($elem, columns, draggable, currentType) {
 		idx = -1,
 		count,
 		name;
-	
+
 	h[++idx] = '<div class="row margin-bottom">';
 	for(i = 0; i < types.length; i++) {
-		
+
 		if(types[i].canSelect && isCompatible(types[i].compatTypes, currentType) ) {
 
 			name = localise.set[types[i].trans];
 			h[++idx] = '<div class="col-xs-12 ';
 			h[++idx] = columns === 1 ? '" ' : 'col-md-6" ';
-			h[++idx] = ' style="height:65px;">';	
+			h[++idx] = ' style="height:65px;">';
 			h[++idx] = '<button type="button" tabindex="-1" class="btn btn-large btn-default question_type_sel full_width_btn';
 			if(draggable) {
 				h[++idx] = ' draggable';
@@ -1179,26 +1215,26 @@ function setupQuestionTypes($elem, columns, draggable, currentType) {
 				h[++idx] = '<br/>';
 			} else if(types[i].image) {
 				h[++idx] = '<img class="edit_image_select" src="';
-				h[++idx] = types[i].image; 
+				h[++idx] = types[i].image;
 				h[++idx] = '"></img><br/>';
 			} else if(types[i].text) {
 				h[++idx] = '<span class="edit_type_select">';
-				h[++idx] = types[i].text; 
+				h[++idx] = types[i].text;
 				h[++idx] = '</span><br/>';
 			}
 			h[++idx] = name;
 			h[++idx] = '</button>';
 			h[++idx] = '</div>';		// End col
 
-			
+
 			//count++;
 		}
-	}	
+	}
 	h[++idx] = '</div>';	// End of a row
 	//h[++idx] = '</div>';	// End of a row
-	
+
 	$elem.html(h.join(''));
-	
+
 }
 
 /*
@@ -1235,16 +1271,15 @@ function surveyDetailsDone() {
 		$('#surveyLevelTab').removeClass("disabled");
 		getFilesFromServer(gBaseUrl, globals.gCurrentSurvey, refreshMediaView);
 	}
-	
+
 	$('#openFormModal').modal("hide");		// Hide the open form modal if its open
-	
+
 	// Show message if the survey is blocked
 	if(globals.model.survey.blocked) {
 		bootbox.alert(localise.set["ed_blocked"]);
 	}
 
 	// Get group questions for this current survey - used for selecting the source parameter
-	gCacheGroup[globals.model.survey.ident] = undefined;
 	getGroupQuestionsInSurvey($('.group_column_select'), globals.model.survey.ident);
 
 	/*
@@ -1255,34 +1290,34 @@ function surveyDetailsDone() {
 		// Safer to return to the question view
 		globals.gShowingChoices = false;
 		changeset.updateViewControls();
-		
+
 		/*
 		globals.gSelChoiceProperty = globals.gSelProperty;	// Restore selProperty and selLabel for questions
 		globals.gSelProperty = globals.gSelQuestionProperty;
-		globals.gSelChoiceLabel = globals.gSelLabel;	
+		globals.gSelChoiceLabel = globals.gSelLabel;
 		globals.gSelLabel = globals.gSelQuestionLabel;
 		$('#propSelected').html(globals.gSelLabel);
 		*/
-		
+
 		$('.editorContent').toggle();
 		$('.notoptionslist').show();
-	} 
+	}
 	refreshForm();
-	
+
 	// Set up link to test file
 	$('.m_test_survey').attr("href", "/webForm/" + globals.model.survey.ident);
-	
+
 }
 
 /*
  * Show the form on the screen
  */
 function refreshForm() {
-	
+
 	var $context,
 		survey,
 		question;
-	
+
 	if(globals.gShowingChoices) {
 		survey = globals.model.survey;
 		if(typeof globals.gFormIndex !== "undefined") {
@@ -1328,34 +1363,34 @@ function refreshFeaturedProperties() {
  * The passed in context is for a list of choices
  */
 function respondToEventsChoices($context) {
-	
+
 	$('[type="checkbox"]', $context).iCheck({
 	    checkboxClass: 'icheckbox_square-green',
 	    radioClass: 'iradio_square-green'
 	});
-	
+
 	$('.exitOptions', $context).off().click(function() {
-		
+
 		globals.gShowingChoices = false;
 		changeset.updateViewControls();
-		
+
 		/*
 		globals.gSelChoiceProperty = globals.gSelProperty;	// Restore selProperty and selLabel for questions
 		globals.gSelProperty = globals.gSelQuestionProperty;
-		globals.gSelChoiceLabel = globals.gSelLabel;	
+		globals.gSelChoiceLabel = globals.gSelLabel;
 		globals.gSelLabel = globals.gSelQuestionLabel;
 		$('#propSelected').html(globals.gSelLabel);
 		*/
-		
+
 		$('.editorContent').toggle();
 		$('.notoptionslist').show();
 		refreshForm();
 	});
-	
+
 	$('#addFilter', $context).off().click(function() {
-		$('#filterModal').modal('show');	
+		$('#filterModal').modal('show');
 	});
-	
+
 	// Set option list value
 	$context.find('.option-lists', $context).each(function(index){
 		var $this = $(this),
@@ -1364,7 +1399,7 @@ function respondToEventsChoices($context) {
 			itemIndex = $elem.data("id"),
 			survey = globals.model.survey,
 			question;
-		
+
 		question = survey.forms[formIndex].questions[itemIndex];
 		if(!optionListExists(question.list_name)) {
 			if(!optionListExists(question.name)) {
@@ -1378,10 +1413,10 @@ function respondToEventsChoices($context) {
 		} else {
 			$this.val(question.list_name);
 		}
-		
+
 	});
-	
-	
+
+
 	$('#filterType', $context).off().change(function() {
 		var $this = $(this),
 			survey = globals.model.survey,
@@ -1391,20 +1426,20 @@ function respondToEventsChoices($context) {
 			proceed = true;
 
 		choiceFilter = $('#choiceFilter').val();
-		
+
 		// Show an error and set the filter to none if the user chose cascade when there are no previous select questions
 		if (filterType === "cascade" && $('#previousSelect option').length == 0) {
 			alert(localise.set["c_error"] + ": " + localise.set["msg_prev_select"]);
 			filterType = "none";
 			$('#filterType').val(filterType);
 		}
-		
+
 		if(filterType != "custom") {
 			if(choiceFilter && choiceFilter.indexOf("_smap_cascade") < 0) {
 				proceed = confirm(localise.set["msg_rep_f"] + ": " + choiceFilter + "?");
 			}
 		}
-		
+
 		if(proceed) {
 			if(filterType === "cascade") {
 				setCascadeFilter();
@@ -1412,73 +1447,73 @@ function respondToEventsChoices($context) {
 			} if(filterType === "none") {
 				setNoFilter();
 			}
-		} 
-		
+		}
+
 		if(filterType !== "none") {
 			option.addOptionTable(question, globals.gFormIndex, globals.gListName);
 			respondToEventsChoices($('#optionTable'));
 		}
 		option.setupChoiceView($this.val());
-		
-		
+
+
 	});
-	
+
 	// Respond to columns of filters being hidden or made visible
 	$('input', '#custom_filters').off().on('ifToggled', function(event) {
 		var $this = $(this),
 			survey = globals.model.survey,
 			setting = $this.is(':checked');
-		
+
 		survey.filters[$this.val()] = setting;
 		option.resetFilterColumns();
-		
+
 	});
 
-	
+
 	// Option list change
 	$context.find('.option-lists').off().change(function(){
 		var $this = $(this),
 			$elem = $this.closest('.question_head'),
 			formIndex = $elem.data("fid"),
 			itemIndex = $elem.data("id");
-	
+
 		updateLabel("question", formIndex, itemIndex, undefined, "text", $this.val(), undefined, "list_name");
 	});
-	
+
 	// Choice filter change
 	$context.find('#choiceFilter').off().change(function(){
 		var $this = $(this),
 			$elem = $this.closest('.question_head'),
 			formIndex = $elem.data("fid"),
 			itemIndex = $elem.data("id");
-	
+
 		updateLabel("question", formIndex, itemIndex, undefined, "text", $this.val(), undefined, "choice_filter");
 	});
-	
+
 	// Previous question for cascading select changes
 	$context.find('#previousSelect').off().change(function(){
 		var $this = $(this),
 			survey = globals.model.survey,
 			question = survey.forms[globals.gFormIndex].questions[globals.gItemIndex];
-		
-		option.setPreviousChoices($this.val());	
+
+		option.setPreviousChoices($this.val());
 		option.addOptionTable(question, globals.gFormIndex, globals.gListName);
 		respondToEventsChoices($('#optionTable'));
 	});
-	
+
 	// Previous choice for cascading select changes
 	$context.find('#previousSelectChoice').off().change(function() {
 		var $this = $(this),
 			survey = globals.model.survey,
 			question = survey.forms[globals.gFormIndex].questions[globals.gItemIndex];
-		
+
 		option.addOptionTable(question, globals.gFormIndex, globals.gListName);
 		respondToEventsChoices($('#optionTable'));
 	});
-	
+
 	// Add tooltips
 	$context.find('.has_tt').tooltip();
-	
+
 
 	// Respond to clicks on a label text area
 	$context.find('.labelProp').change(function() {
@@ -1490,11 +1525,11 @@ function respondToEventsChoices($context) {
 			newVal = $this.val(),
 			optionList = $elem.data("list_name"),
 			qname = $elem.data("qname");
-		
-		updateLabel("option", formIndex, itemIndex, optionList, "text", newVal, qname, "label"); 
+
+		updateLabel("option", formIndex, itemIndex, optionList, "text", newVal, qname, "label");
 
 	});
-	
+
 	// Fix issues with dragging and selecting text in text area or input when draggable is set
 	// Mainly a problem with Firefox however in Chrome selecting text by dragging does not work
 	// Refer: http://stackoverflow.com/questions/21680363/prevent-drag-event-to-interfere-with-input-elements-in-firefox-using-html5-drag
@@ -1514,13 +1549,13 @@ function respondToEventsChoices($context) {
 			itemIndex = $elem.data("id"),
 			listName = $elem.data("list_name"),
 			newVal = $this.val();
-		
+
 		changeset.validateName(listName, itemIndex, newVal, "option", true);
 		changeset.updateModelWithErrorStatus(listName, itemIndex, "option");		// Update model and DOM
 
 	});
-	
-	
+
+
 	// Update the option name
 	$context.find('.oname').change(function(){
 
@@ -1530,9 +1565,9 @@ function respondToEventsChoices($context) {
 			itemIndex = $elem.data("id"),
 			qname = $elem.data("qname"),
 			newVal = $this.val();
-		
+
 		updateLabel("option", 0, itemIndex, listName, "text", newVal, "", "value") ;
-		
+
 	});
 
 	// Update the option display name
@@ -1554,55 +1589,55 @@ function respondToEventsChoices($context) {
 	$context.find('.filter').change(function(){
 		updateFilterValues($(this), false, undefined);
 	});
-	
+
 	// Update the cascade filter values when a cascade filter value is checked
 	$('tr'). find('.cascadeFilter').off().on('ifToggled', function(event) {
 		var $this = $(this),
 		survey = globals.model.survey;
-	
+
 		updateFilterValues($(this), true, $this.is(':checked'));
-	
+
 	});
-	
+
 	// Add new option after
 	$context.find('.add_option_after').off().click(function() {
 		var $this = $(this).closest('.editor_element');
 		addNewOption($this, "after");
 	});
-	
+
 	// Add new option before
-	$context.find('.add_option_before').off().click(function() {	
+	$context.find('.add_option_before').off().click(function() {
 		var $this = $(this).closest('.editor_element');
 		addNewOption($this, "before");
 	});
-	
+
 	// Add new option using the "Add New Choice" button
 	$context.find('.add_option').off().click(function() {
 		var $this = $(this);
 
 		addNewOption($this, "end");
-	
+
 	});
-	
+
 	// Delete option
 	$context.find('.delete_option').off().click(function() {
 		var $this = $(this),
 			$context,						// Updated Html
 			index = $this.closest(".editor_element").data("id"),
 			list_name = $this.closest(".editor_element").data("list_name");
-		
+
 		bootbox.confirm(localise.set["msg_del_c"], function(result) {
 			if(result) {
 				$context = question.deleteOption(index, list_name);
 			}
-		}); 
-		
-		
+		});
+
+
 	});
-	
+
 	// Selected a media property
 	$context.find('.mediaProp').off().click(function(){
-		
+
 		var $this = $(this);
 		mediaPropSelected($this);
 
@@ -1610,91 +1645,91 @@ function respondToEventsChoices($context) {
 
 	/*
 	 * Enable drag and drop to move choices
-	 * 
+	 *
 	 * First add handlers for draggable components
 	 */
 	$('.draggable.option').prop('draggable', 'true')
-	
+
 	.off('dragstart')
 	.on('dragstart', function(evt){
 		var ev = evt.originalEvent,
 			$elem = $(ev.target);
-		
+
 		ev.effectAllowed = "move";		// Only allow move, TODO copy
 		gDragCounter = 0;
-		
+
 
 		ev.dataTransfer.setData("text", $elem.closest('li').data('id'));
 		gDragSourceId = $elem.closest('tr').data('id');
-		
+
 		console.log("Draggable item id: " + $elem.closest('tr').data('id'));
 		//$('.dropon.add_option').addClass("add_drop_button").removeClass("add_button");
-		
+
 		return true;
 	})
-	
+
 	// clean up after drag
 	.off('dragend')
 	.on('dragend', function(evt){
 		//$('.dropon.add_option').addClass("add_button").removeClass("add_drop_button").removeClass("over_drop_button");
 		return false;
 	})
-	
+
 	// Don't allow a draggable component to be dropped onto a text field in some other option
 	.off('drop')
 	.on('drop', function(evt){
 		evt.originalEvent.preventDefault();
 	});
-	
+
 	/*
 	 * Handle drop on or dragging over a drop zone
 	 */
 	// Entering a drop zone
 	$('.dropon.option')
-	
+
 	.off('dragenter')
 	.on('dragenter', function(evt){
 		var ev = evt.originalEvent,
-			$elem = $(ev.target),	
+			$elem = $(ev.target),
 			targetId = $elem.closest('tr').data('id'),
 			btnId = $elem.data('id');
-		
+
 		$('tr', '#choiceView').removeClass("over_drop_elem");
 		if(typeof(targetId) !== "undefined" && targetId != gDragSourceId) {
-			ev.preventDefault();	
+			ev.preventDefault();
 			$elem.closest('tr').addClass("over_drop_elem");
 		} else if(typeof(btnId) !== "undefined" && btnId == -1) {
 			ev.preventDefault();
 			$elem.addClass("over_drop_button").removeClass("add_button");
 		}
-	
+
 	})
-	
+
 	// Leaving a drop zone
 	.off('dragleave')
 	.on('dragleave', function(evt){
-		
+
 		var ev = evt.originalEvent,
 			$elem = $(ev.target),
 			targetId = $elem.closest('tr').data('id'),
 			btnId = $elem.data('id');
-		
+
 		if(typeof(btnId) !== "undefined" && btnId == -1) {
 			$elem.addClass("add_button").removeClass("over_drop_button");
 		} else if(typeof(targetId) === "undefined") {
 			$('tr', '#choiceView').removeClass("over_drop_elem");
-		} 
-		
-		
+		}
+
+
 	})
-	
+
 	.off('dragover')
 	.on('dragover', function(evt){
 		evt.originalEvent.dataTransfer.dropEffect = "move";
 		evt.originalEvent.preventDefault();
 		evt.originalEvent.stopPropagation();
 	})
-	
+
 	// Drop the option
 	.off('drop')
 	.on('drop', function(evt){
@@ -1710,16 +1745,16 @@ function respondToEventsChoices($context) {
 			$elemBeforeTarget = $targetElem.prev('tr'),
 			elemBeforeTargetId = $elemBeforeTarget.data('id'),
 			$choiceBeforeButton = $("tr", "#choiceView").last();
-	
+
 		ev.preventDefault();
 		ev.stopPropagation();
-		 
-		
-		$('tr', '#choiceView').removeClass("over_drop_elem");		
+
+
+		$('tr', '#choiceView').removeClass("over_drop_elem");
 		if(sourceId === targetId || sourceId === elemBeforeTargetId) {
 			// Dropped on itself do not move
 		} else {
-			
+
 			if(btnId === -1) {
 				// Dropped on final add choice button
 				targetId = $choiceBeforeButton.data('id');
@@ -1744,9 +1779,9 @@ function addNewOption($elem, locn) {
 
 
 	var $context = question.addOption(oId, locn, list_name, fId, qname);
-	
+
 	respondToEventsChoices($context);				// Add events on to the altered html
-	
+
 	// Set focus to the new option
 	$context.find('textarea').focus();			// Set focus to the new option
 }
@@ -1755,7 +1790,7 @@ function addNewOption($elem, locn) {
  * The passed in context is for a list item containing either a question or an option
  */
 function respondToEvents($context) {
-	
+
 	// Open choices for editing
 	$('.edit_choice', $context).off().click(function(index){
 		var $this = $(this),
@@ -1763,13 +1798,13 @@ function respondToEvents($context) {
 			$context,
 			survey,
 			question;
-			
+
 		// Set global variables that will be used if the contents of this dialog are refreshed
 		globals.gListName = $li.data("list_name");
 		globals.gFormIndex = $li.data("fid");
 		globals.gItemIndex = $li.data("id");
 		globals.gShowingChoices = true;
-		
+
 		$context = option.createChoiceView();
 
 		// Set the previous choices list box
@@ -1777,24 +1812,24 @@ function respondToEvents($context) {
 		if(prevListName) {
 			option.setPreviousChoices(prevListName);
 		}
-		
+
 		// Show the table of options
 		if(typeof globals.gFormIndex !== "undefined" && typeof globals.gItemIndex !== undefined) {
 			// opened from question
 			survey = globals.model.survey,
 			question = survey.forms[globals.gFormIndex].questions[globals.gItemIndex];
 		}
-		
+
 		option.addOptionTable(question, globals.gFormIndex, globals.gListName);
 		option.setupChoiceView($('#filterType').val());
-		
+
 		respondToEventsChoices($context);
 		changeset.updateViewControls();
 
 		$('.editorContent').toggle();
 		$('.notoptionslist').hide();
 	});
-	
+
 	// Repeat count change
 	$context.find('.repeat-counts').change(function(){
 		var $this = $(this),
@@ -1803,13 +1838,13 @@ function respondToEvents($context) {
 			itemIndex = $elem.data("id"),
 			survey = globals.model.survey,
 			question;
-	
+
 		updateLabel("question", formIndex, itemIndex, undefined, "text", $this.val(), undefined, "calculation") ;
 	});
-	
+
 	// Add tooltips
 	$context.find('.has_tt').tooltip();
-	
+
 	// Respond to changes in the label field - this would change the property that has focus
 	$context.find('.labelButton').off().click(function() {
 
@@ -1818,13 +1853,13 @@ function respondToEvents($context) {
 			$li = $this.closest('li'),
 			formIndex = $li.data("fid"),
 			itemIndex = $li.data("id"),
-			newVal,		
+			newVal,
 			type,
 			optionList = $li.data("list_name"),
 			qname = $li.data("qname"),
 			labelType,
 			linkedQuestionId = 0;
-		
+
 		if($li.hasClass("option")) {
 			type = "option";
 		} else {
@@ -1850,7 +1885,7 @@ function respondToEvents($context) {
 		} else if(prop === "readonly") {
 			newVal = $this.hasClass("prop_no");		// If set false then newVal will be true
 		}
-		updateLabel(type, formIndex, itemIndex, optionList, labelType, newVal, qname, prop); 
+		updateLabel(type, formIndex, itemIndex, optionList, labelType, newVal, qname, prop);
 
 	});
 
@@ -2241,26 +2276,26 @@ function respondToEvents($context) {
 			$li = $this.closest('li'),
 			formIndex = $li.data("fid"),
 			itemIndex = $li.data("id"),
-			newVal,		
+			newVal,
 			type,
 			optionList = $li.data("list_name"),
 			qname = $li.data("qname"),
 			labelType,
 			linkedQuestionId;
-	
+
 		type = "question";
 		labelType = "text";
-		
+
 		linkedQuestionId = $this.closest('.row').find(".linkedQuestion").val();
 		if(!linkedQuestionId) {
 			linkedQuestionId = 0;		// HRK
 		}
-		newVal = $this.closest('.row').find(".linkedSurvey").val() + "::" + linkedQuestionId;	
-		updateLabel(type, formIndex, itemIndex, optionList, labelType, newVal, qname, prop); 
-		
+		newVal = $this.closest('.row').find(".linkedSurvey").val() + "::" + linkedQuestionId;
+		updateLabel(type, formIndex, itemIndex, optionList, labelType, newVal, qname, prop);
+
 
 	});
-	
+
 	// Respond to clicks on a label text area
 	$context.find('.labelProp').change(function(){
 
@@ -2286,10 +2321,10 @@ function respondToEvents($context) {
 		} else {
 			labelType = "text";
 		}
-		updateLabel("question", formIndex, itemIndex, optionList, labelType, newVal, qname, prop); 
+		updateLabel("question", formIndex, itemIndex, optionList, labelType, newVal, qname, prop);
 
 	});
-	
+
 	// validate the name on focus as duplicates may have been removed elsewhere
 	$context.find('.qname').focusin(function(){
 
@@ -2297,11 +2332,11 @@ function respondToEvents($context) {
 			$li = $this.closest('li'),
 			formIndex = $li.data("fid"),
 			itemIndex = $li.data("id");
-		
-		changeset.validateItem(formIndex, itemIndex, "question", true); 
+
+		changeset.validateItem(formIndex, itemIndex, "question", true);
 
 	});
-	
+
 	// Fix issues with dragging and selecting text in text area or input when draggable is set
 	// Mainly a problem with Firefox however in Chrome selecting text by dragging does not work
 	// Refer: http://stackoverflow.com/questions/21680363/prevent-drag-event-to-interfere-with-input-elements-in-firefox-using-html5-drag
@@ -2311,7 +2346,7 @@ function respondToEvents($context) {
         $(this).closest('.draggable').prop("draggable", true);
         console.log("blur");
     });
-	
+
 	// On tab in question name move to the feature input
 	//$context.find('.qname').keydown(function(e){
 	//	if(e.keyCode === 9 && ! e.shiftKey) {
@@ -2320,7 +2355,7 @@ function respondToEvents($context) {
 	//	}
 	//});
 
-	
+
 	// validate the question name on every character change
 	$context.find('.qname').keyup(function() {
 
@@ -2329,107 +2364,107 @@ function respondToEvents($context) {
 			formIndex = $li.data("fid"),
 			itemIndex = $li.data("id"),
 			newVal = $this.val();
-		
+
 		changeset.validateName(formIndex, itemIndex, newVal, "question", true);
 		changeset.updateModelWithErrorStatus(formIndex, itemIndex, "question");		// Update model and DOM
 
 	});
-	
+
 	// Update the question name
 	$context.find('.qname').change(function(){
 
 		if(globals.gSaveInProgress) {
 			return;
 		}
-		
+
 		var $this = $(this),
 			$li = $this.closest('li'),
 			formIndex = $li.data("fid"),
 			itemIndex = $li.data("id"),
 			newVal = $this.val();
-		
+
 		updateLabel("question", formIndex, itemIndex, undefined, "text", newVal, undefined, "name") ;
 
 	});
-	
+
 	// Selected a media property
 	$context.find('.mediaProp').off().click(function(){
-		
+
 		var $this = $(this);
 		mediaPropSelected($this);
 
 	});
-	
+
 	/*
-	 * Add a new question 
+	 * Add a new question
 	 *  (or if the property type is groups then extend a group to the selected location)
 	 */
 	$context.find('.add_question').off().click(function() {
 		var $this = $(this);
-		
+
 		if(globals.gSaveInProgress) {
 			return;
 		}
-		
+
 		addQuestion($this, "string");
 
 
 	});
-	
+
 	/*
-	 * Add a new choice list 
+	 * Add a new choice list
 	 */
 	$context.find('.add_option_list').off().click(function() {
 		var $this = $(this),
 			$context,
 			justAddedId,
 			val;
-		
+
 		if(globals.gSaveInProgress) {
 			return;
 		}
-		
+
 		console.log("adding choices list");
 		$context = optionlist.add();
 		respondToEvents($context);
-		
+
 		// Set focus to the new option list
 		var justAddedID = '#ol_' + globals.gLatestOptionList;
 		var $input = $('input', justAddedID);
 		val = $input.val();
-		$input.val("").focus().val(val);		// Set text entry to end of text field	
+		$input.val("").focus().val(val);		// Set text entry to end of text field
 
 	});
-	
+
 	// Delete question
 	$context.find('.delete_question').off().click(function() {
 		var $this = $(this),
 			$context,						// Updated Html
 			item = $(this).data("id");
-		
+
 		if(globals.gSaveInProgress) {
 			return;
 		}
-		
+
 		bootbox.confirm(localise.set["msg_del_q"], function(result) {
 			if(result) {
 				question.deleteQuestion(item);
 			}
-		}); 
-		
+		});
+
 	});
-	
+
 	// Get linked questions
 	$context.find('.linkedSurvey').change(function() {
 		var $this = $(this),
 			$li = $this.closest('li'),
 			item = $li.prop("id"),
 			surveyId = $this.val();
-		
+
 		markup.getLinkedQuestions(item, surveyId, 0);
-		
+
 	});
-	
+
 	// validate the optionlist name
 	$context.find('.olname').keyup(function(){
 
@@ -2438,12 +2473,12 @@ function respondToEvents($context) {
 			itemIndex = $elem.prop("id"),
 			listName = $elem.data("list_name"),
 			newVal = $this.val();
-		
+
 		changeset.validateName(listName, itemIndex, newVal, "optionlist", true);
 		changeset.updateModelWithErrorStatus(listName, itemIndex, "optionlist");		// Update model and DOM
 
 	});
-	
+
 	// Update the option list name
 	$context.find('.olname').change(function(){
 
@@ -2451,11 +2486,11 @@ function respondToEvents($context) {
 			$li = $this.closest('.question'),
 			oldVal = $li.data("list_name"),
 			newVal = $this.val();
-		
+
 		if(globals.gSaveInProgress) {
 			return;
 		}
-		
+
 		// Only apply the update if there is no error on this option list
 		if(!$li.hasClass("error")) {
 			$li.data("list_name", newVal);	// First update the HTML
@@ -2465,29 +2500,29 @@ function respondToEvents($context) {
 		}
 
 	});
-	
+
 	// Delete option list
 	$context.find('.delete_ol').off().click(function() {
 		var $this = $(this),
 			$context,						// Updated Html
 			item = $(this).data("id");
-		
+
 		if(globals.gSaveInProgress) {
 			return;
 		}
-		
+
 		bootbox.confirm(localise.set["msg_del_cl"], function(result) {
 			if(result) {
 				$context = optionlist.deleteList(item);
 				respondToEvents($context);		// The entire view is refreshed after deleting an option list
 			}
-		}); 
-		
+		});
+
 	});
-	
+
 	// Select types
 	$context.find('.question_type').off().click(function() {
-		
+
 		var $this = $(this),
 			$questionElement = $this.closest('li'),
 			published,
@@ -2497,14 +2532,14 @@ function respondToEvents($context) {
 			formIndex,
 			itemIndex,
 			i;
-		
+
 		if(globals.gSaveInProgress) {
 			return;
 		}
-		
+
 		formIndex = $questionElement.data("fid");
 		itemIndex = $questionElement.data("id");
-		
+
 		published = survey.forms[formIndex].questions[itemIndex].published;
 		saved = (survey.forms[formIndex].questions[itemIndex].published > 0);
 		if($this.hasClass("disabled")) {
@@ -2517,10 +2552,10 @@ function respondToEvents($context) {
 			}
 			$('.question_type_sel', '#dialog_types').off().click(function(){
 				var type = $(this).val();
-				
+
 				updateLabel("question", formIndex, itemIndex, undefined, "text", type, undefined, "type");
 				$('#typeModal').modal('hide');
-				
+
 				// Add an end group question if a new group has been created
 				if(type === "begin group") {
 
@@ -2539,13 +2574,13 @@ function respondToEvents($context) {
 					$context = question.add(formIndex,
 							//$questionElement.attr("id"),
                         	"question" + formIndex + "_" + survey.forms[formIndex].qSeq[endGroupSeq],
-							"after", 
+							"after",
 							"end group",
 							name);
-					respondToEvents($context);	
+					respondToEvents($context);
 				}
 			});
-			
+
 			$('#typeModal').modal({
 					keyboard: true,
 					backdrop: 'static',
@@ -2554,23 +2589,23 @@ function respondToEvents($context) {
 		}
 
 	});
-	
+
 	/*
 	 * Enable drag and drop to move questions and choices
-	 * 
+	 *
 	 * First add handlers for draggable components
 	 */
 	$('.draggable').prop('draggable', 'true')
-	
+
 	.off('dragstart')
 	.on('dragstart', function(evt){
 		var ev = evt.originalEvent;
-		
+
 		ev.effectAllowed = "move";		// Only allow move, TODO copy
-		
+
 		if(typeof ev.target.value !== "undefined" && ev.target.value.length > 0) {
 			ev.dataTransfer.setData("type", ev.target.value);
-		} else {	
+		} else {
 			if(ev.target.id === "") {	// Moving an option
 				ev.dataTransfer.setData("list_name", ev.target.dataset.list_name);
 				ev.dataTransfer.setData("index", ev.target.dataset.id);
@@ -2579,62 +2614,62 @@ function respondToEvents($context) {
 			}
 		}
 		$('.dropon.add_question').addClass("add_drop_button").removeClass("add_button");
-		
+
 		return true;
 	})
-	
+
 	// clean up after drag
 	.off('dragend')
 	.on('dragend', function(evt){
 		$('.dropon.add_question').addClass("add_button").removeClass("add_drop_button").removeClass("over_drop_button");
 		return false;
 	})
-	
+
 	// Don't allow a draggable component to be dropped onto a text field in some other question / option
 	.off('drop')
 	.on('drop', function(evt){
 		evt.originalEvent.preventDefault();
 	});
-	
-	
+
+
 	/*
 	 * Handle drop on or dragging over a drop zone
 	 */
-	
+
 	// Entering a drop zone
 	$('.dropon.add_question')
-	
+
 	.off('dragenter')
 	.on('dragenter', function(evt){
 		var ev = evt.originalEvent,
-			$elem = $(ev.target),	
+			$elem = $(ev.target),
 			targetId = $elem.data('qid');
-		
+
 		$elem.addClass("over_drop_button").removeClass("add_button").addClass("add_drop_button");
-	
+
 	})
-	
+
 	// Leaving a drop zone
 	.off('dragleave')
 	.on('dragleave', function(evt){
-		
+
 		var ev = evt.originalEvent,
 			$elem = $(ev.target),
 			sourceId = ev.dataTransfer.getData("text/plain"),
 			targetId = $elem.data('qid');
-		
+
 		$elem.addClass("add_button").removeClass("over_drop_button").addClass("add_drop_button");
-		
-		
+
+
 	})
-	
+
 	.off('dragover')
 	.on('dragover', function(evt){
 		evt.originalEvent.dataTransfer.dropEffect = "move";
 		evt.originalEvent.preventDefault();
 		evt.originalEvent.stopPropagation();
 	})
-	
+
 	// Drop the question or type
 	.off('drop')
 	.on('drop', function(evt){
@@ -2655,68 +2690,68 @@ function respondToEvents($context) {
 			$context,
 			$related,
 			$li,
-			type,											// Question or option									
+			type,											// Question or option
 			dropType = false;								// Set true if a question type is being dropped
-	
+
 		ev.preventDefault();
 		ev.stopPropagation();
-		 
+
 		if(typeof sourceValue !== "undefined" && sourceValue.length > 0) {		// Dropped a new type - Question only
 			type = "question";
 			dropType = true;
 			addQuestion($targetListItem, sourceValue);
 		} else {
-			
+
 			if($targetListItem.hasClass('add_question')) {
 				type = "question";
-				
+
 				formIndex = $targetListItem.data("findex");
 				$li = $targetListItem.closest('li');
 				if(locn === "after") {
 					$related = $li.prev();
 				} else {
 					$related = $li.next();
-				} 
+				}
 				if($related.length === 0) {   // Empty group, location is "after"
 					targetId = $li.parent().closest('li').attr("id");
 				} else {
 					targetId = $related.attr("id");
 				}
-				
+
 				if(sourceId != targetId) {
-					
+
 					console.log("Dropped: " + sourceId + " : " + targetId + " : " + sourceValue);
-					
+
 					$context = question.moveQuestion(formIndex, sourceId, targetId, locn);
 					respondToEvents($context);						// Add events on to the altered html
 				}
-			} 
-			
+			}
+
 			/*
 			else {
 				type = "option";
-				
+
 				targetListName = $targetListItem.data("list_name");
 				targetItemIndex = $targetListItem.data("index");
-				
+
 				if(sourceListName === targetListName && sourceItemIndex === targetItemIndex) {
 					// Dropped on itself do not move
 				} else {
-					
-					console.log("Dropped option: " + sourceListName + " : " + sourceItemIndex + 
+
+					console.log("Dropped option: " + sourceListName + " : " + sourceItemIndex +
 							" : " + targetListName + " : " + targetItemIndex);
-					
-					$context = question.moveBeforeOption(sourceListName, sourceItemIndex, 
+
+					$context = question.moveBeforeOption(sourceListName, sourceItemIndex,
 							targetListName, targetItemIndex, locn);
 					respondToEvents($context);						// Add events on to the altered html
 				}
 			}
 			*/
 
-			
+
 		}
-			
-	
+
+
 	});
 
 	// Select text inside text area on tab - from: https://stackoverflow.com/questions/5797539/jquery-select-all-text-from-a-textarea
@@ -2736,10 +2771,10 @@ function respondToEvents($context) {
  */
 
 function mediaPropSelected($this) {
-	
+
 	var $elem = $this.closest('li'),
 		$immedParent = $this.closest('div');
-	
+
 	if(!$elem.hasClass("question")) {
 		$elem = $this.closest('tr');
 	}
@@ -2748,9 +2783,9 @@ function mediaPropSelected($this) {
 	globals.gFormIndex = $elem.data("fid");
 	globals.gSelOptionId = $elem.data("id");
 	globals.gOptionList = $elem.data("list_name"); 		// Option list only used with choices which are in a table
-	gQname = $elem.data("qname"); 
+	gQname = $elem.data("qname");
 	$gCurrentRow = $elem;
-	
+
 	if($('#orgLevelTab').hasClass("active")) {
 		$('#orgPanel').show();
 		$('#surveyPanel').hide();
@@ -2764,28 +2799,28 @@ function mediaPropSelected($this) {
     	$('#survey_id').val(gSId);			// Set the survey id in the forms hidden field
     	gIsSurveyLevel = true;
 	}
-	
-	$('.mediaManage').hide();						
+
+	$('.mediaManage').hide();
 	$('.mediaSelect').show();
 	$('#mediaModalLabel').html(localise.set['msg_sel_media_f']);
-	
+
 	// Remove any current selections
 	$('#surveyPanel, #orgPanel').find('tr').removeClass('success');
-	
+
 	// Only show relevant media
 	$('tr','#surveyPanel, #orgPanel').hide();
 	$('tr.' + gElement, '#surveyPanel, #orgPanel').show();
-	
+
 	$('#mediaModal table').on('click', 'tbody tr', function(e) {
 		var $sel = $(this);
-		
+
 		$('#surveyPanel, #orgPanel').find('tr').removeClass('success');	// Un mark any other selcted rows
 	    $sel.addClass('success');
-	 
-	    gNewVal = $sel.find('.filename').text();		    
-	   
+
+	    gNewVal = $sel.find('.filename').text();
+
 	});
-	
+
 	// Set the status of the remove button
 	var $empty = $immedParent.find('.emptyMedia');
 	if($empty.length > 0) {
@@ -2793,24 +2828,24 @@ function mediaPropSelected($this) {
 	} else {
 		$('#removeMedia').removeClass("disabled");
 	}
-	
+
 	// On double click save and exit
 	$('#mediaModal table').on('dblclick', 'tbody tr', function(e) {
 		var $sel = $(this);
-		
-	    gNewVal = $sel.find('.filename').text();		    
+
+	    gNewVal = $sel.find('.filename').text();
 	    $('#mediaSelectSave').trigger("click");
 	});
-	
+
 	// If the user clicks on "Add" save and exit
-	
+
 	$('.mediaAdd').on('click', function(e) {
 		var $sel = $(this).closest('tr');
-		
-	    gNewVal = $sel.find('.filename').text();		    
+
+	    gNewVal = $sel.find('.filename').text();
 	    $('#mediaSelectSave').trigger("click");
 	});
-	
+
 	$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
 	$('#mediaModal').modal('show');
 
@@ -2834,36 +2869,36 @@ function addQuestion($this, type) {
 		$textArea,
 		textAreaVal,
 		locn = $this.data("locn");	// Add before or after the element id referenced by qIdx
-	
+
 	if(!survey) {
 		alert(localise.set["ed_ns"]);
 	} else {
 		forms = survey.forms;
-		
+
 		$li = $this.closest('li');
 		if(locn === "after") {
 			$related = $li.prev();
 		} else {
 			$related = $li.next();
-		} 
+		}
 		if($related.length === 0) {   // Empty group, location is "after"
 			qId = $li.parent().closest('li').attr("id");
 		} else {
 			qId = $related.attr("id");
 		}
-		
+
 		if(prop === "group") {		// Extend a group
 			availableGroups = $this.data("groups").split(":");
 			$context = question.setGroupEnd(formIndex, qId, locn ,undefined, undefined, availableGroups);
 		} else {
 			$context = question.add(formIndex, qId, locn, type, undefined);
 		}
-		
+
 		respondToEvents($context);				// Add events on to the altered html
 		if($context.attr("id") !== "formList") {
 			respondToEvents($context.prev());		// Add events on the "insert before" button
 		}
-		
+
 		// Set focus to the new question
 		var justAddedQuestionID = '#question' + formIndex +  '_' + (forms[formIndex].questions.length - 1);
 		$textArea = $('textarea', justAddedQuestionID);
@@ -2875,11 +2910,11 @@ function addQuestion($this, type) {
 		if(type === "begin group") {
 			itemIndex = forms[formIndex].questions.length - 1;
 			var name = survey.forms[formIndex].questions[itemIndex].name + "_groupEnd" ;
-			$context = question.add(formIndex, "question" + formIndex + "_" + itemIndex, 
-					"after", 
+			$context = question.add(formIndex, "question" + formIndex + "_" + itemIndex,
+					"after",
 					"end group",
 					name);
-			respondToEvents($context);	
+			respondToEvents($context);
 		}
 	}
 }
@@ -2931,7 +2966,7 @@ function updateLanguageView() {
 		languages = gTempLanguages,
 		h = [],
 		idx = -1;
-	
+
 
 	h[++idx] = '<table class="table">';
 	h[++idx] = '<thead>';
@@ -2944,10 +2979,10 @@ function updateLanguageView() {
 	h[++idx] = '<tbody class="table-striped">';
 
 	for(i = 0; i < languages.length; i++) {
-		
+
 		if(!languages[i].deleted) {
 			h[++idx] = '<tr>';
-			
+
 			// name
 			h[++idx] = '<td>';
 			h[++idx] = '<input type="text" data-idx="';
@@ -2956,7 +2991,7 @@ function updateLanguageView() {
 			h[++idx] = languages[i].name;
 			h[++idx] = '">';
 			h[++idx] = '</td>';
-			
+
 			// code
 			h[++idx] = '<td>';
 			h[++idx] = '<input type="text" data-idx="';
@@ -2976,23 +3011,23 @@ function updateLanguageView() {
 			}
 			h[++idx] = '>';
 			h[++idx] = '</td>';
-			
-		
+
+
 			// actions
 			h[++idx] = '<td>';
-		
+
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
 			h[++idx] = '" class="btn btn-default btn-sm rm_language danger">';
 			h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
-		
+
 			h[++idx] = '</td>';
 			// end actions
-		
+
 			h[++idx] = '</tr>';
 		}
 	}
-	
+
 	h[++idx] = '</tbody>';
 	h[++idx] = '</table>';
 
@@ -3022,8 +3057,8 @@ function updateLanguageView() {
 		gTempLanguages[idx].rtl = $(this).prop("checked");
 		updateLanguageView();
 	});
-	
-	
+
+
 }
 
 /*
@@ -3047,10 +3082,10 @@ function updatePulldataView() {
 	h[++idx] = '<tbody class="table-striped">';
 
 	for(i = 0; i < pulldata.length; i++) {
-		
+
 		if(!pulldata[i].deleted) {
 			h[++idx] = '<tr>';
-			
+
 			// Survey
 			h[++idx] = '<td>';
 			h[++idx] = '<input type="text" data-idx="';
@@ -3059,7 +3094,7 @@ function updatePulldataView() {
 			h[++idx] = pulldata[i].survey;
 			h[++idx] = '">';
 			h[++idx] = '</td>';
-			
+
 			// Data Key
 			h[++idx] = '<td>';
 			h[++idx] = '<input type="text" data-idx="';
@@ -3068,7 +3103,7 @@ function updatePulldataView() {
 			h[++idx] = pulldata[i].data_key;
 			h[++idx] = '"';
 			h[++idx] = '</td>';
-			
+
 			// Repeats
 			/*
 			h[++idx] = '<td>';
@@ -3083,7 +3118,7 @@ function updatePulldataView() {
 		      h[++idx] = '"> ';
 			h[++idx] = '</td>';
 			*/
-			
+
 			// Identifier
 			/*
 			h[++idx] = '<td>';
@@ -3094,22 +3129,22 @@ function updatePulldataView() {
 			h[++idx] = '"';
 			h[++idx] = '</td>';
 			*/
-		
+
 			// actions
 			h[++idx] = '<td>';
-		
+
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
 			h[++idx] = '" class="btn btn-default btn-sm rm_pulldata danger">';
 			h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
-		
+
 			h[++idx] = '</td>';
 			// end actions
-		
+
 			h[++idx] = '</tr>';
 		}
 	}
-	
+
 	h[++idx] = '</tbody>';
 	h[++idx] = '</table>';
 
@@ -3121,7 +3156,7 @@ function updatePulldataView() {
 		var idx = $(this).data("idx");
 		gTempPulldata[idx].survey = $(this).val();
 	});
-	
+
 	$(".pd_data_key", $selector).change(function(){
 		var idx = $(this).data("idx");
 		gTempPulldata[idx].data_key = $(this).val();
@@ -3132,8 +3167,8 @@ function updatePulldataView() {
         gTempPulldata.splice(idx, 1);
         updatePulldataView();
     });
-	
-	
+
+
 }
 
 
@@ -3146,7 +3181,7 @@ function updatePulldataView() {
  *  type: question || option
  */
 function updateLabel(type, formIndex, itemIndex, optionList, element, newVal, qname, prop) {
-	
+
 	var $context,
 		change,
 		changeType,
@@ -3157,16 +3192,16 @@ function updateLabel(type, formIndex, itemIndex, optionList, element, newVal, qn
 		oldVal,
 		i,
 		question;
-	
+
 	if(type === "question") {
 		question = survey.forms[formIndex].questions[itemIndex];
 		questionType = question.type;
 	}
-	
+
 	if(type === "optionlist") {
 		oldVal = qname;
 	}
-	
+
 	/*
 	 * If the question type is a calculate then the label will contain the calculation unless the
 	 * property type is type, name or display name
@@ -3195,7 +3230,7 @@ function updateLabel(type, formIndex, itemIndex, optionList, element, newVal, qn
 			changeType = "property";
 		}
 	}
-	
+
 	if(typeof questionType !== "undefined" && questionType === "begin repeat") {
 		for(i = 0; i < forms.length; i++) {
 			if(forms[i].parentFormIndex === formIndex && forms[i].parentQuestionIndex === itemIndex) {
@@ -3204,7 +3239,7 @@ function updateLabel(type, formIndex, itemIndex, optionList, element, newVal, qn
 			}
 		}
 	}
-	
+
 	change = {
 			changeType: changeType,		// survey | form | language | question | option | (property | label) last two are types of property change
 			action: "update",			// add | delete | update
@@ -3219,43 +3254,43 @@ function updateLabel(type, formIndex, itemIndex, optionList, element, newVal, qn
 				languageName: undefined,	// Language Name
 				allLanguages: false,		// Set true if all languages should be updated with a new label
 				repeat_path: repeat_path,	// Path to repeat count question if this is a begin repeat
-				
+
 				newVal: newVal,				// New value to be applied
 				oldVal: oldVal,			// Old value for this property
 				key: undefined,				// or Translation the "text_id", For option updates the option "value"
-				
+
 				// Helper values temporary indexes to access the model which has values for the question or option to be updated
 				qname: qname,					// Question name used when updating an option
 				language: globals.gLanguage,	// Index into language array
 				formIndex: formIndex,		// Index into the array of forms
 				itemIndex: itemIndex,		// Index into the form or choice list (for choices)
 
-				optionList: optionList,		// Name of the choice list (if this is an choice update)	
+				optionList: optionList,		// Name of the choice list (if this is an choice update)
 				isSurveyLevel: gIsSurveyLevel	// Set true for media if the media was added at the survey level rather than organisation
 			}
 	};
-	
+
 	$context = changeset.add(change);
 	if($context) {
 		// Do not set focus on change of label, the user has just clicked out of this label text area
 		respondToEvents($context);				// Add events on to the altered html
 	}
-	
+
 }
 
 /*
  * Return true if the passed in value is a valid option name
  */
 function isValidOptionName(val) {
-	
+
 	var vCheck = val.trim(),
 		isValid = true;
-	
+
 	if(vCheck.indexOf(" ") > 0) {
 		isValid = false;
 	}
-	
-	return isValid;	
+
+	return isValid;
 }
 
 /*
@@ -3263,7 +3298,7 @@ function isValidOptionName(val) {
  */
 function optionListExists(list) {
 	var optionLists = globals.model.survey.optionLists;
-	
+
 	if(typeof optionLists[list] === "undefined") {
 		return false;
 	} else {
@@ -3281,7 +3316,7 @@ function getSurveyForms(sId, callback) {
 
 	if(sId != -1 && sId && sId !== 'null') {
 		var url = '/surveyKPI/survey/' + sId + '/getMeta';
-	
+
 		addHourglass();
 	 	$.ajax({
 			url: url,
@@ -3302,7 +3337,7 @@ function getSurveyForms(sId, callback) {
 				}
 			}
 		});
-	
+
 	}
 }
 
@@ -3311,7 +3346,7 @@ function addForms(data) {
 		idx = -1,
 		i,
 		forms;
-	
+
 	forms = data.forms;
 	for(i = 0; i < forms.length; i++) {
 		h[++idx] = '<option value="';
@@ -3322,7 +3357,7 @@ function addForms(data) {
 		} else {
 			h[++idx] = forms[i].form;
 		}
-		h[++idx] = '</option>';	
+		h[++idx] = '</option>';
 	}
 	$('#form_name').html(h.join(""));
 
@@ -3332,7 +3367,7 @@ function addForms(data) {
  * User has changed the filter value on an option
  */
 function updateFilterValues($this, isCascade, isChecked) {
-	
+
 	var $elem = $this.closest('tr'),
 		$f = $this.closest('td'),
 		listName = $elem.data("list_name"),
@@ -3357,11 +3392,11 @@ function updateFilterValues($this, isCascade, isChecked) {
 		fVal = $this.val();
 		currentFilters = $elem.data("filters")
 	}
-	
+
 	if(typeof currentFilters !== "object") {
 		currentFilters = {};
 	}
-	
+
 	newVal = currentFilters;
 	if(typeof fVal === "undefined" || fVal.trim().length === 0) {
 		delete(newVal[filterName]);
@@ -3369,7 +3404,7 @@ function updateFilterValues($this, isCascade, isChecked) {
 		newVal[filterName] = fVal;
 	}
 	$elem.data("filters", newVal);
-	
+
 	updateLabel("option", formIndex, itemIndex, listName, "text", newVal, qname, "cascade_filters") ;
 }
 
@@ -3379,7 +3414,7 @@ function updateFilterValues($this, isCascade, isChecked) {
 function setCascadeFilter() {
 	var filter = "selected(${" + $('#previousSelect option:selected').html() + "}, _smap_cascade)";
 	$('#choiceFilter').val(filter);
-	updateLabel("question", globals.gFormIndex, 
+	updateLabel("question", globals.gFormIndex,
 			globals.gItemIndex, undefined, "text", filter, undefined, "choice_filter");
 }
 
@@ -3412,12 +3447,71 @@ function showSurveySummary(summary) {
 	$('#slu').modal("show");
 
 }
+
+function showSurveyIdentList(surveys) {
+
+	let h = [],
+		idx = -1,
+		project;
+
+	if(surveys && surveys.length > 0) {
+		for(i = 0; i < surveys.length; i++) {
+			if(!project) {
+				h[++idx] = '<h4>' + surveys[i].project + '</h4>';
+				h[++idx] = '<div class="table-responsive">';
+				h[++idx] = '<table><tbody>';
+			} else if(project != surveys[i].project) {
+				h[++idx] = '</tbody></table></div>';
+				h[++idx] = '<div class="table-responsive">';
+				h[++idx] = '<h4>' + surveys[i].project + '</h4>';
+				h[++idx] = '<table><tbody>';
+			}
+			project = surveys[i].project;
+
+			h[++idx] = '<tr>';
+
+			h[++idx] = '<td>';
+			h[++idx] = surveys[i].name;
+			h[++idx] = '</td>';
+
+			h[++idx] = '<td>';
+			h[++idx] = '<input tabindex="0" type="text"  readonly value="';
+			h[++idx] = surveys[i].ident;
+			if(i == 0) {
+				h[++idx] = '" id="gsi_start'
+			}
+			h[++idx] = '"/>';
+			h[++idx] = '</td>';
+
+			h[++idx] = '</tr>';
+		}
+		h[++idx] = '</tbody></table></div>';
+	}
+
+	$('#gsi').on('shown.bs.modal', function () {
+		$('#gsi_start').focus();
+		$('#gsi_start').select();
+	})
+
+	$('#gsi_content').html(h.join(''));
+	$('input', '#gsi_content').keyup(function(event) {
+		if (event.keyCode === 13) {
+			event.preventDefault();
+			document.execCommand('copy');
+			$('#gsi').modal("hide");
+		}
+	});
+
+	$('#gsi').modal("show");
+
+}
+
 /*
  * clear the choice filter
  */
 function setNoFilter() {
 	$('#choiceFilter').val("");
-	updateLabel("question", globals.gFormIndex, 
+	updateLabel("question", globals.gFormIndex,
 			globals.gItemIndex, undefined, "text", "", undefined, "choice_filter");
 }
 
