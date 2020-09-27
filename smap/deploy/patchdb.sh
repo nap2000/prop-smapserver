@@ -8,10 +8,11 @@ unattended-upgrades
 u1404=`lsb_release -r | grep -c "14\.04"`
 u1604=`lsb_release -r | grep -c "16\.04"`
 u1804=`lsb_release -r | grep -c "18\.04"`
-u1910=`lsb_release -r | grep -c "19\.10"`
+u2004=`lsb_release -r | grep -c "20\.04"`
 
-if [ $u1910 -eq 1 ]; then
-    TOMCAT_VERSION=tomcat8
+if [ $u2004 -eq 1 ]; then
+    TOMCAT_VERSION=tomcat9
+    TOMCAT_USER=tomcat
 elif [ $u1804 -eq 1 ]; then
     TOMCAT_VERSION=tomcat8
 else
