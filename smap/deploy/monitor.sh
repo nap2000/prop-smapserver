@@ -1,6 +1,19 @@
 #!/bin/sh
 
-export AWS_CONFIG_FILE=/usr/share/tomcat7/lib/AwsCredentials.properties
+u1604=`lsb_release -r | grep -c "16\.04"`
+u1804=`lsb_release -r | grep -c "18\.04"`
+u2004=`lsb_release -r | grep -c "20\.04"`
+
+if [ $u2004 -eq 1 ]; then
+    TOMCAT_VERSION=tomcat9
+elif [ $u1804 -eq 1 ]; then
+    TOMCAT_VERSION=tomcat8
+else
+    TOMCAT_VERSION=tomcat7
+fi
+
+
+export AWS_CONFIG_FILE=/usr/share/$TOMCAT_VERSION/lib/AwsCredentials.properties
 mindisk="10.0"
 server=`cat ~/hostname`
 diskalert="false"
