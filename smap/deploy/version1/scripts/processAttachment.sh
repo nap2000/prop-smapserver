@@ -36,19 +36,20 @@ if [ x"$type" = xvideo ]; then
 fi
 
 # If there is an s3 bucket available then send files to it
-if [ -f ~ubuntu/bucket ]; then
+# TODO get base path
+if [ -f /smap/settings/bucket ]; then
 
         prefix="/smap"
         region=`cat ~ubuntu/region`
 
         if [ -f  $destfile ]; then
                 relPath=${destfile#"$prefix"}
-                awsPath="s3://`cat ~ubuntu/bucket`$relPath"
+                awsPath="s3://`cat /smap/settings/bucket`$relPath"
                 /usr/bin/aws s3 --region $region cp $destfile $awsPath
         fi
         if [ -f  $destthumbnail ]; then
                 relPath=${destthumbnail#"$prefix"}
-                awsPath="s3://`cat ~ubuntu/bucket`$relPath"
+                awsPath="s3://`cat /smap/settings//bucket`$relPath"
                 /usr/bin/aws s3 --region $region cp $destthumbnail $awsPath
         fi
 fi
