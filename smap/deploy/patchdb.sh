@@ -250,6 +250,14 @@ then
 
 fi
 
+if [ ! -f /smap/settings ]
+then
+    mkdir /smap/settings
+    mv ~ubuntu/region /smap/settings
+    mv ~ubuntu/hostname /smap/settings
+    mv ~ubuntu/bucket /smap/settings
+    mv ~ubuntu/subscriber /smap/settings
+fi
 
 #####################################################################################
 # All versions
