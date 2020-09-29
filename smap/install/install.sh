@@ -137,7 +137,7 @@ sudo mkdir $filelocn/templates/xls
 sudo mkdir $filelocn/uploadedSurveys
 sudo mkdir $filelocn/misc
 sudo mkdir $filelocn/temp
-sudo mkdir $filelocn/bin
+sudo mkdir $filelocn/settings
 
 # For ubuntu 2004 allow tomcat9 to write to /smap
 if [ $u2004 -eq 1 ]; then

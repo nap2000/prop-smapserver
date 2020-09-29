@@ -154,7 +154,7 @@ service postgresql start
 service $TOMCAT_VERSION start
 service apache2 start
 
-echo "go" > ~ubuntu/subscriber
+echo "go" > /smap/settings/subscriber
 if [ $u1404 -eq 1 ]; then
 service subscribers start
 service subscribers_fwd start
@@ -176,4 +176,4 @@ fi
 # Start disk monitor
 cd $cwd
 sudo -u postgres psql -f ./rates.sql -q -d survey_definitions 2>&1 | grep -v duplicate | grep -v "already exists"
-sudo -u ubuntu ~ubuntu/smap/deploy/manage.sh
+sudo ./manage.sh
