@@ -1011,13 +1011,6 @@ define([
                         refresh = true;
                     }
 
-                    // Change the name if this is a location question
-                    if(change.question.type === "geopoint" ||
-                        change.question.type === "geotrace" ||
-                        change.question.type === "geoshape") {
-                        change.question.name = "the_geom";
-                    }
-
                     // Add a subform if required
                     if(change.question.type === "begin repeat") {
                         // New sub form
@@ -2196,6 +2189,7 @@ define([
 
                     }
 
+                    // Keep this check until all old installtions that reference geometry have been migrated away from the_geom
                     if(isValid) {
                         if(val === 'the_geom'  && question.type != "geopoint"
                             && question.type != "geoshape"
@@ -2228,9 +2222,8 @@ define([
 
 			/*
 			 * Question name change require the questions in all the forms to be validated for duplicates
-			 * Note this is a stronger test than applied by xlsForm
 			 */
-            if(isValid && val !== 'the_geom') {
+            if(isValid) {
 
                 valLower = val.toLowerCase();
 
