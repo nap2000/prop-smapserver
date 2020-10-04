@@ -167,9 +167,6 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 						}
 					}
 				}
-				if(translatedName === 'the_geom') {
-					translatedName = localise.set["c_location"];
-				}
 				if(types[i] === "dateTime") {
 					gTab[++gIdx] = translatedName + ' (' + localise.set["c_lt"] + ')';
 				} else {
