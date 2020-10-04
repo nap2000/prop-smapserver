@@ -459,7 +459,6 @@ define(
     "ed_l": "Linked",
     "ed_nl": "Not Linked",
     "ed_r_msg": "Required Text Message",
-    "ed_o_o_g": "Only one geometry question can be added to a form",
     "ed_hrk": "Unique Key",
     "ed_csv": "CSV File",
     "ed_c_s": "Source of Choices",
