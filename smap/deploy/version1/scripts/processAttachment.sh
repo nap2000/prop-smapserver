@@ -40,7 +40,7 @@ fi
 if [ -f /smap/settings/bucket ]; then
 
         prefix="/smap"
-        region=`cat ~ubuntu/region`
+        region=`cat /smap/settings/region`
 
         if [ -f  $destfile ]; then
                 relPath=${destfile#"$prefix"}
@@ -49,7 +49,7 @@ if [ -f /smap/settings/bucket ]; then
         fi
         if [ -f  $destthumbnail ]; then
                 relPath=${destthumbnail#"$prefix"}
-                awsPath="s3://`cat /smap/settings//bucket`$relPath"
+                awsPath="s3://`cat /smap/settings/bucket`$relPath"
                 /usr/bin/aws s3 --region $region cp $destthumbnail $awsPath
         fi
 fi
