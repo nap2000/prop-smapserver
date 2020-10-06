@@ -390,6 +390,7 @@ define({
     "a_ref_rate": "Analysis auto refresh interval",
     "a_exp_title": "Export Results",
     "a_exp_leg1": "Select a survey",
+    "a_locn": "Select a location question",
     "a_exp_leg2": "Output format:",
     "a_exp_notes": "Export notes:",
     "a_exp_meta": "Include Meta Data:",
