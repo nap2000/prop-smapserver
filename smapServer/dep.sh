@@ -26,8 +26,6 @@
 	# Use full optimisation as whitespace only caluse error on submit with missing jscomp
 	#java -jar ~/compiler-latest/closure-compiler-v20200719.jar  --js WebContent/build/js/webform-bundle.es5.js --js_output_file WebContent/build/js/webform-bundle.min.js 
 
-	# No compression - due to the above 2 issues
-	#cp WebContent/build/js/webform-bundle.js WebContent/build/js/webform-bundle.min.js
 	rm WebContent/build/js/webform-bundle.es5.js
 #fi
 
