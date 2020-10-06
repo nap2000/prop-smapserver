@@ -39,6 +39,7 @@ function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, curren
 				}
 				if(updateDatePicker) {
 					addDatePickList(data, currentDate);
+					addGeomPickList(data);
 				}
 				if(neo_model) {
 					$('.showthingsat').show();

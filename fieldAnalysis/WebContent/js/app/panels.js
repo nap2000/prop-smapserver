@@ -312,6 +312,11 @@ $(document).ready(function() {
 		
 		getViewSurveys({sId:"-1"});				// Update the survey list to match the new project
  	 });
+
+	// Respond to changes to the shape forms selector
+	$('.shapeforms').change(function() {
+		shapeFormsChanged();
+	});
 	
 	enableUserProfile();
 	
