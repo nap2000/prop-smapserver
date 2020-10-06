@@ -3416,6 +3416,67 @@ function addDatePickList(sMeta, currentDate) {
 	}
 }
 
+/*
+ * Add a list of geometry questions to pick from
+ */
+function addGeomPickList(sMeta) {
+
+	var h = [],
+		idx = -1,
+		i,
+		value,
+		theForm;
+
+	if(sMeta && sMeta.forms) {
+		for(i = 0; i < sMeta.forms.length; i++) {
+
+			theForm = sMeta.forms[i];
+
+			h[++idx] = '<div class="exportcontrol showshape" style="display: block;">';
+			h[++idx] = '<label>' + theForm.form + '</label>';
+			h[++idx] = '<select class="geomSelect" id="geomForm_' + theForm.f_id + '">';
+			if(theForm.geomQuestions) {
+				for(j = 0; j < theForm.geomQuestions.length; j++) {
+					h[++idx] = '<option value="';
+					h[++idx] = theForm.geomQuestions[j];
+					h[++idx] = '">';
+					h[++idx] = theForm.geomQuestions[j];
+					h[++idx] = '</option>';
+				}
+			}
+			h[++idx] = '</select>';
+			h[++idx] = '</div>';
+
+		}
+
+		$(".geomselect_export").empty().html((h.join('')));
+
+		shapeFormsChanged();
+
+	}
+}
+
+function shapeFormsChanged() {
+	let formId = getSelectedForm('.shapeforms', true);
+	if(formId) {
+		$('.geomSelect').prop('disabled', true);
+		$('#geomForm_' + formId).prop('disabled', false);
+	}
+}
+
+function getSelectedForm($forms, ignoreError) {
+	let forms = $(':radio:checked', $forms).map(function() {
+		return this.value;
+	}).get();
+	if(forms.length === 0) {
+		if(!ignoreError) {
+			alert(window.localise.set["msg_one_f2"]);
+		}
+		return 0;
+	}
+	return forms[0];
+}
+
 function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms) {
 
 	var h = [],
