@@ -142,8 +142,7 @@ sudo mkdir $filelocn/settings
 # For ubuntu 2004 allow tomcat9 to write to /smap
 if [ $u2004 -eq 1 ]; then
 mkdir /etc/systemd/system/tomcat9.service.d
-echo "[Service]" > /etc/systemd/system/tomcat9.service.d/override.conf
-echo "ReadWritePaths=$filelocn" >> /etc/systemd/system/tomcat9.service.d/override.conf
+cp config_files/override.conf /etc/systemd/system/tomcat9.service.d/override.conf
 fi
 
 # Make sure all subdirectories of filelocn are updated even if the latter is a symbolic link

@@ -261,11 +261,16 @@ fi
 
 #####################################################################################
 # All versions
-# Copy the new apache configuration files
+# Copy the new apache configuration files and tomcat directory access
 
 cd ../install
 chmod +x apacheConfig.sh
 ./apacheConfig.sh
+
+if [ $u2004 -eq 1 ]; then
+cp config_files/override.conf /etc/systemd/system/tomcat9.service.d/override.conf
+fi
+
 cd ../deploy
  
 
