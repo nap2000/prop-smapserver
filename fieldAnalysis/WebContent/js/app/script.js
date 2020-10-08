@@ -497,6 +497,7 @@ function setExportControls() {
             $('.showoldxls').show();
         }
     }
+    shapeFormsChanged();
 }
 
 /*

@@ -365,6 +365,7 @@ function surveyChangeEvent(sId) {
 		getSurveyMetaSE(sId, undefined, false, false, true);
 	} else {
 		addDatePickList(surveyMeta);
+		addGeomPickList(surveyMeta);
 	}
 	
 	// Get the languages for this survey
