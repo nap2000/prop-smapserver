@@ -3449,7 +3449,7 @@ function addGeomPickList(sMeta) {
 
 		}
 
-		$(".geomselect_export").empty().html((h.join('')));
+		$(".geomselect_export, .geomselect_settings").empty().html((h.join('')));
 
 		shapeFormsChanged();
 
@@ -3459,8 +3459,8 @@ function addGeomPickList(sMeta) {
 function shapeFormsChanged() {
 	let formId = getSelectedForm('.shapeforms', true);
 	if(formId) {
-		$('.geomSelect').prop('disabled', true);
-		$('#geomForm_' + formId).prop('disabled', false);
+		$('.geomSelect', '.geomselect_export').prop('disabled', true);
+		$('#geomForm_' + formId, '.geomselect_export').prop('disabled', false);
 	}
 }
 
