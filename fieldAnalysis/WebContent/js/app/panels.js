@@ -234,6 +234,13 @@ $(document).ready(function() {
 							}
 			        		view.region = "none";
 						}
+
+						// Add geom Questions
+				        view.geomQuestions = [];
+				        $('.geomSelect', '#p_settings').each(function() {
+					        view.geomQuestions.push($(this).val());
+				        });
+
 						// Determine if we need to redraw the panel
 						if(newType !== view.type) {
 							setPanelType(newType, globals.gViewIdx, view.timeGroup, view.qId, view.subject_type);
