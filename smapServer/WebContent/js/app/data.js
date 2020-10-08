@@ -231,7 +231,8 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 				f_view.dateQuestionId, f_view.fromDate, f_view.toDate,
 				f_view.advanced_filter,  // Get all records with all features
 				tz,
-				f_view.inc_ro);
+				f_view.inc_ro,
+				f_view.geomQuestions);
 	
 	addHourglass();
  	$.ajax({

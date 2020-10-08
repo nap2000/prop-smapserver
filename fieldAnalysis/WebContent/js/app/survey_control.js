@@ -169,7 +169,8 @@ function copyView(v) {
 			dateQuestionId: v.dateQuestionId,
         	advanced_filter: v.advanced_filter,
 			subject_type: v.subject_type,
-		    inc_ro: v.inc_ro
+		    inc_ro: v.inc_ro,
+			geomQuestions: v.geomQuestions
 	};
 	
 	return cp;
