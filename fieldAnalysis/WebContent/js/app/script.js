@@ -17,6 +17,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 var viewIdx = 0;
+var gLastSetForm;
 
 $(document).ready(function() {
 
@@ -252,6 +253,7 @@ function initialiseDialogs() {
                             } else {
                                 queryId = undefined;
                                 form = getSelectedForm('.shapeforms', false);
+                                gLastSetForm = form;    // Keep until the next time the user opens the dialog
                             }
 
                             let geomQuestion = $('#geomForm_' + form).val();
@@ -497,6 +499,9 @@ function setExportControls() {
             $('.showoldxls').show();
         }
     }
+
+    // Set some values according to what the user specified last
+    $('.osmform[value=' + gLastSetForm + ']', '.shapeforms').prop("checked", "checked");
     shapeFormsChanged();
 }
 
