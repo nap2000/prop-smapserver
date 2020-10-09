@@ -126,8 +126,6 @@ function showSettings($this) {
 	var views = globals.gSelector.getViews();
 	
 	gSurveyControlView = copyView(views[globals.gViewIdx]);		// Get a copy of the current view
-
-	//gSurveyControlView = $.extend(true, {}, views[globals.gViewIdx]);	// Get a copy of the current view (stack overflow)
 	
 	getViewData(gSurveyControlView);
 	setSurveyViewControl(gSurveyControlView);		// Set the values in the settings dialog from the view
