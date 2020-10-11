@@ -176,4 +176,3 @@ fi
 # Start disk monitor
 cd $cwd
 sudo -u postgres psql -f ./rates.sql -q -d survey_definitions 2>&1 | grep -v duplicate | grep -v "already exists"
-sudo ./manage.sh
