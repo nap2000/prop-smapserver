@@ -126,8 +126,6 @@ function showSettings($this) {
 	var views = globals.gSelector.getViews();
 	
 	gSurveyControlView = copyView(views[globals.gViewIdx]);		// Get a copy of the current view
-
-	//gSurveyControlView = $.extend(true, {}, views[globals.gViewIdx]);	// Get a copy of the current view (stack overflow)
 	
 	getViewData(gSurveyControlView);
 	setSurveyViewControl(gSurveyControlView);		// Set the values in the settings dialog from the view
@@ -169,7 +167,8 @@ function copyView(v) {
 			dateQuestionId: v.dateQuestionId,
         	advanced_filter: v.advanced_filter,
 			subject_type: v.subject_type,
-		    inc_ro: v.inc_ro
+		    inc_ro: v.inc_ro,
+			geomQuestions: v.geomQuestions
 	};
 	
 	return cp;
@@ -364,6 +363,7 @@ function surveyChangeEvent(sId) {
 		getSurveyMetaSE(sId, undefined, false, false, true);
 	} else {
 		addDatePickList(surveyMeta);
+		addGeomPickList(surveyMeta);
 	}
 	
 	// Get the languages for this survey

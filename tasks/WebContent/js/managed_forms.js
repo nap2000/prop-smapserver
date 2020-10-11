@@ -798,7 +798,7 @@ require([
 
                 // Don't use some types to group
                 if(cols[i].type === "image" || cols[i].type === "video" || cols[i].type === "audio"
-                    || cols[i].displayName === "prikey" || cols[i].displayName === "the_geom") {
+                    || cols[i].type === "prikey" || cols[i].type === "geopoint" || cols[i].type === "geoshape" || cols[i].type === "geotrace") {
 
                     continue;
 

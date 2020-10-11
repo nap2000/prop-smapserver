@@ -234,6 +234,13 @@ $(document).ready(function() {
 							}
 			        		view.region = "none";
 						}
+
+						// Add geom Questions
+				        view.geomQuestions = [];
+				        $('.geomSelect', '#p_settings').each(function() {
+					        view.geomQuestions.push($(this).val());
+				        });
+
 						// Determine if we need to redraw the panel
 						if(newType !== view.type) {
 							setPanelType(newType, globals.gViewIdx, view.timeGroup, view.qId, view.subject_type);
@@ -312,6 +319,11 @@ $(document).ready(function() {
 		
 		getViewSurveys({sId:"-1"});				// Update the survey list to match the new project
  	 });
+
+	// Respond to changes to the shape forms selector
+	$('.shapeforms').change(function() {
+		shapeFormsChanged();
+	});
 	
 	enableUserProfile();
 	

@@ -239,6 +239,7 @@ public class ExportSurveyMedia extends Application {
 						true,
 						false,
 						tz,
+						null,		// geomQuestion
 						false		// Accuracy and Altitude
 						);		
 				
@@ -317,7 +318,7 @@ public class ExportSurveyMedia extends Application {
 				int code = 0;				
 				Process proc = Runtime.getRuntime().exec(new String [] {"/bin/sh", "-c", "/smap_bin/getshape.sh " + 
 							database_name + " " +
-							sqlDesc.target_table + " " +
+							startingForm.table + " " +
 							"\"" + sqlDesc.sql + "\" " +
         					filePath + " media"});
         					
