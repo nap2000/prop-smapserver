@@ -3840,18 +3840,25 @@ public class GeneralUtilityMethods {
 					}
 					
 					if(get_acc_alt && qType.equals("geopoint")) {
-						if(GeneralUtilityMethods.columnType(cResults, table_name, "the_geom_acc") != null) {
+						String accColumn = c.column_name + "_acc";
+						String accDisplay = c.displayName + " Accuracy";
+						String accName = c.question_name + "_acc";
+						
+						String altColumn = c.column_name + "_alt";
+						String altDisplay = c.displayName + " Altitude";
+						String altName = c.question_name + "_alt";
+						if(GeneralUtilityMethods.columnType(cResults, table_name, accName) != null) {
 							c = new TableColumn();
-							c.column_name = "the_geom_acc";
-							c.displayName = "Accuracy";
-							c.question_name = "accuracy";
+							c.column_name = accColumn;
+							c.displayName = accDisplay;
+							c.question_name = accName;
 							c.type = "decimal";
 							realQuestions.add(c);
 							
 							c = new TableColumn();
-							c.column_name = "the_geom_alt";
-							c.displayName = "Altitude";
-							c.question_name = "altitude";
+							c.column_name = altColumn;
+							c.displayName = altDisplay;
+							c.question_name = altName;
 							c.type = "decimal";
 							realQuestions.add(c);
 						}
@@ -3926,6 +3933,18 @@ public class GeneralUtilityMethods {
 		columnList.addAll(realQuestions); // Add the real questions after the property questions
 
 		return columnList;
+	}
+	
+	/*
+	 * Get the name of the first geometry column in the list of columns
+	 */
+	static public String getFirstGeometryQuestionName(ArrayList<TableColumn> columns) {
+		for(TableColumn tc : columns) {
+			if(tc.isGeometry()) {
+				return tc.question_name;
+			}
+		}
+		return "";
 	}
 	
 	/*
@@ -5867,7 +5886,6 @@ public class GeneralUtilityMethods {
 			pstmt.setString(1, tablename);
 			pstmt.setString(2, columnName);
 
-			log.info("++++++++++++++++= Has column: " + pstmt.toString());
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				hasColumn = true;
@@ -8174,7 +8192,6 @@ public class GeneralUtilityMethods {
 				pstmt = sd.prepareStatement(sql);
 				pstmt.setInt(1, fId);
 			
-				log.info(pstmt.toString());
 				rs = pstmt.executeQuery();
 				while(rs.next()) {
 					int qId = rs.getInt(1);
@@ -8184,10 +8201,8 @@ public class GeneralUtilityMethods {
 					
 					if(!GeneralUtilityMethods.hasColumn(cResults, tableName, columnName)) {
 						GeneralUtilityMethods.alterColumn(cResults, tableName, type, columnName, compressed);
-						log.info("Adding column " + columnName + " to table " + tableName);
 					}
 					pstmtUpdate.setInt(1, qId);
-					log.info("Marking question " + columnName + " as published");
 					pstmtUpdate.executeUpdate();
 					
 				}
@@ -9634,6 +9649,32 @@ public class GeneralUtilityMethods {
             }
         }
         return out;
+    }
+    
+    public static boolean hasTheGeom(Connection sd, int sId, int fId) throws SQLException {
+    	
+    	boolean hasTheGeom = false;
+    	String sql = "select count(*) from question q, form f "
+    			+ "where q.f_id = f.f_id "
+    			+ "and f.s_id = ? "
+    			+ "and f.table_name in (select table_name from form where f_id = ?) "
+    			+ "and q.qname = 'the_geom' "
+    			+ "and (q.qtype = 'geopoint' or q.qtype = 'geotrace' or q.qtype = 'geoshape')";
+    	PreparedStatement pstmt = null;
+    	try {
+    		pstmt = sd.prepareStatement(sql);
+    		pstmt.setInt(1,  sId);
+    		pstmt.setInt(2,  fId);
+    		log.info(pstmt.toString());
+    		ResultSet rs = pstmt.executeQuery();
+    		if(rs.next() && rs.getInt(1) > 0) {
+    			hasTheGeom = true;
+    		}
+    	} finally {
+    		if(pstmt != null) {try {pstmt.close();} catch(Exception e) {}}
+    	}
+ 
+    	return hasTheGeom;
     }
 }
 

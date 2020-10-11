@@ -213,6 +213,7 @@ public class Data extends Application {
 		if(meta != null && (meta.equals("false") || meta.equals("no"))) {
 			includeMeta = false;
 		}
+		
 		// Authorisation is done in getDataRecords
 		getDataRecords(request, response, sIdent, start, limit, mgmt, groupSurvey, viewId, 
 				schema, group, sort, dirn, formName, start_parkey,
@@ -415,10 +416,6 @@ public class Data extends Application {
 		boolean isGeoJson=false;
 		if(geojson != null && (geojson.equals("yes") || geojson.equals("true"))) {
 			isGeoJson = true;
-		}
-		
-		if(geomQuestion == null) {
-			geomQuestion = "the_geom";
 		}
 		
 		boolean mergeSelectMultiple = false;
@@ -668,8 +665,12 @@ public class Data extends Application {
 			outWriter.print("[");
 			errorMsgAddClosingArray = true;
 			
+			if(geomQuestion == null) {
+				geomQuestion = GeneralUtilityMethods.getFirstGeometryQuestionName(columns);
+			}
+			
 			if(pstmt != null) {
-				log.info("KoboAPI data: " + pstmt.toString());
+				log.info("DataAPI data: " + pstmt.toString());
 				/*
 				 * Get the data record by record so it can be streamed
 				 */
