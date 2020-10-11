@@ -17,6 +17,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 var viewIdx = 0;
+var gLastSetForm;
 
 $(document).ready(function() {
 
@@ -251,20 +252,15 @@ function initialiseDialogs() {
                                 form = 0;
                             } else {
                                 queryId = undefined;
-                                forms = $(':radio:checked', '.shapeforms').map(function() {
-                                    return this.value;
-                                }).get();
-                                if(forms.length === 0) {
-                                    alert(window.localise.set["msg_one_f2"]);
-                                    return(false);
-                                }
-                                form = forms[0];
+                                form = getSelectedForm('.shapeforms', false);
+                                gLastSetForm = form;    // Keep until the next time the user opens the dialog
                             }
 
+                            let geomQuestion = $('#geomForm_' + form).val();
                             url = exportSurveyMisc(sId, filename, form,
                                 format, exportReadOnly, language,
                                 exp_from_date, exp_to_date, dateQuestionId, queryId,
-                                filter, merge_select_multiple);
+                                filter, merge_select_multiple, geomQuestion);
 
                         } else if(format === "thingsat") {
                             forms = $(':radio:checked', '.shapeforms').map(function() {
@@ -424,6 +420,7 @@ function exportSurveyChanged() {
         } else {
             addFormPickList(sMeta, checkedForms);
             addDatePickList(sMeta);
+            addGeomPickList(sMeta);
         }
 
         // Update the thingsat model if we changed the survey
@@ -502,6 +499,10 @@ function setExportControls() {
             $('.showoldxls').show();
         }
     }
+
+    // Set some values according to what the user specified last
+    $('.osmform[value=' + gLastSetForm + ']', '.shapeforms').prop("checked", "checked");
+    shapeFormsChanged();
 }
 
 /*
@@ -816,7 +817,7 @@ function regionsURL () {
  * @param {string} survey
  */
 function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bBad, filter, dateId, startDate,
-                       endDate, advanced_filter, tz, inc_ro) {
+                       endDate, advanced_filter, tz, inc_ro, geomQuestions) {
 
     var url = "/surveyKPI/items/";
 	var ampersand = false;
@@ -871,6 +872,10 @@ function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bB
 
     if(typeof advanced_filter !== "undefined" && advanced_filter.length > 0) {
         url+= "&advanced_filter=" + encodeURIComponent(advanced_filter);
+    }
+
+    if(geomQuestions && geomQuestions.length > 0) {
+        url+= "&geom_questions=" + encodeURIComponent(geomQuestions.join(','));
     }
 
 	if(tz) {
@@ -1221,7 +1226,8 @@ function exportSurveyMisc (sId, filename, form, format, exp_ro, language,
                            dateQuestionId,
                            queryId,
                            filter,
-                           merge_select_multiple) {
+                           merge_select_multiple,
+                           geomQuestion) {
 
     var url = "/surveyKPI/exportSurveyMisc/";
 
@@ -1264,6 +1270,10 @@ function exportSurveyMisc (sId, filename, form, format, exp_ro, language,
 
     if(merge_select_multiple) {
         url += "&merge_select_multiple=true";
+    }
+
+    if(geomQuestion) {
+        url += "&geom_question=" + geomQuestion;
     }
 
     return url;

@@ -681,7 +681,7 @@ public class UploadFiles extends Application {
 					for(Question q : f.questions) {
 						QuestionForm qt = questionNames.get(q.name);
 						if(qt != null) {
-							if(!qt.reference && !qt.formName.equals(f.name)  && !q.name.equals("the_geom")) {
+							if(!qt.reference && !qt.formName.equals(f.name)) {
 								String msg = localisation.getString("tu_gq");
 								msg = msg.replace("%s1", q.name);
 								msg = msg.replace("%s2", f.name);
@@ -710,6 +710,40 @@ public class UploadFiles extends Application {
 				
 				msg = msg.replace("%s1", s.getDisplayName()).replace("%s2", s.getIdent());
 				lm.writeLog(sd, s.getId(), user, title, msg, 0);
+				
+				/*
+				 * If the survey is being replaced and if it has an existing  geometry called the_geom and there is no
+				 * geometry of that name in the new form then create a warning
+				 * This warnig can be removed in version 21.06
+				 */
+				if(action.equals("replace")) {
+					for(Form f : s.forms) {
+						
+						boolean newTheGeom = false;
+						boolean newNonTheGeom = false;
+						ArrayList<String> newGeomQuestions = new ArrayList<> ();
+						for(Question q : f.questions) {
+							if(q.type.equals("geopoint") || q.type.equals("geotrace") || q.type.equals("geoshape")) {
+								if(q.name.equals("the_geom")) {
+									newTheGeom = true;
+								} else {
+									newNonTheGeom = true;
+									newGeomQuestions.add(q.name);
+								}
+							}
+	
+						}
+						if(newNonTheGeom && !newTheGeom) {
+							if(GeneralUtilityMethods.hasTheGeom(sd, existingSurveyId, f.id)) {		
+								String gMsg = localisation.getString("tu_geom");
+								gMsg = gMsg.replace("%s1", f.name);
+								gMsg = gMsg.replace("%s2", newGeomQuestions.toString());
+								warnings.add(new ApplicationWarning(gMsg));
+							}
+						}
+					}	
+				}
+				
 			} else {
 				int sId = model.writeDatabase();
 				s = sm.getById(sd, cResults, user, false, sId, true, basePath, 
