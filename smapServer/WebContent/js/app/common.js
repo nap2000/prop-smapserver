@@ -3433,7 +3433,7 @@ function addGeomPickList(sMeta) {
 
 			theForm = sMeta.forms[i];
 
-			k[++idx] = h[++idx] = '<div class="exportcontrol showshape" style="display: block;">';
+			k[++idx] = h[++idx] = '<div class="exportcontrol showshape showosm" style="display: block;">';
 			k[++idx] = h[++idx] = '<label>' + theForm.form + '</label>';
 			h[++idx] = '<select class="geomSelect" id="geomForm_' + theForm.f_id + '">';    // export only
 			k[++idx] = '<select class="geomSelect">';                                       // Settings only
