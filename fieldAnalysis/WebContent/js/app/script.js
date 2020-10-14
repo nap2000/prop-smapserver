@@ -237,8 +237,10 @@ function initialiseDialogs() {
                             forms = $(':checkbox:checked', '.osmforms').map(function() {
                                 return this.value;
                             }).get();
+                            form = getSelectedForm('.shapeforms', false);
+                            let geomQuestion = $('#geomForm_' + form).val();
                             url = exportSurveyOSMURL(sId, displayName, forms, exportReadOnly,
-                                exp_from_date, exp_to_date, dateQuestionId);
+                                exp_from_date, exp_to_date, dateQuestionId, geomQuestion);
 
                         } else if(format === "shape"
                             || format === "kml"
@@ -1183,7 +1185,8 @@ function exportSurveyLqasURL (sId, sources, reportDefn,
 function exportSurveyOSMURL (sId, filename, forms, exp_ro,
                              exp_from_date,
                              exp_to_date,
-                             dateQuestionId) {
+                             dateQuestionId,
+                             geomQuestion) {
 
     var url = "/surveyKPI/exportSurveyOSM/",
         form,
@@ -1212,6 +1215,10 @@ function exportSurveyOSMURL (sId, filename, forms, exp_ro,
         if(exp_to_date) {
             url += "&to=" + exp_to_date;
         }
+    }
+
+    if(geomQuestion) {
+        url += "&geom_question=" + geomQuestion;
     }
 
     return encodeURI(url);
