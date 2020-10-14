@@ -3422,6 +3422,7 @@ function addDatePickList(sMeta, currentDate) {
 function addGeomPickList(sMeta) {
 
 	var h = [],
+		k = [],
 		idx = -1,
 		i,
 		value,
@@ -3432,24 +3433,26 @@ function addGeomPickList(sMeta) {
 
 			theForm = sMeta.forms[i];
 
-			h[++idx] = '<div class="exportcontrol showshape" style="display: block;">';
-			h[++idx] = '<label>' + theForm.form + '</label>';
-			h[++idx] = '<select class="geomSelect" id="geomForm_' + theForm.f_id + '">';
+			k[++idx] = h[++idx] = '<div class="exportcontrol showshape" style="display: block;">';
+			k[++idx] = h[++idx] = '<label>' + theForm.form + '</label>';
+			h[++idx] = '<select class="geomSelect" id="geomForm_' + theForm.f_id + '">';    // export only
+			k[++idx] = '<select class="geomSelect">';                                       // Settings only
 			if(theForm.geomQuestions) {
 				for(j = 0; j < theForm.geomQuestions.length; j++) {
-					h[++idx] = '<option value="';
-					h[++idx] = theForm.geomQuestions[j];
-					h[++idx] = '">';
-					h[++idx] = theForm.geomQuestions[j];
-					h[++idx] = '</option>';
+					k[++idx] = h[++idx] = '<option value="';
+					k[++idx] = h[++idx] = theForm.geomQuestions[j];
+					k[++idx] = h[++idx] = '">';
+					k[++idx] = h[++idx] = theForm.geomQuestions[j];
+					k[++idx] = h[++idx] = '</option>';
 				}
 			}
-			h[++idx] = '</select>';
-			h[++idx] = '</div>';
+			k[++idx] = h[++idx] = '</select>';
+			k[++idx] = h[++idx] = '</div>';
 
 		}
 
-		$(".geomselect_export, .geomselect_settings").empty().html((h.join('')));
+		$(".geomselect_export").empty().html((h.join('')));
+		$(".geomselect_settings").empty().html((k.join('')));
 
 		shapeFormsChanged();
 
