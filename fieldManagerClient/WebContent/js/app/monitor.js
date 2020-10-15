@@ -204,9 +204,14 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                         url: "/surveyKPI/regions",
                         data: { settings: regionString },
                         success: function(data, status) {
-                            refreshRegions();
-                            setMapRegions(globals.gRegion["name"]);
                             removeHourglass();
+                            if(data && data.indexOf('ERROR') == 0) {
+                                alert(data);
+                            } else {
+                                refreshRegions();
+                                setMapRegions(globals.gRegion["name"]);
+                            }
+
                         }, error: function(data, status) {
                             removeHourglass();
                             alert("Error: Failed to create region");
@@ -270,7 +275,6 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                                                 if(allCalled && count == 0) {
                                                     refreshRegions(true);
                                                 }
-
                                             },
                                             error: function(xhr, textStatus, err) {
                                                 --count;
@@ -287,6 +291,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
 
                                     });
                                     allCalled = true;
+                                    $dialog.dialog("close");
                                 }
                             }
                         }
