@@ -819,7 +819,7 @@ function regionsURL () {
  * @param {string} survey
  */
 function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bBad, filter, dateId, startDate,
-                       endDate, advanced_filter, tz, inc_ro, geomQuestions) {
+                       endDate, advanced_filter, tz, inc_ro, geomFormQuestions) {
 
     var url = "/surveyKPI/items/";
 	var ampersand = false;
@@ -876,8 +876,15 @@ function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bB
         url+= "&advanced_filter=" + encodeURIComponent(advanced_filter);
     }
 
-    if(geomQuestions && geomQuestions.length > 0) {
-        url+= "&geom_questions=" + encodeURIComponent(geomQuestions.join(','));
+    if(geomFormQuestions && geomFormQuestions.length > 0) {
+        let qList = "";
+        for(let i = 0; i < geomFormQuestions.length; i++) {
+            if(i > 0) {
+                qList += ",";
+            }
+            qList += geomFormQuestions[i].question;
+        }
+        url+= "&geom_questions=" + encodeURIComponent(qList);
     }
 
 	if(tz) {

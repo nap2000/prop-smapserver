@@ -232,7 +232,7 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 				f_view.advanced_filter,  // Get all records with all features
 				tz,
 				f_view.inc_ro,
-				f_view.geomQuestions);
+				f_view.geomFormQuestions);
 	
 	addHourglass();
  	$.ajax({
