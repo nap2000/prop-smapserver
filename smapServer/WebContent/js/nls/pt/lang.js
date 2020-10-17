@@ -851,7 +851,6 @@ define(
     "ed_choice_f": "Filtro de Opção",
     "ed_vc": "Nomes das opções devem conter apenas letras, números. sublinhados, traços e pontos",
     "ed_vq": "O nome da pergunta deve começar com uma letra, sublinhado ou dois pontos e conter apenas letras, números, sublinhados, traços e pontos",
-    "ed_ogl": "Somente perguntas de local podem ter o nome 'the_geom'",
     "ed_ns": "Adicione uma nova pesquisa usando o menu 'Arquivo' antes de adicionar perguntas",
     "ed_kp": "Política Chave",
     "ed_s1": "Selecione Um",

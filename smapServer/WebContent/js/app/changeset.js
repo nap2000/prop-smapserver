@@ -2189,21 +2189,6 @@ define([
 
                     }
 
-                    // Keep this check until all old installtions that reference geometry have been migrated away from the_geom
-                    if(isValid) {
-                        if(val === 'the_geom'  && question.type != "geopoint"
-                            && question.type != "geoshape"
-                            && question.type != "geotrace") {
-                            addValidationError(
-                                container,
-                                itemIndex,
-                                "name",
-                                localise.set["ed_ogl"],
-                                itemType,
-                                "error");
-                        }
-                    }
-
                 } else {
                     isValid = isValidODKOptionName(val);
 

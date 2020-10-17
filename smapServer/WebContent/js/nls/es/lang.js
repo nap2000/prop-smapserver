@@ -867,7 +867,6 @@ define(
     "ed_choice_f": "Filtro de Opción",
     "ed_vc": "Nombres de opciones sólo puede tener letras, números, guiones, guión al piso y puntos",
     "ed_vq": "El nombre de la pregunta debe empezar con una letra, guión bajo o dos puntos y sólo puede contener letras, números, guión bajo, guión y punto",
-    "ed_ogl": "Sólo las preguntas de localización (GPS) pueden tener el nombre \"the_geom\"",
     "ed_ns": "Agregue un Nuevo Formulario usando el menú 'Archivo -> Nuevo' antes de adicionar preguntas",
     "ed_kp": "Política de Llave",
     "ed_s1": "Selección Única",
