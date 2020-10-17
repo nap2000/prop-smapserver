@@ -763,7 +763,6 @@ define(
     "ed_choice_f": "Choice Filter",
     "ed_vc": "Choice names must only contain letters, numbers. underscores, dashes and periods",
     "ed_vq": "The question name must start with a letter, underscore or colon and only contain letters, numbers, underscores, dashes and periods",
-    "ed_ogl": "Only location questions can have a name of 'the_geom'",
     "ed_ns": "Add a new survey using the 'File' menu before adding questions",
     "ed_kp": "Key Policy",
     "ed_s1": "Sélectionner une",
