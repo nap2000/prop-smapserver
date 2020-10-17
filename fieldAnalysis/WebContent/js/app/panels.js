@@ -236,9 +236,12 @@ $(document).ready(function() {
 						}
 
 						// Add geom Questions
-				        view.geomQuestions = [];
+				        view.geomFormQuestions = [];
 				        $('.geomSelect', '#p_settings').each(function() {
-					        view.geomQuestions.push($(this).val());
+					        view.geomFormQuestions.push({
+					        	form: $(this).data("form"),
+						        question: $(this).val()
+				            });
 				        });
 
 						// Determine if we need to redraw the panel
