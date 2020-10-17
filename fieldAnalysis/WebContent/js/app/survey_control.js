@@ -168,7 +168,7 @@ function copyView(v) {
         	advanced_filter: v.advanced_filter,
 			subject_type: v.subject_type,
 		    inc_ro: v.inc_ro,
-			geomQuestions: v.geomQuestions
+			geomFormQuestions: v.geomFormQuestions
 	};
 	
 	return cp;
@@ -579,6 +579,12 @@ function setSurveyViewControl(view) {
 	$('#settings_survey').prop("disabled", false);
 	if(view.sId) {
 		$('#settings_survey').val(view.sId);
+	}
+
+	if(view.geomFormQuestions) {
+		for(let i = 0; i < view.geomFormQuestions.length; i++) {
+			$('#geomSettingsForm_' + view.geomFormQuestions[i].form).val(view.geomFormQuestions[i].question);
+		}
 	}
 
 	$('#settings_user').prop("disabled", false);
