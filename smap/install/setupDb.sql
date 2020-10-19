@@ -625,7 +625,7 @@ CREATE TABLE custom_report (
 	p_id integer REFERENCES project(id) ON DELETE CASCADE,
 	survey_ident text REFERENCES survey(ident) ON DELETE CASCADE,
 	name text,
-	type_id text	REFERENCES custom_report_type(id) ON DELETE CASCADE,
+	type_id integer	REFERENCES custom_report_type(id) ON DELETE CASCADE,
 	config text								-- Custom report columns as json object
 	);
 ALTER TABLE custom_report OWNER TO ws;

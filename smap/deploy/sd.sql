@@ -283,15 +283,30 @@ ALTER TABLE custom_report_type OWNER TO ws;
 
 insert into custom_report_type(name, config) values('Daily', null);
 
- alter table custom_report add column p_id integer REFERENCES project(id) ON DELETE CASCADE;
- alter table custom_report drop column type;
- alter table custom_report add column type_id integer REFERENCES custom_report_type(id) ON DELETE CASCADE;
- alter table custom_report add column  survey_ident text REFERENCES survey(ident) ON DELETE CASCADE;
- drop index custom_report_name;
- CREATE UNIQUE INDEX custom_report_name ON custom_report(p_id, name);
+CREATE SEQUENCE custom_report_seq START 1;
+ALTER SEQUENCE custom_report_seq OWNER TO ws;
 
- alter table organisation add column refresh_rate integer default 0;
- update organisation set refresh_rate = 0 where refresh_rate is null;
+CREATE TABLE custom_report (
+	id integer DEFAULT NEXTVAL('custom_report_seq') CONSTRAINT pk_custom_report PRIMARY KEY,
+	o_id integer REFERENCES organisation(id) ON DELETE CASCADE,
+	p_id integer REFERENCES project(id) ON DELETE CASCADE,
+	survey_ident text REFERENCES survey(ident) ON DELETE CASCADE,
+	name text,
+	type_id integer	REFERENCES custom_report_type(id) ON DELETE CASCADE,
+	config text								-- Custom report columns as json object
+	);
+ALTER TABLE custom_report OWNER TO ws;
+CREATE UNIQUE INDEX custom_report_name ON custom_report(p_id, name);
+
+alter table custom_report add column p_id integer REFERENCES project(id) ON DELETE CASCADE;
+alter table custom_report drop column type;
+alter table custom_report add column type_id integer REFERENCES custom_report_type(id) ON DELETE CASCADE;
+alter table custom_report add column  survey_ident text REFERENCES survey(ident) ON DELETE CASCADE;
+drop index custom_report_name;
+CREATE UNIQUE INDEX custom_report_name ON custom_report(p_id, name);
+
+alter table organisation add column refresh_rate integer default 0;
+update organisation set refresh_rate = 0 where refresh_rate is null;
 
 CREATE INDEX record_event_key ON record_event(key);
 CREATE INDEX survey_group_survey_key ON survey(group_survey_id);

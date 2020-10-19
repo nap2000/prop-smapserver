@@ -55,7 +55,7 @@
 			<ul id="menu_bar">
 				<li id="m_home"><a class="lang" data-lang="m_home" href="/?loggedin=yes">home</a></li>
 				<li id="m_admin" class="restrict_role admin_role analyst_role"><a class="lang" data-lang="m_admin" href="/fieldManager/surveyManagement.html" title="Admin">Admin</a></li>
-				<li id="m_reports" class="restrict_role admin_role analyst_role"><a class="lang" data-lang="m_reports" href="/reports.html" title="Reports">Reports</a></li>
+				<li id="m_reports" class="restrict_role admin_role analyst_role data_role"><a class="lang" data-lang="m_reports" href="/reports.html" title="Reports">Reports</a></li>
 				<li id="m_refresh"><a class="lang" data-lang="m_refresh" id="refreshMenu" href="#" title="Refresh">Refresh</a></li> 
 				<li id="m_export" class="restrict_role admin_role analyst_role data_role"><a class="lang" data-lang="m_export" id="exportMenu" href="#" title="Export">Export</a></li>
 				<li id="m_web_forms" class="restrict_role manage_role admin_role analyst_role"><a href="/tasks/managed_forms.html"><span class="lang" data-lang="m_console" ></span><span class="glyphicon glyphicon-globe pull-right"></span></a></li>
@@ -146,10 +146,6 @@
 					<option value="vrt" class="lang" data-lang="c_vrt">vrt</option>
 					<option value="stata" class="lang" data-lang="c_stata">stata</option>
 					<option value="spss" class="lang" data-lang="c_spss">spss</option>
-					<!-- 
-					<option value="lqas">LQAS</option>
-					<option value="thingsat">Thingsat</option>
-					-->
 				</select>
 			</fieldset><br/>
 			
@@ -429,36 +425,6 @@
 			</fieldset>
 		</form>
 	</div>
-		
-	<!-- Popup to allow the user to edit their own details
-	<div id="modify_me_popup" style="display:none;">
-	
-		<div class="left_panel">
-			<form id="me_edit_form">
-				<label for="me_name" data-lang="c_name" class="lang">Name</label>
-				<input type="text" id="me_name" required><br/>
-				<label for="me_language" data-lang="c_lang" class="lang">Language</label>
-				<select class="language_select" id="me_language"></select><br/>
-				<label for="me_email" data-lang="c_email" class="lang">Email</label>
-				<input type="text" id="me_email" pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"><br/>
-				<label for="me_organisation" data-lang="c_org" class="lang">organisation</label>
-				<select id="me_organisation" class="organisation_select"></select>
-				<label for="u_tz" class="lang" data-lang="c_tz">timezone</label>
-				<select class="timezone_select" id="u_tz"></select>
-				<span id="reset_me_password_fields" style="display:none;">
-					<label for="reset_me_password" data-lang="c_r_p" class="lang">Reset Password</label>
-					<input type="checkbox" id="reset_me_password"/><br/>
-				</span>
-				<span id="password_me_fields" style="display:none;">
-					<label for="me_password" data-lang="c_password" class="lang">Password</label>
-					<input id="me_password" type="password"><br/>	
-					<label for="me_password_confirm" data-lang="c_c_p" class="lang">Confirm Password</label>
-					<input id="me_password_confirm" type="password"><br/>	
-				</span>		
-			</form>	
-		</div>
-	</div>
-	-->
 
 	<!-- Popup to allow the user to download a PDF of the instance or edit it using a WebForm -->
 	<div id="instance_functions_popup" style="display:none;">
