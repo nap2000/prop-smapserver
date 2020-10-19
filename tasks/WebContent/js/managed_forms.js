@@ -2102,7 +2102,7 @@ require([
             // Add data
             for (i = 0; i < columns.length; i++) {
                 configItem = columns[i];
-                if(configItem.displayName === '_geolocation') {
+                if(configItem.type === 'geopoint' || configItem.type === 'geotrace' || configItem.type === 'geoshape') {
                     continue;
                 }
                 h[++idx] = '<tr>';

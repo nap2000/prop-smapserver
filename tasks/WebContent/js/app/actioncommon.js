@@ -254,9 +254,6 @@ define([
 
             if(record && setvalue) {
                 var name = configItem.column_name;
-                if(name === "the_geom") {
-                    name = "_geolocation";  // HACK! TODO Sort out names of gometries
-                }
                 value = record[name];
             }
 
@@ -643,13 +640,7 @@ define([
                 i,
                 foundExistingUpdate;
 
-            if(column_name === "the_geom") {
-                column_name = "_geolocation";       // Hack!!
-            }
             currentValue = record[column_name];
-            if(column_name === "_geolocation") {
-                column_name = "the_geom";       // Hack!!
-            }
             if (typeof currentValue === "undefined") {
                 currentValue = "";
             }
