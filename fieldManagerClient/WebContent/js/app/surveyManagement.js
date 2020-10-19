@@ -361,6 +361,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
                 redirectEnum = false,
                 redirectTasks = false,
                 redirectManage = false,
+                redirectView = false,
                 i;
 
             for (i = 0; i < groups.length; i++) {
@@ -373,6 +374,8 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
                     redirectTasks = true;
                 } else if(group.name === "manage") {
                     redirectManage = true;
+                } else if(group.name === "view data") {
+                    redirectView = true;
                 }
             }
             if(redirect) {
@@ -382,6 +385,8 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
                     window.location.href = "/tasks/taskManagement.html";
                 } else if(redirectManage) {
                     window.location.href = "/tasks/managed_forms.html";
+                } else if(redirectView) {
+                    window.location.href = "/fieldAnalysis/index.html";
                 }
             }
 
