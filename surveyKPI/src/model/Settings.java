@@ -1,7 +1,6 @@
 package model;
 
 import java.sql.Date;
-import java.util.ArrayList;
 
 public class Settings {
 	public int id;
@@ -33,4 +32,6 @@ public class Settings {
 	public Date toDate;
 	public String filter;
 	public String advanced_filter;
+	public boolean inc_ro;
+	public GeomQuestions [] geomFormQuestions;
 }

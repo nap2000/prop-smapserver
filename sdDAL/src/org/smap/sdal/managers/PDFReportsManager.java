@@ -57,7 +57,6 @@ public class PDFReportsManager {
 
 	// Global values set in constructor
 	private ResourceBundle localisation;
-	private Survey survey;
 	
 	// Other global values
 	int languageIdx = 0;
@@ -98,7 +97,7 @@ public class PDFReportsManager {
 		String tz = "UTC";		// Default to UTC
 		File folder = null;
 		ArrayList<FileDescription> files = new ArrayList<> ();
-		
+		sId = GeneralUtilityMethods.getLatestSurveyId(sd, sId);
 		try {
 					
 			/*
@@ -140,7 +139,10 @@ public class PDFReportsManager {
 					null,			// transform
 					true,
 					true,
-					tz);		// Include the keys instanceid, instancename, prikey, hrk
+					tz,
+					null,
+					false		// Accuracy and Altitude
+					);
 			
 			pstmt = cResults.prepareStatement(sqlDesc.sql);
 			log.info("Get records to convert to PDF's: " + pstmt.toString());

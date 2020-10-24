@@ -39,6 +39,7 @@ function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, curren
 				}
 				if(updateDatePicker) {
 					addDatePickList(data, currentDate);
+					addGeomPickList(data);
 				}
 				if(neo_model) {
 					$('.showthingsat').show();
@@ -229,7 +230,9 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 		url = formItemsURL(fId, "yes", "no", start_rec, rec_limit, bBad, f_view.filter,
 				f_view.dateQuestionId, f_view.fromDate, f_view.toDate,
 				f_view.advanced_filter,  // Get all records with all features
-				tz);
+				tz,
+				f_view.inc_ro,
+				f_view.geomFormQuestions);
 	
 	addHourglass();
  	$.ajax({
@@ -356,7 +359,7 @@ function getUserData(view, start_rec) {
 /*
   * Get the location data for users
   */
-function getUserLocationsData(view, start_rec) {
+function getUserLocationsData(view, start_rec, nocache) {
 
 	// For table all of survey views. page the results
 	if(view.type === "table") {
@@ -374,7 +377,7 @@ function getUserLocationsData(view, start_rec) {
 	url = userLocationsItemsURL(view, start_rec, rec_limit,tz);
 	data = globals.gSelector.getItem(url);      // check cache
 
-	if(data) {
+	if(data && !nocache) {
 		if (typeof view.start_recs === "undefined") {
 			view.start_recs = {};
 		}

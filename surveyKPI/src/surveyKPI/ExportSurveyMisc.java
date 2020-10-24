@@ -115,6 +115,7 @@ public class ExportSurveyMisc extends Application {
 			@QueryParam("dateId") int dateId,
 			@QueryParam("query") boolean query,			// Set true if the value in sId is a query id rather than a survey id
 			@QueryParam("filter") String filter,
+			@QueryParam("geom_question") String geomQuestion,
 			@QueryParam("merge_select_multiple") boolean merge_select_multiple,
 			@Context HttpServletResponse response) {
 
@@ -143,6 +144,7 @@ public class ExportSurveyMisc extends Application {
 			a.isValidQuery(sd, request.getRemoteUser(), targetId);
 		} else {
 			a.isValidSurvey(sd, request.getRemoteUser(), targetId, false, superUser);
+			a.isValidQuestionName(sd, request.getRemoteUser(), targetId, geomQuestion, true);
 		}
 		// End Authorisation
 
@@ -221,7 +223,7 @@ public class ExportSurveyMisc extends Application {
 					queryList = qm.getFormList(sd, targetId, fId);		// Get a form list for this survey / form combo
 				}
 				QueryForm startingForm = qm.getQueryTree(sd, queryList);	// Convert the query list into a tree
-
+				QueryForm targetForm = qm.getQueryForm(queryList, targetId);
 				// Get the SQL for this query
 				SqlDesc sqlDesc = QueryGenerator.gen(sd, 
 						connectionResults,
@@ -250,7 +252,10 @@ public class ExportSurveyMisc extends Application {
 						null,			// transform
 						true,
 						false,
-						tz);			// Get all columns (not just instanceid)
+						tz,
+						geomQuestion,
+						false			// Accuracy and ALtitude
+						);
 
 				String basePath = GeneralUtilityMethods.getBasePath(request);					
 				String filepath = basePath + "/temp/" + String.valueOf(UUID.randomUUID());	// Use a random sequence to keep survey name unique
@@ -259,12 +264,12 @@ public class ExportSurveyMisc extends Application {
 				 * Create a VRT file for VRT exports
 				 */
 				if(format.equals(SmapExportTypes.VRT)) {
-					log.info("Writing VRT file: " + filepath + "/" + sqlDesc.target_table + ".vrt");
+					log.info("Writing VRT file: " + filepath + "/" + targetForm.table + ".vrt");
 					// Write the vrt file to the file system
 
 					// Create the file
 					FileUtils.forceMkdir(new File(filepath));
-					File f = new File(filepath, sqlDesc.target_table + ".vrt");
+					File f = new File(filepath, targetForm.table + ".vrt");
 					StreamResult out = new StreamResult(f);
 
 					// Create the document
@@ -276,12 +281,12 @@ public class ExportSurveyMisc extends Application {
 					outputXML.appendChild(rootElement); 
 
 					Element layerElement = outputXML.createElement("OGRVRTLayer");
-					layerElement.setAttribute("name", sqlDesc.target_table);
+					layerElement.setAttribute("name", targetForm.table);
 					rootElement.appendChild(layerElement);
 
 					Element e = outputXML.createElement("SrcDataSource");
 					e.setAttribute("relativeToVrt", "1");
-					e.setTextContent(sqlDesc.target_table + ".csv");
+					e.setTextContent(targetForm.table + ".csv");
 					layerElement.appendChild(e);
 
 					e = outputXML.createElement("GeometryType");
@@ -295,12 +300,12 @@ public class ExportSurveyMisc extends Application {
 					e = outputXML.createElement("GeometryField");
 					e.setAttribute("encoding", "WKT");	// WKB not supported by google maps
 					e.setAttribute("reportSrcColumn", "false");
-					e.setAttribute("field", "the_geom");
+					e.setAttribute("field", "the_geom");	// keep this
 					layerElement.appendChild(e);
 
 					for(int i = 0; i < sqlDesc.column_details.size(); i++) {
 						ColDesc cd = sqlDesc.column_details.get(i);
-						if(!cd.column_name.equals("the_geom")) {
+						if(!cd.column_name.equals(sqlDesc.geometry_column)) {
 							e = outputXML.createElement("Field");
 							e.setAttribute("name", cd.column_name);
 							e.setAttribute("src", cd.column_name);
@@ -318,17 +323,17 @@ public class ExportSurveyMisc extends Application {
 					/*
 					 * Create a Stata "do" file 
 					 */
-					log.info("Writing stata do file: " + filepath + "/" + sqlDesc.target_table + ".do");
+					log.info("Writing stata do file: " + filepath + "/" + targetForm.table + ".do");
 					// Write the do file to the file system
 
 					// Create the file
 					FileUtils.forceMkdir(new File(filepath));
-					File f = new File(filepath, sqlDesc.target_table + ".do");
+					File f = new File(filepath, targetForm.table + ".do");
 					PrintWriter w = new PrintWriter(f);
 
 					w.println("* Created by Smap Server");
 					w.println("version 9");
-					w.println("import delimited "+  sqlDesc.target_table + ".csv, bindquote(strict) clear");
+					w.println("import delimited "+  targetForm.table + ".csv, bindquote(strict) clear");
 					w.println("tempvar temp");
 
 					// Write the label values
@@ -390,11 +395,11 @@ public class ExportSurveyMisc extends Application {
 					/*
 					 * Create an SPSS "sps" file 
 					 */
-					log.info("Writing spss sps file: " + filepath + "/" + sqlDesc.target_table + ".sps");
+					log.info("Writing spss sps file: " + filepath + "/" + targetForm.table + ".sps");
 
 					// Create the file
 					FileUtils.forceMkdir(new File(filepath));
-					File f = new File(filepath, sqlDesc.target_table + ".sps");
+					File f = new File(filepath, targetForm.table + ".sps");
 					PrintWriter w = new PrintWriter(f);
 
 					SpssManager spssm = new SpssManager(localisation);  
@@ -436,13 +441,27 @@ public class ExportSurveyMisc extends Application {
 				if(fastExport) {
 					Process proc = Runtime.getRuntime().exec(new String [] {"/bin/sh", "-c", "/smap_bin/getshape.sh " + 
 							database_name + " " +
-							sqlDesc.target_table + " " +
+							targetForm.table + " " +
 							"\"" + sqlDesc.sql + "\" " +
 							filepath + 
-							" " + modifiedFormat +
-					" >> /var/log/subscribers/survey.log 2>&1"});
+							" " + modifiedFormat});
 					code = proc.waitFor();
-
+					if(code > 0) {
+						int len;
+						if ((len = proc.getErrorStream().available()) > 0) {
+							byte[] buf = new byte[len];
+							proc.getErrorStream().read(buf);
+							log.info("Command error:\t\"" + new String(buf) + "\"");
+						}
+					} else {
+						int len;
+						if ((len = proc.getInputStream().available()) > 0) {
+							byte[] buf = new byte[len];
+							proc.getInputStream().read(buf);
+							log.info("Completed getShape process:\t\"" + new String(buf) + "\"");
+						}
+					}
+					
 					log.info("Process exitValue: " + code);
 				} else {
 					log.info("############## Slow export");
@@ -450,7 +469,7 @@ public class ExportSurveyMisc extends Application {
 					
 					// Create the file
 					FileUtils.forceMkdir(new File(filepath));
-					File f = new File(filepath, sqlDesc.target_table + ".csv");
+					File f = new File(filepath, targetForm.table + ".csv");
 					PrintWriter w = new PrintWriter(f);
 
 					/*
@@ -469,7 +488,7 @@ public class ExportSurveyMisc extends Application {
 								merge_select_multiple,
 								surveyName);	
 							
-						if(split_locn && values.name.equals("the_geom")) {
+						if(split_locn && geomQuestion != null && values.name.equals(geomQuestion)) {
 							addValueToBuf(header, "Latitude");
 							addValueToBuf(header, "Longitude");
 						} else if(item.qType != null && item.qType.equals("select") && !merge_select_multiple && item.choices != null && item.compressed) {

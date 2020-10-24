@@ -213,6 +213,7 @@ public class Data extends Application {
 		if(meta != null && (meta.equals("false") || meta.equals("no"))) {
 			includeMeta = false;
 		}
+		
 		// Authorisation is done in getDataRecords
 		getDataRecords(request, response, sIdent, start, limit, mgmt, groupSurvey, viewId, 
 				schema, group, sort, dirn, formName, start_parkey,
@@ -417,10 +418,6 @@ public class Data extends Application {
 			isGeoJson = true;
 		}
 		
-		if(geomQuestion == null) {
-			geomQuestion = "the_geom";
-		}
-		
 		boolean mergeSelectMultiple = false;
 		if(merge != null && (merge.equals("yes") || merge.equals("true"))) {
 			mergeSelectMultiple = true;
@@ -611,7 +608,9 @@ public class Data extends Application {
 						false,				// TODO include HXL
 						audit,
 						tz,
-						mgmt				// If this is a management request then include the assigned user after prikey
+						mgmt,				// If this is a management request then include the assigned user after prikey
+						false,				// Accuracy and Altitude
+						true		// Server calculates
 						);
 	
 			}
@@ -666,8 +665,12 @@ public class Data extends Application {
 			outWriter.print("[");
 			errorMsgAddClosingArray = true;
 			
+			if(geomQuestion == null) {
+				geomQuestion = GeneralUtilityMethods.getFirstGeometryQuestionName(columns);
+			}
+			
 			if(pstmt != null) {
-				log.info("KoboAPI data: " + pstmt.toString());
+				log.info("DataAPI data: " + pstmt.toString());
 				/*
 				 * Get the data record by record so it can be streamed
 				 */
@@ -1068,7 +1071,9 @@ public class Data extends Application {
 					false,		// Only include HXL with CSV and Excel output
 					false,
 					tz,
-					false		// mgmt
+					false,		// mgmt
+					false,		// Accuracy and Altitude
+					true		// Server calculates
 					);
 
 			if(mgmt) {

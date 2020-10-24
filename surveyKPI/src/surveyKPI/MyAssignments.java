@@ -835,7 +835,7 @@ public class MyAssignments extends Application {
 						"form_ident, " +
 						"form_version, " +
 						"uuid,"	+
-						"the_geom," +
+						"the_geom," +		// keep this
 						"completion_time" +
 						") " +
 						"values(?, ?, ?, ?, ?, ST_GeomFromText(?, 4326), ?)";
@@ -863,7 +863,7 @@ public class MyAssignments extends Application {
 					String sqlTrail = "insert into user_trail (" +
 							"u_id, " +
 							"device_id, " +			
-							"the_geom," +
+							"the_geom," +		// keep this
 							"event_time" +
 							") " +
 							"values(?, ?, ST_GeomFromText(?, 4326), ?);";
@@ -873,10 +873,13 @@ public class MyAssignments extends Application {
 					for(PointEntry pe : tr.userTrail) {
 
 						pstmtTrail.setString(3, "POINT(" + pe.lon + " " + pe.lat + ")");
-						pstmtTrail.setTimestamp(4, new Timestamp(pe.time));
-
+						
 						if(pe.time == 0) {
 							log.info("Error time is zero ######### --------+++++++-----------+++++++------------ " + pstmtTrail.toString());
+							// Seting to now
+							pstmtTrail.setTimestamp(4, new Timestamp(System.currentTimeMillis()));		// Hack
+						} else {						
+							pstmtTrail.setTimestamp(4, new Timestamp(pe.time));
 						}
 						pstmtTrail.executeUpdate();
 					}

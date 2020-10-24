@@ -204,6 +204,7 @@ $(document).ready(function() {
 						view.uId = uId;
 						view.qId = qId;
 						view.qId_is_calc = qId_is_calc;
+				        view.inc_ro = $('#settings_inc_ro').prop('checked');
 
 				        if(subjectType === "user") {
 					        view.dateQuestionId = $('#usage_settings_date_question option:selected').val();
@@ -237,6 +238,16 @@ $(document).ready(function() {
 							}
 			        		view.region = "none";
 						}
+
+						// Add geom Questions
+				        view.geomFormQuestions = [];
+				        $('.geomSelect', '#p_settings').each(function() {
+					        view.geomFormQuestions.push({
+					        	form: $(this).data("form"),
+						        question: $(this).val()
+				            });
+				        });
+
 						// Determine if we need to redraw the panel
 						if(newType !== view.type) {
 							setPanelType(newType, globals.gViewIdx, view.timeGroup, view.qId, view.subject_type);
@@ -315,6 +326,11 @@ $(document).ready(function() {
 		
 		getViewSurveys({sId:"-1"});				// Update the survey list to match the new project
  	 });
+
+	// Respond to changes to the shape forms selector
+	$('.shapeforms').change(function() {
+		shapeFormsChanged();
+	});
 	
 	enableUserProfile();
 	
@@ -821,9 +837,6 @@ function slide($elem) {
 	}
 }
 
-/*
- * 
- */
 function getFilter() {
 	 var qFilter = $('#filter_question option:selected').val();
 	 var filterValue = $('#filter_value option:selected').val(); 
@@ -848,7 +861,7 @@ function autoRefresh() {
 	console.log("refresh every: " + globals.gRefreshRate + " minutes")
 	setTimeout(function(){
 		console.log("refresh");
-		refreshAnalysisData();
+		autoRefreshAnalysisData();
 		autoRefresh();
 		}, 60000 * globals.gRefreshRate);
 }

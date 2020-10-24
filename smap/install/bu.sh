@@ -3,9 +3,9 @@ export PATH=/usr/local/bin:$PATH
 export HOME=/var/lib/postgresql
 
 # back up the databases on this host
-bucket=`cat ~ubuntu/bucket`
+bucket=`cat /smap/settings/bucket`
 file="smap_bu.tgz"
-final_file="`cat ~ubuntu/hostname`-`date +\%Y-\%m-\%d`-smap_bu.tgz.gpg"
+final_file="`cat /smap/settings/hostname`-`date +\%Y-\%m-\%d`-smap_bu.tgz.gpg"
 rm -rf backups/*
 rm $file
 rm $file.gpg
@@ -13,8 +13,6 @@ rm $file.gpg
 # Dump databases
 pg_dump -c -Fc survey_definitions > backups/sd.dmp
 pg_dump -c -Fc results > backups/results.dmp
-pg_dump survey_definitions -c > backups/survey_definitions.sql
-pg_dump results -c > backups/results.sql
 
 tar -zcf $file backups/*
 rm -rf backups/*

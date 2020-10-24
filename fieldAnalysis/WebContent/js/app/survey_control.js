@@ -126,8 +126,6 @@ function showSettings($this) {
 	var views = globals.gSelector.getViews();
 	
 	gSurveyControlView = copyView(views[globals.gViewIdx]);		// Get a copy of the current view
-
-	//gSurveyControlView = $.extend(true, {}, views[globals.gViewIdx]);	// Get a copy of the current view (stack overflow)
 	
 	getViewData(gSurveyControlView);
 	setSurveyViewControl(gSurveyControlView);		// Set the values in the settings dialog from the view
@@ -168,7 +166,9 @@ function copyView(v) {
 			filter: v.filter,
 			dateQuestionId: v.dateQuestionId,
         	advanced_filter: v.advanced_filter,
-			subject_type: v.subject_type
+			subject_type: v.subject_type,
+		    inc_ro: v.inc_ro,
+			geomFormQuestions: v.geomFormQuestions
 	};
 	
 	return cp;
@@ -190,6 +190,7 @@ function getViewData(view) {
 	} 
 	
 	$('#settings_title').val(view.title);
+	$('#settings_inc_ro').prop('checked', view.inc_ro);
 	
 	// Set the survey meta data
 	var sMeta = globals.gSelector.getSurvey(view.sId);
@@ -362,6 +363,7 @@ function surveyChangeEvent(sId) {
 		getSurveyMetaSE(sId, undefined, false, false, true);
 	} else {
 		addDatePickList(surveyMeta);
+		addGeomPickList(surveyMeta);
 	}
 	
 	// Get the languages for this survey
@@ -579,6 +581,12 @@ function setSurveyViewControl(view) {
 		$('#settings_survey').val(view.sId);
 	}
 
+	if(view.geomFormQuestions) {
+		for(let i = 0; i < view.geomFormQuestions.length; i++) {
+			$('#geomSettingsForm_' + view.geomFormQuestions[i].form).val(view.geomFormQuestions[i].question);
+		}
+	}
+
 	$('#settings_user').prop("disabled", false);
 	if(view.uId) {
 		$('#settings_user').val(view.uId);
@@ -745,8 +753,30 @@ function refreshAnalysisData() {
 	
 }
 
+// Refresh the maps and charts only - called when doing automated refresh
+function autoRefreshAnalysisData() {
+
+	//globals.gSelector.clearDataItems();	// clear any cached data
+	//globals.gSelector.clearSurveys();	// Clear the list of surveys and survey definitions
+
+	// Get the view list
+	var	views = globals.gSelector.getViews(),
+		i, j, idx,
+		multiLayerMaps = [];
+
+	for(i = 0; i < views.length; i++) {
+		if(views[i].state != "deleted") {
+			if(views[i].type == "graph" || views[i].type == "map"
+					|| views[i].subject_type === "user_locations") {
+				getData(views[i], true);		// Add the data
+			}
+		}
+	}
+
+}
+
 //Get the data for the specified view
-function getData(view) {
+function getData(view, nocache) {
 
 	if(view.subject_type === "survey") {
 		if (view.qId != "-1") {			// Question level results
@@ -764,7 +794,7 @@ function getData(view) {
 	} else if(view.subject_type === "user") {
 		getUserData(view, 0);       // Start from the first record
 	} else if(view.subject_type === "user_locations") {
-		getUserLocationsData(view, 0);
+		getUserLocationsData(view, 0, nocache);
 	}
 }
 

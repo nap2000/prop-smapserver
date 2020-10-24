@@ -32,7 +32,6 @@ import java.util.logging.Logger;
 import org.smap.sdal.constants.SmapExportTypes;
 import org.smap.sdal.managers.RoleManager;
 import org.smap.sdal.model.ColDesc;
-import org.smap.sdal.model.ExportForm;
 import org.smap.sdal.model.OptionDesc;
 import org.smap.sdal.model.QueryForm;
 import org.smap.sdal.model.SqlDesc;
@@ -78,7 +77,9 @@ public class QueryGenerator {
 			Transform transform,
 			boolean meta,
 			boolean includeKeys,
-			String tz) throws Exception {
+			String tz,
+			String geomQuestion,
+			boolean get_acc_alt) throws Exception {
 		
 		SqlDesc sqlDesc = new SqlDesc();
 		ArrayList<String> tables = new ArrayList<String> ();
@@ -93,7 +94,7 @@ public class QueryGenerator {
 		PreparedStatement pstmtConvert = null;
 		try {			
 			
-			sqlDesc.target_table = form.table;
+			String topLevelTable = form.table;
 			
 			/*
 			 * Prepare the statement to get the list labels
@@ -163,8 +164,9 @@ public class QueryGenerator {
 					true,
 					meta,
 					includeKeys,
-					false,				// have geometry
-					tz
+					tz,
+					get_acc_alt,
+					geomQuestion
 					);
 		
 			/*
@@ -199,7 +201,7 @@ public class QueryGenerator {
 				shpSqlBuf.append("uuid_generate_v4() as _record_uuid, ");
 			}
 			if(add_record_suid) {		// Smap unique id, globally unique (hopefully) but same value each time query is run
-				shpSqlBuf.append("'" + hostname + "_" + sqlDesc.target_table + "_' || " + sqlDesc.target_table + ".prikey as _record_suid, ");
+				shpSqlBuf.append("'" + hostname + "_" + topLevelTable + "_' || " + topLevelTable + ".prikey as _record_suid, ");
 			}
 			shpSqlBuf.append(sqlDesc.cols);
 			shpSqlBuf.append(" from ");
@@ -229,8 +231,8 @@ public class QueryGenerator {
 			}
 			
 			
-			if(format.equals("shape") && sqlDesc.geometry_type != null) {
-				shpSqlBuf.append(" and " + sqlDesc.target_table + ".the_geom is not null");
+			if(format.equals("shape") && sqlDesc.geometry_type != null && geomQuestion != null) {
+				shpSqlBuf.append(" and " + sqlDesc.geometry_table + "." + sqlDesc.geometry_column + " is not null");
 			}
 			
 			/*
@@ -430,15 +432,15 @@ public class QueryGenerator {
 			boolean first,
 			boolean meta,
 			boolean includeKeys,
-			boolean haveGeometry,
-			String tz
+			String tz,
+			boolean get_acc_alt,
+			String geomQuestion
 			) throws Exception {
 		
 		int colLimit = 10000;
 		if(format.equals("shape")) {	// Shape files limited to 244 columns plus the geometry column
 			colLimit = 244;
 		}
-		
 		
 		tables.add(form.table);
 
@@ -468,7 +470,9 @@ public class QueryGenerator {
 				false,				// HXL only include with XLS exports
 				false,				// Don't include audit data
 				tz,
-				false				// mgmt
+				false,				// mgmt
+				get_acc_alt,
+				true		// Server calculates
 				);
 			
 		StringBuffer colBuf = new StringBuffer();
@@ -494,6 +498,7 @@ public class QueryGenerator {
 			sqlDesc.colNameLookup.put(col.question_name, col.column_name);
 			
 			String column_name = null;
+			String questionType = null;
 			String type = null;
 			String label = null;
 			String text_id = null;
@@ -504,6 +509,7 @@ public class QueryGenerator {
 			int qId = col.qId;			
 			column_name = col.column_name;
 			type = col.type;
+			questionType = col.type;
 
 			if(GeneralUtilityMethods.isGeometry(type)) {
 				type = "geometry";
@@ -516,16 +522,20 @@ public class QueryGenerator {
 			}
 			
 			// Ignore geometries in parent forms for shape, VRT, KML, Stata exports (needs to be a unique geometry)
-			if(type.equals("geometry") && haveGeometry && (
+			// Also if geomQuestion is set then ignore geometries other than that geometry question
+			if(type.equals("geometry") && (
 					format.equals(SmapExportTypes.SHAPE) 
 					|| format.equals(SmapExportTypes.STATA)
 					|| format.equals(SmapExportTypes.VRT)
 					|| format.equals(SmapExportTypes.KML)
 					|| format.equals(SmapExportTypes.SPSS))) {	
-				continue;
+				if(geomQuestion != null && !geomQuestion.equals(col.question_name)) {
+					continue;
+				}
 			}
 			
 			if(type.equals("geometry")) {
+				// This is a geometry question, which for shape exports, has the same name as the specified geometry question
 				String sqlGeom = "SELECT GeometryType(" + column_name + ") FROM " + form.table + ";";
 
 				pstmtGeom = cResults.prepareStatement(sqlGeom);
@@ -541,7 +551,7 @@ public class QueryGenerator {
 					if(geomName == null) {
 						continue;
 					} else {
-						if(geomName.equals("POLYGON")) {
+						if(geomName.startsWith("POLYGON")) {
 							sqlDesc.geometry_type = "wkbPolygon";
 						} else if(geomName.startsWith("LINESTRING")) {
 							sqlDesc.geometry_type = "wkbLineString";
@@ -550,6 +560,8 @@ public class QueryGenerator {
 						} else {
 							log.info("Error unknown geometry:  " + geomName);
 						}
+						sqlDesc.geometry_column = column_name;
+						sqlDesc.geometry_table = form.table;
 						break;
 					}
 				}
@@ -634,13 +646,13 @@ public class QueryGenerator {
 					if(sqlDesc.geometry_type.equals("wkbPoint") && (format.equals("csv") || format.equals("stata") || format.equals("spss")) ) {		// Split location into Lon, Lat
 						colBuf.append("ST_Y(" + form.table + "." + column_name + ") as lat, ST_X(" + form.table + "." + column_name + ") as lon");
 						sqlDesc.column_details.add(new ColDesc("lat", type, type, label, null, false, col.question_name, null, false, 
-								col.displayName, col.selectDisplayNames));
+								col.displayName, col.selectDisplayNames, questionType));
 						sqlDesc.column_details.add(new ColDesc("lon", type, type, label, null, false, col.question_name, null, false, 
-								col.displayName, col.selectDisplayNames));
+								col.displayName, col.selectDisplayNames, questionType));
 					} else {																								// Use well known text
-						colBuf.append("ST_AsText(" + form.table + "." + column_name + ") as the_geom");
-						sqlDesc.column_details.add(new ColDesc("the_geom", type, type, label, null, false, col.question_name, null, false, 
-								col.displayName, col.selectDisplayNames));
+						colBuf.append("ST_AsText(" + form.table + "." + column_name + ") as " + column_name);
+						sqlDesc.column_details.add(new ColDesc(column_name, type, type, label, null, false, col.question_name, null, false, 
+								col.displayName, col.selectDisplayNames, questionType));
 					}
 				} else {
 				
@@ -698,7 +710,7 @@ public class QueryGenerator {
 					
 					sqlDesc.column_details.add(new ColDesc(column_name, type, type, label, 
 							optionListLabels, needsReplace, col.question_name,
-							col.choices, col.compressed, col.displayName, col.selectDisplayNames));
+							col.choices, col.compressed, col.displayName, col.selectDisplayNames, questionType));
 					sqlDesc.column_names.add(col.column_name);
 				}
 				
@@ -755,8 +767,9 @@ public class QueryGenerator {
 						false,
 						meta,
 						includeKeys,
-						haveGeometry,
-						tz
+						tz,
+						get_acc_alt,
+						geomQuestion
 						);
 			}
 		}

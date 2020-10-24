@@ -237,6 +237,7 @@ public class Survey extends Application {
 						log.info("Written xml file to: " + f.getAbsoluteFile());
 					} catch (Exception e) {
 						log.log(Level.SEVERE, "", e);
+						throw e;
 					}
 
 
@@ -259,10 +260,23 @@ public class Survey extends Application {
 					int code = 0;
 					if(type.equals("codebook")) {
 						Process proc = Runtime.getRuntime().exec(new String [] {"/bin/sh", "-c", "/smap_bin/gettemplate.sh " + sourceName +
-								" " + language +
-						" >> /var/log/subscribers/survey.log 2>&1"});
+								" " + language});
 						code = proc.waitFor();
-						log.info("Process exitValue: " + code);
+						if(code > 0) {
+							int len;
+							if ((len = proc.getErrorStream().available()) > 0) {
+								byte[] buf = new byte[len];
+								proc.getErrorStream().read(buf);
+								log.info("Command error:\t\"" + new String(buf) + "\"");
+							}
+						} else {
+							int len;
+							if ((len = proc.getInputStream().available()) > 0) {
+								byte[] buf = new byte[len];
+								proc.getInputStream().read(buf);
+								log.info("Completed codebook process:\t\"" + new String(buf) + "\"");
+							}
+						}
 					}
 
 					builder = Response.ok(outputFile);
@@ -289,6 +303,9 @@ public class Survey extends Application {
 		} catch (SQLException e) {
 			log.log(Level.SEVERE,"No data available", e);
 			response = Response.serverError().entity("No data available").build();
+		} catch (Exception e) {
+			log.log(Level.SEVERE,"Error", e);
+			response = Response.serverError().entity(e.getMessage()).build();
 		} finally {
 
 			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
@@ -444,7 +461,7 @@ public class Survey extends Application {
 		Connection sd = SDDataSource.getConnection("surveyKPI-Survey-getSurveyMeta");
 		aManage.isAuthorised(sd, request.getRemoteUser());
 		// End Authorisation
-
+		
 		JSONObject jo = new JSONObject();
 
 		Connection connectionRel = null; 
@@ -463,7 +480,7 @@ public class Survey extends Application {
 					+ "order by f.table_name";		
 			pstmtTables = sd.prepareStatement(sqlTables);	
 
-			String sqlGeom = "select q.q_id "
+			String sqlGeom = "select q.q_id, q.qname "
 					+ "from form f, question q "
 					+ "where f.f_id = q.f_id "
 					+ "and (q.qtype='geopoint' "
@@ -508,7 +525,7 @@ public class Survey extends Application {
 			Stack<Integer> surveys = new Stack<Integer>();
 			surveys.push(new Integer(sId));
 			completedSurveys.put(new Integer(sId), new Integer(sId));
-
+			
 			/*
 			 * Get Forms and row counts the next survey
 			 */
@@ -520,6 +537,7 @@ public class Survey extends Application {
 				if(extended) {
 
 					// Get the surveys that link to this one
+					log.info("meta: get surveys that link to this one");
 					ArrayList<SurveyLinkDetails> sList = GeneralUtilityMethods.getLinkingSurveys(sd, currentSurveyId);
 					if(sList.size() > 0) {
 						for(SurveyLinkDetails link : sList) {
@@ -535,6 +553,7 @@ public class Survey extends Application {
 					}
 
 					// Get the surveys that this survey links to
+					log.info("meta: get surveys that his survey links to");
 					sList = GeneralUtilityMethods.getLinkedSurveys(sd, currentSurveyId);
 					if(sList.size() > 0) {
 						for(SurveyLinkDetails link : sList) {
@@ -551,7 +570,7 @@ public class Survey extends Application {
 				}
 
 				pstmtTables.setInt(1, currentSurveyId);
-				log.info("Get tables :" + pstmtTables.toString());
+				log.info("meta: Get tables :" + pstmtTables.toString());
 				resultSet = pstmtTables.executeQuery();
 
 				while (resultSet.next()) {							
@@ -559,11 +578,10 @@ public class Survey extends Application {
 					String tableName = resultSet.getString(1);
 					String formName = resultSet.getString(2);
 					int fId = resultSet.getInt(3);
-					String p_id = resultSet.getString(4);
+					int p_id = resultSet.getInt(4);
 					int rowCount = 0;
 					boolean has_geom = false;
-					String geom_id = null;
-					String bounds = null;
+					ArrayList<String> geomQuestions = new ArrayList<String> ();
 
 					try {
 						sql = "select count(*) from " + tableName;
@@ -583,28 +601,18 @@ public class Survey extends Application {
 					pstmtGeom.setInt(1, fId);
 					pstmtGeom.setInt(2, sId);
 					resultSetTable = pstmtGeom.executeQuery();
-					if(resultSetTable.next()) {
-						geom_id = resultSetTable.getString(1);
+					while(resultSetTable.next()) {
+						geomQuestions.add(resultSetTable.getString(2));
 						has_geom = true;
 					}
-
-					// Get the table bounding box
-					try {
-						if(has_geom) {
-							sql = "select ST_Extent(the_geom) as table_extent "
-									+ "from " + tableName;
-							try {if (pstmt3 != null) {pstmt3.close();}} catch (SQLException e) {}
-							pstmt3 = connectionRel.prepareStatement(sql);
-							resultSetBounds = pstmt3.executeQuery();
-							if(resultSetBounds.next()) {
-								bounds = resultSetBounds.getString(1);
-								if(bounds != null) {
-									addToSurveyBounds(bbox, bounds);
-								}
+					// Add any location meta data
+					if(p_id == 0) {
+						for(MetaItem mi : preloads) {
+							if(mi.type.equals("geopoint")) {
+								geomQuestions.add(mi.name);
+								has_geom = true;
 							}
 						}
-					} catch (Exception e) {
-						// If the table has not been created don't set the table bounds
 					}
 
 					/*
@@ -615,10 +623,11 @@ public class Survey extends Application {
 						if(fId == di.fId) {
 							try {
 								String name = di.columnName;
-								sql = "select min(" + name + "), max(" + name + ") FROM " + tableName + ";";
+								sql = ":q" + name + "), max(" + name + ") FROM " + tableName + ";";
 
 								try {if (pstmt2 != null) {pstmt2.close();}} catch (SQLException e) {}
 								pstmt2 = connectionRel.prepareStatement(sql);
+								log.info("meta: get first/last record of date field: " + pstmt2.toString());
 								resultSetTable = pstmt2.executeQuery();
 								if(resultSetTable.next()) {
 									di.first = resultSetTable.getDate(1);
@@ -627,6 +636,7 @@ public class Survey extends Application {
 
 							} catch (Exception e) {
 								// Ignore errors, for example table not created
+								log.log(Level.SEVERE, e.getMessage(), e);
 							}
 						}
 					}
@@ -640,11 +650,11 @@ public class Survey extends Application {
 					jp.put("s_id", currentSurveyId);
 					jp.put("f_id", fId);
 					jp.put("p_id", p_id);
-					if(p_id == null || p_id.equals("0")) {
+					if(p_id == 0) {
 						topTableName = tableName;
 						jo.put("top_table", tableName);
 					}
-					jp.put("geom_id", geom_id);
+					jp.put("geomQuestions", geomQuestions);
 					ja.put(jp);
 
 				} 	
@@ -789,6 +799,7 @@ public class Survey extends Application {
 			if(pstmt != null) try {pstmt.close();}catch(Exception e) {}
 			pstmt = sd.prepareStatement(sql);
 			pstmt.setInt(1, sId);
+			log.info("meta: get other survey details: " + pstmt.toString());
 			resultSet = pstmt.executeQuery();
 
 			if (resultSet.next()) {				
@@ -820,7 +831,7 @@ public class Survey extends Application {
 			SDDataSource.closeConnection("surveyKPI-Survey-getSurveyMeta", sd);
 			ResultsDataSource.closeConnection("surveyKPI-Survey-getSurveyMeta", connectionRel);
 		}
-
+		
 		return response;
 	}
 
@@ -1206,6 +1217,7 @@ public class Survey extends Application {
 		return null; 
 	}
 
+	/* no longer used
 	private void addToSurveyBounds(float[] bbox, String bounds) {
 		int idx = bounds.indexOf('(');
 		if(idx > 0) {
@@ -1236,5 +1248,6 @@ public class Survey extends Application {
 			}
 		}
 	}
+	*/
 }
 

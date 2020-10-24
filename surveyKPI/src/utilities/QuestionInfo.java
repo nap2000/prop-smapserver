@@ -514,7 +514,7 @@ public class QuestionInfo {
 					units = "square meters";
 					divBy = 1;
 				}
-				return "ST_Area(geography(" + tableName + ".the_geom), true) / " + divBy;
+				return "ST_Area(geography(" + tableName + "." + columnName + "), true) / " + divBy;
 			} else if(fn.equals("length")) {
 				if(units != null && units.equals("km")) {
 					divBy = 1000;
@@ -525,7 +525,7 @@ public class QuestionInfo {
 					units = "meters";
 					divBy = 1;
 				}
-				return "ST_Length(geography(" + tableName + ".the_geom), true) / " + divBy;
+				return "ST_Length(geography(" + tableName + "." + columnName + "), true) / " + divBy;
 			} else {
 				log.info("getSelectExpression: Unknown function: " + fn);
 				return tableName + "." + columnName;
@@ -578,11 +578,8 @@ public class QuestionInfo {
 				String oName = aO.getColumnName();
 				sqlFrag += "," + tableName + "." + oName + " as " + oName;
 			}
-		} else if(isGeom && columnName.equals("the_geom")) {
-			sqlFrag = "ST_AsGeoJSON(" + tableName + ".the_geom) as the_geom"; 
-		} else if (isGeom) {
-			// Include the table name in name of result set item as otherwise geometry col name may clash with q question name
-			sqlFrag = tableName + "." + columnName  + " as " + tableName + "_" + columnName;
+		} else if(isGeom) {
+			sqlFrag = "ST_AsGeoJSON(" + getSelectExpression()  + ") as " + columnName;
 		} else {
 			// Add primary key with each question, assume only one question per query
 			sqlFrag = tableName + ".prikey as prikey," + getSelectExpression()  + " as " + columnName;

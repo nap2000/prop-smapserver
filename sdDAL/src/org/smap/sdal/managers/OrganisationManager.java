@@ -440,15 +440,24 @@ public class OrganisationManager {
 				savedFile.setReadable(true);
 				savedFile.setWritable(true);
 				
-				// Set access writes to the tnew file
-				Process proc = Runtime.getRuntime().exec(new String [] {"/bin/sh", "-c", "chmod -R 777 " + 
-						filePath + " " +
-						" >> /var/log/subscribers/survey.log 2>&1"});
-				int code = proc.waitFor();				
-	        	
-	            if(code != 0) {
-	                log.info("Error setting access to organisation folder: " + code);
-	            }
+				// Set access writes to the new file
+				Process proc = Runtime.getRuntime().exec(new String [] {"/bin/sh", "-c", "chmod -R 777 " + filePath});
+				int code = proc.waitFor();					        	
+				if(code > 0) {
+					int len;
+					if ((len = proc.getErrorStream().available()) > 0) {
+						byte[] buf = new byte[len];
+						proc.getErrorStream().read(buf);
+						log.info("Command error:\t\"" + new String(buf) + "\"");
+					}
+				} else {
+					int len;
+					if ((len = proc.getInputStream().available()) > 0) {
+						byte[] buf = new byte[len];
+						proc.getInputStream().read(buf);
+						log.info("Completed setting access rights to new file process:\t\"" + new String(buf) + "\"");
+					}
+				}
 	            
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -498,8 +507,6 @@ public class OrganisationManager {
 		try {
 			pstmt = sd.prepareStatement(sql);	
 			pstmt.setString(1, user);
-					
-			log.info("Get organisation sensitivity details: " + pstmt.toString());
 			ResultSet rs = pstmt.executeQuery();
 			
 			Gson gson = new GsonBuilder().disableHtmlEscaping().create();
@@ -553,12 +560,12 @@ public class OrganisationManager {
 			} 
 			if(webform == null) {
 				webform = new WebformOptions();
-				webform.page_background_color = "#f0f0f0";
-				webform.paper_background_color = "#fff";
-				webform.footer_horizontal_offset = 5;
-				webform.button_background_color = "#ce4f07";
-				webform.header_text_color = "#ce4f07";
-				webform.button_text_color = "fff";
+				//webform.page_background_color = "#f0f0f0";
+				//webform.paper_background_color = "#fff";
+				//webform.footer_horizontal_offset = 5;
+				//webform.button_background_color = "#ce4f07";
+				//webform.header_text_color = "#ce4f07";
+				//webform.button_text_color = "fff";
 			}
 			
 		} finally {			

@@ -16,11 +16,11 @@ filelocn="/smap"
 u1404=`lsb_release -r | grep -c "14\.04"`
 u1604=`lsb_release -r | grep -c "16\.04"`
 u1804=`lsb_release -r | grep -c "18\.04"`
-u1910=`lsb_release -r | grep -c "19\.10"`
+u2004=`lsb_release -r | grep -c "20\.04"`
 
 # Check that this version of ubuntu is supported
-if [ $u1910 -eq 1 ]; then
-    echo "Installing on Ubuntu 19.10"
+if [ $u2004 -eq 1 ]; then
+    echo "Installing on Ubuntu 20.04"
 elif [ $u1804 -eq 1 ]; then
     echo "Installing on Ubuntu 18.04"
 elif [ $u1604 -eq 1 ]; then
@@ -28,16 +28,19 @@ elif [ $u1604 -eq 1 ]; then
 elif [ $u1404 -eq 1 ]; then
     echo "Installing on Ubuntu 14.04"
 else
-    echo "Unsupported version of Ubuntu, you need 19.10, 18.04, 16.04 or 14.04"
+    echo "Unsupported version of Ubuntu, you need 20.04, 18.04 or 16.04"
     exit 1;
 fi
 
-if [ $u1910 -eq 1 ]; then
+if [ $u2004 -eq 1 ]; then
     TOMCAT_VERSION=tomcat9
+    TOMCAT_USER=tomcat
 elif [ $u1804 -eq 1 ]; then
     TOMCAT_VERSION=tomcat8
+    TOMCAT_USER=tomcat8
 else
     TOMCAT_VERSION=tomcat7
+    TOMCAT_USER=tomcat7
 fi
 
 CATALINA_HOME=/usr/share/$TOMCAT_VERSION
@@ -83,18 +86,16 @@ sudo a2enmod ssl
 sudo a2enmod headers
 
 sudo mkdir /var/www/smap
-#sudo mkdir /var/www/smap/fieldAnalysis
-#sudo mkdir /var/www/smap/OpenLayers
 
 echo "##### 3. Install Tomcat: $TOMCAT_VERSION"
 sudo apt-get install $TOMCAT_VERSION -y
 
 echo '##### 5. Install Postgres / Postgis'
 
-# Install Postgres for Ubuntu 19.02
-if [ $u1910 -eq 1 ]; then
+# Install Postgres for Ubuntu 20.04
+if [ $u2004 -eq 1 ]; then
     echo 'installing postgres'
-    PGV=11
+    PGV=12
     sudo apt-get install postgresql postgresql-contrib postgis -y
 fi
 
@@ -136,22 +137,28 @@ sudo mkdir $filelocn/templates/xls
 sudo mkdir $filelocn/uploadedSurveys
 sudo mkdir $filelocn/misc
 sudo mkdir $filelocn/temp
-sudo mkdir $filelocn/bin
+sudo mkdir $filelocn/settings
+
+# For ubuntu 2004 allow tomcat9 to write to /smap
+if [ $u2004 -eq 1 ]; then
+mkdir /etc/systemd/system/tomcat9.service.d
+cp config_files/override.conf /etc/systemd/system/tomcat9.service.d/override.conf
+fi
 
 # Make sure all subdirectories of filelocn are updated even if the latter is a symbolic link
-sudo chown -R $TOMCAT_VERSION $filelocn
-sudo chown -R $TOMCAT_VERSION $filelocn/*
+sudo chown -R $TOMCAT_USER $filelocn
+sudo chown -R $TOMCAT_USER $filelocn/*
 sudo chmod -R 0777 $filelocn/*
 
-if [ $u1910 -eq 1 ]; then
+if [ $u2004 -eq 1 ]; then
     sudo mkdir /var/lib/$TOMCAT_VERSION/.aws
-    sudo chown -R $TOMCAT_VERSION /var/lib/$TOMCAT_VERSION/.aws
+    sudo chown -R $TOMCAT_USER /var/lib/$TOMCAT_VERSION/.aws
 elif [ $u1804 -eq 1 ]; then
     sudo mkdir /var/lib/$TOMCAT_VERSION/.aws
-    sudo chown -R $TOMCAT_VERSION /var/lib/$TOMCAT_VERSION/.aws
+    sudo chown -R $TOMCAT_USER /var/lib/$TOMCAT_VERSION/.aws
 else
     sudo mkdir /usr/share/$TOMCAT_VERSION/.aws
-    sudo chown -R $TOMCAT_VERSION /usr/share/$TOMCAT_VERSION/.aws
+    sudo chown -R $TOMCAT_USER /usr/share/$TOMCAT_VERSION/.aws
 fi
 
 # If auto configuration is set then copy the pre-set configuration files to their target destination
@@ -171,10 +178,12 @@ then
 	echo '# copy tomcat server file'
 	sudo mv $tc_server_xml $tc_server_xml.bu
 	sudo cp config_files/server.xml.$TOMCAT_VERSION $tc_server_xml
+	sudo chown $TOMCAT_USER $tc_server_xml
 
 	echo '# copy tomcat context file'
 	sudo mv $tc_context_xml $tc_context_xml.bu
 	sudo cp config_files/context.xml $tc_context_xml
+	sudo chown $TOMCAT_USER $tc_context_xml
 
 	echo '# copy tomcat logging properties file'
 	sudo mv $tc_logging $tc_logging.bu
@@ -202,10 +211,10 @@ then
 	sudo ./apacheConfig.sh
 
 	echo '# copy subscriber upstart files'
-	if [ $u1910 -eq 1 ]; then
-		sudo cp config_files/subscribers.service $service_dir
+	if [ $u2004 -eq 1 ]; then
+		sudo cp config_files/subscribers.service.u2004 $service_dir/subscribers.service
 		sudo chmod 664 $service_dir/subscribers.service
-		sudo cp config_files/subscribers_fwd.service $service_dir
+		sudo cp config_files/subscribers_fwd.service.u2004 $service_dir/subscribers_fwd.service
 		sudo chmod 664 $service_dir/subscribers_fwd.service
 		
 		sudo systemctl enable subscribers.service
@@ -324,25 +333,7 @@ fi
 
 sudo apt-get install imagemagick -y
 sudo apt-get install ffmpeg -y 
-sudo apt-get install flvtool2 -y
-
-echo '##### 15. PHP Install not required'
-
-echo '##### 16. Install Python for xls form translations not required'
-#sudo apt-get install gcc -y
-#sudo apt-get install libz-dev -y
-#sudo apt-get install python-dev -y
-#sudo apt-get install libxml2-dev -y
-#sudo apt-get install libxslt-dev -y
-#sudo apt-get install libxslt1-dev -y
-#sudo apt-get install git -y
-#sudo apt-get install python-setuptools -y
-#sudo easy_install pip
-#sudo pip install setuptools --no-use-wheel --upgrade
-#sudo pip install xlrd 
-#sudo pip install -e git+https://github.com/UW-ICTD/pyxform.git@master#egg=pyxform 
-#sudo cp -r src/pyxform/pyxform/ /smap_bin
-#sudo sed -i "s/from pyxform import constants/import constants/g" /smap_bin/pyxform/survey.py
+#sudo apt-get install flvtool2 -y
 
 echo '##### 17. Backups'
 sudo mkdir ~postgres/backups
@@ -350,9 +341,9 @@ sudo mkdir ~postgres/restore
 sudo chmod +x ~postgres/bu.sh ~postgres/re.sh
 sudo chown postgres ~postgres/bu.sh ~postgres/re.sh ~postgres/backups ~postgres/restore
 
-echo '##### 18. install PHP pecl_http extension skipped'
-
 echo '##### 19. Update miscelaneous file configurations'
+
+sudo apt-get install mlocate
 
 echo '##### Add file location to tomcat configuration'
 
@@ -391,11 +382,11 @@ sudo apt-get install gdal-bin -y
 sudo apt-get install ttf-dejavu -y
 
 # Add a file containing the version number
-echo "2008" > ~/smap_version
+echo "2010" > ~/smap_version
 
 echo '##### 21. Add postgres and apache to tomcat group'
-sudo usermod -a -G $TOMCAT_VERSION postgres
-sudo usermod -a -G $TOMCAT_VERSION www-data
+sudo usermod -a -G $TOMCAT_USER postgres
+sudo usermod -a -G $TOMCAT_USER www-data
 
 echo '##### 22. Deploy Smap'
 cd ../deploy

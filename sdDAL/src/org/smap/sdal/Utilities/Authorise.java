@@ -27,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.smap.sdal.managers.LogManager;
+import org.smap.sdal.model.MetaItem;
 
 public class Authorise {
 	
@@ -491,6 +492,60 @@ public class Authorise {
 				throw new ServerException();
 			} else {
 				throw new AuthorisationException("Survey validation failed for: " + user + " survey was: " + sIdent);	 
+			}
+		} 
+ 		
+		return true;
+	}
+	
+	/*
+	 * Use with anonymous requests to verify that the survey exists only
+	 */
+	public boolean surveyExists(Connection conn, String sIdent)
+			throws ServerException, AuthorisationException, NotFoundException {
+		ResultSet resultSet = null;
+		PreparedStatement pstmt = null;
+		int count = 0;
+		boolean sqlError = false;
+		
+		/*
+		 * 1) Make sure the survey has not been soft deleted and exists or alternately 
+		 *    that it has been soft deleted and exists
+		 * 2) Make sure survey is in a project that the user has access to
+		 */
+
+		StringBuffer sql = new StringBuffer("select count(*) from survey s "
+				+ "where s.ident = ? "
+				+ "and s.deleted = false ");
+		
+		try {		
+			
+			pstmt = conn.prepareStatement(sql.toString());
+			pstmt.setString(1, sIdent);
+			
+			resultSet = pstmt.executeQuery();
+			if(resultSet.next()) {
+				count = resultSet.getInt(1);
+			}
+			
+		} catch (Exception e) {
+			log.log(Level.SEVERE,"Error in Authorisation", e);
+			sqlError = true;
+		} finally {
+			if(resultSet != null) {try{resultSet.close();}catch(Exception e) {}};
+			if(pstmt != null) {try{pstmt.close();} catch(Exception e) {}};
+		}
+		
+ 		if(count == 0) {
+			log.info("IsValidSurvey: " + pstmt.toString());
+ 			log.info("Survey validation failed for survey: " + sIdent);
+ 			
+ 			SDDataSource.closeConnection("isValidSurvey", conn);
+			
+			if(sqlError) {
+				throw new ServerException();
+			} else {
+				throw new AuthorisationException("Survey validation failed for survey: " + sIdent);	 
 			}
 		} 
  		
@@ -1106,6 +1161,80 @@ public class Authorise {
 	}
 	
 	/*
+	 * Verify that the question passed by name is in the survey
+	 */
+	public boolean isValidQuestionName(Connection conn, String user, int sId, 
+			String qName, boolean checkPreloads)
+			throws ServerException, AuthorisationException, NotFoundException {
+		ResultSet resultSet = null;
+		PreparedStatement pstmt = null;
+		int count = 0;
+		boolean sqlError = false;
+		
+		/*
+		 * 1) Make sure the survey has not been soft deleted and exists or alternately 
+		 *    that it has been soft deleted and exists
+		 * 2) Make sure survey is in a project that the user has access to
+		 */
+
+		String sql = "select count(*) from question q, form f " +
+				" where q.f_id = f.f_id" +
+				" and f.s_id = ?" +
+				" and q.qname = ?;"; 
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, sId);
+			pstmt.setString(2, qName);
+			
+			log.info("IsValidQuestion: " + pstmt.toString());
+			
+			resultSet = pstmt.executeQuery();
+			resultSet.next();
+			
+			count = resultSet.getInt(1);
+			
+			if(count == 0 && checkPreloads) {
+				ArrayList<MetaItem> preloads = GeneralUtilityMethods.getPreloads(conn, sId);
+				if(preloads != null) {
+					for(MetaItem item : preloads) {
+						if(item.name != null && item.name.equals(qName)) {
+							count++;
+							break;
+						}
+					}
+				}
+			}
+			
+		} catch (Exception e) {
+			log.log(Level.SEVERE,"Error in Authorisation", e);
+			sqlError = true;
+		} finally {
+			// Close the result set and prepared statement
+			try{
+				if(resultSet != null) {resultSet.close();};
+				if(pstmt != null) {pstmt.close();};
+			} catch (Exception ex) {
+				log.log(Level.SEVERE, "Unable to close resultSet or prepared statement");
+			}
+		}
+		
+ 		if(count == 0) {
+ 			log.info("Question name validation failed for question: " + qName + " survey was: " + sId);
+ 			
+ 			SDDataSource.closeConnection("isValidQuestion", conn);
+			
+			if(sqlError) {
+				throw new ServerException();
+			} else {
+				throw new NotFoundException();	// Not found rather than not authorised as we could not find a resource that the user had access to
+			}
+		} 
+ 		
+		return true;
+	}
+	
+	/*
 	 * Verify that the survey is not blocked
 	 */
 	public boolean isBlocked(Connection conn, int sId, boolean isBlocked)
@@ -1282,8 +1411,6 @@ public class Authorise {
 				" where p.id = ? " +
 				" and p.o_id = ?;";
 		
-		
-		
 		try {
 			int oId = GeneralUtilityMethods.getOrganisationId(conn, user);
 			
@@ -1309,6 +1436,57 @@ public class Authorise {
 		
  		if(count == 0) {
  			log.info("Project in organisation validation failed for: " + user + " project was: " + pId);
+ 			
+ 			SDDataSource.closeConnection("isValidProject", conn);
+			
+			if(sqlError) {
+				throw new ServerException();
+			} else {
+				throw new AuthorisationException();
+			}
+		} 
+ 		
+		return true;
+	}
+	
+	/*
+	 * Verify that the survey is in the users organisation
+	 */
+	public boolean surveyInUsersOrganisation(Connection conn, String user, String sIdent) {
+		ResultSet resultSet = null;
+		PreparedStatement pstmt = null;
+		int count = 0;
+		boolean sqlError = false;
+
+		String sql = "select count(*) from survey s, project p "
+				+ "where p.id = s.p_id "
+				+ "and s.ident = ? "
+				+ "and p.o_id = ?;";
+		
+		try {
+			int oId = GeneralUtilityMethods.getOrganisationId(conn, user);
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, sIdent);
+			pstmt.setInt(2, oId);
+			resultSet = pstmt.executeQuery();
+			resultSet.next();
+			
+			count = resultSet.getInt(1);
+		} catch (Exception e) {
+			log.log(Level.SEVERE,"Error in Authorisation", e);
+			sqlError = true;
+		} finally {
+			// Close the result set and prepared statement
+			try{
+				if(resultSet != null) {resultSet.close();};
+				if(pstmt != null) {pstmt.close();};
+			} catch (Exception ex) {
+			}
+		}
+		
+ 		if(count == 0) {
+ 			log.info("Survey in organisation validation failed for: " + user + " survey ident was: " + sIdent);
  			
  			SDDataSource.closeConnection("isValidProject", conn);
 			
