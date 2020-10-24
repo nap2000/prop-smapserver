@@ -190,7 +190,9 @@ public void populateSvd(
 			false,		// HXL only include with XLS exports
 			false,		// Don't include audit data
 			tz,
-			isMain		// mgmt - Only the main survey request should result in the addition of the mgmt columns
+			isMain,		// mgmt - Only the main survey request should result in the addition of the mgmt columns
+			false,		// Accuracy and Altitude
+			true		// Server calculates
 			);		
 
 	// If this is a group form track which duplicate main questions need to be removed
@@ -226,9 +228,7 @@ public void populateSvd(
 			tc.parameters = c.parameters;		// Add parameters
 			tc.appearance = c.appearance;		// Add appearance
 			
-			if(tc.column_name.equals("the_geom")) {
-				tc.displayName = "_geolocation";
-			} else if(tc.column_name.equals("_bad")) {
+			if(tc.column_name.equals("_bad")) {
 				tc.displayName = localisation.getString("c_del");
 				tc.del_col = true;
 			} else if(tc.column_name.equals("_bad_reason")) {
@@ -591,7 +591,6 @@ private boolean hideDefault(String name) {
 			name.equals("project") ||
 			name.equals("Instance Name") ||
 			name.equals("instanceid") ||
-			name.equals("the_geom") ||
 			name.equals("_end") 
 			) {
 		hide = true;

@@ -33,7 +33,9 @@ import javax.ws.rs.core.Response;
 import org.smap.sdal.Utilities.Authorise;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
 import org.smap.sdal.Utilities.SDDataSource;
+import org.smap.sdal.model.SetValue;
 
+import model.GeomQuestions;
 import model.Settings;
 
 import com.google.gson.Gson;
@@ -43,8 +45,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -89,44 +89,46 @@ public class Dashboard extends Application {
 		PreparedStatement pstmt = null;
 		try  {
 
-			String sql = "SELECT " +
-					"d.ds_id as id," +
-					"d.ds_seq as seq," +
-					"d.ds_state as state," +
-					"d.ds_title as title," +
-					"d.ds_s_id as sId," +
-					"d.ds_u_id as uId," +
-					"d.ds_s_name as sName," +
-					"d.ds_type as type," +
-					"d.ds_layer_id as layerId," +
-					"d.ds_region as region," +
-					"d.ds_lang as lang," +
-					"d.ds_q_id as qId," +
-					"d.ds_date_question_id as dateQuestionId," +
-					"d.ds_question as question," +
-					"d.ds_fn as fn," +
-					"d.ds_table as table, " + 
-					"d.ds_key_words as key_words, " +
-					"d.ds_q1_function as q1_function, " +
-					"d.ds_group_question_id as groupQuestionId, " +
-					"d.ds_group_question_text as groupQuestionText, " +
-					"d.ds_group_type as groupType, " +
-					"d.ds_time_group as timeGroup, " +
-					"d.ds_from_date as fromDate, " +
-					"d.ds_to_date as toDate, " +
-					"d.ds_q_is_calc as qId_is_calc, " +
-					"d.ds_filter as filter, " +
-					"d.ds_advanced_filter as advanced_filter, " +
-					"d.ds_subject_type as subject_type " +
-					" from dashboard_settings d, users u, user_project up, survey s " +
-					" where u.id = up.u_id " +
-					" and up.p_id = ? " +
-					" and s.p_id = up.p_id " +
-					" and s.s_id = d.ds_s_id " +
-					" and u.ident = d.ds_user_ident " +	// Restrict to owning user
-					" and u.ident = ? "
-					+ "and ds_subject_type = 'survey'" +
-					" order by ds_seq asc";
+			String sql = "select "
+					+ "d.ds_id as id,"
+					+ "d.ds_seq as seq,"
+					+ "d.ds_state as state,"
+					+ "d.ds_title as title,"
+					+ "d.ds_s_id as sId,"
+					+ "d.ds_u_id as uId,"
+					+ "d.ds_s_name as sName,"
+					+ "d.ds_type as type,"
+					+ "d.ds_layer_id as layerId,"
+					+ "d.ds_region as region,"
+					+ "d.ds_lang as lang,"
+					+ "d.ds_q_id as qId,"
+					+ "d.ds_date_question_id as dateQuestionId,"
+					+ "d.ds_question as question,"
+					+ "d.ds_fn as fn,"
+					+ "d.ds_table as table, "
+					+ "d.ds_key_words as key_words, "
+					+ "d.ds_q1_function as q1_function, "
+					+ "d.ds_group_question_id as groupQuestionId, "
+					+ "d.ds_group_question_text as groupQuestionText, "
+					+ "d.ds_group_type as groupType, "
+					+ "d.ds_time_group as timeGroup, "
+					+ "d.ds_from_date as fromDate, "
+					+ "d.ds_to_date as toDate, "
+					+ "d.ds_q_is_calc as qId_is_calc, "
+					+ "d.ds_filter as filter, "
+					+ "d.ds_advanced_filter as advanced_filter, "
+					+ "d.ds_subject_type as subject_type, "
+					+ "d.ds_inc_ro as inc_ro,"
+					+ "d.ds_geom_questions as geom_questions "
+					+ "from dashboard_settings d, users u, user_project up, survey s "
+					+ "where u.id = up.u_id "
+					+ "and up.p_id = ? "
+					+ "and s.p_id = up.p_id "
+					+ "and s.s_id = d.ds_s_id "
+					+ "and u.ident = d.ds_user_ident " 	// Restrict to owning user
+					+ "and u.ident = ? "
+					+ "and ds_subject_type = 'survey' "
+					+ "order by ds_seq asc";
 			
 			String sqlUser = "select "
 					+ "d.ds_id as id,"
@@ -156,7 +158,9 @@ public class Dashboard extends Application {
 					+ "d.ds_q_is_calc as qId_is_calc, "
 					+ "d.ds_filter as filter, "
 					+ "d.ds_advanced_filter as advanced_filter, "
-					+ "d.ds_subject_type as subject_type "
+					+ "d.ds_subject_type as subject_type,"
+					+ "d.ds_inc_ro as inc_ro, "
+					+ "d.ds_geom_questions as geom_questions "
 					+ "from dashboard_settings d "
 					+ "where d.ds_user_ident = ? "
 					+ "and d.ds_subject_type = 'user' "
@@ -191,7 +195,9 @@ public class Dashboard extends Application {
 					+ "d.ds_q_is_calc as qId_is_calc, "
 					+ "d.ds_filter as filter, "
 					+ "d.ds_advanced_filter as advanced_filter, "
-					+ "d.ds_subject_type as subject_type "
+					+ "d.ds_subject_type as subject_type,"
+					+ "d.ds_inc_ro as inc_ro,"
+					+ "d.ds_geom_questions as geom_questions "
 					+ "from dashboard_settings d "
 					+ "where d.ds_user_ident = ? "
 					+ "and d.ds_subject_type = 'user_locations' ";
@@ -296,12 +302,13 @@ public class Dashboard extends Application {
 					"and ds_user_ident = ?;";	
 			pstmtDelView = connectionSD.prepareStatement(sqlDelView);	
 			
-			String sqlAddView = "insert into dashboard_settings(" +
-					"ds_state, ds_seq, ds_title, ds_s_id, ds_s_name, ds_type, ds_layer_id, ds_region," +
-					" ds_lang, ds_q_id, ds_date_question_id, ds_question, ds_fn, ds_table, ds_key_words, ds_q1_function, " +
-					" ds_group_question_id, ds_group_question_text, ds_group_type, ds_user_ident, ds_time_group," +
-					" ds_from_date, ds_to_date, ds_q_is_calc, ds_filter, ds_advanced_filter, ds_subject_type, ds_u_id) values (" +
-					"?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";		
+			String sqlAddView = "insert into dashboard_settings("
+					+ "ds_state, ds_seq, ds_title, ds_s_id, ds_s_name, ds_type, ds_layer_id, ds_region,"
+					+ "ds_lang, ds_q_id, ds_date_question_id, ds_question, ds_fn, ds_table, ds_key_words, ds_q1_function, "
+					+ "ds_group_question_id, ds_group_question_text, ds_group_type, ds_user_ident, ds_time_group,"
+					+ "ds_from_date, ds_to_date, ds_q_is_calc, ds_filter, ds_advanced_filter, ds_subject_type, ds_u_id,"
+					+ "ds_inc_ro, ds_geom_questions) values ("
+					+ "?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";		
 			pstmtAddView = connectionSD.prepareStatement(sqlAddView);	 			
 			
 			String sqlReplaceView = "update dashboard_settings set " +
@@ -331,7 +338,9 @@ public class Dashboard extends Application {
 					" ds_filter = ?," +
 					" ds_advanced_filter = ?," +
 					" ds_subject_type = ?, " +
-					" ds_u_id = ? " +
+					" ds_u_id = ?, " +
+					" ds_inc_ro = ?," +
+					" ds_geom_questions = ? " +
 					" where ds_id = ? " +
 					" and ds_user_ident = ?;";						
 			pstmtReplaceView = connectionSD.prepareStatement(sqlReplaceView);
@@ -381,6 +390,14 @@ public class Dashboard extends Application {
 						pstmtAddView.setString(26, s.advanced_filter);
 						pstmtAddView.setString(27, s.subject_type);
 						pstmtAddView.setInt(28, s.uId);
+						pstmtAddView.setBoolean(29, s.inc_ro);
+						
+						String gQuestions = null;
+						if(s.geomFormQuestions != null) {
+							gQuestions = gson.toJson(s.geomFormQuestions);
+						}
+						pstmtAddView.setString(30, gQuestions);
+						
 						log.info("Add view: " + pstmtAddView.toString());
 						pstmtAddView.executeUpdate();		
 
@@ -414,8 +431,16 @@ public class Dashboard extends Application {
 						pstmtReplaceView.setString(25, s.advanced_filter);
 						pstmtReplaceView.setString(26, s.subject_type);
 						pstmtReplaceView.setInt(27, s.uId);
-						pstmtReplaceView.setInt(28, s.id);
-						pstmtReplaceView.setString(29, user);
+						pstmtReplaceView.setBoolean(28, s.inc_ro);
+						
+						String gQuestions = null;
+						if(s.geomFormQuestions != null) {
+							gQuestions = gson.toJson(s.geomFormQuestions);
+						}
+						pstmtReplaceView.setString(29, gQuestions);
+						
+						pstmtReplaceView.setInt(30, s.id);
+						pstmtReplaceView.setString(31, user);
 						
 						log.info("Update view: " + pstmtReplaceView.toString());
 						pstmtReplaceView.executeUpdate();
@@ -512,6 +537,9 @@ public class Dashboard extends Application {
 	}
 
 	private Settings getSettings(ResultSet resultSet, int idx) throws SQLException {
+		
+		Gson gson=  new GsonBuilder().disableHtmlEscaping().setDateFormat("yyyy-MM-dd").create();
+		
 		// Create the new Dashboard object
 		Settings s = new Settings();
 
@@ -545,7 +573,15 @@ public class Dashboard extends Application {
 		s.filter = resultSet.getString("filter");
 		s.advanced_filter = resultSet.getString("advanced_filter");
 		s.subject_type = resultSet.getString("subject_type");
+		s.inc_ro = resultSet.getBoolean("inc_ro");
 		
+		String gQuestions = resultSet.getString("geom_questions");;
+		if(gQuestions != null) {
+			try {
+				s.geomFormQuestions = gson.fromJson(gQuestions, new TypeToken<GeomQuestions []>() {}.getType());
+			} catch (Exception e) {}
+		} 
+	
 		return s;
 	}
 }

@@ -12,6 +12,9 @@ public class QuestionForm {
 	public String qType;
 	public int s_id;
 	public boolean reference;
+	public boolean published;
+	public int f_id;
+	public String serverCalculate;
 	
 	public QuestionForm(
 			String qName, 
@@ -21,7 +24,10 @@ public class QuestionForm {
 			String parameters,
 			String qType,
 			int s_id,
-			boolean reference) {
+			boolean reference,
+			boolean published,
+			int f_id,
+			String serverCalculate) {
 		
 		this.qName = qName;
 		this.columnName = columnName;
@@ -31,5 +37,8 @@ public class QuestionForm {
 		this.qType = qType;
 		this.s_id = s_id;
 		this.reference = reference;
+		this.published = published;
+		this.f_id = f_id;
+		this.serverCalculate = serverCalculate;
 	}
 }

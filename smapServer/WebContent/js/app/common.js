@@ -3416,6 +3416,71 @@ function addDatePickList(sMeta, currentDate) {
 	}
 }
 
+/*
+ * Add a list of geometry questions to pick from
+ */
+function addGeomPickList(sMeta) {
+
+	var h = [],
+		k = [],
+		idx = -1,
+		i,
+		value,
+		theForm;
+
+	if(sMeta && sMeta.forms) {
+		for(i = 0; i < sMeta.forms.length; i++) {
+
+			theForm = sMeta.forms[i];
+
+			k[++idx] = h[++idx] = '<div class="exportcontrol showshape showosm" style="display: block;">';
+			k[++idx] = h[++idx] = '<label>' + theForm.form + '</label>';
+			h[++idx] = '<select class="geomSelect" id="geomForm_' + theForm.f_id;            // export only
+			k[++idx] = '<select class="geomSelect" id="geomSettingsForm_' + theForm.f_id;    // Settings only
+			k[++idx] = h[++idx] = '" data-form="' + theForm.f_id + '">';
+			if(theForm.geomQuestions) {
+				for(j = 0; j < theForm.geomQuestions.length; j++) {
+					k[++idx] = h[++idx] = '<option value="';
+					k[++idx] = h[++idx] = theForm.geomQuestions[j];
+					k[++idx] = h[++idx] = '">';
+					k[++idx] = h[++idx] = theForm.geomQuestions[j];
+					k[++idx] = h[++idx] = '</option>';
+				}
+			}
+			k[++idx] = h[++idx] = '</select>';
+			k[++idx] = h[++idx] = '</div>';
+
+		}
+
+		$(".geomselect_export").empty().html((h.join('')));
+		$(".geomselect_settings").empty().html((k.join('')));
+
+		shapeFormsChanged();
+
+	}
+}
+
+function shapeFormsChanged() {
+	let formId = getSelectedForm('.shapeforms', true);
+	if(formId) {
+		$('.geomSelect', '.geomselect_export').prop('disabled', true);
+		$('#geomForm_' + formId, '.geomselect_export').prop('disabled', false);
+	}
+}
+
+function getSelectedForm($forms, ignoreError) {
+	let forms = $(':radio:checked', $forms).map(function() {
+		return this.value;
+	}).get();
+	if(forms.length === 0) {
+		if(!ignoreError) {
+			alert(window.localise.set["msg_one_f2"]);
+		}
+		return 0;
+	}
+	return forms[0];
+}
+
 function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms) {
 
 	var h = [],
@@ -3863,15 +3928,18 @@ function tokenizeAppearance(input) {
 	var j;
 	var chunk;
 
-	// only search needs special treatment
+	// only search/lookup_choices needs special treatment
 	var idx1 = input.indexOf('search');
+	if(idx1 < 0) {
+		idx1 = input.indexOf('lookup_choices');
+	}
 	if(idx1 >= 0) {
 		chunks.push({
 			val:input.substring(0, idx1),
 			type: "text"
 		});
 		if(idx1 < input.length) {
-			var idx2 = input.indexOf(')', idx1 + 1);
+			var idx2 = input.lastIndexOf(')');
 			if(idx2 >= 0) {
 				chunks.push({
 					val: input.substring(idx1, idx2 + 1),
@@ -5058,7 +5126,7 @@ function getAppearanceParams(appearance) {
 	var response = {};
 
 	var idx1 = appearance.indexOf('(');
-	var idx2 = appearance.indexOf(')');
+	var idx2 = appearance.lastIndexOf(')');
 	var params = appearance.substring(idx1 + 1, idx2);
 	var paramsArray = [];
 	if(params) {
@@ -5079,31 +5147,55 @@ function getAppearanceParams(appearance) {
 			response.filter = response.filter.replace(/'/g, "");
 		}
 
-		if(paramsArray.length > 2) {
-			// Third parameter is the filter column
-			response.filter_column = paramsArray[2].trim();
-			response.filter_column = response.filter_column.replace(/'/g, "");
-		}
+		if(response.filter === 'eval') {
+			if (paramsArray.length > 2) {
+				// Third parameter for an evaluation type function is the expression
+				// For an expression type filter only remove the first and last single quote if they exist
+				response.expression = paramsArray[2].trim();
+				if(response.expression.charAt(0) == '\'') {
+					response.expression = response.expression.substring(1);
+				}
+				if(response.expression.charAt(response.expression.length - 1) == '\'') {
+					response.expression = response.expression.substring(0, response.expression.length - 1);
+				}
+			}
+		} else {
 
-		if(paramsArray.length > 3) {
-			// Fourth parameter is the filter value
-			response.filter_value = paramsArray[3].trim();
-			response.filter_value = response.filter_value.replace(/'/g, "");
-		}
+			if (paramsArray.length > 2) {
+				// Third parameter is the filter column
+				response.filter_column = paramsArray[2].trim();
+				response.filter_column = response.filter_column.replace(/'/g, "");
+			}
 
-		if(paramsArray.length > 4) {
-			// Fifth parameter is the second filter column
-			response.second_filter_column = paramsArray[4].trim();
-			response.second_filter_column = response.second_filter_column.replace(/'/g, "");
-		}
+			if (paramsArray.length > 3) {
+				// Fourth parameter is the filter value
+				response.filter_value = paramsArray[3].trim();
+				response.filter_value = response.filter_value.replace(/'/g, "");
+			}
+
+			if (paramsArray.length > 4) {
+				// Fifth parameter is the second filter column
+				response.second_filter_column = paramsArray[4].trim();
+				response.second_filter_column = response.second_filter_column.replace(/'/g, "");
+			}
 
 
-		if(paramsArray.length > 5) {
-			// Sixth parameter is the filter value
-			response.second_filter_value = paramsArray[5].trim();
-			response.second_filter_value = response.second_filter_value.replace(/'/g, "");
+			if (paramsArray.length > 5) {
+				// Sixth parameter is the filter value
+				response.second_filter_value = paramsArray[5].trim();
+				response.second_filter_value = response.second_filter_value.replace(/'/g, "");
+			}
 		}
 
 	}
 	return response;
+}
+
+function getQuestionType(schema, qname) {
+	var i;
+	for(i = 0; i < schema.columns.length; i++) {
+		if(schema.columns[i].question_name == qname) {
+			return schema.columns[i].type;
+		}
+	}
 }

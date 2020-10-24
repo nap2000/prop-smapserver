@@ -21,8 +21,10 @@ import org.smap.sdal.model.Label;
 import org.smap.sdal.model.LanguageItem;
 import org.smap.sdal.model.Option;
 import org.smap.sdal.model.Pulldata;
+import org.smap.sdal.model.QuestionForm;
 import org.smap.sdal.model.ServerCalculation;
 import org.smap.sdal.model.SqlFrag;
+import org.smap.sdal.model.SqlFragParam;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -177,11 +179,10 @@ public class SurveyTableManager {
 	public void initData(
 			PreparedStatement pstmt, 
 			String type, 
-			String key_column, 
-			String key_value,
 			String selection, 
 			ArrayList<String> arguments, 
 			ArrayList<String> whereColumns,
+			SqlFrag expressionFrag,		// A more general approach than using "whereColumns". The latter should probably be deprecated
 			String tz,
 			ArrayList<SqlFrag> qArray,
 			ArrayList<SqlFrag> fArray
@@ -190,43 +191,30 @@ public class SurveyTableManager {
 		if(sqlDef != null && sqlDef.qnames != null && sqlDef.qnames.size() > 0) {
 			StringBuilder sql = new StringBuilder(sqlDef.sql);
 			
-			// Add filter
-			String filter = null;
-			if(type.equals("lookup")) {
-				filter = getFilter(key_column, key_value);
-				if(filter.length() > 0) {
-					if(sqlDef.hasWhere) {
-						sql.append(" and ");
-					} else {
-						sql.append(" where ");
-					}
-					sql.append(filter);
-				}
-			} else if (type.equals("choices")) {
-				// Check the where questions
-				if(whereColumns != null) {
-					for(String col : whereColumns) {
-						boolean foundCol = false;
-						for(String h : sqlDef.qnames) {
-							if(h.equals(col)) {
-								foundCol = true;
-								break;
-							}
-						}
-						if(!foundCol) {
-							throw new ApplicationException("Question " + col + " not found in table ");
+			// Check the where questions
+			if(whereColumns != null) {
+				for(String col : whereColumns) {
+					boolean foundCol = false;
+					for(String h : sqlDef.qnames) {
+						if(h.equals(col)) {
+							foundCol = true;
+							break;
 						}
 					}
-				}
-				if(selection != null) {
-					if(sqlDef.hasWhere) {
-						sql.append(" and ");
-					} else {
-						sql.append(" where ");
+					if(!foundCol) {
+						throw new ApplicationException("Question " + col + " not found in table ");
 					}
-					sql.append(selection);
 				}
 			}
+			if(selection != null) {
+				if(sqlDef.hasWhere) {
+					sql.append(" and ");
+				} else {
+					sql.append(" where ");
+				}
+				sql.append(selection);
+			}
+
 			sql.append(sqlDef.order_by);
 			pstmt = cResults.prepareStatement(sql.toString());
 			int paramCount = 1;
@@ -242,25 +230,22 @@ public class SurveyTableManager {
 			if (sqlDef.hasRbacFilter) {
 				paramCount = GeneralUtilityMethods.setArrayFragParams(pstmt, sqlDef.rfArray, paramCount, tz);
 			}
-			if(type.equals("lookup")) {
-				if(filter.length() > 0) {
-					pstmt.setString(paramCount, key_value);
+			
+			if(expressionFrag != null) {
+				paramCount = GeneralUtilityMethods.setFragParams(pstmt, expressionFrag, paramCount, tz);
+			} else if(arguments != null) {
+				for(String arg : arguments) {
+					pstmt.setString(paramCount++, arg);
 				}
-			} else {
-				if(arguments != null) {
-					for(String arg : arguments) {
-						pstmt.setString(paramCount++, arg);
-					}
-				}
-			}
+			}		
 			
 			log.info("Init data: " + pstmt.toString());
 			try {
 				rs = pstmt.executeQuery();
 			} catch (Exception e) {
 				String msg = e.getMessage();
-				if(msg != null && e.getMessage().contains("does not exist")) {
-					log.info("Attempting to get data from a survey that has had no data submitted");
+				if(msg != null && msg.contains("does not exist")) {
+					log.info("Attempting to get data from a survey that has had no data submitted. " + msg);
 				} else {
 					log.log(Level.SEVERE, msg, e);
 				}
@@ -636,14 +621,7 @@ public class SurveyTableManager {
 		Form topForm = GeneralUtilityMethods.getTopLevelForm(sd, sId);
 
 		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-		
-		ResultSet rs = null;
-		String sqlGetCol = "select column_name, f_id, qtype, server_calculate from question " 
-				+ "where qname = ? " 
-				+ "and published "
-				+ "and f_id in (select f_id from form where s_id = ?)";
-		PreparedStatement pstmtGetCol = null;
-
+	
 		String sqlGetTable = "select f_id, table_name from form " 
 				+ "where s_id = ? " 
 				+ "and parentform = ?";
@@ -652,9 +630,10 @@ public class SurveyTableManager {
 		try {
 			int fId;
 
-			// 1. Add the columns
-			pstmtGetCol = sd.prepareStatement(sqlGetCol);
-			pstmtGetCol.setInt(2, sId);
+			// 1. Get the columns in the group
+			SurveyManager sm = new SurveyManager(localisation, "UTC");					
+			int groupSurveyId = GeneralUtilityMethods.getGroupSurveyId(sd, sId);
+			HashMap<String, QuestionForm> refQuestionMap = sm.getGroupQuestionsMap(sd, groupSurveyId, null, false);
 
 			boolean first = true;
 			if (linked_s_pd) {
@@ -676,14 +655,14 @@ public class SurveyTableManager {
 				String[] multNames = name.split(",");		// Allow for comma separated labels
 				for(String n : multNames) {
 					n = n.trim();
-					pstmtGetCol.setString(1, n);
-					log.info("%%%%%%%%%%%%%%%%%%%%%%% Check presence of col name:" + pstmtGetCol.toString());
-					rs = pstmtGetCol.executeQuery();
-					if (rs.next()) {
-						colName = rs.getString(1);
-						fId = rs.getInt(2);
-						colType = rs.getString(3);
-						serverCalculate = rs.getString(4);
+					
+					QuestionForm qf = refQuestionMap.get(n);
+					
+					if (qf != null && qf.published) {
+						colName = qf.columnName;
+						fId = qf.f_id;
+						colType = qf.qType;
+						serverCalculate = qf.serverCalculate;
 						SqlFrag calculation = null;
 						
 						if(colType.equals("server_calculate") && serverCalculate != null) {
@@ -713,10 +692,10 @@ public class SurveyTableManager {
 					}
 					sql.append(colName);
 					sql.append(" as ");
-					sql.append(n);
+					sql.append("\"" + n + "\"");
 					first = false;
 	
-					order_cols.append(n);
+					order_cols.append("\"" + n + "\"" );
 				}
 			}
 
@@ -791,16 +770,8 @@ public class SurveyTableManager {
 			sqlDef.order_by = orderBy.toString();
 
 		} finally {
-			if (pstmtGetCol != null)
-				try {
-					pstmtGetCol.close();
-				} catch (Exception e) {
-				}
-			if (pstmtGetTable != null)
-				try {
-					pstmtGetTable.close();
-				} catch (Exception e) {
-				}
+			
+			if (pstmtGetTable != null) try {pstmtGetTable.close();} catch (Exception e) {}
 		}
 
 		sqlDef.sql = sql.toString();

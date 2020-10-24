@@ -105,6 +105,7 @@ public class ExportSurveyXlsx extends Application {
 					sId,
 					filename,
 					split_locn,
+					meta,		// Get altitude and location
 					merge_select_multiple,
 					language,
 					exp_ro,

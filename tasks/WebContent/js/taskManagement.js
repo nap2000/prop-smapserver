@@ -1247,8 +1247,11 @@ require([
 								colname = table.columns[i].name;
 								coltype = table.columns[i].type;
 
-								if (colname !== "prikey" && colname !== "parkey" &&
-									colname !== "the_geom" &&
+								if (coltype &&
+									colname !== "prikey" && colname !== "parkey" &&
+									coltype !== "geopoint" &&
+									coltype !== "geotrace" &&
+									coltype !== "geoshape" &&
 									colname !== "geo_type" &&
 									colname.indexOf("_") !== 0) {
 

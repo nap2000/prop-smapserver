@@ -24,7 +24,13 @@ if (Modernizr.localstorage) {
 	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
 }
 
-var gDelSig = false;
+var STATUS_T_ACCEPTED = "accepted";
+var STATUS_T_REJECTED = "rejected";
+var STATUS_T_COMPLETE = "complete";
+var STATUS_T_SUBMITTED = "submitted";
+var STATUS_T_CANCELLED = "cancelled";
+var STATUS_T_CLOSED = "closed";
+var STATUS_T_NEW = "new";
 
 requirejs.config({
 	baseUrl: 'js/libs',
@@ -32,34 +38,34 @@ requirejs.config({
 	locale: gUserLocale,
 	paths: {
 		app: '../app',
-		jquery: 'jquery',
-		metismenu: 'wb/metisMenu/jquery.metisMenu',
-		lang_location: '../'
+		i18n: '../../../../js/libs/i18n',
+		async: '../../../../js/libs/async',
+		localise: '../../../../js/app/localise',
+		modernizr: '../../../../js/libs/modernizr',
+		common: '../../../../js/app/common',
+		globals: '../../../../js/app/globals',
+		lang_location: '../../../../js'
 	},
 	shim: {
-		'app/common': ['jquery'],
-		'metismenu': ['jquery'],
-		'slimscroll': ['jquery']
+		'common': ['jquery']
 	}
 });
 
 require([
 	'jquery',
-	'app/common',
-	'app/globals',
-	'app/localise',
-	'bootstrapfileinput',
-	'metismenu',
-	'slimscroll',
-	'pace'
-], function($, common, globals, localise) {
+	'common',
+	'globals',
+	'localise',
+	'app/db-storage'
+], function($, common, globals, localise, dbstorage) {
 
 	$(document).ready(function() {
 
 		setCustomWebForms();			// Apply custom javascript
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
-		$("#side-menu").metisMenu();
+
+		dbstorage.open();
 
 		// Get the user details
 		globals.gIsAdministrator = false;
@@ -95,18 +101,40 @@ require([
 			}
 		});
 
+		/*
+		 * Register service worker
+		 */
+		if ('serviceWorker' in navigator) {
+				navigator.serviceWorker.register('/myWork/myWorkServiceWorker.js').then(function(registration) {
+					// Registration was successful
+					console.log('ServiceWorker registration successful with scope: ', registration.scope);
+				}, function(err) {
+					// registration failed :(
+					console.log('ServiceWorker registration failed: ', err);
+				});
+		}
+
+		/*
+		 * Rgister for messages from the service worker
+		 */
+		navigator.serviceWorker.onmessage = event => {
+			const message = JSON.parse(event.data);
+			if(message.data.status === "200") {
+				surveyDataFromNetwork(message.data, globals.gCurrentProject);
+			} else {
+				alert("Error updating assignments: " + message.data.message);
+			}
+		};
 
 	});
-
-
+	
 	function projectSet() {
-		getSurveysForList(globals.gCurrentProject);			// Get surveys
-		//getAlerts();
+		getSurveysForList();			// Get surveys
 	}
 
-	function getSurveysForList(projectId) {
+	function getSurveysForList() {
 
-		url="/surveyKPI/myassignments";
+		var url="/surveyKPI/myassignments";
 
 		addHourglass();
 		$.ajax({
@@ -114,9 +142,8 @@ require([
 			dataType: 'json',
 			cache: false,
 			success: function(data) {
-				var filterProject = projectId;
 				removeHourglass();
-				completeSurveyList(data, filterProject);
+				surveyDataFromCache(data, globals.gCurrentProject);
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
@@ -131,26 +158,60 @@ require([
 
 	/*
 	 * Fill in the survey list
+	 * This is called using cache data, hence no need to update data store
 	 */
-	function completeSurveyList(surveyList, filterProjectId) {
+	function surveyDataFromCache(surveyList, filterProjectId) {
 
 		var i,
 			h = [],
 			idx = -1,
-			formList = surveyList.forms,
-			taskList = surveyList.data;
+			formList = surveyList.forms;
 
 
+		// Get the presaved records and refresh the task view
+		dbstorage.getRecords().then( records => {
+			if (records) {
+				showTaskList(records, filterProjectId);
+			} else {
+				$('#tasks_count').html('(0)');
+				$('#task_list').html('');
+			}
+		});
 
-		// Add the tasks
-		if (taskList) {
-			addTaskList(taskList, filterProjectId);
+		// Refresh the view of forms
+		if (formList) {
+			addFormList(formList, filterProjectId);
 		} else {
-			$('#tasks_count').html('(0)');
-			$('#task_list').html('');
+			$('#forms_count').html('(0)');
+			$('#form_list').html('');
 		}
+	}
 
-		// Add the forms
+	/*
+     * Fill in the survey list
+    */
+	function surveyDataFromNetwork(surveyList, filterProjectId) {
+
+		var i,
+			h = [],
+			idx = -1,
+			formList = surveyList.forms;
+
+
+		// Save the tasks then refresh view
+		saveTasks(surveyList.data).then( () => {
+			dbstorage.getRecords().then( records => {
+				if (taskList) {
+					showTaskList(taskList, filterProjectId);
+				} else {
+					$('#tasks_count').html('(0)');
+					$('#task_list').html('');
+				}
+			});
+		});
+
+
+		// Refresh the view of forms
 		if (formList) {
 			addFormList(formList, filterProjectId);
 		} else {
@@ -168,9 +229,9 @@ require([
 
 		for(i = 0; i < formList.length; i++) {
 			if(!filterProjectId || filterProjectId == formList[i].pid) {
-				h[++idx] = '<a role="button" class="btn btn-primary btn-block btn-lg" target="_blank" href="/webForm/';
+				h[++idx] = '<a role="button" class="btn btn-primary btn-block btn-lg" target="_blank" href="/myWork/webForm/';
 				h[++idx] = formList[i].ident;
-				h[++idx] = '">';
+				h[++idx] = '?myWork=true">';
 				h[++idx] = formList[i].name;
 				h[++idx] = '</a>';
 				count++;
@@ -180,7 +241,45 @@ require([
 		$formList.html(h.join(''));
 	}
 
-	function addTaskList(taskList, filterProjectId) {
+	function saveTasks(tasks) {
+		return new Promise((resolve, reject) => {
+			var i;
+			if(tasks) {
+				for (i = 0; i < tasks.length; i++) {
+					processServerTask(tasks[i]);
+				}
+			}
+			resolve();
+		});
+	}
+
+	async function processServerTask(task) {
+
+		var assignment = task.assignment;
+
+		let promise = new Promise((resolve, reject) => {
+			dbstorage.getTask(assignment.assignment_id).then(current => {
+				if (!current) {
+					// new task
+					if (assignment.assignment_status === STATUS_T_ACCEPTED ||
+						assignment.assignment_status === STATUS_T_NEW) {
+
+						dbstorage.addRecord(task).then(() => {
+							resolve();
+						});
+
+					}
+				} else {
+					console.log("existing task");
+					resolve();
+				}
+			});
+		});
+
+		await promise;
+	}
+
+	function showTaskList(taskList, filterProjectId) {
 		var i,
 			h = [],
 			idx = -1,
@@ -190,8 +289,8 @@ require([
 		for(i = 0; i < taskList.length; i++) {
 
 			if(!filterProjectId || filterProjectId == taskList[i].task.pid) {
-				repeat = taskList[i].task.repeat;	// Can complete the task multiple times
-				h[++idx] = '<div class="btn-group btn-group-lg d-flex" role="group" aria-label="Button group for task selection or rejection">';
+				var repeat = taskList[i].task.repeat;	// Can complete the task multiple times
+				h[++idx] = '<div class="btn-group btn-block btn-group-lg d-flex" role="group" aria-label="Button group for task selection or rejection">';
 				h[++idx] = '<a id="a_';
 				h[++idx] = taskList[i].assignment.assignment_id;
 				h[++idx] = '" class="task btn btn-warning w-80" role="button" target="_blank" data-repeat="';
@@ -317,6 +416,7 @@ require([
 
 
 	}
+
 
 });
 

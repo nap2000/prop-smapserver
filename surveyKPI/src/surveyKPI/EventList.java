@@ -251,7 +251,7 @@ public class EventList extends Application {
 				sql = "SELECT se.se_id, ue.ue_id, ue.s_id, ue.upload_time, ue.user_name, ue.imei, ue.file_name, ue.survey_name, ue.location, "
 						+ "se.status as se_status, se.reason as se_reason, "
 						+ "se.dest as dest, ue.ident,"
-						+"ue.status as upload_status, ue.reason as upload_reason "
+						+"ue.status as upload_status, ue.reason as upload_reason, ue.incomplete "
 						+ "from upload_event ue "
 						+ "left outer join subscriber_event se "
 						+ "on ue.ue_id = se.ue_id "
@@ -279,11 +279,19 @@ public class EventList extends Application {
 				}
 				
 			} else {
+				// get the survey ident
+				String sIdent = null;
+				try {
+					int sId = Integer.parseInt(sName);
+					sIdent = GeneralUtilityMethods.getSurveyIdent(sd, sId);
+				} catch(Exception e) {
+					// Assume we were passed an ident
+					sIdent = sName;
+				}
 				sql = "SELECT se.se_id, ue.ue_id, ue.s_id, ue.upload_time, ue.user_name, ue.imei, ue.file_name, ue.survey_name, ue.location, " +
 						"se.status as se_status, se.reason as se_reason, " +
-						//"ue.status as ue_status, ue.reason as ue_reason, " +
 						"se.dest as dest, ue.ident, " +
-						"ue.status as upload_status, ue.reason as upload_reason " +
+						"ue.status as upload_status, ue.reason as upload_reason, ue.incomplete " +
 						"FROM upload_event ue " +
 						"left outer join subscriber_event se " +
 						"on ue.ue_id = se.ue_id " +
@@ -292,14 +300,14 @@ public class EventList extends Application {
 						"inner join users u " +
 						"on up.u_id = u.id " +
 						"where u.ident = ? " +
-						"and ue.s_id = ? " +
+						"and ue.ident = ? " +
 						"and up.p_id = ? " +
 						subscriberSelect +
 						filter +
 						" ORDER BY ue.ue_id desc;";
 				pstmt = sd.prepareStatement(sql);
 				pstmt.setString(1, user);
-				pstmt.setInt(2, Integer.parseInt(sName));
+				pstmt.setString(2, sIdent);
 				pstmt.setInt(3, projectId);
 				if(start_key > 0) {
 					pstmt.setInt(4, start_key);
@@ -374,6 +382,7 @@ public class EventList extends Application {
 					jp.put("dest", resultSet.getString("dest"));
 					jp.put("imei", resultSet.getString("imei"));
 					jp.put("ident", resultSet.getString("ident"));
+					jp.put("complete", (resultSet.getBoolean("incomplete")) ? "c_no" : "c_yes");
 					if(upload_status != null && upload_status.equals("error")) {
 						jp.put("status", "upload error");
 						jp.put("reason", upload_reason);
@@ -918,23 +927,33 @@ public class EventList extends Application {
 		try {
 			int oId = GeneralUtilityMethods.getOrganisationId(sd, user);
 			
+			// Get the survey ident
+			String surveyIdent = null;
+			try {
+				int sId = Integer.parseInt(sName);
+				surveyIdent = GeneralUtilityMethods.getSurveyIdent(sd, sId);
+			} catch(Exception e) {
+				// Assume we were passed an ident
+				surveyIdent = sName;
+			}
+			
 			if(!hideSuccess) {
-				addStatusTotals("success", sName, projectId, user, sd,	groupby, sList, is_forward, oId); 
+				addStatusTotals("success", sName, surveyIdent, projectId, user, sd,	groupby, sList, is_forward, oId); 
 			}
 			if(!hideErrors) {
-				addStatusTotals("errors", sName, projectId, user, sd,	groupby, sList, is_forward, oId); 
+				addStatusTotals("errors", sName, surveyIdent, projectId, user, sd,	groupby, sList, is_forward, oId); 
 			}
 			if(!hideDuplicates) {
-				addStatusTotals("duplicates", sName, projectId, user, sd,	groupby, sList, is_forward, oId); 
+				addStatusTotals("duplicates", sName, surveyIdent, projectId, user, sd,	groupby, sList, is_forward, oId); 
 			}
 			if(!hideMerged) {
-				addStatusTotals("merged", sName, projectId, user, sd,	groupby, sList, is_forward, oId); 
+				addStatusTotals("merged", sName, surveyIdent, projectId, user, sd,	groupby, sList, is_forward, oId); 
 			}
 			if(!hideNotLoaded) {
-				addStatusTotals("not_loaded", sName, projectId, user, sd, groupby, sList, is_forward, oId); 
+				addStatusTotals("not_loaded", sName, surveyIdent, projectId, user, sd, groupby, sList, is_forward, oId); 
 			}
 			if(!hideUploadErrors) {
-				addStatusTotals("upload_errors", sName, projectId, user, sd, groupby, sList, is_forward, oId); 
+				addStatusTotals("upload_errors", sName, surveyIdent, projectId, user, sd, groupby, sList, is_forward, oId); 
 			}
 			
 			
@@ -1004,6 +1023,7 @@ public class EventList extends Application {
 	private void addStatusTotals(
 			String status, 
 			String sName, 
+			String surveyIdent,
 			int projectId,
 			String user,
 			Connection sd,
@@ -1102,7 +1122,7 @@ public class EventList extends Application {
 						+ "inner join project p "
 						+ "on up.p_id = p.id "
 						+ "where u.ident = ? "
-						+ "and ue.s_id = ? "
+						+ "and ue.ident = ? "
 						+ "and up.p_id = ? "
 						+ "and p.o_id = ? "
 						+ subscriberSelect
@@ -1112,7 +1132,7 @@ public class EventList extends Application {
 				
 				pstmt = sd.prepareStatement(sql);
 				pstmt.setString(1, user);
-				pstmt.setInt(2, Integer.parseInt(sName));
+				pstmt.setString(2, surveyIdent);
 				pstmt.setInt(3, projectId);
 				pstmt.setInt(4, oId);
 				
@@ -1137,7 +1157,7 @@ public class EventList extends Application {
 						+ "inner join project p "
 						+ "on up.p_id = p.id "
 						+ "where u.ident = ? "
-						+ "and ue.s_id = ? "
+						+ "and ue.ident = ? "
 						+ "and up.p_id = ? "
 						+ "and p.o_id = ? "
 						+ subscriberSelect
@@ -1147,7 +1167,7 @@ public class EventList extends Application {
 				
 				pstmt = sd.prepareStatement(sql);
 				pstmt.setString(1, user);
-				pstmt.setInt(2, Integer.parseInt(sName));
+				pstmt.setString(2, surveyIdent);
 				pstmt.setInt(3, projectId);
 				pstmt.setInt(4, oId);
 			} else if(groupby.equals("week")) {			
@@ -1169,7 +1189,7 @@ public class EventList extends Application {
 						+ "inner join project p "
 						+ "on up.p_id = p.id "
 						+ "where u.ident = ? "
-						+ "and ue.s_id = ? "
+						+ "and ue.ident = ? "
 						+ "and up.p_id = ? "
 						+ "and p.o_id = ? "
 						+ subscriberSelect
@@ -1179,7 +1199,7 @@ public class EventList extends Application {
 				
 				pstmt = sd.prepareStatement(sql);
 				pstmt.setString(1, user);
-				pstmt.setInt(2, Integer.parseInt(sName));
+				pstmt.setString(2, surveyIdent);
 				pstmt.setInt(3, projectId);
 				pstmt.setInt(4, oId);
 				
@@ -1204,7 +1224,7 @@ public class EventList extends Application {
 						+ "inner join project p "
 						+ "on up.p_id = p.id "
 						+ "where u.ident = ? "
-						+ "and ue.s_id = ? "
+						+ "and ue.ident = ? "
 						+ "and up.p_id = ? "
 						+ "and p.o_id = ? "
 						+ subscriberSelect
@@ -1214,7 +1234,7 @@ public class EventList extends Application {
 				
 				pstmt = sd.prepareStatement(sql);
 				pstmt.setString(1, user);
-				pstmt.setInt(2, Integer.parseInt(sName));
+				pstmt.setString(2, surveyIdent);
 				pstmt.setInt(3, projectId);
 				pstmt.setInt(4, oId);
 			}

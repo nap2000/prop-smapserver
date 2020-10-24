@@ -116,9 +116,10 @@ public class AutoUpdateManager {
 							SurveyManager sm = new SurveyManager(localisation, "UTC");			
 							
 							int groupSurveyId = GeneralUtilityMethods.getGroupSurveyId(sd, qf.s_id);
-							HashMap<String, QuestionForm> refQuestionMap = sm.getGroupQuestions(sd, 
+							HashMap<String, QuestionForm> refQuestionMap = sm.getGroupQuestionsMap(sd, 
 									groupSurveyId, 
-									" q.column_name = '" + refColumn + "'");
+									" q.column_name = '" + refColumn + "'",
+									true);
 							
 							QuestionForm refQf = refQuestionMap.get(refColumn);
 							
@@ -480,14 +481,18 @@ public class AutoUpdateManager {
 									
 									if(lcm.isSupported(sd, item.fromLang, LanguageCodeManager.LT_TRANSLATE)) {
 										if(lcm.isSupported(sd, item.toLang, LanguageCodeManager.LT_TRANSLATE)) {
-											output = tp.getTranslatian(source, item.fromLang, item.toLang);
-											String msg = localisation.getString("aws_t_au")
-													.replace("%s1", item.fromLang)
-													.replace("%s2", item.toLang)
-													.replace("%s3", item.tableName)
-													.replace("%s4", item.targetColName);
-											rm.recordUsage(sd, item.oId, 0, LogManager.TRANSLATE, msg, 
-													"auto_update", source.length());					
+											try {
+												output = tp.getTranslatian(source, item.fromLang, item.toLang);
+												String msg = localisation.getString("aws_t_au")
+														.replace("%s1", item.fromLang)
+														.replace("%s2", item.toLang)
+														.replace("%s3", item.tableName)
+														.replace("%s4", item.targetColName);
+												rm.recordUsage(sd, item.oId, 0, LogManager.TRANSLATE, msg, 
+														"auto_update", source.length());
+											} catch(Exception e) {
+												output = "[Error: " + e.getMessage() + "]";
+											}
 										} else {
 											if(item.toLang == null) {
 												output = "[" + localisation.getString("aws_t_np").replace("%s1", "to_lang") + "]";
@@ -541,7 +546,7 @@ public class AutoUpdateManager {
 		
 		ArrayList<QuestionForm> auQuestions = new ArrayList<> ();
 
-		String sql = "select q.qname, q.column_name, f.name, f.table_name, q.parameters, q.qtype, f.s_id, f.reference "
+		String sql = "select q.qname, q.column_name, f.name, f.table_name, q.parameters, q.qtype, f.s_id, f.reference, q.published, f.f_id "
 				+ "from question q, form f, survey s, autoupdate_questions auq "
 				+ "where q.f_id = f.f_id "
 				+ "and f.s_id = s.s_id "
@@ -568,7 +573,10 @@ public class AutoUpdateManager {
 						rs.getString("parameters"),
 						rs.getString("qtype"),
 						rs.getInt("s_id"),
-						rs.getBoolean("reference"));
+						rs.getBoolean("reference"),
+						rs.getBoolean("published"),
+						rs.getInt("f_id"),
+						null);
 					
 				auQuestions.add(qt);
 

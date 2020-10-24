@@ -107,7 +107,8 @@ public class ActionServiceKPI extends Application {
 			}
 			
 			// Authorisation - Access Don't validate user rights as this is for an anonymous report
-			auth.isValidSurvey(sd, userIdent, a.sId, false, false);
+			String sIdent = GeneralUtilityMethods.getSurveyIdent(sd, a.sId);
+			auth.surveyExists(sd, sIdent);
 			// End Authorisation
 
 			// 3. Get parameters
@@ -179,6 +180,7 @@ public class ActionServiceKPI extends Application {
 						a.sId,
 						a.name,		// File name
 						split_locn,
+						meta,		// Get altitude and location
 						merge_select_multiple,
 						language,
 						exp_ro,
@@ -198,7 +200,7 @@ public class ActionServiceKPI extends Application {
 				prm.getReport(sd, 
 						cResults, 
 						userIdent, 
-						false,
+						true,		// Temporary User
 						request, 
 						response, 
 						a.sId, 

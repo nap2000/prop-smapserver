@@ -17,6 +17,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 var viewIdx = 0;
+var gLastSetForm;
 
 $(document).ready(function() {
 
@@ -232,8 +233,10 @@ function initialiseDialogs() {
                             forms = $(':checkbox:checked', '.osmforms').map(function() {
                                 return this.value;
                             }).get();
+                            form = getSelectedForm('.shapeforms', false);
+                            let geomQuestion = $('#geomForm_' + form).val();
                             url = exportSurveyOSMURL(sId, displayName, forms, exportReadOnly,
-                                exp_from_date, exp_to_date, dateQuestionId);
+                                exp_from_date, exp_to_date, dateQuestionId, geomQuestion);
 
                         } else if(format === "shape"
                             || format === "kml"
@@ -247,20 +250,15 @@ function initialiseDialogs() {
                                 form = 0;
                             } else {
                                 queryId = undefined;
-                                forms = $(':radio:checked', '.shapeforms').map(function() {
-                                    return this.value;
-                                }).get();
-                                if(forms.length === 0) {
-                                    alert(window.localise.set["msg_one_f2"]);
-                                    return(false);
-                                }
-                                form = forms[0];
+                                form = getSelectedForm('.shapeforms', false);
+                                gLastSetForm = form;    // Keep until the next time the user opens the dialog
                             }
 
+                            let geomQuestion = $('#geomForm_' + form).val();
                             url = exportSurveyMisc(sId, filename, form,
                                 format, exportReadOnly, language,
                                 exp_from_date, exp_to_date, dateQuestionId, queryId,
-                                filter, merge_select_multiple);
+                                filter, merge_select_multiple, geomQuestion);
 
                         } else if(format === "thingsat") {
                             forms = $(':radio:checked', '.shapeforms').map(function() {
@@ -420,6 +418,7 @@ function exportSurveyChanged() {
         } else {
             addFormPickList(sMeta, checkedForms);
             addDatePickList(sMeta);
+            addGeomPickList(sMeta);
         }
 
         // Update the thingsat model if we changed the survey
@@ -498,6 +497,10 @@ function setExportControls() {
             $('.showoldxls').show();
         }
     }
+
+    // Set some values according to what the user specified last
+    $('.osmform[value=' + gLastSetForm + ']', '.shapeforms').prop("checked", "checked");
+    shapeFormsChanged();
 }
 
 /*
@@ -812,7 +815,7 @@ function regionsURL () {
  * @param {string} survey
  */
 function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bBad, filter, dateId, startDate,
-                       endDate, advanced_filter, tz) {
+                       endDate, advanced_filter, tz, inc_ro, geomFormQuestions) {
 
     var url = "/surveyKPI/items/";
 	var ampersand = false;
@@ -845,6 +848,10 @@ function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bB
         url += "&get_bad=true";
     }
 
+    if(inc_ro) {
+        url += "&inc_ro=true";
+    }
+
     if(typeof filter !== "undefined") {
         url+= "&filter=" + encodeURIComponent(filter);
     }
@@ -863,6 +870,17 @@ function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bB
 
     if(typeof advanced_filter !== "undefined" && advanced_filter.length > 0) {
         url+= "&advanced_filter=" + encodeURIComponent(advanced_filter);
+    }
+
+    if(geomFormQuestions && geomFormQuestions.length > 0) {
+        let qList = "";
+        for(let i = 0; i < geomFormQuestions.length; i++) {
+            if(i > 0) {
+                qList += ",";
+            }
+            qList += geomFormQuestions[i].question;
+        }
+        url+= "&geom_questions=" + encodeURIComponent(qList);
     }
 
 	if(tz) {
@@ -1170,7 +1188,8 @@ function exportSurveyLqasURL (sId, sources, reportDefn,
 function exportSurveyOSMURL (sId, filename, forms, exp_ro,
                              exp_from_date,
                              exp_to_date,
-                             dateQuestionId) {
+                             dateQuestionId,
+                             geomQuestion) {
 
     var url = "/surveyKPI/exportSurveyOSM/",
         form,
@@ -1201,6 +1220,10 @@ function exportSurveyOSMURL (sId, filename, forms, exp_ro,
         }
     }
 
+    if(geomQuestion) {
+        url += "&geom_question=" + geomQuestion;
+    }
+
     return encodeURI(url);
 }
 
@@ -1213,7 +1236,8 @@ function exportSurveyMisc (sId, filename, form, format, exp_ro, language,
                            dateQuestionId,
                            queryId,
                            filter,
-                           merge_select_multiple) {
+                           merge_select_multiple,
+                           geomQuestion) {
 
     var url = "/surveyKPI/exportSurveyMisc/";
 
@@ -1256,6 +1280,10 @@ function exportSurveyMisc (sId, filename, form, format, exp_ro, language,
 
     if(merge_select_multiple) {
         url += "&merge_select_multiple=true";
+    }
+
+    if(geomQuestion) {
+        url += "&geom_question=" + geomQuestion;
     }
 
     return url;
