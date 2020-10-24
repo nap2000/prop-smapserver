@@ -625,7 +625,7 @@ CREATE TABLE custom_report (
 	p_id integer REFERENCES project(id) ON DELETE CASCADE,
 	survey_ident text REFERENCES survey(ident) ON DELETE CASCADE,
 	name text,
-	type_id text,	REFERENCES custom_report_type(id) ON DELETE CASCADE,
+	type_id integer	REFERENCES custom_report_type(id) ON DELETE CASCADE,
 	config text								-- Custom report columns as json object
 	);
 ALTER TABLE custom_report OWNER TO ws;
@@ -873,7 +873,9 @@ CREATE TABLE dashboard_settings (
 	ds_filter text,
 	ds_advanced_filter text,
 	ds_subject_type text,
-	ds_u_id integer
+	ds_u_id integer,
+	ds_inc_ro boolean default false,
+	ds_geom_questions text
 	);
 alter table dashboard_settings add constraint ds_user_ident FOREIGN KEY (ds_user_ident)
 	REFERENCES users (ident) MATCH SIMPLE
@@ -1485,7 +1487,7 @@ create TABLE aws_async_jobs (
 	table_name text,		-- Table containing the data
 	instanceid text,		-- Record identifier
 	type text,				-- AUTO_UPDATE_AUDIO
-	boolean medical,		-- Used with transcribe jobs
+	medical boolean,		-- Used with transcribe jobs
 	locale text,			-- Locale of organisation that submitted this job
 	update_details text,	-- AutoUpdate object in JSON
 	job text,				-- Unique AWS job identifier

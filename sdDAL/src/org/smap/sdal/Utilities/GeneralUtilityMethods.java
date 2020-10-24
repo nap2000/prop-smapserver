@@ -82,6 +82,7 @@ import org.smap.sdal.model.Question;
 import org.smap.sdal.model.Role;
 import org.smap.sdal.model.RoleColumnFilter;
 import org.smap.sdal.model.Search;
+import org.smap.sdal.model.SelectKeys;
 import org.smap.sdal.model.ServerCalculation;
 import org.smap.sdal.model.SetValue;
 import org.smap.sdal.model.SqlFrag;
@@ -292,7 +293,7 @@ public class GeneralUtilityMethods {
 
 		boolean locationServer = false;
 		if(host.contains("kontrolid") || host.equals("localhost")
-				|| host.equals("ubuntu1804.smap.com.au")) {
+				|| host.equals("demo.smap.com.au")) {
 			locationServer = true;
 		}
 		log.info("++++++++++++++++ Is location Server Host: " + host);
@@ -545,18 +546,13 @@ public class GeneralUtilityMethods {
 	 */
 	private static void processAttachment(String fileName, String destDir, String contentType, String ext) {
 
+		// note this function is called from subscriber hence can echo to the attachments log
 		String cmd = "/smap_bin/processAttachment.sh " + fileName + " " + destDir + " \"" + contentType + "\" " + ext
 				+ " >> /var/log/subscribers/attachments.log 2>&1";
 		log.info("Exec: " + cmd);
 		try {
 
 			Runtime.getRuntime().exec(new String[] { "/bin/sh", "-c", cmd });
-
-			//int code = proc.waitFor();
-			//log.info("Attachment processing finished with status:" + code);
-			//if (code != 0) {
-			//	log.info("Error: Attachment processing failed");
-			//}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -569,18 +565,13 @@ public class GeneralUtilityMethods {
 	 */
 	public static void sendToS3(String filePath) {
 
+		// note this function is called from subscriber and hence can still echo to attachments log
 		String cmd = "/smap_bin/sendToS3.sh " + filePath 
 				+ " >> /var/log/subscribers/attachments.log 2>&1";
 		log.info("Exec: " + cmd);
 		try {
 
 			Runtime.getRuntime().exec(new String[] { "/bin/sh", "-c", cmd });
-
-			//int code = proc.waitFor();
-			//log.info("Attachment processing finished with status:" + code);
-			//if (code != 0) {
-			//	log.info("Error: Attachment processing failed");
-			//}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -662,8 +653,8 @@ public class GeneralUtilityMethods {
 	/*
 	 * Return true if the user has the security group
 	 */
-	static public boolean hasSecurityRole(Connection sd, String user) throws SQLException {
-		boolean securityRole = false;
+	static public boolean hasSecurityGroup(Connection sd, String user) throws SQLException {
+		boolean securityGroup = false;
 
 		String sql = "select count(*) " 
 				+ "from users u, user_group ug " 
@@ -679,14 +670,14 @@ public class GeneralUtilityMethods {
 			pstmt.setString(1, user);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
-				securityRole = (rs.getInt(1) > 0);
+				securityGroup = (rs.getInt(1) > 0);
 			}
 
 		} finally {
 			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
 		}
 
-		return securityRole;
+		return securityGroup;
 	}
 
 	/*
@@ -2552,8 +2543,20 @@ public class GeneralUtilityMethods {
 	/*
 	 * Add nodeset functions to a nodeset
 	 */
-	public static String addNodesetFunctions(String nodeset, String randomize) {
-		if (parameterIsSet(randomize)) {
+	public static String addNodesetFunctions(String nodeset, String randomize, String seed) {
+		
+		int seedInt = 0;
+		if(seed != null) {
+			try {
+				seedInt = Integer.valueOf(seed);
+			} catch(Exception e) {
+				
+			}
+		}
+		
+		if (seed != null && parameterIsSet(randomize)) {
+			return "randomize(" + nodeset + "," + seedInt + ")";
+		} else if (parameterIsSet(randomize)) {
 			return "randomize(" + nodeset + ")";
 		} else {
 			return nodeset;
@@ -3422,7 +3425,9 @@ public class GeneralUtilityMethods {
 			boolean hxl,
 			boolean audit,
 			String tz,
-			boolean mgmt)	// If set substitute display name for the question name if it is not null, also publish un published
+			boolean mgmt,			// If set substitute display name for the question name if it is not null, also publish un published
+			boolean get_acc_alt,
+			boolean includeServerCalculates)	
 					throws Exception {
 
 		Gson gson=  new GsonBuilder().disableHtmlEscaping().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
@@ -3471,13 +3476,21 @@ public class GeneralUtilityMethods {
 				+ "server_calculate, parameters " 
 				+ "from question "
 				+ "where f_id = ? "
-				+ "and (source is not null or qtype = 'server_calculate') "
-				+ "and (published = 'true' or qtype = 'server_calculate') "
 				+ "and soft_deleted = 'false' ";
+		
+		String sqlSC =
+				"and (source is not null or qtype = 'server_calculate') "
+				+ "and (published = 'true' or qtype = 'server_calculate') ";
+		
+		String sqlNonSC =
+				"and (source is not null) "
+				+ "and (published = 'true') ";
 		
 		String sqlQuestion2 = colList.toString();
 		String sqlQuestion3 = "order by seq";
-		PreparedStatement pstmtQuestions = sd.prepareStatement(sqlQuestion1 + sqlQuestion2 + sqlQuestion3);
+		PreparedStatement pstmtQuestions = sd.prepareStatement(sqlQuestion1 
+				+ (includeServerCalculates ? sqlSC : sqlNonSC)
+				+ sqlQuestion2 + sqlQuestion3);
 
 		// Get column names for select multiple questions in an uncompressed legacy select multiple
 		String sqlSelectMultipleNotCompressed = "select distinct o.column_name, o.ovalue, o.seq, o.display_name " 
@@ -3699,7 +3712,6 @@ public class GeneralUtilityMethods {
 			columnList.add(c);
 		}
 
-
 		try {
 			
 			pstmtQuestions.setInt(1, f_id);
@@ -3827,6 +3839,31 @@ public class GeneralUtilityMethods {
 						realQuestions.add(c);
 					}
 					
+					if(get_acc_alt && qType.equals("geopoint")) {
+						String accColumn = c.column_name + "_acc";
+						String accDisplay = c.displayName + " Accuracy";
+						String accName = c.question_name + "_acc";
+						
+						String altColumn = c.column_name + "_alt";
+						String altDisplay = c.displayName + " Altitude";
+						String altName = c.question_name + "_alt";
+						if(GeneralUtilityMethods.columnType(cResults, table_name, accName) != null) {
+							c = new TableColumn();
+							c.column_name = accColumn;
+							c.displayName = accDisplay;
+							c.question_name = accName;
+							c.type = "decimal";
+							realQuestions.add(c);
+							
+							c = new TableColumn();
+							c.column_name = altColumn;
+							c.displayName = altDisplay;
+							c.question_name = altName;
+							c.type = "decimal";
+							realQuestions.add(c);
+						}
+					}
+					
 					if (qType.equals("select1") || qType.equals("select") || qType.equals("rank")) {
 		
 						c.choices = new ArrayList<KeyValue> ();	
@@ -3896,6 +3933,18 @@ public class GeneralUtilityMethods {
 		columnList.addAll(realQuestions); // Add the real questions after the property questions
 
 		return columnList;
+	}
+	
+	/*
+	 * Get the name of the first geometry column in the list of columns
+	 */
+	static public String getFirstGeometryQuestionName(ArrayList<TableColumn> columns) {
+		for(TableColumn tc : columns) {
+			if(tc.isGeometry()) {
+				return tc.question_name;
+			}
+		}
+		return "";
 	}
 	
 	/*
@@ -4271,7 +4320,7 @@ public class GeneralUtilityMethods {
 	/*
 	 * Convert names in xls format ${ } to an SQL query
 	 */
-	public static String convertAllxlsNamesToQuery(String input, int sId, Connection sd) throws SQLException {
+	public static String convertAllxlsNamesToQuery(String input, int sId, Connection sd) throws SQLException, ApplicationException {
 
 		if (input == null) {
 			return null;
@@ -4305,6 +4354,9 @@ public class GeneralUtilityMethods {
 					|| qname.equals(SmapServerMeta.SCHEDULED_START_NAME)
 					|| qname.equals("_end") || qname.equals("device") || qname.equals("instancename"))) {
 				columnName = qname;
+			}
+			if(columnName == null) {
+				throw new ApplicationException("Column does not exist");
 			}
 			output.append(columnName);
 
@@ -4665,6 +4717,55 @@ public class GeneralUtilityMethods {
 	}
 	
 	/*
+	 *  Get key_name and label_
+	 */
+	public static SelectKeys getSelectKeys(Connection sd, int sId, String qName) throws SQLException {
+		
+		SelectKeys sk = new SelectKeys ();
+		
+		String sqlChoices = "select ovalue, label_id "
+				+ "from option "
+				+ "where l_id = (select l_id from question where qname = ? and f_id in (select f_id from form where s_id = ?)) "
+				+ "and not externalfile "
+				+ "and ovalue !~ '^[0-9]+$'";
+		PreparedStatement pstmtChoices = null;
+			
+		String sqlLabels = "select t.value, t.language " 
+						+ "from translation t "
+						+ "where t.text_id = ? "
+						+ "and t.type = 'none' "
+						+ "and t.s_id = ? "
+						+ "order by t.language asc";
+		PreparedStatement pstmtLabels = null;
+		
+		try {
+			pstmtChoices = sd.prepareStatement(sqlChoices);
+			pstmtChoices.setString(1, qName);
+			pstmtChoices.setInt(2,  sId);
+			log.info(pstmtChoices.toString());
+			ResultSet rs = pstmtChoices.executeQuery();
+			if(rs.next()) {
+				sk.valueColumn = rs.getString(1);
+				
+				pstmtLabels = sd.prepareStatement(sqlLabels);
+				pstmtLabels.setString(1,rs.getString(2));
+				pstmtLabels.setInt(2, sId);
+				log.info(pstmtLabels.toString());
+				ResultSet rsl = pstmtLabels.executeQuery();
+				while(rsl.next()) {
+					sk.labelColumns.put(rsl.getString(2), rsl.getString(1));
+				}
+			}
+			
+		} finally {
+			try {if (pstmtChoices != null) {pstmtChoices.close();}} catch (SQLException e) {}
+			try {if (pstmtLabels != null) {pstmtLabels.close();}} catch (SQLException e) {}
+		}
+		
+		return sk;
+	}
+	
+	/*
 	 * Get choices from an external file
 	 */
 	public static ArrayList<Option> getExternalChoices(
@@ -4751,7 +4852,9 @@ public class GeneralUtilityMethods {
 								}
 								// Get data from another form
 								SurveyTableManager stm = new SurveyTableManager(sd, cResults, localisation, oId, sId, filename, remoteUser);
-								stm.initData(pstmt, "choices", null, null, selection, matches, matchCols, tz, null, null);						
+								stm.initData(pstmt, "choices", selection, matches, matchCols, 
+										null,	// expression fragment
+										tz, null, null);						
 								choices = stm.getChoices(ovalue, languageItems, wfFilters);
 								
 							} else {
@@ -5810,25 +5913,7 @@ public class GeneralUtilityMethods {
 			try {
 				pstmt.executeUpdate();
 			} catch (Exception e) {
-				String msg = e.getMessage();
-				if(msg.contains("already exists")) {
-					log.info("Column already exists");
-				} else if(msg.contains("does not exist")) {
-					log.info("Table does not exist");
-				} else if(msg.contains("syntax error at or near \"not\"")) {
-					log.info("Obsolete version of postgres");
-					// A hack to allow an old version of Postgres to still work
-					sql = "alter table " + tablename + " add column " + columnName + " " + type;
-					try {
-						try {if (pstmt != null) {pstmt.close();}} catch (Exception exx) {}
-						pstmt = conn.prepareStatement(sql);
-						pstmt.executeUpdate();
-					} catch (Exception ex) {
-						// Ignore
-					}
-				} else {
-					throw e;
-				}
+				log.log(Level.SEVERE, e.getMessage(), e);
 			} finally {
 				try {if (pstmt != null) {pstmt.close();}} catch (Exception e) {}
 			}
@@ -6205,6 +6290,7 @@ public class GeneralUtilityMethods {
 			pstmt = sd.prepareStatement(sqlLaunched);
 			pstmt.setInt(1, sId);
 			
+			log.info("Get linked forms----------------: " + pstmt.toString());
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				String name = rs.getString(1);
@@ -6227,6 +6313,8 @@ public class GeneralUtilityMethods {
 				
 				if(qName != null && childSurveyId != null) {
 					formLinks.add(new FormLink(name, parent, type, childSurveyId, qName));
+				} else {
+					log.info("Failed to add child survey. qname: " + qName + " sIdent: " + sIdent + " iChildSurveyId: " + iChildSurveyId);
 				}
 			}
 			
@@ -6306,7 +6394,44 @@ public class GeneralUtilityMethods {
 		return val;
 
 	}
+	
+	/*
+	 * Get a function from a string
+	 */
+	public static String extractFn(String name, String in) {
+		String fn = null;
+		int idx;
+		int idx2;
+		int depth = 0;
 
+		if (in != null) {
+			idx = in.indexOf(name + "(");
+			if (idx >= 0) {
+				// Get closing bracket index
+				idx2 = -1;
+				for(int i = idx; i < in.length(); i++) {
+					 char c = in.charAt(i);
+					 if(c == '(') {
+						 depth++;
+					 } else if(c == ')') {
+						 depth--;
+						 if(depth == 0) {
+							 idx2 = i;
+							 break;
+						 }
+					 }
+					 
+				}
+				if (idx2 >= 0) {
+					fn = in.substring(idx, idx2 + 1);
+				}
+
+			}
+		}
+
+		return fn;
+
+	}
 	/*
 	 * Get the index in the language array for the provided language
 	 */
@@ -6610,7 +6735,7 @@ public class GeneralUtilityMethods {
 	/*
 	 * Get the search question from appearance Used when converting searches into
 	 * cascading selects
-	 */
+	 *
 	public static String getFirstSearchQuestionFromAppearance(String appearance) {
 		String filterQuestion = null;
 
@@ -6632,6 +6757,7 @@ public class GeneralUtilityMethods {
 
 		return filterQuestion;
 	}
+	*/
 	
 	/*
 	 * Get the search filter questions
@@ -8066,7 +8192,6 @@ public class GeneralUtilityMethods {
 				pstmt = sd.prepareStatement(sql);
 				pstmt.setInt(1, fId);
 			
-				log.info(pstmt.toString());
 				rs = pstmt.executeQuery();
 				while(rs.next()) {
 					int qId = rs.getInt(1);
@@ -8076,10 +8201,8 @@ public class GeneralUtilityMethods {
 					
 					if(!GeneralUtilityMethods.hasColumn(cResults, tableName, columnName)) {
 						GeneralUtilityMethods.alterColumn(cResults, tableName, type, columnName, compressed);
-						log.info("Adding column " + columnName + " to table " + tableName);
 					}
 					pstmtUpdate.setInt(1, qId);
-					log.info("Marking question " + columnName + " as published");
 					pstmtUpdate.executeUpdate();
 					
 				}
@@ -8283,28 +8406,51 @@ public class GeneralUtilityMethods {
 	 */
 	public static void restoreUploadedFiles(String ident, String type) throws InterruptedException, IOException {
 		Process proc = Runtime.getRuntime().exec(new String [] {"/bin/sh", "-c", "/smap_bin/restoreFiles.sh " + 
-				ident + 	" " + type + " >> /var/log/subscribers/survey.log 2>&1"});
+				ident + " " + type});
 		
 		/*
 		 * If type is uploadedSurveys then also get attachments as raw media are no longer saved
 		 */
 		if(type.equals("uploadedSurveys")) {
 			Process proc2 = Runtime.getRuntime().exec(new String [] {"/bin/sh", "-c", "/smap_bin/restoreFiles.sh " + 
-					ident + 	" attachments >> /var/log/subscribers/survey.log 2>&1"});
+					ident + 	" attachments"});
 			
 			int code2 = proc2.waitFor();
-			if(code2 != 0) {
-				log.info("Error:  Failed to restore attachments from s3 for ident " + ident + " error code: " + code2);
+			if(code2 > 0) {
+				int len;
+				if ((len = proc2.getErrorStream().available()) > 0) {
+					byte[] buf = new byte[len];
+					proc2.getErrorStream().read(buf);
+					log.info("Command error:\t\"" + new String(buf) + "\"");
+				}
+			} else {
+				int len;
+				if ((len = proc2.getInputStream().available()) > 0) {
+					byte[] buf = new byte[len];
+					proc2.getInputStream().read(buf);
+					log.info("Completed restore media atachments process:\t\"" + new String(buf) + "\"");
+				}
 			}
 		}
 		
-		
+		// wait for restore media
 		int code = proc.waitFor();
-
-		if(code != 0) {
-			log.info("Error:  Failed to restore files from s3 for ident " + ident + "and type: " + type + " error code: " + code);
+		if(code > 0) {
+			int len;
+			if ((len = proc.getErrorStream().available()) > 0) {
+				byte[] buf = new byte[len];
+				proc.getErrorStream().read(buf);
+				log.info("Command error:\t\"" + new String(buf) + "\"");
+			}
+		} else {
+			int len;
+			if ((len = proc.getInputStream().available()) > 0) {
+				byte[] buf = new byte[len];
+				proc.getInputStream().read(buf);
+				log.info("Completed 54tore media process:\t\"" + new String(buf) + "\"");
+			}
 		}
-
+		
 	}
 	
 	/*
@@ -8499,14 +8645,13 @@ public class GeneralUtilityMethods {
 	}
 	
 	/*
-	 * Starting from the past in question get all the tables up to the highest
-	 * parent that are part of this survey
+	 * Create a location record
 	 */
 	public static void createLocation(Connection sd, int oId, 
 			String group, String uid, String name, double lon, double lat) throws SQLException {
 
 		PreparedStatement pstmt = null;
-		String sql = "insert into locations (o_id, locn_group, locn_type, uid, name, the_geom) "
+		String sql = "insert into locations (o_id, locn_group, locn_type, uid, name, the_geom) "	// keep this
 				+ "values (?, ?, 'nfc', ?, ?, ST_GeomFromText(?, 4326))";
 
 		try {
@@ -8531,8 +8676,7 @@ public class GeneralUtilityMethods {
 	}
 
 	/*
-	 * Starting from the past in question get all the tables up to the highest
-	 * parent that are part of this survey
+	 *update a location record with a new uid
 	 */
 	public static void updateLocation(Connection sd, 
 			int oId, 
@@ -8545,7 +8689,7 @@ public class GeneralUtilityMethods {
 		PreparedStatement pstmt = null;
 		String sql = "update locations "
 				+ "set uid = ?,"
-				+ "the_geom = ST_GeomFromText(?, 4326) "
+				+ "the_geom = ST_GeomFromText(?, 4326) "	// keep this
 				+ "where o_id = ? "
 				+ "and locn_group = ? "
 				+ "and name = ?";
@@ -9458,12 +9602,194 @@ public class GeneralUtilityMethods {
 		return new Timestamp(c.getTime().getTime());
 	}
 	
-public static Timestamp getTimestampNextMonth(Timestamp tIn) {
+	public static Timestamp getTimestampNextMonth(Timestamp tIn) {
 		
 		Calendar c = Calendar.getInstance(); 
 		c.setTime(tIn); 
 		c.add(Calendar.MONTH, 1);
 		return new Timestamp(c.getTime().getTime());
 	}
+	
+	 /*
+     * Replace single quotes inside a functions parameter with ##
+     * The objective is to prevent an error when the xpath of a function is evaluated
+     * Currently his is only required for search in appearances of type 'eval':
+     *   the parameter to be escaped contains pseudo SQL
+     *   all occurrences of a single quote within that parameter should be escaped
+     */
+    public static String escapeSingleQuotesInFn(String in) {
+        StringBuilder paramsOut = new StringBuilder("");
+        String out = "";
+        if(in != null) {
+
+            int idx1 = in.indexOf('(');
+            int idx2 = in.lastIndexOf(')');
+            if(idx1 >= 0 && idx2 > idx1) {
+                String fn = in.substring(0, idx1);
+                String params = in.substring(idx1, idx2);
+                String end = in.substring(idx2);
+
+                String[] eList = params.split(",");
+                for (String s : eList) {
+                    s = s.trim();
+                    if (s.length() > 2 && s.charAt(0) == '\'' && s.charAt(s.length() - 1) == '\'') {
+                        s = s.substring(1, s.length() - 1);
+                        s = s.replace("'", "##");
+                        s = "'" + s + "'";
+                    }
+
+                    if (paramsOut.length() > 0) {
+                        paramsOut.append(",");
+                    }
+                    paramsOut.append(s);
+                }
+                out = fn + paramsOut.toString() + end;
+            }
+        }
+        return out;
+    }
+    
+    /*
+     * Check to see if a form has a question called the_geom of type geometry
+     * This is temporary code to warn the user if they are inadvertantly changing the name of a geometry question
+     */
+    public static boolean hasTheGeom(Connection sd, int sId, int fId) throws SQLException {
+    	
+    	boolean hasTheGeom = false;
+    	String sql = "select count(*) from question q, form f "
+    			+ "where q.f_id = f.f_id "
+    			+ "and f.s_id = ? "
+    			+ "and f.table_name in (select table_name from form where f_id = ?) "
+    			+ "and q.qname = 'the_geom' "	// keep this
+    			+ "and (q.qtype = 'geopoint' or q.qtype = 'geotrace' or q.qtype = 'geoshape')";
+    	PreparedStatement pstmt = null;
+    	try {
+    		pstmt = sd.prepareStatement(sql);
+    		pstmt.setInt(1,  sId);
+    		pstmt.setInt(2,  fId);
+    		log.info(pstmt.toString());
+    		ResultSet rs = pstmt.executeQuery();
+    		if(rs.next() && rs.getInt(1) > 0) {
+    			hasTheGeom = true;
+    		}
+    	} finally {
+    		if(pstmt != null) {try {pstmt.close();} catch(Exception e) {}}
+    	}
+ 
+    	return hasTheGeom;
+    }
+    
+    /*
+     * Get a geometry question that can be used to determine the rough location of the data
+     * In order of preference the location to get is:
+     *   1) First geopoint question
+     *   2) A start location preload
+     *   3) First geotrace or geoshape question
+     */
+    public static String getGeomColumnFromForm(Connection sd, int sId, int fId) throws SQLException {
+    	
+    	String geomColumn = null;
+    	String sql = "select column_name,qtype from question "
+    			+ "where f_id = ? "
+    			+ "and (qtype = 'geopoint' or qtype = 'geotrace' or qtype = 'geoshape') "
+    			+ "and published "
+    			+ "and not soft_deleted" ;
+    	PreparedStatement pstmt = null;
+    	
+    	String nonGeoPointColumn = null;
+    	try {
+    		pstmt = sd.prepareStatement(sql);
+    		pstmt.setInt(1,  fId);
+    		log.info(pstmt.toString());
+    		ResultSet rs = pstmt.executeQuery();
+    		while(rs.next()) {
+    			if(rs.getString(2).equals("geopoint")) {
+    				geomColumn = rs.getString(1);
+    				break;
+    			} else {
+    				nonGeoPointColumn = rs.getString(1);
+    			}
+    		}
+    		
+    		// Now check preloads
+    		if(geomColumn == null) {
+    			ArrayList<MetaItem> preloads = getPreloads(sd, sId);
+    			for(MetaItem mi : preloads) {
+    				if(mi.type.equals("geopoint")) {
+    					geomColumn = mi.columnName;
+    					break;
+    				}
+    			}
+    		}
+    		
+    		if(geomColumn == null) {
+    			geomColumn = nonGeoPointColumn;
+    		}
+    	} finally {
+    		if(pstmt != null) {try {pstmt.close();} catch(Exception e) {}}
+    	}
+ 
+    	return geomColumn;
+    }
+    
+    /*
+     * Get a geometry question of a specific type form a form
+     */
+    public static String getGeomColumnOfType(Connection sd, int sId, int fId, String type) throws SQLException {
+    	
+    	String geomColumn = null;
+    	String sql = "select column_name,qtype from question "
+    			+ "where f_id = ? "
+    			+ "and qtype = ? "
+    			+ "and published "
+    			+ "and not soft_deleted" ;
+    	PreparedStatement pstmt = null;
+    	
+    	try {
+    		pstmt = sd.prepareStatement(sql);
+    		pstmt.setInt(1,  fId);
+    		pstmt.setString(2, type);
+    		log.info(pstmt.toString());
+    		ResultSet rs = pstmt.executeQuery();
+    		if(rs.next()) {
+    			geomColumn = rs.getString(1);
+    		}
+    		
+    	} finally {
+    		if(pstmt != null) {try {pstmt.close();} catch(Exception e) {}}
+    	}
+ 
+    	return geomColumn;
+    }
+
+    /*
+     * Get a geometry question name of a specific type form a form
+     */
+    public static String getGeomNameOfType(Connection sd, int sId, int fId, String type) throws SQLException {
+    	
+    	String geomColumn = null;
+    	String sql = "select qname, qtype from question "
+    			+ "where f_id = ? "
+    			+ "and qtype = ? "
+    			+ "and published "
+    			+ "and not soft_deleted" ;
+    	PreparedStatement pstmt = null;
+    	
+    	try {
+    		pstmt = sd.prepareStatement(sql);
+    		pstmt.setInt(1,  fId);
+    		pstmt.setString(2, type);
+    		log.info(pstmt.toString());
+    		ResultSet rs = pstmt.executeQuery();
+    		if(rs.next()) {
+    			geomColumn = rs.getString(1);
+    		}
+    		
+    	} finally {
+    		if(pstmt != null) {try {pstmt.close();} catch(Exception e) {}}
+    	}
+ 
+    	return geomColumn;
+    }
 }
 

@@ -153,7 +153,7 @@ public class SqlFrag {
 		if(token.startsWith("${") && token.endsWith("}")) {
 			String name = token.substring(2, token.length() - 1);
 			boolean columnNameCaptured = false;
-			out = GeneralUtilityMethods.cleanName(name, true, true, false);
+			out = GeneralUtilityMethods.cleanName(name, true, true, false);		// TODO - This check will fail with long names, it should do a lookup of the question name to see if it exists and o get the column name
 			for(int i = 0; i < columns.size(); i++) {
 				if(columns.get(i).equals(out)) {
 					columnNameCaptured = true;
@@ -183,6 +183,12 @@ public class SqlFrag {
 				token.equals("is") || 
 				token.equals("null") || 
 				token.equals("not") || 
+				token.equals("to_timestamp") || 
+				token.equals("::timestamptz") || 
+				token.equals("::timestamp") || 
+				token.equals("to_date") || 
+				token.equals("::date") || 
+				token.equals("::integer") || 
 				token.equals("like") || 
 				token.equals("cast") || 
 				token.equals("as") || 

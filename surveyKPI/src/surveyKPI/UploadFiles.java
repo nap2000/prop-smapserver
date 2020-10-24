@@ -593,7 +593,7 @@ public class UploadFiles extends Application {
 				
 				merge = true;
 				groupForms = sm.getGroupForms(sd, surveyId);
-				questionNames = sm.getGroupQuestions(sd, surveyId, null);
+				questionNames = sm.getGroupQuestionsMap(sd, surveyId, null, false);	
 				optionNames = sm.getGroupOptions(sd, surveyId);
 			}
 			
@@ -710,6 +710,40 @@ public class UploadFiles extends Application {
 				
 				msg = msg.replace("%s1", s.getDisplayName()).replace("%s2", s.getIdent());
 				lm.writeLog(sd, s.getId(), user, title, msg, 0);
+				
+				/*
+				 * If the survey is being replaced and if it has an existing  geometry called the_geom and there is no
+				 * geometry of that name in the new form then create a warning
+				 * This warnig can be removed in version 21.06
+				 */
+				if(action.equals("replace")) {
+					for(Form f : s.forms) {
+						
+						boolean newTheGeom = false;
+						boolean newNonTheGeom = false;
+						ArrayList<String> newGeomQuestions = new ArrayList<> ();
+						for(Question q : f.questions) {
+							if(q.type.equals("geopoint") || q.type.equals("geotrace") || q.type.equals("geoshape")) {
+								if(q.name.equals("the_geom")) {	// keep this
+									newTheGeom = true;
+								} else {
+									newNonTheGeom = true;
+									newGeomQuestions.add(q.name);
+								}
+							}
+	
+						}
+						if(newNonTheGeom && !newTheGeom) {
+							if(GeneralUtilityMethods.hasTheGeom(sd, existingSurveyId, f.id)) {		
+								String gMsg = localisation.getString("tu_geom");
+								gMsg = gMsg.replace("%s1", f.name);
+								gMsg = gMsg.replace("%s2", newGeomQuestions.toString());
+								warnings.add(new ApplicationWarning(gMsg));
+							}
+						}
+					}	
+				}
+				
 			} else {
 				int sId = model.writeDatabase();
 				s = sm.getById(sd, cResults, user, false, sId, true, basePath, 
@@ -733,9 +767,6 @@ public class UploadFiles extends Application {
 			/*
 			 * Validate the survey:
 			 * 	 using the JavaRosa API
-			 * 		Ignore invalid function errors for extended functions
-			 *    		lookup
-			 *    		lookup_image_labels
 			 *    Ensure that it fits within the limit of 1,600 columns
 			 */
 			boolean valid = true;
@@ -744,22 +775,15 @@ public class UploadFiles extends Application {
 				JavaRosaUtilities.javaRosaSurveyValidation(localisation, s.id, request.getRemoteUser(), tz);
 			} catch (Exception e) {
 								
-				String msg = e.getMessage();
-				if(msg != null && !msg.contains("cannot handle function 'lookup'") &&
-						!msg.contains("cannot handle function 'lookup_image_labels'") &&
-						!msg.contains("cannot handle function 'get_media'")) {
-					// Error! Delete the survey we just created
-					log.log(Level.SEVERE, e.getMessage(), e);
-					valid = false;
+				// Error! Delete the survey we just created
+				log.log(Level.SEVERE, e.getMessage(), e);
+				valid = false;
 					
-					errMsg = e.getMessage();			
-					if(errMsg.startsWith("no <translation>s defined")) {
-						errMsg = localisation.getString("tu_nl");
-					}
-							
-				} else if(msg == null) {
-					log.log(Level.SEVERE, e.getMessage(), e);
-				} 
+				errMsg = e.getMessage();			
+				if(errMsg != null && errMsg.startsWith("no <translation>s defined")) {
+					errMsg = localisation.getString("tu_nl");
+				}					
+				
 			}
 			if(valid) {
 				ArrayList<FormLength> formLength = GeneralUtilityMethods.getFormLengths(sd, s.id);

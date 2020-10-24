@@ -148,7 +148,6 @@ require([
             groupSurveys: {},
             currentData: undefined,
             data: {},
-            gSelectedIndexes: []
         },
         gSelectedRecord: undefined,
         gBulkInstances: [],
@@ -495,7 +494,7 @@ require([
         $('.saverecord').click(function () {
             var saveString = JSON.stringify(gTasks.gUpdate);
             var biString;
-            if(gTasks.gBulkInstances && gTasks.gBulkInstances.length > 0) {
+            if(gTasks.gBulkInstances && gTasks.gBulkInstances.length > 1) {
                 biString =  JSON.stringify(gTasks.gBulkInstances)
             }
             addHourglass();
@@ -799,7 +798,7 @@ require([
 
                 // Don't use some types to group
                 if(cols[i].type === "image" || cols[i].type === "video" || cols[i].type === "audio"
-                    || cols[i].displayName === "prikey" || cols[i].displayName === "the_geom") {
+                    || cols[i].type === "prikey" || cols[i].type === "geopoint" || cols[i].type === "geoshape" || cols[i].type === "geotrace") {
 
                     continue;
 
@@ -1346,10 +1345,10 @@ require([
 
         // Respond to selection of a row
         globals.gMainTable.off('select').on('select', function (e, dt, type, indexes) {
-            recordSelected(indexes);
+            recordSelected(globals.gMainTable.rows('.selected').data());
         });
         globals.gMainTable.off('deselect').on('deselect', function (e, dt, type, indexes) {
-            recordSelected(indexes);
+            recordSelected(globals.gMainTable.rows('.selected').data());
         });
 
         // Highlight data conditionally, set barcodes
@@ -1841,7 +1840,7 @@ require([
 
                     if(data[i].surveyId) {
 	                    h[++idx] = ' data-survey="';
-	                    h[++idx] = data[i].type;
+	                    h[++idx] = data[i].surveyId;
 	                    h[++idx] = '"';
                     }
 
@@ -2058,25 +2057,21 @@ require([
      * Respond to a map feature being selected
      */
     function featureSelected(properties) {
-        if(properties) {
-
-            // If one record was selected highlight it
-            if(properties.length === 1) {
-                var indexes = [];
-                indexes.push(properties[0].record);
-                recordSelected(indexes);
+        var data = [];
+        var indexes = [];
+        if(properties && properties.length > 0) {
+            for(i = 0; i < properties.length; i++) {
+                indexes.push(properties[i].record);
             }
+            data = globals.gMainTable.rows(indexes).data().toArray();
 
-            // Show all data from selected features
-            if(properties.length > 0) {
-                showSelectedMapData(properties);
-            }
+            showSelectedMapData(properties);
 
         } else {
-            recordUnSelected();
-
             $('#features').hide().empty();
         }
+        recordSelected(data);
+
     }
 
     /*
@@ -2107,6 +2102,9 @@ require([
             // Add data
             for (i = 0; i < columns.length; i++) {
                 configItem = columns[i];
+                if(configItem.type === 'geopoint' || configItem.type === 'geotrace' || configItem.type === 'geoshape') {
+                    continue;
+                }
                 h[++idx] = '<tr>';
                 h[++idx] = addCell(translateKey(configItem.displayName));
                 for(j = 0; j < properties.length; j++) {
@@ -2140,7 +2138,7 @@ require([
 
         // Add form group and label
         h[++idx] = '<td>';
-        h[++idx] = item;
+        h[++idx] = addAnchors(item, true);
         h[++idx] = '</td>';
 
 
@@ -2148,45 +2146,45 @@ require([
     }
 
     /*
-     * Respond to a record of data being unselected
-     */
-    function recordUnSelected() {
-        gTasks.gSelectedIndexes = [];
-        gTasks.gSelectedRecord = undefined;
-        $('.selectOnly, .dd_only').hide();
-    }
-
-    /*
      * Respond to a record of data being selected
      */
-    function recordSelected(indexes) {
+    function recordSelected(records) {
 
         var assignedOther = false,
             i;
 
-        gTasks.gSelectedIndexes = indexes;
-        gTasks.gSelectedRecord = undefined;
-        gTasks.gBulkInstances = [];
-
         $('.selectOnly, .multiSelectOnly, .singleSelectOnly').hide();
         $('.dd_only,.du_only').hide();
 
-        if(gTasks.gSelectedIndexes.length === 0) {
+        gTasks.gSelectedRecord = undefined;
+        gTasks.gBulkInstances = [];
+
+        for(i = 0; i < records.length; i++) {
+            gTasks.gBulkInstances.push(records[i].instanceid);
+        }
+
+        if(records.length === 0) {
             /*
 			 * No records are selected
 			 */
-        }
-        if(gTasks.gSelectedIndexes.length > 1) {
+            gTasks.gSelectedRecord = undefined;
+            $('.selectOnly, .dd_only').hide();
+
+        } else if(records.length > 1) {
             /*
              * Multiple records are selected
              */
 
-            // Set seleced record to first record selected
-            gTasks.gSelectedRecord = globals.gMainTable.rows(gTasks.gSelectedIndexes).data().toArray()[0];
+            // Set selected record to first record selected
+            //gTasks.gSelectedRecord = globals.gMainTable.rows(gTasks.gSelectedIndexes).data().toArray()[0];
+            gTasks.gSelectedRecord = records[0];
 
             // Store the record indexes that will need to be updated
-            var records = globals.gMainTable.rows(gTasks.gSelectedIndexes).data().toArray();
-            for(i = 0; i < gTasks.gSelectedIndexes.length; i++) {
+            //var records = globals.gMainTable.rows(gTasks.gSelectedIndexes).data().toArray();
+            //for(i = 0; i < gTasks.gSelectedIndexes.length; i++) {
+            //    gTasks.gBulkInstances.push(records[i].instanceid);
+            //}
+            for(i = 0; i < records.length; i++) {
                 gTasks.gBulkInstances.push(records[i].instanceid);
             }
 
@@ -2194,9 +2192,10 @@ require([
 
         } else {
             /*
-			* Only a single record is selected
-			*/
-            gTasks.gSelectedRecord = globals.gMainTable.rows(gTasks.gSelectedIndexes).data().toArray()[0];
+			 * Only a single record is selected
+			 */
+            //gTasks.gSelectedRecord = globals.gMainTable.rows(gTasks.gSelectedIndexes).data().toArray()[0];
+            gTasks.gSelectedRecord = records[0];
             if (gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned === globals.gLoggedInUser.ident) {
                 $('.assigned').show();
             } else if (gTasks.gSelectedRecord._assigned && gTasks.gSelectedRecord._assigned !== globals.gLoggedInUser.ident) {
@@ -2207,8 +2206,6 @@ require([
             }
 
             // Set up the drill down
-            $('.dd_only,.du_only').hide();
-
             if(gDrillDownStack.length > 0) {
                 $('.du_only').show();
             }
@@ -3143,6 +3140,12 @@ require([
     }
 
     function tableOnDraw() {
+        var i;
+
+        if(!globals.gMainTable) {
+            return;     // Table not ready
+        }
+
         gDeleteColumn = -1;
         gDeleteReasonColumn = -1;
 
@@ -3216,10 +3219,12 @@ require([
 
         // Refresh the views that depend on the displayed rows
         map.refreshAllLayers(gMapView, gOverallMapConfig.map);
-        chart.refreshAllCharts(gChartView, gTimingView, true);
+        //chart.refreshAllCharts(gChartView, gTimingView, true);
 
-        if(gTasks.gSelectedRecord && gTasks.gSelectedRecord.instanceid) {
-            globals.gMainTable.row('#' + escSelector(gTasks.gSelectedRecord.instanceid)).select();      // Reselect the row, escape the :
+        if(gTasks.gBulkInstances && gTasks.gBulkInstances.length) {
+            for(i = 0; i < gTasks.gBulkInstances.length; i++ ) {
+                globals.gMainTable.row('#' + escSelector(gTasks.gBulkInstances[i])).select();      // Reselect the row, escape the :
+            }
         }
     }
 
@@ -3288,7 +3293,7 @@ require([
         $('#srLink').val("");
         getSurveyRoles(globals.gCurrentSurvey);
 
-        var sIdent = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].ident;
+        //var sIdent = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].ident;
 
 
         $('.overviewSection').hide();

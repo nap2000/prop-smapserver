@@ -116,6 +116,8 @@ public class Items extends Application {
 			@QueryParam("endDate") Date endDate,
 			@QueryParam("filter") String sFilter,
 			@QueryParam("advanced_filter") String advanced_filter,
+			@QueryParam("inc_ro") boolean inc_ro,
+			@QueryParam("geom_questions") String geomQuestions,
 			@QueryParam("tz") String tz) { 
 		
 		JSONObject jo = new JSONObject();
@@ -156,6 +158,17 @@ public class Items extends Application {
 		lm.writeLog(sd, sId, request.getRemoteUser(), LogManager.DASHBOARD_VIEW, "View Results", 0);
 	
 		tz = (tz == null) ? "UTC" : tz;
+		
+		HashMap<String, String> geomQuestionMap = null;
+		if(geomQuestions != null) {
+			String [] a = geomQuestions.split(",");
+			if(a.length > 0) {
+				geomQuestionMap = new HashMap<> ();
+				for(int i = 0; i < a.length; i++) {
+					geomQuestionMap.put(a[i].trim(), "yes");
+				}
+			}
+		}
 		
 		Tables tables = new Tables(sId);
 		boolean hasRbacRowFilter = false;
@@ -241,7 +254,7 @@ public class Items extends Application {
 						parent,
 						fId,
 						tName,
-						false,	// Don't include Read only
+						inc_ro,	// Read only
 						true,	// Include parent key
 						true,	// Include "bad"
 						true,	// Include instanceId
@@ -254,7 +267,9 @@ public class Items extends Application {
 						false,		// HXL only include with XLS exports
 						false,		// Don't include audit data
 						tz,
-						false		// mgmt
+						false,		// mgmt
+						false,		// Accuracy and Altitude
+						true		// Server calculates
 						);		
 				
 				// Construct a new query that retrieves a geometry object as geoJson
@@ -264,18 +279,23 @@ public class Items extends Application {
 				JSONArray columns = new JSONArray();
 				JSONArray types = new JSONArray();
 				ArrayList<String> sscList = new ArrayList<String> ();
+				boolean hasGeometry = false;
+				String geomColumn = null;
 				
 				for(TableColumn c : columnList) {
 					if(newColIdx > 0) {
 						cols.append(",");
 					}
-					if(bGeom && (c.type.equals("geopoint") || c.type.equals("geopolygon") 
-							|| c.type.equals("geolinestring") || c.type.equals("geotrace")
-							|| c.type.equals("geoshape"))) {
+					if(bGeom && c.isGeometry()) {
 						
-						geomIdx = newColIdx;
-						cols.append("ST_AsGeoJSON(" + tName + "." + c.column_name + ") ");
-						geomType = c.type;
+						cols.append("ST_AsText(" + tName + "." + c.column_name + ") " + " as " +  c.column_name);
+						if(geomQuestionMap != null && geomQuestionMap.size() > 0) {
+							if(geomQuestionMap.get(c.question_name) != null) {		// requested this one
+								geomColumn = c.column_name;
+								hasGeometry = true;
+								geomType = c.type;
+							}						
+						}
 					
 					} else if(GeneralUtilityMethods.isAttachmentType(c.type)) {
 							cols.append("'" + urlprefix + "' || " + tName + "." + c.column_name + " as " + c.column_name);
@@ -317,6 +337,10 @@ public class Items extends Application {
 					types.put(c.type);
 					newColIdx++;
 				}
+				if(hasGeometry) {	// Put the geojson select of teh geometry at the end
+					geomIdx = newColIdx;
+					cols.append(",ST_AsGeoJSON(" + tName + "." + geomColumn + ") " + " as geomvalue");
+				}
 				
 				boolean hasImportSourceColumn = GeneralUtilityMethods.hasColumn(cResults, tName, "_import_source");
 				if(hasImportSourceColumn) {
@@ -337,7 +361,6 @@ public class Items extends Application {
 						" order by ssc.id;";
 				pstmtSSC = sd.prepareStatement(sqlSSC);	 
 				pstmtSSC.setString(1, tName);
-				log.info("SQL Get SSC: " + pstmtSSC.toString());
 				resultSet = pstmtSSC.executeQuery();
 				while(resultSet.next()) {
 					String sscName = resultSet.getString(1);
@@ -346,31 +369,40 @@ public class Items extends Application {
 
 					if(geomType != null) {
 						if(sscFn.equals("area")) {
-							String colName = sscName + " (" + sscUnits + ")";
-							if(newColIdx != 0 ) {cols.append(",");}
-							cols.append("ST_Area(geography(the_geom), true)");
-							if(sscUnits.equals("hectares")) {
-								cols.append(" / 10000");
+							geomColumn = GeneralUtilityMethods.getGeomColumnOfType(sd, sId, fId, "geoshape");
+							if(geomColumn != null) {
+								String colName = sscName + " (" + sscUnits + ")";
+								if(newColIdx != 0 ) {
+									cols.append(",");
+								}
+								cols.append("ST_Area(geography(" + geomColumn + "), true)");
+								if(sscUnits.equals("hectares")) {
+									cols.append(" / 10000");
+								}
+								cols.append(" as \"" + colName + "\"");
+								columns.put(colName);
+								newColIdx++;
+								sscList.add(colName);
 							}
-							cols.append(" as \"" + colName + "\"");
-							columns.put(colName);
-							newColIdx++;
-							sscList.add(colName);
 						} else if (sscFn.equals("length")) {
-							String colName = sscName + " (" + sscUnits + ")";
-							if(newColIdx != 0 ) {cols.append(",");}
-							if(geomType.equals("geopolygon") || geomType.equals("geoshape")) {
-								cols.append("ST_Length(geography(the_geom), true)");
-							} else {
-								cols.append("ST_Length(geography(the_geom), true)");
+							geomColumn = GeneralUtilityMethods.getGeomColumnOfType(sd, sId, fId, "geoshape");
+							if(geomColumn == null) {
+								geomColumn = GeneralUtilityMethods.getGeomColumnOfType(sd, sId, fId, "geotrace");
 							}
-							if(sscUnits.equals("km")) {
-								cols.append(" / 1000");
+							if(geomColumn != null) {
+								String colName = sscName + " (" + sscUnits + ")";
+								if(newColIdx != 0 ) {
+									cols.append(",");
+								}
+								cols.append("ST_Length(geography(" + geomColumn + "), true)");
+								if(sscUnits.equals("km")) {
+									cols.append(" / 1000");
+								}
+								cols.append(" as \"" + colName + "\"");
+								columns.put(colName);
+								newColIdx++;
+								sscList.add(colName);
 							}
-							cols.append(" as \"" + colName + "\"");
-							columns.put(colName);
-							newColIdx++;
-							sscList.add(colName);
 						} else {
 							log.info("Invalid SSC function: " + sscFn);
 						}
@@ -511,7 +543,7 @@ public class Items extends Application {
 				if(rec_limit > 0) {
 					sqlLimit = "limit " + rec_limit;
 				}
-				StringBuffer sql2 = new StringBuffer("select distinct ");		// Add distinct as filter by values in a subform would otherwise result in duplicate tables
+				StringBuffer sql2 = new StringBuffer("select ");		// Add distinct as filter by values in a subform would otherwise result in duplicate tables
 				StringBuffer sqlFC = new StringBuffer("select count(*) ");	
 				sql2.append(cols);
 				sql2.append(" from ");
@@ -551,7 +583,13 @@ public class Items extends Application {
 				}
 				sql2.append(whereClause);
 				sqlFC.append(whereClause);
-				sql2.append(" order by ").append(tName).append(".parkey desc, ").append(tName).append(".prikey desc ").append(sqlLimit);
+				
+				// Add oder by and limit
+				sql2.append(" order by ");
+				if(parent > 0) {
+					sql2.append(tName).append(".parkey desc, ");
+				}
+				sql2.append(tName).append(".prikey desc ").append(sqlLimit);
 				
 				// Get the number of filtered records			
 				if(sqlFC.length() > 0) {
@@ -636,53 +674,51 @@ public class Items extends Application {
 					
 					jr.put("type", "Feature");
 
+					if(geomIdx > 0) {
+						// Add Geometry
+						String geomValue = resultSet.getString(geomIdx + 1);	
+						if(geomValue != null) {	
+							jg = new JSONObject(geomValue);
+						}
+					}
 					for(int i = 0; i < colNames.size(); i++) {	
-						
-						if(i == geomIdx) {							
-							// Add Geometry (assume one geometry type per table)
-							String geomValue = resultSet.getString(i + 1);	
-							if(geomValue != null) {	
-								jg = new JSONObject(geomValue);
-							}
-						} else {
-							
-							//String name = rsMetaData.getColumnName(i);	
-							String name = colNames.get(i);
-							String headerName = columns.getString(i);
-							String value = resultSet.getString(i + 1);	
-							if(value == null) {
-								value = "";
-							}
-							
-							if(name.equals("prikey")) {
-								JSONArray prikeys = new JSONArray();
-								jp.put("prikeys", prikeys);
-								prikeys.put(resultSet.getString("prikey"));
-								maxRec = resultSet.getInt("prikey");
-							} else if(name.equals(SmapServerMeta.SURVEY_ID_NAME)) {
-								// Get the display name
-								String displayName = "";
-								if(value.length() > 0 && !value.equals("0")) {
-									displayName = surveyNames.get(value);
-									if(displayName == null) {
-										displayName = GeneralUtilityMethods.getSurveyName(sd, Integer.parseInt(value));
-										surveyNames.put(value, displayName);
-									}
-								} else {
-									if(hasImportSourceColumn) {
-										displayName = resultSet.getString("_import_source");
-										if(displayName == null) {
-											displayName = "";
-										}
-									} 
+
+						//String name = rsMetaData.getColumnName(i);	
+						String name = colNames.get(i);
+						String headerName = columns.getString(i);
+						String value = resultSet.getString(i + 1);	
+						if(value == null) {
+							value = "";
+						}
+
+						if(name.equals("prikey")) {
+							JSONArray prikeys = new JSONArray();
+							jp.put("prikeys", prikeys);
+							prikeys.put(resultSet.getString("prikey"));
+							maxRec = resultSet.getInt("prikey");
+						} else if(name.equals(SmapServerMeta.SURVEY_ID_NAME)) {
+							// Get the display name
+							String displayName = "";
+							if(value.length() > 0 && !value.equals("0")) {
+								displayName = surveyNames.get(value);
+								if(displayName == null) {
+									displayName = GeneralUtilityMethods.getSurveyName(sd, Integer.parseInt(value));
+									surveyNames.put(value, displayName);
 								}
-								jp.put(headerName, displayName);
 							} else {
-								jp.put(headerName, value);
+								if(hasImportSourceColumn) {
+									displayName = resultSet.getString("_import_source");
+									if(displayName == null) {
+										displayName = "";
+									}
+								} 
 							}
+							jp.put(headerName, displayName);
+						} else {
+							jp.put(headerName, value);
 						}
 					} 
-					
+
 					/*
 					 * Get the server side calculates
 					 */

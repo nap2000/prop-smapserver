@@ -204,9 +204,14 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                         url: "/surveyKPI/regions",
                         data: { settings: regionString },
                         success: function(data, status) {
-                            refreshRegions();
-                            setMapRegions(globals.gRegion["name"]);
                             removeHourglass();
+                            if(data && data.indexOf('ERROR') == 0) {
+                                alert(data);
+                            } else {
+                                refreshRegions();
+                                setMapRegions(globals.gRegion["name"]);
+                            }
+
                         }, error: function(data, status) {
                             removeHourglass();
                             alert("Error: Failed to create region");
@@ -270,7 +275,6 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                                                 if(allCalled && count == 0) {
                                                     refreshRegions(true);
                                                 }
-
                                             },
                                             error: function(xhr, textStatus, err) {
                                                 --count;
@@ -287,6 +291,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
 
                                     });
                                     allCalled = true;
+                                    $dialog.dialog("close");
                                 }
                             }
                         }
@@ -597,6 +602,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                     h[++i] = '<th>Dest</th>';
                 }
                 h[++i] = '<th>' + localise.set["c_location"] + '</th>';
+                h[++i] = '<th>' + localise.set["c_complete"] + '</th>';
                 h[++i] = '<th>' + localise.set["c_status"] + '</th>';
                 h[++i] = '<th>' + localise.set["mon_fr"] + '</th>';
             }
@@ -650,6 +656,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                         locn = "none";
                     }
                     h[++i] = '<td>' + locn + '</td>';
+                    h[++i] = '<td>' + localise.set[features[j].properties.complete] + '</td>';
                     status = features[j].properties.status;
                     h[++i] = '<td class="' + status + '">' + status + '</td>';
                     reason = features[j].properties.reason;

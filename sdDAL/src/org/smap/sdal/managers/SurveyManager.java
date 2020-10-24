@@ -78,7 +78,9 @@ import org.smap.sdal.model.SetValue;
 import org.smap.sdal.model.SqlFrag;
 import org.smap.sdal.model.StyleList;
 import org.smap.sdal.model.Survey;
+import org.smap.sdal.model.SurveyIdent;
 import org.smap.sdal.model.SurveyLinks;
+import org.smap.sdal.model.SurveySummary;
 import org.smap.sdal.model.TableColumn;
 import org.smap.sdal.model.TableColumnMarkup;
 import org.smap.sdal.model.User;
@@ -105,7 +107,8 @@ public class SurveyManager {
 	public static String KP_MERGE = "merge";
 	public static String KP_DISCARD = "discard";
 	
-	private static String sqlGetGroupQuestions = "select q.qname, q.column_name, f.name, f.table_name, q.parameters, q.qtype, f.s_id, f.reference "
+	private static String sqlGetGroupQuestions = "select q.qname, q.column_name, f.name, f.table_name, q.parameters, "
+			+ "q.qtype, f.s_id, f.reference, q.published, f.f_id, q.server_calculate "
 			+ "from question q, form f "
 			+ "where q.f_id = f.f_id "
 			+ "and (q.f_id in "
@@ -1455,23 +1458,20 @@ public class SurveyManager {
 					ResultSet rs = pstmtGetQuestionTextId.executeQuery();
 					if(rs.next()) {
 						text_id = rs.getString(1);
-						if(ci.property.propType.equals("constraint_msg")) {
-							text_id = text_id.replace(":label", ":constraint");
-						} else if(ci.property.propType.equals("required_msg")) {
-							text_id = text_id.replace(":label", ":required");
-						} else if(ci.property.propType.equals("hint")) {
-							text_id = text_id.replace(":label", ":hint");
-						} else if(ci.property.propType.equals("guidance_hint")) {
-							text_id = text_id.replace(":label", ":guidance_hint");
-						} 
-						if(text_id == null || text_id.trim().length() == 0) {
-							text_id = ci.property.key;
-							updateTextId = true;
-						}
-					} else {
-						text_id = ci.property.key;		// For question we can rely on the key?
+					}
+					if(text_id == null || text_id.trim().length() == 0) {
+						text_id = sId + "_question_" + ci.property.name  + ":label";
 						updateTextId = true;
 					}
+					if(ci.property.propType.equals("constraint_msg")) {
+						text_id = text_id.replace(":label", ":constraint");
+					} else if(ci.property.propType.equals("required_msg")) {
+						text_id = text_id.replace(":label", ":required");
+					} else if(ci.property.propType.equals("hint")) {
+						text_id = text_id.replace(":label", ":hint");
+					} else if(ci.property.propType.equals("guidance_hint")) {
+						text_id = text_id.replace(":label", ":guidance_hint");
+					} 
 				}
 
 				if(ci.property.oldVal != null && ci.property.newVal != null) {
@@ -1493,12 +1493,13 @@ public class SurveyManager {
 							|| ci.property.propType.equals("constraint_msg")
 							|| ci.property.propType.equals("required_msg")
 							|| ci.property.propType.equals("guidance_hint")) {
+						
 						addLabel(connectionSD, ci, ci.property.languageName, pstmtLangNew, sId, pstmtDeleteLabel, text_id);
 
 						// Add the new text id to the question
 						if(updateTextId) {
 							if(isQuestion) {
-								pstmtNewQuestionLabel.setString(1, ci.property.key);
+								pstmtNewQuestionLabel.setString(1, text_id);
 								pstmtNewQuestionLabel.setInt(2, ci.property.qId);
 								log.info("Update question table with text_id: " + pstmtNewQuestionLabel.toString());
 								pstmtNewQuestionLabel.executeUpdate();
@@ -3479,9 +3480,10 @@ public class SurveyManager {
 	/*
 	 * Get the group Questions
 	 */
-	public HashMap<String, QuestionForm> getGroupQuestions(Connection sd, 
+	public HashMap<String, QuestionForm> getGroupQuestionsMap(Connection sd, 
 			int groupSurveyId,
-			String filter) throws SQLException {
+			String filter,
+			boolean useColumnName) throws SQLException {
 		
 		HashMap<String, QuestionForm> groupQuestions = new HashMap<> ();
 
@@ -3508,8 +3510,15 @@ public class SurveyManager {
 						rs.getString("parameters"),
 						rs.getString("qtype"),
 						rs.getInt("s_id"),
-						rs.getBoolean("reference"));
-				groupQuestions.put(rs.getString("column_name"), qt);
+						rs.getBoolean("reference"),
+						rs.getBoolean("published"),
+						rs.getInt("f_id"),
+						rs.getString("server_calculate"));
+				if(useColumnName) {
+					groupQuestions.put(rs.getString("column_name"), qt);
+				} else {
+					groupQuestions.put(rs.getString("qname"), qt);
+				}
 			}
 		} finally {
 			try {if (pstmt != null) {pstmt.close();}} catch (SQLException e) {}
@@ -4218,7 +4227,9 @@ public class SurveyManager {
 					false,			// include HXL
 					false,
 					tz,
-					false		// mgmt
+					false,		// mgmt
+					false,		// Accuracy and Altitude
+					true		// Server calculates
 					);
 
 			/*
@@ -4445,7 +4456,7 @@ public class SurveyManager {
 					);
 			
 			// Get the text processor
-			TextProcessing tp = new TextProcessing(GeneralUtilityMethods.getSettingFromFile("/home/ubuntu/region"));	
+			TextProcessing tp = new TextProcessing(GeneralUtilityMethods.getSettingFromFile("/smap/settings/region"));		// TODO get base path
 
 			ArrayList<ChangeSet> changes = new ArrayList<ChangeSet> ();
 			ChangeSet cs = new ChangeSet();
@@ -4675,5 +4686,71 @@ public class SurveyManager {
 
 		return result;
 		
+	}
+	
+	/*
+	 * If a form is replaced the form will need to be replaced in the report
+	 */
+	public SurveySummary getSummary(Connection sd, String sIdent) throws SQLException {
+		
+		String sql = "select s.display_name, s.version, p.name "
+				+ "from survey s, project p "
+				+ "where s.p_id = p.id "
+				+ "and s.ident = ? ";
+		PreparedStatement pstmt = null;
+		SurveySummary summary = new SurveySummary();
+		
+		try {
+	
+			pstmt = sd.prepareStatement(sql);
+			pstmt.setString(1, sIdent);
+
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next()) {
+				summary.ident = sIdent;
+				summary.displayName = rs.getString("display_name");
+				summary.projectName = rs.getString("name");
+			}
+		} finally {
+			if(pstmt != null) {try {pstmt.close();} catch(Exception e) {}};
+		}
+		return summary;
+	}
+	
+	public ArrayList<SurveyIdent> getSurveyIdentList(Connection sd, String user, boolean superUser) throws SQLException {
+		
+		ArrayList<SurveyIdent> surveys = new ArrayList<> ();
+		
+		StringBuffer sql = new StringBuffer("");
+		sql.append("select p.name as project_name, s.display_name, s.ident "
+				+ "from survey s, users u, user_project up, project p, organisation o "
+				+ "where u.id = up.u_id "
+				+ "and p.id = up.p_id "
+				+ "and s.p_id = up.p_id "
+				+ "and p.o_id = u.o_id "
+				+ "and u.o_id = o.id "
+				+ "and u.ident = ? "
+				+ "and s.deleted = 'false' "
+				+ "and s.hidden = 'false' ");
+
+		if(!superUser) {					// Add RBAC
+			sql.append(GeneralUtilityMethods.getSurveyRBAC());
+		}
+	
+		sql.append("order by p.name, s.display_name ");
+
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = sd.prepareStatement(sql.toString());	
+			pstmt.setString(1,  user);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				surveys.add(new SurveyIdent(rs.getString(1), rs.getString(2), rs.getString(3)));
+			}
+		} finally {
+			if(pstmt != null) {try {pstmt.close();}catch(Exception e) {}}
+		}
+		
+		return surveys;
 	}
 }

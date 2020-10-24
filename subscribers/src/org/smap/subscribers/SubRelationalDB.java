@@ -458,7 +458,8 @@ public class SubRelationalDB extends Subscriber {
 					"/main",
 					assignmentId,
 					foreignKeys,
-					null				// audit data
+					null,				// audit data
+					1		// record counter
 					);
 
 			/*
@@ -484,13 +485,17 @@ public class SubRelationalDB extends Subscriber {
 					pstmtAddHrk.executeUpdate();
 				}
 
-				String sql = "update " + topLevelForm.tableName + " set _hrk = "
-						+ GeneralUtilityMethods.convertAllxlsNamesToQuery(hrk, sId, sd);
-
-				sql += " where _hrk is null;";
-				pstmtHrk = cResults.prepareStatement(sql);
-				log.info("Adding HRK: " + pstmtHrk.toString());
-				pstmtHrk.executeUpdate();
+				try {
+					String sql = "update " + topLevelForm.tableName + " set _hrk = "
+							+ GeneralUtilityMethods.convertAllxlsNamesToQuery(hrk, sId, sd);
+	
+					sql += " where _hrk is null;";
+					pstmtHrk = cResults.prepareStatement(sql);
+					log.info("Adding HRK: " + pstmtHrk.toString());
+					pstmtHrk.executeUpdate();
+				} catch (Exception e) {
+					log.log(Level.SEVERE, e.getMessage(), e);
+				}
 			}
 
 			/*
@@ -619,7 +624,8 @@ public class SubRelationalDB extends Subscriber {
 			String auditPath,
 			int assignmentId,
 			ArrayList<ForeignKey> foreignKeys,
-			AuditData auditData) throws SQLException, Exception {
+			AuditData auditData,
+			int recCounter) throws SQLException, Exception {
 
 		Keys keys = new Keys();
 		PreparedStatement pstmt = null;
@@ -700,16 +706,19 @@ public class SubRelationalDB extends Subscriber {
 						hasVersion = GeneralUtilityMethods.hasColumn(cResults, tableName, "_version");
 						hasSurveyNotes = GeneralUtilityMethods.hasColumn(cResults, tableName, "_survey_notes");
 					}
+
 					boolean hasAudit = GeneralUtilityMethods.hasColumn(cResults, tableName, "_audit");
-					if(!hasAudit) {
-						GeneralUtilityMethods.addColumn(cResults, tableName, "_audit", "text");
-						hasAudit = true;
-					}
+					//log.info("+++++++++++++ " + tableName + " : _audit : " + hasAudit);
+					//if(!hasAudit && recCounter <= 1) {
+					//	GeneralUtilityMethods.addColumn(cResults, tableName, "_audit", "text");
+					//}
+					hasAudit = true;
 					boolean hasAuditRaw = GeneralUtilityMethods.hasColumn(cResults, tableName, AuditData.AUDIT_RAW_COLUMN_NAME);
-					if(!hasAuditRaw) {
-						GeneralUtilityMethods.addColumn(cResults, tableName, AuditData.AUDIT_RAW_COLUMN_NAME, "text");
-						hasAuditRaw = true;
-					}
+					//log.info("+++++++++++++ " + tableName + " : " + AuditData.AUDIT_RAW_COLUMN_NAME + " : " + hasAuditRaw);
+					//if(!hasAuditRaw && recCounter <= 1) {
+					//	GeneralUtilityMethods.addColumn(cResults, tableName, AuditData.AUDIT_RAW_COLUMN_NAME, "text");
+					//}
+					hasAuditRaw = true;
 					boolean hasAltitude = GeneralUtilityMethods.hasColumn(cResults, tableName, "the_geom_alt"); 
 
 					if(hasAudit && parent_key == 0 && gAuditFilePath != null) {
@@ -845,7 +854,7 @@ public class SubRelationalDB extends Subscriber {
 
 			// Write any child forms
 			List<IE> childElements = element.getChildren();
-			int recCounter = 1;
+			int childRecCounter = 1;
 			for (IE child : childElements) {
 
 				if (child.getType() != null && (child.getType().equals("form")
@@ -855,8 +864,8 @@ public class SubRelationalDB extends Subscriber {
 					
 					writeTableContent(child, parent_key, sIdent, remoteUser, server, device, uuid, formStatus, version,
 							surveyNotes, locationTrigger, cResults, sd, sId, uploadTime,
-							auditPath + "/" + child.getName() + "[" + recCounter + "]", assignmentId,
-							foreignKeys, auditData);
+							auditPath + "/" + child.getName() + "[" + childRecCounter + "]", assignmentId,
+							foreignKeys, auditData, childRecCounter);
 					recCounter++;
 				}
 			}
@@ -1836,9 +1845,10 @@ public class SubRelationalDB extends Subscriber {
 
 		ArrayList<Integer> duplicateKeys = new ArrayList<Integer> ();
 		PreparedStatement pstmt = null;
-		uuid = uuid.replace("'", "''");	// Escape apostrophes
+		
 
 		if(uuid != null && uuid.trim().length() > 0) {
+			uuid = uuid.replace("'", "''");	// Escape apostrophes
 			try {
 
 				String colTest1 = "select column_name from information_schema.columns " +

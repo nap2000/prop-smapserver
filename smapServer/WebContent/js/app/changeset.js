@@ -710,26 +710,6 @@ define([
                                     });
                                     question.childFormIndex = survey.forms.length - 1;
 
-                                } else if(property.newVal == "geopoint" || property.newVal == "geoshape" || property.newVal == "geotrace") {
-
-                                    // Set the question name automatically
-                                    modelGeneratedChanges.push({
-                                        changeType: "property",
-                                        action: "update",
-                                        source: "editor",
-                                        property: {
-                                            type: "question",
-                                            prop: "name",
-                                            newVal: "the_geom",
-                                            oldVal: question.name,
-                                            language: property.language,
-                                            formIndex: property.formIndex,
-                                            itemIndex: property.itemIndex
-
-                                        }
-                                    });
-                                    question.name = "the_geom";
-
                                 }
 
                                 // Fix ups depending on oldVal
@@ -1029,13 +1009,6 @@ define([
                         refresh = true;		// Refresh all the questions when adding the first question to a form
                     } else if(change.question.type === "end group") {
                         refresh = true;
-                    }
-
-                    // Change the name if this is a location question
-                    if(change.question.type === "geopoint" ||
-                        change.question.type === "geotrace" ||
-                        change.question.type === "geoshape") {
-                        change.question.name = "the_geom";
                     }
 
                     // Add a subform if required
@@ -1563,32 +1536,6 @@ define([
                     // Check references to other questions
                     isValid = checkReferences(container, itemIndex, itemType, item);
                     isValid = checkSelfReferences(container, itemIndex, itemType, item);
-
-                    // Check for multiple geom types in a single form
-                    if(isValid) {
-                        if(item.type === "geopoint" || item.type === "geoshape" || item.type === "geotrace") {
-                            form = survey.forms[container];
-                            for(j = 0; j < form.questions.length; j++) {
-                                var otherQuestion = form.questions[j];
-                                if(j != itemIndex) {
-                                    if(!otherQuestion.soft_deleted && !otherQuestion.deleted &&
-                                        (otherQuestion.type === "geopoint" || otherQuestion.type === "geotrace" ||
-                                        otherQuestion.type === "geoshape")) {
-                                        addValidationError(
-                                            container,
-                                            itemIndex,
-                                            "item",
-                                            localise.set["ed_o_o_g"],	// Only one geometry question can be added to a form
-                                            itemType,
-                                            "error");
-                                        isValid = false;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
 
                     if(isValid) {	// Check parenthesis on relevant
                         isValid = checkParentheisis(container, itemIndex, itemType, item.relevant);
@@ -2242,31 +2189,6 @@ define([
 
                     }
 
-                    if(isValid) {
-                        if(question.type == "geopoint"
-                            || question.type == "geoshape"
-                            || question.type == "geotrace"
-                        ) {
-                            if(val !== 'the_geom') {
-                                addValidationError(
-                                    container,
-                                    itemIndex,
-                                    "name",
-                                    localise.set["ed_gl"],
-                                    itemType,
-                                    "error");
-                            }
-                        } else if(val === 'the_geom') {
-                            addValidationError(
-                                container,
-                                itemIndex,
-                                "name",
-                                localise.set["ed_ogl"],
-                                itemType,
-                                "error");
-                        }
-                    }
-
                 } else {
                     isValid = isValidODKOptionName(val);
 
@@ -2285,9 +2207,8 @@ define([
 
 			/*
 			 * Question name change require the questions in all the forms to be validated for duplicates
-			 * Note this is a stronger test than applied by xlsForm
 			 */
-            if(isValid && val !== 'the_geom') {
+            if(isValid) {
 
                 valLower = val.toLowerCase();
 

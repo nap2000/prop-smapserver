@@ -20,8 +20,11 @@
 	echo "--------------------------- google closure compile"
 	#java -jar ~/compiler-latest/closure-compiler-v20190106.jar --js WebContent/build/js/webform-bundle.es5.js --js_output_file WebContent/build/js/webform-bundle.min.js 
 
-	# Use whitespace optimisation only as "SIMPLE_OPTIMIZATION" causes code that triggers enabling of widgets to not work
-	java -jar ~/compiler-latest/closure-compiler-v20200719.jar --compilation_level WHITESPACE_ONLY --js WebContent/build/js/webform-bundle.es5.js --js_output_file WebContent/build/js/webform-bundle.min.js 
+	# Use whitespace optimisation only "SIMPLE_OPTIMIZATION" as full opimisation causes code that triggers enabling of widgets to not work
+	java -jar ~/compiler-latest/closure-compiler-v20200719.jar --force_inject_library es6_runtime --compilation_level WHITESPACE_ONLY --js WebContent/build/js/webform-bundle.es5.js --js_output_file WebContent/build/js/webform-bundle.min.js 
+
+	# Use full optimisation as whitespace only caluse error on submit with missing jscomp
+	#java -jar ~/compiler-latest/closure-compiler-v20200719.jar  --js WebContent/build/js/webform-bundle.es5.js --js_output_file WebContent/build/js/webform-bundle.min.js 
 
 	rm WebContent/build/js/webform-bundle.es5.js
 #fi

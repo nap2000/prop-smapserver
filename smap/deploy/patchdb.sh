@@ -8,10 +8,11 @@ unattended-upgrades
 u1404=`lsb_release -r | grep -c "14\.04"`
 u1604=`lsb_release -r | grep -c "16\.04"`
 u1804=`lsb_release -r | grep -c "18\.04"`
-u1910=`lsb_release -r | grep -c "19\.10"`
+u2004=`lsb_release -r | grep -c "20\.04"`
 
-if [ $u1910 -eq 1 ]; then
-    TOMCAT_VERSION=tomcat8
+if [ $u2004 -eq 1 ]; then
+    TOMCAT_VERSION=tomcat9
+    TOMCAT_USER=tomcat
 elif [ $u1804 -eq 1 ]; then
     TOMCAT_VERSION=tomcat8
 else
@@ -50,7 +51,7 @@ sudo -u postgres psql -f ./sd_pre_1908.sql -q -d survey_definitions 2>&1 | grep 
 fi
 
 echo "applying new patches to survey_definitions"
-sudo -u postgres psql -f ./sd.sql -q -d survey_definitions 2>&1 | grep -v "already exists" | grep -v "duplicate key" | grep -vi "addgeometrycolumn" | grep -v "implicit index" | grep -v "skipping" | grep -v "is duplicated" | grep -v "create unique index" | grep -v CONTEXT
+sudo -u postgres psql -f ./sd.sql -q -d survey_definitions 2>&1 | grep -v "already exists" | grep -v "duplicate key" | grep -vi "addgeometrycolumn" | grep -v "implicit index" | grep -v "skipping" | grep -v "is duplicated" | grep -v "create unique index" | grep -v CONTEXT | grep -v "does not exist"
 
 echo "applying patches to results"
 sudo -u postgres psql -f ./results.sql -q -d results 2>&1 | grep -v "already exists"
@@ -249,14 +250,51 @@ then
 
 fi
 
+if [ ! -f /smap/settings ]
+then
+    mkdir /smap/settings
+    mv ~ubuntu/region /smap/settings
+    mv ~ubuntu/hostname /smap/settings
+    mv ~ubuntu/bucket /smap/settings
+    mv ~ubuntu/subscriber /smap/settings
+fi
 
 #####################################################################################
 # All versions
-# Copy the new apache configuration files
+# Copy the new apache configuration files and tomcat directory access
+# Copy aws credentials
+
+if [ $u2004 -eq 1 ]; then
+    sudo cp  $deploy_from/resources/properties/credentials /var/lib/$TOMCAT_VERSION/.aws
+elif [ $u1804 -eq 1 ]; then
+    sudo cp  $deploy_from/resources/properties/credentials /var/lib/$TOMCAT_VERSION/.aws
+else
+    sudo cp  $deploy_from/resources/properties/credentials /usr/share/$TOMCAT_VERSION/.aws
+fi
+# update existing credentials
+if [ -f $deploy_from/resources/properties/credentials ]
+then
+    for f in `locate .aws/credentials`
+    do
+            echo "processing $f"
+            cp $deploy_from/resources/properties/credentials $f
+    done
+fi
+sudo cp  $deploy_from/resources/properties/setcredentials.sh /smap_bin
+envset=`cat /usr/share/$TOMCAT_VERSION/bin/setenv.sh | grep -c "setcredentials"`
+if [ $envset -eq 0 ]; then
+	echo "/smap_bin/setcredentials.sh" | sudo tee -a /usr/share/$TOMCAT_VERSION/bin/setenv.sh 
+fi
+
 
 cd ../install
 chmod +x apacheConfig.sh
 ./apacheConfig.sh
+
+if [ $u2004 -eq 1 ]; then
+cp config_files/override.conf /etc/systemd/system/tomcat9.service.d/override.conf
+fi
+
 cd ../deploy
  
 
@@ -267,5 +305,5 @@ echo "COPY language_codes(code, aws_translate, aws_transcribe, transcribe_defaul
 
 
 # update version reference
-new_version="2008"
+new_version="2010"
 echo "$new_version" > ~/smap_version

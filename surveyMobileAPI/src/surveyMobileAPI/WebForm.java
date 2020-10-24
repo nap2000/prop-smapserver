@@ -115,6 +115,8 @@ public class WebForm extends Application {
 	HashMap<String, Integer> gRecordCounts = null;
 	private WebformOptions options;
 	String debug = "no";
+	boolean myWork = false;
+	String gFormIdent = null;
 
 	/*
 	 * Get instance data Respond with JSON
@@ -272,6 +274,7 @@ public class WebForm extends Application {
 			@QueryParam("taskkey") int taskKey,	// Task id, if set initial data is from task
 			@QueryParam("viewOnly") boolean vo,
 			@QueryParam("debug") String d,
+			@QueryParam("myWork") boolean mw,
 			@QueryParam("callback") String callback) throws IOException {
 
 		Response response = null;
@@ -283,6 +286,7 @@ public class WebForm extends Application {
 		}
 		viewOnly = vo;
 		debug = d;
+		myWork = mw;
 
 		userIdent = request.getRemoteUser();
 		isTemporaryUser = false;
@@ -477,6 +481,8 @@ public class WebForm extends Application {
 		String requester = "surveyMobileAPI-getWebForm";
 		boolean superUser = false;
 		
+		gFormIdent = formIdent;
+		
 		/*
 		 * Get the media manifest so we can set the url's of media files used the form
 		 * Also get the google api key
@@ -576,7 +582,7 @@ public class WebForm extends Application {
 				String urlprefix = GeneralUtilityMethods.getUrlPrefix(request);
 				GetXForm xForm = new GetXForm(localisation, userIdent, tz);
 				instanceXML = xForm.getInstanceXml(survey.id, formIdent, template, datakey, datakeyvalue, 0, simplifyMedia,
-						isWebForm, taskKey, urlprefix, initialData);
+						isWebForm, taskKey, urlprefix, initialData, false);
 				instanceStrToEditId = xForm.getInstanceId();
 				gRecordCounts = xForm.getRecordCounts();
 			} 
@@ -733,24 +739,28 @@ public class WebForm extends Application {
 
 		// head
 		output.append("<head>\n");
-		output.append("<link rel=\"preload\" as=\"font\" href=\"/fonts/OpenSans-Bold-webfont.woff\" type=\"font/woff\" crossorigin=\"\">");
+		output.append("<link rel=\"preload\" as=\"font\" href=\"/fonts/OpenSans-Regular-webfont.woff\" type=\"font/woff\" crossorigin>");
+		output.append("<link rel=\"preload\"as=\"font\" href=\"/fonts/OpenSans-Bold-webfont.woff\" type=\"font/woff\" crossorigin>");
+		output.append("<link rel=\"preload\" as=\"font\" href=\"/fonts/fontawesome-webfont.woff\" type=\"font/woff\" crossorigin>");
 		
+		/*
 		output.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=Roboto:300,400,500,700\">");
 		output.append("<style type=\"text/css\">.gm-style .gm-style-cc span,.gm-style .gm-style-cc a,.gm-style .gm-style-mtc div{font-size:10px}\n" + 
 				"</style>");
 		output.append("<style type=\"text/css\">@media print {  .gm-style .gmnoprint, .gmnoprint {    display:none  }}@media screen {  .gm-style .gmnoscreen, .gmnoscreen {    display:none  }}</style>");
 		output.append("<style type=\"text/css\">.gm-style-pbc{transition:opacity ease-in-out;background-color:rgba(0,0,0,0.45);text-align:center}.gm-style-pbt{font-size:22px;color:white;font-family:Roboto,Arial,sans-serif;position:relative;margin:0;top:50%;-webkit-transform:translateY(-50%);-ms-transform:translateY(-50%);transform:translateY(-50%)}\n" + 
 				"</style>");
-		
+		*/
 		
 		if (surveyClass != null && surveyClass.trim().contains("theme-grid")) {		
 			output.append("<link type='text/css' href='/build/css/theme-grid.css' media='all' rel='stylesheet' />\n");
 			output.append("<link type='text/css' href='/build/css/grid-print.css' media='print' rel='stylesheet'/>\n");
 		} else {
-			output.append("<link type='text/css' href='/build/css/formhub.css' media='all' rel='stylesheet' />\n");
-			output.append("<link type='text/css' href='/build/css/theme-formhub.print.css' media='print' rel='stylesheet'/>\n");
+			output.append("<link type='text/css' href='/build/css/theme-smap.css' media='all' rel='stylesheet' />\n");
+			output.append("<link type='text/css' href='/build/css/theme-smap.print.css' media='print' rel='stylesheet'/>\n");
 		}
 		output.append("<link type='text/css' href='/build/css/webform.css' media='all' rel='stylesheet' />\n");
+		output.append("<link type='text/css' href='/build/css/webform.print.css' media='print' rel='stylesheet' />\n");
 
 		/*
 		 * Add organisation specific css settings
@@ -813,9 +823,10 @@ public class WebForm extends Application {
 		output.append("<meta charset='utf-8' />\n");
 		output.append("<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n");
 		output.append("<meta name='apple-mobile-web-app-capable' content='yes' />\n");
-		output.append("<!--[if lt IE 10]>");
-		output.append("<script type='text/javascript'>window.location = 'modern_browsers';</script>\n");
-		output.append("<![endif]-->\n");
+		output.append("<script>");
+		output.append("if ( navigator.userAgent.indexOf( 'Trident/' ) >= 0 ) {");
+		output.append("window.location.href = '/browser-support.html'}");
+		output.append("</script>");
 
 		output.append("<script src='/js/libs/modernizr.js'></script>");
 		//output.append("<script src='/js/libs/textile.js'></script>");		in browser markdown - don't currently use
@@ -828,6 +839,7 @@ public class WebForm extends Application {
 			output.append(serverData.google_key);
 			output.append("\";");
 		}
+		output.append("window.smapConfig.myWork=" + (myWork ? "true" : "false") + ";");
 		output.append("</script>");
 		output.append("</head>\n");
 
@@ -847,9 +859,8 @@ public class WebForm extends Application {
 		output.append("settings = {};\n");
 
 		output.append("surveyData = {};\n");
-
+		output.append("surveyData.surveyIdent=\"").append(gFormIdent).append("\";\n");
 		// Data model
-
 		output.append("surveyData.modelStr=\"");
 		output.append(getModelStr(request));
 		output.append("\";\n");
@@ -1150,8 +1161,10 @@ public class WebForm extends Application {
 			output.append("<header class='form-header clearfix'>\n");
 			output.append("<div class='offline-enabled'>\n");
 			output.append("<div title='Records Queued' class='queue-length side-slider-toggle'>0</div>\n");
+			output.append("<div><img id=\"hour_glass\" src=\"/images/ajax-loader.gif\" style=\"display:none;\" alt=\"hourglass\" height=\"34\" width=\"34\"></div>\n");
 			output.append("</div>\n");
-			output.append("<button onclick='window.print();' class='print' title='Print this Form'> </button>\n");
+			//output.append("<button onclick='window.print();' class='print' title='Print this Form'> </button>\n");
+			output.append("<button class=\"print form-header__button--print btn-bg-icon-only\" onclick=\"return false;\"></button>");
 			output.append("<span class='form-language-selector'><span class='lang' data-lang='form.chooseLanguage'>language</span></span>\n");
 			output.append("<div class='form-progress'></div>\n");
 
@@ -1255,14 +1268,13 @@ public class WebForm extends Application {
 			SurveyTemplate template = new SurveyTemplate(localisation);
 			template.readDatabase(survey.id, false);
 
-			// If required get the instance data
 			String instanceXML = null;
 			String dataKey = "instanceid";
 			String urlprefix = GeneralUtilityMethods.getUrlPrefix(request);
 
 			GetXForm xForm = new GetXForm(localisation, userIdent, tz);
 			instanceXML = xForm.getInstanceXml(survey.id, formIdent, template, dataKey, updateid, 0, simplifyMedia, 
-					false, taskKey, urlprefix, null);
+					false, taskKey, urlprefix, null, false);
 
 			SurveyData surveyData = new SurveyData();
 			surveyData.instanceStrToEdit = instanceXML.replace("\n", "").replace("\r", "");

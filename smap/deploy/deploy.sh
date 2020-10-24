@@ -4,14 +4,17 @@ deploy_from="version1"
 u1404=`lsb_release -r | grep -c "14\.04"`
 u1604=`lsb_release -r | grep -c "16\.04"`
 u1804=`lsb_release -r | grep -c "18\.04"`
-u1910=`lsb_release -r | grep -c "19\.10"`
+u2004=`lsb_release -r | grep -c "20\.04"`
 
-if [ $u1910 -eq 1 ]; then
+if [ $u2004 -eq 1 ]; then
     TOMCAT_VERSION=tomcat9
+    TOMCAT_USER=tomcat
 elif [ $u1804 -eq 1 ]; then
     TOMCAT_VERSION=tomcat8
+    TOMCAT_USER=tomcat8
 else
     TOMCAT_VERSION=tomcat7
+    TOMCAT_USER=tomcat7
 fi
 
 # save directory that contains deploy script
@@ -34,7 +37,7 @@ if [ $u1804 -eq 1 ]; then
 systemctl stop subscribers
 systemctl stop subscribers_fwd
 fi
-if [ $u1910 -eq 1 ]; then
+if [ $u2004 -eq 1 ]; then
 systemctl stop subscribers
 systemctl stop subscribers_fwd
 fi
@@ -88,7 +91,7 @@ cp $deploy_from/smapUploader.jar /var/www/smap
 cp $deploy_from/fieldTask.apk /var/www/default
 cp -r $deploy_from/smapIcons/WebContent/* /var/www/smap/smapIcons
 cp $deploy_from/*.war /var/lib/$TOMCAT_VERSION/webapps
-chown -R $TOMCAT_VERSION /var/lib/$TOMCAT_VERSION/webapps
+chown -R $TOMCAT_USER /var/lib/$TOMCAT_VERSION/webapps
 
 # change owner for apache web directory
 chown -R www-data:www-data /var/www/smap
@@ -105,24 +108,6 @@ cp -r $deploy_from/scripts/* /smap_bin
 cp  $deploy_from/resources/fonts/* /usr/share/fonts/truetype
 chmod +x /smap_bin/*.sh
 chmod +r /usr/share/fonts/truetype/*
-
-# Copy aws credentials
-if [ $u1910 -eq 1 ]; then
-    sudo cp  $deploy_from/resources/properties/credentials /var/lib/$TOMCAT_VERSION/.aws
-elif [ $u1804 -eq 1 ]; then
-    sudo cp  $deploy_from/resources/properties/credentials /var/lib/$TOMCAT_VERSION/.aws
-else
-    sudo cp  $deploy_from/resources/properties/credentials /usr/share/$TOMCAT_VERSION/.aws
-fi
-# update existing credentials
-if [ -f $deploy_from/resources/properties/credentials ]
-then
-    for f in `locate .aws/credentials`
-    do
-            echo "processing $f"
-            cp $deploy_from/resources/properties/credentials $f
-    done
-fi
 
 cd /var/log/subscribers
 rm *.log_old
@@ -146,7 +131,7 @@ service postgresql start
 service $TOMCAT_VERSION start
 service apache2 start
 
-echo "go" > ~ubuntu/subscriber
+echo "go" > /smap/settings/subscriber
 if [ $u1404 -eq 1 ]; then
 service subscribers start
 service subscribers_fwd start
@@ -159,7 +144,7 @@ if [ $u1804 -eq 1 ]; then
 systemctl start subscribers
 systemctl start subscribers_fwd
 fi
-if [ $u1910 -eq 1 ]; then
+if [ $u2004 -eq 1 ]; then
 systemctl start subscribers
 systemctl start subscribers_fwd
 fi
@@ -168,4 +153,3 @@ fi
 # Start disk monitor
 cd $cwd
 sudo -u postgres psql -f ./rates.sql -q -d survey_definitions 2>&1 | grep -v duplicate | grep -v "already exists"
-sudo -u ubuntu ~ubuntu/smap/deploy/manage.sh

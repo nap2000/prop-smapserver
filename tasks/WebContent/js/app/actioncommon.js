@@ -38,7 +38,7 @@ define([
         /*
 	     * Refresh any select lists that are dependent on entered values
          */
-        function refreshSelectLists(schema, record, changedItemIndex) {
+        function refreshSelectLists(schema, record, changedItemIndex, prefix) {
 
             var  columns = schema.columns;
             var changedItem = columns[changedItemIndex];
@@ -47,7 +47,7 @@ define([
                 if (column.mgmt) {
                     if (column.type === "select1" || column.type === "select" || column.type === "select_one") {
                         var value = record[column.column_name];
-                        getChoiceList(schema, column, i, value, record, changedItem.column_name);
+                        getChoiceList(schema, column, i, value, record, changedItem.column_name, prefix);
                     }
                 }
 
@@ -66,7 +66,8 @@ define([
                 i,
                 configItem,
                 first = true,
-                columns = schema.columns;
+                columns = schema.columns,
+                prefix = 'er';
 
             globals.gRecordMaps = [];     // Initialise the list of maps we are going to show
             gTasks.gPriKey = record["prikey"];
@@ -80,11 +81,11 @@ define([
 
                 if (configItem.mgmt) {
 
-                    h[++idx] = getEditMarkup(configItem, i, first, record, schema, editable, true);
+                    h[++idx] = getEditMarkup(configItem, i, first, record, schema, editable, true, prefix);
 
                 } //else {
                 // Always add the read only original
-                m[++cnt] = getEditMarkup(configItem, i, first, record, schema, false, true);
+                m[++cnt] = getEditMarkup(configItem, i, first, record, schema, false, true, prefix);
                 //}
                 if (!configItem.readonly) {
                     first = false;
@@ -137,7 +138,7 @@ define([
                         value: $this.val()
                     };
                     dataChanged(config);
-                    refreshSelectLists(schema, record, $this.data("item"));
+                    refreshSelectLists(schema, record, $this.data("item"), prefix);
                 }
             });
             $editForm.find('.date').on("dp.change", function () {
@@ -169,7 +170,8 @@ define([
                 i,
                 configItem,
                 first = true,
-                columns = schema.columns;
+                columns = schema.columns,
+                prefix = 'be';
 
             for (i = 0; i < columns.length; i++) {
                 configItem = columns[i];
@@ -182,7 +184,7 @@ define([
                     if(configItem.type === 'select') {
                         cloneItem.type = 'select1';     // With select multiples the bulk change is to set or clear one value
                     }
-                    h[++idx] = getEditMarkup(cloneItem, i, first, record, schema, true, false);
+                    h[++idx] = getEditMarkup(cloneItem, i, first, record, schema, true, false, prefix);
                     h[++idx] = '</div>';    // Question column
                     h[++idx] = '<div class="col-sm-4">';    // clear
                     if(configItem.type === 'select') {
@@ -220,6 +222,7 @@ define([
                     clear: $this.closest(".bulkquestion").find(".selectClear").is(':checked')
                 };
                 bulkDataChanged(config);
+                refreshSelectLists(schema, record, $this.data("item"), prefix);
             });
 
             // Respond to changes in a clear checkbox
@@ -233,7 +236,7 @@ define([
                 };
 
                 bulkDataChanged(config);
-
+                refreshSelectLists(schema, record, $this.data("item"), prefix);
             });
 
             // Set focus to first editable data item
@@ -243,7 +246,7 @@ define([
         /*
          * Get the markup to edit the record
          */
-        function getEditMarkup(configItem, itemIndex, first, record, schema, editable, setvalue) {
+        function getEditMarkup(configItem, itemIndex, first, record, schema, editable, setvalue, prefix) {
 
             var h = [],
                 idx = -1,
@@ -251,9 +254,6 @@ define([
 
             if(record && setvalue) {
                 var name = configItem.column_name;
-                if(name === "the_geom") {
-                    name = "_geolocation";  // HACK! TODO Sort out names of gometries
-                }
                 value = record[name];
             }
 
@@ -277,7 +277,7 @@ define([
             } else if (configItem.readonly || !editable) {		// Read only text
                 h[++idx] = addCellMarkup(value);
             } else {
-                h[++idx] = addEditableColumnMarkup(configItem, value, itemIndex, first, schema, record);
+                h[++idx] = addEditableColumnMarkup(configItem, value, itemIndex, first, schema, record, prefix);
                 first = false;
             }
             h[++idx] = '</div>';
@@ -291,7 +291,7 @@ define([
         /*
          * Add the markup for an editable column
          */
-        function addEditableColumnMarkup(column, value, itemIndex, first, schema, record) {
+        function addEditableColumnMarkup(column, value, itemIndex, first, schema, record, prefix) {
             var h = [],
                 idx = -1,
                 i,
@@ -335,7 +335,7 @@ define([
                 h[++idx] = '</div>';
             } else if (column.type === "select1" || column.type === "select" || column.type === "select_one") {
                 h[++idx] = ' <select id="select_';
-                h[++idx] = itemIndex;
+                h[++idx] = prefix + itemIndex;
                 h[++idx] = '" class="form-control editable ';
                 if (column.type === "select") {
                     h[++idx] = ' select';
@@ -353,7 +353,7 @@ define([
                     h[++idx] = '<option value=""></option>';
                 }
 
-                var choices = getChoiceList(schema, column, itemIndex, value, record, undefined);
+                var choices = getChoiceList(schema, column, itemIndex, value, record, undefined, prefix);
                 if (choices) {
                     h[++idx] = getChoicesHTML(column, choices, value, true);
                 }
@@ -401,7 +401,7 @@ define([
         /*
          * Get the choicelist for a select question
          */
-        function getChoiceList(schema, col, itemIndex, value, record, changed_column) {
+        function getChoiceList(schema, col, itemIndex, value, record, changed_column, prefix) {
 
             // Get the choice list
             var listId = col.l_id;
@@ -423,6 +423,7 @@ define([
                     var params = getAppearanceParams(col.appearance);
                     var changeParam1 = false;
                     var changeParam2 = false;
+                    var changeExpr = false;
                     var dependentColumn;
                     if (params.length > 0) {
                         // todo consider fixed values
@@ -431,45 +432,79 @@ define([
                         var label_column = choices[0].v;
                         var url = '/lookup/choices/' + sIdent + '/' + params.filename + '/' + value_column + '/' + label_column;
                         if(typeof params.filter !== "undefined") {
-                            if(typeof params.filter_column !== "undefined" && typeof params.filter_value !== "undefined") {
-                                // Add first filter
-                                url += '?search_type=' + params.filter;
-                                url += '&q_column=' + params.filter_column;
-                                if(params.filter_value.indexOf('${') == 0) {
-                                    dependentColumn = params.filter_value.substring(2, params.filter_value.length - 1);
-                                    params.filter_value = record[dependentColumn];
+                            if(params.filter === 'eval') {
+                                if (typeof params.expression !== "undefined") {
+                                    // Replace ${question_name} elements with values
+                                    const regex = /\$\{.+?\}/g;
+                                    const found = params.expression.match(regex);
+                                    if(found && found.length > 0) {
+                                        for(i = 0; i < found.length; i++) {
+                                            var token = found[i];
+                                            dependentColumn = token.substring(2, token.length - 1);
+                                            var depValue = record[dependentColumn];
+                                            depValue = getUpdate(dependentColumn, depValue);  // Replace the value if there has been an update
+                                            var type = getQuestionType(schema, dependentColumn);
+                                            if(type !== 'int') {
+                                                depValue = '\'' + depValue + '\'';
+                                            }
+                                            params.expression = params.expression.replace(token, depValue);
 
-                                    params.filter_value = getUpdate(params.filter_column, params.filter_value);  // Replace the value if there has been an update
-                                    if(changed_column && dependentColumn === changed_column) {        // Set a flag if this refresh in response to a changed value and this param is wha changed
-                                        changeParam1 = true;
-                                    }
-                                }
 
-                                url += '&q_value=' + params.filter_value;
-                                if(typeof params.second_filter_column !== "undefined"
-                                        && typeof params.second_filter_value !== "undefined") {
-                                    url += '&f_column=' + params.second_filter_column;
-                                    if(params.second_filter_value.indexOf('${') == 0) {
-                                        dependentColumn = params.second_filter_value.substring(2, params.second_filter_value.length - 1);
-                                        params.second_filter_value = record[dependentColumn];
-
-                                        params.second_filter_value  = getUpdate(params.second_filter_column, params.second_filter_value);    // Replace the value if there has been an update
-                                        if(changed_column && dependentColumn=== changed_column) {        // Set a flag if this refresh in response to a changed value and this param is wha changed
-                                            changeParam2 = true;
+                                            if (changed_column && dependentColumn === changed_column) {        // Set a flag if this refresh in response to a changed value and this param is wha changed
+                                                changeExpr = true;
+                                            }
                                         }
                                     }
-                                    url += '&f_value=' + params.second_filter_value;
+
+                                    var encodedExpression = encodeURIComponent(params.expression);
+                                    // manually encode some characters that are missed by encodeUriComponent and ned to be encoded
+                                    encodedExpression = encodedExpression.replace(/\(/g, "%28");
+                                    encodedExpression = encodedExpression.replace(/\)/g, "%29");
+                                    url += '?expression=' + encodedExpression;
+
+                                }
+                            } else {
+                                if (typeof params.filter_column !== "undefined" && typeof params.filter_value !== "undefined") {
+                                    // Add first filter
+                                    url += '?search_type=' + params.filter;
+                                    url += '&q_column=' + params.filter_column;
+                                    if (params.filter_value.indexOf('${') == 0) {
+                                        dependentColumn = params.filter_value.substring(2, params.filter_value.length - 1);
+                                        params.filter_value = record[dependentColumn];
+
+                                        params.filter_value = getUpdate(params.filter_column, params.filter_value);  // Replace the value if there has been an update
+                                        if (changed_column && dependentColumn === changed_column) {        // Set a flag if this refresh in response to a changed value and this param is wha changed
+                                            changeParam1 = true;
+                                        }
+                                    }
+
+                                    url += '&q_value=' + params.filter_value;
+                                    if (typeof params.second_filter_column !== "undefined"
+                                        && typeof params.second_filter_value !== "undefined") {
+                                        url += '&f_column=' + params.second_filter_column;
+                                        if (params.second_filter_value.indexOf('${') == 0) {
+                                            dependentColumn = params.second_filter_value.substring(2, params.second_filter_value.length - 1);
+                                            params.second_filter_value = record[dependentColumn];
+
+                                            params.second_filter_value = getUpdate(params.second_filter_column, params.second_filter_value);    // Replace the value if there has been an update
+                                            if (changed_column && dependentColumn === changed_column) {        // Set a flag if this refresh in response to a changed value and this param is wha changed
+                                                changeParam2 = true;
+                                            }
+                                        }
+                                        url += '&f_value=' + params.second_filter_value;
+                                    }
                                 }
                             }
                         }
 
-                        if(!changed_column || changeParam1 || changeParam2) {
+                        if(!changed_column || changeParam1 || changeParam2 || changeExpr) {
                             $.ajax({   // Get the existing report details to edit
                                 url: url,
                                 cache: false,
                                 success: function (data, status) {
-                                    var el = '#select_' + itemIndex;
-                                    var html = getChoicesHTML(col, data, value, false);
+                                    var el = '#select_' + prefix + itemIndex;
+                                    var selValue = value;
+                                    var html = getChoicesHTML(col, data, selValue, false);
                                     $(el).empty().append(html);
 
                                     // Set up multi selects
@@ -535,7 +570,7 @@ define([
                 id: idbase + maps.length,
                 currentValue: currentValue,
                 oldValue: oldValue
-            }
+            };
 
             h[++idx] = '<div id="';
             h[++idx] = config.id;
@@ -605,7 +640,7 @@ define([
                 i,
                 foundExistingUpdate;
 
-            currentValue = record[columns[itemIndex].column_name];
+            currentValue = record[column_name];
             if (typeof currentValue === "undefined") {
                 currentValue = "";
             }
@@ -760,6 +795,9 @@ define([
 
             if (column.type === "select") {
                 vArray = value.split(' ');
+            } else {
+                // Add the empty option
+                h[++idx] = '<option value=""></option>';
             }
             for (i = 0; i < choices.length; i++) {
                 if(internal) {

@@ -4,8 +4,11 @@
 u1404=`lsb_release -r | grep -c "14\.04"`
 u1604=`lsb_release -r | grep -c "16\.04"`
 u1804=`lsb_release -r | grep -c "18\.04"`
+u2004=`lsb_release -r | grep -c "20\.04"`
 
-if [ $u1804 -eq 1 ]; then
+if [ $u2004 -eq 1 ]; then
+    TOMCAT_VERSION=tomcat9
+elif [ $u1804 -eq 1 ]; then
     TOMCAT_VERSION=tomcat8
 else
     TOMCAT_VERSION=tomcat7

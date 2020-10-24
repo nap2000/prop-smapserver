@@ -284,7 +284,7 @@ public class GetXForm {
 
 		// Add forms to bind elements
 		if (firstForm != null && !modelInstanceOnly) {
-			populateForm(sd, outputDoc, parent, BIND, firstForm);
+			populateForm(sd, outputDoc, parent, BIND, firstForm, false, false);
 		}
 	}
 
@@ -470,7 +470,7 @@ public class GetXForm {
 			if (!isWebForms) {
 				formElement.setAttribute("project", String.valueOf(template.getProject().getName()));
 			}
-			populateForm(sd, outputDoc, formElement, INSTANCE, firstForm); // Process the top form
+			populateForm(sd, outputDoc, formElement, INSTANCE, firstForm, false, false); // Process the top form
 			parent.appendChild(formElement);
 		}
 	}
@@ -487,7 +487,7 @@ public class GetXForm {
 			gSurveyClass = surveyClass;
 		}
 		if (firstForm != null) {
-			populateForm(sd, outputDoc, bodyElement, BODY, firstForm); // Process the top level form
+			populateForm(sd, outputDoc, bodyElement, BODY, firstForm, false, false); // Process the top level form
 		}
 
 		parent.appendChild(bodyElement);
@@ -507,7 +507,7 @@ public class GetXForm {
 	 * 
 	 * @param parentXPath
 	 */
-	public void populateForm(Connection sd, Document outputDoc, Element parentElement, int location, Form f)
+	public void populateForm(Connection sd, Document outputDoc, Element parentElement, int location, Form f, boolean inTemplate, boolean inRealForm)
 			throws Exception {
 
 		Element currentParent = parentElement;
@@ -650,15 +650,19 @@ public class GetXForm {
 					}
 
 					// Add template
-					Element template = outputDoc.createElement(subForm.getName());
-					template.setAttribute("jr:template", ""); // The model requires a local name only
-					populateForm(sd, outputDoc, template, INSTANCE, subForm);
-					currentParent.appendChild(template);
+					if(!inRealForm) {
+						Element template = outputDoc.createElement(subForm.getName());
+						template.setAttribute("jr:template", ""); // The model requires a local name only
+						populateForm(sd, outputDoc, template, INSTANCE, subForm, true, false);
+						currentParent.appendChild(template);
+					}
 					
 					// Add the real form
-					Element form = outputDoc.createElement(subForm.getName());
-					populateForm(sd, outputDoc, form, INSTANCE, subForm);
-					currentParent.appendChild(form);
+					if(!inTemplate) {
+						Element form = outputDoc.createElement(subForm.getName());
+						populateForm(sd, outputDoc, form, INSTANCE, subForm, false, true);
+						currentParent.appendChild(form);
+					}
 
 				} else if (qType.equals("begin group")) {
 
@@ -695,6 +699,16 @@ public class GetXForm {
 					}
 
 					currentParent.appendChild(questionElement);
+					
+					// If this is webforms add a placeholder for dynamic calculations
+					if(isWebForms) {
+						String app = q.getAppearance(false, null);
+						if(app.contains("lookup_choices(")) {
+							questionElement = outputDoc.createElement(q.getName() + "__dynamic"
+									+ (q.getType().equals("select") ? "_mult" : ""));
+							currentParent.appendChild(questionElement);
+						}
+					}
 				}
 
 			} else if (location == BIND) {
@@ -710,7 +724,7 @@ public class GetXForm {
 
 					// Process sub form
 
-					populateForm(sd, outputDoc, currentParent, BIND, subForm);
+					populateForm(sd, outputDoc, currentParent, BIND, subForm, false, false);
 					if (subForm.getRepeats(true, template.getQuestionPaths()) != null) {
 						// Add the calculation for repeat count
 						questionElement = populateBindQuestion(outputDoc, f, q, f.getPath(null), true);
@@ -773,7 +787,7 @@ public class GetXForm {
 					}
 					groupElement.appendChild(repeatElement);
 
-					populateForm(sd, outputDoc, repeatElement, BODY, subForm);
+					populateForm(sd, outputDoc, repeatElement, BODY, subForm, false, false);
 
 				} else if(qType.equals("end group")) { 
 					// Ignore end group
@@ -1003,7 +1017,19 @@ public class GetXForm {
 				if(sv.value != null) {
 					String value = null;
 					if(sv.value.contains("last-saved#")) {
-						value = "instance('__last-saved')" + reference;
+						int idx1 = sv.value.indexOf('#');
+						int idx2 = sv.value.indexOf('}', idx1);
+						if(idx2 > 0) {
+							HashMap<String, String> questionPaths = template.getQuestionPaths();
+							String sourceQuestion = sv.value.substring(idx1 + 1, idx2);
+							String sourcePath = questionPaths.get(sourceQuestion);
+							if(sourcePath != null) {
+								value = "instance('__last-saved')" + sourcePath;
+							} else {
+								log.info("Error: Source question in " + sv.value + " not found");
+								// Ignore error as throwing an exception may stop previously functioning surveys from working
+							}
+						}
 					} else {
 						value = UtilityMethods.convertAllxlsNames(sv.value, false, template.getQuestionPaths(), q.getFormId(), false, q.getName(), false);
 						if (value != null && value.trim().length() > 0) {
@@ -1100,9 +1126,47 @@ public class GetXForm {
 
 		// Add Body Parameters
 		ArrayList<KeyValueSimp> parameters = q.getParameters();
+		String formIdentifier = null;
+		String initial = null;
 		if (parameters != null) {
 			for(KeyValueSimp kv : parameters) {
-				questionElement.setAttribute(kv.k, kv.v);
+				if(!kv.k.equals("initial")) {
+					questionElement.setAttribute(kv.k, kv.v);
+				} else {
+					initial = kv.v;
+				}
+				if(kv.k.equals("form_identifier")) {
+					formIdentifier = kv.v;
+				}
+			}
+			// Process initial data parameter for launching forms
+			if(initial != null && formIdentifier != null) {
+				int launchSid = GeneralUtilityMethods.getSurveyId(sd, formIdentifier);
+				if(launchSid != 0) {	// Check for valid survey to launch
+					SurveyTemplate launchTemplate = new SurveyTemplate(localisation);
+					launchTemplate.readDatabase(launchSid, false);
+					GetXForm launchXForm = new GetXForm(localisation, remoteUser, tz);
+	
+					String model = launchXForm.getInstanceXml(launchSid, formIdentifier, launchTemplate, null, null, 0,
+							false,	// simplify media 
+							false, 0, 
+							"",		// url prefix 
+							null,
+							true);
+					
+					// Populate model with data
+					String [] a = initial.split(",");
+					for(int i = 0; i < a.length; i++) {
+						String item = a[i].trim();
+						String[] b = item.split(":");
+						if(b.length > 1) {
+							String k = b[0].trim();
+							String v = b[1].trim();
+							model = model.replace("<" + k + "/>", "<" + k + ">" + v + "</" + k + ">");
+						}	
+					}
+					questionElement.setAttribute("initial", model);
+				}
 			}
 		}
 
@@ -1180,7 +1244,8 @@ public class GetXForm {
 				cascade = true;
 				Element isElement = outputXML.createElement("itemset");
 				String adjustedNodeset = GeneralUtilityMethods.addNodesetFunctions(nodeset, 
-						GeneralUtilityMethods.getSurveyParameter("randomize", q.getParameters())); 
+						GeneralUtilityMethods.getSurveyParameter("randomize", q.getParameters()),
+						GeneralUtilityMethods.getSurveyParameter("seed", q.getParameters())); 
 				isElement.setAttribute("nodeset", adjustedNodeset);
 
 				Element vElement = outputXML.createElement("value");
@@ -1464,7 +1529,9 @@ public class GetXForm {
 		PreparedStatement pstmt = null;
 		ArrayList<KeyValueSimp> line = null;
 		try {
-			stm.initData(pstmt, "all", null, null, null, null, null, tz, null, null);
+			stm.initData(pstmt, "all", null, null, null, 
+					null,	// expression fragment
+					tz, null, null);
 			line = stm.getLine();
 			while(line != null) {
 				// process line
@@ -1495,7 +1562,8 @@ public class GetXForm {
 			boolean isWebForms, 
 			int taskKey,
 			String urlprefix,
-			Instance initialData) 
+			Instance initialData,
+			boolean createBlank) 
 			throws ParserConfigurationException, ClassNotFoundException, SQLException, TransformerException, ApplicationException {
 
 		this.isWebForms = isWebForms;
@@ -1558,7 +1626,7 @@ public class GetXForm {
 			} else if (key != null && keyval != null) {
 				// Create a blank form containing only the key values
 				hasData = true;
-				populateBlankForm(outputXML, firstForm, sd, template, null, sId, key, keyval, templateName, false);
+				populateBlankForm(outputXML, firstForm, sd, template, null, sId, key, keyval, templateName, false, false);
 			} else if(taskKey > 0) {
 				// Create a form containing only the initial task data
 				hasData = true;
@@ -1568,7 +1636,9 @@ public class GetXForm {
 			} else if(initialData != null) {
 				hasData = true;
 				populateTaskDataForm(outputXML, firstForm, sd, template, null, sId, templateName, initialData, urlprefix, true, isWebForms);
-
+			} else if(createBlank) {
+				hasData = true;
+				populateBlankForm(outputXML, firstForm, sd, template, null, sId, null, null, templateName, false, true);
 			}
 
 			// Write the survey to a string and return it to the calling program
@@ -1760,12 +1830,48 @@ public class GetXForm {
 	 * @param outputDoc
 	 */
 	public void populateBlankForm(Document outputDoc, Form form, Connection sd, SurveyTemplate template,
-			Element parentElement, int sId, String key, String keyval, String survey_ident, boolean isTemplate)
+			Element parentElement, int sId, String key, String keyval, String survey_ident, boolean isTemplate, 
+			boolean addMeta)
 					throws SQLException {
 
 		List<Results> record = new ArrayList<Results>();
 
-		List<Question> questions = form.getQuestions(sd, form.getPath(null));
+		// Get a copy of the array of questions in the form as we don't want to add to them here
+		List<Question> questions = new ArrayList<> (form.getQuestions(sd, form.getPath(null)));
+		if(addMeta) {		// Add meta group
+			Question q = new Question();
+			q.setType("begin group");
+			q.setName("meta");
+			questions.add(q);
+			
+			q = new Question();
+			q.setType("text");
+			q.setName("instanceID");
+			questions.add(q);
+			
+			q = new Question();
+			q.setType("text");
+			q.setName("instanceName");
+			questions.add(q);
+			
+			q = new Question();
+			q.setType("end group");
+			q.setName("meta");
+			questions.add(q);
+			
+			ArrayList<MetaItem> preloads = template.getSurvey().getMeta();
+			if(preloads != null) {
+				for(MetaItem mi : preloads) {
+					if(mi.isPreload) {
+						q = new Question();
+						q.setName(mi.name);
+						q.setType(mi.type);
+						questions.add(q);
+					}
+				}
+			}
+			
+		}
 		for (Question q : questions) {
 
 			String qName = q.getName();
@@ -1808,7 +1914,7 @@ public class GetXForm {
 
 			if (item.subForm != null) {
 				populateBlankForm(outputDoc, item.subForm, sd, template, currentParent, sId, key, keyval, survey_ident,
-						isTemplate);
+						isTemplate, false);
 			} else if (item.begin_group) {
 
 				Element childElement = null;
@@ -1834,12 +1940,7 @@ public class GetXForm {
 		}
 
 		// Append this new form to its parent (if the parent is null append to output
-		// doc)
 		if (parentElement != null) {
-			// Template no longer set in data model
-			//if (isTemplate) {
-			//	currentParent.setAttribute("jr:template", "");
-			//}
 			parentElement.appendChild(currentParent);
 		} else {
 			currentParent.setAttribute("id", survey_ident);
@@ -1849,9 +1950,7 @@ public class GetXForm {
 	}
 	
 	/*
-	 * Create a form poplulated with the initial data supplied in a task
-	 * 
-	 * @param outputDoc
+	 * Create a form populated with the initial data supplied in a task
 	 */
 	public void populateTaskDataForm(Document outputDoc, Form form, Connection sd, SurveyTemplate template,
 				Element parentElement, int sId, String survey_ident, 
@@ -1863,8 +1962,9 @@ public class GetXForm {
 
 		List<Results> record = new ArrayList<Results>();
 
-		List<Question> questions = form.getQuestions(sd, form.getPath(null));
-		if(isTopLevel) {		// Add meta group
+		// Get a copy of the array of questions in the form as we don't want to add to them here
+		List<Question> questions = new ArrayList<> (form.getQuestions(sd, form.getPath(null)));
+		if(isTopLevel) {		// Add meta group and prelaods
 			Question q = new Question();
 			q.setType("begin group");
 			q.setName("meta");
@@ -1884,6 +1984,18 @@ public class GetXForm {
 			q.setType("end group");
 			q.setName("meta");
 			questions.add(q);
+			
+			ArrayList<MetaItem> preloads = template.getSurvey().getMeta();
+			if(preloads != null) {
+				for(MetaItem mi : preloads) {
+					if(mi.isPreload) {
+						q = new Question();
+						q.setName(mi.name);
+						q.setType(mi.type);
+						questions.add(q);
+					}
+				}
+			}
 			
 		}
 		for (Question q : questions) {
@@ -2442,18 +2554,10 @@ public class GetXForm {
 	}
 
 	/*
-	 * Get the question reference This adds the form id to geometry questions since
-	 * these questions do not have unique names and the path is found through f_id +
-	 * qname
+	 * Get the question reference 
 	 */
 	private String getQuestionReference(HashMap<String, String> paths, int fId, String qName) {
-		String key = qName;
-
-		if (key.equals("the_geom")) {
-			key = fId + key;
-		}
-
-		return paths.get(key);
+		return paths.get(qName);
 	}
 
 	/*

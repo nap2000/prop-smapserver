@@ -535,7 +535,7 @@ public class GetHtml {
 						horizontal = true;
 					}
 					
-					if(appItem.startsWith("search(")) {
+					if(appItem.startsWith("search(") || appItem.startsWith("lookup_choices(")) {
 						inSearch = true;
 						brackets = 0;
 					}
@@ -662,7 +662,9 @@ public class GetHtml {
 			if (q.name.equals("instanceName")) {
 				continue;		// Legacy instance name included as a question
 				//calculation = survey.instanceNameDefn;
-			} if (q.type.equals("begin repeat")) {
+			} 
+			
+			if (q.type.equals("begin repeat")) {
 				for (Form subForm : survey.forms) {
 					if (subForm.parentQuestion == q.id) { // continue with next form
 						if(subForm.reference) {
@@ -704,6 +706,35 @@ public class GetHtml {
 				calculationInput.setAttribute("data-type-xml", "string"); // Always use string for calculate
 				calculationLabel.appendChild(calculationInput);
 
+			}
+			
+			/*
+			 * Add an additional calculation for lookup_choices
+			 */
+			if(q.appearance != null && q.appearance.contains("lookup_choices(")) {
+				calculationLabel = outputDoc.createElement("label");
+				calculationLabel.setAttribute("class", "calculation non-select");
+				bodyElement.appendChild(calculationLabel);
+
+				calculationInput = outputDoc.createElement("input");
+				calculationInput.setAttribute("type", "hidden");
+
+				calculationInput.setAttribute("name", paths.get(getRefName(q.name, form)) + "__dynamic"
+						+ (q.type.equals("select") ? "_mult" : ""));
+				String fn = GeneralUtilityMethods.extractFn("lookup_choices", q.appearance);
+				
+				if(fn != null && fn.length() > 1) {
+					// Add additional parameters required for webforms
+					fn = fn.trim();
+					fn = fn.substring(0, fn.length() - 1);
+					fn += ",'" + q.name + "')";
+					fn = GeneralUtilityMethods.escapeSingleQuotesInFn(fn);
+				
+					calculationInput.setAttribute("data-calculate"," " + UtilityMethods.convertAllxlsNames(fn, false, paths, form.id, true, q.name, false) + " ");
+
+					calculationInput.setAttribute("data-type-xml", "string"); // Always use string for calculate
+					calculationLabel.appendChild(calculationInput);
+				}
 			}
 			
 			// Process calculations in repeats
@@ -932,12 +963,21 @@ public class GetHtml {
 		if(q.type.equals("rank")) {
 			optionWrapperElement.setAttribute("class", "option-wrapper widget rank-widget rank-widget--empty");
 			optionWrapperElement.setAttribute("aria-dropeffect", "move");
-		} else {
-			optionWrapperElement.setAttribute("class", "option-wrapper");
+		} else {      
+			optionWrapperElement.setAttribute("class", getDynamicOptionsClass(q));
 		}
 
 		// options
 		addOptions(sd, optionWrapperElement, q, form, tableList);
+	}
+	
+	private String getDynamicOptionsClass(Question q) {
+		StringBuilder cValue = new StringBuilder("option-wrapper");
+		
+		if(q.appearance != null && q.appearance.contains("lookup_choices")) {
+			cValue.append(" dchoice_").append(q.name);
+		}
+		return cValue.toString(); 
 	}
 
 	/*
@@ -1116,7 +1156,6 @@ public class GetHtml {
 			if (!hasNodeset) {
 				labelElement = outputDoc.createElement("label");
 				parent.appendChild(labelElement);
-				labelElement.setAttribute("class", "");
 
 				if (!tableList) {
 					Element inputElement = outputDoc.createElement("input");
@@ -1600,11 +1639,7 @@ public class GetHtml {
 	}
 
 	private String getRefName(String qName, Form form) {
-		if (qName.equals("_the_geom")) {
-			return form.id + "_the_geom";
-		} else {
-			return qName;
-		}
+		return qName;
 	}
 
 	/*
@@ -1748,7 +1783,8 @@ public class GetHtml {
 		String nodeset =  UtilityMethods.getNodeset(true, false, paths, true, q.nodeset, q.appearance, form.id, q.name, 
 				false /*(form.parentform > 0)*/);		// XXXXXX In our version of enketo core multiple relative predicates do not work. use non relative paths. Use relative paths if in a subform
 		String adjustedNodeset = GeneralUtilityMethods.addNodesetFunctions(nodeset, 
-				GeneralUtilityMethods.getSurveyParameter("randomize", q.paramArray)); 
+				GeneralUtilityMethods.getSurveyParameter("randomize", q.paramArray),
+				GeneralUtilityMethods.getSurveyParameter("seed", q.paramArray)); 
 		return adjustedNodeset;
 	}
 
@@ -1759,7 +1795,7 @@ public class GetHtml {
 
 		if (q.nodeset == null || q.nodeset.trim().length() == 0) {
 			return false;
-		} else if(q.type.equals("rank")) {
+		} else if(q.type.equals("rank") || (q.appearance != null && q.appearance.contains("lookup_choices"))) {  // lookup choices is vanilla select in webforms
 			return false;
 		} else {
 			return true;

@@ -265,14 +265,19 @@ define([
 			h[++idx] = localise.set['ed_aq'];
 			h[++idx] = '">';
 		}
-		h[++idx] = '<button tabindex="-1" id="addnew_';
+		h[++idx] = '<button id="addnew_';
 		h[++idx] = globals.gNewQuestionButtonIndex++;
 		h[++idx] = '" type="button" class="add_question btn dropon ';
 		h[++idx] = addButtonClass;
 		if(globals.gNewQuestionButtonIndex == 1) { // First button in the form
 			h[++idx] = ' first_element ';
-		}	
-		h[++idx] = '" data-locn="';
+		}
+		if(!(topLevelForm && locn === "after")) {
+			h[++idx] = '" tabindex="-1"';
+		} else {
+			h[++idx] = '"';
+		}
+		h[++idx] = ' data-locn="';
 		h[++idx] = locn;
 		h[++idx] = '" data-findex="';
 		h[++idx] = formIndex;
@@ -482,7 +487,7 @@ define([
 			     * Add the text area for the required response text
 			     */
 			    h[++idx] = '<div class="col-sm-6">';
-			    h[++idx] = '<textarea class="labelProp has_tt" title="';
+			    h[++idx] = '<textarea class="labelProp has_tt" tabindex="0" title="';
 			    h[++idx] = localise.set['ed_r_msg'];
 				h[++idx] = '" data-prop="required_msg">';	
 				h[++idx] = question.labels[globals.gLanguage].required_msg;
@@ -633,7 +638,7 @@ define([
 			h[++idx] = '</div>';		// End of row
 
 		} else {
-			h[++idx] = '<textarea class="labelProp has_tt';
+			h[++idx] = '<textarea tabindex="0" class="labelProp has_tt';
 			if((question.type === 'calculate' || question.type === 'server_calculate') && selProperty !== "appearance" && selProperty !== "parameters" && selProperty !== "display_name") {
 				h[++idx] = ' calculate';
 			}
