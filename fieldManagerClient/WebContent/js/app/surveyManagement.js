@@ -380,7 +380,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
             }
             if(redirect) {
                 if(redirectEnum) {
-                    window.location.href = "/webForm.html";
+                    window.location.href = "/myWork";
                 } else if(redirectTasks) {
                     window.location.href = "/tasks/taskManagement.html";
                 } else if(redirectManage) {
