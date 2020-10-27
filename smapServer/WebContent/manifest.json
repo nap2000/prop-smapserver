@@ -4,14 +4,14 @@
   "description": "Complete forms using a browser interface",
   "icons": [
     {
-      "src": "images/blue-marker.png",
-      "sizes": "32x32",
+      "src": "images/pwa.png",
+      "sizes": "144x144",
       "type": "image/png"
     }
   ],
-  "start_url": "./meWork.html",
+  "start_url": "./myWork",
   "display": "standalone",
   "orientation": "portrait",
-  "theme_color": "#29BDBB",
-  "background_color": "#29BDBB"
+  "theme_color": "#1c5705",
+  "background_color": "#1c5705"
 }
