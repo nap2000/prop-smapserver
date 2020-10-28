@@ -1,5 +1,5 @@
 
-var CACHE_NAME = 'v4';
+var CACHE_NAME = 'v5';
 var ASSIGNMENTS = '/surveyKPI/myassignments';
 var WEBFORM = "/webForm";
 
@@ -9,19 +9,44 @@ self.addEventListener('install', function(e) {
 	e.waitUntil(
 		caches.open(CACHE_NAME).then(function(cache) {
 			return cache.addAll([
-				'./index.html',
-				'./myWork/index.html',
-				'./css/bootstrap.v4.5.min.css',
-				'./font-awesome/css/font-awesome.css',
-				'./js/libs/modernizr.js',
-				'./js/libs/jquery-2.1.1.js',
-				'./js/libs/bootstrap.bundle.v4.5.min.js',
-				'./js/app/theme2.js',
-				'./js/app/custom.js'
+				'/',
+				'/myWork/index.html',
+				'/css/bootstrap.v4.5.min.css',
+				'/build/css/theme-smap.print.css',
+				'/build/css/webform.print.css',
+				'/build/css/webform.css',
+				'/font-awesome/css/font-awesome.css',
+				'/fonts/OpenSans-Regular-webfont.woff',
+				'/fonts/OpenSans-Bold-webfont.woff',
+				'/fonts/fontawesome-webfont.woff',
+				'/js/libs/modernizr.js',
+				'/js/libs/jquery-2.1.1.js',
+				'/js/libs/bootstrap.bundle.v4.5.min.js',
+				'/js/app/theme2.js',
+				'/js/app/custom.js',
+				'/js/app/idbconfig.js',
+				'/images/enketo_bare_150x56.png',
+				'/images/smap_logo.png'
 			])
 		})
 	);
 });
+
+self.addEventListener('activate', function (event) {
+	var cacheKeeplist = [CACHE_NAME];
+
+	event.waitUntil(
+		caches.keys().then(function (keyList) {
+			return Promise.all(keyList.map(function (key) {
+				if (cacheKeeplist.indexOf(key) === -1) {
+					return caches.delete(key);
+				}
+			}));
+		})
+	);
+
+});
+
 
 // when the browser fetches a URL…
 self.addEventListener('fetch', function(event) {
@@ -53,27 +78,16 @@ self.addEventListener('fetch', function(event) {
 		);
 
 	} else {
-		// Always fethc
-		event.respondWith(
-			fetch(event.request)
-		);
+		// Try cache then network - do not cache missing files
+		if(typeof event.request !== "undefined") {
+			event.respondWith(
+				caches
+					.match(event.request) // check if the request has already been cached
+					.then(cached => cached || fetch(event.request)) // otherwise request network
+			);
+		}
 	}
 
-
-});
-
-self.addEventListener('activate', function (event) {
-	var cacheKeeplist = [CACHE_NAME];
-
-	event.waitUntil(
-		caches.keys().then(function (keyList) {
-			return Promise.all(keyList.map(function (key) {
-				if (cacheKeeplist.indexOf(key) === -1) {
-					return caches.delete(key);
-				}
-			}));
-		})
-	);
 
 });
 
@@ -133,6 +147,21 @@ function precacheforms(response) {
 	if(response && response.forms) {
 		for(var i = 0; i < response.forms.length; i++) {
 			console.log(response.forms[i].ident);
+			let url = '/myWork/webForm/' + response.forms[i].ident;
+			fetch(url).then(function(response) {
+				if (!response.ok || response.type === "error" || response.type === "opaque") {
+					// An HTTP error response code (40x, 50x) won't cause the fetch() promise to reject.
+					// We need to explicitly throw an exception to trigger the catch() clause.
+					throw Error('response status ' + response.status);
+				}
+
+				return caches
+					.open(CACHE_NAME)
+					.then(cache => {
+						cache.put(url, response.clone());
+						return response;
+					});
+			});
 		}
 	}
 }
