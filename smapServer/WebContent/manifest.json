@@ -7,12 +7,22 @@
       "src": "images/pwa.png",
       "sizes": "144x144",
       "type": "image/png"
+    },
+    {
+      "src": "images/pwa.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/pwa512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ],
-  "start_url": "./myWork",
+  "start_url": "/myWork/index.html",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#2C3D29",
-  "background_color": "#2C3D29"
+  "background_color": "#CCC"
 }
