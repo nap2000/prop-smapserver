@@ -10,8 +10,9 @@
     }
   ],
   "start_url": "./myWork",
+  "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "theme_color": "#1c5705",
-  "background_color": "#1c5705"
+  "theme_color": "#2C3D29",
+  "background_color": "#2C3D29"
 }

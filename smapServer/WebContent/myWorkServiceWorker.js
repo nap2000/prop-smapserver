@@ -10,12 +10,13 @@ self.addEventListener('install', function(e) {
 		caches.open(CACHE_NAME).then(function(cache) {
 			return cache.addAll([
 				'./index.html',
+				'./myWork/index.html',
 				'./css/bootstrap.v4.5.min.css',
-				'./css/font-awesome.css',
+				'./font-awesome/css/font-awesome.css',
 				'./js/libs/modernizr.js',
-				'./js/app/theme2.js',
 				'./js/libs/jquery-2.1.1.js',
 				'./js/libs/bootstrap.bundle.v4.5.min.js',
+				'./js/app/theme2.js',
 				'./js/app/custom.js'
 			])
 		})
