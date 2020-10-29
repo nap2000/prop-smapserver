@@ -1,7 +1,10 @@
 
-var CACHE_NAME = 'v5';
-var ASSIGNMENTS = '/surveyKPI/myassignments';
-var WEBFORM = "/webForm";
+let CACHE_NAME = 'v7';
+let ASSIGNMENTS = '/surveyKPI/myassignments';
+let WEBFORM = "/webForm";
+let USER = "/user";
+let PROJECT_LIST = "/myProjectList";
+let CURRENT_PROJECT = "/currentproject"
 
 // During the installation phase, you'll usually want to cache static assets.
 self.addEventListener('install', function(e) {
@@ -12,6 +15,7 @@ self.addEventListener('install', function(e) {
 				'/',
 				'/myWork/index.html',
 				'/css/bootstrap.v4.5.min.css',
+				'/build/css/theme-smap.css',
 				'/build/css/theme-smap.print.css',
 				'/build/css/webform.print.css',
 				'/build/css/webform.css',
@@ -19,6 +23,7 @@ self.addEventListener('install', function(e) {
 				'/fonts/OpenSans-Regular-webfont.woff',
 				'/fonts/OpenSans-Bold-webfont.woff',
 				'/fonts/fontawesome-webfont.woff',
+				'/build/js/webform-bundle.min.js',
 				'/js/libs/modernizr.js',
 				'/js/libs/jquery-2.1.1.js',
 				'/js/libs/bootstrap.bundle.v4.5.min.js',
@@ -26,7 +31,10 @@ self.addEventListener('install', function(e) {
 				'/js/app/custom.js',
 				'/js/app/idbconfig.js',
 				'/images/enketo_bare_150x56.png',
-				'/images/smap_logo.png'
+				'/images/smap_logo.png',
+				'/images/ajax-loader.gif',
+				'/favicon.ico',
+				'/surveyKPI/utility/timezones'
 			])
 		})
 	);
@@ -56,8 +64,12 @@ self.addEventListener('fetch', function(event) {
 		event.respondWith(caches.match(ASSIGNMENTS));
 		event.waitUntil(update_assignments(event.request).then(refresh).then(precacheforms));
 
-	} else if (event.request.url.includes(WEBFORM)) {
-		// response to a webform request.  Network then cache strategy
+	} else if (event.request.url.includes(WEBFORM)
+			|| event.request.url.includes(USER)
+			|| event.request.url.includes(CURRENT_PROJECT)
+			|| event.request.url.includes(PROJECT_LIST)) {
+
+		// response to a webform/user request.  Network then cache strategy
 		event.respondWith(
 			fetch(event.request).then(function(response) {
 				if (!response.ok || response.type === "error" || response.type === "opaque") {
@@ -69,20 +81,20 @@ self.addEventListener('fetch', function(event) {
 				return caches
 					.open(CACHE_NAME)
 					.then(cache => {
-						cache.put(event.request, response.clone());
+						cache.put(getCacheUrl(event.request), response.clone());
 						return response;
 					});
 			}).catch( function () {
-				return caches.match(event.request);
+				return caches.match(getCacheUrl(event.request));
 			})
 		);
 
 	} else {
-		// Try cache then network - do not cache missing files
+		// Try cache then network - do not cache missing files as there will be a lot of them
 		if(typeof event.request !== "undefined") {
 			event.respondWith(
 				caches
-					.match(event.request) // check if the request has already been cached
+					.match(getCacheUrl(event.request)) // check if the request has already been cached
 					.then(cached => cached || fetch(event.request)) // otherwise request network
 			);
 		}
@@ -91,41 +103,45 @@ self.addEventListener('fetch', function(event) {
 
 });
 
-function cache(request, response) {
+function cache(url, response) {
 	if (response.type === "error" || response.type === "opaque") {
 		return Promise.resolve(); // do not put in cache network errors
 	}
 
 	return caches
 		.open(CACHE_NAME)
-		.then(cache => cache.put(request, response.clone()));
+		.then(cache => cache.put(url, response.clone()));
 }
 
 function update(request) {
 	return fetch(request.url).then(
 		response =>
-			cache(request, response) // we can put response in cache
+			cache(getCacheUrl(request), response) // we can put response in cache
 				.then(() => response) // resolve promise with the Response object
 	);
 }
 
 function refresh(response) {
-	return response
-		.json() // read and parse JSON response
-		.then(jsonResponse => {
-			self.clients.matchAll().then(clients => {
-				clients.forEach(client => {
-					// report and send new data to client
-					client.postMessage(
-						JSON.stringify({
-							type: response.url,
-							data: jsonResponse
-						})
-					);
+	if (response.ok) {
+		return response
+			.json() // read and parse JSON response
+			.then(jsonResponse => {
+				self.clients.matchAll().then(clients => {
+					clients.forEach(client => {
+						// report and send new data to client
+						client.postMessage(
+							JSON.stringify({
+								type: response.url,
+								data: jsonResponse
+							})
+						);
+					});
 				});
+				return jsonResponse; // resolve promise with new data
 			});
-			return jsonResponse; // resolve promise with new data
-		});
+	} else {
+		return response;
+	}
 }
 
 
@@ -143,10 +159,9 @@ function update_assignments(request) {
 }
 
 function precacheforms(response) {
-	console.log("-------" + JSON.stringify(response));
+
 	if(response && response.forms) {
-		for(var i = 0; i < response.forms.length; i++) {
-			console.log(response.forms[i].ident);
+		for(let i = 0; i < response.forms.length; i++) {
 			let url = '/myWork/webForm/' + response.forms[i].ident;
 			fetch(url).then(function(response) {
 				if (!response.ok || response.type === "error" || response.type === "opaque") {
@@ -164,4 +179,16 @@ function precacheforms(response) {
 			});
 		}
 	}
+}
+
+/*
+ * Remove cache buster from URLs that can be cached
+ */
+function getCacheUrl(request) {
+	let url = request.url;
+	if(url.includes(USER) || url.includes(PROJECT_LIST)) {
+		let parts = url.split('?');
+		url = parts[0];
+	}
+	return url;
 }
