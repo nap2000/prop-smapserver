@@ -297,7 +297,7 @@ $(document).ready(function() {
 			ident = selection;
 		}
 
-		if(!gSurveyNames) {
+		if(typeof gSurveyNames !== "undefined") {
 			showSurveySummary(gSurveyNames);
 		} else {
 			addHourglass();
@@ -429,7 +429,7 @@ $(document).ready(function() {
 
 		// validate
 		var displayName = $('#set_survey_name').val();
-		if(!displayName || displayName.trim().length == 0) {
+		if(!displayName) {
 			alert(localise.set["ed_er"]);
             return false;
 		}
