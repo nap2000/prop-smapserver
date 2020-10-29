@@ -458,6 +458,11 @@ require([
 				return -1;
 			}
 
+			role.users = [];
+			$('#p_user_roles').find('input:checked').each(function(index) {
+				role.users[index] = $(this).val();
+			});
+
 			roleList[0] = role;
 			var roleString = JSON.stringify(roleList);
 
@@ -470,6 +475,7 @@ require([
 				data: { roles: roleString },
 				success: function(data, status) {
 					removeHourglass();
+					getUsers();
 					getRoles(updateRoleTable);
 					$('#create_role_popup').modal("hide");
 				},
@@ -1516,13 +1522,12 @@ require([
 		}
 
 		// Add users
-		filter_project = $('#project_name').val();
-		h = [];
-		idx = -1;
-		for (i = 0; i < gUsers.length; i++) {
-			user = gUsers[i];
+		let h = [];
+		let idx = -1;
+		for (let i = 0; i < gUsers.length; i++) {
+			let user = gUsers[i];
 
-			yesProject = false;
+			let yesProject = false;
 			if(globals.gProjectList.length > 0 && projectIndex >= 0 && projectIndex < globals.gProjectList.length) {
 				yesProject = hasId(user.projects, globals.gProjectList[projectIndex].id);
 			}
@@ -1556,6 +1561,7 @@ require([
 	 */
 	function openRoleDialog(existing, roleIndex) {
 
+		var $p_user_roles = $('#p_user_roles');
 		gCurrentRoleIndex = roleIndex;
 
 		$('#role_create_form')[0].reset();
@@ -1563,6 +1569,38 @@ require([
 			$('#ur_name').val(globals.gRoleList[roleIndex].name);
 			$('#ur_desc').val(globals.gRoleList[roleIndex].desc);
 		}
+
+		// Add users
+		let h = [];
+		let idx = -1;
+		for (let i = 0; i < gUsers.length; i++) {
+
+			let user = gUsers[i];
+			let yesRole = false;
+			if(globals.gRoleList.length > 0 && roleIndex >= 0 && roleIndex < globals.gRoleList.length) {
+				yesRole = hasId(user.roles, globals.gRoleList[roleIndex].id);
+			}
+
+
+			h[++idx] = '<div class="custom-control custom-checkbox ml-2">';
+			h[++idx] = '<input type="checkbox" class="custom-control-input" id="';
+			h[++idx] = 'user_role_details_cb' + i;
+			h[++idx] = '" name="';
+			h[++idx] = 'user_role_details_cb';
+			h[++idx] = '" value="';
+			h[++idx] = user.id + '"';
+			if(yesRole) {
+				h[++idx] = ' checked="checked"';
+			}
+			h[++idx] = '/>';
+			h[++idx] = '<label class="custom-control-label" for="';
+			h[++idx] = 'user_role_details_cb' + i;
+			h[++idx] = '">';
+			h[++idx] = user.name;
+			h[++idx] = '</label></div>';
+		}
+
+		$p_user_roles.empty().append(h.join(''));
 
 		$('#create_role_popup').modal("show");
 	}
