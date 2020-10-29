@@ -61,6 +61,8 @@ then
 	rm -rf /var/www/smap/js
 	rm -rf /var/www/smap/css
 	rm -rf /var/www/smap/*.html
+	rm -rf /var/www/smap/*.js
+        rm -rf /var/www/smap/*.json
 	tar -xzf $deploy_from/smapServer.tgz -C /var/www/smap
 fi
 
