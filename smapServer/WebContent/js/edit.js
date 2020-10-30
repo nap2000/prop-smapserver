@@ -1291,14 +1291,6 @@ function surveyDetailsDone() {
 		globals.gShowingChoices = false;
 		changeset.updateViewControls();
 
-		/*
-		globals.gSelChoiceProperty = globals.gSelProperty;	// Restore selProperty and selLabel for questions
-		globals.gSelProperty = globals.gSelQuestionProperty;
-		globals.gSelChoiceLabel = globals.gSelLabel;
-		globals.gSelLabel = globals.gSelQuestionLabel;
-		$('#propSelected').html(globals.gSelLabel);
-		*/
-
 		$('.editorContent').toggle();
 		$('.notoptionslist').show();
 	}
