@@ -896,7 +896,7 @@ $(document).ready(function() {
 		saveCurrentProject($('#set_project_name option:selected').val(), globals.gCurrentSurvey);	// Save the current project id
 		globals.model.settingsChange();
 	});
-	$('#set_default_language, #set_style').change(function() {
+	$('#set_default_language, #set_style, #default_logo').change(function() {
 		globals.model.settingsChange();
 	});
 	$('#task_file').change(function() {
@@ -1305,7 +1305,7 @@ function surveyDetailsDone() {
 /*
  * Refresh any pick lists that use media
  */
-function refreshAllMediaPickLists(data) {q
+function refreshAllMediaPickLists(data) {
 	let h = [],
 		idx = -1,
 		i;
@@ -2972,6 +2972,7 @@ function updateSettingsData() {
 	$('#data_survey').prop('checked', globals.model.survey.dataSurvey);
 	$('#oversight_survey').prop('checked', globals.model.survey.oversightSurvey);
     $('#exclude_empty').prop('checked', globals.model.survey.exclude_empty);
+	$('#default_logo').val(globals.model.survey.default_logo);
 }
 
 
