@@ -1489,11 +1489,16 @@ function addVectorMapIcon() {
 	return h.join('');
 }
 
-function getFilesFromServer(url, sId, callback) {
+function getFilesFromServer(url, sId, callback, getall) {
 
+	let hasParams = false;
 	if(sId) {
 		gSId = sId;
 		url += '?survey_id=' + sId;
+		hasParams = true;
+	}
+	if(getall) {
+		url += (hasParams ? '&' : '?') + 'getall=true';
 	}
 
 	url += addCacheBuster(url);

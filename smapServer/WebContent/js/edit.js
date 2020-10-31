@@ -176,7 +176,7 @@ $(document).ready(function() {
 	// Get the user details
 	globals.gIsAdministrator = false;
 	getLoggedInUser(getSurveyList, false, true, undefined, false, dont_get_current_survey);
-	getFilesFromServer(gBaseUrl, undefined, refreshMediaView);		// Get the organisational level media files
+	getFilesFromServer(gBaseUrl, 0, refreshMediaView, false);		// Get the organisational level media files
 
 	/*
 	 * Switch between choices list view and question view
@@ -1269,7 +1269,8 @@ function surveyDetailsDone() {
 	// Get survey level files
 	if(globals.gCurrentSurvey) {
 		$('#surveyLevelTab').removeClass("disabled");
-		getFilesFromServer(gBaseUrl, globals.gCurrentSurvey, refreshMediaView);
+		getFilesFromServer(gBaseUrl, globals.gCurrentSurvey, refreshMediaView, false);
+		getFilesFromServer(gBaseUrl, globals.gCurrentSurvey, refreshAllMediaPickLists, true);   // Get all media
 	}
 
 	$('#openFormModal').modal("hide");		// Hide the open form modal if its open
@@ -1299,6 +1300,31 @@ function surveyDetailsDone() {
 	// Set up link to test file
 	$('.m_test_survey').attr("href", "/webForm/" + globals.model.survey.ident);
 
+}
+
+/*
+ * Refresh any pick lists that use media
+ */
+function refreshAllMediaPickLists(data) {q
+	let h = [],
+		idx = -1,
+		i;
+
+	h[++idx] = '<option value="none">';
+	h[++idx] = localise.set["c_none"];
+	h[++idx] = '</option>';
+	if(data && data.files && data.files.length > 0) {
+		for (i = 0; i < data.files.length; i++) {
+			if(data.files[i].type === 'image') {
+				h[++idx] = '<option value="';
+				h[++idx] = data.files[i].name;
+				h[++idx] = '">';
+				h[++idx] = data.files[i].name;
+				h[++idx] = '</option>';
+			}
+		}
+	}
+	$('#default_logo').empty().html(h.join(''));
 }
 
 /*
