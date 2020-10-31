@@ -1150,7 +1150,8 @@ define(function () {
 	            $('#oversight_survey').prop('checked'),
                 $('#exclude_empty').prop('checked'),
                 $('#set_hrk').val(),
-                $('#set_key_policy').val()
+                $('#set_key_policy').val(),
+	            $('#default_logo').val()
             );
 
             // Update the model to reflect the current values
@@ -1170,6 +1171,7 @@ define(function () {
                 this.survey.exclude_empty = current.exclude_empty;
                 this.survey.hrk = current.hrk;
                 this.survey.key_policy = current.key_policy;
+	            this.survey.default_logo = current.default_logo;
             }
 
             return current;
@@ -1192,7 +1194,8 @@ define(function () {
 	                this.survey.oversightSurvey,
                     this.survey.exclude_empty,
                     this.survey.hrk,
-                    this.survey.key_policy
+                    this.survey.key_policy,
+	                this.survey.default_logo
                 ));
 
             this.forceSettingsChange = false;
@@ -1211,7 +1214,8 @@ define(function () {
                                               oversightSurvey,
                                               exclude_empty,
                                               hrk,
-                                              key_policy) {
+                                              key_policy,
+                                              default_logo) {
 
             var projId;
             if (typeof p_id === "string") {
@@ -1234,7 +1238,8 @@ define(function () {
 	            oversightSurvey: oversightSurvey,
                 exclude_empty: exclude_empty,
                 hrk: hrk,
-                key_policy: key_policy
+                key_policy: key_policy,
+	            default_logo: default_logo
             }
         }
 
