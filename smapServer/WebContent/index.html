@@ -48,7 +48,7 @@
 
 			<li class="nav-item restrict_role admin_role analyst_role"><a class="lang nav-link" data-lang="c_edit" href="/edit.html" title="Edit">Edit</a></li>
 			<li class="nav-item restrict_role admin_role analyst_role"><a class="lang nav-link" data-lang="m_admin" href="/fieldManager/surveyManagement.html" title="Admin">Admin</a></li>
-			<li class="nav-item"><a class="lang nav-link" data-lang="m_web_forms" href="/myWork/index.html">wf</a></li>
+			<li class="nav-item"><a class="lang nav-link" data-lang="m_web_forms" href="/myWork/index.html">Web Forms</a></li>
 			<li class="nav-item restrict_role admin_role analyst_role data_role"><a class="lang nav-link" data-lang="m_analysis" href="/fieldAnalysis/index.html">Analysis</a></li>
 			<li class="nav-item restrict_role manage_role admin_role analyst_role"><a class="lang nav-link" data-lang="m_console" href="/tasks/managed_forms.html"></a></li>
 			<li class="nav-item restrict_role admin_role analyst_role manage_role task_role"><a href="/tasks/taskManagement.html" class="nav-link"><span class="nav-label lang" data-lang="m_assign">assign</span></a></li>
@@ -124,9 +124,9 @@
 </body>
 <script>
 	try {
-		var mainLogo = localStorage.getItem("main_logo");
-		if (mainLogo) {
-			var img = document.getElementById('main_logo');
+		let mainLogo = localStorage.getItem("main_logo");
+		if (typeof mainLogo !== 'undefined' && mainLogo !== "undefined") {
+			let img = document.getElementById('main_logo');
 			console.log("Logo: " + mainLogo);
 			img.setAttribute("src", mainLogo);
 		}
