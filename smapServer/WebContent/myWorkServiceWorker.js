@@ -1,10 +1,10 @@
 
-let CACHE_NAME = 'v7';
+let CACHE_NAME = 'v13';
 let ASSIGNMENTS = '/surveyKPI/myassignments';
 let WEBFORM = "/webForm";
 let USER = "/user";
 let PROJECT_LIST = "/myProjectList";
-let CURRENT_PROJECT = "/currentproject"
+let CURRENT_PROJECT = "/currentproject";
 
 // During the installation phase, you'll usually want to cache static assets.
 self.addEventListener('install', function(e) {
@@ -23,13 +23,18 @@ self.addEventListener('install', function(e) {
 				'/fonts/OpenSans-Regular-webfont.woff',
 				'/fonts/OpenSans-Bold-webfont.woff',
 				'/fonts/fontawesome-webfont.woff',
+				'/font-awesome/webfonts/fa-solid-900.woff',
+				'/font-awesome/webfonts/fa-solid-900.woff2',
+				'/font-awesome/webfonts/fa-solid-900.ttf',
 				'/build/js/webform-bundle.min.js',
 				'/js/libs/modernizr.js',
+				'/js/libs/require.js',
 				'/js/libs/jquery-2.1.1.js',
 				'/js/libs/bootstrap.bundle.v4.5.min.js',
 				'/js/app/theme2.js',
 				'/js/app/custom.js',
 				'/js/app/idbconfig.js',
+				'/myWork/js/myWork.js',
 				'/images/enketo_bare_150x56.png',
 				'/images/smap_logo.png',
 				'/images/ajax-loader.gif',
