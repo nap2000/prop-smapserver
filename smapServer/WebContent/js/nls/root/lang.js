@@ -363,7 +363,7 @@ define({
     "ft_xls_orig": "Original file",
     "ft_xml": "XML Form",
     "ft_codebook": "Codebook",
-    "ft_pdf": "PDF Template",
+    "ft_pdf": "Default Report Template",
     "ft_spss": "SPS File (SPSS)",
 
     // Template Management
@@ -975,6 +975,7 @@ define({
     "ed_ow": "Overwrite existing translations",
     "ed_fe": "Filter Expression",
     "ed_e": "Expression",
+    "ed_drl": "Default report logo",
 
     // Managed Forms
     "mf_id": "Include Deleted",

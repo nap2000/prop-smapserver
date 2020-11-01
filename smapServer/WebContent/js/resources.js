@@ -68,7 +68,7 @@ $(document).ready(function() {
 	globals.gCurrentSurvey = undefined;
 	getLoggedInUser(undefined, false, false, undefined, false, true);
 	
-	getFilesFromServer('/surveyKPI/upload/media', undefined, refreshMediaViewManage);		// Get files available to the entire organisation
+	getFilesFromServer('/surveyKPI/upload/media', 0, refreshMediaViewManage, false);		// Get files available to the entire organisation
 	
 	// Set up the tabs
 	getLocations(loadedLocationData);
