@@ -321,3 +321,6 @@ update organisation set ft_enable_geofence = true where ft_send_location is null
 -- Version 20.09
 alter table dashboard_settings add column ds_inc_ro boolean default false;
 alter table dashboard_settings add column ds_geom_questions text;
+
+-- version 20.10
+alter table survey add column default_logo text;
