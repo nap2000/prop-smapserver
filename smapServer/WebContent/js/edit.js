@@ -176,7 +176,7 @@ $(document).ready(function() {
 	// Get the user details
 	globals.gIsAdministrator = false;
 	getLoggedInUser(getSurveyList, false, true, undefined, false, dont_get_current_survey);
-	getFilesFromServer(gBaseUrl, undefined, refreshMediaView);		// Get the organisational level media files
+	getFilesFromServer(gBaseUrl, 0, refreshMediaView, false);		// Get the organisational level media files
 
 	/*
 	 * Switch between choices list view and question view
@@ -297,7 +297,7 @@ $(document).ready(function() {
 			ident = selection;
 		}
 
-		if(!gSurveyNames) {
+		if(typeof gSurveyNames !== "undefined") {
 			showSurveySummary(gSurveyNames);
 		} else {
 			addHourglass();
@@ -429,7 +429,7 @@ $(document).ready(function() {
 
 		// validate
 		var displayName = $('#set_survey_name').val();
-		if(!displayName || displayName.trim().length == 0) {
+		if(!displayName) {
 			alert(localise.set["ed_er"]);
             return false;
 		}
@@ -896,7 +896,7 @@ $(document).ready(function() {
 		saveCurrentProject($('#set_project_name option:selected').val(), globals.gCurrentSurvey);	// Save the current project id
 		globals.model.settingsChange();
 	});
-	$('#set_default_language, #set_style').change(function() {
+	$('#set_default_language, #set_style, #default_logo').change(function() {
 		globals.model.settingsChange();
 	});
 	$('#task_file').change(function() {
@@ -1269,7 +1269,8 @@ function surveyDetailsDone() {
 	// Get survey level files
 	if(globals.gCurrentSurvey) {
 		$('#surveyLevelTab').removeClass("disabled");
-		getFilesFromServer(gBaseUrl, globals.gCurrentSurvey, refreshMediaView);
+		getFilesFromServer(gBaseUrl, globals.gCurrentSurvey, refreshMediaView, false);
+		getFilesFromServer(gBaseUrl, globals.gCurrentSurvey, refreshAllMediaPickLists, true);   // Get all media
 	}
 
 	$('#openFormModal').modal("hide");		// Hide the open form modal if its open
@@ -1291,14 +1292,6 @@ function surveyDetailsDone() {
 		globals.gShowingChoices = false;
 		changeset.updateViewControls();
 
-		/*
-		globals.gSelChoiceProperty = globals.gSelProperty;	// Restore selProperty and selLabel for questions
-		globals.gSelProperty = globals.gSelQuestionProperty;
-		globals.gSelChoiceLabel = globals.gSelLabel;
-		globals.gSelLabel = globals.gSelQuestionLabel;
-		$('#propSelected').html(globals.gSelLabel);
-		*/
-
 		$('.editorContent').toggle();
 		$('.notoptionslist').show();
 	}
@@ -1307,6 +1300,31 @@ function surveyDetailsDone() {
 	// Set up link to test file
 	$('.m_test_survey').attr("href", "/webForm/" + globals.model.survey.ident);
 
+}
+
+/*
+ * Refresh any pick lists that use media
+ */
+function refreshAllMediaPickLists(data) {
+	let h = [],
+		idx = -1,
+		i;
+
+	h[++idx] = '<option value="none">';
+	h[++idx] = localise.set["c_none"];
+	h[++idx] = '</option>';
+	if(data && data.files && data.files.length > 0) {
+		for (i = 0; i < data.files.length; i++) {
+			if(data.files[i].type === 'image') {
+				h[++idx] = '<option value="';
+				h[++idx] = data.files[i].name;
+				h[++idx] = '">';
+				h[++idx] = data.files[i].name;
+				h[++idx] = '</option>';
+			}
+		}
+	}
+	$('#default_logo').empty().html(h.join(''));
 }
 
 /*
@@ -2954,6 +2972,7 @@ function updateSettingsData() {
 	$('#data_survey').prop('checked', globals.model.survey.dataSurvey);
 	$('#oversight_survey').prop('checked', globals.model.survey.oversightSurvey);
     $('#exclude_empty').prop('checked', globals.model.survey.exclude_empty);
+	$('#default_logo').val(globals.model.survey.default_logo);
 }
 
 
