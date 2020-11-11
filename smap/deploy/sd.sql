@@ -324,3 +324,6 @@ alter table dashboard_settings add column ds_geom_questions text;
 
 -- version 20.10
 alter table survey add column default_logo text;
+CREATE INDEX task_task_group ON tasks(tg_id);
+CREATE INDEX assignments_status ON assignments(status);
+CREATE INDEX form_s_id ON form(s_id);
