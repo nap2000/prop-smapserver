@@ -507,6 +507,7 @@ require([
                 data: {
                     updates: saveString,
                     instanceid: gTasks.gSelectedRecord.instanceid,
+                    prikey: gTasks.gSelectedRecord.prikey,
                     bulkInstances: biString,
                     groupForm: globals.gSubForms[globals.gCurrentSurvey]
                 },
