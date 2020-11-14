@@ -327,3 +327,6 @@ alter table survey add column default_logo text;
 CREATE INDEX task_task_group ON tasks(tg_id);
 CREATE INDEX assignments_status ON assignments(status);
 CREATE INDEX form_s_id ON form(s_id);
+
+-- version 20.11
+alter table question add column flash integer;
