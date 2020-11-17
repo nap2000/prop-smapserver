@@ -854,7 +854,7 @@ define([
             }
 
             // Get the choice values from the choices which have the question name in them
-            var choiceLists = gTasks.cache.surveyConfig[globals.gViewId].choiceLists;
+            var choiceLists = gTasks.cache.currentData.schema.choiceLists;
             for(i = 0; i < choiceLists.length; i++) {
                 if(choiceLists[i].l_id == selM.l_id) {
                     choiceValues = choiceLists[i].choices;
@@ -1437,7 +1437,7 @@ define([
          * convert a choice name into a choice label
          */
         function lookupChoiceLabel(l_id, name) {
-            var choiceLists = gTasks.cache.surveyConfig[globals.gViewId].choiceLists,
+            var choiceLists = gTasks.cache.currentData.schema.choiceLists,
                 cl,
                 i, j;
 
