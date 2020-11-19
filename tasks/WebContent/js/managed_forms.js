@@ -2945,7 +2945,7 @@ require([
     }
 
 
-    function getData(sId, groupSurvey, subForm, callback, clearCache) {
+    function getData(sId, oversightSurvey, subForm, callback, clearCache) {
 
     	var filter;
 
@@ -2953,8 +2953,8 @@ require([
 	    url += sId;
 	    url += "?mgmt=true";
 
-	    if (groupSurvey) {
-		    url += "&groupSurvey=" + groupSurvey;
+	    if (oversightSurvey) {
+		    url += "&oversightSurvey=" + oversightSurvey;
 	    }
 
 	    if(subForm) {
