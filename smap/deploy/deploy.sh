@@ -114,18 +114,18 @@ chmod +r /usr/share/fonts/truetype/*
 cd /var/log/subscribers
 rm *.log_old
 rename 's/\.log$/\.log_old/g' *.log
-cd
+cd $cwd
 
 # Copy any customised files
-if [ -e ~/custom/web ]
+if [ -e ../../custom/web ]
 then
         echo "copy custom web files"
-        cp -vr ~/custom/web/* /var/www/smap
+        cp -vr ../../custom/web/* /var/www/smap
 fi
-if [ -e ~/custom/subscribers/default ]
+if [ -e ../../custom/subscribers/default ]
 then
         echo "copy custom subscriber data files"
-        cp -v ~/custom/subscribers/default/* /smap_bin/default
+        cp -v ../../custom/subscribers/default/* /smap_bin/default
 fi
 
 # Restart Servers
