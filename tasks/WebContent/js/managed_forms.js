@@ -213,6 +213,12 @@ require([
             }
         }
 
+        // Set custom menus
+        var customMenuClass = getCustomMenuClass();
+        if(customMenuClass) {
+            $(customMenuClass).show();
+        }
+
         // Get the user details
         globals.gIsAdministrator = false;
         getLoggedInUser(refreshData, false, true, undefined, false, dont_get_current_survey);
