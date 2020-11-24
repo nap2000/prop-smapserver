@@ -2235,6 +2235,26 @@ function isBusinessServer() {
 }
 
 /*
+ * Returns the class of server that has custom menus
+ */
+function getCustomMenuClass() {
+
+	var hostname = location.hostname;
+	var classname = undefined;
+
+	if(hostname.indexOf('cuso.smap.com.au') >= 0) {
+		classname = '.xxxx1';
+	} else {
+		if(hostname === 'localhost') {
+			classname = '.xxxx1';   // testing
+		}
+	}
+
+	return classname;
+}
+
+
+/*
  * Return true if this is a self registration server
  */
 function isSelfRegistrationServer() {
