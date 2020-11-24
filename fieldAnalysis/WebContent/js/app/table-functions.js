@@ -464,7 +464,7 @@ function generateUserTable(elementId, data, user_ident, uId, subject_type) {
 			if(key !== "_instanceid" && key !== "instanceid" && key !== "_task_key" &&
 				key !== "_task_replace" && key !== "prikey" && key !== "_modified") {
 				val = groups[i].properties[key];
-				if(typeof groups[i].geometry !== "undefined") {
+				if(type === "geometry" && typeof groups[i].geometry !== "undefined") {
 					// Get the value from the geometry
 					val = groups[i].geometry.type + '[' + groups[i].geometry.coordinates + ']';
 				} else if(key === "_bad") {

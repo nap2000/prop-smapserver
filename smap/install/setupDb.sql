@@ -633,7 +633,6 @@ ALTER TABLE custom_report OWNER TO ws;
 CREATE UNIQUE INDEX custom_report_name ON custom_report(p_id, name);
 
 -- table name is used by "results databases" to store result data for this form
-DROP TABLE IF EXISTS form CASCADE;
 CREATE TABLE form (
 	f_id INTEGER DEFAULT NEXTVAL('f_seq') CONSTRAINT pk_form PRIMARY KEY,
 	s_id INTEGER REFERENCES survey ON DELETE CASCADE,
@@ -650,6 +649,7 @@ CREATE TABLE form (
 	replace boolean default false,
 	append boolean default false
 	);
+CREATE INDEX form_s_id ON form(s_id);
 ALTER TABLE form OWNER TO ws;
 
 DROP TABLE IF EXISTS listname CASCADE;
@@ -711,8 +711,9 @@ CREATE TABLE question (
 	linked_target text,					-- Id of a survey whose hrk is populated here
 	compressed boolean default false,	-- Will put all answers to select multiples into a single column
 	external_choices text,				-- Set to yes if choices are external
-	external_table text,					-- The table containing the external choices
-	intent text							-- ODK intent attribute
+	external_table text,				-- The table containing the external choices
+	intent text,						-- ODK intent attribute
+	flash integer						-- Interval in literacy test before question flashes
 	);
 ALTER TABLE question OWNER TO ws;
 CREATE INDEX qtext_id_sequence ON question(qtext_id);
@@ -973,6 +974,7 @@ CREATE TABLE public.tasks (
 );
 SELECT AddGeometryColumn('tasks', 'geo_point', 4326, 'POINT', 2);
 SELECT AddGeometryColumn('tasks', 'geo_point_actual', 4326, 'POINT', 2);
+CREATE INDEX task_task_group ON tasks(tg_id);
 ALTER TABLE public.tasks OWNER TO ws;
 
 CREATE TABLE public.task_rejected (
@@ -1010,6 +1012,7 @@ CREATE TABLE public.assignments (
 	cancelled_date timestamp with time zone,
 	deleted_date timestamp with time zone
 );
+CREATE INDEX assignments_status ON assignments(status);
 ALTER TABLE public.assignments OWNER TO ws;
 
 -- Table to manage state of user downloads of forms
