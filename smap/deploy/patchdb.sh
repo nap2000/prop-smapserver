@@ -283,7 +283,7 @@ fi
 sudo cp  $deploy_from/resources/properties/setcredentials.sh /smap_bin
 envset=`cat /usr/share/$TOMCAT_VERSION/bin/setenv.sh | grep -c "setcredentials"`
 if [ $envset -eq 0 ]; then
-	echo "/smap_bin/setcredentials.sh" | sudo tee -a /usr/share/$TOMCAT_VERSION/bin/setenv.sh 
+	echo ". /smap_bin/setcredentials.sh" | sudo tee -a /usr/share/$TOMCAT_VERSION/bin/setenv.sh 
 fi
 
 
