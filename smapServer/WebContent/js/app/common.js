@@ -723,6 +723,12 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 		$('#m_training').show();
 	}
 
+	// Set custom menus
+	var customMenuClass = getCustomMenuClass();
+	if(customMenuClass) {
+		$(customMenuClass + '.analyst_role').show();
+	}
+
 	//TODO set logic for enabling disabling billing
 	if(isBusinessServer() && (globals.gBillingData || globals.gOrgBillingData)) {
 		$('.billing_role').show();
