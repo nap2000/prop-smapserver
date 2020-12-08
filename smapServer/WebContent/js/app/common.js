@@ -723,6 +723,12 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 		$('#m_training').show();
 	}
 
+	// Set custom menus
+	var customMenuClass = getCustomMenuClass();
+	if(customMenuClass) {
+		$(customMenuClass + '.analyst_role').show();
+	}
+
 	//TODO set logic for enabling disabling billing
 	if(isBusinessServer() && (globals.gBillingData || globals.gOrgBillingData)) {
 		$('.billing_role').show();
@@ -2233,6 +2239,26 @@ function isBusinessServer() {
 
 	return bs;
 }
+
+/*
+ * Returns the class of server that has custom menus
+ */
+function getCustomMenuClass() {
+
+	var hostname = location.hostname;
+	var classname = undefined;
+
+	if(hostname.indexOf('cuso.smap.com.au') >= 0) {
+		classname = '.xxxx1';
+	} else {
+		if(hostname === 'localhost') {
+			classname = '.xxxx1';   // testing
+		}
+	}
+
+	return classname;
+}
+
 
 /*
  * Return true if this is a self registration server
