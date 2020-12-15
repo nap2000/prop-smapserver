@@ -336,3 +336,5 @@ update survey set group_survey_ident = ident where group_survey_id = 0 and group
 CREATE INDEX group_survey_ident_idx ON survey(group_survey_ident);
 DROP INDEX if exists survey_group_survey_key;
 
+insert into groups(id,name) values(12,'dashboard');
+
