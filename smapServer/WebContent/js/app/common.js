@@ -658,6 +658,9 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
             } else if(groups[i].id === globals.GROUP_ANALYST) {
 				globals.gIsAnalyst = true;
 
+			} else if(groups[i].id === globals.GROUP_DASHBOARD) {
+				globals.gIsDashboard = true;
+
 			} else if(groups[i].id === globals.GROUP_MANAGE) {
 				globals.gIsManage = true;
 
@@ -683,6 +686,9 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 	}
 	if(globals.gIsAnalyst) {
 		$('.analyst_role').show();
+	}
+	if(globals.gIsDashboard) {
+		$('.dashboard_role').show();
 	}
 	if(globals.gViewData) {
 		$('.data_role').show();
@@ -721,12 +727,6 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 	if(globals.gTraining) {
 		$('#train_link').prop("href", globals.gTraining);
 		$('#m_training').show();
-	}
-
-	// Set custom menus
-	var customMenuClass = getCustomMenuClass();
-	if(customMenuClass) {
-		$(customMenuClass + '.analyst_role').show();
 	}
 
 	//TODO set logic for enabling disabling billing
