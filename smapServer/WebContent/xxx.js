@@ -1,11 +1,10 @@
 
-let CACHE_NAME = 'v14';
+let CACHE_NAME = 'v13';
 let ASSIGNMENTS = '/surveyKPI/myassignments';
 let WEBFORM = "/webForm";
 let USER = "/user";
 let PROJECT_LIST = "/myProjectList";
 let CURRENT_PROJECT = "/currentproject";
-let TIMEZONES = "/timezones";
 
 // During the installation phase, you'll usually want to cache static assets.
 self.addEventListener('install', function(e) {
@@ -35,11 +34,12 @@ self.addEventListener('install', function(e) {
 				'/js/app/theme2.js',
 				'/js/app/custom.js',
 				'/js/app/idbconfig.js',
-				'/myWork/js/my_work.js',
+				'/myWork/js/myWork.js',
 				'/images/enketo_bare_150x56.png',
 				'/images/smap_logo.png',
 				'/images/ajax-loader.gif',
-				'/favicon.ico'
+				'/favicon.ico',
+				'/surveyKPI/utility/timezones'
 			])
 		})
 	);
@@ -60,6 +60,7 @@ self.addEventListener('activate', function (event) {
 
 });
 
+
 // when the browser fetches a URL…
 self.addEventListener('fetch', function(event) {
 
@@ -68,42 +69,40 @@ self.addEventListener('fetch', function(event) {
 		event.respondWith(caches.match(ASSIGNMENTS));
 		event.waitUntil(update_assignments(event.request).then(refresh).then(precacheforms));
 
-	} else if (event.request.url.includes(TIMEZONES)) {
-		// Cache then if not found network then cache the response
+	} else if (event.request.url.includes(WEBFORM)
+			|| event.request.url.includes(USER)
+			|| event.request.url.includes(CURRENT_PROJECT)
+			|| event.request.url.includes(PROJECT_LIST)) {
+
+		// response to a webform/user request.  Network then cache strategy
+		event.respondWith(
+			fetch(event.request).then(function(response) {
+				if (!response.ok || response.type === "error" || response.type === "opaque") {
+					// An HTTP error response code (40x, 50x) won't cause the fetch() promise to reject.
+					// We need to explicitly throw an exception to trigger the catch() clause.
+					throw Error('response status ' + response.status);
+				}
+
+				return caches
+					.open(CACHE_NAME)
+					.then(cache => {
+						cache.put(getCacheUrl(event.request), response.clone());
+						return response;
+					});
+			}).catch( function () {
+				return caches.match(getCacheUrl(event.request));
+			})
+		);
+
+	} else {
+		// Try cache then network - do not cache missing files as there will be a lot of them
 		if(typeof event.request !== "undefined") {
 			event.respondWith(
 				caches
 					.match(getCacheUrl(event.request)) // check if the request has already been cached
-					.then(cached => cached || update(event.request)) // otherwise request network
+					.then(cached => cached || fetch(event.request)) // otherwise request network
 			);
 		}
-
-	} else if (event.request.url.includes(WEBFORM)
-		|| event.request.url.includes(USER)
-		|| event.request.url.includes(CURRENT_PROJECT)
-		|| event.request.url.includes(PROJECT_LIST)) {
-
-		// response to a webform/user request.  Network then cache strategy
-		event.respondWith(
-			fetch(event.request)
-				.then(response => {
-					if (response.type !== "error" && response.type !== "opaque") {
-						cache.put(getCacheUrl(event.request), response.clone());
-					}
-					return response;
-			})
-				.catch(() => {
-					return caches.match(getCacheUrl(event.request));
-				})
-		);
-
-	} else {
-		// Try cache then network - but do not cache missing files as there will be a lot of them
-		event.respondWith(
-			caches
-				.match(getCacheUrl(event.request)) // check if the request has already been cached
-				.then(cached => cached || fetch(event.request)) // otherwise request network
-		);
 	}
 
 
@@ -111,16 +110,12 @@ self.addEventListener('fetch', function(event) {
 
 function cacheIt(url, response) {
 	if (response.type === "error" || response.type === "opaque") {
-		return response; // do not put in cache network errors
-
-	} else {
-		return caches
-			.open(CACHE_NAME)
-			.then(cache => {
-				cache.put(url, response.clone());
-				return response;
-			});
+		return Promise.resolve(); // do not put in cache network errors
 	}
+
+	return caches
+		.open(CACHE_NAME)
+		.then(cache => cache.put(url, response.clone()));
 }
 
 function update(request) {
@@ -161,14 +156,10 @@ function refresh(response) {
  */
 function update_assignments(request) {
 	return fetch(request.url).then(
-		response => {
+		response =>
 
-			if (response.type !== "error" && response.type !== "opaque") {
-				cache.put(ASSIGNMENTS, response.clone());
-			}
-			return response;
-		}
-		
+			cacheIt(ASSIGNMENTS, response) // we can put response in cache
+				.then(() => response) // resolve promise with the Response object
 	);
 }
 
@@ -190,10 +181,7 @@ function precacheforms(response) {
 						cache.put(url, response.clone());
 						return response;
 					});
-			})
-				.catch(err => {
-					console.log(err);
-				})
+			});
 		}
 	}
 }
