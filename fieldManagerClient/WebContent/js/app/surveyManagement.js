@@ -34,7 +34,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
 
         $(document).ready(function() {
 
-	        setupUserProfile();
+	        setupUserProfile(true);
             localise.setlang();		// Localise HTML
 
             /*
