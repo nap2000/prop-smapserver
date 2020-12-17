@@ -658,6 +658,9 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
             } else if(groups[i].id === globals.GROUP_ANALYST) {
 				globals.gIsAnalyst = true;
 
+			} else if(groups[i].id === globals.GROUP_DASHBOARD) {
+				globals.gIsDashboard = true;
+
 			} else if(groups[i].id === globals.GROUP_MANAGE) {
 				globals.gIsManage = true;
 
@@ -683,6 +686,9 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 	}
 	if(globals.gIsAnalyst) {
 		$('.analyst_role').show();
+	}
+	if(globals.gIsDashboard) {
+		$('.dashboard_role').show();
 	}
 	if(globals.gViewData) {
 		$('.data_role').show();
@@ -2233,6 +2239,26 @@ function isBusinessServer() {
 
 	return bs;
 }
+
+/*
+ * Returns the class of server that has custom menus
+ */
+function getCustomMenuClass() {
+
+	var hostname = location.hostname;
+	var classname = undefined;
+
+	if(hostname.indexOf('cuso.smap.com.au') >= 0) {
+		classname = '.xxxx1';
+	} else {
+		if(hostname === 'localhost') {
+			classname = '.xxxx1';   // testing
+		}
+	}
+
+	return classname;
+}
+
 
 /*
  * Return true if this is a self registration server

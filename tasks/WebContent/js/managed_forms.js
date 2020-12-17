@@ -213,6 +213,12 @@ require([
             }
         }
 
+        // Set custom menus
+        var customMenuClass = getCustomMenuClass();
+        if(customMenuClass) {
+            $(customMenuClass).show();
+        }
+
         // Get the user details
         globals.gIsAdministrator = false;
         getLoggedInUser(refreshData, false, true, undefined, false, dont_get_current_survey);
@@ -2945,7 +2951,7 @@ require([
     }
 
 
-    function getData(sId, groupSurvey, subForm, callback, clearCache) {
+    function getData(sId, oversightSurvey, subForm, callback, clearCache) {
 
     	var filter;
 
@@ -2953,8 +2959,8 @@ require([
 	    url += sId;
 	    url += "?mgmt=true";
 
-	    if (groupSurvey) {
-		    url += "&groupSurvey=" + groupSurvey;
+	    if (oversightSurvey) {
+		    url += "&oversightSurvey=" + oversightSurvey;
 	    }
 
 	    if(subForm) {

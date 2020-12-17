@@ -128,10 +128,9 @@ require([
         });
 
         $('#addReport').click(function(){
-	        $('#e_tz').val(globals.gTimezone);
         	if($('#publicPanel').hasClass('show')) {
 		        $('#publish_form')[0].reset();
-
+		        $('#e_tz').val(globals.gTimezone);
 		        $('.role_select_roles').empty()
 		        getSurveyRoles(gSurveyList[$('#survey').val()].id, undefined, true);
 
@@ -140,8 +139,8 @@ require([
 		        $('#saveReport').hide();
 		        $('#publish_popup').modal("show");
 	        } else if($('#customPanel').hasClass('show')) {
-
-        		$('#custom_form')[0].reset();
+		        $('#custom_form')[0].reset();
+		        $('#e_tz').val(globals.gTimezone);
 		        addCustomReportTypes();
 		        surveyChanged(setForm);
 		        $('.custom_section').hide();

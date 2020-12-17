@@ -330,3 +330,11 @@ CREATE INDEX form_s_id ON form(s_id);
 
 -- version 20.11
 alter table question add column flash integer;
+alter table survey add column group_survey_ident text;
+update survey n set group_survey_ident = (select s.ident from survey s where s.s_id = n.group_survey_id) where n.group_survey_id > 0 and n.group_survey_ident is null;
+update survey set group_survey_ident = ident where group_survey_id = 0 and group_survey_ident is null;
+CREATE INDEX group_survey_ident_idx ON survey(group_survey_ident);
+DROP INDEX if exists survey_group_survey_key;
+
+insert into groups(id,name) values(12,'dashboard');
+
