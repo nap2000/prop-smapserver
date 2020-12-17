@@ -5,8 +5,11 @@
  * Also this file should not be added to the cache
  */
 
+/*
+ * commented out in service worker version of smap
 navigator.serviceWorker.getRegistrations().then( function(registrations) {
 	for(let registration of registrations) {
 		registration.unregister();
 	}
 });
+*/
