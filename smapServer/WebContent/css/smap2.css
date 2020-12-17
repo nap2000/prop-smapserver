@@ -125,3 +125,6 @@ button.bg-navbar-smap:focus {
     padding: 0;
 }
 
+.maxwidth {
+    width: 100%;
+}

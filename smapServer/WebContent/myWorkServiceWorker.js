@@ -2,7 +2,7 @@
 let CACHE_NAME = 'v14';
 let ASSIGNMENTS = '/surveyKPI/myassignments';
 let WEBFORM = "/webForm";
-let USER = "/user";
+let USER = "/surveyKPI/user?";
 let PROJECT_LIST = "/myProjectList";
 let CURRENT_PROJECT = "/currentproject";
 let TIMEZONES = "/timezones";
@@ -109,25 +109,14 @@ self.addEventListener('fetch', function(event) {
 
 });
 
-function cacheIt(url, response) {
-	if (response.type === "error" || response.type === "opaque") {
-		return response; // do not put in cache network errors
-
-	} else {
-		return caches
-			.open(CACHE_NAME)
-			.then(cache => {
-				cache.put(url, response.clone());
-				return response;
-			});
-	}
-}
-
 function update(request) {
-	return fetch(request.url).then(
-		response =>
-			cacheIt(getCacheUrl(request), response) // we can put response in cache
-				.then(() => response) // resolve promise with the Response object
+	return fetch(request).then(
+		response => {
+			if (response.type !== "error" && response.type !== "opaque") {
+				cache.put(getCacheUrl(event.request), response.clone());
+			}
+			return response;
+		}
 	);
 }
 
@@ -168,7 +157,7 @@ function update_assignments(request) {
 			}
 			return response;
 		}
-		
+
 	);
 }
 
