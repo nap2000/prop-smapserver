@@ -96,7 +96,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 	</div>
 </nav>
 
-<div class="container">
+<div class="container-fluid">
 	<!-- Header Row -->
 	<div class="row border-bottom bg-white mt-4">
 		<div class="col-sm-6">
@@ -128,16 +128,15 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 	<div class="bg-light mt-4 row">
 
-			<div class="selected_templates">
-				<div class="restrict_role admin_role analyst_role" style="display:none">
-					<input id="show_deleted" type="checkbox" name="show_deleted"
-						   value="show_deleted"/> <span class="lang" data-lang="tm_s_del">show del</span><br/>
-				</div>
-				<div id="surveys">
-					<div id="survey_table" class="table-responsive-sm"></div>
-				</div>
+		<div class="selected_templates col-sm-4 col-xs-12">
+			<div class="restrict_role admin_role analyst_role" style="display:none">
+				<input id="show_deleted" type="checkbox" name="show_deleted"
+					   value="show_deleted"/> <span class="lang" data-lang="tm_s_del">show del</span><br/>
 			</div>
-
+		</div>
+	</div>
+	<div class="bg-light mt-4 row">
+		<div id="survey_table" class="table-responsive col-xs-12"></div>
 	</div>
 
 	<div id="tem_controls" class="row">
