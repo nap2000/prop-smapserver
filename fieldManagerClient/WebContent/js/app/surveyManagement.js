@@ -488,7 +488,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
                 hSel = [],
                 selIdx = -1;
 
-            h[++idx] = '<table class="table">';
+            h[++idx] = '<table class="table table-responsive-sm table-striped">';
             h[++idx] = '<thead>';
             h[++idx] = '<tr>';
             h[++idx] = '<th class="col-xs-1 select_all">';
@@ -502,7 +502,7 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
             h[++idx] = '<th class="col-xs-2">' + localise.set["c_action"] + '</th>';
             h[++idx] = '</tr>';
             h[++idx] = '</thead>';
-            h[++idx] = '<tbody class="table-striped">';
+            h[++idx] = '<tbody>';
 
             for(i = 0; i < gSurveys.length; i++) {
                 survey = gSurveys[i];
