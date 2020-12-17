@@ -1339,12 +1339,14 @@ require([
 			filter_org;
 
 		gCurrentUserIndex = userIndex;
+		let hasDashboard = getCustomMenuClass() === '.xxxx1';
 
 		filter_group = $('#group_name').val();
 		h = [];
 		idx = -1;
 		for(i = 0; i < gGroups.length; i++) {
 			if((gGroups[i].id !== globals.GROUP_ORG_ADMIN || globals.gIsOrgAdministrator) &&
+				(gGroups[i].id !== globals.GROUP_DASHBOARD || hasDashboard) &&
 				(gGroups[i].id !== globals.GROUP_SECURITY || globals.gIsOrgAdministrator || globals.gIsSecurityAdministrator) &&
 				(gGroups[i].id != globals.GROUP_ENTERPRISE || globals.gIsEnterpriseAdministrator) &&
 				gGroups[i].id !== globals.GROUP_OWNER
