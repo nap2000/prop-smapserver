@@ -128,3 +128,7 @@ button.bg-navbar-smap:focus {
 .maxwidth {
     width: 100%;
 }
+
+tr.deleted td a {
+    color: red !important;
+}
