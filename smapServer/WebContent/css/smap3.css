@@ -1,0 +1,8 @@
+
+.maxwidth {
+    width: 100%;
+}
+
+tr.deleted td a {
+    color: red !important;
+}

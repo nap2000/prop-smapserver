@@ -25,10 +25,9 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 	<link href="/css/bootstrap.v4.5.min.css" rel="stylesheet">
 	<link href="/font-awesome/css/font-awesome.css" rel="stylesheet">
 	<link href="/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
-	<link href="/css/wb/plugins/iCheck/custom.css" rel="stylesheet">
-	<link href="/css/smap2.css" rel="stylesheet">
+	<link href="/css/smap3.css" rel="stylesheet">
 
-	<link href="/css/wb/animate.css" rel="stylesheet">
+	<!--<link href="/css/wb/animate.css" rel="stylesheet">-->
 
 	<script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
 
@@ -44,7 +43,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-smap bg-navbar-smap">
+<nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
 	<a class="navbar-brand lang" data-lang="c_forms" href="#">forms</a>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
@@ -88,7 +87,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 				</div>
 			</li>
 
-			<li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><i class="fa fa-info-circle"></i> <span class="nav-label lang" data-lang="m_help">help</span></a></li>
+			<li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
 			<li id="m_training" class="nav-item" style="display:none;"><a class="nav-link" id="train_link" href="#" target="_blank"><i class="fas fa-running"></i> <span class="nav-label lang" data-lang="m_training">training</span></a></li>
 			<li class="nav-item"><a class="nav-link"  id="username" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"><i class="fa fa-user"></i> </a></li>
 		</ul>
@@ -115,7 +114,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 
 	<div class="row border-bottom bg-grey mt-1 mb-1">
-		<div class="col-sm-4 col-xs-12">
+		<div class="col-sm-4 col-xs-12 mt-1 mb-1">
 			<a class="mgmt_buttons btn btn-success lang alist btn-block pl-4 pr-4" type="button" data-lang="tm_g_new" href="/edit.html?new=true">New</a>
 		</div>
 		<div class="mgmt_buttons col-sm-4 col-xs-12 mt-1 mb-1">
@@ -157,24 +156,20 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 
 <!-- Popup to add a new survey -->
-<div id="survey_add" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dtLabel" aria-hidden="true">
-	<div class="modal-dialog">
+<div id="survey_add" class="modal fade" role="dialog" tabindex="-1" aria-labelledby="survey_add_title" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title"></h4>
+				<h5 id="survey_add_title"><span class="lang" data-lang="tm_c_form">load</span> <span class="lang notreplace" data-lang="tm_c_xls"></span></h5>
+				<button type="button" class="close" data-dismiss="modal"><span class="lang" data-lang="c_close">x</span></button>
+
 			</div>
 			<div class="modal-body">
-				<h3 id="survey_add_title" class="lang" data-lang="tm_c_form">Create a Form</h3>
-
 
 				<div class="spreadsheet_editor">
-					<h3 class="lang notreplace" data-lang="tm_c_xls">Using Spreadsheet</h3>
-
-
+					<h5 class="lang notreplace" data-lang="tm_c_xls"></h5>
 					<div style="clear: both;">&nbsp;</div>
 					<p data-lang="tm_g_temp_i1" class="lang notreplace"></p>
-
 
 					<div class="col-md-12 text-center">
 						<img id="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
@@ -186,16 +181,16 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					<form role="form" id="uploadForm" name="uploadForm" accept-charset="utf-8"
 						  class="ui-body ui-body-a ui-corner-all">
 						<fieldset id="templateUpload">
-							<div class="form-group notreplace">
+							<div class="form-group row notreplace">
 								<label for="templateName"><span data-lang="c_name" class="lang control-label">Name</span>:</label>
 								<input id="templateName" class="form-control" type="text" name="templateName" maxlength="100" required />
 							</div>
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="file"><span data-lang="c_file" class="lang control-label">file</span></label>
 								<input type="file" class="form-control" name="tname" id="file" required/>
 							</div>
 
-							<div class="form-group notreplace">
+							<div class="form-group row notreplace">
 								<label for="group"><span data-lang="sr_g" class="lang control-label">group</span></label>
 								<select id="group" name="groupsurvey"></select>
 							</div>
@@ -217,7 +212,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 </div>
 
 <!-- Popup to edit a public link to a webform -->
-<div id="survey_link" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dtLabel" aria-hidden="true">
+<div id="survey_link" class="modal fade" role="dialog" tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -227,7 +222,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 			<div class="modal-body">
 				<h3 id="survey_link_title" class="lang" data-lang="n_share">Get Link</h3>
 
-				<form role="form" class="form-horizontal">
+				<form>
 					<div class="form-group">
 						<input type="text" id="srLink" required class="form-control" readonly>
 					</div>
@@ -246,7 +241,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 </div>
 
 <!-- Popup to allow the user to download files -->
-<div id="download_template" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dtLabel" aria-hidden="true">
+<div id="download_template" class="modal fade" tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -254,7 +249,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 				<h4 class="modal-title" id="dtLabel"></h4>
 			</div>
 			<div class="modal-body">
-				<form role="form" class="form-horizontal">
+				<form>
 					<fieldset>
 						<legend class="lang" data-lang="c_download">type</legend>
 						<div class="form-group">
@@ -307,16 +302,16 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 <!-- Reports -->
 <!-- Parameters for usage report -->
-<div id="usage_report_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dtLabel" aria-hidden="true">
+<div id="usage_report_popup" class="modal" tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title lang" data-lang="u_usage"></h4>
+				<h5 class="modal-title lang" data-lang="u_usage"></h5>
 			</div>
 			<div class="modal-body">
 
-				<form role="form" class="form-horizontal">
+				<form>
 					<div class="form-group">
 						<label for="usageDate" data-lang="c_month" class="lang col-sm-2 control-label">month</label>
 						<div class="col-sm-10">
@@ -366,7 +361,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 </div>
 
 <!-- Parameters for form access report -->
-<div id="form_access_report_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dtLabel" aria-hidden="true">
+<div id="form_access_report_popup" class="modal fade" tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -375,7 +370,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 			</div>
 			<div class="modal-body">
 
-				<form role="form" class="form-horizontal">
+				<form>
 					<div class="form-group">
 						<label class="lang col-sm-4 control-label" data-lang="c_survey" for="survey_access">survey</label>
 						<div class="col-sm-8">
