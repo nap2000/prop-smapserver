@@ -437,6 +437,7 @@ insert into groups(id,name) values(8,'enterprise admin');
 insert into groups(id,name) values(9,'server owner');
 insert into groups(id,name) values(10,'view own data');
 insert into groups(id,name) values(11,'manage tasks');
+insert into groups(id,name) values(12,'dashboard');
 
 insert into user_group (u_id, g_id) values (1, 1);
 insert into user_group (u_id, g_id) values (1, 2);
@@ -449,6 +450,7 @@ insert into user_group (u_id, g_id) values (1, 8);
 insert into user_group (u_id, g_id) values (1, 9);
 insert into user_group (u_id, g_id) values (1, 10);
 insert into user_group (u_id, g_id) values (1, 11);
+insert into user_group (u_id, g_id) values (1, 12);
 
 insert into project (id, o_id, name) values (1, 1, 'A project');
 
@@ -541,7 +543,8 @@ CREATE TABLE survey (
 	hrk text,										-- human readable key
 	key_policy text,									-- Whether to discard, append, replace or merge duplicates of the HRK
 	based_on text,									-- Survey and form this survey was based on
-	group_survey_id integer default 0,
+	group_survey_id integer default 0,				-- deprecate
+	group_survey_ident text,						-- common ident linking grouped surveys
 	pulldata text,									-- Settings to customise pulling data from another survey into a csv file
 	exclude_empty boolean default false,				-- True if reports should not include empty data
 	created timestamp with time zone,				-- Date / Time the survey was created
@@ -560,7 +563,7 @@ ALTER TABLE survey OWNER TO ws;
 DROP INDEX IF EXISTS SurveyDisplayName;
 DROP INDEX IF EXISTS SurveyKey;
 CREATE UNIQUE INDEX SurveyKey ON survey(ident);
-CREATE INDEX survey_group_survey_key ON survey(group_survey_id);
+CREATE INDEX group_survey_ident_idx ON survey(group_survey_ident);
 
 DROP TABLE IF EXISTS survey_change CASCADE;
 CREATE TABLE survey_change (

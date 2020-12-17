@@ -343,3 +343,11 @@ button.bg-orange:focus {
     background-color: #fffad4;
     outline: 0;
 }
+
+/*
+ * Change cursor when waiting for ajax calls
+ */
+body.wait *, body.wait
+{
+    cursor: progress !important;
+}

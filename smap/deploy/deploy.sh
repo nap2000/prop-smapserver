@@ -94,6 +94,13 @@ then
         tar -xzf $deploy_from/myWork.tgz -C /var/www/smap
 fi
 
+if [ -e $deploy_from/dashboard.tgz ]
+then
+        echo "Dashboard"
+        rm -rf /var/www/smap/dashboard
+        tar -xzf $deploy_from/dashboard.tgz -C /var/www/smap
+fi
+
 cp $deploy_from/fieldTask.apk /var/www/smap
 cp $deploy_from/fieldTaskPreJellyBean.apk /var/www/smap
 cp $deploy_from/smapUploader.jar /var/www/smap
