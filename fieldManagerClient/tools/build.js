@@ -40,6 +40,7 @@
     modules: [
  	{
             name: '../surveymanagement_main',
+	    exclude: ['jquery', 'bootstrap']
         },
         {
             name: '../usermanagement_main',
