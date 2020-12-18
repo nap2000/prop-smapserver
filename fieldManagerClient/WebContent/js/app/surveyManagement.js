@@ -556,7 +556,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                     h[++idx] = '<button class="btn survey_replace" value="';
                     h[++idx] = i;
                     h[++idx] = '">';
-                    h[++idx] = '<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>';
+                    h[++idx] = '<i class="fas fa-sync-alt"></i>';
                     h[++idx] = '</button>';
                     h[++idx] = '</td>';
 
@@ -566,7 +566,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                     h[++idx] = survey.ident;
                     h[++idx] = '" target="_blank">'
 
-                    h[++idx] = '<i class="fa fa-eye"></i>';
+                    h[++idx] = '<i class="fas fa-eye"></i>';
                     h[++idx] = '</a>';
 
                     if(survey.publicLink && survey.publicLink.trim().length > 0) {              // Link
