@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v14';
+let CACHE_NAME = 'v16';
 let ASSIGNMENTS = '/surveyKPI/myassignments';
 let WEBFORM = "/webForm";
 let USER = "/surveyKPI/user?";
@@ -63,6 +63,7 @@ self.addEventListener('activate', function (event) {
 // when the browser fetches a URL…
 self.addEventListener('fetch', function(event) {
 
+	event.request.credentials = "same-origin";
 	if (event.request.url.includes(ASSIGNMENTS)) {
 		// response to request for forms and tasks. Cache Update Refresh strategy
 		event.respondWith(caches.match(ASSIGNMENTS));
@@ -87,12 +88,18 @@ self.addEventListener('fetch', function(event) {
 		event.respondWith(
 			fetch(event.request)
 				.then(response => {
-					if (response.type !== "error" && response.type !== "opaque") {
-						cache.put(getCacheUrl(event.request), response.clone());
+					if (response.status == 200) {
+						return caches
+							.open(CACHE_NAME)
+							.then(cache => {
+								cache.put(getCacheUrl(event.request), response.clone());
+								return response;
+							})
+					} else {
+						return caches.match(getCacheUrl(event.request))
+							.then(cached => cached || response) // otherwise request network
 					}
-					return response;
-			})
-				.catch(() => {
+				}).catch(() => {
 					return caches.match(getCacheUrl(event.request));
 				})
 		);
@@ -112,8 +119,13 @@ self.addEventListener('fetch', function(event) {
 function update(request) {
 	return fetch(request).then(
 		response => {
-			if (response.type !== "error" && response.type !== "opaque") {
-				cache.put(getCacheUrl(event.request), response.clone());
+			if (response.status == 200) {
+				return caches
+					.open(CACHE_NAME)
+					.then(cache => {
+						cache.put(getCacheUrl(request), response.clone());
+						return response;
+					})
 			}
 			return response;
 		}
@@ -152,8 +164,13 @@ function update_assignments(request) {
 	return fetch(request.url).then(
 		response => {
 
-			if (response.type !== "error" && response.type !== "opaque") {
-				cache.put(ASSIGNMENTS, response.clone());
+			if (response.status == 200) {
+				return caches
+					.open(CACHE_NAME)
+					.then(cache => {
+						cache.put(ASSIGNMENTS, response.clone());
+						return response;
+					});
 			}
 			return response;
 		}
@@ -166,23 +183,17 @@ function precacheforms(response) {
 	if(response && response.forms) {
 		for(let i = 0; i < response.forms.length; i++) {
 			let url = '/myWork/webForm/' + response.forms[i].ident;
-			fetch(url).then(function(response) {
-				if (!response.ok || response.type === "error" || response.type === "opaque") {
-					// An HTTP error response code (40x, 50x) won't cause the fetch() promise to reject.
-					// We need to explicitly throw an exception to trigger the catch() clause.
-					throw Error('response status ' + response.status);
+			fetch(new Request(url, {credentials: 'same-origin'})).then(function(response) {
+				if (response.status == 200) {
+					return caches
+						.open(CACHE_NAME)
+						.then(cache => {
+							cache.put(url, response.clone());
+							return response;
+						});
 				}
-
-				return caches
-					.open(CACHE_NAME)
-					.then(cache => {
-						cache.put(url, response.clone());
-						return response;
-					});
+				return response;
 			})
-				.catch(err => {
-					console.log(err);
-				})
 		}
 	}
 }
