@@ -16,8 +16,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'datetimepicker'],
-    function($, lang, common, globals, bootstrap, moment) {
+define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
+    function($, lang, common, globals, moment) {
 
         var	gSurveys,		// Only in this java script file
             gControlDelete,
