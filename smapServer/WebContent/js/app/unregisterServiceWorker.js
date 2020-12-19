@@ -5,8 +5,11 @@
  * Also this file should not be added to the cache
  */
 
-navigator.serviceWorker.getRegistrations().then( function(registrations) {
-	for(let registration of registrations) {
-		registration.unregister();
-	}
+window.addEventListener('load', function() {
+	navigator.serviceWorker.getRegistrations().then(function (registrations) {
+		for (let registration of registrations) {
+			registration.unregister();
+		}
+	});
 });
+
