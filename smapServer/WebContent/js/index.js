@@ -43,7 +43,8 @@ require(['jquery', 'bootstrap.min', 'app/localise', 'app/common','app/globals'],
 			} 
 		}
 	}
-	
+
+
 	/*
 	 * If the user is not logged in then enable the login button and disable other menus
 	 * which depend on their authorisation level
