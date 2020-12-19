@@ -71,13 +71,11 @@ self.addEventListener('fetch', function(event) {
 
 	} else if (event.request.url.includes(TIMEZONES)) {
 		// Cache then if not found network then cache the response
-		if(typeof event.request !== "undefined") {
-			event.respondWith(
-				caches
-					.match(getCacheUrl(event.request)) // check if the request has already been cached
-					.then(cached => cached || update(event.request)) // otherwise request network
-			);
-		}
+		event.respondWith(
+			caches
+				.match(getCacheUrl(event.request)) // check if the request has already been cached
+				.then(cached => cached || update(event.request)) // otherwise request network
+		);
 
 	} else if (event.request.url.includes(WEBFORM)
 		|| event.request.url.includes(USER)
@@ -88,7 +86,9 @@ self.addEventListener('fetch', function(event) {
 		event.respondWith(
 			fetch(event.request)
 				.then(response => {
-					if (response.status == 200) {
+					if(response.status == 401) {
+						fetch(event.request);
+					} else if (response.status == 200) {
 						return caches
 							.open(CACHE_NAME)
 							.then(cache => {
