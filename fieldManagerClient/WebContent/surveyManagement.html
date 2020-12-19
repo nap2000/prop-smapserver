@@ -156,7 +156,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 id="survey_add_title"><span class="lang" data-lang="tm_c_form">load</span> <span class="lang notreplace" data-lang="tm_c_xls"></span></h5>
-				<button type="button" class="close" data-dismiss="modal">x</button>
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 
 			</div>
 			<div class="modal-body">
@@ -209,7 +209,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 </div>
 
 <!-- Popup to edit a public link to a webform -->
-<div id="survey_link" class="modal fade" role="dialog" tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">
+<div id="survey_link" class="modal fade" tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -242,15 +242,15 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
+				<h5 class="modal-title" id="dtLabel"></h5>
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title" id="dtLabel"></h4>
 			</div>
 			<div class="modal-body">
 				<form>
 					<fieldset>
 						<legend class="lang" data-lang="c_download">type</legend>
-						<div class="form-group">
-							<div class="col-sm-offset-2 col-sm-10">
+						<div class="form-group row">
+							<div class="offset-sm-2 col-sm-10">
 								<input type="radio" name="download_type" value="xls_edited" checked="checked"/> <span data-lang="ft_xls" class="lang">latest XLS</span>
 								(<span class="lang" data-lang="c_version"></span>: <span id="dtversion"></span>)<br/>
 								<!--<span id="dtorigxls"><input type="radio" name="download_type" value="xls"/> <span data-lang="ft_xls_orig" class="lang">original XLS</span>
@@ -263,20 +263,20 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					</fieldset>
 					<fieldset>
 						<legend class="lang" data-lang="c_options"></legend>
-						<div id="download_language_div" class="form-group">
-							<label for="download_language" data-lang="c_lang" class="lang col-sm-2 control-label">Language</label>
+						<div id="download_language_div" class="form-group row">
+							<label for="download_language" data-lang="c_lang" class="lang col-sm-2 col-form-label">Language</label>
 							<div class="col-sm-10">
 								<select id="download_language" class="form-control"></select>
 							</div>
 						</div>
-						<div class="form-group pdf_elements">
-							<div class="col-sm-offset-2 col-sm-10">
+						<div class="form-group pdf_elements row">
+							<div class="offset-sm-2 col-sm-10">
 								<input type="radio" name="orientation" value="portrait" checked="checked"/> <span data-lang="c_portrait" class="lang">Portrait</span><br/>
 								<input type="radio" name="orientation" value="landscape"/> <span data-lang="c_landscape" class="lang">Landscape</span><br/>
 							</div>
 						</div>
-						<div class="form-group pdf_elements">
-							<div class="col-sm-offset-2 col-sm-10">
+						<div class="form-group pdf_elements row">
+							<div class="offset-sm-2 col-sm-10">
 								<div class="checkbox">
 									<label>
 										<input id="include_references" type="checkbox" name="include_references" value="include_references"/>
@@ -303,44 +303,44 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 				<h5 class="modal-title lang" data-lang="u_usage"></h5>
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 			</div>
 			<div class="modal-body">
 
 				<form>
-					<div class="form-group">
+					<div class="form-group row">
 						<label for="usageDateInput" data-lang="c_month" class="lang col-sm-2 control-label">month</label>
 						<div class="col-sm-10">
 							<div class='input-group date' id='usageDate' data-toggle="tooltip"  data-container="body" title="Month and Year of report">
 								<input id = "usageDateInput" type='text' class="form-control" data-date-format="YYYY/MM"/>
 								<span class="input-group-addon">
-									<span class="glyphicon glyphicon-calendar"></span>
+									<i style="font-size: 2rem;" class="far fa-calendar-alt"></i>
 								</span>
 							</div>
 						</div>
 					</div>
 
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
+					<div class="form-group row">
+						<div class="offset-sm-2 col-sm-10">
 							<div class="radio">
 								<label>
-									<input type="radio" name="usage_radio" id="usage_by_user"><span data-lang="c_user" class="lang"></span>
+									<input type="radio" name="usage_radio" id="usage_by_user"> <span data-lang="c_user" class="lang"></span>
 								</label>
 							</div>
 							<div class="radio">
 								<label>
-									<input type="radio" name="usage_radio" id="usage_by_project"><span data-lang="rep_usage_project" class="lang"></span>
+									<input type="radio" name="usage_radio" id="usage_by_project"> <span data-lang="rep_usage_project" class="lang"></span>
 								</label>
 							</div>
 							<div class="radio">
 								<label>
-									<input type="radio" name="usage_radio"  id="usage_by_survey"><span data-lang="rep_usage_survey" class="lang"></span>
+									<input type="radio" name="usage_radio"  id="usage_by_survey"> <span data-lang="rep_usage_survey" class="lang"></span>
 								</label>
 							</div>
 							<div class="radio">
 								<label>
-									<input type="radio" name="usage_radio"  id="usage_by_device"><span data-lang="rep_usage_device" class="lang"></span>
+									<input type="radio" name="usage_radio"  id="usage_by_device"> <span data-lang="rep_usage_device" class="lang"></span>
 								</label>
 							</div>
 						</div>
