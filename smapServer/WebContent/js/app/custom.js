@@ -111,5 +111,8 @@ function setCustomBilling() {
 }
 
 function setCustomMainLogo() {
-    $('.main_logo').attr("src", "/images/cropped-blog1.jpg");
+    var elem1 = document.getElementsByClassName("main_logo");
+    if(elem1 && elem1.length > 0) {
+        elem1[0].setAttribute("src", "/images/cropped-blog1.jpg");
+    }
 }
