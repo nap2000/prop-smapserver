@@ -121,7 +121,8 @@ require([
 		gSelectedCount = 0,
 		gUnsentEmailCount = 0,
 		MIN_DOWNLOAD_RANGE = 100,
-		MIN_SHOW_RANGE = 10;
+		MIN_SHOW_RANGE = 10,
+		gSourceSurvey;
 
 	var gCurrentGroup,
 		gCurrentLocation = '-1',
@@ -458,7 +459,11 @@ require([
 				$('#assign_data').val(tgRule.assign_data);
 				$('#fixed_role').val(tgRule.fixed_role_id);
 				$('#assign_emails').val(tgRule.emails);
-
+				if(tgRule.source_project) {
+					$('#project_select').val(tgRule.source_project);
+					gSourceSurvey = tg.source_s_id;
+					loadSurveys(tgRule.source_project, "#survey", false, false, sourceProjectSet, false);
+				}
 				$('#survey').val(tg.source_s_id);
 				if(tgRule.update_results) {
 					$('#id_update_results').prop('checked', true);
@@ -487,7 +492,6 @@ require([
 					if (typeof tgRule.filter.qId !== "undefined" && tgRule.filter.qId.length > 0) {
 
 						$('#filter_language').val(tgRule.lang_val);
-						$('#project_select').val(tgRule.filter.existing_proj);
 						filterQuestion = tgRule.filter.qId;
 						if(tgRule.filter.qType === "string") {
 							$('#filter_text').val(tgRule.filter.qText);
@@ -644,7 +648,8 @@ require([
 
 			if ($('#add_from_survey').is(':checked')) {
 
-				assignObj["survey_name"] = $('#survey_to_complete option:selected').text();	// The display name of the survey to complete
+				assignObj["source_project"] = $('#project_select option:selected').val();
+				assignObj["survey_name"] = $('#survey_to_complete option:selected').text();	            // The display name of the survey to complete
 				assignObj["target_survey_id"] = $('#survey_to_complete option:selected').val(); 		// The form id is the survey id of the survey used to complete the task!
 
 				var assignType = $("button.assign_type.active", "#addTask").attr("id");
@@ -1105,6 +1110,13 @@ require([
 			getLanguageList(sId, questionChanged, false, '#filter_language', false, filterQuestion);
 			setAddressOptions(address_columns);
 		}
+	}
+
+	/*
+	 *  Called if the source project is set when editing a task group
+	 */
+	function sourceProjectSet() {
+		$('#survey').val(gSourceSurvey);
 	}
 
 	function languageChanged() {
