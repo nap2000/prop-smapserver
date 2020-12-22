@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v16';
+let CACHE_NAME = 'v17';
 let ASSIGNMENTS = '/surveyKPI/myassignments';
 let WEBFORM = "/webForm";
 let USER = "/surveyKPI/user?";
@@ -16,11 +16,11 @@ self.addEventListener('install', function(e) {
 				'/',
 				'/myWork/index.html',
 				'/css/bootstrap.v4.5.min.css',
+				'/css/fa.v5.15.1.all.min.css',
 				'/build/css/theme-smap.css',
 				'/build/css/theme-smap.print.css',
 				'/build/css/webform.print.css',
 				'/build/css/webform.css',
-				'/css/fa.v5.15.1.all.min.css',
 				'/fonts/OpenSans-Regular-webfont.woff',
 				'/fonts/OpenSans-Bold-webfont.woff',
 				'/fonts/fontawesome-webfont.woff',
@@ -61,9 +61,10 @@ self.addEventListener('activate', function (event) {
 });
 
 // when the browser fetches a URL…
+// PWA version
+/*
 self.addEventListener('fetch', function(event) {
 
-	event.request.credentials = "same-origin";
 	if (event.request.url.includes(ASSIGNMENTS)) {
 		// response to request for forms and tasks. Cache Update Refresh strategy
 		event.respondWith(caches.match(ASSIGNMENTS));
@@ -102,6 +103,31 @@ self.addEventListener('fetch', function(event) {
 				}).catch(() => {
 					return caches.match(getCacheUrl(event.request));
 				})
+		);
+
+	} else {
+		// Try cache then network - but do not cache missing files as there will be a lot of them
+		event.respondWith(
+			caches
+				.match(getCacheUrl(event.request)) // check if the request has already been cached
+				.then(cached => cached || fetch(event.request)) // otherwise request network
+		);
+	}
+
+
+});
+*/
+
+
+// Temporary cache option
+self.addEventListener('fetch', function(event) {
+
+	if (event.request.url.includes(TIMEZONES)) {
+		// Cache then if not found network then cache the response
+		event.respondWith(
+			caches
+				.match(getCacheUrl(event.request)) // check if the request has already been cached
+				.then(cached => cached || update(event.request)) // otherwise request network
 		);
 
 	} else {
