@@ -45,7 +45,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
 
             // change functions
             // Display Type
-            $('input[name=showsource]').change(function () {
+            $('#showSource').change(function () {
                 setcontrols();
                 refreshData(globals.gCurrentProject, $('#survey option:selected').val());
             });
@@ -321,8 +321,12 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
         function setcontrols() {
 
             var survey = $('#survey option:selected').val(),
-                showSource = $("input[name=showsource]:checked").val(),
+                showSource = $("#showSource").val(),
                 showType = $("input[name=showtype]:checked").val();
+
+            $('.conditional').hide();
+            $('.' + showSource).show();
+
 
             if(showSource === "forms") {
                 $('#showtype, #showstatus').hide();
@@ -496,8 +500,8 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                             refreshFormsTable(data);
                         } else if(showSourceE === "notifications" || showSourceE === "optin_msg") {
                             refreshNotificationsTable(data, showType, showSourceE);
-                        } else {
-                            refreshTable(data, showType);
+                        } else if(showSourceE === "notifications") {
+                            refreshUploadedTable(data, showType);
                             if(showTypeE !== "totals") {
                                 refreshMap(data);
                             }
@@ -519,11 +523,10 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
             }
         }
 
-        function refreshTable(data, showType) {
+        function refreshUploadTable(data, showType) {
 
             var features = data.features,
-                $elem = $("#events tbody"),
-                $head = $("#events thead"),
+                $elem,
                 $msg = $('#events_table_msg'),
                 h = [],
                 i = -1,
@@ -536,8 +539,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 groupby =  $("input[name=groupsurvey]:checked").val(),
                 showSource = $("input[name=showsource]:checked").val();
 
-            $head.empty();
-            $elem.empty();
+            $elem = $('#_' + showSource + (showType ? '_' + showType : ''));
             $msg.empty();
 
             if(typeof features === "undefined" || features.length === 0) {
@@ -557,6 +559,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 return;
             }
             // Add the head
+            h[++i] = '<thead>';
             h[++i] = '<tr>';
             if(showType === "totals") {
                 if(sId === "_all") {
@@ -607,11 +610,10 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 h[++i] = '<th>' + localise.set["mon_fr"] + '</th>';
             }
             h[++i] = '</tr>';
-            $head.append(h.join(''));
+            h[++i] = '</thead>';
 
-            h = [];
-            i = -1;
             // Add the body
+            h[++i] = '<tbody>';
             for(j = 0; j < features.length; j++) {
                 h[++i] = '<tr>';
                 if(showType === "totals") {
@@ -668,6 +670,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 h[++i] = '</tr>';
 
             }
+            h[++i] = '</tbody>';
 
             $elem.append(h.join(''));
 
