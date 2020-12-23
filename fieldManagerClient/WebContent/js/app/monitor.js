@@ -22,9 +22,14 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
         var gStartEvents = [],		// Only in this java script file
             gPageCount = 1;			// Only in this java script file
 
+        let SOURCE_UPLOADED = "uploaded";
+        let SOURCE_FORMS = "forms";
+        let SOURCE_NOTIFICATIONS = "notifications";
+        let SOURCE_OPTIN_MSG = "optin_msg";
+
         $(document).ready(function() {
 
-	        setupUserProfile();
+	        setupUserProfile(true);
             window.moment = moment;
 
             localise.setlang();		// Localise HTML
@@ -45,7 +50,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
 
             // change functions
             // Display Type
-            $('#showSource').change(function () {
+            $('#showSource, #showType').change(function () {
                 setcontrols();
                 refreshData(globals.gCurrentProject, $('#survey option:selected').val());
             });
@@ -321,20 +326,19 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
         function setcontrols() {
 
             var survey = $('#survey option:selected').val(),
-                showSource = $("#showSource").val(),
-                showType = $("input[name=showtype]:checked").val();
+                showSource = $("#showSource").val();
 
             $('.conditional').hide();
             $('.' + showSource).show();
 
 
-            if(showSource === "forms") {
+            if(showSource === SOURCE_FORMS) {
                 $('#showtype, #showstatus').hide();
             } else {
                 $('#showtype, #showstatus').show();
             }
 
-            if(showSource === "optin_msg") {
+            if(showSource === SOURCE_OPTIN_MSG) {
                 $('.showproject').hide();
             } else {
                 $('.showproject').show();
@@ -344,16 +348,6 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 $('#groupsurvey').hide();
             } else {
                 $('#groupsurvey').show();
-            }
-            if(showType === "totals") {
-                $("input[value='map']", "#showtarget").prop('checked', false);
-                $("input[value='table']", "#showtarget").prop('checked',true);
-                $(".showmap").hide();
-                $('#map,#layers,.get_less_more').hide();
-                $('#events_table').show();
-                //refreshData(globals.gCurrentProject, survey);
-            } else {
-                $(".showmap,.get_less_more").show();
             }
         }
 
@@ -421,11 +415,11 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
             });
 
             var groupby =  $("input[name=groupsurvey]:checked").val();
-            var showType = $("input[name=showtype]:checked").val();
-            var showSource = $("input[name=showsource]:checked").val();
+            var showType = $("#showType").val();
+            var showSource = $("#showSource").val();
             var isForward = false;
 
-            if(showSource === "uploaded") {
+            if(showSource === SOURCE_UPLOADED) {
                 isForward=false;
             } else {
                 isForward=true;
@@ -438,16 +432,16 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 }
 
                 var url;
-                if(showSourceE === "notifications") {
+                if(showSourceE === SOURCE_NOTIFICATIONS) {
                     url = "/surveyKPI/eventList/notifications/" + projectId + "/" + surveyId;
-                } else  if(showSourceE === "optin_msg") {
+                } else  if(showSourceE === SOURCE_OPTIN_MSG) {
                     url = "/surveyKPI/eventList/optin";
                 } else {
                     url = "/surveyKPI/eventList/" + projectId + "/" + surveyId;
                 }
 
 
-                if(showSourceE === "forms") {
+                if(showSourceE === SOURCE_FORMS) {
                     url += "/forms";
                 } else {
                     if(showTypeE === "totals" ) {
@@ -478,6 +472,8 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                     success: function(data) {
                         removeHourglass();
 
+                        console.log("+++++++++++ received data: " + showSourceE + " : " + showTypeE);
+
                         // Save start and end records for less & more buttons
                         if(typeof data.totals !== "undefined") {
                             gStartEvents.push(start_rec);
@@ -496,11 +492,11 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                                 " to " +  data.totals.to_date;
                             $('.get_less_more_text').html(totals_msg);
                         }
-                        if(showSourceE === "forms") {
+                        if(showSourceE === SOURCE_FORMS) {
                             refreshFormsTable(data);
-                        } else if(showSourceE === "notifications" || showSourceE === "optin_msg") {
+                        } else if(showSourceE === SOURCE_NOTIFICATIONS || showSourceE === SOURCE_OPTIN_MSG) {
                             refreshNotificationsTable(data, showType, showSourceE);
-                        } else if(showSourceE === "notifications") {
+                        } else if(showSourceE === SOURCE_UPLOADED) {
                             refreshUploadedTable(data, showType);
                             if(showTypeE !== "totals") {
                                 refreshMap(data);
@@ -523,10 +519,10 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
             }
         }
 
-        function refreshUploadTable(data, showType) {
+        function refreshUploadedTable(data, showType) {
 
             var features = data.features,
-                $elem,
+                $elem = $('#events'),
                 $msg = $('#events_table_msg'),
                 h = [],
                 i = -1,
@@ -537,9 +533,10 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 sId = $('#survey option:selected').val(),
                 isForwarded = $("input[name=showsource]:checked").val() === "forwarded" ? true : false,
                 groupby =  $("input[name=groupsurvey]:checked").val(),
-                showSource = $("input[name=showsource]:checked").val();
+                showSource = $("#showSource").val(),
+                showType = $("#showType").val();
 
-            $elem = $('#_' + showSource + (showType ? '_' + showType : ''));
+
             $msg.empty();
 
             if(typeof features === "undefined" || features.length === 0) {
@@ -625,7 +622,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                         h[++i] = '<td>' + features[j].properties.success + '</td>';
                     }
                     if(typeof features[j].properties.errors !== "undefined") {
-                        h[++i] = '<td>' + features[j].properties.errors + '</td>';
+                        h[++i] = '<td' + (features[j].properties.errors > 0 ? ' class="text-danger"' : '') + '>' + features[j].properties.errors + '</td>';
                     }
                     if(typeof features[j].properties.duplicates !== "undefined") {
                         h[++i] = '<td>' + features[j].properties.duplicates + '</td>';
@@ -672,7 +669,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
             }
             h[++i] = '</tbody>';
 
-            $elem.append(h.join(''));
+            $elem.html(h.join(''));
 
 
         }
