@@ -34,23 +34,14 @@ requirejs.config({
      	i18n: '../../../../js/libs/i18n',
      	async: '../../../../js/libs/async',
      	localise: '../../../../js/app/localise',
-    	jquery: '../../../../js/libs/jquery-2.1.1',
-    	jquery_ui: [
-    	            '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min',
-    	            '../../../../js/libs/jquery-ui-1.10.3.custom.min'
-    	            ],
     	modernizr: '../../../../js/libs/modernizr',
-    	rmm: '../../../../js/libs/responsivemobilemenu',
     	common: '../../../../js/app/common',
     	moment: '../../../../js/libs/moment-with-locales.min',
     	globals: '../../../../js/app/globals',
-    	tablesorter: '../../../../js/libs/tablesorter',
     	crf: '../../../../js/libs/commonReportFunctions',
     	lang_location: '../../../../js'
     },
     shim: {
-    	'rmm': ['jquery'],
-    	'jquery_ui': ['jquery'],
     	'common': ['jquery'],
     	'tablesorter': ['jquery'],
     	'app/plugins': ['jquery'],
@@ -60,9 +51,7 @@ requirejs.config({
     });
 
 require([
-         'jquery', 
-         'jquery_ui',
-         'rmm', 
+         'jquery',
          'common', 
          'localise', 
          'globals',
@@ -73,7 +62,7 @@ require([
          'tablesorter',
          'crf'
          
-         ], function($, jquery_ui, rmm, common, localise, globals, moment) {
+         ], function($, jquery, common, localise, globals, moment) {
 
     setCustomMonitor();			// Apply custom javascript
 });
