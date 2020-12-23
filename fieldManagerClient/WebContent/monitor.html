@@ -7,6 +7,7 @@
 	<title class="lang" data-lang="m_monitor"></title>
 
 	<link href="/css/bootstrap.v4.5.min.css" rel="stylesheet">
+	<link href="/css/bootstrap.v4.5.greyson.min.css" rel="stylesheet">
 	<link href="/css/fa.v5.15.1.all.min.css" rel="stylesheet">
 	<link href="/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 	<link href="/css/smap3.css" rel="stylesheet">
@@ -71,7 +72,7 @@
 <div class="container-fluid">
 	<!-- Header Row -->
 	<div class="row border-bottom bg-white mt-4">
-		<div class="col-sm-6">
+		<div class="col-sm-4 pt-4 border-right">
 			<form>
 				<div class="form-group row">
 					<label class="lang col-sm-4 control-label" data-lang="c_source" for="showSource">source</label>
@@ -85,10 +86,6 @@
 						</select>
 					</div>
 				</div>
-			</form>
-		</div>
-		<div class="col-sm-6">
-			<form>
 				<div class="form-group row">
 					<label class="lang col-sm-4 control-label" data-lang="c_project" for="project_name">project</label>
 					<div class="col-sm-8">
@@ -97,62 +94,55 @@
 				</div>
 			</form>
 		</div>
-		<div class="col-sm-6"></div>
+		<div class="col-sm-4 pt-4 border-right">
+			<form>
+				<div class="form-group row">
+					<label class="lang col-sm-4 control-label" data-lang="c_show" for="showType">source</label>
+					<div class="col-sm-8">
+						<select class="form-control" id="showType">
+							<option value="totals" class="lang" data-lang="c_totals"></option>
+							<option value="instances" class="lang" data-lang="mon_l200"></option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="lang col-sm-4 control-label" data-lang="c_survey" for="survey">survey</label>
+					<div class="col-sm-8">
+						<select class="survey_select data_survey form-control" id="survey"></select>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-sm-4 pt-4"></div>
 	</div>
 </div>
 
 <!-- Main panel -->
 <div class="card text-center mt-10 conditional uploaded">
-	<div class="card-header">
-		<ul class="nav nav-tabs card-header-tabs" role="tablist">
-			<li id="uploadedTotalsTab" class="nav-item"><a class="nav-link active" href="#formsPanel" data-toggle="tab" role="tab" aria-controls="formsPanel" aria-selected="true">
-				<span class="lang" data-lang="c_totals"></span> </a>
-			</li>
-			<li id="uploadedInstancesTab" class="nav-item"><a class="nav-link" href="#tasksPanel" data-toggle="tab" role="tab" aria-controls="tasksPanel" aria-selected="false">
-				<span class="lang" data-lang="c_instances"></span></a>
-			</li>
-			<li id="uploadedMapTab" class="nav-item"><a class="nav-link" href="#mapPanel" data-toggle="tab" role="tab" aria-controls="mapPanel" aria-selected="false">
-				<span class="lang" data-lang="c_map"></span></a>
-			</li>
-		</ul>
-	</div>
 	<div class="card-body">
 		<div class="tab-content">
 			<div id="uploadedTotalsPanel" class="tab-pane fade show active" role="tabpanel" aria-labelledby="uploadedTotalsTab">
 				<div class="panel-body">
-					<table id="uploaded_totals"></table>
-				</div>
-			</div>
-
-			<div id="uploadedInstancesPanel" class="tab-pane fade" role="tabpanel" aria-labelledby="uploadedInstancesTab">
-				<div class="panel-body">
-					<table id="uploaded_instances"></table>
-				</div>
-			</div>
-
-			<div id="uploadedMapPanel" class="tab-pane fade" role="tabpanel" aria-labelledby="uploadedMapTab">
-				<div class="panel-body">
-					<div id="uploaded_map"></div>
+					<div class="table-responsive col-xs-12">
+						<table class="table table-responsive-sm table-bordered table-sm" id="events"></table>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
 
+<div class="card text-center mt-10 conditional uploaded_map">
+	<div class="card-body">
+		<div class="panel-body">
+			<div id="uploaded_map"></div>
+		</div>
+	</div>
+</div>
+
 	<div id="aside">
 		<form id="mon_controls">
-			<fieldset id="showtype" class="ui-widget-content">
-				<legend class="ui-widget-header ui-corner-all lang" data-lang="c_show">show</legend>
-				<input type="radio" name="showtype" value="totals" checked="checked"/> <span class="lang" data-lang="c_totals">totals</span><br/> 
-				<input type="radio" name="showtype" value="instances"/> <span class="lang" data-lang="c_instances">instances</span> <span class="lang" data-lang="mon_l200">last 200</span><br/>  
-			</fieldset>
-			<fieldset class="ui-widget-content showproject">
-				<legend class="ui-widget-header ui-corner-all lang" data-lang="c_data">data</legend>
 
-				<label for="survey" class="lang" data-lang="c_survey">Survey: </label>
-				<select id="survey" class="survey_select data_survey">
-				</select>
-			</fieldset>
 			<fieldset id="groupsurvey" style="display:none;" class="ui-widget-content">
 				<legend class="ui-widget-header ui-corner-all" class="lang" data-lang="mon_gtb">group totals by</legend>
 				<input type="radio" name="groupsurvey" value="device" checked="checked"/><span class="lang" data-lang="c_device">device</span><br/> 
@@ -201,12 +191,7 @@
 		<div id="monitor">
 			<div id="map"></div>
 			<div id="events_table">
-				<table id="events" class="tablesorter">
-					<thead>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
+
 			</div>
 		</div>
 	</div>
