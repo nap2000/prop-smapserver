@@ -16,8 +16,8 @@
 
  */
 
-define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
-    function($, ui, ol_mgmt, lang, common, globals, moment) {
+define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
+    function($, ol_mgmt, lang, common, globals, moment) {
 
         var gStartEvents = [],		// Only in this java script file
             gPageCount = 1;			// Only in this java script file
@@ -109,6 +109,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 }
                 $('#regions').dialog("open");
             });
+            /*
             $('#regions').dialog(
                 {
                     autoOpen: false, closeOnEscape:true, draggable:true, modal:true,
@@ -130,6 +131,8 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                     ]
                 }
             );
+            */
+
 
             // Remove layer button
             $('#removeLayer').button().click(function () {
@@ -225,6 +228,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 }
                 return false;
             });
+            /*
             $('#region_create').dialog(
                 {
                     autoOpen: false, closeOnEscape:true, draggable:true, modal:false,
@@ -242,6 +246,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                     ]
                 }
             );
+            */
 
             // Delete Layers button and dialog
             $('#deleteLayer').button().click(function () {
@@ -249,6 +254,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 // open the dialog
                 $('#regions_delete').dialog("open");
             });
+            /*
             $('#regions_delete').dialog(
                 {
                     autoOpen: false, closeOnEscape:true, draggable:true, modal:false,
@@ -303,8 +309,9 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                     ]
                 }
             );
+            */
 
-            enableUserProfile();
+            //enableUserProfile();
             setcontrols();
 
             $('#tableradio').prop('checked',true);
@@ -326,7 +333,8 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
         function setcontrols() {
 
             var survey = $('#survey option:selected').val(),
-                showSource = $("#showSource").val();
+                showSource = $("#showSource").val(),
+                showType = $('#showType').val();
 
             $('.conditional').hide();
             $('.' + showSource).show();
@@ -348,6 +356,15 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 $('#groupsurvey').hide();
             } else {
                 $('#groupsurvey').show();
+            }
+            if(showType === "totals") {
+                $("input[value='map']", "#showtarget").prop('checked', false);
+                $("input[value='table']", "#showtarget").prop('checked',true);
+                $(".showmap").hide();
+                $('#map,#layers,.get_less_more').hide();
+                $('#events_table').show();
+            } else {
+                $(".showmap,.get_less_more").show();
             }
         }
 
@@ -479,14 +496,14 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                             gStartEvents.push(start_rec);
                             $('.get_more').val(data.totals.max_rec);
                             if(start_rec === 0) {
-                                $('.get_less').button({ disabled: true });
+                                $('.get_less').prop("disabled", true);
                             } else {
-                                $('.get_less').button({ disabled: false });
+                                $('.get_less').prop("disabled", false);
                             }
                             if(data.totals.more_recs === 0) {
-                                $('.get_more').button({ disabled: true });
+                                $('.get_more').prop("disabled", true);
                             } else {
-                                $('.get_more').button({ disabled: false });
+                                $('.get_more').prop("disabled", false);
                             }
                             var totals_msg = "Page " + gPageCount + " from " + data.totals.from_date +
                                 " to " +  data.totals.to_date;
@@ -556,7 +573,7 @@ define(['jquery','jquery_ui', 'app/map-ol-mgmt', 'localise', 'common', 'globals'
                 return;
             }
             // Add the head
-            h[++i] = '<thead>';
+            h[++i] = '<thead class="thead-dark">';
             h[++i] = '<tr>';
             if(showType === "totals") {
                 if(sId === "_all") {
