@@ -338,3 +338,6 @@ DROP INDEX if exists survey_group_survey_key;
 
 insert into groups(id,name) values(12,'dashboard');
 
+-- version 21.01
+alter table question add column trigger text;
+
