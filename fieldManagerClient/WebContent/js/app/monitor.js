@@ -98,6 +98,10 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                 }
             });
 
+            $('#m_refresh').click(function() {
+                refreshData(globals.gCurrentProject, $('#survey option:selected').val());
+            });
+
             // Add button to add a Layer along with its dialog
             $('#addLayer').button().click(function () {
                 var $elem = $("#available_regions");
