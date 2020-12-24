@@ -9,7 +9,6 @@
 	<link href="/css/bootstrap.v4.5.min.css" rel="stylesheet">
 	<link href="/css/bootstrap.v4.5.greyson.min.css" rel="stylesheet">
 	<link href="/css/fa.v5.15.1.all.min.css" rel="stylesheet">
-	<link href="/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 	<link href="/css/smap3.css" rel="stylesheet">
 
 	<link rel="stylesheet" href="/js/libs/OpenLayers/theme/default/style.tidy.css" type="text/css">
@@ -92,6 +91,12 @@
 						<select class="project_list form-control" id="project_name"></select>
 					</div>
 				</div>
+				<div class="form-group row">
+					<label class="lang col-sm-4 control-label" data-lang="c_survey" for="survey">survey</label>
+					<div class="col-sm-8">
+						<select class="survey_select data_survey form-control" id="survey"></select>
+					</div>
+				</div>
 			</form>
 		</div>
 		<div class="col-sm-4 pt-4 border-right">
@@ -105,20 +110,58 @@
 						</select>
 					</div>
 				</div>
-				<div class="form-group row">
-					<label class="lang col-sm-4 control-label" data-lang="c_survey" for="survey">survey</label>
+				<div class="showtarget conditional form-group row">
+					<label class="lang col-sm-4 control-label" data-lang="mon_sa" for="showAs">as</label>
 					<div class="col-sm-8">
-						<select class="survey_select data_survey form-control" id="survey"></select>
+						<select class="form-control" id="showAs">
+							<option value="table" class="lang" data-lang="c_table"></option>
+							<option value="map" class="lang" data-lang="c_map"></option>
+						</select>
 					</div>
 				</div>
-				<div class="form-group row get_less_more" style="display:none;">
+				<div class="form-group row conditional get_less_more" style="display:none;">
 					<button type="button" class="mx-2 col-sm-3 button-light get_less">&lt;&lt;&lt;</button>
 					<button type="button" class="mr-2 col-sm-3 button-light get_more">&gt;&gt;&gt;</button>
 					<span class="col -sm-6 get_less_more_text">Page 1 of 1</span>
 				</div>
 			</form>
 		</div>
-		<div class="col-sm-4 pt-4"></div>
+		<div class="col-sm-4 pt-4">
+			<fieldset id="groupsurvey" style="display:none;" class="ui-widget-content">
+				<legend class="ui-widget-header ui-corner-all" class="lang" data-lang="mon_gtb">group totals by</legend>
+				<input type="radio" name="groupsurvey" value="device" checked="checked"/><span class="lang" data-lang="c_device">device</span><br/>
+				<input type="radio" name="groupsurvey" value="month"/><span class="lang" data-lang="c_month">month</span><br/>
+				<input type="radio" name="groupsurvey" value="week"/><span class="lang" data-lang="c_week">week</span><br/>
+				<input type="radio" name="groupsurvey" value="day"/><span class="lang" data-lang="c_day">day</span><br/>
+			</fieldset>
+			<div id="showstatus">
+				<h5 class="lang" data-lang="c_include">inc</h5>
+				<div class="custom-control custom-checkbox">
+					<input type="checkbox" class="custom-control-input" id="statusCheck1" name="showstatus" value="success" checked="checked">
+					<label class="custom-control-label lang" data-lang="c_success" for="statusCheck1">su</label>
+				</div>
+				<div class="custom-control custom-checkbox">
+					<input type="checkbox" class="custom-control-input" id="statusCheck2" name="showstatus" value="errors" checked="checked">
+					<label class="custom-control-label lang" data-lang="c_errors" for="statusCheck2">err</label>
+				</div>
+				<div class="custom-control custom-checkbox">
+					<input type="checkbox" class="custom-control-input" id="statusCheck3" name="showstatus" value="not_loaded" checked="checked">
+					<label class="custom-control-label lang" data-lang="mon_nl" for="statusCheck3">nl</label>
+				</div>
+				<div class="custom-control custom-checkbox">
+					<input type="checkbox" class="custom-control-input" id="statusCheck4" name="showstatus" value="duplicates" checked="checked">
+					<label class="custom-control-label lang" data-lang="mon_dup" for="statusCheck4">dups</label>
+				</div>
+				<div class="custom-control custom-checkbox">
+					<input type="checkbox" class="custom-control-input" id="statusCheck5" name="showstatus" value="merged" checked="checked">
+					<label class="custom-control-label lang" data-lang="mon_att" for="statusCheck5">att</label>
+				</div>
+				<div class="custom-control custom-checkbox">
+					<input type="checkbox" class="custom-control-input" id="statusCheck6" name="showstatus" value="upload_errors" checked="checked">
+					<label class="custom-control-label lang" data-lang="mon_ue" for="statusCheck6">ue</label>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -140,7 +183,7 @@
 <div class="card text-center mt-10 conditional uploaded_map">
 	<div class="card-body">
 		<div class="panel-body">
-			<div id="uploaded_map"></div>
+			<div id="map"></div>
 		</div>
 	</div>
 </div>
@@ -148,28 +191,7 @@
 	<div id="aside">
 		<form id="mon_controls">
 
-			<fieldset id="groupsurvey" style="display:none;" class="ui-widget-content">
-				<legend class="ui-widget-header ui-corner-all" class="lang" data-lang="mon_gtb">group totals by</legend>
-				<input type="radio" name="groupsurvey" value="device" checked="checked"/><span class="lang" data-lang="c_device">device</span><br/> 
-				<input type="radio" name="groupsurvey" value="month"/><span class="lang" data-lang="c_month">month</span><br/> 
-				<input type="radio" name="groupsurvey" value="week"/><span class="lang" data-lang="c_week">week</span><br/> 
-				<input type="radio" name="groupsurvey" value="day"/><span class="lang" data-lang="c_day">day</span><br/> 
-			</fieldset>
-			<fieldset id="showstatus" class="ui-widget-content">
-				<legend class="ui-widget-header ui-corner-all">Include</legend>
-					<input type="checkbox" name="showstatus" value="success" checked="checked"/> <span class="lang" data-lang="c_success">success</span><br/> 
-					<input type="checkbox" name="showstatus" value="errors" checked="checked"/> <span class="lang" data-lang="c_errors">errors</span><br/> 
-					<input type="checkbox" name="showstatus" value="not_loaded" checked="checked"/> <span class="lang" data-lang="mon_nl">not loaded</span><br/>
-					<input type="checkbox" name="showstatus" value="duplicates" checked="checked"/> <span class="lang" data-lang="mon_dup">duplicates</span><br/>  
-					<input type="checkbox" name="showstatus" value="merged" checked="checked"/> <span class="lang" data-lang="mon_att">attachments</span><br/>
-					<input type="checkbox" name="showstatus" value="upload_errors" checked="checked"/> <span class="lang" data-lang="mon_ue">upload errors</span><br/>
-			</fieldset>
-			<fieldset id="showtarget" class="ui-widget-content">
-				<legend class="ui-widget-header ui-corner-all lang" data-lang="mon_sa">show as</legend>
-				<input type="radio" name="target" value="table" id="tableradio" checked="checked"/> <span class="lang" data-lang="c_table">table</span><br/> 
-				<!-- <input type="radio" name="target" value="graph"/> Graph<br/> -->
-				<span class="showmap"><input type="radio" name="target" value="map"/> <span class="lang" data-lang="c_map">map</span><br/></span> 
-			</fieldset>
+
 			<div id="layers" style="display:none;">
 				<h1 class="lang" data-lang="c_map_layers">layers</h1>
 				<div id="current_layers">
@@ -190,7 +212,6 @@
 
 	</div>
 		<div id="monitor">
-			<div id="map"></div>
 			<div id="events_table">
 
 			</div>

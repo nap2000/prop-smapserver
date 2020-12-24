@@ -39,14 +39,10 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             refreshRegions();
 
             // Initialise the map and then hide it
+            $('#uploaded_map').show();
             initializeMap();
-            $('#map, #layers').hide();
+            $('#uploaded_map, #layers').hide();
 
-            // Menu functions
-            $('.rmm').delegate('#refreshMenu', 'click', function(e) {
-                e.preventDefault();
-                refreshData(globals.gCurrentProject, $('#survey option:selected').val());
-            });
 
             // change functions
             // Display Type
@@ -55,11 +51,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                 refreshData(globals.gCurrentProject, $('#survey option:selected').val());
             });
 
-            $('input[name=target]').change(function () {
-                $('#map,#events_table,#layers').toggle();
-            });
-
-            $('input[name=showtype]').change(function () {
+            $('#showAs').change(function () {
                 setcontrols();
                 refreshData(globals.gCurrentProject, $('#survey option:selected').val());
             });
@@ -338,10 +330,10 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
 
             var survey = $('#survey option:selected').val(),
                 showSource = $("#showSource").val(),
-                showType = $('#showType').val();
+                showType = $('#showType').val(),
+                showAs = $('#showAs').val();
 
             $('.conditional').hide();
-            $('.' + showSource).show();
 
 
             if(showSource === SOURCE_FORMS) {
@@ -361,14 +353,19 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             } else {
                 $('#groupsurvey').show();
             }
-            if(showType === "totals") {
-                $("input[value='map']", "#showtarget").prop('checked', false);
-                $("input[value='table']", "#showtarget").prop('checked',true);
-                $(".showmap").hide();
-                $('#map,#layers,.get_less_more').hide();
-                $('#events_table').show();
-            } else {
-                $(".showmap,.get_less_more").show();
+
+            if(showSource === SOURCE_UPLOADED) {
+                if (showType === "instances") {
+                    $(".showmap,.get_less_more, .showtarget").show();
+                    if(showAs === "table") {
+                        $('.uploaded').show();
+                    } else {
+                        $('.uploaded_map').show();
+                    }
+                } else {
+                    $('.uploaded').show();
+                }
+
             }
         }
 
@@ -573,6 +570,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                 } else {
                     msg = "<h1>" + localise.set["msg_us"] + "</h1>";
                 }
+                $elem.empty();
                 $msg.html(msg);
                 return;
             }
