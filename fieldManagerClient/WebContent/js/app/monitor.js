@@ -336,21 +336,15 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             $('.conditional').hide();
 
 
-            if(showSource === SOURCE_FORMS) {
-                $('#showtype, #showstatus').hide();
-            } else {
-                $('#showtype, #showstatus').show();
+            if(showSource !== SOURCE_FORMS) {
+                $('.showtype, #showstatus').show();
             }
 
-            if(showSource === SOURCE_OPTIN_MSG) {
-                $('.showproject').hide();
-            } else {
+            if(showSource !== SOURCE_OPTIN_MSG) {
                 $('.showproject').show();
             }
 
-            if(typeof survey === "undefined" || survey === "_all" || showType === "instances") {
-                $('#groupsurvey').hide();
-            } else {
+            if(typeof survey !== "undefined" && survey !== "_all" && showType !== "instances") {
                 $('#groupsurvey').show();
             }
 
