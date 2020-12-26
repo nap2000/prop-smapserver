@@ -335,7 +335,6 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
 
             $('.conditional').hide();
 
-
             if(showSource !== SOURCE_FORMS) {
                 $('.showtype, #showstatus').show();
             }
@@ -360,6 +359,8 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                     $('.uploaded').show();
                 }
 
+            } else {
+                $('.uploaded').show();
             }
         }
 
@@ -690,8 +691,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
         function refreshNotificationsTable(data, showType, source) {
 
             var features = data.features,
-                $elem = $("#events tbody"),
-                $head = $("#events thead"),
+                $elem = $("#events"),
                 $msg = $('#events_table_msg'),
                 h = [],
                 i = -1,
@@ -699,19 +699,20 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                 locn,
                 status,
                 reason,
-                showSource = $("input[name=showsource]:checked").val();
+                showSource = $("#showSource").val(),
+                showType = $("#showType").val();
 
-            $head.empty();
             $elem.empty();
             $msg.empty();
 
             if(typeof features === "undefined" || features.length === 0) {
-                var msg = "<h1>" + localise.set["msg_nn"] + "</h1>";
+                var msg = "<h1>" + (showSource === SOURCE_NOTIFICATIONS ? localise.set["msg_nn"] : localise.set["msg_noi"]) + "</h1>";
                 $msg.html(msg);
                 return;
             }
 
             // Add the head
+            h[++i] = '<thead class="thead-dark">';
             h[++i] = '<tr>';
             if(showType === "totals") {
                 h[++i] = '<th>' + localise.set["c_success"] + '</th>';
@@ -736,16 +737,15 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                 h[++i] = '<th>' + localise.set["c_retry"] + '</th>';
             }
             h[++i] = '</tr>';
-            $head.append(h.join(''));
+            h[++i] = '</thead>';
 
-            h = [];
-            i = -1;
             // Add the body
+            h[++i] = '<tbody>';
             for(j = 0; j < features.length; j++) {
                 h[++i] = '<tr>';
                 if(showType === "totals") {
-                    h[++i] = '<td>' + features[j].properties.success + '</td>';
-                    h[++i] = '<td>' + features[j].properties.errors + '</td>';
+                    h[++i] = '<td>' + (features[j].properties.success ? features[j].properties.success : 0) + '</td>';
+                    h[++i] = '<td>' + (features[j].properties.errors ? features[j].properties.errors : 0) + '</td>';
                 } else {
 
                     h[++i] = '<td>' + features[j].properties.id + '</td>';
@@ -788,10 +788,11 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
 
                 }
                 h[++i] = '</tr>';
+                h[++i] = '</tbody>';
 
             }
 
-            $elem.append(h.join(''));
+            $elem.html(h.join(''));
             $('.retry_button', $elem).button().click(function() {
                 var $this = $(this);
                 var messageId = $this.val();
