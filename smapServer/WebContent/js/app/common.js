@@ -1669,6 +1669,9 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 	if(addAll) {
 		h[++idx] = '<option value="_all">';
 		h[++idx] = localise.set["c_all_s"];		// All Surveys
+		if (count++ == 0) {
+			selValue = "_all";
+		}
 		h[++idx] = '</option>';
 	}
 

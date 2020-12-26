@@ -85,13 +85,13 @@
 						</select>
 					</div>
 				</div>
-				<div class="form-group row">
+				<div class="form-group row conditional showproject">
 					<label class="lang col-sm-4 control-label" data-lang="c_project" for="project_name">project</label>
 					<div class="col-sm-8">
 						<select class="project_list form-control" id="project_name"></select>
 					</div>
 				</div>
-				<div class="form-group row">
+				<div class="form-group row conditional showproject">
 					<label class="lang col-sm-4 control-label" data-lang="c_survey" for="survey">survey</label>
 					<div class="col-sm-8">
 						<select class="survey_select data_survey form-control" id="survey"></select>
@@ -101,7 +101,7 @@
 		</div>
 		<div class="col-sm-4 pt-4 border-right">
 			<form>
-				<div class="form-group row">
+				<div class="form-group conditional showtype row">
 					<label class="lang col-sm-4 control-label" data-lang="c_show" for="showType">source</label>
 					<div class="col-sm-8">
 						<select class="form-control" id="showType">
@@ -127,38 +127,52 @@
 			</form>
 		</div>
 		<div class="col-sm-4 pt-4">
-			<fieldset id="groupsurvey" style="display:none;" class="ui-widget-content">
-				<legend class="ui-widget-header ui-corner-all" class="lang" data-lang="mon_gtb">group totals by</legend>
-				<input type="radio" name="groupsurvey" value="device" checked="checked"/><span class="lang" data-lang="c_device">device</span><br/>
-				<input type="radio" name="groupsurvey" value="month"/><span class="lang" data-lang="c_month">month</span><br/>
-				<input type="radio" name="groupsurvey" value="week"/><span class="lang" data-lang="c_week">week</span><br/>
-				<input type="radio" name="groupsurvey" value="day"/><span class="lang" data-lang="c_day">day</span><br/>
-			</fieldset>
-			<div id="showstatus">
-				<h5 class="lang" data-lang="c_include">inc</h5>
-				<div class="custom-control custom-checkbox">
-					<input type="checkbox" class="custom-control-input" id="statusCheck1" name="showstatus" value="success" checked="checked">
-					<label class="custom-control-label lang" data-lang="c_success" for="statusCheck1">su</label>
+			<div class="row">
+				<div id="showstatus" class="conditional col-sm-6">
+					<h5 class="lang" data-lang="c_include">inc</h5>
+					<div class="custom-control custom-checkbox">
+						<input type="checkbox" class="custom-control-input" id="statusCheck1" name="showstatus" value="success" checked="checked">
+						<label class="custom-control-label lang" data-lang="c_success" for="statusCheck1">su</label>
+					</div>
+					<div class="custom-control custom-checkbox">
+						<input type="checkbox" class="custom-control-input" id="statusCheck2" name="showstatus" value="errors" checked="checked">
+						<label class="custom-control-label lang" data-lang="c_errors" for="statusCheck2">err</label>
+					</div>
+					<div class="custom-control custom-checkbox">
+						<input type="checkbox" class="custom-control-input" id="statusCheck3" name="showstatus" value="not_loaded" checked="checked">
+						<label class="custom-control-label lang" data-lang="mon_nl" for="statusCheck3">nl</label>
+					</div>
+					<div class="custom-control custom-checkbox">
+						<input type="checkbox" class="custom-control-input" id="statusCheck4" name="showstatus" value="duplicates" checked="checked">
+						<label class="custom-control-label lang" data-lang="mon_dup" for="statusCheck4">dups</label>
+					</div>
+					<div class="custom-control custom-checkbox">
+						<input type="checkbox" class="custom-control-input" id="statusCheck5" name="showstatus" value="merged" checked="checked">
+						<label class="custom-control-label lang" data-lang="mon_att" for="statusCheck5">att</label>
+					</div>
+					<div class="custom-control custom-checkbox">
+						<input type="checkbox" class="custom-control-input" id="statusCheck6" name="showstatus" value="upload_errors" checked="checked">
+						<label class="custom-control-label lang" data-lang="mon_ue" for="statusCheck6">ue</label>
+					</div>
 				</div>
-				<div class="custom-control custom-checkbox">
-					<input type="checkbox" class="custom-control-input" id="statusCheck2" name="showstatus" value="errors" checked="checked">
-					<label class="custom-control-label lang" data-lang="c_errors" for="statusCheck2">err</label>
-				</div>
-				<div class="custom-control custom-checkbox">
-					<input type="checkbox" class="custom-control-input" id="statusCheck3" name="showstatus" value="not_loaded" checked="checked">
-					<label class="custom-control-label lang" data-lang="mon_nl" for="statusCheck3">nl</label>
-				</div>
-				<div class="custom-control custom-checkbox">
-					<input type="checkbox" class="custom-control-input" id="statusCheck4" name="showstatus" value="duplicates" checked="checked">
-					<label class="custom-control-label lang" data-lang="mon_dup" for="statusCheck4">dups</label>
-				</div>
-				<div class="custom-control custom-checkbox">
-					<input type="checkbox" class="custom-control-input" id="statusCheck5" name="showstatus" value="merged" checked="checked">
-					<label class="custom-control-label lang" data-lang="mon_att" for="statusCheck5">att</label>
-				</div>
-				<div class="custom-control custom-checkbox">
-					<input type="checkbox" class="custom-control-input" id="statusCheck6" name="showstatus" value="upload_errors" checked="checked">
-					<label class="custom-control-label lang" data-lang="mon_ue" for="statusCheck6">ue</label>
+				<div id="groupsurvey" class="col-sm-6 conditional">
+					<h5 class="lang" data-lang="mon_gtb">inc</h5>
+					<div class="custom-control custom-checkbox">
+						<input type="radio" class="custom-control-input" id="groupCheck1" name="groupsurvey" value="device" checked="checked">
+						<label class="custom-control-label lang" data-lang="c_device" for="groupCheck1">dev</label>
+					</div>
+					<div class="custom-control custom-checkbox">
+						<input type="radio" class="custom-control-input" id="groupCheck2" name="groupsurvey" value="month">
+						<label class="custom-control-label lang" data-lang="c_month" for="groupCheck2">day</label>
+					</div>
+					<div class="custom-control custom-checkbox">
+						<input type="radio" class="custom-control-input" id="groupCheck3" name="groupsurvey" value="week">
+						<label class="custom-control-label lang" data-lang="c_week" for="groupCheck3">wk</label>
+					</div>
+					<div class="custom-control custom-checkbox">
+						<input type="radio" class="custom-control-input" id="groupCheck4" name="groupsurvey" value="day">
+						<label class="custom-control-label lang" data-lang="c_day" for="groupCheck4">mth</label>
+					</div>
 				</div>
 			</div>
 		</div>
