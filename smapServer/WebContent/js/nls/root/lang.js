@@ -496,6 +496,7 @@ define({
     "msg_edit_notification": "Edit Notification",
     "msg_send_notification": "Send Notification",
     "msg_nn": "No notifications",
+    "msg_noi": "No opt in messages",
     "msg_add_map": "Add Map",
     "msg_edit_map": "Edit Map",
     "msg_sel_form": "Select Form:",
@@ -755,6 +756,7 @@ define({
     "mon_pending_count": "Pending Messages",
     "error": "Error",
     "success": "Success",
+    "mon_retry": "Re-apply failed uploads",
 
     // Analysis, reports, modify
     "an_auth": "Author",
