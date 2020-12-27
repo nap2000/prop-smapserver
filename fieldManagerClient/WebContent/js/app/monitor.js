@@ -94,6 +94,30 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                 refreshData(globals.gCurrentProject, $('#survey option:selected').val());
             });
 
+            // retry submissions
+            $('#submission_retry').click(function() {
+               let survey = $('#survey').val();
+
+                addHourglass();
+                $.ajax({
+                    url: "/surveyKPI/eventList/submission_retry/" + survey,
+                    dataType: 'text',
+                    cache: false,
+                    success: function() {
+                        removeHourglass();
+                        refreshData(globals.gCurrentProject, $('#survey option:selected').val());
+                    },
+                    error: function(xhr, textStatus, err) {
+                        removeHourglass();
+                        if(xhr.readyState == 0 || xhr.status == 0) {
+                            return;  // Not an error
+                        } else {
+                            alert("Failed retry survey");
+                        }
+                    }
+                });
+            });
+
             // Add button to add a Layer along with its dialog
             $('#addLayer').button().click(function () {
                 var $elem = $("#available_regions");
@@ -313,13 +337,13 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             $('#tableradio').prop('checked',true);
 
             // Handle more / less buttons
-            $('.get_less').button().click(function() {
+            $('.get_less').click(function() {
                 var currentStart = gStartEvents.pop();
                 var newStart = gStartEvents.pop();
                 gPageCount--;
                 refreshData(globals.gCurrentProject, $('#survey option:selected').val(), newStart);
             });
-            $('.get_more').button().click(function() {
+            $('.get_more').click(function() {
                 gPageCount++;
                 refreshData(globals.gCurrentProject, $('#survey option:selected').val(), parseInt($(this).val()));
             });
@@ -627,6 +651,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             h[++i] = '</thead>';
 
             // Add the body
+            $('#submission_retry').prop("disabled", true);
             h[++i] = '<tbody>';
             for(j = 0; j < features.length; j++) {
                 h[++i] = '<tr>';
@@ -640,6 +665,9 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                     }
                     if(typeof features[j].properties.errors !== "undefined") {
                         h[++i] = '<td' + (features[j].properties.errors > 0 ? ' class="text-danger"' : '') + '>' + features[j].properties.errors + '</td>';
+                        if(features[j].properties.errors > 0) {
+                            $('#submission_retry').prop("disabled", false);
+                        }
                     }
                     if(typeof features[j].properties.duplicates !== "undefined") {
                         h[++i] = '<td>' + features[j].properties.duplicates + '</td>';
@@ -772,14 +800,14 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                     }
                     h[++i] = '<td>' + localTime(features[j].properties.event_time) + '</td>';
                     if(source === "optin_msg") {
-                        h[++i] = '<td><button class="optin_retry_button" value="';
+                        h[++i] = '<td><button type="button" class="btn btn-info optin_retry_button" value="';
                         h[++i] = features[j].properties.id;
                         h[++i] = '">';
                         h[++i] = localise.set["c_retry"];
                         h[++i] = '</button></td>';
                     } else {
                         if (status === "error" && features[j].properties.message_id) {
-                            h[++i] = '<td><button class="retry_button" value="';
+                            h[++i] = '<td><button type="button" class="btn btn-info retry_button" value="';
                             h[++i] = features[j].properties.message_id;
                             h[++i] = '">';
                             h[++i] = localise.set["c_retry"];
@@ -796,7 +824,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             }
 
             $elem.html(h.join(''));
-            $('.retry_button', $elem).button().click(function() {
+            $('.retry_button', $elem).click(function() {
                 var $this = $(this);
                 var messageId = $this.val();
                 $this.closest('tr').remove();
