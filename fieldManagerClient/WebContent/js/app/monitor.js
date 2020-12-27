@@ -345,6 +345,9 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
 
             if(typeof survey !== "undefined" && survey !== "_all" && showType !== "instances") {
                 $('#groupsurvey').show();
+                if(showSource === SOURCE_UPLOADED ) {
+                    $('.retry').show();
+                }
             }
 
             if(showSource === SOURCE_UPLOADED) {
@@ -846,13 +849,11 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
 
         function refreshFormsTable(forms) {
 
-            var $elem = $("#events tbody"),
-                $head = $("#events thead"),
+            var $elem = $("#events"),
                 $msg = $('#events_table_msg'),
                 h = [],
                 i = -1;
 
-            $head.empty();
             $elem.empty();
             $msg.empty();
 
@@ -869,6 +870,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             }
 
             // Add the head
+            h[++i] = '<thead class="thead-dark">';
             h[++i] = '<tr>';
             h[++i] = '<th>' + localise.set["c_user"] + ' ' + localise.set["c_name"] + '</th>';
             h[++i] = '<th>' + localise.set["c_user"] + ' ' + localise.set["c_ident"] + '</th>';
@@ -876,11 +878,11 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             h[++i] = '<th>' + localise.set["c_survey"] + ' ' + localise.set["c_name"] + '</th>';
             h[++i] = '<th>' + localise.set["c_survey"] + ' ' + localise.set["c_version"] + '</th>';
             h[++i] = '</tr>';
-            $head.append(h.join(''));
+            h[++i] = '</thead>';
 
-            h = [];
-            i = -1;
+
             // Add the body
+            h[++i] = '<tbody>';
             for(j = 0; j < forms.length; j++) {
                 h[++i] = '<tr>';
                 h[++i] = '<td>' + forms[j].u_name + '</td>';
@@ -903,8 +905,8 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                 h[++i] = '</tr>';
 
             }
-
-            $elem.append(h.join(''));
+            h[++i] = '</tbody>';
+            $elem.html(h.join(''));
 
         }
 
