@@ -1940,7 +1940,7 @@ require([
 
 			if (yesGroup && yesProject && yesRole && yesOrg) {
 				h[++idx] = '<tr>';
-				h[++idx] = '<td class="user_edit_td"><button class="btn btn-default user_edit" style="width:100%;" value="';
+				h[++idx] = '<td class="user_edit_td"><button class="btn btn-default user_edit" style="width:100%;" data-idx="';
 				h[++idx] = i;
 				h[++idx] = '">';
 				h[++idx] = user.ident;
@@ -1956,7 +1956,11 @@ require([
 				h[++idx] = '<button type="button" data-idx="';
 				h[++idx] = i;
 				h[++idx] = '" class="btn btn-default btn-sm rm_user btn-danger">';
-				h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+				h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
+				h[++idx] = '<button type="button" data-idx="';
+				h[++idx] = i;
+				h[++idx] = '" class="ml-4 btn btn-default btn-sm user_edit btn-info">';
+				h[++idx] = '<i class="far fa-edit"></i></button>';
 				h[++idx] = '</td>';
 
 				h[++idx] = '</tr>';
@@ -1968,8 +1972,8 @@ require([
 		h[++idx] = '</div>';        // responsive
 
 		$userTable.empty().append(h.join(''));
-		$('.user_edit').click(function () {
-			openUserDialog(true, $(this).val());
+		$('.user_edit', $('#user_table')).click(function () {
+			openUserDialog(true, $(this).data("idx"));
 		});
 
 		$(".rm_user", $('#user_table')).click(function(){
@@ -2026,7 +2030,7 @@ require([
 			h[++idx] = '<td>';
 			h[++idx] = project.id;
 			h[++idx] = '</td>';
-			h[++idx] = '<td class="user_edit_td"><button class="btn btn-default project_edit" style="width:100%;" value="';
+			h[++idx] = '<td class="user_edit_td"><button class="btn btn-default project_edit" style="width:100%;" data-idx="';
 			h[++idx] = i;
 			h[++idx] = '">';
 			h[++idx] = project.name;
@@ -2039,7 +2043,11 @@ require([
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
 			h[++idx] = '" class="btn btn-default btn-sm rm_project btn-danger">';
-			h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+			h[++idx] = '<i class="fas fa-trash-alt"></i></span></button>';
+			h[++idx] = '<button type="button" data-idx="';
+			h[++idx] = i;
+			h[++idx] = '" class="ml-4 btn btn-default btn-sm project_edit btn-info">';
+			h[++idx] = '<i class="far fa-edit"></i></button>';
 			h[++idx] = '</td>';
 
 			h[++idx] = '</tr>';
@@ -2051,7 +2059,7 @@ require([
 
 		$projectTable.empty().append(h.join('')).find('table');
 		$('.project_edit').click(function () {
-			openProjectDialog(true, $(this).val());
+			openProjectDialog(true, $(this).data("idx"));
 		});
 
 		$(".rm_project", $('#project_table')).click(function(){
@@ -2138,7 +2146,7 @@ require([
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
 			h[++idx] = '" class="btn btn-default btn-sm rm_role btn-danger">';
-			h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+			h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
 			h[++idx] = '</td>';
 
 			h[++idx] = '</tr>';
@@ -2259,7 +2267,7 @@ require([
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
 			h[++idx] = '" class="btn btn-default btn-sm rm_org btn-danger">';
-			h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+			h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
 			h[++idx] = '</td>';
 			h[++idx] = '</tr>';
 		}
@@ -2367,8 +2375,8 @@ require([
 			h[++idx] = '<td>';
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-default btn-sm rm_ent danger">';
-			h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+			h[++idx] = '" class="btn btn-default btn-sm rm_ent btn-danger">';
+			h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
 			h[++idx] = '</td>';
 			h[++idx] = '</tr>';
 		}
@@ -2654,13 +2662,6 @@ require([
 			userName,
 			i;
 
-		/*
-		$('#user_table').find('input:checked').each(function(index) {
-			userIdx = $(this).val();
-			users[index] = {id: gUsers[userIdx].id};
-			h[++i] = gUsers[userIdx].name;
-		});
-		*/
 		userName = gUsers[userIdx].name;
 		users[0] = {id: gUsers[userIdx].id};
 
