@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v17';
+let CACHE_NAME = 'v18';
 let ASSIGNMENTS = '/surveyKPI/myassignments';
 let WEBFORM = "/webForm";
 let USER = "/surveyKPI/user?";
