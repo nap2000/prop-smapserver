@@ -1039,7 +1039,7 @@ require([
 		});
 
 		// Set page defaults
-		var currentTab = getFromLocalStorage("currentTab");
+		var currentTab = getFromLocalStorage("currentTab" + page);
 		if(currentTab) {
 			$(currentTab).trigger('click');
 		}
@@ -1115,7 +1115,7 @@ require([
 		$(".usertab").hide();
 		$('.panel' + name).show();
 		$('#' + name + 'Panel').show();
-		setInLocalStorage("currentTab", '#' + name + 'Tab a');
+		setInLocalStorage("currentTab" + page, '#' + name + 'Tab a');
 
 		if(name === 'users' || name === 'projects' || name === 'role') {
 			$('#m_import_xls, #m_export_xls').removeClass("disabled");
