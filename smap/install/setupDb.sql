@@ -716,7 +716,8 @@ CREATE TABLE question (
 	external_choices text,				-- Set to yes if choices are external
 	external_table text,				-- The table containing the external choices
 	intent text,						-- ODK intent attribute
-	flash integer						-- Interval in literacy test before question flashes
+	flash integer,						-- Interval in literacy test before question flashes
+	trigger text
 	);
 ALTER TABLE question OWNER TO ws;
 CREATE INDEX qtext_id_sequence ON question(qtext_id);
