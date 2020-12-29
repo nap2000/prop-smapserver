@@ -46,8 +46,8 @@ echo "CREATE EXTENSION postgis;" | psql -d results
 echo "ALTER TABLE geometry_columns OWNER TO ws; ALTER TABLE spatial_ref_sys OWNER TO ws; ALTER TABLE geography_columns OWNER TO ws;" | psql -d results
 
 # restore the databse
-# pg_restore -c -d survey_definitions restore/backups/sd.dmp
-# pg_restore -c -d results restore/backups/results.dmp
+psql survey_definitions < restore/backups/sd.sql
+psql results < restore/backups/results.sql
 esac
 
 
