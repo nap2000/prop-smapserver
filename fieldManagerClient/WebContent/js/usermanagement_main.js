@@ -1103,7 +1103,7 @@ require([
 	});
 
 	/*
-	 * Respond to a panel being changes
+	 * Respond to a panel being changed
 	 * panelChange($(this), 'userPanel', 'usersTab');
 	 */
 	function panelChange($this, name) {
@@ -1116,6 +1116,12 @@ require([
 		$('.panel' + name).show();
 		$('#' + name + 'Panel').show();
 		setInLocalStorage("currentTab", '#' + name + 'Tab a');
+
+		if(name === 'users' || name === 'projects' || name === 'role') {
+			$('#m_import_xls, #m_export_xls').removeClass("disabled");
+		} else {
+			$('#m_import_xls, #m_export_xls').addClass("disabled");;
+		}
 	}
 
 	/*
