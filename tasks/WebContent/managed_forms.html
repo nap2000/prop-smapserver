@@ -119,7 +119,7 @@
     </div>
 </nav>
 
-<div class="container-fluid mt-4 mx-4">
+<div class="container-fluid mt-4 px-4">
 
     <div class="row border-bottom bg-grey mt-1 mb-1">
         <ul class="nav justify-content-end">
@@ -140,33 +140,33 @@
     <div class="bg-light mt-4 row filtersShown">
         <!-- Header Row - Filtering goes here-->
 
-        <div class="col-sm-4 pt-4 overviewSection border-right">
+        <div class="col-sm-4 pt-4 px-2 overviewSection border-right">
             <form class="form pr-1" role="form">
                 <div class="form-group row">
                     <label class="lang col-md-4"  data-lang="c_project"  for="project_name"></label>
-                    <select class="project_list form-control form-control-lg col-md-8" id="project_name"></select>
+                    <select class="project_list form-control form-control col-md-8" id="project_name"></select>
                 </div>
                 <div class="form-group row">
                     <label class="lang col-md-4" data-lang="c_survey" for="survey_name"></label>
-                    <select class="survey_select data_survey form-control col-md-8 form-control-lg" id="survey_name"></select>
+                    <select class="survey_select data_survey form-control col-md-8 form-control" id="survey_name"></select>
                 </div>
                 <div class="form-group row">
                     <label class="lang col-md-4" data-lang="mf_of" for="group_survey"></label>
-                    <select class="form-control col-md-8 form-control-lg" id="group_survey"></select>
+                    <select class="form-control col-md-8 form-control" id="group_survey"></select>
                 </div>
                 <div class="form-group row">
                     <label class="lang col-md-4" data-lang="c_form" for="sub_form"></label>
-                    <select class="form-control col-md-8 form-control-lg" id="sub_form"></select>
+                    <select class="form-control col-md-8 form-control" id="sub_form"></select>
                 </div>
             </form>
 
         </div>
 
-        <div class="col-sm-4 pt-4 overviewSection srview border-right">
+        <div class="col-sm-4 pt-4 px-2 overviewSection srview border-right">
             <button id="clear_srview" class="btn btn-info lang" data-lang="mf_clear"></button>
         </div>
 
-        <div class="col-sm-4 pt-4 overviewSection mrview border-right">
+        <div class="col-sm-4 pt-4 px-2 overviewSection mrview border-right">
             <form class="form" role="form">
                 <div class="form-group row">
                     <label class="lang col-sm-4 control-label" data-lang="c_dateq" for="filter_from">date</label>
@@ -197,7 +197,7 @@
             </form>
         </div>
 
-        <div class="col-sm-4 pt-4 overviewSection">
+        <div class="col-sm-4 pt-4 px-2 overviewSection">
             <form class="form" role="form">
 
                 <div class="custom-control custom-switch">
@@ -234,7 +234,7 @@
         </div>
 
         <!-- record editing commands -->
-        <div class="col-sm-4 pt-4 editRecordSection border-right">
+        <div class="col-sm-4 pt-4 px-2 editRecordSection border-right">
             <div class="custom-control custom-switch dataView">
                 <input type="checkbox" class="custom-control-input table_filter"
                        name="formdata" value="yes" id="er_form_data" checked="checked">
@@ -258,63 +258,83 @@
             </div>
         </div>
 
-        <div class="col-sm-4 pt-4 editRecordSection border-right">
+        <div class="col-sm-4 pt-4 px-2 editRecordSection border-right">
             <button class="genrecordpdf btn btn-danger"><i class="fa fa-file-pdf"></i></button>
             <a class="launchwebform btn btn-success restrict_role enum_role" target="_blank"
                href="#" ><i class="glyphicon glyphicon-globe"></i></a>
         </div>
 
-        <div class="col-sm-4 pt-4 editRecordSection border-right">
+        <div class="col-sm-4 pt-4 px-2 editRecordSection border-right">
             <button class="editRecordSection lang btn btn-primary" data-lang="t_add_task" id="addTask"></button>
             <button class="editRecordSection lang btn btn-primary" data-lang="msg_send_notification" id="addNotification"></button>
         </div>
 
     </div>
 
-    <div class="bg-light overviewSection">
-        <div class="row mt-4">
-            <div id="timezone" style="float:left;"></div>
 
-            <div class="targetSpecific mapOnly custom-control custom-switch custom-control-inline" style="display:none;">
-                <input type="checkbox" class="custom-control-input" id="showlayers">
-                <label class="custom-control-label lang" data-lang="d_layers" for="showlayers"></label>
+
+    <div class="bg-light mt-4 row">
+        <div class="overviewSection">
+            <div class="row border-bottom bg-grey mt-1 mb-1">
+                <div id="timezone" style="float:left;"></div>
+                <ul class="nav justify-content-end">
+                    <li class="nav-item" >
+                        <input type="checkbox" class="custom-control-input" id="showlayers">
+                        <label class="custom-control-label lang" data-lang="d_layers" for="showlayers"></label>
+                    </li>
+                    <li class="nav-item filtersHidden" style="display:none;">
+                        <a id="showFilters" class="nav-link lang" data-lang="mf_sc" href="#">show</a>
+                    </li>
+                    <li class="nav-item editRecordSection">
+                        <a id="exitEditRecord" class="nav-link lang" data-lang="c_back" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="show_settings" class="nav-link" href="#"><i class="fa fa-cog"></i> <span class="lang" data-lang="mf_ts"></span></a>
+                    </li>
+                </ul>
             </div>
 
 
-            <div class="btn-group not_deleted singleSelectOnly" role="group" aria-label="drill down">
-                <button type="button" class="lang du_only btn btn-secondary" data-lang="co_up" id="drill_up"></button>
-                <button type="button" class="dd_only lang btn btn-secondary" data-lang="co_dd" id="drill_down"></button>
-                <div class="btn-group dd_only" role="group">
-                    <button id="dd_form" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
-                    </button>
-                    <div id="drill_down_list" class="dropdown-menu" aria-labelledby="drill_down">
+                <div class="targetSpecific mapOnly custom-control custom-switch custom-control-inline" style="display:none;">
+                    <input type="checkbox" class="custom-control-input" id="showlayers">
+                    <label class="custom-control-label lang" data-lang="d_layers" for="showlayers"></label>
+                </div>
 
+
+                <div class="btn-group not_deleted singleSelectOnly" role="group" aria-label="drill down">
+                    <button type="button" class="lang du_only btn btn-secondary" data-lang="co_up" id="drill_up"></button>
+                    <button type="button" class="dd_only lang btn btn-secondary" data-lang="co_dd" id="drill_down"></button>
+                    <div class="btn-group dd_only" role="group">
+                        <button id="dd_form" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                        </button>
+                        <div id="drill_down_list" class="dropdown-menu" aria-labelledby="drill_down">
+
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <button class="singleSelectOnly not_deleted lang btn btn-danger" data-lang="c_del" id="m_delete"></button>
-            <button class="singleSelectOnly deleted lang btn btn-info" data-lang="c_undel" id="m_undelete"></button>
-            <button class="singleSelectOnly not_assigned lang btn btn-primary" data-lang="mf_lock" id="m_lock"></button>
-            <button class="singleSelectOnly assigned lang btn btn-default" data-lang="mf_rel" id="m_release"></button>
-            <button class="multiSelectOnly lang btn btn-primary" data-lang="co_b" id="m_bulk_edit"></button>
-            <button class="singleSelectOnly assigned lang btn btn-primary" data-lang="c_edit" id="m_edit"></button>
-            <button class="singleSelectOnly assigned_other lang btn btn-primary" data-lang="m_view" id="m_view"></button>
-            <button class="singleSelectOnly assigned_admin lang btn btn-warning" type="button" data-lang="t_assign" id="m_assign_to"></button>
+                <button class="singleSelectOnly not_deleted lang btn btn-danger" data-lang="c_del" id="m_delete"></button>
+                <button class="singleSelectOnly deleted lang btn btn-info" data-lang="c_undel" id="m_undelete"></button>
+                <button class="singleSelectOnly not_assigned lang btn btn-primary" data-lang="mf_lock" id="m_lock"></button>
+                <button class="singleSelectOnly assigned lang btn btn-default" data-lang="mf_rel" id="m_release"></button>
+                <button class="multiSelectOnly lang btn btn-primary" data-lang="co_b" id="m_bulk_edit"></button>
+                <button class="singleSelectOnly assigned lang btn btn-primary" data-lang="c_edit" id="m_edit"></button>
+                <button class="singleSelectOnly assigned_other lang btn btn-primary" data-lang="m_view" id="m_view"></button>
+                <button class="singleSelectOnly assigned_admin lang btn btn-warning" type="button" data-lang="t_assign" id="m_assign_to"></button>
 
-            <!--<button class="genfile pdf btn btn-danger"><i class="fa fa-file-pdf-o fa-lg"></i></button>-->
-            <button class="genfile docx btn btn-info"><i class="fa fa-file-word fa-lg"></i></button>
-            <button class="genfile xls btn btn-success "><i class="fa fa-file-excel fa-lg"></i></button>
-            <!--<button class="genfile image btn btn-warning"><i class="fa fa-file-image-o fa-lg"></i></button>-->
+                <!--<button class="genfile pdf btn btn-danger"><i class="fa fa-file-pdf-o fa-lg"></i></button>-->
+                <button class="genfile docx btn btn-info"><i class="fa fa-file-word fa-lg"></i></button>
+                <button class="genfile xls btn btn-success "><i class="fa fa-file-excel fa-lg"></i></button>
+                <!--<button class="genfile image btn btn-warning"><i class="fa fa-file-image-o fa-lg"></i></button>-->
 
 
-            <div id="dashboardInfo" class="alert alert-success" style="display:none;"></div>
+                <div id="dashboardInfo" class="alert alert-success" style="display:none;"></div>
+
         </div>
-    </div>
 
-    <div class="container-fluid mt-4 mx-4">
-        <ul id="mainTabs" class="nav nav-tabs nav-fill" role="tablist">
+        <ul id="mainTabs" class="nav nav-tabs mt-4" role="tablist">
             <li class="nav-item" role="presentation">
                 <a data-toggle="tab" id="set-table-view" href="#table-view" role="tab" class="active nav-link" aria-controls="table-view" aria-selected="true"><i class="fa fa-list"></i> <span class="lang" data-lang="c_table"></span></a>
             </li>
