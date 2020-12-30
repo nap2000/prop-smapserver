@@ -121,7 +121,6 @@
 
 <div class="container-fluid mt-4 mx-4">
 
-
     <div class="row border-bottom bg-grey mt-1 mb-1">
         <ul class="nav justify-content-end">
             <li class="nav-item filtersShown">
@@ -137,270 +136,266 @@
                 <a id="show_settings" class="nav-link" href="#"><i class="fa fa-cog"></i> <span class="lang" data-lang="mf_ts"></span></a>
             </li>
         </ul>
-
+    </div>
+    <div class="bg-light mt-4 row filtersShown">
         <!-- Header Row - Filtering goes here-->
-        <div class="row wrapper border-bottom white-bg page-heading filtersShown">
 
-            <!-- record listing commands and filters -->
-            <div class="col-sm-4 pt-4 overviewSection border-right">
-                <form class="form pr-1" role="form">
-                    <div class="form-group row">
-                        <label class="lang col-md-4"  data-lang="c_project"  for="project_name"></label>
-                        <select class="project_list form-control form-control-lg col-md-8" id="project_name"></select>
-                    </div>
-                    <div class="form-group row">
-                        <label class="lang col-md-4" data-lang="c_survey" for="survey_name"></label>
-                        <select class="survey_select data_survey form-control col-md-8 form-control-lg" id="survey_name"></select>
-                    </div>
-                    <div class="form-group row">
-                        <label class="lang col-md-4" data-lang="mf_of" for="group_survey"></label>
-                        <select class="form-control col-md-8 form-control-lg" id="group_survey"></select>
-                    </div>
-                    <div class="form-group row">
-                        <label class="lang col-md-4" data-lang="c_form" for="sub_form"></label>
-                        <select class="form-control col-md-8 form-control-lg" id="sub_form"></select>
-                    </div>
-                </form>
-
-            </div>
-
-            <div class="col-sm-4 pt-4 overviewSection srview border-right">
-                <button id="clear_srview" class="btn btn-info lang" data-lang="mf_clear"></button>
-            </div>
-
-            <div class="col-sm-4 pt-4 overviewSection mrview border-right">
-                <form class="form" role="form">
-                    <div class="form-group row">
-                        <label class="lang col-sm-4 control-label" data-lang="c_dateq" for="filter_from">date</label>
-                        <div class="col-sm-8">
-                            <select class="form-control table_filter" id="date_question"></select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="lang col-sm-4 control-label" data-lang="a_from_date" for="filter_from">from</label>
-                        <div class="col-sm-8">
-                            <input type="date" class="hasDatepicker form-control table_filter" id="filter_from">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="lang col-sm-4 control-label" data-lang="a_to_date" for="filter_to">to</label>
-                        <div class="col-sm-8">
-                            <input type="date" class="hasDatepicker form-control table_filter" id="filter_to">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-sm-12">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="include_bad">
-                                <label class="custom-control-label lang" data-lang="mf_id" for="include_bad"></label>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <div class="col-sm-4 pt-4 overviewSection">
-                <form class="form" role="form">
-
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input assign_filter" id="my_records">
-                        <label class="custom-control-label lang" data-lang="mf_mr" for="my_records"></label>
-                    </div>
-                    <div class="custom-control custom-switch ">
-                        <input type="checkbox" class="custom-control-input assign_filter" id="unassigned_records">
-                        <label class="custom-control-label lang" data-lang="mf_ur" for="unassigned_records"></label>
-                    </div>
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input assign_filter" id="other_records">
-                        <label class="custom-control-label lang" data-lang="mf_or" for="other_records"></label>
-                    </div>
-
-                    <div class="form-group row">
-                        <label class="col-sm-4 control-label"
-                               for="advanced_filter"><span class="lang" data-lang="c_filter"></span>
-                            <a href="https://www.smap.com.au/docs/server_expressions.html" target="_blank"> ( i ) </a></label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="advanced_filter"></input>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label class="col-sm-4 control-label lang"
-                               for="limit" data-lang="mf_max"></label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="limit"></input>
-                        </div>
-                    </div>
-
-                </form>
-            </div>
-
-            <!-- record editing commands -->
-            <div class="col-sm-4 pt-4 editRecordSection border-right">
-                <div class="custom-control custom-switch dataView">
-                    <input type="checkbox" class="custom-control-input table_filter"
-                           name="formdata" value="yes" id="er_form_data" checked="checked">
-                    <label class="custom-control-label lang" data-lang="mf_fd" for="er_form_data"></label>
+        <div class="col-sm-4 pt-4 overviewSection border-right">
+            <form class="form pr-1" role="form">
+                <div class="form-group row">
+                    <label class="lang col-md-4"  data-lang="c_project"  for="project_name"></label>
+                    <select class="project_list form-control form-control-lg col-md-8" id="project_name"></select>
                 </div>
-
-                <div class="custom-control custom-switch historyView" style="display:none">
-                    <input type="checkbox" class="custom-control-input changes_filter"
-                           name="showtasks" value="yes" id="er_show_tasks" checked="checked">
-                    <label class="custom-control-label lang" data-lang="t_tasks" for="er_show_tasks"></label>
+                <div class="form-group row">
+                    <label class="lang col-md-4" data-lang="c_survey" for="survey_name"></label>
+                    <select class="survey_select data_survey form-control col-md-8 form-control-lg" id="survey_name"></select>
                 </div>
-                <div class="custom-control custom-switch historyView" style="display:none">
-                    <input type="checkbox" class="custom-control-input changes_filter"
-                           name="showNotifications" value="yes" id="er_show_notifications" checked="checked">
-                    <label class="custom-control-label lang" data-lang="m_notify" for="er_show_notifications"></label>
+                <div class="form-group row">
+                    <label class="lang col-md-4" data-lang="mf_of" for="group_survey"></label>
+                    <select class="form-control col-md-8 form-control-lg" id="group_survey"></select>
                 </div>
-                <div class="custom-control custom-switch historyView" style="display:none">
-                    <input type="checkbox" class="custom-control-input changes_filter"
-                           name="showChanges" value="yes" id="er_show_changes" checked="checked">
-                    <label class="custom-control-label lang" data-lang="c_changes" for="er_show_changes"></label>
+                <div class="form-group row">
+                    <label class="lang col-md-4" data-lang="c_form" for="sub_form"></label>
+                    <select class="form-control col-md-8 form-control-lg" id="sub_form"></select>
                 </div>
-            </div>
-
-            <div class="col-sm-4 pt-4 editRecordSection border-right">
-                <button class="genrecordpdf btn btn-danger"><i class="fa fa-file-pdf"></i></button>
-                <a class="launchwebform btn btn-success restrict_role enum_role" target="_blank"
-                   href="#" ><i class="glyphicon glyphicon-globe"></i></a>
-            </div>
-
-            <div class="col-sm-4 pt-4 editRecordSection border-right">
-                <button class="editRecordSection lang btn btn-primary" data-lang="t_add_task" id="addTask"></button>
-                <button class="editRecordSection lang btn btn-primary" data-lang="msg_send_notification" id="addNotification"></button>
-            </div>
+            </form>
 
         </div>
 
-        <div class="wrapper wrapper-content animated fadeInRight">
-            <div class="row overviewSection">
-                <div class="col-md-12">
-                    <div class="ibox float-e-margins">
-                        <div class="ibox-title">
-                            <div id="timezone" style="float:left;"></div>
-                            <div class="ibox-tools">
+        <div class="col-sm-4 pt-4 overviewSection srview border-right">
+            <button id="clear_srview" class="btn btn-info lang" data-lang="mf_clear"></button>
+        </div>
 
-                                <div class="targetSpecific mapOnly custom-control custom-switch custom-control-inline" style="display:none;">
-                                    <input type="checkbox" class="custom-control-input" id="showlayers">
-                                    <label class="custom-control-label lang" data-lang="d_layers" for="showlayers"></label>
+        <div class="col-sm-4 pt-4 overviewSection mrview border-right">
+            <form class="form" role="form">
+                <div class="form-group row">
+                    <label class="lang col-sm-4 control-label" data-lang="c_dateq" for="filter_from">date</label>
+                    <div class="col-sm-8">
+                        <select class="form-control table_filter" id="date_question"></select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="lang col-sm-4 control-label" data-lang="a_from_date" for="filter_from">from</label>
+                    <div class="col-sm-8">
+                        <input type="date" class="hasDatepicker form-control table_filter" id="filter_from">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="lang col-sm-4 control-label" data-lang="a_to_date" for="filter_to">to</label>
+                    <div class="col-sm-8">
+                        <input type="date" class="hasDatepicker form-control table_filter" id="filter_to">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="include_bad">
+                            <label class="custom-control-label lang" data-lang="mf_id" for="include_bad"></label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-sm-4 pt-4 overviewSection">
+            <form class="form" role="form">
+
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input assign_filter" id="my_records">
+                    <label class="custom-control-label lang" data-lang="mf_mr" for="my_records"></label>
+                </div>
+                <div class="custom-control custom-switch ">
+                    <input type="checkbox" class="custom-control-input assign_filter" id="unassigned_records">
+                    <label class="custom-control-label lang" data-lang="mf_ur" for="unassigned_records"></label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input assign_filter" id="other_records">
+                    <label class="custom-control-label lang" data-lang="mf_or" for="other_records"></label>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-4 control-label"
+                           for="advanced_filter"><span class="lang" data-lang="c_filter"></span>
+                        <a href="https://www.smap.com.au/docs/server_expressions.html" target="_blank"> ( i ) </a></label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="advanced_filter"></input>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-4 control-label lang"
+                           for="limit" data-lang="mf_max"></label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="limit"></input>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- record editing commands -->
+        <div class="col-sm-4 pt-4 editRecordSection border-right">
+            <div class="custom-control custom-switch dataView">
+                <input type="checkbox" class="custom-control-input table_filter"
+                       name="formdata" value="yes" id="er_form_data" checked="checked">
+                <label class="custom-control-label lang" data-lang="mf_fd" for="er_form_data"></label>
+            </div>
+
+            <div class="custom-control custom-switch historyView" style="display:none">
+                <input type="checkbox" class="custom-control-input changes_filter"
+                       name="showtasks" value="yes" id="er_show_tasks" checked="checked">
+                <label class="custom-control-label lang" data-lang="t_tasks" for="er_show_tasks"></label>
+            </div>
+            <div class="custom-control custom-switch historyView" style="display:none">
+                <input type="checkbox" class="custom-control-input changes_filter"
+                       name="showNotifications" value="yes" id="er_show_notifications" checked="checked">
+                <label class="custom-control-label lang" data-lang="m_notify" for="er_show_notifications"></label>
+            </div>
+            <div class="custom-control custom-switch historyView" style="display:none">
+                <input type="checkbox" class="custom-control-input changes_filter"
+                       name="showChanges" value="yes" id="er_show_changes" checked="checked">
+                <label class="custom-control-label lang" data-lang="c_changes" for="er_show_changes"></label>
+            </div>
+        </div>
+
+        <div class="col-sm-4 pt-4 editRecordSection border-right">
+            <button class="genrecordpdf btn btn-danger"><i class="fa fa-file-pdf"></i></button>
+            <a class="launchwebform btn btn-success restrict_role enum_role" target="_blank"
+               href="#" ><i class="glyphicon glyphicon-globe"></i></a>
+        </div>
+
+        <div class="col-sm-4 pt-4 editRecordSection border-right">
+            <button class="editRecordSection lang btn btn-primary" data-lang="t_add_task" id="addTask"></button>
+            <button class="editRecordSection lang btn btn-primary" data-lang="msg_send_notification" id="addNotification"></button>
+        </div>
+
+    </div>
+
+    <div class="row bg-light mt-4 overviewSection">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <div id="timezone" style="float:left;"></div>
+                    <div class="ibox-tools">
+
+                        <div class="targetSpecific mapOnly custom-control custom-switch custom-control-inline" style="display:none;">
+                            <input type="checkbox" class="custom-control-input" id="showlayers">
+                            <label class="custom-control-label lang" data-lang="d_layers" for="showlayers"></label>
+                        </div>
+
+                        <a class="targetSpecific chartOnly" id="m_add_chart" style="display:none;">
+                            <i class="btn btn-success fa fa-bar-chart-o fa-lg"> <span class="nav-label lang"
+                                                                                      data-lang="d_add_c"></span></i>
+                        </a>
+
+                        <div class="btn-group not_deleted singleSelectOnly" role="group" aria-label="drill down">
+                            <button type="button" class="lang du_only btn btn-secondary" data-lang="co_up" id="drill_up"></button>
+                            <button type="button" class="dd_only lang btn btn-secondary" data-lang="co_dd" id="drill_down"></button>
+                            <div class="btn-group dd_only" role="group">
+                                <button id="dd_form" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                                </button>
+                                <div id="drill_down_list" class="dropdown-menu" aria-labelledby="drill_down">
+
                                 </div>
+                            </div>
+                        </div>
 
-                                <a class="targetSpecific chartOnly" id="m_add_chart" style="display:none;">
-                                    <i class="btn btn-success fa fa-bar-chart-o fa-lg"> <span class="nav-label lang"
-                                                                                              data-lang="d_add_c"></span></i>
-                                </a>
+                        <button class="singleSelectOnly not_deleted lang btn btn-danger" data-lang="c_del" id="m_delete"></button>
+                        <button class="singleSelectOnly deleted lang btn btn-info" data-lang="c_undel" id="m_undelete"></button>
+                        <button class="singleSelectOnly not_assigned lang btn btn-primary" data-lang="mf_lock" id="m_lock"></button>
+                        <button class="singleSelectOnly assigned lang btn btn-default" data-lang="mf_rel" id="m_release"></button>
+                        <button class="multiSelectOnly lang btn btn-primary" data-lang="co_b" id="m_bulk_edit"></button>
+                        <button class="singleSelectOnly assigned lang btn btn-primary" data-lang="c_edit" id="m_edit"></button>
+                        <button class="singleSelectOnly assigned_other lang btn btn-primary" data-lang="m_view" id="m_view"></button>
+                        <button class="singleSelectOnly assigned_admin lang btn btn-warning" type="button" data-lang="t_assign" id="m_assign_to"></button>
 
-                                <div class="btn-group not_deleted singleSelectOnly" role="group" aria-label="drill down">
-                                    <button type="button" class="lang du_only btn btn-secondary" data-lang="co_up" id="drill_up"></button>
-                                    <button type="button" class="dd_only lang btn btn-secondary" data-lang="co_dd" id="drill_down"></button>
-                                    <div class="btn-group dd_only" role="group">
-                                        <button id="dd_form" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <!--<button class="genfile pdf btn btn-danger"><i class="fa fa-file-pdf-o fa-lg"></i></button>-->
+                        <button class="genfile docx btn btn-info"><i class="fa fa-file-word fa-lg"></i></button>
+                        <button class="genfile xls btn btn-success "><i class="fa fa-file-excel fa-lg"></i></button>
+                        <!--<button class="genfile image btn btn-warning"><i class="fa fa-file-image-o fa-lg"></i></button>-->
+                    </div>
 
-                                        </button>
-                                        <div id="drill_down_list" class="dropdown-menu" aria-labelledby="drill_down">
+                </div>
+                <div class="ibox-content">
+                    <div id="dashboardInfo" class="alert alert-success" style="display:none;"></div>
+                    <ul id="mainTabs" class="nav nav-tabs" role="tablist">
+                        <li class="nav-item"><a data-toggle="tab" id="set-table-view" href="#table-view" role="tab" class="active nav-link"><i class="fa fa-list"></i> <span class="lang" data-lang="c_table"></span></a></li>
+                        <li class="nav-item"><a data-toggle="tab" id="set-map-view"href="#map-view" role="tab" class="nav-link"><i class="fa fa-globe"></i> <span class="lang" data-lang="c_map"></span></a></li>
+                        <li class="nav-item"><a data-toggle="tab" id="set-chart-view"href="#chart-view" role="tab" class="nav-link"><i class="fa fa-bar-chart"></i> <span class="lang" data-lang="c_chart"></span></a></li>
+                        <li class="nav-item" style="display:none;"><a data-toggle="tab" id="set-timing-view" href="#timing-view" role="tab" class="nav-link"><i class="fa fa-clock-o"></i></a></li>
+                    </ul>
 
+                    <div class="row">
+
+                        <div class="tabs-container container-fluid">
+                            <div class="tab-content">
+                                <div id="table-view" role="tabpanel" class="tab-pane active show fade">
+                                    <div class="panel-body">
+                                        <div id="table_content" class="col-md-12 dash_views">
+                                            <div class="sk-spinner sk-spinner-wave">
+                                                <div class="sk-rect1"></div>
+                                                <div class="sk-rect2"></div>
+                                                <div class="sk-rect3"></div>
+                                                <div class="sk-rect4"></div>
+                                                <div class="sk-rect5"></div>
+                                            </div>
+                                            <div class="table-responsive">
+                                                <table id="trackingTable" class="table table-striped">
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-
-                                <button class="singleSelectOnly not_deleted lang btn btn-danger" data-lang="c_del" id="m_delete"></button>
-                                <button class="singleSelectOnly deleted lang btn btn-info" data-lang="c_undel" id="m_undelete"></button>
-                                <button class="singleSelectOnly not_assigned lang btn btn-primary" data-lang="mf_lock" id="m_lock"></button>
-                                <button class="singleSelectOnly assigned lang btn btn-default" data-lang="mf_rel" id="m_release"></button>
-                                <button class="multiSelectOnly lang btn btn-primary" data-lang="co_b" id="m_bulk_edit"></button>
-                                <button class="singleSelectOnly assigned lang btn btn-primary" data-lang="c_edit" id="m_edit"></button>
-                                <button class="singleSelectOnly assigned_other lang btn btn-primary" data-lang="m_view" id="m_view"></button>
-                                <button class="singleSelectOnly assigned_admin lang btn btn-warning" type="button" data-lang="t_assign" id="m_assign_to"></button>
-
-                                <!--<button class="genfile pdf btn btn-danger"><i class="fa fa-file-pdf-o fa-lg"></i></button>-->
-                                <button class="genfile docx btn btn-info"><i class="fa fa-file-word fa-lg"></i></button>
-                                <button class="genfile xls btn btn-success "><i class="fa fa-file-excel fa-lg"></i></button>
-                                <!--<button class="genfile image btn btn-warning"><i class="fa fa-file-image-o fa-lg"></i></button>-->
-                            </div>
-
-                        </div>
-                        <div class="ibox-content">
-                            <div id="dashboardInfo" class="alert alert-success" style="display:none;"></div>
-                            <ul id="mainTabs" class="nav nav-tabs" role="tablist">
-                                <li class="nav-item"><a data-toggle="tab" id="set-table-view" href="#table-view" role="tab" class="active nav-link"><i class="fa fa-list"></i> <span class="lang" data-lang="c_table"></span></a></li>
-                                <li class="nav-item"><a data-toggle="tab" id="set-map-view"href="#map-view" role="tab" class="nav-link"><i class="fa fa-globe"></i> <span class="lang" data-lang="c_map"></span></a></li>
-                                <li class="nav-item"><a data-toggle="tab" id="set-chart-view"href="#chart-view" role="tab" class="nav-link"><i class="fa fa-bar-chart"></i> <span class="lang" data-lang="c_chart"></span></a></li>
-                                <li class="nav-item" style="display:none;"><a data-toggle="tab" id="set-timing-view" href="#timing-view" role="tab" class="nav-link"><i class="fa fa-clock-o"></i></a></li>
-                            </ul>
-
-                            <div class="row">
-
-                                <div class="tabs-container container-fluid">
-                                    <div class="tab-content">
-                                        <div id="table-view" role="tabpanel" class="tab-pane active show fade">
-                                            <div class="panel-body">
-                                                <div id="table_content" class="col-md-12 dash_views">
-                                                    <div class="sk-spinner sk-spinner-wave">
-                                                        <div class="sk-rect1"></div>
-                                                        <div class="sk-rect2"></div>
-                                                        <div class="sk-rect3"></div>
-                                                        <div class="sk-rect4"></div>
-                                                        <div class="sk-rect5"></div>
+                                <div id="map-view"  role="tabpanel" class="tab-pane fade">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-4 map_layers" style="display:none;">
+                                                <div class="ibox float-e-margins">
+                                                    <div class="ibox-title">
+                                                        <h5 class="lang" data-lang="c_map_layers"></h5>
+                                                        <div class="pull-right">
+                                                            <a id="m_add_layer">
+                                                                <i class="btn btn-success fa fa-bar-map-o fa-lg">
+                                                                    <span class="nav-label lang" data-lang="d_add"></span></i>
+                                                            </a>
+                                                        </div>
                                                     </div>
+                                                </div>
+                                                <div id="layerSelect">
                                                     <div class="table-responsive">
-                                                        <table id="trackingTable" class="table table-striped">
+                                                        <table class="table">
+                                                            <thead>
+                                                            <tr>
+                                                                <th class="lang" data-lang="c_name"></th>
+                                                                <th class="lang" data-lang="c_del"></th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+
+                                                            </tbody>
                                                         </table>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div id="map-view"  role="tabpanel" class="tab-pane fade">
-                                            <div class="panel-body">
-                                                <div class="row">
-                                                    <div class="col-md-4 map_layers" style="display:none;">
-                                                        <div class="ibox float-e-margins">
-                                                            <div class="ibox-title">
-                                                                <h5 class="lang" data-lang="c_map_layers"></h5>
-                                                                <div class="pull-right">
-                                                                    <a id="m_add_layer">
-                                                                        <i class="btn btn-success fa fa-bar-map-o fa-lg">
-                                                                            <span class="nav-label lang" data-lang="d_add"></span></i>
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div id="layerSelect">
-                                                            <div class="table-responsive">
-                                                                <table class="table">
-                                                                    <thead>
-                                                                    <tr>
-                                                                        <th class="lang" data-lang="c_name"></th>
-                                                                        <th class="lang" data-lang="c_del"></th>
-                                                                    </tr>
-                                                                    </thead>
-                                                                    <tbody>
-
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div id="map_content" class="col-md-12 dash_views">
-                                                        <div id="map" class="map"></div>
-                                                        <div id="features" class="feature-panel-right"></div>
-                                                    </div>
-                                                </div>
+                                            <div id="map_content" class="col-md-12 dash_views">
+                                                <div id="map" class="map"></div>
+                                                <div id="features" class="feature-panel-right"></div>
                                             </div>
                                         </div>
-                                        <div id="chart-view"  role="tabpanel" class="tab-pane fade">
-                                            <div class="panel-body">
-                                                <div id="chartcontent">
-                                                    <div class="row" id="chartrow"></div>
-                                                </div>
-                                            </div>
+                                    </div>
+                                </div>
+                                <div id="chart-view"  role="tabpanel" class="tab-pane fade">
+                                    <div class="panel-body">
+                                        <div id="chartcontent">
+                                            <div class="row" id="chartrow"></div>
                                         </div>
-                                        <div id="timing-view"  role="tabpanel" class="tab-pane fade" style="display:none;">
-                                            <div class="panel-body">
-                                                <div id="timingcontent">
-                                                    <div class="row" id="timingrow"></div>
-                                                </div>
-                                            </div>
+                                    </div>
+                                </div>
+                                <div id="timing-view"  role="tabpanel" class="tab-pane fade" style="display:none;">
+                                    <div class="panel-body">
+                                        <div id="timingcontent">
+                                            <div class="row" id="timingrow"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -409,937 +404,937 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="row editRecordSection">
-                <div class="col-md-12">
-                    <div class="ibox float-e-margins">
-                        <div class="ibox-content">
-                            <div id="recordEditInfo" class="alert alert-success" style="display:none;"></div>
-                            <ul id="editTabs" class="nav nav-tabs" role="tablist">
-                                <li class="nav-item"><a data-toggle="tab" href="#data-view" class="active nav-link"><i class="fa fa-list"></i> <span class="lang" data-lang="c_data"></span></a></li>
-                                <li class="nav-item"><a data-toggle="tab" href="#changes-view" class="nav-link"><i class="fa fa-edit"></i> <span class="lang" data-lang="c_history"></span></a></li>
-                            </ul>
+    <div class="row bg-light mt-4 editRecordSection">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div id="recordEditInfo" class="alert alert-success" style="display:none;"></div>
+                    <ul id="editTabs" class="nav nav-tabs" role="tablist">
+                        <li class="nav-item"><a data-toggle="tab" href="#data-view" class="active nav-link"><i class="fa fa-list"></i> <span class="lang" data-lang="c_data"></span></a></li>
+                        <li class="nav-item"><a data-toggle="tab" href="#changes-view" class="nav-link"><i class="fa fa-edit"></i> <span class="lang" data-lang="c_history"></span></a></li>
+                    </ul>
 
-                            <div class="tabs-container container-fluid">
-                                <div class="tab-content">
-                                    <div id="data-view" role="tabpanel" class="tab-pane active">
-                                        <div class="panel-body">
-                                            <div class="row">
+                    <div class="tabs-container container-fluid">
+                        <div class="tab-content">
+                            <div id="data-view" role="tabpanel" class="tab-pane active">
+                                <div class="panel-body">
+                                    <div class="row">
 
-                                                <div class="col-sm-6 b-r showFormData">
-                                                    <h3 class="m-t-none m-b lang" data-lang="mf_fd"></h3>
-                                                    <form id="surveyForm"></form>
-                                                </div>
-                                                <div class="col-sm-6 b-r showMgmtData">
-                                                    <h3 class="m-t-none m-b lang" data-lang="mf_md">mgmt data</h3>
-                                                    <form id="editRecordForm"></form>
+                                        <div class="col-sm-6 b-r showFormData">
+                                            <h3 class="m-t-none m-b lang" data-lang="mf_fd"></h3>
+                                            <form id="surveyForm"></form>
+                                        </div>
+                                        <div class="col-sm-6 b-r showMgmtData">
+                                            <h3 class="m-t-none m-b lang" data-lang="mf_md">mgmt data</h3>
+                                            <form id="editRecordForm"></form>
 
-                                                    <button id="saveRecord" type="button" class="btn btn-primary lang saverecord"
-                                                            data-dismiss="modal"
-                                                            data-lang="c_save">Save
-                                                    </button>
-                                                    <button id="shareRecord" type="button" class="btn btn-info">
-                                                        <span class="lang"  data-lang="n_share">link</span>
-                                                    </button>
-                                                    <button id="exitEditRecord2" type="button" class="btn btn-primary exitEditRecord">
-                                                        <span class="lang" data-lang="c_back">exit</span>
-                                                    </button>
+                                            <button id="saveRecord" type="button" class="btn btn-primary lang saverecord"
+                                                    data-dismiss="modal"
+                                                    data-lang="c_save">Save
+                                            </button>
+                                            <button id="shareRecord" type="button" class="btn btn-info">
+                                                <span class="lang"  data-lang="n_share">link</span>
+                                            </button>
+                                            <button id="exitEditRecord2" type="button" class="btn btn-primary exitEditRecord">
+                                                <span class="lang" data-lang="c_back">exit</span>
+                                            </button>
 
-                                                    <div class="re_alert alert alert-success" role="alert" style="display:none;"></div>
-                                                    <div class="shareRecordOnly well">
-                                                        <form>
-                                                            <div class="form-group role_select">
-                                                                <h4 class="lang" data-lang="c_roles">roles</h4>
-                                                                <div class="role_select_roles"></div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <div class="input-group">
+                                            <div class="re_alert alert alert-success" role="alert" style="display:none;"></div>
+                                            <div class="shareRecordOnly well">
+                                                <form>
+                                                    <div class="form-group role_select">
+                                                        <h4 class="lang" data-lang="c_roles">roles</h4>
+                                                        <div class="role_select_roles"></div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="input-group">
                                                                         <span class="input-group-btn">
                                                                             <button id="getSharedRecord" class="btn btn-info" type="button"><i class="fa fa-share-alt"></i></button>
                                                                         </span>
-                                                                    <input type="text" id="srLink" required class="form-control" readonly>
-                                                                </div>
-                                                            </div>
-                                                        </form>
+                                                            <input type="text" id="srLink" required class="form-control" readonly>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="changes-view" role="tabpanel" class="tab-pane">
-                                        <div class="panel-body">
-                                            <div class="table-responsive">
-                                                <table class="table" id="changes"></table>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row bulkEditSection">
-                <div class="col-md-12">
-                    <div class="ibox float-e-margins">
-                        <div class="ibox-content">
-                            <div id="bulkEditInfo" class="alert alert-success" style="display:none;"></div>
-
-                            <div class="tabs-container container-fluid">
-                                <div class="tab-content">
-                                    <div id="bulk-edit-view" role="tabpanel" class="tab-pane active">
-                                        <div class="panel-body">
-                                            <div class="row">
-
-                                                <div class="col-sm-12 showMgmtData">
-                                                    <div class="row">
-                                                        <div class="col-sm-8"><b><span class="lang" data-lang="c_question"></span></b></div>
-                                                        <div class="col-sm-4"><b><span class="lang" data-lang="c_clear"></span></b></div>
-                                                    </div>
-                                                    <form id="bulkEditForm"></form>
-
-                                                    <button id="saveBulkEdit" type="button" class="btn btn-success lang saverecord"
-                                                            data-dismiss="modal"
-                                                            data-lang="c_save">Save
-                                                    </button>
-
-                                                    <button id="exitBulkEdit" type="button" class="btn btn-primary exitBulkEdit">
-                                                        <span class="lang" data-lang="c_back">exit</span>
-                                                    </button>
-
-                                                    <div class="re_alert alert alert-success" role="alert" style="display:none;"></div>
-                                                </div>
-
-                                            </div>
-                                        </div>
+                            <div id="changes-view" role="tabpanel" class="tab-pane">
+                                <div class="panel-body">
+                                    <div class="table-responsive">
+                                        <table class="table" id="changes"></table>
                                     </div>
-
                                 </div>
                             </div>
-
                         </div>
                     </div>
+
                 </div>
             </div>
-
         </div>
-
     </div>
 
+    <div class="row bg-light mt-4 bulkEditSection">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div id="bulkEditInfo" class="alert alert-success" style="display:none;"></div>
 
-    <!-- Modal to edit a chart widget -->
-    <div id="editChart" class="modal fade" aria-hidden="true">
-        <div class="modal-dialog custom-modal-width">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <!--  <button id="shareRecord" type="button" class="btn btn-info"><i class="fa fa-share-alt"></i> <span class="lang" data-lang="n_share">get link</span></button> -->
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                            class="sr-only">Close</span></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-12"><h3 class="m-t-none m-b lang" data-lang="mf_fd">form data</h3>
+                    <div class="tabs-container container-fluid">
+                        <div class="tab-content">
+                            <div id="bulk-edit-view" role="tabpanel" class="tab-pane active">
+                                <div class="panel-body">
+                                    <div class="row">
 
-                            <form id="chartForm" role="form" class="form-horizontal">
+                                        <div class="col-sm-12 showMgmtData">
+                                            <div class="row">
+                                                <div class="col-sm-8"><b><span class="lang" data-lang="c_question"></span></b></div>
+                                                <div class="col-sm-4"><b><span class="lang" data-lang="c_clear"></span></b></div>
+                                            </div>
+                                            <form id="bulkEditForm"></form>
 
-                                <div class="form-group">
-                                    <label class="lang col-sm-2 control-label" data-lang="c_title"
-                                           for="ew_title">title</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control title" id="ew_title">
+                                            <button id="saveBulkEdit" type="button" class="btn btn-success lang saverecord"
+                                                    data-dismiss="modal"
+                                                    data-lang="c_save">Save
+                                            </button>
+
+                                            <button id="exitBulkEdit" type="button" class="btn btn-primary exitBulkEdit">
+                                                <span class="lang" data-lang="c_back">exit</span>
+                                            </button>
+
+                                            <div class="re_alert alert alert-success" role="alert" style="display:none;"></div>
+                                        </div>
 
                                     </div>
                                 </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 
 
+<!-- Modal to edit a chart widget -->
+<div id="editChart" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog custom-modal-width">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!--  <button id="shareRecord" type="button" class="btn btn-info"><i class="fa fa-share-alt"></i> <span class="lang" data-lang="n_share">get link</span></button> -->
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12"><h3 class="m-t-none m-b lang" data-lang="mf_fd">form data</h3>
+
+                        <form id="chartForm" role="form" class="form-horizontal">
+
+                            <div class="form-group">
+                                <label class="lang col-sm-2 control-label" data-lang="c_title"
+                                       for="ew_title">title</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control title" id="ew_title">
+
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label lang" data-lang="a_ts" for="ew_tseries">time
+                                    series</label>
+                                <div class="col-sm-1">
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="ew_tseries">
+                                    </div>
+                                </div>
+
+                                <div class="tseries_only">
+                                    <label class="lang col-sm-2 control-label" data-lang="c_period" for="ew_period">period</label>
+                                    <div class="col-sm-3">
+                                        <select class="form-control" id="ew_period">
+                                            <option class="lang" value="day" data-lang="c_day">day</option>
+                                            <option class="lang" value="month" data-lang="c_month">month</option>
+                                            <option class="lang" value="year" data-lang="c_year">year</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label lang" data-lang="a_ts" for="ew_tseries">time
+                                    <label class="col-sm-2 control-label lang" data-lang="a_sl" for="ew_qlabel">time
                                         series</label>
                                     <div class="col-sm-1">
                                         <div class="checkbox">
-                                            <input type="checkbox" id="ew_tseries">
-                                        </div>
-                                    </div>
-
-                                    <div class="tseries_only">
-                                        <label class="lang col-sm-2 control-label" data-lang="c_period" for="ew_period">period</label>
-                                        <div class="col-sm-3">
-                                            <select class="form-control" id="ew_period">
-                                                <option class="lang" value="day" data-lang="c_day">day</option>
-                                                <option class="lang" value="month" data-lang="c_month">month</option>
-                                                <option class="lang" value="year" data-lang="c_year">year</option>
-                                            </select>
+                                            <input type="checkbox" id="ew_qlabel">
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div>
-                                    <div class="form-group">
-                                        <label class="col-sm-2 control-label lang" data-lang="a_sl" for="ew_qlabel">time
-                                            series</label>
-                                        <div class="col-sm-1">
-                                            <div class="checkbox">
-                                                <input type="checkbox" id="ew_qlabel">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div class="form-group">
-                                        <label class="lang col-sm-2 control-label" data-lang="a_type" for="ew_chart_type">chart_type</label>
-                                        <div class="col-sm-10">
-                                            <select class="form-control chart_type" id="ew_chart_type">
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
+                            <div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="ew_question1"><span data-lang="c_question" class="lang">question</span>
-                                        1</label>
-                                    <div class="col-sm-4">
-                                        <select class="form-control question_req" id="ew_question1">
-                                        </select>
-                                    </div>
-
-                                    <label class="lang col-sm-2 control-label" data-lang="a_fn"
-                                           for="ew_fn">function</label>
-                                    <div class="col-sm-4">
-                                        <select class="form-control" id="ew_fn">
+                                    <label class="lang col-sm-2 control-label" data-lang="a_type" for="ew_chart_type">chart_type</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control chart_type" id="ew_chart_type">
                                         </select>
                                     </div>
                                 </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label"
-                                           for="ew_question2"><span class="lang" data-lang="c_question">question</span>
-                                        2</label>
-                                    <div class="col-sm-10">
-                                        <select class="form-control question" id="ew_question2">
-                                        </select>
-                                    </div>
-                                </div>
-
-
-                                <div class="form-group">
-                                    <label class="lang col-sm-2 control-label" data-lang="c_width"
-                                           for="ew_width">width</label>
-                                    <div class="col-sm-10">
-                                        <select class="form-control" id="ew_width">
-                                            <option class="lang" value="3" data-lang="d_qtr">25</option>
-                                            <option class="lang" value="6" data-lang="d_half">50</option>
-                                            <option class="lang" value="9" data-lang="d_3qtr">75</option>
-                                            <option class="lang" value="12" data-lang="d_full">100</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </form>
-                            <div id="chartInfo" style="word-wrap:break-word; display:none;" class="alert"
-                                 role="alert"></div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
-                    </button>
-                    <button id="editChartSave" type="button" class="btn btn-primary lang" data-lang="c_save">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal to edit a map layer -->
-    <div id="layerEdit" class="modal fade" aria-hidden="true">
-        <div class="modal-dialog custom-modal-width">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                            class="sr-only">Close</span></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-12 b-r">
-                            <h3 class="m-t-none m-b lang" data-lang="mf_ld"></h3>
-
-                            <form id="mapForm" role="form" class="form-horizontal">
-
-                                <div class="form-group row">
-                                    <label class="lang col-sm-2 control-label" data-lang="c_title"
-                                           for="ml_title"></label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control title" id="ml_title" required>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" id="usecurrent_tabledata" checked><span
-                                                    data-lang="br_cd" class="lang"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" value="normal" id="clump_normal" name="clump"
-                                                       checked><span data-lang="c_normal" class="lang"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" value="heatmap" id="clump_heatmap" name="clump"><span
-                                                    data-lang="c_heatmap" class="lang"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <!--
-								<div class="form-group">
-									 <label class="lang col-sm-2 control-label" data-lang="c_survey" for="ml_survey">survey</label>
-									<div class="col-sm-10">
-										<select class="form-control" id="ml_survey">
-										</select>
-									</div>
-								</div>
-
-								<div class="form-group">
-									 <label class="lang col-sm-2 control-label" data-lang="c_survey" for="ml_survey">survey</label>
-									<div class="col-sm-10">
-										<select class="form-control" id="ml_survey">
-										</select>
-									</div>
-								</div>
-								-->
-
-                            </form>
-                            <div id="layerInfo" style="word-wrap:break-word; display:none;" class="alert"
-                                 role="alert"></div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
-                    <button id="addLayerSave" type="button" class="btn btn-primary lang" data-lang="c_save"></button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal to assign a user -->
-    <div id="userAssign" class="modal fade" aria-hidden="true">
-        <div class="modal-dialog custom-modal-width">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title lang" data-lang="t_assign"></h4>
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                            class="sr-only"></span></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-12 b-r">
-
-                            <form role="form">
-
-                                <div class="form-group row">
-                                    <select id="user_to_assign" class="custom-select"></select>
-                                </div>
-
-                            </form>
-                            <div id="assignUserInfo" style="word-wrap:break-word; display:none;" class="alert" role="alert"></div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
-                    <button id="assignUserSave" type="button" data-dismiss="modal" class="btn btn-primary lang " data-lang="c_save"></button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal to delete / restore a record -->
-    <div id="toggleRecord" class="modal fade" aria-hidden="true">
-        <div class="modal-dialog custom-modal-width">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 id="toggleRecordTitle" class="modal-title"></h4>
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                            class="sr-only"></span></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-12 b-r">
-
-                            <form role="form">
-
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label lang" data-lang="c_reason" for="toggle_reason">r</label>
-                                    <div class="col-sm-10">
-                                        <input id="toggle_reason" type='text' class="form-control" name="taskTitle">
-                                    </div>
-                                </div>
-
-                            </form>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
-                    <button id="toggleRecordSave" type="button" data-dismiss="modal" class="btn btn-primary"></button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--
-		Modal to show task properties and allow them to be edited
-		Replicated from taskManagement. These two code bases should be combined howeve
-		  currently task managmement and managed_forms use two different map APIs mapbox and OL3
-	-->
-    <div id="task_properties" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="taskPropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="taskPropLabel"></h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <form role="form" id="taskPropertiesForm" name="taskProperties">
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="c_name" for="tp_name">name</label>
-                                <div class="col-sm-10">
-                                    <input id="tp_name" type='text' class="form-control" name="taskTitle">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="lang col-sm-2 col-form-label" data-lang="c_survey" for="tp_form_name"></label>
-                                <div class="col-sm-10">
-                                    <select class="disable_blocked form-control" id="tp_form_name"></select>
-                                </div>
-                            </div>
-                            <div class="well">
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label lang" data-lang="assign_type"></label>
-                                    <div class="col-sm-10">
-                                        <div class="btn-group" role="group" aria-label="select assignment type">
-                                            <button id="tp_user_type" type="button" class="btn btn-outline-secondary assign_type user_type_checkbox lang active" data-lang="c_user"></button>
-                                            <button id="tp_email_type" type="button" class="btn btn-outline-secondary assign_type email_type_checkbox lang" data-lang="c_email"></button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group assign_user assign_group row">.
-                                    <label class="lang col-sm-2 col-form-label" data-lang="c_user" for="tp_user"></label>
-                                    <div class="col-sm-9">
-                                        <select class="users_select form-control" id="tp_user"></select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group assign_email assign_group row">
-                                    <label class="lang col-sm-2 col-form-label" for="tp_assign_emails" data-lang="c_email" ></label>
-                                    <div class="col-sm-10">
-                                        <input type="email" id="tp_assign_emails" class="form-control" required multiple placeholder="">
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label lang" data-lang="t_pol" for="tp_pol"></label>
-                                    <div class="col-sm-10">
-                                        <div class="checkbox">
-                                            <input type="checkbox" name="repeat" value="repeat" id="tp_pol">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label lang" data-lang="t_auto2" for="tp_assign_auto"></label>
-                                    <div class="col-sm-5">
-                                        <div class="checkbox">
-                                            <input type="checkbox" id="tp_assign_auto">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-5">
-                                        <p class="lang" data-lang="t_auto">auto</p>
-                                    </div>
-                                </div>
-
                             </div>
 
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="c_persist" for="tp_repeat"></label>
-                                <div class="col-sm-3">
-                                    <div class="checkbox">
-                                        <input type="checkbox" name="repeat" value="repeat" id="tp_repeat">
-                                    </div>
-                                </div>
-                                <div class="col-sm-7">
-                                    <p class="lang" data-lang="msg_persist"></p>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="c_from" for="tp_from"></label>
-                                <div class="col-sm-10">
-                                    <div class='input-group date' id='tp_from' data-toggle="tooltip" data-container="body"
-                                         title="Scheduled date in local time zone">
-                                        <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
-                                        <span class="input-group-addon"><span
-                                                class="glyphicon glyphicon-calendar"></span></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="c_to" for="tp_to"></label>
-                                <div class="col-sm-10">
-                                    <div class='input-group date' id='tp_to' data-toggle="tooltip" data-container="body"
-                                         title="Finish time">
-                                        <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
-                                        <span class="input-group-addon"><span
-                                                class="glyphicon glyphicon-calendar"></span></span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="t_g" for="tp_guidance">guide</label>
-                                <div class="col-sm-10">
-                                    <input id="tp_guidance" type='text' class="form-control" name="guidance">
-                                </div>
-                            </div>
-
-                            <div class="well">
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label lang" data-lang="t_nfc"
-                                           for="location_select"></label>
-                                    <div class="col-sm-10">
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <button type="button" class="btn btn-outline-secondary"><span class="location_group_list_sel"></span></button>
-                                                <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <span class="sr-only">Toggle Dropdown</span></button>
-                                                <div class="dropdown-menu location_group_list" id="location_group"></div>
-                                            </div>
-                                            <select class="form-control location_select" id="location_select" name="location_trigger"></select>
-                                        </div>
-                                    </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="ew_question1"><span data-lang="c_question" class="lang">question</span>
+                                    1</label>
+                                <div class="col-sm-4">
+                                    <select class="form-control question_req" id="ew_question1">
+                                    </select>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label lang" data-lang="sr_uid" for="nfc_uid"></label>
-                                    <div class="col-sm-10">
-                                        <input id="nfc_uid" type='text' class="form-control">
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label lang" data-lang="c_location">locn</label>
-                                    <div class="col-sm-10">
-                                        <div id="mapModal"></div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row" id="location_save_panel" style="display:none;">
-                                    <label class="col-sm-2 col-form-label lang" data-lang="sr_sl">locn</label>
-                                    <div class="col-sm-10">
-                                        <div class="well2">
-                                            <p class="lang" data-lang="sr_si"></p>
-                                            <form>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="location_save" id="location_save_al" value="al">
-                                                    <label class="form-check-label lang" data-lang="sr_al" for="location_save_al">
-                                                    </label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="location_save" id="location_save_ul" value="ul">
-                                                    <label class="form-check-label lang" data-lang="sr_ul" for="location_save_ul">
-                                                    </label>
-                                                </div>
-                                                <div class="form-check disabled">
-                                                    <input class="form-check-input" type="radio" name="location_save" id="location_save_nl" value="nl">
-                                                    <label class="form-check-label lang" data-lang="sr_nl" for="location_save_nl">
-                                                    </label>
-                                                </div>
-                                                <div class="form-group row update_only">
-                                                    <label for="locationGroupSave" class="col-sm-2 col-form-label lang" data-lang="sr_g"></label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="locationGroupSave">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row update_only">
-                                                    <label for="locationSave" class="col-sm-2 col-form-label lang" data-lang="c_name"></label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="locationSave">
-                                                    </div>
-                                                </div>
-
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="lang col-sm-2 col-form-label lang" data-lang="t_show_dist"
-                                       for="tp_show_dist"></label>
-                                <div class="col-sm-3">
-                                    <input type="integer" class="form-control" id="tp_show_dist">
-                                </div>
-                                <div class="col-sm-7">
-                                    <span class="lang" data-lang="t_show_dist_i"></span>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
-                    </button>
-                    <button id="taskPropertiesSave" type="button" class="btn btn-primary lang" data-lang="c_save">Save
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Popup to allow the user to add a notification -->
-    <div id="addNotificationPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addNotificationLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title lang" id="addNotificationLabel" data-lang="msg_send_notification">send</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                </div>
-
-                <div class="modal-body">
-                    <form id="notification_edit_form">
-
-
-                        <div class="form-group row">
-                            <label class="lang col-sm-2 control-label" data-lang="c_target" for="target"></label>
-                            <div class="col-sm-10">
-                                <select class="form-control" id="target"></select>
-                            </div>
-                        </div>
-
-
-                        <div class="submission_options form-group row">
-                            <label for="survey" class="lang col-sm-2 control-label" data-lang="c_survey"></label>
-                            <div class="col-sm-10">
-                                <select id="survey" class="form-control"></select>
-                            </div>
-                        </div>
-
-                        <div class="forward_options" style="display:none;">
-                            <div class="form-group row">
-                                <label for="fwd_host" data-lang="c_host" class="lang col-sm-2 control-label">Host</label>
-                                <div class="col-sm-10">
-                                    <input type="text" id="fwd_host" class="form-control" required>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="fwd_user" data-lang="c_user" class="lang col-sm-2 control-label"></label>
-                                <div class="col-sm-10">
-                                    <input type="text" id="fwd_user" class="form-control" required>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="fwd_password" data-lang="c_password" class="lang col-sm-2 control-label"></label>
-                                <div class="col-sm-10">
-                                    <input id="fwd_password" type="password" class="form-control lang_ph" data-lang_ph="c_password" placeholder="" required>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="fwd_rem_survey" data-lang="c_rem_f" class="lang col-sm-2 control-label"></label>
-                                <div class="col-sm-5">
-                                    <select id="fwd_rem_survey" class="form-control"></select>
-                                </div>
-                                <div class="col-sm-5">
-                                    <input id="fwd_rem_survey_nm" class="form-control">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-sm-offset-2 col-sm-10">
-                                    <button id="fwd_upd_rem_survey" type="button" class="btn btn-default lang"  data-lang="tm_ref_f"></button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="well email_options submission_options" style="display:none;">
-                            <div class="form-group row" >
-                                <label class="lang col-sm-2 control-label" data-lang="c_attach" for="email_attach"></label>
-                                <div class="col-sm-10">
-                                    <select class="form-control" id="email_attach">
-                                        <option value="none" class="lang" data-lang="c_none">none</option>
-                                        <option value="webform" class="lang" data-lang="n_wf">web form</option>
-                                        <option value="pdf" class="lang" data-lang="n_pdfp">pdf p</option>
-                                        <option value="pdf_landscape" class="lang" data-lang="n_pdfl">pdf l</option>
+                                <label class="lang col-sm-2 control-label" data-lang="a_fn"
+                                       for="ew_fn">function</label>
+                                <div class="col-sm-4">
+                                    <select class="form-control" id="ew_fn">
                                     </select>
                                 </div>
                             </div>
 
-                            <div class="form-group pdf_options submission_options row" style="display:none;">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"
+                                       for="ew_question2"><span class="lang" data-lang="c_question">question</span>
+                                    2</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control question" id="ew_question2">
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="lang col-sm-2 control-label" data-lang="c_width"
+                                       for="ew_width">width</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" id="ew_width">
+                                        <option class="lang" value="3" data-lang="d_qtr">25</option>
+                                        <option class="lang" value="6" data-lang="d_half">50</option>
+                                        <option class="lang" value="9" data-lang="d_3qtr">75</option>
+                                        <option class="lang" value="12" data-lang="d_full">100</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="chartInfo" style="word-wrap:break-word; display:none;" class="alert"
+                             role="alert"></div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
+                </button>
+                <button id="editChartSave" type="button" class="btn btn-primary lang" data-lang="c_save">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal to edit a map layer -->
+<div id="layerEdit" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog custom-modal-width">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 b-r">
+                        <h3 class="m-t-none m-b lang" data-lang="mf_ld"></h3>
+
+                        <form id="mapForm" role="form" class="form-horizontal">
+
+                            <div class="form-group row">
+                                <label class="lang col-sm-2 control-label" data-lang="c_title"
+                                       for="ml_title"></label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control title" id="ml_title" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
                                 <div class="col-sm-offset-2 col-sm-10">
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" id="include_references" name="include_references"
-                                                   value="include_references"><span data-lang="n_inc_ref" class="lang"></span>
+                                            <input type="checkbox" id="usecurrent_tabledata" checked><span
+                                                data-lang="br_cd" class="lang"></span>
                                         </label>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="form-group pdf_options submission_options row" style="display:none;">
+                            <div class="form-group row">
                                 <div class="col-sm-offset-2 col-sm-10">
-                                    <div class="checkbox">
+                                    <div class="radio">
                                         <label>
-                                            <input type="checkbox" id="launched_only" name="launched_only"
-                                                   value="launched_only"><span data-lang="n_lo" class="lang"></span>
+                                            <input type="radio" value="normal" id="clump_normal" name="clump"
+                                                   checked><span data-lang="c_normal" class="lang"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" value="heatmap" id="clump_heatmap" name="clump"><span
+                                                data-lang="c_heatmap" class="lang"></span>
                                         </label>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="email_options" style="display:none;">
-
-                            <div id="notify_emails_cont" class="form-group row lang_tt" data-lang_tt="n_cs_e" data-toggle="tooltip"  data-container="body" title="">
-                                <label for="notify_emails" data-lang="c_email" class="lang col-sm-2 control-label"></label>
-                                <div class="col-sm-10">
-                                    <input type="email" id="notify_emails" class="form-control lang_ph" data-lang_ph="n_ea" required multiple placeholder="">
-                                </div>
-                            </div>
-
-                            <div id="email_subject_cont" class="form-group row lang_tt" data-lang_tt="n_esc" data-toggle="tooltip"  data-container="body" title="">
-                                <label for="email_subject" data-lang="c_subject" class="lang col-sm-2 control-label"></label>
-                                <div class="col-sm-10">
-                                    <input type="text" id="email_subject" class="form-control">
-                                </div>
-                            </div>
-                            <div class="well">
-                                <div class="form-group row" data-toggle="tooltip"  data-container="body">
-                                    <label for="email_content" data-lang="c_content" class="lang col-sm-2 control-label"></label>
-                                    <div class="col-sm-10">
-                                        <textarea id="email_content" class="labelProp form-control"></textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group task_reminder_options row">
-                                    <label for="email_content_ap" data-lang="n_ap" class="lang col-sm-2 control-label"></label>
-                                    <div class="col-sm-8">
-                                        <select id="email_content_ap" class="labelProp form-control">
-                                            <option class="lang" data-lang="c_task" value="${task_webform}">webform</option>
-                                            <option class="lang" data-lang="t_assigned" value="${assignee_name}">assigned</option>
-                                            <option class="lang" data-lang="c_scheduled" value="${scheduled}">scheduled</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <button id="email_content_ap_insert" type="button" class="btn btn-info lang" data-lang="c_insert"></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="sms_options" style="display:none;">
-                            <div class="form-group row lang_tt" data-lang_tt="n_sms_n_tt" data-toggle="tooltip"  data-container="body" title="">
-                                <label for="notify_sms" data-lang="c_sms" class="lang col-sm-2 control-label"></label>
-                                <div class="col-sm-10">
-                                    <input type="tel" id="notify_sms" class="form-control" required>
-                                </div>
-                            </div>
-
-                            <div class="form-group row" data-container="body">
-                                <label for="notify_sms" data-lang="n_si" class="lang col-sm-2 control-label"></label>
-                                <div class="col-sm-10">
-                                    <input type="text" id="sms_sender_id" class="form-control">
-                                </div>
-                            </div>
-                            <div class="form-group row" data-container="body">
-                                <label for="sms_content" data-lang="c_content" class="lang col-sm-2 control-label"></label>
-                                <div class="col-sm-10">
-                                    <textarea id="sms_content" class="labelProp form-control"></textarea>
-                                </div>
-                            </div>
-                        </div>
 
 
-                    </form>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
-                        <button id="saveNotification" type="button" class="btn btn-primary lang" data-lang="c_save"></button>
+                            <!--
+							<div class="form-group">
+								 <label class="lang col-sm-2 control-label" data-lang="c_survey" for="ml_survey">survey</label>
+								<div class="col-sm-10">
+									<select class="form-control" id="ml_survey">
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								 <label class="lang col-sm-2 control-label" data-lang="c_survey" for="ml_survey">survey</label>
+								<div class="col-sm-10">
+									<select class="form-control" id="ml_survey">
+									</select>
+								</div>
+							</div>
+							-->
+
+                        </form>
+                        <div id="layerInfo" style="word-wrap:break-word; display:none;" class="alert"
+                             role="alert"></div>
                     </div>
+
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
+                <button id="addLayerSave" type="button" class="btn btn-primary lang" data-lang="c_save"></button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Popup to allow the user to generate a PDF -->
-    <div id="genPdfPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="genpdfLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title lang" id="genpdfLabel" data-lang="d_d_pdf">pdf</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
+<!-- Modal to assign a user -->
+<div id="userAssign" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog custom-modal-width">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title lang" data-lang="t_assign"></h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only"></span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 b-r">
+
+                        <form role="form">
+
+                            <div class="form-group row">
+                                <select id="user_to_assign" class="custom-select"></select>
+                            </div>
+
+                        </form>
+                        <div id="assignUserInfo" style="word-wrap:break-word; display:none;" class="alert" role="alert"></div>
+                    </div>
+
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
+                <button id="assignUserSave" type="button" data-dismiss="modal" class="btn btn-primary lang " data-lang="c_save"></button>
+            </div>
+        </div>
+    </div>
+</div>
 
-                <div class="modal-body">
-                    <form id="genpdf_form">
+<!-- Modal to delete / restore a record -->
+<div id="toggleRecord" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog custom-modal-width">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="toggleRecordTitle" class="modal-title"></h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only"></span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 b-r">
 
-                        <div class="form-group row" >
-                            <label class="lang col-sm-2 control-label" data-lang="c_orientation" for="pdf_orientation"></label>
+                        <form role="form">
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label lang" data-lang="c_reason" for="toggle_reason">r</label>
+                                <div class="col-sm-10">
+                                    <input id="toggle_reason" type='text' class="form-control" name="taskTitle">
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
+                <button id="toggleRecordSave" type="button" data-dismiss="modal" class="btn btn-primary"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+	Modal to show task properties and allow them to be edited
+	Replicated from taskManagement. These two code bases should be combined howeve
+	  currently task managmement and managed_forms use two different map APIs mapbox and OL3
+-->
+<div id="task_properties" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="taskPropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="taskPropLabel"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form role="form" id="taskPropertiesForm" name="taskProperties">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label lang" data-lang="c_name" for="tp_name">name</label>
                             <div class="col-sm-10">
-                                <select class="form-control" id="pdf_orientation">
-                                    <option value="portrait" class="lang" data-lang="n_pdfp">pdf p</option>
-                                    <option value="landscape" class="lang" data-lang="n_pdfl">pdf l</option>
-                                </select>
+                                <input id="tp_name" type='text' class="form-control" name="taskTitle">
                             </div>
                         </div>
-
-                        <div class="form-group row" >
-                            <label class="lang col-sm-2 control-label" data-lang="c_lang" for="pdf_language"></label>
+                        <div class="form-group row">
+                            <label class="lang col-sm-2 col-form-label" data-lang="c_survey" for="tp_form_name"></label>
                             <div class="col-sm-10">
-                                <select class="form-control language_sel" id="pdf_language">
-                                </select>
+                                <select class="disable_blocked form-control" id="tp_form_name"></select>
+                            </div>
+                        </div>
+                        <div class="well">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label lang" data-lang="assign_type"></label>
+                                <div class="col-sm-10">
+                                    <div class="btn-group" role="group" aria-label="select assignment type">
+                                        <button id="tp_user_type" type="button" class="btn btn-outline-secondary assign_type user_type_checkbox lang active" data-lang="c_user"></button>
+                                        <button id="tp_email_type" type="button" class="btn btn-outline-secondary assign_type email_type_checkbox lang" data-lang="c_email"></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group assign_user assign_group row">.
+                                <label class="lang col-sm-2 col-form-label" data-lang="c_user" for="tp_user"></label>
+                                <div class="col-sm-9">
+                                    <select class="users_select form-control" id="tp_user"></select>
+                                </div>
+                            </div>
+
+                            <div class="form-group assign_email assign_group row">
+                                <label class="lang col-sm-2 col-form-label" for="tp_assign_emails" data-lang="c_email" ></label>
+                                <div class="col-sm-10">
+                                    <input type="email" id="tp_assign_emails" class="form-control" required multiple placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label lang" data-lang="t_pol" for="tp_pol"></label>
+                                <div class="col-sm-10">
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="repeat" value="repeat" id="tp_pol">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label lang" data-lang="t_auto2" for="tp_assign_auto"></label>
+                                <div class="col-sm-5">
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="tp_assign_auto">
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <p class="lang" data-lang="t_auto">auto</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label lang" data-lang="c_persist" for="tp_repeat"></label>
+                            <div class="col-sm-3">
+                                <div class="checkbox">
+                                    <input type="checkbox" name="repeat" value="repeat" id="tp_repeat">
+                                </div>
+                            </div>
+                            <div class="col-sm-7">
+                                <p class="lang" data-lang="msg_persist"></p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label lang" data-lang="c_from" for="tp_from"></label>
+                            <div class="col-sm-10">
+                                <div class='input-group date' id='tp_from' data-toggle="tooltip" data-container="body"
+                                     title="Scheduled date in local time zone">
+                                    <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
+                                    <span class="input-group-addon"><span
+                                            class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label lang" data-lang="c_to" for="tp_to"></label>
+                            <div class="col-sm-10">
+                                <div class='input-group date' id='tp_to' data-toggle="tooltip" data-container="body"
+                                     title="Finish time">
+                                    <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
+                                    <span class="input-group-addon"><span
+                                            class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-6 col-form-label lang" data-lang="n_inc_ref" for="pdf_include_references"></label>
-                            <div class="col-sm-6">
-                                <div class="checkbox">
-                                    <input type="checkbox" id="pdf_include_references">
+                            <label class="col-sm-2 col-form-label lang" data-lang="t_g" for="tp_guidance">guide</label>
+                            <div class="col-sm-10">
+                                <input id="tp_guidance" type='text' class="form-control" name="guidance">
+                            </div>
+                        </div>
+
+                        <div class="well">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label lang" data-lang="t_nfc"
+                                       for="location_select"></label>
+                                <div class="col-sm-10">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <button type="button" class="btn btn-outline-secondary"><span class="location_group_list_sel"></span></button>
+                                            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="sr-only">Toggle Dropdown</span></button>
+                                            <div class="dropdown-menu location_group_list" id="location_group"></div>
+                                        </div>
+                                        <select class="form-control location_select" id="location_select" name="location_trigger"></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label lang" data-lang="sr_uid" for="nfc_uid"></label>
+                                <div class="col-sm-10">
+                                    <input id="nfc_uid" type='text' class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label lang" data-lang="c_location">locn</label>
+                                <div class="col-sm-10">
+                                    <div id="mapModal"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row" id="location_save_panel" style="display:none;">
+                                <label class="col-sm-2 col-form-label lang" data-lang="sr_sl">locn</label>
+                                <div class="col-sm-10">
+                                    <div class="well2">
+                                        <p class="lang" data-lang="sr_si"></p>
+                                        <form>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="location_save" id="location_save_al" value="al">
+                                                <label class="form-check-label lang" data-lang="sr_al" for="location_save_al">
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="location_save" id="location_save_ul" value="ul">
+                                                <label class="form-check-label lang" data-lang="sr_ul" for="location_save_ul">
+                                                </label>
+                                            </div>
+                                            <div class="form-check disabled">
+                                                <input class="form-check-input" type="radio" name="location_save" id="location_save_nl" value="nl">
+                                                <label class="form-check-label lang" data-lang="sr_nl" for="location_save_nl">
+                                                </label>
+                                            </div>
+                                            <div class="form-group row update_only">
+                                                <label for="locationGroupSave" class="col-sm-2 col-form-label lang" data-lang="sr_g"></label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="locationGroupSave">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row update_only">
+                                                <label for="locationSave" class="col-sm-2 col-form-label lang" data-lang="c_name"></label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="locationSave">
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-6 col-form-label lang" data-lang="n_lo" for="pdf_launched_only"></label>
-                            <div class="col-sm-6">
+                            <label class="lang col-sm-2 col-form-label lang" data-lang="t_show_dist"
+                                   for="tp_show_dist"></label>
+                            <div class="col-sm-3">
+                                <input type="integer" class="form-control" id="tp_show_dist">
+                            </div>
+                            <div class="col-sm-7">
+                                <span class="lang" data-lang="t_show_dist_i"></span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
+                </button>
+                <button id="taskPropertiesSave" type="button" class="btn btn-primary lang" data-lang="c_save">Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Popup to allow the user to add a notification -->
+<div id="addNotificationPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addNotificationLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title lang" id="addNotificationLabel" data-lang="msg_send_notification">send</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="notification_edit_form">
+
+
+                    <div class="form-group row">
+                        <label class="lang col-sm-2 control-label" data-lang="c_target" for="target"></label>
+                        <div class="col-sm-10">
+                            <select class="form-control" id="target"></select>
+                        </div>
+                    </div>
+
+
+                    <div class="submission_options form-group row">
+                        <label for="survey" class="lang col-sm-2 control-label" data-lang="c_survey"></label>
+                        <div class="col-sm-10">
+                            <select id="survey" class="form-control"></select>
+                        </div>
+                    </div>
+
+                    <div class="forward_options" style="display:none;">
+                        <div class="form-group row">
+                            <label for="fwd_host" data-lang="c_host" class="lang col-sm-2 control-label">Host</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="fwd_host" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="fwd_user" data-lang="c_user" class="lang col-sm-2 control-label"></label>
+                            <div class="col-sm-10">
+                                <input type="text" id="fwd_user" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="fwd_password" data-lang="c_password" class="lang col-sm-2 control-label"></label>
+                            <div class="col-sm-10">
+                                <input id="fwd_password" type="password" class="form-control lang_ph" data-lang_ph="c_password" placeholder="" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="fwd_rem_survey" data-lang="c_rem_f" class="lang col-sm-2 control-label"></label>
+                            <div class="col-sm-5">
+                                <select id="fwd_rem_survey" class="form-control"></select>
+                            </div>
+                            <div class="col-sm-5">
+                                <input id="fwd_rem_survey_nm" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button id="fwd_upd_rem_survey" type="button" class="btn btn-default lang"  data-lang="tm_ref_f"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="well email_options submission_options" style="display:none;">
+                        <div class="form-group row" >
+                            <label class="lang col-sm-2 control-label" data-lang="c_attach" for="email_attach"></label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="email_attach">
+                                    <option value="none" class="lang" data-lang="c_none">none</option>
+                                    <option value="webform" class="lang" data-lang="n_wf">web form</option>
+                                    <option value="pdf" class="lang" data-lang="n_pdfp">pdf p</option>
+                                    <option value="pdf_landscape" class="lang" data-lang="n_pdfl">pdf l</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group pdf_options submission_options row" style="display:none;">
+                            <div class="col-sm-offset-2 col-sm-10">
                                 <div class="checkbox">
-                                    <input type="checkbox" id="pdf_launched_only">
+                                    <label>
+                                        <input type="checkbox" id="include_references" name="include_references"
+                                               value="include_references"><span data-lang="n_inc_ref" class="lang"></span>
+                                    </label>
                                 </div>
                             </div>
                         </div>
 
-
-
-                    </form>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
-                        <button id="genPdf" type="button" data-dismiss="modal" class="btn btn-primary lang" data-lang="c_save"></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal to create an overview report -->
-    <div id="overviewReport" class="modal fade" aria-hidden="true">
-        <div class="modal-dialog custom-modal-width modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                            class="sr-only">close</span></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-12 b-r">
-                            <h3 class="m-t-none m-b lang" data-lang="a_rd">report definition</h3>
-
-                            <form id="summaryReportForm">
-
-
-                                <div class="form-group row">
-                                    <label class="col-sm-4 control-label" for="srf_text_fn">
-                                        <span class="lang" data-lang="a_fn">fn</span><span> </span><span class="lang" data-lang="br_tf">text</span></label>
-                                    <div class="col-sm-6">
-                                        <select class="form-control" id="srf_text_fn">
-                                            <option class="lang" value="count" data-lang="count">count</option>
-                                            <option class="lang" value="percent" data-lang="percent">percent</option>
-                                        </select>
-                                    </div>
+                        <div class="form-group pdf_options submission_options row" style="display:none;">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="launched_only" name="launched_only"
+                                               value="launched_only"><span data-lang="n_lo" class="lang"></span>
+                                    </label>
                                 </div>
-
-                                <div class="form-group row">
-                                    <label class="col-sm-4 control-label" for="srf_num_fn">
-                                        <span class="lang" data-lang="a_fn">fn</span><span> </span><span class="lang" data-lang="br_nf">text</span></label>
-                                    <div class="col-sm-6">
-                                        <select class="form-control" id="srf_num_fn">
-                                            <option class="lang" value="average" data-lang="average">average</option>
-                                            <option class="lang" value="min" data-lang="min">min</option>
-                                            <option class="lang" value="max" data-lang="max">max</option>
-                                            <option class="lang" value="sum" data-lang="sum">sum</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label" for="srf_group">
-                                        <span class="lang" data-lang="a_gb">group</span></label>
-                                    <div class="col-sm-6">
-                                        <select class="form-control" id="srf_group"></select>
-                                    </div>
-                                </div>
-
-                            </form>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
-                    </button>
-                    <button id="overviewReportSave" type="button" class="btn btn-primary lang" data-lang="m_export">export</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Popup to allow the user to select the visible columns -->
-    <div id="settingsPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="genpdfLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title lang" data-lang="c_settings">pdf</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                </div>
+                    <div class="email_options" style="display:none;">
 
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-6"></div>
-                        <div class="col-sm-2">
-                            <input type="checkbox" name="clearColumns" id="clearColumns">
+                        <div id="notify_emails_cont" class="form-group row lang_tt" data-lang_tt="n_cs_e" data-toggle="tooltip"  data-container="body" title="">
+                            <label for="notify_emails" data-lang="c_email" class="lang col-sm-2 control-label"></label>
+                            <div class="col-sm-10">
+                                <input type="email" id="notify_emails" class="form-control lang_ph" data-lang_ph="n_ea" required multiple placeholder="">
+                            </div>
+                        </div>
+
+                        <div id="email_subject_cont" class="form-group row lang_tt" data-lang_tt="n_esc" data-toggle="tooltip"  data-container="body" title="">
+                            <label for="email_subject" data-lang="c_subject" class="lang col-sm-2 control-label"></label>
+                            <div class="col-sm-10">
+                                <input type="text" id="email_subject" class="form-control">
+                            </div>
+                        </div>
+                        <div class="well">
+                            <div class="form-group row" data-toggle="tooltip"  data-container="body">
+                                <label for="email_content" data-lang="c_content" class="lang col-sm-2 control-label"></label>
+                                <div class="col-sm-10">
+                                    <textarea id="email_content" class="labelProp form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group task_reminder_options row">
+                                <label for="email_content_ap" data-lang="n_ap" class="lang col-sm-2 control-label"></label>
+                                <div class="col-sm-8">
+                                    <select id="email_content_ap" class="labelProp form-control">
+                                        <option class="lang" data-lang="c_task" value="${task_webform}">webform</option>
+                                        <option class="lang" data-lang="t_assigned" value="${assignee_name}">assigned</option>
+                                        <option class="lang" data-lang="c_scheduled" value="${scheduled}">scheduled</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button id="email_content_ap_insert" type="button" class="btn btn-info lang" data-lang="c_insert"></button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-6"><b><span class="lang" data-lang="c_cols"></span></b></div>
-                        <div class="col-sm-2"><b><span class="lang" data-lang="c_show"></span></b></div>
-                        <div class="col-sm-2"><b><span class="lang" data-lang="ed_bc"></span></b></div>
-                        <div class="col-sm-2"><b><span class="lang" data-lang="co_tid"></span></b></div>
+
+                    <div class="sms_options" style="display:none;">
+                        <div class="form-group row lang_tt" data-lang_tt="n_sms_n_tt" data-toggle="tooltip"  data-container="body" title="">
+                            <label for="notify_sms" data-lang="c_sms" class="lang col-sm-2 control-label"></label>
+                            <div class="col-sm-10">
+                                <input type="tel" id="notify_sms" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" data-container="body">
+                            <label for="notify_sms" data-lang="n_si" class="lang col-sm-2 control-label"></label>
+                            <div class="col-sm-10">
+                                <input type="text" id="sms_sender_id" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row" data-container="body">
+                            <label for="sms_content" data-lang="c_content" class="lang col-sm-2 control-label"></label>
+                            <div class="col-sm-10">
+                                <textarea id="sms_content" class="labelProp form-control"></textarea>
+                            </div>
+                        </div>
                     </div>
-                    <div id="tab-columns-content"></div>
-                </div>
+
+
+                </form>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
-                    <button id="saveSettings" type="button" data-dismiss="modal" class="btn btn-primary lang" data-lang="c_save"></button>
+                    <button id="saveNotification" type="button" class="btn btn-primary lang" data-lang="c_save"></button>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Popup to allow the user to generate a PDF -->
+<div id="genPdfPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="genpdfLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title lang" id="genpdfLabel" data-lang="d_d_pdf">pdf</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="genpdf_form">
+
+                    <div class="form-group row" >
+                        <label class="lang col-sm-2 control-label" data-lang="c_orientation" for="pdf_orientation"></label>
+                        <div class="col-sm-10">
+                            <select class="form-control" id="pdf_orientation">
+                                <option value="portrait" class="lang" data-lang="n_pdfp">pdf p</option>
+                                <option value="landscape" class="lang" data-lang="n_pdfl">pdf l</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" >
+                        <label class="lang col-sm-2 control-label" data-lang="c_lang" for="pdf_language"></label>
+                        <div class="col-sm-10">
+                            <select class="form-control language_sel" id="pdf_language">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label lang" data-lang="n_inc_ref" for="pdf_include_references"></label>
+                        <div class="col-sm-6">
+                            <div class="checkbox">
+                                <input type="checkbox" id="pdf_include_references">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label lang" data-lang="n_lo" for="pdf_launched_only"></label>
+                        <div class="col-sm-6">
+                            <div class="checkbox">
+                                <input type="checkbox" id="pdf_launched_only">
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
+                    <button id="genPdf" type="button" data-dismiss="modal" class="btn btn-primary lang" data-lang="c_save"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal to create an overview report -->
+<div id="overviewReport" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog custom-modal-width modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">close</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 b-r">
+                        <h3 class="m-t-none m-b lang" data-lang="a_rd">report definition</h3>
+
+                        <form id="summaryReportForm">
+
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label" for="srf_text_fn">
+                                    <span class="lang" data-lang="a_fn">fn</span><span> </span><span class="lang" data-lang="br_tf">text</span></label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" id="srf_text_fn">
+                                        <option class="lang" value="count" data-lang="count">count</option>
+                                        <option class="lang" value="percent" data-lang="percent">percent</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label" for="srf_num_fn">
+                                    <span class="lang" data-lang="a_fn">fn</span><span> </span><span class="lang" data-lang="br_nf">text</span></label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" id="srf_num_fn">
+                                        <option class="lang" value="average" data-lang="average">average</option>
+                                        <option class="lang" value="min" data-lang="min">min</option>
+                                        <option class="lang" value="max" data-lang="max">max</option>
+                                        <option class="lang" value="sum" data-lang="sum">sum</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="srf_group">
+                                    <span class="lang" data-lang="a_gb">group</span></label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" id="srf_group"></select>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
+                </button>
+                <button id="overviewReportSave" type="button" class="btn btn-primary lang" data-lang="m_export">export</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Popup to allow the user to select the visible columns -->
+<div id="settingsPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="genpdfLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title lang" data-lang="c_settings">pdf</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6"></div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" name="clearColumns" id="clearColumns">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6"><b><span class="lang" data-lang="c_cols"></span></b></div>
+                    <div class="col-sm-2"><b><span class="lang" data-lang="c_show"></span></b></div>
+                    <div class="col-sm-2"><b><span class="lang" data-lang="ed_bc"></span></b></div>
+                    <div class="col-sm-2"><b><span class="lang" data-lang="co_tid"></span></b></div>
+                </div>
+                <div id="tab-columns-content"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
+                <button id="saveSettings" type="button" data-dismiss="modal" class="btn btn-primary lang" data-lang="c_save"></button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
