@@ -1007,6 +1007,7 @@ define({
     "mf_clear": "Clear single record view",
     "mf_sc": "Show Controls",
     "mf_hc": "Hide Controls",
+    "mf_ts": "Table Settings",
 
 
     // Logout
