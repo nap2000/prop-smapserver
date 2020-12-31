@@ -690,10 +690,18 @@ require([
             gMapView = false;
             gChartView = false;
             gTimingView = false;
-            if (target === '#map-view') {
-                map.initDynamicMap(gOverallMapConfig, false, featureSelected, true);
+
+            if (target === '#table-view') {
+                $('.tableOnly').show();
+            } else if (target === '#map-view') {
                 $('.mapOnly').show();
                 gMapView = true;
+                try {       // will fail if there is no data
+                    map.initDynamicMap(gOverallMapConfig, false, featureSelected, true);
+                } catch(err) {
+
+                }
+
             } else if(target === '#chart-view') {
                 chart.init(true, false);
                 $('.chartOnly').show();
