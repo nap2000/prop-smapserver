@@ -257,10 +257,10 @@
 
 
 
-    <div class="overviewSection bg-light mt-4">
-        <div class="row border-bottom bg-light mt-1 mb-1">
+    <div class="overviewSection mt-4">
 
-            <div class="d-flex w-100">
+
+            <div class="d-flex w-100 px-4">
                 <p id="timezone" class="mr-auto"></p>
                 <ul class="nav">
                     <li class="nav-item">
@@ -274,72 +274,53 @@
                     <li class="nav-item editRecordSection">
                         <a id="exitEditRecord" class="nav-link lang" data-lang="c_back" href="#">Link</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item targetSpecific tableOnly">
                         <a id="show_settings" class="nav-link" href="#"><i class="fa fa-cog"></i> <span class="lang" data-lang="mf_ts"></span></a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Dropdown
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" href="#">Disabled</a>
-                    </li>
                 </ul>
-                <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+
+                <form class="form-inline my-2 my-lg-0  mx-1 mapOnly targetSpecific" style="display:none;">
+                    <div class="custom-control custom-switch custom-control-inline">
+                        <input type="checkbox" class="custom-control-input" id="showlayers">
+                        <label class="custom-control-label lang" data-lang="d_layers" for="showlayers"></label>
+                    </div>
                 </form>
+
+                <form class="form-inline my-2 my-lg-0  mx-1">
+                    <div class="btn-group not_deleted singleSelectOnly" role="group" aria-label="drill down">
+                        <button type="button" class="lang du_only btn btn-secondary" data-lang="co_up" id="drill_up"></button>
+                        <button type="button" class="dd_only lang btn btn-secondary" data-lang="co_dd" id="drill_down"></button>
+                        <div class="btn-group dd_only" role="group">
+                            <button id="dd_form" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                            </button>
+                            <div id="drill_down_list" class="dropdown-menu" aria-labelledby="drill_down">
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <form class="form-inline my-2 my-lg-0">
+                    <button class="singleSelectOnly not_deleted lang btn btn-danger mx-1" data-lang="c_del" id="m_delete"></button>
+                    <button class="singleSelectOnly deleted lang btn btn-info mx-1" data-lang="c_undel" id="m_undelete"></button>
+                    <button class="singleSelectOnly not_assigned lang btn btn-primary mx-1" data-lang="mf_lock" id="m_lock"></button>
+                    <button class="singleSelectOnly assigned lang btn btn-default mx-1" data-lang="mf_rel" id="m_release"></button>
+                    <button class="multiSelectOnly lang btn btn-primary mx-1" data-lang="co_b" id="m_bulk_edit"></button>
+                    <button class="singleSelectOnly assigned lang btn btn-primary mx-1" data-lang="c_edit" id="m_edit"></button>
+                    <button class="singleSelectOnly assigned_other lang btn btn-primary mx-1" data-lang="m_view" id="m_view"></button>
+                    <button class="singleSelectOnly assigned_admin lang btn btn-warning mx-1" type="button" data-lang="t_assign" id="m_assign_to"></button>
+
+                    <button class="genfile docx btn btn-info mx-1"><i class="fa fa-file-word fa-lg"></i></button>
+                    <button class="genfile xls btn btn-success mx-1"><i class="fa fa-file-excel fa-lg"></i></button>
+
+                </form>
+
             </div>
 
-
-            <!--
-
-						<div class="targetSpecific mapOnly custom-control custom-switch custom-control-inline" style="display:none;">
-							<input type="checkbox" class="custom-control-input" id="showlayers">
-							<label class="custom-control-label lang" data-lang="d_layers" for="showlayers"></label>
-						</div>
-
-
-						<div class="btn-group not_deleted singleSelectOnly" role="group" aria-label="drill down">
-							<button type="button" class="lang du_only btn btn-secondary" data-lang="co_up" id="drill_up"></button>
-							<button type="button" class="dd_only lang btn btn-secondary" data-lang="co_dd" id="drill_down"></button>
-							<div class="btn-group dd_only" role="group">
-								<button id="dd_form" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-
-								</button>
-								<div id="drill_down_list" class="dropdown-menu" aria-labelledby="drill_down">
-
-								</div>
-							</div>
-						</div>
-
-						<button class="singleSelectOnly not_deleted lang btn btn-danger" data-lang="c_del" id="m_delete"></button>
-						<button class="singleSelectOnly deleted lang btn btn-info" data-lang="c_undel" id="m_undelete"></button>
-						<button class="singleSelectOnly not_assigned lang btn btn-primary" data-lang="mf_lock" id="m_lock"></button>
-						<button class="singleSelectOnly assigned lang btn btn-default" data-lang="mf_rel" id="m_release"></button>
-						<button class="multiSelectOnly lang btn btn-primary" data-lang="co_b" id="m_bulk_edit"></button>
-						<button class="singleSelectOnly assigned lang btn btn-primary" data-lang="c_edit" id="m_edit"></button>
-						<button class="singleSelectOnly assigned_other lang btn btn-primary" data-lang="m_view" id="m_view"></button>
-						<button class="singleSelectOnly assigned_admin lang btn btn-warning" type="button" data-lang="t_assign" id="m_assign_to"></button>
-
-						<button class="genfile docx btn btn-info"><i class="fa fa-file-word fa-lg"></i></button>
-						<button class="genfile xls btn btn-success "><i class="fa fa-file-excel fa-lg"></i></button>
-
-
-			-->
             <div id="dashboardInfo" class="alert alert-success" style="display:none;"></div>
 
-        </div>
+
+
 
         <ul id="mainTabs" class="nav nav-tabs mt-4" role="tablist">
             <li class="nav-item" role="presentation">
