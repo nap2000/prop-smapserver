@@ -256,71 +256,65 @@
     </div>
 
 
-
     <div class="overviewSection mt-4">
+        <div class="d-flex w-100 px-4">
+            <p id="timezone" class="mr-auto"></p>
+            <ul class="nav">
+                <li class="nav-item">
 
+                <li class="nav-item filtersShown">
+                    <a id="hideFilters"  class="nav-link active lang" data-lang="mf_hc" href="#">hide</a>
+                </li>
+                <li class="nav-item filtersHidden" style="display:none;">
+                    <a id="showFilters" class="nav-link lang" data-lang="mf_sc" href="#">show</a>
+                </li>
+                <li class="nav-item editRecordSection">
+                    <a id="exitEditRecord" class="nav-link lang" data-lang="c_back" href="#">Link</a>
+                </li>
+                <li class="nav-item targetSpecific tableOnly">
+                    <a id="show_settings" class="nav-link" href="#"><i class="fa fa-cog"></i> <span class="lang" data-lang="mf_ts"></span></a>
+                </li>
+            </ul>
 
-            <div class="d-flex w-100 px-4">
-                <p id="timezone" class="mr-auto"></p>
-                <ul class="nav">
-                    <li class="nav-item">
+            <form class="form-inline my-2 my-lg-0  mx-1 mapOnly targetSpecific" style="display:none;">
+                <div class="custom-control custom-switch custom-control-inline">
+                    <input type="checkbox" class="custom-control-input" id="showlayers">
+                    <label class="custom-control-label lang" data-lang="d_layers" for="showlayers"></label>
+                </div>
+            </form>
 
-                    <li class="nav-item filtersShown">
-                        <a id="hideFilters"  class="nav-link active lang" data-lang="mf_hc" href="#">hide</a>
-                    </li>
-                    <li class="nav-item filtersHidden" style="display:none;">
-                        <a id="showFilters" class="nav-link lang" data-lang="mf_sc" href="#">show</a>
-                    </li>
-                    <li class="nav-item editRecordSection">
-                        <a id="exitEditRecord" class="nav-link lang" data-lang="c_back" href="#">Link</a>
-                    </li>
-                    <li class="nav-item targetSpecific tableOnly">
-                        <a id="show_settings" class="nav-link" href="#"><i class="fa fa-cog"></i> <span class="lang" data-lang="mf_ts"></span></a>
-                    </li>
-                </ul>
+            <form class="form-inline my-2 my-lg-0  mx-1">
+                <div class="btn-group not_deleted singleSelectOnly" role="group" aria-label="drill down">
+                    <button type="button" class="lang du_only btn btn-secondary" data-lang="co_up" id="drill_up"></button>
+                    <button type="button" class="dd_only lang btn btn-secondary" data-lang="co_dd" id="drill_down"></button>
+                    <div class="btn-group dd_only" role="group">
+                        <button id="dd_form" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
-                <form class="form-inline my-2 my-lg-0  mx-1 mapOnly targetSpecific" style="display:none;">
-                    <div class="custom-control custom-switch custom-control-inline">
-                        <input type="checkbox" class="custom-control-input" id="showlayers">
-                        <label class="custom-control-label lang" data-lang="d_layers" for="showlayers"></label>
-                    </div>
-                </form>
+                        </button>
+                        <div id="drill_down_list" class="dropdown-menu" aria-labelledby="drill_down">
 
-                <form class="form-inline my-2 my-lg-0  mx-1">
-                    <div class="btn-group not_deleted singleSelectOnly" role="group" aria-label="drill down">
-                        <button type="button" class="lang du_only btn btn-secondary" data-lang="co_up" id="drill_up"></button>
-                        <button type="button" class="dd_only lang btn btn-secondary" data-lang="co_dd" id="drill_down"></button>
-                        <div class="btn-group dd_only" role="group">
-                            <button id="dd_form" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-
-                            </button>
-                            <div id="drill_down_list" class="dropdown-menu" aria-labelledby="drill_down">
-
-                            </div>
                         </div>
                     </div>
-                </form>
-                <form class="form-inline my-2 my-lg-0">
-                    <button class="singleSelectOnly not_deleted lang btn btn-danger mx-1" data-lang="c_del" id="m_delete"></button>
-                    <button class="singleSelectOnly deleted lang btn btn-info mx-1" data-lang="c_undel" id="m_undelete"></button>
-                    <button class="singleSelectOnly not_assigned lang btn btn-primary mx-1" data-lang="mf_lock" id="m_lock"></button>
-                    <button class="singleSelectOnly assigned lang btn btn-default mx-1" data-lang="mf_rel" id="m_release"></button>
-                    <button class="multiSelectOnly lang btn btn-primary mx-1" data-lang="co_b" id="m_bulk_edit"></button>
-                    <button class="singleSelectOnly assigned lang btn btn-primary mx-1" data-lang="c_edit" id="m_edit"></button>
-                    <button class="singleSelectOnly assigned_other lang btn btn-primary mx-1" data-lang="m_view" id="m_view"></button>
-                    <button class="singleSelectOnly assigned_admin lang btn btn-warning mx-1" type="button" data-lang="t_assign" id="m_assign_to"></button>
+                </div>
+            </form>
+            <form class="form-inline my-2 my-lg-0">
+                <button class="singleSelectOnly not_deleted lang btn btn-danger mx-1" data-lang="c_del" id="m_delete"></button>
+                <button class="singleSelectOnly deleted lang btn btn-info mx-1" data-lang="c_undel" id="m_undelete"></button>
+                <button class="singleSelectOnly not_assigned lang btn btn-primary mx-1" data-lang="mf_lock" id="m_lock"></button>
+                <button class="singleSelectOnly assigned lang btn btn-default mx-1" data-lang="mf_rel" id="m_release"></button>
+                <button class="multiSelectOnly lang btn btn-primary mx-1" data-lang="co_b" id="m_bulk_edit"></button>
+                <button class="singleSelectOnly assigned lang btn btn-primary mx-1" data-lang="c_edit" id="m_edit"></button>
+                <button class="singleSelectOnly assigned_other lang btn btn-primary mx-1" data-lang="m_view" id="m_view"></button>
+                <button class="singleSelectOnly assigned_admin lang btn btn-warning mx-1" type="button" data-lang="t_assign" id="m_assign_to"></button>
 
-                    <button class="genfile docx btn btn-info mx-1"><i class="fa fa-file-word fa-lg"></i></button>
-                    <button class="genfile xls btn btn-success mx-1"><i class="fa fa-file-excel fa-lg"></i></button>
+                <button class="genfile docx btn btn-info mx-1"><i class="fa fa-file-word fa-lg"></i></button>
+                <button class="genfile xls btn btn-success mx-1"><i class="fa fa-file-excel fa-lg"></i></button>
 
-                </form>
+            </form>
 
-            </div>
+        </div>
 
-            <div id="dashboardInfo" class="alert alert-success" style="display:none;"></div>
-
-
-
+        <div id="dashboardInfo" class="alert alert-success" style="display:none;"></div>
 
         <ul id="mainTabs" class="nav nav-tabs mt-4" role="tablist">
             <li class="nav-item" role="presentation">
@@ -333,7 +327,7 @@
             <li class="nav-item" style="display:none;"><a data-toggle="tab" id="set-timing-view" href="#timing-view" role="tab" class="nav-link"><i class="fa fa-clock-o"></i></a></li>
         </ul>
 
-        <div class="tab-content  mt-4">
+        <div class="tab-content mt-4">
             <div id="table-view" class="tab-pane fade show active" role="tabpanel" aria-labelledby="set-table-view">
 
                 <div id="table_content" class="col-md-12 dash_views">
@@ -409,119 +403,112 @@
 
     </div>
 
-    <div class="row bg-light mt-4 editRecordSection">
-        <div class="col-md-12">
-            <div class="ibox float-e-margins">
-                <div class="ibox-content">
-                    <div id="recordEditInfo" class="alert alert-success" style="display:none;"></div>
-                    <ul id="editTabs" class="nav nav-tabs" role="tablist">
-                        <li class="nav-item"><a data-toggle="tab" href="#data-view" class="active nav-link"><i class="fa fa-list"></i> <span class="lang" data-lang="c_data"></span></a></li>
-                        <li class="nav-item"><a data-toggle="tab" href="#changes-view" class="nav-link"><i class="fa fa-edit"></i> <span class="lang" data-lang="c_history"></span></a></li>
-                    </ul>
+    <div class="mt-4 editRecordSection mt-4">
+        <ul id="editTabs" class="nav nav-tabs mt-4" role="tablist">
+            <li class="nav-item" role="presentation"><a data-toggle="tab" href="#data-view" class="active nav-link"><i class="fa fa-list"></i> <span class="lang" data-lang="c_data"></span></a></li>
+            <li class="nav-item" role="presentation"><a data-toggle="tab" href="#changes-view" class="nav-link"><i class="fa fa-edit"></i> <span class="lang" data-lang="c_history"></span></a></li>
+        </ul>
 
-                    <div class="tabs-container container-fluid">
-                        <div class="tab-content">
-                            <div id="data-view" role="tabpanel" class="tab-pane active">
-                                <div class="panel-body">
-                                    <div class="row">
+        <div class="tab-content mt-4">
 
-                                        <div class="col-sm-6 b-r showFormData">
-                                            <h3 class="m-t-none m-b lang" data-lang="mf_fd"></h3>
-                                            <form id="surveyForm"></form>
-                                        </div>
-                                        <div class="col-sm-6 b-r showMgmtData">
-                                            <h3 class="m-t-none m-b lang" data-lang="mf_md">mgmt data</h3>
-                                            <form id="editRecordForm"></form>
+            <div id="data-view" role="tabpanel" class="tab-pane active">
+                <div class="panel-body">
+                    <div class="row">
 
-                                            <button id="saveRecord" type="button" class="btn btn-primary lang saverecord"
-                                                    data-dismiss="modal"
-                                                    data-lang="c_save">Save
-                                            </button>
-                                            <button id="shareRecord" type="button" class="btn btn-info">
-                                                <span class="lang"  data-lang="n_share">link</span>
-                                            </button>
-                                            <button id="exitEditRecord2" type="button" class="btn btn-primary exitEditRecord">
-                                                <span class="lang" data-lang="c_back">exit</span>
-                                            </button>
+                        <div class="col-sm-6 b-r showFormData">
+                            <h3 class="m-t-none m-b lang" data-lang="mf_fd"></h3>
+                            <form id="surveyForm"></form>
+                        </div>
+                        <div class="col-sm-6 b-r showMgmtData">
+                            <h3 class="m-t-none m-b lang" data-lang="mf_md">mgmt data</h3>
+                            <form id="editRecordForm"></form>
 
-                                            <div class="re_alert alert alert-success" role="alert" style="display:none;"></div>
-                                            <div class="shareRecordOnly well">
-                                                <form>
-                                                    <div class="form-group role_select">
-                                                        <h4 class="lang" data-lang="c_roles">roles</h4>
-                                                        <div class="role_select_roles"></div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <div class="input-group">
-                                                                        <span class="input-group-btn">
-                                                                            <button id="getSharedRecord" class="btn btn-info" type="button"><i class="fa fa-share-alt"></i></button>
-                                                                        </span>
-                                                            <input type="text" id="srLink" required class="form-control" readonly>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
+                            <button id="saveRecord" type="button" class="btn btn-primary lang saverecord"
+                                    data-dismiss="modal"
+                                    data-lang="c_save">Save
+                            </button>
+                            <button id="shareRecord" type="button" class="btn btn-info">
+                                <span class="lang"  data-lang="n_share">link</span>
+                            </button>
+                            <button id="exitEditRecord2" type="button" class="btn btn-primary exitEditRecord">
+                                <span class="lang" data-lang="c_back">exit</span>
+                            </button>
+
+                            <div class="re_alert alert alert-success" role="alert" style="display:none;"></div>
+                            <div class="shareRecordOnly well">
+                                <form>
+                                    <div class="form-group role_select">
+                                        <h4 class="lang" data-lang="c_roles">roles</h4>
+                                        <div class="role_select_roles"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-btn">
+                                                <button id="getSharedRecord" class="btn btn-info" type="button"><i class="fa fa-share-alt"></i></button>
+                                            </span>
+                                            <input type="text" id="srLink" required class="form-control" readonly>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div id="changes-view" role="tabpanel" class="tab-pane">
-                                <div class="panel-body">
-                                    <div class="table-responsive">
-                                        <table class="table" id="changes"></table>
-                                    </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
-
+                </div>
+            </div>
+            <div id="changes-view" role="tabpanel" class="tab-pane">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table" id="changes"></table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row bg-light mt-4 bulkEditSection">
-        <div class="col-md-12">
-            <div class="ibox float-e-margins">
-                <div class="ibox-content">
-                    <div id="bulkEditInfo" class="alert alert-success" style="display:none;"></div>
+</div>
 
-                    <div class="tabs-container container-fluid">
-                        <div class="tab-content">
-                            <div id="bulk-edit-view" role="tabpanel" class="tab-pane active">
-                                <div class="panel-body">
-                                    <div class="row">
+<div class="row bg-light mt-4 bulkEditSection">
+    <div class="col-md-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div id="bulkEditInfo" class="alert alert-success" style="display:none;"></div>
 
-                                        <div class="col-sm-12 showMgmtData">
-                                            <div class="row">
-                                                <div class="col-sm-8"><b><span class="lang" data-lang="c_question"></span></b></div>
-                                                <div class="col-sm-4"><b><span class="lang" data-lang="c_clear"></span></b></div>
-                                            </div>
-                                            <form id="bulkEditForm"></form>
+                <div class="tabs-container container-fluid">
+                    <div class="tab-content">
+                        <div id="bulk-edit-view" role="tabpanel" class="tab-pane active">
+                            <div class="panel-body">
+                                <div class="row">
 
-                                            <button id="saveBulkEdit" type="button" class="btn btn-success lang saverecord"
-                                                    data-dismiss="modal"
-                                                    data-lang="c_save">Save
-                                            </button>
-
-                                            <button id="exitBulkEdit" type="button" class="btn btn-primary exitBulkEdit">
-                                                <span class="lang" data-lang="c_back">exit</span>
-                                            </button>
-
-                                            <div class="re_alert alert alert-success" role="alert" style="display:none;"></div>
+                                    <div class="col-sm-12 showMgmtData">
+                                        <div class="row">
+                                            <div class="col-sm-8"><b><span class="lang" data-lang="c_question"></span></b></div>
+                                            <div class="col-sm-4"><b><span class="lang" data-lang="c_clear"></span></b></div>
                                         </div>
+                                        <form id="bulkEditForm"></form>
 
+                                        <button id="saveBulkEdit" type="button" class="btn btn-success lang saverecord"
+                                                data-dismiss="modal"
+                                                data-lang="c_save">Save
+                                        </button>
+
+                                        <button id="exitBulkEdit" type="button" class="btn btn-primary exitBulkEdit">
+                                            <span class="lang" data-lang="c_back">exit</span>
+                                        </button>
+
+                                        <div class="re_alert alert alert-success" role="alert" style="display:none;"></div>
                                     </div>
+
                                 </div>
                             </div>
-
                         </div>
-                    </div>
 
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
+</div>
 
 </div>
 
