@@ -335,7 +335,10 @@ require([
         });
 
         window.addEventListener("popstate", function(e) {
-            exitEdit();
+            console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
+            if(document.location.href.indexOf("#edit") == -1) {
+                exitEdit();
+            }
             return false;
         });
 
