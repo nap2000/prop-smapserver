@@ -44,8 +44,6 @@ requirejs.config({
         file_input: '../../../../js/libs/bootstrap.file-input',
         datetimepicker: '../../../../js/libs/bootstrap-datetimepicker.min',
         svgsave: '../../../../js/libs/saveSvgAsPng',
-        metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu',
-        inspinia: '../../../../js/libs/wb/inspinia.v2.9.2',
         pace: '../../../../js/libs/wb/plugins/pace/pace.min',
         qrcode: '../../../../js/libs/jquery-qrcode-0.14.0.min',
         multiselect: '../../../../js/libs/bootstrap-multiselect',
@@ -60,12 +58,10 @@ requirejs.config({
         'app/plugins': ['jquery'],
         'crf': ['jquery'],
         'file_input': ['jquery'],
-        'metismenu': ['jquery'],
         'app/chart': ['jquery'],
         'qrcode': ['jquery'],
 	    'slimscroll': ['jquery'],
         'toggle': ['bootstrap.min'],
-        'inspinia': ['jquery'],
         'multiselect': ['jquery', 'knockout']
     }
 });
@@ -80,7 +76,6 @@ require([
     'app/mapOL3',
     'svgsave',
     'app/actioncommon',
-    'metismenu',
     'pace',
     'datetimepicker',
     'crf',
@@ -171,7 +166,6 @@ require([
         setCustomManage();
 	    setupUserProfile(true);
         localise.setlang();		// Localise HTML
-        $("#side-menu").metisMenu();
         userDefaults();
 
         // Set page defaults
