@@ -30,23 +30,20 @@ requirejs.config({
     locale: gUserLocale,
     paths: {
     	app: '../app',
-    	jquery: '../../../../js/libs/jquery-2.1.1',
        	lang_location: '..'
     },
     shim: {
-    	'app/common': ['jquery'],
-    	'bootstrap.min': ['jquery']
+    	'app/common': ['jquery']
     }
 });
 
 require([
-         'jquery', 
-         'bootstrap.min',
+         'jquery',
          'app/common', 
          'app/globals',
          'app/localise',
          'bootstrapfileinput'
-         ], function($, bootstrap, common, globals, localise, bsfi) {
+         ], function($, common, globals, localise, bsfi) {
 
 	var gMaps,
 		gMapVersion,

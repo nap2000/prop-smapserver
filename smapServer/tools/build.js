@@ -50,6 +50,7 @@
         },
         {
             name: '../resources',
+	    exclude: ['jquery', 'bootstrap']
         },
         {
             name: '../queries',
