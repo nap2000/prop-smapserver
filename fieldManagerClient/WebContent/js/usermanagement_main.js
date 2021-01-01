@@ -39,9 +39,7 @@ requirejs.config({
 		common: '../../../../js/app/common',
 		globals: '../../../../js/app/globals',
 		crf: '../../../../js/libs/commonReportFunctions',
-		metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu',
 		moment: '../../../../js/libs/moment-with-locales.2.24.0',
-		inspinia_v2_9_2: '../../../../js/libs/wb/inspinia.v2.9.2',
 		slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll',
 		lang_location: '../../../../js'
 	},
@@ -49,9 +47,7 @@ requirejs.config({
 		'bootstrapcolorpicker': ['jquery'],
 		'slimscroll': ['jquery'],
 		'datetimepicker': ['moment'],
-		'common': ['jquery'],
-		'metismenu': ['jquery', 'slimscroll'],
-		'inspinia_v2_9_2': ['jquery', 'slimscroll', 'metismenu']
+		'common': ['jquery']
 	}
 });
 
@@ -63,9 +59,7 @@ require([
 	'moment',
 	'slimscroll',
 	'bootstrapcolorpicker',
-	'datetimepicker',
-	'metismenu',
-	'inspinia_v2_9_2'
+	'datetimepicker'
 
 ], function($, common, localise, globals, moment) {
 
@@ -119,7 +113,6 @@ require([
 
 	$(document).ready(function() {
 
-		$("#side-menu").metisMenu();
 		setCustomUserMgmt();			// Apply custom javascript
 
 		localise.setlang();		// Localise HTML
