@@ -330,7 +330,7 @@ require([
 
         window.addEventListener("popstate", function(e) {
             console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
-            if(document.location.href.indexOf("#edit") == -1) {
+            if(document.location.href.indexOf("#edit") == -1 && document.location.href.indexOf("#bulk") == -1) {
                 exitEdit();
             }
             return false;
