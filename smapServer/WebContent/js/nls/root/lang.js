@@ -1146,6 +1146,10 @@ define({
     "u_clear_p": "Clear exiting empty imported projects",
     "u_clear_u": "Clear exiting imported users",
     "u_clear_r": "Clear exiting imported roles",
+    "u_css_ss": "Upload a new CSS style sheet",
+    "u_css_del": "Delete CSS style sheet",
+    "u_css_sel": "Select a style sheet",
+    "u_css_info": "Create a custom style sheet using <a href='https://themestr.app/theme' _target='blank'>this website</a> and then upload to the server",
 
     // Browse Results
     "br_ci": "Case Insensitive",
