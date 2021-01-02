@@ -83,7 +83,7 @@
 <div class="container-fluid">
 
 	<!-- Main panel -->
-	<div class="card text-center mt-10">
+	<div class="card mt-10">
 		<div class="card-header">
 			<ul class="nav nav-tabs card-header-tabs" role="tablist">
 				<li id="appearanceTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="ed_appearance"></a></li>
@@ -99,207 +99,202 @@
 				<!-- The container for device settings -->
 				<div id="devicePanel" style="display:none;" class="usertab mt-4">
 
-					<div class="well">
-						<div class="container">
-							<form id="device_form">
+					<div class="container">
+						<form id="device_form">
 
-								<div class="form-group row">
-									<label data-lang="u_ft_rv" class="lang col-sm-4 control-label">tasks</label>
-									<div class="col-sm-6">
-										<div class="checkbox">
-											<input type="checkbox" name="devoption" class="devoption" value="ft_review_final">
-										</div>
+							<div class="form-group row">
+								<label data-lang="u_ft_rv" class="lang col-sm-4 control-label">tasks</label>
+								<div class="col-sm-6">
+									<div class="checkbox">
+										<input type="checkbox" name="devoption" class="devoption" value="ft_review_final">
 									</div>
 								</div>
+							</div>
 
-								<div class="form-group row">
-									<label for="ft_send" data-lang="u_ft_as" class="lang control-label col-sm-4">synchronise</label>
-									<div class="col-sm-6">
-										<select class="form-control" id="ft_send">
-											<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
-											<option class="lang" data-lang="c_off" value="off">off</option>
-											<option class="lang" data-lang="u_ft_sw" value="wifi_only">wifi</option>
-											<option class="lang" data-lang="u_ft_sw_c" value="wifi_and_cellular">wifi cell</option>
-										</select>
-									</div>
+							<div class="form-group row">
+								<label for="ft_send" data-lang="u_ft_as" class="lang control-label col-sm-4">synchronise</label>
+								<div class="col-sm-6">
+									<select class="form-control" id="ft_send">
+										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+										<option class="lang" data-lang="c_off" value="off">off</option>
+										<option class="lang" data-lang="u_ft_sw" value="wifi_only">wifi</option>
+										<option class="lang" data-lang="u_ft_sw_c" value="wifi_and_cellular">wifi cell</option>
+									</select>
 								</div>
+							</div>
 
-								<div class="form-group row">
-									<label for="ft_delete" data-lang="u_ft_del" class="lang control-label col-sm-4">delete</label>
-									<div class="col-sm-6">
-										<select class="form-control" id="ft_delete">
-											<option class="lang" data-lang="u_ft_sop" value="not set">nd</option>
-											<option class="lang" data-lang="c_off" value="off">off</option>
-											<option class="lang" data-lang="c_on" value="on">on</option>
-										</select>
-									</div>
+							<div class="form-group row">
+								<label for="ft_delete" data-lang="u_ft_del" class="lang control-label col-sm-4">delete</label>
+								<div class="col-sm-6">
+									<select class="form-control" id="ft_delete">
+										<option class="lang" data-lang="u_ft_sop" value="not set">nd</option>
+										<option class="lang" data-lang="c_off" value="off">off</option>
+										<option class="lang" data-lang="c_on" value="on">on</option>
+									</select>
 								</div>
+							</div>
 
-								<div class="form-group row">
-									<label for="ft_backward_navigation" data-lang="u_ft_back_nav" class="lang control-label col-sm-4">backward</label>
-									<div class="col-sm-6">
-										<select class="form-control" id="ft_backward_navigation">
-											<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
-											<option class="lang" data-lang="c_dis" value="disable">disable</option>
-											<option class="lang" data-lang="c_en" value="enable">enable</option>
-										</select>
-									</div>
+							<div class="form-group row">
+								<label for="ft_backward_navigation" data-lang="u_ft_back_nav" class="lang control-label col-sm-4">backward</label>
+								<div class="col-sm-6">
+									<select class="form-control" id="ft_backward_navigation">
+										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+										<option class="lang" data-lang="c_dis" value="disable">disable</option>
+										<option class="lang" data-lang="c_en" value="enable">enable</option>
+									</select>
 								</div>
+							</div>
 
-								<div class="form-group row">
-									<label for="ft_high_res_video" data-lang="u_ft_hrv" class="lang control-label col-sm-4">hrv</label>
-									<div class="col-sm-6">
-										<select class="form-control" id="ft_high_res_video">
-											<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
-											<option class="lang" data-lang="c_off" value="off">off</option>
-											<option class="lang" data-lang="c_on" value="on">on</option>
-										</select>
-									</div>
+							<div class="form-group row">
+								<label for="ft_high_res_video" data-lang="u_ft_hrv" class="lang control-label col-sm-4">hrv</label>
+								<div class="col-sm-6">
+									<select class="form-control" id="ft_high_res_video">
+										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+										<option class="lang" data-lang="c_off" value="off">off</option>
+										<option class="lang" data-lang="c_on" value="on">on</option>
+									</select>
 								</div>
+							</div>
 
-								<div class="form-group row">
-									<label for="ft_navigation" data-lang="u_ft_nav" class="lang control-label col-sm-4">nav</label>
-									<div class="col-sm-6">
-										<select class="form-control" id="ft_navigation">
-											<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
-											<option class="lang" data-lang="u_ft_swipes" value="swipe">swipe</option>
-											<option class="lang" data-lang="u_ft_buttons" value="buttons">buttons</option>
-											<option class="lang" data-lang="u_ft_swipes_buttons" value="swipe_buttons">swipe and buttons</option>
-										</select>
-									</div>
+							<div class="form-group row">
+								<label for="ft_navigation" data-lang="u_ft_nav" class="lang control-label col-sm-4">nav</label>
+								<div class="col-sm-6">
+									<select class="form-control" id="ft_navigation">
+										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+										<option class="lang" data-lang="u_ft_swipes" value="swipe">swipe</option>
+										<option class="lang" data-lang="u_ft_buttons" value="buttons">buttons</option>
+										<option class="lang" data-lang="u_ft_swipes_buttons" value="swipe_buttons">swipe and buttons</option>
+									</select>
 								</div>
+							</div>
 
-								<div class="form-group row">
-									<label for="ft_guidance" data-lang="t_g" class="lang control-label col-sm-4">guide</label>
-									<div class="col-sm-6">
-										<select class="form-control" id="ft_guidance">
-											<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
-											<option class="lang" data-lang="c_no" value="no">no</option>
-											<option class="lang" data-lang="u_ft_sa" value="yes always">yes</option>
-											<option class="lang" data-lang="u_ft_sc" value="yes collapsed">collapsed</option>
-										</select>
-									</div>
+							<div class="form-group row">
+								<label for="ft_guidance" data-lang="t_g" class="lang control-label col-sm-4">guide</label>
+								<div class="col-sm-6">
+									<select class="form-control" id="ft_guidance">
+										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+										<option class="lang" data-lang="c_no" value="no">no</option>
+										<option class="lang" data-lang="u_ft_sa" value="yes always">yes</option>
+										<option class="lang" data-lang="u_ft_sc" value="yes collapsed">collapsed</option>
+									</select>
 								</div>
+							</div>
 
-								<div class="form-group row">
-									<label for="ft_image_size" data-lang="u_ft_img_size" class="lang control-label col-sm-4">image size</label>
-									<div class="col-sm-6">
-										<select class="form-control" id="ft_image_size">
-											<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
-											<option class="lang" data-lang="u_ft_img_camera" value="original_image_size">camera</option>
-											<option class="lang" data-lang="u_ft_vs" value="very_small">very small</option>
-											<option class="lang" data-lang="u_ft_s" value="small">small</option>
-											<option class="lang" data-lang="u_ft_m" value="medium">medium</option>
-											<option class="lang" data-lang="u_ft_l" value="large">large</option>
-										</select>
-									</div>
+							<div class="form-group row">
+								<label for="ft_image_size" data-lang="u_ft_img_size" class="lang control-label col-sm-4">image size</label>
+								<div class="col-sm-6">
+									<select class="form-control" id="ft_image_size">
+										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+										<option class="lang" data-lang="u_ft_img_camera" value="original_image_size">camera</option>
+										<option class="lang" data-lang="u_ft_vs" value="very_small">very small</option>
+										<option class="lang" data-lang="u_ft_s" value="small">small</option>
+										<option class="lang" data-lang="u_ft_m" value="medium">medium</option>
+										<option class="lang" data-lang="u_ft_l" value="large">large</option>
+									</select>
 								</div>
+							</div>
 
-								<div class="form-group row">
-									<label for="ft_login_policy1" data-lang="u_ft_pw_policy" class="lang control-label col-sm-4"></label>
-									<div class="col-sm-6">
-										<select class="form-control" id="ft_login_policy1">
-											<option class="lang" data-lang="u_ft_never" value="never">never</option>
-											<option class="lang" data-lang="u_ft_always" value="always">always</option>
-											<option class="lang" data-lang="u_ft_periodically" value="periodic">periodic</option>
-										</select>
-									</div>
+							<div class="form-group row">
+								<label for="ft_login_policy1" data-lang="u_ft_pw_policy" class="lang control-label col-sm-4"></label>
+								<div class="col-sm-6">
+									<select class="form-control" id="ft_login_policy1">
+										<option class="lang" data-lang="u_ft_never" value="never">never</option>
+										<option class="lang" data-lang="u_ft_always" value="always">always</option>
+										<option class="lang" data-lang="u_ft_periodically" value="periodic">periodic</option>
+									</select>
 								</div>
-								<div class="form-group row pw_timeout" style="display:none;">
-									<label for="ft_login_policy2" data-lang="u_ft_pw_timeout" class="lang col-sm-4 control-label"></label>
-									<div class="col-sm-6">
-										<div class="form-control">
-											<input type="number" id="ft_login_policy2">
-										</div>
-									</div>
+							</div>
+							<div class="form-group row pw_timeout" style="display:none;">
+								<label for="ft_login_policy2" data-lang="u_ft_pw_timeout" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-6">
+									<input type="number" id="ft_login_policy2">
 								</div>
+							</div>
 
-								<div class="form-group row">
-									<label for="ft_number_tasks" data-lang="u_ft_tasks" class="lang col-sm-4 control-label">max tasks</label>
-									<div class="col-sm-6">
-										<div class="form-control">
-											<input type="number" id="ft_number_tasks">
-										</div>
+							<div class="form-group row">
+								<label for="ft_number_tasks" data-lang="u_ft_tasks" class="lang col-sm-4 control-label">max tasks</label>
+								<div class="col-sm-6">
+									<input type="number" id="ft_number_tasks">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label data-lang="u_ft_os" class="lang col-sm-4 control-label">odk menus</label>
+								<div class="col-sm-6">
+									<div class="checkbox">
+										<input type="checkbox" name="devoption" class="devoption" value="ft_odk_style_menus">
 									</div>
 								</div>
-								<div class="form-group row">
-									<label data-lang="u_ft_os" class="lang col-sm-4 control-label">odk menus</label>
-									<div class="col-sm-6">
-										<div class="checkbox">
-											<input type="checkbox" name="devoption" class="devoption" value="ft_odk_style_menus">
-										</div>
+							</div>
+							<div class="form-group row">
+								<label data-lang="u_ft_am" class="lang col-sm-4 control-label">admin menu</label>
+								<div class="col-sm-6">
+									<div class="checkbox">
+										<input type="checkbox" name="devoption" class="devoption" value="ft_admin_menu">
 									</div>
 								</div>
-								<div class="form-group row">
-									<label data-lang="u_ft_am" class="lang col-sm-4 control-label">admin menu</label>
-									<div class="col-sm-6">
-										<div class="checkbox">
-											<input type="checkbox" name="devoption" class="devoption" value="ft_admin_menu">
-										</div>
+							</div>
+							<div class="form-group row">
+								<label data-lang="u_ft_ss" class="lang col-sm-4 control-label">ss menu</label>
+								<div class="col-sm-6">
+									<div class="checkbox">
+										<input type="checkbox" name="devoption" class="devoption" value="ft_server_menu">
 									</div>
 								</div>
-								<div class="form-group row">
-									<label data-lang="u_ft_ss" class="lang col-sm-4 control-label">ss menu</label>
-									<div class="col-sm-6">
-										<div class="checkbox">
-											<input type="checkbox" name="devoption" class="devoption" value="ft_server_menu">
-										</div>
+							</div>
+							<div class="form-group row">
+								<label data-lang="u_ft_md" class="lang col-sm-4 control-label">md menu</label>
+								<div class="col-sm-6">
+									<div class="checkbox">
+										<input type="checkbox" name="devoption" class="devoption" value="ft_meta_menu">
 									</div>
 								</div>
-								<div class="form-group row">
-									<label data-lang="u_ft_md" class="lang col-sm-4 control-label">md menu</label>
-									<div class="col-sm-6">
-										<div class="checkbox">
-											<input type="checkbox" name="devoption" class="devoption" value="ft_meta_menu">
-										</div>
+							</div>
+							<div class="form-group row">
+								<label data-lang="u_ft_ex" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-6">
+									<div class="checkbox">
+										<input type="checkbox" name="devoption" class="devoption" value="ft_exit_track_menu">
 									</div>
 								</div>
-								<div class="form-group row">
-									<label data-lang="u_ft_ex" class="lang col-sm-4 control-label"></label>
-									<div class="col-sm-6">
-										<div class="checkbox">
-											<input type="checkbox" name="devoption" class="devoption" value="ft_exit_track_menu">
-										</div>
+							</div>
+							<div class="form-group row">
+								<label data-lang="u_ft_in" class="lang col-sm-4 control-label">instance name</label>
+								<div class="col-sm-6">
+									<div class="checkbox">
+										<input type="checkbox" name="devoption" class="devoption" value="ft_specify_instancename">
 									</div>
 								</div>
-								<div class="form-group row">
-									<label data-lang="u_ft_in" class="lang col-sm-4 control-label">instance name</label>
-									<div class="col-sm-6">
-										<div class="checkbox">
-											<input type="checkbox" name="devoption" class="devoption" value="ft_specify_instancename">
-										</div>
+							</div>
+							<div class="form-group row">
+								<label data-lang="u_ft_prev_track_dis" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-6">
+									<div class="checkbox">
+										<input type="checkbox" name="devoption" class="devoption" value="ft_prevent_disable_track">
 									</div>
 								</div>
-								<div class="form-group row">
-									<label data-lang="u_ft_prev_track_dis" class="lang col-sm-4 control-label"></label>
-									<div class="col-sm-6">
-										<div class="checkbox">
-											<input type="checkbox" name="devoption" class="devoption" value="ft_prevent_disable_track">
-										</div>
+							</div>
+							<div class="form-group row">
+								<label data-lang="u_ft_eg" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-6">
+									<div class="checkbox">
+										<input type="checkbox" name="devoption" class="devoption" value="ft_enable_geofence">
 									</div>
 								</div>
-								<div class="form-group row">
-									<label data-lang="u_ft_eg" class="lang col-sm-4 control-label"></label>
-									<div class="col-sm-6">
-										<div class="checkbox">
-											<input type="checkbox" name="devoption" class="devoption" value="ft_enable_geofence">
-										</div>
-									</div>
+							</div>
+							<div class="form-group row">
+								<label for="ft_send_location" data-lang="u_ft_ld" class="lang control-label col-sm-4">location</label>
+								<div class="col-sm-6">
+									<select class="form-control" id="ft_send_location">
+										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+										<option class="lang" data-lang="c_off" value="off">off</option>
+										<option class="lang" data-lang="c_on" value="on">on</option>
+									</select>
 								</div>
-								<div class="form-group row">
-									<label for="ft_send_location" data-lang="u_ft_ld" class="lang control-label col-sm-4">location</label>
-									<div class="col-sm-6">
-										<select class="form-control" id="ft_send_location">
-											<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
-											<option class="lang" data-lang="c_off" value="off">off</option>
-											<option class="lang" data-lang="c_on" value="on">on</option>
-										</select>
-									</div>
-								</div>
-							</form>
-							<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
-							<button id="saveDevice" class="btn btn-success lang" data-lang="c_save">save</button>
-						</div>
+							</div>
+						</form>
+						<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
+						<button id="saveDevice" class="btn btn-success lang mt-4" data-lang="c_save">save</button>
+
 					</div>
 
 				</div>
@@ -307,80 +302,78 @@
 				<!-- The container for webform settings -->
 				<div id="webformPanel" style="display:none;" class="usertab mt-4">
 
-					<div class="well">
-						<div class="container">
-							<form>
-								<div class="form-group row">
-									<label for="wf_page_background" data-lang="u_det_pbc" class="lang control-label col-sm-4">page</label>
-									<div class="col-sm-6">
-										<div class="input-group colorpicker-component">
-											<input id="wf_page_background" type="text" value="#000000" class="form-control" />
-											<div class="input-group-append">
-												<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i></i></span></button>
-											</div>
+					<div class="container">
+						<form>
+							<div class="form-group row">
+								<label for="wf_page_background" data-lang="u_det_pbc" class="lang control-label col-sm-4">page</label>
+								<div class="col-sm-6">
+									<div class="input-group colorpicker-component">
+										<input id="wf_page_background" type="text" value="#000000" class="form-control" />
+										<div class="input-group-append">
+											<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i></i></span></button>
 										</div>
 									</div>
 								</div>
-								<div class="form-group row">
-									<label for="wf_paper_background" data-lang="u_det_paperbc" class="lang control-label col-sm-4">page</label>
-									<div class="col-sm-6">
-										<div class="input-group colorpicker-component">
-											<input id="wf_paper_background" type="text" value="#000000" class="form-control" />
-											<div class="input-group-append">
-												<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i></i></span></button>
-											</div>
+							</div>
+							<div class="form-group row">
+								<label for="wf_paper_background" data-lang="u_det_paperbc" class="lang control-label col-sm-4">page</label>
+								<div class="col-sm-6">
+									<div class="input-group colorpicker-component">
+										<input id="wf_paper_background" type="text" value="#000000" class="form-control" />
+										<div class="input-group-append">
+											<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i></i></span></button>
 										</div>
 									</div>
 								</div>
-								<div class="form-group row">
-									<label for="wf_footer_horizontal_offset" data-lang="u_det_fp" class="lang control-label col-sm-4">page</label>
-									<div class="col-sm-6">
-										<input id="wf_footer_horizontal_offset" type="number" class="form-control" />
-									</div>
+							</div>
+							<div class="form-group row">
+								<label for="wf_footer_horizontal_offset" data-lang="u_det_fp" class="lang control-label col-sm-4">page</label>
+								<div class="col-sm-6">
+									<input id="wf_footer_horizontal_offset" type="number" class="form-control" />
 								</div>
-								<div class="form-group row">
-									<label for="wf_button_background_color" data-lang="u_det_buttonbc" class="lang control-label col-sm-4">page</label>
-									<div class="col-sm-6">
-										<div class="input-group colorpicker-component">
-											<input id="wf_button_background_color" type="text" value="#000000" class="form-control" />
-											<div class="input-group-append">
-												<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i></i></span></button>
-											</div>
+							</div>
+							<div class="form-group row">
+								<label for="wf_button_background_color" data-lang="u_det_buttonbc" class="lang control-label col-sm-4">page</label>
+								<div class="col-sm-6">
+									<div class="input-group colorpicker-component">
+										<input id="wf_button_background_color" type="text" value="#000000" class="form-control" />
+										<div class="input-group-append">
+											<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i></i></span></button>
 										</div>
 									</div>
 								</div>
-								<div class="form-group row">
-									<label for="wf_button_text_color" data-lang="u_det_buttontc" class="lang control-label col-sm-4">page</label>
-									<div class="col-sm-6">
-										<div class="input-group colorpicker-component">
-											<input id="wf_button_text_color" type="text" value="#000000" class="form-control" />
-											<div class="input-group-append">
-												<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i></i></span></button>
-											</div>
+							</div>
+							<div class="form-group row">
+								<label for="wf_button_text_color" data-lang="u_det_buttontc" class="lang control-label col-sm-4">page</label>
+								<div class="col-sm-6">
+									<div class="input-group colorpicker-component">
+										<input id="wf_button_text_color" type="text" value="#000000" class="form-control" />
+										<div class="input-group-append">
+											<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i></i></span></button>
 										</div>
 									</div>
 								</div>
-								<div class="form-group row">
-									<label for="wf_header_text_color" data-lang="u_det_headertc" class="lang control-label col-sm-4">page</label>
-									<div class="col-sm-6">
-										<div class="input-group colorpicker-component">
-											<input id="wf_header_text_color" type="text" value="#000000" class="form-control" />
-											<div class="input-group-append">
-												<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i></i></span></button>
-											</div>
+							</div>
+							<div class="form-group row">
+								<label for="wf_header_text_color" data-lang="u_det_headertc" class="lang control-label col-sm-4">page</label>
+								<div class="col-sm-6">
+									<div class="input-group colorpicker-component">
+										<input id="wf_header_text_color" type="text" value="#000000" class="form-control" />
+										<div class="input-group-append">
+											<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i></i></span></button>
 										</div>
 									</div>
 								</div>
-							</form>
-							<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
-							<button id="saveWebform" class="btn btn-success lang" data-lang="c_save">save</button>
-							<button id="resetWebform" class="btn btn-warning lang" data-lang="c_reset">save</button>
-						</div>
+							</div>
+						</form>
+						<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
+						<button type="button" id="saveWebform" class="btn btn-success lang" data-lang="c_save">save</button>
+						<button type="button" id="resetWebform" class="btn btn-warning lang" data-lang="c_reset">save</button>
 					</div>
 
 				</div>
 
-				<!-- The container for appearance settings -->
+				<!-- The container for organisation appearance settings -->
 				<div id="appearancePanel" style="display:none;" class="usertab mt-4">
 
 					<form enctype="multipart/form-data" name="appearancesave" id="appearance_logo_form">
@@ -478,10 +471,29 @@
 									</div>
 								</div>
 
+								<div class="card-body bg-light">
+									<h5 class="card-title lang" data-lang="c_style">style</h5>
+									<p class="lang" data-lang="u_css_info"></p>
+									<div class="form-group row">
+										<label for="cssSelect" data-lang="u_css_sel" class="lang control-label col-sm-4">select</label>
+										<div class="col-sm-6">
+											<select class="form-control" id="cssSelect">
+												<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+												<option class="lang" data-lang="c_off" value="off">off</option>
+												<option class="lang" data-lang="c_on" value="on">on</option>
+											</select>
+										</div>
+									</div>
+									<button type="button" id="uploadCss" class="btn btn-success mt-4 lang" data-lang="u_css_ss">upload</button>
+									<button type="button" id="deleteCss" class="btn btn-danger mt-4 lang" data-lang="u_css_del">delete</button>
+								</div>
+
 							</form>
 
-							<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
-							<button id="saveServer" class="btn btn-success lang" data-lang="c_save">save</button>
+
+
+							<div class="org_alert alert alert-success mt-4" role="alert" style="display:none;"></div>
+							<button id="saveServer" class="btn btn-success mt-4 lang" data-lang="c_save">save</button>
 						</div>
 					</div>
 				</div>
@@ -674,6 +686,38 @@
 	</div>
 </div>
 
+<!-- Modal to allow the user to upload a css file -->
+<div id="upload_css_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="uploadCssLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 id="uploadCssLabel" class="modal-title lang" data-lang="u_css_ss">upload</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+						aria-hidden="true">&times;</span></button>
+			</div>
+			<div class="modal-body">
+
+				<form class="form" onsubmit="return false;" id="upload_css_form">
+					<div class="form-group row">
+						<label for="cssUpload" data-lang="u_css_ss" class="lang col-sm-4 control-label">upload</label>
+						<div class="col-sm-6">
+							<div class="custom-file">
+								<input type="file" class="custom-file-input" id="cssUPLOAD" accept="text/css">
+								<label class="custom-file-label" ></label>
+							</div>
+						</div>
+
+					</div>
+				</form>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close"></button>
+				<button id="cssSave" type="button" class="btn btn-primary lang btn-default" data-lang="c_save"></button>
+			</div>
+		</div>
+	</div>
+</div>
 
 <!-- Modal to allow the user to edit a project details -->
 <div id="create_project_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createProjectLabel" aria-hidden="true">
