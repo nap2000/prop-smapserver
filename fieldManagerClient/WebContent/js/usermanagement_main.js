@@ -1092,6 +1092,10 @@ require([
 			}
 		});
 
+		$('#uploadCss').click(function() {
+			$('#upload_css_popup').modal("show");
+		});
+
 
 	});
 
