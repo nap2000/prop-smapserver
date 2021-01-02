@@ -1092,8 +1092,43 @@ require([
 			}
 		});
 
+		/*
+		 * Support uploading of a css file
+		 */
 		$('#uploadCss').click(function() {
 			$('#upload_css_popup').modal("show");
+		});
+
+		$('#cssSave').click(function(){
+			var url = "/surveyKPI/assignments/load";
+			var f = document.forms.namedItem("upload_css_form");
+			var formData = new FormData(f);
+			addHourglass();
+			$.ajax({
+				type: "POST",
+				data: formData,
+				cache: false,
+				contentType: false,
+				dataType: "json",
+				processData:false,
+				url: url,
+				success: function(data, status) {
+					removeHourglass();
+					$('#upload_css_popup').modal("hide");
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+					var msg = xhr.responseText;
+					if(msg && msg === "only csv") {
+						msg = localise.set["t_efnl"] + " " + localise.set["msg_csv"];
+					} else {
+						msg = localise.set["t_efnl"] + " " + xhr.responseText;
+					}
+
+					$('.load_file_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
+
+				}
+			});
 		});
 
 
