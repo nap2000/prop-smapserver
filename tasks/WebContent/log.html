@@ -65,7 +65,6 @@
 			<li class="nav-item dropdown active">
 				<a class="nav-link dropdown-toggle" href="#" id="m_local_reports" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="lang" data-lang="m_lr">reports</span></a>
 				<div class="dropdown-menu" aria-labelledby="m_local_reports">
-					<a id="m_usage_report" class="dropdown-item restrict_role admin_role analyst_role" href="#"><span class="nav-label lang" data-lang="u_usage">usage</span></a>
 					<a id="m_hourly_sr" class="dropdown-item restrict_role admin_role analyst_role" href="#"><span class="nav-label lang" data-lang="log_hr"></span></a>
 				</div>
 			</li>
@@ -128,7 +127,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title lang" data-lang="u_usage"></h4>
+				<h4 class="modal-title lang" data-lang="log_hr"></h4>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
 						aria-hidden="true">&times;</span></button>
 
@@ -142,7 +141,7 @@
 							<div class='input-group date' id='usageDate' data-container="body">
 								<input type='text' class="form-control" data-date-format="YYYY/MM/DD"/>
 								<span class="input-group-addon">
-									<span class="glyphicon glyphicon-calendar"></span>
+									<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i class="fas fa-calendar-alt"></i></span></button>
 								</span>
 							</div>
 						</div>
