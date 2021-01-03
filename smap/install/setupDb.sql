@@ -110,7 +110,8 @@ create TABLE server (
 	doc_server_user text,
 	doc_server_password text,
 	keep_erased_days integer default 0,
-	billing_enabled boolean default false
+	billing_enabled boolean default false,
+	css text
 	);
 ALTER TABLE server OWNER TO ws;
 
