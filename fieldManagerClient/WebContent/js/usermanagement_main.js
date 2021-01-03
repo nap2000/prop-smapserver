@@ -1096,11 +1096,13 @@ require([
 		 * Support uploading of a css file
 		 */
 		$('#uploadCss').click(function() {
+			$('#file').val("");
+			$('.load_file_alert').hide();
 			$('#upload_css_popup').modal("show");
 		});
 
 		$('#cssSave').click(function(){
-			var url = "/surveyKPI/assignments/load";
+			var url = "/surveyKPI/css";
 			var f = document.forms.namedItem("upload_css_form");
 			var formData = new FormData(f);
 			addHourglass();
@@ -1109,7 +1111,6 @@ require([
 				data: formData,
 				cache: false,
 				contentType: false,
-				dataType: "json",
 				processData:false,
 				url: url,
 				success: function(data, status) {
