@@ -1499,7 +1499,8 @@ require([
 				email_user: $('#s_email_user').val(),
 				email_password: $('#s_email_password').val(),
 				email_port: $('#s_email_port').val(),
-				sms_url: $('#s_sms_url').val()
+				sms_url: $('#s_sms_url').val(),
+				css: $('#cssSelect').val()
 			};
 
 		var serverString = JSON.stringify(server);
