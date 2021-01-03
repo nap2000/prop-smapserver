@@ -924,7 +924,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             var formData = new FormData(f);
             var url;
 
-            file = $('#templateName').val();
+            let file = $('#templateName').val();
             if(!file || file.trim().length == 0) {
                 $('#up_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(localise.set["msg_val_nm"]);
                 return false;
