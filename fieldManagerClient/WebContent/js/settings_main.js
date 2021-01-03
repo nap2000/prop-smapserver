@@ -117,7 +117,6 @@ require([
 		enableDebugging();
 
 		getSmsType();
-		getUsers();
 		getLoggedInUser(userKnown, false, false, undefined, false,
 			false, undefined, getServerDetails);
 		getDeviceSettings();
@@ -524,36 +523,6 @@ require([
 
 		});
 
-		/*
-         * Move an organisation to a new enterprise
-         */
-		$('#enterpriseMove').click(function(){
-			var h = [],
-				i = -1,
-				idx,
-				orgId,
-				orgName,
-				entName,
-				msg;
-
-			orgId = gOrganisationList[gCurrentOrganisationIndex].id;
-			orgName = gOrganisationList[gCurrentOrganisationIndex].name;
-
-			entId = $('#target_enterprise').val();
-			entName = $('#target_enterprise :selected').text();
-
-			msg = localise.set["u_check_mv_o"];
-			msg = msg.replace("%s1", orgName);
-			msg = msg.replace("%s2", entName);
-
-			bootbox.confirm(msg, function(result){
-				if(result) {
-					moveToEnterprise(entId, orgId);
-				}
-			});
-
-		});
-
 
 		// Initialise the reset password checkbox
 		$('#reset_password').click(function () {
@@ -562,22 +531,6 @@ require([
 			} else {
 				$('#password_fields').hide();
 			}
-		});
-
-		// Respond to confirmation of a delete that requires the user to consider multiple choices
-		$('#confirmDelUser').click(function () {
-			var confirmValue = $("input[name='confirm_delete']:checked"). val();
-			if(confirmValue === "delete_one") {
-				gCurrentDeleteUsers[0].all = false;
-				callUsersDeleteService(gCurrentDeleteUsers);
-			} else if(confirmValue === "delete_all") {
-				gCurrentDeleteUsers[0].all = true;
-				callUsersDeleteService(gCurrentDeleteUsers);
-			} else {
-				// cancel just ignore
-			}
-
-			$('#del_user_confirm_popup').modal("hide");
 		});
 
 		/*
@@ -653,6 +606,37 @@ require([
 		});
 
 		/*
+         * Support uploading of a css file
+         */
+		$('#deleteCss').click(function() {
+			var url = "/surveyKPI/css/" + encodeURIComponent($('#cssSelect').val());
+
+			addHourglass();
+			$.ajax({
+				type: "DELETE",
+				cache: false,
+				url: url,
+				success: function(data, status) {
+					removeHourglass();
+					getCustomCss();
+					$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["c_success"]);
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+					var msg = xhr.responseText;
+					if(msg && msg === "only csv") {
+						msg = localise.set["t_efnl"] + " " + localise.set["msg_csv"];
+					} else {
+						msg = localise.set["t_efnl"] + " " + xhr.responseText;
+					}
+
+					$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
+
+				}
+			});
+		});
+
+		/*
 		 * Support uploading of a css file
 		 */
 		$('#uploadCss').click(function() {
@@ -675,7 +659,9 @@ require([
 				url: url,
 				success: function(data, status) {
 					removeHourglass();
+					getCustomCss();
 					$('#upload_css_popup').modal("hide");
+
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
@@ -867,90 +853,6 @@ require([
 		});
 	}
 
-// Return true if the item with the name is in the list
-	function hasName(itemList, item) {
-		var i;
-		for(i = 0; i < itemList.length; i++) {
-			if(itemList[i].name === item) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-//Return true if the item with the id is in the list
-	function hasId(itemList, item) {
-		var i;
-		if(itemList) {
-			for(i = 0; i < itemList.length; i++) {
-				if(itemList[i].id === item) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/*
-	 * Get the list of users from the server
-	 */
-	function getUsers() {
-
-		addHourglass();
-		$.ajax({
-			url: "/surveyKPI/userList",
-			dataType: 'json',
-			cache: false,
-			success: function(data) {
-				removeHourglass();
-				gUsers = data;
-				updateUserTable();
-			},
-			error: function(xhr, textStatus, err) {
-				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert("Error: Failed to get list of users: " + err);
-				}
-			}
-		});
-	}
-
-	/*
-     * Get the usage of protected resources
-     */
-	function getCurrentResourceUsage(oId) {
-
-		addHourglass();
-		$.ajax({
-			url: "/surveyKPI/organisationList/usage/" + oId,
-			dataType: 'json',
-			cache: false,
-			success: function(data) {
-				removeHourglass();
-				var i;
-				for(i = 0; i < limitTypes.length; i++ ) {
-					var val = localise.set["c_current"] + ": ";
-					val += data[limitTypes[i].name];
-					val += " (";
-					val += localise.set[limitTypes[i].name + "_i"];
-					val += ")";
-					$("#" + limitTypes[i].id + "_i").html(val);
-				}
-
-			},
-			error: function(xhr, textStatus, err) {
-				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert("Error: " + err);
-				}
-			}
-		});
-	}
-
 	/*
 	 * Get a usage report
 	 */
@@ -1012,80 +914,6 @@ require([
 		}
 		$groupSelect.empty().append(h.join(''));
 		$groupSelect.val("All");
-	}
-
-	/*
-	 * Delete the selected user
-	 */
-	function deleteUser (userIdx) {
-
-		var users = [],
-			decision = false,
-			deleteAll = false,
-			userName,
-			i;
-
-		userName = gUsers[userIdx].name;
-		users[0] = {id: gUsers[userIdx].id};
-
-		if(globals.gIsOrgAdministrator && gUsers[userIdx].orgs.length > 1) {
-
-			$('#confirmDelForm')[0].reset();
-			var orgList = '';
-			for(i = 0; i < gUsers[userIdx].orgs.length; i++) {
-				if(orgList.length > 0) {
-					orgList += ', ';
-				}
-				orgList += gUsers[userIdx].orgs[i].name;
-			}
-
-			// Set message for the delete one option
-			var msg_one = localise.set["msg_confirm_del_one"];
-			msg_one = msg_one.replace('%s1', userName);
-			msg_one = msg_one.replace('%s2', $('#me_organisation option:selected').html());
-			$('#confirmDelOne').html(msg_one);
-
-			// Set message for the delete all option
-			var msg_all = localise.set["msg_confirm_del_all"];
-			msg_all = msg_all.replace('%s1', userName);
-			msg_all = msg_all.replace('%s2', orgList);
-			$('#confirmDelAll').html(msg_all);
-
-			gCurrentDeleteUsers = users;      // Save in case they say yes
-
-			$('#del_user_confirm_popup').modal("show");
-			return;
-		} else {
-			decision = confirm(localise.set["msg_confirm_del"] + " " + userName);
-		}
-
-		if (decision === true) {
-			callUsersDeleteService(users);
-		}
-	}
-
-	/*
-	 * Call the sevice that will delete the users
-	 */
-	function callUsersDeleteService(users) {
-		addHourglass();
-		$.ajax({
-			type: "DELETE",
-			contentType: "application/json",
-			url: "/surveyKPI/userList",
-			data: { users: JSON.stringify(users) },
-			success: function(data, status) {
-				removeHourglass();
-				getUsers();
-			}, error: function(data, status) {
-				var msg = localise.set["msg_err_del"];
-				removeHourglass();
-				if(typeof data != "undefined" && typeof data.responseText != "undefined" ) {
-					msg = data.responseText;
-				}
-				alert(msg);
-			}
-		});
 	}
 
 	/*
@@ -1269,7 +1097,6 @@ require([
 			cache: false,
 			success: function(data) {
 				removeHourglass();
-				console.log(JSON.stringify(data));
 				showCssNames(data);
 			},
 			error: function(xhr, textStatus, err) {
