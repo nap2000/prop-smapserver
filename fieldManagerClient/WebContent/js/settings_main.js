@@ -122,9 +122,8 @@ require([
 
 		getSmsType();
 		getUsers();
-		getProjects();
-		getLoggedInUser(userKnown, false, false, getOrganisations, false,
-			false, getEnterprises, getServerDetails);
+		getLoggedInUser(userKnown, false, false, undefined, false,
+			false, undefined, getServerDetails);
 		getDeviceSettings();
 		getWebformSettings();
 		getAppearanceSettings();
@@ -161,18 +160,6 @@ require([
 		});
 
 		// Set up the tabs
-		$('#usersTab a').click(function (e) {
-			e.preventDefault();
-			panelChange($(this), 'users');
-		});
-		$('#projectsTab a').click(function (e) {
-			e.preventDefault();
-			panelChange($(this), 'projects');
-		});
-		$('#organisationTab a').click(function (e) {
-			e.preventDefault();
-			panelChange($(this), 'organisation');
-		});
 		$('#appearanceTab a').click(function (e) {
 			e.preventDefault();
 			panelChange($(this), 'appearance');
@@ -1200,106 +1187,10 @@ require([
 		if(globals.gIsOrgAdministrator) {
 			$('#appearanceTab').hide();
 		}
-		if(globals.gIsOrgAdministrator || globals.gIsSecurityAdministrator) {
-			getRoles(updateRoleTable);
+		if(globals.gIsServerOwner) {
+			getCustomCss();
 		}
 
-	}
-
-	/*
-	 * Get the list of available projects from the server
-	 */
-	function getProjects() {
-		addHourglass();
-		$.ajax({
-			url: "/surveyKPI/projectList",
-			dataType: 'json',
-			cache: false,
-			success: function(data) {
-				removeHourglass();
-				globals.gProjectList = data;
-				updateProjectList(true, 0);
-				updateProjectTable();
-			},
-			error: function(xhr, textStatus, err) {
-				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert(localise.set["c_error"] + ": " + err);
-				}
-			}
-		});
-	}
-
-	/*
-	 * Get the list of available organisations from the server
-	 */
-	function getOrganisations(e_id) {
-
-		var url = "/surveyKPI/organisationList";
-		if(globals.gIsEnterpriseAdministrator && e_id) {
-			url += '?enterprise=' + e_id;
-		}
-		// Show the current organisation
-		$('#organisation_name').text(localise.set["c_org"] + ": " + globals.gLoggedInUser.organisation_name);
-
-		addHourglass();
-		$.ajax({
-			url: url,
-			dataType: 'json',
-			cache: false,
-			success: function(data) {
-				var ent_id = e_id;
-				removeHourglass();
-				if(!ent_id) {
-					gOrganisationList = data;
-					updateOrganisationTable();
-					updateOrganisationList();
-				} else {
-					// Just update the single select that can choose a new organisation for a user in a new enterprise
-					updateOrganisationNewEnterpriseList(data);
-				}
-
-			},
-			error: function(xhr, textStatus, err) {
-				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert(localise.set["c_error"] + ": " + err);
-				}
-			}
-		});
-	}
-
-	/*
-	 * Get the list of available enterprises from the server
-	 */
-	function getEnterprises() {
-
-		// Show the current organisation
-		var url = addTimeZoneToUrl("/surveyKPI/enterpriseList");
-		addHourglass();
-		$.ajax({
-			url: url,
-			dataType: 'json',
-			cache: false,
-			success: function(data) {
-				removeHourglass();
-				gEnterpriseList = data;
-				updateEnterpriseTable();
-				updateEnterpriseList();
-			},
-			error: function(xhr, textStatus, err) {
-				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert(localise.set["c_error"] + ": " + err);
-				}
-			}
-		});
 	}
 
 	function getServerDetails() {
@@ -1544,264 +1435,6 @@ require([
 		}
 
 		$('#create_user_popup').modal("show");
-	}
-
-	/*
-	 * Show the project dialog
-	 */
-	function openProjectDialog(existing, projectIndex) {
-
-		var $p_user_projects = $('#p_user_projects');
-		gCurrentProjectIndex = projectIndex;
-
-
-		$('#project_create_form')[0].reset();
-		if(existing) {
-			$('#p_name').val(globals.gProjectList[projectIndex].name);
-			$('#p_desc').val(globals.gProjectList[projectIndex].desc);
-			$('#p_tasks_only').prop('checked', globals.gProjectList[projectIndex].tasks_only);
-		}
-
-		// Add users
-		let h = [];
-		let idx = -1;
-		for (let i = 0; i < gUsers.length; i++) {
-			let user = gUsers[i];
-
-			let yesProject = false;
-			if(globals.gProjectList.length > 0 && projectIndex >= 0 && projectIndex < globals.gProjectList.length) {
-				yesProject = hasId(user.projects, globals.gProjectList[projectIndex].id);
-			}
-
-
-			h[++idx] = '<div class="custom-control custom-checkbox ml-2">';
-			h[++idx] = '<input type="checkbox" class="custom-control-input" id="';
-			h[++idx] = 'user_projects_cb' + i;
-			h[++idx] = '" name="';
-			h[++idx] = 'user_projects_cb';
-			h[++idx] = '" value="';
-			h[++idx] = user.id + '"';
-			if(yesProject) {
-				h[++idx] = ' checked="checked"';
-			}
-			h[++idx] = '/>';
-			h[++idx] = '<label class="custom-control-label" for="';
-			h[++idx] = 'user_projects_cb' + i;
-			h[++idx] = '">';
-			h[++idx] = user.name;
-			h[++idx] = '</label></div>';
-		}
-
-		$p_user_projects.empty().append(h.join(''));
-
-		$('#create_project_popup').modal("show");
-	}
-
-	/*
-	 * Show the user role dialog
-	 */
-	function openRoleDialog(existing, roleIndex) {
-
-		var $p_user_roles = $('#p_user_roles');
-		gCurrentRoleIndex = roleIndex;
-
-		$('#role_create_form')[0].reset();
-		if(existing) {
-			$('#ur_name').val(globals.gRoleList[roleIndex].name);
-			$('#ur_desc').val(globals.gRoleList[roleIndex].desc);
-		}
-
-		// Add users
-		let h = [];
-		let idx = -1;
-		for (let i = 0; i < gUsers.length; i++) {
-
-			let user = gUsers[i];
-			let yesRole = false;
-			if(globals.gRoleList.length > 0 && roleIndex >= 0 && roleIndex < globals.gRoleList.length) {
-				yesRole = hasId(user.roles, globals.gRoleList[roleIndex].id);
-			}
-
-
-			h[++idx] = '<div class="custom-control custom-checkbox ml-2">';
-			h[++idx] = '<input type="checkbox" class="custom-control-input" id="';
-			h[++idx] = 'user_role_details_cb' + i;
-			h[++idx] = '" name="';
-			h[++idx] = 'user_role_details_cb';
-			h[++idx] = '" value="';
-			h[++idx] = user.id + '"';
-			if(yesRole) {
-				h[++idx] = ' checked="checked"';
-			}
-			h[++idx] = '/>';
-			h[++idx] = '<label class="custom-control-label" for="';
-			h[++idx] = 'user_role_details_cb' + i;
-			h[++idx] = '">';
-			h[++idx] = user.name;
-			h[++idx] = '</label></div>';
-		}
-
-		$p_user_roles.empty().append(h.join(''));
-
-		$('#create_role_popup').modal("show");
-	}
-
-
-	/*
-	 * Show the organisation dialog
-	 */
-	function openOrganisationDialog(existing, organisationIndex) {
-		var i,
-			h = [],
-			idx = -1;
-
-		if(gSmsType && gSmsType === "aws") {
-			$('.awsSmsOnly').show();
-		} else {
-			$('.awsSmsOnly').hide();
-		}
-
-		var org = gOrganisationList[organisationIndex];
-		gCurrentOrganisationIndex = organisationIndex;
-
-		$('#organisation_create_form')[0].reset();
-		$('#organisation_logo_form')[0].reset();
-		$('#o_banner_logo').attr("src", "/images/smap_logo.png");
-
-		if(existing) {
-
-			getCurrentResourceUsage(org.id);
-
-			$('#o_name').val(org.name);
-			$('#o_company_name').val(org.company_name);
-			$('#o_company_address').val(org.company_address);
-			$('#o_company_phone').val(org.company_phone);
-			$('#o_company_email').val(org.company_email);
-			$('#o_admin_email').val(org.admin_email);
-			$('#o_smtp_host').val(org.smtp_host);
-			$('#o_email_domain').val(org.email_domain);
-			$('#o_email_user').val(org.email_user);
-			$('#o_email_password').val(org.email_password);
-			$('#o_email_port').val(org.email_port);
-			$('#o_default_email_content').val(org.default_email_content);
-			$('#o_server_description').val(org.server_description);
-			$('#o_navbar_color').colorpicker('setValue', org.appearance.navbar_color);
-			$('.puboption').each(function() {
-				console.log("option: " + $(this).val() );
-				if($(this).val() === "email") {
-					this.checked = org.allow_email;
-				} else if($(this).val() === "facebook") {
-					this.checked = org.allow_facebook;
-				} else if($(this).val() === "twitter") {
-					this.checked = org.allow_twitter;
-				} else if($(this).val() === "can_edit") {
-					this.checked = org.can_edit;
-				} else if($(this).val() === "email_task") {
-					this.checked = org.email_task;
-				} else if($(this).val() === "ft_sync_incomplete") {
-					this.checked = org.ft_sync_incomplete;
-				} else if($(this).val() === "can_notify") {
-					this.checked = org.can_notify;
-				} else if($(this).val() === "can_use_api") {
-					this.checked = org.can_use_api;
-				} else if($(this).val() === "can_submit") {
-					this.checked = org.can_submit;
-				} else if($(this).val() === "can_sms") {
-					this.checked = org.can_sms;
-				} else if($(this).val() === "send_optin") {
-					this.checked = org.send_optin;
-				} else if($(this).val() === "ft_odk_style_menus") {
-					this.checked = org.ft_odk_style_menus;
-				} else if($(this).val() === "ft_odk_style_menus") {
-					this.checked = org.ft_odk_style_menus;
-				} else if($(this).val() === "ft_specify_instancename") {
-					this.checked = org.ft_specify_instancename;
-				} else if($(this).val() === "ft_prevent_disable_track") {
-					this.checked = org.ft_prevent_disable_track;
-				} else if($(this).val() === "ft_enable_geofence") {
-					this.checked = org.ft_enable_geofence;
-				} else if($(this).val() === "ft_admin_menu") {
-					this.checked = org.ft_admin_menu;
-				} else if($(this).val() === "ft_server_menu") {
-					this.checked = org.ft_server_menu;
-				} else if($(this).val() === "ft_meta_menu") {
-					this.checked = org.ft_meta_menu;
-				} else if($(this).val() === "ft_exit_track_menu") {
-					this.checked = org.ft_exit_track_menu;
-				} else if($(this).val() === "ft_review_final") {
-					this.checked = org.ft_review_final;
-				} else if($(this).val() === "set_as_theme") {
-					this.checked = org.appearance.set_as_theme;
-				}
-			});
-			addLanguageOptions($('#o_language'), org.locale);
-			$('#o_tz').val(org.timeZone);
-			$('#o_refresh_rate').val(org.refresh_rate);
-
-			gOrgId = org.id;
-			setLogos(org.id);
-
-		} else {
-			$('#o_tz').val('UTC');
-			addLanguageOptions($('#o_language'), undefined);
-		}
-
-		// Add usage limits
-		h[++idx] = '<fieldset>';
-		for(i = 0; i < limitTypes.length; i++ ) {
-			h[++idx] = '<div class="form-group row">';
-				h[++idx] = '<label for="';
-					h[++idx] = limitTypes[i].id;
-					h[++idx] = '" class="col-sm-2 control-label">';
-					h[++idx] = localise.set[limitTypes[i].label];
-				h[++idx] = '</label>';
-				h[++idx] = 	'<div class="col-sm-5">';
-					h[++idx] = '<input type="integer" id="'
-					h[++idx] = limitTypes[i].id;
-					h[++idx] = '" class="form-control"><br/>';
-				h[++idx] = '</div>';
-				h[++idx] = 	'<div class="col-sm-5">';
-					h[++idx] = '<p id="';
-					h[++idx] = limitTypes[i].id + "_i";
-					h[++idx] = '"></p>';
-				h[++idx] = '</div>';
-			h[++idx] = '</div>';
-		}
-		h[++idx] = '</fieldset>';
-		$('#usageLimitsHere').empty().html(h.join(''));
-		if(org && org.limits) {
-			for (i = 0; i < limitTypes.length; i++) {
-				$('#' + limitTypes[i].id).val((org.limits) ? org.limits[limitTypes[i].name] : 0);
-			}
-		} else {
-			for (i = 0; i < limitTypes.length; i++) {
-				$('#' + limitTypes[i].id).val(limitTypes[i].default);
-			}
-		}
-
-		$('#create_organisation_popup').modal("show");
-	}
-
-	/*
-	 * Show the enterprise edit dialog
-	 */
-	function openEnterpriseDialog(existing, enterpriseIndex) {
-
-		var enterprise = gEnterpriseList[enterpriseIndex];
-		gCurrentEnterpriseIndex = enterpriseIndex;
-
-		$('#enterprise_create_form')[0].reset();
-
-		if (existing) {
-			$('#e_name').val(enterprise.name);
-		}
-		$('#create_enterprise_popup').modal("show");
-	}
-
-	function setLogos(orgId) {
-		var d = new Date();
-		$('#o_banner_logo').attr("src", "/surveyKPI/file/bannerLogo/organisation?settings=true&org=" + orgId + "&" + d.valueOf());
-		$('#o_main_logo').attr("src", "/surveyKPI/file/mainLogo/organisation?settings=true&org=" + orgId + "&" + d.valueOf());
 	}
 
 	/*
@@ -2826,135 +2459,6 @@ require([
 	}
 
 	/*
-	 * Delete the selected organisations
-	 */
-	function deleteOrganisations (orgIdx) {
-
-		var organisations = [],
-			decision = false,
-			orgName;
-
-		organisations[0] = {id: gOrganisationList[orgIdx].id, name: gOrganisationList[orgIdx].name};
-		orgName = gOrganisationList[orgIdx].name;
-
-		decision = confirm(localise.set["msg_del_orgs"] + " " + orgName);
-		if (decision === true) {
-			addHourglass();
-			$.ajax({
-				type: "DELETE",
-				contentType: "application/json",
-				url: "/surveyKPI/organisationList",
-				data: { organisations: JSON.stringify(organisations) },
-				success: function(data, status) {
-					removeHourglass();
-					getOrganisations();
-				}, error: function(data, status) {
-					removeHourglass();
-					if(data && data.responseText) {
-						alert(data.responseText);
-					} else {
-						alert(localise.set["msg_err_del"]);
-					}
-				}
-			});
-		}
-	}
-
-	/*
-     * Delete the selected enterprises
-     */
-	function deleteEnterprises (entIdx) {
-
-		var enterprises = [],
-			decision = false,
-			h = [],
-			i = -1;
-
-		enterprises[0] = {id: gEnterpriseList[entIdx].id, name: gEnterpriseList[entIdx].name};
-
-
-		decision = confirm(localise.set["msg_del_ents"] + " " + gEnterpriseList[entIdx].name);
-		if (decision === true) {
-			addHourglass();
-			$.ajax({
-				type: "DELETE",
-				contentType: "application/json",
-				url: "/surveyKPI/enterpriseList",
-				data: { data: JSON.stringify(enterprises) },
-				success: function(data, status) {
-					removeHourglass();
-					getEnterprises();
-				}, error: function(data, status) {
-					removeHourglass();
-					if(data && data.responseText) {
-						alert(data.responseText);
-					} else {
-						alert(localise.set["msg_err_del"]);
-					}
-				}
-			});
-		}
-	}
-
-	/*
-	 * Move the provided projects to the selected organisation
-	 */
-	function moveToOrganisations (orgId, projects) {
-
-		addHourglass();
-		$.ajax({
-			type: "POST",
-			contentType: "application/json",
-			cache: false,
-			url: "/surveyKPI/organisationList/setOrganisation",
-			data: {
-				orgId: orgId,
-				projects: JSON.stringify(projects)
-			},
-			success: function(data, status) {
-				removeHourglass();
-				window.location.reload();
-			}, error: function(data, status) {
-				removeHourglass();
-				if(data && data.responseText) {
-					alert(data.responseText);
-				} else {
-					alert(localise.set["c_error"]);
-				}
-			}
-		});
-	}
-
-	/*
-     * Move the provided users and projects to the selected organisation
-     */
-	function moveToEnterprise (entId, orgId) {
-
-		addHourglass();
-		$.ajax({
-			type: "POST",
-			contentType: "application/json",
-			cache: false,
-			url: "/surveyKPI/organisationList/setEnterprise",
-			data: {
-				entId: entId,
-				orgId: orgId
-			},
-			success: function(data, status) {
-				removeHourglass();
-				window.location.reload();
-			}, error: function(data, status) {
-				removeHourglass();
-				if(data && data.responseText) {
-					alert(data.responseText);
-				} else {
-					alert(localise.set["c_error"]);
-				}
-			}
-		});
-	}
-
-	/*
 	 * Get the device settings
 	 */
 	function getDeviceSettings() {
@@ -3123,6 +2627,54 @@ require([
 			}
 		});
 	}
+
+	/*
+	 * Get the available custom css files
+	 */
+	function getCustomCss() {
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/css",
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				console.log(JSON.stringify(data));
+				showCssNames(data);
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["c_error"] + ": " + err);
+				}
+			}
+		});
+	}
+
+	function showCssNames(names) {
+		let $elem = $('#cssSelect'),
+			h = [],
+			idx = -1;
+
+		h[++idx] = '<option value="_none">';
+		h[++idx] = localise.set["c_none"];
+		h[++idx] = '</option>';
+
+		if(names && names.length > 0) {
+			for (i = 0; i < names.length; i++) {
+				h[++idx] = '<option value="';
+				h[++idx] = names[i]
+				h[++idx] = '">';
+				h[++idx] = names[i];
+				h[++idx] = '</option>';
+			}
+		}
+		$elem.html(h.join(''));
+
+	}
+
 
 });
 

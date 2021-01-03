@@ -47,6 +47,10 @@
 	    exclude: ['jquery', 'bootstrap']
         },
         {
+            name: '../settings_main',
+	    exclude: ['jquery', 'bootstrap']
+        },
+        {
             name: '../monitor_main',
 	    exclude: ['jquery', 'bootstrap']
         },
