@@ -1988,11 +1988,11 @@ require([
 				h[++idx] = '<td>';
 				h[++idx] = '<button type="button" data-idx="';
 				h[++idx] = i;
-				h[++idx] = '" class="btn btn-default btn-sm rm_user btn-danger">';
+				h[++idx] = '" class="btn btn-sm rm_user btn-danger">';
 				h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
 				h[++idx] = '<button type="button" data-idx="';
 				h[++idx] = i;
-				h[++idx] = '" class="ml-4 btn btn-default btn-sm user_edit btn-info">';
+				h[++idx] = '" class="ml-4 btn-sm user_edit btn-info">';
 				h[++idx] = '<i class="far fa-edit"></i></button>';
 				h[++idx] = '</td>';
 
@@ -2178,7 +2178,7 @@ require([
 			h[++idx] = '<td>';
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-default btn-sm rm_role btn-danger">';
+			h[++idx] = '" class="btn btn-sm rm_role btn-danger">';
 			h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
 			h[++idx] = '</td>';
 
@@ -2280,7 +2280,7 @@ require([
 				h[++idx] = i;
 				h[++idx] = '">';
 				h[++idx] = localise.set["u_usage"];
-				h[++idx] = ' <span class="glyphicon glyphicon-download" aria-hidden="true"></span>';
+				h[++idx] = ' <i class="fas fa-file-download"></i>';
 				h[++idx] = '</button>';
 			}
 			if(globals.gIsEnterpriseAdministrator) {
@@ -2288,19 +2288,19 @@ require([
 				h[++idx] = i;
 				h[++idx] = '">';
 				h[++idx] = localise.set["c_move"];
-				h[++idx] = ' <span class="glyphicon glyphicon-move" aria-hidden="true"></span>';
 				h[++idx] = '</button>';
 			}
 
-			h[++idx] = '<button type="button" value="';
-			h[++idx] = i;
-			h[++idx] = '" class="btn btn-default btn-sm organisation_edit warning">';
-			h[++idx] = '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>';
-
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-default btn-sm rm_org btn-danger">';
+			h[++idx] = '" class="btn btn-sm rm_org btn-danger">';
 			h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
+
+			h[++idx] = '<button type="button" value="';
+			h[++idx] = i;
+			h[++idx] = '" class="btn btn-sm organisation_edit btn-info">';
+			h[++idx] = '<i class="far fa-edit"></i></button>';
+
 			h[++idx] = '</td>';
 			h[++idx] = '</tr>';
 		}

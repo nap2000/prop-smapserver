@@ -743,9 +743,6 @@ require([
 
 	function userKnown() {
 		getGroups();
-		if(globals.gIsOrgAdministrator) {
-			$('#appearanceTab').hide();
-		}
 		if(globals.gIsServerOwner) {
 			getCustomCss();
 		}
