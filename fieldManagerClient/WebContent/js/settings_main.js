@@ -558,9 +558,15 @@ require([
 		 * Support uploading of a css file
 		 */
 		$('#uploadCss').click(function() {
-			$('#file').val("");
+			$('#cssUpload').val("");
 			$('.load_file_alert').hide();
 			$('#upload_css_popup').modal("show");
+		});
+
+		$('#uploadCssOrg').click(function() {
+			$('#cssUploadOrg').val("");
+			$('.load_file_alert').hide();
+			$('#upload_css_popup_org').modal("show");
 		});
 
 		$('#cssSave').click(function(){

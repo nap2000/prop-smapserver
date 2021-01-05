@@ -421,14 +421,14 @@
 								<h5 class="card-title lang" data-lang="c_style">style</h5>
 								<p class="lang" data-lang="u_css_info"></p>
 								<div class="form-group row">
-									<label for="cssSelect" data-lang="u_css_sel" class="lang control-label col-sm-4">select</label>
+									<label for="cssSelectOrg" data-lang="u_css_sel" class="lang control-label col-sm-4">select</label>
 									<div class="col-sm-6">
 										<select class="form-control" id="cssSelectOrg">
 
 										</select>
 									</div>
 								</div>
-								<button type="button" id="uploadCssOrg" class="btn btn-success mt-4 lang" data-lang="u_css_ss">upload</button>
+								<button type="button" id="uploadCssOrg" class="btn btn-success mt-4 lang" data-lang="u_css">upload</button>
 								<button type="button" id="deleteCssOrg" class="btn btn-danger mt-4 lang" data-lang="u_css_del">delete</button>
 							</div>
 						</form>
@@ -504,7 +504,7 @@
 										</select>
 									</div>
 								</div>
-								<button type="button" id="uploadCss" class="btn btn-success mt-4 lang" data-lang="u_css_ss">upload</button>
+								<button type="button" id="uploadCss" class="btn btn-success mt-4 lang" data-lang="u_css">upload</button>
 								<button type="button" id="deleteCss" class="btn btn-danger mt-4 lang" data-lang="u_css_del">delete</button>
 							</div>
 
@@ -544,7 +544,7 @@
 </div>
 
 
-<!-- Modal to allow the user to upload a css file -->
+<!-- Modal to allow the user to upload a css file for the server -->
 <div id="upload_css_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="uploadCssLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
@@ -557,10 +557,10 @@
 
 				<form class="form" id="upload_css_form"  enctype="multipart/form-data" name="upload_css_form">
 					<div class="form-group row">
-						<label for="cssUpload" data-lang="u_css_ss" class="lang col-sm-4 control-label">upload</label>
+						<label for="cssUpload" data-lang="u_css_f" class="lang col-sm-4 control-label">upload</label>
 						<div class="col-sm-6">
 							<div class="custom-file">
-								<input type="file" class="custom-file-input" id="cssUPLOAD" accept="text/css" name="file">
+								<input type="file" class="custom-file-input" id="cssUpload" accept="text/css" name="file">
 								<label class="custom-file-label" ></label>
 							</div>
 						</div>
@@ -576,6 +576,40 @@
 		</div>
 	</div>
 </div>
+
+<!-- Modal to allow the user to upload a css file for their prganisation -->
+<div id="upload_css_popup_org" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="uploadCssLabelOrg" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 id="uploadCssLabelOrg" class="modal-title lang" data-lang="u_css_ss_org">upload</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+						aria-hidden="true">&times;</span></button>
+			</div>
+			<div class="modal-body">
+
+				<form class="form" id="upload_css_form_org"  enctype="multipart/form-data" name="upload_css_form_org">
+					<div class="form-group row">
+						<label for="cssUploadOrg" data-lang="u_css_f" class="lang col-sm-4 control-label">upload</label>
+						<div class="col-sm-6">
+							<div class="custom-file">
+								<input type="file" class="custom-file-input" id="cssUploadOrg" accept="text/css" name="file">
+								<label class="custom-file-label" ></label>
+							</div>
+						</div>
+					</div>
+				</form>
+				<div class="load_file_alert alert alert-success" role="alert" style="display:none;"></div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close"></button>
+				<button id="cssSaveOrg" type="button" class="btn btn-primary lang btn-default" data-lang="c_save"></button>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 </body>
 </html>
