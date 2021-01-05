@@ -72,7 +72,8 @@ require([
 		gCurrentDeleteUsers,    // Users that have been selected for deletion, waiting on approval
 		gSmsType,
 		gPanel,
-		gCssFile;
+		gCssFile,
+		gCssOrgFile
 
 	var limitTypes = [
 		{
@@ -401,6 +402,10 @@ require([
 		$('#cssSelect').change(function() {
 			cssSelectChange();
 		});
+		cssSelectOrgChange();
+		$('#cssSelectOrg').change(function() {
+			cssSelectOrgChange();
+		});
 
 		/*
 		 * Move a project to a new organisation
@@ -616,6 +621,17 @@ require([
 			$('#deleteCss').prop("disabled", false);
 		}
 	}
+
+	function cssSelectOrgChange() {
+		let val = $('#cssSelectOrg').val();
+		if(val === "_none") {
+			$('#deleteCssOrg').prop("disabled", true);
+		} else {
+			$('#deleteCssOrg').prop("disabled", false);
+		}
+	}
+
+
 	/*
 	 * Respond to a panel being changed
 	 * panelChange($(this), 'userPanel', 'usersTab');
@@ -681,6 +697,7 @@ require([
 		if(globals.gIsServerOwner) {
 			getCustomCss();
 		}
+		getCustomCssOrg();
 
 	}
 
@@ -783,17 +800,6 @@ require([
 
 			}
 		});
-	}
-
-	/*
-	 * Get a usage report
-	 */
-	function getUsage(oId, month, year, period) {
-
-
-		docURL = "/surveyKPI/usage/" + oId + "?month=" + month + "&year=" + year + "&period=" + period;
-		window.location.href = docURL;
-
 	}
 
 	/*
@@ -1042,6 +1048,30 @@ require([
 		});
 	}
 
+	/*
+     * Get the available custom css files for an organisation
+     */
+	function getCustomCssOrg() {
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/css?org=true",
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				showCssOrgNames(data);
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["c_error"] + ": " + err);
+				}
+			}
+		});
+	}
+
 	function showCssNames(names) {
 		let $elem = $('#cssSelect'),
 			h = [],
@@ -1066,6 +1096,33 @@ require([
 		}
 		$elem.val(gCssFile);
 		cssSelectChange();
+
+	}
+
+	function showCssOrgNames(names) {
+		let $elem = $('#cssSelectOrg'),
+			h = [],
+			idx = -1;
+
+		h[++idx] = '<option value="_none">';
+		h[++idx] = localise.set["c_none"];
+		h[++idx] = '</option>';
+
+		if(names && names.length > 0) {
+			for (i = 0; i < names.length; i++) {
+				h[++idx] = '<option value="';
+				h[++idx] = names[i]
+				h[++idx] = '">';
+				h[++idx] = names[i];
+				h[++idx] = '</option>';
+			}
+		}
+		$elem.html(h.join(''));
+		if(!gCssOrgFile) {
+			gCssOrgFile = '_none';
+		}
+		$elem.val(gCssOrgFile);
+		cssSelectOrgChange();
 
 	}
 
