@@ -73,7 +73,8 @@ require([
 		gSmsType,
 		gPanel,
 		gCssFile,
-		gCssOrgFile
+		gCssOrgFile,
+		gCssModal;
 
 	var limitTypes = [
 		{
@@ -371,7 +372,8 @@ require([
 		$('#saveAppearance').click(function() {
 			var appearance = {
 				set_as_theme: $('#app_set_as_theme').prop('checked'),
-				navbar_color: $('#app_navbar_color').val()
+				navbar_color: $('#app_navbar_color').val(),
+				css: $('#cssSelectOrg').val()
 			};
 
 			$('.org_alert').hide();
@@ -384,6 +386,7 @@ require([
 				url: "/surveyKPI/organisationList/appearance",
 				success: function(data, status) {
 					removeHourglass();
+					gCssOrgFile = $('#cssSelectOrg').val();
 					$('.my_org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
 				}, error: function(xhr, textStatus, err) {
 					removeHourglass();
@@ -408,55 +411,6 @@ require([
 		});
 
 		/*
-		 * Move a project to a new organisation
-		 */
-		$('#organisationMove').click(function(){
-			var projects =[],
-				h = [],
-				i = -1,
-				idx,
-				orgId,
-				orgName,
-				hasProjects = false,
-				projectsMoving = '',
-				msg;
-
-			$('#project_table').find('input:checked').each(function(index) {
-				if(hasProjects){
-					projectsMoving += ", ";
-				}
-				idx = $(this).val();
-				projects[index] = {id: globals.gProjectList[idx].id};
-
-				projectsMoving += globals.gProjectList[idx].name;
-			});
-
-			orgId = $('#target_organisation').val();
-			orgName = $('#target_organisation :selected').text();
-
-			msg = localise.set["u_check_mv_p"];
-			msg = msg.replace("%s1", projectsMoving);
-			msg = msg.replace("%s2", orgName);
-
-			bootbox.confirm(msg, function(result){
-				if(result) {
-					moveToOrganisations(orgId, projects);
-				}
-			});
-
-		});
-
-
-		// Initialise the reset password checkbox
-		$('#reset_password').click(function () {
-			if($(this).is(':checked')) {
-				$('#password_fields').show();
-			} else {
-				$('#password_fields').hide();
-			}
-		});
-
-		/*
 		 * Set up colour picker
 		 */
 		$('.colorpicker-component').colorpicker({
@@ -474,62 +428,7 @@ require([
 		}
 
 		/*
-         * Export
-         */
-		$('#m_export_xls').click(function () {	// Export to XLS
-
-			var url;
-
-			if(gPanel === 'users') {
-				downloadFile('/surveyKPI/userList/xls');
-			} else if(gPanel === 'projects') {
-				downloadFile('/surveyKPI/projectList/xls');
-			} else if(gPanel === 'role') {
-				downloadFile('/surveyKPI/role/xls');
-			} else {
-				alert("Error unknown panel: " + gPanel);    // Would be programming error - no need for translation
-			}
-		});
-
-		/*
-		 * import
-		 */
-		$('#m_import_xls').click(function () {	// Import from XLS
-			if(gPanel === 'users') {
-				$('#fi_clear_label').html(localise.set["u_clear_u"]);
-			} else if(gPanel === 'projects') {
-				$('#fi_clear_label').html(localise.set["u_clear_p"]);
-			} else if(gPanel === 'role') {
-				$('#fi_clear_label').html(localise.set["u_clear_r"]);
-			}
-
-			$('#load_file_alert').hide();
-			$('#import_file').modal("show");
-		});
-
-		// Respond to selection of a file for upload
-		$('.custom-file-label').attr('data-browse', localise.set["c_browse"]);
-		$('.custom-file-input').on('change',function(){
-			var fileName = $(this).val();
-			var endPath = fileName.lastIndexOf("\\");
-			if(endPath > 0) {
-				fileName = fileName.substring(endPath + 1);
-			}
-			$(this).next('.custom-file-label').html(fileName);
-		});
-
-		$(('#importFileGo')).click(function () {
-			if(gPanel === "projects") {
-				importXLS('/surveyKPI/projectList/xls', getProjects, undefined);
-			} else if(gPanel === "users") {
-				importXLS('/surveyKPI/userList/xls', getUsers, undefined);
-			} else if(gPanel === "role") {
-				importXLS('/surveyKPI/role/xls', getRoles, updateRoleTable);
-			}
-		});
-
-		/*
-         * Support uploading of a css file
+         * Support deletion of a css file
          */
 		$('#deleteCss').click(function() {
 			var url = "/surveyKPI/css/" + encodeURIComponent($('#cssSelect').val());
@@ -565,18 +464,29 @@ require([
 		$('#uploadCss').click(function() {
 			$('#cssUpload').val("");
 			$('.load_file_alert').hide();
+			gCssModal = "server";
 			$('#upload_css_popup').modal("show");
 		});
 
 		$('#uploadCssOrg').click(function() {
 			$('#cssUploadOrg').val("");
 			$('.load_file_alert').hide();
+			gCssModal = "org";
 			$('#upload_css_popup_org').modal("show");
 		});
 
-		$('#cssSave').click(function(){
-			var url = "/surveyKPI/css";
-			var f = document.forms.namedItem("upload_css_form");
+		$('#cssSave, #cssSaveOrg').click(function(){
+			let url = "/surveyKPI/css";
+			let f;
+
+			if(gCssModal === "server") {
+				f = document.forms.namedItem("upload_css_form");
+			} else {
+				f = document.forms.namedItem("upload_css_form_org");
+				url += "?org=true";
+			}
+
+
 			var formData = new FormData(f);
 			addHourglass();
 			$.ajax({
@@ -588,8 +498,12 @@ require([
 				url: url,
 				success: function(data, status) {
 					removeHourglass();
-					getCustomCss();
-					$('#upload_css_popup').modal("hide");
+					if(gCssModal === "server") {
+						getCustomCss();
+					} else {
+						getCustomCssOrg();
+					}
+					$('#upload_css_popup, #upload_css_popup_org').modal("hide");
 
 				},
 				error: function(xhr, textStatus, err) {
@@ -647,50 +561,7 @@ require([
 		$('#' + name + 'Panel').show();
 		setInLocalStorage("currentTab" + page, '#' + name + 'Tab a');
 
-		if(name === 'users' || name === 'projects' || name === 'role') {
-			$('#m_import_xls, #m_export_xls').removeClass("disabled");
-		} else {
-			$('#m_import_xls, #m_export_xls').addClass("disabled");;
-		}
 	}
-
-	/*
-     * Import data from a spreadsheet
-     */
-	function importXLS(url, callback, p1) {
-
-		var f = document.forms.namedItem("importFile");
-		var formData = new FormData(f);
-
-		$('#load_file_alert').hide();
-
-		addHourglass();
-		$.ajax({
-			type: "POST",
-			data: formData,
-			dataType: "text",
-			cache: false,
-			contentType: false,
-			processData: false,
-			url: url,
-			success: function (data) {
-				removeHourglass();
-				var cb = callback;
-				var param1 = p1;
-				$('#load_file_alert').removeClass('alert-danger').addClass('alert-success').html(data);
-				$('#load_file_alert').show();
-				cb(param1);
-
-			},
-			error: function (xhr, textStatus, err) {
-				removeHourglass();
-				var msg = xhr.responseText;
-				$('#load_file_alert').show().removeClass('alert-success').addClass('alert-danger').text(msg);
-
-			}
-		});
-	}
-
 
 	function userKnown() {
 		getGroups();
@@ -984,6 +855,8 @@ require([
 
 				$('#app_set_as_theme').prop('checked', appearance.set_as_theme);
 				$('#app_navbar_color').colorpicker('setValue', appearance.navbar_color);
+				$('#cssSelectOrg').val(appearance.css);
+				gCssOrgFile = appearance.css;
 
 			},
 			error: function(xhr, textStatus, err) {
@@ -1091,7 +964,7 @@ require([
 			}
 		}
 		$elem.html(h.join(''));
-		if(!gCssFile) {
+		if(!gCssFile || gCssFile === '') {
 			gCssFile = '_none';
 		}
 		$elem.val(gCssFile);
@@ -1118,7 +991,7 @@ require([
 			}
 		}
 		$elem.html(h.join(''));
-		if(!gCssOrgFile) {
+		if(!gCssOrgFile || gCssOrgFile === '') {
 			gCssOrgFile = '_none';
 		}
 		$elem.val(gCssOrgFile);
