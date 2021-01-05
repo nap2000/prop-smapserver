@@ -341,4 +341,5 @@ insert into groups(id,name) values(12,'dashboard');
 -- version 21.01
 alter table question add column trigger text;
 alter table server add column css text;
+alter table organisation add column css text;
 

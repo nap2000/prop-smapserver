@@ -193,6 +193,7 @@ create TABLE organisation (
 	training text,
 	limits text,				-- JSON object with resource limits
 	refresh_rate integer,
+	css text,
 	changed_ts TIMESTAMP WITH TIME ZONE
 	);
 CREATE UNIQUE INDEX idx_organisation ON organisation(name);
