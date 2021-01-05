@@ -146,9 +146,6 @@ require([
 			panelChange($(this), 'sensitive');
 		});
 
-		// Style the upload buttons
-		//$('.file-inputs').bootstrapFileInput();  todo
-
 		// Copy user ident to email if it is a valid email
 		$('#user_ident').blur(function(){
 			var ident = $('#user_ident').val();
@@ -180,71 +177,6 @@ require([
 		$('.modal').on('shown.bs.modal', function() {
 			$(this).find('input[type=text],textarea,select').filter(':visible:first').focus();
 		});
-
-		/*
-		 * Add date time picker to usage date
-		 */
-		moment.locale();
-		$('#usageDate').datetimepicker({
-			useCurrent: false,
-			format: "MM/YYYY",
-			viewMode: "months",
-			locale: gUserLocale || 'en'
-		}).data("DateTimePicker").date(moment());
-
-		/*
-		 * Save a project details
-		 */
-		$('#projectSave').click(function(){
-			var projectList = [],
-				project = {},
-				error = false;
-
-			if(gCurrentProjectIndex === -1) {
-				project.id = -1;
-			} else {
-				project.id = globals.gProjectList[gCurrentProjectIndex].id;
-			}
-
-			project.name = $('#p_name').val();
-			project.desc = $('#p_desc').val();
-			project.tasks_only = $('#p_tasks_only').is(':checked');
-
-			project.users = [];
-			$('#p_user_projects').find('input:checked').each(function(index) {
-				project.users[index] = $(this).val();
-			});
-
-			projectList[0] = project;
-			var projectString = JSON.stringify(projectList);
-
-			addHourglass();
-			$.ajax({
-				type: "POST",
-				contentType: "application/json",
-				cache: false,
-				url: "/surveyKPI/projectList",
-				data: { projects: projectString },
-				success: function(data, status) {
-					removeHourglass();
-					getUsers();
-					getProjects();
-					$('#create_project_popup').modal("hide");
-				},
-				error: function(xhr, textStatus, err) {
-					removeHourglass();
-
-					if(xhr.readyState == 0 || xhr.status == 0) {
-						return;  // Not an error
-					} else {
-						var msg = xhr.responseText;
-						alert(localise.set["msg_err_upd"] + msg);
-					}
-				}
-			});
-
-		});
-
 
 		$('#saveSensitive').click(function() {
 
@@ -464,24 +396,10 @@ require([
 			});
 
 		});
-
-		/*
-		 * Get a usage report
-		 */
-		$('#usageGet').click(function() {
-			var usageMsec = $('#usageDate').data("DateTimePicker").date(),
-				d = new Date(usageMsec),
-				month = d.getMonth() + 1,
-				year = d.getFullYear(),
-				oId = gOrganisationList[gCurrentOrganisationIndex].id,
-				period,
-				month_names = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-			// Calculate the period as text so the web service doesn't have to (can also use language translations here)
-			period = month_names[month -1] + " " + year;
-
-			$('#get_usage_popup').modal("hide");
-			getUsage(oId, month, year, period);
+		// Disable style delete if style is set to none
+		cssSelectChange();
+		$('#cssSelect').change(function() {
+			cssSelectChange();
 		});
 
 		/*
@@ -681,6 +599,17 @@ require([
 
 	});
 
+	/*
+	 * Respond to change of cssSelect
+	 */
+	function cssSelectChange() {
+		let val = $('#cssSelect').val();
+		if(val === "_none") {
+			$('#deleteCss').prop("disabled", true);
+		} else {
+			$('#deleteCss').prop("disabled", false);
+		}
+	}
 	/*
 	 * Respond to a panel being changed
 	 * panelChange($(this), 'userPanel', 'usersTab');
@@ -1126,7 +1055,11 @@ require([
 			}
 		}
 		$elem.html(h.join(''));
+		if(!gCssFile) {
+			gCssFile = '_none';
+		}
 		$elem.val(gCssFile);
+		cssSelectChange();
 
 	}
 
