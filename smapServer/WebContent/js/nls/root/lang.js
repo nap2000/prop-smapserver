@@ -1130,7 +1130,7 @@ define({
     "u_sat": "Set as Theme",
     "u_bl": "WebForm Banner Logo (Height 50px)",
     "u_ml": "Main Logo",
-    "u_nbc": "Navigation bar color",
+    "u_nbc": "Home page navigation bar color",
     "u_eoi": "Enable Opt In",
     "admin": "Administrator",
     "analyst": "Analyst",
