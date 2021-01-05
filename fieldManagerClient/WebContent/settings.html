@@ -376,40 +376,60 @@
 				<!-- The container for organisation appearance settings -->
 				<div id="appearancePanel" style="display:none;" class="usertab mt-4">
 
-					<form enctype="multipart/form-data" name="appearancesave" id="appearance_logo_form">
-						<fieldset>
-							<legend class="lang" data-lang="ed_appearance"></legend>
+					<div class="container">
+						<form enctype="multipart/form-data" name="appearancesave" id="appearance_logo_form">
+
 							<input id="appearanceSettings" type="hidden" name="settings" >
 
-							<div class="well">
-								<div class="custom-control custom-checkbox">
-									<input type="checkbox" class="custom-control-input" id="app_set_as_theme" name="set_as_theme" value="set_as_theme">
-									<label class="custom-control-label" for="app_set_as_theme">
-										<span data-lang="u_sat" class="lang"></span>
-									</label>
-								</div>
-								<div class="form-group row">
-									<label for="app_main_logo" class="lang col-sm-2 control-label mt-3" data-lang="u_ml"></label>
-									<div class="col-sm-6">
-										<img id="app_main_logo" alt="nf" src="#" style="width:100%;">
-									</div>
-									<div class="input-group-btn col-sm-4">
-										<input id="app_change_main_logo" name="main_logo" title="Add" class="file-inputs" type="file" accept="image/png, image/jpeg, image/gif">
+							<div class="form-group row">
+								<label for="app_set_as_theme" data-lang="u_sat" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-6">
+									<div class="checkbox">
+										<input type="checkbox" id="app_set_as_theme" name="set_as_theme" value="set_as_theme">
 									</div>
 								</div>
-								<div class="form-group row">
-									<label for="app_navbar_color" data-lang="u_nbc" class="lang control-label col-sm-2"></label>
-									<div class="col-sm-10">
-										<div class="input-group colorpicker-component">
-											<input id="app_navbar_color" type="text" value="#000000" class="form-control" />
-											<span class="input-group-addon"><i></i></span>
+							</div>
+
+							<div class="form-group row">
+								<label for="app_main_logo" class="lang col-sm-2 control-label mt-3" data-lang="u_ml"></label>
+								<div class="col-sm-4">
+									<img id="app_main_logo" alt="nf" src="#" style="width:100%;">
+								</div>
+								<div class="input-group-btn col-sm-6">
+									<input id="app_change_main_logo" name="main_logo" title="Add" class="file-inputs" type="file" accept="image/png, image/jpeg, image/gif">
+								</div>
+							</div>
+
+
+							<div class="form-group row">
+								<label for="app_navbar_color" data-lang="u_nbc" class="lang control-label col-sm-4"></label>
+								<div class="col-sm-6">
+									<div class="input-group colorpicker-component">
+										<input id="app_navbar_color" type="text" value="#000000" class="form-control" />
+										<div class="input-group-append">
+											<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i></i></span></button>
 										</div>
 									</div>
 								</div>
 							</div>
 
-						</fieldset>
-					</form>
+
+							<div class="card-body bg-light">
+								<h5 class="card-title lang" data-lang="c_style">style</h5>
+								<p class="lang" data-lang="u_css_info"></p>
+								<div class="form-group row">
+									<label for="cssSelect" data-lang="u_css_sel" class="lang control-label col-sm-4">select</label>
+									<div class="col-sm-6">
+										<select class="form-control" id="cssSelectOrg">
+
+										</select>
+									</div>
+								</div>
+								<button type="button" id="uploadCssOrg" class="btn btn-success mt-4 lang" data-lang="u_css_ss">upload</button>
+								<button type="button" id="deleteCssOrg" class="btn btn-danger mt-4 lang" data-lang="u_css_del">delete</button>
+							</div>
+						</form>
+					</div>
 
 					<div class="my_org_alert alert alert-success" role="alert" style="display:none;"></div>
 					<button id="saveAppearance" class="btn btn-success lang" data-lang="c_save">save</button>
@@ -419,79 +439,78 @@
 				<!-- The container for the server details -->
 				<div id="serverPanel" style="display:none;" class="usertab mt-4">
 
-					<div class="well">
-						<div class="container">
-							<form id="server_form">
-								<div class="form-group row">
-									<label for="mapbox_key" data-lang="u_mb_k" class="lang control-label col-sm-4"></label>
-									<div class="col-sm-6">
-										<input type="text" id="mapbox_key" required class="form-control">
-									</div>
+					<div class="container">
+						<form id="server_form">
+							<div class="form-group row">
+								<label for="mapbox_key" data-lang="u_mb_k" class="lang control-label col-sm-4"></label>
+								<div class="col-sm-6">
+									<input type="text" id="mapbox_key" required class="form-control">
 								</div>
-								<div class="form-group row">
-									<label for="google_key" data-lang="u_g_k" class="lang control-label col-sm-4">google</label>
-									<div class="col-sm-6">
-										<input type="text" id="google_key" required class="form-control">
-									</div>
+							</div>
+							<div class="form-group row">
+								<label for="google_key" data-lang="u_g_k" class="lang control-label col-sm-4">google</label>
+								<div class="col-sm-6">
+									<input type="text" id="google_key" required class="form-control">
 								</div>
-								<div class="form-group row">
-									<label for="s_smtp_host" data-lang="u_smtp" class="lang col-sm-4 control-label">smtp</label>
-									<div class="col-sm-6">
-										<input class="form-control" type="text" id="s_smtp_host" tabindex="10">
-									</div>
+							</div>
+							<div class="form-group row">
+								<label for="s_smtp_host" data-lang="u_smtp" class="lang col-sm-4 control-label">smtp</label>
+								<div class="col-sm-6">
+									<input class="form-control" type="text" id="s_smtp_host" tabindex="10">
 								</div>
-								<div class="form-group row">
-									<label for="s_email_domain" data-lang="u_e_dom" class="lang col-sm-4 control-label">email dom</label>
-									<div class="col-sm-6">
-										<input class="form-control" type="text" id="s_email_domain" tabindex="11">
-									</div>
+							</div>
+							<div class="form-group row">
+								<label for="s_email_domain" data-lang="u_e_dom" class="lang col-sm-4 control-label">email dom</label>
+								<div class="col-sm-6">
+									<input class="form-control" type="text" id="s_email_domain" tabindex="11">
 								</div>
-								<div class="form-group row">
-									<label for="s_email_user" data-lang="u_e_nm" class="lang col-sm-4 control-label">email name</label>
-									<div class="col-sm-6">
-										<input class="form-control" type="text" id="s_email_user" tabindex="12">
-									</div>
+							</div>
+							<div class="form-group row">
+								<label for="s_email_user" data-lang="u_e_nm" class="lang col-sm-4 control-label">email name</label>
+								<div class="col-sm-6">
+									<input class="form-control" type="text" id="s_email_user" tabindex="12">
 								</div>
-								<div class="form-group row">
-									<label for="s_email_password"  data-lang="u_e_p" class="lang col-sm-4 control-label">email pwd</label>
-									<div class="col-sm-6">
-										<input class="form-control" type="password" id="s_email_password" tabindex="13">
-									</div>
+							</div>
+							<div class="form-group row">
+								<label for="s_email_password"  data-lang="u_e_p" class="lang col-sm-4 control-label">email pwd</label>
+								<div class="col-sm-6">
+									<input class="form-control" type="password" id="s_email_password" tabindex="13">
 								</div>
-								<div class="form-group row">
-									<label for="s_email_port" data-lang="u_e_port" class="lang col-sm-4 control-label">email port</label>
-									<div class="col-sm-6">
-										<input class="form-control" type="text" id="s_email_port" tabindex="14">
-									</div>
+							</div>
+							<div class="form-group row">
+								<label for="s_email_port" data-lang="u_e_port" class="lang col-sm-4 control-label">email port</label>
+								<div class="col-sm-6">
+									<input class="form-control" type="text" id="s_email_port" tabindex="14">
 								</div>
-								<div class="form-group row">
-									<label for="s_sms_url" data-lang="u_sms_url" class="lang col-sm-4 control-label">sms</label>
-									<div class="col-sm-6">
-										<input class="form-control" type="text" id="s_sms_url" tabindex="15">
-									</div>
+							</div>
+							<div class="form-group row">
+								<label for="s_sms_url" data-lang="u_sms_url" class="lang col-sm-4 control-label">sms</label>
+								<div class="col-sm-6">
+									<input class="form-control" type="text" id="s_sms_url" tabindex="15">
 								</div>
+							</div>
 
-								<div class="card-body bg-light">
-									<h5 class="card-title lang" data-lang="c_style">style</h5>
-									<p class="lang" data-lang="u_css_info"></p>
-									<div class="form-group row">
-										<label for="cssSelect" data-lang="u_css_sel" class="lang control-label col-sm-4">select</label>
-										<div class="col-sm-6">
-											<select class="form-control" id="cssSelect">
+							<div class="card-body bg-light">
+								<h5 class="card-title lang" data-lang="c_style">style</h5>
+								<p class="lang" data-lang="u_css_info"></p>
+								<div class="form-group row">
+									<label for="cssSelect" data-lang="u_css_sel" class="lang control-label col-sm-4">select</label>
+									<div class="col-sm-6">
+										<select class="form-control" id="cssSelect">
 
-											</select>
-										</div>
+										</select>
 									</div>
-									<button type="button" id="uploadCss" class="btn btn-success mt-4 lang" data-lang="u_css_ss">upload</button>
-									<button type="button" id="deleteCss" class="btn btn-danger mt-4 lang" data-lang="u_css_del">delete</button>
 								</div>
+								<button type="button" id="uploadCss" class="btn btn-success mt-4 lang" data-lang="u_css_ss">upload</button>
+								<button type="button" id="deleteCss" class="btn btn-danger mt-4 lang" data-lang="u_css_del">delete</button>
+							</div>
 
-							</form>
+						</form>
 
-							<div class="org_alert alert alert-success mt-4" role="alert" style="display:none;"></div>
-							<button id="saveServer" class="btn btn-success mt-4 lang" data-lang="c_save">save</button>
-						</div>
+						<div class="org_alert alert alert-success mt-4" role="alert" style="display:none;"></div>
+						<button id="saveServer" class="btn btn-success mt-4 lang" data-lang="c_save">save</button>
 					</div>
+
 				</div>
 
 				<!-- The container for documenting sensitive data -->
@@ -711,35 +730,6 @@
 			<div class="modal-footer">
 				<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close"></button>
 				<button id="cssSave" type="button" class="btn btn-primary lang btn-default" data-lang="c_save"></button>
-			</div>
-		</div>
-	</div>
-</div>
-
-
-<!-- Modal to allow the user to get usage details -->
-<div id="get_usage_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="getUsageLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title lang" data-lang="u_usage" id="getUsageLabel">usage</h4>
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-			</div>
-			<div class="modal-body">
-
-				<form class="form">
-					<div class="form-group row">
-						<div class='input-group date' id='usageDate' data-toggle="tooltip"  data-container="body" title="Month and Year of report">
-							<input type='text' class="form-control" data-date-format="YYYY/MM"/>
-							<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
-	                    	</span>
-						</div>
-					</div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-				<button id="usageGet" type="button" class="btn btn-primary lang" data-lang="u_gr">get</button>
 			</div>
 		</div>
 	</div>
