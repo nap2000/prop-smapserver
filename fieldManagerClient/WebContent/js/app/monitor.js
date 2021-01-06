@@ -582,15 +582,15 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             if(typeof features === "undefined" || features.length === 0) {
                 var msg;
                 if(showSource === "forms" && sId == "_all") {
-                    msg = "<h1>" + localise.set["msg_saf"] + "</h1>";
+                    msg = "<h5>" + localise.set["msg_saf"] + "</h5>";
                 } else if(showSource === "forms" ) {
-                    msg = "<h1>" + localise.set["msg_nf"] + "</h1>";
+                    msg = "<h5>" + localise.set["msg_nf"] + "</h5>";
                 } else if(showSource === "uploaded") {
-                    msg = "<h1>" + localise.set["msg_ns"] + "</h1>";
+                    msg = "<h5>" + localise.set["msg_ns"] + "</h5>";
                 } else if(isForwarded) {
-                    msg = "<h1>" + localise.set["msg_nrf"] + "</h1>";
+                    msg = "<h5>" + localise.set["msg_nrf"] + "</h5>";
                 } else {
-                    msg = "<h1>" + localise.set["msg_us"] + "</h1>";
+                    msg = "<h5>" + localise.set["msg_us"] + "</h5>";
                 }
                 $elem.empty();
                 $msg.html(msg);
@@ -737,7 +737,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             $msg.empty();
 
             if(typeof features === "undefined" || features.length === 0) {
-                var msg = "<h1>" + (showSource === SOURCE_NOTIFICATIONS ? localise.set["msg_nn"] : localise.set["msg_noi"]) + "</h1>";
+                var msg = "<h5>" + (showSource === SOURCE_NOTIFICATIONS ? localise.set["msg_nn"] : localise.set["msg_noi"]) + "</h5>";
                 $msg.html(msg);
                 return;
             }
@@ -886,13 +886,13 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             $msg.empty();
 
             if($('#project_name').val() == 0) {
-                var msg = "<h1>" + localise.set["msg_sp"] + "</h1>";
+                var msg = "<h5>" + localise.set["msg_sp"] + "</h5>";
                 $msg.html(msg);
                 return;
             }
 
             if(typeof forms === "undefined" || forms.length === 0) {
-                var msg = "<h1>" + localise.set["msg_nf"] + "</h1>";
+                var msg = "<h5>" + localise.set["msg_nf"] + "</h5>";
                 $msg.html(msg);
                 return;
             }
