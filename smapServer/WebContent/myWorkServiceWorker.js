@@ -3,9 +3,11 @@ let CACHE_NAME = 'v18';
 let ASSIGNMENTS = '/surveyKPI/myassignments';
 let WEBFORM = "/webForm";
 let USER = "/surveyKPI/user?";
+let ORG_CSS = "/custom/css/org/custom.css";
 let PROJECT_LIST = "/myProjectList";
 let CURRENT_PROJECT = "/currentproject";
 let TIMEZONES = "/timezones";
+let organisationId = 0;
 
 // During the installation phase, you'll usually want to cache static assets.
 self.addEventListener('install', function(e) {
@@ -122,7 +124,27 @@ self.addEventListener('fetch', function(event) {
 // Temporary cache option
 self.addEventListener('fetch', function(event) {
 
-	if (event.request.url.includes(TIMEZONES)) {
+	console.log("org: " + organisationId);
+
+	if(event.request.url.includes(USER)) {
+		// Get organisation id
+		event.respondWith(
+			getOrgId(event.request)
+
+		);
+	} else if(event.request.url.includes(ORG_CSS)) {
+		if(organisationId) {
+			let url = ORG_CSS;
+			url = url.replace("org", organisationId);
+			var myRequest = new Request(url);
+
+			event.respondWith(
+				caches
+					.match(getCacheUrl(myRequest)) // check if the request has already been cached
+					.then(cached => cached || fetch(myRequest)) // otherwise request network
+			);
+		}
+	} else if (event.request.url.includes(TIMEZONES)) {
 		// Cache then if not found network then cache the response
 		event.respondWith(
 			caches
@@ -141,6 +163,18 @@ self.addEventListener('fetch', function(event) {
 
 
 });
+
+function getOrgId(request) {
+	return fetch(request).then(
+		async response => {
+			if (response.status == 200) {
+				let responseData = await response.clone().json();
+				organisationId = responseData.o_id;
+			}
+			return response;
+		}
+	);
+}
 
 function update(request) {
 	return fetch(request).then(
