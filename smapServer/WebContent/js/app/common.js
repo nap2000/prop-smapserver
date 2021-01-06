@@ -1006,7 +1006,7 @@ function saveCurrentUser(user) {
 		cache: false,
 		contentType: "application/json",
 		dataType: 'json',
-		url: "/surveyKPI/user",
+		url: "/surveyKPI/user?x=x", // Terminate url with ? so that the service worker will pick it out
 		data: { user: userString },
 		success: function(data) {
 			removeHourglass();

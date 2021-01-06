@@ -124,8 +124,6 @@ self.addEventListener('fetch', function(event) {
 // Temporary cache option
 self.addEventListener('fetch', function(event) {
 
-	console.log("org: " + organisationId);
-
 	if(event.request.url.includes(USER)) {
 		// Get organisation id
 		event.respondWith(
