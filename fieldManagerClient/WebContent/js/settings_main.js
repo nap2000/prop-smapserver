@@ -63,13 +63,8 @@ require([
 
 ], function($, common, localise, globals, moment) {
 
-	var gUsers,
+	var
 		gGroups,
-		gOrganisationList,
-		gCurrentProjectIndex,	// Set while editing a projects details
-		gCurrentOrganisationIndex,
-		gCurrentUserIndex,		// Set while editing a users details
-		gCurrentDeleteUsers,    // Users that have been selected for deletion, waiting on approval
 		gSmsType,
 		gPanel,
 		gCssFile,
@@ -168,7 +163,7 @@ require([
 			displayAsImage($(this)[0].files[0], $('#o_main_logo')[0]);
 		});
 
-		// Function to save a users details
+		// Function to save server details
 		$('#saveServer').click(function(e) {
 			writeServerDetails();
 		});
@@ -323,6 +318,7 @@ require([
 			$('#wf_button_background_color').colorpicker('setValue', '#556B2F');
 			$('#wf_button_text_color').colorpicker('setValue', '#fff');
 			$('#wf_header_text_color').colorpicker('setValue', '#004200');
+			$('#o_banner_logo').attr("src", "/images/smap_logo.png");
 		});
 
 		/*
@@ -342,13 +338,20 @@ require([
 			webform.footer_horizontal_offset = $('#wf_footer_horizontal_offset').val();
 			webform.footer_horizontal_offset = webform.footer_horizontal_offset || 0;
 
+			var webformString = JSON.stringify(webform);
+
+			$('#webformSettings').val(webformString);
+			var f = document.forms.namedItem("webformsave");
+			var formData = new FormData(f);
+
 			$('.org_alert').hide();
 			addHourglass();
 			$.ajax({
 				type: 'POST',
-				data: {settings: JSON.stringify(webform)},
+				data: formData,
 				cache: false,
-				contentType: "application/json",
+				contentType: false,
+				processData:false,
 				url: "/surveyKPI/organisationList/webform",
 				success: function(data, status) {
 					removeHourglass();
@@ -569,7 +572,7 @@ require([
 			getCustomCss();
 		}
 		getCustomCssOrg();
-
+		setLogos(globals.gOrgId);
 	}
 
 	function getServerDetails() {
@@ -999,6 +1002,11 @@ require([
 
 	}
 
+	function setLogos(orgId) {
+		var d = new Date();
+		$('#o_banner_logo').attr("src", "/surveyKPI/file/bannerLogo/organisation?settings=true&org=" + orgId + "&" + d.valueOf());
+		$('#o_main_logo').attr("src", "/surveyKPI/file/mainLogo/organisation?settings=true&org=" + orgId + "&" + d.valueOf());
+	}
 
 });
 
