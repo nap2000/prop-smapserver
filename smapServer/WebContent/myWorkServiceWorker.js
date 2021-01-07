@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v18';
+let CACHE_NAME = 'v21';
 let ASSIGNMENTS = '/surveyKPI/myassignments';
 let WEBFORM = "/webForm";
 let USER = "/surveyKPI/user?";
@@ -34,7 +34,6 @@ self.addEventListener('install', function(e) {
 				'/js/libs/require.js',
 				'/js/libs/jquery-2.1.1.js',
 				'/js/libs/bootstrap.bundle.v4.5.min.js',
-				'/js/app/theme2.js',
 				'/js/app/custom.js',
 				'/js/app/idbconfig.js',
 				'/myWork/js/my_work.js',

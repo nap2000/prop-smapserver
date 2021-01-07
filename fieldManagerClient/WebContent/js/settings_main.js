@@ -379,6 +379,7 @@ require([
 			var appearance = {
 				set_as_theme: $('#app_set_as_theme').prop('checked'),
 				navbar_color: $('#app_navbar_color').val(),
+				navbar_text_color: $('#app_navbar_text_color').val(),
 				css: $('#cssSelectOrg').val()
 			};
 
@@ -861,6 +862,7 @@ require([
 
 				$('#app_set_as_theme').prop('checked', appearance.set_as_theme);
 				$('#app_navbar_color').colorpicker('setValue', appearance.navbar_color);
+				$('#app_navbar_text_color').colorpicker('setValue', appearance.navbar_text_color);
 				$('#cssSelectOrg').val(appearance.css);
 				gCssOrgFile = appearance.css;
 

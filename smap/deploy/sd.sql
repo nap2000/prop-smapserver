@@ -343,3 +343,5 @@ alter table question add column trigger text;
 alter table server add column css text;
 alter table organisation add column css text;
 
+alter table organisation add column navbar_text_color text;
+
