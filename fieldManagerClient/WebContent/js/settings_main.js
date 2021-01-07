@@ -69,7 +69,8 @@ require([
 		gPanel,
 		gCssFile,
 		gCssOrgFile,
-		gCssModal;
+		gCssModal,
+		gResetWebformPressed = false;
 
 	var limitTypes = [
 		{
@@ -319,6 +320,7 @@ require([
 			$('#wf_button_text_color').colorpicker('setValue', '#fff');
 			$('#wf_header_text_color').colorpicker('setValue', '#004200');
 			$('#o_banner_logo').attr("src", "/images/smap_logo.png");
+			gResetWebformPressed = true;
 		});
 
 		/*
@@ -337,6 +339,7 @@ require([
 			webform.paper_background_color = $('#wf_paper_background').val();
 			webform.footer_horizontal_offset = $('#wf_footer_horizontal_offset').val();
 			webform.footer_horizontal_offset = webform.footer_horizontal_offset || 0;
+			webform.resetPressed = gResetWebformPressed;
 
 			var webformString = JSON.stringify(webform);
 
