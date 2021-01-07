@@ -909,6 +909,7 @@ function logout() {
 
 	try {
 		localStorage.setItem('navbar_color', undefined);
+		localStorage.setItem('navbar_text_color', undefined);
 		localStorage.setItem('main_logo', undefined);
 	} catch (e) {
 
@@ -1116,6 +1117,7 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 			globals.gEnterpriseName = data.enterprise_name;
 			globals.gSetAsTheme = data.set_as_theme;
 			globals.gNavbarColor = data.navbar_color;
+			globals.gNavbarTextColor = data.navbar_text_color;
 			globals.gTraining = data.training;
 			globals.gRefreshRate = data.refresh_rate;
 
@@ -4027,6 +4029,11 @@ function setOrganisationTheme() {
 		if(navbarColor !== globals.gNavbarColor) {
 			setInLocalStorage('navbar_color', globals.gNavbarColor);
 		}
+		// navbar color
+		var navbarTextColor = getFromLocalStorage("navbar_text_color");
+		if(navbarTextColor !== globals.gNavbarTextColor) {
+			setInLocalStorage('navbar_text_color', globals.gNavbarTextColor);
+		}
 	} else {
 		// remove styles
 		var navbarColorElement = document. getElementById("navbar_color");
@@ -4034,6 +4041,7 @@ function setOrganisationTheme() {
 			navbarColorElement.parentNode.removeChild(navbarColorElement);
 		}
 		setInLocalStorage('navbar_color', undefined);
+		setInLocalStorage('navbar_text_color', undefined);
 		setInLocalStorage('main_logo', undefined);
 
 		// Set the default logo

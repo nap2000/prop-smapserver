@@ -127,7 +127,6 @@ require([
 			false, getEnterprises, getServerDetails);
 		getDeviceSettings();
 		getWebformSettings();
-		getAppearanceSettings();
 		getSensitiveSettings();
 
 		// Add change event on group and project filter
@@ -622,7 +621,6 @@ require([
 					organisation.send_optin = true;
 				}
 			}
-			organisation.appearance.navbar_color = $('#o_navbar_color').val();
 
 			// Add usage limits
 			organisation.limits = {};
@@ -635,17 +633,12 @@ require([
 			organisationList[0] = organisation;
 			var organisationString = JSON.stringify(organisationList);
 
-			$('#orgSettings').val(organisationString);
-			var f = document.forms.namedItem("organisationsave");
-			var formData = new FormData(f);
-
 			addHourglass();
 			$.ajax({
 				type: 'POST',
-				data: formData,
+				data: { settings: organisationString },
 				cache: false,
-				contentType: false,
-				processData:false,
+				contentType: "application/json",
 				url: "/surveyKPI/organisationList",
 				success: function(data, status) {
 					removeHourglass();
@@ -867,39 +860,6 @@ require([
 					} else {
 						var msg = err;
 						$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
-					}
-				}
-			});
-
-		});
-
-		/*
-         * Save the appearance options
-         */
-		$('#saveAppearance').click(function() {
-			var appearance = {
-				set_as_theme: $('#app_set_as_theme').prop('checked'),
-				navbar_color: $('#app_navbar_color').val()
-			};
-
-			$('.org_alert').hide();
-			addHourglass();
-			$.ajax({
-				type: 'POST',
-				data: {settings: JSON.stringify(appearance)},
-				cache: false,
-				contentType: "application/json",
-				url: "/surveyKPI/organisationList/appearance",
-				success: function(data, status) {
-					removeHourglass();
-					$('.my_org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
-				}, error: function(xhr, textStatus, err) {
-					removeHourglass();
-					if(xhr.readyState == 0 || xhr.status == 0) {
-						return;  // Not an error
-					} else {
-						var msg = err;
-						$('.my_org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
 					}
 				}
 			});
@@ -1665,7 +1625,6 @@ require([
 		gCurrentOrganisationIndex = organisationIndex;
 
 		$('#organisation_create_form')[0].reset();
-		$('#organisation_logo_form')[0].reset();
 		$('#o_banner_logo').attr("src", "/images/smap_logo.png");
 
 		if(existing) {
@@ -1685,7 +1644,6 @@ require([
 			$('#o_email_port').val(org.email_port);
 			$('#o_default_email_content').val(org.default_email_content);
 			$('#o_server_description').val(org.server_description);
-			$('#o_navbar_color').colorpicker('setValue', org.appearance.navbar_color);
 			$('.puboption').each(function() {
 				console.log("option: " + $(this).val() );
 				if($(this).val() === "email") {
@@ -3056,34 +3014,6 @@ require([
 				}
 
 				$('#wf_footer_horizontal_offset').val(webform.footer_horizontal_offset);
-
-			},
-			error: function(xhr, textStatus, err) {
-				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert(localise.set["c_error"] + ": " + err);
-				}
-			}
-		});
-	}
-
-	/*
-     * Get the appearance settings that can be modified by an administrator settings
-     */
-	function getAppearanceSettings() {
-
-		addHourglass();
-		$.ajax({
-			url: "/surveyKPI/organisationList/appearance",
-			dataType: 'json',
-			cache: false,
-			success: function(appearance) {
-				removeHourglass();
-
-				$('#app_set_as_theme').prop('checked', appearance.set_as_theme);
-				$('#app_navbar_color').colorpicker('setValue', appearance.navbar_color);
 
 			},
 			error: function(xhr, textStatus, err) {

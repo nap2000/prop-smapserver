@@ -190,6 +190,7 @@ create TABLE organisation (
 	sensitive_data text,			-- Questions that should be stored more securely
 	webform text,				-- Webform options
 	navbar_color text,
+	navbar_text_color text,
 	training text,
 	limits text,				-- JSON object with resource limits
 	refresh_rate integer,
