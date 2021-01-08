@@ -362,8 +362,7 @@ function updateMapList(data) {
 		i, 
 		h = [],
 		idx = -1;
-	
-	h[++idx] = '<table class="table">';
+
 	h[++idx] = '<thead>';
 	h[++idx] = '<tr>';
 	h[++idx] = '<th>' + localise.set["c_name"], + '</th>';
@@ -413,13 +412,13 @@ function updateMapList(data) {
 		
 		h[++idx] = '<button type="button" data-idx="';
 		h[++idx] = i;
-		h[++idx] = '" class="btn btn-default btn-sm edit_map warning">';
-		h[++idx] = '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>';
+		h[++idx] = '" class="btn btn-info mx-2 btn-sm edit_map warning">';
+		h[++idx] = '<i class="far fa-edit"></i></button>';
 		
 		h[++idx] = '<button type="button" data-idx="';
 		h[++idx] = i;
-		h[++idx] = '" class="btn btn-default btn-sm rm_map danger">';
-		h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+		h[++idx] = '" class="btn btn-danger mx-2 btn-sm rm_map danger">';
+		h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
 		
 		h[++idx] = '</td>';
 		// end actions
@@ -427,7 +426,6 @@ function updateMapList(data) {
 		h[++idx] = '</tr>';
 	}
 	h[++idx] = '</tbody>';
-	h[++idx] = '</table>';
 	
 	$selector.empty().append(h.join(''));
 	
