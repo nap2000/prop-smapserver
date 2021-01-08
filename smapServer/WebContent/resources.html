@@ -118,11 +118,9 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 								application/vnd.ms-excel, image/svg+xml">
 
 									<button type="button" id="submitFiles" class="submitFiles btn btn-primary">
-										<i class="glyphicon glyphicon-upload"></i>
 										<span class="lang" data-lang="c_upload">upload</span>
 									</button>
 									<button type="reset" class="btn btn-warning cancel">
-										<i class="glyphicon glyphicon-ban-circle"></i>
 										<span class="lang" data-lang="c_cancel">cancel</span>
 									</button>
 
@@ -144,15 +142,10 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						</div>
 
 						<!-- Status -->
-						<div class="upload_file_msg alert alert-success mediaManage" role="alert" style="display:none;"></div>
-
-						<!-- The global progress bar -->
-						<div id="progress" class="progress mediaManage">
-							<div class="progress-bar progress-bar-success"></div>
-						</div>
+						<div class="upload_file_msg alert alert-success mediaManage mt-4" role="alert" style="display:none;"></div>
 
 						<!-- The container for the uploaded Survey files -->
-						<div id="surveyPanel" class="col-lg-10" style="display:none;">
+						<div id="surveyPanel" class="col-lg-10 mt-4" style="display:none;">
 							<h4 class="formName"></h4>
 
 							<div class="table-responsive">
@@ -163,8 +156,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 							</div>
 						</div>
 
-						<!-- The container for the uploaded Survey files -->
-						<div id="orgPanel" class="col-lg-10">
+						<!-- The container for the uploaded organisation files -->
+						<div id="orgPanel" class="col-lg-10 mt-4">
 							<div class="table-responsive">
 								<table role="presentation" class="table table-striped col-md-10">
 									<tbody id="filesOrg">
@@ -178,11 +171,9 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 				<div class="resourcePanel" id="mapPanel" style="display:none;">
 					<div class="container">
-						<div class = "well">
-							<a id="addMap" type="button" class="btn btn-default lang" data-lang="msg_add_map" aria-label="Add Map">add</a>
-							<div class="table-responsive">
-								<div id="map_list"></div>
-							</div>
+						<a id="addMap" type="button" class="btn btn-success lang" data-lang="msg_add_map" aria-label="Add Map">add</a>
+						<div class="table-responsive mt-4">
+							<table class="table" id="map_list"></table>
 						</div>
 					</div>
 				</div>
@@ -201,15 +192,12 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 										   accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
 
 									<button type="button" id="submitLocationFiles" class="submitFiles btn btn-primary">
-										<i class="glyphicon glyphicon-upload"></i>
 										<span class="lang" data-lang="c_upload">upload</span>
 									</button>
 									<button type="reset" class="btn btn-warning cancel">
-										<i class="glyphicon glyphicon-ban-circle"></i>
 										<span class="lang" data-lang="c_cancel">cancel</span>
 									</button>
 									<button type="button" id="downloadLocationFiles" class="btn btn-primary">
-										<i class="glyphicon glyphicon-download"></i>
 										<span class="lang" data-lang="c_download">download</span>
 									</button>
 
@@ -231,31 +219,29 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						</div>
 
 						<!-- Status -->
-						<div class="upload_file_msg alert alert-success mediaManage" role="alert"></div>
+						<div class="upload_file_msg alert alert-success mediaManage mt-4" role="alert"></div>
 
 						<!-- The container for the uploaded location files -->
-						<div id="locationListPanel" class="col-lg-10">
-							<div class="row">
+						<div id="locationListPanel">
+							<div>
 								<form role="form">
-									<div class="form-group">
-										<div class="col-sm-offset-4 col-sm-8">
+									<div class="form-group row">
+										<label data-lang="sr_nfc" class="lang col-sm-4 control-label">nfc</label>
+										<div class="col-sm-1">
 											<div class="checkbox">
-												<label>
-													<input type="checkbox" id="includeNfc" checked="checked"><span data-lang="sr_nfc" class="lang"></span>
-												</label>
+												<input type="checkbox" id="includeNfc" checked="checked">
 											</div>
 										</div>
 									</div>
-									<div class="form-group">
-										<div class="col-sm-offset-4 col-sm-8">
+									<div class="form-group row">
+										<label data-lang="sr_geo" class="lang col-sm-4 control-label">nfc</label>
+										<div class="col-sm-1">
 											<div class="checkbox">
-												<label>
-													<input type="checkbox" id="includeGeo" checked="checked"><span data-lang="sr_geo" class="lang"></span>
-												</label>
+												<input type="checkbox" id="includeGeo" checked="checked">
 											</div>
 										</div>
 									</div>
-									<div class="form-group">
+									<div class="form-group row">
 										<label class="lang col-sm-4 control-label" data-lang="sr_g" for="location_group"></label>
 										<div class="col-sm-8">
 											<select class="location_group_list form-control" id="location_group"></select>
@@ -292,16 +278,16 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 <!-- Popup to allow the user to add a map -->
 <div id="addMapPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addMapLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 				<h4 class="modal-title lang" id="addMapLabel" data-lang="c_map">Map</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			</div>
 
 			<div class="modal-body">
-				<form id="map_edit_form" class="form-horizontal" role="form">
-					<div class="form-group">
+				<form id="map_edit_form" class="form" role="form">
+					<div class="form-group row">
 						<label class="lang col-sm-2 control-label" data-lang="c_name" for="map_name">name</label>
 						<div class="col-sm-10">
 							<input type="text" id="map_name" class="form-control"
@@ -309,7 +295,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 								   required>
 						</div>
 					</div>
-					<div class="form-group">
+					<div class="form-group row">
 						<label class="lang col-sm-2 control-label" data-lang="c_type" for="map_type">Type</label>
 						<div class="col-sm-10">
 							<select class="form-control" id="map_type">
@@ -318,14 +304,14 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 							</select>
 						</div>
 					</div>
-					<div class="form-group">
+					<div class="form-group row">
 						<label class="lang col-sm-2 control-label" data-lang="c_desc" for="map_description">Description</label>
 						<div class="col-sm-10">
 							<input type="text" id="map_description" class="form-control"
 								   placeholder="description">
 						</div>
 					</div>
-					<div class="form-group">
+					<div class="form-group row">
 						<label class="lang col-sm-2 control-label" data-lang="c_zoom" for="map_zoom">Zoom Levels</label>
 						<div class="col-sm-10">
 							<input type="number" id="map_zoom" min="5" max="22" step="1" value="22" class="form-control"
@@ -334,7 +320,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					</div>
 
 					<div class="mapbox_only">
-						<div class="form-group">
+						<div class="form-group row">
 							<label class="lang col-sm-2 control-label" data-lang="c_mapid" for="mapid">Map Id</label>
 							<div class="col-sm-10">
 								<input type="text" id="mapid" class="form-control"
@@ -345,7 +331,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					</div>
 
 					<div class="vector_only">
-						<div class="form-group">
+						<div class="form-group row">
 							<label class="lang col-sm-2 control-label" data-lang="c_vector_data" for="vector_data">Vector Data</label>
 							<div class="col-sm-10">
 								<select class="form-control" id="vector_data">
@@ -353,7 +339,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 								</select>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="form-group row">
 							<label class="lang col-sm-2 control-label" data-lang="c_vector_style" for="vector_data">Vector Style</label>
 							<div class="col-sm-10">
 								<select class="form-control" id="vector_style">
@@ -374,17 +360,17 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 <!-- Popup to allow the user to add a report -->
 <div id="addReportPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addReportLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 				<h4 class="modal-title lang" id="addReportLabel" data-lang="sr_cr">reports</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			</div>
 
 			<div class="modal-body">
 				<div class="upload_file_msg alert alert-success mediaManage" role="alert"></div>
-				<form id="report_edit_form" class="form-horizontal" role="form" enctype="multipart/form-data" name="crupload">
-					<div class="form-group">
+				<form id="report_edit_form" class="form" role="form" enctype="multipart/form-data" name="crupload">
+					<div class="form-group row">
 						<label class="lang col-sm-2 control-label" data-lang="c_name" for="report_name">name</label>
 						<div class="col-sm-10">
 							<input type="text" id="report_name" name="name" class="form-control"
@@ -393,7 +379,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						</div>
 					</div>
 
-					<div class="form-group">
+					<div class="form-group row">
 						<label class="col-sm-2 control-label lang" data-lang="c_file" for="report_file"></label>
 						<div class="col-sm-10">
 							<input accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -401,7 +387,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						</div>
 					</div>
 
-					<div class="form-group">
+					<div class="form-group row">
 						<label class="col-sm-2 control-label lang" data-lang="c_type" for="report_type"></label>
 						<div class="col-sm-10">
 							<select id="report_type" name="type">
