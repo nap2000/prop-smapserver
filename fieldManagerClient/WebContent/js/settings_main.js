@@ -383,13 +383,20 @@ require([
 				css: $('#cssSelectOrg').val()
 			};
 
+			var appearanceString = JSON.stringify(appearance);
+
+			$('#appearanceSettings').val(appearanceString);
+			var f = document.forms.namedItem("appearancesave");
+			var formData = new FormData(f);
+
 			$('.org_alert').hide();
 			addHourglass();
 			$.ajax({
 				type: 'POST',
-				data: {settings: JSON.stringify(appearance)},
+				data: formData,
 				cache: false,
-				contentType: "application/json",
+				contentType: false,
+				processData:false,
 				url: "/surveyKPI/organisationList/appearance",
 				success: function(data, status) {
 					removeHourglass();
