@@ -7,6 +7,10 @@ tr.deleted td a {
     color: red !important;
 }
 
+.blocked {
+    opacity: 0.5;
+}
+
 #map {
     width: 100%;
     height: 500px;
