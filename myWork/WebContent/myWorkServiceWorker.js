@@ -123,7 +123,13 @@ self.addEventListener('fetch', function(event) {
 // Temporary cache option
 self.addEventListener('fetch', function(event) {
 
-	if(event.request.url.includes(USER)) {
+	if(event.request.url.includes('login.js')
+		|| event.request.url.includes('@')
+		|| event.request.url.includes('formList')) {   // do not use service worker
+
+		return false;
+
+	} else if(event.request.url.includes(USER)) {
 		// Get organisation id
 		event.respondWith(
 			getOrgId(event.request)
@@ -159,7 +165,7 @@ self.addEventListener('fetch', function(event) {
 	}
 
 
-});
+}, {passive: true});
 
 function getOrgId(request) {
 	return fetch(request).then(
