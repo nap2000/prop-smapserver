@@ -125,7 +125,7 @@
 <script>
 	try {
 		let mainLogo = localStorage.getItem("main_logo");
-		if (typeof mainLogo !== 'undefined' && mainLogo !== "undefined") {
+		if (typeof mainLogo !== 'undefined' && mainLogo !== "undefined" && mainLogo) {
 			let img = document.getElementById('main_logo');
 			console.log("Logo: " + mainLogo);
 			img.setAttribute("src", mainLogo);
