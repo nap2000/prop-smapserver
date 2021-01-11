@@ -23,8 +23,6 @@
 	<script src="/js/libs/jquery-3.4.1.min.js"></script>
 	<script src="/js/libs/bootstrap.bundle.v4.5.min.js"></script>
 	<script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
-	<script src="/js/app/unregisterServiceWorker.js"></script>
-	<script src="/myWorkServiceWorker.js"></script>
 	<script data-main="js/index" src="js/libs/require.js"></script>
 
 </head>
@@ -47,13 +45,13 @@
 		<ul class="navbar-nav ml-auto">
 
 			<li class="nav-item restrict_role admin_role analyst_role"><a class="lang nav-link" data-lang="c_edit" href="/edit.html" title="Edit">Edit</a></li>
-			<li class="nav-item restrict_role admin_role analyst_role"><a class="lang nav-link" data-lang="m_admin" href="/fieldManager/surveyManagement.html" title="Admin">Admin</a></li>
-			<li class="nav-item"><a class="lang nav-link" data-lang="m_web_forms" href="/myWork/index.html">Web Forms</a></li>
-			<li class="nav-item restrict_role admin_role analyst_role data_role"><a class="lang nav-link" data-lang="m_analysis" href="/fieldAnalysis/index.html">Analysis</a></li>
-			<li class="nav-item restrict_role manage_role admin_role analyst_role"><a class="lang nav-link" data-lang="m_console" href="/tasks/managed_forms.html"></a></li>
-			<li class="nav-item restrict_role admin_role analyst_role manage_role task_role"><a href="/tasks/taskManagement.html" class="nav-link"><span class="nav-label lang" data-lang="m_assign">assign</span></a></li>
+			<li class="nav-item restrict_role admin_role analyst_role"><a class="lang nav-link" data-lang="m_admin" href="/app/fieldManager/surveyManagement.html" title="Admin">Admin</a></li>
+			<li class="nav-item"><a class="lang nav-link" data-lang="m_web_forms" href="/app/myWork/index.html">Web Forms</a></li>
+			<li class="nav-item restrict_role admin_role analyst_role data_role"><a class="lang nav-link" data-lang="m_analysis" href="/app/fieldAnalysis/index.html">Analysis</a></li>
+			<li class="nav-item restrict_role manage_role admin_role analyst_role"><a class="lang nav-link" data-lang="m_console" href="/app/tasks/managed_forms.html"></a></li>
+			<li class="nav-item restrict_role admin_role analyst_role manage_role task_role"><a href="/app/tasks/taskManagement.html" class="nav-link"><span class="nav-label lang" data-lang="m_assign">assign</span></a></li>
 			<li id="logout" class="nav-item loggedin"><a class="lang button nav-link" data-lang="c_logout">logout</a></li>
-			<li id="login" style="display:none;" class="nav-item notloggedin"><a class="lang button nav-link" data-lang="m_login" href="/fieldManager/surveyManagement.html">login</a></li>
+			<li id="login" style="display:none;" class="nav-item notloggedin"><a class="lang button nav-link" data-lang="m_login" href="/app/fieldManager/surveyManagement.html">login</a></li>
 			<li id="m_subscribe" class="nav-item"><a class="lang nav-link" data-lang="c_subscribe" href="/subscriptions.html">Subscribe</a></li>
 			<li class="nav-item"><a class="lang nav-link" rel="noopener noreferrer"  data-lang="m_docs" href="https://www.smap.com.au/docs" target="_blank">Documentation</a></li>
 			<li id="signup" style="display:none;" class="nav-item notloggedin"><a class="lang button nav-link" data-lang="m_register" href="/register.html" > Register</a></li>
