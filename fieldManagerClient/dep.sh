@@ -9,9 +9,9 @@ tar -zcf fieldManager.tgz fieldManager
 cp fieldManager.tgz ~/deploy
 
 # deploy to local
-sudo rm -rf /Library/WebServer/Documents/fieldManager
-sudo mkdir /Library/WebServer/Documents/fieldManager
-sudo cp -rf fieldManager/* /Library/WebServer/Documents/fieldManager
+sudo rm -rf /Library/WebServer/Documents/app/fieldManager
+sudo mkdir /Library/WebServer/Documents/app/fieldManager
+sudo cp -rf fieldManager/* /Library/WebServer/Documents/app/fieldManager
 sudo apachectl restart
 rm fieldManager.tgz
 

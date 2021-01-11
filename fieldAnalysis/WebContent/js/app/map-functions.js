@@ -780,7 +780,7 @@ function addSharedMaps(map, sharedMaps) {
 		console.log("aDataItem");
 		console.log(aDataItem);
 		// Close button
-		h[++idx] = '<img id="fDel" src="/fieldAnalysis/img/delete.png"/><br/>';
+		h[++idx] = '<img id="fDel" src="/app/fieldAnalysis/img/delete.png"/><br/>';
 		h[++idx] = '<div id="feature_data">';
 		
 		// Process

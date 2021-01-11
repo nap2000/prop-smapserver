@@ -9,9 +9,9 @@ tar -zcf tasks.tgz tasks
 cp tasks.tgz ~/deploy
 
 # deploy to local
-sudo rm -rf /Library/WebServer/Documents/tasks
-sudo mkdir /Library/WebServer/Documents/tasks
-sudo cp -rf tasks/* /Library/WebServer/Documents/tasks
+sudo rm -rf /Library/WebServer/Documents/app/tasks
+sudo mkdir /Library/WebServer/Documents/app/tasks
+sudo cp -rf tasks/* /Library/WebServer/Documents/app/tasks
 sudo apachectl restart
 rm tasks.tgz
 

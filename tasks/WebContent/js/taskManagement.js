@@ -1668,7 +1668,7 @@ require([
 
 		if(!isNew && task.update_id) {
 			$('#tp_show_console').removeClass('disabled');
-			var link = "/tasks/managed_forms.html?id=" + taskFeature.properties.form_id
+			var link = "/app/tasks/managed_forms.html?id=" + taskFeature.properties.form_id
 				+ "&instanceid=" + taskFeature.properties.update_id;
 			$('#tp_show_console').prop("href", link);
 		} else {

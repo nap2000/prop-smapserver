@@ -380,13 +380,13 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             }
             if(redirect) {
                 if(redirectEnum) {
-                    window.location.href = "/myWork/index.html";
+                    window.location.href = "/app/myWork/index.html";
                 } else if(redirectTasks) {
-                    window.location.href = "/tasks/taskManagement.html";
+                    window.location.href = "/app/tasks/taskManagement.html";
                 } else if(redirectManage) {
-                    window.location.href = "/tasks/managed_forms.html";
+                    window.location.href = "/app/tasks/managed_forms.html";
                 } else if(redirectView) {
-                    window.location.href = "/fieldAnalysis/index.html";
+                    window.location.href = "/app/fieldAnalysis/index.html";
                 }
             }
 

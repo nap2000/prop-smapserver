@@ -19,7 +19,7 @@
       "type": "image/png"
     }
   ],
-  "start_url": "/myWork/index.html",
+  "start_url": "/app/myWork/index.html",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",

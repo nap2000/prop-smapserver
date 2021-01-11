@@ -297,11 +297,11 @@ function getMedia(property) {
             }
 			media.type = "audio";
 			media.url = property;		// Don't convert audio files
-			media.thumbNail = "/fieldAnalysis/img/audio-icon.png"
+			media.thumbNail = "/app/fieldAnalysis/img/audio-icon.png"
 		} else {
 			media.type = "unknown";
 			media.url = property; 
-			media.thumbNail = "/fieldAnalysis/img/link.png"
+			media.thumbNail = "/app/fieldAnalysis/img/link.png"
 		}
 
 
