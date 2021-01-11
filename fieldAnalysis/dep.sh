@@ -9,9 +9,9 @@ tar -zcf fieldAnalysis.tgz fieldAnalysis
 cp fieldAnalysis.tgz ~/deploy
 
 # deploy to local
-sudo rm -rf /Library/WebServer/Documents/fieldAnalysis
-sudo mkdir /Library/WebServer/Documents/fieldAnalysis
-sudo cp -rf fieldAnalysis/* /Library/WebServer/Documents/fieldAnalysis
+sudo rm -rf /Library/WebServer/Documents/app/fieldAnalysis
+sudo mkdir /Library/WebServer/Documents/app/fieldAnalysis
+sudo cp -rf fieldAnalysis/* /Library/WebServer/Documents/iapp/fieldAnalysis
 sudo apachectl restart
 rm fieldAnalysis.tgz
 

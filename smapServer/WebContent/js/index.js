@@ -48,7 +48,7 @@ require(['jquery', 'app/localise', 'app/common','app/globals'],
 	 */
 	window.addEventListener('load', function() {
 		if ('serviceWorker' in navigator) {
-			navigator.serviceWorker.register('/myWorkServiceWorker.js').then(function (registration) {
+			navigator.serviceWorker.register('/app/myWorkServiceWorker.js').then(function (registration) {
 				// Registration was successful
 				console.log('ServiceWorker registration successful with scope: ', registration.scope);
 			}, function (err) {
