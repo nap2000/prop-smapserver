@@ -53,6 +53,10 @@
 	    exclude: ['jquery', 'bootstrap']
         },
         {
+            name: '../login',
+	    exclude: ['jquery', 'bootstrap']
+        },
+        {
             name: '../queries',
         },
         {
