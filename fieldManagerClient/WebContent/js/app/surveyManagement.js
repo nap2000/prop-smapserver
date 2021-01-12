@@ -38,6 +38,19 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             localise.setlang();		// Localise HTML
 
             /*
+             * Rgister for messages from the service worker
+             */
+            navigator.serviceWorker.addEventListener('message', event => {
+                // event is a MessageEvent object
+                console.log(`The service worker sent me a message: ${event.data}`);
+                window.open("/login.html");
+                if(event.data.status === 401) {
+                    window.open("/login.html");
+                }
+            });
+
+
+            /*
              * Add functionality to control buttons
              */
             $('#delete_survey').click(function () {

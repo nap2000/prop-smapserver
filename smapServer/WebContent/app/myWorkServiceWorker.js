@@ -159,7 +159,15 @@ self.addEventListener('fetch', function(event) {
 				.match(getCacheUrl(event.request)) // check if the request has already been cached
 				.then(cached => cached || fetch(event.request).then(response => {
 						if (response.status === 401) {
-							window.location.href = "/login.html";
+							self.clients.matchAll({
+								includeUncontrolled: true,
+								type: 'window',
+							})
+								.then((clients) => {
+									clients.forEach(function(client) {
+										client.postMessage(response)
+									})
+								})
 						} else {
 							return response;
 						}
