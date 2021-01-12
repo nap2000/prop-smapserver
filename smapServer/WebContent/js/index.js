@@ -55,8 +55,11 @@ require(['jquery', 'app/localise', 'app/common','app/globals'],
 				// registration failed :(
 				console.log('ServiceWorker registration failed: ', err);
 			});
+
 		}
 	});
+
+
 
 	/*
 	 * If the user is not logged in then enable the login button and disable other menus
