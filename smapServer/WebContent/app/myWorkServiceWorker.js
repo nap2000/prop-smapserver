@@ -15,8 +15,7 @@ self.addEventListener('install', function(e) {
 	e.waitUntil(
 		caches.open(CACHE_NAME).then(function(cache) {
 			return cache.addAll([
-				'/',
-				'/myWork/index.html',
+				'/app/myWork/index.html',
 				'/css/bootstrap.v4.5.min.css',
 				'/css/fa.v5.15.1.all.min.css',
 				'/build/css/theme-smap.css',
@@ -36,7 +35,7 @@ self.addEventListener('install', function(e) {
 				'/js/libs/bootstrap.bundle.v4.5.min.js',
 				'/js/app/custom.js',
 				'/js/app/idbconfig.js',
-				'/myWork/js/my_work.js',
+				'/app/myWork/js/my_work.js',
 				'/images/enketo_bare_150x56.png',
 				'/images/smap_logo.png',
 				'/images/ajax-loader.gif',
@@ -123,9 +122,7 @@ self.addEventListener('fetch', function(event) {
 // Temporary cache option
 self.addEventListener('fetch', function(event) {
 
-	if(event.request.url.includes('login.js')
-		|| event.request.url.includes('@')
-		|| event.request.url.includes('formList')) {   // do not use service worker
+	if(event.request.url.includes('@')) {   // do not use service worker
 
 		return false;
 
@@ -160,7 +157,14 @@ self.addEventListener('fetch', function(event) {
 		event.respondWith(
 			caches
 				.match(getCacheUrl(event.request)) // check if the request has already been cached
-				.then(cached => cached || fetch(event.request)) // otherwise request network
+				.then(cached => cached || fetch(event.request).then(response => {
+						if (response.status === 401) {
+							window.location.href = "/login.html";
+						} else {
+							return response;
+						}
+					}
+				))
 		);
 	}
 
