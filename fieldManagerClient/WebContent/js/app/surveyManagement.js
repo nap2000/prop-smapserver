@@ -36,18 +36,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 
 	        setupUserProfile(true);
             localise.setlang();		// Localise HTML
-
-            /*
-             * Rgister for messages from the service worker
-             */
-            navigator.serviceWorker.addEventListener('message', event => {
-                // event is a MessageEvent object
-                console.log("Service worker message: " + JSON.stringify((event.data)));
-                if(event.data.type === "401") {
-                    window.open("/login.html");
-                }
-            });
-
+            registerForServiceWorkerMessages();
 
             /*
              * Add functionality to control buttons

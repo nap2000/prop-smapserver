@@ -117,6 +117,7 @@ require([
 
 		localise.setlang();		// Localise HTML
 		setupUserProfile(true);
+		registerForServiceWorkerMessages();
 		window.moment = moment;		// Make moment global for use by common.js
 		enableDebugging();
 
