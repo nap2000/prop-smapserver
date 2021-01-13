@@ -1372,7 +1372,13 @@ define({
     "svc_to_l": "To Language",
 
     // Logs
-    "log_hr": "Hourly Summary"
+    "log_hr": "Hourly Summary",
+
+    // Login
+    "li_success": "Login successful",
+    "li_failure": "Login failure",
+    "li_continue": "Return to applications"
+
 
 
 });
