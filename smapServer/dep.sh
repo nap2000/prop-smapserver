@@ -31,7 +31,8 @@
 
 # Minify the smap server code
 echo "--------------------------- minify smap server code"
-node tools/r.js -o tools/build.js
+#node tools/r.js -o tools/build.js
+node tools/r_2_3_6.js -o tools/build.js
 
 export COPYFILE_DISABLE=true
 # Create a tar file and copy to the deploy directory
