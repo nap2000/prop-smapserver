@@ -42,18 +42,42 @@ require([
 
         $(document).ready(function() {
             localise.setlang();		// Localise HTML
+
+            $('.login_success, .login_failure').hide();
+
+            $('#login_retry').click(function(){
+                login();
+            });
+
+            $('#login_continue').click(function() {
+               window.close();
+            });
+
+            login();
+
+
+        });
+
+        function login() {
             $.ajax({
                 cache: false,
                 url: "/authenticate/login.txt",
                 success: function (data, status) {
-                    alert("success")
+                    if(data === 'loggedin') {
+                        $('.login_failure').hide();
+                        $('.login_success').show();
+                    } else {
+                        $('.login_failure').show();
+                        $('.login_success').hide();
+                    }
 
                 }, error: function (data, status) {
-                    alert("fail")
+                    $('.login_failure').show();
+                    $('.login_success').hide();
 
                 }
             });
-        });
+        }
 
     });
 
