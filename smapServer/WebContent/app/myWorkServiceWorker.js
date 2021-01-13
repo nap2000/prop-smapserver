@@ -1,7 +1,7 @@
 
 let CACHE_NAME = 'v22';
 let ASSIGNMENTS = '/surveyKPI/myassignments';
-let WEBFORM = "/webForm";
+let WEBFORM = "/app/webForm";
 let USER = "/surveyKPI/user?";
 let ORG_CSS = "/custom/css/org/custom.css";
 let PROJECT_LIST = "/myProjectList";
@@ -145,12 +145,55 @@ self.addEventListener('fetch', function(event) {
 					.then(cached => cached || fetch(myRequest)) // otherwise request network
 			);
 		}
+	} else if (event.request.url.includes(ASSIGNMENTS)) {
+		// response to request for forms and tasks. Cache Update Refresh strategy
+		event.respondWith(caches.match(ASSIGNMENTS));
+		event.waitUntil(update_assignments(event.request).then(refresh).then(precacheforms));
+
 	} else if (event.request.url.includes(TIMEZONES)) {
 		// Cache then if not found network then cache the response
 		event.respondWith(
 			caches
 				.match(getCacheUrl(event.request)) // check if the request has already been cached
 				.then(cached => cached || update(event.request)) // otherwise request network
+		);
+
+	} else if (event.request.url.includes(WEBFORM)
+		|| event.request.url.includes(USER)
+		|| event.request.url.includes(CURRENT_PROJECT)
+		|| event.request.url.includes(PROJECT_LIST)) {
+
+		// response to a webform/user request.  Network then cache strategy
+		event.respondWith(
+			fetch(event.request)
+				.then(response => {
+					if(response.status == 401) {
+						self.clients.matchAll({
+							includeUncontrolled: false,
+							type: 'window',
+						})
+							.then((clients) => {
+								let msg = {
+									type: "401"
+								}
+								if(clients.length > 0) {
+									clients[0].postMessage(msg);
+								}
+							})
+					} else if (response.status == 200) {
+						return caches
+							.open(CACHE_NAME)
+							.then(cache => {
+								cache.put(getCacheUrl(event.request), response.clone());
+								return response;
+							})
+					} else {
+						return caches.match(getCacheUrl(event.request))
+							.then(cached => cached || response) // otherwise request network
+					}
+				}).catch(() => {
+				return caches.match(getCacheUrl(event.request));
+			})
 		);
 
 	} else {
@@ -261,7 +304,7 @@ function precacheforms(response) {
 
 	if(response && response.forms) {
 		for(let i = 0; i < response.forms.length; i++) {
-			let url = '/myWork/webForm/' + response.forms[i].ident;
+			let url = '/app/webForm/' + response.forms[i].ident;
 			fetch(new Request(url, {credentials: 'same-origin'})).then(function(response) {
 				if (response.status == 200) {
 					return caches
