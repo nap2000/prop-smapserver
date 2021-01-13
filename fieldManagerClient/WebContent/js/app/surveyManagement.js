@@ -42,9 +42,8 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
              */
             navigator.serviceWorker.addEventListener('message', event => {
                 // event is a MessageEvent object
-                console.log(`The service worker sent me a message: ${event.data}`);
-                window.open("/login.html");
-                if(event.data.status === 401) {
+                console.log("Service worker message: " + JSON.stringify((event.data)));
+                if(event.data.type === "401") {
                     window.open("/login.html");
                 }
             });

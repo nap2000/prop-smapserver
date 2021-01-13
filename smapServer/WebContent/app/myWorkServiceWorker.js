@@ -164,8 +164,11 @@ self.addEventListener('fetch', function(event) {
 								type: 'window',
 							})
 								.then((clients) => {
+									let msg = {
+										type: "401"
+									}
 									clients.forEach(function(client) {
-										client.postMessage(response)
+										client.postMessage(msg)
 									})
 								})
 						} else {
