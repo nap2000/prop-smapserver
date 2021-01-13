@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v21';
+let CACHE_NAME = 'v22';
 let ASSIGNMENTS = '/surveyKPI/myassignments';
 let WEBFORM = "/webForm";
 let USER = "/surveyKPI/user?";
@@ -35,6 +35,7 @@ self.addEventListener('install', function(e) {
 				'/js/libs/bootstrap.bundle.v4.5.min.js',
 				'/js/app/custom.js',
 				'/js/app/idbconfig.js',
+				'/js/app/pwacommon.js',
 				'/app/myWork/js/my_work.js',
 				'/images/enketo_bare_150x56.png',
 				'/images/smap_logo.png',
@@ -160,16 +161,16 @@ self.addEventListener('fetch', function(event) {
 				.then(cached => cached || fetch(event.request).then(response => {
 						if (response.status === 401) {
 							self.clients.matchAll({
-								includeUncontrolled: true,
+								includeUncontrolled: false,
 								type: 'window',
 							})
 								.then((clients) => {
 									let msg = {
 										type: "401"
 									}
-									clients.forEach(function(client) {
-										client.postMessage(msg)
-									})
+									if(clients.length > 0) {
+										clients[0].postMessage(msg);
+									}
 								})
 						} else {
 							return response;
