@@ -70,28 +70,33 @@ if [ -e $deploy_from/fieldAnalysis.tgz ]
 then
         echo "Updating fieldAnalysis"
         rm -rf /var/www/smap/fieldAnalysis
-        tar -xzf $deploy_from/fieldAnalysis.tgz -C /var/www/smap
+        rm -rf /var/www/smap/app/fieldAnalysis
+        tar -xzf $deploy_from/fieldAnalysis.tgz -C /var/www/smap/app
 fi
 
 if [ -e $deploy_from/fieldManager.tgz ]
 then
         echo "Updating fieldManager"
         rm -rf /var/www/smap/fieldManager
-        tar -xzf $deploy_from/fieldManager.tgz -C /var/www/smap
+        rm -rf /var/www/smap/app/fieldManager
+
+        tar -xzf $deploy_from/fieldManager.tgz -C /var/www/smap/app
 fi
 
 if [ -e $deploy_from/tasks.tgz ]
 then
         echo "Updating tasks"
         rm -rf /var/www/smap/tasks
-        tar -xzf $deploy_from/tasks.tgz -C /var/www/smap
+        rm -rf /var/www/smap/app/tasks
+        tar -xzf $deploy_from/tasks.tgz -C /var/www/smap/app
 fi
 
 if [ -e $deploy_from/myWork.tgz ]
 then
         echo "Updating myWork"
         rm -rf /var/www/smap/myWork
-        tar -xzf $deploy_from/myWork.tgz -C /var/www/smap
+        rm -rf /var/www/smap/app/myWork
+        tar -xzf $deploy_from/myWork.tgz -C /var/www/smap/app
 fi
 
 if [ -e $deploy_from/dashboard.tgz ]
