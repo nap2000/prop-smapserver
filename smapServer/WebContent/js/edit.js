@@ -1298,7 +1298,7 @@ function surveyDetailsDone() {
 	refreshForm();
 
 	// Set up link to test file
-	$('.m_test_survey').attr("href", "/app/webForm/" + globals.model.survey.ident);
+	$('.m_test_survey').attr("href", "/app/myWork/webForm/" + globals.model.survey.ident);
 
 }
 

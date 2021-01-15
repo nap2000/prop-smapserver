@@ -289,7 +289,7 @@ function addFormList(formList, filterProjectId) {
 
 	for(i = 0; i < formList.length; i++) {
 		if(!filterProjectId || filterProjectId == formList[i].pid) {
-			h[++idx] = '<a role="button" class="btn btn-primary btn-block btn-lg" target="_blank" href="/app/webForm/';
+			h[++idx] = '<a role="button" class="btn btn-primary btn-block btn-lg" target="_blank" href="/app/myWork/webForm/';
 			h[++idx] = formList[i].ident;
 			h[++idx] = '">';
 			h[++idx] = formList[i].name;
@@ -322,7 +322,7 @@ function addTaskList(taskList, filterProjectId) {
 			} else {
 				h[++idx] = 'false';
 			}
-			h[++idx] = '" href="/app/webForm/';
+			h[++idx] = '" href="/app/myWork/webForm/';
 			h[++idx] = taskList[i].task.form_id;
 
 			var hasParam = false;

@@ -1,7 +1,7 @@
 
 let CACHE_NAME = 'v22';
 let ASSIGNMENTS = '/surveyKPI/myassignments';
-let WEBFORM = "/app/webForm";
+let WEBFORM = "/app/myWork/webForm";
 let USER = "/surveyKPI/user?";
 let ORG_CSS = "/custom/css/org/custom.css";
 let PROJECT_LIST = "/myProjectList";
@@ -127,12 +127,6 @@ self.addEventListener('fetch', function(event) {
 
 		return false;
 
-	} else if(event.request.url.includes(USER)) {
-		// Get organisation id
-		event.respondWith(
-			getOrgId(event.request)
-
-		);
 	} else if(event.request.url.includes(ORG_CSS)) {
 		if(organisationId) {
 			let url = ORG_CSS;
@@ -167,7 +161,7 @@ self.addEventListener('fetch', function(event) {
 		event.respondWith(
 			fetch(event.request)
 				.then(response => {
-					if(response.status == 401) {
+					if(response.status == 401) {  // force relogon
 						self.clients.matchAll({
 							includeUncontrolled: false,
 							type: 'window',
@@ -181,6 +175,13 @@ self.addEventListener('fetch', function(event) {
 								}
 							})
 					} else if (response.status == 200) {
+
+						if(event.request.url.includes(USER)) {
+							// Get organisation ID
+							let responseData = response.clone().json();
+							organisationId = responseData.o_id;
+						}
+
 						return caches
 							.open(CACHE_NAME)
 							.then(cache => {
@@ -189,7 +190,7 @@ self.addEventListener('fetch', function(event) {
 							})
 					} else {
 						return caches.match(getCacheUrl(event.request))
-							.then(cached => cached || response) // otherwise request network
+							.then(cached => cached || response) // Return whatever is in cache
 					}
 				}).catch(() => {
 				return caches.match(getCacheUrl(event.request));
@@ -225,18 +226,6 @@ self.addEventListener('fetch', function(event) {
 
 
 }, {passive: true});
-
-function getOrgId(request) {
-	return fetch(request).then(
-		async response => {
-			if (response.status == 200) {
-				let responseData = await response.clone().json();
-				organisationId = responseData.o_id;
-			}
-			return response;
-		}
-	);
-}
 
 function update(request) {
 	return fetch(request).then(
@@ -304,7 +293,7 @@ function precacheforms(response) {
 
 	if(response && response.forms) {
 		for(let i = 0; i < response.forms.length; i++) {
-			let url = '/app/webForm/' + response.forms[i].ident;
+			let url = '/app/myWork/webForm/' + response.forms[i].ident;
 			fetch(new Request(url, {credentials: 'same-origin'})).then(function(response) {
 				if (response.status == 200) {
 					return caches
