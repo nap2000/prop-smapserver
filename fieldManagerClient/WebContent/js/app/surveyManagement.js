@@ -563,7 +563,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 
                     h[++idx] = '<td>';
 
-                    h[++idx] = '<a class="btn survey_view" href="/app/webForm/';                    // Webform
+                    h[++idx] = '<a class="btn survey_view" href="/app/myWork/webForm/';                    // Webform
                     h[++idx] = survey.ident;
                     h[++idx] = '" target="_blank">'
 

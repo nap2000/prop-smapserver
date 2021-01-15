@@ -3282,7 +3282,7 @@ require([
 
         var sIdent = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].ident;
         var instanceId = gTasks.gSelectedRecord.instanceid;
-        $('.launchwebform').prop("href", "/app/webForm/" + sIdent + "?datakey=instanceid&datakeyvalue=" + instanceId);
+        $('.launchwebform').prop("href", "/app/myWork/webForm/" + sIdent + "?datakey=instanceid&datakeyvalue=" + instanceId);
 
         $('.overviewSection').hide();
         $('.editRecordSection').show();
