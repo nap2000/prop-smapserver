@@ -1,13 +1,16 @@
 
-let CACHE_NAME = 'v22';
+let CACHE_NAME = 'v24';
 let ASSIGNMENTS = '/surveyKPI/myassignments';
 let WEBFORM = "/app/myWork/webForm";
 let USER = "/surveyKPI/user?";
 let ORG_CSS = "/custom/css/org/custom.css";
 let PROJECT_LIST = "/myProjectList";
-let CURRENT_PROJECT = "/currentproject";
 let TIMEZONES = "/timezones";
 let organisationId = 0;
+
+let databaseName = "smap_pwa";
+let databaseVersion = 2;
+let latestRequestStore = "requests";
 
 // During the installation phase, you'll usually want to cache static assets.
 self.addEventListener('install', function(e) {
@@ -61,66 +64,7 @@ self.addEventListener('activate', function (event) {
 
 });
 
-// when the browser fetches a URL…
-// PWA version
-/*
-self.addEventListener('fetch', function(event) {
 
-	if (event.request.url.includes(ASSIGNMENTS)) {
-		// response to request for forms and tasks. Cache Update Refresh strategy
-		event.respondWith(caches.match(ASSIGNMENTS));
-		event.waitUntil(update_assignments(event.request).then(refresh).then(precacheforms));
-
-	} else if (event.request.url.includes(TIMEZONES)) {
-		// Cache then if not found network then cache the response
-		event.respondWith(
-			caches
-				.match(getCacheUrl(event.request)) // check if the request has already been cached
-				.then(cached => cached || update(event.request)) // otherwise request network
-		);
-
-	} else if (event.request.url.includes(WEBFORM)
-		|| event.request.url.includes(USER)
-		|| event.request.url.includes(CURRENT_PROJECT)
-		|| event.request.url.includes(PROJECT_LIST)) {
-
-		// response to a webform/user request.  Network then cache strategy
-		event.respondWith(
-			fetch(event.request)
-				.then(response => {
-					if(response.status == 401) {
-						fetch(event.request);
-					} else if (response.status == 200) {
-						return caches
-							.open(CACHE_NAME)
-							.then(cache => {
-								cache.put(getCacheUrl(event.request), response.clone());
-								return response;
-							})
-					} else {
-						return caches.match(getCacheUrl(event.request))
-							.then(cached => cached || response) // otherwise request network
-					}
-				}).catch(() => {
-					return caches.match(getCacheUrl(event.request));
-				})
-		);
-
-	} else {
-		// Try cache then network - but do not cache missing files as there will be a lot of them
-		event.respondWith(
-			caches
-				.match(getCacheUrl(event.request)) // check if the request has already been cached
-				.then(cached => cached || fetch(event.request)) // otherwise request network
-		);
-	}
-
-
-});
-*/
-
-
-// Temporary cache option
 self.addEventListener('fetch', function(event) {
 
 	if(event.request.url.includes('@')) {   // do not use service worker
@@ -152,35 +96,31 @@ self.addEventListener('fetch', function(event) {
 				.then(cached => cached || update(event.request)) // otherwise request network
 		);
 
-	} else if (event.request.url.includes(WEBFORM)
-		|| event.request.url.includes(USER)
-		|| event.request.url.includes(CURRENT_PROJECT)
-		|| event.request.url.includes(PROJECT_LIST)) {
+	} else if (event.request.url.includes(WEBFORM)) {
 
-		// response to a webform/user request.  Network then cache strategy
+		// response to a webform request.  Network then cache strategy
 		event.respondWith(
 			fetch(event.request)
 				.then(response => {
-					if(response.status == 401) {  // force relogon
-						self.clients.matchAll({
-							includeUncontrolled: false,
-							type: 'window',
-						})
-							.then((clients) => {
-								let msg = {
-									type: "401"
-								}
-								if(clients.length > 0) {
-									clients[0].postMessage(msg);
-								}
+					if (response.status == 401) {  // force re-logon
+						try {
+							self.clients.matchAll({
+								includeUncontrolled: true,
+								type: 'window',
 							})
-					} else if (response.status == 200) {
-
-						if(event.request.url.includes(USER)) {
-							// Get organisation ID
-							let responseData = response.clone().json();
-							organisationId = responseData.o_id;
+								.then((clients) => {
+									let msg = {
+										type: "401"
+									}
+									if (clients.length > 0) {
+										clients[0].postMessage(msg);
+									}
+								});
+						} catch {
+							return caches.match(getCacheUrl(event.request))
+								.then(cached => cached || response) // Return whatever is in cache
 						}
+					} else if (response.status == 200) {
 
 						return caches
 							.open(CACHE_NAME)
@@ -193,7 +133,55 @@ self.addEventListener('fetch', function(event) {
 							.then(cached => cached || response) // Return whatever is in cache
 					}
 				}).catch(() => {
-				return caches.match(getCacheUrl(event.request));
+				return caches.match(getCacheUrl(event.request))
+					.then(cached => cached || response) // Return whatever is in cache
+			})
+		);
+	} else if (event.request.url.includes(USER)
+		|| event.request.url.includes(PROJECT_LIST)) {
+
+		// response to a XHR request.  Network then cache strategy
+		event.respondWith(
+			fetch(event.request)
+				.then(response => {
+					let recordId = getRecordId(event.request.url);
+					if(response.status == 401) {  // force re-logon
+						try {
+							self.clients.matchAll({
+								includeUncontrolled: true,
+								type: 'window',
+							})
+								.then((clients) => {
+									let msg = {
+										type: "401"
+									}
+									if (clients.length > 0) {
+										clients[0].postMessage(msg);
+									}
+								});
+						} catch {
+							return getRecord(latestRequestStore, recordId).then(storedResponse => {
+								return storedResponse;
+							});
+						}
+					} else if (response.status == 200) {
+
+						let responseData = response.clone().json().then(data => {
+							setRecord(latestRequestStore, data, recordId);
+							if(recordId === "user") {
+								organisationId = data.o_id;
+							}
+						});
+						return response;
+
+					} else {
+						return getRecord(latestRequestStore, recordId).then(storedResponse => {
+							return storedResponse;
+						});
+
+					}
+				}).catch(() => {
+					//return new Response().error();
 			})
 		);
 
@@ -319,4 +307,122 @@ function getCacheUrl(request) {
 		url = parts[0];
 	}
 	return url;
+}
+
+
+/*
+ * indexdb ----------------------------------------------------
+ */
+/**
+ * Initialize indexdDb
+ * @return {[type]} promise boolean or rejection with Error
+ */
+function open() {
+	return new Promise((resolve, reject) => {
+
+		if(typeof self.indexedDB !== 'undefined') {
+			var request = self.indexedDB.open(databaseName, databaseVersion);
+
+			request.onerror = function (e) {
+				console.log('Error', e.target.error.message);
+				reject(e);
+			};
+
+			request.onblocked = function (e) {
+				console.log('Error', e.target.error.message);
+				reject(e);
+			};
+
+			request.onsuccess = function (e) {
+				let openDb = e.target.result;
+
+				openDb.onerror = function (e) {
+					// Generic error handler for all errors targeted at this database's
+					// requests!
+					console.error("Database error: " + e.target.errorCode);
+				};
+
+				resolve(openDb);
+			};
+
+			request.onupgradeneeded = function(e) {
+				let upgradeDb = e.target.result;
+				let oldVersion = upgradeDb.oldVersion || 0;
+
+				switch (oldVersion) {
+					case 0:
+					case 1:
+						if (!upgradeDb.objectStoreNames.contains(latestRequestStore)) {
+							upgradeDb.createObjectStore(latestRequestStore);
+						}
+				}
+			};
+
+		} else {
+			reject("indexeddb not supported");
+		}
+
+	});
+};
+
+/*
+ * Set a record
+ */
+function setRecord(store, record, id) {
+	return new Promise((resolve, reject) => {
+		if(typeof self.indexedDB !== 'undefined') {
+			open().then((db) => {
+				let transaction = db.transaction([store], "readwrite");
+				transaction.onerror = function (event) {
+					console.log("Error: failed to add record ");
+				};
+
+				let objectStore = transaction.objectStore(store);
+				let request = objectStore.put(record, id);
+				request.onsuccess = function (e) {
+					resolve();
+				};
+				request.onerror = function (e) {
+					console.log('Error', e.target.error.name);
+					reject();
+				};
+				db.close()
+			});
+		} else {
+			reject("indexeddb not supported");
+		}
+	});
+};
+
+/*
+ * Get a record
+ */
+function getRecord(store, id) {
+	return new Promise((resolve, reject) => {
+		if(typeof self.indexedDB !== 'undefined') {
+			open().then((db) => {
+				let transaction = db.transaction([store], "readonly");
+				let objectStore = transaction.objectStore(store);
+				let request = objectStore.get(id);
+
+				request.onerror = function (e) {
+					reject(new Response().error());
+				};
+
+				request.onsuccess = function (e) {
+					resolve(new Response(request.result));
+				};
+			});
+		} else {
+			reject(new Response().error());
+		}
+	});
+};
+
+function getRecordId(url) {
+	if(url.includes(USER)) {
+		return "user";
+	} else if(url.includes(PROJECT_LIST)) {
+		return "project_list";
+	}
 }
