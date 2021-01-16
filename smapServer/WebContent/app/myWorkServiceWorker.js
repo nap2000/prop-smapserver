@@ -1,8 +1,12 @@
 
 let CACHE_NAME = 'v24';
+
+// Web service requests
 let ASSIGNMENTS = '/surveyKPI/myassignments';
 let WEBFORM = "/app/myWork/webForm";
 let USER = "/surveyKPI/user?";
+let SURVEYS = "/surveyKPI/surveys?";
+
 let ORG_CSS = "/custom/css/org/custom.css";
 let PROJECT_LIST = "/myProjectList";
 let TIMEZONES = "/timezones";
@@ -138,7 +142,8 @@ self.addEventListener('fetch', function(event) {
 			})
 		);
 	} else if (event.request.url.includes(USER)
-		|| event.request.url.includes(PROJECT_LIST)) {
+		|| event.request.url.includes(PROJECT_LIST)
+		|| event.request.url.includes(SURVEYS)) {
 
 		// response to a XHR request.  Network then cache strategy
 		event.respondWith(
@@ -158,6 +163,7 @@ self.addEventListener('fetch', function(event) {
 									if (clients.length > 0) {
 										clients[0].postMessage(msg);
 									}
+									return response;
 								});
 						} catch {
 							return getRecord(latestRequestStore, recordId).then(storedResponse => {
@@ -180,9 +186,7 @@ self.addEventListener('fetch', function(event) {
 						});
 
 					}
-				}).catch(() => {
-					//return new Response().error();
-			})
+				})
 		);
 
 	} else {
@@ -410,7 +414,13 @@ function getRecord(store, id) {
 				};
 
 				request.onsuccess = function (e) {
-					resolve(new Response(request.result));
+					try {
+						resolve(new Response(JSON.stringify(request.result), {
+							headers: {"Content-Type": "application/json"}
+						}));
+					} catch (err) {
+						log.console(err);
+					}
 				};
 			});
 		} else {
@@ -424,5 +434,7 @@ function getRecordId(url) {
 		return "user";
 	} else if(url.includes(PROJECT_LIST)) {
 		return "project_list";
+	} else if(url.includes(SURVEYS)) {
+		return "surveys";
 	}
 }
