@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v24';
+let CACHE_NAME = 'v27';
 
 // Web service requests
 let ASSIGNMENTS = '/surveyKPI/myassignments';
@@ -254,10 +254,10 @@ function refresh(response) {
 					clients.forEach(client => {
 						// report and send new data to client
 						client.postMessage(
-							JSON.stringify({
+							{
 								type: response.url,
 								data: jsonResponse
-							})
+							}
 						);
 					});
 				});
