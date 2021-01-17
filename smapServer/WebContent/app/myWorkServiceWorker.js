@@ -1,8 +1,8 @@
 
-let CACHE_NAME = 'v27';
+let CACHE_NAME = 'v30';
 
 // Web service requests
-let ASSIGNMENTS = '/surveyKPI/myassignments';
+let ASSIGNMENTS = '/surveyKPI/myassignments?';
 let WEBFORM = "/app/myWork/webForm";
 let USER = "/surveyKPI/user?";
 let SURVEYS = "/surveyKPI/surveys?";
