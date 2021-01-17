@@ -17,15 +17,17 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /*
-* Rgister for messages from the service worker
+* Register for messages from the service worker
 */
-function registerForServiceWorkerMessages() {
+function registerForServiceWorkerMessages(callback) {
 
 	navigator.serviceWorker.addEventListener('message', event => {
 		// event is a MessageEvent object
 		console.log("Service worker message: " + JSON.stringify((event.data)));
 		if(event.data.type === "401") {
 			window.open("/login.html");
+		} else if (callback) {
+			callback(event.data);
 		}
 	});
 }
