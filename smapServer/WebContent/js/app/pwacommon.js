@@ -21,12 +21,14 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 */
 function registerForServiceWorkerMessages(callback) {
 
-	navigator.serviceWorker.addEventListener('message', function(event) {
-		// event is a MessageEvent object
-		if(event.data.type === "401") {
-			window.open("/login.html");
-		} else if (callback) {
-			callback(event.data);
-		}
-	});
+	if ('serviceWorker' in navigator) {
+		navigator.serviceWorker.addEventListener('message', function (event) {
+			// event is a MessageEvent object
+			if (event.data.type === "401") {
+				window.open("/login.html");
+			} else if (callback) {
+				callback(event.data);
+			}
+		});
+	}
 }
