@@ -33,7 +33,7 @@ try {
 		// #header legacy jquery UI banner
 		// Other elements are for current navbar
 		style.innerHTML = 'nav.navbar-smap, .bg-navbar-smap,  .navbar-smap .navbar-toggler, .navbar-smap .navbar-brand, .navbar-smap .navbar-nav .nav-link , .navbar-smap .nav > li > a:focus '
-			+ '{ background-color: ' + navbarColor + '; background: ' + navbarColor + ' !important; color: ' + navbarTextColor +'!important}'
+			+ '{ background-color: ' + navbarColor + '; background: ' + navbarColor + ' !important; color: ' + navbarTextColor +'!important }'
 			+ ' nav.navbar-smap .nav > li > a:hover,, .bg-navbar-smap .nav > li > a:hover, ul.nav-second-level, .canvas-menu.mini-navbar .nav-second-level '
 			+ '{ background-color: ' + navbarLight + '; background: ' + navbarLight + ' !important; color: ' + navbarTextColor +'!important}';
 

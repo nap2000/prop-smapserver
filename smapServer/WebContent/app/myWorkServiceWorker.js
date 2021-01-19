@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v30';
+let CACHE_NAME = 'v42';
 
 // Web service requests
 let ASSIGNMENTS = '/surveyKPI/myassignments?';
@@ -8,8 +8,11 @@ let USER = "/surveyKPI/user?";
 let SURVEYS = "/surveyKPI/surveys?";
 
 let ORG_CSS = "/custom/css/org/custom.css";
+let SERVER_CSS = "/custom/css/custom.css";
 let PROJECT_LIST = "/myProjectList";
 let TIMEZONES = "/timezones";
+let BANNER = " settings/bannerLogo";
+let TRANSLATION = "translation-combined.json"
 let organisationId = 0;
 
 let databaseName = "smap_pwa";
@@ -23,11 +26,15 @@ self.addEventListener('install', function(e) {
 		caches.open(CACHE_NAME).then(function(cache) {
 			return cache.addAll([
 				'/app/myWork/index.html',
+				'/app/myWork/js/my_work.js',
+				'/app/myWork/js/libs/jquery.js',
+				'/manifest.json',
 				'/css/bootstrap.v4.5.min.css',
 				'/css/fa.v5.15.1.all.min.css',
 				'/build/css/theme-smap.css',
 				'/build/css/theme-smap.print.css',
 				'/build/css/webform.print.css',
+				'/build/css/grid-print.css',
 				'/build/css/webform.css',
 				'/fonts/OpenSans-Regular-webfont.woff',
 				'/fonts/OpenSans-Bold-webfont.woff',
@@ -38,12 +45,14 @@ self.addEventListener('install', function(e) {
 				'/build/js/webform-bundle.min.js',
 				'/js/libs/modernizr.js',
 				'/js/libs/require.js',
-				'/js/libs/jquery-2.1.1.js',
+				'/js/libs/jquery-3.5.1.min.js',
 				'/js/libs/bootstrap.bundle.v4.5.min.js',
+				'/js/libs/bootbox.5.1.1.min.js',
+				'/js/libs/bootbox.5.1.1.locales.min.js',
 				'/js/app/custom.js',
 				'/js/app/idbconfig.js',
 				'/js/app/pwacommon.js',
-				'/app/myWork/js/my_work.js',
+				'/js/app/theme2.js',
 				'/images/enketo_bare_150x56.png',
 				'/images/smap_logo.png',
 				'/images/ajax-loader.gif',
@@ -89,7 +98,10 @@ self.addEventListener('fetch', function(event) {
 		);
 
 	} else if (event.request.url.includes(WEBFORM)
-			|| event.request.url.includes(ORG_CSS)) {       // Files Network then cache strategy
+			|| event.request.url.includes(ORG_CSS)
+			|| event.request.url.includes(SERVER_CSS)
+			|| event.request.url.includes(BANNER)
+			|| event.request.url.includes(TRANSLATION)) {       // Files Network then cache strategy
 
 		let recordId = getRecordId(event.request.url);
 		if(recordId === "org_css") {
@@ -98,26 +110,28 @@ self.addEventListener('fetch', function(event) {
 				getOrganisationId().then(
 					() => {
 						url = url.replace("org", organisationId);
-						filesThenNetworkThenCache(event, new Request(url));
+						filesNetworkThenCache(event, new Request(url));
 					}
 				)
 			}
 
 			url = url.replace("org", organisationId);
-			filesThenNetworkThenCache(event, new Request(url));
+			filesNetworkThenCache(event, new Request(url));
 
 		} else {
-			filesThenNetworkThenCache(event, event.request);
+			filesNetworkThenCache(event, event.request);
 		}
 
 	} else if (event.request.url.includes(USER)         // Web services network then cache strategy
 		|| event.request.url.includes(PROJECT_LIST)
 		|| event.request.url.includes(SURVEYS)) {
 
+		let recordId = getRecordId(event.request.url);
+
 		event.respondWith(
 			fetch(event.request)
 				.then(response => {
-					let recordId = getRecordId(event.request.url);
+
 					if(response.status == 401) {  // force re-logon
 						try {
 							self.clients.matchAll({
@@ -154,7 +168,11 @@ self.addEventListener('fetch', function(event) {
 						});
 
 					}
-				})
+				}).catch(function(err){
+					return getRecord(latestRequestStore, recordId).then(storedResponse => {
+						return storedResponse;
+					});
+			})
 		);
 
 	} else {
@@ -187,7 +205,7 @@ self.addEventListener('fetch', function(event) {
 
 }, {passive: true});
 
-function filesThenNetworkThenCache(event, request) {
+function filesNetworkThenCache(event, request) {
 	event.respondWith(
 		fetch(request)
 			.then(response => {
@@ -223,8 +241,8 @@ function filesThenNetworkThenCache(event, request) {
 						.then(cached => cached || response) // Return whatever is in cache
 				}
 			}).catch(() => {
-			return caches.match(getCacheUrl(request))
-				.then(cached => cached || response) // Return whatever is in cache
+				return caches.match(getCacheUrl(request))
+					.then(cached => cached || response) // Return whatever is in cache
 		})
 	);
 }
@@ -479,5 +497,9 @@ function getRecordId(url) {
 		return "webform";
 	} else if(url.includes(ORG_CSS)) {
 		return "org_css";
+	} else if(url.includes(SERVER_CSS)) {
+		return "server_css";
+	} else {
+		return "unknown";
 	}
 }
