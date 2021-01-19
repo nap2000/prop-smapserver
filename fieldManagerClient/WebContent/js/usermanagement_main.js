@@ -2135,10 +2135,19 @@ require([
 			h[++idx] = '</td>';
 
 			h[++idx] = '<td>';
+
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
 			h[++idx] = '" class="btn btn-sm rm_role btn-danger">';
 			h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
+
+			h[++idx] = '<button type="button" data-idx="';
+			h[++idx] = i;
+			h[++idx] = '" class="ml-4 btn-sm role_edit btn-info" value="';
+			h[++idx] = i;
+			h[++idx] = '">';
+			h[++idx] = '<i class="far fa-edit"></i></button>';
+
 			h[++idx] = '</td>';
 
 			h[++idx] = '</tr>';

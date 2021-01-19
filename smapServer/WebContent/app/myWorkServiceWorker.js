@@ -12,7 +12,7 @@ let SERVER_CSS = "/custom/css/custom.css";
 let PROJECT_LIST = "/myProjectList";
 let TIMEZONES = "/timezones";
 let BANNER = " settings/bannerLogo";
-let TRANSLATION = "translation-combined.json"
+let TRANSLATION = "translation-combined.json";
 let organisationId = 0;
 
 let databaseName = "smap_pwa";
