@@ -48,7 +48,6 @@ requirejs.config({
     	metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu',
     	pace: '../../../../js/libs/wb/pace/pace.min',
     	peity: '../../../../js/libs/wb/peity/jquery.peity.min',
-    	icheck: '../../../../js/libs/wb/plugins/iCheck/icheck.min',
     	calendar: '../../../../js/libs/wb/plugins/fullcalendar/fullcalendar.min',
         es: '../../../../js/libs/wb/plugins/fullcalendar/es',
         multiselect: '../../../../js/libs/bootstrap-multiselect',
@@ -67,7 +66,6 @@ requirejs.config({
         },
     	'metismenu': ['jquery'],
     	'peity': ['jquery'],
-    	'icheck': ['jquery'],
         'multiselect': ['jquery', 'knockout'],
         'es': ['calendar']
 	
@@ -91,7 +89,6 @@ require([
          'metismenu',
          'pace',
          'peity',
-         'icheck',
          'calendar',
 	     'multiselect'
          
