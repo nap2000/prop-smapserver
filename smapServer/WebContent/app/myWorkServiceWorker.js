@@ -18,6 +18,7 @@ let organisationId = 0;
 let databaseName = "smap_pwa";
 let databaseVersion = 2;
 let latestRequestStore = "requests";
+let logon = false;      // Flag to prevent attempt to relogon multiple times
 
 // During the installation phase, you'll usually want to cache static assets.
 self.addEventListener('install', function(e) {
@@ -133,27 +134,30 @@ self.addEventListener('fetch', function(event) {
 				.then(response => {
 
 					if(response.status == 401) {  // force re-logon
-						try {
-							self.clients.matchAll({
-								includeUncontrolled: true,
-								type: 'window',
-							})
-								.then((clients) => {
-									let msg = {
-										type: "401"
-									}
-									if (clients.length > 0) {
-										clients[0].postMessage(msg);
-									}
-									return response;
+						if(!logon) {
+							logon = true;
+							try {
+								self.clients.matchAll({
+									includeUncontrolled: true,
+									type: 'window',
+								})
+									.then((clients) => {
+										let msg = {
+											type: "401"
+										}
+										if (clients.length > 0) {
+											clients[0].postMessage(msg);
+										}
+										return response;
+									});
+							} catch {
+								return getRecord(latestRequestStore, recordId).then(storedResponse => {
+									return storedResponse;
 								});
-						} catch {
-							return getRecord(latestRequestStore, recordId).then(storedResponse => {
-								return storedResponse;
-							});
+							}
 						}
 					} else if (response.status == 200) {
-
+						logon = false;
 						let responseData = response.clone().json().then(data => {
 							setRecord(latestRequestStore, data, recordId);
 							if(recordId === "user") {
@@ -163,6 +167,7 @@ self.addEventListener('fetch', function(event) {
 						return response;
 
 					} else {
+						logon = false;
 						return getRecord(latestRequestStore, recordId).then(storedResponse => {
 							return storedResponse;
 						});
@@ -182,19 +187,23 @@ self.addEventListener('fetch', function(event) {
 				.match(getCacheUrl(event.request)) // check if the request has already been cached
 				.then(cached => cached || fetch(event.request).then(response => {
 						if (response.status === 401) {
-							self.clients.matchAll({
-								includeUncontrolled: false,
-								type: 'window',
-							})
-								.then((clients) => {
-									let msg = {
-										type: "401"
-									}
-									if(clients.length > 0) {
-										clients[0].postMessage(msg);
-									}
+							if(!logon) {
+								logon = true;
+								self.clients.matchAll({
+									includeUncontrolled: false,
+									type: 'window',
 								})
+									.then((clients) => {
+										let msg = {
+											type: "401"
+										}
+										if (clients.length > 0) {
+											clients[0].postMessage(msg);
+										}
+									})
+							}
 						} else {
+							logon = false;
 							return response;
 						}
 					}
@@ -211,25 +220,28 @@ function filesNetworkThenCache(event, request) {
 			.then(response => {
 
 				if (response.status == 401) {  // force re-logon
-					try {
-						self.clients.matchAll({
-							includeUncontrolled: true,
-							type: 'window',
-						})
-							.then((clients) => {
-								let msg = {
-									type: "401"
-								}
-								if (clients.length > 0) {
-									clients[0].postMessage(msg);
-								}
-							});
-					} catch {
-						return caches.match(getCacheUrl(request))
-							.then(cached => cached || response) // Return whatever is in cache
+					if(!logon) {
+						logon = true;
+						try {
+							self.clients.matchAll({
+								includeUncontrolled: true,
+								type: 'window',
+							})
+								.then((clients) => {
+									let msg = {
+										type: "401"
+									}
+									if (clients.length > 0) {
+										clients[0].postMessage(msg);
+									}
+								});
+						} catch {
+							return caches.match(getCacheUrl(request))
+								.then(cached => cached || response) // Return whatever is in cache
+						}
 					}
 				} else if (response.status == 200) {
-
+					logon = false;
 					return caches
 						.open(CACHE_NAME)
 						.then(cache => {
@@ -237,10 +249,12 @@ function filesNetworkThenCache(event, request) {
 							return response;
 						})
 				} else {
+					logon = false;
 					return caches.match(getCacheUrl(request))
 						.then(cached => cached || response) // Return whatever is in cache
 				}
 			}).catch(() => {
+				logon = false;
 				return caches.match(getCacheUrl(request))
 					.then(cached => cached || response) // Return whatever is in cache
 		})
