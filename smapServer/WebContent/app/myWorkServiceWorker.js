@@ -134,30 +134,7 @@ self.addEventListener('fetch', function(event) {
 				.then(response => {
 
 					if(response.status == 401) {  // force re-logon
-						if(!logon) {
-							logon = true;
-							try {
-								self.clients.matchAll({
-									includeUncontrolled: true,
-									type: 'window',
-								})
-									.then((clients) => {
-										let msg = {
-											type: "401"
-										}
-										if (clients.length > 0) {
-											clients[0].postMessage(msg);
-										}
-										return response;
-									});
-							} catch {
-								return getRecord(latestRequestStore, recordId).then(storedResponse => {
-									return storedResponse;
-								});
-							}
-						} else {
-							return response;
-						}
+						return authResponse();
 					} else if (response.status == 200) {
 						logon = false;
 						let responseData = response.clone().json().then(data => {
@@ -189,23 +166,7 @@ self.addEventListener('fetch', function(event) {
 				.match(getCacheUrl(event.request)) // check if the request has already been cached
 				.then(cached => cached || fetch(event.request).then(response => {
 						if (response.status === 401) {
-							if(!logon) {
-								logon = true;
-								self.clients.matchAll({
-									includeUncontrolled: false,
-									type: 'window',
-								})
-									.then((clients) => {
-										let msg = {
-											type: "401"
-										}
-										if (clients.length > 0) {
-											clients[0].postMessage(msg);
-										}
-									})
-							} else {
-								return response;
-							}
+							return authResponse();
 						} else {
 							logon = false;
 							return response;
@@ -224,28 +185,7 @@ function filesNetworkThenCache(event, request) {
 			.then(response => {
 
 				if (response.status == 401) {  // force re-logon
-					if(!logon) {
-						logon = true;
-						try {
-							self.clients.matchAll({
-								includeUncontrolled: true,
-								type: 'window',
-							})
-								.then((clients) => {
-									let msg = {
-										type: "401"
-									}
-									if (clients.length > 0) {
-										clients[0].postMessage(msg);
-									}
-								});
-						} catch {
-							return caches.match(getCacheUrl(request))
-								.then(cached => cached || response) // Return whatever is in cache
-						}
-					} else {
-						return response;
-					}
+					return authResponse();
 				} else if (response.status == 200) {
 					logon = false;
 					return caches
@@ -281,6 +221,38 @@ function update(request) {
 			return response;
 		}
 	);
+}
+
+function authResponse() {
+	if(!logon) {
+		logon = true;
+		try {
+			self.clients.matchAll({
+				includeUncontrolled: true,
+				type: 'window',
+			})
+				.then((clients) => {
+					let msg = {
+						type: "401"
+					};
+					if (clients.length > 0) {
+						let idx = 0;
+						for(let i = 0; i < clients.length; i++) {
+							if(clients[i].visibilityState === "visible") {
+								idx = i;
+								break;
+							}
+						}
+						clients[i].postMessage(msg);
+					}
+				});
+			return response;
+		} catch {
+			return response;
+		}
+	} else {
+		return response;
+	}
 }
 
 function refresh(response) {
