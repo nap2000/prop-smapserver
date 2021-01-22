@@ -155,6 +155,8 @@ self.addEventListener('fetch', function(event) {
 									return storedResponse;
 								});
 							}
+						} else {
+							return response;
 						}
 					} else if (response.status == 200) {
 						logon = false;
@@ -201,6 +203,8 @@ self.addEventListener('fetch', function(event) {
 											clients[0].postMessage(msg);
 										}
 									})
+							} else {
+								return response;
 							}
 						} else {
 							logon = false;
@@ -239,6 +243,8 @@ function filesNetworkThenCache(event, request) {
 							return caches.match(getCacheUrl(request))
 								.then(cached => cached || response) // Return whatever is in cache
 						}
+					} else {
+						return response;
 					}
 				} else if (response.status == 200) {
 					logon = false;
