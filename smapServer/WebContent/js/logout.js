@@ -28,22 +28,18 @@ requirejs.config({
     locale: gUserLocale,
     paths: {
     	app: '../app',
-    	jquery: 'jquery-2.1.1',
-       	lang_location: '../'
+       	lang_location: '..'
     },
     shim: {
-    	'bootstrap.min': ['jquery']
     }
 });
 
 require([
-         'jquery', 
-         'bootstrap.min',
+         'jquery',
          'app/localise'
-         ], function($, bootstrap, localise) {
+         ], function($, localise) {
 	
 	$(document).ready(function() {
-	
 		localise.setlang();
 	});
 
