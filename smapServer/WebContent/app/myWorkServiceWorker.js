@@ -134,7 +134,8 @@ self.addEventListener('fetch', function(event) {
 				.then(response => {
 
 					if(response.status == 401) {  // force re-logon
-						return authResponse();
+						authResponse();
+						return response;
 					} else if (response.status == 200) {
 						logon = false;
 						let responseData = response.clone().json().then(data => {
@@ -166,7 +167,8 @@ self.addEventListener('fetch', function(event) {
 				.match(getCacheUrl(event.request)) // check if the request has already been cached
 				.then(cached => cached || fetch(event.request).then(response => {
 						if (response.status === 401) {
-							return authResponse();
+							authResponse();
+							return response;
 						} else {
 							logon = false;
 							return response;
@@ -185,7 +187,8 @@ function filesNetworkThenCache(event, request) {
 			.then(response => {
 
 				if (response.status == 401) {  // force re-logon
-					return authResponse();
+					authResponse();
+					return response;
 				} else if (response.status == 200) {
 					logon = false;
 					return caches
@@ -226,33 +229,27 @@ function update(request) {
 function authResponse() {
 	if(!logon) {
 		logon = true;
-		try {
-			self.clients.matchAll({
-				includeUncontrolled: true,
-				type: 'window',
-			})
-				.then((clients) => {
-					let msg = {
-						type: "401"
-					};
-					if (clients.length > 0) {
-						let idx = 0;
-						for(let i = 0; i < clients.length; i++) {
-							if(clients[i].visibilityState === "visible") {
-								idx = i;
-								break;
-							}
+		self.clients.matchAll({
+			includeUncontrolled: true,
+			type: 'window',
+		})
+			.then((clients) => {
+				let msg = {
+					type: "401"
+				};
+				if (clients.length > 0) {
+					let idx = 0;
+					for(let i = 0; i < clients.length; i++) {
+						if(clients[i].visibilityState === "visible") {
+							idx = i;
+							break;
 						}
-						clients[i].postMessage(msg);
 					}
-				});
-			return response;
-		} catch {
-			return response;
-		}
-	} else {
-		return response;
+					clients[idx].postMessage(msg);
+				}
+			});
 	}
+
 }
 
 function refresh(response) {
