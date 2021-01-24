@@ -436,7 +436,7 @@ function getRecord(store, id) {
 							headers: {"Content-Type": "application/json"}
 						}));
 					} catch (err) {
-						log.console(err);
+						console.log(err);
 					}
 				};
 			});
@@ -465,7 +465,7 @@ function getOrganisationId() {
 					try {
 						organisationId = request.result.o_id;
 					} catch (err) {
-						log.console(err);
+						console.log(err);
 					}
 				};
 			});
