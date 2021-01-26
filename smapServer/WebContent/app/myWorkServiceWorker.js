@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v47';
+let CACHE_NAME = 'v52';
 
 // Web service requests
 let ASSIGNMENTS = '/surveyKPI/myassignments?';
@@ -87,7 +87,7 @@ self.addEventListener('fetch', function(event) {
 
 	} else if (event.request.url.includes(ASSIGNMENTS)) {   // response to request for forms and tasks. Cache Update Refresh strategy
 
-		event.respondWith(caches.match(ASSIGNMENTS));
+		event.respondWith(caches.match(ASSIGNMENTS).then(cached => cached || new Response()));
 		event.waitUntil(update_assignments(event.request).then(refresh).then(precacheforms));
 
 	} else if (event.request.url.includes(TIMEZONES)) {     // Cache first strategy
@@ -200,7 +200,7 @@ function filesNetworkThenCache(event, request) {
 				} else {
 					logon = false;
 					return caches.match(getCacheUrl(request))
-						.then(cached => cached || response) // Return whatever is in cache
+						.then(cached => cached || response); // Return whatever is in cache
 				}
 			}).catch(() => {
 				logon = false;
@@ -427,7 +427,7 @@ function getRecord(store, id) {
 				let request = objectStore.get(id);
 
 				request.onerror = function (e) {
-					reject(new Response().error());
+					reject(new Response());
 				};
 
 				request.onsuccess = function (e) {
@@ -441,7 +441,7 @@ function getRecord(store, id) {
 				};
 			});
 		} else {
-			reject(new Response().error());
+			reject(new Response());
 		}
 	});
 };
@@ -458,19 +458,20 @@ function getOrganisationId() {
 				let request = objectStore.get("user");
 
 				request.onerror = function (e) {
-					reject(new Response().error());
+					reject();
 				};
 
 				request.onsuccess = function (e) {
 					try {
 						organisationId = request.result.o_id;
+						resolve();
 					} catch (err) {
 						console.log(err);
 					}
 				};
 			});
 		} else {
-			reject(new Response().error());
+			reject();
 		}
 	});
 };
