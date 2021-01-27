@@ -445,31 +445,10 @@ require([
          * Support deletion of a css file
          */
 		$('#deleteCss').click(function() {
-			var url = "/surveyKPI/css/" + encodeURIComponent($('#cssSelect').val());
-
-			addHourglass();
-			$.ajax({
-				type: "DELETE",
-				cache: false,
-				url: url,
-				success: function(data, status) {
-					removeHourglass();
-					getCustomCss();
-					$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["c_success"]);
-				},
-				error: function(xhr, textStatus, err) {
-					removeHourglass();
-					var msg = xhr.responseText;
-					if(msg && msg === "only csv") {
-						msg = localise.set["t_efnl"] + " " + localise.set["msg_csv"];
-					} else {
-						msg = localise.set["t_efnl"] + " " + xhr.responseText;
-					}
-
-					$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
-
-				}
-			});
+			deleteCss();
+		});
+		$('#deleteCssOrg').click(function() {
+			deleteCss(globals.gOrgId);
 		});
 
 		/*
@@ -538,6 +517,43 @@ require([
 
 	});
 
+	function deleteCss(org) {
+		var url = "/surveyKPI/css/";
+		if(org) {
+			url += encodeURIComponent($('#cssSelectOrg').val());
+			url += "?org=true";
+		} else {
+			url += encodeURIComponent($('#cssSelect').val());
+		}
+
+		addHourglass();
+		$.ajax({
+			type: "DELETE",
+			cache: false,
+			url: url,
+			success: function(data, status) {
+				removeHourglass();
+				if(org) {
+					getCustomCssOrg();
+				} else {
+					getCustomCss();
+				}
+				$('.org_alert, .my_org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["c_success"]);
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				var msg = xhr.responseText;
+				if(msg && msg === "only csv") {
+					msg = localise.set["t_efnl"] + " " + localise.set["msg_csv"];
+				} else {
+					msg = localise.set["t_efnl"] + " " + xhr.responseText;
+				}
+
+				$('.org_alert,.my_org_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
+
+			}
+		});
+	}
 	/*
 	 * Respond to change of cssSelect
 	 */

@@ -16,35 +16,18 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
+/*
+ * Register service worker
+ */
+window.addEventListener('load', function() {
+	if ('serviceWorker' in navigator) {
+		navigator.serviceWorker.register('/app/myWorkServiceWorker.js').then(function (registration) {
+			// Registration was successful
+			console.log('ServiceWorker registration successful with scope: ', registration.scope);
+		}, function (err) {
+			// registration failed :(
+			console.log('ServiceWorker registration failed: ', err);
+		});
 
-"use strict";
-requirejs.config({
-    baseUrl: 'js/libs',
-    waitSeconds: 0,
-    locale: gUserLocale,
-    paths: {
-    	app: '../app',
-       	lang_location: '..'
-    },
-    shim: {
-    }
+	}
 });
-
-require([
-         'jquery',
-         'app/localise'
-         ], function($, localise) {
-	
-	$(document).ready(function() {
-		localise.setlang();
-	});
-
-
-});
-
-
-
