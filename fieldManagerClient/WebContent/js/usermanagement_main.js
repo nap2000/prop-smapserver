@@ -996,6 +996,8 @@ require([
 		var currentTab = getFromLocalStorage("currentTab" + page);
 		if(currentTab) {
 			$(currentTab).trigger('click');
+		} else {
+			$('#usersTab a').trigger('click');
 		}
 
 		/*
@@ -1029,6 +1031,8 @@ require([
 			}
 
 			$('#load_file_alert').hide();
+			document.forms.namedItem("importFile").reset();
+			$('#importFileLabel').text("");
 			$('#import_file').modal("show");
 		});
 
