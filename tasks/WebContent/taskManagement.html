@@ -49,7 +49,7 @@
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
-    <a class="navbar-brand lang" data-lang="t_tasks" href="#">tasks</a>
+    <a class="navbar-brand lang" data-lang="m_task_m" href="#">tasks</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -92,10 +92,20 @@
                     <a id="assignUser" class="dropdown-item" href="#"><span class="lang" data-lang="t_assign"></span></a>
                     <a id="deleteTasks" class="dropdown-item" href="#"><span class="lang" data-lang="c_del_sel"></span></a>
                     <a id="setStatus" class="dropdown-item" href="#"><span class="lang" data-lang="c_assign_sel"></span></a>
-
-
                 </div>
             </li>
+
+            <li class="nav-item dropdown active">
+                <a class="nav-link dropdown-toggle lang" data-lang="t_tg" href="#" id="m_task_groups" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+                <div class="dropdown-menu" aria-labelledby="m_task_groups">
+                    <a id="addTaskGroup" class="dropdown-item" href="#"><span class="lang" data-lang="t_add_group">add group</span></a>
+                    <a id="editTaskGroup" class="dropdown-item" href="#"><span class="lang" data-lang="t_edit_group"></span></a>
+                    <a id="deleteTaskGroup" class="dropdown-item" href="#"><span class="lang" data-lang="t_del_group"></span></a>
+                </div>
+            </li>
+            <li class="nav-item"><a href="#" id="zoomData" class="nav-link"><span class="lang" data-lang="c_zoom_data">zoom to data</span></a></li>
+            <li class="nav-item"><a class="for_unsent_email nav-link" href="#" id="m_email_unsent"><span class="lang" data-lang="m_email_unsent">email unsent</span></a></li>
+
 
             <li id="m_notify" class="nav-item restrict_role admin_role analyst_role"><a
                     class="nav-link" href="/app/fieldManager/notifications.html"><span
@@ -112,7 +122,7 @@
             </li>
 
 
-            <li><a href="#" id="m_refresh"><span class="nav-link lang" data-lang="m_refresh">r</span></a></li>
+            <li class="nav-item"><a href="#" id="m_refresh" class="nav-link"><span class="lang" data-lang="m_refresh">r</span></a></li>
             <li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
             <li class="nav-item"><a class="nav-link"  id="username" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"><i class="fa fa-user"></i> </a></li>
         </ul>
@@ -129,13 +139,11 @@
 
     <div id="page-wrapper" class="gray-bg">
 
-        <!-- Navbar Row -->
+        <!-- Navbar Row
         <div class="row border-bottom">
             <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 
                 <ul class="nav navbar-top-links navbar-right">
-
-                    <!--
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <span class="lang" data-lang="t_tasks">Tasks</span>
@@ -164,7 +172,7 @@
 
                         </ul>
                     </li>
-                    -->
+
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <span class="lang" data-lang="t_tg">Task Group</span>
@@ -197,15 +205,12 @@
                     <li><a href="#" id="zoomData"><span class="lang" data-lang="c_zoom_data">zoom to data</span></a></li>
                     <li><a class="for_unsent_email" href="#" id="m_email_unsent"><span class="lang" data-lang="m_email_unsent">email unsent</span></a></li>
                 </ul>
-
             </nav>
         </div>
+        -->
 
         <!-- Header Row -->
         <div class="row wrapper border-bottom white-bg page-heading">
-            <div class="col-sm-2">
-                <h2 class="lang" data-lang="m_task_m"></h2>
-            </div>
             <div class="col-sm-10">
                 <form class="form-inline" role="form">
                     <div class="col-sm-6 pt-4">
