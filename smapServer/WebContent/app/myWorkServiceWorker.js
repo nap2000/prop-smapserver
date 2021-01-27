@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v42';
+let CACHE_NAME = 'v52';
 
 // Web service requests
 let ASSIGNMENTS = '/surveyKPI/myassignments?';
@@ -18,6 +18,7 @@ let organisationId = 0;
 let databaseName = "smap_pwa";
 let databaseVersion = 2;
 let latestRequestStore = "requests";
+let logon = false;      // Flag to prevent attempt to relogon multiple times
 
 // During the installation phase, you'll usually want to cache static assets.
 self.addEventListener('install', function(e) {
@@ -86,7 +87,7 @@ self.addEventListener('fetch', function(event) {
 
 	} else if (event.request.url.includes(ASSIGNMENTS)) {   // response to request for forms and tasks. Cache Update Refresh strategy
 
-		event.respondWith(caches.match(ASSIGNMENTS));
+		event.respondWith(caches.match(ASSIGNMENTS).then(cached => cached || new Response()));
 		event.waitUntil(update_assignments(event.request).then(refresh).then(precacheforms));
 
 	} else if (event.request.url.includes(TIMEZONES)) {     // Cache first strategy
@@ -133,27 +134,10 @@ self.addEventListener('fetch', function(event) {
 				.then(response => {
 
 					if(response.status == 401) {  // force re-logon
-						try {
-							self.clients.matchAll({
-								includeUncontrolled: true,
-								type: 'window',
-							})
-								.then((clients) => {
-									let msg = {
-										type: "401"
-									}
-									if (clients.length > 0) {
-										clients[0].postMessage(msg);
-									}
-									return response;
-								});
-						} catch {
-							return getRecord(latestRequestStore, recordId).then(storedResponse => {
-								return storedResponse;
-							});
-						}
+						authResponse();
+						return response;
 					} else if (response.status == 200) {
-
+						logon = false;
 						let responseData = response.clone().json().then(data => {
 							setRecord(latestRequestStore, data, recordId);
 							if(recordId === "user") {
@@ -163,6 +147,7 @@ self.addEventListener('fetch', function(event) {
 						return response;
 
 					} else {
+						logon = false;
 						return getRecord(latestRequestStore, recordId).then(storedResponse => {
 							return storedResponse;
 						});
@@ -182,19 +167,10 @@ self.addEventListener('fetch', function(event) {
 				.match(getCacheUrl(event.request)) // check if the request has already been cached
 				.then(cached => cached || fetch(event.request).then(response => {
 						if (response.status === 401) {
-							self.clients.matchAll({
-								includeUncontrolled: false,
-								type: 'window',
-							})
-								.then((clients) => {
-									let msg = {
-										type: "401"
-									}
-									if(clients.length > 0) {
-										clients[0].postMessage(msg);
-									}
-								})
+							authResponse();
+							return response;
 						} else {
+							logon = false;
 							return response;
 						}
 					}
@@ -211,25 +187,10 @@ function filesNetworkThenCache(event, request) {
 			.then(response => {
 
 				if (response.status == 401) {  // force re-logon
-					try {
-						self.clients.matchAll({
-							includeUncontrolled: true,
-							type: 'window',
-						})
-							.then((clients) => {
-								let msg = {
-									type: "401"
-								}
-								if (clients.length > 0) {
-									clients[0].postMessage(msg);
-								}
-							});
-					} catch {
-						return caches.match(getCacheUrl(request))
-							.then(cached => cached || response) // Return whatever is in cache
-					}
+					authResponse();
+					return response;
 				} else if (response.status == 200) {
-
+					logon = false;
 					return caches
 						.open(CACHE_NAME)
 						.then(cache => {
@@ -237,10 +198,12 @@ function filesNetworkThenCache(event, request) {
 							return response;
 						})
 				} else {
+					logon = false;
 					return caches.match(getCacheUrl(request))
-						.then(cached => cached || response) // Return whatever is in cache
+						.then(cached => cached || response); // Return whatever is in cache
 				}
 			}).catch(() => {
+				logon = false;
 				return caches.match(getCacheUrl(request))
 					.then(cached => cached || response) // Return whatever is in cache
 		})
@@ -261,6 +224,32 @@ function update(request) {
 			return response;
 		}
 	);
+}
+
+function authResponse() {
+	if(!logon) {
+		logon = true;
+		self.clients.matchAll({
+			includeUncontrolled: true,
+			type: 'window',
+		})
+			.then((clients) => {
+				let msg = {
+					type: "401"
+				};
+				if (clients.length > 0) {
+					let idx = 0;
+					for(let i = 0; i < clients.length; i++) {
+						if(clients[i].visibilityState === "visible") {
+							idx = i;
+							break;
+						}
+					}
+					clients[idx].postMessage(msg);
+				}
+			});
+	}
+
 }
 
 function refresh(response) {
@@ -438,7 +427,7 @@ function getRecord(store, id) {
 				let request = objectStore.get(id);
 
 				request.onerror = function (e) {
-					reject(new Response().error());
+					reject(new Response());
 				};
 
 				request.onsuccess = function (e) {
@@ -447,12 +436,12 @@ function getRecord(store, id) {
 							headers: {"Content-Type": "application/json"}
 						}));
 					} catch (err) {
-						log.console(err);
+						console.log(err);
 					}
 				};
 			});
 		} else {
-			reject(new Response().error());
+			reject(new Response());
 		}
 	});
 };
@@ -469,19 +458,20 @@ function getOrganisationId() {
 				let request = objectStore.get("user");
 
 				request.onerror = function (e) {
-					reject(new Response().error());
+					reject();
 				};
 
 				request.onsuccess = function (e) {
 					try {
 						organisationId = request.result.o_id;
+						resolve();
 					} catch (err) {
-						log.console(err);
+						console.log(err);
 					}
 				};
 			});
 		} else {
-			reject(new Response().error());
+			reject();
 		}
 	});
 };
