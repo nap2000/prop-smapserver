@@ -75,6 +75,28 @@
                 </div>
             </li>
 
+            <li class="nav-item dropdown active">
+                <a class="nav-link dropdown-toggle lang" data-lang="c_file" id="m_file" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+                <div class="dropdown-menu" aria-labelledby="m_file">
+                    <a id="m_export_xls" class="dropdown-item" href="#"> <span class="lang" data-lang="m_export">export</span> XLS<i class="fa fa-file-excel-o pull-right"></i></a>
+                    <a id="m_import_xls" class="dropdown-item" href="#"><span class="lang" data-lang="m_import">import</span> XLS<i class="fa fa-file-excel-o pull-right"></i></a>
+                    <a id="xls_download" class="dropdown-item" href="/tasks_template.xlsx">   <span class="lang" data-lang="tm_g_temp">download</span><i class="fa fa-file-excel-o pull-right"></i></a>
+
+                </div>
+            </li>
+
+            <li class="nav-item dropdown active">
+                <a class="nav-link dropdown-toggle lang" data-lang="t_tasks" href="#" id="m_tasks" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+                <div class="dropdown-menu" aria-labelledby="m_tasks">
+                    <a id="addSingleTask" class="dropdown-item" href="#"><span class="lang" data-lang="t_add_task">add task</span></a>
+                    <a id="assignUser" class="dropdown-item" href="#"><span class="lang" data-lang="t_assign"></span></a>
+                    <a id="deleteTasks" class="dropdown-item" href="#"><span class="lang" data-lang="c_del_sel"></span></a>
+                    <a id="setStatus" class="dropdown-item" href="#"><span class="lang" data-lang="c_assign_sel"></span></a>
+
+
+                </div>
+            </li>
+
             <li id="m_notify" class="nav-item restrict_role admin_role analyst_role"><a
                     class="nav-link" href="/app/fieldManager/notifications.html"><span
                     class="lang" data-lang="m_notify"></span></a></li>
@@ -101,6 +123,9 @@
 
 <div class="container-fluid">
 
+    <div class="card">
+
+    </div>
 
     <div id="page-wrapper" class="gray-bg">
 
@@ -110,6 +135,7 @@
 
                 <ul class="nav navbar-top-links navbar-right">
 
+                    <!--
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <span class="lang" data-lang="t_tasks">Tasks</span>
@@ -138,6 +164,7 @@
 
                         </ul>
                     </li>
+                    -->
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <span class="lang" data-lang="t_tg">Task Group</span>
@@ -168,49 +195,7 @@
                         </ul>
                     </li>
                     <li><a href="#" id="zoomData"><span class="lang" data-lang="c_zoom_data">zoom to data</span></a></li>
-                    <li><a href="#" id="m_refresh"><span class="lang" data-lang="m_refresh">refresh</span></a></li>
                     <li><a class="for_unsent_email" href="#" id="m_email_unsent"><span class="lang" data-lang="m_email_unsent">email unsent</span></a></li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-file"></i> <span class="lang" data-lang="c_file">file</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-alerts">
-                            <li>
-                                <a href="#" id="m_export_pdf">
-                                    <div>
-                                        <span class="lang" data-lang="m_export">export</span> PDF
-                                        <i class="fa fa-file-pdf-o pull-right"></i>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" id="m_export_xls">
-                                    <div>
-                                        <span class="lang" data-lang="m_export">export</span> XLS
-                                        <i class="fa fa-file-excel-o pull-right"></i>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#" class="for_is_tg" id="m_import_xls">
-                                    <div>
-                                        <span class="lang" data-lang="m_import">import</span> XLS
-                                        <i class="fa fa-file-excel-o pull-right"></i>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="/tasks_template.xlsx" id="xls_download">
-                                    <div>
-                                        <span class="lang" data-lang="tm_g_temp">download</span>
-                                        <i class="fa fa-file-excel-o pull-right"></i>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
                 </ul>
 
             </nav>
