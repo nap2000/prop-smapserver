@@ -1077,6 +1077,8 @@ require([
 			}
 
 			$('#load_file_alert').hide();
+			document.forms.namedItem("importFile").reset();
+			$('#importFileLabel').text("");
 			$('#import_file').modal("show");
 		});
 
