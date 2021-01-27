@@ -1042,6 +1042,8 @@ require([
 		var currentTab = getFromLocalStorage("currentTab");
 		if(currentTab) {
 			$(currentTab).trigger('click');
+		} else {
+			$('#usersTab a').trigger('click');
 		}
 
 		/*
