@@ -1014,6 +1014,7 @@ define({
     "lo_back": "Back",
     "lo_out": "You are logged out of ",
     "lo_lo": "Logged Out",
+    "lo_loa": "You should now close your browser in order to ensure cached log in details are removed",
 
     // Users
     "u_show_u": "Show users with security group",

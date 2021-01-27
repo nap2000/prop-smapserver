@@ -1163,8 +1163,8 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
+			if(xhr.readyState == 0 || xhr.status == 0 || xhr.status == 401) {
+				return;  // Not an error or an authorisation error which is handled by the service worker
 			} else {
 				console.log("Error: Failed to get user details: " + err);
 
