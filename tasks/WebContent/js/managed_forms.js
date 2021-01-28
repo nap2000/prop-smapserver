@@ -76,7 +76,6 @@ require([
     'app/mapOL3',
     'svgsave',
     'app/actioncommon',
-    'pace',
     'datetimepicker',
     'crf',
     'qrcode',
@@ -774,8 +773,8 @@ require([
     });         // End of document ready
 
     // Generate a file based on chart data
-    $('.genfile').click(function () {
-
+    $('.genfile').click(function (e) {
+        e.preventDefault();
         var format,
             $this = $(this);
 

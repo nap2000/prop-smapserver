@@ -2886,9 +2886,6 @@ function generateFile(url, filename, format, mime, data, sId, groupSurvey, title
 	xhr.onerror = function(e) {
 		alert("Error: Upload Failed");
 	}
-	if(Pace) {
-		Pace.restart();
-	}
 	xhr.send(payload);
 
 }
