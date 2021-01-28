@@ -1145,9 +1145,6 @@ define({
     "manage tasks": "Manage Tasks",
     "view own data": "View Own Data",
     "dashboard": "Dashboard",
-    "u_clear_p": "Clear exiting empty imported projects",
-    "u_clear_u": "Clear exiting imported users",
-    "u_clear_r": "Clear exiting imported roles",
     "u_css_f": "CSS file",
     "u_css": "Upload a CSS style sheet",
     "u_css_ss": "Upload a new CSS style sheet for the server",
@@ -1155,6 +1152,9 @@ define({
     "u_css_del": "Delete CSS style sheet",
     "u_css_sel": "Select a style sheet",
     "u_css_info": "Create a custom style sheet using <a href='https://themestr.app/theme' _target='blank'>this website</a> and then upload to the server",
+    "u_clear_p": "Clear existing empty imported projects",
+    "u_clear_u": "Clear existing imported users",
+    "u_clear_r": "Clear existing imported roles",
 
     // Browse Results
     "br_ci": "Case Insensitive",
