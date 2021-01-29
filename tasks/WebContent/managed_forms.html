@@ -267,20 +267,19 @@
                         <div class="col-sm-8"><b><span class="lang" data-lang="c_question"></span></b></div>
                         <div class="col-sm-4"><b><span class="lang" data-lang="c_clear"></span></b></div>
                     </div>
-                        <form id="bulkEditForm"></form>
+                    <form id="bulkEditForm"></form>
 
-                        <button id="saveBulkEdit" type="button" class="btn btn-success lang saverecord"
-                                data-dismiss="modal"
-                                data-lang="c_save">Save
-                        </button>
+                    <button id="saveBulkEdit" type="button" class="btn btn-success lang saverecord"
+                            data-dismiss="modal"
+                            data-lang="c_save">Save
+                    </button>
 
-                        <button id="exitBulkEdit" type="button" class="btn btn-primary exitBulkEdit">
-                            <span class="lang" data-lang="c_back">exit</span>
-                        </button>
+                    <button id="exitBulkEdit" type="button" class="btn btn-primary exitBulkEdit">
+                        <span class="lang" data-lang="c_back">exit</span>
+                    </button>
 
-                        <div class="re_alert alert alert-success" role="alert" style="display:none;"></div>
-                    </div>
-         
+                    <div class="re_alert alert alert-success" role="alert" style="display:none;"></div>
+                </div>
 
             </div>
 
@@ -347,7 +346,7 @@
         <div id="dashboardInfo" class="alert alert-success" style="display:none;"></div>
 
         <!-- Main panel -->
-        <div class="card text-center">
+        <div class="card text-center overviewSection">
             <div class="card-header">
                 <ul id="mainTabs" class="nav nav-tabs card-header-tabs" role="tablist">
                     <li class="nav-item" role="presentation">
@@ -438,13 +437,16 @@
                 </div>
 
             </div>
-
-            <div class="mt-4 editRecordSection mt-4">
+        </div>
+        <div class="card text-center editRecordSection">
+            <div class="card-header">
                 <ul id="editTabs" class="nav nav-tabs mt-4" role="tablist">
                     <li class="nav-item" role="presentation"><a data-toggle="tab" href="#data-view" class="active nav-link"><i class="fa fa-list"></i> <span class="lang" data-lang="c_data"></span></a></li>
                     <li class="nav-item" role="presentation"><a data-toggle="tab" href="#changes-view" class="nav-link"><i class="fa fa-edit"></i> <span class="lang" data-lang="c_history"></span></a></li>
                 </ul>
+            </div>
 
+            <div class="card-body">
                 <div class="tab-content mt-4">
 
                     <div id="data-view" role="tabpanel" class="tab-pane active">
@@ -502,8 +504,6 @@
             </div>
         </div>
     </div>
-
-
 </div>
 
 <!-- Modal to edit a chart widget -->
