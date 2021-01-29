@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v52';
+let CACHE_NAME = 'v53';
 
 // Web service requests
 let ASSIGNMENTS = '/surveyKPI/myassignments?';
@@ -56,7 +56,6 @@ self.addEventListener('install', function(e) {
 				'/js/app/theme2.js',
 				'/images/enketo_bare_150x56.png',
 				'/images/smap_logo.png',
-				'/images/ajax-loader.gif',
 				'/favicon.ico'
 			])
 		})
