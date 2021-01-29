@@ -2258,7 +2258,7 @@ require([
 	 */
     function getEligibleUsers() {
 
-        if(globals.gCurrentSurvey) {
+        if(globals.gCurrentSurvey && globals.gCurrentSurvey > 0) {
             addHourglass();
             $.ajax({
                 url: "/surveyKPI/userList/survey/" + globals.gCurrentSurvey,
