@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v53';
+let CACHE_NAME = 'v55';
 
 // Web service requests
 let ASSIGNMENTS = '/surveyKPI/myassignments?';
@@ -33,6 +33,7 @@ self.addEventListener('install', function(e) {
 				'/css/bootstrap.v4.5.min.css',
 				'/css/fa.v5.15.1.all.min.css',
 				'/build/css/theme-smap.css',
+				'/build/css/theme-grid.css',
 				'/build/css/theme-smap.print.css',
 				'/build/css/webform.print.css',
 				'/build/css/grid-print.css',
@@ -56,7 +57,8 @@ self.addEventListener('install', function(e) {
 				'/js/app/theme2.js',
 				'/images/enketo_bare_150x56.png',
 				'/images/smap_logo.png',
-				'/favicon.ico'
+				'/favicon.ico',
+				'/build/locales/en/translation-combined.json'
 			])
 		})
 	);
