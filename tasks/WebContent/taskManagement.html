@@ -202,7 +202,7 @@
                 <ul class="nav nav-tabs">
                     <li><a class="nav-link active" data-toggle="tab" href="#table-view"> <i class="fa fa-list"></i></a></li>
                     <li><a class="nav-link" data-toggle="tab" href="#map-view"><i class="fa fa-globe"></i></a></li>
-                    <li><a class="nav-link" data-toggle="tab" href="#cal-view"><i class="fa fa-calendar"></i></a></li>
+                    <li><a class="nav-link" data-toggle="tab" href="#cal-view"><i class="fa fa-calendar-alt"></i></a></li>
                 </ul>
                 <div class="tab-content">
                     <div id="table-view" class="tab-pane active" role="tabpanel">
@@ -296,20 +296,20 @@
                 <div class="container-fluid">
                     <form role="form" name="taskProperties">
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label lang" data-lang="c_name" for="tp_name">name</label>
+                            <label class="col-sm-2 control-label lang" data-lang="c_name" for="tp_name">name</label>
                             <div class="col-sm-10">
                                 <input id="tp_name" type='text' class="form-control" name="taskTitle">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="lang col-sm-2 col-form-label" data-lang="c_survey" for="tp_form_name"></label>
+                            <label class="lang col-sm-2 control-label" data-lang="c_survey" for="tp_form_name"></label>
                             <div class="col-sm-10">
                                 <select class="survey_select data_survey disable_blocked form-control" id="tp_form_name"></select>
                             </div>
                         </div>
                         <div class="well">
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="assign_type"></label>
+                                <label class="col-sm-2 control-label lang" data-lang="assign_type"></label>
                                 <div class="col-sm-10">
                                     <div class="btn-group" role="group" aria-label="select assignment type">
                                         <button id="tp_user_type" type="button" class="btn btn-outline-secondary assign_type user_type_checkbox lang active" data-lang="c_user"></button>
@@ -318,29 +318,29 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group assign_user assign_group row">.
-                                <label class="lang col-sm-2 col-form-label" data-lang="c_user" for="tp_user"></label>
-                                <div class="col-sm-9">
+                            <div class="form-group assign_user assign_group row">
+                                <label class="lang col-sm-2 control-label" data-lang="c_user" for="tp_user"></label>
+                                <div class="col-sm-10">
                                     <select class="users_select form-control" id="tp_user"></select>
                                 </div>
                             </div>
 
                             <div class="form-group assign_role assign_group row">
-                                <label for="tp_assign_roles" class="col-sm-2 col-form-label lang" data-lang="t_assign_roles">assign role</label>
+                                <label for="tp_assign_roles" class="col-sm-2 control-label lang" data-lang="t_assign_roles">assign role</label>
                                 <div class="col-sm-10">
                                     <select class="form-control roles_select" id="tp_assign_roles"></select>
                                 </div>
                             </div>
 
                             <div class="form-group assign_email assign_group row">
-                                <label class="lang col-sm-2 col-form-label" for="tp_assign_emails" data-lang="c_email" ></label>
+                                <label class="lang col-sm-2 control-label" for="tp_assign_emails" data-lang="c_email" ></label>
                                 <div class="col-sm-10">
                                     <input type="email" id="tp_assign_emails" class="form-control" required multiple placeholder="">
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="t_pol" for="tp_pol"></label>
+                                <label class="col-sm-2 control-label lang" data-lang="t_pol" for="tp_pol"></label>
                                 <div class="col-sm-10">
                                     <div class="checkbox">
                                         <input type="checkbox" name="repeat" value="repeat" id="tp_pol">
@@ -349,7 +349,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="t_auto2" for="tp_assign_auto"></label>
+                                <label class="col-sm-2 control-label lang" data-lang="t_auto2" for="tp_assign_auto"></label>
                                 <div class="col-sm-5">
                                     <div class="checkbox">
                                         <input type="checkbox" id="tp_assign_auto">
@@ -363,7 +363,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label lang" data-lang="c_persist" for="users_select_user"></label>
+                            <label class="col-sm-2 control-label lang" data-lang="c_persist" for="users_select_user"></label>
                             <div class="col-sm-3">
                                 <div class="checkbox">
                                     <input type="checkbox" name="repeat" value="repeat" id="tp_repeat">
@@ -377,30 +377,32 @@
 
 
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label lang" data-lang="c_from" for="tp_from"></label>
+                            <label class="col-sm-2 control-label lang" data-lang="c_from" for="tp_from"></label>
                             <div class="col-sm-10">
                                 <div class='input-group date' id='tp_from' data-toggle="tooltip" data-container="body"
                                      title="Scheduled date in local time zone">
                                     <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
-                                    <span class="input-group-addon"><span
-                                            class="glyphicon glyphicon-calendar"></span></span>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i class="fas fa-calendar-alt"></i></span></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label lang" data-lang="c_to" for="tp_to"></label>
+                            <label class="col-sm-2 control-label lang" data-lang="c_to" for="tp_to"></label>
                             <div class="col-sm-10">
                                 <div class='input-group date' id='tp_to' data-toggle="tooltip" data-container="body"
                                      title="Finish time">
                                     <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
-                                    <span class="input-group-addon"><span
-                                            class="glyphicon glyphicon-calendar"></span></span>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i class="fas fa-calendar-alt"></i></span></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label lang" data-lang="t_g" for="tp_guidance">guide</label>
+                            <label class="col-sm-2 control-label lang" data-lang="t_g" for="tp_guidance">guide</label>
                             <div class="col-sm-10">
                                 <input id="tp_guidance" type='text' class="form-control" name="guidance">
                             </div>
@@ -408,7 +410,7 @@
 
                         <div class="well">
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="t_nfc"
+                                <label class="col-sm-2 control-label lang" data-lang="t_nfc"
                                        for="location_select"></label>
                                 <div class="col-sm-10">
                                     <div class="input-group mb-3">
@@ -424,21 +426,21 @@
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="sr_uid" for="nfc_uid"></label>
+                                <label class="col-sm-2 control-label lang" data-lang="sr_uid" for="nfc_uid"></label>
                                 <div class="col-sm-10">
                                     <input id="nfc_uid" type='text' class="form-control">
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="c_location">locn</label>
+                                <label class="col-sm-2 control-label lang" data-lang="c_location">locn</label>
                                 <div class="col-sm-10">
                                     <div id="mapModal"></div>
                                 </div>
                             </div>
 
                             <div class="form-group row" id="location_save_panel" style="display:none;">
-                                <label class="col-sm-2 col-form-label lang" data-lang="sr_sl">locn</label>
+                                <label class="col-sm-2 control-label lang" data-lang="sr_sl">locn</label>
                                 <div class="col-sm-10">
                                     <div class="well2">
                                         <p class="lang" data-lang="sr_si"></p>
@@ -459,13 +461,13 @@
                                                 </label>
                                             </div>
                                             <div class="form-group row update_only">
-                                                <label for="locationGroupSave" class="col-sm-2 col-form-label lang" data-lang="sr_g"></label>
+                                                <label for="locationGroupSave" class="col-sm-2 control-label lang" data-lang="sr_g"></label>
                                                 <div class="col-sm-10">
                                                     <input type="text" class="form-control" id="locationGroupSave">
                                                 </div>
                                             </div>
                                             <div class="form-group row update_only">
-                                                <label for="locationSave" class="col-sm-2 col-form-label lang" data-lang="c_name"></label>
+                                                <label for="locationSave" class="col-sm-2 control-label lang" data-lang="c_name"></label>
                                                 <div class="col-sm-10">
                                                     <input type="text" class="form-control" id="locationSave">
                                                 </div>
@@ -478,7 +480,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="lang col-sm-2 col-form-label lang" data-lang="t_show_dist"
+                            <label class="lang col-sm-2 control-label lang" data-lang="t_show_dist"
                                    for="tp_show_dist"></label>
                             <div class="col-sm-3">
                                 <input type="integer" class="form-control" id="tp_show_dist">
@@ -520,7 +522,7 @@
             <div class="modal-body">
                 <p class="single lang" data-lang="t_choose_user">choose user</p>
                 <form class="form" role="form" id="user_assign_form">
-                    <label class="col-form-label lang" data-lang="c_user" for="users_select_user">user</label>
+                    <label class="control-label lang" data-lang="c_user" for="users_select_user">user</label>
                     <select class="form-control users_select" id="users_select_user"></select>
                 </form>
             </div>
@@ -561,7 +563,7 @@
 
                 <form role="form" id="assign_survey_form">
                     <div class="form-group row">
-                        <label class="lang col-sm-2 col-form-label lang" data-lang="c_name"
+                        <label class="lang col-sm-2 control-label lang" data-lang="c_name"
                                for="task_group_name">name</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="task_group_name" required="true">
@@ -569,7 +571,7 @@
                     </div>
 
                     <div class="form-group row">
-                        <label class="lang col-sm-2 col-form-label lang" data-lang="t_dl_dist"
+                        <label class="lang col-sm-2 control-label lang" data-lang="t_dl_dist"
                                for="t_dl_dist"></label>
                         <div class="col-sm-3">
                             <input type="integer" class="form-control" id="t_dl_dist">
@@ -589,7 +591,7 @@
                     <div id="add_task_from_existing" style="display:none;">
 
                         <div class="form-group row">
-                            <label for="project_select" class="col-sm-2 col-form-label lang" data-lang="t_ep">existing
+                            <label for="project_select" class="col-sm-2 control-label lang" data-lang="t_ep">existing
                                 project</label>
                             <div class="col-sm-10">
                                 <select id="project_select" class="project_list form-control"></select>
@@ -597,7 +599,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="survey" class="col-sm-2 col-form-label lang" data-lang="t_es">existing
+                            <label for="survey" class="col-sm-2 control-label lang" data-lang="t_es">existing
                                 survey</label>
                             <div class="col-sm-10">
                                 <select class="survey_select data_survey form-control" id="survey"></select><br/>
@@ -605,7 +607,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="survey_to_complete" class="col-sm-2 col-form-label lang" data-lang="t_ns">New
+                            <label for="survey_to_complete" class="col-sm-2 control-label lang" data-lang="t_ns">New
                                 Survey</label>
                             <div class="col-sm-10">
                                 <select class="survey_select data_survey disable_blocked form-control"
@@ -633,14 +635,14 @@
 
                         <div class="simple_filter well" style="display:none;">
                             <div class="form-group row">
-                                <label for="filter_language" class="col-sm-2 col-form-label lang" data-lang="c_lang">Language</label>
+                                <label for="filter_language" class="col-sm-2 control-label lang" data-lang="c_lang">Language</label>
                                 <div class="col-sm-10">
                                     <select id="filter_language" class="form-control"></select>
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label for="filter_question" class="col-sm-2 col-form-label lang" data-lang="t_fq">Filter
+                                <label for="filter_question" class="col-sm-2 control-label lang" data-lang="t_fq">Filter
                                     by question</label>
                                 <div class="col-sm-10">
                                     <select class="selected_question form-control" id="filter_question"></select>
@@ -649,7 +651,7 @@
 
                             <div class="filter_option_only" style="display:none;">
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label lang" data-lang="t_so" for="filter_option">selected
+                                    <label class="col-sm-2 control-label lang" data-lang="t_so" for="filter_option">selected
                                         option</label>
                                     <div class="col-sm-10">
                                         <select class="form-control selected_option" id="filter_option"></select>
@@ -659,7 +661,7 @@
 
                             <div class="filter_integer_only" style="display:none;">
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label lang" for="filter_integer"
+                                    <label class="col-sm-2 control-label lang" for="filter_integer"
                                            data-lang="t_sn">numeric
                                         value</label>
                                     <div class="col-sm-10">
@@ -671,7 +673,7 @@
 
                             <div class="filter_text_only" style="display:none;">
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label lang" for="filter_text" data-lang="t_st">text
+                                    <label class="col-sm-2 control-label lang" for="filter_text" data-lang="t_st">text
                                         value</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="selected_text form-control" id="filter_text">
@@ -682,27 +684,29 @@
                             <div class="filter_date_only" style="display:none;">
 
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label lang" for="startDate"
+                                    <label class="col-sm-2 control-label lang" for="startDate"
                                            data-lang="c_from">from</label>
                                     <div class="col-sm-10">
                                         <div class='input-group date' id='startDate' data-toggle="tooltip"
                                              data-container="body" title="Dates in local time zone">
                                             <input type='text' class="form-control" data-date-format="YYYY/MM/DD"/>
-                                            <span class="input-group-addon"><span
-                                                    class="glyphicon glyphicon-calendar"></span></span>
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i class="fas fa-calendar-alt"></i></span></button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="form-group row mt-3">
-                                    <label class="col-sm-2 col-form-label lang" for="endDate"
+                                    <label class="col-sm-2 control-label lang" for="endDate"
                                            data-lang="c_to">to</label>
                                     <div class="col-sm-10">
                                         <div class='input-group date' id='endDate' data-toggle="tooltip"
                                              data-container="body" title="Dates in local time zone">
                                             <input type='text' class="form-control" data-date-format="YYYY/MM/DD"/>
-                                            <span class="input-group-addon"><span
-                                                    class="glyphicon glyphicon-calendar"></span></span>
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i class="fas fa-calendar-alt"></i></span></button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -712,15 +716,15 @@
                         </div>
                         <div class="advanced_filter well mt-3" style="display:none;">
                             <div class="form-group row" data-container="body">
-                                <label for="tg_ad_filter" data-lang="c_filter" class="lang col-sm-2 col-form-label">filter</label>
+                                <label for="tg_ad_filter" data-lang="c_filter" class="lang col-sm-2 control-label">filter</label>
                                 <div class="col-sm-10">
                                     <div class="input-group">
                                         <textarea id="tg_ad_filter" class="form-control"></textarea>
-                                        <span class="input-group-addon">
-									<a href="https://www.smap.com.au/docs/server_expressions.html" target="_blank">
-										<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-									</a>
-								</span>
+                                        <div class="input-group-append">
+                                            <a href="https://www.smap.com.au/docs/server_expressions.html" target="_blank">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -743,7 +747,7 @@
                         </div>
 
                         <div class="form-group row mt-3">
-                            <label class="col-sm-2 col-form-label lang" data-lang="t_id"></label>
+                            <label class="col-sm-2 control-label lang" data-lang="t_id"></label>
                             <div class="col-sm-10">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="initial_data" id="id_blank" value="blank" checked>
@@ -762,7 +766,7 @@
                         </div>
 
                         <div class="form-group row mt-3">
-                            <label class="col-sm-2 col-form-label lang" data-lang="c_apply"></label>
+                            <label class="col-sm-2 control-label lang" data-lang="c_apply"></label>
                             <div class="col-sm-10">
                                 <div class="checkbox">
                                     <label>
@@ -781,7 +785,7 @@
 
                         <div class="well">
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="t_assign_type"></label>
+                                <label class="col-sm-2 control-label lang" data-lang="t_assign_type"></label>
                                 <div class="col-sm-10">
                                     <div class="btn-group" role="group" aria-label="select assignment type">
                                         <button id="assign_user_type" type="button" class="btn btn-outline-secondary assign_type lang active user_type_checkbox" data-lang="c_user"></button>
@@ -793,7 +797,7 @@
 
 
                             <div class="form-group assign_user assign_group row">
-                                <label for="users_task_group" class="col-sm-2 col-form-label lang" data-lang="t_assign">assign
+                                <label for="users_task_group" class="col-sm-2 control-label lang" data-lang="t_assign">assign
                                     user</label>
                                 <div class="col-sm-10">
                                     <select class="form-control users_select" id="users_task_group"></select>
@@ -801,14 +805,14 @@
                             </div>
 
                             <div class="form-group assign_role assign_group row">
-                                <label for="roles_task_group" class="col-sm-2 col-form-label lang" data-lang="t_assign_roles">assign role</label>
+                                <label for="roles_task_group" class="col-sm-2 control-label lang" data-lang="t_assign_roles">assign role</label>
                                 <div class="col-sm-10">
                                     <select class="form-control roles_select" id="roles_task_group"></select>
                                 </div>
                             </div>
 
                             <div class="form-group assign_email assign_group row">
-                                <label for="assign_emails" data-lang="c_email" class="lang col-sm-2 col-form-label">Email</label>
+                                <label for="assign_emails" data-lang="c_email" class="lang col-sm-2 control-label">Email</label>
                                 <div class="col-sm-10">
                                     <input type="email" id="assign_emails" class="form-control" required multiple placeholder="">
                                 </div>
@@ -816,28 +820,28 @@
 
 
                             <div class="form-group assign_data row" data-container="body">
-                                <label for="assign_data" data-lang="c_data" class="lang col-sm-2 col-form-label">filter</label>
+                                <label for="assign_data" data-lang="c_data" class="lang col-sm-2 control-label">filter</label>
                                 <div class="col-sm-10">
                                     <div class="input-group">
                                         <input type="text" id="assign_data" class="form-control">
-                                        <span class="input-group-addon">
-									<a href="https://www.smap.com.au/docs/server_expressions.html" target="_blank">
-										<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-									</a>
-								</span>
+                                        <div class="input-group-append">
+                                            <a href="https://www.smap.com.au/docs/server_expressions.html" target="_blank">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-group assign_role row">
-                                <label for="roles_task_group" class="col-sm-2 col-form-label lang" data-lang="t_fixed_role">fixed role</label>
+                                <label for="roles_task_group" class="col-sm-2 control-label lang" data-lang="t_fixed_role">fixed role</label>
                                 <div class="col-sm-10">
                                     <select class="form-control" id="fixed_role"></select>
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="t_pol" for="assign_pol"></label>
+                                <label class="col-sm-2 control-label lang" data-lang="t_pol" for="assign_pol"></label>
                                 <div class="col-sm-10">
                                     <div class="checkbox">
                                         <input type="checkbox" id="assign_pol">
@@ -846,7 +850,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="t_auto2" for="assign_auto"></label>
+                                <label class="col-sm-2 control-label lang" data-lang="t_auto2" for="assign_auto"></label>
                                 <div class="col-sm-5">
                                     <div class="checkbox">
                                         <input type="checkbox" id="assign_auto">
@@ -863,14 +867,14 @@
                             <p class="lang" data-lang="t_start"></p>
 
                             <div class="form-group row">
-                                <label for="task_start" class="col-sm-2 col-form-label lang" data-lang="c_start">start</label>
+                                <label for="task_start" class="col-sm-2 control-label lang" data-lang="c_start">start</label>
                                 <div class="col-sm-10">
                                     <select class="form-control date_questions" id="task_start"></select>
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label for="task_after" class="col-sm-2 col-form-label lang" data-lang="c_after">after</label>
+                                <label for="task_after" class="col-sm-2 control-label lang" data-lang="c_after">after</label>
                                 <div class="col-sm-5">
                                     <input type="number" id="task_after" class="form-control" value="0">
                                 </div>
@@ -885,7 +889,7 @@
 
 
                             <div class="form-group row">
-                                <label for="task_duration" class="col-sm-2 col-form-label lang" data-lang="c_duration">after</label>
+                                <label for="task_duration" class="col-sm-2 control-label lang" data-lang="c_duration">after</label>
                                 <div class="col-sm-5">
                                     <input type="number" id="task_duration" class="form-control" value="0">
                                 </div>
@@ -905,14 +909,14 @@
 
                             <div id="email_subject_cont" class="form-group row" data-container="body">
                                 <label for="email_subject" data-lang="c_subject"
-                                       class="lang col-sm-2 col-form-label">subject</label>
+                                       class="lang col-sm-2 control-label">subject</label>
                                 <div class="col-sm-10">
                                     <input type="text" id="email_subject" class="form-control" placeholder="">
                                 </div>
                             </div>
                             <div class="form-group row" data-toggle="tooltip" data-container="body">
                                 <label for="email_content" data-lang="c_content"
-                                       class="lang col-sm-2 col-form-label">content</label>
+                                       class="lang col-sm-2 control-label">content</label>
                                 <div class="col-sm-10">
                                     <textarea id="email_content" class="labelProp form-control"></textarea>
                                 </div>
@@ -920,7 +924,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="lang col-sm-2 col-form-label lang" data-lang="t_show_dist"
+                            <label class="lang col-sm-2 control-label lang" data-lang="t_show_dist"
                                    for="t_show_dist"></label>
                             <div class="col-sm-3">
                                 <input type="integer" class="form-control" id="t_show_dist">
