@@ -1624,7 +1624,7 @@ require([
 		$('#tp_repeat').prop('checked', task.repeat);
 		$('#tp_name').val(task.name);		// name
 		if(isNew) {
-			$('#tp_form_name').val($('#tp_form_name option:first').val());
+			// Use whatever survey was last specified or the default which will not be blocked -- $('#tp_form_name').val($('#tp_form_name option:first').val());
 		} else {
 			$('#tp_form_name').val(taskFeature.properties.form_id);	// form id
 		}
