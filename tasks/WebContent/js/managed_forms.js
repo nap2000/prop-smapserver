@@ -76,7 +76,6 @@ require([
     'app/mapOL3',
     'svgsave',
     'app/actioncommon',
-    'pace',
     'datetimepicker',
     'crf',
     'qrcode',
@@ -289,7 +288,7 @@ require([
             showManagedData(globals.gCurrentSurvey, showTable, true);
         });
 
-        // St change function on clearColumns
+        // Set change function on clearColumns
         $('#clearColumns').change(function() {
             $('.columnSelect').prop('checked', ($(this).prop('checked')));
         });
@@ -301,12 +300,14 @@ require([
             $("#surveySelect").modal("show");
         });
 
-        $('.exitEditRecord').click(function() {
+        $('.exitEditRecord').click(function(e) {
+            e.preventDefault();
             showManagedData(globals.gCurrentSurvey, showTable, true);
             window.history.back();
         });
 
-        $('.exitBulkEdit').click(function() {
+        $('.exitBulkEdit').click(function(e) {
+            e.preventDefault();
             showManagedData(globals.gCurrentSurvey, showTable, true);
             window.history.back();
         });
@@ -349,25 +350,29 @@ require([
         /*
          * Edit a record
          */
-        $('#m_edit').click(function() {
+        $('#m_edit').click(function(e) {
+            e.preventDefault();
             showRecord(true);
         });
 
-        $('#m_bulk_edit').click(function() {
+        $('#m_bulk_edit').click(function(e) {
+            e.preventDefault();
             showBulkEdit();
         });
 
         /*
 	     * View a record
 	     */
-        $('#m_view').click(function() {
+        $('#m_view').click(function(e) {
+            e.preventDefault();
             showRecord(false);
         });
 
         /*
          * Open the dialog to assign a user to a record
          */
-        $('#m_assign_to').click(function() {
+        $('#m_assign_to').click(function(e) {
+            e.preventDefault();
             if(gTasks.gSelectedRecord._assigned) {
                 $('#user_to_assign').val(gTasks.gSelectedRecord._assigned);
             } else {
@@ -379,18 +384,21 @@ require([
         /*
          * Delete a record
          */
-        $('#m_delete').click(function() {
+        $('#m_delete').click(function(e) {
+            e.preventDefault();
             toggleRecord(localise.set["c_del"], true);
         });
 
         /*
          * UnDelete a record
          */
-        $('#m_undelete').click(function() {
+        $('#m_undelete').click(function(e) {
+            e.preventDefault();
             toggleRecord(localise.set["c_undel"], false);
         });
 
-        $('#toggleRecordSave').click(function(){
+        $('#toggleRecordSave').click(function(e){
+            e.preventDefault(e);
             var url = "/surveyKPI/items/" + globals.gCurrentSurvey + "/survey/bad/" + gTasks.gSelectedRecord.instanceid;
             var reason = $('#toggle_reason').val();
             addHourglass();
@@ -418,8 +426,8 @@ require([
         /*
          * Lock a record for editing by this user
          */
-        $('#m_lock').click(function() {
-
+        $('#m_lock').click(function(e) {
+            e.preventDefault();
             var url = "/surveyKPI/managed/lock/" + globals.gCurrentSurvey;
             addHourglass();
             $.ajax({
@@ -444,8 +452,8 @@ require([
         /*
 	     * Assign a user
 	     */
-        $('#assignUserSave').click(function() {
-
+        $('#assignUserSave').click(function(e) {
+            e.preventDefault();
             var url = "/surveyKPI/managed/assign/" + globals.gCurrentSurvey + "/" + $('#user_to_assign').val();
 
             addHourglass();
@@ -470,8 +478,8 @@ require([
         /*
          * Release a record
          */
-        $('#m_release').click(function() {
-
+        $('#m_release').click(function(e) {
+            e.preventDefault();
             var url = "/surveyKPI/managed/release/" + globals.gCurrentSurvey;
             addHourglass();
             $.ajax({
@@ -494,7 +502,8 @@ require([
         /*
          * Save a record of data in managed forms
          */
-        $('.saverecord').click(function () {
+        $('.saverecord').click(function (e) {
+            e.preventDefault();
             var saveString = JSON.stringify(gTasks.gUpdate);
             var biString;
             if(gTasks.gBulkInstances && gTasks.gBulkInstances.length > 1) {
@@ -537,7 +546,8 @@ require([
             });
         });
 
-        $('#shareRecord').click(function () {
+        $('#shareRecord').click(function (e) {
+            e.preventDefault();
             $('.shareRecordOnly').toggle();
             // Automatically get the link if there are no roles to select
             if ($('.role_select_roles').text().length === 0) {
@@ -545,7 +555,8 @@ require([
             }
         });
 
-        $('#getSharedRecord').click(function () {
+        $('#getSharedRecord').click(function (e) {
+            e.preventDefault();
 
             var groupSurvey = globals.gGroupSurveys[globals.gCurrentSurvey];
 
@@ -588,11 +599,13 @@ require([
 
         });
 
-        $('.genrecordpdf').click(function ()  {
+        $('.genrecordpdf').click(function (e)  {
+            e.preventDefault();
             $('#genPdfPopup').modal("show");
         });
 
-        $('#genPdf').click(function() {
+        $('#genPdf').click(function(e) {
+            e.preventDefault();
 
             var language = $('#pdf_language option:selected').val();
             var orientation = $("#pdf_orientation").val();
@@ -607,7 +620,8 @@ require([
         /*
          * show the settings dialog
          */
-        $('#show_settings').click(function() {
+        $('#show_settings').click(function(e) {
+            e.preventDefault();
             $('#settingsPopup').modal("show");
         });
 
@@ -653,20 +667,23 @@ require([
         });
 
         // Add a new chart
-        $('#m_add_chart').click(function () {
+        $('#m_add_chart').click(function (e) {
+            e.preventDefault();
             $('#chartInfo').hide();
             chart.addNewChart();
         });
 
         // Add a new map layer
-        $('#m_add_layer').click(function () {
+        $('#m_add_layer').click(function (e) {
+            e.preventDefault();
             $('#layerInfo').hide();
             $('#ml_title').val("");
             $('#layerEdit').modal("show");
         });
 
         // Respond to save on a layer edit dialog
-        $('#addLayerSave').click(function () {
+        $('#addLayerSave').click(function (e) {
+            e.preventDefault();
             map.saveLayer(gOverallMapConfig.map);
         });
 
@@ -759,13 +776,15 @@ require([
         /*
          * SHow and hide the controls
          */
-        $('#hideFilters').click(function(){
+        $('#hideFilters').click(function(e){
+            e.preventDefault();
             $('.filtersShown').hide();
             $('.filtersHidden').show();
             return false;
         });
 
-        $('#showFilters').click(function(){
+        $('#showFilters').click(function(e){
+            e.preventDefault();
             $('.filtersShown').show();
             $('.filtersHidden').hide();
             return false;
@@ -774,8 +793,8 @@ require([
     });         // End of document ready
 
     // Generate a file based on chart data
-    $('.genfile').click(function () {
-
+    $('.genfile').click(function (e) {
+        e.preventDefault();
         var format,
             $this = $(this);
 
@@ -792,8 +811,9 @@ require([
     });
 
     // Generate an xls file of basic counts for all data
-    $('.genxlsfileall').click(function () {
-        var $groupBy = $('#srf_group')
+    $('.genxlsfileall').click(function (e) {
+        e.preventDefault();
+        var $groupBy = $('#srf_group');
         if(gTasks.cache.currentData.schema &&  $groupBy.html().length == 0) {
             var cols = gTasks.cache.currentData.schema.columns;
             var h = [];
@@ -840,7 +860,8 @@ require([
         $('#overviewReport').modal("show");
     });
 
-    $('#overviewReportSave').click(function() {
+    $('#overviewReportSave').click(function(e) {
+        e.preventDefault();
         genFile(true, "xlsx");
         $('#overviewReport').modal("hide");
     });
@@ -994,7 +1015,8 @@ require([
     /*
      * Alerts
      */
-    $('#show_alerts').click(function () {
+    $('#show_alerts').click(function (e) {
+        e.preventDefault();
         if (!globals.gAlertSeen) {
             globals.gAlertSeen = true;
             $('.alert_icon').removeClass("text-danger");
@@ -2259,7 +2281,7 @@ require([
 	 */
     function getEligibleUsers() {
 
-        if(globals.gCurrentSurvey) {
+        if(globals.gCurrentSurvey && globals.gCurrentSurvey > 0) {
             addHourglass();
             $.ajax({
                 url: "/surveyKPI/userList/survey/" + globals.gCurrentSurvey,

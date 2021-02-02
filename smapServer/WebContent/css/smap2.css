@@ -70,6 +70,12 @@
     background-color: #2C3D29 !important;
 }
 
+.navbar-brand img {
+    max-height: 30px;
+    line-height: 40px;
+    padding-right: 5px;
+}
+
 a.bg-navbar-smap:hover, a.bg-dark:focus,
 button.bg-navbar-smap:hover,
 button.bg-navbar-smap:focus {
