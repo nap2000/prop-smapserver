@@ -24,7 +24,7 @@ try {
 	var navbarColor = localStorage.getItem("navbar_color");
 	var navbarTextColor = localStorage.getItem("navbar_text_color");
 	var navbarLight = LightenDarkenColor(navbarColor, 20);
-	if(navbarColor && navbarTextColor) {
+	if(navbarColor && navbarTextColor && navbarColor !== "undefined" && navbarTextColor !== "undefined") {
 		var head = document.getElementsByTagName('head')[0];
 		var style = document.createElement('style');
 		style.setAttribute("id", "navbar_color");
