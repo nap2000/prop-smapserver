@@ -133,49 +133,39 @@
 
 <div class="container-fluid">
 
-    <div class="card">
+    <div class="card mt-2">
         <div class="col-sm-12">
             <div class="bg-light row">
                 <!-- Header Row -->
-                <div class="col-sm-6 pt-4">
+                <div class="col-sm-6 pt-4 px-2 border-right">
                     <form role="form">
                         <div class="form-group row">
-                            <label class="lang col-md-4"  data-lang="c_project"  for="project_name"></label>
-                            <select class="project_list form-control form-control-lg col-md-8" id="project_name"></select>
+                            <label class="lang col-sm-4 control-label"  data-lang="c_project"  for="project_name"></label>
+                            <div class="col-sm-8">
+                                <select class="project_list form-control form-control col-sm-8" id="project_name"></select>
+                            </div>
                         </div>
-                    </form>
-                </div>
-                <div class="col-sm-6 pt-4">
-                    <form role="form">
                         <div class="form-group row">
-                            <label class="lang col-md-4" data-lang="t_tg" for="taskgroup"></label>
-                            <select class="form-control col-md-8 form-control-lg" id="taskgroup"></select>
-                        </div>
-                    </form>
-                </div>
-                <img id="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
-            </div>
-
-
-            <div class="bg-light row" id="tasks_row">
-                <div class="col-md-4">
-                    <form role="form">
-                        <div class="form-group row">
-                            <label class="col-form-label lang col-md-4" data-lang="t_show"
-                                   for="users_filter">show for</label>
-                            <div class="col-md-8">
-                                <select class="task_filter input-sm form-control input-s-sm inline"
-                                        id="users_filter"></select>
+                            <label class="lang col-sm-4 control-label" data-lang="t_tg" for="taskgroup"></label>
+                            <div class="col-sm-8">
+                                <select class="form-control col-sm-8 form-control" id="taskgroup"></select>
                             </div>
                         </div>
                     </form>
                 </div>
-                <div class="col-md-4">
+
+
+                <div class="col-sm-6 pt-4 px-2">
                     <form role="form">
                         <div class="form-group row">
-                            <label class="col-form-label lang col-md-4" data-lang="c_status"
-                                   for="status_filter">status</label>
-                            <div class="col-md-8">
+                            <label class="control-label lang col-sm-4" data-lang="t_show" for="users_filter">show for</label>
+                            <div class="col-sm-8">
+                                <select class="task_filter form-control" id="users_filter"></select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="control-label lang col-sm-4" data-lang="c_status" for="status_filter">status</label>
+                            <div class="col-sm-8">
                                 <select id="status_filter" multiple="multiple">
                                     <option class="lang" data-lang="t_u" value="new">u</option>
                                     <option class="lang" data-lang="t_assigned" value="accepted"></option>
@@ -192,14 +182,9 @@
                                 </select>
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="col-md-4">
-                    <form role="form">
                         <div class="form-group row">
-                            <label class="col-form-label lang col-md-4" data-lang="c_period"
-                                   for="period">period</label>
-                            <div class="col-md-8">
+                            <label class="control-label lang col-sm-4" data-lang="c_period" for="period">period</label>
+                            <div class="col-sm-8">
                                 <select class="form-control task_filter" id="period">
                                     <option class="lang" data-lang="c_week" value="week" selected>week</option>
                                     <option class="lang" data-lang="c_month" value="month">month</option>
@@ -212,76 +197,76 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="card">
-        <div class="tabs-container">
-            <ul class="nav nav-tabs">
-                <li><a class="nav-link active" data-toggle="tab" href="#table-view"> <i class="fa fa-list"></i></a></li>
-                <li><a class="nav-link" data-toggle="tab" href="#map-view"><i class="glyphicon glyphicon-globe"></i></a></li>
-                <li><a class="nav-link" data-toggle="tab" href="#cal-view"><i class="fa fa-calendar"></i></a></li>
-            </ul>
-            <div class="tab-content">
-                <div id="table-view" class="tab-pane active" role="tabpanel">
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table id="task_table" class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th></th>
-                                    <th class="lang" data-lang="c_id">id</th>
-                                    <th class="lang" data-lang="c_form">f</th>
-                                    <th class="lang" data-lang="c_name">n</th>
-                                    <th class="lang" data-lang="c_status">s</th>
-                                    <th class="lang" data-lang="t_assigned">a</th>
-                                    <th class="lang" data-lang="c_comment">c</th>
-                                    <th></th>    <!-- NFC -->
-                                    <th></th>     <!--  Existing Data -->
-                                    <th></th>     <!--  Blocked -->
-                                    <th class="lang" data-lang="c_repeat"></th>
-                                    <th class="lang" data-lang="c_start">start</th>
-                                    <th class="lang" data-lang="c_edit">edit</th>
-                                </tr>
-                                </thead>
-                                <tbody id="task_table_body">
-                                </tbody>
-                            </table>
+        <div class="card">
+            <div class="tabs-container">
+                <ul class="nav nav-tabs">
+                    <li><a class="nav-link active" data-toggle="tab" href="#table-view"> <i class="fa fa-list"></i></a></li>
+                    <li><a class="nav-link" data-toggle="tab" href="#map-view"><i class="fa fa-globe"></i></a></li>
+                    <li><a class="nav-link" data-toggle="tab" href="#cal-view"><i class="fa fa-calendar"></i></a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="table-view" class="tab-pane active" role="tabpanel">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table id="task_table" class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th class="lang" data-lang="c_id">id</th>
+                                        <th class="lang" data-lang="c_form">f</th>
+                                        <th class="lang" data-lang="c_name">n</th>
+                                        <th class="lang" data-lang="c_status">s</th>
+                                        <th class="lang" data-lang="t_assigned">a</th>
+                                        <th class="lang" data-lang="c_comment">c</th>
+                                        <th></th>    <!-- NFC -->
+                                        <th></th>     <!--  Existing Data -->
+                                        <th></th>     <!--  Blocked -->
+                                        <th class="lang" data-lang="c_repeat"></th>
+                                        <th class="lang" data-lang="c_start">start</th>
+                                        <th class="lang" data-lang="c_edit">edit</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="task_table_body">
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div id="map-view" class="tab-pane" role="tabpanel">
-                    <div class="panel-body">
+                    <div id="map-view" class="tab-pane" role="tabpanel">
+                        <div class="panel-body">
 
-                        <div class="panel panel-default">
-                            <div id="map"></div>
-                            <div id="map_alert" style="display:none;" class="alert alert-info"
-                                 role="alert"></div>
+                            <div class="panel panel-default">
+                                <div id="map"></div>
+                                <div id="map_alert" style="display:none;" class="alert alert-info"
+                                     role="alert"></div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div id="cal-view" class="tab-pane" role="tabpanel">
-                    <div class="panel-body">
-                        <div class="col-sm-12">
-                            <div class="row animated fadeInDown">
-                                <div class="col-sm-3">
-                                    <div class="ibox float-e-margins">
-                                        <div class="ibox-title">
-                                            <h5 class="lang" data-lang="t_n_s">Tasks no start</h5>
-                                        </div>
-                                        <div class="ibox-content">
-                                            <div id='external-events'>
-                                                <p class="lang" data-lang="t_drag">drag task</p>
-                                                <div id="dragTask">
+                    <div id="cal-view" class="tab-pane" role="tabpanel">
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <div class="row animated fadeInDown">
+                                    <div class="col-sm-3">
+                                        <div class="ibox float-e-margins">
+                                            <div class="ibox-title">
+                                                <h5 class="lang" data-lang="t_n_s">Tasks no start</h5>
+                                            </div>
+                                            <div class="ibox-content">
+                                                <div id='external-events'>
+                                                    <p class="lang" data-lang="t_drag">drag task</p>
+                                                    <div id="dragTask">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-9">
-                                    <div class="ibox float-e-margins">
-                                        <div class="ibox-content">
-                                            <div id="calendar"></div>
+                                    <div class="col-sm-9">
+                                        <div class="ibox float-e-margins">
+                                            <div class="ibox-content">
+                                                <div id="calendar"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
