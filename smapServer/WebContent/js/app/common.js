@@ -1676,11 +1676,13 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 		h[++idx] = '</option>';
 	}
 
+	var valueSelected = false;
 	for(i = 0; i < data.length; i++) {
 		item = data[i];
 		if(item.dataSurvey && dataSurvey || item.oversightSurvey && oversightSurvey) {
 			h[++idx] = '<option';
-			if (count++ == 0) {
+			if (!valueSelected && !item.blocked) {
+				valueSelected = true;
 				selValue = useIdx ? i : item.id;
 			}
 			if (item.blocked) {
