@@ -242,31 +242,9 @@ require([
 		});
 
 		$('#m_export_xls').click(function () {	// Export to XLS
-			var tz = Intl.DateTimeFormat().resolvedOptions().timeZone,
-				tzParam = "",
-				url = '/surveyKPI/tasks/xls/' + globals.gCurrentTaskGroup,
-				hasParam = false,
-				statusFilterArray = $('#status_filter').val();
 
 			if (globals.gCurrentTaskGroup) {
-
-				// Add parameters
-				if (tz) {
-					url += (hasParam ? '&' : '?') + "tz=" + encodeURIComponent(tz);
-					hasParam = true;
-				}
-				if(statusFilterArray) {
-					url += (hasParam ? '&' : '?') + 'inc_status=' + statusFilterArray.join(',');
-				}
-
-				period_filter = $('#period').val();
-				if(period_filter) {
-					url += (hasParam ? '&' : '?') + 'period=' + period_filter;
-					hasParam = true;
-				}
-
-				downloadFile(url);
-
+				taskReport(globals.gCurrentTaskGroup)
 			} else {
 				alert(localise.set["msg_tg_ns"]);
 			}
@@ -963,29 +941,7 @@ require([
 		 * Reports
 		 */
 		$('#m_all_tasks_report').click(function(){
-			var tz = Intl.DateTimeFormat().resolvedOptions().timeZone,
-				tzParam = "",
-				url = '/surveyKPI/tasks/xls/0',
-				hasParam = false,
-				statusFilterArray = $('#status_filter').val(),
-				period_filter = $('#period').val();
-
-			// Add parameters
-			if (tz) {
-				url += (hasParam ? '&' : '?') + "tz=" + encodeURIComponent(tz);
-				hasParam = true;
-			}
-			if(statusFilterArray) {
-				url += (hasParam ? '&' : '?') + 'inc_status=' + statusFilterArray.join(',');
-				hasParam = true;
-			}
-			if(period_filter) {
-				url += (hasParam ? '&' : '?') + 'period=' + period_filter;
-				hasParam = true;
-			}
-
-			downloadFile(url);
-
+			taskReport(0);
 		});
 	});
 
@@ -1844,7 +1800,7 @@ require([
 				gUnsentEmailCount++;
 			}
 
-			if(includeByStatus(statusFilter, task)) {
+			if(includeByStatus(statusFilter, task, false)) {
 				tab[++idx] = '<tr>';
 				tab[++idx] = addSelectCheckBox(false, i, false);
 
@@ -2188,7 +2144,7 @@ require([
 
 		for (i = 0; i < tasks.length; i++) {
 			task = tasks[i].properties;
-			if(includeByStatus(statusFilter, tasks[i])) {
+			if(includeByStatus(statusFilter, tasks[i], false)) {
 				if (task.from) {
 					event = {
 						title: task.name,
