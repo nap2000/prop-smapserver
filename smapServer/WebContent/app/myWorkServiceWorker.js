@@ -105,24 +105,19 @@ self.addEventListener('fetch', function(event) {
 			|| event.request.url.includes(BANNER)
 			|| event.request.url.includes(TRANSLATION)) {       // Files Network then cache strategy
 
-		let recordId = getRecordId(event.request.url);
-		if(recordId === "org_css") {
-			let url = ORG_CSS;
-			if(!organisationId) {
-				getOrganisationId().then(
-					() => {
-						url = url.replace("org", organisationId);
-						filesNetworkThenCache(event, new Request(url));
+		event.respondWith(
+			getOrganisationId().then(
+				() => {
+					let recordId = getRecordId(event.request.url);
+					if(recordId === "org_css") {
+						let url = ORG_CSS.replace("org", organisationId);
+						return filesNetworkThenCache(event, new Request(url));
+					} else {
+						return filesNetworkThenCache(event, event.request);
 					}
-				)
-			} else {
-				url = url.replace("org", organisationId);
-				filesNetworkThenCache(event, new Request(url));
-			}
-
-		} else {
-			filesNetworkThenCache(event, event.request);
-		}
+				}
+			)
+		);
 
 	} else if (event.request.url.includes(USER)         // Web services network then cache strategy
 		|| event.request.url.includes(PROJECT_LIST)
@@ -183,32 +178,30 @@ self.addEventListener('fetch', function(event) {
 }, {passive: true});
 
 function filesNetworkThenCache(event, request) {
-	event.respondWith(
-		fetch(request)
-			.then(response => {
+	return fetch(request)
+		.then(response => {
 
-				if (response.status == 401) {  // force re-logon
-					authResponse();
-					return response;
-				} else if (response.status == 200) {
-					logon = false;
-					return caches
-						.open(CACHE_NAME)
-						.then(cache => {
-							cache.put(getCacheUrl(request), response.clone());
-							return response;
-						})
-				} else {
-					logon = false;
-					return caches.match(getCacheUrl(request))
-						.then(cached => cached || response); // Return whatever is in cache
-				}
-			}).catch(() => {
+			if (response.status == 401) {  // force re-logon
+				authResponse();
+				return response;
+			} else if (response.status == 200) {
+				logon = false;
+				return caches
+					.open(CACHE_NAME)
+					.then(cache => {
+						cache.put(getCacheUrl(request), response.clone());
+						return response;
+					})
+			} else {
 				logon = false;
 				return caches.match(getCacheUrl(request))
-					.then(cached => cached || response) // Return whatever is in cache
-		})
-	);
+					.then(cached => cached || response); // Return whatever is in cache
+			}
+		}).catch(() => {
+			logon = false;
+			return caches.match(getCacheUrl(request))
+				.then(cached => cached || response) // Return whatever is in cache
+		});
 }
 
 function update(request) {
@@ -452,7 +445,10 @@ function getRecord(store, id) {
  */
 function getOrganisationId() {
 	return new Promise((resolve, reject) => {
-		if(typeof self.indexedDB !== 'undefined') {
+
+		if(organisationId) {
+			resolve();
+		} else if(typeof self.indexedDB !== 'undefined') {
 			open().then((db) => {
 				let transaction = db.transaction([latestRequestStore], "readonly");
 				let objectStore = transaction.objectStore(latestRequestStore);
