@@ -4956,9 +4956,19 @@ function includeByStatus(statusFilter, task) {
 		// check for late
 		if(task.properties.status === 'accepted' && isLate(task.properties.to) && statusFilter.indexOf("late") >= 0) {
 			include = true;
-
 		}
 	}
+	if(include) {
+		// Remove points with 0,0 coordinates
+		include = false;
+		if(task.geometry) {
+			include = true;
+			if(task.geometry.type === "Point" && task.geometry.coordinates[0] == 0 && task.geometry.coordinates[1] == 0) {
+				include = false;
+			}
+		}
+	}
+
 	return include;
 }
 

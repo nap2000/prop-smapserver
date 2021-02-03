@@ -937,6 +937,7 @@ require([
 		 * Refer: http://stackoverflow.com/questions/20705905/bootstrap-3-jquery-event-for-active-tab-change
 		 */
 		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+			$('#zoomData').hide();
 			var target = $(e.target).attr("href") // activated tab
 			console.log("panel change: " + target);
 			if (target === '#cal-view') {
@@ -950,6 +951,7 @@ require([
 					$('#calendar').fullCalendar('render');
 				}
 			} else if (target === '#map-view') {
+				$('#zoomData').show();
 				if (!gMapInitialised) {
 					gMapInitialised = true;
 					initialiseMap('map', 1, true, mapViewClicked, refreshMainMap);
