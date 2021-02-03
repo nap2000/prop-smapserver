@@ -4946,10 +4946,35 @@ function getWebFormUrl(form_ident, update_id, initial_data_source, taskId, assig
 	return url;
 }
 
+function taskReport(taskGroup) {
+	var tz = Intl.DateTimeFormat().resolvedOptions().timeZone,
+		tzParam = "",
+		url = '/surveyKPI/tasks/xls/' + taskGroup,
+		hasParam = false,
+		statusFilterArray = $('#status_filter').val(),
+		period_filter = $('#period').val();
+
+	// Add parameters
+	if (tz) {
+		url += (hasParam ? '&' : '?') + "tz=" + encodeURIComponent(tz);
+		hasParam = true;
+	}
+	if(statusFilterArray) {
+		url += (hasParam ? '&' : '?') + 'inc_status=' + statusFilterArray.join(',');
+		hasParam = true;
+	}
+	if(period_filter) {
+		url += (hasParam ? '&' : '?') + 'period=' + period_filter;
+		hasParam = true;
+	}
+
+	downloadFile(url);
+}
+
 /*
  * Check to see if the status of the task means it should be included
  */
-function includeByStatus(statusFilter, task) {
+function includeByStatus(statusFilter, task, excludeZeroOrigin) {
 
 	var include = statusFilter.indexOf(task.properties.status) >= 0;
 	if(!include) {
@@ -4958,7 +4983,7 @@ function includeByStatus(statusFilter, task) {
 			include = true;
 		}
 	}
-	if(include) {
+	if(include && excludeZeroOrigin) {
 		// Remove points with 0,0 coordinates
 		include = false;
 		if(task.geometry) {
