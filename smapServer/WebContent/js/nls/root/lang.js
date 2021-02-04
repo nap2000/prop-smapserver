@@ -945,6 +945,8 @@ define({
 	"ed_hod": "Hide the form on devices",
     "ed_s_g": "Grid (Web Forms)",
     "ed_s_p": "Pages",
+    "ed_c_sr": "All questions set to <span style=\"color:blue;\">required</span>",
+    "ed_c_snr": "All questions set to <span style=\"color:red;\">not required</span>",
     "ed_c_del_q": "Deleted question",
     "ed_c_del_o": "Deleted choice %s1 from option list %s2",
     "ed_c_chg_p":  "%s1 property of question %s2 changed to: %s3 from: %s4",
