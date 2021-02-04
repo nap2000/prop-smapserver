@@ -512,17 +512,19 @@ require([
 
 			// actions
 			h[++idx] = '<td style="text-align: center;">';
+			h[++idx] = '<div class="d-flex">';
 
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-danger btn-sm rm_not">';
+			h[++idx] = '" class="btn btn-danger btn-sm rm_not mr-2">';
 			h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
 
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="ml-4 btn btn-info btn-sm edit_not">';
+			h[++idx] = '" class="btn btn-info btn-sm edit_not">';
 			h[++idx] = '<i class="fa fa-edit"></i></button>';
 
+			h[++idx] = '</div>';
 			h[++idx] = '</td>';
 			// end actions
 
