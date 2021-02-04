@@ -1949,14 +1949,16 @@ require([
 				h[++idx] = '</td>';
 
 				h[++idx] = '<td>';
+				h[++idx] = '<div class="d-flex">';
 				h[++idx] = '<button type="button" data-idx="';
 				h[++idx] = i;
-				h[++idx] = '" class="btn btn-sm rm_user btn-danger">';
+				h[++idx] = '" class="btn btn-sm rm_user btn-danger mr-2">';
 				h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
 				h[++idx] = '<button type="button" data-idx="';
 				h[++idx] = i;
-				h[++idx] = '" class="ml-4 btn-sm user_edit btn-info">';
+				h[++idx] = '" class="btn-sm user_edit btn-info">';
 				h[++idx] = '<i class="far fa-edit"></i></button>';
+				h[++idx] = '</div>';
 				h[++idx] = '</td>';
 
 				h[++idx] = '</tr>';
@@ -2036,14 +2038,16 @@ require([
 			h[++idx] = '</td>';
 
 			h[++idx] = '<td>';
+			h[++idx] = '<div class="d-flex">';
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-default btn-sm rm_project btn-danger">';
+			h[++idx] = '" class="btn btn-default btn-sm rm_project btn-danger mr-2">';
 			h[++idx] = '<i class="fas fa-trash-alt"></i></span></button>';
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="ml-4 btn btn-default btn-sm project_edit btn-info">';
+			h[++idx] = '" class="btn btn-default btn-sm project_edit btn-info">';
 			h[++idx] = '<i class="far fa-edit"></i></button>';
+			h[++idx] = '</div>';
 			h[++idx] = '</td>';
 
 			h[++idx] = '</tr>';
@@ -2139,19 +2143,19 @@ require([
 			h[++idx] = '</td>';
 
 			h[++idx] = '<td>';
-
+			h[++idx] = '<div class="d-flex">';
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-sm rm_role btn-danger">';
+			h[++idx] = '" class="btn btn-sm rm_role btn-danger mr-2">';
 			h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
 
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="ml-4 btn-sm role_edit btn-info" value="';
+			h[++idx] = '" class="btn-sm role_edit btn-info" value="';
 			h[++idx] = i;
 			h[++idx] = '">';
 			h[++idx] = '<i class="far fa-edit"></i></button>';
-
+			h[++idx] = '</div>';
 			h[++idx] = '</td>';
 
 			h[++idx] = '</tr>';
