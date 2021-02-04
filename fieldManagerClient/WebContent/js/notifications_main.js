@@ -39,13 +39,11 @@ requirejs.config({
     	common: '../../../../js/app/common',
     	globals: '../../../../js/app/globals',
     	tablesorter: '../../../../js/libs/tablesorter',
-    	lang_location: '../../../../js',
-	    metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu'
+    	lang_location: '../../../../js'
     },
     shim: {
     	'common': ['jquery'],
     	'tablesorter': ['jquery'],
-	    'metismenu': ['jquery'],
 	
     	}
     });
@@ -55,8 +53,7 @@ require([
          'common', 
          'localise', 
          'globals',
-         'tablesorter',
-		 'metismenu'
+         'tablesorter'
          
          ], function($, common, localise, globals) {
 
@@ -75,7 +72,6 @@ require([
 
 		setupUserProfile(true);
 		localise.setlang();		    // Localise HTML
-		$("#side-menu").metisMenu();
 
 		// Get Notification Types for this server
 		getNotificationTypes();
@@ -396,36 +392,43 @@ require([
 			idx = -1,
 			updateCurrentProject = true;
 
-		h[++idx] = '<b><div class="row">';
+		h[++idx] = '<div class="table-responsive">';
+		h[++idx] = '<table class="table table-striped">';
 
-		h[++idx] = '<div class="col-sm-2">';
+		h[++idx] = '<thead>';
+		h[++idx] = '<tr>';
+
+		h[++idx] = '<th scope="col" style="text-align: center;">';
 		h[++idx] = localise.set["c_name"];
-		h[++idx] = '</div>';
+		h[++idx] = '</th>';
 
-		h[++idx] = '<div class="col-sm-1">';
+		h[++idx] = '<th scope="col" style="text-align: center;">';
 		h[++idx] = localise.set["c_trigger"];
-		h[++idx] = '</div>';
+		h[++idx] = '</th>';
 
-		h[++idx] = '<div class="col-sm-2">';
+		h[++idx] = '<th scope="col" style="text-align: center;">';
 		h[++idx] = localise.set["c_survey_tg"];
-		h[++idx] = '</div>';
+		h[++idx] = '</th>';
 
-		h[++idx] = '<div class="col-sm-1">';
+		h[++idx] = '<th scope="col" style="text-align: center;">';
 		h[++idx] = localise.set["c_target"];
-		h[++idx] = '</div>';
+		h[++idx] = '</th>';
 
-		h[++idx] = '<div class="col-sm-4">';
+		h[++idx] = '<th scope="col" style="text-align: center;">';
 		h[++idx] = localise.set["c_details"];
-		h[++idx] = '</div>';
+		h[++idx] = '</th>';
 
-		h[++idx] = '<div class="col-sm-2">';
+		h[++idx] = '<th scope="col" style="text-align: center;">';
 		h[++idx] = localise.set["c_action"];
-		h[++idx] = '</div>';
-		h[++idx] = '</div></b>';        // Header row
+		h[++idx] = '</th>';
 
+		h[++idx] = '</tr>';
+		h[++idx] = '</thead>';
+
+		h[++idx] = '<tbody>';
 		for(i = 0; i < data.length; i++) {
 
-			h[++idx] = '<div class="row"';
+			h[++idx] = '<tr';
 			if(!data[i].enabled) {
 				h[++idx] = ' class="disabled"';
 			}
@@ -433,17 +436,17 @@ require([
 
 			// name
 			var name = (data[i].name && data[i].name.trim().length > 0) ? data[i].name : i;
-			h[++idx] = '<div class="col-sm-2" style="word-wrap: break-word;">';
+			h[++idx] = '<td style="text-align: center;">';
 			h[++idx] = name;
-			h[++idx] = '</div>';
+			h[++idx] = '</td>';
 
 			// trigger
-			h[++idx] = '<div class="col-sm-1">';
+			h[++idx] = '<td style="text-align: center;">';
 			h[++idx] = localise.set[data[i].trigger];
-			h[++idx] = '</div>';
+			h[++idx] = '</td>';
 
 			// survey / task group
-			h[++idx] = '<div class="col-sm-2" style="word-wrap: break-word;">';
+			h[++idx] = '<td style="text-align: center;">';
 			if(data[i].trigger === "submission") {
 				h[++idx] = data[i].s_name;
 			} else if(data[i].trigger === "console_update") {
@@ -451,18 +454,18 @@ require([
 			} else {
 				h[++idx] = data[i].tg_name;
 			}
-			h[++idx] = '</div>';
+			h[++idx] = '</td>';
 
 			// target
-			h[++idx] = '<div class="col-sm-1">';
+			h[++idx] = '<td style="text-align: center;">';
 			h[++idx] = localise.set["c_" + data[i].target];
-			h[++idx] = '</div>';
+			h[++idx] = '</td>';
 
 			if(data[i].notifyDetails && !data[i].notifyDetails.emails) {
 				data[i].notifyDetails.emails = [];
 			}
 			// details
-			h[++idx] = '<div class="col-sm-4" style="word-wrap: break-word;">';
+			h[++idx] = '<td style="text-align: center;">';
 			if(data[i].target === "email" && data[i].notifyDetails) {
 				var notifyEmail = false;
 				if((data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0)
@@ -505,27 +508,29 @@ require([
 					}
 				}
 			}
-			h[++idx] = '</div>';
+			h[++idx] = '</td>';
 
 			// actions
-			h[++idx] = '<div class="col-sm-2">';
+			h[++idx] = '<td style="text-align: center;">';
 
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-default btn-sm edit_not warning">';
-			h[++idx] = '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>';
+			h[++idx] = '" class="btn btn-danger btn-sm rm_not">';
+			h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
 
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-default btn-sm rm_not danger">';
-			h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+			h[++idx] = '" class="ml-4 btn btn-info btn-sm edit_not">';
+			h[++idx] = '<i class="fa fa-edit"></i></button>';
 
-			h[++idx] = '</div>';
+			h[++idx] = '</td>';
 			// end actions
 
-			h[++idx] = '</div>';
+			h[++idx] = '</tr>';
 		}
-
+		h[++idx] = '</tbody>';
+		h[++idx] = '</table>';
+		h[++idx] = '</div>';
 
 		$selector.empty().append(h.join(''));
 
