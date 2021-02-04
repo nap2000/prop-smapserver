@@ -2537,15 +2537,10 @@ function getChangeDescription(change, version) {
 			h[++idx] = str;
 		}
 	} else if(change.action === "set_required")  {
-		h[++idx] = 'All questions set ';
 		if(change.msg.indexOf('not') < 0) {
-			h[++idx] = '<span style="color:blue;">';
-			h[++idx] = 'required';
-			h[++idx] = '</span>';
+			h[++idx] = localise.set["ed_c_sr"];
 		} else {
-			h[++idx] = '<span style="color:red;">';
-			h[++idx] = 'not required';
-			h[++idx] = '</span>';
+			h[++idx] = localise.set["ed_c_snr"];
 		}
 
 	} else if(change.action === "upload_template")  {
@@ -2555,6 +2550,10 @@ function getChangeDescription(change, version) {
 		} else {
 			h[++idx] = localise.set["msg_survey_loaded"];
 		}
+
+	} else if(change.action === "role")  {
+
+			h[++idx] = change.msg;
 
 	} else {
 		h[++idx] = change.type;
