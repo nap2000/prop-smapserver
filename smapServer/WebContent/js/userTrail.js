@@ -325,81 +325,18 @@ function getData() {
 	var startUtc = moment.utc(startDate),
 		endUtc = moment.utc(endDate);
 		
-	getTrailData(startUtc.valueOf(), endUtc.valueOf());
+	getTrailData(globals.gCurrentProject, $('#user_list option:selected').val(), startUtc.valueOf(), endUtc.valueOf(), showUserTrail);
 
-	//getSurveyLocations(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD'));
 
 }
-function getTrailData(startDate, endDate) {
-	
-	var projectId = globals.gCurrentProject,
-		userId = $('#user_list option:selected').val();
 
-	var url = '/surveyKPI/usertrail/trail' +
-		'?userId=' + userId +
-		'&startDate=' + startDate +
-		'&endDate=' + endDate;
-	
-	addHourglass();
-	$.ajax({
-		url: url,
-		dataType: 'json',
-		cache: false,
-		success: function(data) {
-			removeHourglass();		
-			gTrailData = data;
-			showUserTrail();
-			
-		},
-		error: function(xhr, textStatus, err) {
-			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-	              return;  // Not an error
-			} else {
-				alert("Error: Failed to get user trail: " + err);
-			}
-		}
-	});	
-}
 
-function getSurveyLocations(startDate, endDate) {
-	
-	var projectId = globals.gCurrentProject,
-		userId = $('#user_list option:selected').val();
-
-	var url = '/surveyKPI/items/user/' + userId
-		+ '?start_key=0'
-		+ '&dateId=0'
-		+ '&startDate=' + startDate
-		+ '&endDate=' + endDate;
-	
-	addHourglass();
-	$.ajax({
-		url: url,
-		dataType: 'json',
-		cache: false,
-		success: function(data) {
-			removeHourglass();		
-			gSurveyLocations = data;
-			showSurveyLocations();
-			
-		},
-		error: function(xhr, textStatus, err) {
-			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-	              return;  // Not an error
-			} else {
-				alert("Error: Failed to get survey locations: " + err);
-			}
-		}
-	});	
-}
-
-function showUserTrail() {
+function showUserTrail(data) {
 	var i,
 		lineFeature,
 		coords = [];
-	
+
+	gTrailData = data;
 	gTrailSource.clear();
 	
 	// Add points
@@ -421,34 +358,6 @@ function showUserTrail() {
 		gTime.duration = gTime.stop - gTime.start;
 	}
 	
-	gMap.getView().fit(gTrailSource.getExtent(), gMap.getSize());
-
-	gMap.render();
-}
-
-function showSurveyLocations() {
-	var i,
-		lineFeature,
-		coords = [];
-	
-	gSurveyLocationSource.clear();
-	gSurveys = [];
-	
-	// Add points
-	for(i = 0; i < gSurveyLocations.features.length; i++) {
-		
-		var f = new ol.Feature({
-			geometry: new ol.geom.Point(gSurveyLocations.features[i].geometry),
-			name: gSurveyLocations.features[i].properties['Survey Name']
-		});
-		
-		gSurveys.push(f);
-		coords.push(gSurveyLocations.features[i].geometry);
-	}
-	
-	gSurveyLocationSource.addFeatures(gSurveyLocations.features);
-	
-	// TODO fit the extent to the combination of trail data and survey locations
 	gMap.getView().fit(gTrailSource.getExtent(), gMap.getSize());
 
 	gMap.render();

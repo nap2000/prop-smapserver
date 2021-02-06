@@ -40,14 +40,11 @@ requirejs.config({
     	modernizr: '../../../../js/libs/modernizr',
     	common: '../../../../js/app/common',
     	lang_location: '../../../../js',
-    	metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu',
     	pace: '../../../../js/libs/wb/pace/pace.min'
     },
     shim: {
 	    'datetimepicker': ['moment'],
-    	'common': ['jquery'],
-    	'bootstrap': ['jquery'],
-    	'metismenu': ['jquery']
+    	'common': ['jquery']
     	}
     });
 
@@ -57,7 +54,6 @@ require([
          'localise',
 		 'globals',
 		 'moment',
-         'metismenu',
 		 'datetimepicker',
          'pace'
 
@@ -75,8 +71,6 @@ require([
         setCustomLogs();
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
-
-		$("#side-menu").metisMenu()
 
 		getLoggedInUser(undefined, false, true, undefined);
 		
