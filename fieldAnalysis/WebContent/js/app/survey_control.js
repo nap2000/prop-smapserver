@@ -793,9 +793,28 @@ function getData(view, nocache) {
 		}
 	} else if(view.subject_type === "user") {
 		getUserData(view, 0);       // Start from the first record
+		if(view.type === "map") {
+			addUserTrail(view);
+		}
+
 	} else if(view.subject_type === "user_locations") {
 		getUserLocationsData(view, 0, nocache);
 	}
+}
+
+function addUserTrail(view) {
+	var startDate = $('#from_date').datepicker({ dateFormat: 'yy-mm-dd' }).val(),
+		endDate = $('#to_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+
+	var startUtc = moment.utc(startDate),
+		endUtc = moment.utc(endDate);
+
+	getTrailData(globals.gCurrentProject, view.uId, startUtc.valueOf(), endUtc.valueOf(), showUserTrail);
+
+}
+
+function showUserTrail(data) {
+
 }
 
 // Populate the list of available functions

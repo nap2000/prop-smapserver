@@ -5273,3 +5273,31 @@ function getQuestionType(schema, qname) {
 		}
 	}
 }
+
+function getTrailData(projectId, userId, startDate, endDate, callback) {
+
+	var url = '/surveyKPI/usertrail/trail' +
+		'?userId=' + userId +
+		'&startDate=' + startDate +
+		'&endDate=' + endDate;
+
+	addHourglass();
+	$.ajax({
+		url: url,
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			removeHourglass();
+			callback(data);
+
+		},
+		error: function(xhr, textStatus, err) {
+			removeHourglass();
+			if(xhr.readyState == 0 || xhr.status == 0) {
+				return;  // Not an error
+			} else {
+				alert("Error: Failed to get user trail: " + err);
+			}
+		}
+	});
+}

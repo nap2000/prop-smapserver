@@ -45,7 +45,6 @@ requirejs.config({
     	mapbox_app: '../../../../js/app/mapbox_app',
     	
     	mapbox: '../../../../js/libs/mapbox/js/mapbox',
-    	metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu',
     	pace: '../../../../js/libs/wb/pace/pace.min',
     	peity: '../../../../js/libs/wb/peity/jquery.peity.min',
     	calendar: '../../../../js/libs/wb/plugins/fullcalendar/fullcalendar.min',
@@ -64,7 +63,6 @@ requirejs.config({
     	'mapbox': {
             exports: 'L'
         },
-    	'metismenu': ['jquery'],
     	'peity': ['jquery'],
         'multiselect': ['jquery', 'knockout'],
         'es': ['calendar']
@@ -86,7 +84,6 @@ require([
          'mapbox',
          'datetimepicker',
          'mapbox_app',
-         'metismenu',
          'pace',
          'peity',
          'calendar',
@@ -143,8 +140,6 @@ require([
 		localise.setlang();		// Localise HTML
 		$('#email_subject').prop('placeholder', localise.set['n_esc']);
 		$('#tp_assign_emails, #assign_emails').prop('placeholder', localise.set['n_cs_e']);
-
-		$("#side-menu").metisMenu();
 
 		getLoggedInUser(projectChanged, false, true, undefined);
 
