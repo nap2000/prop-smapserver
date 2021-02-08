@@ -52,7 +52,6 @@ requirejs.config({
     shim: {
     	'app/common': ['jquery'],
         'app/data': ['jquery'],
-    	'icheck': ['jquery'],
     	'metismenu': ['jquery'],
     	'slimscroll': ['jquery'],
         'bootstrap-datetimepicker.min': ['moment']
@@ -70,7 +69,6 @@ require([
          'slimscroll',
          'pace',
          'app/data',
-         'icheck',
          'bootstrap-datetimepicker.min'
          ], function($, common, globals, localise, bsfi, moment) {
 
