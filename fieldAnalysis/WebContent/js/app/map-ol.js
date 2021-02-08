@@ -226,6 +226,50 @@ function setMap(view, secondaryLayer) {
 	}
 }
 
+/*
+ * Add user trail to a map
+ */
+function addUserTrail(view, secondaryLayer, data) {
+
+	var i, j,
+		views = globals.gSelector.getViews(),
+		map = globals.gSelector.getMap(view.pId);
+
+	// Add the layer(s) for the selected panel
+	if(!secondaryLayer) {
+
+		if(view.results) {
+			for(i = 0; i < view.results.length; i++) {
+				addLayer(view.results[i], view.pId, view.pId, view, view.title + i + " " + view.pId, map);
+			}
+		} else {
+			console.log("Selected View: "+ view.title + " does not have results");
+		}
+	}
+
+	// Add the layer for any other panels that are displayed on this panel
+	if(secondaryLayer) {
+		for(i = 0; i < views.length; i++) {
+
+			if(views[i].results) {
+				if(view.id !== views[i].id && views[i].state != "deleted"  && views[i].layerId === view.id) {
+					addSettingsButton(views[i].title, views[i].pId, view.pId);
+
+					for(j = 0; j < views[i].results.length; j++) {
+						addLayer(views[i].results[j], view.pId, views[i].pId, view, views[i].title + j + " " + views[i].pId, map);
+					}
+				}
+			}
+		}
+		$('.layerSettings').button().off().click(function() {	// display the settings dialog
+			showSettings($(this));
+		});
+	}
+
+	if(typeof view.bounds != "undefined") {
+		map.zoomToExtent(view.bounds);
+	}
+}
 
 /*
  * Add a button to access the settings of a secondary layer
