@@ -806,10 +806,18 @@ function addUserTrail(view) {
 	var startDate = $('#from_date').datepicker({ dateFormat: 'yy-mm-dd' }).val(),
 		endDate = $('#to_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
 
-	var startUtc = moment.utc(startDate),
-		endUtc = moment.utc(endDate);
+	var startUtcValue = 0;
+	var endUtcValue = 0;
+	if(startDate !== "") {
+		var startUtc = moment.utc(startDate);
+		startUtcValue = startUtc.valueOf();
+	}
+	if(endDate !== "") {
+		var endUtc = moment.utc(endDate);
+		endUtcValue = endUtc.valueOf();
+	}
 
-	getTrailData(globals.gCurrentProject, view.uId, startUtc.valueOf(), endUtc.valueOf(), showUserTrail);
+	getTrailData(globals.gCurrentProject, view.uId, startUtcValue, endUtcValue, showUserTrail);
 
 }
 
