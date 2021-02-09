@@ -334,7 +334,9 @@
                             <div class="col-sm-8">
                                 <div class='input-group date' id='exp_from_date' data-container="body">
                                     <input type='text' class="form-control" data-date-format="YYYY-MM-DD"/>
-                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i class="fa fa-calendar-alt"></i></span></button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-sm-2">
@@ -346,7 +348,9 @@
                             <div class="col-sm-8">
                                 <div class='input-group date' id='exp_to_date' data-container="body">
                                     <input type='text' class="form-control" data-date-format="YYYY-MM-DD"/>
-                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i class="fa fa-calendar-alt"></i></span></button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-sm-2">
@@ -359,21 +363,29 @@
                             <div class="col-sm-10">
                                 <div class="input-group">
                                     <textarea id="tg_ad_filter" class="form-control"></textarea>
-                                    <span class="input-group-addon">
-                                        <a href="https://www.smap.com.au/docs/server_expressions.html" target="_blank">
-                                            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                                        </a>
-                                    </span>
+                                    <button class="btn btn-outline-secondary" type="button">
+                                            <span class="input-group-append">
+                                                <a href="https://www.smap.com.au/docs/server_expressions.html" target="_blank">
+                                                    <i class="fas fa-info-circle"></i>
+                                                </a>
+                                             </span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="well">
+                    <div class="card card-body bg-light offset-sm-2 mr-4">
                         <h4 class="lang" data-lang="ro_transform">transform</h4>
 
                         <form>
 
+                            <div class="col-sm-10 offset-sm-2 mb-2 custom-control custom-checkbox rt_dependent xlsx">
+                                <input type="checkbox" checked="checked"  class="custom-control-input" id="enabletransform">
+                                <label class="custom-control-label lang mt-3" data-lang="c_en" for="enabletransform"></label>
+                            </div>
+
+                            <!--
                             <div class="form-group row">
                                 <div class="col-sm-offset-1 col-sm-10">
                                     <div class="custom-control custom-checkbox mt-3">
@@ -382,9 +394,9 @@
                                             <span data-lang="c_en" class="lang">enable</span>
                                         </label>
                                     </div>
-
                                 </div>
                             </div>
+                            -->
 
                             <div class="transformenabled" style="display:none;">
                                 <div class="form-group row">
@@ -392,11 +404,13 @@
                                     <div class="col-sm-10">
                                         <div class="input-group">
                                             <input type="text" id="t_keys" class="form-control">
-                                            <span class="input-group-addon">
+                                            <button class="btn btn-outline-secondary" type="button">
+                                            <span class="input-group-append">
                                                 <a href="/transformHelp.html#keys" target="_blank">
-                                                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                                                    <i class="fas fa-info-circle"></i>
                                                 </a>
                                             </span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -405,11 +419,13 @@
                                     <div class="col-sm-10">
                                         <div class="input-group">
                                             <input type="text" id="t_values_question" class="form-control">
+                                            <button class="btn btn-outline-secondary" type="button">
                                             <span class="input-group-addon">
                                                 <a href="/transformHelp.html#valuesquestion" target="_blank">
-                                                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                                                    <i class="fas fa-info-circle"></i>
                                                 </a>
                                             </span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -418,11 +434,13 @@
                                     <div class="col-sm-10">
                                         <div class="input-group">
                                             <input type="text" id="t_values" class="form-control">
+                                            <button class="btn btn-outline-secondary" type="button">
                                             <span class="input-group-addon">
                                                 <a href="/transformHelp.html#values" target="_blank">
-                                                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                                                    <i class="fas fa-info-circle"></i>
                                                 </a>
                                             </span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -431,11 +449,13 @@
                                     <div class="col-sm-10">
                                         <div class="input-group">
                                             <input type="text" id="t_wide_columns" class="form-control">
+                                            <button class="btn btn-outline-secondary" type="button">
                                             <span class="input-group-addon">
                                                 <a href="/transformHelp.html#widecolumns" target="_blank">
-                                                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                                                    <i class="fas fa-info-circle"></i>
                                                 </a>
                                             </span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -605,7 +625,9 @@
                         <div class="col-sm-4">
                             <div class="input-group date" id='reportMonth' >
                                 <input type='text' class="form-control" data-date-format="YYYY/MM"/>
-                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i class="fa fa-calendar-alt"></i></span></button>
+                                </div>
                             </div>
                         </div>
                     </div>
