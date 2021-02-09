@@ -52,7 +52,6 @@ requirejs.config({
     shim: {
     	'app/common': ['jquery'],
         'app/data': ['jquery'],
-    	'metismenu': ['jquery'],
     	'slimscroll': ['jquery'],
         'bootstrap-datetimepicker.min': ['moment']
     }
@@ -65,7 +64,6 @@ require([
          'app/localise',
          'bootstrapfileinput',
          'moment',
-         'metismenu',
          'slimscroll',
          'pace',
          'app/data',
@@ -77,7 +75,6 @@ require([
         setCustomReports();			// Apply custom javascript
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
-		$("#side-menu").metisMenu();
 
 		// Get the user details
 		globals.gIsAdministrator = false;
