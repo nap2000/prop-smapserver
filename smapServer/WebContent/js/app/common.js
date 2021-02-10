@@ -3380,9 +3380,10 @@ function addFormPickList(sMeta, checked_forms) {
 	// Start with the top level form
 	for(i = 0; i < sMeta.forms.length; i++) {
 		if(sMeta.forms[i].p_id == 0) {
-			$(".osmforms").html(addFormToList(sMeta.forms[i], sMeta, 0, true, false, checked_forms));
-			$(".selectforms").html(addFormToList(sMeta.forms[i], sMeta, 0, false, false, checked_forms));
-			$(".shapeforms,.taforms").html(addFormToList(sMeta.forms[i], sMeta, 0, true, true, checked_forms));
+			$(".osmforms").html(addFormToList(sMeta.forms[i], sMeta, 0, true, false, checked_forms, false));
+			$(".selectforms").html(addFormToList(sMeta.forms[i], sMeta, 0, false, false, checked_forms, false));
+			$(".shapeforms,.taforms").html(addFormToList(sMeta.forms[i], sMeta, 0, true, true, checked_forms, false));
+			$(".shapeforms_bs4").html(addFormToList(sMeta.forms[i], sMeta, 0, true, true, checked_forms, true));
 		}
 	}
 
@@ -3514,7 +3515,7 @@ function getSelectedForm($forms, ignoreError) {
 	return forms[0];
 }
 
-function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms) {
+function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms, bs4) {
 
 	var h = [],
 		idx = -1,
@@ -3545,7 +3546,7 @@ function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms) {
 				break;
 			}
 		}
-	} else {}
+	}
 
 	h[++idx] = '<div class="' + type + '"';
 	h[++idx] = '<span style="padding-left:';
@@ -3558,7 +3559,13 @@ function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms) {
 	} else {
 		h[++idx] = '">';
 	}
+	if(bs4) {
+		h[++idx] = '<span class="ml-2">';
+	}
 	h[++idx] = form.form;
+	if(bs4) {
+		h[++idx] = '</span>';
+	}
 	h[++idx] = '</label>';
 	if(form.p_id != 0 && !osm) {
 		h[++idx] = ' <button class="exportpivot">Pivot</button>';
@@ -3568,7 +3575,7 @@ function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms) {
 	// Add the children (recursively)
 	for(i = 0; i < sMeta.forms.length; i++) {
 		if(sMeta.forms[i].p_id != 0  && sMeta.forms[i].p_id == form.f_id) {
-			h[++idx] = addFormToList(sMeta.forms[i], sMeta, offset + 20, osm, set_radio, checked_forms);
+			h[++idx] = addFormToList(sMeta.forms[i], sMeta, offset + 20, osm, set_radio, checked_forms, bs4);
 		}
 	}
 
@@ -3663,6 +3670,21 @@ function showRoles(data, selectedRoles, setall) {
 	$('.role_select_roles').empty();
 	if (data.length > 0) {
 		for (i = 0; i < data.length; i++) {
+			h[++idx] = '<div class="col-sm-10 custom-control custom-checkbox ml-2 mb-1">'
+			h[++idx] = '<input type="checkbox"';
+			if(setall || roleSelected(data[i].id, selectedRoles)) {
+				h[++idx] = ' checked="checked"';
+			}
+			h[++idx] = ' class="custom-control-input" value="';
+			h[++idx] = data[i].id;
+			h[++idx] = '">';
+
+			h[++idx] = '<label class="custom-control-label">';
+			h[++idx] = 	data[i].name;
+			h[++idx] = '</label>';
+			h[++idx] = '</div>';
+
+			/*
 			h[++idx] = '<div class="checkbox">';
 			h[++idx] = '<label><input type="checkbox" value="';
 			h[++idx] = data[i].id;
@@ -3674,9 +3696,11 @@ function showRoles(data, selectedRoles, setall) {
 			h[++idx] = data[i].name;
 			h[++idx] = '</label>';
 			h[++idx] = '</div>';
+			*/
+
 		}
 		$('.role_select').show();
-		$('.role_select_roles').append(h.join(''));
+		$('.role_select_roles').empty().append(h.join(''));
 	}
 }
 
