@@ -52,8 +52,6 @@ requirejs.config({
     shim: {
     	'app/common': ['jquery'],
         'app/data': ['jquery'],
-    	'icheck': ['jquery'],
-    	'metismenu': ['jquery'],
     	'slimscroll': ['jquery'],
         'bootstrap-datetimepicker.min': ['moment']
     }
@@ -66,11 +64,9 @@ require([
          'app/localise',
          'bootstrapfileinput',
          'moment',
-         'metismenu',
          'slimscroll',
          'pace',
          'app/data',
-         'icheck',
          'bootstrap-datetimepicker.min'
          ], function($, common, globals, localise, bsfi, moment) {
 
@@ -79,7 +75,6 @@ require([
         setCustomReports();			// Apply custom javascript
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
-		$("#side-menu").metisMenu();
 
 		// Get the user details
 		globals.gIsAdministrator = false;
@@ -843,11 +838,11 @@ require([
                 tab[++idx] = '<button id="dropdownMenu' + i + '" class="btn btn-default dropdown-toggle report_action" data-toggle="dropdown"  type="button" aria-haspopup="true" aria-expanded="false">';
                 tab[++idx] = localise.set["c_action"];
                 tab[++idx] = '</button>';
-                tab[++idx] = '<ul class="dropdown-menu" aria-labelledby="dropdownMenu' + i + '">';
-                    tab[++idx] = '<li><a class="repGenerate" href="#">' + localise.set["c_generate"] + '</a></li>';
-                    tab[++idx] = '<li><a class="repEdit" href="#">' + localise.set["c_edit"] + '</a></li>';
-                    tab[++idx] = '<li><a class="repDelete" href="#">' + localise.set["c_del"] + '</a></li>';
-                tab[++idx] = '</ul>';
+                tab[++idx] = '<div class="dropdown-menu" aria-labelledby="dropdownMenu' + i + '">';
+                    tab[++idx] = '<button class="dropdown-item repGenerate" type="button">' + localise.set["c_generate"] + '</button>';
+                    tab[++idx] = '<button class="dropdown-item repEdit" type="button">' + localise.set["c_edit"] + '</button>';
+                    tab[++idx] = '<button class="dropdown-item repDelete" type="button">' + localise.set["c_del"] + '</button>';
+                tab[++idx] = '</div>';
                 tab[++idx] = '</div>';  // Dropdown class
                 tab[++idx] = '</td>';
                 tab[++idx] = '</tr>';
