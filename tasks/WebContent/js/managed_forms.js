@@ -1301,9 +1301,6 @@ require([
             scrollY: '70vh',
             scrollX: true,
             scrollCollapse: true,
-            //fixedColumns: {
-            //    leftColumns: 2
-            //},
             select: {
                 selector: 'td:not(:first-child)'
             },
