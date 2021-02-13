@@ -79,6 +79,9 @@ require([
 			 scrollY: '70vh',
 			 scrollX: true,
 			 scrollCollapse: true,
+			 select: {
+			    	selector: 'td:not(:first-child)'
+			 },
 			 deferRender: true,
 		     ajax: "/api/v1/log/dt",
 		     columns: [
@@ -128,6 +131,15 @@ require([
 			table.ajax.reload();
 		});
 
+		// Respond to selection of a row
+		$(".row_selected").attr('aria-disabled', true).addClass("disabled");
+		table.off('select').on('select', function (e, dt, type, indexes) {
+			recordSelected(table.rows('.selected').data());
+		});
+		table.off('deselect').on('deselect', function (e, dt, type, indexes) {
+			recordSelected(table.rows('.selected').data());
+		});
+
 		/*
 		 * Reports
 		 */
@@ -160,7 +172,38 @@ require([
 		
 	});
 	
+	function recordSelected(records) {
+		if(records.length > 0 && records[0].sId > 0) {
+			$(".row_selected").attr('aria-disabled', false).removeClass("disabled");
+			console.log(JSON.stringify(records[0]));
 
+			addHourglass();
+			$.ajax({
+				url: "/surveyKPI/surveys/summary/id/" + records[0].sId,
+				dataType: 'json',
+				cache: false,
+				success: function(data) {
+					removeHourglass();
+					$('#survey_project').val(data.projectName);
+					$('#surveyDetails').modal("show");
+					console.log(JSON.stringify(data));
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(localise.set["c_error"] + ": " + err);
+					}
+				}
+			});
+
+		} else {
+			$(".row_selected").attr('aria-disabled', true).addClass("disabled");
+		}
+
+
+	}
 
 });
 
