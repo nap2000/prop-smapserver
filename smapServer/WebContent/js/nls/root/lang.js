@@ -1377,6 +1377,7 @@ define({
 
     // Logs
     "log_hr": "Hourly Summary",
+    "log_sd": "Survey Details",
 
     // Login
     "li_success": "Login successful",

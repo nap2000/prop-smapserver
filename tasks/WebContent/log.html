@@ -33,6 +33,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
 	<a class="navbar-brand lang" data-lang="m_logs" href="#">logs</a>
+	<div class="spinner-grow text-danger hour_glass"></div>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
 	</button>
@@ -79,18 +80,25 @@
 </nav>
 
 <div class="container-fluid mt-4 mx-4">
-	<div class="row">
+
+	<div class="card mt-2">
+		<div class="col-sm-12">
+			<div class="bg-light row filtersShown">
+				<div class="col-sm-6">
+					<div class="col-lg-3 col-sm-4 col-xs-12 mt-1 mb-1">
+						<a id="details_btn" class="row_selected btn btn-success lang alist pl-4 pr-4" data-lang="log_sd" href="#">details</a>
+					</div>
+				</div>
+				<div class="col-sm-6"></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row mt-4">
 		<div class="col-md-12">
 			<div id="table-view" class="tab-pane active">
 				<div class="panel-body">
 					<div id="table_content" class="col-md-12 dash_views">
-						<div class="sk-spinner sk-spinner-wave">
-							<div class="sk-rect1"></div>
-							<div class="sk-rect2"></div>
-							<div class="sk-rect3"></div>
-							<div class="sk-rect4"></div>
-							<div class="sk-rect5"></div>
-						</div>
 						<div class="table-responsive">
 							<table id="log_table" class="table table-striped">
 								<thead>
@@ -160,7 +168,31 @@
 	</div>
 </div>
 
-<img id="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
+<!-- Survey Details -->
+<div id="surveyDetails" class="modal fade" tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title lang" data-lang="log_sd"></h4>
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			</div>
+			<div class="modal-body">
+
+				<form>
+					<div class="form-group row">
+						<label class="lang col-sm-4 control-label" data-lang="c_project" for="survey_project">survey project</label>
+						<div class="col-sm-8">
+							<input class="form-control" id="survey_project" readonly></input>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 </body>
 </html>
