@@ -2227,6 +2227,21 @@ function openForm(type) {
 }
 
 /*
+ * If this is a smap server return the subdomain
+ */
+function getServerSubDomainName() {
+
+	var hostname = location.hostname;
+	var sd = "";
+
+	if(hostname.indexOf('smap.com.au') > 0) {
+		sd = hostname.substring(0, hostname.indexOf('smap.com.au'));
+	}
+
+	return sd;
+}
+
+/*
  * Return true if this is a business server
  */
 function isBusinessServer() {
