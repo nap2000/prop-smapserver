@@ -1063,6 +1063,4 @@ define(['jquery','localise', 'common', 'globals',  'bootstrap','moment', 'dateti
             downloadFile("/surveyKPI/adminreport/resourceusage/");
         }
 
-
-
     });
