@@ -2228,8 +2228,10 @@ function getServerSubDomainName() {
 	var hostname = location.hostname;
 	var sd = "";
 
-	if(hostname.indexOf('smap.com.au') > 0) {
-		sd = hostname.substring(0, hostname.indexOf('smap.com.au'));
+	if(hostname.indexOf('.smap.com.au') > 0) {
+		sd = hostname.substring(0, hostname.indexOf('.smap.com.au'));
+	} else if(hostname === 'localhost') {
+		sd = 'localhost';
 	}
 
 	return sd;
