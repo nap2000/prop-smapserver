@@ -1,0 +1,16 @@
+{
+  "name": "webform",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "./node_modules/.bin/babel src  --presets=@babel/env"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.16",
+    "@babel/core": "^7.12.16",
+    "@babel/preset-env": "^7.12.16",
+    "babel-loader": "^7.1.2"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.12.1"
+  }
+}
