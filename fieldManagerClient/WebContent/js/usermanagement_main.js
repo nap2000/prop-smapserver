@@ -495,7 +495,7 @@ require([
 				options=[],
 				i;
 
-			if(gCurrentOrganisationIndex === -1) {
+			if(!gCurrentOrganisationIndex || gCurrentOrganisationIndex === -1) {
 				organisation.id = -1;
 			} else {
 				organisation.id = gOrganisationList[gCurrentOrganisationIndex].id;
@@ -610,7 +610,6 @@ require([
 					getOrganisations();
 					$('#create_organisation_popup').modal("hide");
 				}, error: function(xhr, textStatus, err) {
-					document.forms.namedItem("organisationsave").reset();
 					removeHourglass();
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
@@ -1493,7 +1492,8 @@ require([
 	function openOrganisationDialog(existing, organisationIndex) {
 		var i,
 			h = [],
-			idx = -1;
+			idx = -1,
+			org;
 
 		if(gSmsType && gSmsType === "aws") {
 			$('.awsSmsOnly').show();
@@ -1501,15 +1501,17 @@ require([
 			$('.awsSmsOnly').hide();
 		}
 
-		var org = gOrganisationList[organisationIndex];
-		gCurrentOrganisationIndex = organisationIndex;
-
 		$('#organisation_create_form')[0].reset();
 		$('#o_banner_logo').attr("src", "/images/smap_logo.png");
 
 		if(existing) {
 
-			getCurrentResourceUsage(org.id);
+			org = gOrganisationList[organisationIndex];
+			gCurrentOrganisationIndex = organisationIndex;
+
+			if(globals.gIsOrgAdministrator) {
+				getCurrentResourceUsage(org.id);
+			}
 
 			$('#o_name').val(org.name);
 			$('#o_company_name').val(org.company_name);
@@ -1584,36 +1586,38 @@ require([
 			addLanguageOptions($('#o_language'), undefined);
 		}
 
-		// Add usage limits
-		h[++idx] = '<fieldset>';
-		for(i = 0; i < limitTypes.length; i++ ) {
-			h[++idx] = '<div class="form-group row">';
+		if(globals.gIsOrgAdministrator) {
+			// Add usage limits
+			h[++idx] = '<fieldset>';
+			for (i = 0; i < limitTypes.length; i++) {
+				h[++idx] = '<div class="form-group row">';
 				h[++idx] = '<label for="';
-					h[++idx] = limitTypes[i].id;
-					h[++idx] = '" class="col-sm-2 control-label">';
-					h[++idx] = localise.set[limitTypes[i].label];
+				h[++idx] = limitTypes[i].id;
+				h[++idx] = '" class="col-sm-2 control-label">';
+				h[++idx] = localise.set[limitTypes[i].label];
 				h[++idx] = '</label>';
-				h[++idx] = 	'<div class="col-sm-5">';
-					h[++idx] = '<input type="integer" id="'
-					h[++idx] = limitTypes[i].id;
-					h[++idx] = '" class="form-control"><br/>';
+				h[++idx] = '<div class="col-sm-5">';
+				h[++idx] = '<input type="integer" id="'
+				h[++idx] = limitTypes[i].id;
+				h[++idx] = '" class="form-control"><br/>';
 				h[++idx] = '</div>';
-				h[++idx] = 	'<div class="col-sm-5">';
-					h[++idx] = '<p id="';
-					h[++idx] = limitTypes[i].id + "_i";
-					h[++idx] = '"></p>';
+				h[++idx] = '<div class="col-sm-5">';
+				h[++idx] = '<p id="';
+				h[++idx] = limitTypes[i].id + "_i";
+				h[++idx] = '"></p>';
 				h[++idx] = '</div>';
-			h[++idx] = '</div>';
-		}
-		h[++idx] = '</fieldset>';
-		$('#usageLimitsHere').empty().html(h.join(''));
-		if(org && org.limits) {
-			for (i = 0; i < limitTypes.length; i++) {
-				$('#' + limitTypes[i].id).val((org.limits) ? org.limits[limitTypes[i].name] : 0);
+				h[++idx] = '</div>';
 			}
-		} else {
-			for (i = 0; i < limitTypes.length; i++) {
-				$('#' + limitTypes[i].id).val(limitTypes[i].default);
+			h[++idx] = '</fieldset>';
+			$('#usageLimitsHere').empty().html(h.join(''));
+			if (org && org.limits) {
+				for (i = 0; i < limitTypes.length; i++) {
+					$('#' + limitTypes[i].id).val((org.limits) ? org.limits[limitTypes[i].name] : 0);
+				}
+			} else {
+				for (i = 0; i < limitTypes.length; i++) {
+					$('#' + limitTypes[i].id).val(limitTypes[i].default);
+				}
 			}
 		}
 
@@ -2126,7 +2130,7 @@ require([
 			h[++idx] = '</td>';
 			h[++idx] = '<td class="usage_report_td">';
 
-			if (bs) {
+			if (bs && globals.gIsOrgAdministrator) {
 				h[++idx] = '<button style="margin-right:2px;" class="btn btn-default btn-sm btn-warning usage_report" value="';
 				h[++idx] = i;
 				h[++idx] = '">';

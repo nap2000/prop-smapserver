@@ -705,8 +705,10 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 	if(globals.gIsSecurityAdministrator) {
 		$('.security_role').show();
 	}
-	if(globals.gIsOrgAdministrator) {
+	if(globals.gIsOrgAdministrator) {  // Admins can see their personal organisations
 		$('.org_role').show();
+	}
+	if(globals.gIsOrgAdministrator || globals.gIsAdministrator) {  // Admins can see their personal organisations
 		if(typeof getOrganisationsFn === "function") {
 			getOrganisationsFn();
 		}
