@@ -196,6 +196,7 @@ create TABLE organisation (
 	limits text,				-- JSON object with resource limits
 	refresh_rate integer,
 	css text,
+	owner integer default 0,				-- User that owns this organisation
 	changed_ts TIMESTAMP WITH TIME ZONE
 	);
 CREATE UNIQUE INDEX idx_organisation ON organisation(name);
@@ -425,7 +426,8 @@ ALTER TABLE user_role OWNER TO ws;
 
 -- Create an administrator and set up defaul values
 insert into enterprise(id, name, changed_by, changed_ts) values(1, 'Default', '', now());
-insert into organisation(id, name, e_id, can_edit) values(1, 'Smap', 1, 'true');
+-- Create an organisation with communal ownership
+insert into organisation(id, name, e_id, can_edit, owner) values(1, 'Smap', 1, 'true', 0);
 
 insert into users (id, ident, realm, password, o_id, name, email) 
 	values (1, 'admin', 'smap', '9f12895fe9898cc306c45c9d3fcbc3d6', 1, 'Administrator', '');

@@ -348,4 +348,5 @@ alter table organisation add column navbar_text_color text;
 -- version 21.02
 alter table organisation add column ft_mark_finalized boolean default false;
 update organisation set ft_mark_finalized = false where ft_mark_finalized is null;
-
+alter table organisation add column owner integer default 0;
+update organisation set owner = 0 where owner is null;
