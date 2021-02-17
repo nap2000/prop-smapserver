@@ -87,10 +87,10 @@
 	<div class="card text-center mt-10">
 		<div class="card-header">
 			<ul class="nav nav-tabs card-header-tabs" role="tablist">
-				<li id="usersTab" class="nav-item" role="presentation"><a href="#" class="active nav-link lang" data-lang="m_user"></a></li>
-				<li id="projectsTab" class="nav-item" role="presentation"><a href="#" class="nav-link lang" data-lang="c_projects"></a></li>
+				<li id="usersTab" class="nav-item restrict_role admin_role" role="presentation"><a href="#" class="active nav-link lang" data-lang="m_user"></a></li>
+				<li id="projectsTab" class="nav-item restrict_role admin_role" role="presentation"><a href="#" class="nav-link lang" data-lang="c_projects"></a></li>
 				<li id="roleTab" class="nav-item restrict_role org_role security_role" role="presentation"><a href="#" class="nav-link lang" data-lang="c_roles">roles</a></li>
-				<li id="organisationTab" class="nav-item restrict_role org_role" role="presentation"><a href="#" class="nav-link lang" data-lang="c_orgs"></a></li>
+				<li id="organisationTab" class="nav-item restrict_role admin_role org_role" role="presentation"><a href="#" class="nav-link lang" data-lang="c_orgs"></a></li>
 				<li id="enterpriseTab" class="nav-item restrict_role enterprise_role" role="presentation"><a href="#" class="nav-link lang" data-lang="c_ent"></a></li>
 			</ul>
 		</div>
@@ -548,146 +548,141 @@
 						</div>
 					</div>
 
-					<div>
-						<div class="card">
-							<div class="card-header" id="emailOptions">
-								<h4 class="card-title">
-									<a class="card-link" data-toggle="collapse" role="button" href="#collapseEmailOptions" aria-expanded="false" aria-controls="collapseEmailOptions">
-										<span class="lang" data-lang="u_det_o_email">email options</span>
-									</a>
-								</h4>
+					<div class="card restrict_role org_role">
+						<div class="card-header" id="emailOptions">
+							<h4 class="card-title">
+								<a class="card-link" data-toggle="collapse" role="button" href="#collapseEmailOptions" aria-expanded="false" aria-controls="collapseEmailOptions">
+									<span class="lang" data-lang="u_det_o_email">email options</span>
+								</a>
+							</h4>
+						</div>
+						<div id="collapseEmailOptions" class="collapse" role="tabpanel" aria-labelledby="emailOptions">
+							<div class="card-body">
+								<label for="o_admin_email" data-lang="u_h_e" class="lang control-label">help email</label>
+								<input class="form-control" type="text" id="o_admin_email" tabindex="9">
+
+								<label for="o_smtp_host" data-lang="u_smtp" class="lang col-sm-4 control-label">smtp</label>
+								<input class="form-control" type="text" id="o_smtp_host" tabindex="10">
+
+								<label for="o_email_domain" data-lang="u_e_dom" class="lang col-sm-4 control-label">domain</label>
+								<input class="form-control" type="text" id="o_email_domain" tabindex="11">
+
+								<label for="o_email_user" data-lang="u_e_nm" class="lang col-sm-4 control-label">user name</label>
+								<input class="form-control" type="text" id="o_email_user" tabindex="12">
+
+								<label for="o_email_password" data-lang="u_e_p" class="lang col-sm-4 control-label">Email password: </label>
+								<input class="form-control" type="password" id="o_email_password" tabindex="13">
+
+								<label for="o_email_port" data-lang="u_e_port" class="lang col-sm-4 control-label">port</label>
+								<input class="form-control" type="text" id="o_email_port" tabindex="14">
+
+								<label for="o_default_email_content" data-lang="c_content" class="lang col-sm-4 control-label">content</label>
+								<textarea id="o_default_email_content" class="labelProp form-control" placeholder="Default Email content"></textarea>
+
+								<label for="o_server_description" data-lang="u_e_si" class="lang col-sm-4 control-label">server identification</label>
+								<textarea id="o_server_description" class="labelProp form-control" placeholder="Server Identifier"></textarea>
+
 							</div>
-							<div id="collapseEmailOptions" class="collapse" role="tabpanel" aria-labelledby="emailOptions">
-								<div class="card-body">
-									<label for="o_admin_email" data-lang="u_h_e" class="lang control-label">help email</label>
-									<input class="form-control" type="text" id="o_admin_email" tabindex="9">
+						</div>
 
-									<label for="o_smtp_host" data-lang="u_smtp" class="lang col-sm-4 control-label">smtp</label>
-									<input class="form-control" type="text" id="o_smtp_host" tabindex="10">
+					</div>
 
-									<label for="o_email_domain" data-lang="u_e_dom" class="lang col-sm-4 control-label">domain</label>
-									<input class="form-control" type="text" id="o_email_domain" tabindex="11">
+					<div class="card">
+						<div class="card-header" id="otherOptions">
+							<h4 class="card-title">
+								<a class="card-link" data-toggle="collapse" role="button" href="#collapseOtherOptions" aria-expanded="false" aria-controls="collapseOtherOptions">
+									<span class="lang" data-lang="u_det_o_other">other</span>
+								</a>
+							</h4>
+						</div>
+						<div id="collapseOtherOptions" class="collapse" aria-labelledby="otherOptions">
+							<div class="card-body">
 
-									<label for="o_email_user" data-lang="u_e_nm" class="lang col-sm-4 control-label">user name</label>
-									<input class="form-control" type="text" id="o_email_user" tabindex="12">
+								<form>
+									<div class="custom-control custom-checkbox">
+										<input type="checkbox" class="custom-control-input puboption" id="can_edit" value="can_edit" checked="checked">
+										<label class="custom-control-label" for="can_edit">
+											<span data-lang="u_other_edit" class="lang"></span>
+										</label>
+									</div>
 
-									<label for="o_email_password" data-lang="u_e_p" class="lang col-sm-4 control-label">Email password: </label>
-									<input class="form-control" type="password" id="o_email_password" tabindex="13">
+									<div class="custom-control custom-checkbox">
+										<input type="checkbox" class="custom-control-input puboption" id="email_task" value="email_task" checked="checked">
+										<label class="custom-control-label" for="email_task">
+											<span data-lang="u_email_tasks" class="lang"></span>
+										</label>
+									</div>
 
-									<label for="o_email_port" data-lang="u_e_port" class="lang col-sm-4 control-label">port</label>
-									<input class="form-control" type="text" id="o_email_port" tabindex="14">
+									<div class="custom-control custom-checkbox">
+										<input type="checkbox" class="custom-control-input puboption" id="can_notify" value="can_notify" checked="checked">
+										<label class="custom-control-label" for="can_notify">
+											<span data-lang="u_notifications" class="lang"></span>
+										</label>
+									</div>
 
-									<label for="o_default_email_content" data-lang="c_content" class="lang col-sm-4 control-label">content</label>
-									<textarea id="o_default_email_content" class="labelProp form-control" placeholder="Default Email content"></textarea>
+									<div class="custom-control custom-checkbox">
+										<input type="checkbox" class="custom-control-input puboption" id="can_use_api" value="can_use_api" checked="checked">
+										<label class="custom-control-label" for="can_use_api">
+											<span data-lang="u_use_api" class="lang"></span>
+										</label>
+									</div>
 
-									<label for="o_server_description" data-lang="u_e_si" class="lang col-sm-4 control-label">server identification</label>
-									<textarea id="o_server_description" class="labelProp form-control" placeholder="Server Identifier"></textarea>
+									<div class="custom-control custom-checkbox">
+										<input type="checkbox" class="custom-control-input puboption" id="can_submit" value="can_submit" checked="checked">
+										<label class="custom-control-label" for="can_submit">
+											<span data-lang="u_submissions" class="lang"></span>
+										</label>
+									</div>
 
-								</div>
+									<div class="custom-control custom-checkbox awsSmsOnly">
+										<input type="checkbox" class="custom-control-input puboption" id="can_sms" value="can_sms" checked="checked">
+										<label class="custom-control-label" for="can_sms">
+											<span data-lang="u_sms" class="lang"></span>
+										</label>
+									</div>
+
+									<div class="custom-control custom-checkbox">
+										<input type="checkbox" class="custom-control-input puboption" id="send_optin" value="send_optin" checked="checked">
+										<label class="custom-control-label" for="send_optin">
+											<span data-lang="u_eoi" class="lang"></span>
+										</label>
+									</div>
+
+									<div class="form-group row">
+										<label for="o_tz" data-lang="c_tz" class="lang control-label col-sm-2">tz</label>
+										<div class="col-sm-10">
+											<select class="form-control timezone_select" id="o_tz"></select>
+										</div>
+									</div>
+									<div class="form-group row">
+										<label for="o_language" data-lang="c_lang" class="lang control-label col-sm-2">lang</label>
+										<div class="col-sm-10">
+											<select class="form-control" id="o_language"></select>
+										</div>
+									</div>
+									<div class="form-group row restrict_role org_role">
+										<label for="o_refresh_rate" data-lang="a_ref_rate" class="lang control-label col-sm-2">ref</label>
+										<div class="col-sm-6">
+											<input type="number" class="form-control" id="o_refresh_rate"></input>
+										</div>
+										<p class="col-sm-4 lang" data-lang="i_m"></p>
+									</div>
+								</form>
 							</div>
-
 						</div>
 					</div>
 
-					<div>
-						<div class="card">
-							<div class="card-header" id="otherOptions">
-								<h4 class="card-title">
-									<a class="card-link" data-toggle="collapse" role="button" href="#collapseOtherOptions" aria-expanded="false" aria-controls="collapseOtherOptions">
-										<span class="lang" data-lang="u_det_o_other">other</span>
-									</a>
-								</h4>
-							</div>
-							<div id="collapseOtherOptions" class="collapse" aria-labelledby="otherOptions">
-								<div class="card-body">
-
-									<form>
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input puboption" id="can_edit" value="can_edit" checked="checked">
-											<label class="custom-control-label" for="can_edit">
-												<span data-lang="u_other_edit" class="lang"></span>
-											</label>
-										</div>
-
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input puboption" id="email_task" value="email_task" checked="checked">
-											<label class="custom-control-label" for="email_task">
-												<span data-lang="u_email_tasks" class="lang"></span>
-											</label>
-										</div>
-
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input puboption" id="can_notify" value="can_notify" checked="checked">
-											<label class="custom-control-label" for="can_notify">
-												<span data-lang="u_notifications" class="lang"></span>
-											</label>
-										</div>
-
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input puboption" id="can_use_api" value="can_use_api" checked="checked">
-											<label class="custom-control-label" for="can_use_api">
-												<span data-lang="u_use_api" class="lang"></span>
-											</label>
-										</div>
-
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input puboption" id="can_submit" value="can_submit" checked="checked">
-											<label class="custom-control-label" for="can_submit">
-												<span data-lang="u_submissions" class="lang"></span>
-											</label>
-										</div>
-
-										<div class="custom-control custom-checkbox awsSmsOnly">
-											<input type="checkbox" class="custom-control-input puboption" id="can_sms" value="can_sms" checked="checked">
-											<label class="custom-control-label" for="can_sms">
-												<span data-lang="u_sms" class="lang"></span>
-											</label>
-										</div>
-
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input puboption" id="send_optin" value="send_optin" checked="checked">
-											<label class="custom-control-label" for="send_optin">
-												<span data-lang="u_eoi" class="lang"></span>
-											</label>
-										</div>
-
-										<div class="form-group row">
-											<label for="o_tz" data-lang="c_tz" class="lang control-label col-sm-2">tz</label>
-											<div class="col-sm-10">
-												<select class="form-control timezone_select" id="o_tz"></select>
-											</div>
-										</div>
-										<div class="form-group row">
-											<label for="o_language" data-lang="c_lang" class="lang control-label col-sm-2">lang</label>
-											<div class="col-sm-10">
-												<select class="form-control" id="o_language"></select>
-											</div>
-										</div>
-										<div class="form-group row">
-											<label for="o_refresh_rate" data-lang="a_ref_rate" class="lang control-label col-sm-2">ref</label>
-											<div class="col-sm-6">
-												<input type="number" class="form-control" id="o_refresh_rate"></input>
-											</div>
-											<p class="col-sm-4 lang" data-lang="i_m"></p>
-										</div>
-									</form>
-								</div>
-							</div>
+					<div class="card restrict_role org_role">
+						<div class="card-header" id="limitOptions">
+							<h4 class="card-title">
+								<a class="card-link" data-toggle="collapse" role="button" href="#collapseLimitOptions" aria-expanded="false" aria-controls="collapseLimitOptions">
+									<span class="lang" data-lang="u_det_o_limits">limits</span>
+								</a>
+							</h4>
 						</div>
-					</div>
-					<div>
-						<div class="card">
-							<div class="card-header" id="limitOptions">
-								<h4 class="card-title">
-									<a class="card-link" data-toggle="collapse" role="button" href="#collapseLimitOptions" aria-expanded="false" aria-controls="collapseLimitOptions">
-										<span class="lang" data-lang="u_det_o_limits">limits</span>
-									</a>
-								</h4>
-							</div>
-							<div id="collapseLimitOptions" class="collapse" aria-labelledby="limitOptions">
-								<div class="card-body">
-									<div id="usageLimitsHere"></div>
-								</div>
+						<div id="collapseLimitOptions" class="collapse" aria-labelledby="limitOptions">
+							<div class="card-body">
+								<div id="usageLimitsHere"></div>
 							</div>
 						</div>
 					</div>
