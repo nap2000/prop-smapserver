@@ -790,6 +790,29 @@ require([
             return false;
         });
 
+	    /*
+         * Custom reports
+         */
+	    $('.server_specific').hide();
+	    $('.' + getServerSubDomainName()).show();
+	    $('#m_tdh_individual').click(function() {
+		    $('#tdh_individual_report_popup').modal("show");
+	    });
+	    $('#tdh_individual_report_save').click(function() {
+		    var bc = $('#tdh_rep_bc').val();
+		    var link = "/surveyKPI/tdh/individual/";
+		    link += $('#tdh_rep_bc').val().trim();
+		    link += '/individual_report';
+
+		    if(!bc || bc.trim().length == 0) {
+			    alert("Please enter a beneficiary code");
+			    return;
+		    }
+
+		    downloadFile(link);
+		    $('#tdh_individual_report_popup').modal("hide");
+	    })
+
     });         // End of document ready
 
     // Generate a file based on chart data
