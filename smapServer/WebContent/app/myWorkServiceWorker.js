@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v61';
+let CACHE_NAME = 'v62';
 
 // Web service requests
 let ASSIGNMENTS = '/surveyKPI/myassignments?';
