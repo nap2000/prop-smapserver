@@ -104,6 +104,7 @@
                 <div class="dropdown-menu" aria-labelledby="m_local_reports">
                     <a class="dropdown-item xxxx1" style="display:none;" href="/misc/CreatingIdentificationCards.docx"><span>Guide on creating Id Cards</span></a></a>
                     <a class="dropdown-item xxxx1" style="display:none;" href="/misc/CardMergeTemplate.docx"><span>ID Card Template</span></a></a>
+                    <a id="m_tdh_individual" style="display:none;" href="#" class="dropdown-item server_specific tdh localhost">Individual Report</a>
                 </div>
             </li>
 
@@ -1316,5 +1317,34 @@
         </div>
     </div>
 </div>
+
+<!-- Parameters for for individual report -->
+<div id="tdh_individual_report_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dtLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title lang" data-lang="u_access"></h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+
+                <form role="form">
+                    <div class="form-group row">
+                        <label class="col-sm-4 control-label" for="tdh_rep_bc">Beneficiary code</label>
+                        <div class="col-sm-8">
+                            <input id="tdh_rep_bc" type='text' class="form-control"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+                <button id="tdh_individual_report_save" type="button" class="btn btn-primary lang" data-lang="c_create">create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 </body>
 </html>
