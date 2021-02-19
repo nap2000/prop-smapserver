@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v58';
+let CACHE_NAME = 'v62';
 
 // Web service requests
 let ASSIGNMENTS = '/surveyKPI/myassignments?';
@@ -136,7 +136,7 @@ self.addEventListener('fetch', function(event) {
 						logon = false;
 						let responseData = response.clone().json().then(data => {
 							setRecord(latestRequestStore, data, recordId);
-							if(recordId === "user") {
+							if(recordId === "user" && data && data.o_id) {
 								organisationId = data.o_id;
 							}
 						});
@@ -243,7 +243,6 @@ function authResponse() {
 				}
 			});
 	}
-
 }
 
 function refresh(response) {
@@ -355,6 +354,7 @@ function open() {
 					// Generic error handler for all errors targeted at this database's
 					// requests!
 					console.error("Database error: " + e.target.errorCode);
+					reject(e);
 				};
 
 				resolve(openDb);
@@ -371,6 +371,7 @@ function open() {
 							upgradeDb.createObjectStore(latestRequestStore);
 						}
 				}
+				resolve(upgradeDb);
 			};
 
 		} else {
@@ -455,20 +456,24 @@ function getOrganisationId() {
 				let request = objectStore.get("user");
 
 				request.onerror = function (e) {
-					reject();
+					resolve();
 				};
 
 				request.onsuccess = function (e) {
 					try {
-						organisationId = request.result.o_id;
-						resolve();
+						if(request && request.result && request.result.o_id) {
+							organisationId = request.result.o_id;
+						}
 					} catch (err) {
 						console.log(err);
 					}
+					resolve();
 				};
+			}).catch(function(err){
+				resolve();
 			});
 		} else {
-			reject();
+			resolve();
 		}
 	});
 };

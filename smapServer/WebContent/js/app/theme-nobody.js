@@ -44,6 +44,9 @@ if(navbarColor && navbarTextColor) {
 // From https://css-tricks.com/snippets/javascript/lighten-darken-color/
 function LightenDarkenColor(col, amt) {
 
+    if(!col) {
+        col = '#CCC';
+    }
     var usePound = false;
 
     if (col[0] == "#") {
