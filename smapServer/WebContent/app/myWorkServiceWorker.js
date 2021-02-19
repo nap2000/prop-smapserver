@@ -243,7 +243,6 @@ function authResponse() {
 				}
 			});
 	}
-
 }
 
 function refresh(response) {
