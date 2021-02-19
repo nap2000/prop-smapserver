@@ -1064,6 +1064,4 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             downloadFile("/surveyKPI/adminreport/resourceusage/");
         }
 
-
-
     });
