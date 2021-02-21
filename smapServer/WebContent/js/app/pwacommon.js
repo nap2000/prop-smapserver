@@ -25,7 +25,8 @@ function registerForServiceWorkerMessages(callback) {
 		navigator.serviceWorker.addEventListener('message', function (event) {
 			// event is a MessageEvent object
 			if (event.data.type === "401") {
-				window.open("/login.html");
+				//window.open("/login.html");
+				window.location.href = "/login.html";
 			} else if (callback) {
 				callback(event.data);
 			}
