@@ -50,7 +50,9 @@ require([
             });
 
             $('#login_continue').click(function() {
-               window.close();
+                //alert(document.referrer);
+               //window.close();
+                window.location.href = document.referrer;
             });
 
             login();
