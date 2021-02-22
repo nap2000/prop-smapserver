@@ -23,6 +23,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             gPageCount = 1;			// Only in this java script file
 
         let SOURCE_UPLOADED = "uploaded";
+        let SOURCE_FORWARDED = "forwarded";
         let SOURCE_FORMS = "forms";
         let SOURCE_NOTIFICATIONS = "notifications";
         let SOURCE_OPTIN_MSG = "optin_msg";
@@ -536,7 +537,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                             refreshFormsTable(data);
                         } else if(showSourceE === SOURCE_NOTIFICATIONS || showSourceE === SOURCE_OPTIN_MSG) {
                             refreshNotificationsTable(data, showType, showSourceE);
-                        } else if(showSourceE === SOURCE_UPLOADED) {
+                        } else if(showSourceE === SOURCE_UPLOADED || showSourceE === SOURCE_FORWARDED) {
                             refreshUploadedTable(data, showType);
                             if(showTypeE !== "totals") {
                                 refreshMap(data);
