@@ -607,7 +607,8 @@ require([
 				url: "/surveyKPI/organisationList",
 				success: function(data, status) {
 					removeHourglass();
-					getOrganisations();
+					getLoggedInUser(userKnown, false, false, getOrganisations, false,
+						false, getEnterprises, getServerDetails);
 					$('#create_organisation_popup').modal("hide");
 				}, error: function(xhr, textStatus, err) {
 					removeHourglass();
