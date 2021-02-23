@@ -94,6 +94,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             // Upload File
             $('#submitFileGroup').click( function(e) {
 
+                $('#submitFileGroup').prop("disabled", true);  // debounce
                 if(!gReplace) {
                     $('#surveyId').val($('#group').val());
                 }
@@ -928,6 +929,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             let file = $('#templateName').val();
             if(!file || file.trim().length == 0) {
                 $('#up_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(localise.set["msg_val_nm"]);
+                $('#submitFileGroup').prop("disabled", false);  // debounce
                 return false;
             }
 
@@ -944,6 +946,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                 processData:false,
                 success: function(data) {
                     removeHourglass();
+                    $('#submitFileGroup').prop("disabled", false);  // debounce
 
                     // Check for errors in the form
                     if(data && data.status === "error") {
@@ -966,6 +969,8 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                 },
                 error: function(xhr, textStatus, err) {
                     removeHourglass();
+                    $('#submitFileGroup').prop("disabled", false);  // debounce
+                    
                     if(xhr.readyState == 0 || xhr.status == 0) {
                         return;  // Not an error
                     } else {
