@@ -1583,6 +1583,7 @@ require([
 			setLogos(org.id);
 
 		} else {
+			gCurrentOrganisationIndex = -1;
 			$('#o_tz').val('UTC');
 			addLanguageOptions($('#o_language'), undefined);
 		}
