@@ -169,8 +169,11 @@ self.addEventListener('fetch', function(event) {
 							logon = false;
 							return response;
 						}
-					}
-				))
+					}).catch(function(err) {
+						console.log("Failed to fetch uncached request: " + event.request.url);
+						return err;
+					})
+				)
 		);
 	}
 
