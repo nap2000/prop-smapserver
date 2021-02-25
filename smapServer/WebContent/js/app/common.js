@@ -3847,7 +3847,7 @@ function getAccessibleCsvFiles($elem, includeNone) {
  /*
   * Get the questions in a survey
   */
-function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly, callback) {
+function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly, callback, includeHrk) {
 
 	function populateElement($elem, data) {
 		var h = [],
@@ -3858,6 +3858,11 @@ function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly, callback) {
 		if (includeNone) {
 			h[++idx] = '<option value="">';
 			h[++idx] = localise.set["c_none"];
+			h[++idx] = '</option>';
+		}
+		if (includeHrk) {
+			h[++idx] = '<option value="_hrk">';
+			h[++idx] = localise.set["ed_hrk"];
 			h[++idx] = '</option>';
 		}
 		for (i = 0; i < data.length; i++) {
