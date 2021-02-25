@@ -2104,7 +2104,7 @@ require([
             }
         }
         $('.overviewSection,.mrview').show();
-        $('.editRecordSection,.srview,.re_alert').hide();
+        $('.editRecordSection,.bulkEditSection,.srview,.re_alert').hide();
     }
 
     /*
