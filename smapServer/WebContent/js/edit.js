@@ -484,7 +484,7 @@ $(document).ready(function() {
 		var survey = globals.model.survey;
 		var qType = survey.forms[globals.gFormIndex].questions[globals.gItemIndex].type;
 		if(qType === "child_form") {
-			getQuestionsInSurvey($('#p_key_question'), $(this).val(), true, true, setAppearanceValues, false);
+			getQuestionsInSurvey($('#p_key_question'), $(this).val(), true, true, setAppearanceValues, true);
 		}
 	});
 
@@ -1957,7 +1957,7 @@ function respondToEvents($context) {
 					}
 				}
 			}
-			getQuestionsInSurvey($('#p_key_question'), sIdent, true, true, undefined, false);
+			getQuestionsInSurvey($('#p_key_question'), sIdent, true, true, undefined, true);
 		} else if(qType === "begin repeat") {
 			$('#p_ref').empty().append(getFormsAsSelect(qName));
 		}
@@ -3850,7 +3850,7 @@ function setNoFilter() {
 								$('input[type=radio][name=search_source][value=survey]').prop('checked', true);
 								$('#a_survey_identifier').val(sIdent);
 								$('.search_survey').show();
-								getQuestionsInSurvey($('.column_select'), sIdent, true, false, setAppearanceValues, false);
+								getQuestionsInSurvey($('.column_select'), sIdent, true, false, setAppearanceValues, true);
 							} else {
 								var csvIndex = getIndexOfCsvFilename(params.filename);
 								$('input[type=radio][name=search_source][value=csv]').prop('checked', true);
