@@ -1214,22 +1214,6 @@ create TABLE custom_query (
 );
 ALTER TABLE custom_query OWNER TO ws;
 
-DROP SEQUENCE IF EXISTS survey_settings_seq CASCADE;
-CREATE SEQUENCE survey_settings_seq START 1;
-ALTER SEQUENCE survey_settings_seq OWNER TO ws;
-
-DROP TABLE IF EXISTS survey_settings CASCADE;
-create TABLE survey_settings (
-	id integer DEFAULT NEXTVAL('survey_settings_seq') CONSTRAINT pk_survey_settings PRIMARY KEY,
-	s_ident text,		-- Survey ident
-	u_id integer,		-- User
-	view text,			-- Overall view (json)
-	map_view text,		-- Map view data
-	chart_view text,	-- Chart view data	
-	columns text		
-);
-ALTER TABLE survey_settings OWNER TO ws;
-
 DROP SEQUENCE IF EXISTS report_seq CASCADE;
 CREATE SEQUENCE report_seq START 1;
 ALTER SEQUENCE report_seq OWNER TO ws;
@@ -1478,7 +1462,7 @@ DROP TABLE IF EXISTS survey_settings;
 create TABLE survey_settings (
 	id integer DEFAULT NEXTVAL('survey_settings_seq') CONSTRAINT pk_survey_settings PRIMARY KEY,
 	s_ident text,		-- Survey ident
-	u_id integer,		-- User
+	u_id integer REFERENCES users(id) ON DELETE CASCADE,		-- User
 	view text,			-- Overall view (json)
 	map_view text,		-- Map view data
 	chart_view text,		-- Chart view data
