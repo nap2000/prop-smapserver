@@ -50,8 +50,6 @@ require([
             });
 
             $('#login_continue').click(function() {
-                //alert(document.referrer);
-               //window.close();
                 window.location.href = document.referrer;
             });
 
@@ -68,6 +66,7 @@ require([
                     if(data === 'loggedin') {
                         $('.login_failure').hide();
                         $('.login_success').show();
+                        window.location.href = document.referrer;
                     } else {
                         $('.login_failure').show();
                         $('.login_success').hide();
