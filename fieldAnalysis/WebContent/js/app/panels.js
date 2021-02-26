@@ -124,6 +124,7 @@ $(document).ready(function() {
 
 	setupUserProfile();
 	localise.setlang();		// Localise HTML
+	registerForServiceWorkerMessages();
 	
     // Add a new panel button click
     $('.db_settings_add').click(function() { 
