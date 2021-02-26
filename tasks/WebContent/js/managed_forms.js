@@ -165,6 +165,7 @@ require([
         setCustomManage();
 	    setupUserProfile(true);
         localise.setlang();		// Localise HTML
+        registerForServiceWorkerMessages();
         userDefaults();
 
         // Set page defaults
