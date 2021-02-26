@@ -203,7 +203,7 @@ function filesNetworkThenCache(event, request) {
 		}).catch(() => {
 			logon = false;
 			return caches.match(getCacheUrl(request))
-				.then(cached => cached || response) // Return whatever is in cache
+				.then(cached => cached) // Return whatever is in cache
 		});
 }
 
