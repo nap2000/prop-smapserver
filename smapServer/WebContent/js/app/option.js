@@ -276,7 +276,10 @@ define([
 								h[++idx] = '</div>';
 							h[++idx] = '</div>';
 						}
-						
+
+						/*
+						 * Disable until fixed
+						 *
 						// A control to select the filter type
 						h[++idx] = '<div class="form-group filter_only" style="display:none;">';
 							h[++idx] = '<label class="col-sm-2">';
@@ -300,6 +303,7 @@ define([
 								h[++idx] = '</select>';
 							h[++idx] = '</div>';
 						h[++idx] = '</div>';
+						*/
 						
 					h[++idx] = '</form>';
 				h[++idx] = '</div>';
