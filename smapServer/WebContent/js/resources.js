@@ -54,7 +54,7 @@ require([
 $(document).ready(function() {
 
     setCustomResources();			// Apply custom javascript
-	setupUserProfile();
+	setupUserProfile(true);
 	localise.setlang();		// Localise HTML
 	$('#map_name').attr("placeholder", localise.set["sr_m_ph"]);
 	$('#map_description').attr("placeholder", localise.set["sr_m_d"]);
