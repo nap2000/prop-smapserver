@@ -4,7 +4,7 @@
     waitSeconds: 0,
     wrapShim: false,
     baseUrl: 'js/libs',
-//    optimize: 'none',
+    optimize: 'none',
     fileExclusionRegExp: /^build$/,
     paths: {
     	jquery: 'jquery-2.1.1',
@@ -44,6 +44,7 @@
         },
         {
             name: '../api',
+	    exclude: ['jquery', 'bootstrap']
         },
         {
             name: '../passwords',
