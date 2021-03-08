@@ -36,47 +36,30 @@ window.gTasks = {
 };
 
 requirejs.config({
-    baseUrl: 'js/libs',
+    baseUrl: '/js/libs',
     waitSeconds: 0,
     locale: gUserLocale,
     paths: {
-    	app: '../app',
-    	jquery: '../../../../js/libs/jquery-2.1.1',
-        moment: 'moment-with-locales.min',
-       	lang_location: '../'
+    	app: '/js/app',
+       	lang_location: '/js'
     },
     shim: {
     	'app/common': ['jquery'],
-        'app/data': ['jquery'],
-    	'bootstrap.min': ['jquery'],
-    	'icheck': ['jquery'],
-       	'inspinia': ['jquery'],
-    	'metismenu': ['jquery'],
-    	'slimscroll': ['jquery'],
-        'bootstrap-datetimepicker.min': ['moment']
+        'app/data': ['jquery']
     }
 });
 
 require([
-         'jquery', 
-         'bootstrap.min',
+         'jquery',
          'app/common',
          'app/globals',
          'app/localise',
-         'bootstrapfileinput',
-         'moment',
-         'inspinia',
-         'metismenu',
-         'slimscroll',
-         'pace',
-         'app/data',
-         'icheck',
-         'bootstrap-datetimepicker.min'
-         ], function($, bootstrap, common, globals, localise, bsfi, moment) {
+         'app/data'
+         ], function($, common, globals, localise, datafns) {
 
 	$(document).ready(function() {
 
-		setupUserProfile();
+		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
 
 		// Get the user details
