@@ -40,14 +40,13 @@ window.gTasks = {
 };
 
 requirejs.config({
-    baseUrl: 'js/libs',
+    baseUrl: '/js/libs',
     waitSeconds: 0,
     locale: gUserLocale,
     paths: {
-    	app: '../app',
-	    jquery: 'jquery',
+    	app: '/js/app',
         moment: 'moment-with-locales.min',
-       	lang_location: '../'
+       	lang_location: '/js'
     },
     shim: {
     	'app/common': ['jquery'],
