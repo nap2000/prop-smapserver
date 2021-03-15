@@ -529,7 +529,7 @@ define(function () {
 	        barcode: ['auto'],
             image: ['max-pixels', 'auto'],
 	        video: ['auto'],
-	        audio: ['auto'],
+	        audio: ['auto', 'quality'],
             range: ['start', 'end', 'step'],
             select: ['randomize'],
             select1: ['randomize'],
@@ -569,6 +569,10 @@ define(function () {
 	        auto: {
 		        field: 'p_auto',
 		        type: 'boolean'
+	        },
+	        quality: {
+		        field: 'p_quality',
+		        type: 'select'
 	        },
 	        auto_annotate: {
 		        field: 'p_auto_annotate',

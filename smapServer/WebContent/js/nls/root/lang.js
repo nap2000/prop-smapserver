@@ -356,6 +356,9 @@ define({
     "c_code": "Code",
     "c_dirn": "Direction",
     "c_current": "Current",
+    "c_quality": "Quality",
+    "c_low": "Low",
+    "c_external": "External",
 
     // File Types
     "ft": "File Type",
@@ -981,6 +984,7 @@ define({
     "ed_fe": "Filter Expression",
     "ed_e": "Expression",
     "ed_drl": "Default report logo",
+    "ed_voice": "Voice only",
 
     // Managed Forms
     "mf_id": "Include Deleted",
