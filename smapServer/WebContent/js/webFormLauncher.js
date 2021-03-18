@@ -315,7 +315,7 @@ function addTaskList(taskList, filterProjectId) {
 			h[++idx] = '<div class="btn-group btn-group-lg d-flex" role="group" aria-label="Button group for task selection or rejection">';
 			h[++idx] = '<a id="a_';
 			h[++idx] = taskList[i].assignment.assignment_id;
-			h[++idx] = '" class="task btn btn-warning w-80" role="button" target="_blank" data-repeat="';
+			h[++idx] = '" class="task btn btn-warning w-100" role="button" target="_blank" data-repeat="';
 
 			if(repeat) {
 				h[++idx] = 'true';
