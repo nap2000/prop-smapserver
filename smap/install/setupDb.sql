@@ -1256,6 +1256,9 @@ create TABLE csvtable (
 	user_ident text,						-- Survey data from a survey needs tohave access authenticated so RBAC can be applied
 	chart boolean default false,		-- Set true if the data is for a chart
 	non_unique_key boolean default false,	-- Set true if the data does not have a unique key
+	linked_sident text,						-- The ident of the survey from which the data is coming
+	chart_key text,							-- The chart key
+	linked_s_pd boolean,
 	sqldef text,						-- The sql definition			
 	ts_initialised TIMESTAMP WITH TIME ZONE
 	);

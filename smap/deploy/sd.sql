@@ -352,3 +352,8 @@ alter table organisation add column owner integer default 0;
 update organisation set owner = 0 where owner is null;
 
 delete from survey_settings where u_id not in (select id from users);
+
+-- version 21.03
+alter table csvtable add column linked_sident text;
+alter table csvtable add column chart_key text;
+alter table csvtable add column linked_s_pd boolean;
