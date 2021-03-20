@@ -157,7 +157,7 @@ $(document).ready(function() {
 	    refreshLocationView();
     });
 	$('#includeNfc, #includeGeo').change(function() {
-		refreshLocationGroups(gTags, false);
+		gCurrentGroup = refreshLocationGroups(gTags, false, gCurrentGroup);
 		refreshLocationView();
 	});
     
@@ -473,7 +473,7 @@ function delete_map(id) {
 function loadedLocationData(tags) {
 
 	gTags = tags;
-	refreshLocationGroups(gTags, false);
+	gCurrentGroup = refreshLocationGroups(gTags, false, gCurrentGroup);
 	refreshLocationView();
 }
 
