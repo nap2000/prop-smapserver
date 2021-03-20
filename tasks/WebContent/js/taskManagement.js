@@ -1881,7 +1881,7 @@ require([
 	 */
 	function processLocationList(tags) {
 		gTags = tags;
-		refreshLocationGroups(tags, true);
+		gCurrentGroup = refreshLocationGroups(tags, true, gCurrentGroup);
 		setLocationList(tags, gCurrentLocation, gCurrentGroup);
 
 		// Respond to a location group being selected
