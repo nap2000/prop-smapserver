@@ -2638,7 +2638,7 @@ function getLocations(callback) {
 /*
  * update Location group list
  */
-function refreshLocationGroups(tags, includeAll) {
+function refreshLocationGroups(tags, includeAll, currentGroup) {
 
 	var g = undefined,
 		h = [],
@@ -2655,12 +2655,12 @@ function refreshLocationGroups(tags, includeAll) {
 				if (g != tags[i].group) {
 
 					g = tags[i].group;
-					if (typeof gCurrentGroup === "undefined") {
-						gCurrentGroup = g;
+					if (typeof currentGroup === "undefined") {
+						currentGroup = g;
 					}
 
 					if(includeAll) {
-						if (gCurrentGroup === g) {
+						if (currentGroup === g) {
 							$('.location_group_list_sel').text(g);
 						}
 						h[++idx] = '<a class="dropdown-item" href="#">';
@@ -2668,7 +2668,7 @@ function refreshLocationGroups(tags, includeAll) {
 						h[++idx] = '</a>';
 					} else {
 						h[++idx] = '<option';
-						if (gCurrentGroup === g) {
+						if (currentGroup === g) {
 							h[++idx] = ' selected';
 						}
 						h[++idx] = ' value="';
@@ -2683,6 +2683,7 @@ function refreshLocationGroups(tags, includeAll) {
 	}
 
 	$('.location_group_list').empty().html(h.join(""));
+	return currentGroup;
 }
 
 /*
