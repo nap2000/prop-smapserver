@@ -64,6 +64,7 @@ require([
 		         moment) {
 
 	var table;
+	var gSelectedRecord;
 	
 	$(document).ready(function() {
 
@@ -134,10 +135,19 @@ require([
 		// Respond to selection of a row
 		$(".row_selected").attr('aria-disabled', true).addClass("disabled");
 		table.off('select').on('select', function (e, dt, type, indexes) {
-			recordSelected(table.rows('.selected').data());
+			var records = table.rows('.selected').data();
+			if(records.length > 0 && records[0].sId > 0) {
+				$(".row_selected").attr('aria-disabled', false).removeClass("disabled");
+				gSelectedRecord = records[0].sId;
+			}
 		});
 		table.off('deselect').on('deselect', function (e, dt, type, indexes) {
-			recordSelected(table.rows('.selected').data());
+			gSelectedRecord = undefined;
+			$('#details_btn').addClass("disabled");
+		});
+
+		$('#details_btn').click(function(){
+			showDetails();
 		});
 
 		/*
@@ -171,37 +181,30 @@ require([
 		});
 		
 	});
-	
-	function recordSelected(records) {
-		if(records.length > 0 && records[0].sId > 0) {
-			$(".row_selected").attr('aria-disabled', false).removeClass("disabled");
-			console.log(JSON.stringify(records[0]));
 
-			addHourglass();
-			$.ajax({
-				url: "/surveyKPI/surveys/summary/id/" + records[0].sId,
-				dataType: 'json',
-				cache: false,
-				success: function(data) {
-					removeHourglass();
-					$('#survey_project').val(data.projectName);
-					$('#surveyDetails').modal("show");
-					console.log(JSON.stringify(data));
-				},
-				error: function(xhr, textStatus, err) {
-					removeHourglass();
-					if(xhr.readyState == 0 || xhr.status == 0) {
-						return;  // Not an error
-					} else {
-						alert(localise.set["c_error"] + ": " + err);
-					}
+	function showDetails() {
+
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/surveys/summary/id/" + gSelectedRecord,
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				$('#survey_project').val(data.projectName);
+				$('#surveyDetails').modal("show");
+
+				console.log(JSON.stringify(data));
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["c_error"] + ": " + err);
 				}
-			});
-
-		} else {
-			$(".row_selected").attr('aria-disabled', true).addClass("disabled");
-		}
-
+			}
+		});
 
 	}
 
