@@ -795,7 +795,10 @@ require([
          * Custom reports
          */
 	    $('.server_specific').hide();
-	    $('.' + getServerSubDomainName()).show();
+	    var ssd = getServerSubDomainName();
+	    if(ssd !== '') {
+            $('.' + ssd).show();
+        }
 	    $('#m_tdh_individual').click(function() {
 		    $('#tdh_individual_report_popup').modal("show");
 	    });
