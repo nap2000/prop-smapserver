@@ -357,3 +357,5 @@ delete from survey_settings where u_id not in (select id from users);
 alter table csvtable add column linked_sident text;
 alter table csvtable add column chart_key text;
 alter table csvtable add column linked_s_pd boolean;
+
+delete from csvtable where survey and linked_sident is null;
