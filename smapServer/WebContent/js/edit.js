@@ -1127,13 +1127,16 @@ $(document).ready(function() {
 
 function setLanguageCodes() {
 	var type = $('#p_source').find(':selected').data('type');
-
 	var translateType;
-	if($('#p_medical').prop("checked") && type === "audio" ) {
+
+	if($('#p_medical').prop("checked")) {
+		$('.p_med_type').show();
 		translateType = "transcribe_medical";
 	} else {
+		$('.p_med_type').hide();
 		translateType = (type === "audio" || type === "video") ? "transcribe" : "translate";
 	}
+
 	aws.setLanguageSelect($('.parameter_lang'), translateType, setLanguageCodeVals);
 
 	if(translateType === "transcribe" || translateType === "transcribe_medical") {
