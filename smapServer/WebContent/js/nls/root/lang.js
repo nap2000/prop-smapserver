@@ -794,6 +794,7 @@ define({
     "wf_sig": "Signature",
 
     // Editor
+    "ed_ba": "Background Audio",
     "ed_map_zoom": "Map Zoom",
 	"ed_hidden": "Hide in mobile app",
 	"ed_selfie": "Open camera in selfie mode",
