@@ -108,6 +108,12 @@ require([
 				if(pdfNo) {
 					set.push('pdfno');
 				}
+				if(item.sourceParam === 'background-audio') {
+					var quality = $('#item_audio_quality').val();
+					if(quality !== 'default') {
+						set.push('quality=' + quality);
+					}
+				}
 				item.settings = set.join(' ');
 
 				updateMetaItem(item, surveyListDone);
@@ -126,6 +132,15 @@ require([
 					globals.gCurrentTaskGroup);
 
 				getSurveyList();
+			});
+
+			$('.item_audio').hide();
+			$('#item_source_param').change(function(){
+				if($('#item_source_param').val() === 'background-audio') {
+					$('.item_audio').show();
+				} else {
+					$('.item_audio').hide();
+				}
 			});
 
 		});
@@ -199,6 +214,10 @@ require([
 					{
 						value: "start-geopoint",
 						label: "c_location"
+					},
+					{
+						value: "background-audio",
+						label: "ed_ba"
 					}
 				];
 
@@ -277,11 +296,23 @@ require([
 				$('#item_display_name').val(item.display_name);
 				$('#item_source_param').val(item.sourceParam);
 
+				if(item.sourceParam === 'background-audio') {
+					$('.item_audio').show();
+				} else {
+					$('.item_audio').hide();
+				}
+
+				$('#item_audio_quality').val('default');
 				if(item.settings) {
 					var set = item.settings.split(' ');
 					for(i = 0; i < set.length; i++) {
 						if(set[i] === 'pdfno') {
 							$('#a_pdfno').prop('checked', true);
+						} else if(set[i].indexOf('quality') === 0) {
+							var qArray = set[i].split('=');
+							if(qArray.length > 1) {
+								$('#item_audio_quality').val(qArray[1]);
+							}
 						}
 					}
 				}
