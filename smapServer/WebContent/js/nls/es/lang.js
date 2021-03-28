@@ -760,6 +760,7 @@ define(
     "notification": "Notificacion",
     "created": "Creado",
     "wf_sig": "Firma",
+    "ed_ba": "Audio de fondo",
     "ed_map_zoom": "Zoom en mapa",
     "ed_hidden": "Ocultar en aplicación móvil",
     "ed_selfie": "Iniciar cámara en modo selfie",
