@@ -130,63 +130,62 @@
 		<div class="col-sm-12">
 			<div class="bg-light row filtersShown">  <!-- Header Row - Filtering goes here-->
 
-				<div class="ibox float-e-margins">
-					<div class="ibox-content">
-						<div class="row">
-							<!-- record listing commands and filters -->
-							<div class="col-sm-6 pt-1 border-right">
-								<form class="form pr-1" role="form">
 
-									<label class="lang control-label" data-lang="mo_subject" for="mo_subject"></label>
-									<input type="text" readonly id="mo_subject_view" class="form-control">
+				<!-- record listing commands and filters -->
+				<div class="col-sm-4 pt-4 px-2 border-right">
+					<form class="form pr-1" role="form">
 
-									<label class="lang control-label" data-lang="mo_content" for="mo_content"></label>
-									<textarea id="mo_content_view" rows="3" readonly class="form-control"></textarea>
+						<label class="lang control-label" data-lang="mo_subject" for="mo_subject"></label>
+						<input type="text" readonly id="mo_subject_view" class="form-control">
 
-								</form>
+						<label class="lang control-label" data-lang="mo_content" for="mo_content"></label>
+						<textarea id="mo_content_view" rows="3" readonly class="form-control"></textarea>
 
-							</div>
+					</form>
 
-							<div class="col-sm-6 pt-1">
-								<div class="row">
-									<span class="lang col-sm-4" data-lang="submitted"></span>
-									<span id="mo_complete" class="col-sm-2"></span>
-								</div>
-								<div class="row">
-									<span class="lang col-sm-4" data-lang="mo_sent"></span>
-									<span id="mo_sent" class="col-sm-2"></span>
-								</div>
-								<div class="row">
-									<span class="lang col-sm-4" data-lang="c_unsent"></span>
-									<span id="mo_unsent" class="col-sm-2"></span>
-								</div>
-								<div class="row">
-									<span class="lang col-sm-4" data-lang="c_pending"></span>
-									<span id="mo_pending" class="col-sm-2"></span>
-								</div>
-								<div class="row">
-									<span class="lang col-sm-4" data-lang="c_error"></span>
-									<span id="mo_error" class="col-sm-2"></span>
-								</div>
-								<div class="row">
-									<span class="lang col-sm-4" data-lang="c_unsubscribed"></span>
-									<span id="mo_unsubscribed" class="col-sm-2"></span>
-								</div>
-								<div class="row">
-									<span class="lang col-sm-4" data-lang="c_expired"></span>
-									<span id="mo_expired" class="col-sm-2"></span>
-								</div>
-								<div class="row">
-									<span class="lang col-sm-4" data-lang="c_manual"></span>
-									<span id="mo_manual" class="col-sm-2"></span>
-								</div>
-							</div>
-						</div>
+				</div>
+
+				<div class="col-sm-6 pt-1">
+					<div class="row">
+						<span class="lang col-sm-4" data-lang="submitted"></span>
+						<span id="mo_complete" class="col-sm-2"></span>
+					</div>
+					<div class="row">
+						<span class="lang col-sm-4" data-lang="mo_sent"></span>
+						<span id="mo_sent" class="col-sm-2"></span>
+					</div>
+					<div class="row">
+						<span class="lang col-sm-4" data-lang="c_unsent"></span>
+						<span id="mo_unsent" class="col-sm-2"></span>
+					</div>
+					<div class="row">
+						<span class="lang col-sm-4" data-lang="c_pending"></span>
+						<span id="mo_pending" class="col-sm-2"></span>
+					</div>
+					<div class="row">
+						<span class="lang col-sm-4" data-lang="c_error"></span>
+						<span id="mo_error" class="col-sm-2"></span>
+					</div>
+					<div class="row">
+						<span class="lang col-sm-4" data-lang="c_unsubscribed"></span>
+						<span id="mo_unsubscribed" class="col-sm-2"></span>
+					</div>
+					<div class="row">
+						<span class="lang col-sm-4" data-lang="c_expired"></span>
+						<span id="mo_expired" class="col-sm-2"></span>
+					</div>
+					<div class="row">
+						<span class="lang col-sm-4" data-lang="c_manual"></span>
+						<span id="mo_manual" class="col-sm-2"></span>
 					</div>
 				</div>
+
+
 			</div>
 		</div>
+	</div>
 
+	<div class="card mt-2">
 		<div class="d-flex w-100 px-4">
 			<p id="timezone" class="mr-auto py-2"></p>
 			<ul class="nav">
@@ -199,7 +198,7 @@
 				</li>
 
 			</ul>
-			
+
 			<form class="form-inline my-2 my-lg-0">
 				<button class="selectedOnly lang btn btn-primary" style="display:none;" data-lang="c_details" id="m_view_details"></button>
 				<button class="btn btn-success" id="m_gen"><span class="lang" data-lang="m_email_gen"></span> <i class="fa fa-link"></i></button>
@@ -211,49 +210,33 @@
 		</div>
 
 		<div class="row">
-			<div class="col-md-12">
-				<div class="ibox float-e-margins">
-					<div class="ibox-title">
-						<h5 class="lang" data-lang="c_emails">e</h5>
-						<div class="ibox-tools">
-
-						</div>
-
-					</div>
-
-					<div class="ibox-content">
-
-						<div class="row">
-
-							<div class="tabs-container container-fluid">
-								<div class="panel-body">
-									<img id="hour_glass" src="/images/ajax-loader.gif" style="display:none; margin-left: auto;margin-right: auto;" alt="hourglass" height="60" width="60">
-									<div class="table-responsive">
-										<table id="sub_table" class="table table-striped" width="100%" cellspacing="0">
-											<thead>
-											<tr>
-												<th class="lang" data-lang="c_email">email</th>
-												<th class="lang" data-lang="c_name">n</th>
-												<th class="lang" data-lang="c_status">status</th>
-												<th class="lang" data-lang="mo_sd">details</th>
-											</tr>
-											</thead>
-											<tfoot>
-											<tr>
-												<th></th>
-												<th></th>
-												<th></th>
-											</tr>
-											</tfoot>
-										</table>
-									</div>
-								</div>
-
-							</div>
-						</div>
+			<div class="tabs-container container-fluid">
+				<div class="panel-body">
+					<img id="hour_glass" src="/images/ajax-loader.gif" style="display:none; margin-left: auto;margin-right: auto;" alt="hourglass" height="60" width="60">
+					<div class="table-responsive">
+						<table id="sub_table" class="table table-striped" width="100%" cellspacing="0">
+							<thead>
+							<tr>
+								<th class="lang" data-lang="c_email">email</th>
+								<th class="lang" data-lang="c_name">n</th>
+								<th class="lang" data-lang="c_status">status</th>
+								<th class="lang" data-lang="mo_sd">details</th>
+							</tr>
+							</thead>
+							<tfoot>
+							<tr>
+								<th></th>
+								<th></th>
+								<th></th>
+							</tr>
+							</tfoot>
+						</table>
 					</div>
 				</div>
+
 			</div>
+
+
 		</div>
 	</div>
 </div>
