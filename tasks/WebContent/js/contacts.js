@@ -39,14 +39,12 @@ requirejs.config({
 	    moment: '../../../../js/libs/moment-with-locales.2.24.0',
     	common: '../../../../js/app/common',
     	lang_location: '../../../../js',
-    	metismenu: '../../../../js/libs/wb/metisMenu/jquery.metisMenu',
     	pace: '../../../../js/libs/wb/pace/pace.min'
     },
     shim: {
 
     	'common': ['jquery'],
-    	'bootstrap': ['jquery'],
-    	'metismenu': ['jquery']
+    	'bootstrap': ['jquery']
     	}
     });
 
@@ -56,7 +54,6 @@ require([
          'localise',
 		 'globals',
 		 'moment',
-         'metismenu',
          'pace'
 
          ], function($,
@@ -76,7 +73,6 @@ require([
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
 
-		$("#side-menu").metisMenu();
 
 		getLoggedInUser(undefined, false, false, undefined);
 
