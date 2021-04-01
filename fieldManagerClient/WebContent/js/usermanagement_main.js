@@ -1416,9 +1416,9 @@ require([
 
 			h[++idx] = '<div class="custom-control custom-checkbox ml-2">';
 			h[++idx] = '<input type="checkbox" class="custom-control-input" id="';
-			h[++idx] = 'user_projects_cb' + i;
+			h[++idx] = 'p_user_projects_cb' + i;
 			h[++idx] = '" name="';
-			h[++idx] = 'user_projects_cb';
+			h[++idx] = 'p_user_projects_cb';
 			h[++idx] = '" value="';
 			h[++idx] = user.id + '"';
 			if(yesProject) {
@@ -1426,7 +1426,7 @@ require([
 			}
 			h[++idx] = '/>';
 			h[++idx] = '<label class="custom-control-label" for="';
-			h[++idx] = 'user_projects_cb' + i;
+			h[++idx] = 'p_user_projects_cb' + i;
 			h[++idx] = '">';
 			h[++idx] = user.name;
 			h[++idx] = '</label></div>';
