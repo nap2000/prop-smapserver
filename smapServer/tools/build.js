@@ -35,10 +35,6 @@
             name: '../edit',
         },
         {
-            name: '../webFormLauncher',
-	    exclude: ['jquery', 'bootstrap']
-        },
-        {
             name: '../reports',
 	    exclude: ['jquery', 'bootstrap']
         },
