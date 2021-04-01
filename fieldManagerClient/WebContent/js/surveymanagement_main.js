@@ -17,7 +17,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /*
- * Purpose: Manage the panels that display graphs, maps etc of results data
+ * Purpose: Manage surveys uploaded to the server
  */
 
 var gUserLocale = navigator.language;
@@ -43,7 +43,6 @@ requirejs.config({
     },
     shim: {
         'common': ['jquery'],
-        'inspinia': ['jquery'],
         'slimscroll': ['jquery']
 
     }
