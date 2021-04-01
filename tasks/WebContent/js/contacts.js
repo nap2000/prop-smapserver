@@ -128,19 +128,22 @@ require([
 			table.ajax.reload();
 		});
 
-		$('#m_add').click(function(){
+		$('#m_add').click(function(e){
+			e.preventDefault();
 			gSelectedId = -1;
 			initPersonDialog(-1);
 			$('#addPersonPopup').modal("show");
 		});
 
-		$('#m_edit').click(function(){
+		$('#m_edit').click(function(e){
+			e.preventDefault();
 			gSelectedId = gSelectedRecord.id;
 			initPersonDialog(gSelectedRecord.id);
 			$('#addPersonPopup').modal("show");
 		});
 
-		$('#m_del').click(function(){
+		$('#m_del').click(function(e){
+			e.preventDefault();
 			gSelectedId = gSelectedRecord.id;
 
 			msg = localise.set["msg_confirm_del"];
