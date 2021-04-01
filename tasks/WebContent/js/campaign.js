@@ -163,7 +163,8 @@ require([
 		/*
 		 * Record details
 		 */
-		$('#m_view_details').click(function(){
+		$('#m_view_details').click(function(e){
+			e.preventDefault();
 			$('#mo_initial_data').val(JSON.stringify(gSelectedRecord.initialData, null, 4));
 			$('#mo_link').val(gSelectedRecord.url);
 			$('#vrd').modal("show");
@@ -222,18 +223,21 @@ require([
 		/*
 		 * Generate links to complete the webforms
 		 */
-		$(('#m_gen')).click(function () {
+		$(('#m_gen')).click(function (e) {
+			e.preventDefault();
 			generateLinks();
 		});
 
 		/*
 		 * Send unsent
 		 */
-		$(('#m_send')).click(function () {
+		$(('#m_send')).click(function (e) {
+			e.preventDefault();
 			sendUnsent(false);
 		});
 
-		$(('#m_retry')).click(function () {
+		$(('#m_retry')).click(function (e) {
+			e.preventDefault();
 			sendUnsent(true);
 		});
 
