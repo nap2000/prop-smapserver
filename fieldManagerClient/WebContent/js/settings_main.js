@@ -279,6 +279,8 @@ require([
 					device.ft_meta_menu = true;
 				} else if(options[i] === "ft_exit_track_menu") {
 					device.ft_exit_track_menu = true;
+				} else if(options[i] === "ft_bg_stop_menu") {
+					device.ft_bg_stop_menu = true;
 				} else if(options[i] === "ft_review_final") {
 					device.ft_review_final = true;
 				}
@@ -789,6 +791,8 @@ require([
 						this.checked = device.ft_meta_menu;
 					} else if($(this).val() === "ft_exit_track_menu") {
 						this.checked = device.ft_exit_track_menu;
+					} else if($(this).val() === "ft_bg_stop_menu") {
+						this.checked = device.ft_bg_stop_menu;
 					} else if($(this).val() === "ft_review_final") {
 						this.checked = device.ft_review_final;
 					}
