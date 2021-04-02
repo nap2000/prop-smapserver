@@ -1071,7 +1071,7 @@ define({
     "u_ft_os": "Enable ODK style menus to delete, submit, edit and get new forms",
     "u_ft_am": "Enable ODK Admin menu",
     "u_ft_ex": "Disable exit menu",
-    "u_ft_bgs": "Disable menu to stop recording background audio",
+    "u_ft_bgs": "Prevent background audio from being disabled",
     "u_ft_in": "Allow user to set instance name",
     "u_ft_mf": "Allow user to mark  forms as not finalized",
     "u_ft_rv": "Allow finalised forms to be opened for review",
