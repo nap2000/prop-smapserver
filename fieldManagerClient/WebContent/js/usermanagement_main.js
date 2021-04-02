@@ -1569,6 +1569,8 @@ require([
 					this.checked = org.ft_meta_menu;
 				} else if($(this).val() === "ft_exit_track_menu") {
 					this.checked = org.ft_exit_track_menu;
+				} else if($(this).val() === "ft_bg_stop_menu") {
+					this.checked = org.ft_bg_stop_menu;
 				} else if($(this).val() === "ft_review_final") {
 					this.checked = org.ft_review_final;
 				} else if($(this).val() === "set_as_theme") {

@@ -171,6 +171,7 @@ create TABLE organisation (
 	ft_server_menu boolean default true,
 	ft_meta_menu boolean default true,
 	ft_exit_track_menu boolean default false,
+	ft_bg_stop_menu boolean default false,
 	ft_review_final boolean default true,
 	ft_send text,
 	ft_pw_policy integer default -1,
