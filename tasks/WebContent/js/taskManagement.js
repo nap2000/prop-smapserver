@@ -798,22 +798,25 @@ require([
 
 			var tg_id = globals.gCurrentTaskGroup;
 
-			bootbox.confirm(localise.set["msg_confirm_del"] + ' ' + localise.set["msg_confirm_tasks"] + ' (' + $('#taskgroup option:selected').text() + ')', function (result) {
-				if (result) {
-					addHourglass();
-					$.ajax({
-						type: "DELETE",
-						url: "/surveyKPI/assignments/" + tg_id,
-						success: function (data, status) {
-							removeHourglass();
-							refreshTaskGroupData();
-						}, error: function (data, status) {
-							removeHourglass();
-							alert(localise.set["c_error"] +": " + data.responseText);
-						}
-					});
-				}
-			});
+			if(tg_id)
+			{
+				bootbox.confirm(localise.set["msg_confirm_del"] + ' ' + localise.set["msg_confirm_tasks"] + ' (' + $('#taskgroup option:selected').text() + ')', function (result) {
+					if (result) {
+						addHourglass();
+						$.ajax({
+							type: "DELETE",
+							url: "/surveyKPI/assignments/" + tg_id,
+							success: function (data, status) {
+								removeHourglass();
+								refreshTaskGroupData();
+							}, error: function (data, status) {
+								removeHourglass();
+								alert(localise.set["c_error"] + ": " + data.responseText);
+							}
+						});
+					}
+				});
+			}
 
 
 		});
