@@ -363,6 +363,13 @@ require([
 
 
 		/*
+		 * Respond to selection of tasks
+		 */
+		$('input[type=checkbox], #task_table').change(function() {
+			updateDisplayState();
+		});
+
+		/*
 		 * Set up filters
 		 */
 		$('#status_filter').multiselect({
@@ -1359,17 +1366,9 @@ require([
 		gTaskGroups = taskgroups;   // Keep the task group list
 		gTaskGroupIndex = 0;
 
-		if (!taskgroups || taskgroups.length == 0) {
-			$('#tasks_row').hide();
-		} else {
-			$('#tasks_row').show();
-		}
-
-		$('.for_selected, .for_is_tg').addClass('disabled');		// Disable task buttons
+		updateDisplayState();
 
 		if (typeof taskgroups != "undefined" && taskgroups.length > 0) {
-
-			$('.for_is_tg').removeClass('disabled');				// Enable adding of task to the task group
 
 			for (i = 0; i < taskgroups.length; i++) {
 				grp = taskgroups[i];
@@ -1388,6 +1387,7 @@ require([
 				}
 			}
 		}
+
 		$('#taskgroup').html(h.join(''));
 
 		// Set current value for the task group
@@ -1469,6 +1469,7 @@ require([
 					if (gCalendarInitialised) {
 						updateCalendar();
 					}
+					updateDisplayState();
 				},
 				error: function (xhr, textStatus, err) {
 					removeHourglass();
@@ -2206,6 +2207,29 @@ require([
 	function doneTaskSave() {
 		refreshAssignmentData();
 		getLocations(processLocationList);
+	}
+
+	function updateDisplayState() {
+		if (!gTaskGroups || gTaskGroups.length == 0) {
+			$('#task_table_body').empty();
+			$('#tasks_row').hide();
+			$('#deleteTaskGroup, #editTaskGroup').prop('disabled', true).addClass("disabled");
+			$('.task_menu').prop('disabled', true).addClass("disabled");
+			$('.task_dd').removeClass('active');
+		} else {
+			$('#tasks_row').show();
+			$('#deleteTaskGroup, #editTaskGroup').prop('disabled', false).removeClass("disabled");
+			$('.task_menu').prop('disabled', false).removeClass("disabled");
+			$('.task_dd').addClass('active');
+		}
+
+		// Check selected tasks
+		var sel = getSelectedTaskIds();
+		if(sel.length == 0) {
+			$('.bulk_selected').prop('disabled', true).addClass("disabled");
+		} else {
+			$('.bulk_selected').prop('disabled', false).removeClass("disabled");
+		}
 	}
 
 });
