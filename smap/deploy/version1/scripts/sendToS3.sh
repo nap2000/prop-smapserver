@@ -14,7 +14,7 @@ filepath=$1
 if [ -f /smap/settings/bucket ]; then
 
         prefix="/smap"
-        region=`cat ~ubuntu/region`
+        region=`cat /smap/settings/region`
 
         if [ -f  $filepath ]; then
                 relPath=${filepath#"$prefix"}
