@@ -60,6 +60,7 @@
         },
         {
             name: '../billing_main',
+	    exclude: ['jquery', 'bootstrap']
         }
 
     ]

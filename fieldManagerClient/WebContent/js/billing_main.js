@@ -34,41 +34,28 @@ requirejs.config({
      	i18n: '../../../../js/libs/i18n',
      	async: '../../../../js/libs/async',
      	localise: '../../../../js/app/localise',
-    	jquery: '../../../../js/libs/jquery-2.1.1',
-    	bootstrap: '../../../../js/libs/bootstrap.min',
     	bootbox: '../../../../js/libs/bootbox.min',
-    	bootstrapfileinput: '../../../../js/libs/bootstrap.file-input',
     	common: '../../../../js/app/common',
     	globals: '../../../../js/app/globals',
-    	crf: '../../../../js/libs/commonReportFunctions',
     	lang_location: '../../../../js',
-	    inspinia: '../../../../js/libs/wb/inspinia',
-	    metismenu: '../../../../js/libs/wb/plugins/metisMenu/jquery.metisMenu',
 	    slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll.min',
     },
     shim: {
-       	'bootstrap': ['jquery'],
        	'bootstrapfileinput': ['jquery'],
     	'bootbox': ['bootstrap'],
-	    'inspinia': ['jquery'],
     	'common': ['jquery'],
-	    'metismenu': ['jquery'],
 	    'slimscroll': ['jquery']
     	}
     });
 
 require([
-         'jquery', 
-         'bootstrap', 
+         'jquery',
          'common', 
          'localise', 
          'globals',
          'bootbox',
          'app/billing',
-	     'inspinia',
-		 'metismenu',
-		 'slimscroll',
-         'bootstrapfileinput'
+		 'slimscroll'
          
          ], function($, bootstrap, common, localise, globals) {
 	setCustomBilling();
