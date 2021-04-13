@@ -1660,7 +1660,6 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 		item,
 		h = [],
 		idx = -1,
-		count = 0,
 		$elem,
 		$elem_disable_blocked,
 		selValue;
@@ -1669,16 +1668,16 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 	$elem_disable_blocked = $(selector + ".disable_blocked");
 
 	$elem.empty();
+	var valueSelected = false;
 	if(addAll) {
 		h[++idx] = '<option value="_all">';
 		h[++idx] = localise.set["c_all_s"];		// All Surveys
-		if (count++ == 0) {
-			selValue = "_all";
-		}
 		h[++idx] = '</option>';
+
+		selValue = "_all";
+		valueSelected = true;
 	}
 
-	var valueSelected = false;
 	for(i = 0; i < data.length; i++) {
 		item = data[i];
 		if(item.dataSurvey && dataSurvey || item.oversightSurvey && oversightSurvey) {
