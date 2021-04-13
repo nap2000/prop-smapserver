@@ -370,9 +370,10 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
 
             if(typeof survey !== "undefined" && survey !== "_all" && showType !== "instances") {
                 $('#groupsurvey').show();
-                if(showSource === SOURCE_UPLOADED ) {
-                    $('.retry').show();
-                }
+            }
+
+            if(typeof survey !== "undefined" && survey !== "_all" && showSource === SOURCE_UPLOADED) {
+                $('.retry').show();
             }
 
             if(showSource === SOURCE_UPLOADED) {
@@ -396,6 +397,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             globals.gCurrentProject = $('#project_name option:selected').val();
             globals.gCurrentSurvey = -1;
             globals.gCurrentTaskGroup = undefined;
+            $('#survey').val("_all");
 
             loadSurveys(globals.gCurrentProject, undefined, false, true, undefined, false);			// Get surveys
 
