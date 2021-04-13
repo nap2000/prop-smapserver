@@ -64,6 +64,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             // Set change function on projects
             $('#project_name').change(function() {
                 projectChanged();
+                setcontrols();
             });
 
             // Survey Change
