@@ -84,8 +84,6 @@
 
 <div class="container-fluid">
 
-
-
 	<div class="card mt-2">
 		<div class="col-sm-12">
 			<div class="bg-light row">
@@ -109,21 +107,22 @@
 			<div class="bg-light row">
 				<p class="lang" data-lang="br_cc">Cols</p>
 			</div>
+		<div class="col-sm-12" id="duplicateSelect"></div>
+	</div>
 
-			<div class="col-sm-12">
-				<div class="row">
-					<div class="col-sm-12" id="duplicateSelect"></div>
-				</div>
-			</div>
+	<div class="card mt-2">
+		<div class="d-flex w-100 px-4">
+			<p id="survey_title" class="mr-auto py-2"></p>
 
-			<div class="col-sm-12">
-				<div class="row">
-					<div class="col-sm-12">
-						<button id="duplicateSearch" type="button" class="btn btn-primary lang" data-lang="br_s">search</button>
-					</div>
-				</div>
-			</div>
+			<form class="form-inline my-2 my-lg-0">
+				<button id="duplicateSearch" type="button" class="btn btn-primary lang" data-lang="br_s">search</button>
+				<button class="genfile docx btn btn-info mx-1"><i class="fa fa-file-word fa-lg"></i></button>
+				<button class="genfile xls btn btn-success mx-1"><i class="fa fa-file-excel fa-lg"></i></button>
+
+			</form>
+
 		</div>
+
 	</div>
 
 
@@ -133,14 +132,6 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="ibox float-e-margins">
-					<div class="ibox-title">
-						<h5 id="survey_title"></h5>
-						<div class="ibox-tools">
-							<button class="genfile docx btn btn-info"><i class="fa fa-file-word fa-lg"></i></button>
-							<button class="genfile xls btn btn-success "><i class="fa fa-file-excel fa-lg"></i></button>
-						</div>
-
-					</div>
 					<div class="ibox-content">
 						<div class="row">
 							<div id="table_content" class="col-md-12">
