@@ -86,32 +86,28 @@
 
 
 
-	<div id="page-wrapper" class="gray-bg">
+	<div class="card mt-2">
+		<div class="col-sm-12">
+			<div class="bg-light row">
 
-		<!-- Header Row -->
-		<div class="row wrapper border-bottom white-bg page-heading">
-
-			<div class="col-sm-12">
-				<div class="row">
-					<form class="form mt-2 col-sm-6">
-						<div class="form-group row">
-							<label class="lang col-sm-4"  data-lang="c_project"  for="project_name"></label>
-							<select class="project_list form-control form-control-lg col-sm-8" id="project_name"></select>
-						</div>
-						<div class="form-group row">
-							<label class="lang col-sm-4" data-lang="c_survey" for="survey_name"></label>
-							<select class="survey_select data_survey form-control col-sm-8 form-control-lg" id="survey_name"></select>
-						</div>
-					</form>
-				</div>
-			</div>
-
-			<div class="col-sm-12">
-				<div class="row">
-					<div class="col-sm-12">
-						<p class="lang" data-lang="br_cc">Cols</p>
+				<form class="form mt-2 col-sm-6">
+					<div class="form-group row">
+						<label class="lang col-sm-4"  data-lang="c_project"  for="project_name"></label>
+						<select class="project_list form-control form-control-lg col-sm-8" id="project_name"></select>
 					</div>
-				</div>
+					<div class="form-group row">
+						<label class="lang col-sm-4" data-lang="c_survey" for="survey_name"></label>
+						<select class="survey_select data_survey form-control col-sm-8 form-control-lg" id="survey_name"></select>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="card mt-2">
+		<div class="col-sm-12">
+			<div class="bg-light row">
+				<p class="lang" data-lang="br_cc">Cols</p>
 			</div>
 
 			<div class="col-sm-12">
@@ -128,29 +124,29 @@
 				</div>
 			</div>
 		</div>
+	</div>
 
 
 
-		<!-- Tracked items to process -->
-		<div class="wrapper wrapper-content animated fadeInRight">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="ibox float-e-margins">
-						<div class="ibox-title">
-							<h5 id="survey_title"></h5>
-							<div class="ibox-tools">
-								<button class="genfile docx btn btn-info"><i class="fa fa-file-word fa-lg"></i></button>
-								<button class="genfile xls btn btn-success "><i class="fa fa-file-excel fa-lg"></i></button>
-							</div>
-
+	<!-- Tracked items to process -->
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5 id="survey_title"></h5>
+						<div class="ibox-tools">
+							<button class="genfile docx btn btn-info"><i class="fa fa-file-word fa-lg"></i></button>
+							<button class="genfile xls btn btn-success "><i class="fa fa-file-excel fa-lg"></i></button>
 						</div>
-						<div class="ibox-content">
-							<div class="row">
-								<div id="table_content" class="col-md-12">
-									<div class="container-fluid" style="width:100%">
-										<table id="trackingTable">
-										</table>
-									</div>
+
+					</div>
+					<div class="ibox-content">
+						<div class="row">
+							<div id="table_content" class="col-md-12">
+								<div class="container-fluid" style="width:100%">
+									<table id="trackingTable">
+									</table>
 								</div>
 							</div>
 						</div>
@@ -158,51 +154,48 @@
 				</div>
 			</div>
 		</div>
-		<div id="relatedData"></div>
 	</div>
+	<div id="relatedData"></div>
+</div>
 
-	<div id="right-sidebar">
-		<div class="sidebar-container">
+<div id="right-sidebar">
+	<div class="sidebar-container">
 
-			<ul class="nav nav-tabs navs-2">
+		<ul class="nav nav-tabs navs-2">
 
-				<li class="active"><a data-toggle="tab" href="#tab-1"><i class="fa fa-sort-amount-desc"></i></a></li>
-				<li><a data-toggle="tab" href="#tab-2"><i class="fa fa-qrcode"></i></a></li>
+			<li class="active"><a data-toggle="tab" href="#tab-1"><i class="fa fa-sort-amount-desc"></i></a></li>
+			<li><a data-toggle="tab" href="#tab-2"><i class="fa fa-qrcode"></i></a></li>
 
-			</ul>
+		</ul>
 
-			<div class="tab-content">
-				<div id="tab-1" class="tab-pane active">
-					<div class="sidebar-title">
-						<h3> <span class="lang" data-lang="mf_sc">sort</span></h3>
-						<small><i class="fa fa-tim"></i> <span class="lang" data-lang="mf_sc_i"></span></small>
-					</div>
-
-					<div id="tab-columns-content"></div>
-
-					<div class="sidebar-content">
-						<button id="applyColumns" type="button" class="btn btn-primary lang" data-lang="c_apply">apply</button>
-					</div>
+		<div class="tab-content">
+			<div id="tab-1" class="tab-pane active">
+				<div class="sidebar-title">
+					<h3> <span class="lang" data-lang="mf_sc">sort</span></h3>
+					<small><i class="fa fa-tim"></i> <span class="lang" data-lang="mf_sc_i"></span></small>
 				</div>
 
-				<div id="tab-2" class="tab-pane">
-					<div class="sidebar-title">
-						<h3> <span class="lang" data-lang="mf_qr">qr</span></h3>
-						<small><i class="fa fa-tim"></i> <span class="lang" data-lang="mf_bc_i"></span></small>
-					</div>
+				<div id="tab-columns-content"></div>
 
-					<div id="tab-barcode-content"></div>
-
-					<div class="sidebar-content">
-						<button id="applyBarcodes" type="button" class="btn btn-primary lang" data-lang="c_apply">apply</button>
-
-					</div>
+				<div class="sidebar-content">
+					<button id="applyColumns" type="button" class="btn btn-primary lang" data-lang="c_apply">apply</button>
 				</div>
 			</div>
 
+			<div id="tab-2" class="tab-pane">
+				<div class="sidebar-title">
+					<h3> <span class="lang" data-lang="mf_qr">qr</span></h3>
+					<small><i class="fa fa-tim"></i> <span class="lang" data-lang="mf_bc_i"></span></small>
+				</div>
+
+				<div id="tab-barcode-content"></div>
+
+				<div class="sidebar-content">
+					<button id="applyBarcodes" type="button" class="btn btn-primary lang" data-lang="c_apply">apply</button>
+
+				</div>
+			</div>
 		</div>
-
-
 
 	</div>
 
