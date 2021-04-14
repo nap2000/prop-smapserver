@@ -111,104 +111,42 @@
 		</div>
 	</div>
 
-		<div class="card mt-2">
-			<div class="d-flex w-100 px-4">
-				<p id="survey_title" class="mr-auto py-2"></p>
-				<ul class="nav">
-					<li class="nav-item filtersShown">
-						<a id="hideFilters"  class="nav-link active lang" data-lang="mf_hc" href="#">hide</a>
-					</li>
-					<li class="nav-item filtersHidden" style="display:none;">
-						<a id="showFilters" class="nav-link lang" data-lang="mf_sc" href="#">show</a>
-					</li>
-					<li class="nav-item targetSpecific tableOnly">
-						<a id="show_settings" class="nav-link" href="#"><i class="fa fa-cog"></i> <span class="lang" data-lang="mf_ts"></span></a>
-					</li>
-				</ul>
+	<div class="card mt-2">
+		<div class="d-flex w-100 px-4">
+			<p id="survey_title" class="mr-auto py-2"></p>
+			<ul class="nav">
+				<li class="nav-item filtersShown">
+					<a id="hideFilters"  class="nav-link active lang" data-lang="mf_hc" href="#">hide</a>
+				</li>
+				<li class="nav-item filtersHidden" style="display:none;">
+					<a id="showFilters" class="nav-link lang" data-lang="mf_sc" href="#">show</a>
+				</li>
+				<li class="nav-item targetSpecific tableOnly">
+					<a id="show_settings" class="nav-link" href="#"><i class="fa fa-cog"></i> <span class="lang" data-lang="mf_ts"></span></a>
+				</li>
+			</ul>
 
-				<form class="form-inline my-2 my-lg-0">
-					<button id="duplicateSearch" type="button" class="btn btn-primary lang" data-lang="br_s">search</button>
-					<button class="genfile docx btn btn-info mx-1"><i class="fa fa-file-word fa-lg"></i></button>
-					<button class="genfile xls btn btn-success mx-1"><i class="fa fa-file-excel fa-lg"></i></button>
+			<form class="form-inline my-2 my-lg-0">
+				<button id="duplicateSearch" type="button" class="btn btn-primary lang" data-lang="br_s">search</button>
+				<button class="genfile docx btn btn-info mx-1"><i class="fa fa-file-word fa-lg"></i></button>
+				<button class="genfile xls btn btn-success mx-1"><i class="fa fa-file-excel fa-lg"></i></button>
 
-				</form>
-
-			</div>
-
-
-		<!-- Tracked items to process -->
-		<div class="wrapper wrapper-content animated fadeInRight">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="ibox float-e-margins">
-						<div class="ibox-content">
-							<div class="row">
-								<div id="table_content" class="col-md-12">
-									<div class="container-fluid" style="width:100%">
-										<table id="trackingTable">
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="relatedData"></div>
-	</div>
-
-
-</div>>
-
-<!-- Modal to edit a record -->
-<div id="editRecord" class="modal fade" aria-hidden="true">
-	<div class="modal-dialog custom-modal-width">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-			</div>
-			<div class="modal-body">
-				<div class="row">
-					<div class="col-sm-6 b-r"><h3 class="m-t-none m-b lang" data-lang="mf_fd">form data</h3>
-
-						<form id="surveyForm" role="form" class="form-horizontal">
-
-						</form>
-					</div>
-					<div class="col-sm-6 b-r"><h3 class="m-t-none m-b lang" data-lang="mf_md">mgmt data</h3>
-
-						<form id="editRecordForm" role="form" class="form-horizontal">
-
-						</form>
-						<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-						<button id="saveRecord" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_save">Save</button>
-					</div>
-				</div>
-			</div>
+			</form>
 
 		</div>
 	</div>
-</div>
 
-<!-- Modal to set filters on a column -->
-<div id="duplicateReport" class="modal fade" aria-hidden="true">
-	<div class="modal-dialog custom-modal-width">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+	<!-- Tracked items to process -->
+	<div class="card mt-2">
+		<div id="table_content" class="col-md-12">
+			<div class="table-responsive">
+				<table class="table" id="trackingTable"></table>
 			</div>
-			<div class="modal-body">
-
-
-
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-				<button id="saveRecord" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_save">Save</button>
-
-			</div>
-
 		</div>
+
 	</div>
+
 </div>
 
 <!-- Popup to allow the user to select the visible columns -->
