@@ -28,26 +28,20 @@ requirejs.config({
     locale: gUserLocale,
     paths: {
         app: '../app',
-        jquery: 'jquery-2.1.1',
         bootbox: 'bootbox.min',
         lang_location: '../'
     },
     shim: {
-        'bootstrap.min': ['jquery'],
-        'bootstrapValidator.min': ['bootstrap.min'],
-        'app/common': ['jquery'],
-        'bootbox': ['bootstrap.min']
     }
 });
 
 require([
     'jquery',
-    'bootstrap.min',
     'bootstrapValidator.min',
     'app/localise',
     'app/common',
     'bootbox'
-], function ($, bootstrap, bv, localise, common, bootbox) {
+], function ($, bv, localise, common, bootbox) {
 
     var gToken;
     var gSubscribe;

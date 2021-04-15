@@ -727,7 +727,7 @@ define({
     "r_y_e": "Your Email",
     "r_y_o": "Organisation Website",
     "r_f": "Registration Form",
-    "r_s": "Subscriptions",
+    "r_s": "Email Subscriptions",
 
     // Monitor
     "mon_l200": "(last 200)",

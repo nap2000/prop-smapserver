@@ -52,10 +52,8 @@
 	    exclude: ['jquery', 'bootstrap']
         },
         {
-            name: '../queries',
-        },
-        {
             name: '../subscriptions',
+	    exclude: ['jquery', 'bootstrap']
         },
         {
             name: '../userTrail',
