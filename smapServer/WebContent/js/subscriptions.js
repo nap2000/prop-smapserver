@@ -23,13 +23,13 @@ if (Modernizr.localstorage) {
 
 "use strict";
 requirejs.config({
-    baseUrl: 'js/libs',
+    baseUrl: '/js/libs',
     waitSeconds: 0,
     locale: gUserLocale,
     paths: {
-        app: '../app',
+        app: '/js/app',
         bootbox: 'bootbox.min',
-        lang_location: '../'
+        lang_location: '/js'
     },
     shim: {
     }
