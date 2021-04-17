@@ -364,13 +364,5 @@ alter table organisation add column ft_bg_stop_menu boolean default false;
 update organisation set ft_exit_track_menu = false where ft_bg_stop_menu is null;
 
 -- rate limiter
-CREATE SEQUENCE rate_limit_seq START 1;
-ALTER SEQUENCE rate_limit_seq OWNER TO ws;
-
-create TABLE rate_limit (
-	id integer DEFAULT NEXTVAL('rate_limit_seq') CONSTRAINT pk_rate_limit PRIMARY KEY,
-	o_id integer references organisation(id) on delete cascade,
-	action text,
-	gap integer		-- Duration is seconds until next call is allowed
-);
-ALTER TABLE rate_limit OWNER TO ws;
+alter table organisation add column api_rate_limit integer default 0;
+update organisation set api_rate_limit = 0 where api_rate_limit is null;
