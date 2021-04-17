@@ -1553,3 +1553,17 @@ create TABLE autoupdate_questions (
 	s_id integer references survey(s_id) on delete cascade
 );
 ALTER TABLE autoupdate_questions OWNER TO ws;
+
+-- Store rate limits that can apply to services
+DROP SEQUENCE IF EXISTS rate_limit_seq CASCADE;
+CREATE SEQUENCE rate_limit_seq START 1;
+ALTER SEQUENCE rate_limit_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS rate_limit;
+create TABLE rate_limit (
+	id integer DEFAULT NEXTVAL('rate_limit_seq') CONSTRAINT pk_rate_limit PRIMARY KEY,
+	o_id integer references organisation(id) on delete cascade,
+	action text,
+	gap integer		-- Duration is seconds until next call is allowed
+);
+ALTER TABLE rate_limit OWNER TO ws;
