@@ -366,3 +366,5 @@ update organisation set ft_exit_track_menu = false where ft_bg_stop_menu is null
 -- rate limiter
 alter table organisation add column api_rate_limit integer default 0;
 update organisation set api_rate_limit = 0 where api_rate_limit is null;
+
+update translation set type = 'guidance' where type = 'guidance_hint';
