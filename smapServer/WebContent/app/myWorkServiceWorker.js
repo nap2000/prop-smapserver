@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v81';
+let CACHE_NAME = 'v82';
 
 // Web service requests
 let ASSIGNMENTS = '/surveyKPI/myassignments?';
@@ -89,7 +89,8 @@ self.addEventListener('fetch', function(event) {
 	} else if (event.request.url.includes(ASSIGNMENTS)) {   // response to request for forms and tasks. Cache Update Refresh strategy
 
 		event.respondWith(caches.match(ASSIGNMENTS).then(cached => cached || new Response()));
-		event.waitUntil(update_assignments(event.request).then(refresh).then(precacheforms));
+		//event.waitUntil(update_assignments(event.request).then(refresh).then(precacheforms));
+		event.waitUntil(update_assignments(event.request).then(refresh));       // disable precaching due to server load
 
 	} else if (event.request.url.includes(TIMEZONES)) {     // Cache first strategy
 
