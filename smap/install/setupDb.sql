@@ -504,6 +504,7 @@ create index idx_ue_ident on upload_event(user_name);
 create index idx_ue_applied on upload_event (status, incomplete, results_db_applied);
 create index idx_ue_upload_time on upload_event (upload_time);
 CREATE index ue_survey_ident ON upload_event(ident);
+CREATE INDEX idx_ue_p_id ON upload_event(p_id);
 ALTER TABLE upload_event OWNER TO ws;
 
 DROP TABLE IF EXISTS subscriber_event CASCADE;
