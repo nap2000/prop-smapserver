@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v82';
+let CACHE_NAME = 'v83';
 
 // Web service requests
 let ASSIGNMENTS = '/surveyKPI/myassignments?';
@@ -12,6 +12,7 @@ let SERVER_CSS = "/custom/css/custom.css";
 let PROJECT_LIST = "/myProjectList";
 let TIMEZONES = "/timezones";
 let BANNER = " settings/bannerLogo";
+let WEBFORM_BANNER = "media/organisation";
 let TRANSLATION = "translation-combined.json";
 let organisationId = 0;
 
@@ -104,6 +105,7 @@ self.addEventListener('fetch', function(event) {
 			|| event.request.url.includes(ORG_CSS)
 			|| event.request.url.includes(SERVER_CSS)
 			|| event.request.url.includes(BANNER)
+			|| event.request.url.includes(WEBFORM_BANNER)
 			|| event.request.url.includes(TRANSLATION)) {       // Files Network then cache strategy
 
 		event.respondWith(
