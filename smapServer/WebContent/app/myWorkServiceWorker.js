@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v81';
+let CACHE_NAME = 'v86';
 
 // Web service requests
 let ASSIGNMENTS = '/surveyKPI/myassignments?';
@@ -12,6 +12,7 @@ let SERVER_CSS = "/custom/css/custom.css";
 let PROJECT_LIST = "/myProjectList";
 let TIMEZONES = "/timezones";
 let BANNER = " settings/bannerLogo";
+let WEBFORM_BANNER = "media/organisation";
 let TRANSLATION = "translation-combined.json";
 let organisationId = 0;
 
@@ -89,7 +90,8 @@ self.addEventListener('fetch', function(event) {
 	} else if (event.request.url.includes(ASSIGNMENTS)) {   // response to request for forms and tasks. Cache Update Refresh strategy
 
 		event.respondWith(caches.match(ASSIGNMENTS).then(cached => cached || new Response()));
-		event.waitUntil(update_assignments(event.request).then(refresh).then(precacheforms));
+		//event.waitUntil(update_assignments(event.request).then(refresh).then(precacheforms));
+		event.waitUntil(update_assignments(event.request).then(refresh));       // disable precaching due to server load
 
 	} else if (event.request.url.includes(TIMEZONES)) {     // Cache first strategy
 
@@ -103,6 +105,7 @@ self.addEventListener('fetch', function(event) {
 			|| event.request.url.includes(ORG_CSS)
 			|| event.request.url.includes(SERVER_CSS)
 			|| event.request.url.includes(BANNER)
+			|| event.request.url.includes(WEBFORM_BANNER)
 			|| event.request.url.includes(TRANSLATION)) {       // Files Network then cache strategy
 
 		event.respondWith(
