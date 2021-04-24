@@ -15,8 +15,10 @@ import org.smap.model.SurveyTemplate;
 import org.smap.model.TableManager;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
 import org.smap.sdal.model.KeyValueSimp;
+import org.smap.sdal.model.NodesetFormDetails;
 import org.smap.sdal.model.Search;
 import org.smap.server.entities.Option;
+import org.smap.server.entities.Question;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -191,9 +193,6 @@ public class UtilityMethods {
 				qPath = questionPaths.get(qname);
 			}
 			 			
-			
-		
-				
 			if(qPath == null) {
 				throw new Exception("Question path not found for question: " + qname + " in " + input + 
 							" of " + calledForQuestion);
@@ -234,7 +233,7 @@ public class UtilityMethods {
 				int idx;
 				log.info("xxxxx: " + cfPath + " : " + qPath);
 				
-				for(idx = 0; qSteps[idx].equals(cfSteps[idx]); idx++) {					
+				for(idx = 0; idx < qSteps.length && idx < cfSteps.length && qSteps[idx].equals(cfSteps[idx]); idx++) {					
 					relPath.add(qSteps[idx]);
 				}
 				int pathDepth = cfSteps.length - idx;
@@ -242,7 +241,10 @@ public class UtilityMethods {
 				StringBuffer path = new StringBuffer("");
 				if(!webform) {
 					path = path.append("current()");
-				}
+				} 
+				if(pathDepth == 0 && webform) {
+					path.append(".")
+;				}
 				for(int i = 0; i < pathDepth; i++) {
 					if(webform && i == 0) {
 						path.append("..");
@@ -362,6 +364,58 @@ public class UtilityMethods {
 		
 		return out;
 	}
+    
+    /*
+     * Get a repeat nodeset
+     */
+    public static String getRepeatNodeset(SurveyTemplate template, HashMap<String, String> formRefs, 
+    		HashMap<String, String> questionPaths, int formId, 
+    		String qNodeset) throws Exception {
+    	
+    	String nodeset = null;
+    	
+    	int idx = qNodeset.indexOf('[');
+    	if(idx > 0) {
+			
+    		String repQuestionXLS = qNodeset.substring(0, idx).trim();
+			String filter = qNodeset.substring(idx);
+    	
+
+			NodesetFormDetails formDetails = getFormDetails(template, formRefs, repQuestionXLS, questionPaths, formId);
+			nodeset = formDetails.formRef + UtilityMethods.convertAllxlsNames(filter, false, questionPaths,  
+				formId, true, formDetails.formName, true);
+    	}
+    	return nodeset;
+    }
+    
+    public static NodesetFormDetails getFormDetails(SurveyTemplate template, HashMap<String, String> formRefs, String repQuestionXLS, HashMap<String, String> questionPaths, int formId) throws Exception {
+    	NodesetFormDetails details = new NodesetFormDetails();
+		
+		String repQuestionName = GeneralUtilityMethods.getNameFromXlsName(repQuestionXLS);
+		String repQuestionPath = UtilityMethods.convertAllxlsNames(repQuestionXLS, false, questionPaths,  
+				formId, false, null, false);
+		
+		if(template != null) {
+			// Use the template to get the path of the repeat question (presumably called from get xform)
+			Question repQuestion = template.getQuestion(repQuestionPath);
+			details.formRef = repQuestion.getFormRef();
+		} else {
+			// Presumably called from getHtml
+			details.formRef = formRefs.get(repQuestionName);
+		}
+		
+		details.formRef = details.formRef.trim();
+		if(details.formRef.charAt(details.formRef.length() - 1) == '/') {
+			details.formRef = details.formRef.substring(0, details.formRef.length() - 1);
+		}
+		int idx2 = details.formRef.lastIndexOf('/');
+		details.formName = null;
+		if(idx2 > 0) {
+			details.formName = details.formRef.substring(idx2 + 1);
+		}
+		
+    	return details;
+    }
     
 	/*
 	 * Create the results tables if they do not exist

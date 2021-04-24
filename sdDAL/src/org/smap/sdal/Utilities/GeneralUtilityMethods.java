@@ -255,6 +255,9 @@ public class GeneralUtilityMethods {
 	 * Get Base Path
 	 */
 	static public String getBasePath(HttpServletRequest request) {
+		if(request.getServerName().equals("localhost")) {
+			return "/Users/neilpenman/smap_config/smap";
+		}
 		String basePath = request.getServletContext().getInitParameter("au.com.smap.files");
 		if (basePath == null) {
 			basePath = "/smap";
@@ -1051,7 +1054,8 @@ public class GeneralUtilityMethods {
 				+ "server_description,"
 				+ "e_id,"
 				+ "limits,"
-				+ "refresh_rate "
+				+ "refresh_rate,"
+				+ "api_rate_limit "
 				+ "from organisation "
 				+ "where organisation.id = ? "
 				+ "order by name asc;";			
@@ -1108,6 +1112,7 @@ public class GeneralUtilityMethods {
 				String limits = resultSet.getString("limits");
 				org.limits = (limits == null) ? null : gson.fromJson(limits, new TypeToken<HashMap<String, Integer>>() {}.getType());
 				org.refresh_rate = resultSet.getInt("refresh_rate");
+				org.api_rate_limit = resultSet.getInt("api_rate_limit");
 			}
 
 	
@@ -4314,6 +4319,28 @@ public class GeneralUtilityMethods {
 		nodeset.append(listName);
 		nodeset.append("')");
 		nodeset.append("/root/item");
+		if (choice_filter != null && choice_filter.trim().length() > 0) {
+			nodeset.append("[");
+			nodeset.append(choice_filter);
+			nodeset.append("]");
+		}
+
+		return nodeset.toString().trim();
+
+	}
+	
+	/*
+	 * Get the nodeset for a select that looks up a repeat
+	 */
+	public static String getNodesetForRepeat(String choice_filter, String repQuestion) {
+
+		StringBuffer nodeset = new StringBuffer("");
+
+		// There must always be a choice filter, default is to make sure the repeating question is not empty
+		if (choice_filter == null || choice_filter.trim().length() == 0) {
+			choice_filter = repQuestion + " != ''";
+		}
+		nodeset.append(repQuestion);
 		if (choice_filter != null && choice_filter.trim().length() > 0) {
 			nodeset.append("[");
 			nodeset.append(choice_filter);
@@ -8902,7 +8929,9 @@ public class GeneralUtilityMethods {
 				pstmtApplyGeometryChange = cResults.prepareStatement(gSql);
 				
 				try { 
-					pstmtApplyGeometryChange.executeQuery();
+					if(!GeneralUtilityMethods.hasColumn(cResults, table, column)) {
+						pstmtApplyGeometryChange.executeQuery();
+					}
 					
 					// Add altitude and accuracy
 					if(type.equals("geopoint")) {

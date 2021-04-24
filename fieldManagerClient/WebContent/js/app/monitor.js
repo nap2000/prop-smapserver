@@ -655,7 +655,6 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             h[++i] = '</thead>';
 
             // Add the body
-            $('#submission_retry').prop("disabled", true);
             h[++i] = '<tbody>';
             for(j = 0; j < features.length; j++) {
                 h[++i] = '<tr>';
@@ -669,9 +668,6 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                     }
                     if(typeof features[j].properties.errors !== "undefined") {
                         h[++i] = '<td' + (features[j].properties.errors > 0 ? ' class="text-danger"' : '') + '>' + features[j].properties.errors + '</td>';
-                        if(features[j].properties.errors > 0) {
-                            $('#submission_retry').prop("disabled", false);
-                        }
                     }
                     if(typeof features[j].properties.duplicates !== "undefined") {
                         h[++i] = '<td>' + features[j].properties.duplicates + '</td>';
