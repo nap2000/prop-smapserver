@@ -368,3 +368,7 @@ alter table organisation add column api_rate_limit integer default 0;
 update organisation set api_rate_limit = 0 where api_rate_limit is null;
 
 update translation set type = 'guidance' where type = 'guidance_hint';
+
+-- Version 21.04
+
+alter table survey add column search_local_data boolean default false;
