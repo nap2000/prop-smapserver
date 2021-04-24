@@ -948,6 +948,7 @@ define({
     "ed_rl": "Record location with questions",
     "ed_rc": "Audit changes to questions",
 	"ed_hod": "Hide the form on devices",
+    "ed_sld": "Lookup local, unsent, data on device",
     "ed_s_g": "Grid (Web Forms)",
     "ed_s_p": "Pages",
     "ed_c_sr": "All questions set to <span style=\"color:blue;\">required</span>",
