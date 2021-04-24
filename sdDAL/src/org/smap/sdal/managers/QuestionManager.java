@@ -264,10 +264,18 @@ public class QuestionManager {
 				String cascade_instance = null;
 
 				if(q.type.startsWith("select") || q.type.equals("rank")) {
-					cascade_instance = GeneralUtilityMethods.cleanName(q.list_name, true, false, false);
-					nodeset = GeneralUtilityMethods.getNodesetFromChoiceFilter(q.choice_filter, cascade_instance);
-					nodeset_value = "name";
-					nodeset_label = "jr:itext(itextId)";
+					if(q.list_name != null && q.list_name.startsWith("${")) {
+						cascade_instance = q.list_name;
+						String repQuestion = GeneralUtilityMethods.getNameFromXlsName(cascade_instance);
+						nodeset = GeneralUtilityMethods.getNodesetForRepeat(q.choice_filter, cascade_instance);
+						nodeset_value = repQuestion;
+						nodeset_label = repQuestion;
+					} else {
+						cascade_instance = GeneralUtilityMethods.cleanName(q.list_name, true, false, false);
+						nodeset = GeneralUtilityMethods.getNodesetFromChoiceFilter(q.choice_filter, cascade_instance);
+						nodeset_value = "name";
+						nodeset_label = "jr:itext(itextId)";
+					}
 				}
 				pstmtInsertQuestion.setString(24, nodeset);
 				pstmtInsertQuestion.setString(25, nodeset_value);
@@ -1815,7 +1823,8 @@ public class QuestionManager {
 				+ "st.name as style_name, "
 				+ "q.server_calculate,"
 				+ "q.set_value,"
-				+ "q.flash "
+				+ "q.flash, "
+				+ "q.trigger "
 				+ "from question q "
 				+ "left outer join listname l on q.l_id = l.l_id "
 				+ "left outer join style st on q.style_id = st.id "
@@ -1917,6 +1926,7 @@ public class QuestionManager {
 					}
 				}
 				q.flash = rsGetQuestions.getInt(38);
+				q.trigger = rsGetQuestions.getString(39);
 				
 				if(q.type.startsWith("select") || q.type.equals("rank")) {
 					GeneralUtilityMethods.setExternalFileValues(sd, q);
@@ -1960,10 +1970,17 @@ public class QuestionManager {
 				}
 				q.inMeta = inMeta;
 
-				// If the survey was loaded from xls it will not have a list name
+				// If there is no list name then perhaps this select question references a repeat - check the nodeset
 				if(q.type.startsWith("select") || q.type.equals("rank")) {
 					if(q.list_name == null || q.list_name.trim().length() == 0) {
-						q.list_name = q.name;
+						q.list_name = "";
+						if(q.nodeset != null && q.nodeset.startsWith("${")) {
+							// Repeating list reference
+							int idx = q.nodeset.indexOf('[');
+							if(idx > 0) {
+								q.list_name = q.nodeset.substring(0, idx).trim();
+							}
+						}
 					}
 				}
 

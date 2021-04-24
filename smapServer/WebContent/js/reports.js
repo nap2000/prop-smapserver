@@ -237,7 +237,7 @@ require([
         }
         var filter = $('#tg_ad_filter').val();
         var filename = $('#filename').val();
-        var forms = $(':radio:checked', '.shapeforms').map(function() {
+        var forms = $(':radio:checked', '.shapeforms_bs4').map(function() {
             return this.value;
         }).get();
         var form = forms[0];
@@ -1335,7 +1335,7 @@ require([
      * Set the selected form in the pick list
      */
     function setForm() {
-        $('.shapeforms').find("input").each(function() {
+        $('.shapeforms_bs4').find("input").each(function() {
             console.log($(this).val());
             if($(this).val() == gForm) {
                 $(this).prop('checked', true);
