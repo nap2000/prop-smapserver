@@ -1555,3 +1555,16 @@ create TABLE autoupdate_questions (
 	s_id integer references survey(s_id) on delete cascade
 );
 ALTER TABLE autoupdate_questions OWNER TO ws;
+
+DROP SEQUENCE IF EXISTS linked_files_seq CASCADE;
+CREATE SEQUENCE linked_files_seq START 1;
+ALTER SEQUENCE linked_files_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS linked_files;
+create TABLE linked_files (
+	id integer DEFAULT NEXTVAL('linked_files_seq') CONSTRAINT pk_linked_files PRIMARY KEY,
+	s_id integer references survey(s_id) on delete cascade,
+	logical_path text,
+	current_id integer
+);
+ALTER TABLE linked_files OWNER TO ws;
