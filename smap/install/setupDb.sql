@@ -1568,3 +1568,15 @@ create TABLE linked_files (
 	current_id integer
 );
 ALTER TABLE linked_files OWNER TO ws;
+
+DROP SEQUENCE IF EXISTS linked_files_old_seq CASCADE;
+CREATE SEQUENCE linked_files_old_seq START 1;
+ALTER SEQUENCE linked_files_old_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS linked_files_old;
+create TABLE linked_files_old (
+	id integer DEFAULT NEXTVAL('linked_files_old_seq') CONSTRAINT pk_linked_old_files PRIMARY KEY,
+	file text,
+	deleted_time TIMESTAMP
+);
+ALTER TABLE linked_files_old OWNER TO ws;
