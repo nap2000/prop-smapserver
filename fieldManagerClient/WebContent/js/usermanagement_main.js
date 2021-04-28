@@ -511,7 +511,13 @@ require([
 			organisation.admin_email = $('#o_admin_email').val();
 			organisation.smtp_host = $('#o_smtp_host').val();
 			organisation.email_domain = $('#o_email_domain').val();
-			organisation.email_user = $('#o_email_user').val();
+
+			var eu = $('#o_email_user').val();      // avoid autofill
+			if(eu === '-') {
+				eu = undefined;
+			}
+			organisation.email_user = eu;
+
 			organisation.email_password = $('#o_email_password').val();
 			organisation.email_port = parseInt($('#o_email_port').val());
 			organisation.default_email_content = $('#o_default_email_content').val();
@@ -538,7 +544,7 @@ require([
 					return false;
 				}
 			}
-			if(organisation.email_user.indexOf('@') > 0) {
+			if(organisation.email_user && organisation.email_user.indexOf('@') > 0) {
 				error = true;
 				alert(localise.set["msg_email_dom"]);
 				$('#o_email_user').focus();
@@ -1523,7 +1529,12 @@ require([
 			$('#o_admin_email').val(org.admin_email);
 			$('#o_smtp_host').val(org.smtp_host);
 			$('#o_email_domain').val(org.email_domain);
-			$('#o_email_user').val(org.email_user);
+
+			if(typeof org.email_user === "undefined" || org.email_user.trim() === '') {
+				$('#o_email_user').val('-');
+			} else {
+				$('#o_email_user').val(org.email_user);
+			}
 			$('#o_email_password').val(org.email_password);
 			$('#o_email_port').val(org.email_port);
 			$('#o_default_email_content').val(org.default_email_content);
