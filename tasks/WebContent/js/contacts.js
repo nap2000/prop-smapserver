@@ -74,23 +74,29 @@ require([
 		localise.setlang();		// Localise HTML
 
 
-		getLoggedInUser(undefined, false, false, undefined);
+		getLoggedInUser(gotUser, false, false, undefined);
 
+		
+	});
+
+	function gotUser() {
+		var tzString = globals.gTimezone ? "&tz=" + encodeURIComponent(globals.gTimezone) : "";
 		table = $('#sub_table').DataTable({
 			processing: true,
 			scrollY: '70vh',
 			scrollX: true,
 			scrollCollapse: true,
-		     ajax: "/api/v1/subscriptions?dt=true",
-			 select: true,
-			 rowId: 'id',
-		     columns: [
-		     	    { "data": "email" },
-			        { "data": "name" },
-			        { "data": "status_loc"  }
-			     ],
-		      order: [[ 0, "asc" ]],
-			  initComplete: function () {
+			ajax: "/api/v1/subscriptions?dt=true" + tzString,
+			select: true,
+			rowId: 'id',
+			columns: [
+				{ "data": "email" },
+				{ "data": "name" },
+				{ "data": "status_loc"  },
+				{ "data": "time_changed"  }
+			],
+			order: [[ 0, "asc" ]],
+			initComplete: function () {
 				this.api().columns().every( function () {
 					var column = this;
 					var select = $('<select><option value=""></option></select>')
@@ -114,7 +120,7 @@ require([
 
 		});
 
-        $('#sub_table').find('td').css('white-space','initial').css('word-wrap', 'break-word');
+		$('#sub_table').find('td').css('white-space','initial').css('word-wrap', 'break-word');
 
 		// Respond to selection of a row
 		table.off('select').on('select', function (e, dt, type, indexes) {
@@ -159,9 +165,7 @@ require([
 
 
 		$('#savePerson').click(function(){savePerson();});
-		
-	});
-
+	}
 	/*
 	 * Initialise the dialog
 	 */
