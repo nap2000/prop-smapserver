@@ -369,6 +369,27 @@ update organisation set api_rate_limit = 0 where api_rate_limit is null;
 
 update translation set type = 'guidance' where type = 'guidance_hint';
 
--- Version 21.04
-
 alter table survey add column search_local_data boolean default false;
+
+-- Rotating csv file names
+CREATE SEQUENCE linked_files_seq START 1;
+ALTER SEQUENCE linked_files_seq OWNER TO ws;
+
+create TABLE linked_files (
+	id integer DEFAULT NEXTVAL('linked_files_seq') CONSTRAINT pk_linked_files PRIMARY KEY,
+	s_id integer references survey(s_id) on delete cascade,
+	logical_path text,
+	current_id integer
+);
+ALTER TABLE linked_files OWNER TO ws;
+
+CREATE SEQUENCE linked_files_old_seq START 1;
+ALTER SEQUENCE linked_files_old_seq OWNER TO ws;
+
+create TABLE linked_files_old (
+	id integer DEFAULT NEXTVAL('linked_files_old_seq') CONSTRAINT pk_linked_old_files PRIMARY KEY,
+	file text,
+	deleted_time TIMESTAMP
+);
+ALTER TABLE linked_files_old OWNER TO ws;
+

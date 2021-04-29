@@ -890,7 +890,9 @@ require([
 		});
 
 		$('#m_email_unsent').click(function (e) {	// Add email unsent action
-			emailUnsent();
+			if(!$(this).hasClass("disabled")) {
+				emailUnsent();
+			}
 		});
 
 		$('#tasks_print').button();									// Add button styling
