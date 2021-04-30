@@ -290,12 +290,12 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                 var copyText = document.getElementById("srLink");
                 copyText.select();
                 document.execCommand("Copy");
-
-                $('#copyLink').prop('title', localise.set["c_c"] + ": " + copyText.value).tooltip('fixTitle').tooltip('show');
+                
+                $('#copyLink').tooltip('dispose').tooltip({title: localise.set["c_c"] + ": " + copyText.value}).tooltip('show');
 
             });
             $('#copyLink').mouseout(function () {
-                $('#copyLink').prop('title', localise.set["c_cb"]).tooltip('fixTitle');
+                $('#copyLink').tooltip({title: localise.set["c_c"]});
             });
 
             /*
