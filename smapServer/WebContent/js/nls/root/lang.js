@@ -1351,6 +1351,7 @@ define({
 	"rep_msg_min_values": "You must specify at least one value if transform is enabled",
 	"rep_msg_min_wc": "You must specify at least one wide column if transform is enabled",
     "rep_ch": "Column Heading",
+    "rep_inc_temp": "Include temporary users",
 
     // Console
     "co_dd": "Drill Down",
