@@ -1284,6 +1284,7 @@ define(
     "rep_msg_min_values": "Se debe especificar mínimo un valor si la transformación está habilitada.",
     "rep_msg_min_wc": "Se debe especificar mínimo una wide column, si la transformación está habilitada.",
     "rep_ch": "Encabezado de Columna",
+    "rep_inc_temp": "Incluir usuarios temporales",
     "co_dd": "Desglosar",
     "co_up": "Arriba",
     "co_tid": "Incluir valor de texto en Descarga",

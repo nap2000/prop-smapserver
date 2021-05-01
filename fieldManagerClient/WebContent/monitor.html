@@ -70,146 +70,150 @@
 	</div>
 </nav>
 
-<div class="container-fluid">
+<div class="container">
 	<!-- Header Row -->
-	<div class="row border-bottom bg-white mt-4">
-		<div class="col-sm-4 pt-4 border-right">
-			<form>
-				<div class="form-group row">
-					<label class="lang col-sm-4 control-label" data-lang="c_source" for="showSource">source</label>
-					<div class="col-sm-8">
-						<select class="form-control" id="showSource">
-							<option value="uploaded" class="lang" data-lang="c_submitted"></option>
-							<option value="forms" class="lang" data-lang="m_tm"></option>
-							<option value="notifications" class="lang" data-lang="m_notify"></option>
-							<option value="optin_msg" class="lang" data-lang="mon_optin_msg"></option>
-							<option value="forwarded" class="lang" data-lang="c_forwarded"></option>
-						</select>
-					</div>
-				</div>
-				<div class="form-group row conditional showproject">
-					<label class="lang col-sm-4 control-label" data-lang="c_project" for="project_name">project</label>
-					<div class="col-sm-8">
-						<select class="project_list form-control" id="project_name"></select>
-					</div>
-				</div>
-				<div class="form-group row conditional showproject">
-					<label class="lang col-sm-4 control-label" data-lang="c_survey" for="survey">survey</label>
-					<div class="col-sm-8">
-						<select class="survey_select data_survey form-control" id="survey"></select>
-					</div>
-				</div>
-			</form>
-		</div>
-		<div class="col-sm-4 pt-4 border-right">
-			<form>
-				<div class="form-group conditional showtype row">
-					<label class="lang col-sm-4 control-label" data-lang="c_show" for="showType">source</label>
-					<div class="col-sm-8">
-						<select class="form-control" id="showType">
-							<option value="totals" class="lang" data-lang="c_totals"></option>
-							<option value="instances" class="lang" data-lang="mon_l200"></option>
-						</select>
-					</div>
-				</div>
-				<div class="showtarget conditional form-group row">
-					<label class="lang col-sm-4 control-label" data-lang="mon_sa" for="showAs">as</label>
-					<div class="col-sm-8">
-						<select class="form-control" id="showAs">
-							<option value="table" class="lang" data-lang="c_table"></option>
-							<option value="map" class="lang" data-lang="c_map"></option>
-						</select>
-					</div>
-				</div>
-				<div class="form-group row conditional get_less_more" style="display:none;">
-					<button type="button" class="mx-2 col-sm-3 button-light get_less">&lt;&lt;&lt;</button>
-					<button type="button" class="mr-2 col-sm-3 button-light get_more">&gt;&gt;&gt;</button>
-					<span class="col -sm-6 get_less_more_text">Page 1 of 1</span>
-				</div>
-				<div class="conditional retry" style="display:none;">
-					<button id="submission_retry" type="button" class="lang btn btn-info" data-lang="mon_retry">retry</button>
-				</div>
-			</form>
-		</div>
-		<div class="col-sm-4 pt-4">
+	<div class="card mt-2">
+		<div class="card-body">
 			<div class="row">
-				<div id="showstatus" class="conditional col-sm-6">
-					<h5 class="lang" data-lang="c_include">inc</h5>
-					<div class="custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" id="statusCheck1" name="showstatus" value="success" checked="checked">
-						<label class="custom-control-label lang" data-lang="c_success" for="statusCheck1">su</label>
-					</div>
-					<div class="custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" id="statusCheck2" name="showstatus" value="errors" checked="checked">
-						<label class="custom-control-label lang" data-lang="c_errors" for="statusCheck2">err</label>
-					</div>
-					<div class="custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" id="statusCheck3" name="showstatus" value="not_loaded" checked="checked">
-						<label class="custom-control-label lang" data-lang="mon_nl" for="statusCheck3">nl</label>
-					</div>
-					<div class="custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" id="statusCheck4" name="showstatus" value="duplicates" checked="checked">
-						<label class="custom-control-label lang" data-lang="mon_dup" for="statusCheck4">dups</label>
-					</div>
-					<div class="custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" id="statusCheck5" name="showstatus" value="merged" checked="checked">
-						<label class="custom-control-label lang" data-lang="mon_att" for="statusCheck5">att</label>
-					</div>
-					<div class="custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" id="statusCheck6" name="showstatus" value="upload_errors" checked="checked">
-						<label class="custom-control-label lang" data-lang="mon_ue" for="statusCheck6">ue</label>
-					</div>
+				<div class="col-sm-4 border-right">
+					<form>
+						<div class="form-group row">
+							<label class="lang col-sm-4 control-label" data-lang="c_source" for="showSource">source</label>
+							<div class="col-sm-8">
+								<select class="form-control" id="showSource">
+									<option value="uploaded" class="lang" data-lang="c_submitted"></option>
+									<option value="forms" class="lang" data-lang="m_tm"></option>
+									<option value="notifications" class="lang" data-lang="m_notify"></option>
+									<option value="optin_msg" class="lang" data-lang="mon_optin_msg"></option>
+									<option value="forwarded" class="lang" data-lang="c_forwarded"></option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group row conditional showproject">
+							<label class="lang col-sm-4 control-label" data-lang="c_project" for="project_name">project</label>
+							<div class="col-sm-8">
+								<select class="project_list form-control" id="project_name"></select>
+							</div>
+						</div>
+						<div class="form-group row conditional showproject">
+							<label class="lang col-sm-4 control-label" data-lang="c_survey" for="survey">survey</label>
+							<div class="col-sm-8">
+								<select class="survey_select data_survey form-control" id="survey"></select>
+							</div>
+						</div>
+					</form>
 				</div>
-				<div id="groupsurvey" class="col-sm-6 conditional">
-					<h5 class="lang" data-lang="mon_gtb">inc</h5>
-					<div class="custom-control custom-checkbox">
-						<input type="radio" class="custom-control-input" id="groupCheck1" name="groupsurvey" value="device" checked="checked">
-						<label class="custom-control-label lang" data-lang="c_device" for="groupCheck1">dev</label>
-					</div>
-					<div class="custom-control custom-checkbox">
-						<input type="radio" class="custom-control-input" id="groupCheck2" name="groupsurvey" value="month">
-						<label class="custom-control-label lang" data-lang="c_month" for="groupCheck2">day</label>
-					</div>
-					<div class="custom-control custom-checkbox">
-						<input type="radio" class="custom-control-input" id="groupCheck3" name="groupsurvey" value="week">
-						<label class="custom-control-label lang" data-lang="c_week" for="groupCheck3">wk</label>
-					</div>
-					<div class="custom-control custom-checkbox">
-						<input type="radio" class="custom-control-input" id="groupCheck4" name="groupsurvey" value="day">
-						<label class="custom-control-label lang" data-lang="c_day" for="groupCheck4">mth</label>
-					</div>
+				<div class="col-sm-4 border-right">
+					<form>
+						<div class="form-group conditional showtype row">
+							<label class="lang col-sm-4 control-label" data-lang="c_show" for="showType">source</label>
+							<div class="col-sm-8">
+								<select class="form-control" id="showType">
+									<option value="totals" class="lang" data-lang="c_totals"></option>
+									<option value="instances" class="lang" data-lang="mon_l200"></option>
+								</select>
+							</div>
+						</div>
+						<div class="showtarget conditional form-group row">
+							<label class="lang col-sm-4 control-label" data-lang="mon_sa" for="showAs">as</label>
+							<div class="col-sm-8">
+								<select class="form-control" id="showAs">
+									<option value="table" class="lang" data-lang="c_table"></option>
+									<option value="map" class="lang" data-lang="c_map"></option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group row conditional get_less_more" style="display:none;">
+							<button type="button" class="mx-2 col-sm-3 button-light get_less">&lt;&lt;&lt;</button>
+							<button type="button" class="mr-2 col-sm-3 button-light get_more">&gt;&gt;&gt;</button>
+							<span class="col -sm-6 get_less_more_text">Page 1 of 1</span>
+						</div>
+						<div class="conditional retry" style="display:none;">
+							<button id="submission_retry" type="button" class="lang btn btn-info" data-lang="mon_retry">retry</button>
+						</div>
+					</form>
 				</div>
+				<div class="col-sm-4 ">
+					<div class="row">
+						<div id="showstatus" class="conditional col-sm-6">
+							<h5 class="lang" data-lang="c_include">inc</h5>
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" id="statusCheck1" name="showstatus" value="success" checked="checked">
+								<label class="custom-control-label lang" data-lang="c_success" for="statusCheck1">su</label>
+							</div>
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" id="statusCheck2" name="showstatus" value="errors" checked="checked">
+								<label class="custom-control-label lang" data-lang="c_errors" for="statusCheck2">err</label>
+							</div>
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" id="statusCheck3" name="showstatus" value="not_loaded" checked="checked">
+								<label class="custom-control-label lang" data-lang="mon_nl" for="statusCheck3">nl</label>
+							</div>
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" id="statusCheck4" name="showstatus" value="duplicates" checked="checked">
+								<label class="custom-control-label lang" data-lang="mon_dup" for="statusCheck4">dups</label>
+							</div>
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" id="statusCheck5" name="showstatus" value="merged" checked="checked">
+								<label class="custom-control-label lang" data-lang="mon_att" for="statusCheck5">att</label>
+							</div>
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" id="statusCheck6" name="showstatus" value="upload_errors" checked="checked">
+								<label class="custom-control-label lang" data-lang="mon_ue" for="statusCheck6">ue</label>
+							</div>
+						</div>
+						<div id="groupsurvey" class="col-sm-6 conditional">
+							<h5 class="lang" data-lang="mon_gtb">inc</h5>
+							<div class="custom-control custom-checkbox">
+								<input type="radio" class="custom-control-input" id="groupCheck1" name="groupsurvey" value="device" checked="checked">
+								<label class="custom-control-label lang" data-lang="c_device" for="groupCheck1">dev</label>
+							</div>
+							<div class="custom-control custom-checkbox">
+								<input type="radio" class="custom-control-input" id="groupCheck2" name="groupsurvey" value="month">
+								<label class="custom-control-label lang" data-lang="c_month" for="groupCheck2">day</label>
+							</div>
+							<div class="custom-control custom-checkbox">
+								<input type="radio" class="custom-control-input" id="groupCheck3" name="groupsurvey" value="week">
+								<label class="custom-control-label lang" data-lang="c_week" for="groupCheck3">wk</label>
+							</div>
+							<div class="custom-control custom-checkbox">
+								<input type="radio" class="custom-control-input" id="groupCheck4" name="groupsurvey" value="day">
+								<label class="custom-control-label lang" data-lang="c_day" for="groupCheck4">mth</label>
+							</div>
+						</div>
 
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
-<!-- Main panel -->
-<div class="card text-center mt-10 conditional uploaded">
-	<div class="card-body">
-		<div class="tab-content">
-			<div id="uploadedTotalsPanel" class="tab-pane fade show active" role="tabpanel" aria-labelledby="uploadedTotalsTab">
-				<div class="panel-body">
-					<div id="events_table_msg"></div>
-					<div class="table-responsive col-xs-12">
-						<table class="table table-responsive-sm table-striped table-bordered table-sm" id="events"></table>
+
+	<!-- Main panel -->
+	<div class="card text-center conditional uploaded">
+		<div class="card-body">
+			<div class="tab-content">
+				<div id="uploadedTotalsPanel" class="tab-pane fade show active" role="tabpanel" aria-labelledby="uploadedTotalsTab">
+					<div class="panel-body">
+						<div id="events_table_msg"></div>
+						<div class="table-responsive col-xs-12">
+							<table class="table table-responsive-sm table-striped table-bordered table-sm" id="events"></table>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
-<div class="card text-center mt-10 conditional uploaded_map">
-	<div class="card-body">
-		<div class="panel-body">
-			<div id="map"></div>
+	<div class="card text-center mt-3 conditional uploaded_map">
+		<div class="card-body">
+			<div class="panel-body">
+				<div id="map"></div>
+			</div>
 		</div>
 	</div>
-</div>
 
-	<div id="aside">
+	<div id="aside">  <!-- no longer used -->
 		<form id="mon_controls">
 
 
@@ -222,11 +226,11 @@
 				<button id="addLayer" type="button" class="lang" data-lang="mon_show_grid">show grids</button><br/>
 				<button id="removeLayer" type="button" class="lang" data-lang="mon_clear_grid">clear grids</button><br/>
 				<button id="createLayer" type="button" class="lang" data-lang="mon_create_grid">create grid</button><br/>
-				<button id="deleteLayer" type="button" class="lang" data-lang="mon_del_grid">delete grids</button><br/>	
+				<button id="deleteLayer" type="button" class="lang" data-lang="mon_del_grid">delete grids</button><br/>
 			</div>
 		</form>
 	</div>
-
+</div>
 <!-- Popup to show features when a user clicks on a geometry item -->
 <div id="features" class="feature-panel-right"></div>
 
@@ -246,11 +250,11 @@
 		<label for="region_width" class="lang" data-lang="mon_cw">Cell Width</label>
 		<input type="text" id="region_width" required><br/>
 		<label for="region_centre" class="lang" data-lang="mon_centre">Centre</label>
-		<input type="text" id="region_centre" readonly=readonly><br/>	
+		<input type="text" id="region_centre" readonly=readonly><br/>
 		<label for="region_bounds" class="lang" data-lang="mon_bounds">Bounds</label>
 		<input type="text" id="region_bounds" readonly=readonly><br/>
 		<button type="submit" id="region_submit" value="Create Grid" class="lang" data-lang="mon_create_grid">create</button>
-	</form>	
+	</form>
 </div>
 
 <!-- Popup to allow the user to delete regions -->
