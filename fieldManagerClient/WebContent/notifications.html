@@ -245,6 +245,15 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						</div>
 					</div>
 
+					<div class="webhook_options" style="display:none;">
+						<div class="form-group row">
+							<label for="callback_url" data-lang="n_curl" class="lang col-sm-2 control-label">url</label>
+							<div class="col-sm-10">
+								<input type="text" id="callback_url" class="form-control" required>
+							</div>
+						</div>
+					</div>
+
 					<div class="forward_options" style="display:none;">
 						<div class="form-group row">
 							<label for="fwd_host" data-lang="c_host" class="lang col-sm-2 control-label">Host</label>
@@ -252,6 +261,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 								<input type="text" id="fwd_host" class="form-control" required>
 							</div>
 						</div>
+					</div>
+					<div class="forward_options webhook_options" style="display:none;">
 						<div class="form-group row">
 							<label for="fwd_user" data-lang="c_user" class="lang col-sm-2 control-label"></label>
 							<div class="col-sm-10">
@@ -264,6 +275,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 								<input id="fwd_password" type="password" class="form-control lang_ph" data-lang_ph="c_password" placeholder="" required>
 							</div>
 						</div>
+					</div>
+					<div class="forward_options" style="display:none;">
 						<div class="form-group row">
 							<label for="fwd_rem_survey" data-lang="c_rem_f" class="lang col-sm-2 control-label"></label>
 							<div class="col-sm-5">
