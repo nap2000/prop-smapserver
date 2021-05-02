@@ -80,6 +80,7 @@ define({
     "c_forms": "Forms",
     "c_form": "Form",
     "c_forward": "Forward",
+    "c_webhook": "Web Hook",
     "c_forwarded": "Forwarded",
     "c_name": "Name",
     "c_company_name": "Company Name",
@@ -1233,6 +1234,7 @@ define({
     "n_no_oversight": "There are no oversight surveys that can be used to update the data in the console",
     "n_nv": "A value for the update must be specified",
     "n_nq": "An update question must be specified",
+    "n_curl": "Callback URL",
 
     // Roles
     "ro_fr": "Filter rows",
