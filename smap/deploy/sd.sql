@@ -387,7 +387,9 @@ ALTER SEQUENCE linked_files_old_seq OWNER TO ws;
 create TABLE linked_files_old (
 	id integer DEFAULT NEXTVAL('linked_files_old_seq') CONSTRAINT pk_linked_old_files PRIMARY KEY,
 	file text,
-	deleted_time TIMESTAMP
+	deleted_time TIMESTAMP WITH TIME ZONE
 );
 ALTER TABLE linked_files_old OWNER TO ws;
+
+alter table linked_files_old add column erase_time timestamp with time zone;
 
