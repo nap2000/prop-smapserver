@@ -4933,6 +4933,7 @@ function saveWebhook() {
 		notification.remote_password = $('#fwd_password').val();
 		notification.notifyDetails = {};
 		notification.notifyDetails.callback_url = callback_url;
+		notification.update_password = window.gUpdateFwdPassword;
 
 	} else {
 		notification.error = true;
