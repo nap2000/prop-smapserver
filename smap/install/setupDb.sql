@@ -1578,6 +1578,7 @@ DROP TABLE IF EXISTS linked_files_old;
 create TABLE linked_files_old (
 	id integer DEFAULT NEXTVAL('linked_files_old_seq') CONSTRAINT pk_linked_old_files PRIMARY KEY,
 	file text,
-	deleted_time TIMESTAMP
+	deleted_time TIMESTAMP WITH TIME ZONE,
+	erase_time TIMESTAMP WItH TiME ZONE
 );
 ALTER TABLE linked_files_old OWNER TO ws;

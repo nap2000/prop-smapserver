@@ -4599,6 +4599,8 @@ function edit_notification(idx, console) {
 				$('#sms_content').val(notification.notifyDetails.content);
 				$('#sms_attach').val(notification.notifyDetails.attach);
 				$('#sms_sender_id').val(notification.notifyDetails.subject);
+			} else if (notification.target == "webhook") {
+				$('#callback_url').val(notification.notifyDetails.callback_url);
 			}
 		}
 		if (!console) {
@@ -4639,14 +4641,17 @@ function edit_notification(idx, console) {
 
 function setTargetDependencies(target) {
 	if(target === "email") {
-		$('.forward_options, .sms_options').hide();
+		$('.forward_options, .sms_options, .webhook_options, .email_options').hide();
 		$('.email_options').show();
 	} else if(target === "forward") {
-		$('.email_options, .sms_options').hide();
+		$('.forward_options, .sms_options, .webhook_options, .email_options').hide();
 		$('.forward_options').show();
 	} else if(target === "sms") {
-		$('.email_options, .forward_options').hide();
+		$('.forward_options, .sms_options, .webhook_options, .email_options').hide();
 		$('.sms_options').show();
+	} else if(target  === "webhook") {
+		$('.forward_options, .sms_options, .webhook_options, .email_options').hide();
+		$('.webhook_options').show();
 	}
 }
 
@@ -4902,6 +4907,33 @@ function saveForward() {
 		// Save the values temporarily entered by the user
 		window.gRemote_host = host;
 		window.gRemote_user = $('#fwd_user').val();
+
+	} else {
+		notification.error = true;
+	}
+
+	return notification;
+}
+
+/*
+ * Process a save notification when the target is "webhook"
+ */
+function saveWebhook() {
+
+	var error = false,
+		callback_url,
+		notification = {};
+
+	callback_url = $('#callback_url').val();
+
+	if(!error) {
+
+		notification.target = "webhook";
+		notification.remote_user = $('#fwd_user').val();
+		notification.remote_password = $('#fwd_password').val();
+		notification.notifyDetails = {};
+		notification.notifyDetails.callback_url = callback_url;
+		notification.update_password = window.gUpdateFwdPassword;
 
 	} else {
 		notification.error = true;
