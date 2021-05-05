@@ -148,6 +148,8 @@ require([
 			notification = saveSMS();
 		} else if(target === "document") {
 			notification = saveDocument();
+		} else if(target === "webhook") {
+			notification = saveWebhook();
 		}
 
 		if(!notification.error) {
@@ -421,6 +423,8 @@ require([
 						h[++idx] = localise.set["msg_sms_n2"];
 					}
 				}
+			} else if(data[i].target === "webhook" && data[i].notifyDetails) {
+				h[++idx] = data[i].notifyDetails.callback_url;
 			}
 			h[++idx] = '</td>';
 
