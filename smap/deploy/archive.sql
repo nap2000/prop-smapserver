@@ -2,7 +2,7 @@
 WITH archived_rows AS (
     DELETE FROM log
     WHERE
-        event = 'view' 
+        (event = 'view' or event = 'dashboard view' or event = 'API view')
         and log_time < now() - interval '100 days'
     RETURNING *
 )
