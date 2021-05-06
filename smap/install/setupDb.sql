@@ -237,7 +237,6 @@ create TABLE log_archive (
 	note text,
 	measure int default 0		-- In the case of translate this would be the number of characters
 	);
-
 ALTER TABLE log_archive OWNER TO ws;
 
 DROP TABLE IF EXISTS project CASCADE;
