@@ -948,66 +948,6 @@ define(function () {
 
         };
 
-        // Apply the current change
-        /*
-         this.doChange = function() {
-
-         var change = this.changes[this.currentChange];
-         var i,
-         question;
-
-         if(change.type === "label") {
-         for(i = 0; i < change.items.length; i++) {
-         label = change.items[i];
-
-         if(label.form) {
-         this.survey.forms[label.formIdx].questions[label.questionIdx].
-         labels[label.language][label.element] = label.newVal;
-         } else if(label.optionListIdx) {
-         this.survey.optionLists[label.optionListIdx][label.optionIdx].
-         labels[label.language][label.element] = label.newVal;
-         }
-         }
-         }
-
-         }
-
-         this.undo = function() {
-         var change = this.changes[this.currentChange--];
-         this.setHasChanges(this.changes.length);
-         if(change.type === "label") {
-         for(i = 0; i < change.labels.length; i++) {
-         label = change.labels[i];
-         if(label.form) {
-         this.survey.forms[label.formIdx].questions[label.questionIdx].
-         labels[label.language][label.element] = label.oldVal;
-         } else if(question.optionList) {
-         this.survey.optionLists[label.optionListIdx][label.optionIdx].
-         labels[label.language][label.element] = label.oldVal;
-         }
-         }
-         }
-         }
-
-         this.redo = function() {
-         if(this.currentChange < this.changes.length - 1) {
-         this.currentChange++;
-         this.setHasChanges(this.changes.length);
-         this.doChange();
-         }
-         }
-
-
-         // Add a question, option or language
-         this.addElement = function(item) {
-
-         this.currentChange = this.changes.push(item) - 1;
-         this.doChange();				// Apply the current change
-         this.setHasChanges(this.changes.length);
-         }
-
-         */
-
         // Modify a label for a question or an option called from translate where multiple questions can be modified at once if the text is the same
         this.modLabel = function (language, changedQ, newVal, element, prop) {
 
@@ -1152,6 +1092,7 @@ define(function () {
 	            $('#audit_location_data').prop('checked'),
 	            $('#track_changes').prop('checked'),
 	            $('#hide_on_device').prop('checked'),
+	            $('#search_local_data').prop('checked'),
 	            $('#data_survey').prop('checked'),
 	            $('#oversight_survey').prop('checked'),
                 $('#exclude_empty').prop('checked'),
@@ -1172,6 +1113,7 @@ define(function () {
 	            this.survey.audit_location_data = current.audit_location_data;
 	            this.survey.track_changes = current.track_changes;
 	            this.survey.hideOnDevice = current.hideOnDevice;
+	            this.survey.searchLocalData = current.searchLocalData;
 	            this.survey.dataSurvey = current.dataSurvey;
 	            this.survey.oversightSurvey = current.oversightSurvey;
                 this.survey.exclude_empty = current.exclude_empty;
@@ -1196,6 +1138,7 @@ define(function () {
 	                this.survey.audit_location_data,
 	                this.survey.track_changes,
                     this.survey.hideOnDevice,
+	                this.survey.searchLocalData,
 	                this.survey.dataSurvey,
 	                this.survey.oversightSurvey,
                     this.survey.exclude_empty,
@@ -1216,6 +1159,7 @@ define(function () {
                                               audit_location_data,
                                               track_changes,
                                               hideOnDevice,
+                                              searchLocalData,
                                               dataSurvey,
                                               oversightSurvey,
                                               exclude_empty,
@@ -1240,6 +1184,7 @@ define(function () {
 	            audit_location_data: audit_location_data,
 	            track_changes: track_changes,
                 hideOnDevice: hideOnDevice,
+                searchLocalData: searchLocalData,
 	            dataSurvey: dataSurvey,
 	            oversightSurvey: oversightSurvey,
                 exclude_empty: exclude_empty,

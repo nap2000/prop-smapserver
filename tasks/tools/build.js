@@ -45,11 +45,7 @@
 
 	mapbox: '../../../../smapServer/WebContent/js/libs/mapbox/js/mapbox',
 
-	inspinia: '../../../../smapServer/WebContent/js/libs/wb/inspinia.v2.9.2',
-	'wb-setup': '../../../../smapServer/WebContent/js/libs/wb/wb-setup',
 	jquery_ui: '../../../../smapServer/WebContent/js/libs/wb/jquery-ui-1.10.4.min',
-	metismenu: '../../../../smapServer/WebContent/js/libs/wb/plugins/metisMenu/jquery.metisMenu',
-	metismenu_v4: '../../../../smapServer/WebContent/js/libs/wb/plugins/metisMenu/jquery.metisMenu.2.7.7',
 	slimscroll: '../../../../smapServer/WebContent/js/libs/wb/plugins/slimscroll/jquery.slimscroll.min',
 	sweetalert: '../../../../smapServer/WebContent/js/libs/wb/plugins/sweetalert/sweetalert.min',
 	pace: '../../../../smapServer/WebContent/js/libs/wb/plugins/pace/pace.min',
