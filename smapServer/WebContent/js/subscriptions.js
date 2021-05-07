@@ -23,31 +23,25 @@ if (Modernizr.localstorage) {
 
 "use strict";
 requirejs.config({
-    baseUrl: 'js/libs',
+    baseUrl: '/js/libs',
     waitSeconds: 0,
     locale: gUserLocale,
     paths: {
-        app: '../app',
-        jquery: 'jquery-2.1.1',
+        app: '/js/app',
         bootbox: 'bootbox.min',
-        lang_location: '../'
+        lang_location: '/js'
     },
     shim: {
-        'bootstrap.min': ['jquery'],
-        'bootstrapValidator.min': ['bootstrap.min'],
-        'app/common': ['jquery'],
-        'bootbox': ['bootstrap.min']
     }
 });
 
 require([
     'jquery',
-    'bootstrap.min',
     'bootstrapValidator.min',
     'app/localise',
     'app/common',
     'bootbox'
-], function ($, bootstrap, bv, localise, common, bootbox) {
+], function ($, bv, localise, common, bootbox) {
 
     var gToken;
     var gSubscribe;
