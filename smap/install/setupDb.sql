@@ -577,6 +577,7 @@ CREATE TABLE survey (
 	hidden boolean default false,					-- Updated when a form is replaced
 	original_ident text,								-- Updated when a form is replaced
 	hide_on_device boolean,							-- Used when forms are launched from other forms or as tasks to hide the ad-hoc form
+	search_local_data boolean,						-- Use when local unsubmitted data should be referenced
 	pdf_template text,
 	default_logo text,
 	data_survey boolean default true,

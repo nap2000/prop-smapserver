@@ -593,7 +593,7 @@ define({
     "msg_uns": "Unsubscribe sucessful",
     "msg_s1": "An email has been sent to the address you provided.  Click on the link to confirm your subscription",
     "msg_s2": "Subscribed sucessfully",
-    "msg_s3": "Enter your email address to subscribe to emails",
+    "msg_s3": "Enter your email address to re-subscribe to emails",
     "msg_pd_key": "Specify a data key ",
     "msg_one_role": "At least one role must be selected",
     "msg_dup_name": "Duplicate name",
@@ -616,6 +616,7 @@ define({
     "msg_no_uns_orgs": "There are no organisations where that email address is unsubscribed",
     "msg_res_name": "%s1 is a reserved name",
     "msg_trans_to": "The translation request has timed out.  However it should still be working in the background and you can view the results by refreshing the page",
+    "msg_subs_bg": "If you have un-subscribed from receiving email notifications, then using this page, you can re-subscribe to receive them again. The decision to send notifications to an email address is made by an administrator so although you can un-subscribe from these and then re-subscribe on this page you cannot request email notiifcations when you are not being sent any.",
 
     // Editor
     "e_b_e": "Base on existing form",
@@ -728,7 +729,7 @@ define({
     "r_y_e": "Your Email",
     "r_y_o": "Organisation Website",
     "r_f": "Registration Form",
-    "r_s": "Subscriptions",
+    "r_s": "Email Subscriptions",
 
     // Monitor
     "mon_l200": "(last 200)",
@@ -948,6 +949,7 @@ define({
     "ed_rl": "Record location with questions",
     "ed_rc": "Audit changes to questions",
 	"ed_hod": "Hide the form on devices",
+    "ed_sld": "Lookup local, unsent, data on device",
     "ed_s_g": "Grid (Web Forms)",
     "ed_s_p": "Pages",
     "ed_c_sr": "All questions set to <span style=\"color:blue;\">required</span>",
