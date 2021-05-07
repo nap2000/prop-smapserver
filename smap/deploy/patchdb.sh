@@ -56,6 +56,9 @@ sudo -u postgres psql -f ./sd.sql -q -d survey_definitions 2>&1 | grep -v "alrea
 echo "applying patches to results"
 sudo -u postgres psql -f ./results.sql -q -d results 2>&1 | grep -v "already exists"
 
+echo "Archiving records in survey_definitions"
+sudo -u postgres psql -f ./archive.sql -q -d survey_definitions 2>&1 
+
 # Version 14.02
 if [ $version -lt "1402" ]
 then

@@ -224,6 +224,21 @@ create TABLE log (
 CREATE INDEX log_time_key ON log(log_time);
 ALTER TABLE log OWNER TO ws;
 
+-- Log table archive
+DROP TABLE IF EXISTS log_archive CASCADE;
+create TABLE log_archive (
+	id integer CONSTRAINT pk_log_archive PRIMARY KEY,
+	log_time TIMESTAMP WITH TIME ZONE,
+	s_id integer,
+	o_id integer REFERENCES organisation(id) ON DELETE CASCADE,
+	e_id integer,
+	user_ident text,
+	event text,	
+	note text,
+	measure int default 0		-- In the case of translate this would be the number of characters
+	);
+ALTER TABLE log_archive OWNER TO ws;
+
 DROP TABLE IF EXISTS project CASCADE;
 create TABLE project (
 	id INTEGER DEFAULT NEXTVAL('project_seq') CONSTRAINT pk_project PRIMARY KEY,

@@ -393,3 +393,17 @@ ALTER TABLE linked_files_old OWNER TO ws;
 
 alter table linked_files_old add column erase_time timestamp with time zone;
 
+-- Log table archive
+create TABLE log_archive (
+	id integer CONSTRAINT pk_log_archive PRIMARY KEY,
+	log_time TIMESTAMP WITH TIME ZONE,
+	s_id integer,
+	o_id integer REFERENCES organisation(id) ON DELETE CASCADE,
+	e_id integer,
+	user_ident text,
+	event text,	
+	note text,
+	measure int default 0		-- In the case of translate this would be the number of characters
+	);
+ALTER TABLE log_archive OWNER TO ws;
+
