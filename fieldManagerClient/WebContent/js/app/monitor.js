@@ -35,7 +35,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
 
             localise.setlang();		// Localise HTML
 
-            getLoggedInUser(projectChanged, true, true, undefined);
+            getLoggedInUser(projectChanged, false, true, undefined);
 
             refreshRegions();
 
