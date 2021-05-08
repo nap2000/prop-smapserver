@@ -190,10 +190,6 @@ require([
 			e.preventDefault();
 			panelChange($(this), 'webform');
 		});
-		$('#sensitiveTab a').click(function (e) {
-			e.preventDefault();
-			panelChange($(this), 'sensitive');
-		});
 		$('#enterpriseTab a').click(function (e) {
 			e.preventDefault();
 			panelChange($(this), 'enterprise');
