@@ -118,6 +118,7 @@ require([
 		getLoggedInUser(userKnown, false, false, undefined, false,
 			false, undefined, getServerDetails);
 		getDeviceSettings();
+		getEmailSettings();
 		getWebformSettings();
 		getAppearanceSettings();
 		getSensitiveSettings();
@@ -142,6 +143,10 @@ require([
 		$('#sensitiveTab a').click(function (e) {
 			e.preventDefault();
 			panelChange($(this), 'sensitive');
+		});
+		$('#emailTab a').click(function (e) {
+			e.preventDefault();
+			panelChange($(this), 'email');
 		});
 
 		// Copy user ident to email if it is a valid email
@@ -300,6 +305,55 @@ require([
 					removeHourglass();
 					$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
 					getDeviceSettings();
+				}, error: function(xhr, textStatus, err) {
+					removeHourglass();
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						var msg = err;
+						$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
+					}
+				}
+			});
+
+		});
+
+		/*
+         * Save the email options
+         */
+		$('#saveEmailSettings').click(function() {
+			var email = {},
+				error = false;
+
+			email.admin_email = $('#o_admin_email').val();
+			email.smtp_host = $('#o_smtp_host').val();
+			email.email_domain = $('#o_email_domain').val();
+
+			var eu = $('#o_email_user').val();      // avoid autofill
+			if(eu === '-') {
+				eu = undefined;
+			}
+			email.email_user = eu;
+
+			email.email_password = $('#o_email_password').val();
+			email.email_port = parseInt($('#o_email_port').val());
+			email.default_email_content = $('#o_default_email_content').val();
+			email.server_description = $('#o_server_description').val();
+
+			var emailString = JSON.stringify(email);
+
+			$('.org_alert').hide();
+			addHourglass();
+			$.ajax({
+				type: 'POST',
+				data: {settings: emailString},
+				cache: false,
+				contentType: "application/json",
+				url: "/surveyKPI/organisationList/email",
+				success: function(data, status) {
+					removeHourglass();
+					$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+					getEmailSettings();
 				}, error: function(xhr, textStatus, err) {
 					removeHourglass();
 					if(xhr.readyState == 0 || xhr.status == 0) {
@@ -820,6 +874,44 @@ require([
 					}
 					$('.pw_timeout').hide();
 				}
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["c_error"] + ": " + err);
+				}
+			}
+		});
+	}
+
+	/*
+     * Get the device settings
+     */
+	function getEmailSettings() {
+
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/organisationList/email",
+			dataType: 'json',
+			cache: false,
+			success: function(org) {
+				removeHourglass();
+
+				$('#o_admin_email').val(org.admin_email);
+				$('#o_smtp_host').val(org.smtp_host);
+				$('#o_email_domain').val(org.email_domain);
+
+				if(typeof org.email_user === "undefined" || org.email_user.trim() === '') {
+					$('#o_email_user').val('-');
+				} else {
+					$('#o_email_user').val(org.email_user);
+				}
+				$('#o_email_password').val(org.email_password);
+				$('#o_email_port').val(org.email_port);
+				$('#o_default_email_content').val(org.default_email_content);
+				$('#o_server_description').val(org.server_description);
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();

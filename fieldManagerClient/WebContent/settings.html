@@ -91,6 +91,7 @@
 				<li id="serverTab" class="nav-item restrict_role owner_role"><a href="#" class="nav-link lang" data-lang="c_server"></a></li>
 				<li id="deviceTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="u_det_o_ft"></a></li>
 				<li id="webformTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="u_det_o_wf"></a></li>
+				<li id="emailTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="u_det_o_email"></a></li>
 				<li id="sensitiveTab" class="nav-item restrict_role security_role"><a href="#" class="nav-link lang" data-lang="u_sens_data"></a></li>
 			</ul>
 		</div>
@@ -548,6 +549,76 @@
 
 						<div class="org_alert alert alert-success mt-4" role="alert" style="display:none;"></div>
 						<button id="saveServer" class="btn btn-success mt-4 lang" data-lang="c_save">save</button>
+					</div>
+
+				</div>
+
+				<!-- The panel for setting organisation email settings -->
+				<div id="emailPanel" style="display:none;" class="usertab mt-4">
+
+					<div class="container">
+						<form id="email_form">
+
+							<div class="form-group row">
+								<label for="o_admin_email" data-lang="u_h_e" class="lang control-label col-sm-4">help email</label>
+								<div class="col-sm-6">
+									<input class="form-control" type="text" id="o_admin_email" tabindex="9">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="o_smtp_host" data-lang="u_smtp" class="lang col-sm-4 control-label">smtp</label>
+								<div class="col-sm-6">
+									<input class="form-control" type="text" id="o_smtp_host" tabindex="10">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="o_email_domain" data-lang="u_e_dom" class="lang col-sm-4 control-label">domain</label>
+								<div class="col-sm-6">
+									<input class="form-control" type="text" id="o_email_domain" tabindex="11">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="o_email_user" data-lang="u_e_nm" class="lang col-sm-4 control-label">user name</label>
+								<div class="col-sm-6">
+									<input class="form-control" type="text" id="o_email_user" tabindex="12">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="o_email_password" data-lang="u_e_p" class="lang col-sm-4 control-label">Email password: </label>
+								<div class="col-sm-6">
+									<input class="form-control" type="password" id="o_email_password" tabindex="13">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="o_email_port" data-lang="u_e_port" class="lang col-sm-4 control-label">port</label>
+								<div class="col-sm-6">
+									<input class="form-control" type="text" id="o_email_port" tabindex="14">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="o_default_email_content" data-lang="c_content" class="lang col-sm-4 control-label">content</label>
+								<div class="col-sm-6">
+									<textarea id="o_default_email_content" class="labelProp form-control" placeholder="Default Email content"></textarea>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label for="o_server_description" data-lang="u_e_si" class="lang col-sm-4 control-label">server identification</label>
+								<div class="col-sm-6">
+									<textarea id="o_server_description" class="labelProp form-control" placeholder="Server Identifier"></textarea>
+								</div>
+							</div>
+						</form>
+
+						<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
+						<button id="saveEmailSettings" class="btn btn-success lang mt-4" data-lang="c_save">save</button>
+
 					</div>
 
 				</div>
