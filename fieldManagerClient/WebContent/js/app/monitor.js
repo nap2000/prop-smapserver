@@ -686,7 +686,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                     h[++i] = '<td>' + features[j].properties.ue_id + '</td>';
                     h[++i] = '<td>' + localTime(features[j].properties.upload_time) + '</td>';
                     h[++i] = '<td>' + features[j].properties.user_name + '</td>';
-                    h[++i] = '<td>' + features[j].properties.imei + '</td>';
+                    h[++i] = '<td><div style="word-wrap: break-word;overflow-wrap: break-word;width: 100%;">' + features[j].properties.imei + '</div></td>';
                     h[++i] = '<td>' + features[j].properties.file_name + '</td>';
                     h[++i] = '<td>' + features[j].properties.survey_name + '</td>';
                     h[++i] = '<td>' + features[j].properties.ident + '</td>'
