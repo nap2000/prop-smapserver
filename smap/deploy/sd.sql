@@ -396,15 +396,16 @@ ALTER TABLE linked_files_old OWNER TO ws;
 alter table linked_files_old add column erase_time timestamp with time zone;
 
 -- Log table archive
+-- Note when patching in log_archive the order of columns is different in order to match the patched order of log on most servers
 create TABLE log_archive (
 	id integer CONSTRAINT pk_log_archive PRIMARY KEY,
 	log_time TIMESTAMP WITH TIME ZONE,
 	s_id integer,
 	o_id integer,
-	e_id integer,
 	user_ident text,
 	event text,	
 	note text,
+	e_id integer,
 	measure int default 0		-- In the case of translate this would be the number of characters
 	);
 ALTER TABLE log_archive OWNER TO ws;
