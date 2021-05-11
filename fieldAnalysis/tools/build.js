@@ -15,6 +15,7 @@
     	modernizr: '../../../../smapServer/WebContent/js/libs/modernizr',
     	rmm: '../../../../smapServer/WebContent/js/libs/responsivemobilemenu',
     	common: '../../../../smapServer/WebContent/js/app/common',
+	bootstrap: '../../../../smapServer/WebContent/js/libs/bootstrap.min',
     	data: '../../../../smapServer/WebContent/js/app/data',
         moment: '../../../../smapServer/WebContent/js/libs/moment-with-locales.min',
     	version: '../../../../smapServer/WebContent/js/app/version',
@@ -51,20 +52,11 @@
             name: '../reportlist_main'
         },
         {
-            name: '../review_main'
+            name: '../review_main',
+	    exclude: ['jquery', 'bootstrap']
         },
         {
             name: '../audit_main'
-        },
-        {
-            name: '../table_reports_main'
-        },
-        {
-            name: '../graph_reports_main'
-//	    exclude: ['../jqplot_main']
-        },
-        {
-            name: '../map_reports_main'
         }
 
 
