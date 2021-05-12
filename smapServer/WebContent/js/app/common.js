@@ -3691,6 +3691,7 @@ function showRoles(data, selectedRoles, setall) {
 		for (i = 0; i < data.length; i++) {
 			h[++idx] = '<div class="col-sm-10 custom-control custom-checkbox ml-2 mb-1">'
 			h[++idx] = '<input type="checkbox"';
+			h[++idx] = ' id="rolesel_' + i + '"';
 			if(setall || roleSelected(data[i].id, selectedRoles)) {
 				h[++idx] = ' checked="checked"';
 			}
@@ -3698,7 +3699,8 @@ function showRoles(data, selectedRoles, setall) {
 			h[++idx] = data[i].id;
 			h[++idx] = '">';
 
-			h[++idx] = '<label class="custom-control-label">';
+			h[++idx] = '<label class="custom-control-label"';
+			h[++idx] = ' for="rolesel_' + i + '">';
 			h[++idx] = 	data[i].name;
 			h[++idx] = '</label>';
 			h[++idx] = '</div>';
