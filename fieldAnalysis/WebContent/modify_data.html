@@ -87,25 +87,44 @@
 	</div>
 </nav>
 
-<!-- Portal -->
 <div class="container-fluid">
-
 	<div class="card mt-2">
 		<div class="card-header">
-				<div style="padding-left: 50px; padding-right:50px; color:blue;">
-					<p class="lang" data-lang="an_mod_hint"></p>
-				</div>
+			<p class="lang text-primary" data-lang="an_mod_hint"></p>
 		</div>
-		<div class="card-body">
-			<form class="modify_form">
-				<div style="float:left;">
+		<form class="card-body">
+			<div class="row">
+				<div class="custom-control custom-checkbox">
+					<input type="checkbox" class="custom-control-input" id="primary_key_cb" name="primary_key" value="success" checked="checked">
+					<label class="custom-control-label lang" data-lang="rev_sel_pk" for="primary_key_cb">su</label>
+
+					<!--
 					<span class="lang" data-lang="rev_sel_pk">use primary key</span>:
 					<input type="checkbox" name="primary_key" id="primary_key_cb">
+					-->
 				</div>
-			</form>
-			<div style="clear: both;">&nbsp;</div>
+			</div>
+			<form>
 
-			<form class="modify_form">
+				<div class="row">
+				<div class="col-sm-3">
+					<div class="form-group row">
+						<label class="lang col-sm-4 control-label" data-lang="c_project" for="project_name">project</label>
+						<div class="col-sm-8">
+							<select class="project_list form-control" id="project_name"></select>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="form-group row">
+						<label class="lang col-sm-4 control-label" data-lang="c_survey" for="survey_name">survey</label>
+						<div class="col-sm-8">
+							<select class="survey_select data_oversight_survey form-control" id="survey_name"></select>
+						</div>
+					</div>
+				</div>
+
+				<!--
 				<div style="width:210px; height:50px; font-size:16px; float:left;">
 					<label for="project_name" class="lang" data-lang="c_project">project</label>
 					<select class="project_list" id="project_name" style="font-size: 16px;"></select>
@@ -115,12 +134,23 @@
 					<label for="survey_name" class="lang" data-lang="c_survey">survey</label>
 					<select class="survey_select data_oversight_survey" id="survey_name" style="font-size: 16px;"></select>
 				</div>
+				-->
 
+				<div class="col-sm-3">
+					<div class="form-group row">
+						<label class="lang col-sm-4 control-label" data-lang="c_project" for="language_name"">language</label>
+						<div class="col-sm-8">
+							<select class="language_select form-control" id="language_name""></select>
+						</div>
+					</div>
+				</div>
+				</div>
+				<!--
 				<div style="width:210px; height:50px; font-size:16px; float:left;" class="not_pk_select">
 					<label for="language_name" class="lang" data-lang="c_lang">language</label>
 					<select class="language_select" id="language_name" style="font-size: 16px;"></select>
 				</div>
-
+				-->
 				<div style="width:210px; height:50px;font-size:16px; float:left;" class="not_pk_select">
 					<label for="text_name" class="lang" data-lang="c_question">question</label>
 					<select id="text_name" style="font-size: 16px;"></select>
@@ -131,7 +161,6 @@
 					<select id="form_name" style="font-size: 16px;"></select>
 				</div>
 			</form>
-			<div style="clear: both;">&nbsp;</div>
 			<form class="modify_form">
 				<div style="float:left;">
 					<span class="lang" data-lang="rev_upd_diff">Update different</span>:
@@ -142,10 +171,12 @@
 					<select id="target_question_name" style="font-size: 16px;"></select>
 				</div>
 			</form>
+		</div>
+	</div>
 
-			<div style="clear: both;">&nbsp;</div>
-
-			<div id="review-container">
+	<div class="card mt-2">
+		<div class="card-body">
+			<div class="row" id="review-container">
 				<table class="tablesorter">
 					<thead>
 					<tr>
@@ -159,12 +190,10 @@
 					</tbody>
 				</table>
 			</div>
-
-
 		</div>
 	</div>
 
-</div> <!-- end of #container -->
+</div>
 
 
 		<
