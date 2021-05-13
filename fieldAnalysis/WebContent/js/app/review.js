@@ -388,9 +388,9 @@ function getData() {
 				h[++idx] = data[i].count;
 				h[++idx] = '</td>';
 				h[++idx] = '<td>';
-				h[++idx] = '<button class="review_update" type="button" value="';
+				h[++idx] = '<button type="button" class="btn btn-light review_update" value="';
 				h[++idx] = i;
-				h[++idx] = '"><img src="img/rightarrow.png" height="16" width="16"></button>';
+				h[++idx] = '"><i class="fas fa-arrow-right"></i></button>';
 				h[++idx] = '</td>';
 				h[++idx] = '<td class="review_update_other">';
 				h[++idx] = addSecondary(data[i], i);
@@ -407,7 +407,7 @@ function getData() {
 
 
 			$elem.html(h.join(''));
-			$('.review_update').button().click(function(e) {
+			$('.review_update').click(function(e) {
 				gTextIdx = $(this).val();
 				textUpdate();
 			});
@@ -539,7 +539,7 @@ function textUpdate() {
 		$('.tu_existing_text').css('color','black').prop("disabled", false);
 	}
 
-	$('#text_update_popup').dialog("open");
+	$('#text_update_popup').modal("show");
 }
 
 
