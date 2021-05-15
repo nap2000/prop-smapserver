@@ -38,7 +38,7 @@ requirejs.config({
     	datetimepicker: '../../../../js/libs/bootstrap-datetimepicker-4.17.47',
     	common: '../../../../js/app/common',
     	globals: '../../../../js/app/globals',
-	    popper: '../../../../js/libs/popper.v1.12.9.min',
+	    popper: '../../../../js/libs/popper.v1.16.1.min',
     	bootbox: '../../../../js/libs/bootbox.min',
     	crf: '../../../../js/libs/commonReportFunctions',
     	lang_location: '../../../../js',
