@@ -148,9 +148,8 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 		/*
 		 * Enable Menu events
 		 */
-		$('.rmm').delegate('#refreshMenu', 'click', function(e) {
+		$('#refreshMenu', 'click', function(e) {
 
-			e.preventDefault();
 			if(targetHasChanged()) {
 				if (confirm(localise.set["msg_refresh"])) {
 					gSecondaryChoices = {};	// Clear cache
@@ -172,7 +171,7 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 		};
 	});
 
-	function saveUpdate() {
+	$('#applyUpdate').click(function() {
 		// TODO only save if value has changed
 		var updateString,
 			newValue,
@@ -268,7 +267,7 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 			}
 		});
 		$(this).dialog("close");
-	}
+	});
 
 
 function getSurveyList() {

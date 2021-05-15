@@ -218,14 +218,34 @@
 
 				<p><span class="lang" data-lang="m_modify">modify</span> "<span id=text_to_mod></span>" <span class="lang" data-lang="c_to">to</span></p>
 				<form id="tu_edit_form">
-					<label for="tu_reason"><span class="lang" data-lang="c_reason">reason</span></label>
-					<input type="text" id="tu_reason"><br/>
-					<label class="lang tu_existing_option" data-lang="t_ec" for="tu_existing_option">choice</label>
-					<select class="tu_existing_option" id="tu_existing_option"></select>
-					<label class="lang tu_existing_text" data-lang="t_et" for="tu_existing_text">text</label>
-					<select class="tu_existing_text" id="tu_existing_text"></select>
-					<label class="lang" data-lang="t_nt" for="tu_new_text">new text</label>
-					<input type="text" id="tu_new_text"><br/>
+					<div class="form-group row">
+						<label for="tu_reason" data-lang="c_reason" class="lang col-sm-2 control-label"></label>
+						<div class="col-sm-10">
+							<input type="text" id="tu_reason" class="form-control" required tabindex="1"><br/>
+						</div>
+					</div>
+
+					<div class="security_role form-group row">
+						<label class="control-label col-sm-2" for="tu_existing_option"><span class="lang" data-lang="t_ec"></span></label>
+						<div class="col-sm-10">
+							<select class="form-control tu_existing_option" id="tu_existing_option"></select>
+						</div>
+					</div>
+
+					<div class="security_role form-group row">
+						<label class="control-label col-sm-2" for="tu_existing_text"><span class="lang" data-lang="tu_existing_text"></span></label>
+						<div class="col-sm-10">
+							<select class="form-control tu_existing_text" id="tu_existing_text"></select>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="tu_new_text" data-lang="t_nt" class="lang col-sm-2 control-label"></label>
+						<div class="col-sm-10">
+							<input type="text" id="tu_new_text" class="form-control" required tabindex="1"><br/>
+						</div>
+					</div>
+
 				</form>
 			</div>
 
