@@ -97,46 +97,54 @@ function setMediaQuestion(view, mediaItems) {
 
 function media_show_full(view, $this) {
 	
-	var $image_wrap = $("#media_panel" + view.pId + " .image_wrap"),
-		$flow_player_wrap = $("#media_panel" + view.pId + " .flow_player_wrap"),
-		$fp = $("#flow_player" + view.pId);
+	var $image_wrap = $("#media_panel" + view.pId + " .image_wrap");
+	var $media_wrap = $('#media_wrap' + view.pId);
+	var style = ' width="512" height="344"';
 	
 	// see if same thumb is being clicked
 	if ($(this).hasClass("active")) { return; }
 
 	var url = $this.attr("full");
 	var type = $this.attr("type");
-	
+	var source_type = $this.attr("source_type");
+
+	$image_wrap.fadeTo("medium", 0.5);
+
 	if(type == "image") {
-		var wrap = $image_wrap.fadeTo("medium", 0.5);
-		$flow_player_wrap.hide();
-		wrap.show();
+		$media_wrap.hide();
+		$image_wrap.show();
 		var img = new Image();
-		img.onload = function() {	
-			wrap.fadeTo("fast", 1);
-			wrap.find("img").attr("src", url);
+		img.onload = function() {
+			$image_wrap.fadeTo("fast", 1);
+			$image_wrap.find("img").attr("src", url);
 		};
 		img.src = url;	// begin loading the image 
-	} else {
-	
+	} else if (type === "audio") {
+		$media_wrap.show();
 		$image_wrap.hide();
-		$flow_player_wrap.show();
 
-		$fp.empty().append('<div class="player"></div>');
-		$fp.find(".player").flowplayer({
-			swf: 'js/libs/fp/flowplayer.swf',
-			playlist: [
-			   [
-			      {flash: url}
-			   ]
-			]
-		});
+		$media_wrap.empty().append('<audio controls' + style + '><source src="' + url
+			+ '" type="' + source_type + '"/>'
+			+ 'Your browser does not support this audio type'
+			+ '</audio>');
+	} else if (type === "video") {
+		$media_wrap.show();
+		$image_wrap.hide();
 
-		
-		video=true;	
+		var content = '<video controls'
+			+ style
+			+ '><source src="' + url
+			+ '" type="' + source_type + '">'
+			+ 'Your browser does not support this video type'
+			+ '</video>';
 
-		//flowplayer("flow_player" + view.pId).play();
-		//
+		$media_wrap.empty().append('<video controls'
+			+ style
+			+ '><source src="' + url
+			+ '" type="' + source_type + '">'
+			+ 'Your browser does not support this video type'
+			+ '</video>');
+
 	}
 
 	// activate item
