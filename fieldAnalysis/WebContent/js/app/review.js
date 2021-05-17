@@ -94,6 +94,8 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 		});
 
 		// Set change function on the select by primary key checkbox
+		$('.pk_select').hide();
+		$('.not_pk_select').show();
 		$('#primary_key_cb').change(function() {
 			var $this = $(this);
 			if($this.is(':checked')) {
@@ -259,6 +261,7 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 			data: { updates: updateString },
 			success: function(data, status) {
 				removeHourglass();
+				$('#text_update_popup').modal("hide");
 				getData();
 
 			}, error: function(data, status) {
@@ -266,7 +269,7 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 				alert(localise.set["c_error"] + data.responseText);
 			}
 		});
-		$(this).dialog("close");
+
 	});
 
 
@@ -400,7 +403,9 @@ function getData() {
 			// Add row for other text update button
 			h[++idx] = '<tr><td></td><td></td><td></td>';
 			h[++idx] = '<td class="review_update_other">';
-			h[++idx] = '<button id="target_update_btn" type="button">Update</button>';
+			h[++idx] = '<button id="target_update_btn" type="button" class="btn btn-primary" data-lang="rev_upd">';
+			h[++idx] = localise.set["rev_upd"];
+			h[++idx] = '</button>';
 			h[++idx] = '</td>';
 			h[++idx] = '</tr>;'
 
@@ -652,7 +657,7 @@ function addSecondary(item, i) {
 		h[++idx] = '">';
 		h[++idx] = '</select>';
 	} else {
-		h[++idx] = '<input type="text" data-orig="';
+		h[++idx] = '<input type="text" class="form-control" data-orig="';
 		h[++idx] = item.targetQuestion;
 		h[++idx] = '" data-idx="';
 		h[++idx] = i;
