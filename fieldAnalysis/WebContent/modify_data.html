@@ -93,10 +93,10 @@
 
 
 			<div class="row mt-4">
-				<div class="col-sm-6">
+				<div class="col-sm-4" border-right>
 					<form>
 						<div class="custom-control custom-checkbox">
-							<input type="checkbox" class="custom-control-input" id="primary_key_cb" name="primary_key" value="success" checked="checked">
+							<input type="checkbox" class="custom-control-input" id="primary_key_cb" name="primary_key" value="success">
 							<label class="custom-control-label lang" data-lang="rev_sel_pk" for="primary_key_cb">su</label>
 
 							<!--
@@ -105,6 +105,20 @@
 							-->
 						</div>
 
+						<div class="custom-control custom-checkbox mt-4 mb-4">
+							<input type="checkbox" class="custom-control-input" id="other_target_cb" name="other_target" value="success">
+							<label class="custom-control-label lang" data-lang="rev_upd_diff" for="other_target_cb">ud</label>
+
+							<!--
+							<span class="lang" data-lang="rev_sel_pk">use primary key</span>:
+							<input type="checkbox" name="primary_key" id="primary_key_cb">
+							-->
+						</div>
+
+					</form>
+				</div>
+				<div class="col-sm-8">
+					<form>
 						<div class="form-group row">
 							<label class="lang col-sm-4 control-label" data-lang="c_project" for="project_name">project</label>
 							<div class="col-sm-8">
@@ -153,15 +167,16 @@
 							</div>
 						</div>
 
-					</form>
-					<form class="modify_form mt-2">
-						<div style="float:left;">
-							<span class="lang" data-lang="rev_upd_diff">Update different</span>:
-							<input type="checkbox" name="other_target" id="other_target_cb">
+						<div id = "target_question_name_cont" class="form-group row" style="display:none;">
+							<label class="lang col-sm-4 control-label" data-lang="rev_q_upd" for="target_question_name">form</label>
+							<div class="col-sm-8">
+								<select class="language_select form-control" id="target_question_name"></select>
+							</div>
 						</div>
-						<div id = "target_question_name_cont" style="display:none; margin-left:50px; width:210px; height:50px;font-size:16px; float:left;">
-							<label for="target_question_name" class="lang" data-lang="rev_q_upd">question</label>
-							<select id="target_question_name" style="font-size: 16px;"></select>
+
+						<div  style="display:none; margin-left:50px; width:210px; height:50px;font-size:16px; float:left;">
+							<label for="" class="lang" data-lang="">question</label>
+							<select id="" style="font-size: 16px;"></select>
 						</div>
 					</form>
 				</div>
@@ -232,7 +247,7 @@
 					</div>
 
 					<div class="security_role form-group row">
-						<label class="control-label col-sm-2" for="tu_existing_text"><span class="lang" data-lang="tu_existing_text"></span></label>
+						<label class="control-label col-sm-2 lang" for="tu_existing_text" data-lang="t_et"></label>
 						<div class="col-sm-10">
 							<select class="form-control tu_existing_text" id="tu_existing_text"></select>
 						</div>
