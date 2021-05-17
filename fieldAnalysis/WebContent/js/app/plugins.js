@@ -125,7 +125,7 @@ window.log = function(){
 								html[++th] = '<div>';
 							}
 							html[++th] = '<img src="' + media.thumbNail + '" full="' + media.url + '" type="' + 
-									media.type + '" alt="' + media.type + '" />';
+									media.type + '" source_type="' + media.source_type + '" alt="' + media.type + '" />';
 							++count;
 						}
 
