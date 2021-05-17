@@ -57,7 +57,6 @@ require.config({
     	'jquery_ui': ['jquery'],
     	'jquery-ui-timepicker-addon': ['jquery_ui'],
     	'jquery.dataTables.min': ['jquery'],
-    	'fp/flowplayer.min': ['jquery'],
     	'common': ['jquery'],
     	
     	'app/jqplot_image': ['jquery'],
@@ -85,7 +84,6 @@ require(['jquery', 'jquery_ui', 'rmm', 'common', 'localise', 'globals', 'moment'
          
          'main/jqplot_main',
          'jquery-ui-timepicker-addon',
-         'fp/flowplayer.min',
          'jquery.dataTables.min',
          
          'app/jqplot_image',
