@@ -107,7 +107,7 @@ var htable13 = '</div>';
 
 var hmedia1	= '<div class="analysis media_panel" id="media_panel';
 var hmedia2 = '"><div class="image_wrap"><img src="img/blank.gif" width="512" height="344" /></div>' +
-	'<div class="flow_player_wrap"><div id="flow_player';
+	'<div class="media_wrap"><div id="media_wrap';
 var hmedia3 = '"><div class="player"></div></div></div><br clear="all" /><div class="scrollable" id="scrollable';
 var hmedia4 = '"></div></div>';
 
