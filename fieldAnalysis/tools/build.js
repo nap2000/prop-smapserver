@@ -56,7 +56,8 @@
 	    exclude: ['jquery', 'bootstrap']
         },
         {
-            name: '../audit_main'
+            name: '../audit_main',
+	    exclude: ['jquery', 'bootstrap']
         }
 
 
