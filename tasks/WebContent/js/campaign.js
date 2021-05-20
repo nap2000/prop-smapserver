@@ -196,6 +196,7 @@ require([
 		$('#m_import_xls').click(function () {	// Import from XLS
 
 			if (gCurrentMailOutIdx && gCurrentMailOutIdx >= 0) {
+				$('#load_mailouts_alert').hide();
 				$('#import_mailoutpeople').modal("show");
 				$('.custom-file-input').val("");
 				$('#importMailoutPeopleLabel').html("");
