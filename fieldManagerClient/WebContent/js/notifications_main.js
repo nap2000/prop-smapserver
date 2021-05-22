@@ -381,7 +381,7 @@ require([
 				data[i].notifyDetails.emails = [];
 			}
 			// details
-			h[++idx] = '<td style="text-align: center;">';
+			h[++idx] = '<td style="text-align: center; word-break: break-all;">';
 			if(data[i].target === "email" && data[i].notifyDetails) {
 				var notifyEmail = false;
 				if((data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0)
