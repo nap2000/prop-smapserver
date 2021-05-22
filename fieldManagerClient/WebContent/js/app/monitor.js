@@ -707,7 +707,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                     if(typeof reason === "undefined") {
                         reason = "";
                     }
-                    h[++i] = '<td>' + reason + '</td>';
+                    h[++i] = '<td style="word-break: break-all;">' + reason + '</td>';
                 }
                 h[++i] = '</tr>';
 
