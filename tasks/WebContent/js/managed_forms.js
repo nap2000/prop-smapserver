@@ -242,7 +242,7 @@ require([
             globals.gCurrentSurvey = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].id;
             gGetSettings = true;
 	        clearDrillDown();
-            surveyChanged();
+            mfSurveyChanged();
         });
 
         // Set change function on group survey
@@ -1106,7 +1106,7 @@ require([
     /*
      * Function called when the current survey is changed
      */
-    function surveyChanged() {
+    function mfSurveyChanged() {
 
 
         globals.gViewId = 0;        // TODO remember views set for each survey and restore
@@ -1175,7 +1175,7 @@ require([
             gGetSettings = true;
 
             // Get the list of available surveys
-            loadManagedSurveys(globals.gCurrentProject, surveyChanged);
+            loadManagedSurveys(globals.gCurrentProject, mfSurveyChanged);
             getTaskUsers(globals.gCurrentProject);	// Get the users that have access to this project
         }
 
