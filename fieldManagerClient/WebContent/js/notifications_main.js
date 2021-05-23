@@ -108,6 +108,11 @@ require([
 			getOversightSurveys($('#survey').val());
 		});
 
+		// Add response to a source survey being selected
+		$('#task_group').change(function() {
+			taskGroupChanged($('#task_group').val());
+		});
+
 		// Add response to an oversight survey being selected
 		$('#group_survey').change(function() {
 			getOversightQuestionList($('#group_survey').val())
@@ -127,6 +132,26 @@ require([
 		populateTaskGroupList();
 		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged, false);			// Get surveys
 		getNotifications(globals.gCurrentProject);
+	}
+
+	function taskGroupChanged(tgId) {
+
+		var tg = gTaskGroups[getTaskGroupIndex(tgId)];
+		var qList = globals.gSelector.getSurveyQuestions(sId, language);
+		var metaList = globals.gSelector.getSurveyMeta(sId);
+
+		if(!qList) {
+			getQuestionList(sId, language, 0, "-1", undefined, false,
+				undefined, undefined, qName);
+		} else {
+			setSurveyViewQuestions(qList, undefined, undefined, undefined, qName );
+		}
+
+		if(!metaList) {
+			getMetaList(sId, metaItem);
+		} else {
+			setSurveyViewMeta(metaList, metaItem);
+		}
 	}
 
 	/*
