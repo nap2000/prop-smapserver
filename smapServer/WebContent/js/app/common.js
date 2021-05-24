@@ -4578,6 +4578,9 @@ function edit_notification(idx, console) {
 					$('#period_list_sel').val(periodArray[1]);
 				}
 			}
+			if(notification.trigger === "task_reminder") {
+				taskGroupChanged($('#task_group').val());
+			}
 		}
 
 		if (notification.notifyDetails) {
@@ -4737,7 +4740,11 @@ function getNotificationTypes() {
 function setupNotificationDialog() {
 	// Set change function trigger
 	$('#trigger').change(function() {
-		setTriggerDependencies($(this).val());
+		var trigger = $(this).val();
+		setTriggerDependencies(trigger);
+		if(trigger === "task_reminder") {
+			taskGroupChanged($('#task_group').val());
+		}
 	});
 	setTriggerDependencies("submission");
 
@@ -4781,6 +4788,38 @@ function setupNotificationDialog() {
 	$('#fwd_rem_survey').change(function(){
 		remoteSurveyChanged();
 	});
+}
+
+/*
+ Get updated question names if the task group changes
+ */
+function taskGroupChanged(tgIndex) {
+
+	var tg = gTaskGroups[tgIndex];
+	var language = "none";
+	var qList;
+	var metaList;
+
+	if(tg.source_s_id) {
+		qList = globals.gSelector.getSurveyQuestions(tg.source_s_id, language);
+		metaList = globals.gSelector.getSurveyMeta(tg.source_s_id);
+	} else {
+		qList = [];
+		metaList = [];
+	}
+
+	if(!qList) {
+		getQuestionList(tg.source_s_id, language, 0, "-1", undefined, false,
+			undefined, undefined, undefined);
+	} else {
+		setSurveyViewQuestions(qList, undefined, undefined, undefined, undefined);
+	}
+
+	if(!metaList) {
+		getMetaList(tg.source_s_id, undefined);
+	} else {
+		setSurveyViewMeta(metaList, undefined);
+	}
 }
 
 /*
