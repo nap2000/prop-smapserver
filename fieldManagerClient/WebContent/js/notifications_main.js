@@ -134,26 +134,6 @@ require([
 		getNotifications(globals.gCurrentProject);
 	}
 
-	function taskGroupChanged(tgId) {
-
-		var tg = gTaskGroups[getTaskGroupIndex(tgId)];
-		var qList = globals.gSelector.getSurveyQuestions(sId, language);
-		var metaList = globals.gSelector.getSurveyMeta(sId);
-
-		if(!qList) {
-			getQuestionList(sId, language, 0, "-1", undefined, false,
-				undefined, undefined, qName);
-		} else {
-			setSurveyViewQuestions(qList, undefined, undefined, undefined, qName );
-		}
-
-		if(!metaList) {
-			getMetaList(sId, metaItem);
-		} else {
-			setSurveyViewMeta(metaList, metaItem);
-		}
-	}
-
 	/*
 	 * Save a notification
 	 */
