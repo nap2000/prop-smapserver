@@ -62,11 +62,15 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 			getAuditList();
 		});
 
+		$('#applyReverse').click(function(){
+			applyReverse();
+		});
 		//enableReversal();
 		//enableDetails();
 
 	});
 
+	/*
 	function enableDetails() {
 		$('#details_popup').dialog(
 			{
@@ -87,7 +91,37 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 			}
 		);
 	}
+*/
 
+	function applyReverse() {
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			dataType: 'text',
+			cache: false,
+			url: "/surveyKPI/review/" + globals.gCurrentSurvey + "/undo/" + gChangeset,
+			success: function (data, status) {
+				removeHourglass();
+				getAuditList();
+			},
+			error: function (xhr, textStatus, err) {
+				var resp = [],
+					blockingChangeset;
+
+				removeHourglass();
+				alert(xhr.responseText);
+				resp = xhr.responseText.split(":");
+				if (resp.length > 0) {
+					blockingChangeset = resp[1];
+				}
+				getAuditList(blockingChangeset);
+
+			}
+		});
+		$(this).modal("hide");
+	}
+
+	/*
 	function enableReversal() {
 		$('#reversal_popup').dialog(
 			{
@@ -138,6 +172,7 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 			}
 		);
 	}
+	*/
 
 	function getSurveyList() {
 		loadSurveys(globals.gCurrentProject, undefined, false, false, getAuditList, false);
@@ -212,7 +247,7 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 
 					gChangeset = $(this).val();
 					$('h1', '#reversal_popup').html(localise.set["rev_rcn"] + " " + gChangeset);
-					$('#reversal_popup').dialog("open");
+					$('#reversal_popup').modal("show");
 				});
 				$('.reversed .reverse').prop("disabled", true);
 
@@ -274,7 +309,7 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 						}
 					});
 
-					$('#details_popup').dialog("open");
+					$('#details_popup').modal("show");
 				});
 
 			},
