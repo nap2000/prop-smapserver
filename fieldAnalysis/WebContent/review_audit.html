@@ -120,23 +120,50 @@
 				</table>
 			</div>
 
-			<!-- Popup to confirm a reversal -->
-			<div id="reversal_popup" style="display:none;">
-				<h1></h1>
-			</div>
-
-			<!-- Popup to provide details of a changeset -->
-			<div id="details_popup" style="display:none;">
-				<h1></h1>
-				<ul>
-				</ul>
-			</div>
-
-			<img id="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
-
 		</div>	<!-- End of main -->
 
 	</div> <!-- end of #container -->
+</div>
+
+<!-- Modal to ask for confirmation of deleting a user from multiple organisations -->
+<div id="details_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="detailsLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 id="detailsLabel" class="modal-title lang" data-lang="c_details">details</h4>
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			</div>
+			<div class="modal-body">
+				<h4></h4>
+				<ul>
+				</ul>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal to ask for confirmation of deleting a user from multiple organisations -->
+<div id="reversal_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="reversalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 id="reversalLabel" class="modal-title lang" data-lang="c_rev">reverse</h4>
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			</div>
+			<div class="modal-body">
+				<h1></h1>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+					<button id="applyReverse" type="button" class="btn btn-primary lang" data-lang="c_save">save</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 </body>
