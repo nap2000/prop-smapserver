@@ -789,7 +789,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                     if(source === "optin_msg") {
                         h[++i] = '<td>' + features[j].properties.email + '</td>';
                     } else {
-                        h[++i] = '<td>' + features[j].properties.notify_details + '</td>';
+                        h[++i] = '<td style="word-break: break-all;">' + features[j].properties.notify_details + '</td>';
                     }
                     status = features[j].properties.status;
                     h[++i] = '<td class="' + status + '">' + localise.set[features[j].properties.status] + '</td>';
