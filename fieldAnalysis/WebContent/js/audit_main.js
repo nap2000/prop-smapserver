@@ -28,31 +28,20 @@ requirejs.config({
     paths: {
      	app: '../app',
     	i18n: '../../../../js/libs/i18n',
-     	async: '../../../../js/libs/async',
-    	jquery: '../../../../js/libs/jquery-2.1.1',
-    	jquery_ui: [
-    	            '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min',
-    	            '../../../../js/libs/jquery-ui-1.10.3.custom.min'
-    	            ],
     	modernizr: '../../../../js/libs/modernizr',
     	localise: '../../../../js/app/localise',
-    	rmm: '../../../../js/libs/responsivemobilemenu',
     	common: '../../../../js/app/common',
     	globals: '../../../../js/app/globals',
     	lang_location: '../../../../js'
     },
     shim: {
-    	'rmm': ['jquery'],
-    	'jquery_ui': ['jquery'],	
        	'common': ['jquery']
     	}
     });
 
 
 require([
-         'jquery', 
-         'jquery_ui', 
-         'rmm', 
+         'jquery',
          'common', 
          'globals',
          'localise', 
