@@ -1,18 +1,7 @@
-<!doctype html>
-<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
-<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
-<!-- Consider adding an manifest.appcache: h5bp.com/d/Offline -->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
-<!--[if IE]><script src="js/libs/excanvas.compiled.js"></script><![endif]-->
-
+<!DOCTYPE html>
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<meta charset="utf-8">
-
-	<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
-		 Remove this if you use the .htaccess -->
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
 	<title class="lang" data-lang="m_modify">modify</title>
 	<meta name="description" content="Smap Analysis Review">
@@ -20,11 +9,6 @@
 
 	<!-- Allow all robots -->
 	<meta content="all" name="robots" />
-
-	<!-- turn off IE image toolbar -->
-	<meta content="no" http-equiv="imagetoolbar" />
-
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 	<link href="/css/bootstrap.v4.5.min.css" rel="stylesheet">
 	<link href="/custom/css/custom.css" rel="stylesheet">
@@ -124,18 +108,6 @@
 							</div>
 						</div>
 
-						<!--
-						<div style="width:210px; height:50px; font-size:16px; float:left;">
-							<label for="project_name" class="lang" data-lang="c_project">project</label>
-							<select class="project_list" id="project_name" style="font-size: 16px;"></select>
-						</div>
-
-						<div style="width:210px; height:50px;font-size:16px; float:left;">
-							<label for="survey_name" class="lang" data-lang="c_survey">survey</label>
-							<select class="survey_select data_oversight_survey" id="survey_name" style="font-size: 16px;"></select>
-						</div>
-						-->
-
 						<div class="form-group row">
 							<label class="lang col-sm-4 control-label" data-lang="c_language" for="language_name">language</label>
 							<div class="col-sm-8">
@@ -188,22 +160,20 @@
 			</div>
 		</div>
 
-		<div class="card mt-2">
-			<div class="card-body">
-				<div class="row" id="review-container">
-					<table class="table">
-						<thead>
-						<tr>
-							<th class="lang" data-lang="rev_text">text</th>
-							<th class="lang" data-lang="count">count</th>
-							<th class="lang" data-lang="rev_upd">update</th>
-							<th class="lang review_update_other" data-lang="rev_upd_t">update question</th>
-						</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
-				</div>
+		<div class="card-body">
+			<div class="row" id="review-container">
+				<table class="table">
+					<thead>
+					<tr>
+						<th class="lang" data-lang="rev_text">text</th>
+						<th class="lang" data-lang="count">count</th>
+						<th class="lang" data-lang="rev_upd">update</th>
+						<th class="lang review_update_other" data-lang="rev_upd_t">update question</th>
+					</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
 			</div>
 		</div>
 
