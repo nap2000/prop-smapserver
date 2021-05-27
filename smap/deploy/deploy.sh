@@ -148,7 +148,14 @@ then
 fi
 
 # Restart Servers
-service postgresql start
+local_dbhost=`grep DBHOST /etc/environment | grep "127.0.0.1"s | wc -l`
+if [ $local_dbhost -eq 1 ]; then
+    service postgresql start
+    echo "Starting postgres"
+else
+    echo ".............. using remote postgres at $dbhost"
+fi
+
 service $TOMCAT_VERSION start
 service apache2 start
 
