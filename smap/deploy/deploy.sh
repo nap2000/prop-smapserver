@@ -148,12 +148,17 @@ then
 fi
 
 # Restart Servers
-local_dbhost=`grep DBHOST /etc/environment | grep "127.0.0.1"s | wc -l`
+local_dbhost=`grep DBHOST /etc/environment | grep "127.0.0.1" | grep -v "#" | wc -l`
 if [ $local_dbhost -eq 1 ]; then
     service postgresql start
     echo "Starting postgres"
+
 else
     echo ".............. using remote postgres at $dbhost"
+    # Update subscriber configuration files
+    sudo sed -i "s#127.0.0.1#$dbhost#g" /smap_bin/default/metaDataModel.xml
+    sudo sed -i "s#127.0.0.1#$dbhost#g" /smap_bin/default/results_db.xml
+
 fi
 
 service $TOMCAT_VERSION start
@@ -180,4 +185,8 @@ fi
 # Hosted Only
 # Start disk monitor
 cd $cwd
-sudo -u postgres psql -f ./rates.sql -q -d survey_definitions 2>&1 | grep -v duplicate | grep -v "already exists"
+if [ $local_dbhost -eq 1 ]; then
+    sudo -u postgres psql -f ./rates.sql -q -d survey_definitions 2>&1 | grep -v duplicate | grep -v "already exists"
+else
+    sudo -u postgres psql -f ./rates.sql -q -h $DBHOST -d survey_definitions 2>&1 | grep -v duplicate | grep -v "already exists"
+fi
