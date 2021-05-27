@@ -11,6 +11,10 @@ tr.deleted td a {
     opacity: 0.5;
 }
 
+.reversed {
+    color: #ccc;
+}
+
 #map {
     width: 100%;
     height: 500px;
