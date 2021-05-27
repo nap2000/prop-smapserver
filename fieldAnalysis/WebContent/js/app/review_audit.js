@@ -118,7 +118,7 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 
 			}
 		});
-		$(this).modal("hide");
+		$('#reversal_popup').modal("hide");
 	}
 
 	/*
@@ -246,7 +246,7 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 				$('.reverse').click(function (e) {
 
 					gChangeset = $(this).val();
-					$('h1', '#reversal_popup').html(localise.set["rev_rcn"] + " " + gChangeset);
+					$('h5', '#reversal_popup').html(localise.set["rev_rcn"] + " " + gChangeset);
 					$('#reversal_popup').modal("show");
 				});
 				$('.reversed .reverse').prop("disabled", true);
