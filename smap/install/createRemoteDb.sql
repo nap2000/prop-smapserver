@@ -5,6 +5,7 @@ alter user ws with password 'ws1234';
 
 -- Quicksight users
 create user quicksight;
+create user quicksight_supply;
 create user qsadmin;
 
 grant ws to postgres;
