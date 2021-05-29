@@ -7,8 +7,12 @@ alter user ws with password 'ws1234';
 create user quicksight;
 create user quicksight_supply;
 create user qsadmin;
+create user rep_user;
 
 grant ws to postgres;
+grant quicksight_supply to postgres;
+grant rep_user to postgres;
+grant qsadmin to postgres;
 
 create database survey_definitions with encoding=UTF8 owner=ws;
 \c survey_definitions

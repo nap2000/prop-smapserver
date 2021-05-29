@@ -47,17 +47,17 @@ echo "Current Smap Version is $version"
 if [ $version -lt "1908" ]
 then
 echo "applying pre 1909 patches to survey_definitions"
-sudo -u postgres psql -f ./sd_pre_1908.sql -q -d survey_definitions 2>&1 | grep -v "already exists" | grep -v "duplicate key" | grep -vi "addgeometrycolumn" | grep -v "implicit index" | grep -v "skipping" | grep -v "is duplicated" | grep -v "create unique index" | grep -v CONTEXT
+sudo -u postgres psql -h $DBHOST -f ./sd_pre_1908.sql -q -d survey_definitions 2>&1 | grep -v "already exists" | grep -v "duplicate key" | grep -vi "addgeometrycolumn" | grep -v "implicit index" | grep -v "skipping" | grep -v "is duplicated" | grep -v "create unique index" | grep -v CONTEXT
 fi
 
 echo "applying new patches to survey_definitions"
-sudo -u postgres psql -f ./sd.sql -q -d survey_definitions 2>&1 | grep -v "already exists" | grep -v "duplicate key" | grep -vi "addgeometrycolumn" | grep -v "implicit index" | grep -v "skipping" | grep -v "is duplicated" | grep -v "create unique index" | grep -v CONTEXT | grep -v "does not exist"
+sudo -u postgres psql -h $DBHOST -f ./sd.sql -q -d survey_definitions 2>&1 | grep -v "already exists" | grep -v "duplicate key" | grep -vi "addgeometrycolumn" | grep -v "implicit index" | grep -v "skipping" | grep -v "is duplicated" | grep -v "create unique index" | grep -v CONTEXT | grep -v "does not exist"
 
 echo "applying patches to results"
-sudo -u postgres psql -f ./results.sql -q -d results 2>&1 | grep -v "already exists"
+sudo -u postgres psql -h $DBHOST -f ./results.sql -q -d results 2>&1 | grep -v "already exists"
 
 echo "Archiving records in survey_definitions"
-sudo -u postgres psql -f ./archive.sql -q -d survey_definitions 2>&1 
+sudo -u postgres psql -h $DBHOST -f ./archive.sql -q -d survey_definitions 2>&1 
 
 # Version 14.02
 if [ $version -lt "1402" ]
@@ -303,8 +303,8 @@ cd ../deploy
 
 # Get the AWS language codes
 cp language_codes.csv /smap_bin
-echo "truncate language_codes" | sudo -u postgres psql -d survey_definitions
-echo "COPY language_codes(code, aws_translate, aws_transcribe, transcribe_default, transcribe_medical) FROM '/smap_bin/language_codes.csv' DELIMITER ',' CSV HEADER;" | sudo -u postgres psql -d survey_definitions
+echo "truncate language_codes" | sudo -u postgres psql -h $DBHOST -d survey_definitions
+echo "COPY language_codes(code, aws_translate, aws_transcribe, transcribe_default, transcribe_medical) FROM '/smap_bin/language_codes.csv' DELIMITER ',' CSV HEADER;" | sudo -u postgres psql -h $DBHOST -d survey_definitions
 
 
 # update version reference
