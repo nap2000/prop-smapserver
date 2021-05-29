@@ -158,8 +158,8 @@ else
     # Update subscriber configuration files
     sudo sed -i "s#127.0.0.1#$DBHOST#g" /smap_bin/default/metaDataModel.xml
     sudo sed -i "s#127.0.0.1#$DBHOST#g" /smap_bin/default/results_db.xml
-    sudo sed -i "s#127.0.0.1#$DBHOST#g" /smap_bin/forward/metaDataModel.xml
-    sudo sed -i "s#127.0.0.1#$DBHOST#g" /smap_bin/forward/results_db.xml
+#    sudo sed -i "s#127.0.0.1#$DBHOST#g" /smap_bin/forward/metaDataModel.xml
+#    sudo sed -i "s#127.0.0.1#$DBHOST#g" /smap_bin/forward/results_db.xml
     sudo sed -i "s#127.0.0.1#$DBHOST#g" /smap_bin/getshape.sh
 
 fi
