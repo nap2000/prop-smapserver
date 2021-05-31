@@ -28,6 +28,7 @@ sudo cp config_files/a24-smap-volatile.conf $a_config_dir/smap-volatile.conf
 dbhost_set=`grep DBHOST /etc/environment | wc -l`
 if [ $dbhost_set -eq 0 ]; then
     echo "export DBHOST=127.0.0.1" >> /etc/environment
+    DBHOST=127.0.0.1; export DBHOST;
 fi
 
 # Ensure apache loads the environment variables
