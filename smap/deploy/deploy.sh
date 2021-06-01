@@ -17,6 +17,16 @@ else
     TOMCAT_USER=tomcat7
 fi
 
+# Get location of database
+if [ $DBHOST = "127.0.0.1" ]
+then
+        echo "local database"
+        PSQL="psql"
+else
+        echo "remote database"
+        PSQL="PGPASSWORD=keycar08 psql -h $DBHOST -U postgres"
+fi
+
 # save directory that contains deploy script
 cwd=`pwd`
 
@@ -148,7 +158,22 @@ then
 fi
 
 # Restart Servers
-service postgresql start
+local_dbhost=`grep DBHOST /etc/environment | grep "127.0.0.1" | grep -v "#" | wc -l`
+if [ $local_dbhost -eq 1 ]; then
+    service postgresql start
+    echo "Starting postgres"
+
+else
+    echo ".............. using remote postgres at $DBHOST"
+    # Update subscriber configuration files
+    sudo sed -i "s#127.0.0.1#$DBHOST#g" /smap_bin/default/metaDataModel.xml
+    sudo sed -i "s#127.0.0.1#$DBHOST#g" /smap_bin/default/results_db.xml
+    sudo sed -i "s#127.0.0.1#$DBHOST#g" /smap_bin/getshape.sh
+#    sudo sed -i "s#127.0.0.1#$DBHOST#g" /smap_bin/forward/metaDataModel.xml
+#    sudo sed -i "s#127.0.0.1#$DBHOST#g" /smap_bin/forward/results_db.xml
+
+fi
+
 service $TOMCAT_VERSION start
 service apache2 start
 
@@ -173,4 +198,4 @@ fi
 # Hosted Only
 # Start disk monitor
 cd $cwd
-sudo -u postgres psql -f ./rates.sql -q -d survey_definitions 2>&1 | grep -v duplicate | grep -v "already exists"
+sudo -u postgres $PSQL -f ./rates.sql -q -d survey_definitions 2>&1 | grep -v duplicate | grep -v "already exists"
