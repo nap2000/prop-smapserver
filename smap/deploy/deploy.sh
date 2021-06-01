@@ -17,6 +17,16 @@ else
     TOMCAT_USER=tomcat7
 fi
 
+# Get location of database
+if [ $DBHOST = "127.0.0.1" ]
+then
+        echo "local database"
+        PSQL="psql"
+else
+        echo "remote database"
+        PSQL="PGPASSWORD=keycar08 psql -h $DBHOST -U postgres"
+fi
+
 # save directory that contains deploy script
 cwd=`pwd`
 
@@ -188,8 +198,4 @@ fi
 # Hosted Only
 # Start disk monitor
 cd $cwd
-if [ $local_dbhost -eq 1 ]; then
-    sudo -u postgres psql -f ./rates.sql -q -d survey_definitions 2>&1 | grep -v duplicate | grep -v "already exists"
-else
-    sudo -u postgres psql -f ./rates.sql -q -h $DBHOST -d survey_definitions 2>&1 | grep -v duplicate | grep -v "already exists"
-fi
+sudo -u postgres $PSQL -f ./rates.sql -q -d survey_definitions 2>&1 | grep -v duplicate | grep -v "already exists"
