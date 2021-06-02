@@ -160,7 +160,9 @@ require([
 		if(!notification.error) {
 
 			notification.trigger = $('#trigger').val();
-			notification.s_id = $('#survey').val();
+			if(notification.trigger !== 'task_reminder') {
+				notification.s_id = $('#survey').val();
+			}
 			notification.enabled = $('#nt_enabled').is(':checked');
 			notification.filter = $('#not_filter').val();
 			notification.name = $('#name').val();
@@ -169,6 +171,7 @@ require([
 				var idx = $('#task_group').val();
 				if(gTaskGroups.length > 0 && idx < gTaskGroups.length) {
 					notification.tgId = gTaskGroups[idx].tg_id;
+					notification.s_id = gTaskGroups[idx].source_s_id;
 				}
 				var periodCount = $('#r_period').val();
 				notification.period = periodCount + ' ' + $('#period_list_sel').val();
