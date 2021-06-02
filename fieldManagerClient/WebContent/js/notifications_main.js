@@ -98,7 +98,7 @@ require([
 		$('#saveNotification').click(function(){saveNotification();});
 
 		$('#addNotification').click(function(){
-			edit_notification();
+			edit_notification(false, -1, false);
 			$('#addNotificationPopup').modal("show");
 		});
 
@@ -470,7 +470,7 @@ require([
 
 		$(".edit_not", $selector).click(function(){
 			var idx = $(this).data("idx");
-			edit_notification(idx);
+			edit_notification(true, idx, false);
 			$('#addNotificationPopup').modal("show");
 		});
 

@@ -2535,7 +2535,7 @@ require([
                         window.gNotifications.push(n);
 
                         $('#saveNotification').html(localise.set["c_resend"]);
-                        edit_notification(0, true);
+                        edit_notification(true,0, true);
                         $('#addNotificationPopup').modal("show");
                     });
 
@@ -2593,7 +2593,7 @@ require([
                         window.gNotifications.push(n);
 
                         $('#saveNotification').html(localise.set["c_resend"]);
-                        edit_notification(0, true);
+                        edit_notification(true, 0, true);
                         $('#addNotificationPopup').modal("show");
 
                          */
@@ -3386,7 +3386,7 @@ require([
     });
 
     $('#addNotification').click(function(){
-        edit_notification();
+        edit_notification(false, -1, true);
         $('#addNotificationPopup').modal("show");
     });
 

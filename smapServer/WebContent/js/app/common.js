@@ -4537,7 +4537,7 @@ function getStatusClass(status, assign_auto) {
  *------------------------------------------------------------------
  * Common notification functions shared between console and notifications
  */
-function edit_notification(idx, console) {
+function edit_notification(edit, idx, console) {
 
 	var notification;
 
@@ -4546,7 +4546,7 @@ function edit_notification(idx, console) {
 	setTriggerDependencies("submission");
 	setAttachDependencies();
 
-	if(typeof idx !== "undefined") {
+	if(edit) {
 		notification = window.gNotifications[idx];
 
 		title = localise.set["msg_edit_notification"];
@@ -4564,7 +4564,9 @@ function edit_notification(idx, console) {
 
 		setAttachDependencies(notification.notifyDetails.attach);
 
-		$('#survey').val(notification.s_id).change();
+		if (notification.trigger !== "task_reminder") {
+			$('#survey').val(notification.s_id).change();
+		}
 		$('#not_filter').val(notification.filter);
 		$('#update_value').val(notification.updateValue);
 
@@ -4579,12 +4581,12 @@ function edit_notification(idx, console) {
 				}
 			}
 			if(notification.trigger === "task_reminder") {
-				taskGroupChanged($('#task_group').val());
+				taskGroupChanged($('#task_group').val(), notification.notifyDetails.emailQuestionName, notification.notifyDetails.emailMeta);
 			}
 		}
 
 		if (notification.notifyDetails) {
-			if (notification.notifyDetails.emailQuestionName || notification.notifyDetails.emailMeta) {
+			if (notification.trigger !== "task_reminder" && (notification.notifyDetails.emailQuestionName || notification.notifyDetails.emailMeta)) {
 				surveyChanged(notification.notifyDetails.emailQuestionName, notification.notifyDetails.emailMeta);
 			}
 
@@ -4793,7 +4795,7 @@ function setupNotificationDialog() {
 /*
  Get updated question names if the task group changes
  */
-function taskGroupChanged(tgIndex) {
+function taskGroupChanged(tgIndex, emailQuestionName, emailMetaName) {
 
 	var tg = gTaskGroups[tgIndex];
 	var language = "none";
@@ -4810,9 +4812,9 @@ function taskGroupChanged(tgIndex) {
 
 	if(!qList) {
 		getQuestionList(tg.source_s_id, language, 0, "-1", undefined, false,
-			undefined, undefined, undefined);
+			undefined, undefined, emailQuestionName);
 	} else {
-		setSurveyViewQuestions(qList, undefined, undefined, undefined, undefined);
+		setSurveyViewQuestions(qList, undefined, undefined, undefined, emailQuestionName);
 	}
 
 	if(!metaList) {
