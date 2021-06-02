@@ -3,7 +3,7 @@
 
 force=$1
 
-if [ "$force" == "force" ]
+if [ "$force" = "force" ]
 then
 	echo "All existing data will be deleted"
 fi
@@ -11,6 +11,13 @@ fi
 config="auto"
 clean="true"
 filelocn="/smap"
+
+# Add a default setting of 127.0.0.1 as the DBHOST if it has not already been set
+dbhost_set=`grep DBHOST /etc/environment | wc -l`
+if [ $dbhost_set -eq 0 ]; then
+    echo "export DBHOST=127.0.0.1" >> /etc/environment
+    DBHOST=127.0.0.1; export DBHOST;
+fi
 
 # Set flag for ubuntu version
 u1404=`lsb_release -r | grep -c "14\.04"`
@@ -92,6 +99,8 @@ sudo apt-get install $TOMCAT_VERSION -y
 
 echo '##### 5. Install Postgres / Postgis'
 
+if [ $DBHOST = "127.0.0.1" ]; then
+
 # Install Postgres for Ubuntu 20.04
 if [ $u2004 -eq 1 ]; then
     echo 'installing postgres'
@@ -124,6 +133,8 @@ if [ $u1404 -eq 1 ]; then
 fi
 
 pg_conf="/etc/postgresql/$PGV/main/postgresql.conf"
+
+fi
 
 echo "##### 6. Create folders for files in $filelocn"
 sudo mkdir $filelocn
