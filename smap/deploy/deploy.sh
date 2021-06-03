@@ -36,31 +36,33 @@ cwd=`pwd`
 service apache2 stop
 service $TOMCAT_VERSION stop
 if [ $u1404 -eq 1 ]; then
-service subscribers stop
-service subscribers_fwd stop
+    service subscribers stop
+    service subscribers_fwd stop
 fi
 if [ $u1604 -eq 1 ]; then
-systemctl stop subscribers
-systemctl stop subscribers_fwd
+    systemctl stop subscribers
+    systemctl stop subscribers_fwd
 fi
 if [ $u1804 -eq 1 ]; then
-systemctl stop subscribers
-systemctl stop subscribers_fwd
+    systemctl stop subscribers
+    systemctl stop subscribers_fwd
 fi
 if [ $u2004 -eq 1 ]; then
-systemctl stop subscribers
-systemctl stop subscribers_fwd
+    systemctl stop subscribers
+    systemctl stop subscribers_fwd
 fi
-service postgresql stop
+if [ $DBHOST = "127.0.0.1" ]; then
+    service postgresql stop
+fi
 
 cd $deploy_from
 for f in `ls *.war`
 do
-echo "restarting:" $f
-rm /var/lib/$TOMCAT_VERSION/webapps/$f
-fdir=`echo $f | sed "s/\([a-zA-Z0-9]*\)\..*/\1/"`
-echo "deleting folder:" $fdir
-rm -rf /var/lib/$TOMCAT_VERSION/webapps/$fdir
+    echo "restarting:" $f
+    rm /var/lib/$TOMCAT_VERSION/webapps/$f
+    fdir=`echo $f | sed "s/\([a-zA-Z0-9]*\)\..*/\1/"`
+    echo "deleting folder:" $fdir
+    rm -rf /var/lib/$TOMCAT_VERSION/webapps/$fdir
 done
 cd ..
 
@@ -158,8 +160,7 @@ then
 fi
 
 # Restart Servers
-local_dbhost=`grep DBHOST /etc/environment | grep "127.0.0.1" | grep -v "#" | wc -l`
-if [ $local_dbhost -eq 1 ]; then
+if [ $DBHOST = "127.0.0.1" ]; then
     service postgresql start
     echo "Starting postgres"
 
