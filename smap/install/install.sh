@@ -99,6 +99,7 @@ sudo apt-get install $TOMCAT_VERSION -y
 
 echo '##### 5. Install Postgres / Postgis'
 
+# Skip this section if the database is remote
 if [ $DBHOST = "127.0.0.1" ]; then
 
 # Install Postgres for Ubuntu 20.04
@@ -134,7 +135,12 @@ fi
 
 pg_conf="/etc/postgresql/$PGV/main/postgresql.conf"
 
+else
+    # Just install the psql client and create a postgres user
+    sudo useradd -s /bin/sh -d /home/postgres -m postgres
+    sudo apt-get install postgresql-client
 fi
+# End of conditional install
 
 echo "##### 6. Create folders for files in $filelocn"
 sudo mkdir $filelocn
@@ -180,11 +186,12 @@ then
 
 	sudo service apache2 stop
 	sudo service $TOMCAT_VERSION stop
-	sudo service postgresql stop
-
-	echo '# copy postgres conf file'
-	sudo mv $pg_conf $pg_conf.bu
-	sudo cp config_files/postgresql.conf.$PGV $pg_conf
+        if [ $DBHOST = "127.0.0.1" ]; then
+	    sudo service postgresql stop
+	    echo '# copy postgres conf file'
+	    sudo mv $pg_conf $pg_conf.bu
+	    sudo cp config_files/postgresql.conf.$PGV $pg_conf
+	fi
 
 	echo '# copy tomcat server file'
 	sudo mv $tc_server_xml $tc_server_xml.bu
@@ -257,68 +264,71 @@ then
 		sudo cp config_files/subscribers_fwd.conf $upstart_dir
 	fi
 
-	echo '# update bu.sh file'
-	sudo cp bu.sh ~postgres/bu.sh
-	sudo chown postgres ~postgres/bu.sh
+        if [ $DBHOST = "127.0.0.1" ]; then
+	    echo '# update bu.sh file'
+	    sudo cp bu.sh ~postgres/bu.sh
+	    sudo chown postgres ~postgres/bu.sh
 
-	echo '# update re.sh file'
-	sudo cp re.sh ~postgres/re.sh
-	sudo chown postgres ~postgres/re.sh
-
+	    echo '# update re.sh file'
+	    sudo cp re.sh ~postgres/re.sh
+	    sudo chown postgres ~postgres/re.sh
+	fi
 
 else
 	echo '##### 7. Skipping auto configuration'
 
 fi
 
-echo '##### 9. Create user and databases'
-sudo service postgresql start
-sudo -u postgres createuser -S -D -R ws
-echo "alter user ws with password 'ws1234'" | sudo -u postgres psql
+if [ $DBHOST = "127.0.0.1" ]; then
+    echo '##### 9. Create user and databases'
+    sudo service postgresql start
+    sudo -u postgres createuser -S -D -R ws
+    echo "alter user ws with password 'ws1234'" | sudo -u postgres psql
 
-echo '##### 10. Create $sd database'
+    echo '##### 10. Create $sd database'
 
-if [ "$force" = "force" ]
-then
+    if [ "$force" = "force" ]
+    then
 	echo "drop database $sd;" | sudo -u postgres psql
-fi
+    fi
 
-sd_exists=`sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -w $sd | wc -l`
-if [ "$sd_exists"  = "0" ]
-then
-echo 'survey_definitions database does not exist'
-sudo -u postgres createdb -E UTF8 -O ws $sd
-echo "CREATE EXTENSION postgis;" | sudo -u postgres psql -d $sd 
-echo "ALTER TABLE geometry_columns OWNER TO ws; ALTER TABLE spatial_ref_sys OWNER TO ws; ALTER TABLE geography_columns OWNER TO ws;" | sudo -u postgres psql -d $sd
-sudo -u postgres psql -f setupDb.sql -d $sd | grep -v "does not exist, skipping"
-else
-echo "==================> $sd database already exists.  Apply patches if necessary, to upgrade it."
-fi
+    sd_exists=`sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -w $sd | wc -l`
+    if [ "$sd_exists"  = "0" ]
+    then
+        echo 'survey_definitions database does not exist'
+        sudo -u postgres createdb -E UTF8 -O ws $sd
+        echo "CREATE EXTENSION postgis;" | sudo -u postgres psql -d $sd 
+        echo "ALTER TABLE geometry_columns OWNER TO ws; ALTER TABLE spatial_ref_sys OWNER TO ws; ALTER TABLE geography_columns OWNER TO ws;" | sudo -u postgres psql -d $sd
+        sudo -u postgres psql -f setupDb.sql -d $sd | grep -v "does not exist, skipping"
+        else
+        echo "==================> $sd database already exists.  Apply patches if necessary, to upgrade it."
+    fi
 
-echo '##### 11. Create $results database'
+    echo '##### 11. Create $results database'
 
-if [ "$force" = "force" ]
-then
+    if [ "$force" = "force" ]
+    then
 	echo "drop database $results;" | sudo -u postgres psql
-fi
+    fi
 
-results_exists=`sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -w $results | wc -l`
-if [ "$results_exists"  = "0" ]
-then
-echo 'results database does not exist'
-sudo -u postgres createdb -E UTF8 -O ws $results
-echo "CREATE EXTENSION postgis;" | sudo -u postgres psql -d $results
-sudo -u postgres echo "ALTER TABLE geometry_columns OWNER TO ws; ALTER TABLE spatial_ref_sys OWNER TO ws; ALTER TABLE geography_columns OWNER TO ws;" | sudo -u postgres psql -d $results
-sudo -u postgres psql -f resultsDb.sql -d $results
+    results_exists=`sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -w $results | wc -l`
+    if [ "$results_exists"  = "0" ]
+    then
+        echo 'results database does not exist'
+        sudo -u postgres createdb -E UTF8 -O ws $results
+        echo "CREATE EXTENSION postgis;" | sudo -u postgres psql -d $results
+        sudo -u postgres echo "ALTER TABLE geometry_columns OWNER TO ws; ALTER TABLE spatial_ref_sys OWNER TO ws; ALTER TABLE geography_columns OWNER TO ws;" | sudo -u postgres psql -d $results
+        sudo -u postgres psql -f resultsDb.sql -d $results
 
-cd ../geospatial
-echo '# adding countries shape files'
-sudo -u postgres shp2pgsql -s 4326 -I world_countries_boundary_file_world_2002.shp | sudo -u postgres psql -d $results
-sudo -u postgres echo "alter table world_countries_boundary_file_world_2002 owner to ws;" | sudo -u postgres psql -d $results
-cd ../install
+        cd ../geospatial
+        echo '# adding countries shape files'
+        sudo -u postgres shp2pgsql -s 4326 -I world_countries_boundary_file_world_2002.shp | sudo -u postgres psql -d $results
+        sudo -u postgres echo "alter table world_countries_boundary_file_world_2002 owner to ws;" | sudo -u postgres psql -d $results
+        cd ../install
 
-else
-echo "==================> $results database already exists.  Apply patches if necessary, to upgrade it."
+    else
+        echo "==================> $results database already exists.  Apply patches if necessary, to upgrade it."
+    fi
 fi
 
 echo '##### 12. Setup subscribers'
@@ -346,11 +356,13 @@ sudo apt-get install imagemagick -y
 sudo apt-get install ffmpeg -y 
 #sudo apt-get install flvtool2 -y
 
-echo '##### 17. Backups'
-sudo mkdir ~postgres/backups
-sudo mkdir ~postgres/restore
-sudo chmod +x ~postgres/bu.sh ~postgres/re.sh
-sudo chown postgres ~postgres/bu.sh ~postgres/re.sh ~postgres/backups ~postgres/restore
+if [ $DBHOST = "127.0.0.1" ]; then
+    echo '##### 17. Backups'
+    sudo mkdir ~postgres/backups
+    sudo mkdir ~postgres/restore
+    sudo chmod +x ~postgres/bu.sh ~postgres/re.sh
+    sudo chown postgres ~postgres/bu.sh ~postgres/re.sh ~postgres/backups ~postgres/restore
+fi
 
 echo '##### 19. Update miscelaneous file configurations'
 
@@ -376,14 +388,18 @@ echo '##### Increase shared memory available to tomcat'
 sudo cp /etc/default/$TOMCAT_VERSION  /etc/default/$TOMCAT_VERSION.bu
 sudo sed -i "s#-Xmx128m#-Xmx512m#g" /etc/default/$TOMCAT_VERSION
 
-echo '##### Allow logon to postgres authenticated by md5 - used to export shape files'
-# This could be better written as it is not idempotent, each time the install script is run an additional line will be changed
-sudo mv /etc/postgresql/$PGV/main/pg_hba.conf /etc/postgresql/$PGV/main/pg_hba.conf.bu
-sudo awk 'BEGIN{doit=0;}/# "local"/{doit=1;isdone=0;}{if(doit==1){isdone=sub("peer","md5",$0);print;if(isdone==1){doit=0}}else{print}}' /etc/postgresql/$PGV/main/pg_hba.conf.bu > x
-sudo mv x /etc/postgresql/$PGV/main/pg_hba.conf
+if [ $DBHOST = "127.0.0.1" ]; then
+    echo '##### Allow logon to postgres authenticated by md5 - used to export shape files'
+    # This could be better written as it is not idempotent, each time the install script is run an additional line will be changed
+    sudo mv /etc/postgresql/$PGV/main/pg_hba.conf /etc/postgresql/$PGV/main/pg_hba.conf.bu
+    sudo awk 'BEGIN{doit=0;}/# "local"/{doit=1;isdone=0;}{if(doit==1){isdone=sub("peer","md5",$0);print;if(isdone==1){doit=0}}else{print}}' /etc/postgresql/$PGV/main/pg_hba.conf.bu > x
+    sudo mv x /etc/postgresql/$PGV/main/pg_hba.conf
+fi
 
 echo '##### . Start the servers'
-sudo service postgresql start
+if [ $DBHOST = "127.0.0.1" ]; then
+    sudo service postgresql start
+fi
 sudo service $TOMCAT_VERSION start
 sudo service apache2 start
 
@@ -396,7 +412,9 @@ sudo apt-get install ttf-dejavu -y
 echo "2105" > ~/smap_version
 
 echo '##### 21. Add postgres and apache to tomcat group'
-sudo usermod -a -G $TOMCAT_USER postgres
+if [ $DBHOST = "127.0.0.1" ]; then
+    sudo usermod -a -G $TOMCAT_USER postgres
+fi
 sudo usermod -a -G $TOMCAT_USER www-data
 
 echo '##### 22. Deploy Smap'
