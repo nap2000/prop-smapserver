@@ -17,6 +17,13 @@ else
     TOMCAT_USER=tomcat7
 fi
 
+# Add a default setting of "yes" as the value for SUBSCRIBER if it has not already been set
+subscribers_set=`grep SUBSCRIBER /etc/environment | wc -l`
+if [ $subscribers_set -eq 0 ]; then
+    echo "SUBSCRIBER=yes" >> /etc/environment
+    SUBSCRIBER=yes; export SUBSCRIBER;
+fi
+
 # Get location of database
 if [ $DBHOST = "127.0.0.1" ]
 then
@@ -178,22 +185,26 @@ fi
 service $TOMCAT_VERSION start
 service apache2 start
 
-echo "go" > /smap/settings/subscriber
-if [ $u1404 -eq 1 ]; then
-service subscribers start
-service subscribers_fwd start
-fi
-if [ $u1604 -eq 1 ]; then
-systemctl start subscribers
-systemctl start subscribers_fwd
-fi
-if [ $u1804 -eq 1 ]; then
-systemctl start subscribers
-systemctl start subscribers_fwd
-fi
-if [ $u2004 -eq 1 ]; then
-systemctl start subscribers
-systemctl start subscribers_fwd
+if [ $SUBSCRIBER != "no" ]
+then
+    echo "go" > /smap/settings/subscriber
+    echo "...... starting subscriber"
+    if [ $u1404 -eq 1 ]; then
+        service subscribers start
+        service subscribers_fwd start
+    fi
+    if [ $u1604 -eq 1 ]; then
+        systemctl start subscribers
+        systemctl start subscribers_fwd
+    fi
+    if [ $u1804 -eq 1 ]; then
+        systemctl start subscribers
+        systemctl start subscribers_fwd
+    fi
+    if [ $u2004 -eq 1 ]; then
+        systemctl start subscribers
+        systemctl start subscribers_fwd
+    fi
 fi
 
 # Hosted Only
