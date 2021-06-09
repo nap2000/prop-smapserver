@@ -1025,14 +1025,18 @@ require([
 				var param1 = p1;
 				$('#load_file_alert').removeClass('alert-danger').addClass('alert-success').html(data);
 				$('#load_file_alert').show();
+				$('#importFile').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
+				$('#importFileLabel').html("");     // Work around ERR_UPLOAD_FILE_CHANGED error
 				cb(param1);
 
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
 				var msg = xhr.responseText;
+				msg = msg || localise.set["e_unknown"];
 				$('#load_file_alert').show().removeClass('alert-success').addClass('alert-danger').text(msg);
-
+				$('#importFile').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
+				$('#importFileLabel').html("");     // Work around ERR_UPLOAD_FILE_CHANGED error
 			}
 		});
 	}
