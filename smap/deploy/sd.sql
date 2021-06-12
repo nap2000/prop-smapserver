@@ -412,3 +412,5 @@ ALTER TABLE log_archive OWNER TO ws;
 
 alter table people alter column opted_in set default false;
 update people set opted_in = false where opted_in is null;
+
+alter table users add column one_time_password_sent timestamp with time zone;
