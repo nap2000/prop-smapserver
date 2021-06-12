@@ -324,6 +324,7 @@ CREATE TABLE users (
 	current_task_group_id integer,	-- Set to the last task group the user selected
 	one_time_password varchar(36),	-- For password reset
 	one_time_password_expiry timestamp with time zone,		-- Time and date one time password expires
+	one_time_password_sent timestamp with time zone,		-- Time and date one time password was sent
 	password_reset boolean default false,	-- Set true if the user has reset their password
 	o_id integer REFERENCES organisation(id),
 	action_details text,			-- Details of a specific action the user can undertake
