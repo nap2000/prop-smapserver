@@ -23,28 +23,24 @@ if (Modernizr.localstorage) {
 
 "use strict";
 requirejs.config({
-    baseUrl: 'js/libs',
+    baseUrl: '/js/libs',
     waitSeconds: 0,
     locale: gUserLocale,
     paths: {
-    	app: '../app',
-    	jquery: 'jquery-2.1.1',
-       	lang_location: '../'
+    	app: '/js/app',
+       	lang_location: '/js'
     },
     shim: {
-    	'bootstrap.min': ['jquery'],
-    	'bootstrapValidator.min': ['bootstrap.min'],
     	'app/common': ['jquery']
     }
 });
 
 require([
-         'jquery', 
-         'bootstrap.min',
+         'jquery',
          'bootstrapValidator.min',
          'app/localise',
          'app/common'
-         ], function($, bootstrap, bv, localise) {
+         ], function($, bv, localise) {
 
 	var gToken;
 	
@@ -72,7 +68,11 @@ $(document).ready(function() {
 			gToken = param[1];
 		}
 	}
-	
+
+	$('#forgottenPasswordEmail, #passwordValue').change(function(){
+		$('.pwd_alert').hide();
+	});
+
     $('#emailForm').bootstrapValidator({
         feedbackIcons: {
             valid: 'glyphicon glyphicon-ok',
@@ -127,12 +127,11 @@ $(document).ready(function() {
 			  data: { passwordDetails: pdString },
 			  success: function(data, status) {
 				  removeHourglass();
-				  alert(localise.set["msg_pr"]);
-				  window.location.href="/";
+				  $('.pwd_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_pr"]);
 
 			  }, error: function(data, status) {
 				  removeHourglass();
-				  alert("Error: " + data.responseText); 
+			    $('.pwd_alert').show().addClass('alert-danger').removeClass('alert-success').html(localise.set["c_error"] + ": " + data.responseText);
 			  }
 		});
     });
@@ -141,7 +140,7 @@ $(document).ready(function() {
     	e.preventDefault();
     	
     	var email = $('#forgottenPasswordEmail').val();
-    	
+	    $('.pwd_alert').hide();
 		addHourglass();
     	$.ajax({
 			  type: "GET",
@@ -149,8 +148,7 @@ $(document).ready(function() {
 			  url: "/surveyKPI/onetimelogon/" + email,
 			  success: function(data, status) {
 				  removeHourglass();
-				  alert(localise.set["msg_es"] + " " + email);
-				  window.location.href="/";
+				  $('.pwd_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_es"] + " " + email);
 			  }, error: function(data, status) {
 				  removeHourglass();
 				  var msg = data.responseText;
@@ -159,7 +157,7 @@ $(document).ready(function() {
 				  if(idx1 > 0 && idx2 > idx1) {
 				  	msg = msg.substring(idx1, idx2);
 				  }
-				  alert(localise.set["c_error"] + ": " + msg);
+			    $('.pwd_alert').show().addClass('alert-danger').removeClass('alert-success').html(localise.set["c_error"] + ": " + msg);
 			  }
 		});
 	
