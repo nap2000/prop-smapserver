@@ -42,6 +42,7 @@
         },
         {
             name: '../passwords',
+	    exclude: ['jquery', 'bootstrap']
         },
         {
             name: '../resources',
