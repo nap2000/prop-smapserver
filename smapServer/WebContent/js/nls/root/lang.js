@@ -617,6 +617,7 @@ define({
     "msg_res_name": "%s1 is a reserved name",
     "msg_trans_to": "The translation request has timed out.  However it should still be working in the background and you can view the results by refreshing the page",
     "msg_subs_bg": "If you have un-subscribed from receiving email notifications, then using this page, you can re-subscribe to receive them again. The decision to send notifications to an email address is made by an administrator so although you can un-subscribe from these and then re-subscribe on this page you cannot request email notiifcations when you are not being sent any.",
+    "msg_fgt_p": "Enter the email address associated with your account. A link will be sent to that address allowing you to reset your password.",
 
     // Editor
     "e_b_e": "Base on existing form",
