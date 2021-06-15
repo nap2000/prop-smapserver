@@ -1,8 +1,8 @@
 #!/bin/sh
-  
+
 
 if [ $# -lt "1" ]; then
-        echo "usage $0 gpg file"
+        echo "usage $0 gpg_file"
         exit
 fi
 
@@ -16,12 +16,21 @@ case $choice in
         n|N) break;;
         y|Y)
 
+echo "Exiting anyway.  Comment out these two lines if you really want to restore your database from a backups
+exit
+
+echo "copy files...."
+bucket=`cat /smap/settings/bucket`
+aws s3 sync s3://$bucket /smap
+
 echo "progressing...."
 
 rm -rf restore/*
 rm out_bu.tgz
 
 echo "restoring: " + $1
+
+aws s3 cp s3://sg-bu-smap/$1 $1
 
 # Decrypt
 echo `cat passwordfile` | gpg  --batch -q --passphrase-fd 0 -o out_bu.tgz  -d $1
@@ -49,8 +58,4 @@ echo "ALTER TABLE geometry_columns OWNER TO ws; ALTER TABLE spatial_ref_sys OWNE
 psql survey_definitions < restore/backups/sd.sql
 psql results < restore/backups/results.sql
 esac
-
-
-# pg_restore -c -d survey_definitions sd.dmp
-# pg_restore -c -d results results.dmp
 
