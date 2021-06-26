@@ -2296,7 +2296,8 @@ function isSelfRegistrationServer() {
 		hostname.indexOf('reachnettechnologies.com') < 0 &&
 		hostname.indexOf('.icanreach.com') < 0 &&
 		hostname.indexOf('encontactone.com') < 0 &&
-		hostname !== 'app.kontrolid.com') {
+		hostname !== 'app.kontrolid.com' &&
+		hostname !== 'kontrolid.smap.com.au') {
 		sr = false;
 	}
 	return sr;
