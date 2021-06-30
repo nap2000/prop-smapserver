@@ -100,7 +100,7 @@ sudo apt-get install $TOMCAT_VERSION -y
 echo '##### 5. Install Postgres / Postgis'
 
 # Skip this section if the database is remote
-if [ $DBHOST = "127.0.0.1" ]; then
+if [ "$DBHOST" = "127.0.0.1" ]; then
 
 # Install Postgres for Ubuntu 20.04
 if [ $u2004 -eq 1 ]; then
@@ -264,7 +264,7 @@ then
 		sudo cp config_files/subscribers_fwd.conf $upstart_dir
 	fi
 
-        if [ $DBHOST = "127.0.0.1" ]; then
+        if [ "$DBHOST" = "127.0.0.1" ]; then
 	    echo '# update bu.sh file'
 	    sudo cp bu.sh ~postgres/bu.sh
 	    sudo chown postgres ~postgres/bu.sh
@@ -279,7 +279,7 @@ else
 
 fi
 
-if [ $DBHOST = "127.0.0.1" ]; then
+if [ "$DBHOST" = "127.0.0.1" ]; then
     echo '##### 9. Create user and databases'
     sudo service postgresql start
     sudo -u postgres createuser -S -D -R ws
@@ -356,7 +356,7 @@ sudo apt-get install imagemagick -y
 sudo apt-get install ffmpeg -y 
 #sudo apt-get install flvtool2 -y
 
-if [ $DBHOST = "127.0.0.1" ]; then
+if [ "$DBHOST" = "127.0.0.1" ]; then
     echo '##### 17. Backups'
     sudo mkdir ~postgres/backups
     sudo mkdir ~postgres/restore
@@ -388,7 +388,7 @@ echo '##### Increase shared memory available to tomcat'
 sudo cp /etc/default/$TOMCAT_VERSION  /etc/default/$TOMCAT_VERSION.bu
 sudo sed -i "s#-Xmx128m#-Xmx512m#g" /etc/default/$TOMCAT_VERSION
 
-if [ $DBHOST = "127.0.0.1" ]; then
+if [ "$DBHOST" = "127.0.0.1" ]; then
     echo '##### Allow logon to postgres authenticated by md5 - used to export shape files'
     # This could be better written as it is not idempotent, each time the install script is run an additional line will be changed
     sudo mv /etc/postgresql/$PGV/main/pg_hba.conf /etc/postgresql/$PGV/main/pg_hba.conf.bu
@@ -397,7 +397,7 @@ if [ $DBHOST = "127.0.0.1" ]; then
 fi
 
 echo '##### . Start the servers'
-if [ $DBHOST = "127.0.0.1" ]; then
+if [ "$DBHOST" = "127.0.0.1" ]; then
     sudo service postgresql start
 fi
 sudo service $TOMCAT_VERSION start
@@ -412,7 +412,7 @@ sudo apt-get install ttf-dejavu -y
 echo "2105" > ~/smap_version
 
 echo '##### 21. Add postgres and apache to tomcat group'
-if [ $DBHOST = "127.0.0.1" ]; then
+if [ "$DBHOST" = "127.0.0.1" ]; then
     sudo usermod -a -G $TOMCAT_USER postgres
 fi
 sudo usermod -a -G $TOMCAT_USER www-data
