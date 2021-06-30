@@ -185,7 +185,7 @@ fi
 service $TOMCAT_VERSION start
 service apache2 start
 
-if [ $SUBSCRIBER != "no" ]
+if [ "$SUBSCRIBER" != "no" ]
 then
     echo "go" > /smap/settings/subscriber
     echo "...... starting subscriber"
