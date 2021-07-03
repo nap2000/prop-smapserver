@@ -205,6 +205,8 @@ then
         systemctl start subscribers
         systemctl start subscribers_fwd
     fi
+else
+    echo "stop" > /smap/settings/subscriber
 fi
 
 # Hosted Only
