@@ -185,28 +185,24 @@ fi
 service $TOMCAT_VERSION start
 service apache2 start
 
+echo "go" > /smap/settings/subscriber
 if [ "$SUBSCRIBER" != "no" ]
 then
-    echo "go" > /smap/settings/subscriber
     echo "...... starting subscriber"
     if [ $u1404 -eq 1 ]; then
         service subscribers start
         service subscribers_fwd start
-    fi
-    if [ $u1604 -eq 1 ]; then
+    else	
+        systemctl enable subscribers
         systemctl start subscribers
-        systemctl start subscribers_fwd
-    fi
-    if [ $u1804 -eq 1 ]; then
-        systemctl start subscribers
-        systemctl start subscribers_fwd
-    fi
-    if [ $u2004 -eq 1 ]; then
-        systemctl start subscribers
+
+        systemctl enable subscribers_fwd
         systemctl start subscribers_fwd
     fi
 else
-    echo "stop" > /smap/settings/subscriber
+    # Disable subscribers so they will not restart on next reboot
+    systemctl disable subscribers
+    systemctl disable subscribers_fwd
 fi
 
 # Hosted Only
