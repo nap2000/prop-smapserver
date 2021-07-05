@@ -23,68 +23,34 @@ if (Modernizr.localstorage) {
 
 "use strict";
 require.config({
-    baseUrl: 'js/libs',
+    baseUrl: '/js/libs',
     waitSeconds: 0,
     locale: gUserLocale,
     paths: {
-    	app: '../app',
-    	jquery: 'jquery-2.1.1',
-    	lang_location: '..'
+    	app: '/js/app',
+    	lang_location: '/js'
     },
     shim: {
     	'app/common': ['jquery'],
-        'bootstrap.min': ['jquery'],
         'jquery.autosize.min': ['jquery']
     }
 });
 
 require([
          'jquery',
-         'app/common', 
-         'bootstrap.min', 
-         'modernizr',
+         'app/common',
          'app/localise',
-         'app/ssc',
-         'app/globals',
-         'jquery.autosize.min'], 
-		function($, common, bootstrap, modernizr, lang, ssc, globals) {
-
-
-var	gMode = "survey",
-	gTempQuestions = [];
+         'app/globals'],
+		function($, common, lang, globals) {
 
 $(document).ready(function() {
-	
-	var i,
-		params,
-		pArray = [],
-		param = [];
 
-	setupUserProfile();
+	setupUserProfile(true);
 	localise.setlang();		// Localise HTML
 
 	// Get the user details
 	globals.gIsAdministrator = false;
 	getLoggedInUser(surveyListDone, false, true, undefined, false, false);
-
-	// Add menu functions
-	$('#m_open').off().click(function() {	// Open an existing form
-		openForm("existing");
-	});
-
-	// Add menu functions
-	$('#m_simple_edit').off().click(function() {	// Edit a survey
-		gMode = "simple_edit";
-		refreshView(gMode);
-	});
-
-	
-	$('.language_list').off().change(function() {
-		globals.gLanguage1 = $('#language1').val();
-		globals.gLanguage2 = $('#language2').val();
-		refreshView(gMode);
-		//$('#set_language').foundation('reveal', 'close');
- 	 });
 
 });
 
@@ -93,23 +59,7 @@ function surveyListDone() {
 }
 
 function refreshView() {
-	
-	var i,
-		j,
-		qList = [],
-		index = -1,
-		survey = globals.model.survey,
-		numberLanguages,
-		key,
-		options = [];
-	
-	gTempQuestions = [];
-	
-	if(survey) {
-		numberLanguages = survey.languages.length;
-	}
-
-	setChangesHtml($('#changes'), survey, survey);
+	setChangesHtml($('#changes'), globals.model.survey);
 }
 
 
@@ -129,7 +79,7 @@ function setChangesHtml($element, survey) {
 
 		changes = survey.changes;
 		
-		h[++idx] = '<table class="table table-striped">';
+		h[++idx] = '<table class="table table-responsive-sm table-striped">';
 		
 		// write the table headings
 		h[++idx] = '<thead>';
