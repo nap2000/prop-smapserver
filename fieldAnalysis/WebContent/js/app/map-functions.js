@@ -177,8 +177,12 @@ function addLayer(data, pId1, pId2, view, title, map) {
 			// Add this layers description to the overall description
 
 			var filterDescription = ' (' + localise.set["a_filter"] + ')';
-			filterDescription = filterDescription.replace('%s1', data.totals.returned_count);
-			filterDescription = filterDescription.replace('%s2', data.totals.filtered_count);
+			if(data.totals) {
+				filterDescription = filterDescription.replace('%s1', data.totals.returned_count);
+				filterDescription = filterDescription.replace('%s2', data.totals.filtered_count);
+			} else {
+				
+			}
 
 			currentDisplayDescription += '<span class="l' + pId2 + '"><p>Layer(' + title + '): ' + 
 			getDisplayDescription(fn, "map", data.survey, data.question, data.group, data.option, data.qtype, 
