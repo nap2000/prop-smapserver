@@ -786,36 +786,6 @@
 	</div>
 </div>
 
-<!-- Modal to allow the user to get usage details -->
-<div id="get_usage_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="getUsageLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title lang" data-lang="u_usage" id="getUsageLabel">usage</h4>
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-			</div>
-			<div class="modal-body">
-
-				<form class="form">
-					<div class="form-group row">
-						<div class='input-group date col-sm-12' id='usageDate' data-toggle="tooltip"  data-container="body" title="Month and Year of report">
-							<input type='text' class="form-control" data-date-format="YYYY/MM"/>
-							<div class="input-group-append">
-								<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i class="fas fa-calendar-alt"></i></span></button>
-							</div>
-							</span>
-						</div>
-					</div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-				<button id="usageGet" type="button" class="btn btn-primary lang" data-lang="u_gr">get</button>
-			</div>
-		</div>
-	</div>
-</div>
-
 <!-- Modal to ask for confirmation of deleting a user from multiple organisations -->
 <div id="del_user_confirm_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delUserLabel" aria-hidden="true">
 	<div class="modal-dialog">
@@ -896,5 +866,69 @@
 		</div>
 	</div>
 </div>
+<!-- Parameters for usage report -->
+<div id="usage_report_popup" class="modal" tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title lang" data-lang="u_usage"></h5>
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			</div>
+			<div class="modal-body">
+
+				<form>
+					<div class="form-group row">
+						<label for="usageDateInput" data-lang="c_month" class="lang col-sm-2 control-label">month</label>
+						<div class="col-sm-10">
+							<div class='input-group date' id='usageDate' data-toggle="tooltip"  data-container="body" title="Month and Year of report">
+								<input id = "usageDateInput" type='text' class="form-control" data-date-format="YYYY/MM"/>
+								<div class="input-group-append">
+									<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i class="fas fa-calendar-alt"></i></span></button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<div class="offset-sm-2 col-sm-10">
+							<div class="radio">
+								<label>
+									<input checked type="radio" name="usage_radio" id="usage_by_user"> <span data-lang="c_user" class="lang"></span>
+								</label>
+							</div>
+							<div class="radio">
+								<label>
+									<input type="radio" name="usage_radio" id="usage_by_project"> <span data-lang="rep_usage_project" class="lang"></span>
+								</label>
+							</div>
+							<div class="radio">
+								<label>
+									<input type="radio" name="usage_radio"  id="usage_by_survey"> <span data-lang="rep_usage_survey" class="lang"></span>
+								</label>
+							</div>
+							<div class="radio">
+								<label>
+									<input type="radio" name="usage_radio"  id="usage_by_device"> <span data-lang="rep_usage_device" class="lang"></span>
+								</label>
+							</div>
+							<div class="checkbox mt-3">
+								<label>
+									<input checked type="checkbox" id="usage_inc_temp"> <span data-lang="rep_inc_temp" class="lang"></span>
+								</label>
+							</div>
+						</div>
+					</div>
+				</form>
+
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="usage_report_save" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_create">create</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 </body>
 </html>
