@@ -748,20 +748,8 @@ require([
 		/*
 		 * Get a usage report
 		 */
-		$('#usageGet').click(function() {
-			var usageMsec = $('#usageDate').data("DateTimePicker").date(),
-				d = new Date(usageMsec),
-				month = d.getMonth() + 1,
-				year = d.getFullYear(),
-				oId = gOrganisationList[gCurrentOrganisationIndex].id,
-				period,
-				month_names = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-			// Calculate the period as text so the web service doesn't have to (can also use language translations here)
-			period = month_names[month -1] + " " + year;
-
-			$('#get_usage_popup').modal("hide");
-			getUsage(oId, month, year, period);
+		$('#usage_report_save').click(function(){
+			executeUsageReport(gOrganisationList[gCurrentOrganisationIndex].id);
 		});
 
 		/*
@@ -2187,7 +2175,7 @@ require([
 		});
 		$('.usage_report', '#organisation_table').click(function () {
 			gCurrentOrganisationIndex = $(this).val();
-			$('#get_usage_popup').modal("show");
+			$('#usage_report_popup').modal("show");
 		});
 		$(".rm_org", $('#organisation_table')).click(function(){
 			var idx = $(this).data("idx");
@@ -2491,17 +2479,6 @@ require([
 				}
 			}
 		});
-	}
-
-	/*
-	 * Get a usage report
-	 */
-	function getUsage(oId, month, year, period) {
-
-
-		docURL = "/surveyKPI/usage/" + oId + "?month=" + month + "&year=" + year + "&period=" + period;
-		window.location.href = docURL;
-
 	}
 
 	/*
