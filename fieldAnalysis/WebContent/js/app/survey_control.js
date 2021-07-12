@@ -850,9 +850,6 @@ function setQ1Functions(type, panelType, defValue) {
 		} else {
 			pType = panelType;
 		}
-		if(pType === "map") {
-			h[++idx] = '<option value="ocha">OCHA Icons</option>';
-		}
 
 	} else if(type === "int" || type === "decimal" || type === "calculate" ){
 		
