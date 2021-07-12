@@ -1029,31 +1029,6 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             }
         }
 
-        /*
-         * Reports
-         */
-	    function executeUsageReport() {
-
-		    var usageMsec = $('#usageDate').data("DateTimePicker").date(),
-			    d = new Date(usageMsec),
-			    month = d.getMonth() + 1,
-			    year = d.getFullYear(),
-                url,
-                usageByProject = $('#usage_by_project').prop('checked'),
-                usageBySurvey = $('#usage_by_survey').prop('checked'),
-                usageByDevice = $('#usage_by_device').prop('checked'),
-                incTemp = $('#usage_inc_temp').prop('checked');
-
-		    url = "/surveyKPI/adminreport/usage/" + year + "/" + month;
-		    url += usageByProject ? "?project=true" : "?project=false";
-		    url += usageBySurvey ? "&survey=true" : "&survey=false";
-            url += usageByDevice ? "&device=true" : "&device=false";
-            url += incTemp ? "&inc_temp=true" : "&inc_temp=false";
-
-		    downloadFile(url);
-
-	    }
-
 	    function executeFormAccessReport() {
 
 		    var formIdent = $('#survey_access').val();
