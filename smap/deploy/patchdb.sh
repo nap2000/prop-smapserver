@@ -263,7 +263,7 @@ then
 
 fi
 
-if [ ! -f /smap/settings ]
+if [ ! -d "/smap/settings" ]
 then
     mkdir /smap/settings
     cp ~ubuntu/region /smap/settings
