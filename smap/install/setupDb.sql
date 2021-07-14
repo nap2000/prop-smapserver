@@ -1415,7 +1415,8 @@ create TABLE last_refresh (
 	o_id integer,
 	user_ident text,
 	refresh_time TIMESTAMP WITH TIME ZONE,
-	device_time TIMESTAMP WITH TIME ZONE
+	device_time TIMESTAMP WITH TIME ZONE,
+	deviceid text
 	);
 SELECT AddGeometryColumn('last_refresh', 'geo_point', 4326, 'POINT', 2);
 ALTER TABLE last_refresh OWNER TO ws;
@@ -1430,7 +1431,8 @@ create TABLE last_refresh_log (
 	o_id integer,
 	user_ident text,
 	refresh_time TIMESTAMP WITH TIME ZONE,
-	device_time TIMESTAMP WITH TIME ZONE
+	device_time TIMESTAMP WITH TIME ZONE,
+	deviceid text
 	);
 SELECT AddGeometryColumn('last_refresh_log', 'geo_point', 4326, 'POINT', 2);
 ALTER TABLE last_refresh_log OWNER TO ws;
