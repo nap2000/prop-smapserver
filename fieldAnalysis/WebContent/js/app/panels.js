@@ -239,10 +239,12 @@ $(document).ready(function() {
 						// Add geom Questions
 				        view.geomFormQuestions = [];
 				        $('.geomSelect', '#p_settings').each(function() {
-					        view.geomFormQuestions.push({
-					        	form: $(this).data("form"),
-						        question: $(this).val()
-				            });
+				        	if($(this).val()) {
+						        view.geomFormQuestions.push({
+							        form: $(this).data("form"),
+							        question: $(this).val()
+						        });
+					        }
 				        });
 
 						// Determine if we need to redraw the panel
