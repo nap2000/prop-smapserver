@@ -414,3 +414,6 @@ alter table people alter column opted_in set default false;
 update people set opted_in = false where opted_in is null;
 
 alter table users add column one_time_password_sent timestamp with time zone;
+alter table last_refresh add column deviceid text;
+alter table last_refresh_log add column deviceid text;
+
