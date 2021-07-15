@@ -13,3 +13,7 @@ WITH archived_rows AS (
 )
 INSERT INTO log_archive
 SELECT * FROM archived_rows;
+
+
+-- Truncate user trail for all records older than 100 days
+DELETE FROM user_trail WHERE event_time < now() - interval '100 days';
