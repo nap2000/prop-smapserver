@@ -2133,6 +2133,7 @@ define([
                 survey = globals.model.survey,
                 isValid = true,
                 hasDuplicate = false,
+                hasDuplicateOption = false,
                 itemDesc,
                 questionType,
                 question,
@@ -2238,7 +2239,7 @@ define([
                         if(j !== itemIndex) {
                             otherItem = optionList.options[j];
                             if(!otherItem.deleted && otherItem.value.toLowerCase() === valLower) {
-                                hasDuplicate = true;
+                                hasDuplicateOption = true;
                                 break;
                             }
                         }
@@ -2253,14 +2254,14 @@ define([
                         }
                     }
                 }
-                if(hasDuplicate) {
+                if(hasDuplicate || hasDuplicateOption) {
                     addValidationError(
                         container,
                         itemIndex,
                         "name",
                         "The " + itemDesc + " name is the same as the name of another " + itemDesc +".  Specify a unique name.",
                         itemType,
-                        "error");
+                        hasDuplicate ? "error" : "warning");
                     isValid = false;
                 }
 
