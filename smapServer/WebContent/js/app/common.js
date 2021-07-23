@@ -2257,7 +2257,7 @@ function isBusinessServer() {
 	}
 	if(hostname.indexOf('sg.smap.com.au') >= 0 ||
 		hostname.indexOf('ubuntu1804.smap.com.au') >= 0 ||
-		hostname.indexOf('dev.smap.com.au') >= 0) {
+		hostname.indexOf('demo.smap.com.au') >= 0) {
 		bs = true;
 	}
 
