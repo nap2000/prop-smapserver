@@ -78,6 +78,11 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                 refreshData(globals.gCurrentProject, $('#survey option:selected').val());
             });
 
+            // Status values change
+            $('#ignoreOldIssues').change(function () {
+                refreshData(globals.gCurrentProject, $('#survey option:selected').val());
+            });
+
             // Add zoom to data button
             $('#zoomData').button().click(function () {
                 zoomTo("events");
@@ -365,6 +370,10 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                 $('.showtype, #showstatus').show();
             }
 
+            if(showSource !== SOURCE_FORMS && showSource !== SOURCE_OPTIN_MSG && showSource !== SOURCE_FORWARDED) {
+                $('.showold').show();
+            }
+
             if(showSource !== SOURCE_OPTIN_MSG) {
                 $('.showproject').show();
             }
@@ -462,6 +471,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             var showType = $("#showType").val();
             var showSource = $("#showSource").val();
             var isForward = false;
+            var ignoreOldIssue = $(ignoreOldIssues).is(':checked');
 
             if(showSource === SOURCE_UPLOADED) {
                 isForward=false;
@@ -500,8 +510,12 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                         "&hide_upload_errors=" + hide_upload_errors +
                         "&is_forward=" + isForward;
 
+
                     if(showTypeE === "totals" && surveyId !== "_all") {
                         url += "&groupby=" + groupby;
+                    }
+                    if(ignoreOldIssue) {
+                        url += "&ignore_old_issues=true";
                     }
 
                     url += "&start_key=" + start_rec;

@@ -760,6 +760,7 @@ define({
     "mon_optin_msg": "Opt in messages",
     "mon_send_count": "Send Count",
     "mon_pending_count": "Pending Messages",
+    "mon_ignore_old": "Ignore issues older than 100 days",
     "error": "Error",
     "success": "Success",
     "mon_retry": "Re-apply failed uploads",
