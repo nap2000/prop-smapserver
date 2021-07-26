@@ -23,6 +23,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             gControlDelete,
             gControlRestore,
             gShowDeleted = false,
+            gShowBlocked = true,
             gSelectedTemplateId,            // survey id of current template
             gSelectedTemplateIdent,         // survey ident of current template
             gSelectedTemplateName,
@@ -61,6 +62,11 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                 completeSurveyList();
             });
             $('#show_deleted').prop('checked', false);
+
+            $('#show_blocked').click(function() {
+                gShowBlocked = $('#show_blocked').is(':checked');
+                completeSurveyList();
+            });
 
             // Get the user details
             getLoggedInUser(projectSet, false, true, undefined);
@@ -509,7 +515,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             for(i = 0; i < gSurveys.length; i++) {
                 survey = gSurveys[i];
 
-                if(gShowDeleted || !survey.deleted) {
+                if((gShowDeleted || !survey.deleted) && (gShowBlocked || !survey.blocked)) {
                     h[++idx] = '<tr';
                     if(survey.deleted) {
                         h[++idx] = ' class="deleted"';
