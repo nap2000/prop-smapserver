@@ -734,6 +734,7 @@ define(
     "mon_optin_msg": "Mensajes de suscripción",
     "mon_send_count": "Enviar Conteo",
     "mon_pending_count": "Mensajes Pendientes",
+    "mon_ignore_old": "Ignorar problemas que tengan más de 100 días",
     "error": "Error",
     "success": "Realizado",
     "mon_retry": "Volver a aplicar cargas fallidas",
