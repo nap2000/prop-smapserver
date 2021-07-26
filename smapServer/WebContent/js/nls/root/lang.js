@@ -372,6 +372,7 @@ define({
 
     // Template Management
     "tm_s_del": "Show deleted forms",
+    "tm_s_block": "Show blocked forms",
     "tm_d_forms": "Delete Forms",
     "tm_r_forms": "Restore Forms",
     "tm_e_forms": "Erase Forms",
