@@ -364,6 +364,7 @@ define(
     "ft_pdf": "Plantilla del reporte PDF",
     "ft_spss": "Archivo SPS (SPSS)",
     "tm_s_del": "Mostrar formularios eliminados",
+    "tm_s_block": "Mostrar formularios desactivados",
     "tm_d_forms": "Eliminar Formularios",
     "tm_r_forms": "Recuperar Formularios",
     "tm_e_forms": "Borrar Formularios",
