@@ -360,6 +360,8 @@ define({
     "c_quality": "Quality",
     "c_low": "Low",
     "c_external": "External",
+    "c_preview": "Preview",
+    "c_size": "Size",
 
     // File Types
     "ft": "File Type",

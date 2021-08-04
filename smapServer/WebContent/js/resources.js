@@ -30,7 +30,8 @@ requirejs.config({
     locale: gUserLocale,
     paths: {
     	app: '../app',
-       	lang_location: '..'
+       	lang_location: '..',
+	    moment: '../../../../js/libs/moment-with-locales.2.24.0',
     },
     shim: {
     	'app/common': ['jquery']
@@ -42,8 +43,9 @@ require([
          'app/common', 
          'app/globals',
          'app/localise',
-         'bootstrapfileinput'
-         ], function($, common, globals, localise, bsfi) {
+         'bootstrapfileinput',
+	     'moment'
+         ], function($, common, globals, localise, bsfi, moment) {
 
 	var gMaps,
 		gMapVersion,
@@ -52,6 +54,8 @@ require([
 		gCurrentGroup;
 	
 $(document).ready(function() {
+
+	window.moment = moment;		// Make moment global for use by common.js
 
     setCustomResources();			// Apply custom javascript
 	setupUserProfile(true);
@@ -191,14 +195,16 @@ $(document).ready(function() {
     
     /*
      * Set up reports tab
-     */
+     *
+     *
 	$('#addReport').click(function(){
 		$('.panel_msg').hide();
 		document.forms.namedItem("crupload").reset();
 		$('#addReportPopup').modal("show");
 	});
 	getReports(refreshCustomReportView, undefined, "lqas");
-	
+	*/
+
 	// On change of report name, hide any previous results
 	$('#templateName').keydown(function(){
 		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
