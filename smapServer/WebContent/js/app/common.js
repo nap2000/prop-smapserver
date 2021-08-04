@@ -1387,6 +1387,9 @@ function refreshMediaView(data, sId) {
 			h[++idx] = '</p>';
 			h[++idx] = '</td>';
 			h[++idx] = '<td class="mediaManage">';
+			h[++idx] = localTime(files[i].modified);
+			h[++idx] = '</td>';
+			h[++idx] = '<td class="mediaManage">';
 			h[++idx] = '<p>';
 			h[++idx] = files[i].size;
 			h[++idx] = '</p>';
