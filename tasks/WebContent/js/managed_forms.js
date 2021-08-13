@@ -825,16 +825,27 @@ require([
         var format,
             $this = $(this);
 
-        if ($this.hasClass("xls")) {
-            format = "xlsx";
-        } else if ($this.hasClass("pdf")) {
-            format = "pdf";
-        } else if ($this.hasClass("docx")) {
-            format = "docx";
-        } else {
-            format = "image";
+        if(!$this.hasClass("disabled")) {
+            $('.genfile').addClass("disabled");
+            if ($this.hasClass("xls")) {
+                format = "xlsx";
+            } else if ($this.hasClass("pdf")) {
+                format = "pdf";
+            } else if ($this.hasClass("docx")) {
+                format = "docx";
+            } else {
+                format = "image";
+            }
+
+            $('#dashboardInfo').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_ds_s"]);
+            setTimeout(function () {
+                $('#dashboardInfo').hide();
+                $('.genfile').removeClass("disabled");
+            }, 5000);
+            setTimeout(function () {
+                genFile(false, format);         // allow message to be displayd
+            }, 0);
         }
-        genFile(false, format);
     });
 
     // Generate an xls file of basic counts for all data
