@@ -168,7 +168,8 @@ function copyView(v) {
         	advanced_filter: v.advanced_filter,
 			subject_type: v.subject_type,
 		    inc_ro: v.inc_ro,
-			geomFormQuestions: v.geomFormQuestions
+			geomFormQuestions: v.geomFormQuestions,
+		    selectedGeomQuestion: v.selectedGeomQuestion
 	};
 	
 	return cp;
