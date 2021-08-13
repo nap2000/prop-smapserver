@@ -735,7 +735,8 @@ function regionURL(region) {
 }
 
 function resultsURL (sId, qId, dateId, groupId, groupType, geoTable, fn, lang, timeGroup,
-                     startDate, endDate, qId_is_calc, filter, advanced_filter, geomFormQuestions) {
+                     startDate, endDate, qId_is_calc, filter, advanced_filter, geomFormQuestions,
+                     selectedGeomQuestion) {
 
     var url = "/surveyKPI/results/";
     url += sId;
@@ -799,6 +800,9 @@ function resultsURL (sId, qId, dateId, groupId, groupType, geoTable, fn, lang, t
             qList += geomFormQuestions[i].question;
         }
         url+= "&geom_questions=" + encodeURIComponent(qList);
+    }
+    if(selectedGeomQuestion) {
+        url+= "&selected_geom_question=" + encodeURIComponent(selectedGeomQuestion);
     }
 
     return url;

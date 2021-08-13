@@ -440,7 +440,8 @@ function getUserLocationsData(view, start_rec, nocache) {
 	 			fromDate, toDate, qId_is_calc) {
 			
 			var url = resultsURL (sId, data, dateId, groupId, groupType, groupRegion, fn, lang, timeGroup, 
-					fromDate, toDate, qId_is_calc, view.filter, view.advanced_filter, view.geomFormQuestions);
+					fromDate, toDate, qId_is_calc, view.filter, view.advanced_filter, view.geomFormQuestions,
+					view.selectedGeomQuestion);
 			
 			addHourglass();
 
