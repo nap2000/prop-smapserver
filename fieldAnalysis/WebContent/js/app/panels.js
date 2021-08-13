@@ -224,7 +224,8 @@ $(document).ready(function() {
 						}
 						
 						if(newType === "map") {
-							view.groupQuestionId = gSurveyControlView.geometryQuestion;
+							view.selectedGeomQuestion = $('.geomSelect', '#p_settings').val();
+							view.groupQuestionId = $('#settings_group option:selected').val();
 							view.groupQuestionText = "Location";
 							view.region = $('#settings_group option:selected').val();
 						} else {
