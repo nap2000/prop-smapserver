@@ -1,0 +1,93 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+	<meta name="keywords" content="" />
+	<meta name="description" content="" />
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+
+	<title class="lang" data-lang="m_dash">Dashboard</title>
+
+	<link href="/css/bootstrap.v4.min.css" rel="stylesheet">
+	<link href="/font-awesome/css/font-awesome.css" rel="stylesheet">
+	<link href="/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+
+	<link href="/css/bootstrap-multiselect.css" rel="stylesheet">
+
+	<link href="/css/wb/animate.css" rel="stylesheet">
+	<link href="/css/wb/style.v2.9.1.css" rel="stylesheet">
+	<link href="/css/bootstrap-toggle.min.css" rel="stylesheet"/>
+	<link href="/css/smap-wb.css" rel="stylesheet">
+
+
+	<script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
+	<script src="/js/libs/modernizr.js"></script>
+	<script src="/js/app/theme.js"></script>
+	<script src="/js/libs/jquery-2.1.1.js"></script>
+	<script src="/js/libs/wb/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="/js/libs/bootstrap.bundle.v4.min.js"></script>
+	<script src="https://unpkg.com/amazon-quicksight-embedding-sdk@1.0.12/dist/quicksight-embedding-js-sdk.min.js"></script>
+	<script src="js/dashboard.js"></script>
+	<script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
+
+</head>
+<body class="backdos">
+
+<div id="wrapper">
+
+	<nav class="navbar-default navbar-static-side" role="navigation">
+		<div>
+			<ul class="nav metismenu" id="side-menu">
+
+				<li>
+					<a href="#" id="username" data-toggle="modal" data-target="#modify_me_popup" aria-label="User">
+						<i class="glyphicon glyphicon-user" aria-hidden="true"></i> <span class="lang"
+																						  data-lang="m_user_profile">User Profile</span></a>
+				</li>
+				<li>
+					<a href="#" id="m_modules_inspinia" aria-expanded="false"><i class="fa fa-th-large"></i> <span
+							class="lang" data-lang="m_modules">Modules</span></a>
+					<ul class="nav nav-second-level" aria-expanded="false">
+
+						<li><a class="lang" data-lang="m_home" href="/?loggedin=yes"></a></li>
+						<li class="restrict_role admin_role analyst_role"><a href="/edit.html"><i
+								class="glyphicon glyphicon-edit"></i> <span class="lang" data-lang="c_edit">Edit</span></a>
+						</li>
+						<li class="restrict_role admin_role analyst_role"><a
+								href="/fieldManager/surveyManagement.html"><i
+								class="glyphicon glyphicon-wrench"></i><span class="lang"
+																			 data-lang="m_admin">Forms</span></a></li>
+						<li class="restrict_role manage_role admin_role analyst_role"><a href="/webForm.html"><i
+								class="glyphicon glyphicon-globe"></i> <span class="nav-label lang"
+																			 data-lang="m_web_forms">Webforms</span></span>
+						</a></li>
+						<li class="restrict_role manage_role admin_role analyst_role"><a href="/tasks/managed_forms.html"><i
+								class="glyphicon glyphicon-dashboard"></i> <span class="nav-label lang"
+																				 data-lang="m_console">Console</span></span>
+						</a></li>
+						<li class="restrict_role analyst_role"><a href="/fieldAnalysis/index.html"><i
+								class="glyphicon glyphicon-stats"></i> <span class="nav-label lang"
+																			 data-lang="m_analysis">Analysis</span></a>
+						</li>
+						<li class="restrict_role admin_role analyst_role manage_role task_role"><a href="/tasks/taskManagement.html"><i
+								class="fa fa-tasks"></i> <span class="nav-label lang" data-lang="m_assign">Tasks</span></a>
+						</li>
+						<li id="m_reports" class="restrict_role admin_role analyst_role"><a class="lang" data-lang="m_reports" href="/reports.html" title="Reports">Reports</a></li>
+
+					</ul>
+				</li>
+
+
+			</ul>
+		</div>
+
+	</nav>
+
+	<div id="page-wrapper" class="gray-bg" style="height: 100vh;">
+
+			<div id="dashboardContainer" style="height: 100vh;"></div>
+	</div>
+</div>
+</body>
+</html>
