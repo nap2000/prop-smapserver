@@ -1,0 +1,27 @@
+aws sts assume-role \
+     --role-arn "arn:aws:iam::439804189189:role/dashboard_role" \
+     --role-session-name cuso
+
+aws quicksight register-user \
+     --aws-account-id 439804189189 \
+     --namespace default \
+     --identity-type IAM \
+     --iam-arn "arn:aws:iam::439804189189:role/dashboard_role" \
+     --user-role READER \
+     --session-name "john.doe@example.com" \
+     --email john.doe@example.com \
+     --region us-east-1
+
+aws quicksight create-group-membership \
+     --aws-account-id=439804189189 \
+     --namespace=default \
+     --group-name=cuso \
+     --region us-east-1 \
+     --member-name="dashboard_role/john.doe@example.com"
+
+aws quicksight get-dashboard-embed-url \
+     --aws-account-id 439804189189 \
+     --dashboard-id 3c0205d9-c84c-49bd-8112-20e81c16f619 \
+     --identity-type QUICKSIGHT \
+     --region us-east-1 \
+     --user-arn "arn:aws:quicksight:us-east-1:439804189189:user/default/dashboard_role/john.doe@example.com"
