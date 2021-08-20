@@ -219,7 +219,8 @@ create TABLE log (
 	user_ident text,
 	event text,	
 	note text,
-	measure int default 0		-- In the case of translate this would be the number of characters
+	measure int default 0,		-- In the case of translate this would be the number of characters
+	server text
 	);
 CREATE INDEX log_time_key ON log(log_time);
 ALTER TABLE log OWNER TO ws;
@@ -235,7 +236,8 @@ create TABLE log_archive (
 	user_ident text,
 	event text,	
 	note text,
-	measure int default 0		-- In the case of translate this would be the number of characters
+	measure int default 0,		-- In the case of translate this would be the number of characters
+	server text
 	);
 ALTER TABLE log_archive OWNER TO ws;
 
