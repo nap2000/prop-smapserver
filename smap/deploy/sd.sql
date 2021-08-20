@@ -418,4 +418,6 @@ alter table last_refresh add column deviceid text;
 alter table last_refresh_log add column deviceid text;
 
 alter table dashboard_settings add column ds_selected_geom_question text;
+alter table log add column server text;
+alter table log_archive add column server text;
 
