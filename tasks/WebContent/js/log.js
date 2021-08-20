@@ -91,7 +91,8 @@ require([
 		                 { "data": "sName", "width": "200px"  },
 		                 { "data": "userIdent" },
 		                 { "data": "event" },
-		                 { "data": "note" }
+		                 { "data": "note" },
+			             { "data": "server" }
 		             ],
 		      order: [[ 0, "desc" ]],
 		      columnDefs: [{
@@ -104,7 +105,7 @@ require([
 			initComplete: function () {
 				this.api().columns().every( function () {
 					var column = this;
-					if (column.index() === 2 || column.index() === 3 || column.index() === 4) {
+					if (column.index() === 2 || column.index() === 3 || column.index() === 4 || column.index() === 6) {
 						var select = $('<select style="width:100%;"><option value=""></option></select>')
 							.appendTo($(column.footer()).empty())
 							.on('change', function () {
