@@ -1357,7 +1357,7 @@ require([
 			$('#user_ident').val(gUsers[userIndex].ident).prop('disabled', true);
 			$('#user_name').val(gUsers[userIndex].name);
 			$('#user_email').val(gUsers[userIndex].email);
-			$('#current_organisation').val(gUsers[userIndex].o_id);
+			$('#current_organisation').val(gUsers[userIndex].current_org_id);
 		}
 		$('#current_enterprise').val(globals.gEntId);
 
