@@ -239,7 +239,9 @@ require([
 			user.name = $('#user_name').val();
 			user.email = $('#user_email').val();
 			var newOrgId = $('#current_organisation').val();
-			if(newOrgId !== globals.gOrgId) {
+			// Set the organisation id to zero if it is not being changed
+			// By setting it to zero all changes will be made in the organisation of the administrator
+			if(newOrgId != gUsers[gCurrentUserIndex].current_org_id ) {
 				user.o_id = newOrgId;
 			} else {
 				user.o_id = 0;
