@@ -241,7 +241,7 @@ require([
 			var newOrgId = $('#current_organisation').val();
 			// Set the organisation id to zero if it is not being changed
 			// By setting it to zero all changes will be made in the organisation of the administrator
-			if(newOrgId != gUsers[gCurrentUserIndex].current_org_id ) {
+			if(gUsers[gCurrentUserIndex] && newOrgId != gUsers[gCurrentUserIndex].current_org_id ) {
 				user.o_id = newOrgId;
 			} else {
 				user.o_id = 0;
