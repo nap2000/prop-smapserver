@@ -34,7 +34,7 @@ textarea {
   line-height: inherit; }
 
 a {
-  color: #556B2F; }
+  color: #ce4f07; }
   a:hover, a:focus {
     color: #843304; }
   a:focus {
@@ -299,7 +299,7 @@ body {
   padding: 100px 0 70px 0;
   position: relative;
   width: 100%;
-  max-width: 720px; }
+  max-width: 1100px; }
 
 .paper {
   -webkit-flex: 1;
@@ -358,6 +358,7 @@ body {
 
 .enketo-power {
   position: relative;
+  left: 50%;
   margin: 30px 0 0 -100px;
   width: 200px;
   font-size: 16px;
@@ -426,15 +427,15 @@ button {
 
 .btn-primary {
   color: white;
-  background-color: #556B2F;
-  border-color: #856B2F; }
+  background-color: #ce4f07;
+  border-color: #b54606; }
   .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active {
     color: white;
-    background-color: #778D4F;
+    background-color: #a74006;
     border-color: #7a2f04; }
   .open .btn-primary.dropdown-toggle {
     color: white;
-    background-color: #778D4F;
+    background-color: #a74006;
     border-color: #7a2f04; }
   .btn-primary:active, .btn-primary.active {
     background-image: none; }
@@ -446,10 +447,10 @@ button {
   fieldset[disabled] .btn-primary:focus,
   fieldset[disabled] .btn-primary:active,
   fieldset[disabled] .btn-primary.active {
-    background-color: #556B2F;
-    border-color: #856B2F; }
+    background-color: #ce4f07;
+    border-color: #b54606; }
   .btn-primary .badge {
-    color: #556B2F;
+    color: #ce4f07;
     background-color: white; }
 
 .btn-icon-only {
@@ -488,7 +489,7 @@ button {
 .or-group > h3 {
   padding: 5px 0 15px 0;
   word-wrap: break-word;
-  color: #556B2F;
+  color: #ce4f07;
   text-align: center; }
 
 .or > h4,
@@ -496,7 +497,7 @@ button {
   text-align: inherit;
   margin-top: 9px;
   margin-bottom: 9px;
-  color: #556B2F; }
+  color: #ce4f07; }
   .or > h4 strong,
   .or-group > h4 strong {
     font-size: inherit; }
@@ -587,7 +588,7 @@ button {
     max-width: 120px; }
 
 .or-repeat {
-  background-color: #ebf0ec;
+  background-color: #fef5ef;
   margin: 0 0 3px 0;
   padding: 20px 10px 10px 10px;
   position: relative; }
@@ -598,13 +599,13 @@ button {
     position: absolute;
     top: 7px;
     right: 10px;
-    color: #556B2F; }
+    color: #ce4f07; }
     .or-repeat .repeat-number + .or-group {
       border-top: none; }
   .or-repeat .or-repeat {
     background-color: white; }
     .or-repeat .or-repeat .or-repeat {
-      background-color: #ebf0ec; }
+      background-color: #fef5ef; }
       .or-repeat .or-repeat .or-repeat .or-repeat {
         background-color: white; }
 
@@ -636,7 +637,7 @@ button {
     height: 0;
     border-left: 12px solid transparent;
     border-right: 12px solid transparent;
-    border-top: 12px solid #556B2F;
+    border-top: 12px solid #ce4f07;
     border-bottom: 0;
     display: block;
     position: absolute;
@@ -651,7 +652,7 @@ button {
   height: 0;
   border-top: 12px solid transparent;
   border-bottom: 12px solid transparent;
-  border-left: 12px solid #556B2F;
+  border-left: 12px solid #ce4f07;
   border-right: 0;
   left: -22px;
   right: -22px;
@@ -662,7 +663,7 @@ button {
 
 [dir="rtl"] .or-group:not(.or-appearance-no-collapse).or-appearance-compact > h4::before {
   border-left: 0;
-  border-right: 12px solid #556B2F; }
+  border-right: 12px solid #ce4f07; }
 
 #stats + .or-group,
 #or-preload-items + .or-group,
@@ -883,7 +884,7 @@ select {
   position: absolute;
   top: 10px;
   left: -10px;
-  color: #556B2F; }
+  color: #ce4f07; }
 
 legend .required {
   top: 0; }
@@ -1162,28 +1163,28 @@ legend .required {
   [type=range]::-webkit-slider-thumb {
     margin-top: -9.5px;
     box-sizing: border-box;
-    border: 1px solid #556B2F;
+    border: 1px solid #ce4f07;
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: #556B2F;
+    background: #ce4f07;
     cursor: pointer; }
   [type=range]::-moz-range-thumb {
     box-sizing: border-box;
-    border: 1px solid #556B2F;
+    border: 1px solid #ce4f07;
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: #556B2F;
+    background: #ce4f07;
     cursor: pointer; }
   [type=range]::-ms-thumb {
     margin-top: 0;
     box-sizing: border-box;
-    border: 1px solid #556B2F;
+    border: 1px solid #ce4f07;
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: #556B2F;
+    background: #ce4f07;
     cursor: pointer; }
   [type=range]::-ms-tooltip {
     display: none; }
@@ -3157,7 +3158,7 @@ table th[class*="col-"] {
     .question.or-appearance-compact .option-wrapper > label input[disabled]:checked ~ .active, .question.or-appearance-compact .option-wrapper > label input[disabled]:checked ~ .active:hover, .question.or-appearance-compact .option-wrapper > label input[readonly]:checked ~ .active, .question.or-appearance-compact .option-wrapper > label input[readonly]:checked ~ .active:hover, .question.or-appearance-quickcompact .option-wrapper > label input[disabled]:checked ~ .active, .question.or-appearance-quickcompact .option-wrapper > label input[disabled]:checked ~ .active:hover, .question.or-appearance-quickcompact .option-wrapper > label input[readonly]:checked ~ .active, .question.or-appearance-quickcompact .option-wrapper > label input[readonly]:checked ~ .active:hover {
       border-color: #555555; }
     .question.or-appearance-compact .option-wrapper > label input:checked ~ .active, .question.or-appearance-compact .option-wrapper > label input:checked ~ .active:hover, .question.or-appearance-quickcompact .option-wrapper > label input:checked ~ .active, .question.or-appearance-quickcompact .option-wrapper > label input:checked ~ .active:hover {
-      border-color: #556B2F; }
+      border-color: #ce4f07; }
     .question.or-appearance-compact .option-wrapper > label input:focus ~ .active, .question.or-appearance-quickcompact .option-wrapper > label input:focus ~ .active {
       outline: 0;
       -webkit-box-shadow: 0 0 0 1px #66afe9, 0 0 8px rgba(102, 175, 233, 0.6);
@@ -3204,7 +3205,7 @@ table th[class*="col-"] {
     .question.or-appearance-compact-1 .option-wrapper > label input[disabled]:checked ~ .active, .question.or-appearance-compact-1 .option-wrapper > label input[disabled]:checked ~ .active:hover, .question.or-appearance-compact-1 .option-wrapper > label input[readonly]:checked ~ .active, .question.or-appearance-compact-1 .option-wrapper > label input[readonly]:checked ~ .active:hover {
       border-color: #555555; }
     .question.or-appearance-compact-1 .option-wrapper > label input:checked ~ .active, .question.or-appearance-compact-1 .option-wrapper > label input:checked ~ .active:hover {
-      border-color: #556B2F; }
+      border-color: #ce4f07; }
     .question.or-appearance-compact-1 .option-wrapper > label input:focus ~ .active {
       outline: 0;
       -webkit-box-shadow: 0 0 0 1px #66afe9, 0 0 8px rgba(102, 175, 233, 0.6);
@@ -3257,7 +3258,7 @@ table th[class*="col-"] {
     .question.or-appearance-compact-2 .option-wrapper > label input[disabled]:checked ~ .active, .question.or-appearance-compact-2 .option-wrapper > label input[disabled]:checked ~ .active:hover, .question.or-appearance-compact-2 .option-wrapper > label input[readonly]:checked ~ .active, .question.or-appearance-compact-2 .option-wrapper > label input[readonly]:checked ~ .active:hover {
       border-color: #555555; }
     .question.or-appearance-compact-2 .option-wrapper > label input:checked ~ .active, .question.or-appearance-compact-2 .option-wrapper > label input:checked ~ .active:hover {
-      border-color: #556B2F; }
+      border-color: #ce4f07; }
     .question.or-appearance-compact-2 .option-wrapper > label input:focus ~ .active {
       outline: 0;
       -webkit-box-shadow: 0 0 0 1px #66afe9, 0 0 8px rgba(102, 175, 233, 0.6);
@@ -3310,7 +3311,7 @@ table th[class*="col-"] {
     .question.or-appearance-compact-3 .option-wrapper > label input[disabled]:checked ~ .active, .question.or-appearance-compact-3 .option-wrapper > label input[disabled]:checked ~ .active:hover, .question.or-appearance-compact-3 .option-wrapper > label input[readonly]:checked ~ .active, .question.or-appearance-compact-3 .option-wrapper > label input[readonly]:checked ~ .active:hover {
       border-color: #555555; }
     .question.or-appearance-compact-3 .option-wrapper > label input:checked ~ .active, .question.or-appearance-compact-3 .option-wrapper > label input:checked ~ .active:hover {
-      border-color: #556B2F; }
+      border-color: #ce4f07; }
     .question.or-appearance-compact-3 .option-wrapper > label input:focus ~ .active {
       outline: 0;
       -webkit-box-shadow: 0 0 0 1px #66afe9, 0 0 8px rgba(102, 175, 233, 0.6);
@@ -3363,7 +3364,7 @@ table th[class*="col-"] {
     .question.or-appearance-compact-4 .option-wrapper > label input[disabled]:checked ~ .active, .question.or-appearance-compact-4 .option-wrapper > label input[disabled]:checked ~ .active:hover, .question.or-appearance-compact-4 .option-wrapper > label input[readonly]:checked ~ .active, .question.or-appearance-compact-4 .option-wrapper > label input[readonly]:checked ~ .active:hover {
       border-color: #555555; }
     .question.or-appearance-compact-4 .option-wrapper > label input:checked ~ .active, .question.or-appearance-compact-4 .option-wrapper > label input:checked ~ .active:hover {
-      border-color: #556B2F; }
+      border-color: #ce4f07; }
     .question.or-appearance-compact-4 .option-wrapper > label input:focus ~ .active {
       outline: 0;
       -webkit-box-shadow: 0 0 0 1px #66afe9, 0 0 8px rgba(102, 175, 233, 0.6);
@@ -3416,7 +3417,7 @@ table th[class*="col-"] {
     .question.or-appearance-compact-5 .option-wrapper > label input[disabled]:checked ~ .active, .question.or-appearance-compact-5 .option-wrapper > label input[disabled]:checked ~ .active:hover, .question.or-appearance-compact-5 .option-wrapper > label input[readonly]:checked ~ .active, .question.or-appearance-compact-5 .option-wrapper > label input[readonly]:checked ~ .active:hover {
       border-color: #555555; }
     .question.or-appearance-compact-5 .option-wrapper > label input:checked ~ .active, .question.or-appearance-compact-5 .option-wrapper > label input:checked ~ .active:hover {
-      border-color: #556B2F; }
+      border-color: #ce4f07; }
     .question.or-appearance-compact-5 .option-wrapper > label input:focus ~ .active {
       outline: 0;
       -webkit-box-shadow: 0 0 0 1px #66afe9, 0 0 8px rgba(102, 175, 233, 0.6);
@@ -3469,7 +3470,7 @@ table th[class*="col-"] {
     .question.or-appearance-compact-6 .option-wrapper > label input[disabled]:checked ~ .active, .question.or-appearance-compact-6 .option-wrapper > label input[disabled]:checked ~ .active:hover, .question.or-appearance-compact-6 .option-wrapper > label input[readonly]:checked ~ .active, .question.or-appearance-compact-6 .option-wrapper > label input[readonly]:checked ~ .active:hover {
       border-color: #555555; }
     .question.or-appearance-compact-6 .option-wrapper > label input:checked ~ .active, .question.or-appearance-compact-6 .option-wrapper > label input:checked ~ .active:hover {
-      border-color: #556B2F; }
+      border-color: #ce4f07; }
     .question.or-appearance-compact-6 .option-wrapper > label input:focus ~ .active {
       outline: 0;
       -webkit-box-shadow: 0 0 0 1px #66afe9, 0 0 8px rgba(102, 175, 233, 0.6);
@@ -3522,7 +3523,7 @@ table th[class*="col-"] {
     .question.or-appearance-compact-7 .option-wrapper > label input[disabled]:checked ~ .active, .question.or-appearance-compact-7 .option-wrapper > label input[disabled]:checked ~ .active:hover, .question.or-appearance-compact-7 .option-wrapper > label input[readonly]:checked ~ .active, .question.or-appearance-compact-7 .option-wrapper > label input[readonly]:checked ~ .active:hover {
       border-color: #555555; }
     .question.or-appearance-compact-7 .option-wrapper > label input:checked ~ .active, .question.or-appearance-compact-7 .option-wrapper > label input:checked ~ .active:hover {
-      border-color: #556B2F; }
+      border-color: #ce4f07; }
     .question.or-appearance-compact-7 .option-wrapper > label input:focus ~ .active {
       outline: 0;
       -webkit-box-shadow: 0 0 0 1px #66afe9, 0 0 8px rgba(102, 175, 233, 0.6);
@@ -3575,7 +3576,7 @@ table th[class*="col-"] {
     .question.or-appearance-compact-8 .option-wrapper > label input[disabled]:checked ~ .active, .question.or-appearance-compact-8 .option-wrapper > label input[disabled]:checked ~ .active:hover, .question.or-appearance-compact-8 .option-wrapper > label input[readonly]:checked ~ .active, .question.or-appearance-compact-8 .option-wrapper > label input[readonly]:checked ~ .active:hover {
       border-color: #555555; }
     .question.or-appearance-compact-8 .option-wrapper > label input:checked ~ .active, .question.or-appearance-compact-8 .option-wrapper > label input:checked ~ .active:hover {
-      border-color: #556B2F; }
+      border-color: #ce4f07; }
     .question.or-appearance-compact-8 .option-wrapper > label input:focus ~ .active {
       outline: 0;
       -webkit-box-shadow: 0 0 0 1px #66afe9, 0 0 8px rgba(102, 175, 233, 0.6);
@@ -3628,7 +3629,7 @@ table th[class*="col-"] {
     .question.or-appearance-compact-9 .option-wrapper > label input[disabled]:checked ~ .active, .question.or-appearance-compact-9 .option-wrapper > label input[disabled]:checked ~ .active:hover, .question.or-appearance-compact-9 .option-wrapper > label input[readonly]:checked ~ .active, .question.or-appearance-compact-9 .option-wrapper > label input[readonly]:checked ~ .active:hover {
       border-color: #555555; }
     .question.or-appearance-compact-9 .option-wrapper > label input:checked ~ .active, .question.or-appearance-compact-9 .option-wrapper > label input:checked ~ .active:hover {
-      border-color: #556B2F; }
+      border-color: #ce4f07; }
     .question.or-appearance-compact-9 .option-wrapper > label input:focus ~ .active {
       outline: 0;
       -webkit-box-shadow: 0 0 0 1px #66afe9, 0 0 8px rgba(102, 175, 233, 0.6);
@@ -3681,7 +3682,7 @@ table th[class*="col-"] {
     .question.or-appearance-compact-10 .option-wrapper > label input[disabled]:checked ~ .active, .question.or-appearance-compact-10 .option-wrapper > label input[disabled]:checked ~ .active:hover, .question.or-appearance-compact-10 .option-wrapper > label input[readonly]:checked ~ .active, .question.or-appearance-compact-10 .option-wrapper > label input[readonly]:checked ~ .active:hover {
       border-color: #555555; }
     .question.or-appearance-compact-10 .option-wrapper > label input:checked ~ .active, .question.or-appearance-compact-10 .option-wrapper > label input:checked ~ .active:hover {
-      border-color: #556B2F; }
+      border-color: #ce4f07; }
     .question.or-appearance-compact-10 .option-wrapper > label input:focus ~ .active {
       outline: 0;
       -webkit-box-shadow: 0 0 0 1px #66afe9, 0 0 8px rgba(102, 175, 233, 0.6);
@@ -3990,7 +3991,7 @@ table th[class*="col-"] {
   background-color: #fffded; }
 
 .or-appearance-likert.focus .option-wrapper > label:first-of-type .option-label::after, .or-appearance-likert.focus .option-wrapper > label:last-of-type .option-label::after {
-  background-color: #ebf0ec; }
+  background-color: #fffad4; }
 
 .or[dir="rtl"] .or-appearance-likert .option-wrapper > label {
   margin-right: 0; }
@@ -4012,7 +4013,7 @@ table th[class*="col-"] {
 .or-repeat .or-appearance-likert .option-wrapper > label:last-of-type .option-label::after,
 .or-repeat .or-appearance-likert .option-wrapper > label input[type=radio],
 .or-repeat .or-appearance-likert .option-wrapper > label input[type=checkbox] {
-  background-color: #ebf0ec; }
+  background-color: #fef5ef; }
 
 .or-horizontal-initialized .option-wrapper {
   /*IE10*/
@@ -4166,7 +4167,7 @@ table th[class*="col-"] {
   max-width: 70%;
   max-height: 300px; }
   .or-big-image img {
-    border: 2px solid #556B2F;
+    border: 2px solid #ce4f07;
     max-width: 100%; }
   .or-big-image.open {
     /*IE10*/
@@ -4307,8 +4308,8 @@ table th[class*="col-"] {
     opacity: 0.75 !important; }
   .image-map svg path[id][or-selected],
   .image-map svg g[id][or-selected] {
-    fill: #556B2F !important;
-    stroke: #556B2F !important; }
+    fill: #ce4f07 !important;
+    stroke: #ce4f07 !important; }
 
 .image-map__ui {
   height: 2em;
@@ -4495,7 +4496,7 @@ table th[class*="col-"] {
   color: white;
   text-decoration: none;
   outline: 0;
-  background-color: #556B2F; }
+  background-color: #ce4f07; }
 
 .dropdown-menu > .disabled > a, .dropdown-menu > .disabled > a:hover, .dropdown-menu > .disabled > a:focus {
   color: #999999; }
@@ -5158,7 +5159,7 @@ h4 + .or-repeat {
   .question.readonly {
     background: #eeeeee; }
   .question.focus {
-    background: #ebf0ec; }
+    background: #fffad4; }
   .question .required {
     position: absolute;
     top: -2px;
@@ -5248,7 +5249,7 @@ h4 + .or-repeat {
 .or-repeat {
   margin: 0;
   padding: 0;
-  background: #ebf0ec; }
+  background: #fef5ef; }
   .or-repeat .repeat-number {
     position: absolute;
     left: 100%;
@@ -5975,9 +5976,3 @@ h4 + .or-repeat {
 @media print, screen and (min-width: 1100px) and (max-width: 1200px) {
   .paper .or .form-logo {
     margin-top: 0; } }
-
-/* Matrix */
-
-.or-appearance-matrix h4 {
-    display:none;
-}

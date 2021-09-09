@@ -17,6 +17,10 @@
       <excludeFolder url="file://$MODULE_DIR$/../subscribers" />
       <excludeFolder url="file://$MODULE_DIR$/../surveyKPI" />
       <excludeFolder url="file://$MODULE_DIR$/../surveyMobileAPI" />
+      <excludeFolder url="file://$MODULE_DIR$/../odata" />
+      <excludeFolder url="file://$MODULE_DIR$/../billingBatch" />
+      <excludeFolder url="file://$MODULE_DIR$/../tasks" />
+      <excludeFolder url="file://$MODULE_DIR$/../smap" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
