@@ -805,7 +805,7 @@ CREATE TABLE forward (
 	remote_user text,
 	remote_password text,
 	remote_host text,
-	notify_details	text	,			-- JSON string
+	notify_details text,			-- JSON string
 	tg_id integer default 0,			-- Reminder notifications
 	period text,						-- Reminder notifications
 	update_survey text references survey(ident) on delete cascade,
