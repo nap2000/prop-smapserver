@@ -15,16 +15,18 @@ destfile="$destdir/$filename.$ext"
 destthumbnail="$destdir/thumbs/$filename.$ext.jpg"
 
 
+export PATH="$PATH:/usr/local/bin:/usr/bin"
+
 # If content type is "image" create a thumbnail
 type=`echo $contenttype | cut -c 1-5`
 if [ x"$type" = ximage ]; then
 	echo "--------------------------------------"
 	echo "Creating thumbnails $destthumbnail from $destfile"
 	rm $destthumbnail
-	sh -c "/usr/bin/convert -thumbnail 100 -background white -alpha remove $destfile $destthumbnail"
+	sh -c "convert -thumbnail 100 -background white -alpha remove $destfile $destthumbnail"
 # Process the image file with a null processing action to address a bug in iText where some malformed jpegs can't be shown
 	echo "processing image file for iText hack also set background white"
-	sh -c "/usr/bin/convert -background white -alpha remove $destfile $destfile"
+	sh -c "convert -background white -alpha remove $destfile $destfile"
 fi
 
 #If content type is "video" create a thumbnail 
@@ -32,7 +34,7 @@ if [ x"$type" = xvideo ]; then
 	echo "--------------------------------------"
 	echo "Creating thumbnails $destthumbnail from $destfile"
 	rm $destthumbnail
-	sh -c "/usr/bin/ffmpeg -i $destfile -vf scale=-1:100  $destthumbnail"
+	sh -c "ffmpeg -i $destfile -vf scale=-1:100  $destthumbnail"
 fi
 
 # If there is an s3 bucket available then send files to it
@@ -45,11 +47,11 @@ if [ -f /smap/settings/bucket ]; then
         if [ -f  $destfile ]; then
                 relPath=${destfile#"$prefix"}
                 awsPath="s3://`cat /smap/settings/bucket`$relPath"
-                /usr/bin/aws s3 --region $region cp $destfile $awsPath
+                aws s3 --region $region cp $destfile $awsPath
         fi
         if [ -f  $destthumbnail ]; then
                 relPath=${destthumbnail#"$prefix"}
                 awsPath="s3://`cat /smap/settings/bucket`$relPath"
-                /usr/bin/aws s3 --region $region cp $destthumbnail $awsPath
+                aws s3 --region $region cp $destthumbnail $awsPath
         fi
 fi
