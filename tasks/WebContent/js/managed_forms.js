@@ -983,6 +983,7 @@ require([
         }
 
         var tz = globals.gTimezone;
+        var sId = globals.gCurrentSurvey;
 
         data = getTableData(globals.gMainTable, gTasks.cache.currentData.schema.columns, format);
 
@@ -1010,6 +1011,23 @@ require([
                 subForm = undefined;
             }
         }
+        if(!subForm) {
+            // Check that we have not drilled down
+            var drillDownState;
+
+            if(gDrillDownStack.length > 0) {
+                drillDownState = gDrillDownStack[gDrillDownStack.length  - 1];
+            }
+
+            if(drillDownState) {
+                sId = drillDownState.survey;
+
+                // Set subform
+                if(drillDownState.type === "sub_form") {
+                    subForm = drillDownState.form;
+                }
+            }
+        }
 
         if (format !== "image") {
 
@@ -1017,7 +1035,7 @@ require([
                 chartData = chart.getXLSData(alldata);
             }
 
-            generateFile(url, filename, format, mime, data, globals.gCurrentSurvey, groupSurvey, title, project, charts, chartData,
+            generateFile(url, filename, format, mime, data, sId, groupSurvey, title, project, charts, chartData,
                 settings,
                 tz,
                 subForm);      // formName
@@ -1040,7 +1058,7 @@ require([
                     charts.push(chart);
                     countImages--;
                     if (countImages <= 0) {
-                        generateFile(url, filename, format, mime, undefined, globals.gCurrentSurvey,
+                        generateFile(url, filename, format, mime, undefined, sId,
                             groupSurvey, title, project,
                             charts, chartData, settings, tz, subForm);
                     }
