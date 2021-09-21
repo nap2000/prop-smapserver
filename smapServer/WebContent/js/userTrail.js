@@ -32,16 +32,11 @@ requirejs.config({
     paths: {
      	app: '../app',
     	i18n: 'i18n',
-    	jquery: [
-    	       '//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min',
-    	       'jquery-2.1.1'
-    	       ],
     	modernizr: 'modernizr',
     	lang_location: '..'
     },
     shim: {
     	'app/common': ['jquery'],
-    	'bootstrap.min': ['jquery'],
     	'bootstrap-datetimepicker.min': ['moment']
     	}
     });
@@ -50,13 +45,12 @@ requirejs.config({
 require([
          'jquery', 
          'app/common',
-         'bootstrap.min', 
          'app/localise',
          'app/globals',
          'moment',
          'bootstrap-datetimepicker.min'
          
-         ], function($, common, bootstrap, localise, globals, moment) {
+         ], function($, common, localise, globals, moment) {
 
 var gOverlayHasFeature;
 var gTrailData;
@@ -117,7 +111,7 @@ var trailStyle = new ol.style.Style({
 $(document).ready(function() {
 
     setCustomUserTrail();			// Apply custom javascript
-	setupUserProfile();
+	setupUserProfile(true);
 	localise.setlang();
 	$('.date').prop("title", localise.set["c_lt"]);
 		
@@ -167,6 +161,27 @@ $(document).ready(function() {
 		getData();
  	 });
 
+	$('#exportMenu').click(function(e) {
+		e.preventDefault();
+
+		var startDate = $('#startDate').data("DateTimePicker").date().startOf('day'),
+			endDate = $('#endDate').data("DateTimePicker").date().endOf('day');	// Get end of displayed date
+
+		var startUtc = moment.utc(startDate),
+			endUtc = moment.utc(endDate);
+
+		var url = '/surveyKPI/usertrail/export' +
+			'?userId=' + $('#user_list option:selected').val() +
+			'&startDate=' + startUtc.valueOf() +
+			'&endDate=' + endUtc.valueOf() +
+			'&format=kml';
+
+		downloadFile(url);
+		$('#info').html(localise.set["msg_ds_s"]);
+		setTimeout(function () {
+			$('#info').html("");
+		}, 2000);
+	});
 
 	// Add the map	
     gMap = new ol.Map({
@@ -253,19 +268,6 @@ $(document).ready(function() {
         getData();
     });
     
-	// From: http://stackoverflow.com/questions/20247945/bootstrap-3-navbar-dynamic-collapse
-    /*
-	function autocollapse() {
-	    var $navbar = $('.navbar');
-	    $navbar.removeClass('collapsed'); 
-	    if($navbar.innerHeight() > 60) // check if we've got 2 lines
-	        $navbar.addClass('collapsed'); // force collapse mode
-	}
-
-	$(document).on('ready', autocollapse);
-	$(window).on('resize', autocollapse);
-	*/
-    
 });
 
 
@@ -299,7 +301,8 @@ function updateUserList(users, addAll) {
 	var $userSelect = $('.user_list'),
 		i, 
 		h = [],
-		idx = -1;
+		idx = -1,
+		updateCurrentProject;
 	
 	if(addAll) {
 		h[++idx] = '<option value="0">All</option>';
@@ -311,8 +314,6 @@ function updateUserList(users, addAll) {
 		h[++idx] = '">';
 		h[++idx] = users[i].name;
 		h[++idx] = '</option>';
-		
-		
 	}
 	$userSelect.empty().append(h.join(''));
 }

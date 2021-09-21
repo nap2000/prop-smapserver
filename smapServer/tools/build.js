@@ -58,7 +58,7 @@
         },
         {
             name: '../userTrail',
-	    exclude: [ 'ol3/ol']
+	    exclude: ['jquery', 'bootstrap', 'ol3/ol']
         }
 
     ]
