@@ -537,6 +537,12 @@ require([
 						h[++idx] = item.name;
 						h[++idx] = '</option>';
 					}
+
+					if(data.length > 0) {
+						$('#m_edit, #m_delete').removeClass("disabled");
+					} else {
+						$('#m_edit, #m_delete').addClass("disabled");
+					}
 				}
 
 				$mailout.empty().append(h.join(''));
