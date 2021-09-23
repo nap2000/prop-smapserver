@@ -421,3 +421,5 @@ alter table dashboard_settings add column ds_selected_geom_question text;
 alter table log add column server text;
 alter table log_archive add column server text;
 
+alter table mailout add column multiple_select boolean;
+
