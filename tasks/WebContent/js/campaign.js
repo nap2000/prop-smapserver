@@ -267,12 +267,14 @@ require([
 			$('#mo_name').val(gMailouts[gCurrentMailOutIdx].name);
 			$('#mo_subject').val(gMailouts[gCurrentMailOutIdx].subject);
 			$('#mo_content').val(gMailouts[gCurrentMailOutIdx].content);
+			$('#mo_ms').prop('checked', gMailouts[gCurrentMailOutIdx].ms);
 			gMailoutEditIdx = gCurrentMailOutIdx;
 		} else {
 			// new
 			$('#mo_name').val("");
 			$('#mo_subject').val("");
 			$('#mo_content').val("");
+			$('#mo_ms').prop('checked', false);
 			gMailoutEditIdx = -1;
 		}
 
@@ -299,6 +301,7 @@ require([
 		mailout.name = $('#mo_name').val();
 		mailout.subject = $('#mo_subject').val();
 		mailout.content = $('#mo_content').val();
+		mailout.ms = $('#mo_ms').prop('checked');
 
 		/*
 		 * Validation
@@ -405,6 +408,7 @@ require([
 
 			$('#mo_subject_view').val(gMailouts[gCurrentMailOutIdx].subject);
 			$('#mo_content_view').val(gMailouts[gCurrentMailOutIdx].content);
+			$('#mo_ms_view').prop('checked', gMailouts[gCurrentMailOutIdx].ms);
 
 			var url = "/api/v1/mailout/" + gMailouts[gCurrentMailOutIdx].id + "/emails?dt=true";
 			if (table) {
@@ -437,6 +441,7 @@ require([
 
 		$('#mo_subject_view').val("");
 		$('#mo_content_view').val("");
+		$('#mo_ms_view').prop('checked',false);
 	}
 
 	/*
