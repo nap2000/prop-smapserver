@@ -1342,6 +1342,7 @@ create TABLE mailout (
 	name text,						-- Name for the mail out
 	content text,
 	subject text,
+	multiple_select boolean,
 	created TIMESTAMP WITH TIME ZONE,
 	modified TIMESTAMP WITH TIME ZONE
 	);
