@@ -1377,7 +1377,7 @@ define({
     "mo_exp": "This survey form has expired",
     "mo_del_done": "This survey form has been deleted",
     "mo_se": "System Error",
-    "mo_del": "Are you sure that you want to delete mailout \"%s1\".  Recipients who have already been sent emails will still be able to respond. ",
+    "mo_del": "Are you sure that you want to delete mailout \"%s1\".  Recipients who have already been sent emails will no longer be able to respond. ",
     "mo_blocked": "This survey form has been blocked.  Try again later or contact the administrator to unblock",
     "mo_import": "Import Emails",
     "mo_export": "Export Emails",
