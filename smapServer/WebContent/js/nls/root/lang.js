@@ -1385,6 +1385,7 @@ define({
     "mo_content": "Email Content",
     "mo_sent": "Sent",
     "mo_sd": "Status Details",
+    "mo_ms": "Multiple Submissions",
     "mo_send": "Are you sure you are ready to send the emails?",
     "mo_gen": "Are you sure you are want to generate the links now?  They are created automatically when you use the email unsent button however you can generate them now if you want to send them via a different channel. Once created the links will expire in 30 days.",
 
