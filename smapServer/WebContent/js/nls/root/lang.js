@@ -1387,7 +1387,7 @@ define({
     "mo_sd": "Status Details",
     "mo_ms": "Multiple Submissions",
     "mo_send": "Are you sure you are ready to send the emails?",
-    "mo_gen": "Are you sure you are want to generate the links now?  They are created automatically when you use the email unsent button however you can generate them now if you want to send them via a0 different channel. iFor single submission links, once created they will expire in 30 days.",
+    "mo_gen": "Are you sure you are want to generate the links now?  They are created automatically when you use the email unsent button however you can generate them now if you want to send them via a0 different channel. For single submission links, once created they will expire in 30 days.",
 
     // AWS Services
     "svc_at": "Auto Translate",
