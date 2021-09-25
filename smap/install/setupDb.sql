@@ -1362,6 +1362,7 @@ create TABLE mailout_people (
 	status_details text,
 	initial_data text,
 	link text,
+	user_ident text,
 	processed TIMESTAMP WITH TIME ZONE,	-- Time converted into a message
 	status_updated TIMESTAMP WITH TIME ZONE	
 	);

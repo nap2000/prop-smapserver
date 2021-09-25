@@ -422,4 +422,5 @@ alter table log add column server text;
 alter table log_archive add column server text;
 
 alter table mailout add column multiple_submit boolean;
+alter table mailout_people add column user_ident text;
 

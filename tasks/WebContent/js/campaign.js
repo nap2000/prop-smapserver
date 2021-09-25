@@ -267,7 +267,7 @@ require([
 			$('#mo_name').val(gMailouts[gCurrentMailOutIdx].name);
 			$('#mo_subject').val(gMailouts[gCurrentMailOutIdx].subject);
 			$('#mo_content').val(gMailouts[gCurrentMailOutIdx].content);
-			$('#mo_ms').prop('checked', gMailouts[gCurrentMailOutIdx].ms);
+			$('#mo_ms').prop('checked', gMailouts[gCurrentMailOutIdx].multiple_submit);
 			gMailoutEditIdx = gCurrentMailOutIdx;
 		} else {
 			// new
@@ -301,7 +301,7 @@ require([
 		mailout.name = $('#mo_name').val();
 		mailout.subject = $('#mo_subject').val();
 		mailout.content = $('#mo_content').val();
-		mailout.ms = $('#mo_ms').prop('checked');
+		mailout.multiple_submit = $('#mo_ms').prop('checked');
 
 		/*
 		 * Validation
@@ -408,7 +408,7 @@ require([
 
 			$('#mo_subject_view').val(gMailouts[gCurrentMailOutIdx].subject);
 			$('#mo_content_view').val(gMailouts[gCurrentMailOutIdx].content);
-			$('#mo_ms_view').prop('checked', gMailouts[gCurrentMailOutIdx].ms);
+			$('#mo_ms_view').prop('checked', gMailouts[gCurrentMailOutIdx].multiple_submit);
 
 			var url = "/api/v1/mailout/" + gMailouts[gCurrentMailOutIdx].id + "/emails?dt=true";
 			if (table) {
