@@ -135,8 +135,34 @@
 			<div id="info" class="alert alert-success"></div>
 		</div>
 	</div>	<!-- End of row -->
-
 </div>
 
+<div id="trail_export_popup" class="modal" tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title lang" data-lang="m_export"></h5>
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group row">
+						<label for="max_point_separation" data-lang="ut_mps" class="lang col-sm-4 control-label">mps</label>
+						<div class="col-sm-5">
+							<input type="number" id="max_point_separation">
+						</div>
+						<span class="col-sm-2 lang text-left" data-lang="c_meters">
+					</div>
+				</form>
+
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="trail_export_save" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_create">create</button>
+			</div>
+		</div>
+	</div>
+</div>
 </body>
 </html>
