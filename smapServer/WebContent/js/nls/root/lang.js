@@ -362,6 +362,7 @@ define({
     "c_external": "External",
     "c_preview": "Preview",
     "c_size": "Size",
+    "c_meters": "Meters",
 
     // File Types
     "ft": "File Type",
@@ -1024,6 +1025,9 @@ define({
     "mf_hc": "Hide Controls",
     "mf_ts": "Table Settings",
 
+    // User trail
+    "ut_mps": "Max point separation to include in a single line",
+    "ut_mps_err": "Max point separation must be greater than 0",
 
     // Logout
     "lo_back": "Back",
