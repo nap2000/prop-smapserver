@@ -23,254 +23,267 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 var gUserLocale = navigator.language;
 if (Modernizr.localstorage) {
 	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
+}
 
 requirejs.config({
-    baseUrl: 'js/libs',
-    locale: gUserLocale,
-    waitSeconds: 0,
-    paths: {
-     	app: '../app',
-    	i18n: 'i18n',
-    	modernizr: 'modernizr',
-    	lang_location: '..'
-    },
-    shim: {
-    	'app/common': ['jquery'],
-    	'bootstrap-datetimepicker.min': ['moment']
-    	}
-    });
+	baseUrl: 'js/libs',
+	locale: gUserLocale,
+	waitSeconds: 0,
+	paths: {
+		app: '../app',
+		i18n: 'i18n',
+		modernizr: 'modernizr',
+		lang_location: '..'
+	},
+	shim: {
+		'app/common': ['jquery'],
+		'bootstrap-datetimepicker.min': ['moment']
+	}
+});
 
 
 require([
-         'jquery', 
-         'app/common',
-         'app/localise',
-         'app/globals',
-         'moment',
-         'bootstrap-datetimepicker.min'
-         
-         ], function($, common, localise, globals, moment) {
+	'jquery',
+	'app/common',
+	'app/localise',
+	'app/globals',
+	'moment',
+	'bootstrap-datetimepicker.min'
 
-var gOverlayHasFeature;
-var gTrailData;
-var gSurveys = [];
-var gTrailSource;
-var gSurveyLocations;
-var gSurveyLocationLayer;
-var gSurveyLocationSource;
-var gTrailLayer;
-var featureOverlay;
-var overlaySource;
-var gMap;
-var point = null;
-var line = null;
-var gTime = {
-	  start: Infinity,
-	  stop: -Infinity,
-	  duration: 0
+], function($, common, localise, globals, moment) {
+
+	var gOverlayHasFeature;
+	var gTrailData;
+	var gSurveys = [];
+	var gTrailSource;
+	var gSurveyLocations;
+	var gSurveyLocationLayer;
+	var gSurveyLocationSource;
+	var gTrailLayer;
+	var featureOverlay;
+	var overlaySource;
+	var gMap;
+	var point = null;
+	var line = null;
+	var gMps = 200;
+	var gTime = {
+		start: Infinity,
+		stop: -Infinity,
+		duration: 0
 	};
 
 // Style for survey locations
-var iconStyle = new ol.style.Style({
-	  image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
-	    anchor: [0.5, 0.5],
-	    anchorXUnits: 'fraction',
-	    anchorYUnits: 'fraction',
-	    height: 36,
-	    width: 36,
-	    opacity: 0.75,
-	    src: 'images/survey.png'
-	  }))
+	var iconStyle = new ol.style.Style({
+		image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+			anchor: [0.5, 0.5],
+			anchorXUnits: 'fraction',
+			anchorYUnits: 'fraction',
+			height: 36,
+			width: 36,
+			opacity: 0.75,
+			src: 'images/survey.png'
+		}))
 	});
 
 // Style for selected points
-var imageStyle = new ol.style.Circle({
-	  radius: 5,
-	  fill: null,
-	  stroke: new ol.style.Stroke({
-	    color: 'rgba(255,0,0,0.9)',
-	    width: 1
-	  })
+	var imageStyle = new ol.style.Circle({
+		radius: 5,
+		fill: null,
+		stroke: new ol.style.Stroke({
+			color: 'rgba(255,0,0,0.9)',
+			width: 1
+		})
 	});
 
 // Style for line to selected points
-var strokeStyle = new ol.style.Stroke({
-	color: 'rgba(255,0,0,0.9)',
-	width: 3
-});
+	var strokeStyle = new ol.style.Stroke({
+		color: 'rgba(255,0,0,0.9)',
+		width: 3
+	});
 
 //Style for user trail
-var trailStyle = new ol.style.Style({
+	var trailStyle = new ol.style.Style({
 		stroke: new ol.style.Stroke({
 			color: 'rgba(20,20,237,0.8)',
 			width: 3
 		})
-});
+	});
 
-$(document).ready(function() {
+	$(document).ready(function() {
 
-    setCustomUserTrail();			// Apply custom javascript
-	setupUserProfile(true);
-	localise.setlang();
-	$('.date').prop("title", localise.set["c_lt"]);
-		
-	// Set up the start and end dates with date picker
-	$('#startDate').datetimepicker({
-		locale: gUserLocale || 'en',
-		useCurrent: false
-	}).data("DateTimePicker").date(moment());
-	
-	$('#endDate').datetimepicker({
-		locale: gUserLocale || 'en',
-		useCurrent: false
-	}).data("DateTimePicker").date(moment());
-	
-	// Set base layers
-	var osm = new ol.layer.Tile({source: new ol.source.OSM()}); 
-	//var osmVisible = new ol.dom.Input(document.getElementById('osmVisible'));
-	//osmVisible.bindTo('checked', base, 'osmVisible');
-	
-	// Source and Layer objects for gps points
-	gTrailSource = new ol.source.Vector({
+		setCustomUserTrail();			// Apply custom javascript
+		setupUserProfile(true);
+		localise.setlang();
+		$('.date').prop("title", localise.set["c_lt"]);
+
+		// Set up the start and end dates with date picker
+		$('#startDate').datetimepicker({
+			locale: gUserLocale || 'en',
+			useCurrent: false
+		}).data("DateTimePicker").date(moment());
+
+		$('#endDate').datetimepicker({
+			locale: gUserLocale || 'en',
+			useCurrent: false
+		}).data("DateTimePicker").date(moment());
+
+		// Set base layers
+		var osm = new ol.layer.Tile({source: new ol.source.OSM()});
+		//var osmVisible = new ol.dom.Input(document.getElementById('osmVisible'));
+		//osmVisible.bindTo('checked', base, 'osmVisible');
+
+		// Source and Layer objects for gps points
+		gTrailSource = new ol.source.Vector({
 		});
-	
-	gTrailLayer = new ol.layer.Vector ({
-		source: gTrailSource
-	});
-	
-	// Source and Layer objects for survey locations
-	gSurveyLocationSource = new ol.source.Vector({
-		features: gSurveys
+
+		gTrailLayer = new ol.layer.Vector ({
+			source: gTrailSource
 		});
-	
-	gSurveyLocationLayer = new ol.layer.Vector ({
-		source: gSurveyLocationSource,
-		style: iconStyle
+
+		// Source and Layer objects for survey locations
+		gSurveyLocationSource = new ol.source.Vector({
+			features: gSurveys
+		});
+
+		gSurveyLocationLayer = new ol.layer.Vector ({
+			source: gSurveyLocationSource,
+			style: iconStyle
+		});
+
+		getLoggedInUser(getUserList, false, true, undefined, false, true);
+
+		// Add responses to changing parameters
+		$('#user_list').change(function() {
+			getData();
+		});
+
+		// Add responses to changing parameters
+		$('#startDate,#endDate').on("dp.change", function(e) {
+			getData();
+		});
+
+		$('#exportMenu').click(function(e) {
+			e.preventDefault();
+			$('#max_point_separation').val(gMps);
+			$('#trail_export_popup').modal("show");
+		});
+
+		$('#trail_export_save').click(function(e) {
+			var startDate = $('#startDate').data("DateTimePicker").date().startOf('day'),
+				endDate = $('#endDate').data("DateTimePicker").date().endOf('day');	// Get end of displayed date
+
+			var startUtc = moment.utc(startDate),
+				endUtc = moment.utc(endDate);
+
+			/*
+			 * Validate
+			 */
+			gMps = $('#max_point_separation').val();
+			if(!gMps || gMps < 0) {
+				alert(localise.set["ut_mps_err"]);
+				return false;
+			}
+
+			var url = '/surveyKPI/usertrail/export' +
+				'?userId=' + $('#user_list option:selected').val() +
+				'&startDate=' + startUtc.valueOf() +
+				'&endDate=' + endUtc.valueOf() +
+				'&mps=' + gMps +
+				'&format=kml';
+
+			downloadFile(url);
+			$('#info').html(localise.set["msg_ds_s"]);
+			setTimeout(function () {
+				$('#info').html("");
+			}, 2000);
+		});
+
+		// Add the map
+		gMap = new ol.Map({
+			target: 'map',
+			layers: [osm, gTrailLayer, gSurveyLocationLayer],
+			view: new ol.View(
+				{
+					center: ol.proj.transform([0.0, 0.0], 'EPSG:4326', 'EPSG:3857'),
+					zoom: 1
+				}
+			)
+		});
+
+		// Overlay to highlight time of slider
+		overlaySource = new ol.source.Vector({});
+		featureOverlay = new ol.layer.Vector({
+			map: gMap,
+			source: overlaySource,
+			style: new ol.style.Style({
+				image: new ol.style.Circle({
+					radius: 5,
+					fill: new ol.style.Fill({
+						color: 'rgba(255,0,0,0.9)'
+					}),
+					stroke: null
+				})
+			})
+		});
+
+		$(gMap.getViewport()).on('click', function(evt) {
+
+			var coordinate = gMap.getEventCoordinate(evt.originalEvent);
+			displaySnap(coordinate);
+
+		});
+
+		gMap.on('postcompose', function(evt) {
+			var vectorContext = evt.vectorContext;
+			if (point !== null) {
+				vectorContext.setImageStyle(imageStyle);
+				vectorContext.drawPointGeometry(point);
+			}
+			if (line !== null) {
+				vectorContext.setFillStrokeStyle(null, strokeStyle);
+				vectorContext.drawLineStringGeometry(line);
+			}
+		});
+
+		// Enable tooltips
+		$('[data-toggle="tooltip"]').tooltip();
+
+		// Enable the time slider
+		$('#time').on('input', function(event) {
+
+			point = null;		// Clear any selected points
+			line = null;
+
+			var value = parseInt($(this).val(), 10) / 100;
+			var m = gTime.start + (gTime.duration * value);
+			gTrailSource.forEachFeature(function(feature) {
+				var geometry = /** @type {ol.geom.LineString} */ (feature.getGeometry());
+				var coordinate = geometry.getCoordinateAtM(m, true);
+				var highlight = feature.get('highlight');
+				if (highlight === undefined) {
+					highlight = new ol.Feature(new ol.geom.Point(coordinate));
+					feature.set('highlight', highlight);
+				} else {
+					highlight.getGeometry().setCoordinates(coordinate);
+				}
+				if(!gOverlayHasFeature) {
+					featureOverlay.getSource().addFeature(highlight);
+					gOverlayHasFeature = true;
+				}
+			});
+			gMap.render();
+
+			var date = new Date(m);	// Using Measure coordinate to store unix date
+			document.getElementById('info').innerHTML = date;
+
+		});
+
+		$('#refreshMenu').on('click', function(e) {
+			e.preventDefault();
+			getData();
+		});
+
 	});
-	
-	getLoggedInUser(getUserList, false, true, undefined, false, true);
-	
-	// Add responses to changing parameters
-	$('#user_list').change(function() {		
-		getData();
- 	 });
-	
-	// Add responses to changing parameters
-	$('#startDate,#endDate').on("dp.change", function(e) {
-		getData();
- 	 });
-
-	$('#exportMenu').click(function(e) {
-		e.preventDefault();
-
-		var startDate = $('#startDate').data("DateTimePicker").date().startOf('day'),
-			endDate = $('#endDate').data("DateTimePicker").date().endOf('day');	// Get end of displayed date
-
-		var startUtc = moment.utc(startDate),
-			endUtc = moment.utc(endDate);
-
-		var url = '/surveyKPI/usertrail/export' +
-			'?userId=' + $('#user_list option:selected').val() +
-			'&startDate=' + startUtc.valueOf() +
-			'&endDate=' + endUtc.valueOf() +
-			'&format=kml';
-
-		downloadFile(url);
-		$('#info').html(localise.set["msg_ds_s"]);
-		setTimeout(function () {
-			$('#info').html("");
-		}, 2000);
-	});
-
-	// Add the map	
-    gMap = new ol.Map({
-        target: 'map',
-        layers: [osm, gTrailLayer, gSurveyLocationLayer],
-        view: new ol.View(
-        		{
-        			center: ol.proj.transform([0.0, 0.0], 'EPSG:4326', 'EPSG:3857'),
-        			zoom: 1
-        		}
-        	)
-      });
-    
-    // Overlay to highlight time of slider
-	overlaySource = new ol.source.Vector({});
-    featureOverlay = new ol.layer.Vector({
-    	  map: gMap,
-		  source: overlaySource,
-    	  style: new ol.style.Style({
-    	    image: new ol.style.Circle({
-    	      radius: 5,
-    	      fill: new ol.style.Fill({
-    	        color: 'rgba(255,0,0,0.9)'
-    	      }),
-    	      stroke: null
-    	    })
-    	  })
-    	});
-    
-    $(gMap.getViewport()).on('click', function(evt) {
-    	
-    	var coordinate = gMap.getEventCoordinate(evt.originalEvent);   	  
-    	displaySnap(coordinate);
-    	  
-    });
-    
-    gMap.on('postcompose', function(evt) {
-    	  var vectorContext = evt.vectorContext;
-    	  if (point !== null) {
-    	    vectorContext.setImageStyle(imageStyle);
-    	    vectorContext.drawPointGeometry(point);
-    	  }
-    	  if (line !== null) {
-    	    vectorContext.setFillStrokeStyle(null, strokeStyle);
-    	    vectorContext.drawLineStringGeometry(line);
-    	  }
-    	});
-    
-    // Enable tooltips
-    $('[data-toggle="tooltip"]').tooltip();
-	
-    // Enable the time slider
-    $('#time').on('input', function(event) {
-    	
-    	point = null;		// Clear any selected points
-	    line = null;
-	    
-    	var value = parseInt($(this).val(), 10) / 100;
-    	var m = gTime.start + (gTime.duration * value);
-    	gTrailSource.forEachFeature(function(feature) {
-    		var geometry = /** @type {ol.geom.LineString} */ (feature.getGeometry());
-    	    var coordinate = geometry.getCoordinateAtM(m, true);
-    	    var highlight = feature.get('highlight');
-    	    if (highlight === undefined) {
-    	      highlight = new ol.Feature(new ol.geom.Point(coordinate));
-    	      feature.set('highlight', highlight);
-    	    } else {
-    	      highlight.getGeometry().setCoordinates(coordinate);
-    	    }
-    	    if(!gOverlayHasFeature) {
-    	    	featureOverlay.getSource().addFeature(highlight);
-    	    	gOverlayHasFeature = true;
-    	    }
-    	});
-    	gMap.render();
-    	  
-  	   	var date = new Date(m);	// Using Measure coordinate to store unix date
-  	    document.getElementById('info').innerHTML = date;
-  	    
-    });
-
-    $('#refreshMenu').on('click', function(e) {
-        e.preventDefault();
-        getData();
-    });
-    
-});
-
-
 
 	function getUserList() {
 
@@ -296,111 +309,111 @@ $(document).ready(function() {
 		});
 	}
 
-function updateUserList(users, addAll) {
+	function updateUserList(users, addAll) {
 
-	var $userSelect = $('.user_list'),
-		i, 
-		h = [],
-		idx = -1,
-		updateCurrentProject;
-	
-	if(addAll) {
-		h[++idx] = '<option value="0">All</option>';
-		updateCurrentProject = false;
+		var $userSelect = $('.user_list'),
+			i,
+			h = [],
+			idx = -1,
+			updateCurrentProject;
+
+		if(addAll) {
+			h[++idx] = '<option value="0">All</option>';
+			updateCurrentProject = false;
+		}
+		for(i = 0; i < users.length; i++) {
+			h[++idx] = '<option value="';
+			h[++idx] = users[i].id;
+			h[++idx] = '">';
+			h[++idx] = users[i].name;
+			h[++idx] = '</option>';
+		}
+		$userSelect.empty().append(h.join(''));
 	}
-	for(i = 0; i < users.length; i++) {
-		h[++idx] = '<option value="';
-		h[++idx] = users[i].id;
-		h[++idx] = '">';
-		h[++idx] = users[i].name;
-		h[++idx] = '</option>';
+
+	function getData() {
+
+		var startDate = $('#startDate').data("DateTimePicker").date().startOf('day'),
+			endDate = $('#endDate').data("DateTimePicker").date().endOf('day');	// Get end of displayed date
+
+		var startUtc = moment.utc(startDate),
+			endUtc = moment.utc(endDate);
+
+		getTrailData(globals.gCurrentProject, $('#user_list option:selected').val(), startUtc.valueOf(), endUtc.valueOf(), showUserTrail);
+
+
 	}
-	$userSelect.empty().append(h.join(''));
-}
-
-function getData() {
-	
-	var startDate = $('#startDate').data("DateTimePicker").date().startOf('day'),
-		endDate = $('#endDate').data("DateTimePicker").date().endOf('day');	// Get end of displayed date
-	
-	var startUtc = moment.utc(startDate),
-		endUtc = moment.utc(endDate);
-		
-	getTrailData(globals.gCurrentProject, $('#user_list option:selected').val(), startUtc.valueOf(), endUtc.valueOf(), showUserTrail);
 
 
-}
+	function showUserTrail(data) {
+		var i,
+			lineFeature,
+			coords = [];
 
+		gTrailData = data;
+		gTrailSource.clear();
 
-function showUserTrail(data) {
-	var i,
-		lineFeature,
-		coords = [];
+		// Add points
+		for(i = 0; i < gTrailData.features.length; i++) {
 
-	gTrailData = data;
-	gTrailSource.clear();
-	
-	// Add points
-	for(i = 0; i < gTrailData.features.length; i++) {
-		
-		gTrailData.features[i].coordinates.push(gTrailData.features[i].rawTime);	// Add attributes to Measure coordinate
-		coords.push(gTrailData.features[i].coordinates);
+			gTrailData.features[i].coordinates.push(gTrailData.features[i].rawTime);	// Add attributes to Measure coordinate
+			coords.push(gTrailData.features[i].coordinates);
+		}
+		if(coords.length > 0) {
+			var geometry = new ol.geom.LineString(coords, 'XYM');
+			var lineFeature = new ol.Feature({
+				geometry: geometry
+			});
+			lineFeature.setStyle(trailStyle);
+			gTrailSource.addFeature(lineFeature);
+
+			gTime.start = Math.min(gTime.start, geometry.getFirstCoordinate()[2]);
+			gTime.stop = Math.max(gTime.stop, geometry.getLastCoordinate()[2]);
+			gTime.duration = gTime.stop - gTime.start;
+		}
+
+		gMap.getView().fit(gTrailSource.getExtent(), gMap.getSize());
+
+		gMap.render();
 	}
-	if(coords.length > 0) {
-		var geometry = new ol.geom.LineString(coords, 'XYM');
-		var lineFeature = new ol.Feature({
-			geometry: geometry
-		});
-		lineFeature.setStyle(trailStyle);
-		gTrailSource.addFeature(lineFeature);
-		
-		gTime.start = Math.min(gTime.start, geometry.getFirstCoordinate()[2]);
-		gTime.stop = Math.max(gTime.stop, geometry.getLastCoordinate()[2]);
-		gTime.duration = gTime.stop - gTime.start;
-	}
-	
-	gMap.getView().fit(gTrailSource.getExtent(), gMap.getSize());
-
-	gMap.render();
-}
 
 // Show data for closes features
-var displaySnap = function(coordinate) {
-	
-	// Clear the slider
-	var overlays = featureOverlay.getFeatures(),
-		i;
-	for(i = 0; i < overlays.a.length; i++) {
-		featureOverlay.getSource().removeFeature(overlays.a[i]);
-	}
-	gOverlayHasFeature = false;
-	  
-	var closestFeature = gTrailSource.getClosestFeatureToCoordinate(coordinate);
-	var info = document.getElementById('info');
-	  
-	if (closestFeature === null) {
-	    point = null;
-	    line = null;
-	    info.innerHTML = '&nbsp;';
-	  } else {
-	    var geometry = closestFeature.getGeometry();
-	    var closestPoint = geometry.getClosestPoint(coordinate);
-	    if (point === null) {
-	      point = new ol.geom.Point(closestPoint);
-	    } else {
-	      point.setCoordinates(closestPoint);
-	    }
-	
-	    var date = new Date(closestPoint[2]);	// Using Z coordinate to store unix date
-	    info.innerHTML = date;
-	    var coordinates = [coordinate, [closestPoint[0], closestPoint[1]]];
-	    if (line === null) {
-	      line = new ol.geom.LineString(coordinates);
-	    } else {
-	      line.setCoordinates(coordinates);
-	    }
-	  }
-	  gMap.render();
+	var displaySnap = function(coordinate) {
+
+		// Clear the slider
+		var overlays = featureOverlay.getFeatures(),
+			i;
+		for(i = 0; i < overlays.a.length; i++) {
+			featureOverlay.getSource().removeFeature(overlays.a[i]);
+		}
+		gOverlayHasFeature = false;
+
+		var closestFeature = gTrailSource.getClosestFeatureToCoordinate(coordinate);
+		var info = document.getElementById('info');
+
+		if (closestFeature === null) {
+			point = null;
+			line = null;
+			info.innerHTML = '&nbsp;';
+		} else {
+			var geometry = closestFeature.getGeometry();
+			var closestPoint = geometry.getClosestPoint(coordinate);
+			if (point === null) {
+				point = new ol.geom.Point(closestPoint);
+			} else {
+				point.setCoordinates(closestPoint);
+			}
+
+			var date = new Date(closestPoint[2]);	// Using Z coordinate to store unix date
+			info.innerHTML = date;
+			var coordinates = [coordinate, [closestPoint[0], closestPoint[1]]];
+			if (line === null) {
+				line = new ol.geom.LineString(coordinates);
+			} else {
+				line.setCoordinates(coordinates);
+			}
+		}
+		gMap.render();
 	};
 });
 
