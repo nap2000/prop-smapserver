@@ -189,6 +189,7 @@ require([
 				'&startDate=' + startUtc.valueOf() +
 				'&endDate=' + endUtc.valueOf() +
 				'&mps=' + gMps +
+				'&filename=' + 'locations_' + $('#user_list option:selected').text() +
 				'&format=kml';
 
 			downloadFile(url);
