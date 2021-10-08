@@ -50,7 +50,8 @@ $(document).ready(function() {
 		params,
 		pArray = [],
 		param = [];
-	
+
+	setCustomUserForgottonPasswords();			// Apply custom javascript
 	localise.setlang();
 	$('#forgottenPasswordEmail').attr('data-bv-emailaddress-message', localise.set["msg_inv_email"]);
 	
