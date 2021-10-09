@@ -1606,13 +1606,13 @@ create TABLE linked_files_old (
 );
 ALTER TABLE linked_files_old OWNER TO ws;
 
-DROP SEQUENCE IF EXISTS background_reports_seq CASCADE;
-CREATE SEQUENCE background_reports_seq START 1;
-ALTER SEQUENCE background_reports_seq OWNER TO ws;
+DROP SEQUENCE IF EXISTS background_report_seq CASCADE;
+CREATE SEQUENCE background_report_seq START 1;
+ALTER SEQUENCE background_report_seq OWNER TO ws;
 
-DROP TABLE IF EXISTS background_reports;
-create TABLE background_reports (
-	id integer DEFAULT NEXTVAL('background_reports_seq') CONSTRAINT pk_background_reports PRIMARY KEY,
+DROP TABLE IF EXISTS background_report;
+create TABLE background_report (
+	id integer DEFAULT NEXTVAL('background_report_seq') CONSTRAINT pk_background_report PRIMARY KEY,
 	o_id integer,
 	u_id integer,		-- user
 	status text,        -- new || processing || completed || failed
@@ -1623,4 +1623,4 @@ create TABLE background_reports (
 	start_time TIMESTAMP WITH TIME ZONE,
 	end_time TIMESTAMP WITH TIME ZONE
 );
-ALTER TABLE background_reports OWNER TO ws;
+ALTER TABLE background_report OWNER TO ws;

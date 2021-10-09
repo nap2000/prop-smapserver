@@ -189,7 +189,8 @@ require([
 				return false;
 			}
 
-			var url = '/surveyKPI/usertrail/export' +
+			/* old
+			let url = '/surveyKPI/usertrail/export' +
 				'?userId=' + $('#user_list option:selected').val() +
 				'&startDate=' + startUtc.valueOf() +
 				'&endDate=' + endUtc.valueOf() +
@@ -198,10 +199,46 @@ require([
 				'&format=kml';
 
 			downloadFile(url);
-			$('#info').html(localise.set["msg_ds_s"]);
-			setTimeout(function () {
-				$('#info').html("");
-			}, 2000);
+			*/
+
+			let detailsObj = {
+				userId: $('#user_list option:selected').val(),
+				startDate: startUtc.valueOf(),
+				endDate: endUtc.valueOf(),
+				mps: gMps
+			};
+			let reportObj = {
+				report_name: 'locations_' + $('#user_list option:selected').text(),
+				report_type: 'locations_kml',
+				details: JSON.stringify(detailsObj)
+			}
+
+			addHourglass();
+			$.ajax({
+				type: "POST",
+				cache: false,
+				dataType: 'text',
+				contentType: "application/json",
+				url: "/surveyKPI/background_report/",
+				data: { report: JSON.stringify(reportObj) },
+				success: function(data, status) {
+					removeHourglass();
+					$('#info').html(localise.set["msg_ds_s"]);
+					setTimeout(function () {
+						$('#info').html("");
+					},2000);
+				}, error: function(xhr, textStatus, err) {
+					removeHourglass();
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						$('#info').html(localise.set["msg_err_save"] + xhr.responseText);
+					}
+
+				}
+			});
+
+
 		});
 
 		// Add the map
