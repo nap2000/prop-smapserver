@@ -153,6 +153,11 @@ require([
 		getLoggedInUser(getUserList, false, true, undefined, false, true);
 
 		// Add responses to changing parameters
+		$('#project_name').change(function() {
+			globals.gCurrentProject = $('#project_name option:selected').val();
+			getUserList();
+		});
+
 		$('#user_list').change(function() {
 			getData();
 		});
@@ -290,7 +295,7 @@ require([
 
 		addHourglass();
 		$.ajax({
-			url: "/surveyKPI/userList",
+			url: "/surveyKPI/userList/" + globals.gCurrentProject,
 			cache: false,
 			dataType: 'json',
 			success: function(data) {
