@@ -26,7 +26,7 @@ if (Modernizr.localstorage) {
 }
 
 requirejs.config({
-	baseUrl: 'js/libs',
+	baseUrl: '/js/libs',
 	locale: gUserLocale,
 	waitSeconds: 0,
 	paths: {
