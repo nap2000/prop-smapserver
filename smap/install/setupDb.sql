@@ -1602,6 +1602,25 @@ create TABLE linked_files_old (
 	id integer DEFAULT NEXTVAL('linked_files_old_seq') CONSTRAINT pk_linked_old_files PRIMARY KEY,
 	file text,
 	deleted_time TIMESTAMP WITH TIME ZONE,
-	erase_time TIMESTAMP WItH TiME ZONE
+	erase_time TIMESTAMP WITH TIME ZONE
 );
 ALTER TABLE linked_files_old OWNER TO ws;
+
+DROP SEQUENCE IF EXISTS background_reports_seq CASCADE;
+CREATE SEQUENCE background_reports_seq START 1;
+ALTER SEQUENCE background_reports_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS background_reports;
+create TABLE background_reports (
+	id integer DEFAULT NEXTVAL('background_reports_seq') CONSTRAINT pk_background_reports PRIMARY KEY,
+	o_id integer,
+	u_id integer,		-- user
+	status text,        -- new || processing || completed || failed
+	status_msg text,
+	report_type text,	-- Type of report
+	report_name text,	-- Name given to the report by a user
+	details text,		-- Report details in JSON	
+	start_time TIMESTAMP WITH TIME ZONE,
+	end_time TIMESTAMP WITH TIME ZONE
+);
+ALTER TABLE background_reports OWNER TO ws;
