@@ -777,7 +777,7 @@ function savePanels(newPanel) {
 		saveViews[i] = copyView(inViews[i]);
 	}
 
-	viewsString = JSON.stringify(saveViews);
+	let viewsString = JSON.stringify(saveViews);
 	addHourglass();
 	$.ajax({
 		  type: "POST",
