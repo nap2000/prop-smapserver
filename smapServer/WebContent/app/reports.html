@@ -95,7 +95,8 @@
 
     <div class="card mt-2">
         <div class="card-header">
-            <button id="addReport" type="button" class="btn btn-success lang" aria-label="Add Report" data-lang="r_add">add</button>
+            <p class="panel_dep generated lang" data-lang="rep_gen_ov"></p>
+            <button id="addReport" type="button" class="panel_dep publish btn btn-success lang" aria-label="Add Report" style="display:none;" data-lang="r_add">add</button>
         </div>
         <div class="card-body">
 
@@ -104,13 +105,15 @@
                         <div class="tabs-container">
 
                             <ul class="nav nav-tabs" role="tablist">
-                                <li id="publicTab" class="nav-item"><a class="nav-link active" data-toggle="tab" role="tab" href="#publicPanel"><span class="lang" data-lang="m_reports_public"></span></a></li>
-                                <!--<li id="customTab" class="nav-item"><a class="nav-link" data-toggle="tab" role="tab" href="#customPanel"><span class="lang" data-lang="sr_cr"></span></a></li>-->
+                                <li id="generatedTab" class="nav-item"><a class="nav-link active" data-toggle="tab" role="tab" href="#generatedPanel"><span class="lang" data-lang="rep_gen"></span></a></li>
+                                <li id="publishTab" class="nav-item"><a class="nav-link" data-toggle="tab" role="tab" href="#publishPanel"><span class="lang" data-lang="m_reports_public"></span></a></li>
                             </ul>
 
                             <div class="tab-content">
 
-                                <div id="publicPanel" class="tab-pane show fade active" role="tabpanel">
+                                <div id="generatedPanel" class="tab-pane show fade active" role="tabpanel">
+                                </div>
+                                <div id="publishPanel" class="tab-pane show fade" role="tabpanel">
                                     <div class="panel-body">
                                         <div class="table-responsive" style="min-height: 300px;">
                                             <table id="reports_table" class="table table-striped">
@@ -123,24 +126,6 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody id="report_list">
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div id="customPanel" class="tab-pane fade" role="tabpanel">
-                                    <div class="panel-body">
-                                        <div class="table-responsive" style="min-height: 300px;">
-                                            <table id="custom_reports_table" class="table table-striped">
-                                                <thead>
-                                                <tr>
-                                                    <th class="lang" data-lang="m_report">report</th>
-                                                    <th class="lang" data-lang="c_survey">survey</th>
-                                                    <th class="lang" data-lang="c_action">action</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody id="custom_report_list">
                                                 </tbody>
                                             </table>
                                         </div>
@@ -471,110 +456,6 @@
                 <button id="publishReport" type="button" class="btn btn-primary lang" data-lang="c_create">create</button>
                 <button id="saveReport" type="button" class="btn btn-primary lang" data-lang="c_save"
                         style="display:none;">save</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal to edit or create a custom report -->
-<div id="custom_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="publishLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title lang" data-lang="c_custom" id="customLabel">custom</h4>
-                <button type="button" class="close" data-dismiss="modal"><span
-                        aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-
-            </div>
-            <div class="modal-body">
-                <form id="custom_form">
-                    <div class="form-group row">
-                        <label class="lang col-sm-2 control-label lang" data-lang="c_name"
-                               for="c_name">name</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="c_name" required="true">
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label class="lang col-sm-2 control-label lang" data-lang="c_type"
-                               for="customType">type</label>
-                        <div class="col-sm-10">
-                            <select class="form-control" id="customType">
-
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="c_survey" class="col-sm-2 control-label lang" data-lang="c_survey">survey</label>
-                        <div class="col-sm-10">
-                            <select class="survey_select data_survey form-control" id="c_survey"></select><br/>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="custom_date_q" class="col-sm-2 control-label lang" data-lang="c_dateq">date</label>
-                        <div class="col-sm-10">
-                            <select class="date_question form-control" id="custom_date_q"></select>
-                        </div>
-                    </div>
-
-
-                </form>
-                <div class="card">
-                    <div class="card-header" id="columns">
-                        <h4 class="card-title">
-                            <a class="card-link" data-toggle="collapse" role="button" href="#collapseColumns" aria-expanded="false" aria-controls="collapseColumns">
-                                <span class="lang" data-lang="c_cols">cols</span>
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseColumns" class="collapse" aria-labelledby="columns">
-                        <div class="card-body">
-                            <h5 class="card-title"></h5>
-                            <div>
-                                <form id="columnsHere">
-                                </form>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <h4>Bar Chart</h4>
-                <p>Any integer or decimal question can be selected to show on the stacked bar chart.  Questions with a similar name to the one selected, varying
-                    only in the ending ..._1, ..._2 etc will all be added together to get the value shown on the chart.</p>
-                <form class="custom_section custom_type_1" id="custom_form_daily">
-                    <div class="row">
-                        <div class="col-sm-6"><b><span class="lang" data-lang="c_question"></span></b></div>
-                        <div class="col-sm-6"><b><span class="lang" data-lang="c_title"></span></b></div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-sm-6">
-                            <select class="selected_name_question form-control" id="custom_bar_1"></select>
-                        </div>
-                        <div class="col-sm-6">
-                            <input type='text' class="form-control" id='custom_bar_1_title'/>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-sm-6">
-                            <select class="selected_name_question form-control" id="custom_bar_2"></select>
-                        </div>
-                        <div class="col-sm-6">
-                            <input type='text' class="form-control" id='custom_bar_2_title'/>
-                        </div>
-                    </div>
-                </form>
-
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-                    <button id="customReport" type="button" class="btn btn-primary lang" data-lang="c_create">create</button>
-                    <button id="saveCustomReport" type="button" class="btn btn-primary lang" data-lang="c_save" style="display:none;">save</button>
-                </div>
             </div>
         </div>
     </div>
