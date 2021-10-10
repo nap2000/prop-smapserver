@@ -26,12 +26,11 @@ if (Modernizr.localstorage) {
 
 var gReportList = [];
 var gReportTypeList = [];
-var gCustomReportList = [];
 var gConfig;
 var gReportIdx;
-var gCustomReportIdx;
 var gForm = 0;
 var gSurveyList;
+let gPanel;
 
 window.gTasks = {
     cache: {
@@ -71,7 +70,6 @@ require([
 
 	$(document).ready(function() {
 
-        setCustomReports();			// Apply custom javascript
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
 
@@ -81,6 +79,13 @@ require([
 
 		$('#m_refresh').click(function() {
             getReports();
+		});
+
+		$('#generatedTab a').click(function (e) {
+			panelChange($(this), 'generated');
+		});
+		$('#publishTab a').click(function (e) {
+			panelChange($(this), 'publish');
 		});
 
         $('#generateReport').click(function() {
@@ -122,7 +127,7 @@ require([
         });
 
         $('#addReport').click(function(){
-        	if($('#publicPanel').hasClass('show')) {
+        	if($('#publishPanel').hasClass('show')) {
 		        $('#publish_form')[0].reset();
 		        $('#e_tz').val(globals.gTimezone);
 		        $('.role_select_roles').empty()
@@ -132,24 +137,7 @@ require([
 		        $('#publishReport').show();
 		        $('#saveReport').hide();
 		        $('#publish_popup').modal("show");
-	        } else if($('#customPanel').hasClass('show')) {
-		        $('#custom_form')[0].reset();
-		        $('#e_tz').val(globals.gTimezone);
-		        addCustomReportTypes();
-		        surveyChanged(setForm);
-		        $('.custom_section').hide();
-		        $('.custom_type_' + $('#customType').val()).show();
-
-		        // Set button to create
-		        $('#customReport').show();
-		        $('#saveCustomReport').hide();
-		        $('#custom_popup').modal("show");
 	        }
-		});
-
-		$('#customType').change(function(){
-			$('.custom_section').hide();
-			$('.custom_type_' + $('#customType').val()).show();
 		});
 
         $('#publishReport').click(function () {
@@ -159,14 +147,6 @@ require([
         $('#saveReport').click(function () {
             updateReport(true);
         });
-
-		$('#customReport').click(function () {
-			updateCustomReport(false);
-		});
-
-		$('#saveCustomReport').click(function () {
-			updateCustomReport(true);
-		});
 
         $('#publish_popup').on('shown.bs.modal', function () {
             $('#exp_from_date').datetimepicker({
@@ -208,9 +188,17 @@ require([
 			locale: gUserLocale || 'en'
 		}).data("DateTimePicker").date(moment());
 
-		$('#generateCustomReport').click(generateCustomReport);
-
 	});
+
+	/*
+ 	 * Respond to a panel being changed
+     */
+	function panelChange($this, name) {
+		gPanel = name;
+
+		$('.panel_dep').hide();
+		$('.' + name).show();
+	}
 
 	function updateReport(edit) {
 
@@ -472,105 +460,12 @@ require([
         });
     }
 
-	function updateCustomReport(edit) {
-
-		var questions = globals.gSelector.getSurveyQuestions(gSurveyList[$('#c_survey').val()].id, "none");
-		var i;
-		var sIdent = gSurveyList[$('#c_survey').val()].ident;
-		var name = $('#c_name').val();
-		var reportType = $('#customType').val();
-
-		// Validation
-		if(!sIdent) {
-			alert(localise.set["a_exp_leg1"]);
-			return;
-		} else if (!name || name.trim().length == 0) {
-			alert(localise.set["msg_val_nm"]);
-			$('#r_name').focus();
-			return;
-		}
-
-		var report = {
-			sIdent: sIdent,
-			dateColumn: getDateColName($('#custom_date_q').val())
-		};
-
-		// Add bars
-		report.bars = [];
-		var b1 = $("#custom_bar_1").val();
-		if(b1 && b1 != '-1') {
-			report.bars.push({
-				name: b1,
-				title: $("#custom_bar_1_title").val()
-			})
-		}
-
-		var b2 = $("#custom_bar_2").val();
-		if(b2 && b2 != '-1') {
-			report.bars.push({
-				name: b2,
-				title: $("#custom_bar_2_title").val()
-			})
-		}
-
-		// Add columns
-		report.columns = [];
-		var cols = $(".c_column:checked").map(function(){
-			return $(this).val();
-		}).toArray();
-		for(i = 0; i < cols.length; i++) {
-			var col = {};
-			col.column = questions[cols[i]].name;
-			report.columns.push(col);
-		}
-
-		/*
-		 * create URL
-		 */
-		var url = "/surveyKPI/custom_reports/"
-				+ globals.gCurrentProject + "/"
-				+ sIdent + "/"
-				+ reportType + "/" + encodeURIComponent(name);
-		if(edit) {
-			url += "?id=" + gCustomReportList[gCustomReportIdx].id;
-		}
-
-		addHourglass();
-		$.ajax({
-			url: url,
-			type: "POST",
-			contentType: "application/json",
-			cache: false,
-			data: { report: JSON.stringify(report) },
-			success: function (data) {
-				removeHourglass();
-				getReports();
-				$('#custom_popup').modal("hide");
-			},
-			error: function (xhr, textStatus, err) {
-				removeHourglass();
-				if (xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert(localise.set["msg_err_upd"] + " : " + xhr.responseText);
-				}
-			}
-		});
-	}
-
     function surveyChanged(callback) {
 
-	    var isCustom = $('#customPanel').hasClass('show');
-		var sId;
-        var dateQuestionId = 0;
+		let sId = gSurveyList[$('#survey').val()].id;
+		var dateQuestionId = 0;
 
-	    if(isCustom) {
-		    sId = gSurveyList[$('#c_survey').val()].id;
-		    getQuestionList(sId, "none", 0, "-1", showCustomColumns, false, undefined, undefined, undefined);
-	    } else {
-		    sId = gSurveyList[$('#survey').val()].id;
-		    getSurveyRoles(sId, undefined, true);
-	    }
+		getSurveyRoles(sId, undefined, true);
 
         // Set the survey meta data
         var sMeta = globals.gSelector.getSurvey(sId);
@@ -593,85 +488,6 @@ require([
 
     }
 
-    /*
-     * Update the custom columns in the custom dialog
-     */
-    function showCustomColumns() {
-    	var i,
-		    idx = -1,
-		    h =[];
-    	var questions = globals.gSelector.getSurveyQuestions(gSurveyList[$('#c_survey').val()].id, "none");
-
-	    h[++idx] = '<div class="row">';
-    	h[++idx] = '<div class="col-sm-offset-1 col-sm-1">';
-    	h[++idx] = '</div>';
-	    h[++idx] = '<div class="col-sm-5">';
-	    h[++idx] = localise.set["c_question"];
-	    h[++idx] = '</div>';
-	    h[++idx] = '<div class="col-sm-5">';
-	    h[++idx] = localise.set["rep_ch"];
-	    h[++idx] = '</div>';
-	    h[++idx] = '</div>';
-
-
-    	for(i = 0; i < questions.length; i++) {
-    		h[++idx] = '<div class="row">';
-
-    		// Checkbox
-	        h[++idx] = '<div class="col-sm-offset-1 col-sm-1">';
-	        h[++idx] = '<div class="checkbox">';
-	        h[++idx] = '<input type="checkbox" class="c_column" value="';
-	        h[++idx] = i;
-	        h[++idx] = '">';
-		    h[++idx] = '</div>';
-		    h[++idx] = '</div>';    // end checkbox
-
-		    // Name
-	        h[++idx] = '<div class="col-sm-5">';
-	        h[++idx] = '<span>';
-	        h[++idx] = questions[i].name;
-		    h[++idx] = '</span>';
-		    h[++idx] = '</div>';
-
-		    // Title
-		    h[++idx] = '<div class="col-sm-5">';
-		    h[++idx] = '<input type="text" value="';
-		    h[++idx] = '';
-		    h[++idx] = '" class="form-control" />';
-		    h[++idx] = '</div>';
-
-    		h[++idx] = '</div>';    // end row
-	    }
-    	$('#columnsHere').empty().html(h.join(''));
-
-	    if(gConfig && gConfig.columns && gConfig.columns.length > 0) {
-		    for(i = 0; i < gConfig.columns.length; i++) {
-			    $('.c_column', '#columnsHere').each(function(){
-				    var $this = $(this);
-			    })
-			    $(':checkbox[value=' + getQuestionIndex(gConfig.columns[i], questions) + ']', '#columnsHere').prop("checked","true");
-		    }
-	    }
-
-		// Show bar selections
-	    var b1 = "-1";
-	    var b1_title = "";
-	    var b2 = "-1";
-	    var b2_title = "";
-	    if(gConfig && gConfig.bars && gConfig.bars.length > 0) {
-		    b1 = gConfig.bars[0].name;
-		    b1_title = gConfig.bars[0].title;
-
-		    if(gConfig.bars.length > 1) {
-			    b2 = gConfig.bars[1].name;
-			    b2_title = gConfig.bars[1].title;
-		    }
-	    }
-	    $('#custom_bar_1').val(b1);
-	    $('#custom_bar_1_title').val(b1_title);
-	    $('#custom_bar_2').val(b2);
-	    $('#custom_bar_2_title').val(b2_title);
-    }
 
     /*
      *  Get the name of a date question given its id
@@ -735,59 +551,6 @@ require([
 			}
 		});
 
-		/*
-         * Get custom reports
-         */
-		var url="/surveyKPI/custom_reports?pId=" + globals.gCurrentProject;
-
-		addHourglass();
-		$.ajax({
-			url: url,
-			dataType: 'json',
-			cache: false,
-			success: function(data) {
-				removeHourglass();
-				gCustomReportList = data;
-				completeCustomReportList(data);
-			},
-			error: function(xhr, textStatus, err) {
-				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					var msg = xhr.responseText;
-					if(msg.indexOf("404 - Not Found") >= 0) {
-						msg = localise.set["msg_no_proj"];
-					}
-					alert(localise.set["error"] + ": " + msg);
-				}
-			}
-		});
-
-
-		/*
-		 * Get custom report types
-		 */
-		url = '/surveyKPI/custom_reports/types';
-
-		addHourglass();
-		$.ajax({
-			url: url,
-			dataType: 'json',
-			cache: false,
-			success: function(data) {
-				removeHourglass();
-				gReportTypeList = data;
-			},
-			error: function(xhr, textStatus, err) {
-				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert(localise.set["error"] + ": " + msg);
-				}
-			}
-		});
 	}
 
 	/*
@@ -1151,138 +914,6 @@ require([
 
 	}
 
-	/*
-     * Fill in the custom report list
-     */
-	function completeCustomReportList() {
-
-		var i,
-			tab = [],
-			idx = -1,
-			$reportList = $('#custom_report_list');
-
-		// Add the reports
-		if(gCustomReportList) {
-			for (i = 0; i < gCustomReportList.length; i++) {
-				var report = gCustomReportList[i];
-
-				tab[++idx] = '<tr data-idx="';
-				tab[++idx] = i;
-				tab[++idx] = '">';
-
-				tab[++idx] = '<td>';
-				tab[++idx] = '<a type="button" class="btn btn-block btn-warning custom_report" href="#">';
-				tab[++idx] = report.name;
-				tab[++idx] = '</a>';
-				tab[++idx] = '</td>';
-
-				tab[++idx] = '<td>';
-				tab[++idx] = report.surveyName;
-				tab[++idx] = '</td>';
-
-				tab[++idx] = '<td>';
-				tab[++idx] = '<div class="dropdown">';
-				tab[++idx] = '<button id="dropdownMenu' + i + '" class="btn btn-default dropdown-toggle report_action" data-toggle="dropdown"  type="button" aria-haspopup="true" aria-expanded="false">';
-				tab[++idx] = localise.set["c_action"];
-				tab[++idx] = '</button>';
-				tab[++idx] = '<ul class="dropdown-menu" aria-labelledby="dropdownMenu' + i + '">';
-				tab[++idx] = '<li><a class="repGenerate" href="#">' + localise.set["c_generate"] + '</a></li>';
-				tab[++idx] = '<li><a class="repEdit" href="#">' + localise.set["c_edit"] + '</a></li>';
-				tab[++idx] = '<li><a class="repDelete" href="#">' + localise.set["c_del"] + '</a></li>';
-				tab[++idx] = '</ul>';
-				tab[++idx] = '</div>';  // Dropdown class
-				tab[++idx] = '</td>';
-				tab[++idx] = '</tr>';
-			}
-		}
-
-		$reportList.html(tab.join(''));
-
-		// Add response to report being launched
-		$('.custom_report', $reportList).click(function(){
-			var $this = $(this);
-			gCustomReportIdx= $this.closest('tr').data("idx");
-			$('#custom_report_launch').modal("show");
-		});
-
-		/*
-         * Delete
-         */
-		$('.repDelete', $reportList).click(function() {
-			var $this = $(this);
-			gCustomReportIdx = $this.closest('tr').data("idx");
-			var report = gCustomReportList[gCustomReportIdx];
-
-			addHourglass();
-			$.ajax({
-				url: "/surveyKPI/custom_reports/" + report.id,
-				type: "DELETE",
-				cache: false,
-				success: function (data) {
-					removeHourglass();
-					getReports();
-				},
-				error: function (xhr, textStatus, err) {
-					removeHourglass();
-					if (xhr.readyState == 0 || xhr.status == 0) {
-						getReports();
-					} else {
-						alert(localise.set["msg_err_upd"] + " : " + xhr.responseText);
-					}
-				}
-			});
-		});
-
-		$('.repEdit', $reportList).click(function() {
-			var $this = $(this);
-			var i;
-
-			gCustomReportIdx = $this.closest('tr').data("idx");
-			var report = gCustomReportList[gCustomReportIdx];
-
-			$('#report_params_form')[0].reset();
-
-			// Set button to save
-			$('#customReport').hide();
-			$('#saveCustomReport').show();
-
-			$('#custom_form')[0].reset();
-
-			setupCustomReportDialog(report);
-
-
-			$('#custom_popup').modal("show");
-		});
-
-		$('.repGenerate', $reportList).click(function() {
-			var $this = $(this);
-			gCustomReportIdx= $this.closest('tr').data("idx");
-			$('#custom_report_launch').modal("show");
-
-
-		});
-	}
-
-	/*
-	 * Initialise the custom repor form
-	 */
-	function setupCustomReportDialog(report) {
-
-		$('#c_survey').val(gCustomReportIdx);
-		if(report) {
-			gConfig = JSON.parse(report.config);
-		} else {
-			gConfig = undefined;
-		}
-		surveyChanged();
-
-		if(report) {
-			$('#c_name').val(report.name);
-			$('#custom_date_q').val(getDateId(gConfig.dateColumn));
-		}
-		addCustomReportTypes();
-	}
-
 	function getQuestionIndex(col, questions) {
 		var i;
 		for(i = 0; i < questions.length; i++) {
@@ -1352,26 +983,6 @@ require([
         $('.' + reportType).show();
     }
 
-    function addCustomReportTypes() {
-
-    	var hostname = location.hostname,
-		    h = [],
-		    idx = -1,
-		    i;
-
-	    if(gReportTypeList && gReportTypeList.length > 0) {
-	    	for(i = 0; i < gReportTypeList.length; i++) {
-	    		h[++idx] = '<option value="';
-	    		h[++idx] = gReportTypeList[i].id;
-	    		h[++idx] = '">';
-			    h[++idx] = gReportTypeList[i].name;
-			    h[++idx] = '</option>';
-		    }
-
-	    }
-	    $('#customType').empty().html(h.join(''));
-    }
-
 	function getSurveyIndex(sId) {
 		var i;
 		for(i = 0; i < gSurveyList.length; i++) {
@@ -1382,19 +993,6 @@ require([
 		return 0;
 	}
 
-	function generateCustomReport() {
-		var usageMsec = $('#reportMonth').data("DateTimePicker").date(),
-			d = new Date(usageMsec),
-			month = d.getMonth() + 1,
-			year = d.getFullYear(),
-			url = "/surveyKPI/report/daily/" + gCustomReportList[gCustomReportIdx].id + "/xls";
 
-		url += "?year=" + year;
-		url += "&month=" + month;
-
-		$('#custom_report_launch').modal("hide");
-
-		downloadFile(url);
-	}
 });
 
