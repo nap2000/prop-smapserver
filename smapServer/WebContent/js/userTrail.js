@@ -155,6 +155,11 @@ require([
 		// Add responses to changing parameters
 		$('#project_name').change(function() {
 			globals.gCurrentProject = $('#project_name option:selected').val();
+
+			saveCurrentProject(globals.gCurrentProject,
+				globals.gCurrentSurvey,
+				globals.gCurrentTaskGroup);
+
 			getUserList();
 		});
 
@@ -210,6 +215,7 @@ require([
 			let reportObj = {
 				report_name: 'locations_' + $('#user_list option:selected').text(),
 				report_type: 'locations_kml',
+				pId: globals.gCurrentProject,
 				details: JSON.stringify(detailsObj)
 			}
 
