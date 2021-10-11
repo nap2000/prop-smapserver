@@ -1614,7 +1614,9 @@ DROP TABLE IF EXISTS background_report;
 create TABLE background_report (
 	id integer DEFAULT NEXTVAL('background_report_seq') CONSTRAINT pk_background_report PRIMARY KEY,
 	o_id integer,
+	p_id integer,
 	u_id integer,		-- user
+	share boolean,
 	status text,        -- new || processing || completed || failed
 	status_msg text,
 	report_type text,	-- Type of report
