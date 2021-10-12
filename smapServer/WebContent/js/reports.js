@@ -986,7 +986,7 @@ require([
 	            tab[++idx] = '</td>';
 
 				tab[++idx] = '<td>';
-				tab[++idx] = genItem.status;
+				tab[++idx] = genItem.status_loc;
 				tab[++idx] = '</td>';
 
 				tab[++idx] = '<td>';
