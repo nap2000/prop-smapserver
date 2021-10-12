@@ -81,6 +81,9 @@ function setCustomManage() {
 function setCustomRegister() {
 }
 
+function setCustomUserForgottonPasswords() {
+}
+
 function setCustomSubscriptions() {
     var elem1 = document.getElementById("navbar-brand");
 
