@@ -206,18 +206,19 @@ require([
 			downloadFile(url);
 			*/
 
-			let detailsObj = {
-				userId: $('#user_list option:selected').val(),
-				startDate: startUtc.valueOf(),
-				endDate: endUtc.valueOf(),
-				mps: gMps
-			};
 			let reportObj = {
 				report_name: 'locations_' + $('#user_list option:selected').text(),
 				report_type: 'locations_kml',
 				pId: globals.gCurrentProject,
-				details: JSON.stringify(detailsObj)
+				details: {
+					userId: $('#user_list option:selected').val(),
+					startDate: startUtc.valueOf(),
+					endDate: endUtc.valueOf(),
+					mps: gMps
+				}
 			}
+
+			let tzString = globals.gTimezone ? "?tz=" + encodeURIComponent(globals.gTimezone) : "";
 
 			addHourglass();
 			$.ajax({
@@ -225,7 +226,7 @@ require([
 				cache: false,
 				dataType: 'text',
 				contentType: "application/json",
-				url: "/surveyKPI/background_report/",
+				url: "/surveyKPI/background_report" + tzString,
 				data: { report: JSON.stringify(reportObj) },
 				success: function(data, status) {
 					removeHourglass();
