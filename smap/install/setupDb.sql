@@ -1621,6 +1621,8 @@ create TABLE background_report (
 	status_msg text,
 	report_type text,	-- Type of report
 	report_name text,	-- Name given to the report by a user
+	tz text,
+	language text,
 	details text,		-- Report details in JSON	
 	start_time TIMESTAMP WITH TIME ZONE,
 	end_time TIMESTAMP WITH TIME ZONE
