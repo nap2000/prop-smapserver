@@ -965,7 +965,12 @@ require([
 		if(gGeneratedList) {
             for (i = 0; i < gGeneratedList.length; i++) {
 				var genItem = gGeneratedList[i];
-	            let link = location.origin + "/surveyKPI/action/";
+	            let link = location.origin + "/surveyKPI/file/" + genItem.filename + "/report?reportname=" + genItem.report_name;
+				// Add an extension to the report name
+				let idx = genItem.filename.lastIndexOf('.');
+				if(idx > 0) {
+					link += genItem.filename.substring(idx);
+				}
 
                 tab[++idx] = '<tr data-idx="';
                 tab[++idx] = i;
@@ -974,11 +979,15 @@ require([
 	            tab[++idx] = '">';
 
 	            tab[++idx] = '<td>';			// Anonymous Link
-	            tab[++idx] = '<a type="button" class="btn btn-block btn-primary" href="';
-	            tab[++idx] = link;
-	            tab[++idx] = '">';
-	            tab[++idx] = genItem.report_name;
-	            tab[++idx] = '</a>';
+				if(genItem.status === 'complete') {
+					tab[++idx] = '<a type="button" class="btn btn-block btn-primary" href="';
+					tab[++idx] = link;
+					tab[++idx] = '">';
+					tab[++idx] = genItem.report_name;
+					tab[++idx] = '</a>';
+				} else {
+					tab[++idx] = genItem.report_name;
+				}
 	            tab[++idx] = '</td>';
 
 	            tab[++idx] = '<td>';
