@@ -210,7 +210,7 @@ require([
 				report_name: 'locations_' + $('#user_list option:selected').text(),
 				report_type: 'locations_kml',
 				pId: globals.gCurrentProject,
-				details: {
+				params: {
 					userId: $('#user_list option:selected').val(),
 					startDate: startUtc.valueOf(),
 					endDate: endUtc.valueOf(),
