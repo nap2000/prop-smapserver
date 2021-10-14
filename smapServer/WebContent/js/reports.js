@@ -967,9 +967,11 @@ require([
 				var genItem = gGeneratedList[i];
 	            let link = location.origin + "/surveyKPI/file/" + genItem.filename + "/report?reportname=" + genItem.report_name;
 				// Add an extension to the report name
-				let idx = genItem.filename.lastIndexOf('.');
-				if(idx > 0) {
-					link += genItem.filename.substring(idx);
+				if(genItem.filename ) {
+					let idx = genItem.filename.lastIndexOf('.');
+					if (idx > 0) {
+						link += genItem.filename.substring(idx);
+					}
 				}
 
                 tab[++idx] = '<tr data-idx="';
@@ -977,6 +979,10 @@ require([
                 tab[++idx] = '" data-link="';
                 tab[++idx] = link;
 	            tab[++idx] = '">';
+
+				tab[++idx] = '<td>';
+				tab[++idx] = genItem.id;
+				tab[++idx] = '</td>';
 
 	            tab[++idx] = '<td>';			// Anonymous Link
 				if(genItem.status === 'complete') {
@@ -989,6 +995,10 @@ require([
 					tab[++idx] = genItem.report_name;
 				}
 	            tab[++idx] = '</td>';
+
+				tab[++idx] = '<td>';
+				tab[++idx] = localise.set[genItem.report_type];
+				tab[++idx] = '</td>';
 
 	            tab[++idx] = '<td>';
 	            tab[++idx] = genItem.userName;

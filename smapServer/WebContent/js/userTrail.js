@@ -208,7 +208,7 @@ require([
 
 			let reportObj = {
 				report_name: 'locations_' + $('#user_list option:selected').text(),
-				report_type: 'locations_kml',
+				report_type: $('#report_type option:selected').val(),
 				pId: globals.gCurrentProject,
 				params: {
 					userId: $('#user_list option:selected').val(),
