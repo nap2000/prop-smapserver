@@ -125,7 +125,6 @@
 							</div>
 						</div>
 
-
 						<div id="ut_alert" style="display:none;" class="alert alert-danger" role="alert"></div>
 
 						<input id="time" type="range" value="0" steps="1" />
@@ -153,11 +152,21 @@
 			<div class="modal-body">
 				<form>
 					<div class="form-group row">
+						<label class="lang control-label lang col-sm-4" data-lang="c_type" for="report_type">type</label>
+						<div class="col-sm-7">
+							<select class="form-control" id="report_type">
+								<option class="lang" data-lang="locations_kml" value="locations_kml">kml</option>
+								<option class="lang" data-lang="locations_distance" value="locations_distance">distance</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group row">
 						<label for="max_point_separation" data-lang="ut_mps" class="lang col-sm-4 control-label">mps</label>
 						<div class="col-sm-5">
 							<input type="number" id="max_point_separation">
 						</div>
-						<span class="col-sm-2 lang text-left" data-lang="c_meters">
+						<span class="col-sm-2 lang text-left" data-lang="c_meters"></span>
 					</div>
 				</form>
 
