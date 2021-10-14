@@ -1634,7 +1634,7 @@ DROP SEQUENCE IF EXISTS distance_calculation_seq CASCADE;
 CREATE SEQUENCE distance_calculation_seq START 1;
 ALTER SEQUENCE distance_calculation_seq OWNER TO ws;
 
-DROP TABLE IF EXISTS distance_calculation_tmp;
+DROP TABLE IF EXISTS distance_calculation;
 create TABLE distance_calculation (
 	id integer DEFAULT NEXTVAL('distance_calculation_seq') CONSTRAINT pk_distance_calculation PRIMARY KEY,	
 	filename text,   
