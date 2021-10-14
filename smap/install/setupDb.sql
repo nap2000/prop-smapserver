@@ -1629,3 +1629,17 @@ create TABLE background_report (
 	end_time TIMESTAMP WITH TIME ZONE
 );
 ALTER TABLE background_report OWNER TO ws;
+
+DROP SEQUENCE IF EXISTS distance_calculation_seq CASCADE;
+CREATE SEQUENCE distance_calculation_seq START 1;
+ALTER SEQUENCE distance_calculation_seq OWNER TO ws;
+
+DROP TABLE IF EXISTS distance_calculation_tmp;
+create TABLE distance_calculation (
+	id integer DEFAULT NEXTVAL('distance_calculation_seq') CONSTRAINT pk_distance_calculation PRIMARY KEY,	
+	filename text,   
+	user_ident text,
+	distance integer	-- distance in meters
+);
+ALTER TABLE distance_calculation OWNER TO ws;
+SELECT AddGeometryColumn('distance_calculation', 'path', 4326, 'LINESTRING', 2);
