@@ -66,6 +66,7 @@ require([
 	var point = null;
 	var line = null;
 	var gMps = 200;
+	var gAllUsers = false;
 	var gTime = {
 		start: Infinity,
 		stop: -Infinity,
@@ -175,6 +176,7 @@ require([
 		$('#exportMenu').click(function(e) {
 			e.preventDefault();
 			$('#max_point_separation').val(gMps);
+			$('#all_users').prop('checked', gAllUsers);
 			$('#trail_export_popup').modal("show");
 		});
 
@@ -193,6 +195,7 @@ require([
 				alert(localise.set["ut_mps_err"]);
 				return false;
 			}
+			gAllUsers = $('#all_users').prop('checked');
 
 			/* old
 			let url = '/surveyKPI/usertrail/export' +
@@ -211,7 +214,7 @@ require([
 				report_type: $('#report_type option:selected').val(),
 				pId: globals.gCurrentProject,
 				params: {
-					userId: $('#user_list option:selected').val(),
+					userId: (gAllUsers ? 0 : $('#user_list option:selected').val()),
 					startDate: startUtc.valueOf(),
 					endDate: endUtc.valueOf(),
 					mps: gMps
