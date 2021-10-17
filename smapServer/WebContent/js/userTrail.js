@@ -392,7 +392,7 @@ require([
 		var startUtc = moment.utc(startDate),
 			endUtc = moment.utc(endDate);
 
-		getTrailData(globals.gCurrentProject, $('#user_list option:selected').val(), startUtc.valueOf(), endUtc.valueOf(), showUserTrail);
+		getTrailData(globals.gCurrentProject, $('#user_list option:selected').val(), startUtc.valueOf(), endUtc.valueOf(), showUserTrail, globals.gTimezone);
 
 
 	}

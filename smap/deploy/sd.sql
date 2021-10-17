@@ -424,3 +424,26 @@ alter table log_archive add column server text;
 alter table mailout add column multiple_submit boolean;
 alter table mailout_people add column user_ident text;
 
+CREATE SEQUENCE background_report_seq START 1;
+ALTER SEQUENCE background_report_seq OWNER TO ws;
+
+create TABLE background_report (
+	id integer DEFAULT NEXTVAL('background_report_seq') CONSTRAINT pk_background_report PRIMARY KEY,
+	o_id integer,
+	p_id integer,
+	u_id integer,		-- user
+	share boolean,
+	status text,        -- new || processing || completed || failed
+	status_msg text,
+	report_type text,	-- Type of report
+	report_name text,	-- Name given to the report by a user
+	filename text,
+	tz text,
+	language text,
+	params text,		-- Report details in JSON	
+	start_time TIMESTAMP WITH TIME ZONE,
+	end_time TIMESTAMP WITH TIME ZONE
+);
+ALTER TABLE background_report OWNER TO ws;
+
+

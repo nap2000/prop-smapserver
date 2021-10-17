@@ -5401,12 +5401,13 @@ function getQuestionType(schema, qname) {
 	}
 }
 
-function getTrailData(projectId, userId, startDate, endDate, callback) {
+function getTrailData(projectId, userId, startDate, endDate, callback, tz) {
 
 	var url = '/surveyKPI/usertrail/trail' +
 		'?userId=' + userId +
 		'&startDate=' + startDate +
-		'&endDate=' + endDate;
+		'&endDate=' + endDate +
+		(tz ? "&tz=" + tz : "");
 
 	addHourglass();
 	$.ajax({
