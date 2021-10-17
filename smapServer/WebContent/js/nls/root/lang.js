@@ -1370,6 +1370,7 @@ define({
     "locations_distance": "Distance travelled",
     "locations_kml": "KML",
     "rep_au": "Include all users in project",
+    "rep_d": "Generation time (seconds)",
 
     // Console
     "co_dd": "Drill Down",
