@@ -526,7 +526,8 @@ require([
 		/*
 		 * Get reports that are accessible via a public link
 		 */
-		var url="/surveyKPI/userList/temporary?action=report&pId=" + globals.gCurrentProject;
+		var tzString = globals.gTimezone ? "&tz=" + encodeURIComponent(globals.gTimezone) : "";
+		var url="/surveyKPI/userList/temporary?action=report&pId=" + globals.gCurrentProject +tzString;
 
 		addHourglass();
 		$.ajax({
@@ -562,7 +563,8 @@ require([
 		/*
 		 * Get reports that are accessible via a public link
 		 */
-		var url="/surveyKPI/background_report/" + globals.gCurrentProject;
+		var tzString = globals.gTimezone ? "?tz=" + encodeURIComponent(globals.gTimezone) : "";
+		var url="/surveyKPI/background_report/" + globals.gCurrentProject + tzString;
 
 		addHourglass();
 		$.ajax({
@@ -1010,6 +1012,14 @@ require([
 
 				tab[++idx] = '<td>';
 				tab[++idx] = genItem.status_msg;
+				tab[++idx] = '</td>';
+
+				tab[++idx] = '<td>';
+				tab[++idx] = genItem.completed;
+				tab[++idx] = '</td>';
+
+				tab[++idx] = '<td>';
+				tab[++idx] = genItem.duration;
 				tab[++idx] = '</td>';
 
                 tab[++idx] = '</tr>';
