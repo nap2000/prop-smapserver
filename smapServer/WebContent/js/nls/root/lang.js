@@ -591,6 +591,7 @@ define({
     "msg_sms_n1": "Send SMS to ",
     "msg_sms_n2": "numbers entered in response to a question",
     "msg_ds_s": "Download started.  If there is a lot of data then this may take some time please be patient",
+    "msg_ds_s_r": "Report generation started.  You will find the generated report in the reports module",
     "msg_survey_replaced": "Survey replaced",
     "msg_survey_loaded": "Survey loaded",
     "msg_reg": "Registration accepted.  An email has been sent to %s1 with a link that you can use to set your password.",
