@@ -233,7 +233,7 @@ require([
 				data: { report: JSON.stringify(reportObj) },
 				success: function(data, status) {
 					removeHourglass();
-					$('#info').html(localise.set["msg_ds_s"]);
+					$('#info').html(localise.set["msg_ds_s_r"]);
 					setTimeout(function () {
 						$('#info').html("");
 					},2000);
