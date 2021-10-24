@@ -1590,6 +1590,7 @@ require([
 		} else {
 			gCurrentOrganisationIndex = -1;
 			$('#o_tz').val('UTC');
+			$('#o_email_user').val('-');
 			addLanguageOptions($('#o_language'), undefined);
 		}
 
