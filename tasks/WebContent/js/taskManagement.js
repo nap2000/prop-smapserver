@@ -466,7 +466,7 @@ require([
 				$('.simple_filter').hide();
 				$('.advanced_filter').hide();
 				if(typeof tgRule.filter !== "undefined") {
-					if (typeof tgRule.filter.qId !== "undefined" && tgRule.filter.qId.length > 0) {
+					if (typeof tgRule.filter.qId !== "undefined" && tgRule.filter.qId > 0) {
 
 						$('#filter_language').val(tgRule.lang_val);
 						filterQuestion = tgRule.filter.qId;
