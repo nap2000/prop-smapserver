@@ -70,6 +70,7 @@ require([
 
 	$(document).ready(function() {
 
+		setCustomReports();			// Apply custom javascript
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
 
