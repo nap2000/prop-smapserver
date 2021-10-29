@@ -55,4 +55,15 @@ then
         tar -xzf $deploy_from/dashboard.tgz -C /var/www/smap
 fi
 
+# Copy any customised files
+if [ -e ../../custom/web ]
+then
+        echo "copy custom web files"
+        cp -vr ../../custom/web/* /var/www/smap
+fi
+if [ -e ../../custom/subscribers/default ]
+then
+        echo "copy custom subscriber data files"
+        cp -v ../../custom/subscribers/default/* /smap_bin/default
+fi
 
