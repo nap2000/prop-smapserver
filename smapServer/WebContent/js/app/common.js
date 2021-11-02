@@ -1503,7 +1503,7 @@ function addVectorMapIcon() {
 
 function getFilesFromServer(url, sId, callback, getall) {
 
-	let hasParams = false;
+	var hasParams = false;
 	if(sId) {
 		gSId = sId;
 		url += '?survey_id=' + sId;
@@ -3518,7 +3518,7 @@ function addGeomPickList(sMeta) {
 }
 
 function shapeFormsChanged() {
-	let formId = getSelectedForm('.shapeforms', true);
+	var formId = getSelectedForm('.shapeforms', true);
 	if(formId) {
 		$('.geomSelect', '.geomselect_export').prop('disabled', true);
 		$('#geomForm_' + formId, '.geomselect_export').prop('disabled', false);
@@ -3526,7 +3526,7 @@ function shapeFormsChanged() {
 }
 
 function getSelectedForm($forms, ignoreError) {
-	let forms = $(':radio:checked', $forms).map(function() {
+	var forms = $(':radio:checked', $forms).map(function() {
 		return this.value;
 	}).get();
 	if(forms.length === 0) {
@@ -5527,21 +5527,56 @@ function executeUsageReport(oId) {
 		month = d.getMonth() + 1,
 		year = d.getFullYear(),
 		url,
-		usageByProject = $('#usage_by_project').prop('checked'),
-		usageBySurvey = $('#usage_by_survey').prop('checked'),
-		usageByDevice = $('#usage_by_device').prop('checked'),
+
 		incTemp = $('#usage_inc_temp').prop('checked');
 
-	url = "/surveyKPI/adminreport/usage/" + year + "/" + month;
-	url += usageByProject ? "?project=true" : "?project=false";
-	url += usageBySurvey ? "&survey=true" : "&survey=false";
-	url += usageByDevice ? "&device=true" : "&device=false";
-	url += incTemp ? "&inc_temp=true" : "&inc_temp=false";
-
-	if(oId) {
-		url+="&org=" + oId;
+	var reportObj = {
+		report_type: 'usage',
+		pId: globals.gCurrentProject,
+		params: {
+			oId: oId,
+			byProject: $('#usage_by_project').prop('checked'),
+			bySurvey: $('#usage_by_survey').prop('checked'),
+			byDevice: $('#usage_by_device').prop('checked'),
+			month: month,
+			year: year,
+			incTemp: incTemp
+		}
 	}
 
-	downloadFile(url);
+	//url = "/surveyKPI/adminreport/usage/" + year + "/" + month;
+	//url += usageByProject ? "?project=true" : "?project=false";
+	//url += usageBySurvey ? "&survey=true" : "&survey=false";
+	//url += usageByDevice ? "&device=true" : "&device=false";
+	//url += incTemp ? "&inc_temp=true" : "&inc_temp=false";
+
+	//if(oId) {
+	//	url+="&org=" + oId;
+	//
+	// }
+	var tzString = globals.gTimezone ? "?tz=" + encodeURIComponent(globals.gTimezone) : "";
+
+	addHourglass();
+	$.ajax({
+		type: "POST",
+		cache: false,
+		dataType: 'text',
+		contentType: "application/json",
+		url: "/surveyKPI/adminreport/usage" + tzString,
+		data: { report: JSON.stringify(reportObj) },
+		success: function(data, status) {
+			removeHourglass();
+			alert(localise.set["msg_ds_s_r"]);
+		}, error: function(xhr, textStatus, err) {
+			removeHourglass();
+			if(xhr.readyState == 0 || xhr.status == 0) {
+				return;  // Not an error
+			} else {
+				alert(localise.set["msg_err_save"] + xhr.responseText);
+			}
+
+		}
+	});
+	//downloadFile(url);
 
 }
