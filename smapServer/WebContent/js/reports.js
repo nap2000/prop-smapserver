@@ -30,7 +30,7 @@ var gConfig;
 var gReportIdx;
 var gForm = 0;
 var gSurveyList;
-let gPanel;
+var gPanel;
 
 window.gTasks = {
     cache: {

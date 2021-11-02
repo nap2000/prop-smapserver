@@ -209,7 +209,7 @@ require([
 			downloadFile(url);
 			*/
 
-			let reportObj = {
+			var reportObj = {
 				report_name: 'locations_' + (gAllUsers ? $('#project_name option:selected').text() : $('#user_list option:selected').text()),
 				report_type: $('#report_type option:selected').val(),
 				pId: globals.gCurrentProject,
@@ -221,7 +221,7 @@ require([
 				}
 			}
 
-			let tzString = globals.gTimezone ? "?tz=" + encodeURIComponent(globals.gTimezone) : "";
+			var tzString = globals.gTimezone ? "?tz=" + encodeURIComponent(globals.gTimezone) : "";
 
 			addHourglass();
 			$.ajax({
@@ -247,8 +247,6 @@ require([
 
 				}
 			});
-
-
 		});
 
 		// Add the map
