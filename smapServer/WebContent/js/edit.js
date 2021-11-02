@@ -1309,7 +1309,7 @@ function surveyDetailsDone() {
  * Refresh any pick lists that use media
  */
 function refreshAllMediaPickLists(data) {
-	let h = [],
+	var h = [],
 		idx = -1,
 		i;
 
@@ -2777,7 +2777,7 @@ function respondToEvents($context) {
 
 	// Select text inside text area on tab - from: https://stackoverflow.com/questions/5797539/jquery-select-all-text-from-a-textarea
 	$("textarea").focus(function() {
-		let $this = $(this);
+		var $this = $(this);
 		$this.select();
 
 		$this.mouseup(function () {
@@ -3473,7 +3473,7 @@ function showSurveySummary(summary) {
 
 function showSurveyIdentList(surveys) {
 
-	let h = [],
+	var h = [],
 		idx = -1,
 		project;
 
