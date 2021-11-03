@@ -5526,12 +5526,11 @@ function executeUsageReport(oId) {
 		d = new Date(usageMsec),
 		month = d.getMonth() + 1,
 		year = d.getFullYear(),
-		url,
-
 		incTemp = $('#usage_inc_temp').prop('checked');
 
 	var reportObj = {
 		report_type: 'usage',
+		report_name: localise.set("m_report") + "_" + (oId > 0 ? orgName + "_" : "") + year + "_" + month;
 		pId: globals.gCurrentProject,
 		params: {
 			oId: oId,
@@ -5562,7 +5561,7 @@ function executeUsageReport(oId) {
 		cache: false,
 		dataType: 'text',
 		contentType: "application/json",
-		url: "/surveyKPI/adminreport/usage" + tzString,
+		url: "/surveyKPI/background_report" + tzString,
 		data: { report: JSON.stringify(reportObj) },
 		success: function(data, status) {
 			removeHourglass();
