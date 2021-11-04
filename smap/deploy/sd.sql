@@ -446,4 +446,5 @@ create TABLE background_report (
 );
 ALTER TABLE background_report OWNER TO ws;
 
-
+alter table last_refresh add column appversion text;
+alter table last_refresh_log add column appversion text;
