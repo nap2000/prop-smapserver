@@ -464,7 +464,7 @@ require([
 
     function surveyChanged(callback) {
 
-		let sId = gSurveyList[$('#survey').val()].id;
+		var sId = gSurveyList[$('#survey').val()].id;
 		var dateQuestionId = 0;
 
 		getSurveyRoles(sId, undefined, true);
@@ -959,7 +959,7 @@ require([
 	 */
 	function completeGeneratedList() {
 
-		let i,
+		var i,
 			tab = [],
 			idx = -1,
 			$generatedList = $('#generated_list');
@@ -968,10 +968,10 @@ require([
 		if(gGeneratedList) {
             for (i = 0; i < gGeneratedList.length; i++) {
 				var genItem = gGeneratedList[i];
-	            let link = location.origin + "/surveyKPI/file/" + genItem.filename + "/report?reportname=" + genItem.report_name;
+	            var link = location.origin + "/surveyKPI/file/" + genItem.filename + "/report?reportname=" + genItem.report_name;
 				// Add an extension to the report name
 				if(genItem.filename ) {
-					let idx = genItem.filename.lastIndexOf('.');
+					var idx = genItem.filename.lastIndexOf('.');
 					if (idx > 0) {
 						link += genItem.filename.substring(idx);
 					}

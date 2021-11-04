@@ -5529,8 +5529,8 @@ function executeUsageReport(oId) {
 		incTemp = $('#usage_inc_temp').prop('checked');
 
 	var reportObj = {
-		report_type: 'usage',
-		report_name: localise.set("m_report") + "_" + (oId > 0 ? orgName + "_" : "") + year + "_" + month;
+		report_type: 'u_usage',
+		report_name: localise.set["m_report"] + "_" + year + "_" + month,
 		pId: globals.gCurrentProject,
 		params: {
 			oId: oId,
