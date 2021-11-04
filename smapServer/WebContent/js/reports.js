@@ -971,9 +971,9 @@ require([
 	            var link = location.origin + "/surveyKPI/file/" + genItem.filename + "/report?reportname=" + genItem.report_name;
 				// Add an extension to the report name
 				if(genItem.filename ) {
-					var idx = genItem.filename.lastIndexOf('.');
-					if (idx > 0) {
-						link += genItem.filename.substring(idx);
+					var extIdx = genItem.filename.lastIndexOf('.');
+					if (extIdx > 0) {
+						link += genItem.filename.substring(extIdx);
 					}
 				}
 
