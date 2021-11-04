@@ -739,6 +739,8 @@ function resultsURL (sId, qId, dateId, groupId, groupType, geoTable, fn, lang, t
                      startDate, endDate, qId_is_calc, filter, advanced_filter, geomFormQuestions,
                      selectedGeomQuestion) {
 
+    var qList = "";
+    var i;
     var url = "/surveyKPI/results/";
     url += sId;
     url += "?qId=" + qId;
@@ -793,8 +795,7 @@ function resultsURL (sId, qId, dateId, groupId, groupType, geoTable, fn, lang, t
     }
 
     if(geomFormQuestions && geomFormQuestions.length > 0) {
-        var qList = "";
-        for(var i = 0; i < geomFormQuestions.length; i++) {
+        for(i = 0; i < geomFormQuestions.length; i++) {
             if(i > 0) {
                 qList += ",";
             }
@@ -839,6 +840,7 @@ function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bB
 
     var url = "/surveyKPI/items/";
 	var ampersand = false;
+    var i;
 
     url += form;
 
@@ -894,7 +896,7 @@ function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bB
 
     if(geomFormQuestions && geomFormQuestions.length > 0) {
         var qList = "";
-        for(let i = 0; i < geomFormQuestions.length; i++) {
+        for(i = 0; i < geomFormQuestions.length; i++) {
             if(i > 0) {
                 qList += ",";
             }
