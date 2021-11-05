@@ -239,7 +239,7 @@ function initialiseDialogs() {
                                 return this.value;
                             }).get();
                             form = getSelectedForm('.shapeforms', false);
-                            let geomQuestion = $('#geomForm_' + form).val();
+                            var geomQuestion = $('#geomForm_' + form).val();
                             url = exportSurveyOSMURL(sId, displayName, forms, exportReadOnly,
                                 exp_from_date, exp_to_date, dateQuestionId, geomQuestion);
 
@@ -259,7 +259,7 @@ function initialiseDialogs() {
                                 gLastSetForm = form;    // Keep until the next time the user opens the dialog
                             }
 
-                            let geomQuestion = $('#geomForm_' + form).val();
+                            var geomQuestion = $('#geomForm_' + form).val();
                             url = exportSurveyMisc(sId, filename, form,
                                 format, exportReadOnly, language,
                                 exp_from_date, exp_to_date, dateQuestionId, queryId,
@@ -739,6 +739,8 @@ function resultsURL (sId, qId, dateId, groupId, groupType, geoTable, fn, lang, t
                      startDate, endDate, qId_is_calc, filter, advanced_filter, geomFormQuestions,
                      selectedGeomQuestion) {
 
+    var qList = "";
+    var i;
     var url = "/surveyKPI/results/";
     url += sId;
     url += "?qId=" + qId;
@@ -793,8 +795,7 @@ function resultsURL (sId, qId, dateId, groupId, groupType, geoTable, fn, lang, t
     }
 
     if(geomFormQuestions && geomFormQuestions.length > 0) {
-        let qList = "";
-        for(let i = 0; i < geomFormQuestions.length; i++) {
+        for(i = 0; i < geomFormQuestions.length; i++) {
             if(i > 0) {
                 qList += ",";
             }
@@ -839,6 +840,7 @@ function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bB
 
     var url = "/surveyKPI/items/";
 	var ampersand = false;
+    var i;
 
     url += form;
 
@@ -893,8 +895,8 @@ function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bB
     }
 
     if(geomFormQuestions && geomFormQuestions.length > 0) {
-        let qList = "";
-        for(let i = 0; i < geomFormQuestions.length; i++) {
+        var qList = "";
+        for(i = 0; i < geomFormQuestions.length; i++) {
             if(i > 0) {
                 qList += ",";
             }
