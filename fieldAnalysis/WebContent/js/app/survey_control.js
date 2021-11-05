@@ -577,13 +577,14 @@ function groupChangeEvent(sId, groupId) {
 //Set the state of the survey view control according to the view
 function setSurveyViewControl(view) {
 
+	var i;
 	$('#settings_survey').prop("disabled", false);
 	if(view.sId) {
 		$('#settings_survey').val(view.sId);
 	}
 
 	if(view.geomFormQuestions) {
-		for(let i = 0; i < view.geomFormQuestions.length; i++) {
+		for(i = 0; i < view.geomFormQuestions.length; i++) {
 			$('#geomSettingsForm_' + view.geomFormQuestions[i].form).val(view.geomFormQuestions[i].question);
 		}
 	}
@@ -602,7 +603,7 @@ function setSurveyViewControl(view) {
 	var views = globals.gSelector.getViews();
 	$display_panel = $('#display_panel');
 	$display_panel.empty().append('<option value="-1">' + localise.set["a_tc"] + '</option>');
-	for (var i = 0; i < views.length; i++) {
+	for (i = 0; i < views.length; i++) {
 		if(views[i].pId != view.pId && views[i].type == "map" && views[i].layerId < 1) {
 			if(views[i].state !== "deleted") {
 				$display_panel.append('<option value="' + views[i].id + '">' + views[i].title + '</option>');
