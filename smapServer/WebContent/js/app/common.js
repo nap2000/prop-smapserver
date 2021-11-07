@@ -5526,17 +5526,32 @@ function executeUsageReport(oId) {
 		d = new Date(usageMsec),
 		month = d.getMonth() + 1,
 		year = d.getFullYear(),
-		incTemp = $('#usage_inc_temp').prop('checked');
+		incTemp = $('#usage_inc_temp').prop('checked'),
+		byProject = $('#usage_by_project').prop('checked'),
+		bySurvey = $('#usage_by_survey').prop('checked'),
+		byDevice = $('#usage_by_device').prop('checked');
+
+	var reportName = localise.set["u_usage"] + "_";
+	if(byProject) {
+		reportName += localise.set["c_project"];
+	} else if(bySurvey) {
+		reportName += localise.set["c_survey"];
+	} else if(byDevice) {
+		reportName += localise.set["c_device"];
+	} else {
+		reportName += localise.set["c_user"];
+	}
+	reportName += "_" + year + "_" + month;
 
 	var reportObj = {
 		report_type: 'u_usage',
-		report_name: localise.set["m_report"] + "_" + year + "_" + month,
+		report_name: reportName,
 		pId: globals.gCurrentProject,
 		params: {
 			oId: oId,
-			byProject: $('#usage_by_project').prop('checked'),
-			bySurvey: $('#usage_by_survey').prop('checked'),
-			byDevice: $('#usage_by_device').prop('checked'),
+			byProject: byProject,
+			bySurvey: bySurvey,
+			byDevice: byDevice,
 			month: month,
 			year: year,
 			incTemp: incTemp
