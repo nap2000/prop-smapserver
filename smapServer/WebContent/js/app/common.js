@@ -5529,9 +5529,22 @@ function executeUsageReport(oId) {
 		incTemp = $('#usage_inc_temp').prop('checked'),
 		byProject = $('#usage_by_project').prop('checked'),
 		bySurvey = $('#usage_by_survey').prop('checked'),
-		byDevice = $('#usage_by_device').prop('checked');
+		byDevice = $('#usage_by_device').prop('checked'),
+		i;
 
 	var reportName = localise.set["u_usage"] + "_";
+	reportName = reportName.replaceAll(' ', '_');
+
+	// Add the organisation name
+	if(oId > 0 && globals.gLoggedInUser.orgs.length > 0) {
+		for(i = 0; i < globals.gLoggedInUser.orgs.length; i++) {
+			if(globals.gLoggedInUser.orgs[i].id == oId) {
+				reportName += globals.gLoggedInUser.orgs[i].name + "_";
+				break;
+			}
+		}
+	}
+
 	if(byProject) {
 		reportName += localise.set["c_project"];
 	} else if(bySurvey) {
@@ -5542,7 +5555,8 @@ function executeUsageReport(oId) {
 		reportName += localise.set["c_user"];
 	}
 	reportName += "_" + year + "_" + month;
-
+	reportName = reportName.replaceAll(' ', '_');
+	
 	var reportObj = {
 		report_type: 'u_usage',
 		report_name: reportName,
