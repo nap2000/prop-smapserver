@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.math3.ode.nonstiff.AdamsBashforthFieldIntegrator;
 import org.smap.sdal.Utilities.GeneralUtilityMethods;
 import org.smap.sdal.Utilities.PdfPageSizer;
 import org.smap.sdal.Utilities.PdfUtilities;
@@ -32,6 +33,7 @@ import org.smap.sdal.model.LineMap;
 import org.smap.sdal.model.MetaItem;
 import org.smap.sdal.model.Option;
 import org.smap.sdal.model.OptionList;
+import org.smap.sdal.model.PdfMapValues;
 import org.smap.sdal.model.Question;
 import org.smap.sdal.model.Result;
 import org.smap.sdal.model.Row;
@@ -613,8 +615,9 @@ public class PDFSurveyManager {
 			/*
 			 * Add the value to the form
 			 * Alternatively remove the fieldName if the value is empty.
+			 * pdf_fields have empty values as the real value is a composite of other questions so allow these
 			 */
-			if(value == null || value.trim().equals("")) {
+			if(value == null || value.trim().equals("") && (!(r.type.equals("pdf_field") && di.linemap != null))) {
 				try {
 					pdfForm.removeField(fieldName);
 				} catch (Exception e) {
@@ -625,8 +628,12 @@ public class PDFSurveyManager {
 
 				PushbuttonField ad = pdfForm.getNewPushbuttonFromField(fieldName);
 				if(ad != null) {
-					Image img = PdfUtilities.getMapImage(sd, di.map, di.account, r.value, 
-							r.value,
+					
+					PdfMapValues mapValues = new PdfMapValues();
+					mapValues.geometry = r.value;
+					// TODO no start geopoint
+					
+					Image img = PdfUtilities.getMapImage(sd, di.map, di.account, mapValues, 
 							di.location, di.zoom,gv.mapbox_key,
 							survey.id,
 							user,
@@ -636,6 +643,45 @@ public class PDFSurveyManager {
 				} else {
 					log.info("No field for image (Mapbox not called: " + fieldName);
 				}
+
+			} else if(r.type.equals("pdf_field") && di.linemap != null) {
+
+
+				Float width = (float) 200.0;
+				Float height = (float) 100.0;
+
+
+				// If a push button field is used set the image size from that field
+				PushbuttonField ad = pdfForm.getNewPushbuttonFromField(fieldName);
+				if(ad != null) {
+					Rectangle rect = ad.getBox();
+					width = rect.getWidth();
+					height = rect.getHeight();
+				}
+				PdfMapValues mapValues = getMapValues(di);
+				Image img = null;
+				if(di.linemap.type.equals("map")) {
+					img = PdfUtilities.getMapImage(sd, di.map, 
+							di.account, 
+							mapValues,
+							di.location, di.zoom, gv.mapbox_key,
+							survey.id,
+							user,
+							di.markerColor,
+							basePath);
+				} else {
+					img = PdfUtilities.getLineImage(sd, 
+							mapValues,
+							survey.id,
+							user,
+							di.markerColor,
+							basePath,
+							width,
+							height);
+				}
+
+				PdfUtilities.addMapImageTemplate(pdfForm, ad, fieldName, img);
+
 
 			} else if(r.type.equals("image") || r.type.equals("video") || r.type.equals("audio")  || r.type.equals("file")) {
 				PdfUtilities.addImageTemplate(pdfForm, fieldName, basePath, value, serverRoot, stamper, defaultFontLink);
@@ -849,7 +895,7 @@ public class PDFSurveyManager {
 		}
 
 		/*
-		 * Hide any start geopoints if we have a standard geometry in this form
+		 * Get the start geopoint value if it has been set
 		 */
 		String startGeopointValue = null;
 		boolean hideStartGeopoint = false;
@@ -863,10 +909,8 @@ public class PDFSurveyManager {
 				if(!question.visible) {
 					startGeopointValue = r.value;
 					startGeopointIndex = j;
-				} else {
-					hideStartGeopoint = true;
-					startGeopointValue = r.value;
-				}
+					break;
+				} 
 			}
 		}
 
@@ -1369,10 +1413,15 @@ public class PDFSurveyManager {
 	 */
 	ArrayList<String> lookupInSurvey(String qname, ArrayList<ArrayList<Result>> records) {
 		ArrayList<String> values = new ArrayList<>();
-		for(ArrayList<Result> r : records) {
-			String v = lookupInRecord(qname, r);
-			if(v != null) {
-				values.add(v);
+		if(qname != null && records != null && records.size() > 0) {
+			for(ArrayList<Result> r : records) {
+				for(Result result : r) {
+					if(result.subForm == null && result.name.equals(qname)) {
+						values.add(result.value);
+					} else if(result.subForm != null) {
+						values.addAll(lookupInSurvey(qname, result.subForm));
+					}
+				}		
 			}
 		}
 		return values;
@@ -1456,8 +1505,13 @@ public class PDFSurveyManager {
 							di.map = map;
 							di.account = "mapbox";
 						}
-					} else if(app.startsWith("pdflinemap")) {		// Multiple points to be joined into a map
+					} else if(app.startsWith("pdflinemap") || app.startsWith("pdflineimage")) {		// Multiple points to be joined into a map or image
 						di.linemap = new LineMap(getAppValueArray(app));
+						if(app.startsWith("pdflinemap")) {
+							di.linemap.type = "map";
+						} else {
+							di.linemap.type = "image";
+						}
 					} else if(app.startsWith("pdfaccount")) {			// mapbox account
 						di.account = getAppValue(app);
 					} else if(app.startsWith("pdflocation")) {
@@ -1802,9 +1856,13 @@ public class PDFSurveyManager {
 
 		} else if(di.type.equals("geopoint") || di.type.equals("geoshape") || di.type.equals("geotrace") || di.type.startsWith("geopolygon_") || di.type.startsWith("geolinestring_")) {
 
+			PdfMapValues mapValues = new PdfMapValues();
+			mapValues.geometry = di.value;
+			mapValues.startGeometry = startGeopointValue;
+			
 			Image img = PdfUtilities.getMapImage(sd, di.map, 
-					di.account, di.value, 
-					startGeopointValue,
+					di.account, 
+					mapValues,
 					di.location, di.zoom, gv.mapbox_key,
 					survey.id,
 					user,
@@ -1820,32 +1878,35 @@ public class PDFSurveyManager {
 		} else if(di.type.equals("pdf_field") && di.linemap != null) { 
 			System.out.println("pdf field");
 			
-			String startValue = "0 0";
-			String endValue = "0 0";
-			ArrayList<String> markerValues = new ArrayList<String> ();
+			PdfMapValues mapValues = getMapValues(di);
 			
-			// Start point
-			ArrayList<String> startValues = lookupInSurvey(di.linemap.startPoint, survey.instance.results);
-			if(startValues.size() > 0) {
-				startValue = startValues.get(0);
+			Image img = null;
+			Float width = (float) 200.0;
+			Float height = (float) 100.0;
+			if(di.linemap.type.equals("map")) {
+				 img = PdfUtilities.getMapImage(sd, di.map, 
+						di.account, 
+						mapValues,
+						di.location, di.zoom, gv.mapbox_key,
+						survey.id,
+						user,
+						di.markerColor,
+						basePath);
+			} else {
+				img = PdfUtilities.getLineImage(sd, 
+						mapValues,
+						survey.id,
+						user,
+						di.markerColor,
+						basePath,
+						width,
+						height);
 			}
-			System.out.println("     start: " + startValue);
-
-			// End point
-			ArrayList<String> endValues = lookupInSurvey(di.linemap.endPoint, survey.instance.results);
-			if(endValues.size() > 0) {
-				endValue = endValues.get(0);
-			}
-			System.out.println("     end: " + endValue);
-
 			
-			if(di.linemap.markers.size() > 0) {
-				for(String markerName : di.linemap.markers) {
-					markerValues.addAll(lookupInSurvey(markerName, survey.instance.results));
-				}		
-			}
-			for(String mv : markerValues) {
-				System.out.println("     marker: " + mv);
+			if(img != null) {
+				valueCell.addElement(img);
+			} else {
+				valueCell.addElement(getPara(" ", di, gv, deps, null));
 			}
 
 		} else if(di.isBarcode) { 
@@ -1939,6 +2000,34 @@ public class PDFSurveyManager {
 		}
 	}
 
+	/*
+	 * Extract the compound map values from the display item specification
+	 */
+	private PdfMapValues getMapValues(DisplayItem di) {
+		PdfMapValues mapValues = new PdfMapValues();
+		
+		// Start point
+		ArrayList<String> startValues = lookupInSurvey(di.linemap.startPoint, survey.instance.results);
+		if(startValues.size() > 0) {
+			mapValues.startLine = startValues.get(0);
+		}
+
+		// End point
+		ArrayList<String> endValues = lookupInSurvey(di.linemap.endPoint, survey.instance.results);
+		if(endValues.size() > 0) {
+			mapValues.endLine = endValues.get(0);
+		}
+		
+		if(di.linemap.markers.size() > 0) {
+			mapValues.markers = new ArrayList<String> ();
+			for(String markerName : di.linemap.markers) {
+				mapValues.markers.addAll(lookupInSurvey(markerName, survey.instance.results));
+			}		
+		}
+		
+		return mapValues;
+	}
+	
 	private Paragraph getPara(String value, DisplayItem di, GlobalVariables gv, ArrayList<String> deps, Anchor anchor) {
 
 		boolean hasContent = false;
