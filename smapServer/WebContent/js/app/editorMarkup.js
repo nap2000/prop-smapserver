@@ -658,11 +658,12 @@ define([
 					((question.source != "user" && 
 						question.type != "begin group" &&
 						question.type != "begin repeat" &&
-						question.type != "server_calculate"
+						question.type != "server_calculate" &&
+						question.type != "pdf_field"
 						))) {
 				h[++idx] = ' readonly tabindex="-1">';
 				h[++idx] = selLabel;
-				h[++idx] = ' not required';
+				h[++idx] = localise.set["ed_nreq"];
 			} else {
 				h[++idx] = '>';
 				if(question.type === 'calculate' && selProperty !== "appearance" && selProperty !== "parameters" && selProperty !== "display_name") {
