@@ -932,6 +932,7 @@ define({
     "ed_gps": "GPS Point",
     "ed_calc": "Calculation",
     "ed_s_calc": "Server Calculation",
+    "ed_ci": "Server Compound PDF Image",
     "ed_audio": "Audio",
     "ed_video": "Video",
     "ed_bc": "Barcode",
