@@ -648,7 +648,7 @@ define(function () {
 	            canSelect: true,
 	            visible: true,
 		        source: "user",
-		        compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note"]
+		        compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field"]
             },
             {
                 name: "Note",
@@ -658,7 +658,7 @@ define(function () {
                 canSelect: true,
                 visible: true,
                 source: "user",
-	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note"]
+	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field"]
             },
             {
                 name: "Select One",
@@ -668,7 +668,7 @@ define(function () {
                 canSelect: true,
                 visible: true,
 				source: "user",
-	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note"]
+	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field"]
             },
             {
                 name: "Select Multiple",
@@ -678,7 +678,7 @@ define(function () {
                 canSelect: true,
                 visible: true,
                 source: "user",
-	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note"]
+	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field"]
             },
             {
                 name: "Form",
@@ -714,7 +714,8 @@ define(function () {
                 text: "#",
                 canSelect: true,
                 visible: true,
-                source: "user"
+                source: "user",
+                compatTypes: ["pdf_field"]
             },
             {
                 name: "GPS Point",
@@ -734,7 +735,7 @@ define(function () {
                 canSelect: true,
                 visible: true,
                 source: "user",
-	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note"]
+	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field"]
             },
             {
                 name: "Audio",
@@ -761,7 +762,8 @@ define(function () {
                 glyphicon: "barcode",
                 canSelect: true,
                 visible: true,
-                source: "user"
+                source: "user",
+                compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field"]
             },
             {
                 name: "Date",
@@ -824,7 +826,8 @@ define(function () {
                 text: "OK",
                 canSelect: true,
                 visible: true,
-                source: "user"
+                source: "user",
+                compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field"]
             },
             {
                 name: "Range",
@@ -835,7 +838,7 @@ define(function () {
                 canSelect: true,
                 visible: true,
                 source: "user",
-	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note"]
+	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field"]
             },
             {
                 name: "Chart",
@@ -845,7 +848,8 @@ define(function () {
                 text: "Chart",
                 canSelect: true,
                 visible: true,
-                source: "user"
+                source: "user",
+                compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field"]
             },
 	        {
 		        name: "Parent Form",
@@ -874,7 +878,8 @@ define(function () {
                 glyphicon: "file",
                 canSelect: true,
                 visible: true,
-                source: "user"
+                source: "user",
+                compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field"]
             },
             {
                 name: "Rank",
@@ -883,7 +888,8 @@ define(function () {
                 glyphicon: "sort-by-attributes",
                 canSelect: true,
                 visible: true,
-                source: "user"
+                source: "user",
+                compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field"]
             },
 	        {
 		        name: "Server Calculation",
@@ -894,7 +900,7 @@ define(function () {
 		        canSelect: true,
 		        visible: true,
 		        source: "user",
-		        compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note"]
+		        compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field"]
 	        },
             {
                 name: "Compound Pdf Image",
@@ -903,9 +909,7 @@ define(function () {
                 calculation: false,
                 glyphicon: "object-align-vertical",
                 canSelect: true,
-                visible: true,
-                source: "user",
-                compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note"]
+                visible: false,
             },
             {
                 name: "Unknown Type",
