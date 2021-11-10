@@ -897,6 +897,17 @@ define(function () {
 		        compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note"]
 	        },
             {
+                name: "Compound Pdf Image",
+                type: "pdf_field",
+                trans: "ed_ci",
+                calculation: false,
+                glyphicon: "object-align-vertical",
+                canSelect: true,
+                visible: true,
+                source: "user",
+                compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note"]
+            },
+            {
                 name: "Unknown Type",
                 glyphicon: "record",
                 canSelect: false
