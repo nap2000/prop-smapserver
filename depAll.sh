@@ -22,3 +22,7 @@ cd ..
 cd dashboard
 ./dep.sh
 cd ..
+
+cd smap
+./dep.sh
+cd ..
