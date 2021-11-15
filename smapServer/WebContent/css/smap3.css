@@ -19,3 +19,8 @@ tr.deleted td a {
     width: 100%;
     height: 500px;
 }
+
+.bg-rejected {
+    background-color: #8B4513 !important;
+    color: white
+}

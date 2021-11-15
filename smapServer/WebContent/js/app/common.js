@@ -4530,7 +4530,7 @@ function getStatusClass(status, assign_auto) {
 		statusClass = "bg-warning";
 	} else 	if (status === "error" || status === "unsent" || status === "unsubscribed"
 		|| status === "blocked" || status === "rejected" || status === "cancelled" || status === "deleted") {
-		statusClass = "bg-brown";
+		statusClass = "bg-rejected";
 	} else {
 		statusClass = "bg-success";
 	}
