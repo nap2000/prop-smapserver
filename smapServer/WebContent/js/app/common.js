@@ -2277,6 +2277,8 @@ function getCustomMenuClass() {
 
 	if(hostname.indexOf('cuso.smap.com.au') >= 0) {
 		classname = '.xxxx1';
+	} else if(hostname.indexOf('demo.smap.com.au') >= 0) {
+		classname = '.xxxx1';
 	} else {
 		if(hostname === 'localhost') {
 			classname = '.xxxx1';   // testing
