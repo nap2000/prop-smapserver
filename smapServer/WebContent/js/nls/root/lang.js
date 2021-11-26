@@ -813,6 +813,7 @@ define({
 	"ed_add_to": "Append to question",
     "ed_app": "Put in an appendix",
 	"ed_barcode": "Show as a barcode",
+    "ed_si": "Show choice images instead of label text",
 	"ed_hyperlink": "Show a hyperlink to the image",
 	"ed_col_width": "width of column %s1",
 	"ed_place_map": "Allow the user to select their location from a map",

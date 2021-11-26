@@ -771,6 +771,9 @@ $(document).ready(function() {
 		if($('#a_pdfbarcode').prop('checked')) {
 			appearances.push('pdfbarcode');
 		}
+		if($('#a_pdfshowimage').prop('checked')) {
+			appearances.push('pdfshowimage');
+		}
 		if($('#a_pdfhyperlink').prop('checked')) {
 			appearances.push('pdfhyperlink');
 		}
@@ -2214,6 +2217,9 @@ function respondToEvents($context) {
 				foundAppearance = true;
 			} else if(appearanceArray[i] === 'pdfbarcode') {
 				$('#a_pdfbarcode').prop('checked', true);
+				foundAppearance = true;
+			} else if(appearanceArray[i] === 'pdfshowimage') {
+				$('#a_pdfshowimage').prop('checked', true);
 				foundAppearance = true;
 			} else if(appearanceArray[i] === 'pdfhyperlink') {
 				$('#a_pdfhyperlink').prop('checked', true);
