@@ -130,9 +130,9 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 	                    docURL += "&reference_surveys=true";
                     }
                 } else if(type === "xls_edited") {
-                    docURL = "/surveyKPI/xlsForm/" + gSelectedTemplateId + "?filetype=" + "xlsx";
+                    docURL = "/surveyKPI/xlsForm/" + gSelectedTemplateId + "?filetype=" + "xlsx" + addCacheBuster("?");;
                 } else {
-                    docURL = "/surveyKPI/survey/" + gSelectedTemplateId + "/download?type=" + type + "&language=" + language;
+                    docURL = "/surveyKPI/survey/" + gSelectedTemplateId + "/download?type=" + type + "&language=" + language + addCacheBuster("?");;
                 }
                 docURL += "&_v=" + new Date().getTime().toString();    // add a cache buster
                 window.location.href = docURL;
