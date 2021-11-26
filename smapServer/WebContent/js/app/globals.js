@@ -1111,6 +1111,7 @@ define(function () {
 	            $('#data_survey').prop('checked'),
 	            $('#oversight_survey').prop('checked'),
                 $('#exclude_empty').prop('checked'),
+                $('#compress_pdf').prop('checked'),
                 $('#set_hrk').val(),
                 $('#set_key_policy').val(),
 	            $('#default_logo').val()
@@ -1132,6 +1133,7 @@ define(function () {
 	            this.survey.dataSurvey = current.dataSurvey;
 	            this.survey.oversightSurvey = current.oversightSurvey;
                 this.survey.exclude_empty = current.exclude_empty;
+                this.survey.compress_pdf = current.compress_pdf;
                 this.survey.hrk = current.hrk;
                 this.survey.key_policy = current.key_policy;
 	            this.survey.default_logo = current.default_logo;
@@ -1157,6 +1159,7 @@ define(function () {
 	                this.survey.dataSurvey,
 	                this.survey.oversightSurvey,
                     this.survey.exclude_empty,
+                    this.survey.compress_pdf,
                     this.survey.hrk,
                     this.survey.key_policy,
 	                this.survey.default_logo
@@ -1178,6 +1181,7 @@ define(function () {
                                               dataSurvey,
                                               oversightSurvey,
                                               exclude_empty,
+                                              compress_pdf,
                                               hrk,
                                               key_policy,
                                               default_logo) {
@@ -1203,6 +1207,7 @@ define(function () {
 	            dataSurvey: dataSurvey,
 	            oversightSurvey: oversightSurvey,
                 exclude_empty: exclude_empty,
+                compress_pdf: compress_pdf,
                 hrk: hrk,
                 key_policy: key_policy,
 	            default_logo: default_logo

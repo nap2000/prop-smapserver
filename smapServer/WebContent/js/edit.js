@@ -471,7 +471,7 @@ $(document).ready(function() {
         if($(this).closest('li').hasClass('disabled')) {
             bootbox.alert(localise.set["ed_cx"]);
         } else {
-            window.location.href = "/surveyKPI/xlsForm/" + gSId + "?filetype=" + "xlsx";
+            window.location.href = "/surveyKPI/xlsForm/" + gSId + "?filetype=" + "xlsx" + addCacheBuster("?");;
         }
 
     });
@@ -910,7 +910,7 @@ $(document).ready(function() {
 		}
 		globals.model.settingsChange();
 	});
-	$('#hide_on_device, #search_local_data, #audit_location_data, #track_changes, #data_survey, #oversight_survey').change(function() {
+	$('#hide_on_device, #search_local_data, #audit_location_data, #track_changes, #data_survey, #oversight_survey, #compress_pdf').change(function() {
 		globals.model.settingsChange();
 	});
     $('#exclude_empty').change(function() {
@@ -2976,6 +2976,7 @@ function updateSettingsData() {
 	$('#data_survey').prop('checked', globals.model.survey.dataSurvey);
 	$('#oversight_survey').prop('checked', globals.model.survey.oversightSurvey);
     $('#exclude_empty').prop('checked', globals.model.survey.exclude_empty);
+	$('#compress_pdf').prop('checked', globals.model.survey.compress_pdf);
 	$('#default_logo').val(globals.model.survey.default_logo);
 }
 
