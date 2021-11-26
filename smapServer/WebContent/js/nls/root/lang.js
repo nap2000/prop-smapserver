@@ -946,6 +946,7 @@ define({
     "ed_graph": "Graph",
     "ed_qs": "Questions set ",
     "ed_ee": "Don't include empty answers in reports",
+    "ed_cpdf": "Compress PDF (images will have lower resolution that should be adequate for printing)",
     "ed_er": "Cannot save until errors are fixed",
     "ed_blocked": "The survey has been blocked. Changes cannot be saved.  You can unblock the survey on the form management page.",
     "ed_cml": "Cannot modify languages while there are unsaved changes",
