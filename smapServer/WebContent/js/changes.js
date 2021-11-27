@@ -127,7 +127,7 @@ function setChangesHtml($element, survey) {
 				if(filename.indexOf("_template.pdf") > 0) {
 					url = '/surveyKPI/file/' + filename + '/surveyPdfTemplate/' + changes[i].change.origSId + '?archive=true';
 				} else {
-					url = '/surveyKPI/survey/' + changes[i].change.origSId + '/download?type=xls';
+					url = '/surveyKPI/survey/' + changes[i].change.origSId + '/download?type=xlsx';
 				}
                 filehtml = '<a href="' + url + '">' + filename + '</a>';
 			}
