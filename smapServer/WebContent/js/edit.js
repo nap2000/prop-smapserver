@@ -774,6 +774,9 @@ $(document).ready(function() {
 		if($('#a_pdfshowimage').prop('checked')) {
 			appearances.push('pdfshowimage');
 		}
+		if($('#a_pdfstretch').prop('checked')) {
+			appearances.push('pdfstretch');
+		}
 		if($('#a_pdfhyperlink').prop('checked')) {
 			appearances.push('pdfhyperlink');
 		}
@@ -2220,6 +2223,9 @@ function respondToEvents($context) {
 				foundAppearance = true;
 			} else if(appearanceArray[i] === 'pdfshowimage') {
 				$('#a_pdfshowimage').prop('checked', true);
+				foundAppearance = true;
+			} else if(appearanceArray[i] === 'pdfstretch') {
+				$('#a_pdfstretch').prop('checked', true);
 				foundAppearance = true;
 			} else if(appearanceArray[i] === 'pdfhyperlink') {
 				$('#a_pdfhyperlink').prop('checked', true);
