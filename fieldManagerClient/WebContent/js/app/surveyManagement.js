@@ -572,6 +572,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 
                     h[++idx] = '<a class="btn survey_view" href="/app/myWork/webForm/';                    // Webform
                     h[++idx] = survey.ident;
+                    h[++idx] = addCacheBuster("");
                     h[++idx] = '" target="_blank">'
 
                     h[++idx] = '<i class="fas fa-eye"></i>';
