@@ -223,17 +223,12 @@ $(document).ready(function() {
 	});
 	$('.m_save_survey').off().click(function() {	// Save a survey to the server
 		changeset.validateAll();
-		if(globals.model.survey.blocked) {
-			bootbox.alert({
-				locale: gUserLocale,
-				message: localise.set["ed_blocked"]
-			});
+
+		if(changeset.numberIssues("error") === 0) {
+			changeset.save(surveyListDone);
 		} else {
-			if(changeset.numberIssues("error") === 0) {
-				changeset.save(surveyListDone);
-			} else {
-				bootbox.alert(localise.set["ed_er"]);
-			}
+			bootbox.alert(localise.set["ed_er"]);
+
 		}
 	});
 
@@ -1283,11 +1278,6 @@ function surveyDetailsDone() {
 	}
 
 	$('#openFormModal').modal("hide");		// Hide the open form modal if its open
-
-	// Show message if the survey is blocked
-	if(globals.model.survey.blocked) {
-		bootbox.alert(localise.set["ed_blocked"]);
-	}
 
 	// Get group questions for this current survey - used for selecting the source parameter
 	getGroupQuestionsInSurvey($('.group_column_select'), globals.model.survey.ident);
