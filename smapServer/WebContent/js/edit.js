@@ -96,7 +96,9 @@ var	gMode = "survey",
 	gDragCounter,
 	gDragSourceId,
 	gSurveyIdents,
-	gSurveyNames;
+	gSurveyNames,
+	gSurveyUrl,
+	gSurveyUrlCacheBuster;
 // Media globals
 var gUrl,			// url to submit to
 	gBaseUrl = '/surveyKPI/upload/media';
@@ -226,9 +228,9 @@ $(document).ready(function() {
 
 		if(changeset.numberIssues("error") === 0) {
 			changeset.save(surveyListDone);
+			gSurveyUrlCacheBuster = addCacheBuster(gSurveyUrl);	// Update the cache buster
 		} else {
 			bootbox.alert(localise.set["ed_er"]);
-
 		}
 	});
 
@@ -950,6 +952,7 @@ $(document).ready(function() {
             alert(localise.set["msg_test"]);
             return false;
         }
+		$('.m_test_survey').attr("href", gSurveyUrl + gSurveyUrlCacheBuster);
 		return true;
 	});
 
@@ -1297,7 +1300,8 @@ function surveyDetailsDone() {
 	refreshForm();
 
 	// Set up link to test file
-	$('.m_test_survey').attr("href", "/app/myWork/webForm/" + globals.model.survey.ident);
+	gSurveyUrl = "/app/myWork/webForm/" + globals.model.survey.ident;
+	gSurveyUrlCacheBuster = addCacheBuster(gSurveyUrl)
 
 }
 
