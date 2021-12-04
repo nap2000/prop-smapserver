@@ -7,8 +7,11 @@ rm -rf ~/deploy/smap
 cp -rf ~/git/prop-smapserver/smap ~/deploy
 
 # Get files from open source release
-cp ~/git/smapserver2/setup/patch/*.sql ~/deploy/smap/deploy
-cp ~/git/smapserver2/setup/install/*.sql ~/deploy/smap/install
+cp -rf ~/git/smapserver2/setup/deploy/* ~/deploy/smap/deploy
+cp -rf ~/git/smapserver2/setup/install/* ~/deploy/smap/install
+
+# Override the opensource deploy with the standard deploy
+cp -rf ~/git/prop-smapserver/smap/deploy/deploy.sh ~/deploy/smap/deploy
 
 # Get miscelaneous files
 cp ~/deploy/fieldTask.apk ~/deploy/smap/deploy/version1
