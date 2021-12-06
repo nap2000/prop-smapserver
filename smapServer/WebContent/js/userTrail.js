@@ -398,6 +398,8 @@ require([
 
 	function showUserTrail(data) {
 		var i,
+			j,
+			k = 0,
 			lineFeature,
 			coords = [];
 
@@ -406,21 +408,24 @@ require([
 
 		// Add points
 		for(i = 0; i < gTrailData.features.length; i++) {
+			var feature = gTrailData.features[i];
+			coords = [];
+			for (j = 0; j < feature.points.length; j++) {
 
-			gTrailData.features[i].coordinates.push(gTrailData.features[i].rawTime);	// Add attributes to Measure coordinate
-			coords.push(gTrailData.features[i].coordinates);
-		}
-		if(coords.length > 0) {
-			var geometry = new ol.geom.LineString(coords, 'XYM');
-			var lineFeature = new ol.Feature({
-				geometry: geometry
-			});
-			lineFeature.setStyle(trailStyle);
-			gTrailSource.addFeature(lineFeature);
-
-			gTime.start = Math.min(gTime.start, geometry.getFirstCoordinate()[2]);
-			gTime.stop = Math.max(gTime.stop, geometry.getLastCoordinate()[2]);
-			gTime.duration = gTime.stop - gTime.start;
+				//gTrailData.features[i].coordinates.push(gTrailData.features[i].rawTime);	// Add attributes to Measure coordinate
+				coords.push(feature.points[j].coordinates);
+			}
+			if (coords.length > 0) {
+				var geometry = new ol.geom.LineString(coords, 'XYM');
+				var lineFeature = new ol.Feature({
+					geometry: geometry
+				});
+				lineFeature.setStyle(trailStyle);
+				gTrailSource.addFeature(lineFeature);
+			}
+			//gTime.start = Math.min(gTime.start, geometry.getFirstCoordinate()[2]);
+			//gTime.stop = Math.max(gTime.stop, geometry.getLastCoordinate()[2]);
+			//gTime.duration = gTime.stop - gTime.start;
 		}
 
 		gMap.getView().fit(gTrailSource.getExtent(), gMap.getSize());
