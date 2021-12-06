@@ -287,7 +287,7 @@ require([
 		gMap.on('postcompose', function(evt) {
 			var vectorContext = evt.vectorContext;
 			if (point !== null) {
-				vectorContext.setImageStyle(imageStyle);
+				vectorContext.setStyle(imageStyle);
 				vectorContext.drawPointGeometry(point);
 			}
 			if (line !== null) {
@@ -309,17 +309,19 @@ require([
 			var m = gTime.start + (gTime.duration * value);
 			gTrailSource.forEachFeature(function(feature) {
 				var geometry = /** @type {ol.geom.LineString} */ (feature.getGeometry());
-				var coordinate = geometry.getCoordinateAtM(m, true);
-				var highlight = feature.get('highlight');
-				if (highlight === undefined) {
-					highlight = new ol.Feature(new ol.geom.Point(coordinate));
-					feature.set('highlight', highlight);
-				} else {
-					highlight.getGeometry().setCoordinates(coordinate);
-				}
-				if(!gOverlayHasFeature) {
-					featureOverlay.getSource().addFeature(highlight);
-					gOverlayHasFeature = true;
+				var coordinate = geometry.getCoordinateAtM(m, false);
+				if(coordinate != null) {
+					var highlight = feature.get('highlight');
+					if (highlight === undefined) {
+						highlight = new ol.Feature(new ol.geom.Point(coordinate));
+						feature.set('highlight', highlight);
+					} else {
+						highlight.getGeometry().setCoordinates(coordinate);
+					}
+					if (!gOverlayHasFeature) {
+						featureOverlay.getSource().addFeature(highlight);
+						gOverlayHasFeature = true;
+					}
 				}
 			});
 			gMap.render();
@@ -411,8 +413,7 @@ require([
 			var feature = gTrailData.features[i];
 			coords = [];
 			for (j = 0; j < feature.points.length; j++) {
-
-				//gTrailData.features[i].coordinates.push(gTrailData.features[i].rawTime);	// Add attributes to Measure coordinate
+				feature.points[j].coordinates.push(feature.points[j].rawTime);	// Add attributes to Measure coordinate
 				coords.push(feature.points[j].coordinates);
 			}
 			if (coords.length > 0) {
@@ -422,10 +423,13 @@ require([
 				});
 				lineFeature.setStyle(trailStyle);
 				gTrailSource.addFeature(lineFeature);
+
+				gTime.start = Math.min(gTime.start, geometry.getFirstCoordinate()[2]);
+				gTime.stop = Math.max(gTime.stop, geometry.getLastCoordinate()[2]);
+				gTime.duration = gTime.stop - gTime.start;
 			}
-			//gTime.start = Math.min(gTime.start, geometry.getFirstCoordinate()[2]);
-			//gTime.stop = Math.max(gTime.stop, geometry.getLastCoordinate()[2]);
-			//gTime.duration = gTime.stop - gTime.start;
+
+
 		}
 
 		gMap.getView().fit(gTrailSource.getExtent(), gMap.getSize());
@@ -437,10 +441,12 @@ require([
 	var displaySnap = function(coordinate) {
 
 		// Clear the slider
-		var overlays = featureOverlay.getFeatures(),
+		var overlays = featureOverlay.getSource().getFeatures(),
 			i;
-		for(i = 0; i < overlays.a.length; i++) {
-			featureOverlay.getSource().removeFeature(overlays.a[i]);
+		if(overlays) {
+			for (i = 0; i < overlays.length; i++) {
+				featureOverlay.getSource().removeFeature(overlays[i]);
+			}
 		}
 		gOverlayHasFeature = false;
 
