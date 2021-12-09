@@ -60,6 +60,7 @@ require([
 	var gSurveyLocationLayer;
 	var gSurveyLocationSource;
 	var gTrailLayer;
+	var gHighlight;
 	var featureOverlay;
 	var overlaySource;
 	var gMap;
@@ -311,15 +312,14 @@ require([
 				var geometry = /** @type {ol.geom.LineString} */ (feature.getGeometry());
 				var coordinate = geometry.getCoordinateAtM(m, false);
 				if(coordinate != null) {
-					var highlight = feature.get('highlight');
-					if (highlight === undefined) {
-						highlight = new ol.Feature(new ol.geom.Point(coordinate));
-						feature.set('highlight', highlight);
+					
+					if (gHighlight === undefined) {
+						gHighlight = new ol.Feature(new ol.geom.Point(coordinate));
 					} else {
-						highlight.getGeometry().setCoordinates(coordinate);
+						gHighlight.getGeometry().setCoordinates(coordinate);
 					}
 					if (!gOverlayHasFeature) {
-						featureOverlay.getSource().addFeature(highlight);
+						featureOverlay.getSource().addFeature(gHighlight);
 						gOverlayHasFeature = true;
 					}
 				}
