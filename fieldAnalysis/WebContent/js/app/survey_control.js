@@ -819,7 +819,7 @@ function addUserTrail(view) {
 		endUtcValue = endUtc.valueOf();
 	}
 
-	getTrailData(globals.gCurrentProject, view.uId, startUtcValue, endUtcValue, showUserTrail);
+	getTrailData(globals.gCurrentProject, view.uId, startUtcValue, endUtcValue, showUserTrail, 200);
 
 }
 

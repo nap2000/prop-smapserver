@@ -66,7 +66,6 @@ require([
 	var gMap;
 	var point = null;
 	var line = null;
-	var gMps = 200;
 	var gAllUsers = false;
 	var gTime = {
 		start: Infinity,
@@ -118,6 +117,8 @@ require([
 		localise.setlang();
 		$('.date').prop("title", localise.set["c_lt"]);
 
+		$('#max_point_separation').val(200);		// Default value
+
 		// Set up the start and end dates with date picker
 		$('#startDate').datetimepicker({
 			locale: gUserLocale || 'en',
@@ -165,7 +166,7 @@ require([
 			getUserList();
 		});
 
-		$('#user_list').change(function() {
+		$('#user_list,#max_point_separation').change(function() {
 			getData();
 		});
 
@@ -176,7 +177,6 @@ require([
 
 		$('#exportMenu').click(function(e) {
 			e.preventDefault();
-			$('#max_point_separation').val(gMps);
 			$('#all_users').prop('checked', gAllUsers);
 			$('#trail_export_popup').modal("show");
 		});
@@ -191,24 +191,12 @@ require([
 			/*
 			 * Validate
 			 */
-			gMps = $('#max_point_separation').val();
-			if(!gMps || gMps < 0) {
+			var mps = $('#max_point_separation').val();
+			if(!mps || mps < 0) {
 				alert(localise.set["ut_mps_err"]);
 				return false;
 			}
 			gAllUsers = $('#all_users').prop('checked');
-
-			/* old
-			let url = '/surveyKPI/usertrail/export' +
-				'?userId=' + $('#user_list option:selected').val() +
-				'&startDate=' + startUtc.valueOf() +
-				'&endDate=' + endUtc.valueOf() +
-				'&mps=' + gMps +
-				'&filename=' + 'locations_' + $('#user_list option:selected').text() +
-				'&format=kml';
-
-			downloadFile(url);
-			*/
 
 			var reportObj = {
 				report_name: 'locations_' + (gAllUsers ? $('#project_name option:selected').text() : $('#user_list option:selected').text()),
@@ -218,7 +206,7 @@ require([
 					userId: (gAllUsers ? 0 : $('#user_list option:selected').val()),
 					startDate: startUtc.valueOf(),
 					endDate: endUtc.valueOf(),
-					mps: gMps
+					mps: mps
 				}
 			}
 
@@ -312,7 +300,7 @@ require([
 				var geometry = /** @type {ol.geom.LineString} */ (feature.getGeometry());
 				var coordinate = geometry.getCoordinateAtM(m, false);
 				if(coordinate != null) {
-					
+
 					if (gHighlight === undefined) {
 						gHighlight = new ol.Feature(new ol.geom.Point(coordinate));
 					} else {
@@ -387,12 +375,13 @@ require([
 	function getData() {
 
 		var startDate = $('#startDate').data("DateTimePicker").date().startOf('day'),
-			endDate = $('#endDate').data("DateTimePicker").date().endOf('day');	// Get end of displayed date
+			endDate = $('#endDate').data("DateTimePicker").date().endOf('day'),	// Get end of displayed date
+			mps = $('#max_point_separation').val();
 
 		var startUtc = moment.utc(startDate),
 			endUtc = moment.utc(endDate);
 
-		getTrailData(globals.gCurrentProject, $('#user_list option:selected').val(), startUtc.valueOf(), endUtc.valueOf(), showUserTrail, globals.gTimezone);
+		getTrailData(globals.gCurrentProject, $('#user_list option:selected').val(), startUtc.valueOf(), endUtc.valueOf(), showUserTrail, globals.gTimezone, mps);
 
 
 	}
