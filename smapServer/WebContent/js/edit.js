@@ -2102,9 +2102,9 @@ function respondToEvents($context) {
 
 
 		for (i = 0; i < appearanceArray.length; i++) {
-
+			foundAppearance = false;
+			
 			if (qAppearances && qAppearances.length > 0) {
-				foundAppearance = false;
 				for (j = 0; j < qAppearances.length; j++) {
 					appearanceDetails = globals.model.appearanceDetails[qAppearances[j]];
 
