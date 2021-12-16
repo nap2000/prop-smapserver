@@ -1829,7 +1829,7 @@ require([
 				h[++idx] = user.ident;
 				h[++idx] = '</button></td>';
 				h[++idx] = '<td style="text-align: center;">';
-				h[++idx] = user.name;
+				h[++idx] = htmlEncode(user.name);
 				h[++idx] = '</td>';
 				h[++idx] = '<td style="text-align: center;">';
 				h[++idx] = user.current_org_name;
@@ -1918,7 +1918,7 @@ require([
 			h[++idx] = '<td class="user_edit_td"><button class="btn btn-default project_edit" style="width:100%;" data-idx="';
 			h[++idx] = i;
 			h[++idx] = '">';
-			h[++idx] = project.name;
+			h[++idx] = htmlEncode(project.name);
 			h[++idx] = '</button></td>';
 			h[++idx] = '<td>';
 			h[++idx] = project.changed_by;
@@ -2023,7 +2023,7 @@ require([
 			h[++idx] = '<td class="user_edit_td"><button class="btn btn-default role_edit" style="width:100%;" value="';
 			h[++idx] = i;
 			h[++idx] = '">';
-			h[++idx] = role.name;
+			h[++idx] = htmlEncode(role.name);
 			h[++idx] = '</button></td>';
 			h[++idx] = '<td>';
 			h[++idx] = role.changed_by;
@@ -2131,7 +2131,7 @@ require([
 			h[++idx] = '<td class="user_edit_td"><button style="width:100%;" class="btn btn-default organisation_edit" value="';
 			h[++idx] = i;
 			h[++idx] = '">';
-			h[++idx] = organisation.name;
+			h[++idx] = htmlEncode(organisation.name);
 			h[++idx] = '</button></td>';
 			h[++idx] = '<td>';
 			h[++idx] = organisation.changed_by;
@@ -2260,7 +2260,7 @@ require([
 			h[++idx] = '<td class="user_edit_td"><button style="width:100%;" class="btn btn-default enterprise_edit" value="';
 			h[++idx] = i;
 			h[++idx] = '">';
-			h[++idx] = enterprise.name;
+			h[++idx] = htmlEncode(enterprise.name);
 			h[++idx] = '</button></td>';
 			h[++idx] = '<td>';
 			h[++idx] = enterprise.changed_by;
