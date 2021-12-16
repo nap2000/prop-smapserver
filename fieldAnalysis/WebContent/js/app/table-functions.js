@@ -202,7 +202,7 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 			}
 			for(k = 0; k < cols.length; k++) {
 				key = cols[k];
-				val = addAnchors(groups[i].properties[key], true);
+				val = addAnchors(htmlEncode(groups[i].properties[key]), true);  // Anchors after any HTML in the data has been encoded
 				recordObject[curGroup].push(val);
 			}
 		}
@@ -261,7 +261,7 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 					if (isGrouped && fn === "none") {
 						// Grouped but no aggregating function. Show as an array
 						for(j = 0; j < groups[i].properties[key].length; j++) {
-							val = groups[i].properties[key][j];
+							val = htmlEncode(groups[i].properties[key][j]);
 
 							if(typeof groups[i].geometry !== "undefined" &&         // Get the value from the geometry
 								typeof groups[i].geometry.coordinates != "undefined") {
@@ -273,7 +273,7 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 							gTab[++gIdx] = '</td>';
 						}
 					} else {
-						val = groups[i].properties[key];
+						val = htmlEncode(groups[i].properties[key]);
 						if(key === "_bad") {
 							if(val === "f") {
 								params = 'class="good_r" pkey="' + groups[i].properties.prikeys[0] + '"';
