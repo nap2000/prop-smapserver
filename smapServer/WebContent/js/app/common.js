@@ -604,8 +604,8 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 			$('#password_me_fields').hide();
 			addLanguageOptions($('.language_select'), data.language);
 			addOrganisationOptions($('.organisation_select'), data.o_id, data.orgs);
-			$('#me_name').val(data.name);
-			$('#me_email').val(data.email);
+			$('#me_name').val(htmlDecode(data.name));
+			$('#me_email').val(htmlDecode(data.email));
 			$('#me_enterprise').text(globals.gEnterpriseName);
 			$('#u_tz').val(globals.gTimezone);
 
@@ -622,8 +622,8 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 			$('#password_me_fields').hide();
 			addLanguageOptions($('.language_select'), data.language);
 			addOrganisationOptions($('.organisation_select'), data.o_id, data.orgs);
-			$('#me_name').val(data.name);
-			$('#me_email').val(data.email);
+			$('#me_name').val(htmlDecode(data.name));
+			$('#me_email').val(htmlDecode(data.email));
 			$('#me_enterprise').text(globals.gEnterpriseName);
 			$('#u_tz').val(globals.gTimezone);
 
@@ -5611,3 +5611,13 @@ function executeUsageReport(oId) {
 	//downloadFile(url);
 
 }
+
+/*
+ * Decode escaped HTML
+ * From https://stackoverflow.com/questions/1912501/unescape-html-entities-in-javascript
+ */
+function htmlDecode(input) {
+	var doc = new DOMParser().parseFromString(input, "text/html");
+	return doc.documentElement.textContent;
+}
+
