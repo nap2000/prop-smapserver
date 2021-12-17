@@ -794,7 +794,7 @@ function addSharedMaps(map, sharedMaps) {
 				h[++idx] = '<tr>';
 				h[++idx] = '<td>Location</td>';
 				h[++idx] = '<td>';
-				h[++idx] = aDataItem.group_value;
+				h[++idx] = htmlEncode(aDataItem.group_value);
 				h[++idx] = '</td>';
 				h[++idx] = '</tr>';
 			}
@@ -841,9 +841,9 @@ function addSharedMaps(map, sharedMaps) {
 				} else {
 					computedResult = "";	// No aggregation required
 				}
-				h[++idx] = addAnchors(computedResult, true).join(',');
+				h[++idx] = addAnchors(htmlEncode(computedResult), true).join(',');
 			} else {
-				h[++idx] = addAnchors(aDataItem.result, true).join(',');
+				h[++idx] = addAnchors(htmlEncode(aDataItem.result), true).join(',');
 			}
 			h[++idx] = '</td>';
 			h[++idx] = '</tr>';
@@ -865,10 +865,10 @@ function addSharedMaps(map, sharedMaps) {
 				for(i = 0; i < clusterData.length; i++) {
 					h[++idx] = '<tr>';
 					h[++idx] = '<td>';
-					h[++idx] = clusterData[i].attributes.group_value;
+					h[++idx] = htmlEncode(clusterData[i].attributes.group_value);
 					h[++idx] = '</td>';
 					h[++idx] = '<td>';
-					h[++idx] = addAnchors(clusterData[i].attributes.result, true).join(',');
+					h[++idx] = addAnchors(htmlEncode(clusterData[i].attributes.result), true).join(',');
 					h[++idx] = '</td>';
 					h[++idx] = '</tr>';
 				}
@@ -887,7 +887,7 @@ function addSharedMaps(map, sharedMaps) {
 						h[++idx] = aDataItem.records[i];
 						h[++idx] = '</td>';
 						h[++idx] = '<td>';
-						h[++idx] = addAnchors(aDataItem.sourceData[i], true).join(',');
+						h[++idx] = addAnchors(htmlEncode(aDataItem.sourceData[i]), true).join(',');
 						h[++idx] = '</td>';
 						h[++idx] = '</tr>';
 					}
@@ -951,10 +951,10 @@ function addSharedMaps(map, sharedMaps) {
 							} else if (key_orig === "_start" || key_orig === "_end" || key_orig === "Upload Time") {
 								// No change to value
 							}
-							h[++idx] = '<td>' + addAnchors(value_c, true).join(',') + '</td>';
+							h[++idx] = '<td>' + addAnchors(htmlEncode(value_c), true).join(',') + '</td>';
 						}
 					} else {
-						h[++idx] = '<td>' + addAnchors(value, true).join(',') + '</td>';
+						h[++idx] = '<td>' + addAnchors(htmlEncode(value), true).join(',') + '</td>';
 					}
 					h[++idx] = '</tr>';
 				}

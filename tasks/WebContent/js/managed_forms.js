@@ -2162,7 +2162,7 @@ require([
     }
 
     /*
-     * Show data from featurds selected on a map
+     * Show data from features selected on a map
      */
     function showSelectedMapData(properties) {
 
