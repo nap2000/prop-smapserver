@@ -141,7 +141,7 @@ function setChangesHtml($element, survey) {
 				h[++idx] = getChangeDescription(changes[i].change, changes[i].version);
 				h[++idx] = '</td>';
 				h[++idx] = '<td>';
-				h[++idx] = changes[i].userName;
+				h[++idx] = htmlEncode(changes[i].userName);
 				h[++idx] = '</td>';
 				h[++idx] = '<td>';
 				h[++idx] = changes[i].updatedTime;
