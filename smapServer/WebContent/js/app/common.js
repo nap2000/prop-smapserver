@@ -2396,7 +2396,7 @@ function getChangeDescription(change, version) {
 	}  else if(change.action === "settings_update") {
 		h[++idx] = localise.set["ed_c_settings"];
 		h[++idx] = ' <span style="color:blue;">';
-		h[++idx] = change.msg;
+		h[++idx] = htmlEncode(change.msg);
 		h[++idx] = '</span>';
 
 	}   else if(change.action === "language_update") {
@@ -2421,11 +2421,11 @@ function getChangeDescription(change, version) {
 		 * Updates to questions and options and list names
 		 */
 		if(change.property.prop === "type") {
-			newVal = translateType(change.property.newVal);
-			oldVal = translateType(change.property.oldVal);
+			newVal = htmlEncode(translateType(change.property.newVal));
+			oldVal = htmlEncode(translateType(change.property.oldVal));
 		} else {
-			newVal = change.property.newVal;
-			oldVal = change.property.oldVal;
+			newVal = htmlEncode(change.property.newVal);
+			oldVal = htmlEncode(change.property.oldVal);
 		}
 
 
