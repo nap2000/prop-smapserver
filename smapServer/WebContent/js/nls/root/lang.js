@@ -247,6 +247,7 @@ define({
     "c_of": "of",
     "c_media": "Media",
     "c_changes": "Changes",
+    "c_templates": "Templates",
     "c_meta": "Meta Items",
     "c_calc": "Calculations",
     "c_trans": "Translate",
