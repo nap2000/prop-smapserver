@@ -19,149 +19,118 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 var gUserLocale = navigator.language;
 if (Modernizr.localstorage) {
 	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
+}
 
 "use strict";
 require.config({
-    baseUrl: '/js/libs',
-    waitSeconds: 0,
-    locale: gUserLocale,
-    paths: {
-    	app: '/js/app',
-    	lang_location: '/js'
-    },
-    shim: {
-    	'app/common': ['jquery'],
-        'jquery.autosize.min': ['jquery']
-    }
+	baseUrl: '/js/libs',
+	waitSeconds: 0,
+	locale: gUserLocale,
+	paths: {
+		app: '/js/app',
+		lang_location: '/js'
+	},
+	shim: {
+		'app/common': ['jquery'],
+		'jquery.autosize.min': ['jquery']
+	}
 });
 
 require([
-         'jquery',
-         'app/common',
-         'app/localise',
-         'app/globals'],
-		function($, common, lang, globals) {
+		'jquery',
+		'app/common',
+		'app/localise',
+		'app/globals'],
+	function($, common, lang, globals) {
 
-$(document).ready(function() {
+		$(document).ready(function() {
 
-	setupUserProfile(true);
-	localise.setlang();		// Localise HTML
+			setupUserProfile(true);
+			localise.setlang();		// Localise HTML
 
-	// Get the user details
-	globals.gIsAdministrator = false;
-	getLoggedInUser(surveyListDone, false, true, undefined, false, false);
+			// Get the user details
+			globals.gIsAdministrator = false;
+			getLoggedInUser(surveyListDone, false, true, undefined, false, false);
 
-});
+		});
 
-function surveyListDone() {
-	getSurveyDetails(refreshView, true);
-}
-
-function refreshView() {
-	setChangesHtml($('#changes'), globals.model.survey);
-}
-
-
-/*
- * Convert change log JSON to html
- */
-function setChangesHtml($element, survey) {
-	var h =[],
-		idx = -1,
-		i,
-		changes;
-	
-	if(!survey) {
-		$('#errormesg').html("<strong>No Changes</strong> Create or select a survey to see changes");
-		$('#infobox').show();
-	} else {
-
-		changes = survey.changes;
-		
-		h[++idx] = '<table class="table table-responsive-sm table-striped">';
-		
-		// write the table headings
-		h[++idx] = '<thead>';
-			h[++idx] = '<tr>';
-        		h[++idx] = '<th>';
-        			h[++idx] = localise.set["c_version"];
-        		h[++idx] = '</th>';
-
-        		h[++idx] = '<th>';
-        			h[++idx] = localise.set["c_changes"];
-        		h[++idx] = '</th>';
-
-        		h[++idx] = '<th>';
-					h[++idx] = localise.set["rev_cb"];
-        		h[++idx] = '</th>';
-
-				h[++idx] = '<th>';
-					h[++idx] = localise.set["ed_dt"];
-					h[++idx] = ' (';
-					h[++idx] = globals.gTimezone;
-					h[++idx] = ')';
-				h[++idx] = '</th>';
-
-				h[++idx] = '<th>' + localise.set["c_file"] + '</th>';
-				h[++idx] = '<th>' + localise.set["c_msg"] + '</th>';
-			h[++idx] = '</tr>';
-		h[++idx] = '</thead>';
-		
-		// Write the table body
-		h[++idx] = '<body>';
-		for(i = 0; i < changes.length; i++) {
-			
-			var status = "pending";
-			if(!changes[i].apply_results) {		// Change has been applied to the results tables
-				status = changes[i].success ? "success" : "failed";
-			}
-			var filehtml = "";
-			if(changes[i].change.fileName && changes[i].change.fileName.trim().length > 0) {
-                var filename = changes[i].change.fileName;
-				var fnIndex = changes[i].change.fileName.lastIndexOf('/');
-				if(fnIndex >= 0) {
-					filename = filename.substr(fnIndex + 1);
-				}
-				var url = null;
-				if(filename.indexOf("_template.pdf") > 0) {
-					url = '/surveyKPI/file/' + filename + '/surveyPdfTemplate/' + changes[i].change.origSId + '?archive=true';
-				} else {
-					url = '/surveyKPI/survey/' + changes[i].change.origSId + '/download?type=xlsx';
-				}
-                filehtml = '<a href="' + url + '">' + filename + '</a>';
-			}
-			h[++idx] = '<tr class="change_';
-					h[++idx] = status;
-					h[++idx] = '">';
-				h[++idx] = '<td>';
-				h[++idx] = changes[i].version;
-				h[++idx] = '</td>';	
-				h[++idx] = '<td>';
-				h[++idx] = getChangeDescription(changes[i].change, changes[i].version);
-				h[++idx] = '</td>';
-				h[++idx] = '<td>';
-				h[++idx] = htmlEncode(changes[i].userName);
-				h[++idx] = '</td>';
-				h[++idx] = '<td>';
-				h[++idx] = changes[i].updatedTime;
-				h[++idx] = '</td>';
-				h[++idx] = '<td>';
-				h[++idx] = filehtml;
-				h[++idx] = '</td>';
-				h[++idx] = '<td>';
-				h[++idx] = changes[i].msg;
-				h[++idx] = '</td>';
-			h[++idx] = '</tr>';
+		function surveyListDone() {
+			getTemplates();
 		}
-		h[++idx] = '</body>';
-		
-		h[++idx] = '</table>';
-	} 
-	
-	$element.html(h.join(''));
-	
-	
-}
 
-});
+		/*
+         * Get a survey details - depends on globals being set
+         */
+		function getTemplates() {
+
+			var tz = globals.gTimezone;
+			var url="/surveyKPI/surveys/templates/" + globals.gCurrentSurvey;
+			url += "?tz=" + encodeURIComponent(tz);
+
+			addHourglass();
+			$.ajax({
+				url: url,
+				dataType: 'json',
+				cache: false,
+				success: function(data) {
+					removeHourglass();
+					setTemplatesHtml(data);
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						if(xhr.status == 404) {
+							// The current survey has probably been deleted or the user no longer has access
+							globals.gCurrentSurvey = undefined;
+							return;
+						}
+						alert("Error: Failed to get templates: " + err);
+					}
+				}
+			});
+
+		}
+
+		/*
+         * Convert change log JSON to html
+         */
+		function setTemplatesHtml(templates) {
+			var h =[],
+				idx = -1,
+				i;
+
+			if(templates) {
+
+				h[++idx] = '<table class="table table-responsive-sm table-striped">';
+
+				// write the table headings
+				h[++idx] = '<thead>';
+				h[++idx] = '<tr>';
+				h[++idx] = '<th>';
+				h[++idx] = localise.set["c_name"];
+				h[++idx] = '</th>';
+				h[++idx] = '</tr>';
+				h[++idx] = '</thead>';
+
+				// Write the table body
+				h[++idx] = '<body>';
+				for(i = 0; i < templates.length; i++) {
+					h[++idx] = '</tr>';
+					h[++idx] = '<td>';
+					h[++idx] = templates[i].name;
+					h[++idx] = '</td>';
+					h[++idx] = '</tr>';
+				}
+				h[++idx] = '</body>';
+
+				h[++idx] = '</table>';
+			}
+
+			$('#templates').html(h.join(''));
+
+
+		}
+
+	});
