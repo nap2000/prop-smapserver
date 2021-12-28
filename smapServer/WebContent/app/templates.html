@@ -74,9 +74,57 @@
 
 <div class="container-fluid mt-4 px-4">
 
-	<div id="templates" class="bg-light mt-4 row">
+	<div class="card text-center mt-10">
+		<div class="card-header">
+			<div class="col-lg-3 col-sm-4 col-xs-12 mt-1 mb-1">
+				<button	id="addTemplate" class="btn btn-primary lang btn-block pl-4 pr-4" data-lang="tm_up" value="upload template" >upload</button>
+			</div>
+		</div>
+		<div class="card-body">
+			<div id="templates" class="bg-light table-responsive mt-4"></div>
+		</div>
 	</div>
+</div>
 
+<!-- Popup to add a new template -->
+<div id="template_add" class="modal fade" tabindex="-1" aria-labelledby="template_add_title" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 id="template_add_title"><span class="lang" data-lang="tm_up">load</span></h5>
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+			</div>
+			<div class="modal-body">
+
+				<div id="up_alert" style="display:none; word-wrap:break-word;" class="alert alert-success" role="alert"></div>
+				<div id="up_warnings" style="display:none;" class="alert alert-warning" role="alert"></div>
+				<form id="uploadForm" name="uploadTemplate" accept-charset="utf-8">
+					<div class="form-group row notreplace">
+						<label class="col-sm-2 col-form-label" for="templateName"><span data-lang="c_name" class="lang">Name</span>:</label>
+						<div class="col-sm-10">
+							<input id="templateName" class="form-control" type="text" name="templateName" maxlength="100" required />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label" for="file"><span data-lang="c_file" class="lang">file</span></label>
+						<div class="col-sm-10">
+							<input type="file" class="form-control-file" name="tname" id="file" required/>
+						</div>
+					</div>
+
+					<input id="surveyId" type="hidden" name="surveyId" value="" style="display:none;"/>
+					<input id="projectId" type="hidden" name="projectId" value="" style="display:none;"/>
+					<input id="uploadAction" type="hidden" name="action" value="" style="display:none;"/>
+				</form>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="submitFileGroup" type="button" class="btn btn-primary lang" data-lang="c_upload">Upload</button>
+			</div>
+		</div>
+	</div>
 </div>
 </body>
 </html>

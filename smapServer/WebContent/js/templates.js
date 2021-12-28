@@ -48,6 +48,10 @@ require([
 			setupUserProfile(true);
 			localise.setlang();		// Localise HTML
 
+			$('#addTemplate').click( function(e) {
+				$('#template_add').modal('show');
+			});
+
 			// Get the user details
 			globals.gIsAdministrator = false;
 			getLoggedInUser(surveyListDone, false, true, undefined, false, false);
