@@ -901,7 +901,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             });
         }
 
-        //Block or ublock the template
+        //Block or unblock the template
         function executeBlock(template, set) {
 
             var blockURL = "/surveyKPI/survey/" + template + "/block?set=" + set;
@@ -924,7 +924,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
         }
 
         /*
-         * Upload a template
+         * Upload a survey form
          */
         function uploadTemplate() {
 

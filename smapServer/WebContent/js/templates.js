@@ -52,6 +52,37 @@ require([
 				$('#template_add').modal('show');
 			});
 
+			$('#templateLoad').click( function(e) {
+				templateLoad();
+			});
+
+			$('#templateName').keydown(function(){
+				$('#up_alert, #up_warnings').hide();
+			});
+
+			// Change function on file selected
+			$('#file').change(function(){
+				var templateName = $('#templateName').val();
+				var $this = $(this);
+				var fileName = $this[0].files[0].name;
+				var newTemplateName;
+
+				$('#up_alert, #up_warnings').hide();
+
+				if(templateName && templateName.trim().length > 0) {
+					// ignore - leave user specified name
+				} else {
+					var lastDot = fileName.lastIndexOf(".");
+					if (lastDot === -1) {
+						newTemplateName = fileName;
+					} else {
+						newTemplateName = fileName.substr(0, lastDot);
+					}
+					$('#templateName').val(newTemplateName);
+				}
+			});
+
+
 			// Get the user details
 			globals.gIsAdministrator = false;
 			getLoggedInUser(surveyListDone, false, true, undefined, false, false);
@@ -94,7 +125,6 @@ require([
 					}
 				}
 			});
-
 		}
 
 		/*
@@ -133,8 +163,59 @@ require([
 			}
 
 			$('#templates').html(h.join(''));
+		}
 
+		/*
+  		 * Upload a template
+  		 */
+		function templateLoad() {
 
+			$('#up_alert, #up_warnings').hide();
+			var f = document.forms.namedItem("uploadTemplate");
+			var formData = new FormData(f);
+			var url;
+
+			let file = $('#templateName').val();
+			if(!file || file.trim().length == 0) {
+				$('#up_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(localise.set["msg_val_nm"]);
+				$('#templateLoad').prop("disabled", false);  // debounce
+				return false;
+			}
+
+			url = '/surveyKPI/surveys/add_template/' + globals.gCurrentSurvey;
+
+			addHourglass();
+			$.ajax({
+				url: url,
+				type: 'POST',
+				data: formData,
+				dataType: 'json',
+				cache: false,
+				contentType: false,
+				processData:false,
+				success: function() {
+					removeHourglass();
+					$('#templateLoad').prop("disabled", false);  // debounce
+
+					document.forms.namedItem("uploadTemplate").reset();
+					getTemplates();
+					$('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
+
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+					$('#submitFileGroup').prop("disabled", false);  // debounce
+
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						var msg = xhr.responseText;
+
+						$('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_u_f"] + ": " + msg);
+						$('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
+					}
+				}
+			});
 		}
 
 	});
