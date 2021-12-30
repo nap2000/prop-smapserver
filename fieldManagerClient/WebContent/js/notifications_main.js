@@ -181,6 +181,10 @@ require([
 					alert(localise.set["msg_pc"]);
 					return(-1);
 				}
+				if(!notification.s_id) {
+					alert(localise.set["msg_rs"]);
+					return(-1);
+				}
 			}
 
 			if(notification.trigger === 'console_update') {
