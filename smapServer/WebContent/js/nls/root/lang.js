@@ -480,6 +480,7 @@ define({
     "msg_pk_sel": "You can only select the record identifier if you have selected the \"Update a different question\" checkbox",
     "msg_wait": "Waiting for a response from the server. Please try again in a few seconds",
     "msg_reason": "Please provide a reason: ",
+    "msg_rs": "Reminder notifications must be associated with a task group that has tasks generated from a survey.  You cannot send reminders for ad-hoc tasks",
     "msg_sel_survey": "You must select a survey",
     "msg_sel_dates": "From date is greater than To date",
 	"msg_no_from": "If you specify the scheduled end date, then also specify the scheduled start date",
