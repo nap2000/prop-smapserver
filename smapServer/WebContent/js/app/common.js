@@ -2393,13 +2393,19 @@ function getChangeDescription(change, version) {
 		h[++idx] = change.fileName;
 		h[++idx] = '</span>';
 
-	}  else if(change.action === "settings_update") {
+	} else if(change.action === "template_update") {
+		h[++idx] = localise.set["ed_c_template"];
+		h[++idx] = ' <span style="color:blue;">';
+		h[++idx] = htmlEncode(change.msg);
+		h[++idx] = '</span>';
+
+	} else if(change.action === "settings_update") {
 		h[++idx] = localise.set["ed_c_settings"];
 		h[++idx] = ' <span style="color:blue;">';
 		h[++idx] = htmlEncode(change.msg);
 		h[++idx] = '</span>';
 
-	}   else if(change.action === "language_update") {
+	} else if(change.action === "language_update") {
 		h[++idx] = localise.set["ed_c_languages"];
 		h[++idx] = ' <span style="color:blue;">';
 		h[++idx] = change.msg;
