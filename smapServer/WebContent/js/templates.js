@@ -49,6 +49,7 @@ require([
 			localise.setlang();		// Localise HTML
 
 			$('#addTemplate').click( function(e) {
+				$('#up_alert, #up_warnings').hide();
 				$('#template_add').modal('show');
 			});
 
@@ -198,6 +199,7 @@ require([
 					$('#templateLoad').prop("disabled", false);  // debounce
 
 					document.forms.namedItem("uploadTemplate").reset();
+					$('#template_add').modal('hide');
 					getTemplates();
 					$('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
 
