@@ -10,8 +10,11 @@ cp -rf ~/git/prop-smapserver/smap ~/deploy
 cp -rf ~/git/smapserver2/setup/deploy/* ~/deploy/smap/deploy
 cp -rf ~/git/smapserver2/setup/install/* ~/deploy/smap/install
 
-# Override the opensource deploy with the standard deploy
-cp -rf ~/git/prop-smapserver/smap/deploy/deploy.sh ~/deploy/smap/deploy
+# Restore credentials file
+cp -rf ~/git/prop-smapserver/smap/deploy/version1/resources/properties/setcredentials.sh ~/deploy/smap/deploy/version1/resources/properties
+
+# Append proprietary components to deploy script
+echo "# Hosted Only\ncd $cwd\nsudo -u postgres $PSQL -f ./rates.sql -q -d survey_definitions 2>&1 | grep -v duplicate | grep -v \"already exists\"" >> ~/deploy/smap/deploy/deploy.sh
 
 # Get miscelaneous files
 cp ~/deploy/fieldTask.apk ~/deploy/smap/deploy/version1
