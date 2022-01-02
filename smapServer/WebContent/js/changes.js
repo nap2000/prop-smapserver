@@ -125,7 +125,12 @@ function setChangesHtml($element, survey) {
 				}
 				var url = null;
 				if(filename.indexOf(".pdf") === filename.length - 4) {
-					url = '/surveyKPI/file/' + filename + '/surveyPdfTemplate/' + changes[i].change.origSId + '?archive=true';
+					if(!changes[i].msg) {
+						// deprecated old style
+						url = '/surveyKPI/file/' + filename + '/surveyPdfTemplate/' + changes[i].change.origSId + '?archive=true';
+					} else {
+						url = '/surveyKPI/file/' + encodeURIComponent(changes[i].msg) + '/pdfTemplate/' + changes[i].change.origSId;
+					}
 				} else {
 					url = '/surveyKPI/survey/' + changes[i].change.origSId + '/download?type=xlsx';
 				}
