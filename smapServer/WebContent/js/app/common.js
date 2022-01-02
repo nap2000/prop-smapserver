@@ -2399,6 +2399,18 @@ function getChangeDescription(change, version) {
 		h[++idx] = htmlEncode(change.msg);
 		h[++idx] = '</span>';
 
+	} else if(change.action === "template_add") {
+		h[++idx] = localise.set["ed_a_template"];
+		h[++idx] = ' <span style="color:blue;">';
+		h[++idx] = htmlEncode(change.msg);
+		h[++idx] = '</span>';
+
+	} else if(change.action === "template_delete") {
+		h[++idx] = localise.set["ed_c_template"];
+		h[++idx] = ' <span style="color:red;">';
+		h[++idx] = htmlEncode(change.msg);
+		h[++idx] = '</span>';
+
 	} else if(change.action === "settings_update") {
 		h[++idx] = localise.set["ed_c_settings"];
 		h[++idx] = ' <span style="color:blue;">';

@@ -43,6 +43,8 @@ require([
 		'app/globals'],
 	function($, common, lang, globals) {
 
+		var gTemplates;
+
 		$(document).ready(function() {
 
 			setupUserProfile(true);
@@ -110,7 +112,8 @@ require([
 				cache: false,
 				success: function(data) {
 					removeHourglass();
-					setTemplatesHtml(data);
+					gTemplates = data;
+					setTemplatesHtml();
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
@@ -131,12 +134,12 @@ require([
 		/*
          * Convert change log JSON to html
          */
-		function setTemplatesHtml(templates) {
+		function setTemplatesHtml() {
 			var h =[],
 				idx = -1,
 				i;
 
-			if(templates) {
+			if(gTemplates) {
 
 				h[++idx] = '<table class="table table-responsive-sm table-striped">';
 
@@ -146,16 +149,29 @@ require([
 				h[++idx] = '<th>';
 				h[++idx] = localise.set["c_name"];
 				h[++idx] = '</th>';
+				h[++idx] = '<th>' + localise.set["c_dis"] + '</th>';	// Disable Checkbox
+				h[++idx] = '<th></th>';		// delete button
 				h[++idx] = '</tr>';
 				h[++idx] = '</thead>';
 
 				// Write the table body
 				h[++idx] = '<body>';
-				for(i = 0; i < templates.length; i++) {
+				for(i = 0; i < gTemplates.length; i++) {
 					h[++idx] = '</tr>';
 					h[++idx] = '<td>';
-					h[++idx] = templates[i].name;
+					h[++idx] = gTemplates[i].name;
 					h[++idx] = '</td>';
+
+					// Disable checkbox
+
+					// Delete button
+					h[++idx] = '<td>';
+					h[++idx] = '<button type="button" data-idx="';
+					h[++idx] = i;
+					h[++idx] = '" class="btn btn-danger mx-2 btn-sm rm_template danger">';
+					h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
+					h[++idx] = '</td>';
+
 					h[++idx] = '</tr>';
 				}
 				h[++idx] = '</body>';
@@ -164,6 +180,11 @@ require([
 			}
 
 			$('#templates').html(h.join(''));
+
+			$(".rm_template", '#templates').click(function(){
+				var idx = $(this).data("idx");
+				deleteTemplate(gTemplates[idx]);
+			});
 		}
 
 		/*
@@ -215,6 +236,31 @@ require([
 
 						$('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_u_f"] + ": " + msg);
 						$('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
+					}
+				}
+			});
+		}
+
+		/*
+ 		 * Delete a template
+ 		 */
+		function deleteTemplate(template) {
+
+			addHourglass();
+			$.ajax({
+				type: "DELETE",
+				async: false,
+				url: "/surveyKPI/surveys/delete_template/" + globals.gCurrentSurvey + "/" + template.id,
+				success: function(data, status) {
+					removeHourglass();
+					getTemplates();
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(localise.set["msg_err_del"] + xhr.responseText);
 					}
 				}
 			});
