@@ -1005,6 +1005,7 @@ define({
     "ed_e": "Expression",
     "ed_drl": "Default report logo",
     "ed_voice": "Voice only",
+    "ed_na": "Not available",
 
     // Managed Forms
     "mf_id": "Include Deleted",

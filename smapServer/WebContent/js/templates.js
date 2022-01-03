@@ -88,11 +88,11 @@ require([
 
 			// Get the user details
 			globals.gIsAdministrator = false;
-			getLoggedInUser(surveyListDone, false, true, undefined, false, false);
+			getLoggedInUser(getUserDone, false, true, undefined, false, false);
 
 		});
 
-		function surveyListDone() {
+		function getUserDone() {
 			getTemplates();
 		}
 
@@ -149,7 +149,8 @@ require([
 				h[++idx] = '<th>';
 				h[++idx] = localise.set["c_name"];
 				h[++idx] = '</th>';
-				h[++idx] = '<th>' + localise.set["c_dis"] + '</th>';	// Disable Checkbox
+				h[++idx] = '<th>' + localise.set["ed_na"] + '</th>';	// Disable Checkbox
+				h[++idx] = '<th>' + localise.set["c_default"] + '</th>';	// Disable Checkbox
 				h[++idx] = '<th></th>';		// delete button
 				h[++idx] = '</tr>';
 				h[++idx] = '</thead>';
@@ -157,12 +158,32 @@ require([
 				// Write the table body
 				h[++idx] = '<body>';
 				for(i = 0; i < gTemplates.length; i++) {
-					h[++idx] = '</tr>';
+					h[++idx] = '<tr';
+					if(gTemplates[i].not_available) {
+						h[++idx] = ' class="blocked"';
+					}
+					h[++idx] = '>';
 					h[++idx] = '<td>';
 					h[++idx] = gTemplates[i].name;
 					h[++idx] = '</td>';
 
-					// Disable checkbox
+					// Not available checkbox
+					h[++idx] = '<td class="not_available"><input type="checkbox" name="block" value="';
+					h[++idx] = gTemplates[i].id;
+					h[++idx] = '" ';
+					if(gTemplates[i].not_available) {
+						h[++idx] = 'checked="checked"';
+					}
+					h[++idx] = '></td>';
+
+					// Default checkbox
+					h[++idx] = '<td class="default_template"><input type="checkbox" name="block" value="';
+					h[++idx] = gTemplates[i].id;
+					h[++idx] = '" ';
+					if(gTemplates[i].default_template) {
+						h[++idx] = 'checked="checked"';
+					}
+					h[++idx] = '></td>';
 
 					// Delete button
 					h[++idx] = '<td>';
@@ -184,6 +205,38 @@ require([
 			$(".rm_template", '#templates').click(function(){
 				var idx = $(this).data("idx");
 				deleteTemplate(gTemplates[idx]);
+			});
+
+			$('.not_available').find('input').click(function() {
+
+				var $template,
+					$this = $(this),
+					id;
+
+				$template = $this.closest('tr');
+				id=$this.val();
+
+				if($this.is(':checked')) {
+					$template.addClass('blocked');
+					updateTemplateProperty(id, 'not_available', true);
+				} else {
+					$template.removeClass('blocked');
+					updateTemplateProperty(id, 'not_available', false);
+				}
+
+			});
+
+			$('.default_template').find('input').click(function() {
+
+				var $template,
+					$this = $(this),
+					id;
+
+				$template = $this.closest('tr');
+				id=$this.val();
+
+				updateTemplateProperty(id, 'default_template', $this.is(':checked'));
+
 			});
 		}
 
@@ -262,6 +315,38 @@ require([
 					} else {
 						alert(localise.set["msg_err_del"] + xhr.responseText);
 					}
+				}
+			});
+		}
+
+		/*
+ 		 * Update a property for the specified template
+ 		 */
+		function updateTemplateProperty(id, property, value) {
+
+			var prop = {
+				id: id,
+				property: property,
+				value: value
+			};
+
+			var propString = JSON.stringify(prop);
+
+			addHourglass();
+			$.ajax({
+				type: "POST",
+				contentType: "application/json",
+				url: "/surveyKPI/surveys/update_template_property",
+				cache: false,
+				data: { prop: propString },
+				success: function() {
+					var theProp = prop;
+					if(theProp.property === 'default_template') {
+						getTemplates();	// Reload templates view
+					}
+					removeHourglass();
+				}, error: function() {
+					removeHourglass();
 				}
 			});
 		}
