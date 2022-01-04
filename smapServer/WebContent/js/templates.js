@@ -159,7 +159,7 @@ require([
 				h[++idx] = '<body>';
 				for(i = 0; i < gTemplates.length; i++) {
 					h[++idx] = '<tr';
-					if(gTemplates[i].not_available) {
+					if (gTemplates[i].not_available) {
 						h[++idx] = ' class="blocked"';
 					}
 					h[++idx] = '>';
@@ -168,22 +168,29 @@ require([
 					h[++idx] = '</td>';
 
 					// Not available checkbox
-					h[++idx] = '<td class="not_available"><input type="checkbox" name="block" value="';
-					h[++idx] = gTemplates[i].id;
-					h[++idx] = '" ';
-					if(gTemplates[i].not_available) {
-						h[++idx] = 'checked="checked"';
-					}
-					h[++idx] = '></td>';
+					if (!gTemplates[i].fromSettings) {
 
-					// Default checkbox
-					h[++idx] = '<td class="default_template"><input type="checkbox" name="block" value="';
-					h[++idx] = gTemplates[i].id;
-					h[++idx] = '" ';
-					if(gTemplates[i].default_template) {
-						h[++idx] = 'checked="checked"';
+						h[++idx] = '<td class="not_available"><input type="checkbox" name="block" value="';
+						h[++idx] = gTemplates[i].id;
+						h[++idx] = '" ';
+						if (gTemplates[i].not_available) {
+							h[++idx] = 'checked="checked"';
+						}
+						h[++idx] = '></td>';
+
+						// Default checkbox
+						h[++idx] = '<td class="default_template"><input type="checkbox" name="block" value="';
+						h[++idx] = gTemplates[i].id;
+						h[++idx] = '" ';
+						if (gTemplates[i].default_template) {
+							h[++idx] = 'checked="checked"';
+						}
+						h[++idx] = '></td>';
+					} else {
+						h[++idx] = '<td colspan="2">';
+						h[++idx] = localise.set["ed_s_templates"],
+						h[++idx] = '</td>';
 					}
-					h[++idx] = '></td>';
 
 					// Delete button
 					h[++idx] = '<td>';
