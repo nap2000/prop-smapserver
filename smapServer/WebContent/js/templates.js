@@ -120,11 +120,6 @@ require([
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						if(xhr.status == 404) {
-							// The current survey has probably been deleted or the user no longer has access
-							globals.gCurrentSurvey = undefined;
-							return;
-						}
 						alert("Error: Failed to get templates: " + err);
 					}
 				}
@@ -192,12 +187,28 @@ require([
 						h[++idx] = '</td>';
 					}
 
-					// Delete button
+					// Actions
 					h[++idx] = '<td>';
+
+					// Download button
+					h[++idx] = '<a href="';
+					if (!gTemplates[i].fromSettings) {
+						h[++idx] = '/surveyKPI/file/' + encodeURIComponent(gTemplates[i].name) + '/pdfTemplate/' + globals.gCurrentSurvey;
+					} else {
+						h[++idx] = '/surveyKPI/file/pdf/surveyPdfTemplate/' + globals.gCurrentSurvey;
+					}
+					h[++idx] = "?_v=" + new Date().getTime().toString();	// cache buster
+					h[++idx] = '" type="button" data-idx="';
+					h[++idx] = i;
+					h[++idx] = '" class="btn btn-info mx-2 btn-sm">';
+					h[++idx] = '<i class="fa fa-arrow-down" aria-hidden="true"></i></a>';
+
+					// Delete button
 					h[++idx] = '<button type="button" data-idx="';
 					h[++idx] = i;
 					h[++idx] = '" class="btn btn-danger mx-2 btn-sm rm_template danger">';
-					h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
+					h[++idx] = '<i class="fas fa-trash-alt" aria-hidden="true"></i></button>';
+
 					h[++idx] = '</td>';
 
 					h[++idx] = '</tr>';

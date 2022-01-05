@@ -440,6 +440,33 @@ function addUserDetailsPopup() {
 }
 
 /*
+ * Populate a language select widget
+ */
+function populateLanguageSelect(sId, $elem) {
+	$.getJSON("/surveyKPI/languages/" + sId, function(data) {
+
+		$elem.empty();
+		$.each(data, function(j, item) {
+			$elem.append('<option value="' + item + '">' + item + '</option>');
+		});
+	});
+}
+
+/*
+ * Populate a pdf select widget
+ */
+function populatePdfSelect(sId, $elem) {
+	$.getJSON("/surveyKPI/surveys/templates/" + sId, function(data) {
+
+		$elem.empty();
+		$elem.append('<option value="-1">' + localise.set["c_none"] + '</option>');
+		$.each(data, function(j, item) {
+			$elem.append('<option value="' + item.id + '"' + (item.default_template ? 'selected' : '') + '>' + item.name + '</option>');
+		});
+	});
+}
+
+/*
  * Add user details popup to the page
  */
 function addUserDetailsPopupBootstrap4() {
@@ -2823,11 +2850,12 @@ function isLate(finish) {
 
 }
 
-function downloadPdf(language, orientation, include_references, launched_only, sIdent, instanceId) {
+function downloadPdf(language, orientation, include_references, launched_only, sIdent, instanceId, pdfTemplateId) {
 
 	var docURL = "/surveyKPI/pdf/" + sIdent
 		+ "?language=" + language
 		+ "&instance=" + instanceId
+		+ "&pdftemplate=" + pdfTemplateId
 		+ "&tz=" + globals.gTimezone;
 	if(orientation === "landscape") {
 		docURL += "&landscape=true";
