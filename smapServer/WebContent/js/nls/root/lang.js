@@ -248,6 +248,7 @@ define({
     "c_media": "Media",
     "c_changes": "Changes",
     "c_templates": "PDF Templates",
+    "c_template": "PDF Template",
     "c_meta": "Meta Items",
     "c_calc": "Calculations",
     "c_trans": "Translate",
