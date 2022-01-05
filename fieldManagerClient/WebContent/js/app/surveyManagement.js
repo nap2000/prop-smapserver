@@ -681,15 +681,9 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 
                 gSelectedTemplateId = $(this).val();
                 gSelectedTemplateIdent = gSurveys[surveyIndex].ident;
-                $.getJSON("/surveyKPI/languages/" + gSelectedTemplateId, function(data) {
+                populateLanguageSelect(gSelectedTemplateId, $('#download_language'));
+                populatePdfSelect(gSelectedTemplateId, $('#select_pdf'));
 
-                    var $languageSelect = $('#download_language');
-                    $languageSelect.empty();
-
-                    $.each(data, function(j, item) {
-                        $languageSelect.append('<option value="' + item + '">' + item + '</option>');
-                    });
-                });
                 gSelectedTemplateName = $(this).parent().siblings(".displayName").text();
                 $('h4', '#download_template').html(localise.set["c_download"] + " " + gSelectedTemplateName);
                 $('#dtversion').html(surveyVersion);

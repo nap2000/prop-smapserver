@@ -615,7 +615,7 @@ require([
             var sIdent = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].ident;
             var instanceId = gTasks.gSelectedRecord.instanceid;
 
-            downloadPdf(language, orientation, include_references, launched_only, sIdent, instanceId);
+            downloadPdf(language, orientation, include_references, launched_only, sIdent, instanceId, pdfTemplate);
         });
 
         /*
