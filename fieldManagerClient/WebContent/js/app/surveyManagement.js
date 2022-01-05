@@ -682,7 +682,6 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                 gSelectedTemplateId = $(this).val();
                 gSelectedTemplateIdent = gSurveys[surveyIndex].ident;
                 populateLanguageSelect(gSelectedTemplateId, $('#download_language'));
-                populatePdfSelect(gSelectedTemplateId, $('#select_pdf'));
 
                 gSelectedTemplateName = $(this).parent().siblings(".displayName").text();
                 $('h4', '#download_template').html(localise.set["c_download"] + " " + gSelectedTemplateName);
