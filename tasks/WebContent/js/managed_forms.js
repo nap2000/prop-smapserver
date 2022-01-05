@@ -243,6 +243,7 @@ require([
             gGetSettings = true;
 	        clearDrillDown();
             mfSurveyChanged();
+            populatePdfSelect(globals.gCurrentSurvey, $('#select_pdf'));
         });
 
         // Set change function on group survey
@@ -609,6 +610,7 @@ require([
             e.preventDefault();
 
             var language = $('#pdf_language option:selected').val();
+            var pdfTemplate = $('#select_pdf option:selected').val();
             var orientation = $("#pdf_orientation").val();
             var include_references = $("#pdf_include_references").prop('checked');
             var launched_only = $("#pdf_launched_only").prop('checked');
@@ -1205,6 +1207,7 @@ require([
 
             // Get the list of available surveys
             loadManagedSurveys(globals.gCurrentProject, mfSurveyChanged);
+            populatePdfSelect(globals.gCurrentSurvey, $('#select_pdf'));
             getTaskUsers(globals.gCurrentProject);	// Get the users that have access to this project
         }
 
