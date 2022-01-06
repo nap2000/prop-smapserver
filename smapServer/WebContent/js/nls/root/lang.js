@@ -479,6 +479,7 @@ define({
 	"a_exp_start": "The start record must be less than or equal to the end record",
 
     // Messages
+    "msg_pdft": "PDF Templates are now managed on the templates page which can be accessed from the tools menu",
     "msg_pc": "The reminder interval must be greater than zero",
     "msg_pk_sel": "You can only select the record identifier if you have selected the \"Update a different question\" checkbox",
     "msg_wait": "Waiting for a response from the server. Please try again in a few seconds",
