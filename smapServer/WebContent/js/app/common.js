@@ -454,15 +454,31 @@ function populateLanguageSelect(sId, $elem) {
 
 /*
  * Populate a pdf select widget
+ * Set the template set as the default to be selected
+ * If there is no default template and there is a template specified in settings (legacy) then set that as the default
  */
 function populatePdfSelect(sId, $elem) {
 	$.getJSON("/surveyKPI/surveys/templates/" + sId, function(data) {
 
+		var defaultTemplateId,
+			fromSettingsTemplateId;
+
 		$elem.empty();
 		$elem.append('<option value="-1">' + localise.set["c_none"] + '</option>');
 		$.each(data, function(j, item) {
-			$elem.append('<option value="' + item.id + '"' + (item.default_template ? 'selected' : '') + '>' + item.name + '</option>');
+			if(item.default_template) {
+				defaultTemplateId = item.id;
+			} else if(item.fromSettings) {
+				fromSettingsTemplateId = item.id;
+			}
+			$elem.append('<option value="' + item.id + '">' + item.name + '</option>');
 		});
+		if(typeof defaultTemplateId !== "undefined") {
+			$elem.val(defaultTemplateId);
+		} else if(typeof fromSettingsTemplateId !== "undefined") {
+			$elem.val(fromSettingsTemplateId)
+		}
+
 	});
 }
 
