@@ -247,6 +247,8 @@ define({
     "c_of": "of",
     "c_media": "Media",
     "c_changes": "Changes",
+    "c_templates": "PDF Templates",
+    "c_template": "PDF Template",
     "c_meta": "Meta Items",
     "c_calc": "Calculations",
     "c_trans": "Translate",
@@ -390,6 +392,7 @@ define({
     "tm_ul_f": "Upload the spreadsheet",
     "tm_si": "Specify survey identifier",
     "tm_up": "Upload Template",
+    "tm_add": "Add Template",
     "tm_ups": "Upload Form",
     "tm_add_for": "Add Forward",
     "tm_ref_f": "Refresh Form List",
@@ -476,6 +479,7 @@ define({
 	"a_exp_start": "The start record must be less than or equal to the end record",
 
     // Messages
+    "msg_pdft": "PDF Templates are now managed on the templates page which can be accessed from the tools menu",
     "msg_pc": "The reminder interval must be greater than zero",
     "msg_pk_sel": "You can only select the record identifier if you have selected the \"Update a different question\" checkbox",
     "msg_wait": "Waiting for a response from the server. Please try again in a few seconds",
@@ -973,6 +977,10 @@ define({
     "ed_c_add_o": "Added choice %s1 to choice list: %s2",
     "ed_c_settings": "Settings changed",
     "ed_c_languages": "Languages changed",
+    "ed_c_template": "PDF template changed",
+    "ed_a_template": "PDF template added",
+    "ed_d_template": "PDF template deleted",
+    "ed_s_templates": "PDF templates added using the settings dialog cannot be set not not available nor set as default",
     "ed_mmf": "Manage Media Files For this Form",
     "ed_sl": "Survey to launch",
     "ed_slu": "Survey lookup",
@@ -1001,6 +1009,7 @@ define({
     "ed_e": "Expression",
     "ed_drl": "Default report logo",
     "ed_voice": "Voice only",
+    "ed_na": "Not available",
 
     // Managed Forms
     "mf_id": "Include Deleted",

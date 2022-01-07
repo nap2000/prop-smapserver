@@ -375,6 +375,7 @@ function updateMapList(data) {
 	h[++idx] = '<th>' + localise.set["c_type"] + '</th>';
 	h[++idx] = '<th>' + localise.set["c_desc"] + '</th>';
 	h[++idx] = '<th>' + localise.set["c_details"] + '</th>';
+	h[++idx] = '<th></th>';
 	h[++idx] = '</tr>';
 	h[++idx] = '</thead>';
 	h[++idx] = '<tbody class="table-striped">';
