@@ -735,17 +735,10 @@ function addRightClickToTable($elem, sId, view) {
 			var isReplaced = $this.parent().parent().find('.bad_replaced').size() !== 0;
 			var sId =  $this.data("id");	
 			var instanceid = $this.data("instanceid");
-			
-			$.getJSON("/surveyKPI/languages/" + sId, function(data) {
 
-				var $languageSelect = $('#download_language');
-				$languageSelect.empty();
-				
-				$.each(data, function(j, item) {
-					$languageSelect.append('<option value="' + item + '">' + item + '</option>');
-				});
-			});
-			
+			populateLanguageSelect(sId, $('#download_language'));
+			populatePdfSelect(sId, $('#select_pdf'));
+
 			gSelectedTemplate = survey_ident;
 			gInstanceId = instanceid;
 			
@@ -778,16 +771,18 @@ $('#download_pdf').click(function () {
 
 	var docURL,
 		language,
+		pdf_template,
 		orientation,
 		include_references,
 		launched_only
 
 	language = $('#download_language option:selected').val();
+	pdf_template = $('#select_pdf').val();
 	orientation = $("input[name='orientation']:checked", "#instance_functions_popup").val();
 	include_references = $("#include_references", "#instance_functions_popup").prop('checked');
 	launched_only = $("#launched_only", "#instance_functions_popup").prop('checked');
 
-	downloadPdf(language, orientation, include_references, launched_only, gSelectedTemplate, gInstanceId);
+	downloadPdf(language, orientation, include_references, launched_only, gSelectedTemplate, gInstanceId, pdf_template);
 	
 	//window.location.href = docURL;
 	$('#instance_functions_popup').dialog("close");
