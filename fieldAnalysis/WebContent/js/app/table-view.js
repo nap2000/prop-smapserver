@@ -73,7 +73,7 @@ function setTableSurvey(view) {
 			currentForm = idx;
 		}
 		btns[++i] = '/><label for="radio'+ view.pId + '_' + idx + '">' +
-				data[idx].formName + '</label>';
+				htmlEncode(data[idx].formName) + '</label>';
 		
 	}
 	$tabSelect.append(btns.join(''));

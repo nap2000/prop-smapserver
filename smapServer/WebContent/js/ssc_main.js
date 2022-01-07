@@ -209,7 +209,7 @@ function surveyListDone() {
 }
 
 function surveyDetailsDone() {
-	$('.formName').html(globals.model.survey.displayName);	
+	$('.formName').text(globals.model.survey.displayName);
 	ssc.init();	// initialise the Server Side Calculations section
 	ssc.setHtml('#sscList', globals.model.survey.sscList);
 	$('.ssc_btn_rem').click(function () {
