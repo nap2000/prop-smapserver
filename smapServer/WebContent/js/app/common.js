@@ -2449,8 +2449,8 @@ function getChangeDescription(change, version) {
 		h[++idx] = '</span>';
 
 	} else if(change.action === "template_delete") {
-		h[++idx] = localise.set["ed_c_template"];
 		h[++idx] = ' <span style="color:red;">';
+		h[++idx] = localise.set["ed_d_template"];
 		h[++idx] = htmlEncode(change.msg);
 		h[++idx] = '</span>';
 
