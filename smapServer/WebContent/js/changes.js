@@ -118,7 +118,7 @@ function setChangesHtml($element, survey) {
 			}
 			var filehtml = "";
 			if(changes[i].change.fileName && changes[i].change.fileName.trim().length > 0) {
-                var filename = changes[i].change.fileName;
+				var filename = changes[i].change.fileName;
 				var fnIndex = changes[i].change.fileName.lastIndexOf('/');
 				if(fnIndex >= 0) {
 					filename = filename.substr(fnIndex + 1);
@@ -129,7 +129,8 @@ function setChangesHtml($element, survey) {
 						// deprecated old style
 						url = '/surveyKPI/file/' + filename + '/surveyPdfTemplate/' + changes[i].change.origSId + '?archive=true';
 					} else {
-						url = '/surveyKPI/file/' + encodeURIComponent(changes[i].msg) + '/pdfTemplate/' + changes[i].change.origSId;
+						url = '/surveyKPI/file/' + filename + '/pdfTemplate/' + changes[i].change.origSId;
+						filename = changes[i].msg;
 					}
 				} else {
 					url = '/surveyKPI/survey/' + changes[i].change.origSId + '/download?type=xlsx';
