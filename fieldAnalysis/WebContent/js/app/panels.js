@@ -569,7 +569,7 @@ function createPanel(idx, $panels, title, surveyName, subject_type) {
 	h[++i] = idx;
 	h[++i] = hdel2;
 	h[++i] = hspan1;
-	h[++i] = title;
+	h[++i] = htmlEncode(title);
 	h[++i] = hspan2;
 	h[++i] = hexp1;
 	h[++i] = idx;

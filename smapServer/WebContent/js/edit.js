@@ -2952,7 +2952,7 @@ function addQuestion($this, type) {
 function updateSettingsData() {
 
 	$('.survey_name').val(globals.model.survey.displayName);
-	$('.formName').html(globals.model.survey.displayName);
+	$('.formName').text(globals.model.survey.displayName);
 	$('#set_survey_ident').val(globals.model.survey.ident);
 	$('#set_instance_name').val(globals.model.survey.instanceNameDefn);
 	$('#set_style').val(globals.model.survey.surveyClass);

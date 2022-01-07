@@ -948,7 +948,7 @@ define(function () {
                     globals.model.forceSettingsChange = false;
                     $('#save_settings, #save_keys').prop("disabled", true);
 
-                    $('.formName').html(globals.model.survey.displayName);
+                    $('.formName').text(globals.model.survey.displayName);
                     $('#settingsModal, #keysModal').modal("hide");
                 },
                 error: function (xhr, textStatus, err) {

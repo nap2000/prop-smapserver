@@ -539,7 +539,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                         h[++idx] = '"';
                     }
                     h[++idx] = '><span style="word-wrap: break-word;">';
-                    h[++idx] = survey.displayName;
+                    h[++idx] = htmlEncode(survey.displayName);
                     h[++idx] = '</span></a></td>';
 
                     h[++idx] = '<td>';
@@ -557,7 +557,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                     h[++idx] = '<td class="groupsurvey" data-id="';
                     h[++idx] = survey.groupSurveyId;
                     h[++idx] = '">';
-                    h[++idx] = survey.groupSurveyDetails;
+                    h[++idx] = htmlEncode(survey.groupSurveyDetails);
                     h[++idx] = '</td>';
 
                     h[++idx] = '<td>';
@@ -601,7 +601,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                     hSel[++selIdx] = '<option value="';
 	                hSel[++selIdx] = survey.ident;
 	                hSel[++selIdx] = '">';
-	                hSel[++selIdx] = survey.displayName;
+	                hSel[++selIdx] = htmlEncode(survey.displayName);
 	                hSel[++selIdx] = '</option>';
 
                 }

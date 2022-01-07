@@ -258,7 +258,7 @@ function refreshView() {
 		
 		h[++idx] = '<tr>';
 			h[++idx] = '<td>';
-				h[++idx] = gRoles[i].name;
+				h[++idx] = htmlEncode(gRoles[i].name);
 			h[++idx] = '</td>';	
 			h[++idx] = '<td>';
 				h[++idx] = '<div class="btn-group btn-toggle" data-idx="';

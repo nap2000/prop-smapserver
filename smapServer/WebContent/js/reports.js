@@ -619,12 +619,12 @@ require([
 				tab[++idx] = '<a type="button" class="btn btn-block btn-primary" href="';
 				tab[++idx] = link;
 				tab[++idx] = '">';
-				tab[++idx] = action.name;
+				tab[++idx] = htmlEncode(action.name);
 				tab[++idx] = '</a>';
 				tab[++idx] = '</td>';
 
 				tab[++idx] = '<td>';
-				tab[++idx] = action.surveyName;
+				tab[++idx] = htmlEncode(action.surveyName);
 				tab[++idx] = '</td>';
 
 				tab[++idx] = '<td>';			// Copy Link
@@ -992,10 +992,10 @@ require([
 					tab[++idx] = '<a type="button" class="btn btn-block btn-primary" href="';
 					tab[++idx] = link;
 					tab[++idx] = '">';
-					tab[++idx] = genItem.report_name;
+					tab[++idx] = htmlEncode(genItem.report_name);
 					tab[++idx] = '</a>';
 				} else {
-					tab[++idx] = genItem.report_name;
+					tab[++idx] = htmlEncode(genItem.report_name);
 				}
 	            tab[++idx] = '</td>';
 
@@ -1004,7 +1004,7 @@ require([
 				tab[++idx] = '</td>';
 
 	            tab[++idx] = '<td>';
-	            tab[++idx] = genItem.userName;
+	            tab[++idx] = htmlEncode(genItem.userName);
 	            tab[++idx] = '</td>';
 
 				tab[++idx] = '<td>';
