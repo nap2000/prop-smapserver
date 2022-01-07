@@ -440,6 +440,49 @@ function addUserDetailsPopup() {
 }
 
 /*
+ * Populate a language select widget
+ */
+function populateLanguageSelect(sId, $elem) {
+	$.getJSON("/surveyKPI/languages/" + sId, function(data) {
+
+		$elem.empty();
+		$.each(data, function(j, item) {
+			$elem.append('<option value="' + item + '">' + item + '</option>');
+		});
+	});
+}
+
+/*
+ * Populate a pdf select widget
+ * Set the template set as the default to be selected
+ * If there is no default template and there is a template specified in settings (legacy) then set that as the default
+ */
+function populatePdfSelect(sId, $elem) {
+	$.getJSON("/surveyKPI/surveys/templates/" + sId, function(data) {
+
+		var defaultTemplateId,
+			fromSettingsTemplateId;
+
+		$elem.empty();
+		$elem.append('<option value="-1">' + localise.set["c_none"] + '</option>');
+		$.each(data, function(j, item) {
+			if(item.default_template) {
+				defaultTemplateId = item.id;
+			} else if(item.fromSettings) {
+				fromSettingsTemplateId = item.id;
+			}
+			$elem.append('<option value="' + item.id + '">' + item.name + '</option>');
+		});
+		if(typeof defaultTemplateId !== "undefined") {
+			$elem.val(defaultTemplateId);
+		} else if(typeof fromSettingsTemplateId !== "undefined") {
+			$elem.val(fromSettingsTemplateId)
+		}
+
+	});
+}
+
+/*
  * Add user details popup to the page
  */
 function addUserDetailsPopupBootstrap4() {
@@ -2393,13 +2436,31 @@ function getChangeDescription(change, version) {
 		h[++idx] = change.fileName;
 		h[++idx] = '</span>';
 
-	}  else if(change.action === "settings_update") {
+	} else if(change.action === "template_update") {
+		h[++idx] = localise.set["ed_c_template"];
+		h[++idx] = ' <span style="color:blue;">';
+		h[++idx] = htmlEncode(change.msg);
+		h[++idx] = '</span>';
+
+	} else if(change.action === "template_add") {
+		h[++idx] = localise.set["ed_a_template"];
+		h[++idx] = ' <span style="color:blue;">';
+		h[++idx] = htmlEncode(change.msg);
+		h[++idx] = '</span>';
+
+	} else if(change.action === "template_delete") {
+		h[++idx] = ' <span style="color:red;">';
+		h[++idx] = localise.set["ed_d_template"];
+		h[++idx] = htmlEncode(change.msg);
+		h[++idx] = '</span>';
+
+	} else if(change.action === "settings_update") {
 		h[++idx] = localise.set["ed_c_settings"];
 		h[++idx] = ' <span style="color:blue;">';
 		h[++idx] = htmlEncode(change.msg);
 		h[++idx] = '</span>';
 
-	}   else if(change.action === "language_update") {
+	} else if(change.action === "language_update") {
 		h[++idx] = localise.set["ed_c_languages"];
 		h[++idx] = ' <span style="color:blue;">';
 		h[++idx] = change.msg;
@@ -2805,11 +2866,12 @@ function isLate(finish) {
 
 }
 
-function downloadPdf(language, orientation, include_references, launched_only, sIdent, instanceId) {
+function downloadPdf(language, orientation, include_references, launched_only, sIdent, instanceId, pdfTemplateId) {
 
 	var docURL = "/surveyKPI/pdf/" + sIdent
 		+ "?language=" + language
 		+ "&instance=" + instanceId
+		+ "&pdftemplate=" + pdfTemplateId
 		+ "&tz=" + globals.gTimezone;
 	if(orientation === "landscape") {
 		docURL += "&landscape=true";

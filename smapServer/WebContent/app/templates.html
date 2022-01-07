@@ -6,7 +6,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<title class="lang" data-lang="c_changes"></title>
+	<title class="lang" data-lang="c_templates"></title>
 
 	<link href="/css/bootstrap.v4.5.min.css" rel="stylesheet">
 	<link href="/custom/css/custom.css" rel="stylesheet">
@@ -26,12 +26,12 @@
 	<script src="/js/libs/bootstrap.bundle.v4.5.min.js"></script>
 	<script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
 
-	<script data-main="/js/changes" src="/js/libs/require.js"></script>
+	<script data-main="/js/templates" src="/js/libs/require.js"></script>
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
-	<a class="navbar-brand lang" data-lang="c_changes" href="#">changes</a>
+	<a class="navbar-brand lang" data-lang="c_templates" href="#">templates</a>
 	<div class="spinner-grow text-danger hour_glass"></div>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"><i class="fas fa-bars" style="font-size:28px;"></i></span>
@@ -59,8 +59,8 @@
 				</div>
 			</li>
 
-			<li id="m_form" ><a class="nav-link" href="/edit.html"><span class="lang" data-lang="c_form"></span></a></li>
-			<li id="m_templates" class="nav-item"><a href="/app/templates.html" class="lang nav-link" data-lang="c_templates">templates</a></li>
+			<li id="m_form" class="nav-item"><a class="nav-link" href="/edit.html"><span class="lang" data-lang="c_form"></span></a></li>
+			<li id="m_changes" class=""nav-item"><a  href="/app/changes.html" class="nav-link lang" data-lang="c_changes">changes</a></li>
 			<li id="m_translate" class="nav-item"><a class="nav-link" href="/translate.html"><span class="lang" data-lang="c_trans"></span></a></li>
 
 
@@ -75,10 +75,57 @@
 
 <div class="container-fluid mt-4 px-4">
 
-	<!-- List of changes to the current survey -->
-	<div id="changes" class="bg-light mt-4 row">
+	<div class="card text-center mt-10">
+		<div class="card-header">
+			<div class="mt-1 mb-1">
+				<button	id="addTemplate" class="btn btn-primary lang pl-4 pr-4" data-lang="tm_add" value="add template" >upload</button>
+			</div>
+		</div>
+		<div class="card-body">
+			<div id="templates" class="bg-light table-responsive mt-4"></div>
+		</div>
 	</div>
+</div>
 
+<!-- Popup to add a new template -->
+<div id="template_add" class="modal fade" tabindex="-1" aria-labelledby="template_add_title" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 id="template_add_title"><span class="lang" data-lang="tm_up">load</span></h5>
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+			</div>
+			<div class="modal-body">
+
+				<div id="up_alert" style="display:none; word-wrap:break-word;" class="alert alert-success" role="alert"></div>
+				<div id="up_warnings" style="display:none;" class="alert alert-warning" role="alert"></div>
+				<form name="uploadTemplate" accept-charset="utf-8">
+					<div class="form-group row notreplace">
+						<label class="col-sm-2 col-form-label" for="templateName"><span data-lang="c_name" class="lang">Name</span>:</label>
+						<div class="col-sm-10">
+							<input id="templateName" class="form-control" type="text" name="templateName" maxlength="100" required />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label" for="file"><span data-lang="c_file" class="lang">file</span></label>
+						<div class="col-sm-10">
+							<input type="file" class="form-control-file" name="tname" id="file" required/>
+						</div>
+					</div>
+
+					<input id="surveyId" type="hidden" name="surveyId" value="" style="display:none;"/>
+					<input id="projectId" type="hidden" name="projectId" value="" style="display:none;"/>
+					<input id="uploadAction" type="hidden" name="action" value="" style="display:none;"/>
+				</form>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="templateLoad" type="button" class="btn btn-primary lang" data-lang="c_upload">Upload</button>
+			</div>
+		</div>
+	</div>
 </div>
 </body>
 </html>

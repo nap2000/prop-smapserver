@@ -681,15 +681,8 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 
                 gSelectedTemplateId = $(this).val();
                 gSelectedTemplateIdent = gSurveys[surveyIndex].ident;
-                $.getJSON("/surveyKPI/languages/" + gSelectedTemplateId, function(data) {
+                populateLanguageSelect(gSelectedTemplateId, $('#download_language'));
 
-                    var $languageSelect = $('#download_language');
-                    $languageSelect.empty();
-
-                    $.each(data, function(j, item) {
-                        $languageSelect.append('<option value="' + item + '">' + item + '</option>');
-                    });
-                });
                 gSelectedTemplateName = $(this).parent().siblings(".displayName").text();
                 $('h4', '#download_template').html(localise.set["c_download"] + " " + gSelectedTemplateName);
                 $('#dtversion').html(surveyVersion);
@@ -901,7 +894,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             });
         }
 
-        //Block or ublock the template
+        //Block or unblock the template
         function executeBlock(template, set) {
 
             var blockURL = "/surveyKPI/survey/" + template + "/block?set=" + set;
@@ -924,7 +917,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
         }
 
         /*
-         * Upload a template
+         * Upload a survey form
          */
         function uploadTemplate() {
 
