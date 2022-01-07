@@ -184,7 +184,7 @@ function addLayer(data, pId1, pId2, view, title, map) {
 				
 			}
 
-			currentDisplayDescription += '<span class="l' + pId2 + '"><p>Layer(' + title + '): ' + 
+			currentDisplayDescription += '<span class="l' + pId2 + '"><p>Layer(' + htmlEncode(title) + '): ' +
 			getDisplayDescription(fn, "map", data.survey, data.question, data.group, data.option, data.qtype, 
 					data.date_question, data.start, data.end, data.interval, data.units, data.filter) +
 					filterDescription +
@@ -194,7 +194,7 @@ function addLayer(data, pId1, pId2, view, title, map) {
 			data.caption = currentDisplayDescription;	// Save caption in data layer in case it is saved as a report	
 		} else {
 			// Update this layers description
-			displayElement.innerHTML = '<p>Layer(' + title + '): ' + 
+			displayElement.innerHTML = '<p>Layer(' + htmlEncode(title) + '): ' +
 			getDisplayDescription(fn, "map", data.survey, data.question, data.group, data.option, data.qtype, 
 					data.date_question, data.start, data.end, data.interval, data.units, data.filter) +
 			"</p>";

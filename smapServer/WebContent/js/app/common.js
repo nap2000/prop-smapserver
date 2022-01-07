@@ -99,7 +99,7 @@ function updateProjectList(addAll, projectId, callback) {
 		h[++idx] = '<option value="';
 		h[++idx] = globals.gProjectList[i].id;
 		h[++idx] = '">';
-		h[++idx] = globals.gProjectList[i].name;
+		h[++idx] = htmlEncode(globals.gProjectList[i].name);
 		h[++idx] = '</option>';
 
 		if(globals.gProjectList[i].id === projectId) {
@@ -1340,7 +1340,7 @@ function refreshMediaView(data, sId) {
 
 	if(survey && sId) {
 		// Set the display name
-		$('.formName').html(survey.displayName);
+		$('.formName').text(survey.displayName);
 		$('#survey_id').val(sId);
 		gSId = sId;
 	}
@@ -1695,7 +1695,7 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 			h[++idx] = ' value="';
 			h[++idx] = useIdx ? i : item.id;
 			h[++idx] = '">';
-			h[++idx] = item.displayName;
+			h[++idx] = htmlEncode(item.displayName);
 			if (item.blocked) {
 				h[++idx] = ' (' + localise.set["c_blocked"] + ')';
 			}

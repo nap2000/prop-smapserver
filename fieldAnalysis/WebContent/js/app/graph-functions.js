@@ -236,7 +236,7 @@ function setGraph(data, chart, optionSelElement, pId) {
 	console.log(data);
 	disp_desc = getDisplayDescription(fn, "graph", data.survey, data.question, data.group, undefined, data.qtype, 
 			data.date_question, data.start, data.end, data.interval, data.units, data.filter);
-	$('#p' + pId).find('.r_description').html(disp_desc);
+	$('#p' + pId).find('.r_description').text(disp_desc);
 	data.caption = disp_desc;
 	
 	if(matrix2 && matrix2.length > 0) {

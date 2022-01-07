@@ -682,7 +682,7 @@ function setSurveyViewSurveys(surveyList, sId, elem) {
 	$surveySelect.empty();
 	$surveySelect.append('<option value="-1">' + localise.set["c_none"] + '</option>');	    // Default is no survey selected
 	$.each(surveyList, function(j, item) {
-		$surveySelect.append('<option value="' + item.id + '">' + item.displayName + '</option>');
+		$surveySelect.append('<option value="' + item.id + '">' + htmlEncode(item.displayName) + '</option>');
 	});
 	
 	$surveySelect.val(sId);
@@ -696,7 +696,7 @@ function setSurveyViewRegions(list, region) {
 	$regionSelect.empty();
 	$regionSelect.append('<option value="none">' + localise.set["c_none"] + '</option>');
 	$.each(list, function(j, item) {
-		$regionSelect.append('<option value="' + item.table + '">' + item.name + '</option>');
+		$regionSelect.append('<option value="' + item.table + '">' + htmlEncode(item.name) + '</option>');
 	});
 	$regionSelect.val(region);
 	gSurveyControlView.region = region;

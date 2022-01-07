@@ -23,32 +23,9 @@ function getDisplayDescription(fn, reportType, survey, question, group, option, 
 	var txt = [],
 		idx = -1,
 		msg;
-	/*
-		fnText = {ocha: "location of responses to ", 
-			percent: "percentage of responses that selected ", 
-			average: "average of responses to ", 
-			count: "count of responses to ", 
-			total: "total of responses to ",
-			none: "responses to "};
-			*/
-	
+
 	console.log("getDisplayDescription: " + qtype + " : " + question);
-	/*
-	txt[++idx] = "Shows the ";
-	if(typeof question === "undefined" || question === "None") {
-		txt[++idx] = "results";
-	} else {
-		txt[++idx] = fnText[fn];
-		if(reportType === "map") {
-			txt[++idx] = option + " in ";
-		} else if(typeof qtype !== "undefined" && qtype.substring(0, 6) === 'select'){
-			txt[++idx] = "each option in ";
-		}
-		txt[++idx] = "the question '";
-		txt[++idx] = question;
-		txt[++idx] ="'";
-	}
-	*/
+
 	if(typeof question === "undefined" || question === "None") {
 		txt[++idx] = localise.set["a_dd_sl"];
 	} else {
@@ -84,37 +61,18 @@ function getDisplayDescription(fn, reportType, survey, question, group, option, 
 
 		}
 		msg = msg.replace('%s2', question);
-		msg = msg.replace('%s3', survey);
+		msg = msg.replace('%s3', htmlEncode(survey));
 		txt[++idx] = msg;
 	}
 
 	
 	if(units) {
-		//txt[++idx] = " (units are " + units + ")";
 		msg = localise.set["a_dd_units"];
 		msg = msg.replace("%s1", units);
 		txt[++idx] = ' ';
 		txt[++idx] = msg;
 	}
 
-	//txt[++idx] = " in survey '";
-	//txt[++idx] = survey;
-	//txt[++idx] = "'";
-
-	/*
-	if(typeof group !== "undefined") {
-		txt[++idx] = " grouped by the responses to the question ";
-		txt[++idx] = group;
-		if(typeof interval !== "undefined") {
-			txt[++idx] = " and by ";
-			txt[++idx] = interval;
-		}
-	} else {
-		if(typeof interval !== "undefined") {
-			txt[++idx] = " grouped by ";
-			txt[++idx] = interval;
-		}
-	}*/
 	if(typeof group !== "undefined") {
 		if(typeof interval !== "undefined") {
 			msg = localise.set["a_dd_group_interval"];
@@ -153,11 +111,7 @@ function getDisplayDescription(fn, reportType, survey, question, group, option, 
 		msg.replace("%s2", filterObj.value);
 		txt[++idx] = ' ';
 		txt[++idx] = msg;
-		//txt[++idx] = " <b>Where ";
-		//txt[++idx] = filterObj.qName;
-		//txt[++idx] = " equals ";
-		//txt[++idx] = filterObj.value;
-		//txt[++idx] = "</b>";
+
 	}
 	
 	return txt.join('');

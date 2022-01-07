@@ -171,7 +171,7 @@ require([
 				i,
 				j;
 
-			$('.formName').html(survey.displayName);
+			$('.formName').text(survey.displayName);
 
 			if(!survey) {
 				$('#errormesg').html("<strong>No Changes</strong> Create or select a survey to see meta items");
