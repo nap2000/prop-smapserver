@@ -2203,7 +2203,7 @@ function createNewSurvey(name, existing, existing_survey, shared_results, callba
 
 	console.log("create new: " + existing + " : " + existing_survey + " : " + shared_results);
 
-	var url="/surveyKPI/surveys/new/" + globals.gCurrentProject + "/" + name;
+	var url="/surveyKPI/surveys/new/" + globals.gCurrentProject + "/" + encodeURIComponent(name);
 	if(!existing) {
 		existing_survey = 0;
 	}
