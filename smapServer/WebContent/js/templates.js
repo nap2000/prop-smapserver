@@ -103,7 +103,8 @@ require([
 
 			var tz = globals.gTimezone;
 			var url="/surveyKPI/surveys/templates/" + globals.gCurrentSurvey;
-			url += "?tz=" + encodeURIComponent(tz);
+			url += "?get_not_available=true";
+			url += "&tz=" + encodeURIComponent(tz);
 
 			addHourglass();
 			$.ajax({
