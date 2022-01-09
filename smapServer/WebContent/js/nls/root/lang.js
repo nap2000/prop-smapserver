@@ -980,7 +980,7 @@ define({
     "ed_c_template": "PDF template changed",
     "ed_a_template": "PDF template added",
     "ed_d_template": "PDF template deleted",
-    "ed_s_templates": "PDF templates added using the settings dialog cannot be set not not available nor set as default",
+    "ed_s_templates": "PDF templates added using the settings dialog cannot be set as 'not available' nor set as default",
     "ed_mmf": "Manage Media Files For this Form",
     "ed_sl": "Survey to launch",
     "ed_slu": "Survey lookup",
