@@ -43,7 +43,8 @@ require([
 		'app/globals'],
 	function($, common, lang, globals) {
 
-		var gTemplates;
+		var gTemplates,
+			gEditTemplate;
 
 		$(document).ready(function() {
 
@@ -57,6 +58,10 @@ require([
 
 			$('#templateLoad').click( function(e) {
 				templateLoad();
+			});
+
+			$('#ruleSave').click( function(e) {
+				updateTemplateProperty(gEditTemplate.id, 'rule', $('#templateRule').val());
 			});
 
 			$('#templateName').keydown(function(){
@@ -146,8 +151,9 @@ require([
 				h[++idx] = localise.set["c_name"];
 				h[++idx] = '</th>';
 				h[++idx] = '<th>' + localise.set["ed_na"] + '</th>';	// Disable Checkbox
-				h[++idx] = '<th>' + localise.set["c_default"] + '</th>';	// Disable Checkbox
-				h[++idx] = '<th></th>';		// delete button
+				h[++idx] = '<th>' + localise.set["c_default"] + '</th>';	// Default Checkbox
+				h[++idx] = '<th>' + localise.set["c_rule"] + '</th>';
+				h[++idx] = '<th></th>';		// delete and edit button
 				h[++idx] = '</tr>';
 				h[++idx] = '</thead>';
 
@@ -188,6 +194,11 @@ require([
 						h[++idx] = '</td>';
 					}
 
+					// rule
+					h[++idx] = '<td style="text-align: center; word-break: break-all;">';
+					h[++idx] = gTemplates[i].rule;
+					h[++idx] = '</td>';
+
 					// Actions
 					h[++idx] = '<td>';
 
@@ -210,6 +221,11 @@ require([
 					h[++idx] = '" class="btn btn-danger mx-2 btn-sm rm_template danger">';
 					h[++idx] = '<i class="fas fa-trash-alt" aria-hidden="true"></i></button>';
 
+					h[++idx] = '<button type="button" data-idx="';
+					h[++idx] = i;
+					h[++idx] = '" class="btn btn-info btn-sm edit_temp">';
+					h[++idx] = '<i class="fa fa-edit"></i></button>';
+
 					h[++idx] = '</td>';
 
 					h[++idx] = '</tr>';
@@ -224,6 +240,13 @@ require([
 			$(".rm_template", '#templates').click(function(){
 				var idx = $(this).data("idx");
 				deleteTemplate(gTemplates[idx]);
+			});
+
+			$(".edit_temp", '#templates').click(function(){
+				var idx = $(this).data("idx");
+				gEditTemplate = gTemplates[idx];
+				$('#templateRule').val(gTemplates[idx].rule);
+				$('#template_edit').modal("show");
 			});
 
 			$('.not_available').find('input').click(function() {
@@ -264,6 +287,7 @@ require([
   		 */
 		function templateLoad() {
 
+			$('#templateLoad').prop("disabled", true);  // debounce
 			$('#up_alert, #up_warnings').hide();
 			var f = document.forms.namedItem("uploadTemplate");
 			var formData = new FormData(f);
@@ -318,24 +342,26 @@ require([
  		 */
 		function deleteTemplate(template) {
 
-			addHourglass();
-			$.ajax({
-				type: "DELETE",
-				async: false,
-				url: "/surveyKPI/surveys/delete_template/" + globals.gCurrentSurvey + "/" + template.id,
-				success: function(data, status) {
-					removeHourglass();
-					getTemplates();
-				},
-				error: function(xhr, textStatus, err) {
-					removeHourglass();
-					if(xhr.readyState == 0 || xhr.status == 0) {
-						return;  // Not an error
-					} else {
-						alert(localise.set["msg_err_del"] + xhr.responseText);
+			if(confirm(localise.set["msg_confirm_del"] + " " + template.name)) {
+				addHourglass();
+				$.ajax({
+					type: "DELETE",
+					async: false,
+					url: "/surveyKPI/surveys/delete_template/" + globals.gCurrentSurvey + "/" + template.id,
+					success: function (data, status) {
+						removeHourglass();
+						getTemplates();
+					},
+					error: function (xhr, textStatus, err) {
+						removeHourglass();
+						if (xhr.readyState == 0 || xhr.status == 0) {
+							return;  // Not an error
+						} else {
+							alert(localise.set["msg_err_del"] + xhr.responseText);
+						}
 					}
-				}
-			});
+				});
+			}
 		}
 
 		/*
@@ -359,13 +385,15 @@ require([
 				cache: false,
 				data: { prop: propString },
 				success: function() {
+					$('#template_edit').modal("hide");
 					var theProp = prop;
 					if(theProp.property === 'default_template') {
 						getTemplates();	// Reload templates view
 					}
 					removeHourglass();
-				}, error: function() {
+				}, error: function(xhr, textStatus, err) {
 					removeHourglass();
+					('#edit_warnings').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(localise.set["msg_err_del"] + xhr.responseText);
 				}
 			});
 		}
