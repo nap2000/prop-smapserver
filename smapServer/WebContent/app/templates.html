@@ -127,5 +127,36 @@
 		</div>
 	</div>
 </div>
+
+<!-- Popup to edit a template -->
+<div id="template_edit" class="modal fade" tabindex="-1" aria-labelledby="template_edit_title" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 id="template_edit_title"><span class="lang" data-lang="c_edit">edit</span></h5>
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+			</div>
+			<div class="modal-body">
+
+				<div id="edit_warnings" style="display:none;" class="alert alert-warning" role="alert"></div>
+				<form name="editTemplate" accept-charset="utf-8">
+					<div class="form-group row notreplace">
+						<label class="col-sm-2 col-form-label" for="templateRule"><span data-lang="c_rule" class="lang">rule</span>:</label>
+						<div class="col-sm-10">
+							<input id="templateRule" class="form-control" type="text" name="templateName" />
+						</div>
+					</div>
+				</form>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="ruleSave" type="button" class="btn btn-primary lang" data-lang="c_save">save</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 </body>
 </html>

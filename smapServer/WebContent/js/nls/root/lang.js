@@ -291,6 +291,7 @@ define({
     "c_unsav": "You have unsaved changes are you sure you want to leave?",
     "c_off": "Off",
     "c_on": "On",
+    "c_rule": "Rule",
     "c_replace": "Replace",
     "c_retry": "Retry",
     "c_alink": "Anonymous Link",
