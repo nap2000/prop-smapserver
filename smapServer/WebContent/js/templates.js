@@ -385,12 +385,9 @@ require([
 				cache: false,
 				data: { prop: propString },
 				success: function() {
-					$('#template_edit').modal("hide");
-					var theProp = prop;
-					if(theProp.property === 'default_template') {
-						getTemplates();	// Reload templates view
-					}
 					removeHourglass();
+					$('#template_edit').modal("hide");
+					getTemplates();	// Reload templates view
 				}, error: function(xhr, textStatus, err) {
 					removeHourglass();
 					('#edit_warnings').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(localise.set["msg_err_del"] + xhr.responseText);
