@@ -4477,7 +4477,7 @@ function getTaskUsers(projectId) {
 					h[++idx] = '<option value="';
 					h[++idx] = user.id;
 					h[++idx] = '">';
-					h[++idx] = user.name;
+					h[++idx] = htmlEncode(user.name);
 					h[++idx] = '</option>';
 				}
 			}

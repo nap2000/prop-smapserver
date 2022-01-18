@@ -221,10 +221,12 @@ require([
 					h[++idx] = '" class="btn btn-danger mx-2 btn-sm rm_template danger">';
 					h[++idx] = '<i class="fas fa-trash-alt" aria-hidden="true"></i></button>';
 
-					h[++idx] = '<button type="button" data-idx="';
-					h[++idx] = i;
-					h[++idx] = '" class="btn btn-info btn-sm edit_temp">';
-					h[++idx] = '<i class="fa fa-edit"></i></button>';
+					if (!gTemplates[i].fromSettings) {
+						h[++idx] = '<button type="button" data-idx="';
+						h[++idx] = i;
+						h[++idx] = '" class="btn btn-info btn-sm edit_temp">';
+						h[++idx] = '<i class="fa fa-edit"></i></button>';
+					}
 
 					h[++idx] = '</td>';
 
