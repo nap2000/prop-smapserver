@@ -229,7 +229,7 @@ require([
 					h[++idx] = '" target="_blank';      // If launched as an app do not create new windows
 				}
 				h[++idx] = '">';
-				h[++idx] = formList[i].name;
+				h[++idx] = htmlEncode(formList[i].name);
 				h[++idx] = '</a>';
 				count++;
 			}
@@ -325,7 +325,7 @@ require([
 				}
 
 				h[++idx] = '">';
-				h[++idx] = taskList[i].task.title + " (" + localise.set["c_id"] + ": " + taskList[i].assignment.assignment_id + ")";
+				h[++idx] = htmlEncode(taskList[i].task.title) + " (" + localise.set["c_id"] + ": " + taskList[i].assignment.assignment_id + ")";
 				h[++idx] = '</a>';
 
 				// Add button with additional options
