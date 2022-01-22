@@ -458,7 +458,10 @@ function populateLanguageSelect(sId, $elem) {
  * If there is no default template and there is a template specified in settings (legacy) then set that as the default
  */
 function populatePdfSelect(sId, $elem) {
-	$.getJSON("/surveyKPI/surveys/templates/" + sId, function(data) {
+	var url = "/surveyKPI/surveys/templates/" + sId;
+	url += addCacheBuster(url);
+
+	$.getJSON(url, function(data) {
 
 		var defaultTemplateId,
 			fromSettingsTemplateId;
@@ -4477,7 +4480,7 @@ function getTaskUsers(projectId) {
 					h[++idx] = '<option value="';
 					h[++idx] = user.id;
 					h[++idx] = '">';
-					h[++idx] = user.name;
+					h[++idx] = htmlEncode(user.name);
 					h[++idx] = '</option>';
 				}
 			}

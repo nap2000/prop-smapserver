@@ -543,7 +543,7 @@ require([
 						h[++idx] = ' value="';
 						h[++idx] = i;
 						h[++idx] = '">';
-						h[++idx] = item.name;
+						h[++idx] = htmlEncode(item.name);
 						h[++idx] = '</option>';
 					}
 
@@ -598,14 +598,14 @@ require([
 				removeHourglass();
 
 				if(data) {
-					$('#mo_sent').html(data.sent);
-					$('#mo_complete').html(data.complete);
-					$('#mo_unsent').html(data.unsent);
-					$('#mo_pending').html(data.pending);
-					$('#mo_error').html(data.error);
-					$('#mo_unsubscribed').html(data.unsubscribed);
-					$('#mo_expired').html(data.expired);
-					$('#mo_manual').html(data.manual);
+					$('#mo_sent').text(data.sent);
+					$('#mo_complete').text(data.complete);
+					$('#mo_unsent').text(data.unsent);
+					$('#mo_pending').text(data.pending);
+					$('#mo_error').text(data.error);
+					$('#mo_unsubscribed').text(data.unsubscribed);
+					$('#mo_expired').text(data.expired);
+					$('#mo_manual').text(data.manual);
 				}
 			},
 			error: function(xhr, textStatus, err) {
