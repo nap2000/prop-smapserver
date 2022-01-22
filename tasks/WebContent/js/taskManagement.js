@@ -1810,11 +1810,11 @@ require([
 				tab[++idx] = '</td>';
 
 				tab[++idx] = '<td>';
-				tab[++idx] = task.properties.survey_name;
+				tab[++idx] = htmlEncode(task.properties.survey_name);
 				tab[++idx] = '</td>';
 
 				tab[++idx] = '<td>';			// Task name
-				tab[++idx] = task.properties.name;
+				tab[++idx] = htmlEncode(task.properties.name);
 				tab[++idx] = '</td>';
 
 				statusClass = getStatusClass(task.properties.status, task.properties.assign_auto);
@@ -1835,7 +1835,7 @@ require([
 				tab[++idx] = '</td>';
 
 				tab[++idx] = '<td>';		// Comment
-				tab[++idx] = task.properties.comment;
+				tab[++idx] = htmlEncode(task.properties.comment);
 				tab[++idx] = '</td>';
 
 				tab[++idx] = '<td>';			// NFC
