@@ -45,6 +45,7 @@ smapServer/WebContent/build/css.orig
 combined.min.js
 enketo-core.min.js
 smapServer/WebContent/build/js/webform-bundle.js
+smapServer/WebContent/build/js/webform-bundle.min.js
 smapServer/node_modules
 aws/target
 
