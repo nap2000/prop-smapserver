@@ -391,8 +391,8 @@ function loadFeatures(map, key, item, ext_g, bounds, layers, isPeriod, md) {
 		return;
 	}
 
-	var defaultStyle = undefined,
-		selectStyle = undefined,
+	var defaultStyle,
+		selectStyle,
 		colour_lookup = undefined;
 	
 	if(ext_g) {		// External graphic
@@ -414,6 +414,7 @@ function loadFeatures(map, key, item, ext_g, bounds, layers, isPeriod, md) {
 				pointRadius: "${radius}",
 				fillOpacity: 0.6,
 				strokeWidth: "${width}",
+				stokeColor: "${strokeColor}",
 				label: "${count}",
 				labelXOffset: "${xOffset}",
 				labelYOffset: "${yOffset}",
@@ -422,8 +423,19 @@ function loadFeatures(map, key, item, ext_g, bounds, layers, isPeriod, md) {
 			}, {
                 context: {
                     width: function(feature) {
+						if (feature.geometry && feature.geometry.CLASS_NAME ==
+							"OpenLayers.Geometry.LineString") {
+							return 5;
+						}
                         return (feature.cluster) ? 2 : 1;
                     },
+					strokeColor: function(feature) {
+						if (feature.geometry && feature.geometry.CLASS_NAME ==
+							"OpenLayers.Geometry.LineString") {
+							return "blue";
+						}
+						return "black";
+					},
                     radius: function(feature) {
                         var pix = 8;
                         if(feature.cluster) {
@@ -490,6 +502,7 @@ function loadFeatures(map, key, item, ext_g, bounds, layers, isPeriod, md) {
 			1 : {fillColor: "green"},
 			0 : {fillColor: "blue"}
 		};
+
 	}
 	
 	var styleMap = new OpenLayers.StyleMap({
