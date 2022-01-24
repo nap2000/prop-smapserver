@@ -870,7 +870,8 @@ require([
 
                 // Don't use some types to group
                 if(cols[i].type === "image" || cols[i].type === "video" || cols[i].type === "audio"
-                    || cols[i].type === "prikey" || cols[i].type === "geopoint" || cols[i].type === "geoshape" || cols[i].type === "geotrace") {
+                    || cols[i].type === "prikey" || cols[i].type === "geopoint" || cols[i].type === "geoshape" || cols[i].type === "geotrace"
+                    || cols[i].type === "geocompound") {
 
                     continue;
 
@@ -2192,7 +2193,8 @@ require([
             // Add data
             for (i = 0; i < columns.length; i++) {
                 configItem = columns[i];
-                if(configItem.type === 'geopoint' || configItem.type === 'geotrace' || configItem.type === 'geoshape') {
+                if(configItem.type === 'geopoint' || configItem.type === 'geotrace' || configItem.type === 'geoshape'
+                    || configItem.type === 'geocompound') {
                     continue;
                 }
                 h[++idx] = '<tr>';
@@ -2994,7 +2996,7 @@ require([
                     oldVal = baseUrl + oldVal;
                 }
 
-                if(type === 'geopoint' || type === 'geoshape' || type === 'geotrace') {
+                if(type === 'geopoint' || type === 'geoshape' || type === 'geotrace' || type === 'geocompund') {
                     h[++idx] = actioncommon.addCellMap(true, 'change_maps_',
                         globals.gRecordChangeMaps, changes[i], newVal, oldVal);
                 } else {
