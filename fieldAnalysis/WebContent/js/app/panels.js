@@ -283,6 +283,7 @@ $(document).ready(function() {
 		        					groupMeta.type === "geolinestring" || 
 		        					groupMeta.type === "geoshape" ||
 		        					groupMeta.type === "geotrace" ||
+									groupMeta.type === "geocompound" ||
 		        					groupMeta.type === "string") {
 		        				view.groupType = groupMeta.type;
 		        			} else {

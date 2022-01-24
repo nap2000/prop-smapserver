@@ -912,6 +912,16 @@ define(function () {
                 visible: false,
             },
             {
+                name: "Compound map",
+                type: "geocompound",
+                trans: "ed_cm",
+                calculation: false,
+                glyphicon: "pushpin",
+                canSelect: true,
+                visible: false,
+                compatTypes: ["geotrace"]
+            },
+            {
                 name: "Unknown Type",
                 glyphicon: "record",
                 canSelect: false
