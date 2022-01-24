@@ -1226,6 +1226,7 @@ require([
 									coltype !== "geopoint" &&
 									coltype !== "geotrace" &&
 									coltype !== "geoshape" &&
+									coltype !== "geocompound" &&
 									colname !== "geo_type" &&
 									colname.indexOf("_") !== 0) {
 
