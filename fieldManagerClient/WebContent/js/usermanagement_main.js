@@ -1276,7 +1276,7 @@ require([
 			h[++idx] = '<label class="custom-control-label" for="';
 			h[++idx] = 'user_projects_cb' + i;
 			h[++idx] = '">';
-			h[++idx] = globals.gProjectList[i].name;
+			h[++idx] = htmlEncode(globals.gProjectList[i].name);
 			h[++idx] = '</label></div>';
 		}
 		$user_projects.empty().append(h.join(''));
@@ -1304,7 +1304,7 @@ require([
 				h[++idx] = '<label class="custom-control-label" for="';
 				h[++idx] = 'user_roles_cb' + i;
 				h[++idx] = '">';
-				h[++idx] = globals.gRoleList[i].name;
+				h[++idx] = htmlEncode(globals.gRoleList[i].name);
 				h[++idx] = '</label></div>';
 			}
 			$user_roles.empty().append(h.join(''));
@@ -1334,7 +1334,7 @@ require([
 				h[++idx] = '<label class="custom-control-label" for="';
 				h[++idx] = 'user_orgs_cb' + i;
 				h[++idx] = '">';
-				h[++idx] = gOrganisationList[i].name;
+				h[++idx] = htmlEncode(gOrganisationList[i].name);
 				h[++idx] = '</label></div>';
 			}
 			$user_orgs.empty().append(h.join(''));
@@ -1425,7 +1425,7 @@ require([
 			h[++idx] = '<label class="custom-control-label" for="';
 			h[++idx] = 'p_user_projects_cb' + i;
 			h[++idx] = '">';
-			h[++idx] = user.name;
+			h[++idx] = htmlEncode(user.name);
 			h[++idx] = '</label></div>';
 		}
 
@@ -1474,7 +1474,7 @@ require([
 			h[++idx] = '<label class="custom-control-label" for="';
 			h[++idx] = 'user_role_details_cb' + i;
 			h[++idx] = '">';
-			h[++idx] = user.name;
+			h[++idx] = htmlEncode(user.name);
 			h[++idx] = '</label></div>';
 		}
 
