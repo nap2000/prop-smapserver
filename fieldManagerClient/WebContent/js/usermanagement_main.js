@@ -1391,7 +1391,6 @@ require([
 		var $p_user_projects = $('#p_user_projects');
 		gCurrentProjectIndex = projectIndex;
 
-
 		$('#project_create_form')[0].reset();
 		if(existing) {
 			$('#p_name').val(globals.gProjectList[projectIndex].name);
