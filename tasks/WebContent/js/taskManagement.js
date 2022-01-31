@@ -1832,7 +1832,7 @@ require([
 				tab[++idx] = '</td>';
 
 				tab[++idx] = '<td>';		// Assignee
-				tab[++idx] = task.properties.assignee_name;
+				tab[++idx] = htmlEncode(task.properties.assignee_name);
 				tab[++idx] = '</td>';
 
 				tab[++idx] = '<td>';		// Comment
