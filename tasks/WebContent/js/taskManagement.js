@@ -440,8 +440,9 @@ require([
 					$('#project_select').val(tgRule.source_project);
 					gSourceSurvey = tg.source_s_id;
 					loadSurveys(tgRule.source_project, "#survey", false, false, sourceProjectSet, false);
+				} else {
+					$('#survey').val(tg.source_s_id);
 				}
-				$('#survey').val(tg.source_s_id);
 				if(tgRule.update_results) {
 					$('#id_update_results').prop('checked', true);
 				} else if(tgRule.prepopulate) {
@@ -548,6 +549,7 @@ require([
 			$('.assign_user').show();
 			$('.assign_role').hide();
 
+			$('#project_select').val(globals.gCurrentProject);	// Set the source project equal to the current project
 			surveyChanged("-1");
 			$('#add_task_from_existing').hide();
 			$('.simple_filter').hide();
