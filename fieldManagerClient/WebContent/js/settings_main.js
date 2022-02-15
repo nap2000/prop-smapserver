@@ -378,6 +378,9 @@ require([
 			$('#wf_button_text_color').colorpicker('setValue', '#fff');
 			$('#wf_header_text_color').colorpicker('setValue', '#004200');
 			$('#o_banner_logo').attr("src", "/images/smap_logo.png");
+			$('.wfoption').each(function() {
+				this.checked = false;
+			});
 			gResetWebformPressed = true;
 		});
 
@@ -398,6 +401,16 @@ require([
 			webform.footer_horizontal_offset = $('#wf_footer_horizontal_offset').val();
 			webform.footer_horizontal_offset = webform.footer_horizontal_offset || 0;
 			webform.resetPressed = gResetWebformPressed;
+
+			var options = $(".wfoption:checked").map(function(){
+				return $(this).val();
+			}).toArray();
+
+			for(i = 0; i < options.length; i++) {
+				if(options[i] === "wf_hide_draft") {
+					webform.wf_hide_draft = true;
+				}
+			}
 
 			var webformString = JSON.stringify(webform);
 
@@ -937,8 +950,23 @@ require([
 			success: function(webform) {
 				removeHourglass();
 
-				$('#wf_page_background').colorpicker('setValue', webform.page_background_color);
-				$('#wf_paper_background').colorpicker('setValue', webform.paper_background_color);
+				$('.wfoption').each(function() {
+					if($(this).val() === "wf_hide_draft") {
+						this.checked = webform.wf_hide_draft;
+					}
+				});
+
+				if(webform.page_background_color) {
+					$('#wf_page_background').colorpicker('setValue', webform.page_background_color);
+				} else {
+					$('#wf_page_background').colorpicker('setValue', '#f0f0f0');
+				}
+
+				if(webform.paper_background_color) {
+					$('#wf_paper_background').colorpicker('setValue', webform.paper_background_color);
+				} else {
+					$('#wf_paper_background').colorpicker('setValue', '#fff');
+				}
 
 				if(webform.button_background_color) {
 					$('#wf_button_background_color').colorpicker('setValue', webform.button_background_color);
