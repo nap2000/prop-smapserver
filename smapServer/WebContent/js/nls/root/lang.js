@@ -1088,6 +1088,7 @@ define({
     "u_det_buttontc": "Button text colors",
     "u_det_headertc": "Heading text colors",
 	"u_det_fp": "Footer position (from right in pixels)",
+    "u_wf_hd": "Hide 'save as draft' checkbox",
     "u_ft_del": "Delete submitted results from the phone",
     "u_ft_prev_track_dis": "Prevent the disabling of location tracking",
     "u_ft_img_size": "Maximum pixels of the long edge of an image",
