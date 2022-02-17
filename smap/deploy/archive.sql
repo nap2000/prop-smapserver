@@ -27,3 +27,6 @@ SELECT * FROM archived_rows;
 
 -- Truncate user trail for all records older than 100 days
 DELETE FROM user_trail WHERE event_time < now() - interval '100 days';
+
+-- Remove old uploads that reported an error
+delete from upload_event where not results_db_applied and upload_time < now() - interval '60 days';
