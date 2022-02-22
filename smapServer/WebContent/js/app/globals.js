@@ -392,7 +392,7 @@ define(function () {
 		    video:['selfie', 'w', 'new'],
 		    barcode:['read_nfc', 'w'],
 		    date:['date_type', 'w'],
-		    dateTime:['no-calendar', 'w'],
+		    dateTime:['date_type', 'no-calendar', 'w'],
 		    time:['w'],
             decimal:['thousands-sep', 'bearing', 'w'],
 		    geotrace:['w'],
@@ -433,7 +433,7 @@ define(function () {
 		    'date_type': {
 			    field: 'a_date_type',
 			    type: 'select',
-			    rex: 'no-calendar|month-year|year|coptic|ethiopian|islamic|myanmar|persian',
+			    rex: 'no-calendar|month-year|year|coptic|ethiopian|islamic|myanmar|persian|bikram-sambat',
 			    valIsAppearance: true,
 			    value_offset: 0,
 			    undef_value: ''
