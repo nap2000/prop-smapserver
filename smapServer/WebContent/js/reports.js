@@ -618,6 +618,7 @@ require([
 				tab[++idx] = '<td>';			// Anonymous Link
 				tab[++idx] = '<a type="button" class="btn btn-block btn-primary" href="';
 				tab[++idx] = link;
+				tab[++idx] = addCacheBuster(link);
 				tab[++idx] = '">';
 				tab[++idx] = htmlEncode(action.name);
 				tab[++idx] = '</a>';
