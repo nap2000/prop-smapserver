@@ -68,6 +68,7 @@ define({
 
     // Common
     "c_api_builder": "API Builder",
+    "c_auto": "Auto",
     "c_api": "API",
     "c_link": "Link",
     "c_links": "Links",
