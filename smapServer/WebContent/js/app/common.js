@@ -467,6 +467,7 @@ function populatePdfSelect(sId, $elem) {
 			fromSettingsTemplateId;
 
 		$elem.empty();
+		$elem.append('<option value="-2">' + localise.set["c_auto"] + '</option>');
 		$elem.append('<option value="-1">' + localise.set["c_none"] + '</option>');
 		$.each(data, function(j, item) {
 			if(item.default_template) {
@@ -480,6 +481,8 @@ function populatePdfSelect(sId, $elem) {
 			$elem.val(defaultTemplateId);
 		} else if(typeof fromSettingsTemplateId !== "undefined") {
 			$elem.val(fromSettingsTemplateId)
+		} else {
+			$elem.val(-2);		// Set to auto
 		}
 
 	});
