@@ -277,9 +277,6 @@ define([
 							h[++idx] = '</div>';
 						}
 
-						/*
-						 * Disable until fixed
-						 *
 						// A control to select the filter type
 						h[++idx] = '<div class="form-group filter_only" style="display:none;">';
 							h[++idx] = '<label class="col-sm-2">';
@@ -303,7 +300,6 @@ define([
 								h[++idx] = '</select>';
 							h[++idx] = '</div>';
 						h[++idx] = '</div>';
-						*/
 						
 					h[++idx] = '</form>';
 				h[++idx] = '</div>';
@@ -331,7 +327,7 @@ define([
 							h[++idx] = '<div id="custom_filters">';
 							h[++idx] = '</div>';
 						h[++idx] = '</form>';
-						h[++idx] = '<button id="addFilter" class="btn btn-default">';
+						h[++idx] = '<button id="addFilter" class="mt-2 btn btn-default">';
 						h[++idx] = localise.set["ed_afc"];
 						h[++idx] = '</button>';
 					h[++idx] = '</div>';  // Custom filter only
