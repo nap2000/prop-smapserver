@@ -327,7 +327,7 @@ define([
 							h[++idx] = '<div id="custom_filters">';
 							h[++idx] = '</div>';
 						h[++idx] = '</form>';
-						h[++idx] = '<button id="addFilter" class="mt-2 btn btn-default">';
+						h[++idx] = '<button id="addFilter" class="btn btn-default" style="margin-top: 4px;">';
 						h[++idx] = localise.set["ed_afc"];
 						h[++idx] = '</button>';
 					h[++idx] = '</div>';  // Custom filter only
