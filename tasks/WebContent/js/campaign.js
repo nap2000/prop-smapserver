@@ -76,6 +76,8 @@ require([
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
 
+		$('#m_edit, #m_delete').addClass("disabled");
+
 		getLoggedInUser(projectChanged, false, true, undefined);
 
 		// Set change function on projects
@@ -101,6 +103,10 @@ require([
 
 		$('#m_add').click(function(){
 			gSelectedId = -1;
+			if((typeof $('#survey_name').val()) !== "string") {
+				alert(localise.set["msg_sel_survey"]);	// There must be a selected survey
+				return;
+			}
 			initMailoutDialog("add");
 			$('#addMailoutPopup').modal("show");
 		});
@@ -190,6 +196,8 @@ require([
 					hasParam = true;
 				}
 				downloadFile(url);
+			} else {
+				alert(localise.set["mo_ns"]);
 			}
 		});
 
@@ -290,14 +298,14 @@ require([
 			errorMsg;
 		var $survey = $('#survey_name');
 		var surveyIdx = $survey.val();
-		var surveyIdent = gSurveyList[surveyIdx].ident;
 
 		if(gMailoutEditIdx >= 0) {
 			mailout.id = gMailouts[gMailoutEditIdx].id;
 		} else {
 			mailout.id = -1;
 		}
-		mailout.survey_ident = surveyIdent;
+
+		mailout.survey_ident = gSurveyList[surveyIdx].ident;
 		mailout.name = $('#mo_name').val();
 		mailout.subject = $('#mo_subject').val();
 		mailout.content = $('#mo_content').val();
