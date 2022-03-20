@@ -104,18 +104,19 @@ public class patch {
 			//ClinicTestData ctd = new ClinicTestData();
 			//ctd.apply(connectionSD, connectionResults);
 			
-			if(action.equals("both") || action.equals("purge")) {
-				System.out.println("Purging old upload surveys directories");
-				PurgeUploadedDirectories pu = new PurgeUploadedDirectories();
-				pu.apply(testRun, connectionSD);
-			}
+			//if(action.equals("both") || action.equals("purge")) {
+			//	System.out.println("Purging old upload surveys directories");
+			//	PurgeUploadedDirectories pu = new PurgeUploadedDirectories();
+			//	pu.apply(testRun, connectionSD);
+			//}
 			
-			if(action.equals("both") || action.equals("erased")) {
-				System.out.println("Deleting upload folders where the survey has been deleted");
-				PurgeErasedSurveys pe = new PurgeErasedSurveys();
-				pe.apply(testRun, connectionSD);
-			}
+			//if(action.equals("both") || action.equals("erased")) {
+			//	System.out.println("Deleting upload folders where the survey has been deleted");
+			//	PurgeErasedSurveys pe = new PurgeErasedSurveys();
+			//	pe.apply(testRun, connectionSD);
+			//}
 			
+		
 			
 			
 		} catch (Exception e) {
