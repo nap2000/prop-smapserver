@@ -776,6 +776,7 @@ require([
 				projects[index] = {id: globals.gProjectList[idx].id};
 
 				projectsMoving += globals.gProjectList[idx].name;
+				hasProjects = true;
 			});
 
 			orgId = $('#target_organisation').val();
