@@ -469,9 +469,10 @@ function addUserDetailsPopupBootstrap4() {
 	h[++idx] = '</label>';
 	h[++idx] = '<div class="col-sm-10">';
 	h[++idx] = '<input id="me_password_confirm" type="password" placeholder="Password" class="form-control">';
-	h[++idx] = '</div>';
-	h[++idx] = '</div>';
-	h[++idx] = '</div>';
+	h[++idx] = '</div>';  // around input
+	h[++idx] = '</div>';  // form group
+	h[++idx] = '</div>';  // password fields
+	h[++idx] = '<div id="me_alert" style="display:none; word-wrap:break-word;" class="alert" role="alert"></div>';
 	h[++idx] = '</form>';
 	h[++idx] = '</div>';    // modal body
 
@@ -874,6 +875,10 @@ function enableUserProfileBS () {
 		logout();
 	});
 
+	$("#modify_me_popup :input").keydown(function() {
+		$("#me_alert").hide();
+	});
+
 	/*
 	 * Save the user profile
 	 */
@@ -891,7 +896,7 @@ function enableUserProfileBS () {
 			if($('#me_password_confirm').val() !== user.password) {
 				error = true;
 				user.password = undefined;
-				alert(localise.set["msg_pwd_m"]);
+				$('#me_alert').removeClass('alert-success').addClass('alert-danger').text(localise.set["msg_pwd_m"]).show();
 				$('#me_password').focus();
 				return false;
 			}
@@ -942,7 +947,11 @@ function saveCurrentUser(user, $dialog) {
 		success: function(data) {
 			removeHourglass();
 			if(data.error) {
-				alert(localise.set["c_error"] + " : " + data.msg);
+				if($dialog) {
+					$('#me_alert').removeClass('alert-success').addClass('alert-danger').text(data.msg).show();
+				} else {
+					alert(localise.set["c_error"] + " : " + data.msg);  // legacy non bootstrap
+				}
 			} else if($dialog) {
 				$dialog.modal("hide");
 				updateUserDetails(data, undefined);
