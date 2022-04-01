@@ -251,192 +251,71 @@ function saveCurrentGroupSurvey(surveyId, gs, fName) {
 
 /*
  * Add user details popup to the page
+ * Legacy only used with non bootstrap pages - these should be replaced with bootstrap
  */
 function addUserDetailsPopup() {
-	var bootstrap_enabled = (typeof $().modal == 'function'),
+	var
 		h =[],
 		idx = -1;
 
-	if(bootstrap_enabled) {
 
-		h[++idx] = '<div id="modify_me_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modifyMeLabel" aria-hidden="true">';
-			h[++idx] = '<div class="modal-dialog">';
-				h[++idx] = '<div class="modal-content">';
-					h[++idx] = '<div class="modal-header">';
-						h[++idx] = '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>';
-						h[++idx] = '<h4 class="modal-title" id="modifyMeLabel"></h4>';
-					h[++idx] = '</div>';    // modal-headers
+	h[++idx] = '<div id="modify_me_popup" style="display:none;">';
+	h[++idx] = '<div class="left_panel">';
+	h[++idx] = '<form id="me_edit_form">';
+	h[++idx] = '<label for="me_name">';
+	h[++idx] = localise.set["c_name"];
+	h[++idx] = '</label>';
+	h[++idx] = '<input type="text" id="me_name" required><br/>';
 
-					h[++idx] = '<div class="modal-body">';
-						h[++idx] = '<form role="form" class="form-horizontal" id="me_edit_form">';
-							h[++idx] = '<div class="form-group">';
-								h[++idx] = '<label for="me_name" class="col-sm-2 control-label">';
-									h[++idx] = localise.set["c_name"];
-								h[++idx] = '</label>';
-								h[++idx] = '<div class="col-sm-10">';
-									h[++idx] = '<input type="text" id="me_name" required class="form-control">';
-								h[++idx] = '</div>';
-							h[++idx] = '</div>';
+	h[++idx] = '<label for="me_language">';
+	h[++idx] = localise.set["c_lang"];
+	h[++idx] = '</label>';
+	h[++idx] = '<select class="language_select" id="me_language"></select><br/>';
 
-							h[++idx] = '<div class="form-group">';
-								h[++idx] = '<label for="me_language" class="col-sm-2 control-label">';
-									h[++idx] = localise.set["c_lang"];
-								h[++idx] = '</label>';
-								h[++idx] = '<div class="col-sm-10">';
-									h[++idx] = '<select id="me_language" class="language_select form-control"></select>';
-								h[++idx] = '</div>';
-							h[++idx] = '</div>';
+	h[++idx] = '<label for="me_email">';
+	h[++idx] = localise.set["c_email"];
+	h[++idx] = '</label>';
+	h[++idx] = '<input type="text" id="me_email" pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"><br/>';
 
-							h[++idx] = '<div class="form-group">';
-								h[++idx] = '<label for="me_email" class="col-sm-2 control-label">';
-									h[++idx] = localise.set["c_email"];
-								h[++idx] = '</label>';
-								h[++idx] = '<div class="col-sm-10">';
-									h[++idx] = '<input type="email" class="form-control" id="me_email"';
-									h[++idx] = ' placeholder="Enter email"';
-									h[++idx] = ' pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$">';
-								h[++idx] = '</div>';
-							h[++idx] = '</div>';
+	h[++idx] = '<label for="me_organisation">';
+	h[++idx] = localise.set["c_org"];
+	h[++idx] = '</label>';
+	h[++idx] = '<select class="organisation_select" id="me_organisation"></select><br/>';
 
-							h[++idx] = '<div class="form-group">';
-								h[++idx] = '<label for="me_organisation" class="col-sm-2 control-label">';
-									h[++idx] = localise.set["c_org"];
-								h[++idx] = '</label>';
-								h[++idx] = '<div class="col-sm-10">';
-									h[++idx] = '<select id="me_organisation" class="organisation_select form-control"></select>';
-								h[++idx] = '</div>';
-							h[++idx] = '</div>';
+	h[++idx] = '<label for="me_enterprise">';
+	h[++idx] = localise.set["c_ent"];
+	h[++idx] = '</label>';
+	h[++idx] = '<div id="me_enterprise"></div><br/>';
 
-							h[++idx] = '<div class="form-group">';
-								h[++idx] = '<label for="me_enterprise" class="col-sm-2 control-label">';
-									h[++idx] = localise.set["c_ent"];
-								h[++idx] = '</label>';
-								h[++idx] = '<div class="col-sm-10">';
-									h[++idx] = '<div id="me_enterprise" class="form-control"></div>';
-								h[++idx] = '</div>';
-							h[++idx] = '</div>';
+	h[++idx] = '<label for="u_tz">';
+	h[++idx] = localise.set["c_tz"];
+	h[++idx] = '</label>';
+	h[++idx] = '<select class="timezone_select" id="u_tz"></select>';
 
-							h[++idx] = '<div class="form-group">';
-								h[++idx] = '<label for="u_tz" class="col-sm-2 control-label">';
-									h[++idx] = localise.set["c_tz"];
-								h[++idx] = '</label>';
-								h[++idx] = '<div class="col-sm-10">';
-									h[++idx] = '<select class="form-control timezone_select" id="u_tz"></select>';
-								h[++idx] = '</div>';
-							h[++idx] = '</div>';
+	h[++idx] = '<span id="reset_me_password_fields" style="display:none;">';
+	h[++idx] = '<label for="reset_me_password">';
+	h[++idx] = localise.set["c_r_p"];
+	h[++idx] = '</label>';
+	h[++idx] = '<input type="checkbox" id="reset_me_password"/><br/>';
+	h[++idx] = '</span>';
 
-							h[++idx] = '<div id="reset_me_password_fields" style="display:none;">';
-								h[++idx] = '<div class="form-group">';
-									h[++idx] = '<div class="col-sm-offset-2 col-sm-10">';
-										h[++idx] = '<div class="checkbox">';
-											h[++idx] = '<label>';
-												h[++idx] = '<input type="checkbox" id="reset_me_password">';
-												h[++idx] = localise.set["c_r_p"];
-											h[++idx] = '</label>';
-										h[++idx] = '</div>';
-									h[++idx] = '</div>';
-								h[++idx] = '</div>';
-							h[++idx] = '</div>';
+	h[++idx] =	'<span id="password_me_fields" style="display:none;">';
+	h[++idx] = '<label for="me_password" data-lang="c_password" class="lang">';
+	h[++idx] = localise.set["c_password"];
+	h[++idx] = '</label>';
+	h[++idx] = '<input id="me_password" type="password"><br/>';
 
-							h[++idx] = '<div id="password_me_fields" style="display:none;">';
-								h[++idx] = '<div class="form-group">';
-									h[++idx] = '<label for="me_password" class="col-sm-2 control-label">';
-										h[++idx] = localise.set["c_password"];
-									h[++idx] = '</label>';
-									h[++idx] = '<div class="col-sm-10">';
-										h[++idx] = '<input id="me_password" type="password" placeholder="Password" class="form-control">';
-									h[++idx] = '</div>';
-								h[++idx] = '</div>';
+	h[++idx] = '<label for="me_password_confirm" data-lang="c_c_p" class="lang">';
+	h[++idx] = localise.set["c_password"];
+	h[++idx] = '</label>';
+	h[++idx] = '<input id="me_password_confirm" type="password"><br/>';
+	h[++idx] = '</span>';
+	h[++idx] = '</form>';
+	h[++idx] = '</div>';
+	h[++idx] = '</div>';
 
-								h[++idx] = '<div class="form-group">';
-									h[++idx] = '<label for="me_password_confirm" class="col-sm-2 control-label">';
-										h[++idx] = localise.set["c_c_p"];
-									h[++idx] = '</label>';
-									h[++idx] = '<div class="col-sm-10">';
-										h[++idx] = '<input id="me_password_confirm" type="password" placeholder="Password" class="form-control">';
-									h[++idx] = '</div>';
-								h[++idx] = '</div>';
-							h[++idx] = '</div>';
-						h[++idx] = '</form>';
-					h[++idx] = '</div>';    // modal body
-
-					h[++idx] = '<div class="modal-footer">';
-						h[++idx] = '<button type="button" class="btn btn-default" data-dismiss="modal">';
-							h[++idx] = localise.set["c_close"];
-						h[++idx] = '</button>';
-
-						h[++idx] = '<button id="userProfileLogout"type="button" class="btn btn-default" data-dismiss="modal">';
-							h[++idx] = localise.set["c_logout"];
-						h[++idx] = '</button>';
-
-						h[++idx] = '<button id="userProfileSave" type="button" class="btn btn-primary" data-dismiss="modal">';
-							h[++idx] = localise.set["c_save"];
-						h[++idx] = '</button>';
-					h[++idx] = '</div>';    // modal - footer
-				h[++idx] = '</div>';        // modal - content
-			h[++idx] = '</div>';            // modal - dialog
-		h[++idx] = '</div>';                // popup
-
-	} else {
-		h[++idx] = '<div id="modify_me_popup" style="display:none;">';
-			h[++idx] = '<div class="left_panel">';
-				h[++idx] = '<form id="me_edit_form">';
-					h[++idx] = '<label for="me_name">';
-						h[++idx] = localise.set["c_name"];
-					h[++idx] = '</label>';
-					h[++idx] = '<input type="text" id="me_name" required><br/>';
-
-					h[++idx] = '<label for="me_language">';
-						h[++idx] = localise.set["c_lang"];
-					h[++idx] = '</label>';
-					h[++idx] = '<select class="language_select" id="me_language"></select><br/>';
-
-					h[++idx] = '<label for="me_email">';
-						h[++idx] = localise.set["c_email"];
-					h[++idx] = '</label>';
-					h[++idx] = '<input type="text" id="me_email" pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"><br/>';
-
-					h[++idx] = '<label for="me_organisation">';
-						h[++idx] = localise.set["c_org"];
-					h[++idx] = '</label>';
-					h[++idx] = '<select class="organisation_select" id="me_organisation"></select><br/>';
-
-					h[++idx] = '<label for="me_enterprise">';
-						h[++idx] = localise.set["c_ent"];
-					h[++idx] = '</label>';
-					h[++idx] = '<div id="me_enterprise"></div><br/>';
-
-					h[++idx] = '<label for="u_tz">';
-						h[++idx] = localise.set["c_tz"];
-					h[++idx] = '</label>';
-					h[++idx] = '<select class="timezone_select" id="u_tz"></select>';
-
-					h[++idx] = '<span id="reset_me_password_fields" style="display:none;">';
-						h[++idx] = '<label for="reset_me_password">';
-							h[++idx] = localise.set["c_r_p"];
-						h[++idx] = '</label>';
-						h[++idx] = '<input type="checkbox" id="reset_me_password"/><br/>';
-					h[++idx] = '</span>';
-
-					h[++idx] =	'<span id="password_me_fields" style="display:none;">';
-						h[++idx] = '<label for="me_password" data-lang="c_password" class="lang">';
-							h[++idx] = localise.set["c_password"];
-						h[++idx] = '</label>';
-						h[++idx] = '<input id="me_password" type="password"><br/>';
-
-						h[++idx] = '<label for="me_password_confirm" data-lang="c_c_p" class="lang">';
-							h[++idx] = localise.set["c_password"];
-						h[++idx] = '</label>';
-						h[++idx] = '<input id="me_password_confirm" type="password"><br/>';
-					h[++idx] = '</span>';
-				h[++idx] = '</form>';
-			h[++idx] = '</div>';
-		h[++idx] = '</div>';
-	}
 	$(document.body).append(h.join(''));
-	if(bootstrap_enabled) {
-		enableUserProfileBS();
-	}
+
 }
 
 /*
@@ -605,7 +484,7 @@ function addUserDetailsPopupBootstrap4() {
 	h[++idx] = localise.set["c_logout"];
 	h[++idx] = '</button>';
 
-	h[++idx] = '<button id="userProfileSave" type="button" class="btn btn-primary" data-dismiss="modal">';
+	h[++idx] = '<button id="userProfileSave" type="button" class="btn btn-primary">';
 	h[++idx] = localise.set["c_save"];
 	h[++idx] = '</button>';
 	h[++idx] = '</div>';    // modal - footer
@@ -927,7 +806,7 @@ function enableUserProfile () {
 							user.o_id = 0;	// No change
 						}
 
-						saveCurrentUser(user);			// Save the updated user details to disk
+						saveCurrentUser(user, undefined);			// Save the updated user details to disk
 						$(this).dialog("close");
 					},
 				}, {
@@ -1012,7 +891,7 @@ function enableUserProfileBS () {
 			if($('#me_password_confirm').val() !== user.password) {
 				error = true;
 				user.password = undefined;
-				alert("Passwords do not match");
+				alert(localise.set["msg_pwd_m"]);
 				$('#me_password').focus();
 				return false;
 			}
@@ -1032,7 +911,7 @@ function enableUserProfileBS () {
 		user.current_survey_id = 0;
 		user.current_task_group_id = 0;
 
-		saveCurrentUser(user);			// Save the updated user details to disk
+		saveCurrentUser(user, $('#modify_me_popup'));			// Save the updated user details to disk
 	});
 
 
@@ -1049,7 +928,7 @@ function enableUserProfileBS () {
 /*
  * Save the currently logged on user's details
  */
-function saveCurrentUser(user) {
+function saveCurrentUser(user, $dialog) {
 
 	var userString = JSON.stringify(user);
 	addHourglass();
@@ -1062,10 +941,16 @@ function saveCurrentUser(user) {
 		data: { user: userString },
 		success: function(data) {
 			removeHourglass();
-			updateUserDetails(data, undefined);
+			if(data.error) {
+				alert(localise.set["c_error"] + " : " + data.msg);
+			} else if($dialog) {
+				$dialog.modal("hide");
+				updateUserDetails(data, undefined);
+			}
+
 		}, error: function(data, status) {
 			removeHourglass();
-			alert(localise.set["c_error"]);
+			alert(localise.set["c_error"] + " : " + data.responseText);
 		}
 	});
 }
@@ -1137,7 +1022,7 @@ function setupUserProfile(bs4) {
 	if(bs4) {
 		addUserDetailsPopupBootstrap4();
 	} else {
-		addUserDetailsPopup();
+		addUserDetailsPopup();	// legacy
 	}
 	getAvailableTimeZones(showTimeZones);
 }

@@ -1832,7 +1832,7 @@ require([
 				h[++idx] = htmlEncode(user.name);
 				h[++idx] = '</td>';
 				h[++idx] = '<td style="text-align: center;">';
-				h[++idx] = user.current_org_name;
+				h[++idx] = htmlEncode(user.current_org_name);
 				h[++idx] = '</td>';
 
 				h[++idx] = '<td>';
