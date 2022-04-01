@@ -55,7 +55,7 @@ require([
 
 		$(document).ready(function() {
 
-			setupUserProfile();
+			setupUserProfile(true);
 			localise.setlang();		// Localise HTML
 
 			// Get the user details
