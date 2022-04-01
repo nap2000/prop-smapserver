@@ -65,7 +65,7 @@ $(document).ready(function() {
 		param = [];
 
     setCustomEdit();
-	setupUserProfile();
+	setupUserProfile(true);
 	localise.setlang();		// Localise HTML
 	
 	// Get the user details

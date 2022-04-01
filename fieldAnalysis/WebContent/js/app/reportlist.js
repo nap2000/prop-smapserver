@@ -67,7 +67,7 @@ $(document).ready(function() {
 	}(document));    
 	    
 	window.moment = moment;	// Required as common.js not part of module
-	setupUserProfile();
+	setupUserProfile(false);
 	localise.setlang();		// Localise HTML
 	
 	initializeReportsMap();

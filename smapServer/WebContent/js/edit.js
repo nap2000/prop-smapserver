@@ -130,7 +130,7 @@ $(document).ready(function() {
 	window.moment = moment;
 
     setCustomEdit();
-	setupUserProfile();
+	setupUserProfile(false);
 	localise.setlang();		// Localise HTML
 
 	// Get the parameters and start editing a survey if one was passed as a parameter

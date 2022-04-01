@@ -65,7 +65,7 @@ $(document).ready(function() {
 		pArray = [],
 		param = [];
 
-	setupUserProfile();
+	setupUserProfile(true);
 	localise.setlang();		// Localise HTML
 	
 	// Get the user details
