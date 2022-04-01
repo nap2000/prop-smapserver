@@ -528,6 +528,8 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 			var $this = $(this)
 			$this.find('.modal-title').text(data.ident + "@" + data.organisation_name)
 
+			$("#me_alert").hide();
+
 			$('#me_edit_form')[0].reset();
 			$('#reset_me_password_fields').show();
 			$('#password_me_fields').hide();
