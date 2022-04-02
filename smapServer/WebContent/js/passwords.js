@@ -124,7 +124,7 @@ $(document).ready(function() {
     	$.ajax({
 			  type: "POST",
 			  cache: false,
-			  url: "/surveyKPI/onetimelogon",
+			  url: "/surveyKPI/onetimelogon?lang=" + gUserLocale,
 			  data: { passwordDetails: pdString },
 			  success: function(data, status) {
 				  removeHourglass();
