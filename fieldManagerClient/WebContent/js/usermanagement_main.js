@@ -1195,6 +1195,7 @@ require([
 		$('#s_email_password').val(data.email_password);
 		$('#s_email_port').val(data.email_port);
 		$('#s_sms_url').val(data.sms_url);
+		$('#s_p_strength').val(data.password_strength);
 
 	}
 
@@ -1716,7 +1717,8 @@ require([
 				email_user: $('#s_email_user').val(),
 				email_password: $('#s_email_password').val(),
 				email_port: $('#s_email_port').val(),
-				sms_url: $('#s_sms_url').val()
+				sms_url: $('#s_sms_url').val(),
+				password_strength: $('#s_p_strength').val(),
 			};
 
 		var serverString = JSON.stringify(server);
