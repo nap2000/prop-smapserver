@@ -524,6 +524,7 @@ require([
 			organisation.api_rate_limit = parseInt($('#o_api_rate_limit').val());
 			organisation.timeZone = $('#o_tz').val();
 			organisation.server_description = $('#o_server_description').val();
+			organisation.password_strength = $('#o_password_strength').val();
 
 			if(typeof organisation.email_port !== "number") {
 				organisation.email_port = 0;
@@ -1530,6 +1531,7 @@ require([
 			$('#o_email_port').val(org.email_port);
 			$('#o_default_email_content').val(org.default_email_content);
 			$('#o_server_description').val(org.server_description);
+			$('#o_password_strength').val(org.password_strength);
 			$('.puboption').each(function() {
 				console.log("option: " + $(this).val() );
 				if($(this).val() === "email") {
