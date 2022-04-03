@@ -71,7 +71,7 @@ $(document).ready(function() {
 	}
 
 	$('#forgottenPasswordEmail, #passwordValue').change(function(){
-		$('.pwd_alert').hide();
+		$('.pwd_alert, .pwd_home').hide();
 	});
 
     $('#emailForm').bootstrapValidator({
@@ -129,7 +129,7 @@ $(document).ready(function() {
 			  success: function(data, status) {
 				  removeHourglass();
 				  $('.pwd_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_pr"]);
-
+				  $('.pwd_home').show();
 			  }, error: function(data, status) {
 				  removeHourglass();
 			    $('.pwd_alert').show().addClass('alert-danger').removeClass('alert-success').html(localise.set["c_error"] + ": " + data.responseText);
@@ -141,7 +141,7 @@ $(document).ready(function() {
     	e.preventDefault();
     	
     	var email = $('#forgottenPasswordEmail').val();
-	    $('.pwd_alert').hide();
+	    $('.pwd_alert, .pwd_home').hide();
 		addHourglass();
     	$.ajax({
 			  type: "GET",
@@ -150,6 +150,7 @@ $(document).ready(function() {
 			  success: function(data, status) {
 				  removeHourglass();
 				  $('.pwd_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_es"] + " " + email);
+				  $('.pwd_home').show();
 			  }, error: function(data, status) {
 				  removeHourglass();
 				  var msg = data.responseText;

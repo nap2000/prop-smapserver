@@ -72,6 +72,7 @@ require([
         setCustomLogs();
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
+		registerForServiceWorkerMessages();
 
 		getLoggedInUser(undefined, false, true, undefined);
 		
