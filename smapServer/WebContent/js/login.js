@@ -55,7 +55,6 @@ require([
 
             login();
 
-
         });
 
         function login() {
@@ -66,7 +65,9 @@ require([
                     if(data === 'loggedin') {
                         $('.login_failure').hide();
                         $('.login_success').show();
-                        window.location.href = document.referrer;
+                        if(window.location.href !== document.referrer) {
+                            window.location.href = document.referrer;
+                        }
                     } else {
                         $('.login_failure').show();
                         $('.login_success').hide();
