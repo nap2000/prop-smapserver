@@ -310,8 +310,14 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             $('#m_usage_report').click(function(){
                 $('#usage_report_popup').modal("show");
             });
+            $('#m_attendance_report').click(function(){
+                $('#attendance_report_popup').modal("show");
+            });
             $('#usage_report_save').click(function(){
                 executeUsageReport();
+            });
+            $('#attendance_report_save').click(function(){
+                executeAttendanceReport();
             });
 	        $('#m_form_access_report').click(function(){
 		        $('#form_access_report_popup').modal("show");
@@ -327,7 +333,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             });
 
 	        /*
-             * Add date time picker to usage date
+             * Add date time picker to usage and attendance date
              */
 	        moment.locale();
 	        $('#usageDate').datetimepicker({
@@ -337,6 +343,11 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 		        locale: gUserLocale || 'en'
 	        }).data("DateTimePicker").date(moment());
 
+            $('#attendanceDate').datetimepicker({
+                useCurrent: false,
+                format: "MM/YYYY/DD",
+                locale: gUserLocale || 'en'
+            }).data("DateTimePicker").date(moment());
         });
 
 
