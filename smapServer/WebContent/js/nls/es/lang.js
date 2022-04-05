@@ -1152,6 +1152,7 @@ define(
     "u_clear_r": "Borrar los roles importados ya existentes",
     "u_api_rl": "Límite de frecuencia para la API de datos",
     "u_api_rlm": "Número mínimo de milisegundos entre solicitudes de datos de API. Cualquier solicitud recibida menos de este tiempo desde la solicitud anterior será rechazada. Se aplica a las solicitudes de datos json y csv. Cuanto menor sea el número, mayor será el volumen de solicitudes de API permitidas.",
+    "u_mps": "Nivel de seguridad mínimo de la contraseña",
     "br_ci": "Indiferente a Mayúsculas y Minúsculas",
     "br_exact": "Coincidencia Exacta",
     "br_cc": "Selecciona las columnas a evaluar por similitudes en los datos. Por cada columna a evaluar se puede seleccionar una función para ampliar el rango de valores que deben coincidir",
