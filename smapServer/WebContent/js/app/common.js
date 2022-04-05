@@ -5485,8 +5485,8 @@ function updateRemoteSurveys(surveyList) {
 }
 
 /*
-  * Reports
-  */
+ * Reports
+ */
 function executeUsageReport(oId) {
 
 	var usageMsec = $('#usageDate').data("DateTimePicker").date(),
@@ -5500,7 +5500,6 @@ function executeUsageReport(oId) {
 		i;
 
 	var reportName = localise.set["u_usage"] + "_";
-	reportName = reportName.replaceAll(' ', '_');
 
 	// Add the organisation name
 	if(oId > 0 && globals.gLoggedInUser.orgs.length > 0) {
@@ -5539,16 +5538,6 @@ function executeUsageReport(oId) {
 		}
 	}
 
-	//url = "/surveyKPI/adminreport/usage/" + year + "/" + month;
-	//url += usageByProject ? "?project=true" : "?project=false";
-	//url += usageBySurvey ? "&survey=true" : "&survey=false";
-	//url += usageByDevice ? "&device=true" : "&device=false";
-	//url += incTemp ? "&inc_temp=true" : "&inc_temp=false";
-
-	//if(oId) {
-	//	url+="&org=" + oId;
-	//
-	// }
 	var tzString = globals.gTimezone ? "?tz=" + encodeURIComponent(globals.gTimezone) : "";
 
 	addHourglass();
@@ -5572,7 +5561,68 @@ function executeUsageReport(oId) {
 
 		}
 	});
-	//downloadFile(url);
+
+}
+
+function executeAttendanceReport(oId) {
+
+	var usageMsec = $('#usageDate').data("DateTimePicker").date(),
+		d = new Date(usageMsec),
+		day = d.getDay() + 1,
+		month = d.getMonth() + 1,
+		year = d.getFullYear(),
+		i;
+
+	var reportName = localise.set["u_attendance"] + "_";
+
+	// Add the organisation name
+	if(oId > 0 && globals.gLoggedInUser.orgs.length > 0) {
+		for(i = 0; i < globals.gLoggedInUser.orgs.length; i++) {
+			if(globals.gLoggedInUser.orgs[i].id == oId) {
+				reportName += globals.gLoggedInUser.orgs[i].name + "_";
+				break;
+			}
+		}
+	}
+
+	reportName += "_" + year + "_" + month + "_" + day;
+	reportName = reportName.replaceAll(' ', '_');
+
+	var reportObj = {
+		report_type: 'u_attendance',
+		report_name: reportName,
+		pId: globals.gCurrentProject,
+		params: {
+			oId: oId,
+			month: month,
+			year: year,
+			day: day
+		}
+	}
+
+	var tzString = globals.gTimezone ? "?tz=" + encodeURIComponent(globals.gTimezone) : "";
+
+	addHourglass();
+	$.ajax({
+		type: "POST",
+		cache: false,
+		dataType: 'text',
+		contentType: "application/json",
+		url: "/surveyKPI/background_report" + tzString,
+		data: { report: JSON.stringify(reportObj) },
+		success: function(data, status) {
+			removeHourglass();
+			alert(localise.set["msg_ds_s_r"]);
+		}, error: function(xhr, textStatus, err) {
+			removeHourglass();
+			if(xhr.readyState == 0 || xhr.status == 0) {
+				return;  // Not an error
+			} else {
+				alert(localise.set["msg_err_save"] + xhr.responseText);
+			}
+
+		}
+	});
 
 }
 
