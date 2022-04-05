@@ -525,6 +525,7 @@ require([
 			organisation.timeZone = $('#o_tz').val();
 			organisation.server_description = $('#o_server_description').val();
 			organisation.password_strength = $('#o_password_strength').val();
+			organisation.password_strength = organisation.password_strength || "0";
 
 			if(typeof organisation.email_port !== "number") {
 				organisation.email_port = 0;
