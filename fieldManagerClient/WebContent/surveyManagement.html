@@ -85,6 +85,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 				<a class="nav-link dropdown-toggle" href="#" id="m_local_reports" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="lang" data-lang="m_lr">reports</span></a>
 				<div class="dropdown-menu" aria-labelledby="m_local_reports">
 					<a id="m_usage_report" class="dropdown-item restrict_role admin_role analyst_role" href="#"><span class="nav-label lang" data-lang="u_usage">usage</span></a>
+					<a id="m_attendance_report" class="dropdown-item restrict_role admin_role analyst_role" href="#"><span class="nav-label lang" data-lang="u_attendance">att</span></a>
 					<a id="m_form_access_report" class="dropdown-item restrict_role admin_role analyst_role" href="#"><span class="nav-label lang" data-lang="u_access">access</span></a>
 					<a id="m_notification_report" class="dropdown-item restrict_role admin_role analyst_role" href="#"><span class="nav-label lang" data-lang="u_notification">notification</span></a>
 					<a id="m_resource_usage_report" class="dropdown-item restrict_role admin_role analyst_role" href="#"><span class="nav-label lang" data-lang="u_r_u">res</span></a>
@@ -321,7 +322,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					<div class="form-group row">
 						<label for="usageDateInput" data-lang="c_month" class="lang col-sm-2 control-label">month</label>
 						<div class="col-sm-10">
-							<div class='input-group date' id='usageDate' data-toggle="tooltip"  data-container="body" title="Month and Year of report">
+							<div class='input-group date lang_tt' id='usageDate' data-toggle="tooltip"  data-container="body" data-lang_tt="rep_my"  title="">
 								<input id = "usageDateInput" type='text' class="form-control" data-date-format="YYYY/MM"/>
 								<div class="input-group-append">
 									<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i class="fas fa-calendar-alt"></i></span></button>
@@ -394,6 +395,41 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
 				<button id="form_access_report_save" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_create">create</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Parameters for attendance report -->
+<div id="attendance_report_popup" class="modal" tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title lang" data-lang="u_attendance"></h5>
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			</div>
+			<div class="modal-body">
+
+				<form>
+					<div class="form-group row">
+						<label for="attendanceDateInput" data-lang="c_date" class="lang col-sm-2 control-label">date</label>
+						<div class="col-sm-10">
+							<div class='input-group date' id='attendanceDate' data-toggle="tooltip"  data-container="body" title="Date of report">
+								<input id = "attendanceDateInput" type='text' class="form-control" data-date-format="YYYY/MM/DD"/>
+								<div class="input-group-append">
+									<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i class="fas fa-calendar-alt"></i></span></button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</form>
+
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="attendance_report_save" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_create">create</button>
 			</div>
 		</div>
 	</div>
