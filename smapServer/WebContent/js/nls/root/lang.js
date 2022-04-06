@@ -1152,6 +1152,7 @@ define({
     "u_rap_d": "Administrators will be able to assign the selected users only to this project",
     "u_chg": "Changed by",
 	"u_usage": "Usage Report",
+    "u_attendance": "Attendance Report",
     "u_notification": "Notification Report",
 	"u_access": "Form Access Report",
     "u_r_u": "Resource Usage Report",
@@ -1391,6 +1392,7 @@ define({
     "locations_kml": "KML",
     "rep_au": "Include all users in project",
     "rep_d": "Generation time (seconds)",
+    "rep_my": "Month and year of the report",
 
     // Console
     "co_dd": "Drill Down",
