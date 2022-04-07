@@ -5568,7 +5568,7 @@ function executeAttendanceReport(oId) {
 
 	var usageMsec = $('#usageDate').data("DateTimePicker").date(),
 		d = new Date(usageMsec),
-		day = d.getDay() + 1,
+		day = d.getDate(),
 		month = d.getMonth() + 1,
 		year = d.getFullYear(),
 		i;
