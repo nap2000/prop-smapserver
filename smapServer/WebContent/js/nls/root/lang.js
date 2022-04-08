@@ -621,6 +621,7 @@ define({
     "msg_search_source2": "The source file or survey must be selected",
 	"msg_pdfcols_count": "The total width of all the columns must add up to 10",
     "msg_pdfinv_zoom": "Zoom must be between 1 and 20",
+    "msg_pdfinv_round": "Rounding of decimal places can be between 0 and 10",
 	"msg_pdfcols_width": "A column width must be between 1 and 10 inclusive",
 	"msg_pe": "The number of days before password expiry must be an integer greater than 0",
     "msg_restore_started": "Restoration of the survey data has started.  Press refresh to see progress.  This process may take minutes if the files to be retrieved are in off site storage",
@@ -812,6 +813,7 @@ define({
     // Editor
     "ed_ba": "Background Audio",
     "ed_map_zoom": "Map Zoom",
+    "ed_round": "Decimal places",
 	"ed_hidden": "Hide in mobile app",
 	"ed_selfie": "Open camera in selfie mode",
     "ed_new": "Require a new picture be taken",
