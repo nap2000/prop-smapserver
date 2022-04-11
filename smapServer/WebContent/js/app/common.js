@@ -5566,8 +5566,8 @@ function executeUsageReport(oId) {
 
 function executeAttendanceReport(oId) {
 
-	var usageMsec = $('#usageDate').data("DateTimePicker").date(),
-		d = new Date(usageMsec),
+	var attendanceMsec = $('#attendanceDate').data("DateTimePicker").date(),
+		d = new Date(attendanceMsec),
 		day = d.getDate(),
 		month = d.getMonth() + 1,
 		year = d.getFullYear(),
