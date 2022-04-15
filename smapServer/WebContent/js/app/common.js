@@ -5526,7 +5526,7 @@ function executeUsageReport(oId) {
 	var reportObj = {
 		report_type: 'u_usage',
 		report_name: reportName,
-		pId: globals.gCurrentProject,
+		pId: 0,
 		params: {
 			oId: oId,
 			byProject: byProject,
@@ -5591,7 +5591,7 @@ function executeAttendanceReport(oId) {
 	var reportObj = {
 		report_type: 'u_attendance',
 		report_name: reportName,
-		pId: globals.gCurrentProject,
+		pId: 0,
 		params: {
 			oId: oId,
 			month: month,
