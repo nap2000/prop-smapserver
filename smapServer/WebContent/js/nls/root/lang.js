@@ -814,7 +814,7 @@ define({
     "ed_ba": "Background Audio",
     "ed_map_zoom": "Map Zoom",
     "ed_round": "Decimal places",
-	"ed_hidden": "Hide in mobile app",
+	"ed_hidden": "Hide in form",
 	"ed_selfie": "Open camera in selfie mode",
     "ed_new": "Require a new picture be taken",
 	"ed_read_nfc": "Read an NFC tag instead of a barcode",
