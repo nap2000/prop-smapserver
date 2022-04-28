@@ -546,8 +546,10 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                             } else {
                                 $('.get_more').prop("disabled", false);
                             }
-                            var totals_msg = "Page " + gPageCount + " from " + data.totals.from_date +
-                                " to " +  data.totals.to_date;
+                            var totals_msg = localise.set["mon_page"];
+                            totals_msg = totals_msg.replace("%s1", gPageCount );
+                            totals_msg = totals_msg.replace("%s2", data.totals.from_date );
+                            totals_msg = totals_msg.replace("%s3", data.totals.to_date );
                             $('.get_less_more_text').html(totals_msg);
                         }
                         if(showSourceE === SOURCE_FORMS) {
@@ -649,14 +651,14 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                 }
 
             } else {
-                h[++i] = '<th>Id</th>';
-                h[++i] = '<th>Upload Id</th>';
+                h[++i] = '<th>' + localise.set["c_id"] +'</th>';
+                h[++i] = '<th>' + localise.set["mon_uid"] + '</th>';
                 h[++i] = '<th>' + localise.set["mon_ud"] + ' ' + localise.set["c_lt"] + '</th>';
                 h[++i] = '<th>' + localise.set["c_user"] + ' ' + localise.set["c_ident"] + '</th>';
                 h[++i] = '<th>' + localise.set["mon_pi"] + '</th>';
                 h[++i] = '<th>' + localise.set["mon_file"] + '</th>';
                 h[++i] = '<th>' + localise.set["c_survey"] + '</th>';
-                h[++i] = '<th>Ident</th>';
+                h[++i] = '<th>' + localise.set["c_ident"] + '</th>';
                 if(isForwarded) {
                     h[++i] = '<th>Dest</th>';
                 }
@@ -673,7 +675,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             for(j = 0; j < features.length; j++) {
                 h[++i] = '<tr>';
                 if(showType === "totals") {
-                    h[++i] = '<td>' + features[j].properties.key + '</td>';
+                    h[++i] = '<td>' + htmlEncode(features[j].properties.key) + '</td>';
                     if(isForwarded) {
                         h[++i] = '<td>' + features[j].properties.dest + '</td>';;
                     }
@@ -699,11 +701,11 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                     h[++i] = '<td>' + ((typeof features[j].properties.se_id === "undefined") ? "" : features[j].properties.se_id) + '</td>';
                     h[++i] = '<td>' + features[j].properties.ue_id + '</td>';
                     h[++i] = '<td>' + localTime(features[j].properties.upload_time) + '</td>';
-                    h[++i] = '<td>' + features[j].properties.user_name + '</td>';
+                    h[++i] = '<td>' + htmlEncode(features[j].properties.user_name) + '</td>';
                     h[++i] = '<td style="word-wrap: break-word;">' + features[j].properties.imei + '</td>';
-                    h[++i] = '<td>' + features[j].properties.file_name + '</td>';
-                    h[++i] = '<td>' + features[j].properties.survey_name + '</td>';
-                    h[++i] = '<td>' + features[j].properties.ident + '</td>'
+                    h[++i] = '<td>' + htmlEncode(features[j].properties.file_name) + '</td>';
+                    h[++i] = '<td>' + htmlEncode(features[j].properties.survey_name) + '</td>';
+                    h[++i] = '<td>' + htmlEncode(features[j].properties.ident) + '</td>'
                     if(isForwarded) {
                         h[++i] = '<td>' + features[j].properties.dest + '</td>';;
                     }
@@ -721,7 +723,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                     if(typeof reason === "undefined") {
                         reason = "";
                     }
-                    h[++i] = '<td style="word-break: break-all;">' + reason + '</td>';
+                    h[++i] = '<td style="word-break: break-all;">' + htmlEncode(reason) + '</td>';
                 }
                 h[++i] = '</tr>';
 
@@ -927,14 +929,14 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             h[++i] = '<tbody>';
             for(j = 0; j < forms.length; j++) {
                 h[++i] = '<tr>';
-                h[++i] = '<td>' + forms[j].u_name + '</td>';
-                h[++i] = '<td>' + forms[j].u_ident + '</td>';
-                h[++i] = '<td>' + forms[j].device_id + '</td>';
+                h[++i] = '<td>' + htmlEncode(forms[j].u_name) + '</td>';
+                h[++i] = '<td>' + htmlEncode(forms[j].u_ident) + '</td>';
+                h[++i] = '<td>' + htmlEncode(forms[j].device_id) + '</td>';
 
                 if(forms[j].no_download) {
-                    h[++i] = '<td class="error">' + forms[j].survey_name + '</td>';
+                    h[++i] = '<td class="error">' + htmlEncode(forms[j].survey_name) + '</td>';
                 } else {
-                    h[++i] = '<td class="success">' + forms[j].survey_name + '</td>';
+                    h[++i] = '<td class="success">' + htmlEncode(forms[j].survey_name) + '</td>';
                 }
 
                 if(forms[j].survey_version === forms[j].download_version || forms[j].download_version === '') {
