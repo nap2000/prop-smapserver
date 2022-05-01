@@ -803,14 +803,14 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                         h[++i] = '<td>' + (features[j].properties.type ? features[j].properties.type : '') + '</td>';
                     }
                     if(source === "optin_msg") {
-                        h[++i] = '<td>' + features[j].properties.email + '</td>';
+                        h[++i] = '<td>' + htmlEncode(features[j].properties.email) + '</td>';
                     } else {
-                        h[++i] = '<td style="word-break: break-all;">' + features[j].properties.notify_details + '</td>';
+                        h[++i] = '<td style="word-break: break-all;">' + htmlEncode(features[j].properties.notify_details) + '</td>';
                     }
                     status = features[j].properties.status;
                     h[++i] = '<td class="' + status + '">' + localise.set[features[j].properties.status] + '</td>';
                     if(features[j].properties.status_details) {
-                        h[++i] = '<td>' + features[j].properties.status_details + '</td>';
+                        h[++i] = '<td>' + htmlEncode(features[j].properties.status_details) + '</td>';
                     } else {
                         h[++i] = '<td></td>';
                     }
