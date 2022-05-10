@@ -94,6 +94,7 @@
 				<li id="deviceTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="u_det_o_ft"></a></li>
 				<li id="webformTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="u_det_o_wf"></a></li>
 				<li id="emailTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="u_det_o_email"></a></li>
+				<li id="caseManagementTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="c_cm"></a></li>
 				<li id="sensitiveTab" class="nav-item restrict_role security_role"><a href="#" class="nav-link lang" data-lang="u_sens_data"></a></li>
 			</ul>
 		</div>
@@ -646,6 +647,24 @@
 
 				</div>
 
+				<!-- The container for managing case management data -->
+				<div id="caseManagementPanel" style="display:none;" class="usertab mt-4">
+
+					<div class="well">
+						<div class="container">
+							<div class="row">
+								<div class="col-md-12 col-xs-12">
+									<button class="btn btn-success lang" id="create_cm_setting" data-lang="u_add_s"></button>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12 col-xs-12">
+									<div id="cm_table"  style="margin-top:20px;"></div>
+								</div>
+							</div>
+					</div>
+				</div>
+
 				<!-- The container for documenting sensitive data -->
 				<div id="sensitivePanel" style="display:none;" class="usertab mt-4">
 
@@ -704,35 +723,83 @@
 	</div>
 </div>
 
-<!-- Modal to allow the user to upload a css file for their organisation -->
-<div id="upload_css_popup_org" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="uploadCssLabelOrg" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 id="uploadCssLabelOrg" class="modal-title lang" data-lang="u_css_ss_org">upload</h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			</div>
-			<div class="modal-body">
+	<!-- Modal to allow the user to upload a css file for their organisation -->
+	<div id="upload_css_popup_org" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="uploadCssLabelOrg" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 id="uploadCssLabelOrg" class="modal-title lang" data-lang="u_css_ss_org">upload</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				</div>
+				<div class="modal-body">
 
-				<form class="form" id="upload_css_form_org"  enctype="multipart/form-data" name="upload_css_form_org">
-					<div class="form-group row">
-						<label for="cssUploadOrg" data-lang="u_css_f" class="lang col-sm-4 control-label">upload</label>
-						<div class="col-sm-6">
-							<input type="file" class="form-control-file" id="cssUploadOrg" accept="text/css" name="file">
+					<form class="form" id="upload_css_form_org"  enctype="multipart/form-data" name="upload_css_form_org">
+						<div class="form-group row">
+							<label for="cssUploadOrg" data-lang="u_css_f" class="lang col-sm-4 control-label">upload</label>
+							<div class="col-sm-6">
+								<input type="file" class="form-control-file" id="cssUploadOrg" accept="text/css" name="file">
+							</div>
 						</div>
-					</div>
-				</form>
-				<div class="load_file_alert alert alert-success" role="alert" style="display:none;"></div>
+					</form>
+					<div class="load_file_alert alert alert-success" role="alert" style="display:none;"></div>
 
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close"></button>
-				<button id="cssSaveOrg" type="button" class="btn btn-primary lang btn-default" data-lang="c_save"></button>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close"></button>
+					<button id="cssSaveOrg" type="button" class="btn btn-primary lang btn-default" data-lang="c_save"></button>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
+	<!-- Modal to allow the user to edit a case management setting -->
+	<div id="create_cms_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createCmsLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title lang" data-lang="u_cms" id="createCmsLabel">role</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+							aria-hidden="true">&times;</span></button>
+				</div>
+				<div class="modal-body">
+
+					<form class="form" onsubmit="return false;" id="cms_create_form">
+
+						<div class="form-group row">
+							<label for="cms_name" data-lang="c_name" class="lang col-sm-4 control-label"></label>
+							<div class="col-sm-8">
+								<input type="text" id="cms_name" class="form-control" required tabindex="1"><br/>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label class="control-label col-sm-4" for="cms_type"><span class="lang" data-lang="c_type"></span>:</label>
+							<div class="col-sm-8">
+								<select class="form-control" id="cms_type">
+									<option value="status">status</option>
+									<option value="severity">severity</option>
+									<option value="sensitivity">sensitivity</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label class="control-label col-sm-4" for="cms_project"><span class="lang" data-lang="c_project"></span>:</label>
+							<div class="col-sm-8">
+								<select class="form-control project_list" id="cms_project"></select>
+							</div>
+						</div>
+
+					</form>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close">Close</button>
+					<button id="cmsSave" type="button" class="btn btn-primary lang btn-default" data-lang="c_save">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </body>
 </html>

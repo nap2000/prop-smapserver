@@ -70,6 +70,7 @@ require([
 		gCssFile,
 		gCssOrgFile,
 		gCssModal,
+		gCurrentCmsIndex,
 		gResetWebformPressed = false;
 
 	var limitTypes = [
@@ -122,6 +123,7 @@ require([
 		getWebformSettings();
 		getAppearanceSettings();
 		getSensitiveSettings();
+		getProjects();
 
 		// Set up the tabs
 		$('#appearanceTab a').click(function (e) {
@@ -143,6 +145,10 @@ require([
 		$('#sensitiveTab a').click(function (e) {
 			e.preventDefault();
 			panelChange($(this), 'sensitive');
+		});
+		$('#caseManagementTab a').click(function (e) {
+			e.preventDefault();
+			panelChange($(this), 'caseManagement');
 		});
 		$('#emailTab a').click(function (e) {
 			e.preventDefault();
@@ -585,8 +591,98 @@ require([
 			});
 		});
 
+		/*
+		 * Case Management
+		 */
+		$('#create_cm_setting').click(function () {
+			openCmDialog(false, -1);
+		});
+
+		/*
+ 		 * Save a case management setting details
+ 		 */
+		$('#cmsSave').click(function(){
+			var cmsList = [],
+				cms = {},
+				error = false;
+
+			if(gCurrentCmsIndex === -1) {
+				cms.id = -1;
+			} else {
+				cms.id = globals.gCmsList[gCurrentCmsIndex].id;
+			}
+
+			cms.name = $('#cms_name').val();
+			cms.type = $('#cms_type').val();
+			cms.project = $('#cms_project').val();
+
+			if(!cms.name || cms.name.trim().length === 0) {
+				alert(localise.set["msg_val_nm"]);
+				$('#cms_name').focus();
+				return;
+			}
+
+			var cmsString = JSON.stringify(cms);
+
+			addHourglass();
+			$.ajax({
+				type: "POST",
+				contentType: "application/json",
+				cache: false,
+				url: "/surveyKPI/cases/settings",
+				data: { settings: cmsString },
+				success: function(data, status) {
+					removeHourglass();
+					$('#create_cms_popup').modal("hide");
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						var msg = xhr.responseText;
+						alert(localise.set["msg_err_upd"] + msg);
+					}
+				}
+			});
+
+		});
 
 	});
+
+	/*
+ 	 * Show the case management dialog
+ 	 */
+	function openCmDialog(existing, cmsIndex) {
+		gCurrentCmsIndex = cmsIndex;
+		$('#create_cms_popup').modal("show");
+	}
+
+	/*
+ 	 * Get the list of available projects from the server
+ 	 */
+	function getProjects() {
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/projectList",
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				globals.gProjectList = data;
+				updateProjectList(true, 0);
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["c_error"] + ": " + err);
+				}
+			}
+		});
+	}
 
 	function deleteCss(org) {
 		var url = "/surveyKPI/css/";

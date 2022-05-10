@@ -69,6 +69,7 @@ define({
     // Common
     "c_api_builder": "API Builder",
     "c_auto": "Auto",
+    "c_cm": "Case Management",
     "c_api": "API",
     "c_link": "Link",
     "c_links": "Links",
@@ -1065,6 +1066,7 @@ define({
     "u_add": "Add User",
     "u_del": "Delete User",
     "u_mv": "Move To Organisation",
+    "u_cms": "Case management Setting",
 	"u_mv_ent": "Move To Enterprise",
     "u_add_p": "Add Project",
     "u_del_p": "Delete Project",
@@ -1073,6 +1075,7 @@ define({
 	"u_add_e": "Add Enterprise",
 	"u_del_e": "Delete Enterprise",
     "u_add_r": "Add Role",
+    "u_add_s": "Add Setting",
     "u_edit_r": "Edit Role",
     "u_del_r": "Delete Role",
     "u_det": "User Details",
