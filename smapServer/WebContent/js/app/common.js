@@ -3297,6 +3297,33 @@ function getRoles(callback) {
 	});
 }
 
+/*
+ * Get the list of available case management settings from the server
+ */
+function getCms(callback) {
+	addHourglass();
+	$.ajax({
+		url: "/surveyKPI/cases/settings",
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			removeHourglass();
+			globals.gCmsList = data;
+			if(typeof callback === "function") {
+				callback();
+			}
+		},
+		error: function(xhr, textStatus, err) {
+			removeHourglass();
+			if(xhr.readyState == 0 || xhr.status == 0) {
+				return;  // Not an error
+			} else {
+				alert(localise.set["msg_err_get_r"] + " " + err);
+			}
+		}
+	});
+}
+
 function getInterval(seconds) {
 	if(seconds < 2) {
 		return seconds + ' ' + localise.set["i_sec"];

@@ -41,6 +41,7 @@ define(function () {
 
         gProjectList: undefined,
         gRoleList: undefined,
+        gCmsList: undefined,
         gCurrentProject: 0,
         gCurrentSurvey: 0,
 	    gGroupSurveys: {},
