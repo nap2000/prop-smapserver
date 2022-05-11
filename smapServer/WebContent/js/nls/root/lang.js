@@ -1442,7 +1442,12 @@ define({
     // Login
     "li_success": "Login successful",
     "li_failure": "Login failure",
-    "li_continue": "Return to applications"
+    "li_continue": "Return to applications",
+
+    // Case Management
+    "cm_sv": "Status Values",
+    "cm_asv": "Add a status value",
+    "cm_aa": "Add an action"
 
 
 
