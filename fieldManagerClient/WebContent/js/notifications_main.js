@@ -105,6 +105,7 @@ require([
 		// Add response to a source survey being selected
 		$('#survey').change(function() {
 			surveyChanged();
+			getEligibleUsers();
 			getOversightSurveys($('#survey').val());
 		});
 
@@ -155,6 +156,8 @@ require([
 			notification = saveDocument();
 		} else if(target === "webhook") {
 			notification = saveWebhook();
+		} else if(target === "escalate") {
+			notification = saveEscalate();
 		}
 
 		if(!notification.error) {
