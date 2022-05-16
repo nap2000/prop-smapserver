@@ -543,7 +543,9 @@ function addMediaPickList() {
                     questions[i].type === "int" ||
                     questions[i].type === "decimal" ||
                     questions[i].type === "barcode" ||
-                    questions[i].type === "geopoint"
+                    questions[i].type === "geopoint" ||
+                    questions[i].type === "server_calculate" ||
+                    questions[i].type === "calculate"
                 ) {
 
                     h2[++idx2] = '<div class="checkbox"><label><input type="checkbox" name="mediaselect" value="';

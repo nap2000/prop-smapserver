@@ -518,6 +518,7 @@ define({
     "msg_edit_map": "Edit Map",
     "msg_sel_form": "Select Form:",
     "msg_sel_media": "Select Media Question:",
+    "msg_mfn": "Create media file name with:",
     "msg_sel_media_f": "Select Media File",
     "msg_err_save": "Error: Save failed: ",
     "msg_err_del": "Error: Delete failed: ",
