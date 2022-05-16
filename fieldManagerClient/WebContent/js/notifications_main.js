@@ -365,7 +365,7 @@ require([
 			// name
 			var name = (data[i].name && data[i].name.trim().length > 0) ? data[i].name : i;
 			h[++idx] = '<td style="text-align: center;">';
-			h[++idx] = name;
+			h[++idx] = htmlEncode(name);
 			h[++idx] = '</td>';
 
 			// trigger
@@ -376,11 +376,11 @@ require([
 			// survey / task group
 			h[++idx] = '<td style="text-align: center;">';
 			if(data[i].trigger === "submission") {
-				h[++idx] = data[i].s_name;
+				h[++idx] = htmlEncode(data[i].s_name);
 			} else if(data[i].trigger === "console_update") {
-				h[++idx] = data[i].s_name;
+				h[++idx] = htmlEncode(data[i].s_name);
 			} else {
-				h[++idx] = data[i].tg_name;
+				h[++idx] = htmlEncode(data[i].tg_name);
 			}
 			h[++idx] = '</td>';
 
@@ -415,13 +415,13 @@ require([
 						}
 						h[++idx] = localise.set["msg_n2"];
 						h[++idx] = ' ';
-						h[++idx] = data[i].notifyDetails.emailMeta;
+						h[++idx] = htmlEncode(data[i].notifyDetails.emailMeta);
 					}
 				}
 			} else if(data[i].target === "forward"){
-				h[++idx] = data[i].remote_host;
+				h[++idx] = htmlEncode(data[i].remote_host);
 				h[++idx] = ':';
-				h[++idx] = data[i].remote_s_name;
+				h[++idx] = htmlEncode(data[i].remote_s_name);
 			} else if(data[i].target === "sms" && data[i].notifyDetails) {
 				if((data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0) ||
 					(data[i].notifyDetails.emailQuestionName && data[i].notifyDetails.emailQuestionName != "-1")) {
@@ -436,7 +436,7 @@ require([
 					}
 				}
 			} else if(data[i].target === "webhook" && data[i].notifyDetails) {
-				h[++idx] = data[i].notifyDetails.callback_url;
+				h[++idx] = htmlEncode(data[i].notifyDetails.callback_url);
 			}
 			h[++idx] = '</td>';
 
