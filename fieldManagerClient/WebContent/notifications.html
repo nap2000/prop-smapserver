@@ -150,7 +150,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 								<option value="submission" selected="selected" class="lang" data-lang="submission">submission</option>
 								<option value="task_reminder" class="lang" data-lang="task_reminder">reminder</option>
 								<option value="console_update" class="lang" data-lang="console_update">u</option>
-
 							</select>
 						</div>
 					</div>
@@ -190,7 +189,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						</div>
 					</div>
 
-					<div class="submission_options form-group row">
+					<div class="submission_options escalate_options form-group row">
 						<label for="survey" class="lang col-sm-2 control-label" data-lang="c_survey"></label>
 						<div class="col-sm-10">
 							<select id="survey" class="survey_select data_survey form-control"></select>
@@ -224,11 +223,9 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 								</div>
 							</div>
 						</div>
-
-
 					</div>
 
-					<div class="submission_options form-group row" data-container="body">
+					<div class="submission_options escalate_options form-group row" data-container="body">
 						<label for="not_filter" data-lang="c_filter" class="lang col-sm-2 control-label"></label>
 						<div class="col-sm-10">
 							<div class="input-group">
@@ -291,36 +288,36 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 							</div>
 						</div>
 					</div>
-					<div class="well email_options submission_options" style="display:none;">
-						<div class="form-group row" >
-							<label class="lang col-sm-2 control-label" data-lang="c_attach" for="email_attach"></label>
-							<div class="col-sm-10">
-								<select class="form-control" id="email_attach">
-									<option value="none" class="lang" data-lang="c_none">none</option>
-									<option value="webform" class="lang" data-lang="n_wf">web form</option>
-									<option value="pdf" class="lang" data-lang="n_pdfp">pdf p</option>
-									<option value="pdf_landscape" class="lang" data-lang="n_pdfl">pdf l</option>
-								</select>
-							</div>
-						</div>
 
-						<div class="form-group pdf_options submission_options row" style="display:none;">
-							<div class="col-sm-1 offset-sm-2">
-								<div class="checkbox">
-									<input type="checkbox" name="include_references" value="include_references" id="include_references">
-								</div>
-							</div>
-							<label class="col-sm-9 control-label lang" data-lang="n_inc_ref" for="include_references"></label>
+					<div class="form-group email_options row" >
+						<label class="lang col-sm-2 control-label" data-lang="c_attach" for="email_attach"></label>
+						<div class="col-sm-10">
+							<select class="form-control" id="email_attach">
+								<option value="none" class="lang" data-lang="c_none">none</option>
+								<option value="webform" class="lang" data-lang="n_wf">web form</option>
+								<option value="pdf" class="lang" data-lang="n_pdfp">pdf p</option>
+								<option value="pdf_landscape" class="lang" data-lang="n_pdfl">pdf l</option>
+							</select>
 						</div>
+					</div>
 
-						<div class="form-group pdf_options submission_options row" style="display:none;">
-							<div class="col-sm-1 offset-sm-2">
-								<div class="checkbox">
-									<input type="checkbox" name="launched_only" value="launched_only" id="launched_only">
-								</div>
+					<div class="form-group pdf_options row" style="display:none;">
+						<div class="col-sm-1 offset-sm-2">
+							<div class="checkbox">
+								<input type="checkbox" name="include_references" value="include_references" id="include_references">
 							</div>
-							<label class="col-sm-9 control-label lang" data-lang="n_lo" for="launched_only"></label>
 						</div>
+						<label class="col-sm-9 control-label lang" data-lang="n_inc_ref" for="include_references"></label>
+					</div>
+
+					<!-- Restrict results to surveys launched from other surveys -->
+					<div class="form-group pdf_options row" style="display:none;">
+						<div class="col-sm-1 offset-sm-2">
+							<div class="checkbox">
+								<input type="checkbox" name="launched_only" value="launched_only" id="launched_only">
+							</div>
+						</div>
+						<label class="col-sm-9 control-label lang" data-lang="n_lo" for="launched_only"></label>
 					</div>
 
 					<div class="email_options" style="display:none;">
@@ -349,27 +346,26 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 								<input type="text" id="email_subject" class="form-control">
 							</div>
 						</div>
-						<div class="well">
-							<div class="form-group row" data-toggle="tooltip"  data-container="body">
-								<label for="email_content" data-lang="c_content" class="lang col-sm-2 control-label"></label>
-								<div class="col-sm-10">
-									<textarea id="email_content" class="labelProp form-control"></textarea>
-								</div>
-							</div>
-							<div class="form-group task_reminder_options row">
-								<label for="email_content_ap" data-lang="n_ap" class="lang col-sm-2 control-label"></label>
-								<div class="col-sm-8">
-									<select id="email_content_ap" class="labelProp form-control">
-										<option class="lang" data-lang="c_task" value="${task_webform}">webform</option>
-										<option class="lang" data-lang="t_assigned" value="${assignee_name}">assigned</option>
-										<option class="lang" data-lang="c_scheduled" value="${scheduled}">scheduled</option>
-									</select>
-								</div>
-								<div class="col-sm-2">
-									<button id="email_content_ap_insert" type="button" class="btn btn-info lang" data-lang="c_insert"></button>
-								</div>
+						<div class="form-group row" data-toggle="tooltip"  data-container="body">
+							<label for="email_content" data-lang="c_content" class="lang col-sm-2 control-label"></label>
+							<div class="col-sm-10">
+								<textarea id="email_content" class="labelProp form-control"></textarea>
 							</div>
 						</div>
+						<div class="form-group task_reminder_options row">
+							<label for="email_content_ap" data-lang="n_ap" class="lang col-sm-2 control-label"></label>
+							<div class="col-sm-8">
+								<select id="email_content_ap" class="labelProp form-control">
+									<option class="lang" data-lang="c_task" value="${task_webform}">webform</option>
+									<option class="lang" data-lang="t_assigned" value="${assignee_name}">assigned</option>
+									<option class="lang" data-lang="c_scheduled" value="${scheduled}">scheduled</option>
+								</select>
+							</div>
+							<div class="col-sm-2">
+								<button id="email_content_ap_insert" type="button" class="btn btn-info lang" data-lang="c_insert"></button>
+							</div>
+						</div>
+
 					</div>
 
 					<div class="sms_options" style="display:none;">

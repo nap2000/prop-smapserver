@@ -4541,7 +4541,7 @@ function edit_notification(edit, idx, console) {
 	document.getElementById("notification_edit_form").reset();
 	setTargetDependencies("email");
 	setTriggerDependencies("submission");
-	setAttachDependencies();
+	setAttachDependencies("none");
 
 	if(edit) {
 		notification = window.gNotifications[idx];
