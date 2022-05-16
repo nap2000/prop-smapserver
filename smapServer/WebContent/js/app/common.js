@@ -4644,32 +4644,29 @@ function edit_notification(edit, idx, console) {
 }
 
 function setTargetDependencies(target) {
+	$('.forward_options, .sms_options, .webhook_options, .email_options, .escalate_options').hide();
 	if(target === "email") {
-		$('.forward_options, .sms_options, .webhook_options, .email_options').hide();
 		$('.email_options').show();
 	} else if(target === "forward") {
-		$('.forward_options, .sms_options, .webhook_options, .email_options').hide();
 		$('.forward_options').show();
 	} else if(target === "sms") {
-		$('.forward_options, .sms_options, .webhook_options, .email_options').hide();
 		$('.sms_options').show();
 	} else if(target  === "webhook") {
-		$('.forward_options, .sms_options, .webhook_options, .email_options').hide();
 		$('.webhook_options').show();
+	} else if(target  === "escalate") {
+		$('.escalate_options').show();
 	}
 }
 
 function setTriggerDependencies(trigger) {
+	$('.task_reminder_options,.update_options, .submission_options').hide();
 	if(trigger === "submission") {
-		$('.task_reminder_options,.update_options').hide();
 		$('.submission_options').show();
 	} else if(trigger === "task_reminder") {
-		$('.submission_options, .update_options').hide();
 		$('.task_reminder_options').show();
 		$('#target').val('email');
 		setTargetDependencies('email');
 	} else if(trigger === "console_update") {
-		$('.task_reminder_options').hide();
 		$('.update_options, .submission_options').show();
 	}
 }
