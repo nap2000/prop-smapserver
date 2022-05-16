@@ -4979,6 +4979,27 @@ function saveWebhook() {
 	return notification;
 }
 
+/*
+ * Process a save notification when the target is "escalate"
+ */
+function saveEscalate() {
+
+	var error = false,
+		callback_url,
+		notification = {};
+
+	if(!error) {
+
+		notification.target = "escalate";
+		notification.remote_user = $('#user_to_assign').val();
+
+	} else {
+		notification.error = true;
+	}
+
+	return notification;
+}
+
 function getTaskGroupIndex(tgId) {
 	var i;
 	if(gTaskGroups && gTaskGroups.length > 0 && tgId) {
@@ -5667,3 +5688,51 @@ function htmlEncode(input) {
 	}
 }
 
+
+/*
+  * Get the list of users from the server
+  */
+function getEligibleUsers() {
+
+	if(globals.gCurrentSurvey && globals.gCurrentSurvey > 0) {
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/userList/survey/" + globals.gCurrentSurvey,
+			dataType: 'json',
+			cache: false,
+			success: function (data) {
+				removeHourglass();
+
+				var h = [],
+					idx = -1,
+					$elem = $('#user_to_assign');
+
+				$elem.empty();
+
+				h[++idx] = '<option value="_none">';
+				h[++idx] = localise.set["c_none"];
+				h[++idx] = '</option>';
+
+				if(data && data.length > 0) {
+					for(i = 0; i < data.length; i++) {
+						h[++idx] = '<option value="';
+						h[++idx] = data[i].ident;
+						h[++idx] = '">';
+						h[++idx] = data[i].name;
+						h[++idx] = '</option>';
+					}
+					$elem.html(h.join(''));
+				}
+
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["error"] + ": " + err);
+				}
+			}
+		});
+	}
+}
