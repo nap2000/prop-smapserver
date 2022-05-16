@@ -98,6 +98,7 @@ define({
     "c_vertical": "Vertical",
     "c_projects": "Projects",
     "c_email": "Email",
+    "c_escalate": "Escalate",
     "c_emails": "Emails",
     "c_sms": "SMS",
     "c_document": "Document",
