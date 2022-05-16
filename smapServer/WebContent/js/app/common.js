@@ -4603,7 +4603,8 @@ function edit_notification(edit, idx, console) {
 		if (!console) {
 			$('#fwd_rem_survey_id').val(notification.remote_s_ident);
 			$('#fwd_rem_survey_nm').val(notification.remote_s_name);
-			$('#fwd_user').val(notification.remote_user);
+			$('#fwd_user,#user_to_assign').val(notification.remote_user);
+			gEligibleUser = notification.remote_user;
 			// Password not returned from server - leave blank
 
 			$('#fwd_host').val(notification.remote_host);
@@ -4985,6 +4986,7 @@ function saveEscalate() {
 
 		notification.target = "escalate";
 		notification.remote_user = $('#user_to_assign').val();
+		notification.notifyDetails = {};	// Required so that notifyDetails is not undefined
 
 	} else {
 		notification.error = true;
@@ -5681,7 +5683,6 @@ function htmlEncode(input) {
 	}
 }
 
-
 /*
   * Get the list of users from the server
   */
@@ -5714,7 +5715,11 @@ function getEligibleUsers() {
 						h[++idx] = data[i].name;
 						h[++idx] = '</option>';
 					}
-					$elem.html(h.join(''));
+				}
+				$elem.html(h.join(''));
+
+				if(gEligibleUser) {
+					$elem.val(gEligibleUser);
 				}
 
 			},
