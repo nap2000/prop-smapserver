@@ -65,6 +65,7 @@ require([
 	window.oversightQuestions = {};
 	window.gSelectedOversightQuestion = undefined;
 	window.gSelectedOversightSurvey = undefined;
+	window.gEligibleUser = undefined;
 
 	$(document).ready(function() {
 
