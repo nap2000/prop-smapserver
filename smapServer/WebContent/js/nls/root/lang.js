@@ -1070,7 +1070,7 @@ define({
     "u_add": "Add User",
     "u_del": "Delete User",
     "u_mv": "Move To Organisation",
-    "u_cms": "Case management Setting",
+    "u_cms": "Case management Settings",
 	"u_mv_ent": "Move To Enterprise",
     "u_add_p": "Add Project",
     "u_del_p": "Delete Project",
