@@ -2044,6 +2044,47 @@ function getSurveyDetails(callback, get_changes, hide_soft_deleted) {
 			}
 		});
 	}
+}
+
+/*
+ * Get a survey details - depends on globals being set
+ */
+function getGroupSurveys(callback) {
+
+	var tz = globals.gTimezone;
+	var url="/surveyKPI/surveys/groups/" + globals.gCurrentSurvey;
+	url += "?tz=" + encodeURIComponent(tz);
+
+	if(!globals.gCurrentSurvey) {
+		alert("Error: Can't get group details, Survey identifier not specified");
+	} else {
+		addHourglass();
+		$.ajax({
+			url: url,
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				globals.gGroupSurveys = data;
+				if(typeof callback == "function") {
+					callback();
+				}
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					if(xhr.status == 404) {
+						// The current survey has probably been deleted or the user no longer has access
+						globals.gCurrentSurvey = undefined;
+						return;
+					}
+					alert("Error: Failed to get survey: " + err);
+				}
+			}
+		});
+	}
 
 }
 
@@ -3293,10 +3334,10 @@ function getRoles(callback) {
 /*
  * Get the list of available case management settings from the server
  */
-function getCms(callback) {
+function getCms(sId, callback) {
 	addHourglass();
 	$.ajax({
-		url: "/surveyKPI/cases/settings",
+		url: "/surveyKPI/cases/settings/" + sId,
 		dataType: 'json',
 		cache: false,
 		success: function(data) {
