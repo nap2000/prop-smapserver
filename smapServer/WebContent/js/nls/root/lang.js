@@ -1447,9 +1447,9 @@ define({
     "li_continue": "Return to applications",
 
     // Case Management
-    "cm_sv": "Status Values",
-    "cm_asv": "Add a status value",
-    "cm_aa": "Add an action"
+    "cm_ne": "Named Events",
+    "cm_ane": "Add a named event",
+    "cm_dcms": "There is already a case management event with that name for this survey group"
 
 
 

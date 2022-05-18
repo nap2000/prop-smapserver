@@ -53,11 +53,8 @@ require([
 
             // Get the user details
             globals.gIsAdministrator = false;
-            getLoggedInUser(surveyListDone, false, true, undefined, false, false);
+            getLoggedInUser(currentSurveyDone, false, true, undefined, false, false);
 
-            /*
-         * Case Management
-         */
             $('#create_cm_setting').click(function () {
                 openCmsDialog(false, -1);
             });
@@ -70,8 +67,12 @@ require([
             });
         });
 
-        function surveyListDone() {
-            getCms(updateCmsTable);
+        function currentSurveyDone() {
+            getGroupSurveys(groupSurveysDone);
+        }
+
+        function groupSurveysDone() {
+            getCms(globals.gCurrentSurvey, updateCmsTable);
         }
 
         /*
@@ -181,7 +182,7 @@ require([
 
             cms.name = $('#cms_name').val();
             cms.type = $('#cms_type').val();
-            cms.pId = $('#cms_project').val();
+            cms.group_survey_ident = globals.gGroupSurveys[0].groupSurveyIdent;
 
             if(!cms.name || cms.name.trim().length === 0) {
                 alert(localise.set["msg_val_nm"]);
@@ -210,7 +211,14 @@ require([
                         return;  // Not an error
                     } else {
                         var msg = xhr.responseText;
-                        alert(localise.set["msg_err_upd"] + msg);
+                        if (msg) {
+                            if (msg.indexOf("cms_unique_name") > 0) {
+                                msg = localise.set["cm_dcms"];
+                            }
+                        } else {
+                            msg = localise.set["c_error"];
+                        }
+                        alert(msg);
                     }
                 }
             });
