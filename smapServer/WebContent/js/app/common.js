@@ -5759,7 +5759,7 @@ function getEligibleUsers() {
 				}
 				$elem.html(h.join(''));
 
-				if(gEligibleUser) {
+				if(typeof gEligibleUser !== 'undefined') {
 					$elem.val(gEligibleUser);
 				}
 
