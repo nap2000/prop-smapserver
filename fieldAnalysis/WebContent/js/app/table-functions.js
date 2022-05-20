@@ -137,9 +137,9 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 	// Add the column headings
 	gTab[++gIdx] = '<tr>';
 	if(isGrouped && !isPeriod) {
-		gTab[++gIdx] = '<th>' + data.group + '</th>';
+		gTab[++gIdx] = '<th>' + htmlEncode(data.group) + '</th>';
 	} else if(isPeriod ){
-		gTab[++gIdx] = '<th>' + data.interval + '</th>';
+		gTab[++gIdx] = '<th>' + htmlEncode(data.interval) + '</th>';
 	} else {
 		if(typeof globals !== "undefined" && globals.gCanEdit) {
 			gTab[++gIdx] = '<th></th>';			// Add empty header for edit button
@@ -170,7 +170,7 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 				if(types[i] === "dateTime") {
 					gTab[++gIdx] = translatedName + ' (' + localise.set["c_lt"] + ')';
 				} else {
-					gTab[++gIdx] = translatedName;
+					gTab[++gIdx] = htmlEncode(translatedName);
 				}
 				gTab[++gIdx] = '</th>';
 			}
