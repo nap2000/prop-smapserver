@@ -4192,7 +4192,7 @@ function setNoFilter() {
 						h[++idx] = '<label for="';
 						h[++idx] = labelControlId;
 						h[++idx] = '" class="col-sm-4 control-label">';
-						h[++idx] = languages[i].name;
+						h[++idx] = htmlEncode(languages[i].name);
 						h[++idx] = '</label>';
 					h[++idx] = '<div class="col-sm-8">';
 					h[++idx] = '<select id="';
