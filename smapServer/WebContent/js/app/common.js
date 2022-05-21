@@ -3334,15 +3334,15 @@ function getRoles(callback) {
 /*
  * Get the list of available case management settings from the server
  */
-function getCms(sId, callback) {
+function getCms(callback) {
 	addHourglass();
 	$.ajax({
-		url: "/surveyKPI/cases/settings/" + sId,
+		url: "/surveyKPI/cases/settings/" + globals.gCurrentSurvey,
 		dataType: 'json',
 		cache: false,
 		success: function(data) {
 			removeHourglass();
-			globals.gCmsList = data;
+			globals.gCmSettings = data;
 			if(typeof callback === "function") {
 				callback();
 			}
