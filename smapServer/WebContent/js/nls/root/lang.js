@@ -1450,8 +1450,7 @@ define({
     // Case Management
     "cm_ne": "Named Events",
     "cm_ane": "Add a named event",
-    "cm_dcms": "There is already a case management event with that name for this survey group"
-
-
+    "cm_dcms": "There is already a case management event with that name for this survey group",
+    "cm_p": "Create alert if not finalised within",
 
 });

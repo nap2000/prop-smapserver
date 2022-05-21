@@ -88,14 +88,9 @@
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="col-md-12 col-xs-12">
-			<div id="cm_action_table"  style="margin-top:20px;"></div>
-		</div>
-	</div>
 </div>
 
-<!-- Modal to allow the user to edit a case management status value -->
+<!-- Modal to allow the user to edit a case management alert value -->
 <div id="create_cms_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createCmsLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
@@ -116,13 +111,19 @@
 					</div>
 
 					<div class="form-group row">
-						<label class="control-label col-sm-4" for="cms_type"><span class="lang" data-lang="c_type"></span>:</label>
+						<label class="col-sm-4 col-form-label lang" data-lang="cm_p" for="cms_period"></label>
 						<div class="col-sm-8">
-							<select class="form-control" id="cms_type">
-								<option value="status">status</option>
-								<option value="severity">severity</option>
-								<option value="sensitivity">sensitivity</option>
-							</select>
+							<div class="input-group mb-3">
+
+								<input type="number" min="1" class="form-control" id="cms_period">
+								<div class="input-group-append">
+									<select id="period_list_sel" class="period_list_sel form-control">
+										<option class="lang" data-lang="d_min" value="minutes">minutes</option>
+										<option class="lang" data-lang="d_hour" value="hours">hours</option>
+										<option class="lang" data-lang="d_day" value="days">day</option>
+									</select>
+								</div>
+							</div>
 						</div>
 					</div>
 

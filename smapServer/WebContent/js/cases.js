@@ -29,6 +29,7 @@ require.config({
     locale: gUserLocale,
     paths: {
         app: '/js/app',
+        bootbox: 'bootbox.min',
         lang_location: '/js'
     },
     shim: {
@@ -41,8 +42,9 @@ require([
         'jquery',
         'app/common',
         'app/localise',
+        'bootbox',
         'app/globals'],
-    function($, common, lang, globals) {
+    function($, common, lang, bootbox, globals) {
 
         var gCurrentCmsIndex;
 
@@ -63,7 +65,7 @@ require([
               * Save a case management setting details
               */
             $('#cmsSave').click(function(){
-                saveCaseManagementSetting();
+                saveCaseManagementAlert();
             });
         });
 
@@ -72,17 +74,17 @@ require([
         }
 
         function groupSurveysDone() {
-            getCms(globals.gCurrentSurvey, updateCmsTable);
+            getCms(updateAlertsTable);
         }
 
         /*
           * Update the case management settings table
           */
-        function updateCmsTable() {
-
+        function updateAlertsTable() {
 
             var $tab = $('#cms_table'),
-                i, cms,
+                i, cmAlert,
+                alertList = globals.gCmSettings.alerts;
                 h = [],
                 idx = -1;
 
@@ -98,10 +100,7 @@ require([
             h[++idx] = localise.set["c_name"];	// Name
             h[++idx] = '</th>';
             h[++idx] = '<th scope="col">';
-            h[++idx] = localise.set["c_type"];	// type
-            h[++idx] = '</th>';
-            h[++idx] = '<th scope="col">';
-            h[++idx] = localise.set["u_chg"];	// Changed by
+            h[++idx] = localise.set["cm_p"];	// Period
             h[++idx] = '</th>';
             h[++idx] = '<th scope="col">';
             h[++idx] = localise.set["c_action"];
@@ -111,24 +110,21 @@ require([
             h[++idx] = '<tbody>';
 
 
-            for (i = 0; i < globals.gCmsList.length; i++) {
-                cms = globals.gCmsList[i];
+            for (i = 0; i < alertList.length; i++) {
+                cmAlert = alertList[i];
 
                 h[++idx] = '<tr>';
                 h[++idx] = '<td class="control_td"><input type="checkbox" name="controls" value="';
                 h[++idx] = i;
                 h[++idx] = '"></td>';
                 h[++idx] = '<td>';
-                h[++idx] = cms.id;
+                h[++idx] = cmAlert.id;
                 h[++idx] = '</td>';
                 h[++idx] = '<td>';
-                h[++idx] = htmlEncode(cms.name);
+                h[++idx] = htmlEncode(cmAlert.name);
                 h[++idx] = '</td>';
                 h[++idx] = '<td>';
-                h[++idx] = htmlEncode(cms.type);
-                h[++idx] = '</td>';
-                h[++idx] = '<td>';
-                h[++idx] = htmlEncode(cms.changed_by);
+                h[++idx] = htmlEncode(cmAlert.period);
                 h[++idx] = '</td>';
 
                 h[++idx] = '<td>';
@@ -171,37 +167,37 @@ require([
         /*
          * Save a new or updated case managment setting
          */
-        function saveCaseManagementSetting() {
-            var cms = {};
+        function saveCaseManagementAlert() {
+            var cmsAlert = {};
 
             if(gCurrentCmsIndex === -1) {
-                cms.id = -1;
+                cmsAlert.id = -1;
             } else {
-                cms.id = globals.gCmsList[gCurrentCmsIndex].id;
+                cmsAlert.id = globals.gCmSettings.alerts[gCurrentCmsIndex].id;
             }
 
-            cms.name = $('#cms_name').val();
-            cms.type = $('#cms_type').val();
-            cms.group_survey_ident = globals.gGroupSurveys[0].groupSurveyIdent;
+            cmsAlert.name = $('#cms_name').val();
+            cmsAlert.period = $('#cms_period').val() + ' ' + $('#period_list_sel').val();
+            cmsAlert.group_survey_ident = globals.gGroupSurveys[0].groupSurveyIdent;
 
-            if(!cms.name || cms.name.trim().length === 0) {
+            if(!cmsAlert.name || cmsAlert.name.trim().length === 0) {
                 alert(localise.set["msg_val_nm"]);
                 $('#cms_name').focus();
                 return;
             }
 
-            var cmsString = JSON.stringify(cms);
+            var alertString = JSON.stringify(cmsAlert);
 
             addHourglass();
             $.ajax({
                 type: "POST",
                 contentType: "application/json",
                 cache: false,
-                url: "/surveyKPI/cases/settings",
-                data: { settings: cmsString },
+                url: "/surveyKPI/cases/settings/alert",
+                data: { alert: alertString },
                 success: function(data, status) {
                     removeHourglass();
-                    getCms(updateCmsTable);
+                    getCms(updateAlertsTable);
                     $('#create_cms_popup').modal("hide");
                 },
                 error: function(xhr, textStatus, err) {
@@ -225,25 +221,23 @@ require([
         }
 
         /*
-          * Delete the case management setting
+          * Delete the case management alert
           */
         function deleteCms (cmsIdx) {
 
-            var cms;
+            var cmAlert = {id: globals.gCmSettings.alerts[cmsIdx].id};
 
-            cms = {id: globals.gCmsList[cmsIdx].id};
-
-            bootbox.confirm(localise.set["msg_del_cms"] +  ' ' + globals.gCmsList[cmsIdx].name, function(decision) {
+            bootbox.confirm(localise.set["msg_del_cms"] +  ' ' + globals.gCmSettings.alerts[cmsIdx].name, function(decision) {
                 if (decision === true) {
                     addHourglass();
                     $.ajax({
                         type: "DELETE",
                         contentType: "application/json",
-                        url: "/surveyKPI/cases/settings",
-                        data: { cms: JSON.stringify(cms) },
+                        url: "/surveyKPI/cases/settings/alert",
+                        data: { alert: JSON.stringify(cmAlert) },
                         success: function(data, status) {
                             removeHourglass();
-                            getCms(updateCmsTable);
+                            getCms(updateAlertsTable);
                         }, error: function(data, status) {
                             removeHourglass();
                             if(data && data.responseText) {
@@ -263,10 +257,15 @@ require([
         function openCmsDialog(existing, cmsIndex) {
             gCurrentCmsIndex = cmsIndex;
             if(cmsIndex >= 0) {
-                var cms = globals.gCmsList[gCurrentCmsIndex];
-                $('#cms_name').val(cms.name)
-                $('#cms_type').val(cms.type)
-                $('#cms_project').val(cms.pId)
+                var cmAlert = globals.gCmSettings.alerts[gCurrentCmsIndex];
+                $('#cms_name').val(cmAlert.name)
+                if ((cmAlert.period)) {
+                    var periodArray = cmAlert.period.split(" ");
+                    if (periodArray.length > 1) {
+                        $('#cms_period').val(periodArray[0]);
+                        $('#period_list_sel').val(periodArray[1]);
+                    }
+                }
             }
             $('#create_cms_popup').modal("show");
         }
