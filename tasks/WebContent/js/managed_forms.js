@@ -1324,7 +1324,7 @@ require([
             });
             h[++idx] = '<th>';
             h[++idx] = '<span class="ch">';
-            h[++idx] = headItem.displayName;
+            h[++idx] = htmlEncode(headItem.displayName);
             h[++idx] = '</span>';
             h[++idx] = '</th>';
             hfoot[++foot_idx] = '<th></th>';
@@ -1666,7 +1666,7 @@ require([
                             h[++idx] = '<option value="';
                             h[++idx] = i;
                             h[++idx] = '">';
-                            h[++idx] = item.displayName;
+                            h[++idx] = htmlEncode(item.displayName);
                             h[++idx] = '</option>';
 
                             if (firstSurvey) {
@@ -1785,7 +1785,7 @@ require([
                 h[++idx] = '<option value="';
                 h[++idx] = item.surveyIdent;
                 h[++idx] = '">';
-                h[++idx] = item.surveyName;
+                h[++idx] = htmlEncode(item.surveyName);
                 h[++idx] = '</option>';
 
             }
@@ -2423,11 +2423,11 @@ require([
 
                                 h[++idx] = '</td>';
                                 h[++idx] = '<td class="mincol">';    // user
-                                h[++idx] = data[i].userName;
+                                h[++idx] = htmlEncode(data[i].userName);
                                 h[++idx] = '</td>';
 
                                 h[++idx] = '<td class="mincol">';    // Survey
-                                h[++idx] = data[i].surveyName + ' (' + data[i].surveyVersion + ')';
+                                h[++idx] = htmlEncode(data[i].surveyName) + ' (' + data[i].surveyVersion + ')';
                                 h[++idx] = '</td>';
 
                                 h[++idx] = '<td class="mincol">';    // when
@@ -2955,9 +2955,9 @@ require([
 
                     h[++idx] = '<div class="col-md-3">';
                     if(changes[i].displayName) {
-                        h[++idx] = changes[i].displayName;
+                        h[++idx] = htmlEncode(changes[i].displayName);
                     } else {
-                        h[++idx] = changes[i].col;
+                        h[++idx] = htmlEncode(changes[i].col);
                     }
                     h[++idx] = '</div>';
 

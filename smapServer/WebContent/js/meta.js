@@ -231,10 +231,10 @@ require([
 						h[++idx] = survey.meta[i].sourceParam;
 						h[++idx] = '</td>';
 						h[++idx] = '<td>';
-						h[++idx] = survey.meta[i].name;
+						h[++idx] = htmlEncode(survey.meta[i].name);
 						h[++idx] = '</td>';
 						h[++idx] = '<td>';
-						h[++idx] = survey.meta[i].display_name;
+						h[++idx] = htmlEncode(survey.meta[i].display_name);
 						h[++idx] = '</td>';
 						h[++idx] = '<td>';
 						h[++idx] = survey.meta[i].settings;

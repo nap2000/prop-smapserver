@@ -55,7 +55,7 @@ define([
 					h[++idx] = '<option value="';
 					h[++idx] = gLanguages[i].code;
 					h[++idx] = '">';
-					h[++idx] = gLanguages[i].name;
+					h[++idx] = htmlEncode(gLanguages[i].name);
 					h[++idx] = '</option>';
 				}
 			}

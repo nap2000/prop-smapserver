@@ -532,6 +532,7 @@ define({
     "msg_err_get_q": "Error: Get questions failed",
     "msg_err_get_s": "Error: Get surveys failed",
     "msg_err_get_c": "Error: Get case management settings failed",
+    "msg_err_bll": "Blank Label for language",
     "msg_upd": "Update Succeeded",
     "msg_err_nc": "Name cannot include a comma",
     "msg_err_wait": "Either waiting for the server or there are no surveys in this project to assign to a user. If the project does have surveys then try again in a few seconds",

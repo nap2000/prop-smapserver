@@ -1717,7 +1717,7 @@ define([
                         container,
                         itemIndex,
                         "item",
-                        "Blank Label for language: " + globals.model.survey.languages[i].name,
+                        localise.set["msg_err_bll"] + " " + htmlEncode(globals.model.survey.languages[i].name),
                         itemType,
                         "warning");
                     valid = false;
