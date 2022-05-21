@@ -259,7 +259,7 @@ define([
 
             // Add form group and label
             h[++idx] = '<div class="form-group row"><label class="col-md-4 control-label">';
-            h[++idx] = configItem.displayName;
+            h[++idx] = htmlEncode(configItem.displayName);
             h[++idx] = '</label>';
 
             // Add Data

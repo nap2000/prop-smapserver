@@ -2114,24 +2114,24 @@ function setLanguages(languages, languageCallback) {
 		h[++idx] = '<a data-lang="';
 		h[++idx] = i;
 		h[++idx] = '" href="javascript:void(0)">';
-		h[++idx] = languages[i].name;
+		h[++idx] = htmlEncode(languages[i].name);
 		h[++idx] = '</a>';
 		h[++idx] = '</li>';
 
 		h2[++idx2] = '<option value="';
 		h2[++idx2] = i;
 		h2[++idx2] = '">';
-		h2[++idx2] = languages[i].name;
+		h2[++idx2] = htmlEncode(languages[i].name);
 		h2[++idx2] = '</option>';
 	}
 
 	$lang_menu.empty().append(h.join(""));
 	$lang.empty().append(h2.join(""));
 
-	$('#langSelected').html(languages[ globals.gLanguage].name);
+	$('#langSelected').text(languages[ globals.gLanguage].name);
 	$('.language_menu_list a').click(function() {
 		globals.gLanguage = $(this).data("lang");
-		$('#langSelected').html(languages[ globals.gLanguage].name);
+		$('#langSelected').text(languages[ globals.gLanguage].name);
 		languageCallback();
 	});
 

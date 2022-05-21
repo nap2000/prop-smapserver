@@ -313,7 +313,7 @@ function setupExportDialog(view, media) {
 
 	validateExport();
 
-	$('#exp_s_name').html(view.sName);
+	$('#exp_s_name').text(view.sName);
 	$('#export_data_popup').dialog("open");
 	$('#exp_start_record,#exp_end_record').keyup(function() {validateExport()});
 }
