@@ -76,15 +76,29 @@
 
 <div class="container-fluid mt-4 px-4">
 
-	<h5 class="lang" data-lang="cm_ne"></h5>
-	<div class="row">
-		<div class="col-md-12 col-xs-12">
-			<button class="btn btn-success lang" id="create_cm_setting" data-lang="cm_ane"></button>
+	<h3 class="lang" data-lang="c_settings">s</h3>
+
+	<form class="form" onsubmit="return false;">
+
+		<div class="form-group row">
+			<label for="cms_fs" data-lang="cm_fs" class="lang col-sm-4 control-label"></label>
+			<div class="col-sm-8">
+				<input type="text" id="cms_fs" class="form-control" required tabindex="1"><br/>
+			</div>
 		</div>
-	</div>
+		<button type="button" id="saveSettings" class="btn btn-success lang" data-lang="c_save"></button>
+	</form>
+
+	<h3 class="lang" data-lang="cm_ne">a</h3>
+
 	<div class="row">
 		<div class="col-md-12 col-xs-12">
 			<div id="cms_table"  style="margin-top:20px;"></div>
+		</div>
+	</div>
+    <div class="row">
+		<div class="col-md-12 col-xs-12">
+			<button class="btn btn-success lang" id="create_cm_alert" data-lang="cm_ane"></button>
 		</div>
 	</div>
 
@@ -101,7 +115,7 @@
 			</div>
 			<div class="modal-body">
 
-				<form class="form" onsubmit="return false;" id="cms_create_form">
+				<form class="form" onsubmit="return false;">
 
 					<div class="form-group row">
 						<label for="cms_name" data-lang="c_name" class="lang col-sm-4 control-label"></label>
@@ -132,7 +146,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close">Close</button>
-				<button id="cmsSave" type="button" class="btn btn-primary lang btn-default" data-lang="c_save">Save</button>
+				<button id="alertSave" type="button" class="btn btn-primary lang btn-default" data-lang="c_save">Save</button>
 			</div>
 		</div>
 	</div>

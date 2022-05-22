@@ -57,15 +57,19 @@ require([
             globals.gIsAdministrator = false;
             getLoggedInUser(currentSurveyDone, false, true, undefined, false, false);
 
-            $('#create_cm_setting').click(function () {
+            $('#create_cm_alert').click(function () {
                 openCmsDialog(false, -1);
             });
 
             /*
               * Save a case management setting details
               */
-            $('#cmsSave').click(function(){
+            $('#alertSave').click(function(){
                 saveCaseManagementAlert();
+            });
+
+            $('#saveSettings').click(function(){
+                saveSettings();
             });
         });
 
@@ -74,20 +78,29 @@ require([
         }
 
         function groupSurveysDone() {
-            getCms(updateAlertsTable);
+            getCms(updateCmsData);
         }
 
         /*
-          * Update the case management settings table
+          * Update the case management settings table and other case management data
           */
-        function updateAlertsTable() {
+        function updateCmsData() {
 
             var $tab = $('#cms_table'),
                 i, cmAlert,
-                alertList = globals.gCmSettings.alerts;
+                alertList = globals.gCmSettings.alerts,
+                settings = globals.gCmSettings.settings,
                 h = [],
                 idx = -1;
 
+            /*
+             * Update settings
+             */
+            $('#cms_fs').val(settings.finalStatus);
+
+            /*
+             * Update alerts table
+             */
             h[++idx] = '<div class="table-responsive">';
             h[++idx] = '<table class="table table-striped">';
             h[++idx] = '<thead>';
@@ -167,6 +180,41 @@ require([
         /*
          * Save a new or updated case managment setting
          */
+        function saveSettings() {
+            var settings = {};
+
+            settings.finalStatus = $('#cms_fs').val();
+
+            addHourglass();
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                cache: false,
+                url: "/surveyKPI/cases/settings/" + globals.gCmSettings.group_survey_ident,
+                data: { settings: JSON.stringify(settings) },
+                success: function(data, status) {
+                    removeHourglass();
+                    getCms(updateCmsData);
+                },
+                error: function(xhr, textStatus, err) {
+                    removeHourglass();
+
+                    if(xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        var msg = xhr.responseText;
+                        if (!msg) {
+                            msg = localise.set["c_error"];
+                        }
+                        alert(msg);
+                    }
+                }
+            });
+        }
+
+        /*
+  * Save a new or updated case managment setting
+  */
         function saveCaseManagementAlert() {
             var cmsAlert = {};
 
@@ -197,7 +245,7 @@ require([
                 data: { alert: alertString },
                 success: function(data, status) {
                     removeHourglass();
-                    getCms(updateAlertsTable);
+                    getCms(updateCmsData);
                     $('#create_cms_popup').modal("hide");
                 },
                 error: function(xhr, textStatus, err) {
@@ -237,7 +285,7 @@ require([
                         data: { alert: JSON.stringify(cmAlert) },
                         success: function(data, status) {
                             removeHourglass();
-                            getCms(updateAlertsTable);
+                            getCms(updateCmsData);
                         }, error: function(data, status) {
                             removeHourglass();
                             if(data && data.responseText) {
