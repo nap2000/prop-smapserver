@@ -125,7 +125,7 @@ require([
 
         // Set change function on surveys
         $('#survey, #c_survey').change(function() {
-            surveyChanged(setForm);
+            surveyChangedReports(setForm);
         });
 
         $('#addReport').click(function(){
@@ -462,7 +462,7 @@ require([
         });
     }
 
-    function surveyChanged(callback) {
+    function surveyChangedReports(callback) {
 
 		var sId = gSurveyList[$('#survey').val()].id;
 		var dateQuestionId = 0;
@@ -733,7 +733,7 @@ require([
 			$('#reportType').val(report.action_details.reportType);
 
 			$('#survey').val(getSurveyIndex(report.action_details.sId));
-			surveyChanged(setForm);
+			surveyChangedReports(setForm);
 
 			getSurveyRoles(report.action_details.sId, report.action_details.roles);
 
@@ -1059,12 +1059,11 @@ require([
         saveCurrentProject(globals.gCurrentProject,
             globals.gCurrentSurvey,
             globals.gCurrentTaskGroup);
-
     }
 
 	function surveysLoaded(data) {
 		gSurveyList = data;
-		surveyChanged();
+		surveyChangedReports();
 	}
 
     /*

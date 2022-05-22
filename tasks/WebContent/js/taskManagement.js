@@ -161,7 +161,7 @@ require([
 		//
 		$('#project_select,#project_name').change(function () {
 			var sourceProject = $('#project_select option:selected').val();
-			loadSurveys(sourceProject, "#survey", false, false, surveyChanged, false);			// Get surveys
+			loadSurveys(sourceProject, "#survey", false, false, surveyChangedTasks, false);			// Get surveys
 		});
 
 		// Add a trigger to respond to the clicking of "filter tasks"
@@ -199,7 +199,7 @@ require([
 
 		// Add response to a source survey being selected
 		$('#survey').change(function () {
-			surveyChanged("-1");
+			surveyChangedTasks("-1");
 		});
 
 		// Add response to a source survey being selected
@@ -520,7 +520,7 @@ require([
 			}
 
 
-			surveyChanged(filterQuestion, tgRule.address_columns);    // Set survey related parameters
+			surveyChangedTasks(filterQuestion, tgRule.address_columns);    // Set survey related parameters
 
 			// open the modal for update
 			$('#add_current').prop('disabled', true);
@@ -550,7 +550,7 @@ require([
 			$('.assign_role').hide();
 
 			$('#project_select').val(globals.gCurrentProject);	// Set the source project equal to the current project
-			surveyChanged("-1");
+			surveyChangedTasks("-1");
 			$('#add_task_from_existing').hide();
 			$('.simple_filter').hide();
 			$('.advanced_filter').hide();
@@ -1051,7 +1051,7 @@ require([
 
 		globals.gCurrentProject = $('#project_name option:selected').val();
 
-		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged, false);			// Get surveys
+		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChangedTasks, false);			// Get surveys
 		refreshTaskGroupData();		// Get the task groups from the server
 
 		saveCurrentProject(globals.gCurrentProject,
@@ -1063,7 +1063,7 @@ require([
 
 	}
 
-	function surveyChanged(filterQuestion, address_columns) {
+	function surveyChangedTasks(filterQuestion, address_columns) {
 		var sId = $('#survey').val();
 
 		if(sId) {

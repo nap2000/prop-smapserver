@@ -4222,7 +4222,7 @@ function enableDebugging() {
 
 /*
  * ----------------------------------------------------
- * Common task fuctions shared between task managmeent page and console
+ * Common task functions shared between task managmeent page and console
  */
 function setupAssignType(user_id, role_id, emails, email_question) {
 	$('.assign_group').hide();
@@ -4618,7 +4618,7 @@ function edit_notification(edit, idx, console) {
 
 		if (notification.notifyDetails) {
 			if (notification.trigger !== "task_reminder" && (notification.notifyDetails.emailQuestionName || notification.notifyDetails.emailMeta)) {
-				surveyChanged(notification.notifyDetails.emailQuestionName, notification.notifyDetails.emailMeta);
+				surveyChangedNotification(notification.notifyDetails.emailQuestionName, notification.notifyDetails.emailMeta);
 			}
 
 			if (notification.target == "email") {
@@ -5048,10 +5048,10 @@ function getTaskGroupIndex(tgId) {
 	return 0;
 }
 
-function surveyChanged(qName, metaItem) {
+function surveyChangedNotification(qName, metaItem) {
 
 	var language = "none",
-		sId = $('#survey').val(),
+		sId = $('#survey').val() || 0,
 		qList,
 		metaList;
 

@@ -112,7 +112,7 @@ require([
 
         // Set change function on surveys
         $('#survey').change(function() {
-            surveyChanged();
+            surveyChangedApi();
         });
 
         $('.options').change(function() {
@@ -121,7 +121,7 @@ require([
 
 	});
 
-    function surveyChanged(callback) {
+    function surveyChangedApi(callback) {
 	    // Set the survey meta data
 	    var sId = $('#survey').val();
 	    var sMeta = globals.gSelector.getSurvey(sId);
@@ -144,7 +144,7 @@ require([
 
         if(globals.gCurrentProject !== "0") {
 
-	        loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged, false);
+	        loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChangedApi, false);
 	        saveCurrentProject(globals.gCurrentProject, globals.gCurrentSurvey, globals.gCurrentTaskGroup);
 	        $('.project_selected').show();
         } else {
