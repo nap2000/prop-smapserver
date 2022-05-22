@@ -105,7 +105,7 @@ require([
 
 		// Add response to a source survey being selected
 		$('#survey').change(function() {
-			surveyChanged();
+			surveyChangedNotification();
 			getEligibleUsers();
 			getOversightSurveys($('#survey').val());
 		});
@@ -132,7 +132,7 @@ require([
 	function projectSet() {
 
 		populateTaskGroupList();
-		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged, false);			// Get surveys
+		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChangedNotification, false);			// Get surveys
 		getNotifications(globals.gCurrentProject);
 	}
 

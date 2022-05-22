@@ -108,7 +108,7 @@ $(document).ready(function() {
 	
 	// Set change function on survey
 	$('#survey_name').change(function() {
-		surveyChanged();
+		surveyChangedRoles();
 	});
 	
 	$('#filter_row_aq_insert').click(function() {
@@ -124,10 +124,10 @@ $(document).ready(function() {
 });
 
 function projectChanged() {
-	loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChanged, false);			// Get surveys
+	loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChangedRoles, false);			// Get surveys
 }
 
-function surveyChanged() {
+function surveyChangedRoles() {
 	gRoles = undefined;
     globals.gCurrentSurvey = $('#survey_name option:selected').val();
 	$('#survey_name_disp').html($('#survey_name option:selected').text());

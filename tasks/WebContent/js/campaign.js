@@ -89,7 +89,7 @@ require([
 
 		//Set change function on survey
 		$('#survey_name').change(function () {
-			surveyChanged();
+			surveyChangedCampaign();
 		});
 
 		//Set change function on mailout id
@@ -383,13 +383,13 @@ require([
 	 */
 	function surveysLoaded(data) {
 		gSurveyList = data;
-		surveyChanged();
+		surveyChangedCampaign();
 	}
 
 	/*
 	 * Function called when the current survey is changed
 	 */
-	function surveyChanged() {
+	function surveyChangedCampaign() {
 
 		var $survey = $('#survey_name');
 		var surveyIdx = $survey.val();
