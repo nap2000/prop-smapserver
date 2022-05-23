@@ -1841,6 +1841,33 @@ function getMetaList(sId, metaItem) {
 	});
 }
 
+/*
+ * Function to get the list of notification alerts
+ * These are extracted from the settings for the survey
+ */
+function getAlertList(sId) {
+
+	addHourglass();
+	$.ajax({
+		url: "/surveyKPI/cases/settings/" + sId,
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			removeHourglass();
+			globals.gSelector.setSurveyAlerts(sId, data);
+			setSurveyAlerts(data);
+		},
+		error: function(xhr, textStatus, err) {
+			removeHourglass();
+			if(xhr.readyState == 0 || xhr.status == 0) {
+				return;  // Not an error
+			} else {
+				alert(localise.set["c_error"] + ": " + err);
+			}
+		}
+	});
+}
+
 
 //Set the language list in the survey view control
 function setSurveyViewLanguages(list, language,elem, addNone) {
@@ -1943,6 +1970,26 @@ function setSurveyViewMeta(list, metaItem) {
 		metaItem = "-1";
 	}
 	$metaSelect.val(metaItem);
+
+}
+
+/*
+ * Populate the alert list
+ */
+function setSurveyAlerts(settings) {
+
+	var $elem = $('.alert_list'),
+		item,
+		i;
+
+	$elem.empty();
+
+	if(settings && settings.alerts) {
+		for(i = 0; i < settings.alerts.length; i++) {
+			item = settings.alerts[i];
+			$elem.append('<option value="' + item.id + '">' + htmlEncode(item.name) + '</option>');
+		}
+	}
 
 
 }
@@ -4694,7 +4741,7 @@ function setTargetDependencies(target) {
 }
 
 function setTriggerDependencies(trigger) {
-	$('.task_reminder_options,.update_options, .submission_options').hide();
+	$('.task_reminder_options,.update_options, .submission_options, .cm_alert_options').hide();
 	if(trigger === "submission") {
 		$('.submission_options').show();
 	} else if(trigger === "task_reminder") {
@@ -4703,6 +4750,8 @@ function setTriggerDependencies(trigger) {
 		setTargetDependencies('email');
 	} else if(trigger === "console_update") {
 		$('.update_options, .submission_options').show();
+	} else if(trigger === "cm_alert") {
+		$('.cm_alert_options').show();
 	}
 }
 
@@ -5053,7 +5102,8 @@ function surveyChangedNotification(qName, metaItem) {
 	var language = "none",
 		sId = $('#survey').val() || 0,
 		qList,
-		metaList;
+		metaList,
+		alertList;
 
 	if(sId) {
 		if(!qName) {
@@ -5062,6 +5112,7 @@ function surveyChangedNotification(qName, metaItem) {
 
 		qList = globals.gSelector.getSurveyQuestions(sId, language);
 		metaList = globals.gSelector.getSurveyMeta(sId);
+		alertList = globals.gSelector.getSurveyAlerts(sId);
 
 		if(!qList) {
 			getQuestionList(sId, language, 0, "-1", undefined, false,
@@ -5074,6 +5125,12 @@ function surveyChangedNotification(qName, metaItem) {
 			getMetaList(sId, metaItem);
 		} else {
 			setSurveyViewMeta(metaList, metaItem);
+		}
+
+		if(!alertList) {
+			getAlertList(sId);
+		} else {
+			setSurveyAlerts(alertList);
 		}
 	}
 }

@@ -67,6 +67,7 @@ define({
     "ss_su": "Get Smap Uploader",
 
     // Common
+    "c_alert": "Alert",
     "c_api_builder": "API Builder",
     "c_auto": "Auto",
     "c_cm": "Case Management",
@@ -1453,5 +1454,6 @@ define({
     "cm_ane": "Add a named event",
     "cm_dcms": "There is already a case management event with that name for this survey group",
     "cm_p": "Create alert if not finalised within",
+    "cm_a": "Case management alert"
 
 });
