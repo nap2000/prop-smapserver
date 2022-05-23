@@ -158,6 +158,7 @@ define(function () {
         this.surveyLanguages = new Object();
         this.surveyQuestions = new Object();
         this.surveyMeta = new Object();
+        this.surveyAlerts = new Object();
         this.questions = new Object();
         this.allSurveys;				// Simple list of surveys
         this.allRegions;
@@ -214,6 +215,10 @@ define(function () {
 
         this.getSurveyMeta = function (key) {
             return this.surveyMeta[key];
+        };
+
+        this.getSurveyAlerts = function (key) {
+            return this.surveyAlerts[key];
         };
 
         this.getSurveyLanguages = function (key) {
@@ -297,6 +302,7 @@ define(function () {
             this.surveyLanguages = new Object();
             this.surveyQuestions = new Object();
             this.surveyMeta = new Object();
+            this.surveyAlerts = new Object();
             this.questions = new Object();
             this.allSurveys = undefined;
             this.allRegions = undefined;
@@ -321,6 +327,10 @@ define(function () {
 
         this.setSurveyMeta = function (key, value) {
             this.surveyMeta[key] = value;
+        };
+
+        this.setSurveyAlerts = function (key, value) {
+            this.surveyAlerts[key] = value;
         };
 
         this.setRegionList = function (list) {
