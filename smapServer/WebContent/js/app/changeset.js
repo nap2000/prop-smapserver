@@ -2198,7 +2198,7 @@ define([
                             container,
                             itemIndex,
                             "name",
-                            localise.set["ed_vc"] + " : "  + val,
+                            localise.set["ed_vc"] + " : "  + htmlEncode(val),
                             itemType,
                             "error");
 

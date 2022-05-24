@@ -189,7 +189,7 @@ function addLayer(data, pId1, pId2, view, title, map) {
 					data.date_question, data.start, data.end, data.interval, data.units, data.filter) +
 					filterDescription +
 			"</p></span>";
-			document.getElementById('p' + pId1).getElementsByClassName('r_description')[0].innerHTML =
+			document.getElementById('p' + pId1).getElementsByClassName('r_description')[0].textContent =
 				currentDisplayDescription;
 			data.caption = currentDisplayDescription;	// Save caption in data layer in case it is saved as a report	
 		} else {
@@ -198,7 +198,7 @@ function addLayer(data, pId1, pId2, view, title, map) {
 			getDisplayDescription(fn, "map", data.survey, data.question, data.group, data.option, data.qtype, 
 					data.date_question, data.start, data.end, data.interval, data.units, data.filter) +
 			"</p>";
-			data.caption = displayElement.innerHTML;	// Save caption in data layer in case it is saved as a report	
+			data.caption = displayElement.textContent;	// Save caption in data layer in case it is saved as a report
 		}
 
 	}
