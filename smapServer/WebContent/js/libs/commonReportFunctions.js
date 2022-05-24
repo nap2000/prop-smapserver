@@ -27,8 +27,6 @@ function getDisplayDescription(fn, reportType, survey, question, group, option, 
 		idx = -1,
 		msg;
 
-	console.log("getDisplayDescription: " + qtype + " : " + question);
-
 	if(typeof question === "undefined" || question === "None") {
 		txt[++idx] = localise.set["a_dd_sl"];
 	} else {
