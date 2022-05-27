@@ -57,7 +57,7 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 	gTab = [];
 	gTab[++gIdx] = '<div><div id="scroll_controls"><p>';
 	if(typeof disp_desc !== "undefined") {
-		gTab[++gIdx] = disp_desc;
+		gTab[++gIdx] = htmlEncode(disp_desc);
 	} else if(fn != "none") {
 		gTab[++gIdx] = localise.set[fn] + " " + localise.set["c_of"] + " : ";
 		gTab[++gIdx] = title;
@@ -344,7 +344,7 @@ function generateUserTable(elementId, data, user_ident, uId, subject_type) {
 	gTab = [];
 	gTab[++gIdx] = '<div><div id="scroll_controls"><p>';
 	if(typeof disp_desc !== "undefined") {
-		gTab[++gIdx] = disp_desc;
+		gTab[++gIdx] = htmlEncode(disp_desc);
 	} else {
 		gTab[++gIdx] = title;
 	}

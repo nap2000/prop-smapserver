@@ -237,7 +237,7 @@ define([
 			idx = -1;
 		
 		h[++idx] = '<p class="error-msg">';
-		h[++idx] = msg;
+		h[++idx] = htmlEncode(msg);
 		h[++idx] = '</p>';
 		return h.join("");
 	}

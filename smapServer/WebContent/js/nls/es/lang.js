@@ -1112,7 +1112,7 @@ define(
     "u_rap_d": "Administradores sólo pueden asignar los usuarios seleccionados a este proyecto",
     "u_chg": "Cambiado por",
     "u_usage": "Reporte de Uso",
-    "u_attendance": "Reporte de accesos",
+    "u_attendance": "Reporte de Actividad",
     "u_notification": "Reporte de Notificaciones",
     "u_access": "Reporte de Acceso a Formularios",
     "u_r_u": "Reporte de Uso de Recursos Compartidos",
