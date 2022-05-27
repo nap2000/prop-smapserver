@@ -2120,12 +2120,11 @@ require([
                     h[++idx] = '<option value="';
                     h[++idx] = columns[i].column_name;
                     h[++idx] = '">';
-                    h[++idx] = columns[i].displayName;
+                    h[++idx] = htmlEncode(columns[i].displayName);
                     h[++idx] = '</option>';
             } else if (d.displayName === '_assigned') {
                 gAssignedCol = i;
             }
-
 
         }
         

@@ -326,7 +326,7 @@ function populateLanguageSelect(sId, $elem) {
 
 		$elem.empty();
 		$.each(data, function(j, item) {
-			$elem.append('<option value="' + item + '">' + item + '</option>');
+			$elem.append('<option value="' + item + '">' + htmlEncode(item) + '</option>');
 		});
 	});
 }
@@ -354,7 +354,7 @@ function populatePdfSelect(sId, $elem) {
 			} else if(item.fromSettings) {
 				fromSettingsTemplateId = item.id;
 			}
-			$elem.append('<option value="' + item.id + '">' + item.name + '</option>');
+			$elem.append('<option value="' + item.id + '">' + htmlEncode(item.name) + '</option>');
 		});
 		if(typeof defaultTemplateId !== "undefined") {
 			$elem.val(defaultTemplateId);
@@ -743,7 +743,7 @@ function addOrganisationOptions($elem, current, orgs) {
 		h[++idx] = '<option value="';
 		h[++idx] = orgs[i].id;
 		h[++idx] = '">';
-		h[++idx] = orgs[i].name;
+		h[++idx] = htmlEncode(orgs[i].name);
 		h[++idx] = '</option>';
 	}
 	$elem.html(h.join(''));
@@ -1002,7 +1002,7 @@ function showTimeZones(timeZones) {
 		h[++idx] = '<option value="';
 		h[++idx] = tz.id;
 		h[++idx] = '">';
-		h[++idx] = tz.name;
+		h[++idx] = htmlEncode(tz.name);
 		h[++idx] = '</option>';
 	}
 	$('.timezone_select').empty().html(h.join(''));
@@ -1156,7 +1156,7 @@ function getQueries(published) {
 					h[++idx] = item.id;
 					h[++idx] = '">';
 					h[++idx] = '<td>';
-					h[++idx] = item.name;
+					h[++idx] = htmlEncode(item.name);
 					h[++idx] = '</option>';
 				}
 			}
@@ -1402,7 +1402,7 @@ function refreshVectorSelects(data) {
 				h_d[++idx_d] = '<option value="';
 				h_d[++idx_d] = files[i].name;
 				h_d[++idx_d] = '">';
-				h_d[++idx_d] = files[i].name;
+				h_d[++idx_d] = htmlEncode(files[i].name);
 				h_d[++idx_d] = '</option>';
 			}
 
@@ -1410,7 +1410,7 @@ function refreshVectorSelects(data) {
 				h_s[++idx_s] = '<option value="';
 				h_s[++idx_s] = files[i].name;
 				h_s[++idx_s] = '">';
-				h_s[++idx_s] = files[i].name;
+				h_s[++idx_s] = htmlEncode(files[i].name);
 				h_s[++idx_s] = '</option>';
 			}
 
@@ -1693,7 +1693,7 @@ function loadForms(surveyId, selector) {
 				h[++idx] = ' value="';
 				h[++idx] = item.id;
 				h[++idx] = '">';
-				h[++idx] = item.name;
+				h[++idx] = htmlEncode(item.name);
 				h[++idx] = '</option>';
 			}
 
@@ -1877,11 +1877,11 @@ function setSurveyViewLanguages(list, language,elem, addNone) {
 
 	$languageSelect.empty();
 	if(addNone) {
-		$languageSelect.append('<option value="none">None</option>');
+		$languageSelect.append('<option value="none">' + localise.set["c_none"] + '</option>');
 	}
 
 	for(i = 0; i < list.length; i++) {
-		$languageSelect.append('<option value="' + list[i] + '">' + list[i] + '</option>');
+		$languageSelect.append('<option value="' + list[i] + '">' + htmlEncode(list[i]) + '</option>');
 	}
 
 	if(language) {
@@ -1914,12 +1914,12 @@ function setSurveyViewQuestions(list, qId, view, dateqId, qName) {
 				label = item.q;
 			}
 			if(item.is_ssc) {
-				$questionSelect.append('<option value="' + item.id + '">ssc : ' + item.name + " : " + item.fn + '</option>');
+				$questionSelect.append('<option value="' + item.id + '">ssc : ' + htmlEncode(item.name + " : " + item.fn) + '</option>');
 			} else {
-				$questionSelect.append('<option value="' + item.id + '">' + item.name + " : " + label + '</option>');
-				$questionNameSelect.append('<option value="' + item.name + '">' + item.name + '</option>');
+				$questionSelect.append('<option value="' + item.id + '">' + htmlEncode(item.name + " : " + label) + '</option>');
+				$questionNameSelect.append('<option value="' + item.name + '">' + htmlEncode(item.name) + '</option>');
 				if(item.type === 'timestamp' || item.type === 'dateTime' || item.type == 'date') {
-					$dateQuestions.append('<option value="' + item.id + '">' + item.name + " : " + label + '</option>');
+					$dateQuestions.append('<option value="' + item.id + '">' + htmlEncode(item.name + " : " + label) + '</option>');
 				}
 			}
 		});
@@ -1963,7 +1963,7 @@ function setSurveyViewMeta(list, metaItem) {
 	if(list) {
 		for(i = 0; i < list.length; i++) {
 			item = list[i];
-			$metaSelect.append('<option value="' + item.name + '">' + item.name + '</option>');
+			$metaSelect.append('<option value="' + item.name + '">' + htmlEncode(item.name) + '</option>');
 		}
 	}
 	if(!metaItem) {
@@ -2021,7 +2021,7 @@ function questionListUrl (sId, language, exc_read_only) {
 	}
 
 	url += sId;
-	url += "/" + language;
+	url += "/" + encodeURIComponent(language);
 	url += "?exc_read_only=" + ro_text;
 	return url;
 }
@@ -2420,10 +2420,10 @@ function getChangeDescription(change, version) {
 		 * Options added from a file
 		 */
 		h[++idx] = 'Choice <span style="color:blue;">';
-		h[++idx] = change.option.externalLabel;
+		h[++idx] = htmlEncode(change.option.externalLabel);
 		h[++idx] = '</span>';
 		h[++idx] = ' from file: <span style="color:blue;">';
-		h[++idx] = change.fileName;
+		h[++idx] = htmlEncode(change.fileName);
 		h[++idx] = '</span>';
 
 	} else if(change.action === "template_update") {
@@ -2453,17 +2453,17 @@ function getChangeDescription(change, version) {
 	} else if(change.action === "language_update") {
 		h[++idx] = localise.set["ed_c_languages"];
 		h[++idx] = ' <span style="color:blue;">';
-		h[++idx] = change.msg;
+		h[++idx] = htmlEncode(change.msg);
 		h[++idx] = '</span>';
 
 	} else if(change.action === "add_preload") {
 		h[++idx] = ' <span style="color:blue;">';
-		h[++idx] = change.msg;
+		h[++idx] = htmlEncode(change.msg);
 		h[++idx] = '</span>';
 
 	} else if(change.action === "del_preload") {
 		h[++idx] = ' <span style="color:red;">';
-		h[++idx] = change.msg;
+		h[++idx] = htmlEncode(change.msg);
 		h[++idx] = '</span>';
 
 	} else if(change.action === "update") {
@@ -2491,21 +2491,21 @@ function getChangeDescription(change, version) {
 			h[++idx] = ' ';
 			h[++idx] = localise.set["msg_ren"],
 				h[++idx] = ': <span style="color:blue;">';
-			h[++idx] = newVal;
+			h[++idx] = newVal;		// Already encoded
 			h[++idx] = '</span>';
 			h[++idx] = ' from: <span style="color:red;">';
-			h[++idx] = oldVal;
+			h[++idx] = oldVal;	// Already encoded
 			h[++idx] = '</span>';
 		} else {
 			str = localise.set["ed_c_chg_p"];
 			if(change.property.propType === "constraint_msg" || change.property.propType === "required_msg" || change.property.propType === "guidance_hint") {
-				str = str.replace("%s1", '"' + change.property.propType + '"');
+				str = str.replace("%s1", '"' + htmlEncode(change.property.propType) + '"');
 			} else {
-				str = str.replace("%s1", '"' + change.property.prop + '"');
+				str = str.replace("%s1", '"' + htmlEncode(change.property.prop) + '"');
 			}
-			str = str.replace("%s2", change.property.name);
-			str = str.replace("%s3", '<span style="color:blue;">' + newVal + '</span>');
-			str = str.replace("%s4", '<span style="color:red;">' + oldVal + '</span>');
+			str = str.replace("%s2", htmlEncode(change.property.name));
+			str = str.replace("%s3", '<span style="color:blue;">' + newVal + '</span>');	// Already encoded
+			str = str.replace("%s4", '<span style="color:red;">' + oldVal + '</span>');		// Already encoded
 			h[++idx] = str;
 		}
 
@@ -2517,7 +2517,7 @@ function getChangeDescription(change, version) {
 		if(change.type === "question" || change.changeType === "question"){  // deprecate checking of changeType
 
 			str = localise.set["ed_c_add_q"];
-			str = str.replace("%s1", '<span style="color:blue;">' + change.question.name + "</span>");
+			str = str.replace("%s1", '<span style="color:blue;">' + htmlEncode(change.question.name) + "</span>");
 			var typeString;
 			if(change.question.type === "string") {
 				typeString = 'text';
@@ -2528,7 +2528,7 @@ function getChangeDescription(change, version) {
 			} else {
 				typeString = change.question.type;
 			}
-			str = str.replace("%s2", '<span style="color:red;">' + typeString + "</span>");
+			str = str.replace("%s2", '<span style="color:red;">' + htmlEncode(typeString) + "</span>");
 			h[++idx] = str;
 
 		} else if(change.type === "option" || change.changeType === "option") {	// deprecate checking of changeType
@@ -2539,12 +2539,12 @@ function getChangeDescription(change, version) {
 			var valueStr = '<span style="color:blue;">' + change.option.value;
 			if(change.option.labels && change.option.labels.length >= 1) {
 				valueStr += ' (';
-				valueStr += change.option.labels[0].text;
+				valueStr += htmlEncode(change.option.labels[0].text);
 				valueStr += ')';
 			}
 			valueStr += '</span>';
 			str = str.replace("%s1", valueStr);
-			str = str.replace("%s2", '<span style="color:blue;">' + change.option.optionList + '</span>');
+			str = str.replace("%s2", '<span style="color:blue;">' + htmlEncode(change.option.optionList) + '</span>');
 			h[++idx] = str;
 		}
 
@@ -2561,35 +2561,35 @@ function getChangeDescription(change, version) {
 			h[++idx] = change.question.name;
 			if(change.question.sourceSeq >= 0) {
 				h[++idx] = '</span> from position <span style="color:red;">';
-				h[++idx] = change.question.sourceSeq;
+				h[++idx] = htmlEncode(change.question.sourceSeq);
 				h[++idx] = '</span> in form ';
-				h[++idx] = forms[change.question.sourceFormIndex].name;
+				h[++idx] = htmlEncode(forms[change.question.sourceFormIndex].name);
 			} else {
 				h[++idx] = '</span> from form ';
-				h[++idx] = forms[change.question.sourceFormIndex].name;
+				h[++idx] = htmlEncode(forms[change.question.sourceFormIndex].name);
 			}
 			h[++idx] = '</span> to position <span style="color:red;">';
-			h[++idx] = change.question.seq;
+			h[++idx] = htmlEncode(change.question.seq);
 			h[++idx] = '</span>';
 			h[++idx] = ' in form ';
-			h[++idx] = forms[change.question.formIndex].name;
+			h[++idx] = htmlEncode(forms[change.question.formIndex].name);
 
 
 		} else if(change.type === "option") {
 
 			h[++idx] = 'choice <span style="color:blue;">';
-			h[++idx] = change.option.value;
+			h[++idx] = htmlEncode(change.option.value);
 			if(change.option.labels && change.option.labels.length >= 1) {
 				h[++idx] = ' (';
-				h[++idx] = change.option.labels[0].text;
+				h[++idx] = htmlEncode(change.option.labels[0].text);
 				h[++idx] = ')';
 			}
 			h[++idx] = '</span>';
 			h[++idx] = ' from choice list: <span style="color:blue;">';
-			h[++idx] = change.option.sourceOptionList;
+			h[++idx] = htmlEncode(change.option.sourceOptionList);
 			h[++idx] = '</span>';
 			h[++idx] = ' to choice list: <span style="color:blue;">';
-			h[++idx] = change.option.optionList;
+			h[++idx] = htmlEncode(change.option.optionList);
 			h[++idx] = '</span>';
 		}
 
@@ -2600,21 +2600,21 @@ function getChangeDescription(change, version) {
 			h[++idx] = localise.set["ed_c_del_q"];
 
 			h[++idx] = ' <span style="color:blue;">';
-			h[++idx] = change.question.name;
+			h[++idx] = htmlEncode(change.question.name);
 			h[++idx] = '</span>';
 
 		} else if(change.type === "option") {
 
 			str = localise.set["ed_c_del_o"];
-			var valueStr = '<span style="color:blue;">' + change.option.value;
+			var valueStr = '<span style="color:blue;">' + htmlEncode(change.option.value);
 			if(change.option.labels && change.option.labels.length >= 1) {
 				valueStr  += ' (';
-				valueStr  += change.option.labels[0].text;
+				valueStr  += htmlEncode(change.option.labels[0].text);
 				valueStr  += ')';
 			}
 			valueStr  += '</span>';
 			str = str.replace("%s1", valueStr);
-			str = str.replace("%s2", '<span style="color:blue;">' + change.option.optionList + '</span>');
+			str = str.replace("%s2", '<span style="color:blue;">' + htmlEncode(change.option.optionList) + '</span>');
 			h[++idx] = str;
 		}
 	} else if(change.action === "set_required")  {
@@ -2637,14 +2637,14 @@ function getChangeDescription(change, version) {
 			h[++idx] = change.msg;
 
 	} else {
-		h[++idx] = change.type;
+		h[++idx] = htmlEncode(change.type);
 		h[++idx] = ' ';
-		h[++idx] = change.name;
+		h[++idx] = htmlEncode(change.name);
 		h[++idx] = ' changed to: <span style="color:blue;">';
-		h[++idx] = change.newVal;
+		h[++idx] = htmlEncode(change.newVal);
 		h[++idx] = '</span>';
 		h[++idx] = ' from: <span style="color:red;">';
-		h[++idx] = change.oldVal;
+		h[++idx] = htmlEncode(change.oldVal);
 		h[++idx] = '</span>';
 	}
 
@@ -2730,7 +2730,7 @@ function refreshLocationGroups(tags, includeAll, currentGroup) {
 						h[++idx] = ' value="';
 						h[++idx] = g;
 						h[++idx] = '">';
-						h[++idx] = g;
+						h[++idx] = htmlEncode(g);
 						h[++idx] = '</option>';
 					}
 				}
@@ -2760,7 +2760,7 @@ function setLocationList(locns, current, currentGroup) {
 				h[++idx] = '<option value="';
 				h[++idx] = i;
 				h[++idx] = '">';
-				h[++idx] = locns[i].name;
+				h[++idx] = htmlEncode(locns[i].name);
 				h[++idx] = '</option>';
 			}
 		}
@@ -3237,7 +3237,7 @@ function showReportList(data) {
 			h[++idx] = '<option value="';
 			h[++idx] = data[i].id;
 			h[++idx] = '">';
-			h[++idx] = data[i].name;
+			h[++idx] = htmlEncode(data[i].name);
 			h[++idx] = '</option>';
 		}
 		$('.customReportList').empty().html(h.join(''));
@@ -3532,7 +3532,7 @@ function addDatePickList(sMeta, currentDate) {
 			} else if(key === "Scheduled Start") {
 				key = localise.set["c_scheduled"]
 			}
-			h[++idx] = key;
+			h[++idx] = htmlEncode(key);
 			h[++idx] = '</option>';
 
 		}
@@ -3574,7 +3574,7 @@ function addGeomPickList(sMeta) {
 					k[++idx] = h[++idx] = '<option value="';
 					k[++idx] = h[++idx] = theForm.geomQuestions[j];
 					k[++idx] = h[++idx] = '">';
-					k[++idx] = h[++idx] = theForm.geomQuestions[j];
+					k[++idx] = h[++idx] = htmlEncode(theForm.geomQuestions[j]);
 					k[++idx] = h[++idx] = '</option>';
 				}
 			}
@@ -3907,7 +3907,7 @@ function getAccessibleCsvFiles($elem, includeNone) {
 				h[++idx] = '<option value="';
 				h[++idx] = i;
 				h[++idx] = '">';
-				h[++idx] = data[i].filename;
+				h[++idx] = htmlEncode(data[i].filename);
 				h[++idx] = '</option>';
 			}
 			$elem.empty().append(h.join(''));
@@ -3950,7 +3950,7 @@ function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly, callback, in
 				h[++idx] = '<option value="';
 				h[++idx] = data[i].name;
 				h[++idx] = '">';
-				h[++idx] = data[i].name;
+				h[++idx] = htmlEncode(data[i].name);
 				h[++idx] = '</option>';
 			}
 		}
@@ -4013,7 +4013,7 @@ function getQuestionsInCsvFile($elem, index, includeNone) {
 		h[++idx] = '<option value="';
 		h[++idx] = data[i].fName;
 		h[++idx] = '">';
-		h[++idx] = data[i].fName;
+		h[++idx] = htmlEncode(data[i].fName);
 		h[++idx] = '</option>';
 	}
 	$elem.empty().append(h.join(''));
@@ -4039,7 +4039,7 @@ function getGroupQuestionsInSurvey($elem, sIdent) {
 			h[++idx] = '" value="';
 			h[++idx] = data[i].name;
 			h[++idx] = '">';
-			h[++idx] = data[i].name;
+			h[++idx] = htmlEncode(data[i].name);
 			h[++idx] = '</option>';
 		}
 		$elem.empty().append(h.join(''));
@@ -4224,7 +4224,7 @@ function populateTaskGroupList() {
 						h[++idx] = '<option value="';
 						h[++idx] = i;
 						h[++idx] = '">';
-						h[++idx] = grp.name;
+						h[++idx] = htmlEncode(grp.name);
 						h[++idx] = '</option>';
 					}
 				}
@@ -5288,7 +5288,7 @@ function showOversightSurveys(data) {
 			h[++idx] = '<option value="';
 			h[++idx] = item.surveyIdent;
 			h[++idx] = '">';
-			h[++idx] = item.surveyName;
+			h[++idx] = htmlEncode(item.surveyName);
 			h[++idx] = '</option>';
 
 			if(count == 0) {
@@ -5358,7 +5358,7 @@ function showOversightQuestions(data) {
 		h[++idx] = '<option value="';
 		h[++idx] = item.name;
 		h[++idx] = '">';
-		h[++idx] = item.name;
+		h[++idx] = htmlEncode(item.name);
 		h[++idx] = '</option>';
 
 	}
@@ -5613,7 +5613,7 @@ function updateRemoteSurveys(surveyList) {
 		h[++idx] = '<option value="';
 		h[++idx] = survey.formID;
 		h[++idx] = '">';
-		h[++idx] = survey.name;
+		h[++idx] = htmlEncode(survey.name);
 		h[++idx] = '</option>';
 	}
 

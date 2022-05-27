@@ -17,14 +17,15 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
+/*
+ * The description should always be encoded / not used as html therefore do not encode
+ */
 function getDisplayDescription(fn, reportType, survey, question, group, option, qtype, 
 		date_question, start, end, interval, units, filter) {
 	
 	var txt = [],
 		idx = -1,
 		msg;
-
-	console.log("getDisplayDescription: " + qtype + " : " + question);
 
 	if(typeof question === "undefined" || question === "None") {
 		txt[++idx] = localise.set["a_dd_sl"];
@@ -61,7 +62,7 @@ function getDisplayDescription(fn, reportType, survey, question, group, option, 
 
 		}
 		msg = msg.replace('%s2', question);
-		msg = msg.replace('%s3', htmlEncode(survey));
+		msg = msg.replace('%s3', survey);
 		txt[++idx] = msg;
 	}
 
