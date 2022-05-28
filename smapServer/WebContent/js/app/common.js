@@ -1845,7 +1845,7 @@ function getMetaList(sId, metaItem) {
  * Function to get the list of notification alerts
  * These are extracted from the settings for the survey
  */
-function getAlertList(sId) {
+function getAlertList(sId, alertId) {
 
 	addHourglass();
 	$.ajax({
@@ -1855,7 +1855,7 @@ function getAlertList(sId) {
 		success: function(data) {
 			removeHourglass();
 			globals.gSelector.setSurveyAlerts(sId, data);
-			setSurveyAlerts(data);
+			setSurveyAlerts(data, alertId);
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
@@ -1976,7 +1976,7 @@ function setSurveyViewMeta(list, metaItem) {
 /*
  * Populate the alert list
  */
-function setSurveyAlerts(settings) {
+function setSurveyAlerts(settings, alertId) {
 
 	var $elem = $('.alert_list'),
 		item,
@@ -1989,6 +1989,9 @@ function setSurveyAlerts(settings) {
 			item = settings.alerts[i];
 			$elem.append('<option value="' + item.id + '">' + htmlEncode(item.name) + '</option>');
 		}
+	}
+	if(alertId) {
+		$elem.val(alertId);
 	}
 
 
@@ -4642,11 +4645,12 @@ function edit_notification(edit, idx, console) {
 
 		setAttachDependencies(notification.notifyDetails.attach);
 
-		if (notification.trigger !== "task_reminder") {
-			$('#survey').val(notification.s_id).change();
-		}
+		//if (notification.trigger !== "task_reminder") {
+		//	$('#survey').val(notification.s_id).change();
+		//}
 		$('#not_filter').val(notification.filter);
 		$('#update_value').val(notification.updateValue);
+		$('#alerts').val(notification.alert_id);
 
 		// reminder settings
 		if (!console) {
@@ -4663,10 +4667,15 @@ function edit_notification(edit, idx, console) {
 			}
 		}
 
+		if(notification.trigger !== "task_reminder" && (notification.alert_id
+			|| (notification.notify_details && (notification.notifyDetails.emailQuestionName || notification.notifyDetails.emailMeta)))) {
+
+				surveyChangedNotification(notification.notifyDetails.emailQuestionName,
+					notification.notifyDetails.emailMeta,
+					notification.alert_id);
+		}
+
 		if (notification.notifyDetails) {
-			if (notification.trigger !== "task_reminder" && (notification.notifyDetails.emailQuestionName || notification.notifyDetails.emailMeta)) {
-				surveyChangedNotification(notification.notifyDetails.emailQuestionName, notification.notifyDetails.emailMeta);
-			}
 
 			if (notification.target == "email") {
 				if (notification.notifyDetails.emails) {
@@ -5076,6 +5085,7 @@ function saveEscalate() {
 
 		notification.target = "escalate";
 		notification.remote_user = $('#user_to_assign').val();
+		notification.alert_id = $('#alerts').val();
 		notification.notifyDetails = {};	// Required so that notifyDetails is not undefined
 
 	} else {
@@ -5097,7 +5107,7 @@ function getTaskGroupIndex(tgId) {
 	return 0;
 }
 
-function surveyChangedNotification(qName, metaItem) {
+function surveyChangedNotification(qName, metaItem, alertId) {
 
 	var language = "none",
 		sId = $('#survey').val() || 0,
@@ -5109,6 +5119,9 @@ function surveyChangedNotification(qName, metaItem) {
 		if(!qName) {
 			qName = "-1";
 		}
+
+		getEligibleUsers();
+		getOversightSurveys(sId);
 
 		qList = globals.gSelector.getSurveyQuestions(sId, language);
 		metaList = globals.gSelector.getSurveyMeta(sId);
@@ -5128,9 +5141,9 @@ function surveyChangedNotification(qName, metaItem) {
 		}
 
 		if(!alertList) {
-			getAlertList(sId);
+			getAlertList(sId, alertId);
 		} else {
-			setSurveyAlerts(alertList);
+			setSurveyAlerts(alertList, alertId);
 		}
 	}
 }
@@ -5660,7 +5673,7 @@ function executeUsageReport(oId) {
 	}
 	reportName += "_" + year + "_" + month;
 	reportName = reportName.replaceAll(' ', '_');
-	
+
 	var reportObj = {
 		report_type: 'u_usage',
 		report_name: reportName,
@@ -5810,7 +5823,7 @@ function getEligibleUsers() {
 						h[++idx] = '<option value="';
 						h[++idx] = data[i].ident;
 						h[++idx] = '">';
-						h[++idx] = data[i].name;
+						h[++idx] = htmlEncode(data[i].name);
 						h[++idx] = '</option>';
 					}
 				}

@@ -106,8 +106,6 @@ require([
 		// Add response to a source survey being selected
 		$('#survey').change(function() {
 			surveyChangedNotification();
-			getEligibleUsers();
-			getOversightSurveys($('#survey').val());
 		});
 
 		// Add response to a source survey being selected
