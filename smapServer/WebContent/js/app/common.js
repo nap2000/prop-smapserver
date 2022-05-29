@@ -19,6 +19,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 var gWait = 0;		// This javascript file only
 var gCache = {};
 var gCacheGroup = {};
+var gCacheStatusQuestions = {};
 
 
 /*
@@ -4082,6 +4083,55 @@ function getGroupQuestionsInSurvey($elem, sIdent) {
 		}
 	}
 
+}
+
+/*
+ * Get the questions suitable for use as a status in a survey group using the survey id as the key
+ */
+function getGroupStatusQuestions($elem, sId) {
+
+	function populateElement($elem, data) {
+		var h = [],
+			idx = -1,
+			i;
+
+		for (i = 0; i < data.length; i++) {
+			h[++idx] = '<option value="';
+			h[++idx] = data[i].column_name;
+			h[++idx] = '">';
+			h[++idx] = htmlEncode(data[i].name);
+			h[++idx] = '</option>';
+		}
+		$elem.empty().append(h.join(''));
+	}
+
+	if(gCacheStatusQuestions[sId]) {
+		populateElement($elem, gCacheStatusQuestions[sId]);
+	} else {
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/questionList/" + sId + "/none/group?status=true",
+			dataType: 'json',
+			cache: false,
+			success: function (data) {
+				removeHourglass();
+				var theId = sId;
+				var $theElem = $elem;
+
+				gCacheStatusQuestions[theId] = data;
+				populateElement($theElem, data);
+
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["msg_err_get_q"] + ": " + err);
+				}
+			}
+		});
+	}
 }
 
 function tokenizeAppearance(input) {
