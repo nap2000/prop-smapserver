@@ -377,13 +377,11 @@ require([
 
 			// survey / task group
 			h[++idx] = '<td style="text-align: center;">';
-			if(data[i].trigger === "submission") {
-				h[++idx] = htmlEncode(data[i].s_name);
-			} else if(data[i].trigger === "console_update") {
-				h[++idx] = htmlEncode(data[i].s_name);
-			} else {
+			if(data[i].trigger === "task_reminder") {
 				h[++idx] = htmlEncode(data[i].tg_name);
-			}
+			} else {
+				h[++idx] = htmlEncode(data[i].s_name);
+			} 
 			h[++idx] = '</td>';
 
 			// target
@@ -439,6 +437,12 @@ require([
 				}
 			} else if(data[i].target === "webhook" && data[i].notifyDetails) {
 				h[++idx] = htmlEncode(data[i].notifyDetails.callback_url);
+			} else if(data[i].target === "escalate"){
+				h[++idx] = htmlEncode(data[i].remote_user);
+				if(data[i].alert_id) {
+					h[++idx] = ':';
+					h[++idx] = htmlEncode(data[i].alert_name);
+				}
 			}
 			h[++idx] = '</td>';
 
