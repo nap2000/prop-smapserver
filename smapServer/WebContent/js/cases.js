@@ -71,9 +71,17 @@ require([
             $('#saveSettings').click(function(){
                 saveSettings();
             });
+
+            $('#cms_fs').keydown(function(){
+                $('.save_alert').hide();
+            })
+            $('#cms_sq').change(function(){
+                $('.save_alert').hide();
+            })
         });
 
         function currentSurveyDone() {
+            getGroupStatusQuestions($('#cms_sq'), globals.gCurrentSurvey, true);
             getGroupSurveys(groupSurveysDone);
         }
 
@@ -97,6 +105,7 @@ require([
              * Update settings
              */
             $('#cms_fs').val(settings.finalStatus);
+            $('#cms_sq').val(settings.statusQuestion);      // The list of questions should have been set by now but it is not guaranteed
 
             /*
              * Update alerts table
@@ -183,8 +192,10 @@ require([
         function saveSettings() {
             var settings = {};
 
+            settings.statusQuestion = $('#cms_sq').val();
             settings.finalStatus = $('#cms_fs').val();
 
+            $('.org_alert').hide();
             addHourglass();
             $.ajax({
                 type: "POST",
@@ -194,6 +205,8 @@ require([
                 data: { settings: JSON.stringify(settings) },
                 success: function(data, status) {
                     removeHourglass();
+
+                    $('.save_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
                     getCms(updateCmsData);
                 },
                 error: function(xhr, textStatus, err) {
@@ -206,7 +219,7 @@ require([
                         if (!msg) {
                             msg = localise.set["c_error"];
                         }
-                        alert(msg);
+                        $('.save_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
                     }
                 }
             });
