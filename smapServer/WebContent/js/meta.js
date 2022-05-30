@@ -101,6 +101,10 @@ require([
 					alert(msg);
 					return;
 				}
+				if(!isValidODKQuestionName(item.name)) {
+					alert(localise.set["ed_vq"]);
+					return;
+				}
 
 				// Settings
 				var set = [];
