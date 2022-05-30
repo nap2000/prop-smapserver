@@ -1990,21 +1990,6 @@ define([
         }
 
 		/*
-		 * Return true if the passed in value is accepted by xlsFormConverter
-		 */
-        function isValidODKQuestionName(val) {
-
-            var sqlCheck = /^[A-Za-z_][A-Za-z0-9_\-\.]*$/;
-            return sqlCheck.test(val);
-        }
-
-        function isValidODKOptionName(val) {
-
-            var sqlCheck = /^[A-Za-z0-9_@\-\.\+\(\),%:\/]*$/;
-            return sqlCheck.test(val);
-        }
-
-		/*
 		 * Error types:  name || dupname || noname || dupgeom
 		 */
         function addValidationError(container, itemIndex, errorType, msg, itemType, severity) {
