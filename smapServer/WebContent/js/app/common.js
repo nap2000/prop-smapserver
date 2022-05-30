@@ -5847,8 +5847,8 @@ function htmlEncode(input) {
 }
 
 /*
-  * Get the list of users from the server
-  */
+ * Get the list of users from the server
+ */
 function getEligibleUsers() {
 
 	if(globals.gCurrentSurvey && globals.gCurrentSurvey > 0) {
@@ -5896,4 +5896,18 @@ function getEligibleUsers() {
 			}
 		});
 	}
+}
+/*
+ * Return true if the passed in value is accepted by xlsFormConverter
+ */
+function isValidODKQuestionName(val) {
+
+	var sqlCheck = /^[A-Za-z_][A-Za-z0-9_\-\.]*$/;
+	return sqlCheck.test(val);
+}
+
+function isValidODKOptionName(val) {
+
+	var sqlCheck = /^[A-Za-z0-9_@\-\.\+\(\),%:\/]*$/;
+	return sqlCheck.test(val);
 }

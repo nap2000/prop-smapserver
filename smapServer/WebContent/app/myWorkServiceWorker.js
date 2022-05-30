@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v131';
+let CACHE_NAME = 'v134';
 
 // Web service requests
 let ASSIGNMENTS = '/surveyKPI/myassignments?';
@@ -28,6 +28,7 @@ self.addEventListener('install', function(e) {
 		caches.open(CACHE_NAME).then(function(cache) {
 			return cache.addAll([
 				'/app/myWork/index.html',
+				'/app/myWork/done.html',
 				'/app/myWork/js/my_work.js',
 				'/app/myWork/js/libs/jquery.js',
 				'/manifest.json',
