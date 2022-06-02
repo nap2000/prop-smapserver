@@ -228,7 +228,32 @@
                     </form>
                 </div>
 
-                <!-- record editing commands -->
+
+                <div class="bulkEditSection col-sm-12 showMgmtData">
+
+                    <div id="bulkEditInfo" class="alert alert-success" style="display:none;"></div>
+                    <div class="row">
+                        <div class="col-sm-8"><b><span class="lang" data-lang="c_question"></span></b></div>
+                        <div class="col-sm-4"><b><span class="lang" data-lang="c_clear"></span></b></div>
+                    </div>
+                    <form id="bulkEditForm"></form>
+
+                    <button id="saveBulkEdit" type="button" class="btn btn-success lang saverecord"
+                            data-dismiss="modal"
+                            data-lang="c_save">Save
+                    </button>
+
+                    <button id="exitBulkEdit" type="button" class="btn btn-primary exitBulkEdit">
+                        <span class="lang" data-lang="c_back">exit</span>
+                    </button>
+
+                    <div class="re_alert alert alert-success mt-2" role="alert" style="display:none;"></div>
+                </div>
+
+            </div>
+
+            <!-- record editing commands -->
+            <div class="bg-light row">
                 <div class="col-sm-4 pt-4 px-2 editRecordSection border-right">
                     <div class="custom-control custom-switch dataView">
                         <input type="checkbox" class="custom-control-input table_filter"
@@ -262,29 +287,8 @@
                 <div class="col-sm-4 pt-4 px-2 editRecordSection border-right">
                     <button class="editRecordSection lang btn btn-primary" data-lang="t_add_task" id="addTask"></button>
                     <button class="editRecordSection lang btn btn-primary" data-lang="msg_send_notification" id="addNotification"></button>
+                    <button id="exitEditRecord2" type="button" class="btn btn-success exitEditRecord lang" data-lang="c_back"></button>
                 </div>
-
-                <div class="bulkEditSection col-sm-12 showMgmtData">
-
-                    <div id="bulkEditInfo" class="alert alert-success" style="display:none;"></div>
-                    <div class="row">
-                        <div class="col-sm-8"><b><span class="lang" data-lang="c_question"></span></b></div>
-                        <div class="col-sm-4"><b><span class="lang" data-lang="c_clear"></span></b></div>
-                    </div>
-                    <form id="bulkEditForm"></form>
-
-                    <button id="saveBulkEdit" type="button" class="btn btn-success lang saverecord"
-                            data-dismiss="modal"
-                            data-lang="c_save">Save
-                    </button>
-
-                    <button id="exitBulkEdit" type="button" class="btn btn-primary exitBulkEdit">
-                        <span class="lang" data-lang="c_back">exit</span>
-                    </button>
-
-                    <div class="re_alert alert alert-success mt-2" role="alert" style="display:none;"></div>
-                </div>
-
             </div>
 
 
@@ -472,9 +476,6 @@
                                 </button>
                                 <button id="shareRecord" type="button" class="btn btn-info">
                                     <span class="lang"  data-lang="n_share">link</span>
-                                </button>
-                                <button id="exitEditRecord2" type="button" class="btn btn-primary exitEditRecord">
-                                    <span class="lang" data-lang="c_back">exit</span>
                                 </button>
 
                                 <div class="re_alert alert alert-success mt-2" role="alert" style="display:none;"></div>
