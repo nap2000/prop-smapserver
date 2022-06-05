@@ -52,7 +52,7 @@ define([
             };
 
             gStatusChart = new Chart(
-                document.getElementById('myChart'),
+                document.getElementById('statusChart'),
                 gStatusConfig
             );
 
@@ -63,8 +63,15 @@ define([
          * Extract the data in chart form
          */
         function refresh() {
+
             var statusVal,
                 assigned;
+
+            if(!gTasks.cache.currentData) {
+                // Data not available yet.
+                return;
+            }
+
             var cd = gTasks.cache.currentData.case;
             var results = globals.gMainTable.rows({
                 order: 'current',  // 'current', 'applied', 'index',  'original'
