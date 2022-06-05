@@ -58,7 +58,7 @@ requirejs.config({
         'app/plugins': ['jquery'],
         'crf': ['jquery'],
         'file_input': ['jquery'],
-        'app/chart': ['jquery'],
+        'app/summary_report': ['jquery'],
         'qrcode': ['jquery'],
 	    'slimscroll': ['jquery'],
         'toggle': ['bootstrap.min'],
@@ -72,7 +72,7 @@ require([
     'localise',
     'globals',
     'moment',
-    'app/chart',
+    'app/summary_report',
     'app/mapOL3',
     'svgsave',
     'app/actioncommon',
@@ -88,7 +88,7 @@ require([
              localise,
              globals,
              moment,
-             chart,
+             summary_report,
              map,
              svgsave,
              actioncommon) {
@@ -160,7 +160,7 @@ require([
 
     $(document).ready(function () {
 
-        window.chart = chart;
+        window.summary_report = summary_report;
         window.moment = moment;
         setCustomManage();
 	    setupUserProfile(true);
@@ -669,13 +669,6 @@ require([
             }
         });
 
-        // Add a new chart
-        $('#m_add_chart').click(function (e) {
-            e.preventDefault();
-            $('#chartInfo').hide();
-            chart.addNewChart();
-        });
-
         // Add a new map layer
         $('#m_add_layer').click(function (e) {
             e.preventDefault();
@@ -720,11 +713,11 @@ require([
                 }
 
             } else if(target === '#chart-view') {
-                chart.init(true, false);
+                //chart.init(true, false);
                 $('.chartOnly').show();
                 gChartView = true;
             } else if(target === '#timing-view') {
-                chart.init(false, true);
+                //chart.init(false, true);
                 $('#m_add_chart').show();
                 gTimingView = true;
             }
@@ -821,7 +814,7 @@ require([
 
     });         // End of document ready
 
-    // Generate a file based on chart data
+    // Generate a file based on current console data
     $('.genfile').click(function (e) {
         e.preventDefault();
         var format,
@@ -1032,43 +1025,14 @@ require([
             }
         }
 
-        if (format !== "image") {
-
-            if (format === "xlsx") {
-                chartData = chart.getXLSData(alldata);
-            }
-
-            generateFile(url, filename, format, mime, data, sId, groupSurvey, title, project, charts, chartData,
-                settings,
-                tz,
-                subForm);      // formName
-        } else {
-            var countImages = $('.svg-container svg').length;
-            $('.svg-container svg').each(function (index) {
-                var $this = $(this),
-                    elem = $this[0],
-                    title = $this.closest('.ibox').find('.ibox-title h5').text();
-
-                if (!title) {
-                    title = "A Chart";
-                }
-                //svgsave.saveSvgAsPng(elem, "x.png");
-                svgsave.svgAsPngUri(elem, undefined, function (uri) {
-                    var chart = {
-                        image: uri,
-                        title: title
-                    };
-                    charts.push(chart);
-                    countImages--;
-                    if (countImages <= 0) {
-                        generateFile(url, filename, format, mime, undefined, sId,
-                            groupSurvey, title, project,
-                            charts, chartData, settings, tz, subForm);
-                    }
-                });
-
-            });
+        if (format === "xlsx") {
+            chartData = summary_report.getXLSData(alldata);
         }
+
+        generateFile(url, filename, format, mime, data, sId, groupSurvey, title, project, charts, chartData,
+            settings,
+            tz,
+            subForm);      // formName
     }
 
     /*
@@ -2072,7 +2036,7 @@ require([
             select_questions = {};
 
         /*
-         * Add an indicator to columns if they can be used as a chart question
+         * Add an indicator to columns if they can be used as a chart question in summary reports
          * Merge choices in select multiples
          */
 
@@ -3104,7 +3068,6 @@ require([
             callback(gTasks.cache.data[url]);
             updateSettings(gTasks.cache.currentData.settings);
             map.setLayers(gTasks.cache.currentData.schema.layers);
-            chart.setCharts(gTasks.cache.currentData.schema.charts);
             updateFormList(gTasks.cache.currentData.forms);
 	    } else {
 
@@ -3139,7 +3102,6 @@ require([
 
 					    updateSettings(gTasks.cache.currentData.settings);
 					    map.setLayers(gTasks.cache.currentData.schema.layers);
-					    chart.setCharts(gTasks.cache.currentData.schema.charts);
 					    updateFormList(gTasks.cache.currentData.forms);
 
 					    // Add a config item for the group value if this is a duplicates search
@@ -3262,7 +3224,6 @@ require([
 
         // Refresh the views that depend on the displayed rows
         map.refreshAllLayers(gMapView, gOverallMapConfig.map);
-        //chart.refreshAllCharts(gChartView, gTimingView, true);
 
         if(gTasks.gBulkInstances && gTasks.gBulkInstances.length) {
             for(i = 0; i < gTasks.gBulkInstances.length; i++ ) {
