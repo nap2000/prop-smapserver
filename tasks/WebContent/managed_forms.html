@@ -97,6 +97,14 @@
                 </div>
             </li>
 
+            <li class="nav-item dropdown active">
+                <a class="nav-link dropdown-toggle lang" data-lang="c_file" id="m_file" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+                <div class="dropdown-menu" aria-labelledby="m_file">
+                    <a id="m_export_xls" class="dropdown-item genfile docx lang" data-lang="c_word" href="#"></a>
+                    <a id="m_export_word" class="dropdown-item genfile xls lang" data-lang="c_excel" href="#"></a>
+                </div>
+            </li>
+
             <li id="m_duplicates" class="nav-item restrict_role admin_role"><a class="nav-link" href="/app/tasks/duplicates.html"><span class="lang" data-lang="mon_dup"></span></a></li>
             <li id="m_web_forms" class="nav-item restrict_role enum_role"><a class="nav-link" href="/app/myWork/index.html"><span class="lang" data-lang="m_web_forms"></span></a></li>
             <li id="m_rep" class="nav-item restrict_role admin_role analyst_role"><a class="nav-link" href="/app/reports.html"><span class="lang" data-lang="m_reports"></span></a></li>
@@ -293,8 +301,8 @@
 
 
             <div class="overviewSection">
-                <div class="d-flex w-100 px-4">
-                    <p id="timezone" class="mr-auto py-2"></p>
+                <div class="d-flex w-100 px-1">
+                    <!--<p id="timezone" class="mr-auto py-2"></p>  Is this really useful and it complicates mobile first-->
                     <ul class="nav">
 
                         <li class="nav-item filtersShown">
@@ -309,41 +317,44 @@
                         <li class="nav-item targetSpecific tableOnly">
                             <a id="show_settings" class="nav-link" href="#"><i class="fa fa-cog"></i> <span class="lang" data-lang="mf_ts"></span></a>
                         </li>
-                    </ul>
 
-                    <form class="form-inline my-2 my-lg-0  mx-1 mapOnly targetSpecific" style="display:none;">
-                        <div class="custom-control custom-switch custom-control-inline">
-                            <input type="checkbox" class="custom-control-input" id="showlayers">
-                            <label class="custom-control-label lang" data-lang="d_layers" for="showlayers"></label>
-                        </div>
-                    </form>
+                        <li class="nav-item mapOnly targetSpecific" style="display:none;">
+                            <div class="custom-control custom-switch custom-control-inline my-2">
+                                <input type="checkbox" class="custom-control-input" id="showlayers">
+                                <label class="custom-control-label lang" data-lang="d_layers" for="showlayers"></label>
+                            </div>
+                        </li>
 
-                    <form class="form-inline my-2 my-lg-0  mx-1">
-                        <div class="btn-group not_deleted singleSelectOnly" role="group" aria-label="drill down">
-                            <button type="button" class="lang du_only btn btn-secondary" data-lang="co_up" id="drill_up"></button>
-                            <button type="button" class="dd_only lang btn btn-secondary" data-lang="co_dd" id="drill_down"></button>
-                            <div class="btn-group dd_only" role="group">
-                                <button id="dd_form" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <li class="nav-item my-2 my-lg-0  mx-1">
+                            <div class="btn-group not_deleted singleSelectOnly my-2" role="group" aria-label="drill down">
+                                <button type="button" class="lang du_only btn btn-secondary" data-lang="co_up" id="drill_up"></button>
+                                <button type="button" class="dd_only lang btn btn-secondary" data-lang="co_dd" id="drill_down"></button>
+                                <div class="btn-group dd_only" role="group">
+                                    <button id="dd_form" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
-                                </button>
-                                <div id="drill_down_list" class="dropdown-menu" aria-labelledby="drill_down">
+                                    </button>
+                                    <div id="drill_down_list" class="dropdown-menu" aria-labelledby="drill_down">
 
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
+                        </li>
+                    </ul>
+
                     <form class="form-inline my-2 my-lg-0">
                         <button class="singleSelectOnly not_deleted lang btn btn-danger mx-1 my-1" data-lang="c_del" id="m_delete"></button>
                         <button class="singleSelectOnly deleted lang btn btn-info mx-1 my-1" data-lang="c_undel" id="m_undelete"></button>
                         <button class="singleSelectOnly not_assigned lang btn btn-primary mx-1 my-1" data-lang="mf_lock" id="m_lock"></button>
-                        <button class="singleSelectOnly assigned lang btn btn-default mx-1 my-1" data-lang="mf_rel" id="m_release"></button>
+                        <button class="singleSelectOnly assigned lang btn btn-secondary mx-1 my-1" data-lang="mf_rel" id="m_release"></button>
                         <button class="multiSelectOnly lang btn btn-primary mx-1 my-1" data-lang="co_b" id="m_bulk_edit"></button>
                         <button class="singleSelectOnly assigned lang btn btn-primary mx-1 my-1" data-lang="c_edit" id="m_edit"></button>
                         <button class="singleSelectOnly assigned_other lang btn btn-primary mx-1 my-1" data-lang="m_view" id="m_view"></button>
                         <button class="singleSelectOnly assigned_admin lang btn btn-warning mx-1 my-1" type="button" data-lang="t_assign" id="m_assign_to"></button>
 
+                        <!--
                         <button class="genfile docx btn btn-info mx-1 my-1"><i class="fa fa-file-word fa-lg"></i></button>
                         <button class="genfile xls btn btn-success mx-1 my-1"><i class="fa fa-file-excel fa-lg"></i></button>
+                        -->
 
                     </form>
 
@@ -359,13 +370,15 @@
         <div class="card-header">
             <ul id="mainTabs" class="nav nav-tabs card-header-tabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a data-toggle="tab" id="set-table-view" href="#table-view" role="tab" class="active nav-link" aria-controls="table-view" aria-selected="true"><i class="fa fa-list"></i> <span class="lang" data-lang="c_table"></span></a>
+                    <a data-toggle="tab" id="set-table-view" href="#table-view" role="tab" class="active nav-link" aria-controls="table-view" aria-selected="true"><i class="fa fa-list" aria-hidden="true"></i> <span class="lang" data-lang="c_table"></span></a>
                 </li>
                 <li class="nav-item">
-                    <a data-toggle="tab" id="set-map-view"href="#map-view" role="tab" class="nav-link" aria-controls="map-view" aria-selected="false"><i class="fa fa-globe"></i> <span class="lang" data-lang="c_map"></span></a>
+                    <a data-toggle="tab" id="set-map-view"href="#map-view" role="tab" class="nav-link" aria-controls="map-view" aria-selected="false"><i class="fa fa-globe" aria-hidden="true"></i> <span class="lang" data-lang="c_map"></span></a>
                 </li>
-                <li class="nav-item" style="display:none;"><a data-toggle="tab" id="set-chart-view"href="#chart-view" role="tab" class="nav-link"><i class="fa fa-bar-chart"></i> <span class="lang" data-lang="c_chart"></span></a></li>
-                <li class="nav-item" style="display:none;"><a data-toggle="tab" id="set-timing-view" href="#timing-view" role="tab" class="nav-link"><i class="fa fa-clock-o"></i></a></li>
+                <li class="nav-item">
+                    <a data-toggle="tab" id="set-chart-view"href="#chart-view" role="tab" class="nav-link"><i class="fa fa-chart-bar" aria-hidden="true"></i> <span class="lang" data-lang="c_chart"></span></a>
+                </li>
+                <li class="nav-item" style="display:none;"><a data-toggle="tab" id="set-timing-view" href="#timing-view" role="tab" class="nav-link"><i class="fa fa-clock-o" aria-hidden="true"></i></a></li>
             </ul>
         </div>
 
