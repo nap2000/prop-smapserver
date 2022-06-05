@@ -73,6 +73,7 @@ require([
     'globals',
     'moment',
     'app/summary_report',
+    'app/chart',
     'app/mapOL3',
     'svgsave',
     'app/actioncommon',
@@ -89,6 +90,7 @@ require([
              globals,
              moment,
              summary_report,
+             chart,
              map,
              svgsave,
              actioncommon) {
@@ -690,7 +692,7 @@ require([
         });
 
         /*
-         * Take action on tab change to initialise tab contents
+         * Take action on tab change to initialiseColumns tab contents
          * Refer: http://stackoverflow.com/questions/20705905/bootstrap-3-jquery-event-for-active-tab-change
          */
         $('a[data-toggle="tab"]', '#mainTabs').on('shown.bs.tab', function (e) {
@@ -713,7 +715,7 @@ require([
                 }
 
             } else if(target === '#chart-view') {
-                //chart.init(true, false);
+                chart.refresh();
                 $('.chartOnly').show();
                 gChartView = true;
             } else if(target === '#timing-view') {
@@ -2026,7 +2028,7 @@ require([
     /*
      * Perform initialisation after the data has been loaded
      */
-    function initialise() {
+    function initialiseColumns() {
 
 
         var columns = gTasks.cache.currentData.schema.columns,
@@ -3115,7 +3117,7 @@ require([
 					    }
 
 					    // Initialise the column settings
-					    initialise();
+					    initialiseColumns();
 
 					    theCallback(data);
 				    }
@@ -3186,7 +3188,6 @@ require([
                             $this.addClass(getColorClass(headItem.markup[j].classes));
                         }
                     }
-
                 });
             }
 
@@ -3224,6 +3225,7 @@ require([
 
         // Refresh the views that depend on the displayed rows
         map.refreshAllLayers(gMapView, gOverallMapConfig.map);
+        chart.refresh();
 
         if(gTasks.gBulkInstances && gTasks.gBulkInstances.length) {
             for(i = 0; i < gTasks.gBulkInstances.length; i++ ) {
