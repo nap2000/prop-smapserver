@@ -300,6 +300,7 @@ define({
     "c_retry": "Retry",
     "c_alink": "Anonymous Link",
     "c_excel": "Excel",
+    "c_word": "Word",
     "c_csv": "CSV",
     "c_json": "JSON",
     "c_geojson": "GeoJSON",
