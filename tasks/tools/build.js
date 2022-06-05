@@ -1,7 +1,7 @@
 ({
     appDir: '../WebContent',
     locale: "en",
-//    optimize: 'none',
+    optimize: 'none',
     wrapShim: false,
     waitSeconds: 60,
     baseUrl: 'js/libs',
@@ -35,10 +35,6 @@
 	moment: '../../../../smapServer/WebContent/js/libs/moment-with-locales.2.24.0',
 	datetimepicker: '../../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-4.17.47',
 	rmm: '../../../../smapServer/WebContent/js/libs/responsivemobilemenu',
-	d3: '../../../../smapServer/WebContent/js/libs/d3.v4',
-        d3v3: '../../../../smapServer/WebContent/js/libs/d3.v3.min',
-        //d3cloud: '../../../../smapServer/WebContent/js/libs/d3.layout.cloud',
-        d3cloud2: '../../../../smapServer/WebContent/js/libs/d3.layout.cloud2',
         multiselect: '../../../../smapServer/WebContent/js/libs/bootstrap-multiselect',
         knockout: '../../../../smapServer/WebContent/js/libs/knockout',
 
