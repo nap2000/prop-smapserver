@@ -15,7 +15,7 @@
 	bootbox: 'bootbox.min',
 	moment: 'moment-with-locales.min',
 	d3: 'd3.v4.min',
-	chart: 'chart.min.3.8.0',
+	charting: 'chart.min.3.8.0',
 	toggle: 'bootstrap-toggle.min',
 	bootstrap: 'bootstrap.min',
         bootstrapfileinput: 'bootstrap.file-input',
