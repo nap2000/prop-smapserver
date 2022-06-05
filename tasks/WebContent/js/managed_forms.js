@@ -697,15 +697,17 @@ require([
          */
         $('a[data-toggle="tab"]', '#mainTabs').on('shown.bs.tab', function (e) {
             var target = $(e.target).attr("href") // activated tab
+            var trigger;
 
             $('.targetSpecific').hide();
             gMapView = false;
             gChartView = false;
             gTimingView = false;
 
-            if (target === '#table-view') {
+            if (target === '#tablePanel') {
                 $('.tableOnly').show();
-            } else if (target === '#map-view') {
+                trigger = '#table-view';
+            } else if (target === '#mapPanel') {
                 $('.mapOnly').show();
                 gMapView = true;
                 try {       // will fail if there is no data
@@ -713,16 +715,20 @@ require([
                 } catch(err) {
 
                 }
+                trigger = '#map-view';
 
-            } else if(target === '#chart-view') {
+            } else if(target === '#chartPanel') {
                 chart.refresh();
                 $('.chartOnly').show();
                 gChartView = true;
-            } else if(target === '#timing-view') {
+                trigger = '#chart-view';
+            } else if(target === '#timingPanel') {
                 //chart.init(false, true);
                 $('#m_add_chart').show();
                 gTimingView = true;
+                trigger = '#timing-view';
             }
+            setInLocalStorage("currentTab" + page, trigger);
         });
 
         $('a[data-toggle="tab"]', '#editTabs').on('shown.bs.tab', function (e) {
@@ -813,6 +819,14 @@ require([
 		    downloadFile(link);
 		    $('#tdh_individual_report_popup').modal("hide");
 	    })
+
+        // Set page defaults
+        var currentTab = getFromLocalStorage("currentTab" + page);
+        if(currentTab) {
+            $(currentTab).trigger('click');
+        } else {
+            $('#table-view').trigger('click');
+        }
 
     });         // End of document ready
 

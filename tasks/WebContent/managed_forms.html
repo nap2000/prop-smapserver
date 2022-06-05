@@ -61,7 +61,8 @@
     <script src="/js/libs/chart.min.3.8.0.js"></script>
     <script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
     <script>
-        var isDuplicates = false;
+        let isDuplicates = false;
+        let page = 'console';
     </script>
     <script data-main="js/managed_forms" src="/js/libs/require.js"></script>
 
@@ -371,22 +372,22 @@
         <div class="card-header">
             <ul id="mainTabs" class="nav nav-tabs card-header-tabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a data-toggle="tab" id="set-table-view" href="#table-view" role="tab" class="active nav-link" aria-controls="table-view" aria-selected="true"><i class="fa fa-list" aria-hidden="true"></i> <span class="lang" data-lang="c_table"></span></a>
+                    <a data-toggle="tab" id="table-view" href="#tablePanel" role="tab" class="active nav-link" aria-controls="table-view" aria-selected="true"><i class="fa fa-list" aria-hidden="true"></i> <span class="lang" data-lang="c_table"></span></a>
                 </li>
                 <li class="nav-item">
-                    <a data-toggle="tab" id="set-map-view"href="#map-view" role="tab" class="nav-link" aria-controls="map-view" aria-selected="false"><i class="fa fa-globe" aria-hidden="true"></i> <span class="lang" data-lang="c_map"></span></a>
+                    <a data-toggle="tab" id="map-view" href="#mapPanel" role="tab" class="nav-link" aria-controls="map-view" aria-selected="false"><i class="fa fa-globe" aria-hidden="true"></i> <span class="lang" data-lang="c_map"></span></a>
                 </li>
                 <li class="nav-item">
-                    <a data-toggle="tab" id="set-chart-view"href="#chart-view" role="tab" class="nav-link"><i class="fa fa-chart-bar" aria-hidden="true"></i> <span class="lang" data-lang="c_chart"></span></a>
+                    <a data-toggle="tab" id="chart-view" href="#chartPanel" role="tab" class="nav-link"><i class="fa fa-chart-bar" aria-hidden="true"></i> <span class="lang" data-lang="c_chart"></span></a>
                 </li>
-                <li class="nav-item" style="display:none;"><a data-toggle="tab" id="set-timing-view" href="#timing-view" role="tab" class="nav-link"><i class="fa fa-clock-o" aria-hidden="true"></i></a></li>
+                <li class="nav-item" style="display:none;"><a data-toggle="tab" id="timing-view" href="#timingPanel" role="tab" class="nav-link"><i class="fa fa-clock-o" aria-hidden="true"></i></a></li>
             </ul>
         </div>
 
         <div class="card-body">
 
             <div class="tab-content">
-                <div id="table-view" class="tab-pane fade show active" role="tabpanel" aria-labelledby="set-table-view">
+                <div id="tablePanel" class="tab-pane fade show active" role="tabpanel" aria-labelledby="table-view">
 
                     <div id="table_content" class="col-md-12 dash_views">
                         <div class="sk-spinner sk-spinner-wave">
@@ -404,7 +405,7 @@
                 </div>
 
 
-                <div id="map-view" class="tab-pane fade" role="tabpanel" aria-labelledby="set-map-view">
+                <div id="mapPanel" class="tab-pane fade" role="tabpanel" aria-labelledby="map-view">
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-4 map_layers" style="display:none;">
@@ -442,14 +443,14 @@
                         </div>
                     </div>
                 </div>
-                <div id="chart-view"  role="tabpanel" class="tab-pane fade">
+                <div id="chartPanel"  role="tabpanel" class="tab-pane fade" aria-labelledby="chart-view">
                     <div class="panel-body">
                         <div id="chartcontent">
                             <canvas id="myChart"></canvas>
                         </div>
                     </div>
                 </div>
-                <div id="timing-view"  role="tabpanel" class="tab-pane fade" style="display:none;">
+                <div id="timingPanel"  role="tabpanel" class="tab-pane fade" style="display:none;" aria-labelledby="timing-view">
                     <div class="panel-body">
                         <div id="timingcontent">
                             <div class="row" id="timingrow"></div>
