@@ -201,7 +201,7 @@ require([
 			var reportObj = {
 				report_name: 'locations_' + (gAllUsers ? $('#project_name option:selected').text() : $('#user_list option:selected').text()),
 				report_type: $('#report_type option:selected').val(),
-				pId: 0,
+				pId: (gAllUsers ? globals.gCurrentProject : 0),
 				params: {
 					userId: (gAllUsers ? 0 : $('#user_list option:selected').val()),
 					startDate: startUtc.valueOf(),
