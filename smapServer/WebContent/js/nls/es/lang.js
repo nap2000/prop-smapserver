@@ -513,6 +513,7 @@ define(
     "msg_err_get_a": "Error: Fallo en recibo de Alertas",
     "msg_err_get_q": "Error: Fallo en cargue de preguntas",
     "msg_err_get_s": "Error: Error trayendo formularios",
+    "msg_err_bll": "Etiqueta en blanco para el idioma",
     "msg_upd": "Actualización Exitosa",
     "msg_err_nc": "Nombre no puede incluir una coma",
     "msg_err_wait": "Esperando conexión con servidor  o no hay formularios en este proyecto para asignar a un usuario. Si el proyecto tiene respuestas reintente en pocos segundos.",
