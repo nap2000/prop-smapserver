@@ -1028,6 +1028,7 @@ define({
 
     // Managed Forms
     "mf_id": "Include Deleted",
+    "mf_cc": "Include Completed Cases",
     "mf_fd": "Form Data",
     "mf_md": "Management Data",
     "mf_sc": "Visible Columns",

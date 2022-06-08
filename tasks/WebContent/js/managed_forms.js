@@ -272,23 +272,11 @@ require([
             if(gDrillDownStack.length > 0) {
                 gDrillDownNext = gDrillDownStack.pop();
             }
-
             subFormChanged();
-
         });
 
-        // Set change function on advanced filter
-        $('#advanced_filter').change(function () {
-            showManagedData(globals.gCurrentSurvey, showTable, true);
-        });
-
-        // Set change function on limit
-        $('#limit').change(function () {
-            showManagedData(globals.gCurrentSurvey, showTable, true);
-        });
-
-        // Set change function on show deleted
-        $('#include_bad').change(function () {
+        // Set change function on controls
+        $('#advanced_filter, #limit, #include_bad, #include_completed').change(function () {
             showManagedData(globals.gCurrentSurvey, showTable, true);
         });
 
@@ -962,6 +950,10 @@ require([
         settings.push({
             k: localise.set["c_deleted"],
             v: $('#include_bad').prop('checked') ? localise.set["c_yes"] : localise.set["c_no"]
+        });
+        settings.push({
+            k: localise.set["mf_cc"],
+            v: $('#include_completed').prop('checked') ? localise.set["c_yes"] : localise.set["c_no"]
         });
         if(format === "xlsx" && alldata) {
             settings.push({
@@ -3018,6 +3010,11 @@ require([
 		    if($('#include_bad').prop('checked')) {
 			    url += "&bad=yes";
 		    }
+            if($('#include_completed').prop('checked')) {
+                url += "&completed=yes";
+            } else {
+                url += "&completed=no";
+            }
 
 		    // Limit number of records returned
 		    var limit = $('#limit').val();
@@ -3274,6 +3271,7 @@ require([
             $('#limit').val(settings.limit);
             $('#advanced_filter').val(settings.filter);
             $('#include_bad').prop('checked', settings.include_bad === "yes");
+            $('#include_completed').prop('checked', settings.include_completed === "yes");
         }
     }
 
