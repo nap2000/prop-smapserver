@@ -472,9 +472,9 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                         h[++idx] = '<option value="';
                         h[++idx] = data[i].id;
                         h[++idx] = '">';
-                        h[++idx] = data[i].projectName;
+                        h[++idx] = htmlEncode(data[i].projectName);
                         h[++idx] = ' : ';
-                        h[++idx] = data[i].displayName;
+                        h[++idx] = htmlEncode(data[i].displayName);
                         h[++idx] = '</option>';
                     }
                     $('#group').empty().append(h.join(''));

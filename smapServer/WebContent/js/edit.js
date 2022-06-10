@@ -3479,13 +3479,13 @@ function showSurveySummary(summary) {
 	h[++idx] = '<p><b>';
 	h[++idx] = localise.set["c_survey"];
 	h[++idx] = "</b>: ";
-	h[++idx] = summary.displayName;
+	h[++idx] = htmlEncode(summary.displayName);
 	h[++idx] = '</p>';
 
 	h[++idx] = '<p><b>';
 	h[++idx] = localise.set["c_project"];
 	h[++idx] = "</b>: ";
-	h[++idx] = summary.projectName;
+	h[++idx] = htmlEncode(summary.projectName);
 	h[++idx] = '</p>';
 
 
@@ -3503,13 +3503,13 @@ function showSurveyIdentList(surveys) {
 	if(surveys && surveys.length > 0) {
 		for(i = 0; i < surveys.length; i++) {
 			if(!project) {
-				h[++idx] = '<h4>' + surveys[i].project + '</h4>';
+				h[++idx] = '<h4>' + htmlEncode(surveys[i].project) + '</h4>';
 				h[++idx] = '<div class="table-responsive">';
 				h[++idx] = '<table><tbody>';
 			} else if(project != surveys[i].project) {
 				h[++idx] = '</tbody></table></div>';
 				h[++idx] = '<div class="table-responsive">';
-				h[++idx] = '<h4>' + surveys[i].project + '</h4>';
+				h[++idx] = '<h4>' + htmlEncode(surveys[i].project) + '</h4>';
 				h[++idx] = '<table><tbody>';
 			}
 			project = surveys[i].project;
@@ -3517,7 +3517,7 @@ function showSurveyIdentList(surveys) {
 			h[++idx] = '<tr>';
 
 			h[++idx] = '<td>';
-			h[++idx] = surveys[i].name;
+			h[++idx] = htmlEncode(surveys[i].name);
 			h[++idx] = '</td>';
 
 			h[++idx] = '<td>';
