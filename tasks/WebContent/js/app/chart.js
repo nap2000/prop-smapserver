@@ -31,14 +31,26 @@ define([
             refresh: refresh
         };
 
-        var gChartData;
+        var initialised = false;
+
         var gStatusChart;
         var gStatusConfig;
+        var gAssignedChart;
+        var gAssignedConfig;
 
         function init() {
 
+            initStatus();
+            initAssigned();
+            initialised = true;
+
+            refresh();
+        }
+
+        function initStatus() {
             gStatusConfig = {
-                type: 'pie',
+                type: 'bar',
+                responsive: true,
                 data: {
                     labels: [],
                     datasets: [{
@@ -55,8 +67,28 @@ define([
                 document.getElementById('statusChart'),
                 gStatusConfig
             );
+        }
 
-            refresh();
+        function initAssigned() {
+            gAssignedConfig = {
+                type: 'bar',
+                responsive: true,
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: localise.set["t_assigned"],
+                        backgroundColor: 'rgb(0, 0, 255)',
+                        borderColor: 'rgb(0, 0, 255)',
+                        data: [],
+                    }]
+                },
+                options: {}
+            };
+
+            gAssignedChart = new Chart(
+                document.getElementById('assignedChart'),
+                gAssignedConfig
+            );
         }
 
         /*
@@ -79,39 +111,51 @@ define([
                 search: 'applied',     // 'none',    'applied', 'removed'
             }).data();
 
-            if(!gStatusConfig) {
+            if(!initialised) {
                 init()
             }
 
-            gChartData = {};
+            var statusData = {};
+            var assignedData = {};
             if(cd.settings.finalStatus && cd.settings.statusQuestion) {
-                for (i = 0; i < results.length; i++) {
-                    statusVal = results[i][cd.settings.statusQuestion];
+                for (var i = 0; i < results.length; i++) {
 
-                    assigned =  results[i]["assigned"];
+                    statusVal = results[i][cd.settings.statusQuestion];
+                    assigned =  results[i]["_assigned"];
+
                     if(!(statusVal === cd.settings.finalStatus && assigned === "")) {    // Ignore completed tasks that are not assigned
 
                         if(statusVal === "") {
                             statusVal = localise.set["c_none"];
                         }
+                        if(assigned === "") {
+                            assigned = localise.set["t_u"];
+                        }
 
-                        gChartData[statusVal] = gChartData[statusVal] || 0;
-                        gChartData[statusVal]++;
+                        statusData[statusVal] = statusData[statusVal] || 0; // Ensure value is numeric
+                        statusData[statusVal]++;
+
+                        assignedData[assigned] = assignedData[assigned] || 0; // Ensure value is numeric
+                        assignedData[assigned]++;
                     }
                 }
             }
 
-            console.log(gChartData);
             /*
-             * Show the chart
+             * Show the charts
              */
-            gStatusConfig.data.labels = [];
-            gStatusConfig.data.datasets[0].data = [];
-            for (statusVal in gChartData) {
-                gStatusConfig.data.labels.push(statusVal);
-                gStatusConfig.data.datasets[0].data.push(gChartData[statusVal]);
-            }
-            gStatusChart.update();
+            updateChart(gStatusConfig, statusData, gStatusChart);
+            updateChart(gAssignedConfig, assignedData, gAssignedChart);
 
+        }
+
+        function updateChart(config, data, chart) {
+            config.data.labels = [];
+            config.data.datasets[0].data = [];
+            for (var val in data) {
+                config.data.labels.push(val);
+                config.data.datasets[0].data.push(data[val]);
+            }
+            chart.update();
         }
     });
