@@ -1530,7 +1530,7 @@ require([
         if (item.include || item.column_name === "prikey") {
             h[++idx] = '<div class="row">';
             h[++idx] = '<div class="col-sm-6">';
-            h[++idx] = item.displayName;
+            h[++idx] = htmlEncode(item.displayName);
             h[++idx] = '</div>';
 
             h[++idx] = '<div class="col-sm-2">';
