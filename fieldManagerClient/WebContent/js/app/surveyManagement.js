@@ -516,7 +516,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             h[++idx] = '<th class="col-xs-4">' + localise.set["c_name"] + '</th>';
             h[++idx] = '<th class="col-xs-1">' + localise.set["c_version"] + '</th>';
             h[++idx] = '<th class="col-xs-1">' + localise.set["c_block"] + '</th>';
-            h[++idx] = '<th class="col-xs-2">' + localise.set["c_case"] + '</th>';
+            h[++idx] = '<th class="col-xs-2">' + localise.set["c_bundle"] + '</th>';
             h[++idx] = '<th class="col-xs-1">' + localise.set["c_replace"] + '</th>';
             h[++idx] = '<th class="col-xs-2">' + localise.set["c_action"] + '</th>';
             h[++idx] = '</tr>';
