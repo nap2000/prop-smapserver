@@ -71,7 +71,7 @@ define({
     "c_api_builder": "API Builder",
     "c_auto": "Auto",
     "c_cm": "Case Management",
-    "c_case": "Case",
+    "c_bundle": "Bundle",
     "c_api": "API",
     "c_link": "Link",
     "c_links": "Links",
@@ -404,7 +404,7 @@ define({
     "tm_add_for": "Add Forward",
     "tm_ref_f": "Refresh Form List",
     "tm_o_u": "Original Upload Page",
-    "tm_gw": "A case should only be specified for surveys that share tables, if in doubt select none",
+    "tm_gw": "A bundle should only be specified for surveys that share tables, if in doubt select none",
 
     // Analysis
     "a_ref_rate": "Analysis auto refresh interval",
