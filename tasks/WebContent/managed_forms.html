@@ -1384,7 +1384,7 @@
     </div>
 </div>
 
-<!-- Parameters for for individual report -->
+<!-- Parameters for individual report -->
 <div id="tdh_individual_report_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dtLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -1411,6 +1411,36 @@
     </div>
 </div>
 
+<!-- Chart settings -->
+<div id="chart_settings_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="csLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="csLabel" class="modal-title lang" data-lang="c_settings"></h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+
+                <form role="form">
+                    <div class="form-group row">
+                        <label class="col-sm-4 control-label lang" data-lang="a_type" for="cs_chart_type"></label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="cs_chart_type">
+                                <option class="lang" value="bar" data-lang="cm_bar"></option>
+                                <option class="lang" value="col" data-lang="cm_col"></option>
+                                <option class="lang" value="pie" data-lang="cm_pie"></option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+                <button id="chart_settings_save" type="button" class="btn btn-primary lang" data-lang="c_create">create</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
