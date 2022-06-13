@@ -37,11 +37,14 @@ define([
         var gStatusConfig;
         var gAssignedChart;
         var gAssignedConfig;
+        var gAlertChart;
+        var gAlertConfig;
 
         function init() {
 
             initStatus();
             initAssigned();
+            initAlert();
             initialised = true;
 
             refresh();
@@ -68,6 +71,29 @@ define([
                 gStatusConfig
             );
         }
+
+        function initAlert() {
+            gAlertConfig = {
+                type: 'bar',
+                responsive: true,
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: localise.set["c_alert"],
+                        backgroundColor: 'rgb(0, 255, 0)',
+                        borderColor: 'rgb(0, 255, 0)',
+                        data: [],
+                    }]
+                },
+                options: {}
+            };
+
+            gAlertChart = new Chart(
+                document.getElementById('alertChart'),
+                gAlertConfig
+            );
+        }
+
 
         function initAssigned() {
             gAssignedConfig = {
@@ -97,7 +123,8 @@ define([
         function refresh() {
 
             var statusVal,
-                assigned;
+                assigned,
+                alert;
 
             if(!gTasks.cache.currentData) {
                 // Data not available yet.
@@ -117,11 +144,13 @@ define([
 
             var statusData = {};
             var assignedData = {};
+            var alertData = {};
             if(cd.settings.finalStatus && cd.settings.statusQuestion) {
                 for (var i = 0; i < results.length; i++) {
 
                     statusVal = results[i][cd.settings.statusQuestion];
                     assigned =  results[i]["_assigned"];
+                    alert =  results[i]["_alert"];
 
                     if(!(statusVal === cd.settings.finalStatus && assigned === "")) {    // Ignore completed tasks that are not assigned
 
@@ -137,6 +166,11 @@ define([
 
                         assignedData[assigned] = assignedData[assigned] || 0; // Ensure value is numeric
                         assignedData[assigned]++;
+
+                        if(!(statusVal === cd.settings.finalStatus)) {      // Ignore completed
+                            alertData[alert] = alertData[alert] || 0; // Ensure value is numeric
+                            alertData[alert]++;
+                        }
                     }
                 }
             }
@@ -146,6 +180,7 @@ define([
              */
             updateChart(gStatusConfig, statusData, gStatusChart);
             updateChart(gAssignedConfig, assignedData, gAssignedChart);
+            updateChart(gAlertConfig, alertData, gAlertChart);
 
         }
 

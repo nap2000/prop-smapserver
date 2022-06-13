@@ -24,3 +24,8 @@ tr.deleted td a {
     background-color: #8B4513 !important;
     color: white
 }
+
+.chart-header.card-header {
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
+}
