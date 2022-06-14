@@ -1459,7 +1459,7 @@ define({
     "cm_ane": "Add a named event",
     "cm_dcms": "There is already a case management event with that name for this survey group",
     "cm_p": "Create alert if not finalised within",
-    "cm_a": "Case management alert"
+    "cm_a": "Case management alert",
     "cm_bar": "Bar",
     "cm_col": "Column",
     "cm_pie": "Pie"
