@@ -185,11 +185,14 @@ define([
         }
 
         function updateChart(config, data, chart) {
+            var keys = Object.keys(data).sort();
+
             config.data.labels = [];
             config.data.datasets[0].data = [];
-            for (var val in data) {
-                config.data.labels.push(val);
-                config.data.datasets[0].data.push(data[val]);
+            for (var i = 0; i < keys.length; i++) {
+                var key = keys[i];
+                config.data.labels.push(key);
+                config.data.datasets[0].data.push(data[key]);
             }
             chart.update();
         }
