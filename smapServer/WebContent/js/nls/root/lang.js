@@ -68,6 +68,7 @@ define({
 
     // Common
     "c_alert": "Alert",
+    "c_alerts": "Alerts",
     "c_api_builder": "API Builder",
     "c_auto": "Auto",
     "c_cm": "Case Management",
@@ -1453,10 +1454,9 @@ define({
     "li_continue": "Return to applications",
 
     // Case Management
-    "cm_ne": "Named Events",
     "cm_fs": "Final status",
     "cm_sq": "Status Question",
-    "cm_ane": "Add a named event",
+    "cm_aa": "Add an Alert",
     "cm_dcms": "There is already a case management event with that name for this survey group",
     "cm_p": "Create alert if not finalised within",
     "cm_a": "Case management alert",

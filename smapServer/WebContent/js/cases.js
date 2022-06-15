@@ -78,6 +78,16 @@ require([
             $('#cms_sq').change(function(){
                 $('.save_alert').hide();
             })
+
+            // Set up the tabs
+            $('#settingsTab a').click(function (e) {
+                e.preventDefault();
+                panelChange($(this), 'settings');
+            });
+            $('#alertsTab a').click(function (e) {
+                e.preventDefault();
+                panelChange($(this), 'alerts');
+            });
         });
 
         function currentSurveyDone() {
@@ -87,6 +97,20 @@ require([
 
         function groupSurveysDone() {
             getCms(updateCmsData);
+        }
+
+        /*
+         * Respond to a panel being changed
+         */
+        function panelChange($this, name) {
+            gPanel = name;
+
+            $('.save_alert').hide();
+            $this.tab('show');
+
+            $(".cmtab").hide();
+            $('#' + name + 'Panel').removeClass("d-none").show();
+            setInLocalStorage("currentTab" + page, '#' + name + 'Tab a');
         }
 
         /*
@@ -206,7 +230,7 @@ require([
                 success: function(data, status) {
                     removeHourglass();
 
-                    $('.save_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+                    $('.save_alert').show().removeClass('d-none alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
                     getCms(updateCmsData);
                 },
                 error: function(xhr, textStatus, err) {
@@ -219,15 +243,15 @@ require([
                         if (!msg) {
                             msg = localise.set["c_error"];
                         }
-                        $('.save_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
+                        $('.save_alert').show().removeClass('d-none alert-success').addClass('alert-danger').html(msg);
                     }
                 }
             });
         }
 
         /*
-  * Save a new or updated case managment setting
-  */
+         * Save a new or updated case management setting
+         */
         function saveCaseManagementAlert() {
             var cmsAlert = {};
 

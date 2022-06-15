@@ -25,6 +25,9 @@
 	<script src="/js/libs/bootstrap.bundle.v4.5.min.js"></script>
 	<script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
 
+	<script>
+		let page = 'cases';
+	</script>
 	<script data-main="/js/cases" src="/js/libs/require.js"></script>
 </head>
 <body>
@@ -52,8 +55,8 @@
 					<a class="dropdown-item restrict_role admin_role analyst_role manage_role task_role" href="/app/tasks/taskManagement.html"><span class="nav-label lang" data-lang="m_assign">assign</span></a>
 					<a id="c_campaigns" class="dropdown-item restrict_role admin_role analyst_role" href="/app/tasks/campaign.html"><span class="lang" data-lang="c_campaigns">m</span></a>
 					<a class="dropdown-item restrict_role admin_role analyst_role" href="/app/api.html"><span class="lang" data-lang="c_api">api</span></a>
-					<a class="dropdown-item restrict_role billing_role" href="/app/fieldManager/billing.html" style="display:none;"><span class="lang" data-lang="m_billing">billing</span></a>
-					<a class="dropdown-item restrict_role dashboard_role" style="display:none;" href="/dashboard/index.html"><span>Dashboard</span></a>
+					<a class="dropdown-item restrict_role billing_role d-none" href="/app/fieldManager/billing.html"><span class="lang" data-lang="m_billing">billing</span></a>
+					<a class="dropdown-item restrict_role dashboard_role d-none" href="/dashboard/index.html"><span>Dashboard</span></a>
 					<a class="dropdown-item restrict_role admin_role analyst_role manage_role task_role" href="/app/reports.html"><span class="nav-label lang" data-lang="m_reports">reports</span></a>
 				</div>
 			</li>
@@ -63,9 +66,8 @@
 			<li id="m_changes" class="nav-item"><a class="nav-link lang" href="/app/changes.html" data-lang="c_changes">changes</a></li>
 			<li id="m_translate" class="nav-item"><a class="nav-link" href="/translate.html"><span class="lang" data-lang="c_trans"></span></a></li>
 
-
 			<li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
-			<li id="m_training" class="nav-item" style="display:none;"><a class="nav-link" id="train_link" href="#" target="_blank"><span class="nav-label lang" data-lang="m_train">training</span></a></li>
+			<li id="m_training" class="nav-item d-none"><a class="nav-link" id="train_link" href="#" target="_blank"><span class="nav-label lang" data-lang="m_train">training</span></a></li>
 			<li class="nav-item"><a class="nav-link"  id="username" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"><i class="fa fa-user"></i> </a></li>
 		</ul>
 
@@ -75,40 +77,54 @@
 
 <div class="container-fluid mt-4 px-4">
 
-	<h3 class="lang" data-lang="c_settings">s</h3>
+	<div class="card text-center mt-2">
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs" role="tablist">
+				<li id="settingsTab" class="nav-item restrict_role admin_role" role="presentation"><a href="#" class="active nav-link lang" data-lang="c_settings"></a></li>
+				<li id="alertsTab" class="nav-item restrict_role admin_role" role="presentation"><a href="#" class="nav-link lang" data-lang="c_alerts"></a></li>
+			</ul>
+		</div>
 
-	<form class="form" onsubmit="return false;">
+		<div class="card-body">
+			<div class="tab-content">
+				<div id="settingsPanel" class="cmtab mt-4">
 
-		<div class="form-group row">
-			<label for="cms_sq" data-lang="cm_sq" class="lang col-sm-4 control-label"></label>
-			<div class="col-sm-8">
-				<select id="cms_sq" class="form-control"></select>
+					<form class="form" onsubmit="return false;">
+
+						<div class="form-group row">
+							<label for="cms_sq" data-lang="cm_sq" class="lang col-sm-4 control-label"></label>
+							<div class="col-sm-8">
+								<select id="cms_sq" class="form-control"></select>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="cms_fs" data-lang="cm_fs" class="lang col-sm-4 control-label"></label>
+							<div class="col-sm-8">
+								<input type="text" id="cms_fs" class="form-control" required tabindex="1"><br/>
+							</div>
+						</div>
+						<div class="save_alert alert alert-success d-none" role="alert"></div>
+						<button type="button" id="saveSettings" class="btn btn-success lang" data-lang="c_save"></button>
+					</form>
+				</div>
+
+				<div id="alertsPanel" class="cmtab mt-4 d-none">
+
+					<div class="row">
+						<div class="col-md-12 col-xs-12">
+							<div id="cms_table"  style="margin-top:20px;"></div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12 col-xs-12">
+							<button class="btn btn-success lang" id="create_cm_alert" data-lang="cm_aa"></button>
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
 
-		<div class="form-group row">
-			<label for="cms_fs" data-lang="cm_fs" class="lang col-sm-4 control-label"></label>
-			<div class="col-sm-8">
-				<input type="text" id="cms_fs" class="form-control" required tabindex="1"><br/>
-			</div>
 		</div>
-		<div class="save_alert alert alert-success " role="alert" style="display:none;"></div>
-		<button type="button" id="saveSettings" class="btn btn-success lang" data-lang="c_save"></button>
-	</form>
-
-	<h3 class="lang" data-lang="cm_ne">a</h3>
-
-	<div class="row">
-		<div class="col-md-12 col-xs-12">
-			<div id="cms_table"  style="margin-top:20px;"></div>
-		</div>
-	</div>
-    <div class="row">
-		<div class="col-md-12 col-xs-12">
-			<button class="btn btn-success lang" id="create_cm_alert" data-lang="cm_ane"></button>
-		</div>
-	</div>
-
 </div>
 
 <!-- Modal to allow the user to edit a case management alert value -->
