@@ -614,31 +614,31 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 	// Only show items relevant to a user
 	$('.restrict_role').hide();
 	if(globals.gIsEnum) {
-		$('.enum_role').show();
+		$('.enum_role').removeClass('d-none').show();
 	}
 	if(globals.gIsAnalyst) {
-		$('.analyst_role').show();
+		$('.analyst_role').removeClass('d-none').show();
 	}
 	if(globals.gIsDashboard) {
-		$('.dashboard_role').show();
+		$('.dashboard_role').removeClass('d-none').show();
 	}
 	if(globals.gViewData) {
-		$('.data_role').show();
+		$('.data_role').removeClass('d-none').show();
 	}
 	if(globals.gManageTasks) {
 		$('.task_role').show();
 	}
 	if(globals.gIsAdministrator) {
-		$('.admin_role').show();
+		$('.admin_role').removeClass('d-none').show();
 	}
 	if(globals.gIsManage) {
-		$('.manage_role').show();
+		$('.manage_role').removeClass('d-none').show();
 	}
 	if(globals.gIsSecurityAdministrator) {
-		$('.security_role').show();
+		$('.security_role').removeClass('d-none').show();
 	}
 	if(globals.gIsOrgAdministrator) {  // Admins can see their personal organisations
-		$('.org_role').show();
+		$('.org_role').removeClass('d-none').show();
 	}
 	if(globals.gIsOrgAdministrator || globals.gIsAdministrator) {  // Admins can see their personal organisations
 		if(typeof getOrganisationsFn === "function") {
@@ -646,13 +646,13 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 		}
 	}
 	if(globals.gIsEnterpriseAdministrator) {
-		$('.enterprise_role').show();
+		$('.enterprise_role').removeClass('d-none').show();
 		if(typeof getEnterprisesFn === "function") {
 			getEnterprisesFn();
 		}
 	}
 	if(globals.gIsServerOwner) {
-		$('.owner_role').show();
+		$('.owner_role').removeClass('d-none').show();
 		if(typeof getServerDetailsFn === "function") {
 			getServerDetailsFn();
 		}
@@ -660,12 +660,12 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 
 	if(globals.gTraining) {
 		$('#train_link').prop("href", globals.gTraining);
-		$('#m_training').show();
+		$('#m_training').removeClass('d-none').show();
 	}
 
 	//TODO set logic for enabling disabling billing
 	if(isBusinessServer() && (globals.gBillingData || globals.gOrgBillingData)) {
-		$('.billing_role').show();
+		$('.billing_role').removeClass('d-none').show();
 	}
 
 	// Other conditional elements
@@ -1225,6 +1225,7 @@ function uploadFiles(url, formName, callback1, param, callback2) {
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
+			document.forms.namedItem(formName).reset();
 			$('.submitFiles').removeClass('disabled');
 			if(xhr.readyState == 0 || xhr.status == 0) {
 				return;  // Not an error
