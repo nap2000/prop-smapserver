@@ -538,6 +538,7 @@ require([
             });
         });
 
+        /*
         $('#shareRecord').click(function (e) {
             e.preventDefault();
             $('.shareRecordOnly').toggle();
@@ -590,7 +591,8 @@ require([
             });
 
         });
-
+        */
+        
         $('.genrecordpdf').click(function (e)  {
             e.preventDefault();
             $('#genPdfPopup').modal("show");
