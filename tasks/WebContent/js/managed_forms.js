@@ -762,7 +762,7 @@ require([
          * Callback when history filter changes
          */
         $('.changes_filter').change(function () {
-            getRecordChanges(gTasks.gSelectedRecord);
+            showHistory(window.gChanges);
         });
 
         /*
@@ -2322,240 +2322,7 @@ require([
                     window.gChanges = data;
                     globals.gRecordChangeMaps = [];     // Initialise the list of maps we are going to show
 
-                    var h = [],
-                        idx = -1,
-                        $elem = $('#changes'),
-                        i,
-                        finish,
-                        statusClass;
-
-                    var includeTasks = $('#er_show_tasks').is(':checked');
-                    var includeNotifications = $('#er_show_notifications').is(':checked');
-                    var includeChanges = $('#er_show_changes').is(':checked');
-
-                    // Add header
-                    h[++idx] = '<thead>';
-                    h[++idx] = '<tr>';
-                    h[++idx] = '<th></th>';     // icon
-                    h[++idx] = '<th class="mincol">';
-                    h[++idx] = localise.set["c_user"];
-                    h[++idx] = '</th>';
-                    h[++idx] = '<th class="mincol">';
-                    h[++idx] = localise.set["c_survey"];
-                    h[++idx] = '</th>';
-                    h[++idx] = '<th class="mincol">';
-                    h[++idx] = localise.set["c_date"];
-                    //if(data.length > 0) {
-                    //    h[++idx] = ' (';
-                    //    h[++idx] = data[0].tz;
-                    //    h[++idx] = ')';
-                    //}
-                    h[++idx] = '</th>';
-                    h[++idx] = '<th class="mincol">';
-                    h[++idx] = localise.set["c_event"];
-                    h[++idx] = '</th>';
-                    h[++idx] = '<th class="mincol">';
-                    h[++idx] = localise.set["c_status"];
-                    h[++idx] = '</th>';
-                    h[++idx] = '<th>';
-                    h[++idx] = localise.set["c_details"];
-                    h[++idx] = '</th>';
-                    h[++idx] = '<th class="mincol">';
-                    h[++idx] = localise.set["c_action"];
-                    h[++idx] = '</th>';
-                    h[++idx] = '</tr>';
-                    h[++idx] = '</thead>';
-
-                    h[++idx] = '<tbody>';
-                    if(data && data.length > 0) {
-                        for(i = 0; i < data.length; i++) {
-
-                            if((includeChanges && (data[i].event === 'changes' || data[i].event === 'created')) ||
-                                (includeTasks && data[i].event === 'task') ||
-                                (includeNotifications && data[i].event === 'notification')) {
-                                h[++idx] = '<tr>';
-
-                                h[++idx] = '<td>';
-                                if (data[i].event === 'task') {
-                                    h[++idx] = '<i class="fa fa-lg fa-tasks fa-2x"></i>';
-                                } else if (data[i].event === 'created' || data[i].event === 'changes') {
-                                    h[++idx] = '<i style="line-height: 1.5em;" class="fa fa-lg fa-inbox fa-2x"></i>';
-                                } else if (data[i].event === 'notification') {
-                                    if (data[i].notification && data[i].notification.target === 'sms') {
-                                        // From http://jsfiddle.net/4Bacg/
-                                        h[++idx] = '<span style="line-height: 1.5em; text-align: center; margin-top: -7px; margin-right: 0.3em;" class="fa-stack fa-lg pull-left">';
-                                        h[++idx] = '<i class="fa fa-flip-horizontal fa-comment-o fa-stack-2x"></i>';
-                                        h[++idx] = '<i style="font-size: 10px; line-height: 1em;">sms</i>';
-                                        h[++idx] = '</span>';
-                                    } else {
-                                        h[++idx] = '<i class="fa fa-lg fa-envelope-o fa-2x"></i>';
-                                    }
-                                }
-
-                                h[++idx] = '</td>';
-                                h[++idx] = '<td class="mincol">';    // user
-                                h[++idx] = htmlEncode(data[i].userName);
-                                h[++idx] = '</td>';
-
-                                h[++idx] = '<td class="mincol">';    // Survey
-                                h[++idx] = htmlEncode(data[i].surveyName) + ' (' + data[i].surveyVersion + ')';
-                                h[++idx] = '</td>';
-
-                                h[++idx] = '<td class="mincol">';    // when
-                                h[++idx] = data[i].eventTime;
-                                h[++idx] = '</td>';
-
-                                h[++idx] = '<td class="mincol">';    // event
-                                h[++idx] = localise.set[data[i].event];
-                                h[++idx] = '</td>';
-
-                                h[++idx] = '<td class="mincol ';    // status
-                                finish = getFinish(data[i]);
-                                statusClass = getStatusClass(data[i].status, data[i].assign_auto);
-                                h[++idx] = statusClass;
-                                h[++idx] = '">';
-                                if(statusClass == 'bg-danger') {
-                                    h[++idx] = localise.set["c_late"];
-                                } if(statusClass == 'bg-orange') {
-                                    h[++idx] = localise.set["t_auto2"];
-                                } else {
-                                    h[++idx] = localise.set[data[i].status];
-                                }
-
-                                h[++idx] = '</td>';
-
-                                h[++idx] = '<td>';    // Changes
-                                if (data[i].event === 'changes' && data[i].changes) {
-                                    h[++idx] = getChangeCard(data[i].changes, i);
-                                } else if (data[i].event === 'task' && data[i].task) {
-                                    h[++idx] = getTaskCard(data[i].task, i);
-                                } else if (data[i].event === 'notification' && data[i].notification) {
-                                    h[++idx] = getNotificationInfo(data[i].notification, data[i].description);
-                                } else {
-                                    h[++idx] = data[i].description;
-                                }
-                                h[++idx] = '</td>';
-
-                                h[++idx] = '<td class="mincol">';    // Action
-                                if (data[i].event === 'notification' && data[i].notification) {
-                                    h[++idx] = '<button class="btn btn-secondary edit_notification" data-idx="';
-                                    h[++idx] = i;
-                                    h[++idx] = '">';
-                                    h[++idx] = localise.set["c_resend"];
-                                    h[++idx] = '</button>';
-                                } else  if (data[i].event === 'task' && data[i].task && data[i].status !== 'cancelled') {
-                                    h[++idx] = '<button class="btn btn-secondary edit_task" data-idx="';
-                                    h[++idx] = i;
-                                    h[++idx] = '">';
-                                    h[++idx] = localise.set["t_edit_task"];
-                                    h[++idx] = '</button>';
-                                }
-                                h[++idx] = '</td>';
-
-                                h[++idx] = '</tr>';    // row
-                            }
-
-                        }
-                    }
-                    h[++idx] = '</tbody>';
-                    $elem.empty().html(h.join(''));
-
-                    $('.change_card').on('shown.bs.collapse', function() {
-                        var $this = $(this);
-                        $('.card-body > .row > .small_map', $this).each(function(){
-                           console.log($(this).attr("id"));
-                            actioncommon.initialiseDynamicMaps(globals.gRecordChangeMaps, $(this).attr("id"));
-                        });
-                    });
-                    $('.change_card').on('show.bs.collapse', function() {
-                        $('.mincol').hide();
-                    });
-                    $('.change_card').on('hidden.bs.collapse', function() {
-                        $('.mincol').show();
-                    });
-
-                    $('.edit_notification').click(function(){
-                        var n = {
-                            notifyDetails: {
-
-                            }
-                        };
-                        var idx = $(this).data("idx");
-                        var nMessage = window.gChanges[idx].notification
-                        n.target = nMessage.target;
-                        n.s_id = nMessage.survey_ident;     // Confusing yes - for notifications this is still id, wheras for console this is the ident
-                        n.notifyDetails.subject = nMessage.subject;
-                        n.notifyDetails.content = nMessage.content;
-                        n.notifyDetails.attach = nMessage.attach;
-                        n.notifyDetails.emails = nMessage.emails;
-                        window.gNotifications = [];
-                        window.gNotifications.push(n);
-
-                        $('#saveNotification').html(localise.set["c_resend"]);
-                        edit_notification(true,0, true);
-                        $('#addNotificationPopup').modal("show");
-                    });
-
-                    $('.edit_task').click(function(){
-
-
-                        var idx = $(this).data("idx");
-                        var task = window.gChanges[idx].task;
-                        var url = "/api/v1/tasks/assignment/" + task.assignmentId + "?taskid=" + task.taskId;
-                        // Get the task details and then open the editor dialog
-
-                        $.ajax({
-                            url: url,
-                            dataType: 'json',
-                            cache: false,
-                            success: function (data) {
-                                var task = data,
-                                    taskFeature = {
-                                        geometry: {
-                                            coordinates: [],
-                                            type: 'Point'
-                                        },
-                                        properties: {}
-                                    };
-                                taskFeature.geometry.coordinates.push(task.lon);
-                                taskFeature.geometry.coordinates.push(task.lat);
-                                taskFeature.properties.form_id = task.survey_ident;
-                                taskFeature.properties.assignee = task.assignee;
-                                taskFeature.properties.emails = task.emails;
-                                taskFeature.properties.repeat = task.repeat;
-                                taskFeature.properties.id = task.id;
-                                taskFeature.properties.a_id = task.a_id;
-
-                                editTask(false, task, taskFeature);
-                            },
-                            error: function (xhr, textStatus, err) {
-                                removeHourglass();
-                                if (xhr.readyState == 0 || xhr.status == 0) {
-                                    return;  // Not an error
-                                } else {
-                                    console.log(localise.set["c_error"] + ": " + err);
-                                }
-                            }
-                        });
-
-                        /*
-                        var nMessage = window.gChanges[idx].notification
-                        n.target = nMessage.target;
-                        n.s_id = nMessage.survey_ident;     // Confusing yes - for notifications this is still id, wheras for console this is the ident
-                        n.notifyDetails.subject = nMessage.subject;
-                        n.notifyDetails.content = nMessage.content;
-                        n.notifyDetails.attach = nMessage.attach;
-                        n.notifyDetails.emails = nMessage.emails;
-                        window.gNotifications = [];
-                        window.gNotifications.push(n);
-
-                        $('#saveNotification').html(localise.set["c_resend"]);
-                        edit_notification(true, 0, true);
-                        $('#addNotificationPopup').modal("show");
-
-                         */
-                    });
-
+                    showHistory(data);
 
                 },
                 error: function (xhr, textStatus, err) {
@@ -2568,6 +2335,230 @@ require([
                 }
             });
         }
+    }
+
+    function showHistory(data) {
+        var h = [],
+            idx = -1,
+            $elem = $('#changes'),
+            i,
+            finish,
+            statusClass;
+
+        var includeTasks = $('#er_show_tasks').is(':checked');
+        var includeNotifications = $('#er_show_notifications').is(':checked');
+        var includeChanges = $('#er_show_changes').is(':checked');
+        var includeAssignments = $('#er_show_assignments').is(':checked');
+
+        // Add header
+        h[++idx] = '<thead>';
+        h[++idx] = '<tr>';
+        h[++idx] = '<th></th>';     // icon
+        h[++idx] = '<th class="mincol">';
+        h[++idx] = localise.set["c_user"];
+        h[++idx] = '</th>';
+        h[++idx] = '<th class="mincol">';
+        h[++idx] = localise.set["c_survey"];
+        h[++idx] = '</th>';
+        h[++idx] = '<th class="mincol">';
+        h[++idx] = localise.set["c_date"];
+        h[++idx] = '</th>';
+        h[++idx] = '<th class="mincol">';
+        h[++idx] = localise.set["c_event"];
+        h[++idx] = '</th>';
+        h[++idx] = '<th class="mincol">';
+        h[++idx] = localise.set["c_status"];
+        h[++idx] = '</th>';
+        h[++idx] = '<th>';
+        h[++idx] = localise.set["c_details"];
+        h[++idx] = '</th>';
+        h[++idx] = '<th class="mincol">';
+        h[++idx] = localise.set["c_action"];
+        h[++idx] = '</th>';
+        h[++idx] = '</tr>';
+        h[++idx] = '</thead>';
+
+        h[++idx] = '<tbody>';
+        if(data && data.length > 0) {
+            for(i = 0; i < data.length; i++) {
+
+                if((includeChanges && (data[i].event === 'changes' || data[i].event === 'created')) ||
+                    (includeTasks && data[i].event === 'task') ||
+                    (includeAssignments && data[i].event === 'assigned') ||
+                    (includeNotifications && data[i].event === 'notification')) {
+                    h[++idx] = '<tr>';
+
+                    h[++idx] = '<td>';
+                    if (data[i].event === 'task') {
+                        h[++idx] = '<i class="fa fa-lg fa-tasks fa-2x"></i>';
+                    } else if (data[i].event === 'created' || data[i].event === 'changes') {
+                        h[++idx] = '<i style="line-height: 1.5em;" class="fa fa-lg fa-inbox fa-2x"></i>';
+                    } else if (data[i].event === 'notification') {
+                        if (data[i].notification && data[i].notification.target === 'sms') {
+                            // From http://jsfiddle.net/4Bacg/
+                            h[++idx] = '<span style="line-height: 1.5em; text-align: center; margin-top: -7px; margin-right: 0.3em;" class="fa-stack fa-lg pull-left">';
+                            h[++idx] = '<i class="fa fa-flip-horizontal fa-comment-o fa-stack-2x"></i>';
+                            h[++idx] = '<i style="font-size: 10px; line-height: 1em;">sms</i>';
+                            h[++idx] = '</span>';
+                        } else {
+                            h[++idx] = '<i class="fa fa-lg fa-envelope-o fa-2x"></i>';
+                        }
+                    }
+
+                    h[++idx] = '</td>';
+                    h[++idx] = '<td class="mincol">';    // user
+                    if(data[i].userName) {
+                        h[++idx] = htmlEncode(data[i].userName);
+                    }
+                    h[++idx] = '</td>';
+
+                    h[++idx] = '<td class="mincol">';    // Survey
+                    if(data[i].surveyName) {
+                        h[++idx] = htmlEncode(data[i].surveyName) + ' (' + data[i].surveyVersion + ')';
+                    }
+                    h[++idx] = '</td>';
+
+                    h[++idx] = '<td class="mincol">';    // when
+                    h[++idx] = htmlEncode(data[i].eventTime);
+                    h[++idx] = '</td>';
+
+                    h[++idx] = '<td class="mincol">';    // event
+                    if(data[i].event === 'assigned') {
+                        h[++idx] = htmlEncode(localise.set['t_assign']);
+                    } else {
+                        h[++idx] = htmlEncode(localise.set[data[i].event]);
+                    }
+                    h[++idx] = '</td>';
+
+                    h[++idx] = '<td class="mincol ';    // status
+                    finish = getFinish(data[i]);
+                    statusClass = getStatusClass(data[i].status, data[i].assign_auto);
+                    h[++idx] = statusClass;
+                    h[++idx] = '">';
+                    if(statusClass == 'bg-danger') {
+                        h[++idx] = localise.set["c_late"];
+                    } if(statusClass == 'bg-orange') {
+                        h[++idx] = localise.set["t_auto2"];
+                    } else {
+                        h[++idx] = localise.set[data[i].status];
+                    }
+
+                    h[++idx] = '</td>';
+
+                    h[++idx] = '<td>';    // Changes
+                    if (data[i].event === 'changes' && data[i].changes) {
+                        h[++idx] = getChangeCard(data[i].changes, i);
+                    } else if (data[i].event === 'task' && data[i].task) {
+                        h[++idx] = getTaskCard(data[i].task, i);
+                    } else if (data[i].event === 'notification' && data[i].notification) {
+                        h[++idx] = getNotificationInfo(data[i].notification, data[i].description);
+                    } else {
+                        h[++idx] = htmlEncode(data[i].description);
+                    }
+                    h[++idx] = '</td>';
+
+                    h[++idx] = '<td class="mincol">';    // Action
+                    if (data[i].event === 'notification' && data[i].notification) {
+                        h[++idx] = '<button class="btn btn-secondary edit_notification" data-idx="';
+                        h[++idx] = i;
+                        h[++idx] = '">';
+                        h[++idx] = localise.set["c_resend"];
+                        h[++idx] = '</button>';
+                    } else  if (data[i].event === 'task' && data[i].task && data[i].status !== 'cancelled') {
+                        h[++idx] = '<button class="btn btn-secondary edit_task" data-idx="';
+                        h[++idx] = i;
+                        h[++idx] = '">';
+                        h[++idx] = localise.set["t_edit_task"];
+                        h[++idx] = '</button>';
+                    }
+                    h[++idx] = '</td>';
+
+                    h[++idx] = '</tr>';    // row
+                }
+
+            }
+        }
+        h[++idx] = '</tbody>';
+        $elem.empty().html(h.join(''));
+
+        $('.change_card').on('shown.bs.collapse', function() {
+            var $this = $(this);
+            $('.card-body > .row > .small_map', $this).each(function(){
+                console.log($(this).attr("id"));
+                actioncommon.initialiseDynamicMaps(globals.gRecordChangeMaps, $(this).attr("id"));
+            });
+        });
+        $('.change_card').on('show.bs.collapse', function() {
+            $('.mincol').hide();
+        });
+        $('.change_card').on('hidden.bs.collapse', function() {
+            $('.mincol').show();
+        });
+
+        $('.edit_notification').click(function(){
+            var n = {
+                notifyDetails: {
+
+                }
+            };
+            var idx = $(this).data("idx");
+            var nMessage = window.gChanges[idx].notification
+            n.target = nMessage.target;
+            n.s_id = nMessage.survey_ident;     // Confusing yes - for notifications this is still id, wheras for console this is the ident
+            n.notifyDetails.subject = nMessage.subject;
+            n.notifyDetails.content = nMessage.content;
+            n.notifyDetails.attach = nMessage.attach;
+            n.notifyDetails.emails = nMessage.emails;
+            window.gNotifications = [];
+            window.gNotifications.push(n);
+
+            $('#saveNotification').html(localise.set["c_resend"]);
+            edit_notification(true,0, true);
+            $('#addNotificationPopup').modal("show");
+        });
+
+        $('.edit_task').click(function(){
+
+
+            var idx = $(this).data("idx");
+            var task = window.gChanges[idx].task;
+            var url = "/api/v1/tasks/assignment/" + task.assignmentId + "?taskid=" + task.taskId;
+            // Get the task details and then open the editor dialog
+
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                    var task = data,
+                        taskFeature = {
+                            geometry: {
+                                coordinates: [],
+                                type: 'Point'
+                            },
+                            properties: {}
+                        };
+                    taskFeature.geometry.coordinates.push(task.lon);
+                    taskFeature.geometry.coordinates.push(task.lat);
+                    taskFeature.properties.form_id = task.survey_ident;
+                    taskFeature.properties.assignee = task.assignee;
+                    taskFeature.properties.emails = task.emails;
+                    taskFeature.properties.repeat = task.repeat;
+                    taskFeature.properties.id = task.id;
+                    taskFeature.properties.a_id = task.a_id;
+
+                    editTask(false, task, taskFeature);
+                },
+                error: function (xhr, textStatus, err) {
+                    removeHourglass();
+                    if (xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        console.log(localise.set["c_error"] + ": " + err);
+                    }
+                }
+            });
+        });
     }
 
     /*
