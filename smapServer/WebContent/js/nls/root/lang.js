@@ -72,6 +72,7 @@ define({
     "c_api_builder": "API Builder",
     "c_auto": "Auto",
     "c_cm": "Case Management",
+    "c_crit": "Criticality",
     "c_bundle": "Bundle",
     "c_api": "API",
     "c_link": "Link",
@@ -1457,6 +1458,7 @@ define({
     // Case Management
     "cm_fs": "Final status",
     "cm_sq": "Status Question",
+    "cm_cq": "Criticality Question",
     "cm_aa": "Add an Alert",
     "cm_dcms": "There is already a case management event with that name for this survey group",
     "cm_p": "Create alert if not finalised within",

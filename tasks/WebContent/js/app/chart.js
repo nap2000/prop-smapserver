@@ -39,12 +39,15 @@ define([
         var gAssignedConfig;
         var gAlertChart;
         var gAlertConfig;
+        var gCriticalityChart;
+        var gCriticalityConfig;
 
         function init() {
 
             initStatus();
             initAssigned();
             initAlert();
+            initCriticality();
             initialised = true;
 
             refresh();
@@ -117,6 +120,28 @@ define([
             );
         }
 
+        function initCriticality() {
+            gCriticalityConfig = {
+                type: 'bar',
+                responsive: true,
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: localise.set["c_crit"],
+                        backgroundColor: 'rgb(255, 255, 0)',
+                        borderColor: 'rgb(0, 0, 0)',
+                        data: [],
+                    }]
+                },
+                options: {}
+            };
+
+            gCriticalityChart = new Chart(
+                document.getElementById('criticalityChart'),
+                gCriticalityConfig
+            );
+        }
+
         /*
          * Extract the data in chart form
          */
@@ -124,7 +149,8 @@ define([
 
             var statusVal,
                 assigned,
-                alert;
+                alert,
+                criticality;
 
             if(!gTasks.cache.currentData) {
                 // Data not available yet.
@@ -145,12 +171,14 @@ define([
             var statusData = {};
             var assignedData = {};
             var alertData = {};
+            var criticalityData = {};
             if(cd.settings.finalStatus && cd.settings.statusQuestion) {
                 for (var i = 0; i < results.length; i++) {
 
                     statusVal = results[i][cd.settings.statusQuestion];
                     assigned =  results[i]["_assigned"];
                     alert =  results[i]["_alert"];
+                    criticality = results[i][cd.settings.statusQuestion]
 
                     if(!(statusVal === cd.settings.finalStatus && assigned === "")) {    // Ignore completed tasks that are not assigned
 
@@ -159,6 +187,9 @@ define([
                         }
                         if(assigned === "") {
                             assigned = localise.set["t_u"];
+                        }
+                        if(criticality === "") {
+                            criticality = localise.set["c_none"];
                         }
 
                         statusData[statusVal] = statusData[statusVal] || 0; // Ensure value is numeric
@@ -170,6 +201,9 @@ define([
                         if(!(statusVal === cd.settings.finalStatus)) {      // Ignore completed
                             alertData[alert] = alertData[alert] || 0; // Ensure value is numeric
                             alertData[alert]++;
+
+                            criticalityData[criticality] = criticalityData[criticality] || 0; // Ensure value is numeric
+                            criticalityData[criticality]++;
                         }
                     }
                 }
@@ -181,6 +215,7 @@ define([
             updateChart(gStatusConfig, statusData, gStatusChart);
             updateChart(gAssignedConfig, assignedData, gAssignedChart);
             updateChart(gAlertConfig, alertData, gAlertChart);
+            updateChart(gCriticalityConfig, criticalityData, gCriticalityChart);
 
         }
 
