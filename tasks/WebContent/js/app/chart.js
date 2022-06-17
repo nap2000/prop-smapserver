@@ -178,7 +178,7 @@ define([
                     statusVal = results[i][cd.settings.statusQuestion];
                     assigned =  results[i]["_assigned"];
                     alert =  results[i]["_alert"];
-                    criticality = results[i][cd.settings.statusQuestion]
+                    criticality = results[i][cd.settings.criticalityQuestion]
 
                     if(!(statusVal === cd.settings.finalStatus && assigned === "")) {    // Ignore completed tasks that are not assigned
 
@@ -199,8 +199,10 @@ define([
                         assignedData[assigned]++;
 
                         if(!(statusVal === cd.settings.finalStatus)) {      // Ignore completed
-                            alertData[alert] = alertData[alert] || 0; // Ensure value is numeric
-                            alertData[alert]++;
+                            if(alert && alert.trim().length > 0) {
+                                alertData[alert] = alertData[alert] || 0; // Ensure value is numeric
+                                alertData[alert]++;
+                            }
 
                             criticalityData[criticality] = criticalityData[criticality] || 0; // Ensure value is numeric
                             criticalityData[criticality]++;
