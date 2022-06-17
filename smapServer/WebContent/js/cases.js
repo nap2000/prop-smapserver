@@ -75,7 +75,7 @@ require([
             $('#cms_fs').keydown(function(){
                 $('.save_alert').hide();
             })
-            $('#cms_sq').change(function(){
+            $('#cms_sq, #cms_cq').change(function(){
                 $('.save_alert').hide();
             })
 
@@ -91,7 +91,7 @@ require([
         });
 
         function currentSurveyDone() {
-            getGroupStatusQuestions($('#cms_sq'), globals.gCurrentSurvey, true);
+            getGroupStatusQuestions($('#cms_sq, #cms_cq'), globals.gCurrentSurvey, true);
             getGroupSurveys(groupSurveysDone);
         }
 
@@ -130,7 +130,7 @@ require([
              */
             $('#cms_fs').val(settings.finalStatus);
             $('#cms_sq').val(settings.statusQuestion);      // The list of questions should have been set by now but it is not guaranteed
-
+            $('#cms_cq').val(settings.criticalityQuestion);
             /*
              * Update alerts table
              */
@@ -218,6 +218,7 @@ require([
 
             settings.statusQuestion = $('#cms_sq').val();
             settings.finalStatus = $('#cms_fs').val();
+            settings.criticalityQuestion = $('#cms_cq').val();
 
             $('.org_alert').hide();
             addHourglass();
