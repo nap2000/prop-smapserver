@@ -592,7 +592,7 @@ require([
 
         });
         */
-        
+
         $('.genrecordpdf').click(function (e)  {
             e.preventDefault();
             $('#genPdfPopup').modal("show");
