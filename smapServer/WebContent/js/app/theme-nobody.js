@@ -20,25 +20,36 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Set page themes
  */
-var navbarColor = localStorage.getItem("navbar_color");
-var navbarTextColor = localStorage.getItem("navbar_text_color");
-var navbarLight = LightenDarkenColor(navbarColor, 20);
-if(navbarColor && navbarTextColor) {
-    var head = document.getElementsByTagName('head')[0];
-    var style = document.createElement('style');
-    style.setAttribute("id", "navbar_color");
+function setTheme() {
+    var navbarColor = localStorage.getItem("navbar_color");
+    var navbarTextColor = localStorage.getItem("navbar_text_color");
+    var navbarLight = LightenDarkenColor(navbarColor, 20);
+    if (navbarColor && navbarTextColor) {
 
-    // header.navbar-default legacy WB banner
-    // #header legacy jquery UI banner
-    // Other elements are for current navbar
-    //style.innerHTML = 'header.navbar-default, #header '
-    //    + '{ background-color: ' + navbarColor + '; background: ' + navbarColor + '};'
-    style.innerHTML = 'nav.navbar-smap, .bg-navbar-smap,  .navbar-smap .navbar-toggler, .navbar-smap .navbar-brand, .navbar-smap .navbar-nav .nav-link , .navbar-smap .nav > li > a:focus '
-        + '{ background-color: ' + navbarColor + '; background: ' + navbarColor + ' !important; color: ' + navbarTextColor +'!important}'
-        + ' nav.navbar-smap .nav > li > a:hover,, .bg-navbar-smap .nav > li > a:hover, ul.nav-second-level, .canvas-menu.mini-navbar .nav-second-level '
-        + '{ background-color: ' + navbarLight + '; background: ' + navbarLight + ' !important; color: ' + navbarTextColor +'!important}';
+        /*
+         * Set styles without using inline css
+         */
+        var $color = $('nav.navbar-smap, .bg-navbar-smap,  .navbar-smap .navbar-toggler, .navbar-smap .navbar-brand, .navbar-smap .navbar-nav .nav-link , .navbar-smap .nav > li > a:focus');
+        var $light = $('nav.navbar-smap .nav > li > a:hover, .bg-navbar-smap .nav > li > a:hover, ul.nav-second-level, .canvas-menu.mini-navbar .nav-second-level');
 
-    head.appendChild(style);
+        $color.css("background-color", navbarColor);
+        $color.css("background", navbarColor);
+        $color.css("color", navbarTextColor);
+
+        $light.css("background-color", navbarLight);
+        $light.css("background", navbarLight);
+        $light.css("color", navbarTextColor);
+
+        /* Remove for CSP
+        style.innerHTML = 'nav.navbar-smap, .bg-navbar-smap,  .navbar-smap .navbar-toggler, .navbar-smap .navbar-brand, .navbar-smap .navbar-nav .nav-link , .navbar-smap .nav > li > a:focus '
+            + '{ background-color: ' + navbarColor + '; background: ' + navbarColor + ' !important; color: ' + navbarTextColor +'!important}'
+            + ' nav.navbar-smap .nav > li > a:hover,, .bg-navbar-smap .nav > li > a:hover, ul.nav-second-level, .canvas-menu.mini-navbar .nav-second-level '
+            + '{ background-color: ' + navbarLight + '; background: ' + navbarLight + ' !important; color: ' + navbarTextColor +'!important}';
+
+        head.appendChild(style);
+
+         */
+    }
 }
 
 // From https://css-tricks.com/snippets/javascript/lighten-darken-color/

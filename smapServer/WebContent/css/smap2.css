@@ -67,7 +67,7 @@
 }
 
 .bg-navbar-smap {
-    background-color: #2C3D29 !important;
+    background-color: #2C3D29;
 }
 
 .navbar-brand img {
@@ -137,4 +137,8 @@ button.bg-navbar-smap:focus {
 
 tr.deleted td a {
     color: red !important;
+}
+
+.large-bars {
+    font-size:28px;
 }
