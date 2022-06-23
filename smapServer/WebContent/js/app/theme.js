@@ -20,32 +20,45 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Set page themes
  */
-try {
+function setTheme() {
     var navbarColor = localStorage.getItem("navbar_color");
+    var navbarTextColor = localStorage.getItem("navbar_text_color");
     var navbarLight = LightenDarkenColor(navbarColor, 20);
-    if(navbarColor) {
-        var head = document.getElementsByTagName('head')[0];
-        var style = document.createElement('style');
-        style.setAttribute("id", "navbar_color");
+    if (navbarColor && navbarTextColor) {
 
-        // header.navbar-default legacy WB banner
-        // #header legacy jquery UI banner
-        // Other elements are for current navbar
-        style.innerHTML = 'header.navbar-default, #header, body, .mini-navbar, .nav-second-level, .nav > li.active, .navbar-default .nav > li > a:focus '
-            + '{ background-color: ' + navbarColor + '; background: ' + navbarColor + '}'
-            + ' .navbar-default .nav > li > a:hover, ul.nav-second-level, .canvas-menu.mini-navbar .nav-second-level '
-            + '{ background-color: ' + navbarLight + '; background: ' + navbarLight + '}';
+        /*
+         * Set styles without using inline css
+         */
+        var $color = $('nav.navbar-smap, .navbar-collapse, .bg-navbar-smap,  .navbar-smap .navbar-toggler, .navbar-smap .navbar-brand, .navbar-smap .navbar-nav .nav-link , .navbar-smap .nav > li > a:focus');
+        var $light = $('.nav-link a:hover, .bg-navbar-smap .nav > li > a:hover, ul.nav-second-level, .canvas-menu.mini-navbar .nav-second-level');
+
+        $color.removeClass("navbar-light bg-light");
+        $color.css("background-color", navbarColor);
+        //$color.css("background", navbarColor);
+        $color.css("color", navbarTextColor);
+
+        $light.css("background-color", navbarLight);
+        //$light.css("background", navbarLight);
+        $light.css("color", navbarTextColor);
+
+        /* Remove for CSP
+        style.innerHTML = 'nav.navbar-smap, .bg-navbar-smap,  .navbar-smap .navbar-toggler, .navbar-smap .navbar-brand, .navbar-smap .navbar-nav .nav-link , .navbar-smap .nav > li > a:focus '
+            + '{ background-color: ' + navbarColor + '; background: ' + navbarColor + ' !important; color: ' + navbarTextColor +'!important}'
+            + ' nav.navbar-smap .nav > li > a:hover,, .bg-navbar-smap .nav > li > a:hover, ul.nav-second-level, .canvas-menu.mini-navbar .nav-second-level '
+            + '{ background-color: ' + navbarLight + '; background: ' + navbarLight + ' !important; color: ' + navbarTextColor +'!important}';
 
         head.appendChild(style);
+
+         */
     }
-} catch (e) {
-
 }
-
 
 // From https://css-tricks.com/snippets/javascript/lighten-darken-color/
 function LightenDarkenColor(col, amt) {
 
+    if(!col) {
+        col = '#CCC';
+    }
     var usePound = false;
 
     if (col[0] == "#") {
@@ -73,5 +86,4 @@ function LightenDarkenColor(col, amt) {
     return (usePound?"#":"") + (g | (b << 8) | (r << 16)).toString(16);
 
 }
-
 
