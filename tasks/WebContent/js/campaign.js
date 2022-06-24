@@ -73,6 +73,7 @@ require([
 	$(document).ready(function() {
 
 		setCustomSubs();
+		setTheme();
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
 

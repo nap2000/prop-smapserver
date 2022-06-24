@@ -50,6 +50,7 @@ require([
 
         $(document).ready(function() {
 
+            setTheme();
             setupUserProfile(true);
             localise.setlang();		// Localise HTML
 

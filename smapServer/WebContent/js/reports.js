@@ -71,6 +71,7 @@ require([
 	$(document).ready(function() {
 
 		setCustomReports();			// Apply custom javascript
+		setTheme();
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
 

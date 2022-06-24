@@ -58,6 +58,7 @@ $(document).ready(function() {
 	window.moment = moment;		// Make moment global for use by common.js
 
     setCustomResources();			// Apply custom javascript
+	setTheme();
 	setupUserProfile(true);
 	localise.setlang();		// Localise HTML
 	$('#map_name').attr("placeholder", localise.set["sr_m_ph"]);

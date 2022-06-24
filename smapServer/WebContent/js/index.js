@@ -61,6 +61,7 @@ require(['jquery', 'app/localise', 'app/common','app/globals'],
 	 * which depend on their authorisation level
 	 */
 	if(loggedin) {
+		setTheme();
 		setupUserProfile(true);
 		localise.setlang();
 		$('.loggedin').show().removeClass("d-none");

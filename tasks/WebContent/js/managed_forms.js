@@ -165,6 +165,7 @@ require([
         window.summary_report = summary_report;
         window.moment = moment;
         setCustomManage();
+        setTheme();
 	    setupUserProfile(true);
         localise.setlang();		// Localise HTML
         registerForServiceWorkerMessages();

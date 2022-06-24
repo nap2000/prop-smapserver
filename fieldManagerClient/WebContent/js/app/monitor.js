@@ -30,6 +30,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
 
         $(document).ready(function() {
 
+            setTheme();
 	        setupUserProfile(true);
             window.moment = moment;
 
