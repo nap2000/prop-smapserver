@@ -1031,7 +1031,7 @@ function addTimeZoneToUrl(url) {
  * Create the user profile dialog and get any data it needs
  */
 function setupUserProfile(bs4) {
-	setTheme();
+
 	if(bs4) {
 		addUserDetailsPopupBootstrap4();
 	} else {

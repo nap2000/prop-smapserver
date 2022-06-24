@@ -28,6 +28,7 @@ define(['jquery','localise', 'common', 'globals',
 
 	$(document).ready(function() {
 
+		setTheme();
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
 

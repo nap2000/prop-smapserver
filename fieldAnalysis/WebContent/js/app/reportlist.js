@@ -67,6 +67,7 @@ $(document).ready(function() {
 	}(document));    
 	    
 	window.moment = moment;	// Required as common.js not part of module
+	setTheme();
 	setupUserProfile(false);
 	localise.setlang();		// Localise HTML
 	
