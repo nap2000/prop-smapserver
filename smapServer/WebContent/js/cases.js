@@ -110,7 +110,7 @@ require([
             $this.tab('show');
 
             $(".cmtab").hide();
-            $('#' + name + 'Panel').removeClass("d-none").show();
+            $('#' + name + 'Panel').removeClass('d-none').show();
             setInLocalStorage("currentTab" + page, '#' + name + 'Tab a');
         }
 
