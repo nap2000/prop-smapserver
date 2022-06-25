@@ -64,12 +64,12 @@ require(['jquery', 'app/localise', 'app/common','app/globals'],
 		setTheme();
 		setupUserProfile(true);
 		localise.setlang();
-		$('.loggedin').show().removeClass("d-none");
+		$('.loggedin').show().removeClass('d-none');
 		$('.notloggedin').hide();
 	} else {
 		setCustomMainLogo();
 		$('.restrict_role').hide();
-		$('.notloggedin').show().removeClass("d-none");;
+		$('.notloggedin').show().removeClass('d-none');;
 		$('.loggedin').hide();
 	}
 	
@@ -77,7 +77,7 @@ require(['jquery', 'app/localise', 'app/common','app/globals'],
 	 * Enable self registration 
 	 */
 	if(isSelfRegistrationServer() && !loggedin) {
-		$('#signup').show().removeClass("d-none");;
+		$('#signup').show().removeClass('d-none');;
 	} else {
 		$('#signup').hide();
 	}
