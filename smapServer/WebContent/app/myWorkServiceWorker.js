@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v134';
+let CACHE_NAME = 'v140';
 
 // Web service requests
 let ASSIGNMENTS = '/surveyKPI/myassignments?';
@@ -24,6 +24,8 @@ let logon = false;      // Flag to prevent attempt to relogon multiple times
 // During the installation phase, you'll usually want to cache static assets.
 self.addEventListener('install', function(e) {
 	// Once the service worker is installed, go ahead and fetch the resources to make this work offline.
+	self.skipWaiting();
+
 	e.waitUntil(
 		caches.open(CACHE_NAME).then(function(cache) {
 			return cache.addAll([
