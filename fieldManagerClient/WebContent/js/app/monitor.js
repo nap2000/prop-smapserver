@@ -40,6 +40,24 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
 
             refreshRegions();
 
+            /*
+             * Handle tabs
+             */
+            $('#submitTab a').click(function (e) {
+                e.preventDefault();
+                panelChange($(this), 'submit');
+            });
+
+            $('#notifyTab a').click(function (e) {
+                e.preventDefault();
+                panelChange($(this), 'notify');
+            });
+
+            $('#optinTab a').click(function (e) {
+                e.preventDefault();
+                panelChange($(this), 'optin');
+            });
+
             // Initialise the map and then hide it
             $('#uploaded_map').show();
             initializeMap();
@@ -89,14 +107,6 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                 zoomTo("events");
             });
 
-            // Add zoom to regions button
-            $('#zoomRegions').button().click(function () {
-                if(globals.gCurrentLayer) {
-                    zoomTo(globals.gCurrentLayer);
-                } else {
-                    alert("No region set");
-                }
-            });
 
             $('#m_refresh').click(function() {
                 refreshData(globals.gCurrentProject, $('#survey option:selected').val());
@@ -256,25 +266,6 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                 }
                 return false;
             });
-            /*
-            $('#region_create').dialog(
-                {
-                    autoOpen: false, closeOnEscape:true, draggable:true, modal:false,
-                    show:"drop",
-                    position: { my: "left top", at: "left top", of:'#aside'},
-                    buttons: [
-                        {
-                            text: "Close",
-                            click: function() {
-                                // Unregister for clicks on the map
-                                map.events.remove("click");
-                                $(this).dialog("close");
-                            }
-                        }
-                    ]
-                }
-            );
-            */
 
             // Delete Layers button and dialog
             $('#deleteLayer').button().click(function () {
@@ -282,64 +273,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                 // open the dialog
                 $('#regions_delete').dialog("open");
             });
-            /*
-            $('#regions_delete').dialog(
-                {
-                    autoOpen: false, closeOnEscape:true, draggable:true, modal:false,
-                    show:"drop",
-                    buttons: [
-                        {
-                            text: "Close",
-                            click: function() {
 
-                                $(this).dialog("close");
-                            }
-                        },
-                        {
-                            text: "Delete",
-                            click: function() {
-                                $dialog=$(this);
-                                if(confirm(localise.set["msg_del_r"])) {
-                                    var count = 0;
-                                    var allCalled = false;
-                                    $('#regions_delete input:checked').each(function(index) {
-                                        ++count;
-
-                                        $.ajax({
-                                            url: "/surveyKPI/regions/" + $(this).val(),
-                                            type: "DELETE",
-                                            cache: false,
-                                            success: function(data) {
-                                                --count;
-                                                if(allCalled && count == 0) {
-                                                    refreshRegions(true);
-                                                }
-                                            },
-                                            error: function(xhr, textStatus, err) {
-                                                --count;
-                                                if(xhr.readyState == 0 || xhr.status == 0) {
-                                                    return;  // Not an error
-                                                } else {
-                                                    alert("Failed to delete region");
-                                                }
-                                                if(allCalled && count == 0) {
-                                                    refreshRegions(true);
-                                                }
-                                            }
-                                        });
-
-                                    });
-                                    allCalled = true;
-                                    $dialog.dialog("close");
-                                }
-                            }
-                        }
-                    ]
-                }
-            );
-            */
-
-            //enableUserProfile();
             setcontrols();
 
             $('#tableradio').prop('checked',true);
@@ -978,5 +912,20 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
                     }
                 }
             });
+        }
+
+        /*
+	     * Respond to a panel being changed
+	     * panelChange($(this), 'userPanel', 'usersTab');
+	     */
+        function panelChange($this, name) {
+            gPanel = name;
+
+            $this.tab('show');
+
+            $(".monpanel").hide();
+            $('#' + name + 'Panel').removeClass("d-none").show();
+            setInLocalStorage("currentTab" + page, '#' + name + 'Tab a');
+
         }
     });

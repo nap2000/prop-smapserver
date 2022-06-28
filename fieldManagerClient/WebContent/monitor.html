@@ -195,15 +195,33 @@
 
 	<!-- Main panel -->
 	<div class="card text-center conditional uploaded">
+		<div class="card-header">
+			<ul id="mainTabs" class="nav nav-tabs card-header-tabs" role="tablist">
+				<li id="submitTab" class="nav-item" role="presentation">
+					<a data-toggle="tab" id="submit-view" href="#submitPanel" role="tab" class="active nav-link lang" aria-controls="table-view" aria-selected="true" data-lang="c_submitted"></a>
+				</li>
+				<li id="notifyTab" class="nav-item">
+					<a data-toggle="tab" id="notify-view" href="#notifyPanel" role="tab" class="nav-link lang" aria-controls="map-view" aria-selected="false" data-lang="m_notify"></a>
+				</li>
+				<li id="optinTab" class="nav-item">
+					<a data-toggle="tab" id="optin-view" href="#optinPanel" role="tab" class="nav-link lang" data-lang="mon_optin_msg"></a>
+				</li>
+			</ul>
+		</div>
+
 		<div class="card-body">
 			<div class="tab-content">
-				<div id="uploadedTotalsPanel" class="tab-pane fade show active" role="tabpanel" aria-labelledby="uploadedTotalsTab">
+				<div id="submitPanel" class="tab-pane fade show active monpanel" role="tabpanel" aria-labelledby="submit-view">
 					<div class="panel-body">
 						<div id="events_table_msg"></div>
 						<div class="table-responsive col-xs-12">
-							<table class="table table-responsive-sm table-striped table-bordered table-sm" id="events" style="layout-table:fixed; width:100%;"></table>
+							<table class="table table-responsive-sm table-striped table-bordered table-sm w-100" id="events"></table>
 						</div>
 					</div>
+				</div>
+				<div id="notifyPanel" class="tab-pane fade show active" role="tabpanel" aria-labelledby="notify-view">
+				</div>
+				<div id="optinPanel" class="tab-pane fade show active" role="tabpanel" aria-labelledby="optin-view">
 				</div>
 			</div>
 		</div>
@@ -217,23 +235,6 @@
 		</div>
 	</div>
 
-	<div id="aside">  <!-- no longer used -->
-		<form id="mon_controls">
-
-
-			<div id="layers" style="display:none;">
-				<h1 class="lang" data-lang="c_map_layers">layers</h1>
-				<div id="current_layers">
-				</div>
-				<button id="zoomData" type="button" class="lang" data-lang="c_zoom_data">zoom to data</button><br/>
-				<button id="zoomRegions" type="button" class="lang" data-lang="mon_zoom_grid">zoom to grids</button><br/>
-				<button id="addLayer" type="button" class="lang" data-lang="mon_show_grid">show grids</button><br/>
-				<button id="removeLayer" type="button" class="lang" data-lang="mon_clear_grid">clear grids</button><br/>
-				<button id="createLayer" type="button" class="lang" data-lang="mon_create_grid">create grid</button><br/>
-				<button id="deleteLayer" type="button" class="lang" data-lang="mon_del_grid">delete grids</button><br/>
-			</div>
-		</form>
-	</div>
 </div>
 <!-- Popup to show features when a user clicks on a geometry item -->
 <div id="features" class="feature-panel-right"></div>
