@@ -696,10 +696,10 @@ require([
             gTimingView = false;
 
             if (target === '#tablePanel') {
-                $('.tableOnly').show();
+                $('.tableOnly').removeClass('d-none').show();
                 trigger = '#table-view';
             } else if (target === '#mapPanel') {
-                $('.mapOnly').show();
+                $('.mapOnly').removeClass('d-none').show();
                 gMapView = true;
                 try {       // will fail if there is no data
                     map.initDynamicMap(gOverallMapConfig, false, featureSelected, true);
@@ -710,12 +710,12 @@ require([
 
             } else if(target === '#chartPanel') {
                 chart.refresh();
-                $('.chartOnly').show();
+                $('.chartOnly').removeClass('d-none').show();
                 gChartView = true;
                 trigger = '#chart-view';
             } else if(target === '#timingPanel') {
                 //chart.init(false, true);
-                $('#m_add_chart').show();
+                $('#m_add_chart').removeClass('d-none').show();
                 gTimingView = true;
                 trigger = '#timing-view';
             }
@@ -728,9 +728,9 @@ require([
             $('.historyView,.dataView').hide();
 
             if (target === '#data-view') {
-                $('.dataView').show();
+                $('.dataView').removeClass('d-none').show();
             } else if(target === '#changes-view') {
-                $('.historyView').show();
+                $('.historyView').removeClass('d-none').show();
             }
 
             $('.re_alert').hide();
@@ -791,7 +791,7 @@ require([
 	    $('.server_specific').hide();
 	    var ssd = getServerSubDomainName();
 	    if(ssd !== '') {
-            $('.' + ssd).show();
+            $('.' + ssd).removeClass('d-none').show();
         }
 	    $('#m_tdh_individual').click(function() {
 		    $('#tdh_individual_report_popup').modal("show");
