@@ -90,7 +90,7 @@
                     <a class="dropdown-item restrict_role admin_role analyst_role manage_role task_role" href="/app/tasks/taskManagement.html"><span class="nav-label lang" data-lang="m_assign">assign</span></a>
                     <a id="c_campaigns" class="dropdown-item restrict_role admin_role analyst_role" href="/app/tasks/campaign.html"><span class="lang" data-lang="c_campaigns">m</span></a>
                     <a class="dropdown-item restrict_role admin_role analyst_role" href="/app/api.html"><span class="lang" data-lang="c_api">api</span></a>
-                    <a class="dropdown-item restrict_role billing_role" href="/app/fieldManager/billing.html" style="display:none;"><span class="lang" data-lang="m_billing">billing</span></a>
+                    <a class="dropdown-item restrict_role billing_role" href="/app/fieldManager/billing.html"><span class="lang" data-lang="m_billing">billing</span></a>
                     <a class="dropdown-item restrict_role dashboard_role" style="display:none;" href="/dashboard/index.html"><span>Dashboard</span></a>
                     <a class="dropdown-item restrict_role admin_role analyst_role manage_role task_role" href="/app/reports.html"><span class="nav-label lang" data-lang="m_reports">reports</span></a>
                     <a class="dropdown-item restrict_role admin_role analyst_role" href="/app/userTrail.html"><span class="nav-label lang" data-lang="m_locations"></span></a>
@@ -113,15 +113,15 @@
                 <a class="nav-link dropdown-toggle" href="#" id="m_local_reports" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="lang" data-lang="m_lr">reports</span></a>
                 <div class="dropdown-menu" aria-labelledby="m_local_reports">
                     <a id="m_summary_report" class="dropdown-item restrict_role admin_role analyst_role data_role genxlsfileall" href="#"><span class="lang" data-lang="mf_sr">summary</span></a>
-                    <a class="dropdown-item xxxx1" style="display:none;" href="/misc/CreatingIdentificationCards.docx"><span>Guide on creating Id Cards</span></a>
-                    <a class="dropdown-item xxxx1" style="display:none;" href="/misc/CardMergeTemplate.docx"><span>ID Card Template</span></a>
-                    <a id="m_tdh_individual" style="display:none;" href="#" class="dropdown-item server_specific tdh localhost">Individual Report</a>
+                    <a class="dropdown-item xxxx1 d-none" href="/misc/CreatingIdentificationCards.docx"><span>Guide on creating Id Cards</span></a>
+                    <a class="dropdown-item xxxx1 d-none" href="/misc/CardMergeTemplate.docx"><span>ID Card Template</span></a>
+                    <a id="m_tdh_individual" href="#" class="dropdown-item server_specific tdh localhost d-none">Individual Report</a>
                 </div>
             </li>
 
             <li><a href="#" id="m_refresh"><span class="nav-link lang" data-lang="m_refresh">r</span></a></li>
             <li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
-            <li id="m_training" class="nav-item" style="display:none;"><a class="nav-link" id="train_link" href="#" target="_blank"><span class="nav-label lang" data-lang="m_training">training</span></a></li>
+            <li id="m_training" class="nav-item d-none"><a class="nav-link" id="train_link" href="#" target="_blank"><span class="nav-label lang" data-lang="m_training">training</span></a></li>
             <li class="nav-item"><a class="nav-link"  id="username" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"><i class="fa fa-user"></i> </a></li>
         </ul>
 
@@ -506,7 +506,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="timingPanel"  role="tabpanel" class="tab-pane fade" style="display:none;" aria-labelledby="timing-view">
+                <div id="timingPanel"  role="tabpanel" class="tab-pane fade d-none" aria-labelledby="timing-view">
                     <div class="panel-body">
                         <div id="timingcontent">
                             <div class="row" id="timingrow"></div>
