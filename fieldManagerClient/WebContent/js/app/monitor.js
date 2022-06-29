@@ -517,8 +517,8 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
         function refreshUploadedTable(data, showType) {
 
             var features = data.features,
-                $elem = $('#events'),
-                $msg = $('#events_table_msg'),
+                $elem = $('#submit_events'),
+                $msg = $('#submit_msg'),
                 h = [],
                 i = -1,
                 j,
@@ -673,8 +673,8 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
         function refreshNotificationsTable(data, showType, source) {
 
             var features = data.features,
-                $elem = $("#events"),
-                $msg = $('#events_table_msg'),
+                $elem = $("#notify_events"),
+                $msg = $('#notify_msg'),
                 h = [],
                 i = -1,
                 j,
@@ -826,6 +826,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
 
         }
 
+        /*
         function refreshFormsTable(forms) {
 
             var $elem = $("#events"),
@@ -888,6 +889,8 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             $elem.html(h.join(''));
 
         }
+
+         */
 
         function refreshRegions(show) {
             // Get the regions
