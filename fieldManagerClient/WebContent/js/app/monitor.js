@@ -16,8 +16,8 @@
 
  */
 
-define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
-    function($, ol_mgmt, lang, common, globals, moment) {
+define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 'app/monitorChart'],
+    function($, ol_mgmt, lang, common, globals, moment, chart) {
 
         var gStartEvents = [],		// Only in this java script file
             gPageCount = 1;			// Only in this java script file
@@ -58,6 +58,10 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             $('#optinTab a').click(function (e) {
                 e.preventDefault();
                 panelChange($(this), 'optin');
+            });
+            $('#caseTab a').click(function (e) {
+                e.preventDefault();
+                panelChange($(this), 'case');
             });
 
             // Initialise the map and then hide it
@@ -928,6 +932,9 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment'],
             setcontrols();
             refreshData(globals.gCurrentProject, $('#survey option:selected').val());
 
+            if(name === 'case') {
+                chart.refresh();
+            }
             $this.tab('show');
             $(".monpanel").hide();
             $('#' + name + 'Panel').removeClass("d-none").show();

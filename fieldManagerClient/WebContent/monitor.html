@@ -194,6 +194,9 @@
 				<li id="optinTab" class="nav-item">
 					<a data-toggle="tab" id="optin-view" href="#optinPanel" role="tab" class="nav-link lang" data-lang="mon_optin_msg"></a>
 				</li>
+				<li id="caseTab" class="nav-item">
+					<a data-toggle="tab" id="case-view" href="#casePanel" role="tab" class="nav-link lang" data-lang="c_cases"></a>
+				</li>
 			</ul>
 		</div>
 
@@ -220,6 +223,23 @@
 						<div id="optin_msg"></div>
 						<div class="table-responsive col-xs-12">
 							<table class="table table-responsive-sm table-striped table-bordered table-sm w-100" id="optin_events"></table>
+						</div>
+					</div>
+				</div>
+				<div id="casePanel" class="tab-pane fade show active" role="tabpanel" aria-labelledby="optin-view">
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-12 col-md-6 col-lg-3">
+								<div class="card">
+									<div class="card-header d-flex chart-header">
+										<span class="mr-auto lang" data-lang="c_status"></span>
+										<i class="fa fa-cog"></i>
+									</div>
+									<div class="card-body">
+										<canvas id="progressChart"></canvas>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

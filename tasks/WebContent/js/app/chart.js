@@ -17,6 +17,7 @@
 
 /*
  * Chart functions
+ * Uses: https://www.chartjs.org/
  */
 
 "use strict";
