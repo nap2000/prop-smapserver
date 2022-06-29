@@ -20,13 +20,19 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
     function($, ol_mgmt, lang, common, globals, moment, chart) {
 
         var gStartEvents = [],		// Only in this java script file
-            gPageCount = 1;			// Only in this java script file
+            gPageCount = 1,			// Only in this java script file
+            gCaseProgress;
 
         let SOURCE_UPLOADED = "submit";
-        let SOURCE_FORWARDED = "forwarded";
         let SOURCE_FORMS = "forms";
         let SOURCE_NOTIFICATIONS = "notify";
         let SOURCE_OPTIN_MSG = "optin";
+
+        window.gMonitor = {
+            cache: {
+                caseProgress: {}
+            }
+        };
 
         $(document).ready(function() {
 
@@ -37,8 +43,6 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             localise.setlang();		// Localise HTML
 
             getLoggedInUser(projectChanged, false, true, undefined);
-
-            refreshRegions();
 
             gPanel = 'submit';
 
@@ -96,6 +100,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             $('#survey').change(function () {
                 setcontrols();
                 refreshData(globals.gCurrentProject, $('#survey option:selected').val());
+                refreshCases();
             });
 
             // Status values change
@@ -115,6 +120,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
 
 
             $('#m_refresh').click(function() {
+                refreshCases();
                 refreshData(globals.gCurrentProject, $('#survey option:selected').val());
             });
 
@@ -142,144 +148,6 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                 });
             });
 
-            // Add button to add a Layer along with its dialog
-            $('#addLayer').button().click(function () {
-                var $elem = $("#available_regions");
-                $elem.empty();
-                for(var i = 0; i < globals.gRegions.length; i++) {
-                    if(globals.gRegions[i].name != globals.gCurrentLayer) {
-                        $elem.append('<option value="' + globals.gRegions[i].name + '">' + globals.gRegions[i].name + '</option>');
-                    }
-                }
-                $('#regions').dialog("open");
-            });
-            /*
-            $('#regions').dialog(
-                {
-                    autoOpen: false, closeOnEscape:true, draggable:true, modal:true,
-                    show:"drop",
-                    buttons: [
-                        {
-                            text: "Cancel",
-                            click: function() {
-                                $(this).dialog("close");
-                            }
-                        },
-                        {
-                            text: "Done",
-                            click: function() {
-                                setMapRegions($('#available_regions option:selected').val());
-                                $(this).dialog("close");
-                            }
-                        }
-                    ]
-                }
-            );
-            */
-
-
-            // Remove layer button
-            $('#removeLayer').button().click(function () {
-                if(globals.gCurrentLayer) {
-                    clearLayer(globals.gCurrentLayer);
-                    globals.gCurrentLayer = undefined;
-                } else {
-                    alert("No region to remove");
-                }
-            });
-
-            // Create Layer button and dialog
-            $('#createLayer').button().click(function () {
-                // clear the form
-                document.getElementById("region_create_form").reset();
-
-                // Register for clicks on the map so we can get the report location
-                map.events.register("click", map , function(e) {
-                    var lonlat = map.getLonLatFromViewPortPx(e.xy);
-                    addMarker(lonlat, true);
-                });
-
-                // open the dialog
-                $('#region_create').dialog("open");
-            });
-            $('#region_submit').button().click(function () {
-                var error = false;
-                globals.gRegion["name"] = $('#region_name').val();
-                globals.gRegion["width"] = $('#region_width').val();
-                if(!globals.gRegion["name"]) {
-                    alert("Name must be specified");
-                    error = true;
-                    $('#region_name').focus();
-                }
-                if(globals.gRegion["name"].indexOf(' ') > 0) {
-                    alert("No spaces are allowed in the name");
-                    error = true;
-                    $('#region_name').focus();
-                }
-                if(globals.gRegion["name"] !== globals.gRegion["name"].toLowerCase()) {
-                    alert("Name must be lower case");
-                    error = true;
-                    $('#region_name').focus();
-                }
-
-                if(!error && (!globals.gRegion["width"] || globals.gRegion["width"] < 10)) {
-                    alert("Width must be specified and greater than 10");
-                    error = true;
-                    $('#region_width').focus();
-                }
-                if(!error && !globals.gRegion["centre_x"]) {
-                    alert("You must select the centre of one cell by clicking on the map");
-                    error = true;
-                }
-                if(!error && !globals.gRegion["lower_left_x"]) {
-                    alert("You must select the bounds of the region by pressing shift, clicking with the left button and dragging");
-                    error = true;
-                }
-
-                if(!error) {
-                    var boundsWidth = globals.gRegion["upper_right_x"] - globals.gRegion["lower_left_x"];
-                    var boundsHeight = globals.gRegion["upper_right_y"] - globals.gRegion["lower_left_y"];
-
-                    if(boundsWidth / globals.gRegion["width"] > 100 || boundsHeight / globals.gRegion["width"] > 100) {
-                        alert("The bounding region is too large or the cell width is too small");
-                        error = true;
-                    }
-                }
-                if(!error) {
-                    var regionString = JSON.stringify(globals.gRegion);
-                    addHourglass();
-                    $.ajax({
-                        type: "POST",
-                        dataType: 'text',
-                        cache: false,
-                        contentType: "application/json",
-                        url: "/surveyKPI/regions",
-                        data: { settings: regionString },
-                        success: function(data, status) {
-                            removeHourglass();
-                            if(data && data.indexOf('ERROR') == 0) {
-                                alert(data);
-                            } else {
-                                refreshRegions();
-                                setMapRegions(globals.gRegion["name"]);
-                            }
-
-                        }, error: function(data, status) {
-                            removeHourglass();
-                            alert("Error: Failed to create region");
-                        }
-                    });
-                }
-                return false;
-            });
-
-            // Delete Layers button and dialog
-            $('#deleteLayer').button().click(function () {
-                showRegions();
-                // open the dialog
-                $('#regions_delete').dialog("open");
-            });
-
             setcontrols();
 
             $('#tableradio').prop('checked',true);
@@ -296,6 +164,14 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                 refreshData(globals.gCurrentProject, $('#survey option:selected').val(), parseInt($(this).val()));
             });
 
+            /*
+             * Get the data
+             */
+            refreshData(globals.gCurrentProject, $('#survey option:selected').val());
+
+            // Get case management data
+            refreshCases();
+
         });
 
         function setcontrols() {
@@ -310,7 +186,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                 $('.showtype, #showstatus').show();
             }
 
-            if(gPanel !== SOURCE_FORMS && gPanel !== SOURCE_OPTIN_MSG && gPanel !== SOURCE_FORWARDED) {
+            if(gPanel !== SOURCE_FORMS && gPanel !== SOURCE_OPTIN_MSG) {
                 $('.showold').show();
             }
 
@@ -358,24 +234,6 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             refreshData(globals.gCurrentProject, "_all");
         }
 
-        function showRegions() {
-            $elem = $('#regions_delete > div');
-            var h = [];
-            var idx = -1;
-            for(var i = 0; i < globals.gRegions.length; i++) {
-                h[++idx] = '<input type="checkbox" name="delregion" value="';
-                h[++idx] = globals.gRegions[i].name;
-                h[++idx] = '" id="del_region';
-                h[++idx] = i;
-                h[++idx] = '"/><label for "del_region';
-                h[++idx] = i;
-                h[++idx] = '">';
-                h[++idx] = globals.gRegions[i].name;
-                h[++idx] = '</label></br>';
-            }
-            $elem.empty().append(h.join(''));
-        }
-
         function refreshData(projectId, surveyId, start_rec) {
 
             var hide_success=true,
@@ -385,7 +243,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                 hide_upload_errors=true,
                 hide_not_loaded=true;
 
-            var status_values = $('#showstatus :checkbox:checked').each(function() {
+            $('#showstatus :checkbox:checked').each(function() {
                 var $this = $(this).val();
                 if($this === "success") {
                     hide_success=false;
@@ -412,11 +270,6 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             var isForward = false;
             var ignoreOldIssue = $(ignoreOldIssues).is(':checked');
 
-            if(gPanel === SOURCE_UPLOADED) {
-                isForward=false;
-            } else {
-                isForward=true;
-            }
             function refreshDataExec(showTypeE, showSourceE) {
 
                 if(typeof start_rec === "undefined") {
@@ -495,7 +348,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                             refreshFormsTable(data);
                         } else if(showSourceE === SOURCE_NOTIFICATIONS || showSourceE === SOURCE_OPTIN_MSG) {
                             refreshNotificationsTable(data, showType, showSourceE);
-                        } else if(showSourceE === SOURCE_UPLOADED || showSourceE === SOURCE_FORWARDED) {
+                        } else if(showSourceE === SOURCE_UPLOADED) {
                             refreshUploadedTable(data, showType);
                             if(showTypeE !== "totals") {
                                 refreshMap(data);
@@ -530,7 +383,6 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                 status,
                 reason,
                 sId = $('#survey option:selected').val(),
-                isForwarded = gPanel === "forwarded" ? true : false,
                 groupby =  $("input[name=groupsurvey]:checked").val(),
                 showType = $("#showType").val();
 
@@ -545,8 +397,6 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                     msg = "<h5>" + localise.set["msg_nf"] + "</h5>";
                 } else if(gPanel === "uploaded") {
                     msg = "<h5>" + localise.set["msg_ns"] + "</h5>";
-                } else if(isForwarded) {
-                    msg = "<h5>" + localise.set["msg_nrf"] + "</h5>";
                 } else {
                     msg = "<h5>" + localise.set["msg_us"] + "</h5>";
                 }
@@ -560,14 +410,8 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             if(showType === "totals") {
                 if(sId === "_all") {
                     h[++i] = '<th>' + localise.set["c_survey"] + '</th>';
-                    if(isForwarded) {
-                        h[++i] = '<th>Dest</th>';
-                    }
                 } else {
                     h[++i] = '<th>' + groupby + '</th>';
-                    if(isForwarded) {
-                        h[++i] = '<th>Dest</th>';
-                    }
                 }
                 if(typeof features[0].properties.success !== "undefined") {
                     h[++i] = '<th>' + localise.set["c_success"] + '</th>';
@@ -597,9 +441,6 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                 h[++i] = '<th>' + localise.set["mon_file"] + '</th>';
                 h[++i] = '<th>' + localise.set["c_survey"] + '</th>';
                 h[++i] = '<th>' + localise.set["c_ident"] + '</th>';
-                if(isForwarded) {
-                    h[++i] = '<th>Dest</th>';
-                }
                 h[++i] = '<th>' + localise.set["c_location"] + '</th>';
                 h[++i] = '<th>' + localise.set["c_complete"] + '</th>';
                 h[++i] = '<th>' + localise.set["c_status"] + '</th>';
@@ -614,9 +455,6 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                 h[++i] = '<tr>';
                 if(showType === "totals") {
                     h[++i] = '<td>' + htmlEncode(features[j].properties.key) + '</td>';
-                    if(isForwarded) {
-                        h[++i] = '<td>' + features[j].properties.dest + '</td>';;
-                    }
                     if(typeof features[j].properties.success !== "undefined") {
                         h[++i] = '<td>' + features[j].properties.success + '</td>';
                     }
@@ -644,9 +482,6 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                     h[++i] = '<td>' + htmlEncode(features[j].properties.file_name) + '</td>';
                     h[++i] = '<td>' + htmlEncode(features[j].properties.survey_name) + '</td>';
                     h[++i] = '<td>' + htmlEncode(features[j].properties.ident) + '</td>'
-                    if(isForwarded) {
-                        h[++i] = '<td>' + features[j].properties.dest + '</td>';;
-                    }
 
                     if(features[j].geometry) {
                         locn = 'lon:' + features[j].geometry.coordinates[0] + ' lat:' + features[j].geometry.coordinates[1];
@@ -897,29 +732,36 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
 
          */
 
-        function refreshRegions(show) {
-            // Get the regions
-            addHourglass();
-            $.ajax({
-                url: "/surveyKPI/regions",
-                dataType: 'json',
-                cache: false,
-                success: function(data) {
-                    globals.gRegions = data;
-                    if(show) {
-                        showRegions();
+        function refreshCases() {
+            var sId = $('#survey').val();
+            if(sId) {
+
+                addHourglass();
+                $.ajax({
+                    url: "/api/v1/cases/progress/" + $('#survey').val(),
+                    dataType: 'json',
+                    cache: false,
+                    success: function (data) {
+                        gMonitor.cache.caseProgress = data;
+                        $('#case_msg').hide();
+                        $('#case_data').removeClass("d-none").show();
+                        chart.refresh();
+                        removeHourglass();
+                    },
+                    error: function (xhr, textStatus, err) {
+                        removeHourglass();
+                        if (xhr.readyState == 0 || xhr.status == 0) {
+                            return;  // Not an error
+                        } else {
+                            $('#case_data').hide();
+                            $('#case_msg').removeClass("d-none").text(localise.set["c_error"] + ": " + xhr.responseText).show();
+                        }
                     }
-                    removeHourglass();
-                },
-                error: function(xhr, textStatus, err) {
-                    removeHourglass();
-                    if(xhr.readyState == 0 || xhr.status == 0) {
-                        return;  // Not an error
-                    } else {
-                        alert("Failed to get region list");
-                    }
-                }
-            });
+                });
+            } else {
+                $('#case_data').hide();
+                $('#case_msg').removeClass("d-none").text(localise.set["cm_ns"]).show();
+            }
         }
 
         /*
@@ -930,7 +772,6 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             gPanel = name;
 
             setcontrols();
-            refreshData(globals.gCurrentProject, $('#survey option:selected').val());
 
             if(name === 'case') {
                 chart.refresh();
@@ -938,7 +779,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             $this.tab('show');
             $(".monpanel").hide();
             $('#' + name + 'Panel').removeClass("d-none").show();
-            setInLocalStorage("currentTab" + page, '#' + name + 'Tab a');
+            setInLocalStorage("currentTab" + $('body').data('page'), '#' + name + 'Tab a');
 
         }
     });

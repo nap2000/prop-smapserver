@@ -1273,7 +1273,6 @@ define({
 	"n_lo": "Only reference data from forms that were launched from this form",
     "task_reminder": "Task Reminder",
     "submission": "Submission",
-    "cm_alert": "Case Management Alert",
     "console_update": "Console Update",
     "n_p": "Send reminder after",
     "n_oa": "Email original assignee",
@@ -1466,6 +1465,8 @@ define({
     "cm_a": "Case management alert",
     "cm_bar": "Bar",
     "cm_col": "Column",
-    "cm_pie": "Pie"
+    "cm_pie": "Pie",
+    "cm_alert": "Case Management Alert",
+    "cm_ns": "Select a survey to see case data"
 
 });
