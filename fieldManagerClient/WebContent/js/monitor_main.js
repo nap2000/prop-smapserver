@@ -56,13 +56,14 @@ require([
          'localise', 
          'globals',
          'moment',
+         'app/monitorChart',
          'app/monitor', 
          'app/map-ol-mgmt',
          'app/plugins',
          'tablesorter',
          'crf'
          
-         ], function($, jquery, common, localise, globals, moment) {
+         ], function($, jquery, common, localise, globals, moment, chart) {
 
     setCustomMonitor();			// Apply custom javascript
 });
