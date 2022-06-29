@@ -28,6 +28,8 @@ define([
         'globals'],
     function ($, modernizr, lang, globals) {
 
+        var gCharts = [];
+        
         return {
             getXLSData: getXLSData
         };
