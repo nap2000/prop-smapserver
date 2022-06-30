@@ -79,7 +79,7 @@ define([
          */
         function refresh() {
 
-            if(!gMonitor.cache.caseProgress) {
+            if(!gMonitor.caseProgress) {
                 // Data not available yet.
                 return;
             }
@@ -91,7 +91,7 @@ define([
             /*
              * Show the charts
              */
-            updateProgressChart(gProgressConfig, gMonitor.cache.caseProgress, gProgressChart);
+            updateProgressChart(gProgressConfig, gMonitor.caseProgress, gProgressChart);
 
         }
 

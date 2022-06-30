@@ -103,6 +103,16 @@
 								</select>
 							</div>
 						</div>
+						<div class="form-group conditional showinterval row">
+							<label class="lang col-sm-4 control-label" data-lang="cm_p" for="showInterval">interval</label>
+							<div class="col-sm-8">
+								<select class="form-control" id="showInterval">
+									<option value="7" class="lang" data-lang="cm_7days"></option>
+									<option value="14" class="lang" data-lang="cm_14days"></option>
+									<option value="30" class="lang" data-lang="cm_30days"></option>
+								</select>
+							</div>
+						</div>
 						<div class="showtarget conditional form-group row">
 							<label class="lang col-sm-4 control-label" data-lang="mon_sa" for="showAs">as</label>
 							<div class="col-sm-8">
@@ -112,12 +122,12 @@
 								</select>
 							</div>
 						</div>
-						<div class="form-group row conditional get_less_more" style="display:none;">
+						<div class="form-group row conditional get_less_more">
 							<button type="button" class="mx-2 col-sm-3 button-light get_less">&lt;&lt;&lt;</button>
 							<button type="button" class="mr-2 col-sm-3 button-light get_more">&gt;&gt;&gt;</button>
 							<span class="col -sm-6 get_less_more_text">Page 1 of 1</span>
 						</div>
-						<div class="conditional retry" style="display:none;">
+						<div class="conditional retry">
 							<button id="submission_retry" type="button" class="lang btn btn-info" data-lang="mon_retry">retry</button>
 						</div>
 						<div class="custom-control custom-checkbox conditional showold">
@@ -183,7 +193,7 @@
 
 
 	<!-- Main panel -->
-	<div class="card text-center conditional uploaded">
+	<div class="card text-center">
 		<div class="card-header">
 			<ul id="mainTabs" class="nav nav-tabs card-header-tabs" role="tablist">
 				<li id="submitTab" class="nav-item" role="presentation">
@@ -234,7 +244,7 @@
 							<div class="col-sm-12">
 								<div class="card card">
 									<div class="card-header d-flex chart-header">
-										<span class="mr-auto lang" data-lang="c_status"></span>
+										<span class="mr-auto lang" data-lang="cm_oc"></span>
 										<i class="fa fa-cog"></i>
 									</div>
 									<div class="card-body wide-chart">
