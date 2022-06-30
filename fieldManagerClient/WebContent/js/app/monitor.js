@@ -69,7 +69,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             });
 
             // Initialise the map and then hide it
-            $('#uploaded_map').show();
+            $('#uploaded_map').removeClass('d-none').show();
             initializeMap();
             $('#uploaded_map, #layers').hide();
 
@@ -189,39 +189,39 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             $('.conditional').hide();
 
             if(gPanel !== SOURCE_FORMS) {
-                $('.showtype, #showstatus').show();
+                $('.showtype, #showstatus').removeClass('d-none').show();
             }
 
             if(gPanel !== SOURCE_FORMS && gPanel !== SOURCE_OPTIN_MSG) {
-                $('.showold').show();
+                $('.showold').removeClass('d-none').show();
             }
 
             if(gPanel !== SOURCE_OPTIN_MSG) {
-                $('.showproject').show();
+                $('.showproject').removeClass('d-none').show();
             }
 
             if(typeof survey !== "undefined" && survey !== "_all" && showType !== "instances") {
-                $('#groupsurvey').show();
+                $('#groupsurvey').removeClass('d-none').show();
             }
 
             if(typeof survey !== "undefined" && survey !== "_all" && gPanel === SOURCE_UPLOADED) {
-                $('.retry').show();
+                $('.retry').removeClass('d-none').show();
             }
 
             if(gPanel === SOURCE_UPLOADED) {
                 if (showType === "instances") {
                     $(".showmap,.get_less_more, .showtarget").show();
                     if(showAs === "table") {
-                        $('.uploaded').show();
+                        $('.uploaded').removeClass('d-none').show();
                     } else {
-                        $('.uploaded_map').show();
+                        $('.uploaded_map').removeClass('d-none').show();
                     }
                 } else {
-                    $('.uploaded').show();
+                    $('.uploaded').removeClass('d-none').show();
                 }
 
             } else {
-                $('.uploaded').show();
+                $('.uploaded').removeClass('d-none').show();
             }
         }
 
@@ -740,7 +740,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
 
         function refreshCases() {
             var sId = $('#survey').val();
-            if(sId) {
+            if(sId && sId != "_all") {
 
                 addHourglass();
                 $.ajax({
