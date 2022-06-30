@@ -30,6 +30,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
         let CASE_PANEL = "case";
 
         window.gMonitor = {
+            caseProgress: undefined,
             cache: {
                 caseProgress: {}
             }
@@ -125,6 +126,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
 
 
             $('#m_refresh').click(function() {
+                gMonitor.cache = {};
                 refreshCases();
                 refreshData(globals.gCurrentProject, $('#survey option:selected').val());
             });
@@ -750,29 +752,39 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             if(sId && sId != "_all") {
 
                 var url = "/api/v1/cases/progress/" + $('#survey').val() + "?intervalCount=" + $('#showInterval').val();
-                url += addCacheBuster(url);
-                addHourglass();
-                $.ajax({
-                    url:  url,
-                    dataType: 'json',
-                    cache: false,
-                    success: function (data) {
-                        gMonitor.cache.caseProgress = data;
-                        $('#case_msg').hide();
-                        $('#case_data').removeClass("d-none").show();
-                        chart.refresh();
-                        removeHourglass();
-                    },
-                    error: function (xhr, textStatus, err) {
-                        removeHourglass();
-                        if (xhr.readyState == 0 || xhr.status == 0) {
-                            return;  // Not an error
-                        } else {
-                            $('#case_data').hide();
-                            $('#case_msg').removeClass("d-none").text(localise.set["c_error"] + ": " + xhr.responseText).show();
+                var savedData = gMonitor.cache[url];
+                if(savedData) {
+                    gMonitor.caseProgress = savedData;
+                    $('#case_msg').hide();
+                    $('#case_data').removeClass("d-none").show();
+                    chart.refresh();
+                } else {
+                    var cbUrl = url + addCacheBuster(url);
+                    addHourglass();
+                    $.ajax({
+                        url: cbUrl,
+                        dataType: 'json',
+                        cache: false,
+                        success: function (data) {
+                            removeHourglass();
+                            gMonitor.cache[url] = data;
+                            gMonitor.caseProgress = data;
+                            $('#case_msg').hide();
+                            $('#case_data').removeClass("d-none").show();
+                            chart.refresh();
+
+                        },
+                        error: function (xhr, textStatus, err) {
+                            removeHourglass();
+                            if (xhr.readyState == 0 || xhr.status == 0) {
+                                return;  // Not an error
+                            } else {
+                                $('#case_data').hide();
+                                $('#case_msg').removeClass("d-none").text(localise.set["c_error"] + ": " + xhr.responseText).show();
+                            }
                         }
-                    }
-                });
+                    });
+                }
             } else {
                 $('#case_data').hide();
                 $('#case_msg').removeClass("d-none").text(localise.set["cm_ns"]).show();
