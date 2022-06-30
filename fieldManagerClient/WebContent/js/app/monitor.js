@@ -329,60 +329,71 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                     url += "&rec_limit=200";
                 }
 
-                addHourglass();
-                $.ajax({
-                    url: url,
-                    cache: false,
-                    dataType: 'json',
-                    success: function(data) {
-                        removeHourglass();
+                var savedData = gMonitor.cache[url];
+                if(savedData) {
+                    processResponse(savedData, showSourceE, showTypeE);
+                } else {
+                    url += addCacheBuster(url);
+                    addHourglass();
+                    $.ajax({
+                        url: url,
+                        cache: false,
+                        dataType: 'json',
+                        success: function (data) {
+                            removeHourglass();
+                            gMonitor.cache[url] = data;
+                            processResponse(data, showSourceE, showTypeE);
 
-                        console.log("+++++++++++ received data: " + showSourceE + " : " + showTypeE);
-
-                        // Save start and end records for less & more buttons
-                        if(typeof data.totals !== "undefined") {
-                            gStartEvents.push(start_rec);
-                            $('.get_more').val(data.totals.max_rec);
-                            if(start_rec === 0) {
-                                $('.get_less').prop("disabled", true);
+                        },
+                        error: function (xhr, textStatus, err) {
+                            removeHourglass();
+                            if (xhr.readyState == 0 || xhr.status == 0) {
+                                return;  // Not an error
                             } else {
-                                $('.get_less').prop("disabled", false);
-                            }
-                            if(data.totals.more_recs === 0) {
-                                $('.get_more').prop("disabled", true);
-                            } else {
-                                $('.get_more').prop("disabled", false);
-                            }
-                            var totals_msg = localise.set["mon_page"];
-                            totals_msg = totals_msg.replace("%s1", gPageCount );
-                            totals_msg = totals_msg.replace("%s2", data.totals.from_date );
-                            totals_msg = totals_msg.replace("%s3", data.totals.to_date );
-                            $('.get_less_more_text').html(totals_msg);
-                        }
-                        if(showSourceE === FORMS_PANEL) {
-                            refreshFormsTable(data);
-                        } else if(showSourceE === NOTIFICATIONS_PANEL || showSourceE === OPTIN_MSG_PANEL) {
-                            refreshNotificationsTable(data, showType, showSourceE);
-                        } else if(showSourceE === SUBMIT_PANEL) {
-                            refreshUploadedTable(data, showType);
-                            if(showTypeE !== "totals") {
-                                refreshMap(data);
+                                alert("Failed to get data on submission of results");
                             }
                         }
-                    },
-                    error: function(xhr, textStatus, err) {
-                        removeHourglass();
-                        if(xhr.readyState == 0 || xhr.status == 0) {
-                            return;  // Not an error
-                        } else {
-                            alert("Failed to get data on submission of results");
-                        }
-                    }
-                });
+                    });
+                }
             }
 
             if(typeof projectId !== "undefined" && projectId != -1 && typeof surveyId != "undefined") {
                 refreshDataExec(showType, gPanel);
+            }
+        }
+
+        function processResponse(data, showSourceE, showTypeE) {
+            console.log("+++++++++++ received data: " + showSourceE + " : " + showTypeE);
+
+            // Save start and end records for less & more buttons
+            if(typeof data.totals !== "undefined") {
+                gStartEvents.push(start_rec);
+                $('.get_more').val(data.totals.max_rec);
+                if(start_rec === 0) {
+                    $('.get_less').prop("disabled", true);
+                } else {
+                    $('.get_less').prop("disabled", false);
+                }
+                if(data.totals.more_recs === 0) {
+                    $('.get_more').prop("disabled", true);
+                } else {
+                    $('.get_more').prop("disabled", false);
+                }
+                var totals_msg = localise.set["mon_page"];
+                totals_msg = totals_msg.replace("%s1", gPageCount );
+                totals_msg = totals_msg.replace("%s2", data.totals.from_date );
+                totals_msg = totals_msg.replace("%s3", data.totals.to_date );
+                $('.get_less_more_text').html(totals_msg);
+            }
+            if(showSourceE === FORMS_PANEL) {
+                refreshFormsTable(data);
+            } else if(showSourceE === NOTIFICATIONS_PANEL || showSourceE === OPTIN_MSG_PANEL) {
+                refreshNotificationsTable(data, showType, showSourceE);
+            } else if(showSourceE === SUBMIT_PANEL) {
+                refreshUploadedTable(data, showType);
+                if(showTypeE !== "totals") {
+                    refreshMap(data);
+                }
             }
         }
 
@@ -665,6 +676,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                     cache: false,
                     success: function() {
                         removeHourglass();
+                        gMonitor.cache = {};    // Clear the cache
                         refreshData(globals.gCurrentProject, $('#survey option:selected').val());
                     },
                     error: function(xhr, textStatus, err) {
@@ -759,10 +771,10 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                     $('#case_data').removeClass("d-none").show();
                     chart.refresh();
                 } else {
-                    var cbUrl = url + addCacheBuster(url);
+                    url += addCacheBuster(url);
                     addHourglass();
                     $.ajax({
-                        url: cbUrl,
+                        url: url,
                         dataType: 'json',
                         cache: false,
                         success: function (data) {
@@ -799,7 +811,9 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             gPanel = name;
 
             setcontrols();
-
+            refreshData(globals.gCurrentProject, $('#survey option:selected').val());
+            refreshCases();
+            
             $(".monpanel").hide();
             $this.tab('show');
             $('#' + name + 'Panel').removeClass('d-none').show();
