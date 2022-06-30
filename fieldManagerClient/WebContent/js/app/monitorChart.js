@@ -42,23 +42,30 @@ define([
             initProgressChart();
             initialised = true;
 
-            refresh();
         }
 
         function initProgressChart() {
             gProgressConfig = {
                 type: 'bar',
-                responsive: true,
                 data: {
                     labels: [],
                     datasets: [{
-                        label: localise.set["c_status"],
-                        backgroundColor: 'rgb(255, 99, 132)',
-                        borderColor: 'rgb(255, 99, 132)',
+                        label: localise.set["c_opened"],
+                        backgroundColor: 'rgb(255, 00, 00)',
+                        borderColor: 'rgb(255, 00, 00)',
                         data: [],
-                    }]
+                    },
+                        {
+                            label: localise.set["c_closed"],
+                            backgroundColor: 'rgb(00, 64, 00)',
+                            borderColor: 'rgb(00, 64, 00)',
+                            data: [],
+                        }]
                 },
-                options: {}
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                }
             };
 
             gProgressChart = new Chart(
@@ -77,68 +84,25 @@ define([
                 return;
             }
 
-            var progressVal;
-
             if(!initialised) {
                 init()
-            }
-
-            var progressData = {};
-            if(cd.settings.finalStatus && cd.settings.statusQuestion) {
-                for (var i = 0; i < results.length; i++) {
-
-                    progressVal = results[i][cd.settings.statusQuestion];
-                    assigned =  results[i]["_assigned"];
-                    alert =  results[i]["_alert"];
-                    criticality = results[i][cd.settings.criticalityQuestion]
-
-                    if(!(statusVal === cd.settings.finalStatus && assigned === "")) {    // Ignore completed tasks that are not assigned
-
-                        if(statusVal === "") {
-                            statusVal = localise.set["c_none"];
-                        }
-                        if(assigned === "") {
-                            assigned = localise.set["t_u"];
-                        }
-                        if(criticality === "") {
-                            criticality = localise.set["c_none"];
-                        }
-
-                        statusData[statusVal] = statusData[statusVal] || 0; // Ensure value is numeric
-                        statusData[statusVal]++;
-
-                        assignedData[assigned] = assignedData[assigned] || 0; // Ensure value is numeric
-                        assignedData[assigned]++;
-
-                        if(!(statusVal === cd.settings.finalStatus)) {      // Ignore completed
-                            if(alert && alert.trim().length > 0) {
-                                alertData[alert] = alertData[alert] || 0; // Ensure value is numeric
-                                alertData[alert]++;
-                            }
-
-                            criticalityData[criticality] = criticalityData[criticality] || 0; // Ensure value is numeric
-                            criticalityData[criticality]++;
-                        }
-                    }
-                }
             }
 
             /*
              * Show the charts
              */
-            updateChart(gProgressConfig, progressData, gProgressChart);
+            updateProgressChart(gProgressConfig, gMonitor.cache.caseProgress, gProgressChart);
 
         }
 
-        function updateChart(config, data, chart) {
-            var keys = Object.keys(data).sort();
-
+        function updateProgressChart(config, data, chart) {
+            var i;
             config.data.labels = [];
             config.data.datasets[0].data = [];
-            for (var i = 0; i < keys.length; i++) {
-                var key = keys[i];
-                config.data.labels.push(key);
-                config.data.datasets[0].data.push(data[key]);
+            for (i = 0; i < data.length; i++) {
+                config.data.labels.push(data[i].day);
+                config.data.datasets[0].data.push(data[i].opened);
+                config.data.datasets[1].data.push(data[i].closed);
             }
             chart.update();
         }

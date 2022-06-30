@@ -773,12 +773,9 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
 
             setcontrols();
 
-            if(name === 'case') {
-                chart.refresh();
-            }
-            $this.tab('show');
             $(".monpanel").hide();
-            $('#' + name + 'Panel').removeClass("d-none").show();
+            $this.tab('show');
+            $('#' + name + 'Panel').removeClass('d-none').show();
             setInLocalStorage("currentTab" + $('body').data('page'), '#' + name + 'Tab a');
 
         }
