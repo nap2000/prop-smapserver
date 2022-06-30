@@ -1469,6 +1469,11 @@ define({
     "cm_col": "Column",
     "cm_pie": "Pie",
     "cm_alert": "Case Management Alert",
-    "cm_ns": "Select a survey to see case data"
+    "cm_ns": "Select a survey to see case data",
+    "cm_oc": "Count of cases opened and closed per day",
+    "cm_p": "Show data for last",
+    "cm_7days": "7 days",
+    "cm_14days": "14 days",
+    "cm_30days": "30 days"
 
 });

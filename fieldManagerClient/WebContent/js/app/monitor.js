@@ -23,10 +23,11 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             gPageCount = 1,			// Only in this java script file
             gCaseProgress;
 
-        let SOURCE_UPLOADED = "submit";
-        let SOURCE_FORMS = "forms";
-        let SOURCE_NOTIFICATIONS = "notify";
-        let SOURCE_OPTIN_MSG = "optin";
+        let SUBMIT_PANEL = "submit";
+        let FORMS_PANEL = "forms";
+        let NOTIFICATIONS_PANEL = "notify";
+        let OPTIN_MSG_PANEL = "optin";
+        let CASE_PANEL = "case";
 
         window.gMonitor = {
             cache: {
@@ -51,21 +52,21 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
              */
             $('#submitTab a').click(function (e) {
                 e.preventDefault();
-                panelChange($(this), 'submit');
+                panelChange($(this), SUBMIT_PANEL);
             });
 
             $('#notifyTab a').click(function (e) {
                 e.preventDefault();
-                panelChange($(this), 'notify');
+                panelChange($(this), NOTIFICATIONS_PANEL);
             });
 
             $('#optinTab a').click(function (e) {
                 e.preventDefault();
-                panelChange($(this), 'optin');
+                panelChange($(this), OPTIN_MSG_PANEL);
             });
             $('#caseTab a').click(function (e) {
                 e.preventDefault();
-                panelChange($(this), 'case');
+                panelChange($(this), CASE_PANEL);
             });
 
             // Initialise the map and then hide it
@@ -79,6 +80,10 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             $('#showType').change(function () {
                 setcontrols();
                 refreshData(globals.gCurrentProject, $('#survey option:selected').val());
+            });
+
+            $('#showInterval').change(function () {
+                refreshCases();
             });
 
             $('#showAs').change(function () {
@@ -188,27 +193,31 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
 
             $('.conditional').hide();
 
-            if(gPanel !== SOURCE_FORMS) {
+            if(gPanel === SUBMIT_PANEL || gPanel === NOTIFICATIONS_PANEL || gPanel === OPTIN_MSG_PANEL) {
                 $('.showtype, #showstatus').removeClass('d-none').show();
+
+                if(typeof survey !== "undefined" && survey !== "_all" && showType !== "instances") {
+                    $('#groupsurvey').removeClass('d-none').show();
+                }
             }
 
-            if(gPanel !== SOURCE_FORMS && gPanel !== SOURCE_OPTIN_MSG) {
+            if(gPanel === SUBMIT_PANEL || gPanel === NOTIFICATIONS_PANEL) {
                 $('.showold').removeClass('d-none').show();
             }
 
-            if(gPanel !== SOURCE_OPTIN_MSG) {
+            if(gPanel !== OPTIN_MSG_PANEL) {
                 $('.showproject').removeClass('d-none').show();
             }
 
-            if(typeof survey !== "undefined" && survey !== "_all" && showType !== "instances") {
-                $('#groupsurvey').removeClass('d-none').show();
+            if(gPanel === CASE_PANEL) {
+                $('.showinterval').removeClass('d-none').show();
             }
 
-            if(typeof survey !== "undefined" && survey !== "_all" && gPanel === SOURCE_UPLOADED) {
+            if(typeof survey !== "undefined" && survey !== "_all" && gPanel === SUBMIT_PANEL) {
                 $('.retry').removeClass('d-none').show();
             }
 
-            if(gPanel === SOURCE_UPLOADED) {
+            if(gPanel === SUBMIT_PANEL) {
                 if (showType === "instances") {
                     $(".showmap,.get_less_more, .showtarget").show();
                     if(showAs === "table") {
@@ -220,8 +229,6 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                     $('.uploaded').removeClass('d-none').show();
                 }
 
-            } else {
-                $('.uploaded').removeClass('d-none').show();
             }
         }
 
@@ -284,16 +291,16 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                 }
 
                 var url;
-                if(showSourceE === SOURCE_NOTIFICATIONS) {
+                if(showSourceE === NOTIFICATIONS_PANEL) {
                     url = "/surveyKPI/eventList/notifications/" + projectId + "/" + surveyId;
-                } else  if(showSourceE === SOURCE_OPTIN_MSG) {
+                } else  if(showSourceE === OPTIN_MSG_PANEL) {
                     url = "/surveyKPI/eventList/optin";
                 } else {
                     url = "/surveyKPI/eventList/" + projectId + "/" + surveyId;
                 }
 
 
-                if(showSourceE === SOURCE_FORMS) {
+                if(showSourceE === FORMS_PANEL) {
                     url += "/forms";
                 } else {
                     if(showTypeE === "totals" ) {
@@ -350,11 +357,11 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                             totals_msg = totals_msg.replace("%s3", data.totals.to_date );
                             $('.get_less_more_text').html(totals_msg);
                         }
-                        if(showSourceE === SOURCE_FORMS) {
+                        if(showSourceE === FORMS_PANEL) {
                             refreshFormsTable(data);
-                        } else if(showSourceE === SOURCE_NOTIFICATIONS || showSourceE === SOURCE_OPTIN_MSG) {
+                        } else if(showSourceE === NOTIFICATIONS_PANEL || showSourceE === OPTIN_MSG_PANEL) {
                             refreshNotificationsTable(data, showType, showSourceE);
-                        } else if(showSourceE === SOURCE_UPLOADED) {
+                        } else if(showSourceE === SUBMIT_PANEL) {
                             refreshUploadedTable(data, showType);
                             if(showTypeE !== "totals") {
                                 refreshMap(data);
@@ -527,14 +534,14 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                 reason,
                 showType = $("#showType").val();
 
-            $elem = gPanel === SOURCE_NOTIFICATIONS ? $("#notify_events") : $("#optin_events");
-            $msg = gPanel === SOURCE_OPTIN_MSG ? $("#notify_msg") : $("#optin_msg");
+            $elem = gPanel === NOTIFICATIONS_PANEL ? $("#notify_events") : $("#optin_events");
+            $msg = gPanel === OPTIN_MSG_PANEL ? $("#notify_msg") : $("#optin_msg");
 
             $elem.empty();
             $msg.empty();
 
             if(typeof features === "undefined" || features.length === 0) {
-                var msg = "<h5>" + (gPanel === SOURCE_NOTIFICATIONS ? localise.set["msg_nn"] : localise.set["msg_noi"]) + "</h5>";
+                var msg = "<h5>" + (gPanel === NOTIFICATIONS_PANEL ? localise.set["msg_nn"] : localise.set["msg_noi"]) + "</h5>";
                 $msg.html(msg);
                 return;
             }
@@ -742,9 +749,11 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             var sId = $('#survey').val();
             if(sId && sId != "_all") {
 
+                var url = "/api/v1/cases/progress/" + $('#survey').val() + "?intervalCount=" + $('#showInterval').val();
+                url += addCacheBuster(url);
                 addHourglass();
                 $.ajax({
-                    url: "/api/v1/cases/progress/" + $('#survey').val(),
+                    url:  url,
                     dataType: 'json',
                     cache: false,
                     success: function (data) {

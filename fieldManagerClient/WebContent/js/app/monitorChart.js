@@ -99,6 +99,7 @@ define([
             var i;
             config.data.labels = [];
             config.data.datasets[0].data = [];
+            config.data.datasets[1].data = [];
             for (i = 0; i < data.length; i++) {
                 config.data.labels.push(data[i].day);
                 config.data.datasets[0].data.push(data[i].opened);
