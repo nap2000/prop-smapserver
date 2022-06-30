@@ -331,7 +331,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
 
                 var savedData = gMonitor.cache[url];
                 if(savedData) {
-                    processResponse(savedData, showSourceE, showTypeE);
+                    processResponse(savedData, showSourceE, showTypeE, start_rec);
                 } else {
                     url += addCacheBuster(url);
                     addHourglass();
@@ -342,7 +342,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                         success: function (data) {
                             removeHourglass();
                             gMonitor.cache[url] = data;
-                            processResponse(data, showSourceE, showTypeE);
+                            processResponse(data, showSourceE, showTypeE, start_rec);
 
                         },
                         error: function (xhr, textStatus, err) {
@@ -362,7 +362,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             }
         }
 
-        function processResponse(data, showSourceE, showTypeE) {
+        function processResponse(data, showSourceE, showTypeE, start_rec) {
             console.log("+++++++++++ received data: " + showSourceE + " : " + showTypeE);
 
             // Save start and end records for less & more buttons
@@ -813,7 +813,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             setcontrols();
             refreshData(globals.gCurrentProject, $('#survey option:selected').val());
             refreshCases();
-            
+
             $(".monpanel").hide();
             $this.tab('show');
             $('#' + name + 'Panel').removeClass('d-none').show();

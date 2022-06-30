@@ -21,7 +21,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
+if (typeof(localStorage) !== "undefined") {
 	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
 } 
 
@@ -34,7 +34,6 @@ requirejs.config({
      	i18n: '../../../../js/libs/i18n',
      	async: '../../../../js/libs/async',
      	localise: '../../../../js/app/localise',
-    	modernizr: '../../../../js/libs/modernizr',
     	common: '../../../../js/app/common',
     	moment: '../../../../js/libs/moment-with-locales.min',
     	globals: '../../../../js/app/globals',
