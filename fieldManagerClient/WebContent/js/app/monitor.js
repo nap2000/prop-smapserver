@@ -168,9 +168,15 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
              * Get the data
              */
             refreshData(globals.gCurrentProject, $('#survey option:selected').val());
-
-            // Get case management data
             refreshCases();
+
+            // Set page defaults
+            var currentTab = getFromLocalStorage("currentTab" + $('body').data('page'));
+            if(currentTab) {
+                $(currentTab).trigger('click');
+            } else {
+                $('#submitTab a').trigger('click');
+            }
 
         });
 
