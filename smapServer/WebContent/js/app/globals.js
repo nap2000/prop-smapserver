@@ -406,12 +406,13 @@ define(function () {
 		    dateTime:['date_type', 'no-calendar', 'w'],
 		    time:['w'],
             decimal:['thousands-sep', 'bearing', 'w'],
-		    geotrace:['w'],
-		    geoshape:['w'],
+		    geotrace:['placement-map', 'w'],
+		    geoshape:['placement-map', 'w'],
 		    acknowledge:['w'],
 		    range:['w', 'rating', 'vertical', 'picker'],
 		    file:['w'],
-		    rank:['w']
+		    rank:['w'],
+            geocompound:['w', 'placement-map']
 	    };
 
 	    this.appearanceDetails = {
