@@ -28,119 +28,101 @@ define([
         'localise',
         'globals'],
     function ($, modernizr, localise, globals) {
+
+        var charts = [
+            {
+                name: "status",
+                config: {
+                    type: 'bar',
+                    responsive: true,
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: localise.set["c_status"],
+                            backgroundColor: 'rgb(255, 99, 132)',
+                            borderColor: 'rgb(255, 99, 132)',
+                            data: [],
+                        }]
+                    },
+                    options: {}
+                }
+            },
+            {
+                name: "assigned",
+                config: {
+                    type: 'bar',
+                    responsive: true,
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: localise.set["t_assigned"],
+                            backgroundColor: 'rgb(0, 0, 255)',
+                            borderColor: 'rgb(0, 0, 255)',
+                            data: [],
+                        }]
+                    },
+                    options: {}
+                }
+            },
+            {
+                name: "alert",
+                config: {
+                    type: 'bar',
+                    responsive: true,
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: localise.set["c_alert"],
+                            backgroundColor: 'rgb(0, 255, 0)',
+                            borderColor: 'rgb(0, 255, 0)',
+                            data: [],
+                        }]
+                    },
+                    options: {}
+                }
+            },
+            {
+                name: "criticality",
+                config: {
+                    type: 'bar',
+                    responsive: true,
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: localise.set["c_crit"],
+                            backgroundColor: 'rgb(255, 255, 0)',
+                            borderColor: 'rgb(0, 0, 0)',
+                            data: [],
+                        }]
+                    },
+                    options: {}
+                }
+            }
+        ];
+
         return {
             refresh: refresh
         };
 
         var initialised = false;
 
-        var gStatusChart;
-        var gStatusConfig;
-        var gAssignedChart;
-        var gAssignedConfig;
-        var gAlertChart;
-        var gAlertConfig;
-        var gCriticalityChart;
-        var gCriticalityConfig;
-
         function init() {
 
-            initStatus();
-            initAssigned();
-            initAlert();
-            initCriticality();
+            initCharts();
+
             initialised = true;
 
             refresh();
         }
 
-        function initStatus() {
-            gStatusConfig = {
-                type: 'bar',
-                responsive: true,
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: localise.set["c_status"],
-                        backgroundColor: 'rgb(255, 99, 132)',
-                        borderColor: 'rgb(255, 99, 132)',
-                        data: [],
-                    }]
-                },
-                options: {}
-            };
-
-            gStatusChart = new Chart(
-                document.getElementById('statusChart'),
-                gStatusConfig
-            );
-        }
-
-        function initAlert() {
-            gAlertConfig = {
-                type: 'bar',
-                responsive: true,
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: localise.set["c_alert"],
-                        backgroundColor: 'rgb(0, 255, 0)',
-                        borderColor: 'rgb(0, 255, 0)',
-                        data: [],
-                    }]
-                },
-                options: {}
-            };
-
-            gAlertChart = new Chart(
-                document.getElementById('alertChart'),
-                gAlertConfig
-            );
-        }
-
-
-        function initAssigned() {
-            gAssignedConfig = {
-                type: 'bar',
-                responsive: true,
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: localise.set["t_assigned"],
-                        backgroundColor: 'rgb(0, 0, 255)',
-                        borderColor: 'rgb(0, 0, 255)',
-                        data: [],
-                    }]
-                },
-                options: {}
-            };
-
-            gAssignedChart = new Chart(
-                document.getElementById('assignedChart'),
-                gAssignedConfig
-            );
-        }
-
-        function initCriticality() {
-            gCriticalityConfig = {
-                type: 'bar',
-                responsive: true,
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: localise.set["c_crit"],
-                        backgroundColor: 'rgb(255, 255, 0)',
-                        borderColor: 'rgb(0, 0, 0)',
-                        data: [],
-                    }]
-                },
-                options: {}
-            };
-
-            gCriticalityChart = new Chart(
-                document.getElementById('criticalityChart'),
-                gCriticalityConfig
-            );
+        function initCharts() {
+            var i;
+            for(i = 0; i < charts.length; i++) {
+                charts[i].chart = new Chart(
+                    document.getElementById('chart' + i),
+                    charts[i].config
+                );
+            }
         }
 
         /*
@@ -169,6 +151,7 @@ define([
                 init()
             }
 
+            var chartData = [];
             var statusData = {};
             var assignedData = {};
             var alertData = {};
@@ -212,13 +195,17 @@ define([
                 }
             }
 
+            chartData.push(statusData);
+            chartData.push(assignedData);
+            chartData.push(alertData);
+            chartData.push(criticalityData);
+            
             /*
              * Show the charts
              */
-            updateChart(gStatusConfig, statusData, gStatusChart);
-            updateChart(gAssignedConfig, assignedData, gAssignedChart);
-            updateChart(gAlertConfig, alertData, gAlertChart);
-            updateChart(gCriticalityConfig, criticalityData, gCriticalityChart);
+            for(i = 0; i < charts.length; i++) {
+                updateChart(charts[i].config, chartData[i], charts[i].chart);
+            }
 
         }
 
