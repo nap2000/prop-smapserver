@@ -145,6 +145,33 @@ require([
             currentData: undefined,
             data: {},
         },
+        charts: [
+            {
+                name: "status",
+                type: 'bar',
+                label: localise.set["c_status"],
+                color: 'rgb(255, 99, 132)'
+            },
+            {
+                name: "assigned",
+                type: 'bar',
+                label: localise.set["t_assigned"],
+                color: 'rgb(0, 0, 255)'
+            },
+            {
+                name: "alert",
+                type: 'bar',
+                label: localise.set["c_alert"],
+                color: 'rgb(0, 255, 0)'
+            },
+            {
+                name: "criticality",
+                type: 'bar',
+                label: localise.set["c_crit"],
+                color: 'rgb(255, 255, 0)'
+            }
+
+        ],
         gSelectedRecord: undefined,
         gBulkInstances: [],
         gSelectedSurveyIndex: undefined,
@@ -230,6 +257,9 @@ require([
 
         // Get Notification Types for this server
         getNotificationTypes();
+
+        // Get the user's charts
+        getCharts();
 
         // Set response to clearing single record view
         $('#clear_srview').click(function() {
@@ -539,60 +569,6 @@ require([
             });
         });
 
-        /*
-        $('#shareRecord').click(function (e) {
-            e.preventDefault();
-            $('.shareRecordOnly').toggle();
-            // Automatically get the link if there are no roles to select
-            if ($('.role_select_roles').text().length === 0) {
-                $("#getSharedRecord").trigger("click");
-            }
-        });
-
-        $('#getSharedRecord').click(function (e) {
-            e.preventDefault();
-
-            var groupSurvey = globals.gGroupSurveys[globals.gCurrentSurvey];
-
-            var url = "/surveyKPI/managed/actionlink/" + globals.gCurrentSurvey + "/" + gTasks.gPriKey;
-            if(groupSurvey && groupSurvey !== "") {
-                url += "?groupSurvey=" + groupSurvey;
-            }
-
-            if (globals.gIsSecurityAdministrator) {
-                var roleIds = [],
-                    id;
-                $('input[type=checkbox]:checked', '.role_select_roles').each(function () {
-                    id = $(this).val();
-                    roleIds.push(id);
-                });
-                if (roleIds.length > 0) {
-                    url += "?roles=" + roleIds.join();
-                }
-            }
-
-            addHourglass();
-            $.ajax({
-                url: url,
-                dataType: 'json',
-                cache: false,
-                success: function (data) {
-
-                    removeHourglass();
-                    $('#srLink').val(data.link);
-                },
-                error: function (xhr, textStatus, err) {
-                    removeHourglass();
-                    if (xhr.readyState == 0 || xhr.status == 0) {
-                        return;  // Not an error
-                    } else {
-                        console.log("Error: Failed to get sharing link: " + err);
-                    }
-                }
-            });
-
-        });
-        */
 
         $('.genrecordpdf').click(function (e)  {
             e.preventDefault();
@@ -906,6 +882,16 @@ require([
         genFile(true, "xlsx");
         $('#overviewReport').modal("hide");
     });
+
+    /*
+     * Load the chart definitions from the server
+    */
+    function getCharts() {
+        var i;
+        for(i = 0; i < window.gTasks.charts.length; i++) {
+            chart.add(window.gTasks.charts[i]);
+        }
+    }
 
     /*
      * Generate a file of data
