@@ -29,100 +29,56 @@ define([
         'globals'],
     function ($, modernizr, localise, globals) {
 
-        var charts = [
-            {
-                name: "status",
+        var charts = [];
+
+        return {
+            add: add,
+            refresh: refresh
+        };
+
+        var initialised = false;
+
+        function add(settings) {
+            var item = {
+                name: settings.name,
                 config: {
-                    type: 'bar',
+                    type: settings.type,
                     responsive: true,
                     data: {
                         labels: [],
-                        datasets: [{
-                            label: localise.set["c_status"],
-                            backgroundColor: 'rgb(255, 99, 132)',
-                            borderColor: 'rgb(255, 99, 132)',
-                            data: [],
-                        }]
-                    },
-                    options: {}
-                }
-            },
-            {
-                name: "assigned",
-                config: {
-                    type: 'bar',
-                    responsive: true,
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: localise.set["t_assigned"],
-                            backgroundColor: 'rgb(0, 0, 255)',
-                            borderColor: 'rgb(0, 0, 255)',
-                            data: [],
-                        }]
-                    },
-                    options: {}
-                }
-            },
-            {
-                name: "alert",
-                config: {
-                    type: 'bar',
-                    responsive: true,
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: localise.set["c_alert"],
-                            backgroundColor: 'rgb(0, 255, 0)',
-                            borderColor: 'rgb(0, 255, 0)',
-                            data: [],
-                        }]
-                    },
-                    options: {}
-                }
-            },
-            {
-                name: "criticality",
-                config: {
-                    type: 'bar',
-                    responsive: true,
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: localise.set["c_crit"],
-                            backgroundColor: 'rgb(255, 255, 0)',
+                        datasets:[{
+                            label: settings.label,
+                            backgroundColor: settings.color,
                             borderColor: 'rgb(0, 0, 0)',
                             data: [],
                         }]
                     },
                     options: {}
                 }
-            }
-        ];
+            };
 
-        return {
-            refresh: refresh
-        };
+            // create the canvas element
+            var label = settings.label;
+            var index = charts.length;
+            var card = `<div class="col-sm-12 col-md-6 col-lg-3">
+                                    <div class="card">
+                                        <div class="card-header d-flex chart-header">
+                                            <span class="mr-auto">${label}</span>
+                                            <i class="fa fa-cog"></i>
+                                        </div>
+                                        <div class="card-body">
+                                            <canvas id="chart${index}"></canvas>
+                                        </div>
+                                    </div>
+                                </div>`;
+            $('#chartcontent').append(card);
 
-        var initialised = false;
-
-        function init() {
-
-            initCharts();
-
-            initialised = true;
-
-            refresh();
-        }
-
-        function initCharts() {
-            var i;
-            for(i = 0; i < charts.length; i++) {
-                charts[i].chart = new Chart(
-                    document.getElementById('chart' + i),
-                    charts[i].config
-                );
-            }
+            // Associate the canvas element with the chart
+            item.chart = new Chart(
+                document.getElementById('chart' + charts.length),
+                item.config
+            );
+            charts.push(item);
         }
 
         /*
@@ -146,10 +102,6 @@ define([
                 page: 'all',      // 'all',     'current'
                 search: 'applied',     // 'none',    'applied', 'removed'
             }).data();
-
-            if(!initialised) {
-                init()
-            }
 
             var chartData = [];
             var statusData = {};
@@ -199,7 +151,7 @@ define([
             chartData.push(assignedData);
             chartData.push(alertData);
             chartData.push(criticalityData);
-            
+
             /*
              * Show the charts
              */
