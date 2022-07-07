@@ -147,25 +147,25 @@ require([
         },
         charts: [
             {
-                name: "status",
+                source_type: "status",
                 type: 'bar',
                 label: localise.set["c_status"],
                 color: 'rgb(255, 99, 132)'
             },
             {
-                name: "assigned",
+                source_type: "assigned",
                 type: 'bar',
                 label: localise.set["t_assigned"],
                 color: 'rgb(0, 0, 255)'
             },
             {
-                name: "alert",
+                source_type: "alert",
                 type: 'bar',
                 label: localise.set["c_alert"],
                 color: 'rgb(0, 255, 0)'
             },
             {
-                name: "criticality",
+                source_type: "criticality",
                 type: 'bar',
                 label: localise.set["c_crit"],
                 color: 'rgb(255, 255, 0)'
@@ -185,6 +185,7 @@ require([
     window.gSaveType = '';
     window.gNotifications = undefined;
     window.gChanges = [];
+    window.gSelectedChart = -1;
 
 
     $(document).ready(function () {
@@ -403,6 +404,18 @@ require([
             }
             $('#userAssign').modal("show");
         });
+
+        /*
+         * add a chart
+         */
+        $('#m_add_chart').click(function(e) {
+            e.preventDefault();
+
+            $('#addChartForm')[0].reset();
+            gSelectedChart = -1;
+            $('#chart_settings_popup').modal("show");
+        });
+
 
         /*
          * Delete a record
@@ -785,7 +798,23 @@ require([
 
 		    downloadFile(link);
 		    $('#tdh_individual_report_popup').modal("hide");
-	    })
+	    });
+
+        $('#chart_settings_save').click(function() {
+            if(gSelectedChart >= 0) {   // edit
+                gTasks.charts[gSelectedChart].type = $('#cs_chart_type').val();
+                chart.replace(gTasks.charts[gSelectedChart], gSelectedChart);
+            } else {
+                var item = {
+                    source_type: $('#cs_source_type').val(),
+                    type: $('#cs_chart_type').val(),
+                    label:  $('#cs_chart_label').val(),
+                    color: 'rgb(0, 0, 255)'
+                }
+                gTasks.charts.push(item);
+                chart.add(item);
+            }
+        });
 
         // Set page defaults
         var currentTab = getFromLocalStorage("currentTab" + page);
@@ -891,6 +920,11 @@ require([
         for(i = 0; i < window.gTasks.charts.length; i++) {
             chart.add(window.gTasks.charts[i]);
         }
+        $('.fa-cog','#chartcontent').click(function(){
+            gSelectedChart = $(this).data("idx");
+            $('#cs_chart_type').val(gTasks.charts[gSelectedChart].type);
+            $('#chart_settings_popup').modal("show");
+        });
     }
 
     /*

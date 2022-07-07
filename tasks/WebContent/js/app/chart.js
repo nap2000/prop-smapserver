@@ -33,15 +33,16 @@ define([
 
         return {
             add: add,
+            replace: replace,
             refresh: refresh
         };
 
-        var initialised = false;
-
         function add(settings) {
             var item = {
-                name: settings.name,
-                config: {
+                source: {
+                    source_type: settings.source_type
+                },
+                config: updateConfigFromSettings({
                     type: settings.type,
                     responsive: true,
                     data: {
@@ -54,7 +55,7 @@ define([
                         }]
                     },
                     options: {}
-                }
+                }, settings)
             };
 
             // create the canvas element
@@ -64,7 +65,7 @@ define([
                                     <div class="card">
                                         <div class="card-header d-flex chart-header">
                                             <span class="mr-auto">${label}</span>
-                                            <i class="fa fa-cog"></i>
+                                            <i class="fa fa-cog" data-idx="${index}"></i>
                                         </div>
                                         <div class="card-body">
                                             <canvas id="chart${index}"></canvas>
@@ -81,15 +82,28 @@ define([
             charts.push(item);
         }
 
+        function replace(settings, index) {
+            charts[index].config = updateConfigFromSettings(charts[index].config, settings);
+            charts[index].chart.update();
+        }
+
+        function updateConfigFromSettings(config, settings) {
+            config.type = settings.type;
+            config.data.datasets[0].backgroundColor = settings.color;
+
+            if(config.type === 'col') {
+                config.type = 'bar';
+                config.options.indexAxis = 'y';
+            }
+
+            return config;
+        }
+
         /*
          * Extract the data in chart form
          */
         function refresh() {
 
-            var statusVal,
-                assigned,
-                alert,
-                criticality;
 
             if(!gTasks.cache.currentData) {
                 // Data not available yet.
@@ -103,60 +117,41 @@ define([
                 search: 'applied',     // 'none',    'applied', 'removed'
             }).data();
 
-            var chartData = [];
-            var statusData = {};
-            var assignedData = {};
-            var alertData = {};
-            var criticalityData = {};
             if(cd.settings.finalStatus && cd.settings.statusQuestion) {
-                for (var i = 0; i < results.length; i++) {
+                for(var chartIdx = 0; chartIdx < charts.length; chartIdx++) {
 
-                    statusVal = results[i][cd.settings.statusQuestion];
-                    assigned =  results[i]["_assigned"];
-                    alert =  results[i]["_alert"];
-                    criticality = results[i][cd.settings.criticalityQuestion]
+                    var source_type = charts[chartIdx].source.source_type;
+                    var key;
+                    var chartData = {};
 
-                    if(!(statusVal === cd.settings.finalStatus && assigned === "")) {    // Ignore completed tasks that are not assigned
-
-                        if(statusVal === "") {
-                            statusVal = localise.set["c_none"];
-                        }
-                        if(assigned === "") {
-                            assigned = localise.set["t_u"];
-                        }
-                        if(criticality === "") {
-                            criticality = localise.set["c_none"];
-                        }
-
-                        statusData[statusVal] = statusData[statusVal] || 0; // Ensure value is numeric
-                        statusData[statusVal]++;
-
-                        assignedData[assigned] = assignedData[assigned] || 0; // Ensure value is numeric
-                        assignedData[assigned]++;
-
-                        if(!(statusVal === cd.settings.finalStatus)) {      // Ignore completed
-                            if(alert && alert.trim().length > 0) {
-                                alertData[alert] = alertData[alert] || 0; // Ensure value is numeric
-                                alertData[alert]++;
-                            }
-
-                            criticalityData[criticality] = criticalityData[criticality] || 0; // Ensure value is numeric
-                            criticalityData[criticality]++;
-                        }
+                    // TODO the key should be part of the config
+                    if(source_type === 'status') {
+                        key = cd.settings.statusQuestion;
+                    } else  if(source_type === 'assigned') {
+                        key = "_assigned";
+                    } else  if(source_type === 'alert') {
+                        key = "_alert";
+                    } else  if(source_type === 'criticality') {
+                        key = cd.settings.criticalityQuestion;
                     }
+
+                    for (var i = 0; i < results.length; i++) {
+
+                        var val = results[i][key];
+
+                        // ignore records without an alert when getting alert chart data
+                        if (key === '_alert' && val.trim().length === 0) {
+                            continue;
+                        } else if (val === "") {
+                            val = localise.set["c_none"];
+                        }
+
+                        chartData[val] = chartData[val] || 0; // Ensure value is numeric
+                        chartData[val]++;
+
+                    }
+                    updateChart(charts[chartIdx].config, chartData, charts[chartIdx].chart);
                 }
-            }
-
-            chartData.push(statusData);
-            chartData.push(assignedData);
-            chartData.push(alertData);
-            chartData.push(criticalityData);
-
-            /*
-             * Show the charts
-             */
-            for(i = 0; i < charts.length; i++) {
-                updateChart(charts[i].config, chartData[i], charts[i].chart);
             }
 
         }
