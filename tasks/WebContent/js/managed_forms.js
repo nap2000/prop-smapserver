@@ -147,25 +147,25 @@ require([
         },
         charts: [
             {
-                source_type: "status",
+                subject: "status",
                 type: 'bar',
                 label: localise.set["c_status"],
                 color: 'rgb(255, 99, 132)'
             },
             {
-                source_type: "assigned",
+                subject: "assigned",
                 type: 'bar',
                 label: localise.set["t_assigned"],
                 color: 'rgb(0, 0, 255)'
             },
             {
-                source_type: "alert",
+                subject: "alert",
                 type: 'bar',
                 label: localise.set["c_alert"],
                 color: 'rgb(0, 255, 0)'
             },
             {
-                source_type: "criticality",
+                subject: "criticality",
                 type: 'bar',
                 label: localise.set["c_crit"],
                 color: 'rgb(255, 255, 0)'
@@ -258,9 +258,6 @@ require([
 
         // Get Notification Types for this server
         getNotificationTypes();
-
-        // Get the user's charts
-        getCharts();
 
         // Set response to clearing single record view
         $('#clear_srview').click(function() {
@@ -806,7 +803,7 @@ require([
                 chart.replace(gTasks.charts[gSelectedChart], gSelectedChart);
             } else {
                 var item = {
-                    source_type: $('#cs_source_type').val(),
+                    subject: $('#cs_subject').val(),
                     type: $('#cs_chart_type').val(),
                     label:  $('#cs_chart_label').val(),
                     color: 'rgb(0, 0, 255)'
@@ -917,6 +914,7 @@ require([
     */
     function getCharts() {
         var i;
+        chart.clear();
         for(i = 0; i < window.gTasks.charts.length; i++) {
             chart.add(window.gTasks.charts[i]);
         }
@@ -1146,6 +1144,7 @@ require([
             getLanguageList(globals.gCurrentSurvey, undefined, false, '.language_sel', false, -1);
             saveCurrentProject(-1, globals.gCurrentSurvey);
             getGroupForms(globals.gCurrentSurvey);
+            getCharts();     // Get the user's charts
 
         } else {
             // No surveys in this project
