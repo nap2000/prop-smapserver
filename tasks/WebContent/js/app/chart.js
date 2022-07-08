@@ -34,13 +34,20 @@ define([
         return {
             add: add,
             replace: replace,
-            refresh: refresh
+            refresh: refresh,
+            clear: clear
         };
 
         function add(settings) {
+
+            if(!gTasks.cache.currentData) {
+                // Data not available yet.
+                return;
+            }
+
             var item = {
                 source: {
-                    source_type: settings.source_type
+                    subject: settings.subject
                 },
                 config: updateConfigFromSettings({
                     type: settings.type,
@@ -57,6 +64,18 @@ define([
                     options: {}
                 }, settings)
             };
+
+            // Set the data key
+            var cd = gTasks.cache.currentData.case;
+            if(settings.subject === 'status') {
+                item.source.key = cd.settings.statusQuestion;
+            } else  if(settings.subject === 'assigned') {
+                item.source.key = "_assigned";
+            } else  if(settings.subject === 'alert') {
+                item.source.key = "_alert";
+            } else  if(settings.subject === 'criticality') {
+                item.source.key = cd.settings.criticalityQuestion;
+            }
 
             // create the canvas element
             var label = settings.label;
@@ -100,6 +119,17 @@ define([
         }
 
         /*
+         * Clear existing charts
+         */
+       function clear() {
+           for(var chartIdx = 0; chartIdx < charts.length; chartIdx++) {
+               charts[chartIdx].chart.destroy();
+           }
+           charts = [];
+           $('#chartcontent').empty();
+        }
+
+        /*
          * Extract the data in chart form
          */
         function refresh() {
@@ -120,20 +150,8 @@ define([
             if(cd.settings.finalStatus && cd.settings.statusQuestion) {
                 for(var chartIdx = 0; chartIdx < charts.length; chartIdx++) {
 
-                    var source_type = charts[chartIdx].source.source_type;
-                    var key;
+                    var key = charts[chartIdx].source.key;
                     var chartData = {};
-
-                    // TODO the key should be part of the config
-                    if(source_type === 'status') {
-                        key = cd.settings.statusQuestion;
-                    } else  if(source_type === 'assigned') {
-                        key = "_assigned";
-                    } else  if(source_type === 'alert') {
-                        key = "_alert";
-                    } else  if(source_type === 'criticality') {
-                        key = cd.settings.criticalityQuestion;
-                    }
 
                     for (var i = 0; i < results.length; i++) {
 
