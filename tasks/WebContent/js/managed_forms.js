@@ -148,25 +148,25 @@ require([
         charts: [
             {
                 subject: "status",
-                type: 'bar',
+                chart_type: 'bar',
                 label: localise.set["c_status"],
                 color: 'rgb(255, 99, 132)'
             },
             {
                 subject: "assigned",
-                type: 'bar',
+                chart_type: 'bar',
                 label: localise.set["t_assigned"],
                 color: 'rgb(0, 0, 255)'
             },
             {
                 subject: "alert",
-                type: 'bar',
+                chart_type: 'bar',
                 label: localise.set["c_alert"],
                 color: 'rgb(0, 255, 0)'
             },
             {
                 subject: "criticality",
-                type: 'bar',
+                chart_type: 'bar',
                 label: localise.set["c_crit"],
                 color: 'rgb(255, 255, 0)'
             }
@@ -799,18 +799,19 @@ require([
 
         $('#chart_settings_save').click(function() {
             if(gSelectedChart >= 0) {   // edit
-                gTasks.charts[gSelectedChart].type = $('#cs_chart_type').val();
+                gTasks.charts[gSelectedChart].chart_type = $('#cs_chart_type').val();
                 chart.replace(gTasks.charts[gSelectedChart], gSelectedChart);
             } else {
                 var item = {
                     subject: $('#cs_subject').val(),
-                    type: $('#cs_chart_type').val(),
+                    chart_type: $('#cs_chart_type').val(),
                     label:  $('#cs_chart_label').val(),
                     color: 'rgb(0, 0, 255)'
                 }
                 gTasks.charts.push(item);
                 chart.add(item);
             }
+            saveCharts();
         });
 
         // Set page defaults
@@ -2012,6 +2013,31 @@ require([
         }
 
         saveConfig(config);
+    }
+
+    /*
+     * Save the current charts configuration
+     */
+    function saveCharts() {
+
+        var saveView = JSON.stringify(gTasks.charts);
+
+        var url = "/surveyKPI/charts/save/" + globals.gCurrentSurvey;
+
+        addHourglass();
+        $.ajax({
+            type: "POST",
+            cache: false,
+            contentType: "application/json",
+            url: url,
+            data: {chartArray: saveView},
+            success: function (data, status) {
+                removeHourglass();
+            }, error: function (data, status) {
+                removeHourglass();
+                alert(data.responseText);
+            }
+        });
     }
 
     /*
