@@ -50,7 +50,7 @@ define([
                     subject: settings.subject
                 },
                 config: updateConfigFromSettings({
-                    type: settings.type,
+                    type: settings.chart_type,
                     responsive: true,
                     data: {
                         labels: [],
@@ -107,7 +107,7 @@ define([
         }
 
         function updateConfigFromSettings(config, settings) {
-            config.type = settings.type;
+            config.type = settings.chart_type;
             config.data.datasets[0].backgroundColor = settings.color;
 
             if(config.type === 'col') {
