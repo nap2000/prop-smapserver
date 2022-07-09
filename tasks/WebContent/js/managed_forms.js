@@ -799,8 +799,8 @@ require([
 
         $('#chart_settings_save').click(function() {
             if(gSelectedChart >= 0) {   // edit
-                gTasks.charts[gSelectedChart].chart_type = $('#cs_chart_type').val();
-                chart.replace(gTasks.charts[gSelectedChart], gSelectedChart);
+                gTasks.cache.currentData.settings.charts[gSelectedChart].chart_type = $('#cs_chart_type').val();
+                chart.replace(gTasks.cache.currentData.settings.charts[gSelectedChart], gSelectedChart);
             } else {
                 var item = {
                     subject: $('#cs_subject').val(),
@@ -808,7 +808,7 @@ require([
                     label:  $('#cs_chart_label').val(),
                     color: 'rgb(0, 0, 255)'
                 }
-                gTasks.charts.push(item);
+                gTasks.cache.currentData.settings.charts.push(item);
                 chart.add(item);
             }
             saveCharts();
@@ -913,15 +913,17 @@ require([
     /*
      * Load the chart definitions from the server
     */
-    function getCharts() {
+    function updateCharts(charts) {
         var i;
         chart.clear();
-        for(i = 0; i < window.gTasks.charts.length; i++) {
-            chart.add(window.gTasks.charts[i]);
+        for(i = 0; i < charts.length; i++) {
+            chart.add(charts[i]);
         }
         $('.fa-cog','#chartcontent').click(function(){
             gSelectedChart = $(this).data("idx");
-            $('#cs_chart_type').val(gTasks.charts[gSelectedChart].type);
+            $('#cs_subject').val(gTasks.cache.currentData.settings.charts[gSelectedChart].subject);
+            $('#cs_chart_type').val(gTasks.cache.currentData.settings.charts[gSelectedChart].chart_type);
+            $('#cs_chart_label').val(gTasks.cache.currentData.settings.charts[gSelectedChart].label);
             $('#chart_settings_popup').modal("show");
         });
     }
@@ -1145,7 +1147,6 @@ require([
             getLanguageList(globals.gCurrentSurvey, undefined, false, '.language_sel', false, -1);
             saveCurrentProject(-1, globals.gCurrentSurvey);
             getGroupForms(globals.gCurrentSurvey);
-            getCharts();     // Get the user's charts
 
         } else {
             // No surveys in this project
@@ -2020,7 +2021,7 @@ require([
      */
     function saveCharts() {
 
-        var saveView = JSON.stringify(gTasks.charts);
+        var saveView = JSON.stringify(gTasks.cache.currentData.settings.charts);
 
         var url = "/surveyKPI/charts/save/" + globals.gCurrentSurvey;
 
@@ -3121,6 +3122,7 @@ require([
             updateSettings(gTasks.cache.currentData.settings);
             map.setLayers(gTasks.cache.currentData.schema.layers);
             updateFormList(gTasks.cache.currentData.forms);
+            updateCharts(gTasks.cache.currentData.charts);
 	    } else {
 
 		    addHourglass();
@@ -3155,6 +3157,7 @@ require([
 					    updateSettings(gTasks.cache.currentData.settings);
 					    map.setLayers(gTasks.cache.currentData.schema.layers);
 					    updateFormList(gTasks.cache.currentData.forms);
+                        updateCharts(gTasks.cache.currentData.settings.charts);
 
 					    // Add a config item for the group value if this is a duplicates search
 					    if (isDuplicates) {
