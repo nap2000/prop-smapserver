@@ -811,6 +811,7 @@ require([
                 gTasks.cache.currentData.settings.charts.push(item);
                 chart.add(item);
             }
+            $('#chart_settings_popup').modal("hide");
             saveCharts();
         });
 
