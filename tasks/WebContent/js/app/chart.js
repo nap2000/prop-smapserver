@@ -30,6 +30,8 @@ define([
     function ($, modernizr, localise, globals) {
 
         var charts = [];
+        //var barColors = ["red", "green","blue","orange","brown"];
+        var barColors = ["#e60049", "#0bb4ff", "#50e991", "#e6d800", "#9b19f5", "#ffa300", "#dc0ab4", "#b3d4ff", "#00bfa0"];  // River nights from: https://www.heavy.ai/blog/12-color-palettes-for-telling-better-stories-with-your-data
 
         return {
             add: add,
@@ -56,7 +58,7 @@ define([
                         labels: [],
                         datasets:[{
                             label: settings.label,
-                            backgroundColor: settings.color,
+                            backgroundColor: barColors,
                             borderColor: 'rgb(0, 0, 0)',
                             data: [],
                         }]
@@ -108,10 +110,12 @@ define([
 
         function updateConfigFromSettings(config, settings) {
             config.type = settings.chart_type;
-            config.data.datasets[0].backgroundColor = settings.color;
+            config.data.datasets[0].backgroundColor = barColors;
 
             if(config.type === 'col') {
                 config.type = 'bar';
+
+            } if(config.type === 'bar') {
                 config.options.indexAxis = 'y';
             }
 
