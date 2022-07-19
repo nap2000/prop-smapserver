@@ -410,7 +410,12 @@ require([
 
             $('#addChartForm')[0].reset();
             gSelectedChart = -1;
+            setChartPopupControls();
             $('#chart_settings_popup').modal("show");
+        });
+
+        $('#cs_subject').change(function() {
+            setChartPopupControls();
         });
 
 
@@ -805,11 +810,13 @@ require([
                 var item = {
                     subject: $('#cs_subject').val(),
                     chart_type: $('#cs_chart_type').val(),
+                    question:  $('#cs_question').val(),
                     label:  $('#cs_chart_label').val(),
                     color: 'rgb(0, 0, 255)'
                 }
                 gTasks.cache.currentData.settings.charts.push(item);
                 chart.add(item);
+                setupChartEdit();
             }
             $('#chart_settings_popup').modal("hide");
             saveCharts();
@@ -920,11 +927,20 @@ require([
         for(i = 0; i < charts.length; i++) {
             chart.add(charts[i]);
         }
+        setupChartEdit();
+
+    }
+
+    function setupChartEdit() {
         $('.fa-cog','#chartcontent').click(function(){
             gSelectedChart = $(this).data("idx");
+            $('#addChartForm')[0].reset();
             $('#cs_subject').val(gTasks.cache.currentData.settings.charts[gSelectedChart].subject);
             $('#cs_chart_type').val(gTasks.cache.currentData.settings.charts[gSelectedChart].chart_type);
+            $('#cs_question').val(gTasks.cache.currentData.settings.charts[gSelectedChart].question);
             $('#cs_chart_label').val(gTasks.cache.currentData.settings.charts[gSelectedChart].label);
+
+            setChartPopupControls();
             $('#chart_settings_popup').modal("show");
         });
     }
@@ -1287,8 +1303,10 @@ require([
             headItem,
             hColSort = [],
             hDups = [],
+            hSelect = [],
             hColSortIdx = -1,
-            hDupsIdx = -1;
+            hDupsIdx = -1,
+            hSelectIdx = -1;
 
 
         if ( $.fn.dataTable.isDataTable( $table) && globals.gMainTable) {
@@ -1312,6 +1330,7 @@ require([
             headItem = columns[i];
 
             hColSort[++hColSortIdx] = addToColumnSort(headItem);
+            hSelect[++hSelectIdx] = addToColumnSelect(headItem);
             if(isDuplicates) {
                 hDups[++hDupsIdx] = addToDuplicateReportSelect(headItem);
             }
@@ -1469,6 +1488,7 @@ require([
          * Settings
          */
         $('#tab-columns-content').html(hColSort.join(''));
+        $('#cs_question').html(hSelect.join(''));
 
         /*
          * Duplicates modal
@@ -1477,6 +1497,19 @@ require([
             $('#duplicateSelect').html(hDups.join(''));
         }
 
+    }
+
+    /*
+     * Set context specific controls in chart dialog
+     */
+    function setChartPopupControls() {
+        var subject = $('#cs_subject').val();
+
+        $('.qonly').hide();
+
+        if(subject === 'question') {
+            $('.qonly').show();
+        }
     }
 
     /*
@@ -1575,6 +1608,23 @@ require([
     }
 
     /*
+     * Add the column to column select
+    */
+    function addToColumnSelect(item) {
+        var h = [],
+            idx = -1;
+
+        if (item.include) {
+            h[++idx] = '<option value="';
+            h[++idx] = item.displayName;
+            h[++idx] = '">';
+            h[++idx] = htmlEncode(item.displayName);
+            h[++idx] = '</option>';
+        }
+        return h.join('');
+    }
+
+    /*
      * Add the column to the select list for duplicate searches
      */
     function addToDuplicateReportSelect(item) {
@@ -1614,8 +1664,6 @@ require([
             h[++idx] = '</select>';
             h[++idx] = '</div>';
 
-
-            //h[++idx] = '</div>';	// Settings item
             h[++idx] = '</div>';		// Row
 
         }
