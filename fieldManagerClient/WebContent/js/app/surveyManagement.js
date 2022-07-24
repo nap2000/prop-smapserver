@@ -35,6 +35,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 
         $(document).ready(function() {
 
+            setTheme();
 	        setupUserProfile(true);
             localise.setlang();		// Localise HTML
             registerForServiceWorkerMessages();

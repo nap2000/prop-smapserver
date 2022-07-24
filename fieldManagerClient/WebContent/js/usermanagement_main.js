@@ -116,6 +116,7 @@ require([
 		setCustomUserMgmt();			// Apply custom javascript
 
 		localise.setlang();		// Localise HTML
+		setTheme();
 		setupUserProfile(true);
 		registerForServiceWorkerMessages();
 		window.moment = moment;		// Make moment global for use by common.js

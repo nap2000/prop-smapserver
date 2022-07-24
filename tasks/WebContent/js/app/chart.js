@@ -17,6 +17,7 @@
 
 /*
  * Chart functions
+ * Uses: https://www.chartjs.org/
  */
 
 "use strict";
@@ -27,119 +28,109 @@ define([
         'localise',
         'globals'],
     function ($, modernizr, localise, globals) {
+
+        var charts = [];
+        //var barColors = ["red", "green","blue","orange","brown"];
+        var barColors = ["#e60049", "#0bb4ff", "#50e991", "#e6d800", "#9b19f5", "#ffa300", "#dc0ab4", "#b3d4ff", "#00bfa0"];  // River nights from: https://www.heavy.ai/blog/12-color-palettes-for-telling-better-stories-with-your-data
+
         return {
-            refresh: refresh
+            add: add,
+            replace: replace,
+            refresh: refresh,
+            clear: clear
         };
 
-        var initialised = false;
+        function add(settings) {
 
-        var gStatusChart;
-        var gStatusConfig;
-        var gAssignedChart;
-        var gAssignedConfig;
-        var gAlertChart;
-        var gAlertConfig;
-        var gCriticalityChart;
-        var gCriticalityConfig;
+            if(!gTasks.cache.currentData) {
+                // Data not available yet.
+                return;
+            }
 
-        function init() {
-
-            initStatus();
-            initAssigned();
-            initAlert();
-            initCriticality();
-            initialised = true;
-
-            refresh();
-        }
-
-        function initStatus() {
-            gStatusConfig = {
-                type: 'bar',
-                responsive: true,
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: localise.set["c_status"],
-                        backgroundColor: 'rgb(255, 99, 132)',
-                        borderColor: 'rgb(255, 99, 132)',
-                        data: [],
-                    }]
+            var item = {
+                source: {
+                    subject: settings.subject
                 },
-                options: {}
+                config: updateConfigFromSettings({
+                    type: settings.chart_type,
+                    responsive: true,
+                    data: {
+                        labels: [],
+                        datasets:[{
+                            label: settings.label,
+                            backgroundColor: barColors,
+                            borderColor: 'rgb(0, 0, 0)',
+                            data: [],
+                        }]
+                    },
+                    options: {}
+                }, settings)
             };
 
-            gStatusChart = new Chart(
-                document.getElementById('statusChart'),
-                gStatusConfig
+            // Set the data key
+            var cd = gTasks.cache.currentData.case;
+            if(settings.subject === 'status') {
+                item.source.key = cd.settings.statusQuestion;
+            } else  if(settings.subject === 'assigned') {
+                item.source.key = "_assigned";
+            } else  if(settings.subject === 'alert') {
+                item.source.key = "_alert";
+            } else  if(settings.subject === 'criticality') {
+                item.source.key = cd.settings.criticalityQuestion;
+            }
+
+            // create the canvas element
+            var label = settings.label;
+            var index = charts.length;
+            var card = `<div class="col-sm-12 col-md-6 col-lg-3">
+                                    <div class="card">
+                                        <div class="card-header d-flex chart-header">
+                                            <span class="mr-auto">${label}</span>
+                                            <i class="fa fa-cog" data-idx="${index}"></i>
+                                        </div>
+                                        <div class="card-body">
+                                            <canvas id="chart${index}"></canvas>
+                                        </div>
+                                    </div>
+                                </div>`;
+            $('#chartcontent').append(card);
+
+            // Associate the canvas element with the chart
+            item.chart = new Chart(
+                document.getElementById('chart' + charts.length),
+                item.config
             );
+            charts.push(item);
         }
 
-        function initAlert() {
-            gAlertConfig = {
-                type: 'bar',
-                responsive: true,
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: localise.set["c_alert"],
-                        backgroundColor: 'rgb(0, 255, 0)',
-                        borderColor: 'rgb(0, 255, 0)',
-                        data: [],
-                    }]
-                },
-                options: {}
-            };
-
-            gAlertChart = new Chart(
-                document.getElementById('alertChart'),
-                gAlertConfig
-            );
+        function replace(settings, index) {
+            charts[index].config = updateConfigFromSettings(charts[index].config, settings);
+            charts[index].chart.update();
         }
 
+        function updateConfigFromSettings(config, settings) {
+            config.type = settings.chart_type;
+            config.data.datasets[0].backgroundColor = barColors;
 
-        function initAssigned() {
-            gAssignedConfig = {
-                type: 'bar',
-                responsive: true,
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: localise.set["t_assigned"],
-                        backgroundColor: 'rgb(0, 0, 255)',
-                        borderColor: 'rgb(0, 0, 255)',
-                        data: [],
-                    }]
-                },
-                options: {}
-            };
+            if(config.type === 'col') {
+                config.type = 'bar';
 
-            gAssignedChart = new Chart(
-                document.getElementById('assignedChart'),
-                gAssignedConfig
-            );
+            } if(config.type === 'bar') {
+                config.options.indexAxis = 'y';
+            }
+
+            return config;
         }
 
-        function initCriticality() {
-            gCriticalityConfig = {
-                type: 'bar',
-                responsive: true,
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: localise.set["c_crit"],
-                        backgroundColor: 'rgb(255, 255, 0)',
-                        borderColor: 'rgb(0, 0, 0)',
-                        data: [],
-                    }]
-                },
-                options: {}
-            };
-
-            gCriticalityChart = new Chart(
-                document.getElementById('criticalityChart'),
-                gCriticalityConfig
-            );
+        /*
+         * Clear existing charts
+         */
+       function clear() {
+           for(var chartIdx = 0; chartIdx < charts.length; chartIdx++) {
+               charts[chartIdx].chart.destroy();
+           }
+           charts = [];
+           $('#chartcontent').empty();
         }
 
         /*
@@ -147,10 +138,6 @@ define([
          */
         function refresh() {
 
-            var statusVal,
-                assigned,
-                alert,
-                criticality;
 
             if(!gTasks.cache.currentData) {
                 // Data not available yet.
@@ -164,60 +151,30 @@ define([
                 search: 'applied',     // 'none',    'applied', 'removed'
             }).data();
 
-            if(!initialised) {
-                init()
-            }
-
-            var statusData = {};
-            var assignedData = {};
-            var alertData = {};
-            var criticalityData = {};
             if(cd.settings.finalStatus && cd.settings.statusQuestion) {
-                for (var i = 0; i < results.length; i++) {
+                for(var chartIdx = 0; chartIdx < charts.length; chartIdx++) {
 
-                    statusVal = results[i][cd.settings.statusQuestion];
-                    assigned =  results[i]["_assigned"];
-                    alert =  results[i]["_alert"];
-                    criticality = results[i][cd.settings.criticalityQuestion]
+                    var key = charts[chartIdx].source.key;
+                    var chartData = {};
 
-                    if(!(statusVal === cd.settings.finalStatus && assigned === "")) {    // Ignore completed tasks that are not assigned
+                    for (var i = 0; i < results.length; i++) {
 
-                        if(statusVal === "") {
-                            statusVal = localise.set["c_none"];
-                        }
-                        if(assigned === "") {
-                            assigned = localise.set["t_u"];
-                        }
-                        if(criticality === "") {
-                            criticality = localise.set["c_none"];
+                        var val = results[i][key];
+
+                        // ignore records without an alert when getting alert chart data
+                        if (key === '_alert' && val.trim().length === 0) {
+                            continue;
+                        } else if (val === "") {
+                            val = localise.set["c_none"];
                         }
 
-                        statusData[statusVal] = statusData[statusVal] || 0; // Ensure value is numeric
-                        statusData[statusVal]++;
+                        chartData[val] = chartData[val] || 0; // Ensure value is numeric
+                        chartData[val]++;
 
-                        assignedData[assigned] = assignedData[assigned] || 0; // Ensure value is numeric
-                        assignedData[assigned]++;
-
-                        if(!(statusVal === cd.settings.finalStatus)) {      // Ignore completed
-                            if(alert && alert.trim().length > 0) {
-                                alertData[alert] = alertData[alert] || 0; // Ensure value is numeric
-                                alertData[alert]++;
-                            }
-
-                            criticalityData[criticality] = criticalityData[criticality] || 0; // Ensure value is numeric
-                            criticalityData[criticality]++;
-                        }
                     }
+                    updateChart(charts[chartIdx].config, chartData, charts[chartIdx].chart);
                 }
             }
-
-            /*
-             * Show the charts
-             */
-            updateChart(gStatusConfig, statusData, gStatusChart);
-            updateChart(gAssignedConfig, assignedData, gAssignedChart);
-            updateChart(gAlertConfig, alertData, gAlertChart);
-            updateChart(gCriticalityConfig, criticalityData, gCriticalityChart);
 
         }
 

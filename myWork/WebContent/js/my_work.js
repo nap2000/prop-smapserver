@@ -63,6 +63,7 @@ require([
 	$(document).ready(function() {
 
 		setCustomWebForms();			// Apply custom javascript
+		setTheme();
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
 		registerForServiceWorkerMessages(serviceWorkerNotification);

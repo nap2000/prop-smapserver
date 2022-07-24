@@ -145,6 +145,33 @@ require([
             currentData: undefined,
             data: {},
         },
+        charts: [
+            {
+                subject: "status",
+                chart_type: 'bar',
+                label: localise.set["c_status"],
+                color: 'rgb(255, 99, 132)'
+            },
+            {
+                subject: "assigned",
+                chart_type: 'bar',
+                label: localise.set["t_assigned"],
+                color: 'rgb(0, 0, 255)'
+            },
+            {
+                subject: "alert",
+                chart_type: 'bar',
+                label: localise.set["c_alert"],
+                color: 'rgb(0, 255, 0)'
+            },
+            {
+                subject: "criticality",
+                chart_type: 'bar',
+                label: localise.set["c_crit"],
+                color: 'rgb(255, 255, 0)'
+            }
+
+        ],
         gSelectedRecord: undefined,
         gBulkInstances: [],
         gSelectedSurveyIndex: undefined,
@@ -158,6 +185,7 @@ require([
     window.gSaveType = '';
     window.gNotifications = undefined;
     window.gChanges = [];
+    window.gSelectedChart = -1;
 
 
     $(document).ready(function () {
@@ -165,6 +193,7 @@ require([
         window.summary_report = summary_report;
         window.moment = moment;
         setCustomManage();
+        setTheme();
 	    setupUserProfile(true);
         localise.setlang();		// Localise HTML
         registerForServiceWorkerMessages();
@@ -374,6 +403,23 @@ require([
         });
 
         /*
+         * add a chart
+         */
+        $('#m_add_chart').click(function(e) {
+            e.preventDefault();
+
+            $('#addChartForm')[0].reset();
+            gSelectedChart = -1;
+            setChartPopupControls();
+            $('#chart_settings_popup').modal("show");
+        });
+
+        $('#cs_subject').change(function() {
+            setChartPopupControls();
+        });
+
+
+        /*
          * Delete a record
          */
         $('#m_delete').click(function(e) {
@@ -538,60 +584,6 @@ require([
             });
         });
 
-        /*
-        $('#shareRecord').click(function (e) {
-            e.preventDefault();
-            $('.shareRecordOnly').toggle();
-            // Automatically get the link if there are no roles to select
-            if ($('.role_select_roles').text().length === 0) {
-                $("#getSharedRecord").trigger("click");
-            }
-        });
-
-        $('#getSharedRecord').click(function (e) {
-            e.preventDefault();
-
-            var groupSurvey = globals.gGroupSurveys[globals.gCurrentSurvey];
-
-            var url = "/surveyKPI/managed/actionlink/" + globals.gCurrentSurvey + "/" + gTasks.gPriKey;
-            if(groupSurvey && groupSurvey !== "") {
-                url += "?groupSurvey=" + groupSurvey;
-            }
-
-            if (globals.gIsSecurityAdministrator) {
-                var roleIds = [],
-                    id;
-                $('input[type=checkbox]:checked', '.role_select_roles').each(function () {
-                    id = $(this).val();
-                    roleIds.push(id);
-                });
-                if (roleIds.length > 0) {
-                    url += "?roles=" + roleIds.join();
-                }
-            }
-
-            addHourglass();
-            $.ajax({
-                url: url,
-                dataType: 'json',
-                cache: false,
-                success: function (data) {
-
-                    removeHourglass();
-                    $('#srLink').val(data.link);
-                },
-                error: function (xhr, textStatus, err) {
-                    removeHourglass();
-                    if (xhr.readyState == 0 || xhr.status == 0) {
-                        return;  // Not an error
-                    } else {
-                        console.log("Error: Failed to get sharing link: " + err);
-                    }
-                }
-            });
-
-        });
-        */
 
         $('.genrecordpdf').click(function (e)  {
             e.preventDefault();
@@ -695,10 +687,10 @@ require([
             gTimingView = false;
 
             if (target === '#tablePanel') {
-                $('.tableOnly').show();
+                $('.tableOnly').removeClass('d-none').show();
                 trigger = '#table-view';
             } else if (target === '#mapPanel') {
-                $('.mapOnly').show();
+                $('.mapOnly').removeClass('d-none').show();
                 gMapView = true;
                 try {       // will fail if there is no data
                     map.initDynamicMap(gOverallMapConfig, false, featureSelected, true);
@@ -709,12 +701,12 @@ require([
 
             } else if(target === '#chartPanel') {
                 chart.refresh();
-                $('.chartOnly').show();
+                $('.chartOnly').removeClass('d-none').show();
                 gChartView = true;
                 trigger = '#chart-view';
             } else if(target === '#timingPanel') {
                 //chart.init(false, true);
-                $('#m_add_chart').show();
+                $('#m_add_chart').removeClass('d-none').show();
                 gTimingView = true;
                 trigger = '#timing-view';
             }
@@ -727,9 +719,9 @@ require([
             $('.historyView,.dataView').hide();
 
             if (target === '#data-view') {
-                $('.dataView').show();
+                $('.dataView').removeClass('d-none').show();
             } else if(target === '#changes-view') {
-                $('.historyView').show();
+                $('.historyView').removeClass('d-none').show();
             }
 
             $('.re_alert').hide();
@@ -790,7 +782,7 @@ require([
 	    $('.server_specific').hide();
 	    var ssd = getServerSubDomainName();
 	    if(ssd !== '') {
-            $('.' + ssd).show();
+            $('.' + ssd).removeClass('d-none').show();
         }
 	    $('#m_tdh_individual').click(function() {
 		    $('#tdh_individual_report_popup').modal("show");
@@ -808,7 +800,27 @@ require([
 
 		    downloadFile(link);
 		    $('#tdh_individual_report_popup').modal("hide");
-	    })
+	    });
+
+        $('#chart_settings_save').click(function() {
+            if(gSelectedChart >= 0) {   // edit
+                gTasks.cache.currentData.settings.charts[gSelectedChart].chart_type = $('#cs_chart_type').val();
+                chart.replace(gTasks.cache.currentData.settings.charts[gSelectedChart], gSelectedChart);
+            } else {
+                var item = {
+                    subject: $('#cs_subject').val(),
+                    chart_type: $('#cs_chart_type').val(),
+                    question:  $('#cs_question').val(),
+                    label:  $('#cs_chart_label').val(),
+                    color: 'rgb(0, 0, 255)'
+                }
+                gTasks.cache.currentData.settings.charts.push(item);
+                chart.add(item);
+                setupChartEdit();
+            }
+            $('#chart_settings_popup').modal("hide");
+            saveCharts();
+        });
 
         // Set page defaults
         var currentTab = getFromLocalStorage("currentTab" + page);
@@ -905,6 +917,33 @@ require([
         genFile(true, "xlsx");
         $('#overviewReport').modal("hide");
     });
+
+    /*
+     * Load the chart definitions from the server
+    */
+    function updateCharts(charts) {
+        var i;
+        chart.clear();
+        for(i = 0; i < charts.length; i++) {
+            chart.add(charts[i]);
+        }
+        setupChartEdit();
+
+    }
+
+    function setupChartEdit() {
+        $('.fa-cog','#chartcontent').click(function(){
+            gSelectedChart = $(this).data("idx");
+            $('#addChartForm')[0].reset();
+            $('#cs_subject').val(gTasks.cache.currentData.settings.charts[gSelectedChart].subject);
+            $('#cs_chart_type').val(gTasks.cache.currentData.settings.charts[gSelectedChart].chart_type);
+            $('#cs_question').val(gTasks.cache.currentData.settings.charts[gSelectedChart].question);
+            $('#cs_chart_label').val(gTasks.cache.currentData.settings.charts[gSelectedChart].label);
+
+            setChartPopupControls();
+            $('#chart_settings_popup').modal("show");
+        });
+    }
 
     /*
      * Generate a file of data
@@ -1264,8 +1303,10 @@ require([
             headItem,
             hColSort = [],
             hDups = [],
+            hSelect = [],
             hColSortIdx = -1,
-            hDupsIdx = -1;
+            hDupsIdx = -1,
+            hSelectIdx = -1;
 
 
         if ( $.fn.dataTable.isDataTable( $table) && globals.gMainTable) {
@@ -1289,6 +1330,7 @@ require([
             headItem = columns[i];
 
             hColSort[++hColSortIdx] = addToColumnSort(headItem);
+            hSelect[++hSelectIdx] = addToColumnSelect(headItem);
             if(isDuplicates) {
                 hDups[++hDupsIdx] = addToDuplicateReportSelect(headItem);
             }
@@ -1446,6 +1488,7 @@ require([
          * Settings
          */
         $('#tab-columns-content').html(hColSort.join(''));
+        $('#cs_question').html(hSelect.join(''));
 
         /*
          * Duplicates modal
@@ -1454,6 +1497,19 @@ require([
             $('#duplicateSelect').html(hDups.join(''));
         }
 
+    }
+
+    /*
+     * Set context specific controls in chart dialog
+     */
+    function setChartPopupControls() {
+        var subject = $('#cs_subject').val();
+
+        $('.qonly').hide();
+
+        if(subject === 'question') {
+            $('.qonly').show();
+        }
     }
 
     /*
@@ -1552,6 +1608,23 @@ require([
     }
 
     /*
+     * Add the column to column select
+    */
+    function addToColumnSelect(item) {
+        var h = [],
+            idx = -1;
+
+        if (item.include) {
+            h[++idx] = '<option value="';
+            h[++idx] = item.displayName;
+            h[++idx] = '">';
+            h[++idx] = htmlEncode(item.displayName);
+            h[++idx] = '</option>';
+        }
+        return h.join('');
+    }
+
+    /*
      * Add the column to the select list for duplicate searches
      */
     function addToDuplicateReportSelect(item) {
@@ -1591,8 +1664,6 @@ require([
             h[++idx] = '</select>';
             h[++idx] = '</div>';
 
-
-            //h[++idx] = '</div>';	// Settings item
             h[++idx] = '</div>';		// Row
 
         }
@@ -1992,6 +2063,31 @@ require([
         }
 
         saveConfig(config);
+    }
+
+    /*
+     * Save the current charts configuration
+     */
+    function saveCharts() {
+
+        var saveView = JSON.stringify(gTasks.cache.currentData.settings.charts);
+
+        var url = "/surveyKPI/charts/save/" + globals.gCurrentSurvey;
+
+        addHourglass();
+        $.ajax({
+            type: "POST",
+            cache: false,
+            contentType: "application/json",
+            url: url,
+            data: {chartArray: saveView},
+            success: function (data, status) {
+                removeHourglass();
+            }, error: function (data, status) {
+                removeHourglass();
+                alert(data.responseText);
+            }
+        });
     }
 
     /*
@@ -3075,6 +3171,7 @@ require([
             updateSettings(gTasks.cache.currentData.settings);
             map.setLayers(gTasks.cache.currentData.schema.layers);
             updateFormList(gTasks.cache.currentData.forms);
+            updateCharts(gTasks.cache.currentData.charts);
 	    } else {
 
 		    addHourglass();
@@ -3109,6 +3206,7 @@ require([
 					    updateSettings(gTasks.cache.currentData.settings);
 					    map.setLayers(gTasks.cache.currentData.schema.layers);
 					    updateFormList(gTasks.cache.currentData.forms);
+                        updateCharts(gTasks.cache.currentData.settings.charts);
 
 					    // Add a config item for the group value if this is a duplicates search
 					    if (isDuplicates) {

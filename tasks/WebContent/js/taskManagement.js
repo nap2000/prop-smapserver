@@ -136,6 +136,7 @@ require([
 		globals.gRegion = {};	// Initialise global values
 		globals.gRegions = undefined;
 
+		setTheme();
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
 		$('#email_subject').prop('placeholder', localise.set['n_esc']);

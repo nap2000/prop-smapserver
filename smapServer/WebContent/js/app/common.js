@@ -441,7 +441,7 @@ function addUserDetailsPopupBootstrap4() {
 	h[++idx] = '</div>';
 	h[++idx] = '</div>';
 
-	h[++idx] = '<div id="reset_me_password_fields" style="display:none;">';
+	h[++idx] = '<div class="d-none" id="reset_me_password_fields">';
 	h[++idx] = '<div class="form-group row">';
 	h[++idx] = '<label class="col-form-label col-sm-2">';
 	h[++idx] = localise.set["c_r_p"];
@@ -454,7 +454,7 @@ function addUserDetailsPopupBootstrap4() {
 	h[++idx] = '</div>';        // form-group
 	h[++idx] = '</div>';        // reset password fields
 
-	h[++idx] = '<div id="password_me_fields" style="display:none;">';
+	h[++idx] = '<div class="d-none" id="password_me_fields">';
 	h[++idx] = '<div class="form-group row">';
 	h[++idx] = '<label for="me_password" class="col-sm-2 control-label">';
 	h[++idx] = localise.set["c_password"];
@@ -473,7 +473,7 @@ function addUserDetailsPopupBootstrap4() {
 	h[++idx] = '</div>';  // around input
 	h[++idx] = '</div>';  // form group
 	h[++idx] = '</div>';  // password fields
-	h[++idx] = '<div id="me_alert" style="display:none; word-wrap:break-word;" class="alert" role="alert"></div>';
+	h[++idx] = '<div id="me_alert" class="alert d-none text-wrap text-break" role="alert"></div>';
 	h[++idx] = '</form>';
 	h[++idx] = '</div>';    // modal body
 
@@ -532,7 +532,7 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 			$("#me_alert").hide();
 
 			$('#me_edit_form')[0].reset();
-			$('#reset_me_password_fields').show();
+			$('#reset_me_password_fields').removeClass('d-none').show();
 			$('#password_me_fields').hide();
 			addLanguageOptions($('.language_select'), data.language);
 			addOrganisationOptions($('.organisation_select'), data.o_id, data.orgs);
@@ -550,7 +550,7 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 			icons: { primary: "ui-icon-person" }}).off().click(function(){
 			$('#me_edit_form')[0].reset();
 
-			$('#reset_me_password_fields').show();
+			$('#reset_me_password_fields').removeClass('d-none').show();
 			$('#password_me_fields').hide();
 			addLanguageOptions($('.language_select'), data.language);
 			addOrganisationOptions($('.organisation_select'), data.o_id, data.orgs);
@@ -829,7 +829,7 @@ function enableUserProfile () {
 	// Initialise the reset password checkbox
 	$('#reset_me_password').click(function () {
 		if($(this).is(':checked')) {
-			$('#password_me_fields').show();
+			$('#password_me_fields').removeClass('d-none').show();
 		} else {
 			$('#password_me_fields').hide();
 		}
@@ -899,7 +899,7 @@ function enableUserProfileBS () {
 			if($('#me_password_confirm').val() !== user.password) {
 				error = true;
 				user.password = undefined;
-				$('#me_alert').removeClass('alert-success').addClass('alert-danger').text(localise.set["msg_pwd_m"]).show();
+				$('#me_alert').removeClass('alert-success d-none').addClass('alert-danger').text(localise.set["msg_pwd_m"]).show();
 				$('#me_password').focus();
 				return false;
 			}
@@ -926,7 +926,7 @@ function enableUserProfileBS () {
 	// Initialise the reset password checkbox
 	$('#reset_me_password').click(function () {
 		if($(this).is(':checked')) {
-			$('#password_me_fields').show();
+			$('#password_me_fields').removeClass('d-none').show();
 		} else {
 			$('#password_me_fields').hide();
 		}
@@ -951,7 +951,7 @@ function saveCurrentUser(user, $dialog) {
 			removeHourglass();
 			if(data.error) {
 				if($dialog) {
-					$('#me_alert').removeClass('alert-success').addClass('alert-danger').text(data.msg).show();
+					$('#me_alert').removeClass('alert-success d-none').addClass('alert-danger').text(data.msg).show();
 				} else {
 					alert(localise.set["c_error"] + " : " + data.msg);  // legacy non bootstrap
 				}
@@ -1031,6 +1031,7 @@ function addTimeZoneToUrl(url) {
  * Create the user profile dialog and get any data it needs
  */
 function setupUserProfile(bs4) {
+
 	if(bs4) {
 		addUserDetailsPopupBootstrap4();
 	} else {

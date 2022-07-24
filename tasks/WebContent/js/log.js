@@ -70,6 +70,7 @@ require([
 
 		window.moment = moment;		// Make moment global for use by common.js
         setCustomLogs();
+		setTheme();
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
 		registerForServiceWorkerMessages();

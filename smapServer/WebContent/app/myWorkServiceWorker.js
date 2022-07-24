@@ -58,7 +58,7 @@ self.addEventListener('install', function(e) {
 				'/js/app/custom.js',
 				'/js/app/idbconfig.js',
 				'/js/app/pwacommon.js',
-				'/js/app/theme2.js',
+				'/js/app/theme.js',
 				'/images/enketo_bare_150x56.png',
 				'/images/smap_logo.png',
 				'/favicon.ico',

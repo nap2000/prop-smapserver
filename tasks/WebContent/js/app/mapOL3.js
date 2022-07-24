@@ -171,7 +171,7 @@ define([
          */
         function refreshLayer(index, map) {
 
-            if (gOverallMapConfig.map) {
+            if (map) {
                 var results = globals.gMainTable.rows({
                     order: 'current',  // 'current', 'applied', 'index',  'original'
                     page: 'all',      // 'all',     'current'

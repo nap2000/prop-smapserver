@@ -35,7 +35,7 @@ var gTextValues,
 define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, globals) {
 
 	$(document).ready(function() {
-
+		setTheme();
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
 		/*

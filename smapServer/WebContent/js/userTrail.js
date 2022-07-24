@@ -113,6 +113,7 @@ require([
 	$(document).ready(function() {
 
 		setCustomUserTrail();			// Apply custom javascript
+		setTheme();
 		setupUserProfile(true);
 		localise.setlang();
 		$('.date').prop("title", localise.set["c_lt"]);
