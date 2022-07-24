@@ -65,6 +65,7 @@ $(document).ready(function() {
 		param = [];
 
     setCustomEdit();
+	setTheme();
 	setupUserProfile(true);
 	localise.setlang();		// Localise HTML
 	

@@ -109,6 +109,7 @@ require([
 
 		setCustomUserMgmt();			// Apply custom javascript
 
+		setTheme();
 		localise.setlang();		// Localise HTML
 		setupUserProfile(true);
 		window.moment = moment;		// Make moment global for use by common.js

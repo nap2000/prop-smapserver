@@ -45,10 +45,8 @@
 
     </style>
 
-    <script> if (!window.console) console = {log: function() {}}; </script>
-
     <script src="/js/libs/modernizr.js"></script>
-    <script src="/js/app/theme2.js"></script>
+    <script src="/js/app/theme.js"></script>
     <script src="/js/app/pwacommon.js"></script>
     <script src="/js/libs/jquery-3.5.1.min.js"></script>
     <script src="/js/libs/popper.v1.16.1.min.js"></script>
@@ -73,7 +71,7 @@
     <a class="navbar-brand lang" data-lang="m_console" href="#">console</a>
     <div class="spinner-grow text-danger hour_glass"></div>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"><i class="fas fa-bars" style="font-size:28px;"></i></span>
+        <span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -92,7 +90,7 @@
                     <a class="dropdown-item restrict_role admin_role analyst_role manage_role task_role" href="/app/tasks/taskManagement.html"><span class="nav-label lang" data-lang="m_assign">assign</span></a>
                     <a id="c_campaigns" class="dropdown-item restrict_role admin_role analyst_role" href="/app/tasks/campaign.html"><span class="lang" data-lang="c_campaigns">m</span></a>
                     <a class="dropdown-item restrict_role admin_role analyst_role" href="/app/api.html"><span class="lang" data-lang="c_api">api</span></a>
-                    <a class="dropdown-item restrict_role billing_role" href="/app/fieldManager/billing.html" style="display:none;"><span class="lang" data-lang="m_billing">billing</span></a>
+                    <a class="dropdown-item restrict_role billing_role" href="/app/fieldManager/billing.html"><span class="lang" data-lang="m_billing">billing</span></a>
                     <a class="dropdown-item restrict_role dashboard_role" style="display:none;" href="/dashboard/index.html"><span>Dashboard</span></a>
                     <a class="dropdown-item restrict_role admin_role analyst_role manage_role task_role" href="/app/reports.html"><span class="nav-label lang" data-lang="m_reports">reports</span></a>
                     <a class="dropdown-item restrict_role admin_role analyst_role" href="/app/userTrail.html"><span class="nav-label lang" data-lang="m_locations"></span></a>
@@ -115,15 +113,15 @@
                 <a class="nav-link dropdown-toggle" href="#" id="m_local_reports" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="lang" data-lang="m_lr">reports</span></a>
                 <div class="dropdown-menu" aria-labelledby="m_local_reports">
                     <a id="m_summary_report" class="dropdown-item restrict_role admin_role analyst_role data_role genxlsfileall" href="#"><span class="lang" data-lang="mf_sr">summary</span></a>
-                    <a class="dropdown-item xxxx1" style="display:none;" href="/misc/CreatingIdentificationCards.docx"><span>Guide on creating Id Cards</span></a>
-                    <a class="dropdown-item xxxx1" style="display:none;" href="/misc/CardMergeTemplate.docx"><span>ID Card Template</span></a>
-                    <a id="m_tdh_individual" style="display:none;" href="#" class="dropdown-item server_specific tdh localhost">Individual Report</a>
+                    <a class="dropdown-item xxxx1 d-none" href="/misc/CreatingIdentificationCards.docx"><span>Guide on creating Id Cards</span></a>
+                    <a class="dropdown-item xxxx1 d-none" href="/misc/CardMergeTemplate.docx"><span>ID Card Template</span></a>
+                    <a id="m_tdh_individual" href="#" class="dropdown-item server_specific tdh localhost d-none">Individual Report</a>
                 </div>
             </li>
 
             <li><a href="#" id="m_refresh"><span class="nav-link lang" data-lang="m_refresh">r</span></a></li>
             <li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
-            <li id="m_training" class="nav-item" style="display:none;"><a class="nav-link" id="train_link" href="#" target="_blank"><span class="nav-label lang" data-lang="m_training">training</span></a></li>
+            <li id="m_training" class="nav-item d-none"><a class="nav-link" id="train_link" href="#" target="_blank"><span class="nav-label lang" data-lang="m_training">training</span></a></li>
             <li class="nav-item"><a class="nav-link"  id="username" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"><i class="fa fa-user"></i> </a></li>
         </ul>
 
@@ -357,14 +355,15 @@
                     </ul>
 
                     <form class="form-inline my-2 my-lg-0">
-                        <button class="singleSelectOnly not_deleted lang btn btn-danger mx-1 my-1" data-lang="c_del" id="m_delete"></button>
-                        <button class="singleSelectOnly deleted lang btn btn-info mx-1 my-1" data-lang="c_undel" id="m_undelete"></button>
-                        <button class="singleSelectOnly not_assigned lang btn btn-primary mx-1 my-1" data-lang="mf_lock" id="m_lock"></button>
-                        <button class="singleSelectOnly assigned lang btn btn-secondary mx-1 my-1" data-lang="mf_rel" id="m_release"></button>
-                        <button class="multiSelectOnly lang btn btn-primary mx-1 my-1" data-lang="co_b" id="m_bulk_edit"></button>
-                        <button class="singleSelectOnly assigned lang btn btn-primary mx-1 my-1" data-lang="c_edit" id="m_edit"></button>
-                        <button class="singleSelectOnly assigned_other lang btn btn-primary mx-1 my-1" data-lang="m_view" id="m_view"></button>
-                        <button class="singleSelectOnly assigned_admin lang btn btn-warning mx-1 my-1" type="button" data-lang="t_assign" id="m_assign_to"></button>
+                        <button class="targetSpecific singleSelectOnly not_deleted lang btn btn-danger mx-1 my-1" data-lang="c_del" id="m_delete"></button>
+                        <button class="targetSpecific singleSelectOnly deleted lang btn btn-info mx-1 my-1" data-lang="c_undel" id="m_undelete"></button>
+                        <button class="targetSpecific singleSelectOnly not_assigned lang btn btn-primary mx-1 my-1" data-lang="mf_lock" id="m_lock"></button>
+                        <button class="targetSpecific singleSelectOnly assigned lang btn btn-secondary mx-1 my-1" data-lang="mf_rel" id="m_release"></button>
+                        <button class="targetSpecific multiSelectOnly lang btn btn-primary mx-1 my-1" data-lang="co_b" id="m_bulk_edit"></button>
+                        <button class="targetSpecific singleSelectOnly assigned lang btn btn-primary mx-1 my-1" data-lang="c_edit" id="m_edit"></button>
+                        <button class="targetSpecific singleSelectOnly assigned_other lang btn btn-primary mx-1 my-1" data-lang="m_view" id="m_view"></button>
+                        <button class="targetSpecific singleSelectOnly assigned_admin lang btn btn-warning mx-1 my-1" type="button" data-lang="t_assign" id="m_assign_to"></button>
+                        <button class="targetSpecific chartOnly lang btn btn-success mx-1 my-1 d-none" type="button" data-lang="d_add_c" id="m_add_chart"></button>
 
                         <!--
                         <button class="genfile docx btn btn-info mx-1 my-1"><i class="fa fa-file-word fa-lg"></i></button>
@@ -458,57 +457,12 @@
                 </div>
                 <div id="chartPanel"  role="tabpanel" class="tab-pane fade" aria-labelledby="chart-view">
                     <div class="panel-body">
-                        <div id="chartcontent">
-                            <div class="row">
-                                <div class="col-sm-12 col-md-6 col-lg-3">
-                                    <div class="card">
-                                        <div class="card-header d-flex chart-header">
-                                            <span class="mr-auto lang" data-lang="c_status"></span>
-                                            <!--<i class="fa fa-cog"></i>-->
-                                        </div>
-                                        <div class="card-body">
-                                            <canvas id="statusChart"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 col-md-6 col-lg-3">
-                                    <div class="card">
-                                        <div class="card-header d-flex chart-header">
-                                            <span class="mr-auto lang" data-lang="accepted"></span>
-                                            <!--<i class="fa fa-cog"></i>-->
-                                        </div>
-                                        <div class="card-body">
-                                            <canvas id="assignedChart"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 col-md-6 col-lg-3">
-                                    <div class="card">
-                                        <div class="card-header d-flex chart-header">
-                                            <span class="mr-auto lang" data-lang="c_alert"></span>
-                                            <!--<i class="fa fa-cog"></i>-->
-                                        </div>
-                                        <div class="card-body">
-                                            <canvas id="alertChart"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 col-md-6 col-lg-3">
-                                    <div class="card">
-                                        <div class="card-header d-flex chart-header">
-                                            <span class="mr-auto lang" data-lang="c_crit"></span>
-                                            <!--<i class="fa fa-cog"></i>-->
-                                        </div>
-                                        <div class="card-body">
-                                            <canvas id="criticalityChart"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div id="chartcontent" class="row">
+
                         </div>
                     </div>
                 </div>
-                <div id="timingPanel"  role="tabpanel" class="tab-pane fade" style="display:none;" aria-labelledby="timing-view">
+                <div id="timingPanel"  role="tabpanel" class="tab-pane fade d-none" aria-labelledby="timing-view">
                     <div class="panel-body">
                         <div id="timingcontent">
                             <div class="row" id="timingrow"></div>
@@ -1434,7 +1388,31 @@
             </div>
             <div class="modal-body">
 
-                <form role="form">
+                <form id="addChartForm" role="form">
+                    <div class="form-group row"  data-container="body">
+                        <label for="cs_chart_label" data-lang="c_name" class="lang col-sm-4 control-label"></label>
+                        <div class="col-sm-8">
+                            <input type="text" id="cs_chart_label" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 control-label lang" data-lang="c_subject" for="cs_subject"></label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="cs_subject">
+                                <option class="lang" value="status" data-lang="c_status"></option>
+                                <option class="lang" value="assigned" data-lang="t_assigned"></option>
+                                <option class="lang" value="alert" data-lang="c_alert"></option>
+                                <option class="lang" value="criticality" data-lang="c_crit"></option>
+                                <option class="lang" value="question" data-lang="c_question"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row qonly">
+                        <label class="col-sm-4 control-label lang" data-lang="c_question" for="cs_question"></label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="cs_question"></select>
+                        </div>
+                    </div>
                     <div class="form-group row">
                         <label class="col-sm-4 control-label lang" data-lang="a_type" for="cs_chart_type"></label>
                         <div class="col-sm-8">
@@ -1449,7 +1427,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-                <button id="chart_settings_save" type="button" class="btn btn-primary lang" data-lang="c_create">create</button>
+                <button id="chart_settings_save" type="button" class="btn btn-primary lang" data-lang="c_save">save</button>
             </div>
         </div>
     </div>

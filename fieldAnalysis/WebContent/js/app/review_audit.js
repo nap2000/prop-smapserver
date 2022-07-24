@@ -26,6 +26,7 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 
 	$(document).ready(function () {
 
+		setTheme();
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
 

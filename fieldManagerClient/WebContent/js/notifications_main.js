@@ -71,6 +71,7 @@ require([
 
 		setCustomNotifications();			// Apply custom javascript
 
+		setTheme();
 		setupUserProfile(true);
 		localise.setlang();		    // Localise HTML
 

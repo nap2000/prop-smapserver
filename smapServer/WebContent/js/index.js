@@ -1,5 +1,5 @@
 var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
+if (typeof(localStorage) !== "undefined") {
 	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
 } 
 
@@ -27,7 +27,20 @@ require(['jquery', 'app/localise', 'app/common','app/globals'],
 		i,
 		loggedin=false,
 		androidVersion;
-	
+
+	setTheme();
+	// Show default logo
+	try {
+		let mainLogo = localStorage.getItem("main_logo");
+		if (typeof mainLogo !== 'undefined' && mainLogo !== "undefined" && mainLogo) {
+			let img = document.getElementById('main_logo');
+			console.log("Logo: " + mainLogo);
+			img.setAttribute("src", mainLogo);
+		}
+	} catch (e) {
+
+	}
+
 	/*
 	 * If the user is logged in then get their details
 	 */
@@ -48,14 +61,15 @@ require(['jquery', 'app/localise', 'app/common','app/globals'],
 	 * which depend on their authorisation level
 	 */
 	if(loggedin) {
+		setTheme();
 		setupUserProfile(true);
 		localise.setlang();
-		$('.loggedin').show();
+		$('.loggedin').show().removeClass('d-none');
 		$('.notloggedin').hide();
 	} else {
 		setCustomMainLogo();
 		$('.restrict_role').hide();
-		$('.notloggedin').show();
+		$('.notloggedin').show().removeClass('d-none');;
 		$('.loggedin').hide();
 	}
 	
@@ -63,7 +77,7 @@ require(['jquery', 'app/localise', 'app/common','app/globals'],
 	 * Enable self registration 
 	 */
 	if(isSelfRegistrationServer() && !loggedin) {
-		$('#signup').show();
+		$('#signup').show().removeClass('d-none');;
 	} else {
 		$('#signup').hide();
 	}

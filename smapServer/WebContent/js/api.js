@@ -60,6 +60,7 @@ require([
 	$(document).ready(function() {
 
 		setupUserProfile(true);
+		setTheme();
 		localise.setlang();		// Localise HTML
 
 		// Get the user details

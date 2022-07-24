@@ -122,6 +122,7 @@ $(document).ready(function() {
 	window.extended_model = extended_model;
 	window.localise = localise;             // Required as survey control is not part of module
 
+	setTheme();
 	setupUserProfile(false);
 	localise.setlang();		// Localise HTML
 	registerForServiceWorkerMessages();

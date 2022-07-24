@@ -49,12 +49,11 @@ require([
 		'jquery.autosize.min'],
 	function($, common, bootstrap, modernizr, localise, ssc, globals) {
 
-
 		var	gMode = "survey",
 			gIdx;;
 
 		$(document).ready(function() {
-
+			
 			setupUserProfile(true);
 			localise.setlang();		// Localise HTML
 

@@ -29,3 +29,9 @@ tr.deleted td a {
     padding-top: 0.1rem;
     padding-bottom: 0.1rem;
 }
+
+.wide-chart {
+    position: relative;
+    height:40vh;
+    width:80vw;
+}
