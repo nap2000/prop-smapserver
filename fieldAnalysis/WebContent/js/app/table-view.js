@@ -121,6 +121,12 @@ function setTableSurvey(view) {
         restoreAllTables(view.sId);
         alert(localise.set["msg_restore_started"]);
     });
+
+	$selFoot.find('.tArchive').button().off().click(function() {
+		if(confirm(localise.set["msg_archive_data"])) {
+			$('#archive_data_popup').dialog("open");
+		}
+	});
 	
 	/*
 	 * Enable the dialog to import data
@@ -152,6 +158,31 @@ function setTableSurvey(view) {
 				        }
 		        	}
 		        }
+			]
+		}
+	);
+
+	/*
+ 	 * Enable the dialog to archive data
+ 	 */
+	$('#archive_data_popup').dialog(
+		{
+			autoOpen: false, closeOnEscape:true, draggable:true, model:true,
+			show:"drop",
+			zIndex: 2000,
+			buttons: [
+				{
+					text: localise.set["c_close"],
+					click: function() {
+						$(this).dialog("close");
+					}
+				},
+				{
+					text: localise.set["c_archive_data"],
+					click: function() {
+						archiveAllTables(view.sId);
+					}
+				}
 			]
 		}
 	);
@@ -228,7 +259,7 @@ function setTableSurvey(view) {
 					});
 				}
 			} else {
-				var form = $('#form_select option:selected').val("-1");    // No form selected
+				$('#form_select option:selected').val("-1");    // No form selected
 			}
 
             $('#load_data_popup').dialog("open");
@@ -532,7 +563,28 @@ function restoreAllTables(sId) {
             });
         }
 	}
+}
 
+function archiveAllTables(sId) {
+
+	addHourglass();
+	$.ajax({
+		url: "/surveyKPI/surveyResults/" + sId + "/archive",
+		cache: false,
+		success: function (response) {
+			removeHourglass();
+			$('#archive_data_popup').dialog("close");
+			setTimeout(refreshAnalysisData, 5000);
+		},
+		error: function (xhr, textStatus, err) {
+			removeHourglass();
+			if (xhr.readyState == 0 || xhr.status == 0) {
+				return;  // Not an error
+			} else {
+				alert(localise.set["error"] + " " + err);
+			}
+		}
+	});
 
 }
 
@@ -655,6 +707,7 @@ function setTableQuestion(view) {
 	$selFoot.find('.tImport').hide();
 	$selFoot.find('.tDelete').hide();
     $selFoot.find('.tRestore').hide();
+	$selFoot.find('.tArchive').hide();
 	
 }
 
