@@ -102,6 +102,7 @@ var htable9b =	  '<button class="tExportMedia">' + localise.set["m_backup_media"
 var htable10 =	  '<button class="tImport">' + localise.set["m_import"] + '</button>';
 var htable11 =	  '<button class="tDelete">' + localise.set["c_del_data"] + '</button>';
 var htable11b =	  '<button class="tRestore">' + localise.set["c_res_data"] + '</button>';
+var htable11c =	  '<button class="tArchive">' + localise.set["c_archive_data"] + '</button>';
 var htable12 =	'</div>' ;
 var htable13 = '</div>';
 
@@ -653,6 +654,7 @@ function setPanelType(type, idx, period, qId, subject_type) {
 		h[++i] = htable10;
 		h[++i] = htable11;
         h[++i] = htable11b;
+		h[++i] = htable11c;
 		h[++i] = htable12;
 		$panelContent.append(h.join(''));
 		break;
