@@ -74,6 +74,7 @@ define({
     "c_api_builder": "API Builder",
     "c_audit": "Audit",
     "c_auto": "Auto",
+    "c_before": "Before",
     "c_bundle": "Bundle",
     "c_cases": "Cases",
     "c_closed": "Closed",
@@ -559,7 +560,6 @@ define({
     "msg_del_data": "Are you sure you want to delete all the data in this survey?",
     "msg_del_groups": "This survey is part of a group and deleting its data will also delete the data for these other surveys",
     "msg_res_data": "Are you sure you want to restore all the data in this survey to the original submissions?",
-    "msg_archive_data": "Are you sure you want to archive old submissions?",
     "msg_del_data2": "Are you really sure?",
     "msg_del_rep": "Are you sure you want to delete this report?",
     "msg_del_users": "Are you sure you want to delete these users?",
@@ -647,6 +647,9 @@ define({
     "msg_trans_to": "The translation request has timed out.  However it should still be working in the background and you can view the results by refreshing the page",
     "msg_subs_bg": "If you have un-subscribed from receiving email notifications, then using this page, you can re-subscribe to receive them again. The decision to send notifications to an email address is made by an administrator so although you can un-subscribe from these and then re-subscribe on this page you cannot request email notiifcations when you are not being sent any.",
     "msg_fgt_p": "Enter the email address associated with your account. A link will be sent to that address allowing you to reset your password.",
+    "msg_archive": "%s1 records on or before %s2 have been archived to survey %s3",
+    "msg_archive_none": "There is no data to archive",
+    "msg_archive_data": "Are you sure you want to archive old submissions?",
 
     // Editor
     "e_b_e": "Base on existing form",
