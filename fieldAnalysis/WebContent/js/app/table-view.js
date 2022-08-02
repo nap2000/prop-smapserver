@@ -181,7 +181,7 @@ function setTableSurvey(view) {
 				{
 					text: localise.set["c_archive_data"],
 					click: function() {
-						archiveAllTables(view.sId);
+						archiveCount(view.sId);
 					}
 				}
 			]
@@ -566,13 +566,20 @@ function restoreAllTables(sId) {
 	}
 }
 
-function archiveAllTables(sId) {
+/*
+ * Check how many records are to be archived
+ * Then, if the user confirms, start the archive
+ */
+function archiveCount(sId) {
 
 	var before = $('#archive_before_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
-
+	if(before === '') {
+		$('#archive_data_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["msg_archive_before"]);
+		return;
+	}
 	addHourglass();
 	$.ajax({
-		url: "/surveyKPI/surveyResults/" + sId + "/archive",
+		url: "/surveyKPI/surveyResults/" + sId + "/archivecount?startDate=" + before + "&tz=" + encodeURIComponent(globals.gTimezone),
 		dataType: 'json',
 		cache: false,
 		success: function (response) {
@@ -581,7 +588,43 @@ function archiveAllTables(sId) {
 				var msg = localise.set["msg_archive"];
 				msg = msg.replace("%s1", response.count);
 				msg = msg.replace("%s2", before);
-				msg = msg.replace("%s3", response.archiveName);
+				msg = msg.replace("%s3", response.surveys.join(","));
+				if(confirm(msg)) {
+					archiveAllTables(sId);
+				}
+			} else {
+				$('#archive_data_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["msg_archive_none"]);
+			}
+			setTimeout(refreshAnalysisData, 5000);
+		},
+		error: function (xhr, textStatus, err) {
+			removeHourglass();
+			if (xhr.readyState == 0 || xhr.status == 0) {
+				return;  // Not an error
+			} else {
+				alert(localise.set["error"] + " " + err);
+			}
+		}
+	});
+
+}
+
+function archiveAllTables(sId) {
+
+	var before = $('#archive_before_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+
+	addHourglass();
+	$.ajax({
+		url: "/surveyKPI/surveyResults/" + sId + "/archive?startDate=" + before + "&tz=" + encodeURIComponent(globals.gTimezone),
+		dataType: 'json',
+		cache: false,
+		success: function (response) {
+			removeHourglass();
+			if(response.count > 0) {
+				var msg = localise.set["msg_archive_done"];
+				msg = msg.replace("%s1", response.count);
+				msg = msg.replace("%s2", before);
+				msg = msg.replace("%s3", response.archives.join(","));
 				$('#archive_data_alert').show().removeClass('alert-danger').addClass('alert-success').text(msg);
 			} else {
 				$('#archive_data_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["msg_archive_none"]);
