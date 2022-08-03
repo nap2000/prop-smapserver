@@ -579,7 +579,7 @@ function archiveCount(sId) {
 	}
 	addHourglass();
 	$.ajax({
-		url: "/surveyKPI/surveyResults/" + sId + "/archivecount?startDate=" + before + "&tz=" + encodeURIComponent(globals.gTimezone),
+		url: "/surveyKPI/surveyResults/" + sId + "/archivecount?beforeDate=" + before + "&tz=" + encodeURIComponent(globals.gTimezone),
 		dataType: 'json',
 		cache: false,
 		success: function (response) {
@@ -600,9 +600,9 @@ function archiveCount(sId) {
 		error: function (xhr, textStatus, err) {
 			removeHourglass();
 			if (xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
+				$('#archive_data_alert').show().removeClass('alert-success').addClass('alert-danger').text(xhr.responseText);
 			} else {
-				alert(localise.set["error"] + " " + err);
+				$('#archive_data_alert').show().removeClass('alert-success').addClass('alert-danger').text(xhr.responseText);
 			}
 		}
 	});
@@ -615,13 +615,13 @@ function archiveAllTables(sId) {
 
 	addHourglass();
 	$.ajax({
-		url: "/surveyKPI/surveyResults/" + sId + "/archive?startDate=" + before + "&tz=" + encodeURIComponent(globals.gTimezone),
+		url: "/surveyKPI/surveyResults/" + sId + "/archive?beforeDate=" + before + "&tz=" + encodeURIComponent(globals.gTimezone),
 		dataType: 'json',
 		cache: false,
 		success: function (response) {
 			removeHourglass();
 			if(response.count > 0) {
-				var msg = localise.set["msg_archive_done"];
+				var msg = localise.set["msg_archive"];
 				msg = msg.replace("%s1", response.count);
 				msg = msg.replace("%s2", before);
 				msg = msg.replace("%s3", response.archives.join(","));
@@ -634,9 +634,9 @@ function archiveAllTables(sId) {
 		error: function (xhr, textStatus, err) {
 			removeHourglass();
 			if (xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
+				$('#archive_data_alert').show().removeClass('alert-danger').addClass('alert-success').text(localise.set["msg_archive_done"]);
 			} else {
-				alert(localise.set["error"] + " " + err);
+				$('#archive_data_alert').show().removeClass('alert-success').addClass('alert-danger').text(xhr.responseText);
 			}
 		}
 	});
