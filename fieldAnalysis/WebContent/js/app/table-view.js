@@ -124,6 +124,7 @@ function setTableSurvey(view) {
 
 	$selFoot.find('.tArchive').button().off().click(function() {
 		if(confirm(localise.set["msg_archive_data"])) {
+			$('#archive_data_alert').hide();
 			$('#archive_before_date').datepicker({ dateFormat: "yy-mm-dd" });
 			$('#archive_data_popup').dialog("open");
 		}
@@ -621,15 +622,10 @@ function archiveAllTables(sId) {
 		success: function (response) {
 			removeHourglass();
 			if(response.count > 0) {
-				var msg = localise.set["msg_archive"];
-				msg = msg.replace("%s1", response.count);
-				msg = msg.replace("%s2", before);
-				msg = msg.replace("%s3", response.archives.join(","));
-				$('#archive_data_alert').show().removeClass('alert-danger').addClass('alert-success').text(msg);
+				$('#archive_data_alert').show().removeClass('alert-danger').addClass('alert-success').text(response.msg);
 			} else {
 				$('#archive_data_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["msg_archive_none"]);
 			}
-			setTimeout(refreshAnalysisData, 5000);
 		},
 		error: function (xhr, textStatus, err) {
 			removeHourglass();
