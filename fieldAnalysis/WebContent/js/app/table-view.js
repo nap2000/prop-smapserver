@@ -25,7 +25,8 @@ var gSelectedTemplate,          // Survey ident of the current template
 	gMedia,
 	gDataLength,
 	MAX_EXPORT_MEDIA = 500,
-	MAX_EXPORT = 10000;
+	MAX_EXPORT = 10000,
+	gArchiveSurveyId;
 
 function setTableSurvey(view) {
 
@@ -124,6 +125,7 @@ function setTableSurvey(view) {
 
 	$selFoot.find('.tArchive').button().off().click(function() {
 		if(confirm(localise.set["msg_archive_data"])) {
+			gArchiveSurveyId = view.sId;
 			$('#archive_data_alert').hide();
 			$('#archive_before_date').datepicker({ dateFormat: "yy-mm-dd" });
 			$('#archive_data_popup').dialog("open");
@@ -182,7 +184,7 @@ function setTableSurvey(view) {
 				{
 					text: localise.set["c_archive_data"],
 					click: function() {
-						archiveCount(view.sId);
+						archiveCount(gArchiveSurveyId);
 					}
 				}
 			]
@@ -585,13 +587,14 @@ function archiveCount(sId) {
 		cache: false,
 		success: function (response) {
 			removeHourglass();
+			var archiveSurveyId = sId;
 			if(response.count > 0) {
 				var msg = localise.set["msg_archive"];
 				msg = msg.replace("%s1", response.count);
 				msg = msg.replace("%s2", before);
 				msg = msg.replace("%s3", response.surveys.join(","));
 				if(confirm(msg)) {
-					archiveAllTables(sId);
+					archiveAllTables(archiveSurveyId);
 				}
 			} else {
 				$('#archive_data_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["msg_archive_none"]);
