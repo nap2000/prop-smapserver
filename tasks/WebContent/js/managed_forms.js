@@ -762,8 +762,8 @@ require([
         /*
          * SHow and hide the controls
          */
-        $('.filtersShown').hide();
-        $('.filtersHidden').show();
+        $('.filtersShown').show();
+        $('.filtersHidden').hide();
         $('#hideFilters').click(function(e){
             e.preventDefault();
             $('.filtersShown').hide();
