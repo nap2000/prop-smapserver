@@ -20,6 +20,7 @@ var gWait = 0;		// This javascript file only
 var gCache = {};
 var gCacheGroup = {};
 var gCacheStatusQuestions = {};
+var gEligibleUser;
 
 
 /*
@@ -4697,9 +4698,9 @@ function edit_notification(edit, idx, console) {
 
 		setAttachDependencies(notification.notifyDetails.attach);
 
-		//if (notification.trigger !== "task_reminder") {
-		//	$('#survey').val(notification.s_id).change();
-		//}
+		if (notification.trigger !== "task_reminder") {
+			$('#survey').val(notification.s_id).change();
+		}
 		$('#not_filter').val(notification.filter);
 		$('#update_value').val(notification.updateValue);
 		$('#alerts').val(notification.alert_id);
