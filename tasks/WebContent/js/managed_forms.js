@@ -821,6 +821,7 @@ require([
                 setupChartEdit();
             }
             $('#chart_settings_popup').modal("hide");
+            chart.refresh();
             saveCharts();
         });
 
