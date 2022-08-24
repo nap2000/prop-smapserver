@@ -122,7 +122,7 @@ define([
             if(config.type === 'col') {
                 config.type = 'bar';
 
-            } if(config.type === 'bar') {
+            } else if(config.type === 'bar') {
                 config.options.indexAxis = 'y';
             }
 
