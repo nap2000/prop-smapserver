@@ -37,6 +37,7 @@ define([
             add: add,
             replace: replace,
             refresh: refresh,
+            remove: remove,
             clear: clear
         };
 
@@ -86,6 +87,7 @@ define([
                                     <div class="card">
                                         <div class="card-header d-flex chart-header">
                                             <span class="mr-auto">${label}</span>
+                                            <i class="fa fa-trash text-danger pr-2" data-idx="${index}"></i>
                                             <i class="fa fa-cog" data-idx="${index}"></i>
                                         </div>
                                         <div class="card-body">
@@ -106,6 +108,11 @@ define([
         function replace(settings, index) {
             charts[index].config = updateConfigFromSettings(charts[index].config, settings);
             charts[index].chart.update();
+        }
+
+        function remove(index) {
+            charts[index].chart.destroy();
+            charts.splice(index,1);
         }
 
         function updateConfigFromSettings(config, settings) {

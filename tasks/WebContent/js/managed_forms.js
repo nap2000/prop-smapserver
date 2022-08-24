@@ -946,6 +946,14 @@ require([
             setChartPopupControls();
             $('#chart_settings_popup').modal("show");
         });
+
+        $('.fa-trash','#chartcontent').click(function(){
+            chart.remove($(this).data("idx"));
+            gTasks.cache.currentData.settings.charts.splice($(this).data("idx"), 1);
+            saveCharts();
+            updateCharts(gTasks.cache.currentData.settings.charts);
+            chart.refresh();
+        });
     }
 
     /*
@@ -3174,7 +3182,7 @@ require([
             updateSettings(gTasks.cache.currentData.settings);
             map.setLayers(gTasks.cache.currentData.schema.layers);
             updateFormList(gTasks.cache.currentData.forms);
-            updateCharts(gTasks.cache.currentData.charts);
+            updateCharts(gTasks.cache.currentData.settings.charts);
 	    } else {
 
 		    addHourglass();
