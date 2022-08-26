@@ -147,7 +147,7 @@ require([
             h[++idx] = localise.set["c_name"];	// Name
             h[++idx] = '</th>';
             h[++idx] = '<th scope="col">';
-            h[++idx] = localise.set["cm_p"];	// Period
+            h[++idx] = localise.set["cm_alert_a"];	// Period
             h[++idx] = '</th>';
             h[++idx] = '<th scope="col">';
             h[++idx] = localise.set["c_action"];
