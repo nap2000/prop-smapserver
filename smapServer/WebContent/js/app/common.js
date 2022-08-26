@@ -4720,7 +4720,7 @@ function edit_notification(edit, idx, console) {
 			}
 		}
 
-		if(notification.trigger !== "task_reminder" && (notification.alert_id
+		if(notification.trigger !== "task_reminder" && (typeof notification.alert_id !== 'undefined'
 			|| (notification.notify_details && (notification.notifyDetails.emailQuestionName || notification.notifyDetails.emailMeta)))) {
 
 				surveyChangedNotification(notification.notifyDetails.emailQuestionName,
