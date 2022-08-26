@@ -169,6 +169,7 @@ require([
 			notification.enabled = $('#nt_enabled').is(':checked');
 			notification.filter = $('#not_filter').val();
 			notification.name = $('#name').val();
+			notification.alert_id = $('#alerts').val();
 
 			if(notification.trigger === 'task_reminder') {
 				var idx = $('#task_group').val();
