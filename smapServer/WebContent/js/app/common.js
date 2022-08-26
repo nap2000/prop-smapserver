@@ -5138,9 +5138,9 @@ function saveEscalate() {
 
 		notification.target = "escalate";
 		notification.remote_user = $('#user_to_assign').val();
-		if($('#trigger').val() === "cm_alert") {
-			notification.alert_id = $('#alerts').val();
-		}
+		//if($('#trigger').val() === "cm_alert") {
+		//	notification.alert_id = $('#alerts').val();
+		//}
 		notification.notifyDetails = {};	// Required so that notifyDetails is not undefined
 
 	} else {
