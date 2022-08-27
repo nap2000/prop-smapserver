@@ -727,7 +727,6 @@ require([
             $('.re_alert').hide();
         });
 
-
         /*
          * Respond to a location being selected
          */
@@ -806,7 +805,10 @@ require([
 
         $('#chart_settings_save').click(function() {
             if(gSelectedChart >= 0) {   // edit
+                gTasks.cache.currentData.settings.charts[gSelectedChart].subject = $('#cs_subject').val();
                 gTasks.cache.currentData.settings.charts[gSelectedChart].chart_type = $('#cs_chart_type').val();
+                gTasks.cache.currentData.settings.charts[gSelectedChart].question = $('#cs_question').val();
+                gTasks.cache.currentData.settings.charts[gSelectedChart].label = $('#cs_chart_label').val();
                 chart.replace(gTasks.cache.currentData.settings.charts[gSelectedChart], gSelectedChart);
             } else {
                 var item = {
