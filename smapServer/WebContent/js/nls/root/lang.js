@@ -89,6 +89,7 @@ define({
     "c_project": "Project",
     "c_forms": "Forms",
     "c_form": "Form",
+    "c_sub_form": "Sub Form",
     "c_forward": "Forward",
     "c_webhook": "Web Hook",
     "c_forwarded": "Forwarded",

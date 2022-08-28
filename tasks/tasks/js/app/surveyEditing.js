@@ -1,0 +1,19 @@
+/*
+ This file is part of SMAP.
+
+ SMAP is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ SMAP is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
+
+ */
+
+define(["jquery","jquery_ui","tablesorter","localise"],function(e,s,o,a){function t(s){var o,a=e("#s_id").val(),t=[],n=-1;addHourglass(),e.ajax({url:"/surveyKPI/ssc/"+a+"/"+s+"/forms",dataType:"json",cache:!1,success:function(a){if(removeHourglass(),console.log("Forms"),console.log(a),0===a.length)alert("No forms found that can be used for function "+s);else{for(o=0;o<a.length;o++)t[++n]='<option value="',t[++n]=a[o].fId,t[++n]='">',t[++n]=a[o].name,t[++n]="</option>";e("#ssc_form").html(t.join(""))}},error:function(s,o,a){removeHourglass(),0!=s.readyState&&0!=s.status&&(alert("Error: Failed to get list of forms: "+a),e("#add_ssc_popup").dialog("close"))}})}function n(){var s=e("#s_name").val(),o=e("#s_def_lang").val(),a=e("#s_id").val();addHourglass(),e.ajax({type:"POST",url:"/surveyKPI/survey/"+a+"/rename",cache:!1,data:{name:s,def_lang:o},success:function(e,s){removeHourglass(),alert("Survey name updated")},error:function(e,s){removeHourglass(),alert("Failed to update survey name")}})}function l(){var s=e("#ssc_name").val(),o=e("#ssc_form option:selected").val(),a=e("#s_id").val(),t=e("#ssc_function").val(),n=e("#ssc_units").val();addHourglass(),e.ajax({type:"POST",url:"/surveyKPI/ssc/"+a+"/"+t+"/add",cache:!1,data:{form:o,name:s,units:n},success:function(e,s){removeHourglass(),window.location.reload(!0)},error:function(e,s,o){removeHourglass(),console.log(e),alert("Failed to add server side calculation: "+e.responseText)}})}e(document).ready(function(){localise.setlang(),"function"==typeof getVersion&&getVersion(),e("#fl").tablesorter({widgets:["zebra"]}),e("#save_survey").button().click(function(){n()}),e("#add_ssc_popup").dialog({autoOpen:!1,closeOnEscape:!0,draggable:!0,modal:!0,show:"drop",title:"Server Side Calculations",zIndex:2e3,buttons:[{text:"Cancel",click:function(){e(this).dialog("close")}},{text:"Save",click:function(){var s=e("#ssc_function").val(),o=e("#ssc_name").val(),a=e("#ssc_form option:selected").val();return""===s?(alert("You must select a function"),!1):""===o?(alert("You must specify a name"),!1):void 0===a||""===a?(alert("You must specify a form"),!1):(l(),void e(this).dialog("close"))}}]}),e("#ssc_function").change(function(){var s=e(this).val();e("#ssc_name").val(s),e("#ssc_form").empty(),""!==s?(t(s),"area"===s?e("#ssc_units").html('<option value="hectares">Hectares</option><option value="square meters">Square Meters</option>'):"length"===s&&e("#ssc_units").html('<option value="km">Kilometers</option><option value="meters">Meters</option>')):e("#ssc_units").html("")}),e("#add_ssc").button().click(function(){e("#ssc_name").val(e("#ssc_function").val()),e("#add_ssc_popup").dialog("open")}),e(".ssc_btn_rem").click(function(){var s=e(this).val(),o=e("#s_id").val();e.ajax({type:"DELETE",url:"/surveyKPI/ssc/"+o+"/any/delete/"+s,success:function(e,s){removeHourglass(),window.location.reload(!0)},error:function(e,s,o){removeHourglass(),console.log(e),alert("Failed to delete server side calculation: "+e.responseText)}})})})});
