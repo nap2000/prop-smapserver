@@ -113,6 +113,7 @@ require([
     var gDeleteReasonColumn = -1;   // The index of the column that has the reason for a delete
     var gBad;                       // A boolean indicating the direction of toggle of a deleted state
     var gLocalDefaults = {};
+    var gPreviousUrl = "";
 
     var gDrillDownNext;                 // Next drill down state if drill down is selected
     var gDrillDownStack = [];
@@ -834,7 +835,6 @@ require([
         } else {
             $('#table-view').trigger('click');
         }
-
     });         // End of document ready
 
     // Generate a file based on current console data
@@ -1477,9 +1477,9 @@ require([
             tableOnDraw();
         });
 
-        // Respond to filter changes that require the server to be queried
-        $('.table_filter').focusout(function () {
-            showManagedData(globals.gCurrentSurvey, showTable, true);
+        $('.table_filter').one('blur', function () {
+            console.log("blur");
+            showManagedData(globals.gCurrentSurvey, showTable, false);  // update console with changed data
         });
 
         // Respond to changes that filter data on assignment
@@ -2158,7 +2158,7 @@ require([
          * Add an indicator to columns if they can be used as a chart question in summary reports
          * Merge choices in select multiples
          */
-
+        var firstDate = undefined;
         for(i = 0; i < columns.length; i++) {
             var d = columns[i];
 
@@ -2200,6 +2200,9 @@ require([
                 }
             } else if(d.type === "dateTime" || d.type === "date") {
 
+                if(!firstDate) {
+                    firstDate = columns[i].column_name;
+                }
                     h[++idx] = '<option value="';
                     h[++idx] = columns[i].column_name;
                     h[++idx] = '">';
@@ -2210,8 +2213,11 @@ require([
             }
 
         }
-        
-        $('#date_question').empty().html(h.join(''));
+        var dq = $('#date_question').val();
+        if(!dq) {
+            dq = firstDate;
+        }
+        $('#date_question').empty().html(h.join('')).val(dq);
     }
 
     function exitEdit() {
@@ -3097,17 +3103,16 @@ require([
 		    var fromDate = document.getElementById('filter_from').value,
 			    toDate = document.getElementById('filter_to').value,
 			    dateName = $('#date_question').val();
-		    var dateSet = (fromDate && fromDate.trim().length) || (toDate && toDate.trim().length);
 
-		    if (dateSet && dateName && dateName.trim().length) {
-			    url += "&dateName=" + dateName;
-			    if (fromDate && fromDate.trim().length) {
-				    url += "&startDate=" + fromDate;
-			    }
-			    if (toDate && toDate.trim().length) {
-				    url += "&endDate=" + toDate;
-			    }
-		    }
+		    if (dateName && dateName.trim().length) {
+                url += "&dateName=" + dateName;
+            }
+            if (fromDate && fromDate.trim().length) {
+                url += "&startDate=" + fromDate;
+            }
+            if (toDate && toDate.trim().length) {
+                url += "&endDate=" + toDate;
+            }
 
 		    if($('#include_bad').prop('checked')) {
 			    url += "&bad=yes";
@@ -3179,13 +3184,19 @@ require([
 
 	    // First Check the Cache
 	    if(!clearCache && gTasks.cache.data[url]) {
-		    gTasks.cache.currentData = gTasks.cache.data[url];
-            callback(gTasks.cache.data[url]);
-            updateSettings(gTasks.cache.currentData.settings);
-            map.setLayers(gTasks.cache.currentData.schema.layers);
-            updateFormList(gTasks.cache.currentData.forms);
-            updateCharts(gTasks.cache.currentData.settings.charts);
+            if(url !== gPreviousUrl) {
+                // URL has changed update views
+                gPreviousUrl = url;
+                gTasks.cache.currentData = gTasks.cache.data[url];
+                callback(gTasks.cache.data[url]);
+                updateSettings(gTasks.cache.currentData.settings);
+                map.setLayers(gTasks.cache.currentData.schema.layers);
+                updateFormList(gTasks.cache.currentData.forms);
+                updateCharts(gTasks.cache.currentData.settings.charts);
+            }
 	    } else {
+
+            gPreviousUrl = url;
 
 		    addHourglass();
 		    $.ajax({
@@ -3369,7 +3380,7 @@ require([
     function updateSettings(settings) {
         if(settings) {
 
-            $('#filter_from').val(settings.startDate);
+            $('#filter_from').val(settings.fromDate);
             $('#filter_to').val(settings.toDate);
             $('#date_question').val(settings.dateName);
             $('#limit').val(settings.limit);
