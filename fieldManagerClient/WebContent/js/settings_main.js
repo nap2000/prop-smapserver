@@ -225,9 +225,20 @@ require([
 		 */
 		$('#ft_login_policy1').change(function() {
 			if($(this).val() === 'periodic') {
-				$('.pw_timeout').show();
+				$('.pw_timeout').removeClass("d-none").show();
 			} else {
 				$('.pw_timeout').hide();
+			}
+		});
+
+		/*
+		 * Respond to change on GeoPoly input method
+		 */
+		$('#ft_input_method').change(function() {
+			if($(this).val() === 'auto') {
+				$('.u_ft_im_auto').removeClass("d-none").show();
+			} else {
+				$('.u_ft_im_auto').hide();
 			}
 		});
 
@@ -241,6 +252,9 @@ require([
 				i;
 
 			device.ft_send_location = $('#ft_send_location').val();
+			device.ft_input_method = $('#ft_input_method').val();
+			device.ft_im_ri = $('#ft_im_ri').val();
+			device.ft_im_acc = $('#ft_im_acc').val();
 			device.ft_send = $('#ft_send').val();
 			device.ft_delete = $('#ft_delete').val();
 			device.ft_backward_navigation = $('#ft_backward_navigation').val();
@@ -899,6 +913,9 @@ require([
 
 				$('#ft_send').val(device.ft_send);
 				$('#ft_send_location').val(device.ft_send_location);
+				$('#ft_input_method').val(device.ft_input_method);
+				$('#ft_im_ri').val(device.ft_im_ri);
+				$('#ft_im_acc').val(device.ft_im_acc);
 				$('#ft_delete').val(device.ft_delete);
 				$('#ft_backward_navigation').val(device.ft_backward_navigation);
 				$('#ft_high_res_video').val(device.ft_high_res_video);
@@ -910,7 +927,7 @@ require([
 				if(device.ft_pw_policy > 0) {
 					$('#ft_login_policy1').val("periodic");
 					$('#ft_login_policy2').val(device.ft_pw_policy );
-					$('.pw_timeout').show();
+					$('.pw_timeout').removeClass("d-none").show();
 				} else {
 					if(device.ft_pw_policy < 0) {
 						$('#ft_login_policy1').val("never");
@@ -918,6 +935,10 @@ require([
 						$('#ft_login_policy1').val("always");       // policy == 0
 					}
 					$('.pw_timeout').hide();
+				}
+
+				if(device.ft_input_method === 'auto') {
+					$('.u_ft_im_auto').removeClass("d-none").show();
 				}
 			},
 			error: function(xhr, textStatus, err) {

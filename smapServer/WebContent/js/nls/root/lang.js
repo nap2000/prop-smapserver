@@ -380,6 +380,7 @@ define({
     "c_preview": "Preview",
     "c_size": "Size",
     "c_meters": "Meters",
+    "c_accuracy": "Accuracy",
 
     // File Types
     "ft": "File Type",
@@ -1124,6 +1125,11 @@ define({
     "u_ft_prev_track_dis": "Prevent the disabling of location tracking",
     "u_ft_img_size": "Maximum pixels of the long edge of an image",
     "u_ft_img_camera": "Original size from camera",
+    "u_ft_im": "GeoShape and GeoTrace Input Method",
+    "u_ft_im_pt": "Placement by Tapping",
+    "u_ft_im_man": "Manual location recording",
+    "u_ft_im_auto": "Automatic location recording",
+    "u_ri": "Recording Interval",
     "u_ft_vs": "Very small (640px)",
     "u_ft_s": "Small (1024px)",
     "u_ft_m": "Medium (2048px)",
