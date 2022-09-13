@@ -207,7 +207,7 @@
 									</select>
 								</div>
 							</div>
-							<div class="form-group row pw_timeout" style="display:none;">
+							<div class="form-group row pw_timeout d-none">
 								<label for="ft_login_policy2" data-lang="u_ft_pw_timeout" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-6">
 									<input type="number" id="ft_login_policy2">
@@ -308,6 +308,51 @@
 										<option class="lang" data-lang="c_off" value="off">off</option>
 										<option class="lang" data-lang="c_on" value="on">on</option>
 									</select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="ft_input_method" data-lang="u_ft_im" class="lang control-label col-sm-4">input method</label>
+								<div class="col-sm-6">
+									<select class="form-control" id="ft_input_method">
+										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+										<option class="lang" data-lang="u_ft_im_pt" value="pt">pt</option>
+										<option class="lang" data-lang="u_ft_im_man" value="man">man</option>
+										<option class="lang" data-lang="u_ft_im_auto" value="auto">auto</option>
+									</select>
+								</div>
+							</div>
+							<div class="u_ft_im_auto d-none">
+								<div class="form-group row">
+									<label for="ft_im_ri" data-lang="u_ri" class="lang col-sm-4 control-label">interval</label>
+									<div class="col-sm-4">
+										<select class="form-control" id="ft_im_ri"> <!-- Uses an index to an array as per FT -->
+											<option value="0">1</option>
+											<option value="1">5</option>
+											<option value="2">10</option>
+											<option value="3">20</option>
+											<option value="4">30</option>
+											<option value="5">60</option>
+											<option value="6">300</option>
+											<option value="7">600</option>
+											<option value="8">1200</option>
+											<option value="9">1800</option>
+										</select>
+									</div>
+									<p class="lang col-sm-4" data-lang="d_sec"></p>
+								</div>
+								<div class="form-group row">
+									<label for="ft_im_acc" data-lang="c_accuracy" class="lang col-sm-4 control-label">acc</label>
+									<div class="col-sm-4">
+										<select class="form-control" id="ft_im_acc"> <!-- Uses an index to an array as per FT -->
+											<option value="0">0</option>
+											<option value="1">3</option>
+											<option value="2">5</option>
+											<option value="3">10</option>
+											<option value="4">15</option>
+											<option value="5">20</option>
+										</select>
+									</div>
+									<p class="lang col-sm-4" data-lang="c_meters"></p>
 								</div>
 							</div>
 						</form>
