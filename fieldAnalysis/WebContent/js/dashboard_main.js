@@ -46,7 +46,7 @@ require.config({
         data: '../../../../js/app/data',
     	globals: '../../../../js/app/globals',
     	moment: '../../../../js/libs/moment-with-locales.min',
-    	tablesorter: '../../../../js/libs/tablesorter',
+		tablesorter: '../../../../js/libs/jquery.tablesorter.min',
     	crf: '../../../../js/libs/commonReportFunctions',
     	pace: '../../../../js/libs/wb/plugins/pace/pace.min',
     	lang_location: '../../../../js'
@@ -100,7 +100,6 @@ require(['jquery', 'jquery_ui', 'rmm', 'common', 'localise', 'globals', 'moment'
          'data',
          'app/panels',
          'pace',
-         
          'tablesorter',
          'crf'
          

@@ -22,7 +22,7 @@
     	pacesettings: '../../../../smapServer/WebContent/js/libs/paceSettings',
 	pace: '../../../../smapServer/WebContent/js/libs/wb/plugins/pace/pace.min',
     	globals: '../../../../smapServer/WebContent/js/app/globals',
-    	tablesorter: '../../../../smapServer/WebContent/js/libs/tablesorter',
+    	tablesorter: '../../../../smapServer/WebContent/js/libs/jquery.tablesorter.min',
     	crf: '../../../../smapServer/WebContent/js/libs/commonReportFunctions',
     	lang_location: '../../../../smapServer/WebContent/js'
     },
