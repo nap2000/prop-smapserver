@@ -660,7 +660,7 @@ function showTable(tableIdx, view, tableItems, fId, survey_ident) {
 	if(tableItems && tableItems.features && tableItems.features.length > 0) {
 		generateTable(elemMain, tableItems, "", survey_ident, view.sId);
 		addRightClickToTable($selMain, view.sId, view);
-		$selMain.find('table').tablesorter({ theme : 'blue' });
+		$selMain.find('table').tablesorter({ theme : 'dark' });
 		addMoreLessButtons($selMain, view, fId, tableItems);
 	} else {
         if(typeof tableItems.message !== "undefined" && tableItems.message.trim().length > 0) {
@@ -684,7 +684,7 @@ function showUserTable(view) {
 	if(tableItems && tableItems.features && tableItems.features.length > 0) {
 		generateUserTable(elemMain, tableItems, view.user_ident, view.uId, view.subject_type);
 		addRightClickToTable($selMain, view.sId, view);
-		$selMain.find('table').tablesorter({ theme : 'blue' });
+		$selMain.find('table').tablesorter({ theme : 'dark' });
 		addMoreLessUserButtons($selMain, view);
 	} else {
 		if(typeof tableItems.message !== "undefined" && tableItems.message.trim().length > 0) {
