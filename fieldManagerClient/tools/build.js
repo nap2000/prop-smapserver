@@ -14,7 +14,6 @@
     	modernizr: '../../../../smapServer/WebContent/js/libs/modernizr',
     	common: '../../../../smapServer/WebContent/js/app/common',
     	globals: '../../../../smapServer/WebContent/js/app/globals',
-    	tablesorter: '../../../../smapServer/WebContent/js/libs/tablesorter',
     	crf: '../../../../smapServer/WebContent/js/libs/commonReportFunctions',
     	openlayers: '../../../../smapServer/WebContent/js/libs/OpenLayers/OpenLayers',
     	lang_location: '../../../../smapServer/WebContent/js',

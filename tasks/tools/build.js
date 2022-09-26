@@ -15,7 +15,6 @@
     	common: '../../../../smapServer/WebContent/js/app/common',
     	globals: '../../../../smapServer/WebContent/js/app/globals',
     	mapbox_app: '../../../../smapServer/WebContent/js/app/mapbox_app',
-    	tablesorter: '../../../../smapServer/WebContent/js/libs/tablesorter',
     	crf: '../../../../smapServer/WebContent/js/libs/commonReportFunctions',
     	lang_location: '../../../../smapServer/WebContent/js',
 	datatables: '../../../../smapServer/WebContent/js/libs/DataTables/datatables.min',

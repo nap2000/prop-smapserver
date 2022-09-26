@@ -42,7 +42,6 @@ requirejs.config({
     },
     shim: {
     	'common': ['jquery'],
-    	'tablesorter': ['jquery'],
     	'app/plugins': ['jquery'],
     	'crf': ['jquery']
 	
@@ -59,7 +58,6 @@ require([
          'app/monitor', 
          'app/map-ol-mgmt',
          'app/plugins',
-         'tablesorter',
          'crf'
          
          ], function($, jquery, common, localise, globals, moment, chart) {
