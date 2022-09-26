@@ -38,13 +38,10 @@ requirejs.config({
     	modernizr: '../../../../js/libs/modernizr',
     	common: '../../../../js/app/common',
     	globals: '../../../../js/app/globals',
-    	tablesorter: '../../../../js/libs/tablesorter',
     	lang_location: '../../../../js'
     },
     shim: {
-    	'common': ['jquery'],
-    	'tablesorter': ['jquery'],
-	
+    	'common': ['jquery']
     	}
     });
 
@@ -52,8 +49,7 @@ require([
          'jquery', 
          'common', 
          'localise', 
-         'globals',
-         'tablesorter'
+         'globals'
          
          ], function($, common, localise, globals) {
 

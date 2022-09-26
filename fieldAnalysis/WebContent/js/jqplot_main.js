@@ -37,7 +37,6 @@ require.config({
     	rmm: '../../../../js/libs/responsivemobilemenu',
     	common: '../../../../js/app/common',
     	globals: '../../../../js/app/globals',
-    	tablesorter: '../../../../js/libs/tablesorter',
     	crf: '../../../../js/libs/commonReportFunctions',
     	lang_location: '../../../../js'
 
