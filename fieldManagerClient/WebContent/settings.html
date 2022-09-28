@@ -93,6 +93,7 @@
 				<li id="deviceTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="u_det_o_ft"></a></li>
 				<li id="webformTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="u_det_o_wf"></a></li>
 				<li id="emailTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="u_det_o_email"></a></li>
+				<li id="otherTab" class="nav-item"><a href="#" class="nav-link lang" data-lang="u_det_o_other"></a></li>
 				<li id="sensitiveTab" class="nav-item restrict_role security_role"><a href="#" class="nav-link lang" data-lang="u_sens_data"></a></li>
 			</ul>
 		</div>
@@ -624,7 +625,7 @@
 				<div id="emailPanel" style="display:none;" class="usertab mt-4">
 
 					<div class="container">
-						<form id="email_form">
+						<form id="email_form" autocomplete="off">
 
 							<div class="form-group row">
 								<label for="o_admin_email" data-lang="u_h_e" class="lang control-label col-sm-4">help email</label>
@@ -643,21 +644,21 @@
 							<div class="form-group row">
 								<label for="o_email_domain" data-lang="u_e_dom" class="lang col-sm-4 control-label">domain</label>
 								<div class="col-sm-6">
-									<input class="form-control" type="text" id="o_email_domain" tabindex="11">
+									<input class="form-control" type="text" id="o_email_domain" tabindex="11" autocomplete="new-email">
 								</div>
 							</div>
 
 							<div class="form-group row">
 								<label for="o_email_user" data-lang="u_e_nm" class="lang col-sm-4 control-label">user name</label>
 								<div class="col-sm-6">
-									<input class="form-control" type="text" id="o_email_user" tabindex="12">
+									<input class="form-control" type="text" id="o_email_user" tabindex="12" autocomplete="new-email">
 								</div>
 							</div>
 
 							<div class="form-group row">
 								<label for="o_email_password" data-lang="u_e_p" class="lang col-sm-4 control-label">Email password: </label>
 								<div class="col-sm-6">
-									<input class="form-control" type="password" id="o_email_password" tabindex="13">
+									<input class="form-control" type="password" id="o_email_password" tabindex="13" autocomplete="new-password">
 								</div>
 							</div>
 
@@ -685,6 +686,23 @@
 
 						<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
 						<button id="saveEmailSettings" class="btn btn-success lang mt-4" data-lang="c_save">save</button>
+
+					</div>
+
+				</div>
+
+				<!-- The panel for setting organisation email settings -->
+				<div id="otherPanel" style="display:none;" class="usertab mt-4">
+
+					<p class="lang" data-lang="u_other_msg"></p>
+					<div class="container">
+						<form id="other_form">
+
+
+						</form>
+
+						<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
+						<button id="saveOtherSettings" class="btn btn-success lang mt-4" data-lang="c_save">save</button>
 
 					</div>
 
