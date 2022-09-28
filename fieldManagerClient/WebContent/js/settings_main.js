@@ -154,6 +154,10 @@ require([
 			e.preventDefault();
 			panelChange($(this), 'email');
 		});
+		$('#otherTab a').click(function (e) {
+			e.preventDefault();
+			panelChange($(this), 'other');
+		});
 
 		// Copy user ident to email if it is a valid email
 		$('#user_ident').blur(function(){
