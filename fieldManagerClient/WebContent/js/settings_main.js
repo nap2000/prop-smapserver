@@ -123,7 +123,6 @@ require([
 		getWebformSettings();
 		getAppearanceSettings();
 		getSensitiveSettings();
-		getProjects();
 
 		// Set up the tabs
 		$('#appearanceTab a').click(function (e) {
@@ -611,31 +610,6 @@ require([
 
 	});
 
-	/*
- 	 * Get the list of available projects from the server
- 	 */
-	function getProjects() {
-		addHourglass();
-		$.ajax({
-			url: "/surveyKPI/projectList",
-			dataType: 'json',
-			cache: false,
-			success: function(data) {
-				removeHourglass();
-				globals.gProjectList = data;
-				updateProjectList(true, 0);
-			},
-			error: function(xhr, textStatus, err) {
-				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert(localise.set["c_error"] + ": " + err);
-				}
-			}
-		});
-	}
-
 	function deleteCss(org) {
 		var url = "/surveyKPI/css/";
 		if(org) {
@@ -1084,8 +1058,7 @@ require([
 			}
 		});
 	}
-
-
+	
 	/*
 	 * Get the sensitive question settings
 	 */
