@@ -126,7 +126,7 @@ require([
 		getUsers();
 		getProjects();
 		getLoggedInUser(userKnown, false, false, getOrganisations, false,
-			false, getEnterprises, getServerDetails);
+			false, getEnterprises, undefined);
 
 		// Add change event on group and project filter
 		$('#group_name, #project_name, #role_name, #org_name').change(function() {
@@ -616,7 +616,7 @@ require([
 				success: function(data, status) {
 					removeHourglass();
 					getLoggedInUser(userKnown, false, false, getOrganisations, false,
-						false, getEnterprises, getServerDetails);
+						false, getEnterprises, undefined);
 					$('#create_organisation_popup').modal("hide");
 				}, error: function(xhr, textStatus, err) {
 					removeHourglass();
@@ -1143,28 +1143,6 @@ require([
 		});
 	}
 
-	function getServerDetails() {
-		// Get the server details
-		addHourglass();
-		$.ajax({
-			url: "/surveyKPI/server",
-			dataType: 'json',
-			cache: false,
-			success: function(data) {
-				removeHourglass();
-				updateServerData(data);
-			},
-			error: function(xhr, textStatus, err) {
-				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert(localise.set["c_error"] + ": " + err);
-				}
-			}
-		});
-	}
-
 	function getSmsType() {
 		// Get the server details
 		addHourglass();
@@ -1184,22 +1162,6 @@ require([
 				}
 			}
 		});
-	}
-
-	/*
-	 * Populate the server tab
-	 */
-	function updateServerData(data) {
-		$('#mapbox_key').val(data.mapbox_default);
-		$('#google_key').val(data.google_key);
-		$('#s_smtp_host').val(data.smtp_host);
-		$('#s_email_domain').val(data.email_domain);
-		$('#s_email_user').val(data.email_user);
-		$('#s_email_password').val(data.email_password);
-		$('#s_email_port').val(data.email_port);
-		$('#s_sms_url').val(data.sms_url);
-		$('#s_p_strength').val(data.password_strength);
-
 	}
 
 	/*

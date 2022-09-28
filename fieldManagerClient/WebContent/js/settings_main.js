@@ -694,7 +694,6 @@ require([
 		}
 	}
 
-
 	/*
 	 * Respond to a panel being changed
 	 * panelChange($(this), 'userPanel', 'usersTab');
