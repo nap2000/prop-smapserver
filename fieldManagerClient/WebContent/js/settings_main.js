@@ -123,6 +123,7 @@ require([
 		getWebformSettings();
 		getAppearanceSettings();
 		getSensitiveSettings();
+		getOtherSettings();		// miscellaneous settings
 
 		// Set up the tabs
 		$('#appearanceTab a').click(function (e) {
@@ -207,6 +208,39 @@ require([
 				success: function(data, status) {
 					removeHourglass();
 					getSensitiveSettings();
+					$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+						return;  // Not an error
+					} else {
+						var msg = xhr.responseText;
+						alert(localise.set["msg_err_upd"] + msg);
+					}
+				}
+			});
+		});
+
+		$('#saveOtherSettings').click(function() {
+
+			var otherObj = {
+				password_strength: $('#o_p_strength').val()
+			};
+
+			var otherString = JSON.stringify(otherObj);
+			addHourglass();
+			$.ajax({
+				type: "POST",
+				contentType: "application/json",
+				cache: false,
+				url: "/surveyKPI/organisationList/other",
+				data: { other: otherString },
+				success: function(data, status) {
+					removeHourglass();
+					getOtherSettings();
 					$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
 				},
 				error: function(xhr, textStatus, err) {
@@ -1058,7 +1092,7 @@ require([
 			}
 		});
 	}
-	
+
 	/*
 	 * Get the sensitive question settings
 	 */
@@ -1072,6 +1106,32 @@ require([
 			success: function(sensitive) {
 				removeHourglass();
 				$('#sens_sig').val(sensitive.signature);
+
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["c_error"] + ": " + err);
+				}
+			}
+		});
+	}
+
+	/*
+ * Get the sensitive question settings
+ */
+	function getOtherSettings() {
+
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/organisationList/other",
+			dataType: 'json',
+			cache: false,
+			success: function(other) {
+				removeHourglass();
+				$('#o_p_strength').val(other.password_strength);
 
 			},
 			error: function(xhr, textStatus, err) {
