@@ -568,13 +568,13 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
 
             } else {
                 h[++i] = '<th>' + localise.set["c_id"] + '</th>';
-                if(source === "optin_msg") {
+                if(source === "optin") {
                     h[++i] = '<th>' + localise.set["mon_send_count"] + '</th>';
                     h[++i] = '<th>' + localise.set["mon_pending_count"] + '</th>';
                 } else {
                     h[++i] = '<th>' + localise.set["c_type"] + '</th>';
                 }
-                if(source === "optin_msg") {
+                if(source === "optin") {
                     h[++i] = '<th>' + localise.set["c_email"] + '</th>';
                 } else {
                     h[++i] = '<th>' + localise.set["c_details"] + '</th>';
@@ -597,13 +597,13 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                 } else {
 
                     h[++i] = '<td>' + features[j].properties.id + '</td>';
-                    if(source === "optin_msg") {
+                    if(source === "optin") {
                         h[++i] = '<td>' + features[j].properties.opted_in_count + '</td>';
                         h[++i] = '<td>' + features[j].properties.pending_count + '</td>';
                     } else {
                         h[++i] = '<td>' + (features[j].properties.type ? features[j].properties.type : '') + '</td>';
                     }
-                    if(source === "optin_msg") {
+                    if(source === "optin") {
                         h[++i] = '<td>' + htmlEncode(features[j].properties.email) + '</td>';
                     } else {
                         h[++i] = '<td style="word-break: break-all;">' + htmlEncode(features[j].properties.notify_details) + '</td>';
@@ -616,7 +616,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                         h[++i] = '<td></td>';
                     }
                     h[++i] = '<td>' + localTime(features[j].properties.event_time) + '</td>';
-                    if(source === "optin_msg") {
+                    if(source === "optin") {
                         h[++i] = '<td><button type="button" class="btn btn-info optin_retry_button" value="';
                         h[++i] = features[j].properties.id;
                         h[++i] = '">';
