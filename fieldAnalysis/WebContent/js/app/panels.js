@@ -184,13 +184,13 @@ $(document).ready(function() {
 		        		subjectType = $('#subject_type option:selected').val();
 
 		        		sId  = $('#settings_survey option:selected').val();
-		        		if(subjectType === "survey" && sId == "-1") {
+		        		if(subjectType === "survey" && sId <= 0) {
 							alert(localise.set["msg_sel_survey"]);
 		        			return false;
 		        		}
 		        		uId = $('#settings_user option:selected').val();
 
-		        		if(subjectType === "survey" && newType == "graph" && qId == "-1") {
+		        		if(subjectType === "survey" && newType == "graph" && qId <= 0) {
 		        			alert(localise.set["msg_sel_q"]);
 		        			return false;
 						}
@@ -280,7 +280,7 @@ $(document).ready(function() {
 		        		
 		        		// Set the group type
 		        		groupMeta = globals.gSelector.getQuestion(view.groupQuestionId, view.lang);
-		        		if(groupMeta && view.groupQuestionId != "-1") {
+		        		if(groupMeta && view.groupQuestionId > 0) {
 		        			if(groupMeta.type === "geopoint" || groupMeta.type === "geopolygon" || 
 		        					groupMeta.type === "geolinestring" || 
 		        					groupMeta.type === "geoshape" ||
@@ -849,7 +849,7 @@ function getFilter() {
 	 
 	 var qInfo = getQuestionInfo(sId, language, qFilter);
 		
-	 if(qFilter !== -1 && typeof filterValue !== "undefined") {
+	 if(qFilter > 0 && typeof filterValue !== "undefined") {
 		 var filterObj = {};
 		 filterObj.qId = qFilter;
 		 filterObj.qType = qInfo.type;
