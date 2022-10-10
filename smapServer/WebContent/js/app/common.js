@@ -3716,22 +3716,6 @@ function validateEmails(emails) {
 }
 
 /*
- * Prevent the menu bar from extending over two lines
- */
-// From: http://stackoverflow.com/questions/20247945/bootstrap-3-navbar-dynamic-collapse
-/*
-function autocollapse() {
-	var $navbar = $('#autocollapse');
-    $navbar.removeClass('collapsed'); 
-    if($navbar.innerHeight() > 60) // check if we've got 2 lines
-        $navbar.addClass('collapsed'); // force collapse mode
-}
-
-$(document).on('ready', autocollapse);
-$(window).on('resize', autocollapse);
-*/
-
-/*
  * Get the roles for a survey
  */
 function getSurveyRoles(sId, selectedRoles, setall) {
