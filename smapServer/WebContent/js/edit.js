@@ -607,6 +607,18 @@ $(document).ready(function() {
 			$('.pdf_custom_map').hide();
 		}
 	});
+
+	$('#a_pdfmapsource').change(function() {
+		var source = $(this).val();
+		if(source === 'mapbox') {
+			$('.a_pdfmap_mb').show();
+			$('.a_pdfmap_g').hide();
+		} else {
+			$('.a_pdfmap_mb').hide();
+			$('.a_pdfmap_g').show();
+		}
+	});
+
 	$('#a_pdfcols_number').change(function() {
 		var val = $(this).val();
 		var i;
@@ -789,6 +801,9 @@ $(document).ready(function() {
 		if($('#a_pdfaddto').val() !== '') {
 			appearances.push('pdfaddto_' + $('#a_pdfaddto').val());
 		}
+
+		appearances.push('pdfmapsource_' + $('#a_pdfmapsource').val());
+
 		var pdfmap = $('#a_pdfmap').val();
 		if (pdfmap !== 'default') {
 			appearances.push('pdfmap_' + pdfmap);
@@ -2256,6 +2271,12 @@ function respondToEvents($context) {
 				pdfa = appearanceArray[i].split('_');
 				if(pdfa.length > 1) {
 					$('#a_pdfaddto').val(pdfa[1]);
+					foundAppearance = true;
+				}
+			} else if(appearanceArray[i].indexOf('pdfmapsource_') === 0) {
+				pdfa = appearanceArray[i].split('_');
+				if(pdfa.length > 1) {
+					$('#a_pdfmapsource').val(pdfa[1]);
 					foundAppearance = true;
 				}
 			} else if(appearanceArray[i].indexOf('pdfmap_') === 0) {

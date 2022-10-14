@@ -839,6 +839,8 @@ define({
     // Editor
     "ed_ba": "Background Audio",
     "ed_map_zoom": "Map Zoom",
+    "ed_map_source": "Map Source",
+    "ed_map_style": "Map Style",
     "ed_round": "Decimal places",
 	"ed_hidden": "Hide in form",
 	"ed_selfie": "Open camera in selfie mode",
