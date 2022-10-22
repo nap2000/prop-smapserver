@@ -3960,7 +3960,7 @@ function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly, callback, in
 		if (sIdent !== "0") {
 			addHourglass();
 			$.ajax({
-				url: "/surveyKPI/questionListIdent/" + sIdent + "/none?exc_ssc=true",
+				url: "/surveyKPI/questionListIdent/" + sIdent + "/none?exc_ssc=true&inc_meta=true",
 				dataType: 'json',
 				cache: false,
 				success: function (data) {
