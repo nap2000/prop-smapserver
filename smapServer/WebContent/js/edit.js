@@ -4222,7 +4222,31 @@ function setNoFilter() {
 					h[++idx] = '</div>';
 					h[++idx] = '</div>';
 				}
+				for (i = 0; i < languages.length; i++) {
+					labelControlId = 'a_search_labelx' + i;
+					h[++idx] = '<div class="form-group search_label">';
+					h[++idx] = '<label for="';
+					h[++idx] = labelControlId;
+					h[++idx] = '" class="col-sm-4 control-label">';
+					h[++idx] = htmlEncode(languages[i].name);
+					h[++idx] = '</label>';
+					h[++idx] = '<div class="col-sm-8">';
+					h[++idx] = '<select class="multi" multiple="multiple" id="';
+					h[++idx] = labelControlId;
+					h[++idx] = '" class="form-control column_select"></select>';
+					h[++idx] = '</div>';
+					h[++idx] = '</div>';
+				}
 				$('#search_label_list').empty().append(h.join(''));
+
+				/*
+		 		 * Set up multiple selects
+				 */
+				$('.multi', '#search_label_list').multiselect({
+					onChange: function(option, checked, select) {
+
+					}
+				});
 			}
 
 			function showAppearanceError(msg) {
