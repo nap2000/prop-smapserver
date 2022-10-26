@@ -582,7 +582,9 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 
                     h[++idx] = '<td>';
 
-                    h[++idx] = '<a class="btn survey_view" href="/app/myWork/webForm/';                    // Webform
+                    h[++idx] = '<a class="btn survey_view" data-sid="';
+                    h[++idx] = survey.id;
+                    h[++idx] = '" href="/app/myWork/webForm/';                    // Webform
                     h[++idx] = survey.ident;
                     h[++idx] = addCacheBuster("");
                     h[++idx] = '" target="_blank">'
@@ -665,6 +667,13 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                     executeBlock(id, false);
                 }
 
+            });
+
+            // On survey view update the current survey as well as showing the webform
+            $('.survey_view').click(function(e) {
+                saveCurrentProject(globals.gCurrentProject,
+                    $(this).data("sid"),
+                    globals.gCurrentTaskGroup);
             });
 
             $('.survey_replace').click(function(e) {
