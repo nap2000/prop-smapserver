@@ -467,6 +467,8 @@ require([
          */
         $('#m_lock').click(function(e) {
             e.preventDefault();
+            $('#m_lock').prop("disabled", true);     // debounce
+
             var url = "/surveyKPI/managed/lock/" + globals.gCurrentSurvey;
             addHourglass();
             $.ajax({
@@ -480,9 +482,11 @@ require([
                 },
                 success: function (data, status) {
                     removeHourglass();
+                    $('#m_lock').prop("disabled", false);     // debounce
                     showManagedData(globals.gCurrentSurvey, showTable, true);
                 }, error: function (data, status) {
                     removeHourglass();
+                    $('#m_lock').prop("disabled", false);     // debounce
                     alert(data.responseText);
                 }
             });
@@ -493,6 +497,8 @@ require([
 	     */
         $('#assignUserSave').click(function(e) {
             e.preventDefault();
+            $('#assignUserSave').prop("disabled", true);     // debounce
+
             var url = "/surveyKPI/managed/assign/" + globals.gCurrentSurvey + "/" + $('#user_to_assign').val();
 
             addHourglass();
@@ -505,9 +511,11 @@ require([
                 data: {record: gTasks.gSelectedRecord.instanceid},
                 success: function (data, status) {
                     removeHourglass();
+                    $('#assignUserSave').prop("disabled", false);     // debounce
                     showManagedData(globals.gCurrentSurvey, showTable, true);
                 }, error: function (data, status) {
                     removeHourglass();
+                    $('#assignUserSave').prop("disabled", false);     // debounce
                     alert(data.responseText);
                 }
             });
@@ -519,6 +527,8 @@ require([
          */
         $('#m_release').click(function(e) {
             e.preventDefault();
+            $('#m_release').prop("disabled", true);     // debounce
+
             var url = "/surveyKPI/managed/release/" + globals.gCurrentSurvey;
             addHourglass();
             $.ajax({
@@ -530,9 +540,11 @@ require([
                 data: {record: gTasks.gSelectedRecord.instanceid},
                 success: function (data, status) {
                     removeHourglass();
+                    $('#m_release').prop("disabled", false);     // debounce
                     showManagedData(globals.gCurrentSurvey, showTable, true);
                 }, error: function (data, status) {
                     removeHourglass();
+                    $('#m_release').prop("disabled", false);     // debounce
                     alert(data.responseText);
                 }
             });
