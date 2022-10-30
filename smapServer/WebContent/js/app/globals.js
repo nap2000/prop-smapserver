@@ -549,6 +549,9 @@ define(function () {
             parent_form: ['form_identifier', 'key_question', 'auto'],
 	        child_form: ['form_identifier', 'key_question', 'auto'],
 	        geopoint: ['auto'],
+            geotrace: ['geotextlength'],
+            geoshape: ['geotextlength'],
+            geocompound: ['geotextlength'],
             'begin repeat':['ref', 'instance_order', 'instance_count', 'key_policy'],
 	        chart: ['chart_type', 'stacked', 'normalized']
         };
@@ -556,6 +559,10 @@ define(function () {
         this.paramDetails = {
 	        rows: {
 	            field: 'p_rows',
+                type: 'integer'
+            },
+            geotextlength: {
+                field: 'p_geotextlength',
                 type: 'integer'
             },
             'max-pixels': {

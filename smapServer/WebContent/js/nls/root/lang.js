@@ -837,6 +837,7 @@ define({
     "wf_sig": "Signature",
 
     // Editor
+    "ed_gr": "Text rows to show",
     "ed_ba": "Background Audio",
     "ed_map_zoom": "Map Zoom",
     "ed_map_source": "Map Source",
