@@ -23,6 +23,5 @@ cd dashboard
 ./dep.sh
 cd ..
 
-cd ../smapserver2/smap/setup
+cd ../smapserver2/setup
 ./dep.sh
-cd ../../..
