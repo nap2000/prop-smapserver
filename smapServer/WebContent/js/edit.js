@@ -802,7 +802,10 @@ $(document).ready(function() {
 			appearances.push('pdfaddto_' + $('#a_pdfaddto').val());
 		}
 
-		appearances.push('pdfmapsource_' + $('#a_pdfmapsource').val());
+		// mapbox is the default
+		if($('#a_pdfmapsource').val() != "mapbox") {
+			appearances.push('pdfmapsource_' + $('#a_pdfmapsource').val());
+		}
 
 		var pdfmap = $('#a_pdfmap').val();
 		if (pdfmap !== 'default') {
