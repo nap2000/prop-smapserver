@@ -1139,6 +1139,7 @@ define(function () {
 	            $('#search_local_data').prop('checked'),
 	            $('#data_survey').prop('checked'),
 	            $('#oversight_survey').prop('checked'),
+                $('#read_only_survey').prop('checked'),
                 $('#exclude_empty').prop('checked'),
                 $('#compress_pdf').prop('checked'),
                 $('#set_hrk').val(),
@@ -1161,6 +1162,7 @@ define(function () {
 	            this.survey.searchLocalData = current.searchLocalData;
 	            this.survey.dataSurvey = current.dataSurvey;
 	            this.survey.oversightSurvey = current.oversightSurvey;
+                this.survey.readOnlySurvey = current.readOnlySurvey;
                 this.survey.exclude_empty = current.exclude_empty;
                 this.survey.compress_pdf = current.compress_pdf;
                 this.survey.hrk = current.hrk;
@@ -1187,6 +1189,7 @@ define(function () {
 	                this.survey.searchLocalData,
 	                this.survey.dataSurvey,
 	                this.survey.oversightSurvey,
+                    this.survey.readOnlySurvey,
                     this.survey.exclude_empty,
                     this.survey.compress_pdf,
                     this.survey.hrk,
@@ -1209,6 +1212,7 @@ define(function () {
                                               searchLocalData,
                                               dataSurvey,
                                               oversightSurvey,
+                                              readOnlySurvey,
                                               exclude_empty,
                                               compress_pdf,
                                               hrk,
@@ -1235,6 +1239,7 @@ define(function () {
                 searchLocalData: searchLocalData,
 	            dataSurvey: dataSurvey,
 	            oversightSurvey: oversightSurvey,
+                readOnlySurvey: readOnlySurvey,
                 exclude_empty: exclude_empty,
                 compress_pdf: compress_pdf,
                 hrk: hrk,
