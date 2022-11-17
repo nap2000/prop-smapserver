@@ -533,14 +533,22 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                         h[++idx] = ' class="deleted"';
                     } else if(survey.blocked) {
                         h[++idx] = ' class="blocked"';
+                    } else if(survey.readOnlySurvey) {
+                        h[++idx] = ' class="readonlysurvey"';
                     }
                     h[++idx] = '>';
                     h[++idx] = '<td class="control_td"><input type="checkbox" name="controls" value="';
                     h[++idx] = i;
                     h[++idx] = '"></td>';
 
-                    h[++idx] = '<td class="displayName">';
-                    h[++idx] = '<a class="displayName" href="';
+                    if(survey.readOnlySurvey) {
+                        h[++idx] = '<td>';
+                        h[++idx] = '<a class="readonlysurvey" href="';
+                    } else {
+                        h[++idx] = '<td class="displayName">';
+                        h[++idx] = '<a class="displayName" href="';
+                    }
+
                     if(survey.deleted) {
                         h[++idx] = '#"';
                     } else {

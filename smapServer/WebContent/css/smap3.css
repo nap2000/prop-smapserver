@@ -11,6 +11,11 @@ tr.deleted td a {
     opacity: 0.5;
 }
 
+.readonlysurvey {
+    color: rebeccapurple !important;
+}
+
+
 .reversed {
     color: #ccc;
 }
