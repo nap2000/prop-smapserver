@@ -221,7 +221,13 @@ require([
 
 		for(i = 0; i < formList.length; i++) {
 			if(!formList[i].tasks_only && (!filterProjectId || filterProjectId == formList[i].pid)) {
-				h[++idx] = '<a role="button" class="btn btn-info btn-block btn-lg" href="/app/myWork/webForm/';
+				h[++idx] = '<a role="button" class="btn btn-block btn-lg';
+				if(formList[i].read_only) {
+					h[++idx] = ' bg-light';
+				} else {
+					h[++idx] = ' bg-info';
+				}
+				h[++idx] = '" href="/app/myWork/webForm/';
 				h[++idx] = formList[i].ident;
 
 				if(gIsApp) {
