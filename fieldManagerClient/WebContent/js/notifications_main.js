@@ -222,7 +222,6 @@ require([
 				url = "/surveyKPI/notifications/add";
 			}
 
-
 			notificationString = JSON.stringify(notification);
 			$dialog = $(this);
 			addHourglass();

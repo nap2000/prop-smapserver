@@ -4698,6 +4698,7 @@ function edit_notification(edit, idx, console) {
 			$('#fwd_rem_survey_id').val(notification.remote_s_ident);
 			$('#fwd_rem_survey_nm').val(notification.remote_s_name);
 			$('#fwd_user,#user_to_assign').val(notification.remote_user);
+			$('#survey_case').val(notification.notifyDetails.survey_case);
 			gEligibleUser = notification.remote_user;
 			// Password not returned from server - leave blank
 
@@ -5082,10 +5083,9 @@ function saveEscalate() {
 
 		notification.target = "escalate";
 		notification.remote_user = $('#user_to_assign').val();
-		//if($('#trigger').val() === "cm_alert") {
-		//	notification.alert_id = $('#alerts').val();
-		//}
-		notification.notifyDetails = {};	// Required so that notifyDetails is not undefined
+
+		notification.notifyDetails = {};
+		notification.notifyDetails.survey_case = $('#survey_case').val();
 
 	} else {
 		notification.error = true;
@@ -5292,7 +5292,7 @@ function getGroupSurveys(surveyId, callback) {
  * Update a selector that is used for any data survey in a group that is not an oversight form
  */
 function setGroupSelector(data) {
-	var $elemGroups = $('#tp_form_name, #survey, #case_survey');
+	var $elemGroups = $('#survey_case');
 
 	var i,
 		item,
