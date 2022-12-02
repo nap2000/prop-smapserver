@@ -1017,6 +1017,7 @@ define({
     "ed_s_templates": "PDF templates added using the settings dialog cannot be set as 'not available' nor set as default",
     "ed_mmf": "Manage Media Files For this Form",
     "ed_sl": "Survey to launch",
+    "ed_sc": "Survey to complete",
     "ed_slu": "Survey lookup",
     "ed_gsi": "Get Survey Ident",
     "ed_qk": "Question to store the returned key",

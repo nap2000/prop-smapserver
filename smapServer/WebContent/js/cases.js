@@ -48,6 +48,12 @@ require([
 
         var gCurrentCmsIndex;
 
+        window.gTasks = {
+            cache: {
+                groupSurveys: {}
+            }
+        }
+
         $(document).ready(function() {
 
             setTheme();
@@ -93,7 +99,7 @@ require([
 
         function currentSurveyDone() {
             getGroupStatusQuestions($('#cms_sq, #cms_cq'), globals.gCurrentSurvey, true);
-            getGroupSurveys(groupSurveysDone);
+            getGroupSurveys(globals.gCurrentSurvey, groupSurveysDone);
         }
 
         function groupSurveysDone() {
@@ -161,9 +167,6 @@ require([
                 cmAlert = alertList[i];
 
                 h[++idx] = '<tr>';
-                h[++idx] = '<td class="control_td"><input type="checkbox" name="controls" value="';
-                h[++idx] = i;
-                h[++idx] = '"></td>';
                 h[++idx] = '<td>';
                 h[++idx] = cmAlert.id;
                 h[++idx] = '</td>';
@@ -265,7 +268,9 @@ require([
 
             cmsAlert.name = $('#cms_name').val();
             cmsAlert.period = $('#cms_period').val() + ' ' + $('#period_list_sel').val();
-            cmsAlert.group_survey_ident = globals.gGroupSurveys[0].groupSurveyIdent;
+            if(gTasks.cache.groupSurveys[globals.gCurrentSurvey][0]) {
+                cmsAlert.group_survey_ident = gTasks.cache.groupSurveys[globals.gCurrentSurvey][0].groupSurveyIdent;
+            }
 
             if(!cmsAlert.name || cmsAlert.name.trim().length === 0) {
                 alert(localise.set["msg_val_nm"]);

@@ -71,7 +71,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 
             // Get the user details
             getLoggedInUser(projectSet, false, true, undefined);
-            getGroupSurveys();
+            getPotentialGroupSurveys();
 
             // Set change function on projects
             $('#project_name').change(function() {
@@ -451,7 +451,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
         /*
          * Get the surveys that can be used as groups
          */
-        function getGroupSurveys() {
+        function getPotentialGroupSurveys() {
 
             var url="/surveyKPI/surveys?blocked=true&groups=true";
 
@@ -891,7 +891,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                     removeHourglass();
                     var projectId = $('#project_name option:selected').val();
                     getSurveys(projectId);
-                    getGroupSurveys();
+                    getPotentialGroupSurveys();
                 }
             });
         }
@@ -917,7 +917,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                 success : function() {
                     var projectId = $('#project_name option:selected').val();
                     getSurveys(projectId);
-                    getGroupSurveys();
+                    getPotentialGroupSurveys();
                     removeHourglass();
                 }
             });
@@ -984,13 +984,13 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                     } else if(data && data.status === "warning") {
                         document.forms.namedItem("uploadForm").reset();
                         projectSet();
-                        getGroupSurveys();
+                        getPotentialGroupSurveys();
                         $('#up_alert').show().removeClass('alert-success alert-danger').addClass('alert-warning').html(msgToHtml(data));
 
                     } else {
                         document.forms.namedItem("uploadForm").reset();
                         projectSet();
-                        getGroupSurveys();
+                        getPotentialGroupSurveys();
                         $('#up_alert').show().removeClass('alert-danger alert-warning').addClass('alert-success').html(localise.set["t_tl"] + ": " + data.name);
                     }
                     $('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error

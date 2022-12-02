@@ -279,7 +279,7 @@ require([
         });
 
         // Set change function on group survey
-        $('#group_survey').change(function () {
+        $('#oversight_survey').change(function () {
             globals.gGroupSurveys[globals.gCurrentSurvey] = $(this).val();
             groupSurveyChanged();
         });
@@ -1188,7 +1188,7 @@ require([
 
             getLanguageList(globals.gCurrentSurvey, undefined, false, '.language_sel', false, -1);
             saveCurrentProject(-1, globals.gCurrentSurvey);
-            getGroupForms(globals.gCurrentSurvey);
+            getGroupSurveys(globals.gCurrentSurvey,  groupsRetrieved);
 
         } else {
             // No surveys in this project
@@ -1783,45 +1783,6 @@ require([
     }
 
     /*
-     * Get Forms in the current surveys group
-     */
-    function getGroupForms(surveyId) {
-
-        groupSurveyChanged();       // Can finally retrieve the data
-
-        if (typeof surveyId !== "undefined" && surveyId > 0) {
-
-            if(gTasks.cache.groupSurveys[surveyId]) {
-                groupsRetrieved(gTasks.cache.groupSurveys[surveyId]);
-            } else {
-
-                var url = "/surveyKPI/surveyResults/" + surveyId + "/groups",
-                    survey = surveyId;
-
-                addHourglass();
-                $.ajax({
-                    url: url,
-                    dataType: 'json',
-                    cache: false,
-                    success: function (data) {
-                        removeHourglass();
-                        gTasks.cache.groupSurveys[survey] = data;
-                        groupsRetrieved(data);
-                    },
-                    error: function (xhr, textStatus, err) {
-                        removeHourglass();
-                        if (xhr.readyState == 0 || xhr.status == 0) {
-                            return;  // Not an error
-                        } else {
-                            console.log(localise.set["c_error"] + ": " + err);
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-    /*
      * Update the group selector
      */
     function groupsRetrieved(data) {
@@ -1835,7 +1796,7 @@ require([
      * Update a selector that is used for oversight forms and does not include current form
      */
     function setOversightSelector(data) {
-        var $elemGroups = $('#group_survey');
+        var $elemGroups = $('#oversight_survey');
 
         var i,
             item,
@@ -1891,11 +1852,10 @@ require([
     }
 
     /*
-     * Update a selector that is used for any data survey in a group
+     * Update a selector that is used for any data survey in a group that is not an oversight form
      */
     function setGroupSelector(data) {
-        var $elemGroups = $('#tp_form_name, #survey');
-
+        var $elemGroups = $('#tp_form_name, #survey, #survey_to_c');
 
         var i,
             item,
@@ -1905,14 +1865,15 @@ require([
         for (i = 0; i < data.length; i++) {
             item = data[i];
 
-            if (item.dataSurvey) {
-                h[++idx] = '<option value="';
-                h[++idx] = item.surveyIdent;
-                h[++idx] = '">';
-                h[++idx] = item.surveyName;
-                h[++idx] = '</option>';
+            if (!item.oversightSurvey) {
+                if (item.dataSurvey) {
+                    h[++idx] = '<option value="';
+                    h[++idx] = item.surveyIdent;
+                    h[++idx] = '">';
+                    h[++idx] = item.surveyName;
+                    h[++idx] = '</option>';
+                }
             }
-
         }
 
         $elemGroups.empty().html(h.join(''));

@@ -21,6 +21,8 @@ var gCache = {};
 var gCacheGroup = {};
 var gCacheStatusQuestions = {};
 var gEligibleUser;
+var gSelectedOversightQuestion;
+var gSelectedOversightSurvey;
 
 
 /*
@@ -2098,48 +2100,6 @@ function getSurveyDetails(callback, get_changes, hide_soft_deleted) {
 			}
 		});
 	}
-}
-
-/*
- * Get a survey details - depends on globals being set
- */
-function getGroupSurveys(callback) {
-
-	var tz = globals.gTimezone;
-	var url="/surveyKPI/surveys/groups/" + globals.gCurrentSurvey;
-	url += "?tz=" + encodeURIComponent(tz);
-
-	if(!globals.gCurrentSurvey) {
-		alert("Error: Can't get group details, Survey identifier not specified");
-	} else {
-		addHourglass();
-		$.ajax({
-			url: url,
-			dataType: 'json',
-			cache: false,
-			success: function(data) {
-				removeHourglass();
-				globals.gGroupSurveys = data;
-				if(typeof callback == "function") {
-					callback();
-				}
-			},
-			error: function(xhr, textStatus, err) {
-				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					if(xhr.status == 404) {
-						// The current survey has probably been deleted or the user no longer has access
-						globals.gCurrentSurvey = undefined;
-						return;
-					}
-					alert("Error: Failed to get survey: " + err);
-				}
-			}
-		});
-	}
-
 }
 
 /*
@@ -4677,7 +4637,7 @@ function edit_notification(edit, idx, console) {
 		gSelectedOversightSurvey = notification.updateSurvey;
 		setTriggerDependencies(notification.trigger);
 		if(notification.trigger === "console_update") {
-			getOversightSurveys(notification.s_id);
+			getGroupSurveys(notification.s_id, showOversightSurveys);
 		}
 
 		setAttachDependencies(notification.notifyDetails.attach);
@@ -5160,7 +5120,7 @@ function surveyChangedNotification(qName, metaItem, alertId) {
 		}
 
 		getEligibleUsers();
-		getOversightSurveys(sId);
+		getGroupSurveys(sId, showOversightSurveys);
 
 		qList = globals.gSelector.getSurveyQuestions(sId, language);
 		metaList = globals.gSelector.getSurveyMeta(sId);
@@ -5184,6 +5144,7 @@ function surveyChangedNotification(qName, metaItem, alertId) {
 		} else {
 			setSurveyAlerts(alertList, alertId);
 		}
+
 	}
 }
 
@@ -5290,15 +5251,17 @@ function isTextStorageType(type) {
 /*
  * Get oversight surveys
  */
-function getOversightSurveys(surveyId) {
+function getGroupSurveys(surveyId, callback) {
 
 	var url = "/surveyKPI/surveyResults/" + surveyId + "/groups",
 		survey = surveyId;
 
 	if(surveyId > 0) {
 
-		if(window.oversightSurveys[surveyId]) {
-			showOversightSurveys(window.oversightSurveys[surveyId]);
+		if(gTasks.cache.groupSurveys[surveyId]) {
+			if(typeof callback === 'function') {
+				callback(gTasks.cache.groupSurveys[surveyId]);
+			}
 		} else {
 			addHourglass();
 			$.ajax({
@@ -5307,8 +5270,10 @@ function getOversightSurveys(surveyId) {
 				cache: false,
 				success: function (data) {
 					removeHourglass();
-					window.oversightSurveys[surveyId] = data;
-					showOversightSurveys(data);
+					gTasks.cache.groupSurveys[surveyId] = data;
+					if(typeof callback === 'function') {
+						callback(data);
+					}
 				},
 				error: function (xhr, textStatus, err) {
 					removeHourglass();
@@ -5360,9 +5325,9 @@ function showOversightSurveys(data) {
 	} else {
 		$('.update_options_msg').hide();
 	}
-	$('#group_survey').empty().html(h.join(''));
+	$('#oversight_survey').empty().html(h.join(''));
 	if(gSelectedOversightSurvey) {
-		$('#group_survey').val(gSelectedOversightSurvey);
+		$('#oversight_survey').val(gSelectedOversightSurvey);
 	}
 }
 
