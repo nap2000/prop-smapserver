@@ -3532,8 +3532,6 @@ require([
 
         if(target === "email") {
             notification = saveEmail();
-        } else if(target === "forward") {
-            notification = saveForward();
         } else if(target === "sms") {
             notification = saveSMS();
         } else if(target === "document") {

@@ -149,8 +149,6 @@ require([
 
 		if(target === "email") {
 			notification = saveEmail();
-		} else if(target === "forward") {
-			notification = saveForward();
 		} else if(target === "sms") {
 			notification = saveSMS();
 		} else if(target === "document") {
@@ -420,10 +418,6 @@ require([
 						h[++idx] = htmlEncode(data[i].notifyDetails.emailMeta);
 					}
 				}
-			} else if(data[i].target === "forward"){
-				h[++idx] = htmlEncode(data[i].remote_host);
-				h[++idx] = ':';
-				h[++idx] = htmlEncode(data[i].remote_s_name);
 			} else if(data[i].target === "sms" && data[i].notifyDetails) {
 				if((data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0) ||
 					(data[i].notifyDetails.emailQuestionName && data[i].notifyDetails.emailQuestionName != "-1")) {

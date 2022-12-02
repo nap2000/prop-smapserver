@@ -4991,59 +4991,6 @@ function saveDocument() {
 }
 
 /*
- * Process a save notification when the target is "forward"
- */
-function saveForward() {
-
-	var error = false,
-		remote_s_ident,
-		host,
-		$dialog,
-		rem_survey_id,
-		rem_survey_nm,
-		notification = {};
-
-	host = $('#fwd_host').val();
-	remote_s_ident = $('#fwd_rem_survey :selected').val();
-	remote_s_nm = $('#fwd_rem_survey :selected').text();
-
-	// Remove any trailing slashes from the host
-	if(host.substr(-1) == '/') {
-		host = host.substr(0, host.length - 1);
-	}
-
-	if(typeof remote_s_ident === "undefined" || remote_s_ident.length == 0) {
-		error = true;
-		alert(localise.set["msg_val_rf"]);
-
-	} else if(host.substr(0, 4) !== "http") {
-		error = true;
-		alert(localise.set["msg_val_prot"]);
-		$('#fwd_host').focus();
-	}
-
-	if(!error) {
-
-		notification.target = "forward";
-		notification.remote_s_ident = remote_s_ident;
-		notification.remote_s_name = remote_s_nm;
-		notification.remote_user = $('#fwd_user').val();
-		notification.remote_password = $('#fwd_password').val();
-		notification.remote_host = host;
-		notification.update_password = window.gUpdateFwdPassword;
-
-		// Save the values temporarily entered by the user
-		window.gRemote_host = host;
-		window.gRemote_user = $('#fwd_user').val();
-
-	} else {
-		notification.error = true;
-	}
-
-	return notification;
-}
-
-/*
  * Process a save notification when the target is "webhook"
  */
 function saveWebhook() {
