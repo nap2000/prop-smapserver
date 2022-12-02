@@ -5120,7 +5120,7 @@ function surveyChangedNotification(qName, metaItem, alertId) {
 		}
 
 		getEligibleUsers();
-		getGroupSurveys(sId, showOversightSurveys);
+		getGroupSurveys(sId, setGroupSelector);
 
 		qList = globals.gSelector.getSurveyQuestions(sId, language);
 		metaList = globals.gSelector.getSurveyMeta(sId);
@@ -5286,6 +5286,33 @@ function getGroupSurveys(surveyId, callback) {
 			});
 		}
 	}
+}
+
+/*
+ * Update a selector that is used for any data survey in a group that is not an oversight form
+ */
+function setGroupSelector(data) {
+	var $elemGroups = $('#tp_form_name, #survey, #case_survey');
+
+	var i,
+		item,
+		h = [],
+		idx = -1;
+
+	for (i = 0; i < data.length; i++) {
+		item = data[i];
+
+		if (item.dataSurvey) {
+			h[++idx] = '<option value="';
+			h[++idx] = item.surveyIdent;
+			h[++idx] = '">';
+			h[++idx] = item.surveyName;
+			h[++idx] = '</option>';
+		}
+	}
+
+	$elemGroups.empty().html(h.join(''));
+
 }
 
 function showOversightSurveys(data) {

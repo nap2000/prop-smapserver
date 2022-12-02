@@ -1189,6 +1189,7 @@ require([
             getLanguageList(globals.gCurrentSurvey, undefined, false, '.language_sel', false, -1);
             saveCurrentProject(-1, globals.gCurrentSurvey);
             getGroupSurveys(globals.gCurrentSurvey,  groupsRetrieved);
+            groupSurveyChanged();
 
         } else {
             // No surveys in this project
@@ -1849,35 +1850,6 @@ require([
         } else {
             $elemGroups.val("");        // None
         }
-    }
-
-    /*
-     * Update a selector that is used for any data survey in a group that is not an oversight form
-     */
-    function setGroupSelector(data) {
-        var $elemGroups = $('#tp_form_name, #survey, #survey_to_c');
-
-        var i,
-            item,
-            h = [],
-            idx = -1;
-
-        for (i = 0; i < data.length; i++) {
-            item = data[i];
-
-            if (!item.oversightSurvey) {
-                if (item.dataSurvey) {
-                    h[++idx] = '<option value="';
-                    h[++idx] = item.surveyIdent;
-                    h[++idx] = '">';
-                    h[++idx] = item.surveyName;
-                    h[++idx] = '</option>';
-                }
-            }
-        }
-
-        $elemGroups.empty().html(h.join(''));
-
     }
 
     /*
