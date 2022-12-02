@@ -1308,6 +1308,8 @@ define({
     "n_nv": "A value for the update must be specified",
     "n_nq": "An update question must be specified",
     "n_curl": "Callback URL",
+    "n_aa": "After alert %s1.",
+    "n_as": "Assign survey %s1 to %s2.",
 
     // Roles
     "ro_fr": "Filter rows",

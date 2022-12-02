@@ -310,7 +310,6 @@ require([
 		});
 	}
 
-
 	/*
 	 * Update the notification list
 	 */
@@ -434,11 +433,18 @@ require([
 			} else if(data[i].target === "webhook" && data[i].notifyDetails) {
 				h[++idx] = htmlEncode(data[i].notifyDetails.callback_url);
 			} else if(data[i].target === "escalate"){
-				h[++idx] = htmlEncode(data[i].remote_user);
-				if(data[i].alert_id) {
-					h[++idx] = ':';
-					h[++idx] = htmlEncode(data[i].alert_name);
+				h[++idx] = htmlEncode();
+				var msg = '';
+				if(data[i].trigger === 'cm_alert') {
+					msg = localise.set["n_aa"];
+					msg = msg.replace('%s1', data[i].alert_name);
+					msg = msg + ' ';
+
 				}
+				msg = msg + localise.set["n_as"];
+				msg = msg.replace("%s1", data[i].notifyDetails.survey_case);
+				msg = msg.replace("%s2", data[i].remote_user);
+				h[++idx] = htmlEncode(msg);
 			}
 			h[++idx] = '</td>';
 
