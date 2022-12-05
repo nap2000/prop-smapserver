@@ -1779,7 +1779,7 @@ function retrievedLanguages(sId, selector, data, theCallback, filterQuestion, se
 
 	if(data[0]) {
 		var dateqId = $('#task_start').val();
-		getQuestionList(sId, data[0], filterQuestion, "-1", theCallback, setGroupList, undefined, dateqId, undefined);	// Default language to the first in the list
+		getQuestionList(sId, data[0], filterQuestion, "-1", theCallback, setGroupList, undefined, dateqId, undefined, undefined);	// Default language to the first in the list
 	} else {
 		if(typeof theCallback === "function") {
 			theCallback();
@@ -1788,9 +1788,9 @@ function retrievedLanguages(sId, selector, data, theCallback, filterQuestion, se
 }
 
 //Function to get the question list
-function getQuestionList(sId, language, qId, groupId, callback, setGroupList, view, dateqId, qName) {
+function getQuestionList(sId, language, qId, groupId, callback, setGroupList, view, dateqId, qName, assignQuestion) {
 
-	function getAsyncQuestionList(sId, language, theCallback, groupId, qId, view, dateqId, qName) {
+	function getAsyncQuestionList(sId, language, theCallback, groupId, qId, view, dateqId, qName, assignQuestion) {
 
 		addHourglass();
 		$.ajax({
@@ -1800,7 +1800,7 @@ function getQuestionList(sId, language, qId, groupId, callback, setGroupList, vi
 			success: function(data) {
 				removeHourglass();
 				globals.gSelector.setSurveyQuestions(sId, language, data);
-				setSurveyViewQuestions(data, qId, view, dateqId, qName);
+				setSurveyViewQuestions(data, qId, view, dateqId, qName, assignQuestion);
 
 				if(setGroupList && typeof setSurveyViewQuestionGroups === "function") {
 					setSurveyViewQuestionGroups(data, groupId);
@@ -1820,7 +1820,7 @@ function getQuestionList(sId, language, qId, groupId, callback, setGroupList, vi
 		});
 	}
 
-	getAsyncQuestionList(sId, language, callback, groupId, qId, view, dateqId, qName);
+	getAsyncQuestionList(sId, language, callback, groupId, qId, view, dateqId, qName, assignQuestion);
 }
 
 //Function to get the meta list
@@ -1896,11 +1896,12 @@ function setSurveyViewLanguages(list, language,elem, addNone) {
 }
 
 // Set the question list in the survey view control
-function setSurveyViewQuestions(list, qId, view, dateqId, qName) {
+function setSurveyViewQuestions(list, qId, view, dateqId, qName, assignQuestion) {
 
 	var $questionSelect = $('.selected_question'),
 		$dateQuestions = $('.date_questions'),
 		$questionNameSelect = $('.selected_name_question'),     // this should replace selected_question
+		$assignQuestion = $('#assign_question'),
 		label;
 
 	$questionSelect.empty();
@@ -1939,6 +1940,7 @@ function setSurveyViewQuestions(list, qId, view, dateqId, qName) {
 		qName = "-1";
 	}
 	$questionNameSelect.val(qName);
+	$assignQuestion.val(assignQuestion);
 
 	if(!dateqId) {
 		dateqId = "-1";
@@ -4668,6 +4670,7 @@ function edit_notification(edit, idx, console) {
 			|| (notification.notify_details && (notification.notifyDetails.emailQuestionName || notification.notifyDetails.emailMeta)))) {
 
 				surveyChangedNotification(notification.notifyDetails.emailQuestionName,
+					notification.notifyDetails.assign_question,
 					notification.notifyDetails.emailMeta,
 					notification.alert_id);
 		}
@@ -4698,6 +4701,8 @@ function edit_notification(edit, idx, console) {
 			$('#fwd_rem_survey_id').val(notification.remote_s_ident);
 			$('#fwd_rem_survey_nm').val(notification.remote_s_name);
 			$('#fwd_user,#user_to_assign').val(notification.remote_user);
+			$('#assign_question').val(notification.notifyDetails.assign_question);
+			$('#user_to_assign').trigger('change');
 			$('#survey_case').val(notification.notifyDetails.survey_case);
 			gEligibleUser = notification.remote_user;
 			// Password not returned from server - leave blank
@@ -4897,9 +4902,9 @@ function taskGroupChanged(tgIndex, emailQuestionName, emailMetaName) {
 
 	if(!qList) {
 		getQuestionList(tg.source_s_id, language, 0, "-1", undefined, false,
-			undefined, undefined, emailQuestionName);
+			undefined, undefined, emailQuestionName, undefined);
 	} else {
-		setSurveyViewQuestions(qList, undefined, undefined, undefined, emailQuestionName);
+		setSurveyViewQuestions(qList, undefined, undefined, undefined, emailQuestionName, undefined);
 	}
 
 	if(!metaList) {
@@ -5031,8 +5036,10 @@ function saveEscalate() {
 		notification.target = "escalate";
 		notification.remote_user = $('#user_to_assign').val();
 
+
 		notification.notifyDetails = {};
 		notification.notifyDetails.survey_case = $('#survey_case').val();
+		notification.notifyDetails.assign_question = $('#assign_question').val();
 
 	} else {
 		notification.error = true;
@@ -5053,7 +5060,7 @@ function getTaskGroupIndex(tgId) {
 	return 0;
 }
 
-function surveyChangedNotification(qName, metaItem, alertId) {
+function surveyChangedNotification(qName, assignQuestion, metaItem, alertId) {
 
 	var language = "none",
 		sId = $('#survey').val() || 0,
@@ -5075,9 +5082,9 @@ function surveyChangedNotification(qName, metaItem, alertId) {
 
 		if(!qList) {
 			getQuestionList(sId, language, 0, "-1", undefined, false,
-				undefined, undefined, qName);
+				undefined, undefined, qName, assignQuestion);
 		} else {
-			setSurveyViewQuestions(qList, undefined, undefined, undefined, qName );
+			setSurveyViewQuestions(qList, undefined, undefined, undefined, qName, assignQuestion);
 		}
 
 		if(!metaList) {

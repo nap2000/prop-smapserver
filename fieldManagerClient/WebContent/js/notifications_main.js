@@ -107,7 +107,7 @@ require([
 
 		// Add response to a source survey being selected
 		$('#survey').change(function() {
-			surveyChangedNotification();
+			surveyChangedNotification(undefined, undefined, undefined, undefined);
 		});
 
 		// Add response to a source survey being selected
