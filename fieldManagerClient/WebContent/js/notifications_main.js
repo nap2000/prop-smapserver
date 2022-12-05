@@ -120,6 +120,13 @@ require([
 			getOversightQuestionList($('#oversight_survey').val())
 		});
 
+		$('#user_to_assign').change(function() {
+			if($('#user_to_assign').val() === '_data') {
+				$('.assign_question').removeClass('d-none').show();
+			} else {
+				$('.assign_question').hide();
+			}
+		});
 
 		$('#email_content_ap_insert').click(function() {
 			var current = $('#email_content').val();
@@ -396,8 +403,8 @@ require([
 			if(data[i].target === "email" && data[i].notifyDetails) {
 				var notifyEmail = false;
 				if((data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0)
-					|| (data[i].notifyDetails.emailQuestionName && data[i].notifyDetails.emailQuestionName != "-1")
-					|| (data[i].notifyDetails.emailMeta && data[i].notifyDetails.emailMeta.length > 0)) {
+						|| (data[i].notifyDetails.emailQuestionName && data[i].notifyDetails.emailQuestionName != "-1")
+						|| (data[i].notifyDetails.emailMeta && data[i].notifyDetails.emailMeta.length > 0)) {
 
 					h[++idx] = data[i].notifyDetails.emails.join(",");
 					if(data[i].notifyDetails.emailQuestionName && data[i].notifyDetails.emailQuestionName != "-1") {

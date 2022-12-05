@@ -5800,6 +5800,10 @@ function getEligibleUsers() {
 				h[++idx] = localise.set["c_submitter"];
 				h[++idx] = '</option>';
 
+				h[++idx] = '<option value="_data">';
+				h[++idx] = localise.set["t_ad"];
+				h[++idx] = '</option>';
+
 				if(data && data.length > 0) {
 					for(i = 0; i < data.length; i++) {
 						h[++idx] = '<option value="';
