@@ -5881,7 +5881,10 @@ function getEligibleUsers() {
 				removeHourglass();
 				if (xhr.readyState == 0 || xhr.status == 0) {
 					return;  // Not an error
-				} else {
+				} else if(err == 403) {
+					return;  // Ignore errors where the survey cannot be found. The current survey setting may be out of date
+				}
+				else {
 					alert(localise.set["error"] + ": " + err);
 				}
 			}
