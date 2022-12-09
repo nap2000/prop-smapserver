@@ -5159,7 +5159,7 @@ function surveyChangedNotification(qName, metaItem, alertId) {
 			qName = "-1";
 		}
 
-		getEligibleUsers();
+		getEligibleUsers(sId);
 		getOversightSurveys(sId);
 
 		qList = globals.gSelector.getSurveyQuestions(sId, language);
@@ -5836,12 +5836,12 @@ function htmlEncode(input) {
 /*
  * Get the list of users from the server
  */
-function getEligibleUsers() {
+function getEligibleUsers(sId) {
 
-	if(globals.gCurrentSurvey && globals.gCurrentSurvey > 0) {
+	if(sId > 0) {
 		addHourglass();
 		$.ajax({
-			url: "/surveyKPI/userList/survey/" + globals.gCurrentSurvey,
+			url: "/surveyKPI/userList/survey/" + sId,
 			dataType: 'json',
 			cache: false,
 			success: function (data) {
@@ -5882,7 +5882,7 @@ function getEligibleUsers() {
 				if (xhr.readyState == 0 || xhr.status == 0) {
 					return;  // Not an error
 				} else if(err == 403) {
-					return;  // Ignore errors where the survey cannot be found. The current survey setting may be out of date
+					return;  // Ignore errors where the survey cannot be found. The survey requested may be the global default current survey which may be out of date
 				}
 				else {
 					alert(localise.set["error"] + ": " + err);

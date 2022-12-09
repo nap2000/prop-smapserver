@@ -1181,7 +1181,7 @@ require([
 
         globals.gViewId = 0;        // TODO remember views set for each survey and restore
 
-        getEligibleUsers();
+        getEligibleUsers(globals.gCurrentSurvey);
 
         $('.editRecordSection, .bulkEditSection, .selectedOnly, .singleSelectOnly, .multiSelectOnly, .re_alert, .dd_only').hide();
         if (globals.gCurrentSurvey > 0 && typeof gTasks.gSelectedSurveyIndex !== "undefined") {
