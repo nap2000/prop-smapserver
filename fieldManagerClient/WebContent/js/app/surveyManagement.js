@@ -516,6 +516,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             h[++idx] = '</th>';
             h[++idx] = '<th class="col-xs-4">' + localise.set["c_name"] + '</th>';
             h[++idx] = '<th class="col-xs-1">' + localise.set["c_version"] + '</th>';
+            h[++idx] = '<th class="col-xs-1">' + localise.set["c_type"] + '</th>';
             h[++idx] = '<th class="col-xs-1">' + localise.set["c_block"] + '</th>';
             h[++idx] = '<th class="col-xs-2">' + localise.set["c_bundle"] + '</th>';
             h[++idx] = '<th class="col-xs-1">' + localise.set["c_replace"] + '</th>';
@@ -528,6 +529,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                 survey = gSurveys[i];
 
                 if((gShowDeleted || !survey.deleted) && (gShowBlocked || !survey.blocked)) {
+
                     h[++idx] = '<tr';
                     if(survey.deleted) {
                         h[++idx] = ' class="deleted"';
@@ -535,6 +537,8 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                         h[++idx] = ' class="blocked"';
                     } else if(survey.readOnlySurvey) {
                         h[++idx] = ' class="readonlysurvey"';
+                    } else if(survey.oversightSurvey && !survey.dataSurvey) {
+                        h[++idx] = ' class="oversightsurvey"';
                     }
                     h[++idx] = '>';
                     h[++idx] = '<td class="control_td"><input type="checkbox" name="controls" value="';
@@ -544,6 +548,9 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                     if(survey.readOnlySurvey) {
                         h[++idx] = '<td>';
                         h[++idx] = '<a class="readonlysurvey" href="';
+                    } if(survey.oversightSurvey && !survey.dataSurvey) {
+                        h[++idx] = '<td>';
+                        h[++idx] = '<a class="oversightsurvey" href="';
                     } else {
                         h[++idx] = '<td class="displayName">';
                         h[++idx] = '<a class="displayName" href="';
@@ -562,8 +569,17 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                     h[++idx] = htmlEncode(survey.displayName);
                     h[++idx] = '</span></a></td>';
 
-                    h[++idx] = '<td>';
+
+                    h[++idx] = '<td>';  // type
                     h[++idx] = survey.version;
+                    h[++idx] = '</td>';
+
+                    h[++idx] = '<td>';
+                    if(survey.readOnlySurvey) {
+                        h[++idx] = localise.set["ed_ro"];
+                    } if(survey.oversightSurvey && !survey.dataSurvey) {
+                        h[++idx] = localise.set["m_os"];
+                    }
                     h[++idx] = '</td>';
 
                     h[++idx] = '<td class="control_block"><input type="checkbox" name="block" value="';
