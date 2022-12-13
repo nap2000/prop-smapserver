@@ -23,15 +23,12 @@
 	<script src="/js/libs/bootstrap.bundle.v4.5.min.js"></script>
 	<script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
 
-	<script>
-		let page = 'cases';
-	</script>
 	<script data-main="/js/cases" src="/js/libs/require.js"></script>
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
-	<a class="navbar-brand lang" data-lang="c_cm" href="#">cases</a>
+	<a class="navbar-brand" href="#"><span class="lang" data-lang="c_cm"></span> <span class="formName"></span></a>
 	<div class="spinner-grow text-danger hour_glass"></div>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
@@ -78,14 +75,42 @@
 	<div class="card text-center mt-2">
 		<div class="card-header">
 			<ul class="nav nav-tabs card-header-tabs" role="tablist">
-				<li id="settingsTab" class="nav-item restrict_role admin_role" role="presentation"><a href="#" class="active nav-link lang" data-lang="c_settings"></a></li>
+				<li id="keysTab" class="nav-item restrict_role admin_role" role="presentation"><a href="#" class="active nav-link lang" data-lang="c_keys"></a></li>
+				<li id="settingsTab" class="nav-item restrict_role admin_role" role="presentation"><a href="#" class="nav-link lang" data-lang="c_settings"></a></li>
 				<li id="alertsTab" class="nav-item restrict_role admin_role" role="presentation"><a href="#" class="nav-link lang" data-lang="c_alerts"></a></li>
 			</ul>
 		</div>
 
 		<div class="card-body">
 			<div class="tab-content">
-				<div id="settingsPanel" class="cmtab mt-4">
+				<div id="keysPanel" class="cmtab mt-4">
+					<form role="form" class="form" onsubmit="return false;">
+
+						<div class="form-group row">
+							<label for="key_policy" class="lang col-sm-4 control-label" data-lang="ed_kp">kp</label>
+							<div class="col-sm-8">
+								<select id="key_policy" class="form-control">
+									<option value="none" class="lang" data-lang="c_none">n</option>
+									<option value="replace" class="lang" data-lang="c_replace">r</option>
+									<option value="merge" class="lang" data-lang="c_merge">m</option>
+									<option value="discard" class="lang" data-lang="c_discard">d</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="key" class="lang col-sm-4 control-label" data-lang="ed_hrk"
+								   title="Specify a unique key if you want to refer to the data collected by this form from another form"
+							>key</label>
+							<div class="col-sm-8">
+								<input type="text" id="key" required class="form-control">
+							</div>
+						</div>
+
+					</form>
+				</div>
+
+				<div id="settingsPanel" class="cmtab mt-4 d-none">
 
 					<form class="form" onsubmit="return false;">
 
@@ -130,55 +155,55 @@
 			</div>
 
 		</div>
-</div>
+	</div>
 
-<!-- Modal to allow the user to edit a case management alert value -->
-<div id="create_cms_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createCmsLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title lang" data-lang="u_cms" id="createCmsLabel">status</h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-						aria-hidden="true">&times;</span></button>
-			</div>
-			<div class="modal-body">
+	<!-- Modal to allow the user to edit a case management alert value -->
+	<div id="create_cms_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createCmsLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title lang" data-lang="u_cms" id="createCmsLabel">status</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+							aria-hidden="true">&times;</span></button>
+				</div>
+				<div class="modal-body">
 
-				<form class="form" onsubmit="return false;">
+					<form class="form" onsubmit="return false;">
 
-					<div class="form-group row">
-						<label for="cms_name" data-lang="c_name" class="lang col-sm-4 control-label"></label>
-						<div class="col-sm-8">
-							<input type="text" id="cms_name" class="form-control" required tabindex="1"><br/>
+						<div class="form-group row">
+							<label for="cms_name" data-lang="c_name" class="lang col-sm-4 control-label"></label>
+							<div class="col-sm-8">
+								<input type="text" id="cms_name" class="form-control" required tabindex="1"><br/>
+							</div>
 						</div>
-					</div>
 
-					<div class="form-group row">
-						<label class="col-sm-4 col-form-label lang" data-lang="cm_alert_a" for="cms_period"></label>
-						<div class="col-sm-8">
-							<div class="input-group mb-3">
+						<div class="form-group row">
+							<label class="col-sm-4 col-form-label lang" data-lang="cm_alert_a" for="cms_period"></label>
+							<div class="col-sm-8">
+								<div class="input-group mb-3">
 
-								<input type="number" min="1" class="form-control" id="cms_period">
-								<div class="input-group-append">
-									<select id="period_list_sel" class="period_list_sel form-control">
-										<option class="lang" data-lang="d_min" value="minutes">minutes</option>
-										<option class="lang" data-lang="d_hour" value="hours">hours</option>
-										<option class="lang" data-lang="d_day" value="days">day</option>
-									</select>
+									<input type="number" min="1" class="form-control" id="cms_period">
+									<div class="input-group-append">
+										<select id="period_list_sel" class="period_list_sel form-control">
+											<option class="lang" data-lang="d_min" value="minutes">minutes</option>
+											<option class="lang" data-lang="d_hour" value="hours">hours</option>
+											<option class="lang" data-lang="d_day" value="days">day</option>
+										</select>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
 
-				</form>
+					</form>
 
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close">Close</button>
-				<button id="alertSave" type="button" class="btn btn-primary lang btn-default" data-lang="c_save">Save</button>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close">Close</button>
+					<button id="alertSave" type="button" class="btn btn-primary lang btn-default" data-lang="c_save">Save</button>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
-
 </body>
 </html>

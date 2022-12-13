@@ -20,6 +20,7 @@ var gWait = 0;		// This javascript file only
 var gCache = {};
 var gCacheGroup = {};
 var gCacheStatusQuestions = {};
+var gCacheKeys = {};
 var gEligibleUser;
 var gSelectedOversightQuestion;
 var gSelectedOversightSurvey;
@@ -1105,11 +1106,6 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 				if(typeof callback !== "undefined") {
 					callback(globals.gCurrentSurvey);				// Call the callback with the correct current project
 				}
-			}
-
-			// Add hack to show beta functions. There should be a user setting of beta tester
-			if(data.name &&(data.name.indexOf("Penman") >= 0 || data.name.indexOf("Torrado") >= 0)) {
-				$('.beta').show();
 			}
 
 		},
@@ -4077,6 +4073,41 @@ function getGroupStatusQuestions($elem, sId) {
 					return;  // Not an error
 				} else {
 					alert(localise.set["msg_err_get_q"] + ": " + err);
+				}
+			}
+		});
+	}
+}
+
+/*
+ * Get the questions suitable for use as a status in a survey group using the survey id as the key
+ */
+function getGroupKeys($key, $key_policy, sId) {
+
+	if(gCacheKeys[sId]) {
+		$key.val(gCacheStatusQuestions[sId].key);
+		$key_policy.val(gCacheStatusQuestions[sId].key_policy)
+	} else {
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/cases/keys/" + sId,
+			dataType: 'json',
+			cache: false,
+			success: function (data) {
+				removeHourglass();
+				var theId = sId;
+
+				gCacheStatusQuestions[theId] = data;
+				$key.val(gCacheStatusQuestions[sId].key);
+				$key_policy.val(gCacheStatusQuestions[sId].key_policy)
+
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["c_error"] + ": " + err);
 				}
 			}
 		});

@@ -87,6 +87,10 @@ require([
             })
 
             // Set up the tabs
+            $('#keysTab a').click(function (e) {
+                e.preventDefault();
+                panelChange($(this), 'keys');
+            });
             $('#settingsTab a').click(function (e) {
                 e.preventDefault();
                 panelChange($(this), 'settings');
@@ -99,6 +103,7 @@ require([
 
         function currentSurveyDone() {
             getGroupStatusQuestions($('#cms_sq, #cms_cq'), globals.gCurrentSurvey, true);
+            getGroupKeys($('#key'), $('#key_policy'), globals.gCurrentSurvey);
             getGroupSurveys(globals.gCurrentSurvey, groupSurveysDone);
         }
 
@@ -117,7 +122,7 @@ require([
 
             $(".cmtab").hide();
             $('#' + name + 'Panel').removeClass('d-none').show();
-            setInLocalStorage("currentTab" + page, '#' + name + 'Tab a');
+            setInLocalStorage("currentTabcases", '#' + name + 'Tab a');
         }
 
         /*
@@ -145,7 +150,6 @@ require([
             h[++idx] = '<table class="table table-striped">';
             h[++idx] = '<thead>';
             h[++idx] = '<tr>';
-            h[++idx] = '<th></th>';
             h[++idx] = '<th scope="col">';
             h[++idx] = localise.set["c_id"];	// Id
             h[++idx] = '</th>';
