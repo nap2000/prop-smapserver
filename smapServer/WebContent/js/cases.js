@@ -79,6 +79,10 @@ require([
                 saveSettings();
             });
 
+            $('#saveKeys').click(function(){
+                saveKeys();
+            });
+
             $('#cms_fs').keydown(function(){
                 $('.save_alert').hide();
             })
@@ -236,6 +240,45 @@ require([
                 cache: false,
                 url: "/surveyKPI/cases/settings/" + globals.gCmSettings.group_survey_ident,
                 data: { settings: JSON.stringify(settings) },
+                success: function(data, status) {
+                    removeHourglass();
+
+                    $('.save_alert').show().removeClass('d-none alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+                    getCms(updateCmsData);
+                },
+                error: function(xhr, textStatus, err) {
+                    removeHourglass();
+
+                    if(xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        var msg = xhr.responseText;
+                        if (!msg) {
+                            msg = localise.set["c_error"];
+                        }
+                        $('.save_alert').show().removeClass('d-none alert-success').addClass('alert-danger').html(msg);
+                    }
+                }
+            });
+        }
+
+        /*
+   * Save a new or updated case managment setting
+   */
+        function saveKeys() {
+            var keys = {};
+
+            keys.key = $('#key').val();
+            keys.key_policy = $('#key_policy').val();
+
+            $('.org_alert').hide();
+            addHourglass();
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                cache: false,
+                url: "/surveyKPI/cases/keys/" + globals.gCmSettings.group_survey_ident,
+                data: { keys: JSON.stringify(keys) },
                 success: function(data, status) {
                     removeHourglass();
 
