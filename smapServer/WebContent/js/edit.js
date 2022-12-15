@@ -421,7 +421,7 @@ $(document).ready(function() {
     });
 
 
-	$('#save_settings, #save_keys').off().click(function() {	// Save settings to the database
+	$('#save_settings').off().click(function() {	// Save settings to the database
 
 		// validate
 		var displayName = $('#set_survey_name').val();
@@ -909,7 +909,7 @@ $(document).ready(function() {
  	 });
 
 	// Check for changes in settings
-	$('#set_survey_name, #set_instance_name, #set_hrk').keyup(function(){
+	$('#set_survey_name, #set_instance_name').keyup(function(){
 
 		// validate
 		var displayName = $('#set_survey_name').val();
@@ -944,24 +944,6 @@ $(document).ready(function() {
 		globals.model.settingsChange();
 	});
     $('#exclude_empty').change(function() {
-        globals.model.settingsChange();
-    });
-	$('#addPdfTemplate').off().click(function() {
-		globals.model.settingsAddPdfClicked();
-        $('#pdfSet').val("yes");
-	});
-	$('#delPdfTemplate').off().click(function() {
-		globals.model.settingsAddPdfClicked();
-		$('#pdf_file_msg').val("");
-		$('#pdfSet').val("no");
-	});
-    $('#downloadPdfTemplate').off().click(function() {
-        downloadFile("/surveyKPI/file/pdf/surveyPdfTemplate/" + gSId);
-    });
-	$('#prevPdfTemplate').off().click(function() {
-		downloadFile("/surveyKPI/file/pdf/surveyPdfTemplate/" + gSId + '?recovery=true');
-	});
-    $('#set_key_policy').change(function() {
         globals.model.settingsChange();
     });
 
@@ -2995,19 +2977,7 @@ function updateSettingsData() {
 	$('.formName').text(globals.model.survey.displayName);
 	$('#set_survey_ident').val(globals.model.survey.ident);
 	$('#set_instance_name').val(globals.model.survey.instanceNameDefn);
-	$('#set_style').val(globals.model.survey.surveyClass);
-	$('#pdf_file_msg').val(globals.model.survey.pdfTemplateName);
-	if(globals.model.survey.pdfTemplateName && globals.model.survey.pdfTemplateName.trim().length > 0) {
-		$('#pdfSet').val("yes");
-	} else {
-        $('#pdfSet').val("no");
-	}
-	$('#set_hrk').val(globals.model.survey.hrk);
-	if(globals.model.survey.key_policy) {
-        $('#set_key_policy').val(globals.model.survey.key_policy);
-    } else {
-        $('#set_key_policy').val("replace");
-	}
+	$('#set_style').val(globals.model.survey.surveyClass)
 	$('#task_file').prop('checked', globals.model.survey.task_file);
 	$('#timing_data').prop('checked', globals.model.survey.timing_data);
 	if(globals.model.survey.timing_data) {

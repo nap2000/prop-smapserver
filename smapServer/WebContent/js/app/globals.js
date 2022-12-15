@@ -958,27 +958,23 @@ define(function () {
         this.save_settings = function () {
 
             var settings = JSON.stringify(this.getSettings(true));
-            $('#pdfSettings').val(settings);
-            var f = document.forms.namedItem("pdftemplate");
-            var formData = new FormData(f);
 
             addHourglass();
             $.ajax({
                 type: "POST",
-                data: formData,
+                contentType: "application/json",
                 cache: false,
-                contentType: false,
-                processData: false,
+                data: { settings: settings },
                 url: "/surveyKPI/surveys/save_settings/" + globals.gCurrentSurvey,
                 success: function (data, status) {
                     removeHourglass();
                     globals.model.savedSettings = settings;
                     globals.model.survey.pdfTemplateName = data;
                     globals.model.forceSettingsChange = false;
-                    $('#save_settings, #save_keys').prop("disabled", true);
+                    $('#save_settings').prop("disabled", true);
 
                     $('.formName').text(globals.model.survey.displayName);
-                    $('#settingsModal, #keysModal').modal("hide");
+                    $('#settingsModal').modal("hide");
                 },
                 error: function (xhr, textStatus, err) {
                     removeHourglass();
@@ -1142,8 +1138,6 @@ define(function () {
                 $('#read_only_survey').prop('checked'),
                 $('#exclude_empty').prop('checked'),
                 $('#compress_pdf').prop('checked'),
-                $('#set_hrk').val(),
-                $('#set_key_policy').val(),
 	            $('#default_logo').val()
             );
 
@@ -1165,8 +1159,6 @@ define(function () {
                 this.survey.readOnlySurvey = current.readOnlySurvey;
                 this.survey.exclude_empty = current.exclude_empty;
                 this.survey.compress_pdf = current.compress_pdf;
-                this.survey.hrk = current.hrk;
-                this.survey.key_policy = current.key_policy;
 	            this.survey.default_logo = current.default_logo;
             }
 
@@ -1215,8 +1207,6 @@ define(function () {
                                               readOnlySurvey,
                                               exclude_empty,
                                               compress_pdf,
-                                              hrk,
-                                              key_policy,
                                               default_logo) {
 
             var projId;
@@ -1242,8 +1232,6 @@ define(function () {
                 readOnlySurvey: readOnlySurvey,
                 exclude_empty: exclude_empty,
                 compress_pdf: compress_pdf,
-                hrk: hrk,
-                key_policy: key_policy,
 	            default_logo: default_logo
             }
         }
@@ -1252,20 +1240,11 @@ define(function () {
             var current = globals.model.getSettings(false);
 
             if (JSON.stringify(current) !== globals.model.savedSettings || globals.model.forceSettingsChange) {
-                $('#save_settings, #save_keys').prop("disabled", false);
+                $('#save_settings').prop("disabled", false);
             } else {
-                $('#save_settings, #save_keys').prop("disabled", true);
+                $('#save_settings').prop("disabled", true);
             }
         }
 
-        /*
-         * If the user select a pdfTemplate that has been modified but its name has not changed then
-         * the settings values will not be different but we want to enable an upload of the new template.
-         * Hence set the forceSettingChange flag.
-         */
-        this.settingsAddPdfClicked = function () {
-            globals.model.forceSettingsChange = true;
-            $('#save_settings').prop("disabled", false);
-        }
     }
 });
