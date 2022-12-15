@@ -190,10 +190,8 @@ require([
 
 		// Save the tasks then refresh view
 		saveTasks(surveyList.data).then( function() {
-			console.log("xxxxxxxxxxxxx: gettingRecords");
 			dbstorage.getRecords().then( function(records) {
 				if (typeof records !== "undefined") {
-					console.log("xxxxxxxxxxxxx: showTaskList; " + records.length);
 					showTaskList(records, filterProjectId);
 				} else {
 					$('#tasks_count').html('(0)');
@@ -289,6 +287,13 @@ require([
 			if(!filterProjectId || filterProjectId == taskList[i].task.pid) {
 				var repeat = taskList[i].task.repeat;	// Can complete the task multiple times
 				h[++idx] = '<div class="btn-group btn-block btn-group-lg d-flex" role="group" aria-label="Button group for task selection or rejection">';
+				h[++idx] = '<button class="btn btn-info w-10" type="button">';
+				if(taskList[i].task.type === 'case') {
+					h[++idx] = '<i class="fa fa-folder-open"></i>';
+				} else {
+					h[++idx] = '<i class="fa fa-file"></i>';
+				}
+				h[++idx] = '</button>';
 				h[++idx] = '<a id="a_';
 				h[++idx] = taskList[i].assignment.assignment_id;
 				h[++idx] = '" class="task btn btn-info w-100" role="button"';
@@ -332,7 +337,11 @@ require([
 				}
 
 				h[++idx] = '">';
-				h[++idx] = htmlEncode(taskList[i].task.title) + " (" + localise.set["c_id"] + ": " + taskList[i].assignment.assignment_id + ")";
+
+				h[++idx] = '<span class="text-center">'
+					+ htmlEncode(taskList[i].task.title)
+					+ " (" + localise.set["c_id"] + ": " + taskList[i].assignment.assignment_id + ")"
+					+ '</span>';
 				h[++idx] = '</a>';
 
 				// Add button with additional options
