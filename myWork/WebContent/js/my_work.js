@@ -225,7 +225,7 @@ require([
 				if(formList[i].read_only) {
 					h[++idx] = ' bg-light';
 				} else {
-					h[++idx] = ' bg-info';
+					h[++idx] = ' bg-warning';
 				}
 				h[++idx] = '" href="/app/myWork/webForm/';
 				h[++idx] = formList[i].ident;
@@ -291,7 +291,7 @@ require([
 				h[++idx] = '<div class="btn-group btn-block btn-group-lg d-flex" role="group" aria-label="Button group for task selection or rejection">';
 				h[++idx] = '<a id="a_';
 				h[++idx] = taskList[i].assignment.assignment_id;
-				h[++idx] = '" class="task btn btn-warning w-100" role="button"';
+				h[++idx] = '" class="task btn btn-info w-100" role="button"';
 				if(!gIsApp) {
 					h[++idx] = ' target="_blank"';      // If launched as an app do not create new windows
 				}
@@ -338,7 +338,7 @@ require([
 				// Add button with additional options
 				h[++idx] = '<button ';
 				h[++idx] = 	'id="a_r_' + taskList[i].assignment.assignment_id;
-				h[++idx] = '" class="btn btn-info w-20 reject" type="button"';
+				h[++idx] = '" class="btn btn-danger w-20 reject" type="button"';
 				h[++idx] = '" data-aid="';
 				h[++idx] = taskList[i].assignment.assignment_id;
 				h[++idx] = '">';
