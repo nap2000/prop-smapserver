@@ -548,7 +548,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                     if(survey.readOnlySurvey) {
                         h[++idx] = '<td>';
                         h[++idx] = '<a class="readonlysurvey" href="';
-                    } if(survey.oversightSurvey && !survey.dataSurvey) {
+                    } else if(survey.oversightSurvey && !survey.dataSurvey) {
                         h[++idx] = '<td>';
                         h[++idx] = '<a class="oversightsurvey" href="';
                     } else {
