@@ -348,8 +348,8 @@ require([
 				h[++idx] = '<button ';
 				h[++idx] = 	'id="a_r_' + taskList[i].assignment.assignment_id;
 				h[++idx] = '" class="btn btn-danger w-20 reject" type="button"';
-				h[++idx] = '" data-aid="';
-				h[++idx] = taskList[i].assignment.assignment_id;
+				h[++idx] = '" data-id="';
+				h[++idx] = i;
 				h[++idx] = '">';
 				h[++idx] = localise.set["c_reject"]
 				h[++idx] = '</button>';
@@ -376,15 +376,15 @@ require([
 
 		$taskList.find('.reject').off().click(function(){
 			var $this = $(this);
-
+			var tl = taskList;
 			if(!$this.hasClass('disabled')) {
-				reject($this.data("aid"));
+				reject($this.data("id"), tl);
 			}
 		});
 	}
 
 
-	function reject(aid) {
+	function reject(idx, taskList) {
 
 		$('.up_alert').hide();
 		bootbox.prompt({
@@ -400,26 +400,28 @@ require([
 					return;
 				}
 
-				var assignment = {
-					assignment_id: aid,
+
+				var taskUpdate = {
+					assignment_id: taskList[idx].assignment.assignment_id,
 					assignment_status: 'rejected',
-					task_comment: result
+					task_comment: result,
+					type: taskList[idx].task.type,
+					sIdent: taskList[idx].task.form_id,
+					uuid: taskList[idx].task.update_id
 				}
-				var assignmentString = JSON.stringify(assignment);
 
 				addHourglass();
 				$.ajax({
 					type: "POST",
-					data: {assignment: assignmentString},
+					data: {assignment: JSON.stringify(taskUpdate)},
 					cache: false,
 					contentType: "application/json",
 					url: "/surveyKPI/myassignments/update_status",
 					success: function(data, status) {
 						removeHourglass();
-						$('#a_' + aid).removeClass('btn-warning').addClass('btn-danger');
+						var aid = taskList[idx].assignment.assignment_id;
+						$('#a_' + aid).removeClass('btn-info').addClass('btn-danger').addClass('disabled');
 						$('#a_r_' + aid).addClass('disabled');
-
-
 					},
 					error: function(xhr, textStatus, err) {
 						removeHourglass();
