@@ -511,6 +511,7 @@ require([
                 data: {record: gTasks.gSelectedRecord.instanceid},
                 success: function (data, status) {
                     removeHourglass();
+                    $('#userAssign').modal("hide");
                     $('#assignUserSave').prop("disabled", false);     // debounce
                     showManagedData(globals.gCurrentSurvey, showTable, true);
                 }, error: function (data, status) {
