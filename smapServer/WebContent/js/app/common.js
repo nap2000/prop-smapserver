@@ -4739,6 +4739,11 @@ function edit_notification(edit, idx, console) {
 			// Password not returned from server - leave blank
 
 			$('#fwd_host').val(notification.remote_host);
+
+			// assign user from data
+			if($('#user_to_assign').val() === '_data') {
+				$('.assign_question').removeClass('d-none').show();
+			}
 		}
 
 		if (!console) {
@@ -4861,6 +4866,7 @@ function getNotificationTypes() {
 }
 
 function setupNotificationDialog() {
+
 	// Set change function trigger
 	$('#trigger').change(function() {
 		var trigger = $(this).val();
