@@ -1227,6 +1227,7 @@ define({
     "manage tasks": "Manage Tasks",
     "view own data": "View Own Data",
     "dashboard": "Dashboard",
+    "links": "Follow Links",
     "u_css_f": "CSS file",
     "u_css": "Upload a CSS style sheet",
     "u_css_ss": "Upload a new CSS style sheet for the server",

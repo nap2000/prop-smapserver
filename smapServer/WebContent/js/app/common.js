@@ -591,7 +591,10 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
                 globals.gIsEnterpriseAdministrator = true;
 				globals.gBillingData = true;
 
-            } else if(groups[i].id === globals.GROUP_ANALYST) {
+            } else if(groups[i].id === globals.GROUP_LINKAGES) {
+				globals.gIsLinkFollower = true;
+
+			} else if(groups[i].id === globals.GROUP_ANALYST) {
 				globals.gIsAnalyst = true;
 
 			} else if(groups[i].id === globals.GROUP_DASHBOARD) {

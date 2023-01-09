@@ -372,6 +372,7 @@ require([
         /*
          * Show links
          */
+        $('.linksOnly').hide();
         $('#m_links').click(function(e) {
             e.preventDefault();
             showLinks();
@@ -2362,6 +2363,9 @@ require([
                 $('.assigned_admin').show();
             }
 
+            if(!globals.gIsLinkFollower) {
+                $('.linksOnly').hide();
+            }
         }
 
     }
