@@ -370,6 +370,14 @@ require([
         });
 
         /*
+         * Show links
+         */
+        $('#m_links').click(function(e) {
+            e.preventDefault();
+            showLinks();
+        });
+
+        /*
          * Edit a record
          */
         $('#m_edit').click(function(e) {
@@ -3334,6 +3342,13 @@ require([
             $('#include_bad').prop('checked', settings.include_bad === "yes");
             $('#include_completed').prop('checked', settings.include_completed === "yes");
         }
+    }
+
+    /*
+     * Show links
+     */
+    function showLinks() {
+        window.location.href = '/app/tasks/linkages.html';
     }
 
     /*

@@ -60,6 +60,10 @@
 	    exclude: ['jquery', 'bootstrap', 'datatables_b4']
         },
         {
+            name: '../linkages',
+	    exclude: ['jquery', 'bootstrap']
+        },
+        {
             name: '../action_forms'
         },
         {

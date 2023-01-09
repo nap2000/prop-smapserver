@@ -105,6 +105,10 @@ function setCustomLogs() {
 
 }
 
+function setCustomLinkages() {
+
+}
+
 function setCustomSubs() {
 
 }
