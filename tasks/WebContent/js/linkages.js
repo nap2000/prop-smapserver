@@ -44,7 +44,8 @@ requirejs.config({
         datetimepicker: '../../../../js/libs/bootstrap-datetimepicker.min',
         pace: '../../../../js/libs/wb/plugins/pace/pace.min',
         knockout: '../../../../js/libs/knockout',
-	    slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll.min'
+	    slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll.min',
+        bootbox: 'bootbox.min',
 
     },
     shim: {
@@ -65,6 +66,7 @@ require([
     'localise',
     'globals',
     'moment',
+    'bootbox',
     'datetimepicker',
 	'slimscroll'
 
@@ -72,7 +74,12 @@ require([
              common,
              localise,
              globals,
-             moment) {
+             moment,
+             bootbox) {
+
+    var gSurveyIdent;
+    var gRecord;
+    var gLinkageItems;
 
     $(document).ready(function () {
 
@@ -81,10 +88,153 @@ require([
         setupUserProfile(true);
         localise.setlang();		// Localise HTML
 
+        // Get the parameters and start editing a survey if one was passed as a parameter
+        var params = location.search.substr(location.search.indexOf("?") + 1);
+        var pArray = params.split("&");
+
+        for (var i = 0; i < pArray.length; i++) {
+            var param = pArray[i].split("=");
+            if ( param[0] === "survey" ) {
+                gSurveyIdent = param[1];
+                saveCurrentProject(-1, globals.gCurrentSurvey, undefined);	// Save the current survey id
+            } else if ( param[0] === "record" ) {
+                gRecord = param[1];
+            }
+        }
+
+        getLinkageItems();
+
+        $('#m_search').click(function(e) {
+            e.preventDefault();
+            getMatchesAllItems();
+        });
     });         // End of document ready
 
+    /*
+     * Get items that can link other records to this one
+     */
+    function getLinkageItems() {
+        if(gRecord && gSurveyIdent) {
+            addHourglass();
+            $.ajax({
+                url: "/surveyKPI/match/record/" + gSurveyIdent + "/" + gRecord,
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    removeHourglass();
+                    gLinkageItems = data;
+                    showLinkageItems();
 
+                },
+                error: function (xhr, textStatus, err) {
+                    removeHourglass();
+                    if (xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        alert(xhr.responseText + " " + gSurveyIdent + " " + localise.set["msg_not_f"]);
+                    }
+                }
+            });
+        }
+    }
 
+    function showLinkageItems() {
+
+        var fpAlt = localise.set["c_fingerprint"];
+
+        $('#links').empty();
+        for(var index = 0; index < gLinkageItems.length; index++) {
+
+            var link = gLinkageItems[index];
+            var image = (' ' + link.fp_image).slice(1);    // Force copy
+            if(location.hostname === 'localhost') {
+                image = image.replace("https", "http");
+            }
+            var linkHtml = `<div class="col-sm-12">
+                                    <div class="card">
+                                        <div class="card-header d-flex chart-header">
+                                            <span class="mr-auto">${link.colName}</span>
+                                            <img src="${image}" alt="${fpAlt}">
+                                            <i class="fa fa-cog" data-idx="${index}"></i>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row" id="matches${index}">
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`;
+            $('#links').append(linkHtml);
+        }
+    }
+
+    /*
+     * Get matches for current items
+     */
+    function getMatchesAllItems() {
+
+        for(var index = 0; index < gLinkageItems.length; index++) {
+            getMatches(index);
+        }
+    }
+
+    /*
+     * Get matches for a singe link item
+     */
+    function getMatches(index, link) {
+        var threshold = $('#threshold').val();
+        var link = gLinkageItems[index];
+
+        if(link.fp_image) {
+
+            if(!threshold) {
+                threshold = 40.0;
+            }
+
+            addHourglass();
+            $.ajax({
+                url: "/surveyKPI/match/fingerprint/image?image=" + link.fp_image + "&threshold=" + threshold,
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    removeHourglass();
+                    var idx = index;
+                    showMatches(idx, data);
+
+                },
+                error: function (xhr, textStatus, err) {
+                    removeHourglass();
+                    if (xhr.readyState == 0 || xhr.status == 0) {
+                        return;  // Not an error
+                    } else {
+                        alert(xhr.responseText + " " + gSurveyIdent + " " + localise.set["msg_not_f"]);
+                    }
+                }
+            });
+        }
+    }
+
+    function showMatches(idx, matches) {
+
+        var fpAlt = localise.set["c_fingerprint"];
+
+        $('#matches' + idx).empty();
+        if(matches) {
+            for (var i = 0; i < matches.length; i++) {
+
+                var match = matches[i];
+                var image = (' ' + match.linkageItem.fp_image).slice(1);    // Force copy
+                if (location.hostname === 'localhost') {
+                    image = image.replace("https", "http");
+                }
+                var matchHtml = `<div class="col-sm">
+                                    <img src="${image}" alt="${fpAlt}">
+                                    <p>${match.score}</p>
+                                    </div>`;
+                $('#matches' + idx).append(matchHtml);
+            }
+        }
+    }
 });
 
 

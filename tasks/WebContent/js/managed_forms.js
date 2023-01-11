@@ -3352,7 +3352,9 @@ require([
      * Show links
      */
     function showLinks() {
-        window.location.href = '/app/tasks/linkages.html';
+        var sIdent = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].ident;
+        var instanceId = gTasks.gSelectedRecord.instanceid;
+        window.location.href = '/app/tasks/linkages.html?survey=' + sIdent + '&record=' + instanceId;
     }
 
     /*

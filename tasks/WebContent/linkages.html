@@ -82,12 +82,7 @@
 
                 <div class="col-sm-4 pt-4 px-2 overviewSection border-right">
                     <form class="form" role="form">
-                        <div class="form-group row">
-                            <label class="lang col-sm-4 control-label"  data-lang="c_project"  for="project_name"></label>
-                            <div class="col-sm-8">
-                                <select class="project_list form-control" id="project_name"></select>
-                            </div>
-                        </div>
+                        <button type="button" class="lang btn btn-info mx-1 my-1" data-lang="br_s" id="m_search"></button>
                     </form>
                 </div>
             </div>
@@ -96,99 +91,13 @@
 
     <div id="dashboardInfo" class="alert alert-success" style="display:none;"></div>
 
-    <!-- Main panel -->
-    <div class="card text-center overviewSection">
-        <div class="card-header">
-            <ul id="mainTabs" class="nav nav-tabs card-header-tabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <a data-toggle="tab" id="table-view" href="#tablePanel" role="tab" class="active nav-link" aria-controls="table-view" aria-selected="true"><i class="fa fa-list" aria-hidden="true"></i> <span class="lang" data-lang="c_table"></span></a>
-                </li>
-                <li class="nav-item">
-                    <a data-toggle="tab" id="map-view" href="#mapPanel" role="tab" class="nav-link" aria-controls="map-view" aria-selected="false"><i class="fa fa-globe" aria-hidden="true"></i> <span class="lang" data-lang="c_map"></span></a>
-                </li>
-                <li class="nav-item">
-                    <a data-toggle="tab" id="chart-view" href="#chartPanel" role="tab" class="nav-link"><i class="fa fa-chart-bar" aria-hidden="true"></i> <span class="lang" data-lang="c_chart"></span></a>
-                </li>
-                <li class="nav-item" style="display:none;"><a data-toggle="tab" id="timing-view" href="#timingPanel" role="tab" class="nav-link"><i class="fa fa-clock-o" aria-hidden="true"></i></a></li>
-            </ul>
-        </div>
-
-        <div class="card-body">
-
-            <div class="tab-content">
-                <div id="tablePanel" class="tab-pane fade show active" role="tabpanel" aria-labelledby="table-view">
-
-                    <div id="table_content" class="col-md-12 dash_views">
-                        <div class="sk-spinner sk-spinner-wave">
-                            <div class="sk-rect1"></div>
-                            <div class="sk-rect2"></div>
-                            <div class="sk-rect3"></div>
-                            <div class="sk-rect4"></div>
-                            <div class="sk-rect5"></div>
-                        </div>
-                        <div class="table-responsive">
-                            <table id="trackingTable" class="table table-striped">
-                            </table>
-                        </div>
-                    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div id="table-view" class="tab-pane active">
+                <div class="panel-body">
+                    <div id="links"></div>
                 </div>
-
-
-                <div id="mapPanel" class="tab-pane fade" role="tabpanel" aria-labelledby="map-view">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-4 map_layers" style="display:none;">
-                                <div class="ibox float-e-margins">
-                                    <div class="ibox-title">
-                                        <h5 class="lang" data-lang="c_map_layers"></h5>
-                                        <div class="pull-right">
-                                            <a id="m_add_layer">
-                                                <i class="btn btn-success fa fa-bar-map-o fa-lg">
-                                                    <span class="nav-label lang" data-lang="d_add"></span></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="layerSelect">
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                            <tr>
-                                                <th class="lang" data-lang="c_name"></th>
-                                                <th class="lang" data-lang="c_del"></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="map_content" class="col-md-12 dash_views">
-                                <div id="map" class="map"></div>
-                                <div id="features" class="feature-panel-right"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="chartPanel"  role="tabpanel" class="tab-pane fade" aria-labelledby="chart-view">
-                    <div class="panel-body">
-                        <div id="chartcontent" class="row">
-
-                        </div>
-                    </div>
-                </div>
-                <div id="timingPanel"  role="tabpanel" class="tab-pane fade d-none" aria-labelledby="timing-view">
-                    <div class="panel-body">
-                        <div id="timingcontent">
-                            <div class="row" id="timingrow"></div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
-
         </div>
     </div>
 

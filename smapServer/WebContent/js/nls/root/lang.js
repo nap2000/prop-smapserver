@@ -87,6 +87,7 @@ define({
     "c_opened": "Opened",
     "c_url": "URL",
     "c_project": "Project",
+    "c_fingerprint": "Fingerprint",
     "c_forms": "Forms",
     "c_form": "Form",
     "c_sub_form": "Sub Form",
