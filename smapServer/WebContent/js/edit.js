@@ -34,6 +34,8 @@ require.config({
     	lang_location: '..',
     	icheck: '/wb/plugins/iCheck/icheck.min',
 	    bootstrapcolorpicker: 'bootstrap-colorpicker.min',
+		multiselect: 'bootstrap-multiselect',
+		knockout: 'knockout'
 
     },
     shim: {
@@ -44,7 +46,8 @@ require.config({
     	'bootbox': ['bootstrap.min'],
        	'toggle': ['bootstrap.min'],
 	    'bootstrapcolorpicker': ['bootstrap', 'jquery'],
-    	'icheck': ['jquery']
+    	'icheck': ['jquery'],
+		'multiselect': ['jquery', 'knockout'],
 
     }
 });
@@ -67,7 +70,8 @@ require([
 		 'bootstrapcolorpicker',
 		 'moment',
 		 'app/aws',
-         'icheck'],
+         'icheck',
+		 'multiselect'],
 		function(
 				$,
 				common,
@@ -480,7 +484,7 @@ $(document).ready(function() {
 		var survey = globals.model.survey;
 		var qType = survey.forms[globals.gFormIndex].questions[globals.gItemIndex].type;
 		if(qType === "child_form") {
-			getQuestionsInSurvey($('#p_key_question'), $(this).val(), true, true, setAppearanceValues, true);
+			getQuestionsInSurvey($('#p_key_question'), undefined, $(this).val(), true, true, setAppearanceValues, true);
 		}
 	});
 
@@ -651,12 +655,11 @@ $(document).ready(function() {
      * If the question type is a child form then the list of questions needs to be updated
      */
 	$('#a_survey_identifier, #a_csv_identifier').change(function(){
-		var survey = globals.model.survey;
 		var search_source = $('input[type=radio][name=search_source]:checked').val();
 		if(search_source === "survey") {
-			getQuestionsInSurvey($('.column_select'), $(this).val(), true, false, setAppearanceValues, true);
+			getQuestionsInSurvey($('.column_select'), $('.column_select_multiple'), $(this).val(), true, false, setAppearanceValues, true);
 		} else {
-			getQuestionsInCsvFile($('.column_select'), $(this).val(), true);
+			getQuestionsInCsvFile($('.column_select'), $('.column_select_multiple'), $(this).val(), true);
 		}
 	});
 
@@ -1969,7 +1972,7 @@ function respondToEvents($context) {
 					}
 				}
 			}
-			getQuestionsInSurvey($('#p_key_question'), sIdent, true, true, undefined, true);
+			getQuestionsInSurvey($('#p_key_question'), undefined,  sIdent, true, true, undefined, true);
 		} else if(qType === "begin repeat") {
 			$('#p_ref').empty().append(getFormsAsSelect(qName));
 		}
@@ -3741,7 +3744,8 @@ function setNoFilter() {
 							}
 							var languages = globals.model.survey.languages;
 							for(i = 0; i < languages.length; i++) {
-								var labelValue = $('#a_search_label' + i).val();
+								var labelValueArray = $('#a_search_label' + i).val();
+								var labelValue = labelValueArray ? labelValueArray.join(',') : "";
 								if(!labelValue || labelValue.trim().length == 0) {
 									labelValue = searchValue;
 								}
@@ -3872,14 +3876,14 @@ function setNoFilter() {
 								$('input[type=radio][name=search_source][value=survey]').prop('checked', true);
 								$('#a_survey_identifier').val(sIdent);
 								$('.search_survey').show();
-								getQuestionsInSurvey($('.column_select'), sIdent, true, false, setAppearanceValues, true);
+								getQuestionsInSurvey($('.column_select'), $('.column_select_multiple'), sIdent, true, false, setAppearanceValues, true);
 							} else {
 								var csvIndex = getIndexOfCsvFilename(params.filename);
 								$('input[type=radio][name=search_source][value=csv]').prop('checked', true);
 								$('#a_csv_identifier').val(csvIndex);
 								$('.search_csv').show();
 								if(typeof csvIndex !== "undefined") {
-									getQuestionsInCsvFile($('.column_select'), csvIndex, true);
+									getQuestionsInCsvFile($('.column_select'), $('.column_select_multiple'), csvIndex, true);
 								}
 							}
 
@@ -4192,11 +4196,12 @@ function setNoFilter() {
 					h[++idx] = '<div class="col-sm-8">';
 					h[++idx] = '<select id="';
 						h[++idx] = labelControlId;
-						h[++idx] = '" class="form-control column_select"></select>';
+						h[++idx] = '" multiple="multiple" class="form-control column_select_multiple"></select>';
 					h[++idx] = '</div>';
 					h[++idx] = '</div>';
 				}
 				$('#search_label_list').empty().append(h.join(''));
+
 			}
 
 			function showAppearanceError(msg) {
@@ -4237,8 +4242,16 @@ function setNoFilter() {
 								$('#a_search_value').val(v);
 								var choiceIdx = 0;
 								var labels = optionList.options[i].labels;
-								for (choiceIdx = 0; choiceIdx < optionList.options[i].labels.length; choiceIdx++) {
-									$('#a_search_label' + choiceIdx).val(labels[choiceIdx].text);
+								for (choiceIdx = 0; choiceIdx < labels.length; choiceIdx++) {
+									var labelValue = labels[choiceIdx].text;
+									$('#a_search_label' + choiceIdx).multiselect('deselectAll', false);
+									if(labelValue && labelValue.trim().length > 0) {
+										var labelArray = labelValue.split(",");
+										for (i = 0; i < labelArray.length; i++) {
+											$('#a_search_label' + choiceIdx).multiselect('select', labelArray[i])
+												.multiselect('refresh');
+										}
+									}
 								}
 								break;
 							} else {

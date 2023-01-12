@@ -3879,11 +3879,13 @@ function getAccessibleCsvFiles($elem, includeNone) {
  /*
   * Get the questions in a survey
   */
-function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly, callback, includeHrk) {
+function getQuestionsInSurvey($elem, $elem_multiple, sIdent, includeNone, textOnly, callback, includeHrk) {
 
-	function populateElement($elem, data) {
+	function populateElement($elem, $elem_multiple, data) {
 		var h = [],
+			hm = [],
 			idx = -1,
+			idx_m = -1,
 			i,
 			setValueFn = callback;
 
@@ -3893,20 +3895,26 @@ function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly, callback, in
 			h[++idx] = '</option>';
 		}
 		if (includeHrk) {
-			h[++idx] = '<option value="_hrk">';
-			h[++idx] = localise.set["ed_hrk"];
-			h[++idx] = '</option>';
+			hm[++idx_m] = h[++idx] = '<option value="_hrk">';
+			hm[++idx_m] = h[++idx] = localise.set["ed_hrk"];
+			hm[++idx_m] = h[++idx] = '</option>';
 		}
 		for (i = 0; i < data.length; i++) {
 			if(!textOnly || isTextStorageType(data[i].type)) {
-				h[++idx] = '<option value="';
-				h[++idx] = data[i].name;
-				h[++idx] = '">';
-				h[++idx] = htmlEncode(data[i].name);
-				h[++idx] = '</option>';
+				hm[++idx_m] = h[++idx] = '<option value="';
+				hm[++idx_m] = h[++idx] = data[i].name;
+				hm[++idx_m] = h[++idx] = '">';
+				hm[++idx_m] = h[++idx] = htmlEncode(data[i].name);
+				hm[++idx_m] = h[++idx] = '</option>';
 			}
 		}
-		$elem.empty().append(h.join(''));
+		if($elem) {
+			$elem.empty().append(h.join(''));
+		}
+		if($elem_multiple) {
+			$elem_multiple.empty().append(hm.join(''));
+			$elem_multiple.multiselect('deselectAll', false);
+		}
 
 		if(typeof setValueFn === "function") {
 			setValueFn();
@@ -3914,9 +3922,9 @@ function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly, callback, in
 	}
 
 	if(sIdent === 'self') {
-		populateElement($elem, globals.model.survey.forms[globals.gFormIndex].questions);
+		populateElement($elem, $elem_multiple, globals.model.survey.forms[globals.gFormIndex].questions);
 	} else if(gCache[sIdent]) {
-		populateElement($elem, gCache[sIdent]);
+		populateElement($elem, $elem_multiple, gCache[sIdent]);
 	} else {
 		if (sIdent !== "0") {
 			addHourglass();
@@ -3928,9 +3936,10 @@ function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly, callback, in
 					removeHourglass();
 					var theIdent = sIdent;
 					var $theElem = $elem;
+					var $theElemMultiple = $elem_multiple;
 
 					gCache[theIdent] = data;
-					populateElement($theElem, data);
+					populateElement($theElem, $theElemMultiple, data);
 				},
 				error: function (xhr, textStatus, err) {
 					removeHourglass();
@@ -3944,31 +3953,40 @@ function getQuestionsInSurvey($elem, sIdent, includeNone, textOnly, callback, in
 		} else {
 			if (includeNone) {
 				$elem.empty().append('option value="0">' + localise.set["c_none"] + '</option>');
+				$elem_multiple.empty().append('option value="0">' + localise.set["c_none"] + '</option>');
 			}
 		}
 	}
 
 }
 
-function getQuestionsInCsvFile($elem, index, includeNone) {
+function getQuestionsInCsvFile($elem, $elem_multiple, index, includeNone) {
 	var h = [],
+		hm = [],
 		idx = -1,
+		idx_m = -1,
 		i;
 	var data = globals.gCsvFiles[index].headers;
 
-	if (includeNone) {
+	if (includeNone) {		// Only include select none for single selects
 		h[++idx] = '<option value="">';
 		h[++idx] = localise.set["c_none"];
 		h[++idx] = '</option>';
 	}
 	for (i = 0; i < data.length; i++) {
-		h[++idx] = '<option value="';
-		h[++idx] = data[i].fName;
-		h[++idx] = '">';
-		h[++idx] = htmlEncode(data[i].fName);
-		h[++idx] = '</option>';
+		hm[++idx_m] = h[++idx] = '<option value="';
+		hm[++idx_m] = h[++idx] = data[i].fName;
+		hm[++idx_m] = h[++idx] = '">';
+		hm[++idx_m] = h[++idx] = htmlEncode(data[i].fName);
+		hm[++idx_m] = h[++idx] = '</option>';
 	}
-	$elem.empty().append(h.join(''));
+	if($elem) {
+		$elem.empty().append(h.join(''));
+	}
+	if($elem_multiple) {
+		$elem_multiple.empty().append(hm.join(''));
+		$elem_multiple.multiselect('deselectAll', false);
+	}
 }
 
 /*

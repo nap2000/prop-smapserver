@@ -22,7 +22,9 @@
     	bootstrapcolorpicker: '../../../../smapServer/WebContent/js/libs/bootstrap-colorpicker.min',
 	slimscroll: 'wb/plugins/slimscroll/jquery.slimscroll.min',
         pace: 'wb/plugins/pace/pace.min',
-	icheck: 'wb/plugins/iCheck/icheck.min'
+	icheck: 'wb/plugins/iCheck/icheck.min',
+        multiselect: 'bootstrap-multiselect',
+        knockout: 'knockout',
     },
     dir: '../smapServer',
     modules: [
