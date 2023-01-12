@@ -3952,8 +3952,12 @@ function getQuestionsInSurvey($elem, $elem_multiple, sIdent, includeNone, textOn
 			});
 		} else {
 			if (includeNone) {
-				$elem.empty().append('option value="0">' + localise.set["c_none"] + '</option>');
-				$elem_multiple.empty().append('option value="0">' + localise.set["c_none"] + '</option>');
+				if($elem) {
+					$elem.empty().append('option value="0">' + localise.set["c_none"] + '</option>');
+				}
+				if($elem_multiple) {
+					$elem_multiple.empty().append('option value="0">' + localise.set["c_none"] + '</option>');
+				}
 			}
 		}
 	}
