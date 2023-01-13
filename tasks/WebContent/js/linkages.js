@@ -191,6 +191,8 @@ require([
                 threshold = 40.0;
             }
 
+            var url = "/surveyKPI/match/fingerprint/image?image=" + link.fp_image + "&threshold=" + threshold;
+            url += addCacheBuster(url);
             addHourglass();
             $.ajax({
                 url: "/surveyKPI/match/fingerprint/image?image=" + link.fp_image + "&threshold=" + threshold,
@@ -217,6 +219,7 @@ require([
     function showMatches(idx, matches) {
 
         var fpAlt = localise.set["c_fingerprint"];
+        var fpView = localise.set["m_view"];
 
         $('#matches' + idx).empty();
         if(matches) {
@@ -224,12 +227,16 @@ require([
 
                 var match = matches[i];
                 var image = (' ' + match.linkageItem.fp_image).slice(1);    // Force copy
+                var url = (' ' + match.url).slice(1);    // Force copy
+
                 if (location.hostname === 'localhost') {
-                    image = image.replace("https", "http");
+                    image = image.replace("https://", "http://");
+                    url = url.replace("https://", "http://");
                 }
                 var matchHtml = `<div class="col-sm">
                                     <img src="${image}" alt="${fpAlt}">
                                     <p>${match.score}</p>
+                                    <p><a href="${url}">${fpView}</a></p>
                                     </div>`;
                 $('#matches' + idx).append(matchHtml);
             }
