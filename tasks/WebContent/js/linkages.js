@@ -104,10 +104,29 @@ require([
 
         getLinkageItems();
 
+        /*
+         * Set initial threshold and respond to updates
+         */
+        var threshold = localStorage.getItem('fp_threshold');
+        if(!threshold) {
+            threshold = 40.0;
+        }
+        $('#threshold').val(threshold);
+        $('#threshold').change(function() {
+                $('#m_search').prop('disabled', false);
+                localStorage.setItem('fp_threshold', $('#threshold').val());
+            }
+        )
+
         $('#m_search').click(function(e) {
             e.preventDefault();
             getMatchesAllItems();
         });
+
+        $('#m_back').click(function(e){
+            e.preventDefault();
+            history.back();
+        })
     });         // End of document ready
 
     /*
@@ -124,6 +143,7 @@ require([
                     removeHourglass();
                     gLinkageItems = data;
                     showLinkageItems();
+                    getMatchesAllItems();
 
                 },
                 error: function (xhr, textStatus, err) {
@@ -155,10 +175,9 @@ require([
                                         <div class="card-header d-flex chart-header">
                                             <span class="mr-auto">${link.colName}</span>
                                             <img src="${image}" alt="${fpAlt}">
-                                            <i class="fa fa-cog" data-idx="${index}"></i>
                                         </div>
                                         <div class="card-body">
-                                            <div class="row" id="matches${index}">
+                                            <div class="row bg-success" id="matches${index}">
                                                 
                                             </div>
                                         </div>
@@ -189,6 +208,7 @@ require([
 
             if(!threshold) {
                 threshold = 40.0;
+                $('#threshold').val(threshold);
             }
 
             var url = "/surveyKPI/match/fingerprint/image?image=" + link.fp_image + "&threshold=" + threshold;

@@ -76,16 +76,26 @@
 <div class="container-fluid">
 
     <div class="card mt-2">
-        <div class="col-sm-12">
-            <div class="bg-light row filtersShown">
-                <!-- Header Row - Filtering goes here-->
+        <div class="bg-light">
+            <!-- Header Row - Filtering goes here-->
 
-                <div class="col-sm-4 pt-4 px-2 overviewSection border-right">
-                    <form class="form" role="form">
-                        <button type="button" class="lang btn btn-info mx-1 my-1" data-lang="br_s" id="m_search"></button>
-                    </form>
-                </div>
-            </div>
+
+                <form class="form-inline">
+                    <div class="form-group col-sm-4">
+                        <button id="m_back" type="button" class="lang btn btn-success mx-1 my-1" data-lang="c_back"></button>
+                        <button id="m_search" type="button" class="lang btn btn-info mx-1 my-1" disabled aria-disabled="true" data-lang="br_s"></button>
+                    </div>
+                    <div class="form-group col-sm-8">
+                        <label for="threshold" class="lang col-sm-2 col-form-label" data-lang="c_threshold"></label>
+                        <div class="col-sm-10">
+                            <input type="integer" class="form-control" id="threshold">
+                        </div>
+                    </div>
+
+
+                </form>
+
+
         </div>
     </div>
 
