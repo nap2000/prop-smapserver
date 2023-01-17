@@ -242,7 +242,7 @@ require([
         var fpView = localise.set["m_view"];
 
         $('#matches' + idx).empty();
-        if(matches) {
+        if(matches && matches.length) {
             for (var i = 0; i < matches.length; i++) {
 
                 var match = matches[i];
@@ -260,6 +260,12 @@ require([
                                     </div>`;
                 $('#matches' + idx).append(matchHtml);
             }
+        } else {
+            var noMatch = localise.set["fp_nm"]
+            var matchHtml = `<div class="col-sm">
+                                    <p>${noMatch}</p>
+                                    </div>`;
+            $('#matches' + idx).append(matchHtml);
         }
     }
 });

@@ -94,9 +94,9 @@ require(['jquery', 'app/localise', 'app/common','app/globals'],
 	 */
 	androidVersion = parseFloat(getAndroidVersion());
 	if(androidVersion == 0 || androidVersion >= 4.1) {		// Default to downloading the new APK
-		$('#ft').attr("href", "fieldTask.apk");
+		$('.ftapk').attr("href", "fieldTask.apk");
 	} else {
-		$('#ft').attr("href", "fieldTaskPreJellyBean.apk");
+		$('.ftapk').attr("href", "fieldTaskPreJellyBean.apk");
 	}
 
  });

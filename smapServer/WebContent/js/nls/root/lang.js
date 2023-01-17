@@ -1499,6 +1499,8 @@ define({
     "cm_p": "Show data for last",
     "cm_7days": "7 days",
     "cm_14days": "14 days",
-    "cm_30days": "30 days"
+    "cm_30days": "30 days",
+
+    "fp_nm": "No matches found"
 
 });
