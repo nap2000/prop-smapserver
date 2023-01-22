@@ -1412,6 +1412,7 @@ define({
     "transcribe": "AWS Transcribe",
     "transcribe_i": "seconds of audio",
 	"static_map": "Mapbox Static Map",
+    "google_static_map": "Google Static Map",
 	"monthly": "Monthly Charge",
     "org_bill_rpt": "Organisation Usage Report",
     "bill_enable": "Enable Billing",
