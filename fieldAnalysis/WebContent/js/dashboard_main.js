@@ -35,7 +35,7 @@ require.config({
      	i18n: '../../../../js/libs/i18n',
      	async: '../../../../js/libs/async',
      	localise: '../../../../js/app/localise',
-    	jquery: '../../../../js/libs/jquery-2.1.1',
+    	jquery: '../../../../js/libs/jquery-3.5.1.min.js',
     	jquery_ui: [
     	            '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min',
     	            '../../../../js/libs/jquery-ui-1.10.3.custom.min'

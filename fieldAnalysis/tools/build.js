@@ -49,9 +49,6 @@
 	    exclude: ['../jqplot_main']
         },
         {
-            name: '../reportlist_main'
-        },
-        {
             name: '../review_main',
 	    exclude: ['jquery', 'bootstrap']
         },
