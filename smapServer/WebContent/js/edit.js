@@ -27,7 +27,6 @@ require.config({
     locale: gUserLocale,
     paths: {
     	app: '../app',
-    	jquery: 'jquery-2.1.1',
     	bootbox: 'bootbox.min',
     	toggle: 'bootstrap-toggle.min',
     	moment: 'moment-with-locales.min',
@@ -40,12 +39,8 @@ require.config({
     },
     shim: {
     	'app/common': ['jquery'],
-        'bootstrap.min': ['jquery'],
         'jquery.autosize.min': ['jquery'],
-        'bootstrap.file-input': ['bootstrap.min'],
     	'bootbox': ['bootstrap.min'],
-       	'toggle': ['bootstrap.min'],
-	    'bootstrapcolorpicker': ['bootstrap', 'jquery'],
     	'icheck': ['jquery'],
 		'multiselect': ['jquery', 'knockout'],
 
@@ -55,7 +50,6 @@ require.config({
 require([
          'jquery',
          'app/common',
-         'bootstrap.min',
          'app/localise',
          'app/globals',
          'jquery.autosize.min',
@@ -75,7 +69,6 @@ require([
 		function(
 				$,
 				common,
-				bootstrap,
 				lang,
 				globals,
 				jqas,
@@ -1208,7 +1201,7 @@ function setupQuestionTypes($elem, columns, draggable, currentType) {
 		count,
 		name;
 
-	h[++idx] = '<div class="row margin-bottom">';
+	h[++idx] = '<div class="margin-bottom">';
 	for(i = 0; i < types.length; i++) {
 
 		if(types[i].canSelect && isCompatible(types[i].compatTypes, currentType) ) {
@@ -1217,7 +1210,7 @@ function setupQuestionTypes($elem, columns, draggable, currentType) {
 			h[++idx] = '<div class="col-xs-12 ';
 			h[++idx] = columns === 1 ? '" ' : 'col-md-6" ';
 			h[++idx] = ' style="height:65px;">';
-			h[++idx] = '<button type="button" tabindex="-1" class="btn btn-large btn-default question_type_sel full_width_btn';
+			h[++idx] = '<button type="button" tabindex="-1" class="btn btn-large btn-default border border-primary question_type_sel full_width_btn';
 			if(draggable) {
 				h[++idx] = ' draggable';
 			}

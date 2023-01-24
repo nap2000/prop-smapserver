@@ -2378,11 +2378,11 @@ define([
             if(globals.gIsQuestionView && !globals.gShowingChoices) {
                 $('.q_only').show();
                 $('.o_only').hide();
-                globals.gSelLabel = $('#selProperty > li.q_only.default').text();
+                globals.gSelLabel = $('#selProperty > a.q_only.default').text();
             } else {
                 $('.q_only').hide();
                 $('.o_only').show();
-                globals.gSelLabel = $('#selProperty > li.o_only.default').text();
+                globals.gSelLabel = $('#selProperty > a.o_only.default').text();
             }
             globals.gSelProperty = "label";
             $('#propSelected').text(globals.gSelLabel);

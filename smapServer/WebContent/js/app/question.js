@@ -76,7 +76,7 @@ define([
 		firstQuestion = true;
 		qIndex = 0;
 		seq = 0;
-		if($relatedQuestion.size() > 0) {
+		if($relatedQuestion.length > 0) {
 			relatedFormIndex = $relatedQuestion.data("fid");
 			if(relatedFormIndex == formIndex) {
 				// Appending or pre=pending to an existing question
@@ -284,7 +284,7 @@ define([
 		$beforeElement = $("#" + beforeId);
 		seq = 0;
 		beforeItemIndex = 0;
-		if($beforeElement.size() > 0) {
+		if($beforeElement.length > 0) {
 			beforeFormIndex = $beforeElement.data("fid");
 			if(beforeFormIndex == formIndex) {
 				beforeItemIndex = $beforeElement.data("id");

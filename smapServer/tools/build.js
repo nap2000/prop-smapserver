@@ -7,7 +7,7 @@
 //    optimize: 'none',
     fileExclusionRegExp: /^build$/,
     paths: {
-    	jquery: 'jquery-2.1.1',
+    	jquery: 'jquery-3.5.1.min',
     	jquery_ui: 'empty:',
     	app: '../app',
     	wfapp: '../app/webform',
@@ -34,6 +34,7 @@
         },
         {
             name: '../edit',
+	    exclude: ['jquery', 'bootstrap']
         },
         {
             name: '../reports',

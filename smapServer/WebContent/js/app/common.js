@@ -2125,13 +2125,11 @@ function setLanguages(languages, languageCallback) {
 	}
 
 	for (i = 0; i < languages.length; i++) {
-		h[++idx] = '<li>';
 		h[++idx] = '<a data-lang="';
 		h[++idx] = i;
-		h[++idx] = '" href="javascript:void(0)">';
+		h[++idx] = '" class="dropdown-item" href="javascript:void(0)">';
 		h[++idx] = htmlEncode(languages[i].name);
 		h[++idx] = '</a>';
-		h[++idx] = '</li>';
 
 		h2[++idx2] = '<option value="';
 		h2[++idx2] = i;
