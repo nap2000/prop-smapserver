@@ -57,7 +57,6 @@ requirejs.config({
     	'common': ['jquery'],
     	'datetimepicker': ['moment'],
     	'jquery-barcode': ['jquery'],
-    	'app/plugins': ['jquery'],
     	'crf': ['jquery'],
     	'mapbox_app' : ['jquery', 'mapbox'],
     	'mapbox': {

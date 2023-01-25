@@ -34,7 +34,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
+<nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap sticky-top">
 	<a class="navbar-brand" href="#"><i class="fa fa-edit" aria-hidden="true"></i><span class="formName"></span></a>
 	<div class="spinner-grow text-danger hour_glass"></div>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -136,124 +136,20 @@
 					<a data-prop="trigger" href='#'  class="dropdown-item q_only lang" data-lang="c_trigger">trigger</a>
 				</div>
 			</li>
+			<li class="nav-item notoptionslist"><input id="viewType" type="checkbox" checked
+											  data-onstyle="primary" data-offstyle="info"></li>
+			<li class="nav-item"><a type="button" class="nav-link btn btn-success lang disabled m_save_survey" disabled="disabled">
+				<span class="lang" data-lang="c_save">Save</span>
+				<span class="badge">0</span></a></li>
+			<li class="nav-item"><a type="button" data-lang="c_test"
+				   class="nav-link btn btn-primary lang m_test_survey" href='javascript:void(0)' target="_blank">Test</a></li>
+
+			<li id="m_help" class="nav-item"><a class="nav-link lang" data-lang="m_help" href="http://www.smap.com.au/docs/online-editor.html" target="_blank">Help</a></li>
 
 
 		</ul>
 	</div>
 </nav>
-<!--
-<header class="navbar navbar-default navbar-fixed-top" role="banner">
-	<div class="container" style="width:100%;">
-		<div class="navbar-header">
-			<button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a href='javascript:void(0)' class="navbar-brand">
-				<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-				<span class="formName"></span>
-			</a>
-		</div>
-		<nav class="collapse navbar-collapse" role="navigation">
-			<ul class="nav navbar-nav navbar-right">
-				<li id="m_modules" class="dropdown">
-					<a href='javascript:void(0)' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="lang" data-lang="m_modules">View</span> <span class="caret"></span></a>
-					<ul class="dropdown-menu" role="menu">
-
-						<li><a class="lang" data-lang="m_home" href="/?loggedin=yes">home</a></li>
-						<li class="disabled restrict_role admin_role analyst_role"><a href='javascript:void(0)'><span class="lang" data-lang="c_edit">Edit</span><span class="glyphicon glyphicon-edit pull-right"></span></a></li>
-						<li class="restrict_role admin_role analyst_role"><a href="/app/fieldManager/surveyManagement.html"><span class="lang" data-lang="m_admin">admin</span><span class="glyphicon glyphicon-wrench pull-right"></span></a></li>
-						<li class="restrict_role manage_role admin_role analyst_role"><a href="/app/myWork/index.html">
-							<span class="nav-label lang" data-lang="m_web_forms"></span><span class="glyphicon glyphicon-globe pull-right"></span></a></li>
-						<li class="restrict_role manage_role admin_role analyst_role"><a href="/app/tasks/managed_forms.html"><span class="lang" data-lang="m_console" ></span><span class="glyphicon glyphicon-globe pull-right"></span></a></li>
-						<li class="restrict_role analyst_role"><a href="/app/fieldAnalysis/index.html"><span class="lang" data-lang="m_analysis">Analysis</span><span class="glyphicon glyphicon-stats pull-right"></span></a></li>
-						<li class="restrict_role admin_role analyst_role manage_role task_role"><a href="/app/tasks/taskManagement.html"><span class="nav-label lang" data-lang="m_assign">assign</span><span class="glyphicon glyphicon-tasks pull-right"></span></a></li>
-						<li class="restrict_role admin_role analyst_role" id="c_campaigns"><a href="/app/tasks/campaign.html">
-							<span class="nav-label lang" data-lang="c_campaigns">m</span><span class="glyphicon glyphicon-envelope pull-right"></span></a></li>
-						<li class="restrict_role billing_role" style="display:none;"><a href="/app/fieldManager/billing.html"><span class="nav-label lang" data-lang="m_billing">billing</span><span class="glyphicon glyphicon-usd pull-right"></span></a></li>
-					</ul>
-				</li>
-				<li class="dropdown">
-					<a href='javascript:void(0)' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="lang" data-lang="c_file">File</span> <span class="caret"></span></a>
-					<ul class="dropdown-menu" role="menu">
-						<li><a id="c_save" class="m_save_survey lang" href='javascript:void(0)' data-lang="c_save">save</a></li>
-						<li><a id="m_open" href='javascript:void(0)' class="lang" data-lang="m_open">open</a></li>
-						<li><a id="m_new" href='javascript:void(0)' class="lang" data-lang="m_new">New</a></li>
-						<li role="presentation" class="divider"></li>
-						<li><a id="m_languages" class="lang m_languages" data-lang="c_langs" href='javascript:void(0)'>languages</a></li>
-						<li><a id="m_pulldata" class="lang" data-lang="c_pulldata_r" href='javascript:void(0)'>pulldata</a></li>
-						<li><a id="m_media" href='javascript:void(0)' class="lang" data-lang="c_media">media</a></li>
-						<li><a id="m_settings" href='javascript:void(0)' class="lang" data-lang="c_settings">settings</a></li>
-						<li><a id="m_keys" href="/app/cases.html" class="lang" data-lang="c_keys">keys</a></li>
-						<li role="presentation" class="divider"></li>
-						<li class="restrict_role org_role security_role"><a id="m_roles" href="/surveyRoles.html" class="lang" data-lang="c_roles">roles</a></li>
-						<li><a id="m_info" href='javascript:void(0)' class="lang" data-lang="m_info">info</a></li>
-						<li><a id="m_export" href='javascript:void(0)' class="lang" data-lang="m_export">export</a></li>
-					</ul>
-				</li>
-				<li class="dropdown">
-					<a href='javascript:void(0)' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="lang" data-lang="c_tools">Tools</span> <span class="caret"></span></a>
-					<ul class="dropdown-menu" role="menu">
-						<li><a id="m_required" class="lang" data-lang="c_required" href='javascript:void(0)'>Req</a></li>
-						<li><a id="m_not_required" class="lang" data-lang="c_not_required" href='javascript:void(0)'>NR</a></li>
-						<li role="presentation" class="divider"></li>
-						<li><a id="m_translate" class="lang" data-lang="c_trans" href="translate.html">translate</a>
-						<li><a id="m_validate" class="lang m_validate" data-lang="c_validate" href='javascript:void(0)'>validate</a></li>
-						<li><a id="m_changes" href="/app/changes.html" class="lang" data-lang="c_changes">changes</a></li>
-						<li><a id="m_templates" href="/app/templates.html" class="lang" data-lang="c_templates">templates</a></li>
-						<li><a id="m_meta" href="/meta.html" class="lang" data-lang="c_meta">meta</a></li>
-						<li><a id="m_cases" href="/app/cases.html" class="lang" data-lang="c_cm">case</a></li>
-						<li><a id="m_slu" href="#" class="lang" data-lang="ed_slu">slu</a></li>
-						<li><a id="m_gsi" href="#" class="lang" data-lang="ed_gsi">gsi</a></li>
-					</ul>
-				</li>
-				<li class="dropdown">
-					<a href='javascript:void(0)' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span id="langSelected"></span> <span class="caret"></span></a>
-					<ul id="language" class="dropdown-menu language_menu_list" role="menu">
-					</ul>
-				</li>
-				<li class="dropdown">
-					<a href='javascript:void(0)' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span id="propSelected"></span> <span class="caret"></span></a>
-					<ul id="selProperty" class="dropdown-menu" role="menu">
-						<li class="q_only default"><a data-prop="label" href='javascript:void(0)'  class="lang" data-lang="ed_qt">question text</a></li>
-						<li class="o_only default"><a data-prop="label" href='javascript:void(0)'  class="lang" data-lang="ed_ct">choice text</a></li>
-						<li class="q_only"><a data-prop="hint" href='javascript:void(0)'  class="lang" data-lang="ed_qh">question hint</a></li>
-						<li><a data-prop="media" href='javascript:void(0)'  class="lang" data-lang="c_media">media</a></li>
-						<li class="q_only"><a data-prop="appearance" href='javascript:void(0)'  class="lang" data-lang="ed_appearance">appearance</a></li>
-						<li class="q_only"><a data-prop="parameters" href='javascript:void(0)'  class="lang" data-lang="ed_parameters">parameters</a></li>
-						<li class="q_only"><a data-prop="constraint" href='javascript:void(0)'  class="lang" data-lang="ed_con">constraint</a></li>
-						<li class="q_only"><a data-prop="constraint_msg" href='javascript:void(0)'  class="lang" data-lang="ed_con_msg">constraint message</a></li>
-						<li class="q_only"><a data-prop="relevant" href='javascript:void(0)'  class="lang" data-lang="ed_rel">relevant</a></li>
-						<li class="q_only"><a data-prop="required" href='javascript:void(0)'  class="lang" data-lang="ed_req">required</a></li>
-						<li class="q_only"><a data-prop="autoplay" href='javascript:void(0)'  class="lang" data-lang="ed_ap">auto play</a></li>
-						<li class="q_only"><a data-prop="accuracy" href='javascript:void(0)'  class="lang" data-lang="ed_at">accuracy</a></li>
-						<li class="q_only"><a data-prop="readonly" href='javascript:void(0)'  class="lang" data-lang="ed_ro">Read Only</a></li>
-						<li><a data-prop="display_name" href='javascript:void(0)'  class="lang" data-lang="ed_dn">display name</a></li>
-						<li class="q_only"><a data-prop="defaultanswer" href='javascript:void(0)'  class="lang" data-lang="c_default">default</a></li>
-						<li class="q_only"><a data-prop="calculation" href='javascript:void(0)'  class="lang" data-lang="ed_calc">calculation</a></li>
-						<li class="q_only"><a data-prop="guidance_hint" href='javascript:void(0)'  class="lang" data-lang="t_g">guidance</a></li>
-						<li class="q_only"><a data-prop="trigger" href='#'  class="lang" data-lang="c_trigger">trigger</a></li>
-					</ul>
-				</li>
-				<li class="notoptionslist"><input id="viewType" type="checkbox" checked
-												  data-onstyle="primary" data-offstyle="info"></li>
-				<li><a type="button" class="btn btn-success lang disabled m_save_survey" disabled="disabled">
-					<span class="lang" data-lang="c_save">Save</span>
-					<span class="badge">0</span></a></li>
-				<li><a type="button" data-lang="c_test"
-					   class="btn btn-primary lang m_test_survey" href='javascript:void(0)' target="_blank">Test</a></li>
-
-				<li id="m_help"><a class="lang" data-lang="m_help" href="http://www.smap.com.au/docs/online-editor.html" target="_blank">Help</a></li>
-
-			</ul>
-
-		</nav>
-
-	</div>
-</header>
--->
 
 <div id="content" class="editorContent">
 	<div class="container-fluid">

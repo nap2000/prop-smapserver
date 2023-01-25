@@ -60,7 +60,6 @@ requirejs.config({
         'common': ['jquery'],
         'datetimepicker': ['moment'],
         'bootstrap': ['jquery'],
-        'app/plugins': ['jquery'],
         'file_input': ['jquery'],
         'icheck': ['jquery'],
         'slimscroll': ['jquery'],

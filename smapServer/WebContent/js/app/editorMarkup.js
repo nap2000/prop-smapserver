@@ -74,7 +74,7 @@ define([
 		}
 		
 		h[++idx] = addPanelStyle(question.type, formIndex, qIndex, question.error, questionId, undefined);
-		h[++idx] = '<div class="panel-heading">';
+		h[++idx] = '<div class="card-body">';
 			h[++idx] = addErrorMsg(question.errorMsg);
 			h[++idx] = '<div class="row">';
 				
@@ -191,7 +191,7 @@ define([
 		}
 		
 		h[++idx] = addPanelStyle("choices", undefined, undefined, optionList.error, itemId, list_name);
-		h[++idx] = '<div class="panel-heading">';
+		h[++idx] = '<div class="card-body>';
 		h[++idx] = addErrorMsg(optionList.errorMsg);
 			h[++idx] = '<div class="row">';
 				
@@ -340,16 +340,16 @@ define([
 		var h = [],
 			idx = -1;
 		
-		h[++idx] = '<li class="panel editor_element question draggable';
+		h[++idx] = '<li class="card editor_element question draggable';
 
 		if(error) {
 			h[++idx] = ' error ';
 		}
 		
 		if(type === "begin repeat" || type === "begin group") {
-			h[++idx] = ' panel-warning" id="';
+			h[++idx] = ' bg-secondary" id="';
 		} else {
-			h[++idx] = ' panel-success" id="';
+			h[++idx] = ' bg-light" id="';
 		}
 		h[++idx] = elementId;
 		++globals.gElementIndex;

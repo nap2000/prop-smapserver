@@ -42,7 +42,6 @@ requirejs.config({
     },
     shim: {
     	'common': ['jquery'],
-    	'app/plugins': ['jquery'],
     	'crf': ['jquery']
 	
     	}
@@ -57,7 +56,6 @@ require([
          'app/monitorChart',
          'app/monitor', 
          'app/map-ol-mgmt',
-         'app/plugins',
          'crf'
          
          ], function($, jquery, common, localise, globals, moment, chart) {
