@@ -79,7 +79,7 @@ define([
 			h[++idx] = '<div class="row">';
 				
 			// Add question type
-				h[++idx] = '<div class="col-xs-2 ">';
+				h[++idx] = '<div class="col-sm-2 col-12 ">';
 					h[++idx] = '<div class="question_type';
 						if(question.published) {
 							h[++idx] = ' readonly';
@@ -88,28 +88,24 @@ define([
 						h[++idx] = addQType(question.type);
 					h[++idx] = '</div>';
 				h[++idx] = '</div>';	// End of question type cell
-				
-				// Add name and featured property cell
-				h[++idx] = '<div class="col-xs-8"><div class="row">';
-					
-					// Add question name cell
-					h[++idx] = '<div class="col-xs-12 col-md-3"><input class="qname form-control has_tt" title="';
-					h[++idx] = question.name;
-					h[++idx] = '" value="';
-					h[++idx] = question.name;
-					h[++idx] = '" ';
-						
-					if(question.published) {				// Mark disabled if the question has been published
-						h[++idx] = 'readonly="true" ';
-					}
-					h[++idx] = 'type="text"></div>';
 
-					// Add feature property cell
-					h[++idx] = addFeaturedProperty(question, formIndex, qIndex, undefined, undefined, questionId);
-				h[++idx] = '</div></div>';		// End of name and featured property cell
+				// Add question name cell
+				h[++idx] = '<div class="col-sm-3 col-12 "><input class="qname form-control has_tt" title="';
+				h[++idx] = question.name;
+				h[++idx] = '" value="';
+				h[++idx] = question.name;
+				h[++idx] = '" ';
+						
+				if(question.published) {				// Mark disabled if the question has been published
+					h[++idx] = 'readonly="true" ';
+				}
+				h[++idx] = 'type="text"></div>';		// End of name
+
+				// Add feature property cell
+				h[++idx] = addFeaturedProperty(question, formIndex, qIndex, undefined, undefined, questionId);
 				
 				// Add buttons
-				h[++idx] = '<div class="col-xs-2 q_icons_col">';
+				h[++idx] = '<div class="col-sm-2 col-12 q_icons_col">';
 					h[++idx] = '<div class="btn-group">';
 						if(question.type === "begin repeat" 
 								|| question.type === "begin group") {
@@ -431,7 +427,7 @@ define([
 			type = "option";
 		}
 		
-		h[++idx] = '<div class="col-xs-12 col-md-9 ';
+		h[++idx] = '<div class="col-sm-5 col-12 ';
 		h[++idx] = type;
 	
 		h[++idx] = '">';
