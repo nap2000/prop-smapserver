@@ -931,7 +931,7 @@ define({
     "ed_nl": "Not Linked",
     "ed_r_msg": "Required Text Message",
 	"ed_f_l": "The form to be launched must be specified as a parameter",
-	"ed_emp_rep": "Sub forms and groups should have at least one visible question.  Calculate questions are not considered visible.",
+	"ed_emp_rep": "Sub forms and groups should have at least one question.",
     "ed_hrk": "Unique Key",
     "ed_dk": "Data Key",
     "ed_csv": "CSV File",

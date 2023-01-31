@@ -1579,10 +1579,7 @@ define([
 
                         if(questions.length > 0) {
                             for(j = 0; j < questions.length; j++) {
-                                if(questions[j].type !== 'calculate') {
-                                    isEmpty = false;
-                                    break;
-                                }
+                                isEmpty = false;
                             }
                         }
 
@@ -1614,7 +1611,7 @@ define([
 		                    if(inGroup === true) {
 			                    if (questions[qSeq[j]].name.toLowerCase() === endName.toLowerCase()) {
 				                    break;
-			                    } else if (questions[qSeq[j]].type !== 'calculate') {
+			                    } else {
 				                    isEmpty = false;
 				                    break;
 			                    }
