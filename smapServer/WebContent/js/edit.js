@@ -39,7 +39,6 @@ require.config({
     },
     shim: {
     	'app/common': ['jquery'],
-        'jquery.autosize.min': ['jquery'],
     	'bootbox': ['bootstrap.min'],
     	'icheck': ['jquery'],
 		'multiselect': ['jquery', 'knockout'],
@@ -52,7 +51,6 @@ require([
          'app/common',
          'app/localise',
          'app/globals',
-         'jquery.autosize.min',
          'bootstrap.file-input',
          'bootbox',
          'toggle',
@@ -71,7 +69,6 @@ require([
 				common,
 				lang,
 				globals,
-				jqas,
 				bsfi,
 				bootbox,
 				toggle,

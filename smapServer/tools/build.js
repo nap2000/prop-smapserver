@@ -63,6 +63,10 @@
         {
             name: '../userTrail',
 	    exclude: ['jquery', 'bootstrap', 'ol3/ol']
+        },
+        {
+            name: '../meta',
+	    exclude: ['jquery', 'bootstrap']
         }
 
     ]

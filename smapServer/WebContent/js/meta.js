@@ -28,26 +28,21 @@ require.config({
 	locale: gUserLocale,
 	paths: {
 		app: '../app',
-		jquery: 'jquery-2.1.1',
 		lang_location: '..'
 	},
 	shim: {
-		'app/common': ['jquery'],
-		'bootstrap.min': ['jquery'],
-		'jquery.autosize.min': ['jquery']
+		'app/common': ['jquery']
 	}
 });
 
 require([
 		'jquery',
 		'app/common',
-		'bootstrap.min',
 		'modernizr',
 		'app/localise',
 		'app/ssc',
-		'app/globals',
-		'jquery.autosize.min'],
-	function($, common, bootstrap, modernizr, localise, ssc, globals) {
+		'app/globals'],
+	function($, common, modernizr, localise, ssc, globals) {
 
 		var	gMode = "survey",
 			gIdx;;
@@ -245,10 +240,10 @@ require([
 						h[++idx] = '<td>';
 						h[++idx] = '<button type="button" data-idx="';
 						h[++idx] = i;
-						h[++idx] = '" class="btn btn-primary btn-sm edit_preload"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>';
+						h[++idx] = '" class="btn btn-primary btn-sm edit_preload"><i class="fa fa-edit"></i></span></button>';
 						h[++idx] = '<button type="button" data-idx="';
 						h[++idx] = i;
-						h[++idx] = '" style="margin-left:2px;" class="btn btn-default btn-sm rm_preload danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+						h[++idx] = '" style="margin-left:2px;" class="btn btn-danger btn-sm rm_preload danger"><i class="fa fa-trash-alt"></i></button></button>';
 						h[++idx] = '</td>';
 						h[++idx] = '</tr>';
 					}
