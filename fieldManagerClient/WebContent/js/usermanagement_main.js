@@ -2239,7 +2239,7 @@ require([
 			h[++idx] = '<td>';
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-default btn-sm rm_ent btn-danger">';
+			h[++idx] = '" class="btn btn-sm rm_ent btn-danger">';
 			h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
 			h[++idx] = '</td>';
 			h[++idx] = '</tr>';

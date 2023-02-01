@@ -194,48 +194,49 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
+				<h5 class="modal-title lang" id="settingsLabel" data-lang="c_settings">Settings</h5>
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title lang" id="settingsLabel" data-lang="c_settings">Settings</h4>
+
 			</div>
 			<div class="modal-body">
 				<div id="settings_msg" class="alert alert-success" role="alert" style="display:none;"></div>
-				<form role="form" class="form-horizontal">
-					<div class="form-group">
+				<form role="form">
+					<div class="form-group row">
 						<label for="set_survey_name" data-lang="c_form" class="lang col-sm-2 control-label">form</label>
 						<div class="col-sm-10">
 							<input type="text" id="set_survey_name" required class="form-control survey_name">
 						</div>
 					</div>
 
-					<div class="form-group">
+					<div class="form-group row">
 						<label for="set_survey_ident" data-lang="ed_fi" class="lang col-sm-2 control-label">ident</label>
 						<div class="col-sm-10">
 							<input type="text" id="set_survey_ident" readonly class="form-control">
 						</div>
 					</div>
 
-					<div class="form-group">
+					<div class="form-group row">
 						<label for="set_project_name" data-lang="c_project" class="lang col-sm-2 control-label">Project</label>
 						<div class="col-sm-10">
 							<select id="set_project_name" class="form-control project_list"></select>
 						</div>
 					</div>
 
-					<div class="form-group">
+					<div class="form-group row">
 						<label for="set_default_language" data-lang="ed_dl" class="lang col-sm-2 control-label">language</label>
 						<div class="col-sm-10">
 							<select id="set_default_language" class="form-control language_list"></select>
 						</div>
 					</div>
 
-					<div class="form-group">
+					<div class="form-group row">
 						<label for="set_instance_name" data-lang="ed_in" class="lang col-sm-2 control-label" data-lang="ed_in">Instance Name</label>
 						<div class="col-sm-10">
 							<input type="text" id="set_instance_name" required class="form-control instance_name">
 						</div>
 					</div>
 
-					<div class="form-group">
+					<div class="form-group row">
 						<label for="set_style" data-lang="c_style" class="lang col-sm-2 control-label">Style</label>
 						<div class="col-sm-10">
 							<select id="set_style" class="form-control">
@@ -246,110 +247,113 @@
 						</div>
 					</div>
 
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
+					<div class="form-group row">
+						<div class="offset-sm-2 col-sm-1">
 							<div class="checkbox">
-								<label>
-									<input type="checkbox" id="task_file"><span class="lang" data-lang="ed_ld">allow import</span>
-								</label>
+								<input type="checkbox" id="task_file">
 							</div>
 						</div>
+						<label class="col-sm-9 control-label lang" data-lang="ed_ld" for="task_file"></label>
 					</div>
 
 					<div class="well">
-						<div class="form-group">
-							<div class="col-sm-offset-2 col-sm-10">
+						<div class="form-group row">
+							<div class="offset-sm-2 col-sm-1">
 								<div class="checkbox">
-									<label>
-										<input type="checkbox" id="timing_data"><span class="lang" data-lang="ed_td">timing data</span>
-									</label>
+									<input type="checkbox" id="timing_data">
 								</div>
 							</div>
+							<label class="col-sm-9 control-label lang" data-lang="ed_td" for="timing_data"></label>
 						</div>
 
-						<div class="form-group audit_location_data" style="display:none;">
-							<div class="col-sm-offset-2 col-sm-10">
+						<div class="form-group row audit_location_data" style="display:none;">
+							<div class="offset-sm-2 col-sm-1">
 								<div class="checkbox">
-									<label>
-										<input type="checkbox" id="audit_location_data"><span class="lang" data-lang="ed_rl"></span>
-									</label>
+									<input type="checkbox" id="audit_location_data">
 								</div>
 							</div>
+							<label class="col-sm-9 control-label lang" data-lang="ed_rl" for="audit_location_data"></label>
+
 						</div>
 
-						<div class="form-group audit_location_data" style="display:none;">
-							<div class="col-sm-offset-2 col-sm-10">
+						<div class="form-group row audit_location_data" style="display:none;">
+							<div class="offset-sm-2 col-sm-1">
 								<div class="checkbox">
-									<label>
-										<input type="checkbox" id="track_changes"><span class="lang" data-lang="ed_rc"></span>
-									</label>
+									<input type="checkbox" id="track_changes">
 								</div>
 							</div>
+							<label class="col-sm-9 control-label lang" data-lang="ed_rc" for="track_changes"></label>
+
 						</div>
 
 					</div>
 
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
+					<div class="form-group row">
+						<div class="offset-sm-2 col-sm-1">
 							<div class="checkbox">
-								<label>
-									<input type="checkbox" id="hide_on_device"><span class="lang" data-lang="ed_hod"></span>
-								</label>
+								<input type="checkbox" id="hide_on_device">
 							</div>
 						</div>
+						<label class="col-sm-9 control-label lang" data-lang="ed_hod" for="hide_on_device"></label>
+
 					</div>
 
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
+					<div class="form-group row">
+
+						<div class="offset-sm-2 col-sm-1">
 							<div class="checkbox">
-								<label>
-									<input type="checkbox" id="search_local_data"><span class="lang" data-lang="ed_sld"></span>
-								</label>
+								<input type="checkbox" id="search_local_data">
 							</div>
 						</div>
+						<label class="col-sm-9 control-label lang" data-lang="ed_sld" for="search_local_data"></label>
+
 					</div>
 
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
+					<div class="form-group row">
+
+						<div class="offset-sm-2 col-sm-1">
 							<div class="checkbox">
-								<label>
-									<input type="checkbox" id="data_survey"><span class="lang" data-lang="ed_ds"></span>
-								</label>
+								<input type="checkbox" id="data_survey">
 							</div>
 						</div>
+						<label class="col-sm-9 control-label lang" data-lang="ed_ds" for="data_survey"></label>
+
 					</div>
 
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
+					<div class="form-group row">
+
+						<div class="offset-sm-2 col-sm-1">
 							<div class="checkbox">
-								<label>
-									<input type="checkbox" id="oversight_survey"><span class="lang" data-lang="ed_os"></span>
-								</label>
+								<input type="checkbox" id="oversight_survey">
 							</div>
 						</div>
+						<label class="col-sm-9 control-label lang" data-lang="ed_as" for="oversight_survey"></label>
+
 					</div>
 
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
+					<div class="form-group row">
+
+						<div class="offset-sm-2 col-sm-1">
 							<div class="checkbox">
-								<label>
-									<input type="checkbox" id="read_only_survey"><span class="lang" data-lang="ed_ro"></span>
-								</label>
+								<input type="checkbox" id="read_only_survey">
 							</div>
 						</div>
+						<label class="col-sm-9 control-label lang" data-lang="ed_ro" for="read_only_survey"></label>
+
 					</div>
 
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
+					<div class="form-group row">
+
+						<div class="offset-sm-2 col-sm-1">
 							<div class="checkbox">
-								<label>
-									<input type="checkbox" id="exclude_empty"><span class="lang" data-lang="ed_ee">exclude empty</span>
-								</label>
+								<input type="checkbox" id="exclude_empty">
 							</div>
 						</div>
+						<label class="col-sm-9 control-label lang" data-lang="ed_ee" for="exclude_empty"></label>
+
 					</div>
 
-					<div class="form-group">
+					<div class="form-group row">
 						<label for="default_logo" data-lang="ed_drl" class="lang col-sm-2 control-label">drl</label>
 						<div class="col-sm-10">
 							<select id="default_logo" class="form-control">
@@ -357,30 +361,18 @@
 						</div>
 					</div>
 
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
+					<div class="form-group row">
+
+						<div class="offset-sm-2 col-sm-1">
 							<div class="checkbox">
-								<label>
-									<input type="checkbox" id="compress_pdf"><span class="lang" data-lang="ed_cpdf">compress</span>
-								</label>
+								<input type="checkbox" id="compress_pdf">
 							</div>
 						</div>
+						<label class="col-sm-9 control-label lang" data-lang="ed_cpdf" for="compress_pdf"></label>
+
 					</div>
 
 				</form>
-				<!--
-				<p class="lang" data-lang="msg_pdft"></p>
-				-->
-				
-				<!--
-				<form enctype="multipart/form-data" name="pdftemplate" role="form" class="form-horizontal"
-					  method="POST" accept-charset="utf-8">
-					<fieldset>
-						<input id="pdfSettings" type="hidden" name="settings" >
-						<input id="pdfSet" type="hidden" name="pdfSet" >
-					</fieldset>
-				</form>
-				-->
 
 			</div>
 
@@ -487,7 +479,7 @@
 						</div>
 					</div>
 					<div class="form-group new_form" style="display:none;">
-						<div class="col-sm-offset-2 col-sm-10">
+						<div class="offset-sm-2 col-sm-10">
 							<div class="checkbox">
 								<label>
 									<input type="checkbox" id="base_on_existing" ><span data-lang="e_b_e" class="lang">BE</span>
@@ -508,7 +500,7 @@
 						</div>
 					</div>
 					<div class="form-group reusing_form" style="display:none;">
-						<div class="col-sm-offset-2 col-sm-10">
+						<div class="offset-sm-2 col-sm-10">
 							<div class="checkbox">
 								<label>
 									<input type="checkbox" id="shared_results" ><span data-lang="e_s_r" class="lang">SR</span>

@@ -107,24 +107,25 @@ define([
 				// Add buttons
 				h[++idx] = '<div class="col-sm-2 col-12 q_icons_col">';
 					h[++idx] = '<div class="btn-group">';
+
+						h[++idx] = '<button tabindex="-1" class="btn btn-light delete_question ml-1" data-id="';
+						h[++idx] = questionId;
+						h[++idx] = '">';
+						h[++idx]='<i class="fas fa-trash-alt edit_icon"></i>';
+						h[++idx]='</button>';
+
 						if(question.type === "begin repeat" 
 								|| question.type === "begin group") {
 							
-							h[++idx] = '<a button tabindex="-1" class="btn btn-default" data-toggle="collapse"  href="#collapse';
+							h[++idx] = '<a button tabindex="-1" class="btn btn-light ml-1" data-toggle="collapse" href="#collapse';
 							h[++idx] = globals.gElementIndex;
-							h[++idx]='"><span class="glyphicon glyphicon-chevron-down edit_icon"></span></a>';
+							h[++idx]='"><i class="fas fa-chevron-down edit_icon"></i></a>';
 						} else if(question.type.indexOf("select") === 0 || question.type === "rank") {
 						
-							h[++idx] = '<a button tabindex="-1" class="btn btn-default edit_choice" ';
-							h[++idx]='"><span class="glyphicon glyphicon-edit edit_icon"></span></a>';
+							h[++idx] = '<a button tabindex="-1" class="btn btn-light edit_choice ml-1" ';
+							h[++idx]='"><i class="fa fa-edit edit_icon"></i></a>';
 							
 						}
-						
-						h[++idx] = '<button tabindex="-1" class="btn btn-default delete_question" data-id="';
-						h[++idx] = questionId;
-						h[++idx] = '">';
-						h[++idx]='<span class="glyphicon glyphicon-remove-circle edit_icon"></span>';
-						h[++idx]='</button>';
 					 
 					h[++idx] = '</div>';
 				h[++idx] = '</div>';		// End of button cell
@@ -206,8 +207,8 @@ define([
 				h[++idx] = '<div class="col-xs-2 q_icons_col">';
 					h[++idx] = '<div class="btn-group">';
 					
-						h[++idx] = '<a button tabindex="-1" class="btn btn-default edit_choice" ';
-						h[++idx]='"><span class="glyphicon glyphicon-edit edit_icon"></span></a>';
+						h[++idx] = '<a button tabindex="-1" class="btn btn-light edit_choice" ';
+						h[++idx]='"><i class="fa fa-edit edit_icon"></i></a>';
 					
 						//h[++idx] = '<a button tabindex="-1" class="btn btn-default" data-toggle="collapse"  href="#collapse';
 						//h[++idx] = globals.gElementIndex;
@@ -390,12 +391,12 @@ define([
 				h[++idx] = '<span class="has_tt" title="Question type: ';
 				h[++idx] = name;
 				h[++idx] = '">';
-				if(types[i].glyphicon) {
-					tArray = types[i].glyphicon.split(',');
+				if(types[i].icon) {
+					tArray = types[i].icon.split(',');
 					for(j = 0; j < tArray.length; j++) {
-						h[++idx] = '<span class="glyphicon glyphicon-';
+						h[++idx] = '<i class="fas fa-';
 						h[++idx] = tArray[j].trim();
-						h[++idx] = ' edit_type"></span>';
+						h[++idx] = ' edit_type"></i>';
 					}
 				} else if(types[i].image) {
 					h[++idx] = '<img class="edit_image" src="';
@@ -911,7 +912,7 @@ define([
 		for(i = 0; i < collapsedPanels.length; i++) {
 			var $collapsedPanel = $('#' + collapsedPanels[i]);
 			$collapsedPanel.find('.collapse').first().addClass("in");
-			$collapsedPanel.find('.edit_icon.glyphicon-chevron-down').first().removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+			$collapsedPanel.find('.edit_icon.fa-chevron-down').first().removeClass('fa-chevron-down').addClass('fa-chevron-up');
 			
 		}
 		
@@ -930,13 +931,13 @@ define([
 
         var survey = globals.model.survey;
 
-		$('li.panel.question').each(function() {
+		$('li.card.question').each(function() {
 			var $this = $(this);
 			var fId = $this.data("fid");
 			var id = $this.data("id");
 			var question = survey.forms[fId].questions[id];
 
-			$this.find('.panel-heading .row .question').html(getFeaturedMarkup(question, "question"));
+			$this.find('.card-body .row .question').html(getFeaturedMarkup(question, "question"));
 
 		});
 

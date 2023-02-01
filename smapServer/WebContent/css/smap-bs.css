@@ -99,13 +99,13 @@ tr.deleted td a {
 }
 
 .danger {
-	background-color:red;
+	background-color:red!important;
 	border-color:red;
 	color: white;
 }
 
 .warning {
-	background-color:orange;
+	background-color:orange!important;
 	border-color:orange;
 	color: white;
 }
@@ -330,7 +330,7 @@ li .panel-body {
 /*
 /* Icons */
 
-.edit_icon.glyphicon-remove-circle {
+.edit_icon.fa-trash-alt {
 	color: red;
 }
 
@@ -420,7 +420,7 @@ li .panel-body {
 	opacity: 0.3;
 }
 
-li.panel {
+li.card {
 	margin-bottom: 0px;
 	
 }
@@ -457,7 +457,7 @@ textarea {
 }
 
 #formList textarea[data-prop="label"] {
-	background-color: #cbeeff;
+	background-color: #80cdf3;
 }
 
 #formList textarea.calculate {

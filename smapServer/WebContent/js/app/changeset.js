@@ -2288,8 +2288,8 @@ define([
             globals.errors = [];		// Clear the existing errors
             $('tr.editor_element.error', '#choiceView').removeClass("error");
             $('tr.editor_element.warning', '#choiceView').removeClass("warning");
-            $('li.panel.error', '#formList').removeClass("error");
-            $('li.panel.warning', '#formList').removeClass("warning");
+            $('li.card.error', '#formList').removeClass("error");
+            $('li.card.warning', '#formList').removeClass("warning");
 
             for(i = 0; i < forms.length; i++) {
                 var deleted = false;
