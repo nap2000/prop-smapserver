@@ -16,7 +16,7 @@
 	moment: 'moment-with-locales.min',
 	d3: 'd3.v4.min',
 	charting: 'chart.min.3.8.0',
-	toggle: 'bootstrap-toggle.min',
+	toggle: 'bootstrap4-toggle.min',
 	bootstrap: 'bootstrap.min',
         bootstrapfileinput: 'bootstrap.file-input',
     	bootstrapcolorpicker: '../../../../smapServer/WebContent/js/libs/bootstrap-colorpicker.min',

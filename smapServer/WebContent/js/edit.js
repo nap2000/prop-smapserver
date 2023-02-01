@@ -28,7 +28,7 @@ require.config({
     paths: {
     	app: '../app',
     	bootbox: 'bootbox.min',
-    	toggle: 'bootstrap-toggle.min',
+    	toggle: 'bootstrap4-toggle.min',
     	moment: 'moment-with-locales.min',
     	lang_location: '..',
     	icheck: '/wb/plugins/iCheck/icheck.min',
@@ -123,6 +123,7 @@ $(document).ready(function() {
 	window.bootbox = bootbox;
 	window.moment = moment;
 
+	setTheme();
     setCustomEdit();
 	setupUserProfile(false);
 	localise.setlang();		// Localise HTML

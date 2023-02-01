@@ -13,11 +13,11 @@
 
 	<title class="lang" data-lang="c_edit"></title>
 
+	<link href="/css/bootstrap.v4.5.min.css" rel="stylesheet">
 	<link href="/css/wb/plugins/iCheck/custom.css" rel="stylesheet">
 	<link rel="shortcut icon" href="/favicon.ico" />
 	<link rel="stylesheet" href="css/normalize.css" />
-	<link href="/css/bootstrap.v4.5.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="/css/bootstrap-toggle.min.css" />
+	<link rel="stylesheet" href="/css/bootstrap4-toggle.min.css" />
 	<link rel="stylesheet" href="/css/bootstrap-colorpicker.min.css" />
 	<link href="/css/fa.v5.15.1.all.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="/css/smap-bs.css" type="text/css"/>
@@ -135,13 +135,16 @@
 					<a data-prop="trigger" href='#'  class="dropdown-item q_only lang" data-lang="c_trigger">trigger</a>
 				</div>
 			</li>
-			<li class="nav-item notoptionslist"><input id="viewType" type="checkbox" checked
-											  data-onstyle="primary" data-offstyle="info"></li>
-			<li class="nav-item"><a type="button" class="nav-link btn btn-success lang disabled m_save_survey" disabled="disabled">
-				<span class="lang" data-lang="c_save">Save</span>
-				<span class="badge">0</span></a></li>
-			<li class="nav-item"><a type="button" data-lang="c_test"
-				   class="nav-link btn btn-primary lang m_test_survey" href='javascript:void(0)' target="_blank">Test</a></li>
+			<li>
+				<form class="form-inline">
+					<input id="viewType" type="checkbox" checked data-onstyle="primary" data-offstyle="info">
+					<a type="button" class="btn btn-success lang disabled m_save_survey" disabled="disabled">
+						<span class="lang" data-lang="c_save">Save</span>
+						<span class="badge badge-light">0</span></a>
+					<a type="button" data-lang="c_test"
+					   class="btn btn-primary lang m_test_survey" href='javascript:void(0)' target="_blank">Test</a>
+				</form>
+			</li>
 
 			<li id="m_help" class="nav-item"><a class="nav-link lang" data-lang="m_help" href="http://www.smap.com.au/docs/online-editor.html" target="_blank">Help</a></li>
 
@@ -160,11 +163,11 @@
 </div>
 <div id="toolbar" class="editorContent">
 	<div class="row margin-bottom" id="error-nav-btns" style="display:none;">
-		<div class="col-xs-6">
-			<button type="button" id="next-warning" class="btn btn-warning"><span class="badge warning-count">0</span></button>
+		<div class="col-6">
+			<button type="button" id="next-warning" class="btn btn-warning mx-auto d-block"><span class="badge badge-light warning-count">0</span></button>
 		</div>
-		<div class="col-xs-6">
-			<button type="button" id="next-error" class="btn btn-danger"><span class="badge error-count">0</span></button>
+		<div class="col-6">
+			<button type="button" id="next-error" class="btn btn-danger mx-auto d-block"><span class="badge badge-light error-count">0</span></button>
 		</div>
 	</div>
 	<div id="toolbar_types"></div>
