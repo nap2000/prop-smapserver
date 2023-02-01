@@ -193,10 +193,10 @@ define([
 			h[++idx] = '<div class="row">';
 				
 				// Add name
-				h[++idx] = '<div class="col-xs-8"><div class="row">';
-					
+				h[++idx] = '<div class="col-8"><div class="row">';
+
 					// Add choice name cell
-					h[++idx] = '<div class="col-xs-12 col-md-3"><input class="olname form-control has_tt" title="List Name" value="';
+					h[++idx] = '<div class="col-12 col-md-3"><input class="olname form-control has_tt" title="List Name" value="';
 						h[++idx] = list_name;
 						h[++idx] = '" ';
 					h[++idx] = 'type="text"></div>';
@@ -204,7 +204,7 @@ define([
 				h[++idx] = '</div></div>';		// End of name 
 				
 				// Add buttons
-				h[++idx] = '<div class="col-xs-2 q_icons_col">';
+				h[++idx] = '<div class="col-2 q_icons_col">';
 					h[++idx] = '<div class="btn-group">';
 					
 						h[++idx] = '<a button tabindex="-1" class="btn btn-light edit_choice" ';

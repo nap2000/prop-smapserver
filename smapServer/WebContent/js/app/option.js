@@ -175,20 +175,20 @@ define([
 				
 				// Add option name and value cell
 				h[++idx] = '<td>';
-						h[++idx] = '<div class="btn-group">';
-						h[++idx] = '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="edit_icon glyphicon glyphicon-option-vertical"></span> <span class="caret"></span>';
+						h[++idx] = '<div class="dropdown">';
+						h[++idx] = '<button type="button" class="btn btn-secondary btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i> ';
 						h[++idx] = '</button>';
-							h[++idx] = '<ul class="dropdown-menu">';
-								h[++idx] = '<li><a href="javascript:void(0)" class="delete_option">';
+							h[++idx] = '<div class="dropdown-menu">';
+								h[++idx] = '<a href="javascript:void(0)" class="dropdown-item delete_option">';
 								h[++idx] = localise.set["c_del"];
-								h[++idx] = '</a></li>';
-								h[++idx] = '<li><a href="javascript:void(0)" class="add_option_before">';
+								h[++idx] = '</a>';
+								h[++idx] = '<a href="javascript:void(0)" class="dropdown-item add_option_before">';
 								h[++idx] = localise.set["ed_ab"];
-								h[++idx] = '</a></li>';
-								h[++idx] = '<li><a href="javascript:void(0)" class="add_option_after">';
+								h[++idx] = '</a>';
+								h[++idx] = '<a href="javascript:void(0)" class="dropdown-item add_option_after">';
 								h[++idx] = localise.set["ed_aa"];
-								h[++idx] = '</a></li>';
-							h[++idx] = '</ul>';
+								h[++idx] = '</a>';
+							h[++idx] = '</div>';
 						h[++idx] = '</div>';
 				h[++idx] = '</td>';	// End of menu button
 				

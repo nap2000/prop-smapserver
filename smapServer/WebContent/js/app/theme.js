@@ -32,6 +32,9 @@ function setTheme() {
         var $color = $('nav.navbar-smap, .navbar-collapse, .bg-navbar-smap,  .navbar-smap .navbar-toggler, .navbar-smap .navbar-brand, .navbar-smap .navbar-nav .nav-link , .navbar-smap .nav > li > a:focus');
         var $light = $('.nav-link a:hover, .bg-navbar-smap .nav > li > a:hover, ul.nav-second-level, .canvas-menu.mini-navbar .nav-second-level');
 
+        if(!navbarColor || navbarColor == "undefined") {
+            navbarColor = $color.css("background-color");
+        }
         $color.removeClass("navbar-light bg-light");
         $color.css("background-color", navbarColor);
         //$color.css("background", navbarColor);

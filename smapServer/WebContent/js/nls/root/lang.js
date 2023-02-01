@@ -375,6 +375,7 @@ define({
     "c_submitter": "Submitter",
     "c_code": "Code",
     "c_dirn": "Direction",
+    "c_rtl": "RTL",
     "c_current": "Current",
     "c_quality": "Quality",
     "c_low": "Low",

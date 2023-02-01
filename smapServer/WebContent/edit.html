@@ -182,10 +182,6 @@
 	</div>
 </div>
 
-<div class="col-md-12 text-center">
-	<img class="hour_glass" src="/images/ajax-loader.gif" style="display:none;position: fixed; top: 200px; left:300px;" alt="hourglass" height="60" width="60">
-</div>
-
 <!-- Informational -->
 <div id="infobox" class="alert alert-warning alert-dismissible" role="alert" style="display:none;">
 	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -1671,9 +1667,9 @@
 
 			<div class="modal-body">
 				<div class="container-fluid">
-					<form role="form" class="form-horizontal">
-						<div class="form-group">
-							<label for="filter_name" data-lang="c_name" class="lang col-sm-2 control-label">name</label>
+					<form role="form">
+						<div class="form-group row">
+							<label for="filter_name" data-lang="c_name" class="lang col-sm-2 control-label"></label>
 							<div class="col-sm-10">
 								<input type="text" id="filter_name" required class="form-control">
 							</div>
@@ -1691,13 +1687,13 @@
 </div>
 
 
-<!-- Model to edit languages -->
+<!-- Modal to edit languages -->
 <div id="editLanguageModal" class="modal fade" role="dialog" aria-labelledby="editLanguageLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
+				<h5 class="modal-title lang" data-lang="c_langs" id="editLanguageLabel">lang</h5>
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title lang" data-lang="c_langs" id="editLanguageLabel">lang</h4>
 			</div>
 
 			<div class="modal-body">
@@ -1706,10 +1702,7 @@
 						<div class="table-responsive">
 							<div id="language_edit_list"></div>
 						</div>
-						<a id="addLanguage" type="button" class="btn btn-default lang" data-lang="c_add" aria-label="Add Language">add</a>
-					</div>
-					<div class="col-md-12 text-center">
-						<img class="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
+						<a id="addLanguage" type="button" class="btn btn-success lang" data-lang="c_add" aria-label="Add Language">add</a>
 					</div>
 				</div>
 			</div>
@@ -1723,7 +1716,7 @@
 
 </div>
 
-<!-- Model to edit pull data settings -->
+<!-- Model to edit pull data settings No longer used -->
 <div id="pulldataModal" class="modal fade" role="dialog" aria-labelledby="pulldataLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -1742,9 +1735,6 @@
 						</div>
 						<a id="addPulldata" type="button" class="btn btn-default lang" data-lang="c_add" aria-label="Add Pulldata">add</a>
 					</div>
-					<div class="col-md-12 text-center">
-						<img class="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
-					</div>
 				</div>
 			</div>
 
@@ -1757,8 +1747,8 @@
 </div>
 
 <!-- Model to show details on selected ident -->
-<div id="slu" class="modal fade" role="dialog" aria-labelledby="pulldataLabel" aria-hidden="true">
-	<div class="modal-dialog">
+<div id="slu" class="modal fade" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -1778,8 +1768,8 @@
 </div>
 
 <!-- Model to show available survey idents -->
-<div id="gsi" class="modal fade" role="dialog" aria-labelledby="pulldataLabel" aria-hidden="true">
-	<div class="modal-dialog">
+<div id="gsi" class="modal fade" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>

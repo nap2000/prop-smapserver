@@ -1205,7 +1205,7 @@ function setupQuestionTypes($elem, columns, draggable, currentType) {
 		if(types[i].canSelect && isCompatible(types[i].compatTypes, currentType) ) {
 
 			name = localise.set[types[i].trans];
-			h[++idx] = '<div class="col-xs-12 ';
+			h[++idx] = '<div class="col-12 ';
 			h[++idx] = columns === 1 ? '" ' : 'col-md-6" ';
 			h[++idx] = ' style="height:65px;">';
 			h[++idx] = '<button type="button" tabindex="-1" class="btn btn-large btn-light border border-primary question_type_sel full_width_btn';
@@ -3008,7 +3008,7 @@ function updateLanguageView() {
 	h[++idx] = '<tr>';
 	h[++idx] = '<th>' + localise.set["c_name"], + '</th>';
 	h[++idx] = '<th>' + localise.set["c_code"] + '</th>';
-	h[++idx] = '<th>' + localise.set["c_dirn"] + '</th>';
+	h[++idx] = '<th>' + localise.set["c_rtl"] + '</th>';
 	h[++idx] = '</tr>';
 	h[++idx] = '</thead>';
 	h[++idx] = '<tbody class="table-striped">';
@@ -3053,8 +3053,8 @@ function updateLanguageView() {
 
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-default btn-sm rm_language danger">';
-			h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+			h[++idx] = '" class="btn btn-sm btn-light rm_language mb-1">';
+			h[++idx] = '<i class="fas fa-trash-alt edit_icon"></i></button>';
 
 			h[++idx] = '</td>';
 			// end actions

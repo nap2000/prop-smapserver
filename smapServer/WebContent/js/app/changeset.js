@@ -616,10 +616,10 @@ define([
             if(numberChanges === 0) {
                 globals.changes = [];
                 $('.m_save_survey').addClass("disabled").prop("disabled", true).find('.badge').html(numberChanges);
-                $('.m_languages,#m_required,#m_not_required').closest('li').removeClass("disabled").prop("disabled", false);
+                $('.m_languages,#m_required,#m_not_required').removeClass("disabled").prop("disabled", false);
             } else {
                 $('.m_save_survey').find('.badge').html(numberChanges);
-                $('.m_languages,#m_required,#m_not_required').closest('li').addClass("disabled").prop("disabled", true);
+                $('.m_languages,#m_required,#m_not_required').addClass("disabled").prop("disabled", true);
                 $('.m_validate').removeClass("disabled").prop("disabled", false);
                 $('.m_save_survey').removeClass("disabled").prop("disabled", false);
                 //if(numberIssues("error") === 0) {
@@ -1603,6 +1603,9 @@ define([
 		                var isEmpty = true;
 		                var inGroup = false;
 
+                        if(!qSeq) {
+                            qSeq = [];
+                        }
 		                /*
 						 * Get the questions in the group
 						 */
