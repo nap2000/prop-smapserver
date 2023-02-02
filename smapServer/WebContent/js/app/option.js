@@ -261,11 +261,11 @@ define([
 		h[++idx] = '<div class="question-controls">';
 			h[++idx] = '<div class="row">';
 				h[++idx] = '<div class="col-md-6">';
-					h[++idx] = '<form role="form" class="form-horizontal">';
+					h[++idx] = '<form role="form">';
 						
 						// A control to set option list name
 						if(!listName) {
-							h[++idx] = '<div class="form-group">';
+							h[++idx] = '<div class="form-group row">';
 								h[++idx] = '<label class="col-sm-2">';
 									h[++idx] = localise.set["ed_cl"];
 								h[++idx] = '</label>';
@@ -278,7 +278,7 @@ define([
 						}
 
 						// A control to select the filter type
-						h[++idx] = '<div class="form-group filter_only" style="display:none;">';
+						h[++idx] = '<div class="form-group row filter_only" style="display:none;">';
 							h[++idx] = '<label class="col-sm-2">';
 								h[++idx] = localise.set["c_filter"];
 							h[++idx] = '</label>';
@@ -303,15 +303,15 @@ define([
 						
 					h[++idx] = '</form>';
 				h[++idx] = '</div>';
-				h[++idx] = '<div class="col-md-6">';
-					h[++idx] = '<button class="btn btn-primary pull-right exitOptions">';
+				h[++idx] = '<div class="col-md-6 text-right">';
+					h[++idx] = '<button class="btn btn-primary exitOptions">';
 						h[++idx] = localise.set["c_back"];
 					h[++idx] = '</button>';
 					h[++idx] = '<div class="custom_filter_only" style="display:none;">';
-						h[++idx] = '<form role="form" class="form-horizontal">';
+						h[++idx] = '<form role="form">';
 						
 							if(!listName) {
-								h[++idx] = '<div class="form-group">';
+								h[++idx] = '<div class="form-group row">';
 									h[++idx] = '<label class="col-sm-2">';
 									h[++idx] = localise.set["ed_choice_f"];
 									h[++idx] = '</label>';
@@ -327,15 +327,15 @@ define([
 							h[++idx] = '<div id="custom_filters">';
 							h[++idx] = '</div>';
 						h[++idx] = '</form>';
-						h[++idx] = '<button id="addFilter" class="btn btn-default" style="margin-top: 4px;">';
+						h[++idx] = '<button id="addFilter" class="btn btn-default mt-2">';
 						h[++idx] = localise.set["ed_afc"];
 						h[++idx] = '</button>';
 					h[++idx] = '</div>';  // Custom filter only
 					
 					h[++idx] = '<div class="cascade_filter_only" style="display:none;">';
-						h[++idx] = '<form role="form" class="form-horizontal">';
+						h[++idx] = '<form role="form">';
 
-							h[++idx] = '<div class="form-group">';
+							h[++idx] = '<div class="form-group row">';
 								h[++idx] = '<label class="col-sm-2">';
 									h[++idx] = localise.set["ed_cspq"];
 								h[++idx] = '</label>';
@@ -346,7 +346,7 @@ define([
 								h[++idx] = '</div>';
 							h[++idx] = '</div>';
 			
-							h[++idx] = '<div class="form-group">';
+							h[++idx] = '<div class="form-group row">';
 								h[++idx] = '<label class="col-sm-2">';
 									h[++idx] = localise.set["ed_csp"];
 								h[++idx] = '</label>';
