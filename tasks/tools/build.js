@@ -34,7 +34,7 @@
 	moment: '../../../../smapServer/WebContent/js/libs/moment-with-locales.2.24.0',
 	datetimepicker: '../../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-4.17.47',
 	rmm: '../../../../smapServer/WebContent/js/libs/responsivemobilemenu',
-        multiselect: '../../../../smapServer/WebContent/js/libs/bootstrap-multiselect',
+        multiselect: '../../../../smapServer/WebContent/js/libs/bootstrap-multiselect.min',
         knockout: '../../../../smapServer/WebContent/js/libs/knockout',
 
 	mapbox: '../../../../smapServer/WebContent/js/libs/mapbox/js/mapbox',

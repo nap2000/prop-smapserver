@@ -49,7 +49,7 @@ requirejs.config({
     	peity: '../../../../js/libs/wb/peity/jquery.peity.min',
     	calendar: '../../../../js/libs/wb/plugins/fullcalendar/fullcalendar.min',
         es: '../../../../js/libs/wb/plugins/fullcalendar/es',
-        multiselect: '../../../../js/libs/bootstrap-multiselect',
+        multiselect: '../../../../js/libs/bootstrap-multiselect.min',
         knockout: '../../../../js/libs/knockout'
     },
     shim: {

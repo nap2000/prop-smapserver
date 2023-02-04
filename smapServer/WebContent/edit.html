@@ -1522,38 +1522,49 @@
 
 						<div class="form-group row">
 							<label for="a_source" data-lang="c_source" class="lang col-sm-4 control-label">source</label>
-							<div class="col-sm-8" id="a_source">
-								<div class="radio">
-									<label>
-										<input type="radio" name="search_source" value="worksheet" checked="checked"><span class="lang" data-lang="ed_cws"></span>
-									</label>
+							<div class="col-sm-8 row" id="a_source">
+
+								<div class="col-sm-1">
+									<div class="radio">
+										<input type="radio" name="search_source" value="worksheet" checked="checked">
+									</div>
 								</div>
-								<div class="radio">
-									<label>
-										<input type="radio" name="search_source" value="csv"><span class="lang" data-lang="c_csv"></span>
-									</label>
+								<label class="col-sm-11 control-label lang" data-lang="ed_cws"></label>
+
+								<div class="col-sm-1">
+									<div class="radio">
+										<input type="radio" name="search_source" value="csv">
+									</div>
 								</div>
-								<div class="radio">
-									<label>
-										<input type="radio" name="search_source" value="survey"><span class="lang" data-lang="c_survey"></span>
-									</label>
+								<label class="col-sm-11 control-label lang mb-0" data-lang="c_csv"></label>
+
+								<div class="col-sm-1">
+									<div class="radio">
+										<input type="radio" name="search_source" value="survey">
+									</div>
 								</div>
+								<label class="col-sm-11 control-label lang mb-0" data-lang="c_survey"></label>
+
 							</div>
+
 						</div>
 
 						<div class="form-group row appearance_search_details">
 							<label for="a_access" data-lang="c_access" class="lang col-sm-4 control-label">ac</label>
-							<div class="col-sm-8" id="a_access">
-								<div class="radio">
-									<label>
-										<input type="radio" name="search_access" value="offline" checked="checked"><span class="lang" data-lang="ed_offline"></span>
-									</label>
+							<div class="col-sm-8 row" id="a_access">
+								<div class="col-sm-1">
+									<div class="radio">
+										<input type="radio" name="search_access" value="offline" checked="checked">
+									</div>
 								</div>
-								<div class="radio">
-									<label>
-										<input type="radio" name="search_access" value="online"><span class="lang" data-lang="ed_online"></span>
-									</label>
+								<label class="col-sm-11 control-label lang" data-lang="ed_offline"></label>
+
+								<div class="col-sm-1">
+									<div class="radio">
+										<input type="radio" name="search_access" value="online">
+									</div>
 								</div>
+								<label class="col-sm-11 control-label lang" data-lang="ed_online"></label>
 							</div>
 						</div>
 
@@ -1583,22 +1594,20 @@
 
 							<div class="well a_choice_values" style="display:none;">
 								<div class="form-group row search_label">
-									<label data-lang="ed_clabs" class="lang col-sm-4 control-label"></label>
+									<b><label data-lang="ed_clabs" class="lang col-sm-12 control-label"></label></b>
 								</div>
 
-								<div id="search_label_list">
-
-								</div>
+								<div id="search_label_list"></div>
 							</div>
 
 							<div class="form-group row online_appearance_field">
-								<div class="col-sm-offset-4 col-sm-8">
+								<div class="offset-sm-4 col-sm-1">
 									<div class="checkbox">
-										<label>
-											<input type="checkbox" id="a_fe"><span class="lang" data-lang="ed_fe"></span>
-										</label>
+										<input type="checkbox" id="a_fe">
 									</div>
 								</div>
+								<label class="col-sm-5 control-label lang" data-lang="ed_fe" for="a_fe"></label>
+
 							</div>
 
 							<div class="filter_expression">

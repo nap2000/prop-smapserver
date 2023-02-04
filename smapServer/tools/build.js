@@ -23,7 +23,7 @@
 	slimscroll: 'wb/plugins/slimscroll/jquery.slimscroll.min',
         pace: 'wb/plugins/pace/pace.min',
 	icheck: 'wb/plugins/iCheck/icheck.min',
-        multiselect: 'bootstrap-multiselect',
+        multiselect: 'bootstrap-multiselect.min',
         knockout: 'knockout',
     },
     dir: '../smapServer',

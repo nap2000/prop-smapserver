@@ -33,7 +33,7 @@ require.config({
     	lang_location: '..',
     	icheck: '/wb/plugins/iCheck/icheck.min',
 	    bootstrapcolorpicker: 'bootstrap-colorpicker.min',
-		multiselect: 'bootstrap-multiselect',
+		multiselect: 'bootstrap-multiselect.min',
 		knockout: 'knockout'
 
     },
@@ -4177,7 +4177,7 @@ function setNoFilter() {
 
 				for (i = 0; i < languages.length; i++) {
 					labelControlId = 'a_search_label' + i;
-					h[++idx] = '<div class="form-group search_label">';
+					h[++idx] = '<div class="form-group row search_label">';
 						h[++idx] = '<label for="';
 						h[++idx] = labelControlId;
 						h[++idx] = '" class="col-sm-4 control-label">';

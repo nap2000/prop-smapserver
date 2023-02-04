@@ -46,7 +46,7 @@ requirejs.config({
         svgsave: '../../../../js/libs/saveSvgAsPng',
         pace: '../../../../js/libs/wb/plugins/pace/pace.min',
         qrcode: '../../../../js/libs/jquery-qrcode-0.14.0.min',
-        multiselect: '../../../../js/libs/bootstrap-multiselect',
+        multiselect: '../../../../js/libs/bootstrap-multiselect.min',
         knockout: '../../../../js/libs/knockout',
 	    slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll.min'
 

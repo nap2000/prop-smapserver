@@ -51,7 +51,7 @@ requirejs.config({
         slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll.min',
         pace: '../../../../js/libs/wb/plugins/pace/pace.min',
         crf: '../../../../js/libs/commonReportFunctions',
-        multiselect: '../../../../js/libs/bootstrap-multiselect',
+        multiselect: '../../../../js/libs/bootstrap-multiselect.min',
         qrcode: '../../../../js/libs/jquery-qrcode-0.14.0.min'
 
     },
