@@ -725,21 +725,21 @@ $(document).ready(function() {
 			}
 			appearances.push(pdfcols);
 		}
-		colour = $('input', '#a_pdflabelbg').val();
+		colour = $('#a_pdflabelbg').val();
 		if(colour && colour !== '#ffffff') {
 			 var c1 = colour.substring(1,3);
 			 var c2 = colour.substring(3,5);
 			 var c3 = colour.substring(5,7);
 			 appearances.push('pdflabelbg_' + c1 + '_' + c2 + '_' +c3);
 		}
-		colour = $('input', '#a_pdfvaluebg').val();
+		colour = $('#a_pdfvaluebg').val();
 		if(colour && colour !== '#ffffff') {
 			var c1 = colour.substring(1,3);
 			var c2 = colour.substring(3,5);
 			var c3 = colour.substring(5,7);
 			appearances.push('pdfvaluebg_' + c1 + '_' + c2 + '_' +c3);
 		}
-		colour = $('input', '#a_pdfmarkercolor').val();
+		colour = $('#a_pdfmarkercolor').val();
 		if(colour && colour !== '#ffffff') {
 			var c1 = colour.substring(1,3);
 			var c2 = colour.substring(3,5);
@@ -2159,7 +2159,7 @@ function respondToEvents($context) {
 				if(pdfa.length > 3) {
 					colour += pdfa[3];
 				}
-				$('input', '#a_pdflabelbg').colorpicker('setValue', colour);
+				$('#a_pdflabelbg').colorpicker('setValue', colour);
 			}  else if(appearanceArray[i].indexOf('pdfvaluebg_') === 0) {
 				pdfa = appearanceArray[i].split('_');
 				foundAppearance = true;
@@ -2172,7 +2172,7 @@ function respondToEvents($context) {
 				if(pdfa.length > 3) {
 					colour += pdfa[3];
 				}
-				$('input', '#a_pdfvaluebg').colorpicker('setValue', colour);
+				$('#a_pdfvaluebg').colorpicker('setValue', colour);
 
 			} else if(appearanceArray[i].indexOf('pdfmarkercolor_') === 0) {
 				pdfa = appearanceArray[i].split('_');
@@ -2186,7 +2186,7 @@ function respondToEvents($context) {
 				if(pdfa.length > 3) {
 					colour += pdfa[3];
 				}
-				$('input', '#a_pdfmarkercolor').colorpicker('setValue', colour);
+				$('#a_pdfmarkercolor').colorpicker('setValue', colour);
 
 			} else if(appearanceArray[i].indexOf('pdfspace_') === 0) {
 				pdfa = appearanceArray[i].split('_');

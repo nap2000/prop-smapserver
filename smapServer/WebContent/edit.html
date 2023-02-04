@@ -115,23 +115,23 @@
 					<span id="propSelected"></span>
 				</a>
 				<div id="selProperty" class="dropdown-menu" aria-labelledby="m_property">
-					<a data-prop="label" href='javascript:void(0)'  class="dropdown-item q_only default lang" data-lang="ed_qt">question text</a>
+					<a data-prop="label" href='#'  class="dropdown-item q_only default lang" data-lang="ed_qt">question text</a>
 					<a data-prop="label" href='javascript:void(0)'  class="dropdown-item o_only default lang" data-lang="ed_ct">choice text</a>
 					<a data-prop="hint" href='javascript:void(0)'  class="dropdown-item q_only lang" data-lang="ed_qh">question hint</a>
 					<a data-prop="media" href='javascript:void(0)'  class="dropdown-item lang" data-lang="c_media">media</a>
-					<a data-prop="appearance" href='javascript:void(0)'  class="dropdown-item lang" data-lang="ed_appearance">appearance</a>
-					<a data-prop="parameters" href='javascript:void(0)'  class="dropdown-item q_only lang" data-lang="ed_parameters">parameters</a>
-					<a data-prop="constraint" href='javascript:void(0)'  class="dropdown-item lq_only ang" data-lang="ed_con">constraint</a>
-					<a data-prop="constraint_msg" href='javascript:void(0)'  class="dropdown-item q_only lang" data-lang="ed_con_msg">constraint message</a>
-					<a data-prop="relevant" href='javascript:void(0)'  class="dropdown-item q_only lang" data-lang="ed_rel">relevant</a>
-					<a data-prop="required" href='javascript:void(0)'  class="dropdown-item q_only lang" data-lang="ed_req">required</a>
-					<a data-prop="autoplay" href='javascript:void(0)'  class="dropdown-item q_only lang" data-lang="ed_ap">auto play</a>
-					<a data-prop="accuracy" href='javascript:void(0)'  class="dropdown-item q_only lang" data-lang="ed_at">accuracy</a>
-					<a data-prop="readonly" href='javascript:void(0)'  class="dropdown-item q_only lang" data-lang="ed_ro">Read Only</a>
-					<a data-prop="display_name" href='javascript:void(0)'  class="dropdown-item lang" data-lang="ed_dn">display name</a>
-					<a data-prop="defaultanswer" href='javascript:void(0)'  class="dropdown-item q_only lang" data-lang="c_default">default</a>
-					<a data-prop="calculation" href='javascript:void(0)'  class="dropdown-item q_only lang" data-lang="ed_calc">calculation</a>
-					<a data-prop="guidance_hint" href='javascript:void(0)'  class="dropdown-item q_only lang" data-lang="t_g">guidance</a>
+					<a data-prop="appearance" href='#'  class="dropdown-item lang" data-lang="ed_appearance">appearance</a>
+					<a data-prop="parameters" href='#'  class="dropdown-item q_only lang" data-lang="ed_parameters">parameters</a>
+					<a data-prop="constraint" href='#'  class="dropdown-item lq_only ang" data-lang="ed_con">constraint</a>
+					<a data-prop="constraint_msg" href='#'  class="dropdown-item q_only lang" data-lang="ed_con_msg">constraint message</a>
+					<a data-prop="relevant" href='#'  class="dropdown-item q_only lang" data-lang="ed_rel">relevant</a>
+					<a data-prop="required" href='#'  class="dropdown-item q_only lang" data-lang="ed_req">required</a>
+					<a data-prop="autoplay" href='#'  class="dropdown-item q_only lang" data-lang="ed_ap">auto play</a>
+					<a data-prop="accuracy" href='#'  class="dropdown-item q_only lang" data-lang="ed_at">accuracy</a>
+					<a data-prop="readonly" href='#'  class="dropdown-item q_only lang" data-lang="ed_ro">Read Only</a>
+					<a data-prop="display_name" href='#'  class="dropdown-item lang" data-lang="ed_dn">display name</a>
+					<a data-prop="defaultanswer" href='#'  class="dropdown-item q_only lang" data-lang="c_default">default</a>
+					<a data-prop="calculation" href='#'  class="dropdown-item q_only lang" data-lang="ed_calc">calculation</a>
+					<a data-prop="guidance_hint" href='#'  class="dropdown-item q_only lang" data-lang="t_g">guidance</a>
 					<a data-prop="trigger" href='#'  class="dropdown-item q_only lang" data-lang="c_trigger">trigger</a>
 				</div>
 			</li>
@@ -142,7 +142,7 @@
 						<span class="lang" data-lang="c_save">Save</span>
 						<span class="badge badge-light">0</span></a>
 					<a type="button" data-lang="c_test"
-					   class="btn btn-primary lang m_test_survey" href='javascript:void(0)' target="_blank">Test</a>
+					   class="btn btn-primary lang m_test_survey" href='#' target="_blank">Test</a>
 				</form>
 			</li>
 
@@ -885,24 +885,24 @@
 
 <!-- Modal for setting appearances -->
 <div id="appearanceModal" class="modal fade" role="dialog" aria-labelledby="typeModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
+				<h5 class="modal-title lang" data-lang="ed_appearance">appearance</h5>
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title lang" data-lang="ed_appearance">appearance</h4>
 			</div>
 
 			<div class="modal-body">
-				<ul class="nav nav-pills" role="tablist">
-					<li id="standardTab" role="presentation" class="active"><a href="#" class="lang" data-lang="c_standard">standard</a></li>
-					<li id="searchTab" role="presentation"><a href="#" class="lang appearance_field a_search" data-lang="br_s">search</a></li>
-					<li id="pdfTab" role="presentation"><a href="#" class="lang" data-lang="ed_pdf_layout">pdf</a></li>
+				<ul class="nav nav-pills">
+					<li id="standardTab" class="nav-item"><a href="#" class="lang nav-link active" data-lang="c_standard">standard</a></li>
+					<li id="searchTab" class="nav-item"><a href="#" class="lang appearance_field a_search nav-link" data-lang="br_s">search</a></li>
+					<li id="pdfTab" class="nav-item"><a href="#" class="lang nav-link" data-lang="ed_pdf_layout">pdf</a></li>
 				</ul>
-				<div id="standardPanel" class="appearancetab">
+				<div id="standardPanel" class="appearancetab mt-2">
 					<div class="container-fluid">
-						<form id="appearance_form" role="form" class="form-horizontal">
+						<form id="appearance_form" role="form">
 
-							<div class="form-group appearance_field a_page">
+							<div class="form-group row appearance_field a_page">
 								<label for="a_width" data-lang="ed_pl" class="lang col-sm-4 control-label">page</label>
 								<div class="col-sm-8">
 									<select id="a_page" class="form-control">
@@ -913,7 +913,7 @@
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_image_type">
+							<div class="form-group row appearance_field a_image_type">
 								<label for="a_width" data-lang="ed_image_type" class="lang col-sm-4 control-label">image</label>
 								<div class="col-sm-8">
 									<select id="a_image_type" class="form-control">
@@ -925,7 +925,7 @@
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_date_type">
+							<div class="form-group row appearance_field a_date_type">
 								<label for="a_width" data-lang="ed_date_type" class="lang col-sm-4 control-label">date</label>
 								<div class="col-sm-8">
 									<select id="a_date_type" class="form-control">
@@ -943,7 +943,7 @@
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_select1_type">
+							<div class="form-group row appearance_field a_select1_type">
 								<label for="a_select1_type" data-lang="ed_select_type" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<select id="a_select1_type" class="form-control">
@@ -959,7 +959,7 @@
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_select_type">
+							<div class="form-group row appearance_field a_select_type">
 								<label for="a_select_type" data-lang="ed_select_type" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<select id="a_select_type" class="form-control">
@@ -973,7 +973,7 @@
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_number_columns">
+							<div class="form-group row appearance_field a_number_columns">
 								<label for="a_number_columns" data-lang="ed_numb_cols" class="lang col-sm-4 control-label">cols</label>
 								<div class="col-sm-8">
 									<select id="a_number_columns" class="form-control">
@@ -994,147 +994,161 @@
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_no_calendar">
-								<div class="col-sm-offset-4 col-sm-8">
+							<div class="form-group row appearance_field a_no_calendar">
+								<label for="a_no_calendar" data-lang="ed_nc" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-8">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" id="a_no_calendar"><span class="lang" data-lang="ed_nc">no cal</span>
+											<input type="checkbox" id="a_no_calendar">
 										</label>
 									</div>
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_likert">
-								<div class="col-sm-offset-4 col-sm-8">
+							<div class="form-group row appearance_field a_likert">
+								<label for="a_likert" data-lang="c_likert" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-8">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" id="a_likert"><span class="lang" data-lang="c_likert">likert</span>
+											<input type="checkbox" id="a_likert">
 										</label>
 									</div>
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_no_buttons">
-								<div class="col-sm-offset-4 col-sm-8">
+							<div class="form-group row appearance_field a_no_buttons">
+								<label for="a_no_buttons" data-lang="ed_nb" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-8">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" id="a_no_buttons"><span class="lang" data-lang="ed_nb">nb</span>
+											<input type="checkbox" id="a_no_buttons">
 										</label>
 									</div>
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_placement-map">
-								<div class="col-sm-offset-4 col-sm-8">
+							<div class="form-group row appearance_field a_placement-map">
+								<label for="a_placement-map" data-lang="ed_place_map" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-8">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" id="a_placement-map"><span class="lang" data-lang="ed_place_map"></span>
+											<input type="checkbox" id="a_placement-map">
 										</label>
 									</div>
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_selfie">
-								<div class="col-sm-offset-4 col-sm-8">
+							<div class="form-group row appearance_field a_selfie">
+								<label for="a_selfie" data-lang="ed_selfie" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-8">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" id="a_selfie"><span class="lang" data-lang="ed_selfie"></span>
+											<input type="checkbox" id="a_selfie">
 										</label>
 									</div>
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_new">
-								<div class="col-sm-offset-4 col-sm-8">
+							<div class="form-group row appearance_field a_new">
+								<label for="a_new" data-lang="ed_new" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-8">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" id="a_new"><span class="lang" data-lang="ed_new"></span>
+											<input type="checkbox" id="a_new">
 										</label>
 									</div>
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_read_nfc">
-								<div class="col-sm-offset-4 col-sm-8">
+							<div class="form-group row appearance_field a_read_nfc">
+								<label for="a_read_nfc" data-lang="ed_read_nfc" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-8">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" id="a_read_nfc"><span class="lang" data-lang="ed_read_nfc"></span>
+											<input type="checkbox" id="a_read_nfc">
 										</label>
 									</div>
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_rating">
-								<div class="col-sm-offset-4 col-sm-8">
+							<div class="form-group row appearance_field a_rating">
+								<label for="a_rating" data-lang="ed_r" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-8">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" id="a_rating"><span class="lang" data-lang="ed_r">rating</span>
+											<input type="checkbox" id="a_rating">
 										</label>
 									</div>
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_picker">
-								<div class="col-sm-offset-4 col-sm-8">
+							<div class="form-group row appearance_field a_picker">
+								<label for="a_picker" data-lang="ed_pick" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-8">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" id="a_picker"><span class="lang" data-lang="ed_pick">picker</span>
+											<input type="checkbox" id="a_picker">
 										</label>
 									</div>
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_vertical">
-								<div class="col-sm-offset-4 col-sm-8">
+							<div class="form-group row appearance_field a_vertical">
+								<label for="a_vertical" data-lang="c_vertical" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-8">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" id="a_vertical"><span class="lang" data-lang="c_vertical">vertical</span>
+											<input type="checkbox" id="a_vertical">
 										</label>
 									</div>
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_bearing">
-								<div class="col-sm-offset-4 col-sm-8">
+							<div class="form-group row appearance_field a_bearing">
+								<label for="a_bearing" data-lang="ed_bear" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-8">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" id="a_bearing"><span class="lang" data-lang="ed_bear">bearing</span>
+											<input type="checkbox" id="a_bearing">
 										</label>
 									</div>
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_numbers">
-								<div class="col-sm-offset-4 col-sm-8">
+							<div class="form-group row appearance_field a_numbers">
+								<label for="a_numbers" data-lang="ed_sn" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-8">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" id="a_numbers"><span class="lang" data-lang="ed_sn">numbers</span>
+											<input type="checkbox" id="a_numbers">
 										</label>
 									</div>
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_url">
-								<div class="col-sm-offset-4 col-sm-8">
+							<div class="form-group row appearance_field a_url">
+								<label for="a_url" data-lang="c_url" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-8">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" id="a_url"><span class="lang" data-lang="c_url">numbers</span>
+											<input type="checkbox" id="a_url">
 										</label>
 									</div>
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_sep">
-								<div class="col-sm-offset-4 col-sm-8">
+							<div class="form-group row appearance_field a_sep">
+								<label for="a_sep" data-lang="ed_sep" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-8">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" id="a_sep"><span class="lang" data-lang="ed_sep">sep</span>
+											<input type="checkbox" id="a_sep">
 										</label>
 									</div>
 								</div>
 							</div>
 
-							<div class="form-group appearance_field a_width">
+							<div class="form-group row appearance_field a_width">
 								<label for="a_width" data-lang="ed_w" class="lang col-sm-4 control-label">order</label>
 								<div class="col-sm-8">
 									<select id="a_width" class="form-control">
@@ -1155,17 +1169,18 @@
 								</div>
 							</div>
 
-							<div class="form-group">
-								<div class="col-sm-offset-4 col-sm-8">
+							<div class="form-group row">
+								<label for="a_hidden" data-lang="ed_hidden" class="lang col-sm-4 control-label"></label>
+								<div class="col-sm-8">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" id="a_hidden"><span class="lang" data-lang="ed_hidden">hide</span>
+											<input type="checkbox" id="a_hidden">
 										</label>
 									</div>
 								</div>
 							</div>
 
-							<div class="form-group a_other">
+							<div class="form-group row a_other">
 								<label for="p_other" data-lang="c_other" class="lang col-sm-4 control-label">other</label>
 								<div class="col-sm-8">
 									<input type="text" id="a_other" class="form-control">
@@ -1175,20 +1190,21 @@
 					</div>
 				</div>
 
-				<div id="pdfPanel" style="display:none;" class="appearancetab">
-					<form id="appearance_pdf_form" role="form" class="form-horizontal">
+				<div id="pdfPanel" style="display:none;" class="appearancetab mt-2">
+					<form id="appearance_pdf_form" role="form">
 
-						<div class="form-group">
-							<div class="col-sm-offset-4 col-sm-8">
+						<div class="form-group row">
+							<label for="a_pdfno" data-lang="ed_pdfno" class="lang col-sm-4 control-label"></label>
+							<div class="col-sm-8">
 								<div class="checkbox">
 									<label>
-										<input type="checkbox" id="a_pdfno"><span class="lang" data-lang="ed_pdfno">hide</span>
+										<input type="checkbox" id="a_pdfno">
 									</label>
 								</div>
 							</div>
 						</div>
 
-						<div class="form-group pdf_appearance_field">
+						<div class="form-group row pdf_appearance_field">
 							<label for="a_pdf_lw" data-lang="ed_lw" class="lang col-sm-4 control-label">width</label>
 							<div class="col-sm-8">
 								<select id="a_pdf_lw" class="form-control">
@@ -1207,7 +1223,7 @@
 							</div>
 						</div>
 
-						<div class="form-group pdf_appearance_field">
+						<div class="form-group row pdf_appearance_field">
 							<label for="a_pdfheight" data-lang="ed_height" class="lang col-sm-4 control-label">height</label>
 							<div class="col-sm-8">
 								<input type="number" id="a_pdfheight">
@@ -1215,7 +1231,7 @@
 						</div>
 
 						<div class="well pdf_appearance_field">
-							<div class="form-group pdf_appearance_field">
+							<div class="form-group row pdf_appearance_field">
 								<p class="lang" data-lang="ed_pdfcols_help"></p>
 								<label for="a_pdfcols_number" data-lang="ed_numb_cols" class="lang col-sm-4 control-label">width</label>
 								<div class="col-sm-8">
@@ -1235,124 +1251,128 @@
 								</div>
 							</div>
 
-							<div class="form-group pdfcols pdfcols1">
+							<div class="form-group row pdfcols pdfcols1">
 								<label id="a_pdfcols_1_l" for="a_pdfcols_1" class="col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<input type="number" id="a_pdfcols_1">
 								</div>
 							</div>
 
-							<div class="form-group pdfcols pdfcols2">
+							<div class="form-group row pdfcols pdfcols2">
 								<label id="a_pdfcols_2_l" for="a_pdfcols_2" class="col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<input type="number" id="a_pdfcols_2">
 								</div>
 							</div>
 
-							<div class="form-group pdfcols pdfcols3">
+							<div class="form-group row pdfcols pdfcols3">
 								<label id="a_pdfcols_3_l" for="a_pdfcols_3" class="col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<input type="number" id="a_pdfcols_3">
 								</div>
 							</div>
 
-							<div class="form-group pdfcols pdfcols4">
+							<div class="form-group row pdfcols pdfcols4">
 								<label id="a_pdfcols_4_l" for="a_pdfcols_4" class="col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<input type="number" id="a_pdfcols_4">
 								</div>
 							</div>
 
-							<div class="form-group pdfcols pdfcols5">
+							<div class="form-group row pdfcols pdfcols5">
 								<label id="a_pdfcols_5_l" for="a_pdfcols_5" class="col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<input type="number" id="a_pdfcols_5">
 								</div>
 							</div>
 
-							<div class="form-group pdfcols pdfcols6">
+							<div class="form-group row pdfcols pdfcols6">
 								<label id="a_pdfcols_6_l" for="a_pdfcols_6" class="col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<input type="number" id="a_pdfcols_6">
 								</div>
 							</div>
 
-							<div class="form-group pdfcols pdfcols7">
+							<div class="form-group row pdfcols pdfcols7">
 								<label id="a_pdfcols_7_l" for="a_pdfcols_7" class="col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<input type="number" id="a_pdfcols_7">
 								</div>
 							</div>
 
-							<div class="form-group pdfcols pdfcols8">
+							<div class="form-group row pdfcols pdfcols8">
 								<label id="a_pdfcols_8_l" for="a_pdfcols_8" class="col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<input type="number" id="a_pdfcols_8">
 								</div>
 							</div>
 
-							<div class="form-group pdfcols pdfcols9">
+							<div class="form-group row pdfcols pdfcols9">
 								<label id="a_pdfcols_9_l" for="a_pdfcols_9" class="col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<input type="number" id="a_pdfcols_9">
 								</div>
 							</div>
 
-							<div class="form-group pdfcols pdfcols10">
+							<div class="form-group row pdfcols pdfcols10">
 								<label id="a_pdfcols_10_l" for="a_pdfcols_10" class="col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<input type="number" id="a_pdfcols_10">
 								</div>
 							</div>
-
-
 						</div>
 
-						<div class="form-group pdf_appearance_field">
-							<label for="a_pdflabelbg" data-lang="ed_bgc" class="lang control-label col-sm-4">background</label>
+						<div class="form-group row pdf_appearance_field">
+							<label for="a_pdflabelbg" data-lang="ed_bgc" class="lang control-label col-sm-4"></label>
 							<div class="col-sm-6">
-								<div id="a_pdflabelbg" class="input-group colorpicker-component">
-									<input type="text" value="#ffffff" class="form-control" />
-									<span class="input-group-addon"><i></i></span>
+								<div class="input-group colorpicker-component">
+									<input id="a_pdflabelbg" type="text" value="#ffffff" class="form-control" />
+									<div class="input-group-append">
+										<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i></i></span></button>
+									</div>
 								</div>
 							</div>
 						</div>
 
-						<div class="form-group pdf_appearance_field">
-							<label for="a_pdfvaluebg" data-lang="ed_vbgc" class="lang control-label col-sm-4">value background</label>
+						<div class="form-group row pdf_appearance_field">
+							<label for="a_pdfvaluebg" data-lang="ed_vbgc" class="lang control-label col-sm-4"></label>
 							<div class="col-sm-6">
-								<div id="a_pdfvaluebg" class="input-group colorpicker-component">
-									<input type="text" value="#ffffff" class="form-control" />
-									<span class="input-group-addon"><i></i></span>
+								<div class="input-group colorpicker-component">
+									<input id="a_pdfvaluebg" type="text" value="#ffffff" class="form-control" />
+									<div class="input-group-append">
+										<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i></i></span></button>
+									</div>
 								</div>
 							</div>
 						</div>
 
-						<div class="form-group pdf_appearance_field">
-							<label for="a_pdfmarkercolor" data-lang="ed_mc" class="lang control-label col-sm-4">value background</label>
+						<div class="form-group row pdf_appearance_field">
+							<label for="a_pdfmarkercolor" data-lang="ed_mc" class="lang control-label col-sm-4"></label>
 							<div class="col-sm-6">
-								<div id="a_pdfmarkercolor" class="input-group colorpicker-component">
-									<input type="text" value="#ffffff" class="form-control" />
-									<span class="input-group-addon"><i></i></span>
+								<div class="input-group colorpicker-component">
+									<input id="a_pdfmarkercolor" type="text" value="#ffffff" class="form-control" />
+									<div class="input-group-append">
+										<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i></i></span></button>
+									</div>
 								</div>
 							</div>
 						</div>
 
-						<div class="form-group pdf_appearance_field">
+						<div class="form-group row pdf_appearance_field">
 							<label for="a_pdfspace" data-lang="ed_sa" class="lang col-sm-4 control-label">space</label>
 							<div class="col-sm-8">
 								<input type="number" id="a_pdfspace">
 							</div>
 						</div>
 
-						<div class="form-group pdf_appearance_field">
+						<div class="form-group row pdf_appearance_field">
 							<label for="a_pdfround" data-lang="ed_round" class="lang col-sm-4 control-label">round</label>
 							<div class="col-sm-8">
 								<input  min="0" max="10" type="number" id="a_pdfround">
 							</div>
 						</div>
 
-						<div class="form-group pdf_appearance_field">
+						<div class="form-group row pdf_appearance_field">
 							<div class="col-sm-offset-4 col-sm-8">
 								<div class="checkbox">
 									<label>
@@ -1362,41 +1382,43 @@
 							</div>
 						</div>
 
-						<div class="form-group pdf_appearance_field">
-							<div class="col-sm-offset-4 col-sm-8">
+						<div class="form-group row pdf_appearance_field">
+							<label for="a_pdflabelcaps" data-lang="ed_caps" class="lang col-sm-4 control-label"></label>
+							<div class="col-sm-8">
 								<div class="checkbox">
 									<label>
-										<input type="checkbox" id="a_pdflabelcaps"><span class="lang" data-lang="ed_caps"></span>
+										<input type="checkbox" id="a_pdflabelcaps">
 									</label>
 								</div>
 							</div>
 						</div>
 
-						<div class="form-group pdf_appearance_field">
-							<div class="col-sm-offset-4 col-sm-8">
+						<div class="form-group row pdf_appearance_field">
+							<label for="a_pdflabelbold" data-lang="ed_l_bold" class="lang col-sm-4 control-label"></label>
+							<div class="col-sm-8">
 								<div class="checkbox">
 									<label>
-										<input type="checkbox" id="a_pdflabelbold"><span class="lang" data-lang="ed_l_bold"></span>
+										<input type="checkbox" id="a_pdflabelbold">
 									</label>
 								</div>
 							</div>
 						</div>
 
-						<div class="form-group">	<!-- This appearance is never hidden because it can apply to a hidden question -->
+						<div class="form-group row">	<!-- This appearance is never hidden because it can apply to a hidden question -->
 							<label for="a_pdfaddto" class="col-sm-4 control-label lang" data-lang="ed_add_to"></label>
 							<div class="col-sm-8">
 								<select id="a_pdfaddto" class="form-control"></select>
 							</div>
 						</div>
 
-						<div class="form-group pdf_appearance_field">
+						<div class="form-group row pdf_appearance_field">
 							<label for="a_pdfzoom" data-lang="ed_map_zoom" class="lang col-sm-4 control-label">zoom</label>
 							<div class="col-sm-8">
 								<input  min="1" max="20" type="number" id="a_pdfzoom">
 							</div>
 						</div>
 
-						<div class="form-group pdf_appearance_field">
+						<div class="form-group row pdf_appearance_field">
 							<label for="a_pdfmapsource" class="col-sm-4 control-label lang" data-lang="ed_map_source"></label>
 							<div class="col-sm-8">
 								<select id="a_pdfmapsource" class="form-control">
@@ -1406,7 +1428,7 @@
 							</div>
 						</div>
 
-						<div class="form-group pdf_appearance_field a_pdfmap_mb">
+						<div class="form-group row pdf_appearance_field a_pdfmap_mb">
 							<label for="a_pdfmap" class="col-sm-4 control-label lang" data-lang="ed_map_style"></label>
 							<div class="col-sm-8">
 								<select id="a_pdfmap" class="form-control">
@@ -1423,13 +1445,13 @@
 						</div>
 
 						<div class="well pdf_custom_map">
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="a_pdfaccount" data-lang="u_mb_a" class="lang col-sm-4 control-label">account</label>
 								<div class="col-sm-8">
 									<input id="a_pdfaccount">
 								</div>
 							</div>
-							<div class="form-group">
+							<div class="form-group row">
 								<label for="a_pdfcustommap" data-lang="u_mb_s" class="lang col-sm-4 control-label">map style</label>
 								<div class="col-sm-8">
 									<input id="a_pdfcustommap">
@@ -1437,51 +1459,56 @@
 							</div>
 						</div>
 
-						<div class="form-group pdf_appearance_field">
-							<div class="col-sm-offset-4 col-sm-8">
+						<div class="form-group row pdf_appearance_field">
+							<label for="a_pdfapp" data-lang="ed_app" class="lang col-sm-4 control-label"></label>
+							<div class="col-sm-8">
 								<div class="checkbox">
 									<label>
-										<input type="checkbox" id="a_pdfapp"><span class="lang" data-lang="ed_app"></span>
+										<input type="checkbox" id="a_pdfapp">
 									</label>
 								</div>
 							</div>
 						</div>
 
-						<div class="form-group pdf_appearance_field. a_pdfhyperlink">
-							<div class="col-sm-offset-4 col-sm-8">
+						<div class="form-group row pdf_appearance_field a_pdfhyperlink">
+							<label for="a_pdfhyperlink" data-lang="ed_hyperlink" class="lang col-sm-4 control-label"></label>
+							<div class="col-sm-8">
 								<div class="checkbox">
 									<label>
-										<input type="checkbox" id="a_pdfhyperlink"><span class="lang" data-lang="ed_hyperlink"></span>
+										<input type="checkbox" id="a_pdfhyperlink">
 									</label>
 								</div>
 							</div>
 						</div>
 
-						<div class="form-group pdf_appearance_field">
-							<div class="col-sm-offset-4 col-sm-8">
+						<div class="form-group row pdf_appearance_field">
+							<label for="a_pdfbarcode" data-lang="ed_barcode" class="lang col-sm-4 control-label"></label>
+							<div class="col-sm-8">
 								<div class="checkbox">
 									<label>
-										<input type="checkbox" id="a_pdfbarcode"><span class="lang" data-lang="ed_barcode"></span>
+										<input type="checkbox" id="a_pdfbarcode">
 									</label>
 								</div>
 							</div>
 						</div>
 
-						<div class="form-group pdf_appearance_field">
-							<div class="col-sm-offset-4 col-sm-8">
+						<div class="form-group row pdf_appearance_field">
+							<label for="a_pdfshowimage" data-lang="ed_si" class="lang col-sm-4 control-label"></label>
+							<div class="col-sm-8">
 								<div class="checkbox">
 									<label>
-										<input type="checkbox" id="a_pdfshowimage"><span class="lang" data-lang="ed_si"></span>
+										<input type="checkbox" id="a_pdfshowimage">
 									</label>
 								</div>
 							</div>
 						</div>
 
-						<div class="form-group pdf_appearance_field">
-							<div class="col-sm-offset-4 col-sm-8">
+						<div class="form-group row pdf_appearance_field">
+							<label for="a_pdfstretch" data-lang="ed_stretch" class="lang col-sm-4 control-label"></label>
+							<div class="col-sm-8">
 								<div class="checkbox">
 									<label>
-										<input type="checkbox" id="a_pdfstretch"><span class="lang" data-lang="ed_stretch"></span>
+										<input type="checkbox" id="a_pdfstretch">
 									</label>
 								</div>
 							</div>
@@ -1490,10 +1517,10 @@
 					</form>
 				</div>
 
-				<div id="searchPanel" style="display:none;" class="appearancetab">
-					<form id="appearance_search_form" role="form" class="form-horizontal">
+				<div id="searchPanel" style="display:none;" class="appearancetab mt-2">
+					<form id="appearance_search_form" role="form">
 
-						<div class="form-group">
+						<div class="form-group row">
 							<label for="a_source" data-lang="c_source" class="lang col-sm-4 control-label">source</label>
 							<div class="col-sm-8" id="a_source">
 								<div class="radio">
@@ -1514,7 +1541,7 @@
 							</div>
 						</div>
 
-						<div class="form-group appearance_search_details">
+						<div class="form-group row appearance_search_details">
 							<label for="a_access" data-lang="c_access" class="lang col-sm-4 control-label">ac</label>
 							<div class="col-sm-8" id="a_access">
 								<div class="radio">
@@ -1532,14 +1559,14 @@
 
 						<div class="appearance_search_details" style="display:none;">
 
-							<div class="form-group search_csv">
+							<div class="form-group row search_csv">
 								<label for="a_csv_identifier" data-lang="ed_csv" class="lang col-sm-4 control-label">file</label>
 								<div class="col-sm-8">
 									<select id="a_csv_identifier" class="form-control linkable_files"></select>
 								</div>
 							</div>
 
-							<div class="form-group search_survey">
+							<div class="form-group row search_survey">
 								<label for="a_survey_identifier" data-lang="c_survey" class="lang col-sm-4 control-label">survey</label>
 								<div class="col-sm-8">
 									<select id="a_survey_identifier" class="form-control linkable_surveys"></select>
@@ -1547,7 +1574,7 @@
 							</div>
 
 
-							<div class="form-group search_value a_choice_values">
+							<div class="form-group row search_value a_choice_values">
 								<label for="a_search_value" data-lang="ed_cval" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<select id="a_search_value" class="form-control column_select"></select>
@@ -1555,7 +1582,7 @@
 							</div>
 
 							<div class="well a_choice_values" style="display:none;">
-								<div class="form-group search_label">
+								<div class="form-group row search_label">
 									<label data-lang="ed_clabs" class="lang col-sm-4 control-label"></label>
 								</div>
 
@@ -1564,7 +1591,7 @@
 								</div>
 							</div>
 
-							<div class="form-group online_appearance_field">
+							<div class="form-group row online_appearance_field">
 								<div class="col-sm-offset-4 col-sm-8">
 									<div class="checkbox">
 										<label>
@@ -1575,7 +1602,7 @@
 							</div>
 
 							<div class="filter_expression">
-								<div class="form-group">
+								<div class="form-group row">
 									<label or="a_fe_val" class="col-sm-4 control-label lang" data-lang="ed_e"></label>
 									<div class="col-sm-8">
 										<textarea id="a_fe_val"></textarea>
@@ -1584,14 +1611,14 @@
 							</div>
 
 							<div class="classic_filter">
-								<div class="form-group a_filter_column">
+								<div class="form-group row a_filter_column">
 									<label for="a_filter_column" data-lang="ed_fc" class="lang col-sm-4 control-label">filter column</label>
 									<div class="col-sm-8">
 										<select id="a_filter_column" class="form-control column_select"></select>
 									</div>
 								</div>
 
-								<div class="form-group has_filter">
+								<div class="form-group row has_filter">
 									<label for="a_match" data-lang="ed_m" class="lang col-sm-4 control-label">match</label>
 									<div class="col-sm-8">
 										<select id="a_match" class="form-control">
@@ -1606,7 +1633,7 @@
 									</div>
 								</div>
 
-								<div class="form-group has_filter">
+								<div class="form-group row has_filter">
 									<label for="a_filter_value" data-lang="ed_fv" class="lang control-label col-sm-4"></label>
 									<div class="col-sm-8">
 										<div class="input-group mb-3">
@@ -1618,14 +1645,14 @@
 									</div>
 								</div>
 
-								<div class="form-group a_second_filter_column">
+								<div class="form-group row a_second_filter_column">
 									<label for="a_second_filter_column" data-lang="ed_sfc" class="lang col-sm-4 control-label">second filter</label>
 									<div class="col-sm-8">
 										<select id="a_second_filter_column" class="form-control column_select"></select>
 									</div>
 								</div>
 
-								<div class="form-group has_second_filter">
+								<div class="form-group row has_second_filter">
 									<label for="a_filter_value" data-lang="ed_sfv" class="lang control-label col-sm-4"></label>
 									<div class="col-sm-8">
 										<div class="input-group mb-3">
