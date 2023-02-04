@@ -303,10 +303,12 @@ define([
 						
 					h[++idx] = '</form>';
 				h[++idx] = '</div>';
-				h[++idx] = '<div class="col-md-6 text-right">';
-					h[++idx] = '<button class="btn btn-primary exitOptions">';
+				h[++idx] = '<div class="col-md-6">';
+					h[++idx] = '<div class="text-right">';
+				    h[++idx] = '<button class="btn btn-primary exitOptions mb-2">';
 						h[++idx] = localise.set["c_back"];
 					h[++idx] = '</button>';
+					h[++idx] = '</div>';
 					h[++idx] = '<div class="custom_filter_only" style="display:none;">';
 						h[++idx] = '<form role="form">';
 						
@@ -327,7 +329,7 @@ define([
 							h[++idx] = '<div id="custom_filters">';
 							h[++idx] = '</div>';
 						h[++idx] = '</form>';
-						h[++idx] = '<button id="addFilter" class="btn btn-default mt-2">';
+						h[++idx] = '<button id="addFilter" class="btn btn-light mt-2">';
 						h[++idx] = localise.set["ed_afc"];
 						h[++idx] = '</button>';
 					h[++idx] = '</div>';  // Custom filter only
@@ -431,7 +433,6 @@ define([
 			if (filters.hasOwnProperty(filter)) {
 				globals.gFilterArray.push(filter);	// Save filters as ordered array
 				h[++idx] = '<div class="checkbox">';
-			    h[++idx] = '<label>';
 			      h[++idx] = '<input type="checkbox" ';
 			      if(survey.filters[filter]) {
 			    	  h[++idx] = 'checked=true ';
@@ -439,6 +440,7 @@ define([
 			      h[++idx] = 'value="';
 			      h[++idx] = filter;
 			      h[++idx] = '"> ';
+				  h[++idx] = '<label>';
 			      h[++idx] = filter
 			    h[++idx] = '</label>';
 			    h[++idx] = '</div>';
