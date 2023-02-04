@@ -67,7 +67,7 @@
 	<div class="bg-light mt-4 row">
 
 		<div class="selected_templates col-sm-4 col-xs-12">
-			<a id="addPreload" type="button" class="btn btn-default lang" aria-label="Add Preload" data-lang="c_add">add</a>
+			<a id="addPreload" type="button" class="btn btn-success lang" aria-label="Add Preload" data-lang="c_add">add</a>
 		</div>
 
 	</div>
@@ -88,54 +88,32 @@
 			</table>
 		</div>
 	</div>
-	<!--
-	<div class="row">
-		<div class="col-lg-12">
-			<div class="ibox float-e-margins">
-
-				<div class="ibox-content">
-					<div id="table-view" class="tab-pane active">
-						<div class="panel-body">
-							<div class="well">
-								<a id="addPreload" type="button" class="btn btn-default lang" aria-label="Add Preload" data-lang="c_add">add</a>
-								<div class="table-responsive" style="min-height: 300px;">
-
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
--->
-
 
 	<!-- Modals -->
 	<div id="addModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addLabel" aria-hidden="true">
 		<div class="modal-dialog">
 	   		<div class="modal-content">
 	   			<div class="modal-header">
+					<h5 class="modal-title lang" id="addLabel" data-lang="c_add">Add</h5>
 	     			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-	     			<h4 class="modal-title lang" id="addLabel" data-lang="c_add">Add</h4>
 	   			</div>
 			     <div class="modal-body">
-			  		<form id="metaForm" role="form" class="form-horizontal">
-						<div class="form-group">
+			  		<form id="metaForm" role="form">
+						<div class="form-group row">
 							<label for="item_name" data-lang="c_name" class="lang col-sm-2 control-label"></label>
 							<div class="col-sm-10">
 								<input type="text" id="item_name" required class="form-control">
 							</div>
 						</div>
 
-						<div class="form-group">
+						<div class="form-group row">
 							<label for="item_display_name" data-lang="ed_dn" class="lang col-sm-2 control-label"></label>
 							<div class="col-sm-10">
 								<input type="text" id="item_display_name" required class="form-control">
 							</div>
 						</div>
 
-			  			<div class="form-group item_source_param">
+			  			<div class="form-group row item_source_param">
 							<label for="item_source_param" class="lang col-sm-2 control-label" data-lang="c_type">type</label>
 							<div class="col-sm-10">
 								<select id="item_source_param" class="form-control">
@@ -143,17 +121,18 @@
 							</div>
 						</div>
 
-						<div class="form-group">
-							<div class="col-sm-offset-4 col-sm-8">
+						<div class="form-group row">
+							<div class="offset-sm-2 col-sm-1">
 								<div class="checkbox">
-									<label>
-										<input type="checkbox" id="a_pdfno"><span class="lang" data-lang="ed_pdfno">hide</span>
-									</label>
+									<input type="checkbox" id="a_pdfno">
 								</div>
 							</div>
+							<label class="col-sm-9 control-label lang" data-lang="ed_pdfno" for="a_pdfno"></label>
+
+
 						</div>
 
-						<div class="form-group item_audio">
+						<div class="form-group row item_audio">
 							<label for="item_audio_quality" class="lang col-sm-2 control-label" data-lang="c_quality">type</label>
 							<div class="col-sm-10">
 								<select id="item_audio_quality" class="form-control">
