@@ -530,8 +530,8 @@
 			<div class="modal-body">
 				<div class="container-responsiver">
 					<ul class="nav nav-pills mediaSelect">
-						<li id="orgLevelTab" class="active nav-item"><a href='javascript:void(0)' class="lang nav-link" data-lang="c_org">organisation</a></li>
-						<li id="surveyLevelTab" class="disabled nav-item"><a href='javascript:void(0)' class="lang nav-link" data-lang="c_form">form</a></li>
+						<li id="orgLevelTab" class="nav-item"><a href='#' class="lang nav-link active" data-lang="c_org">organisation</a></li>
+						<li id="surveyLevelTab" class="disabled nav-item"><a href='#' class="lang nav-link" data-lang="c_form">form</a></li>
 					</ul>
 
 					<form enctype="multipart/form-data" name="fileupload">
@@ -637,57 +637,57 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
+				<h5 class="modal-title lang" data-lang="ed_parameters">params</h5>
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title lang" data-lang="ed_parameters">params</h4>
 			</div>
 
 			<div class="modal-body">
 
-				<ul class="nav nav-pills" role="tablist">
-					<li id="standardParamTab" role="presentation" class="active"><a href="#" class="lang" data-lang="c_standard"></a></li>
-					<li id="annotateParamTab" role="presentation"><a href="#" class="lang appearance_field a_annotate" data-lang="c_annotate"></a></li>
+				<ul class="nav nav-pills">
+					<li id="standardParamTab" class="nav-item"><a href="#" class="lang nav-link active" data-lang="c_standard"></a></li>
+					<li id="annotateParamTab" class="nav-item"><a href="#" class="nav-link lang appearance_field a_annotate" data-lang="c_annotate"></a></li>
 				</ul>
 
-				<div id="standardParamPanel" class="paramtab">
+				<div id="standardParamPanel" class="paramtab mt-2">
 					<div class="container-fluid">
-						<form id="parameter_form" role="form" class="form-horizontal">
-							<div class="form-group parameter_field p_max_pixels">
+						<form id="parameter_form" role="form">
+							<div class="form-group row parameter_field p_max_pixels">
 								<label for="p_max_pixels" data-lang="u_ft_img_size" class="lang col-sm-4 control-label">max</label>
 								<div class="col-sm-8">
 									<input type="number" id="p_max_pixels" class="form-control">
 								</div>
 							</div>
-							<div class="form-group parameter_field p_rows">
+							<div class="form-group row parameter_field p_rows">
 								<label for="p_rows" data-lang="ro_fr_rule" class="lang col-sm-4 control-label">rows</label>
 								<div class="col-sm-8">
 									<input type="number" id="p_rows" class="form-control">
 								</div>
 							</div>
-							<div class="form-group parameter_field p_geotextlength">
+							<div class="form-group row parameter_field p_geotextlength">
 								<label for="p_rows" data-lang="ed_gr" class="lang col-sm-4 control-label">rows</label>
 								<div class="col-sm-8">
 									<input type="number" id="p_geotextlength" class="form-control">
 								</div>
 							</div>
-							<div class="form-group parameter_field p_start">
+							<div class="form-group fow parameter_field p_start">
 								<label for="p_start" data-lang="c_start" class="lang col-sm-4 control-label">start</label>
 								<div class="col-sm-8">
 									<input type="number" id="p_start" class="form-control">
 								</div>
 							</div>
-							<div class="form-group parameter_field p_end">
+							<div class="form-group row parameter_field p_end">
 								<label for="p_end" data-lang="c_end" class="lang col-sm-4 control-label">end</label>
 								<div class="col-sm-8">
 									<input type="number" id="p_end" class="form-control">
 								</div>
 							</div>
-							<div class="form-group parameter_field p_step">
+							<div class="form-group row parameter_field p_step">
 								<label for="p_step" data-lang="c_step" class="lang col-sm-4 control-label">rows</label>
 								<div class="col-sm-8">
 									<input type="number" id="p_step" class="form-control">
 								</div>
 							</div>
-							<div class="form-group parameter_field p_randomize">
+							<div class="form-group row parameter_field p_randomize">
 								<label for="p_randomize" data-lang="c_random" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<div class="checkbox">
@@ -697,7 +697,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group parameter_field p_auto">
+							<div class="form-group row parameter_field p_auto">
 								<label for="p_auto" data-lang="ed_ap" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<div class="checkbox">
@@ -713,21 +713,21 @@
 									<select id="p_form_identifier" class="form-control linkable_surveys"></select>
 								</div>
 							</div>
-							<div class="form-group parameter_field p_key_question">
+							<div class="form-group row parameter_field p_key_question">
 								<label for="p_key_question" id="p_key_question_label" class="col-sm-4 control-label">question</label>
 								<div class="col-sm-8">
 									<select id="p_key_question" class="form-control"></select>
 								</div>
 							</div>
 
-							<div class="form-group parameter_field p_ref">
+							<div class="form-group row parameter_field p_ref">
 								<label for="p_ref" data-lang="ed_rf" class="lang col-sm-4 control-label">question</label>
 								<div class="col-sm-8">
 									<select id="p_ref" class="form-control"></select>
 								</div>
 							</div>
 
-							<div class="form-group parameter_field p_instance_order">
+							<div class="form-group row parameter_field p_instance_order">
 								<label for="p_instance_order" data-lang="ed_io" class="lang col-sm-4 control-label">order</label>
 								<div class="col-sm-8">
 									<select id="p_instance_order" class="form-control">
@@ -738,14 +738,14 @@
 								</div>
 							</div>
 
-							<div class="form-group parameter_field p_instance_count">
+							<div class="form-group row parameter_field p_instance_count">
 								<label for="p_instance_count" data-lang="ed_ic" class="lang col-sm-4 control-label">count</label>
 								<div class="col-sm-8">
 									<input type="number" id="p_instance_count" class="form-control">
 								</div>
 							</div>
 
-							<div class="form-group parameter_field p_chart_type">
+							<div class="form-group row parameter_field p_chart_type">
 								<label for="p_chart_type" data-lang="a_type" class="lang col-sm-4 control-label">type</label>
 								<div class="col-sm-8">
 									<select id="p_chart_type" class="form-control">
@@ -755,7 +755,7 @@
 								</div>
 							</div>
 
-							<div class="form-group parameter_field p_quality">
+							<div class="form-group row parameter_field p_quality">
 								<label for="p_quality" data-lang="c_quality" class="lang col-sm-4 control-label">type</label>
 								<div class="col-sm-8">
 									<select id="p_quality" class="form-control">
@@ -767,7 +767,7 @@
 								</div>
 							</div>
 
-							<div class="form-group parameter_field p_key_policy">
+							<div class="form-group row parameter_field p_key_policy">
 								<label for="p_key_policy" data-lang="ed_kp" class="lang col-sm-4 control-label">order</label>
 								<div class="col-sm-8">
 									<select id="p_key_policy" class="form-control">
@@ -779,7 +779,7 @@
 								</div>
 							</div>
 
-							<div class="form-group parameter_field p_stacked">
+							<div class="form-group row parameter_field p_stacked">
 								<label for="p_stacked" data-lang="stacked" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<div class="checkbox">
@@ -790,7 +790,7 @@
 								</div>
 							</div>
 
-							<div class="form-group parameter_field p_normalized">
+							<div class="form-group row parameter_field p_normalized">
 								<label for="p_normalized" data-lang="normalized" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<div class="checkbox">
@@ -801,7 +801,7 @@
 								</div>
 							</div>
 
-							<div class="form-group p_other">
+							<div class="form-group row p_other">
 								<label for="p_other" data-lang="c_other" class="lang col-sm-4 control-label">other</label>
 								<div class="col-sm-8">
 									<textarea id="p_other" class="form-control"></textarea>
@@ -813,10 +813,10 @@
 
 					</div>
 				</div>
-				<div id="annotateParamPanel" style="display:none;" class="paramtab">
+				<div id="annotateParamPanel" style="display:none;" class="paramtab mt-2">
 					<div class="container-fluid">
-						<form role="form" class="form-horizontal">
-							<div class="form-group parameter_field p_auto_annotate">
+						<form role="form">
+							<div class="form-group row parameter_field p_auto_annotate">
 								<label for="p_auto_annotate" data-lang="ed_al" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-1">
 									<div class="checkbox">
@@ -828,7 +828,7 @@
 								<p class="lang col-sm-7" data-lang="ed_al2"></p>
 							</div>
 
-							<div class="form-group parameter_field p_medical">
+							<div class="form-group row parameter_field p_medical">
 								<label for="p_medical" data-lang="ed_am" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-1">
 									<div class="checkbox">
@@ -840,28 +840,28 @@
 								<p class="lang col-sm-7" data-lang="ed_am2"></p>
 							</div>
 
-							<div class="form-group parameter_field p_source">
+							<div class="form-group row parameter_field p_source">
 								<label for="p_source" data-lang="ed_p_q" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<select id="p_source" class="form-control group_column_select"></select>
 								</div>
 							</div>
 
-							<div class="form-group parameter_field from_lang param_lang">
+							<div class="form-group row parameter_field from_lang param_lang">
 								<label for="from_lang" class="lang col-sm-4 control-label" data-lang="svc_from_l"></label>
 								<div class="col-sm-8">
 									<select id="from_lang" class="parameter_lang form-control" data-live-search="true"></select>
 								</div>
 							</div>
 							<div class="to_lang_override">
-								<div class="form-group parameter_field to_lang param_lang">
+								<div class="form-group row parameter_field to_lang param_lang">
 									<label for="to_lang" class="lang col-sm-4 control-label" data-lang="svc_to_l"></label>
 									<div class="col-sm-8">
 										<select id="to_lang" class="parameter_lang form-control" data-live-search="true"></select>
 									</div>
 								</div>
 							</div>
-							<div class="form-group parameter_field p_med_type">
+							<div class="form-group row parameter_field p_med_type">
 								<label for="p_med_type" data-lang="ed_mat" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
 									<select id="p_med_type" class="form-control">
