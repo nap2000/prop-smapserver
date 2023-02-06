@@ -205,9 +205,9 @@ define([
 		h[++idx] = itemId;
 		h[++idx] = '"><i class="fa fa-edit edit_icon"></i></a>';
 
-		h[++idx] = '<a button tabindex="-1" class="btn btn-light edit_icon delete_ol" data-id="';
+		h[++idx] = '<a button tabindex="-1" class="btn btn-light delete_ol" data-id="';
 		h[++idx] = itemId;
-		h[++idx]= '"><i class="fa fa-times-circle" aria-hidden="true"></i></a>';
+		h[++idx]= '"><i class="fa fa-times-circle edit_icon text-danger" aria-hidden="true"></i></a>';
 
 		h[++idx] = '</div>';		// End of button group
 		h[++idx] = '</div>';		// End of button group cell
