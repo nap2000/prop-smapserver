@@ -188,44 +188,34 @@ define([
 		}
 		
 		h[++idx] = addPanelStyle("choices", undefined, undefined, optionList.error, itemId, list_name);
-		h[++idx] = '<div class="card-body>';
+		h[++idx] = '<div class="card-body">';
 		h[++idx] = addErrorMsg(optionList.errorMsg);
-			h[++idx] = '<div class="row">';
-				
-				// Add name
-				h[++idx] = '<div class="col-8"><div class="row">';
+		h[++idx] = '<div class="row">';
 
-					// Add choice name cell
-					h[++idx] = '<div class="col-12 col-md-3"><input class="olname form-control has_tt" title="List Name" value="';
-						h[++idx] = list_name;
-						h[++idx] = '" ';
-					h[++idx] = 'type="text"></div>';
+		// Add choice name cell
+		h[++idx] = '<div class="col-10"><input class="olname form-control has_tt" title="List Name" value="';
+		h[++idx] = list_name;
+		h[++idx] = '" type="text"></div>';
 
-				h[++idx] = '</div></div>';		// End of name 
-				
-				// Add buttons
-				h[++idx] = '<div class="col-2 q_icons_col">';
-					h[++idx] = '<div class="btn-group">';
-					
-						h[++idx] = '<a button tabindex="-1" class="btn btn-light edit_choice" ';
-						h[++idx]='"><i class="fa fa-edit edit_icon"></i></a>';
-					
-						//h[++idx] = '<a button tabindex="-1" class="btn btn-default" data-toggle="collapse"  href="#collapse';
-						//h[++idx] = globals.gElementIndex;
-						//h[++idx]='"><span class="glyphicon glyphicon-chevron-down edit_icon"></span></a>';	
-						
-						h[++idx] = '<button tabindex="-1" class="btn btn-default">';
-						h[++idx]='<span class="glyphicon glyphicon-remove-circle edit_icon delete_ol" data-id="';
-						h[++idx] = itemId;
-						h[++idx]='"></span>';
-						h[++idx]='</button>';
-					 
-					h[++idx] = '</div>';
-				h[++idx] = '</div>';		// End of button cell
-				h[++idx] = '</div>';		// End of row
-		h[++idx] = '</li>';
-		
-		
+		// Add buttons
+		h[++idx] = '<div class="col-2 q_icons_col">';
+		h[++idx] = '<div class="btn-group">';
+
+		h[++idx] = '<a button tabindex="-1" class="btn btn-light edit_choice" data-id="';
+		h[++idx] = itemId;
+		h[++idx] = '"><i class="fa fa-edit edit_icon"></i></a>';
+
+		h[++idx] = '<a button tabindex="-1" class="btn btn-light edit_icon delete_ol" data-id="';
+		h[++idx] = itemId;
+		h[++idx]= '"><i class="fa fa-times-circle" aria-hidden="true"></i></a>';
+
+		h[++idx] = '</div>';		// End of button group
+		h[++idx] = '</div>';		// End of button group cell
+		h[++idx] = '</div>';		// End of row
+		h[++idx] = '</div>';		// End of card
+		h[++idx] = '</li>';			// End of list item
+
+
 		return h.join("");
 	}
 	
@@ -469,15 +459,14 @@ define([
 			    h[++idx] = ' data-prop="';
 				h[++idx] = selProperty;
 				h[++idx] = '">';
-				h[++idx] = '<span class="glyphicon ';
 				if(question[selProperty]) {
-			    	h[++idx] = 'glyphicon-ok-sign"> ';
-			    	h[++idx] = localise.set["c_yes"];
-			    } else {
-			    	h[++idx] = 'glyphicon-remove-sign"> ';
-			    	h[++idx] = localise.set["c_no"];
-			    }
-			    h[++idx] = '</span></button>';
+					h[++idx] = '<i class="fa fa-check-circle" aria-hidden="true"></i> ';
+					h[++idx] = localise.set["c_yes"];
+				} else {
+					h[++idx] = '<i class="fa fa-times-circle" aria-hidden="true"></i> ';
+					h[++idx] = localise.set["c_no"];
+				}
+			    h[++idx] = '</button>';
 			    h[++idx] = '</div>';
 
 			    /*
@@ -508,12 +497,14 @@ define([
 			    h[++idx] = ' data-prop="';
 				h[++idx] = selProperty;
 				h[++idx] = '">';
-				h[++idx] = '<span class="glyphicon ';
+				h[++idx] = '<span>';
 				if(question[selProperty]) {
-			    	h[++idx] = 'glyphicon-ok-sign"> Yes';
-			    } else {
-			    	h[++idx] = 'glyphicon-remove-sign"> No';
-			    }
+					h[++idx] = '<i class="fa fa-check-circle" aria-hidden="true"></i> ';
+					h[++idx] = localise.set["c_yes"];
+				} else {
+					h[++idx] = '<i class="fa fa-times-circle" aria-hidden="true"></i> ';
+					h[++idx] = localise.set["c_no"];
+				}
 			    h[++idx] = '</span></button>';
 			    h[++idx] = '</div>';
 			   
@@ -525,21 +516,21 @@ define([
 				
 				h[++idx] = '<div class="btn-group" role="group" aria-label="Autoplay Selection" data-toggle="buttons-radio">';
 					// Add "none" autoplay option
-					h[++idx] = '<button data-prop="autoplay" type="button" class="btn btn-default labelButton ';
+					h[++idx] = '<button data-prop="autoplay" type="button" class="btn btn-light labelButton ';
 					if(question[selProperty] == "none") {
 						h[++idx] = "active";
 					}
 					h[++idx] = '" value="none">None</button>';
 					
 					// Add video autoplay option
-					h[++idx] = '<button data-prop="autoplay" type="button" class="btn btn-default labelButton ';
+					h[++idx] = '<button data-prop="autoplay" type="button" class="btn btn-light labelButton ';
 					if(question[selProperty] == "video") {
 						h[++idx] = "active";
 					}
 					h[++idx] = '" value="video">Video</button>';
 					
 					// Add audio autoplay option
-					h[++idx] = '<button data-prop="autoplay" type="button" class="btn btn-default labelButton ';
+					h[++idx] = '<button data-prop="autoplay" type="button" class="btn btn-light labelButton ';
 					if(question[selProperty] == "audio") {
 						h[++idx] = "active";
 					}
@@ -558,7 +549,7 @@ define([
 				h[++idx] = ' data-prop="';
 				h[++idx] = selProperty;
 				h[++idx] = '">';
-				h[++idx] = '<span class="glyphicon glyphicon-edit"></span> ';
+				h[++idx] = '<i class="fa fa-edit edit_icon"></i> ';
 				h[++idx] = localise.set["c_edit"];
 				h[++idx] = '</button>';
 				h[++idx] = '</div>';		// End Col
@@ -588,7 +579,7 @@ define([
 				h[++idx] = ' data-prop="';
 				h[++idx] = selProperty;
 				h[++idx] = '">';
-				h[++idx] = '<span class="glyphicon glyphicon-edit"></span> ';
+				h[++idx] = '<i class="fa fa-edit edit_icon"></i> ';
 				h[++idx] = localise.set["c_edit"];
 				h[++idx] = '</button>';
 				h[++idx] = '</div>';		// End Col
@@ -869,7 +860,7 @@ define([
 		} else {
 			h[++idx] = '</div>';
 		}
-	    h[++idx] = '<a type="button" class="btn btn-default mediaProp form-control" data-element="';
+	    h[++idx] = '<a type="button" class="btn btn-dark mediaProp form-control" data-element="';
 	    h[++idx] = label.toLowerCase();
 	    h[++idx] = '">';
 	    h[++idx] = localise.set["ed_" + lcLabel];

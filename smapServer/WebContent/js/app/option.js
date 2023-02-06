@@ -205,21 +205,6 @@ define([
 							
 				h[++idx] = '</td>';	// End of option name and label cell
 
-				/*
-				// Add option display_name cell
-				h[++idx] = '<td>';
-
-					h[++idx] = '<input class="odisplayname form-control has_tt" value="';
-					h[++idx] = option.display_name;
-					h[++idx] = '" ';
-
-					h[++idx] = ' type="text" title="';
-					h[++idx] = localise.set["ed_dn"];
-					h[++idx] = '">';
-
-				h[++idx] = '</td>';	// End of option display_name and label cell
-				*/
-
 				h[++idx] = addFilterColumnBody(option.cascade_filters);
 				h[++idx] = addOptionLabel(option);
 				

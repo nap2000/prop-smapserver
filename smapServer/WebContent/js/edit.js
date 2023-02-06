@@ -2829,7 +2829,7 @@ function mediaPropSelected($this) {
 	gQname = $elem.data("qname");
 	$gCurrentRow = $elem;
 
-	if($('#orgLevelTab').hasClass("active")) {
+	if($('#orgLevelTab a').hasClass("active")) {
 		$('#orgPanel').show();
 		$('#surveyPanel').hide();
 		gUrl = gBaseUrl;
@@ -3169,7 +3169,7 @@ function updatePulldataView() {
 
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-default btn-sm rm_pulldata danger">';
+			h[++idx] = '" class="btn btn-light btn-sm rm_pulldata danger">';
 			h[++idx] = '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
 
 			h[++idx] = '</td>';
