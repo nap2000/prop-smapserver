@@ -36,11 +36,7 @@ require.config({
      	async: '../../../../js/libs/async',
      	localise: '../../../../js/app/localise',
     	jquery: '../../../../js/libs/jquery-3.5.1.min.js',
-    	jquery_ui: [
-    	            '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min',
-    	            '../../../../js/libs/jquery-ui-1.10.3.custom.min'
-    	            ],
-
+		jquery_ui: '../../../../js/libs/jquery-ui-1.13.2.min',
     	rmm: '../../../../js/libs/responsivemobilemenu',
     	common: '../../../../js/app/common',
         data: '../../../../js/app/data',

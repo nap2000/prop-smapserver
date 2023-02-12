@@ -28,7 +28,6 @@ require.config({
     locale: gUserLocale,
     paths: {
     	app: '../app',
-    	jquery: 'jquery-2.1.1',
     	lang_location: '..',
     	icheck: './wb/plugins/iCheck/icheck.min',
     },

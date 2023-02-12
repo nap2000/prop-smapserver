@@ -1,6 +1,6 @@
 ({
     appDir: '../WebContent',
-//    optimize: 'none',
+    optimize: 'none',
     wrapShim: false,
     waitSeconds: 0,
     baseUrl: 'js/libs',
@@ -10,8 +10,8 @@
      	i18n: '../../../../smapServer/WebContent/js/libs/i18n',
      	async: '../../../../smapServer/WebContent/js/libs/async',
      	localise: '../../../../smapServer/WebContent/js/app/localise',
-    	jquery: '../../../../smapServer/WebContent/js/libs/jquery-2.1.1',
-    	jquery_ui: '../../../../smapServer/WebContent/js/libs/jquery-ui-1.10.3.custom.min',
+    	jquery: '../../../../smapServer/WebContent/js/libs/jquery-3.5.1.min',
+    	jquery_ui: '../../../../smapServer/WebContent/js/libs/jquery-ui-1.13.2.min',
     	modernizr: '../../../../smapServer/WebContent/js/libs/modernizr',
     	rmm: '../../../../smapServer/WebContent/js/libs/responsivemobilemenu',
     	common: '../../../../smapServer/WebContent/js/app/common',

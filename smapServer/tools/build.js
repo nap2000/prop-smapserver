@@ -4,7 +4,7 @@
     waitSeconds: 0,
     wrapShim: false,
     baseUrl: 'js/libs',
-//    optimize: 'none',
+    optimize: 'none',
     fileExclusionRegExp: /^build$/,
     paths: {
     	jquery: 'jquery-3.5.1.min',
@@ -65,7 +65,15 @@
 	    exclude: ['jquery', 'bootstrap', 'ol3/ol']
         },
         {
+            name: '../translate',
+	    exclude: ['jquery', 'bootstrap']
+        },
+        {
             name: '../meta',
+	    exclude: ['jquery', 'bootstrap']
+        },
+        {
+            name: '../survey_roles',
 	    exclude: ['jquery', 'bootstrap']
         }
 

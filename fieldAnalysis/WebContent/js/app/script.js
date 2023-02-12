@@ -90,7 +90,7 @@ $(document).ready(function() {
 });
 
 
-$(window).load(function() {
+$(window).on('load', function() {
 
     var param_string,
         i,

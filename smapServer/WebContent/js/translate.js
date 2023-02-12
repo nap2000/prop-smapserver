@@ -28,22 +28,19 @@ require.config({
     locale: gUserLocale,
     paths: {
     	app: '../app',
-    	jquery: 'jquery-2.1.1',
     	bootbox: 'bootbox.min',
     	lang_location: '..'
     },
     shim: {
     	'app/common': ['jquery'],
         'bootstrap.min': ['jquery'],
-        'jquery.autosize.min': ['jquery'],
-    	'bootbox': ['bootstrap.min']
+        'jquery.autosize.min': ['jquery']
     }
 });
 
 require([
          'jquery',
-         'app/common', 
-         'bootstrap.min', 
+         'app/common',
          'modernizr',
          'app/localise',
          'app/ssc',
@@ -52,7 +49,7 @@ require([
          'bootbox',
          'app/aws',
          'jquery.autosize.min'], 
-		function($, common, bootstrap, modernizr, lang, ssc, globals, changeset, bootbox, aws) {
+		function($, common, modernizr, lang, ssc, globals, changeset, bootbox, aws) {
 
 
 var	gMode = "survey",
