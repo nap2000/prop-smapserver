@@ -2301,11 +2301,6 @@ function respondToEvents($context) {
 			}
 		}
 
-		/*
-		 * Add appearance values for app choices
-		 */
-		setAppearanceValues();
-
 		// Add any appearance values not explicetely set
 		$('#a_other').val(otherAppearances);       // Not sure if we want to do this
 
@@ -3867,9 +3862,12 @@ function setNoFilter() {
 					// Custom - hardcoded
 					if(val === "search(" || val === "lookup_choices(") {
 						var params = getAppearanceParams(appearance);
+						gAppearanceQuestion = question;
 
 						// Now check parameters
 						if(params.length > 0) {
+							gAppearanceParams = params;
+
 							// 1. First parameter is the filename
 							if(params.filename.startsWith('linked_s')) {
 								var sIdent = params.filename.substring("linked_s".length - 1);
@@ -3885,14 +3883,12 @@ function setNoFilter() {
 								if(typeof csvIndex !== "undefined") {
 									getQuestionsInCsvFile($('.column_select'), $('.column_select_multiple'), csvIndex, true);
 								}
+								setAppearanceValues();
 							}
-
-							gAppearanceParams = params;
-
 						}
 
-						gAppearanceQuestion = question;
-						setAppearanceValues();
+
+
 
 						/*
 						 * Set the access value

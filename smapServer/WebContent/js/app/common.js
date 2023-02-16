@@ -3898,6 +3898,10 @@ function getQuestionsInSurvey($elem, $elem_multiple, sIdent, includeNone, textOn
 			hm[++idx_m] = h[++idx] = '<option value="_hrk">';
 			hm[++idx_m] = h[++idx] = localise.set["ed_hrk"];
 			hm[++idx_m] = h[++idx] = '</option>';
+
+			hm[++idx_m] = h[++idx] = '<option value="_assigned">';
+			hm[++idx_m] = h[++idx] = localise.set["t_assigned"];
+			hm[++idx_m] = h[++idx] = '</option>';
 		}
 		for (i = 0; i < data.length; i++) {
 			if(!textOnly || isTextStorageType(data[i].type)) {
