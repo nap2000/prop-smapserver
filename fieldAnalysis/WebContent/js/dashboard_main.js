@@ -35,8 +35,6 @@ require.config({
      	i18n: '../../../../js/libs/i18n',
      	async: '../../../../js/libs/async',
      	localise: '../../../../js/app/localise',
-    	jquery: '../../../../js/libs/jquery-3.5.1.min.js',
-		jquery_ui: '../../../../js/libs/jquery-ui-1.13.2.min',
     	rmm: '../../../../js/libs/responsivemobilemenu',
     	common: '../../../../js/app/common',
         data: '../../../../js/app/data',
@@ -50,8 +48,6 @@ require.config({
     },
     shim: {
     	'rmm': ['jquery'],
-    	'jquery_ui': ['jquery'],
-    	'jquery-ui-timepicker-addon': ['jquery_ui'],
     	'jquery.dataTables.min': ['jquery'],
     	'common': ['jquery'],
     	
@@ -79,7 +75,6 @@ require.config({
 require(['jquery', 'jquery_ui', 'rmm', 'common', 'localise', 'globals', 'moment',
          
          'main/jqplot_main',
-         'jquery-ui-timepicker-addon',
          'jquery.dataTables.min',
          
          'app/jqplot_image',
