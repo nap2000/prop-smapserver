@@ -3918,6 +3918,7 @@ function getQuestionsInSurvey($elem, $elem_multiple, sIdent, includeNone, textOn
 		if($elem_multiple) {
 			$elem_multiple.empty().append(hm.join(''));
 			$elem_multiple.multiselect('deselectAll', false);
+			$elem_multiple.multiselect('rebuild');
 		}
 
 		if(typeof setValueFn === "function") {
@@ -3930,7 +3931,7 @@ function getQuestionsInSurvey($elem, $elem_multiple, sIdent, includeNone, textOn
 	} else if(gCache[sIdent]) {
 		populateElement($elem, $elem_multiple, gCache[sIdent]);
 	} else {
-		if (sIdent !== "0") {
+		if (sIdent && sIdent !== "0" && sIdent !== '') {
 			addHourglass();
 			$.ajax({
 				url: "/surveyKPI/questionListIdent/" + sIdent + "/none?exc_ssc=true&inc_meta=true",
@@ -3961,6 +3962,7 @@ function getQuestionsInSurvey($elem, $elem_multiple, sIdent, includeNone, textOn
 				}
 				if($elem_multiple) {
 					$elem_multiple.empty().append('option value="0">' + localise.set["c_none"] + '</option>');
+					$elem_multiple.multiselect('rebuild');
 				}
 			}
 		}
@@ -3974,26 +3976,30 @@ function getQuestionsInCsvFile($elem, $elem_multiple, index, includeNone) {
 		idx = -1,
 		idx_m = -1,
 		i;
-	var data = globals.gCsvFiles[index].headers;
 
-	if (includeNone) {		// Only include select none for single selects
-		h[++idx] = '<option value="">';
-		h[++idx] = localise.set["c_none"];
-		h[++idx] = '</option>';
-	}
-	for (i = 0; i < data.length; i++) {
-		hm[++idx_m] = h[++idx] = '<option value="';
-		hm[++idx_m] = h[++idx] = data[i].fName;
-		hm[++idx_m] = h[++idx] = '">';
-		hm[++idx_m] = h[++idx] = htmlEncode(data[i].fName);
-		hm[++idx_m] = h[++idx] = '</option>';
-	}
-	if($elem) {
-		$elem.empty().append(h.join(''));
-	}
-	if($elem_multiple) {
-		$elem_multiple.empty().append(hm.join(''));
-		$elem_multiple.multiselect('deselectAll', false);
+	if(globals.gCsvFiles[index]) {
+		var data = globals.gCsvFiles[index].headers;
+
+		if (includeNone) {		// Only include select none for single selects
+			h[++idx] = '<option value="">';
+			h[++idx] = localise.set["c_none"];
+			h[++idx] = '</option>';
+		}
+		for (i = 0; i < data.length; i++) {
+			hm[++idx_m] = h[++idx] = '<option value="';
+			hm[++idx_m] = h[++idx] = data[i].fName;
+			hm[++idx_m] = h[++idx] = '">';
+			hm[++idx_m] = h[++idx] = htmlEncode(data[i].fName);
+			hm[++idx_m] = h[++idx] = '</option>';
+		}
+		if ($elem) {
+			$elem.empty().append(h.join(''));
+		}
+		if ($elem_multiple) {
+			$elem_multiple.empty().append(hm.join(''));
+			$elem_multiple.multiselect('deselectAll', false)
+			$elem_multiple.multiselect('rebuild');
+		}
 	}
 }
 
