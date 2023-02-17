@@ -39,7 +39,7 @@
 
 	mapbox: '../../../../smapServer/WebContent/js/libs/mapbox/js/mapbox',
 
-	jquery_ui: '../../../../smapServer/WebContent/js/libs/wb/jquery-ui-1.10.4.min',
+	jquery_ui: '../../../../smapServer/WebContent/js/libs/wb/jquery-ui-1.13.2.min',
 	slimscroll: '../../../../smapServer/WebContent/js/libs/wb/plugins/slimscroll/jquery.slimscroll.min',
 	sweetalert: '../../../../smapServer/WebContent/js/libs/wb/plugins/sweetalert/sweetalert.min',
 	pace: '../../../../smapServer/WebContent/js/libs/wb/plugins/pace/pace.min',
