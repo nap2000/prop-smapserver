@@ -107,31 +107,31 @@
 	<div class="modal-dialog">
    		<div class="modal-content">
    			<div class="modal-header">
-     				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     				<h4 class="modal-title" id="addRowFilterLabel"></h4>
+				<h5 class="modal-title" id="addRowFilterLabel"></h5>
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
    			</div>
    			
 		    <div class="modal-body">
 		    	<div class="alert alert-info" role="alert">
 					<span class="lang" data-lang="ro_fr_i"></span>
 					<a class="filter_help" href="https://www.smap.com.au/docs/server-expressions.html" target="_blank">
-						<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+						<i class="fas fa-info-circle"></i>
 					</a>
 				</div>
-				<form id="role_filter_row_form" class="form-horizontal" role="form">
-					<div class="form-group" data-toggle="tooltip" title="Row Filter">
-						<label for="filter_row_content" data-lang="ro_fr_rule" class="lang col-sm-2 control-label">filter</label>
-						<div class="col-sm-10">
+				<form id="role_filter_row_form">
+					<div class="form-group row" data-toggle="tooltip" title="Row Filter">
+						<label for="filter_row_content" data-lang="ro_fr_rule" class="lang col-2 control-label"></label>
+						<div class="col-10">
 							<textarea id="filter_row_content" class="labelProp form-control"></textarea>
 						</div>
 					</div>
 					
-					<div class="form-group">
-						<label for="filter_row_aq" data-lang="ro_aq" class="lang col-sm-2 control-label">aq</label>
-						<div class="col-sm-8">
+					<div class="form-group row">
+						<label for="filter_row_aq" data-lang="ro_aq" class="lang col-2 control-label">aq</label>
+						<div class="col-8">
 							<select id="filter_row_aq" class="labelProp form-control"></select>
 						</div>
-						<div class="col-sm-2">
+						<div class="col-2">
 							<button id="filter_row_aq_insert" type="button" class="btn btn-info lang" data-lang="c_insert">insert</button>
 						</div>
 					</div>
@@ -150,8 +150,8 @@
 	<div class="modal-dialog">
    		<div class="modal-content">
    			<div class="modal-header">
-     				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-     				<h4 class="modal-title" id="addColumnFilterLabel"></h4>
+				<h5 class="modal-title" id="addColumnFilterLabel"></h5>
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
    			</div>
    			
 		    <div class="modal-body">

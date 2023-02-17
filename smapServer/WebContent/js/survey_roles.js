@@ -33,7 +33,6 @@ require.config({
     },
     shim: {
     	'app/common': ['jquery'],
-        'bootstrap.min': ['jquery'],
         'jquery.autosize.min': ['jquery'],
       	'icheck': ['jquery']
     }
@@ -41,15 +40,14 @@ require.config({
 
 require([
          'jquery',
-         'app/common', 
-         'bootstrap.min', 
+         'app/common',
          'modernizr',
          'app/localise',
          'app/ssc',
          'app/globals',
          'icheck',
          'jquery.autosize.min'], 
-		function($, common, bootstrap, modernizr, lang, ssc, globals) {
+		function($, common, modernizr, lang, ssc, globals) {
 
 
 var	gCache = {},
@@ -292,7 +290,7 @@ function refreshView() {
 					h[++idx] = ' btn-success';
 				}
 				h[++idx] = '">';
-				h[++idx] = '<i class="glyphicon glyphicon-filter"></i>';
+				h[++idx] = '<i class="fa fa-filter" aria-hidden="true"></i>';
 				h[++idx] = '</button>';
 			h[++idx] = '</td>';
 			h[++idx] = '<td>';
@@ -304,7 +302,7 @@ function refreshView() {
 					h[++idx] = ' btn-success';
 				}
 				h[++idx] = '">';
-				h[++idx] = '<i class="glyphicon glyphicon-filter"></i>';
+				h[++idx] = '<i class="fa fa-filter" aria-hidden="true"></i>';
 				h[++idx] = '</button>';
 			h[++idx] = '</td>';
 		h[++idx] = '</tr>';
