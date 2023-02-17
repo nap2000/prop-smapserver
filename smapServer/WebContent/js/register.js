@@ -28,26 +28,20 @@ requirejs.config({
     locale: gUserLocale,
     paths: {
         app: '../app',
-        jquery: 'jquery-2.1.1',
         bootbox: 'bootbox.min',
         lang_location: '../'
     },
     shim: {
-        'bootstrap.min': ['jquery'],
-        'bootstrapValidator.min': ['bootstrap.min'],
-        'app/common': ['jquery'],
-        'bootbox': ['bootstrap.min']
+
     }
 });
 
 require([
     'jquery',
-    'bootstrap.min',
-    'bootstrapValidator.min',
     'app/localise',
     'app/common',
     'bootbox'
-], function ($, bootstrap, bv, localise, common, bootbox) {
+], function ($, localise, common, bootbox) {
 
     $(document).ready(function () {
 
@@ -55,14 +49,6 @@ require([
 
         setCustomRegister();			// Apply custom javascript
         localise.setlang();
-
-        $('#registerForm').bootstrapValidator({
-            feedbackIcons: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            }
-        });
 
         $('#registerForm input').keyup(function () {
             validateForm();

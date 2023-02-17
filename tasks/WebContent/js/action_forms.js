@@ -36,7 +36,7 @@ requirejs.config({
         i18n: '../../../../js/libs/i18n',
         async: '../../../../js/libs/async',
         localise: '../../../../js/app/localise',
-        jquery: '../../../../js/libs/jquery-2.1.1',
+        jquery: '../../../../js/libs/jquery-3.5.1.min',
         modernizr: '../../../../js/libs/modernizr',
         common: '../../../../js/app/common',
         globals: '../../../../js/app/globals',

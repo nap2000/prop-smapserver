@@ -7,7 +7,7 @@
     baseUrl: 'js/libs',
     paths: {
     	app: '../app',
-     	jquery: '../../../../smapServer/WebContent/js/libs/jquery-2.1.1',
+     	jquery: '../../../../smapServer/WebContent/js/libs/jquery-3.5.1.min',
      	i18n: '../../../../smapServer/WebContent/js/libs/i18n',
      	async: '../../../../smapServer/WebContent/js/libs/async',
      	localise: '../../../../smapServer/WebContent/js/app/localise',
