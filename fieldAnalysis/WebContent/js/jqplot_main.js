@@ -27,7 +27,6 @@ require.config({
     paths: {
      	app: '../app',
      	localise: '../../../../js/app/localise',
-		jquery_ui: '../../../../js/libs/jquery-ui-1.13.2.min',
     	modernizr: '../../../../js/libs/modernizr',
     	rmm: '../../../../js/libs/responsivemobilemenu',
     	common: '../../../../js/app/common',
@@ -37,10 +36,6 @@ require.config({
 
     },
     shim: {
-    	
-    	'jquery_ui': ['jquery'],
-    	
-    	'jqplot/jquery.jqplot.min': ['jquery_ui'],
     	'jqplot/plugins/jqplot.highlighter': ['jqplot/jquery.jqplot.min'],
     	'jqplot/plugins/jqplot.cursor': ['jqplot/jquery.jqplot.min'],
     	'jqplot/plugins/jqplot.dateAxisRenderer': ['jqplot/jquery.jqplot.min'],
@@ -50,14 +45,10 @@ require.config({
     	'jqplot/plugins/jqplot.canvasAxisTickRenderer': ['jqplot/jquery.jqplot.min'],
     	'jqplot/plugins/jqplot.canvasTextRenderer': ['jqplot/jquery.jqplot.min'],
     	'jqplot/plugins/jqplot.enhancedLegendRenderer': ['jqplot/jquery.jqplot.min'],
-    	
-
-    	
     	}
     });
 
-require(['jquery', 'jquery_ui', 
-         
+require(['jquery',
          'jqplot/jquery.jqplot.min',
          'jqplot/plugins/jqplot.highlighter',
          'jqplot/plugins/jqplot.cursor',

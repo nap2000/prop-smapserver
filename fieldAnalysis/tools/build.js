@@ -1,6 +1,6 @@
 ({
     appDir: '../WebContent',
-    optimize: 'none',
+//    optimize: 'none',
     wrapShim: false,
     waitSeconds: 0,
     baseUrl: 'js/libs',
@@ -46,7 +46,7 @@
         },
         {
             name: '../dashboard_main',
-	    exclude: ['../jqplot_main']
+	    exclude: ['jquery', '../jqplot_main']
         },
         {
             name: '../review_main',

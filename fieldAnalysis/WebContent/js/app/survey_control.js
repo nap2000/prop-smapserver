@@ -131,6 +131,7 @@ function showSettings($this) {
 	setSurveyViewControl(gSurveyControlView);		// Set the values in the settings dialog from the view
 	
 	$('#p_settings').dialog("open");
+	$('.ui-dialog, #p_settings').css('z-index',2000);	// Float the dialog over other controls
 }
 
 /*

@@ -138,8 +138,8 @@ $(document).ready(function() {
 		{
 			autoOpen: false, closeOnEscape:true, draggable:true, modal:true,
 			show:"drop",
+			modal: true,
 			width:600,
-			zIndex: 2000,
 			title: localise.set["c_settings"],
 			buttons: [
 		        {
