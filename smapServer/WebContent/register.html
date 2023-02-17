@@ -26,9 +26,6 @@
         <span class="thick">SMAP</span> Server
     </a>
     <div class="spinner-grow text-danger hour_glass" style="display:none;"></div>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
-    </button>
 </nav>
 
 <div class="page-header text-center">
@@ -41,7 +38,7 @@
 
         <div class="form-group row">
             <label class="col-3 control-label lang" data-lang="r_o_n" for="org_name">organisation name</label>
-            <div class="col-5">
+            <div class="col-6">
                 <input type="text" class="form-control" name="org_name" id="org_name" required>
 
             </div>
@@ -49,37 +46,37 @@
 
         <div class="form-group row">
             <label class="col-3 control-label lang" data-lang="r_y_n" for="admin_name">your name</label>
-            <div class="col-5">
+            <div class="col-6">
                 <input type="text" class="form-control" name="admin_name" id="admin_name" required>
             </div>
         </div>
 
         <div class="form-group row">
             <label class="col-3 control-label lang" data-lang="r_y_e" for="admin_email">your email</label>
-            <div class="col-5">
+            <div class="col-6">
                 <input id="admin_email" class="form-control" name="email" type="email" required/>
                 <div class="invalid-feedback">Not Valid</div>
             </div>
         </div>
 
         <div class="form-group row">
-            <label for="website" class="col-lg-3 control-label lang" data-lang="r_y_o">organisation website</label>
-            <div class="col-lg-5">
+            <label for="website" class="col-3 control-label lang" data-lang="r_y_o">organisation website</label>
+            <div class="col-6">
                 <input type="url" class="form-control" name="website" id="website">
             </div>
         </div>
 
         <div class="form-group row">
-            <label for="accept_tc" class="col-lg-3 control-label">
+            <label for="accept_tc" class="col-3 control-label">
                 <span class="lang" data-lang="c_agree">i agree to the </span><a id="t_c_link" href="/terms.html">
                 <span class="lang" data-lang="c_t_c">terms and conditions</span></a></label>
-            <div class="col-lg-5">
+            <div class="col-6">
                 <input type="checkbox" name="accept_tc" id="accept_tc"/>
             </div>
         </div>
 
         <div class="form-group row has-error">
-            <div class="col-sm-12 text-center">
+            <div class="col-12 text-center">
                 <button id="registerSubmit" type="submit" class="btn btn-default btn-primary lang"
                         data-lang="c_submit"
                         disabled="disabled">submit
