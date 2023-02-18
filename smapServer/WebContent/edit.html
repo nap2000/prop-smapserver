@@ -35,7 +35,7 @@
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap sticky-top">
-	<a class="navbar-brand" href="#"><i class="fa fa-edit" aria-hidden="true"></i><span class="formName"></span></a>
+	<a class="navbar-brand" href="#"><i class="fa fa-edit" aria-hidden="true"></i> <span class="formName"></span></a>
 	<div class="spinner-grow text-danger hour_glass"></div>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
@@ -116,9 +116,9 @@
 				</a>
 				<div id="selProperty" class="dropdown-menu" aria-labelledby="m_property">
 					<a data-prop="label" href='#'  class="dropdown-item q_only default lang" data-lang="ed_qt">question text</a>
-					<a data-prop="label" href='javascript:void(0)'  class="dropdown-item o_only default lang" data-lang="ed_ct">choice text</a>
-					<a data-prop="hint" href='javascript:void(0)'  class="dropdown-item q_only lang" data-lang="ed_qh">question hint</a>
-					<a data-prop="media" href='javascript:void(0)'  class="dropdown-item lang" data-lang="c_media">media</a>
+					<a data-prop="label" href='#'  class="dropdown-item o_only default lang" data-lang="ed_ct">choice text</a>
+					<a data-prop="hint" href='#'  class="dropdown-item q_only lang" data-lang="ed_qh">question hint</a>
+					<a data-prop="media" href='#'  class="dropdown-item lang" data-lang="c_media">media</a>
 					<a data-prop="appearance" href='#'  class="dropdown-item lang" data-lang="ed_appearance">appearance</a>
 					<a data-prop="parameters" href='#'  class="dropdown-item q_only lang" data-lang="ed_parameters">parameters</a>
 					<a data-prop="constraint" href='#'  class="dropdown-item lq_only ang" data-lang="ed_con">constraint</a>
@@ -138,8 +138,8 @@
 			<li>
 				<form class="form-inline">
 					<input id="viewType" type="checkbox" checked data-onstyle="primary" data-offstyle="info">
-					<a type="button" class="btn btn-success lang disabled m_save_survey" disabled="disabled">
-						<span class="lang" data-lang="c_save">Save</span>
+					<a type="button" href="#" class="btn btn-success disabled m_save_survey" disabled="disabled">
+						<span class="lang" data-lang="c_save"></span>
 						<span class="badge badge-light">0</span></a>
 					<a type="button" data-lang="c_test"
 					   class="btn btn-primary lang m_test_survey" href='#' target="_blank">Test</a>
@@ -199,7 +199,7 @@
 			</div>
 			<div class="modal-body">
 				<div id="settings_msg" class="alert alert-success" role="alert" style="display:none;"></div>
-				<form role="form">
+				<form>
 					<div class="form-group row">
 						<label for="set_survey_name" data-lang="c_form" class="lang col-sm-2 control-label">form</label>
 						<div class="col-sm-10">

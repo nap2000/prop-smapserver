@@ -14,7 +14,7 @@
 	<link href="/css/fa.v5.15.1.all.min.css" rel="stylesheet">
 	<link rel="shortcut icon" href="/favicon.ico" />
 	<link rel="stylesheet" href="css/normalize.css" />
-	<link rel="stylesheet" href="/css/app.css" />
+	<!--<link rel="stylesheet" href="/css/app.css" />-->
 
 	<link rel="stylesheet" href="/css/smap-bs.css" type="text/css">
 	<link href="/css/smap3.css" rel="stylesheet">
@@ -25,10 +25,10 @@
 	<script src="/js/app/theme.js"></script>
 	<script data-main="js/translate" src="js/libs/require.js"></script>
 </head>
-<body style="padding-top: 50px;">
+<body>
 
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap sticky-top">
-	<a class="navbar-brand" href="#"><i class="fa fa-edit" aria-hidden="true"></i><span class="lang" data-lang="c_trans"></span></a>
+	<a class="navbar-brand" href="#"><i class="fa fa-edit" aria-hidden="true"></i><span class="formName"></span></a>
 	<div class="spinner-grow text-danger hour_glass"></div>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
@@ -60,6 +60,13 @@
 			<li class="nav-item"><a id="m_form" class="nav-link lang" data-lang="c_form" href="/edit.html">form</a></li>
 			<li class="nav-item"><a id="m_roles" href="/surveyRoles.html" class="nav-link restrict_role org_role security_role lang" data-lang="c_roles"></a></li>
 			<li class="nav-item"><a id="m_meta" href="/meta.html" class="nav-link lang" data-lang="c_meta"></a></li>
+			<li>
+				<form class="form-inline">
+					<a type="button" href="#" class="btn btn-success save_form disabled m_save_survey" disabled="disabled">
+						<span class="lang" data-lang="c_save"></span>
+						<span class="badge badge-light">0</span></a>
+				</form>
+			</li>
 			<li id="m_help" class="nav-item"><a class="nav-link lang" data-lang="m_help" href="http://www.smap.com.au/docs/online-editor.html" target="_blank">Help</a></li>
 			<li class="nav-item"><a class="nav-link"  id="username" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"><i class="fa fa-user"></i> </a></li>
 
@@ -67,40 +74,45 @@
 	</div>
 </nav>
 
-<div class="uno" id="main_page">
+<div class="container-fluid">
 
-	<div id="translate">
-		<div class="statusbar">
-			<div class="row">
-				<div class="col-xs-4 col-sm-6 col-md-4">
-					<span class="formName"> </span>
-				</div>
+	<div class="card mt-2">
 
-				<div class="col-xs-8 col-sm-6 col-md-4">
-					<div id="infobox" class="alert alert-warning alert-dismissible" role="alert" style="display:none;">
-						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<span id="errormesg"></span>
+		<div class="bg-light row filtersShown">  <!-- Header Row -->
+
+			<div class="col-6 pt-4">
+				<form class="form" role="form">
+					<div class="form-group row">
+						<label class="lang col-4 control-label"  data-lang="svc_from_l"  for="language1"></label>
+						<div class="col-8">
+							<select id="language1" class="language_list form-control" ></select>
+						</div>
 					</div>
-				</div>
+				</form>
+			</div>
+			<div class="col-6 pt-4">
+				<form class="form" role="form">
+					<div class="form-group row">
+						<label class="lang col-4 control-label" data-lang="svc_to_l" for="language2"></label>
+						<div class="col-8">
+							<select id="language2" class="language_list form-control" ></select>
+						</div>
+					</div>
+				</form>
+			</div>
 
-				<div class="col-md-4 hidden-sm hidden-xs">
-					<a type="button" class="btn btn-success lang save_form m_save_survey"><span class="lang" data-lang="c_save">Save</span> <span class=" badge-light">0</span></a>
-				</div>
+		</div>
+	</div>
+
+	<div class="card mt-2">
+		<div class="col-sm-12">
+			<div class="bg-light row questions translate">
 			</div>
 		</div>
-		<div class="statusbar" style="top: 100px;">
-			<div class="small-12 medium-6 columns" style="line-height: 30px;">
-				<select id="language1" class="language_list" tabindex="-1"></select>
-			</div>
-			<div class="small-12 medium-6 columns" style="line-height: 30px;">
-				<select id="language2" class="language_list" tabindex="-1"></select>
-			</div>
-		</div>
-		<div class="questions translate" style="margin-top:100px"></div>
 	</div>
 </div>
 
-<img id="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
+
 
 <div id="autoTranslateModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="atLabel" aria-hidden="true">
 	<div class="modal-dialog">

@@ -33,7 +33,6 @@ require.config({
     },
     shim: {
     	'app/common': ['jquery'],
-        'bootstrap.min': ['jquery'],
         'jquery.autosize.min': ['jquery']
     }
 });
@@ -56,11 +55,6 @@ var	gMode = "survey",
 	gTempLanguageItems = [];
 
 $(document).ready(function() {
-	
-	var i,
-		params,
-		pArray = [],
-		param = [];
 
 	setTheme();
 	setupUserProfile(true);
@@ -114,7 +108,6 @@ $(document).ready(function() {
 		globals.gLanguage1 = $('#language1').val();
 		globals.gLanguage2 = $('#language2').val();
 		refreshView(gMode);
-		//$('#set_language').foundation('reveal', 'close');
  	 });
 	
 
@@ -141,6 +134,17 @@ $(document).ready(function() {
 			autoTranslate();
 		}
 	});
+
+	/*
+ 	 * Add check prior to the user leaving the screen
+ 	 */
+	window.onbeforeunload = function() {
+		if(globals.changes.length > 0) {
+			return localise.set["msg_leave"];
+		} else {
+			return;
+		}
+	};
 
 });
 
@@ -411,21 +415,20 @@ function refreshView() {
 			}
 		}
 	}
-	itemList = [];		// clear temporary question list
 
-	setTranslateHtml($('#translate .questions'), gTempLanguageItems, survey);
+	// Add the HTML
+	setTranslateHtml($('.questions'), gTempLanguageItems, survey);
 
-	var questionsedited="0";
+	// Respond to text changes
 	$(".lang_b").first().focus();
-	$(".lang_b").change(function(){
-		event.preventDefault();
+	$(".lang_b").change(function(e){
+		e.preventDefault();
 		var $this = $(this);
 		var index = $this.data("index");
 		var newVal = $this.val();
 		console.log(gTempLanguageItems[index]);
 		console.log("New val:" + newVal);
 		globals.model.modLabel(globals.gLanguage2, gTempLanguageItems[index].indexes, newVal, "text", "label");
-		$('.qcount').empty().append('Translations made: ' + (++questionsedited))
 	});
 
 	
@@ -435,52 +438,21 @@ function refreshView() {
  * Convert JSON to html
  */
 function setTranslateHtml($element, language_items, survey) {
-	var h =[],
-		idx = -1,
-		i;
+	var i;
 
 	for(i = 0; i < language_items.length; i++) {
-		h[++idx] = '<div class="fullest-width row center ribbonwrapper">';
-			h[++idx] = '<div class="ribbon">';
-				h[++idx] = '<div class="small-12 medium-6 columns">';
-					h[++idx] = '<textarea class="lang_a" tabindex="-1" readonly>';
-						h[++idx] = language_items[i].label_a;
-					h[++idx] = '</textarea>';
-				h[++idx] = '</div>';
-				h[++idx] = '<div class="small-12 medium-6 columns">';
-					h[++idx] = '<textarea class="lang_b" tabindex="';
-						h[++idx] = i + 1;
-						h[++idx] = '" data-index="';
-						h[++idx] = i;
-						h[++idx] = '">';
-						h[++idx] = language_items[i].label_b;
-					h[++idx] = '</textarea>';
-				h[++idx] = '</div>';	
-			h[++idx] = '</div>';
-		h[++idx] = '</div>';
+		var label_a = language_items[i].label_a;
+		var label_b = language_items[i].label_b || "";
+		var tabidx = i + 1;
+		var content = `
+			<div class="col-6">
+				<textarea class="lang_a" tabindex="-1" readonly>${label_a}</textarea>
+			</div>
+			<div class="col-6">
+				<textarea class="lang_b" tabindex="${tabidx}" data-index="${i}">${label_b}</textarea>
+			<div>`;
+		$element.append(content);
 	}
-
-	
-	$element.html(h.join(''));
-	translateHtmlFixup($element);
-	
-}
-
-function translateHtmlFixup($element) {
-
-	//$('.lang_a', $element).before('<h6 class="qtype">Original Language</h6>');
-	//$('.lang_b', $element).before('<h6 class="qtype">Translated Language</h6>');
-	$(document).on('focus', '.lang_a, .lang_b', function(event) {
-		event.preventDefault();
-		var half_height = $(window).height()/2.5;
-		$("html, body").animate({ 
-			scrollTop: 
-			($(this).offset().top 
-				-half_height) 
-			},100);
-		$(this).autosize();
-		$(this).parent().prev().find('.lang_a').autosize();
-	});
 
 }
 
