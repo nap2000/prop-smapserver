@@ -28,7 +28,7 @@
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap sticky-top">
-	<a class="navbar-brand" href="#"><i class="fa fa-edit" aria-hidden="true"></i><span class="formName"></span></a>
+	<a class="navbar-brand" href="#"><i class="fa fa-edit" aria-hidden="true"></i> <span class="lang" data-lang="c_trans"></span> <span class="formName"></span></a>
 	<div class="spinner-grow text-danger hour_glass"></div>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
@@ -54,6 +54,24 @@
 					<a class="dropdown-item restrict_role dashboard_role" style="display:none;" href="/dashboard/index.html"><span>Dashboard</span></a>
 					<a class="dropdown-item restrict_role admin_role analyst_role manage_role task_role" href="/app/reports.html"><span class="nav-label lang" data-lang="m_reports">reports</span></a>
 					<a class="dropdown-item restrict_role admin_role analyst_role" href="/app/userTrail.html"><span class="nav-label lang" data-lang="m_locations"></span></a>
+				</div>
+			</li>
+
+			<li class="nav-item dropdown active">
+				<a class="nav-link dropdown-toggle" href="#" id="c_file" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<span class="lang" data-lang="c_file"></span>
+				</a>
+				<div class="dropdown-menu" aria-labelledby="c_file">
+					<a id="c_save" class="dropdown-item lang save_form" data-lang="c_save" href="#"></a>
+				</div>
+			</li>
+
+			<li class="nav-item dropdown active">
+				<a class="nav-link dropdown-toggle" href="#" id="c_tools" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<span class="lang" data-lang="c_tools"></span>
+				</a>
+				<div class="dropdown-menu" aria-labelledby="c_tools">
+					<a id="m_auto_translate" class="dropdown-item lang" data-lang="svc_at" href="#"></a>
 				</div>
 			</li>
 
@@ -118,32 +136,31 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
+				<h5 id="atLabel" class="lang" data-lang="svc_at"></h5>
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 style="color:black;" id="atLabel" class="lang" data-lang="svc_at">at</h4>
 			</div>
 			<div class="modal-body">
-				<form role="form" class="form-horizontal">
-					<div class="form-group">
-						<label for="from_lang" class="lang col-sm-4 control-label" data-lang="svc_from_l"></label>
-						<div class="col-sm-8">
+				<form>
+					<div class="form-group row">
+						<label for="from_lang" class="lang col-4 control-label" data-lang="svc_from_l"></label>
+						<div class="col-8">
 							<select id="from_lang" class="translate_select form-control" data-live-search="true"></select>
 						</div>
 					</div>
-					<div class="form-group">
-						<label for="to_lang" class="lang col-sm-4 control-label" data-lang="svc_to_l"></label>
-						<div class="col-sm-8">
+					<div class="form-group row">
+						<label for="to_lang" class="lang col-4 control-label" data-lang="svc_to_l"></label>
+						<div class="col-8">
 							<select id="to_lang" class="translate_select form-control" data-live-search="true"></select>
 						</div>
 					</div>
-					<div class="form-group">
-						<label class="control-label col-sm-4 lang" for="overwrite" data-lang="ed_ow"></label>
-						<div class="col-sm-4">
+					<div class="form-group row">
+						<label class="control-label col-4 lang" for="overwrite" data-lang="ed_ow"></label>
+						<div class="col-4">
 							<div class="checkbox">
-								<label>
-									<input type="checkbox" id="overwrite">
-								</label>
+								<input type="checkbox" id="overwrite">
 							</div>
 						</div>
+
 					</div>
 				</form>
 			</div>
