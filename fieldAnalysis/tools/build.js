@@ -15,7 +15,7 @@
     	modernizr: '../../../../smapServer/WebContent/js/libs/modernizr',
     	rmm: '../../../../smapServer/WebContent/js/libs/responsivemobilemenu',
     	common: '../../../../smapServer/WebContent/js/app/common',
-	bootstrap: '../../../../smapServer/WebContent/js/libs/bootstrap.min',
+	bootstrap: '../../../../smapServer/WebContent/js/libs/bootstrap.bundle.v4.5.min',
     	data: '../../../../smapServer/WebContent/js/app/data',
         moment: '../../../../smapServer/WebContent/js/libs/moment-with-locales.min',
     	version: '../../../../smapServer/WebContent/js/app/version',

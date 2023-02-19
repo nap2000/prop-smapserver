@@ -55,7 +55,7 @@ requirejs.config({
         'file_input': ['jquery'],
         'app/summary_report': ['jquery'],
 	    'slimscroll': ['jquery'],
-        'toggle': ['bootstrap.min']
+        'toggle': ['jquery']
     }
 });
 

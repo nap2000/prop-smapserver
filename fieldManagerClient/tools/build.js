@@ -15,7 +15,7 @@
     	crf: '../../../../smapServer/WebContent/js/libs/commonReportFunctions',
     	openlayers: '../../../../smapServer/WebContent/js/libs/OpenLayers/OpenLayers',
     	lang_location: '../../../../smapServer/WebContent/js',
-	bootstrap: '../../../../smapServer/WebContent/js/libs/bootstrap.min',
+	bootstrap: '../../../../smapServer/WebContent/js/libs/bootstrap.bundle.v4.5.min',
     	bootstrapfileinput: '../../../../smapServer/WebContent/js/libs/bootstrap.file-input',
     	bootstrapcolorpicker: '../../../../smapServer/WebContent/js/libs/bootstrap-colorpicker.min',
 	bootbox: '../../../../smapServer/WebContent/js/libs/bootbox.min',

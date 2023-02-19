@@ -40,7 +40,7 @@ requirejs.config({
         modernizr: '../../../../js/libs/modernizr',
         common: '../../../../js/app/common',
         globals: '../../../../js/app/globals',
-        bootstrap: '../../../../js/libs/bootstrap.min',
+        bootstrap: '../../../../js/libs/bootstrap.bundle.v4.5.min',
         toggle: 'bootstrap-toggle.min',
         lang_location: '../../../../js',
         file_input: '../../../../js/libs/bootstrap.file-input',
@@ -65,7 +65,7 @@ requirejs.config({
         'slimscroll': ['jquery'],
         'crf': ['jquery'],
         'qrcode': ['jquery'],
-        'toggle': ['bootstrap.min'],
+        'toggle': ['bootstrap'],
         'sweetalert': ['jquery', 'bootstrap']
 
     }

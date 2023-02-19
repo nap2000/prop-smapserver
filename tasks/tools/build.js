@@ -27,7 +27,7 @@
 	qrcode: '../../../../smapServer/WebContent/js/libs/jquery-qrcode-0.14.0.min',
 	svgsave: '../../../../smapServer/WebContent/js/libs/saveSvgAsPng',
 	popper: '../../../../smapServer/WebContent/js/libs/popper.v1.16.1.min',
-	bootstrap: '../../../../smapServer/WebContent/js/libs/bootstrap.min',
+	bootstrap: '../../../../smapServer/WebContent/js/libs/bootstrap.bundle.v4.5.min',
     	bootstrapfileinput: '../../../../smapServer/WebContent/js/libs/bootstrap.file-input',
 	bootbox: '../../../../smapServer/WebContent/js/libs/bootbox.min',
 	file_input: '../../../../smapServer/WebContent/js/libs/bootstrap.file-input',

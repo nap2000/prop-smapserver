@@ -39,7 +39,7 @@ require.config({
     },
     shim: {
     	'app/common': ['jquery'],
-    	'bootbox': ['bootstrap.min'],
+    	'bootbox': ['jquery'],
     	'icheck': ['jquery'],
 		'multiselect': ['jquery', 'knockout'],
 

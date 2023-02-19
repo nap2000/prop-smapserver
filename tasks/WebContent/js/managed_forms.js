@@ -60,7 +60,6 @@ requirejs.config({
         'app/summary_report': ['jquery'],
         'qrcode': ['jquery'],
 	    'slimscroll': ['jquery'],
-        'toggle': ['bootstrap.min'],
         'multiselect': ['jquery', 'knockout']
     }
 });
