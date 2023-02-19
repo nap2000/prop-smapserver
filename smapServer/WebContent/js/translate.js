@@ -430,8 +430,6 @@ function refreshView() {
 		console.log("New val:" + newVal);
 		globals.model.modLabel(globals.gLanguage2, gTempLanguageItems[index].indexes, newVal, "text", "label");
 	});
-
-	
 }
 
 /*
@@ -440,6 +438,7 @@ function refreshView() {
 function setTranslateHtml($element, language_items, survey) {
 	var i;
 
+	$element.empty();
 	for(i = 0; i < language_items.length; i++) {
 		var label_a = language_items[i].label_a;
 		var label_b = language_items[i].label_b || "";
