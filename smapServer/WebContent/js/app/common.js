@@ -3729,24 +3729,9 @@ function showRoles(data, selectedRoles, setall) {
 
 			h[++idx] = '<label class="custom-control-label"';
 			h[++idx] = ' for="rolesel_' + i + '">';
-			h[++idx] = 	data[i].name;
+			h[++idx] = 	htmlEncode(data[i].name);
 			h[++idx] = '</label>';
 			h[++idx] = '</div>';
-
-			/*
-			h[++idx] = '<div class="checkbox">';
-			h[++idx] = '<label><input type="checkbox" value="';
-			h[++idx] = data[i].id;
-			h[++idx] = '"';
-			if(setall || roleSelected(data[i].id, selectedRoles)) {
-				h[++idx] = ' checked';
-			}
-			h[++idx] = '>';
-			h[++idx] = data[i].name;
-			h[++idx] = '</label>';
-			h[++idx] = '</div>';
-			*/
-
 		}
 		$('.role_select').show();
 		$('.role_select_roles').empty().append(h.join(''));
