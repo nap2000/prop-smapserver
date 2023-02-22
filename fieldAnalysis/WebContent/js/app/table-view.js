@@ -101,7 +101,7 @@ function setTableSurvey(view) {
 		{
 			autoOpen: false, closeOnEscape:true, draggable:true, model:true,
 			show:"drop",
-			zIndex: 2000,
+			zIndex: 3000,
 			buttons: [
 		        {
 		        	text: "Ok",
@@ -323,9 +323,9 @@ function setUserTableSurvey(view) {
 			autoOpen: false,
 			closeOnEscape:true,
 			draggable:true,
-			model:true,
+			modal:true,
 			show:"drop",
-			zIndex: 2000,
+			zIndex: 3000,
 			buttons: [
 				{
 					text: "Ok",

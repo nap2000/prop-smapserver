@@ -1224,7 +1224,7 @@ span.selectProject
 }
 
 #btn_edit_record, #btn_assign_record, #btn_mark_bad, #btn_edit_thingsat, .instance_functions {
-	width: 100%;
+	width: 90%;
 }
 
 .pace {
