@@ -326,9 +326,13 @@ function bar_graph(ticks, matrix, series, chart, data, pId) {
  
 	// Replot on resize events
 	function replot() {
-		plot.replot( { resetAxes: true, barMargin: 8 } );
+		try {
+			plot.replot({resetAxes: true, barMargin: 8});
+		} catch (error) {
+			// Ignore errors - this is a hack to get around calling of this function when not required
+		}
 	}
-	
+
 	$('#graph_panel' + pId).bind('resized', function() {
 		replot();
 	});

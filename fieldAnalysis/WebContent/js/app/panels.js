@@ -136,7 +136,9 @@ $(document).ready(function() {
 	 // Initialse the settings dialog
 	 $('#p_settings').dialog(
 		{
-			autoOpen: false, closeOnEscape:true, draggable:true, modal:true,
+			autoOpen: false,
+			closeOnEscape:true,
+			draggable:true,
 			show:"drop",
 			modal: true,
 			width:600,
@@ -336,6 +338,10 @@ $(document).ready(function() {
 	});
 	
 	enableUserProfile();
+
+	setTimeout(function() {
+		$('.ui-dialog, #filter_dialog').css('z-index','3000');	// Float the dialog over other controls
+	}, 0);
 	
 });
 
@@ -388,6 +394,9 @@ function getPanels(projectId) {
 					$('#status_msg_msg').empty().text("Error: Failed to get dashboard settings");
 				}
 				$("#status_msg").dialog("open");
+				setTimeout(function() {
+					$('.ui-dialog, #status_msg').css('z-index','3000');	// Float the dialog over other controls
+				}, 0);
 			}
 		});
 	}

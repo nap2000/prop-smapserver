@@ -80,7 +80,6 @@ $(document).ready(function() {
 		        {
 		        	text: "OK",
 		        	click: function() {
-		        		
 		        		$(this).dialog("close");
 		        	}
 		        }
@@ -90,6 +89,9 @@ $(document).ready(function() {
 	$('#filter_button').button().click(function() {
 		$('#filter_dialog').dialog( "option", "title", localise.set["a_fbv"] );
 		$("#filter_dialog").dialog("open");
+		setTimeout(function() {
+			$('.ui-dialog, #filter_dialog').css('z-index','3000');	// Float the dialog over other controls
+		}, 0);
 		return false;
 	});
 	
@@ -131,7 +133,10 @@ function showSettings($this) {
 	setSurveyViewControl(gSurveyControlView);		// Set the values in the settings dialog from the view
 	
 	$('#p_settings').dialog("open");
-	$('.ui-dialog, #p_settings').css('z-index',2000);	// Float the dialog over other controls
+	setTimeout(function() {
+		$('.ui-dialog, #p_settings').css('z-index','3000');	// Float the dialog over other controls
+	}, 0);
+
 }
 
 /*
@@ -1040,6 +1045,9 @@ function getViewSurveys (view) {
 				} else {
 					$('#status_msg_msg').empty().text("Error: Failed to get a list of surveys");
 					$("#status_msg").dialog("open");
+					setTimeout(function() {
+						$('.ui-dialog, #status_msg').css('z-index','3000');	// Float the dialog over other controls
+					}, 0);
 				}
 			}
 		});		

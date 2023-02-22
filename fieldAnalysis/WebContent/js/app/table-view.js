@@ -320,7 +320,10 @@ function setUserTableSurvey(view) {
 	 */
 	$('#instance_functions_popup').dialog(
 		{
-			autoOpen: false, closeOnEscape:true, draggable:true, model:true,
+			autoOpen: false,
+			closeOnEscape:true,
+			draggable:true,
+			model:true,
 			show:"drop",
 			zIndex: 2000,
 			buttons: [
@@ -771,7 +774,6 @@ function getTablePanel() {
 			return globals.gSelector.getViews()[i];
 		}
 	}
-	
 	return {};
 }
 
@@ -838,8 +840,8 @@ function addRightClickToTable($elem, sId, view) {
 			var $this = $(this);
 			var pkey = $this.data("pkey");
 			var survey_ident = $this.data("ident");	
-			var isBad = $this.parent().parent().find('.bad_r').size() !== 0;
-			var isReplaced = $this.parent().parent().find('.bad_replaced').size() !== 0;
+			var isBad = $this.parent().parent().find('.bad_r').length !== 0;
+			var isReplaced = $this.parent().parent().find('.bad_replaced').length !== 0;
 			var sId =  $this.data("id");	
 			var instanceid = $this.data("instanceid");
 
@@ -864,6 +866,9 @@ function addRightClickToTable($elem, sId, view) {
 			}
 			
 			$('#instance_functions_popup').dialog("open");
+			setTimeout(function() {
+				$('.ui-dialog, #instance_functions_popup').css('z-index','3000');	// Float the dialog over other controls
+			}, 0);
 			
 			return false;
 		});
