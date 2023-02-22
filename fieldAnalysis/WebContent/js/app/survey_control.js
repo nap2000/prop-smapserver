@@ -202,7 +202,7 @@ function getViewData(view) {
 	// Set the survey meta data
 	var sMeta = globals.gSelector.getSurvey(view.sId);
 	if(!sMeta) {
-		getSurveyMetaSE(view.sId, undefined, false, true, true, view.dateQuestionId);
+		getSurveyMetaSE(view.sId, undefined, false, true, true, view.dateQuestionId, undefined);
 	} else {
 		addFormPickList(sMeta);
 		addDatePickList(sMeta);
@@ -367,7 +367,7 @@ function surveyChangeEvent(sId) {
 	// Get the survey meta data
 	var surveyMeta = globals.gSelector.getSurvey(sId);
 	if(!surveyMeta) {
-		getSurveyMetaSE(sId, undefined, false, false, true);
+		getSurveyMetaSE(sId, undefined, false, false, true, undefined, undefined);
 	} else {
 		addDatePickList(surveyMeta);
 		addGeomPickList(surveyMeta);
@@ -793,7 +793,7 @@ function getData(view, nocache) {
 		} else {				// Whole of survey results
 			var sMeta = globals.gSelector.getSurvey(view.sId);
 			if (!sMeta) {
-				getSurveyMetaSE(view.sId, view, true, false, true, view.dateQuestionId);
+				getSurveyMetaSE(view.sId, view, true, false, true, view.dateQuestionId, undefined);
 			} else {
 				addDatePickList(sMeta);
 				getSurveyDataSE(view.sId, view);

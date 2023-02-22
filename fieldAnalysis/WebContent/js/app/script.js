@@ -407,7 +407,6 @@ function exportSurveyChanged() {
         }
         language = $('#export_language').val();
 
-
         if(!languages || languages.length == 0) {
             getLanguageList(sId, addMediaPickList);		// Retrieve the languages and questions for the default language
         } else {
@@ -419,16 +418,11 @@ function exportSurveyChanged() {
 
         sMeta = globals.gSelector.getSurvey(sId);
         if(!sMeta) {
-            getSurveyMetaSE(sId, {}, false,true, true, false, false);
+            getSurveyMetaSE(sId, {}, false,true, true, false, undefined);
         } else {
             addFormPickList(sMeta, checkedForms);
             addDatePickList(sMeta);
             addGeomPickList(sMeta);
-        }
-
-        // Update the thingsat model if we changed the survey
-        if($('#exportformat').val() === "thingsat") {
-            showModel();
         }
 
         exportQuerySelChanged();
@@ -484,9 +478,6 @@ function setExportControls() {
         $('.showshape,.showro,.showlang').show();
     } else if(format === "stata" || format === "spss") {
         $('.showshape,.showro,.showlang').show();
-    } else if(format === "thingsat") {
-        $('.showshape,.showro,.showlang').show();
-        showModel();			// Show the thingsat model
     } else if(format === "trail") {
         $('.showshape').show();
     } else if(format === "media") {
@@ -586,34 +577,6 @@ function addCustomReportList(templates) {
 
     $('#export_report_defn').html(h.join(''));
 
-}
-
-/* 
- * Show a newo4J model of the survey
- */
-function showModel() {
-    require(['app/neo_model'], function(neo_model) {
-        var sId = $('#export_survey option:selected').val();
-        if(sId != -1) {
-            var sMeta = globals.gSelector.getSurvey(sId);
-            if(!sMeta) {
-                getSurveyMetaSE(sId, {}, false, false, false, undefined, neo_model);
-            } else {
-                $('.showthingsat').show();
-
-                // Set the form to the value stored in the model
-                if(sMeta.model) {
-                    var graph = JSON.parse(sMeta.model);
-                    $('.osmform[value=' + graph.form + ']').prop("checked", "checked");
-                }
-
-                neo_model.init(sId, undefined, undefined, sMeta.model);
-                neo_model.showModel('#ta_model_show', 300, 200);
-            }
-        } else {
-            neo_model.clear('#ta_model_show');
-        }
-    });
 }
 
 /*

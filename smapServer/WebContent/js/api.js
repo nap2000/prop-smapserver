@@ -127,7 +127,7 @@ require([
 	    var sId = $('#survey').val();
 	    var sMeta = globals.gSelector.getSurvey(sId);
 	    if(!sMeta) {
-		    getSurveyMetaSE(sId, undefined, false, true, true, undefined, false, setUrl);
+		    getSurveyMetaSE(sId, undefined, false, true, true, undefined, setUrl);
 	    } else {
 		    setUrl();
 	    }

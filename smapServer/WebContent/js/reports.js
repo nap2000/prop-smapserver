@@ -473,7 +473,7 @@ require([
         // Set the survey meta data
         var sMeta = globals.gSelector.getSurvey(sId);
         if(!sMeta) {
-	        getSurveyMetaSE(sId, undefined, false, true, true, dateQuestionId, false, callback);
+	        getSurveyMetaSE(sId, undefined, false, true, true, dateQuestionId, callback);
         } else {
 	        addFormPickList(sMeta);
 	        addDatePickList(sMeta);
