@@ -73,21 +73,8 @@ $(document).ready(function() {
 	$('#forgottenPasswordEmail, #passwordValue').change(function(){
 		$('.pwd_alert, .pwd_home').hide();
 	});
-
-    $('#emailForm').bootstrapValidator({
-        feedbackIcons: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        }
-    });
     
     $('#resetPassword').bootstrapValidator({
-        feedbackIcons: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
         fields: {
             password: {
                 validators: {
