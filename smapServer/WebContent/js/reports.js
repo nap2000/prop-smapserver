@@ -210,6 +210,7 @@ require([
         var name = $('#r_name').val();
         var reportType = $('#reportType').val();
         var includeMeta = $('#includeMeta').prop('checked');
+		var includeReadOnly = $('#includeReadOnly').prop('checked');
         var odata2Data = $('#odata2Data').prop('checked');
         var split_locn = $('#splitlocn').prop('checked');
         var merge_select_multiple = $('#mergeSelectMultiple').prop('checked');
@@ -369,6 +370,12 @@ require([
 		        v: "true"
 	        });
         }
+		if(includeReadOnly) {
+			report.parameters.push({
+				k: "exp_ro",
+				v: "true"
+			});
+		}
         if(odata2Data) {
 	        report.parameters.push({
 		        k: "odata2",
@@ -740,6 +747,7 @@ require([
 
 			// Add parameters
 			var meta = false;
+			var readOnly = false;
 			var split_locn = false;
 			var odata2_data = false;
 			var merge_select_multiple = false;
@@ -758,6 +766,10 @@ require([
 				if(param.k === "meta") {
 					if(param.v === "true") {
 						meta = true;
+					}
+				} else if(param.k === "exp_ro") {
+					if(param.v === "true") {
+						readOnly = true;
 					}
 				} else  if(param.k === "form") {
 					gForm = +param.v;
@@ -797,6 +809,7 @@ require([
 				}
 			}
 			$('#includeMeta').prop('checked', meta);
+			$('#includeReadOnly').prop('checked', readOnly);
 			$('#splitlocn').prop('checked', split_locn);
 			$('#odata2Data').prop('checked', odata2_data);
 			$('#mergeSelectMultiple').prop('checked', merge_select_multiple);

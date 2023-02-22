@@ -586,6 +586,11 @@ $(document).ready(function() {
 		showSearchElements();
 	});
 
+	// Trigger change in survey or csv list
+	$('input[type=radio][name=search_source]').change(function() {
+		$('#a_survey_identifier').trigger('change');
+	});
+
 	$('#a_pdfno').change(function() {
 		if($(this).prop('checked')) {
 			$('.pdf_appearance_field').hide();
@@ -648,9 +653,9 @@ $(document).ready(function() {
 	$('#a_survey_identifier, #a_csv_identifier').change(function(){
 		var search_source = $('input[type=radio][name=search_source]:checked').val();
 		if(search_source === "survey") {
-			getQuestionsInSurvey($('.column_select'), $('.column_select_multiple'), $(this).val(), true, false, setAppearanceValues, true);
+			getQuestionsInSurvey($('.column_select'), $('.column_select_multiple'), $('#a_survey_identifier').val(), true, false, setAppearanceValues, true);
 		} else {
-			getQuestionsInCsvFile($('.column_select'), $('.column_select_multiple'), $(this).val(), true);
+			getQuestionsInCsvFile($('.column_select'), $('.column_select_multiple'), $('#a_csv_identifier').val(), true);
 		}
 	});
 
@@ -2292,14 +2297,8 @@ function respondToEvents($context) {
 			}
 		}
 
-		/*
-		 * Add appearance values for app choices
-		 */
-		setAppearanceValues();
-
 		// Add any appearance values not explicetely set
 		$('#a_other').val(otherAppearances);       // Not sure if we want to do this
-
 
 		$('#appearance_msg').hide();
 		$('#appearanceModal').modal({
@@ -3857,9 +3856,12 @@ function setNoFilter() {
 					// Custom - hardcoded
 					if(val === "search(" || val === "lookup_choices(") {
 						var params = getAppearanceParams(appearance);
+						gAppearanceQuestion = question;
 
 						// Now check parameters
 						if(params.length > 0) {
+							gAppearanceParams = params;
+
 							// 1. First parameter is the filename
 							if(params.filename.startsWith('linked_s')) {
 								var sIdent = params.filename.substring("linked_s".length - 1);
@@ -3875,14 +3877,12 @@ function setNoFilter() {
 								if(typeof csvIndex !== "undefined") {
 									getQuestionsInCsvFile($('.column_select'), $('.column_select_multiple'), csvIndex, true);
 								}
+								setAppearanceValues();
 							}
-
-							gAppearanceParams = params;
-
 						}
 
-						gAppearanceQuestion = question;
-						setAppearanceValues();
+
+
 
 						/*
 						 * Set the access value

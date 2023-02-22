@@ -963,7 +963,7 @@ define({
     "ed_fv": "Filter Value",
 	"ed_sfv": "Second Filter Value",
     "ed_choice_f": "Choice Filter",
-	"ed_vc": "Choice names must only contain letters, numbers. underscores, dashes and periods",
+	"ed_vc": "Choice names must only contain letters, numbers, spaces, underscores, dashes and periods",
 	"ed_vq": "The question name must start with a letter, underscore or colon and only contain letters, numbers, underscores, dashes and periods",
     "ed_ns": "Add a new survey using the 'File' menu before adding questions",
     "ed_kp": "Key Policy",

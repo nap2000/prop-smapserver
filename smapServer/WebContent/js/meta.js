@@ -191,6 +191,10 @@ require([
 						label: "c_device"
 					},
 					{
+						value: "today",
+						label: "c_today"
+					},
+					{
 						value: "subscriberid",
 						label: "c_subscriberid"
 					},
