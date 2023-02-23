@@ -1326,14 +1326,14 @@ function refreshMediaView(data, sId) {
 				h[++idx] = '<img width="100" height="100" src="';
 				h[++idx] = files[i].thumbnailUrl + addCacheBuster(files[i].thumbnailUrl);
 				h[++idx] = '" alt="';
-				h[++idx] = files[i].name;
+				h[++idx] = htmlEncode(files[i].name);
 				h[++idx] = '">';
 			}
 			h[++idx] = '</a>';
 			h[++idx] = '</td>';
 			h[++idx] = '<td class="filename">';
 			h[++idx] = '<p>';
-			h[++idx] = files[i].name;
+			h[++idx] = htmlEncode(files[i].name);
 			h[++idx] = '</p>';
 			h[++idx] = '</td>';
 			h[++idx] = '<td class="mediaManage">';

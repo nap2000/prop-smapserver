@@ -387,31 +387,31 @@ function updateMapList(data) {
 		
 		// name
 		h[++idx] = '<td>';
-		h[++idx] = data[i].name;
+		h[++idx] = htmlEncode(data[i].name);
 		h[++idx] = '</td>';
 
 		// type
 		h[++idx] = '<td>';
-		h[++idx] = data[i].type;
+		h[++idx] = htmlEncode(data[i].type);
 		h[++idx] = '</td>';
 		
 		// description
 		h[++idx] = '<td>';
-		h[++idx] = data[i].desc;
+		h[++idx] = htmlEncode(data[i].desc);
 		h[++idx] = '</td>';
 		
 		// details
 		h[++idx] = '<td>';
 		
-		h[++idx] = data[i].config.zoom +" levels";
+		h[++idx] = htmlEncode(data[i].config.zoom + " levels");
 		if(data[i].type === "mapbox" && data[i].config.mapid) {
-			h[++idx] = ", Mapbox Id: " + data[i].config.mapid;
+			h[++idx] = htmlEncode(", Mapbox Id: " + data[i].config.mapid);
 		}
 		if(data[i].type === "vector" && data[i].config.vectorData) {
-			h[++idx] = ", Vector file: " + data[i].config.vectorData;
+			h[++idx] = htmlEncode(", Vector file: " + data[i].config.vectorData);
 		}
 		if(data[i].type === "vector" && data[i].config.styleData) {
-			h[++idx] = ", styled by " + data[i].config.styleData;
+			h[++idx] = htmlEncode(", styled by " + data[i].config.styleData);
 		}
 		h[++idx] = '</td>';
 		
@@ -510,23 +510,23 @@ function refreshLocationView() {
 					h[++idx] = '<tr>';
 
 					h[++idx] = '<td>';
-					h[++idx] = gTags[i].group;
+					h[++idx] = htmlEncode(gTags[i].group);
 					h[++idx] = '</td>';
 
 					h[++idx] = '<td>';
-					h[++idx] = gTags[i].uid;
+					h[++idx] = htmlEncode(gTags[i].uid);
 					h[++idx] = '</td>';
 
 					h[++idx] = '<td>';
-					h[++idx] = gTags[i].name;
+					h[++idx] = htmlEncode(gTags[i].name);
 					h[++idx] = '</td>';
 
 					h[++idx] = '<td>';
-					h[++idx] = gTags[i].lat == "0" ? '' : gTags[i].lat;
+					h[++idx] = gTags[i].lat == "0" ? '' : htmlEncode(gTags[i].lat);
 					h[++idx] = '</td>';
 
 					h[++idx] = '<td>';
-					h[++idx] = gTags[i].lon == "0" ? '' : gTags[i].lon;
+					h[++idx] = gTags[i].lon == "0" ? '' : htmlEncode(gTags[i].lon);
 					h[++idx] = '</td>';
 
 					h[++idx] = '</tr>';
