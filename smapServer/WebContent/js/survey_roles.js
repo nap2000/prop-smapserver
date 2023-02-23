@@ -128,7 +128,7 @@ function projectChanged() {
 function surveyChangedRoles() {
 	gRoles = undefined;
     globals.gCurrentSurvey = $('#survey_name option:selected').val();
-	$('#survey_name_disp').html($('#survey_name option:selected').text());
+	$('#survey_name_disp').text($('#survey_name option:selected').text());
 	getAllRolesForSurvey();
 	
 	if(!gCache[globals.gCurrentSurvey]) {
@@ -202,13 +202,13 @@ function refreshRFQuestionSelect(questions) {
 	for(i = 0; i < questions.length; i++) {
 		if(questions[i].toplevel) {			// Only allow top level form questions in row filter
 			h[++idx] = '<option value="';
-			h[++idx] = questions[i].name;
+			h[++idx] = htmlEncode(questions[i].name);
 			h[++idx] = '"';
 			if (questions[i].id < 0) {       // Show meta in blue
 				h[++idx] = ' style="color:blue"';
 			}
 			h[++idx] = '>';
-			h[++idx] = questions[i].name;
+			h[++idx] = htmlEncode(questions[i].name);
 
 			h[++idx] = '</option>';
 
@@ -216,9 +216,7 @@ function refreshRFQuestionSelect(questions) {
 
 	}
 	$element.empty().append(h.join(''));
-	
 }
-
 
 /*
  * Convert roles to html
@@ -394,10 +392,10 @@ function refreshColumnSelect(questions, filter_columns) {
 	for(i = 0; i < questions.length; i++) {
 		h[++idx] = '<tr>';
 		h[++idx] = '<td>';
-			h[++idx] = questions[i].name;
+			h[++idx] = htmlEncode(questions[i].name);
 		h[++idx] = '</td>';
 		h[++idx] = '<td>';
-			h[++idx] = questions[i].q;
+			h[++idx] = htmlEncode(questions[i].q);
 			h[++idx] = '</td>';
 		h[++idx] = '<td><span class="colgroup"><input type="checkbox" name="colgroup" value="';
 		h[++idx] = i;
