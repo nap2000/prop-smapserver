@@ -388,7 +388,6 @@ function refreshColumnSelect(questions, filter_columns) {
 	h[++idx] = '</thead>';
 	h[++idx] = '<tbody>';
 
-	j = 0;
 	for(i = 0; i < questions.length; i++) {
 		h[++idx] = '<tr>';
 		h[++idx] = '<td>';
@@ -402,9 +401,11 @@ function refreshColumnSelect(questions, filter_columns) {
 		h[++idx] = '"';
 		
 		// See if this question has been included in the filter columns
-		while(j < filter_columns.length && filter_columns[j].id <= questions[i].id) {
+		j = 0;
+		while(j < filter_columns.length) {
 			if(filter_columns[j].id ==  questions[i].id) {
 				h[++idx] = ' checked';
+				break;
 			}
 			j++;
 		}
