@@ -5128,7 +5128,7 @@ function surveyChangedNotification(qName, assignQuestion, metaItem, alertId) {
 			qName = "-1";
 		}
 
-		getEligibleUsers(sId);
+		getEligibleUsers(sId, true);
 		getGroupSurveys(sId, setGroupSelector);
 
 		qList = globals.gSelector.getSurveyQuestions(sId, language);
@@ -5837,7 +5837,7 @@ function htmlEncode(input) {
 /*
  * Get the list of users from the server
  */
-function getEligibleUsers(sId) {
+function getEligibleUsers(sId, isNotification) {
 
 	if(sId > 0) {
 		addHourglass();
@@ -5858,13 +5858,15 @@ function getEligibleUsers(sId) {
 				h[++idx] = localise.set["c_none"];
 				h[++idx] = '</option>';
 
-				h[++idx] = '<option value="_submitter">';
-				h[++idx] = localise.set["c_submitter"];
-				h[++idx] = '</option>';
+				if(isNotification) {
+					h[++idx] = '<option value="_submitter">';
+					h[++idx] = localise.set["c_submitter"];
+					h[++idx] = '</option>';
 
-				h[++idx] = '<option value="_data">';
-				h[++idx] = localise.set["t_ad"];
-				h[++idx] = '</option>';
+					h[++idx] = '<option value="_data">';
+					h[++idx] = localise.set["t_ad"];
+					h[++idx] = '</option>';
+				}
 
 				if(data && data.length > 0) {
 					for(i = 0; i < data.length; i++) {
