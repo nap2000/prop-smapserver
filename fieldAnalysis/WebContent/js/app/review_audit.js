@@ -216,10 +216,10 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 					h[++idx] = data[i].id;
 					h[++idx] = '</td>';
 					h[++idx] = '<td>';
-					h[++idx] = data[i].change_reason;
+					h[++idx] = htmlEncode(data[i].change_reason);
 					h[++idx] = '</td>';
 					h[++idx] = '<td>';
-					h[++idx] = data[i].description;
+					h[++idx] = htmlEncode(data[i].description);
 					h[++idx] = '</td>';
 					h[++idx] = '<td>';
 					h[++idx] = '<button class="btn btn-light details" type="button" value="';
@@ -229,10 +229,10 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 					h[++idx] = '</button>';
 					h[++idx] = '</td>';
 					h[++idx] = '<td>';
-					h[++idx] = data[i].change_name;
+					h[++idx] = htmlEncode(data[i].change_name);
 					h[++idx] = '</td>';
 					h[++idx] = '<td>';
-					h[++idx] = data[i].reverse_name;
+					h[++idx] = htmlEncode(data[i].reverse_name);
 					h[++idx] = '</td>';
 					h[++idx] = '<td>';
 					h[++idx] = '<button class="btn btn-light reverse" type="button" value="';
@@ -276,7 +276,7 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 								h[++idx] = '] ';
 								h[++idx] = localise.set["rev_cq"];
 								h[++idx] = ' ';
-								h[++idx] = data[j].qname;
+								h[++idx] = htmlEncode(data[j].qname);
 								if (data[j].qtype === "select") {
 									h[++idx] = ' ';
 									if (data[j].set) {
@@ -285,16 +285,16 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 										h[++idx] = localise.set["rev_usc"];
 									}
 									h[++idx] = ' ';
-									h[++idx] = data[j].newValue;
+									h[++idx] = htmlEncode(data[j].newValue);
 								} else {
 									h[++idx] = ' ';
 									h[++idx] = localise.set["c_from"];
 									h[++idx] = ' "';
-									h[++idx] = data[j].oldValue;
+									h[++idx] = htmlEncode(data[j].oldValue);
 									h[++idx] = '" ';
 									h[++idx] = localise.set["c_to"];
 									h[++idx] = ' "';
-									h[++idx] = data[j].newValue;
+									h[++idx] = htmlEncode(data[j].newValue);
 									h[++idx] = '"';
 								}
 								h[++idx] = '</li>';

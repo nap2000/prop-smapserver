@@ -134,6 +134,10 @@ require([
 				+ (current.length > 0 ? " " : "")
 				+ $('#email_content_ap option:selected').val());
 		});
+
+		$('#m_refresh').click(function(){
+			getNotifications(globals.gCurrentProject);
+		});
 	});
 
 	function projectSet() {

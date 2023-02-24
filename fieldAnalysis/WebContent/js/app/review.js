@@ -88,6 +88,11 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 			getRelevance();
 		});
 
+		$('#m_refresh').click(function() {
+			getData();
+			getRelevance();
+		});
+
 		// Set change function on the other text question
 		$('#target_question_name').change(function() {
 			getData();
@@ -384,10 +389,10 @@ function getData() {
 			for(i = 0; i < data.length; i++) {
 				h[++idx] = "<tr>";
 				h[++idx] = '<td>';
-				h[++idx] = data[i].text;
+				h[++idx] = htmlEncode(data[i].text);
 				h[++idx] = '</td>';
 				h[++idx] = '<td>';
-				h[++idx] = data[i].count;
+				h[++idx] = htmlEncode(data[i].count);
 				h[++idx] = '</td>';
 				h[++idx] = '<td>';
 				h[++idx] = '<button type="button" class="btn btn-light review_update" value="';
@@ -496,7 +501,7 @@ function textUpdate() {
 		gUpdate.valueFilter = gTextValues[gTextIdx].text;
 
 	gCountRecords = parseInt(gTextValues[gTextIdx].count);
-	$text_change_list.html(gTextValues[gTextIdx].text);
+	$text_change_list.text(gTextValues[gTextIdx].text);
 
 	// Add existing option selection options
 
@@ -509,7 +514,7 @@ function textUpdate() {
 			h[++idx] = '<option value="';
 			h[++idx] = gRelevance[0].options[i].name;
 			h[++idx] = '">';
-			h[++idx] = gRelevance[0].options[i].label;
+			h[++idx] = htmlEncode(gRelevance[0].options[i].label);
 			h[++idx] = '</option>';
 		}
 	}
@@ -531,7 +536,7 @@ function textUpdate() {
 			h[++idx] = '<option value="';
 			h[++idx] = i;	// Use any unique value other than "", only the text content is used
 			h[++idx] = '">';
-			h[++idx] = gTextValues[i].text;
+			h[++idx] = htmlEncode(gTextValues[i].text);
 			h[++idx] = '</option>';
 		}
 	}
@@ -719,7 +724,7 @@ function addSecondarySelects(choices) {
 		h[++idx] = '<option value="';
 		h[++idx] = choices[i].value;
 		h[++idx] = '">';
-		h[++idx] = choices[i].label;
+		h[++idx] = htmlEncode(choices[i].label);
 		h[++idx] = '</option>';
 	}
 
@@ -748,7 +753,7 @@ function getFormList(sId) {
 					h[++idx] = '<option value="';
 					h[++idx] = data.forms[i].f_id;
 					h[++idx] = '">';
-					h[++idx] = data.forms[i].name;
+					h[++idx] = htmlEncode(data.forms[i].name);
 					h[++idx] = '</option>';
 				}
 			}

@@ -167,7 +167,7 @@ require([
 					}
 					h[++idx] = '>';
 					h[++idx] = '<td>';
-					h[++idx] = gTemplates[i].name;
+					h[++idx] = htmlEncode(gTemplates[i].name);
 					h[++idx] = '</td>';
 
 					// Not available checkbox
@@ -197,7 +197,7 @@ require([
 
 					// rule
 					h[++idx] = '<td style="text-align: center; word-break: break-all;">';
-					h[++idx] = gTemplates[i].rule;
+					h[++idx] = htmlEncode(gTemplates[i].rule);
 					h[++idx] = '</td>';
 
 					// Actions
