@@ -549,7 +549,7 @@ define([
 				h[++idx] = ' data-prop="';
 				h[++idx] = selProperty;
 				h[++idx] = '">';
-				h[++idx] = '<i class="fa fa-edit edit_icon"></i> ';
+				h[++idx] = '<i class="fa fa-edit"></i> ';
 				h[++idx] = localise.set["c_edit"];
 				h[++idx] = '</button>';
 				h[++idx] = '</div>';		// End Col
@@ -579,7 +579,7 @@ define([
 				h[++idx] = ' data-prop="';
 				h[++idx] = selProperty;
 				h[++idx] = '">';
-				h[++idx] = '<i class="fa fa-edit edit_icon"></i> ';
+				h[++idx] = '<i class="fa fa-edit"></i> ';
 				h[++idx] = localise.set["c_edit"];
 				h[++idx] = '</button>';
 				h[++idx] = '</div>';		// End Col
