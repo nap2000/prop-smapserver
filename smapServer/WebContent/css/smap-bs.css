@@ -101,13 +101,11 @@ tr.deleted td a {
 .danger {
 	background-color:red!important;
 	border-color:red;
-	color: white;
 }
 
 .warning {
 	background-color:orange!important;
 	border-color:orange;
-	color: white;
 }
 
 .blocked {
