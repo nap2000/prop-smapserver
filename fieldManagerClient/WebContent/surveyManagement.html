@@ -92,7 +92,15 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 			<li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
 			<li id="m_training" class="nav-item d-none"><a class="nav-link" id="train_link" href="#" target="_blank"><span class="nav-label lang" data-lang="m_train">training</span></a></li>
-			<li class="nav-item"><a class="nav-link"  id="username" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"><i class="fa fa-user"></i> </a></li>
+			<li class="nav-item dropdown active">
+				<a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+				</a>
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="m_profile">
+					<a class="nav-link text-center"  id="username" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"><i class="fa fa-user"></i> </a>
+					<a class="dropdown-item lang" data-lang="c_change_p" href="/app/changePassword.html"></a>
+				</div>
+			</li>
 		</ul>
 
 	</div>

@@ -123,6 +123,7 @@ define({
     "c_c_p": "Confirm Password",
     "c_c_d": "Confirm Delete",
     "c_r_p": "Reset Password",
+    "c_change_p": "Change Password",
     "c_reset": "Reset",
     "c_en": "Enable",
     "c_dis": "Disable",
