@@ -1578,9 +1578,7 @@ define([
                         var isEmpty = true;
 
                         if(questions.length > 0) {
-                            for(j = 0; j < questions.length; j++) {
-                                isEmpty = false;
-                            }
+                            isEmpty = false;
                         }
 
                         if(isEmpty) {
@@ -1626,7 +1624,7 @@ define([
 
 		                }
 
-		                if(isEmpty) {
+		                if(isEmpty && inGroup) {
 			                isValid = false;
 			                addValidationError(
 				                container,
