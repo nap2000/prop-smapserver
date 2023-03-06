@@ -41,7 +41,6 @@ requirejs.config({
 		pace: '../../../../js/libs/wb/pace/pace.min'
 	},
 	shim: {
-
 		'common': ['jquery'],
 	}
 });

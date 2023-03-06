@@ -2027,8 +2027,7 @@ require([
                 break;
             }
         }
-
-        saveConfig(config);
+        saveColumns();
     }
 
     /*
