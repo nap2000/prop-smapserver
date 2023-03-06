@@ -154,18 +154,9 @@ require([
 		var i,
 			h = [],
 			idx = -1,
-			formList = surveyList.forms;
+			formList = surveyList.forms,
+			taskList = surveyList.data;
 
-
-		// Get the presaved records and refresh the task view
-		dbstorage.getRecords().then( function(records) {
-			if (records) {
-				showTaskList(records, filterProjectId);
-			} else {
-				$('#tasks_count').html('(0)');
-				$('#task_list').html('');
-			}
-		});
 
 		// Refresh the view of forms
 		if (formList) {
@@ -174,11 +165,27 @@ require([
 			$('#forms_count').html('(0)');
 			$('#form_list').html('');
 		}
+
+		// Refresh the view of tasks
+		if (taskList) {
+			showTaskList(taskList, filterProjectId);
+		} else {
+			$('#tasks_count').html('(0)');
+			$('#task_list').html('');
+
+			// Get the presaved records and refresh the task view
+			dbstorage.getRecords().then( function(records) {
+				if (records) {
+					showTaskList(records, filterProjectId);
+				}
+			});
+		}
 	}
 
 	/*
-     * Fill in the survey list
-    */
+     * Fill in the survey list after a service worker notification
+     * In incognito mode these might not be received
+     */
 	function surveyDataFromNetwork(surveyList, filterProjectId) {
 
 		var i,
