@@ -1204,7 +1204,6 @@ function setupQuestionTypes($elem, columns, draggable, currentType) {
 		count,
 		name;
 
-	h[++idx] = '<div class="margin-bottom">';
 	for(i = 0; i < types.length; i++) {
 
 		if(types[i].canSelect && isCompatible(types[i].compatTypes, currentType) ) {
@@ -1245,8 +1244,6 @@ function setupQuestionTypes($elem, columns, draggable, currentType) {
 			//count++;
 		}
 	}
-	h[++idx] = '</div>';	// End of a row
-	//h[++idx] = '</div>';	// End of a row
 
 	$elem.html(h.join(''));
 

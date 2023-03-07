@@ -17,12 +17,6 @@
     	mapbox_app: '../../../../smapServer/WebContent/js/app/mapbox_app',
     	crf: '../../../../smapServer/WebContent/js/libs/commonReportFunctions',
     	lang_location: '../../../../smapServer/WebContent/js',
-	datatables: '../../../../smapServer/WebContent/js/libs/DataTables/datatables.min',
-	datatables_b4: '../../../../smapServer/WebContent/js/libs/datatables.b4.min',
-	'datatables.net': '../../../../smapServer/WebContent/js/libs/DataTables/DataTables/js/jquery.dataTables',
-	'datatables.net-bs': '../../../../smapServer/WebContent/js/libs/DataTables/DataTables/js/dataTables.bootstrap',
-	'datatables.select': '../../../../smapServer/WebContent/js/libs/DataTables/Select/js/dataTables.select.min',
-	'datatables.select.v1.3.0': '../../../../smapServer/WebContent/js/libs/DataTables/Select/js/dataTables.select.v1.3.0.min',
 	toggle: '../../../../smapServer/WebContent/js/libs/bootstrap-toggle.min',
 	qrcode: '../../../../smapServer/WebContent/js/libs/jquery-qrcode-0.14.0.min',
 	svgsave: '../../../../smapServer/WebContent/js/libs/saveSvgAsPng',
@@ -57,7 +51,7 @@
         },
         {
             name: '../managed_forms',
-	    exclude: ['jquery', 'bootstrap', 'datatables_b4']
+	    exclude: ['jquery', 'bootstrap']
         },
         {
             name: '../linkages',
@@ -68,15 +62,15 @@
         },
         {
             name: '../log',
-	    exclude: ['jquery', 'bootstrap', 'datatables_b4']
+	    exclude: ['jquery', 'bootstrap']
         },
         {
             name: '../contacts',
-	    exclude: ['jquery', 'bootstrap', 'datatables_b4']
+	    exclude: ['jquery', 'bootstrap']
 	},
         {
             name: '../campaign',
-	    exclude: ['jquery', 'bootstrap', 'datatables_b4']
+	    exclude: ['jquery', 'bootstrap']
 	}
 
     ]

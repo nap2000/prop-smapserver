@@ -48,7 +48,6 @@ require.config({
     },
     shim: {
     	'rmm': ['jquery'],
-    	'jquery.dataTables.min': ['jquery'],
     	'common': ['jquery'],
     	
     	'app/jqplot_image': ['jquery'],
@@ -75,8 +74,6 @@ require.config({
 require(['jquery', 'jquery_ui', 'rmm', 'common', 'localise', 'globals', 'moment',
          
          'main/jqplot_main',
-         'jquery.dataTables.min',
-         
          'app/jqplot_image',
          'app/map-functions',
          'app/map-ol',
