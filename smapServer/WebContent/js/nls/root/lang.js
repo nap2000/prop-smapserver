@@ -1504,6 +1504,8 @@ define({
     "cm_14days": "14 days",
     "cm_30days": "30 days",
 
-    "fp_nm": "No matches found"
+    "fp_nm": "No matches found",
+
+    "pw_gen": "Generate Password"
 
 });
