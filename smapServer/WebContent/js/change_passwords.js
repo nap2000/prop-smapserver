@@ -59,7 +59,7 @@ require([
 					validators: {
 						identical: {
 							field: 'confirmPassword',
-							message: 'The password and its confirm are not the same'
+							message: localise.set["pw_mm"]
 						}
 					}
 				},
@@ -67,7 +67,7 @@ require([
 					validators: {
 						identical: {
 							field: 'password',
-							message: 'The password and its confirm are not the same'
+							message: localise.set["pw_mm"]
 						}
 					}
 				}
@@ -130,8 +130,9 @@ require([
 			password += chars.charAt(i);
 		}
 
-		$('#generated_password').text(password);
-		$('#passwordConfirm, #passwordValue').val(password);
+		$('#passwordConfirm, #passwordValue, #generated_password')
+			.val(password).trigger('change');
+		$('#resetPassword').validate();
 	}
 
 

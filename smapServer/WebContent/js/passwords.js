@@ -80,7 +80,7 @@ require([
 					validators: {
 						identical: {
 							field: 'confirmPassword',
-							message: 'The password and its confirm are not the same'
+							message: localise.set["pw_mm"]
 						}
 					}
 				},
@@ -88,7 +88,7 @@ require([
 					validators: {
 						identical: {
 							field: 'password',
-							message: 'The password and its confirm are not the same'
+							message: localise.set["pw_mm"]
 						}
 					}
 				}

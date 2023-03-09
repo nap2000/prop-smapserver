@@ -1506,6 +1506,7 @@ define({
 
     "fp_nm": "No matches found",
 
-    "pw_gen": "Generate Password"
+    "pw_gen": "Generate Password",
+    "pw_mm": "The password and its confirm are not the same"
 
 });
