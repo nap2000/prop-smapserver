@@ -78,24 +78,25 @@ require([
 			e.preventDefault();
 
 			var pd = {
-					onetime: gToken,
 					password: $('#passwordValue').val()
 				},
 				pdString;
 
 			pdString = JSON.stringify(pd);
 
-
 			addHourglass();
 			$.ajax({
 				type: "POST",
 				cache: false,
-				url: "/surveyKPI/onetimelogon?lang=" + gUserLocale,
+				dataType: 'text',
+				contentType: "application/json",
+				url: "/surveyKPI/user/password?lang=" + gUserLocale,
 				data: { passwordDetails: pdString },
 				success: function(data, status) {
 					removeHourglass();
 					$('.pwd_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_pr"]);
 					$('.pwd_home').show();
+
 				}, error: function(data, status) {
 					removeHourglass();
 					$('.pwd_alert').show().addClass('alert-danger').removeClass('alert-success').html(localise.set["c_error"] + ": " + data.responseText);
@@ -113,6 +114,9 @@ require([
 		$('#genPassword').click(function(){
 			getPassword(6);
 		});
+		$('#goback').click(function(){
+			history.back();
+		})
 	});
 
 	function gotuser() {
@@ -132,7 +136,6 @@ require([
 
 		$('#passwordConfirm, #passwordValue, #generated_password')
 			.val(password).trigger('change');
-		$('#resetPassword').validate();
 	}
 
 
