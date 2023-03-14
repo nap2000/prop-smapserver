@@ -94,38 +94,14 @@ require([
 				}
 			}
 		});
+	});
 
-		$('#resetPasswordSubmit').click(function(e){
-			e.preventDefault();
+	$('#forgottenPasswordSubmit').click(function(e){
+		e.preventDefault();
 
-			var pd = {
-					onetime: gToken,
-					password: $('#passwordValue').val()
-				},
-				pdString;
-
-			pdString = JSON.stringify(pd);
-
-
-			addHourglass();
-			$.ajax({
-				type: "POST",
-				cache: false,
-				url: "/surveyKPI/onetimelogon?lang=" + gUserLocale,
-				data: { passwordDetails: pdString },
-				success: function(data, status) {
-					removeHourglass();
-					$('.pwd_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_pr"]);
-					$('.pwd_home').show();
-				}, error: function(data, status) {
-					removeHourglass();
-					$('.pwd_alert').show().addClass('alert-danger').removeClass('alert-success').html(localise.set["c_error"] + ": " + data.responseText);
-				}
-			});
-		});
-
-		$('#forgottenPasswordSubmit').click(function(e){
-			e.preventDefault();
+		if (! $('#emailForm')[0].checkValidity()) {
+			$('#emailForm')[0].reportValidity()
+		} else {
 
 			var email = $('#forgottenPasswordEmail').val();
 			$('.pwd_alert, .pwd_home').hide();
@@ -134,24 +110,56 @@ require([
 				type: "GET",
 				cache: false,
 				url: "/surveyKPI/onetimelogon/" + email,
-				success: function(data, status) {
+				success: function (data, status) {
 					removeHourglass();
 					$('.pwd_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_es"] + " " + email);
 					$('.pwd_home').show();
-				}, error: function(data, status) {
+				}, error: function (data, status) {
 					removeHourglass();
 					var msg = data.responseText;
 					var idx1 = msg.indexOf('ApplicationException:');
 					var idx2 = msg.indexOf('<', idx1);
-					if(idx1 > 0 && idx2 > idx1) {
+					if (idx1 > 0 && idx2 > idx1) {
 						msg = msg.substring(idx1, idx2);
 					}
 					$('.pwd_alert').show().addClass('alert-danger').removeClass('alert-success').html(localise.set["c_error"] + ": " + msg);
 				}
 			});
-		});
+		}
 
 	});
+
+
+	$('#resetPasswordSubmit').click(function(e){
+		e.preventDefault();
+
+		var pd = {
+				onetime: gToken,
+				password: $('#passwordValue').val()
+			},
+			pdString;
+
+		pdString = JSON.stringify(pd);
+
+
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			cache: false,
+			url: "/surveyKPI/onetimelogon?lang=" + gUserLocale,
+			data: { passwordDetails: pdString },
+			success: function(data, status) {
+				removeHourglass();
+				$('.pwd_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_pr"]);
+				$('.pwd_home').show();
+			}, error: function(data, status) {
+				removeHourglass();
+				$('.pwd_alert').show().addClass('alert-danger').removeClass('alert-success').html(localise.set["c_error"] + ": " + data.responseText);
+			}
+		});
+	});
+
+
 
 });
 
