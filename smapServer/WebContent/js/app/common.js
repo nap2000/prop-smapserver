@@ -436,10 +436,6 @@ function addUserDetailsPopupBootstrap4() {
 	h[++idx] = localise.set["c_close"];
 	h[++idx] = '</button>';
 
-	h[++idx] = '<button id="userProfileLogout"type="button" class="btn btn-default" data-dismiss="modal">';
-	h[++idx] = localise.set["c_logout"];
-	h[++idx] = '</button>';
-
 	h[++idx] = '<button id="userProfileSave" type="button" class="btn btn-primary">';
 	h[++idx] = localise.set["c_save"];
 	h[++idx] = '</button>';
