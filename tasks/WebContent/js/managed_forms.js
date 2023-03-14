@@ -3310,7 +3310,9 @@ require([
 
         if(gTasks.gBulkInstances && gTasks.gBulkInstances.length) {
             for(i = 0; i < gTasks.gBulkInstances.length; i++ ) {
-                globals.gMainTable.row('#' + escSelector(gTasks.gBulkInstances[i])).select();      // Reselect the row, escape the :
+                if(gTasks.gBulkInstances[i]) {
+                    globals.gMainTable.row('#' + escSelector(gTasks.gBulkInstances[i])).select();      // Reselect the row, escape the :
+                }
             }
         }
     }
