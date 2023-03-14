@@ -126,29 +126,34 @@ $(document).ready(function() {
     
     $('#forgottenPasswordSubmit').click(function(e){
     	e.preventDefault();
-    	
-    	var email = $('#forgottenPasswordEmail').val();
-	    $('.pwd_alert, .pwd_home').hide();
-		addHourglass();
-    	$.ajax({
-			  type: "GET",
-			  cache: false,
-			  url: "/surveyKPI/onetimelogon/" + email,
-			  success: function(data, status) {
-				  removeHourglass();
-				  $('.pwd_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_es"] + " " + email);
-				  $('.pwd_home').show();
-			  }, error: function(data, status) {
-				  removeHourglass();
-				  var msg = data.responseText;
-				  var idx1 = msg.indexOf('ApplicationException:');
-				  var idx2 = msg.indexOf('<', idx1);
-				  if(idx1 > 0 && idx2 > idx1) {
-				  	msg = msg.substring(idx1, idx2);
-				  }
-			    $('.pwd_alert').show().addClass('alert-danger').removeClass('alert-success').html(localise.set["c_error"] + ": " + msg);
-			  }
-		});
+
+		if (! $('#emailForm')[0].checkValidity()) {
+			$('#emailForm')[0].reportValidity()
+		} else {
+
+			var email = $('#forgottenPasswordEmail').val();
+			$('.pwd_alert, .pwd_home').hide();
+			addHourglass();
+			$.ajax({
+				type: "GET",
+				cache: false,
+				url: "/surveyKPI/onetimelogon/" + email,
+				success: function (data, status) {
+					removeHourglass();
+					$('.pwd_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_es"] + " " + email);
+					$('.pwd_home').show();
+				}, error: function (data, status) {
+					removeHourglass();
+					var msg = data.responseText;
+					var idx1 = msg.indexOf('ApplicationException:');
+					var idx2 = msg.indexOf('<', idx1);
+					if (idx1 > 0 && idx2 > idx1) {
+						msg = msg.substring(idx1, idx2);
+					}
+					$('.pwd_alert').show().addClass('alert-danger').removeClass('alert-success').html(localise.set["c_error"] + ": " + msg);
+				}
+			});
+		}
 	
     });
 });
