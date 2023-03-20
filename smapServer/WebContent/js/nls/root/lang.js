@@ -604,6 +604,7 @@ define({
     "msg_pss": "Please select a survey",
     "msg_nm": "No images, video, audio found",
     "msg_pr": "Password has been reset",
+    "msg_pex": "Your password has expired please set a new one",
     "msg_es": "Email has been sent to",
     "msg_refresh": "You have made some changes and not saved them, are you sure you want to refresh?",
     "msg_leave": "You have made some changes and not saved them, are you sure you want to leave?",

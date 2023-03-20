@@ -50,6 +50,10 @@ require([
 		setCustomUserForgottonPasswords();			// Apply custom javascript
 		setTheme();
 		localise.setlang();		// Localise HTML
+		var params = location.search.substr(location.search.indexOf("?") + 1);
+		if(params.indexOf('expired') >= 0) {
+			$('.pwd_alert').show().removeClass('alert-danger, alert-success').addClass('alert-info').html(localise.set["msg_pex"]);
+		}
 
 		getLoggedInUser(gotuser, false, false, undefined, false, true);
 
@@ -94,12 +98,12 @@ require([
 				data: { passwordDetails: pdString },
 				success: function(data, status) {
 					removeHourglass();
-					$('.pwd_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_pr"]);
+					$('.pwd_alert').show().removeClass('alert-danger, alert-info').addClass('alert-success').html(localise.set["msg_pr"]);
 					$('.pwd_home').show();
 
 				}, error: function(data, status) {
 					removeHourglass();
-					$('.pwd_alert').show().addClass('alert-danger').removeClass('alert-success').html(localise.set["c_error"] + ": " + data.responseText);
+					$('.pwd_alert').show().removeClass('alert-success, alert-info').addClass('alert-danger').html(localise.set["c_error"] + ": " + data.responseText);
 				}
 			});
 		});
@@ -112,7 +116,7 @@ require([
 			}
 		})
 		$('#genPassword').click(function(){
-			getPassword(6);
+			getPassword(8);
 		});
 		$('#goback').click(function(){
 			history.back();
