@@ -37,11 +37,10 @@ requirejs.config({
 
 require([
 	'jquery',
-	'bootstrapValidator.min',
 	'app/localise',
 	'app/globals',
 	'app/common'
-], function($, bv, localise, globals) {
+], function($, localise, globals) {
 
 	var gToken;
 
@@ -52,39 +51,26 @@ require([
 		localise.setlang();		// Localise HTML
 		var params = location.search.substr(location.search.indexOf("?") + 1);
 		if(params.indexOf('expired') >= 0) {
-			$('.pwd_alert').show().removeClass('alert-danger, alert-success').addClass('alert-info').html(localise.set["msg_pex"]);
+			$('.pwd_alert').show().removeClass('alert-danger alert-success').addClass('alert-info').html(localise.set["msg_pex"]);
 		}
+		$('#passwordConfirm, #passwordValue').keydown(function() {
+			$('.pwd_alert').hide();
+		});
 
 		getLoggedInUser(gotuser, false, false, undefined, false, true);
-
-		$('#resetPassword').bootstrapValidator({
-			fields: {
-				password: {
-					validators: {
-						identical: {
-							field: 'confirmPassword',
-							message: localise.set["pw_mm"]
-						}
-					}
-				},
-				confirmPassword: {
-					validators: {
-						identical: {
-							field: 'password',
-							message: localise.set["pw_mm"]
-						}
-					}
-				}
-			}
-		});
 
 		$('#changePasswordSubmit').click(function(e){
 			e.preventDefault();
 
+			if(!validate()) {
+				return;
+			}
+
 			var pd = {
-					password: $('#passwordValue').val()
+					password: $('#password').val()
 				},
-				pdString;
+				pdString,
+				user =
 
 			pdString = JSON.stringify(pd);
 
@@ -98,33 +84,49 @@ require([
 				data: { passwordDetails: pdString },
 				success: function(data, status) {
 					removeHourglass();
-					$('.pwd_alert').show().removeClass('alert-danger, alert-info').addClass('alert-success').html(localise.set["msg_pr"]);
+
+					if (window.PasswordCredential) {
+						const creds = new PasswordCredential({
+							id: $('#id').val(),
+							password: $('#password').val()
+						});
+						navigator.credentials.store(creds).then((creds) => {
+
+						});
+					}
+
+					$('.pwd_alert').show().removeClass('alert-danger alert-info').addClass('alert-success').html(localise.set["msg_pr"]);
 					$('.pwd_home').show();
 
 				}, error: function(data, status) {
 					removeHourglass();
-					$('.pwd_alert').show().removeClass('alert-success, alert-info').addClass('alert-danger').html(localise.set["c_error"] + ": " + data.responseText);
+					$('.pwd_alert').show().removeClass('alert-success alert-info').addClass('alert-danger').html(localise.set["c_error"] + ": " + data.responseText);
 				}
 			});
 		});
 
 		$('#generate_password').change(function() {
+			$('.pwd_alert').hide();
 			if($(this).is(':checked')) {
 				$('#genGroup').removeClass("d-none").show();
+				getPassword(8);
 			} else {
 				$('#genGroup').hide();
 			}
 		})
-		$('#genPassword').click(function(){
+		$('#genPassword').click(function(e){
+			e.preventDefault();
+			$('.pwd_alert').hide();
 			getPassword(8);
 		});
+
 		$('#goback').click(function(){
 			history.back();
 		})
 	});
 
 	function gotuser() {
-		$('#username').val(globals.gLoggedInUser.ident);
+		$('#id').val(globals.gLoggedInUser.ident);
 	}
 
 	function getPassword(length) {
@@ -138,10 +140,22 @@ require([
 			password += chars.charAt(i);
 		}
 
-		$('#passwordConfirm, #passwordValue, #generated_password')
-			.val(password).trigger('change');
+		$('#passwordConfirm, #password, #generated_password').val(password);
+
 	}
 
+	function validate() {
+		var pv =  $('#password').val();
+		var pc = $('#passwordConfirm').val();
+		if(pv.length < 2) {
+			$('.pwd_alert').show().removeClass('alert-success alert-info').addClass('alert-danger').html(localise.set["msg_pwd_l"]);
+			return false;
+		} else if(pv !== pc) {
+			$('.pwd_alert').show().removeClass('alert-success alert-info').addClass('alert-danger').html(localise.set["pw_mm"]);
+			return false;
+		}
+		return true;
+	}
 
 });
 
