@@ -37,10 +37,9 @@ requirejs.config({
 
 require([
 	'jquery',
-	'bootstrapValidator.min',
 	'app/localise',
 	'app/common'
-], function($, bv, localise) {
+], function($, localise) {
 
 	var gToken;
 
@@ -53,7 +52,6 @@ require([
 
 		setCustomUserForgottonPasswords();			// Apply custom javascript
 		localise.setlang();
-		$('#forgottenPasswordEmail').attr('data-bv-emailaddress-message', localise.set["msg_inv_email"]);
 
 		// Add the organisation to the title
 		if(window.location.hostname.indexOf("smap") > 0) {
@@ -72,27 +70,6 @@ require([
 
 		$('#forgottenPasswordEmail, #passwordValue').change(function(){
 			$('.pwd_alert, .pwd_home').hide();
-		});
-
-		$('#resetPassword').bootstrapValidator({
-			fields: {
-				password: {
-					validators: {
-						identical: {
-							field: 'confirmPassword',
-							message: localise.set["pw_mm"]
-						}
-					}
-				},
-				confirmPassword: {
-					validators: {
-						identical: {
-							field: 'password',
-							message: localise.set["pw_mm"]
-						}
-					}
-				}
-			}
 		});
 	});
 
@@ -133,14 +110,17 @@ require([
 	$('#resetPasswordSubmit').click(function(e){
 		e.preventDefault();
 
+		if(!validate()) {
+			return;
+		}
+
 		var pd = {
 				onetime: gToken,
-				password: $('#passwordValue').val()
+				password: $('#password').val()
 			},
 			pdString;
 
 		pdString = JSON.stringify(pd);
-
 
 		addHourglass();
 		$.ajax({
@@ -158,6 +138,19 @@ require([
 			}
 		});
 	});
+
+	function validate() {
+		var pv =  $('#password').val();
+		var pc = $('#passwordConfirm').val();
+		if(pv.length < 2) {
+			$('.pwd_alert').show().removeClass('alert-success alert-info').addClass('alert-danger').html(localise.set["msg_pwd_l"]);
+			return false;
+		} else if(pv !== pc) {
+			$('.pwd_alert').show().removeClass('alert-success alert-info').addClass('alert-danger').html(localise.set["pw_mm"]);
+			return false;
+		}
+		return true;
+	}
 
 });
 
