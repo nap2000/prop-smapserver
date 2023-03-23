@@ -2519,7 +2519,7 @@ function getChangeDescription(change, version) {
 		/*
 		 * New questions or options
 		 */
-		h[++idx] = 'Moved ';
+		h[++idx] = localise.set['c_moved'] + ' ';
 
 		if(change.type === "question" || change.changeType === "question") {  // deprecate checking of changeType){
 
@@ -3241,12 +3241,12 @@ function refreshCustomReportView(data, callback1, callback2, type) {
 
 		// name
 		h[++idx] = '<td>';
-		h[++idx] = data[i].name;
+		h[++idx] = htmlEncode(data[i].name);
 		h[++idx] = '</td>';
 
 		// type
 		h[++idx] = '<td>';
-		h[++idx] = data[i].type;
+		h[++idx] = htmlEncode(data[i].type);
 		h[++idx] = '</td>';
 
 		// actions
@@ -3531,7 +3531,7 @@ function addGeomPickList(sMeta) {
 			theForm = sMeta.forms[i];
 
 			k[++idx] = h[++idx] = '<div class="exportcontrol showshape showosm" style="display: block;">';
-			k[++idx] = h[++idx] = '<label>' + theForm.form + '</label>';
+			k[++idx] = h[++idx] = '<label>' + htmlEncode(theForm.form) + '</label>';
 			h[++idx] = '<select class="geomSelect" id="geomForm_' + theForm.f_id;            // export only
 			k[++idx] = '<select class="geomSelect" id="geomSettingsForm_' + theForm.f_id;    // Settings only
 			k[++idx] = h[++idx] = '" data-form="' + theForm.f_id + '">';
@@ -3793,11 +3793,11 @@ function getAccessibleSurveys($elem, includeNone, includeBlocked, groupsOnly, in
 			}
 			for(i = 0; i < data.length; i++) {
 				h[++idx] = '<option value="';
-				h[++idx] = data[i].ident;
+				h[++idx] = htmlEncode(data[i].ident);
 				h[++idx] = '">';
-				h[++idx] = data[i].projectName;
+				h[++idx] = htmlEncode(data[i].projectName);
 				h[++idx] = ' : ';
-				h[++idx] = data[i].displayName;
+				h[++idx] = htmlEncode(data[i].displayName);
 				h[++idx] = '</option>';
 			}
 			$elem.empty().append(h.join(''));
@@ -4843,9 +4843,6 @@ function updateNotificationTypes(data) {
 
 		h[++idx] = '<option value="';
 		h[++idx] = data[i];
-		//if(data[i] === 'forward') {
-		//	h[++idx] = '" class="submission_options';
-		//}
 		h[++idx] = '">';
 		h[++idx] = localise.set["c_" + data[i]];
 		h[++idx] = '</option>';
@@ -5315,7 +5312,7 @@ function setGroupSelector(data) {
 			h[++idx] = '<option value="';
 			h[++idx] = item.surveyIdent;
 			h[++idx] = '">';
-			h[++idx] = item.surveyName;
+			h[++idx] = htmlEncode(item.surveyName);
 			h[++idx] = '</option>';
 		}
 	}
