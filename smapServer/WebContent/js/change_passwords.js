@@ -59,51 +59,7 @@ require([
 
 		getLoggedInUser(gotuser, false, false, undefined, false, true);
 
-		$('#changePasswordSubmit').click(function(e){
-			e.preventDefault();
 
-			if(!validate()) {
-				return;
-			}
-
-			var pd = {
-					password: $('#password').val()
-				},
-				pdString,
-				user =
-
-			pdString = JSON.stringify(pd);
-
-			addHourglass();
-			$.ajax({
-				type: "POST",
-				cache: false,
-				dataType: 'text',
-				contentType: "application/json",
-				url: "/surveyKPI/user/password?lang=" + gUserLocale,
-				data: { passwordDetails: pdString },
-				success: function(data, status) {
-					removeHourglass();
-
-					if (window.PasswordCredential) {
-						const creds = new PasswordCredential({
-							id: $('#id').val(),
-							password: $('#password').val()
-						});
-						navigator.credentials.store(creds).then((creds) => {
-
-						});
-					}
-
-					$('.pwd_alert').show().removeClass('alert-danger alert-info').addClass('alert-success').html(localise.set["msg_pr"]);
-					$('.pwd_home').show();
-
-				}, error: function(data, status) {
-					removeHourglass();
-					$('.pwd_alert').show().removeClass('alert-success alert-info').addClass('alert-danger').html(localise.set["c_error"] + ": " + data.responseText);
-				}
-			});
-		});
 
 		$('#generate_password').change(function() {
 			$('.pwd_alert').hide();
@@ -157,6 +113,56 @@ require([
 		return true;
 	}
 
+	$( "#changePasswordx" ).submit(function( event ) {
+
+		if(!validate()) {
+			return false;
+		}
+
+		var pd = {
+				password: $('#password').val()
+			},
+			pdString,
+			user =
+
+				pdString = JSON.stringify(pd);
+
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			cache: false,
+			dataType: 'text',
+			contentType: "application/json",
+			url: "/surveyKPI/user/password?lang=" + gUserLocale,
+			data: { passwordDetails: pdString },
+			success: function(data, status) {
+				removeHourglass();
+
+				//history.pushState({}, "Your new page title");
+				/*
+                if (window.PasswordCredential) {
+                    const creds = new PasswordCredential({
+                        id: $('#id').val(),
+                        password: $('#password').val()
+                    });
+                    navigator.credentials.store(creds).then((creds) => {
+
+                    });
+                }
+
+                 */
+
+				$('.pwd_alert').show().removeClass('alert-danger alert-info').addClass('alert-success').html(localise.set["msg_pr"]);
+				$('.pwd_home').show();
+
+			}, error: function(data, status) {
+				removeHourglass();
+				$('.pwd_alert').show().removeClass('alert-success alert-info').addClass('alert-danger').html(localise.set["c_error"] + ": " + data.responseText);
+			}
+		});
+		//return false;
+
+	});
 });
 
 
