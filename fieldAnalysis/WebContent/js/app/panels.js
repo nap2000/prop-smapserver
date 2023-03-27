@@ -192,7 +192,7 @@ $(document).ready(function() {
 		        		}
 		        		uId = $('#settings_user option:selected').val();
 
-		        		if(subjectType === "survey" && newType == "graph" && qId <= 0) {
+		        		if(subjectType === "survey" && newType == "graph" && (!qId || qId == -1)) {
 		        			alert(localise.set["msg_sel_q"]);
 		        			return false;
 						}
