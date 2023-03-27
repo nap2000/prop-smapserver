@@ -384,6 +384,16 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                 redirectView = false,
                 i;
 
+            /*
+             * Check if the password has expired
+             */
+            if(globals.gLoggedInUser.passwordExpired) {
+                window.location.href = "/app/changePassword.html?expired=yes";
+            }
+
+            /*
+             * Check if user permissions require that they be redirected
+             */
             for (i = 0; i < groups.length; i++) {
                 group = groups[i];
                 if(group.name === "admin" || group.name === "analyst") {

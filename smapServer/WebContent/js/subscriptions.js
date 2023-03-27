@@ -37,11 +37,10 @@ requirejs.config({
 
 require([
     'jquery',
-    'bootstrapValidator.min',
     'app/localise',
     'app/common',
     'bootbox'
-], function ($, bv, localise, common, bootbox) {
+], function ($, localise, common, bootbox) {
 
     var gToken;
     var gSubscribe;
@@ -82,14 +81,6 @@ require([
             $('#heading').text(localise.set["r_s"]);
             $('#subscribe').show();
         }
-
-        $('#subscribeForm').bootstrapValidator({
-            feedbackIcons: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            }
-        });
 
         $('#email').keyup(function() {
             $('#org_list').hide();
@@ -136,30 +127,35 @@ require([
         $('#validateEmail').click(function (e) {
             e.preventDefault();
 
-            var email = $('#email').val();
+            if (!$('#subscribeForm')[0].checkValidity()) {
+                $('#subscribeForm')[0].reportValidity()
+            } else {
 
-            addHourglass();
-            $.ajax({
-                cache: false,
-                type: "GET",
-                dataType: 'json',
-                url: "/surveyKPI/subscriptions/validateEmail/" + encodeURIComponent(email),
-                success: function (data, status) {
-                    removeHourglass();
-                    if(data && data.length > 0) {
-                        $('#org_list').show();
-                        $('#org_empty').hide();
-                        updateOrgList(data);
-                    } else {
-                        $('#org_list').hide();
-                        $('#org_empty').show();
+                var email = $('#email').val();
 
+                addHourglass();
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    dataType: 'json',
+                    url: "/surveyKPI/subscriptions/validateEmail/" + encodeURIComponent(email),
+                    success: function (data, status) {
+                        removeHourglass();
+                        if (data && data.length > 0) {
+                            $('#org_list').show();
+                            $('#org_empty').hide();
+                            updateOrgList(data);
+                        } else {
+                            $('#org_list').hide();
+                            $('#org_empty').show();
+
+                        }
+                    }, error: function (data, status) {
+                        removeHourglass();
+                        alert(data.responseText);
                     }
-                }, error: function (data, status) {
-                    removeHourglass();
-                    alert(data.responseText);
-                }
-            });
+                });
+            }
         });
 
     });
@@ -222,26 +218,31 @@ require([
         $('.subscribe_org').click(function (e) {
             e.preventDefault();
 
-            var email = $('#email').val();
-            var oId = gOrgList[$(this).val()].id;
+            if (! $('#subscribeForm')[0].checkValidity()) {
+                $('#subscribeForm')[0].reportValidity()
+            } else {
 
-            addHourglass();
-            $.ajax({
-                cache: false,
-                type: "POST",
-                url: "/surveyKPI/subscriptions/subscribe",
-                data: {
-                    email: email,
-                    oId: oId
-                },
-                success: function (data, status) {
-                    removeHourglass();
-                    alert(localise.set["msg_s1"]);
-                }, error: function (data, status) {
-                    removeHourglass();
-                    alert(data.responseText);
-                }
-            });
+                var email = $('#email').val();
+                var oId = gOrgList[$(this).val()].id;
+
+                addHourglass();
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "/surveyKPI/subscriptions/subscribe",
+                    data: {
+                        email: email,
+                        oId: oId
+                    },
+                    success: function (data, status) {
+                        removeHourglass();
+                        alert(localise.set["msg_s1"]);
+                    }, error: function (data, status) {
+                        removeHourglass();
+                        alert(data.responseText);
+                    }
+                });
+            }
         });
 
     }

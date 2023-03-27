@@ -124,6 +124,7 @@ define({
     "c_c_p": "Confirm Password",
     "c_c_d": "Confirm Delete",
     "c_r_p": "Reset Password",
+    "c_change_p": "Change Password",
     "c_reset": "Reset",
     "c_en": "Enable",
     "c_dis": "Disable",
@@ -604,6 +605,7 @@ define({
     "msg_pss": "Please select a survey",
     "msg_nm": "No images, video, audio found",
     "msg_pr": "Password has been reset",
+    "msg_pex": "Your password has expired please set a new one",
     "msg_es": "Email has been sent to",
     "msg_refresh": "You have made some changes and not saved them, are you sure you want to refresh?",
     "msg_leave": "You have made some changes and not saved them, are you sure you want to leave?",
@@ -1504,6 +1506,9 @@ define({
     "cm_14days": "14 days",
     "cm_30days": "30 days",
 
-    "fp_nm": "No matches found"
+    "fp_nm": "No matches found",
+
+    "pw_gen": "Generate Password",
+    "pw_mm": "The password and its confirm are not the same"
 
 });

@@ -297,24 +297,6 @@ function addUserDetailsPopup() {
 	h[++idx] = '</label>';
 	h[++idx] = '<select class="timezone_select" id="u_tz"></select>';
 
-	h[++idx] = '<span id="reset_me_password_fields" style="display:none;">';
-	h[++idx] = '<label for="reset_me_password">';
-	h[++idx] = localise.set["c_r_p"];
-	h[++idx] = '</label>';
-	h[++idx] = '<input type="checkbox" id="reset_me_password"/><br/>';
-	h[++idx] = '</span>';
-
-	h[++idx] =	'<span id="password_me_fields" style="display:none;">';
-	h[++idx] = '<label for="me_password" data-lang="c_password" class="lang">';
-	h[++idx] = localise.set["c_password"];
-	h[++idx] = '</label>';
-	h[++idx] = '<input id="me_password" type="password"><br/>';
-
-	h[++idx] = '<label for="me_password_confirm" data-lang="c_c_p" class="lang">';
-	h[++idx] = localise.set["c_password"];
-	h[++idx] = '</label>';
-	h[++idx] = '<input id="me_password_confirm" type="password"><br/>';
-	h[++idx] = '</span>';
 	h[++idx] = '</form>';
 	h[++idx] = '</div>';
 	h[++idx] = '</div>';
@@ -444,39 +426,7 @@ function addUserDetailsPopupBootstrap4() {
 	h[++idx] = '<select class="form-control timezone_select" id="u_tz"></select>';
 	h[++idx] = '</div>';
 	h[++idx] = '</div>';
-
-	h[++idx] = '<div class="d-none" id="reset_me_password_fields">';
-	h[++idx] = '<div class="form-group row">';
-	h[++idx] = '<label class="col-form-label col-sm-2">';
-	h[++idx] = localise.set["c_r_p"];
-	h[++idx] = '</label>';
-	h[++idx] = '<div class="col-sm-10">';
-	h[++idx] = '<div class="checkbox">';
-	h[++idx] = '<input type="checkbox" id="reset_me_password">';
-	h[++idx] = '</div>';        // checkbox
-	h[++idx] = '</div>';        // col-sm-10
-	h[++idx] = '</div>';        // form-group
-	h[++idx] = '</div>';        // reset password fields
-
-	h[++idx] = '<div class="d-none" id="password_me_fields">';
-	h[++idx] = '<div class="form-group row">';
-	h[++idx] = '<label for="me_password" class="col-sm-2 control-label">';
-	h[++idx] = localise.set["c_password"];
-	h[++idx] = '</label>';
-	h[++idx] = '<div class="col-sm-10">';
-	h[++idx] = '<input id="me_password" type="password" placeholder="Password" class="form-control">';
-	h[++idx] = '</div>';
-	h[++idx] = '</div>';
-
-	h[++idx] = '<div class="form-group row">';
-	h[++idx] = '<label for="me_password_confirm" class="col-sm-2 control-label">';
-	h[++idx] = localise.set["c_c_p"];
-	h[++idx] = '</label>';
-	h[++idx] = '<div class="col-sm-10">';
-	h[++idx] = '<input id="me_password_confirm" type="password" placeholder="Password" class="form-control">';
-	h[++idx] = '</div>';  // around input
-	h[++idx] = '</div>';  // form group
-	h[++idx] = '</div>';  // password fields
+	
 	h[++idx] = '<div id="me_alert" class="alert d-none text-wrap text-break" role="alert"></div>';
 	h[++idx] = '</form>';
 	h[++idx] = '</div>';    // modal body
@@ -484,10 +434,6 @@ function addUserDetailsPopupBootstrap4() {
 	h[++idx] = '<div class="modal-footer">';
 	h[++idx] = '<button type="button" class="btn btn-default" data-dismiss="modal">';
 	h[++idx] = localise.set["c_close"];
-	h[++idx] = '</button>';
-
-	h[++idx] = '<button id="userProfileLogout"type="button" class="btn btn-default" data-dismiss="modal">';
-	h[++idx] = localise.set["c_logout"];
 	h[++idx] = '</button>';
 
 	h[++idx] = '<button id="userProfileSave" type="button" class="btn btn-primary">';

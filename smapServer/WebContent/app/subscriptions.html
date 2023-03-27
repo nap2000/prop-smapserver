@@ -8,7 +8,6 @@
     <link href="/css/bootstrap.v4.5.min.css" rel="stylesheet">
     <link href="/custom/css/custom.css" rel="stylesheet">
     <link href="/custom/css/org/custom.css" rel="stylesheet">
-    <link href="/css/bootstrapValidator.min.css" rel="stylesheet"/>
     <link href="/css/smap3.css" rel="stylesheet">
 
     <script src="/js/libs/modernizr.js"></script>
@@ -66,15 +65,13 @@
                     <div class="form-group row">
                         <label class="col-sm-4 control-label lang" data-lang="msg_s3" for="email">your email</label>
                         <div class="col-sm-8">
-                            <input id="email" class="form-control" name="email" type="email" required
-                                   data-bv-emailaddress-message="Not Valid"/>
+                            <input id="email" class="form-control" name="email" type="email" minlength="1" required/>
                         </div>
                     </div>
 
                     <div class="text-center my-2">
                         <button id="validateEmail" type="submit" class="btn btn-default btn-primary lang my-2"
-                                data-lang="c_validate"
-                                disabled="disabled">val
+                                data-lang="c_validate">
                         </button>
                     </div>
                 </form>
