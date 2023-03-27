@@ -113,32 +113,7 @@ require([
 		return true;
 	}
 
-	$('#changePassword').submit( function(event) {
-		event.preventDefault();
-
-		setTimeout(function(){
-			event.target.parentNode.removeChild(event.target); // Or alternatively just hide the form: e.target.style.display = 'none';
-
-			history.replaceState({success:true}, 'title', "/app/changePassword.html");
-
-			// This is working too!!! (uncomment the history.xxxState(..) line above) (it works when the http response is a redirect or a 200 status)
-			//var request = new XMLHttpRequest();
-			//request.open('POST', '/success.html', true); // use a real url you have instead of '/success.html'
-			//request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-			//request.send();
-		}, 1);
-
-	});
-
 	$('#changePasswordSubmit').click( function(event) {
-
-		var form = this;
-
-
-
-		if (form.submitted) {
-			return;
-		}
 
 		if(!validate()) {
 			return false;
@@ -160,22 +135,6 @@ require([
 			success: function(data, status) {
 				removeHourglass();
 
-				form.submitted = true;
-				form.submit();
-				//history.pushState({}, "Your new page title");
-				/*
-                if (window.PasswordCredential) {
-                    const creds = new PasswordCredential({
-                        id: $('#id').val(),
-                        password: $('#password').val()
-                    });
-                    navigator.credentials.store(creds).then((creds) => {
-
-                    });
-                }
-
-                 */
-
 				$('.pwd_alert').show().removeClass('alert-danger alert-info').addClass('alert-success').html(localise.set["msg_pr"]);
 				$('.pwd_home').show();
 
@@ -184,7 +143,7 @@ require([
 				$('.pwd_alert').show().removeClass('alert-success alert-info').addClass('alert-danger').html(localise.set["c_error"] + ": " + data.responseText);
 			}
 		});
-		//return false;
+		return false;
 
 	});
 });
