@@ -459,7 +459,6 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                 }
 
             } else {
-                h[++i] = '<th>' + localise.set["c_id"] +'</th>';
                 h[++i] = '<th>' + localise.set["mon_uid"] + '</th>';
                 h[++i] = '<th>' + localise.set["mon_ud"] + ' ' + localise.set["c_lt"] + '</th>';
                 h[++i] = '<th>' + localise.set["c_user"] + ' ' + localise.set["c_ident"] + '</th>';
@@ -500,7 +499,6 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                         h[++i] = '<td>' + features[j].properties.upload_errors + '</td>';
                     }
                 } else {
-                    h[++i] = '<td>' + ((typeof features[j].properties.se_id === "undefined") ? "" : features[j].properties.se_id) + '</td>';
                     h[++i] = '<td>' + features[j].properties.ue_id + '</td>';
                     h[++i] = '<td>' + localTime(features[j].properties.upload_time) + '</td>';
                     h[++i] = '<td>' + htmlEncode(features[j].properties.user_name) + '</td>';
@@ -520,7 +518,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                     h[++i] = '<td class="' + status + '">' + status + '</td>';
                     reason = features[j].properties.reason;
                     if(typeof reason === "undefined") {
-                        reason = "";
+                        reason = " ";
                     }
                     h[++i] = '<td style="word-break: break-all;">' + htmlEncode(reason) + '</td>';
                 }
