@@ -90,7 +90,7 @@ define([
 				h[++idx] = '</div>';	// End of question type cell
 
 				// Add question name cell
-				h[++idx] = '<div class="col-sm-3 col-12 "><input class="qname form-control has_tt" title="';
+				h[++idx] = '<div class="col-sm-3 col-12 "><input class="qname form-control has_tt" data-toggle="tooltip" title="';
 				h[++idx] = question.name;
 				h[++idx] = '" value="';
 				h[++idx] = question.name;
@@ -193,7 +193,7 @@ define([
 		h[++idx] = '<div class="row">';
 
 		// Add choice name cell
-		h[++idx] = '<div class="col-10"><input class="olname form-control has_tt" title="List Name" value="';
+		h[++idx] = '<div class="col-10"><input class="olname form-control has_tt" data-toggle="tooltip" title="List Name" value="';
 		h[++idx] = list_name;
 		h[++idx] = '" type="text"></div>';
 
@@ -245,13 +245,8 @@ define([
 		}
 		
 		h[++idx] = '<li>';
-		if(selProperty === "group") {
-			h[++idx] = '<span class="has_tt" title="End the group here">';
-		} else {
-			h[++idx] = '<span class="has_tt" title="';
-			h[++idx] = localise.set['ed_aq'];
-			h[++idx] = '">';
-		}
+		h[++idx] = '<span>';
+
 		h[++idx] = '<button id="addnew_';
 		h[++idx] = globals.gNewQuestionButtonIndex++;
 		h[++idx] = '" type="button" class="add_question btn dropon ';
@@ -268,34 +263,14 @@ define([
 		h[++idx] = locn;
 		h[++idx] = '" data-findex="';
 		h[++idx] = formIndex;
-		if(selProperty === "group") {
-			h[++idx] = '" data-groups="';
-			if(gGroupStacks[formIndex].groupStack.length > 0) {
-				h[++idx] = gGroupStacks[formIndex].groupStack[0];
-			}
-			if(gGroupStacks[formIndex].groupStack.length > 0 && gGroupStacks[formIndex].lastGroup) {
-				h[++idx] = ':';
-			}
-			if(gGroupStacks[formIndex].lastGroup) {
-				h[++idx] = gGroupStacks[formIndex].lastGroup;
-			} 
-			
-			if(topLevelForm) {
-				h[++idx] = '">End group here'; 
-			} else if(formName) {	
-				h[++idx] = '" disabled="true">';
-			} else {
-				h[++idx] = '">';
-			}
-			
-		} else {
-			h[++idx] = '">';
-			h[++idx] = localise.set['ed_aq'];
-			if(formName) {
-				h[++idx] = ' - ';
-				h[++idx] = formName;
-			}
+
+		h[++idx] = '">';
+		h[++idx] = localise.set['ed_aq'];
+		if(formName) {
+			h[++idx] = ' - ';
+			h[++idx] = formName;
 		}
+
 		h[++idx] = '</button>';
 		h[++idx] = '</span>';
 		h[++idx] = '</li>';
@@ -378,7 +353,7 @@ define([
 		for(i = 0; i < types.length; i++) {
 			if(types[i].type === type) {
 				name = localise.set[types[i].trans];
-				h[++idx] = '<span class="has_tt" title="Question type: ';
+				h[++idx] = '<span class="has_tt" data-toggle="tooltip" title="Question type: ';
 				h[++idx] = name;
 				h[++idx] = '">';
 				if(types[i].icon) {
@@ -558,7 +533,7 @@ define([
 			     * Add the text area to display the parameters
 			     */
 				h[++idx] = '<div class="col-sm-6">';
-				h[++idx] = '<textarea class="labelProp has_tt" readonly title="';
+				h[++idx] = '<textarea class="labelProp has_tt" data-toggle="tooltip" readonly title="';
 				h[++idx] = selLabel;
 				h[++idx] = '" data-prop="';
 				h[++idx] = selProperty;
@@ -588,7 +563,7 @@ define([
 			     * Add the text area to display the appearances
 			     */
 				h[++idx] = '<div class="col-sm-6">';
-				h[++idx] = '<textarea class="labelProp has_tt" readonly title="';
+				h[++idx] = '<textarea class="labelProp has_tt" data-toggle="tooltip" readonly title="';
 				h[++idx] = selLabel;
 				h[++idx] = '" data-prop="';
 				h[++idx] = selProperty;
@@ -630,7 +605,7 @@ define([
 			if((question.type === 'calculate' || question.type === 'server_calculate') && selProperty !== "appearance" && selProperty !== "parameters" && selProperty !== "display_name") {
 				h[++idx] = ' calculate';
 			}
-			h[++idx] = '" title="';
+			h[++idx] = '" data-toggle="tooltip" title="';
 			if((question.type === 'calculate' || question.type === 'server_calculate') && selProperty !== "appearance" && selProperty !== "parameters" && selProperty !== "display_name") {
 				h[++idx] = localise.set["ed_addcalc"];
 			} else {
@@ -892,7 +867,7 @@ define([
 		}
 		
 		// Get the current list of collapsed panels
-		$('.collapse.in', '#formList').each(function(){
+		$('.collapse.show', '#formList').each(function(){
 			collapsedPanels.push($(this).closest('li').attr("id"));
 		});
 		
@@ -902,7 +877,7 @@ define([
 		// Restore collapsed panels
 		for(i = 0; i < collapsedPanels.length; i++) {
 			var $collapsedPanel = $('#' + collapsedPanels[i]);
-			$collapsedPanel.find('.collapse').first().addClass("in");
+			$collapsedPanel.find('.collapse').first().addClass("show");
 			$collapsedPanel.find('.edit_icon.fa-chevron-down').first().removeClass('fa-chevron-down').addClass('fa-chevron-up');
 			
 		}

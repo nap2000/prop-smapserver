@@ -1365,7 +1365,7 @@ define([
                 if($changedRow) {
 
                     // Get the current list of collapsed panels
-                    $('.collapse.in', $changedRow).each(function(){
+                    $('.collapse.show', $changedRow).each(function(){
                         collapsedPanels.push($(this).closest('li').attr("id"));
                     });
 
@@ -1374,7 +1374,7 @@ define([
 
                     // Restore collapsed panels
                     for(i = 0; i < collapsedPanels.length; i++) {
-                        $('#' + collapsedPanels[i]).find('.collapse').addClass("in");
+                        $('#' + collapsedPanels[i]).find('.collapse').addClass("show");
                     }
 
                     // Since we replaced the row we had better get the replaced row so that actions can be reapplied

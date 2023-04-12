@@ -1538,7 +1538,7 @@ function respondToEventsChoices($context) {
 	});
 
 	// Add tooltips
-	$context.find('.has_tt').tooltip();
+	//$context.find('.has_tt').tooltip();
 
 
 	// Respond to clicks on a label text area
@@ -1869,7 +1869,7 @@ function respondToEvents($context) {
 	});
 
 	// Add tooltips
-	$context.find('.has_tt').tooltip();
+	//$context.find('.has_tt').tooltip();
 
 	// Respond to changes in the label field - this would change the property that has focus
 	$context.find('.labelButton').off().click(function() {

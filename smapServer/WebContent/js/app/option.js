@@ -572,7 +572,7 @@ define([
 				h[++idx] = addOptionErrorMsg(option.errorMsg);
 
 			} else {
-				h[++idx] = '<textarea class="labelProp has_tt" title="';
+				h[++idx] = '<textarea data-toggle="tooltip" class="labelProp has_tt" title="';
 				h[++idx] = localise.set["ed_clab"];
 				h[++idx] = '">';
 				h[++idx] = option.labels[globals.gLanguage].text;
@@ -689,7 +689,7 @@ define([
 			h[++idx] = '" data-f_name="';
 			h[++idx] = globals.gFilterArray[i];
 			h[++idx] = '">';
-			h[++idx] = '<input class="filter form-control has_tt" value="';
+			h[++idx] = '<input class="filter form-control data-toggle="tooltip" has_tt" value="';
 			h[++idx] = filters ? filters[globals.gFilterArray[i]] : "";
 			h[++idx] = '" ';	
 			h[++idx] = ' type="text" title="';
