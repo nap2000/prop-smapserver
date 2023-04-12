@@ -1008,7 +1008,7 @@ define([
                     if(change.question.firstQuestion) {
                         refresh = true;		// Refresh all the questions when adding the first question to a form
                     } else if(change.question.type === "end group") {
-                        refresh = true;
+                        refresh = false;
                     }
 
                     // Add a subform if required
