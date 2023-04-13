@@ -65,7 +65,16 @@
 			<li id="m_logs" class="nav-item"><a class="nav-link" href="/app/tasks/log.html"><span class="lang" data-lang="m_logs">logs</span></a></li>
 			<li><a href="#" id="m_refresh"><span class="lang nav-link" data-lang="m_refresh">r</span></a></li>
 			<li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
-			<li class="nav-item"><a class="nav-link"  id="username" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"><i class="fa fa-user"></i> </a></li>
+			<li class="nav-item dropdown active">
+				<a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="fa fa-user" aria-hidden="true"></i>
+				</a>
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="m_profile">
+					<a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"> </a>
+					<a class="dropdown-item lang" data-lang="c_change_p" href="/app/changePassword.html"></a>
+					<a id="userProfileLogout" class="dropdown-item lang" data-lang="c_logout" href="#"></a>
+				</div>
+			</li>
 		</ul>
 
 	</div>
