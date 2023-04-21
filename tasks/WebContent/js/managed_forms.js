@@ -223,6 +223,7 @@ require([
         var params = location.search.substr(location.search.indexOf("?") + 1);
         var pArray = params.split("&");
         var dont_get_current_survey = false;
+        var i;
         $('.srview').hide();
         for (i = 0; i < pArray.length; i++) {
             var param = pArray[i].split("=");
@@ -1706,9 +1707,8 @@ require([
 
     /*
      * Get surveys and update the survey lists on this page
-     *  This is a different function from the common loadSurveys function as processing differs depending on whether
-     *    there is a managed form
-     *   applied to the survey
+     *  This is a different function from the common loadSurveys function as it only loads data surveys
+     *  and not oversight surveys
      */
     function loadManagedSurveys(projectId, callback) {
 
@@ -2190,6 +2190,7 @@ require([
     function featureSelected(properties) {
         var data = [];
         var indexes = [];
+        var i;
         if(properties && properties.length > 0) {
             for(i = 0; i < properties.length; i++) {
                 indexes.push(properties[i].record);

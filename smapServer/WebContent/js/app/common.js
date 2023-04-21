@@ -5244,7 +5244,7 @@ function getGroupSurveys(surveyId, callback) {
  * Update a selector that is used for any data survey in a group that is not an oversight form
  */
 function setGroupSelector(data) {
-	var $elemGroups = $('#survey_case');
+	var $elemGroups = $('#survey_case, #tp_form_name');
 
 	var i,
 		item,
