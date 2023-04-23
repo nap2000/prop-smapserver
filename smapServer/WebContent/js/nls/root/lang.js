@@ -700,6 +700,7 @@ define({
     "t_ap": "Address Parameters",
     "t_nfc": "NFC / Location",
     "t_assigned": "Assigned",
+    "t_eas": "Send Email to assigned user",
     "t_assignments": "Assignments",
     "t_fl": "File Loaded",
     "t_tl": "Template Loaded",

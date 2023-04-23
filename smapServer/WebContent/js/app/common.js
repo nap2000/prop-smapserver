@@ -4921,6 +4921,7 @@ function saveEmail() {
 	var emails = $('#notify_emails').val();
 	var emailQuestionName = $('#email_question').val();
 	var emailMetaItem = $('#email_meta').val();
+	var emailAssigned = $('#assigned_user').is(':checked');
 	var emailArray;
 	var i;
 
@@ -4928,7 +4929,7 @@ function saveEmail() {
 	// Must specifify an email
 	notification.error = false;
 	if((!emails || emails.trim().length == 0) && (!emailQuestionName || emailQuestionName == "-1")
-		&& (!emailMetaItem || emailMetaItem == "-1")) {
+		&& (!emailMetaItem || emailMetaItem == "-1") && !emailAssigned) {
 		notification.error = true;
 		notification.errorMsg = localise.set["msg_inv_email"];
 	}
@@ -4950,6 +4951,7 @@ function saveEmail() {
 		notification.notifyDetails = {};
 		notification.notifyDetails.emails = emailArray;
 		notification.notifyDetails.emailQuestionName = emailQuestionName;
+		notification.notifyDetails.emailAssigned = emailAssigned;
 		notification.notifyDetails.emailMeta = emailMetaItem;
 		notification.notifyDetails.subject = $('#email_subject').val();
 		notification.notifyDetails.content = $('#email_content').val();
