@@ -167,7 +167,9 @@ require([
 		} else if(target === "webhook") {
 			notification = saveWebhook();
 		} else if(target === "escalate") {
-			notification = saveEscalate();
+			var nEmail = saveEmail();	// Save email and escalate detail settings
+			var notification = saveEscalate();
+			notification.notifyDetails = Object.assign(nEmail.notifyDetails, notification.notifyDetails);
 		}
 
 		if(!notification.error) {
@@ -408,24 +410,36 @@ require([
 				var notifyEmail = false;
 				if((data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0)
 						|| (data[i].notifyDetails.emailQuestionName && data[i].notifyDetails.emailQuestionName != "-1")
-						|| (data[i].notifyDetails.emailMeta && data[i].notifyDetails.emailMeta.length > 0)) {
+						|| (data[i].notifyDetails.emailMeta && data[i].notifyDetails.emailMeta.length > 0)
+						|| data[i].notifyDetails.emailAssigned) {
 
-					h[++idx] = data[i].notifyDetails.emails.join(",");
-					if(data[i].notifyDetails.emailQuestionName && data[i].notifyDetails.emailQuestionName != "-1") {
+					if(data[i].notifyDetails.emails && data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0) {
+						h[++idx] = data[i].notifyDetails.emails.join(",");
 						notifyEmail = true;
-						if(data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0) {
+					}
+					if(data[i].notifyDetails.emailQuestionName && data[i].notifyDetails.emailQuestionName != "-1") {
+						if(notifyEmail) {
 							h[++idx] = ', '
 						}
 						h[++idx] = localise.set["msg_n1"];
+						notifyEmail = true;
 					}
 					if(data[i].notifyDetails.emailMeta && data[i].notifyDetails.emailMeta.length > 0
 						&& data[i].notifyDetails.emailMeta != "-1") {
-						if(notifyEmail || (data[i].notifyDetails.emails.length > 0 && data[i].notifyDetails.emails[0].trim().length > 0)) {
+						if(notifyEmail) {
 							h[++idx] = ', '
 						}
 						h[++idx] = localise.set["msg_n2"];
 						h[++idx] = ' ';
 						h[++idx] = htmlEncode(data[i].notifyDetails.emailMeta);
+						notifyEmail = true;
+					}
+					if(data[i].notifyDetails.emailAssigned) {
+						if(notifyEmail) {
+							h[++idx] = ', '
+						}
+						h[++idx] = localise.set["t_eas"];
+						notifyEmail = true;
 					}
 				}
 			} else if(data[i].target === "sms" && data[i].notifyDetails) {

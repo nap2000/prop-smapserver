@@ -4615,6 +4615,7 @@ function getStatusClass(status, assign_auto) {
 function edit_notification(edit, idx, console) {
 
 	var notification;
+	var title;
 
 	document.getElementById("notification_edit_form").reset();
 	setTargetDependencies("email");
@@ -4672,10 +4673,11 @@ function edit_notification(edit, idx, console) {
 
 		if (notification.notifyDetails) {
 
-			if (notification.target == "email") {
+			if (notification.target == "email" || notification.target == "escalate") {
 				if (notification.notifyDetails.emails) {
 					$('#notify_emails').val(notification.notifyDetails.emails.join(","));
 				}
+				$('#assigned_user').prop('checked', notification.notifyDetails.emailAssigned);
 				$('#email_subject').val(notification.notifyDetails.subject);
 				$('#email_content').val(notification.notifyDetails.content);
 				$('#email_attach').val(notification.notifyDetails.attach);
@@ -4748,7 +4750,7 @@ function setTargetDependencies(target) {
 	} else if(target  === "webhook") {
 		$('.webhook_options').show();
 	} else if(target  === "escalate") {
-		$('.escalate_options').show();
+		$('.escalate_options,.email_options').show();
 	}
 }
 

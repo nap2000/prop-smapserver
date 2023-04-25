@@ -261,22 +261,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						</div>
 					</div>
 
-					<div class="submission_options form-group row" data-container="body">
-						<label for="not_filter" data-lang="c_filter" class="lang col-sm-2 control-label"></label>
-						<div class="col-sm-10">
-							<div class="input-group">
-								<input type="text" id="not_filter" class="form-control">
-								<button class="btn btn-outline-secondary" type="button">
-									<span class="input-group-append">
-										<a class="filter_help" href="https://www.smap.com.au/docs/server-expressions.html" target="_blank">
-											<i class="fas fa-info-circle"></i>
-										</a>
-									</span>
-								</button>
-							</div>
-						</div>
-					</div>
-
 					<div class="webhook_options" style="display:none;">
 						<div class="form-group row">
 							<label for="callback_url" data-lang="n_curl" class="lang col-sm-2 control-label">url</label>
@@ -322,39 +306,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 							<div class="col-sm-offset-2 col-sm-10">
 								<button id="fwd_upd_rem_survey" type="button" class="btn btn-info lang"  data-lang="tm_ref_f"></button>
 							</div>
-						</div>
-					</div>
-
-					<div class="email_options">
-						<div class="form-group row" >
-							<label class="lang col-sm-2 control-label" data-lang="c_attach" for="email_attach"></label>
-							<div class="col-sm-10">
-								<select class="form-control" id="email_attach">
-									<option value="none" class="lang" data-lang="c_none">none</option>
-									<option value="webform" class="lang" data-lang="n_wf">web form</option>
-									<option value="pdf" class="lang" data-lang="n_pdfp">pdf p</option>
-									<option value="pdf_landscape" class="lang" data-lang="n_pdfl">pdf l</option>
-								</select>
-							</div>
-						</div>
-
-						<div class="form-group pdf_options row" style="display:none;">  <!-- only applies to pdf attachments to emails -->
-							<div class="col-sm-1 offset-sm-2">
-								<div class="checkbox">
-									<input type="checkbox" name="include_references" value="include_references" id="include_references">
-								</div>
-							</div>
-							<label class="col-sm-9 control-label lang" data-lang="n_inc_ref" for="include_references"></label>
-						</div>
-
-						<!-- Restrict results to surveys launched from other surveys - only applies to pdf attachments to emails -->
-						<div class="form-group pdf_options row" style="display:none;">
-							<div class="col-sm-1 offset-sm-2">
-								<div class="checkbox">
-									<input type="checkbox" name="launched_only" value="launched_only" id="launched_only">
-								</div>
-							</div>
-							<label class="col-sm-9 control-label lang" data-lang="n_lo" for="launched_only"></label>
 						</div>
 					</div>
 
@@ -412,6 +363,36 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 							</div>
 						</div>
 
+						<div class="form-group row" >
+							<label class="lang col-sm-2 control-label" data-lang="c_attach" for="email_attach"></label>
+							<div class="col-sm-10">
+								<select class="form-control" id="email_attach">
+									<option value="none" class="lang" data-lang="c_none">none</option>
+									<option value="webform" class="lang" data-lang="n_wf">web form</option>
+									<option value="pdf" class="lang" data-lang="n_pdfp">pdf p</option>
+									<option value="pdf_landscape" class="lang" data-lang="n_pdfl">pdf l</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group pdf_options row" style="display:none;">  <!-- only applies to pdf attachments to emails -->
+							<div class="col-sm-1 offset-sm-2">
+								<div class="checkbox">
+									<input type="checkbox" name="include_references" value="include_references" id="include_references">
+								</div>
+							</div>
+							<label class="col-sm-9 control-label lang" data-lang="n_inc_ref" for="include_references"></label>
+						</div>
+
+						<!-- Restrict results to surveys launched from other surveys - only applies to pdf attachments to emails -->
+						<div class="form-group pdf_options row" style="display:none;">
+							<div class="col-sm-1 offset-sm-2">
+								<div class="checkbox">
+									<input type="checkbox" name="launched_only" value="launched_only" id="launched_only">
+								</div>
+							</div>
+							<label class="col-sm-9 control-label lang" data-lang="n_lo" for="launched_only"></label>
+						</div>
 					</div>
 
 					<div class="sms_options" style="display:none;">
@@ -437,6 +418,22 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 							<label for="sms_content" data-lang="c_content" class="lang col-sm-2 control-label"></label>
 							<div class="col-sm-10">
 								<textarea id="sms_content" class="labelProp form-control"></textarea>
+							</div>
+						</div>
+					</div>
+
+					<div class="submission_options form-group row mt-4" data-container="body">
+						<label for="not_filter" data-lang="c_filter" class="lang col-sm-2 control-label"></label>
+						<div class="col-sm-10">
+							<div class="input-group">
+								<input type="text" id="not_filter" class="form-control">
+								<button class="btn btn-outline-secondary" type="button">
+									<span class="input-group-append">
+										<a class="filter_help" href="https://www.smap.com.au/docs/server-expressions.html" target="_blank">
+											<i class="fas fa-info-circle"></i>
+										</a>
+									</span>
+								</button>
 							</div>
 						</div>
 					</div>
