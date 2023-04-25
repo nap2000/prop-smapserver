@@ -854,12 +854,15 @@ function addRightClickToTable($elem, sId, view) {
 			if((isBad && isReplaced) || (!globals.gIsAnalyst && !globals.gIsManage)) {
 				$('#download_edit').button("disable");
 			} else {
+				var url;
 				$('#download_edit').button("enable");
 				if(view.subject_type === "survey") {
-					$('#download_edit').attr("href", "/webForm/" + survey_ident + "?datakey=prikey&datakeyvalue=" + pkey);
+					url ="/webForm/" + survey_ident + "?datakey=prikey&datakeyvalue=" + pkey;
 				} else if(view.subject_type === "user") {
-					$('#download_edit').attr("href", "/webForm/" + survey_ident + "?datakey=instanceid&datakeyvalue=" + instanceid);
+					url ="/webForm/" + survey_ident + "?datakey=instanceid&datakeyvalue=" + instanceid;
 				}
+				url += addCacheBuster(url);
+				$('#download_edit').attr("href", url);
 				$('#download_edit').click(function () {
                     $('#instance_functions_popup').dialog("close");
 				});

@@ -3370,7 +3370,9 @@ require([
 
         var sIdent = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].ident;
         var instanceId = gTasks.gSelectedRecord.instanceid;
-        $('.launchwebform').prop("href", "/app/myWork/webForm/" + sIdent + "?datakey=instanceid&datakeyvalue=" + instanceId);
+        var url = "/app/myWork/webForm/" + sIdent + "?datakey=instanceid&datakeyvalue=" + instanceId;
+        url += addCacheBuster(url)
+        $('.launchwebform').prop("href", url);
 
         $('.overviewSection').hide();
         $('.editRecordSection').show();
