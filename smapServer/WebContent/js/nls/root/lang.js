@@ -702,6 +702,7 @@ define({
     "t_assigned": "Assigned",
     "t_eas": "Send Email to assigned user",
     "t_assignments": "Assignments",
+    "t_iewe": "Emails can be sent to notify people about an escalation",
     "t_fl": "File Loaded",
     "t_tl": "Template Loaded",
     "t_efnl": "Error file not loaded",
