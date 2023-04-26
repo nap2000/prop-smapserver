@@ -292,7 +292,7 @@ require([
 		for(i = 0; i < taskList.length; i++) {
 
 			if(!filterProjectId || filterProjectId == taskList[i].task.pid) {
-				var repeat = taskList[i].task.repeat;	// Can complete the task multiple times
+				var repeat = taskList[i].task.repeat || taskList[i].task.type === 'case'; 	// Can complete the task multiple times
 				h[++idx] = '<div class="btn-group btn-block btn-group-lg d-flex" role="group" aria-label="Button group for task selection or rejection">';
 				h[++idx] = '<button class="btn btn-info w-10" type="button">';
 				if(taskList[i].task.type === 'case') {
@@ -314,37 +314,44 @@ require([
 				} else {
 					h[++idx] = 'false';
 				}
-				h[++idx] = '" href="/app/myWork/webForm/';
-				h[++idx] = taskList[i].task.form_id;
 
+				// Add the href
 				var hasParam = false;
+				var href = '/app/myWork/webForm/';
+				href += taskList[i].task.form_id;
+
 				if(taskList[i].task.initial_data_source) {
 					if (taskList[i].task.initial_data_source === 'survey' && taskList[i].task.update_id) {
 
-						h[++idx] = (hasParam ? '&' : '?');
-						h[++idx] = 'datakey=instanceid&datakeyvalue=';
-						h[++idx] = taskList[i].task.update_id;
+						href += (hasParam ? '&' : '?');
+						href += 'datakey=instanceid&datakeyvalue=';
+						href += taskList[i].task.update_id;
 						hasParam = true;
 
 					} else if (taskList[i].task.initial_data_source === 'task') {
-						h[++idx] = (hasParam ? '&' : '?');
-						h[++idx] = 'taskkey=';
-						h[++idx] = taskList[i].task.id;
+						href += (hasParam ? '&' : '?');
+						href += 'taskkey=';
+						href += taskList[i].task.id;
 						hasParam = true;
 					}
 				}
-				// Add the assignment id
-				h[++idx] = (hasParam ? '&' : '?');
-				h[++idx] = 'assignment_id=';
-				h[++idx] = taskList[i].assignment.assignment_id;
+
+				href += (hasParam ? '&' : '?');		// Add the assignment id
+				href += 'assignment_id=';
+				href += taskList[i].assignment.assignment_id;
 
 				if(gIsApp) {
-					h[++idx] = (hasParam ? '&' : '?');
-					h[++idx] = 'app=true';
+					href += (hasParam ? '&' : '?');
+					href += 'app=true';
 				}
 
+				href += addCacheBuster(href);		// Add a cache buster
+
+				h[++idx] = '" href="' + href + '"';
+				h[++idx] = href;
 				h[++idx] = '">';
 
+				// Add the text
 				h[++idx] = '<span class="text-center">'
 					+ htmlEncode(taskList[i].task.title)
 					+ " (" + localise.set["c_id"] + ": " + taskList[i].assignment.assignment_id + ")"
