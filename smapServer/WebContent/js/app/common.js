@@ -4740,11 +4740,9 @@ function edit_notification(edit, idx, console) {
 }
 
 function setTargetDependencies(target) {
-	$('.forward_options, .sms_options, .webhook_options, .email_options, .escalate_options').hide();
+	$('.sms_options, .webhook_options, .email_options, .escalate_options').hide();
 	if(target === "email") {
 		$('.email_options').show();
-	} else if(target === "forward") {
-		$('.forward_options').show();
 	} else if(target === "sms") {
 		$('.sms_options').show();
 	} else if(target  === "webhook") {
