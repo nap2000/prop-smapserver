@@ -38,7 +38,7 @@ define(function () {
         GROUP_LINKAGES : 13,
 
         REC_LIMIT: 200,     // Page size for table views in analysis
-	    MAP_REC_LIMIT: 1000,    // Max size for map views in analysis
+	    MAP_REC_LIMIT: 10000,    // Max size for map views in analysis
 
         gProjectList: undefined,
         gRoleList: undefined,
