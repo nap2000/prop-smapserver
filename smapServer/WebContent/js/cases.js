@@ -313,8 +313,9 @@ require([
                 cmsAlert.id = globals.gCmSettings.alerts[gCurrentCmsIndex].id;
             }
 
+            var periodCount = $('#cms_period').val();
             cmsAlert.name = $('#cms_name').val();
-            cmsAlert.period = $('#cms_period').val() + ' ' + $('#period_list_sel').val();
+            cmsAlert.period = periodCount + ' ' + $('#period_list_sel').val();
             if(gTasks.cache.groupSurveys[globals.gCurrentSurvey][0]) {
                 cmsAlert.group_survey_ident = gTasks.cache.groupSurveys[globals.gCurrentSurvey][0].groupSurveyIdent;
             }
@@ -322,6 +323,12 @@ require([
             if(!cmsAlert.name || cmsAlert.name.trim().length === 0) {
                 alert(localise.set["msg_val_nm"]);
                 $('#cms_name').focus();
+                return;
+            }
+
+            if(!periodCount || periodCount.trim().length === 0 || periodCount < 1) {
+                alert(localise.set["msg_val_period"]);
+                $('#cms_period').focus();
                 return;
             }
 
