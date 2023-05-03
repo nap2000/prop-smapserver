@@ -295,9 +295,10 @@ function getViewData(view) {
 	}
 	
 	// Set the from and to dates  if appropriate	
-	$('#from_date').datepicker("setDate", view.fromDate);
-	$('#to_date').datepicker("setDate", view.toDate);
-	
+	//$('#from_date').datepicker("setDate", view.fromDate);
+	//$('#to_date').datepicker("setDate", view.toDate);
+	$('#from_date').val(view.fromDate);
+	$('#to_date').val(view.toDate);
 }
 
 // Panel type has changed
