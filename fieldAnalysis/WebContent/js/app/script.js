@@ -61,32 +61,6 @@ $(document).ready(function() {
         setExportControls();
     });
 
-    // Edit thingsat button
-    $('#btn_edit_thingsat').button().off().click(function(){
-        require(['app/neo_model'], function(neo_model) {
-            var sId = $('#export_survey option:selected').val(),
-                language = $('#export_language option:selected').val(),
-                form,
-                forms = $(':radio:checked', '.shapeforms').map(function() {
-                    return this.value;
-                }).get();
-
-            var sMeta = globals.gSelector.getSurvey(sId);
-
-            if(forms.length === 0) {
-                alert(window.localise.set["msg_one_f2"]);
-                return(false);
-            }
-
-            if(sId != -1) {
-                neo_model.init(sId, forms[0], language, sMeta.model);
-                neo_model.showModel('#ta_model_edit', 300, 200);
-                neo_model.showTable('#ta_items_edit');
-                neo_model.startEdit();
-            }
-        });
-    });
-
 });
 
 
