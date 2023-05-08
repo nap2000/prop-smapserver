@@ -69,30 +69,9 @@ $(document).ready(function() {
 	 /*
 	  * Question filter
 	  */
-	 // Initialse the dialog
-	 $('#filter_dialog').dialog(
-		{
-			autoOpen: false, closeOnEscape:true, draggable:true, modal:true,
-			show:"drop",
-			width:600,
-			zIndex: 2010,
-			buttons: [
-		        {
-		        	text: "OK",
-		        	click: function() {
-		        		$(this).dialog("close");
-		        	}
-		        }
-			]
-		}
-	);
-	$('#filter_button').button().click(function() {
-		$('#filter_dialog').dialog( "option", "title", localise.set["a_fbv"] );
-		$("#filter_dialog").dialog("open");
-		setTimeout(function() {
-			$('.ui-dialog, #filter_dialog').css('z-index','3000');	// Float the dialog over other controls
-		}, 0);
-		return false;
+	$('#filter_button').button().click(function(e) {
+		e.preventDefault();
+		$("#filter_controls").show();
 	});
 	
 	  // Change event on question filter
@@ -105,6 +84,7 @@ $(document).ready(function() {
 		
 		$('#filter_value').empty(); 
 		$('#filter_button').removeClass('hasfilter');
+		 $('#filter_controls').hide();
 		if(qId != -1) {
 			getFilterValues(sId, qId, undefined, qInfo.type, language);
 		} 
@@ -115,6 +95,7 @@ $(document).ready(function() {
 		 $('#filter_question').val(-1);
 		 $('#filter_value').empty(); 
 		 $('#filter_button').removeClass('hasfilter');
+		 $('#filter_controls').hide();
 		 return false;
 	 });
 	 
@@ -889,11 +870,13 @@ function setFilterFromView(view) {
 		} else {
 			$('#filter_value').empty(); 
 			$('#filter_button').removeClass('hasfilter');
+			$('#filter_controls').hide();
 			$('#filter_question').val(-1);
 		}
 	} else {
 		$('#filter_value').empty(); 
 		$('#filter_button').removeClass('hasfilter');
+		$('#filter_controls').hide();
 		$('#filter_question').val(-1);
 	}
 }
@@ -929,6 +912,7 @@ function getTextValues(sId, qId, value) {
 			console.log(data);
 			
 			$('#filter_button').addClass('hasfilter');
+			$('#filter_controls').show();
 			updateFilterOptions(data, value, false);
 	
 		},
@@ -960,6 +944,7 @@ function getSelectOptions(sId, qId, value, language) {
 			console.log(data);
 			
 			$('#filter_button').addClass('hasfilter');
+			$('#filter_controls').show();
 			updateFilterOptions(data, value, true);
 	
 		},

@@ -90,23 +90,25 @@ $(window).on('load', function() {
 
 
     // Get parameters - If the ident parameter is set then the report dialog is opened
+    var calledFromReports = false;
+    var reportIdent;
     param_string = window.location.search.substring(1);
     if(param_string) {
         params = param_string.split("&");
         for (i = 0; i < params.length; i++) {
             aParam = params[i].split("=");
             if(aParam[0] == "ident") {
-                gReportIdent = aParam[1];
-                gCalledFromReports = true;
+                reportIdent = aParam[1];
+                calledFromReports = true;
             } else if(aParam[0] == "projectId") {
                 globals.gEditingReportProject = aParam[1];
 
             }
         }
-        if(gCalledFromReports) {
+        if(calledFromReports) {
 
             $.ajax({   // Get the existing report details to edit
-                url: getReportURL(gReportIdent, "json"),
+                url: getReportURL(reportIdent, "json"),
                 cache: false,
                 success: function(data, status) {
 
@@ -118,10 +120,10 @@ $(window).on('load', function() {
                     transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913"));
 
                     setReport(gReport);
-                    gReportIdent = undefined;
+                    reportIdent = undefined;
                 }, error: function(data, status) {
                     alert(window.localise.set("c_error"));
-                    gReportIdent = undefined;
+                    reportIdent = undefined;
                 }
             });
 

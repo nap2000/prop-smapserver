@@ -456,7 +456,7 @@ function updateRole(idx, property, $popup) {
 			  },
 		  success: function(data, status) {
 			  removeHourglass();
-			  gRoles[idx].linkid = data.linkid;
+			  gRoles[idx].linkid = data.linkid;		// Record the id of survey/role entity
 			  if($popup) {
 				  $popup.modal("hide");
 			  }

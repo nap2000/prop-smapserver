@@ -393,18 +393,7 @@
 				<input type="text" id="set_ad_filter"><a class="filter_help" href="https://www.smap.com.au/docs/server-expressions.html" target="_blank"> ( i ) </span></a><br/><br/>
 				<button id="filter_button" class="lang" data-lang="a_fbv">Filter by value</button>
 			</fieldset>
-		</form>
-	</div>
-		
-	<!-- Popup for status message -->
-	<div id="status_msg" title="Status" style="display:none;">
-		<h3 id="status_msg_msg"></h3>
-	</div>
-	
-	<!-- Popup for filter by value -->
-	<div id="filter_dialog" title="x" style="display:none;">
-		<form>
-			<fieldset class="ui-widget-content">
+			<fieldset id="filter_controls"  class="ui-widget-content" style="display:none;">
 				<label for="filter_question" class="lang" data-lang="a_fq">Filter Question</label>
 				<select class="selected_question" id="filter_question"></select><br/>
 				<label for="filter_value" class="lang" data-lang="c_value">Value</label>
@@ -412,6 +401,11 @@
 				<button id="filter_clear" class="lang" data-lang="c_clear">Clear</button>
 			</fieldset>
 		</form>
+	</div>
+		
+	<!-- Popup for status message -->
+	<div id="status_msg" title="Status" style="display:none;">
+		<h3 id="status_msg_msg"></h3>
 	</div>
 
 	<!-- Popup to allow the user to download a PDF of the instance or edit it using a WebForm -->

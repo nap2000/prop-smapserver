@@ -1301,3 +1301,11 @@ span.selectProject
 	background-color: inherit;
 	background: linear-gradient(90deg, transparent 0%, transparent calc(100% - .05em), #d6d6d6 calc(100% - .05em), #d6d6d6 100%);
 }
+
+.ui-dialog-content .ui-widget-content, .ui-widget-content {
+	background-color: WhiteSmoke;
+}
+
+#filter_controls, #filter_controls * {
+	background-color: LightGray;
+}

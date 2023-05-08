@@ -340,7 +340,7 @@ $(document).ready(function() {
 	enableUserProfile();
 
 	setTimeout(function() {
-		$('.ui-dialog, #filter_dialog').css('z-index','3000');	// Float the dialog over other controls
+		$('.ui-dialog').css('z-index','3000');	// Float the dialog over other controls
 	}, 0);
 	
 });
