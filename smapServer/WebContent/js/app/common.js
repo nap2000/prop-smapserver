@@ -4835,6 +4835,9 @@ function setupNotificationDialog() {
 		if(trigger === "task_reminder") {
 			taskGroupChanged($('#task_group').val());
 		}
+		if(trigger === "console_update") {
+			getGroupSurveys($('#survey').val(), showOversightSurveys);
+		}
 	});
 	setTriggerDependencies("submission");
 
@@ -4932,6 +4935,7 @@ function saveEmail() {
 		&& (!emailMetaItem || emailMetaItem == "-1") && !emailAssigned) {
 		notification.error = true;
 		notification.errorMsg = localise.set["msg_inv_email"];
+		notification.notifyDetails = {};
 	}
 
 	// Text email must be valid email addresses
@@ -4941,6 +4945,7 @@ function saveEmail() {
 			if (!validateEmails(emailArray[i])) {
 				notification.error = true;
 				notification.errorMsg = localise.set["msg_inv_email"];
+				notification.notifyDetails = {};
 				break;
 			}
 		}
@@ -5277,7 +5282,7 @@ function showOversightSurveys(data) {
 		surveyId = $('#survey').val(),
 		count = 0;
 
-	$('#group_survey_questions').empty();
+	$('#oversight_survey').empty();
 
 	for (i = 0; i < data.length; i++) {
 		item = data[i];
