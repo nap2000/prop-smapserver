@@ -58,9 +58,6 @@
 	    exclude: ['jquery', 'bootstrap']
         },
         {
-            name: '../action_forms'
-        },
-        {
             name: '../log',
 	    exclude: ['jquery', 'bootstrap']
         },
