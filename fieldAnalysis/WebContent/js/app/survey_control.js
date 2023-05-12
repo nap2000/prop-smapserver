@@ -708,11 +708,7 @@ function setSurveyViewQuestionGroups(list, groupId) {
 
 			if(typeof item.type !== "undefined" && item.type !== "dateTime" && item.type !== "date" 
 					&& item.type !== "time" && item.name !== "_task_key") {
-				if(item.is_ssc) {
-					// $groupSelect.append('<option value="' + item.id + '">ssc : ' + item.name + " : " + item.fn + '</option>');  TODO allow grouping by server side calculates
-				} else {
-					$groupSelect.append('<option value="' + item.id + '">' + item.name + " : " + label + '</option>');
-				}
+				$groupSelect.append('<option value="' + item.id + '">' + item.name + " : " + label + '</option>');
 			}
 		});
 	}

@@ -1735,11 +1735,15 @@ function retrievedLanguages(sId, selector, data, theCallback, filterQuestion, se
 //Function to get the question list
 function getQuestionList(sId, language, qId, groupId, callback, setGroupList, view, dateqId, qName, assignQuestion) {
 
-	function getAsyncQuestionList(sId, language, theCallback, groupId, qId, view, dateqId, qName, assignQuestion) {
+	function getAsyncQuestionList(sId, language, theCallback, groupId, qId, view, dateqId, qName, assignQuestion, setGroupList) {
 
+		var excludeReadOnly = true;
+		if(setGroupList) {
+			excludeReadOnly = false;		// Include read only questions in group list
+		}
 		addHourglass();
 		$.ajax({
-			url: questionListUrl(sId, language, true),
+			url: questionListUrl(sId, language, excludeReadOnly),
 			dataType: 'json',
 			cache: false,
 			success: function(data) {
@@ -1765,7 +1769,7 @@ function getQuestionList(sId, language, qId, groupId, callback, setGroupList, vi
 		});
 	}
 
-	getAsyncQuestionList(sId, language, callback, groupId, qId, view, dateqId, qName, assignQuestion);
+	getAsyncQuestionList(sId, language, callback, groupId, qId, view, dateqId, qName, assignQuestion, setGroupList);
 }
 
 //Function to get the meta list
