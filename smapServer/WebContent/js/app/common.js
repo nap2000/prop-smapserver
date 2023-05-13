@@ -5639,6 +5639,7 @@ function executeUsageReport(oId) {
 		month = d.getMonth() + 1,
 		year = d.getFullYear(),
 		incTemp = $('#usage_inc_temp').prop('checked'),
+		incAllTime = $('#usage_inc_alltime').prop('checked'),
 		byProject = $('#usage_by_project').prop('checked'),
 		bySurvey = $('#usage_by_survey').prop('checked'),
 		byDevice = $('#usage_by_device').prop('checked'),
@@ -5679,7 +5680,8 @@ function executeUsageReport(oId) {
 			byDevice: byDevice,
 			month: month,
 			year: year,
-			incTemp: incTemp
+			incTemp: incTemp,
+			incAllTime: incAllTime
 		}
 	}
 
