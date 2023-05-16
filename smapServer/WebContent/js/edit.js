@@ -939,7 +939,7 @@ $(document).ready(function() {
 		globals.model.settingsChange();
 	});
 	$('#hide_on_device, #search_local_data, #audit_location_data, #track_changes, #data_survey, #oversight_survey, ' +
-			'#read_only_survey, #compress_pdf').change(function() {
+			'#read_only_survey, #compress_pdf, #my_reference_data').change(function() {
 		globals.model.settingsChange();
 	});
     $('#exclude_empty').change(function() {
@@ -2981,6 +2981,7 @@ function updateSettingsData() {
 	$('#search_local_data').prop('checked', globals.model.survey.searchLocalData);
 	$('#data_survey').prop('checked', globals.model.survey.dataSurvey);
 	$('#oversight_survey').prop('checked', globals.model.survey.oversightSurvey);
+	$('#my_reference_data').prop('checked', globals.model.survey.myReferenceData);
 	$('#read_only_survey').prop('checked', globals.model.survey.readOnlySurvey);
     $('#exclude_empty').prop('checked', globals.model.survey.exclude_empty);
 	$('#compress_pdf').prop('checked', globals.model.survey.compress_pdf);

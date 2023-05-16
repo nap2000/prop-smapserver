@@ -1138,6 +1138,7 @@ define(function () {
 	            $('#data_survey').prop('checked'),
 	            $('#oversight_survey').prop('checked'),
                 $('#read_only_survey').prop('checked'),
+                $('#my_reference_data').prop('checked'),
                 $('#exclude_empty').prop('checked'),
                 $('#compress_pdf').prop('checked'),
 	            $('#default_logo').val()
@@ -1158,6 +1159,7 @@ define(function () {
 	            this.survey.searchLocalData = current.searchLocalData;
 	            this.survey.dataSurvey = current.dataSurvey;
 	            this.survey.oversightSurvey = current.oversightSurvey;
+                this.survey.myReferenceData = current.myReferenceData;
                 this.survey.readOnlySurvey = current.readOnlySurvey;
                 this.survey.exclude_empty = current.exclude_empty;
                 this.survey.compress_pdf = current.compress_pdf;
@@ -1183,6 +1185,7 @@ define(function () {
 	                this.survey.searchLocalData,
 	                this.survey.dataSurvey,
 	                this.survey.oversightSurvey,
+                    this.survey.myReferenceData,
                     this.survey.readOnlySurvey,
                     this.survey.exclude_empty,
                     this.survey.compress_pdf,
@@ -1207,6 +1210,7 @@ define(function () {
                                               dataSurvey,
                                               oversightSurvey,
                                               readOnlySurvey,
+                                              myReferenceData,
                                               exclude_empty,
                                               compress_pdf,
                                               default_logo) {
@@ -1231,6 +1235,7 @@ define(function () {
                 searchLocalData: searchLocalData,
 	            dataSurvey: dataSurvey,
 	            oversightSurvey: oversightSurvey,
+                myReferenceData: myReferenceData,
                 readOnlySurvey: readOnlySurvey,
                 exclude_empty: exclude_empty,
                 compress_pdf: compress_pdf,

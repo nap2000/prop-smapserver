@@ -1042,6 +1042,7 @@ define({
     "endsWith": "endsWith",
     "ed_ds": "Data Survey",
     "ed_os": "Oversight Survey",
+    "ed_mr": "Only allow an enumerator to access their own data using the search() or pulldata() functions. Data submitted by other users will not be downloaded as reference data.",
     "ed_nb": "No Buttons",
     "ed_offline": "Offline and Online",
     "ed_online": "Online Only",
