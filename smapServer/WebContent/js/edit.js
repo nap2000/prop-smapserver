@@ -1061,22 +1061,6 @@ $(document).ready(function() {
         loadSurveys(existingProject, "#survey_name", false, false, undefined, false);			// Get surveys
     });
 
-
-    /*
-     * Save a selected media file
-     */
-	$('#mediaSelectSave').click(function() {
-		var type;
-		if(gNewVal) {
-			if(globals.gOptionList) {
-				type = "option";
-			} else {
-				type = "question";
-			}
-			updateLabel(type, globals.gFormIndex, globals.gSelOptionId, globals.gOptionList, gElement, gNewVal, gQname, "media");
-		}
-	});
-
 	$('#removeMedia').click(function() {
 		var type;
 		if(globals.gOptionList) {
@@ -1161,6 +1145,20 @@ function setLanguageCodes() {
 
 }
 
+/*
+ * Save a selected media file
+ */
+function mediaSelectSave() {
+	var type;
+	if(gNewVal) {
+		if(globals.gOptionList) {
+			type = "option";
+		} else {
+			type = "question";
+		}
+		updateLabel(type, globals.gFormIndex, globals.gSelOptionId, globals.gOptionList, gElement, gNewVal, gQname, "media");
+	}
+}
 function setLanguageCodeVals() {
 	$('#to_lang').val(g_to_lang_val);
 	$('#from_lang').val(g_from_lang_val);
@@ -2873,7 +2871,7 @@ function mediaPropSelected($this) {
 		var $sel = $(this);
 
 	    gNewVal = $sel.find('.filename').text();
-	    $('#mediaSelectSave').trigger("click");
+	    mediaSelectSave();
 	});
 
 	// If the user clicks on "Add" save and exit
@@ -2882,7 +2880,7 @@ function mediaPropSelected($this) {
 		var $sel = $(this).closest('tr');
 
 	    gNewVal = $sel.find('.filename').text();
-	    $('#mediaSelectSave').trigger("click");
+	    mediaSelectSave();
 	});
 
 	$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");

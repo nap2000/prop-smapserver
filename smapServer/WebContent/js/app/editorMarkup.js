@@ -835,7 +835,7 @@ define([
 		} else {
 			h[++idx] = '</div>';
 		}
-	    h[++idx] = '<a type="button" class="btn btn-dark mediaProp form-control" data-element="';
+	    h[++idx] = '<a type="button" class="btn btn-primary mediaProp form-control" data-element="';
 	    h[++idx] = label.toLowerCase();
 	    h[++idx] = '">';
 	    h[++idx] = localise.set["ed_" + lcLabel];

@@ -295,6 +295,15 @@ tr.deleted td a {
   color: #eee;
 }
 
+
+a.mediaProp:hover {
+	color: #fff;
+}
+
+a.mediaProp {
+	color: #eee;
+}
+
 .add_drop_button {
   background-color: #d6d6d6;
   border-style: dashed;
