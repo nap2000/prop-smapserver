@@ -3482,7 +3482,8 @@ function showSurveyIdentList(surveys) {
 
 	var h = [],
 		idx = -1,
-		project;
+		project,
+		i;
 
 	if(surveys && surveys.length > 0) {
 		for(i = 0; i < surveys.length; i++) {

@@ -437,12 +437,12 @@ define(function () {
 		    'select1_type': {
 			    field: 'a_select1_type',
 			    type: 'form',
-			    rex: 'minimal|quick$|autocomplete|columns|quickcompact|image-map'
+			    rex: 'minimal|quick$|autocomplete|columns|quickcompact|image-map|compact'
 		    },
 		    'select_type': {
 			    field: 'a_select_type',
 			    type: 'form',
-			    rex: 'minimal|autocomplete|columns|image-map'
+			    rex: 'minimal|autocomplete|columns|image-map|compact'
 		    },
 		    'date_type': {
 			    field: 'a_date_type',
