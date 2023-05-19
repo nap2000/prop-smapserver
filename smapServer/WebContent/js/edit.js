@@ -1158,6 +1158,7 @@ function mediaSelectSave() {
 		}
 		updateLabel(type, globals.gFormIndex, globals.gSelOptionId, globals.gOptionList, gElement, gNewVal, gQname, "media");
 	}
+	$('#mediaModal').modal('hide');
 }
 function setLanguageCodeVals() {
 	$('#to_lang').val(g_to_lang_val);
@@ -2848,7 +2849,7 @@ function mediaPropSelected($this) {
 	$('tr','#surveyPanel, #orgPanel').hide();
 	$('tr.' + gElement, '#surveyPanel, #orgPanel').show();
 
-	$('#mediaModal table').on('click', 'tbody tr', function(e) {
+	$('#mediaModal table').off().on('click', 'tbody tr', function(e) {
 		var $sel = $(this);
 
 		$('#surveyPanel, #orgPanel').find('tr').removeClass('success');	// Un mark any other selcted rows
@@ -2867,7 +2868,7 @@ function mediaPropSelected($this) {
 	}
 
 	// On double click save and exit
-	$('#mediaModal table').on('dblclick', 'tbody tr', function(e) {
+	$('#mediaModal table').off().on('dblclick', 'tbody tr', function(e) {
 		var $sel = $(this);
 
 	    gNewVal = $sel.find('.filename').text();
@@ -2876,7 +2877,7 @@ function mediaPropSelected($this) {
 
 	// If the user clicks on "Add" save and exit
 
-	$('.mediaAdd').on('click', function(e) {
+	$('.mediaAdd').off().on('click', function(e) {
 		var $sel = $(this).closest('tr');
 
 	    gNewVal = $sel.find('.filename').text();

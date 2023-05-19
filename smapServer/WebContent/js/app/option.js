@@ -548,6 +548,7 @@ define([
 		
 		h[++idx] = '<td class="option">';
 			if(selProperty === "media") {
+				h[++idx] = '<div class="row">';
 				h[++idx] = markup.addMedia("Image", 
 						option.labels[globals.gLanguage].image, 
 						option.labels[globals.gLanguage].imageUrl, 
@@ -561,7 +562,8 @@ define([
 				h[++idx] = markup.addMedia("Audio", 
 						option.labels[globals.gLanguage].audio, 
 						option.labels[globals.gLanguage].audioUrl, 
-						option.labels[globals.gLanguage].audioThumb);	
+						option.labels[globals.gLanguage].audioThumb);
+				h[++idx] = '</div>';
 
 			} else if(selProperty === "display_name") {
 				h[++idx] = '<textarea class="odisplayname has_tt" title="';
