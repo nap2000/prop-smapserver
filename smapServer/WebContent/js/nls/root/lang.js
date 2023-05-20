@@ -942,6 +942,7 @@ define({
     "ed_hrk": "Unique Key",
     "ed_dk": "Data Key",
     "ed_csv": "CSV File",
+    "ed_csvs": "CSV Files",
     "ed_c_s": "Source of Choices",
     "ed_p_q": "Source question",
     "ed_cws": "Choices Worksheet",
@@ -1263,7 +1264,7 @@ define({
     "br_nf": "for numeric questions, including integer and decimal",
 
     // Shared Resources
-    "sr_res": "Images Video Audio and CSV Files",
+    "sr_res": "Images Video Audio Files",
     "sr_nfc": "NFC Tags",
     "sr_uid": "NFC UID",
     "sr_geo": "Geographic locations",

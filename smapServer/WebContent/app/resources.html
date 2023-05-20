@@ -100,19 +100,79 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 	<div class="card text-center mt-10">
 		<div class="card-header">
 			<ul class="nav nav-tabs card-header-tabs" role="tablist">
-				<li id="mediaTab" role="tab" class="nav-item"><a href="#" class="nav-link active lang" data-lang="sr_res">images</a></li>
+				<li id="csvTab" role="tab" class="nav-item"><a href="#" class="nav-link active lang" data-lang="ed_csvs">csv</a></li>
+				<li id="mediaTab" role="tab" class="nav-item"><a href="#" class="nav-link lang" data-lang="sr_res">images</a></li>
 				<li id="mapTab" role="tab" class="nav-item"><a href="#" class="lang nav-link" data-lang="c_maps">maps</a></li>
 				<li id="locationTab" role="tab" class="nav-item"><a href="#" class="lang nav-link" data-lang="c_location"></a></li>
-				<!--<li id="crTab" role="presentation" class="nav-item"><a href="#" class="lang" data-lang="sr_cr">os</a></li>-->
-
 			</ul>
 		</div>
 		<div class="card-body">
 			<div class="tab-content">
-				<div class="resourcePanel tab-pane fade show active" role="tabpanel" aria-labelledby="mediaTab" id="mediaPanel" >
+				<div class="resourcePanel tab-pane fade show active" role="tabpanel" aria-labelledby="mediaTab" id="csvPanel" >
 					<div class="container-responsive">
 						<!-- The file upload form used as target for the file upload widget -->
-						<form enctype="multipart/form-data" name="fileupload">
+						<form enctype="multipart/form-data" name="csvupload">
+
+							<input id="survey_idx" type="hidden" name="survey_idx" >
+							<!-- The fileupload-buttonbar contains buttons to add files and start/cancel the upload -->
+							<div class="row fileupload-buttonbar mediaManage">
+								<div class="col-lg-7">
+									<!-- The fileinput-button span is used to style the file input field as button -->
+
+									<input name="files" title="Add files..." class="csv-inputs" type="file" multiple
+										   accept="text/csv,
+												application/zip,application/octet-stream,application/x-zip,application/x-zip-compressed,
+												application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+												application/vnd.ms-excel">
+
+									<button type="button" id="submitCsv" class="submitFiles btn btn-primary">
+										<span class="lang" data-lang="c_upload">upload</span>
+									</button>
+									<button type="reset" class="btn btn-warning cancel">
+										<span class="lang" data-lang="c_cancel">cancel</span>
+									</button>
+
+									<!-- The global file processing state -->
+									<span class="fileupload-process"></span>
+								</div>
+								<!-- The global progress state -->
+								<div class="col-lg-5 fileupload-progress fade">
+									<!-- The global progress bar -->
+									<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+										<div class="progress-bar progress-bar-success" style="width:0%;"></div>
+									</div>
+
+								</div>
+							</div>
+						</form>
+
+						<!-- Status -->
+						<div class="upload_file_msg alert alert-success mediaManage mt-4" role="alert" style="display:none;"></div>
+
+						<!-- The container for the uploaded organisation files -->
+						<div id="csvOrgPanel" class="mt-4">
+							<div class="table-responsive">
+								<table role="presentation" class="table table-striped">
+									<thead>
+										<th class="lang" data-lang="c_preview"></th>
+										<th class="lang" data-lang="sr_fn"></th>
+										<th class="lang" data-lang="bill_chg_date"></th>
+										<th class="lang" data-lang="c_size"></th>
+										<th></th>
+										<th class="mediaSelect"></th>
+									</thead>
+									<tbody id="csvOrg">
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="resourcePanel tab-pane fade show active" role="tabpanel" aria-labelledby="mediaTab" id="mediaPanel" style="display:none;">
+					<div class="container-responsive">
+						<!-- The file upload form used as target for the file upload widget -->
+						<form enctype="multipart/form-data" name="mediaupload">
 
 							<input id="survey_id" type="hidden" name="survey_id" >
 							<!-- The fileupload-buttonbar contains buttons to add files and start/cancel the upload -->
@@ -120,14 +180,12 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 								<div class="col-lg-7">
 									<!-- The fileinput-button span is used to style the file input field as button -->
 
-									<input name="files" title="Add files..." class="file-inputs" type="file" multiple
+									<input name="files" title="Add files..." class="media-inputs" type="file" multiple
 										   accept="image/png, image/jpeg, image/gif, video/3gpp, video/mp4, audio/mpeg,
-	                			audio/mp3, audio/mp4, audio/x-wav, text/csv, .geojson, .json,
-								application/zip,application/octet-stream,application/x-zip,application/x-zip-compressed,
-								application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
-								application/vnd.ms-excel, image/svg+xml">
+	                							audio/mp3, audio/mp4, audio/x-wav, .geojson, .json,
+												application/zip,application/octet-stream,application/x-zip,application/x-zip-compressed,image/svg+xml">
 
-									<button type="button" id="submitFiles" class="submitFiles btn btn-primary">
+									<button type="button" id="submitMedia" class="submitFiles btn btn-primary">
 										<span class="lang" data-lang="c_upload">upload</span>
 									</button>
 									<button type="reset" class="btn btn-warning cancel">
@@ -156,12 +214,12 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 							<div class="table-responsive">
 								<table role="presentation" class="table table-striped">
 									<thead>
-										<th class="lang" data-lang="c_preview"></th>
-										<th class="lang" data-lang="sr_fn"></th>
-										<th class="lang" data-lang="bill_chg_date"></th>
-										<th class="lang" data-lang="c_size"></th>
-										<th></th>
-										<th class="mediaSelect"></th>
+									<th class="lang" data-lang="c_preview"></th>
+									<th class="lang" data-lang="sr_fn"></th>
+									<th class="lang" data-lang="bill_chg_date"></th>
+									<th class="lang" data-lang="c_size"></th>
+									<th></th>
+									<th class="mediaSelect"></th>
 									</thead>
 									<tbody id="filesOrg">
 									</tbody>

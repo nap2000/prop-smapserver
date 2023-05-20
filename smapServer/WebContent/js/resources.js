@@ -75,7 +75,16 @@ $(document).ready(function() {
 	// Set up the tabs
 	getLocations(loadedLocationData);
 
-    $('#mediaTab a').click(function (e) {
+	$('#csvTab a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+
+		$('.resourcePanel').hide();
+		$('#csvPanel').show();
+
+		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
+	});
+	$('#mediaTab a').click(function (e) {
     	e.preventDefault();
     	$(this).tab('show');
 
@@ -102,30 +111,34 @@ $(document).ready(function() {
 		
 		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
     });
-
-    $('#crTab a').click(function (e) {
-    	e.preventDefault();
-    	$(this).tab('show');
-
-	    $('.resourcePanel').hide();
-    	$('#crPanel').show();
-		
-		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
-    })
     
     /*
-     * Set up media tab
+     * Set up csv tab
      */
-    $('.file-inputs').bootstrapFileInput();
+    $('.csv-inputs').bootstrapFileInput();
     $('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
     
     // Respond to file upload
-	$('.submitFiles').addClass('disabled');
-    $('#submitFiles').click( function() {
-    	if(!$('#submitFiles').hasClass('disabled')) {
-    		uploadFiles('/surveyKPI/upload/media', "fileupload", refreshMediaViewManage, undefined, undefined);
+	$('.submitCsv').addClass('disabled');
+    $('#submitCsv').click( function() {
+    	if(!$('#submitCsv').hasClass('disabled')) {
+    		uploadFiles('/surveyKPI/upload/media', "csvupload", refreshMediaViewManage, undefined, undefined);
     	}
     });
+
+	/*
+     * Set up media tab
+     */
+	$('.media-inputs').bootstrapFileInput();
+	$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
+
+	// Respond to file upload
+	$('.submitMedia').addClass('disabled');
+	$('#submitMedia').click( function() {
+		if(!$('#submitMedia').hasClass('disabled')) {
+			uploadFiles('/surveyKPI/upload/media', "mediaupload", refreshMediaViewManage, undefined, undefined);
+		}
+	});
     
     // Respond to custom report upload
     $('#submitCustomReport').click( function() {

@@ -1229,9 +1229,12 @@ function refreshMediaView(data, sId) {
 
 	var i,
 		survey = globals.model.survey,
-		$element,
-		h = [],
-		idx = -1,
+		$elementMedia,
+		$elementCsv,
+		hCsv = [],
+		idxCsv = -1,
+		hMedia = [],
+		idxMedia = -1,
 		files;
 
 	if(survey && sId) {
@@ -1245,74 +1248,26 @@ function refreshMediaView(data, sId) {
 		files = data.files;
 
 		if(sId) {
-			$element = $('#filesSurvey');
+			$elementMedia = $('#filesSurvey');
+			$elementCsv = $('#csvSurvey');
 		} else {
-			$element = $('#filesOrg');
+			$elementMedia = $('#filesOrg');
+			$elementCsv = $('#csvOrg');
 		}
 
 		for(i = 0; i < files.length; i++){
-			h[++idx] = '<tr class="';
-			h[++idx] = files[i].type;
-			h[++idx] = '">';
-			h[++idx] = '<td class="preview">';
-			h[++idx] = '<a target="_blank" href="';
-			h[++idx] = files[i].url;
-			if(files[i].url.indexOf("?") < 0) {     // Add some random text to prevent caching on identical file names
-				h[++idx] = "?";
+			if(files[i].type === 'csv') {
+				hCsv[idxCsv++] = getMediaRecord(files[i]);
 			} else {
-				h[++idx] = "&";
+				hMedia[idxMedia++] = getMediaRecord(files[i]);
 			}
-			h[++idx] = "_v" + new Date().getTime().toString();
-			h[++idx] = '">';
-			if(files[i].type == "audio") {
-				h[++idx] = addAudioIcon();
-			} else if(files[i].type == "geojson") {
-				h[++idx] = addVectorMapIcon();
-			} else {
-				h[++idx] = '<img width="100" height="100" src="';
-				h[++idx] = files[i].thumbnailUrl + addCacheBuster(files[i].thumbnailUrl);
-				h[++idx] = '" alt="';
-				h[++idx] = htmlEncode(files[i].name);
-				h[++idx] = '">';
-			}
-			h[++idx] = '</a>';
-			h[++idx] = '</td>';
-			h[++idx] = '<td class="filename">';
-			h[++idx] = '<p>';
-			h[++idx] = htmlEncode(files[i].name);
-			h[++idx] = '</p>';
-			h[++idx] = '</td>';
-			h[++idx] = '<td class="mediaManage">';
-			h[++idx] = localTime(files[i].modified);
-			h[++idx] = '</td>';
-			h[++idx] = '<td class="mediaManage">';
-			h[++idx] = '<p>';
-			h[++idx] = files[i].size;
-			h[++idx] = '</p>';
-			h[++idx] = '</td>';
-			h[++idx] = '<td class="mediaManage">';
-			h[++idx] = '<button class="media_del btn btn-danger" data-url="';
-			h[++idx] = files[i].deleteUrl;
-			h[++idx] = '">';
-			h[++idx] = '<i class="fas fa-trash-alt"></i>'
-			h[++idx] = '</button>';
-			h[++idx] = '</td>';
-			h[++idx] = '<td class="mediaSelect">';
-			h[++idx] = '<button class="mediaAdd btn btn-success">';
-			h[++idx] = '<i class="fas fa-plus"></i> '
-			h[++idx] = localise.set['c_add'];
-			h[++idx] = '</button>';
-			h[++idx] = '</td>';
-
-
-			h[++idx] = '</tr>';
-
 		}
 
 
-		$element.html(h.join(""));
+		$elementMedia.html(hMedia.join(""));
+		$elementCsv.html(hCsv.join(""));
 
-		$('.media_del', $element).click(function () {
+		$('.media_del', $elementMedia).click(function () {
 			var surveyId = sId,
 				url = $(this).data('url'),
 				idx = url.lastIndexOf('/'),
@@ -1331,6 +1286,68 @@ function refreshMediaView(data, sId) {
 	}
 }
 
+function getMediaRecord(file) {
+	var h = [],
+		idx = -1;
+
+	h[++idx] = '<tr class="';
+	h[++idx] = htmlEncode(file.type);
+	h[++idx] = '">';
+	h[++idx] = '<td class="preview">';
+	h[++idx] = '<a target="_blank" href="';
+	h[++idx] = htmlEncode(file.url);
+	if(file.url.indexOf("?") < 0) {     // Add some random text to prevent caching on identical file names
+		h[++idx] = "?";
+	} else {
+		h[++idx] = "&";
+	}
+	h[++idx] = "_v" + new Date().getTime().toString();
+	h[++idx] = '">';
+	if(file.type == "audio") {
+		h[++idx] = addAudioIcon();
+	} else if(file.type == "geojson") {
+		h[++idx] = addVectorMapIcon();
+	} else {
+		h[++idx] = '<img width="100" height="100" src="';
+		h[++idx] = htmlEncode(file.thumbnailUrl) + addCacheBuster(file.thumbnailUrl);
+		h[++idx] = '" alt="';
+		h[++idx] = htmlEncode(file.name);
+		h[++idx] = '">';
+	}
+	h[++idx] = '</a>';
+	h[++idx] = '</td>';
+	h[++idx] = '<td class="filename">';
+	h[++idx] = '<p>';
+	h[++idx] = htmlEncode(file.name);
+	h[++idx] = '</p>';
+	h[++idx] = '</td>';
+	h[++idx] = '<td class="mediaManage">';
+	h[++idx] = localTime(file.modified);
+	h[++idx] = '</td>';
+	h[++idx] = '<td class="mediaManage">';
+	h[++idx] = '<p>';
+	h[++idx] = htmlEncode(file.size);
+	h[++idx] = '</p>';
+	h[++idx] = '</td>';
+	h[++idx] = '<td class="mediaManage">';
+	h[++idx] = '<button class="media_del btn btn-danger" data-url="';
+	h[++idx] = htmlEncode(file.deleteUrl);
+	h[++idx] = '">';
+	h[++idx] = '<i class="fas fa-trash-alt"></i>'
+	h[++idx] = '</button>';
+	h[++idx] = '</td>';
+	h[++idx] = '<td class="mediaSelect">';
+	h[++idx] = '<button class="mediaAdd btn btn-success">';
+	h[++idx] = '<i class="fas fa-plus"></i> '
+	h[++idx] = localise.set['c_add'];
+	h[++idx] = '</button>';
+	h[++idx] = '</td>';
+
+
+	h[++idx] = '</tr>';
+
+	return h.join('');
+}
 /*
  * Refresh the vector select lists
  */
