@@ -117,7 +117,16 @@ $(document).ready(function() {
      */
     $('.csv-inputs').bootstrapFileInput();
     $('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
-    
+
+	// Open the dialog to select a new survey for upload
+	$('#addCsv').click( function(e) {
+		gReplace = false;
+		$('#uploadAction').val("add");
+		$('#csvUpload')[0].reset();
+		$('.notreplace').show();
+		$('#fileAddPopup').modal('show');
+	});
+
     // Respond to file upload
 	$('.submitCsv').addClass('disabled');
     $('#submitCsv').click( function() {
