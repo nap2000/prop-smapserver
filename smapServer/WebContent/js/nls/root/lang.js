@@ -518,7 +518,7 @@ define({
     "msg_val_pass": "You must specify a password",
     "msg_nv": "Please specify a new value",
     "msg_val_nm": "Name is required",
-    "msg_val_inv_nm": "Name cannot include a / character",
+    "msg_val_inv_nm": "Name cannot include a / or a . character. Specify the name without an extension.",
     "msg_val_period": "An period greater than 0 must be specified",
     "msg_val_dl_dist": "If set then the download distance must be greater than 100 meters",
     "msg_val_show_dist": "If set then the show distance must be greater than 10 meters",

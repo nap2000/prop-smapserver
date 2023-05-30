@@ -80,7 +80,7 @@ require([
 			$('.resourcePanel').hide();
 			$('#csvPanel').show();
 
-			$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
+			$('.upload_alert').removeClass('alert-danger').addClass('alert-success').html("");
 		});
 		$('#mediaTab a').click(function (e) {
 			e.preventDefault();
@@ -89,7 +89,7 @@ require([
 			$('.resourcePanel').hide();
 			$('#mediaPanel').show();
 
-			$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
+			$('.upload_alert').removeClass('alert-danger').addClass('alert-success').html("");
 		});
 		$('#mapTab a').click(function (e) {
 			e.preventDefault();
@@ -97,8 +97,6 @@ require([
 
 			$('.resourcePanel').hide();
 			$('#mapPanel').show();
-
-			$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
 		});
 		$('#locationTab a').click(function (e) {
 			e.preventDefault();
@@ -114,7 +112,7 @@ require([
          * Set up csv tab
          */
 		$('.csv-inputs').bootstrapFileInput();
-		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
+		$('.upload_alert').removeClass('alert-danger').addClass('alert-success').html("");
 
 		// Open the dialog to select a new survey for upload
 		$('#addCsv').click( function(e) {
@@ -122,22 +120,49 @@ require([
 			$('#uploadAction').val("add");
 			$('#resourceUpload')[0].reset();
 			$('.notreplace').show();
+			$('.upload_alert').removeClass('alert-danger').addClass('alert-success').html("");
 			$('#fileAddPopup').modal('show');
 		});
 
-		// Respond to file upload
-		$('.submitCsv').addClass('disabled');
-		$('#submitCsv').click( function() {
-			if(!$('#submitCsv').hasClass('disabled')) {
-				uploadFiles('/surveyKPI/upload/media', "resourceUpload", refreshMediaViewManage, undefined, undefined);
+		/*
+         * Uploading of media files
+         */
+		$('#itemName').keydown(function(){
+			$('.upload_alert').removeClass('alert-danger').addClass('alert-success').html("");
+		});
+
+		// Change function on media file selected
+		$('#file').change(function(){
+			var $this = $(this);
+			var itemName = $('#itemName').val();
+			var fileName = $this[0].files[0].name;
+			var newItemName;
+
+			$('.upload_alert').hide();
+
+			if(itemName && itemName.trim().length > 0) {
+				// ignore - leave user specified name
+			} else {
+				var lastDot = fileName.lastIndexOf(".");
+				if (lastDot === -1) {
+					newItemName = fileName;
+				} else {
+					newItemName = fileName.substr(0, lastDot);
+				}
+				$('#itemName').val(newItemName);
 			}
+		});
+
+		// Upload File
+		$('#submitResourceFile').click( function(e) {
+			$('#submitResourceFile').prop("disabled", true);  // debounce
+			uploadResourceFile();
 		});
 
 		/*
          * Set up media tab
          */
 		$('.media-inputs').bootstrapFileInput();
-		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
 
 		// Respond to file upload
 		$('.submitMedia').addClass('disabled');
@@ -196,42 +221,6 @@ require([
 
 		$('.vector-data-inputs').bootstrapFileInput();
 		$('.vector-style-inputs').bootstrapFileInput();
-
-		/*
-         * Uploading of media files
-         */
-		$('#itemName').keydown(function(){
-			$('.upload_alert').removeClass('alert-danger').addClass('alert-success').html("");
-		});
-
-		// Change function on media file selected
-		$('#file').change(function(){
-			var $this = $(this);
-			var itemName = $('#itemName').val();
-			var fileName = $this[0].files[0].name;
-			var newItemName;
-
-			$('.upload_alert').hide();
-
-			if(itemName && itemName.trim().length > 0) {
-				// ignore - leave user specified name
-			} else {
-				var lastDot = fileName.lastIndexOf(".");
-				if (lastDot === -1) {
-					newItemName = fileName;
-				} else {
-					newItemName = fileName.substr(0, lastDot);
-				}
-				$('#itemName').val(newItemName);
-			}
-		});
-
-		// Upload File
-		$('#submitResourceFile').click( function(e) {
-
-			$('#submitResourceFile').prop("disabled", true);  // debounce
-			uploadResourceFile();
-		});
 
 	});
 
@@ -565,7 +554,8 @@ require([
 			return false;
 		}
 
-		if(name.indexOf('/') >= 0) {			// Name includes a slash
+		if(name.indexOf('/') >= 0						// Name includes a slash
+				|| name.indexOf('.') >= 0) {			// Name includes a .
 			$('.upload_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(localise.set["msg_val_inv_nm"]);
 			$('#submitResourceFile').prop("disabled", false);  // debounce
 			return false;
