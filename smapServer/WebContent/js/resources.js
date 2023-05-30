@@ -148,24 +148,7 @@ $(document).ready(function() {
 			uploadFiles('/surveyKPI/upload/media', "mediaupload", refreshMediaViewManage, undefined, undefined);
 		}
 	});
-    
-    // Respond to custom report upload
-    $('#submitCustomReport').click( function() {
-    	var reportName = $('#report_name').val(),
-    		fileName = $('#report_file').val();
-    	
-    	if(!reportName || reportName.trim().length == 0) {
-    		$('.upload_file_msg').removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_val_nm"]);
-    		return false;
-    	}
-    	if(!fileName || fileName.trim().length == 0) {
-    		$('.upload_file_msg').removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_val_file"]);
-    		return false;
-    	}
-    	
-    	uploadFiles('/surveyKPI/upload/lqasreport', "crupload", refreshCustomReportView, undefined, undefined);
-    });
-    
+
     // Respond to location upload
     $('#submitLocationFiles').click( function() {
     	if(!$('#submitLocationFiles').hasClass('disabled')) {
@@ -215,43 +198,33 @@ $(document).ready(function() {
 	
     $('.vector-data-inputs').bootstrapFileInput();
     $('.vector-style-inputs').bootstrapFileInput();
-    
-    /*
-     * Set up reports tab
-     *
-     *
-	$('#addReport').click(function(){
-		$('.panel_msg').hide();
-		document.forms.namedItem("crupload").reset();
-		$('#addReportPopup').modal("show");
-	});
-	getReports(refreshCustomReportView, undefined, "lqas");
-	*/
 
-	// On change of report name, hide any previous results
-	$('#templateName').keydown(function(){
-		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
+	/*
+	 * Uploading of media files
+	 */
+	$('#itemName').keydown(function(){
+		$('.upload_alert').removeClass('alert-danger').addClass('alert-success').html("");
 	});
 
 	// Change function on file selected
-	$('#report_file').change(function(){
-		var reportName = $('#report_name').val(),
-			$this = $(this),
-			fileName = $this[0].files[0].name,
-			newReportName;
-		
-		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
-		
-		if(reportName && reportName.trim().length > 0) {
+	$('#file').change(function(){
+		var templateName = $('#templateName').val();
+		var $this = $(this);
+		var fileName = $this[0].files[0].name;
+		var newTemplateName;
+
+		$('#up_alert, #up_warnings').hide();
+
+		if(templateName && templateName.trim().length > 0) {
 			// ignore - leave user specified name
 		} else {
 			var lastDot = fileName.lastIndexOf(".");
-		    if (lastDot === -1) {
-		    	newReportName = fileName;
-		    } else {
-		    	newReportName = fileName.substr(0, lastDot);
-		    }
-			$('#report_name').val(newReportName);
+			if (lastDot === -1) {
+				newTemplateName = fileName;
+			} else {
+				newTemplateName = fileName.substr(0, lastDot);
+			}
+			$('#templateName').val(newTemplateName);
 		}
 	});
 
