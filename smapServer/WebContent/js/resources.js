@@ -122,7 +122,7 @@ require([
 		$('#addCsv').click( function(e) {
 			gReplace = false;
 			$('#uploadAction').val("add");
-			$('#csvUpload')[0].reset();
+			$('#resourceUpload')[0].reset();
 			$('.notreplace').show();
 			$('#fileAddPopup').modal('show');
 		});
@@ -131,7 +131,7 @@ require([
 		$('.submitCsv').addClass('disabled');
 		$('#submitCsv').click( function() {
 			if(!$('#submitCsv').hasClass('disabled')) {
-				uploadFiles('/surveyKPI/upload/media', "csvupload", refreshMediaViewManage, undefined, undefined);
+				uploadFiles('/surveyKPI/upload/media', "resourceUpload", refreshMediaViewManage, undefined, undefined);
 			}
 		});
 
@@ -232,9 +232,6 @@ require([
 		$('#submitResourceFile').click( function(e) {
 
 			$('#submitResourceFile').prop("disabled", true);  // debounce
-			if(!gReplace) {
-				$('#surveyId').val($('#group').val());	// TODO
-			}
 			uploadResourceFile();
 		});
 
@@ -550,15 +547,20 @@ require([
      */
 	function uploadResourceFile() {
 
-		$('#up_alert, #up_warnings').hide();
-		var f = document.forms.namedItem("uploadForm");
+		if(!gReplace) {
+			$('#surveyId').val($('#group').val());	// TODO
+		}
+
+		$('.upload_alert').hide();
+
+		var f = document.forms.namedItem("resourceUpload");
 		var formData = new FormData(f);
 		var url;
 
-		let file = $('#templateName').val();
+		let file = $('#itemName').val();
 		if(!file || file.trim().length == 0) {
-			$('#up_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(localise.set["msg_val_nm"]);
-			$('#submitFileGroup').prop("disabled", false);  // debounce
+			$('.upload_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(localise.set["msg_val_nm"]);
+			$('#submitFileUpload').prop("disabled", false);  // debounce
 			return false;
 		}
 
