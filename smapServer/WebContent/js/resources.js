@@ -69,12 +69,10 @@ require([
 		globals.gIsAdministrator = false;
 		globals.gCurrentSurvey = undefined;
 		getLoggedInUser(undefined, false, false, undefined, false, true);
-
 		getFilesFromServer('/surveyKPI/upload/media', 0, refreshMediaViewManage, false);		// Get files available to the entire organisation
-
-		// Set up the tabs
 		getLocations(loadedLocationData);
 
+		// Set up the tabs
 		$('#csvTab a').click(function (e) {
 			e.preventDefault();
 			$(this).tab('show');
@@ -537,7 +535,6 @@ require([
 
 			}
 
-
 			$element.html(h.join(""));
 		}
 	}
@@ -557,14 +554,24 @@ require([
 		var formData = new FormData(f);
 		var url;
 
-		let file = $('#itemName').val();
-		if(!file || file.trim().length == 0) {
+		let name = $('#itemName').val();
+
+		/*
+		 * Validation
+		 */
+		if(!name || name.trim().length == 0) {		// Name ia set
 			$('.upload_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(localise.set["msg_val_nm"]);
-			$('#submitFileUpload').prop("disabled", false);  // debounce
+			$('#submitResourceFile').prop("disabled", false);  // debounce
 			return false;
 		}
 
-		url = '/surveyKPI/upload/surveytemplate';
+		if(name.indexOf('/') >= 0) {			// Name includes a slash
+			$('.upload_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(localise.set["msg_val_inv_nm"]);
+			$('#submitResourceFile').prop("disabled", false);  // debounce
+			return false;
+		}
+
+		url = '/surveyKPI/upload/media';
 
 		addHourglass();
 		$.ajax({
@@ -577,37 +584,29 @@ require([
 			processData:false,
 			success: function(data) {
 				removeHourglass();
-				$('#submitFileGroup').prop("disabled", false);  // debounce
+				$('#submitResourceFile').prop("disabled", false);  // debounce
 
 				// Check for errors in the form
 				if(data && data.status === "error") {
-					$('#up_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(msgToHtml(data));
-
-				} else if(data && data.status === "warning") {
-					document.forms.namedItem("uploadForm").reset();
-					projectSet();
-					getPotentialGroupSurveys();
-					$('#up_alert').show().removeClass('alert-success alert-danger').addClass('alert-warning').html(msgToHtml(data));
-
+					$('.upload_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(msgToHtml(data));
 				} else {
-					document.forms.namedItem("uploadForm").reset();
-					projectSet();
-					getPotentialGroupSurveys();
-					$('#up_alert').show().removeClass('alert-danger alert-warning').addClass('alert-success').html(localise.set["t_tl"] + ": " + data.name);
+					document.forms.namedItem("resourceUpload").reset();
+					getFilesFromServer('/surveyKPI/upload/media', 0, refreshMediaViewManage, false);
+					$('.upload_alert').show().removeClass('alert-danger alert-warning').addClass('alert-success').html(localise.set["t_tl"] + ": " + data.name);
 				}
 				$('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
 
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
-				$('#submitFileGroup').prop("disabled", false);  // debounce
+				$('#submitResourceFile').prop("disabled", false);  // debounce
 
 				if(xhr.readyState == 0 || xhr.status == 0) {
 					return;  // Not an error
 				} else {
 					var msg = xhr.responseText;
 
-					$('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_u_f"] + ": " + msg);
+					$('.upload_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_u_f"] + ": " + msg);
 					$('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
 				}
 			}
