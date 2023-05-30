@@ -206,25 +206,25 @@ $(document).ready(function() {
 		$('.upload_alert').removeClass('alert-danger').addClass('alert-success').html("");
 	});
 
-	// Change function on file selected
+	// Change function on media file selected
 	$('#file').change(function(){
-		var templateName = $('#templateName').val();
 		var $this = $(this);
+		var itemName = $('#itemName').val();
 		var fileName = $this[0].files[0].name;
-		var newTemplateName;
+		var newItemName;
 
-		$('#up_alert, #up_warnings').hide();
+		$('.upload_alert').hide();
 
-		if(templateName && templateName.trim().length > 0) {
+		if(itemName && itemName.trim().length > 0) {
 			// ignore - leave user specified name
 		} else {
 			var lastDot = fileName.lastIndexOf(".");
 			if (lastDot === -1) {
-				newTemplateName = fileName;
+				newItemName = fileName;
 			} else {
-				newTemplateName = fileName.substr(0, lastDot);
+				newItemName = fileName.substr(0, lastDot);
 			}
-			$('#templateName').val(newTemplateName);
+			$('#itemName').val(newItemName);
 		}
 	});
 
