@@ -1234,8 +1234,7 @@ function refreshMediaView(data, sId) {
 		hCsv = [],
 		idxCsv = -1,
 		hMedia = [],
-		idxMedia = -1,
-		files;
+		idxMedia = -1;
 
 	if(survey && sId) {
 		// Set the display name
@@ -1245,7 +1244,8 @@ function refreshMediaView(data, sId) {
 	}
 
 	if(data) {
-		files = data.files;
+		window.gFiles = data.files;
+		let files = data.files;
 
 		if(sId) {
 			$elementMedia = $('#filesSurvey');
@@ -1257,12 +1257,11 @@ function refreshMediaView(data, sId) {
 
 		for(i = 0; i < files.length; i++){
 			if(files[i].type === 'csv') {
-				hCsv[idxCsv++] = getMediaRecord(files[i]);
+				hCsv[idxCsv++] = getMediaRecord(files[i], 'csv', i);
 			} else {
-				hMedia[idxMedia++] = getMediaRecord(files[i]);
+				hMedia[idxMedia++] = getMediaRecord(files[i], 'media', i);
 			}
 		}
-
 
 		$elementMedia.html(hMedia.join(""));
 		$elementCsv.html(hCsv.join(""));
@@ -1278,6 +1277,19 @@ function refreshMediaView(data, sId) {
 			}
 		});
 
+		$('.media_replace').click(function(e) {
+			let item = window.gFiles[$(this).val()];
+
+			$('#uploadAction').val('replace');
+			$('#itemName').val(getBaseName(item.name));
+
+			$('.upload_alert').hide();
+			$('.notreplace').hide();
+			$('#media_add_title').text(localise.set["tm_c_sr_rep"] + ": " + item.name);
+
+			$('#fileAddPopup').modal('show');
+		});
+
 	}
 
 	// If this is the organisational view we can refresh the list of choices for selecting vector maps
@@ -1286,49 +1298,72 @@ function refreshMediaView(data, sId) {
 	}
 }
 
-function getMediaRecord(file) {
+function getBaseName(fileName) {
+	let lastDot = fileName.lastIndexOf(".");
+	let baseName = fileName;
+	if (lastDot !== -1) {
+		baseName = fileName.substr(0, lastDot);
+	}
+	return baseName;
+}
+function getMediaRecord(file, panel, record) {
 	var h = [],
 		idx = -1;
 
 	h[++idx] = '<tr class="';
 	h[++idx] = htmlEncode(file.type);
 	h[++idx] = '">';
-	h[++idx] = '<td class="preview">';
-	h[++idx] = '<a target="_blank" href="';
-	h[++idx] = htmlEncode(file.url);
-	if(file.url.indexOf("?") < 0) {     // Add some random text to prevent caching on identical file names
-		h[++idx] = "?";
-	} else {
-		h[++idx] = "&";
-	}
-	h[++idx] = "_v" + new Date().getTime().toString();
-	h[++idx] = '">';
-	if(file.type == "audio") {
-		h[++idx] = addAudioIcon();
-	} else if(file.type == "geojson") {
-		h[++idx] = addVectorMapIcon();
-	} else {
-		h[++idx] = '<img width="100" height="100" src="';
-		h[++idx] = htmlEncode(file.thumbnailUrl) + addCacheBuster(file.thumbnailUrl);
-		h[++idx] = '" alt="';
-		h[++idx] = htmlEncode(file.name);
+
+	if(panel === 'media') {
+		h[++idx] = '<td class="preview">';
+		h[++idx] = '<a target="_blank" href="';
+		h[++idx] = htmlEncode(file.url);
+		if (file.url.indexOf("?") < 0) {     // Add some random text to prevent caching on identical file names
+			h[++idx] = "?";
+		} else {
+			h[++idx] = "&";
+		}
+		h[++idx] = "_v" + new Date().getTime().toString();
 		h[++idx] = '">';
+		if (file.type == "audio") {
+			h[++idx] = addAudioIcon();
+		} else if (file.type == "geojson") {
+			h[++idx] = addVectorMapIcon();
+		} else {
+			h[++idx] = '<img width="100" height="100" src="';
+			h[++idx] = htmlEncode(file.thumbnailUrl) + addCacheBuster(file.thumbnailUrl);
+			h[++idx] = '" alt="';
+			h[++idx] = htmlEncode(file.name);
+			h[++idx] = '">';
+		}
+		h[++idx] = '</a>';
+		h[++idx] = '</td>';
 	}
-	h[++idx] = '</a>';
-	h[++idx] = '</td>';
+
 	h[++idx] = '<td class="filename">';
 	h[++idx] = '<p>';
 	h[++idx] = htmlEncode(file.name);
 	h[++idx] = '</p>';
 	h[++idx] = '</td>';
+
 	h[++idx] = '<td class="mediaManage">';
 	h[++idx] = localTime(file.modified);
 	h[++idx] = '</td>';
+
 	h[++idx] = '<td class="mediaManage">';
 	h[++idx] = '<p>';
 	h[++idx] = htmlEncode(file.size);
 	h[++idx] = '</p>';
 	h[++idx] = '</td>';
+
+	h[++idx] = '<td class="mediaManage">';
+	h[++idx] = '<button class="btn media_replace" value="';
+	h[++idx] = record;
+	h[++idx] = '">';
+	h[++idx] = '<i class="fas fa-sync-alt"></i>';
+	h[++idx] = '</button>';
+	h[++idx] = '</td>';
+
 	h[++idx] = '<td class="mediaManage">';
 	h[++idx] = '<button class="media_del btn btn-danger" data-url="';
 	h[++idx] = htmlEncode(file.deleteUrl);

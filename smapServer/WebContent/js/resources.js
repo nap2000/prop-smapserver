@@ -116,7 +116,6 @@ require([
 
 		// Open the dialog to select a new survey for upload
 		$('#addCsv').click( function(e) {
-			gReplace = false;
 			$('#uploadAction').val("add");
 			$('#resourceUpload')[0].reset();
 			$('.notreplace').show();
@@ -136,20 +135,11 @@ require([
 			var $this = $(this);
 			var itemName = $('#itemName').val();
 			var fileName = $this[0].files[0].name;
-			var newItemName;
 
 			$('.upload_alert').hide();
 
-			if(itemName && itemName.trim().length > 0) {
-				// ignore - leave user specified name
-			} else {
-				var lastDot = fileName.lastIndexOf(".");
-				if (lastDot === -1) {
-					newItemName = fileName;
-				} else {
-					newItemName = fileName.substr(0, lastDot);
-				}
-				$('#itemName').val(newItemName);
+			if(itemName && itemName.trim().length === 0) {
+				$('#itemName').val(getBaseName(fileName));
 			}
 		});
 
@@ -532,10 +522,6 @@ require([
      * Upload a shared resource file
      */
 	function uploadResourceFile() {
-
-		if(!gReplace) {
-			$('#surveyId').val($('#group').val());	// TODO
-		}
 
 		$('.upload_alert').hide();
 

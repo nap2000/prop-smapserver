@@ -119,11 +119,11 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 							<div class="table-responsive">
 								<table role="presentation" class="table table-striped">
 									<thead>
-										<th class="lang" data-lang="c_preview"></th>
 										<th class="lang" data-lang="sr_fn"></th>
 										<th class="lang" data-lang="bill_chg_date"></th>
 										<th class="lang" data-lang="c_size"></th>
-										<th></th>
+										<th class="lang" data-lang="c_replace"></th>
+										<th class="lang" data-lang="c_action"></th>
 										<th class="mediaSelect"></th>
 									</thead>
 									<tbody id="csvOrg">
@@ -180,7 +180,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 									<th class="lang" data-lang="sr_fn"></th>
 									<th class="lang" data-lang="bill_chg_date"></th>
 									<th class="lang" data-lang="c_size"></th>
-									<th></th>
+									<th class="lang" data-lang="c_replace"></th>
+									<th class="lang" data-lang="c_action"></th>
 									<th class="mediaSelect"></th>
 									</thead>
 									<tbody id="filesOrg">
@@ -383,17 +384,16 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 id="survey_add_title"><span class="lang" data-lang="tm_c_form">load</span> <span class="lang notreplace" data-lang="tm_c_xls"></span></h5>
+				<h5 id="media_add_title"><span class="lang" data-lang="tm_c_form">load</span> <span class="lang notreplace" data-lang="tm_ul_sr"></span></h5>
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 
 			</div>
 			<div class="modal-body">
 
 				<div class="spreadsheet_editor">
-					<h5 class="lang" data-lang="tm_ul_f"></h5>
 					<div id="up_alert" style="display:none; word-wrap:break-word;" class="upload_alert alert alert-success" role="alert"></div>
 					<form id="resourceUpload" name="resourceUpload" accept-charset="utf-8">
-						<div class="form-group row">
+						<div class="form-group row notreplace">
 							<label class="col-sm-2 col-form-label" for="itemName"><span data-lang="c_name" class="lang"></span>:</label>
 							<div class="col-sm-10">
 								<input id="itemName" class="form-control" type="text" name="itemName" maxlength="100" required />
@@ -409,7 +409,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 							</div>
 						</div>
 
-						<input id="surveyId" type="hidden" name="surveyId" value="" style="display:none;"/>
 						<input id="uploadAction" type="hidden" name="action" value="" style="display:none;"/>
 					</form>
 
