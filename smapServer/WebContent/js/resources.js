@@ -138,7 +138,7 @@ require([
 
 			$('.upload_alert').hide();
 
-			if(itemName && itemName.trim().length === 0) {
+			if(!itemName || itemName.trim().length === 0) {
 				$('#itemName').val(getBaseName(fileName));
 			}
 		});
@@ -564,7 +564,7 @@ require([
 
 				// Check for errors in the form
 				if(data && data.status === "error") {
-					$('.upload_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(msgToHtml(data));
+					$('.upload_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').text(data.message);
 				} else {
 					document.forms.namedItem("resourceUpload").reset();
 					getFilesFromServer('/surveyKPI/upload/media', 0, refreshMediaViewManage, false);
