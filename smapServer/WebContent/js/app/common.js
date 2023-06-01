@@ -1317,13 +1317,7 @@ function getMediaRecord(file, panel, record) {
 	if(panel === 'media') {
 		h[++idx] = '<td class="preview">';
 		h[++idx] = '<a target="_blank" href="';
-		h[++idx] = htmlEncode(file.url);
-		if (file.url.indexOf("?") < 0) {     // Add some random text to prevent caching on identical file names
-			h[++idx] = "?";
-		} else {
-			h[++idx] = "&";
-		}
-		h[++idx] = "_v" + new Date().getTime().toString();
+		h[++idx] = htmlEncode(file.url) + addCacheBuster(file.url);
 		h[++idx] = '">';
 		if (file.type == "audio") {
 			h[++idx] = addAudioIcon();
@@ -1364,13 +1358,26 @@ function getMediaRecord(file, panel, record) {
 	h[++idx] = '</button>';
 	h[++idx] = '</td>';
 
+	// Action Buttons
 	h[++idx] = '<td class="mediaManage">';
-	h[++idx] = '<button class="media_del btn btn-danger" data-url="';
-	h[++idx] = htmlEncode(file.deleteUrl);
+	h[++idx] = '<a class="media_download btn btn-info" href="';					// Download
+	h[++idx] = file.url;
+	h[++idx] = '">';
+	h[++idx] = '<i class="fas fa-download"></i>'
+	h[++idx] = '</a>';
+	h[++idx] = '<button class="media_history btn btn-primary" value="';	// History
+	h[++idx] = record;
+	h[++idx] = '">';
+	h[++idx] = '<i class="fas fa-landmark"></i>'
+	h[++idx] = '</button>';
+	h[++idx] = '<button class="media_delete btn btn-danger" value="';		// Delete
+	h[++idx] = record;
 	h[++idx] = '">';
 	h[++idx] = '<i class="fas fa-trash-alt"></i>'
 	h[++idx] = '</button>';
+
 	h[++idx] = '</td>';
+
 	h[++idx] = '<td class="mediaSelect">';
 	h[++idx] = '<button class="mediaAdd btn btn-success">';
 	h[++idx] = '<i class="fas fa-plus"></i> '
