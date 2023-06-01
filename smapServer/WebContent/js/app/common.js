@@ -1267,12 +1267,9 @@ function refreshMediaView(data, sId) {
 		$elementCsv.html(hCsv.join(""));
 
 		$('.media_del', $elementMedia).click(function () {
-			var surveyId = sId,
-				url = $(this).data('url'),
-				idx = url.lastIndexOf('/'),
-				filename = url.substring(idx + 1);
+			let item = window.gFiles[$(this).val()];
 
-			if(confirm(localise.set["msg_confirm_del"] + filename)) {
+			if(confirm(localise.set["msg_confirm_del"] + " " + item.name)) {
 				delete_media(url, surveyId);
 			}
 		});
