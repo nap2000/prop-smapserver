@@ -1266,11 +1266,11 @@ function refreshMediaView(data, sId) {
 		$elementMedia.html(hMedia.join(""));
 		$elementCsv.html(hCsv.join(""));
 
-		$('.media_del', $elementMedia).click(function () {
+		$('.media_delete').click(function () {
 			let item = window.gFiles[$(this).val()];
 
 			if(confirm(localise.set["msg_confirm_del"] + " " + item.name)) {
-				delete_media(url, surveyId);
+				delete_media(item.name, 0);	// TODO survey id
 			}
 		});
 
@@ -1426,8 +1426,6 @@ function refreshVectorSelects(data) {
 
 		$vectorData.html(h_d.join(""));
 		$vectorStyle.html(h_s.join(""));
-
-
 	}
 }
 
@@ -1453,9 +1451,10 @@ function addVectorMapIcon() {
 	return h.join('');
 }
 
-function getFilesFromServer(url, sId, callback, getall) {
+function getFilesFromServer(sId, callback, getall) {
 
-	var hasParams = false;
+	let url = '/surveyKPI/upload/media';
+	let hasParams = false;
 	if(sId) {
 		gSId = sId;
 		url += '?survey_id=' + sId;
@@ -1474,7 +1473,7 @@ function getFilesFromServer(url, sId, callback, getall) {
 		cache: false,
 		success: function(data) {
 			removeHourglass();
-			var surveyId = sId;
+			let surveyId = sId;
 			callback(data, surveyId);
 
 		},
@@ -1492,7 +1491,10 @@ function getFilesFromServer(url, sId, callback, getall) {
 /*
  * Delete a media file
  */
-function delete_media(url, sId) {
+function delete_media(filename, sId) {
+
+	let url = "/surveyKPI/shared/file/" + filename;
+
 	addHourglass();
 	$.ajax({
 		url: url,
@@ -1501,7 +1503,7 @@ function delete_media(url, sId) {
 		success: function(data) {
 			removeHourglass();
 			var surveyId = sId;
-			refreshMediaViewManage(data, surveyId);
+			getFilesFromServer(surveyId, refreshMediaViewManage, false);
 
 		},
 		error: function(xhr, textStatus, err) {
@@ -1509,7 +1511,7 @@ function delete_media(url, sId) {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 				return;  // Not an error
 			} else {
-				$('.upload_file_msg').removeClass('alert-success').addClass('alert-danger').html("Error: " + err);
+				$('.upload_alert').removeClass('alert-success').addClass('alert-danger').html("Error: " + err);
 			}
 		}
 	});

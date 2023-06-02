@@ -173,7 +173,7 @@ $(document).ready(function() {
 	// Get the user details
 	globals.gIsAdministrator = false;
 	getLoggedInUser(getSurveyList, false, true, undefined, false, dont_get_current_survey);
-	getFilesFromServer(gBaseUrl, 0, refreshMediaView, false);		// Get the organisational level media files
+	getFilesFromServer(0, refreshMediaView, false);		// Get the organisational level media files
 
 	/*
 	 * Switch between choices list view and question view
@@ -1280,8 +1280,8 @@ function surveyDetailsDone() {
 	// Get survey level files
 	if(globals.gCurrentSurvey) {
 		$('#surveyLevelTab').removeClass("disabled");
-		getFilesFromServer(gBaseUrl, globals.gCurrentSurvey, refreshMediaView, false);
-		getFilesFromServer(gBaseUrl, globals.gCurrentSurvey, refreshAllMediaPickLists, true);   // Get all media
+		getFilesFromServer(globals.gCurrentSurvey, refreshMediaView, false);
+		getFilesFromServer(globals.gCurrentSurvey, refreshAllMediaPickLists, true);   // Get all media
 	}
 
 	$('#openFormModal').modal("hide");		// Hide the open form modal if its open

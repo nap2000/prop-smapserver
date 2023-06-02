@@ -69,7 +69,7 @@ require([
 		globals.gIsAdministrator = false;
 		globals.gCurrentSurvey = undefined;
 		getLoggedInUser(undefined, false, false, undefined, false, true);
-		getFilesFromServer('/surveyKPI/upload/media', 0, refreshMediaViewManage, false);		// Get files available to the entire organisation
+		getFilesFromServer(0, refreshMediaViewManage, false);		// Get files available to the entire organisation
 		getLocations(loadedLocationData);
 
 		// Set up the tabs
@@ -567,7 +567,7 @@ require([
 					$('.upload_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').text(data.message);
 				} else {
 					document.forms.namedItem("resourceUpload").reset();
-					getFilesFromServer('/surveyKPI/upload/media', 0, refreshMediaViewManage, false);
+					getFilesFromServer(0, refreshMediaViewManage, false);
 					$('.upload_alert').show().removeClass('alert-danger alert-warning').addClass('alert-success').html(localise.set["t_tl"] + ": " + data.name);
 				}
 				$('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
