@@ -1255,11 +1255,13 @@ function refreshMediaView(data, sId) {
 			$elementCsv = $('#csvOrg');
 		}
 
-		for(i = 0; i < files.length; i++){
-			if(files[i].type === 'csv') {
-				hCsv[idxCsv++] = getMediaRecord(files[i], 'csv', i);
-			} else {
-				hMedia[idxMedia++] = getMediaRecord(files[i], 'media', i);
+		if(files) {
+			for (i = 0; i < files.length; i++) {
+				if (files[i].type === 'csv') {
+					hCsv[idxCsv++] = getMediaRecord(files[i], 'csv', i);
+				} else {
+					hMedia[idxMedia++] = getMediaRecord(files[i], 'media', i);
+				}
 			}
 		}
 

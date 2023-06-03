@@ -173,7 +173,7 @@ $(document).ready(function() {
 	// Get the user details
 	globals.gIsAdministrator = false;
 	getLoggedInUser(getSurveyList, false, true, undefined, false, dont_get_current_survey);
-	getFilesFromServer(0, refreshMediaView, false);		// Get the organisational level media files
+	getFilesFromServer(globals.gCurrentSurvey , refreshMediaView, false);		// Get the organisational level media files
 
 	/*
 	 * Switch between choices list view and question view
