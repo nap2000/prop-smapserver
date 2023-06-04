@@ -122,6 +122,7 @@ define({
     "c_orientation": "Orientation",
     "c_password": "Password",
     "c_c_p": "Confirm Password",
+    "c_n_p": "New Password",
     "c_c_d": "Confirm Delete",
     "c_r_p": "Reset Password",
     "c_change_p": "Change Password",
