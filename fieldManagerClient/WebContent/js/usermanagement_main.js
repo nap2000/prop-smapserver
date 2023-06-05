@@ -527,6 +527,7 @@ require([
 			organisation.server_description = $('#o_server_description').val();
 			organisation.password_strength = $('#o_password_strength').val();
 			organisation.password_strength = organisation.password_strength || "0";
+			organisation.map_source = $('#o_map_source').val();
 
 			if(typeof organisation.email_port !== "number") {
 				organisation.email_port = 0;
@@ -1496,6 +1497,7 @@ require([
 			$('#o_default_email_content').val(org.default_email_content);
 			$('#o_server_description').val(org.server_description);
 			$('#o_password_strength').val(org.password_strength);
+			$('#o_map_source').val(org.map_source);
 			$('.puboption').each(function() {
 				console.log("option: " + $(this).val() );
 				if($(this).val() === "email") {
@@ -1678,13 +1680,14 @@ require([
 			server = {
 				mapbox_default: $('#mapbox_key').val(),
 				google_key: $('#google_key').val(),
+				maptiler_key: $('#maptiler_key').val(),
 				smtp_host: $('#s_smtp_host').val(),
 				email_domain: $('#s_email_domain').val(),
 				email_user: $('#s_email_user').val(),
 				email_password: $('#s_email_password').val(),
 				email_port: $('#s_email_port').val(),
 				sms_url: $('#s_sms_url').val(),
-				password_strength: $('#s_p_strength').val(),
+				password_strength: $('#s_p_strength').val()
 			};
 
 		var serverString = JSON.stringify(server);
