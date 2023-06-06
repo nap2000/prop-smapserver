@@ -264,6 +264,7 @@ define({
     "c_records": "Records",
     "c_of": "of",
     "c_media": "Media",
+    "c_resource": "Media / CSV",
     "c_changes": "Changes",
     "c_templates": "PDF Templates",
     "c_template": "PDF Template",

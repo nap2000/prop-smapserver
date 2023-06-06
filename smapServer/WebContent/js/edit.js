@@ -129,7 +129,7 @@ $(document).ready(function() {
 	localise.setlang();		// Localise HTML
 
 	// Get the parameters and start editing a survey if one was passed as a parameter
-	params = location.search.substr(location.search.indexOf("?") + 1);
+	params = location.search.substring(location.search.indexOf("?") + 1);
 	pArray = params.split("&");
 	dont_get_current_survey = false;
 	for (i = 0; i < pArray.length; i++) {
@@ -367,8 +367,9 @@ $(document).ready(function() {
 	$('#viewType').attr("data-on", localise.set["c_questions"]).attr("data-off", localise.set["c_choices"]).bootstrapToggle();
 
 	// Add menu functions
-	$('#m_media').off().click(function() {	// MEDIA
-		// Set up media dialog to manage loading and deleting of media
+	/*
+	$('#m_media').off().click(function() {	// Media nd CSV files
+		// Go to the shared reosurces page
 		$('.mediaManage').show();
 		$('.mediaSelect').hide();
 		$('#mediaModalLabel').html(localise.set["ed_mmf"]);
@@ -392,6 +393,8 @@ $(document).ready(function() {
 		$('#mediaModal').modal('show');
 
 	});
+
+	 */
 
 	$('#m_settings').off().click(function() {	// Show the settings dialog
 
@@ -977,7 +980,7 @@ $(document).ready(function() {
 
 	/*
 	 * Set up media files
-	 */
+	 *
     $('#surveyLevelTab a').click(function (e) {
     	if(gSId) {
     		e.preventDefault();
@@ -991,6 +994,9 @@ $(document).ready(function() {
     	}
     })
 
+	 */
+
+	/*
     $('#orgLevelTab a').click(function (e) {
     	  e.preventDefault();
     	  $(this).tab('show');
@@ -1002,11 +1008,13 @@ $(document).ready(function() {
     	  $('#surveyPanel').hide();
     })
 
+	 */
+
     $('.file-inputs').bootstrapFileInput();
 
     /*
      * Submit the files
-     */
+     *
 	$('.submitFiles').addClass('disabled');
     $('#submitFiles').click( function() {
        	if(!$('#submitFiles').hasClass('disabled')) {
@@ -1014,6 +1022,7 @@ $(document).ready(function() {
        		uploadFiles(gUrl, "fileupload", refreshMediaViewManage, globals.gCurrentSurvey, undefined);
        	}
     });
+     */
 
     /*
      * Open a new form

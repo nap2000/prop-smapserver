@@ -1133,11 +1133,10 @@ function getQueries(published) {
 
 /*
  * Upload files to the server
- * Writes status to   .upload_file_msg
  */
-function uploadFiles(url, formName, callback1, param, callback2) {
+function uploadFiles(url, formName, callback1) {
 
-	var f = document.forms.namedItem(formName),
+	let f = document.forms.namedItem(formName),
 		formData = new FormData(f);
 
 	url = addUrlParam(url, "getlist=true");
@@ -1146,22 +1145,13 @@ function uploadFiles(url, formName, callback1, param, callback2) {
 	$.ajax({
 		url: url,
 		type: 'POST',
-		xhr: function () {
-			var myXhr = $.ajaxSettings.xhr();
-			if(myXhr.upload){
-				myXhr.upload.addEventListener('progress', progressFn, false);
-			}
-			return myXhr;
-		},
 		data: formData,
 		cache: false,
 		contentType: false,
 		processData:false,
 		success: function(data) {
 			removeHourglass();
-			var callbackParam = param,
-				cb1 = callback1,
-				cb2 = callback2;
+			let cb1 = callback1;
 			$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html(localise.set["c_success"]);
 			if(typeof cb1 === "function") {
 				cb1(data, callbackParam);

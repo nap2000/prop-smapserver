@@ -47,16 +47,24 @@ require([
 	'moment'
 ], function($, common, globals, localise, bsfi, moment) {
 
-	var gMaps,
+	let gMaps,
 		gMapVersion,
 		gMapId,
 		gTags,          // NFC tags
-		gCurrentGroup;
+		gCurrentGroup,
+		gIsSurvey;
 
 	$(document).ready(function() {
 
 		window.moment = moment;		// Make moment global for use by common.js
 
+		/*
+		 * Check if this page is called for a single survey or shared resources
+		 */
+		gIsSurvey = location.search.indexOf('?survey=true') >= 0;
+		if(gIsSurvey) {
+			$('#mapTab, #locationTab').hide();
+		}
 		setCustomResources();			// Apply custom javascript
 		setTheme();
 		setupUserProfile(true);
@@ -68,7 +76,7 @@ require([
 		// Get the user details
 		globals.gIsAdministrator = false;
 		globals.gCurrentSurvey = undefined;
-		getLoggedInUser(undefined, false, false, undefined, false, true);
+		getLoggedInUser(undefined, false, false, undefined, false, false);
 		getFilesFromServer(0, refreshMediaViewManage, false);		// Get files available to the entire organisation
 		getLocations(loadedLocationData);
 
@@ -143,7 +151,7 @@ require([
 			}
 		});
 
-		// Upload File
+		// Upload a single media or CSV File
 		$('#submitResourceFile').click( function(e) {
 			$('#submitResourceFile').prop("disabled", true);  // debounce
 			uploadResourceFile();
@@ -158,14 +166,14 @@ require([
 		$('.submitMedia').addClass('disabled');
 		$('#submitMedia').click( function() {
 			if(!$('#submitMedia').hasClass('disabled')) {
-				uploadFiles('/surveyKPI/upload/media', "mediaupload", refreshMediaViewManage, undefined, undefined);
+				uploadFiles('/surveyKPI/upload/media', "mediaupload", refreshMediaViewManage);
 			}
 		});
 
 		// Respond to location upload
 		$('#submitLocationFiles').click( function() {
 			if(!$('#submitLocationFiles').hasClass('disabled')) {
-				uploadFiles('/surveyKPI/tasks/locations/upload', "locationupload", loadedLocationData, undefined, undefined);
+				uploadFiles('/surveyKPI/tasks/locations/upload', "locationupload", loadedLocationData);
 			}
 		});
 
@@ -525,9 +533,13 @@ require([
 
 		$('.upload_alert').hide();
 
-		var f = document.forms.namedItem("resourceUpload");
-		var formData = new FormData(f);
-		var url;
+		if(gIsSurvey) {
+			$('#surveyId').val(globals.gCurrentSurvey);
+		}
+
+		let f = document.forms.namedItem("resourceUpload");
+		let formData = new FormData(f);
+		let url;
 
 		let name = $('#itemName').val();
 
