@@ -1285,6 +1285,7 @@ define({
     "sr_ul": "Update Existing Location",
     "sr_nl": "Save as New Location",
     "sr_sl": "Save Location",
+    "sr_sm": "Survey Media Files",
     "sr_si": "The NFC UID and GPS coordinates that you specify here can be saves as a named location or used in the task as an anonymous location",
 
     // languages

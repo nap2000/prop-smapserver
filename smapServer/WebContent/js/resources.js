@@ -62,9 +62,7 @@ require([
 		 * Check if this page is called for a single survey or shared resources
 		 */
 		gIsSurvey = location.search.indexOf('?survey=true') >= 0;
-		if(gIsSurvey) {
-			$('#mapTab, #locationTab').hide();
-		}
+
 		setCustomResources();			// Apply custom javascript
 		setTheme();
 		setupUserProfile(true);
@@ -72,6 +70,11 @@ require([
 		$('#map_name').attr("placeholder", localise.set["sr_m_ph"]);
 		$('#map_description').attr("placeholder", localise.set["sr_m_d"]);
 		$('#mapid').attr("placeholder", localise.set["sr_m_mb"]);
+
+		if(gIsSurvey) {
+			$('#mapTab, #locationTab').hide();
+			$('#page_title').text(localise.set["sr_sm"]);
+		}
 
 		// Get the user details
 		globals.gIsAdministrator = false;
