@@ -1237,20 +1237,15 @@ function refreshMediaView(data, sId) {
 		window.gFiles = data.files;
 		let files = data.files;
 
-		if(sId) {
-			$elementMedia = $('#filesSurvey');
-			$elementCsv = $('#csvSurvey');
-		} else {
-			$elementMedia = $('#filesOrg');
-			$elementCsv = $('#csvOrg');
-		}
+		$elementMedia = $('#filesOrg');
+		$elementCsv = $('#csvOrg');
 
 		if(files) {
 			for (i = 0; i < files.length; i++) {
 				if (files[i].type === 'csv') {
-					hCsv[idxCsv++] = getMediaRecord(files[i], 'csv', i);
+					hCsv[++idxCsv] = getMediaRecord(files[i], 'csv', i);
 				} else {
-					hMedia[idxMedia++] = getMediaRecord(files[i], 'media', i);
+					hMedia[++idxMedia] = getMediaRecord(files[i], 'media', i);
 				}
 			}
 		}

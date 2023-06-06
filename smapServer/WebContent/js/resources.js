@@ -76,8 +76,7 @@ require([
 		// Get the user details
 		globals.gIsAdministrator = false;
 		globals.gCurrentSurvey = undefined;
-		getLoggedInUser(undefined, false, false, undefined, false, false);
-		getFilesFromServer(0, refreshMediaViewManage, false);		// Get files available to the entire organisation
+		getLoggedInUser(gotUser, false, false, undefined, false, false);
 		getLocations(loadedLocationData);
 
 		// Set up the tabs
@@ -222,6 +221,13 @@ require([
 
 	});
 
+	/*
+	Once we know the user and the current survey get the media files
+	 */
+	function gotUser() {
+		let sId = gIsSurvey ? globals.gCurrentSurvey : 0;
+		getFilesFromServer(sId, refreshMediaViewManage, false);
+	}
 	function showMapDialogSections(type) {
 		if(type === "mapbox") {
 			$(".mapbox_only").show();
