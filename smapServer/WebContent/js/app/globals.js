@@ -442,7 +442,7 @@ define(function () {
 		    'select_type': {
 			    field: 'a_select_type',
 			    type: 'form',
-			    rex: 'minimal|autocomplete|columns|image-map|compact'
+			    rex: 'minimal|autocomplete|columns|image-map|compact|autocomplete-minimal'
 		    },
 		    'date_type': {
 			    field: 'a_date_type',

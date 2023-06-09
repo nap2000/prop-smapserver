@@ -3816,6 +3816,8 @@ function setNoFilter() {
 							} else {
 								val = s1Val + '-' + numberColumns;
 							}
+						} else if (s1Val === 'autocomplete-minimal') {
+							val = 'autocomplete minimal';
 						} else {
 							val = s1Val;
 						}
@@ -3847,7 +3849,6 @@ function setNoFilter() {
              * Set the value of an appearance in the appearance dialog
              */
 			function setAppearance($elem, val, type, appearance, question, survey) {
-				var val;
 				if (type === "boolean") {
 					$elem.prop('checked', true);
 				} else if (type === "form") {
@@ -3879,9 +3880,6 @@ function setNoFilter() {
 							}
 						}
 
-
-
-
 						/*
 						 * Set the access value
 						 */
@@ -3906,6 +3904,9 @@ function setNoFilter() {
 							$('.a_number_columns').show();
 						}
 
+					} else if(val === 'autocomplete' && question.appearance.indexOf('minimal') >= 0
+							|| val === 'minimal' && question.appearance.indexOf('autocomplete') >= 0) {
+						$elem.val('autocomplete-minimal');
 					} else {
 						$elem.val(val);
 					}

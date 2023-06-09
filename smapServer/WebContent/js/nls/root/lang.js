@@ -895,6 +895,7 @@ define({
 	"ed_min": "Minimal",
 	"ed_adv": "Auto Advance",
 	"ed_ac": "Auto Complete",
+    "ed_acm": "Minimal Auto Complete",
 	"ed_compact": "Compact",
 	"ed_compact_adv": "Compact with auto advance",
 	"ed_image_map": "Image Map",
