@@ -801,7 +801,7 @@ $(document).ready(function() {
 		}
 
 		// mapbox is the default
-		if($('#a_pdfmapsource').val() != "mapbox") {
+		if($('#a_pdfmapsource').val() != "none") {
 			appearances.push('pdfmapsource_' + $('#a_pdfmapsource').val());
 		}
 
