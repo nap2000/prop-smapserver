@@ -1261,6 +1261,12 @@ function refreshMediaView(data, sId) {
 			}
 		});
 
+		$('.media_history').click(function () {
+			let item = window.gFiles[$(this).val()];
+
+			window.location.href='/app/resource_history.html?resource=' + item.name;
+		});
+
 		$('.media_replace').click(function(e) {
 			let item = window.gFiles[$(this).val()];
 

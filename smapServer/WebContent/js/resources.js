@@ -128,7 +128,18 @@ require([
 		$('#addCsv').click( function(e) {
 			$('#uploadAction').val("add");
 			$('#resourceUpload')[0].reset();
-			$('.notreplace').show();
+			$('.notreplace, #fileCsv').show();
+			$('#fileMedia').hide();
+			$('.upload_alert').removeClass('alert-danger').addClass('alert-success').html("");
+			$('#fileAddPopup').modal('show');
+		});
+
+		// Open the dialog to select a new survey for upload
+		$('#addMedia').click( function(e) {
+			$('#uploadAction').val("add");
+			$('#resourceUpload')[0].reset();
+			$('.notreplace, #fileMedia').show();
+			$('#fileCsv').hide();
 			$('.upload_alert').removeClass('alert-danger').addClass('alert-success').html("");
 			$('#fileAddPopup').modal('show');
 		});
@@ -141,7 +152,7 @@ require([
 		});
 
 		// Change function on media file selected
-		$('#file').change(function(){
+		$('#fileCsv, #fileMedia').change(function(){
 			var $this = $(this);
 			var itemName = $('#itemName').val();
 			var fileName = $this[0].files[0].name;

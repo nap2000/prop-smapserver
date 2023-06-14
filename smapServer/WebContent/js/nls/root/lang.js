@@ -1287,6 +1287,7 @@ define({
     "sr_sl": "Save Location",
     "sr_sm": "Survey Media Files",
     "sr_si": "The NFC UID and GPS coordinates that you specify here can be saves as a named location or used in the task as an anonymous location",
+    "sr_rh": "Resource History",
 
     // languages
     "ar": "Arabic",
