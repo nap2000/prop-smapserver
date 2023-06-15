@@ -1214,11 +1214,12 @@ function refreshMediaViewManage(data, sId) {
 }
 /*
  * Refresh the view of any attached media if the available media items has changed
+ * sId is set if a resources for that survey are being viewed
  */
 function refreshMediaView(data, sId) {
 
 	var i,
-		survey = globals.model.survey,
+		survey = globals.model.survey,		// Survey details
 		$elementMedia,
 		$elementCsv,
 		hCsv = [],
@@ -1230,7 +1231,6 @@ function refreshMediaView(data, sId) {
 		// Set the display name
 		$('.formName').text(survey.displayName);
 		$('#survey_id').val(sId);
-		gSId = sId;
 	}
 
 	if(data) {
@@ -1262,9 +1262,12 @@ function refreshMediaView(data, sId) {
 		});
 
 		$('.media_history').click(function () {
-			let item = window.gFiles[$(this).val()];
-
-			window.location.href='/app/resource_history.html?resource=' + item.name;
+			var item = window.gFiles[$(this).val()];
+			var url = '/app/resource_history.html?resource=' + item.name;
+			if(sId) {
+				url += '&survey_id=' + sId;
+			}
+			window.location.href = url;
 		});
 
 		$('.media_replace').click(function(e) {
@@ -1449,7 +1452,6 @@ function getFilesFromServer(sId, callback, getall) {
 	let url = '/surveyKPI/upload/media';
 	let hasParams = false;
 	if(sId) {
-		gSId = sId;
 		url += '?survey_id=' + sId;
 		hasParams = true;
 	}

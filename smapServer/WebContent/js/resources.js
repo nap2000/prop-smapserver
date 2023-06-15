@@ -598,8 +598,12 @@ require([
 				if(data && data.status === "error") {
 					$('.upload_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').text(data.message);
 				} else {
+					var surveyId = 0;
 					document.forms.namedItem("resourceUpload").reset();
-					getFilesFromServer(0, refreshMediaViewManage, false);
+					if(gIsSurvey) {
+						surveyId = globals.gCurrentSurvey;
+					}
+					getFilesFromServer(surveyId, refreshMediaViewManage, false);
 					$('.upload_alert').show().removeClass('alert-danger alert-warning').addClass('alert-success').html(localise.set["t_tl"] + ": " + data.name);
 				}
 				$('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error

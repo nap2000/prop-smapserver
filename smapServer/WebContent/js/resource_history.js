@@ -43,11 +43,30 @@ require([
          'app/globals'],
 		function($, common, lang, globals) {
 
+	var gHistory,
+		gResource,
+		gSurveyId;
+
 $(document).ready(function() {
 
 	setTheme();
 	setupUserProfile(true);
 	localise.setlang();		// Localise HTML
+
+	/*
+	 * Get the parameters
+	 */
+	var params = location.search.substring(location.search.indexOf("?") + 1);
+	var pArray = params.split("&");
+	var i;
+	for (i = 0; i < pArray.length; i++) {
+		var param = pArray[i].split("=");
+		if ( param[0] === "resource" ) {
+			gResource= param[1];
+		} else if ( param[0] === "survey_id" ) {
+			gSurveyId= param[1];
+		}
+	}
 
 	// Get the user details
 	globals.gIsAdministrator = false;
@@ -56,39 +75,42 @@ $(document).ready(function() {
 });
 
 function surveyListDone() {
-	getResourceHistory(refreshView, true);
+	getResourceHistory(gResource, gSurveyId);
 }
 
 function refreshView() {
-	setChangesHtml($('#changes'), globals.model.survey);
+	setChangesHtml($('#changes'), gHistory);
 }
 
 
-function getResourceHistory() {
+function getResourceHistory(resource, surveyId) {
 
-	var url="/surveyKPI/shared/maps/";
+	var url="/surveyKPI/shared/media/" + resource + "/history";
+	if(surveyId > 0) {
+		url += '&survey_id=' + surveyId;
+	}
 
-				addHourglass();
-				$.ajax({
-					url: url,
-					dataType: 'json',
-					cache: false,
-					success: function(data) {
-						removeHourglass();
-						gMaps = data;
-						updateMapList(data);
-					},
-					error: function(xhr, textStatus, err) {
-						removeHourglass();
-						if(xhr.readyState == 0 || xhr.status == 0) {
-							return;  // Not an error
-						} else {
-							console.log("Error: Failed to get list of maps: " + err);
-						}
-					}
-				});
-
+	addHourglass();
+	$.ajax({
+		url: url,
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			removeHourglass();
+			gHistory = data;
+			refreshView();
+		},
+		error: function(xhr, textStatus, err) {
+			removeHourglass();
+			if(xhr.readyState == 0 || xhr.status == 0) {
+				return;  // Not an error
+			} else {
+				alert("Error: " + err);
 			}
+		}
+	});
+
+}
 
 /*
  * Convert change log JSON to html
