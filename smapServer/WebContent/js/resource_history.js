@@ -79,7 +79,7 @@ function surveyListDone() {
 }
 
 function refreshView() {
-	setChangesHtml($('#changes'), gHistory);
+	setChangesHtml($('#history'), gHistory);
 }
 
 
@@ -115,108 +115,57 @@ function getResourceHistory(resource, surveyId) {
 /*
  * Convert change log JSON to html
  */
-function setChangesHtml($element, survey) {
+function setChangesHtml($element, items) {
 	var h =[],
 		idx = -1,
 		i,
 		changes;
-	
-	if(!survey) {
-		$('#errormesg').html("<strong>No Changes</strong> Create or select a survey to see changes");
-		$('#infobox').show();
-	} else {
-
-		changes = survey.changes;
 		
-		h[++idx] = '<table class="table table-responsive-sm table-striped">';
+	h[++idx] = '<table class="table table-responsive-sm table-striped">';
 		
-		// write the table headings
-		h[++idx] = '<thead>';
-			h[++idx] = '<tr>';
-        		h[++idx] = '<th>';
-        			h[++idx] = localise.set["c_version"];
-        		h[++idx] = '</th>';
+	// write the table headings
+	h[++idx] = '<thead>';
+	h[++idx] = '<tr>';
+		h[++idx] = '<th>';
+		h[++idx] = localise.set["c_file"];
+		h[++idx] = '</th>';
 
-        		h[++idx] = '<th>';
-        			h[++idx] = localise.set["c_changes"];
-        		h[++idx] = '</th>';
+		h[++idx] = '<th>';
+		h[++idx] = localise.set["c_user"];
+		h[++idx] = '</th>';
 
-        		h[++idx] = '<th>';
-					h[++idx] = localise.set["rev_cb"];
-        		h[++idx] = '</th>';
-
-				h[++idx] = '<th>';
-					h[++idx] = localise.set["ed_dt"];
-					h[++idx] = ' (';
-					h[++idx] = globals.gTimezone;
-					h[++idx] = ')';
-				h[++idx] = '</th>';
-
-				h[++idx] = '<th>' + localise.set["c_file"] + '</th>';
-				h[++idx] = '<th>' + localise.set["c_msg"] + '</th>';
-			h[++idx] = '</tr>';
-		h[++idx] = '</thead>';
+		h[++idx] = '<th>';
+		h[++idx] = localise.set["ed_dt"];
+		h[++idx] = ' (';
+		h[++idx] = globals.gTimezone;
+		h[++idx] = ')';
+		h[++idx] = '</th>';
+	h[++idx] = '</tr>';
+	h[++idx] = '</thead>';
 		
-		// Write the table body
-		h[++idx] = '<body>';
-		for(i = 0; i < changes.length; i++) {
-			
-			var status = "pending";
-			if(!changes[i].apply_results) {		// Change has been applied to the results tables
-				status = changes[i].success ? "success" : "failed";
-			}
-			var filehtml = "";
-			if(changes[i].change.fileName && changes[i].change.fileName.trim().length > 0) {
-				var filename = changes[i].change.fileName;
-				var fnIndex = changes[i].change.fileName.lastIndexOf('/');
-				if(fnIndex >= 0) {
-					filename = filename.substr(fnIndex + 1);
-				}
-				var url = null;
-				if(filename.indexOf(".pdf") === filename.length - 4) {
-					if(!changes[i].msg) {
-						// deprecated old style
-						url = '/surveyKPI/file/' + filename + '/surveyPdfTemplate/' + changes[i].change.origSId + '?archive=true';
-					} else {
-						url = '/surveyKPI/file/' + filename + '/pdfTemplate/' + changes[i].change.origSId;
-						filename = changes[i].msg;
-					}
-				} else {
-					url = '/surveyKPI/survey/' + changes[i].change.origSId + '/download?type=xlsx';
-				}
-                filehtml = '<a href="' + url + '">' + filename + '</a>';
-			}
-			h[++idx] = '<tr class="change_';
-					h[++idx] = status;
-					h[++idx] = '">';
-				h[++idx] = '<td>';
-				h[++idx] = changes[i].version;
-				h[++idx] = '</td>';	
-				h[++idx] = '<td>';
-				h[++idx] = getChangeDescription(changes[i].change, changes[i].version);
-				h[++idx] = '</td>';
-				h[++idx] = '<td>';
-				h[++idx] = htmlEncode(changes[i].userName);
-				h[++idx] = '</td>';
-				h[++idx] = '<td>';
-				h[++idx] = changes[i].updatedTime;
-				h[++idx] = '</td>';
-				h[++idx] = '<td>';
-				h[++idx] = filehtml;
-				h[++idx] = '</td>';
-				h[++idx] = '<td>';
-				h[++idx] = changes[i].msg;
-				h[++idx] = '</td>';
-			h[++idx] = '</tr>';
-		}
-		h[++idx] = '</body>';
-		
-		h[++idx] = '</table>';
-	} 
+	// Write the table body
+	h[++idx] = '<body>';
+	for(i = 0; i < items.length; i++) {
+
+		h[++idx] = '<tr>';
+		h[++idx] = '<td>';
+		h[++idx] = htmlEncode(items[i].file_name);
+		h[++idx] = '</td>';
+
+		h[++idx] = '<td>';
+		h[++idx] = htmlEncode(items[i].user_ident);
+		h[++idx] = '</td>';
+
+		h[++idx] = '<td>';
+		h[++idx] = htmlEncode(items[i].uploaded);
+		h[++idx] = '</td>';
+
+		h[++idx] = '</tr>';
+	}
+	h[++idx] = '</body>';
+	h[++idx] = '</table>';
 	
 	$element.html(h.join(''));
-	
-	
 }
 
 });
