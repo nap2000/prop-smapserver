@@ -85,10 +85,12 @@ function refreshView() {
 
 function getResourceHistory(resource, surveyId) {
 
-	var url="/surveyKPI/shared/media/" + resource + "/history";
+	var url="/surveyKPI/shared/media/" + encodeURIComponent(resource) + "/history";
 	if(surveyId > 0) {
-		url += '&survey_id=' + surveyId;
+		url += '?survey_id=' + surveyId;
 	}
+	url += (surveyId > 0) ? '&' : '?';
+	url += "tz=" + encodeURIComponent(globals.gTimezone);   // Also add timezone to URL
 
 	addHourglass();
 	$.ajax({
