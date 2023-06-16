@@ -142,6 +142,11 @@ function setChangesHtml($element, items) {
 		h[++idx] = globals.gTimezone;
 		h[++idx] = ')';
 		h[++idx] = '</th>';
+
+		h[++idx] = '<th>';
+		h[++idx] = localise.set["c_action"];
+		h[++idx] = '</th>';
+
 	h[++idx] = '</tr>';
 	h[++idx] = '</thead>';
 		
@@ -160,6 +165,14 @@ function setChangesHtml($element, items) {
 
 		h[++idx] = '<td>';
 		h[++idx] = htmlEncode(items[i].uploaded);
+		h[++idx] = '</td>';
+
+		h[++idx] = '<td>';
+		h[++idx] = '<a class="media_download btn btn-info" href="';					// Download
+		h[++idx] = items[i].url;
+		h[++idx] = '">';
+		h[++idx] = '<i class="fas fa-download"></i>'
+		h[++idx] = '</a>';
 		h[++idx] = '</td>';
 
 		h[++idx] = '</tr>';
