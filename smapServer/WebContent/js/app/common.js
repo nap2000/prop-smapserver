@@ -1270,17 +1270,20 @@ function refreshMediaView(data, sId) {
 			window.location.href = url;
 		});
 
+		$('.csv_replace').click(function(e) {
+
+			$('#fileCsv').show();
+			$('#fileMedia').hide();
+
+			replace(window.gFiles[$(this).val()]);
+		});
+
 		$('.media_replace').click(function(e) {
-			let item = window.gFiles[$(this).val()];
 
-			$('#uploadAction').val('replace');
-			$('#itemName').val(getBaseName(item.name));
+			$('#fileCsv').hide();
+			$('#fileMedia').show();
 
-			$('.upload_alert').hide();
-			$('.notreplace').hide();
-			$('#media_add_title').text(localise.set["tm_c_sr_rep"] + ": " + item.name);
-
-			$('#fileAddPopup').modal('show');
+			replace(window.gFiles[$(this).val()]);
 		});
 
 	}
@@ -1291,6 +1294,18 @@ function refreshMediaView(data, sId) {
 	}
 }
 
+function replace(item) {
+
+	$('#uploadAction').val('replace');
+	$('#itemName').val(getBaseName(item.name));
+
+	$('.upload_alert').hide();
+	$('.notreplace').hide();
+	$('#media_add_title').text(localise.set["tm_c_sr_rep"] + ": " + item.name);
+
+	$('#fileAddPopup').modal('show');
+
+}
 function getBaseName(fileName) {
 	let lastDot = fileName.lastIndexOf(".");
 	let baseName = fileName;
@@ -1344,7 +1359,9 @@ function getMediaRecord(file, panel, record) {
 	h[++idx] = '</td>';
 
 	h[++idx] = '<td class="mediaManage">';
-	h[++idx] = '<button class="btn media_replace" value="';
+	h[++idx] = '<button class="btn ';
+	h[++idx] = (panel === 'csv') ? 'csv_replace' : 'media_replace';
+	h[++idx] = '" value="';
 	h[++idx] = record;
 	h[++idx] = '">';
 	h[++idx] = '<i class="fas fa-sync-alt"></i>';
