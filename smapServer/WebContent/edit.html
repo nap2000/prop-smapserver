@@ -522,82 +522,14 @@
 			</div>
 
 			<div class="modal-body">
-				<div class="container-responsiver">
-					<ul class="nav nav-pills mediaSelect">
-						<li id="orgLevelTab" class="nav-item"><a href='#' class="lang nav-link active" data-lang="c_org">organisation</a></li>
-						<li id="surveyLevelTab" class="disabled nav-item"><a href='#' class="lang nav-link" data-lang="c_form">form</a></li>
-					</ul>
-
-					<form enctype="multipart/form-data" name="fileupload">
-
-						<input id="survey_id" type="hidden" name="survey_id" >
-						<!-- The fileupload-buttonbar contains buttons to add files and start/cancel the upload -->
-						<div class="row fileupload-buttonbar mediaManage">
-							<div class="col-lg-7">
-								<!-- The fileinput-button span is used to style the file input field as button -->
-
-								<input name="files" title="Add files..." class="file-inputs" type="file" multiple
-									   accept="image/png, image/jpeg, image/gif, video/3gpp, video/mp4, audio/mpeg,
-	                			audio/mp3, audio/mp4, audio/x-wav, text/csv, .geojson, .json,
-								application/zip,application/octet-stream,application/x-zip,application/x-zip-compressed,
-								application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
-								application/vnd.ms-excel, image/svg+xml">
-
-								<button type="button" id="submitFiles" class="submitFiles btn btn-primary">
-									<span class="lang" data-lang="c_upload">upload</span>
-								</button>
-								<button type="reset" class="btn btn-warning cancel">
-									<span class="lang" data-lang="c_cancel">cancel</span>
-								</button>
-
-								<!-- The global file processing state -->
-								<span class="fileupload-process"></span>
-							</div>
-							<!-- The global progress state -->
-							<div class="col-lg-5 fileupload-progress fade">
-								<!-- The global progress bar -->
-								<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-									<div class="progress-bar progress-bar-success" style="width:0%;"></div>
-								</div>
-
-							</div>
-						</div>
-					</form>
-
-					<!-- Status -->
-					<div class="upload_file_msg alert alert-success mediaManage" role="alert"></div>
-
-					<!-- The global progress bar -->
-					<div id="progress" class="progress mediaManage">
-						<div class="progress-bar progress-bar-success"></div>
-					</div>
-
-					<!-- The container for the uploaded Survey files -->
-					<div id="surveyPanel" class="col-lg-10" style="display:none;">
-						<div class="table-responsive">
-							<table role="presentation" class="table table-striped col-lg-10">
-								<tbody id="filesSurvey">
-								</tbody>
-							</table>
-						</div>
-					</div>
-
-					<!-- The container for the uploaded Survey files -->
-					<div id="orgPanel" class="col-lg-10">
-						<div class="table-responsive">
-							<table role="presentation" class="table table-striped col-lg-10">
-								<tbody id="filesOrg">
-								</tbody>
-							</table>
-						</div>
-					</div>
-
-				</div>	<!-- End Body -->
+				<div class="container-responsive">
+					<div id="imageSelect"></div>
+				</div>	<!-- End Container -->
 			</div>
 
 			<div class="modal-footer">
-				<button id="removeMedia" type="button" class="btn btn-danger mediaSelect" data-dismiss="modal" ><span class="lang" data-lang="c_del">delete</span></button>
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="mediaSave" type="button" class="btn btn-primary lang" data-lang="c_done">done</button>
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">/button>
 			</div>
 		</div>
 	</div>

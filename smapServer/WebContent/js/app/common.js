@@ -3839,7 +3839,7 @@ function getAccessibleSurveys($elem, includeNone, includeBlocked, groupsOnly, in
  */
 function getAccessibleCsvFiles($elem, includeNone) {
 
-	var url="/surveyKPI/csv/files";
+	var url="/surveyKPI/shared/csv/files";
 
 	addHourglass();
 	$.ajax({

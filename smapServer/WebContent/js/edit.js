@@ -173,7 +173,6 @@ $(document).ready(function() {
 	// Get the user details
 	globals.gIsAdministrator = false;
 	getLoggedInUser(getSurveyList, false, true, undefined, false, dont_get_current_survey);
-	getFilesFromServer(globals.gCurrentSurvey , refreshMediaView, false);		// Get the organisational level media files
 
 	/*
 	 * Switch between choices list view and question view
@@ -366,36 +365,6 @@ $(document).ready(function() {
 	// Set up view type toggle
 	$('#viewType').attr("data-on", localise.set["c_questions"]).attr("data-off", localise.set["c_choices"]).bootstrapToggle();
 
-	// Add menu functions
-	/*
-	$('#m_media').off().click(function() {	// Media nd CSV files
-		// Go to the shared reosurces page
-		$('.mediaManage').show();
-		$('.mediaSelect').hide();
-		$('#mediaModalLabel').html(localise.set["ed_mmf"]);
-		$('#mediaModal table').off();
-		$('#surveyPanel, #orgPanel').find('tr').removeClass('success');
-
-		// Make sure all types of media are shown
-		$('tr').show();
-		// Close any drop downmenus
-		$('.dropdown-toggle').parent().removeClass("open");
-		$('.navbar-collapse').removeClass("in");
-
-		// Only form level media is managed here, organisation level media is managed in the shared resources page
-		$('#orgPanel').hide();
-		$('#surveyPanel').show();
-		gUrl = gBaseUrl + '?sId=' + gSId;
-    	$('#survey_id').val(gSId);			// Set the survey id in the forms hidden field
-    	gIsSurveyLevel = true;
-
-		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
-		$('#mediaModal').modal('show');
-
-	});
-
-	 */
-
 	$('#m_settings').off().click(function() {	// Show the settings dialog
 
 		// Close any drop downmenus
@@ -417,7 +386,6 @@ $(document).ready(function() {
         updateSettingsData();
 
     });
-
 
 	$('#save_settings').off().click(function() {	// Save settings to the database
 
@@ -979,24 +947,6 @@ $(document).ready(function() {
 	};
 
 	/*
-	 * Set up media files
-	 *
-    $('#surveyLevelTab a').click(function (e) {
-    	if(gSId) {
-    		e.preventDefault();
-    		$(this).tab('show');
-    		gUrl = gBaseUrl + '?sId=' + gSId;
-    		$('#survey_id').val(gSId);			// Set the survey id in the forms hidden field
-    		gIsSurveyLevel = true;
-
-    		$('#orgPanel').hide();
-    		$('#surveyPanel').show();
-    	}
-    })
-
-	 */
-
-	/*
     $('#orgLevelTab a').click(function (e) {
     	  e.preventDefault();
     	  $(this).tab('show');
@@ -1011,18 +961,6 @@ $(document).ready(function() {
 	 */
 
     $('.file-inputs').bootstrapFileInput();
-
-    /*
-     * Submit the files
-     *
-	$('.submitFiles').addClass('disabled');
-    $('#submitFiles').click( function() {
-       	if(!$('#submitFiles').hasClass('disabled')) {
-	        $('.submitFiles').addClass('disabled');
-       		uploadFiles(gUrl, "fileupload", refreshMediaViewManage, globals.gCurrentSurvey, undefined);
-       	}
-    });
-     */
 
     /*
      * Open a new form
@@ -1288,8 +1226,6 @@ function surveyListDone() {
 function surveyDetailsDone() {
 	// Get survey level files
 	if(globals.gCurrentSurvey) {
-		$('#surveyLevelTab').removeClass("disabled");
-		getFilesFromServer(globals.gCurrentSurvey, refreshMediaView, false);
 		getFilesFromServer(globals.gCurrentSurvey, refreshAllMediaPickLists, true);   // Get all media
 	}
 
@@ -1326,20 +1262,7 @@ function refreshAllMediaPickLists(data) {
 		idx = -1,
 		i;
 
-	h[++idx] = '<option value="none">';
-	h[++idx] = localise.set["c_none"];
-	h[++idx] = '</option>';
-	if(data && data.files && data.files.length > 0) {
-		for (i = 0; i < data.files.length; i++) {
-			if(data.files[i].type === 'image') {
-				h[++idx] = '<option value="';
-				h[++idx] = data.files[i].name;
-				h[++idx] = '">';
-				h[++idx] = data.files[i].name;
-				h[++idx] = '</option>';
-			}
-		}
-	}
+
 	$('#default_logo').empty().html(h.join(''));
 }
 
@@ -2833,48 +2756,11 @@ function mediaPropSelected($this) {
 	gQname = $elem.data("qname");
 	$gCurrentRow = $elem;
 
-	if($('#orgLevelTab a').hasClass("active")) {
-		$('#orgPanel').show();
-		$('#surveyPanel').hide();
-		gUrl = gBaseUrl;
-    	$('#survey_id').val("");			// Set the survey id in the forms hidden field
-    	gIsSurveyLevel = false;
-	} else {
-		$('#orgPanel').hide();
-		$('#surveyPanel').show();
-		gUrl = gBaseUrl + '?sId=' + gSId;
-    	$('#survey_id').val(gSId);			// Set the survey id in the forms hidden field
-    	gIsSurveyLevel = true;
-	}
-
-	$('.mediaManage').hide();
-	$('.mediaSelect').show();
 	$('#mediaModalLabel').html(localise.set['msg_sel_media_f']);
-
-	// Remove any current selections
-	$('#surveyPanel, #orgPanel').find('tr').removeClass('success');
 
 	// Only show relevant media
 	$('tr','#surveyPanel, #orgPanel').hide();
 	$('tr.' + gElement, '#surveyPanel, #orgPanel').show();
-
-	$('#mediaModal table').off().on('click', 'tbody tr', function(e) {
-		var $sel = $(this);
-
-		$('#surveyPanel, #orgPanel').find('tr').removeClass('success');	// Un mark any other selcted rows
-	    $sel.addClass('success');
-
-	    gNewVal = $sel.find('.filename').text();
-
-	});
-
-	// Set the status of the remove button
-	var $empty = $immedParent.find('.emptyMedia');
-	if($empty.length > 0) {
-		$('#removeMedia').addClass("disabled");
-	} else {
-		$('#removeMedia').removeClass("disabled");
-	}
 
 	// On double click save and exit
 	$('#mediaModal table').off().on('dblclick', 'tbody tr', function(e) {
