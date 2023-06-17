@@ -729,3 +729,11 @@ td.completed, td.submitted {
 	border-radius: 4px;
 	box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
 }
+
+.mediaItem:hover {
+	background: #fafafa;
+}
+
+.mediaItem.selected {
+	background: rgba(2, 117, 216, 0.95);
+}

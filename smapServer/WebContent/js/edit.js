@@ -92,10 +92,9 @@ var	gMode = "survey",
 	gSurveyIdents,
 	gSurveyNames,
 	gSurveyUrl,
-	gSurveyUrlCacheBuster;
+	gSurveyUrlCacheBuster,
+	gFiles;
 // Media globals
-var gUrl,			// url to submit to
-	gBaseUrl = '/surveyKPI/upload/media';
 
 // Media Modal Parameters
 var gNewVal,
@@ -1226,7 +1225,7 @@ function surveyListDone() {
 function surveyDetailsDone() {
 	// Get survey level files
 	if(globals.gCurrentSurvey) {
-		getFilesFromServer(globals.gCurrentSurvey, refreshAllMediaPickLists, true);   // Get all media
+		getFilesFromServer(globals.gCurrentSurvey, refreshMediaPickLists, true);   // Get all media
 	}
 
 	$('#openFormModal').modal("hide");		// Hide the open form modal if its open
@@ -1257,13 +1256,60 @@ function surveyDetailsDone() {
 /*
  * Refresh any pick lists that use media
  */
-function refreshAllMediaPickLists(data) {
+function refreshMediaPickLists(data) {
 	var h = [],
 		idx = -1,
 		i;
 
+	gFiles = data.files;	// Reference the data on selection of an item
 
-	$('#default_logo').empty().html(h.join(''));
+	for(i = 0; i < data.files.length; i++) {
+		var f = data.files[i];
+		if(f.type === 'image' || f.type === 'video' || f.type === 'audio') {
+			h[++idx] = '<div class="row mediaItem" data-idx="';
+			h[++idx] = i;
+			h[++idx] = '">';
+
+			// Image
+			h[++idx] = '<div class="col-sm">';
+			h[++idx] = '<img src="';
+			h[++idx] = htmlEncode(f.thumbnailUrl);
+			h[++idx] = '" class="';
+			h[++idx] = f.type;
+			h[++idx] = '" alt="';
+			h[++idx] = htmlEncode(f.name);
+			h[++idx] = '">';
+			h[++idx] = '</div>';
+
+			// Name
+			h[++idx] = '<div class="col-sm">';
+			h[++idx] = '<p>';
+			h[++idx] = htmlEncode(f.name);
+			h[++idx] = '<p>';
+			h[++idx] = '</div>';
+
+			h[++idx] = '</div>';
+		}
+	}
+
+	$('#imageSelect').empty().html(h.join(''));
+
+	$('#mediaSave').off().click(function() {
+		var idx = $('.mediaItem.selected', '#imageSelect').data('idx');
+		gNewVal = gFiles[idx].name;
+		mediaSelectSave();
+	});
+
+	$('.mediaItem', '#imageSelect').off().on("click", function(e) {
+		var $this = $(this);
+		$('.mediaItem', '#imageSelect').removeClass('selected');
+		$this.addClass('selected');
+	});
+
+	$('.mediaItem', '#imageSelect').on("dblclick", function(e) {
+		gNewVal = gFiles[$(this).data('idx')].name;
+		mediaSelectSave();
+	});
 }
 
 /*
@@ -2696,32 +2742,7 @@ function respondToEvents($context) {
 					respondToEvents($context);						// Add events on to the altered html
 				}
 			}
-
-			/*
-			else {
-				type = "option";
-
-				targetListName = $targetListItem.data("list_name");
-				targetItemIndex = $targetListItem.data("index");
-
-				if(sourceListName === targetListName && sourceItemIndex === targetItemIndex) {
-					// Dropped on itself do not move
-				} else {
-
-					console.log("Dropped option: " + sourceListName + " : " + sourceItemIndex +
-							" : " + targetListName + " : " + targetItemIndex);
-
-					$context = question.moveBeforeOption(sourceListName, sourceItemIndex,
-							targetListName, targetItemIndex, locn);
-					respondToEvents($context);						// Add events on to the altered html
-				}
-			}
-			*/
-
-
 		}
-
-
 	});
 
 	// Select text inside text area on tab - from: https://stackoverflow.com/questions/5797539/jquery-select-all-text-from-a-textarea
@@ -2742,8 +2763,7 @@ function respondToEvents($context) {
 
 function mediaPropSelected($this) {
 
-	var $elem = $this.closest('li'),
-		$immedParent = $this.closest('div');
+	var $elem = $this.closest('li');
 
 	if(!$elem.hasClass("question")) {
 		$elem = $this.closest('tr');
@@ -2759,7 +2779,6 @@ function mediaPropSelected($this) {
 	$('#mediaModalLabel').html(localise.set['msg_sel_media_f']);
 
 	// Only show relevant media
-	$('tr','#surveyPanel, #orgPanel').hide();
 	$('tr.' + gElement, '#surveyPanel, #orgPanel').show();
 
 	// On double click save and exit
