@@ -1219,7 +1219,6 @@ function refreshMediaViewManage(data, sId) {
 function refreshMediaView(data, sId) {
 
 	var i,
-		survey = globals.model.survey,		// Survey details
 		$elementMedia,
 		$elementCsv,
 		hCsv = [],
@@ -1227,9 +1226,7 @@ function refreshMediaView(data, sId) {
 		hMedia = [],
 		idxMedia = -1;
 
-	if(survey && sId) {
-		// Set the display name
-		$('.formName').text(survey.displayName);
+	if(sId) {
 		$('#survey_id').val(sId);
 	}
 
@@ -1257,7 +1254,7 @@ function refreshMediaView(data, sId) {
 			let item = window.gFiles[$(this).val()];
 
 			if(confirm(localise.set["msg_confirm_del"] + " " + item.name)) {
-				delete_media(item.name, 0);	// TODO survey id
+				delete_media(item.name, sId);
 			}
 		});
 
@@ -1505,7 +1502,11 @@ function getFilesFromServer(sId, callback, getall) {
  */
 function delete_media(filename, sId) {
 
-	let url = "/surveyKPI/shared/file/" + filename;
+	var url = "/surveyKPI/shared/file/" + filename;
+
+	if(sId > 0) {
+		url += '?survey_id=' + sId;
+	}
 
 	addHourglass();
 	$.ajax({

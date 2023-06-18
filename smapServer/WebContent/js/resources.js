@@ -239,7 +239,7 @@ require([
 	Once we know the user and the current survey get the media files
 	 */
 	function gotUser() {
-		let sId = gIsSurvey ? globals.gCurrentSurvey : 0;
+		var sId = gIsSurvey ? globals.gCurrentSurvey : 0;
 		getFilesFromServer(sId, refreshMediaViewManage, false);
 	}
 	function showMapDialogSections(type) {
