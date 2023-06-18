@@ -976,6 +976,8 @@ define(function () {
                     $('#save_settings').prop("disabled", true);
 
                     $('.formName').text(globals.model.survey.displayName);
+                    $('#m_media').prop('href', '/app/resources.html?survey=true&survey_name=' + globals.model.survey.displayName);
+
                     $('#settingsModal').modal("hide");
                 },
                 error: function (xhr, textStatus, err) {

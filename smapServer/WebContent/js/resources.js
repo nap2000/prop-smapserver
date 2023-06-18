@@ -59,8 +59,19 @@ require([
 		window.moment = moment;		// Make moment global for use by common.js
 
 		/*
-		 * Check if this page is called for a single survey or shared resources
-		 */
+	 	 * Get the parameters
+	 	 */
+		var params = location.search.substring(location.search.indexOf("?") + 1);
+		var pArray = params.split("&");
+		var i;
+		for (i = 0; i < pArray.length; i++) {
+			var param = pArray[i].split("=");
+			if ( param[0] === "survey" ) {
+				gIsSurvey = true;
+			} else if ( param[0] === "survey_name" ) {
+				$('.formName').text(decodeURI(': ' + param[1]));
+			}
+		}
 		gIsSurvey = location.search.indexOf('?survey=true') >= 0;
 
 		setCustomResources();			// Apply custom javascript

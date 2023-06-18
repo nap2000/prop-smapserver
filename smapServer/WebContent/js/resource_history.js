@@ -62,7 +62,8 @@ $(document).ready(function() {
 	for (i = 0; i < pArray.length; i++) {
 		var param = pArray[i].split("=");
 		if ( param[0] === "resource" ) {
-			gResource= param[1];
+			gResource= decodeURI(param[1]);
+			$('.formName').text(decodeURI(': ' + param[1]));
 		} else if ( param[0] === "survey_id" ) {
 			gSurveyId= param[1];
 		}

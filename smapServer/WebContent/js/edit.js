@@ -1228,6 +1228,10 @@ function surveyDetailsDone() {
 		getFilesFromServer(globals.gCurrentSurvey, refreshMediaPickLists, true);   // Get all media
 	}
 
+	// Set the survey name
+	$('.formName').text(globals.model.survey.displayName);
+	$('#m_media').prop('href', '/app/resources.html?survey=true&survey_name=' + globals.model.survey.displayName);
+
 	$('#openFormModal').modal("hide");		// Hide the open form modal if its open
 
 	// Get group questions for this current survey - used for selecting the source parameter
