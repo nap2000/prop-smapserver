@@ -72,7 +72,6 @@ require([
 				$('.formName').text(decodeURI(': ' + param[1]));
 			}
 		}
-		gIsSurvey = location.search.indexOf('?survey=true') >= 0;
 
 		setCustomResources();			// Apply custom javascript
 		setTheme();
@@ -81,11 +80,6 @@ require([
 		$('#map_name').attr("placeholder", localise.set["sr_m_ph"]);
 		$('#map_description').attr("placeholder", localise.set["sr_m_d"]);
 		$('#mapid').attr("placeholder", localise.set["sr_m_mb"]);
-
-		if(gIsSurvey) {
-			$('#mapTab, #locationTab').hide();
-			$('#page_title').text(localise.set["sr_sm"]);
-		}
 
 		// Get the user details
 		globals.gIsAdministrator = false;
@@ -250,8 +244,19 @@ require([
 	Once we know the user and the current survey get the media files
 	 */
 	function gotUser() {
-		var sId = gIsSurvey ? globals.gCurrentSurvey : 0;
-		getFilesFromServer(sId, refreshMediaViewManage, false);
+		/*
+		 * Update menus
+		 * Do it here as menus will have been set automatically according to security privileges
+		 */
+		if(gIsSurvey) {
+			$('#mapTab, #locationTab').hide();
+			$('#m_monitor, #m_tm, #m_user, #m_settings, #m_logs').hide();
+			$('#m_form').show();
+			$('#page_title').text(localise.set["sr_sm"]);
+		}
+
+		// Get the files
+		getFilesFromServer(gIsSurvey ? globals.gCurrentSurvey : 0, refreshMediaViewManage, false);
 	}
 	function showMapDialogSections(type) {
 		if(type === "mapbox") {
