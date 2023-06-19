@@ -1502,7 +1502,7 @@ function getFilesFromServer(sId, callback, getall) {
  */
 function delete_media(filename, sId) {
 
-	var url = "/surveyKPI/shared/file/" + filename;
+	var url = "/surveyKPI/shared/file/" + encodeURIComponent(filename);
 
 	if(sId > 0) {
 		url += '?survey_id=' + sId;
@@ -1524,7 +1524,7 @@ function delete_media(filename, sId) {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 				return;  // Not an error
 			} else {
-				$('.upload_alert').removeClass('alert-success').addClass('alert-danger').html("Error: " + err);
+				alert("Error: " + err);
 			}
 		}
 	});

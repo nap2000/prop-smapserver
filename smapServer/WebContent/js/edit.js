@@ -1276,7 +1276,7 @@ function refreshMediaPickLists(data) {
 
 			// Image
 			h[++idx] = '<div class="col-sm">';
-			h[++idx] = '<img src="';
+			h[++idx] = '<img height="100" width="100" src="';
 			h[++idx] = htmlEncode(f.thumbnailUrl);
 			h[++idx] = '" class="';
 			h[++idx] = f.type;
