@@ -92,10 +92,9 @@ var	gMode = "survey",
 	gSurveyIdents,
 	gSurveyNames,
 	gSurveyUrl,
-	gSurveyUrlCacheBuster;
+	gSurveyUrlCacheBuster,
+	gFiles;
 // Media globals
-var gUrl,			// url to submit to
-	gBaseUrl = '/surveyKPI/upload/media';
 
 // Media Modal Parameters
 var gNewVal,
@@ -129,7 +128,7 @@ $(document).ready(function() {
 	localise.setlang();		// Localise HTML
 
 	// Get the parameters and start editing a survey if one was passed as a parameter
-	params = location.search.substr(location.search.indexOf("?") + 1);
+	params = location.search.substring(location.search.indexOf("?") + 1);
 	pArray = params.split("&");
 	dont_get_current_survey = false;
 	for (i = 0; i < pArray.length; i++) {
@@ -173,7 +172,6 @@ $(document).ready(function() {
 	// Get the user details
 	globals.gIsAdministrator = false;
 	getLoggedInUser(getSurveyList, false, true, undefined, false, dont_get_current_survey);
-	getFilesFromServer(gBaseUrl, 0, refreshMediaView, false);		// Get the organisational level media files
 
 	/*
 	 * Switch between choices list view and question view
@@ -366,33 +364,6 @@ $(document).ready(function() {
 	// Set up view type toggle
 	$('#viewType').attr("data-on", localise.set["c_questions"]).attr("data-off", localise.set["c_choices"]).bootstrapToggle();
 
-	// Add menu functions
-	$('#m_media').off().click(function() {	// MEDIA
-		// Set up media dialog to manage loading and deleting of media
-		$('.mediaManage').show();
-		$('.mediaSelect').hide();
-		$('#mediaModalLabel').html(localise.set["ed_mmf"]);
-		$('#mediaModal table').off();
-		$('#surveyPanel, #orgPanel').find('tr').removeClass('success');
-
-		// Make sure all types of media are shown
-		$('tr').show();
-		// Close any drop downmenus
-		$('.dropdown-toggle').parent().removeClass("open");
-		$('.navbar-collapse').removeClass("in");
-
-		// Only form level media is managed here, organisation level media is managed in the shared resources page
-		$('#orgPanel').hide();
-		$('#surveyPanel').show();
-		gUrl = gBaseUrl + '?sId=' + gSId;
-    	$('#survey_id').val(gSId);			// Set the survey id in the forms hidden field
-    	gIsSurveyLevel = true;
-
-		$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
-		$('#mediaModal').modal('show');
-
-	});
-
 	$('#m_settings').off().click(function() {	// Show the settings dialog
 
 		// Close any drop downmenus
@@ -414,7 +385,6 @@ $(document).ready(function() {
         updateSettingsData();
 
     });
-
 
 	$('#save_settings').off().click(function() {	// Save settings to the database
 
@@ -976,21 +946,6 @@ $(document).ready(function() {
 	};
 
 	/*
-	 * Set up media files
-	 */
-    $('#surveyLevelTab a').click(function (e) {
-    	if(gSId) {
-    		e.preventDefault();
-    		$(this).tab('show');
-    		gUrl = gBaseUrl + '?sId=' + gSId;
-    		$('#survey_id').val(gSId);			// Set the survey id in the forms hidden field
-    		gIsSurveyLevel = true;
-
-    		$('#orgPanel').hide();
-    		$('#surveyPanel').show();
-    	}
-    })
-
     $('#orgLevelTab a').click(function (e) {
     	  e.preventDefault();
     	  $(this).tab('show');
@@ -1002,18 +957,9 @@ $(document).ready(function() {
     	  $('#surveyPanel').hide();
     })
 
-    $('.file-inputs').bootstrapFileInput();
+	 */
 
-    /*
-     * Submit the files
-     */
-	$('.submitFiles').addClass('disabled');
-    $('#submitFiles').click( function() {
-       	if(!$('#submitFiles').hasClass('disabled')) {
-	        $('.submitFiles').addClass('disabled');
-       		uploadFiles(gUrl, "fileupload", refreshMediaViewManage, globals.gCurrentSurvey, undefined);
-       	}
-    });
+    $('.file-inputs').bootstrapFileInput();
 
     /*
      * Open a new form
@@ -1279,10 +1225,12 @@ function surveyListDone() {
 function surveyDetailsDone() {
 	// Get survey level files
 	if(globals.gCurrentSurvey) {
-		$('#surveyLevelTab').removeClass("disabled");
-		getFilesFromServer(gBaseUrl, globals.gCurrentSurvey, refreshMediaView, false);
-		getFilesFromServer(gBaseUrl, globals.gCurrentSurvey, refreshAllMediaPickLists, true);   // Get all media
+		getFilesFromServer(globals.gCurrentSurvey, refreshMediaPickLists, true);   // Get all media
 	}
+
+	// Set the survey name
+	$('.formName').text(globals.model.survey.displayName);
+	$('#m_media').prop('href', '/app/resources.html?survey=true&survey_name=' + globals.model.survey.displayName);
 
 	$('#openFormModal').modal("hide");		// Hide the open form modal if its open
 
@@ -1312,26 +1260,60 @@ function surveyDetailsDone() {
 /*
  * Refresh any pick lists that use media
  */
-function refreshAllMediaPickLists(data) {
+function refreshMediaPickLists(data) {
 	var h = [],
 		idx = -1,
 		i;
 
-	h[++idx] = '<option value="none">';
-	h[++idx] = localise.set["c_none"];
-	h[++idx] = '</option>';
-	if(data && data.files && data.files.length > 0) {
-		for (i = 0; i < data.files.length; i++) {
-			if(data.files[i].type === 'image') {
-				h[++idx] = '<option value="';
-				h[++idx] = data.files[i].name;
-				h[++idx] = '">';
-				h[++idx] = data.files[i].name;
-				h[++idx] = '</option>';
-			}
+	gFiles = data.files;	// Reference the data on selection of an item
+
+	for(i = 0; i < data.files.length; i++) {
+		var f = data.files[i];
+		if(f.type === 'image' || f.type === 'video' || f.type === 'audio') {
+			h[++idx] = '<div class="row mediaItem" data-idx="';
+			h[++idx] = i;
+			h[++idx] = '">';
+
+			// Image
+			h[++idx] = '<div class="col-sm">';
+			h[++idx] = '<img height="100" width="100" src="';
+			h[++idx] = htmlEncode(f.thumbnailUrl);
+			h[++idx] = '" class="';
+			h[++idx] = f.type;
+			h[++idx] = '" alt="';
+			h[++idx] = htmlEncode(f.name);
+			h[++idx] = '">';
+			h[++idx] = '</div>';
+
+			// Name
+			h[++idx] = '<div class="col-sm">';
+			h[++idx] = '<p>';
+			h[++idx] = htmlEncode(f.name);
+			h[++idx] = '<p>';
+			h[++idx] = '</div>';
+
+			h[++idx] = '</div>';
 		}
 	}
-	$('#default_logo').empty().html(h.join(''));
+
+	$('#imageSelect').empty().html(h.join(''));
+
+	$('#mediaSave').off().click(function() {
+		var idx = $('.mediaItem.selected', '#imageSelect').data('idx');
+		gNewVal = gFiles[idx].name;
+		mediaSelectSave();
+	});
+
+	$('.mediaItem', '#imageSelect').off().on("click", function(e) {
+		var $this = $(this);
+		$('.mediaItem', '#imageSelect').removeClass('selected');
+		$this.addClass('selected');
+	});
+
+	$('.mediaItem', '#imageSelect').on("dblclick", function(e) {
+		gNewVal = gFiles[$(this).data('idx')].name;
+		mediaSelectSave();
+	});
 }
 
 /*
@@ -2764,32 +2746,7 @@ function respondToEvents($context) {
 					respondToEvents($context);						// Add events on to the altered html
 				}
 			}
-
-			/*
-			else {
-				type = "option";
-
-				targetListName = $targetListItem.data("list_name");
-				targetItemIndex = $targetListItem.data("index");
-
-				if(sourceListName === targetListName && sourceItemIndex === targetItemIndex) {
-					// Dropped on itself do not move
-				} else {
-
-					console.log("Dropped option: " + sourceListName + " : " + sourceItemIndex +
-							" : " + targetListName + " : " + targetItemIndex);
-
-					$context = question.moveBeforeOption(sourceListName, sourceItemIndex,
-							targetListName, targetItemIndex, locn);
-					respondToEvents($context);						// Add events on to the altered html
-				}
-			}
-			*/
-
-
 		}
-
-
 	});
 
 	// Select text inside text area on tab - from: https://stackoverflow.com/questions/5797539/jquery-select-all-text-from-a-textarea
@@ -2810,8 +2767,7 @@ function respondToEvents($context) {
 
 function mediaPropSelected($this) {
 
-	var $elem = $this.closest('li'),
-		$immedParent = $this.closest('div');
+	var $elem = $this.closest('li');
 
 	if(!$elem.hasClass("question")) {
 		$elem = $this.closest('tr');
@@ -2824,48 +2780,10 @@ function mediaPropSelected($this) {
 	gQname = $elem.data("qname");
 	$gCurrentRow = $elem;
 
-	if($('#orgLevelTab a').hasClass("active")) {
-		$('#orgPanel').show();
-		$('#surveyPanel').hide();
-		gUrl = gBaseUrl;
-    	$('#survey_id').val("");			// Set the survey id in the forms hidden field
-    	gIsSurveyLevel = false;
-	} else {
-		$('#orgPanel').hide();
-		$('#surveyPanel').show();
-		gUrl = gBaseUrl + '?sId=' + gSId;
-    	$('#survey_id').val(gSId);			// Set the survey id in the forms hidden field
-    	gIsSurveyLevel = true;
-	}
-
-	$('.mediaManage').hide();
-	$('.mediaSelect').show();
 	$('#mediaModalLabel').html(localise.set['msg_sel_media_f']);
 
-	// Remove any current selections
-	$('#surveyPanel, #orgPanel').find('tr').removeClass('success');
-
 	// Only show relevant media
-	$('tr','#surveyPanel, #orgPanel').hide();
 	$('tr.' + gElement, '#surveyPanel, #orgPanel').show();
-
-	$('#mediaModal table').off().on('click', 'tbody tr', function(e) {
-		var $sel = $(this);
-
-		$('#surveyPanel, #orgPanel').find('tr').removeClass('success');	// Un mark any other selcted rows
-	    $sel.addClass('success');
-
-	    gNewVal = $sel.find('.filename').text();
-
-	});
-
-	// Set the status of the remove button
-	var $empty = $immedParent.find('.emptyMedia');
-	if($empty.length > 0) {
-		$('#removeMedia').addClass("disabled");
-	} else {
-		$('#removeMedia').removeClass("disabled");
-	}
 
 	// On double click save and exit
 	$('#mediaModal table').off().on('dblclick', 'tbody tr', function(e) {

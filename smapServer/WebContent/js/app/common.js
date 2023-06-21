@@ -1133,11 +1133,10 @@ function getQueries(published) {
 
 /*
  * Upload files to the server
- * Writes status to   .upload_file_msg
  */
-function uploadFiles(url, formName, callback1, param, callback2) {
+function uploadFiles(url, formName, callback1) {
 
-	var f = document.forms.namedItem(formName),
+	let f = document.forms.namedItem(formName),
 		formData = new FormData(f);
 
 	url = addUrlParam(url, "getlist=true");
@@ -1146,22 +1145,13 @@ function uploadFiles(url, formName, callback1, param, callback2) {
 	$.ajax({
 		url: url,
 		type: 'POST',
-		xhr: function () {
-			var myXhr = $.ajaxSettings.xhr();
-			if(myXhr.upload){
-				myXhr.upload.addEventListener('progress', progressFn, false);
-			}
-			return myXhr;
-		},
 		data: formData,
 		cache: false,
 		contentType: false,
 		processData:false,
 		success: function(data) {
 			removeHourglass();
-			var callbackParam = param,
-				cb1 = callback1,
-				cb2 = callback2;
+			let cb1 = callback1;
 			$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html(localise.set["c_success"]);
 			if(typeof cb1 === "function") {
 				cb1(data, callbackParam);
@@ -1224,103 +1214,73 @@ function refreshMediaViewManage(data, sId) {
 }
 /*
  * Refresh the view of any attached media if the available media items has changed
+ * sId is set if a resources for that survey are being viewed
  */
 function refreshMediaView(data, sId) {
 
 	var i,
-		survey = globals.model.survey,
-		$element,
-		h = [],
-		idx = -1,
-		files;
+		$elementMedia,
+		$elementCsv,
+		hCsv = [],
+		idxCsv = -1,
+		hMedia = [],
+		idxMedia = -1;
 
-	if(survey && sId) {
-		// Set the display name
-		$('.formName').text(survey.displayName);
+	if(sId) {
 		$('#survey_id').val(sId);
-		gSId = sId;
 	}
 
 	if(data) {
-		files = data.files;
+		window.gFiles = data.files;
+		let files = data.files;
 
-		if(sId) {
-			$element = $('#filesSurvey');
-		} else {
-			$element = $('#filesOrg');
+		$elementMedia = $('#filesOrg');
+		$elementCsv = $('#csvOrg');
+
+		if(files) {
+			for (i = 0; i < files.length; i++) {
+				if (files[i].type === 'csv') {
+					hCsv[++idxCsv] = getMediaRecord(files[i], 'csv', i);
+				} else {
+					hMedia[++idxMedia] = getMediaRecord(files[i], 'media', i);
+				}
+			}
 		}
 
-		for(i = 0; i < files.length; i++){
-			h[++idx] = '<tr class="';
-			h[++idx] = files[i].type;
-			h[++idx] = '">';
-			h[++idx] = '<td class="preview">';
-			h[++idx] = '<a target="_blank" href="';
-			h[++idx] = files[i].url;
-			if(files[i].url.indexOf("?") < 0) {     // Add some random text to prevent caching on identical file names
-				h[++idx] = "?";
-			} else {
-				h[++idx] = "&";
+		$elementMedia.html(hMedia.join(""));
+		$elementCsv.html(hCsv.join(""));
+
+		$('.media_delete').click(function () {
+			let item = window.gFiles[$(this).val()];
+
+			if(confirm(localise.set["msg_confirm_del"] + " " + item.name)) {
+				delete_media(item.name, sId);
 			}
-			h[++idx] = "_v" + new Date().getTime().toString();
-			h[++idx] = '">';
-			if(files[i].type == "audio") {
-				h[++idx] = addAudioIcon();
-			} else if(files[i].type == "geojson") {
-				h[++idx] = addVectorMapIcon();
-			} else {
-				h[++idx] = '<img width="100" height="100" src="';
-				h[++idx] = files[i].thumbnailUrl + addCacheBuster(files[i].thumbnailUrl);
-				h[++idx] = '" alt="';
-				h[++idx] = htmlEncode(files[i].name);
-				h[++idx] = '">';
+		});
+
+		$('.media_history').click(function () {
+			var item = window.gFiles[$(this).val()];
+			var url = '/app/resource_history.html?resource=' + item.name;
+			if(sId) {
+				url += '&survey_id=' + sId;
 			}
-			h[++idx] = '</a>';
-			h[++idx] = '</td>';
-			h[++idx] = '<td class="filename">';
-			h[++idx] = '<p>';
-			h[++idx] = htmlEncode(files[i].name);
-			h[++idx] = '</p>';
-			h[++idx] = '</td>';
-			h[++idx] = '<td class="mediaManage">';
-			h[++idx] = localTime(files[i].modified);
-			h[++idx] = '</td>';
-			h[++idx] = '<td class="mediaManage">';
-			h[++idx] = '<p>';
-			h[++idx] = files[i].size;
-			h[++idx] = '</p>';
-			h[++idx] = '</td>';
-			h[++idx] = '<td class="mediaManage">';
-			h[++idx] = '<button class="media_del btn btn-danger" data-url="';
-			h[++idx] = files[i].deleteUrl;
-			h[++idx] = '">';
-			h[++idx] = '<i class="fas fa-trash-alt"></i>'
-			h[++idx] = '</button>';
-			h[++idx] = '</td>';
-			h[++idx] = '<td class="mediaSelect">';
-			h[++idx] = '<button class="mediaAdd btn btn-success">';
-			h[++idx] = '<i class="fas fa-plus"></i> '
-			h[++idx] = localise.set['c_add'];
-			h[++idx] = '</button>';
-			h[++idx] = '</td>';
+			window.location.href = url;
+		});
 
+		$('.csv_replace').click(function(e) {
 
-			h[++idx] = '</tr>';
+			$('#fileCsv').show();
+			$('#fileMedia').hide();
 
-		}
+			replace(window.gFiles[$(this).val()]);
+		});
 
+		$('.media_replace').click(function(e) {
 
-		$element.html(h.join(""));
+			$('#fileCsv').hide();
+			$('#fileMedia').show();
 
-		$('.media_del', $element).click(function () {
-			var surveyId = sId,
-				url = $(this).data('url'),
-				idx = url.lastIndexOf('/'),
-				filename = url.substring(idx + 1);
-
-			if(confirm(localise.set["msg_confirm_del"] + filename)) {
-				delete_media(url, surveyId);
-			}
+			replace(window.gFiles[$(this).val()]);
 		});
 
 	}
@@ -1331,6 +1291,112 @@ function refreshMediaView(data, sId) {
 	}
 }
 
+function replace(item) {
+
+	$('#uploadAction').val('replace');
+	$('#itemName').val(getBaseName(item.name));
+
+	$('.upload_alert').hide();
+	$('.notreplace').hide();
+	$('#media_add_title').text(localise.set["tm_c_sr_rep"] + ": " + item.name);
+
+	$('#fileAddPopup').modal('show');
+
+}
+function getBaseName(fileName) {
+	let lastDot = fileName.lastIndexOf(".");
+	let baseName = fileName;
+	if (lastDot !== -1) {
+		baseName = fileName.substr(0, lastDot);
+	}
+	return baseName;
+}
+function getMediaRecord(file, panel, record) {
+	var h = [],
+		idx = -1;
+
+	h[++idx] = '<tr class="';
+	h[++idx] = htmlEncode(file.type);
+	h[++idx] = '">';
+
+	if(panel === 'media') {
+		h[++idx] = '<td class="preview">';
+		h[++idx] = '<a target="_blank" href="';
+		h[++idx] = htmlEncode(file.url) + addCacheBuster(file.url);
+		h[++idx] = '">';
+		if (file.type == "audio") {
+			h[++idx] = addAudioIcon();
+		} else if (file.type == "geojson") {
+			h[++idx] = addVectorMapIcon();
+		} else {
+			h[++idx] = '<img width="100" height="100" src="';
+			h[++idx] = htmlEncode(file.thumbnailUrl) + addCacheBuster(file.thumbnailUrl);
+			h[++idx] = '" alt="';
+			h[++idx] = htmlEncode(file.name);
+			h[++idx] = '">';
+		}
+		h[++idx] = '</a>';
+		h[++idx] = '</td>';
+	}
+
+	h[++idx] = '<td class="filename">';
+	h[++idx] = '<p>';
+	h[++idx] = htmlEncode(file.name);
+	h[++idx] = '</p>';
+	h[++idx] = '</td>';
+
+	h[++idx] = '<td class="mediaManage">';
+	h[++idx] = localTime(file.modified);
+	h[++idx] = '</td>';
+
+	h[++idx] = '<td class="mediaManage">';
+	h[++idx] = '<p>';
+	h[++idx] = htmlEncode(file.size);
+	h[++idx] = '</p>';
+	h[++idx] = '</td>';
+
+	h[++idx] = '<td class="mediaManage">';
+	h[++idx] = '<button class="btn ';
+	h[++idx] = (panel === 'csv') ? 'csv_replace' : 'media_replace';
+	h[++idx] = '" value="';
+	h[++idx] = record;
+	h[++idx] = '">';
+	h[++idx] = '<i class="fas fa-sync-alt"></i>';
+	h[++idx] = '</button>';
+	h[++idx] = '</td>';
+
+	// Action Buttons
+	h[++idx] = '<td class="mediaManage">';
+	h[++idx] = '<a class="media_download btn btn-info" href="';					// Download
+	h[++idx] = file.url;
+	h[++idx] = '">';
+	h[++idx] = '<i class="fas fa-download"></i>'
+	h[++idx] = '</a>';
+	h[++idx] = '<button class="media_history btn btn-primary" value="';	// History
+	h[++idx] = record;
+	h[++idx] = '">';
+	h[++idx] = '<i class="fas fa-landmark"></i>'
+	h[++idx] = '</button>';
+	h[++idx] = '<button class="media_delete btn btn-danger" value="';		// Delete
+	h[++idx] = record;
+	h[++idx] = '">';
+	h[++idx] = '<i class="fas fa-trash-alt"></i>'
+	h[++idx] = '</button>';
+
+	h[++idx] = '</td>';
+
+	h[++idx] = '<td class="mediaSelect">';
+	h[++idx] = '<button class="mediaAdd btn btn-success">';
+	h[++idx] = '<i class="fas fa-plus"></i> '
+	h[++idx] = localise.set['c_add'];
+	h[++idx] = '</button>';
+	h[++idx] = '</td>';
+
+
+	h[++idx] = '</tr>';
+
+	return h.join('');
+}
 /*
  * Refresh the vector select lists
  */
@@ -1370,8 +1436,6 @@ function refreshVectorSelects(data) {
 
 		$vectorData.html(h_d.join(""));
 		$vectorStyle.html(h_s.join(""));
-
-
 	}
 }
 
@@ -1397,11 +1461,11 @@ function addVectorMapIcon() {
 	return h.join('');
 }
 
-function getFilesFromServer(url, sId, callback, getall) {
+function getFilesFromServer(sId, callback, getall) {
 
-	var hasParams = false;
+	let url = '/surveyKPI/upload/media';
+	let hasParams = false;
 	if(sId) {
-		gSId = sId;
 		url += '?survey_id=' + sId;
 		hasParams = true;
 	}
@@ -1418,7 +1482,7 @@ function getFilesFromServer(url, sId, callback, getall) {
 		cache: false,
 		success: function(data) {
 			removeHourglass();
-			var surveyId = sId;
+			let surveyId = sId;
 			callback(data, surveyId);
 
 		},
@@ -1436,7 +1500,14 @@ function getFilesFromServer(url, sId, callback, getall) {
 /*
  * Delete a media file
  */
-function delete_media(url, sId) {
+function delete_media(filename, sId) {
+
+	var url = "/surveyKPI/shared/file/" + encodeURIComponent(filename);
+
+	if(sId > 0) {
+		url += '?survey_id=' + sId;
+	}
+
 	addHourglass();
 	$.ajax({
 		url: url,
@@ -1445,7 +1516,7 @@ function delete_media(url, sId) {
 		success: function(data) {
 			removeHourglass();
 			var surveyId = sId;
-			refreshMediaViewManage(data, surveyId);
+			getFilesFromServer(surveyId, refreshMediaViewManage, false);
 
 		},
 		error: function(xhr, textStatus, err) {
@@ -1453,7 +1524,7 @@ function delete_media(url, sId) {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 				return;  // Not an error
 			} else {
-				$('.upload_file_msg').removeClass('alert-success').addClass('alert-danger').html("Error: " + err);
+				alert("Error: " + err);
 			}
 		}
 	});
@@ -3769,7 +3840,7 @@ function getAccessibleSurveys($elem, includeNone, includeBlocked, groupsOnly, in
  */
 function getAccessibleCsvFiles($elem, includeNone) {
 
-	var url="/surveyKPI/csv/files";
+	var url="/surveyKPI/shared/csv/files";
 
 	addHourglass();
 	$.ajax({

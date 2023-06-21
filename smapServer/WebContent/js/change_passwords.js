@@ -138,6 +138,8 @@ require([
 				$('.pwd_alert').show().removeClass('alert-danger alert-info').addClass('alert-success').html(localise.set["msg_pr"]);
 				$('.pwd_home').show();
 
+				relogon();
+
 			}, error: function(data, status) {
 				removeHourglass();
 				$('.pwd_alert').show().removeClass('alert-success alert-info').addClass('alert-danger').html(localise.set["c_error"] + ": " + data.responseText);
@@ -146,6 +148,23 @@ require([
 		return false;
 
 	});
+
+	function relogon() {
+		let url = "/authenticate/login.txt";
+		jQuery.ajax({
+			type: "GET",
+			cache: false,
+			url: url + addCacheBuster(url),
+			beforeSend: function(xhr){xhr.setRequestHeader ("Authorization", "Basic " + btoa(globals.gLoggedInUser.ident + ":" + $('#password').val()));},
+
+			error: function(data, status) {
+
+			},
+			success: function(data,status) {
+
+			}
+		});
+	}
 });
 
 
