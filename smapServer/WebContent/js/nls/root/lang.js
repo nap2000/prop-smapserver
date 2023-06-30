@@ -748,6 +748,7 @@ define({
     "rejected": "Rejected",
     "cancelled": "Cancelled",
     "deleted": "Deleted",
+    "restored": "Restored",
     "unsent": "Not Sent",
     "unsubscribed": "Unsubscribed",
 

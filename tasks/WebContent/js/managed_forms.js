@@ -2455,7 +2455,8 @@ require([
         if(data && data.length > 0) {
             for(i = 0; i < data.length; i++) {
 
-                if((includeChanges && (data[i].event === 'changes' || data[i].event === 'created')) ||
+                if((includeChanges && (data[i].event === 'changes' || data[i].event === 'created' || data[i].event === 'deleted'
+                        || data[i].event === 'restored')) ||
                     (includeTasks && data[i].event === 'task') ||
                     (includeAssignments && data[i].event === 'assigned') ||
                     (includeNotifications && data[i].event === 'notification')) {
@@ -2464,7 +2465,7 @@ require([
                     h[++idx] = '<td>';
                     if (data[i].event === 'task') {
                         h[++idx] = '<i class="fa fa-lg fa-tasks fa-2x"></i>';
-                    } else if (data[i].event === 'created' || data[i].event === 'changes') {
+                    } else if (data[i].event === 'created' || data[i].event === 'changes' || data[i].event === 'deleted' || data[i].event === 'restored') {
                         h[++idx] = '<i style="line-height: 1.5em;" class="fa fa-lg fa-inbox fa-2x"></i>';
                     } else if (data[i].event === 'notification') {
                         if (data[i].notification && data[i].notification.target === 'sms') {
