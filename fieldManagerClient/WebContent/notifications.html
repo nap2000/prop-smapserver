@@ -161,7 +161,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 								<option value="submission" selected="selected" class="lang" data-lang="submission">submission</option>
 								<option value="task_reminder" class="lang" data-lang="task_reminder">reminder</option>
 								<option value="console_update" class="lang" data-lang="console_update">u</option>
-								<option value="cm_alert" class="lang" data-lang="cm_a">alert</option>
+								<option value="cm_alert" class="lang" data-lang="cm_a">a</option>
+								<option value="periodic" class="lang" data-lang="c_periodic">p</option>
 							</select>
 						</div>
 					</div>
@@ -174,7 +175,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					</div>
 
 					<!-- Reminder specific fields -->
-					<div class="well task_reminder_options" style="display:none;">
+					<div class="task_reminder_options" style="display:none;">
 
 						<div class="form-group row">
 							<label for="task_group" class="lang col-sm-2 control-label" data-lang="t_tg"></label>
@@ -199,6 +200,97 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 								</div>
 							</div>
 						</div>
+					</div>
+
+					<!-- Reminder specific fields -->
+					<div class="periodic_options" style="display:none;">
+
+						<div class="form-group row">
+							<label for="periodic_period" class="lang col-sm-2 control-label" data-lang="c_period"></label>
+							<div class="col-sm-10">
+								<select id="periodic_period" class="form-control">
+									<option class="lang" data-lang="c_daily" value="daily"></option>
+									<option class="lang" data-lang="c_weekly" value="weekly"></option>
+									<option class="lang" data-lang="c_monthly" value="monthly"></option>
+									<option class="lang" data-lang="c_yearly" value="yearly"></option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group row periodic_week_day">
+							<label for="periodic_week_day" class="lang col-sm-2 control-label" data-lang="n_dow"></label>
+							<div class="col-sm-10">
+								<select id="periodic_week_day" class="form-control">
+									<option class="lang" data-lang="c_sunday" value="0"></option>
+									<option class="lang" data-lang="c_monday" value="1"></option>
+									<option class="lang" data-lang="c_tuesday" value="2"></option>
+									<option class="lang" data-lang="c_wednesday" value="3"></option>
+									<option class="lang" data-lang="c_thursday" value="4"></option>
+									<option class="lang" data-lang="c_friday" value="5"></option>
+									<option class="lang" data-lang="c_saturday" value="6"></option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group row periodic_month_day">
+							<label for="periodic_month_day" class="lang col-sm-2 control-label" data-lang="n_dom"></label>
+							<div class="col-sm-10">
+								<select id="periodic_month_day" class="form-control">
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+									<option value="11">11</option>
+									<option value="12">12</option>
+									<option value="13">13</option>
+									<option value="14">14</option>
+									<option value="15">15</option>
+									<option value="16">16</option>
+									<option value="17">17</option>
+									<option value="18">18</option>
+									<option value="19">19</option>
+									<option value="20">20</option>
+									<option value="21">21</option>
+									<option value="22">22</option>
+									<option value="23">23</option>
+									<option value="24">24</option>
+									<option value="25">22</option>
+									<option value="26">26</option>
+									<option value="27">27</option>
+									<option value="28">28</option>
+									<option value="29">29</option>
+									<option value="30">30</option>
+									<option value="31">31</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group row periodic_month">
+							<label for="periodic_month" class="lang col-sm-2 control-label" data-lang="c_month"></label>
+							<div class="col-sm-10">
+								<select id="periodic_month" class="form-control">
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+									<option value="11">11</option>
+									<option value="12">12</option>
+								</select>
+							</div>
+						</div>
+
 					</div>
 
 					<div class="form-group row cm_alert_options">

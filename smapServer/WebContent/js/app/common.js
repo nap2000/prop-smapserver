@@ -4828,7 +4828,7 @@ function setTargetDependencies(target) {
 }
 
 function setTriggerDependencies(trigger) {
-	$('.task_reminder_options,.update_options, .submission_options, .cm_alert_options').hide();
+	$('.task_reminder_options,.update_options, .submission_options, .cm_alert_options, .periodic_options').hide();
 	if(trigger === "submission") {
 		$('.submission_options').show();
 	} else if(trigger === "task_reminder") {
@@ -4839,6 +4839,8 @@ function setTriggerDependencies(trigger) {
 		$('.update_options, .submission_options').show();
 	} else if(trigger === "cm_alert") {
 		$('.cm_alert_options').show();
+	} else if(trigger === "periodic") {
+		$('.periodic_options').show();
 	}
 }
 
@@ -4847,6 +4849,17 @@ function setAttachDependencies(attach) {
 		$('.pdf_options').show();
 	} else  {
 		$('.pdf_options').hide();
+	}
+}
+
+function setPeriodDependencies(period) {
+	$('.periodic_week_day, .periodic_month_day, .periodic_month').hide();
+	if(period === "weekly") {
+		$('.periodic_week_day').show();
+	} else if(period === "monthly") {
+		$('.periodic_month_day').show();
+	} else if(period === "yearly") {
+		$('.periodic_month').show();
 	}
 }
 
@@ -4927,6 +4940,13 @@ function setupNotificationDialog() {
 		setAttachDependencies($(this).val());
 	});
 
+	// Set dependencies on a periodic trigger period change
+	setPeriodDependencies($('#period_period').val());
+	$('#periodic_period').change(function() {
+		setPeriodDependencies($(this).val());
+	});
+
+
 	// Set focus on notification name when edit notification is opened
 	$('#addNotificationPopup').on('shown.bs.modal', function () {
 		$('#name').focus();
@@ -4968,7 +4988,7 @@ function taskGroupChanged(tgIndex, emailQuestionName, emailMetaName) {
 	var qList;
 	var metaList;
 
-	if(tg.source_s_id) {
+	if(tg && tg.source_s_id) {
 		qList = globals.gSelector.getSurveyQuestions(tg.source_s_id, language);
 		metaList = globals.gSelector.getSurveyMeta(tg.source_s_id);
 	} else {
