@@ -175,7 +175,7 @@ require([
 		if(!notification.error) {
 
 			notification.trigger = $('#trigger').val();
-			if(notification.trigger !== 'task_reminder') {
+			if(notification.trigger !== 'task_reminder' && notification.trigger !== 'periodic') {
 				notification.s_id = $('#survey').val();
 			}
 			notification.enabled = $('#nt_enabled').is(':checked');
@@ -201,6 +201,12 @@ require([
 					alert(localise.set["msg_rs"]);
 					return(-1);
 				}
+			} else if(notification.trigger === 'periodic') {
+				notification.periodic_period = $('#periodic_period').val();
+				notification.periodic_time = $('#periodic_time').val();
+				notification.periodic_week_day = $('#periodic_week_day').val();
+				notification.periodic_month_day = $('#periodic_month_day').val();
+				notification.periodic_month = $('#periodic_month').val();
 			}
 
 			if(notification.trigger === 'console_update') {
@@ -225,16 +231,15 @@ require([
 
 			}
 
-
 			if(window.gSelectedNotification !== -1) {
 				notification.id = window.gSelectedNotification;
 				url = "/surveyKPI/notifications/update";
 			} else {
 				url = "/surveyKPI/notifications/add";
 			}
+			url += "?tz=" + encodeURIComponent(globals.gTimezone);
 
 			notificationString = JSON.stringify(notification);
-			$dialog = $(this);
 			addHourglass();
 			$.ajax({
 				type: "POST",
