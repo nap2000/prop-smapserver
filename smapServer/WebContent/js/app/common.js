@@ -4693,9 +4693,6 @@ function edit_notification(edit, idx, console) {
 	var title;
 
 	document.getElementById("notification_edit_form").reset();
-	setTargetDependencies("email");
-	setTriggerDependencies("submission");
-	setAttachDependencies("none");
 
 	if(edit) {
 		notification = window.gNotifications[idx];
@@ -4743,7 +4740,7 @@ function edit_notification(edit, idx, console) {
 		$('#periodic_week_day').val(notification.periodic_week_day);
 		$('#periodic_month_day').val(notification.periodic_month_day);
 		$('#periodic_month').val(notification.periodic_month);
-
+		setPeriodDependencies(notification.periodic_period);
 
 		if(notification.trigger !== "task_reminder" && (typeof notification.alert_id !== 'undefined'
 			|| (notification.notify_details && (notification.notifyDetails.emailQuestionName || notification.notifyDetails.emailMeta)))) {
