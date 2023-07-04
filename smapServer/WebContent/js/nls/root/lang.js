@@ -189,7 +189,7 @@ define({
     "c_include": "Include",
     "c_unique": "Unique",
     "c_survey": "Survey",
-    "c_survey_tg": "Survey / Task Group",
+    "c_survey_tg": "Survey / Task Group / Report",
     "c_date": "Date",
     "c_dateq": "Date Question",
     "c_none": "None",

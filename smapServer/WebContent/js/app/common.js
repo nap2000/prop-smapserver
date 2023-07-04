@@ -4737,6 +4737,14 @@ function edit_notification(edit, idx, console) {
 			}
 		}
 
+		// Periodic settings
+		$('#periodic_period').val(notification.periodic_period);
+		$('#periodic_time').val(notification.periodic_time);
+		$('#periodic_week_day').val(notification.periodic_week_day);
+		$('#periodic_month_day').val(notification.periodic_month_day);
+		$('#periodic_month').val(notification.periodic_month);
+
+
 		if(notification.trigger !== "task_reminder" && (typeof notification.alert_id !== 'undefined'
 			|| (notification.notify_details && (notification.notifyDetails.emailQuestionName || notification.notifyDetails.emailMeta)))) {
 

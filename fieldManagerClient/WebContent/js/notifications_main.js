@@ -177,7 +177,10 @@ require([
 			notification.trigger = $('#trigger').val();
 			if(notification.trigger !== 'task_reminder' && notification.trigger !== 'periodic') {
 				notification.s_id = $('#survey').val();
+			} else {
+				notification.p_id = $('#project_name').val();		// Project only saved if survey not set, as other wise survey identifies project and survey can move
 			}
+
 			notification.enabled = $('#nt_enabled').is(':checked');
 			notification.filter = $('#not_filter').val();
 			notification.name = $('#name').val();
@@ -274,8 +277,7 @@ require([
 	function getNotifications(projectId) {
 
 		if(projectId != -1) {
-			var url="/surveyKPI/notifications/" + projectId;
-
+			var url="/surveyKPI/notifications/" + projectId + "?tz=" + encodeURIComponent(globals.gTimezone);
 			addHourglass();
 			$.ajax({
 				url: url,
@@ -388,8 +390,12 @@ require([
 			h[++idx] = '</td>';
 
 			// trigger
+			var trigger = localise.set[data[i].trigger];
+			if(!trigger) {
+				trigger = localise.set['c_' + data[i].trigger]
+			}
 			h[++idx] = '<td style="text-align: center;">';
-			h[++idx] = localise.set[data[i].trigger];
+			h[++idx] = trigger;
 			h[++idx] = '</td>';
 
 			// survey / task group
