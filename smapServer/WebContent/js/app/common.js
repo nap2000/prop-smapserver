@@ -4740,6 +4740,7 @@ function edit_notification(edit, idx, console) {
 		$('#periodic_week_day').val(notification.periodic_week_day);
 		$('#periodic_month_day').val(notification.periodic_month_day);
 		$('#periodic_month').val(notification.periodic_month);
+		$('#report').val(notification.r_id);
 		setPeriodDependencies(notification.periodic_period);
 
 		if(notification.trigger !== "task_reminder" && (typeof notification.alert_id !== 'undefined'

@@ -144,7 +144,7 @@ require([
 
 		populateTaskGroupList();
 		loadSurveys(globals.gCurrentProject, undefined, false, false, undefined, false);			// Get surveys
-		getNotifications(globals.gCurrentProject);
+		getReports(globals.gCurrentProject);	// Get notifications after reports as they are deondent on report names
 	}
 
 	/*
@@ -210,6 +210,7 @@ require([
 				notification.periodic_week_day = $('#periodic_week_day').val();
 				notification.periodic_month_day = $('#periodic_month_day').val();
 				notification.periodic_month = $('#periodic_month').val();
+				notification.r_id = $('#report').val();
 			}
 
 			if(notification.trigger === 'console_update') {
@@ -302,7 +303,37 @@ require([
 		}
 	}
 
+	/*
+	 * Load the existing reports from the server
+	 */
+	function getReports(projectId) {
 
+		if(projectId != -1) {
+			var url="/surveyKPI/reporting/reports?pId=" + projectId + "&tz=" + encodeURIComponent(globals.gTimezone);
+			addHourglass();
+			$.ajax({
+				url: url,
+				dataType: 'json',
+				cache: false,
+				success: function(data) {
+					removeHourglass();
+					window.gReports = data;
+					getNotifications(globals.gCurrentProject);
+					if(data) {
+						updateReportList(data);
+					}
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						console.log("Error: Failed to get list of reports: " + err);
+					}
+				}
+			});
+		}
+	}
 
 	/*
 	 * Delete a notification
@@ -328,6 +359,22 @@ require([
 				}
 			}
 		});
+	}
+
+	/*
+	 * update the list of reports
+	 */
+	function updateReportList(data) {
+
+		var $selector=$('.report_select'),
+			i;
+
+		$selector.empty();
+		if(data && data.length > 0) {
+			for(i = 0; i < data.length; i++) {
+				$selector.append(`<option value="${data[i].id}">${data[i].name}</option>`);
+			}
+		}
 	}
 
 	/*
@@ -402,6 +449,8 @@ require([
 			h[++idx] = '<td style="text-align: center;">';
 			if(data[i].trigger === "task_reminder") {
 				h[++idx] = htmlEncode(data[i].tg_name);
+			} else if(data[i].trigger === "periodic") {
+				h[++idx] = getReportName(data[i].r_id);
 			} else {
 				h[++idx] = htmlEncode(data[i].s_name);
 			} 
@@ -527,5 +576,14 @@ require([
 
 	}
 
+	function getReportName(rId) {
+		if(window.gReports) {
+			for(var i = 0; i < window.gReports.length; i++) {
+				if(window.gReports[i].id == rId) {
+					return window.gReports[i].name;
+				}
+			}
+		}
+	}
 });
 

@@ -106,6 +106,7 @@ define({
     "c_file": "File",
     "c_host": "Host",
     "c_rank": "Rank",
+    "c_report": "Report",
     "c_user": "User",
     "c_self": "Self",
     "c_sunday": "Sunday",
