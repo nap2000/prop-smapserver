@@ -3151,11 +3151,6 @@ function addGoogleMapLayers(map) {
 	}
 }
 
-function remoteSurveyChanged() {
-	$('#fwd_rem_survey_id').val($('#fwd_rem_survey :selected').val());
-	$('#fwd_rem_survey_nm').val($('#fwd_rem_survey :selected').text());
-}
-
 /*
  * Get a list of custom reports
  */
@@ -4975,10 +4970,6 @@ function setupNotificationDialog() {
 		window.gUpdateFwdPassword = true;
 	});
 
-	$('#fwd_upd_rem_survey').click(function(){
-		getRemoteSurveys();
-	});
-
 	$('#fwd_rem_survey').change(function(){
 		remoteSurveyChanged();
 	});
@@ -5637,93 +5628,6 @@ function getTrailData(projectId, userId, startDate, endDate, callback, tz, mps) 
 			}
 		}
 	});
-}
-
-/*
- * Get available surveys from a remote host
- */
-function getRemoteSurveys() {
-
-	var host,
-		user,
-		password,
-		remote = {},
-		remoteString;
-
-	remote.address = $('#fwd_host').val();
-	remote.user = $('#fwd_user').val();
-	remote.password = $('#fwd_password').val();
-
-
-	if(!remote.address || remote.address.length == 0) {
-		alert(localise.set["msg_val_rh"]);
-		$('#fwd_host').focus();
-		return;
-	} else if(!remote.user || remote.user.length == 0) {
-		alert(localise.set["msg_val_u_id"]);
-		$('#fwd_user').focus();
-		return;
-	} else if(!remote.password || remote.user.password == 0) {
-		alert(localise.set["msg_val_pass"]);
-		$('#fwd_password').focus();
-		return;
-	}
-
-	remoteString = JSON.stringify(remote);
-	addHourglass();
-	$.ajax({
-		type: "POST",
-		async: true,
-		cache: false,
-		dataType: "json",
-		url: "/surveyKPI/notifications/getRemoteSurveys",
-		data: { remote: remoteString },
-		success: function(data, status) {
-			removeHourglass();
-			updateRemoteSurveys(data);
-		},
-		error: function(xhr, textStatus, err) {
-			removeHourglass();
-			$('#fwd_rem_survey').empty();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				var msg;
-				if(xhr.responseText.indexOf("RSA premaster") >= 0) {
-					msg = localise.set["msg_err_cert"];
-				} else {
-					msg = xhr.responseText;
-				}
-				alert(localise.set["msg_err_get_f"] + msg);
-			}
-		}
-	});
-}
-
-/*
- * Update the list of remote survey
- */
-function updateRemoteSurveys(surveyList) {
-
-	console.log("updateRemoteSurvey");
-
-	var $rs = $('#fwd_rem_survey'),
-		i, survey,
-		h = [],
-		idx = -1;
-
-	for(i = 0; i < surveyList.length; i++) {
-		survey = surveyList[i];
-		h[++idx] = '<option value="';
-		h[++idx] = survey.formID;
-		h[++idx] = '">';
-		h[++idx] = htmlEncode(survey.name);
-		h[++idx] = '</option>';
-	}
-
-	$rs.empty().append(h.join(''));
-	remoteSurveyChanged();
-
 }
 
 /*
