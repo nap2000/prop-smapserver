@@ -518,6 +518,8 @@ define({
 
     // Messages
     "msg_pdft": "PDF Templates are now managed on the templates page which can be accessed from the tools menu",
+    "msg_mms": "The month must be specified",
+    "msg_dms": "The day of the month must be specified",
     "msg_pc": "The reminder interval must be greater than zero",
     "msg_pk_sel": "You can only select the record identifier if you have selected the \"Update a different question\" checkbox",
     "msg_wait": "Waiting for a response from the server. Please try again in a few seconds",

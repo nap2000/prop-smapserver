@@ -211,6 +211,22 @@ require([
 				notification.periodic_month_day = $('#periodic_month_day').val();
 				notification.periodic_month = $('#periodic_month').val();
 				notification.r_id = $('#report').val();
+
+				/*
+				 * Validate
+				 */
+				if(notification.periodic_period === 'yearly' && (notification.periodic_month < 1 || notification.periodic_month > 12)) {
+					alert(localise.set["msg_mms"]);
+					return(-1);
+				}
+				if(notification.periodic_period === 'yearly' && (notification.periodic_month_day < 1 || notification.periodic_month_day > 31)) {
+					alert(localise.set["msg_dms"]);
+					return(-1);
+				}
+				if(notification.periodic_period === 'monthly' && (notification.periodic_month_day < 1 || notification.periodic_month_day > 31)) {
+					alert(localise.set["msg_dms"]);
+					return(-1);
+				}
 			}
 
 			if(notification.trigger === 'console_update') {
