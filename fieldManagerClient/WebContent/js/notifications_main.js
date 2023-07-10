@@ -215,6 +215,10 @@ require([
 				/*
 				 * Validate
 				 */
+				if(target !== "email") {
+					alert(localise.set["msg_oet"]);
+					return(-1);
+				}
 				if(notification.periodic_period === 'yearly' && (notification.periodic_month < 1 || notification.periodic_month > 12)) {
 					alert(localise.set["msg_mms"]);
 					return(-1);

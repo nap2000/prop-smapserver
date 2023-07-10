@@ -4805,6 +4805,8 @@ function edit_notification(edit, idx, console) {
 
 		$('#survey').change();
 
+		setTriggerDependencies('submission');
+
 		// Reminders
 		$('#r_period').val(1);
 		$('#period_list_sel').val('days');
@@ -4918,7 +4920,7 @@ function getNotificationTypes() {
 function setupNotificationDialog() {
 
 	// Set change function trigger
-	$('#trigger').change(function() {
+	$('#trigger').off().change(function() {
 		var trigger = $(this).val();
 		setTriggerDependencies(trigger);
 		if(trigger === "task_reminder") {
@@ -4931,19 +4933,19 @@ function setupNotificationDialog() {
 	setTriggerDependencies("submission");
 
 	// Set change function target
-	$('#target').change(function() {
+	$('#target').off().change(function() {
 		setTargetDependencies($(this).val());
 	});
 	setTargetDependencies("email");
 
 	// Set change function attach
-	$('#email_attach').change(function() {
+	$('#email_attach').off().change(function() {
 		setAttachDependencies($(this).val());
 	});
 
 	// Set dependencies on a periodic trigger period change
 	setPeriodDependencies($('#period_period').val());
-	$('#periodic_period').change(function() {
+	$('#periodic_period').off().change(function() {
 		setPeriodDependencies($(this).val());
 	});
 

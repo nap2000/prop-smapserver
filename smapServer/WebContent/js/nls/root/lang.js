@@ -518,6 +518,7 @@ define({
 
     // Messages
     "msg_pdft": "PDF Templates are now managed on the templates page which can be accessed from the tools menu",
+    "msg_oet": "Only email can be specified as the target when periodic is selected as the trigger",
     "msg_mms": "The month must be specified",
     "msg_dms": "The day of the month must be specified",
     "msg_pc": "The reminder interval must be greater than zero",
