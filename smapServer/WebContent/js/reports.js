@@ -740,7 +740,7 @@ require([
 
 			$('#reportType').val(report.action_details.reportType);
 
-			$('#survey').val(getSurveyIndex(report.action_details.sId));
+			$('#survey').val(getSurveyIndex(report.action_details.surveyIdent);
 			surveyChangedReports(setForm);
 
 			getSurveyRoles(report.action_details.sId, report.action_details.roles);
@@ -1116,10 +1116,10 @@ require([
         $('.' + reportType).show();
     }
 
-	function getSurveyIndex(sId) {
+	function getSurveyIndex(sIdent) {
 		var i;
 		for(i = 0; i < gSurveyList.length; i++) {
-			if(gSurveyList[i].id === sId) {
+			if(gSurveyList[i].ident === sIdent) {
 				return i;
 			}
 		}
