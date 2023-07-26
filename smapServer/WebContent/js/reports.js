@@ -740,7 +740,7 @@ require([
 
 			$('#reportType').val(report.action_details.reportType);
 
-			$('#survey').val(getSurveyIndex(report.action_details.surveyIdent);
+			$('#survey').val(getSurveyIndex(report.action_details.surveyIdent));
 			surveyChangedReports(setForm);
 
 			getSurveyRoles(report.action_details.sId, report.action_details.roles);
