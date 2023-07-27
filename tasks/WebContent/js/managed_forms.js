@@ -1499,7 +1499,7 @@ require([
             tableOnDraw();
         });
 
-        $('.table_filter').one('blur', function () {
+        $('.table_filter').on('blur', function () {
             console.log("blur");
             showManagedData(globals.gCurrentSurvey, showTable, false);  // update console with changed data
         });

@@ -75,8 +75,24 @@ require([
 		localise.setlang();		// Localise HTML
 		registerForServiceWorkerMessages();
 
+		/*
+  	     * Add date time picker to usage date
+  		 */
+		moment.locale();
+		$('#logMonth').datetimepicker({
+			useCurrent: false,
+			format: "MM/YYYY",
+			viewMode: "months",
+			locale: gUserLocale || 'en'
+		}).data("DateTimePicker").date(moment());
+
+		$('.table_filter').on('blur', function () {
+			table.ajax.url("/api/v1/log/dt?month=" + $('#logMonth').data("DateTimePicker").date()).load();
+		});
+
 		getLoggedInUser(undefined, false, true, undefined);
-		
+
+		var url = "/api/v1/log/dt?month=" + $('#logMonth').data("DateTimePicker").date();
 		table = $('#log_table').DataTable({
 			 processing: true,
 			 scrollY: '70vh',
@@ -86,7 +102,7 @@ require([
 			    	selector: 'td:not(:first-child)'
 			 },
 			 deferRender: true,
-		     ajax: "/api/v1/log/dt",
+		     ajax: url,
 		     columns: [
 		                 { "data": "id" },
 		                 { "data": "log_time" },
