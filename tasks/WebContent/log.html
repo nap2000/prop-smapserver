@@ -94,10 +94,14 @@
 	<div class="card mt-2">
 
 			<div class="form-group row mt-1 mb-1">
-				<div class="col-sm-2">
-					<label class="col-sm-4 control-label lang" data-lang="c_month" for="logMonth"></label>
+
+				<div class="col-sm-2 col-lg-1">
+					<label class="control-label lang" data-lang="c_month" for="logMonth"></label>
 				</div>
-				<div class="col-sm-4">
+				<div class="col-sm-1">
+					<a id="prev_btn" class="btn btn-primary pl-4 pr-4" href="#"><<<</a>
+				</div>
+				<div class="col-sm-4 col-lg-2">
 					<div class='input-group date' id="logMonth">
 						<input type='text' class="form-control table_filter" data-date-format="YYYY/MM">
 						<div class="input-group-append">
@@ -105,13 +109,14 @@
 						</div>
 					</div>
 				</div>
+				<div class="col-sm-1">
+					<a id="next_btn" class="btn btn-primary pl-4 pr-4" href="#">>>></a>
+				</div>
 			</div>
 
 			<div class="form-group row filtersShown mt-1 mb-1">
-				<div class="col-sm-6">
-					<div class="col-lg-3 col-sm-4 col-xs-12">
-						<a id="details_btn" class="row_selected btn btn-success lang alist pl-4 pr-4" data-lang="log_sd" href="#">details</a>
-					</div>
+				<div class="col-lg-3 col-sm-4 col-xs-12">
+					<a id="details_btn" class="row_selected btn btn-success lang alist pl-4 pr-4" data-lang="log_sd" href="#">details</a>
 				</div>
 				<div class="col-sm-6"></div>
 			</div>

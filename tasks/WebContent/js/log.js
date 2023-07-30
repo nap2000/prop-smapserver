@@ -86,40 +86,81 @@ require([
 			locale: gUserLocale || 'en'
 		}).data("DateTimePicker").date(moment());
 
-		$('.table_filter').on('blur', function () {
-			table.ajax.url("/api/v1/log/dt?month=" + $('#logMonth').data("DateTimePicker").date()).load();
+		$('#next_btn').click(function (){
+			addMonth();
+			table.ajax.url(getLogUrl()).load();
 		});
 
-		getLoggedInUser(undefined, false, true, undefined);
+		$('#prev_btn').click(function (){
+			subtractMonth();
+			table.ajax.url(getLogUrl()).load();
+		});
 
-		var url = "/api/v1/log/dt?month=" + $('#logMonth').data("DateTimePicker").date();
+		$('.table_filter').on('blur', function () {
+			table.ajax.url(getLogUrl()).load();
+		});
+
+		getLoggedInUser(userDone, false, true, undefined);
+
+		/*
+		 * Reports
+		 */
+		moment.locale();
+		$('#usageDate').datetimepicker({
+			useCurrent: false,
+			locale: gUserLocale || 'en'
+		}).data("DateTimePicker").date(moment());
+
+		$('#m_hourly_sr').click(function(){
+			$('#hourly_sr_popup').modal("show");
+		});
+
+		$('#hourly_sr_save').click(function() {
+			var usageMsec = $('#usageDate').data("DateTimePicker").date(),
+				d = new Date(usageMsec),
+				month = d.getMonth() + 1,
+				year = d.getFullYear(),
+				day = d.getDate(),
+				url;
+
+			var tz = globals.gTimezone;
+			url = "/surveyKPI/adminreport/logs/hourly/" + year + "/" + month + "/" + day + '?tz=' + tz;
+
+			downloadFile(url);
+
+		});
+		
+	});
+
+	function userDone() {
+		var url = getLogUrl();
 		table = $('#log_table').DataTable({
-			 processing: true,
-			 scrollY: '70vh',
-			 scrollX: true,
-			 scrollCollapse: true,
-			 select: {
-			    	selector: 'td:not(:first-child)'
-			 },
-			 deferRender: true,
-		     ajax: url,
-		     columns: [
-		                 { "data": "id" },
-		                 { "data": "log_time" },
-		                 { "data": "sName", "width": "200px"  },
-		                 { "data": "userIdent" },
-		                 { "data": "event" },
-		                 { "data": "note" },
-			             { "data": "server" }
-		             ],
-		      order: [[ 0, "desc" ]],
-		      columnDefs: [{
-                  targets: [1],
-                  render: function (data, type, full, meta) {
-                      return localTime(data);
-                  }
-              }
-		     ],
+			processing: true,
+			scrollY: '70vh',
+			scrollX: true,
+			scrollCollapse: true,
+			select: {
+				selector: 'td:not(:first-child)'
+			},
+			deferRender: true,
+			ajax: url,
+			columns: [
+				{ "data": "id" },
+				{ "data": "log_time" },
+				{ "data": "sName", "width": "200px"  },
+				{ "data": "userIdent" },
+				{ "data": "event" },
+				{ "data": "note" },
+				{ "data": "server" }
+			],
+			order: [[ 0, "desc" ]],
+			columnDefs: [{
+				targets: [1],
+				render: function (data, type, full, meta) {
+					return localTime(data);
+				}
+			}
+			],
 			initComplete: function () {
 				this.api().columns().every( function () {
 					var column = this;
@@ -145,8 +186,8 @@ require([
 			}
 		});
 
-        $('#log_table').find('td').css('white-space','initial').css('word-wrap', 'break-word');
-		
+		$('#log_table').find('td').css('white-space','initial').css('word-wrap', 'break-word');
+
 		$('#m_refresh').click(function(e) {	// Add refresh action
 			table.ajax.reload();
 		});
@@ -169,38 +210,7 @@ require([
 			showDetails();
 		});
 
-		/*
-		 * Reports
-		 */
-		moment.locale();
-		$('#usageDate').datetimepicker({
-			useCurrent: false,
-			locale: gUserLocale || 'en'
-		}).data("DateTimePicker").date(moment());
-
-		$('#m_hourly_sr').click(function(){
-			$('#hourly_sr_popup').modal("show");
-		});
-
-		$('#hourly_sr_save').click(function() {
-			var usageMsec = $('#usageDate').data("DateTimePicker").date(),
-				d = new Date(usageMsec),
-				month = d.getMonth() + 1,
-				year = d.getFullYear(),
-				day = d.getDate(),
-				url;
-
-
-			var tz = globals.gTimezone;
-			url = "/surveyKPI/adminreport/logs/hourly/" + year + "/" + month + "/" + day + '?tz=' + tz;
-
-
-			downloadFile(url);
-
-		});
-		
-	});
-
+	}
 	function showDetails() {
 
 		addHourglass();
@@ -225,6 +235,42 @@ require([
 			}
 		});
 
+	}
+
+	function getLogUrl() {
+		var usageMsec = $('#logMonth').data("DateTimePicker").date(),
+			d = new Date(usageMsec),
+			month = d.getMonth() + 1,
+			year = d.getFullYear();
+		return "/api/v1/log/dt?year=" + year + "&month=" + month + "&tz=" + encodeURIComponent(globals.gTimezone);
+	}
+
+	function addMonth() {
+		var usageMsec = $('#logMonth').data("DateTimePicker").date();
+		var d = new Date(usageMsec);
+		var month = d.getMonth();
+		var year = d.getFullYear();
+		if(month == 11) {
+			d.setMonth(0);
+			d.setFullYear(year + 1);
+		} else {
+			d.setMonth(month + 1);
+		}
+		$('#logMonth').data("DateTimePicker").date(d);
+	}
+
+	function subtractMonth() {
+		var usageMsec = $('#logMonth').data("DateTimePicker").date();
+		var d = new Date(usageMsec);
+		var month = d.getMonth();
+		var year = d.getFullYear();
+		if(month == 0) {
+			d.setMonth(11);
+			d.setFullYear(year - 1);
+		} else {
+			d.setMonth(month -1);
+		}
+		$('#logMonth').data("DateTimePicker").date(d);
 	}
 
 });
