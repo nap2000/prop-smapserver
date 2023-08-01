@@ -250,6 +250,7 @@ $(document).ready(function() {
 		}
 	});
 
+	/*
 	$('#m_pulldata').off().click(function() {
 		if(globals.model.survey.pulldata) {
 			gTempPulldata = globals.model.survey.pulldata.slice();
@@ -259,6 +260,7 @@ $(document).ready(function() {
 		updatePulldataView();
 		$('#pulldataModal').modal("show");
 	});
+	*/
 
     $('#m_required').off().click(function() {
 		if($(this).closest('li').hasClass('disabled')) {
@@ -432,7 +434,7 @@ $(document).ready(function() {
         if($(this).closest('li').hasClass('disabled')) {
             bootbox.alert(localise.set["ed_cx"]);
         } else {
-            window.location.href = "/surveyKPI/xlsForm/" + gSId + "?filetype=" + "xlsx" + addCacheBuster("?");;
+            window.location.href = "/surveyKPI/xlsForm/" + globals.gCurrentSurvey + "?filetype=" + "xlsx" + addCacheBuster("?");;
         }
 
     });
@@ -811,7 +813,7 @@ $(document).ready(function() {
 		addHourglass();
 		$.ajax({
 			  type: "POST",
-			  url: "/surveyKPI/surveys/save_languages/" + gSId,
+			  url: "/surveyKPI/surveys/save_languages/" + globals.gCurrentSurvey,
 			  dataType: 'json',
 			  cache: false,
 			  data: { languages: languagesString },
@@ -839,14 +841,14 @@ $(document).ready(function() {
 	});
 	/*
 	 * Save changes to the pulldata settings
-	 */
+	 * No longer used
 	$('#pulldataSave').off().click(function() {	// Save pulldata to the database
 
 		var pulldataString = JSON.stringify(gTempPulldata);
 		addHourglass();
 		$.ajax({
 			  type: "POST",
-			  url: "/surveyKPI/surveys/save_pulldata/" + gSId,
+			  url: "/surveyKPI/surveys/save_pulldata/" + globals.gCurrentSurvey,
 			  cache: false,
 			  data: { pulldata: pulldataString },
 				success: function(data) {
@@ -864,6 +866,7 @@ $(document).ready(function() {
 				}
 		});
 	});
+	 */
 
 	$('#project_name').change(function() {
 		globals.gCurrentProject = $('#project_name option:selected').val();
@@ -1120,7 +1123,7 @@ function setAllRequired(required) {
 	$.ajax({
 		  type: "POST",
 		  cache: false,
-		  url: "/surveyKPI/surveys/set_required/" + gSId + "/" + (required ? "true" : "false"),
+		  url: "/surveyKPI/surveys/set_required/" + globals.gCurrentSurvey + "/" + (required ? "true" : "false"),
 			success: function(data) {
 				removeHourglass();
 				getSurveyDetails(surveyDetailsDone);
