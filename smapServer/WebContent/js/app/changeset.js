@@ -374,7 +374,11 @@ define([
                     }
                 } else {
                     if(item_orig) {
-                        change.property.oldVal = item_orig[change.property.prop];
+                        if(change.property.prop === "app_choices") {
+                            change.property.oldVal = window.gAppChoiceArray.join(' ');
+                        } else {
+                            change.property.oldVal = item_orig[change.property.prop];
+                        }
                     }
                 }
 
@@ -658,7 +662,12 @@ define([
 
                         } else {						// Other properties, such as constraints, relevance question name
 
-                            var oldVal = question[property.prop];
+                            var oldVal;
+                            if(property.prop === "app_choices") {
+                                oldVal = window.gAppChoiceArray.join[' '];
+                            } else {
+                                oldVal = question[property.prop];
+                            }
                             question[property.prop] = property.newVal;
 
 

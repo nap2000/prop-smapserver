@@ -2036,16 +2036,13 @@ function respondToEvents($context) {
 		var appearanceArray = [];
 
 		var appearanceData = $li.find('.labelProp').val();
-		var app_choices = question.app_choices;
+
 		var otherAppearances = '';
 		var i, j;
 		var foundAppearance;
 
 		if(appearanceData) {
 			appearanceArray = tokenizeAppearance(appearanceData);
-		}
-		if(app_choices) {
-			window.gAppChoiceArray = app_choices.split(' ');
 		}
 
 		/*
@@ -2278,7 +2275,7 @@ function respondToEvents($context) {
 			}
 		}
 
-		// Add any appearance values not explicetely set
+		// Add any appearance values not explicitly set
 		$('#a_other').val(otherAppearances);       // Not sure if we want to do this
 
 		$('#appearance_msg').hide();
@@ -2287,6 +2284,13 @@ function respondToEvents($context) {
 			backdrop: 'static',
 			show: true
 		});
+
+		/*
+		 * Store the dialogs choice values so we know if these change
+		 * THis is a heck since choice values associated with a search are not appearances themselves
+		 */
+		window.gAppChoiceArray = [];
+		getDummyChoiceAppearances(window.gAppChoiceArray)
 
 	});
 
@@ -3641,25 +3645,10 @@ function setNoFilter() {
 
 							/*
 							 * Add dummy appearances in app_choices for choice value and choice labels
-							 *
 							 */
-							var searchValue = $('#a_search_value').val();
-							if(!searchValue || searchValue.trim().length == 0) {
-								showAppearanceError(localise.set["msg_choice_value"]);
-								return false;
-							} else {
-								app_choices.push('_sv::' + searchValue);
+							if(!getDummyChoiceAppearances(app_choices)) {
+								return false;   // error
 							}
-							var languages = globals.model.survey.languages;
-							for(i = 0; i < languages.length; i++) {
-								var labelValueArray = $('#a_search_label' + i).val();
-								var labelValue = labelValueArray ? labelValueArray.join(',') : "";
-								if(!labelValue || labelValue.trim().length == 0) {
-									labelValue = searchValue;
-								}
-								app_choices.push('_sl::' + languages[i].name + '::' +   labelValue);
-							}
-
 
 							if($('#a_fe').prop('checked')) {
 								var expression = $('#a_fe_val').val();
@@ -3752,6 +3741,29 @@ function setNoFilter() {
 
 				return validateAppearance(qtype, appearances, $('#appearance_msg'));
 
+			}
+
+			/*
+			 * Choice values may be required in appearance if search is used
+			 */
+			function getDummyChoiceAppearances(app_choices) {
+				var searchValue = $('#a_search_value').val();
+				if(!searchValue || searchValue.trim().length == 0) {
+					showAppearanceError(localise.set["msg_choice_value"]);
+					return false;
+				} else {
+					app_choices.push('_sv::' + searchValue);
+				}
+				var languages = globals.model.survey.languages;
+				for(i = 0; i < languages.length; i++) {
+					var labelValueArray = $('#a_search_label' + i).val();
+					var labelValue = labelValueArray ? labelValueArray.join(',') : "";
+					if(!labelValue || labelValue.trim().length == 0) {
+						labelValue = searchValue;
+					}
+					app_choices.push('_sl::' + languages[i].name + '::' +   labelValue);
+				}
+				return true;
 			}
 
 			/*
