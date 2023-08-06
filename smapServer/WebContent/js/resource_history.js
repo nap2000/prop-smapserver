@@ -170,7 +170,7 @@ function setChangesHtml($element, items) {
 
 		h[++idx] = '<td>';
 		h[++idx] = '<a class="media_download btn btn-info" href="';					// Download
-		h[++idx] = items[i].url;
+		h[++idx] = htmlEncode(items[i].url + addCacheBuster(items[i].url));
 		h[++idx] = '">';
 		h[++idx] = '<i class="fas fa-download"></i>'
 		h[++idx] = '</a>';

@@ -1368,7 +1368,7 @@ function getMediaRecord(file, panel, record) {
 	// Action Buttons
 	h[++idx] = '<td class="mediaManage">';
 	h[++idx] = '<a class="media_download btn btn-info" href="';					// Download
-	h[++idx] = file.url;
+	h[++idx] = htmlEncode(file.url + addCacheBuster(file.url));
 	h[++idx] = '">';
 	h[++idx] = '<i class="fas fa-download"></i>'
 	h[++idx] = '</a>';
