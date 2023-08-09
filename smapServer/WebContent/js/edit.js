@@ -3647,6 +3647,7 @@ function setNoFilter() {
 							 * Add dummy appearances in app_choices for choice value and choice labels
 							 */
 							if(!getDummyChoiceAppearances(app_choices)) {
+								showAppearanceError(localise.set["msg_choice_value"]);
 								return false;   // error
 							}
 
@@ -3748,11 +3749,10 @@ function setNoFilter() {
 			 */
 			function getDummyChoiceAppearances(app_choices) {
 				var searchValue = $('#a_search_value').val();
-				if(!searchValue || searchValue.trim().length == 0) {
-					showAppearanceError(localise.set["msg_choice_value"]);
-					return false;
-				} else {
+				if(searchValue && searchValue.trim().length > 0) {
 					app_choices.push('_sv::' + searchValue);
+				} else {
+					return false;
 				}
 				var languages = globals.model.survey.languages;
 				for(i = 0; i < languages.length; i++) {
@@ -3761,7 +3761,9 @@ function setNoFilter() {
 					if(!labelValue || labelValue.trim().length == 0) {
 						labelValue = searchValue;
 					}
-					app_choices.push('_sl::' + languages[i].name + '::' +   labelValue);
+					if(labelValue && labelValue.trim().length > 0) {
+						app_choices.push('_sl::' + languages[i].name + '::' + labelValue);
+					}
 				}
 				return true;
 			}
