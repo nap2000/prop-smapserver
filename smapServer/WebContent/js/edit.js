@@ -3748,6 +3748,7 @@ function setNoFilter() {
 			 * Choice values may be required in appearance if search is used
 			 */
 			function getDummyChoiceAppearances(app_choices) {
+				var i = 0;
 				var searchValue = $('#a_search_value').val();
 				if(searchValue && searchValue.trim().length > 0) {
 					app_choices.push('_sv::' + searchValue);
