@@ -1442,6 +1442,8 @@ define({
     "disk": "Disk",
     "rekognition": "AWS Rekognition",
     "rekognition_i": "images",
+    "sentiment": "AWS Comprehend",
+    "sentiment_i": "requests",
     "translate": "AWS Translate",
     "translate_i": "letters",
 	"transcribe_medical": "AWS Transcribe Medical",

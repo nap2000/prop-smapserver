@@ -104,6 +104,12 @@ require([
 			default: 100
 		},
 		{
+			id: 'o_sentiment_limit',
+			name: 'sentiment',
+			label: 'sentiment',
+			default: 100
+		},
+		{
 			id: 'o_submission_limit',
 			name: 'submissions',
 			label: 'submissions',

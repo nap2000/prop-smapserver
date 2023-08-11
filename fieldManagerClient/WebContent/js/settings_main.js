@@ -72,39 +72,6 @@ require([
 		gCssModal,
 		gResetWebformPressed = false;
 
-	var limitTypes = [
-		{
-			id: 'o_translate_limit',
-			name: 'translate',
-			label: 'translate',
-			default: 5000
-		},
-		{
-			id: 'o_transcribe_limit',
-			name: 'transcribe',
-			label: 'transcribe',
-			default: 250
-		},
-		{
-			id: 'o_transcribe_medical_limit',
-			name: 'transcribe_medical',
-			label: 'transcribe_medical',
-			default: 80
-		},
-		{
-			id: 'o_rekognition_limit',
-			name: 'rekognition',
-			label: 'rekognition',
-			default: 100
-		},
-		{
-			id: 'o_submission_limit',
-			name: 'submissions',
-			label: 'submissions',
-			default: 0
-		}
-		];
-
 	$(document).ready(function() {
 
 		setCustomUserMgmt();			// Apply custom javascript
