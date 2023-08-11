@@ -732,10 +732,10 @@ td.completed, td.submitted {
 
 /*
  * The word break setting needs to be more carefully focussed
-.modal-dialog {
+ */
+.modal-dialog .alert {
 	word-break:break-all;
 }
-*/
 
 .mediaItem:hover {
 	background: #fafafa;
