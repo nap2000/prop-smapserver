@@ -41,6 +41,7 @@ define([
         function refreshSelectLists(schema, record, changedItemIndex, prefix) {
 
             var  columns = schema.columns;
+            var i;
             var changedItem = columns[changedItemIndex];
             for (i = 0; i < columns.length; i++) {
                 var column = columns[i];
@@ -322,7 +323,20 @@ define([
                 }
             } else if (column.type === "date") {
                 h[++idx] = '<div class="input-group date" data-container="body">';
-                h[++idx] = '<input type="text" class="form-control editable" data-date-format="YYYY-MM-DD" value="';
+                h[++idx] = '<input type="date" class="form-control editable" data-date-format="YYYY-MM-DD" value="';
+                h[++idx] = value;
+                h[++idx] = '" data-item="';
+                h[++idx] = itemIndex;
+                if (first) {
+                    h[++idx] = '" autofocus/>';
+                } else {
+                    h[++idx] = '"/>';
+                }
+                h[++idx] = '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
+                h[++idx] = '</div>';
+            } else if (column.type === "dateTime") {
+                h[++idx] = '<div class="input-group" data-container="body">';
+                h[++idx] = '<input type="datetime-local" class="form-control editable" data-date-format="YYYY-MM-DD HH:MM" value="';
                 h[++idx] = value;
                 h[++idx] = '" data-item="';
                 h[++idx] = itemIndex;
