@@ -3566,7 +3566,7 @@ require([
         if(!notification.error) {
 
             notification.trigger = $('#trigger').val();
-            notification.sIdent = $('#survey').val();
+            notification.sIdent = $('#not_form_name').val();
             notification.enabled = $('#nt_enabled').is(':checked');
             notification.filter = $('#not_filter').val();
             notification.name = $('#name').val();
