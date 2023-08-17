@@ -581,7 +581,8 @@ require([
                     instanceid: gTasks.gSelectedRecord.instanceid,
                     prikey: gTasks.gSelectedRecord.prikey,
                     bulkInstances: biString,
-                    groupForm: globals.gSubForms[globals.gCurrentSurvey]
+                    groupForm: globals.gSubForms[globals.gCurrentSurvey],
+                    tz: globals.gTimezone
                 },
                 success: function (data, status) {
                     removeHourglass();
