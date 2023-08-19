@@ -1083,7 +1083,7 @@ function getUsers(projectId) {
 				h[++idx] = '<option value="';
 				h[++idx] = user.id;
 				h[++idx] = '">';
-				h[++idx] = user.ident + " - " + user.name;
+				h[++idx] = htmlEncode(user.ident + " - " + user.name);
 				h[++idx] = '</option>';
 			}
 			$users.append(h.join(''));

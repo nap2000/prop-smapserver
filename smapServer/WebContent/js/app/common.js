@@ -509,7 +509,7 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 			$('#me_enterprise').text(globals.gEnterpriseName);
 			$('#u_tz').val(globals.gTimezone);
 
-			$('#modify_me_popup').dialog("option", "title", data.name + "@" + data.organisation_name);
+			$('#modify_me_popup').dialog("option", "title", htmlEncode(data.name + "@" + data.organisation_name));
 			$('#modify_me_popup').dialog("open");
 		});
 	}
