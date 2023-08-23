@@ -276,6 +276,7 @@ require([
 			$('#mo_subject').val(gMailouts[gCurrentMailOutIdx].subject);
 			$('#mo_content').val(gMailouts[gCurrentMailOutIdx].content);
 			$('#mo_ms').prop('checked', gMailouts[gCurrentMailOutIdx].multiple_submit);
+			$('#mo_anon').prop('checked', gMailouts[gCurrentMailOutIdx].anonymous);
 			gMailoutEditIdx = gCurrentMailOutIdx;
 		} else {
 			// new
@@ -283,6 +284,7 @@ require([
 			$('#mo_subject').val("");
 			$('#mo_content').val("");
 			$('#mo_ms').prop('checked', false);
+			$('#mo_anon').prop('checked', false);
 			gMailoutEditIdx = -1;
 		}
 
@@ -310,6 +312,7 @@ require([
 		mailout.subject = $('#mo_subject').val();
 		mailout.content = $('#mo_content').val();
 		mailout.multiple_submit = $('#mo_ms').prop('checked');
+		mailout.anonymous = $('#mo_anon').prop('checked');
 
 		/*
 		 * Validation
@@ -417,6 +420,7 @@ require([
 			$('#mo_subject_view').val(gMailouts[gCurrentMailOutIdx].subject);
 			$('#mo_content_view').val(gMailouts[gCurrentMailOutIdx].content);
 			$('#mo_ms_view').prop('checked', gMailouts[gCurrentMailOutIdx].multiple_submit);
+			$('#mo_anon_view').prop('checked', gMailouts[gCurrentMailOutIdx].anonymous);
 
 			var url = "/api/v1/mailout/" + gMailouts[gCurrentMailOutIdx].id + "/emails?dt=true";
 			if (table) {
@@ -450,6 +454,7 @@ require([
 		$('#mo_subject_view').val("");
 		$('#mo_content_view').val("");
 		$('#mo_ms_view').prop('checked',false);
+		$('#mo_ms_anon').prop('checked',false);
 	}
 
 	/*

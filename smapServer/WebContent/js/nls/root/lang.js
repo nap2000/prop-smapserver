@@ -1490,6 +1490,7 @@ define({
     "co_b": "Bulk Change",
 
     // Mailouts
+    "mo_anon": "Anonymous",
     "mo_ce": "Clear Existing Unsent Emails",
     "mo_ns": "Mailout not selected",
     "mo_na": "Not Authorised",
