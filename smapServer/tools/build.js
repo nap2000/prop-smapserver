@@ -41,6 +41,10 @@
 	    exclude: ['jquery', 'bootstrap']
         },
         {
+            name: '../serverState',
+	    exclude: ['jquery', 'bootstrap']
+        },
+        {
             name: '../api',
 	    exclude: ['jquery', 'bootstrap']
         },

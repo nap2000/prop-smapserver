@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
 
-    <title class="lang" data-lang="c_api">api</title>
+    <title class="lang" data-lang="ss_title"></title>
 
     <link rel="shortcut icon" href="/favicon.ico" />
 
@@ -19,16 +19,17 @@
     <script src="/js/libs/jquery-3.5.1.min.js"></script>
     <script src="/js/libs/popper.v1.16.1.min.js"></script>
     <script src="/js/libs/bootstrap.bundle.v4.5.min.js"></script>
+    <script src="/js/libs/chart.min.3.8.0.js"></script>
 
     <script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
 
-    <script data-main="/js/api" src="/js/libs/require.js"></script>
+    <script data-main="/js/serverState" src="/js/libs/require.js"></script>
 
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
-    <a class="navbar-brand lang" data-lang="c_api_builder" href="#">api</a>
+    <a class="navbar-brand lang" data-lang="ss_title" href="#"></a>
     <div class="spinner-grow text-danger hour_glass"></div>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
@@ -75,82 +76,8 @@
 
 <div class="container-fluid">
 
-    <div class="card text-center mt-10">
-
-        <div class="card-body">
-
-            <!-- Header Row -->
-            <div class="container">
-                <form role="form">
-                    <div class="form-group row">
-                        <label class="lang col-sm-4 control-label" data-lang="c_api" for="api">api</label>
-                        <div class="col-sm-8">
-                            <select class="form-control" id="api">
-                                <option value="data" class="lang" data-lang="c_data"></option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="lang col-sm-4 control-label" data-lang="c_format"
-                               for="format">format</label>
-                        <div class="col-sm-8">
-                            <select class="form-control" id="format">
-                                <option value="json" class="lang" data-lang="c_json"></option>
-                                <option value="csv" class="lang" data-lang="c_csv"></option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="lang col-sm-4 control-label" data-lang="c_project"
-                               for="project_name">project</label>
-                        <div class="col-sm-8">
-                            <select class="project_list form-control" id="project_name"></select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="lang col-sm-4 control-label" data-lang="c_survey"
-                               for="survey">survey</label>
-                        <div class="col-sm-8">
-                            <select class="survey_select data_oversight_survey form-control" id="survey"></select>
-                        </div>
-                    </div>
-
-                    <div class="project_selected form-group row" style="display:none;">
-                        <label data-lang="c_audit" class="lang col-sm-4 control-label" for="option_audit">audit</label>
-                        <div class="col-sm-1">
-                            <div class="checkbox">
-                                <input class="options" type="checkbox" id="option_audit">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="project_selected form-group row" style="display:none;">
-                        <label data-lang="c_links" class="lang col-sm-4 control-label" for="option_links">links</label>
-                        <div class="col-sm-1">
-                            <div class="checkbox">
-                                <input class="options" type="checkbox" id="option_links">
-                            </div>
-                        </div>
-
-                    </div>
-                </form>
-            </div>
-
-        </div>
-
-
-
-        <!-- Main panel -->
-        <div class="card text-center mt-10">
-            <div class="card-body">
-                <div id="main_alert" style="display:none; word-wrap:break-word;" class="alert alert-success" role="alert"></div>
-                <div class="row">
-                    <div class="lang col-sm-2" data-lang="c_url">url</div>
-                    <div class="lang col-sm-8">
-                        <a href="#" id="url" target="_blank"></a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div>
+        <canvas id="myChart"></canvas>
     </div>
 </div>
 
