@@ -2419,6 +2419,7 @@ require([
             finish,
             statusClass;
 
+        $('#dashboardInfo').hide();
         var includeTasks = $('#er_show_tasks').is(':checked');
         var includeNotifications = $('#er_show_notifications').is(':checked');
         var includeChanges = $('#er_show_changes').is(':checked');
@@ -2576,6 +2577,7 @@ require([
 
                 }
             };
+            $('#dashboardInfo').hide();
             var idx = $(this).data("idx");
             var nMessage = window.gChanges[idx].notification
             n.target = nMessage.target;
@@ -2594,7 +2596,7 @@ require([
 
         $('.edit_task').click(function(){
 
-
+            $('#dashboardInfo').hide();
             var idx = $(this).data("idx");
             var task = window.gChanges[idx].task;
             var url = "/api/v1/tasks/assignment/" + task.assignmentId + "?taskid=" + task.taskId;
@@ -2637,7 +2639,7 @@ require([
     }
 
     /*
-     * Get the current schdule to date from a task
+     * Get the current schedule to date from a task
      */
     function getFinish(data) {
         var events,
@@ -3603,6 +3605,7 @@ require([
                 data: { notification: notificationString },
                 success: function(data, status) {
                     removeHourglass();
+                    $('#dashboardInfo').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["n_sent"]);
                     $('#addNotificationPopup').modal("hide");
                 },
                 error: function(xhr, textStatus, err) {

@@ -1351,6 +1351,7 @@ define({
     "n_as": "Assign survey %s1 to %s2.",
     "n_dow": "Day of the week",
     "n_dom": "Day of the month",
+    "n_sent": "Notification sent",
 
     // Roles
     "ro_fr": "Filter rows",
@@ -1510,6 +1511,7 @@ define({
     "mo_ms": "Multiple Submissions",
     "mo_send": "Are you sure you are ready to send the emails?",
     "mo_gen": "Are you sure you are want to generate the links now?  They are created automatically when you use the email unsent button however you can generate them now if you want to send them via a different channel. For single submission links, once created they will expire in 30 days.",
+    "mo_oi": "The following opt-in messages have been sent and are awaiting a response. ",
 
     // AWS Services
     "svc_at": "Auto Translate",
