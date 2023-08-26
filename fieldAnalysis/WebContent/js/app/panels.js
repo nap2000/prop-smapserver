@@ -257,7 +257,7 @@ $(document).ready(function() {
 							setPanelType(newType, globals.gViewIdx, view.timeGroup, view.qId, view.subject_type);
 						}
 						if(newTitle !== view.title) {	// Set the new title
-							$('#p' + view.pId).find('span').html(newTitle);
+							$('#p' + view.pId).find('span').text(newTitle);
 						}
 						view.type = newType;
 						view.title = newTitle;

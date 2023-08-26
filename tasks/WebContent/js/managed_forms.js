@@ -3430,10 +3430,12 @@ require([
                 properties: {}
             };
 
+        $('#dashboardInfo').hide();
         editTask(true, task, taskFeature);
     });
 
     $('#addNotification').click(function(){
+        $('#dashboardInfo').hide();
         edit_notification(false, -1, true);
         $('#addNotificationPopup').modal("show");
     });
@@ -3446,6 +3448,7 @@ require([
             splitDate = [];
 
         console.log("open edit task: " + task.from);
+        $('#dashboardInfo').hide();
 
         window.gCurrentTaskFeature = taskFeature;
 
