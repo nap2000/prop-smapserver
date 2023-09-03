@@ -225,7 +225,7 @@ require([
 				user = {},
 				error = false,
 				securityManagerChecked,
-				validIdent = new RegExp('^[a-z0-9_]+$'),
+				validIdent = new RegExp('^[a-z0-9_-]+$'),
 				send_email = $('input[name=send_email]:checked', '#send_email_fields').val();
 
 			// Ignore click if button disabled

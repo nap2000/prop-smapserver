@@ -964,7 +964,7 @@ function showTimeZones(timeZones) {
 		globals.gTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;      // Browser timezone
 	}
 	$('#u_tz').val(globals.gTimezone);   // Set time zone in user profile
-	$('#timezone').html(localise.set["c_tz"] + ": " + globals.gTimezone);   // Show timezone where this is enabled
+	$('#timezone').text(localise.set["c_tz"] + ": " + globals.gTimezone);   // Show timezone where this is enabled
 }
 
 function addTimeZoneToUrl(url) {
