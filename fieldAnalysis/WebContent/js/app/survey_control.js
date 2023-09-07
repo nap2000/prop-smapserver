@@ -594,7 +594,7 @@ function setSurveyViewControl(view) {
 	for (i = 0; i < views.length; i++) {
 		if(views[i].pId != view.pId && views[i].type == "map" && views[i].layerId < 1) {
 			if(views[i].state !== "deleted") {
-				$display_panel.append('<option value="' + views[i].id + '">' + views[i].title + '</option>');
+				$display_panel.append('<option value="' + views[i].id + '">' + htmlEncode(views[i].title) + '</option>');
 			}
 		}
 	}
@@ -828,8 +828,8 @@ function setQ1Functions(type, panelType, defValue) {
 			defValue = "percent";
 		}
 		
-		h[++idx] = '<option value="count">Count</option>';
-		h[++idx] = '<option value="percent">Percent</option>';
+		h[++idx] = '<option value="count">' + localise.set["count"] + '</option>';
+		h[++idx] = '<option value="percent">' + localise.set["percent"] + '</option>';
 	
 		if(!panelType) {
 			pType = $('#settings_type option:selected').val();
@@ -843,8 +843,8 @@ function setQ1Functions(type, panelType, defValue) {
 		if(defValue === "percent") {
 			defValue = "average";
 		}
-		h[++idx] = '<option value="average">Average</option>';
-		h[++idx] = '<option value="total">Total</option>';
+		h[++idx] = '<option value="average">' + localise.set["average"] + '</option>';
+		h[++idx] = '<option value="total">' + localise.set["c_total"] + '</option>';
 	} else {
 		
 	}
@@ -984,7 +984,7 @@ function updateFilterOptions(data, value, isSelect) {
             h[++idx] = '<option value="';
 			h[++idx] = sortedList[i].value;
             h[++idx] = '">';
-			h[++idx] = sortedList[i].label;
+			h[++idx] = htmlEncode(sortedList[i].label);
             h[++idx] = '</option>';
         }
 	} else {
@@ -992,7 +992,7 @@ function updateFilterOptions(data, value, isSelect) {
             h[++idx] = '<option value="';
 			h[++idx] = data[i].text;
             h[++idx] = '">';
-			h[++idx] = data[i].text;
+			h[++idx] = htmlEncode(data[i].text);
             h[++idx] = '</option>';
         }
     }
