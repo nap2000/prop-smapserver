@@ -367,7 +367,7 @@ require([
 			h[++idx] = '<option value="';
 			h[++idx] = users[i].id;
 			h[++idx] = '">';
-			h[++idx] = users[i].name;
+			h[++idx] = htmlEncode(users[i].name);
 			h[++idx] = '</option>';
 		}
 		$userSelect.empty().append(h.join(''));

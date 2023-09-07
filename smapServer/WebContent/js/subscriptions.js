@@ -193,7 +193,7 @@ require([
 
             // name
             h[++idx] = '<div class="col-lg-4 col-xs-8">';
-            h[++idx] = data[i].name;
+            h[++idx] = htmlEncode(data[i].name);
             h[++idx] = '</div>';
 
             // actions

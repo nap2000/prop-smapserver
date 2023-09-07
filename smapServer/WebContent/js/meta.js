@@ -231,7 +231,7 @@ require([
 					if(survey.meta[i].isPreload) {
 						h[++idx] = '<tr>';
 						h[++idx] = '<td>';
-						h[++idx] = survey.meta[i].sourceParam;
+						h[++idx] = htmlEncode(survey.meta[i].sourceParam);
 						h[++idx] = '</td>';
 						h[++idx] = '<td>';
 						h[++idx] = htmlEncode(survey.meta[i].name);
@@ -240,7 +240,7 @@ require([
 						h[++idx] = htmlEncode(survey.meta[i].display_name);
 						h[++idx] = '</td>';
 						h[++idx] = '<td>';
-						h[++idx] = survey.meta[i].settings;
+						h[++idx] = htmlEncode(survey.meta[i].settings);
 						h[++idx] = '</td>';
 						h[++idx] = '<td>';
 						h[++idx] = '<button type="button" data-idx="';
