@@ -1253,7 +1253,7 @@ function refreshMediaView(data, sId) {
 		$('.media_delete').click(function () {
 			let item = window.gFiles[$(this).val()];
 
-			if(confirm(localise.set["msg_confirm_del"] + " " + item.name)) {
+			if(confirm(localise.set["msg_confirm_del"] + " " + htmlEncode(item.name))) {
 				delete_media(item.name, sId);
 			}
 		});
@@ -2545,7 +2545,7 @@ function getChangeDescription(change, version) {
 		if(change.type === "question" || change.changeType === "question") {  // deprecate checking of changeType){
 
 			h[++idx] = 'question <span style="color:blue;">';
-			h[++idx] = change.question.name;
+			h[++idx] = htmlEncode(change.question.name);
 			if(change.question.sourceSeq >= 0) {
 				h[++idx] = '</span> from position <span style="color:red;">';
 				h[++idx] = htmlEncode(change.question.sourceSeq);
@@ -3291,7 +3291,7 @@ function refreshCustomReportView(data, callback1, callback2, type) {
 
 	$(".rm_cr", $selector).click(function(){
 		var idx = $(this).data("idx");
-		if(confirm(localise.set["msg_confirm_del"] + " " + globals.gReports[idx].name)) {
+		if(confirm(localise.set["msg_confirm_del"] + " " + htmlEncode(globals.gReports[idx].name))) {
 			deleteCustomReport(globals.gReports[idx].id, type);
 		}
 	});

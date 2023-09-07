@@ -463,7 +463,7 @@ define(['jquery','localise', 'common', 'globals',
                             h[++idx] = ' selected="selected"'
                         }
                         h[++idx] = '>';
-                        h[++idx] = data[i].name;
+                        h[++idx] = htmlEncode(data[i].name);
                         h[++idx] = '</option>';
                     }
                     $('.organisation_select').html(h.join(''));
@@ -504,7 +504,7 @@ define(['jquery','localise', 'common', 'globals',
 							h[++idx] = ' selected="selected"'
 						}
 						h[++idx] = '>';
-						h[++idx] = data[i].name;
+						h[++idx] = htmlEncode(data[i].name);
 						h[++idx] = '</option>';
 					}
 					$('.enterprise_select').html(h.join(''));

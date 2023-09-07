@@ -923,7 +923,7 @@ require([
 			if(endPath > 0) {
 				fileName = fileName.substring(endPath + 1);
 			}
-			$(this).next('.custom-file-label').html(fileName);
+			$(this).next('.custom-file-label').text(fileName);
 		});
 
 		$(('#importFileGo')).click(function () {
@@ -970,7 +970,7 @@ require([
 						msg = localise.set["t_efnl"] + " " + xhr.responseText;
 					}
 
-					$('.load_file_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
+					$('.load_file_alert').show().removeClass('alert-success').addClass('alert-danger').text(msg);
 
 				}
 			});
@@ -997,7 +997,7 @@ require([
 		if(name === 'users' || name === 'projects' || name === 'role') {
 			$('#m_import_xls, #m_export_xls').removeClass("disabled");
 		} else {
-			$('#m_import_xls, #m_export_xls').addClass("disabled");;
+			$('#m_import_xls, #m_export_xls').addClass("disabled");
 		}
 	}
 
@@ -1024,10 +1024,10 @@ require([
 				removeHourglass();
 				var cb = callback;
 				var param1 = p1;
-				$('#load_file_alert').removeClass('alert-danger').addClass('alert-success').html(data);
+				$('#load_file_alert').removeClass('alert-danger').addClass('alert-success').text(data);
 				$('#load_file_alert').show();
 				$('#importFile').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
-				$('#importFileLabel').html("");     // Work around ERR_UPLOAD_FILE_CHANGED error
+				$('#importFileLabel').text("");     // Work around ERR_UPLOAD_FILE_CHANGED error
 				cb(param1);
 
 			},
@@ -1037,7 +1037,7 @@ require([
 				msg = msg || localise.set["e_unknown"];
 				$('#load_file_alert').show().removeClass('alert-success').addClass('alert-danger').text(msg);
 				$('#importFile').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
-				$('#importFileLabel').html("");     // Work around ERR_UPLOAD_FILE_CHANGED error
+				$('#importFileLabel').text("");     // Work around ERR_UPLOAD_FILE_CHANGED error
 			}
 		});
 	}
@@ -1708,11 +1708,11 @@ require([
 			url: url,
 			success: function (data, status) {
 				removeHourglass();
-				$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["c_saved"]);
+				$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').text(localise.set["c_saved"]);
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
-				$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["t_ens"] + xhr.responseText);
+				$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["t_ens"] + xhr.responseText);
 
 			}
 		});
@@ -2057,7 +2057,7 @@ require([
 				h[++idx] = '<option value="';
 				h[++idx] = role.id;
 				h[++idx] = '">';
-				h[++idx] = role.name;
+				h[++idx] = htmlEncode(role.name);
 				h[++idx] = '</option>';
 			}
 		}
@@ -2183,7 +2183,7 @@ require([
 				h[++idx] = '<option value="';
 				h[++idx] = organisation.id;
 				h[++idx] = '">';
-				h[++idx] = organisation.name;
+				h[++idx] = htmlEncode(organisation.name);
 				h[++idx] = '</option>';
 			}
 		}
@@ -2288,14 +2288,14 @@ require([
 			h[++idx] = '<option value="';
 			h[++idx] = organisation.id;
 			h[++idx] = '">';
-			h[++idx] = organisation.name;
+			h[++idx] = htmlEncode(organisation.name);
 			h[++idx] = '</option>';
 
 			if(organisation.id !== globals.gOrgId) {
 				hNew[++idxNew] = '<option value="';
 				hNew[++idxNew] = organisation.id;
 				hNew[++idxNew] = '">';
-				hNew[++idxNew] = organisation.name;
+				hNew[++idxNew] = htmlEncode(organisation.name);
 				hNew[++idxNew] = '</option>';
 			}
 		}
@@ -2321,7 +2321,7 @@ require([
 			h[++idx] = '<option value="';
 			h[++idx] = organisation.id;
 			h[++idx] = '">';
-			h[++idx] = organisation.name;
+			h[++idx] = htmlEncode(organisation.name);
 			h[++idx] = '</option>';
 
 		}
@@ -2349,14 +2349,14 @@ require([
 			h[++idx] = '<option value="';
 			h[++idx] = enterprise.id;
 			h[++idx] = '">';
-			h[++idx] = enterprise.name;
+			h[++idx] = htmlEncode(enterprise.name);
 			h[++idx] = '</option>';
 
 			if(enterprise.id != globals.gEntId) {
 				hNew[++idxNew] = '<option value="';
 				hNew[++idxNew] = enterprise.id;
 				hNew[++idxNew] = '">';
-				hNew[++idxNew] = enterprise.name;
+				hNew[++idxNew] = htmlEncode(enterprise.name);
 				hNew[++idxNew] = '</option>';
 				newEnterpriseCount++;
 			}
@@ -2446,7 +2446,7 @@ require([
 					val += " (";
 					val += localise.set[limitTypes[i].name + "_i"];
 					val += ")";
-					$("#" + limitTypes[i].id + "_i").html(val);
+					$("#" + limitTypes[i].id + "_i").text(val);
 				}
 
 			},
@@ -2542,13 +2542,13 @@ require([
 			var msg_one = localise.set["msg_confirm_del_one"];
 			msg_one = msg_one.replace('%s1', userName);
 			msg_one = msg_one.replace('%s2', $('#me_organisation option:selected').html());
-			$('#confirmDelOne').html(msg_one);
+			$('#confirmDelOne').text(msg_one);
 
 			// Set message for the delete all option
 			var msg_all = localise.set["msg_confirm_del_all"];
 			msg_all = msg_all.replace('%s1', userName);
 			msg_all = msg_all.replace('%s2', orgList);
-			$('#confirmDelAll').html(msg_all);
+			$('#confirmDelAll').text(msg_all);
 
 			gCurrentDeleteUsers = users;      // Save in case they say yes
 

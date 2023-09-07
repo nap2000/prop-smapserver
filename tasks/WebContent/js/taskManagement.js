@@ -1310,7 +1310,7 @@ require([
 					h[++idx] = '<option value="';
 					h[++idx] = role.id;
 					h[++idx] = '">';
-					h[++idx] = role.name;
+					h[++idx] = htmlEncode(role.name);
 					h[++idx] = '</option>';
 
 				}
@@ -1380,7 +1380,7 @@ require([
 				h[++idx] = '<option value="';
 				h[++idx] = i;
 				h[++idx] = '">';
-				h[++idx] = grp.name;
+				h[++idx] = htmlEncode(grp.name);
 				h[++idx] = '</option>';
 
 				if (i == 0) {
@@ -1735,13 +1735,6 @@ require([
 				}
 				h[++idx] = '></td>';
 				h[++idx] = '<td class="task_name">' + gTaskParams[i].name + '</td>';
-				//h[++idx] = '<td class="task_isBarcode"><input type="checkbox" name="isBarcode" value="';
-				//h[++idx] = gTaskParams[i].name;
-				//h[++idx] = '" ';
-				//if (gTaskParams[i].isBarcode !== false) {
-				//	h[++idx] = 'checked="checked"';
-				//}
-				//h[++idx] = '></td>';
 				h[++idx] = '</tr>';
 			}
 
@@ -2165,7 +2158,7 @@ require([
 					h[++idx] = i;
 					h[++idx] = '" data-start="09:00" data-duration = "01:00"';
 					h[++idx] = '>';
-					h[++idx] = task.name;
+					h[++idx] = htmlEncode(task.name);
 					h[++idx] = '</div>';
 				}
 			}
