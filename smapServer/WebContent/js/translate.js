@@ -208,7 +208,7 @@ function saveTranslations(callback) {
 				h[++idx] = '</p>';
 				h[++idx] = '<ol>';
 				for(i = 0; i < data.changeSet.length; i++) {
-					h[++idx] = changeset.addUpdateMessage(data.changeSet[i], false);
+					h[++idx] = htmlEncode(changeset.addUpdateMessage(data.changeSet[i], false));
 				}
 				h[++idx] = '</ol>';
 				h[++idx] = '</div>';
@@ -219,7 +219,7 @@ function saveTranslations(callback) {
 				h[++idx] = " " + localise.set["ed_csf"];
 				h[++idx] = '<ol>';
 				for(i = 0; i < data.changeSet.length; i++) {
-					h[++idx] = changeset.addUpdateMessage(data.changeSet[i], true);
+					h[++idx] = htmlEncode(changeset.addUpdateMessage(data.changeSet[i], true));
 				}
 				h[++idx] = '</ol>';
 				h[++idx] = '</div>';

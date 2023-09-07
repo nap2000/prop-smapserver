@@ -1203,7 +1203,7 @@ require([
 				h[++idx] = '<option value="';
 				h[++idx] = names[i]
 				h[++idx] = '">';
-				h[++idx] = names[i];
+				h[++idx] = htmlEncode(names[i]);
 				h[++idx] = '</option>';
 			}
 		}

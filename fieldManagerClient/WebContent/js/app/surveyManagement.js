@@ -369,7 +369,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                 h[++idx] = localise.set["c_warning"];
             }
             h[++idx] =  ': ';
-            h[++idx] = msg.message;
+            h[++idx] = htmlEncode(msg.message);
 
             return h.join('');
         }
@@ -582,7 +582,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 
 
                     h[++idx] = '<td>';  // type
-                    h[++idx] = survey.version;
+                    h[++idx] = htmlEncode(survey.version);
                     h[++idx] = '</td>';
 
                     h[++idx] = '<td>';
@@ -775,7 +775,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                 surveyIdx = $(this).val();
                 if(gSurveys[surveyIdx].deleted === true) {
                     surveys[index++] = {id: gSurveys[surveyIdx].id, name: gSurveys[surveyIdx].displayName};
-                    h[++i] = gSurveys[surveyIdx].displayName;
+                    h[++i] = htmlEncode(gSurveys[surveyIdx].displayName);
                 }
             });
 
@@ -803,7 +803,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                 var surveyIdx = $(this).val();
                 if(gSurveys[surveyIdx].deleted === true) {
                     surveys[index++] = {id: gSurveys[surveyIdx].id, name: gSurveys[surveyIdx].displayName};
-                    h[++i] = gSurveys[surveyIdx].displayName;
+                    h[++i] = htmlEncode(gSurveys[surveyIdx].displayName);
                 }
             });
 
@@ -831,7 +831,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                 var surveyIdx = $(this).val();
                 if(gSurveys[surveyIdx].deleted === false) {
                     surveys[index++] = {id: gSurveys[surveyIdx].id, name: gSurveys[surveyIdx].displayName};
-                    h[++i] = gSurveys[surveyIdx].displayName;
+                    h[++i] = htmlEncode(gSurveys[surveyIdx].displayName);
                 }
             });
 
