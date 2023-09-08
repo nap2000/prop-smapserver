@@ -316,6 +316,7 @@ require([
             var periodCount = $('#cms_period').val();
             cmsAlert.name = $('#cms_name').val();
             cmsAlert.period = periodCount + ' ' + $('#period_list_sel').val();
+            cmsAlert.filter = $('#cms_filter').val();
             if(gTasks.cache.groupSurveys[globals.gCurrentSurvey][0]) {
                 cmsAlert.group_survey_ident = gTasks.cache.groupSurveys[globals.gCurrentSurvey][0].groupSurveyIdent;
             }
@@ -402,16 +403,18 @@ require([
           */
         function openCmsDialog(existing, cmsIndex) {
             gCurrentCmsIndex = cmsIndex;
+            document.forms.namedItem("cmsForm").reset();
             if(cmsIndex >= 0) {
-                var cmAlert = globals.gCmSettings.alerts[gCurrentCmsIndex];
-                $('#cms_name').val(cmAlert.name)
-                if ((cmAlert.period)) {
-                    var periodArray = cmAlert.period.split(" ");
+                var cmsAlert = globals.gCmSettings.alerts[gCurrentCmsIndex];
+                $('#cms_name').val(cmsAlert.name)
+                if ((cmsAlert.period)) {
+                    var periodArray = cmsAlert.period.split(" ");
                     if (periodArray.length > 1) {
                         $('#cms_period').val(periodArray[0]);
                         $('#period_list_sel').val(periodArray[1]);
                     }
                 }
+                $('#cms_filter').val(cmsAlert.filter)
             }
             $('#create_cms_popup').modal("show");
         }

@@ -178,7 +178,7 @@
 				</div>
 				<div class="modal-body">
 
-					<form class="form" onsubmit="return false;">
+					<form class="form" name="cmsForm" onsubmit="return false;">
 
 						<div class="form-group row">
 							<label for="cms_name" data-lang="c_name" class="lang col-sm-4 control-label"></label>
@@ -200,6 +200,22 @@
 											<option class="lang" data-lang="d_day" value="days">day</option>
 										</select>
 									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="cms_filter" data-lang="c_filter" class="lang col-sm-4 control-label"></label>
+							<div class="col-sm-8">
+								<div class="input-group">
+									<input type="text" id="cms_filter" class="form-control" required tabindex="3"><br/>
+									<button class="btn btn-outline-secondary" type="button">
+									<span class="input-group-append">
+										<a class="filter_help" href="https://www.smap.com.au/docs/server-expressions.html" target="_blank">
+											<i class="fas fa-info-circle"></i>
+										</a>
+									</span>
+									</button>
 								</div>
 							</div>
 						</div>
