@@ -1545,6 +1545,7 @@ define({
     "cm_7days": "7 days",
     "cm_14days": "14 days",
     "cm_30days": "30 days",
+    "cm_areq": "A status question and a final status value must be specified if you are using alerts",
 
     "fp_nm": "No matches found",
 

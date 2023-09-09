@@ -147,6 +147,7 @@ require([
             $('#cms_fs').val(settings.finalStatus);
             $('#cms_sq').val(settings.statusQuestion);      // The list of questions should have been set by now but it is not guaranteed
             $('#cms_cq').val(settings.criticalityQuestion);
+
             /*
              * Update alerts table
              */
@@ -176,7 +177,7 @@ require([
 
                 h[++idx] = '<tr>';
                 h[++idx] = '<td>';
-                h[++idx] = cmAlert.id;
+                h[++idx] = htmlEncode(cmAlert.id);
                 h[++idx] = '</td>';
                 h[++idx] = '<td>';
                 h[++idx] = htmlEncode(cmAlert.name);
@@ -210,6 +211,12 @@ require([
 
             $tab.empty().append(h.join(''));
 
+            if((!settings.finalStatus || !settings.statusQuestion
+                    || settings.finalStatus == '' || settings.statusQuestion == '') && alertList.length > 0) {
+                $('.msg_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["cm_areq"]);
+            } else {
+                $('.msg_alert').hide();
+            }
             $('.cms_edit', $tab).click(function () {
                 openCmsDialog(true, $(this).val());
             });
@@ -223,7 +230,7 @@ require([
         }
 
         /*
-         * Save a new or updated case managment setting
+         * Save a new or updated case management setting
          */
         function saveSettings() {
             var settings = {};
