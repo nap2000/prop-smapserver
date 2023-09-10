@@ -275,12 +275,17 @@ require([
 			}
 			if(user.email.length > 0) {
 				if(!validateEmails(user.email)) {
-					error = true;
 					alert(localise.set["msg_inv_email"]);
 					$('#user_email').focus();
 					$('#userDetailsSave').prop("disabled", false);
 					return false;
 				}
+			}
+			if(!validGeneralName(user.name)) {
+				alert(localise.set["msg_val_gen_nm"]);
+				$('#user_name').focus();
+				$('#userDetailsSave').prop("disabled", false);
+				return false;
 			}
 
 			// For a new user, email must be specified if the send email check box is set
@@ -2232,7 +2237,7 @@ require([
 
 			h[++idx] = '<tr>';
 			h[++idx] = '<td>';
-			h[++idx] = enterprise.id;
+			h[++idx] = htmlEncode(enterprise.id);
 			h[++idx] = '</td>';
 			h[++idx] = '<td class="user_edit_td"><button style="width:100%;" class="btn btn-default enterprise_edit" value="';
 			h[++idx] = i;
@@ -2240,10 +2245,10 @@ require([
 			h[++idx] = htmlEncode(enterprise.name);
 			h[++idx] = '</button></td>';
 			h[++idx] = '<td>';
-			h[++idx] = enterprise.changed_by;
+			h[++idx] = htmlEncode(enterprise.changed_by);
 			h[++idx] = '</td>';
 			h[++idx] = '<td>';
-			h[++idx] = enterprise.changed_ts;
+			h[++idx] = htmlEncode(enterprise.changed_ts);
 			h[++idx] = '</td>';
 			h[++idx] = '<td>';
 			h[++idx] = '<button type="button" data-idx="';

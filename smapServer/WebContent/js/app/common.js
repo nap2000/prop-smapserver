@@ -5871,3 +5871,14 @@ function isValidODKOptionName(val) {
 	var sqlCheck = /^[A-Za-z0-9_@&\-\.\+\(\),%:\/ ]*$/;
 	return sqlCheck.test(val);
 }
+
+/*
+ * Check item names such as; a username or an organisation name for invalid characters
+ */
+function validGeneralName(val) {
+
+	if(val.indexOf('<') >= 0 || val.indexOf('>') >= 0) {
+		return false;
+	}
+	return true;
+}
