@@ -124,7 +124,7 @@ define([
             addToChangesetArray(change);
 
             // Add any additional changes generated in the model
-            for(i = 0; i < modelGeneratedChanges.length; i++) {
+            for(var i = 0; i < modelGeneratedChanges.length; i++) {
                 addToChangesetArray(modelGeneratedChanges[i]);
             }
 
@@ -1847,48 +1847,7 @@ define([
                 }
             }
 
-            var refCount = 0;
-            for (name in refQuestions) {
-                if (refQuestions.hasOwnProperty(name)) {
-                    refCount++;
-                }
-            }
-
-            if(refCount > 0) {
-
-                for (i = 0; i < survey.forms.length; i++) {
-                    form = survey.forms[i];
-                    for (j = 0; j < form.questions.length; j++) {
-                        var otherItem = form.questions[j];
-                        var questionType = otherItem.type;
-                        if (!otherItem.deleted && !otherItem.soft_deleted && questionType !== "end group") {
-                            //if (!(i === container && j === itemIndex)) {	// Don't test the question against itself!
-                                otherItem = form.questions[j];
-
-                                for (name in refQuestions) {
-                                    if (refQuestions.hasOwnProperty(name)) {
-                                        if (name === otherItem.name) {
-                                            refQuestions[name].exists = true;
-                                            break;
-                                        }
-                                    }
-                                }
-                            //}
-                        }
-                    }
-                }
-
-                // Check against preloads
-                console.log("check against preloads");
-                if(survey.meta) {
-                    for (i = 0; i < survey.meta.length; i++) {
-                        for (name in refQuestions) {
-                            if (name === survey.meta[i].name) {
-                                refQuestions[name].exists = true;
-                            }
-                        }
-                    }
-                }
+            if(checkExistenceOfReferences(refQuestions, survey)) {
 
                 for (name in refQuestions) {
                     if (refQuestions.hasOwnProperty(name)) {
@@ -1969,31 +1928,6 @@ define([
 
             return true;
 
-        }
-
-		/*
-		 * Get the names of referenced questions in the passed in string
-		 */
-        function getReferenceNames(elem, refQuestions) {
-            var names = [],
-                reg = /\$\{[A-Za-z_][A-Za-z0-9_\-\.]*\}/g,
-                i,
-                name;
-
-            if (elem) {
-                names = elem.match(reg);
-                if(names) {
-                    for(i = 0; i < names.length; i++) {
-                        if(names[i].length > 3) {
-                            name = names[i].substring(2, names[i].length - 1);		// Remove the curly brackets
-                            refQuestions[name] = {
-                                name: name,
-                                exists: false
-                            };
-                        }
-                    }
-                }
-            }
         }
 
 		/*

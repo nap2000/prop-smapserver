@@ -390,11 +390,27 @@ $(document).ready(function() {
 
 	$('#save_settings').off().click(function() {	// Save settings to the database
 
-		// validate
-		var displayName = $('#set_survey_name').val();
+		/*
+		 * Validate
+		 */
+		var displayName = $('#set_survey_name').val();	// Survey name must be set
 		if(!displayName) {
 			alert(localise.set["ed_er"]);
             return false;
+		}
+
+		var refQuestions = {};		// Check referenced questions
+		var name;
+		getReferenceNames($('#set_instance_name').val(), refQuestions);
+		if(checkExistenceOfReferences(refQuestions, globals.model.survey)) {
+			for (name in refQuestions) {
+				if (refQuestions.hasOwnProperty(name)) {
+					if (!refQuestions[name].exists) {
+						alert(localise.set["c_question"] + " ${" + name + "} " + localise.set["msg_not_f"]);
+						return(false);
+					}
+				}
+			}
 		}
 		globals.model.save_settings();
 	});
