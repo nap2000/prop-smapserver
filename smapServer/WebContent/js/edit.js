@@ -988,8 +988,6 @@ $(document).ready(function() {
 		var name,
 			existing,
 			existing_survey,
-			existing_project,
-			//existing_form,
 			shared_results;
 
 		if(globals.gCurrentProject > 0) {
@@ -1001,12 +999,22 @@ $(document).ready(function() {
 				getSurveyDetails(surveyDetailsDone);
 			} else {
 				name = $('#new_form_name').val();
+
+				/*
+				 * Validation
+				 */
 				if(typeof name === "undefined" || name.trim() == "") {
 					bootbox.alert(localise.set["msg_val_nm"]);
+					$('#new_form_name').focus();
 					return false;
 				}
+				if(!validGeneralName(name)) {
+					bootbox.alert(localise.set["msg_val_gen_nm"]);
+					$('#new_form_name').focus();
+					return false;
+				}
+
 				existing = $('#base_on_existing').prop('checked');
-				existing_project = $('#existing_project').val();
 				existing_survey = $('#survey_name').val();
 				shared_results = $('#shared_results').prop('checked');
 				createNewSurvey(name, existing, existing_survey, shared_results, surveyDetailsDone);
@@ -3304,7 +3312,7 @@ function getSurveyForms(sId, callback) {
   				if(xhr.readyState == 0 || xhr.status == 0) {
 		              return;  // Not an error
 				} else {
-					bootbox.alert(localise.set["msg_err_get_s"] + ":" + xhr.responseText + " : " + sId);
+					bootbox.alert(localise.set["msg_err_get_s"] + ":" + htmlEncode(xhr.responseText) + " : " + sId);
 				}
 			}
 		});

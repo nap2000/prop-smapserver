@@ -985,7 +985,7 @@ define(function () {
                     if (xhr.readyState == 0 || xhr.status == 0) {
                         return;  // Not an error
                     } else {
-                        bootbox.alert("Error saving settings. " + xhr.responseText);
+                        bootbox.alert("Error saving settings. " + htmlEncode(xhr.responseText));
                     }
                 }
             });

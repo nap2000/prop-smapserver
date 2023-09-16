@@ -1018,7 +1018,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                         document.forms.namedItem("uploadForm").reset();
                         projectSet();
                         getPotentialGroupSurveys();
-                        $('#up_alert').show().removeClass('alert-danger alert-warning').addClass('alert-success').html(localise.set["t_tl"] + ": " + data.name);
+                        $('#up_alert').show().removeClass('alert-danger alert-warning').addClass('alert-success').html(localise.set["t_tl"] + ": " + htmlEncode(data.name));
                     }
                     $('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
 
@@ -1030,9 +1030,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                     if(xhr.readyState == 0 || xhr.status == 0) {
                         return;  // Not an error
                     } else {
-                        var msg = xhr.responseText;
-
-                        $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_u_f"] + ": " + msg);
+                        $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_u_f"] + ": " + htmlEncode(xhr.responseText));
                         $('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
                     }
                 }

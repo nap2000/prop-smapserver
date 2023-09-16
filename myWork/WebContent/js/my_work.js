@@ -439,7 +439,7 @@ require([
 					},
 					error: function(xhr, textStatus, err) {
 						removeHourglass();
-						$('.up_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
+						$('.up_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["msg_err_upd"] + htmlEncode(xhr.responseText));
 
 					}
 				});
