@@ -687,11 +687,11 @@ require([
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						var msg = err;
-						if(msg.indexOf("Conflict") >= 0) {
+						var msg = xhr.responseText;
+						if(msg.indexOf("duplicate key") >= 0) {
 							msg = localise.set["msg_dup_name"];
 						}
-						alert(localise.set["msg_err_upd"] + ' ' + msg);
+						alert(localise.set["msg_err_upd"] + ' ' +  msg);
 					}
 				}
 			});
