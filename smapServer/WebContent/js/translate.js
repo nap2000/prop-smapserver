@@ -511,7 +511,7 @@ function autoTranslate() {
 				if(xhr.responseText.indexOf("<html>") > 0) {
 					alert(localise.set["msg_trans_to"]);
 				} else {
-					alert(xhr.responseText);
+					alert(htmlEncode(xhr.responseText));
 				}
 
 			}

@@ -138,7 +138,7 @@ require([
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						alert(localise.set["msg_err_del"] + xhr.responseText);
+						alert(localise.set["msg_err_del"] + " " + htmlEncode(xhr.responseText));
 					}
 				}
 			});
@@ -348,7 +348,7 @@ require([
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						alert(localise.set["msg_err_save"] + xhr.responseText);
+						alert(localise.set["msg_err_save"] + " " + htmlEncode(xhr.responseText));
 					}
 				}
 			});
@@ -662,8 +662,7 @@ require([
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
-				var msg = xhr.responseText;
-				$('#load_mailouts_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
+				$('#load_mailouts_alert').show().removeClass('alert-success').addClass('alert-danger').html(htmlEncode(xhr.responseText));
 
 			}
 		});

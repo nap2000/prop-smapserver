@@ -464,11 +464,11 @@ function importData() {
 		  },
 		  error: function(xhr, textStatus, err) {
 			  removeHourglass(); 			 
-			  var msg = xhr.responseText;
+			  var msg = htmlEncode(xhr.responseText);
 			  if(msg && msg === "only csv") {
 				  msg = localise.set["t_efnl"] + " " + localise.set["msg_csv"];
 			  } else {
-				  msg = localise.set["t_efnl"] + " " + xhr.responseText;
+				  msg = localise.set["t_efnl"] + " " + htmlEncode(xhr.responseText);
 			  }
 
 			  $('#load_tasks_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);

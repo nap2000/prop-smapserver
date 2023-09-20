@@ -845,7 +845,7 @@ $(document).ready(function() {
 					if(xhr.readyState == 0 || xhr.status == 0) {
 			              return;  // Not an error
 					} else {
-						alert(localise.set["msg_err_save"] + " " + xhr.responseText);
+						alert(localise.set["msg_err_save"] + " " + htmlEncode(xhr.responseText));
 					}
 				}
 		});
@@ -855,34 +855,6 @@ $(document).ready(function() {
 		var ident = $(this).val();
 
 	});
-	/*
-	 * Save changes to the pulldata settings
-	 * No longer used
-	$('#pulldataSave').off().click(function() {	// Save pulldata to the database
-
-		var pulldataString = JSON.stringify(gTempPulldata);
-		addHourglass();
-		$.ajax({
-			  type: "POST",
-			  url: "/surveyKPI/surveys/save_pulldata/" + globals.gCurrentSurvey,
-			  cache: false,
-			  data: { pulldata: pulldataString },
-				success: function(data) {
-					removeHourglass();
-					globals.model.survey.pulldata = gTempPulldata;
-					$('#pulldataModal').modal("hide");
-				},
-				error: function(xhr, textStatus, err) {
-					removeHourglass();
-					if(xhr.readyState == 0 || xhr.status == 0) {
-			              return;  // Not an error
-					} else {
-						alert(localise.set["msg_err_save"] + ' ' + xhr.responseText);
-					}
-				}
-		});
-	});
-	 */
 
 	$('#project_name').change(function() {
 		globals.gCurrentProject = $('#project_name option:selected').val();

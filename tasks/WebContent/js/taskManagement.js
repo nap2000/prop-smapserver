@@ -1965,8 +1965,7 @@ require([
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
-				var msg = xhr.responseText;
-				$('#load_tasks_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
+				$('#load_tasks_alert').show().removeClass('alert-success').addClass('alert-danger').html(htmlEncode(xhr.responseText));
 
 			}
 		});

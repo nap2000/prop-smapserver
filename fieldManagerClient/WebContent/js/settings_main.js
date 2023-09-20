@@ -335,7 +335,7 @@ require([
 						return;  // Not an error
 					} else {
 						var msg = err;
-						$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
+						$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + htmlEncode(xhr.responseText));
 					}
 				}
 			});
@@ -384,7 +384,7 @@ require([
 						return;  // Not an error
 					} else {
 						var msg = err;
-						$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
+						$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + htmlEncode(xhr.responseText));
 					}
 				}
 			});
@@ -460,7 +460,7 @@ require([
 						return;  // Not an error
 					} else {
 						var msg = err;
-						$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
+						$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + htmlEncode(xhr.responseText));
 					}
 				}
 			});
@@ -503,7 +503,7 @@ require([
 						return;  // Not an error
 					} else {
 						var msg = err;
-						$('.my_org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
+						$('.my_org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + htmlEncode(xhr.responseText));
 					}
 				}
 			});
@@ -596,11 +596,11 @@ require([
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
-					var msg = xhr.responseText;
+					var msg = htmlEncode(xhr.responseText);
 					if(msg && msg === "only csv") {
 						msg = localise.set["t_efnl"] + " " + localise.set["msg_csv"];
 					} else {
-						msg = localise.set["t_efnl"] + " " + xhr.responseText;
+						msg = localise.set["t_efnl"] + " " + htmlEncode(xhr.responseText);
 					}
 
 					$('.load_file_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
@@ -636,11 +636,11 @@ require([
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
-				var msg = xhr.responseText;
+				var msg = htmlEncode(xhr.responseText);
 				if(msg && msg === "only csv") {
 					msg = localise.set["t_efnl"] + " " + localise.set["msg_csv"];
 				} else {
-					msg = localise.set["t_efnl"] + " " + xhr.responseText;
+					msg = localise.set["t_efnl"] + " " + htmlEncode(xhr.responseText);
 				}
 
 				$('.org_alert,.my_org_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
@@ -794,7 +794,7 @@ require([
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
-				$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["t_ens"] + xhr.responseText);
+				$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["t_ens"] + htmlEncode(xhr.responseText));
 
 			}
 		});

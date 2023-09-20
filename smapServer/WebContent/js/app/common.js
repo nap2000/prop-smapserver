@@ -2218,7 +2218,7 @@ function createNewSurvey(name, existing, existing_survey, shared_results, callba
 			if(xhr.readyState == 0 || xhr.status == 0) {
 				return;  // Not an error
 			} else {
-				bootbox.alert(localise.set["c_error"] + xhr.responseText);
+				bootbox.alert(localise.set["c_error"] + " " + htmlEncode(xhr.responseText));
 			}
 		}
 	});
@@ -3327,7 +3327,7 @@ function deleteCustomReport(id, type) {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 				return;  // Not an error
 			} else {
-				alert(localise.set["msg_err_del"] + xhr.responseText);
+				alert(localise.set["msg_err_del"] + " " + htmlEncode(xhr.responseText));
 			}
 		}
 	});
@@ -4518,7 +4518,7 @@ function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback, t
 		error: function (xhr, textStatus, err) {
 
 			removeHourglass();
-			alert(localise.set["msg_err_upd"] + xhr.responseText);
+			alert(localise.set["msg_err_upd"] + " " + htmlEncode(xhr.responseText));
 
 		}
 	});
@@ -5706,7 +5706,7 @@ function executeUsageReport(oId) {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 				return;  // Not an error
 			} else {
-				alert(localise.set["msg_err_save"] + xhr.responseText);
+				alert(localise.set["msg_err_save"] + htmlEncode(xhr.responseText));
 			}
 
 		}
@@ -5768,7 +5768,7 @@ function executeAttendanceReport(oId) {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 				return;  // Not an error
 			} else {
-				alert(localise.set["msg_err_save"] + xhr.responseText);
+				alert(localise.set["msg_err_save"] + " " + htmlEncode(xhr.responseText));
 			}
 
 		}

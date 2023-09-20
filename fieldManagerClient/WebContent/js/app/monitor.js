@@ -790,7 +790,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                                 return;  // Not an error
                             } else {
                                 $('#case_data').hide();
-                                $('#case_msg').removeClass("d-none").text(localise.set["c_error"] + ": " + xhr.responseText).show();
+                                $('#case_msg').removeClass("d-none").text(localise.set["c_error"] + ": " + htmlEncode(xhr.responseText)).show();
                             }
                         }
                     });

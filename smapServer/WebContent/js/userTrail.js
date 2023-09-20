@@ -232,7 +232,7 @@ require([
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						$('#info').html(localise.set["msg_err_save"] + xhr.responseText);
+						$('#info').html(localise.set["msg_err_save"] + " " + htmlEncode(xhr.responseText));
 					}
 
 				}

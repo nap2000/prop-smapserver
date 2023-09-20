@@ -345,7 +345,7 @@ require([
 				if(xhr.readyState == 0 || xhr.status == 0) {
 					return;  // Not an error
 				} else {
-					alert(localise.set["msg_err_save"] + xhr.responseText);
+					alert(localise.set["msg_err_save"] + " " + htmlEncode(xhr.responseText));
 				}
 			}
 		});
@@ -492,7 +492,7 @@ require([
 				if(xhr.readyState == 0 || xhr.status == 0) {
 					return;  // Not an error
 				} else {
-					alert(localise.set["msg_err_del"] + xhr.responseText);
+					alert(localise.set["msg_err_del"] + " " + htmlEncode(xhr.responseText));
 				}
 			}
 		});
@@ -632,9 +632,7 @@ require([
 				if(xhr.readyState == 0 || xhr.status == 0) {
 					return;  // Not an error
 				} else {
-					var msg = xhr.responseText;
-
-					$('.upload_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_u_f"] + ": " + msg);
+					$('.upload_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_u_f"] + ": " + htmlEncode(xhr.responseText));
 					$('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
 				}
 			}

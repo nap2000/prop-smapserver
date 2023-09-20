@@ -449,7 +449,7 @@ function getUserLocationsData(view, start_rec, nocache) {
 	  				if(xhr.readyState == 0 || xhr.status == 0) {
 	  		              return;  // Not an error
 	  				} else {
-	  					alert(localise.set["c_error"] + ": " + xhr.responseText);
+	  					alert(localise.set["c_error"] + ": " + htmlEncode(xhr.responseText));
 	  				}
 	  			}
 			});

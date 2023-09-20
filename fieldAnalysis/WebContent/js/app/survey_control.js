@@ -918,7 +918,7 @@ function getTextValues(sId, qId, value) {
 	              return;  // Not an error
 			} else {
 				console.log("Error: Failed to get values for question filter: " + err);
-				alert(xhr.responseText);
+				alert(htmlEncode(xhr.responseText));
 			}
 		}
 	});	

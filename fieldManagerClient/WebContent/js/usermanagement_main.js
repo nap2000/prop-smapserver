@@ -428,8 +428,7 @@ require([
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						var msg = xhr.responseText;
-						alert(localise.set["msg_err_upd"] + msg);
+						alert(localise.set["msg_err_upd"] + " " + htmlEncode(xhr.responseText));
 					}
 				}
 			});
@@ -635,7 +634,7 @@ require([
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						var msg = (xhr.responseText) ? xhr.responseText : err;
+						var msg = (xhr.responseText) ? htmlEncode(xhr.responseText) : err;
 						if(msg.indexOf("Conflict") >= 0) {
 							msg = localise.set["msg_dup_name"];
 						}
@@ -687,7 +686,7 @@ require([
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						var msg = xhr.responseText;
+						var msg = htmlEncode(xhr.responseText);
 						if(msg.indexOf("duplicate key") >= 0) {
 							msg = localise.set["msg_dup_name"];
 						}
@@ -755,7 +754,7 @@ require([
 						return;  // Not an error
 					} else {
 						var msg = err;
-						$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + xhr.responseText);
+						$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + " " + htmlEncode(xhr.responseText));
 					}
 				}
 			});
@@ -968,11 +967,11 @@ require([
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
-					var msg = xhr.responseText;
+					var msg = htmlEncode(xhr.responseText);
 					if(msg && msg === "only csv") {
 						msg = localise.set["t_efnl"] + " " + localise.set["msg_csv"];
 					} else {
-						msg = localise.set["t_efnl"] + " " + xhr.responseText;
+						msg = localise.set["t_efnl"] + " " + msg
 					}
 
 					$('.load_file_alert').show().removeClass('alert-success').addClass('alert-danger').text(msg);
@@ -1672,7 +1671,7 @@ require([
 						}
 						alert(msg);
 					} else {
-						alert(localise.set["c_error"] + ": " + xhr.responseText);
+						alert(localise.set["c_error"] + ": " + htmlEncode(xhr.responseText));
 					}
 				}
 
@@ -1717,7 +1716,7 @@ require([
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
-				$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["t_ens"] + xhr.responseText);
+				$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["t_ens"] + htmlEncode(xhr.responseText));
 
 			}
 		});
