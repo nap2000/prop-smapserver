@@ -316,7 +316,7 @@ require([
 			gMap.render();
 
 			var date = new Date(m);	// Using Measure coordinate to store unix date
-			document.getElementById('info').innerHTML = date;
+			document.getElementById('info').innerHTML = htmlEncode(date);
 
 		});
 
@@ -457,7 +457,7 @@ require([
 			}
 
 			var date = new Date(closestPoint[2]);	// Using Z coordinate to store unix date
-			info.innerHTML = date;
+			info.innerHTML = htmlEncode(date);
 			var coordinates = [coordinate, [closestPoint[0], closestPoint[1]]];
 			if (line === null) {
 				line = new ol.geom.LineString(coordinates);

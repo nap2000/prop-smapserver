@@ -84308,7 +84308,7 @@ OpenLayers.Control.LayerSwitcher = OpenLayers.Class(OpenLayers.Control, {
                 if (!baseLayer && !layer.inRange) {
                     labelSpan.style.color = "gray";
                 }
-                labelSpan.innerHTML = layer.name;
+                labelSpan.innerHTML = htmlEnccode(layer.name);
                 labelSpan.style.verticalAlign = (baseLayer) ? "bottom"
                                                             : "baseline";
                 // create line break

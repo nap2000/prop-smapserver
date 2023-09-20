@@ -752,7 +752,7 @@ function addSharedMaps(map, sharedMaps) {
 			
 			if(layer.type === "mapbox") {
 				layerUrl = "https://api.mapbox.com/styles/v1/" + layer.config.mapid + "/tiles/${z}/${x}/${y}?access_token=" + globals.gMapboxDefault;
-				map.addLayer(new OpenLayers.Layer.XYZ(layer.name,
+				map.addLayer(new OpenLayers.Layer.XYZ(htmlEncode(layer.name),
 					    [layerUrl], {
 					    sphericalMercator: true,
 					    wrapDateLine: true,
