@@ -3327,7 +3327,7 @@ function deleteCustomReport(id, type) {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 				return;  // Not an error
 			} else {
-				alert(localise.set["msg_err_del"] + " " + htmlEncode(xhr.responseText));
+				alert(localise.set["msg_err_del"] + " " + xhr.responseText);	// alerts htmlencode text
 			}
 		}
 	});
@@ -4462,7 +4462,7 @@ function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback, t
 		taskFeature.properties.location_name = $('#locationSave').val();
 	} else if(saveType == "ul" && locationIdx != "-1") {
 		taskFeature.properties.location_group = $('.location_group_list_sel').text();
-		taskFeature.properties.location_name = gTags[locationIdx].name;
+		taskFeature.properties.location_name = window.gTags[locationIdx].name;
 	} else {
 		taskFeature.properties.location_group = undefined;
 		taskFeature.properties.location_name = undefined;
@@ -4518,7 +4518,7 @@ function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback, t
 		error: function (xhr, textStatus, err) {
 
 			removeHourglass();
-			alert(localise.set["msg_err_upd"] + " " + htmlEncode(xhr.responseText));
+			alert(localise.set["msg_err_upd"] + " " + xhr.responseText);	// Alerts htmlencode text already
 
 		}
 	});
@@ -5706,7 +5706,7 @@ function executeUsageReport(oId) {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 				return;  // Not an error
 			} else {
-				alert(localise.set["msg_err_save"] + htmlEncode(xhr.responseText));
+				alert(localise.set["msg_err_save"] + xhr.responseText);	// alerts htmlencode
 			}
 
 		}
@@ -5768,7 +5768,7 @@ function executeAttendanceReport(oId) {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 				return;  // Not an error
 			} else {
-				alert(localise.set["msg_err_save"] + " " + htmlEncode(xhr.responseText));
+				alert(localise.set["msg_err_save"] + " " + xhr.responseText);  // alerts htmlencode
 			}
 
 		}

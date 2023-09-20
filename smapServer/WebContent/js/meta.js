@@ -349,7 +349,7 @@ require([
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						alert(localise.set["c_error"] + " " + htmlEncode(xhr.responseText));
+						alert(localise.set["c_error"] + " " + xhr.responseText);	// alerts htmlencode
 					}
 				}
 			});
@@ -376,7 +376,7 @@ require([
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						alert(localise.set["c_error"] + " " + htmlEncode(xhr.responseText));
+						alert(localise.set["c_error"] + " " + xhr.responseText);	// alerts htmlencode
 					}
 				}
 			});

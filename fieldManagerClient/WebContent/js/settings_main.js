@@ -185,7 +185,7 @@ require([
 						return;  // Not an error
 					} else {
 						var msg = xhr.responseText;
-						alert(localise.set["msg_err_upd"] + msg);
+						alert(localise.set["msg_err_upd"] + msg);  // Alerts htmlencode text already
 					}
 				}
 			});
@@ -218,7 +218,7 @@ require([
 						return;  // Not an error
 					} else {
 						var msg = xhr.responseText;
-						alert(localise.set["msg_err_upd"] + msg);
+						alert(localise.set["msg_err_upd"] + msg);    // Alerts htmlencode text already
 					}
 				}
 			});

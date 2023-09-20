@@ -464,7 +464,7 @@ require([
                 if (xhr.readyState == 0 || xhr.status == 0) {
                     return;  // Not an error
                 } else {
-                    alert(localise.set["msg_err_upd"] + " : " + htmlEncode(xhr.responseText));
+                    alert(localise.set["msg_err_upd"] + " : " + xhr.responseText);	// alerts htmlencode
                 }
             }
         });
@@ -553,7 +553,7 @@ require([
 				if(xhr.readyState == 0 || xhr.status == 0) {
 					  return;  // Not an error
 				} else {
-				    var msg = htmlEncode(xhr.responseText);
+				    var msg = xhr.responseText;
 				    if(msg.indexOf("404 - Not Found") >= 0) {
 				        msg = localise.set["msg_no_proj"];
                     }
@@ -590,7 +590,7 @@ require([
 				if(xhr.readyState == 0 || xhr.status == 0) {
 					return;  // Not an error
 				} else {
-					var msg = htmlEncode(xhr.responseText);
+					var msg = xhr.responseText;
 					if(msg.indexOf("404 - Not Found") >= 0) {
 						msg = localise.set["msg_no_proj"];
 					}
@@ -722,7 +722,7 @@ require([
 					if (xhr.readyState == 0 || xhr.status == 0) {
 						getReports();
 					} else {
-						alert(localise.set["msg_err_upd"] + " : " + htmlEncode(xhr.responseText));
+						alert(localise.set["msg_err_upd"] + " : " + xhr.responseText);	// alerts htmlencode
 					}
 				}
 			});

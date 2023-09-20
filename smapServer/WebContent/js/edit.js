@@ -845,7 +845,7 @@ $(document).ready(function() {
 					if(xhr.readyState == 0 || xhr.status == 0) {
 			              return;  // Not an error
 					} else {
-						alert(localise.set["msg_err_save"] + " " + htmlEncode(xhr.responseText));
+						alert(localise.set["msg_err_save"] + " " + xhr.responseText);
 					}
 				}
 		});

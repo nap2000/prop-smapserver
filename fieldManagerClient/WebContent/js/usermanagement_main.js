@@ -428,7 +428,7 @@ require([
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						alert(localise.set["msg_err_upd"] + " " + htmlEncode(xhr.responseText));
+						alert(localise.set["msg_err_upd"] + " " + xhr.responseText);  // Alerts htmlencode text already
 					}
 				}
 			});
@@ -484,8 +484,7 @@ require([
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						var msg = xhr.responseText;
-						alert(localise.set["msg_err_upd"] + msg);
+						alert(localise.set["msg_err_upd"] + xhr.responseText);
 					}
 				}
 			});
@@ -634,7 +633,7 @@ require([
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						var msg = (xhr.responseText) ? htmlEncode(xhr.responseText) : err;
+						var msg = (xhr.responseText) ? xhr.responseText : err;
 						if(msg.indexOf("Conflict") >= 0) {
 							msg = localise.set["msg_dup_name"];
 						}
@@ -686,7 +685,7 @@ require([
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						var msg = htmlEncode(xhr.responseText);
+						var msg = xhr.responseText;
 						if(msg.indexOf("duplicate key") >= 0) {
 							msg = localise.set["msg_dup_name"];
 						}
@@ -1671,7 +1670,7 @@ require([
 						}
 						alert(msg);
 					} else {
-						alert(localise.set["c_error"] + ": " + htmlEncode(xhr.responseText));
+						alert(localise.set["c_error"] + ": " + xhr.responseText);
 					}
 				}
 

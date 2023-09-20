@@ -150,7 +150,7 @@ require([
                     if (xhr.readyState == 0 || xhr.status == 0) {
                         return;  // Not an error
                     } else {
-                        alert(htmlEncode(xhr.responseText) + " " + gSurveyIdent + " " + localise.set["msg_not_f"]);
+                        alert(xhr.responseText + " " + gSurveyIdent + " " + localise.set["msg_not_f"]);
                     }
                 }
             });
@@ -228,7 +228,7 @@ require([
                     if (xhr.readyState == 0 || xhr.status == 0) {
                         return;  // Not an error
                     } else {
-                        alert(htmlEncode(xhr.responseText) + " " + gSurveyIdent + " " + localise.set["msg_not_f"]);
+                        alert(xhr.responseText + " " + gSurveyIdent + " " + localise.set["msg_not_f"]);
                     }
                 }
             });

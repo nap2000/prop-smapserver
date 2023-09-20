@@ -360,7 +360,7 @@ require([
                     if(xhr.readyState == 0 || xhr.status == 0) {
                         return;  // Not an error
                     } else {
-                        var msg = htmlEncode(xhr.responseText);
+                        var msg = xhr.responseText;
                         if (msg) {
                             if (msg.indexOf("cms_unique_name") > 0) {
                                 msg = localise.set["cm_dcms"];
