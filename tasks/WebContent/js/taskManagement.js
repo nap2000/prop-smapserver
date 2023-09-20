@@ -118,8 +118,7 @@ require([
 		gSourceSurvey;
 
 	var gCurrentGroup,
-		gCurrentLocation = '-1',
-		gTags;
+		gCurrentLocation = '-1';
 
 	$(document).ready(function () {
 
@@ -128,6 +127,7 @@ require([
 		setCustomAssignments();			// Apply custom javascript
 
 		window.moment = moment;		// Make moment global for use by common.js
+		window.gTags = [];
 
 		window.gCurrentTaskFeature; // Currently edited task feature, hack to support shared functions with console
 		window.gSaveType = '';
@@ -1607,10 +1607,10 @@ require([
 
 		$('#nfc_uid').val(task.location_trigger);
 		gCurrentGroup = task.location_group;
-		gCurrentLocation = getLocationIndex(task.location_name, gTags);
+		gCurrentLocation = getLocationIndex(task.location_name, window.gTags);
 		if(gCurrentGroup && gCurrentGroup != '') {
 			$('.location_group_list_sel').text(gCurrentGroup);
-			setLocationList(gTags, gCurrentLocation, gCurrentGroup);
+			setLocationList(window.gTags, gCurrentLocation, gCurrentGroup);
 		}
 
 		if(task.guidance) {
@@ -1882,7 +1882,7 @@ require([
 	 * Process a list of locations
 	 */
 	function processLocationList(tags) {
-		gTags = tags;
+		window.gTags = tags;
 		gCurrentGroup = refreshLocationGroups(tags, true, gCurrentGroup);
 		setLocationList(tags, gCurrentLocation, gCurrentGroup);
 
@@ -1891,7 +1891,7 @@ require([
 			gCurrentGroup = $(this).text();
 			gCurrentLocation = '-1';
 			$('.location_group_list_sel').text(gCurrentGroup);
-			setLocationList(gTags, gCurrentLocation, gCurrentGroup);
+			setLocationList(window.gTags, gCurrentLocation, gCurrentGroup);
 		});
 	}
 
@@ -1908,9 +1908,9 @@ require([
 		gSaveType = '';
 
 		if(idx != -1) {
-			$('#nfc_uid').val(gTags[idx].uid);
-			var lat = gTags[idx].lat;
-			var lon = gTags[idx].lon;
+			$('#nfc_uid').val(window.gTags[idx].uid);
+			var lat = window.gTags[idx].lat;
+			var lon = window.gTags[idx].lon;
 			if (lon || lat) {
 				//clearDraggableMarker('mapModal');
 				addDraggableMarker('mapModal', new L.LatLng(lat, lon), onDragEnd);
