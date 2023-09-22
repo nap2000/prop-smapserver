@@ -428,6 +428,7 @@ define({
     "tm_g_temp_i3": "Reference Guide",
     "tm_ul_f": "Upload the spreadsheet",
     "tm_ul_sr": "Upload the shared resource file",
+    "tm_ul_sl": "Upload the shared locations file",
     "tm_si": "Specify survey identifier",
     "tm_up": "Upload Template",
     "tm_add": "Add Template",

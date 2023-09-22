@@ -120,14 +120,14 @@ require([
 			$('.resourcePanel').hide();
 			$('#locationPanel').show();
 
-			$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
+			$('.upload_file_msg').hide().removeClass('alert-danger').addClass('alert-success').html("");
 		});
 
 		/*
          * Set up csv tab
          */
 		$('.csv-inputs').bootstrapFileInput();
-		$('.upload_alert').removeClass('alert-danger').addClass('alert-success').html("");
+		$('.upload_alert').hide().removeClass('alert-danger').addClass('alert-success').html("");
 
 		// Open the dialog to select a new survey for upload
 		$('#addCsv').click( function(e) {
@@ -189,14 +189,18 @@ require([
 		});
 
 		// Respond to location upload
-		$('#submitLocationFiles').click( function() {
-			if(!$('#submitLocationFiles').hasClass('disabled')) {
-				uploadFiles('/surveyKPI/tasks/locations/upload', "locationupload", loadedLocationData);
-			}
+		$('.upload_file_msg').hide();
+		$('#uploadLocationFiles').click( function() {
+			$('.upload_file_msg').hide();
+			$('#fileAddLocations').modal('show');
+		});
+		$('#submitLocationFile').click( function(){
+			uploadFiles('/surveyKPI/tasks/locations/upload', "locationsUpload", loadedLocationData);
 		});
 
 		// Respond to location download
 		$('#downloadLocationFiles').click( function() {
+			$('.upload_file_msg').hide();
 			if(!$('#downloadLocationFiles').hasClass('disabled')) {
 				downloadFile('/surveyKPI/tasks/locations/download');
 			}

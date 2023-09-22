@@ -1152,31 +1152,27 @@ function uploadFiles(url, formName, callback1) {
 		success: function(data) {
 			removeHourglass();
 			let cb1 = callback1;
-			$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html(localise.set["c_success"]);
+			$('.upload_file_msg').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["c_success"]);
 			if(typeof cb1 === "function") {
-				cb1(data, callbackParam);
-			}
-			if(typeof cb2 === "function") {
-				cb2(data);
+				cb1(data);
 			}
 			document.forms.namedItem(formName).reset();
-
+			$('#fileAddLocations').modal('hide');
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
 			document.forms.namedItem(formName).reset();
-			$('.submitFiles').removeClass('disabled');
 			if(xhr.readyState == 0 || xhr.status == 0) {
 				return;  // Not an error
 			} else {
-				var msg = xhr.responseText;
+				var msg = htmlEncode(xhr.responseText);
 				if(msg && msg.indexOf("no tags") >= 0) {
 					msg = localise.set["msg_u_nt"];
 				} else {
 					msg = localise.set["msg_u_f"] + " : " + msg;
 				}
-				$('.upload_file_msg').removeClass('alert-success').addClass('alert-danger').html(msg);
-
+				$('.upload_file_msg').show().removeClass('alert-success').addClass('alert-danger').html(msg);
+				$('#fileAddLocations').modal('hide');
 			}
 		}
 	});
@@ -1491,7 +1487,7 @@ function getFilesFromServer(sId, callback, getall) {
 			if(xhr.readyState == 0 || xhr.status == 0) {
 				return;  // Not an error
 			} else {
-				$('.upload_file_msg').removeClass('alert-success').addClass('alert-danger').html("Error: " + err);
+				$('.upload_file_msg').removeClass('alert-success').addClass('alert-danger').html("Error: " + htmlEncode(err));
 			}
 		}
 	});

@@ -182,10 +182,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 								<div class="col-lg-7">
 									<!-- The fileinput-button span is used to style the file input field as button -->
 
-									<input name="files" title="Add files..." class="file-inputs" type="file"
-										   accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-
-									<button type="button" id="submitLocationFiles" class="submitFiles btn btn-primary">
+									<button type="button" id="uploadLocationFiles" class="btn btn-primary">
 										<span class="lang" data-lang="c_upload">upload</span>
 									</button>
 									<button type="reset" class="btn btn-warning cancel">
@@ -393,6 +390,42 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
 				<button id="submitResourceFile" type="button" class="btn btn-primary lang" data-lang="c_upload">Upload</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Popup to add a new shared locations file -->
+<div id="fileAddLocations" class="modal fade" tabindex="-1" aria-labelledby="survey_add_title" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5><span class="lang notreplace" data-lang="tm_ul_sl"></span></h5>
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+			</div>
+			<div class="modal-body">
+
+				<div class="spreadsheet_editor">
+					<div id="up_alert2" style="display:none; word-wrap:break-word;" class="upload_alert alert alert-success" role="alert"></div>
+					<form id="locationsUpload" name="locationsUpload" accept-charset="utf-8">
+
+						<div class="form-group row">
+							<div class="col-sm-10">
+
+								<input name="files" title="Add files..." class="file-inputs" type="file"
+									   accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+
+							</div>
+						</div>
+
+					</form>
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="submitLocationFile" type="button" class="btn btn-primary lang" data-lang="c_upload">Upload</button>
 			</div>
 		</div>
 	</div>
