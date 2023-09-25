@@ -304,6 +304,7 @@ define({
     "c_s_roles": "Survey Roles",
     "c_role": "Role",
     "c_id": "Id",
+    "c_pivot": "Pivot",
     "c_insert": "Insert",
     "c_tz": "Time Zone",
     "c_undef": "Not Defined",

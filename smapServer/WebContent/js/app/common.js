@@ -3637,13 +3637,13 @@ function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms, bs4) 
 	if(bs4) {
 		h[++idx] = '<span class="ml-2">';
 	}
-	h[++idx] = form.form;
+	h[++idx] = htmlEncode(form.form);
 	if(bs4) {
 		h[++idx] = '</span>';
 	}
 	h[++idx] = '</label>';
 	if(form.p_id != 0 && !osm) {
-		h[++idx] = ' <button class="exportpivot">Pivot</button>';
+		h[++idx] = ' <button class="exportpivot">' + localise.set["c_pivot"] + '</button>';
 	}
 	h[++idx]= '</div>';
 

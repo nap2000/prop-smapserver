@@ -196,6 +196,11 @@ $(document).ready(function() {
 		        			alert(localise.set["msg_sel_q"]);
 		        			return false;
 						}
+
+						if(!validGeneralName(newTitle)) {
+							alert(localise.set["msg_val_gen_nm"]);
+							return false;
+						}
 		        		
 		        		gNewPanel = false;
 		        		views = globals.gSelector.getViews();
@@ -555,7 +560,6 @@ function delPanel($this, idx) {
 
 }
 
-
 // Create a single panel 
 function createPanel(idx, $panels, title, surveyName, subject_type) {
 
@@ -571,6 +575,10 @@ function createPanel(idx, $panels, title, surveyName, subject_type) {
 		} else {
 			title = localise.set["a_ul"];
 		}
+	}
+	if(!validGeneralName(title)) {
+		alert(localise.set["msg_val_gen_nm"]);
+		return false;
 	}
 
 	h[++i] = hstart;
@@ -804,7 +812,7 @@ function savePanels(newPanel) {
 			  getPanels(globals.gCurrentProject);
 		  }, error: function(data, status) {
 			  removeHourglass();
-			  // Fail silently - not a big deal if settings can't be saved
+			  alert(localise.set["c_error"] + " : " + data.responseText);
 		  }
 	});
 }

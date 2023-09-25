@@ -708,7 +708,7 @@ function setSurveyViewQuestionGroups(list, groupId) {
 
 			if(typeof item.type !== "undefined" && item.type !== "dateTime" && item.type !== "date" 
 					&& item.type !== "time" && item.name !== "_task_key") {
-				$groupSelect.append('<option value="' + item.id + '">' + item.name + " : " + label + '</option>');
+				$groupSelect.append('<option value="' + item.id + '">' + htmlEncode(item.name + " : " + label) + '</option>');
 			}
 		});
 	}
