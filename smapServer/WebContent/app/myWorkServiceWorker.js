@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v161';
+let CACHE_NAME = 'v162';
 
 // Web service requests
 let ASSIGNMENTS = '/surveyKPI/myassignments?';
@@ -115,12 +115,7 @@ self.addEventListener('fetch', function(event) {
 			getOrganisationId().then(
 				() => {
 					let recordId = getRecordId(event.request.url);
-					if(recordId === "org_css") {
-						let url = ORG_CSS.replace("org", organisationId);
-						return filesNetworkThenCache(event, new Request(url));
-					} else {
-						return filesNetworkThenCache(event, event.request);
-					}
+					return filesNetworkThenCache(event, event.request);
 				}
 			)
 		);
