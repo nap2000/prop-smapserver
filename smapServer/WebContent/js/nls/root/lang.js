@@ -1216,6 +1216,7 @@ define({
 	"u_submissions": "Allow submissions",
 	"u_notifications": "Allow notifications",
     "u_sms": "Allow SMS",
+    "u_ratelimit": "Max number of API requests per minute",
     "u_mb_k": "Mapbox Key",
     "u_mb_a": "Mapbox Account",
     "u_mb_s": "Mapbox Style Id",

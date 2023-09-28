@@ -360,11 +360,6 @@ require([
 			displayAsImage($(this)[0].files[0], $('#o_main_logo')[0]);
 		});
 
-		// Function to save a users details
-		$('#saveServer').click(function(e) {
-			writeServerDetails();
-		});
-
 		/*
 		 * Set focus to first element on opening modals
 		 */
@@ -1674,48 +1669,6 @@ require([
 					}
 				}
 
-
-			}
-		});
-	}
-
-	/*
-	 * Update the server with the server config
-	 */
-	function writeServerDetails() {
-
-		var url = "/surveyKPI/server",
-			serverString,
-			server = {
-				mapbox_default: $('#mapbox_key').val(),
-				google_key: $('#google_key').val(),
-				maptiler_key: $('#maptiler_key').val(),
-				smtp_host: $('#s_smtp_host').val(),
-				email_domain: $('#s_email_domain').val(),
-				email_user: $('#s_email_user').val(),
-				email_password: $('#s_email_password').val(),
-				email_port: $('#s_email_port').val(),
-				sms_url: $('#s_sms_url').val(),
-				password_strength: $('#s_p_strength').val()
-			};
-
-		var serverString = JSON.stringify(server);
-
-		$('.org_alert').hide();
-		addHourglass();
-		$.ajax({
-			type: "POST",
-			data: {settings: serverString},
-			cache: false,
-			contentType: "application/json",
-			url: url,
-			success: function (data, status) {
-				removeHourglass();
-				$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').text(localise.set["c_saved"]);
-			},
-			error: function (xhr, textStatus, err) {
-				removeHourglass();
-				$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["t_ens"] + htmlEncode(xhr.responseText));
 
 			}
 		});

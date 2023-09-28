@@ -751,6 +751,7 @@ require([
 		$('#s_email_password').val(data.email_password);
 		$('#s_email_port').val(data.email_port);
 		$('#s_sms_url').val(data.sms_url);
+		$('#s_ratelimit').val(data.ratelimit);
 		$('#s_p_strength').val(data.password_strength);
 		gCssFile = data.css;
 
@@ -773,6 +774,7 @@ require([
 				email_password: $('#s_email_password').val(),
 				email_port: $('#s_email_port').val(),
 				sms_url: $('#s_sms_url').val(),
+				ratelimit: $('#s_ratelimit').val(),
 				password_strength: $('#s_p_strength').val(),
 				css: $('#cssSelect').val()
 			};
