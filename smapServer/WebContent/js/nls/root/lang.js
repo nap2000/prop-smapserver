@@ -878,6 +878,7 @@ define({
     "ed_map_style": "Map Style",
     "ed_round": "Decimal places",
 	"ed_hidden": "Hide in form",
+    "ed_extendable": "Extendable",
 	"ed_selfie": "Open camera in selfie mode",
     "ed_new": "Require a new picture be taken",
 	"ed_read_nfc": "Read an NFC tag instead of a barcode",

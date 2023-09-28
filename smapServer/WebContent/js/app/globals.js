@@ -394,6 +394,7 @@ define(function () {
 	    // A list of valid appearances for each question type
 	    this.qAppearances = {
 		    'begin group': ['page', 'w'],
+            'begin repeat': ['extendable'],
 		    string: ['numbers', 'thousands-sep', 'w', 'url'],
 		    note: ['w'],
             select1: ['select1_type', 'search', 'likert', 'no-buttons', 'w'],
@@ -517,6 +518,11 @@ define(function () {
 			    type: 'boolean',
 			    rex: 'thousands-sep'
 		    },
+            'extendable': {
+                field: 'a_extendable',
+                type: 'boolean',
+                rex: 'extendable'
+            },
 		    'numbers': {
 			    field: 'a_numbers',
 			    type: 'boolean',
