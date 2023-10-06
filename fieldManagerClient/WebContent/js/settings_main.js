@@ -70,7 +70,8 @@ require([
 		gCssFile,
 		gCssOrgFile,
 		gCssModal,
-		gResetWebformPressed = false;
+		gResetWebformPressed = false,
+		page = 'settings';
 
 	$(document).ready(function() {
 
