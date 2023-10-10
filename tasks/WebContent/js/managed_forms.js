@@ -3369,7 +3369,7 @@ require([
         window.location.hash="#edit";
         $('.shareRecordOnly, .role_select').hide();
         $('#srLink').val("");
-        getSurveyRoles(globals.gCurrentSurvey);
+        getSurveyRoles(globals.gCurrentSurvey, undefined, false);
         getRecordChanges(gTasks.gSelectedRecord);
 
         var sIdent = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].ident;
@@ -3397,7 +3397,7 @@ require([
         window.location.hash="#bulk";
         $('.shareRecordOnly, .role_select').hide();
         $('#srLink').val("");
-        getSurveyRoles(globals.gCurrentSurvey);
+        getSurveyRoles(globals.gCurrentSurvey, undefined, false);
 
         //var sIdent = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].ident;
 

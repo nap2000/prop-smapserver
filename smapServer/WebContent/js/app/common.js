@@ -3699,8 +3699,9 @@ function getSurveyRoles(sId, selectedRoles, setall) {
 			cache: false,
 			success: function (data) {
 				removeHourglass();
+				var savedSelectedRoles = selectedRoles;
 				gTasks.cache.surveyRoles[sId] = data;
-				showRoles(gTasks.cache.surveyRoles[sId], selectedRoles);
+				showRoles(gTasks.cache.surveyRoles[sId], savedSelectedRoles);
 			},
 			error: function (xhr, textStatus, err) {
 
@@ -3724,16 +3725,19 @@ function showRoles(data, selectedRoles, setall) {
 
 	var h = [],
 		idx = -1,
-		i;
+		i,
+		selId,
+		selList = [];
 
 	$('.role_select_roles').empty();
 	if (data.length > 0) {
 		for (i = 0; i < data.length; i++) {
 			h[++idx] = '<div class="col-sm-10 custom-control custom-checkbox ml-2 mb-1">'
 			h[++idx] = '<input type="checkbox"';
-			h[++idx] = ' id="rolesel_' + i + '"';
+			selId = 'rolesel_' + i;
+			h[++idx] = ' id="' + selId + '"';
 			if(setall || roleSelected(data[i].id, selectedRoles)) {
-				h[++idx] = ' checked="checked"';
+				selList.push(selId);
 			}
 			h[++idx] = ' class="custom-control-input" value="';
 			h[++idx] = data[i].id;
@@ -3747,6 +3751,10 @@ function showRoles(data, selectedRoles, setall) {
 		}
 		$('.role_select').show();
 		$('.role_select_roles').empty().append(h.join(''));
+		for(i = 0; i < selList.length; i++) {
+			selId = selList[i];
+			$('#' + selId).prop('checked', true);
+		}
 	}
 }
 

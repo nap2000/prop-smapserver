@@ -470,12 +470,12 @@ require([
         });
     }
 
-    function surveyChangedReports(callback) {
+    function surveyChangedReports(callback, selectedRoles, setall) {
 
 		var sId = gSurveyList[$('#survey').val()].id;
 		var dateQuestionId = 0;
 
-		getSurveyRoles(sId, undefined, true);
+		getSurveyRoles(sId, selectedRoles, setall);
 
         // Set the survey meta data
         var sMeta = globals.gSelector.getSurvey(sId);
@@ -741,9 +741,7 @@ require([
 			$('#reportType').val(report.action_details.reportType);
 
 			$('#survey').val(getSurveyIndex(report.action_details.surveyIdent));
-			surveyChangedReports(setForm);
-
-			getSurveyRoles(report.action_details.sId, report.action_details.roles);
+			surveyChangedReports(setForm, report.action_details.roles, false);
 
 			// Add parameters
 			var meta = false;
