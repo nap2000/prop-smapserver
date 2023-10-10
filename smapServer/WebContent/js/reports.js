@@ -134,7 +134,7 @@ require([
 		        $('#publish_form')[0].reset();
 		        $('#e_tz').val(globals.gTimezone);
 		        $('.role_select_roles').empty()
-		        getSurveyRoles(gSurveyList[$('#survey').val()].id, undefined, true);
+		        getSurveyRoles(gSurveyList[$('#survey').val()].id, undefined, true, true);
 
 		        // Set button to create
 		        $('#publishReport').show();
@@ -475,7 +475,7 @@ require([
 		var sId = gSurveyList[$('#survey').val()].id;
 		var dateQuestionId = 0;
 
-		getSurveyRoles(sId, selectedRoles, setall);
+		getSurveyRoles(sId, selectedRoles, setall, true);
 
         // Set the survey meta data
         var sMeta = globals.gSelector.getSurvey(sId);

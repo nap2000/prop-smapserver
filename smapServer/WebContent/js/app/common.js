@@ -3689,12 +3689,16 @@ function validateEmails(emails) {
 /*
  * Get the roles for a survey
  */
-function getSurveyRoles(sId, selectedRoles, setall) {
+function getSurveyRoles(sId, selectedRoles, setall, onlypriv) {
 
 	if (!gTasks.cache.surveyRoles[sId]) {
 		addHourglass();
+		var url = "/surveyKPI/role/survey/" + sId + "?enabled=true";
+		if(onlypriv) {
+			url += "&onlypriv=true";
+		}
 		$.ajax({
-			url: "/surveyKPI/role/survey/" + sId + "?enabled=true",
+			url: url,
 			dataType: 'json',
 			cache: false,
 			success: function (data) {
