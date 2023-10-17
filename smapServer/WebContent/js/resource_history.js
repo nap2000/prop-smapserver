@@ -169,11 +169,17 @@ function setChangesHtml($element, items) {
 		h[++idx] = '</td>';
 
 		h[++idx] = '<td>';
-		h[++idx] = '<a class="media_download btn btn-info" href="';					// Download
-		h[++idx] = htmlEncode(items[i].url + addCacheBuster(items[i].url));
-		h[++idx] = '">';
-		h[++idx] = '<i class="fas fa-download"></i>'
-		h[++idx] = '</a>';
+		if(items[i].url) {
+			h[++idx] = '<a class="media_download btn btn-info" href="';					// Download
+			h[++idx] = htmlEncode(items[i].url + addCacheBuster(items[i].url));
+			h[++idx] = '">';
+			h[++idx] = '<i class="fas fa-download"></i>'
+			h[++idx] = '</a>';
+		} else {
+			h[++idx] = '<a class="media_download btn btn-secondary" href="#">';
+			h[++idx] = 'X'
+			h[++idx] = '</a>';
+		}
 		h[++idx] = '</td>';
 
 		h[++idx] = '</tr>';
