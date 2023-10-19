@@ -577,8 +577,7 @@ function createPanel(idx, $panels, title, surveyName, subject_type) {
 		}
 	}
 	if(!validGeneralName(title)) {
-		alert(localise.set["msg_val_gen_nm"]);
-		return false;
+		alert(localise.set["msg_ipt"] + ". " + localise.set["msg_val_gen_nm"]);
 	}
 
 	h[++i] = hstart;

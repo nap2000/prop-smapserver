@@ -519,6 +519,7 @@ define({
 	"a_exp_start": "The start record must be less than or equal to the end record",
 
     // Messages
+    "msg_ipt": "Invalid panel title",
     "msg_pdft": "PDF Templates are now managed on the templates page which can be accessed from the tools menu",
     "msg_oet": "Only email can be specified as the target when periodic is selected as the trigger",
     "msg_mms": "The month must be specified",
