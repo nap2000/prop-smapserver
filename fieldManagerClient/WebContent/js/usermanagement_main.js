@@ -1637,9 +1637,9 @@ require([
 		addHourglass();
 		$.ajax({
 			type: "POST",
-			contentType: "application/json",
+			contentType: "text/html",
 			url: "/surveyKPI/userList",
-			data: {users: userString},
+			data: userString,
 			success: function (data, status) {
 				removeHourglass();
 				$('#userDetailsSave').prop("disabled", false);

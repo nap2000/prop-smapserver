@@ -207,7 +207,7 @@ function saveCurrentProject(projectId, surveyId, taskGroupId) {
 			contentType: "application/json",
 			url: "/surveyKPI/user/currentproject",
 			cache: false,
-			data: { user: userString },
+			data: userString,
 			success: function(data, status) {
 				removeHourglass();
 			}, error: function(data, status) {
@@ -230,15 +230,13 @@ function saveCurrentGroupSurvey(surveyId, gs, fName) {
 			fName: fName
 		};
 
-		var groupString = JSON.stringify(groupSurvey);
-
 		addHourglass();
 		$.ajax({
 			type: "POST",
-			contentType: "application/json",
+			contentType: "text/html",
 			url: "/surveyKPI/user/groupsurvey",
 			cache: false,
-			data: {groupSurvey: groupString},
+			data: JSON.stringify(groupSurvey),
 			success: function (data, status) {
 				removeHourglass();
 			}, error: function (data, status) {
