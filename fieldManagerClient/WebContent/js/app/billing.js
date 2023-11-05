@@ -128,7 +128,7 @@ define(['jquery','localise', 'common', 'globals',
 	        $.ajax({
 		        type: "POST",
 		        cache: false,
-		        contentType: "application/json",
+				contentType: "application/x-www-form-urlencoded",
 		        url: "/surveyKPI/billing/enable",
 		        data: {
 		        	enabled: enabledString,

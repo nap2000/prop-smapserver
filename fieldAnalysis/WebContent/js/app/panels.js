@@ -803,7 +803,7 @@ function savePanels(newPanel) {
 		  type: "POST",
 		  cache: false,
 		  dataType: 'text',
-		  contentType: "application/json",
+		  contentType: "application/x-www-form-urlencoded",
 		  url: "/surveyKPI/dashboard/",
 		  data: { settings: viewsString },
 		  success: function(data, status) {
@@ -829,7 +829,7 @@ function savePanelState(view) {
 		  type: "POST",
 		  cache: false,
 		  dataType: 'text',
-		  contentType: "application/json",
+		  contentType: "application/x-www-form-urlencoded",
 		  url: dashboardStateURL(),
 		  data: { state: viewString },
 		  success: function(data, status) {

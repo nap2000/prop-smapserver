@@ -4513,7 +4513,7 @@ function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback, t
 		type: "POST",
 		dataType: 'text',
 		cache: false,
-		contentType: "application/json",
+		contentType: "application/x-www-form-urlencoded",
 		url: url,
 		data: {task: tpString},
 		success: function (data, status) {
