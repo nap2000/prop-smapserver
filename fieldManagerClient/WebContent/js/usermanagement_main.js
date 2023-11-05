@@ -2526,9 +2526,9 @@ require([
 		addHourglass();
 		$.ajax({
 			type: "DELETE",
-			contentType: "application/json",
+			contentType: "text/html",
 			url: "/surveyKPI/userList",
-			data: { users: JSON.stringify(users) },
+			data: JSON.stringify(users),
 			success: function(data, status) {
 				removeHourglass();
 				getUsers();
