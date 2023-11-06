@@ -166,27 +166,6 @@ function getMyProjects(projectId, callback, getAll) {
 }
 
 /*
- * Save the time of the last alert for the user
- */
-function saveLastAlert(lastAlert, seen) {
-
-	var alertStatus = {
-		lastalert: lastAlert,
-		seen: seen
-	}
-
-	$.ajax({
-		type: "POST",
-		contentType: "application/json",
-		url: "/surveyKPI/user/alertstatus",
-		cache: false,
-		data: {
-			alertstatus: JSON.stringify(alertStatus)
-		}
-	});
-}
-
-/*
  * Save the current project id in the user defaults
  */
 function saveCurrentProject(projectId, surveyId, taskGroupId) {
@@ -204,7 +183,7 @@ function saveCurrentProject(projectId, surveyId, taskGroupId) {
 		addHourglass();
 		$.ajax({
 			type: "POST",
-			contentType: "application/json",
+			contentType: "application/json",		// uses application/json
 			url: "/surveyKPI/user/currentproject",
 			cache: false,
 			data: userString,
@@ -894,7 +873,7 @@ function saveCurrentUser(user, $dialog) {
 	$.ajax({
 		type: "POST",
 		cache: false,
-		contentType: "application/json",
+		contentType: "application/x-www-form-urlencoded",
 		dataType: 'json',
 		url: "/surveyKPI/user?x=x", // Terminate url with ? so that the service worker will pick it out
 		data: { user: userString },
@@ -2939,42 +2918,6 @@ function generateFile(url, filename, format, mime, data, sId, groupSurvey, title
 		alert("Error: Upload Failed");
 	}
 	xhr.send(payload);
-
-}
-
-/*
- * Post data to be converted into a file
- * This version creates a temporary file on the server
- */
-function sendReports(url, filename, format, mime, data, sId, managedId, title, project, charts) {
-
-	var update = {
-		sId: sId,
-		format: format,
-		managedId: managedId,
-		data: data,
-		title: title,
-		project: project,
-		charts: charts
-	}
-	var saveString = JSON.stringify(update);
-
-	addHourglass();
-	$.ajax({
-		type: "POST",
-		dataType: 'text',
-		cache: false,
-		contentType: "application/json",
-		url: url,
-		data: { report: saveString },
-		success: function(data, status) {
-			removeHourglass();
-
-		}, error: function(data, status) {
-			removeHourglass();
-			alert(data.responseText);
-		}
-	});
 
 }
 

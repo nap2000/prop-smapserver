@@ -1119,18 +1119,6 @@ require([
             subForm);      // formName
     }
 
-    /*
-     * Alerts
-     */
-    $('#show_alerts').click(function (e) {
-        e.preventDefault();
-        if (!globals.gAlertSeen) {
-            globals.gAlertSeen = true;
-            $('.alert_icon').removeClass("text-danger");
-            saveLastAlert(globals.gLastAlertTime, true);
-        }
-    });
-
     // Respond to duplicate gReports menu
     if (isDuplicates) {
         $('#duplicateSearch').click(function () {
