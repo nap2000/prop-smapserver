@@ -448,7 +448,7 @@ function updateRole(idx, property, $popup) {
 	addHourglass();
 	$.ajax({
 		  type: "POST",
-		  contentType: "application/json",
+		  contentType: "application/x-www-form-urlencoded",
 		  cache: false,
 		  url: "/surveyKPI/role/survey/" + globals.gCurrentSurvey + "/" + property,
 		  data: { 

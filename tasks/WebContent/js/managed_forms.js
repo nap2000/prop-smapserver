@@ -453,7 +453,7 @@ require([
             $.ajax({
                 type: "POST",
                 dataType: 'text',
-                contentType: "application/json",
+                contentType: "application/x-www-form-urlencoded",
                 cache: false,
                 url: url,
                 data: {
@@ -482,7 +482,7 @@ require([
             $.ajax({
                 type: "POST",
                 dataType: 'text',
-                contentType: "application/json",
+                contentType: "application/x-www-form-urlencoded",
                 cache: false,
                 url: url,
                 data: {
@@ -513,7 +513,7 @@ require([
             $.ajax({
                 type: "POST",
                 dataType: 'text',
-                contentType: "application/json",
+                contentType: "application/x-www-form-urlencoded",
                 cache: false,
                 url: url,
                 data: {record: gTasks.gSelectedRecord.instanceid},
