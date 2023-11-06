@@ -381,7 +381,7 @@ require([
 
             var cmAlert = {id: globals.gCmSettings.alerts[cmsIdx].id};
 
-            bootbox.confirm(localise.set["msg_del_cms"] +  ' ' + globals.gCmSettings.alerts[cmsIdx].name, function(decision) {
+            bootbox.confirm(localise.set["msg_del_cms"] +  ' ' + htmlEncode(globals.gCmSettings.alerts[cmsIdx].name), function(decision) {
                 if (decision === true) {
                     addHourglass();
                     $.ajax({

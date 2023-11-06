@@ -381,7 +381,7 @@ require([
 			addHourglass();
 			$.ajax({
 				type: "POST",
-				contentType: "application/json",
+				contentType: "application/x-www-form-urlencoded",
 				url: "/surveyKPI/surveys/update_template_property",
 				cache: false,
 				data: { prop: propString },

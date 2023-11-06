@@ -159,7 +159,7 @@ require([
 			msg += ": ";
 			msg += gSelectedRecord.name;
 
-			bootbox.confirm(msg, function(result){
+			bootbox.confirm(htmlEncode(msg), function(result){
 				if(result) {
 					deletePerson(gSelectedId);
 				}

@@ -753,7 +753,7 @@ require([
 			msg = msg.replace("%s1", projectsMoving);
 			msg = msg.replace("%s2", orgName);
 
-			bootbox.confirm(msg, function(result){
+			bootbox.confirm(htmlEncode(msg), function(result){
 				if(result) {
 					moveToOrganisations(orgId, projects);
 				}
@@ -783,7 +783,7 @@ require([
 			msg = msg.replace("%s1", orgName);
 			msg = msg.replace("%s2", entName);
 
-			bootbox.confirm(msg, function(result){
+			bootbox.confirm(htmlEncode(msg), function(result){
 				if(result) {
 					moveToEnterprise(entId, orgId);
 				}
@@ -2545,12 +2545,12 @@ require([
 
 		roles[0] = {id: globals.gRoleList[roleIdx].id};
 
-		bootbox.confirm(localise.set["msg_del_roles"] +  ' ' + globals.gRoleList[roleIdx].name, function(decision) {
+		bootbox.confirm(localise.set["msg_del_roles"] +  ' ' + htmlEncode(globals.gRoleList[roleIdx].name), function(decision) {
 			if (decision === true) {
 				addHourglass();
 				$.ajax({
 					type: "DELETE",
-					contentType: "application/json",
+					contentType: "application/x-www-form-urlencoded",
 					url: "/surveyKPI/role/roles",
 					data: { roles: JSON.stringify(roles) },
 					success: function(data, status) {
@@ -2586,7 +2586,7 @@ require([
 			addHourglass();
 			$.ajax({
 				type: "DELETE",
-				contentType: "application/json",
+				contentType: "application/x-www-form-urlencoded",
 				url: "/surveyKPI/organisationList",
 				data: { organisations: JSON.stringify(organisations) },
 				success: function(data, status) {
@@ -2622,7 +2622,7 @@ require([
 			addHourglass();
 			$.ajax({
 				type: "DELETE",
-				contentType: "application/json",
+				contentType: "application/x-www-form-urlencoded",
 				url: "/surveyKPI/enterpriseList",
 				data: { data: JSON.stringify(enterprises) },
 				success: function(data, status) {
@@ -2648,7 +2648,7 @@ require([
 		addHourglass();
 		$.ajax({
 			type: "POST",
-			contentType: "application/json",
+			contentType: "application/x-www-form-urlencoded",
 			cache: false,
 			url: "/surveyKPI/organisationList/setOrganisation",
 			data: {
@@ -2677,7 +2677,7 @@ require([
 		addHourglass();
 		$.ajax({
 			type: "POST",
-			contentType: "application/json",
+			contentType: "application/x-www-form-urlencoded",
 			cache: false,
 			url: "/surveyKPI/organisationList/setEnterprise",
 			data: {
