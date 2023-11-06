@@ -243,7 +243,7 @@ require([
             addHourglass();
             $.ajax({
                 type: "POST",
-                contentType: "application/json",
+                contentType: "application/x-www-form-urlencoded",
                 cache: false,
                 url: "/surveyKPI/cases/settings/" + globals.gCmSettings.group_survey_ident,
                 data: { settings: JSON.stringify(settings) },
@@ -282,7 +282,7 @@ require([
             addHourglass();
             $.ajax({
                 type: "POST",
-                contentType: "application/json",
+                contentType: "application/x-www-form-urlencoded",
                 cache: false,
                 url: "/surveyKPI/cases/keys/" + globals.gCmSettings.group_survey_ident,
                 data: { keys: JSON.stringify(keys) },
@@ -345,7 +345,7 @@ require([
             addHourglass();
             $.ajax({
                 type: "POST",
-                contentType: "application/json",
+                contentType: "application/x-www-form-urlencoded",
                 cache: false,
                 url: "/surveyKPI/cases/settings/alert",
                 data: { alert: alertString },
@@ -386,7 +386,7 @@ require([
                     addHourglass();
                     $.ajax({
                         type: "DELETE",
-                        contentType: "application/json",
+                        contentType: "application/x-www-form-urlencoded",
                         url: "/surveyKPI/cases/settings/alert",
                         data: { alert: JSON.stringify(cmAlert) },
                         success: function(data, status) {

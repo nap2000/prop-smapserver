@@ -407,7 +407,7 @@ require([
 			addHourglass();
 			$.ajax({
 				type: "POST",
-				contentType: "application/json",
+				contentType: "application/x-www-form-urlencoded",
 				cache: false,
 				url: "/surveyKPI/projectList",
 				data: { projects: projectString },
@@ -463,7 +463,7 @@ require([
 			addHourglass();
 			$.ajax({
 				type: "POST",
-				contentType: "application/json",
+				contentType: "application/x-www-form-urlencoded",
 				cache: false,
 				url: "/surveyKPI/role/roles",
 				data: { roles: roleString },
@@ -616,7 +616,7 @@ require([
 				type: 'POST',
 				data: { settings: organisationString },
 				cache: false,
-				contentType: "application/json",
+				contentType: "application/x-www-form-urlencoded",
 				url: "/surveyKPI/organisationList",
 				success: function(data, status) {
 					removeHourglass();
@@ -2557,7 +2557,7 @@ require([
 			addHourglass();
 			$.ajax({
 				type: "DELETE",
-				contentType: "application/json",
+				contentType: "application/x-www-form-urlencoded",
 				url: "/surveyKPI/projectList",
 				data: { projects: JSON.stringify(projects) },
 				success: function(data, status) {

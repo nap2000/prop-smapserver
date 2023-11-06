@@ -218,7 +218,7 @@ require([
 				type: "POST",
 				cache: false,
 				dataType: 'text',
-				contentType: "application/json",
+				contentType: "application/x-www-form-urlencoded",
 				url: "/surveyKPI/background_report" + tzString,
 				data: { report: JSON.stringify(reportObj) },
 				success: function(data, status) {

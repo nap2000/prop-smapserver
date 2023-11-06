@@ -799,7 +799,7 @@ function toggleBad($elem, fId, pKey, value, sId, theView) {
 		  type: "POST",
 		  dataType: 'text',
 		  cache: false,
-		  contentType: "application/json",
+		  contentType: "application/x-www-form-urlencoded",
 		  data: { value: toBeBad, sId: sId, reason: reason},
 		  url: toggleBadURL(fId, pKey),
 		  success: function(data, status) {
