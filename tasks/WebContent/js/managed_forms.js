@@ -543,7 +543,7 @@ require([
             $.ajax({
                 type: "POST",
                 dataType: 'text',
-                contentType: "application/json",
+                contentType: "application/x-www-form-urlencoded",
                 cache: false,
                 url: url,
                 data: {record: gTasks.gSelectedRecord.instanceid},
@@ -573,7 +573,7 @@ require([
             $.ajax({
                 type: "POST",
                 dataType: 'text',
-                contentType: "application/json",
+                contentType: "application/x-www-form-urlencoded",
                 cache: false,
                 url: "/surveyKPI/managed/update_gs/" + globals.gCurrentSurvey + "/" + globals.gGroupSurveys[globals.gCurrentSurvey],
                 data: {
@@ -831,19 +831,19 @@ require([
                 gTasks.cache.currentData.settings.charts[gSelectedChart].subject = $('#cs_subject').val();
                 gTasks.cache.currentData.settings.charts[gSelectedChart].chart_type = $('#cs_chart_type').val();
                 gTasks.cache.currentData.settings.charts[gSelectedChart].question = $('#cs_question').val();
-                gTasks.cache.currentData.settings.charts[gSelectedChart].label = $('#cs_chart_label').val();
                 chart.replace(gTasks.cache.currentData.settings.charts[gSelectedChart], gSelectedChart);
             } else {
-                var item = {
-                    subject: $('#cs_subject').val(),
-                    chart_type: $('#cs_chart_type').val(),
-                    question:  $('#cs_question').val(),
-                    label:  $('#cs_chart_label').val(),
-                    color: 'rgb(0, 0, 255)'
+                if(gTasks.cache.currentData) {
+                    var item = {
+                        subject: $('#cs_subject').val(),
+                        chart_type: $('#cs_chart_type').val(),
+                        question: $('#cs_question').val(),
+                        color: 'rgb(0, 0, 255)'
+                    }
+                    gTasks.cache.currentData.settings.charts.push(item);
+                    chart.add(item);
+                    setupChartEdit();
                 }
-                gTasks.cache.currentData.settings.charts.push(item);
-                chart.add(item);
-                setupChartEdit();
             }
             $('#chart_settings_popup').modal("hide");
             chart.refresh();
@@ -2032,7 +2032,7 @@ require([
         $.ajax({
             type: "POST",
             cache: false,
-            contentType: "application/json",
+            contentType: "application/x-www-form-urlencoded",
             url: url,
             data: {chartArray: saveView},
             success: function (data, status) {

@@ -901,7 +901,6 @@ function getAvailableTimeZones(callback) {
 	addHourglass();
 	$.ajax({
 		url: "/surveyKPI/utility/timezones",
-		contentType: "application/json",
 		cache: true,
 		success: function(data) {
 			removeHourglass();
@@ -975,7 +974,6 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 	addHourglass();
 	$.ajax({
 		url: "/surveyKPI/user",
-		contentType: "application/json",
 		cache: false,
 		success: function(data) {
 			removeHourglass();

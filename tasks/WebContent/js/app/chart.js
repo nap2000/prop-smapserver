@@ -58,7 +58,7 @@ define([
                     data: {
                         labels: [],
                         datasets:[{
-                            label: settings.label,
+                            label: settings.subject,
                             backgroundColor: barColors,
                             borderColor: 'rgb(0, 0, 0)',
                             data: [],
@@ -81,7 +81,7 @@ define([
             }
 
             // create the canvas element
-            var label = settings.label;
+            var label = settings.subject;
             var index = charts.length;
             var card = `<div class="col-sm-12 col-md-6 col-lg-3">
                                     <div class="card">
