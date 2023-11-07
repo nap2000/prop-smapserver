@@ -2069,7 +2069,7 @@ require([
         $.ajax({
             type: "POST",
             cache: false,
-            contentType: "application/json",
+            contentType: "application/x-www-form-urlencoded",
             url: url,
             data: {columns: saveView},
             success: function (data, status) {

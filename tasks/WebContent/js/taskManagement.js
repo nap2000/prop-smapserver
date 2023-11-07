@@ -311,7 +311,7 @@ require([
 				type: "POST",
 				dataType: 'text',
 				cache: false,
-				contentType: "application/json",
+				contentType: "application/x-www-form-urlencoded",
 				url: url,
 				data: {tasks: baString},
 				success: function (data, status) {
@@ -347,7 +347,7 @@ require([
 				type: "POST",
 				dataType: 'text',
 				cache: false,
-				contentType: "application/json",
+				contentType: "application/x-www-form-urlencoded",
 				url: url,
 				data: {tasks: baString},
 				success: function (data, status) {
@@ -866,7 +866,7 @@ require([
 						type: "POST",
 						dataType: 'text',
 						cache: false,
-						contentType: "application/json",
+						contentType: "application/x-www-form-urlencoded",
 						url: url,
 						data: {tasks: baString},
 						success: function (data, status) {
@@ -1432,7 +1432,7 @@ require([
 			type: "POST",
 			dataType: 'text',
 			cache: false,
-			contentType: "application/json",
+			contentType: "application/x-www-form-urlencoded",
 			url: url,
 			data: {tasks: baString},
 			success: function (data, status) {
@@ -2092,7 +2092,7 @@ require([
 			type: "POST",
 			dataType: 'text',
 			cache: false,
-			contentType: "application/json",
+			contentType: "application/x-www-form-urlencoded",
 			url: url,
 			data: {task: tfString},
 			success: function (data, status) {
