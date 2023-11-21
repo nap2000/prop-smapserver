@@ -337,7 +337,7 @@ require([
 			async: false,
 			cache: false,
 			url: url,
-			contentType: "application/json",
+			contentType: "application/x-www-form-urlencoded ",
 			data: { map: mapString },
 			success: function(data, status) {
 				removeHourglass();

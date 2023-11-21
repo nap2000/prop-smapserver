@@ -129,7 +129,7 @@ require([
 			type: "POST",
 			cache: false,
 			dataType: 'text',
-			contentType: "application/json",
+			contentType: "application/x-www-form-urlencoded",
 			url: "/surveyKPI/user/password?lang=" + gUserLocale,
 			data: { passwordDetails: pdString },
 			success: function(data, status) {

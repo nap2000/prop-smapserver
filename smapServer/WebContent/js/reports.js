@@ -450,7 +450,7 @@ require([
         $.ajax({
             url: url,
 	        type: "POST",
-	        contentType: "application/json",
+	        contentType: "application/x-www-form-urlencoded",
             cache: false,
 	        data: { report: JSON.stringify(report) },
             success: function (data) {

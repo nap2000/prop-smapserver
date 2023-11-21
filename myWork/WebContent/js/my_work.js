@@ -93,17 +93,6 @@ require([
 			projectSet();
 		});
 
-		/*
-		 * Alerts
-		 */
-		$('#show_alerts').click(function(){
-			if(!globals.gAlertSeen) {
-				globals.gAlertSeen = true;
-				$('.alert_icon').removeClass("text-danger");
-				saveLastAlert(globals.gLastAlertTime, true);
-			}
-		});
-
 		// set a flag if launched as an app
 		gIsApp = (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone) || document.referrer.includes('android-app://');
 
@@ -429,7 +418,7 @@ require([
 					type: "POST",
 					data: {assignment: JSON.stringify(taskUpdate)},
 					cache: false,
-					contentType: "application/json",
+					contentType: "application/x-www-form-urlencoded",
 					url: "/surveyKPI/myassignments/update_status",
 					success: function(data, status) {
 						removeHourglass();

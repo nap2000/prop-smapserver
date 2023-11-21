@@ -169,7 +169,7 @@ require([
 			addHourglass();
 			$.ajax({
 				type: "POST",
-				contentType: "application/json",
+				contentType: "application/x-www-form-urlencoded",
 				cache: false,
 				url: "/surveyKPI/organisationList/sensitive",
 				data: { sensitive: sensitiveString },
@@ -202,7 +202,7 @@ require([
 			addHourglass();
 			$.ajax({
 				type: "POST",
-				contentType: "application/json",
+				contentType: "application/x-www-form-urlencoded",
 				cache: false,
 				url: "/surveyKPI/organisationList/other",
 				data: { other: otherString },
@@ -324,7 +324,7 @@ require([
 				type: 'POST',
 				data: {settings: deviceString},
 				cache: false,
-				contentType: "application/json",
+				contentType: "application/x-www-form-urlencoded",
 				url: "/surveyKPI/organisationList/device",
 				success: function(data, status) {
 					removeHourglass();
@@ -373,7 +373,7 @@ require([
 				type: 'POST',
 				data: {settings: emailString},
 				cache: false,
-				contentType: "application/json",
+				contentType: "application/x-www-form-urlencoded",
 				url: "/surveyKPI/organisationList/email",
 				success: function(data, status) {
 					removeHourglass();
@@ -788,7 +788,7 @@ require([
 			type: "POST",
 			data: {settings: serverString},
 			cache: false,
-			contentType: "application/json",
+			contentType: "application/x-www-form-urlencoded",
 			url: url,
 			success: function (data, status) {
 				removeHourglass();

@@ -970,7 +970,7 @@ define(function () {
             addHourglass();
             $.ajax({
                 type: "POST",
-                contentType: "application/json",
+                contentType: "application/x-www-form-urlencoded",
                 cache: false,
                 data: { settings: settings },
                 url: "/surveyKPI/surveys/save_settings/" + globals.gCurrentSurvey,
