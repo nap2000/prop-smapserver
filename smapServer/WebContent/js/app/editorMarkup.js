@@ -505,7 +505,23 @@ define([
 				}
 			    h[++idx] = '</span></button>';
 			    h[++idx] = '</div>';
-			   
+
+				/*
+				 * Add the text area for conditional required
+				 */
+				h[++idx] = '<div class="col-sm-6';
+				if(!question[selProperty]) {
+					h[++idx] = ' d-none';
+				}
+				h[++idx] = '">';
+				h[++idx] = '<textarea class="labelProp has_tt" tabindex="0" title="';
+				h[++idx] = localise.set['ed_r_readonly'];
+				h[++idx] = '" data-prop="readonly_expression" placeholder="';
+				h[++idx] = localise.set['ed_r_readonly'];
+				h[++idx] = '">';
+				h[++idx] = question.readonly_expression;
+				h[++idx] = '</textarea>';
+				h[++idx] = '</div>';
 			    
 				h[++idx] ='</div>';		// End Row
 				
