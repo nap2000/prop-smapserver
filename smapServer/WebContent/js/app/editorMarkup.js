@@ -424,7 +424,7 @@ define([
 				
 				h[++idx] = '<div class="row">';
 				
-				h[++idx] = '<div class="col-sm-6">';
+				h[++idx] = '<div class="col-sm-4">';
 			    h[++idx] = '<button type="button" class="btn labelButton ';
 			    if(question[selProperty]) {
 			    	h[++idx] = 'prop_yes" ';
@@ -447,13 +447,36 @@ define([
 			    /*
 			     * Add the text area for the required response text
 			     */
-			    h[++idx] = '<div class="col-sm-6">';
+			    h[++idx] = '<div class="col-sm-4';
+				if(!question[selProperty]) {
+					h[++idx] = ' d-none';
+				}
+				h[++idx] = '">';
 			    h[++idx] = '<textarea class="labelProp has_tt" tabindex="0" title="';
 			    h[++idx] = localise.set['ed_r_msg'];
-				h[++idx] = '" data-prop="required_msg">';	
+				h[++idx] = '" data-prop="required_msg" placeholder="';
+				h[++idx] = localise.set['ed_r_msg'];
+				h[++idx] = '">';
 				h[++idx] = question.labels[globals.gLanguage].required_msg;
 				h[++idx] = '</textarea>';
 			    h[++idx] = '</div>';
+
+				/*
+                * Add the text area for conditional required
+                */
+				h[++idx] = '<div class="col-sm-4';
+				if(!question[selProperty]) {
+					h[++idx] = ' d-none';
+				}
+				h[++idx] = '">';
+				h[++idx] = '<textarea class="labelProp has_tt" tabindex="0" title="';
+				h[++idx] = localise.set['ed_r_expression'];
+				h[++idx] = '" data-prop="required_expression" placeholder="';
+				h[++idx] = localise.set['ed_r_expression'];
+				h[++idx] = '">';
+				h[++idx] = question.required_expression;
+				h[++idx] = '</textarea>';
+				h[++idx] = '</div>';
 			    
 				h[++idx] ='</div>';		// End Row
 				

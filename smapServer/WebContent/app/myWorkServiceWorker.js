@@ -103,7 +103,7 @@ self.addEventListener('fetch', function(event) {
 				.match(getCacheUrl(event.request)) // check if the request has already been cached
 				.then(cached => cached || update(event.request)) // otherwise request network
 		);
-		
+
 	} else if (event.request.url.includes(USER)         // Web services network then cache strategy
 		|| event.request.url.includes(PROJECT_LIST)
 		|| event.request.url.includes(SURVEYS)) {

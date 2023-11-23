@@ -250,18 +250,6 @@ $(document).ready(function() {
 		}
 	});
 
-	/*
-	$('#m_pulldata').off().click(function() {
-		if(globals.model.survey.pulldata) {
-			gTempPulldata = globals.model.survey.pulldata.slice();
-		} else {
-			gTempPulldata = [];
-		}
-		updatePulldataView();
-		$('#pulldataModal').modal("show");
-	});
-	*/
-
     $('#m_required').off().click(function() {
 		if($(this).closest('li').hasClass('disabled')) {
 			bootbox.alert(localise.set["ed_csr"]);
@@ -3227,21 +3215,6 @@ function updateLabel(type, formIndex, itemIndex, optionList, element, newVal, qn
 		respondToEvents($context);				// Add events on to the altered html
 	}
 
-}
-
-/*
- * Return true if the passed in value is a valid option name
- */
-function isValidOptionName(val) {
-
-	var vCheck = val.trim(),
-		isValid = true;
-
-	if(vCheck.indexOf(" ") > 0) {
-		isValid = false;
-	}
-
-	return isValid;
 }
 
 /*
