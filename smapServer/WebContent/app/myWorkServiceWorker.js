@@ -1,5 +1,5 @@
 
-let CACHE_NAME = 'v163';
+let CACHE_NAME = 'v164';
 
 // Web service requests
 let ASSIGNMENTS = '/surveyKPI/myassignments?';
@@ -103,18 +103,7 @@ self.addEventListener('fetch', function(event) {
 				.match(getCacheUrl(event.request)) // check if the request has already been cached
 				.then(cached => cached || update(event.request)) // otherwise request network
 		);
-
-	} else if (event.request.url.includes(WEBFORM)
-			|| event.request.url.includes(ORG_CSS)
-			|| event.request.url.includes(SERVER_CSS)
-			|| event.request.url.includes(BANNER)
-			|| event.request.url.includes(WEBFORM_BANNER)
-			|| event.request.url.includes(TRANSLATION)) {       // Files Network then cache strategy
-
-
-		return filesNetworkThenCache(event, event.request);
-
-
+		
 	} else if (event.request.url.includes(USER)         // Web services network then cache strategy
 		|| event.request.url.includes(PROJECT_LIST)
 		|| event.request.url.includes(SURVEYS)) {
