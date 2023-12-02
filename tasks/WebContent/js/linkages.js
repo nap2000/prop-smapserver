@@ -109,6 +109,7 @@ require([
         var threshold = localStorage.getItem('fp_threshold');
         if(!threshold) {
             threshold = 40.0;
+            $('#m_search').prop('disabled', false);
         }
         $('#threshold').val(threshold);
         $('#threshold').change(function() {
@@ -119,6 +120,7 @@ require([
 
         $('#m_search').click(function(e) {
             e.preventDefault();
+            $('#m_search').prop('disabled', true);
             getMatchesAllItems();
         });
 
