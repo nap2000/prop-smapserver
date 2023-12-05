@@ -965,6 +965,8 @@ define({
     "ed_l": "Linked",
     "ed_nl": "Not Linked",
     "ed_r_msg": "Required Text Message",
+    "ed_r_expression": "Optional expression to make this question required",
+    "ed_r_readonly": "Optional expression to make this question read only",
 	"ed_f_l": "The form to be launched must be specified as a parameter",
 	"ed_emp_rep": "Sub forms and groups should have at least one question.",
     "ed_hrk": "Unique Key",

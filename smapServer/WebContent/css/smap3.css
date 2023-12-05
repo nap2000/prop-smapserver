@@ -48,3 +48,7 @@ tr.deleted td a {
     background-color: whitesmoke;
     padding: 10px;
 }
+
+::placeholder {
+    color: lightgrey;
+}

@@ -929,6 +929,8 @@ define(
     "ed_l": "Enlazado",
     "ed_nl": "No Enlazado",
     "ed_r_msg": "Mensaje de Texto Requerido",
+    "ed_r_expression": "Expresión opcional para hacer que esta pregunta sea obligatoria",
+    "ed_r_readonly": "Expresión opcional para que esta pregunta sea de solo lectura",
     "ed_f_l": "Se debe especificar en Parámetros el formulario a iniciarse.",
     "ed_emp_rep": "Los subformularios (grupos de repetición) y grupos deben tener al menos una pregunta.",
     "ed_hrk": "Llave Única",
