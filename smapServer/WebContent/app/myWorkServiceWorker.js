@@ -114,11 +114,7 @@ self.addEventListener('fetch', function(event) {
 			fetch(event.request)
 				.then(response => {
 
-					if(response.status == 401) {  // force re-logon
-						authResponse();
-						return response;
-					} else if (response.status == 200) {
-						logon = false;
+					if (response.status == 200) {
 						let responseData = response.clone().json().then(data => {
 							setRecord(latestRequestStore, data, recordId);
 							if(recordId === "user" && data && data.o_id) {
@@ -128,7 +124,6 @@ self.addEventListener('fetch', function(event) {
 						return response;
 
 					} else {
-						logon = false;
 						return getRecord(latestRequestStore, recordId).then(storedResponse => {
 							return storedResponse;
 						});
@@ -147,13 +142,7 @@ self.addEventListener('fetch', function(event) {
 			caches
 				.match(getCacheUrl(event.request)) // check if the request has already been cached
 				.then(cached => cached || fetch(event.request).then(response => {
-						if (response.status === 401) {
-							authResponse();
-							return response;
-						} else {
-							logon = false;
-							return response;
-						}
+						return response;
 					}).catch(function(err) {
 						console.log("Failed to fetch uncached request: " + event.request.url);
 						return err;
@@ -169,11 +158,7 @@ function filesNetworkThenCache(event, request) {
 	return fetch(request)
 		.then(response => {
 
-			if (response.status == 401) {  // force re-logon
-				authResponse();
-				return response;
-			} else if (response.status == 200) {
-				logon = false;
+			if (response.status == 200) {
 				return caches
 					.open(CACHE_NAME)
 					.then(cache => {
@@ -181,12 +166,10 @@ function filesNetworkThenCache(event, request) {
 						return response;
 					})
 			} else {
-				logon = false;
 				return caches.match(getCacheUrl(request))
 					.then(cached => cached || response); // Return whatever is in cache
 			}
 		}).catch(() => {
-			logon = false;
 			return caches.match(getCacheUrl(request))
 				.then(cached => cached) // Return whatever is in cache
 		});
@@ -208,30 +191,6 @@ function update(request) {
 	);
 }
 
-function authResponse() {
-	if(!logon) {
-		logon = true;
-		self.clients.matchAll({
-			includeUncontrolled: true,
-			type: 'window',
-		})
-			.then((clients) => {
-				let msg = {
-					type: "401"
-				};
-				if (clients.length > 0) {
-					let idx = 0;
-					for(let i = 0; i < clients.length; i++) {
-						if(clients[i].visibilityState === "visible") {
-							idx = i;
-							break;
-						}
-					}
-					clients[idx].postMessage(msg);
-				}
-			});
-	}
-}
 
 function refresh(response) {
 	if (response.ok) {
