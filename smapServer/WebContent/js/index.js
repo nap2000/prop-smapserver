@@ -81,13 +81,6 @@ require(['jquery', 'app/localise', 'app/common','app/globals'],
 	} else {
 		$('#signup').hide();
 	}
-	
-	/*
-	 * Add logout function
-	 */
-	$('#logout').click(function(){
-		logout();
-	});
 
 	/*
 	 * Add links to download fieldTask

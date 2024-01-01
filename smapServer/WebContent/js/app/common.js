@@ -800,14 +800,6 @@ function logout() {
  */
 function enableUserProfileBS () {
 
-
-	/*
-	 * User logout
-	 */
-	$('#userProfileLogout').click(function() {
-		logout();
-	});
-
 	$("#modify_me_popup :input").keydown(function() {
 		$("#me_alert").hide();
 	});

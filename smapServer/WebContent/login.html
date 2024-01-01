@@ -15,14 +15,24 @@
     <script src="/js/libs/bootstrap.bundle.v4.5.min.js"></script>
 </head>
 <body>
-<form method="POST" action="/dologin.html">
-    <div id="msg"></div>
-    <p>Username: <input type="text" name="httpd_username"></p>
-    <p>Password: <input type="password" name="httpd_password"></p>
-    <input type="Submit" name="login" value="login">
-</form>
-<script>
-
-</script>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h2 class="mb-4 lang" data-lang="m_login"></h2>
+                <form method="POST" action="/dologin.html">
+                    <div id="msg"></div>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="httpd_username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="httpd_password" required>
+                    </div>
+                    <button type="submit" name="login" class="btn btn-primary" value="login">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
