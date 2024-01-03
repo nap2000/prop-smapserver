@@ -31,13 +31,13 @@ require.config({
         lang_location: '..'
     },
     shim: {
-
+        'app/common': ['jquery']
     }
 });
 
 require([
         'jquery',
-        'app/localise'],
+        'app/common'],
     function($, localise) {
 
         $(document).ready(function() {
@@ -52,6 +52,14 @@ require([
             }
             document.getElementById("msg").innerText = msg;
 
+            /*
+             * Enable self registration
+             */
+            if(isSelfRegistrationServer()) {
+                $('#signup').show().removeClass('d-none');;
+            } else {
+                $('#signup').hide();
+            }
         });
 
     });

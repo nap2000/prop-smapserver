@@ -35,7 +35,6 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 
         $(document).ready(function() {
 
-            login();            // Hack due to Firefix not authenticating on this page
             setTheme();
 	        setupUserProfile(true);
             localise.setlang();		// Localise HTML
@@ -1098,30 +1097,6 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
         function executeResourceUsageReport() {
 
             downloadFile("/surveyKPI/adminreport/resourceusage/");
-        }
-
-        /*
-         * Hack due to firefox not authenticating automatically on surveyManagement page
-         */
-        function login() {
-            $.ajax({
-                cache: false,
-                url: "/authenticate/login.txt",
-                success: function (data, status) {
-                    if(data === 'loggedin') {
-                        $('.login_failure').hide();
-                        $('.login_success').show();
-                    } else {
-                        $('.login_failure').show();
-                        $('.login_success').hide();
-                    }
-
-                }, error: function (data, status) {
-                    $('.login_failure').show();
-                    $('.login_success').hide();
-
-                }
-            });
         }
 
     });

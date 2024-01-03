@@ -25,7 +25,6 @@ require(['jquery', 'app/localise', 'app/common','app/globals'],
 		pArray = [],
 		param = [],
 		i,
-		loggedin=false,
 		androidVersion;
 
 	setTheme();
@@ -44,43 +43,7 @@ require(['jquery', 'app/localise', 'app/common','app/globals'],
 	/*
 	 * If the user is logged in then get their details
 	 */
-	params = location.search.substr(location.search.indexOf("?") + 1)
-	pArray = params.split("&");
-	for (i = 0; i < pArray.length; i++) {
-		param = pArray[i].split("=");
-		if(param.length > 1) {
-			if ( param[0] === "loggedin" && param[1] === "yes" ) {
-				getLoggedInUser(undefined, false, false, undefined, false, false);
-				loggedin = true;
-			} 
-		}
-	}
-
-	/*
-	 * If the user is not logged in then enable the login button and disable other menus
-	 * which depend on their authorisation level
-	 */
-	if(loggedin) {
-		setTheme();
-		setupUserProfile(true);
-		localise.setlang();
-		$('.loggedin').show().removeClass('d-none');
-		$('.notloggedin').hide();
-	} else {
-		setCustomMainLogo();
-		$('.restrict_role').hide();
-		$('.notloggedin').show().removeClass('d-none');;
-		$('.loggedin').hide();
-	}
-	
-	/*
-	 * Enable self registration 
-	 */
-	if(isSelfRegistrationServer() && !loggedin) {
-		$('#signup').show().removeClass('d-none');;
-	} else {
-		$('#signup').hide();
-	}
+	isLoggedIn();
 
 	/*
 	 * Add links to download fieldTask
@@ -94,6 +57,37 @@ require(['jquery', 'app/localise', 'app/common','app/globals'],
 
  });
 
+/*
+      * Hack due to firefox not authenticating automatically on surveyManagement page
+      */
+function isLoggedIn() {
+	$.ajax({
+		cache: false,
+		url: "/authenticate/login.txt",
+		success: function (data, status) {
+			if(data == 'loggedin') {
+				getLoggedInUser(undefined, false, false, undefined, false, false);
+				setTheme();
+				setupUserProfile(true);
+				localise.setlang();
+				$('.loggedin').show().removeClass('d-none');
+				$('.notloggedin').hide();
+			} else {
+				setCustomMainLogo();
+				$('.restrict_role').hide();
+				$('.notloggedin').show().removeClass('d-none');;
+				$('.loggedin').hide();
+			}
+
+		}, error: function (data, status) {
+			setCustomMainLogo();
+			$('.restrict_role').hide();
+			$('.notloggedin').show().removeClass('d-none');;
+			$('.loggedin').hide();
+
+		}
+	});
+}
 /*
  * Get the android version - return 0.0 if it cannot be determined
  */
