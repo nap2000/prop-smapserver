@@ -771,6 +771,7 @@ define({
     "restored": "Restored",
     "unsent": "Not Sent",
     "unsubscribed": "Unsubscribed",
+    "restore": "Restore",
 
     // template load errors
     "e_u_err": "Form Upload Error",
