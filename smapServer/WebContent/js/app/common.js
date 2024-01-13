@@ -5245,7 +5245,8 @@ function includeByStatus(statusFilter, task, excludeZeroOrigin) {
  */
 function isTextStorageType(type) {
 	return type === "string" || type === "select1" || type === "barcode" || type === "calculate"
-		|| type === "child_form" || type === "parent_form";
+		|| type === "form"
+		|| type === "child_form" || type === "parent_form";		// deprecated
 }
 
 /*

@@ -440,7 +440,6 @@ $(document).ready(function() {
         } else {
             window.location.href = "/surveyKPI/xlsForm/" + globals.gCurrentSurvey + "?filetype=" + "xlsx" + addCacheBuster("?");;
         }
-
     });
 
     /*
@@ -450,8 +449,8 @@ $(document).ready(function() {
 	$('#p_form_identifier').change(function(){
 		var survey = globals.model.survey;
 		var qType = survey.forms[globals.gFormIndex].questions[globals.gItemIndex].type;
-		if(qType === "child_form") {
-			getQuestionsInSurvey($('#p_key_question'), undefined, $(this).val(), true, true, setAppearanceValues, true);
+		if(qType === "form") {
+			getQuestionsInSurvey($('#p_key_question_launcher'), undefined, $(this).val(), true, true, setAppearanceValues, true);
 		}
 	});
 
@@ -837,11 +836,6 @@ $(document).ready(function() {
 					}
 				}
 		});
-	});
-
-	$('#p_form_identifier').change(function() {
-		var ident = $(this).val();
-
 	});
 
 	$('#project_name').change(function() {
@@ -1918,11 +1912,8 @@ function respondToEvents($context) {
          * Add a question select list
          */
 		var sIdent = "0";
-		if(qType === "parent_form") {
-			$('#p_key_question_label').html(localise.set["ed_qk"]);
-			$('#p_key_question').empty().append(getQuestionsAsSelect("", true));
-		} else if (qType === "child_form") {
-			$('#p_key_question_label').html(localise.set["ed_qkc"]);
+		if (qType === "form") {
+			$('#p_key_question_launched').empty().append(getQuestionsAsSelect("", true));
 			// Get the form ident
 			for (i = 0; i < paramArray.length; i++) {
 				var p = paramArray[i].split('=');
@@ -1933,7 +1924,7 @@ function respondToEvents($context) {
 					}
 				}
 			}
-			getQuestionsInSurvey($('#p_key_question'), undefined,  sIdent, true, true, undefined, true);
+			getQuestionsInSurvey($('#p_key_question_launcher'), undefined,  sIdent, true, true, undefined, true);
 		} else if(qType === "begin repeat") {
 			$('#p_ref').empty().append(getFormsAsSelect(qName));
 		}
