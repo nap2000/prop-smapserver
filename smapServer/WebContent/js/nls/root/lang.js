@@ -86,7 +86,7 @@ define({
     "c_form": "Form",
     "c_forms": "Forms",
     "c_forward": "Forward",
-    "c_launch_form": "Launch form",
+    "c_launch_form": "Launch Survey",
     "c_link": "Link",
     "c_links": "Links",
     "c_moved" : "Moved",

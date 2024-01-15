@@ -881,9 +881,9 @@ function addRightClickToTable($elem, sId, view) {
 				var url;
 				$('#download_edit').button("enable");
 				if(view.subject_type === "survey") {
-					url ="/webForm/" + survey_ident + "?datakey=prikey&datakeyvalue=" + pkey;
+					url ="/app/myWork/webForm/" + survey_ident + "?datakey=prikey&datakeyvalue=" + pkey;
 				} else if(view.subject_type === "user") {
-					url ="/webForm/" + survey_ident + "?datakey=instanceid&datakeyvalue=" + instanceid;
+					url ="/app/myWork/webForm/" + survey_ident + "?datakey=instanceid&datakeyvalue=" + instanceid;
 				}
 				url += addCacheBuster(url);
 				$('#download_edit').attr("href", url);
