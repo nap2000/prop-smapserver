@@ -558,7 +558,7 @@ $(document).ready(function() {
 	$('#a_filter_column, #a_second_filter_column, #a_csv_identifier, ' +
 		'#a_survey_identifier, input[type=radio][name=search_source],' +
 		'#a_search_value, #a_search_label, #a_access, #a_fe').change(function() {
-		showSearchElements();
+			showSearchElements();
 	});
 
 	// Trigger change in survey or csv list

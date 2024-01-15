@@ -1911,14 +1911,11 @@ function setSurveyViewQuestions(list, qId, view, dateqId, qName, assignQuestion)
 			} else {
 				label = item.q;
 			}
-			if(item.is_ssc) {
-				$questionSelect.append('<option value="' + item.id + '">ssc : ' + htmlEncode(item.name + " : " + item.fn) + '</option>');
-			} else {
-				$questionSelect.append('<option value="' + item.id + '">' + htmlEncode(item.name + " : " + label) + '</option>');
-				$questionNameSelect.append('<option value="' + item.name + '">' + htmlEncode(item.name) + '</option>');
-				if(item.type === 'timestamp' || item.type === 'dateTime' || item.type == 'date') {
-					$dateQuestions.append('<option value="' + item.id + '">' + htmlEncode(item.name + " : " + label) + '</option>');
-				}
+
+			$questionSelect.append('<option value="' + item.id + '">' + htmlEncode(item.name + " : " + label) + '</option>');
+			$questionNameSelect.append('<option value="' + item.name + '">' + htmlEncode(item.name) + '</option>');
+			if(item.type === 'timestamp' || item.type === 'dateTime' || item.type == 'date') {
+				$dateQuestions.append('<option value="' + item.id + '">' + htmlEncode(item.name + " : " + label) + '</option>');
 			}
 		});
 	}
@@ -3880,7 +3877,7 @@ function getQuestionsInSurvey($elem, $elem_multiple, sIdent, includeNone, textOn
 		if (sIdent && sIdent !== "0" && sIdent !== '') {
 			addHourglass();
 			$.ajax({
-				url: "/surveyKPI/questionListIdent/" + sIdent + "/none?exc_ssc=true&inc_meta=true",
+				url: "/surveyKPI/questionListIdent/" + sIdent + "/none?inc_meta=true",
 				dataType: 'json',
 				cache: false,
 				success: function (data) {

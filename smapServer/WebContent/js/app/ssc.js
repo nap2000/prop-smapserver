@@ -15,6 +15,9 @@ You should have received a copy of the GNU General Public License
 along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+/*
+ deprecated
+
 "use strict";
 
 define([
@@ -42,7 +45,7 @@ define([
 		
 		/*
 		 * Add options for units
-		 */
+		 *
 		$('#ssc_function').change(function () {
 			var fn = $(this).val();
 			$('#ssc_name').val(fn);		// Default name to name of function
@@ -155,3 +158,5 @@ define([
 
 
 });
+
+ */
