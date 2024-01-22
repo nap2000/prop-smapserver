@@ -3652,10 +3652,9 @@ require([
         if(form !== "") {
 
             gDrillDownNext.record = gTasks.gSelectedRecord.prikey;
-            if (gDrillDownNext.type === 'form' || gDrillDownNext.type === 'child_form') {   // child form is deprecated
+            if (gDrillDownNext.type === 'child_form') {
                 gDrillDownNext.key_value = gTasks.gSelectedRecord._hrk;     // Drill down to child using HRK of this, the parent form
             } else {
-                // Going to parent should be drill up - parent form is deprecated
                 gDrillDownNext.key_value = gTasks.gSelectedRecord[gDrillDownNext.key];     // Drill down to parent using its HRK, this is the child form
             }
 

@@ -1562,7 +1562,7 @@ define([
                         isValid = checkParentheisis(container, itemIndex, itemType, item.choice_filter);
                     }
 
-	                if(isValid && (item.type === "form")) {	// Check that form launch types have a reference form
+	                if(isValid && (item.type === "child_form" || item.type === "parent_form")) {	// Check that form launch types have a reference form
 
 	                    if(item.parameters && item.parameters.indexOf("form_identifier") >= 0) {
 	                        isValid = true;

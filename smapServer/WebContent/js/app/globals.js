@@ -554,7 +554,8 @@ define(function () {
             select: ['randomize'],
             select1: ['randomize'],
             rank: ['randomize'],
-            form: ['form_identifier', 'key_question_launched', 'key_question_launcher', 'auto'],
+            parent_form: ['form_identifier', 'key_question', 'auto'],
+	        child_form: ['form_identifier', 'key_question', 'auto'],
 	        geopoint: ['auto'],
             geotrace: ['geotextlength'],
             geoshape: ['geotextlength'],
@@ -628,12 +629,8 @@ define(function () {
 		        field: 'p_form_identifier',
 		        type: 'select'
 	        },
-	        key_question_launched: {
-		        field: 'p_key_question_launched',
-		        type: 'select'
-	        },
-            key_question_launcher: {
-                field: 'p_key_question_launcher',
+	        key_question: {
+		        field: 'p_key_question',
                 type: 'select'
             },
 	        ref: {
@@ -882,11 +879,21 @@ define(function () {
                 compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field"]
             },
 	        {
-		        name: "Launch Form",
-		        type: "form",
-		        trans: "c_launch_form",
+		        name: "Parent Form",
+		        type: "parent_form",
+		        trans: "c_parent_form",
+		        icon: "file-upload",
+		        text: "Parent Form",
+		        canSelect: true,
+		        visible: true,
+		        source: "user"
+	        },
+	        {
+		        name: "Child Form",
+		        type: "child_form",
+		        trans: "c_child_form",
 		        icon: "file-download",
-		        text: "Launch Form",
+		        text: "Child Form",
 		        canSelect: true,
 		        visible: true,
 		        source: "user"

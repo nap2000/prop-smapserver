@@ -86,7 +86,6 @@ define({
     "c_form": "Form",
     "c_forms": "Forms",
     "c_forward": "Forward",
-    "c_launch_form": "Launch Survey",
     "c_link": "Link",
     "c_links": "Links",
     "c_moved" : "Moved",
@@ -363,6 +362,8 @@ define({
     "c_pending": "Pending",
     "c_ok": "OK",
     "c_move": "Move",
+    "c_parent_form": "Parent Form",
+    "c_child_form": "Child Form (Repeats)",
     "c_other": "Other",
     "c_random": "Randomize",
     "c_annotate": "Annotate",
@@ -872,8 +873,6 @@ define({
     "wf_sig": "Signature",
 
     // Editor
-    "ed_qled":"Question in the launched form that will hold the key of this form that launched it",
-    "ed_qler":"Question in this form that will hold the key of the launched form",
     "ed_gr": "Text rows to show",
     "ed_ba": "Background Audio",
     "ed_map_zoom": "Map Zoom",
