@@ -4,7 +4,7 @@
     waitSeconds: 0,
     wrapShim: false,
     baseUrl: 'js/libs',
-//    optimize: 'none',
+    optimize: 'none',
     fileExclusionRegExp: /^build$/,
     paths: {
     	jquery: 'jquery-3.5.1.min',
