@@ -1,13 +1,10 @@
 #!/bin/sh
 
-#if [ "$2" = wf ]
-#then
-	echo "building webforms"
-	pushd ~/git/webform
-	grunt develop
-	popd
-	./enk_up.sh
-#fi
+echo "building webforms"
+pushd ~/git/webform
+grunt develop
+popd
+./enk_up.sh
 
 #if [ "$1" != develop ]
 #then
@@ -47,6 +44,7 @@ cd ..
 
 # deploy to local
 sudo rm -R /Library/WebServer/Documents/js
+sudo rm -R /Library/WebServer/Documents/build
 sudo cp -R smapServer/* /Library/WebServer/Documents
 sudo apachectl restart
 

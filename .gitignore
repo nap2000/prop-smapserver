@@ -48,6 +48,7 @@ smapServer/WebContent/build/js/webform-bundle.js
 smapServer/WebContent/build/js/webform-bundle.min.js
 smapServer/node_modules
 aws/target
+smapServer/WebContent/build/locales/
 
 smapServer/.idea/
 tasks/.idea/
