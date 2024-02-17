@@ -31,6 +31,8 @@ define([],
         let mediaStoreName = "media";
         var mediaStore;
 
+        let logStoreName = "logs";
+
         let recordStoreName = 'records';
         let assignmentIdx = 'assignment';
         let assignmentIdxPath = 'assignment.assignment_id';
@@ -44,6 +46,7 @@ define([],
 
             addRecord: addRecord,
             getRecords: getRecords,
+            getHistory: getHistory,
             deleteRecords: deleteRecords,
 
             getTask: getTask
@@ -123,7 +126,7 @@ define([],
 		 * Delete all media with the specified prefix
 		 * Assumes db has been initialised
 		 * An explicit boolean "all" is added in case the function is called accidnetially with an undefined directory
-		 */
+		 *
         function deleteMedia(dirname, all) {
 
             if(typeof dirname !== "undefined" || all) {
@@ -156,10 +159,11 @@ define([],
 
             }
         }
+        */
 
         /*
 		 * Save an attachment
-		 */
+		 *
         function saveFile(media, dirname) {
 
             console.log("save file: " + media.name + " : " + dirname);
@@ -173,10 +177,11 @@ define([],
             var request = objectStore.put(media.dataUrl, dirname + "/" + media.name);
 
         }
+        */
 
         /*
 		 * Get a file from idb
-		 */
+		 *
         function getFile(name, dirname) {
 
             return new Promise(function(resolve, reject) {
@@ -199,6 +204,7 @@ define([],
             });
 
         }
+        */
 
         /*
          * Add a record
@@ -283,7 +289,6 @@ define([],
                 });
 
             });
-
         }
 
         /*
@@ -318,7 +323,7 @@ define([],
 
         /*
 		 * Obtains blob for specified file
-		 */
+		 *
         function retrieveFile(dirname, file) {
 
             return new Promise(function(resolve, reject) {
@@ -338,7 +343,10 @@ define([],
 
         }
 
+         */
+
         // From: http://stackoverflow.com/questions/6850276/how-to-convert-dataurl-to-file-object-in-javascript
+        /*
         function dataURLtoBlob(dataurl) {
             var arr = dataurl.split(',');
             var mime;
@@ -359,11 +367,12 @@ define([],
                 return new Blob();
             }
         }
+         */
 
         /*
 		 * Local functions
 		 * May be called from a location that has not intialised fileStore (ie fileManager)
-		 */
+		 *
         function getFileFromIdb(key) {
             return new Promise(function(resolve, reject) {
                 if (!db) {
@@ -371,7 +380,7 @@ define([],
                         resolve(completeGetFileRequest(key));
                     });
                 } else {
-                    resolve(completeGetFileRequest(key));
+         8/           resolve(completeGetFileRequest(key));
                 }
             });
         }
@@ -389,6 +398,34 @@ define([],
                 request.onsuccess = function (event) {
                     resolve(request.result);
                 };
+            });
+        }
+
+        /*
+         * Get the history of webform submissions
+         */
+        function getHistory() {
+
+            return new Promise(function(resolve, reject) {
+                console.log("Get history");
+
+                dbPromise.then(function (db) {
+                    var transaction = db.transaction([logStoreName], "readonly");
+                    transaction.onerror = function (event) {
+                        alert("Error: failed to get history");
+                    };
+
+                    var objectStore = transaction.objectStore(logStoreName);
+                    var request = objectStore.getAll();
+                    request.onsuccess = function (event) {
+                        resolve(request.result);
+                    };
+                    request.onerror = function (event) {
+                        console.log('Error', e.target.error.name);
+                        reject();
+                    };
+                });
+
             });
         }
     });
