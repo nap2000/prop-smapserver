@@ -53,14 +53,37 @@ require([
 
 		localise.setlang();		// Localise HTML
 		dbstorage.open();
+		getHistory();
+	});
+
+	$('#m_refresh').click(function(){
+		getHistory();
+	});
+
+
+	function getHistory() {
 		dbstorage.getHistory().then( function(history) {
 			if (history) {
-				showHistoryList(records);
+				showHistoryList(history);
 			}
-	});
-	
-	
+		});
+	}
+	function showHistoryList(history) {
 
-
+		let $table = $('#historyList');
+		$table.empty();
+		if(history && history.length > 0) {
+			for(item of history) {
+				let elem = `<tr>
+						<td>${item.date}</td>
+						<td>${item.name}</td>
+						<td>${item.status}</td>
+						<td>${item.instanceid}</td>
+						</tr>tr>`;
+				$table.append(elem);
+			}
+		}
+	}
 });
+
 

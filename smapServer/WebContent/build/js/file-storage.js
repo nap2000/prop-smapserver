@@ -197,7 +197,7 @@
     /*
      * Write a log entry to the database
      */
-    fileStore.writeLog = function(name, status) {
+    fileStore.writeLog = function(name, status, instanceid) {
 
         open().then(function (db) {
             console.log("write log entry: " + name + " : " + status);
@@ -208,8 +208,10 @@
             };
 
             let logItem = {
+                date: new Date(),
                 name: name,
-                status: status
+                status: status,
+                instanceid: instanceid
             }
             var objectStore = transaction.objectStore(logStoreName);
             objectStore.add(logItem, new Date());

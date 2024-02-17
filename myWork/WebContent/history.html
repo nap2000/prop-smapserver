@@ -49,9 +49,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
 		<ul class="navbar-nav ml-auto">
-
 			<li id="m_refresh"><a class="nav-link" href="#"><span class="lang" data-lang="m_refresh">r</span></a></li>
-
 		</ul>
 
 	</div>
@@ -65,8 +63,19 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 			<form class="form-group row">
 				<div class="col-sm-6 pt-4">
 					<div class="form-group row">
-						<label class="lang col-md-4"  data-lang="c_project"  for="project_name"></label>
-						<select class="project_list form-control form-control-lg col-md-8" id="project_name"></select>
+						<div class="table-responsive">
+							<table role="presentation" class="table table-striped">
+								<thead>
+								<tr>
+									<th class="lang" data-lang="c_date"></th>
+									<th class="lang" data-lang="c_name"></th>
+									<th class="lang" data-lang="c_status"></th>
+									<th class="lang" data-lang="c_iid"></th>
+								</tr>
+								</thead>
+								<tbody id="historyList">
+								</tbody>
+							</table>
 					</div>
 				</div>
 			</form>
