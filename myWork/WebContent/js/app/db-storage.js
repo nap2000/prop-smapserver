@@ -32,6 +32,7 @@ define([],
         var mediaStore;
 
         let logStoreName = "logs";
+        let logStore;
 
         let recordStoreName = 'records';
         let assignmentIdx = 'assignment';
@@ -74,30 +75,22 @@ define([],
                     var upgradeDb = event.target.result;
                     var oldVersion = upgradeDb.oldVersion || 0;
 
-                    switch (oldVersion) {
-                        case 0:
-                        case 1:
-                        case 2:
-                        case 3:
-                        case 4:
-                        case 5:
-                            try {
-                                mediaStore = upgradeDb.createObjectStore(mediaStoreName);
-                            } catch(err) {
-                                console.log(err);
-                            }
-
-
-                            try {
-                                recordStore = upgradeDb.createObjectStore(recordStoreName, {
-                                    keyPath: 'id',
-                                    autoIncrement: true
-                                });
-                                recordStore.createIndex(assignmentIdx, assignmentIdxPath, {unique: false});
-                            } catch(err) {
-                                console.log(err);
-                            }
+                    if (!upgradeDb.objectStoreNames.contains(mediaStoreName)) {
+                        mediaStore = upgradeDb.createObjectStore(mediaStoreName);
                     }
+
+                    if (!upgradeDb.objectStoreNames.contains(recordStoreName)) {
+                        recordStore = upgradeDb.createObjectStore(recordStoreName, {
+                            keyPath: 'id',
+                            autoIncrement: true
+                        });
+                        recordStore.createIndex(assignmentIdx, assignmentIdxPath, {unique: false});
+                    }
+
+                    if (!upgradeDb.objectStoreNames.contains(logStoreName)) {
+                        logStore = upgradeDb.createObjectStore(logStoreName);
+                    }
+
                 };
 
                 request.onsuccess = function (event) {
@@ -418,7 +411,7 @@ define([],
                     var objectStore = transaction.objectStore(logStoreName);
                     var request = objectStore.getAll();
                     request.onsuccess = function (event) {
-                        resolve(request.result);
+                        resolve(request.result.reverse());
                     };
                     request.onerror = function (event) {
                         console.log('Error', e.target.error.name);

@@ -15,4 +15,4 @@ for d in ~/git/webform/locales/* ; do
     fi
 done
 
-cp ~/git/webform/webform/file-storage.js ./WebContent/build/js/file-storage.js
+#cp ~/git/webform/webform/file-storage.js ./WebContent/build/js/file-storage.js

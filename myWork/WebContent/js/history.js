@@ -74,13 +74,16 @@ require([
 		$table.empty();
 		if(history && history.length > 0) {
 			for(item of history) {
-				let elem = `<tr>
-						<td>${item.date}</td>
-						<td>${item.name}</td>
-						<td>${item.status}</td>
-						<td>${item.instanceid}</td>
-						</tr>tr>`;
-				$table.append(elem);
+				let status = (item.status == "201" ? localise.set["c_success"] : localise.set["c_error"] + " : " + item.status);
+				if(item.date) {
+					let elem = `<tr>
+							<td>${item.date}</td>
+							<td>${item.name}</td>
+							<td>${status}</td>
+							<td>${item.instanceid}</td>
+							</tr>tr>`;
+					$table.append(elem);
+				}
 			}
 		}
 	}
