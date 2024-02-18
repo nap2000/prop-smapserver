@@ -74,10 +74,25 @@ require([
 		$table.empty();
 		if(history && history.length > 0) {
 			for(item of history) {
-				let status = (item.status == "201" ? localise.set["c_success"] : localise.set["c_error"] + " : " + item.status);
+				let status = item.status;
+				if(!status || status === "") {
+					status = "";
+				} else if(item.status == "201" ) {
+					status = localise.set["c_success"];
+				} else {
+					status = localise.set["c_error"] + " : " + item.status;
+				}
+
+				let action = "";
+				if(item.action === "submit") {
+					action = localise.set["submission"];
+				} else if(item.action === "delete") {
+					action = localise.set["c_deleted"];
+				}
 				if(item.date) {
 					let elem = `<tr>
 							<td>${item.date}</td>
+							<td>${action}</td>
 							<td>${item.name}</td>
 							<td>${status}</td>
 							<td>${item.instanceid}</td>
