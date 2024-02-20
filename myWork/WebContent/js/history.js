@@ -88,7 +88,10 @@ require([
 					action = localise.set["submission"];
 				} else if(item.action === "delete") {
 					action = localise.set["c_deleted"];
+				} else if(item.action === "save") {
+					action = localise.set["c_save"];
 				}
+
 				if(item.date) {
 					let elem = `<tr>
 							<td>${item.date}</td>
