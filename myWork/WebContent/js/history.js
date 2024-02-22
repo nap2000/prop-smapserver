@@ -54,6 +54,10 @@ require([
 		localise.setlang();		// Localise HTML
 		dbstorage.open();
 		getHistory();
+
+		if(location.search.indexOf("menu=yes") >= 0) {
+			$('.menuopt').removeClass('d-none').show();
+		}
 	});
 
 	$('#m_refresh').click(function(){
