@@ -236,7 +236,7 @@ function getViewData(view) {
 		
 		if(!questions) {	
 
-			getQuestionList(view.sId, view.lang, view.qId, view.groupQuestionId, undefined, setGroupList, view, undefined, undefined, undefined);
+			getQuestionList(view.sId, view.lang, view.qId, view.groupQuestionId, undefined, setGroupList, view, undefined, undefined, undefined, undefined);
 		} else {
 			setSurveyViewQuestions(questions, view.qId, view, undefined, undefined, undefined);
 			if(setGroupList) {
@@ -244,7 +244,7 @@ function getViewData(view) {
 			}
 		}
 	} else {
-		setSurveyViewQuestions(undefined, undefined, undefined, undefined, undefined, undefined);
+		setSurveyViewQuestions(undefined, undefined, undefined, undefined, undefined, undefined, undefined);
 	}
 	
 	/*
@@ -369,9 +369,9 @@ function surveyChangeEvent(sId) {
 		setSurveyViewLanguages(languages, undefined, '#export_language', true);
 		var questions = globals.gSelector.getSurveyQuestions(sId, languages[0].name);
 		if(!questions) {
-			getQuestionList(sId, languages[0].name, "-1", "-1", undefined, setGroupList, undefined, undefined, undefined, undefined);	// Default language to the first in the list
+			getQuestionList(sId, languages[0].name, "-1", "-1", undefined, setGroupList, undefined, undefined, undefined, undefined, undefined);	// Default language to the first in the list
 		} else {
-			setSurveyViewQuestions(questions, undefined, undefined, undefined, undefined, undefined);
+			setSurveyViewQuestions(questions, undefined, undefined, undefined, undefined, undefined, undefined);
 			if(setGroupList) {
 				setSurveyViewQuestionGroups(questions);
 			}
@@ -403,9 +403,9 @@ function languageChangeEvent() {
 	}
 	
 	if(!qList) {
-		getQuestionList(sId, language, "-1", "-1", undefined, setGroupList, undefined, undefined, undefined, undefined);
+		getQuestionList(sId, language, "-1", "-1", undefined, setGroupList, undefined, undefined, undefined, undefined, undefined);
 	} else {
-		setSurveyViewQuestions(qList, undefined, undefined, undefined, undefined, undefined);
+		setSurveyViewQuestions(qList, undefined, undefined, undefined, undefined, undefined, undefined);
 		if(setGroupList) {
 			setSurveyViewQuestionGroups(qList);
 		}

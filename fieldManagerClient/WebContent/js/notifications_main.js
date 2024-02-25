@@ -107,17 +107,17 @@ require([
 
 		// Add response to a source survey being selected
 		$('#survey').change(function() {
-			surveyChangedNotification(undefined, undefined, undefined, undefined);
+			surveyChangedNotification(undefined, undefined, undefined, undefined, undefined);
 		});
 
-		// Add response to a source survey being selected
+		// Add response to the task group being changed
 		$('#task_group').change(function() {
 			taskGroupChanged($('#task_group').val());
 		});
 
 		// Add response to an oversight survey being selected
 		$('#group_survey').change(function() {
-			getOversightQuestionList($('#oversight_survey').val())
+			getOversightQuestionList($('#oversight_survey').val(), showOversightQuestions)
 		});
 
 		$('#user_to_assign').change(function() {
@@ -231,9 +231,7 @@ require([
 					alert(localise.set["msg_dms"]);
 					return(-1);
 				}
-			}
-
-			if(notification.trigger === 'console_update') {
+			} else if(notification.trigger === 'console_update') {
 				var updateQuestion = $('#update_question').val();
 				var updateValue = $('#update_value').val();
 				var updateSurvey = $('#oversight_survey').val();
@@ -252,6 +250,17 @@ require([
 				notification.updateSurvey = updateSurvey;
 				notification.updateQuestion = updateQuestion;
 				notification.updateValue = updateValue;
+
+			} else if(notification.trigger === 'server_calc') {
+				var calculateQuestion = $('#sc_question').val();
+
+				// Validate
+				if(!calculateQuestion || calculateQuestion.trim().length == 0) {
+					alert(localise.set["n_nq"]);
+					return(-1);
+				}
+
+				notification.updateQuestion = calculateQuestion;
 
 			}
 

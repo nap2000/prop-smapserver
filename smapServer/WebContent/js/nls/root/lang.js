@@ -1362,6 +1362,8 @@ define({
     "n_dow": "Day of the week",
     "n_dom": "Day of the month",
     "n_sent": "Notification sent",
+    "n_scc": "Server Calculation Question",
+
 
     // Roles
     "ro_fr": "Filter rows",
