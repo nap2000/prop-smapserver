@@ -466,7 +466,12 @@ require([
 			h[++idx] = '</td>';
 
 			// trigger
-			var trigger = localise.set[data[i].trigger];
+			let trigger;
+			if(data[i].trigger === "server_calc") {
+				trigger = localise.set["ed_s_calc"];
+			} else {
+				trigger = localise.set[data[i].trigger];
+			}
 			if(!trigger) {
 				trigger = localise.set['c_' + data[i].trigger]
 			}
