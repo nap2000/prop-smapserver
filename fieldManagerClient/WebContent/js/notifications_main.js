@@ -252,15 +252,18 @@ require([
 				notification.updateValue = updateValue;
 
 			} else if(notification.trigger === 'server_calc') {
-				var calculateQuestion = $('#sc_question').val();
+				let calculateQuestion = $('#sc_question').val();
+				let calculateValue = $('#sc_value').val();
 
 				// Validate
-				if(!calculateQuestion || calculateQuestion.trim().length == 0) {
-					alert(localise.set["n_nq"]);
+				if(!calculateQuestion || calculateQuestion.trim().length == 0 ||
+					!calculateValue || calculateValue.trim().length == 0) {
+					alert(localise.set["n_val"]);
 					return(-1);
 				}
 
 				notification.updateQuestion = calculateQuestion;
+				notification.updateValue = calculateValue;
 
 			}
 

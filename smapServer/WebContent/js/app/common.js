@@ -4670,6 +4670,7 @@ function edit_notification(edit, idx, console) {
 		$('#update_value').val(notification.updateValue);
 		$('#alerts').val(notification.alert_id);
 		$('#sc_question').val(notification.updateQuestion);
+		$('#sc_value').val(notification.updateValue);
 
 		// reminder settings
 		if (!console) {
@@ -4789,7 +4790,7 @@ function setTargetDependencies(target) {
 }
 
 function setTriggerDependencies(trigger) {
-	$('.task_reminder_options,.update_options, .submission_options, .cm_alert_options, .periodic_options, sc_options').hide();
+	$('.task_reminder_options,.update_options, .submission_options, .cm_alert_options, .periodic_options, .sc_options').hide();
 	if(trigger === "submission") {
 		$('.submission_options').show();
 	} else if(trigger === "task_reminder") {

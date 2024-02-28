@@ -1363,6 +1363,7 @@ define({
     "n_dom": "Day of the month",
     "n_sent": "Notification sent",
     "n_scc": "Server Calculation Question",
+    "n_val": "A server calculation question and value that will cause the notification to be triggered must be specified",
 
 
     // Roles
