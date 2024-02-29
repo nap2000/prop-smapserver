@@ -3211,6 +3211,7 @@ require([
 				    if (xhr.readyState == 0 || xhr.status == 0) {
 					    return;  // Not an error
 				    } else {
+                        err += " : " + xhr.responseText;
 					    alert(localise.set["error"] + ": " + err);
 				    }
 			    }
