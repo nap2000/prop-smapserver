@@ -1766,7 +1766,7 @@ function retrievedLanguages(sId, selector, data, theCallback, filterQuestion, se
 
 	if(data[0]) {
 		var dateqId = $('#task_start').val();
-		getQuestionList(sId, data[0], filterQuestion, "-1", theCallback, setGroupList, undefined, dateqId, undefined, undefined);	// Default language to the first in the list
+		getQuestionList(sId, data[0], filterQuestion, "-1", theCallback, setGroupList, undefined, dateqId, undefined, undefined, undefined);	// Default language to the first in the list
 	} else {
 		if(typeof theCallback === "function") {
 			theCallback();
@@ -1775,9 +1775,9 @@ function retrievedLanguages(sId, selector, data, theCallback, filterQuestion, se
 }
 
 //Function to get the question list
-function getQuestionList(sId, language, qId, groupId, callback, setGroupList, view, dateqId, qName, assignQuestion) {
+function getQuestionList(sId, language, qId, groupId, callback, setGroupList, view, dateqId, qName, assignQuestion, scQuestion) {
 
-	function getAsyncQuestionList(sId, language, theCallback, groupId, qId, view, dateqId, qName, assignQuestion, setGroupList) {
+	function getAsyncQuestionList(sId, language, theCallback, groupId, qId, view, dateqId, qName, assignQuestion, setGroupList, scQuestion) {
 
 		var excludeReadOnly = true;
 		if(setGroupList) {
@@ -1791,7 +1791,7 @@ function getQuestionList(sId, language, qId, groupId, callback, setGroupList, vi
 			success: function(data) {
 				removeHourglass();
 				globals.gSelector.setSurveyQuestions(sId, language, data);
-				setSurveyViewQuestions(data, qId, view, dateqId, qName, assignQuestion);
+				setSurveyViewQuestions(data, qId, view, dateqId, qName, assignQuestion, scQuestion);
 
 				if(setGroupList && typeof setSurveyViewQuestionGroups === "function") {
 					setSurveyViewQuestionGroups(data, groupId);
@@ -1811,7 +1811,7 @@ function getQuestionList(sId, language, qId, groupId, callback, setGroupList, vi
 		});
 	}
 
-	getAsyncQuestionList(sId, language, callback, groupId, qId, view, dateqId, qName, assignQuestion, setGroupList);
+	getAsyncQuestionList(sId, language, callback, groupId, qId, view, dateqId, qName, assignQuestion, setGroupList, scQuestion);
 }
 
 //Function to get the meta list
@@ -1887,10 +1887,11 @@ function setSurveyViewLanguages(list, language,elem, addNone) {
 }
 
 // Set the question list in the survey view control
-function setSurveyViewQuestions(list, qId, view, dateqId, qName, assignQuestion) {
+function setSurveyViewQuestions(list, qId, view, dateqId, qName, assignQuestion, scQuestion) {
 
 	var $questionSelect = $('.selected_question'),
 		$dateQuestions = $('.date_questions'),
+		$scQuestions = $('#sc_question'),
 		$questionNameSelect = $('.selected_name_question'),     // this should replace selected_question
 		$assignQuestion = $('#assign_question'),
 		label;
@@ -1904,6 +1905,8 @@ function setSurveyViewQuestions(list, qId, view, dateqId, qName, assignQuestion)
 	$dateQuestions.empty();
 	$dateQuestions.append('<option value="-1">' + localise.set["ed_i_c"] + '</option>');
 
+	$scQuestions.empty();
+
 	if(list) {
 		$.each(list, function(j, item) {
 			if(typeof item.q === "undefined") {
@@ -1916,6 +1919,10 @@ function setSurveyViewQuestions(list, qId, view, dateqId, qName, assignQuestion)
 			$questionNameSelect.append('<option value="' + item.name + '">' + htmlEncode(item.name) + '</option>');
 			if(item.type === 'timestamp' || item.type === 'dateTime' || item.type == 'date') {
 				$dateQuestions.append('<option value="' + item.id + '">' + htmlEncode(item.name + " : " + label) + '</option>');
+			}
+			if(item.type === 'server_calculate') {
+				let name = htmlEncode(item.name);
+				$scQuestions.append(`<option value="${item.name}">${name}</option>`);
 			}
 		});
 	}
@@ -1934,6 +1941,11 @@ function setSurveyViewQuestions(list, qId, view, dateqId, qName, assignQuestion)
 		dateqId = "-1";
 	}
 	$dateQuestions.val(dateqId);
+
+	// Server calculate question
+	if(scQuestion) {
+		$scQuestions.val(scQuestion);
+	}
 
 	if(view) {
 		setFilterFromView(view);	// Set the filter dialog settings
@@ -4657,6 +4669,8 @@ function edit_notification(edit, idx, console) {
 		$('#not_filter').val(notification.filter);
 		$('#update_value').val(notification.updateValue);
 		$('#alerts').val(notification.alert_id);
+		$('#sc_question').val(notification.updateQuestion);
+		$('#sc_value').val(notification.updateValue);
 
 		// reminder settings
 		if (!console) {
@@ -4688,7 +4702,8 @@ function edit_notification(edit, idx, console) {
 				surveyChangedNotification(notification.notifyDetails.emailQuestionName,
 					notification.notifyDetails.assign_question,
 					notification.notifyDetails.emailMeta,
-					notification.alert_id);
+					notification.alert_id,
+					notification.updateQuestion);
 		}
 
 		if (notification.notifyDetails) {
@@ -4775,7 +4790,7 @@ function setTargetDependencies(target) {
 }
 
 function setTriggerDependencies(trigger) {
-	$('.task_reminder_options,.update_options, .submission_options, .cm_alert_options, .periodic_options').hide();
+	$('.task_reminder_options,.update_options, .submission_options, .cm_alert_options, .periodic_options, .sc_options').hide();
 	if(trigger === "submission") {
 		$('.submission_options').show();
 	} else if(trigger === "task_reminder") {
@@ -4788,6 +4803,8 @@ function setTriggerDependencies(trigger) {
 		$('.cm_alert_options').show();
 	} else if(trigger === "periodic") {
 		$('.periodic_options').show();
+	} else if(trigger === "server_calc") {
+		$('.sc_options').show();
 	}
 }
 
@@ -4943,7 +4960,7 @@ function taskGroupChanged(tgIndex, emailQuestionName, emailMetaName) {
 		getQuestionList(tg.source_s_id, language, 0, "-1", undefined, false,
 			undefined, undefined, emailQuestionName, undefined);
 	} else {
-		setSurveyViewQuestions(qList, undefined, undefined, undefined, emailQuestionName, undefined);
+		setSurveyViewQuestions(qList, undefined, undefined, undefined, emailQuestionName, undefined, undefined, undefined);
 	}
 
 	if(!metaList) {
@@ -5103,7 +5120,7 @@ function getTaskGroupIndex(tgId) {
 	return 0;
 }
 
-function surveyChangedNotification(qName, assignQuestion, metaItem, alertId) {
+function surveyChangedNotification(qName, assignQuestion, metaItem, alertId, updateQuestion) {
 
 	var language = "none",
 		sId = $('#survey').val() || 0,
@@ -5125,9 +5142,9 @@ function surveyChangedNotification(qName, assignQuestion, metaItem, alertId) {
 
 		if(!qList) {
 			getQuestionList(sId, language, 0, "-1", undefined, false,
-				undefined, undefined, qName, assignQuestion);
+				undefined, undefined, qName, assignQuestion, updateQuestion);
 		} else {
-			setSurveyViewQuestions(qList, undefined, undefined, undefined, qName, assignQuestion);
+			setSurveyViewQuestions(qList, undefined, undefined, undefined, qName, assignQuestion, undefined, updateQuestion);
 		}
 
 		if(!metaList) {
@@ -5334,9 +5351,9 @@ function showOversightSurveys(data) {
 
 			if(count == 0) {
 				if(gSelectedOversightSurvey) {
-					getOversightQuestionList(gSelectedOversightSurvey);
+					getOversightQuestionList(gSelectedOversightSurvey, showOversightQuestions);
 				} else {
-					getOversightQuestionList(item.surveyIdent);
+					getOversightQuestionList(item.surveyIdent, showOversightQuestions);
 				}
 			}
 			count++;
@@ -5356,12 +5373,12 @@ function showOversightSurveys(data) {
 }
 
 //Function to get the question list
-function getOversightQuestionList(sIdent) {
+function getOversightQuestionList(sIdent, callback) {
 
 	var url = "/surveyKPI/questionListIdent/" + sIdent + "/none?exc_read_only=false&inc_meta=false";
 
 	if(window.oversightQuestions[sIdent]) {
-		showOversightQuestions(window.oversightQuestions[sIdent]);
+		callback(window.oversightQuestions[sIdent]);
 	} else {
 		addHourglass();
 		$.ajax({
@@ -5371,7 +5388,7 @@ function getOversightQuestionList(sIdent) {
 			success: function(data) {
 				removeHourglass();
 				window.oversightQuestions[sIdent] = data;
-				showOversightQuestions(data);
+				callback(data);
 
 			},
 			error: function(xhr, textStatus, err) {
@@ -5408,7 +5425,6 @@ function showOversightQuestions(data) {
 	if(gSelectedOversightQuestion) {
 		$('#update_question').val(gSelectedOversightQuestion);
 	}
-
 }
 
 /*
