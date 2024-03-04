@@ -37,7 +37,7 @@ export COPYFILE_DISABLE=true
 # Create a tar file and copy to the deploy directory
 cp -R WebContent/build smapServer
 cd smapServer
-tar -zcf smapServer.tgz *
+tar --no-xattrs -zcf smapServer.tgz *
 cp smapServer.tgz ~/deploy
 rm smapServer.tgz
 cd ..

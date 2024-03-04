@@ -45,6 +45,7 @@ define(function () {
         gCmSettings: undefined,
         gCurrentProject: 0,
         gCurrentSurvey: 0,
+        gCurrentSurveyIdent: undefined,
 	    gGroupSurveys: {},
 	    gSubForms: {},
         gCurrentForm: 0,

@@ -1011,6 +1011,7 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 
 			if(!dontGetCurrentSurvey) {	// Hack, on edit screen current survey is set as parameter not from the user's defaults
 				globals.gCurrentSurvey = data.current_survey_id;
+				globals.gCurrentSurveyIdent = data.current_survey_ident;
 			}
 			globals.gCurrentProject = data.current_project_id;
 			globals.gCurrentTaskGroup = data.current_task_group_id;
@@ -1028,7 +1029,7 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 				getMyProjects(globals.gCurrentProject, callback, getAll);	// Get projects
 			} else {
 				if(typeof callback !== "undefined") {
-					callback(globals.gCurrentSurvey);				// Call the callback with the correct current project
+					callback(globals.gCurrentSurvey);				// Call the callback with the correct current survey
 				}
 			}
 
@@ -1211,9 +1212,9 @@ function refreshMediaView(data, sId) {
 		if(files) {
 			for (i = 0; i < files.length; i++) {
 				if (files[i].type === 'csv') {
-					hCsv[++idxCsv] = getMediaRecord(files[i], 'csv', i);
+					hCsv[++idxCsv] = getMediaRecord(files[i], 'csv', i, sId > 0);
 				} else {
-					hMedia[++idxMedia] = getMediaRecord(files[i], 'media', i);
+					hMedia[++idxMedia] = getMediaRecord(files[i], 'media', i, sId > 0);
 				}
 			}
 		}
@@ -1282,7 +1283,7 @@ function getBaseName(fileName) {
 	}
 	return baseName;
 }
-function getMediaRecord(file, panel, record) {
+function getMediaRecord(file, panel, record, surveyLevel) {
 	var h = [],
 		idx = -1;
 
@@ -1337,9 +1338,11 @@ function getMediaRecord(file, panel, record) {
 	h[++idx] = '</td>';
 
 	// Action Buttons
+	let downloadUrl = '/surveyKPI/shared/latest/' + file.name
+		+ (surveyLevel ? '?sIdent=' + globals.gCurrentSurveyIdent : '');
 	h[++idx] = '<td class="mediaManage">';
 	h[++idx] = '<a class="media_download btn btn-info" href="';					// Download
-	h[++idx] = htmlEncode(file.url + addCacheBuster(file.url));
+	h[++idx] = htmlEncode(downloadUrl + addCacheBuster(downloadUrl));
 	h[++idx] = '">';
 	h[++idx] = '<i class="fas fa-download"></i>'
 	h[++idx] = '</a>';
