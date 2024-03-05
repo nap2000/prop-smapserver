@@ -1735,7 +1735,11 @@ require([
 				h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
 				h[++idx] = '<button type="button" data-idx="';
 				h[++idx] = i;
-				h[++idx] = '" class="btn-sm user_edit btn-info">';
+				h[++idx] = '" ';
+				if(user.current_org_name !== globals.gLoggedInUser.organisation_name) {
+					h[++idx] = 'data-other_org="true" ';
+				}
+				h[++idx] = 'class="btn-sm user_edit btn-info">';
 				h[++idx] = '<i class="far fa-edit"></i></button>';
 				h[++idx] = '</div>';
 				h[++idx] = '</td>';
@@ -1749,11 +1753,16 @@ require([
 		h[++idx] = '</div>';        // responsive
 
 		$userTable.empty().append(h.join(''));
-		$('.user_edit', $('#user_table')).click(function () {
-			openUserDialog(true, $(this).data("idx"));
+		$('.user_edit', $userTable).click(function () {
+			var $this = $(this);
+			if ($this.data("other_org")) {
+				alert(localise.set["u_oo"]);
+			} else {
+				openUserDialog(true, $this.data("idx"));
+			}
 		});
 
-		$(".rm_user", $('#user_table')).click(function(){
+		$(".rm_user", $userTable).click(function(){
 			var idx = $(this).data("idx");
 			deleteUser(idx);
 		});
