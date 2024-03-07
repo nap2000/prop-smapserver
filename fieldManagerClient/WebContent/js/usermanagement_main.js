@@ -1736,8 +1736,8 @@ require([
 				h[++idx] = '<button type="button" data-idx="';
 				h[++idx] = i;
 				h[++idx] = '" ';
-				if(user.current_org_name !== globals.gLoggedInUser.organisation_name) {
-					h[++idx] = 'data-other_org="true" ';
+				if(globals.gLoggedInUser && user.current_org_name !== globals.gLoggedInUser.organisation_name) {
+					 h[++idx] = 'data-other_org="true" ';
 				}
 				h[++idx] = 'class="btn-sm user_edit btn-info">';
 				h[++idx] = '<i class="far fa-edit"></i></button>';
