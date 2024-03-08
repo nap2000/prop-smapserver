@@ -141,7 +141,7 @@ require([
 
 		// Set button style and function
 		$('#create_user').click(function () {
-			openUserDialog(false, -1);
+			openUserDialog(false, -1, false);
 		});
 
 		$('#create_project').click(function () {
@@ -1131,7 +1131,7 @@ require([
 	/*
 	 * Show the user dialog
 	 */
-	function openUserDialog(existing, userIndex) {
+	function openUserDialog(existing, userIndex, oo) {
 		'use strict';
 		var i,
 			$user_groups = $('#user_groups'),
@@ -1311,6 +1311,16 @@ require([
 			}
 		}
 
+		/*
+		 * If the user is in another organisation then hide the controls they cannot change
+		 */
+		if(oo) {
+			$('.oo').removeClass('d-none').show();
+			$('.noo').hide();
+		} else {
+			$('.oo').hide();
+			$('.noo').show();
+		}
 		$('#create_user_popup').modal("show");
 	}
 
@@ -1755,11 +1765,7 @@ require([
 		$userTable.empty().append(h.join(''));
 		$('.user_edit', $userTable).click(function () {
 			var $this = $(this);
-			if ($this.data("other_org")) {
-				alert(localise.set["u_oo"]);
-			} else {
-				openUserDialog(true, $this.data("idx"));
-			}
+			openUserDialog(true, $this.data("idx"), $this.data("other_org"));
 		});
 
 		$(".rm_user", $userTable).click(function(){
