@@ -1005,6 +1005,13 @@ $(document).ready(function() {
 	$('#openFormModal').on('shown.bs.modal', function () {
 		$('#new_form_name').focus();
 	});
+	$('#openFormModal').on("keypress", function(event) {
+		// Click the done button if the user presses enter
+		if (event.key === "Enter") {
+			event.preventDefault();
+			$('#get_form').trigger("click");
+		}
+	});
 
 	/*
 	 * Toolbar
