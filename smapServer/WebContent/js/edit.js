@@ -419,7 +419,7 @@ $(document).ready(function() {
                 idx++;
             }
 		}
-		// Close any drop downmenus
+		// Close any drop down menus
 		$('.dropdown-toggle').parent().removeClass("open");
 		$('.navbar-collapse').removeClass("in");
 
@@ -432,6 +432,11 @@ $(document).ready(function() {
         $('#i_id').val(globals.model.survey.id);
 
 		$('#infoModal').modal('show');
+	});
+	
+	// Set initial focus to the cancel button as nothing else is possible
+	$("#infoModal").on("shown.bs.modal", function() {
+		$("#infoCancel").focus();
 	});
 
     $('#m_export').off().click(function() {	// Export to XLS
