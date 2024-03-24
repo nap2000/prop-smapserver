@@ -1284,7 +1284,6 @@ define({
     "u_clear_u": "Clear existing imported users",
     "u_clear_r": "Clear existing imported roles",
     "u_api_rl": "Rate limit for data API",
-    "u_api_rlm": "Minimum number of milli seconds between API Data requests. Any requests received less than this time since the previous request will be rejected. Applies to both json and csv data requests. The smaller the number the higher the volume of API requests allowed",
     "u_mps": "Minimum password strength",
     "u_oo": "The user is currently in a different organisation and only the list of organisations that they belong to can be changed.",
 

@@ -526,7 +526,6 @@ require([
 			organisation.default_email_content = $('#o_default_email_content').val();
 			organisation.locale = $('#o_language').val();
 			organisation.refresh_rate = parseInt($('#o_refresh_rate').val());
-			organisation.api_rate_limit = parseInt($('#o_api_rate_limit').val());
 			organisation.timeZone = $('#o_tz').val();
 			organisation.server_description = $('#o_server_description').val();
 			organisation.password_strength = $('#o_password_strength').val();
@@ -1524,7 +1523,6 @@ require([
 			addLanguageOptions($('#o_language'), org.locale);
 			$('#o_tz').val(org.timeZone);
 			$('#o_refresh_rate').val(org.refresh_rate);
-			$('#o_api_rate_limit').val(org.api_rate_limit);
 
 			gOrgId = org.id;
 			setLogos(org.id);
