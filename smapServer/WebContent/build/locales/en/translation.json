@@ -120,6 +120,9 @@
         "xpatherror": {
             "heading": "Formula Error",
             "msg": "A formula evaluation error occurred. Please contact __emailLink__ with this error:"
+        },
+        "file_storage": {
+            "no_fs": "Storage of large attachments is not supported by your browser. Hence if you are adding media files larger than 2 Megabytes do not save as draft.  Also if you are offline when you submit the data these attachements may not be sent. "
         }
     },
     "confirm": {
@@ -299,6 +302,14 @@
         "vi": "Vietnamese",
         "zh": "Chinese"
     },
+    "literacywidget": {
+        "finish": "Finish",
+        "start": "Start"
+    },
+    "log": {
+        "delete": "Delete",
+        "submit": "Submit"
+    },
     "page": {
         "modernbrowsers": {
             "heading": "Modern Browsers",
@@ -332,11 +343,13 @@
     },
     "record-list": {
         "export": "Export",
+        "history": "History",
         "msg1": "Records are stored inside your browser until they have been uploaded (even if you turn off your computer or go offline).",
         "msg2": "Queued records, except those marked as draft __icon__, are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available.",
         "msg2-nodraft": "Queued records are uploaded automatically, in the background, every 5 minutes when the web page is open and an Internet connection is available.",
         "msg3": "To force an upload in between automatic attempts, click Upload.",
         "norecords": "no records queued",
+        "nocomprecords": "There are no complete records queued",
         "title": "Queue",
         "upload": "Upload"
     },
