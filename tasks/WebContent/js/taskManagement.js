@@ -202,7 +202,7 @@ require([
 			surveyChangedTasks("-1");
 		});
 
-		// Add response to a source survey being selected
+		// Add response to the filter language being changed
 		$('#filter_language').change(function () {
 			languageChanged();
 		});

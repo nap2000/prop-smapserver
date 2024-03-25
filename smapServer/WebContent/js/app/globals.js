@@ -45,6 +45,7 @@ define(function () {
         gCmSettings: undefined,
         gCurrentProject: 0,
         gCurrentSurvey: 0,
+        gCurrentSurveyIdent: undefined,
 	    gGroupSurveys: {},
 	    gSubForms: {},
         gCurrentForm: 0,
@@ -631,8 +632,8 @@ define(function () {
 	        },
 	        key_question: {
 		        field: 'p_key_question',
-		        type: 'select'
-	        },
+                type: 'select'
+            },
 	        ref: {
 		        field: 'p_ref',
 		        type: 'select'

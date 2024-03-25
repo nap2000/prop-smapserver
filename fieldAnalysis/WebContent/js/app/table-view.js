@@ -119,8 +119,9 @@ function setTableSurvey(view) {
 	});
 
     $selFoot.find('.tRestore').button().off().click(function() {
-        restoreAllTables(view.sId);
-        alert(localise.set["msg_restore_started"]);
+        if(restoreAllTables(view.sId, view.sName)) {
+			alert(localise.set["msg_restore_started"]);
+		}
     });
 
 	$selFoot.find('.tArchive').button().off().click(function() {
@@ -543,33 +544,56 @@ function deleteAllTables(sId) {
 
 }
 
-function restoreAllTables(sId) {
-    var msg = localise.set["msg_res_data"];
+function restoreAllTables(sId, sName) {
+    var started = false;
+	var msg = localise.set["msg_res_data"];
     var decision = confirm(msg);
     if (decision == true) {
         var msg2 = localise.set["msg_del_data2"];
         var decision2 = confirm(msg2);
         if(decision2 == true) {
+
+			var reportObj = {
+				report_name: 'restore_' + sName,
+				report_type: 'restore',
+				pId: globals.gCurrentProject,
+				params: {
+					sId: sId
+				}
+			}
+
+			var tzString = globals.gTimezone ? "?tz=" + encodeURIComponent(globals.gTimezone) : "";
+
+			started = true;
+
             addHourglass();
-            $.ajax({
-                url: "/surveyKPI/surveyResults/" + sId + "/restore",
-                cache: false,
-                success: function (response) {
-                    removeHourglass();
-                    setTimeout(refreshAnalysisData, 5000);
-                },
-                error: function (xhr, textStatus, err) {
-                    removeHourglass();
-                    if (xhr.readyState == 0 || xhr.status == 0) {
-                        return;  // Not an error
-                    } else {
-                        console.log(xhr);
-                        alert(localise.set["error"] + " " + err);
-                    }
-                }
-            });
+			$.ajax({
+				type: "POST",
+				cache: false,
+				dataType: 'text',
+				contentType: "application/x-www-form-urlencoded",
+				url: "/surveyKPI/background_report" + tzString,
+				data: { report: JSON.stringify(reportObj) },
+				success: function(data, status) {
+					removeHourglass();
+					$('#info').html(localise.set["msg_ds_s_r"]);
+					setTimeout(function () {
+						$('#info').html("");
+					},2000);
+					setTimeout(refreshAnalysisData, 5000);
+				}, error: function(xhr, textStatus, err) {
+					removeHourglass();
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						$('#info').html(localise.set["msg_err_save"] + " " + htmlEncode(xhr.responseText));
+					}
+
+				}
+			});
         }
 	}
+	return started;
 }
 
 /*
@@ -857,9 +881,9 @@ function addRightClickToTable($elem, sId, view) {
 				var url;
 				$('#download_edit').button("enable");
 				if(view.subject_type === "survey") {
-					url ="/webForm/" + survey_ident + "?datakey=prikey&datakeyvalue=" + pkey;
+					url ="/app/myWork/webForm/" + survey_ident + "?datakey=prikey&datakeyvalue=" + pkey;
 				} else if(view.subject_type === "user") {
-					url ="/webForm/" + survey_ident + "?datakey=instanceid&datakeyvalue=" + instanceid;
+					url ="/app/myWork/webForm/" + survey_ident + "?datakey=instanceid&datakeyvalue=" + instanceid;
 				}
 				url += addCacheBuster(url);
 				$('#download_edit').attr("href", url);

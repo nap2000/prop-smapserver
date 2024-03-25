@@ -141,7 +141,7 @@ require([
 
 		// Set button style and function
 		$('#create_user').click(function () {
-			openUserDialog(false, -1);
+			openUserDialog(false, -1, false);
 		});
 
 		$('#create_project').click(function () {
@@ -526,7 +526,6 @@ require([
 			organisation.default_email_content = $('#o_default_email_content').val();
 			organisation.locale = $('#o_language').val();
 			organisation.refresh_rate = parseInt($('#o_refresh_rate').val());
-			organisation.api_rate_limit = parseInt($('#o_api_rate_limit').val());
 			organisation.timeZone = $('#o_tz').val();
 			organisation.server_description = $('#o_server_description').val();
 			organisation.password_strength = $('#o_password_strength').val();
@@ -1131,7 +1130,7 @@ require([
 	/*
 	 * Show the user dialog
 	 */
-	function openUserDialog(existing, userIndex) {
+	function openUserDialog(existing, userIndex, oo) {
 		'use strict';
 		var i,
 			$user_groups = $('#user_groups'),
@@ -1311,6 +1310,16 @@ require([
 			}
 		}
 
+		/*
+		 * If the user is in another organisation then hide the controls they cannot change
+		 */
+		if(oo) {
+			$('.oo').removeClass('d-none').show();
+			$('.noo').hide();
+		} else {
+			$('.oo').hide();
+			$('.noo').show();
+		}
 		$('#create_user_popup').modal("show");
 	}
 
@@ -1514,7 +1523,6 @@ require([
 			addLanguageOptions($('#o_language'), org.locale);
 			$('#o_tz').val(org.timeZone);
 			$('#o_refresh_rate').val(org.refresh_rate);
-			$('#o_api_rate_limit').val(org.api_rate_limit);
 
 			gOrgId = org.id;
 			setLogos(org.id);
@@ -1735,7 +1743,11 @@ require([
 				h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
 				h[++idx] = '<button type="button" data-idx="';
 				h[++idx] = i;
-				h[++idx] = '" class="btn-sm user_edit btn-info">';
+				h[++idx] = '" ';
+				if(globals.gLoggedInUser && user.current_org_name !== globals.gLoggedInUser.organisation_name) {
+					 h[++idx] = 'data-other_org="true" ';
+				}
+				h[++idx] = 'class="btn-sm user_edit btn-info">';
 				h[++idx] = '<i class="far fa-edit"></i></button>';
 				h[++idx] = '</div>';
 				h[++idx] = '</td>';
@@ -1749,11 +1761,12 @@ require([
 		h[++idx] = '</div>';        // responsive
 
 		$userTable.empty().append(h.join(''));
-		$('.user_edit', $('#user_table')).click(function () {
-			openUserDialog(true, $(this).data("idx"));
+		$('.user_edit', $userTable).click(function () {
+			var $this = $(this);
+			openUserDialog(true, $this.data("idx"), $this.data("other_org"));
 		});
 
-		$(".rm_user", $('#user_table')).click(function(){
+		$(".rm_user", $userTable).click(function(){
 			var idx = $(this).data("idx");
 			deleteUser(idx);
 		});

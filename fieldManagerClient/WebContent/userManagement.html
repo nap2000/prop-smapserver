@@ -239,7 +239,7 @@
 </div>
 
 <!-- Modal to allow the editing of a user's details -->
-<div id="create_user_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modifyUserLabel" aria-hidden="true">
+<div id="create_user_popup" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modifyUserLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -253,56 +253,60 @@
 						<label for="user_ident" class="control-label mt-3"><b class="lang" data-lang="u_ident"></b></label>
 						<input type="text" id="user_ident" required pattern="[a-z0-9_]+" class="form-control">
 
-						<label for="user_name" class="control-label mt-3"><b class="lang" data-lang="c_name"></b></label>
-						<input type="text" id="user_name" required class="form-control" autocomplete="new-name">
+						<p class="oo lang d-none" data-lang="u_oo"></p>
 
-						<div class="restrict_role org_role mt-3">
-							<label for="current_organisation" class="control-label"><b class="lang" data-lang="u_co"></b></label>
-							<select class="organisation_select form-control" id="current_organisation"></select>
-						</div>
+						<div class="noo">
+							<label for="user_name" class="control-label mt-3"><b class="lang" data-lang="c_name"></b></label>
+							<input type="text" id="user_name" required class="form-control" autocomplete="new-name">
 
-						<div class="restrict_role enterprise_role mt-3">
-							<label for="current_enterprise" class="control-label"><b class="lang" data-lang="c_ent"></b></label>
-							<select class="enterprise_select form-control" id="current_enterprise"></select>
-						</div>
+							<div class="restrict_role org_role mt-3">
+								<label for="current_organisation" class="control-label"><b class="lang" data-lang="u_co"></b></label>
+								<select class="organisation_select form-control" id="current_organisation"></select>
+							</div>
 
-						<label for="user_email" class="mt-2 control-label"><b class="lang" data-lang="c_email"></b></label>
-						<input type="email" class="form-control" id="user_email"
-							   placeholder="Enter email"
-							   pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$">
-						<div id="send_email_fields" style="display:none;">
-							<div class="custom-control custom-radio">
-								<input type="radio" class="custom-control-input" id="send_email" name="send_email" value="send_email" checked="checked"/>
-								<label class="custom-control-label" for="send_email">
-									<span class="lang" data-lang="u_email"></span>
-								</label>
+							<div class="restrict_role enterprise_role mt-3">
+								<label for="current_enterprise" class="control-label"><b class="lang" data-lang="c_ent"></b></label>
+								<select class="enterprise_select form-control" id="current_enterprise"></select>
 							</div>
-							<div class="custom-control custom-radio">
-								<input  type="radio" class="custom-control-input" id="set_password" name="send_email" value="set_password" />
-								<label class="custom-control-label" for="set_password">
-									<span class="lang" data-lang="u_set_p"></span>
-								</label>
-							</div>
-						</div>
-						<div id="reset_password_fields" style="display:none;">
-							<div class="custom-control custom-checkbox mt-3">
-								<input type="checkbox" class="custom-control-input" id="reset_password">
-								<label class="custom-control-label" for="reset_password">
-									<span data-lang="c_r_p" class="lang"></span>
-								</label>
-							</div>
-						</div>
-						<div id="password_fields" style="display:none;">
-							<div class="form-group row mt-3">
-								<label for="user_password" class="col-sm-4 control-label"><b class="lang" data-lang="c_password"></b></label>
-								<div class="col-sm-8">
-									<input id="user_password" type="password" placeholder="Password" class="form-control" autocomplete="new-password">
+
+							<label for="user_email" class="mt-2 control-label"><b class="lang" data-lang="c_email"></b></label>
+							<input type="email" class="form-control" id="user_email"
+								   placeholder="Enter email"
+								   pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$">
+							<div id="send_email_fields" style="display:none;">
+								<div class="custom-control custom-radio">
+									<input type="radio" class="custom-control-input" id="send_email" name="send_email" value="send_email" checked="checked"/>
+									<label class="custom-control-label" for="send_email">
+										<span class="lang" data-lang="u_email"></span>
+									</label>
+								</div>
+								<div class="custom-control custom-radio">
+									<input  type="radio" class="custom-control-input" id="set_password" name="send_email" value="set_password" />
+									<label class="custom-control-label" for="set_password">
+										<span class="lang" data-lang="u_set_p"></span>
+									</label>
 								</div>
 							</div>
-							<div class="form-group row">
-								<label for="user_password_confirm" class="col-sm-4 control-label"><b class="lang" data-lang="c_c_p"></b></label>
-								<div class="col-sm-8">
-									<input id="user_password_confirm" type="password" placeholder="Password" class="form-control" autocomplete="new-password">
+							<div id="reset_password_fields" style="display:none;">
+								<div class="custom-control custom-checkbox mt-3">
+									<input type="checkbox" class="custom-control-input" id="reset_password">
+									<label class="custom-control-label" for="reset_password">
+										<span data-lang="c_r_p" class="lang"></span>
+									</label>
+								</div>
+							</div>
+							<div id="password_fields" style="display:none;">
+								<div class="form-group row mt-3">
+									<label for="user_password" class="col-sm-4 control-label"><b class="lang" data-lang="c_password"></b></label>
+									<div class="col-sm-8">
+										<input id="user_password" type="password" placeholder="Password" class="form-control" autocomplete="new-password">
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="user_password_confirm" class="col-sm-4 control-label"><b class="lang" data-lang="c_c_p"></b></label>
+									<div class="col-sm-8">
+										<input id="user_password_confirm" type="password" placeholder="Password" class="form-control" autocomplete="new-password">
+									</div>
 								</div>
 							</div>
 						</div>
@@ -310,76 +314,71 @@
 				</div>
 				<div class="col-md-6">
 					<div class="right_panel">
-						<div>
-							<div class="card text-white">
-								<div class="card-header" id="userGroupDetails">
-									<h4 class="card-title">
-										<a class="card-link" data-toggle="collapse" role="button" href="#collapseUserGroupDetails" aria-expanded="true" aria-controls="collapseUserGroupDetails">
-											<span class="lang" data-lang="u_sg">security</span>
-										</a>
-									</h4>
-								</div>
-								<div id="collapseUserGroupDetails" class="collapse show" role="tabpanel" aria-labelledby="userGroupDetails">
-									<div class="card-body">
-										<div class="bg-danger">
-											<form>
-												<div id = "user_groups"></div>
-											</form>
-										</div>
+						<div class="noo card text-white">
+							<div class="card-header" id="userGroupDetails">
+								<h4 class="card-title">
+									<a class="card-link" data-toggle="collapse" role="button" href="#collapseUserGroupDetails" aria-expanded="true" aria-controls="collapseUserGroupDetails">
+										<span class="lang" data-lang="u_sg">security</span>
+									</a>
+								</h4>
+							</div>
+							<div id="collapseUserGroupDetails" class="collapse show" role="tabpanel" aria-labelledby="userGroupDetails">
+								<div class="card-body">
+									<div class="bg-danger">
+										<form>
+											<div id = "user_groups"></div>
+										</form>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div>
-							<div class="card">
-								<div class="card-header" id="userProjectDetails">
-									<h4 class="card-title">
-										<a class="card-link" data-toggle="collapse" role="button" href="#collapseUserProjectDetails" aria-expanded="false" aria-controls="collapseUserProjectDetails">
-											<span class="lang" data-lang="c_projects">projects</span>
-										</a>
-									</h4>
-								</div>
-								<div id="collapseUserProjectDetails" class="collapse" role="tabpanel" aria-labelledby="userProjectDetails">
-									<div class="card-body">
-										<div class="bg-warning">
-											<div id = "user_projects"></div>
-										</div>
+
+						<div class="noo card">
+							<div class="card-header" id="userProjectDetails">
+								<h4 class="card-title">
+									<a class="card-link" data-toggle="collapse" role="button" href="#collapseUserProjectDetails" aria-expanded="false" aria-controls="collapseUserProjectDetails">
+										<span class="lang" data-lang="c_projects">projects</span>
+									</a>
+								</h4>
+							</div>
+							<div id="collapseUserProjectDetails" class="collapse" role="tabpanel" aria-labelledby="userProjectDetails">
+								<div class="card-body">
+									<div class="bg-warning">
+										<div id = "user_projects"></div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div>
-							<div class="card restrict_role org_role security_role text-white">
-								<div class="card-header" id="userRoleDetails">
-									<h4 class="card-title">
-										<a class="card-link" data-toggle="collapse" role="button" href="#collapseUserRoleDetails" aria-expanded="false" aria-controls="collapseUserRoleDetails">
-											<span class="lang" data-lang="c_roles">roles</span>
-										</a>
-									</h4>
-								</div>
-								<div id="collapseUserRoleDetails" class="collapse" role="tabpanel" aria-labelledby="userRoleDetails">
-									<div class="card-body">
-										<div id="user_roles_section" class="bg-info" >
-											<div id = "user_roles"></div>
-										</div>
+
+						<div class="noo card restrict_role org_role security_role text-white">
+							<div class="card-header" id="userRoleDetails">
+								<h4 class="card-title">
+									<a class="card-link" data-toggle="collapse" role="button" href="#collapseUserRoleDetails" aria-expanded="false" aria-controls="collapseUserRoleDetails">
+										<span class="lang" data-lang="c_roles">roles</span>
+									</a>
+								</h4>
+							</div>
+							<div id="collapseUserRoleDetails" class="collapse" role="tabpanel" aria-labelledby="userRoleDetails">
+								<div class="card-body">
+									<div id="user_roles_section" class="bg-info" >
+										<div id = "user_roles"></div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div>
-							<div class="card restrict_role org_role admin_role text-white">
-								<div class="card-header" id="userOrgDetails">
-									<h4 class="card-title">
-										<a class="card-link" data-toggle="collapse" role="button" href="#collapseUserOrgDetails" aria-expanded="false" aria-controls="collapseUserOrgDetails">
-											<span class="lang" data-lang="c_orgs">orgs</span>
-										</a>
-									</h4>
-								</div>
-								<div id="collapseUserOrgDetails" class="collapse" role="tabpanel" aria-labelledby="userOrgDetails">
-									<div class="card-body">
-										<div id="user_orgs_section" class="bg-danger" >
-											<div id = "user_orgs"></div>
-										</div>
+
+						<div class="card restrict_role org_role admin_role text-white">
+							<div class="card-header" id="userOrgDetails">
+								<h4 class="card-title">
+									<a class="card-link" data-toggle="collapse" role="button" href="#collapseUserOrgDetails" aria-expanded="false" aria-controls="collapseUserOrgDetails">
+										<span class="lang" data-lang="c_orgs">orgs</span>
+									</a>
+								</h4>
+							</div>
+							<div id="collapseUserOrgDetails" class="collapse" role="tabpanel" aria-labelledby="userOrgDetails">
+								<div class="card-body">
+									<div id="user_orgs_section" class="bg-danger" >
+										<div id = "user_orgs"></div>
 									</div>
 								</div>
 							</div>
@@ -673,16 +672,9 @@
 										</div>
 										<p class="col-sm-4 lang" data-lang="i_m"></p>
 									</div>
-									<div class="form-group row restrict_role org_role">
-										<label for="o_api_rate_limit" data-lang="u_api_rl" class="lang control-label col-sm-2">rate limit</label>
-										<div class="col-sm-6">
-											<input type="number" class="form-control" id="o_api_rate_limit"></input>
-										</div>
-										<p class="col-sm-4 lang" data-lang="u_api_rlm"></p>
-									</div>
 									<div class="form-group row">
-										<label for="o_password_strength" data-lang="u_mps" class="lang col-sm-4 control-label">strength</label>
-										<div class="col-sm-6">
+										<label for="o_password_strength" data-lang="u_mps" class="lang col-sm-2 control-label">strength</label>
+										<div class="col-sm-10">
 											<div class="input-group">
 												<input class="form-control" type="number" id="o_password_strength" tabindex="16">
 												<div class="input-group-append">
@@ -693,8 +685,8 @@
 										</div>
 									</div>
 									<div class="form-group row">
-										<label for="o_map_source" data-lang="ed_map_source" class="lang col-sm-4 control-label"></label>
-										<div class="col-sm-6">
+										<label for="o_map_source" data-lang="ed_map_source" class="lang col-sm-2 control-label"></label>
+										<div class="col-sm-10">
 											<select id="o_map_source" class="form-control">
 												<option value="mapbox">Mapbox</option>
 												<option value="google">Google</option>

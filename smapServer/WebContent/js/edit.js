@@ -419,7 +419,7 @@ $(document).ready(function() {
                 idx++;
             }
 		}
-		// Close any drop downmenus
+		// Close any drop down menus
 		$('.dropdown-toggle').parent().removeClass("open");
 		$('.navbar-collapse').removeClass("in");
 
@@ -433,6 +433,11 @@ $(document).ready(function() {
 
 		$('#infoModal').modal('show');
 	});
+	
+	// Set initial focus to the cancel button as nothing else is possible
+	$("#infoModal").on("shown.bs.modal", function() {
+		$("#infoCancel").focus();
+	});
 
     $('#m_export').off().click(function() {	// Export to XLS
         if($(this).closest('li').hasClass('disabled')) {
@@ -440,7 +445,6 @@ $(document).ready(function() {
         } else {
             window.location.href = "/surveyKPI/xlsForm/" + globals.gCurrentSurvey + "?filetype=" + "xlsx" + addCacheBuster("?");;
         }
-
     });
 
     /*
@@ -559,7 +563,7 @@ $(document).ready(function() {
 	$('#a_filter_column, #a_second_filter_column, #a_csv_identifier, ' +
 		'#a_survey_identifier, input[type=radio][name=search_source],' +
 		'#a_search_value, #a_search_label, #a_access, #a_fe').change(function() {
-		showSearchElements();
+			showSearchElements();
 	});
 
 	// Trigger change in survey or csv list
@@ -839,11 +843,6 @@ $(document).ready(function() {
 		});
 	});
 
-	$('#p_form_identifier').change(function() {
-		var ident = $(this).val();
-
-	});
-
 	$('#project_name').change(function() {
 		globals.gCurrentProject = $('#project_name option:selected').val();
 		globals.gCurrentSurvey = -1;
@@ -1010,6 +1009,13 @@ $(document).ready(function() {
 
 	$('#openFormModal').on('shown.bs.modal', function () {
 		$('#new_form_name').focus();
+	});
+	$('#openFormModal').on("keypress", function(event) {
+		// Click the done button if the user presses enter
+		if (event.key === "Enter") {
+			event.preventDefault();
+			$('#get_form').trigger("click");
+		}
 	});
 
 	/*

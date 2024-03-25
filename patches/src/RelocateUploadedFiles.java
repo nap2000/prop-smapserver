@@ -74,6 +74,9 @@ public class RelocateUploadedFiles {
 						// Get the attachments in this survey (if any)
 						// Get the connection details for the meta data database
 						DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+						dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false);   // XXE - Disable DTDs
+						dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);  // Disable external DTDs
+				
 						DocumentBuilder db = null;
 						Document xmlConf = null;			
 				

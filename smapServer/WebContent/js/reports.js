@@ -981,9 +981,10 @@ require([
 		if(gGeneratedList) {
             for (i = 0; i < gGeneratedList.length; i++) {
 				var genItem = gGeneratedList[i];
-	            var link = location.origin + "/surveyKPI/file/" + genItem.filename + "/report?reportname=" + genItem.report_name;
+	            var link = typeof genItem.filename === "undefined" ? "#"
+					: location.origin + "/surveyKPI/file/" + genItem.filename + "/report?reportname=" + genItem.report_name;
 				// Add an extension to the report name
-				if(genItem.filename ) {
+				if(typeof genItem.filename !== "undefined" ) {
 					var extIdx = genItem.filename.lastIndexOf('.');
 					if (extIdx > 0) {
 						link += genItem.filename.substring(extIdx);
@@ -1002,7 +1003,11 @@ require([
 
 	            tab[++idx] = '<td>';			// Anonymous Link
 				if(genItem.status === 'complete') {
-					tab[++idx] = '<a type="button" class="btn btn-block btn-primary" href="';
+					tab[++idx] = '<a type="button" class="btn btn-block btn-primary';
+					if(typeof genItem.filename === "undefined") {
+						tab[++idx] = ' disabled'
+					}
+					tab[++idx] = '" href="';
 					tab[++idx] = link;
 					tab[++idx] = '">';
 					tab[++idx] = htmlEncode(genItem.report_name);

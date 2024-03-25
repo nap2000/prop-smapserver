@@ -1,13 +1,10 @@
 #!/bin/sh
 
-#if [ "$2" = wf ]
-#then
-	echo "building webforms"
-	pushd ~/git/webform
-	grunt develop
-	popd
-	./enk_up.sh
-#fi
+echo "building webforms"
+pushd ~/git/webform
+grunt develop
+popd
+./enk_up.sh
 
 #if [ "$1" != develop ]
 #then
@@ -40,13 +37,14 @@ export COPYFILE_DISABLE=true
 # Create a tar file and copy to the deploy directory
 cp -R WebContent/build smapServer
 cd smapServer
-tar -zcf smapServer.tgz *
+tar --no-xattrs -zcf smapServer.tgz *
 cp smapServer.tgz ~/deploy
 rm smapServer.tgz
 cd ..
 
 # deploy to local
 sudo rm -R /Library/WebServer/Documents/js
+sudo rm -R /Library/WebServer/Documents/build
 sudo cp -R smapServer/* /Library/WebServer/Documents
 sudo apachectl restart
 
