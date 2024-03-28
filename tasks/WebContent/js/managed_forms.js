@@ -3211,7 +3211,13 @@ require([
 				    if (xhr.readyState == 0 || xhr.status == 0) {
 					    return;  // Not an error
 				    } else {
-                        err += " : " + xhr.responseText;
+                        err += " : ";
+                        if(xhr.responseText.indexOf("<head>") >= 0) {
+                            err += localise.set["c_error"];
+                        } else {
+                            err += xhr.responseText;
+                        }
+
 					    alert(localise.set["error"] + ": " + err);
 				    }
 			    }

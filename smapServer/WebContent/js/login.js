@@ -43,20 +43,20 @@ require([
         $(document).ready(function() {
             var msg = "";
             var search = window.location.search;
-            if (search == "?error") {
+            if (search.indexOf("?error") === 0) {
                 msg = "Invalid username and/or password";
             } else if (search == "?loggedout") {
                 msg = "Successfully logged out";
             } else if (search == "?banned") {
                 msg = "Temporarily banned due to too many login attempts";
             }
-            document.getElementById("msg").innerText = msg;
+            $("#msg").html(msg).show().removeClass('d-none');
 
             /*
              * Enable self registration
              */
             if(isSelfRegistrationServer()) {
-                $('#signup').show().removeClass('d-none');;
+                $('#signup').show().removeClass('d-none');
             } else {
                 $('#signup').hide();
             }
