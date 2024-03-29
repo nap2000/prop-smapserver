@@ -60,6 +60,34 @@ require([
             } else {
                 $('#signup').hide();
             }
+
+            $('#username').change(function() {
+               let username =  $('#username').val();
+               if(username && username.trim().length > 0) {
+                   $.ajax({
+                       url: '/surveyKPI/login/basic/' + username,
+                       cache: false,
+                       dataType: 'json',
+                       success: function(data) {
+                           if(data && data.hasBasicPassword) {
+                               $('#resetPassword').hide();
+                               $('.login').show();
+                           } else {
+                               $('#resetPassword').removeClass('d-none').show();
+                               $('.login').hide();
+                           }
+                       },
+                       error: function(xhr, textStatus, err) {
+
+                           if(xhr.readyState == 0 || xhr.status == 0) {
+                               return;  // Not an error
+                           } else {
+                               console.log(htmlEncode(xhr.responseText));
+                           }
+                       }
+                   });
+               }
+            });
         });
 
     });

@@ -26,16 +26,19 @@
                         <label for="username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="username" name="httpd_username" required>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3 login">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" id="password" name="httpd_password" required>
                     </div>
-                    <button type="submit" name="login" class="btn btn-primary" value="login">Login</button>
+                    <button type="submit" name="login" class="btn btn-primary login" value="login">Login</button>
                 </form>
-                <div class="mt-3">
-                    <a href="/app/forgottenPassword.html">Reset Password</a>
+                <div id="resetPassword" class="mt-3 d-none text-primary">
+                    <p>You will need to reset your password before you can logon.  <a type="button" class="btn btn-block btn-primary" href="/app/resetPassword.html">Reset Password</a>
                 </div>
-                <div class="mt-3">
+                <div class="mt-3 login">
+                    <a href="/app/forgottenPassword.html">Forgot Password</a>
+                </div>
+                <div class="mt-3 login">
                     <p id="signup" class="d-none"><a href="/register.html" >Register a new account.</a>
                         Once you have a new account then you
                         can add additional users to it on the user management page.  Usually you only need to do
