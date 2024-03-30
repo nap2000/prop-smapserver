@@ -3019,7 +3019,7 @@ require([
 
     	var filter;
 
-	    var url = '/api/v1/data/server/';
+	    var url = '/surveyKPI/api/data/';
 	    url += sId;
 	    url += "?mgmt=true";
 
