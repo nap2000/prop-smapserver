@@ -4327,7 +4327,7 @@ function getLocationIndex(name, tags) {
 }
 
 function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback, tg_id) {
-	var url = "/api/v1/tasks?preserveInitialData=true",
+	var url = "/surveyKPI/api/tasks?preserveInitialData=true",
 		taskFeature = {
 			properties: {}
 		},
