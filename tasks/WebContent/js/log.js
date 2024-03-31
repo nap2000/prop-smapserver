@@ -242,7 +242,7 @@ require([
 			d = new Date(usageMsec),
 			month = d.getMonth() + 1,
 			year = d.getFullYear();
-		return "/api/v1/log/dt?year=" + year + "&month=" + month + "&tz=" + encodeURIComponent(globals.gTimezone);
+		return "/surveyKPI/api/log?year=" + year + "&month=" + month + "&tz=" + encodeURIComponent(globals.gTimezone);
 	}
 
 	function addMonth() {
