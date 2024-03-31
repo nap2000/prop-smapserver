@@ -328,7 +328,7 @@ require([
 		if(!errorMsg) {
 
 			mailoutString = JSON.stringify(mailout);
-			url = '/api/v1/mailout'
+			url = '/surveyKPI/api/mailout'
 
 			addHourglass();
 			$.ajax({
@@ -599,7 +599,7 @@ require([
      */
 	function loadMailoutTotals() {
 
-		var url = "/api/v1/mailout/" + gMailouts[gCurrentMailOutIdx].id + "/emails/totals";
+		var url = "/surveyKPI/api/mailout/" + gMailouts[gCurrentMailOutIdx].id + "/emails/totals";
 
 		addHourglass();
 
