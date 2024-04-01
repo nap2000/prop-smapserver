@@ -341,6 +341,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                         dataType: 'json',
                         success: function (data) {
                             removeHourglass();
+                            handleLogout(data);
                             gMonitor.cache[url] = data;
                             processResponse(data, showSourceE, showTypeE, start_rec);
 

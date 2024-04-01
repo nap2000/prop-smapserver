@@ -5916,3 +5916,12 @@ function checkExistenceOfReferences(refQuestions, survey) {
 	}
 	return refCount;
 }
+
+/*
+ * Respond to a logged out redirect
+ */
+function handleLogout(data) {
+	if(data && data.code && data.code === 401) {
+		window.location.href = "/login.html";
+	}
+}
