@@ -38,7 +38,6 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             setTheme();
 	        setupUserProfile(true);
             localise.setlang();		// Localise HTML
-            registerForServiceWorkerMessages();
 
             /*
              * Add functionality to control buttons

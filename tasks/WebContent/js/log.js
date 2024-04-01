@@ -73,7 +73,6 @@ require([
 		setTheme();
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
-		registerForServiceWorkerMessages();
 
 		/*
   	     * Add date time picker to usage date

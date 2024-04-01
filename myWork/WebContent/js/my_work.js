@@ -66,7 +66,6 @@ require([
 		setTheme();
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
-		registerForServiceWorkerMessages(serviceWorkerNotification);
 
 		dbstorage.open();
 
@@ -100,14 +99,6 @@ require([
 	
 	function projectSet() {
 		getSurveysForList();			// Get surveys
-	}
-
-	function serviceWorkerNotification(data) {
-		if(data && data.data) {  // Only 1 type currently supported so ignore
-			console.log("xxxxxxxxxxxxx: serviceWorkerNotification");
-			surveyDataFromNetwork(data.data, globals.gCurrentProject);
-		}
-
 	}
 
 	function getSurveysForList() {
