@@ -45,6 +45,8 @@ require(['jquery', 'app/localise', 'app/common','app/globals'],
 	 */
 	isLoggedIn();
 
+	removeServiceWorker();
+
 	/*
 	 * Add links to download fieldTask
 	 */
@@ -57,9 +59,6 @@ require(['jquery', 'app/localise', 'app/common','app/globals'],
 
  });
 
-/*
-      * Hack due to firefox not authenticating automatically on surveyManagement page
-      */
 function isLoggedIn() {
 	$.ajax({
 		cache: false,
@@ -96,3 +95,17 @@ function getAndroidVersion() {
     var match = ua.match(/android\s([0-9\.]*)/);
     return match ? match[1] : 0;
 };
+
+/*
+ * Remove any service workers associated with this site
+ */
+function removeServiceWorker() {
+	if ('serviceWorker' in navigator) {
+		navigator.serviceWorker.getRegistrations()
+			.then(function(registrations) {
+				for(let registration of registrations) {
+					registration.unregister();
+				}
+			});
+	}
+}
