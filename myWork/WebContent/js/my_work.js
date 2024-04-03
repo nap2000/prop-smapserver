@@ -103,7 +103,7 @@ require([
 
 	function getSurveysForList() {
 
-		var url="/surveyKPI/myassignments";
+		var url="/surveyKPI/assignments/mine";
 
 		addHourglass();
 		$.ajax({
@@ -410,7 +410,7 @@ require([
 					data: {assignment: JSON.stringify(taskUpdate)},
 					cache: false,
 					contentType: "application/x-www-form-urlencoded",
-					url: "/surveyKPI/myassignments/update_status",
+					url: "/surveyKPI/assignments/mine/update_status",
 					success: function(data, status) {
 						removeHourglass();
 						var aid = taskList[idx].assignment.assignment_id;
