@@ -1541,7 +1541,7 @@ require([
     function showDuplicateData(sId) {
 
         var searchCriteria = getSearchCriteria();
-        var url = '/api/v1/data/similar/' + sId + '/' + searchCriteria + "?format=dt";
+        var url = '/surveyKPI/api/data/similar/' + sId + '/' + searchCriteria + "?format=dt";
         url += "&tz=" + encodeURIComponent(globals.gTimezone);
 
         if(searchCriteria && searchCriteria.length > 0) {
