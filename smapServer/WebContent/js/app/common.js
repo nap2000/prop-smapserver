@@ -5921,7 +5921,11 @@ function checkExistenceOfReferences(refQuestions, survey) {
  * Respond to a logged out redirect
  */
 function handleLogout(data) {
-	if(data && data.code && data.code === 401) {
+	if(data &&
+		((data.code && data.code === 401)
+			|| (data.status && data.status === 405))) {
 		window.location.href = "/login.html";
+		return false;
 	}
+	return true;
 }

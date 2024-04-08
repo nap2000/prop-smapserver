@@ -820,7 +820,9 @@ require([
 								refreshTaskGroupData();
 							}, error: function (data, status) {
 								removeHourglass();
-								alert(localise.set["c_error"] + ": " + data.responseText);
+								if(handleLogout(data)) {
+									alert(localise.set["c_error"] + ": " + data.responseText);
+								}
 							}
 						});
 					}
