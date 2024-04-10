@@ -493,6 +493,7 @@ require([
                     showManagedData(globals.gCurrentSurvey, showTable, true);
                 }, error: function (data, status) {
                     removeHourglass();
+                    handleLogout(data);
                     $('#m_lock').prop("disabled", false);     // debounce
                     alert(data.responseText);
                 }
@@ -523,6 +524,7 @@ require([
                     showManagedData(globals.gCurrentSurvey, showTable, true);
                 }, error: function (data, status) {
                     removeHourglass();
+                    handleLogout(data);
                     $('#assignUserSave').prop("disabled", false);     // debounce
                     alert(data.responseText);
                 }
@@ -552,6 +554,7 @@ require([
                     showManagedData(globals.gCurrentSurvey, showTable, true);
                 }, error: function (data, status) {
                     removeHourglass();
+                    handleLogout(data);
                     $('#m_release').prop("disabled", false);     // debounce
                     alert(data.responseText);
                 }
@@ -585,7 +588,7 @@ require([
                 },
                 success: function (data, status) {
                     removeHourglass();
-
+                    handleLogout(data);
                     // Update the current values
                     var i,
                         record = gTasks.gSelectedRecord,
@@ -2374,16 +2377,18 @@ require([
         if(record && globals.gCurrentSurvey) {
             addHourglass();
             $.ajax({
-                url: "/api/v1/data/changes/" + globals.gCurrentSurvey + "/" + record["instanceid"] +
+                url: "/surveyKPI/api/data/changes/" + globals.gCurrentSurvey + "/" + record["instanceid"] +
                     '?tz=' + encodeURIComponent(globals.gTimezone),
                 dataType: 'json',
                 cache: false,
                 success: function (data) {
                     removeHourglass();
-                    window.gChanges = data;
-                    globals.gRecordChangeMaps = [];     // Initialise the list of maps we are going to show
+                    if(handleLogout(data)) {
+                        window.gChanges = data;
+                        globals.gRecordChangeMaps = [];     // Initialise the list of maps we are going to show
 
-                    showHistory(data);
+                        showHistory(data);
+                    }
 
                 },
                 error: function (xhr, textStatus, err) {
@@ -3152,48 +3157,50 @@ require([
 			    cache: false,
 			    success: function (data) {
 				    removeHourglass();
-				    gRefreshingData = false;
-				    gGetSettings = false;
+                    if(handleLogout(data)) {
+                        gRefreshingData = false;
+                        gGetSettings = false;
 
-				    var theCallback = callback;
-				    if(data && data.status === "error") {
-					    alert(data.msg);
-					    clearTable();
-					    return;
-				    } else if(data.data && data.data[0] && data.data[0].status === "error") {
-					    alert(data.data[0].msg);
-					    clearTable();
-					    return;
-				    } else if(data && data.status === "ok") {
-					    // Continue presumably there is no data
-					    clearTable();
-					    return;
-				    } else {
-					    var theKey = url;
+                        var theCallback = callback;
+                        if (data && data.status === "error") {
+                            alert(data.msg);
+                            clearTable();
+                            return;
+                        } else if (data.data && data.data[0] && data.data[0].status === "error") {
+                            alert(data.data[0].msg);
+                            clearTable();
+                            return;
+                        } else if (data && data.status === "ok") {
+                            // Continue presumably there is no data
+                            clearTable();
+                            return;
+                        } else {
+                            var theKey = url;
 
-					    gTasks.cache.data[theKey] = data;
-					    gTasks.cache.currentData = data;
+                            gTasks.cache.data[theKey] = data;
+                            gTasks.cache.currentData = data;
 
-					    updateSettings(gTasks.cache.currentData.settings);
-					    map.setLayers(gTasks.cache.currentData.schema.layers);
-					    updateFormList(gTasks.cache.currentData.forms);
-                        updateCharts(gTasks.cache.currentData.settings.charts);
+                            updateSettings(gTasks.cache.currentData.settings);
+                            map.setLayers(gTasks.cache.currentData.schema.layers);
+                            updateFormList(gTasks.cache.currentData.forms);
+                            updateCharts(gTasks.cache.currentData.settings.charts);
 
-					    // Add a config item for the group value if this is a duplicates search
-					    if (isDuplicates) {
-						    gTasks.cache.currentData.schema.columns.unshift({
-							    hide: true,
-							    include: true,
-							    column_name: "_group",
-							    displayName: "_group"
-						    });
-					    }
+                            // Add a config item for the group value if this is a duplicates search
+                            if (isDuplicates) {
+                                gTasks.cache.currentData.schema.columns.unshift({
+                                    hide: true,
+                                    include: true,
+                                    column_name: "_group",
+                                    displayName: "_group"
+                                });
+                            }
 
-					    // Initialise the column settings
-					    initialiseColumns();
+                            // Initialise the column settings
+                            initialiseColumns();
 
-					    theCallback(data);
-				    }
+                            theCallback(data);
+                        }
+                    }
 			    },
 			    error: function (xhr, textStatus, err) {
 				    removeHourglass();
