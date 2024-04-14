@@ -96,7 +96,7 @@ require([
 
 			}, error: function(data, status) {
 				removeHourglass();
-				$('.pwd_alert').show().removeClass('d-none alert-success alert-info').addClass('alert-danger').html(localise.set["c_error"] + ": " + data.responseText);
+				$('.pwd_alert').show().removeClass('d-none alert-success alert-info').addClass('alert-danger').html(localise.set["c_error"] + ": " + htmlEncode(data.responseText));
 			}
 		});
 		return false;

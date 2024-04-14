@@ -89,7 +89,7 @@ require([
 				url: "/surveyKPI/onetimelogon/" + email,
 				success: function (data, status) {
 					removeHourglass();
-					$('.pwd_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_es"] + " " + email);
+					$('.pwd_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_es"] + " " + htmlEncode(email));
 					$('.pwd_home').show();
 				}, error: function (data, status) {
 					removeHourglass();
@@ -99,7 +99,7 @@ require([
 					if (idx1 > 0 && idx2 > idx1) {
 						msg = msg.substring(idx1, idx2);
 					}
-					$('.pwd_alert').show().addClass('alert-danger').removeClass('alert-success').html(localise.set["c_error"] + ": " + msg);
+					$('.pwd_alert').show().addClass('alert-danger').removeClass('alert-success').text(localise.set["c_error"] + ": " + htmlEncode(msg));
 				}
 			});
 		}

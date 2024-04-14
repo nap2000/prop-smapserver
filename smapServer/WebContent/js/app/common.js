@@ -189,6 +189,7 @@ function saveCurrentProject(projectId, surveyId, taskGroupId) {
 			data: userString,
 			success: function(data, status) {
 				removeHourglass();
+				handleLogout(data);
 			}, error: function(data, status) {
 				removeHourglass();
 			}
@@ -218,6 +219,7 @@ function saveCurrentGroupSurvey(surveyId, gs, fName) {
 			data: JSON.stringify(groupSurvey),
 			success: function (data, status) {
 				removeHourglass();
+				handleLogout(data);
 			}, error: function (data, status) {
 				removeHourglass();
 			}
