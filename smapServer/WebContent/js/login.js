@@ -61,6 +61,7 @@ require([
                 $('#signup').hide();
             }
 
+            /*
             $('#username').change(function() {
                let username =  $('#username').val();
                if(username && username.trim().length > 0) {
@@ -88,6 +89,7 @@ require([
                    });
                }
             });
+             */
         });
 
     });
