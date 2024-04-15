@@ -84,9 +84,11 @@ require([
 			$('.pwd_alert, .pwd_home').hide();
 			addHourglass();
 			$.ajax({
-				type: "GET",
+				type: "POST",
+				contentType: "text/html",
 				cache: false,
-				url: "/surveyKPI/onetimelogon/" + email,
+				data: email,
+				url: "/surveyKPI/onetimelogon",
 				success: function (data, status) {
 					removeHourglass();
 					$('.pwd_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_es"] + " " + htmlEncode(email));
