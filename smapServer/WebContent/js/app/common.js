@@ -213,7 +213,7 @@ function saveCurrentGroupSurvey(surveyId, gs, fName) {
 		addHourglass();
 		$.ajax({
 			type: "POST",
-			contentType: "text/html",
+			contentType: "application/x-www-form-urlencoded",
 			url: "/surveyKPI/user/groupsurvey",
 			cache: false,
 			data: JSON.stringify(groupSurvey),

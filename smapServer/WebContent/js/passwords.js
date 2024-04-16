@@ -85,7 +85,8 @@ require([
 			addHourglass();
 			$.ajax({
 				type: "POST",
-				contentType: "text/html",
+				contentType: "application/x-www-form-urlencoded",
+				dataType: 'text',
 				cache: false,
 				data: email,
 				url: "/surveyKPI/onetimelogon",
