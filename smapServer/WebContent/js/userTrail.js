@@ -336,7 +336,7 @@ require([
 			dataType: 'json',
 			success: function(data) {
 				removeHourglass();
-				if(!handleLogout(data)) {
+				if(handleLogout(data)) {
 					updateUserList(data);
 					getData();
 				}

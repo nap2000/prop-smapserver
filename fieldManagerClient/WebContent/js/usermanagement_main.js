@@ -1608,12 +1608,12 @@ require([
 		addHourglass();
 		$.ajax({
 			type: "POST",
-			contentType: "text/html",
+			contentType: "application/x-www-form-urlencoded",
 			url: "/surveyKPI/userList",
 			data: userString,
 			success: function (data, status) {
 				removeHourglass();
-				if(!handleLogout(data)) {
+				if(handleLogout(data)) {
 					$('#userDetailsSave').prop("disabled", false);
 					if (userList[0].ident == globals.gLoggedInUser.ident) {	// Restart if a user updated their own settings
 						location.reload();
@@ -2347,7 +2347,7 @@ require([
 			cache: false,
 			success: function(data) {
 				removeHourglass();
-				if(!handleLogout(data)) {
+				if(handleLogout(data)) {
 					gUsers = data;
 					updateUserTable();
 				}
@@ -2506,17 +2506,17 @@ require([
 		addHourglass();
 		$.ajax({
 			type: "DELETE",
-			contentType: "text/html",
+			contentType: "application/x-www-form-urlencoded",
 			url: "/surveyKPI/userList",
 			data: JSON.stringify(users),
 			success: function(data, status) {
 				removeHourglass();
-				if(!handleLogout(data)) {
+				if(handleLogout(data)) {
 					getUsers();
 				}
 			}, error: function(data, status) {
 				removeHourglass();
-				if(!handleLogout(data.responseText)) {
+				if(handleLogout(data.responseText)) {
 					var msg = localise.set["msg_err_del"];
 					if (typeof data != "undefined" && typeof data.responseText != "undefined") {
 						msg = data.responseText;

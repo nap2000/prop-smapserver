@@ -5765,7 +5765,7 @@ function getEligibleUsers(sId, isNotification) {
 			cache: false,
 			success: function (data) {
 				removeHourglass();
-				if(!handleLogout(data)) {
+				if(handleLogout(data)) {
 					var h = [],
 						idx = -1,
 						$elem = $('#user_to_assign');

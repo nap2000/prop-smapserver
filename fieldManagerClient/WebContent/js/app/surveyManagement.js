@@ -855,31 +855,35 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                     url : resultCountURL,
                     dataType : 'json',
                     cache: false,
-                    error : function() {
+                    error : function(data) {
                         removeHourglass();
-                        executeDelete(template, true, hard);	// Just delete as this is what the user has requested
+                        if(handleLogout(data)) {
+                            executeDelete(template, true, hard);    // Just delete as this is what the user has requested
+                        }
 
                     },
                     success : function(response) {
-                        var totalRows = 0,
-                            msg, decision;
+                        if(handleLogout(response)) {
+                            var totalRows = 0,
+                                msg, decision;
 
-                        removeHourglass();
+                            removeHourglass();
 
-                        $.each(response.forms, function(index,value) {
-                            totalRows += value.rows;
-                        });
+                            $.each(response.forms, function (index, value) {
+                                totalRows += value.rows;
+                            });
 
-                        if (totalRows == 0) {
-                            executeDelete(template, true, hard);	// Delete survey template and data tables
-                        } else {
-                            msg = localise.set["msg_del_recs"];
-                            msg = msg.replace("%s1", totalRows);
-                            msg = msg.replace("%s2", name);
+                            if (totalRows == 0) {
+                                executeDelete(template, true, hard);	// Delete survey template and data tables
+                            } else {
+                                msg = localise.set["msg_del_recs"];
+                                msg = msg.replace("%s1", totalRows);
+                                msg = msg.replace("%s2", name);
 
-                            decision = confirm(msg);
-                            if (decision == true) {
-                                executeDelete(template, true, hard);
+                                decision = confirm(msg);
+                                if (decision == true) {
+                                    executeDelete(template, true, hard);
+                                }
                             }
                         }
                     }
@@ -907,16 +911,21 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             $.ajax({
                 type : 'DELETE',
                 url : delURL,
+                dataType: 'text',
                 cache: false,
-                error : function() {
+                error : function(data) {
                     removeHourglass();
-                    alert(localise.set["msg_err_del"]);
+                    if(handleLogout(data)) {
+                        alert(localise.set["msg_err_del"]);
+                    }
                 },
-                success : function() {
+                success : function(data) {
                     removeHourglass();
-                    var projectId = $('#project_name option:selected').val();
-                    getSurveys(projectId);
-                    getPotentialGroupSurveys();
+                    if(handleLogout(data)) {
+                        var projectId = $('#project_name option:selected').val();
+                        getSurveys(projectId);
+                        getPotentialGroupSurveys();
+                    }
                 }
             });
         }
