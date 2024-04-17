@@ -5929,7 +5929,7 @@ function handleLogout(data) {
 	if(data &&
 		((data.code && data.code === 401)
 			|| (data.status && data.status === 405)
-			|| data === '{ "code": 401 }')) {
+			|| (data.indexOf('"code": 401') >= 0))) {
 		window.location.href = "/login.html";
 		return false;
 	}
