@@ -19,43 +19,52 @@ require.config({
 });
 
 require(['jquery', 'app/localise', 'app/common','app/globals'],
-		function($,  localise, common, globals) {
-	
-	var params,
-		pArray = [],
-		param = [],
-		i,
-		androidVersion;
+	function($,  localise, common, globals) {
 
-	setTheme();
-	// Show default logo
-	try {
-		let mainLogo = localStorage.getItem("main_logo");
-		if (typeof mainLogo !== 'undefined' && mainLogo !== "undefined" && mainLogo) {
-			let img = document.getElementById('main_logo');
-			console.log("Logo: " + mainLogo);
-			img.setAttribute("src", mainLogo);
+		var params,
+			pArray = [],
+			param = [],
+			i,
+			androidVersion;
+
+		setTheme();
+		// Show default logo
+		try {
+			let mainLogo = localStorage.getItem("main_logo");
+			if (typeof mainLogo !== 'undefined' && mainLogo !== "undefined" && mainLogo) {
+				let img = document.getElementById('main_logo');
+				console.log("Logo: " + mainLogo);
+				img.setAttribute("src", mainLogo);
+			}
+		} catch (e) {
+
 		}
-	} catch (e) {
 
-	}
+		/*
+         * If the user is logged in then get their details
+         */
+		isLoggedIn();
 
-	/*
-	 * If the user is logged in then get their details
-	 */
-	isLoggedIn();
+		removeServiceWorker();
 
-	removeServiceWorker();
+		/*
+         * Enable self registration
+         */
+		if(isSelfRegistrationServer()) {
+			$('#signup').show().removeClass('d-none');
+		} else {
+			$('#signup').hide();
+		}
 
-	/*
-	 * Add links to download fieldTask
-	 */
-	androidVersion = parseFloat(getAndroidVersion());
-	if(androidVersion == 0 || androidVersion >= 4.1) {		// Default to downloading the new APK
-		$('.ftapk').attr("href", "fieldTask.apk");
-	} else {
-		$('.ftapk').attr("href", "fieldTaskPreJellyBean.apk");
-	}
+		/*
+         * Add links to download fieldTask
+         */
+		androidVersion = parseFloat(getAndroidVersion());
+		if(androidVersion == 0 || androidVersion >= 4.1) {		// Default to downloading the new APK
+			$('.ftapk').attr("href", "fieldTask.apk");
+		} else {
+			$('.ftapk').attr("href", "fieldTaskPreJellyBean.apk");
+		}
 
  });
 

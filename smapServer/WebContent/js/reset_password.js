@@ -47,14 +47,37 @@ require([
 	$(document).ready(function() {
 
 		setTheme();
-		$('#passwordConfirm, #passwordValue').keydown(function() {
+		$('#passwordConfirm, #passwordValue').keydown(function () {
 			$('.pwd_alert').hide();
 		});
 
-		$('#goback').click(function(){
-			history.back();
-		})
+		/*
+ 		* Check to see if a reset is needed
+ 		*/
+		$.ajax({
+			url: '/surveyKPI/login/basic',
+			cache: false,
+			dataType: 'json',
+			success: function (data) {
+				if (data && data.hasBasicPassword) {
+					$('.noreset').removeClass("d-none").show();
+					$('.complete').removeClass("d-none").show();
+				} else {
+					$('.reset').removeClass("d-none").show();
+				}
+			},
+			error: function (xhr, textStatus, err) {
+
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					console.log(htmlEncode(xhr.responseText));
+				}
+			}
+		});
+
 	});
+
 
 	function validate() {
 		var pv =  $('#password').val();
@@ -92,7 +115,7 @@ require([
 				removeHourglass();
 
 				$('.pwd_alert').show().removeClass('d-none alert-danger alert-info').addClass('alert-success').html(localise.set["msg_pr"]);
-				$('.pwd_home').show().removeClass('d-none');
+				$('.complete').show().removeClass('d-none');
 
 			}, error: function(data, status) {
 				removeHourglass();
