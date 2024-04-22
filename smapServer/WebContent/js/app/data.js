@@ -30,20 +30,22 @@ function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, curren
 			dataType: 'json',
 			success: function(data) {
 				removeHourglass();
-				globals.gSelector.addSurvey(sId, data);
-				if(getS) {
-					 getSurveyDataSE(sId, view);
-				}
-				if(updateExport) {
-					addFormPickList(data);
-				}
-				if(updateDatePicker) {
-					addDatePickList(data, currentDate);
-					addGeomPickList(data);
-				}
+				if(handleLogout(data)) {
+					globals.gSelector.addSurvey(sId, data);
+					if (getS) {
+						getSurveyDataSE(sId, view);
+					}
+					if (updateExport) {
+						addFormPickList(data);
+					}
+					if (updateDatePicker) {
+						addDatePickList(data, currentDate);
+						addGeomPickList(data);
+					}
 
-				if(typeof callback === "function") {
-					callback();
+					if (typeof callback === "function") {
+						callback();
+					}
 				}
 
 			},

@@ -5929,8 +5929,8 @@ function handleLogout(data) {
 	if(data &&
 		((data.code && data.code === 401)
 			|| (data.status && data.status === 405)
-			|| (data.indexOf('"code": 401') >= 0))) {
-		window.location.href = "/login.html";
+			|| (typeof data === "string" && data.indexOf('"code": 401') >= 0))) {
+		window.open("/login.html");
 		return false;
 	}
 	return true;

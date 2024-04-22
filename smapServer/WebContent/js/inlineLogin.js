@@ -23,82 +23,82 @@ if (Modernizr.localstorage) {
 
 "use strict";
 
-        $(document).ready(function() {
-            var msg = "";
-            var search = window.location.search;
-            if (search.indexOf("?error") === 0) {
-                msg = "Invalid username and/or password";
-            } else if (search == "?loggedout") {
-                msg = "Successfully logged out";
-            } else if (search == "?banned") {
-                msg = "Temporarily banned due to too many login attempts";
-            }
-            $("#msg").html(msg).show().removeClass('d-none');
+$(document).ready(function() {
+    var msg = "";
+    var search = window.location.search;
+    if (search.indexOf("?error") === 0) {
+        msg = "Invalid username and/or password";
+    } else if (search == "?loggedout") {
+        msg = "Successfully logged out";
+    } else if (search == "?banned") {
+        msg = "Temporarily banned due to too many login attempts";
+    }
+    $("#msg").html(msg).show().removeClass('d-none');
 
-            let count = 0;      // The number of timea the user has previously tried to logon
-            if (typeof(localStorage) !== "undefined") {
-                /*
-                 * Determine if the user is retrying the logon within 5 minutes
-                 */
-                count = localStorage.getItem("login_count");
-                let loginStart = localStorage.getItem("login_start");   // seconds
-                let loginTime = Date.now() / 1000;
+    let count = 0;      // The number of timea the user has previously tried to logon
+    if (typeof(localStorage) !== "undefined") {
+        /*
+         * Determine if the user is retrying the logon within 5 minutes
+         */
+        count = localStorage.getItem("login_count");
+        let loginStart = localStorage.getItem("login_start");   // seconds
+        let loginTime = Date.now() / 1000;
 
-                /*
-                 * Handle initialisation of variables
-                 */
-                if (!count) {
-                    count = 0;
-                } else {
-                    count = parseInt(count);
-                }
-                if (!loginStart) {
-                    loginStart = loginTime;
-                    localStorage.setItem("login_start", loginStart);
-                } else {
-                    loginStart = parseInt(loginStart);
-                }
+        /*
+         * Handle initialisation of variables
+         */
+        if (!count) {
+            count = 0;
+        } else {
+            count = parseInt(count);
+        }
+        if (!loginStart) {
+            loginStart = loginTime;
+            localStorage.setItem("login_start", loginStart);
+        } else {
+            loginStart = parseInt(loginStart);
+        }
 
-                /*
-                 * Handle reset if more than 10 minutes has elapsed since last logon
-                 */
-                if ((loginTime - loginStart) > 600) {
-                    // reset
-                    count = 0;
-                }
+        /*
+         * Handle reset if more than 10 minutes has elapsed since last logon
+         */
+        if ((loginTime - loginStart) > 600) {
+            // reset
+            count = 0;
+        }
 
-                /*
-                 * Save latest values of login count variables
-                 */
-                if (count === 0) {
-                    localStorage.setItem("login_start", loginTime);
-                }
+        /*
+         * Save latest values of login count variables
+         */
+        if (count === 0) {
+            localStorage.setItem("login_start", loginTime);
+        }
 
-                /*
-                 * Show the count to blocking if login count exceeds 1
-                 */
-                if(count > 0 && count < 9) {
-                    $('#ban').text('Error! You have ' + (10 - count) + ' logon attempts left' );
-                } else if(count === 10) {
-                    $('#ban').text('Error! You have 1 logon attempt left' );
-                } else if(count > 10){
-                    $('#ban').text('Error! But it looks like the retry limit is not enabled on your server' );
-                }
+        /*
+         * Show the count to blocking if login count exceeds 1
+         */
+        if(count > 0 && count < 9) {
+            $('#ban').text('Error! You have ' + (10 - count) + ' logon attempts left' );
+        } else if(count === 10) {
+            $('#ban').text('Error! You have 1 logon attempt left' );
+        } else if(count > 10){
+            $('#ban').text('Error! But it looks like the retry limit is not enabled on your server' );
+        }
 
-                /*
-                 * Record this logon attempt
-                 */
-                localStorage.setItem("login_count", count + 1);
-            }
+        /*
+         * Record this logon attempt
+         */
+        localStorage.setItem("login_count", count + 1);
+    }
 
-            /*
-             * Put up message saying the user may need to reset their password
-             */
-            if(count > 0) {
-                $('#resetPassword').removeClass('d-none').show();
-            }
+    /*
+     * Put up message saying the user may need to reset their password
+     */
+    if(count > 0) {
+        $('#resetPassword').removeClass('d-none').show();
+    }
 
-        });
+});
 
 
 

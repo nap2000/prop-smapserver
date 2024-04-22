@@ -22,77 +22,11 @@ if (Modernizr.localstorage) {
 }
 
 "use strict";
-require.config({
-    baseUrl: 'js/libs',
-    waitSeconds: 0,
-    locale: gUserLocale,
-    paths: {
-        app: '../app',
-        lang_location: '..'
-    },
-    shim: {
-        'app/common': ['jquery']
-    }
-});
-
-require([
-        'jquery',
-        'app/common'],
-    function($, localise) {
-
-        $(document).ready(function() {
-            var msg = "";
-            var search = window.location.search;
-            if (search.indexOf("?error") === 0) {
-                msg = "Invalid username and/or password";
-            } else if (search == "?loggedout") {
-                msg = "Successfully logged out";
-            } else if (search == "?banned") {
-                msg = "Temporarily banned due to too many login attempts";
-            }
-            $("#msg").html(msg).show().removeClass('d-none');
-
-            /*
-             * Enable self registration
-             */
-            if(isSelfRegistrationServer()) {
-                $('#signup').show().removeClass('d-none');
-            } else {
-                $('#signup').hide();
-            }
-
-            /*
-            $('#username').change(function() {
-               let username =  $('#username').val();
-               if(username && username.trim().length > 0) {
-                   $.ajax({
-                       url: '/surveyKPI/login/basic/' + username,
-                       cache: false,
-                       dataType: 'json',
-                       success: function(data) {
-                           if(data && data.hasBasicPassword) {
-                               $('#resetPassword').hide();
-                               $('.login').show();
-                           } else {
-                               $('#resetPassword').removeClass('d-none').show();
-                               $('.login').hide();
-                           }
-                       },
-                       error: function(xhr, textStatus, err) {
-
-                           if(xhr.readyState == 0 || xhr.status == 0) {
-                               return;  // Not an error
-                           } else {
-                               console.log(htmlEncode(xhr.responseText));
-                           }
-                       }
-                   });
-               }
-            });
-             */
-        });
-
+$(document).ready(function() {
+    $(document).ready(function() {
+        window.close();
     });
+});
 
 
 

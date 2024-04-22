@@ -286,15 +286,19 @@ require([
 				data: { notification: notificationString },
 				success: function(data, status) {
 					removeHourglass();
-					getNotifications(globals.gCurrentProject);
-					$('#addNotificationPopup').modal("hide");
+					if(handleLogout(data)) {
+						getNotifications(globals.gCurrentProject);
+						$('#addNotificationPopup').modal("hide");
+					}
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
-					if(xhr.readyState == 0 || xhr.status == 0) {
-						return;  // Not an error
-					} else {
-						alert(localise.set["msg_err_save"] + xhr.responseText);	// Alerts htmlencode text already
+					if(handleLogout(xhr.responseText)) {
+						if (xhr.readyState == 0 || xhr.status == 0) {
+							return;  // Not an error
+						} else {
+							alert(localise.set["msg_err_save"] + xhr.responseText);	// Alerts htmlencode text already
+						}
 					}
 				}
 			});
