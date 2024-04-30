@@ -2591,7 +2591,7 @@ require([
             $('#dashboardInfo').hide();
             var idx = $(this).data("idx");
             var task = window.gChanges[idx].task;
-            var url = "/api/v1/tasks/assignment/" + task.assignmentId + "?taskid=" + task.taskId;
+            var url = "/surveyKPI/api/tasks/assignment/" + task.assignmentId + "?taskid=" + task.taskId;
             // Get the task details and then open the editor dialog
 
             $.ajax({
