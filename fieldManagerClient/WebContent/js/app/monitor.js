@@ -688,81 +688,13 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                     }
                 });
             });
-
-
         }
-
-        /*
-        function refreshFormsTable(forms) {
-
-            var $elem = $("#events"),
-                $msg = $('#events_table_msg'),
-                h = [],
-                i = -1;
-
-            $elem.empty();
-            $msg.empty();
-
-            if($('#project_name').val() == 0) {
-                var msg = "<h5>" + localise.set["msg_sp"] + "</h5>";
-                $msg.html(msg);
-                return;
-            }
-
-            if(typeof forms === "undefined" || forms.length === 0) {
-                var msg = "<h5>" + localise.set["msg_nf"] + "</h5>";
-                $msg.html(msg);
-                return;
-            }
-
-            // Add the head
-            h[++i] = '<thead class="thead-dark">';
-            h[++i] = '<tr>';
-            h[++i] = '<th>' + localise.set["c_user"] + ' ' + localise.set["c_name"] + '</th>';
-            h[++i] = '<th>' + localise.set["c_user"] + ' ' + localise.set["c_ident"] + '</th>';
-            h[++i] = '<th>' + localise.set["c_device"] + ' ' + localise.set["c_ident"] + '</th>';
-            h[++i] = '<th>' + localise.set["c_survey"] + ' ' + localise.set["c_name"] + '</th>';
-            h[++i] = '<th>' + localise.set["c_survey"] + ' ' + localise.set["c_version"] + '</th>';
-            h[++i] = '</tr>';
-            h[++i] = '</thead>';
-
-
-            // Add the body
-            h[++i] = '<tbody>';
-            for(j = 0; j < forms.length; j++) {
-                h[++i] = '<tr>';
-                h[++i] = '<td>' + htmlEncode(forms[j].u_name) + '</td>';
-                h[++i] = '<td>' + htmlEncode(forms[j].u_ident) + '</td>';
-                h[++i] = '<td>' + htmlEncode(forms[j].device_id) + '</td>';
-
-                if(forms[j].no_download) {
-                    h[++i] = '<td class="error">' + htmlEncode(forms[j].survey_name) + '</td>';
-                } else {
-                    h[++i] = '<td class="success">' + htmlEncode(forms[j].survey_name) + '</td>';
-                }
-
-                if(forms[j].survey_version === forms[j].download_version || forms[j].download_version === '') {
-                    h[++i] = '<td class="success">' + forms[j].download_version + '</td>';
-                } else {
-                    h[++i] = '<td class="error">' + forms[j].download_version + ' (' +
-                        forms[j].survey_version + ')'+ '</td>';
-                }
-
-                h[++i] = '</tr>';
-
-            }
-            h[++i] = '</tbody>';
-            $elem.html(h.join(''));
-
-        }
-
-         */
 
         function refreshCases() {
             var sId = $('#survey').val();
             if(sId && sId != "_all") {
 
-                var url = "/api/v1/cases/progress/" + $('#survey').val() + "?intervalCount=" + $('#showInterval').val();
+                var url = "/surveyKPI/api/cases/progress/" + $('#survey').val() + "?intervalCount=" + $('#showInterval').val();
                 var savedData = gMonitor.cache[url];
                 if(savedData) {
                     gMonitor.caseProgress = savedData;
