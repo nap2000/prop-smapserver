@@ -429,6 +429,54 @@ function addUserDetailsPopupBootstrap4() {
 }
 
 /*
+ * Add user details popup to the page
+ */
+function addApiKeyPopup() {
+	var	h =[],
+		idx = -1;
+
+	h[++idx] = '<div id="api_key_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="apiKeyLabel" aria-hidden="true">';
+	h[++idx] = '<div class="modal-dialog modal-lg">';
+	h[++idx] = '<div class="modal-content">';
+	h[++idx] = '<div class="modal-header">';
+	h[++idx] = '<h4 class="modal-title" id="apiKeyLabel"></h4>';
+	h[++idx] = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+	h[++idx] = '</div>';    // modal-headers
+
+	h[++idx] = '<div class="modal-body">';
+	h[++idx] = '<form>';
+	h[++idx] = '<div class="form-group">';
+	h[++idx] = '<input type="text" id="apiKey" required class="form-control" readOnly>';
+	h[++idx] = '</div>';
+	h[++idx] = '</form>';
+	h[++idx] = '<button id="getKey" type="button" class="btn btn-primary">';
+	h[++idx] = localise.set["c_gak"];
+	h[++idx] = '</button>';
+	h[++idx] = '<button id="deleteKey" type="button" class="btn btn-danger">';
+	h[++idx] = localise.set["c_del"];
+	h[++idx] = '</button>';
+	h[++idx] = '<button id="copyKey" type="button" class="btn btn-default has_tt" title="Copy Key">';
+	h[++idx] = localise.set["c_ck"];
+	h[++idx] = '</button>';
+	h[++idx] = '</div>';
+
+	h[++idx] = '<div class="modal-footer">';
+	h[++idx] = '<button type="button" class="btn btn-default" data-dismiss="modal">';
+	h[++idx] = localise.set["c_close"];
+	h[++idx] = '</button>';
+
+	h[++idx] = '</div>';    // modal - footer
+	h[++idx] = '</div>';        // modal - content
+	h[++idx] = '</div>';            // modal - dialog
+	h[++idx] = '</div>';                // popup
+
+	$(document.body).append(h.join(''));
+
+	enableApiKeyPopup();
+}
+
+
+/*
  * Update the user details on the page
  */
 function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServerDetailsFn) {
@@ -810,10 +858,7 @@ function enableUserProfileBS () {
 	 * Save the user profile
 	 */
 	$('#userProfileSave').click(function() {
-		var user = globals.gLoggedInUser,
-			userList = [],
-			error = false,
-			userList;
+		var user = globals.gLoggedInUser;
 
 		user.name = $('#me_name').val();
 		user.language = $('#me_language').val();
@@ -821,7 +866,6 @@ function enableUserProfileBS () {
 		if($('#me_password').is(':visible')) {
 			user.password = $('#me_password').val();
 			if($('#me_password_confirm').val() !== user.password) {
-				error = true;
 				user.password = undefined;
 				$('#me_alert').removeClass('alert-success d-none').addClass('alert-danger').text(localise.set["msg_pwd_m"]).show();
 				$('#me_password').focus();
@@ -854,6 +898,68 @@ function enableUserProfileBS () {
 		} else {
 			$('#password_me_fields').hide();
 		}
+	});
+}
+
+/*
+ * Respond to events on the API key popup
+ */
+function enableApiKeyPopup() {
+
+	$('#api_key_popup').on('show.bs.modal', function (event) {
+		/*
+		 * Get the current API key
+		 */
+		addHourglass();
+		$.ajax({
+			url: '/surveyKPI/user/api_key',
+			cache: false,
+			success: function (data) {
+				removeHourglass();
+				// TODO Enable / disable
+				$('#apiKey').val(data.apiKey);
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					console.log("Error: Failed to get api key: " + err);
+				}
+			}
+		});
+	});
+
+	/*
+	 * Get a new key
+	 * TODO
+	 */
+	$('#getKey').click(function () {
+
+		var url = "/surveyKPI/survey/" +
+			gLinkSurvey.id + "/link";
+
+		addHourglass();
+		$.ajax({
+			url: url,
+			cache: false,
+			success: function (data) {
+
+				removeHourglass();
+				gLinkSurvey.publicLink = data;
+				$('#srLink').val(data);
+				setLinkControls();
+				completeSurveyList();
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					console.log("Error: Failed to get sharing link: " + err);
+				}
+			}
+		});
 	});
 }
 
@@ -957,6 +1063,7 @@ function setupUserProfile(bs4) {
 
 	if(bs4) {
 		addUserDetailsPopupBootstrap4();
+		addApiKeyPopup();
 	} else {
 		addUserDetailsPopup();	// legacy
 	}
@@ -4490,7 +4597,6 @@ function getTaskUsers(projectId) {
 
 	$users.empty();
 	$('#users_filter').append('<option value="0">' + localise.set["t_au"] + '</options>');
-	//$('#users_filter').append('<option value="-1">' + localise.set["t_u"] + '</options>');
 
 	$('#users_select_new_task, #users_task_group, #users_select_user, #tp_user')
 		.append('<option value="-1">' + localise.set["t_u"] + '</options>');
