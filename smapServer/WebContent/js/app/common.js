@@ -910,53 +910,100 @@ function enableApiKeyPopup() {
 		/*
 		 * Get the current API key
 		 */
+		$('#getKey').prop('disabled', true);
 		addHourglass();
 		$.ajax({
 			url: '/surveyKPI/user/api_key',
 			cache: false,
 			success: function (data) {
 				removeHourglass();
-				// TODO Enable / disable
-				$('#apiKey').val(data.apiKey);
+				if (handleLogout(data)) {
+					$('#apiKey').val(data.apiKey);
+					$('#getKey').prop('disabled', false);
+					if (data.apiKey) {
+						$('#getKey').text(localise.set["c_rak"]);
+						$('#deleteKey,#copyKey').prop('disabled', false);
+					} else {
+						$('#getKey').text(localise.set["c_gak"]);
+						$('#deleteKey,#copyKey').prop('disabled', true);
+					}
+				}
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
-				if (xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					console.log("Error: Failed to get api key: " + err);
+				if (handleLogout(xhr.responseText)) {
+					$('#getKey').prop('disabled', false);
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(err);
+						console.log("Error: Failed to get api key: " + err);
+					}
 				}
 			}
 		});
 	});
 
 	/*
-	 * Get a new key
-	 * TODO
+	 * Delete a key
 	 */
-	$('#getKey').click(function () {
-
-		var url = "/surveyKPI/survey/" +
-			gLinkSurvey.id + "/link";
-
+	$('#deleteKey').on("click",function () {
 		addHourglass();
 		$.ajax({
-			url: url,
+			type: "DELETE",
+			url: '/surveyKPI/user/api_key',
 			cache: false,
 			success: function (data) {
-
 				removeHourglass();
-				gLinkSurvey.publicLink = data;
-				$('#srLink').val(data);
-				setLinkControls();
-				completeSurveyList();
+				if (handleLogout(data)) {
+					$('#apiKey').val("");
+					$('#getKey').prop('disabled', false);
+					$('#getKey').text(localise.set["c_gak"]);
+					$('#deleteKey,#copyKey').prop('disabled', true);
+				}
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
-				if (xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					console.log("Error: Failed to get sharing link: " + err);
+				if (handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(err);
+						console.log("Error: Failed to delete api key: " + err);
+					}
+				}
+			}
+		});
+	});
+
+	/*
+	 * Create a key
+	 */
+	$('#getKey').on("click", function () {
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			cache: false,
+			contentType: "application/x-www-form-urlencoded",
+			dataType: 'json',
+			url: "/surveyKPI/user/api_key/create",
+			success: function (data) {
+				removeHourglass();
+				if (handleLogout(data)) {
+					$('#apiKey').val(data.apiKey);
+					$('#getKey').text(localise.set["c_rak"]);
+					$('#deleteKey,#copyKey').prop('disabled', false);
+				}
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(err);
+						console.log("Error: Failed to get api key: " + err);
+					}
 				}
 			}
 		});
