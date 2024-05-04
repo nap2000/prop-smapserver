@@ -452,10 +452,10 @@ function addApiKeyPopup() {
 	h[++idx] = '<button id="getKey" type="button" class="btn btn-primary">';
 	h[++idx] = localise.set["c_gak"];
 	h[++idx] = '</button>';
-	h[++idx] = '<button id="deleteKey" type="button" class="btn btn-danger">';
+	h[++idx] = '<button id="deleteKey" type="button" class="btn btn-danger ml-2">';
 	h[++idx] = localise.set["c_del"];
 	h[++idx] = '</button>';
-	h[++idx] = '<button id="copyKey" type="button" class="btn btn-default has_tt" title="Copy Key">';
+	h[++idx] = '<button id="copyKey" type="button" class="btn btn-default has_tt ml-2" title="Copy Key">';
 	h[++idx] = localise.set["c_ck"];
 	h[++idx] = '</button>';
 	h[++idx] = '</div>';
@@ -1007,6 +1007,20 @@ function enableApiKeyPopup() {
 				}
 			}
 		});
+	});
+
+	// Respond to a user clicking copy api key
+	$('.has_tt').tooltip();
+	$('#copyKey').click(function () {
+		var copyText = document.getElementById("apiKey");
+		copyText.select();
+		navigator.clipboard.writeText($('#apiKey').val());
+
+		$('#copyKey').tooltip('dispose').tooltip({title: localise.set["c_c"] + ": " + copyText.value}).tooltip('show');
+
+	});
+	$('#copyKey').mouseout(function () {
+		$('#copyKey').tooltip({title: localise.set["c_c"]});
 	});
 }
 
