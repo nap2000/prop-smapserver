@@ -598,14 +598,15 @@ require([
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
 					var msg = htmlEncode(xhr.responseText);
-					if(msg && msg === "only csv") {
-						msg = localise.set["t_efnl"] + " " + localise.set["msg_csv"];
-					} else {
-						msg = localise.set["t_efnl"] + " " + htmlEncode(xhr.responseText);
+					if(handleLogout(msg)) {
+						if (msg && msg === "only csv") {
+							msg = localise.set["t_efnl"] + " " + localise.set["msg_csv"];
+						} else {
+							msg = localise.set["t_efnl"] + " " + htmlEncode(xhr.responseText);
+						}
+
+						$('.load_file_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
 					}
-
-					$('.load_file_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
-
 				}
 			});
 		});

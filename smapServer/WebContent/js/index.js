@@ -19,88 +19,83 @@ require.config({
 });
 
 require(['jquery', 'app/localise', 'app/common','app/globals'],
-		function($,  localise, common, globals) {
-	
-	var params,
-		pArray = [],
-		param = [],
-		i,
-		loggedin=false,
-		androidVersion;
+	function($,  localise, common, globals) {
 
-	setTheme();
-	// Show default logo
-	try {
-		let mainLogo = localStorage.getItem("main_logo");
-		if (typeof mainLogo !== 'undefined' && mainLogo !== "undefined" && mainLogo) {
-			let img = document.getElementById('main_logo');
-			console.log("Logo: " + mainLogo);
-			img.setAttribute("src", mainLogo);
-		}
-	} catch (e) {
+		var params,
+			pArray = [],
+			param = [],
+			i,
+			androidVersion;
 
-	}
-
-	/*
-	 * If the user is logged in then get their details
-	 */
-	params = location.search.substr(location.search.indexOf("?") + 1)
-	pArray = params.split("&");
-	for (i = 0; i < pArray.length; i++) {
-		param = pArray[i].split("=");
-		if(param.length > 1) {
-			if ( param[0] === "loggedin" && param[1] === "yes" ) {
-				getLoggedInUser(undefined, false, false, undefined, false, false);
-				loggedin = true;
-			} 
-		}
-	}
-
-	/*
-	 * If the user is not logged in then enable the login button and disable other menus
-	 * which depend on their authorisation level
-	 */
-	if(loggedin) {
 		setTheme();
-		setupUserProfile(true);
-		localise.setlang();
-		$('.loggedin').show().removeClass('d-none');
-		$('.notloggedin').hide();
-	} else {
-		setCustomMainLogo();
-		$('.restrict_role').hide();
-		$('.notloggedin').show().removeClass('d-none');;
-		$('.loggedin').hide();
-	}
-	
-	/*
-	 * Enable self registration 
-	 */
-	if(isSelfRegistrationServer() && !loggedin) {
-		$('#signup').show().removeClass('d-none');;
-	} else {
-		$('#signup').hide();
-	}
-	
-	/*
-	 * Add logout function
-	 */
-	$('#logout').click(function(){
-		logout();
-	});
+		// Show default logo
+		try {
+			let mainLogo = localStorage.getItem("main_logo");
+			if (typeof mainLogo !== 'undefined' && mainLogo !== "undefined" && mainLogo) {
+				let img = document.getElementById('main_logo');
+				console.log("Logo: " + mainLogo);
+				img.setAttribute("src", mainLogo);
+			}
+		} catch (e) {
 
-	/*
-	 * Add links to download fieldTask
-	 */
-	androidVersion = parseFloat(getAndroidVersion());
-	if(androidVersion == 0 || androidVersion >= 4.1) {		// Default to downloading the new APK
-		$('.ftapk').attr("href", "fieldTask.apk");
-	} else {
-		$('.ftapk').attr("href", "fieldTaskPreJellyBean.apk");
-	}
+		}
+
+		/*
+         * If the user is logged in then get their details
+         */
+		isLoggedIn();
+
+		removeServiceWorker();
+
+		/*
+         * Enable self registration
+         */
+		if(isSelfRegistrationServer()) {
+			$('#signup').show().removeClass('d-none');
+		} else {
+			$('#signup').hide();
+		}
+
+		/*
+         * Add links to download fieldTask
+         */
+		androidVersion = parseFloat(getAndroidVersion());
+		if(androidVersion == 0 || androidVersion >= 4.1) {		// Default to downloading the new APK
+			$('.ftapk').attr("href", "fieldTask.apk");
+		} else {
+			$('.ftapk').attr("href", "fieldTaskPreJellyBean.apk");
+		}
 
  });
 
+function isLoggedIn() {
+	$.ajax({
+		cache: false,
+		url: "/authenticate/login.txt",
+		success: function (data, status) {
+			if(data == 'loggedin') {
+				getLoggedInUser(undefined, false, false, undefined, false, false);
+				setTheme();
+				setupUserProfile(true);
+				localise.setlang();
+				$('.loggedin').show().removeClass('d-none');
+				$('.notloggedin').hide();
+			} else {
+				setCustomMainLogo();
+				$('.restrict_role').hide();
+				$('.notloggedin').show().removeClass('d-none');;
+				$('.loggedin').hide();
+			}
+
+		}, error: function (data, status) {
+			setCustomMainLogo();
+			$('.restrict_role').hide();
+			$('.notloggedin').show().removeClass('d-none');;
+			$('.loggedin').hide();
+
+		}
+	});
+}
 /*
  * Get the android version - return 0.0 if it cannot be determined
  */
@@ -109,3 +104,17 @@ function getAndroidVersion() {
     var match = ua.match(/android\s([0-9\.]*)/);
     return match ? match[1] : 0;
 };
+
+/*
+ * Remove any service workers associated with this site
+ */
+function removeServiceWorker() {
+	if ('serviceWorker' in navigator) {
+		navigator.serviceWorker.getRegistrations()
+			.then(function(registrations) {
+				for(let registration of registrations) {
+					registration.unregister();
+				}
+			});
+	}
+}

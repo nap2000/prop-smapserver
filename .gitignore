@@ -40,7 +40,8 @@ local.properties
 .idea/
 workspace.xml
 
-# enketo 
+# webforms 
+smapServer/WebContent/build
 smapServer/WebContent/build/css.orig
 combined.min.js
 enketo-core.min.js

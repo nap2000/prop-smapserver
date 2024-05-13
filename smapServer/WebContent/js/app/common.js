@@ -189,6 +189,7 @@ function saveCurrentProject(projectId, surveyId, taskGroupId) {
 			data: userString,
 			success: function(data, status) {
 				removeHourglass();
+				handleLogout(data);
 			}, error: function(data, status) {
 				removeHourglass();
 			}
@@ -212,12 +213,13 @@ function saveCurrentGroupSurvey(surveyId, gs, fName) {
 		addHourglass();
 		$.ajax({
 			type: "POST",
-			contentType: "text/html",
+			contentType: "application/x-www-form-urlencoded",
 			url: "/surveyKPI/user/groupsurvey",
 			cache: false,
 			data: JSON.stringify(groupSurvey),
 			success: function (data, status) {
 				removeHourglass();
+				handleLogout(data);
 			}, error: function (data, status) {
 				removeHourglass();
 			}
@@ -425,6 +427,54 @@ function addUserDetailsPopupBootstrap4() {
 
 	enableUserProfileBS();
 }
+
+/*
+ * Add user details popup to the page
+ */
+function addApiKeyPopup() {
+	var	h =[],
+		idx = -1;
+
+	h[++idx] = '<div id="api_key_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="apiKeyLabel" aria-hidden="true">';
+	h[++idx] = '<div class="modal-dialog modal-lg">';
+	h[++idx] = '<div class="modal-content">';
+	h[++idx] = '<div class="modal-header">';
+	h[++idx] = '<h4 class="modal-title" id="apiKeyLabel"></h4>';
+	h[++idx] = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+	h[++idx] = '</div>';    // modal-headers
+
+	h[++idx] = '<div class="modal-body">';
+	h[++idx] = '<form>';
+	h[++idx] = '<div class="form-group">';
+	h[++idx] = '<input type="text" id="apiKey" required class="form-control" readOnly>';
+	h[++idx] = '</div>';
+	h[++idx] = '</form>';
+	h[++idx] = '<button id="getKey" type="button" class="btn btn-primary">';
+	h[++idx] = localise.set["c_gak"];
+	h[++idx] = '</button>';
+	h[++idx] = '<button id="deleteKey" type="button" class="btn btn-danger ml-2">';
+	h[++idx] = localise.set["c_del"];
+	h[++idx] = '</button>';
+	h[++idx] = '<button id="copyKey" type="button" class="btn btn-default has_tt ml-2" title="Copy Key">';
+	h[++idx] = localise.set["c_ck"];
+	h[++idx] = '</button>';
+	h[++idx] = '</div>';
+
+	h[++idx] = '<div class="modal-footer">';
+	h[++idx] = '<button type="button" class="btn btn-default" data-dismiss="modal">';
+	h[++idx] = localise.set["c_close"];
+	h[++idx] = '</button>';
+
+	h[++idx] = '</div>';    // modal - footer
+	h[++idx] = '</div>';        // modal - content
+	h[++idx] = '</div>';            // modal - dialog
+	h[++idx] = '</div>';                // popup
+
+	$(document.body).append(h.join(''));
+
+	enableApiKeyPopup();
+}
+
 
 /*
  * Update the user details on the page
@@ -800,14 +850,6 @@ function logout() {
  */
 function enableUserProfileBS () {
 
-
-	/*
-	 * User logout
-	 */
-	$('#userProfileLogout').click(function() {
-		logout();
-	});
-
 	$("#modify_me_popup :input").keydown(function() {
 		$("#me_alert").hide();
 	});
@@ -816,10 +858,7 @@ function enableUserProfileBS () {
 	 * Save the user profile
 	 */
 	$('#userProfileSave').click(function() {
-		var user = globals.gLoggedInUser,
-			userList = [],
-			error = false,
-			userList;
+		var user = globals.gLoggedInUser;
 
 		user.name = $('#me_name').val();
 		user.language = $('#me_language').val();
@@ -827,7 +866,6 @@ function enableUserProfileBS () {
 		if($('#me_password').is(':visible')) {
 			user.password = $('#me_password').val();
 			if($('#me_password_confirm').val() !== user.password) {
-				error = true;
 				user.password = undefined;
 				$('#me_alert').removeClass('alert-success d-none').addClass('alert-danger').text(localise.set["msg_pwd_m"]).show();
 				$('#me_password').focus();
@@ -860,6 +898,129 @@ function enableUserProfileBS () {
 		} else {
 			$('#password_me_fields').hide();
 		}
+	});
+}
+
+/*
+ * Respond to events on the API key popup
+ */
+function enableApiKeyPopup() {
+
+	$('#api_key_popup').on('show.bs.modal', function (event) {
+		/*
+		 * Get the current API key
+		 */
+		$('#getKey').prop('disabled', true);
+		addHourglass();
+		$.ajax({
+			url: '/surveyKPI/user/api_key',
+			cache: false,
+			success: function (data) {
+				removeHourglass();
+				if (handleLogout(data)) {
+					$('#apiKey').val(data.apiKey);
+					$('#getKey').prop('disabled', false);
+					if (data.apiKey) {
+						$('#getKey').text(localise.set["c_rak"]);
+						$('#deleteKey,#copyKey').prop('disabled', false);
+					} else {
+						$('#getKey').text(localise.set["c_gak"]);
+						$('#deleteKey,#copyKey').prop('disabled', true);
+					}
+				}
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (handleLogout(xhr.responseText)) {
+					$('#getKey').prop('disabled', false);
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(err);
+						console.log("Error: Failed to get api key: " + err);
+					}
+				}
+			}
+		});
+	});
+
+	/*
+	 * Delete a key
+	 */
+	$('#deleteKey').on("click",function () {
+		addHourglass();
+		$.ajax({
+			type: "DELETE",
+			url: '/surveyKPI/user/api_key',
+			cache: false,
+			success: function (data) {
+				removeHourglass();
+				if (handleLogout(data)) {
+					$('#apiKey').val("");
+					$('#getKey').prop('disabled', false);
+					$('#getKey').text(localise.set["c_gak"]);
+					$('#deleteKey,#copyKey').prop('disabled', true);
+				}
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(err);
+						console.log("Error: Failed to delete api key: " + err);
+					}
+				}
+			}
+		});
+	});
+
+	/*
+	 * Create a key
+	 */
+	$('#getKey').on("click", function () {
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			cache: false,
+			contentType: "application/x-www-form-urlencoded",
+			dataType: 'json',
+			url: "/surveyKPI/user/api_key/create",
+			success: function (data) {
+				removeHourglass();
+				if (handleLogout(data)) {
+					$('#apiKey').val(data.apiKey);
+					$('#getKey').text(localise.set["c_rak"]);
+					$('#deleteKey,#copyKey').prop('disabled', false);
+				}
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(err);
+						console.log("Error: Failed to get api key: " + err);
+					}
+				}
+			}
+		});
+	});
+
+	// Respond to a user clicking copy api key
+	$('.has_tt').tooltip();
+	$('#copyKey').click(function () {
+		var copyText = document.getElementById("apiKey");
+		copyText.select();
+		navigator.clipboard.writeText($('#apiKey').val());
+
+		$('#copyKey').tooltip('dispose').tooltip({title: localise.set["c_c"] + ": " + copyText.value}).tooltip('show');
+
+	});
+	$('#copyKey').mouseout(function () {
+		$('#copyKey').tooltip({title: localise.set["c_c"]});
 	});
 }
 
@@ -963,6 +1124,7 @@ function setupUserProfile(bs4) {
 
 	if(bs4) {
 		addUserDetailsPopupBootstrap4();
+		addApiKeyPopup();
 	} else {
 		addUserDetailsPopup();	// legacy
 	}
@@ -1042,7 +1204,7 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 				console.log("Error: Failed to get user details: " + err);
 
 				var msg = localise.set["c_error"] + ": ";
-				if(err && err.indexOf('Unauthorized') >= 0) {
+				if(err && err.message && err.message.indexOf('Unauthorized') >= 0) {
 					msg += localise.set["c_auth"];
 				} else {
 					msg += err;
@@ -2857,10 +3019,12 @@ function downloadFile(url) {
 // Show an error generated by file download
 function downloadFileErrorCheck() {
 	var msg = $("iframe").last().contents().find('body').html();
-	if(msg && msg.indexOf("Error:") === 0) {
-		alert(msg.substring(7));	// Jump over "Error: "
-	} else if(msg && msg.length > 0) {
-		alert(msg);
+	if(handleLogout(msg)) {
+		if (msg && msg.indexOf("Error:") === 0) {
+			alert(msg.substring(7));	// Jump over "Error: "
+		} else if (msg && msg.length > 0) {
+			alert(msg);
+		}
 	}
 }
 
@@ -4335,7 +4499,7 @@ function getLocationIndex(name, tags) {
 }
 
 function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback, tg_id) {
-	var url = "/api/v1/tasks?preserveInitialData=true",
+	var url = "/surveyKPI/api/tasks?preserveInitialData=true",
 		taskFeature = {
 			properties: {}
 		},
@@ -4494,7 +4658,6 @@ function getTaskUsers(projectId) {
 
 	$users.empty();
 	$('#users_filter').append('<option value="0">' + localise.set["t_au"] + '</options>');
-	//$('#users_filter').append('<option value="-1">' + localise.set["t_u"] + '</options>');
 
 	$('#users_select_new_task, #users_task_group, #users_select_user, #tp_user')
 		.append('<option value="-1">' + localise.set["t_u"] + '</options>');
@@ -5769,40 +5932,41 @@ function getEligibleUsers(sId, isNotification) {
 			cache: false,
 			success: function (data) {
 				removeHourglass();
+				if(handleLogout(data)) {
+					var h = [],
+						idx = -1,
+						$elem = $('#user_to_assign');
 
-				var h = [],
-					idx = -1,
-					$elem = $('#user_to_assign');
+					$elem.empty();
 
-				$elem.empty();
-
-				h[++idx] = '<option value="_none">';
-				h[++idx] = localise.set["c_none"];
-				h[++idx] = '</option>';
-
-				if(isNotification) {
-					h[++idx] = '<option value="_submitter">';
-					h[++idx] = localise.set["c_submitter"];
+					h[++idx] = '<option value="_none">';
+					h[++idx] = localise.set["c_none"];
 					h[++idx] = '</option>';
 
-					h[++idx] = '<option value="_data">';
-					h[++idx] = localise.set["t_ad"];
-					h[++idx] = '</option>';
-				}
+					if (isNotification) {
+						h[++idx] = '<option value="_submitter">';
+						h[++idx] = localise.set["c_submitter"];
+						h[++idx] = '</option>';
 
-				if(data && data.length > 0) {
-					for(i = 0; i < data.length; i++) {
-						h[++idx] = '<option value="';
-						h[++idx] = data[i].ident;
-						h[++idx] = '">';
-						h[++idx] = htmlEncode(data[i].name);
+						h[++idx] = '<option value="_data">';
+						h[++idx] = localise.set["t_ad"];
 						h[++idx] = '</option>';
 					}
-				}
-				$elem.html(h.join(''));
 
-				if(typeof gEligibleUser !== 'undefined') {
-					$elem.val(gEligibleUser);
+					if (data && data.length > 0) {
+						for (i = 0; i < data.length; i++) {
+							h[++idx] = '<option value="';
+							h[++idx] = data[i].ident;
+							h[++idx] = '">';
+							h[++idx] = htmlEncode(data[i].name);
+							h[++idx] = '</option>';
+						}
+					}
+					$elem.html(h.join(''));
+
+					if (typeof gEligibleUser !== 'undefined') {
+						$elem.val(gEligibleUser);
+					}
 				}
 
 			},
@@ -5923,4 +6087,18 @@ function checkExistenceOfReferences(refQuestions, survey) {
 		}
 	}
 	return refCount;
+}
+
+/*
+ * Respond to a logged out redirect
+ */
+function handleLogout(data) {
+	if(data &&
+		((data.code && data.code === 401)
+			|| (data.status && data.status === 405)
+			|| (typeof data === "string" && data.indexOf('"code": 401') >= 0))) {
+		window.open("/login.html");
+		return false;
+	}
+	return true;
 }

@@ -32,7 +32,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 	<link href="/css/smap3.css" rel="stylesheet">
 
 	<script src="/js/app/theme.js"></script>
-	<script src="/js/app/pwacommon.js"></script>
 	<script src="/js/libs/jquery-3.5.1.min.js"></script>
 	<script src="/js/libs/popper.v1.16.1.min.js"></script>
 	<script src="/js/libs/bootstrap.bundle.v4.5.min.js"></script>
@@ -56,7 +55,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					<span class="lang" data-lang="m_modules">modules</span>
 				</a>
 				<div class="dropdown-menu" aria-labelledby="m_modules">
-					<a class="dropdown-item lang" data-lang="m_home" href="/?loggedin=yes">home</a>
+					<a class="dropdown-item lang" data-lang="m_home" href="/">home</a>
 					<a class="dropdown-item restrict_role admin_role analyst_role" href="/edit.html"> <span class="lang" data-lang="c_edit">Edit</span></a>
 					<a class="dropdown-item restrict_role admin_role analyst_role" href="/app/fieldManager/surveyManagement.html"><span class="lang" data-lang="m_admin">Admin</span></a>
 					<a class="dropdown-item restrict_role manage_role admin_role analyst_role" href="/app/myWork/index.html"><span class="lang" data-lang="m_web_forms"></span></a>
@@ -99,7 +98,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="m_profile">
 					<a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"> </a>
 					<a class="dropdown-item lang" data-lang="c_change_p" href="/app/changePassword.html"></a>
-					<a id="userProfileLogout" class="dropdown-item lang" data-lang="c_logout" href="#"></a>
+					<a class="dropdown-item lang" data-lang="c_ak" data-toggle="modal" data-target="#api_key_popup" aria-label="Get API key"></a>
+					<a class="dropdown-item lang" data-lang="c_logout" href="/dologout.html"></a>
 				</div>
 			</li>
 		</ul>
@@ -233,21 +233,21 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 				<h4 class="modal-title"></h4>
 			</div>
 			<div class="modal-body">
-				<h3 id="survey_link_title" class="lang" data-lang="n_share">Get Link</h3>
+				<h3 id="survey_link_title" class="lang" data-lang="n_share"></h3>
 
 				<form>
 					<div class="form-group">
 						<input type="text" id="srLink" required class="form-control" readonly>
 					</div>
 				</form>
-				<button id="getLink" type="button" class="btn btn-primary lang" data-lang="n_share">get link</button>
-				<button id="deleteLink" type="button" class="btn btn-danger lang" data-lang="c_del">delete</button>
+				<button id="getLink" type="button" class="btn btn-primary lang" data-lang="n_share"></button>
+				<button id="deleteLink" type="button" class="btn btn-danger lang" data-lang="c_del"></button>
 				<button id="copyLink" type="button" class="btn btn-default lang has_tt"
 						title="Copy Link" data-lang="c_cl"></button>
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
 			</div>
 		</div>
 	</div>

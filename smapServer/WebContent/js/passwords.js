@@ -84,12 +84,15 @@ require([
 			$('.pwd_alert, .pwd_home').hide();
 			addHourglass();
 			$.ajax({
-				type: "GET",
+				type: "POST",
+				contentType: "application/x-www-form-urlencoded",
+				dataType: 'text',
 				cache: false,
-				url: "/surveyKPI/onetimelogon/" + email,
+				data: email,
+				url: "/surveyKPI/onetimelogon",
 				success: function (data, status) {
 					removeHourglass();
-					$('.pwd_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_es"] + " " + email);
+					$('.pwd_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_es"] + " " + htmlEncode(email));
 					$('.pwd_home').show();
 				}, error: function (data, status) {
 					removeHourglass();
@@ -99,58 +102,12 @@ require([
 					if (idx1 > 0 && idx2 > idx1) {
 						msg = msg.substring(idx1, idx2);
 					}
-					$('.pwd_alert').show().addClass('alert-danger').removeClass('alert-success').html(localise.set["c_error"] + ": " + msg);
+					$('.pwd_alert').show().addClass('alert-danger').removeClass('alert-success').text(localise.set["c_error"] + ": " + htmlEncode(msg));
 				}
 			});
 		}
 
 	});
-
-
-	$('#resetPasswordSubmit').click(function(e){
-		e.preventDefault();
-
-		if(!validate()) {
-			return;
-		}
-
-		var pd = {
-				onetime: gToken,
-				password: $('#password').val()
-			},
-			pdString;
-
-		pdString = JSON.stringify(pd);
-
-		addHourglass();
-		$.ajax({
-			type: "POST",
-			cache: false,
-			url: "/surveyKPI/onetimelogon?lang=" + gUserLocale,
-			data: { passwordDetails: pdString },
-			success: function(data, status) {
-				removeHourglass();
-				$('.pwd_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_pr"]);
-				$('.pwd_home').show();
-			}, error: function(data, status) {
-				removeHourglass();
-				$('.pwd_alert').show().addClass('alert-danger').removeClass('alert-success').html(localise.set["c_error"] + ": " + data.responseText);
-			}
-		});
-	});
-
-	function validate() {
-		var pv =  $('#password').val();
-		var pc = $('#passwordConfirm').val();
-		if(pv.length < 2) {
-			$('.pwd_alert').show().removeClass('alert-success alert-info').addClass('alert-danger').html(localise.set["msg_pwd_l"]);
-			return false;
-		} else if(pv !== pc) {
-			$('.pwd_alert').show().removeClass('alert-success alert-info').addClass('alert-danger').html(localise.set["pw_mm"]);
-			return false;
-		}
-		return true;
-	}
 
 });
 

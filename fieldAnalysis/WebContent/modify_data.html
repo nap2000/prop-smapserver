@@ -43,7 +43,7 @@
 					<span class="lang" data-lang="m_modules">modules</span>
 				</a>
 				<div class="dropdown-menu" aria-labelledby="m_modules">
-					<a class="dropdown-item lang" data-lang="m_home" href="/?loggedin=yes">home</a>
+					<a class="dropdown-item lang" data-lang="m_home" href="/">home</a>
 					<a class="dropdown-item restrict_role admin_role analyst_role" href="/edit.html"> <span class="lang" data-lang="c_edit">Edit</span></a>
 					<a class="dropdown-item restrict_role admin_role analyst_role" href="/app/fieldManager/surveyManagement.html"><span class="lang" data-lang="m_admin">Admin</span></a>
 					<a class="dropdown-item restrict_role manage_role admin_role analyst_role" href="/app/myWork/index.html"><span class="lang" data-lang="m_web_forms"></span></a>
@@ -70,7 +70,8 @@
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="m_profile">
 					<a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"> </a>
 					<a class="dropdown-item lang" data-lang="c_change_p" href="/app/changePassword.html"></a>
-					<a id="userProfileLogout" class="dropdown-item lang" data-lang="c_logout" href="#"></a>
+					<a class="dropdown-item lang" data-lang="c_ak" data-toggle="modal" data-target="#api_key_popup" aria-label="Get API key"></a>
+					<a id="userProfileLogout" class="dropdown-item lang" data-lang="c_logout" href="/dologout.html"></a>
 				</div>
 			</li>
 		</ul>

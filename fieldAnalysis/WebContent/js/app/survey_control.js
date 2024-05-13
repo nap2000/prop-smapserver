@@ -1010,18 +1010,23 @@ function updateFilterOptions(data, value, isSelect) {
 function getViewSurveys (view) {
 		
 	var url = surveyList();
+	addHourglass();
 	if(typeof url !== "undefined") {
 		$.ajax({
 			url: url,
 			cache: false,
 			dataType: 'json',
 			success: function(data) {
-				globals.gSelector.setSurveyList(data);
-				if(view) {
-					setSurveyViewSurveys(data, view.sId, '#settings_survey, #export_survey, #survey_to_update, #form_select');
+				removeHourglass();
+				if(handleLogout(data)) {
+					globals.gSelector.setSurveyList(data);
+					if (view) {
+						setSurveyViewSurveys(data, view.sId, '#settings_survey, #export_survey, #survey_to_update, #form_select');
+					}
 				}
 			},
 			error: function(xhr, textStatus, err) {
+				removeHourglass();
 				if(xhr.readyState == 0 || xhr.status == 0) {
 		              return;  // Not an error
 				} else {

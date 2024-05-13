@@ -87,7 +87,7 @@ require([
 			scrollY: '70vh',
 			scrollX: true,
 			scrollCollapse: true,
-			ajax: "/api/v1/subscriptions?dt=true" + tzString,
+			ajax: "/surveyKPI/api/subscriptions?dt=true" + tzString,
 			select: true,
 			rowId: 'id',
 			columns: [

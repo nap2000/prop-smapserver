@@ -22,66 +22,11 @@ if (Modernizr.localstorage) {
 }
 
 "use strict";
-require.config({
-    baseUrl: 'js/libs',
-    waitSeconds: 0,
-    locale: gUserLocale,
-    paths: {
-        app: '../app',
-        lang_location: '..'
-    },
-    shim: {
-
-    }
-});
-
-require([
-        'jquery',
-        'app/localise'],
-    function($, localise) {
-
-        $(document).ready(function() {
-            localise.setlang();		// Localise HTML
-
-            $('.login_success, .login_failure').hide();
-
-            $('#login_retry').click(function(){
-                login();
-            });
-
-            $('#login_continue').click(function() {
-                window.location.href = document.referrer;
-            });
-
-            login();
-
-        });
-
-        function login() {
-            $.ajax({
-                cache: false,
-                url: "/authenticate/login.txt",
-                success: function (data, status) {
-                    if(data === 'loggedin') {
-                        $('.login_failure').hide();
-                        $('.login_success').show();
-                        if(window.location.href !== document.referrer) {
-                            window.location.href = document.referrer;
-                        }
-                    } else {
-                        $('.login_failure').show();
-                        $('.login_success').hide();
-                    }
-
-                }, error: function (data, status) {
-                    $('.login_failure').show();
-                    $('.login_success').hide();
-
-                }
-            });
-        }
-
+$(document).ready(function() {
+    $(document).ready(function() {
+        window.close();
     });
+});
 
 
 

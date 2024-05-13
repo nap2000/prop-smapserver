@@ -124,7 +124,6 @@ require([
 		localise.setlang();		// Localise HTML
 		setTheme();
 		setupUserProfile(true);
-		registerForServiceWorkerMessages();
 		window.moment = moment;		// Make moment global for use by common.js
 		enableDebugging();
 
@@ -920,14 +919,15 @@ require([
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
 					var msg = htmlEncode(xhr.responseText);
-					if(msg && msg === "only csv") {
-						msg = localise.set["t_efnl"] + " " + localise.set["msg_csv"];
-					} else {
-						msg = localise.set["t_efnl"] + " " + msg
+					if(handleLogout(msg)) {
+						if (msg && msg === "only csv") {
+							msg = localise.set["t_efnl"] + " " + localise.set["msg_csv"];
+						} else {
+							msg = localise.set["t_efnl"] + " " + msg
+						}
+
+						$('.load_file_alert').show().removeClass('alert-success').addClass('alert-danger').text(msg);
 					}
-
-					$('.load_file_alert').show().removeClass('alert-success').addClass('alert-danger').text(msg);
-
 				}
 			});
 		});
@@ -978,22 +978,26 @@ require([
 			url: url,
 			success: function (data) {
 				removeHourglass();
-				var cb = callback;
-				var param1 = p1;
-				$('#load_file_alert').removeClass('alert-danger').addClass('alert-success').text(data);
-				$('#load_file_alert').show();
-				$('#importFile').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
-				$('#importFileLabel').text("");     // Work around ERR_UPLOAD_FILE_CHANGED error
-				cb(param1);
+				if(handleLogout(data)) {
+					var cb = callback;
+					var param1 = p1;
+					$('#load_file_alert').removeClass('alert-danger').addClass('alert-success').text(data);
+					$('#load_file_alert').show();
+					$('#importFile').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
+					$('#importFileLabel').text("");     // Work around ERR_UPLOAD_FILE_CHANGED error
+					cb(param1);
+				}
 
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
 				var msg = xhr.responseText;
-				msg = msg || localise.set["e_unknown"];
-				$('#load_file_alert').show().removeClass('alert-success').addClass('alert-danger').text(msg);
-				$('#importFile').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
-				$('#importFileLabel').text("");     // Work around ERR_UPLOAD_FILE_CHANGED error
+				if(handleLogout(msg)) {
+					msg = msg || localise.set["e_unknown"];
+					$('#load_file_alert').show().removeClass('alert-success').addClass('alert-danger').text(msg);
+					$('#importFile').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
+					$('#importFileLabel').text("");     // Work around ERR_UPLOAD_FILE_CHANGED error
+				}
 			}
 		});
 	}
@@ -1604,17 +1608,19 @@ require([
 		addHourglass();
 		$.ajax({
 			type: "POST",
-			contentType: "text/html",
+			contentType: "application/x-www-form-urlencoded",
 			url: "/surveyKPI/userList",
 			data: userString,
 			success: function (data, status) {
 				removeHourglass();
-				$('#userDetailsSave').prop("disabled", false);
-				if (userList[0].ident == globals.gLoggedInUser.ident) {	// Restart if a user updated their own settings
-					location.reload();
-				} else {
-					getUsers();
-					$dialog.modal("hide");
+				if(handleLogout(data)) {
+					$('#userDetailsSave').prop("disabled", false);
+					if (userList[0].ident == globals.gLoggedInUser.ident) {	// Restart if a user updated their own settings
+						location.reload();
+					} else {
+						getUsers();
+						$dialog.modal("hide");
+					}
 				}
 			}, error: function (xhr, textStatus, err) {
 				removeHourglass();
@@ -2341,8 +2347,10 @@ require([
 			cache: false,
 			success: function(data) {
 				removeHourglass();
-				gUsers = data;
-				updateUserTable();
+				if(handleLogout(data)) {
+					gUsers = data;
+					updateUserTable();
+				}
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
@@ -2498,19 +2506,23 @@ require([
 		addHourglass();
 		$.ajax({
 			type: "DELETE",
-			contentType: "text/html",
+			contentType: "application/x-www-form-urlencoded",
 			url: "/surveyKPI/userList",
 			data: JSON.stringify(users),
 			success: function(data, status) {
 				removeHourglass();
-				getUsers();
-			}, error: function(data, status) {
-				var msg = localise.set["msg_err_del"];
-				removeHourglass();
-				if(typeof data != "undefined" && typeof data.responseText != "undefined" ) {
-					msg = data.responseText;
+				if(handleLogout(data)) {
+					getUsers();
 				}
-				alert(msg);
+			}, error: function(data, status) {
+				removeHourglass();
+				if(handleLogout(data.responseText)) {
+					var msg = localise.set["msg_err_del"];
+					if (typeof data != "undefined" && typeof data.responseText != "undefined") {
+						msg = data.responseText;
+					}
+					alert(msg);
+				}
 			}
 		});
 	}

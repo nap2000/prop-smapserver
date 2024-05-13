@@ -328,7 +328,7 @@ require([
 		if(!errorMsg) {
 
 			mailoutString = JSON.stringify(mailout);
-			url = '/api/v1/mailout'
+			url = '/surveyKPI/api/mailout'
 
 			addHourglass();
 			$.ajax({
@@ -422,7 +422,7 @@ require([
 			$('#mo_ms_view').prop('checked', gMailouts[gCurrentMailOutIdx].multiple_submit);
 			$('#mo_anon_view').prop('checked', gMailouts[gCurrentMailOutIdx].anonymous);
 
-			var url = "/api/v1/mailout/" + gMailouts[gCurrentMailOutIdx].id + "/emails?dt=true";
+			var url = "/surveyKPI/api/mailout/" + gMailouts[gCurrentMailOutIdx].id + "/emails?dt=true";
 			if (table) {
 				table.ajax.url(url).load();
 			} else {
@@ -527,7 +527,7 @@ require([
 		var surveyIdx = $survey.val();
 		var surveyIdent = gSurveyList[surveyIdx].ident;
 
-		var url="/api/v1/mailout/" + surveyIdent;
+		var url="/surveyKPI/api/mailout/" + surveyIdent;
 		var $mailout = $('#mailout');
 
 		addHourglass();
@@ -599,7 +599,7 @@ require([
      */
 	function loadMailoutTotals() {
 
-		var url = "/api/v1/mailout/" + gMailouts[gCurrentMailOutIdx].id + "/emails/totals";
+		var url = "/surveyKPI/api/mailout/" + gMailouts[gCurrentMailOutIdx].id + "/emails/totals";
 
 		addHourglass();
 

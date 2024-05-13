@@ -336,9 +336,10 @@ require([
 			dataType: 'json',
 			success: function(data) {
 				removeHourglass();
-				updateUserList(data);
-				getData();
-
+				if(handleLogout(data)) {
+					updateUserList(data);
+					getData();
+				}
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
