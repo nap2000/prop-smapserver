@@ -67,19 +67,6 @@ require([
 		globals.gIsAdministrator = false;
         getLoggedInUser(projectChanged, true, true, undefined);
 
-        $('#generateUrl').click(function() {
-        	var i;
-        	var filename;
-        	var val;
-        	var params = [];
-        	var url;
-        	var action = gReportList[gReportIdx].action_details;
-
-            $('#url').html('https://sg.smap.com.au');
-
-
-		});
-
 		$('#api').change(function () {
 			var api = $('$api').val(),
 				h = [],
@@ -115,6 +102,11 @@ require([
         $('#survey').change(function() {
             surveyChangedApi();
         });
+
+		// Set change function on surveys
+		$('#version').change(function() {
+			setUrl();
+		});
 
         $('.options').change(function() {
         	setUrl();
@@ -161,6 +153,7 @@ require([
     function setUrl() {
     	var project = $('#project_name').val(),
 		    sId = $('#survey').val(),
+			version = $('#version').val(),
 		    audit = $('#option_audit').prop("checked"),
 		    links = $('#option_links').prop("checked"),
 		    format = $('#format').val(),
@@ -172,7 +165,7 @@ require([
     	url = window.location.protocol;
     	url += '//';
     	url += window.location.hostname;
-    	url += '/api/v1/data'
+    	url += '/api/v' + version + '/data'
 
 	    if(format === "csv") {
 	    	url += ".csv";
