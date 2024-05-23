@@ -2599,31 +2599,35 @@ require([
                 dataType: 'json',
                 cache: false,
                 success: function (data) {
-                    var task = data,
-                        taskFeature = {
-                            geometry: {
-                                coordinates: [],
-                                type: 'Point'
-                            },
-                            properties: {}
-                        };
-                    taskFeature.geometry.coordinates.push(task.lon);
-                    taskFeature.geometry.coordinates.push(task.lat);
-                    taskFeature.properties.form_id = task.survey_ident;
-                    taskFeature.properties.assignee = task.assignee;
-                    taskFeature.properties.emails = task.emails;
-                    taskFeature.properties.repeat = task.repeat;
-                    taskFeature.properties.id = task.id;
-                    taskFeature.properties.a_id = task.a_id;
+                    if(handleLogout(data)) {
+                        var task = data,
+                            taskFeature = {
+                                geometry: {
+                                    coordinates: [],
+                                    type: 'Point'
+                                },
+                                properties: {}
+                            };
+                        taskFeature.geometry.coordinates.push(task.lon);
+                        taskFeature.geometry.coordinates.push(task.lat);
+                        taskFeature.properties.form_id = task.survey_ident;
+                        taskFeature.properties.assignee = task.assignee;
+                        taskFeature.properties.emails = task.emails;
+                        taskFeature.properties.repeat = task.repeat;
+                        taskFeature.properties.id = task.id;
+                        taskFeature.properties.a_id = task.a_id;
 
-                    editTask(false, task, taskFeature);
+                        editTask(false, task, taskFeature);
+                    }
                 },
                 error: function (xhr, textStatus, err) {
                     removeHourglass();
-                    if (xhr.readyState == 0 || xhr.status == 0) {
-                        return;  // Not an error
-                    } else {
-                        console.log(localise.set["c_error"] + ": " + err);
+                    if(handleLogout(xhr.responseText)) {
+                        if (xhr.readyState == 0 || xhr.status == 0) {
+                            return;  // Not an error
+                        } else {
+                            console.log(localise.set["c_error"] + ": " + err);
+                        }
                     }
                 }
             });

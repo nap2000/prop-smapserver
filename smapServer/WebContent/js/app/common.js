@@ -1047,15 +1047,17 @@ function saveCurrentUser(user, $dialog) {
 		data: { user: userString },
 		success: function(data) {
 			removeHourglass();
-			if(data.error) {
-				if($dialog) {
-					$('#me_alert').removeClass('alert-success d-none').addClass('alert-danger').text(data.msg).show();
-				} else {
-					alert(localise.set["c_error"] + " : " + data.msg);  // legacy non bootstrap
+			if(handleLogout(data)) {
+				if (data.error) {
+					if ($dialog) {
+						$('#me_alert').removeClass('alert-success d-none').addClass('alert-danger').text(data.msg).show();
+					} else {
+						alert(localise.set["c_error"] + " : " + data.msg);  // legacy non bootstrap
+					}
+				} else if ($dialog) {
+					$dialog.modal("hide");
+					updateUserDetails(data, undefined);
 				}
-			} else if($dialog) {
-				$dialog.modal("hide");
-				updateUserDetails(data, undefined);
 			}
 
 		}, error: function(data, status) {
@@ -4404,35 +4406,38 @@ function populateTaskGroupList() {
 			dataType: 'json',
 			success: function (taskgroups) {
 				removeHourglass();
+				if(handleLogout(taskgroups)) {
+					var h = [],
+						idx = -1,
+						i,
+						grp,
+						firstTg,
+						hasCurrentTg = false;
 
-				var h = [],
-					idx = -1,
-					i,
-					grp,
-					firstTg,
-					hasCurrentTg = false;
+					window.gTaskGroups = taskgroups;   // Keep the task group list
 
-				window.gTaskGroups = taskgroups;   // Keep the task group list
+					if (typeof taskgroups != "undefined" && taskgroups.length > 0) {
 
-				if (typeof taskgroups != "undefined" && taskgroups.length > 0) {
-
-					for (i = 0; i < taskgroups.length; i++) {
-						grp = taskgroups[i];
-						h[++idx] = '<option value="';
-						h[++idx] = i;
-						h[++idx] = '">';
-						h[++idx] = htmlEncode(grp.name);
-						h[++idx] = '</option>';
+						for (i = 0; i < taskgroups.length; i++) {
+							grp = taskgroups[i];
+							h[++idx] = '<option value="';
+							h[++idx] = i;
+							h[++idx] = '">';
+							h[++idx] = htmlEncode(grp.name);
+							h[++idx] = '</option>';
+						}
 					}
+					$('.task_group_select').html(h.join(''));
 				}
-				$('.task_group_select').html(h.join(''));
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
-				if (xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert("Failed to get task group data");
+				if(handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert("Failed to get task group data");
+					}
 				}
 			}
 		});

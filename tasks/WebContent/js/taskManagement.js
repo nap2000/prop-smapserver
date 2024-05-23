@@ -758,16 +758,20 @@ require([
 					data: {settings: assignString},
 					dataType: 'json',
 					success: function (data, status) {
-						removeHourglass();
-						$('#addTask').modal("hide");
-						globals.gCurrentTaskGroup = data.tg_id;
-						refreshTaskGroupData();
+						if(handleLogout(data)) {
+							removeHourglass();
+							$('#addTask').modal("hide");
+							globals.gCurrentTaskGroup = data.tg_id;
+							refreshTaskGroupData();
+						}
 					}, error: function (data, status) {
 						removeHourglass();
-						if (data.responseText.indexOf("<html>") !== 0) {
-							alert(localise.set["c_error"] + " : " + data.responseText);
-						} else {
-							alert(localise.set["msg_err_upd"]);
+						if(handleLogout(data)) {
+							if (data.responseText.indexOf("<html>") !== 0) {
+								alert(localise.set["c_error"] + " : " + data.responseText);
+							} else {
+								alert(localise.set["msg_err_upd"]);
+							}
 						}
 
 					}
@@ -1342,14 +1346,18 @@ require([
 				dataType: 'json',
 				success: function (data) {
 					removeHourglass();
-					refreshTaskGroupList(data);
+					if(handleLogout(data)) {
+						refreshTaskGroupList(data);
+					}
 				},
 				error: function (xhr, textStatus, err) {
 					removeHourglass();
-					if (xhr.readyState == 0 || xhr.status == 0) {
-						return;  // Not an error
-					} else {
-						alert("Failed to get task group data");
+					if(handleLogout(xhr.responseText)) {
+						if (xhr.readyState == 0 || xhr.status == 0) {
+							return;  // Not an error
+						} else {
+							alert("Failed to get task group data");
+						}
 					}
 				}
 			});
@@ -1468,22 +1476,26 @@ require([
 				dataType: 'json',
 				success: function (data) {
 					removeHourglass();
-					globals.gTaskList = data;
-					if (gMapInitialised) {
-						refreshMapAssignments('map', globals.gTaskList);
+					if(handleLogout(data)) {
+						globals.gTaskList = data;
+						if (gMapInitialised) {
+							refreshMapAssignments('map', globals.gTaskList);
+						}
+						refreshTableAssignments();
+						if (gCalendarInitialised) {
+							updateCalendar();
+						}
+						updateDisplayState();
 					}
-					refreshTableAssignments();
-					if (gCalendarInitialised) {
-						updateCalendar();
-					}
-					updateDisplayState();
 				},
 				error: function (xhr, textStatus, err) {
 					removeHourglass();
-					if (xhr.readyState == 0 || xhr.status == 0) {
-						return;  // Not an error
-					} else {
-						alert("Failed to get table data");
+					if(handleLogout(xhr.responseText)) {
+						if (xhr.readyState == 0 || xhr.status == 0) {
+							return;  // Not an error
+						} else {
+							alert("Failed to get table data");
+						}
 					}
 				}
 			});
