@@ -41,6 +41,7 @@ require([
 	
 	$(document).ready(function() {
 		localise.setlang();
+        setTheme(true);
 	});
 
 

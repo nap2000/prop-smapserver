@@ -387,20 +387,24 @@ function getPanels(projectId) {
 			cache: false,
 			success: function(data) {
 				removeHourglass();
-				globals.gSelector.setViews(data);
-				refreshPanels();	// nodbl	
+				if(handleLogout(data)) {
+					globals.gSelector.setViews(data);
+					refreshPanels();
+				}
 			},
 			error: function(data) {
 				removeHourglass();
-				if(data.status === 401) {
-					$('#status_msg_msg').empty().text("Not Authorised");
-				} else {
-					$('#status_msg_msg').empty().text("Error: Failed to get dashboard settings");
+				if(handleLogout(data)) {
+					if (data.status === 401) {
+						$('#status_msg_msg').empty().text("Not Authorised");
+					} else {
+						$('#status_msg_msg').empty().text("Error: Failed to get dashboard settings");
+					}
+					$("#status_msg").dialog("open");
+					setTimeout(function () {
+						$('.ui-dialog, #status_msg').css('z-index', '3000');	// Float the dialog over other controls
+					}, 0);
 				}
-				$("#status_msg").dialog("open");
-				setTimeout(function() {
-					$('.ui-dialog, #status_msg').css('z-index','3000');	// Float the dialog over other controls
-				}, 0);
 			}
 		});
 	}
@@ -476,7 +480,6 @@ function setPanelState(view, idx, oldState) {
 	}
 	
 }
-
 
 // Add triggers to panel menu items
 function addTriggers() {
@@ -807,10 +810,14 @@ function savePanels(newPanel) {
 		  data: { settings: viewsString },
 		  success: function(data, status) {
 			  removeHourglass();
-			  getPanels(globals.gCurrentProject);
+			  if(handleLogout(data)) {
+				  getPanels(globals.gCurrentProject);
+			  }
 		  }, error: function(data, status) {
 			  removeHourglass();
-			  alert(localise.set["c_error"] + " : " + data.responseText);
+			  if(handleLogout(data)) {
+				  alert(localise.set["c_error"] + " : " + data.responseText);
+			  }
 		  }
 	});
 }
@@ -832,8 +839,9 @@ function savePanelState(view) {
 		  url: dashboardStateURL(),
 		  data: { state: viewString },
 		  success: function(data, status) {
+			  	handleLogout(data);
 		  }, error: function(data, status) {
-			  // alert("Error state not saved"); // ignore errors
+			  handleLogout(data);
 		  }
 	});
 }

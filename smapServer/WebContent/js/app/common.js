@@ -2816,16 +2816,20 @@ function getLocations(callback) {
 		cache: false,
 		success: function(data) {
 			removeHourglass();
-			if(typeof callback === "function") {
-				callback(data);
+			if(handleLogout(data)) {
+				if (typeof callback === "function") {
+					callback(data);
+				}
 			}
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				console.log("Error: Failed to get list of locations: " + err);
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					console.log("Error: Failed to get list of locations: " + err);
+				}
 			}
 		}
 	});
@@ -4647,14 +4651,16 @@ function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback, t
 		data: {task: tpString},
 		success: function (data, status) {
 			removeHourglass();
-			$('#task_properties').modal("hide");
-			callback();
+			if(handleLogout(data)) {
+				$('#task_properties').modal("hide");
+				callback();
+			}
 		},
 		error: function (xhr, textStatus, err) {
-
 			removeHourglass();
-			alert(localise.set["msg_err_upd"] + " " + xhr.responseText);	// Alerts htmlencode text already
-
+			if(handleLogout(xhr.responseText)) {
+				alert(localise.set["msg_err_upd"] + " " + xhr.responseText);	// Alerts htmlencode text already
+			}
 		}
 	});
 }
@@ -4680,25 +4686,29 @@ function getTaskUsers(projectId) {
 		cache: false,
 		success: function (data) {
 
-			for (i = 0; i < data.length; i++) {
-				user = data[i];
-				// Check that this user has access to the project
+			if(handleLogout(data)) {
+				for (i = 0; i < data.length; i++) {
+					user = data[i];
+					// Check that this user has access to the project
 
-				if (!projectId || userHasAccessToProject(user, projectId)) {
-					h[++idx] = '<option value="';
-					h[++idx] = user.id;
-					h[++idx] = '">';
-					h[++idx] = htmlEncode(user.name);
-					h[++idx] = '</option>';
+					if (!projectId || userHasAccessToProject(user, projectId)) {
+						h[++idx] = '<option value="';
+						h[++idx] = user.id;
+						h[++idx] = '">';
+						h[++idx] = htmlEncode(user.name);
+						h[++idx] = '</option>';
+					}
 				}
+				$users.append(h.join(''));
 			}
-			$users.append(h.join(''));
 		},
 		error: function (xhr, textStatus, err) {
-			if (xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				alert(localise.set["c_error"] + err);
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["c_error"] + err);
+				}
 			}
 		}
 	});
@@ -5837,16 +5847,19 @@ function executeUsageReport(oId) {
 		url: "/surveyKPI/background_report" + tzString,
 		data: { report: JSON.stringify(reportObj) },
 		success: function(data, status) {
-			removeHourglass();
-			alert(localise.set["msg_ds_s_r"]);
+			if(handleLogout(data)) {
+				removeHourglass();
+				alert(localise.set["msg_ds_s_r"]);
+			}
 		}, error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				alert(localise.set["msg_err_save"] + xhr.responseText);	// alerts htmlencode
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["msg_err_save"] + xhr.responseText);	// alerts htmlencode
+				}
 			}
-
 		}
 	});
 
@@ -5899,16 +5912,19 @@ function executeAttendanceReport(oId) {
 		url: "/surveyKPI/background_report" + tzString,
 		data: { report: JSON.stringify(reportObj) },
 		success: function(data, status) {
-			removeHourglass();
-			alert(localise.set["msg_ds_s_r"]);
+			if(handleLogout(data)) {
+				removeHourglass();
+				alert(localise.set["msg_ds_s_r"]);
+			}
 		}, error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				alert(localise.set["msg_err_save"] + " " + xhr.responseText);  // alerts htmlencode
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["msg_err_save"] + " " + xhr.responseText);  // alerts htmlencode
+				}
 			}
-
 		}
 	});
 
