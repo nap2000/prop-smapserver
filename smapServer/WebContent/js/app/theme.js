@@ -20,42 +20,63 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Set page themes
  */
-function setTheme() {
-    var navbarColor = localStorage.getItem("navbar_color");
-    var navbarTextColor = localStorage.getItem("navbar_text_color");
-    var navbarLight = LightenDarkenColor(navbarColor, 20);
-    if (navbarColor && navbarTextColor) {
+function setTheme(background) {
+    if (typeof(localStorage) !== "undefined") {
+        var navbarColor = localStorage.getItem("navbar_color");
+        var navbarTextColor = localStorage.getItem("navbar_text_color");
+        var navbarLight = LightenDarkenColor(navbarColor, 20);
+        if (navbarColor && navbarTextColor) {
 
-        /*
-         * Set styles without using inline css
-         */
-        var $color = $('nav.navbar-smap, .navbar-collapse, .bg-navbar-smap,  .navbar-smap .navbar-toggler, .navbar-smap .navbar-brand, .navbar-smap .navbar-nav .nav-link , .navbar-smap .nav > li > a:focus');
-        var $light = $('.nav-link a:hover, .bg-navbar-smap .nav > li > a:hover, ul.nav-second-level, .canvas-menu.mini-navbar .nav-second-level');
+            /*
+             * Set styles without using inline css
+             */
+            if (background) {
+                var $color = $('body');
+            } else {
+                var $color = $('nav.navbar-smap, .navbar-collapse, .bg-navbar-smap,  .navbar-smap .navbar-toggler, .navbar-smap .navbar-brand, .navbar-smap .navbar-nav .nav-link , .navbar-smap .nav > li > a:focus');
+                var $light = $('.nav-link a:hover, .bg-navbar-smap .nav > li > a:hover, ul.nav-second-level, .canvas-menu.mini-navbar .nav-second-level');
+            }
 
-        if(!navbarColor || navbarColor == "undefined") {
-            navbarColor = $color.css("background-color");
+            if ($color) {
+                if (!navbarColor || navbarColor == "undefined") {
+                    navbarColor = $color.css("background-color");
+                }
+                $color.removeClass("navbar-light bg-light");
+                $color.css("background-color", navbarColor);
+                $color.css("color", navbarTextColor);
+            }
+
+            if ($light) {
+                $light.css("background-color", navbarLight);
+                $light.css("color", navbarTextColor);
+            }
         }
-        $color.removeClass("navbar-light bg-light");
-        $color.css("background-color", navbarColor);
-        //$color.css("background", navbarColor);
-        $color.css("color", navbarTextColor);
-
-        $light.css("background-color", navbarLight);
-        //$light.css("background", navbarLight);
-        $light.css("color", navbarTextColor);
-
-        /* Remove for CSP
-        style.innerHTML = 'nav.navbar-smap, .bg-navbar-smap,  .navbar-smap .navbar-toggler, .navbar-smap .navbar-brand, .navbar-smap .navbar-nav .nav-link , .navbar-smap .nav > li > a:focus '
-            + '{ background-color: ' + navbarColor + '; background: ' + navbarColor + ' !important; color: ' + navbarTextColor +'!important}'
-            + ' nav.navbar-smap .nav > li > a:hover,, .bg-navbar-smap .nav > li > a:hover, ul.nav-second-level, .canvas-menu.mini-navbar .nav-second-level '
-            + '{ background-color: ' + navbarLight + '; background: ' + navbarLight + ' !important; color: ' + navbarTextColor +'!important}';
-
-        head.appendChild(style);
-
-         */
     }
 }
 
+function setLogo() {
+    if (typeof(localStorage) !== "undefined") {
+        try {
+            let mainLogo = localStorage.getItem("main_logo");
+            if (typeof mainLogo !== 'undefined' && mainLogo !== "undefined" && mainLogo) {
+                let img = document.getElementById('main_logo');
+                console.log("Logo: " + mainLogo);
+                if(img) {
+                    img.setAttribute("src", mainLogo);
+                }
+            }
+            let orgName = localStorage.getItem("org_name");
+            if (typeof orgName !== 'undefined' && orgName !== "undefined" && orgName) {
+                let org = document.getElementById('org_name');
+                if(org) {
+                    org.textContent = orgName;
+                }
+            }
+        } catch (e) {
+            console.log(e.toString());
+        }
+    }
+}
 // From https://css-tricks.com/snippets/javascript/lighten-darken-color/
 function LightenDarkenColor(col, amt) {
 

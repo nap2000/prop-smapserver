@@ -28,17 +28,7 @@ require(['jquery', 'app/localise', 'app/common','app/globals'],
 			androidVersion;
 
 		setTheme();
-		// Show default logo
-		try {
-			let mainLogo = localStorage.getItem("main_logo");
-			if (typeof mainLogo !== 'undefined' && mainLogo !== "undefined" && mainLogo) {
-				let img = document.getElementById('main_logo');
-				console.log("Logo: " + mainLogo);
-				img.setAttribute("src", mainLogo);
-			}
-		} catch (e) {
-
-		}
+		setLogo();    // Show default logo
 
 		/*
          * If the user is logged in then get their details

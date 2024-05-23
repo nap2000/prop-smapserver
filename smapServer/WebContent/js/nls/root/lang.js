@@ -89,6 +89,7 @@ define({
     "c_iid": "Instance Id",
     "c_link": "Link",
     "c_links": "Links",
+    "c_logon": "Server Logon",
     "c_moved" : "Moved",
     "c_opened": "Opened",
     "c_periodic": "Periodic",

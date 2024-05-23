@@ -500,6 +500,13 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 	globals.gLoggedInUser = data;
 	globals.gOrgId = data.o_id;
 
+	// Save the organisation name for the logon screen
+	try {
+		localStorage.setItem('org_name', data.organisation_name);
+	} catch (e) {
+
+	}
+
 	if(bootstrap_enabled) {
 
 		$('#modify_me_popup').on('show.bs.modal', function (event) {
@@ -1036,7 +1043,7 @@ function saveCurrentUser(user, $dialog) {
 		cache: false,
 		contentType: "application/x-www-form-urlencoded",
 		dataType: 'json',
-		url: "/surveyKPI/user?x=x", // Terminate url with ? so that the service worker will pick it out
+		url: "/surveyKPI/user",
 		data: { user: userString },
 		success: function(data) {
 			removeHourglass();

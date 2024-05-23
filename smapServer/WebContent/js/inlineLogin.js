@@ -24,19 +24,13 @@ if (Modernizr.localstorage) {
 "use strict";
 
 $(document).ready(function() {
-    var msg = "";
-    var search = window.location.search;
-    if (search.indexOf("?error") === 0) {
-        msg = "Invalid username and/or password";
-    } else if (search == "?loggedout") {
-        msg = "Successfully logged out";
-    } else if (search == "?banned") {
-        msg = "Temporarily banned due to too many login attempts";
-    }
-    $("#msg").html(msg).show().removeClass('d-none');
 
     let count = 0;      // The number of timea the user has previously tried to logon
     if (typeof(localStorage) !== "undefined") {
+
+        setTheme(true);
+        setLogo();
+
         /*
          * Determine if the user is retrying the logon within 5 minutes
          */
@@ -75,27 +69,16 @@ $(document).ready(function() {
         }
 
         /*
-         * Show the count to blocking if login count exceeds 1
-         */
-        if(count > 0 && count < 9) {
-            $('#ban').text('Error! You have ' + (10 - count) + ' logon attempts left' );
-        } else if(count === 10) {
-            $('#ban').text('Error! You have 1 logon attempt left' );
-        } else if(count > 10){
-            $('#ban').text('Error! But it looks like the retry limit is not enabled on your server' );
-        }
-
-        /*
          * Record this logon attempt
          */
         localStorage.setItem("login_count", count + 1);
-    }
 
-    /*
-     * Put up message saying the user may need to reset their password
-     */
-    if(count > 0) {
-        $('#resetPassword').removeClass('d-none').show();
+        /*
+         * Put up message saying the user may need to reset their password
+         */
+        if(count > 0) {
+            $('#resetPassword').removeClass('d-none').show();
+        }
     }
 
 });
