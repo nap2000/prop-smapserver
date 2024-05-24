@@ -352,7 +352,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 
 
         /*
-         * Convert the error response to html
+         * Convert the error response safely to html
          */
         function msgToHtml(msg) {
             var idx = -1,
@@ -1010,35 +1010,40 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                 success: function(data) {
                     removeHourglass();
                     $('#submitFileGroup').prop("disabled", false);  // debounce
+                    if(handleLogout(data)) {
+                        // Check for errors in the form
+                        if (data && data.status === "error") {
+                            $('#up_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(msgToHtml(data));
 
-                    // Check for errors in the form
-                    if(data && data.status === "error") {
-                        $('#up_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(msgToHtml(data));
+                        } else if (data && data.status === "warning") {
+                            document.forms.namedItem("uploadForm").reset();
+                            projectSet();
+                            getPotentialGroupSurveys();
+                            $('#up_alert').show().removeClass('alert-success alert-danger').addClass('alert-warning').html(msgToHtml(data));
 
-                    } else if(data && data.status === "warning") {
-                        document.forms.namedItem("uploadForm").reset();
-                        projectSet();
-                        getPotentialGroupSurveys();
-                        $('#up_alert').show().removeClass('alert-success alert-danger').addClass('alert-warning').html(msgToHtml(data));
-
+                        } else {
+                            document.forms.namedItem("uploadForm").reset();
+                            projectSet();
+                            getPotentialGroupSurveys();
+                            $('#up_alert').show().removeClass('alert-danger alert-warning').addClass('alert-success').html(localise.set["t_tl"] + ": " + htmlEncode(data.name));
+                        }
+                        $('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
                     } else {
-                        document.forms.namedItem("uploadForm").reset();
-                        projectSet();
-                        getPotentialGroupSurveys();
-                        $('#up_alert').show().removeClass('alert-danger alert-warning').addClass('alert-success').html(localise.set["t_tl"] + ": " + htmlEncode(data.name));
+                        $('#up_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(localise.set["lo_lo"]);
                     }
-                    $('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
 
                 },
                 error: function(xhr, textStatus, err) {
                     removeHourglass();
-                    $('#submitFileGroup').prop("disabled", false);  // debounce
-                    
-                    if(xhr.readyState == 0 || xhr.status == 0) {
-                        return;  // Not an error
-                    } else {
-                        $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_u_f"] + ": " + htmlEncode(xhr.responseText));
-                        $('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
+                    if(handleLogout(xhr.responseText)) {
+                        $('#submitFileGroup').prop("disabled", false);  // debounce
+
+                        if (xhr.readyState == 0 || xhr.status == 0) {
+                            return;  // Not an error
+                        } else {
+                            $('#up_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_u_f"] + ": " + htmlEncode(xhr.responseText));
+                            $('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
+                        }
                     }
                 }
             });

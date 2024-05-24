@@ -151,15 +151,19 @@ function getMyProjects(projectId, callback, getAll) {
 		cache: false,
 		success: function(data) {
 			removeHourglass();
-			globals.gProjectList = data;
-			updateProjectList(getAll, projectId, callback);
+			if(handleLogout(data)) {
+				globals.gProjectList = data;
+				updateProjectList(getAll, projectId, callback);
+			}
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				alert("Error: Failed to get list of projects: " + err);
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert("Error: Failed to get list of projects: " + err);
+				}
 			}
 		}
 	});
@@ -800,13 +804,6 @@ function enableUserProfile () {
 						saveCurrentUser(user, undefined);			// Save the updated user details to disk
 						$(this).dialog("close");
 					},
-				}, {
-					text: "Logout",
-					click: function() {
-						logout();
-						$(this).dialog("close");
-					}
-
 				}
 			]
 		}
@@ -819,35 +816,6 @@ function enableUserProfile () {
 			$('#password_me_fields').removeClass('d-none').show();
 		} else {
 			$('#password_me_fields').hide();
-		}
-	});
-}
-
-/*
- * Logout function
- */
-function logout() {
-
-	try {
-		localStorage.setItem('navbar_color', undefined);
-		localStorage.setItem('navbar_text_color', undefined);
-		localStorage.setItem('main_logo', undefined);
-	} catch (e) {
-
-	}
-
-	jQuery.ajax({
-		type: "GET",
-		cache: false,
-		url: "/surveyKPI/logout",
-		beforeSend: function(xhr){xhr.setRequestHeader("Authorization","Basic YXNkc2E6");},
-		username: "shkdhasfkhd",
-		password: "sieinkdnfkdf",
-		error: function(data, status) {
-			window.location.href="/logout.html";
-		},
-		success: function(data,status) {
-			window.location.href="/logout.html";
 		}
 	});
 }
@@ -1074,18 +1042,20 @@ function getAvailableTimeZones(callback) {
 		cache: true,
 		success: function(data) {
 			removeHourglass();
-
-			if(typeof callback == "function") {
-				callback(data);
+			if(handleLogout(data)) {
+				if (typeof callback == "function") {
+					callback(data);
+				}
 			}
-
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				alert(localise.set["c_error"] + ": " + err);
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["c_error"] + ": " + err);
+				}
 			}
 		}
 	});
@@ -1148,125 +1118,80 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 		cache: false,
 		success: function(data) {
 			removeHourglass();
+			if(handleLogout(data)) {
+				var i;
 
-			var i;
+				globals.gServerCanSendEmail = data.sendEmail;
 
-			globals.gServerCanSendEmail = data.sendEmail;
+				globals.gEmailEnabled = data.allow_email;
+				globals.gFacebookEnabled = data.allow_facebook;
+				globals.gTwitterEnabled = data.allow_twitter;
+				globals.gCanEdit = data.can_edit;
+				globals.gSendTrail = data.ft_send_location;
+				globals.gAlertSeen = data.seen;		// Alerts have been acknowledged
+				globals.gLastAlertTime = data.lastalert;
+				globals.gOrgId = data.o_id;
+				globals.gEntId = data.e_id;
+				globals.gEnterpriseName = data.enterprise_name;
+				globals.gSetAsTheme = data.set_as_theme;
+				globals.gNavbarColor = data.navbar_color;
+				globals.gNavbarTextColor = data.navbar_text_color;
+				globals.gTraining = data.training;
+				globals.gRefreshRate = data.refresh_rate;
 
-			globals.gEmailEnabled = data.allow_email;
-			globals.gFacebookEnabled = data.allow_facebook;
-			globals.gTwitterEnabled = data.allow_twitter;
-			globals.gCanEdit = data.can_edit;
-			globals.gSendTrail = data.ft_send_location;
-			globals.gAlertSeen = data.seen;		// Alerts have been acknowledged
-			globals.gLastAlertTime = data.lastalert;
-			globals.gOrgId = data.o_id;
-			globals.gEntId = data.e_id;
-			globals.gEnterpriseName = data.enterprise_name;
-			globals.gSetAsTheme = data.set_as_theme;
-			globals.gNavbarColor = data.navbar_color;
-			globals.gNavbarTextColor = data.navbar_text_color;
-			globals.gTraining = data.training;
-			globals.gRefreshRate = data.refresh_rate;
-
-			if(data.timezone) {
-				globals.gTimezone = data.timezone;
-			} else {
-				globals.gTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-			}
-			$('#u_tz').val(globals.gTimezone);
-
-			if(!hideUserDetails) {
-				updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServerDetailsFn);
-			}
-
-			if(!dontGetCurrentSurvey) {	// Hack, on edit screen current survey is set as parameter not from the user's defaults
-				globals.gCurrentSurvey = data.current_survey_id;
-				globals.gCurrentSurveyIdent = data.current_survey_ident;
-			}
-			globals.gCurrentProject = data.current_project_id;
-			globals.gCurrentTaskGroup = data.current_task_group_id;
-			$('#projectId').val(globals.gCurrentProject);		// Set the project value for the hidden field in template upload
-			if(data.groupSurveys) {
-				for(i = 0; i < data.groupSurveys.length; i++) {
-					globals.gGroupSurveys[data.groupSurveys[i].sId] = data.groupSurveys[i].groupIdent;
-					globals.gSubForms[data.groupSurveys[i].sId] = data.groupSurveys[i].fName;
+				if (data.timezone) {
+					globals.gTimezone = data.timezone;
+				} else {
+					globals.gTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 				}
-			}
+				$('#u_tz').val(globals.gTimezone);
 
-			setOrganisationTheme();
+				if (!hideUserDetails) {
+					updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServerDetailsFn);
+				}
 
-			if(getProjects) {
-				getMyProjects(globals.gCurrentProject, callback, getAll);	// Get projects
-			} else {
-				if(typeof callback !== "undefined") {
-					callback(globals.gCurrentSurvey);				// Call the callback with the correct current survey
+				if (!dontGetCurrentSurvey) {	// Hack, on edit screen current survey is set as parameter not from the user's defaults
+					globals.gCurrentSurvey = data.current_survey_id;
+					globals.gCurrentSurveyIdent = data.current_survey_ident;
+				}
+				globals.gCurrentProject = data.current_project_id;
+				globals.gCurrentTaskGroup = data.current_task_group_id;
+				$('#projectId').val(globals.gCurrentProject);		// Set the project value for the hidden field in template upload
+				if (data.groupSurveys) {
+					for (i = 0; i < data.groupSurveys.length; i++) {
+						globals.gGroupSurveys[data.groupSurveys[i].sId] = data.groupSurveys[i].groupIdent;
+						globals.gSubForms[data.groupSurveys[i].sId] = data.groupSurveys[i].fName;
+					}
+				}
+
+				setOrganisationTheme();
+
+				if (getProjects) {
+					getMyProjects(globals.gCurrentProject, callback, getAll);	// Get projects
+				} else {
+					if (typeof callback !== "undefined") {
+						callback(globals.gCurrentSurvey);				// Call the callback with the correct current survey
+					}
 				}
 			}
 
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0 || xhr.status == 401) {
-				return;  // Not an error or an authorisation error which is handled by the service worker
-			} else {
-				console.log("Error: Failed to get user details: " + err);
-
-				var msg = localise.set["c_error"] + ": ";
-				if(err && err.message && err.message.indexOf('Unauthorized') >= 0) {
-					msg += localise.set["c_auth"];
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0 || xhr.status == 401) {
+					return;  // Not an error or an authorisation error which is handled by the service worker
 				} else {
-					msg += err;
+					console.log("Error: Failed to get user details: " + err);
+
+					var msg = localise.set["c_error"] + ": ";
+					if (err && err.message && err.message.indexOf('Unauthorized') >= 0) {
+						msg += localise.set["c_auth"];
+					} else {
+						msg += err;
+					}
+					alert(msg);
 				}
-				alert(msg);
-			}
-		}
-	});
-}
-
-/*
- * Get the users queries
- */
-function getQueries(published) {
-
-	var url="/surveyKPI/query" + (published ? "?published=true" : "");
-
-	addHourglass();
-
-	$.ajax({
-		url: url,
-		dataType: 'json',
-		cache: false,
-		success: function(data) {
-			var h = [],
-				idx = -1,
-				i,
-				item,
-				$elem = $('#export_query');
-
-			removeHourglass();
-
-			if(data && data.length > 0) {
-				for(i = 0; i < data.length; i++) {
-					item = data[i];
-					h[++idx] = '<option value="';
-					h[++idx] = item.id;
-					h[++idx] = '">';
-					h[++idx] = '<td>';
-					h[++idx] = htmlEncode(item.name);
-					h[++idx] = '</option>';
-				}
-			}
-
-			$elem.html(h.join(''));
-
-		}, error: function(xhr, textStatus, err) {
-
-			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				alert("Error: Failed to get list of queriess: " + err);
 			}
 		}
 	});
@@ -1298,28 +1223,32 @@ function uploadFiles(url, formName, callback1) {
 		processData:false,
 		success: function(data) {
 			removeHourglass();
-			let cb1 = callback1;
-			$('.upload_file_msg').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["c_success"]);
-			if(typeof cb1 === "function") {
-				cb1(data);
+			if(handleLogout(data)) {
+				let cb1 = callback1;
+				$('.upload_file_msg').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["c_success"]);
+				if (typeof cb1 === "function") {
+					cb1(data);
+				}
+				document.forms.namedItem(formName).reset();
+				$('#fileAddLocations').modal('hide');
 			}
-			document.forms.namedItem(formName).reset();
-			$('#fileAddLocations').modal('hide');
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			document.forms.namedItem(formName).reset();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				var msg = htmlEncode(xhr.responseText);
-				if(msg && msg.indexOf("no tags") >= 0) {
-					msg = localise.set["msg_u_nt"];
+			if(handleLogout(xhr.responseText)) {
+				document.forms.namedItem(formName).reset();
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
 				} else {
-					msg = localise.set["msg_u_f"] + " : " + msg;
+					var msg = htmlEncode(xhr.responseText);
+					if (msg && msg.indexOf("no tags") >= 0) {
+						msg = localise.set["msg_u_nt"];
+					} else {
+						msg = localise.set["msg_u_f"] + " : " + msg;
+					}
+					$('.upload_file_msg').show().removeClass('alert-success').addClass('alert-danger').html(msg);
+					$('#fileAddLocations').modal('hide');
 				}
-				$('.upload_file_msg').show().removeClass('alert-success').addClass('alert-danger').html(msg);
-				$('#fileAddLocations').modal('hide');
 			}
 		}
 	});
@@ -1335,16 +1264,6 @@ function addUrlParam(url, param) {
 		url += "?" + param;
 	}
 	return url;
-}
-
-/*
- * Progress function for the uploading of files
- */
-function progressFn(e) {
-	if(e.lengthComputable){
-		var w = (100.0 * e.loaded) / e.total;
-		$('.progress-bar').css('width', w+'%').attr('aria-valuenow', w);
-	}
 }
 
 /*
@@ -1627,16 +1546,19 @@ function getFilesFromServer(sId, callback, getall) {
 		cache: false,
 		success: function(data) {
 			removeHourglass();
-			let surveyId = sId;
-			callback(data, surveyId);
-
+			if(handleLogout(data)) {
+				let surveyId = sId;
+				callback(data, surveyId);
+			}
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				$('.upload_file_msg').removeClass('alert-success').addClass('alert-danger').html("Error: " + htmlEncode(err));
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					$('.upload_file_msg').removeClass('alert-success').addClass('alert-danger').html("Error: " + htmlEncode(err));
+				}
 			}
 		}
 	});
@@ -1660,16 +1582,19 @@ function delete_media(filename, sId) {
 		cache: false,
 		success: function(data) {
 			removeHourglass();
-			var surveyId = sId;
-			getFilesFromServer(surveyId, refreshMediaViewManage, false);
-
+			if(handleLogout(data)) {
+				var surveyId = sId;
+				getFilesFromServer(surveyId, refreshMediaViewManage, false);
+			}
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				alert("Error: " + err);
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert("Error: " + err);
+				}
 			}
 		}
 	});
@@ -1729,26 +1654,29 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx) 
 			dataType: 'json',
 			cache: false,
 			success: function(data) {
-				var sel = selector;
-				var all = addAll;
+				if(handleLogout(data)) {
+					var sel = selector;
+					var all = addAll;
 
-				removeHourglass();
+					removeHourglass();
 
-				showSurveyList(data, sel + ".data_survey", all, true, false, useIdx);
-				showSurveyList(data, sel + ".oversight_survey", all, false, true, useIdx);
-				showSurveyList(data, sel + ".data_oversight_survey", all,true, true, useIdx);
+					showSurveyList(data, sel + ".data_survey", all, true, false, useIdx);
+					showSurveyList(data, sel + ".oversight_survey", all, false, true, useIdx);
+					showSurveyList(data, sel + ".data_oversight_survey", all, true, true, useIdx);
 
-				if(typeof callback == "function") {
-					callback(data);
+					if (typeof callback == "function") {
+						callback(data);
+					}
 				}
 			},
 			error: function(xhr, textStatus, err) {
-
 				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					console.log("Error: Failed to get list of surveys: " + err);
+				if(handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						console.log("Error: Failed to get list of surveys: " + err);
+					}
 				}
 			}
 		});
@@ -1824,67 +1752,6 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 
 }
 
-/*
- * Load the surveys from the server
- */
-function loadForms(surveyId, selector) {
-
-	var url="/surveyKPI/surveys/forms?surveyId=" + surveyId,
-		$elem,
-		selector_disable_blocked,
-		h = [],
-		idx = -1,
-		i,
-		item;
-
-	if(selector === undefined) {
-		selector = ".form_select";	// Update the entire class of form select controls
-	}
-	$elem = $(selector);
-
-
-	addHourglass();
-
-	$.ajax({
-		url: url,
-		dataType: 'json',
-		cache: false,
-		success: function(data) {
-
-			removeHourglass();
-			$elem.empty();
-
-			for(i = 0; i < data.length; i++) {
-				item = data[i];
-				h[++idx] = '<option';
-				h[++idx] = ' value="';
-				h[++idx] = item.id;
-				h[++idx] = '">';
-				h[++idx] = htmlEncode(item.name);
-				h[++idx] = '</option>';
-			}
-
-			$elem.empty().append(h.join(''));
-
-			if(globals.gCurrentForm > 0) {
-				$elem.val(globals.gCurrentForm);
-			}
-
-
-		},
-		error: function(xhr, textStatus, err) {
-
-			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				console.log("Error: Failed to get list of forms: " + err);
-			}
-		}
-	});
-
-}
-
 // Common Function to get the language and question list (for the default language)
 function getLanguageList(sId, callback, addNone, selector, setGroupList, filterQuestion) {
 
@@ -1904,15 +1771,19 @@ function getLanguageList(sId, callback, addNone, selector, setGroupList, filterQ
 			cache: false,
 			success: function(data) {
 				removeHourglass();
-				globals.gSelector.setSurveyLanguages(sId, data);
-				retrievedLanguages(sId, selector, data, theCallback, filterQuestion, setGroupList, addNone);
+				if(handleLogout(data)) {
+					globals.gSelector.setSurveyLanguages(sId, data);
+					retrievedLanguages(sId, selector, data, theCallback, filterQuestion, setGroupList, addNone);
+				}
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert(localise.set["c_error"] + ": " + err);
+				if(handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(localise.set["c_error"] + ": " + err);
+					}
 				}
 			}
 		});
@@ -1964,22 +1835,26 @@ function getQuestionList(sId, language, qId, groupId, callback, setGroupList, vi
 			cache: false,
 			success: function(data) {
 				removeHourglass();
-				globals.gSelector.setSurveyQuestions(sId, language, data);
-				setSurveyViewQuestions(data, qId, view, dateqId, qName, assignQuestion, scQuestion);
+				if(handleLogout(data)) {
+					globals.gSelector.setSurveyQuestions(sId, language, data);
+					setSurveyViewQuestions(data, qId, view, dateqId, qName, assignQuestion, scQuestion);
 
-				if(setGroupList && typeof setSurveyViewQuestionGroups === "function") {
-					setSurveyViewQuestionGroups(data, groupId);
-				}
-				if(typeof theCallback === "function") {
-					theCallback();
+					if (setGroupList && typeof setSurveyViewQuestionGroups === "function") {
+						setSurveyViewQuestionGroups(data, groupId);
+					}
+					if (typeof theCallback === "function") {
+						theCallback();
+					}
 				}
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert("Error: Failed to get list of questions: " + err);
+				if(handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert("Error: Failed to get list of questions: " + err);
+					}
 				}
 			}
 		});
@@ -6124,7 +5999,9 @@ function handleLogout(data) {
 	if(data &&
 		((data.code && data.code === 401)
 			|| (data.status && data.status === 405)
-			|| (typeof data === "string" && data.indexOf('"code": 401') >= 0))) {
+			|| (typeof data === "string" && data.indexOf('"code": 401') >= 0))
+			|| (typeof data === "string" && data.toLowerCase().indexOf("method not allowed") >= 0)		// For delete functions
+		) {
 		window.open("/login.html");
 		return false;
 	}

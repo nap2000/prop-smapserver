@@ -613,31 +613,37 @@ require([
 			success: function(data) {
 				removeHourglass();
 				$('#submitResourceFile').prop("disabled", false);  // debounce
+				if(handleLogout(data)) {
 
-				// Check for errors in the form
-				if(data && data.status === "error") {
-					$('.upload_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').text(data.message);
-				} else {
-					var surveyId = 0;
-					document.forms.namedItem("resourceUpload").reset();
-					if(gIsSurvey) {
-						surveyId = globals.gCurrentSurvey;
+					// Check for errors in the form
+					if (data && data.status === "error") {
+						$('.upload_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').text(data.message);
+					} else {
+						var surveyId = 0;
+						document.forms.namedItem("resourceUpload").reset();
+						if (gIsSurvey) {
+							surveyId = globals.gCurrentSurvey;
+						}
+						getFilesFromServer(surveyId, refreshMediaViewManage, false);
+						$('.upload_alert').show().removeClass('alert-danger alert-warning').addClass('alert-success').html(localise.set["t_tl"] + ": " + data.name);
 					}
-					getFilesFromServer(surveyId, refreshMediaViewManage, false);
-					$('.upload_alert').show().removeClass('alert-danger alert-warning').addClass('alert-success').html(localise.set["t_tl"] + ": " + data.name);
+					$('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
+				} else {
+					$('.upload_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').text(localise.set["lo_lo"]);
 				}
-				$('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
 
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
-				$('#submitResourceFile').prop("disabled", false);  // debounce
+				if(handleLogout(xhr.responseText)) {
+					$('#submitResourceFile').prop("disabled", false);  // debounce
 
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					$('.upload_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_u_f"] + ": " + htmlEncode(xhr.responseText));
-					$('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						$('.upload_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_u_f"] + ": " + htmlEncode(xhr.responseText));
+						$('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
+					}
 				}
 			}
 		});
