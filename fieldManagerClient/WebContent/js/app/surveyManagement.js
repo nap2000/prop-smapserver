@@ -130,12 +130,11 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 	                    docURL += "&reference_surveys=true";
                     }
                 } else if(type === "xls_edited") {
-                    docURL = "/surveyKPI/xlsForm/" + gSelectedTemplateId + "?filetype=" + "xlsx" + addCacheBuster("?");
+                    docURL = "/surveyKPI/xlsForm/" + gSelectedTemplateId + "?filetype=" + "xlsx";
                 } else {
-                    docURL = "/surveyKPI/survey/" + gSelectedTemplateId + "/download?type=" + type + "&language=" + language + addCacheBuster("?");;
+                    docURL = "/surveyKPI/survey/" + gSelectedTemplateId + "/download?type=" + type + "&language=" + language;
                 }
-                docURL += "&_v=" + new Date().getTime().toString();    // add a cache buster
-                window.location.href = docURL;
+                downloadFile(docURL);
             });
 
             // On change of template name, hide any previous results
@@ -349,7 +348,6 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                 locale: gUserLocale || 'en'
             }).data("DateTimePicker").date(moment());
         });
-
 
         /*
          * Convert the error response safely to html

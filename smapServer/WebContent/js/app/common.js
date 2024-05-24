@@ -294,10 +294,12 @@ function addUserDetailsPopup() {
 function populateLanguageSelect(sId, $elem) {
 	$.getJSON("/surveyKPI/languages/" + sId, function(data) {
 
-		$elem.empty();
-		$.each(data, function(j, item) {
-			$elem.append('<option value="' + item + '">' + htmlEncode(item) + '</option>');
-		});
+		if(handleLogout(data)) {
+			$elem.empty();
+			$.each(data, function (j, item) {
+				$elem.append('<option value="' + item + '">' + htmlEncode(item) + '</option>');
+			});
+		}
 	});
 }
 
@@ -312,26 +314,28 @@ function populatePdfSelect(sId, $elem) {
 
 	$.getJSON(url, function(data) {
 
-		var defaultTemplateId,
-			fromSettingsTemplateId;
+		if(handleLogout(data)) {
+			var defaultTemplateId,
+				fromSettingsTemplateId;
 
-		$elem.empty();
-		$elem.append('<option value="-2">' + localise.set["c_auto"] + '</option>');
-		$elem.append('<option value="-1">' + localise.set["c_none"] + '</option>');
-		$.each(data, function(j, item) {
-			if(item.default_template) {
-				defaultTemplateId = item.id;
-			} else if(item.fromSettings) {
-				fromSettingsTemplateId = item.id;
+			$elem.empty();
+			$elem.append('<option value="-2">' + localise.set["c_auto"] + '</option>');
+			$elem.append('<option value="-1">' + localise.set["c_none"] + '</option>');
+			$.each(data, function (j, item) {
+				if (item.default_template) {
+					defaultTemplateId = item.id;
+				} else if (item.fromSettings) {
+					fromSettingsTemplateId = item.id;
+				}
+				$elem.append('<option value="' + item.id + '">' + htmlEncode(item.name) + '</option>');
+			});
+			if (typeof defaultTemplateId !== "undefined") {
+				$elem.val(defaultTemplateId);
+			} else if (typeof fromSettingsTemplateId !== "undefined") {
+				$elem.val(fromSettingsTemplateId)
+			} else {
+				$elem.val(-2);		// Set to auto
 			}
-			$elem.append('<option value="' + item.id + '">' + htmlEncode(item.name) + '</option>');
-		});
-		if(typeof defaultTemplateId !== "undefined") {
-			$elem.val(defaultTemplateId);
-		} else if(typeof fromSettingsTemplateId !== "undefined") {
-			$elem.val(fromSettingsTemplateId)
-		} else {
-			$elem.val(-2);		// Set to auto
 		}
 
 	});
