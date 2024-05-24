@@ -1658,11 +1658,10 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx) 
 			dataType: 'json',
 			cache: false,
 			success: function(data) {
+				removeHourglass();
 				if(handleLogout(data)) {
 					var sel = selector;
 					var all = addAll;
-
-					removeHourglass();
 
 					showSurveyList(data, sel + ".data_survey", all, true, false, useIdx);
 					showSurveyList(data, sel + ".oversight_survey", all, false, true, useIdx);
@@ -1877,15 +1876,19 @@ function getMetaList(sId, metaItem) {
 		cache: false,
 		success: function(data) {
 			removeHourglass();
-			globals.gSelector.setSurveyMeta(sId, data);
-			setSurveyViewMeta(data, metaItem);
+			if(handleLogout(data)) {
+				globals.gSelector.setSurveyMeta(sId, data);
+				setSurveyViewMeta(data, metaItem);
+			}
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				alert(localise.set["c_error"] + ": " + err);
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["c_error"] + ": " + err);
+				}
 			}
 		}
 	});
@@ -1904,15 +1907,19 @@ function getAlertList(sId, alertId) {
 		cache: false,
 		success: function(data) {
 			removeHourglass();
-			globals.gSelector.setSurveyAlerts(sId, data);
-			setSurveyAlerts(data, alertId);
+			if(handleLogout(data)) {
+				globals.gSelector.setSurveyAlerts(sId, data);
+				setSurveyAlerts(data, alertId);
+			}
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				alert(localise.set["c_error"] + ": " + err);
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["c_error"] + ": " + err);
+				}
 			}
 		}
 	});
@@ -2132,25 +2139,29 @@ function getSurveyDetails(callback, get_changes, hide_soft_deleted) {
 			cache: false,
 			success: function(data) {
 				removeHourglass();
-				globals.model.setSurveyData(data);
-				globals.model.setSettings();
-				setLanguages(data.languages, callback);
+				if(handleLogout(data)) {
+					globals.model.setSurveyData(data);
+					globals.model.setSettings();
+					setLanguages(data.languages, callback);
 
-				if(typeof callback == "function") {
-					callback();
+					if (typeof callback == "function") {
+						callback();
+					}
 				}
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					if(xhr.status == 404) {
-						// The current survey has probably been deleted or the user no longer has access
-						globals.gCurrentSurvey = undefined;
-						return;
+				if(handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						if (xhr.status == 404) {
+							// The current survey has probably been deleted or the user no longer has access
+							globals.gCurrentSurvey = undefined;
+							return;
+						}
+						alert("Error: Failed to get survey: " + err);
 					}
-					alert("Error: Failed to get survey: " + err);
 				}
 			}
 		});
@@ -2230,28 +2241,31 @@ function createNewSurvey(name, existing, existing_survey, shared_results, callba
 			existing_form: 0,
 			shared_results: shared_results
 		},
-		cache: false,
 		success: function(data) {
 			removeHourglass();
 
-			globals.model.setSurveyData(data);
-			globals.model.setSettings();
-			globals.gCurrentSurvey = data.id;
+			if(handleLogout(data)) {
+				globals.model.setSurveyData(data);
+				globals.model.setSettings();
+				globals.gCurrentSurvey = data.id;
 
-			saveCurrentProject(-1, globals.gCurrentSurvey, undefined);	// Save the current survey id
+				saveCurrentProject(-1, globals.gCurrentSurvey, undefined);	// Save the current survey id
 
-			setLanguages(data.languages, callback);
+				setLanguages(data.languages, callback);
 
-			if(typeof callback == "function") {
-				callback();
+				if (typeof callback == "function") {
+					callback();
+				}
 			}
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				bootbox.alert(localise.set["c_error"] + " " + htmlEncode(xhr.responseText));
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					bootbox.alert(localise.set["c_error"] + " " + htmlEncode(xhr.responseText));
+				}
 			}
 		}
 	});
@@ -3040,17 +3054,21 @@ function getMapboxDefault(callback, param) {
 			cache: false,
 			success: function(data) {
 				removeHourglass();
-				globals.gMapboxDefault = data;
-				if(typeof callback === "function") {
-					callback(param);
+				if(handleLogout(data)) {
+					globals.gMapboxDefault = data;
+					if (typeof callback === "function") {
+						callback(param);
+					}
 				}
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert(localise.set["error"] + ": " + err);
+				if(handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(localise.set["error"] + ": " + err);
+					}
 				}
 			}
 		});
@@ -3085,46 +3103,48 @@ function getGoogleMapApi(callback, map) {
 			url: '/surveyKPI/server/googlemaps',
 			cache: false,
 			success: function(data) {
-
 				removeHourglass();
-				console.log("Retrieved map keys from server");
+				if(handleLogout(data)) {
+					console.log("Retrieved map keys from server");
 
-				var gElement = document.createElement('script');
-				var key = "";
-				if(data) {
-					key = "?key=" + data;
-				}
-				//gElement.src = "//maps.google.com/maps/api/js?v=3.6&amp";
-				gElement.src = "https://maps.googleapis.com/maps/api/js" + key;
-				if(typeof callback === "function") {
-					gElement.onload = onLoad;
-				}
-				document.getElementsByTagName('head')[0].appendChild(gElement);
-
-				function onLoad() {
-
-					var i;
-
-					window.smapGMapsLoading = false;
-					window.smapLoadedGMaps = true;
-
-					console.log("Google map loaded");
-
-					for(i = 0; i < window.smapGMapsToLoad.length; i++) {
-						console.log("map callback");
-						window.smapGMapsToLoad[i].fn(window.smapGMapsToLoad[i].locn);
+					var gElement = document.createElement('script');
+					var key = "";
+					if (data) {
+						key = "?key=" + data;
 					}
-					delete window.smapGMapsToLoad;
+					//gElement.src = "//maps.google.com/maps/api/js?v=3.6&amp";
+					gElement.src = "https://maps.googleapis.com/maps/api/js" + key;
+					if (typeof callback === "function") {
+						gElement.onload = onLoad;
+					}
+					document.getElementsByTagName('head')[0].appendChild(gElement);
+
+					function onLoad() {
+
+						var i;
+
+						window.smapGMapsLoading = false;
+						window.smapLoadedGMaps = true;
+
+						console.log("Google map loaded");
+
+						for (i = 0; i < window.smapGMapsToLoad.length; i++) {
+							console.log("map callback");
+							window.smapGMapsToLoad[i].fn(window.smapGMapsToLoad[i].locn);
+						}
+						delete window.smapGMapsToLoad;
+					}
 				}
 
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert(localise.set["error"] + " " + err);
-
+				if(handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(localise.set["error"] + " " + err);
+					}
 				}
 			}
 		});
@@ -3172,24 +3192,27 @@ function getReports(callback1, callback2, type) {
 		cache: false,
 		success: function(data) {
 			removeHourglass();
-			var cb1 = callback1,
-				cb2 = callback2,
-				t = type;
-			globals.gReports = data;
-			if(typeof cb1 === "function") {
-				cb1(data, cb1, cb2, t);
+			if(handleLogout(data)) {
+				var cb1 = callback1,
+					cb2 = callback2,
+					t = type;
+				globals.gReports = data;
+				if (typeof cb1 === "function") {
+					cb1(data, cb1, cb2, t);
+				}
+				if (typeof cb2 === "function") {
+					cb2(data, cb1, cb2, t);
+				}
 			}
-			if(typeof cb2 === "function") {
-				cb2(data, cb1, cb2, t);
-			}
-
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				console.log("Error: Failed to get list of reports: " + err);
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					console.log("Error: Failed to get list of reports: " + err);
+				}
 			}
 		}
 	});
@@ -3321,16 +3344,20 @@ function deleteCustomReport(id, type) {
 		url: url,
 		success: function(data, status) {
 			removeHourglass();
-			var t = type;
-			console.log("delete: " + t + " : " + type);
-			getReports(refreshCustomReportView, showReportList, t);
+			if(handleLogout(data)) {
+				var t = type;
+				console.log("delete: " + t + " : " + type);
+				getReports(refreshCustomReportView, showReportList, t);
+			}
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				alert(localise.set["msg_err_del"] + " " + xhr.responseText);	// alerts htmlencode text
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["msg_err_del"] + " " + xhr.responseText);	// alerts htmlencode text
+				}
 			}
 		}
 	});
@@ -3347,17 +3374,21 @@ function getRoles(callback) {
 		cache: false,
 		success: function(data) {
 			removeHourglass();
-			globals.gRoleList = data;
-			if(typeof callback === "function") {
-				callback();
+			if(handleLogout(data)) {
+				globals.gRoleList = data;
+				if (typeof callback === "function") {
+					callback();
+				}
 			}
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				alert(localise.set["msg_err_get_r"] + " " + err);
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["msg_err_get_r"] + " " + err);
+				}
 			}
 		}
 	});
@@ -3374,40 +3405,24 @@ function getCms(callback) {
 		cache: false,
 		success: function(data) {
 			removeHourglass();
-			globals.gCmSettings = data;
-			if(typeof callback === "function") {
-				callback();
+			if(handleLogout(data)) {
+				globals.gCmSettings = data;
+				if (typeof callback === "function") {
+					callback();
+				}
 			}
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				alert(localise.set["msg_err_get_r"] + " " + err);
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["msg_err_get_r"] + " " + err);
+				}
 			}
 		}
 	});
-}
-
-function getInterval(seconds) {
-	if(seconds < 2) {
-		return seconds + ' ' + localise.set["i_sec"];
-	} else if(seconds < 60) {
-		return seconds + ' ' + localise.set["i_secs"];
-	} else if(seconds < 120) {
-		return Math.floor(seconds/ 60) + ' ' + localise.set["i_min"];
-	} else if(seconds < 3600) {
-		return Math.floor(seconds/ 60) + ' ' + localise.set["i_mins"];
-	} else if(seconds < (3600 * 2)) {
-		return Math.floor(seconds/ (60 * 60)) + ' ' + localise.set["i_hour"];
-	} else if(seconds < (3600 * 24)) {
-		return Math.floor(seconds/ (60 * 60)) + ' ' + localise.set["i_hours"];
-	} else if(seconds < (3600 * 24 * 2)) {
-		return Math.floor(seconds/ (60 * 60 * 24)) + ' ' + localise.set["i_day"];
-	} else if(seconds < (3600 * 24)) {
-		return Math.floor(seconds/ (60 * 60 * 24)) + ' ' + localise.set["i_days"];
-	}
 }
 
 /*
@@ -3422,32 +3437,6 @@ function cleanFileName(filename) {
 	n = n.replace("'", "", 'g');		// Remove apostrophes
 
 	return n;
-}
-
-/*
- * Convert a :: separated string containing link information into target survey id and question id
- */
-function getLinkedTarget(input) {
-	var lt,
-		values = [];
-
-	if(input) {
-
-		lt = {
-			sId: 0,
-			qId: 0
-		}
-
-		values = input.split("::");
-		if(values.length > 0) {
-			lt.sId = +values[0].trim();
-		}
-		if(values.length > 1) {
-			lt.qId = +values[1].trim();
-		}
-	}
-
-	return lt;
 }
 
 /*
@@ -3710,17 +3699,21 @@ function getSurveyRoles(sId, selectedRoles, setall, onlypriv) {
 			cache: false,
 			success: function (data) {
 				removeHourglass();
-				var savedSelectedRoles = selectedRoles;
-				gTasks.cache.surveyRoles[sId] = data;
-				showRoles(gTasks.cache.surveyRoles[sId], savedSelectedRoles);
+				if(handleLogout(data)) {
+					var savedSelectedRoles = selectedRoles;
+					gTasks.cache.surveyRoles[sId] = data;
+					showRoles(gTasks.cache.surveyRoles[sId], savedSelectedRoles);
+				}
 			},
 			error: function (xhr, textStatus, err) {
 
 				removeHourglass();
-				if (xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					console.log("Error: Failed to get roles for a survey: " + err);
+				if(handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						console.log("Error: Failed to get roles for a survey: " + err);
+					}
 				}
 			}
 		});
@@ -3807,39 +3800,43 @@ function getAccessibleSurveys($elem, includeNone, includeBlocked, groupsOnly, in
 		cache: false,
 		success: function(data) {
 			removeHourglass();
-			var h = [],
-				idx = -1,
-				i;
+			if(handleLogout(data)) {
+				var h = [],
+					idx = -1,
+					i;
 
-			if(includeNone) {
-				h[++idx] = '<option value="">';
-				h[++idx] = localise.set["c_none"]
-				h[++idx] = '</option>';
-			}
+				if (includeNone) {
+					h[++idx] = '<option value="">';
+					h[++idx] = localise.set["c_none"]
+					h[++idx] = '</option>';
+				}
 
-			if(includeSelf) {
-				h[++idx] = '<option value="self">';
-				h[++idx] = localise.set["c_self"]
-				h[++idx] = '</option>';
+				if (includeSelf) {
+					h[++idx] = '<option value="self">';
+					h[++idx] = localise.set["c_self"]
+					h[++idx] = '</option>';
+				}
+				for (i = 0; i < data.length; i++) {
+					h[++idx] = '<option value="';
+					h[++idx] = htmlEncode(data[i].ident);
+					h[++idx] = '">';
+					h[++idx] = htmlEncode(data[i].projectName);
+					h[++idx] = ' : ';
+					h[++idx] = htmlEncode(data[i].displayName);
+					h[++idx] = '</option>';
+				}
+				$elem.empty().append(h.join(''));
 			}
-			for(i = 0; i < data.length; i++) {
-				h[++idx] = '<option value="';
-				h[++idx] = htmlEncode(data[i].ident);
-				h[++idx] = '">';
-				h[++idx] = htmlEncode(data[i].projectName);
-				h[++idx] = ' : ';
-				h[++idx] = htmlEncode(data[i].displayName);
-				h[++idx] = '</option>';
-			}
-			$elem.empty().append(h.join(''));
 
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				console.log("Error: Failed to get list of surveys: " + err);
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					console.log("Error: Failed to get list of surveys: " + err);
+				}
 			}
 		}
 	});
@@ -3859,32 +3856,36 @@ function getAccessibleCsvFiles($elem, includeNone) {
 		cache: false,
 		success: function(data) {
 			removeHourglass();
-			globals.gCsvFiles = data;
-			var h = [],
-				idx = -1,
-				i;
+			if(handleLogout(data)) {
+				globals.gCsvFiles = data;
+				var h = [],
+					idx = -1,
+					i;
 
-			if(includeNone) {
-				h[++idx] = '<option value="">';
-				h[++idx] = localise.set["c_none"]
-				h[++idx] = '</option>';
+				if (includeNone) {
+					h[++idx] = '<option value="">';
+					h[++idx] = localise.set["c_none"]
+					h[++idx] = '</option>';
+				}
+				for (i = 0; i < data.length; i++) {
+					h[++idx] = '<option value="';
+					h[++idx] = i;
+					h[++idx] = '">';
+					h[++idx] = htmlEncode(data[i].filename);
+					h[++idx] = '</option>';
+				}
+				$elem.empty().append(h.join(''));
 			}
-			for(i = 0; i < data.length; i++) {
-				h[++idx] = '<option value="';
-				h[++idx] = i;
-				h[++idx] = '">';
-				h[++idx] = htmlEncode(data[i].filename);
-				h[++idx] = '</option>';
-			}
-			$elem.empty().append(h.join(''));
 
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				console.log("Error: Failed to get list of csv files: " + err);
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					console.log("Error: Failed to get list of csv files: " + err);
+				}
 			}
 		}
 	});
@@ -3953,19 +3954,23 @@ function getQuestionsInSurvey($elem, $elem_multiple, sIdent, includeNone, textOn
 				cache: false,
 				success: function (data) {
 					removeHourglass();
-					var theIdent = sIdent;
-					var $theElem = $elem;
-					var $theElemMultiple = $elem_multiple;
+					if(handleLogout(data)) {
+						var theIdent = sIdent;
+						var $theElem = $elem;
+						var $theElemMultiple = $elem_multiple;
 
-					gCache[theIdent] = data;
-					populateElement($theElem, $theElemMultiple, data);
+						gCache[theIdent] = data;
+						populateElement($theElem, $theElemMultiple, data);
+					}
 				},
 				error: function (xhr, textStatus, err) {
 					removeHourglass();
-					if (xhr.readyState == 0 || xhr.status == 0) {
-						return;  // Not an error
-					} else {
-						alert(localise.set["msg_err_get_q"] + ": " + err);
+					if(handleLogout(xhr.responseText)) {
+						if (xhr.readyState == 0 || xhr.status == 0) {
+							return;  // Not an error
+						} else {
+							alert(localise.set["msg_err_get_q"] + ": " + err);
+						}
 					}
 				}
 			});
@@ -4054,19 +4059,23 @@ function getGroupQuestionsInSurvey($elem, sIdent) {
 				cache: false,
 				success: function (data) {
 					removeHourglass();
-					var theIdent = sIdent;
-					var $theElem = $elem;
+					if(handleLogout(data)) {
+						var theIdent = sIdent;
+						var $theElem = $elem;
 
-					gCacheGroup[theIdent] = data;
-					populateElement($theElem, data);
+						gCacheGroup[theIdent] = data;
+						populateElement($theElem, data);
+					}
 
 				},
 				error: function (xhr, textStatus, err) {
 					removeHourglass();
-					if (xhr.readyState == 0 || xhr.status == 0) {
-						return;  // Not an error
-					} else {
-						alert(localise.set["msg_err_get_q"] + ": " + err);
+					if(handleLogout(xhr.responseText)) {
+						if (xhr.readyState == 0 || xhr.status == 0) {
+							return;  // Not an error
+						} else {
+							alert(localise.set["msg_err_get_q"] + ": " + err);
+						}
 					}
 				}
 			});
@@ -4109,19 +4118,23 @@ function getGroupStatusQuestions($elem, sId) {
 			cache: false,
 			success: function (data) {
 				removeHourglass();
-				var theId = sId;
-				var $theElem = $elem;
+				if(handleLogout(data)) {
+					var theId = sId;
+					var $theElem = $elem;
 
-				gCacheStatusQuestions[theId] = data;
-				populateElement($theElem, data);
+					gCacheStatusQuestions[theId] = data;
+					populateElement($theElem, data);
+				}
 
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
-				if (xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert(localise.set["msg_err_get_q"] + ": " + err);
+				if(handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(localise.set["msg_err_get_q"] + ": " + err);
+					}
 				}
 			}
 		});
@@ -4144,19 +4157,23 @@ function getGroupKeys($key, $key_policy, sId) {
 			cache: false,
 			success: function (data) {
 				removeHourglass();
-				var theId = sId;
+				if(handleLogout(data)) {
+					var theId = sId;
 
-				gCacheStatusQuestions[theId] = data;
-				$key.val(gCacheStatusQuestions[sId].key);
-				$key_policy.val(gCacheStatusQuestions[sId].key_policy)
+					gCacheStatusQuestions[theId] = data;
+					$key.val(gCacheStatusQuestions[sId].key);
+					$key_policy.val(gCacheStatusQuestions[sId].key_policy);
+				}
 
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
-				if (xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert(localise.set["c_error"] + ": " + err);
+				if(handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(localise.set["c_error"] + ": " + err);
+					}
 				}
 			}
 		});
@@ -4929,17 +4946,21 @@ function getNotificationTypes() {
 		cache: false,
 		success: function(data) {
 			removeHourglass();
-			window.gNotificationTypes = data;
-			if(data) {
-				updateNotificationTypes(data);
+			if(handleLogout(data)) {
+				window.gNotificationTypes = data;
+				if (data) {
+					updateNotificationTypes(data);
+				}
 			}
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				console.log("Error: Failed to get list of notification types: " + err);
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					console.log("Error: Failed to get list of notification types: " + err);
+				}
 			}
 		}
 	});
@@ -5351,17 +5372,21 @@ function getGroupSurveys(surveyId, callback) {
 				cache: false,
 				success: function (data) {
 					removeHourglass();
-					gTasks.cache.groupSurveys[surveyId] = data;
-					if(typeof callback === 'function') {
-						callback(data);
+					if(handleLogout(data)) {
+						gTasks.cache.groupSurveys[surveyId] = data;
+						if (typeof callback === 'function') {
+							callback(data);
+						}
 					}
 				},
 				error: function (xhr, textStatus, err) {
 					removeHourglass();
-					if (xhr.readyState == 0 || xhr.status == 0) {
-						return;  // Not an error
-					} else {
-						console.log(localise.set["c_error"] + ": " + err);
+					if(handleLogout(xhr.responseText)) {
+						if (xhr.readyState == 0 || xhr.status == 0) {
+							return;  // Not an error
+						} else {
+							console.log(localise.set["c_error"] + ": " + err);
+						}
 					}
 				}
 			});
@@ -5454,16 +5479,19 @@ function getOversightQuestionList(sIdent, callback) {
 			cache: false,
 			success: function(data) {
 				removeHourglass();
-				window.oversightQuestions[sIdent] = data;
-				callback(data);
-
+				if(handleLogout(data)) {
+					window.oversightQuestions[sIdent] = data;
+					callback(data);
+				}
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert("Error: Failed to get list of questions: " + err);
+				if(handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert("Error: Failed to get list of questions: " + err);
+					}
 				}
 			}
 		});
@@ -5645,15 +5673,18 @@ function getTrailData(projectId, userId, startDate, endDate, callback, tz, mps) 
 		cache: false,
 		success: function(data) {
 			removeHourglass();
-			callback(data);
-
+			if(handleLogout(data)) {
+				callback(data);
+			}
 		},
 		error: function(xhr, textStatus, err) {
 			removeHourglass();
-			if(xhr.readyState == 0 || xhr.status == 0) {
-				return;  // Not an error
-			} else {
-				alert("Error: Failed to get user trail: " + err);
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert("Error: Failed to get user trail: " + err);
+				}
 			}
 		}
 	});
@@ -5791,8 +5822,8 @@ function executeAttendanceReport(oId) {
 		url: "/surveyKPI/background_report" + tzString,
 		data: { report: JSON.stringify(reportObj) },
 		success: function(data, status) {
+			removeHourglass();
 			if(handleLogout(data)) {
-				removeHourglass();
 				alert(localise.set["msg_ds_s_r"]);
 			}
 		}, error: function(xhr, textStatus, err) {
@@ -5879,13 +5910,14 @@ function getEligibleUsers(sId, isNotification) {
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
-				if (xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else if(err == 403) {
-					return;  // Ignore errors where the survey cannot be found. The survey requested may be the global default current survey which may be out of date
-				}
-				else {
-					alert(localise.set["error"] + ": " + err);
+				if(handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else if (err == 403) {
+						return;  // Ignore errors where the survey cannot be found. The survey requested may be the global default current survey which may be out of date
+					} else {
+						alert(localise.set["error"] + ": " + err);
+					}
 				}
 			}
 		});
