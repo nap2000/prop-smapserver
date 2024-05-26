@@ -71,14 +71,12 @@ function isLoggedIn() {
 				$('.loggedin').show().removeClass('d-none');
 				$('.notloggedin').hide();
 			} else {
-				setCustomMainLogo();
 				$('.restrict_role').hide();
 				$('.notloggedin').show().removeClass('d-none');;
 				$('.loggedin').hide();
 			}
 
 		}, error: function (data, status) {
-			setCustomMainLogo();
 			$('.restrict_role').hide();
 			$('.notloggedin').show().removeClass('d-none');;
 			$('.loggedin').hide();
