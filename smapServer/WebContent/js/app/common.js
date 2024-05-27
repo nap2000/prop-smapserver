@@ -192,9 +192,10 @@ function saveCurrentProject(projectId, surveyId, taskGroupId) {
 			cache: false,
 			data: userString,
 			success: function(data, status) {
+				// Do not process a logout
 				removeHourglass();
-				handleLogout(data);
 			}, error: function(data, status) {
+				// Do not process a logout
 				removeHourglass();
 			}
 		});
