@@ -461,10 +461,14 @@ require([
                 },
                 success: function (data, status) {
                     removeHourglass();
-                    refreshData();
+                    if(handleLogout(data)) {
+                        refreshData();
+                    }
                 }, error: function (data, status) {
                     removeHourglass();
-                    alert(data.responseText);
+                    if(handleLogout(data)) {
+                        alert(data.responseText);
+                    }
                 }
             });
         });
@@ -489,13 +493,16 @@ require([
                 },
                 success: function (data, status) {
                     removeHourglass();
-                    $('#m_lock').prop("disabled", false);     // debounce
-                    showManagedData(globals.gCurrentSurvey, showTable, true);
+                    if(handleLogout(data)) {
+                        $('#m_lock').prop("disabled", false);     // debounce
+                        showManagedData(globals.gCurrentSurvey, showTable, true);
+                    }
                 }, error: function (data, status) {
                     removeHourglass();
-                    handleLogout(data);
-                    $('#m_lock').prop("disabled", false);     // debounce
-                    alert(data.responseText);
+                    if(handleLogout(data)) {
+                        $('#m_lock').prop("disabled", false);     // debounce
+                        alert(data.responseText);
+                    }
                 }
             });
         });
@@ -519,14 +526,17 @@ require([
                 data: {record: gTasks.gSelectedRecord.instanceid},
                 success: function (data, status) {
                     removeHourglass();
-                    $('#userAssign').modal("hide");
-                    $('#assignUserSave').prop("disabled", false);     // debounce
-                    showManagedData(globals.gCurrentSurvey, showTable, true);
+                    if(handleLogout(data)) {
+                        $('#userAssign').modal("hide");
+                        $('#assignUserSave').prop("disabled", false);     // debounce
+                        showManagedData(globals.gCurrentSurvey, showTable, true);
+                    }
                 }, error: function (data, status) {
                     removeHourglass();
-                    handleLogout(data);
-                    $('#assignUserSave').prop("disabled", false);     // debounce
-                    alert(data.responseText);
+                    if(handleLogout(data)) {
+                        $('#assignUserSave').prop("disabled", false);     // debounce
+                        alert(data.responseText);
+                    }
                 }
             });
 
@@ -550,13 +560,16 @@ require([
                 data: {record: gTasks.gSelectedRecord.instanceid},
                 success: function (data, status) {
                     removeHourglass();
-                    $('#m_release').prop("disabled", false);     // debounce
-                    showManagedData(globals.gCurrentSurvey, showTable, true);
+                    if(handleLogout(data)) {
+                        $('#m_release').prop("disabled", false);     // debounce
+                        showManagedData(globals.gCurrentSurvey, showTable, true);
+                    }
                 }, error: function (data, status) {
                     removeHourglass();
-                    handleLogout(data);
-                    $('#m_release').prop("disabled", false);     // debounce
-                    alert(data.responseText);
+                    if(handleLogout(data)) {
+                        $('#m_release').prop("disabled", false);     // debounce
+                        alert(data.responseText);
+                    }
                 }
             });
         });
@@ -588,23 +601,26 @@ require([
                 },
                 success: function (data, status) {
                     removeHourglass();
-                    handleLogout(data);
-                    // Update the current values
-                    var i,
-                        record = gTasks.gSelectedRecord,
-                        columns = gTasks.cache.currentData.schema.columns;
-                    for(i = 0; i < gTasks.gUpdate.length; i++) {
-                        record[columns[gTasks.gUpdate[i].itemIndex].column_name]  = gTasks.gUpdate[i].value;
+                    if(handleLogout(data)) {
+                        // Update the current values
+                        var i,
+                            record = gTasks.gSelectedRecord,
+                            columns = gTasks.cache.currentData.schema.columns;
+                        for (i = 0; i < gTasks.gUpdate.length; i++) {
+                            record[columns[gTasks.gUpdate[i].itemIndex].column_name] = gTasks.gUpdate[i].value;
+                        }
+
+                        gTasks.gUpdate = [];
+                        $('.saverecord').prop("disabled", true);
+
+                        getRecordChanges(gTasks.gSelectedRecord);
+                        $('.re_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
                     }
-
-                    gTasks.gUpdate = [];
-                    $('.saverecord').prop("disabled", true);
-
-                    getRecordChanges(gTasks.gSelectedRecord);
-                    $('.re_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
                 }, error: function (data, status) {
                     removeHourglass();
-                    $('.re_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + data.responseText);
+                    if(handleLogout(data)) {
+                        $('.re_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + data.responseText);
+                    }
                 }
             });
         });
@@ -1715,65 +1731,68 @@ require([
                 dataType: 'json',
                 cache: false,
                 success: function (data) {
-
-                    var i,
-                        item,
-                        h = [],
-                        idx = -1,
-                        firstSurvey = true,
-                        firstSurveyId = undefined,
-                        firstSurveyIndex = undefined;
-
                     removeHourglass();
+                    if(handleLogout(data)) {
 
-                    gTasks.cache.surveyList[globals.gCurrentProject] = data;
-                    gTasks.gSelectedSurveyIndex = undefined;
+                        var i,
+                            item,
+                            h = [],
+                            idx = -1,
+                            firstSurvey = true,
+                            firstSurveyId = undefined,
+                            firstSurveyIndex = undefined;
 
-                    for (i = 0; i < data.length; i++) {
-                        item = data[i];
+                        gTasks.cache.surveyList[globals.gCurrentProject] = data;
+                        gTasks.gSelectedSurveyIndex = undefined;
 
-                        if(item.dataSurvey) {
-                            h[++idx] = '<option value="';
-                            h[++idx] = i;
-                            h[++idx] = '">';
-                            h[++idx] = htmlEncode(item.displayName);
-                            h[++idx] = '</option>';
+                        for (i = 0; i < data.length; i++) {
+                            item = data[i];
 
-                            if (firstSurvey) {
-                                firstSurveyId = item.id;
-                                firstSurveyIndex = i;
-                                firstSurvey = false;
-                            }
+                            if (item.dataSurvey) {
+                                h[++idx] = '<option value="';
+                                h[++idx] = i;
+                                h[++idx] = '">';
+                                h[++idx] = htmlEncode(item.displayName);
+                                h[++idx] = '</option>';
 
-                            if (item.id == globals.gCurrentSurvey) {
-                                gTasks.gSelectedSurveyIndex = i;
+                                if (firstSurvey) {
+                                    firstSurveyId = item.id;
+                                    firstSurveyIndex = i;
+                                    firstSurvey = false;
+                                }
+
+                                if (item.id == globals.gCurrentSurvey) {
+                                    gTasks.gSelectedSurveyIndex = i;
+                                }
                             }
                         }
-                    }
 
-                    $elemSurveys.empty().html(h.join(''));
+                        $elemSurveys.empty().html(h.join(''));
 
-                    if (!gTasks.gSelectedSurveyIndex && firstSurveyId) {
-                        globals.gCurrentSurvey = firstSurveyId;
-                        gTasks.gSelectedSurveyIndex = firstSurveyIndex;
-                    } else if (gTasks.gSelectedSurveyIndex && firstSurveyId) {
-                        $elemSurveys.val(gTasks.gSelectedSurveyIndex);
-                    }
+                        if (!gTasks.gSelectedSurveyIndex && firstSurveyId) {
+                            globals.gCurrentSurvey = firstSurveyId;
+                            gTasks.gSelectedSurveyIndex = firstSurveyIndex;
+                        } else if (gTasks.gSelectedSurveyIndex && firstSurveyId) {
+                            $elemSurveys.val(gTasks.gSelectedSurveyIndex);
+                        }
 
-                    if (typeof callback == "function") {
-                        callback();
-                    } else {
-                        gRefreshingData = false;
+                        if (typeof callback == "function") {
+                            callback();
+                        } else {
+                            gRefreshingData = false;
+                        }
                     }
                 },
                 error: function (xhr, textStatus, err) {
 
                     removeHourglass();
-                    gRefreshingData = false;
-                    if (xhr.readyState == 0 || xhr.status == 0) {
-                        return;  // Not an error
-                    } else {
-                        console.log(localise.set["c_error"] + ": " + err);
+                    if(handleLogout(xhr.responseText)) {
+                        gRefreshingData = false;
+                        if (xhr.readyState == 0 || xhr.status == 0) {
+                            return;  // Not an error
+                        } else {
+                            console.log(localise.set["c_error"] + ": " + err);
+                        }
                     }
                 }
             });
@@ -2039,9 +2058,12 @@ require([
             data: {chartArray: saveView},
             success: function (data, status) {
                 removeHourglass();
+                handleLogout(data);
             }, error: function (data, status) {
                 removeHourglass();
-                alert(data.responseText);
+                if(handleLogout(data)) {
+                    alert(data.responseText);
+                }
             }
         });
     }
@@ -2076,11 +2098,15 @@ require([
             data: {columns: saveView},
             success: function (data, status) {
                 removeHourglass();
-	            showManagedData(globals.gCurrentSurvey, showTable, false); // redraw
-                $('#right-sidebar').removeClass("sidebar-open");
+                if(handleLogout(data)) {
+                    showManagedData(globals.gCurrentSurvey, showTable, false); // redraw
+                    $('#right-sidebar').removeClass("sidebar-open");
+                }
             }, error: function (data, status) {
                 removeHourglass();
-                alert(data.responseText);
+                if(handleLogout(data)) {
+                    alert(data.responseText);
+                }
             }
         });
     }
@@ -2393,10 +2419,12 @@ require([
                 },
                 error: function (xhr, textStatus, err) {
                     removeHourglass();
-                    if (xhr.readyState == 0 || xhr.status == 0) {
-                        return;  // Not an error
-                    } else {
-                        alert(localise.set["error"] + ": " + err);
+                    if(handleLogout(xhr.responseText)) {
+                        if (xhr.readyState == 0 || xhr.status == 0) {
+                            return;  // Not an error
+                        } else {
+                            alert(localise.set["error"] + ": " + err);
+                        }
                     }
                 }
             });
@@ -3209,27 +3237,29 @@ require([
 			    error: function (xhr, textStatus, err) {
 				    removeHourglass();
 
-				    if (globals.gMainTable) {
-					    globals.gMainTable.destroy();
-					    globals.gMainTable = undefined;
-				    }
-				    $("#trackingTable").empty();
-
-				    gRefreshingData = false;
-				    gGetSettings = false;
-
-				    if (xhr.readyState == 0 || xhr.status == 0) {
-					    return;  // Not an error
-				    } else {
-                        err += " : ";
-                        if(xhr.responseText.indexOf("<head>") >= 0) {
-                            err += localise.set["c_error"];
-                        } else {
-                            err += xhr.responseText;
+                    if(handleLogout(xhr.responseText)) {
+                        if (globals.gMainTable) {
+                            globals.gMainTable.destroy();
+                            globals.gMainTable = undefined;
                         }
+                        $("#trackingTable").empty();
 
-					    alert(localise.set["error"] + ": " + err);
-				    }
+                        gRefreshingData = false;
+                        gGetSettings = false;
+
+                        if (xhr.readyState == 0 || xhr.status == 0) {
+                            return;  // Not an error
+                        } else {
+                            err += " : ";
+                            if (xhr.responseText.indexOf("<head>") >= 0) {
+                                err += localise.set["c_error"];
+                            } else {
+                                err += xhr.responseText;
+                            }
+
+                            alert(localise.set["error"] + ": " + err);
+                        }
+                    }
 			    }
 		    });
         }
@@ -3613,15 +3643,19 @@ require([
                 data: { notification: notificationString },
                 success: function(data, status) {
                     removeHourglass();
-                    $('#dashboardInfo').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["n_sent"]);
-                    $('#addNotificationPopup').modal("hide");
+                    if(handleLogout(data)) {
+                        $('#dashboardInfo').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["n_sent"]);
+                        $('#addNotificationPopup').modal("hide");
+                    }
                 },
                 error: function(xhr, textStatus, err) {
                     removeHourglass();
-                    if(xhr.readyState == 0 || xhr.status == 0) {
-                        return;  // Not an error
-                    } else {
-                        alert(localise.set["msg_err_save"] + " " + xhr.responseText);  // alerts htmlencode
+                    if(handleLogout(xhr.responseText)) {
+                        if (xhr.readyState == 0 || xhr.status == 0) {
+                            return;  // Not an error
+                        } else {
+                            alert(localise.set["msg_err_save"] + " " + xhr.responseText);  // alerts htmlencode
+                        }
                     }
                 }
             });
