@@ -251,14 +251,18 @@ function setTableSurvey(view) {
 						cache: false,
 						dataType: 'json',
 						success: function(data) {
-							setSurveyViewSurveys(data, "-1", '#form_select');
+							if(handleLogout(data)) {
+								setSurveyViewSurveys(data, "-1", '#form_select');
+							}
 						},
 						error: function(xhr, textStatus, err) {
-							if(xhr.readyState == 0 || xhr.status == 0) {
-								return;  // Not an error
-							} else {
-								$('#status_msg_msg').empty().text("Error: Failed to get a list of surveys");
-								$("#status_msg").dialog("open");
+							if(handleLogout(xhr.responseText)) {
+								if (xhr.readyState == 0 || xhr.status == 0) {
+									return;  // Not an error
+								} else {
+									$('#status_msg_msg').empty().text("Error: Failed to get a list of surveys");
+									$("#status_msg").dialog("open");
+								}
 							}
 						}
 					});
@@ -443,37 +447,39 @@ function importData() {
 		  url: url,
 		  success: function(data, status) {
 			  removeHourglass();
-			  
-			  var idx = -1,
-			  	h = [],
-			  	i;
-			  
-			  if(!data || data.length === 0) {
-				  $('#load_data_popup').dialog("close");
-			  } else {
-				  for(i = 0; i < data.length; i++) {
-					h[++idx] = '<ul>';
-					  	h[++idx] = '<li>';
-					  	h[++idx] = data[i];
-						h[++idx] = '</li>';
-					h[++idx] = '</ul>';
+			  if(handleLogout(data)) {
+				  var idx = -1,
+					  h = [],
+					  i;
+
+				  if (!data || data.length === 0) {
+					  $('#load_data_popup').dialog("close");
+				  } else {
+					  for (i = 0; i < data.length; i++) {
+						  h[++idx] = '<ul>';
+						  h[++idx] = '<li>';
+						  h[++idx] = data[i];
+						  h[++idx] = '</li>';
+						  h[++idx] = '</ul>';
+					  }
+					  $('#load_tasks_alert').show().removeClass('alert-danger').addClass('alert-success').html(h.join(''));
 				  }
-				  $('#load_tasks_alert').show().removeClass('alert-danger').addClass('alert-success').html(h.join(''));  
+
+				  refreshAnalysisData();
 			  }
-			  
-			  refreshAnalysisData();
 		  },
 		  error: function(xhr, textStatus, err) {
-			  removeHourglass(); 			 
-			  var msg = htmlEncode(xhr.responseText);
-			  if(msg && msg === "only csv") {
-				  msg = localise.set["t_efnl"] + " " + localise.set["msg_csv"];
-			  } else {
-				  msg = localise.set["t_efnl"] + " " + htmlEncode(xhr.responseText);
-			  }
+			  removeHourglass();
+			  if(handleLogout(xhr.responseText)) {
+				  var msg = htmlEncode(xhr.responseText);
+				  if (msg && msg === "only csv") {
+					  msg = localise.set["t_efnl"] + " " + localise.set["msg_csv"];
+				  } else {
+					  msg = localise.set["t_efnl"] + " " + htmlEncode(xhr.responseText);
+				  }
 
-			  $('#load_tasks_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
-			 
+				  $('#load_tasks_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
+			  }
 		  }
 	});
 }
@@ -489,56 +495,64 @@ function deleteAllTables(sId) {
         success: function (response) {
             removeHourglass();
 
-            if(response.length > 1) {
-            	var surveyList = "";
-            	for(i = 0; i < response.length; i++) {
-            		if(sId != response[i].sId) {
-                        if (surveyList.length > 0) {
-                            surveyList += ", ";
-                        }
-                        surveyList += response[i].surveyName;
-                    }
+			if(handleLogout(response)) {
+				if(response.length > 1) {
+					var surveyList = "";
+					for(i = 0; i < response.length; i++) {
+						if(sId != response[i].sId) {
+							if (surveyList.length > 0) {
+								surveyList += ", ";
+							}
+							surveyList += response[i].surveyName;
+						}
+					}
+					var decisionGroups = confirm(localise.set["msg_del_groups"] + " " + surveyList);
+					if(decisionGroups == false) {
+						return;
+					}
 				}
-                var decisionGroups = confirm(localise.set["msg_del_groups"] + " " + surveyList);
-                if(decisionGroups == false) {
-                	return;
+				var decision = confirm(localise.set["msg_del_data"]);
+				if (decision == true) {
+					var msg2 = localise.set["msg_del_data2"];
+					var decision2 = confirm(msg2);
+					if (decision2 == true) {
+						addHourglass();
+						$.ajax({
+							type: 'Delete',
+							url: deleteSurveyDataURL(sId),
+							cache: false,
+							success: function (response) {
+								removeHourglass();
+								if(handleLogout(response)) {
+									refreshAnalysisData();
+								}
+							},
+							error: function (xhr, textStatus, err) {
+								removeHourglass();
+								if(handleLogout(xhr.responseText)) {
+									if (xhr.readyState == 0 || xhr.status == 0) {
+										return;  // Not an error
+									} else {
+										console.log(xhr);
+										alert(localise.set["msg_err_del"] + " " + err);
+									}
+								}
+							}
+						});
+					}
 				}
-			}
-            var decision = confirm(localise.set["msg_del_data"]);
-            if (decision == true) {
-                var msg2 = localise.set["msg_del_data2"];
-                var decision2 = confirm(msg2);
-                if(decision2 == true) {
-                    addHourglass();
-                    $.ajax({
-                        type : 'Delete',
-                        url : deleteSurveyDataURL(sId),
-                        cache: false,
-                        success : function(response) {
-                            removeHourglass();
-                            refreshAnalysisData();
-                        },
-                        error: function(xhr, textStatus, err) {
-                            removeHourglass();
-                            if(xhr.readyState == 0 || xhr.status == 0) {
-                                return;  // Not an error
-                            } else {
-                                console.log(xhr);
-                                alert(localise.set["msg_err_del"] + " " + err);
-                            }
-                        }
-                    });
-                }
             }
         },
         error: function (xhr, textStatus, err) {
             removeHourglass();
-            if (xhr.readyState == 0 || xhr.status == 0) {
-                return;  // Not an error
-            } else {
-                console.log(xhr);
-                alert(localise.set["error"] + " " + err);
-            }
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					console.log(xhr);
+					alert(localise.set["error"] + " " + err);
+				}
+			}
         }
     });
 
@@ -614,26 +628,30 @@ function archiveCount(sId) {
 		cache: false,
 		success: function (response) {
 			removeHourglass();
-			var archiveSurveyId = sId;
-			if(response.count > 0) {
-				var msg = localise.set["msg_archive"];
-				msg = msg.replace("%s1", response.count);
-				msg = msg.replace("%s2", before);
-				msg = msg.replace("%s3", response.surveys.join(","));
-				if(confirm(msg)) {
-					archiveAllTables(archiveSurveyId);
+			if(handleLogout(response)) {
+				var archiveSurveyId = sId;
+				if (response.count > 0) {
+					var msg = localise.set["msg_archive"];
+					msg = msg.replace("%s1", response.count);
+					msg = msg.replace("%s2", before);
+					msg = msg.replace("%s3", response.surveys.join(","));
+					if (confirm(msg)) {
+						archiveAllTables(archiveSurveyId);
+					}
+				} else {
+					$('#archive_data_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["msg_archive_none"]);
 				}
-			} else {
-				$('#archive_data_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["msg_archive_none"]);
+				setTimeout(refreshAnalysisData, 5000);
 			}
-			setTimeout(refreshAnalysisData, 5000);
 		},
 		error: function (xhr, textStatus, err) {
 			removeHourglass();
-			if (xhr.readyState == 0 || xhr.status == 0) {
-				$('#archive_data_alert').show().removeClass('alert-success').addClass('alert-danger').text(xhr.responseText);
-			} else {
-				$('#archive_data_alert').show().removeClass('alert-success').addClass('alert-danger').text(xhr.responseText);
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					$('#archive_data_alert').show().removeClass('alert-success').addClass('alert-danger').text(xhr.responseText);
+				} else {
+					$('#archive_data_alert').show().removeClass('alert-success').addClass('alert-danger').text(xhr.responseText);
+				}
 			}
 		}
 	});
@@ -651,18 +669,22 @@ function archiveAllTables(sId) {
 		cache: false,
 		success: function (response) {
 			removeHourglass();
-			if(response.count > 0) {
-				$('#archive_data_alert').show().removeClass('alert-danger').addClass('alert-success').text(response.msg);
-			} else {
-				$('#archive_data_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["msg_archive_none"]);
+			if(handleLogout(response)) {
+				if (response.count > 0) {
+					$('#archive_data_alert').show().removeClass('alert-danger').addClass('alert-success').text(response.msg);
+				} else {
+					$('#archive_data_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["msg_archive_none"]);
+				}
 			}
 		},
 		error: function (xhr, textStatus, err) {
 			removeHourglass();
-			if (xhr.readyState == 0 || xhr.status == 0) {
-				$('#archive_data_alert').show().removeClass('alert-danger').addClass('alert-success').text(localise.set["msg_archive_done"]);
-			} else {
-				$('#archive_data_alert').show().removeClass('alert-success').addClass('alert-danger').text(xhr.responseText);
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					$('#archive_data_alert').show().removeClass('alert-danger').addClass('alert-success').text(localise.set["msg_archive_done"]);
+				} else {
+					$('#archive_data_alert').show().removeClass('alert-success').addClass('alert-danger').text(xhr.responseText);
+				}
 			}
 		}
 	});
@@ -827,14 +849,18 @@ function toggleBad($elem, fId, pKey, value, sId, theView) {
 		  data: { value: toBeBad, sId: sId, reason: reason},
 		  url: toggleBadURL(fId, pKey),
 		  success: function(data, status) {
-			  $elem.text(toValue);
-			  $elem.next().text(reason);
-			  $elem.toggleClass('bad_r').toggleClass('good_r');
-			  if(theView) {
-				  theView.dirty = true;
+			  if(handleLogout(data)) {
+				  $elem.text(toValue);
+				  $elem.next().text(reason);
+				  $elem.toggleClass('bad_r').toggleClass('good_r');
+				  if (theView) {
+					  theView.dirty = true;
+				  }
 			  }
 		  }, error: function(data, status) {
-			  alert(data.responseText);
+			  if(handleLogout(data.responseText)) {
+				  alert(data.responseText);
+			  }
 			  //alert("Error: Failed to update record"); 
 		  }
 	});
