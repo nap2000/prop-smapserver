@@ -120,7 +120,7 @@ function setTableSurvey(view) {
 
     $selFoot.find('.tRestore').button().off().click(function() {
         if(restoreAllTables(view.sId, view.sName)) {
-			alert(localise.set["msg_restore_started"]);
+			//alert(localise.set["msg_restore_started"]);
 		}
     });
 
@@ -576,19 +576,19 @@ function restoreAllTables(sId, sName) {
 				data: { report: JSON.stringify(reportObj) },
 				success: function(data, status) {
 					removeHourglass();
-					$('#info').html(localise.set["msg_ds_s_r"]);
-					setTimeout(function () {
-						$('#info').html("");
-					},2000);
-					setTimeout(refreshAnalysisData, 5000);
+					if(handleLogout(data)) {
+						alert(localise.set["msg_ds_s_r"]);
+						setTimeout(refreshAnalysisData, 5000);
+					}
 				}, error: function(xhr, textStatus, err) {
 					removeHourglass();
-					if(xhr.readyState == 0 || xhr.status == 0) {
-						return;  // Not an error
-					} else {
-						$('#info').html(localise.set["msg_err_save"] + " " + htmlEncode(xhr.responseText));
+					if(handleLogout(xhr.responseText)) {
+						if (xhr.readyState == 0 || xhr.status == 0) {
+							return;  // Not an error
+						} else {
+							alert(localise.set["msg_err_save"] + " " + htmlEncode(xhr.responseText));
+						}
 					}
-
 				}
 			});
         }
