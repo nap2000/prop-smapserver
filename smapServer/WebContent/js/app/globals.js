@@ -977,22 +977,26 @@ define(function () {
                 url: "/surveyKPI/surveys/save_settings/" + globals.gCurrentSurvey,
                 success: function (data, status) {
                     removeHourglass();
-                    globals.model.savedSettings = settings;
-                    globals.model.survey.pdfTemplateName = data;
-                    globals.model.forceSettingsChange = false;
-                    $('#save_settings').prop("disabled", true);
+                    if(handleLogout(data)) {
+                        globals.model.savedSettings = settings;
+                        globals.model.survey.pdfTemplateName = data;
+                        globals.model.forceSettingsChange = false;
+                        $('#save_settings').prop("disabled", true);
 
-                    $('.formName').text(globals.model.survey.displayName);
-                    $('#m_media').prop('href', '/app/resources.html?survey=true&survey_name=' + globals.model.survey.displayName);
+                        $('.formName').text(globals.model.survey.displayName);
+                        $('#m_media').prop('href', '/app/resources.html?survey=true&survey_name=' + globals.model.survey.displayName);
 
-                    $('#settingsModal').modal("hide");
+                        $('#settingsModal').modal("hide");
+                    }
                 },
                 error: function (xhr, textStatus, err) {
                     removeHourglass();
-                    if (xhr.readyState == 0 || xhr.status == 0) {
-                        return;  // Not an error
-                    } else {
-                        bootbox.alert("Error saving settings. " + htmlEncode(xhr.responseText));
+                    if(handleLogout(xhr.responseText)) {
+                        if (xhr.readyState == 0 || xhr.status == 0) {
+                            return;  // Not an error
+                        } else {
+                            bootbox.alert("Error saving settings. " + htmlEncode(xhr.responseText));
+                        }
                     }
                 }
             });
