@@ -1256,7 +1256,9 @@ function surveyDetailsDone() {
 function refreshMediaPickLists(data) {
 	var h = [],
 		idx = -1,
-		i;
+		i,
+		h2 = [],
+		idx2 = -1;
 
 	gFiles = data.files;	// Reference the data on selection of an item
 
@@ -1286,10 +1288,20 @@ function refreshMediaPickLists(data) {
 			h[++idx] = '</div>';
 
 			h[++idx] = '</div>';
+
+			/*
+			 * Create the choice list for the default logo
+			 */
+			h2[++idx2] = '<option value="';
+			h2[++idx2] = f.name;
+			h2[++idx2] = '">';
+			h2[++idx2] = htmlEncode(f.name);
+			h2[++idx2] = '</option>';
 		}
 	}
 
 	$('#imageSelect').empty().html(h.join(''));
+	$('#default_logo').empty().html(h2.join(''));
 
 	$('#mediaSave').off().click(function() {
 		var idx = $('.mediaItem.selected', '#imageSelect').data('idx');
