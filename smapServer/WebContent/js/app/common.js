@@ -5776,6 +5776,58 @@ function executeUsageReport(oId) {
 
 }
 
+function executeSurveyReport(oId) {
+
+	var i;
+
+	var reportName = localise.set["c_survey"];
+
+	// Add the organisation name
+	if(oId > 0 && globals.gLoggedInUser.orgs.length > 0) {
+		for(i = 0; i < globals.gLoggedInUser.orgs.length; i++) {
+			if(globals.gLoggedInUser.orgs[i].id == oId) {
+				reportName += globals.gLoggedInUser.orgs[i].name + "_";
+				break;
+			}
+		}
+	}
+
+	var reportObj = {
+		report_type: 'survey',
+		report_name: reportName,
+		params: {
+			oId: oId
+		}
+	}
+
+	var tzString = globals.gTimezone ? "?tz=" + encodeURIComponent(globals.gTimezone) : "";
+
+	addHourglass();
+	$.ajax({
+		type: "POST",
+		cache: false,
+		dataType: 'text',
+		contentType: "application/x-www-form-urlencoded",
+		url: "/surveyKPI/background_report" + tzString,
+		data: { report: JSON.stringify(reportObj) },
+		success: function(data, status) {
+			if(handleLogout(data)) {
+				removeHourglass();
+				alert(localise.set["msg_ds_s_r"]);
+			}
+		}, error: function(xhr, textStatus, err) {
+			removeHourglass();
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["msg_err_save"] + xhr.responseText);	// alerts htmlencode
+				}
+			}
+		}
+	});
+
+}
 function executeAttendanceReport(oId) {
 
 	var attendanceMsec = $('#attendanceDate').data("DateTimePicker").date(),

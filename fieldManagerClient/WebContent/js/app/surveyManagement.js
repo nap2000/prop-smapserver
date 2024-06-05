@@ -330,6 +330,9 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             $('#m_resource_usage_report').click(function(){
                 executeResourceUsageReport();
             });
+            $('#m_survey_report').click(function(){
+                executeSurveyReport();
+            });
 
 	        /*
              * Add date time picker to usage and attendance date

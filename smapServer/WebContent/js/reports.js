@@ -1018,7 +1018,11 @@ require([
 	            tab[++idx] = '</td>';
 
 				tab[++idx] = '<td>';
-				tab[++idx] = localise.set[genItem.report_type];
+				var rt = genItem.report_type;
+				if(rt === 'survey') {
+					rt = 'c_survey';
+				}
+				tab[++idx] = localise.set[rt];
 				tab[++idx] = '</td>';
 
 	            tab[++idx] = '<td>';
