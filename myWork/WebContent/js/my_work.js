@@ -212,13 +212,13 @@ require([
 				} else {
 					h[++idx] = ' bg-warning';
 				}
-				h[++idx] = '" href="/app/myWork/webForm/';
+				h[++idx] = '" href="/myWork/webForm/';
 				h[++idx] = formList[i].ident;
 
 				if(gIsApp) {
 					h[++idx] = '?app=true';
 				} else {
-					h[++idx] = '" target="_blank';      // If launched as an app do not create new windows
+					//h[++idx] = '" target="_blank';      // If launched as an app do not create new windows
 				}
 				h[++idx] = '">';
 				h[++idx] = htmlEncode(formList[i].name);
