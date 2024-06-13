@@ -212,7 +212,7 @@ require([
 				} else {
 					h[++idx] = ' bg-warning';
 				}
-				h[++idx] = '" href="/myWork/webForm/';
+				h[++idx] = '" href="/app/myWork/webForm/';
 				h[++idx] = formList[i].ident;
 
 				if(gIsApp) {
