@@ -22,60 +22,43 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * Overridden for each custom implementation
  */
 
-function setCustom() {
-	// Menus
+function setCustomApi() {
 }
 
 function setCustomReports() {
-    // Menus
 }
 
 function setCustomUserTrail() {
-	// Menus
 }
 
 function setCustomAssignments() {
-	// Menus
 }
 
 function setCustomTemplateMgmt() {
-	// Menus
 }
 
 function setCustomUserMgmt() {
-	// Menus
 }
 
 function setCustomResources() {
-	// Menus
 }
 
 function setCustomNotifications() {
-	// Menus
 }
 
 function setCustomDashboard() {
-	// Menus
 }
 
 function setCustomReview() {
-    // Menus
 }
 
 function setCustomAudit() {
-    // Menus
-}
-
-function setCustomUserDashboard() {
-	// Menus
 }
 
 function setCustomMonitor() {
-	// Menus
 }
 
 function setCustomManage() {
-	// Menus
 }
 
 function setCustomRegister() {
@@ -98,23 +81,18 @@ function setCustomEdit() {
 }
 
 function setCustomWebForms() {
-	
 }
 
 function setCustomLogs() {
-
 }
 
 function setCustomLinkages() {
-
 }
 
 function setCustomSubs() {
-
 }
 
 function setCustomBilling() {
-
 }
 
 function setCustomMainLogo() {

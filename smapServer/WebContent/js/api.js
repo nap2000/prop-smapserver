@@ -61,6 +61,7 @@ require([
 
 		setupUserProfile(true);
 		setTheme();
+		setCustomApi();
 		localise.setlang();		// Localise HTML
 
 		// Get the user details
