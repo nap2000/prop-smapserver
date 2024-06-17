@@ -2974,6 +2974,7 @@ function generateFile(url, filename, format, mime, data, sId, groupSurvey, title
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', url, true);
 	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 	xhr.responseType = 'blob';
 
 	xhr.onload = function(e) {
