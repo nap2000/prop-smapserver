@@ -2978,21 +2978,23 @@ function generateFile(url, filename, format, mime, data, sId, groupSurvey, title
 	xhr.responseType = 'blob';
 
 	xhr.onload = function(e) {
-		if (this.status == 200) {
-			// get binary data as a response
-			var blob = new Blob([this.response], { type: mime });
-			var downloadUrl = URL.createObjectURL(blob);
-			var a = document.createElement("a");
-			a.href = downloadUrl;
-			a.download = filename;
-			document.body.appendChild(a);
-			a.click();
-			setTimeout(function(){
-				document.body.removeChild(a);
-				window.URL.revokeObjectURL(url);
-			}, 100);
-		} else {
-			alert(localise.set["c_error"] + ": " + this.statusText);
+		if(handleLogout(this)) {
+			if (this.status == 200) {
+				// get binary data as a response
+				var blob = new Blob([this.response], {type: mime});
+				var downloadUrl = URL.createObjectURL(blob);
+				var a = document.createElement("a");
+				a.href = downloadUrl;
+				a.download = filename;
+				document.body.appendChild(a);
+				a.click();
+				setTimeout(function () {
+					document.body.removeChild(a);
+					window.URL.revokeObjectURL(url);
+				}, 100);
+			} else {
+				alert(localise.set["c_error"] + ": " + this.statusText);
+			}
 		}
 	};
 
@@ -6089,6 +6091,7 @@ function handleLogout(data) {
 	if(data &&
 		((data.code && data.code === 401)
 			|| (data.status && data.status === 405)
+			|| (data.status && data.status === 413)   // When expecting blobx
 			|| (typeof data === "string" && data.indexOf('"code": 401') >= 0))
 			|| (typeof data === "string" && data.toLowerCase().indexOf("method not allowed") >= 0)		// For delete functions
 		) {
