@@ -120,7 +120,7 @@ function setTableSurvey(view) {
 
     $selFoot.find('.tRestore').button().off().click(function() {
         if(restoreAllTables(view.sId, view.sName)) {
-			//alert(localise.set["msg_restore_started"]);
+			alert(localise.set["msg_restore_started"]);
 		}
     });
 
@@ -591,7 +591,6 @@ function restoreAllTables(sId, sName) {
 				success: function(data, status) {
 					removeHourglass();
 					if(handleLogout(data)) {
-						alert(localise.set["msg_ds_s_r"]);
 						setTimeout(refreshAnalysisData, 5000);
 					}
 				}, error: function(xhr, textStatus, err) {
@@ -601,6 +600,7 @@ function restoreAllTables(sId, sName) {
 							return;  // Not an error
 						} else {
 							alert(localise.set["msg_err_save"] + " " + htmlEncode(xhr.responseText));
+							started = false;
 						}
 					}
 				}
