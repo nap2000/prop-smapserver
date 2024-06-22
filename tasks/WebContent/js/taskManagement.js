@@ -787,17 +787,20 @@ require([
 					dataType: 'json',
 					success: function (data, status) {
 						removeHourglass();
-						$('#addTask').modal("hide");
-						globals.gCurrentTaskGroup = data.tg_id;
-						refreshTaskGroupData();
+						if(handleLogout(data)) {
+							$('#addTask').modal("hide");
+							globals.gCurrentTaskGroup = data.tg_id;
+							refreshTaskGroupData();
+						}
 					}, error: function (data, status) {
 						removeHourglass();
-						if (data.responseText.indexOf("<html>") !== 0) {
-							alert(localise.set["c_error"] + " : " + data.responseText);
-						} else {
-							alert(localise.set["msg_err_upd"]);
+						if(handleLogout(data.responseText)) {
+							if (data.responseText.indexOf("<html>") !== 0) {
+								alert(localise.set["c_error"] + " : " + data.responseText);
+							} else {
+								alert(localise.set["msg_err_upd"]);
+							}
 						}
-
 					}
 				});
 			}
