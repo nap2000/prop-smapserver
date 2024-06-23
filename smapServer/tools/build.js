@@ -53,6 +53,10 @@
 	    exclude: ['jquery', 'bootstrap']
         },
         {
+            name: '../resetForgottonPassword',
+	    exclude: ['jquery', 'bootstrap']
+        },
+        {
             name: '../resources',
 	    exclude: ['jquery', 'bootstrap']
         },
