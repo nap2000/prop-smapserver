@@ -363,9 +363,15 @@ define([
                 h[++idx] = '>';
 
                 // Add the empty choice
+                /*
+                 * Do we need this?
+                 * Should it be configurable
+                 * Presumably only valid choices should be allowed
+                 *
                 if (column.type !== "select") {
                     h[++idx] = '<option value=""></option>';
                 }
+                */
 
                 var choices = getChoiceList(schema, column, itemIndex, value, record, undefined, prefix);
                 if (choices) {
@@ -809,10 +815,10 @@ define([
 
             if (column.type === "select") {
                 vArray = value.split(' ');
-            } else {
+            } //else {      // Probably not needed.  If ther eis no empty choice why add it here?
                 // Add the empty option
-                h[++idx] = '<option value=""></option>';
-            }
+                //h[++idx] = '<option value=""></option>';
+            //}
             for (i = 0; i < choices.length; i++) {
                 if(internal) {
                     v = choices[i].k;
@@ -834,7 +840,7 @@ define([
                 h[++idx] = ' value="';
                 h[++idx] = v;
                 h[++idx] = '">';
-                h[++idx] = l;
+                h[++idx] = htmlEncode(l);
                 h[++idx] = '</option>';
             }
             return h.join('');

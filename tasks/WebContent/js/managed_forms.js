@@ -1453,7 +1453,9 @@ require([
 
                         select.append( '<option value=""></option>' );
                         column.data().unique().sort().each( function ( d, j ) {
-                            select.append( '<option value="'+d+'">'+d+'</option>' )
+                            if(d && d.length > 0) {
+                                select.append('<option value="' + d + '">' + htmlEncode(d) + '</option>')
+                            }
                         } );
 
                         // Set current value

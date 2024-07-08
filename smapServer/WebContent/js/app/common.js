@@ -5908,8 +5908,6 @@ function htmlDecode(input) {
 function htmlEncode(input) {
 	if(input) {
 		return $('<div>').text(input).html();
-	} else {
-		return;
 	}
 }
 
