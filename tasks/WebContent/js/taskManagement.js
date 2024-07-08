@@ -893,20 +893,21 @@ require([
 
 
 		$('#taskParamsSave').click(function () {
+			e.preventDefault();
 			updateTaskParams();
 		});
 
 		$('#m_refresh').click(function (e) {	// Add refresh action
+			e.preventDefault();
 			refreshAssignmentData();
 		});
 
 		$('#m_email_unsent').click(function (e) {	// Add email unsent action
+			e.preventDefault();
 			if(!$(this).hasClass("disabled")) {
 				emailUnsent();
 			}
 		});
-
-		$('#tasks_print').button();									// Add button styling
 
 		// Set up the start and end dates with date picker
 		$('#startDate').datetimepicker({					// Selecting start end times for tasks generated from survey
