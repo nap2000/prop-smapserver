@@ -164,7 +164,7 @@ define([
                 }
             }
             changesString = JSON.stringify(changesInSeq);
-            setHasChanges(0);
+
             globals.gSaveInProgress = true;
             addHourglass();
             $.ajax({
@@ -181,61 +181,67 @@ define([
 
                     removeHourglass();
                     globals.gSaveInProgress = false;
+                    if(handleLogout(data)) {
 
-                    if(typeof responseFn === "function") {
-                        responseFn();
-                    }
+                        setHasChanges(0);
 
-                    // Report success and failure
-                    globals.model.lastChanges = data.changeSet;
-                    $('#successLabel .counter').html(data.success);
-                    $('#failedLabel .counter').html(data.failed);
-
-                    if(data.success > 0) {
-                        h[++idx] = '<div class="alert alert-success" role="alert">';
-                        h[++idx] = '<p>';
-                        h[++idx] = data.success;
-                        h[++idx] = localise.set["msg_upd"];
-                        h[++idx] = '</p>'
-                        h[++idx] = '<ol>';
-                        for(i = 0; i < data.changeSet.length; i++) {
-                            h[++idx] = addUpdateMessage(data.changeSet[i], false);
+                        if (typeof responseFn === "function") {
+                            responseFn();
                         }
-                        h[++idx] = '</ol>';
-                        h[++idx] = '</div>';
-                    }
-                    if(data.failed > 0) {
-                        h[++idx] = '<div class="alert alert-danger" role="alert">';
-                        h[++idx] = data.failed;
-                        h[++idx] = " changes failed";
-                        h[++idx] = '<ol>';
-                        for(i = 0; i < data.changeSet.length; i++) {
-                            h[++idx] = addUpdateMessage(data.changeSet[i], true);
-                        }
-                        h[++idx] = '</ol>';
-                        h[++idx] = '</div>';
-                    }
 
-                    bootbox.alert(h.join(""));
+                        // Report success and failure
+                        globals.model.lastChanges = data.changeSet;
+                        $('#successLabel .counter').html(data.success);
+                        $('#failedLabel .counter').html(data.failed);
+
+                        if (data.success > 0) {
+                            h[++idx] = '<div class="alert alert-success" role="alert">';
+                            h[++idx] = '<p>';
+                            h[++idx] = data.success;
+                            h[++idx] = localise.set["msg_upd"];
+                            h[++idx] = '</p>'
+                            h[++idx] = '<ol>';
+                            for (i = 0; i < data.changeSet.length; i++) {
+                                h[++idx] = addUpdateMessage(data.changeSet[i], false);
+                            }
+                            h[++idx] = '</ol>';
+                            h[++idx] = '</div>';
+                        }
+                        if (data.failed > 0) {
+                            h[++idx] = '<div class="alert alert-danger" role="alert">';
+                            h[++idx] = data.failed;
+                            h[++idx] = " changes failed";
+                            h[++idx] = '<ol>';
+                            for (i = 0; i < data.changeSet.length; i++) {
+                                h[++idx] = addUpdateMessage(data.changeSet[i], true);
+                            }
+                            h[++idx] = '</ol>';
+                            h[++idx] = '</div>';
+                        }
+
+                        bootbox.alert(h.join(""));
+                    }
 
                 },
                 error: function(xhr, textStatus, err) {
                     removeHourglass();
-                    globals.gSaveInProgress = false;
+                    if(handleLogout(xhr.responseText)) {
+                        globals.gSaveInProgress = false;
 
-                    if(typeof responseFn === "function") {
-                        responseFn();
-                    }
+                        if (typeof responseFn === "function") {
+                            responseFn();
+                        }
 
-                    if(xhr.readyState == 0 || xhr.status == 0) {
-                        // Not an error
-                    } else {
-                        bootbox.alert(localise.set["msg_err_save"] + ' ' + err);
+                        if (xhr.readyState == 0 || xhr.status == 0) {
+                            // Not an error
+                        } else {
+                            bootbox.alert(localise.set["msg_err_save"] + ' ' + err);
+                        }
                     }
                 }
             });
 
-        };
+        }
 
         /*
          * Resequence a change array to allign with the sequences in the model
