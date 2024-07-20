@@ -493,14 +493,14 @@ require([
                 },
                 success: function (data, status) {
                     removeHourglass();
+                    $('#m_lock').prop("disabled", false);     // debounce
                     if(handleLogout(data)) {
-                        $('#m_lock').prop("disabled", false);     // debounce
                         showManagedData(globals.gCurrentSurvey, showTable, true);
                     }
                 }, error: function (data, status) {
                     removeHourglass();
+                    $('#m_lock').prop("disabled", false);     // debounce
                     if(handleLogout(data)) {
-                        $('#m_lock').prop("disabled", false);     // debounce
                         alert(data.responseText);
                     }
                 }
@@ -2319,7 +2319,6 @@ require([
             /*
 			 * No records are selected
 			 */
-            gTasks.gSelectedRecord = undefined;
             $('.selectOnly, .dd_only').hide();
 
         } else if(records.length > 1) {
@@ -3191,9 +3190,9 @@ require([
 			    cache: false,
 			    success: function (data) {
 				    removeHourglass();
+                    gRefreshingData = false;
+                    gGetSettings = false;
                     if(handleLogout(data)) {
-                        gRefreshingData = false;
-                        gGetSettings = false;
 
                         var theCallback = callback;
                         if (data && data.status === "error") {
@@ -3238,6 +3237,8 @@ require([
 			    },
 			    error: function (xhr, textStatus, err) {
 				    removeHourglass();
+                    gRefreshingData = false;
+                    gGetSettings = false;
 
                     if(handleLogout(xhr.responseText)) {
                         if (globals.gMainTable) {
@@ -3245,9 +3246,6 @@ require([
                             globals.gMainTable = undefined;
                         }
                         $("#trackingTable").empty();
-
-                        gRefreshingData = false;
-                        gGetSettings = false;
 
                         if (xhr.readyState == 0 || xhr.status == 0) {
                             return;  // Not an error
