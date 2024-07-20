@@ -104,6 +104,7 @@ define({
     "c_company_addr": "Company Address",
     "c_company_phone": "Company Phone",
     "c_company_email": "Company Email",
+    "c_conversation": "Message Conversation",
     "c_type": "Type",
     "c_file": "File",
     "c_host": "Host",

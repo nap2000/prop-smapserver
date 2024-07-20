@@ -965,7 +965,7 @@ require([
 
     /*
      * Load the chart definitions from the server
-    */
+     */
     function updateCharts(charts) {
         var i;
         chart.clear();
@@ -973,7 +973,6 @@ require([
             chart.add(charts[i]);
         }
         setupChartEdit();
-
     }
 
     function setupChartEdit() {
@@ -3178,6 +3177,7 @@ require([
                 map.setLayers(gTasks.cache.currentData.schema.layers);
                 updateFormList(gTasks.cache.currentData.forms);
                 updateCharts(gTasks.cache.currentData.settings.charts);
+                updateConversationalSMS(gTasks.cache.currentData.sms);
             }
 	    } else {
 
@@ -3217,6 +3217,7 @@ require([
                             map.setLayers(gTasks.cache.currentData.schema.layers);
                             updateFormList(gTasks.cache.currentData.forms);
                             updateCharts(gTasks.cache.currentData.settings.charts);
+                            updateConversationalSMS(gTasks.cache.currentData.sms);
 
                             // Add a config item for the group value if this is a duplicates search
                             if (isDuplicates) {

@@ -24,7 +24,7 @@ var gCacheKeys = {};
 var gEligibleUser;
 var gSelectedOversightQuestion;
 var gSelectedOversightSurvey;
-
+var gConversationalSMS;	// Set true if a conversational SMS choice has been added to notification types
 
 /*
  * Convert a choice list name into a valid jquery class name
@@ -4935,6 +4935,7 @@ function updateNotificationTypes(data) {
 	}
 
 	$selector.empty().append(h.join(''));
+	gConversationalSMS = false;
 
 }
 
@@ -4954,6 +4955,9 @@ function getNotificationTypes() {
 				window.gNotificationTypes = data;
 				if (data) {
 					updateNotificationTypes(data);
+					if(gTasks && gTasks.cache && gTasks.cache.currentData) {
+						updateConversationalSMS(gTasks.cache.currentData.sms);
+					}
 				}
 			}
 		},
@@ -4968,6 +4972,25 @@ function getNotificationTypes() {
 			}
 		}
 	});
+}
+
+/*
+ * Update anything related to using conversations and SMS
+ */
+function updateConversationalSMS(sms) {
+	if(sms && !gConversationalSMS) {  // Add if there is SMS data associated with this survey and the type has not already been added
+		var $selector=$('#target'),
+			h = [],
+			idx = -1;
+
+
+		h[++idx] = '<option value="conversational_sms">';
+		h[++idx] = localise.set["c_conversation"];
+		h[++idx] = '</option>';
+
+		$selector.append(h.join(''));
+		gConversationalSMS = true;
+	}
 }
 
 function setupNotificationDialog() {
