@@ -77,7 +77,7 @@ require([
 		localise.setlang();		    // Localise HTML
 
 		// Get Notification Types for this server
-		getNotificationTypes();
+		getNotificationTypes("notifications");
 
 		// Get the user details
 		getLoggedInUser(projectSet, false, true, undefined);
@@ -168,7 +168,7 @@ require([
 			notification = saveWebhook();
 		} else if(target === "escalate") {
 			var nEmail = saveEmail();	// Save email and escalate detail settings
-			var notification = saveEscalate();
+			notification = saveEscalate();
 			notification.notifyDetails = Object.assign(nEmail.notifyDetails, notification.notifyDetails);
 		}
 

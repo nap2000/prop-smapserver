@@ -256,7 +256,7 @@ require([
         getLocations(processLocationList);
 
         // Get Notification Types for this server
-        getNotificationTypes();
+        getNotificationTypes("console");
 
         // Set response to clearing single record view
         $('#clear_srview').click(function() {
@@ -3603,6 +3603,10 @@ require([
             notification = saveSMS();
         } else if(target === "document") {
             notification = saveDocument();
+        } else if(target === "conversation") {
+            notification = saveConversation(gTasks.cache.currentData.schema.columns,
+                gTasks.cache.currentData.sms.theirNumberQuestion,
+                gTasks.gSelectedRecord);
         }
 
         if(!notification.error) {

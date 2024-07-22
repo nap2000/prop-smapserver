@@ -4865,7 +4865,7 @@ function edit_notification(edit, idx, console) {
 }
 
 function setTargetDependencies(target) {
-	$('.sms_options, .webhook_options, .email_options, .escalate_options').hide();
+	$('.sms_options, .webhook_options, .email_options, .escalate_options, .conv_options').hide();
 	if(target === "email") {
 		$('.email_options').show();
 	} else if(target === "sms") {
@@ -4874,6 +4874,8 @@ function setTargetDependencies(target) {
 		$('.webhook_options').show();
 	} else if(target  === "escalate") {
 		$('.escalate_options,.email_options').show();
+	} else if(target  === "conversation") {
+		$('.conv_options').show();
 	}
 }
 
@@ -4942,11 +4944,11 @@ function updateNotificationTypes(data) {
 /*
  * Load the existing notifications from the server
  */
-function getNotificationTypes() {
+function getNotificationTypes(page) {
 
 	addHourglass();
 	$.ajax({
-		url: '/surveyKPI/notifications/types',
+		url: '/surveyKPI/notifications/types?page=' + page,
 		dataType: 'json',
 		cache: false,
 		success: function(data) {
@@ -4984,7 +4986,7 @@ function updateConversationalSMS(sms) {
 			idx = -1;
 
 
-		h[++idx] = '<option value="conversational_sms">';
+		h[++idx] = '<option value="conversation">';
 		h[++idx] = localise.set["c_conversation"];
 		h[++idx] = '</option>';
 
@@ -5166,6 +5168,22 @@ function saveDocument() {
 	notification.target = "document";
 	notification.notifyDetails = {};
 
+	return notification;
+}
+
+/*
+ * Process a save notification when the target is "conversation"
+ */
+function saveConversation(columns, numberQuestion, record) {
+
+	var notification = {};
+
+	notification.target = "conversation";
+	notification.notifyDetails = {};
+	notification.notifyDetails.content = $('#conversation_text').val();
+
+	var columnName = getConsoleColumnName(columns, numberQuestion);
+	notification.notifyDetails.emails = [record[columnName]];		// Must be sent as an array
 
 	return notification;
 }
@@ -5221,6 +5239,20 @@ function saveEscalate() {
 	}
 
 	return notification;
+}
+
+function getConsoleColumnName(columns, questionName) {
+	var columnName,
+		i;
+	if(columns) {
+		for(i = 0; i < columns.length; i++) {
+			if(columns[i].question_name === questionName) {
+				columnName = columns[i].column_name;
+				break;
+			}
+		}
+	}
+	return columnName;
 }
 
 function getTaskGroupIndex(tgId) {
