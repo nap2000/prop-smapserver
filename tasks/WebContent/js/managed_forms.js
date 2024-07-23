@@ -3606,6 +3606,7 @@ require([
         } else if(target === "conversation") {
             notification = saveConversation(gTasks.cache.currentData.schema.columns,
                 gTasks.cache.currentData.sms.theirNumberQuestion,
+                gTasks.cache.currentData.sms.ourNumber,
                 gTasks.gSelectedRecord);
         }
 

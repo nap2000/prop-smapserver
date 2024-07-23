@@ -5174,7 +5174,7 @@ function saveDocument() {
 /*
  * Process a save notification when the target is "conversation"
  */
-function saveConversation(columns, numberQuestion, record) {
+function saveConversation(columns, numberQuestion, ourNumber, record) {
 
 	var notification = {};
 
@@ -5184,6 +5184,7 @@ function saveConversation(columns, numberQuestion, record) {
 
 	var columnName = getConsoleColumnName(columns, numberQuestion);
 	notification.notifyDetails.emails = [record[columnName]];		// Must be sent as an array
+	notification.notifyDetails.ourNumber = ourNumber;
 
 	return notification;
 }
