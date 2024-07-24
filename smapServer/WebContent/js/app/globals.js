@@ -676,7 +676,7 @@ define(function () {
 	            canSelect: true,
 	            visible: true,
 		        source: "user",
-		        compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field"]
+		        compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field", "conversation", "phone"]
             },
             {
                 name: "Note",
@@ -686,7 +686,7 @@ define(function () {
                 canSelect: true,
                 visible: true,
                 source: "user",
-	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field"]
+	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field", "conversation", "phone"]
             },
             {
                 name: "Select One",
@@ -696,7 +696,7 @@ define(function () {
                 canSelect: true,
                 visible: true,
 				source: "user",
-	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field"]
+	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field", "conversation", "phone"]
             },
             {
                 name: "Select Multiple",
@@ -706,7 +706,7 @@ define(function () {
                 canSelect: true,
                 visible: true,
                 source: "user",
-	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field"]
+	            compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field", "conversation", "phone"]
             },
             {
                 name: "Form",
@@ -744,6 +744,26 @@ define(function () {
                 visible: true,
                 source: "user",
                 compatTypes: ["pdf_field"]
+            },
+            {
+                name: "Phone Number",
+                type: "phone",
+                trans: "c_phone",
+                icon: "phone",
+                canSelect: true,
+                visible: true,
+                source: "user",
+                compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field", "conversation"]
+            },
+            {
+                name: "Conversation",
+                type: "conversation",
+                trans: "ed_mat_c",
+                icon: "sms",
+                canSelect: true,
+                visible: true,
+                source: "user",
+                compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field", "phone"]
             },
             {
                 name: "GPS Point",
