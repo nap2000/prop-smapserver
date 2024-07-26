@@ -92,7 +92,9 @@ require([
 				url: "/surveyKPI/onetimelogon",
 				success: function (data, status) {
 					removeHourglass();
-					$('.pwd_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_es"] + " " + htmlEncode(email));
+					var msg = localise.set["msg_es"];
+					msg = msg.replace('%s1', htmlEncode(email));
+					$('.pwd_alert').show().removeClass('alert-danger').addClass('alert-success').html(msg);
 					$('.pwd_home').show();
 				}, error: function (data, status) {
 					removeHourglass();
