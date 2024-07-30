@@ -1727,6 +1727,7 @@ require([
         if (typeof projectId !== "undefined" && projectId != -1 && projectId != 0) {
 
             addHourglass();
+            gRefreshingData = false;
             $.ajax({
                 url: url,
                 dataType: 'json',
@@ -1779,16 +1780,14 @@ require([
 
                         if (typeof callback == "function") {
                             callback();
-                        } else {
-                            gRefreshingData = false;
                         }
                     }
                 },
                 error: function (xhr, textStatus, err) {
 
                     removeHourglass();
+                    gRefreshingData = false;
                     if(handleLogout(xhr.responseText)) {
-                        gRefreshingData = false;
                         if (xhr.readyState == 0 || xhr.status == 0) {
                             return;  // Not an error
                         } else {
@@ -3271,6 +3270,7 @@ require([
     function tableOnDraw() {
         var i;
 
+        console.log("tableOnDraw");
         if(!globals.gMainTable) {
             return;     // Table not ready
         }
@@ -3337,20 +3337,35 @@ require([
             } else if(headItem.del_reason_col) {  // Deleted reason
                 gDeleteReasonColumn = i;
             } else if(headItem.type === 'conversation') {
+                console.log("Idx: " + i + " : " + headItem.column_name);
                 $(globals.gMainTable.column(i).nodes()).each(function (index) {
                     var $this = $(this);
-                    var conv = JSON.parse($this.text());
+                    var val = $this.text();
+                    var conv;
+                    console.log(val);
+                    if(val && val.length > 0 && val !== 'undefined') {
+                        try {
+                            conv = JSON.parse(val);
+                        } catch (e) {
+                            console.log("Error converting: " + val);
+                            console.log(e);
+                            // Ignore malformed json
+                        }
+                    }
                     if(conv && conv.length > 0) {
                         var h = [],
-                            idx = -1;
-                        for(i = 0; i < conv.length; i++) {
-                            if(conv[i].inbound) {
-                                h[++idx] = '<div class="d-flex flex-row justify-content-start mb-2">';
+                            idx = -1,
+                            j;
+                        for(j = 0; j < conv.length; j++) {
+                            if(conv[j].inbound) {
+                                h[++idx] = '<div class="d-flex flex-row justify-content-start mb-1">';
+                                h[++idx] = '<div class="p-3 me-3 border bg-body-tertiary conv-from" style="border-radius: 15px;">';
                             } else {
-                                h[++idx] = '<div class="d-flex flex-row justify-content-end mb-2">';
+                                h[++idx] = '<div class="d-flex flex-row justify-content-end mb-1 ">';
+                                h[++idx] = '<div class="p-3 me-3 border bg-body-tertiary conv-to" style="border-radius: 15px;">';
                             }
-                            h[++idx] = '<div class="p-3 me-3 border bg-body-tertiary" style="border-radius: 15px;">';
-                            h[++idx] = htmlEncode(conv[i].msg);
+
+                            h[++idx] = htmlEncode(conv[j].msg);
                             h[++idx] = '</div>';
                             h[++idx] = '</div>';
                         }

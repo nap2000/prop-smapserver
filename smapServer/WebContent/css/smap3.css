@@ -52,3 +52,12 @@ tr.deleted td a {
 ::placeholder {
     color: lightgrey;
 }
+
+.conv-from {
+    background-color: #6395b4;
+}
+
+.conv-to
+{
+    background-color: #dcba56;
+}
