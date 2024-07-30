@@ -3358,14 +3358,23 @@ require([
                             j;
                         for(j = 0; j < conv.length; j++) {
                             if(conv[j].inbound) {
-                                h[++idx] = '<div class="d-flex flex-row justify-content-start mb-1">';
-                                h[++idx] = '<div class="p-3 me-3 border bg-body-tertiary conv-from" style="border-radius: 15px;">';
+                                h[++idx] = '<div class="d-flex flex-row justify-content-start mb-1 message">';
+                                h[++idx] = '<div class="p-1 border bg-body-tertiary conv-from" style="border-radius: 10px;">';
                             } else {
-                                h[++idx] = '<div class="d-flex flex-row justify-content-end mb-1 ">';
-                                h[++idx] = '<div class="p-3 me-3 border bg-body-tertiary conv-to" style="border-radius: 15px;">';
+                                h[++idx] = '<div class="d-flex flex-row justify-content-end mb-1 message">';
+                                h[++idx] = '<div class="p-1 border bg-body-tertiary conv-to" style="border-radius: 10px;">';
                             }
 
+                            if(conv[j].ts) {
+                                h[++idx] = '<time datetime="';
+                                h[++idx] = conv[j].ts;
+                                h[++idx] = '">';
+                                h[++idx] = conv[j].ts;
+                                h[++idx] = '</time>';
+                            }
+                            h[++idx] = '<br/>';
                             h[++idx] = htmlEncode(conv[j].msg);
+
                             h[++idx] = '</div>';
                             h[++idx] = '</div>';
                         }

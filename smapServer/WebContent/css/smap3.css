@@ -54,10 +54,16 @@ tr.deleted td a {
 }
 
 .conv-from {
-    background-color: #6395b4;
+    background-color: #0a6fae;
+    color: white;
 }
 
-.conv-to
-{
-    background-color: #dcba56;
+.conv-to {
+    background-color: #b88a04;
+    color: white;
+}
+
+.message time {
+    font-size: 11px;
+    color: #ccc;
 }
