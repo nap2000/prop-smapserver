@@ -58,7 +58,44 @@ require([
          ], function($, common, globals, localise, datafns) {
 
 	$(document).ready(function() {
+		authorise(setupPage);
+	});
 
+	/*
+	 * Authorise the user to access this page
+	 */
+	function authorise(callback) {
+		addHourglass();
+		$.ajax({
+			url: '/surveyKPI/authorise/api',
+			cache: false,
+			success: function (data) {
+				removeHourglass();
+				if(handleLogout(data)) {
+					callback();
+				}
+			},
+			error: function (xhr, textStatus, err) {
+
+				removeHourglass();
+				if(handleLogout(xhr.responseText)) {
+					if(err == "403") {
+						window.location.href = '/unauthorised.html';
+					}
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(localise.set["c_error"] + ": " + err);
+					}
+				}
+			}
+		});
+	}
+
+	/*
+	 * Set up the page after the user has been authorised to access it
+	 */
+	function setupPage() {
 		setupUserProfile(true);
 		setTheme();
 		setCustomApi();
@@ -66,7 +103,7 @@ require([
 
 		// Get the user details
 		globals.gIsAdministrator = false;
-        getLoggedInUser(projectChanged, true, true, undefined);
+		getLoggedInUser(projectChanged, true, true, undefined);
 
 		$('#api').change(function () {
 			var api = $('$api').val(),
@@ -94,26 +131,25 @@ require([
 			setUrl();
 		});
 
-        // Set change function on projects
-        $('#project_name').change(function () {
-            projectChanged();
-        });
+		// Set change function on projects
+		$('#project_name').change(function () {
+			projectChanged();
+		});
 
-        // Set change function on surveys
-        $('#survey').change(function() {
-            surveyChangedApi();
-        });
+		// Set change function on surveys
+		$('#survey').change(function() {
+			surveyChangedApi();
+		});
 
 		// Set change function on surveys
 		$('#version').change(function() {
 			setUrl();
 		});
 
-        $('.options').change(function() {
-        	setUrl();
-        });
-
-	});
+		$('.options').change(function() {
+			setUrl();
+		});
+	}
 
     function surveyChangedApi(callback) {
 	    // Set the survey meta data
