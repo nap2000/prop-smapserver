@@ -156,7 +156,9 @@ require([
 		});
 
 		$('.move_to_organisation').click(function () {
-			$('#move_to_organisation_popup').modal("show");
+			if(!$(this).hasClass("disabled")) {
+				$('#move_to_organisation_popup').modal("show");
+			}
 		});
 
 		$('#create_enterprise').click(function () {
@@ -1904,7 +1906,6 @@ require([
 		h[++idx] = '<table class="table table-striped">';
 		h[++idx] = '<thead>';
 		h[++idx] = '<tr>';
-		h[++idx] = '<th></th>';
 		h[++idx] = '<th scope="col">';
 		h[++idx] = localise.set["c_id"];	// Id
 		h[++idx] = '</th>';
@@ -1926,9 +1927,6 @@ require([
 			role = globals.gRoleList[i];
 
 			h[++idx] = '<tr>';
-			h[++idx] = '<td class="control_td"><input type="checkbox" name="controls" value="';
-			h[++idx] = i;
-			h[++idx] = '"></td>';
 			h[++idx] = '<td>';
 			h[++idx] = role.id;
 			h[++idx] = '</td>';
