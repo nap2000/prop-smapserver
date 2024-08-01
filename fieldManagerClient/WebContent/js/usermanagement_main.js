@@ -1059,8 +1059,8 @@ require([
 			cache: false,
 			success: function(data) {
 				var ent_id = e_id;
+				removeHourglass();
 				if(handleLogout(data)) {
-					removeHourglass();
 					if (!ent_id) {
 						gOrganisationList = data;
 						updateOrganisationTable();
