@@ -1059,16 +1059,17 @@ require([
 			cache: false,
 			success: function(data) {
 				var ent_id = e_id;
-				removeHourglass();
-				if(!ent_id) {
-					gOrganisationList = data;
-					updateOrganisationTable();
-					updateOrganisationList();
-				} else {
-					// Just update the single select that can choose a new organisation for a user in a new enterprise
-					updateOrganisationNewEnterpriseList(data);
+				if(handleLogout(data)) {
+					removeHourglass();
+					if (!ent_id) {
+						gOrganisationList = data;
+						updateOrganisationTable();
+						updateOrganisationList();
+					} else {
+						// Just update the single select that can choose a new organisation for a user in a new enterprise
+						updateOrganisationNewEnterpriseList(data);
+					}
 				}
-
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
@@ -1613,8 +1614,8 @@ require([
 			data: userString,
 			success: function (data, status) {
 				removeHourglass();
+				$('#userDetailsSave').prop("disabled", false);
 				if(handleLogout(data)) {
-					$('#userDetailsSave').prop("disabled", false);
 					if (userList[0].ident == globals.gLoggedInUser.ident) {	// Restart if a user updated their own settings
 						location.reload();
 					} else {
