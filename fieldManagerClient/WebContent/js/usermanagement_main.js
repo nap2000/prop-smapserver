@@ -1701,6 +1701,8 @@ require([
 		h[++idx] = '<thead>';
 		h[++idx] = '<tr>';
 
+		h[++idx] = '<th></th>';
+
 		h[++idx] = '<th scope="col" style="text-align: center;">';
 		h[++idx] = localise.set["c_id"];
 		h[++idx] = '</th>';
@@ -1732,6 +1734,9 @@ require([
 
 			if (yesGroup && yesProject && yesRole && yesOrg) {
 				h[++idx] = '<tr>';
+				h[++idx] = '<td class="control_td"><input type="checkbox" name="controls" value="';
+				h[++idx] = i;
+				h[++idx] = '"></td>';
 				h[++idx] = '<td class="user_edit_td"><button class="btn btn-default user_edit" style="width:100%;" data-idx="';
 				h[++idx] = i;
 				h[++idx] = '">';
@@ -1778,6 +1783,24 @@ require([
 		$(".rm_user", $userTable).click(function(){
 			var idx = $(this).data("idx");
 			deleteUser(idx);
+		});
+
+		$('#user_table .control_td').find('input').click(function () {
+			if ($(this).is(':checked')) {
+
+				++gControlProjectCount;
+				if (gControlProjectCount === 1) {
+					$('.move_to_organisation').removeClass("disabled");
+				}
+			} else {
+
+				--gControlProjectCount;
+				if (gControlProjectCount === 0) {
+					if (gControlProjectCount === 0) {
+						$('.move_to_organisation').addClass("disabled");
+					}
+				}
+			}
 		});
 
 	}
@@ -1873,20 +1896,17 @@ require([
 
 				++gControlProjectCount;
 				if (gControlProjectCount === 1) {
-					$('#project_controls').find('button').removeClass("disabled");
 					$('.move_to_organisation').removeClass("disabled");
 				}
 			} else {
 
 				--gControlProjectCount;
 				if (gControlProjectCount === 0) {
-					$('#project_controls').find('button').addClass("disabled");
 					if (gControlProjectCount === 0) {
 						$('.move_to_organisation').addClass("disabled");
 					}
 				}
 			}
-
 		});
 
 	}
