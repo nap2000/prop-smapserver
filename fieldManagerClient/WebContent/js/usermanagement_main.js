@@ -246,14 +246,8 @@ require([
 			user.ident = $('#user_ident').val();
 			user.name = $('#user_name').val();
 			user.email = $('#user_email').val();
-			var newOrgId = $('#current_organisation').val();
-			// Set the organisation id to zero if it is not being changed
-			// By setting it to zero all changes will be made in the organisation of the administrator
-			if(gUsers[gCurrentUserIndex] && newOrgId != gUsers[gCurrentUserIndex].current_org_id ) {
-				user.o_id = newOrgId;
-			} else {
-				user.o_id = 0;
-			}
+			// By setting organisationId to zero, all changes will be made in the organisation of the administrator
+			user.o_id = 0;
 
 			if(gCurrentUserIndex === -1 && send_email == "send_email") {
 				user.sendEmail = true;
@@ -725,40 +719,13 @@ require([
 		 * Move a project to a new organisation
 		 */
 		$('#organisationMove').click(function(){
-			var projects =[],
-				h = [],
-				i = -1,
-				idx,
-				orgId,
-				orgName,
-				hasProjects = false,
-				projectsMoving = '',
-				msg;
-
-			$('#project_table').find('input:checked').each(function(index) {
-				if(hasProjects){
-					projectsMoving += ", ";
-				}
-				idx = $(this).val();
-				projects[index] = {id: globals.gProjectList[idx].id};
-
-				projectsMoving += globals.gProjectList[idx].name;
-				hasProjects = true;
-			});
-
-			orgId = $('#target_organisation').val();
-			orgName = $('#target_organisation :selected').text();
-
-			msg = localise.set["u_check_mv_p"];
-			msg = msg.replace("%s1", projectsMoving);
-			msg = msg.replace("%s2", orgName);
-
-			bootbox.confirm(htmlEncode(msg), function(result){
-				if(result) {
-					moveToOrganisations(orgId, projects);
-				}
-			});
-
+			if(gPanel === 'projects') {
+				moveProjects();
+			} else if(gPanel === 'users') {
+				moveUsers();
+			} else {
+				alert("error: unkowem panel requesting move: " + gPanel);
+			}
 		});
 
 		/*
@@ -1296,9 +1263,7 @@ require([
 			$('#user_ident').val(gUsers[userIndex].ident).prop('disabled', true);
 			$('#user_name').val(gUsers[userIndex].name);
 			$('#user_email').val(gUsers[userIndex].email);
-			$('#current_organisation').val(gUsers[userIndex].current_org_id);
 		}
-		$('#current_enterprise').val(globals.gEntId);
 
 		// Initialise the send email or set password radio buttons
 		if(!existing) {
@@ -2263,7 +2228,7 @@ require([
      */
 	function updateOrganisationNewEnterpriseList(data) {
 
-		var $organisationSelect = $('#current_organisation'),
+		var $organisationSelect = $('#target_organisation'),
 			i, organisation,
 			h = [],
 			idx = -1;
@@ -2740,6 +2705,86 @@ require([
 				}
 			}
 		});
+	}
+
+	/*
+	 * Move projects to a new organisation
+	 */
+	function moveProjects() {
+		var projects = [],
+			idx,
+			orgId,
+			orgName,
+			hasProjects = false,
+			projectsMoving = '',
+			msg;
+
+		$('#project_table').find('input:checked').each(function(index) {
+			if(hasProjects){
+				projectsMoving += ", ";
+			}
+			idx = $(this).val();
+			projects[index] = {id: globals.gProjectList[idx].id};
+
+			projectsMoving += globals.gProjectList[idx].name;
+			hasProjects = true;
+		});
+
+		orgId = $('#target_organisation').val();
+		orgName = $('#target_organisation :selected').text();
+
+		msg = localise.set["u_check_mv_p"];
+		msg = msg.replace("%s1", projectsMoving);
+		msg = msg.replace("%s2", orgName);
+
+		bootbox.confirm({
+			message: htmlEncode(msg),
+			callback: function(result) {
+				if (result) {
+					moveToOrganisations(orgId, projects);
+				}
+			},
+			closeButton: false
+		});
+
+	}
+
+	/*
+	 * Move projects to a new organisation
+	 */
+	function moveUsers() {
+		var users = [],
+			idx,
+			orgId,
+			orgName,
+			hasUsers = false,
+			usersMoving = '',
+			msg;
+
+		$('#users_table').find('input:checked').each(function(index) {
+			if(hasUsers){
+				usersMoving += ", ";
+			}
+			idx = $(this).val();
+			projects[index] = {id: globals.gProjectList[idx].id};
+
+			usersMoving += globals.gProjectList[idx].name;
+			hasUsers = true;
+		});
+
+		orgId = $('#target_organisation').val();
+		orgName = $('#target_organisation :selected').text();
+
+		msg = localise.set["u_check_mv_p"];
+		msg = msg.replace("%s1", usersMoving);
+		msg = msg.replace("%s2", orgName);
+
+		bootbox.confirm(htmlEncode(msg), function(result){
+			if(result) {
+				moveToOrganisations(orgId, users);
+			}
+		});
+
 	}
 
 });
