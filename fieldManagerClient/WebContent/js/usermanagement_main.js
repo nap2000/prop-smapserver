@@ -2652,8 +2652,17 @@ require([
 	/*
 	 * Move the provided projects to the selected organisation
 	 */
-	function moveToOrganisations (orgId, projects) {
+	function moveToOrganisations (orgId, projects, users) {
 
+		var pString,
+			uString;
+
+		if(projects) {
+			pString = JSON.stringify(projects);
+		}
+		if(users) {
+			uString = JSON.stringify(users);
+		}
 		addHourglass();
 		$.ajax({
 			type: "POST",
@@ -2662,7 +2671,8 @@ require([
 			url: "/surveyKPI/organisationList/setOrganisation",
 			data: {
 				orgId: orgId,
-				projects: JSON.stringify(projects)
+				projects: pString,
+				users: uString
 			},
 			success: function(data, status) {
 				removeHourglass();
@@ -2741,7 +2751,7 @@ require([
 			message: htmlEncode(msg),
 			callback: function(result) {
 				if (result) {
-					moveToOrganisations(orgId, projects);
+					moveToOrganisations(orgId, projects, undefined);
 				}
 			},
 			closeButton: false
@@ -2756,32 +2766,29 @@ require([
 		var users = [],
 			idx,
 			orgId,
-			orgName,
 			hasUsers = false,
 			usersMoving = '',
 			msg;
 
-		$('#users_table').find('input:checked').each(function(index) {
+		$('#user_table').find('input:checked').each(function(index) {
 			if(hasUsers){
 				usersMoving += ", ";
 			}
 			idx = $(this).val();
-			projects[index] = {id: globals.gProjectList[idx].id};
-
-			usersMoving += globals.gProjectList[idx].name;
+			users[index] = {id: gUsers[idx].id};
+			usersMoving += gUsers[idx].name;
 			hasUsers = true;
 		});
 
 		orgId = $('#target_organisation').val();
-		orgName = $('#target_organisation :selected').text();
 
 		msg = localise.set["u_check_mv_p"];
 		msg = msg.replace("%s1", usersMoving);
-		msg = msg.replace("%s2", orgName);
+		msg = msg.replace("%s2", $('#target_organisation :selected').text());
 
 		bootbox.confirm(htmlEncode(msg), function(result){
 			if(result) {
-				moveToOrganisations(orgId, users);
+				moveToOrganisations(orgId, undefined, users);
 			}
 		});
 
