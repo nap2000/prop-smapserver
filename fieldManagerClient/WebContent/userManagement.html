@@ -154,6 +154,9 @@
 								<div id="user_table"  style="margin-top:20px;"></div>
 							</div>
 						</div>
+						<div class="row">
+							<button class="btn btn-warning restrict_role org_role admin_role move_to_organisation lang" data-lang="u_mv"></button>
+						</div>
 					</div>
 				</div>
 
@@ -258,16 +261,6 @@
 						<div class="noo">
 							<label for="user_name" class="control-label mt-3"><b class="lang" data-lang="c_name"></b></label>
 							<input type="text" id="user_name" required class="form-control" autocomplete="new-name">
-
-							<div class="restrict_role org_role mt-3">
-								<label for="current_organisation" class="control-label"><b class="lang" data-lang="u_co"></b></label>
-								<select class="organisation_select form-control" id="current_organisation"></select>
-							</div>
-
-							<div class="restrict_role enterprise_role mt-3">
-								<label for="current_enterprise" class="control-label"><b class="lang" data-lang="c_ent"></b></label>
-								<select class="enterprise_select form-control" id="current_enterprise"></select>
-							</div>
 
 							<label for="user_email" class="mt-2 control-label"><b class="lang" data-lang="c_email"></b></label>
 							<input type="email" class="form-control" id="user_email"
@@ -726,7 +719,7 @@
 </div>
 
 <!-- Modal to allow the user to edit an enterprise details -->
-<div id="create_enterprise_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createEnterpriseLabel" aria-hidden="true">
+<div id="create_enterprise_popup" class="modal fade " data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="createEnterpriseLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -761,11 +754,18 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title lang" id="moveOrganisationLabel" data-lang="u_mv">move</h4>
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
 			</div>
 			<div class="modal-body">
 				<form id="organisation_move_form">
 					<div class="form-group">
+						<div class="restrict_role enterprise_role">
+							<label for="current_enterprise" class="lang col-sm-2 control-label" data-lang="c_ent"></label>
+							<div class="col-sm-10">
+								<select class="enterprise_select form-control" id="current_enterprise"></select>
+							</div>
+						</div>
+
 						<label for="target_organisation" class="lang col-sm-2 control-label" data-lang="c_org">organisation</label>
 						<div class="col-sm-10">
 							<select class="new_organisation_select form-control" id="target_organisation"></select>
