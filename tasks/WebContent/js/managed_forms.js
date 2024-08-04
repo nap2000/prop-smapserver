@@ -3340,48 +3340,7 @@ require([
                 console.log("Idx: " + i + " : " + headItem.column_name);
                 $(globals.gMainTable.column(i).nodes()).each(function (index) {
                     var $this = $(this);
-                    var val = $this.text();
-                    var conv;
-                    console.log(val);
-                    if(val && val.length > 0 && val !== 'undefined') {
-                        try {
-                            conv = JSON.parse(val);
-                        } catch (e) {
-                            console.log("Error converting: " + val);
-                            console.log(e);
-                            // Ignore malformed json
-                        }
-                    }
-                    if(conv && conv.length > 0) {
-                        var h = [],
-                            idx = -1,
-                            j;
-                        for(j = 0; j < conv.length; j++) {
-                            if(conv[j].inbound) {
-                                h[++idx] = '<div class="d-flex flex-row justify-content-start mb-1 message">';
-                                h[++idx] = '<div class="p-1 border bg-body-tertiary conv-from" style="border-radius: 10px;">';
-                            } else {
-                                h[++idx] = '<div class="d-flex flex-row justify-content-end mb-1 message">';
-                                h[++idx] = '<div class="p-1 border bg-body-tertiary conv-to" style="border-radius: 10px;">';
-                            }
-
-                            if(conv[j].ts) {
-                                h[++idx] = '<time datetime="';
-                                h[++idx] = conv[j].ts;
-                                h[++idx] = '">';
-                                h[++idx] = conv[j].ts;
-                                h[++idx] = '</time>';
-                            }
-                            h[++idx] = '<br/>';
-                            h[++idx] = htmlEncode(conv[j].msg);
-
-                            h[++idx] = '</div>';
-                            h[++idx] = '</div>';
-                        }
-                        $this.html(h.join(''));
-                    } else {
-                        $this.text("");
-                    }
+                    $this.html(actioncommon.formatConversation($this.text()));
                 });
             }
         }
