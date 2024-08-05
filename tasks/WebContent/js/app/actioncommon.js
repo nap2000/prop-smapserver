@@ -278,9 +278,10 @@ define([
                     itemIndex);
             } else if (configItem.readonly || !editable) {		// Read only text
                 if(configItem.type === 'conversation') {
-                        value = formatConversation(value);
+                    h[++idx] = addConversationCellMarkup(value);
+                } else {
+                    h[++idx] = addCellMarkup(value);
                 }
-                h[++idx] = addCellMarkup(value);
             } else {
                 h[++idx] = addEditableColumnMarkup(configItem, value, itemIndex, first, schema, record, prefix);
                 first = false;
@@ -825,6 +826,22 @@ define([
                 h[++idx] = v;
                 h[++idx] = '</textarea>';
             }
+            return h.join('');
+
+        }
+
+        /*
+       * Add markup for a conversation
+       */
+        function addConversationCellMarkup(v) {
+            var h = [],
+                idx = -1;
+
+            h[++idx] = ' <div class="border border-primary">';
+            v = v.replace(/&quot;/g, '\"');    // TODO not sure why quotes are escaped here
+            h[++idx] = formatConversation(v);
+            h[++idx] = '</div>';
+
             return h.join('');
 
         }
