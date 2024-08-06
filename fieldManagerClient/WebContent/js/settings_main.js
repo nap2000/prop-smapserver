@@ -122,6 +122,10 @@ require([
 			e.preventDefault();
 			panelChange($(this), 'email');
 		});
+		$('#smsTab a').click(function (e) {
+			e.preventDefault();
+			panelChange($(this), 'sms');
+		});
 		$('#otherTab a').click(function (e) {
 			e.preventDefault();
 			panelChange($(this), 'other');
@@ -735,6 +739,36 @@ require([
 					return;  // Not an error
 				} else {
 					alert(localise.set["c_error"] + ": " + err);
+				}
+			}
+		});
+	}
+
+	/*
+ 	 * Load the sms numbers from the server
+ 	 */
+	function getSMSNumbers() {
+
+		var url="/surveyKPI/smsnumbers?tz=" + encodeURIComponent(globals.gTimezone);
+		addHourglass();
+		$.ajax({
+			url: url,
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				if(handleLogout(data)) {
+					updateSMSNumbersList(data);
+				}
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						console.log("Error: Failed to get list of notifications: " + err);
+					}
 				}
 			}
 		});

@@ -94,6 +94,7 @@ define({
     "c_opened": "Opened",
     "c_periodic": "Periodic",
     "c_project": "Project",
+    "c_sms": "SMS Numbers",
     "c_sub_form": "Sub Form",
     "c_threshold": "Threshold",
     "c_url": "URL",
