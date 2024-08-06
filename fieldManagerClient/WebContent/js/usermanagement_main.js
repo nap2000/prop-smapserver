@@ -1125,10 +1125,10 @@ require([
 		h = [];
 		idx = -1;
 		for(i = 0; i < gGroups.length; i++) {
-			if((gGroups[i].id !== globals.GROUP_ORG_ADMIN || globals.gIsOrgAdministrator) &&
-				(gGroups[i].id !== globals.GROUP_DASHBOARD || hasDashboard) &&
-				(gGroups[i].id !== globals.GROUP_SECURITY || globals.gIsOrgAdministrator || globals.gIsSecurityAdministrator) &&
-				(gGroups[i].id != globals.GROUP_ENTERPRISE || globals.gIsEnterpriseAdministrator) &&
+			if((gGroups[i].id !== globals.GROUP_ORG_ADMIN || globals.gIsOrgAdministrator || globals.gIsEnterpriseAdministrator || globals.gIsServerOwner) &&
+				(gGroups[i].id !== globals.GROUP_DASHBOARD || hasDashboard || globals.gIsServerOwner) &&
+				(gGroups[i].id !== globals.GROUP_SECURITY || globals.gIsOrgAdministrator || globals.gIsSecurityAdministrator  || globals.gIsServerOwner) &&
+				(gGroups[i].id != globals.GROUP_ENTERPRISE || globals.gIsEnterpriseAdministrator  || globals.gIsServerOwner) &&
 				gGroups[i].id !== globals.GROUP_OWNER
 			) {
 				h[++idx] = '<div class="custom-control custom-checkbox ml-2">';
