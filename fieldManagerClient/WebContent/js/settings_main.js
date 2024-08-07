@@ -85,7 +85,7 @@ require([
 
 		getSmsType();
 		getLoggedInUser(userKnown, false, false, undefined, false,
-			false, undefined, getServerDetails);
+			false, undefined, getServerDetails, getSMSNumbers);
 		getDeviceSettings();
 		getEmailSettings();
 		getWebformSettings();
@@ -772,6 +772,130 @@ require([
 				}
 			}
 		});
+	}
+
+	/*
+	 * Update server data
+	 */
+	function updateSMSNumbersList(data) {
+		var $selector=$('#smsnumber_list'),
+			i,
+			h = [],
+			idx = -1;
+
+		h[++idx] = '<div class="table-responsive">';
+		h[++idx] = '<table class="table table-striped">';
+
+		h[++idx] = '<thead>';
+		h[++idx] = '<tr>';
+
+		h[++idx] = '<th scope="col" style="text-align: center;">';
+		h[++idx] = localise.set["c_phone"];
+		h[++idx] = '</th>';
+
+		h[++idx] = '<th scope="col" style="text-align: center;">';
+		h[++idx] = localise.set["c_org"];
+		h[++idx] = '</th>';
+
+		h[++idx] = '<th scope="col" style="text-align: center;">';
+		h[++idx] = localise.set["c_survey"];
+		h[++idx] = '</th>';
+
+		h[++idx] = '<th scope="col" style="text-align: center;">';
+		h[++idx] = localise.set["sms_their_q"];
+		h[++idx] = '</th>';
+
+		h[++idx] = '<th scope="col" style="text-align: center;">';
+		h[++idx] = localise.set["sms_conv_q"];
+		h[++idx] = '</th>';
+
+		h[++idx] = '<th scope="col" style="text-align: center;">';
+		h[++idx] = localise.set["c_action"];
+		h[++idx] = '</th>';
+
+		h[++idx] = '</tr>';
+		h[++idx] = '</thead>';
+
+		h[++idx] = '<tbody>';
+		for(i = 0; i < data.length; i++) {
+
+			h[++idx] = '<tr>';
+
+			// number
+			h[++idx] = '<td style="text-align: center;">';
+			h[++idx] = htmlEncode(data[i].ourNumber);
+			h[++idx] = '</td>';
+
+			// orgName
+			h[++idx] = '<td style="text-align: center;">';
+			h[++idx] = htmlEncode(data[i].orgName);
+			h[++idx] = '</td>';
+
+			// surveyName
+			h[++idx] = '<td style="text-align: center;">';
+			h[++idx] = htmlEncode(data[i].surveyName);
+			h[++idx] = '</td>';
+
+			// Their number question
+			h[++idx] = '<td style="text-align: center;">';
+			h[++idx] = htmlEncode(data[i].theirNumberQuestion);
+			h[++idx] = '</td>';
+
+			// Conversation question
+			h[++idx] = '<td style="text-align: center;">';
+			h[++idx] = htmlEncode(data[i].messageQuestion);
+			h[++idx] = '</td>';
+
+			// actions
+			h[++idx] = '<td style="text-align: center;">';
+			h[++idx] = '<div class="d-flex">';
+
+			if(globals.gIsServerOwner) {	// Only allow system owners to delete
+				h[++idx] = '<button type="button" data-idx="';
+				h[++idx] = i;
+				h[++idx] = '" class="btn btn-danger btn-sm rm_n mr-2">';
+				h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
+			}
+
+			h[++idx] = '<button type="button" data-idx="';
+			h[++idx] = i;
+			h[++idx] = '" class="btn btn-info btn-sm edit_n">';
+			h[++idx] = '<i class="fa fa-edit"></i></button>';
+
+			h[++idx] = '</div>';
+			h[++idx] = '</td>';
+			// end actions
+
+			h[++idx] = '</tr>';
+		}
+		h[++idx] = '</tbody>';
+		h[++idx] = '</table>';
+		h[++idx] = '</div>';
+
+		$selector.empty().append(h.join(''));
+
+		/*
+		 * Enable the add button for server admins
+		 */
+		if(globals.gIsServerOwner) {
+			$('#addNumber').show();
+		}
+
+		$(".rm_n", $selector).click(function(){
+			var idx = $(this).data("idx");
+			if(window.gNotifications.length > 0 && idx < window.gNotifications.length) {
+				if (confirm(localise.set["msg_del_not"] + ' ' + window.gNotifications[idx].name)) {
+					delete_notification(window.gNotifications[idx].id);
+				}
+			}
+		});
+
+		$(".edit_n", $selector).click(function(){
+			var idx = $(this).data("idx");
+			edit_notification(true, idx, false);
+			$('#addNotificationPopup').modal("show");
+		});
+
 	}
 
 	/*

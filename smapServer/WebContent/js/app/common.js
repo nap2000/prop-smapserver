@@ -1116,7 +1116,7 @@ function setupUserProfile(bs4) {
 }
 
 function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hideUserDetails,
-                         dontGetCurrentSurvey, getEnterprisesFn, getServerDetailsFn) {
+                         dontGetCurrentSurvey, getEnterprisesFn, getServerDetailsFn, getSMSNumbers) {
 	addHourglass();
 	$.ajax({
 		url: "/surveyKPI/user",
@@ -1153,6 +1153,10 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 
 				if (!hideUserDetails) {
 					updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServerDetailsFn);
+				}
+
+				if(getSMSNumbers) {
+					getSMSNumbers();
 				}
 
 				if (!dontGetCurrentSurvey) {	// Hack, on edit screen current survey is set as parameter not from the user's defaults

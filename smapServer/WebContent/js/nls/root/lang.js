@@ -1573,5 +1573,9 @@ define({
     "pw_mm": "The password and its confirm are not the same",
 
     // Server state
-    "ss_title": "Server State"
+    "ss_title": "Server State",
+
+    // sms
+    "sms_their_q": "Question for calling number",
+    "sms_conv_q": "Conversation Question"
 });

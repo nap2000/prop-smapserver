@@ -716,9 +716,11 @@
 				<!-- The panel for setting sms numbers -->
 				<div id="smsPanel" style="display:none;" class="usertab mt-4">
 
-					<div class="container">
-						<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
-						<button id="saveSmsSettings" class="btn btn-success lang mt-4" data-lang="c_save">save</button>
+					<div class="card-header">
+						<button id="addNumber" type="button" class="btn btn-success lang" aria-label="Add Number" data-lang="c_add" style="display:none;">add</button>
+					</div>
+					<div class="card-body">
+						<div id="smsnumber_list"></div>
 					</div>
 				</div>
 
