@@ -71,7 +71,8 @@ require([
 		gCssOrgFile,
 		gCssModal,
 		gResetWebformPressed = false,
-		page = 'settings';
+		page = 'settings',
+		gNumbers;
 
 	$(document).ready(function() {
 
@@ -659,7 +660,26 @@ require([
 
 });
 
-function deleteCss(org) {
+	function deleteNumber(idx) {
+		addHourglass();
+		$.ajax({
+			type: "DELETE",
+			cache: false,
+			url: "/surveyKPI/smsnumbers/number/" + gNumbers[idx].identifier,
+			success: function(data, status) {
+				removeHourglass();
+				getSMSNumbers();
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(handleLogout(xhr.responseText)) {
+					alert(xhr.responseText);
+				}
+			}
+		});
+	}
+
+	function deleteCss(org) {
 		var url = "/surveyKPI/css/";
 		if(org) {
 			url += encodeURIComponent($('#cssSelectOrg').val());
@@ -801,6 +821,7 @@ function deleteCss(org) {
 			success: function(data) {
 				removeHourglass();
 				if(handleLogout(data)) {
+					gNumbers = data;
 					updateSMSNumbersList(data);
 				}
 			},
@@ -926,9 +947,9 @@ function deleteCss(org) {
 
 		$(".rm_n", $selector).click(function(){
 			var idx = $(this).data("idx");
-			if(window.gNotifications.length > 0 && idx < window.gNotifications.length) {
-				if (confirm(localise.set["msg_del_not"] + ' ' + window.gNotifications[idx].name)) {
-					delete_notification(window.gNotifications[idx].id);
+			if(gNumbers.length > 0 && idx < gNumbers.length) {
+				if (confirm(localise.set["msg_del_nbr"] + ' ' + gNumbers[idx].ourNumber)) {
+					deleteNumber(idx);
 				}
 			}
 		});
