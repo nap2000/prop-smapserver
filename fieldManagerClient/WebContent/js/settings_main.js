@@ -568,6 +568,11 @@ require([
 			$('#upload_css_popup_org').modal("show");
 		});
 
+		$('#addNumber').click(function() {
+			$('.add_sms_alert').hide();
+			$('#add_sms_popup').modal("show");
+		});
+
 		$('#cssSave, #cssSaveOrg').click(function(){
 			let url = "/surveyKPI/css";
 			let f;
@@ -578,7 +583,6 @@ require([
 				f = document.forms.namedItem("upload_css_form_org");
 				url += "?org=true";
 			}
-
 
 			var formData = new FormData(f);
 			addHourglass();
@@ -591,13 +595,14 @@ require([
 				url: url,
 				success: function(data, status) {
 					removeHourglass();
-					if(gCssModal === "server") {
-						getCustomCss();
-					} else {
-						getCustomCssOrg();
+					if(handleLogout(data)) {
+						if (gCssModal === "server") {
+							getCustomCss();
+						} else {
+							getCustomCssOrg();
+						}
+						$('#upload_css_popup, #upload_css_popup_org').modal("hide");
 					}
-					$('#upload_css_popup, #upload_css_popup_org').modal("hide");
-
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
@@ -615,9 +620,46 @@ require([
 			});
 		});
 
-	});
+		/*
+		 * Add a new number
+		 */
+		$('#addSmsSave').click(function(){
 
-	function deleteCss(org) {
+			var number = $('#smsNumber').val(),
+				smsString;
+
+			// TODO validate number
+			var sms = {
+				ourNumber: number
+			}
+
+			addHourglass();
+			$.ajax({
+				type: "POST",
+				dataType: 'text',
+				data: sms,
+				cache: false,
+				url: "/surveyKPI/smsnumbers/number",
+				success: function(data, status) {
+					removeHourglass();
+					getSMSNumbers();
+					if(handleLogout(data)) {
+						$('#add_sms_popup').modal("hide");
+					}
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+					if(handleLogout(xhr.responseText)) {
+						var msg = htmlEncode(xhr.responseText);
+						$('.add_sms_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
+					}
+				}
+			});
+		});
+
+});
+
+function deleteCss(org) {
 		var url = "/surveyKPI/css/";
 		if(org) {
 			url += encodeURIComponent($('#cssSelectOrg').val());
@@ -654,6 +696,7 @@ require([
 			}
 		});
 	}
+
 	/*
 	 * Respond to change of cssSelect
 	 */

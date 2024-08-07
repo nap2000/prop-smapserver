@@ -811,34 +811,63 @@
 	</div>
 </div>
 
-	<!-- Modal to allow the user to upload a css file for their organisation -->
-	<div id="upload_css_popup_org" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="uploadCssLabelOrg" aria-hidden="true">
-		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 id="uploadCssLabelOrg" class="modal-title lang" data-lang="u_css_ss_org">upload</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				</div>
-				<div class="modal-body">
+<!-- Modal to allow the user to upload a css file for their organisation -->
+<div id="upload_css_popup_org" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="uploadCssLabelOrg" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 id="uploadCssLabelOrg" class="modal-title lang" data-lang="u_css_ss_org">upload</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			</div>
+			<div class="modal-body">
 
-					<form class="form" id="upload_css_form_org"  enctype="multipart/form-data" name="upload_css_form_org">
-						<div class="form-group row">
-							<label for="cssUploadOrg" data-lang="u_css_f" class="lang col-sm-4 control-label">upload</label>
-							<div class="col-sm-6">
-								<input type="file" class="form-control-file" id="cssUploadOrg" accept="text/css" name="file">
-							</div>
+				<form class="form" id="upload_css_form_org"  enctype="multipart/form-data" name="upload_css_form_org">
+					<div class="form-group row">
+						<label for="cssUploadOrg" data-lang="u_css_f" class="lang col-sm-4 control-label">upload</label>
+						<div class="col-sm-6">
+							<input type="file" class="form-control-file" id="cssUploadOrg" accept="text/css" name="file">
 						</div>
-					</form>
-					<div class="load_file_alert alert alert-success" role="alert" style="display:none;"></div>
+					</div>
+				</form>
+				<div class="load_file_alert alert alert-success" role="alert" style="display:none;"></div>
 
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close"></button>
-					<button id="cssSaveOrg" type="button" class="btn btn-primary lang btn-default" data-lang="c_save"></button>
-				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close"></button>
+				<button id="cssSaveOrg" type="button" class="btn btn-primary lang btn-default" data-lang="c_save"></button>
 			</div>
 		</div>
 	</div>
+</div>
+
+<!-- Modal to add a new SMS number -->
+<div id="add_sms_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addSmsLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 id="addSmsLabel" class="modal-title lang" data-lang="c_phone"></h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			</div>
+			<div class="modal-body">
+
+				<form class="form" id="add_sms_form"  enctype="multipart/form-data" name="add_sms_form">
+					<div class="form-group row">
+						<label for="smsNumber" data-lang="c_phone" class="lang col-sm-4 control-label">port</label>
+						<div class="col-sm-6">
+							<input class="form-control" type="text" id="smsNumber">
+						</div>
+					</div>
+				</form>
+				<div class="add_sms_alert alert alert-success" role="alert" style="display:none;"></div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close"></button>
+				<button id="addSmsSave" type="button" class="btn btn-primary lang btn-default" data-lang="c_save"></button>
+			</div>
+		</div>
+	</div>
+</div>
 
 </body>
 </html>
