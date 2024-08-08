@@ -732,7 +732,7 @@
 						<form id="other_form">
 
 							<div class="form-group row">
-								<label for="s_p_strength" data-lang="u_mps" class="lang col-sm-4 control-label">strength</label>
+								<label for="o_p_strength" data-lang="u_mps" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-6">
 									<div class="input-group">
 										<input class="form-control" type="number" id="o_p_strength" tabindex="16">
@@ -841,7 +841,7 @@
 </div>
 
 <!-- Modal to add a new SMS number -->
-<div id="add_sms_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addSmsLabel" aria-hidden="true">
+<div id="add_sms_popup" class="modal fade"  role="dialog" aria-labelledby="addSmsLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -852,7 +852,7 @@
 
 				<form class="form" id="add_sms_form"  enctype="multipart/form-data" name="add_sms_form">
 					<div class="form-group row">
-						<label for="smsNumber" data-lang="c_phone" class="lang col-sm-4 control-label">port</label>
+						<label for="smsNumber" data-lang="c_phone" class="lang col-sm-4 control-label"></label>
 						<div class="col-sm-6">
 							<input class="form-control" type="text" id="smsNumber">
 						</div>
@@ -864,6 +864,36 @@
 			<div class="modal-footer">
 				<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close"></button>
 				<button id="addSmsSave" type="button" class="btn btn-primary lang btn-default" data-lang="c_save"></button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal to edit an SMS number -->
+<div id="edit_sms_popup" class="modal fade" role="dialog" aria-labelledby="editSmsLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 id="editSmsLabel" class="modal-title lang" data-lang="c_edit"></h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			</div>
+			<div class="modal-body">
+
+				<form class="form" id="edit_sms_form"  enctype="multipart/form-data" name="edit_sms_form">
+					<div class="form-group row d-none">
+						<label for="smsOrg" data-lang="c_organisation" class="lang col-sm-4 control-label"></label>
+						<div class="col-sm-6">
+							<input class="form-control" type="text" id="smsOrg">
+						</div>
+					</div>
+				</form>
+
+				<div class="edit_sms_alert alert alert-success" role="alert" style="display:none;"></div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close"></button>
+				<button id="editSmsSave" type="button" class="btn btn-primary lang btn-default" data-lang="c_save"></button>
 			</div>
 		</div>
 	</div>

@@ -95,39 +95,39 @@ require([
 		getOtherSettings();		// miscellaneous settings
 
 		// Set up the tabs
-		$('#appearanceTab a').click(function (e) {
+		$('#appearanceTab a').on('click', function (e) {
 			e.preventDefault();
 			panelChange($(this), 'appearance');
 		});
-		$('#serverTab a').click(function (e) {
+		$('#serverTab a').on('click',function (e) {
 			e.preventDefault();
 			panelChange($(this), 'server');
 		});
-		$('#deviceTab a').click(function (e) {
+		$('#deviceTab a').on('click',function (e) {
 			e.preventDefault();
 			panelChange($(this), 'device');
 		});
-		$('#webformTab a').click(function (e) {
+		$('#webformTab a').on('click',function (e) {
 			e.preventDefault();
 			panelChange($(this), 'webform');
 		});
-		$('#sensitiveTab a').click(function (e) {
+		$('#sensitiveTab a').on('click',function (e) {
 			e.preventDefault();
 			panelChange($(this), 'sensitive');
 		});
-		$('#caseManagementTab a').click(function (e) {
+		$('#caseManagementTab a').on('click',function (e) {
 			e.preventDefault();
 			panelChange($(this), 'caseManagement');
 		});
-		$('#emailTab a').click(function (e) {
+		$('#emailTab a').on('click',function (e) {
 			e.preventDefault();
 			panelChange($(this), 'email');
 		});
-		$('#smsTab a').click(function (e) {
+		$('#smsTab a').on('click',function (e) {
 			e.preventDefault();
 			panelChange($(this), 'sms');
 		});
-		$('#otherTab a').click(function (e) {
+		$('#otherTab a').on('click',function (e) {
 			e.preventDefault();
 			panelChange($(this), 'other');
 		});
@@ -658,7 +658,11 @@ require([
 			});
 		});
 
-});
+	});
+
+	function editNumber(idx) {
+		$('#edit_sms_popup').modal("show");
+	}
 
 	function deleteNumber(idx) {
 		addHourglass();
@@ -831,7 +835,7 @@ require([
 					if (xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						console.log("Error: Failed to get list of notifications: " + err);
+						console.log("Error: Failed to get list of sms numbers: " + err);
 					}
 				}
 			}
@@ -945,7 +949,7 @@ require([
 			$('#addNumber').show();
 		}
 
-		$(".rm_n", $selector).click(function(){
+		$(".rm_n", $selector).on('click',function(){
 			var idx = $(this).data("idx");
 			if(gNumbers.length > 0 && idx < gNumbers.length) {
 				if (confirm(localise.set["msg_del_nbr"] + ' ' + gNumbers[idx].ourNumber)) {
@@ -954,10 +958,8 @@ require([
 			}
 		});
 
-		$(".edit_n", $selector).click(function(){
-			var idx = $(this).data("idx");
-			edit_notification(true, idx, false);
-			$('#addNotificationPopup').modal("show");
+		$('.edit_n', $selector).on('click',function(){
+			editNumber($(this).data("idx"));
 		});
 
 	}
