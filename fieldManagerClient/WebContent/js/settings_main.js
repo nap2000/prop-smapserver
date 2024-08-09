@@ -86,7 +86,7 @@ require([
 
 		getSmsType();
 		getLoggedInUser(userKnown, false, false, undefined, false,
-			false, undefined, getServerDetails, getSMSNumbers);
+			false, undefined, getServerDetails, undefined);
 		getDeviceSettings();
 		getEmailSettings();
 		getWebformSettings();
@@ -122,10 +122,6 @@ require([
 		$('#emailTab a').on('click',function (e) {
 			e.preventDefault();
 			panelChange($(this), 'email');
-		});
-		$('#smsTab a').on('click',function (e) {
-			e.preventDefault();
-			panelChange($(this), 'sms');
 		});
 		$('#otherTab a').on('click',function (e) {
 			e.preventDefault();
@@ -569,11 +565,6 @@ require([
 			$('#upload_css_popup_org').modal("show");
 		});
 
-		$('#addNumber').click(function() {
-			$('.add_sms_alert').hide();
-			$('#add_sms_popup').modal("show");
-		});
-
 		$('#cssSave, #cssSaveOrg').click(function(){
 			let url = "/surveyKPI/css";
 			let f;
@@ -621,67 +612,9 @@ require([
 			});
 		});
 
-		/*
-		 * Add a new number
-		 */
-		$('#addSmsSave').click(function(){
-
-			var number = $('#smsNumber').val(),
-				smsString;
-
-			// TODO validate number
-			var sms = {
-				ourNumber: number
-			}
-
-			addHourglass();
-			$.ajax({
-				type: "POST",
-				dataType: 'text',
-				data: sms,
-				cache: false,
-				url: "/surveyKPI/smsnumbers/number",
-				success: function(data, status) {
-					removeHourglass();
-					getSMSNumbers();
-					if(handleLogout(data)) {
-						$('#add_sms_popup').modal("hide");
-					}
-				},
-				error: function(xhr, textStatus, err) {
-					removeHourglass();
-					if(handleLogout(xhr.responseText)) {
-						var msg = htmlEncode(xhr.responseText);
-						$('.add_sms_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
-					}
-				}
-			});
-		});
-
 	});
 
-	function editNumber(idx) {
-		$('#edit_sms_popup').modal("show");
-	}
 
-	function deleteNumber(idx) {
-		addHourglass();
-		$.ajax({
-			type: "DELETE",
-			cache: false,
-			url: "/surveyKPI/smsnumbers/number/" + gNumbers[idx].identifier,
-			success: function(data, status) {
-				removeHourglass();
-				getSMSNumbers();
-			},
-			error: function(xhr, textStatus, err) {
-				removeHourglass();
-				if(handleLogout(xhr.responseText)) {
-					alert(xhr.responseText);
-				}
-			}
-		});
-	}
 
 	function deleteCss(org) {
 		var url = "/surveyKPI/css/";
@@ -809,159 +742,6 @@ require([
 				}
 			}
 		});
-	}
-
-	/*
- 	 * Load the sms numbers from the server
- 	 */
-	function getSMSNumbers() {
-
-		var url="/surveyKPI/smsnumbers?tz=" + encodeURIComponent(globals.gTimezone);
-		addHourglass();
-		$.ajax({
-			url: url,
-			dataType: 'json',
-			cache: false,
-			success: function(data) {
-				removeHourglass();
-				if(handleLogout(data)) {
-					gNumbers = data;
-					updateSMSNumbersList(data);
-				}
-			},
-			error: function(xhr, textStatus, err) {
-				removeHourglass();
-				if(handleLogout(xhr.responseText)) {
-					if (xhr.readyState == 0 || xhr.status == 0) {
-						return;  // Not an error
-					} else {
-						console.log("Error: Failed to get list of sms numbers: " + err);
-					}
-				}
-			}
-		});
-	}
-
-	/*
-	 * Update server data
-	 */
-	function updateSMSNumbersList(data) {
-		var $selector=$('#smsnumber_list'),
-			i,
-			h = [],
-			idx = -1;
-
-		h[++idx] = '<div class="table-responsive">';
-		h[++idx] = '<table class="table table-striped">';
-
-		h[++idx] = '<thead>';
-		h[++idx] = '<tr>';
-
-		h[++idx] = '<th scope="col" style="text-align: center;">';
-		h[++idx] = localise.set["c_phone"];
-		h[++idx] = '</th>';
-
-		h[++idx] = '<th scope="col" style="text-align: center;">';
-		h[++idx] = localise.set["c_org"];
-		h[++idx] = '</th>';
-
-		h[++idx] = '<th scope="col" style="text-align: center;">';
-		h[++idx] = localise.set["c_survey"];
-		h[++idx] = '</th>';
-
-		h[++idx] = '<th scope="col" style="text-align: center;">';
-		h[++idx] = localise.set["sms_their_q"];
-		h[++idx] = '</th>';
-
-		h[++idx] = '<th scope="col" style="text-align: center;">';
-		h[++idx] = localise.set["sms_conv_q"];
-		h[++idx] = '</th>';
-
-		h[++idx] = '<th scope="col" style="text-align: center;">';
-		h[++idx] = localise.set["c_action"];
-		h[++idx] = '</th>';
-
-		h[++idx] = '</tr>';
-		h[++idx] = '</thead>';
-
-		h[++idx] = '<tbody>';
-		for(i = 0; i < data.length; i++) {
-
-			h[++idx] = '<tr>';
-
-			// number
-			h[++idx] = '<td style="text-align: center;">';
-			h[++idx] = htmlEncode(data[i].ourNumber);
-			h[++idx] = '</td>';
-
-			// orgName
-			h[++idx] = '<td style="text-align: center;">';
-			h[++idx] = htmlEncode(data[i].orgName);
-			h[++idx] = '</td>';
-
-			// surveyName
-			h[++idx] = '<td style="text-align: center;">';
-			h[++idx] = htmlEncode(data[i].surveyName);
-			h[++idx] = '</td>';
-
-			// Their number question
-			h[++idx] = '<td style="text-align: center;">';
-			h[++idx] = htmlEncode(data[i].theirNumberQuestion);
-			h[++idx] = '</td>';
-
-			// Conversation question
-			h[++idx] = '<td style="text-align: center;">';
-			h[++idx] = htmlEncode(data[i].messageQuestion);
-			h[++idx] = '</td>';
-
-			// actions
-			h[++idx] = '<td style="text-align: center;">';
-			h[++idx] = '<div class="d-flex">';
-
-			if(globals.gIsServerOwner) {	// Only allow system owners to delete
-				h[++idx] = '<button type="button" data-idx="';
-				h[++idx] = i;
-				h[++idx] = '" class="btn btn-danger btn-sm rm_n mr-2">';
-				h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
-			}
-
-			h[++idx] = '<button type="button" data-idx="';
-			h[++idx] = i;
-			h[++idx] = '" class="btn btn-info btn-sm edit_n">';
-			h[++idx] = '<i class="fa fa-edit"></i></button>';
-
-			h[++idx] = '</div>';
-			h[++idx] = '</td>';
-			// end actions
-
-			h[++idx] = '</tr>';
-		}
-		h[++idx] = '</tbody>';
-		h[++idx] = '</table>';
-		h[++idx] = '</div>';
-
-		$selector.empty().append(h.join(''));
-
-		/*
-		 * Enable the add button for server admins
-		 */
-		if(globals.gIsServerOwner) {
-			$('#addNumber').show();
-		}
-
-		$(".rm_n", $selector).on('click',function(){
-			var idx = $(this).data("idx");
-			if(gNumbers.length > 0 && idx < gNumbers.length) {
-				if (confirm(localise.set["msg_del_nbr"] + ' ' + gNumbers[idx].ourNumber)) {
-					deleteNumber(idx);
-				}
-			}
-		});
-
-		$('.edit_n', $selector).on('click',function(){
-			editNumber($(this).data("idx"));
-		});
-
 	}
 
 	/*
