@@ -541,6 +541,7 @@ define({
     "msg_sel_dates": "From date is greater than To date",
 	"msg_no_from": "If you specify the scheduled end date, then also specify the scheduled start date",
     "msg_sel_q": "You must select a question to show on a graph",
+    "msg_so": "Number details can only be edited when you are in the organisation that the number is assigned to",
     "msg_val_prot": "Protocol (http:// or https://) must be specified with the hostname",
     "msg_val_p": "A project must be selected for this form",
     "msg_val_rf": "You must select a remote form",

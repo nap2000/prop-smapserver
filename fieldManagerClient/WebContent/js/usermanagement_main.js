@@ -918,8 +918,8 @@ require([
  		 */
 		$('#addSmsSave').click(function(){
 
-			var number = $('#smsNumber').val(),
-				org = $('#smsOrganisation').val();
+			var number = $('#addSmsNumber').val(),
+				org = $('#addSmsOrganisation').val();
 
 			// TODO validate number
 			var sms = {
@@ -2999,6 +2999,14 @@ require([
 
 	function editNumber(idx) {
 		$('.edit_number').text(gNumbers[idx].ourNumber);
+		$('#smsOrganisation').val(gNumbers[idx].oId);
+		if(gNumbers[idx].oId === globals.gOrgId) {
+			$('.sameOrg').show();
+			$('.diffOrg').hide();
+		} else {
+			$('.sameOrg').hide();
+			$('.diffOrg').show();
+		}
 		$('#edit_sms_popup').modal("show");
 	}
 
