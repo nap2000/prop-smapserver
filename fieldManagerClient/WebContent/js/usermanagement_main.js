@@ -919,11 +919,12 @@ require([
 		$('#addSmsSave').click(function(){
 
 			var number = $('#smsNumber').val(),
-				smsString;
+				org = $('#smsOrganisation').val();
 
 			// TODO validate number
 			var sms = {
-				ourNumber: number
+				ourNumber: number,
+				oId: org
 			}
 
 			addHourglass();
@@ -1043,7 +1044,8 @@ require([
 			success: function(data) {
 				removeHourglass();
 				globals.gProjectList = data;
-				updateProjectList(true, 0);
+				updateProjectList(true, 0, undefined, $('.project_list'));
+				updateProjectList(false, 0, undefined, $('.project_list_min'));
 				updateProjectTable();
 			},
 			error: function(xhr, textStatus, err) {
@@ -2977,7 +2979,7 @@ require([
 		 * Enable the add button for server admins
 		 */
 		if(globals.gIsServerOwner) {
-			$('#addNumber').show();
+			$('.ownerOnly').show();
 		}
 
 		$(".rm_n", $selector).on('click',function(){
@@ -2996,6 +2998,7 @@ require([
 	}
 
 	function editNumber(idx) {
+		$('.edit_number').text(gNumbers[idx].ourNumber);
 		$('#edit_sms_popup').modal("show");
 	}
 

@@ -88,10 +88,9 @@ function removePendingTask(taskId, source) {
  * Note when addAll is set to true the list is not used to change the default project
  *   In this case the value of the list should not be set to the default project
  */
-function updateProjectList(addAll, projectId, callback) {
+function updateProjectList(addAll, projectId, callback, $projectSelect) {
 
-	var $projectSelect = $('.project_list'),
-		i,
+	var i,
 		h = [],
 		idx = -1,
 		updateCurrentProject = true;
@@ -153,7 +152,7 @@ function getMyProjects(projectId, callback, getAll) {
 			removeHourglass();
 			if(handleLogout(data)) {
 				globals.gProjectList = data;
-				updateProjectList(getAll, projectId, callback);
+				updateProjectList(getAll, projectId, callback, $('.project_list'));
 			}
 		},
 		error: function(xhr, textStatus, err) {

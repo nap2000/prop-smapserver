@@ -242,7 +242,7 @@
 				<div id="smsPanel" style="display:none;" class="usertab mt-4">
 
 					<div class="card-header">
-						<button id="addNumber" type="button" class="btn btn-success lang" aria-label="Add Number" data-lang="c_add" style="display:none;">add</button>
+						<button id="addNumber" type="button" class="btn btn-success lang ownerOnly" aria-label="Add Number" data-lang="c_add" style="display:none;">add</button>
 					</div>
 					<div class="card-body">
 						<div id="smsnumber_list"></div>
@@ -983,6 +983,13 @@
 							<input class="form-control" type="text" id="smsNumber">
 						</div>
 					</div>
+
+					<div class="form-group row">
+						<label for="smsOrganisation" data-lang="c_org" class="lang col-sm-4 control-label"></label>
+						<div class="col-sm-6">
+							<select id="smsOrganisation" class="organisation_select form-control"></select>
+						</div>
+					</div>
 				</form>
 				<div class="add_sms_alert alert alert-success" role="alert" style="display:none;"></div>
 
@@ -1000,16 +1007,30 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 id="editSmsLabel" class="modal-title lang" data-lang="c_edit"></h4>
+				<h4 id="editSmsLabel" class="modal-title" ><span class="lang" data-lang="c_edit"></span> <span class="edit_number"></span></h4>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			</div>
 			<div class="modal-body">
 
 				<form class="form" id="edit_sms_form"  enctype="multipart/form-data" name="edit_sms_form">
 					<div class="form-group row">
-						<label for="sms_organisation" class="col-sm-2 control-label"></label>
+						<label for="sms_organisation" class="lang col-sm-2 control-label owner only" data-lang="c_org"></label>
 						<div class="col-sm-10">
 							<select id="sms_organisation" class="organisation_select form-control"></select>
+						</div>
+					</div>
+
+					<div class="currentOrgOnly form-group row">
+						<label for="smsProject" class="lang col-sm-2 control-label" data-lang="c_project"></label>
+						<div class="col-sm-10">
+							<select id="smsProject" class="project_list_min form-control"></select>
+						</div>
+					</div>
+
+					<div class="currentOrgOnly form-group row">
+						<label for="smsSurvey" class="lang col-sm-2 control-label" data-lang="c_survey"></label>
+						<div class="col-sm-10">
+							<select id="smsSurvey" class="survey_select form-control"></select>
 						</div>
 					</div>
 				</form>
