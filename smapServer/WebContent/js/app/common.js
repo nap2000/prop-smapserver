@@ -1655,6 +1655,7 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx, 
 		if(getDeleted) {
 			url+="&deleted=true";
 		}
+		
 		addHourglass();
 
 		$.ajax({

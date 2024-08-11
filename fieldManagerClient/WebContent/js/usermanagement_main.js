@@ -914,6 +914,10 @@ require([
 			$('#add_sms_popup').modal("show");
 		});
 
+		$('#smsProject').change(function() {
+			loadSurveys($(this).val(), undefined, false, false, undefined, false, 0, true);			// Get surveys
+		});
+
 		/*
  		 * Add a new number
  		 */
@@ -922,7 +926,7 @@ require([
 			var number = $('#addSmsNumber').val(),
 				org = $('#addSmsOrganisation').val();
 
-			// TODO validate number
+			// TODO validate
 			var sms = {
 				ourNumber: number,
 				oId: org
@@ -957,12 +961,14 @@ require([
 		$('#editSmsSave').click(function(){
 
 			var number = gNumbers[gNumberIdx].ourNumber,
-				org = $('#smsOrganisation').val();
+				org = $('#smsOrganisation').val(),
+				sId = $('#smsSurvey').val();
 
 			// TODO validate number
 			var sms = {
 				ourNumber: number,
-				oId: org
+				oId: org,
+				sId: sId
 			}
 
 			addHourglass();
