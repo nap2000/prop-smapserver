@@ -240,7 +240,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             globals.gCurrentTaskGroup = undefined;
             $('#survey').val("_all");
 
-            loadSurveys(globals.gCurrentProject, undefined, false, true, undefined, false);			// Get surveys
+            loadSurveys(globals.gCurrentProject, undefined, false, true, undefined, false, undefined, undefined);			// Get surveys
 
             saveCurrentProject(globals.gCurrentProject,
                 globals.gCurrentSurvey,

@@ -174,7 +174,7 @@ require([
 
         if(globals.gCurrentProject !== "0") {
 
-	        loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChangedApi, false);
+	        loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChangedApi, false, undefined, undefined);
 	        saveCurrentProject(globals.gCurrentProject, globals.gCurrentSurvey, globals.gCurrentTaskGroup);
 	        $('.project_selected').show();
         } else {

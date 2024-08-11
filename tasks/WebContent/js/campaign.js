@@ -371,7 +371,7 @@ require([
 
 		globals.gCurrentProject = $('#project_name option:selected').val();
 
-		loadSurveys(globals.gCurrentProject, undefined, false, false, surveysLoaded, true);			// Get surveys
+		loadSurveys(globals.gCurrentProject, undefined, false, false, surveysLoaded, true, undefined, undefined);			// Get surveys
 
 		clearMailoutStatus();
 

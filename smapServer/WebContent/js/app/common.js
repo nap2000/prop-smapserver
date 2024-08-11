@@ -1642,7 +1642,7 @@ function removeHourglass() {
 /*
  * Load the surveys from the server
  */
-function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx) {
+function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx, sId, addNone) {
 
 	var url="/surveyKPI/surveys?projectId=" + projectId + "&blocked=true";
 
@@ -1650,7 +1650,7 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx) 
 		selector = ".survey_select";	// Update the entire class of survey select controls
 	}
 
-	if(typeof projectId !== "undefined" && projectId != -1 && projectId != 0) {
+	if(typeof projectId !== "undefined" && projectId > 0) {
 
 		if(getDeleted) {
 			url+="&deleted=true";
@@ -1667,9 +1667,9 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx) 
 					var sel = selector;
 					var all = addAll;
 
-					showSurveyList(data, sel + ".data_survey", all, true, false, useIdx);
-					showSurveyList(data, sel + ".oversight_survey", all, false, true, useIdx);
-					showSurveyList(data, sel + ".data_oversight_survey", all, true, true, useIdx);
+					showSurveyList(data, sel + ".data_survey", all, true, false, useIdx, sId, addNone);
+					showSurveyList(data, sel + ".oversight_survey", all, false, true, useIdx, sId, addNone);
+					showSurveyList(data, sel + ".data_oversight_survey", all, true, true, useIdx, sId, addNone);
 
 					if (typeof callback == "function") {
 						callback(data);
@@ -1704,7 +1704,7 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx) 
 /*
  * Show the surveys in select boxes
  */
-function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, useIdx) {
+function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, useIdx, sId, addNone) {
 
 	var i,
 		item,
@@ -1727,6 +1727,11 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 		selValue = "_all";
 		valueSelected = true;
 	}
+	if(addNone) {
+		h[++idx] = '<option value="0">';
+		h[++idx] = localise.set["c_none"];		// All Surveys
+		h[++idx] = '</option>';
+	}
 
 	for(i = 0; i < data.length; i++) {
 		item = data[i];
@@ -1748,8 +1753,14 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 			}
 			h[++idx] = '</option>';
 		}
-		if(globals.gCurrentSurvey > 0 && globals.gCurrentSurvey === item.id) {
-			selValue = useIdx ? i : item.id;
+		if(typeof sid === 'unddefined') {
+			if (globals.gCurrentSurvey > 0 && globals.gCurrentSurvey === item.id) {
+				selValue = useIdx ? i : item.id;
+			}
+		} else {
+			if (sId > 0 && sId === item.id) {
+				selValue = useIdx ? i : item.id;
+			}
 		}
 	}
 

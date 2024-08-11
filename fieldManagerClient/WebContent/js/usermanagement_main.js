@@ -76,6 +76,7 @@ require([
 		gCurrentDeleteUsers,    // Users that have been selected for deletion, waiting on approval
 		gOrgId,
 		gSmsType,
+		gNumberIdx,
 		gPanel;
 
 	var limitTypes = [
@@ -933,24 +934,60 @@ require([
 				dataType: 'text',
 				data: sms,
 				cache: false,
-				url: "/surveyKPI/smsnumbers/number",
+				url: "/surveyKPI/smsnumbers/number/add",
 				success: function(data, status) {
 					removeHourglass();
-					getSMSNumbers();
 					if(handleLogout(data)) {
+						getSMSNumbers();
 						$('#add_sms_popup').modal("hide");
 					}
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
 					if(handleLogout(xhr.responseText)) {
-						var msg = htmlEncode(xhr.responseText);
-						$('.add_sms_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
+						$('.add_sms_alert').show().removeClass('alert-success').addClass('alert-danger').html(htmlEncode(xhr.responseText));
 					}
 				}
 			});
 		});
 
+		/*
+  		 * Edit a number
+  		 */
+		$('#editSmsSave').click(function(){
+
+			var number = gNumbers[gNumberIdx].ourNumber,
+				org = $('#smsOrganisation').val();
+
+			// TODO validate number
+			var sms = {
+				ourNumber: number,
+				oId: org
+			}
+
+			addHourglass();
+			$.ajax({
+				type: "POST",
+				dataType: 'text',
+				data: sms,
+				cache: false,
+				url: "/surveyKPI/smsnumbers/number/edit",
+				success: function(data, status) {
+					removeHourglass();
+					if(handleLogout(data)) {
+						getSMSNumbers();
+						$('#edit_sms_popup').modal("hide");
+					}
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+					if(handleLogout(xhr.responseText)) {
+						var msg = htmlEncode(xhr.responseText);
+						$('.edit_sms_alert').show().removeClass('alert-success').addClass('alert-danger').html(msg);
+					}
+				}
+			});
+		});
 	});
 
 	/*
@@ -2998,11 +3035,19 @@ require([
 	}
 
 	function editNumber(idx) {
+		gNumberIdx = idx;
 		$('.edit_number').text(gNumbers[idx].ourNumber);
 		$('#smsOrganisation').val(gNumbers[idx].oId);
 		if(gNumbers[idx].oId === globals.gOrgId) {
 			$('.sameOrg').show();
 			$('.diffOrg').hide();
+
+			// Get the surveys for current project
+			if(gNumbers[idx].pId > 0) {
+				$('#smsProject').val(gNumbers[idx].pId);
+			}
+			loadSurveys(gNumbers[idx].pId, undefined, false, false, undefined, false, gNumbers[idx].sId, true);			// Get surveys
+
 		} else {
 			$('.sameOrg').hide();
 			$('.diffOrg').show();
@@ -3018,7 +3063,9 @@ require([
 			url: "/surveyKPI/smsnumbers/number/" + gNumbers[idx].identifier,
 			success: function(data, status) {
 				removeHourglass();
-				getSMSNumbers();
+				if(handleLogout(data)) {
+					getSMSNumbers();
+				}
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
