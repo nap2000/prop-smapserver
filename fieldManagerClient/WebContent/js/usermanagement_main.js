@@ -915,7 +915,7 @@ require([
 		});
 
 		$('#smsProject').change(function() {
-			loadSurveys($(this).val(), undefined, false, false, undefined, false, 0, true);			// Get surveys
+			loadSurveyIdentList($(this).val(), gNumbers[gNumberIdx].surveyIdent,false, true);			// Get surveys
 		});
 
 		/*

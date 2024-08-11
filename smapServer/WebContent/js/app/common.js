@@ -1655,7 +1655,7 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx, 
 		if(getDeleted) {
 			url+="&deleted=true";
 		}
-		
+
 		addHourglass();
 
 		$.ajax({
@@ -1703,6 +1703,43 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx, 
 }
 
 /*
+ * Load the surveys from the server
+ */
+function loadSurveyIdentList(projectId, sIdent, addAll, addNone) {
+
+	var url="/surveyKPI/surveys/project/" + projectId;
+	var selector = ".survey_select";
+
+	if(typeof projectId !== "undefined" && projectId > 0) {
+		addHourglass();
+		$.ajax({
+			url: url,
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				if(handleLogout(data)) {
+					var sel = selector;
+
+					showIdentSurveyList(data, sel, addAll, sIdent, addNone);
+
+				}
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						console.log("Error: Failed to get list of surveys: " + err);
+					}
+				}
+			}
+		});
+	}
+}
+
+/*
  * Show the surveys in select boxes
  */
 function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, useIdx, sId, addNone) {
@@ -1730,7 +1767,7 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 	}
 	if(addNone) {
 		h[++idx] = '<option value="0">';
-		h[++idx] = localise.set["c_none"];		// All Surveys
+		h[++idx] = localise.set["c_none"];		// No survey
 		h[++idx] = '</option>';
 	}
 
@@ -1770,6 +1807,51 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 	$("option.blocked", $elem_disable_blocked).attr("disabled", "disabled");
 
 }
+
+/*
+ * Show the surveys in select boxes
+ */
+function showIdentSurveyList(data, selector, addAll, sIdent, addNone) {
+
+	var i,
+		item,
+		h = [],
+		idx = -1,
+		$elem;
+
+	$elem = $(selector);
+
+	$elem.empty();
+	if(addAll) {
+		h[++idx] = '<option value="_all">';
+		h[++idx] = localise.set["c_all_s"];		// All Surveys
+		h[++idx] = '</option>';
+	}
+	if(addNone) {
+		h[++idx] = '<option value="_none">';
+		h[++idx] = localise.set["c_none"];		// No Survey
+		h[++idx] = '</option>';
+	}
+
+	for(i = 0; i < data.length; i++) {
+		item = data[i];
+		h[++idx] = '<option';
+		h[++idx] = ' value="';
+		h[++idx] = item.ident;
+		h[++idx] = '">';
+		h[++idx] = htmlEncode(item.name);
+		h[++idx] = '</option>';
+	}
+
+	$elem.empty().append(h.join(''));
+	if(sIdent) {
+		$elem.val(sIdent);
+	} else {
+		$elem.val("_none");
+	}
+
+}
+
 
 // Common Function to get the language and question list (for the default language)
 function getLanguageList(sId, callback, addNone, selector, setGroupList, filterQuestion) {
