@@ -917,6 +917,9 @@ require([
 		$('#smsProject').change(function() {
 			loadSurveyIdentList($(this).val(), gNumbers[gNumberIdx].surveyIdent,false, true);			// Get surveys
 		});
+		$('#smsSurvey').change(function() {
+			getQuestionsInSurvey($('.select_question'), undefined, $(this).val(), true, true, undefined, false);
+		});
 
 		/*
  		 * Add a new number
@@ -962,7 +965,9 @@ require([
 
 			var number = gNumbers[gNumberIdx].ourNumber,
 				org = $('#smsOrganisation').val(),
-				sIdent = $('#smsSurvey').val();
+				sIdent = $('#smsSurvey').val(),
+				theirNumberQuestion = $('#theirNumberQuestion').val(),
+				messageQuestion = $('#messageQuestion').val();
 
 			if(sIdent === "_none") {
 				sIdent = undefined;
@@ -972,9 +977,8 @@ require([
 				ourNumber: number,
 				oId: org,
 				sIdent: sIdent,
-				sIdent: sIdent,
-				theirNumberQuestion: undefined,
-				messageQuestion: undefined
+				theirNumberQuestion: theirNumberQuestion,
+				messageQuestion: messageQuestion
 			}
 
 			addHourglass();
@@ -3062,6 +3066,7 @@ require([
 			if(pId > 0) {
 				$('#smsProject').val(pId);
 				loadSurveyIdentList(pId, gNumbers[gNumberIdx].surveyIdent,false, true);			// Get surveys
+				getQuestionsInSurvey($('.select_question'), undefined, gNumbers[gNumberIdx].surveyIdent, true, true, setQuestionNames, false);
 			}
 
 		} else {
@@ -3090,6 +3095,11 @@ require([
 				}
 			}
 		});
+	}
+
+	function setQuestionNames() {
+		$('#theirNumberQuestion').val(gNumbers[gNumberIdx].theirNumberQuestion);
+		$('#messageQuestion').val(gNumbers[gNumberIdx].messageQuestion);
 	}
 });
 
