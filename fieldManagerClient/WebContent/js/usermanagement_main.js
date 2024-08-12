@@ -962,13 +962,19 @@ require([
 
 			var number = gNumbers[gNumberIdx].ourNumber,
 				org = $('#smsOrganisation').val(),
-				sId = $('#smsSurvey').val();
+				sIdent = $('#smsSurvey').val();
 
+			if(sIdent === "_none") {
+				sIdent = undefined;
+			}
 			// TODO validate number
 			var sms = {
 				ourNumber: number,
 				oId: org,
-				sId: sId
+				sIdent: sIdent,
+				sIdent: sIdent,
+				theirNumberQuestion: undefined,
+				messageQuestion: undefined
 			}
 
 			addHourglass();
@@ -3049,10 +3055,14 @@ require([
 			$('.diffOrg').hide();
 
 			// Get the surveys for current project
-			if(gNumbers[idx].pId > 0) {
-				$('#smsProject').val(gNumbers[idx].pId);
+			var pId = gNumbers[idx].pId;
+			if(pId <= 0) {
+				pId = $('#smsProject').val();
 			}
-			loadSurveys(gNumbers[idx].pId, undefined, false, false, undefined, false, gNumbers[idx].sId, true);			// Get surveys
+			if(pId > 0) {
+				$('#smsProject').val(pId);
+				loadSurveyIdentList(pId, gNumbers[gNumberIdx].surveyIdent,false, true);			// Get surveys
+			}
 
 		} else {
 			$('.sameOrg').hide();
