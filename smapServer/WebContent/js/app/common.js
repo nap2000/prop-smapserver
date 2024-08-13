@@ -773,10 +773,7 @@ function enableUserProfile () {
 					text: "Save",
 					click: function() {
 
-						var user = globals.gLoggedInUser,
-							userList = [],
-							error = false,
-							userList;
+						var user = globals.gLoggedInUser;
 
 						user.name = $('#me_name').val();
 						user.language = $('#me_language').val();
@@ -784,7 +781,6 @@ function enableUserProfile () {
 						if($('#me_password').is(':visible')) {
 							user.password = $('#me_password').val();
 							if($('#me_password_confirm').val() !== user.password) {
-								error = true;
 								user.password = undefined;
 								alert("Passwords do not match");
 								$('#me_password').focus();
@@ -1029,8 +1025,8 @@ function saveCurrentUser(user, $dialog) {
 					}
 				} else if ($dialog) {
 					$dialog.modal("hide");
-					updateUserDetails(data, undefined);
 				}
+				updateUserDetails(data, undefined);
 			}
 
 		}, error: function(data, status) {
