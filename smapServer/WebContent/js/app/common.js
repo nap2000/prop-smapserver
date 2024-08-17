@@ -24,7 +24,7 @@ var gCacheKeys = {};
 var gEligibleUser;
 var gSelectedOversightQuestion;
 var gSelectedOversightSurvey;
-
+var gConversationalSMS;	// Set true if a conversational SMS choice has been added to notification types
 
 /*
  * Convert a choice list name into a valid jquery class name
@@ -88,10 +88,9 @@ function removePendingTask(taskId, source) {
  * Note when addAll is set to true the list is not used to change the default project
  *   In this case the value of the list should not be set to the default project
  */
-function updateProjectList(addAll, projectId, callback) {
+function updateProjectList(addAll, projectId, callback, $projectSelect) {
 
-	var $projectSelect = $('.project_list'),
-		i,
+	var i,
 		h = [],
 		idx = -1,
 		updateCurrentProject = true;
@@ -153,7 +152,7 @@ function getMyProjects(projectId, callback, getAll) {
 			removeHourglass();
 			if(handleLogout(data)) {
 				globals.gProjectList = data;
-				updateProjectList(getAll, projectId, callback);
+				updateProjectList(getAll, projectId, callback, $('.project_list'));
 			}
 		},
 		error: function(xhr, textStatus, err) {
@@ -1112,7 +1111,7 @@ function setupUserProfile(bs4) {
 }
 
 function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hideUserDetails,
-                         dontGetCurrentSurvey, getEnterprisesFn, getServerDetailsFn) {
+                         dontGetCurrentSurvey, getEnterprisesFn, getServerDetailsFn, getSMSNumbers) {
 	addHourglass();
 	$.ajax({
 		url: "/surveyKPI/user",
@@ -1149,6 +1148,10 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 
 				if (!hideUserDetails) {
 					updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServerDetailsFn);
+				}
+
+				if(getSMSNumbers) {
+					getSMSNumbers();
 				}
 
 				if (!dontGetCurrentSurvey) {	// Hack, on edit screen current survey is set as parameter not from the user's defaults
@@ -1635,7 +1638,7 @@ function removeHourglass() {
 /*
  * Load the surveys from the server
  */
-function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx) {
+function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx, sId, addNone) {
 
 	var url="/surveyKPI/surveys?projectId=" + projectId + "&blocked=true";
 
@@ -1643,11 +1646,12 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx) 
 		selector = ".survey_select";	// Update the entire class of survey select controls
 	}
 
-	if(typeof projectId !== "undefined" && projectId != -1 && projectId != 0) {
+	if(typeof projectId !== "undefined" && projectId > 0) {
 
 		if(getDeleted) {
 			url+="&deleted=true";
 		}
+
 		addHourglass();
 
 		$.ajax({
@@ -1660,9 +1664,9 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx) 
 					var sel = selector;
 					var all = addAll;
 
-					showSurveyList(data, sel + ".data_survey", all, true, false, useIdx);
-					showSurveyList(data, sel + ".oversight_survey", all, false, true, useIdx);
-					showSurveyList(data, sel + ".data_oversight_survey", all, true, true, useIdx);
+					showSurveyList(data, sel + ".data_survey", all, true, false, useIdx, sId, addNone);
+					showSurveyList(data, sel + ".oversight_survey", all, false, true, useIdx, sId, addNone);
+					showSurveyList(data, sel + ".data_oversight_survey", all, true, true, useIdx, sId, addNone);
 
 					if (typeof callback == "function") {
 						callback(data);
@@ -1695,9 +1699,46 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx) 
 }
 
 /*
+ * Load the surveys from the server
+ */
+function loadSurveyIdentList(projectId, sIdent, addAll, addNone) {
+
+	var url="/surveyKPI/surveys/project/" + projectId;
+	var selector = ".survey_select";
+
+	if(typeof projectId !== "undefined" && projectId > 0) {
+		addHourglass();
+		$.ajax({
+			url: url,
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				if(handleLogout(data)) {
+					var sel = selector;
+
+					showIdentSurveyList(data, sel, addAll, sIdent, addNone);
+
+				}
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						console.log("Error: Failed to get list of surveys: " + err);
+					}
+				}
+			}
+		});
+	}
+}
+
+/*
  * Show the surveys in select boxes
  */
-function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, useIdx) {
+function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, useIdx, sId, addNone) {
 
 	var i,
 		item,
@@ -1720,6 +1761,11 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 		selValue = "_all";
 		valueSelected = true;
 	}
+	if(addNone) {
+		h[++idx] = '<option value="0">';
+		h[++idx] = localise.set["c_none"];		// No survey
+		h[++idx] = '</option>';
+	}
 
 	for(i = 0; i < data.length; i++) {
 		item = data[i];
@@ -1741,8 +1787,14 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 			}
 			h[++idx] = '</option>';
 		}
-		if(globals.gCurrentSurvey > 0 && globals.gCurrentSurvey === item.id) {
-			selValue = useIdx ? i : item.id;
+		if(typeof sid === 'unddefined') {
+			if (globals.gCurrentSurvey > 0 && globals.gCurrentSurvey === item.id) {
+				selValue = useIdx ? i : item.id;
+			}
+		} else {
+			if (sId > 0 && sId === item.id) {
+				selValue = useIdx ? i : item.id;
+			}
 		}
 	}
 
@@ -1751,6 +1803,51 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 	$("option.blocked", $elem_disable_blocked).attr("disabled", "disabled");
 
 }
+
+/*
+ * Show the surveys in select boxes
+ */
+function showIdentSurveyList(data, selector, addAll, sIdent, addNone) {
+
+	var i,
+		item,
+		h = [],
+		idx = -1,
+		$elem;
+
+	$elem = $(selector);
+
+	$elem.empty();
+	if(addAll) {
+		h[++idx] = '<option value="_all">';
+		h[++idx] = localise.set["c_all_s"];		// All Surveys
+		h[++idx] = '</option>';
+	}
+	if(addNone) {
+		h[++idx] = '<option value="_none">';
+		h[++idx] = localise.set["c_none"];		// No Survey
+		h[++idx] = '</option>';
+	}
+
+	for(i = 0; i < data.length; i++) {
+		item = data[i];
+		h[++idx] = '<option';
+		h[++idx] = ' value="';
+		h[++idx] = item.ident;
+		h[++idx] = '">';
+		h[++idx] = htmlEncode(item.name);
+		h[++idx] = '</option>';
+	}
+
+	$elem.empty().append(h.join(''));
+	if(sIdent) {
+		$elem.val(sIdent);
+	} else {
+		$elem.val("_none");
+	}
+
+}
+
 
 // Common Function to get the language and question list (for the default language)
 function getLanguageList(sId, callback, addNone, selector, setGroupList, filterQuestion) {
@@ -4861,7 +4958,7 @@ function edit_notification(edit, idx, console) {
 }
 
 function setTargetDependencies(target) {
-	$('.sms_options, .webhook_options, .email_options, .escalate_options').hide();
+	$('.sms_options, .webhook_options, .email_options, .escalate_options, .conv_options').hide();
 	if(target === "email") {
 		$('.email_options').show();
 	} else if(target === "sms") {
@@ -4870,6 +4967,8 @@ function setTargetDependencies(target) {
 		$('.webhook_options').show();
 	} else if(target  === "escalate") {
 		$('.escalate_options,.email_options').show();
+	} else if(target  === "conversation") {
+		$('.conv_options').show();
 	}
 }
 
@@ -4931,17 +5030,18 @@ function updateNotificationTypes(data) {
 	}
 
 	$selector.empty().append(h.join(''));
+	gConversationalSMS = false;
 
 }
 
 /*
  * Load the existing notifications from the server
  */
-function getNotificationTypes() {
+function getNotificationTypes(page) {
 
 	addHourglass();
 	$.ajax({
-		url: '/surveyKPI/notifications/types',
+		url: '/surveyKPI/notifications/types?page=' + page,
 		dataType: 'json',
 		cache: false,
 		success: function(data) {
@@ -4950,6 +5050,9 @@ function getNotificationTypes() {
 				window.gNotificationTypes = data;
 				if (data) {
 					updateNotificationTypes(data);
+					if(gTasks && gTasks.cache && gTasks.cache.currentData) {
+						updateConversationalSMS(gTasks.cache.currentData.sms);
+					}
 				}
 			}
 		},
@@ -4964,6 +5067,25 @@ function getNotificationTypes() {
 			}
 		}
 	});
+}
+
+/*
+ * Update anything related to using conversations and SMS
+ */
+function updateConversationalSMS(sms) {
+	if(sms && !gConversationalSMS) {  // Add if there is SMS data associated with this survey and the type has not already been added
+		var $selector=$('#target'),
+			h = [],
+			idx = -1;
+
+
+		h[++idx] = '<option value="conversation">';
+		h[++idx] = localise.set["c_conversation"];
+		h[++idx] = '</option>';
+
+		$selector.append(h.join(''));
+		gConversationalSMS = true;
+	}
 }
 
 function setupNotificationDialog() {
@@ -5139,6 +5261,23 @@ function saveDocument() {
 	notification.target = "document";
 	notification.notifyDetails = {};
 
+	return notification;
+}
+
+/*
+ * Process a save notification when the target is "conversation"
+ */
+function saveConversation(columns, numberQuestion, ourNumber, record) {
+
+	var notification = {};
+
+	notification.target = "conversation";
+	notification.notifyDetails = {};
+	notification.notifyDetails.content = $('#conversation_text').val();
+
+	var columnName = getConsoleColumnName(columns, numberQuestion);
+	notification.notifyDetails.emails = [record[columnName]];		// Must be sent as an array
+	notification.notifyDetails.ourNumber = ourNumber;
 
 	return notification;
 }
@@ -5194,6 +5333,20 @@ function saveEscalate() {
 	}
 
 	return notification;
+}
+
+function getConsoleColumnName(columns, questionName) {
+	var columnName,
+		i;
+	if(columns) {
+		for(i = 0; i < columns.length; i++) {
+			if(columns[i].question_name === questionName) {
+				columnName = columns[i].column_name;
+				break;
+			}
+		}
+	}
+	return columnName;
 }
 
 function getTaskGroupIndex(tgId) {

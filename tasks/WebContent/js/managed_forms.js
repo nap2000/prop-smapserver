@@ -256,7 +256,7 @@ require([
         getLocations(processLocationList);
 
         // Get Notification Types for this server
-        getNotificationTypes();
+        getNotificationTypes("console");
 
         // Set response to clearing single record view
         $('#clear_srview').click(function() {
@@ -965,7 +965,7 @@ require([
 
     /*
      * Load the chart definitions from the server
-    */
+     */
     function updateCharts(charts) {
         var i;
         chart.clear();
@@ -973,7 +973,6 @@ require([
             chart.add(charts[i]);
         }
         setupChartEdit();
-
     }
 
     function setupChartEdit() {
@@ -1728,6 +1727,7 @@ require([
         if (typeof projectId !== "undefined" && projectId != -1 && projectId != 0) {
 
             addHourglass();
+            gRefreshingData = false;
             $.ajax({
                 url: url,
                 dataType: 'json',
@@ -1780,16 +1780,14 @@ require([
 
                         if (typeof callback == "function") {
                             callback();
-                        } else {
-                            gRefreshingData = false;
                         }
                     }
                 },
                 error: function (xhr, textStatus, err) {
 
                     removeHourglass();
+                    gRefreshingData = false;
                     if(handleLogout(xhr.responseText)) {
-                        gRefreshingData = false;
                         if (xhr.readyState == 0 || xhr.status == 0) {
                             return;  // Not an error
                         } else {
@@ -3178,6 +3176,7 @@ require([
                 map.setLayers(gTasks.cache.currentData.schema.layers);
                 updateFormList(gTasks.cache.currentData.forms);
                 updateCharts(gTasks.cache.currentData.settings.charts);
+                updateConversationalSMS(gTasks.cache.currentData.sms);
             }
 	    } else {
 
@@ -3217,6 +3216,7 @@ require([
                             map.setLayers(gTasks.cache.currentData.schema.layers);
                             updateFormList(gTasks.cache.currentData.forms);
                             updateCharts(gTasks.cache.currentData.settings.charts);
+                            updateConversationalSMS(gTasks.cache.currentData.sms);
 
                             // Add a config item for the group value if this is a duplicates search
                             if (isDuplicates) {
@@ -3270,6 +3270,7 @@ require([
     function tableOnDraw() {
         var i;
 
+        console.log("tableOnDraw");
         if(!globals.gMainTable) {
             return;     // Table not ready
         }
@@ -3310,10 +3311,7 @@ require([
                         }
                     }
                 });
-            }
-
-            // Barcode
-            if (headItem.barcode) {
+            } else if (headItem.barcode) {
                 $(globals.gMainTable.column(i).nodes()).each(function (index) {
                     var $this = $(this),
                         opt = {
@@ -3325,10 +3323,7 @@ require([
                     $this.empty().qrcode(opt);
 
                 });
-            }
-
-            // Deleted
-            if(headItem.del_col) {
+            } else if(headItem.del_col) {  // Deleted
                 gDeleteColumn = i;
                 $(globals.gMainTable.column(i).nodes()).each(function (index) {
                     var $this = $(this);
@@ -3339,8 +3334,14 @@ require([
                         $this.text(localise.set["c_no"]);
                     }
                 });
-            } else if(headItem.del_reason_col) {
+            } else if(headItem.del_reason_col) {  // Deleted reason
                 gDeleteReasonColumn = i;
+            } else if(headItem.type === 'conversation') {
+                console.log("Idx: " + i + " : " + headItem.column_name);
+                $(globals.gMainTable.column(i).nodes()).each(function (index) {
+                    var $this = $(this);
+                    $this.html(actioncommon.formatConversation($this.text()));
+                });
             }
         }
 
@@ -3602,6 +3603,11 @@ require([
             notification = saveSMS();
         } else if(target === "document") {
             notification = saveDocument();
+        } else if(target === "conversation") {
+            notification = saveConversation(gTasks.cache.currentData.schema.columns,
+                gTasks.cache.currentData.sms.theirNumberQuestion,
+                gTasks.cache.currentData.sms.ourNumber,
+                gTasks.gSelectedRecord);
         }
 
         if(!notification.error) {

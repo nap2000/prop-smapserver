@@ -122,7 +122,7 @@ $(document).ready(function() {
 });
 
 function projectChanged() {
-	loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChangedRoles, false);			// Get surveys
+	loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChangedRoles, false, undefined, undefined);			// Get surveys
 }
 
 function surveyChangedRoles() {

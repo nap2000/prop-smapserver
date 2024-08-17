@@ -161,7 +161,7 @@ require([
 		//
 		$('#project_select,#project_name').change(function () {
 			var sourceProject = $('#project_select option:selected').val();
-			loadSurveys(sourceProject, "#survey", false, false, surveyChangedTasks, false);			// Get surveys
+			loadSurveys(sourceProject, "#survey", false, false, surveyChangedTasks, false, undefined, undefined);			// Get surveys
 		});
 
 		// Add a trigger to respond to the clicking of "filter tasks"
@@ -439,7 +439,7 @@ require([
 				if(tgRule.source_project) {
 					$('#project_select').val(tgRule.source_project);
 					gSourceSurvey = tg.source_s_id;
-					loadSurveys(tgRule.source_project, "#survey", false, false, sourceProjectSet, false);
+					loadSurveys(tgRule.source_project, "#survey", false, false, sourceProjectSet, false, undefined, undefined);
 				} else {
 					$('#survey').val(tg.source_s_id);
 				}
@@ -1061,7 +1061,7 @@ require([
 
 		globals.gCurrentProject = $('#project_name option:selected').val();
 
-		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChangedTasks, false);			// Get surveys
+		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChangedTasks, false, undefined, undefined);			// Get surveys
 		refreshTaskGroupData();		// Get the task groups from the server
 
 		saveCurrentProject(globals.gCurrentProject,

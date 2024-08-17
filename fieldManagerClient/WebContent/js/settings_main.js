@@ -71,7 +71,8 @@ require([
 		gCssOrgFile,
 		gCssModal,
 		gResetWebformPressed = false,
-		page = 'settings';
+		page = 'settings',
+		gNumbers;
 
 	$(document).ready(function() {
 
@@ -85,7 +86,7 @@ require([
 
 		getSmsType();
 		getLoggedInUser(userKnown, false, false, undefined, false,
-			false, undefined, getServerDetails);
+			false, undefined, getServerDetails, undefined);
 		getDeviceSettings();
 		getEmailSettings();
 		getWebformSettings();
@@ -94,35 +95,35 @@ require([
 		getOtherSettings();		// miscellaneous settings
 
 		// Set up the tabs
-		$('#appearanceTab a').click(function (e) {
+		$('#appearanceTab a').on('click', function (e) {
 			e.preventDefault();
 			panelChange($(this), 'appearance');
 		});
-		$('#serverTab a').click(function (e) {
+		$('#serverTab a').on('click',function (e) {
 			e.preventDefault();
 			panelChange($(this), 'server');
 		});
-		$('#deviceTab a').click(function (e) {
+		$('#deviceTab a').on('click',function (e) {
 			e.preventDefault();
 			panelChange($(this), 'device');
 		});
-		$('#webformTab a').click(function (e) {
+		$('#webformTab a').on('click',function (e) {
 			e.preventDefault();
 			panelChange($(this), 'webform');
 		});
-		$('#sensitiveTab a').click(function (e) {
+		$('#sensitiveTab a').on('click',function (e) {
 			e.preventDefault();
 			panelChange($(this), 'sensitive');
 		});
-		$('#caseManagementTab a').click(function (e) {
+		$('#caseManagementTab a').on('click',function (e) {
 			e.preventDefault();
 			panelChange($(this), 'caseManagement');
 		});
-		$('#emailTab a').click(function (e) {
+		$('#emailTab a').on('click',function (e) {
 			e.preventDefault();
 			panelChange($(this), 'email');
 		});
-		$('#otherTab a').click(function (e) {
+		$('#otherTab a').on('click',function (e) {
 			e.preventDefault();
 			panelChange($(this), 'other');
 		});
@@ -575,7 +576,6 @@ require([
 				url += "?org=true";
 			}
 
-
 			var formData = new FormData(f);
 			addHourglass();
 			$.ajax({
@@ -587,13 +587,14 @@ require([
 				url: url,
 				success: function(data, status) {
 					removeHourglass();
-					if(gCssModal === "server") {
-						getCustomCss();
-					} else {
-						getCustomCssOrg();
+					if(handleLogout(data)) {
+						if (gCssModal === "server") {
+							getCustomCss();
+						} else {
+							getCustomCssOrg();
+						}
+						$('#upload_css_popup, #upload_css_popup_org').modal("hide");
 					}
-					$('#upload_css_popup, #upload_css_popup_org').modal("hide");
-
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
@@ -612,6 +613,8 @@ require([
 		});
 
 	});
+
+
 
 	function deleteCss(org) {
 		var url = "/surveyKPI/css/";
@@ -650,6 +653,7 @@ require([
 			}
 		});
 	}
+
 	/*
 	 * Respond to change of cssSelect
 	 */

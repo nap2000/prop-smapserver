@@ -94,6 +94,7 @@ define({
     "c_opened": "Opened",
     "c_periodic": "Periodic",
     "c_project": "Project",
+    "c_sms": "SMS Numbers",
     "c_sub_form": "Sub Form",
     "c_threshold": "Threshold",
     "c_url": "URL",
@@ -104,6 +105,7 @@ define({
     "c_company_addr": "Company Address",
     "c_company_phone": "Company Phone",
     "c_company_email": "Company Email",
+    "c_conversation": "Message Conversation",
     "c_type": "Type",
     "c_file": "File",
     "c_host": "Host",
@@ -539,6 +541,7 @@ define({
     "msg_sel_dates": "From date is greater than To date",
 	"msg_no_from": "If you specify the scheduled end date, then also specify the scheduled start date",
     "msg_sel_q": "You must select a question to show on a graph",
+    "msg_so": "Number details can only be edited when you are in the organisation that the number is assigned to",
     "msg_val_prot": "Protocol (http:// or https://) must be specified with the hostname",
     "msg_val_p": "A project must be selected for this form",
     "msg_val_rf": "You must select a remote form",
@@ -612,6 +615,7 @@ define({
     "msg_del_c": "Are you sure you want to delete this choice?",
     "msg_rep_f": "Are you sure you want to replace this choice filter",
     "msg_del_not": "Are you sure you want to delete notification",
+    "msg_del_nbr": "Are you sure you want to delete the phone number",
     "msg_n_v": "Not valid",
     "msg_u_f": "Error upload failed",
     "msg_u_nt": "No nfc tags found",
@@ -1571,5 +1575,9 @@ define({
     "pw_mm": "The password and its confirm are not the same",
 
     // Server state
-    "ss_title": "Server State"
+    "ss_title": "Server State",
+
+    // sms
+    "sms_their_q": "Question for calling number",
+    "sms_conv_q": "Conversation Question"
 });
