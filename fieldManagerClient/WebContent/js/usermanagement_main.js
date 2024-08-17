@@ -166,6 +166,7 @@ require([
 		});
 
 		// Set up the tabs
+		gPanel='users';
 		$('#usersTab a').click(function (e) {
 			e.preventDefault();
 			panelChange($(this), 'users');
