@@ -911,6 +911,9 @@ require([
 		 * SMS Numbers
 		 */
 		$('#addNumber').click(function() {
+			$('#addSmsNumber').val('');
+			$('#addSmsOrganisation').val(globals.gOrgId);
+
 			$('.add_sms_alert').hide();
 			$('#add_sms_popup').modal("show");
 		});
