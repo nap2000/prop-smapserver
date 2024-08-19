@@ -1289,7 +1289,7 @@ define({
     "u_css_ss_org": "Upload a new CSS style sheet for the current organisation",
     "u_css_del": "Delete CSS style sheet",
     "u_css_sel": "Select a style sheet",
-    "u_css_info": "Create a custom style sheet using <a href='https://themestr.app/theme' target='_blank'>this website</a> and then upload to the server",
+    "u_css_info": "Create a custom style sheet and then upload to the server",
     "u_clear_p": "Clear existing empty imported projects",
     "u_clear_u": "Clear existing imported users",
     "u_clear_r": "Clear existing imported roles",

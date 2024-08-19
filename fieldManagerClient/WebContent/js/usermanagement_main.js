@@ -3033,7 +3033,7 @@ require([
 		 * Enable the add button for server admins
 		 */
 		if(globals.gIsServerOwner) {
-			$('.ownerOnly').show();
+			$('.ownerOnly').removeClass("d-none").show();
 		}
 
 		$(".rm_n", $selector).on('click',function(){
