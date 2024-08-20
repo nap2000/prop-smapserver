@@ -28,6 +28,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
         let NOTIFICATIONS_PANEL = "notify";
         let OPTIN_MSG_PANEL = "optin";
         let CASE_PANEL = "case";
+        let SERVER_PANEL = "server";
 
         window.gMonitor = {
             caseProgress: undefined,
@@ -68,6 +69,10 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             $('#caseTab a').click(function (e) {
                 e.preventDefault();
                 panelChange($(this), CASE_PANEL);
+            });
+            $('#serverTab a').click(function (e) {
+                e.preventDefault();
+                panelChange($(this), SERVER_PANEL);
             });
 
             // Initialise the map and then hide it
@@ -215,6 +220,10 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                 $('.showinterval').removeClass('d-none').show();
             }
 
+            if(gPanel === SERVER_PANEL) {
+                $('.showserver').removeClass('d-none').show();
+            }
+
             if(typeof survey !== "undefined" && survey !== "_all" && gPanel === SUBMIT_PANEL) {
                 $('.retry').removeClass('d-none').show();
             }
@@ -239,6 +248,10 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             globals.gCurrentSurvey = -1;
             globals.gCurrentTaskGroup = undefined;
             $('#survey').val("_all");
+
+            if(globals.gIsServerOwner) {
+                $('.ownerOnly').removeClass("d-none").show();
+            }
 
             loadSurveys(globals.gCurrentProject, undefined, false, true, undefined, false, undefined, undefined);			// Get surveys
 
@@ -744,7 +757,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             setcontrols();
             refreshData(globals.gCurrentProject, $('#survey option:selected').val());
             refreshCases();
-
+            
             $(".monpanel").hide();
             $this.tab('show');
             $('#' + name + 'Panel').removeClass('d-none').show();

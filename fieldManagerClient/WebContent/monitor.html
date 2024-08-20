@@ -218,6 +218,9 @@
 				<li id="caseTab" class="nav-item">
 					<a data-toggle="tab" id="case-view" href="#casePanel" role="tab" class="nav-link lang" data-lang="c_cases"></a>
 				</li>
+				<li id="serverTab" class="nav-item ownerOnly d-none">
+					<a data-toggle="tab" id="server-view" href="#serverPanel" role="tab" class="nav-link lang" data-lang="server"></a>
+				</li>
 			</ul>
 		</div>
 
@@ -260,6 +263,24 @@
 									</div>
 									<div class="card-body wide-chart">
 										<canvas id="progressChart"></canvas>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="serverPanel" class="d-none monpanel tab-pane fade show active" role="tabpanel" aria-labelledby="server-view">
+					<div class="panel-body">
+						<h5 id="server_msg" class="d-none"></h5>
+						<div id="server_data" class="row d-none">
+							<div class="col-sm-12">
+								<div class="card card">
+									<div class="card-header d-flex chart-header">
+										<span class="mr-auto lang" data-lang="cm_oc"></span>
+										<i class="fa fa-cog"></i>
+									</div>
+									<div class="card-body wide-chart">
+
 									</div>
 								</div>
 							</div>
