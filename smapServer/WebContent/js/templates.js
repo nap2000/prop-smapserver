@@ -314,19 +314,20 @@ require([
 				cache: false,
 				contentType: false,
 				processData:false,
-				success: function() {
+				success: function(data) {
 					removeHourglass();
 					$('#templateLoad').prop("disabled", false);  // debounce
-
-					document.forms.namedItem("uploadTemplate").reset();
-					$('#template_add').modal('hide');
-					getTemplates();
-					$('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
+					if(handleLogout(data)) {
+						document.forms.namedItem("uploadTemplate").reset();
+						$('#template_add').modal('hide');
+						getTemplates();
+						$('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
+					}
 
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
-					$('#submitFileGroup').prop("disabled", false);  // debounce
+					$('#templateLoad').prop("disabled", false);  // debounce
 
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
