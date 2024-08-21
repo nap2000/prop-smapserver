@@ -949,7 +949,7 @@
 </div>
 
 <!-- Modal to import data from a file -->
-<div id="import_taskgroup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importLabel" aria-hidden="true">
+<div id="import_taskgroup" class="modal fade" tabindex="-1" aria-labelledby="importLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -960,7 +960,7 @@
 
             </div>
             <div class="modal-body">
-                <form role="form" enctype="multipart/form-data" name="loadtasks">
+                <form id="uploadForm" role="form" enctype="multipart/form-data" name="loadtasks">
 
                     <input id="tg_to_import" type="hidden" name="tg" value="-1" style="display:none;">
 
@@ -979,14 +979,11 @@
 
 
                 </form>
-                <div id="load_tasks_alert" style="display:none; background-color: #FEFC7C; padding: 5px 2px;"
-                     role="alert"></div>
+                <div id="load_tasks_alert" style="display:none; background-color: #FEFC7C; padding: 5px 2px;" role="alert"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
-                </button>
-                <button id="importTaskGroupGo" type="button" class="btn btn-primary lang" data-lang="m_import">import
-                </button>
+                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
+                <button id="importTaskGroupGo" type="button" class="btn btn-primary lang" data-lang="m_import"></button>
             </div>
         </div>
     </div>

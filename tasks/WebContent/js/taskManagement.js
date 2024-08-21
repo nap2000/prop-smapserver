@@ -245,14 +245,23 @@ require([
 			}
 		});
 
-		$('#m_import_xls').click(function () {	// Import from XLS
+		$('#m_import_xls').on('click',function (e) {	// Import from XLS
+			e.preventDefault();
 			if (globals.gCurrentTaskGroup) {
-				$('#import_taskgroup').modal("show");
+				$('#uploadForm')[0].reset();
+				$('.custom-file-input').val(null);
+				$('#load_tasks_alert').hide();
+				$('#import_taskgroup').modal({
+						keyboard: true,
+						backdrop: 'static',
+						show: true
+				});
 			} else {
 				alert(localise.set["msg_tg_ns"]);
 			}
 		});
-		$(('#importTaskGroupGo')).click(function () {
+		$(('#importTaskGroupGo')).click(function (e) {
+			e.preventDefault();
 			importTaskGroup();
 		});
 
@@ -889,12 +898,6 @@ require([
 					});
 				}
 			});
-		});
-
-
-		$('#taskParamsSave').click(function () {
-			e.preventDefault();
-			updateTaskParams();
 		});
 
 		$('#m_refresh').click(function (e) {	// Add refresh action
@@ -1976,10 +1979,12 @@ require([
 			url: url,
 			success: function (data, status) {
 				removeHourglass();
-				$('#import_taskgroup').modal("hide");
-				$('#load_tasks_alert').show().removeClass('alert-danger').addClass('alert-success').empty("");
-				refreshAssignmentData();
-				getLocations(processLocationList);	// Refresh the location data since new locations may have been loaded
+				if(handleLogout(data)) {
+					$('#import_taskgroup').modal("hide");
+					$('#load_tasks_alert').show().removeClass('alert-danger').addClass('alert-success').empty("");
+					refreshAssignmentData();
+					getLocations(processLocationList);	// Refresh the location data since new locations may have been loaded
+				}
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
