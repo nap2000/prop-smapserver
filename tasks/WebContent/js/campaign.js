@@ -201,11 +201,15 @@ require([
 			}
 		});
 
-		$('#m_import_xls').click(function () {	// Import from XLS
-
+		$('#m_import_xls').click(function (e) {	// Import from XLS
+			e.preventDefault();
 			if (gCurrentMailOutIdx && gCurrentMailOutIdx >= 0) {
 				$('#load_mailouts_alert').hide();
-				$('#import_mailoutpeople').modal("show");
+				$('#import_mailoutpeople').modal({
+					keyboard: true,
+					backdrop: 'static',
+					show: true
+				});
 				$('.custom-file-input').val("");
 				$('#importMailoutPeopleLabel').html("");
 				$('#loadMailoutPeople')[0].reset();
@@ -225,7 +229,8 @@ require([
 			$(this).next('.custom-file-label').html(fileName);
 		});
 
-		$(('#importMailoutGo')).click(function () {
+		$(('#importMailoutGo')).click(function (e) {
+			e.preventDefault();
 			importMailout();
 		});
 
@@ -655,9 +660,11 @@ require([
 			url: url,
 			success: function (data, status) {
 				removeHourglass();
-				$('#import_mailoutpeople').modal("hide");
-				$('#load_mailouts_alert').show().removeClass('alert-danger').addClass('alert-success').empty("");
-				mailoutChanged(true);
+				if(handleLogout(data)) {
+					$('#import_mailoutpeople').modal("hide");
+					$('#load_mailouts_alert').show().removeClass('alert-danger').addClass('alert-success').empty("");
+					mailoutChanged(true);
+				}
 
 			},
 			error: function (xhr, textStatus, err) {

@@ -249,7 +249,8 @@ require([
 			e.preventDefault();
 			if (globals.gCurrentTaskGroup) {
 				$('#uploadForm')[0].reset();
-				$('.custom-file-input').val(null);
+				$('.custom-file-input').val("");
+				$('#importTasksLabel').html("");
 				$('#load_tasks_alert').hide();
 				$('#import_taskgroup').modal({
 						keyboard: true,
