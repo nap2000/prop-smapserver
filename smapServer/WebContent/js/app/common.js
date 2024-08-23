@@ -5816,7 +5816,7 @@ function getTrailData(projectId, userId, startDate, endDate, callback, tz, mps) 
 		'?userId=' + userId +
 		'&startDate=' + startDate +
 		'&endDate=' + endDate +
-		'&mps=' + mps +
+		'&mps=' + (mps || 0) +
 		(tz ? "&tz=" + tz : "");
 
 	addHourglass();
