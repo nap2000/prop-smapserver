@@ -435,7 +435,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                     msg = "<h5>" + localise.set["msg_saf"] + "</h5>";
                 } else if(gPanel === "forms" ) {
                     msg = "<h5>" + localise.set["msg_nf"] + "</h5>";
-                } else if(gPanel === "uploaded") {
+                } else if(gPanel === "submit") {
                     msg = "<h5>" + localise.set["msg_ns"] + "</h5>";
                 } else {
                     msg = "<h5>" + localise.set["msg_us"] + "</h5>";
