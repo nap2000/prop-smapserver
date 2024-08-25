@@ -762,7 +762,6 @@ define(function () {
                 icon: "sms",
                 canSelect: true,
                 visible: true,
-                source: "user",
                 compatTypes: ["string", "select1", "select", "calculate", "rank", "calculate_server", "note", "pdf_field", "phone"]
             },
             {
