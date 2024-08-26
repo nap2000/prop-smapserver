@@ -1296,6 +1296,7 @@ define({
     "u_api_rl": "Rate limit for data API",
     "u_mps": "Minimum password strength",
     "u_oo": "The user is currently in a different organisation and only the list of organisations that they belong to can be changed.",
+    "u_code": "App Code",
 
     // Browse Results
     "br_ci": "Case Insensitive",

@@ -41,13 +41,15 @@ requirejs.config({
 		crf: '../../../../js/libs/commonReportFunctions',
 		moment: '../../../../js/libs/moment-with-locales.2.24.0',
 		slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll',
-		lang_location: '../../../../js'
+		lang_location: '../../../../js',
+		qrcode: '../../../../js/libs/jquery-qrcode-0.14.0.min',
 	},
 	shim: {
 		'bootstrapcolorpicker': ['jquery'],
 		'slimscroll': ['jquery'],
 		'datetimepicker': ['moment'],
-		'common': ['jquery']
+		'common': ['jquery'],
+		'qrcode': ['jquery'],
 	}
 });
 
@@ -59,7 +61,8 @@ require([
 	'moment',
 	'slimscroll',
 	'bootstrapcolorpicker',
-	'datetimepicker'
+	'datetimepicker',
+	'qrcode'
 
 ], function($, common, localise, globals, moment) {
 
@@ -1008,6 +1011,7 @@ require([
 				}
 			});
 		});
+
 	});
 
 	/*
@@ -1739,6 +1743,7 @@ require([
 			yesProject,
 			yesRole,
 			yesOrg,
+			isEnum,
 			project,
 			group,
 			projectStr,
@@ -1803,6 +1808,7 @@ require([
 			yesProject = !filterProject || hasId(user.projects, project);
 			yesRole = !filterRole || hasId(user.roles, +role);
 			yesOrg = !filterOrg || hasId(user.orgs, +org);
+			isEnum = hasName(user.groups, 'enum');
 
 			if (yesGroup && yesProject && yesRole && yesOrg) {
 				h[++idx] = '<tr>';
@@ -1835,6 +1841,15 @@ require([
 				}
 				h[++idx] = 'class="btn-sm user_edit btn-info">';
 				h[++idx] = '<i class="far fa-edit"></i></button>';
+
+				console.log(globals.gLoggedInUser.organisation_name);
+				if(isEnum && globals.gLoggedInUser && user.current_org_name === globals.gLoggedInUser.organisation_name) {
+					h[++idx] = '<button type="button" data-idx="';
+					h[++idx] = i;
+					h[++idx] = '" class="btn btn-sm app_code btn-primary ml-2">';
+					h[++idx] = '<i class="fas fa-qrcode"></i> <span class="lang" data-lang="u_code"</button>';
+				}
+
 				h[++idx] = '</div>';
 				h[++idx] = '</td>';
 
@@ -1855,6 +1870,12 @@ require([
 		$(".rm_user", $userTable).click(function(){
 			var idx = $(this).data("idx");
 			deleteUser(idx);
+		});
+
+		$('.app_code', $userTable).click(function () {
+			var idx = $(this).data("idx");
+			getAppCode(gUsers[idx].ident);
+			$('#app_code_popup').modal('show');
 		});
 
 		$('#user_table .control_td').find('input').click(function () {
@@ -2402,7 +2423,42 @@ require([
 		$enterpriseSelect.val(globals.gEntId);
 	}
 
-// Return true if the item with the name is in the list
+	/*
+ 	 * Respond to events on the app key popup
+ 	 */
+	function getAppCode(userIdent) {
+
+		/*
+         * Get the current app code
+         */
+		addHourglass();
+		$.ajax({
+			url: '/surveyKPI/userList/app_key/' + userIdent,
+			cache: false,
+			success: function (data) {
+				removeHourglass();
+				if (handleLogout(data)) {
+					$('#appKey').text(data.key);
+					$('#appKeyQR').qrcode(data.key);
+				}
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(err);
+						console.log("Error: Failed to get the app code: " + err);
+					}
+				}
+			}
+		});
+
+	}
+
+
+	// Return true if the item with the name is in the list
 	function hasName(itemList, item) {
 		var i;
 		for(i = 0; i < itemList.length; i++) {
@@ -2413,7 +2469,7 @@ require([
 		return false;
 	}
 
-//Return true if the item with the id is in the list
+	//Return true if the item with the id is in the list
 	function hasId(itemList, item) {
 		var i;
 		if(itemList) {

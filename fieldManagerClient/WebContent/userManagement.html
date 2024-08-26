@@ -1065,5 +1065,26 @@
 	</div>
 </div>
 
+<!-- Modal to edit an SMS number -->
+<div id="app_code_popup" class="modal fade" role="dialog" aria-labelledby="editSmsLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 id="appCodeLabel" class="modal-title" ><span class="lang" data-lang="u_code"></span></h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			</div>
+			<div class="modal-body">
+				<div id="appKeyQR"></div>
+				<div id="appKey"></div>
+				<div class="app_code_alert alert alert-success" role="alert" style="display:none;"></div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close"></button>
+			</div>
+		</div>
+	</div>
+</div>
+
 </body>
 </html>
