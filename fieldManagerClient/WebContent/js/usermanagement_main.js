@@ -2442,7 +2442,7 @@ require([
 						size: 200,
 						text: JSON.stringify(data)
 					}
-					$('#appKey').text(data.key);
+					$('#appKey').text(data["token"]);
 					$('#appKeyQR').empty().qrcode(bc);
 				}
 			},
