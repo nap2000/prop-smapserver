@@ -132,7 +132,6 @@ require([
 		enableDebugging();
 
 		getSmsType();
-		getUsers();
 		getProjects();
 		getLoggedInUser(userKnown, false, false, getOrganisations, false,
 			false, getEnterprises, undefined, getSMSNumbers);
@@ -1083,6 +1082,7 @@ require([
 
 
 	function userKnown() {
+		getUsers();
 		getGroups();
 		if(globals.gIsOrgAdministrator) {
 			$('#appearanceTab').hide();
@@ -1090,7 +1090,6 @@ require([
 		if(globals.gIsOrgAdministrator || globals.gIsSecurityAdministrator) {
 			getRoles(updateRoleTable);
 		}
-
 	}
 
 	/*
@@ -2438,8 +2437,13 @@ require([
 			success: function (data) {
 				removeHourglass();
 				if (handleLogout(data)) {
+					var bc = {
+						render: 'div',
+						size: 200,
+						text: JSON.stringify(data)
+					}
 					$('#appKey').text(data.key);
-					$('#appKeyQR').qrcode(data.key);
+					$('#appKeyQR').empty().qrcode(bc);
 				}
 			},
 			error: function (xhr, textStatus, err) {

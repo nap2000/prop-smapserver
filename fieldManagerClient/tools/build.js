@@ -13,6 +13,7 @@
     	common: '../../../../smapServer/WebContent/js/app/common',
     	globals: '../../../../smapServer/WebContent/js/app/globals',
     	crf: '../../../../smapServer/WebContent/js/libs/commonReportFunctions',
+	qrcode: '../../../../smapServer/WebContent/js/libs/jquery-qrcode-0.14.0.min',
     	openlayers: '../../../../smapServer/WebContent/js/libs/OpenLayers/OpenLayers',
     	lang_location: '../../../../smapServer/WebContent/js',
 	bootstrap: '../../../../smapServer/WebContent/js/libs/bootstrap.bundle.v4.5.min',
