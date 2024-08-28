@@ -142,6 +142,8 @@ define({
     "c_ak": "API key",
     "c_gak": "Create API key",
     "c_rak": "Replace API key",
+    "c_cftk": "Create FieldTask Key",
+    "c_rftk": "Replace FieldTask Key",
     "c_reset": "Reset",
     "c_en": "Enable",
     "c_dis": "Disable",

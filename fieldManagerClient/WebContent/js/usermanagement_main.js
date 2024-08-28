@@ -1872,9 +1872,17 @@ require([
 		});
 
 		$('.app_code', $userTable).click(function () {
-			var idx = $(this).data("idx");
-			getAppCode(gUsers[idx].ident);
+			gCurrentUserIndex = $(this).data("idx");
+			getAppCode(gUsers[gCurrentUserIndex].ident);
 			$('#app_code_popup').modal('show');
+		});
+
+		$('#createKey').click(function () {
+			createAppCode(gUsers[gCurrentUserIndex].ident);
+		});
+
+		$('#deleteKey').click(function () {
+			deleteAppCode(gUsers[gCurrentUserIndex].ident);
 		});
 
 		$('#user_table .control_td').find('input').click(function () {
@@ -2437,13 +2445,7 @@ require([
 			success: function (data) {
 				removeHourglass();
 				if (handleLogout(data)) {
-					var bc = {
-						render: 'div',
-						size: 200,
-						text: JSON.stringify(data)
-					}
-					$('#appKey').text(data["token"]);
-					$('#appKeyQR').empty().qrcode(bc);
+					displayAppCode(data);
 				}
 			},
 			error: function (xhr, textStatus, err) {
@@ -2461,6 +2463,90 @@ require([
 
 	}
 
+	/*
+ 	 * Respond to events on the app key popup
+ 	 */
+	function createAppCode(userIdent) {
+
+		/*
+         * Create or replace the current app code
+         */
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			contentType: "application/x-www-form-urlencoded",
+			cache: false,
+			url: '/surveyKPI/userList/app_key/' + userIdent,
+			success: function (data) {
+				removeHourglass();
+				if (handleLogout(data)) {
+					displayAppCode(data);
+				}
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(err);
+						console.log("Error: Failed to create the app code: " + err);
+					}
+				}
+			}
+		});
+	}
+
+	/*
+  * Respond to events on the app key popup
+  */
+	function deleteAppCode(userIdent) {
+
+		/*
+         * Create or replace the current app code
+         */
+		addHourglass();
+		$.ajax({
+			type: "DELETE",
+			contentType: "application/x-www-form-urlencoded",
+			cache: false,
+			url: '/surveyKPI/userList/app_key/' + userIdent,
+			success: function (data) {
+				removeHourglass();
+				if (handleLogout(data)) {
+					displayAppCode(data);
+				}
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (handleLogout(xhr.responseText)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(err);
+						console.log("Error: Failed to delete the app code: " + err);
+					}
+				}
+			}
+		});
+
+	}
+	function displayAppCode(data) {
+		if(data.auth_token) {
+			var bc = {
+				render: 'div',
+				size: 200,
+				text: JSON.stringify(data)
+			}
+			$('#appKey').text(data["auth_token"]);
+			$('#appKeyQR').empty().qrcode(bc);
+			$('#createKey').text(localise.set["c_rftk"]);
+		} else {
+			$('#appKey').text(localise.set["c_none"]);
+			$('#appKeyQR').empty();
+			$('#createKey').text(localise.set["c_cftk"]);
+		}
+	}
 
 	// Return true if the item with the name is in the list
 	function hasName(itemList, item) {
