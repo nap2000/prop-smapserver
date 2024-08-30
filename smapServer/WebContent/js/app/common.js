@@ -4043,7 +4043,7 @@ function getQuestionsInSurvey($elem, $elem_multiple, sIdent, includeNone, textOn
 	} else if(gCache[sIdent]) {
 		populateElement($elem, $elem_multiple, gCache[sIdent]);
 	} else {
-		if (sIdent && sIdent !== "0" && sIdent !== '') {
+		if (sIdent && sIdent !== "0" && sIdent !== '' && sIdent !== '_none') {
 			addHourglass();
 			$.ajax({
 				url: "/surveyKPI/questionListIdent/" + sIdent + "/none?inc_meta=true",
