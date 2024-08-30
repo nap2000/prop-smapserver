@@ -5496,10 +5496,11 @@ function includeByStatus(statusFilter, task, excludeZeroOrigin) {
 }
 
 /*
- * Return true if this qustion stores its data in a text type column
+ * Return true if this question stores its data in a text type column
  */
 function isTextStorageType(type) {
 	return type === "string" || type === "select1" || type === "barcode" || type === "calculate"
+		|| type === "conversation"
 		|| type === "child_form" || type === "parent_form";
 }
 
