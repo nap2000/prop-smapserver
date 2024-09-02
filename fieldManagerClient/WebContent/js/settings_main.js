@@ -752,6 +752,7 @@ require([
 		$('#google_key').val(data.google_key);
 		$('#maptiler_key').val(data.maptiler_key);
 		$('#vonage_application_id').val(data.vonage_application_id);
+		$('#vonage_webhook_secret').val(data.vonage_webhook_secret);
 		$('#s_smtp_host').val(data.smtp_host);
 		$('#s_email_domain').val(data.email_domain);
 		$('#s_email_user').val(data.email_user);
@@ -776,6 +777,7 @@ require([
 				google_key: $('#google_key').val(),
 				maptiler_key: $('#maptiler_key').val(),
 				vonage_application_id: $('#vonage_application_id').val(),
+				vonage_webhook_secret: $('#vonage_webhook_secret').val(),
 				smtp_host: $('#s_smtp_host').val(),
 				email_domain: $('#s_email_domain').val(),
 				email_user: $('#s_email_user').val(),

@@ -1237,6 +1237,7 @@ define({
     "u_g_k": "Google Maps Key",
     "u_mt_k": "MapTiler Maps Key",
     "u_v_k": "Vonage Application Id",
+    "u_v_whs": "Vonage Webhook Secret",
     "u_smtp": "Smtp Host",
     "u_e_dom": "Email Domain",
     "u_e_nm": "Email user name",
