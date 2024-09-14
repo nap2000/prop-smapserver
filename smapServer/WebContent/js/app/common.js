@@ -6241,9 +6241,14 @@ function handleLogout(data) {
 			|| (data.status && data.status === 405)
 			|| (data.status && data.status === 413)   // When expecting blobx
 			|| (typeof data === "string" && data.indexOf('"code": 401') >= 0))
+			|| (typeof data === "string" && data.indexOf('Status 401 – Unauthorized') >= 0)
 			|| (typeof data === "string" && data.toLowerCase().indexOf("method not allowed") >= 0)		// For delete functions
 		) {
 		window.open("/login.html");
+		return false;
+	} else if(data && (typeof data === "string" && data.indexOf('multilogon') >= 0)) {
+		alert("Logon on another device detected - logging out");
+		window.open("/dologout.html");
 		return false;
 	}
 	return true;

@@ -30,10 +30,7 @@ $(document).ready(function() {
 
         setTheme(true);
         setLogo();
-
-        /*
-         * Determine if the user is retrying the logon within 5 minutes
-         */
+        
         count = localStorage.getItem("login_count");
         let loginStart = localStorage.getItem("login_start");   // seconds
         let loginTime = Date.now() / 1000;
@@ -54,11 +51,10 @@ $(document).ready(function() {
         }
 
         /*
-         * Handle reset if more than 10 minutes has elapsed since last logon
+         * Handle reset if more than 60 seconds has elapsed since last logon
          */
-        if ((loginTime - loginStart) > 600) {
-            // reset
-            count = 0;
+        if ((loginTime - loginStart) > 60) {
+            count = 0;   // reset
         }
 
         /*
@@ -77,7 +73,9 @@ $(document).ready(function() {
          * Put up message saying the user may need to reset their password
          */
         if(count > 0) {
-            $('#resetPassword').removeClass('d-none').show();
+            $('#logon_alert').removeClass('d-none').show().text("The username or password you entered is incorrect");
+        } else {
+            $('#logon_alert').addClass('d-none');
         }
     }
 
