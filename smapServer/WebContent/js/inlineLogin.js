@@ -30,7 +30,7 @@ $(document).ready(function() {
 
         setTheme(true);
         setLogo();
-        
+
         count = localStorage.getItem("login_count");
         let loginStart = localStorage.getItem("login_start");   // seconds
         let loginTime = Date.now() / 1000;
