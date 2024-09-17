@@ -87,16 +87,16 @@ require([
 
 		$('#next_btn').click(function (){
 			addMonth();
-			table.ajax.url(getLogUrl()).load();
+			checkLoggedIn(table.ajax.url(getLogUrl()).load);
 		});
 
 		$('#prev_btn').click(function (){
 			subtractMonth();
-			table.ajax.url(getLogUrl()).load();
+			checkLoggedIn(table.ajax.url(getLogUrl()).load);
 		});
 
 		$('.table_filter').on('blur', function () {
-			table.ajax.url(getLogUrl()).load();
+			checkLoggedIn(table.ajax.url(getLogUrl()).load);
 		});
 
 		getLoggedInUser(userDone, false, true, undefined);
@@ -188,7 +188,7 @@ require([
 		$('#log_table').find('td').css('white-space','initial').css('word-wrap', 'break-word');
 
 		$('#m_refresh').click(function(e) {	// Add refresh action
-			table.ajax.reload();
+			checkLoggedIn(table.ajax.reload)
 		});
 
 		// Respond to selection of a row

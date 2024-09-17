@@ -6232,6 +6232,21 @@ function checkExistenceOfReferences(refQuestions, survey) {
 	return refCount;
 }
 
+function checkLoggedIn(callback) {
+	$.ajax({
+		cache: false,
+		url: "/authenticate/login.txt",
+		success: function (data) {
+			if(handleLogout(data)) {
+				callback();
+			}
+
+		}, error: function (data, status) {
+			alert(data);
+		}
+	});
+}
+
 /*
  * Respond to a logged out redirect
  */
