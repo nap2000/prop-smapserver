@@ -2540,7 +2540,7 @@ require([
 
                     h[++idx] = '</td>';
 
-                    h[++idx] = '<td>';    // Changes
+                    h[++idx] = '<td>';    // Details
                     if (data[i].event === 'changes' && data[i].changes) {
                         h[++idx] = getChangeCard(data[i].changes, i);
                     } else if (data[i].event === 'task' && data[i].task) {
@@ -2900,6 +2900,8 @@ require([
         if(description) {
             h[++idx] = description;
             h[++idx] = '<br/>';
+        } else if(n.content) {
+            h[++idx] = n.content;
         }
         h[++idx] = '</p>';
 
