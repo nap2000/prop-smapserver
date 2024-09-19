@@ -2477,7 +2477,8 @@ require([
             for(i = 0; i < data.length; i++) {
 
                 if((includeChanges && (data[i].event === 'changes' || data[i].event === 'created' || data[i].event === 'deleted'
-                        || data[i].event === 'restored')) ||
+                        || data[i].event === 'restored'
+                        || data[i].event === 'inbound_msg')) ||
                     (includeTasks && data[i].event === 'task') ||
                     (includeAssignments && data[i].event === 'assigned') ||
                     (includeNotifications && data[i].event === 'notification')) {
@@ -2488,6 +2489,8 @@ require([
                         h[++idx] = '<i class="fa fa-lg fa-tasks fa-2x"></i>';
                     } else if (data[i].event === 'created' || data[i].event === 'changes' || data[i].event === 'deleted' || data[i].event === 'restored') {
                         h[++idx] = '<i style="line-height: 1.5em;" class="fa fa-lg fa-inbox fa-2x"></i>';
+                    } else if (data[i].event === 'inbound_msg') {
+                        h[++idx] = '<i style="line-height: 1.5em;" class="fa fa-lg fa-phone fa-2x"></i>';
                     } else if (data[i].event === 'notification') {
                         if (data[i].notification && data[i].notification.target === 'sms') {
                             // From http://jsfiddle.net/4Bacg/
@@ -3339,10 +3342,9 @@ require([
             } else if(headItem.del_reason_col) {  // Deleted reason
                 gDeleteReasonColumn = i;
             } else if(headItem.type === 'conversation') {
-                console.log("Idx: " + i + " : " + headItem.column_name);
                 $(globals.gMainTable.column(i).nodes()).each(function (index) {
                     var $this = $(this);
-                    $this.html(actioncommon.formatConversation($this.text()));
+                    $this.html(actioncommon.formatConversation(htmlEncode($this.text())));
                 });
             }
         }
