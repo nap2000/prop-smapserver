@@ -150,6 +150,7 @@ require([
 
 		// Function to save server details
 		$('#saveServer').click(function(e) {
+			e.preventDefault();
 			writeServerDetails();
 		});
 
@@ -771,7 +772,6 @@ require([
 	function writeServerDetails() {
 
 		var url = "/surveyKPI/server",
-			serverString,
 			server = {
 				mapbox_default: $('#mapbox_key').val(),
 				google_key: $('#google_key').val(),
@@ -799,10 +799,12 @@ require([
 			cache: false,
 			contentType: "application/x-www-form-urlencoded",
 			url: url,
-			success: function (data, status) {
+			success: function (data) {
 				removeHourglass();
-				gCssFile = $('#cssSelect').val();
-				$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["c_saved"]);
+				if(handleLogout(data)) {
+					gCssFile = $('#cssSelect').val();
+					$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["c_saved"]);
+				}
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
