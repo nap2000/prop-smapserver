@@ -228,6 +228,13 @@ require([
 		});
 
 		/*
+ 		 * Respond to change on password profile combo
+ 		 */
+		$('#s_email_type').change(function() {
+			emailServerTypeChanged();
+		});
+
+		/*
 		 * Respond to change on password profile combo
 		 */
 		$('#ft_login_policy1').change(function() {
@@ -724,6 +731,14 @@ require([
 		});
 	}
 
+	function emailServerTypeChanged() {
+		var emailType = $('#s_email_type').val();
+		if(emailType === 'smtp') {
+			$('.smtp').show();
+		} else {
+			$('.smtp').hide();
+		}
+	}
 	function getSmsType() {
 		// Get the server details
 		addHourglass();
@@ -765,6 +780,7 @@ require([
 		$('#s_p_strength').val(data.password_strength);
 		gCssFile = data.css;
 
+		emailServerTypeChanged();
 	}
 
 	/*
