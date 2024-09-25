@@ -1598,6 +1598,8 @@ require([
 					this.checked = org.ft_bg_stop_menu;
 				} else if($(this).val() === "ft_review_final") {
 					this.checked = org.ft_review_final;
+				} else if($(this).val() === "ft_force_token") {
+					this.checked = org.ft_force_token;
 				} else if($(this).val() === "set_as_theme") {
 					this.checked = org.appearance.set_as_theme;
 				}

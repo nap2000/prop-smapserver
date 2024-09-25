@@ -1201,6 +1201,7 @@ define({
     "u_ft_in": "Allow user to set instance name",
     "u_ft_mf": "Allow user to mark  forms as not finalized",
     "u_ft_rv": "Allow finalised forms to be opened for review",
+    "u_ft_ft": "Force the use of tokens for logon",
     "u_ft_as": "Automatically Synchronise",
     "u_ft_ms": "Manual Synchronisation",
     "u_ft_sw": "WIFI",

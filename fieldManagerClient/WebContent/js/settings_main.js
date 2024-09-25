@@ -322,6 +322,8 @@ require([
 					device.ft_bg_stop_menu = true;
 				} else if(options[i] === "ft_review_final") {
 					device.ft_review_final = true;
+				} else if(options[i] === "ft_force_token") {
+					device.ft_force_token = true;
 				}
 			}
 
@@ -335,10 +337,12 @@ require([
 				cache: false,
 				contentType: "application/x-www-form-urlencoded",
 				url: "/surveyKPI/organisationList/device",
-				success: function(data, status) {
+				success: function(data) {
 					removeHourglass();
-					$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
-					getDeviceSettings();
+					if(handleLogout(data)) {
+						$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+						getDeviceSettings();
+					}
 				}, error: function(xhr, textStatus, err) {
 					removeHourglass();
 					if(xhr.readyState == 0 || xhr.status == 0) {
@@ -897,60 +901,64 @@ require([
 			success: function(device) {
 				removeHourglass();
 
-				$('.devoption').each(function() {
-					if($(this).val() === "ft_odk_style_menus") {
-						this.checked = device.ft_odk_style_menus;
-					} else if($(this).val() === "ft_specify_instancename") {
-						this.checked = device.ft_specify_instancename;
-					} else if($(this).val() === "ft_mark_finalized") {
-						this.checked = device.ft_mark_finalized;
-					} else if($(this).val() === "ft_prevent_disable_track") {
-						this.checked = device.ft_prevent_disable_track;
-					} else if($(this).val() === "ft_enable_geofence") {
-						this.checked = device.ft_enable_geofence;
-					} else if($(this).val() === "ft_admin_menu") {
-						this.checked = device.ft_admin_menu;
-					} else if($(this).val() === "ft_server_menu") {
-						this.checked = device.ft_server_menu;
-					} else if($(this).val() === "ft_meta_menu") {
-						this.checked = device.ft_meta_menu;
-					} else if($(this).val() === "ft_exit_track_menu") {
-						this.checked = device.ft_exit_track_menu;
-					} else if($(this).val() === "ft_bg_stop_menu") {
-						this.checked = device.ft_bg_stop_menu;
-					} else if($(this).val() === "ft_review_final") {
-						this.checked = device.ft_review_final;
-					}
-				});
+				if(handleLogout(device)) {
+					$('.devoption').each(function () {
+						if ($(this).val() === "ft_odk_style_menus") {
+							this.checked = device.ft_odk_style_menus;
+						} else if ($(this).val() === "ft_specify_instancename") {
+							this.checked = device.ft_specify_instancename;
+						} else if ($(this).val() === "ft_mark_finalized") {
+							this.checked = device.ft_mark_finalized;
+						} else if ($(this).val() === "ft_prevent_disable_track") {
+							this.checked = device.ft_prevent_disable_track;
+						} else if ($(this).val() === "ft_enable_geofence") {
+							this.checked = device.ft_enable_geofence;
+						} else if ($(this).val() === "ft_admin_menu") {
+							this.checked = device.ft_admin_menu;
+						} else if ($(this).val() === "ft_server_menu") {
+							this.checked = device.ft_server_menu;
+						} else if ($(this).val() === "ft_meta_menu") {
+							this.checked = device.ft_meta_menu;
+						} else if ($(this).val() === "ft_exit_track_menu") {
+							this.checked = device.ft_exit_track_menu;
+						} else if ($(this).val() === "ft_bg_stop_menu") {
+							this.checked = device.ft_bg_stop_menu;
+						} else if ($(this).val() === "ft_review_final") {
+							this.checked = device.ft_review_final;
+						} else if ($(this).val() === "ft_force_token") {
+							this.checked = device.ft_force_token;
+						}
+					});
 
-				$('#ft_send').val(device.ft_send);
-				$('#ft_send_location').val(device.ft_send_location);
-				$('#ft_input_method').val(device.ft_input_method);
-				$('#ft_im_ri').val(device.ft_im_ri);
-				$('#ft_im_acc').val(device.ft_im_acc);
-				$('#ft_delete').val(device.ft_delete);
-				$('#ft_backward_navigation').val(device.ft_backward_navigation);
-				$('#ft_high_res_video').val(device.ft_high_res_video);
-				$('#ft_navigation').val(device.ft_navigation);
-				$('#ft_guidance').val(device.ft_guidance);
-				$('#ft_image_size').val(device.ft_image_size);
-				$('#ft_number_tasks').val(device.ft_number_tasks);
+					$('#ft_send').val(device.ft_send);
+					$('#ft_send_location').val(device.ft_send_location);
+					$('#ft_input_method').val(device.ft_input_method);
+					$('#ft_im_ri').val(device.ft_im_ri);
+					$('#ft_im_acc').val(device.ft_im_acc);
+					$('#ft_delete').val(device.ft_delete);
+					$('#ft_backward_navigation').val(device.ft_backward_navigation);
+					$('#ft_high_res_video').val(device.ft_high_res_video);
+					$('#ft_navigation').val(device.ft_navigation);
+					$('#ft_guidance').val(device.ft_guidance);
+					$('#ft_image_size').val(device.ft_image_size);
+					$('#ft_number_tasks').val(device.ft_number_tasks);
 
-				if(device.ft_pw_policy > 0) {
-					$('#ft_login_policy1').val("periodic");
-					$('#ft_login_policy2').val(device.ft_pw_policy );
-					$('.pw_timeout').removeClass("d-none").show();
-				} else {
-					if(device.ft_pw_policy < 0) {
-						$('#ft_login_policy1').val("never");
+					if (device.ft_pw_policy > 0) {
+						$('#ft_login_policy1').val("periodic");
+						$('#ft_login_policy2').val(device.ft_pw_policy);
+						$('.pw_timeout').removeClass("d-none").show();
 					} else {
-						$('#ft_login_policy1').val("always");       // policy == 0
+						if (device.ft_pw_policy < 0) {
+							$('#ft_login_policy1').val("never");
+						} else {
+							$('#ft_login_policy1').val("always");       // policy == 0
+						}
+						$('.pw_timeout').hide();
 					}
-					$('.pw_timeout').hide();
-				}
 
-				if(device.ft_input_method === 'auto') {
-					$('.u_ft_im_auto').removeClass("d-none").show();
+					if (device.ft_input_method === 'auto') {
+						$('.u_ft_im_auto').removeClass("d-none").show();
+					}
 				}
 			},
 			error: function(xhr, textStatus, err) {
