@@ -657,6 +657,12 @@ define([
                             h[++idx] = conv[j].ts;
                             h[++idx] = '</time>';
                         }
+                        if (conv[j].theirNumber) {
+                            h[++idx] = ' <dest>';
+                            h[++idx] = conv[j].theirNumber;
+                            h[++idx] = '</dest>';
+                        }
+
                         h[++idx] = '<br/>';
                         h[++idx] = htmlEncode(conv[j].msg);
 

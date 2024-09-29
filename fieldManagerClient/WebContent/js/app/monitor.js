@@ -130,7 +130,8 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             });
 
 
-            $('#m_refresh').click(function() {
+            $('#m_refresh').click(function(e) {
+                e.preventDefault();
                 gMonitor.cache = {};
                 refreshCases();
                 refreshData(globals.gCurrentProject, $('#survey option:selected').val());
@@ -354,9 +355,10 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                         dataType: 'json',
                         success: function (data) {
                             removeHourglass();
-                            handleLogout(data);
-                            gMonitor.cache[url] = data;
-                            processResponse(data, showSourceE, showTypeE, start_rec);
+                            if(handleLogout(data)) {
+                                gMonitor.cache[url] = data;
+                                processResponse(data, showSourceE, showTypeE, start_rec);
+                            }
 
                         },
                         error: function (xhr, textStatus, err) {
