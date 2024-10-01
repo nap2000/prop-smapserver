@@ -3597,9 +3597,10 @@ require([
 
         var url,
             notification,
-            $dialog,
             notificationString,
             target = $('#target').val();
+
+        $('#saveNotification').prop("disabled", true);  // debounce
 
         if(target === "email") {
             notification = saveEmail();
@@ -3634,6 +3635,7 @@ require([
                 // Validate
                 if(!periodCount || periodCount <= 0) {
                     alert(localise.set["msg_pc"]);
+                    $('#saveNotification').prop("disabled", false);  // debounce
                     return(-1);
                 }
                 console.log("Reminder for tg: " + notification.tgId + ' after ' + notification.period);
@@ -3642,7 +3644,6 @@ require([
             url = "/surveyKPI/notifications/immediate";
 
             notificationString = JSON.stringify(notification);
-            $dialog = $(this);
             addHourglass();
             $.ajax({
                 type: "POST",
@@ -3653,6 +3654,7 @@ require([
                 data: { notification: notificationString },
                 success: function(data, status) {
                     removeHourglass();
+                    $('#saveNotification').prop("disabled", false);  // debounce
                     if(handleLogout(data)) {
                         $('#dashboardInfo').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["n_sent"]);
                         $('#addNotificationPopup').modal("hide");
@@ -3660,6 +3662,7 @@ require([
                 },
                 error: function(xhr, textStatus, err) {
                     removeHourglass();
+                    $('#saveNotification').prop("disabled", false);  // debounce
                     if(handleLogout(xhr.responseText)) {
                         if (xhr.readyState == 0 || xhr.status == 0) {
                             return;  // Not an error
@@ -3671,6 +3674,7 @@ require([
             });
 
         } else {
+            $('#saveNotification').prop("disabled", false);  // debounce
             alert(localise.set["msg_inv_email"]);
         }
     }
