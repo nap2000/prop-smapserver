@@ -332,8 +332,6 @@ require([
 					alert(localise.set["c_error"] +": " + data.responseText);
 				}
 			});
-
-
 		});
 
 		/*
@@ -406,7 +404,6 @@ require([
 		}
 
 		$('#editTaskGroup').click(function () {
-			var s_id = $('#survey').val();
 
 			/*
 			 * Make sure we have a current task group to edit
@@ -512,7 +509,7 @@ require([
 				}
 
 				if(tgRule.taskStart) {
-					$('#task_start').val(tgRule.taskStart);		// Get start of task
+					$('#task_start').val(tgRule.taskStart);		// Set start of task
 					$('#task_after').val(tgRule.taskAfter);
 					$('#task_units').val(tgRule.taskUnits);
 					$('#task_duration').val(tgRule.taskDuration);
@@ -529,14 +526,12 @@ require([
 				$('#email_content').val(emaildetails.content);
 			}
 
-
 			surveyChangedTasks(filterQuestion, tgRule.address_columns);    // Set survey related parameters
 
 			// open the modal for update
 			$('#add_current').prop('disabled', true);
 			$('#addTaskLabel').text(localise.set["t_edit_group"]);
 			$('#tg_id').html(tg.tg_id);
-
 
 			$('.tg_edit_only').show();
 			$('#addTask').modal("show");
@@ -1078,7 +1073,10 @@ require([
 	}
 
 	function surveyChangedTasks(filterQuestion, address_columns) {
-		var sId = $('#survey').val();
+		sId = globals.gCurrentSurvey;
+		if(!sId) {
+			sId = $('#survey').val();
+		}
 
 		if(sId) {
 			if (typeof filterQuestion === "undefined") {
@@ -1200,9 +1198,7 @@ require([
 	 */
 	function setAddressOptions(address_columns) {
 
-		var sId = $('#survey').val(),
-			j,
-			i;
+		var sId = $('#survey').val();
 
 		if (sId) {
 			// Get the survey meta data
@@ -1214,77 +1210,79 @@ require([
 				success: function (data) {
 					removeHourglass();
 
-					// Get the data for the top level table
-					addHourglass();
-					$.ajax({
-						url: "/surveyKPI/table/" + data.top_table,
-						dataType: 'json',
-						cache: false,
-						success: function (table) {
-							var colname,
-								coltype,
-								sMedia,
-								h = [],
-								idx = -1,
-								i, j,k,
-								selected,
-								isBarcode;
-							removeHourglass();
+					if(handleLogout(data)) {
+						// Get the data for the top level table
+						addHourglass();
+						$.ajax({
+							url: "/surveyKPI/table/" + data.top_table,
+							dataType: 'json',
+							cache: false,
+							success: function (table) {
+								var colname,
+									coltype,
+									sMedia,
+									h = [],
+									idx = -1,
+									i, j, k,
+									selected,
+									isBarcode;
+								removeHourglass();
 
-							gTaskParams = [];
-							j = 0;
-							for (i = 0; i < table.columns.length; i++) {
-								colname = table.columns[i].name;
-								coltype = table.columns[i].type;
+								gTaskParams = [];
+								j = 0;
+								for (i = 0; i < table.columns.length; i++) {
+									colname = table.columns[i].name;
+									coltype = table.columns[i].type;
 
-								if (coltype &&
-									colname !== "prikey" && colname !== "parkey" &&
-									coltype !== "geopoint" &&
-									coltype !== "geotrace" &&
-									coltype !== "geoshape" &&
-									coltype !== "geocompound" &&
-									colname !== "geo_type" &&
-									colname.indexOf("_") !== 0) {
+									if (coltype &&
+										colname !== "prikey" && colname !== "parkey" &&
+										coltype !== "geopoint" &&
+										coltype !== "geotrace" &&
+										coltype !== "geoshape" &&
+										coltype !== "geocompound" &&
+										colname !== "geo_type" &&
+										colname.indexOf("_") !== 0) {
 
-									if (coltype && (coltype === "image" || coltype === "audio" || coltype === "video")) {
-										isMedia = true;
-									} else {
-										isMedia = false;
-									}
+										if (coltype && (coltype === "image" || coltype === "audio" || coltype === "video")) {
+											isMedia = true;
+										} else {
+											isMedia = false;
+										}
 
-									selected = false;
-									isBarcode = false;
-									if(address_columns) {
-										for(k = 0; k < address_columns.length; k++) {
-											if(address_columns[k].name === colname) {
-												selected = address_columns[k].selected;
-												isBarcode = address_columns[k].isBarcode;
-												break;
+										selected = false;
+										isBarcode = false;
+										if (address_columns) {
+											for (k = 0; k < address_columns.length; k++) {
+												if (address_columns[k].name === colname) {
+													selected = address_columns[k].selected;
+													isBarcode = address_columns[k].isBarcode;
+													break;
+												}
 											}
 										}
-									}
-									gTaskParams[j++] = {
-										selected: selected,
-										name: colname,
-										isBarcode: isBarcode,
-										isMedia: isMedia
-									};
+										gTaskParams[j++] = {
+											selected: selected,
+											name: colname,
+											isBarcode: isBarcode,
+											isMedia: isMedia
+										};
 
+									}
+								}
+
+								displayTaskParams();
+
+							},
+							error: function (xhr, textStatus, err) {
+								removeHourglass();
+								if (xhr.readyState == 0 || xhr.status == 0) {
+									return;  // Not an error
+								} else {
+									alert(localise.set["c_error"] + ": " + err);
 								}
 							}
-
-							displayTaskParams();
-
-						},
-						error: function (xhr, textStatus, err) {
-							removeHourglass();
-							if (xhr.readyState == 0 || xhr.status == 0) {
-								return;  // Not an error
-							} else {
-								alert(localise.set["c_error"] + ": " + err);
-							}
-						}
-					});
+						});
+					}
 
 				},
 				error: function (data) {

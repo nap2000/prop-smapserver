@@ -278,7 +278,7 @@ define([
                     itemIndex);
             } else if (configItem.readonly || !editable) {		// Read only text
                 if(configItem.type === 'conversation') {
-                    h[++idx] = addConversationCellMarkup(value);
+                    h[++idx] = addConversationCellMarkup(value, true);
                 } else {
                     h[++idx] = addCellMarkup(value);
                 }
@@ -626,7 +626,8 @@ define([
 
         }
 
-        function formatConversation(val) {
+        function formatConversation(val, getRefData) {
+            window.gEditRecord.contacts = {};
             var conv;
             if(val && val.length > 0 && val !== 'undefined' && val[0] === '[') {    // Only convert if the data is a json array, otherwise has already been converted
                 try {
@@ -642,13 +643,23 @@ define([
                         idx = -1,
                         j;
                     for (j = 0; j < conv.length; j++) {
+                        var css,
+                            justify;
+
                         if (conv[j].inbound) {
-                            h[++idx] = '<div class="d-flex flex-row justify-content-start mb-1 message">';
-                            h[++idx] = '<div class="p-1 border bg-body-tertiary conv-from" style="border-radius: 10px;">';
+                            css = 'conv-from';
+                            justify = 'justify-content-start';
                         } else {
-                            h[++idx] = '<div class="d-flex flex-row justify-content-end mb-1 message">';
-                            h[++idx] = '<div class="p-1 border bg-body-tertiary conv-to" style="border-radius: 10px;">';
+                            css = 'conv-to';
+                            justify = 'justify-content-end';
                         }
+                        if(conv[j].channel) {
+                            css += ' ' + conv[j].channel;
+                        } else {
+                            css += ' sms';  // Default style
+                        }
+                        h[++idx] = '<div class="d-flex flex-row ' + justify + ' mb-1 message">';
+                        h[++idx] = '<div class="p-1 border bg-body-tertiary ' + css + '" style="border-radius: 10px;">';
 
                         if (conv[j].ts) {
                             h[++idx] = '<time datetime="';
@@ -668,6 +679,12 @@ define([
 
                         h[++idx] = '</div>';
                         h[++idx] = '</div>';
+
+                        if(getRefData) {
+                            window.gEditRecord.contacts[conv[j].theirNumber] = {
+                                channel: conv[j].channel
+                            }
+                        }
                     }
                     return h.join('');
                 } else {
@@ -841,13 +858,13 @@ define([
         /*
        * Add markup for a conversation
        */
-        function addConversationCellMarkup(v) {
+        function addConversationCellMarkup(v, getRefData) {
             var h = [],
                 idx = -1;
 
             h[++idx] = ' <div class="border border-primary">';
             v = v.replace(/&quot;/g, '\"');    // TODO not sure why quotes are escaped here
-            h[++idx] = formatConversation(v);
+            h[++idx] = formatConversation(v, getRefData);
             h[++idx] = '</div>';
 
             return h.join('');

@@ -185,6 +185,7 @@ require([
     window.gNotifications = undefined;
     window.gChanges = [];
     window.gSelectedChart = -1;
+    window.gEditRecord = {};
 
 
     $(document).ready(function () {
@@ -3344,7 +3345,7 @@ require([
             } else if(headItem.type === 'conversation') {
                 $(globals.gMainTable.column(i).nodes()).each(function (index) {
                     var $this = $(this);
-                    $this.html(actioncommon.formatConversation(htmlEncode($this.text())));
+                    $this.html(actioncommon.formatConversation(htmlEncode($this.text()),false));
                 });
             }
         }

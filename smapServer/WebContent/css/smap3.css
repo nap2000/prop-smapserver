@@ -53,24 +53,44 @@ tr.deleted td a {
     color: lightgrey;
 }
 
-.conv-from {
+.conv-from.sms {
     background-color: #0a6fae;
     color: white;
 }
 
-.conv-to {
-    background-color: #b88a04;
+.conv-to.sms {
+    background-color: #7993a3;
+    color: black;
+}
+
+.conv-from.whatsapp {
+    background-color: #25d366;
     color: white;
 }
 
-.message time {
+.conv-to.whatsapp {
+    background-color: #dcf8c6;
+    color: black;
+}
+
+.conv-from.email {
+    background-color: #987554;
+    color: white;
+}
+
+.conv-to.email {
+    background-color: #e5d3b3;
+    color: black;
+}
+
+.message time, .message dest {
     font-size: 11px;
     color: #ccc;
     line-height: 1;
 }
 
-.message dest {
+.email time, .email dest {
     font-size: 11px;
-    color: #ccc;
+    color: #333;
     line-height: 1;
 }
