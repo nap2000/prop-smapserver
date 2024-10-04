@@ -4940,7 +4940,7 @@ function edit_notification(edit, idx, console) {
 		window.gSelectedNotification = notification.id;
 	} else {
 
-		$('#fwd_host').val(window.gRemote_host);	// Set the values to the ones last used
+		$('#fwd_host').val(window.gRemote_host);	// Set the values to the one's last used
 		$('#fwd_user').val(window.gRemote_user);
 
 		$('#survey').change();
@@ -4969,6 +4969,7 @@ function setTargetDependencies(target) {
 		$('.escalate_options,.email_options').show();
 	} else if(target  === "conversation") {
 		$('.conv_options').show();
+		msgCurNbrChanged();
 	}
 }
 
@@ -5011,8 +5012,53 @@ function setPeriodDependencies(period) {
 }
 
 /*
-	 * Update the notification list
-	 */
+ * Initialise notification popup
+ * Only required if the eDitRecord variable is set as used in immediate notifications
+ */
+function initNotPopup() {
+	if(window.gEditRecord) {
+		var $msg = $('#msg_cur_nbr');
+		var $email = $('#email_cur');
+		var other = localise.set["c_other"];
+		$('.select_msg').hide();
+		$('.other_msg').hide();
+		if (window.gEditRecord.contacts) {
+			for (const [key, value] of Object.entries(window.gEditRecord.contacts)) {
+				// Hack fix up channel for old entries, its either sms or email
+				if (!value.channel) {
+					value.channel = (key.indexOf("@") > 0) ? 'email' : 'sms';
+				}
+				if (!value.channel || value.channel === 'sms' || value.channel === 'whatsapp') {
+					$msg.append(`<option value="${key}">${key} - ${value.channel} </option>`);
+				} else {
+					$email.append(`<option value="${key}">${key}</option>`);
+				}
+			}
+			$msg.append(`<option value="other">${other}</option>`);
+			$email.append(`<option value="other">${other}</option>`);
+
+			$('#msg_cur_nbr').change(function () {
+				msgCurNbrChanged();
+			});
+
+		}
+	}
+}
+
+/*
+ * Change attribute visibility if the user select an existing number to message or selects other
+ */
+function msgCurNbrChanged($choice) {
+	if ($('#msg_cur_nbr').val() === 'other') {
+		$('.other_msg').show();
+	} else {
+		$('.other_msg').hide();
+	}
+}
+
+/*
+ * Update the notification list
+ */
 function updateNotificationTypes(data) {
 
 	var $selector=$('#target'),

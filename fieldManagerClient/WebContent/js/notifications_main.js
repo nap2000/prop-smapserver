@@ -155,7 +155,6 @@ require([
 		var url,
 			notification,
 			notificationString,
-			$dialog,
 			target = $('#target').val();
 
 		if(target === "email") {

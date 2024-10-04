@@ -3478,6 +3478,7 @@ require([
     $('#addNotification').click(function(){
         $('#dashboardInfo').hide();
         edit_notification(false, -1, true);
+        initNotPopup();
         $('#addNotificationPopup').modal("show");
     });
 
