@@ -5023,13 +5023,14 @@ function initNotPopup() {
 		$('.select_msg').hide();
 		$('.other_msg').hide();
 		if (window.gEditRecord.contacts) {
+			$msg.empty();
 			for (const [key, value] of Object.entries(window.gEditRecord.contacts)) {
 				// Hack fix up channel for old entries, its either sms or email
 				if (!value.channel) {
 					value.channel = (key.indexOf("@") > 0) ? 'email' : 'sms';
 				}
 				if (!value.channel || value.channel === 'sms' || value.channel === 'whatsapp') {
-					$msg.append(`<option value="${key}">${key} - ${value.channel} </option>`);
+					$msg.append(`<option data-channel="${value.channel}" value="${key}">${key} - ${value.channel} </option>`);
 				} else {
 					$email.append(`<option value="${key}">${key}</option>`);
 				}
@@ -5039,6 +5040,10 @@ function initNotPopup() {
 
 			$('#msg_cur_nbr').change(function () {
 				msgCurNbrChanged();
+			});
+
+			$('#msg_channel').change(function () {
+				setOurNumbersList();
 			});
 
 		}
@@ -5051,8 +5056,10 @@ function initNotPopup() {
 function msgCurNbrChanged($choice) {
 	if ($('#msg_cur_nbr').val() === 'other') {
 		$('.other_msg').show();
+		$('#msg_channel').prop( "disabled", false);
 	} else {
 		$('.other_msg').hide();
+		$('#msg_channel').val($('#msg_cur_nbr option:selected').attr('data-channel')).prop( "disabled", true);
 	}
 }
 
@@ -6313,4 +6320,51 @@ function handleLogout(data) {
 		return false;
 	}
 	return true;
+}
+
+/*
+ * Load the sms numbers from the server
+ */
+function getOurNumbers() {
+
+	var url="/surveyKPI/smsnumbers?org=true";
+	addHourglass();
+	$.ajax({
+		url: url,
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			removeHourglass();
+			if(handleLogout(data)) {
+				gNumbers = data;
+				setOurNumbersList();
+			}
+		},
+		error: function(xhr, textStatus, err) {
+			removeHourglass();
+			if(handleLogout(xhr.responseText)) {
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					console.log("Error: Failed to get list of sms numbers: " + err);
+				}
+			}
+		}
+	});
+}
+
+function setOurNumbersList() {
+	var i = 0;
+	if(gNumbers && gNumbers.length > 0) {
+		var $elem = $('#msg_our_nbr');
+		var channel = $('#msg_channel').val();
+		$elem.empty();
+		for(i = 0; i < gNumbers.length; i++) {
+			var n = gNumbers[i];
+			if(n.channel === channel) {
+				$elem.append(`<option value="${n.ourNumber}">${n.ourNumber} - ${n.channel} </option>`);
+			}
+		}
+
+	}
 }

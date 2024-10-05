@@ -3054,7 +3054,7 @@ require([
      */
 	function getSMSNumbers() {
 
-		var url="/surveyKPI/smsnumbers?tz=" + encodeURIComponent(globals.gTimezone);
+		var url="/surveyKPI/smsnumbers";
 		addHourglass();
 		$.ajax({
 			url: url,

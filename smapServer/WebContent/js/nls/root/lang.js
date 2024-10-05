@@ -77,6 +77,7 @@ define({
     "c_before": "Before",
     "c_bundle": "Bundle",
     "c_cases": "Cases",
+    "c_channel": "Channel",
     "c_closed": "Closed",
     "c_cm": "Case Management",
     "c_crit": "Criticality",

@@ -3412,6 +3412,7 @@ require([
         $('#srLink').val("");
         getSurveyRoles(globals.gCurrentSurvey, undefined, false, false);
         getRecordChanges(gTasks.gSelectedRecord);
+        getOurNumbers();
 
         var sIdent = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].ident;
         var instanceId = gTasks.gSelectedRecord.instanceid;
