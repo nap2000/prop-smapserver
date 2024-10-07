@@ -5022,8 +5022,9 @@ function initNotPopup() {
 		var other = localise.set["c_other"];
 		$('.select_msg').hide();
 		$('.other_msg').hide();
+
+		$msg.empty();
 		if (window.gEditRecord.contacts) {
-			$msg.empty();
 			for (const [key, value] of Object.entries(window.gEditRecord.contacts)) {
 				// Hack fix up channel for old entries, its either sms or email
 				if (!value.channel) {
@@ -5035,18 +5036,17 @@ function initNotPopup() {
 					$email.append(`<option value="${key}">${key}</option>`);
 				}
 			}
-			$msg.append(`<option value="other">${other}</option>`);
-			$email.append(`<option value="other">${other}</option>`);
-
-			$('#msg_cur_nbr').change(function () {
-				msgCurNbrChanged();
-			});
-
-			$('#msg_channel').change(function () {
-				setOurNumbersList();
-			});
-
 		}
+		$msg.append(`<option value="other">${other}</option>`);
+		$email.append(`<option value="other">${other}</option>`);
+
+		$('#msg_cur_nbr').change(function () {
+			msgCurNbrChanged();
+		});
+
+		$('#msg_channel').change(function () {
+			setOurNumbersList();
+		});
 	}
 }
 
@@ -5320,18 +5320,21 @@ function saveDocument() {
 /*
  * Process a save notification when the target is "conversation"
  */
-function saveConversation(columns, numberQuestion, ourNumber, record) {
+function saveConversation(columns, theirNumber, ourNumber, msgChannel, record) {
 
 	var notification = {};
 
 	notification.target = "conversation";
 	notification.notifyDetails = {};
 	notification.notifyDetails.content = $('#conversation_text').val();
-
-	var columnName = getConsoleColumnName(columns, numberQuestion);
-	notification.notifyDetails.emails = [record[columnName]];		// Must be sent as an array
+	notification.notifyDetails.emails = [theirNumber];		// Must be sent as an array
 	notification.notifyDetails.ourNumber = ourNumber;
+	notification.notifyDetails.msgChannel = msgChannel;
 
+	if(!theirNumber || theirNumber.length === 0) {
+		notification.error = true;
+		notification.errorMsg = localise.set["msg_no_nbr"];
+	}
 	return notification;
 }
 

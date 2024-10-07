@@ -933,11 +933,13 @@ require([
 		$('#addSmsSave').click(function(){
 
 			var number = $('#addSmsNumber').val(),
-				org = $('#addSmsOrganisation').val();
+				org = $('#addSmsOrganisation').val(),
+				channel = $('#addSmsChannel').val();
 
 			// TODO validate
 			var sms = {
 				ourNumber: number,
+				channel:channel,
 				oId: org
 			}
 
@@ -3100,6 +3102,10 @@ require([
 		h[++idx] = '</th>';
 
 		h[++idx] = '<th scope="col" style="text-align: center;">';
+		h[++idx] = localise.set["c_channel"];
+		h[++idx] = '</th>';
+
+		h[++idx] = '<th scope="col" style="text-align: center;">';
 		h[++idx] = localise.set["c_org"];
 		h[++idx] = '</th>';
 
@@ -3130,6 +3136,10 @@ require([
 			// number
 			h[++idx] = '<td style="text-align: center;">';
 			h[++idx] = htmlEncode(data[i].ourNumber);
+			h[++idx] = '</td>';
+
+			h[++idx] = '<td style="text-align: center;">';
+			h[++idx] = htmlEncode(data[i].channel);
 			h[++idx] = '</td>';
 
 			// orgName

@@ -3601,7 +3601,14 @@ require([
         var url,
             notification,
             notificationString,
-            target = $('#target').val();
+            target = $('#target').val(),
+            theirNumber = $('#msg_cur_nbr').val(),
+            ourNumber = $('#msg_our_nbr').val(),
+            msgChannel = $('#msg_channel').val();
+
+        if(theirNumber === 'other') {
+            theirNumber = $('#msg_nbr_other').val();
+        }
 
         $('#saveNotification').prop("disabled", true);  // debounce
 
@@ -3613,8 +3620,9 @@ require([
             notification = saveDocument();
         } else if(target === "conversation") {
             notification = saveConversation(gTasks.cache.currentData.schema.columns,
-                gTasks.cache.currentData.sms.theirNumberQuestion,
-                gTasks.cache.currentData.sms.ourNumber,
+                theirNumber,
+                ourNumber,
+                msgChannel,
                 gTasks.gSelectedRecord);
         }
 

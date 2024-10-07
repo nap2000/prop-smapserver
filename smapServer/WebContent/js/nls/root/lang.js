@@ -699,6 +699,7 @@ define({
     "msg_archive_none": "There is no data to archive",
     "msg_archive_data": "Are you sure you want to archive old submissions?",
     "msg_archive_before": "The date before which submissions will be archived must be specified",
+    "msg_no_nbr": "You must specify their number",
 
     // Editor
     "e_b_e": "Base on existing form",
