@@ -5024,13 +5024,16 @@ function initMsgNotPopup() {
 		$('.other_msg').hide();
 
 		$msg.empty();
+		var hasSelect = false;
 		if (window.gEditRecord.contacts) {
 			for (const [key, value] of Object.entries(window.gEditRecord.contacts)) {
 				// Hack fix up channel for old entries, its either sms or email
 				if (!value.channel) {
 					value.channel = (key.indexOf("@") > 0) ? 'email' : 'sms';
 				}
+
 				if (!value.channel || value.channel === 'sms' || value.channel === 'whatsapp') {
+					hasSelect = true;
 					$msg.append(`<option data-channel="${value.channel}" value="${key}">${key} - ${value.channel} </option>`);
 				} else {
 					$email.append(`<option value="${key}">${key}</option>`);
@@ -5041,6 +5044,11 @@ function initMsgNotPopup() {
 		}
 		$msg.append(`<option value="other">${other}</option>`);
 		$email.append(`<option value="other">${other}</option>`);
+		if(hasSelect) {
+			$('.select_msg').show();
+		} else {
+			$('.other_msg').show();
+		}
 
 		$('#msg_cur_nbr').change(function () {
 			msgCurNbrChanged();
