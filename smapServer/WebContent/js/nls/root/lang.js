@@ -1267,6 +1267,7 @@ define({
     "u_org_admin": "Organisation Administrator",
     "u_ent_admin": "Enterprise Administator",
     "u_server_owner": "Server Owner",
+    "u_check_mv_u": "Are you sure you want to move the following users (%s1) to %s2",
 	"u_check_mv_p": "Are you sure you want to move the following projects (%s1) to %s2",
 	"u_check_mv_o": "Are you sure you want to move organisation \"%s1\" to enterprise \"%s2\"",
     "u_only_one_ent": "Only one enterprise has been created.  You need to create another one to move an organisation there",

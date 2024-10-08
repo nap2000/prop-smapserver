@@ -3039,7 +3039,7 @@ require([
 
 		orgId = $('#target_organisation').val();
 
-		msg = localise.set["u_check_mv_p"];
+		msg = localise.set["u_check_mv_u"];
 		msg = msg.replace("%s1", usersMoving);
 		msg = msg.replace("%s2", $('#target_organisation :selected').text());
 
