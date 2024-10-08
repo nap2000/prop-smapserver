@@ -4969,7 +4969,7 @@ function setTargetDependencies(target) {
 		$('.escalate_options,.email_options').show();
 	} else if(target  === "conversation") {
 		$('.conv_options').show();
-		msgCurNbrChanged();
+		initMsgNotPopup();
 	}
 }
 
@@ -5015,7 +5015,7 @@ function setPeriodDependencies(period) {
  * Initialise notification popup
  * Only required if the eDitRecord variable is set as used in immediate notifications
  */
-function initNotPopup() {
+function initMsgNotPopup() {
 	if(window.gEditRecord) {
 		var $msg = $('#msg_cur_nbr');
 		var $email = $('#email_cur');
@@ -5036,6 +5036,8 @@ function initNotPopup() {
 					$email.append(`<option value="${key}">${key}</option>`);
 				}
 			}
+			msgCurNbrChanged();
+			setOurNumbersList();
 		}
 		$msg.append(`<option value="other">${other}</option>`);
 		$email.append(`<option value="other">${other}</option>`);
@@ -5047,6 +5049,7 @@ function initNotPopup() {
 		$('#msg_channel').change(function () {
 			setOurNumbersList();
 		});
+
 	}
 }
 
@@ -6368,6 +6371,5 @@ function setOurNumbersList() {
 				$elem.append(`<option value="${n.ourNumber}">${n.ourNumber} - ${n.channel} </option>`);
 			}
 		}
-
 	}
 }
