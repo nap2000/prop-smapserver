@@ -1074,7 +1074,7 @@ require([
 
 	function surveyChangedTasks(filterQuestion, address_columns) {
 		sId = globals.gCurrentSurvey;
-		if(!sId) {
+		if(!sId || sId < 0) {
 			sId = $('#survey').val();
 		}
 
