@@ -3033,45 +3033,44 @@ function downloadFileErrorCheck() {
  */
 function generateFile(url, filename, format, mime, data, sId, groupSurvey, title, project, charts, chartData, settings, tz, form) {
 
-	var payload = "sId=" + sId;
-	payload += "&format=" + format;
+	var fd = new FormData();
+	fd.append("sId", sId);
+	fd.append("format", format);
 	if(groupSurvey) {
-		payload += "&groupSurvey=" + groupSurvey;
+		fd.append("groupSurvey", groupSurvey)
 	}
 	if(form) {
-		payload += "&form=" + form;
+		fd.append("form", form);
 	}
 	if(data) {
-		payload += "&data=" + encodeURIComponent(JSON.stringify(data));
+		fd.append("data", JSON.stringify(data));
 	}
 	if(title) {
-		payload += "&title=" + title;
+		fd.append("title", title);
 	}
 	if(project) {
-		payload += "&project=" + project;
+		fd.append("project", project);
 	}
 	if(charts) {
-		payload += "&charts=" + encodeURIComponent(JSON.stringify(charts));
+		fd.append("charts", JSON.stringify(charts));
 	}
 	if(chartData) {
-		payload += "&chartdata=" + encodeURIComponent(JSON.stringify(chartData));
+		fd.append("chartData", JSON.stringify(chartData));
 	}
 	if(settings) {
-		payload += "&settings=" + encodeURIComponent(JSON.stringify(settings));
+		fd.append("settings", JSON.stringify(settings));
 	}
 	if(tz) {
-		payload += "&tz=" + encodeURIComponent(JSON.stringify(tz));
+		fd.append("tz",JSON.stringify(tz));
 	}
-	payload = payload.replace(/%20/g, '+');
 
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', url, true);
-	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 	xhr.responseType = 'blob';
 
 	xhr.onload = function(e) {
-		if(handleLogout(this)) {
+		if(handleLogout(xhr.responseURL)) {
 			if (this.status == 200) {
 				// get binary data as a response
 				var blob = new Blob([this.response], {type: mime});
@@ -3092,9 +3091,12 @@ function generateFile(url, filename, format, mime, data, sId, groupSurvey, title
 	};
 
 	xhr.onerror = function(e) {
-		alert("Error: Upload Failed");
+		if(handleLogout(this)) {
+			alert("Error: Upload Failed");
+		}
 	}
-	xhr.send(payload);
+
+	xhr.send(fd);
 
 }
 
@@ -6324,6 +6326,7 @@ function handleLogout(data) {
 			|| (data.status && data.status === 413)   // When expecting blobx
 			|| (typeof data === "string" && data.indexOf('"code": 401') >= 0))
 			|| (typeof data === "string" && data.indexOf('Status 401 – Unauthorized') >= 0)
+			|| (typeof data === "string" && data.indexOf('notloggedin.json') >= 0)
 			|| (typeof data === "string" && data.toLowerCase().indexOf("method not allowed") >= 0)		// For delete functions
 		) {
 		window.open("/login.html");
