@@ -449,6 +449,8 @@ require([
 					loadSurveys(tgRule.source_project, "#survey", false, false, sourceProjectSet, false, undefined, undefined);
 				} else {
 					$('#survey').val(tg.source_s_id);
+					gSourceSurvey = tg.source_s_id;
+					sourceProjectSet();
 				}
 				if(tgRule.update_results) {
 					$('#id_update_results').prop('checked', true);
@@ -509,6 +511,7 @@ require([
 				}
 
 				if(tgRule.taskStart) {
+					gTaskStart = tgRule.taskStart;				// Use to set value if lists of tasks are still loading in the background
 					$('#task_start').val(tgRule.taskStart);		// Set start of task
 					$('#task_after').val(tgRule.taskAfter);
 					$('#task_units').val(tgRule.taskUnits);
@@ -1073,9 +1076,9 @@ require([
 	}
 
 	function surveyChangedTasks(filterQuestion, address_columns) {
-		sId = globals.gCurrentSurvey;
-		if(!sId || sId < 0) {
-			sId = $('#survey').val();
+		var sId = $('#survey').val();
+		if(!sId || sId <= 0) {
+			sId = globals.gCurrentSurvey;
 		}
 
 		if(sId) {
@@ -1093,6 +1096,7 @@ require([
 	 */
 	function sourceProjectSet() {
 		$('#survey').val(gSourceSurvey);
+		surveyChangedTasks();
 	}
 
 	function languageChanged() {

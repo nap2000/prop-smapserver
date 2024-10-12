@@ -1907,8 +1907,11 @@ function retrievedLanguages(sId, selector, data, theCallback, filterQuestion, se
 	}
 
 	if(data[0]) {
-		var dateqId = $('#task_start').val();
-		getQuestionList(sId, data[0], filterQuestion, "-1", theCallback, setGroupList, undefined, dateqId, undefined, undefined, undefined);	// Default language to the first in the list
+		var dateQId = -1;
+		if(typeof gTaskStart !== "undefined") {
+			dateQId = gTaskStart;
+		}
+		getQuestionList(sId, data[0], filterQuestion, "-1", theCallback, setGroupList, undefined, dateQId, undefined, undefined, undefined);	// Default language to the first in the list
 	} else {
 		if(typeof theCallback === "function") {
 			theCallback();
