@@ -6314,7 +6314,9 @@ function checkLoggedIn(callback) {
 			}
 
 		}, error: function (data, status) {
-			alert(data);
+			if(handleLogout(data.responseText)) {
+				alert(data);
+			}
 		}
 	});
 }
