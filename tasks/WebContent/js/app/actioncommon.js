@@ -284,7 +284,6 @@ define([
                 }
             } else {
                 h[++idx] = addEditableColumnMarkup(configItem, value, itemIndex, first, schema, record, prefix);
-                first = false;
             }
             h[++idx] = '</div>';
 
@@ -642,7 +641,7 @@ define([
                     var h = [],
                         idx = -1,
                         j;
-                    for (j = 0; j < conv.length; j++) {
+                    for (j = conv.length - 1; j >= 0; j--) {
                         var css,
                             justify;
 
@@ -856,8 +855,8 @@ define([
         }
 
         /*
-       * Add markup for a conversation
-       */
+        * Add markup for a conversation
+        */
         function addConversationCellMarkup(v, getRefData) {
             var h = [],
                 idx = -1;

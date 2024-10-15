@@ -2569,6 +2569,12 @@ require([
                         h[++idx] = '">';
                         h[++idx] = localise.set["t_edit_task"];
                         h[++idx] = '</button>';
+                    } else  if (data[i].event === 'inbound_msg' && i < data.length - 1) {     // Button to create new case for this message if it was not the first message
+                        h[++idx] = '<button class="btn btn-secondary new_case" data-idx="';
+                        h[++idx] = i;
+                        h[++idx] = '">';
+                        h[++idx] = localise.set["t_new_case"];
+                        h[++idx] = '</button>';
                     }
                     h[++idx] = '</td>';
 

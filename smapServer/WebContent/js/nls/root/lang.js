@@ -750,6 +750,7 @@ define({
     "t_add_tasks": "Click on the map where you want to add new tasks. When finished click on 'Save Tasks' button",
     "t_add_task": "Add Task",
     "t_edit_task": "Edit Task",
+    "t_new_case": "New Case",
     "t_add_tasks2": "Add Tasks",
     "t_save_tasks": "Save Tasks",
     "t_tasks_only": "Tasks Only",

@@ -85,7 +85,7 @@ tr.deleted td a {
 
 .message time, .message dest {
     font-size: 11px;
-    color: #ccc;
+    color: #333;
     line-height: 1;
 }
 
