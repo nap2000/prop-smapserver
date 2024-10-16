@@ -2669,6 +2669,53 @@ require([
                 }
             });
         });
+
+        $('.new_case').click(function(){
+
+            $('#dashboardInfo').hide();
+            var idx = $(this).data("idx");
+            var change = window.gChanges[idx];
+            var url = "/surveyKPI/api/tasks/assignment/" + task.assignmentId + "?taskid=" + task.taskId;
+            // Get the task details and then open the editor dialog
+
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                    if(handleLogout(data)) {
+                        var task = data,
+                            taskFeature = {
+                                geometry: {
+                                    coordinates: [],
+                                    type: 'Point'
+                                },
+                                properties: {}
+                            };
+                        taskFeature.geometry.coordinates.push(task.lon);
+                        taskFeature.geometry.coordinates.push(task.lat);
+                        taskFeature.properties.form_id = task.survey_ident;
+                        taskFeature.properties.assignee = task.assignee;
+                        taskFeature.properties.emails = task.emails;
+                        taskFeature.properties.repeat = task.repeat;
+                        taskFeature.properties.id = task.id;
+                        taskFeature.properties.a_id = task.a_id;
+
+                        editTask(false, task, taskFeature);
+                    }
+                },
+                error: function (xhr, textStatus, err) {
+                    removeHourglass();
+                    if(handleLogout(xhr.responseText)) {
+                        if (xhr.readyState == 0 || xhr.status == 0) {
+                            return;  // Not an error
+                        } else {
+                            console.log(localise.set["c_error"] + ": " + err);
+                        }
+                    }
+                }
+            });
+        });
     }
 
     /*
