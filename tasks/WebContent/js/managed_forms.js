@@ -2479,7 +2479,8 @@ require([
 
                 if((includeChanges && (data[i].event === 'changes' || data[i].event === 'created' || data[i].event === 'deleted'
                         || data[i].event === 'restored'
-                        || data[i].event === 'inbound_msg')) ||
+                        || data[i].event === 'inbound_msg'
+                        || data[i].event === 'new_case')) ||
                     (includeTasks && data[i].event === 'task') ||
                     (includeAssignments && data[i].event === 'assigned') ||
                     (includeNotifications && data[i].event === 'notification')) {
@@ -2569,7 +2570,7 @@ require([
                         h[++idx] = '">';
                         h[++idx] = localise.set["t_edit_task"];
                         h[++idx] = '</button>';
-                    } 
+                    }
                     h[++idx] = '</td>';
 
                     h[++idx] = '</tr>';    // row
