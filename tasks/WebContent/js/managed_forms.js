@@ -655,6 +655,44 @@ require([
         });
 
         /*
+         * Save response to a message edit popup
+         */
+        $('#messageSave').click(function(e) {
+            e.preventDefault();
+            var action = {
+                idx: window.gMessageIdx,
+                sId: globals.gCurrentSurvey,
+                groupSurvey: globals.gGroupSurveys[globals.gCurrentSurvey],
+                instanceid: gTasks.gSelectedRecord.instanceid,
+                comment: $('#mComment').val()
+            }
+
+            $.ajax({
+                url: "/surveyKPI/message/newcase",
+                type: "POST",
+                contentType: "application/x-www-form-urlencoded",
+                cache: false,
+                data: action,
+                success: function (data) {
+                    if(handleLogout(data)) {
+                        $('#messagePopup').modal('hide');
+                        getRecordChanges(gTasks.gSelectedRecord);
+                    }
+                },
+                error: function (xhr, textStatus, err) {
+                    removeHourglass();
+                    if(handleLogout(xhr.responseText)) {
+                        if (xhr.readyState == 0 || xhr.status == 0) {
+                            return;  // Not an error
+                        } else {
+                            console.log(localise.set["c_error"] + ": " + err);
+                        }
+                    }
+                }
+            });
+        });
+
+        /*
          * Save changes to the table columns that are shown
          */
         $('#saveSettings').click(function () {
@@ -3410,6 +3448,7 @@ require([
      */
     function showRecord(editable) {
 
+        window.gEditable = editable;
         window.location.hash="#edit";
         $('.shareRecordOnly, .role_select').hide();
         $('#srLink').val("");

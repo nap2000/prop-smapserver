@@ -1445,5 +1445,33 @@
     </div>
 </div>
 
+<!-- Modify Message -->
+<div id="messagePopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="mLabel" class="modal-title lang" data-lang="msg_nc"></h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+
+                <form id="messageForm" role="form">
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 control-label lang" data-lang="c_comment" for="mComment"></label>
+                        <div class="col-sm-8">
+                            <textarea id="mComment" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_no">Close</button>
+                <button id="messageSave" type="button" class="btn btn-primary lang" data-lang="c_yes">save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

@@ -700,6 +700,7 @@ define({
     "msg_archive_data": "Are you sure you want to archive old submissions?",
     "msg_archive_before": "The date before which submissions will be archived must be specified",
     "msg_no_nbr": "You must specify their number",
+    "msg_nc": "Do you want to move this message to a new case",
 
     // Editor
     "e_b_e": "Base on existing form",

@@ -110,39 +110,11 @@ define([
 
             // Set up clicks on conversations
             $('.respond', $surveyForm).on('click', function(e) {
-                var $this = $(this);
-                var idx = $this.data("idx");
-
-                var action = {
-                    idx: idx,
-                    sId: globals.gCurrentSurvey,
-                    groupSurvey: globals.gGroupSurveys[globals.gCurrentSurvey],
-                    instanceid: gTasks.gSelectedRecord.instanceid
+                if(window.gEditable) {
+                    window.gMessageIdx = $(this).data("idx");
+                    $('#messageForm')[0].reset();
+                    $('#messagePopup').modal('show');
                 }
-
-                $.ajax({
-                    url: "/surveyKPI/message/newcase",
-                    type: "POST",
-                    contentType: "application/x-www-form-urlencoded",
-                    cache: false,
-                    data: action,
-                    success: function (data) {
-                        if(handleLogout(data)) {
-
-                        }
-                    },
-                    error: function (xhr, textStatus, err) {
-                        removeHourglass();
-                        if(handleLogout(xhr.responseText)) {
-                            if (xhr.readyState == 0 || xhr.status == 0) {
-                                return;  // Not an error
-                            } else {
-                                console.log(localise.set["c_error"] + ": " + err);
-                            }
-                        }
-                    }
-                });
-
             });
 
             // Set up multi selects
