@@ -2569,13 +2569,7 @@ require([
                         h[++idx] = '">';
                         h[++idx] = localise.set["t_edit_task"];
                         h[++idx] = '</button>';
-                    } else  if (data[i].event === 'inbound_msg' && i < data.length - 1) {     // Button to create new case for this message if it was not the first message
-                        h[++idx] = '<button class="btn btn-secondary new_case" data-idx="';
-                        h[++idx] = i;
-                        h[++idx] = '">';
-                        h[++idx] = localise.set["t_new_case"];
-                        h[++idx] = '</button>';
-                    }
+                    } 
                     h[++idx] = '</td>';
 
                     h[++idx] = '</tr>';    // row
@@ -2655,36 +2649,6 @@ require([
                         taskFeature.properties.a_id = task.a_id;
 
                         editTask(false, task, taskFeature);
-                    }
-                },
-                error: function (xhr, textStatus, err) {
-                    removeHourglass();
-                    if(handleLogout(xhr.responseText)) {
-                        if (xhr.readyState == 0 || xhr.status == 0) {
-                            return;  // Not an error
-                        } else {
-                            console.log(localise.set["c_error"] + ": " + err);
-                        }
-                    }
-                }
-            });
-        });
-
-        $('.new_case').click(function(){
-
-            $('#dashboardInfo').hide();
-            var idx = $(this).data("idx");
-            var message = window.gChanges[idx].message;
-
-            $.ajax({
-                url: "/surveyKPI/message/newcase",
-                type: "POST",
-                contentType: "application/x-www-form-urlencoded",
-                cache: false,
-                data: message,
-                success: function (data) {
-                    if(handleLogout(data)) {
-
                     }
                 },
                 error: function (xhr, textStatus, err) {
@@ -3384,7 +3348,6 @@ require([
                     if($this[0].innerHTML.startsWith("[")) {  // Only format if this is a json array
                         $this.html(actioncommon.formatConversation(htmlEncode($this.text()),false));
                     }
-
                 });
             }
         }

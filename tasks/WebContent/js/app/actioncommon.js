@@ -108,6 +108,43 @@ define([
                 showTodayButton: true
             });
 
+            // Set up clicks on conversations
+            $('.respond', $surveyForm).on('click', function(e) {
+                var $this = $(this);
+                var idx = $this.data("idx");
+
+                var action = {
+                    idx: idx,
+                    sId: globals.gCurrentSurvey,
+                    groupSurvey: globals.gGroupSurveys[globals.gCurrentSurvey],
+                    instanceid: gTasks.gSelectedRecord.instanceid
+                }
+
+                $.ajax({
+                    url: "/surveyKPI/message/newcase",
+                    type: "POST",
+                    contentType: "application/x-www-form-urlencoded",
+                    cache: false,
+                    data: action,
+                    success: function (data) {
+                        if(handleLogout(data)) {
+
+                        }
+                    },
+                    error: function (xhr, textStatus, err) {
+                        removeHourglass();
+                        if(handleLogout(xhr.responseText)) {
+                            if (xhr.readyState == 0 || xhr.status == 0) {
+                                return;  // Not an error
+                            } else {
+                                console.log(localise.set["c_error"] + ": " + err);
+                            }
+                        }
+                    }
+                });
+
+            });
+
             // Set up multi selects
             $('.select', $editForm).multiselect({
                 onChange: function(option, checked, select) {
@@ -625,7 +662,7 @@ define([
 
         }
 
-        function formatConversation(val, getRefData) {
+        function formatConversation(val, inEdit) {
             window.gEditRecord.contacts = {};
             var conv;
             if(val && val.length > 0 && val !== 'undefined' && val[0] === '[') {    // Only convert if the data is a json array, otherwise has already been converted
@@ -643,8 +680,12 @@ define([
                         j;
                     for (j = conv.length - 1; j >= 0; j--) {
                         var css,
-                            justify;
+                            justify,
+                            respond = "";
 
+                        if(inEdit && conv[j].inbound && (conv[j].channel === 'sms' || conv[j].channel === 'whatsapp')) {
+                            respond = 'respond';
+                        }
                         if (conv[j].inbound) {
                             css = 'conv-from';
                             justify = 'justify-content-start';
@@ -657,7 +698,7 @@ define([
                         } else {
                             css += ' sms';  // Default style
                         }
-                        h[++idx] = '<div class="d-flex flex-row ' + justify + ' mb-1 message">';
+                        h[++idx] = '<div class="d-flex flex-row ' + justify + ' ' + respond + ' mb-1 message"' + (inEdit ? 'data-idx="' + j + '"' : '') + '>';
                         h[++idx] = '<div class="p-1 border bg-body-tertiary ' + css + '" style="border-radius: 10px;">';
 
                         if (conv[j].ts) {
@@ -679,7 +720,7 @@ define([
                         h[++idx] = '</div>';
                         h[++idx] = '</div>';
 
-                        if(getRefData) {
+                        if(inEdit) {
                             window.gEditRecord.contacts[conv[j].theirNumber] = {
                                 channel: conv[j].channel
                             }
@@ -857,13 +898,13 @@ define([
         /*
         * Add markup for a conversation
         */
-        function addConversationCellMarkup(v, getRefData) {
+        function addConversationCellMarkup(v, inEdit) {
             var h = [],
                 idx = -1;
 
             h[++idx] = ' <div class="border border-primary">';
             v = v.replace(/&quot;/g, '\"');    // TODO not sure why quotes are escaped here
-            h[++idx] = formatConversation(v, getRefData);
+            h[++idx] = formatConversation(v, inEdit);
             h[++idx] = '</div>';
 
             return h.join('');
