@@ -4911,6 +4911,11 @@ function edit_notification(edit, idx, console) {
 				$('#sms_content').val(notification.notifyDetails.content);
 				$('#sms_attach').val(notification.notifyDetails.attach);
 				$('#sms_sender_id').val(notification.notifyDetails.subject);
+			} else if (notification.target == "conversation") {
+				if (notification.notifyDetails.emails) {
+					$('#notify_sms').val(notification.notifyDetails.emails.join(","));
+				}
+				$('#conversation_text').val(notification.notifyDetails.content);
 			} else if (notification.target == "webhook") {
 				$('#callback_url').val(notification.notifyDetails.callback_url);
 			}

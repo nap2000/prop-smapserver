@@ -3384,7 +3384,7 @@ require([
             } else if(headItem.type === 'conversation') {
                 $(globals.gMainTable.column(i).nodes()).each(function (index) {
                     var $this = $(this);
-                    if($this[0].innerHTML.startsWith("[")) {  // Only format if this is a json array
+                    if($this[0] && $this[0].innerHTML && $this[0].innerHTML.startsWith("[")) {  // Only format if this is a json array
                         $this.html(actioncommon.formatConversation(htmlEncode($this.text()),false));
                     }
                 });
