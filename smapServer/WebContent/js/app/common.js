@@ -711,6 +711,10 @@ function addLanguageOptions($elem, current) {
 			{
 				locale: "es",
 				name: "Spanish"
+			},
+			{
+				locale: "uk",
+				name: "Ukrainian"
 			}
 		];
 

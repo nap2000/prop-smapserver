@@ -1344,6 +1344,7 @@ define({
     "fr": "French",
     "hi": "Hindi",
     "pt": "Portuguese",
+    "uk": "Ukrainian",
     "es": "Spanish",
 
     // Notifications

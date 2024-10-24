@@ -4,5 +4,6 @@ define({
 	"fr": true,
 	"pt": true,
 	"es": true,
-	"hi": true
+	"hi": true,
+	"uk": true
 });
