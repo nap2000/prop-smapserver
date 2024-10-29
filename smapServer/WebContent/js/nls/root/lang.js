@@ -255,6 +255,7 @@ define({
     "c_scheduled": "Scheduled",
     "c_t_c": "terms and conditions",
     "c_agree": "I agree to the",
+    "c_sa": "Select All",
     "c_select": "Select",
     "c_status": "Status",
     "c_coords": "Coordinates",

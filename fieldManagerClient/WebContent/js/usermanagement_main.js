@@ -1013,6 +1013,14 @@ require([
 			});
 		});
 
+		// Toggle select all
+		$('#sau').click(function() {
+			var selected = $(this).is(':checked');
+			$('#p_user_projects').find('input').each(function(){
+				$(this).prop('checked', selected);
+			});
+		});
+
 	});
 
 	/*
@@ -1428,6 +1436,9 @@ require([
 		for (let i = 0; i < gUsers.length; i++) {
 			let user = gUsers[i];
 
+			if(globals.gLoggedInUser && user.current_org_name !== globals.gLoggedInUser.organisation_name) {
+				continue;	// Skip if user is not in the current project
+			}
 			let yesProject = false;
 			if(globals.gProjectList.length > 0 && projectIndex >= 0 && projectIndex < globals.gProjectList.length) {
 				yesProject = hasId(user.projects, globals.gProjectList[projectIndex].id);
