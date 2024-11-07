@@ -739,8 +739,10 @@ require([
 		var emailType = $('#s_email_type').val();
 		if(emailType === 'smtp') {
 			$('.smtp').show();
+			$('.awssdk').hide();
 		} else {
 			$('.smtp').hide();
+			$('.awssdk').show();
 		}
 	}
 	function getSmsType() {
@@ -775,6 +777,7 @@ require([
 		$('#vonage_webhook_secret').val(data.vonage_webhook_secret);
 		$('#s_email_type').val(data.email_type);
 		$('#s_smtp_host').val(data.smtp_host);
+		$('#s_aws_region').val(data.aws_region);
 		$('#s_email_domain').val(data.email_domain);
 		$('#s_email_user').val(data.email_user);
 		$('#s_email_password').val(data.email_password);
@@ -801,6 +804,7 @@ require([
 				vonage_webhook_secret: $('#vonage_webhook_secret').val(),
 				email_type: $('#s_email_type').val(),
 				smtp_host: $('#s_smtp_host').val(),
+				aws_region: $('#s_aws_region').val(),
 				email_domain: $('#s_email_domain').val(),
 				email_user: $('#s_email_user').val(),
 				email_password: $('#s_email_password').val(),

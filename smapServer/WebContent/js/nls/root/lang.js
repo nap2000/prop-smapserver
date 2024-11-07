@@ -1246,6 +1246,7 @@ define({
     "u_mt_k": "MapTiler Maps Key",
     "u_v_k": "Vonage Application Id",
     "u_v_whs": "Vonage Webhook Secret",
+    "u_ar": "AWS Region for Email Service",
     "u_smtp": "Smtp Host",
     "u_e_type": "Email Type",
     "u_e_dom": "Email Domain",
