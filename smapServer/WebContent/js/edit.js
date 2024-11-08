@@ -443,7 +443,7 @@ $(document).ready(function() {
         if($(this).closest('li').hasClass('disabled')) {
             bootbox.alert(localise.set["ed_cx"]);
         } else {
-            window.location.href = "/surveyKPI/xlsForm/" + globals.gCurrentSurvey + "?filetype=" + "xlsx" + addCacheBuster("?");;
+         	checkLoggedIn(exportSurvey);
         }
     });
 
@@ -1082,6 +1082,13 @@ function setLanguageCodes() {
 		$('.p_medical, .p_med_type').hide();
 	}
 
+}
+
+/*
+ * Export the survey being currently edited
+ */
+function exportSurvey() {
+	window.location.href = "/surveyKPI/xlsForm/" + globals.gCurrentSurvey + "?filetype=" + "xlsx" + addCacheBuster("?");
 }
 
 /*
