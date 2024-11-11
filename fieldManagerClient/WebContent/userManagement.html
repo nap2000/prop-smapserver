@@ -1017,7 +1017,7 @@
 </div>
 
 <!-- Modal to edit an SMS number -->
-<div id="edit_sms_popup" class="modal fade" role="dialog" aria-labelledby="editSmsLabel" aria-hidden="true">
+<div id="edit_sms_popup" class="modal fade" data-backdrop="static" role="dialog" aria-labelledby="editSmsLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -1062,6 +1062,14 @@
 								<select id="messageQuestion" class="select_question form-control"></select>
 							</div>
 						</div>
+
+						<div class="form-group row">
+							<label for="mcMsg" data-lang="c_mcm" class="lang col-sm-2 control-label"></label>
+							<div class="col-sm-6">
+								<textarea class="form-control" type="text"  id="mcMsg"></textarea>
+							</div>
+							<p class="lang col-sm-4" data-lang="c_mcmg"></p>
+						</div>
 					</div>
 					<div class="diffOrg">
 						<p class="lang" data-lang="msg_so"></p>
@@ -1080,7 +1088,7 @@
 </div>
 
 <!-- Modal to edit an SMS number -->
-<div id="app_code_popup" class="modal fade" role="dialog" aria-labelledby="editSmsLabel" aria-hidden="true">
+<div id="app_code_popup" class="modal fade" data-backdrop="static" role="dialog" aria-labelledby="appCodeLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">

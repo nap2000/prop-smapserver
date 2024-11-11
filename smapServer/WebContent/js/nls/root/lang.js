@@ -813,6 +813,8 @@ define({
     "e_h_c2": "Relevant statements are evaluated before a question is asked so they cannot refer to their own questions",
     "e_brackets": "Mismatched brackets in function",
     "e_text": "Error with the following text:",
+    "c_mcm": "Multi case message",
+    "c_mcmg": "Use place holder %s1 for the number of open cases and %s2 to hold the list of existing cases",
 
     // Register
     "r_o_n": "Organisation Name",

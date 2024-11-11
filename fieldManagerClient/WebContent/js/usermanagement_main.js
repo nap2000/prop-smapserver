@@ -986,7 +986,8 @@ require([
 				oId: org,
 				sIdent: sIdent,
 				theirNumberQuestion: theirNumberQuestion,
-				messageQuestion: messageQuestion
+				messageQuestion: messageQuestion,
+				mcMsg: $('#mcMsg').val()
 			}
 
 			addHourglass();
@@ -3273,6 +3274,7 @@ require([
 	function setQuestionNames() {
 		$('#theirNumberQuestion').val(gNumbers[gNumberIdx].theirNumberQuestion);
 		$('#messageQuestion').val(gNumbers[gNumberIdx].messageQuestion);
+		$('#mcMsg').val(gNumbers[gNumberIdx].mcMsg);
 	}
 });
 
