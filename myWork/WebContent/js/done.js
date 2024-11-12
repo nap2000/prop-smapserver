@@ -54,8 +54,9 @@ require([
 
 		$('.sent').show();
 
-		$('#goback').click(function(){
-			history.back();
+		$('#goback').click(function(e){
+			e.preventDefault();
+			window.history.go(-2);
 		})
 
 	});
