@@ -696,6 +696,8 @@ define([
                             window.gEditRecord.contacts[conv[j].theirNumber] = {
                                 channel: conv[j].channel
                             }
+                        } else {
+                            break;  // Only do the first entry if not in edit
                         }
                     }
                     return h.join('');
