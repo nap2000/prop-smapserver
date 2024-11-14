@@ -3050,7 +3050,10 @@ function generateFile(url, filename, format, mime, data, sId, groupSurvey, title
 		fd.append("form", form);
 	}
 	if(data) {
-		fd.append("data", JSON.stringify(data));
+		var blob = new Blob([JSON.stringify(data)], { type: 'text/plain' });
+		var file = new File([blob], "foo.txt", {type: "text/plain"});
+		fd.append("data", file);
+		//fd.append("data", JSON.stringify(data));
 	}
 	if(title) {
 		fd.append("title", title);

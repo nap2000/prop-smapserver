@@ -940,7 +940,7 @@ require([
                 $('.genfile').removeClass("disabled");
             }, 5000);
             setTimeout(function () {
-                genFile(false, format);         // allow message to be displayd
+                genFile(false, format);         // allow message to be displayed
             }, 0);
         }
     });
