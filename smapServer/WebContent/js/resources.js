@@ -586,7 +586,7 @@ require([
 		/*
 		 * Validation
 		 */
-		if(!name || name.trim().length == 0) {		// Name ia set
+		if(!name || name.trim().length == 0) {		// Name is set
 			$('.upload_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').html(localise.set["msg_val_nm"]);
 			$('#submitResourceFile').prop("disabled", false);  // debounce
 			return false;
@@ -628,8 +628,6 @@ require([
 						$('.upload_alert').show().removeClass('alert-danger alert-warning').addClass('alert-success').html(localise.set["t_tl"] + ": " + data.name);
 					}
 					$('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
-				} else {
-					$('.upload_alert').show().removeClass('alert-success alert-warning').addClass('alert-danger').text(localise.set["lo_lo"]);
 				}
 
 			},
