@@ -1096,14 +1096,14 @@ function exportSurvey() {
  */
 function mediaSelectSave() {
 	var type;
-	if(gNewVal) {
-		if(globals.gOptionList) {
-			type = "option";
-		} else {
-			type = "question";
-		}
-		updateLabel(type, globals.gFormIndex, globals.gSelOptionId, globals.gOptionList, gElement, gNewVal, gQname, "media");
+
+	if(globals.gOptionList) {
+		type = "option";
+	} else {
+		type = "question";
 	}
+	updateLabel(type, globals.gFormIndex, globals.gSelOptionId, globals.gOptionList, gElement, gNewVal, gQname, "media");
+
 	$('#mediaModal').modal('hide');
 }
 function setLanguageCodeVals() {
@@ -1313,6 +1313,11 @@ function refreshMediaPickLists(data) {
 	$('#mediaSave').off().click(function() {
 		var idx = $('.mediaItem.selected', '#imageSelect').data('idx');
 		gNewVal = gFiles[idx].name;
+		mediaSelectSave();
+	});
+
+	$('#mediaClear').off().click(function() {
+		gNewVal = undefined;
 		mediaSelectSave();
 	});
 
