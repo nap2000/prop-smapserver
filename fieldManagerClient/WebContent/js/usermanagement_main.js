@@ -977,6 +977,14 @@ require([
 				theirNumberQuestion = $('#theirNumberQuestion').val(),
 				messageQuestion = $('#messageQuestion').val();
 
+			/*
+			 * If the organisation has changed then clear the survey data
+			 */
+			if(org != gNumbers[gNumberIdx].oId) {		// note org will have a string value, the original id will be integer
+				sIdent = undefined;
+				theirNumberQuestion = 0;
+				messageQuestion = 0;
+			}
 			if(sIdent === "_none") {
 				sIdent = undefined;
 			}
@@ -3242,7 +3250,7 @@ require([
 				loadSurveyIdentList(pId, gNumbers[gNumberIdx].surveyIdent,false, true);			// Get surveys
 				getQuestionsInSurvey($('.select_question'), undefined, gNumbers[gNumberIdx].surveyIdent, true, true, setQuestionNames, false);
 			}
-
+			$('#mcMsg').val(gNumbers[gNumberIdx].mcMsg);
 		} else {
 			$('.sameOrg').hide();
 			$('.diffOrg').show();
@@ -3274,7 +3282,6 @@ require([
 	function setQuestionNames() {
 		$('#theirNumberQuestion').val(gNumbers[gNumberIdx].theirNumberQuestion);
 		$('#messageQuestion').val(gNumbers[gNumberIdx].messageQuestion);
-		$('#mcMsg').val(gNumbers[gNumberIdx].mcMsg);
 	}
 });
 
