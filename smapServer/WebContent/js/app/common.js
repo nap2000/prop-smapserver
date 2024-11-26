@@ -4014,7 +4014,7 @@ function getQuestionsInSurvey($elem, $elem_multiple, sIdent, includeNone, textOn
 			setValueFn = callback;
 
 		if (includeNone) {
-			h[++idx] = '<option value="">';
+			h[++idx] = '<option value="0">';
 			h[++idx] = localise.set["c_none"];
 			h[++idx] = '</option>';
 		}
