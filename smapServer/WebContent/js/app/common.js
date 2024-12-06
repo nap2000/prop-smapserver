@@ -4978,6 +4978,7 @@ function setTargetDependencies(target) {
 	$('.sms_options, .webhook_options, .email_options, .escalate_options, .conv_options').hide();
 	if(target === "email") {
 		$('.email_options').show();
+		initMsgNotPopup();
 	} else if(target === "sms") {
 		$('.sms_options').show();
 	} else if(target  === "webhook") {
@@ -5037,11 +5038,14 @@ function initMsgNotPopup() {
 		var $msg = $('#msg_cur_nbr');
 		var $email = $('#email_cur');
 		var other = localise.set["c_other"];
+
 		$('.select_msg').hide();
 		$('.other_msg').hide();
+		$('.recvd_emails').hide();
 
 		$msg.empty();
 		var hasSelect = false;
+		var hasEmailSelect = false;
 		if (window.gEditRecord.contacts) {
 			for (const [key, value] of Object.entries(window.gEditRecord.contacts)) {
 				// Hack fix up channel for old entries, its either sms or email
@@ -5053,6 +5057,7 @@ function initMsgNotPopup() {
 					hasSelect = true;
 					$msg.append(`<option data-channel="${value.channel}" value="${key}">${key} - ${value.channel} </option>`);
 				} else {
+					hasEmailSelect = true;
 					$email.append(`<option value="${key}">${key}</option>`);
 				}
 			}
@@ -5065,6 +5070,9 @@ function initMsgNotPopup() {
 			$('.select_msg').show();
 		} else {
 			$('.other_msg').show();
+		}
+		if(hasEmailSelect) {
+			$('.recvd_emails').show();
 		}
 
 		$('#msg_cur_nbr').change(function () {
