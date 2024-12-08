@@ -1993,8 +1993,13 @@ require([
 			h[++idx] = '<i class="fas fa-trash-alt"></i></span></button>';
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-default btn-sm project_edit btn-info">';
+			h[++idx] = '" class="btn btn-default btn-sm project_edit btn-info mr-2">';
 			h[++idx] = '<i class="far fa-edit"></i></button>';
+			h[++idx] = '<button type="button" data-idx="';
+			h[++idx] = i;
+			h[++idx] = '" class="btn btn-default btn-sm project_export btn-secondary">';
+			h[++idx] = '<i class="fa fa-download"></i></button>';
+			h[++idx] = '</div>';
 			h[++idx] = '</div>';
 			h[++idx] = '</td>';
 

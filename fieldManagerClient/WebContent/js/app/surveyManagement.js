@@ -638,7 +638,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 
                     h[++idx] = '<button class="btn pdf_td" value="';                            // Download
                     h[++idx] = survey.id;
-                    h[++idx] = '"><img src="images/downarrow.png" height="16" width="16"></button>';
+                    h[++idx] = '"><i class="fa fa-download"></i>';
                     h[++idx] = '</td>';
 
                     h[++idx] = '</tr>';
