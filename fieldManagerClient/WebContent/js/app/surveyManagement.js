@@ -616,27 +616,26 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 
                     h[++idx] = '<td>';
 
-                    h[++idx] = '<a class="btn survey_view" data-sid="';
+                    h[++idx] = '<a class="btn btn-primary mr-2 survey_view" data-sid="';
                     h[++idx] = survey.id;
                     h[++idx] = '" href="/app/myWork/webForm/';                    // Webform
                     h[++idx] = survey.ident;
                     h[++idx] = addCacheBuster("");
                     h[++idx] = '" target="_blank">'
-
-                    h[++idx] = '<i class="fas fa-eye"></i>';
+                    h[++idx] = '<i class="fa fa-eye"></i>';
                     h[++idx] = '</a>';
 
                     if(survey.publicLink && survey.publicLink.trim().length > 0) {              // Link
-                        h[++idx] = '<button class="btn btn-primary survey_link" value="';
+                        h[++idx] = '<button class="btn btn-success mr-2 survey_link" value="';
                     } else {
-                        h[++idx] = '<button class="btn btn-info survey_link" value="';
+                        h[++idx] = '<button class="btn btn-info mr-2 survey_link" value="';
                     }
                     h[++idx] = i;
                     h[++idx] = '">';
                     h[++idx] = '<i class="fa fa-share-alt"></i>';
                     h[++idx] = '</button>';
 
-                    h[++idx] = '<button class="btn pdf_td" value="';                            // Download
+                    h[++idx] = '<button class="btn btn-secondary pdf_td" value="';                            // Download
                     h[++idx] = survey.id;
                     h[++idx] = '"><i class="fa fa-download"></i>';
                     h[++idx] = '</td>';

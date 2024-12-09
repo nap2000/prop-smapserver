@@ -397,7 +397,6 @@ require([
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						var msg = err;
 						$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + htmlEncode(xhr.responseText));
 					}
 				}
@@ -427,8 +426,6 @@ require([
          */
 		$('#saveWebform').click(function() {
 			var webform = {},
-				error = false,
-				options=[],
 				i;
 
 			webform.page_background_color = $('#wf_page_background').val();
@@ -473,7 +470,6 @@ require([
 					if(xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
 					} else {
-						var msg = err;
 						$('.org_alert').show().removeClass('alert-success').addClass('alert-danger').html(localise.set["msg_err_upd"] + htmlEncode(xhr.responseText));
 					}
 				}

@@ -2011,13 +2011,21 @@ require([
 		h[++idx] = '</div>';        // responsive
 
 		$projectTable.empty().append(h.join('')).find('table');
-		$('.project_edit').click(function () {
+		$('.project_edit').click(function (e) {
+			e.preventDefault();
 			openProjectDialog(true, $(this).data("idx"));
 		});
 
-		$(".rm_project", $('#project_table')).click(function(){
+		$(".rm_project", $('#project_table')).click(function(e){
+
+			e.preventDefault();
 			var idx = $(this).data("idx");
 			deleteProject(idx);
+		});
+
+		$(".project_export", $('#project_table')).click(function(e){
+			e.preventDefault();
+			exportProject($(this).data("idx"));
 		});
 
 		$('#project_table .control_td').find('input').click(function () {
@@ -2792,8 +2800,9 @@ require([
 			}
 		});
 	}
+
 	/*
-	 * Delete the selected projects
+	 * Delete the selected project
 	 */
 	function deleteProject (projectIdx) {
 
@@ -2812,7 +2821,9 @@ require([
 				data: { projects: JSON.stringify(projects) },
 				success: function(data, status) {
 					removeHourglass();
-					getProjects();
+					if (handleLogout(data)) {
+						getProjects();
+					}
 				}, error: function(data, status) {
 					removeHourglass();
 					if(data && data.responseText) {
@@ -2823,6 +2834,28 @@ require([
 				}
 			});
 		}
+	}
+
+	/*
+	 * Export the selected project
+	 */
+	function exportProject (projectIdx) {
+
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/exportProject/" + globals.gProjectList[projectIdx].id,
+			success: function(data, status) {
+				removeHourglass();
+				if(handleLogout(data)) {
+					if(data.length > 0) {
+						alert(data);
+					}
+				}
+			}, error: function(xhr, textStatus, err) {
+				removeHourglass();
+				alert(localise.set["c_error"] + ": " + err);
+			}
+		});
 	}
 
 	/*
