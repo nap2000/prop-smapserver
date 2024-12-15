@@ -3666,7 +3666,7 @@ function setNoFilter() {
 								var filterValue;
 								var secondFilterColumn;
 								var secondFilterValue;
-								if (filterColumn !== '') {
+								if (filterColumn !== '' && filterColumn > 0) {
 									if (filter === '') {
 										msg = localise.set["msg_filter_col"];
 										msg = msg.replace('%s1', filterColumn);
