@@ -4018,7 +4018,7 @@ function setNoFilter() {
 							$('.a_filter_column').show();
 						}
 
-						if (!aFilterColumn || aFilterColumn === "") {
+						if (!aFilterColumn || aFilterColumn === "" || aFilterColumn <= 0) {
 							$(".has_filter, .a_second_filter_column, .has_second_filter").hide();
 						} else {
 							$(".has_filter, .a_second_filter_column").show();
