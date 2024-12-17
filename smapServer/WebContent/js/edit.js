@@ -3666,7 +3666,7 @@ function setNoFilter() {
 								var filterValue;
 								var secondFilterColumn;
 								var secondFilterValue;
-								if (filterColumn !== '' && filterColumn > 0) {
+								if (filterColumn !== '' && filterColumn !== '0') {
 									if (filter === '') {
 										msg = localise.set["msg_filter_col"];
 										msg = msg.replace('%s1', filterColumn);
@@ -3692,7 +3692,7 @@ function setNoFilter() {
 
 									// second filter
 									secondFilterColumn = $('#a_second_filter_column').val();
-									if (secondFilterColumn !== '') {
+									if (secondFilterColumn !== '' && secondFilterColumn > 0) {
 										val += ", '" + secondFilterColumn + "'";
 
 										// second filter Value
@@ -4018,13 +4018,13 @@ function setNoFilter() {
 							$('.a_filter_column').show();
 						}
 
-						if (!aFilterColumn || aFilterColumn === "" || aFilterColumn <= 0) {
+						if (!aFilterColumn || aFilterColumn === "" || aFilterColumn === "0") {
 							$(".has_filter, .a_second_filter_column, .has_second_filter").hide();
 						} else {
 							$(".has_filter, .a_second_filter_column").show();
 						}
 
-						if (!aSecondFilterColumn || aSecondFilterColumn === "") {
+						if (!aSecondFilterColumn || aSecondFilterColumn === "" || aSecondFilterColumn === "0") {
 							$('.has_second_filter').hide();
 						} else {
 							$('.has_second_filter').show();
