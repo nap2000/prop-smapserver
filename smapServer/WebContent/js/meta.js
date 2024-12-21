@@ -54,7 +54,6 @@ require([
 			localise.setlang();		// Localise HTML
 
 			// Get the user details
-			globals.gIsAdministrator = false;
 			getLoggedInUser(surveyListDone, false, true, undefined, false, false);
 
 			// Add menu functions

@@ -82,7 +82,6 @@ require([
 		$('#mapid').attr("placeholder", localise.set["sr_m_mb"]);
 
 		// Get the user details
-		globals.gIsAdministrator = false;
 		globals.gCurrentSurvey = undefined;
 		getLoggedInUser(gotUser, false, false, undefined, false, false);
 		getLocations(loadedLocationData);

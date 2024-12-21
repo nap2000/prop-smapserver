@@ -93,7 +93,6 @@ require([
 
 
 			// Get the user details
-			globals.gIsAdministrator = false;
 			getLoggedInUser(getUserDone, false, true, undefined, false, false);
 
 		});

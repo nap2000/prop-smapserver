@@ -102,7 +102,6 @@ require([
 		localise.setlang();		// Localise HTML
 
 		// Get the user details
-		globals.gIsAdministrator = false;
 		getLoggedInUser(projectChanged, true, true, undefined);
 
 		$('#api').change(function () {

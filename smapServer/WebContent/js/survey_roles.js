@@ -67,7 +67,6 @@ $(document).ready(function() {
 	localise.setlang();		// Localise HTML
 	
 	// Get the user details
-	globals.gIsAdministrator = false;
 	getLoggedInUser(projectChanged, false, true, undefined, false, false);
 	
 	// Save a row filter

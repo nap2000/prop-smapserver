@@ -170,7 +170,6 @@ $(document).ready(function() {
 	window.history.pushState('',document.title, document.location.origin + document.location.pathname);	// Strip out the parameters from the href
 
 	// Get the user details
-	globals.gIsAdministrator = false;
 	getLoggedInUser(getSurveyList, false, true, undefined, false, dont_get_current_survey);
 
 	/*

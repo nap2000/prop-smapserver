@@ -1290,6 +1290,7 @@ define({
     "enterprise admin": "Enterprise Admin",
     "enum": "Enumerator",
     "manage": "Manage Data",
+    "console admin": "Manage Console",
     "org admin": "Organisational Admin",
     "security": "Security Manager",
     "view data": "View Data",

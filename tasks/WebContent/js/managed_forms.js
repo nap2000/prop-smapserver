@@ -245,7 +245,7 @@ require([
         }
 
         // Get the user details
-        globals.gIsAdministrator = false;
+        globals.gIsConsoleAdmin = false;
         getLoggedInUser(refreshData, false, true, undefined, false, dont_get_current_survey);
 
         // Set change function on projects
@@ -2414,6 +2414,10 @@ require([
 
             if(globals.gIsAdministrator) {
                 $('.assigned_admin').show();
+            }
+
+            if(globals.gIsAdministrator || globals.gIsConsoleAdmin) {
+                $('.assigned_console_admin').show();
             }
 
             if(!globals.gIsLinkFollower) {

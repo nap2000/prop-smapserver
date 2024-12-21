@@ -602,7 +602,10 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 
 			} else if(groups[i].id === globals.GROUP_OWNER) {
                 globals.gIsServerOwner = true;
-            }
+
+            } else if(groups[i].id === globals.GROUP_CONSOLE_ADMIN) {
+				globals.gIsConsoleAdmin = true;
+			}
 		}
 	}
 
@@ -1116,6 +1119,9 @@ function setupUserProfile(bs4) {
 
 function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hideUserDetails,
                          dontGetCurrentSurvey, getEnterprisesFn, getServerDetailsFn, getSMSNumbers) {
+
+	globals.gIsAdministrator = false;
+
 	addHourglass();
 	$.ajax({
 		url: "/surveyKPI/user",

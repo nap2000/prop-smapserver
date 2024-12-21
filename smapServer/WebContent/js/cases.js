@@ -61,7 +61,6 @@ require([
             localise.setlang();		// Localise HTML
 
             // Get the user details
-            globals.gIsAdministrator = false;
             getLoggedInUser(currentSurveyDone, false, true, undefined, false, false);
 
             $('#create_cm_alert').click(function () {

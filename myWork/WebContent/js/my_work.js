@@ -70,7 +70,6 @@ require([
 		dbstorage.open();
 
 		// Get the user details
-		globals.gIsAdministrator = false;
 		getLoggedInUser(projectSet, false, true, undefined);
 
 		// Set change function on projects

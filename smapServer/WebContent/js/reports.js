@@ -76,7 +76,6 @@ require([
 		localise.setlang();		// Localise HTML
 
 		// Get the user details
-		globals.gIsAdministrator = false;
         getLoggedInUser(projectChanged, false, true, undefined);
 
 		$('#m_refresh').click(function() {

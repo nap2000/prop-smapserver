@@ -36,6 +36,7 @@ define(function () {
 	    GROUP_MANAGE_TASKS : 11,
 	    GROUP_DASHBOARD : 12,
         GROUP_LINKAGES : 13,
+        GROUP_CONSOLE_ADMIN : 14,
 
         REC_LIMIT: 200,     // Page size for table views in analysis
 	    MAP_REC_LIMIT: 10000,    // Max size for map views in analysis
@@ -62,6 +63,7 @@ define(function () {
         gIsEnterpriseAdministrator: false,
         gIsLinkFollower: false,
         gIsServerOwner: false,
+        gIsConsoleAdmin: false,
         gViewData: false,
 	    gManageTasks: false,
         gBillingData: false,
