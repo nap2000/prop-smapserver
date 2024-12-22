@@ -561,14 +561,14 @@ require([
                 data: {record: gTasks.gSelectedRecord.instanceid},
                 success: function (data, status) {
                     removeHourglass();
+                    $('#m_release').prop("disabled", false);     // debounce
                     if(handleLogout(data)) {
-                        $('#m_release').prop("disabled", false);     // debounce
                         showManagedData(globals.gCurrentSurvey, showTable, true);
                     }
                 }, error: function (data, status) {
                     removeHourglass();
+                    $('#m_release').prop("disabled", false);     // debounce
                     if(handleLogout(data)) {
-                        $('#m_release').prop("disabled", false);     // debounce
                         alert(data.responseText);
                     }
                 }
