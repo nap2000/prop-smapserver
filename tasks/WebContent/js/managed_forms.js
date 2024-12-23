@@ -177,7 +177,8 @@ require([
         gUpdate: [],
         gPriKey: undefined,
         gSort: undefined,
-        gDirn: undefined
+        gDirn: undefined,
+        gInitialInstance: undefined
     };
     window.gCurrentTaskFeature; // Currently edited task feature, hack to support shared functions with console
     window.gUpdateFwdPassword = undefined;
@@ -186,7 +187,6 @@ require([
     window.gChanges = [];
     window.gSelectedChart = -1;
     window.gEditRecord = {};
-
 
     $(document).ready(function () {
 
@@ -197,6 +197,9 @@ require([
 	    setupUserProfile(true);
         localise.setlang();		// Localise HTML
         userDefaults();
+
+        // Set any default values saved from the last use of this page
+        gTasks.gInitialInstance = localStorage.getItem("mfselected");   // Currently selected record
 
         // Set page defaults
         var def = getFromLocalStorage("console");
@@ -375,14 +378,6 @@ require([
         $('#m_links').click(function(e) {
             e.preventDefault();
             showLinks();
-        });
-
-        /*
-         * Edit a record
-         */
-        $('#m_edit').click(function(e) {
-            e.preventDefault();
-            showRecord(true);
         });
 
         $('#m_bulk_edit').click(function(e) {
@@ -2393,6 +2388,18 @@ require([
                 $('.not_assigned').show();
             }
 
+            // Set up the record edit button if there is an oversight form
+            var oversightIdent = $('#oversight_survey').val();
+            if(oversightIdent && oversightIdent.length > 0) {
+                var instanceId = gTasks.gSelectedRecord.instanceid;
+                var url = "/app/myWork/webForm/" + oversightIdent + "?datakey=instanceid&datakeyvalue=" + instanceId;
+                url += addCacheBuster(url)
+                $('#m_edit').prop("href", url);
+                localStorage.setItem("mfselected", instanceId);
+            } else {
+                $('#m_edit').prop("href", "#");
+            }
+
             // Set up the drill down
             if(gDrillDownStack.length > 0) {
                 $('.du_only').show();
@@ -3214,6 +3221,10 @@ require([
 
 	    url += "&tz=" + encodeURIComponent(globals.gTimezone);
 
+        if(gTasks.gInitialInstance) {
+            url += "&selectedrow=" + encodeURIComponent(gTasks.gInitialInstance);
+        }
+
 	    // First Check the Cache
 	    if(!clearCache && gTasks.cache.data[url]) {
             if(url !== gPreviousUrl) {
@@ -3406,6 +3417,12 @@ require([
                 }
             }
         }
+
+        // Set an initial selection of one has been set
+        if(gTasks.gInitialInstance) {
+            globals.gMainTable.row('#' + gTasks.cache.currentData.selectedRow).select();
+            gTasks.gInitialInstance = undefined;
+        }
     }
 
     function getColorClass(color) {
@@ -3459,12 +3476,6 @@ require([
         getSurveyRoles(globals.gCurrentSurvey, undefined, false, false);
         getRecordChanges(gTasks.gSelectedRecord);
         getOurNumbers();
-
-        var sIdent = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].ident;
-        var instanceId = gTasks.gSelectedRecord.instanceid;
-        var url = "/app/myWork/webForm/" + sIdent + "?datakey=instanceid&datakeyvalue=" + instanceId;
-        url += addCacheBuster(url)
-        $('.launchwebform').prop("href", url);
 
         $('.overviewSection').hide();
         $('.editRecordSection').show();
