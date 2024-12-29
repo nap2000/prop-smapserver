@@ -112,6 +112,7 @@ require([
     var gBad;                       // A boolean indicating the direction of toggle of a deleted state
     var gLocalDefaults = {};
     var gPreviousUrl = "";
+    var gEditUrl = '#';
 
     var gDrillDownNext;                 // Next drill down state if drill down is selected
     var gDrillDownStack = [];
@@ -390,7 +391,7 @@ require([
 	     */
         $('#m_view').click(function(e) {
             e.preventDefault();
-            showRecord(false);
+            showRecord();
         });
 
         /*
@@ -909,6 +910,12 @@ require([
         } else {
             $('#table-view').trigger('click');
         }
+
+        // Respond to clicking of edit button
+        $('#m_edit').click(function() {
+            gEditUrl = $(this).data("url");
+            checkLoggedIn(editRecord);
+        });
     });         // End of document ready
 
     // Generate a file based on current console data
@@ -997,6 +1004,11 @@ require([
         $('#overviewReport').modal("hide");
     });
 
+    function editRecord() {
+        if(gEditUrl !== '#') {
+            window.location.href = gEditUrl;
+        }
+    }
     /*
      * Load the chart definitions from the server
      */
@@ -2394,10 +2406,10 @@ require([
                 var instanceId = gTasks.gSelectedRecord.instanceid;
                 var url = "/app/myWork/webForm/" + oversightIdent + "?datakey=instanceid&datakeyvalue=" + instanceId;
                 url += addCacheBuster(url)
-                $('#m_edit').prop("href", url);
+                $('#m_edit').data("url", url);
                 localStorage.setItem("mfselected", instanceId);
             } else {
-                $('#m_edit').prop("href", "#");
+                $('#m_edit').data("url", "#");
             }
 
             // Set up the drill down
@@ -3467,25 +3479,21 @@ require([
     /*
      * Show a records details
      */
-    function showRecord(editable) {
+    function showRecord() {
 
-        window.gEditable = editable;
         window.location.hash="#edit";
         $('.shareRecordOnly, .role_select').hide();
         $('#srLink').val("");
-        getSurveyRoles(globals.gCurrentSurvey, undefined, false, false);
-        getRecordChanges(gTasks.gSelectedRecord);
-        getOurNumbers();
+        checkLoggedIn(function(){
+            getSurveyRoles(globals.gCurrentSurvey, undefined, false, false);
+            getRecordChanges(gTasks.gSelectedRecord);
+            getOurNumbers();
+        });
 
         $('.overviewSection').hide();
         $('.editRecordSection').show();
 
-        if(editable) {
-            $('.saverecord').removeClass('disabled');
-        } else {
-            $('.savercord').addClass('disabled');
-        }
-        actioncommon.showEditRecordForm(gTasks.gSelectedRecord, gTasks.cache.currentData.schema, $('#editRecordForm'), $('#surveyForm'), editable, true);
+        actioncommon.showEditRecordForm(gTasks.gSelectedRecord, gTasks.cache.currentData.schema, $('#surveyForm'), true);
     }
 
     /*

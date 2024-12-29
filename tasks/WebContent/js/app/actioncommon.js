@@ -59,10 +59,8 @@ define([
         /*
          * Add HTML to show a form to edit a record
          */
-        function showEditRecordForm(record, schema, $editForm, $surveyForm, editable, includeMaps) {
+        function showEditRecordForm(record, schema, $surveyForm, includeMaps) {
             var
-                h = [],
-                idx = -1,
                 m = [],
                 cnt = -1,
                 i,
@@ -74,65 +72,26 @@ define([
             globals.gRecordMaps = [];     // Initialise the list of maps we are going to show
             gTasks.gPriKey = record["prikey"];
 
-            // Clear the update array
-            gTasks.gUpdate = [];
-            $('.saverecord').prop("disabled", true);
-
             for (i = 0; i < columns.length; i++) {
                 configItem = columns[i];
-
-                if (configItem.mgmt) {
-
-                    h[++idx] = getEditMarkup(configItem, i, first, record, schema, editable, true, prefix);
-
-                } //else {
-                // Always add the read only original
-                m[++cnt] = getEditMarkup(configItem, i, first, record, schema, false, true, prefix);
-                //}
-                if (!configItem.readonly) {
-                    first = false;
+                if((!configItem.readonly
+                        || configItem.column_name[0] !== '_')
+                        && configItem.column_name !== 'prikey'
+                        && configItem.column_name !== 'instanceid') {
+                    m[++cnt] = getEditMarkup(configItem, i, first, record, schema, false, true, prefix);
                 }
+
             }
 
-            if($editForm) {
-                $editForm.html(h.join(''));
-            }
             if($surveyForm) {
                 $surveyForm.html(m.join(''));
             }
 
-            // Set up date fields
-            $editForm.find('.date').datetimepicker({
-                locale: gUserLocale || 'en',
-                useCurrent: false,
-                showTodayButton: true
-            });
-
             // Set up clicks on conversations
             $('.respond', $surveyForm).on('click', function(e) {
-                if(window.gEditable) {
-                    window.gMessageIdx = $(this).data("idx");
-                    $('#messageForm')[0].reset();
-                    $('#messagePopup').modal('show');
-                }
-            });
-
-            // Set up multi selects
-            $('.select', $editForm).multiselect({
-                onChange: function(option, checked, select) {
-
-                    var $sel = option.closest('select');
-                    var itemIndex = $sel.data("item");
-                    var val = '';
-                    if ($sel.val()) {
-                        val = $sel.val().join(' ');
-                    }
-                    var config = {
-                        itemIndex: itemIndex,
-                        value: val
-                    };
-                    dataChanged(config);
-                }
+                window.gMessageIdx = $(this).data("idx");
+                $('#messageForm')[0].reset();
+                $('#messagePopup').modal('show');
             });
 
             // Set up the map fields
@@ -140,33 +99,6 @@ define([
                 initialiseDynamicMaps(globals.gRecordMaps);
             }
 
-            // Respond to changes in the data by creating an update object
-            $editForm.find('.form-control, select').bind("click propertychange paste change keyup input", function () {
-                if(!$(this).hasClass('select')) { // Ignore select multiples
-                    var $this = $(this);
-                    var config = {
-                        itemIndex: $this.data("item"),
-                        value: $this.val()
-                    };
-                    dataChanged(config);
-                    refreshSelectLists(schema, record, $this.data("item"), prefix);
-                }
-            });
-            $editForm.find('.date').on("dp.change", function () {
-                var $this = $(this).find('input');
-                var config = {
-                    itemIndex: $this.data("item"),
-                    value: $this.val()
-                };
-                dataChanged(config);
-            });
-            $('#editRecordForm').on("smap::geopoint", function (event, config) {
-                console.log("New geopoint");
-                dataChanged(config);
-            });
-
-            // Set focus to first editable data item
-            $editForm.find('[autofocus]').focus();
         }
 
         /*
@@ -187,18 +119,21 @@ define([
             for (i = 0; i < columns.length; i++) {
                 configItem = columns[i];
 
-                if (configItem.mgmt) {
+                if (configItem.mgmt
+                    && (configItem.type === 'text'
+                        || configItem.type === 'select1'
+                        || configItem.type === 'select')) {
                     h[++idx] = '<div class="row bulkquestion">';
                     h[++idx] = '<div class="col-sm-8">';
 
                     var cloneItem = JSON.parse(JSON.stringify(configItem));
-                    if(configItem.type === 'select') {
+                    if (configItem.type === 'select') {
                         cloneItem.type = 'select1';     // With select multiples the bulk change is to set or clear one value
                     }
                     h[++idx] = getEditMarkup(cloneItem, i, first, record, schema, true, false, prefix);
                     h[++idx] = '</div>';    // Question column
                     h[++idx] = '<div class="col-sm-4">';    // clear
-                    if(configItem.type === 'select') {
+                    if (configItem.type === 'select') {
                         h[++idx] = '<div class="switch">';
                         h[++idx] = '<input type="checkbox" class="selectClear">';
                         h[++idx] = '</div>';
@@ -286,11 +221,7 @@ define([
                     undefined,
                     itemIndex);
             } else if (configItem.readonly || !editable) {		// Read only text
-                if(configItem.type === 'conversation') {
-                    h[++idx] = addConversationCellMarkup(value, true);
-                } else {
-                    h[++idx] = addCellMarkup(value);
-                }
+                h[++idx] = addCellMarkup(value);
             } else {
                 h[++idx] = addEditableColumnMarkup(configItem, value, itemIndex, first, schema, record, prefix);
             }
@@ -313,7 +244,7 @@ define([
 
             // Check for a source column
             if(column.parameters && column.parameters.source) {
-                var sourceColumn = getColumn(column.parameters.source, schema.columns);
+                sourceColumn = getColumn(column.parameters.source, schema.columns);
             }
 
             if(sourceColumn) {
