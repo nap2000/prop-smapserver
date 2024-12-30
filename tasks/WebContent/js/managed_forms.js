@@ -273,12 +273,14 @@ require([
 
         // Set change function on survey
         $('#survey_name').change(function () {
-            gTasks.gSelectedSurveyIndex = $(this).val();
-            globals.gCurrentSurvey = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].id;
-            gGetSettings = true;
-	        clearDrillDown();
-            mfSurveyChanged();
-            populatePdfSelect(globals.gCurrentSurvey, $('#select_pdf'));
+            checkLoggedIn(function() {
+                gTasks.gSelectedSurveyIndex = $(this).val();
+                globals.gCurrentSurvey = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].id;
+                gGetSettings = true;
+                clearDrillDown();
+                mfSurveyChanged();
+                populatePdfSelect(globals.gCurrentSurvey, $('#select_pdf'));
+            });
         });
 
         // Set change function on group survey

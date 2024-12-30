@@ -455,10 +455,13 @@ function updateRole(idx, property, $popup) {
 			  },
 		  success: function(data, status) {
 			  removeHourglass();
-			  gRoles[idx].linkid = data.linkid;		// Record the id of survey/role entity
-			  if($popup) {
-				  $popup.modal("hide");
+			  if(handleLogout(data)) {
+				  gRoles[idx].linkid = data.linkid;		// Record the id of survey/role entity
+				  if($popup) {
+					  $popup.modal("hide");
+				  }
 			  }
+
 		  }, error: function(data, status) {
 			  removeHourglass();
 			  if(data && data.responseText) {
