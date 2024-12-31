@@ -273,8 +273,9 @@ require([
 
         // Set change function on survey
         $('#survey_name').change(function () {
+            var $this = $(this);
             checkLoggedIn(function() {
-                gTasks.gSelectedSurveyIndex = $(this).val();
+                gTasks.gSelectedSurveyIndex = $this.val();
                 globals.gCurrentSurvey = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].id;
                 gGetSettings = true;
                 clearDrillDown();
@@ -1009,6 +1010,8 @@ require([
     function editRecord() {
         if(gEditUrl !== '#') {
             window.location.href = gEditUrl;
+        } else {
+            alert(localise.set["n_no_oversight"]);
         }
     }
     /*

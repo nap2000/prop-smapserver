@@ -72,6 +72,10 @@ define([
             globals.gRecordMaps = [];     // Initialise the list of maps we are going to show
             gTasks.gPriKey = record["prikey"];
 
+            // Clear the update array
+            gTasks.gUpdate = [];
+            $('.saverecord').prop("disabled", true);
+
             for (i = 0; i < columns.length; i++) {
                 configItem = columns[i];
                 if((!configItem.readonly
@@ -99,6 +103,17 @@ define([
                 initialiseDynamicMaps(globals.gRecordMaps);
             }
 
+            // Respond to changes in the data by creating an update object
+            $surveyForm.find('.form-control').bind("click propertychange paste change keyup input", function () {
+                var $this = $(this);
+                var config = {
+                    itemIndex: $this.data("item"),
+                    value: $this.val()
+                };
+                dataChanged(config);
+            });
+            // Set focus to first editable data item
+            $surveyForm.find('[autofocus]').focus();
         }
 
         /*
@@ -211,6 +226,12 @@ define([
             // Add Data
             h[++idx] = ' <div class="col-md-8">';
 
+            // Check for source column as will make these editable
+            var sourceColumn;
+            if(configItem.parameters && configItem.parameters.source) {
+                sourceColumn = getColumn(configItem.parameters.source, schema.columns);
+            }
+
             if(configItem.type === 'geopoint' || configItem.type === 'geoshape' || configItem.type === 'geotrace') {
                 h[++idx] = addCellMap(
                     configItem.readonly || !editable,
@@ -220,7 +241,9 @@ define([
                     value,
                     undefined,
                     itemIndex);
-            } else if (configItem.readonly || !editable) {		// Read only text
+            } else  if(configItem.type === 'conversation') {
+                h[++idx] = addConversationCellMarkup(value, true);
+            } else if (!sourceColumn && (configItem.readonly || !editable)) {		// Read only text
                 h[++idx] = addCellMarkup(value);
             } else {
                 h[++idx] = addEditableColumnMarkup(configItem, value, itemIndex, first, schema, record, prefix);
