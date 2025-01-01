@@ -3435,7 +3435,7 @@ require([
             }
         }
 
-        // Set an initial selection of one has been set
+        // Set an initial selection if one has been set
         if(gTasks.gInitialInstance) {
             globals.gMainTable.row('#' + gTasks.cache.currentData.selectedRow).select();
             gTasks.gInitialInstance = undefined;

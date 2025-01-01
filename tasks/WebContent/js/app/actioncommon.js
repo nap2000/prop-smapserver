@@ -609,7 +609,7 @@ define([
                             justify,
                             respond = "";
 
-                        if(inEdit && conv[j].inbound && (conv[j].channel === 'sms' || conv[j].channel === 'whatsapp')) {
+                        if(inEdit && conv[j].inbound) {
                             respond = 'respond';
                         }
                         if (conv[j].inbound) {
