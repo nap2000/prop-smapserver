@@ -24,13 +24,6 @@ if (Modernizr.localstorage) {
 	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
 }
 
-var STATUS_T_ACCEPTED = "accepted";
-var STATUS_T_REJECTED = "rejected";
-var STATUS_T_COMPLETE = "complete";
-var STATUS_T_SUBMITTED = "submitted";
-var STATUS_T_CANCELLED = "cancelled";
-var STATUS_T_CLOSED = "closed";
-var STATUS_T_NEW = "new";
 let gIsApp = false;
 
 requirejs.config({
@@ -90,6 +83,10 @@ require([
 			$('.up_alert').hide();
 			projectSet();
 		});
+
+		if(window.location.href.indexOf('tasks') > 0) {
+			$('#tasksTab').find('a').click();
+		}
 
 		// set a flag if launched as an app
 		gIsApp = (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone) || document.referrer.includes('android-app://');
@@ -161,41 +158,6 @@ require([
 		}
 	}
 
-	/*
-     * Fill in the survey list after a service worker notification
-     * In incognito mode these might not be received
-     */
-	function surveyDataFromNetwork(surveyList, filterProjectId) {
-
-		var i,
-			h = [],
-			idx = -1,
-			formList = surveyList.forms;
-
-		console.log("xxxxxxxxxxxxx: surveyDataFromNetwork");
-
-		// Save the tasks then refresh view
-		saveTasks(surveyList.data).then( function() {
-			dbstorage.getRecords().then( function(records) {
-				if (typeof records !== "undefined") {
-					showTaskList(records, filterProjectId);
-				} else {
-					$('#tasks_count').html('(0)');
-					$('#task_list').html('');
-				}
-			});
-		});
-
-
-		// Refresh the view of forms
-		if (formList) {
-			addFormList(formList, filterProjectId);
-		} else {
-			$('#forms_count').html('(0)');
-			$('#form_list').html('');
-		}
-	}
-
 	function addFormList(formList, filterProjectId) {
 		var i,
 			h = [],
@@ -227,38 +189,6 @@ require([
 		}
 		$('#forms_count').html('(' + count+ ')');
 		$formList.html(h.join(''));
-	}
-
-	function saveTasks(tasks) {
-		return new Promise(function(resolve, reject) {
-			dbstorage.deleteRecords().then(function() {
-				console.log("xxxxxxxxxxxxx: savingTasks");
-				var i;
-				if (tasks) {
-					for (i = 0; i < tasks.length; i++) {
-						processServerTask(tasks[i]);
-					}
-				}
-				resolve();
-			});
-		});
-	}
-
-	async function processServerTask(task) {
-
-		var assignment = task.assignment;
-
-		console.log("xxxxxxxxxxxxx: processServerTask: " + JSON.stringify(task));
-
-		let promise = new Promise(function(resolve, reject) {
-
-			dbstorage.addRecord(task).then(function() {
-				resolve();
-			});
-
-		});
-
-		await promise;
 	}
 
 	function showTaskList(taskList, filterProjectId) {

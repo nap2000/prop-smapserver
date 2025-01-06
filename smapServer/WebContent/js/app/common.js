@@ -1164,6 +1164,10 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 					getSMSNumbers();
 				}
 
+				if(data.totalTasks > 0) {
+					$('.total_tasks').html('(' + htmlEncode(data.totalTasks) + ')').addClass('btn-danger');
+				}
+
 				if (!dontGetCurrentSurvey) {	// Hack, on edit screen current survey is set as parameter not from the user's defaults
 					globals.gCurrentSurvey = data.current_survey_id;
 					globals.gCurrentSurveyIdent = data.current_survey_ident;

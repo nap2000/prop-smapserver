@@ -789,6 +789,7 @@ define({
     "unsent": "Not Sent",
     "unsubscribed": "Unsubscribed",
     "restore": "Restore",
+    "t_mt": "My Tasks",
 
     // template load errors
     "e_u_err": "Form Upload Error",
