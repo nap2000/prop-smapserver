@@ -273,7 +273,11 @@ require([
 					h[++idx] = '" data-id="';
 					h[++idx] = i;
 					h[++idx] = '">';
-					h[++idx] = localise.set["c_reject"]
+					if(taskList[i].task.type === 'case') {
+						h[++idx] = localise.set["mf_rel"];
+					} else {
+						h[++idx] = localise.set["c_reject"];
+					}
 					h[++idx] = '</button>';
 				}
 
