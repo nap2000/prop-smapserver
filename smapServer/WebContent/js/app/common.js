@@ -1678,9 +1678,10 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx, 
 					var sel = selector;
 					var all = addAll;
 
-					showSurveyList(data, sel + ".data_survey", all, true, false, useIdx, sId, addNone);
-					showSurveyList(data, sel + ".oversight_survey", all, false, true, useIdx, sId, addNone);
-					showSurveyList(data, sel + ".data_oversight_survey", all, true, true, useIdx, sId, addNone);
+					showSurveyList(data, sel + ".data_survey", all, true, false, useIdx, sId, addNone, false);
+					showSurveyList(data, sel + ".oversight_survey", all, false, true, useIdx, sId, addNone, false);
+					showSurveyList(data, sel + ".data_oversight_survey", all, true, true, useIdx, sId, addNone, false);
+					showSurveyList(data, ".bundle_select", all, true, true, useIdx, sId, addNone, true);
 
 					if (typeof callback == "function") {
 						callback(data);
@@ -1752,7 +1753,7 @@ function loadSurveyIdentList(projectId, sIdent, addAll, addNone) {
 /*
  * Show the surveys in select boxes
  */
-function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, useIdx, sId, addNone) {
+function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, useIdx, sId, addNone, bundle) {
 
 	var i,
 		item,
@@ -1781,33 +1782,42 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 		h[++idx] = '</option>';
 	}
 
+	var bundleObj = {};
 	for(i = 0; i < data.length; i++) {
 		item = data[i];
-		if(item.dataSurvey && dataSurvey || item.oversightSurvey && oversightSurvey) {
-			h[++idx] = '<option';
-			if (!valueSelected && !item.blocked) {
-				valueSelected = true;
-				selValue = useIdx ? i : item.id;
+		if(!bundle || !bundleObj[item.groupSurveyDetails]) {	// If this is for a bundle list remove duplicate entries
+			if (item.dataSurvey && dataSurvey || item.oversightSurvey && oversightSurvey) {
+				h[++idx] = '<option';
+				if (!valueSelected && !item.blocked) {
+					valueSelected = true;
+					selValue = useIdx ? i : item.id;
+				}
+				if (item.blocked && !bundle) {
+					h[++idx] = ' class="blocked"';
+				}
+				h[++idx] = ' value="';
+				h[++idx] = useIdx ? i : item.id;
+				h[++idx] = '">';
+				if(bundle){
+					h[++idx] = htmlEncode(item.groupSurveyDetails);
+					bundleObj[item.groupSurveyDetails] = '1';
+				} else {
+					h[++idx] = htmlEncode(item.displayName);
+
+					if (item.blocked) {
+						h[++idx] = ' (' + localise.set["c_blocked"] + ')';
+					}
+				}
+				h[++idx] = '</option>';
 			}
-			if (item.blocked) {
-				h[++idx] = ' class="blocked"';
-			}
-			h[++idx] = ' value="';
-			h[++idx] = useIdx ? i : item.id;
-			h[++idx] = '">';
-			h[++idx] = htmlEncode(item.displayName);
-			if (item.blocked) {
-				h[++idx] = ' (' + localise.set["c_blocked"] + ')';
-			}
-			h[++idx] = '</option>';
-		}
-		if(typeof sid === 'unddefined') {
-			if (globals.gCurrentSurvey > 0 && globals.gCurrentSurvey === item.id) {
-				selValue = useIdx ? i : item.id;
-			}
-		} else {
-			if (sId > 0 && sId === item.id) {
-				selValue = useIdx ? i : item.id;
+			if (typeof sid === 'undefined') {
+				if (globals.gCurrentSurvey > 0 && globals.gCurrentSurvey === item.id) {
+					selValue = useIdx ? i : item.id;
+				}
+			} else {
+				if (sId > 0 && sId === item.id) {
+					selValue = useIdx ? i : item.id;
+				}
 			}
 		}
 	}
