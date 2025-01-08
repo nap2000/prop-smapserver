@@ -105,6 +105,10 @@ require([
 			$('#addNotificationPopup').modal("show");
 		});
 
+		$('#bundle').change(function() {
+			bundleSelectChanged();
+		});
+
 		// Add response to a source survey being selected
 		$('#survey').change(function() {
 			surveyChangedNotification(undefined, undefined, undefined, undefined, undefined);
@@ -173,9 +177,14 @@ require([
 
 		if(!notification.error) {
 
+			notification.bundle = $('#bundle').is(':checked');
 			notification.trigger = $('#trigger').val();
 			if(notification.trigger !== 'task_reminder' && notification.trigger !== 'periodic') {
-				notification.s_id = $('#survey').val();
+				if(notification.bundle) {
+					notification.bundle_ident = $('#bundle_survey').val();
+				} else {
+					notification.s_id = $('#survey').val();
+				}
 			} else {
 				notification.p_id = $('#project_name').val();		// Project only saved if survey not set, as other wise survey identifies project and survey can move
 			}

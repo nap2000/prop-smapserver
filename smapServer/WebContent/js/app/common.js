@@ -4853,7 +4853,7 @@ function edit_notification(edit, idx, console) {
 	if(edit) {
 		notification = window.gNotifications[idx];
 
-		title = localise.set["msg_edit_notification"];
+		$('#addNotificationLabel').text(localise.set["msg_edit_notification"]);
 		$('#trigger').val(notification.trigger);
 		$('#target').val(notification.target);
 		$('#name').val(notification.name);
@@ -4876,6 +4876,8 @@ function edit_notification(edit, idx, console) {
 		$('#alerts').val(notification.alert_id);
 		$('#sc_question').val(notification.updateQuestion);
 		$('#sc_value').val(notification.updateValue);
+
+		$('#bundle').prop('checked', notification.bundle);
 
 		// reminder settings
 		if (!console) {
@@ -4983,9 +4985,19 @@ function edit_notification(edit, idx, console) {
 		window.gUpdateFwdPassword = true;
 		window.gSelectedNotification = -1;
 	}
+	bundleSelectChanged();
 
 }
 
+function bundleSelectChanged() {
+	if($('#bundle').is(':checked')) {
+		$('.bundle').show();
+		$('.notbundle').hide();
+	} else {
+		$('.bundle').hide();
+		$('.notbundle').show();
+	}
+}
 function setTargetDependencies(target) {
 	$('.sms_options, .webhook_options, .email_options, .escalate_options, .conv_options').hide();
 	if(target === "email") {
