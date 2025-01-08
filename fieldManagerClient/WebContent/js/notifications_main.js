@@ -64,7 +64,8 @@ require([
 
 	window.gTasks = {
 		cache: {
-			groupSurveys: {}
+			groupSurveys: {},
+			eligibleUsers: {}
 		}
 	}
 
@@ -140,6 +141,8 @@ require([
 		});
 
 		$('#m_refresh').click(function(){
+			window.gTasks.cache.groupSurveys = {};
+			window.gTasks.cache.eligibleUsers = {};
 			getNotifications(globals.gCurrentProject);
 		});
 	});
@@ -330,9 +333,11 @@ require([
 				cache: false,
 				success: function(data) {
 					removeHourglass();
-					window.gNotifications = data;
-					if(data) {
-						updateNotificationList(data);
+					if(handleLogout(data)) {
+						window.gNotifications = data;
+						if (data) {
+							updateNotificationList(data);
+						}
 					}
 				},
 				error: function(xhr, textStatus, err) {

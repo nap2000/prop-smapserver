@@ -6182,7 +6182,9 @@ function htmlEncode(input) {
  */
 function getEligibleUsers(sId, isNotification) {
 
-	if(sId > 0) {
+	if(window.gTasks && window.gTasks.cache.eligibleUsers[sId]) {
+		fillUsersList(isNotification, window.gTasks && window.gTasks.cache.eligibleUsers[sId]);
+	} else if(sId > 0) {
 		addHourglass();
 		$.ajax({
 			url: "/surveyKPI/userList/survey/" + sId,
@@ -6191,42 +6193,9 @@ function getEligibleUsers(sId, isNotification) {
 			success: function (data) {
 				removeHourglass();
 				if(handleLogout(data)) {
-					var h = [],
-						idx = -1,
-						$elem = $('#user_to_assign');
-
-					$elem.empty();
-
-					h[++idx] = '<option value="_none">';
-					h[++idx] = localise.set["c_none"];
-					h[++idx] = '</option>';
-
-					if (isNotification) {
-						h[++idx] = '<option value="_submitter">';
-						h[++idx] = localise.set["c_submitter"];
-						h[++idx] = '</option>';
-
-						h[++idx] = '<option value="_data">';
-						h[++idx] = localise.set["t_ad"];
-						h[++idx] = '</option>';
-					}
-
-					if (data && data.length > 0) {
-						for (i = 0; i < data.length; i++) {
-							h[++idx] = '<option value="';
-							h[++idx] = data[i].ident;
-							h[++idx] = '">';
-							h[++idx] = htmlEncode(data[i].name);
-							h[++idx] = '</option>';
-						}
-					}
-					$elem.html(h.join(''));
-
-					if (typeof gEligibleUser !== 'undefined') {
-						$elem.val(gEligibleUser);
-					}
+					window.gTasks.cache.eligibleUsers[sId] = data;
+					fillUsersList(isNotification, data);
 				}
-
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
@@ -6243,6 +6212,47 @@ function getEligibleUsers(sId, isNotification) {
 		});
 	}
 }
+
+/*
+ * Fill a list with the users who can be selected
+ */
+function fillUsersList(isNotification, data) {
+	var h = [],
+		idx = -1,
+		$elem = $('#user_to_assign');
+
+	$elem.empty();
+
+	h[++idx] = '<option value="_none">';
+	h[++idx] = localise.set["c_none"];
+	h[++idx] = '</option>';
+
+	if (isNotification) {
+		h[++idx] = '<option value="_submitter">';
+		h[++idx] = localise.set["c_submitter"];
+		h[++idx] = '</option>';
+
+		h[++idx] = '<option value="_data">';
+		h[++idx] = localise.set["t_ad"];
+		h[++idx] = '</option>';
+	}
+
+	if (data && data.length > 0) {
+		for (i = 0; i < data.length; i++) {
+			h[++idx] = '<option value="';
+			h[++idx] = data[i].ident;
+			h[++idx] = '">';
+			h[++idx] = htmlEncode(data[i].name);
+			h[++idx] = '</option>';
+		}
+	}
+	$elem.html(h.join(''));
+
+	if (typeof gEligibleUser !== 'undefined') {
+		$elem.val(gEligibleUser);
+	}
+}
+
 /*
  * Return true if the passed in value is accepted by xlsFormConverter
  */
