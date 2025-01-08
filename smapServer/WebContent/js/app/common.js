@@ -1681,7 +1681,7 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx, 
 					showSurveyList(data, sel + ".data_survey", all, true, false, useIdx, sId, addNone, false);
 					showSurveyList(data, sel + ".oversight_survey", all, false, true, useIdx, sId, addNone, false);
 					showSurveyList(data, sel + ".data_oversight_survey", all, true, true, useIdx, sId, addNone, false);
-					showSurveyList(data, ".bundle_select", all, true, true, useIdx, sId, addNone, true);
+					showSurveyList(data, ".bundle_select", all, true, true, false, sId, addNone, true);
 
 					if (typeof callback == "function") {
 						callback(data);
@@ -1796,7 +1796,11 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 					h[++idx] = ' class="blocked"';
 				}
 				h[++idx] = ' value="';
-				h[++idx] = useIdx ? i : item.id;
+				if(bundle) {
+					h[++idx] = useIdx ? i : item.groupSurveyIdent;
+				} else {
+					h[++idx] = useIdx ? i : item.id;
+				}
 				h[++idx] = '">';
 				if(bundle){
 					h[++idx] = htmlEncode(item.groupSurveyDetails);
