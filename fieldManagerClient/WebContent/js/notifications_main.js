@@ -112,7 +112,7 @@ require([
 
 		// Add response to a source survey being selected
 		$('#survey').change(function() {
-			surveyChangedNotification(undefined, undefined, undefined, undefined, undefined);
+			surveyChangedNotification(undefined, undefined, undefined, undefined, undefined, undefined);
 		});
 
 		$('#survey_case').change(function() {

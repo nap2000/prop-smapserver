@@ -4867,6 +4867,7 @@ function edit_notification(edit, idx, console) {
 	if(edit) {
 		notification = window.gNotifications[idx];
 
+		$('#bundle').prop('checked', notification.bundle);
 		$('#addNotificationLabel').text(localise.set["msg_edit_notification"]);
 		$('#trigger').val(notification.trigger);
 		$('#target').val(notification.target);
@@ -4883,15 +4884,17 @@ function edit_notification(edit, idx, console) {
 		setAttachDependencies(notification.notifyDetails.attach);
 
 		if (notification.trigger !== "task_reminder") {
-			$('#survey').val(notification.s_id).change();
+			if(notification.bundle) {
+				$('#bundle_survey').val(notification.bundle_ident).change();
+			} else {
+				$('#survey').val(notification.s_id).change();
+			}
 		}
 		$('#not_filter').val(notification.filter);
 		$('#update_value').val(notification.updateValue);
 		$('#alerts').val(notification.alert_id);
 		$('#sc_question').val(notification.updateQuestion);
 		$('#sc_value').val(notification.updateValue);
-
-		$('#bundle').prop('checked', notification.bundle);
 
 		// reminder settings
 		if (!console) {
@@ -4924,7 +4927,8 @@ function edit_notification(edit, idx, console) {
 					notification.notifyDetails.assign_question,
 					notification.notifyDetails.emailMeta,
 					notification.alert_id,
-					notification.updateQuestion);
+					notification.updateQuestion,
+					notification.notifyDetails.survey_case);
 		}
 
 		if (notification.notifyDetails) {
@@ -4971,9 +4975,7 @@ function edit_notification(edit, idx, console) {
 			if($('#user_to_assign').val() === '_data') {
 				$('.assign_question').removeClass('d-none').show();
 			}
-		}
 
-		if (!console) {
 			if (notification.enabled) {
 				$('#nt_enabled').prop('checked', true);
 			} else {
@@ -5269,7 +5271,7 @@ function setupNotificationDialog() {
 	$('#fwd_password').change(function(){
 		window.gUpdateFwdPassword = true;
 	});
-	
+
 }
 
 /*
@@ -5488,20 +5490,24 @@ function getTaskGroupIndex(tgId) {
 	return 0;
 }
 
-function surveyChangedNotification(qName, assignQuestion, metaItem, alertId, updateQuestion) {
+function surveyChangedNotification(qName, assignQuestion, metaItem, alertId, updateQuestion, surveyVal) {
 
 	var language = "none",
+		bundle = $('#bundle').is(':checked'),
 		sId = $('#survey').val() || 0,
+		bundle_ident = $('#bundle_survey').val(),
 		qList,
 		metaList,
 		alertList;
 
-	if(sId) {
+	if(bundle && bundle_ident) {
+		getGroupSurveys(bundle_ident, setGroupSelector, surveyVal);		// Get the surveys in the group
+	} else if(sId) {
 		if(!qName) {
 			qName = "-1";
 		}
 
-		getGroupSurveys(sId, setGroupSelector);		// Get the surveys in the group
+		getGroupSurveys(sId, setGroupSelector, surveyVal);		// Get the surveys in the group
 
 		qList = globals.gSelector.getSurveyQuestions(sId, language);
 		metaList = globals.gSelector.getSurveyMeta(sId);
@@ -5631,18 +5637,18 @@ function isTextStorageType(type) {
 }
 
 /*
- * Get oversight surveys
+ * Get surveys in the same bundle
  */
-function getGroupSurveys(surveyId, callback) {
+function getGroupSurveys(surveyId, callback, surveyVal) {
 
 	var url = "/surveyKPI/surveyResults/" + surveyId + "/groups",
 		survey = surveyId;
 
-	if(surveyId > 0) {
+	if(surveyId) {
 
 		if(gTasks.cache.groupSurveys[surveyId]) {
 			if(typeof callback === 'function') {
-				callback(gTasks.cache.groupSurveys[surveyId]);
+				callback(gTasks.cache.groupSurveys[surveyId], surveyVal);
 			}
 		} else {
 			addHourglass();
@@ -5655,7 +5661,7 @@ function getGroupSurveys(surveyId, callback) {
 					if(handleLogout(data)) {
 						gTasks.cache.groupSurveys[surveyId] = data;
 						if (typeof callback === 'function') {
-							callback(data);
+							callback(data, surveyVal);
 						}
 					}
 				},
@@ -5677,7 +5683,7 @@ function getGroupSurveys(surveyId, callback) {
 /*
  * Update a selector that is used for any data survey in a group that is not an oversight form
  */
-function setGroupSelector(data) {
+function setGroupSelector(data, surveyVal) {
 	var $elemGroups = $('#survey_case, #tp_form_name, #not_form_name');
 
 	var i,
@@ -5698,6 +5704,9 @@ function setGroupSelector(data) {
 	}
 
 	$elemGroups.empty().html(h.join(''));
+	if(surveyVal) {
+		$elemGroups.val(surveyVal).change();
+	}
 
 }
 
