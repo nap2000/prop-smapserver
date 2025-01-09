@@ -118,8 +118,10 @@ require([
 				cache: false,
 				success: function(data) {
 					removeHourglass();
-					gTemplates = data;
-					setTemplatesHtml();
+					if(handleLogout(data)) {
+						gTemplates = data;
+						setTemplatesHtml();
+					}
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();

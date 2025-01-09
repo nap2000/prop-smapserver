@@ -5269,10 +5269,7 @@ function setupNotificationDialog() {
 	$('#fwd_password').change(function(){
 		window.gUpdateFwdPassword = true;
 	});
-
-	$('#fwd_rem_survey').change(function(){
-		remoteSurveyChanged();
-	});
+	
 }
 
 /*
@@ -5504,8 +5501,7 @@ function surveyChangedNotification(qName, assignQuestion, metaItem, alertId, upd
 			qName = "-1";
 		}
 
-		getEligibleUsers(sId, true);
-		getGroupSurveys(sId, setGroupSelector);
+		getGroupSurveys(sId, setGroupSelector);		// Get the surveys in the group
 
 		qList = globals.gSelector.getSurveyQuestions(sId, language);
 		metaList = globals.gSelector.getSurveyMeta(sId);
@@ -6194,20 +6190,20 @@ function htmlEncode(input) {
 /*
  * Get the list of users from the server
  */
-function getEligibleUsers(sId, isNotification) {
+function getEligibleUsers(sIdent, isNotification) {
 
-	if(window.gTasks && window.gTasks.cache.eligibleUsers[sId]) {
-		fillUsersList(isNotification, window.gTasks && window.gTasks.cache.eligibleUsers[sId]);
-	} else if(sId > 0) {
+	if(window.gTasks && window.gTasks.cache.eligibleUsers[sIdent]) {
+		fillUsersList(isNotification, window.gTasks && window.gTasks.cache.eligibleUsers[sIdent]);
+	} else if(sIdent) {
 		addHourglass();
 		$.ajax({
-			url: "/surveyKPI/userList/survey/" + sId,
+			url: "/surveyKPI/userList/survey/" + sIdent,
 			dataType: 'json',
 			cache: false,
 			success: function (data) {
 				removeHourglass();
 				if(handleLogout(data)) {
-					window.gTasks.cache.eligibleUsers[sId] = data;
+					window.gTasks.cache.eligibleUsers[sIdent] = data;
 					fillUsersList(isNotification, data);
 				}
 			},

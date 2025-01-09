@@ -142,6 +142,7 @@ require([
             surveyRoles: {},
             recordChanges: {},
             groupSurveys: {},
+            eligibleUsers: {},
             currentData: undefined,
             data: {},
         },

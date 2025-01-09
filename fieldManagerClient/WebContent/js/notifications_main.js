@@ -115,14 +115,14 @@ require([
 			surveyChangedNotification(undefined, undefined, undefined, undefined, undefined);
 		});
 
+		$('#survey_case').change(function() {
+			var sId = $('#survey_case option:selected').val();
+			getEligibleUsers(sId, true);
+		});
+
 		// Add response to the task group being changed
 		$('#task_group').change(function() {
 			taskGroupChanged($('#task_group').val());
-		});
-
-		// Add response to an oversight survey being selected
-		$('#group_survey').change(function() {
-			getOversightQuestionList($('#oversight_survey').val(), showOversightQuestions)
 		});
 
 		$('#user_to_assign').change(function() {
