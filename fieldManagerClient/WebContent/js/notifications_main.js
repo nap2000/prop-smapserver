@@ -505,6 +505,8 @@ require([
 				h[++idx] = htmlEncode(data[i].tg_name);
 			} else if(data[i].trigger === "periodic") {
 				h[++idx] = getReportName(data[i].r_id);
+			} else if(data[i].bundle) {
+				h[++idx] = htmlEncode(data[i].bundle_name);
 			} else {
 				h[++idx] = htmlEncode(data[i].s_name);
 			} 
