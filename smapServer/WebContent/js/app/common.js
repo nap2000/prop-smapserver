@@ -4960,8 +4960,6 @@ function edit_notification(edit, idx, console) {
 			}
 		}
 		if (!console) {
-			$('#fwd_rem_survey_id').val(notification.remote_s_ident);
-			$('#fwd_rem_survey_nm').val(notification.remote_s_name);
 			$('#fwd_user,#user_to_assign').val(notification.remote_user);
 			$('#assign_question').val(notification.notifyDetails.assign_question);
 			$('#user_to_assign').trigger('change');
