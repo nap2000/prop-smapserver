@@ -626,8 +626,10 @@ require([
 
 		$(".edit_not", $selector).click(function(){
 			var idx = $(this).data("idx");
-			edit_notification(true, idx, false);
-			$('#addNotificationPopup').modal("show");
+			checkLoggedIn(function(){
+				edit_notification(true, idx, false);
+				$('#addNotificationPopup').modal("show");
+			});
 		});
 
 	}

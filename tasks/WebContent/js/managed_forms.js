@@ -726,11 +726,13 @@ require([
         // Refresh menu
         $('#m_refresh').click(function (e) {
             e.preventDefault();
-            if(window.location.hash === "#edit") {
-                getRecordChanges(gTasks.gSelectedRecord);
-            } else {
-                refreshData();
-            }
+            checkLoggedIn(function() {
+                if(window.location.hash === "#edit") {
+                    getRecordChanges(gTasks.gSelectedRecord);
+                } else {
+                    refreshData();
+                }
+            })
         });
 
         // Add a new map layer
