@@ -4990,6 +4990,7 @@ function edit_notification(edit, idx, console) {
 
 		$('#survey').change();
 
+		setTargetDependencies('email');
 		setTriggerDependencies('submission');
 
 		// Reminders
@@ -5077,7 +5078,6 @@ function initMsgNotPopup() {
 		var $email = $('#email_cur');
 		var other = localise.set["c_other"];
 
-		$('.select_msg').hide();
 		$('.other_msg').hide();
 		$('.recvd_emails').hide();
 
@@ -5098,17 +5098,13 @@ function initMsgNotPopup() {
 					hasEmailSelect = true;
 					$email.append(`<option value="${key}">${key}</option>`);
 				}
+				setOurNumbersList();
 			}
-			msgCurNbrChanged();
-			setOurNumbersList();
 		}
 		$msg.append(`<option value="other">${other}</option>`);
 		$email.append(`<option value="other">${other}</option>`);
-		if(hasSelect) {
-			$('.select_msg').show();
-		} else {
-			$('.other_msg').show();
-		}
+		msgCurNbrChanged();
+
 		if(hasEmailSelect) {
 			$('.recvd_emails').show();
 		}
