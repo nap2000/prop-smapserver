@@ -1561,7 +1561,8 @@ require([
             tableOnDraw();
         });
 
-        $('.table_filter').on('blur', function () {
+        $('.table_filter').off().on('blur', function (e) {
+            e.preventDefault();
             console.log("blur");
             showManagedData(globals.gCurrentSurvey, showTable, false);  // update console with changed data
         });
