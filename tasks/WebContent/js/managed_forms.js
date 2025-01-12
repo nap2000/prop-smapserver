@@ -1218,7 +1218,7 @@ require([
     }
 
     /*
-     * Test if this record should be filtered out based on its assignement
+     * Test if this record should be filtered out based on its assignment
      */
     function filterOutAssignments(aData) {
         var myRecords = $('#my_records').prop('checked'),
@@ -1567,7 +1567,7 @@ require([
         });
 
         // Respond to changes that filter data on assignment
-        $('.assign_filter').change(function () {
+        $('.assign_filter:checkbox').change(function () {
             globals.gMainTable.draw();
 
             gLocalDefaults.myRecords = $('#my_records').prop('checked');
@@ -3440,7 +3440,7 @@ require([
 
         // Set an initial selection if one has been set
         if(gTasks.gInitialInstance) {
-            globals.gMainTable.row('#' + gTasks.cache.currentData.selectedRow).select();
+            globals.gMainTable.row('#' + escSelector(gTasks.cache.currentData.selectedRow)).select();
             gTasks.gInitialInstance = undefined;
         }
     }
