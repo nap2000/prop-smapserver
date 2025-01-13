@@ -46,8 +46,8 @@ require([
          'app/ssc',
          'app/globals',
          'icheck',
-         'jquery.autosize.min'], 
-		function($, common, modernizr, lang, ssc, globals) {
+         'jquery.autosize.min'],
+function($, common, modernizr, lang, ssc, globals) {
 
 
 var	gCache = {},
@@ -122,6 +122,7 @@ $(document).ready(function() {
 		if(checked) {
 			if(confirm(localise.set["ro_b_w"])) {
 				// Save role settings to bundle
+				applyRolesToBundle();
 			} else {
 				$('#bundle').prop('checked', false);
 			}
@@ -482,4 +483,34 @@ function updateRole(idx, property, $popup) {
 	});
 }
 
+	/*
+     * Update a role
+     */
+	function applyRolesToBundle() {
+
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			contentType: "application/x-www-form-urlencoded",
+			cache: false,
+			data: {
+				sId: globals.gCurrentSurvey
+			},
+			url: "/surveyKPI/role/survey/bundle/set",
+			success: function (data, status) {
+				removeHourglass();
+				if (handleLogout(data)) {
+					alert(localise.set("ro_b_d"));
+				}
+
+			}, error: function (data, status) {
+				removeHourglass();
+				if (data && data.responseText) {
+					alert(data.responseText);
+				} else {
+					alert(localise.set["msg_u_f"]);
+				}
+			}
+		});
+	}
 });

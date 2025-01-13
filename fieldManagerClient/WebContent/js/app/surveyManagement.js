@@ -442,9 +442,11 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                     cache: false,
                     success: function(data) {
                         removeHourglass();
-                        gSurveys = data;
-                        //setLocalTime();		// Convert timestamps from UTC to local time
-                        completeSurveyList();
+                        if(handleLogout(data)) {
+                            gSurveys = data;
+                            //setLocalTime();		// Convert timestamps from UTC to local time
+                            completeSurveyList();
+                        }
                     },
                     error: function(xhr, textStatus, err) {
                         removeHourglass();
@@ -472,23 +474,25 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                 cache: false,
                 success: function(data) {
                     removeHourglass();
-                    var h = [],
-                        idx = -1,
-                        i;
+                    if(handleLogout(data)) {
+                        var h = [],
+                            idx = -1,
+                            i;
 
-                    h[++idx] = '<option value="0">';
-                    h[++idx] = localise.set["c_none"]
-                    h[++idx] = '</option>';
-                    for(i = 0; i < data.length; i++) {
-                        h[++idx] = '<option value="';
-                        h[++idx] = data[i].id;
-                        h[++idx] = '">';
-                        h[++idx] = htmlEncode(data[i].projectName);
-                        h[++idx] = ' : ';
-                        h[++idx] = htmlEncode(data[i].displayName);
+                        h[++idx] = '<option value="0">';
+                        h[++idx] = localise.set["c_none"]
                         h[++idx] = '</option>';
+                        for (i = 0; i < data.length; i++) {
+                            h[++idx] = '<option value="';
+                            h[++idx] = data[i].id;
+                            h[++idx] = '">';
+                            h[++idx] = htmlEncode(data[i].projectName);
+                            h[++idx] = ' : ';
+                            h[++idx] = htmlEncode(data[i].displayName);
+                            h[++idx] = '</option>';
+                        }
+                        $('#group').empty().append(h.join(''));
                     }
-                    $('#group').empty().append(h.join(''));
 
                 },
                 error: function(xhr, textStatus, err) {

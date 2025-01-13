@@ -1403,6 +1403,7 @@ define({
     // Roles
     "ro_b": "Apply these roles to all surveys in the bundle",
     "ro_b_w": "Warning. Applying roles to the bundle will override the roles set in all other surveys in the bundle. Do you want to proceed?",
+    "ro_b_d": "Identical roles have been applied to all surveys in the bundle",
     "ro_fr": "Filter rows",
     "ro_fc": "Filter columns",
     "ro_fr_rule": "Rows to be shown",
