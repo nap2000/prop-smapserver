@@ -78,23 +78,31 @@
 </nav>
   
 <div class="container">
-	<div class="row">	   	
-	   	<div class="col-md-6 col-xs-12">
-				<form role="form" class="form-horizontal">
-					<label class="lang col-sm-4 control-label" data-lang="c_project" for="project_name">Select Project</label>
+	<div class="row mt-2 mb-2">
+		<div class="col-md-4 col-xs-12">
+			<form>
+				<div class="form-group row">
+					<label class="lang col-sm-4 control-label" data-lang="c_project" for="project_name"></label>
 					<div class="col-sm-8">
 						<select class="project_list form-control" id="project_name"></select>
 					</div>
-				</form>	
+				</div>
+			</form>
 		</div>
-		<div class="col-md-6 col-xs-12">
-			<div id="filters">
-				<form role="form" class="form-horizontal">
-					<label class="lang col-sm-4 control-label" data-lang="c_survey" for="survey_name">Select Project</label>
+		<div class="col-md-4 col-xs-12">
+			<form>
+				<div class="form-group row">
+					<label class="lang col-sm-4 control-label" data-lang="c_survey" for="survey_name"></label>
 					<div class="col-sm-8">
 						<select class="survey_select data_oversight_survey form-control" id="survey_name"></select>
 					</div>
-				</form>	
+				</div>
+			</form>
+		</div>
+		<div class="col-md-4 col-xs-12">
+			<div class="col-sm-10 offset-sm-2 custom-control custom-checkbox">
+				<input type="checkbox" class="custom-control-input" name="bundle" value="bundle" id="bundle">
+				<label class="custom-control-label lang" data-lang="ro_b" for="bundle"></label>
 			</div>
 		</div>
 	</div>

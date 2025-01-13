@@ -117,7 +117,16 @@ $(document).ready(function() {
 				+ "} ");
 	});
 
-	
+	$('#bundle').off().on('change', function() {
+		var checked = $('#bundle').prop('checked');
+		if(checked) {
+			if(confirm(localise.set["ro_b_w"])) {
+				// Save role settings to bundle
+			} else {
+				$('#bundle').prop('checked', false);
+			}
+		}
+	})
 });
 
 function projectChanged() {
