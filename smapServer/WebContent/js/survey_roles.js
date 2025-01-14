@@ -122,10 +122,12 @@ $(document).ready(function() {
 		if(checked) {
 			if(confirm(localise.set["ro_b_w"])) {
 				// Save role settings to bundle
-				applyRolesToBundle();
+				applyRolesToBundle(true);
 			} else {
 				$('#bundle').prop('checked', false);
 			}
+		} else {
+			applyRolesToBundle(false);
 		}
 	})
 });
@@ -484,9 +486,9 @@ function updateRole(idx, property, $popup) {
 }
 
 	/*
-     * Update a role
+     * The checkbox has been set, or unset, to apply all roles to the bundle
      */
-	function applyRolesToBundle() {
+	function applyRolesToBundle(value) {
 
 		addHourglass();
 		$.ajax({
@@ -494,9 +496,10 @@ function updateRole(idx, property, $popup) {
 			contentType: "application/x-www-form-urlencoded",
 			cache: false,
 			data: {
-				sId: globals.gCurrentSurvey
+				sId: globals.gCurrentSurvey,
+				value: value
 			},
-			url: "/surveyKPI/role/survey/bundle/set",
+			url: "/surveyKPI/role/survey/bundle",
 			success: function (data, status) {
 				removeHourglass();
 				if (handleLogout(data)) {

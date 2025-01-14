@@ -248,9 +248,10 @@ require([
                 data: { settings: JSON.stringify(settings) },
                 success: function(data, status) {
                     removeHourglass();
-
-                    $('.save_alert').show().removeClass('d-none alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
-                    getCms(updateCmsData);
+                    if(handleLogout(data)) {
+                        $('.save_alert').show().removeClass('d-none alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+                        getCms(updateCmsData);
+                    }
                 },
                 error: function(xhr, textStatus, err) {
                     removeHourglass();
@@ -350,8 +351,10 @@ require([
                 data: { alert: alertString },
                 success: function(data, status) {
                     removeHourglass();
-                    getCms(updateCmsData);
-                    $('#create_cms_popup').modal("hide");
+                    if(handleLogout(data)) {
+                        getCms(updateCmsData);
+                        $('#create_cms_popup').modal("hide");
+                    }
                 },
                 error: function(xhr, textStatus, err) {
                     removeHourglass();
@@ -390,7 +393,9 @@ require([
                         data: { alert: JSON.stringify(cmAlert) },
                         success: function(data, status) {
                             removeHourglass();
-                            getCms(updateCmsData);
+                            if(handleLogout(data)) {
+                                getCms(updateCmsData);
+                            }
                         }, error: function(data, status) {
                             removeHourglass();
                             if(data && data.responseText) {
