@@ -105,6 +105,10 @@ $(document).ready(function() {
 	
 	// Set change function on survey
 	$('#survey_name').change(function() {
+		globals.gCurrentSurvey = $('#survey_name option:selected').val();
+		saveCurrentProject(globals.gCurrentProject,
+			globals.gCurrentSurvey,
+			globals.gCurrentTaskGroup);	// Save the current survey id
 		surveyChangedRoles();
 	});
 	

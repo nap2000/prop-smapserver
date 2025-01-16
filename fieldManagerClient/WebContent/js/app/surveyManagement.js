@@ -179,7 +179,6 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                 }
             });
 
-
             $('#fwd_rem_survey').change(function(){
                 remoteSurveyChanged();
             });
