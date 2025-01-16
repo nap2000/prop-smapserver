@@ -147,6 +147,7 @@ function surveyChangedRoles() {
 	} else {
 		refreshRFQuestionSelect(gCache[globals.gCurrentSurvey]);
 	}
+	getBundleRoleSetting(globals.gCurrentSurvey);
 	
 }
 
@@ -485,6 +486,32 @@ function updateRole(idx, property, $popup) {
 	});
 }
 
+  /*
+   * Get the roles setting for the bundle
+   */
+	function getBundleRoleSetting(sId) {
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/bundle/settings/" + sId,
+			dataType: 'json',
+			cache: false,
+			success: function (data) {
+				removeHourglass();
+				if(handleLogout(data)) {
+					$('#bundle').prop('checked', data.bundleRoles);
+				}
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["msg_err_get_q"] + ": " + err);
+				}
+			}
+		});
+	}
+
 	/*
      * The checkbox has been set, or unset, to apply all roles to the bundle
      */
@@ -496,14 +523,16 @@ function updateRole(idx, property, $popup) {
 			contentType: "application/x-www-form-urlencoded",
 			cache: false,
 			data: {
-				sId: globals.gCurrentSurvey,
+				sId: $('#survey_name').val(),
 				value: value
 			},
 			url: "/surveyKPI/role/survey/bundle",
 			success: function (data, status) {
 				removeHourglass();
 				if (handleLogout(data)) {
-					alert(localise.set("ro_b_d"));
+					if(value) {
+						alert(localise.set["ro_b_d"]);
+						}
 				}
 
 			}, error: function (data, status) {
