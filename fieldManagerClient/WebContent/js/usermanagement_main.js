@@ -1123,8 +1123,8 @@ require([
 			success: function(data) {
 				removeHourglass();
 				globals.gProjectList = data;
-				updateProjectList(true, 0, undefined, $('.project_list'));
-				updateProjectList(false, 0, undefined, $('.project_list_min'));
+				updateProjectList(true, globals.gCurrentProject, undefined, $('.project_list'));
+				updateProjectList(false, globals.gCurrentProject, undefined, $('.project_list_min'));
 				updateProjectTable();
 			},
 			error: function(xhr, textStatus, err) {

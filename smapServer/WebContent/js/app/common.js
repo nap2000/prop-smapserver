@@ -93,7 +93,11 @@ function updateProjectList(addAll, projectId, callback, $projectSelect) {
 	var i,
 		h = [],
 		idx = -1,
-		updateCurrentProject = true;
+		updateCurrentProject;
+
+	if(projectId > 0) {
+		updateCurrentProject = true;		// Only save the current project if there it is set
+	}
 
 	if(addAll) {
 		h[++idx] = '<option value="0">' + localise.set["c_all"] + '</option>';
@@ -107,7 +111,7 @@ function updateProjectList(addAll, projectId, callback, $projectSelect) {
 		h[++idx] = '</option>';
 
 		if(globals.gProjectList[i].id === projectId) {
-			updateCurrentProject = false;
+			updateCurrentProject = false;   // Don't save the current project if it is already in the list
 		}
 	}
 	$projectSelect.empty().append(h.join(''));
@@ -115,19 +119,21 @@ function updateProjectList(addAll, projectId, callback, $projectSelect) {
 	// If for some reason the user's default project is no longer available then
 	//  set the default project to the first project in the list
 	//  if the list is empty then set the default project to undefined
-	if(updateCurrentProject && globals.gProjectList[0]) {
-		globals.gCurrentProject = globals.gProjectList[0].id;		// Update the current project id
-		globals.gCurrentSurvey = -1;
-		globals.gCurrentTaskGroup = undefined;
-	} else if(updateCurrentProject) {
-		globals.gCurrentProject = -1;		// Update the current project id
-		globals.gCurrentSurvey = -1;
-		globals.gCurrentTaskGroup = undefined;
-	}
+	if(updateCurrentProject) {
+		if (globals.gProjectList[0]) {
+			globals.gCurrentProject = globals.gProjectList[0].id;		// Update the current project id
+			globals.gCurrentSurvey = -1;
+			globals.gCurrentTaskGroup = undefined;
+		} else {
+			globals.gCurrentProject = -1;		// Update the current project id
+			globals.gCurrentSurvey = -1;
+			globals.gCurrentTaskGroup = undefined;
+		}
 
-	saveCurrentProject(globals.gCurrentProject,
-		globals.gCurrentSurvey,
-		globals.gCurrentTaskGroup);
+		saveCurrentProject(globals.gCurrentProject,
+			globals.gCurrentSurvey,
+			globals.gCurrentTaskGroup);
+	}
 
 	if(!addAll) {
 		$projectSelect.val(globals.gCurrentProject);			// Set the initial project value
