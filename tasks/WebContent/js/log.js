@@ -95,7 +95,7 @@ require([
 			checkLoggedIn(table.ajax.url(getLogUrl()).load);
 		});
 
-		$('.table_filter').on('blur', function () {
+		$('.table_filter').off().on('blur', function () {
 			checkLoggedIn(table.ajax.url(getLogUrl()).load);
 		});
 

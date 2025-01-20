@@ -1126,6 +1126,7 @@ define({
     "mf_ao": "Available oversight forms",
     "mf_mf": "Managed forms",
     "mf_ld": "Layer details",
+    "mf_rf": "Reset Filters",
 
     "mf_tr": "A title is required",
     "mf_sr": "Summary Report",

@@ -189,6 +189,35 @@ require([
     window.gChanges = [];
     window.gSelectedChart = -1;
     window.gEditRecord = {};
+    window.filters = [
+        {
+            id: 'filter_from',
+            type: 'text'
+        },
+        {
+            id: 'filter_to',
+            type: 'text'
+        },
+        {
+            id: 'include_bad',
+            type: 'checkbox',
+            value: false
+        },
+        {
+            id: 'include_completed',
+            type: 'checkbox',
+            value: false      // default value
+        },
+        {
+            id: 'limit',
+            type: 'text',
+            value: '1000'
+        },
+        {
+            id: 'advanced_filter',
+            type: 'text'
+        }
+    ];
 
     $(document).ready(function () {
 
@@ -374,6 +403,13 @@ require([
                 $('.showFormData').hide();
                 $('.showMgmtData').addClass('col-sm-12').removeClass('col-sm-6');
             }
+        });
+
+        $('#resetFilters').click(function() {
+            resetFilters();
+            checkLoggedIn(function() {
+                showManagedData(globals.gCurrentSurvey, showTable, false);  // update console with changed data
+            });
         });
 
         /*
@@ -1375,6 +1411,7 @@ require([
 	    }
 
         getData(sId, groupSurvey, subForm, callback, clearCache);
+        checkFilters();
     }
 
     /*
@@ -1563,7 +1600,6 @@ require([
 
         $('.table_filter').off().on('blur', function (e) {
             e.preventDefault();
-            console.log("blur");
             showManagedData(globals.gCurrentSurvey, showTable, false);  // update console with changed data
         });
 
@@ -3345,6 +3381,61 @@ require([
 		    });
         }
 
+
+    }
+
+    /*
+     * Set the reset filters link
+     */
+    function checkFilters() {
+        var filtersOn = false,
+            i;
+
+        for(i = 0; i < window.filters.length; i++) {
+
+            if(window.filters[i].type === 'text') {
+                var v = $('#' + window.filters[i].id).val();
+                if(window.filters[i].value) {
+                    if(window.filters[i].value !== v) {
+                        filtersOn = true;
+                    }
+                } else {
+                    if(v && v.trim().length > 0) {
+                        filtersOn = true;
+                    }
+                }
+            } else  if(window.filters[i].type === 'checkbox') {
+                filtersOn = $('#' + window.filters[i].id).prop('checked');
+            }
+
+            if(filtersOn) {
+                break;
+            }
+        }
+
+        if(filtersOn) {
+            $('.filtersChanged').show();
+        } else {
+            $('.filtersChanged').hide();
+        }
+    }
+
+    /*
+     * Reset the filters
+     */
+    function resetFilters() {
+        var i;
+
+        for(i = 0; i < window.filters.length; i++) {
+
+            if(window.filters[i].type === 'text') {
+                $('#' + window.filters[i].id).val(window.filters[i].value);
+            } else  if(window.filters[i].type === 'checkbox') {
+                $('#' + window.filters[i].id).prop('checked', window.filters[i].value);
+            }
+        }
+
+        $('.filtersChanged').hide();
 
     }
 

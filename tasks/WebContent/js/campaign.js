@@ -256,7 +256,7 @@ require([
 		});
 
 		/*
-	     * SHow and hide the controls
+	     * Show and hide the controls
 	     */
 		$('#hideFilters').click(function(){
 			$('.filtersShown').hide();
