@@ -216,6 +216,21 @@ require([
         {
             id: 'advanced_filter',
             type: 'text'
+        },
+        {
+            id: 'my_records',
+            type: 'checkbox',
+            value: true      // default value
+        },
+        {
+            id: 'unassigned_records',
+            type: 'checkbox',
+            value: true      // default value
+        },
+        {
+            id: 'other_records',
+            type: 'checkbox',
+            value: true      // default value
         }
     ];
 
@@ -1607,6 +1622,7 @@ require([
         $('.assign_filter:checkbox').change(function () {
             globals.gMainTable.draw();
 
+            checkFilters();
             gLocalDefaults.myRecords = $('#my_records').prop('checked');
             gLocalDefaults.unassignedRecords = $('#unassigned_records').prop('checked');
             gLocalDefaults.otherRecords = $('#other_records').prop('checked');
@@ -3405,7 +3421,7 @@ require([
                     }
                 }
             } else  if(window.filters[i].type === 'checkbox') {
-                filtersOn = $('#' + window.filters[i].id).prop('checked');
+                filtersOn = ($('#' + window.filters[i].id).prop('checked') !== window.filters[i].value);
             }
 
             if(filtersOn) {
@@ -3435,6 +3451,7 @@ require([
             }
         }
 
+        globals.gMainTable.draw();
         $('.filtersChanged').hide();
 
     }
