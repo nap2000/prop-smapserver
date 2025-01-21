@@ -1426,7 +1426,6 @@ require([
 	    }
 
         getData(sId, groupSurvey, subForm, callback, clearCache);
-        checkFilters();
     }
 
     /*
@@ -3363,7 +3362,7 @@ require([
 
                             // Initialise the column settings
                             initialiseColumns();
-
+                            checkFilters();
                             theCallback(data);
                         }
                     }
