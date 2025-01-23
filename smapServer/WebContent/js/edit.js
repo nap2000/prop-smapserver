@@ -826,10 +826,12 @@ $(document).ready(function() {
 			  data: { languages: languagesString },
 				success: function(data) {
 					removeHourglass();
-					$('#editLanguageModal').modal("hide");
-					globals.model.setSurveyData(data);
-					setLanguages(data.languages, refreshForm);
-					refreshForm();
+					if(handleLogout(data)) {
+						$('#editLanguageModal').modal("hide");
+						globals.model.setSurveyData(data);
+						setLanguages(data.languages, refreshForm);
+						refreshForm();
+					}
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
