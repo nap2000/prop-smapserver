@@ -309,6 +309,7 @@ define({
     "c_create": "Create",
     "c_generate": "Generate",
     "c_imp_xls": "Import Spreadsheet",
+    "c_spread": "Spreadsheets",
     "c_format": "Format",
     "c_xlstype": "Excel Format",
     "c_roles": "Roles",

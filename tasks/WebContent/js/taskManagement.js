@@ -741,7 +741,7 @@ require([
 				assignObj["taskStart"] = $('#task_start').val();		// Get start of task
 				assignObj["taskAfter"] = $('#task_after').val();
 				assignObj["taskUnits"] = $('#task_units').val();
-				assignObj["taskDuration"] = $('#task_duration').val();
+				assignObj["taskDuration"] = $('#task_duration').val() || 0;
 				assignObj["durationUnits"] = $('#duration_units').val();
 
 			}
