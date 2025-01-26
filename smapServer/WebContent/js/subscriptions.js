@@ -162,7 +162,7 @@ require([
 
 
     /*
-     * Update the oganisation list
+     * Update the organisation list
      */
     function updateOrgList(data) {
 
@@ -201,7 +201,7 @@ require([
 
             h[++idx] = '<button type="button" value="';
             h[++idx] = i;
-            h[++idx] = '" class="btn btn-default btn-sm subscribe_org">';
+            h[++idx] = '" class="btn btn-info btn-sm subscribe_org">';
             h[++idx] = localise.set["c_subscribe"];
             h[++idx] = '</button>';
 
