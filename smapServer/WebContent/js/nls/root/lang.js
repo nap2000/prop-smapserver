@@ -711,6 +711,8 @@ define({
     "e_s_r": "Store results in shared table",
 
     // Tasks
+    "t_i_sd": "Invalid Start Date",
+    "t_i_ed": "Invalid End Date",
     "t_b": "Trigger with any survey in the bundle",
     "t_complete": "Show Completed Tasks",
     "t_show": "Show tasks for:",

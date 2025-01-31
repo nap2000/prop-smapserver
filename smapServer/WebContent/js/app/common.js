@@ -2516,7 +2516,7 @@ function validDates() {
 		d2 = $d2.data("DateTimePicker").date()
 
 	if(!d1 || !d1.isValid()) {
-		$('#ut_alert').show().text("Invalid Start Date");
+		$('#ut_alert').show().text(localise.set["t_i_sd"]);
 		setTimeout(function() {
 			$('.form-control', '#startDate').focus();
 		}, 0);
@@ -2524,7 +2524,7 @@ function validDates() {
 	}
 
 	if(!d2 || !d2.isValid()) {
-		$('#ut_alert').show().text("Invalid End Date");
+		$('#ut_alert').show().text(localise.set["t_i_ed"]);
 		setTimeout(function() {
 			$('.form-control', '#endDate').focus();
 		}, 0);

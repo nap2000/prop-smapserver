@@ -544,6 +544,8 @@ require([
 		// Add new Task Group
 		$('#addTaskGroup').click(function () {
 
+			$('#ut_alert').hide();
+
 			// Clear form
 			$('#assign_survey_form')[0].reset();
 			gUpdateTaskGroupIndex = -1;
@@ -592,6 +594,10 @@ require([
 
 			// validation
 			if (!validDates()) {
+				return;
+			}
+			if(!globals.gCurrentProject) {
+				$('#ut_alert').show().text(localise.set["msg_no_proj"]);
 				return;
 			}
 

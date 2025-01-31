@@ -539,7 +539,7 @@
 
 
 <!-- Modal to allow the user to add tasks to a task group -->
-<div id="addTask" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addTaskLabel" aria-hidden="true">
+<div id="addTask" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="addTaskLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -708,8 +708,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="ut_alert" style="display:none;" class="alert alert-danger"
-                                     role="alert"></div>
                             </div>
                         </div>
                         <div class="advanced_filter well mt-3" style="display:none;">
@@ -935,10 +933,9 @@
                                 <span class="lang" data-lang="t_show_dist_i"></span>
                             </div>
                         </div>
-
                     </div>
-
                 </form>
+                <div id="ut_alert" style="display:none;" class="alert alert-danger" role="alert"></div>
 
             </div>
             <div class="modal-footer">
