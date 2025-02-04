@@ -119,21 +119,26 @@ function setChangesHtml($element, survey) {
 			var filehtml = "";
 			if(changes[i].change.fileName && changes[i].change.fileName.trim().length > 0) {
 				var filename = changes[i].change.fileName;
+				var fileUrl = changes[i].change.fileUrl;
 				var fnIndex = changes[i].change.fileName.lastIndexOf('/');
 				if(fnIndex >= 0) {
 					filename = filename.substr(fnIndex + 1);
 				}
 				var url = null;
-				if(filename.indexOf(".pdf") === filename.length - 4) {
-					if(!changes[i].msg) {
-						// deprecated old style
-						url = '/surveyKPI/file/' + filename + '/surveyPdfTemplate/' + changes[i].change.origSId + '?archive=true';
-					} else {
-						url = '/surveyKPI/file/' + filename + '/pdfTemplate/' + changes[i].change.origSId;
-						filename = changes[i].msg;
-					}
+				if(fileUrl) {
+					url = fileUrl;
 				} else {
-					url = '/surveyKPI/survey/' + changes[i].change.origSId + '/download?type=xlsx';
+					if (filename.indexOf(".pdf") === filename.length - 4) {
+						if (!changes[i].msg) {
+							// deprecated old style
+							url = '/surveyKPI/file/' + filename + '/surveyPdfTemplate/' + changes[i].change.origSId + '?archive=true';
+						} else {
+							url = '/surveyKPI/file/' + filename + '/pdfTemplate/' + changes[i].change.origSId;
+							filename = changes[i].msg;
+						}
+					} else {
+						url = '/surveyKPI/survey/' + changes[i].change.origSId + '/download?type=xlsx';		// Legacy - for new template uploads the server will supply the URL
+					}
 				}
                 filehtml = '<a href="' + url + '">' + filename + '</a>';
 			}
