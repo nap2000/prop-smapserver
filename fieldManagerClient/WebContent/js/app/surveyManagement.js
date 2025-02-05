@@ -840,9 +840,11 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             decision = confirm(localise.set["msg_del_s"] + "\n" + h.join());
 
             if (decision == true) {
-                for(i = 0; i < surveys.length; i++) {
-                    deleteTemplate(surveys[i].id, surveys[i].name, false);
-                }
+                checkLoggedIn(function() {
+                    for(i = 0; i < surveys.length; i++) {
+                        deleteTemplate(surveys[i].id, surveys[i].name, false);
+                    }
+                });
             }
         }
 
