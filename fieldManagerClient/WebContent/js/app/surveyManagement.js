@@ -784,9 +784,11 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             decision = confirm(localise.set["msg_erase"] + "\n" + h.join());
 
             if (decision == true) {
-                for(i = 0; i < surveys.length; i++) {
-                    deleteTemplate(surveys[i].id, surveys[i].name, true);
-                }
+                checkLoggedIn(function() {
+                    for(i = 0; i < surveys.length; i++) {
+                        deleteTemplate(surveys[i].id, surveys[i].name, true);
+                    }
+                });
             }
         }
 
@@ -812,9 +814,11 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             decision = confirm(localise.set["msg_restore"] + "\n" + h.join());
 
             if (decision == true) {
-                for(i = 0; i < surveys.length; i++) {
-                    executeUnDelete(surveys[i].id, surveys[i].name);
-                }
+                checkLoggedIn(function() {
+                    for(i = 0; i < surveys.length; i++) {
+                        executeUnDelete(surveys[i].id, surveys[i].name);
+                    }
+                });
             }
         }
 
@@ -955,10 +959,10 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                     alert(localise.set["msg_err_res"]);
                 },
                 success : function() {
+                    removeHourglass();
                     var projectId = $('#project_name option:selected').val();
                     getSurveys(projectId);
                     getPotentialGroupSurveys();
-                    removeHourglass();
                 }
             });
         }
