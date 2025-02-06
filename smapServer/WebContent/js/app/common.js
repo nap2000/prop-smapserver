@@ -1017,15 +1017,16 @@ function enableApiKeyPopup() {
  */
 function saveCurrentUser(user, $dialog) {
 
-	var userString = JSON.stringify(user);
+	var fd = new FormData();
+	fd.append("user", JSON.stringify(user));
 	addHourglass();
 	$.ajax({
-		type: "POST",
+		method: "POST",
 		cache: false,
-		contentType: "application/x-www-form-urlencoded",
-		dataType: 'json',
+		contentType: false,
+		processData: false,
 		url: "/surveyKPI/user",
-		data: { user: userString },
+		data: fd,
 		success: function(data) {
 			removeHourglass();
 			if(handleLogout(data)) {
