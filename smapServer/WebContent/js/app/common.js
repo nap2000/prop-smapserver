@@ -5024,7 +5024,7 @@ function setTargetDependencies(target) {
 	$('.sms_options, .webhook_options, .email_options, .escalate_options, .conv_options').hide();
 	if(target === "email") {
 		$('.email_options').show();
-		initMsgNotPopup();
+		initMsgNotPopup(target);
 	} else if(target === "sms") {
 		$('.sms_options').show();
 	} else if(target  === "webhook") {
@@ -5033,7 +5033,7 @@ function setTargetDependencies(target) {
 		$('.escalate_options,.email_options').show();
 	} else if(target  === "conversation") {
 		$('.conv_options').show();
-		initMsgNotPopup();
+		initMsgNotPopup(target);
 	}
 }
 
@@ -5079,7 +5079,7 @@ function setPeriodDependencies(period) {
  * Initialise notification popup
  * Only required if the eDitRecord variable is set as used in immediate notifications
  */
-function initMsgNotPopup() {
+function initMsgNotPopup(target) {
 	if(window.gEditRecord) {
 		var $msg = $('#msg_cur_nbr');
 		var $email = $('#email_cur');
@@ -5110,7 +5110,9 @@ function initMsgNotPopup() {
 		}
 		$msg.append(`<option value="other">${other}</option>`);
 		$email.append(`<option value="other">${other}</option>`);
-		msgCurNbrChanged();
+		if(target === "conversation") {
+			msgCurNbrChanged();
+		}
 
 		if(hasEmailSelect) {
 			$('.recvd_emails').show();
