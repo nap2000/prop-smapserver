@@ -1403,7 +1403,7 @@ define({
     "n_our_nbr": "Our Number",
     "n_spec_nbr": "Enter their Number",
     "n_cur_emails": "Select Email",
-    "n_spec_nbr_h": "Enter the number with no spaces or commas.  Include the country code.  Otionally include a +. For example: +442071838451",
+    "n_spec_nbr_h": "Enter the number with no spaces or commas.  Include the country code.  Optionally include a +. For example: +442071838451",
 
 
     // Roles
