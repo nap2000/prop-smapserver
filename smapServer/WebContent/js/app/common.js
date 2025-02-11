@@ -4884,9 +4884,9 @@ function edit_notification(edit, idx, console) {
 		gSelectedOversightQuestion = notification.updateQuestion;
 		gSelectedOversightSurvey = notification.updateSurvey;
 		setTriggerDependencies(notification.trigger);
-		if(notification.trigger === "console_update") {
-			getGroupSurveys(notification.s_id, showOversightSurveys);
-		}
+		//if(notification.trigger === "console_update") {
+		//	getGroupSurveys(notification.s_id, showOversightSurveys);
+		//}
 
 		setAttachDependencies(notification.notifyDetails.attach);
 
@@ -5045,8 +5045,6 @@ function setTriggerDependencies(trigger) {
 		$('.task_reminder_options').show();
 		$('#target').val('email');
 		setTargetDependencies('email');
-	} else if(trigger === "console_update") {
-		$('.update_options, .submission_options').show();
 	} else if(trigger === "cm_alert") {
 		$('.cm_alert_options').show();
 	} else if(trigger === "periodic") {

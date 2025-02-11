@@ -242,6 +242,7 @@ require([
 					alert(localise.set["msg_dms"]);
 					return(-1);
 				}
+				/*
 			} else if(notification.trigger === 'console_update') {
 				var updateQuestion = $('#update_question').val();
 				var updateValue = $('#update_value').val();
@@ -261,7 +262,7 @@ require([
 				notification.updateSurvey = updateSurvey;
 				notification.updateQuestion = updateQuestion;
 				notification.updateValue = updateValue;
-
+				*/
 			} else if(notification.trigger === 'server_calc') {
 				let calculateQuestion = $('#sc_question').val();
 				let calculateValue = $('#sc_value').val();
