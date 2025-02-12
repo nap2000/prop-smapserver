@@ -4923,7 +4923,7 @@ function edit_notification(edit, idx, console) {
 		$('#periodic_time').val(notification.periodic_time);
 		$('#periodic_week_day').val(notification.periodic_week_day);
 		$('#periodic_month_day').val(notification.periodic_month_day);
-		$('#periodic_month').val(notification.periodic_month);
+		$('#periodic_month, #periodic_month_quarter').val(notification.periodic_month);
 		$('#report').val(notification.r_id);
 		setPeriodDependencies(notification.periodic_period);
 
@@ -5070,6 +5070,8 @@ function setPeriodDependencies(period) {
 		$('.periodic_month_day').show();
 	} else if(period === "yearly") {
 		$('.periodic_month').show();
+	} else if(period === "quarterly") {
+		$('.periodic_month_quarter').show();
 	}
 }
 

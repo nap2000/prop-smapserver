@@ -220,7 +220,11 @@ require([
 				notification.periodic_time = $('#periodic_time').val();
 				notification.periodic_week_day = $('#periodic_week_day').val();
 				notification.periodic_month_day = $('#periodic_month_day').val();
-				notification.periodic_month = $('#periodic_month').val();
+				if(notification.periodic_period === 'quarterly') {
+					notification.periodic_month = $('#periodic_month_quarter').val();
+				} else {
+					notification.periodic_month = $('#periodic_month').val();
+				}
 				notification.r_id = $('#report').val();
 
 				/*
@@ -228,10 +232,6 @@ require([
 				 */
 				if(target !== "email") {
 					alert(localise.set["msg_oet"]);
-					return(-1);
-				}
-				if(notification.periodic_period === 'yearly' && (notification.periodic_month < 1 || notification.periodic_month > 12)) {
-					alert(localise.set["msg_mms"]);
 					return(-1);
 				}
 				if(notification.periodic_period === 'yearly' && (notification.periodic_month_day < 1 || notification.periodic_month_day > 31)) {
@@ -242,6 +242,7 @@ require([
 					alert(localise.set["msg_dms"]);
 					return(-1);
 				}
+			
 				/*
 			} else if(notification.trigger === 'console_update') {
 				var updateQuestion = $('#update_question').val();
