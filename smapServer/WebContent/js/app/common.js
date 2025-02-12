@@ -5063,7 +5063,7 @@ function setAttachDependencies(attach) {
 }
 
 function setPeriodDependencies(period) {
-	$('.periodic_week_day, .periodic_month_day, .periodic_month').hide();
+	$('.periodic_week_day, .periodic_month_day, .periodic_month, .periodic_month_quarter').hide();
 	if(period === "weekly") {
 		$('.periodic_week_day').show();
 	} else if(period === "monthly") {
