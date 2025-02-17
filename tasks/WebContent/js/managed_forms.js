@@ -113,6 +113,7 @@ require([
     var gLocalDefaults = {};
     var gPreviousUrl = "";
     var gEditUrl = '#';
+    var gPageLen = 10;
 
     var gDrillDownNext;                 // Next drill down state if drill down is selected
     var gDrillDownStack = [];
@@ -1604,6 +1605,13 @@ require([
         });
         globals.gMainTable.off('deselect').on('deselect', function (e, dt, type, indexes) {
             recordSelected(globals.gMainTable.rows('.selected').data());
+        });
+
+        if(gPageLen) {
+            globals.gMainTable.page.len(gPageLen);
+        }
+        globals.gMainTable.on('length.dt', function (e, settings, len) {
+            gPageLen = len;
         });
 
         // Highlight data conditionally, set barcodes
