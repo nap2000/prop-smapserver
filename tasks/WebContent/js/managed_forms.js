@@ -1519,6 +1519,7 @@ require([
 
         // Create data table
         globals.gMainTable = $table.DataTable({
+            colReorder: true,
             processing: true,
             scrollY: '70vh',
             scrollX: true,
