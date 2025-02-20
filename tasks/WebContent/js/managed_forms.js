@@ -113,6 +113,7 @@ require([
     var gLocalDefaults = {};
     var gPreviousUrl = "";
     var gEditUrl = '#';
+    var gDtChanged = false;
     var gPageLen = 10;
 
     var gDrillDownNext;                 // Next drill down state if drill down is selected
@@ -1364,7 +1365,12 @@ require([
             gTasks.cache.currentData = undefined;
             gTasks.cache.data = {};
 
-            gGetSettings = true;
+            if(gDtChanged) {
+                gGetSettings = false;   // Update the settings on the server
+                gDtChanged = false;
+            } else {
+                gGetSettings = true;    // Use settings from server
+            }
 
             // Get the list of available surveys
             loadManagedSurveys(globals.gCurrentProject, mfSurveyChanged);
@@ -1608,12 +1614,15 @@ require([
             recordSelected(globals.gMainTable.rows('.selected').data());
         });
 
+
+        globals.gMainTable.on('length.dt', function (e, settings, len) {
+            gPageLen = len;
+            gDtChanged = true;
+        });
+        
         if(gPageLen) {
             globals.gMainTable.page.len(gPageLen);
         }
-        globals.gMainTable.on('length.dt', function (e, settings, len) {
-            gPageLen = len;
-        });
 
         // Highlight data conditionally, set barcodes
         tableOnDraw();
@@ -3288,8 +3297,6 @@ require([
                     }
                 }
 		    }
-
-
 	    } else {
 		    url += "&getSettings=true";
 	    }
@@ -3305,6 +3312,10 @@ require([
         if(gTasks.gInitialInstance) {
             url += "&selectedrow=" + encodeURIComponent(gTasks.gInitialInstance);
         }
+
+        // DataTable Settings
+        url += "&pageLen=" + gPageLen;
+        url += "&colOrder=3,2,1";
 
 	    // First Check the Cache
 	    if(!clearCache && gTasks.cache.data[url]) {
@@ -3589,6 +3600,7 @@ require([
             $('#advanced_filter').val(settings.filter);
             $('#include_bad').prop('checked', settings.include_bad === "yes");
             $('#include_completed').prop('checked', settings.include_completed === "yes");
+            gPageLen = settings.pageLen;
         }
     }
 
