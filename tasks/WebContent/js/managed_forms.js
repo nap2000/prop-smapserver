@@ -115,6 +115,7 @@ require([
     var gEditUrl = '#';
     var gDtChanged = false;
     var gPageLen = 10;
+    var gColOrder = [];
 
     var gDrillDownNext;                 // Next drill down state if drill down is selected
     var gDrillDownStack = [];
@@ -779,6 +780,9 @@ require([
         // Refresh menu
         $('#m_refresh').click(function (e) {
             e.preventDefault();
+            if(globals.gMainTable) {
+                globals.gMainTable.off('columns-reordered').off('columns-reorder');
+            }
             checkLoggedIn(function() {
                 if(window.location.hash === "#edit") {
                     getRecordChanges(gTasks.gSelectedRecord);
@@ -1614,15 +1618,25 @@ require([
             recordSelected(globals.gMainTable.rows('.selected').data());
         });
 
-
-        globals.gMainTable.on('length.dt', function (e, settings, len) {
+        // Set page length
+        if(gPageLen) {
+            globals.gMainTable.page.len(gPageLen).draw();
+        }
+        globals.gMainTable.off('length.dt').on('length.dt', function (e, settings, len) {
             gPageLen = len;
             gDtChanged = true;
         });
-        
-        if(gPageLen) {
-            globals.gMainTable.page.len(gPageLen);
+
+        // Set col order
+        if(gColOrder && gColOrder.length > 0) {
+            console.log("Applying col order: " + gColOrder);
+            globals.gMainTable.colReorder.order(gColOrder).draw();
         }
+        globals.gMainTable.off('columns-reordered').off('columns-reorder').on('columns-reordered', function (e, settings, details) {
+            gColOrder = settings.order;
+            gDtChanged = true;
+            console.log('columns-reorder: ' + gColOrder);
+        });
 
         // Highlight data conditionally, set barcodes
         tableOnDraw();
@@ -3297,6 +3311,10 @@ require([
                     }
                 }
 		    }
+
+            // DataTable Settings
+            url += "&pageLen=" + gPageLen;
+            url += "&colOrder=" + gColOrder.join(",");
 	    } else {
 		    url += "&getSettings=true";
 	    }
@@ -3313,9 +3331,7 @@ require([
             url += "&selectedrow=" + encodeURIComponent(gTasks.gInitialInstance);
         }
 
-        // DataTable Settings
-        url += "&pageLen=" + gPageLen;
-        url += "&colOrder=3,2,1";
+        console.log("Get data with get settings: " + gGetSettings + " order: " + gColOrder);
 
 	    // First Check the Cache
 	    if(!clearCache && gTasks.cache.data[url]) {
@@ -3601,6 +3617,12 @@ require([
             $('#include_bad').prop('checked', settings.include_bad === "yes");
             $('#include_completed').prop('checked', settings.include_completed === "yes");
             gPageLen = settings.pageLen;
+            if (settings.colOrder) {
+                gColOrder = settings.colOrder.split(',');
+            } else {
+                gColOrder = [];
+            }
+            console.log("Update settings: " + gColOrder);
         }
     }
 

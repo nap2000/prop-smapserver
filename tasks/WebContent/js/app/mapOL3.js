@@ -60,8 +60,6 @@ define([
 
             var i;
 
-            console.log("====== set layers: ");
-
             /*
              * Delete existing layers
              */
@@ -186,7 +184,6 @@ define([
          * Redisplay all layers
          */
         function refreshAllLayers(mapView, map) {
-            console.log("====== refresh all layers: " + mapView);
             if (mapView) {
                 if (map) {
                     var i;
