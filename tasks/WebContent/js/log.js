@@ -133,11 +133,15 @@ require([
 
 	function userDone() {
 		var url = getLogUrl();
-		table = $('#log_table').DataTable({
-			processing: true,
+		table = new DataTable('#log_table', {
+			//processing: true,
 			scrollY: '70vh',
-			scrollX: true,
+			//scrollX: true,
 			scrollCollapse: true,
+			fixedHeader: {
+				header: true,
+				footer: true
+			},
 			select: {
 				selector: 'td:not(:first-child)'
 			},
