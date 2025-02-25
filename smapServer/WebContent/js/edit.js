@@ -2942,7 +2942,7 @@ function updateLanguageView() {
 	h[++idx] = '<table class="table">';
 	h[++idx] = '<thead>';
 	h[++idx] = '<tr>';
-	h[++idx] = '<th>' + localise.set["c_name"], + '</th>';
+	h[++idx] = '<th>' + localise.set["c_name"] + '</th>';
 	h[++idx] = '<th>' + localise.set["c_code"] + '</th>';
 	h[++idx] = '<th>' + localise.set["c_rtl"] + '</th>';
 	h[++idx] = '</tr>';
