@@ -2956,7 +2956,6 @@ function updateLanguageView() {
 			languageName = languageName.substring(0, languageName.indexOf('('));
 		}
 
-
 		if(!languages[i].deleted) {
 			h[++idx] = '<tr>';
 

@@ -565,7 +565,7 @@ require([
         /*
 	     * Assign a user
 	     */
-        $('#assignUserSave').click(function(e) {
+        $('#assignUserSave').off().click(function(e) {
             e.preventDefault();
             $('#assignUserSave').prop("disabled", true);     // debounce
 
@@ -581,15 +581,15 @@ require([
                 data: {record: gTasks.gSelectedRecord.instanceid},
                 success: function (data, status) {
                     removeHourglass();
+                    $('#assignUserSave').prop("disabled", false);     // debounce
                     if(handleLogout(data)) {
                         $('#userAssign').modal("hide");
-                        $('#assignUserSave').prop("disabled", false);     // debounce
                         showManagedData(globals.gCurrentSurvey, showTable, true);
                     }
                 }, error: function (data, status) {
                     removeHourglass();
+                    $('#assignUserSave').prop("disabled", false);     // debounce
                     if(handleLogout(data)) {
-                        $('#assignUserSave').prop("disabled", false);     // debounce
                         alert(data.responseText);
                     }
                 }
