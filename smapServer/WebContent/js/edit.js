@@ -2951,6 +2951,12 @@ function updateLanguageView() {
 
 	for(i = 0; i < languages.length; i++) {
 
+		var languageName = languages[i].name;
+		if(languageName.indexOf('(') >= 0) {
+			languageName = languageName.substring(0, languageName.indexOf('('));
+		}
+
+
 		if(!languages[i].deleted) {
 			h[++idx] = '<tr>';
 
@@ -2959,7 +2965,7 @@ function updateLanguageView() {
 			h[++idx] = '<input type="text" data-idx="';
 			h[++idx] = i;
 			h[++idx] = '" required class="lname form-control" value="';
-			h[++idx] = languages[i].name;
+			h[++idx] = htmlEncode(languageName);
 			h[++idx] = '">';
 			h[++idx] = '</td>';
 
@@ -2968,7 +2974,7 @@ function updateLanguageView() {
 			h[++idx] = '<input type="text" data-idx="';
 			h[++idx] = i;
 			h[++idx] = '" class="lcode form-control" value="';
-			h[++idx] = languages[i].code;
+			h[++idx] = htmlEncode(languages[i].code);
 			h[++idx] = '">';
 			h[++idx] = '</td>';
 
