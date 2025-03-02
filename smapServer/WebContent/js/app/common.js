@@ -4568,19 +4568,24 @@ function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback, t
 	/*
 	 * Set the properties of the taskFeature from the dialog
 	 */
-	taskFeature.properties.pid = globals.gCurrentProject;
+	taskFeature.properties.p_id = globals.gCurrentProject;
 	taskFeature.properties.tg_id = tg_id;
 
 	if (!taskFeature.properties.id || taskFeature.properties.id == "") {
 		taskFeature.properties["id"] = 0;
 	}
 	taskFeature.properties.name = $('#tp_name').val();		// task name
+	var surveyIdentifier = $('#tp_form_name').val();
+	if(!surveyIdentifier) {
+		alert(localise.set["msg_pss"]);
+		return false;
+	}
 	if(isConsole) {
-		taskFeature.properties.survey_ident = $('#tp_form_name').val();	// form id
+		taskFeature.properties.survey_ident = surveyIdentifier;	// Survey Ident
 		taskFeature.properties.form_id = undefined;
 	} else {
 		// old fashioned
-		taskFeature.properties.form_id = $('#tp_form_name').val();	// form id
+		taskFeature.properties.form_id = surveyIdentifier;	// form id
 		taskFeature.properties.survey_ident = undefined;
 	}
 
