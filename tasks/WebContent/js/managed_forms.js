@@ -1852,6 +1852,14 @@ require([
     }
 
     /*
+     * Return the currently selected survey ident
+     */
+    function surveyIdent() {
+        var survey = gTasks.cache.surveyList[globals.gCurrentProject][$('#survey_name').val()];
+        return survey.ident;
+    }
+
+    /*
      * Get surveys and update the survey lists on this page
      *  This is a different function from the common loadSurveys function as it only loads data surveys
      *  and not oversight surveys
@@ -3210,12 +3218,12 @@ require([
     }
 
 
-    function getData(sId, oversightSurvey, subForm, callback, clearCache) {
+    function getData(sIdent, oversightSurvey, subForm, callback, clearCache) {
 
     	var filter;
 
 	    var url = '/surveyKPI/api/data/';
-	    url += sId;
+	    url += sIdent;
 	    url += "?mgmt=true";
 
 	    if (oversightSurvey) {
@@ -3294,7 +3302,7 @@ require([
 			         * The filter will select those records where the key question is equal to either the
 			         * primary key of this survey or its key
 			         */
-			        var filter = "(${" + stackObj.key + "} = '" + stackObj.record + "'";
+			        filter = "(${" + stackObj.key + "} = '" + stackObj.record + "'";
 			        if(stackObj.key_value) {
 			            filter += "or ${" + stackObj.key + "} = '" + stackObj.key_value + "')"
                     } else {
@@ -3431,8 +3439,6 @@ require([
 			    }
 		    });
         }
-
-
     }
 
     /*
