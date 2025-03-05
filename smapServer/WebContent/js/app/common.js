@@ -207,6 +207,8 @@ function saveCurrentProject(projectId, surveyId, taskGroupId) {
 	}
 }
 
+
+
 /*
  * Save the current relationship between survey and surveyGroup
  */

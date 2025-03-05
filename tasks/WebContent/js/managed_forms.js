@@ -113,7 +113,6 @@ require([
     var gLocalDefaults = {};
     var gPreviousUrl = "";
     var gEditUrl = '#';
-    var gDtChanged = false;
     var gPageLen = 10;
     var gColOrder = [];
 
@@ -1369,12 +1368,7 @@ require([
             gTasks.cache.currentData = undefined;
             gTasks.cache.data = {};
 
-            if(gDtChanged) {
-                gGetSettings = false;   // Update the settings on the server
-                gDtChanged = false;
-            } else {
-                gGetSettings = true;    // Use settings from server
-            }
+            gGetSettings = true;    // Use settings from server
 
             // Get the list of available surveys
             loadManagedSurveys(globals.gCurrentProject, mfSurveyChanged);
@@ -1624,7 +1618,7 @@ require([
         }
         globals.gMainTable.off('length.dt').on('length.dt', function (e, settings, len) {
             gPageLen = len;
-            gDtChanged = true;
+            saveCurrentConsoleSettings();
         });
 
         // Set col order
@@ -1634,8 +1628,8 @@ require([
         }
         globals.gMainTable.off('columns-reordered').off('columns-reorder').on('columns-reordered', function (e, settings, details) {
             gColOrder = settings.order;
-            gDtChanged = true;
             console.log('columns-reorder: ' + gColOrder);
+            saveCurrentConsoleSettings();
         });
 
         // Highlight data conditionally, set barcodes
@@ -1707,6 +1701,38 @@ require([
         }
 
     }
+
+    /*
+     * Save the current project id in the user defaults
+     */
+    function saveCurrentConsoleSettings() {
+
+        var consoleSettings = {
+            pageLen: gPageLen,
+            colOrder: gColOrder.join(',')
+        };
+
+        var settingsString = JSON.stringify(consoleSettings);
+
+        addHourglass();
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",		// uses application/json
+            url: "/surveyKPI/user/consolesettings/" + surveyIdent(),
+            cache: false,
+            data: settingsString,
+            success: function(data, status) {
+                if(handleLogout(data)) {
+                    removeHourglass();
+                }
+            }, error: function(data, status) {
+                // Do not process a logout
+                removeHourglass();
+            }
+        });
+    }
+
+
 
     /*
      * Get the search criteria for a duplicate search
@@ -3338,8 +3364,6 @@ require([
         if(gTasks.gInitialInstance) {
             url += "&selectedrow=" + encodeURIComponent(gTasks.gInitialInstance);
         }
-
-        console.log("Get data with get settings: " + gGetSettings + " order: " + gColOrder);
 
 	    // First Check the Cache
 	    if(!clearCache && gTasks.cache.data[url]) {
