@@ -5145,7 +5145,7 @@ function msgCurNbrChanged($choice) {
 		$('#msg_channel').prop( "disabled", false);
 	} else {
 		$('.other_msg').hide();
-		$('#msg_channel').val($('#msg_cur_nbr option:selected').attr('data-channel')).prop( "disabled", true);
+		$('#msg_channel').val($('#msg_cur_nbr option:selected').attr('data-channel')).prop( "disabled", true).trigger("change");
 	}
 }
 
