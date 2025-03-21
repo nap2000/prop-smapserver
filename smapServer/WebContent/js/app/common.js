@@ -5710,6 +5710,10 @@ function setGroupSelector(data, surveyVal) {
 			h[++idx] = '">';
 			h[++idx] = htmlEncode(item.surveyName);
 			h[++idx] = '</option>';
+
+			if(!surveyVal) {
+				surveyVal = item.surveyIdent;
+			}
 		}
 	}
 
