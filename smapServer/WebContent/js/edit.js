@@ -216,12 +216,14 @@ $(document).ready(function() {
 
 	});
 	$('.m_save_survey').off().click(function() {	// Save a survey to the server
+		globals.gSaveInProgress = true;
 		changeset.validateAll();
 
 		if(changeset.numberIssues("error") === 0) {
 			changeset.save(surveyListDone);
 			gSurveyUrlCacheBuster = addCacheBuster(gSurveyUrl);	// Update the cache buster
 		} else {
+			globals.gSaveInProgress = false;
 			bootbox.alert(localise.set["ed_er"]);
 		}
 	});

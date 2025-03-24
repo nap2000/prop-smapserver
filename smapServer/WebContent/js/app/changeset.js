@@ -165,7 +165,6 @@ define([
             }
             changesString = JSON.stringify(changesInSeq);
 
-            globals.gSaveInProgress = true;
             addHourglass();
             $.ajax({
                 url: url,
