@@ -1530,7 +1530,7 @@ require([
             scrollX: true,
             scrollCollapse: true,
             select: {
-                selector: 'td:not(:first-child)'
+                selector: 'td'
             },
             rowId: 'instanceid',
             data: dataSet.data,
