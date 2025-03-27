@@ -1760,7 +1760,7 @@ function loadSurveyIdentList(projectId, sIdent, addAll, addNone) {
 }
 
 /*
- * Show the surveys in select boxes
+ * Show the surveys in select controls
  */
 function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, useIdx, sId, addNone, bundle) {
 
@@ -1795,7 +1795,7 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 	for(i = 0; i < data.length; i++) {
 		item = data[i];
 		if(!bundle || !bundleObj[item.groupSurveyDetails]) {	// If this is for a bundle list remove duplicate entries
-			if (item.dataSurvey && dataSurvey || item.oversightSurvey && oversightSurvey) {
+			if (!item.readOnlySurvey && (item.dataSurvey && dataSurvey || item.oversightSurvey && oversightSurvey)) {
 				h[++idx] = '<option';
 				if (!valueSelected && !item.blocked) {
 					valueSelected = true;

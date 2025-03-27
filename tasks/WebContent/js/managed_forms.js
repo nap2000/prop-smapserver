@@ -1922,7 +1922,7 @@ require([
                         for (i = 0; i < data.length; i++) {
                             item = data[i];
 
-                            if (item.dataSurvey) {
+                            if (item.dataSurvey && !item.readOnlySurvey) {
                                 h[++idx] = '<option value="';
                                 h[++idx] = i;
                                 h[++idx] = '">';
@@ -2540,12 +2540,12 @@ require([
 
             // Set up the drill down
             if(gDrillDownStack.length > 0) {
-                $('.du_only').show();
+                $('.du_only, .drill_only').show();
             }
 
             updateDrillDownFormList();
             if(gDrillDownNext) {
-                $('.dd_only').show();
+                $('.dd_only, .drill_only').show();
             }
 
             var columns = gTasks.cache.currentData.schema.columns;

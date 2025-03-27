@@ -670,7 +670,9 @@ function setSurveyViewSurveys(surveyList, sId, elem) {
 	$surveySelect.empty();
 	$surveySelect.append('<option value="-1">' + localise.set["c_none"] + '</option>');	    // Default is no survey selected
 	$.each(surveyList, function(j, item) {
-		$surveySelect.append('<option value="' + item.id + '">' + htmlEncode(item.displayName) + '</option>');
+		if(!item.readOnlySurvey) {
+			$surveySelect.append('<option value="' + item.id + '">' + htmlEncode(item.displayName) + '</option>');
+		}
 	});
 	
 	$surveySelect.val(sId);
