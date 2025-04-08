@@ -61,6 +61,9 @@ function setCustomMonitor() {
 function setCustomManage() {
 }
 
+function setCustomChanges() {
+}
+
 function setCustomRegister() {
 }
 
