@@ -1624,6 +1624,18 @@ require([
         // Set col order
         if(gColOrder && gColOrder.length > 0) {
             console.log("Applying col order: " + gColOrder);
+            if(columns.length !== gColOrder.length) {
+                /*
+                 * Make the two arrays the size of the columns array
+                 */
+                if(gColOrder.length < columns.length) {
+                    for(var colIdx = gColOrder.length; colIdx < columns.length; colIdx++) {
+                        gColOrder[colIdx] = colIdx.toString();
+                    }
+                } else {
+                    gColOrder = gColOrder.slice(0, columns.length - 1);
+                }
+            }
             globals.gMainTable.colReorder.order(gColOrder).draw();
         }
         globals.gMainTable.off('columns-reordered').off('columns-reorder').on('columns-reordered', function (e, settings, details) {
