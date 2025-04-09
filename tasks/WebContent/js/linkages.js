@@ -53,7 +53,6 @@ requirejs.config({
         'common': ['jquery'],
         'datetimepicker': ['moment'],
         'file_input': ['jquery'],
-        'app/summary_report': ['jquery'],
 	    'slimscroll': ['jquery'],
         'toggle': ['jquery']
     }

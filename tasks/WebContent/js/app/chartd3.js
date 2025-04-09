@@ -176,7 +176,7 @@ define([
         /*
          * Get XLS Data from charts
          * If all data is set true then ignore the current charts and generate counts for all questions
-         */
+         * Not used
         function getXLSData(alldata) {
 
             var results = globals.gMainTable.rows({
@@ -253,6 +253,7 @@ define([
             return xlsResponse;
 
         }
+        */
 
         /*
          * Refresh all charts

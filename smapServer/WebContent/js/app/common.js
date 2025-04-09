@@ -3110,6 +3110,7 @@ function generateFile(url, filename, format, mime, data, sId, groupSurvey, title
 	}
 
 	var xhr = new XMLHttpRequest();
+	url += addCacheBuster(url);
 	xhr.open('POST', url, true);
 	xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 	xhr.responseType = 'blob';

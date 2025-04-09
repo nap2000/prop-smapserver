@@ -57,7 +57,6 @@ requirejs.config({
         'datetimepicker': ['moment'],
         'crf': ['jquery'],
         'file_input': ['jquery'],
-        'app/summary_report': ['jquery'],
         'qrcode': ['jquery'],
 	    'slimscroll': ['jquery'],
         'multiselect': ['jquery', 'knockout']
@@ -70,7 +69,6 @@ require([
     'localise',
     'globals',
     'moment',
-    'app/summary_report',
     'app/chart',
     'app/mapOL3',
     'svgsave',
@@ -87,7 +85,6 @@ require([
              localise,
              globals,
              moment,
-             summary_report,
              chart,
              map,
              svgsave,
@@ -238,7 +235,6 @@ require([
 
     $(document).ready(function () {
 
-        window.summary_report = summary_report;
         window.moment = moment;
         setCustomManage();
         setTheme();
@@ -1234,10 +1230,6 @@ require([
                     subForm = drillDownState.form;
                 }
             }
-        }
-
-        if (format === "xlsx") {
-            chartData = summary_report.getXLSData(alldata);
         }
 
         generateFile(url, filename, format, mime, data, sId, groupSurvey, title, project, charts, chartData,
