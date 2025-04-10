@@ -1245,7 +1245,6 @@ require([
         });
     }
 
-
     /*
      * Add filtering by date et al to datatable
      */
@@ -1735,8 +1734,6 @@ require([
             }
         });
     }
-
-
 
     /*
      * Get the search criteria for a duplicate search
@@ -3555,8 +3552,14 @@ require([
         var columns = gTasks.cache.currentData.schema.columns;
 
         for (i = 0; i < columns.length; i++) {
-            var headItem = columns[i];
+            var headItem;
 
+            if (gColOrder && gColOrder.length === columns.length) {
+                headItem = columns[gColOrder[i]];  // Order by gColOrder
+            } else {
+                headItem = columns[i];
+            }
+            
             // Highlighting
             if (headItem.markup) {
                 $(globals.gMainTable.column(i).nodes()).each(function (index) {
