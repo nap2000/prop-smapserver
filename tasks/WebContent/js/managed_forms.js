@@ -3559,7 +3559,7 @@ require([
             } else {
                 headItem = columns[i];
             }
-            
+
             // Highlighting
             if (headItem.markup) {
                 $(globals.gMainTable.column(i).nodes()).each(function (index) {

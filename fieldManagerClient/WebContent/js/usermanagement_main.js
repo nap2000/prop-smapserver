@@ -622,9 +622,11 @@ require([
 				url: "/surveyKPI/organisationList",
 				success: function(data, status) {
 					removeHourglass();
-					getLoggedInUser(userKnown, false, false, getOrganisations, false,
-						false, getEnterprises, undefined);
-					$('#create_organisation_popup').modal("hide");
+					if(handleLogout(data)) {
+						getLoggedInUser(userKnown, false, false, getOrganisations, false,
+							false, getEnterprises, undefined);
+						$('#create_organisation_popup').modal("hide");
+					}
 				}, error: function(xhr, textStatus, err) {
 					removeHourglass();
 					if(xhr.readyState == 0 || xhr.status == 0) {
@@ -673,10 +675,12 @@ require([
 				data: { data: enterpriseString },
 				cache: false,
 				url: "/surveyKPI/enterpriseList",
-				success: function() {
+				success: function(data) {
 					removeHourglass();
-					$('#create_enterprise_popup').modal("hide");
-					getEnterprises();
+					if(handleLogout(data)) {
+						$('#create_enterprise_popup').modal("hide");
+						getEnterprises();
+					}
 				}, error: function(xhr, textStatus, err) {
 					removeHourglass();
 					if(xhr.readyState == 0 || xhr.status == 0) {
