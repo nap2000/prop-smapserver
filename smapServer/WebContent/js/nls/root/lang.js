@@ -1156,6 +1156,7 @@ define({
     "lo_loa": "You should now close your browser in order to ensure cached log in details are removed",
 
     // Users
+    "u_sec_mgr_del": "Require security manager privilege to delete data",
     "u_other_msg": "These settings apply to the current organisation",
     "u_show_u": "Show users with security group",
     "u_show_p": "Show users in project",

@@ -785,6 +785,7 @@ require([
 		$('#s_sms_url').val(data.sms_url);
 		$('#s_ratelimit').val(data.ratelimit);
 		$('#s_p_strength').val(data.password_strength);
+		$('#s_sec_mgr_del').prop('checked', data.sec_mgr_del);
 		gCssFile = data.css;
 
 		emailServerTypeChanged();
@@ -812,6 +813,7 @@ require([
 				sms_url: $('#s_sms_url').val(),
 				ratelimit: $('#s_ratelimit').val(),
 				password_strength: $('#s_p_strength').val(),
+				sec_mgr_del: $('#s_sec_mgr_del').prop('checked'),
 				css: $('#cssSelect').val()
 			};
 
