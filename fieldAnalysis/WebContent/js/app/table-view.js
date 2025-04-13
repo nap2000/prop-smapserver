@@ -524,6 +524,9 @@ function deleteAllTables(sId) {
 							success: function (response) {
 								removeHourglass();
 								if(handleLogout(response)) {
+									if(response.length > 0) {
+										alert(response);
+									}
 									refreshAnalysisData();
 								}
 							},
