@@ -2740,7 +2740,7 @@ function getChangeDescription(change, version) {
 			h[++idx] = htmlEncode(change.question.seq);
 			h[++idx] = '</span>';
 			h[++idx] = ' in form ';
-			if(hange.question.formIndex < forms.length) {	// Allow for a form being deleted
+			if(change.question.formIndex < forms.length) {	// Allow for a form being deleted
 				h[++idx] = htmlEncode(forms[change.question.formIndex].name);
 			}
 
