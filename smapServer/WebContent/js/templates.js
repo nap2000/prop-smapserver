@@ -48,6 +48,7 @@ require([
 
 		$(document).ready(function() {
 
+			setCustomChanges();	// Hack assume the customisation is the same as for the changes page
 			setTheme();
 			setupUserProfile(true);
 			localise.setlang();		// Localise HTML
