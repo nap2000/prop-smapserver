@@ -79,8 +79,10 @@ require([
         getLoggedInUser(projectChanged, false, true, undefined);
 
 		$('#m_refresh').click(function() {
-            getReports();
-			getGeneratedReports();
+			checkLoggedIn(function() {
+				getReports();
+				getGeneratedReports();
+			})
 		});
 
 		$('#generatedTab a').click(function (e) {
