@@ -40,6 +40,24 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             localise.setlang();		// Localise HTML
 
             /*
+             * Add response to custom menus id they are enabled
+             */
+            $('#customEntries').click(function() {
+                checkLoggedIn(function() {
+                    var url = "/customApi/bps/usage";
+                    url += addCacheBuster(url);
+                    window.location.href = url;
+                })
+            });
+            $('#customOffences').click(function() {
+                checkLoggedIn(function() {
+                    var url = "/customApi/bps/offences/pivot";
+                    url += addCacheBuster(url);
+                    window.location.href = url;
+                })
+            });
+
+            /*
              * Add functionality to control buttons
              */
             $('#delete_survey').click(function () {
