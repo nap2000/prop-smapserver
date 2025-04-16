@@ -35,7 +35,11 @@ require(['jquery', 'app/localise', 'app/common','app/globals'],
          */
 		isLoggedIn();
 
+		// Remove any service workers - this should only be a temporary fix until no existing users have the service worker version
 		removeServiceWorker();
+
+		// Get the server version
+		getServerVersion();
 
 		/*
          * Enable self registration
@@ -84,6 +88,21 @@ function isLoggedIn() {
 		}
 	});
 }
+
+function getServerVersion() {
+	$.ajax({
+		cache: false,
+		url: "/surveyKPI/server/version",
+		success: function (data, status) {
+			if(handleLogout(data)) {
+				$('#smap_version').text(data);
+			}
+		}, error: function (data, status) {
+
+		}
+	});
+}
+
 /*
  * Get the android version - return 0.0 if it cannot be determined
  */

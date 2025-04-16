@@ -3226,7 +3226,7 @@ function getMapboxDefault(callback, param) {
 
 
 /*
- * Get google map api
+ * Get google map api key
  */
 function getGoogleMapApi(callback, map) {
 
