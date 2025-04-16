@@ -49,6 +49,7 @@ require([
 
 		$(document).ready(function() {
 
+			setCustomChanges();
 			setTheme();
 			setupUserProfile(true);
 			localise.setlang();		// Localise HTML

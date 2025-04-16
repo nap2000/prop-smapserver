@@ -51,6 +51,7 @@ require([
 
 	$(document).ready(function() {
 
+		setCustomChanges();
 		localise.setlang();		// Localise HTML
 		dbstorage.open();
 		getHistory();

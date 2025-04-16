@@ -56,6 +56,7 @@ var	gMode = "survey",
 
 $(document).ready(function() {
 
+	setCustomEdit();
 	setTheme();
 	setupUserProfile(true);
 	localise.setlang();		// Localise HTML
