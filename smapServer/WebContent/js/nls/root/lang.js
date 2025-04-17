@@ -61,7 +61,7 @@ define({
     "m_bill_level": "Bill Level",
 
     // Smap Server
-    "ss_welcome": "Welcome to Smap Server Version:",
+    "ss_welcome": "Smap Server",
     "ss_welcome2": "Changes in this release",
     "ss_ft": "Get Field Task",
     "ss_su": "Get Smap Uploader",

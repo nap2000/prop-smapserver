@@ -95,7 +95,9 @@ function getServerVersion() {
 		url: "/surveyKPI/server/version",
 		success: function (data, status) {
 			if(handleLogout(data)) {
-				$('#smap_version').text(data);
+				if(data) {
+					$('#smap_version').text(data.replaceAll('_','.'));
+				}
 			}
 		}, error: function (data, status) {
 
