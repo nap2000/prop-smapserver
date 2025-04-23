@@ -125,11 +125,15 @@ require([
 			taskGroupChanged($('#task_group').val());
 		});
 
-		$('#user_to_assign').change(function() {
-			if($('#user_to_assign').val() === '_data') {
-				$('.assign_question').removeClass('d-none').show();
-			} else {
-				$('.assign_question').hide();
+		$('#user_to_assign').off().change(function() {
+			var user = $('#user_to_assign').val();
+			console.log("User changed to: " + user);
+			if(user) {
+				if (user === '_data') {
+					$('.assign_question').removeClass('d-none').show();
+				} else {
+					$('.assign_question').hide();
+				}
 			}
 		});
 

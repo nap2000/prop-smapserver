@@ -4872,7 +4872,7 @@ function getStatusClass(status, assign_auto) {
  *------------------------------------------------------------------
  * Common notification functions shared between console and notifications
  */
-function edit_notification(edit, idx, console) {
+function edit_notification(edit, idx, inconsole) {
 
 	var notification;
 	var title;
@@ -4888,14 +4888,14 @@ function edit_notification(edit, idx, console) {
 		$('#target').val(notification.target);
 		$('#name').val(notification.name);
 		setTargetDependencies(notification.target);
+		$('.assign_question').hide();
+		if(notification.target === 'escalate' && notification.remote_user === '_data') {
+			$('.assign_question').removeClass('d-none').show();
+		}
 
 		gSelectedOversightQuestion = notification.updateQuestion;
 		gSelectedOversightSurvey = notification.updateSurvey;
 		setTriggerDependencies(notification.trigger);
-		//if(notification.trigger === "console_update") {
-		//	getGroupSurveys(notification.s_id, showOversightSurveys);
-		//}
-
 		setAttachDependencies(notification.notifyDetails.attach);
 
 		if (notification.trigger !== "task_reminder") {
@@ -4912,7 +4912,7 @@ function edit_notification(edit, idx, console) {
 		$('#sc_value').val(notification.updateValue);
 
 		// reminder settings
-		if (!console) {
+		if (!inconsole) {
 			$('#task_group').val(getTaskGroupIndex(notification.tgId));
 			if ((notification.period)) {
 				var periodArray = notification.period.split(" ");
@@ -4974,10 +4974,9 @@ function edit_notification(edit, idx, console) {
 				$('#callback_url').val(notification.notifyDetails.callback_url);
 			}
 		}
-		if (!console) {
-			$('#fwd_user,#user_to_assign').val(notification.remote_user);
+		if (!inconsole) {
+			$('#fwd_user,#user_to_assign').val(notification.remote_user).change();
 			$('#assign_question').val(notification.notifyDetails.assign_question);
-			$('#user_to_assign').trigger('change');
 			$('#survey_case').val(notification.notifyDetails.survey_case);
 			gEligibleUser = notification.remote_user;
 			// Password not returned from server - leave blank
@@ -5473,20 +5472,6 @@ function saveEscalate() {
 	}
 
 	return notification;
-}
-
-function getConsoleColumnName(columns, questionName) {
-	var columnName,
-		i;
-	if(columns) {
-		for(i = 0; i < columns.length; i++) {
-			if(columns[i].question_name === questionName) {
-				columnName = columns[i].column_name;
-				break;
-			}
-		}
-	}
-	return columnName;
 }
 
 function getTaskGroupIndex(tgId) {
