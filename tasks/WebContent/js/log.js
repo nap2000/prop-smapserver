@@ -134,7 +134,7 @@ require([
 	function userDone() {
 		var url = getLogUrl();
 		table = new DataTable('#log_table', {
-			//processing: true,
+			processing: true,
 			scrollY: '70vh',
 			//scrollX: true,
 			scrollCollapse: true,
