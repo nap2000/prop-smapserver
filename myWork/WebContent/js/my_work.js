@@ -209,7 +209,7 @@ require([
 				}
 				h[++idx] = '</button>';
 				h[++idx] = '<a id="a_';
-				h[++idx] = taskList[i].assignment.assignment_id;
+				h[++idx] = i;
 				if(taskList[i].assignment.assignment_status === 'cancelled') {
 					h[++idx] = '" class="task btn btn-danger w-100" role="button"';
 				} else {
@@ -268,7 +268,7 @@ require([
 				// Add button with additional options
 				if(taskList[i].assignment.assignment_status !== 'cancelled') {
 					h[++idx] = '<button ';
-					h[++idx] = 'id="a_r_' + taskList[i].assignment.assignment_id;
+					h[++idx] = 'id="a_r_' + i;
 					h[++idx] = '" class="btn btn-danger w-20 reject" type="button"';
 					h[++idx] = '" data-id="';
 					h[++idx] = i;
@@ -349,9 +349,8 @@ require([
 					success: function(data, status) {
 						removeHourglass();
 						if(handleLogout(data)) {
-							var aid = taskList[idx].assignment.assignment_id;
-							$('#a_' + aid).removeClass('btn-info').addClass('btn-danger').addClass('disabled');
-							$('#a_r_' + aid).addClass('disabled');
+							$('#a_' + idx).removeClass('btn-info').addClass('btn-danger').addClass('disabled');
+							$('#a_r_' + idx).addClass('disabled');
 						}
 					},
 					error: function(xhr, textStatus, err) {
