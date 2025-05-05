@@ -118,7 +118,9 @@ require([
 		gSourceSurvey;
 
 	var gCurrentGroup,
-		gCurrentLocation = '-1';
+		gCurrentLocation = '-1',
+		gFilterQuestion,
+		gAddressColumns;
 
 	$(document).ready(function () {
 
@@ -199,7 +201,8 @@ require([
 
 		// Add response to a source survey being selected
 		$('#survey').change(function () {
-			surveyChangedTasks("-1");
+			gFilterQuestion = "-1";
+			surveyChangedTasks();
 		});
 
 		// Add response to the filter language being changed
@@ -431,7 +434,7 @@ require([
 			$('#t_show_dist').val(tgRule.show_dist);
 
 			// If added from a survey
-			var filterQuestion = "-1";
+			gFilterQuestion = "-1";
 			if(tg.source_s_id) {
 				$('#add_from_survey').prop('checked', true);
 				$('#add_task_from_existing').show();
@@ -479,7 +482,7 @@ require([
 					if (typeof tgRule.filter.qId !== "undefined" && tgRule.filter.qId > 0) {
 
 						$('#filter_language').val(tgRule.lang_val);
-						filterQuestion = tgRule.filter.qId;
+						gFilterQuestion = tgRule.filter.qId;
 						if(tgRule.filter.qType === "string") {
 							$('#filter_text').val(tgRule.filter.qText);
 						} else if(tgRule.filter.qType === "int") {
@@ -529,7 +532,8 @@ require([
 				$('#email_content').val(emaildetails.content);
 			}
 
-			surveyChangedTasks(filterQuestion, tgRule.address_columns);    // Set survey related parameters
+			gAddressColumns = tgRule.address_columns;
+			surveyChangedTasks();    // Set survey related parameters
 
 			// open the modal for update
 			$('#add_current').prop('disabled', true);
@@ -560,7 +564,8 @@ require([
 			$('.assign_role').hide();
 
 			$('#project_select').val(globals.gCurrentProject);	// Set the source project equal to the current project
-			surveyChangedTasks("-1");
+			gFilterQuestion = "-1";
+			surveyChangedTasks();
 			$('#add_task_from_existing').hide();
 			$('.simple_filter').hide();
 			$('.advanced_filter').hide();
@@ -1081,19 +1086,19 @@ require([
 
 	}
 
-	function surveyChangedTasks(filterQuestion, address_columns) {
+	function surveyChangedTasks() {
 		var sId = $('#survey').val();
 		if(!sId || sId <= 0) {
 			sId = globals.gCurrentSurvey;
 		}
 
 		if(sId) {
-			if (typeof filterQuestion === "undefined") {
-				filterQuestion = "-1";
+			if (typeof gFilterQuestion === "undefined") {
+				gFilterQuestion = "-1";
 			}
 			$('#filter_option').empty();
-			getLanguageList(sId, questionChanged, false, '#filter_language', false, filterQuestion);
-			setAddressOptions(address_columns);
+			getLanguageList(sId, questionChanged, false, '#filter_language', false, gFilterQuestion);
+			setAddressOptions(gAddressColumns);
 		}
 	}
 
