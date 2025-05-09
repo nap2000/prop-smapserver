@@ -1171,7 +1171,7 @@ require([
 							}
 							$filter_option.append(h.join(''));
 
-							var tgRule = JSON.parse(gTaskGroups[gTaskGroupIndex].rule);
+							var tgRule = gTaskGroups[gTaskGroupIndex].rule;
 							if(tgRule && tgRule.filter) {
 								$filter_option.val(tgRule.filter.oValue);
 							}
