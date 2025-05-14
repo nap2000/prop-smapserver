@@ -1492,7 +1492,9 @@ require([
 			$.ajax({
 				url: "/surveyKPI/tasks/assignments/" +
 					globals.gCurrentTaskGroup +
-					"?user=" + user_filter + "&period=" + period_filter,
+					"?user=" + user_filter +
+					"&period=" + period_filter +
+					"&tz=" + encodeURIComponent(globals.gTimezone),
 				cache: false,
 				dataType: 'json',
 				success: function (data) {
