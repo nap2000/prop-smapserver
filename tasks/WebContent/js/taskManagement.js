@@ -1494,7 +1494,7 @@ require([
 					globals.gCurrentTaskGroup +
 					"?user=" + user_filter +
 					"&period=" + period_filter +
-					"&tz=" + encodeURIComponent(globals.gTimezone),
+					"&tz=UTC",		// Work with UTC and change dates locally
 				cache: false,
 				dataType: 'json',
 				success: function (data) {

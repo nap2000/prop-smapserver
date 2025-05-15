@@ -4556,7 +4556,7 @@ function getLocationIndex(name, tags) {
 }
 
 function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback, tg_id) {
-	var url = "/surveyKPI/api/tasks?preserveInitialData=true",
+	var url = "/surveyKPI/api/tasks?preserveInitialData=true&tz=UTC",	// Assume we use UTC times in interface
 		taskFeature = {
 			properties: {}
 		},
