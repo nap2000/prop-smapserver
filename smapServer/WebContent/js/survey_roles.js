@@ -262,7 +262,7 @@ function refreshView() {
 			h[++idx] = localise.set["ro_fc"];
 		h[++idx] = '</th>';
 		h[++idx] = '<th>';
-			h[++idx] = localise.set["ro_f_type"];
+			h[++idx] = localise.set["ro_f_group"];
 		h[++idx] = '</th>';
 		h[++idx] = '</tr>';
 	h[++idx] = '</thead>';
@@ -323,15 +323,25 @@ function refreshView() {
 				h[++idx] = '</button>';
 			h[++idx] = '</td>';
 			h[++idx] = '<td>';
-				h[++idx] = '<div class="btn-group btn-toggle restrict';
+				h[++idx] = '<div class="btn-group btn-toggle role_group';
 				if(!gRoles[i].enabled) {
 					h[++idx] = ' disabled';
 				}
 				h[++idx] = '" data-idx="';
 				h[++idx] = i;
 				h[++idx] = '">';
-				h[++idx] = '<button class="btn btn-xs restrictive ';
-				if(gRoles[i].restrictive) {
+				h[++idx] = '<button class="btn btn-xs groupA ';
+				if(gRoles[i].role_group === 'A') {
+					h[++idx] = 'btn-success active';
+				} else {
+					h[++idx] = 'btn-default';
+				}
+				if(!gRoles[i].enabled) {
+					h[++idx] = ' disabled';
+				}
+				h[++idx] = '">A</button>';
+				h[++idx] = '<button class="btn btn-xs groupB ';
+				if(gRoles[i].role_group === 'B') {
 					h[++idx] = 'btn-danger active';
 				} else {
 					h[++idx] = 'btn-default';
@@ -339,21 +349,7 @@ function refreshView() {
 				if(!gRoles[i].enabled) {
 					h[++idx] = ' disabled';
 				}
-				h[++idx] = '">';
-				h[++idx] = localise.set["c_rest"];
-				h[++idx] = '</button>';
-				h[++idx] = '<button class="btn btn-xs permissive ';
-				if(gRoles[i].restrictive) {
-					h[++idx] = 'btn-default';
-				} else {
-					h[++idx] = 'btn-success active';
-				}
-				if(!gRoles[i].enabled) {
-					h[++idx] = ' disabled';
-				}
-				h[++idx] = '">';
-				h[++idx] = localise.set["c_perm"];
-				h[++idx] = '</button>';
+				h[++idx] = '">B</button>';
 				h[++idx] = '</div>';
 			h[++idx] = '</td>';
 		h[++idx] = '</tr>';
@@ -379,7 +375,7 @@ function refreshView() {
 		gRoles[idx].enabled = !gRoles[idx].enabled;
 		updateRole(idx, "enabled", undefined);
 		
-		$this.closest('tr').find('.row_filter, .column_filter, .restrict, .permissive, .restrictive').toggleClass("disabled");
+		$this.closest('tr').find('.row_filter, .column_filter, .role_group, .groupA, .groupB').toggleClass("disabled");
 		
 		setInfoMsg();
 	});
@@ -410,16 +406,20 @@ function refreshView() {
 	});
 
 	// filter type
-	$('.restrict', $element).click(function() {
+	$('.role_group', $element).click(function() {
 		var $this = $(this);
 
 		$this.find('.btn').toggleClass('active').removeClass("btn-success btn-danger").addClass("btn-default");
-		$this.find('.permissive.active').addClass("btn-success").removeClass("btn-default");
-		$this.find('.restrictive.active').addClass("btn-danger").removeClass("btn-default");
+		$this.find('.groupA.active').addClass("btn-success").removeClass("btn-default");
+		$this.find('.groupB.active').addClass("btn-danger").removeClass("btn-default");
 
 		idx = $this.data("idx");
-		gRoles[idx].restrictive = !gRoles[idx].restrictive;
-		updateRole(idx, "restrictive", undefined);
+		if(gRoles[idx].role_group === 'A') {
+			gRoles[idx].role_group = 'B';
+		} else {
+			gRoles[idx].role_group = 'A';
+		}
+		updateRole(idx, "role_group", undefined);
 
 	});
 	
