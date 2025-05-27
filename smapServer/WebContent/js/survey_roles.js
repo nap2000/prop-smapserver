@@ -364,7 +364,7 @@ function refreshView() {
 
 	$element.html(h.join(''));
 
-	$('.enable', $element).click(function () {
+	$('.enable', $element).off().click(function () {
 		var $this = $(this),
 			idx;
 
@@ -382,7 +382,7 @@ function refreshView() {
 	});
 
 	// Row filtering logic
-	$('.row_filter', $element).click(function () {
+	$('.row_filter', $element).off().click(function () {
 		var $this = $(this);
 
 		if (!$this.hasClass("disabled")) {
@@ -393,7 +393,7 @@ function refreshView() {
 	});
 
 	// Column filtering logic
-	$('.column_filter', $element).click(function () {
+	$('.column_filter', $element).off().click(function () {
 		var $this = $(this);
 
 		if (!$this.hasClass("disabled")) {
@@ -407,7 +407,7 @@ function refreshView() {
 	});
 
 	// filter type
-	$('.role_group', $element).click(function () {
+	$('.role_group', $element).off().click(function () {
 		var $this = $(this);
 
 		$this.find('.btn').toggleClass('active').removeClass("btn-success btn-danger").addClass("btn-default");
@@ -526,9 +526,14 @@ function updateRole(idx, property, $popup) {
 			  removeHourglass();
 			  if(handleLogout(data)) {
 				  gRoles[idx].linkid = data.linkid;		// Record the id of survey/role entity
+				  gRoles[idx].row_filter = data.row_filter;
+				  if(data.role_group) {
+					  gRoles[idx].role_group = data.role_group;
+				  }
 				  if($popup) {
 					  $popup.modal("hide");
 				  }
+				  refreshView();
 			  }
 
 		  }, error: function(data, status) {
