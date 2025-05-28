@@ -76,7 +76,7 @@ $(document).ready(function() {
 	});
 	
 	// Save a column filter
-	$('#saveColumnFilter').click(function() {
+	$('#saveColumnFilter').off().click(function() {
 		var $this,
 			question,
 			column
@@ -88,7 +88,7 @@ $(document).ready(function() {
 			
 			if($this.is(':checked')) {
 				column = {
-					id: question.id
+					name: question.name
 				};
 				gRoles[gIdx].column_filter.push(column);
 			}
@@ -471,7 +471,7 @@ function refreshColumnSelect(questions, filter_columns) {
 		// See if this question has been included in the filter columns
 		j = 0;
 		while(j < filter_columns.length) {
-			if(filter_columns[j].id ==  questions[i].id) {
+			if(filter_columns[j].name ==  questions[i].name) {
 				h[++idx] = ' checked';
 				break;
 			}
