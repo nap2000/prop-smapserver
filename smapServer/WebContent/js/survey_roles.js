@@ -527,6 +527,7 @@ function updateRole(idx, property, $popup) {
 			  if(handleLogout(data)) {
 				  gRoles[idx].linkid = data.linkid;		// Record the id of survey/role entity
 				  gRoles[idx].row_filter = data.row_filter;
+				  gRoles[idx].column_filter = data.column_filter;
 				  if(data.role_group) {
 					  gRoles[idx].role_group = data.role_group;
 				  }
