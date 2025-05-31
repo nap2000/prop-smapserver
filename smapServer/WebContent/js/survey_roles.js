@@ -526,6 +526,19 @@ function updateRole(idx, property, $popup) {
 			  removeHourglass();
 			  if(handleLogout(data)) {
 				  gRoles[idx].linkid = data.linkid;		// Record the id of survey/role entity
+				  if(property === "enabled") {		// Newly enabled get any synchronised properties
+					  gRoles[idx].row_filter = data.row_filter;
+					  gRoles[idx].column_filter = data.column_filter;
+					  if(data.role_group) {
+						  gRoles[idx].role_group = data.role_group;
+						  var $g = $('#role_table .role_group[data-idx=' + idx + ']')
+
+						  $g.find('.btn').removeClass('active').removeClass("btn-success btn-danger").addClass("btn-default");
+						  $g.find('.group' + data.role_group).addClass('active');
+						  $g.find('.groupA.active').addClass("btn-success").removeClass("btn-default");
+						  $g.find('.groupB.active').addClass("btn-danger").removeClass("btn-default");
+					  }
+				  }
 
 				  if($popup) {
 					  $popup.modal("hide");
