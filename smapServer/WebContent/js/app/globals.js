@@ -539,7 +539,7 @@ define(function () {
 		    'w': {
 			    field: 'a_width',
 			    type: 'select',
-                rex: 'w[1-9]*',
+                rex: 'w10|w[1-9]',
                 value_offset: 1,
                 undef_value: ''
 		    }
