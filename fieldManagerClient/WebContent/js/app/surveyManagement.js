@@ -624,7 +624,14 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                     h[++idx] = '<td class="groupsurvey" data-id="';
                     h[++idx] = survey.groupSurveyId;
                     h[++idx] = '">';
-                    h[++idx] = htmlEncode(survey.groupSurveyDetails);
+                    if(survey.groupSurveyDetails) {
+                        h[++idx] = htmlEncode(survey.groupSurveyDetails);
+                    } else {
+                        // Allow for the case where the original group survey was deleted
+                        if(survey.ident !== survey.groupSurveyIdent) {
+                            h[++idx] = htmlEncode(survey.groupSurveyIdent);
+                        }
+                    }
                     h[++idx] = '</td>';
 
                     h[++idx] = '<td>';
