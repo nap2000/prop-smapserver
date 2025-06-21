@@ -545,7 +545,9 @@ require([
                     removeHourglass();
                     $('#m_lock').prop("disabled", false);     // debounce
                     if(handleLogout(data)) {
+                        gTasks.gSelectedRecord._assigned = globals.gLoggedInUser.ident;
                         showManagedData(globals.gCurrentSurvey, showTable, true);
+
                     }
                 }, error: function (data, status) {
                     removeHourglass();
@@ -579,6 +581,7 @@ require([
                     $('#assignUserSave').prop("disabled", false);     // debounce
                     if(handleLogout(data)) {
                         $('#userAssign').modal("hide");
+                        gTasks.gSelectedRecord._assigned = $('#user_to_assign').val();
                         showManagedData(globals.gCurrentSurvey, showTable, true);
                     }
                 }, error: function (data, status) {
@@ -612,6 +615,7 @@ require([
                     removeHourglass();
                     $('#m_release').prop("disabled", false);     // debounce
                     if(handleLogout(data)) {
+                        gTasks.gSelectedRecord._assigned = "";
                         showManagedData(globals.gCurrentSurvey, showTable, true);
                     }
                 }, error: function (data, status) {
@@ -768,7 +772,7 @@ require([
             });
 
             updateVisibleColumns(config.columns);
-            saveColumns();
+            saveColumns(true);
 
         });
 
@@ -1520,6 +1524,7 @@ require([
             scrollY: '70vh',
             scrollX: true,
             scrollCollapse: true,
+            paging: false,
             select: {
                 selector: 'td'
             },
@@ -1536,15 +1541,15 @@ require([
                 }
 
                 this.api().columns().every(function (colIdx) {
-                    if (columns[colIdx].filter || columns[colIdx].type === "select1") {
+                    if (columns[colIdx].filter || columns[colIdx].type === "select1"
+                            || columns[colIdx].type === "calculate") {
                         var column = this;
-                        var select = $('<select class="form-control"/>')
-                            .appendTo( $(column.footer()).empty())
+                        var select = $('<select class="form-control">')
+                            .appendTo( $(column.header()))
                             .on('change', function () {
                                 var val = $.fn.dataTable.util.escapeRegex(
                                     $(this).val()
                                 );
-
                                 column
                                     .search( val ? '^'+val+'$' : '', true, false )
                                     .draw();
@@ -1555,11 +1560,12 @@ require([
                         select.append( '<option value=""></option>' );
                         column.data().unique().sort().each( function ( d, j ) {
                             if(d && d.length > 0) {
-                                select.append('<option value="' + d + '">' + htmlEncode(d) + '</option>')
+                                select.append('<option value="' + d + '">' + d + '</option>')
                             }
                         } );
+                        select.append('</select>');
 
-                        // Set current value
+                        //Set current value
                         if (columns[colIdx].filterValue) {
                             select.val(columns[colIdx].filterValue).trigger('change');
                         }
@@ -1688,6 +1694,10 @@ require([
         if(subject === 'question') {
             $('.qonly').show();
         }
+    }
+
+    function check(a) {
+        return window.colval === a || window.colval === "" || a === "";
     }
 
     /*
@@ -2210,7 +2220,7 @@ require([
                 break;
             }
         }
-        saveColumns();
+        saveColumns(false);
     }
 
     /*
@@ -2244,7 +2254,7 @@ require([
     /*
      * Update the saved configuration
      */
-    function saveColumns() {
+    function saveColumns(refresh) {
         var configColumns = {},
             columns = gTasks.cache.currentData.schema.columns,
             i;
@@ -2253,8 +2263,8 @@ require([
             configColumns[columns[i].column_name] = {
                 hide: columns[i].hide,
                 barcode: columns[i].barcode,
-                includeText: columns[i].includeText
-
+                includeText: columns[i].includeText,
+                filterValue: config.columns[i].filterValue
             };
         }
 
@@ -2272,8 +2282,10 @@ require([
             success: function (data, status) {
                 removeHourglass();
                 if(handleLogout(data)) {
-                    showManagedData(globals.gCurrentSurvey, showTable, false); // redraw
-                    $('#right-sidebar').removeClass("sidebar-open");
+                    if(refresh) {
+                        showManagedData(globals.gCurrentSurvey, showTable, false); // redraw
+                        $('#right-sidebar').removeClass("sidebar-open");
+                    }
                 }
             }, error: function (data, status) {
                 removeHourglass();
