@@ -2264,7 +2264,7 @@ require([
                 hide: columns[i].hide,
                 barcode: columns[i].barcode,
                 includeText: columns[i].includeText,
-                filterValue: config.columns[i].filterValue
+                filterValue: columns[i].filterValue
             };
         }
 
