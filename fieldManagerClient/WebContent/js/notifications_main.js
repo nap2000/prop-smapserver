@@ -154,7 +154,7 @@ require([
 	function projectSet() {
 
 		populateTaskGroupList();
-		loadSurveys(globals.gCurrentProject, undefined, false, false, undefined, false, undefined, undefined);			// Get surveys
+		loadSurveys(globals.gCurrentProject, undefined, false, false, undefined, false, undefined, undefined, false);			// Get surveys
 		getReports(globals.gCurrentProject);	// Get notifications after reports as they are deondent on report names
 	}
 

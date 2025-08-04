@@ -137,7 +137,7 @@ $(document).ready(function() {
 });
 
 function projectChanged() {
-	loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChangedRoles, false, undefined, undefined);			// Get surveys
+	loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChangedRoles, false, undefined, undefined, true);			// Get surveys
 }
 
 function surveyChangedRoles() {

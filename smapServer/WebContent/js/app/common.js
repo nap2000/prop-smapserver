@@ -1661,7 +1661,7 @@ function removeHourglass() {
 /*
  * Load the surveys from the server
  */
-function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx, sId, addNone) {
+function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx, sId, addNone, incReadOnly) {
 
 	var url="/surveyKPI/surveys?projectId=" + projectId + "&blocked=true";
 
@@ -1687,10 +1687,10 @@ function loadSurveys(projectId, selector, getDeleted, addAll, callback, useIdx, 
 					var sel = selector;
 					var all = addAll;
 
-					showSurveyList(data, sel + ".data_survey", all, true, false, useIdx, sId, addNone, false);
-					showSurveyList(data, sel + ".oversight_survey", all, false, true, useIdx, sId, addNone, false);
-					showSurveyList(data, sel + ".data_oversight_survey", all, true, true, useIdx, sId, addNone, false);
-					showSurveyList(data, ".bundle_select", all, true, true, false, sId, addNone, true);
+					showSurveyList(data, sel + ".data_survey", all, true, false, useIdx, sId, addNone, false, incReadOnly);
+					showSurveyList(data, sel + ".oversight_survey", all, false, true, useIdx, sId, addNone, false, incReadOnly);
+					showSurveyList(data, sel + ".data_oversight_survey", all, true, true, useIdx, sId, addNone, false, incReadOnly);
+					showSurveyList(data, ".bundle_select", all, true, true, false, sId, addNone, true, incReadOnly);
 
 					if (typeof callback == "function") {
 						callback(data);
@@ -1762,7 +1762,7 @@ function loadSurveyIdentList(projectId, sIdent, addAll, addNone) {
 /*
  * Show the surveys in select controls
  */
-function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, useIdx, sId, addNone, bundle) {
+function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, useIdx, sId, addNone, bundle, incReadOnly) {
 
 	var i,
 		item,
@@ -1795,7 +1795,7 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 	for(i = 0; i < data.length; i++) {
 		item = data[i];
 		if(!bundle || !bundleObj[item.groupSurveyDetails]) {	// If this is for a bundle list remove duplicate entries
-			if (!item.readOnlySurvey && (item.dataSurvey && dataSurvey || item.oversightSurvey && oversightSurvey)) {
+			if ((incReadOnly || !item.readOnlySurvey) && (item.dataSurvey && dataSurvey || item.oversightSurvey && oversightSurvey)) {
 				h[++idx] = '<option';
 				if (!valueSelected && !item.blocked) {
 					valueSelected = true;

@@ -254,7 +254,7 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
                 $('.ownerOnly').removeClass("d-none").show();
             }
 
-            loadSurveys(globals.gCurrentProject, undefined, false, true, undefined, false, undefined, undefined);			// Get surveys
+            loadSurveys(globals.gCurrentProject, undefined, false, true, undefined, false, undefined, undefined, false);			// Get surveys
 
             saveCurrentProject(globals.gCurrentProject,
                 globals.gCurrentSurvey,

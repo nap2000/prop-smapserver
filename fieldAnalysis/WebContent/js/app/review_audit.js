@@ -176,7 +176,7 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 	*/
 
 	function getSurveyList() {
-		loadSurveys(globals.gCurrentProject, undefined, false, false, getAuditList, false, undefined, undefined);
+		loadSurveys(globals.gCurrentProject, undefined, false, false, getAuditList, false, undefined, undefined, false);
 	}
 
 

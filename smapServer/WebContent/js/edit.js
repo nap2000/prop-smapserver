@@ -993,7 +993,7 @@ $(document).ready(function() {
 	 */
     $('#existing_project').change(function() {
         var existingProject = $('#existing_project option:selected').val();
-        loadSurveys(existingProject, "#survey_name", false, false, undefined, false, undefined, undefined);			// Get surveys
+        loadSurveys(existingProject, "#survey_name", false, false, undefined, false, undefined, undefined, false);			// Get surveys
     });
 
 	$('#removeMedia').click(function() {
@@ -1214,9 +1214,9 @@ function isCompatible(compatTypes, currentType) {
 
 function getSurveyList() {
 	if(globals.gCurrentSurvey > 0) {
-		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyListDone, false);
+		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyListDone, false, undefined, false);
 	} else {
-		loadSurveys(globals.gCurrentProject, undefined, false, false, undefined, false, undefined, undefined);
+		loadSurveys(globals.gCurrentProject, undefined, false, false, undefined, false, undefined, undefined, false);
 	}
 }
 

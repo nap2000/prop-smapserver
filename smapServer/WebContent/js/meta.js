@@ -147,9 +147,9 @@ require([
 		function getSurveyList() {
 			console.log("getSurveyList: " + globals.gCurrentSurvey);
 			if(globals.gCurrentSurvey > 0) {
-				loadSurveys(globals.gCurrentProject, undefined, false, false, surveyListDone, false, undefined, undefined);
+				loadSurveys(globals.gCurrentProject, undefined, false, false, surveyListDone, false, undefined, undefined, false);
 			} else {
-				loadSurveys(globals.gCurrentProject, undefined, false, false, undefined, false, undefined, undefined);
+				loadSurveys(globals.gCurrentProject, undefined, false, false, undefined, false, undefined, undefined, false);
 			}
 		}
 
