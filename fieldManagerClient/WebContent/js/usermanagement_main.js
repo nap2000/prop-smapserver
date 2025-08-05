@@ -284,6 +284,11 @@ require([
 					return false;
 				}
 			}
+			// Set the user name to the same value as ident if it has not been specified
+			if(!user.name || user.name.trim().length === 0) {
+				user.name = user.ident;
+			}
+
 			if(!validGeneralName(user.name)) {
 				alert(localise.set["msg_val_gen_nm"]);
 				$('#user_name').focus();
