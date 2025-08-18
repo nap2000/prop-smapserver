@@ -4,14 +4,20 @@ echo "building webforms"
 pushd ~/git/webform
 grunt develop
 popd
-./enk_up.sh
 
-#if [ "$1" != develop ]
-#then
+if [ "$1" != develop ]
+then
 	rm WebContent/build/js/webform-bundle.min.js
 
+        # uglify
+        pushd ~/git/minify
+        grunt uglify
+        popd
+
+	cp ~/git/minify/bundle.min.js WebContent/build/js/webform-bundle.min.js
+
 	# Skip minification
-        cp  WebContent/build/js/webform-bundle.js WebContent/build/js/webform-bundle.min.js
+        # cp  WebContent/build/js/webform-bundle.js WebContent/build/js/webform-bundle.min.js
 
 	#echo "--------------------------- transpiling with babel to es5"
 	#babel WebContent/build/js/webform-bundle.js --out-file WebContent/build/js/webform-bundle.es5.js
@@ -26,7 +32,13 @@ popd
 	#java -jar ~/compiler-latest/closure-compiler-v20200719.jar  --js WebContent/build/js/webform-bundle.es5.js --js_output_file WebContent/build/js/webform-bundle.min.js 
 
 	#rm WebContent/build/js/webform-bundle.es5.js
-#fi
+else
+
+	cp ~/git/webform/build/js/enketo-bundle.js WebContent/build/js/webform-bundle.min.js
+
+fi
+
+./enk_up.sh
 
 # Minify the smap server code
 echo "--------------------------- minify smap server code"
