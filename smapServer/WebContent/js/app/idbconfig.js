@@ -4,5 +4,5 @@
  */
 
 window.idbConfig = {
-	version: 10
+	version: 15
 };

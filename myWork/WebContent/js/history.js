@@ -53,8 +53,13 @@ require([
 
 		setCustomChanges();
 		localise.setlang();		// Localise HTML
-		dbstorage.open();
-		getHistory();
+		dbstorage.open().then(
+			function() {
+				getHistory();
+			},
+			function(e) {
+				console.log(e);
+			});
 
 		if(location.search.indexOf("menu=yes") >= 0) {
 			$('.menuopt').removeClass('d-none').show();

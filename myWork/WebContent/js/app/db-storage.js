@@ -17,6 +17,9 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 */
 "use strict";
 
+/*
+ *  This file provides access to the same database used by webforms.  The db creation code is duplicated for this reason.
+ */
 define([],
     function() {
 
@@ -26,18 +29,15 @@ define([],
         let databaseVersion = window.idbConfig.version;
         let databaseName = "webform";
 
-        var dbPromise;  // Promise that returns the database
+        let dbPromise;  // Promise that returns the database
 
         let mediaStoreName = "media";
-        var mediaStore;
-
         let logStoreName = "logs";
-        let logStore;
+        let lastSavedStoreName = 'lastSavedRecords';
 
         let recordStoreName = 'records';
         let assignmentIdx = 'assignment';
         let assignmentIdxPath = 'assignment.assignment_id';
-        var recordStore;
 
         var idbSupported = typeof window.indexedDB !== 'undefined';
 
@@ -76,19 +76,26 @@ define([],
                     var oldVersion = upgradeDb.oldVersion || 0;
 
                     if (!upgradeDb.objectStoreNames.contains(mediaStoreName)) {
-                        mediaStore = upgradeDb.createObjectStore(mediaStoreName);
+                        upgradeDb.createObjectStore(mediaStoreName);
                     }
 
                     if (!upgradeDb.objectStoreNames.contains(recordStoreName)) {
-                        recordStore = upgradeDb.createObjectStore(recordStoreName, {
+                        let recordStore = upgradeDb.createObjectStore(recordStoreName, {
                             keyPath: 'id',
                             autoIncrement: true
                         });
-                        recordStore.createIndex(assignmentIdx, assignmentIdxPath, {unique: false});
+                        createIndex(assignmentIdx, assignmentIdxPath, {unique: false});
                     }
 
                     if (!upgradeDb.objectStoreNames.contains(logStoreName)) {
-                        logStore = upgradeDb.createObjectStore(logStoreName);
+                        upgradeDb.createObjectStore(logStoreName);
+                    }
+
+                    if (!upgradeDb.objectStoreNames.contains(lastSavedStoreName)) {
+                        upgradeDb.createObjectStore(lastSavedStoreName, {
+                            keyPath: '_surveyId',
+                            autoIncrement: false,
+                        });
                     }
 
                 };
@@ -108,96 +115,14 @@ define([],
                 request.onerror = function (e) {
                     console.log('Error', e.target.error.name);
                     alert('Error opening idb: ' + e.target.error.name);
+                    reject(e);
                 };
 
 
             });
+
+            return dbPromise;
         }
-
-
-        /*
-		 * Delete all media with the specified prefix
-		 * Assumes db has been initialised
-		 * An explicit boolean "all" is added in case the function is called accidnetially with an undefined directory
-		 *
-        function deleteMedia(dirname, all) {
-
-            if(typeof dirname !== "undefined" || all) {
-
-                if(dirname) {
-                    console.log("delete media for: " + dirname);
-                } else {
-                    console.log("delete all attachments");
-                }
-
-                var prefix = dirname;
-
-                // indexeddb first
-                var objectStore = db.transaction([mediaStoreName], "readwrite").objectStore(mediaStoreName);
-                objectStore.openCursor().onsuccess = function(event) {
-                    var cursor = event.target.result;
-                    if (cursor) {
-                        if (all || cursor.key.startsWith(prefix)) {     // Don't need to check the key if all is set as everything in the data store is a media URL
-                            if(cursor.value) {
-                                window.URL.revokeObjectURL(cursor.value);
-                            }
-                            var request = objectStore.delete(cursor.key);
-                            request.onsuccess = function (event) {
-                                console.log("Delete: " + cursor.key);
-                            };
-                            cursor.continue();
-                        }
-                    }
-                };
-
-            }
-        }
-        */
-
-        /*
-		 * Save an attachment
-		 *
-        function saveFile(media, dirname) {
-
-            console.log("save file: " + media.name + " : " + dirname);
-
-            var transaction = db.transaction([mediaStoreName], "readwrite");
-            transaction.onerror = function(event) {
-                alert("Error: failed to save " + media.name);
-            };
-
-            var objectStore = transaction.objectStore(mediaStoreName);
-            var request = objectStore.put(media.dataUrl, dirname + "/" + media.name);
-
-        }
-        */
-
-        /*
-		 * Get a file from idb
-		 *
-        function getFile(name, dirname) {
-
-            return new Promise(function(resolve, reject) {
-
-                var key = dirname + "/" + name;
-
-
-                getFileFromIdb(key).then(function (file) {
-
-                    if (file) {
-                        resolve(file);
-
-                    } else {
-                        reject("Error: " + err.message);
-                    }
-
-                }).catch(function (reason) {
-                    reject(reason);
-                });
-            });
-
-        }
-        */
 
         /*
          * Add a record
