@@ -144,12 +144,22 @@ require([
 	        }
 		});
 
-        $('#publishReport').click(function () {
-            updateReport(false);
+		var $publishReport = $('#publishReport');
+        $publishReport.on( 'click', function (e) {
+			e.preventDefault();
+			$publishReport.prop("disabled", true);     // debounce
+            if(!updateReport(false)) {
+				$publishReport.prop("disabled", false);     // debounce
+			}
         });
 
-        $('#saveReport').click(function () {
-            updateReport(true);
+		var $saveReport = $('#saveReport');
+        $saveReport.on( 'click', function (e) {
+			e.preventDefault();
+			$saveReport.prop("disabled", true);     // debounce
+			if(!updateReport(true)) {
+				$saveReport.prop("disabled", false);     // debounce
+			}
         });
 
         $('#publish_popup').on('shown.bs.modal', function () {
@@ -459,9 +469,11 @@ require([
                 removeHourglass();
                 getReports();
                 $('#publish_popup').modal("hide");
+				$('#publishReport, #saveReport').prop("disabled", false);     // debounce
             },
             error: function (xhr, textStatus, err) {
                 removeHourglass();
+				$('#publishReport, #saveReport').prop("disabled", false);     // debounce
                 if (xhr.readyState == 0 || xhr.status == 0) {
                     return;  // Not an error
                 } else {
@@ -469,6 +481,8 @@ require([
                 }
             }
         });
+
+		return true;	// Successfully launched
     }
 
     function surveyChangedReports(callback, selectedRoles, setall) {
