@@ -98,6 +98,7 @@ define([],
                         });
                     }
 
+                    resolve(upgradeDb);
                 };
 
                 request.onsuccess = function (event) {
