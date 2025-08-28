@@ -441,9 +441,11 @@ function getUserLocationsData(view, start_rec, nocache) {
 	  			dataType: 'json',
 	  			success: function(results) {
                     removeHourglass();
-	  				globals.gSelector.addDataItem(url, results);				// Cache the raw data
-	  				view.results = results;						// Save the raw data against the panel
-	  				refreshData(view, "question");
+					if(handleLogout(results)) {
+						globals.gSelector.addDataItem(url, results);				// Cache the raw data
+						view.results = results;						// Save the raw data against the panel
+						refreshData(view, "question");
+					}
 
 	  			},
 	  			error: function(xhr, textStatus, err) {
