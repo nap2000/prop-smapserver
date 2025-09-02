@@ -56,7 +56,11 @@ require([
 
 		$('#goback').click(function(e){
 			e.preventDefault();
-			window.history.go(-2);
+			if(window.history.length > 2) {
+				window.history.go(-2);
+			} else {
+				window.close();
+			}
 		})
 
 	});
