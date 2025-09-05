@@ -1618,23 +1618,6 @@ require([
             saveCurrentConsoleSettings();
         });
 
-        // Set col order
-        if(gColOrder && gColOrder.length > 0) {
-            console.log("Applying col order: " + gColOrder);
-            if(columns.length !== gColOrder.length) {
-                /*
-                 * Make the two arrays the size of the columns array
-                 */
-                if(gColOrder.length < columns.length) {
-                    for(var colIdx = gColOrder.length; colIdx < columns.length; colIdx++) {
-                        gColOrder[colIdx] = colIdx.toString();
-                    }
-                } else {
-                    gColOrder = gColOrder.slice(0, columns.length - 1);
-                }
-            }
-            globals.gMainTable.colReorder.order(gColOrder).draw();
-        }
         globals.gMainTable.off('columns-reordered').off('columns-reorder').on('columns-reordered', function (e, settings, details) {
             gColOrder = settings.order;
             console.log('columns-reorder: ' + gColOrder);
@@ -1716,7 +1699,7 @@ require([
     }
 
     /*
-     * Save the current project id in the user defaults
+     * Save the current console settings in the user defaults
      */
     function saveCurrentConsoleSettings() {
 
@@ -3361,7 +3344,6 @@ require([
 
             // DataTable Settings
             url += "&pageLen=" + gPageLen;
-            url += "&colOrder=" + gColOrder.join(",");
 	    } else {
 		    url += "&getSettings=true";
 	    }
@@ -3564,13 +3546,7 @@ require([
         var columns = gTasks.cache.currentData.schema.columns;
 
         for (i = 0; i < columns.length; i++) {
-            var headItem;
-
-            if (gColOrder && gColOrder.length === columns.length) {
-                headItem = columns[gColOrder[i]];  // Order by gColOrder
-            } else {
-                headItem = columns[i];
-            }
+            var headItem = columns[i];
 
             // Highlighting
             if (headItem.markup) {
@@ -3666,11 +3642,7 @@ require([
             $('#include_bad').prop('checked', settings.include_bad === "yes");
             $('#include_completed').prop('checked', settings.include_completed === "yes");
             gPageLen = settings.pageLen;
-            if (settings.colOrder) {
-                gColOrder = settings.colOrder.split(',');
-            } else {
-                gColOrder = [];
-            }
+
             console.log("Update settings: " + gColOrder);
         }
     }
