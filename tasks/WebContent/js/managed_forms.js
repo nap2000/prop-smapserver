@@ -2503,11 +2503,6 @@ require([
             //gTasks.gSelectedRecord = globals.gMainTable.rows(gTasks.gSelectedIndexes).data().toArray()[0];
             gTasks.gSelectedRecord = records[0];
 
-            // Store the record indexes that will need to be updated
-            //var records = globals.gMainTable.rows(gTasks.gSelectedIndexes).data().toArray();
-            //for(i = 0; i < gTasks.gSelectedIndexes.length; i++) {
-            //    gTasks.gBulkInstances.push(records[i].instanceid);
-            //}
             for(i = 0; i < records.length; i++) {
                 gTasks.gBulkInstances.push(records[i].instanceid);
             }

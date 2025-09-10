@@ -137,7 +137,7 @@ define([
 
                 if (configItem.mgmt
                     && !configItem.readonly
-                    && !configItem.question_name === '_hrk'
+                    && configItem.question_name !== '_hrk'
                     && (configItem.type === 'text'
                         || configItem.type === 'select1'
                         || configItem.type === 'select')) {
