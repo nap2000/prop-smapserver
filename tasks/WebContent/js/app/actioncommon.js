@@ -117,7 +117,7 @@ define([
         }
 
         /*
-         * Add HTML to allow bulk ediitng
+         * Add HTML to allow bulk edititng
          */
         function showBulkEditForm(record, schema, $editForm) {
             var
@@ -129,15 +129,21 @@ define([
                 configItem,
                 first = true,
                 columns = schema.columns,
-                prefix = 'be';
+                prefix = 'be',
+                qFound = false;
 
             for (i = 0; i < columns.length; i++) {
                 configItem = columns[i];
 
                 if (configItem.mgmt
+                    && !configItem.readonly
+                    && !configItem.question_name === '_hrk'
                     && (configItem.type === 'text'
                         || configItem.type === 'select1'
                         || configItem.type === 'select')) {
+
+                    qFound = true;
+
                     h[++idx] = '<div class="row bulkquestion">';
                     h[++idx] = '<div class="col-sm-8">';
 
@@ -162,46 +168,51 @@ define([
                 }
             }
 
-            if($editForm) {
-                $editForm.html(h.join(''));
+            if(qFound) {
+                if ($editForm) {
+                    $editForm.html(h.join(''));
+                }
+
+                // Set up date fields
+                $editForm.find('.date').datetimepicker({
+                    locale: gUserLocale || 'en',
+                    useCurrent: false,
+                    showTodayButton: true
+                });
+
+
+                // Respond to changes in the data by creating an update object
+                $editForm.find('.form-control, select').bind("click propertychange paste change keyup input", function () {
+                    var $this = $(this);
+                    var config = {
+                        itemIndex: $this.data("item"),
+                        value: $this.val(),
+                        clear: $this.closest(".bulkquestion").find(".selectClear").is(':checked')
+                    };
+                    bulkDataChanged(config);
+                    refreshSelectLists(schema, record, $this.data("item"), prefix);
+                });
+
+                // Respond to changes in a clear checkbox
+                $editForm.find('.selectClear').bind("change", function () {
+                    var $this = $(this);
+                    var $q = $this.closest(".bulkquestion").find(".form-control")
+                    var config = {
+                        itemIndex: $q.data("item"),
+                        value: $q.val(),
+                        clear: $this.is(':checked')
+                    };
+
+                    bulkDataChanged(config);
+                    refreshSelectLists(schema, record, $this.data("item"), prefix);
+                });
+
+                // Set focus to first editable data item
+                $editForm.find('[autofocus]').focus();
+            } else {
+                // There are no questions that can be bulk edited
+                alert(localise.set["m_no_q"]);
             }
-
-            // Set up date fields
-            $editForm.find('.date').datetimepicker({
-                locale: gUserLocale || 'en',
-                useCurrent: false,
-                showTodayButton: true
-            });
-
-
-            // Respond to changes in the data by creating an update object
-            $editForm.find('.form-control, select').bind("click propertychange paste change keyup input", function () {
-                var $this = $(this);
-                var config = {
-                    itemIndex: $this.data("item"),
-                    value: $this.val(),
-                    clear: $this.closest(".bulkquestion").find(".selectClear").is(':checked')
-                };
-                bulkDataChanged(config);
-                refreshSelectLists(schema, record, $this.data("item"), prefix);
-            });
-
-            // Respond to changes in a clear checkbox
-            $editForm.find('.selectClear').bind("change", function () {
-                var $this = $(this);
-                var $q = $this.closest(".bulkquestion").find(".form-control")
-                var config = {
-                    itemIndex: $q.data("item"),
-                    value: $q.val(),
-                    clear: $this.is(':checked')
-                };
-
-                bulkDataChanged(config);
-                refreshSelectLists(schema, record, $this.data("item"), prefix);
-            });
-
-            // Set focus to first editable data item
-            $editForm.find('[autofocus]').focus();
         }
 
         /*

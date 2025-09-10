@@ -2512,7 +2512,12 @@ require([
                 gTasks.gBulkInstances.push(records[i].instanceid);
             }
 
-            $('.multiSelectOnly').show();
+            /*
+             * Multi select is only available for Admin, Security Manager and analyst roles
+             */
+            if(globals.gIsSecurityAdministrator || globals.gIsAdministrator || globals.gIsAnalyst) {
+                $('.multiSelectOnly').show();
+            }
 
         } else {
             /*
@@ -3683,18 +3688,20 @@ require([
      */
     function showBulkEdit() {
 
-        window.location.hash="#bulk";
-        $('.shareRecordOnly, .role_select').hide();
-        $('#srLink').val("");
-        getSurveyRoles(globals.gCurrentSurvey, undefined, false, false);
+        var oversight = $('#oversight_survey').val();
+        if(oversight !== '') {
+            window.location.hash = "#bulk";
+            $('.shareRecordOnly, .role_select').hide();
+            $('#srLink').val("");
+            getSurveyRoles(globals.gCurrentSurvey, undefined, false, false);
 
-        //var sIdent = gTasks.cache.surveyList[globals.gCurrentProject][gTasks.gSelectedSurveyIndex].ident;
+            $('.overviewSection').hide();
+            $('.bulkEditSection').show();
 
-
-        $('.overviewSection').hide();
-        $('.bulkEditSection').show();
-
-        actioncommon.showBulkEditForm(gTasks.gSelectedRecord, gTasks.cache.currentData.schema, $('#bulkEditForm'));
+            actioncommon.showBulkEditForm(gTasks.gSelectedRecord, gTasks.cache.currentData.schema, $('#bulkEditForm'));
+        } else {
+            alert(localise.set["n_no_oversight"]);
+        }
     }
 
 
