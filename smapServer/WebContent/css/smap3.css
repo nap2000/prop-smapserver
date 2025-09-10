@@ -19,6 +19,10 @@ tr.deleted td a {
     color: #f18314 !important;
 }
 
+.hideondevice {
+    color: rgba(241, 20, 223, 0.95) !important;
+}
+
 .reversed {
     color: #ccc;
 }

@@ -570,6 +570,8 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                         h[++idx] = ' class="readonlysurvey"';
                     } else if(survey.oversightSurvey && !survey.dataSurvey) {
                         h[++idx] = ' class="oversightsurvey"';
+                    } else if(survey.hideOnDevice) {
+                        h[++idx] = ' class="hideondevice"';
                     }
                     h[++idx] = '>';
                     h[++idx] = '<td class="control_td"><input type="checkbox" name="controls" value="';
@@ -582,6 +584,9 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                     } else if(survey.oversightSurvey && !survey.dataSurvey) {
                         h[++idx] = '<td>';
                         h[++idx] = '<a class="oversightsurvey" href="';
+                    } else if(survey.hideOnDevice) {
+                        h[++idx] = '<td>';
+                        h[++idx] = '<a class="hideondevice" href="';
                     } else {
                         h[++idx] = '<td class="displayName">';
                         h[++idx] = '<a class="displayName" href="';

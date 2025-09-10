@@ -110,7 +110,6 @@ require([
     var gLocalDefaults = {};
     var gPreviousUrl = "";
     var gEditUrl = '#';
-    var gPageLen = 10;
     var gColOrder = [];
 
     var gDrillDownNext;                 // Next drill down state if drill down is selected
@@ -1609,19 +1608,23 @@ require([
             recordSelected(globals.gMainTable.rows('.selected').data());
         });
 
-        // Set page length
-        if(gPageLen) {
-            globals.gMainTable.page.len(gPageLen).draw();
-        }
-        globals.gMainTable.off('length.dt').on('length.dt', function (e, settings, len) {
-            gPageLen = len;
-            saveCurrentConsoleSettings();
-        });
-
+        /*
+         * This event gets fired multiple times during a reorder
+         * If we just call settings update these updates can happen out of order
+         */
         globals.gMainTable.off('columns-reordered').off('columns-reorder').on('columns-reordered', function (e, settings, details) {
+            let noCurrentSend = gColOrder.length === 0;
             gColOrder = settings.order;
             console.log('columns-reorder: ' + gColOrder);
-            saveCurrentConsoleSettings();
+            if(noCurrentSend) {
+                setTimeout(() => {
+                    if(gColOrder.length > 0) {
+                        saveCurrentConsoleSettings(gColOrder.join(','));   // Do the save after 5 seconds using the latest order at that time
+                        gColOrder = [];     // Allow new changes to the column order to trigger an update
+                    }
+                }, 1000);
+            }
+
         });
 
         // Highlight data conditionally, set barcodes
@@ -1701,11 +1704,10 @@ require([
     /*
      * Save the current console settings in the user defaults
      */
-    function saveCurrentConsoleSettings() {
+    function saveCurrentConsoleSettings(colOrder) {
 
         var consoleSettings = {
-            pageLen: gPageLen,
-            colOrder: gColOrder.join(',')
+            colOrder: colOrder
         };
 
         var settingsString = JSON.stringify(consoleSettings);
@@ -1714,10 +1716,10 @@ require([
         $.ajax({
             type: "POST",
             contentType: "application/json",		// uses application/json
-            url: "/surveyKPI/user/consolesettings/" + surveyIdent(),
+            url: "/surveyKPI/user/consolesettings/" + surveyIdentAndOversight(),
             cache: false,
             data: settingsString,
-            success: function(data, status) {
+            success: function(data) {
                 if(handleLogout(data)) {
                     removeHourglass();
                 }
@@ -1874,9 +1876,14 @@ require([
     /*
      * Return the currently selected survey ident
      */
-    function surveyIdent() {
+    function surveyIdentAndOversight() {
         var survey = gTasks.cache.surveyList[globals.gCurrentProject][$('#survey_name').val()];
-        return survey.ident;
+        var oversightSurvey = $('#oversight_survey').val();
+        var resp = survey.ident;
+        if(oversightSurvey) {
+            resp += "?oversight=" + oversightSurvey;
+        }
+        return resp;
     }
 
     /*
@@ -3342,8 +3349,6 @@ require([
                 }
 		    }
 
-            // DataTable Settings
-            url += "&pageLen=" + gPageLen;
 	    } else {
 		    url += "&getSettings=true";
 	    }
@@ -3641,9 +3646,6 @@ require([
             $('#advanced_filter').val(settings.filter);
             $('#include_bad').prop('checked', settings.include_bad === "yes");
             $('#include_completed').prop('checked', settings.include_completed === "yes");
-            gPageLen = settings.pageLen;
-
-            console.log("Update settings: " + gColOrder);
         }
     }
 
