@@ -1523,7 +1523,8 @@ require([
             scrollY: '70vh',
             scrollX: true,
             scrollCollapse: true,
-            paging: false,
+            paging: true,
+            pageLength:100,
             select: {
                 selector: 'td'
             },
@@ -1607,7 +1608,7 @@ require([
         globals.gMainTable.off('deselect').on('deselect', function (e, dt, type, indexes) {
             recordSelected(globals.gMainTable.rows('.selected').data());
         });
-
+        
         /*
          * This event gets fired multiple times during a reorder
          * If we just call settings update these updates can happen out of order
