@@ -613,8 +613,12 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                     h[++idx] = '<td>';
                     if(survey.readOnlySurvey) {
                         h[++idx] = localise.set["ed_ro"];
-                    } if(survey.oversightSurvey && !survey.dataSurvey) {
+                    } else if(survey.oversightSurvey && !survey.dataSurvey) {
                         h[++idx] = localise.set["m_os"];
+                    } else if(survey.hideOnDevice) {
+                        h[++idx] = localise.set["ed_hod"];
+                    } else {
+                        h[++idx] = localise.set["ed_ds"];
                     }
                     h[++idx] = '</td>';
 

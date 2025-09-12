@@ -2673,7 +2673,7 @@ require([
 
                     h[++idx] = '<td>';
                     if (data[i].event === 'task') {
-                        h[++idx] = '<i class="fa fa-lg fa-tasks"></i>';
+                        h[++idx] = '<i class="fa fa-lg fa-tasks text-info"></i>';
                     } else if (data[i].event === 'created' || data[i].event === 'changes' || data[i].event === 'deleted' || data[i].event === 'restored') {
                         h[++idx] = '<i style="line-height: 1.5em;" class="fa fa-lg fa-inbox text-info"></i>';
                     } else if (data[i].event === 'inbound_msg') {
@@ -2681,8 +2681,8 @@ require([
                     } else if (data[i].event === 'notification') {
                         if (data[i].notification && data[i].notification.target === 'sms') {
                             // From http://jsfiddle.net/4Bacg/
-                            h[++idx] = '<span style="line-height: 1.5em; text-align: center; margin-top: -7px; margin-right: 0.3em;" class="fa-stack text-info fa-lg pull-left">';
-                            h[++idx] = '<i class="fa fa-flip-horizontal fa-comment-o text-info"></i>';
+                            h[++idx] = '<span class="text-info" style="line-height: 1.5em; text-align: center; margin-top: -7px; margin-right: 0.3em;" class="fa-stack text-info fa-lg pull-left">';
+                            h[++idx] = '<i class="fa fa-flip-horizontal fa-comment-o"></i>';
                             h[++idx] = '<i style="font-size: 10px; line-height: 1em;">sms</i>';
                             h[++idx] = '</span>';
                         } else {
