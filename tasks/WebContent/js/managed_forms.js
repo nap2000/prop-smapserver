@@ -49,7 +49,6 @@ requirejs.config({
         multiselect: '../../../../js/libs/bootstrap-multiselect.min',
         knockout: '../../../../js/libs/knockout',
 	    slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll.min'
-
     },
     shim: {
 
@@ -110,7 +109,6 @@ require([
     var gLocalDefaults = {};
     var gPreviousUrl = "";
     var gEditUrl = '#';
-    var gColOrder = [];
 
     var gDrillDownNext;                 // Next drill down state if drill down is selected
     var gDrillDownStack = [];
@@ -749,30 +747,26 @@ require([
          */
         $('#saveSettings').click(function () {
 
-            var
+            let
                 config = gTasks.cache.currentData.schema,
-                $this;
+                $this,
+                newColumns = [];
 
-            $('input.columnSelect', '#tab-columns-content').each(function (index) {
+            $('.row', '#tab-columns-content').each(function (index) {
                 $this = $(this);
-                config.columns[index].hide = !$this.is(':checked');
+                let oldIdx = $(this).data("idx");
+                let configItem = config.columns[oldIdx];
+
+                configItem.hide = !$('input.columnSelect', $this).is(':checked');
+                configItem.barcode = $('input.barcodeSelect', $this).is(':checked');
+                configItem.includeText = $('input.includeText', $this).is(':checked');
+                newColumns.push(configItem);
             });
 
-            $('input.barcodeSelect', '#tab-columns-content').each(function (index) {
-                $this = $(this);
-                config.columns[index].barcode = $this.is(':checked');
+            config.columns = newColumns;
 
-            });
-
-            $('input.includeText', '#tab-columns-content').each(function (index) {
-                $this = $(this);
-                config.columns[index].includeText = $this.is(':checked');
-
-            });
-
-            updateVisibleColumns(config.columns);
+            updateVisibleColumns(newColumns);
             saveColumns(true);
-
         });
 
         // Refresh menu
@@ -1464,9 +1458,6 @@ require([
             columns = [];
         }
 
-        // Add table
-        //h[++idx] = '<table id="trackingTable" style="width:100%">';
-
         // Add head
         h[++idx] = '<thead>';
         h[++idx] = '<tr>';
@@ -1474,7 +1465,7 @@ require([
         for (i = 0; i < columns.length; i++) {
             headItem = columns[i];
 
-            hColSort[++hColSortIdx] = addToColumnSort(headItem);
+            hColSort[++hColSortIdx] = addToColumnSort(headItem, i);
             hSelect[++hSelectIdx] = addToColumnSelect(headItem);
             if(isDuplicates) {
                 hDups[++hDupsIdx] = addToDuplicateReportSelect(headItem);
@@ -1518,7 +1509,6 @@ require([
 
         // Create data table
         globals.gMainTable = $table.DataTable({
-            colReorder: true,
             processing: true,
             scrollY: '70vh',
             scrollX: true,
@@ -1608,25 +1598,6 @@ require([
         globals.gMainTable.off('deselect').on('deselect', function (e, dt, type, indexes) {
             recordSelected(globals.gMainTable.rows('.selected').data());
         });
-        
-        /*
-         * This event gets fired multiple times during a reorder
-         * If we just call settings update these updates can happen out of order
-         */
-        globals.gMainTable.off('columns-reordered').off('columns-reorder').on('columns-reordered', function (e, settings, details) {
-            let noCurrentSend = gColOrder.length === 0;
-            gColOrder = settings.order;
-            console.log('columns-reorder: ' + gColOrder);
-            if(noCurrentSend) {
-                setTimeout(() => {
-                    if(gColOrder.length > 0) {
-                        saveCurrentConsoleSettings(gColOrder.join(','));   // Do the save after 5 seconds using the latest order at that time
-                        gColOrder = [];     // Allow new changes to the column order to trigger an update
-                    }
-                }, 1000);
-            }
-
-        });
 
         // Highlight data conditionally, set barcodes
         tableOnDraw();
@@ -1659,6 +1630,7 @@ require([
          * Settings
          */
         $('#tab-columns-content').html(hColSort.join(''));
+        Sortable.create(document.getElementById('tab-columns-content'));
         $('#cs_question').html(hSelect.join(''));
 
         /*
@@ -1705,7 +1677,7 @@ require([
     /*
      * Save the current console settings in the user defaults
      */
-    function saveCurrentConsoleSettings(colOrder) {
+    function saveColumnOrder(colOrder) {
 
         var consoleSettings = {
             colOrder: colOrder
@@ -1757,57 +1729,58 @@ require([
     /*
      * Add the column to the settings
      */
-    function addToColumnSort(item) {
+    function addToColumnSort(item, colIndex) {
         var h = [],
             idx = -1;
 
-        if (item.include || item.column_name === "prikey") {
-            h[++idx] = '<div class="row">';
-            h[++idx] = '<div class="col-sm-6">';
-            h[++idx] = htmlEncode(item.displayName);
-            h[++idx] = '</div>';
+        h[++idx] = '<div class="row" data-idx="';
+        h[++idx] = colIndex;
+        h[++idx] = '">';
+        h[++idx] = '<div class="col-sm-6">';
+        h[++idx] = htmlEncode(item.displayName);
+        h[++idx] = '</div>';
 
-            h[++idx] = '<div class="col-sm-2">';
-            h[++idx] = '<div class="switch">';
-            h[++idx] = '<input type="checkbox" name="columnSelect"';
-            h[++idx] = ' class="columnSelect" value="';
-            h[++idx] = item.displayName;
-            h[++idx] = '"';
-            if(!item.hide) {
-            	h[++idx] = ' checked';
-            }
-            h[++idx] = '>';
-            h[++idx] = '</div>';
-            h[++idx] = '</div>';
-
-            h[++idx] = '<div class="col-sm-2">';
-            h[++idx] = '<div class="switch">';
-            h[++idx] = '<input type="checkbox" name="barcodeSelect"';
-            h[++idx] = ' class="barcodeSelect" value="';
-            h[++idx] = item.displayName;
-            h[++idx] = '"';
-            if(item.barcode) {
-                h[++idx] = ' checked';
-            }
-            h[++idx] = '>';
-            h[++idx] = '</div>';
-            h[++idx] = '</div>';
-
-            h[++idx] = '<div class="col-sm-2">';
-            h[++idx] = '<div class="switch">';
-            h[++idx] = '<input type="checkbox" name="includeText"';
-            h[++idx] = ' class="includeText" value="';
-            h[++idx] = item.displayName;
-            h[++idx] = '"';
-            if(item.includeText) {
-                h[++idx] = ' checked';
-            }
-            h[++idx] = '>';
-            h[++idx] = '</div>';
-            h[++idx] = '</div>';
-
-            h[++idx] = '</div>';
+        h[++idx] = '<div class="col-sm-2">';
+        h[++idx] = '<div class="switch">';
+        h[++idx] = '<input type="checkbox" name="columnSelect"';
+        h[++idx] = ' class="columnSelect" value="';
+        h[++idx] = item.displayName;
+        h[++idx] = '"';
+        if(!item.hide) {
+            h[++idx] = ' checked';
         }
+        h[++idx] = '>';
+        h[++idx] = '</div>';
+        h[++idx] = '</div>';
+
+        h[++idx] = '<div class="col-sm-2">';
+        h[++idx] = '<div class="switch">';
+        h[++idx] = '<input type="checkbox" name="barcodeSelect"';
+        h[++idx] = ' class="barcodeSelect" value="';
+        h[++idx] = item.displayName;
+        h[++idx] = '"';
+        if(item.barcode) {
+            h[++idx] = ' checked';
+        }
+        h[++idx] = '>';
+        h[++idx] = '</div>';
+        h[++idx] = '</div>';
+
+        h[++idx] = '<div class="col-sm-2">';
+        h[++idx] = '<div class="switch">';
+        h[++idx] = '<input type="checkbox" name="includeText"';
+        h[++idx] = ' class="includeText" value="';
+        h[++idx] = item.displayName;
+        h[++idx] = '"';
+        if(item.includeText) {
+            h[++idx] = ' checked';
+        }
+        h[++idx] = '>';
+        h[++idx] = '</div>';
+        h[++idx] = '</div>';
+
+        h[++idx] = '</div>';
+
         return h.join('');
     }
 
@@ -2255,7 +2228,8 @@ require([
                 hide: columns[i].hide,
                 barcode: columns[i].barcode,
                 includeText: columns[i].includeText,
-                filterValue: columns[i].filterValue
+                filterValue: columns[i].filterValue,
+                seq: i
             };
         }
 

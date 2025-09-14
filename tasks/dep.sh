@@ -10,7 +10,7 @@ then
 	grunt
         rm tasks/js/managed_forms.js
 else
-	cp tasks/js/manage_forms.js tasks/js/managed_forms.min.js
+	cp tasks/js/managed_forms.js tasks/js/managed_forms.min.js
 fi
 
 # Create a tar file and copy to the deploy directory
