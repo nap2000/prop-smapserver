@@ -1,0 +1,12 @@
+{
+  "name": "minify",
+  "version": "0.0.1",
+  "author": "Neil",
+  "devDependencies": {
+    "grunt": "^1.6.1",
+    "grunt-contrib-uglify": "^5.2.2"
+  },
+  "dependencies": {
+    "grunt-cli": "^1.5.0"
+  }
+}

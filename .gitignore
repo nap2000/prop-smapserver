@@ -50,6 +50,7 @@ enketo-core.min.js
 smapServer/WebContent/build/js/webform-bundle.js
 smapServer/WebContent/build/js/webform-bundle.min.js
 smapServer/node_modules
+tasks/node_modules
 aws/target
 smapServer/WebContent/build/locales/
 

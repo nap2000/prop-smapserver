@@ -4,6 +4,15 @@
 #node tools/r.js -o tools/build.js
 node tools/r_2_3_6.js -o tools/build.js
 
+#uglification - note minifiy is above s largely not working nowadays
+if [ "$1" != develop ]
+then
+	grunt
+        rm tasks/js/managed_forms.js
+else
+	cp tasks/js/manage_forms.js tasks/js/managed_forms.min.js
+fi
+
 # Create a tar file and copy to the deploy directory
 export COPYFILE_DISABLE=true
 tar -zcf tasks.tgz tasks
