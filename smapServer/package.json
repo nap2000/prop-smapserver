@@ -1,16 +1,12 @@
 {
-  "name": "webform",
-  "version": "1.0.0",
-  "scripts": {
-    "build": "./node_modules/.bin/babel src  --presets=@babel/env"
-  },
+  "name": "minify",
+  "version": "0.0.1",
+  "author": "Neil",
   "devDependencies": {
-    "@babel/cli": "^7.12.16",
-    "@babel/core": "^7.12.16",
-    "@babel/preset-env": "^7.12.16",
-    "babel-loader": "^7.1.2"
+    "grunt": "^1.6.1",
+    "grunt-contrib-uglify": "^5.2.2"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.12.1"
+    "grunt-cli": "^1.5.0"
   }
 }

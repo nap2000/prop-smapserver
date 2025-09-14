@@ -47,6 +47,15 @@ echo "--------------------------- minify smap server code"
 #node tools/r.js -o tools/build.js
 node tools/r_2_3_6.js -o tools/build.js
 
+#uglification - note minifiy is above s largely not working nowadays
+if [ "$1" != develop ]
+then
+	grunt
+        rm smapServer/js/edit.js
+else
+	cp smapServer/js/edit.js smapServer/js/edit.min.js
+fi
+
 export COPYFILE_DISABLE=true
 # Create a tar file and copy to the deploy directory
 cp -R WebContent/build smapServer
