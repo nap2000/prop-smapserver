@@ -9,8 +9,10 @@ if [ "$1" != develop ]
 then
 	grunt
         rm tasks/js/managed_forms.js
+        rm tasks/js/taskManagement.js
 else
 	cp tasks/js/managed_forms.js tasks/js/managed_forms.min.js
+	cp tasks/js/taskManagement.js tasks/js/taskManagement.min.js
 fi
 
 # Create a tar file and copy to the deploy directory
