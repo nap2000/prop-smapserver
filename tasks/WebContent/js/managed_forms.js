@@ -752,7 +752,7 @@ require([
                 $this,
                 newColumns = [];
 
-            $('.row', '#tab-columns-content').each(function (index) {
+            $('.card', '#tab-columns-content').each(function (index) {
                 $this = $(this);
                 let oldIdx = $(this).data("idx");
                 let configItem = config.columns[oldIdx];
@@ -1733,9 +1733,11 @@ require([
         var h = [],
             idx = -1;
 
-        h[++idx] = '<div class="row" data-idx="';
+        h[++idx] = '<div class="card" data-idx="';
         h[++idx] = colIndex;
         h[++idx] = '">';
+        h[++idx] = '<div class="card-body">';
+        h[++idx] = '<div class="row">';
         h[++idx] = '<div class="col-sm-6">';
         h[++idx] = htmlEncode(item.displayName);
         h[++idx] = '</div>';
@@ -1778,8 +1780,10 @@ require([
         h[++idx] = '>';
         h[++idx] = '</div>';
         h[++idx] = '</div>';
+        h[++idx] = '</div>'; // row
+        h[++idx] = '</div>'; // Card body
 
-        h[++idx] = '</div>';
+        h[++idx] = '</div>';  // card
 
         return h.join('');
     }
