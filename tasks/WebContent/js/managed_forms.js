@@ -1675,35 +1675,6 @@ require([
     }
 
     /*
-     * Save the current console settings in the user defaults
-     */
-    function saveColumnOrder(colOrder) {
-
-        var consoleSettings = {
-            colOrder: colOrder
-        };
-
-        var settingsString = JSON.stringify(consoleSettings);
-
-        addHourglass();
-        $.ajax({
-            type: "POST",
-            contentType: "application/json",		// uses application/json
-            url: "/surveyKPI/user/consolesettings/" + surveyIdentAndOversight(),
-            cache: false,
-            data: settingsString,
-            success: function(data) {
-                if(handleLogout(data)) {
-                    removeHourglass();
-                }
-            }, error: function(data, status) {
-                // Do not process a logout
-                removeHourglass();
-            }
-        });
-    }
-
-    /*
      * Get the search criteria for a duplicate search
      */
     function getSearchCriteria() {
