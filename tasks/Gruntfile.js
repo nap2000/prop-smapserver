@@ -10,7 +10,8 @@ module.exports = function(grunt) {
       my_target: {
         files: {
           'tasks/js/managed_forms.min.js': ['tasks/js/managed_forms.js'],
-          'tasks/js/taskManagement.min.js': ['tasks/js/taskManagement.js']
+          'tasks/js/taskManagement.min.js': ['tasks/js/taskManagement.js'],
+          'tasks/js/log.min.js': ['tasks/js/log.js']
         }
       }
     }

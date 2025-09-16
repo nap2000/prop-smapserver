@@ -4,24 +4,24 @@ cd smapServer
 cd ..
 
 cd fieldAnalysis
-./dep.sh
+./dep.sh $1
 cd ..
 
 cd tasks
-./dep.sh
+./dep.sh $1
 cd ..
 
 cd fieldManagerClient
-./dep.sh
+./dep.sh $1
 cd ..
 
 cd myWork
-./dep.sh
+./dep.sh $1
 cd ..
 
 cd dashboard
-./dep.sh
+./dep.sh $1
 cd ..
 
 cd ../smapserver2/setup
-./dep.sh
+./dep.sh $1
