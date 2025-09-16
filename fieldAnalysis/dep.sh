@@ -4,6 +4,15 @@
 #node tools/r.js -o tools/build.js
 node tools/r_2_3_6.js -o tools/build.js
 
+#uglification - note minifiy is above s largely not working nowadays
+if [ "$1" != develop ]
+then
+	grunt
+        rm fieldAnalysis/js/dashboard_main.js
+else
+	cp fieldAnalysis/js/dashboard_main.js fieldAnalysis/js/dashboard_main.min.js
+fi
+
 # Create a tar file and copy to the deploy directory
 export COPYFILE_DISABLE=true
 tar -zcf fieldAnalysis.tgz fieldAnalysis
