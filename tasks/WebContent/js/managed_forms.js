@@ -3040,7 +3040,7 @@ require([
         h[++idx] = '" aria-expanded="false" aria-controls="collapse_';
         h[++idx] = index;
         h[++idx] = '">';
-        h[++idx] = changes.length + ' '  + localise.set["c_changes"];
+        h[++idx] = changes.length + ' '  + (changes.length > 1 ? localise.set["c_changes"] : localise.set["c_change"]);
         h[++idx] = '</button>';
         h[++idx] = '</h5>';
         h[++idx] = '</div>';    // Header
