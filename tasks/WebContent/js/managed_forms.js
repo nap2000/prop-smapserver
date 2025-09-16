@@ -758,8 +758,6 @@ require([
                 let configItem = config.columns[oldIdx];
 
                 configItem.hide = !$('input.columnSelect', $this).is(':checked');
-                configItem.barcode = $('input.barcodeSelect', $this).is(':checked');
-                configItem.includeText = $('input.includeText', $this).is(':checked');
                 newColumns.push(configItem);
             });
 
@@ -1630,7 +1628,7 @@ require([
          * Settings
          */
         $('#tab-columns-content').html(hColSort.join(''));
-        Sortable.create(document.getElementById('tab-columns-content'));
+        Sortable.create(document.getElementById('tab-columns-content'), {animation: 150});
         $('#cs_question').html(hSelect.join(''));
 
         /*
@@ -1671,7 +1669,6 @@ require([
         if(searchCriteria && searchCriteria.length > 0) {
             globals.gMainTable.ajax.url(url).load();
         }
-
     }
 
     /*
@@ -1707,13 +1704,13 @@ require([
         h[++idx] = '<div class="card" data-idx="';
         h[++idx] = colIndex;
         h[++idx] = '">';
-        h[++idx] = '<div class="card-body">';
+        h[++idx] = '<div class="card-body pt-1 pb-1">';
         h[++idx] = '<div class="row">';
         h[++idx] = '<div class="col-sm-6">';
         h[++idx] = htmlEncode(item.displayName);
         h[++idx] = '</div>';
 
-        h[++idx] = '<div class="col-sm-2">';
+        h[++idx] = '<div class="col-sm-6">';
         h[++idx] = '<div class="switch">';
         h[++idx] = '<input type="checkbox" name="columnSelect"';
         h[++idx] = ' class="columnSelect" value="';
@@ -1726,31 +1723,6 @@ require([
         h[++idx] = '</div>';
         h[++idx] = '</div>';
 
-        h[++idx] = '<div class="col-sm-2">';
-        h[++idx] = '<div class="switch">';
-        h[++idx] = '<input type="checkbox" name="barcodeSelect"';
-        h[++idx] = ' class="barcodeSelect" value="';
-        h[++idx] = item.displayName;
-        h[++idx] = '"';
-        if(item.barcode) {
-            h[++idx] = ' checked';
-        }
-        h[++idx] = '>';
-        h[++idx] = '</div>';
-        h[++idx] = '</div>';
-
-        h[++idx] = '<div class="col-sm-2">';
-        h[++idx] = '<div class="switch">';
-        h[++idx] = '<input type="checkbox" name="includeText"';
-        h[++idx] = ' class="includeText" value="';
-        h[++idx] = item.displayName;
-        h[++idx] = '"';
-        if(item.includeText) {
-            h[++idx] = ' checked';
-        }
-        h[++idx] = '>';
-        h[++idx] = '</div>';
-        h[++idx] = '</div>';
         h[++idx] = '</div>'; // row
         h[++idx] = '</div>'; // Card body
 

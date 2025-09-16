@@ -263,6 +263,7 @@ define({
     "c_rec": "(Recommended)",
     "c_source": "Source",
     "c_show": "Show",
+    "c_show_q": "Show Question",
     "c_hide": "Hide",
     "c_total": "Total",
     "c_totals": "Totals",
@@ -875,9 +876,7 @@ define({
     "r_del": "Delete Reports",
     "an_nd": "No data available",
     "an_nmd": "No data matches the filter",
-    "an_mod_hint": "The modify page allows you to make bulk changes to text.  You can select a specific text value and then change all occurences of that to another value.  This is very useful for fixing spelling inconsistencies. You can also change text values in \"other\" questions into one of the select choices. You can also update barcode and calculate questions. Other question types are not supported as, for example, it would make no sense to do a bulk change of an integer age from 25 to 26 wherever it occured. You can review modifications by selecting the review page.<br/><br/> You can however update integer, decimal and select1 questions by selecting the checkbox \"Update a different question\". In this case the change will be applied to all questions that match the existing values of the two questions. In most cases you will not need this option.",
-
-    // Server Strings and direct word conversions
+    "an_mod_hint": "The modify page allows you to make bulk changes to text.  You can select a specific text value and then change all occurrences of that to another value.  This is very useful for fixing spelling inconsistencies. You can also change text values in 'other' questions into one of the select choices. You can also update barcode and calculate questions. Other question types are not supported as, for example, it would make no sense to do a bulk change of an integer age from 25 to 26 wherever it occurred. You can review modifications by selecting the review page.<br/><br/> You can however update integer, decimal and select1 questions by selecting the checkbox 'Update a different question'. In this case the change will be applied to all questions that match the existing values of the two questions. In most cases you will not need this option.",
     "Upload Time": "Upload",
     "_start": "Start Time",
     "_end": "End Time",
@@ -1547,6 +1546,7 @@ define({
     "co_up": "Up",
     "co_tid": "Include text value in Download",
     "co_b": "Bulk Change",
+    "co_drag": "Drag and drop questions to change the order in which they are shown",
 
     // Mailouts
     "mo_anon": "Anonymous",
