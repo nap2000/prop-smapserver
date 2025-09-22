@@ -763,7 +763,6 @@ require([
 
             config.columns = newColumns;
 
-            updateVisibleColumns(newColumns);
             saveColumns(true);
         });
 
