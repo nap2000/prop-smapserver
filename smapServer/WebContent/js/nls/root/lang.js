@@ -942,6 +942,7 @@ define({
     "ed_r": "Rating",
 	"ed_bear": "Bearing",
 	"ed_sep": "Thousands Separator",
+    "ed_ncol": "No Collapse Button (WebForms Only)",
     "ed_sn": "Show numbers keyboard",
     "ed_numb_cols": "Number of Columns",
 	"ed_min": "Minimal",

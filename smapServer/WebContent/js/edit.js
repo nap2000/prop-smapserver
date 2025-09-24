@@ -2106,7 +2106,10 @@ function respondToEvents($context) {
 
 		for (i = 0; i < appearanceArray.length; i++) {
 			foundAppearance = false;
-			
+
+			/*
+			 * Add appearances specific to this questions
+			 */
 			if (qAppearances && qAppearances.length > 0) {
 				for (j = 0; j < qAppearances.length; j++) {
 					appearanceDetails = globals.model.appearanceDetails[qAppearances[j]];
@@ -2124,7 +2127,7 @@ function respondToEvents($context) {
 			}
 
 			/*
-			 * Check for common appearances that are set on every questions type
+			 * Check for common appearances that are set on every question type
 			 */
 			var pdfa;
 			var colour;
