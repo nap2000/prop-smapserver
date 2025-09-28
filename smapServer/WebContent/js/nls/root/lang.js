@@ -1272,6 +1272,8 @@ define({
     "u_attendance": "Attendance Report",
     "u_notification": "Notification Report",
 	"u_access": "Form Access Report",
+    "u_b_access": "Bundle Access Report",
+    "u_survey": "Surveys in this organisation",
     "u_r_u": "Resource Usage Report",
     "u_sms_url": "SMS Url",
     "u_sens_data": "Sensitive Data",

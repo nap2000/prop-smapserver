@@ -83,11 +83,12 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 				<div class="dropdown-menu" aria-labelledby="m_local_reports">
 					<a id="m_usage_report" class="dropdown-item restrict_role admin_role analyst_role" href="#"><span class="nav-label lang" data-lang="u_usage">usage</span></a>
 					<a id="m_attendance_report" class="dropdown-item restrict_role admin_role analyst_role" href="#"><span class="nav-label lang" data-lang="u_attendance">att</span></a>
-					<a id="m_form_access_report" class="dropdown-item restrict_role admin_role analyst_role" href="#"><span class="nav-label lang" data-lang="u_access">access</span></a>
-					<a id="m_notification_report" class="dropdown-item restrict_role admin_role analyst_role" href="#"><span class="nav-label lang" data-lang="u_notification">notification</span></a>
+					<a id="m_form_access_report" class="dropdown-item restrict_role admin_role analyst_role" href="#"><span class="nav-label lang" data-lang="u_access"></span></a>
+					<a id="m_bundle_access_report" class="dropdown-item restrict_role admin_role analyst_role" href="#"><span class="nav-label lang" data-lang="u_b_access"></span></a>
+					<a id="m_notification_report" class="dropdown-item restrict_role admin_role analyst_role" href="#"><span class="nav-label lang" data-lang="u_notification"></span></a>
 					<a id="m_resource_usage_report" class="dropdown-item restrict_role admin_role analyst_role" href="#"><span class="nav-label lang" data-lang="u_r_u">res</span></a>
 					<a id="m_structure_report" class="dropdown-item restrict_role admin_role" href="/surveyKPI/adminreport/structure"><span class="nav-label lang" data-lang="c_orgs">orgs</span></a>
-					<a id="m_survey_report" class="dropdown-item restrict_role admin_role analyst_role" href="#"><span class="nav-label lang" data-lang="c_survey"></span></a>
+					<a id="m_survey_report" class="dropdown-item restrict_role admin_role analyst_role" href="#"><span class="nav-label lang" data-lang="u_survey"></span></a>
 				</div>
 			</li>
 
@@ -413,6 +414,35 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 		</div>
 	</div>
 </div>
+
+<!-- Parameters for bundle access report -->
+<div id="bundle_access_report_popup" class="modal fade" tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title lang" data-lang="u_access"></h4>
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+			</div>
+			<div class="modal-body">
+
+				<form>
+					<div class="form-group row">
+						<label class="lang col-sm-4 control-label" data-lang="c_bundle" for="bundle_access"></label>
+						<div class="col-sm-8">
+							<select class="bundle_select form-control" id="bundle_access"></select>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="bundle_access_report_save" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_create">create</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 <!-- Parameters for attendance report -->
 <div id="attendance_report_popup" class="modal" tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">

@@ -338,9 +338,15 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 	        $('#m_form_access_report').click(function(){
 		        $('#form_access_report_popup').modal("show");
 	        });
+            $('#m_bundle_access_report').click(function(){
+                $('#bundle_access_report_popup').modal("show");
+            });
 	        $('#form_access_report_save').click(function(){
 		        executeFormAccessReport();
 	        });
+            $('#bundle_access_report_save').click(function(){
+                executeBundleAccessReport();
+            });
             $('#m_notification_report').click(function(){
                 executeNotificationReport();
             });
@@ -537,7 +543,10 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                 h = [],
                 idx = -1,
                 hSel = [],
-                selIdx = -1;
+                selIdx = -1,
+                bSel = [],
+                bSelIdx = -1,
+                gso = {};
 
             h[++idx] = '<table class="table table-responsive-sm table-striped">';
             h[++idx] = '<thead>';
@@ -689,6 +698,18 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 	                hSel[++selIdx] = htmlEncode(survey.displayName);
 	                hSel[++selIdx] = '</option>';
 
+                    /*
+                     * Create html for bundle select controls
+                     */
+                    if(!gso[survey.groupSurveyId]) {
+                        gso[survey.groupSurveyId] = true;
+                        bSel[++bSelIdx] = '<option value="';
+                        bSel[++bSelIdx] = survey.groupSurveyIdent;
+                        bSel[++bSelIdx] = '">';
+                        bSel[++bSelIdx] = htmlEncode(survey.groupSurveyDetails);
+                        bSel[++bSelIdx] = '</option>';
+                    }
+
                 }
             }
 
@@ -792,6 +813,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
              * Populate survey select controls
              */
             $('.survey_select').html(hSel.join(''));
+            $('.bundle_select').html(bSel.join(''));
 
         }
 
@@ -1140,11 +1162,14 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
         }
 
 	    function executeFormAccessReport() {
-
-		    var formIdent = $('#survey_access').val();
-
+		    let formIdent = $('#survey_access').val();
 		    downloadFile("/surveyKPI/adminreport/formaccess/" + formIdent);
 	    }
+
+        function executeBundleAccessReport() {
+            let formIdent = $('#bundle_access').val();
+            downloadFile("/surveyKPI/adminreport/bundleaccess/" + formIdent);
+        }
 
         function executeNotificationReport() {
 
