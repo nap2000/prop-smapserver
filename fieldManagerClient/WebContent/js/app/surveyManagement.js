@@ -701,8 +701,8 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                     /*
                      * Create html for bundle select controls
                      */
-                    if(!gso[survey.groupSurveyId]) {
-                        gso[survey.groupSurveyId] = true;
+                    if(survey.groupSurveyDetails && survey.groupSurveyDetails !== '' && !gso[survey.groupSurveyDetails]) {
+                        gso[survey.groupSurveyDetails] = true;
                         bSel[++bSelIdx] = '<option value="';
                         bSel[++bSelIdx] = survey.groupSurveyIdent;
                         bSel[++bSelIdx] = '">';

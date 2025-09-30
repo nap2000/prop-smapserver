@@ -3476,7 +3476,7 @@ require([
                         v = $this.text();
 
                     for (var j = 0; j < headItem.markup.length; j++) {
-                        if (headItem.markup[j].value == v) {
+                        if (headItem.markup[j].value === v) {
                             $this.addClass(getColorClass(headItem.markup[j].classes));
                         }
                     }
