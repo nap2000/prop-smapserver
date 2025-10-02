@@ -117,7 +117,9 @@ function setGraph(data, chart, optionSelElement, pId) {
 			}
 		}
 		pareto.sort(function(a,b) {return grandTotal[b] - grandTotal[a];});
+		pareto = pareto.slice(0, 30);	// Max length of bar chart is 30
 	}
+
 
 	
 	/*
