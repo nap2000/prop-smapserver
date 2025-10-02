@@ -839,7 +839,7 @@ function setQ1Functions(type, panelType, defValue) {
 			pType = panelType;
 		}
 
-	} else if(type === "int" || type === "decimal" || type === "calculate" ){
+	} else if(type === "int" || type === "decimal"){
 		
 		// For these questions the default value should not be "percent" if there is a group by.
 		if(defValue === "percent") {
@@ -847,9 +847,14 @@ function setQ1Functions(type, panelType, defValue) {
 		}
 		h[++idx] = '<option value="average">' + localise.set["average"] + '</option>';
 		h[++idx] = '<option value="total">' + localise.set["c_total"] + '</option>';
-	} else {
-		
+
+	} else if(type === "calculate" || type === "string" || type === "server_calculate"){
+		h[++idx] = '<option value="count">' + localise.set["count"] + '</option>';
+		h[++idx] = '<option value="percent">' + localise.set["percent"] + '</option>';
+		h[++idx] = '<option value="average">' + localise.set["average"] + '</option>';
+		h[++idx] = '<option value="total">' + localise.set["c_total"] + '</option>';
 	}
+
 	$fnElem.append(h.join(''));
 	
 	$fnElem.val(defValue);	
