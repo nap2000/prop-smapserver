@@ -323,7 +323,7 @@ function bar_graph(ticks, matrix, series, chart, data, pId) {
     });
     
     function tooltipContentEditor(str, seriesIndex, pointIndex) {
-    	return plot.series[seriesIndex]["label"] + ", " + plot.data[seriesIndex][pointIndex];
+    	return plot.series[seriesIndex]["label"] + (plot.data[seriesIndex][pointIndex] ? ", " + plot.data[seriesIndex][pointIndex] : "");
     }
  
 	// Replot on resize events
