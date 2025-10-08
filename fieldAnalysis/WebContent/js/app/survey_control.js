@@ -599,16 +599,6 @@ function setSurveyViewControl(view) {
 		}
 	}
 
-	$('.map_only, .table_only').hide();
-	if(view.type === "map") {
-		$('.map_only').show();
-		$display_panel.val(view.layerId);
-	} else if(view.type === "table") {
-		$('.table_only').show();
-	} else if(view.type === "graph") {
-		$('.graph_only').show();
-	}
-
 	// Subject type
 	if(!view.subject_type) {
 		view.subject_type = "survey";
@@ -616,6 +606,19 @@ function setSurveyViewControl(view) {
 	$('.subject_survey_only, .subject_user_only, .subject_user_location').hide();
 	if(view.subject_type === "survey") {
 		$('.subject_survey_only').show();
+
+		/*
+		 * Enable view type specific questions
+		 */
+		$('.map_only, .table_only, .graph_only').hide();
+		if(view.type === "map") {
+			$('.map_only').show();
+			$display_panel.val(view.layerId);
+		} else if(view.type === "table") {
+			$('.table_only').show();
+		} else if(view.type === "graph") {
+			$('.graph_only').show();
+		}
 	} else if(view.subject_type === "user") {
 		$('.subject_user_only').show();
 	} else {

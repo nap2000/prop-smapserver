@@ -735,15 +735,6 @@ function resultsURL (sId, qId, dateId, groupId, groupType, geoTable, fn, lang, t
         url+= "&advanced_filter=" + encodeURIComponent(advanced_filter);
     }
 
-    if(geomFormQuestions && geomFormQuestions.length > 0) {
-        for(i = 0; i < geomFormQuestions.length; i++) {
-            if(i > 0) {
-                qList += ",";
-            }
-            qList += geomFormQuestions[i].question;
-        }
-        url+= "&geom_questions=" + encodeURIComponent(qList);
-    }
     if(selectedGeomQuestion) {
         url+= "&selected_geom_question=" + encodeURIComponent(selectedGeomQuestion);
     }
@@ -774,7 +765,20 @@ function regionsURL () {
 
 /**
  * Web service handler for retrieving items in a table
- * @param {string} survey
+ * @param form
+ * @param getFeatures
+ * @param mustHaveGeom
+ * @param start_key
+ * @param rec_limit
+ * @param bBad
+ * @param filter
+ * @param dateId
+ * @param startDate
+ * @param endDate
+ * @param advanced_filter
+ * @param tz
+ * @param inc_ro
+ * @param geomFormQuestions
  */
 function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bBad, filter, dateId, startDate,
                        endDate, advanced_filter, tz, inc_ro, geomFormQuestions) {
