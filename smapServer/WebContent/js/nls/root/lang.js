@@ -1274,6 +1274,8 @@ define({
 	"u_access": "Form Access Report",
     "u_b_access": "Bundle Access Report",
     "u_survey": "Surveys in this organisation",
+    "u_os": "Organisational Structure",
+    "u_eou": "Enterprise and Organisation Administrators",
     "u_r_u": "Resource Usage Report",
     "u_sms_url": "SMS Url",
     "u_sens_data": "Sensitive Data",
