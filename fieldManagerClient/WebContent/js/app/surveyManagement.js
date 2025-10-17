@@ -353,6 +353,9 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
             $('#m_resource_usage_report').click(function(){
                 executeResourceUsageReport();
             });
+            $('#m_structure_user_report').click(function(){
+                executeStructureUserReport();
+            });
             $('#m_structure_report').click(function(){
                 executeStructureReport();
             });
@@ -1184,6 +1187,10 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 
         function executeStructureReport() {
             downloadFile("/surveyKPI/adminreport/structure");
+        }
+
+        function executeStructureUserReport() {
+            downloadFile("/surveyKPI/adminreport/userstructure");
         }
 
     });
