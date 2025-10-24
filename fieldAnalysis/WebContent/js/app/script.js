@@ -1032,7 +1032,7 @@ function exportXlsxSurveyURL (
     exp_ro = exp_ro || false;
 
     url += sId;
-    url += "/" + filename;
+    url += "/" + encodeURIComponent(filename);
     url += "?language=" + language;
 
     if(split_locn === true) {
