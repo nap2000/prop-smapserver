@@ -962,8 +962,8 @@ function exportSurveyURL (
     }
 
     url += sId;
-    url += "/" + filename;
-    url += "?language=" + language;
+    url += "/" + encodeURIComponent(filename);
+    url += "?language=" + encodeURIComponent(language);
 
     url += "&format=" + format;
     if(format === "xls" && split_locn === true) {
@@ -1033,7 +1033,7 @@ function exportXlsxSurveyURL (
 
     url += sId;
     url += "/" + encodeURIComponent(filename);
-    url += "?language=" + language;
+    url += "?language=" + encodeURIComponent(language);
 
     if(split_locn === true) {
         url += "&split_locn=true";
@@ -1090,7 +1090,7 @@ function exportSurveyMediaURL (sId, filename, form, mediaQuestion, nameQuestions
     filename = cleanFileName(filename);
 
     url += sId;
-    url += "/" + filename;
+    url += "/" + encodeURIComponent(filename);
 
     url+="?mediaquestion=" + mediaQuestion;
     if(nameQuestions && nameQuestions.trim().length > 0) {
@@ -1167,7 +1167,7 @@ function exportSurveyOSMURL (sId, filename, forms, exp_ro,
     exp_ro = exp_ro || false;
 
     url += sId;
-    url += "/" + filename;
+    url += "/" + encodeURIComponent(filename);
 
 
     if(typeof forms !== undefined && forms.length > 0 ) {
@@ -1220,7 +1220,7 @@ function exportSurveyMisc (sId, filename, form, format, exp_ro, language,
     } else {
         url += queryId;
     }
-    url += "/" + filename;
+    url += "/" + encodeURIComponent(filename);
     url += "/shape";
     url += "?form=" + form;
     url += "&format=" + format;
@@ -1267,9 +1267,9 @@ function exportSurveyThingsatURL (sId, filename, form, language) {
     filename = cleanFileName(filename);
 
     url += sId;
-    url += "/" + filename;
+    url += "/" + encodeURIComponent(filename);
     url += "?form=" + form;
-    url += "&language=" + language;
+    url += "&language=" + encodeURIComponent(language);
 
     return encodeURI(url);
 }
@@ -1285,7 +1285,7 @@ function exportSurveyLocationURL (sId, filename, form, format, type) {
     filename = cleanFileName(filename);
 
     url += sId;
-    url += "/" + filename;
+    url += "/" + encodeURIComponent(filename);
     url += "?form=" + form;
     url += "&format=" + format;
     url += "&type=" + type;
