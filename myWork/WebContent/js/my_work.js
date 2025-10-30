@@ -147,13 +147,6 @@ require([
 		} else {
 			$('#tasks_count').html('(0)');
 			$('#task_list').html('');
-
-			// Get the presaved records and refresh the task view
-			dbstorage.getRecords().then( function(records) {
-				if (records) {
-					showTaskList(records, filterProjectId);
-				}
-			});
 		}
 	}
 
