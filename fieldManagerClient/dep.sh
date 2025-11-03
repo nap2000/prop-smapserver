@@ -14,14 +14,23 @@ else
 fi
 
 # Create a tar file and copy to the deploy directory
+
+echo "----------------- fieldManagerClient"
+echo "Placing tar file in ~/deploy"
+
 export COPYFILE_DISABLE=true
 tar -zcf fieldManager.tgz fieldManager
 cp fieldManager.tgz ~/deploy
 
 # deploy to local
-sudo rm -rf /Library/WebServer/Documents/app/fieldManager
-sudo mkdir /Library/WebServer/Documents/app/fieldManager
-sudo cp -rf fieldManager/* /Library/WebServer/Documents/app/fieldManager
+docdir=$WEBSITE_DOCS/app/fieldManager
+
+echo "Website: $WEBSITE_DOCS"
+echo "Deploying to: $docdir"
+
+sudo rm -rf $docdir
+sudo mkdir $docdir
+sudo cp -rf fieldManager/* $docdir
 sudo apachectl restart
 rm fieldManager.tgz
 
