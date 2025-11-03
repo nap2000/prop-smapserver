@@ -18,14 +18,24 @@ else
 fi
 
 # Create a tar file and copy to the deploy directory
+
+echo "----------------- fieldManagerClient"
+echo "Placing tar file in ~/deploy"
+
 export COPYFILE_DISABLE=true
 tar -zcf tasks.tgz tasks
 cp tasks.tgz ~/deploy
 
 # deploy to local
-sudo rm -rf /Library/WebServer/Documents/app/tasks
-sudo mkdir /Library/WebServer/Documents/app/tasks
-sudo cp -rf tasks/* /Library/WebServer/Documents/app/tasks
+
+docdir=$WEBSITE_DOCS/app/tasks
+
+echo "Website: $WEBSITE_DOCS"
+echo "Deploying to: $docdir"
+
+sudo rm -rf $docdir
+sudo mkdir $docdir
+sudo cp -rf tasks/* $docdir
 sudo apachectl restart
 rm tasks.tgz
 
