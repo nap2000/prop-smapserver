@@ -5,14 +5,23 @@
 node tools/r_2_3_6.js -o tools/build.js
 
 # Create a tar file and copy to the deploy directory
+
+echo "----------------- myWork"
+echo "Placing tar file in ~/deploy"
+
 export COPYFILE_DISABLE=true
 tar -zcf myWork.tgz myWork
 cp myWork.tgz ~/deploy
 
 # deploy to local
-sudo rm -rf /Library/WebServer/Documents/app/myWork
-sudo mkdir /Library/WebServer/Documents/app/myWork
-sudo cp -rf myWork/* /Library/WebServer/Documents/app/myWork
+docdir=$WEBSITE_DOCS/app/myWork
+
+echo "Website: $WEBSITE_DOCS"
+echo "Deploying to: $docdir"
+
+sudo rm -rf $docdir
+sudo mkdir $docdir
+sudo cp -rf myWork/* $docdir
 sudo apachectl restart
 rm myWork.tgz
 
