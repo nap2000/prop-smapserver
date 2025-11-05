@@ -17,14 +17,16 @@ The client code is grouped into modules
 
 # Development
 
-* Clone this project
+* Clone this project into ~/git
+* Clone [WebForm](https://github.com/nap2000/webform) project into ~/git
 * Set an environment variable WEBSITE_DOCS equal the document root for the Apache web server
 * Create a directory called "deploy" in your hone directory (~/deploy)
 * Install Grunt
+  * Ensure python is installed
   * Install Node
   * Install Npm
   * Install the Grunt CLI
-  * Install Grunt
+  * Install Grunt in ~/git/prop-smapserver and ~/git/webform
   * Install "grunt-contrib-uglify"
 
 # Deployment
