@@ -862,9 +862,3 @@ h4 {
 @media print {
   .back-to-screen-view {
     display: none !important; } }
-
-/* Matrix */
-
-.or-appearance-matrix h4 {
-    display:none;
-}
