@@ -5,30 +5,22 @@ This repository contains the client code (Web Browser) included in a release of 
 ## Modules
 
 The client code is grouped into modules
-* fieldManagerClient.  Administration Pages
-* tasks.  Task Pages
-* fieldAnalysis.  The internal dashboard
-* myWork.  Launch and manage webForms
-* smapServer. Everything else including webforms
+* fieldManagerClient, administration Pages
+* tasks, anything related to tasks
+* fieldAnalysis,  the internal dashboard
+* myWork,  launch and manage webForms
+* smapServer, everything else
 
 ##### Other Projects
 
 *  dashboard.  Integration of AWS quicksight. No longer maintained.
 
-# Development
+## Development
 
 * Clone this project into ~/git
-* Clone [WebForm](https://github.com/nap2000/webform) project into ~/git
 * Set an environment variable WEBSITE_DOCS equal the document root for the Apache web server
 * Create a directory called "deploy" in your hone directory (~/deploy)
-* Install Grunt
-  * Ensure python is installed
-  * Install Node
-  * Install Npm
-  * Install the Grunt CLI
-  * Install Grunt in ~/git/prop-smapserver and ~/git/webform
-  * Install "grunt-contrib-uglify"
 
-# Deployment
+## Deployment
 
-Run ./depALl.sh to build and deploy the modules.
+Run the script depALl.sh to build and deploy the modules.

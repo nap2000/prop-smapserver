@@ -17,11 +17,14 @@ docdir=$WEBSITE_DOCS/app/dashboard
 echo "Website: $WEBSITE_DOCS"
 echo "Deploying to: $docdir"
 
-rm -rf $docdir
+sudo rm -rf $docdir
 sudo mkdir $docdir
-cp -R dashboard $docdir
+sudo cp -R dashboard $docdir
 
-rm -rf dashboard
+if [ -f dep.sh ]
+then
+	rm -rf dashboard
+fi
 
 
 
