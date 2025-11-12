@@ -23,5 +23,3 @@ cd dashboard
 ./dep.sh $1
 cd ..
 
-cd ../smapserver2/setup
-./dep.sh $1

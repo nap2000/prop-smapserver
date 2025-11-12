@@ -24,9 +24,13 @@ rm smapServer.tgz
 cd ..
 
 # deploy to local
-sudo rm -R /Library/WebServer/Documents/js
-sudo rm -R /Library/WebServer/Documents/build
-sudo cp -R smapServer/* /Library/WebServer/Documents
+docdir=$WEBSITE_DOCS
+
+echo "Website: $WEBSITE_DOCS"
+echo "Deploying to: $docdir"
+sudo rm -R $docdir/js
+sudo rm -R $docdir/build
+sudo cp -R smapServer/* $docdir
 sudo apachectl restart
 
 # copy the motd
