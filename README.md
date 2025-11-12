@@ -20,6 +20,8 @@ The client code is grouped into modules
 * Clone this project into ~/git
 * Set an environment variable WEBSITE_DOCS equal the document root for the Apache web server
 * Create a directory called "deploy" in your hone directory (~/deploy)
+* Install Grunt in ~/git/prop-smapserver
+* Install "grunt-contrib-uglify"
 
 ## Deployment
 
