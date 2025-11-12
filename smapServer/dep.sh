@@ -33,9 +33,6 @@ sudo rm -R $docdir/build
 sudo cp -R smapServer/* $docdir
 sudo apachectl restart
 
-# copy the motd
-cp ~/motd.html /Library/WebServer/Documents
-
 # clean up the temporary smapServer directory but first check that it is the right one
 if [ -f dep.sh ]
 then

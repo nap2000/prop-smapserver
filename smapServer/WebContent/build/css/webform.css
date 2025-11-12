@@ -2,48 +2,8 @@
 	height: 50px;
 }
 
-@font-face {
-    font-family: 'OpenSansRegular';
-    src: url("/fonts/OpenSans-Regular-webfont.woff") format("woff"), url("/fonts/OpenSans-Regular-webfont.ttf") format("truetype"), url("/fonts/OpenSans-Regular-webfont.svg#OpenSansRegular") format("svg");
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'OpenSansBold';
-    src: url("/fonts/OpenSans-Bold-webfont.woff") format("woff"), url("/fonts/OpenSans-Bold-webfont.ttf") format("truetype"), url("/fonts/OpenSans-Bold-webfont.svg#OpenSansBold") format("svg");
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'enketo-icons';
-    src: url('../fonts/enketo-icons-v2.woff') format('woff'), url('../fonts/enketo-icons-v2.ttf') format('truetype'), url('../fonts/enketo-icons-v2.svg#enketo-icons') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
-html {
-    height: 100%;
-}
-
 body {
-    /*IE10*/
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
-    -moz-flex-direction: column;
-    flex-direction: column;
-    -webkit-flex-wrap: nowrap;
-    -ms-flex-wrap: nowrap;
-    -moz-flex-wrap: nowrap;
-    flex-wrap: nowrap;
-    position: relative;
-    min-height: 100%;
     overflow: auto;
-}
-
-.or {
-    margin-bottom: 20px;
 }
 
 .main ul.nav-tabs {
@@ -77,24 +37,6 @@ body {
 .form-footer {
     width: calc(100% + ( 2 * 45px ));
     margin: 45px -45px -45px -45px;
-}
-
-.enketo-power {
-    position: relative;
-    left: 50%;
-    margin: 30px 0 0 -100px;
-    width: 200px;
-    font-size: 14px;
-    line-height: 23px;
-    text-align: center;
-}
-.enketo-power a {
-    font-style: italic;
-}
-.enketo-power img {
-    float: none;
-    vertical-align: top;
-    width: 48px;
 }
 
 
@@ -239,12 +181,21 @@ summary {
 .form-footer .main-controls .previous-page {
     position: absolute;
     left: 20px;
-    bottom: 45px;
+    width: 100px;
+    min-height: 20px;
+    bottom: 0px;
+    color: white;
+    filter: brightness(120%);
 }
+
 .form-footer .main-controls .next-page {
     position: absolute;
     right: 20px;
-    bottom: 45px;
+    width: 100px;
+    min-height: 20px;
+    bottom: 0px;
+    color: white;
+    filter: brightness(120%);
 }
 
 .jump-nav {
@@ -308,28 +259,10 @@ summary {
     margin-bottom: 40px;
     text-align: center;
 }
-.form-footer .enketo-power {
+.form-footer {
     left: auto;
     margin: -20px 0 40px 0;
     width: 100%;
-}
-
-@media screen and (min-width: 720px) {
-    .form-footer .enketo-power {
-        position: absolute;
-        bottom: -90px;
-        right: 5px;
-        width: auto;
-    }
-}
-
-@media screen and (max-width: 719px) {
-    .enketo-power {
-        position: absolute;
-        bottom: -40px;
-        right: 5px;
-        width: auto;
-    }
 }
 
 .preview-header {
@@ -425,28 +358,9 @@ summary {
 }
 
 .print {
-    background: none;
-    border-radius: 0;
-    border: none;
-    padding: 7px 0 0 20px;
-    margin-right: 0;
     float: right;
-    font-family: 'enketo-icons';
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1;
-    /* Better Font Rendering =========== */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    outline: 0;
 }
-.print::before {
-    content: '\e60e';
-    font-size: 30px;
-}
+
 .print:hover {
     opacity: 0.7;
 }
@@ -551,9 +465,9 @@ summary {
     outline: 0;
 }
 .modal.fade .modal-dialog {
-    -webkit-transform: translate(0, -25%);
+    /*-webkit-transform: translate(0, -25%);
     -ms-transform: translate(0, -25%);
-    transform: translate(0, -25%);
+    transform: translate(0, -25%);  smap */
     -webkit-transition: -webkit-transform 0.3s ease-out;
     -moz-transition: -moz-transform 0.3s ease-out;
     -o-transition: -o-transform 0.3s ease-out;
@@ -622,8 +536,8 @@ summary {
 }
 
 .modal-footer {
-    margin-top: 15px;
-    padding: 19px 20px 20px;
+    margin-top: 5px;
+    padding: 9px 10px 10px;
     text-align: right;
     border-top: 1px solid #e5e5e5;
 }
@@ -1256,7 +1170,7 @@ button.close {
     display: none;
 }
 .offline-enabled .queue-length.submitting {
-    color: #ce4f07;
+    color: #556B2F;
 }
 .offline-enabled .queue-length:hover {
     color: green;
@@ -1295,3 +1209,75 @@ button.close {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+.or-form-guidance.active {
+    margin: 5px 0;
+    color: #556B2F; }
+.or-form-guidance.active summary {
+    color: #888888; }
+
+/* Smap */
+strong {
+    font-weight: bold; }
+
+label.itemset-template {
+    display: none !important;
+}
+
+.btn.add-repeat-btn {
+    background-color: #fff;
+}
+
+.btn.remove {
+    background-color: #fff;
+}
+
+.search-bar button.btn.btn-default, .geo-inputs button.close-chain-btn {
+    background-color: #fff;
+}
+
+.full-width {
+    width:100%;
+}
+
+.enketo-power {
+    left: unset;
+}
+
+.or-appearance-hidden {
+    display:none;
+}
+
+/* properties*/
+.smap-geopoint-blue-circle-marker {
+    width: 16px;
+    height: 16px;
+    margin-top: -8px;
+    border-radius: 8px;
+    border: 1px solid #4e4e4e;
+    background: #0000ff; }
+
+.smap-geopoint-blue-circle-marker-active {
+    width: 16px;
+    height: 16px;
+    margin-top: -8px;
+    border-radius: 8px;
+    border: 4px solid #6783ec;
+    background: #0000ff; }
+
+.smap-geopoint-red-circle-marker {
+    width: 16px;
+    height: 16px;
+    margin-top: -8px;
+    border-radius: 8px;
+    border: 1px solid #4e4e4e;
+    background: #ff0000; }
+
+.smap-geopoint-red-circle-marker-active {
+    width: 16px;
+    height: 16px;
+    margin-top: -8px;
+    border-radius: 8px;
+    border: 4px solid #6783ec;
+    background: #ff0000; }
+
