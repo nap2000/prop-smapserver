@@ -14,14 +14,24 @@ else
 fi
 
 # Create a tar file and copy to the deploy directory
+
+echo "----------------- fieldManagerClient"
+echo "Placing tar file in ~/deploy"
+
 export COPYFILE_DISABLE=true
 tar -zcf fieldAnalysis.tgz fieldAnalysis
 cp fieldAnalysis.tgz ~/deploy
 
 # deploy to local
-sudo rm -rf /Library/WebServer/Documents/app/fieldAnalysis
-sudo mkdir /Library/WebServer/Documents/app/fieldAnalysis
-sudo cp -rf fieldAnalysis/* /Library/WebServer/Documents/app/fieldAnalysis
+
+docdir=$WEBSITE_DOCS/app/fieldAnalysis
+
+echo "Website: $WEBSITE_DOCS"
+echo "Deploying to: $docdir"
+
+sudo rm -rf $docdir
+sudo mkdir $docdir
+sudo cp -rf fieldAnalysis/* $docdir
 sudo apachectl restart
 rm fieldAnalysis.tgz
 
