@@ -84,7 +84,6 @@ define([],
                             keyPath: 'id',
                             autoIncrement: true
                         });
-                        createIndex(assignmentIdx, assignmentIdxPath, {unique: false});
                     }
 
                     if (!upgradeDb.objectStoreNames.contains(logStoreName)) {
