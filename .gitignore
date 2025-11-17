@@ -45,8 +45,7 @@ workspace.xml
 node_modules
 
 # webforms 
-smapServer/WebContent/build/js/*
-!smapServer/WebContent/build/js/webform-bundle.min.js
+smapServer/WebContent/build
 
 smapServer/.idea/
 tasks/.idea/
