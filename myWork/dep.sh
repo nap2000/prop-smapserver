@@ -11,7 +11,7 @@ echo "Placing tar file in ~/deploy"
 
 export COPYFILE_DISABLE=true
 tar -zcf myWork.tgz myWork
-cp myWork.tgz ~/deploy
+cp myWork.tgz ~/deploy/smap/deploy/version1
 
 # deploy to local
 docdir=$WEBSITE_DOCS/app/myWork

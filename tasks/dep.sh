@@ -24,7 +24,7 @@ echo "Placing tar file in ~/deploy"
 
 export COPYFILE_DISABLE=true
 tar -zcf tasks.tgz tasks
-cp tasks.tgz ~/deploy
+cp tasks.tgz ~/deploy/smap/deploy/version1
 
 # deploy to local
 

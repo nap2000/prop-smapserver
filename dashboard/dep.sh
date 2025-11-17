@@ -8,7 +8,7 @@ tar -zcf dashboard.tgz dashboard
 echo "----------------- dashboard"
 echo "Placing tar file in ~/deploy"
 
-mv dashboard.tgz ~/deploy
+mv dashboard.tgz ~/deploy/smap/deploy/version1
 
 # copy files to the local server
 

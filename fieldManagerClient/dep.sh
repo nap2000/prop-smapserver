@@ -20,7 +20,7 @@ echo "Placing tar file in ~/deploy"
 
 export COPYFILE_DISABLE=true
 tar -zcf fieldManager.tgz fieldManager
-cp fieldManager.tgz ~/deploy
+cp fieldManager.tgz ~/deploy/smap/deploy/version1
 
 # deploy to local
 docdir=$WEBSITE_DOCS/app/fieldManager

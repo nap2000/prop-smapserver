@@ -19,7 +19,7 @@ export COPYFILE_DISABLE=true
 cp -R WebContent/build smapServer
 cd smapServer
 tar --no-xattrs -zcf smapServer.tgz *
-cp smapServer.tgz ~/deploy
+cp smapServer.tgz ~/deploy/smap/deploy/version1
 rm smapServer.tgz
 cd ..
 
