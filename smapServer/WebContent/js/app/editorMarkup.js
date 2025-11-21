@@ -680,7 +680,7 @@ define([
 					} else if(selProperty === "hint") { 
 						h[++idx] = question.labels[globals.gLanguage].hint;
 					} else if(selProperty === "constraint_msg") {
-						h[++idx] = question.labels[globals.gLanguage].constraint_msg;
+						h[++idx] = question.labels[globals.gLanguage].constraint_msg || question.constraint_msg;    // Allow for multi language or single language message
 					} else if(selProperty === "guidance_hint") {
 						h[++idx] = question.labels[globals.gLanguage].guidance_hint;
 					} else {
