@@ -1,13 +1,6 @@
 #!/bin/sh
 
 #
-# Build webforms
-#
-pushd ~/git/webform
-./dep.sh
-popd
-
-#
 # Editor and miscelaneous
 #
 cd smapServer
