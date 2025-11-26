@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<meta charset="utf-8">
@@ -10,9 +11,8 @@
 	<meta content="all" name="robots" />
 	
 	<!-- turn off IE image toolbar -->
-    <meta content="no" http-equiv="imagetoolbar" />
+    <meta http-equiv="imagetoolbar" content="no" />
 
-	<!--<link type="text/css" href="/css/Aristo/Aristo.css" rel="stylesheet" />-->
 	<link type="text/css" href="/css/jquery-ui-1.13.2.min.css" rel="stylesheet" />
   	<link type="text/css" href="css/datatable.css" rel="stylesheet"/>
 	<link type="text/css" href="js/libs/jqplot/jquery.jqplot.css" rel="stylesheet"/>
@@ -62,10 +62,10 @@
 				<label class="lang" data-lang="c_project" for="project_name" style="width:200px; margin-left:5px;">Select Project:</label>
 				<select class="project_list" id="project_name" style="width:200px; margin-left:5px; font-size:16px;"></select>
 			</div>
-			<button type="button" class="db_settings_add ui-priority-primary ui-corner-all hover" value="graph"><img src="img/graph_ico.png" width="32" height="32"/><br/><span class="lang" data-lang="c_graph">Graph</span></button>
-			<button type="button" class="db_settings_add ui-priority-primary ui-corner-all hover" value="map"><img src="img/map_ico2.png" width="32" height="32"/><br/><span class="lang" data-lang="c_map">Map</span></button>
-			<button type="button" class="db_settings_add ui-priority-primary ui-corner-all hover" value="table"><img src="img/table_ico.png" width="32" height="32"/><br/><span class="lang" data-lang="c_table" >Table</span></button>
-			<button type="button" class="db_settings_add ui-priority-primary ui-corner-all hover" value="media"><img src="img/camera.png" width="32" height="32"/><br/><span class="lang" data-lang="c_images">Images</span></button>
+			<button type="button" class="db_settings_add ui-priority-primary ui-corner-all hover" value="graph"><img src="img/graph_ico.png" width="32" height="32" alt="graph icon"/><br/><span class="lang" data-lang="c_graph">Graph</span></button>
+			<button type="button" class="db_settings_add ui-priority-primary ui-corner-all hover" value="map"><img src="img/map_ico2.png" width="32" height="32" alt="map icon"/><br/><span class="lang" data-lang="c_map">Map</span></button>
+			<button type="button" class="db_settings_add ui-priority-primary ui-corner-all hover" value="table"><img src="img/table_ico.png" width="32" height="32" alt="table icon"/><br/><span class="lang" data-lang="c_table" >Table</span></button>
+			<button type="button" class="db_settings_add ui-priority-primary ui-corner-all hover" value="media"><img src="img/camera.png" width="32" height="32" alt="media icon"/><br/><span class="lang" data-lang="c_images">Images</span></button>
 			<div id="panel-container">
 				<ul id="panels">
 				</ul>
@@ -231,8 +231,7 @@
 				<legend class="ui-widget-header ui-corner-all lang" data-lang="t_aft">advanced filter</legend>
 				<label for="ad_filter" data-lang="c_filter" class="lang">filter</label>
 				<input type="text" id="ad_filter">
-				<a class="filter_help" href="https://www.smap.com.au/docs/server-expressions.html" target="_blank"> ( i ) </span>
-				</a>
+				<a class="filter_help" href="https://www.smap.com.au/docs/server-expressions.html" target="_blank"> ( i ) </a>
 			</fieldset>
 			
 		</form>
@@ -361,8 +360,8 @@
 					<option value="year" class="lang" data-lang="c_year">Year</option>
 				</select><br/>
 				<span class="map_group_only" style="display:none">
-					<input type="radio" name="mapgrouptype" value="contains" checked="checked"/> <span class="lang" data-lang="a_g_gps">GPS coordinates within region</span><br/> 
-					<input type="radio" name="mapgrouptype" value="matches"/> <span class="lang" data-lang="c_matches">Matches</span><br/> 
+					<input type="radio" name="mapgrouptype" value="contains" checked="checked"/> <span class="lang" data-lang="a_g_gps"></span><br/>
+					<input type="radio" name="mapgrouptype" value="matches"/> <span class="lang" data-lang="c_matches">Matches</span><br/>
 				</span>	
 			</fieldset>	
 			<fieldset class="ui-widget-content subject_user_only subject_survey_only">
@@ -389,7 +388,7 @@
 			<fieldset class="ui-widget-content subject_survey_only">
 				<legend class="ui-widget-header ui-corner-all lang" data-lang="c_filter">filter</legend>
 				<label for="set_ad_filter" data-lang="t_aft" class="lang">filter</label>
-				<input type="text" id="set_ad_filter"><a class="filter_help" href="https://www.smap.com.au/docs/server-expressions.html" target="_blank"> ( i ) </span></a><br/><br/>
+				<input type="text" id="set_ad_filter"><a class="filter_help" href="https://www.smap.com.au/docs/server-expressions.html" target="_blank"> ( i ) </a><br/><br/>
 				<button id="filter_button" class="lang" data-lang="a_fbv">Filter by value</button>
 			</fieldset>
 			<fieldset id="filter_controls"  class="ui-widget-content" style="display:none;">
@@ -428,8 +427,8 @@
 					<select id="download_language" class="form-control"></select><br/>
 					<label class="lang" data-lang="c_template" for="select_pdf"></label><br/>
 					<select id="select_pdf" class="form-control"></select><br/>
-					<input type="radio" name="orientation" value="portrait" checked="checked"/> <span data-lang="c_portrait" class="lang">Portrait</span><br/> 
-					<input type="radio" name="orientation" value="landscape"/> <span data-lang="c_landscape" class="lang">Landscape</span><br/>					
+					<input type="radio" name="orientation" value="portrait" checked="checked"/> <span data-lang="c_portrait" class="lang">Portrait</span><br/>
+					<input type="radio" name="orientation" value="landscape"/> <span data-lang="c_landscape" class="lang">Landscape</span><br/>
 				</fieldset>							
 			</div>
 		</form>
