@@ -1258,18 +1258,6 @@ span.selectProject
 	background-color: #f2dede;
 }
 
-/* SVG */
-.links line {
-  /*stroke: #999;*/
-  stroke-opacity: 0.6;
-}
-
-
-.node text {
-  pointer-events: none;
-  font: 10px sans-serif;
-}
-
 .disabled {
 	color: lightgrey;
 	filter:opacity(0.4);

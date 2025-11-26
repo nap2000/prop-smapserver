@@ -28,7 +28,6 @@
 	<script src="/js/app/theme.js"></script>
 	<script src="/js/libs/paceSettings.js" charset="utf-8"></script>
 	<script src="/js/libs/OpenLayers/OpenLayers.js" charset="utf-8"></script>
-	<script src="/js/libs/d3.v4.min.js" charset="utf-8"></script>
 	<script src="/js/app/custom.js" charset="utf-8"></script>  <!-- Override this in custom code to apply changes at run time -->
 	<script data-main="js/dashboard_main.min" src="/js/libs/require.js" charset="utf-8"></script>
 
@@ -239,46 +238,6 @@
 			<button id="btn_edit_thingsat" class="lang" data-lang="a_sel_model">Edit Survey Model</button>	
 			<div id="ta_model_show"></div>
 		</div>
-	</div>
-	
-	<!-- Popup to edit thingsat model -->
-	<div id="dialog_edit_ta" title="Edit Thingsat Model" style="display:none;">
-		<div id="ta_model_edit"></div>
-		<div id="ta_items_edit"></div>
-	</div>
-	
-	<!-- Popup to edit thingsat node or relation / link -->
-	<div id="dialog_element_edit_ta" title="Edit Thingsat Element" style="display:none;">
-		<form>
-			<fieldset class="ui-widget-content">
-				<label for="ta_name" class="lang" data-lang="c_name">Name</label>
-				<input type="text" id="ta_name" required /><br/>
-				<label for="ta_type" class="lang" data-lang="c_type">Type</label>
-				<select id="ta_type">
-					<option value="node" class="lang" data-lang="c_node">Node</option>
- 					<option value="link" class="lang" data-lang="c_relation">Relation</option>
-				</select><br/>	
-				<div class="link_only" style="display:none;">
-					<label for="ta_source" class="lang" data-lang="c_from">From</label>
-					<select id="ta_source"></select>
-					<label for="ta_target" class="lang" data-lang="c_to">To</label>
-					<select id="ta_target"></select>
-				</div>
-			</fieldset>	
-			<fieldset class="ui-widget-content">
-				<legend class="ui-widget-header ui-corner-all lang" data-lang="c_properties">Properties</legend>
-				<table>
-				<thead>
-					<tr>
-						<th class="lang" data-lang="c_question">Question</th><th class="lang" data-lang="c_include">Include</th><th class="lang" data-lang="c_unique">Unique</th>
-					</tr>
-				</thead>
-				<tbody id="ta_property_list">
-				</tbody>
-				</table>
-			</fieldset>	
-				
-		</form>
 	</div>
 		
 	<!-- Popup to show features when a user clicks on a geometry item -->

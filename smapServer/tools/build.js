@@ -14,7 +14,6 @@
     	lang_location: '..',
 	bootbox: 'bootbox.min',
 	moment: 'moment-with-locales.min',
-	d3: 'd3.v4.min',
 	charting: 'chart.min.3.8.0',
 	toggle: 'bootstrap4-toggle.min',
 	bootstrap: 'bootstrap.bundle.v4.5.min',
