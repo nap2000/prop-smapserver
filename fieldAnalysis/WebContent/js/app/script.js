@@ -49,11 +49,6 @@ $(document).ready(function() {
         exportSurveyChanged();
     });
 
-    // Change event on exporting a query instead of a survey
-    $('#exportQuerySel').change(function() {
-        exportQuerySelChanged();
-    });
-
     /*
      * Change event on export format select
      */
@@ -178,7 +173,6 @@ function initialiseDialogs() {
                             exp_from_date = $('#exp_from_date').datepicker({ dateFormat: 'yy-mm-dd' }).val(),
                             exp_to_date = $('#exp_to_date').datepicker({ dateFormat: 'yy-mm-dd' }).val(),
                             dateQuestionId = $('#export_date_question option:selected').val(),
-                            exportQuerySel = $('#exportQuerySel').prop("checked"),
                             queryName = $('#export_query option:selected').text(),
                             includeMeta=$('#includeMeta').prop("checked"),
                             filename,
@@ -401,41 +395,12 @@ function exportSurveyChanged() {
             addGeomPickList(sMeta);
         }
 
-        exportQuerySelChanged();
-
         // Restore previous selections
         $('#export_language').val(language);
 
     } else {
         $('#export_date_question').html("");
     }
-}
-
-function exportQuerySelChanged() {
-    require(['app/extended_model'], function(extended_model) {
-
-        var expExtended = $('#exportQuerySel').prop("checked"),
-            sId = $('#export_survey option:selected').val(),
-            sMeta;
-
-        if(expExtended) {
-
-            $('.selectquery').show();
-            $('.selectsurvey').hide();
-            $('.showshape').hide();
-            sMeta = globals.gSelector.getSurveyExtended(sId);
-            if(!sMeta) {
-                sMeta = getExtendedSurveyMetaSE(sId, extended_model.convertMetaToGraph);
-            } else {
-                extended_model.convertMetaToGraph(sMeta);
-            }
-        } else {
-
-            setExportControls();
-            $('.showextselect').hide();
-        }
-    });
-
 }
 
 function setExportControls() {
