@@ -15,8 +15,8 @@ You should have received a copy of the GNU General Public License
 along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-define(['jquery', 'jquery_ui', 'rmm', 'localise', 'globals'],
-		function($, jquery_ui, rmm, localise, globals) {
+define(['jquery', 'jquery_ui', 'rmm', 'localise'],
+		function($, jquery_ui, rmm, localise) {
 	
 	var graph;
 	var surveyList;
@@ -28,116 +28,13 @@ define(['jquery', 'jquery_ui', 'rmm', 'localise', 'globals'],
 		svgLinks,
 		simulation,
 		color,
-		duration = 500,
 		theElement,
 		theWidth,
 		theHeight;
 		
 	
 	return {
-
-		convertMetaToGraph: convertMetaToGraph,
 		getPath: getPath
-	}
-	
-	/*
-	 * Create a graph from the survey meta data
-	 * Styling
-	 *  Survey: color
-	 *  Selected Form: Large Circle
-	 *  Form: Small Circle
-	 *  Path: dark link thick
-	 *  Parent child link: thick
-	 *  Other survey link: thin
-	 *  Unselectable forms: low opacity
-	 */
-	function convertMetaToGraph(meta) {
-		var i,
-			node,
-			link,
-			surveys = {};
-		
-		graph = {
-				  "nodes":[],
-				  "links":[]
-				    };
-		
-		for(i = 0; i < meta.forms.length; i++) {
-			node = {
-					id: meta.forms[i].f_id,
-					survey: meta.forms[i].s_id,
-					name: meta.forms[i].form,
-					main: meta.forms[i].p_id == 0 ? true : false,
-					p_id: meta.forms[i].p_id,
-					selected: isFormSelected(meta.forms[i].f_id)
-			}
-			graph.nodes.push(node);		
-			
-			// Add link between parent / child forms
-			if(+meta.forms[i].p_id != 0) {
-				link = {
-						source: meta.forms[i].f_id,
-						target: meta.forms[i].p_id,
-						sourceQuestionId: 0,
-						value: 2
-				}
-				graph.links.push(link);	
-			} else {
-				surveys[meta.forms[i].s_id] = meta.forms[i].f_id;	// Save the top level form for the survey
-			}
-		}
-		
-		// Add links between surveys
-		for(i = 0; i < meta.links.length; i++) {
-			link = {
-					source: meta.links[i].fromFormId,
-					target: surveys[meta.links[i].toSurveyId],
-					sourceQuestionId: meta.links[i].fromQuestionId,
-					toQuestionId: meta.links[i].toQuestionId,
-					value: 1
-			}
-			graph.links.push(link);	
-		}
-		
-		surveyList = meta.surveys;
-		
-		showModel('#extsvg', 200, 200)
-		
-		if(selected.length == 2) {
-			setPath();
-			update();
-		}
-	}
-	
-	/*
-	 * Show model of selectable forms including those from linked surveys
-	 */
-	function showModel(element) {
-		
-		var $elem = $(element);	
-		var width = $elem.width();
-		var height = $elem.height();
-		
-		if(graph.nodes.length === 0) {
-			$(element).empty().append("<h1 class='center'>" + localise.set["msg_nf"] + "</h1>");
-			$('#export').next().find("button:contains('Export')").addClass("ui-state-disabled");
-			return;
-		}
-		
-		$('#export').next().find("button:contains('Export')").removeClass("ui-state-disabled");
-		
-		theElement = element;
-		theWidth = width;
-		theHeight = height;
-		color = d3.scaleOrdinal(d3.schemeCategory20);
-
-		simulation = d3.forceSimulation()
-	    	.force("link", d3.forceLink().id(function(d) { return d.id; }))
-	    	.force("charge", d3.forceManyBody())
-	    	.force("center", d3.forceCenter(width / 2, height / 2));
-		
-		update();
-
 	}
 	
 	/*
@@ -396,19 +293,7 @@ define(['jquery', 'jquery_ui', 'rmm', 'localise', 'globals'],
 		}
 		return 0;
 	}
-	
-	function isFormSelected(fId) {
-		var i;
-		if(selected) {
-			for(i = 0; i < selected.length; i++) {
-				if(selected[i] == fId) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
+
 	/*
 	 * Get the from question 
 	 */
