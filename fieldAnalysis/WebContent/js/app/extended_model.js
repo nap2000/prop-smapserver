@@ -35,8 +35,7 @@ define(['jquery', 'jquery_ui', 'rmm', 'localise', 'globals'],
 		
 	
 	return {
-		
-		showModel: showModel,
+
 		convertMetaToGraph: convertMetaToGraph,
 		getPath: getPath
 	}
