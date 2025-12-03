@@ -37,6 +37,7 @@ define(function () {
 	    GROUP_DASHBOARD : 12,
         GROUP_LINKAGES : 13,
         GROUP_CONSOLE_ADMIN : 14,
+        GROUP_MCP_ACCESS : 15,
 
         REC_LIMIT: 200,     // Page size for table views in analysis
 	    MAP_REC_LIMIT: 10000,    // Max size for map views in analysis
