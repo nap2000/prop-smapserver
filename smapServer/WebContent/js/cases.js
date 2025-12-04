@@ -144,6 +144,8 @@ require([
             /*
              * Update settings
              */
+            $('#cms_bn').val(settings.name);
+            $('#cms_bd').val(settings.description);
             $('#cms_fs').val(settings.finalStatus);
             $('#cms_sq').val(settings.statusQuestion);      // The list of questions should have been set by now but it is not guaranteed
             $('#cms_cq').val(settings.criticalityQuestion);
@@ -235,6 +237,8 @@ require([
         function saveSettings() {
             var settings = {};
 
+            settings.name = $('#cms_bn').val();
+            settings.description = $('#cms_bd').val();
             settings.statusQuestion = $('#cms_sq').val();
             settings.finalStatus = $('#cms_fs').val();
             settings.criticalityQuestion = $('#cms_cq').val();

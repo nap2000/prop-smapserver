@@ -79,7 +79,7 @@ define({
     "c_cases": "Cases",
     "c_channel": "Channel",
     "c_closed": "Closed",
-    "c_cm": "Case Management",
+    "c_cm": "Bundle and Case Management",
     "c_crit": "Criticality",
     "c_default": "Default",
     "c_desc": "Description",
@@ -1611,6 +1611,8 @@ define({
     "cm_14days": "14 days",
     "cm_30days": "30 days",
     "cm_areq": "A status question and a final status value must be specified if you are using alerts",
+    "cm_bn": "Bundle Name (Topic)",
+    "cm_bd": "Bundle Description",
 
     "fp_nm": "No matches found",
 
