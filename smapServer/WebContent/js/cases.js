@@ -228,7 +228,6 @@ require([
                 deleteCms(idx);
             });
 
-
         }
 
         /*
