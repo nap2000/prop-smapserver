@@ -19,7 +19,7 @@ echo "----------------- fieldManagerClient"
 echo "Placing tar file in ~/deploy"
 
 export COPYFILE_DISABLE=true
-tar -zcf fieldManager.tgz fieldManager
+tar --no-xattrs -zcf fieldManager.tgz fieldManager
 cp fieldManager.tgz ~/deploy/smap/deploy/version1
 
 # deploy to local
