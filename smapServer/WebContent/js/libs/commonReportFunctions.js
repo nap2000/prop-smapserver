@@ -217,7 +217,7 @@ function getMedia(property) {
 		media = {};
 		media.name = name;
 		media.supported = true;
-		if(ext === "jpg" || ext === "png" || ext === "gif" || ext === "jpeg" || ext === "ico") {
+		if(ext === "jpg" || ext === "png" || ext === "gif" || ext === "jpeg" || ext === "ico" || ext === "webp") {
 			media.type = "image";
 			media.url = property; 
 			media.thumbNail = thumbNail;
