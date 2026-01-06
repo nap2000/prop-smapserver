@@ -179,21 +179,13 @@ function initialiseDialogs() {
                             url,
                             filter = $('#ad_filter').val();
 
-                        // Set the filename of the exported file
-                        if(exportQuerySel) {
-                            if(!queryId) {
-                                alert(window.localise.set["a_sel_query"]);
-                                return(false);
-                            }
-                            filename = queryName;
-
-                        } else {
-                            if(sId == "-1") {
-                                alert(window.localise.set["msg_pss"]);
-                                return(false);
-                            }
-                            filename = displayName;
+                        if(sId == "-1") {
+                            alert(window.localise.set["msg_pss"]);
+                            return(false);
                         }
+                        // Set the filename of the exported file
+                        filename = displayName;
+
                         if(!filename) {
                             filename = "export";
                         }
@@ -220,14 +212,9 @@ function initialiseDialogs() {
                             || format === "spss"
                             || format === "stata") {
 
-                            if(exportQuerySel) {
-                                sId = undefined;
-                                form = 0;
-                            } else {
-                                queryId = undefined;
-                                form = getSelectedForm('.shapeforms', false);
-                                gLastSetForm = form;    // Keep until the next time the user opens the dialog
-                            }
+                            queryId = undefined;
+                            form = getSelectedForm('.shapeforms', false);
+                            gLastSetForm = form;    // Keep until the next time the user opens the dialog
 
                             var geomQuestion = $('#geomForm_' + form).val();
                             url = exportSurveyMisc(sId, filename, form,
