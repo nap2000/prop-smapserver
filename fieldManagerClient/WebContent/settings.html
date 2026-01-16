@@ -145,10 +145,18 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label data-lang="u_ft_in" class="lang col-sm-4 control-label">instance name</label>
+									<label data-lang="u_ft_ex" class="lang col-sm-4 control-label"></label>
 									<div class="col-sm-6">
 										<div class="checkbox">
-											<input type="checkbox" name="devoption" class="devoption" value="ft_specify_instancename">
+											<input type="checkbox" name="devoption" class="devoption" value="ft_exit_track_menu">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label data-lang="u_ft_bgs" class="lang col-sm-4 control-label"></label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" name="devoption" class="devoption" value="ft_bg_stop_menu">
 										</div>
 									</div>
 								</div>
@@ -183,19 +191,34 @@
 										</div>
 									</div>
 								</div>
+							</div>
+						</div>
+
+						<div class="card mb-3">
+							<div class="card-header lang" data-lang="u_mobile_completion"></div>
+							<p class="text-muted small mb-0 lang" data-lang="u_mobile_completion_h"></p>
+							<div class="card-body">
 								<div class="form-group row">
-									<label data-lang="u_ft_ex" class="lang col-sm-4 control-label"></label>
+									<label data-lang="u_ft_rv" class="lang col-sm-4 control-label"></label>
 									<div class="col-sm-6">
 										<div class="checkbox">
-											<input type="checkbox" name="devoption" class="devoption" value="ft_exit_track_menu">
+											<input type="checkbox" name="devoption" class="devoption" value="ft_review_final">
 										</div>
 									</div>
 								</div>
 								<div class="form-group row">
-									<label data-lang="u_ft_bgs" class="lang col-sm-4 control-label"></label>
+									<label data-lang="u_ft_mf" class="lang col-sm-4 control-label">finalize</label>
 									<div class="col-sm-6">
 										<div class="checkbox">
-											<input type="checkbox" name="devoption" class="devoption" value="ft_bg_stop_menu">
+											<input type="checkbox" name="devoption" class="devoption" value="ft_mark_finalized">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label data-lang="u_ft_in" class="lang col-sm-4 control-label">instance name</label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" name="devoption" class="devoption" value="ft_specify_instancename">
 										</div>
 									</div>
 								</div>
@@ -235,23 +258,18 @@
 						</div>
 
 						<div class="card mb-3">
-							<div class="card-header lang" data-lang="u_mobile_completion"></div>
-							<p class="text-muted small mb-0 lang" data-lang="u_mobile_completion_h"></p>
+							<div class="card-header lang" data-lang="u_mobile_sync"></div>
+							<p class="text-muted small mb-0 lang" data-lang="u_mobile_sync_h"></p>
 							<div class="card-body">
 								<div class="form-group row">
-									<label data-lang="u_ft_rv" class="lang col-sm-4 control-label"></label>
+									<label for="ft_send" data-lang="u_ft_as" class="lang control-label col-sm-4">synchronise</label>
 									<div class="col-sm-6">
-										<div class="checkbox">
-											<input type="checkbox" name="devoption" class="devoption" value="ft_review_final">
-										</div>
-									</div>
-								</div>
-								<div class="form-group row">
-									<label data-lang="u_ft_mf" class="lang col-sm-4 control-label">finalize</label>
-									<div class="col-sm-6">
-										<div class="checkbox">
-											<input type="checkbox" name="devoption" class="devoption" value="ft_mark_finalized">
-										</div>
+										<select class="form-control" id="ft_send">
+											<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+											<option class="lang" data-lang="c_off" value="off">off</option>
+											<option class="lang" data-lang="u_ft_sw" value="wifi_only">wifi</option>
+											<option class="lang" data-lang="u_ft_sw_c" value="wifi_and_cellular">wifi cell</option>
+										</select>
 									</div>
 								</div>
 								<div class="form-group row">
@@ -268,24 +286,6 @@
 									<label for="ft_number_tasks" data-lang="u_ft_tasks" class="lang col-sm-4 control-label">max tasks</label>
 									<div class="col-sm-6">
 										<input type="number" id="ft_number_tasks">
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="card mb-3">
-							<div class="card-header lang" data-lang="u_mobile_sync"></div>
-							<p class="text-muted small mb-0 lang" data-lang="u_mobile_sync_h"></p>
-							<div class="card-body">
-								<div class="form-group row">
-									<label for="ft_send" data-lang="u_ft_as" class="lang control-label col-sm-4">synchronise</label>
-									<div class="col-sm-6">
-										<select class="form-control" id="ft_send">
-											<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
-											<option class="lang" data-lang="c_off" value="off">off</option>
-											<option class="lang" data-lang="u_ft_sw" value="wifi_only">wifi</option>
-											<option class="lang" data-lang="u_ft_sw_c" value="wifi_and_cellular">wifi cell</option>
-										</select>
 									</div>
 								</div>
 							</div>
