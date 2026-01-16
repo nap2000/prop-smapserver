@@ -114,268 +114,300 @@
 				<div id="devicePanel" style="display:none;" class="usertab mt-4">
 
 					<div class="container">
-						<form id="device_form">
+					<form id="device_form">
 
-							<div class="form-group row">
-								<label data-lang="u_ft_rv" class="lang col-sm-4 control-label"></label>
-								<div class="col-sm-6">
-									<div class="checkbox">
-										<input type="checkbox" name="devoption" class="devoption" value="ft_review_final">
-									</div>
-								</div>
-							</div>
-
-							<div class="form-group row">
-								<label data-lang="u_ft_ft" class="lang col-sm-4 control-label"></label>
-								<div class="col-sm-6">
-									<div class="checkbox">
-										<input type="checkbox" name="devoption" class="devoption" value="ft_force_token">
-									</div>
-								</div>
-							</div>
-
-							<div class="form-group row">
-								<label for="ft_send" data-lang="u_ft_as" class="lang control-label col-sm-4">synchronise</label>
-								<div class="col-sm-6">
-									<select class="form-control" id="ft_send">
-										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
-										<option class="lang" data-lang="c_off" value="off">off</option>
-										<option class="lang" data-lang="u_ft_sw" value="wifi_only">wifi</option>
-										<option class="lang" data-lang="u_ft_sw_c" value="wifi_and_cellular">wifi cell</option>
-									</select>
-								</div>
-							</div>
-
-							<div class="form-group row">
-								<label for="ft_delete" data-lang="u_ft_del" class="lang control-label col-sm-4">delete</label>
-								<div class="col-sm-6">
-									<select class="form-control" id="ft_delete">
-										<option class="lang" data-lang="u_ft_sop" value="not set">nd</option>
-										<option class="lang" data-lang="c_off" value="off">off</option>
-										<option class="lang" data-lang="c_on" value="on">on</option>
-									</select>
-								</div>
-							</div>
-
-							<div class="form-group row">
-								<label for="ft_backward_navigation" data-lang="u_ft_back_nav" class="lang control-label col-sm-4">backward</label>
-								<div class="col-sm-6">
-									<select class="form-control" id="ft_backward_navigation">
-										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
-										<option class="lang" data-lang="c_dis" value="disable">disable</option>
-										<option class="lang" data-lang="c_en" value="enable">enable</option>
-									</select>
-								</div>
-							</div>
-
-							<div class="form-group row">
-								<label for="ft_high_res_video" data-lang="u_ft_hrv" class="lang control-label col-sm-4">hrv</label>
-								<div class="col-sm-6">
-									<select class="form-control" id="ft_high_res_video">
-										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
-										<option class="lang" data-lang="c_off" value="off">off</option>
-										<option class="lang" data-lang="c_on" value="on">on</option>
-									</select>
-								</div>
-							</div>
-
-							<div class="form-group row">
-								<label for="ft_navigation" data-lang="u_ft_nav" class="lang control-label col-sm-4">nav</label>
-								<div class="col-sm-6">
-									<select class="form-control" id="ft_navigation">
-										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
-										<option class="lang" data-lang="u_ft_swipes" value="swipe">swipe</option>
-										<option class="lang" data-lang="u_ft_buttons" value="buttons">buttons</option>
-										<option class="lang" data-lang="u_ft_swipes_buttons" value="swipe_buttons">swipe and buttons</option>
-									</select>
-								</div>
-							</div>
-
-							<div class="form-group row">
-								<label for="ft_guidance" data-lang="t_g" class="lang control-label col-sm-4">guide</label>
-								<div class="col-sm-6">
-									<select class="form-control" id="ft_guidance">
-										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
-										<option class="lang" data-lang="c_no" value="no">no</option>
-										<option class="lang" data-lang="u_ft_sa" value="yes always">yes</option>
-										<option class="lang" data-lang="u_ft_sc" value="yes collapsed">collapsed</option>
-									</select>
-								</div>
-							</div>
-
-							<div class="form-group row">
-								<label for="ft_image_size" data-lang="u_ft_img_size" class="lang control-label col-sm-4">image size</label>
-								<div class="col-sm-6">
-									<select class="form-control" id="ft_image_size">
-										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
-										<option class="lang" data-lang="u_ft_img_camera" value="original_image_size">camera</option>
-										<option class="lang" data-lang="u_ft_vs" value="very_small">very small</option>
-										<option class="lang" data-lang="u_ft_s" value="small">small</option>
-										<option class="lang" data-lang="u_ft_m" value="medium">medium</option>
-										<option class="lang" data-lang="u_ft_l" value="large">large</option>
-									</select>
-								</div>
-							</div>
-
-							<div class="form-group row">
-								<label for="ft_login_policy1" data-lang="u_ft_pw_policy" class="lang control-label col-sm-4"></label>
-								<div class="col-sm-6">
-									<select class="form-control" id="ft_login_policy1">
-										<option class="lang" data-lang="u_ft_never" value="never">never</option>
-										<option class="lang" data-lang="u_ft_always" value="always">always</option>
-										<option class="lang" data-lang="u_ft_periodically" value="periodic">periodic</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group row pw_timeout d-none">
-								<label for="ft_login_policy2" data-lang="u_ft_pw_timeout" class="lang col-sm-4 control-label"></label>
-								<div class="col-sm-6">
-									<input type="number" id="ft_login_policy2">
-								</div>
-							</div>
-
-							<div class="form-group row">
-								<label for="ft_number_tasks" data-lang="u_ft_tasks" class="lang col-sm-4 control-label">max tasks</label>
-								<div class="col-sm-6">
-									<input type="number" id="ft_number_tasks">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label data-lang="u_ft_os" class="lang col-sm-4 control-label">odk menus</label>
-								<div class="col-sm-6">
-									<div class="checkbox">
-										<input type="checkbox" name="devoption" class="devoption" value="ft_odk_style_menus">
-									</div>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label data-lang="u_ft_am" class="lang col-sm-4 control-label">admin menu</label>
-								<div class="col-sm-6">
-									<div class="checkbox">
-										<input type="checkbox" name="devoption" class="devoption" value="ft_admin_menu">
-									</div>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label data-lang="u_ft_ss" class="lang col-sm-4 control-label">ss menu</label>
-								<div class="col-sm-6">
-									<div class="checkbox">
-										<input type="checkbox" name="devoption" class="devoption" value="ft_server_menu">
-									</div>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label data-lang="u_ft_md" class="lang col-sm-4 control-label">md menu</label>
-								<div class="col-sm-6">
-									<div class="checkbox">
-										<input type="checkbox" name="devoption" class="devoption" value="ft_meta_menu">
-									</div>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label data-lang="u_ft_ex" class="lang col-sm-4 control-label"></label>
-								<div class="col-sm-6">
-									<div class="checkbox">
-										<input type="checkbox" name="devoption" class="devoption" value="ft_exit_track_menu">
-									</div>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label data-lang="u_ft_bgs" class="lang col-sm-4 control-label"></label>
-								<div class="col-sm-6">
-									<div class="checkbox">
-										<input type="checkbox" name="devoption" class="devoption" value="ft_bg_stop_menu">
-									</div>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label data-lang="u_ft_in" class="lang col-sm-4 control-label">instance name</label>
-								<div class="col-sm-6">
-									<div class="checkbox">
-										<input type="checkbox" name="devoption" class="devoption" value="ft_specify_instancename">
-									</div>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label data-lang="u_ft_mf" class="lang col-sm-4 control-label">finalize</label>
-								<div class="col-sm-6">
-									<div class="checkbox">
-										<input type="checkbox" name="devoption" class="devoption" value="ft_mark_finalized">
-									</div>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label data-lang="u_ft_prev_track_dis" class="lang col-sm-4 control-label"></label>
-								<div class="col-sm-6">
-									<div class="checkbox">
-										<input type="checkbox" name="devoption" class="devoption" value="ft_prevent_disable_track">
-									</div>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label data-lang="u_ft_eg" class="lang col-sm-4 control-label"></label>
-								<div class="col-sm-6">
-									<div class="checkbox">
-										<input type="checkbox" name="devoption" class="devoption" value="ft_enable_geofence">
-									</div>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="ft_send_location" data-lang="u_ft_ld" class="lang control-label col-sm-4">location</label>
-								<div class="col-sm-6">
-									<select class="form-control" id="ft_send_location">
-										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
-										<option class="lang" data-lang="c_off" value="off">off</option>
-										<option class="lang" data-lang="c_on" value="on">on</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="ft_input_method" data-lang="u_ft_im" class="lang control-label col-sm-4">input method</label>
-								<div class="col-sm-6">
-									<select class="form-control" id="ft_input_method">
-										<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
-										<option class="lang" data-lang="u_ft_im_pt" value="pt">pt</option>
-										<option class="lang" data-lang="u_ft_im_man" value="man">man</option>
-										<option class="lang" data-lang="u_ft_im_auto" value="auto">auto</option>
-									</select>
-								</div>
-							</div>
-							<div class="u_ft_im_auto d-none">
+						<div class="card mb-3">
+							<div class="card-header">Security</div>
+							<p class="text-muted small mb-0">Access protection and authentication policies.</p>
+							<div class="card-body">
 								<div class="form-group row">
-									<label for="ft_im_ri" data-lang="u_ri" class="lang col-sm-4 control-label">interval</label>
-									<div class="col-sm-4">
-										<select class="form-control" id="ft_im_ri"> <!-- Uses an index to an array as per FT -->
-											<option value="0">1</option>
-											<option value="1">5</option>
-											<option value="2">10</option>
-											<option value="3">20</option>
-											<option value="4">30</option>
-											<option value="5">60</option>
-											<option value="6">300</option>
-											<option value="7">600</option>
-											<option value="8">1200</option>
-											<option value="9">1800</option>
-										</select>
+									<label data-lang="u_ft_ft" class="lang col-sm-4 control-label"></label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" name="devoption" class="devoption" value="ft_force_token">
+										</div>
 									</div>
-									<p class="lang col-sm-4" data-lang="d_sec"></p>
 								</div>
 								<div class="form-group row">
-									<label for="ft_im_acc" data-lang="c_accuracy" class="lang col-sm-4 control-label">acc</label>
-									<div class="col-sm-4">
-										<select class="form-control" id="ft_im_acc"> <!-- Uses an index to an array as per FT -->
-											<option value="0">0</option>
-											<option value="1">3</option>
-											<option value="2">5</option>
-											<option value="3">10</option>
-											<option value="4">15</option>
-											<option value="5">20</option>
+									<label for="ft_login_policy1" data-lang="u_ft_pw_policy" class="lang control-label col-sm-4"></label>
+									<div class="col-sm-6">
+										<select class="form-control" id="ft_login_policy1">
+											<option class="lang" data-lang="u_ft_never" value="never">never</option>
+											<option class="lang" data-lang="u_ft_always" value="always">always</option>
+											<option class="lang" data-lang="u_ft_periodically" value="periodic">periodic</option>
 										</select>
 									</div>
-									<p class="lang col-sm-4" data-lang="c_meters"></p>
+								</div>
+								<div class="form-group row pw_timeout d-none">
+									<label for="ft_login_policy2" data-lang="u_ft_pw_timeout" class="lang col-sm-4 control-label"></label>
+									<div class="col-sm-6">
+										<input type="number" id="ft_login_policy2">
+									</div>
+								</div>
+								<div class="form-group row">
+									<label data-lang="u_ft_in" class="lang col-sm-4 control-label">instance name</label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" name="devoption" class="devoption" value="ft_specify_instancename">
+										</div>
+									</div>
 								</div>
 							</div>
-						</form>
+						</div>
+
+						<div class="card mb-3">
+							<div class="card-header">Menus & Navigation</div>
+							<p class="text-muted small mb-0">Expose or hide in-app menus and navigation controls.</p>
+							<div class="card-body">
+								<div class="form-group row">
+									<label data-lang="u_ft_os" class="lang col-sm-4 control-label">odk menus</label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" name="devoption" class="devoption" value="ft_odk_style_menus">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label data-lang="u_ft_am" class="lang col-sm-4 control-label">admin menu</label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" name="devoption" class="devoption" value="ft_admin_menu">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label data-lang="u_ft_ss" class="lang col-sm-4 control-label">ss menu</label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" name="devoption" class="devoption" value="ft_server_menu">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label data-lang="u_ft_md" class="lang col-sm-4 control-label">md menu</label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" name="devoption" class="devoption" value="ft_meta_menu">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label data-lang="u_ft_ex" class="lang col-sm-4 control-label"></label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" name="devoption" class="devoption" value="ft_exit_track_menu">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label data-lang="u_ft_bgs" class="lang col-sm-4 control-label"></label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" name="devoption" class="devoption" value="ft_bg_stop_menu">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="ft_navigation" data-lang="u_ft_nav" class="lang control-label col-sm-4">nav</label>
+									<div class="col-sm-6">
+										<select class="form-control" id="ft_navigation">
+											<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+											<option class="lang" data-lang="u_ft_swipes" value="swipe">swipe</option>
+											<option class="lang" data-lang="u_ft_buttons" value="buttons">buttons</option>
+											<option class="lang" data-lang="u_ft_swipes_buttons" value="swipe_buttons">swipe and buttons</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="ft_guidance" data-lang="t_g" class="lang control-label col-sm-4">guide</label>
+									<div class="col-sm-6">
+										<select class="form-control" id="ft_guidance">
+											<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+											<option class="lang" data-lang="c_no" value="no">no</option>
+											<option class="lang" data-lang="u_ft_sa" value="yes always">yes</option>
+											<option class="lang" data-lang="u_ft_sc" value="yes collapsed">collapsed</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="ft_backward_navigation" data-lang="u_ft_back_nav" class="lang control-label col-sm-4">backward</label>
+									<div class="col-sm-6">
+										<select class="form-control" id="ft_backward_navigation">
+											<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+											<option class="lang" data-lang="c_dis" value="disable">disable</option>
+											<option class="lang" data-lang="c_en" value="enable">enable</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="card mb-3">
+							<div class="card-header">Form Completion</div>
+							<p class="text-muted small mb-0">How forms are reviewed, finalized, and cleaned up.</p>
+							<div class="card-body">
+								<div class="form-group row">
+									<label data-lang="u_ft_rv" class="lang col-sm-4 control-label"></label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" name="devoption" class="devoption" value="ft_review_final">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label data-lang="u_ft_mf" class="lang col-sm-4 control-label">finalize</label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" name="devoption" class="devoption" value="ft_mark_finalized">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="ft_delete" data-lang="u_ft_del" class="lang control-label col-sm-4">delete</label>
+									<div class="col-sm-6">
+										<select class="form-control" id="ft_delete">
+											<option class="lang" data-lang="u_ft_sop" value="not set">nd</option>
+											<option class="lang" data-lang="c_off" value="off">off</option>
+											<option class="lang" data-lang="c_on" value="on">on</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="ft_number_tasks" data-lang="u_ft_tasks" class="lang col-sm-4 control-label">max tasks</label>
+									<div class="col-sm-6">
+										<input type="number" id="ft_number_tasks">
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="card mb-3">
+							<div class="card-header">Sync & Connectivity</div>
+							<p class="text-muted small mb-0">Network and sync behavior for submissions.</p>
+							<div class="card-body">
+								<div class="form-group row">
+									<label for="ft_send" data-lang="u_ft_as" class="lang control-label col-sm-4">synchronise</label>
+									<div class="col-sm-6">
+										<select class="form-control" id="ft_send">
+											<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+											<option class="lang" data-lang="c_off" value="off">off</option>
+											<option class="lang" data-lang="u_ft_sw" value="wifi_only">wifi</option>
+											<option class="lang" data-lang="u_ft_sw_c" value="wifi_and_cellular">wifi cell</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="card mb-3">
+							<div class="card-header">Media</div>
+							<p class="text-muted small mb-0">Capture quality and file sizing for media.</p>
+							<div class="card-body">
+								<div class="form-group row">
+									<label for="ft_high_res_video" data-lang="u_ft_hrv" class="lang control-label col-sm-4">hrv</label>
+									<div class="col-sm-6">
+										<select class="form-control" id="ft_high_res_video">
+											<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+											<option class="lang" data-lang="c_off" value="off">off</option>
+											<option class="lang" data-lang="c_on" value="on">on</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="ft_image_size" data-lang="u_ft_img_size" class="lang control-label col-sm-4">image size</label>
+									<div class="col-sm-6">
+										<select class="form-control" id="ft_image_size">
+											<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+											<option class="lang" data-lang="u_ft_img_camera" value="original_image_size">camera</option>
+											<option class="lang" data-lang="u_ft_vs" value="very_small">very small</option>
+											<option class="lang" data-lang="u_ft_s" value="small">small</option>
+											<option class="lang" data-lang="u_ft_m" value="medium">medium</option>
+											<option class="lang" data-lang="u_ft_l" value="large">large</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="card mb-3">
+							<div class="card-header">Tracking & Geolocation</div>
+							<p class="text-muted small mb-0">Location capture, geofencing, and tracking safeguards.</p>
+							<div class="card-body">
+								<div class="form-group row">
+									<label data-lang="u_ft_prev_track_dis" class="lang col-sm-4 control-label"></label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" name="devoption" class="devoption" value="ft_prevent_disable_track">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label data-lang="u_ft_eg" class="lang col-sm-4 control-label"></label>
+									<div class="col-sm-6">
+										<div class="checkbox">
+											<input type="checkbox" name="devoption" class="devoption" value="ft_enable_geofence">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="ft_send_location" data-lang="u_ft_ld" class="lang control-label col-sm-4">location</label>
+									<div class="col-sm-6">
+										<select class="form-control" id="ft_send_location">
+											<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+											<option class="lang" data-lang="c_off" value="off">off</option>
+											<option class="lang" data-lang="c_on" value="on">on</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="ft_input_method" data-lang="u_ft_im" class="lang control-label col-sm-4">input method</label>
+									<div class="col-sm-6">
+										<select class="form-control" id="ft_input_method">
+											<option class="lang" data-lang="u_ft_sop" value="not set">ns</option>
+											<option class="lang" data-lang="u_ft_im_pt" value="pt">pt</option>
+											<option class="lang" data-lang="u_ft_im_man" value="man">man</option>
+											<option class="lang" data-lang="u_ft_im_auto" value="auto">auto</option>
+										</select>
+									</div>
+								</div>
+								<div class="u_ft_im_auto d-none">
+									<div class="form-group row">
+										<label for="ft_im_ri" data-lang="u_ri" class="lang col-sm-4 control-label">interval</label>
+										<div class="col-sm-4">
+											<select class="form-control" id="ft_im_ri"> <!-- Uses an index to an array as per FT -->
+												<option value="0">1</option>
+												<option value="1">5</option>
+												<option value="2">10</option>
+												<option value="3">20</option>
+												<option value="4">30</option>
+												<option value="5">60</option>
+												<option value="6">300</option>
+												<option value="7">600</option>
+												<option value="8">1200</option>
+												<option value="9">1800</option>
+											</select>
+										</div>
+										<p class="lang col-sm-4" data-lang="d_sec"></p>
+									</div>
+									<div class="form-group row">
+										<label for="ft_im_acc" data-lang="c_accuracy" class="lang col-sm-4 control-label">acc</label>
+										<div class="col-sm-4">
+											<select class="form-control" id="ft_im_acc"> <!-- Uses an index to an array as per FT -->
+												<option value="0">0</option>
+												<option value="1">3</option>
+												<option value="2">5</option>
+												<option value="3">10</option>
+												<option value="4">15</option>
+												<option value="5">20</option>
+											</select>
+										</div>
+										<p class="lang col-sm-4" data-lang="c_meters"></p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+
 						<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
 						<button id="saveDevice" class="btn btn-success lang mt-4" data-lang="c_save">save</button>
 
