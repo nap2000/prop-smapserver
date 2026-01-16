@@ -310,8 +310,6 @@ require([
 					device.ft_prevent_disable_track = true;
 				}  else if(options[i] === "ft_enable_geofence") {
 					device.ft_enable_geofence = true;
-				} else if(options[i] === "ft_admin_menu") {
-					device.ft_admin_menu = true;
 				} else if(options[i] === "ft_server_menu") {
 					device.ft_server_menu = true;
 				} else if(options[i] === "ft_meta_menu") {
@@ -919,8 +917,6 @@ require([
 							this.checked = device.ft_prevent_disable_track;
 						} else if ($(this).val() === "ft_enable_geofence") {
 							this.checked = device.ft_enable_geofence;
-						} else if ($(this).val() === "ft_admin_menu") {
-							this.checked = device.ft_admin_menu;
 						} else if ($(this).val() === "ft_server_menu") {
 							this.checked = device.ft_server_menu;
 						} else if ($(this).val() === "ft_meta_menu") {

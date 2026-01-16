@@ -1617,8 +1617,6 @@ require([
 					this.checked = org.ft_prevent_disable_track;
 				} else if($(this).val() === "ft_enable_geofence") {
 					this.checked = org.ft_enable_geofence;
-				} else if($(this).val() === "ft_admin_menu") {
-					this.checked = org.ft_admin_menu;
 				} else if($(this).val() === "ft_server_menu") {
 					this.checked = org.ft_server_menu;
 				} else if($(this).val() === "ft_meta_menu") {
