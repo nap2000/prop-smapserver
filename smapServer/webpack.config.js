@@ -5,7 +5,8 @@ module.exports = {
   devtool: false,
   entry: {
     edit: "./WebContent/js/edit.js",
-    resources: "./WebContent/js/resources.js"
+    resources: "./WebContent/js/resources.js",
+    index: "./WebContent/js/index.js"
   },
   output: {
     filename: "[name].bundle.js",

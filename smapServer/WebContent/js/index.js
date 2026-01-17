@@ -1,66 +1,63 @@
 var gUserLocale = navigator.language;
-if (typeof(localStorage) !== "undefined") {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
+"use strict";
 
+import localise from "./app/localise";
+import globals from "./app/globals";
 
-require.config({
-    baseUrl: 'js/libs',
-    waitSeconds: 0,
-    locale: gUserLocale,
-    paths: {
-    	app: '../app',
-	    jquery: 'jquery',
-    	lang_location: '..'
-    },
-    shim: {
-    	'app/common': ['jquery']
-    }
+const $ = window.$;
+
+var gUserLocale = navigator.language;
+if (typeof localStorage !== "undefined") {
+	try {
+		gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+	} catch (error) {
+		gUserLocale = navigator.language;
+	}
+}
+window.gUserLocale = gUserLocale;
+
+localise.initLocale(gUserLocale).then(function () {
+	var params,
+		pArray = [],
+		param = [],
+		i,
+		androidVersion;
+
+	localise.setlang();
+	setTheme();
+	setLogo();    // Show default logo
+
+	/*
+     * If the user is logged in then get their details
+     */
+	isLoggedIn();
+
+	// Remove any service workers - this should only be a temporary fix until no existing users have the service worker version
+	removeServiceWorker();
+
+	// Get the server version
+	getServerVersion();
+
+	/*
+     * Enable self registration
+     */
+	if(isSelfRegistrationServer()) {
+		$('#signup').show().removeClass('d-none');
+	} else {
+		$('#signup').hide();
+	}
+
+	/*
+     * Add links to download fieldTask
+     */
+	androidVersion = parseFloat(getAndroidVersion());
+	if(androidVersion == 0 || androidVersion >= 4.1) {		// Default to downloading the new APK
+		$('.ftapk').attr("href", "fieldTask.apk");
+	} else {
+		$('.ftapk').attr("href", "fieldTaskPreJellyBean.apk");
+	}
+
 });
-
-require(['jquery', 'app/localise', 'app/common','app/globals'],
-	function($,  localise, common, globals) {
-
-		var params,
-			pArray = [],
-			param = [],
-			i,
-			androidVersion;
-
-		setTheme();
-		setLogo();    // Show default logo
-
-		/*
-         * If the user is logged in then get their details
-         */
-		isLoggedIn();
-
-		// Remove any service workers - this should only be a temporary fix until no existing users have the service worker version
-		removeServiceWorker();
-
-		// Get the server version
-		getServerVersion();
-
-		/*
-         * Enable self registration
-         */
-		if(isSelfRegistrationServer()) {
-			$('#signup').show().removeClass('d-none');
-		} else {
-			$('#signup').hide();
-		}
-
-		/*
-         * Add links to download fieldTask
-         */
-		androidVersion = parseFloat(getAndroidVersion());
-		if(androidVersion == 0 || androidVersion >= 4.1) {		// Default to downloading the new APK
-			$('.ftapk').attr("href", "fieldTask.apk");
-		} else {
-			$('.ftapk').attr("href", "fieldTaskPreJellyBean.apk");
-		}
-
- });
 
 function isLoggedIn() {
 	$.ajax({
