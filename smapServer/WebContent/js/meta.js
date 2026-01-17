@@ -16,133 +16,120 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-}
-
 "use strict";
-require.config({
-	baseUrl: 'js/libs',
-	waitSeconds: 0,
-	locale: gUserLocale,
-	paths: {
-		app: '../app',
-		lang_location: '..'
-	},
-	shim: {
-		'app/common': ['jquery']
+
+import localise from "./app/localise";
+import globals from "./app/globals";
+
+const $ = window.$;
+
+var gUserLocale = navigator.language;
+if (typeof localStorage !== "undefined") {
+	try {
+		gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+	} catch (error) {
+		gUserLocale = navigator.language;
 	}
-});
+}
+window.gUserLocale = gUserLocale;
 
-require([
-		'jquery',
-		'app/common',
-		'modernizr',
-		'app/localise',
-		'app/ssc',
-		'app/globals'],
-	function($, common, modernizr, localise, ssc, globals) {
+var gMode = "survey",
+	gIdx;
 
-		var	gMode = "survey",
-			gIdx;;
+localise.initLocale(gUserLocale).then(function () {
+	setCustomChanges();
+	setTheme();
+	setupUserProfile(true);
+	localise.setlang();		// Localise HTML
 
-		$(document).ready(function() {
+	// Get the user details
+	getLoggedInUser(surveyListDone, false, true, undefined, false, false);
 
-			setCustomChanges();
-			setTheme();
-			setupUserProfile(true);
-			localise.setlang();		// Localise HTML
+	// Add menu functions
+	$('#m_open').off().click(function() {	// Open an existing form
+		openForm("existing");
+	});
 
-			// Get the user details
-			getLoggedInUser(surveyListDone, false, true, undefined, false, false);
+	// Add menu functions
+	$('#m_simple_edit').off().click(function() {	// Edit a survey
+		gMode = "simple_edit";
+		refreshView(gMode);
+	});
 
-			// Add menu functions
-			$('#m_open').off().click(function() {	// Open an existing form
-				openForm("existing");
-			});
+	$('#addPreload').off().click(function() {
+		$('#metaForm')[0].reset();
+		$('#addModal').modal('show');
+	});
 
-			// Add menu functions
-			$('#m_simple_edit').off().click(function() {	// Edit a survey
-				gMode = "simple_edit";
-				refreshView(gMode);
-			});
+	$('#saveMetaItem').click(function() {
 
-			$('#addPreload').off().click(function() {
-				$('#metaForm')[0].reset();
-				$('#addModal').modal('show');
-			});
+		var item = {
+			name: $('#item_name').val(),
+			display_name: $('#item_display_name').val(),
+			sourceParam: $('#item_source_param').val()
+		};
 
-			$('#saveMetaItem').click(function() {
+		// Validate
+		if(!item.name || item.name.trim().length === 0) {
+			alert(localise.set["msg_val_nm"]);
+			return;
+		}
 
-				var item = {
-					name: $('#item_name').val(),
-					display_name: $('#item_display_name').val(),
-					sourceParam: $('#item_source_param').val()
-				};
+		if(item.name === "_user" || item.name === "_hrk"
+				|| item.name === "_upload_time"
+				|| item.name === "prikey"
+				|| item.name === "_version") {
+			var msg = localise.set["msg_res_name"];
+			msg = msg.replace("%s1", item.name);
+			alert(msg);
+			return;
+		}
+		if(!isValidODKQuestionName(item.name)) {
+			alert(localise.set["ed_vq"]);
+			return;
+		}
 
-				// Validate
-				if(!item.name || item.name.trim().length === 0) {
-					alert(localise.set["msg_val_nm"]);
-					return;
-				}
+		// Settings
+		var set = [];
+		var pdfNo = $('#a_pdfno').prop('checked');
+		if(pdfNo) {
+			set.push('pdfno');
+		}
+		if(item.sourceParam === 'background-audio') {
+			var quality = $('#item_audio_quality').val();
+			if(quality !== 'default') {
+				set.push('quality=' + quality);
+			}
+		}
+		item.settings = set.join(' ');
 
-				if(item.name === "_user" || item.name === "_hrk"
-						|| item.name === "_upload_time"
-						|| item.name === "prikey"
-						|| item.name === "_version") {
-					var msg = localise.set["msg_res_name"];
-					msg = msg.replace("%s1", item.name);
-					alert(msg);
-					return;
-				}
-				if(!isValidODKQuestionName(item.name)) {
-					alert(localise.set["ed_vq"]);
-					return;
-				}
+		updateMetaItem(item, surveyListDone);
 
-				// Settings
-				var set = [];
-				var pdfNo = $('#a_pdfno').prop('checked');
-				if(pdfNo) {
-					set.push('pdfno');
-				}
-				if(item.sourceParam === 'background-audio') {
-					var quality = $('#item_audio_quality').val();
-					if(quality !== 'default') {
-						set.push('quality=' + quality);
-					}
-				}
-				item.settings = set.join(' ');
+		$('#addModal').modal("hide");
+	});
 
-				updateMetaItem(item, surveyListDone);
+	// Add responses to events
+	$('#project_name').change(function() {
+		globals.gCurrentProject = $('#project_name option:selected').val();
+		globals.gCurrentSurvey = -1;
+		globals.gCurrentTaskGroup = undefined;
 
-				$('#addModal').modal("hide");
-			});
+		saveCurrentProject(globals.gCurrentProject,
+			globals.gCurrentSurvey,
+			globals.gCurrentTaskGroup);
 
-			// Add responses to events
-			$('#project_name').change(function() {
-				globals.gCurrentProject = $('#project_name option:selected').val();
-				globals.gCurrentSurvey = -1;
-				globals.gCurrentTaskGroup = undefined;
+		getSurveyList();
+	});
 
-				saveCurrentProject(globals.gCurrentProject,
-					globals.gCurrentSurvey,
-					globals.gCurrentTaskGroup);
-
-				getSurveyList();
-			});
-
+	$('.item_audio').hide();
+	$('#item_source_param').change(function(){
+		if($('#item_source_param').val() === 'background-audio') {
+			$('.item_audio').show();
+		} else {
 			$('.item_audio').hide();
-			$('#item_source_param').change(function(){
-				if($('#item_source_param').val() === 'background-audio') {
-					$('.item_audio').show();
-				} else {
-					$('.item_audio').hide();
-				}
-			});
+		}
+	});
 
-		});
 
 		function getSurveyList() {
 			console.log("getSurveyList: " + globals.gCurrentSurvey);

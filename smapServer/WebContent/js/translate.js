@@ -16,46 +16,32 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
-
 "use strict";
-require.config({
-    baseUrl: 'js/libs',
-    waitSeconds: 0,
-    locale: gUserLocale,
-    paths: {
-    	app: '../app',
-    	bootbox: 'bootbox.min',
-    	lang_location: '..'
-    },
-    shim: {
-    	'app/common': ['jquery'],
-        'jquery.autosize.min': ['jquery']
-    }
-});
 
-require([
-         'jquery',
-         'app/common',
-         'modernizr',
-         'app/localise',
-         'app/ssc',
-         'app/globals',
-         'app/changeset',
-         'bootbox',
-         'app/aws',
-         'jquery.autosize.min'], 
-		function($, common, modernizr, lang, ssc, globals, changeset, bootbox, aws) {
+import bootbox from "./libs/bootbox.min";
+import localise from "./app/localise";
+import globals from "./app/globals";
+import changeset from "./app/changeset";
+import aws from "./app/aws";
+import "./libs/jquery.autosize.min";
 
+const $ = window.$;
+
+var gUserLocale = navigator.language;
+if (typeof localStorage !== "undefined") {
+	try {
+		gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+	} catch (error) {
+		gUserLocale = navigator.language;
+	}
+}
+window.gUserLocale = gUserLocale;
+window.bootbox = bootbox;
 
 var	gMode = "survey",
 	gTempLanguageItems = [];
 
-$(document).ready(function() {
-
+localise.initLocale(gUserLocale).then(function () {
 	setCustomEdit();
 	setTheme();
 	setupUserProfile(true);
@@ -100,7 +86,7 @@ $(document).ready(function() {
 				$('#autoTranslateModal').modal("show");
 			}
 		} else {
-			alert(localise.set["ed_sct"]);
+			bootbox.alert(localise.set["ed_sct"]);
 		}
 	});
 	
@@ -108,16 +94,16 @@ $(document).ready(function() {
 		globals.gLanguage1 = $('#language1').val();
 		globals.gLanguage2 = $('#language2').val();
 		refreshView(gMode);
- 	 });
+  	 });
 	
 
 	// Check for selection of the label indicating successful updates and the one indicating failed
 	$('#successLabel').off().click(function() {
-		alert("success");
+		bootbox.alert("success");
 	});
 	// Check for selection of the label indicating successful updates and the one indicating failed
 	$('#failedLabel').off().click(function() {
-		alert("failed");
+		bootbox.alert("failed");
 	});
 	
     /*
@@ -127,7 +113,7 @@ $(document).ready(function() {
 		globals.gCurrentSurvey = $('#survey_name option:selected').val();
 		saveCurrentProject(globals.gCurrentProject, globals.gCurrentSurvey);	// Save the current survey id
 		getSurveyDetails(refreshView, false, true);
- 	 });
+  	 });
 
 	$('#translateGo').off().click(function() {
 		if(!$(this).hasClass('disabled')) {
@@ -136,8 +122,8 @@ $(document).ready(function() {
 	});
 
 	/*
- 	 * Add check prior to the user leaving the screen
- 	 */
+  	 * Add check prior to the user leaving the screen
+  	 */
 	window.onbeforeunload = function() {
 		if(globals.changes.length > 0) {
 			return localise.set["msg_leave"];
@@ -146,7 +132,6 @@ $(document).ready(function() {
 		}
 	};
 
-});
 
 function surveyListDone() {
 	getSurveyDetails(refreshView, false, true);
@@ -208,7 +193,7 @@ function saveTranslations(callback) {
 				h[++idx] = '</p>';
 				h[++idx] = '<ol>';
 				for(i = 0; i < data.changeSet.length; i++) {
-					h[++idx] = htmlEncode(changeset.addUpdateMessage(data.changeSet[i], false));
+					h[++idx] = changeset.addUpdateMessage(data.changeSet[i], false);
 				}
 				h[++idx] = '</ol>';
 				h[++idx] = '</div>';
@@ -219,7 +204,7 @@ function saveTranslations(callback) {
 				h[++idx] = " " + localise.set["ed_csf"];
 				h[++idx] = '<ol>';
 				for(i = 0; i < data.changeSet.length; i++) {
-					h[++idx] = htmlEncode(changeset.addUpdateMessage(data.changeSet[i], true));
+					h[++idx] = changeset.addUpdateMessage(data.changeSet[i], true);
 				}
 				h[++idx] = '</ol>';
 				h[++idx] = '</div>';
@@ -234,16 +219,16 @@ function saveTranslations(callback) {
 			if(xhr.readyState === 0 || xhr.status === 0) {
 	              return;  // Not an error
 			} else {
-				alert(localise.set["msg_err_save"] + ' ' + err);
+				bootbox.alert(localise.set["msg_err_save"] + ' ' + err);
 			}
 					
 			if(typeof responseFn === "function") { 
 				responseFn();
 			}
 		}
-	});	
-	
-};
+
+	});
+}
 
 function refreshView() {
 	
@@ -509,9 +494,9 @@ function autoTranslate() {
 				return;  // Not an error
 			} else {
 				if(xhr.responseText.indexOf("<html>") > 0) {
-					alert(localise.set["msg_trans_to"]);
+					bootbox.alert(localise.set["msg_trans_to"]);
 				} else {
-					alert(xhr.responseText);
+					bootbox.alert(xhr.responseText);
 				}
 
 			}

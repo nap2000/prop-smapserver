@@ -16,46 +16,30 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
-
 "use strict";
-require.config({
-    baseUrl: 'js/libs',
-    waitSeconds: 0,
-    locale: gUserLocale,
-    paths: {
-    	app: '../app',
-    	lang_location: '..',
-    	icheck: './wb/plugins/iCheck/icheck.min',
-    },
-    shim: {
-    	'app/common': ['jquery'],
-        'jquery.autosize.min': ['jquery'],
-      	'icheck': ['jquery']
-    }
-});
 
-require([
-         'jquery',
-         'app/common',
-         'modernizr',
-         'app/localise',
-         'app/ssc',
-         'app/globals',
-         'icheck',
-         'jquery.autosize.min'],
-function($, common, modernizr, lang, ssc, globals) {
+import localise from "./app/localise";
+import globals from "./app/globals";
+import "./libs/wb/plugins/iCheck/icheck.min";
+import "./libs/jquery.autosize.min";
 
+const $ = window.$;
+
+var gUserLocale = navigator.language;
+if (typeof localStorage !== "undefined") {
+	try {
+		gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+	} catch (error) {
+		gUserLocale = navigator.language;
+	}
+}
+window.gUserLocale = gUserLocale;
 
 var	gCache = {},
 	gRoles,
 	gIdx;
 
-$(document).ready(function() {
-	
+localise.initLocale(gUserLocale).then(function () {
 	var i,
 		params,
 		pArray = [],
@@ -101,8 +85,8 @@ $(document).ready(function() {
         globals.gCurrentProject = $(this).val();
         globals.gCurrentSurvey = 0;
 		projectChanged();
- 	 });
-	
+	});
+
 	// Set change function on survey
 	$('#survey_name').change(function() {
 		globals.gCurrentSurvey = $('#survey_name option:selected').val();
@@ -134,8 +118,6 @@ $(document).ready(function() {
 			applyRolesToBundle(false);
 		}
 	})
-});
-
 function projectChanged() {
 	loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChangedRoles, false, undefined, undefined, true);			// Get surveys
 }

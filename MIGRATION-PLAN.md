@@ -56,3 +56,5 @@
 - Disable splitChunks/runtime while multiple entries are in flux; keep single `edit.bundle.js` + `resources.bundle.js` until shared chunks are planned.
 - `resources.html` now loads `moment-with-locales.2.24.0.min.js` via script tag; webpack bundle is minimal and relies on global `moment`.
 - Import Bootbox as module and assign `window.bootbox` so alerts render HTML; avoid `alert()` fallback.
+- Translate save alerts should not `htmlEncode` change messages or tags show up.
+- When converting from RequireJS, ensure handler blocks are still closed; missing `});` can skip later bindings.

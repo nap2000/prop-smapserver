@@ -6,7 +6,12 @@ module.exports = {
   entry: {
     edit: "./WebContent/js/edit.js",
     resources: "./WebContent/js/resources.js",
-    index: "./WebContent/js/index.js"
+    index: "./WebContent/js/index.js",
+    meta: "./WebContent/js/meta.js",
+    register: "./WebContent/js/register.js",
+    survey_roles: "./WebContent/js/survey_roles.js",
+    translate: "./WebContent/js/translate.js",
+    logout: "./WebContent/js/logout.js"
   },
   output: {
     filename: "[name].bundle.js",
