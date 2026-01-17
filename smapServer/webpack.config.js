@@ -4,7 +4,8 @@ module.exports = {
   mode: "development",
   devtool: false,
   entry: {
-    edit: "./WebContent/js/edit.js"
+    edit: "./WebContent/js/edit.js",
+    resources: "./WebContent/js/resources.js"
   },
   output: {
     filename: "[name].bundle.js",
@@ -22,16 +23,7 @@ module.exports = {
     }
   },
   optimization: {
-    splitChunks: {
-      chunks: "all",
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]WebContent[\\/]js[\\/]libs[\\/]/,
-          name: "vendor",
-          chunks: "all"
-        }
-      }
-    },
-    runtimeChunk: "single"
+    splitChunks: false,
+    runtimeChunk: false
   }
 };

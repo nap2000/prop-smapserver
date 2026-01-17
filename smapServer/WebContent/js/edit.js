@@ -19,7 +19,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 const $ = window.$;
 import "./libs/bootstrap.file-input.js";
-import "./libs/bootbox.5.1.1.min.js";
+import bootbox from "./libs/bootbox.5.1.1.min.js";
 import "./libs/bootstrap-colorpicker.min.js";
 import "./libs/wb/plugins/iCheck/icheck.min.js";
 import localise from "./app/localise";
@@ -31,7 +31,7 @@ import changeset from "./app/changeset";
 import option from "./app/option";
 import aws from "./app/aws";
 
-const bootbox = window.bootbox;
+window.bootbox = bootbox;
 const moment = window.moment;
 
 let gUserLocale = navigator.language;
@@ -89,6 +89,12 @@ $(function() {
 		localise.initLocale(gUserLocale).then(function () {
 			window.gUserLocale = gUserLocale;
 			localise.setlang();		// Localise HTML
+			var $defaultProperty = $('#selProperty a.default').first();
+			if ($defaultProperty.length) {
+				$('#propSelected').html($defaultProperty.html());
+				globals.gSelLabel = $defaultProperty.html();
+				globals.gSelProperty = $defaultProperty.data("prop");
+			}
 
 			// Get the parameters and start editing a survey if one was passed as a parameter
 			params = location.search.substring(location.search.indexOf("?") + 1);

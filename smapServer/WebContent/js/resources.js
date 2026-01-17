@@ -19,44 +19,35 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Purpose: Allow the user to select a web form in order to complete a survey
  */
-var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+"use strict";
+
+import "./libs/bootstrap.file-input.js";
+import localise from "./app/localise";
+import globals from "./app/globals";
+
+const $ = window.$;
+
+let gUserLocale = navigator.language;
+if (typeof localStorage !== "undefined") {
+	try {
+		gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+	} catch (error) {
+		gUserLocale = navigator.language;
+	}
 }
 
-requirejs.config({
-	baseUrl: '/js/libs',
-	waitSeconds: 0,
-	locale: gUserLocale,
-	paths: {
-		app: '../app',
-		lang_location: '..',
-		moment: '../../../../js/libs/moment-with-locales.2.24.0',
-	},
-	shim: {
-		'app/common': ['jquery']
-	}
-});
+window.gUserLocale = gUserLocale;
 
-require([
-	'jquery',
-	'app/common',
-	'app/globals',
-	'app/localise',
-	'bootstrapfileinput',
-	'moment'
-], function($, common, globals, localise, bsfi, moment) {
+let gMaps,
+	gMapVersion,
+	gMapId,
+	gTags,          // NFC tags
+	gCurrentGroup,
+	gIsSurvey;
 
-	let gMaps,
-		gMapVersion,
-		gMapId,
-		gTags,          // NFC tags
-		gCurrentGroup,
-		gIsSurvey;
+$(function() {
 
-	$(document).ready(function() {
-
-		window.moment = moment;		// Make moment global for use by common.js
+		// moment loaded via script tag for common.js
 
 		/*
 	 	 * Get the parameters
@@ -76,10 +67,12 @@ require([
 		setCustomResources();			// Apply custom javascript
 		setTheme();
 		setupUserProfile(true);
-		localise.setlang();		// Localise HTML
-		$('#map_name').attr("placeholder", localise.set["sr_m_ph"]);
-		$('#map_description').attr("placeholder", localise.set["sr_m_d"]);
-		$('#mapid').attr("placeholder", localise.set["sr_m_mb"]);
+		localise.initLocale(gUserLocale).then(function () {
+			localise.setlang();		// Localise HTML
+			$('#map_name').attr("placeholder", localise.set["sr_m_ph"]);
+			$('#map_description').attr("placeholder", localise.set["sr_m_d"]);
+			$('#mapid').attr("placeholder", localise.set["sr_m_mb"]);
+		});
 
 		// Get the user details
 		globals.gCurrentSurvey = undefined;
@@ -645,6 +638,3 @@ require([
 			}
 		});
 	}
-
-});
-

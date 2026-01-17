@@ -215,7 +215,7 @@ export default {
                             h[++idx] = '</div>';
                         }
 
-                        bootbox.alert(h.join(""));
+                        window.bootbox.alert(h.join(""));
                     }
 
                 },
@@ -231,7 +231,7 @@ export default {
                         if (xhr.readyState == 0 || xhr.status == 0) {
                             // Not an error
                         } else {
-                            bootbox.alert(localise.set["msg_err_save"] + ' ' + err);
+                            window.bootbox.alert(localise.set["msg_err_save"] + ' ' + err);
                         }
                     }
                 }
