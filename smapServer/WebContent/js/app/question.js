@@ -22,27 +22,24 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-define([
-         'jquery',
-         'modernizr',
-         'app/localise',
-         'app/globals',
-         'app/editorMarkup',
-         'app/changeset',
-         'app/option'], 
-		function($, modernizr, lang, globals, markup, changeset, option) {
+import $ from "jquery";
+import localise from "./localise";
+import globals from "./globals";
+import markup from "./editorMarkup";
+import changeset from "./changeset";
+import option from "./option";
 
-	return {	
-		init: init,
-		add: add,
-		deleteQuestion: deleteQuestion,
-		addOption: addOption,
-		deleteOption: deleteOption,
-		moveQuestion: moveQuestion,
-		moveBeforeOption: moveBeforeOption,
-		setGroupEnd: setGroupEnd,
-		getSequenceQuestion: getSequenceQuestion
-	};
+export default {	
+	init: init,
+	add: add,
+	deleteQuestion: deleteQuestion,
+	addOption: addOption,
+	deleteOption: deleteOption,
+	moveQuestion: moveQuestion,
+	moveBeforeOption: moveBeforeOption,
+	setGroupEnd: setGroupEnd,
+	getSequenceQuestion: getSequenceQuestion
+};
 	
 	var gEditor;
 
@@ -415,8 +412,9 @@ define([
 			var $this = $(this);
 			return $this.data("id") == index;
 		});
-		
+
 		change = {
+
 				changeType: "option",		// survey | form | language | question | option | (property | label) last two are types of property change
 				action: "delete",
 				option: {
@@ -546,5 +544,3 @@ define([
 		return optionList.oSeq.length;		// Add to end
 	}
 	
-
-});

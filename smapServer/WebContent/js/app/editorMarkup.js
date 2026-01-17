@@ -21,28 +21,25 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-define([
-         'jquery',
-         'modernizr',
-         'app/localise',
-         'app/globals'], 
-		function($, modernizr, lang, globals) {
+import $ from "jquery";
+import localise from "./localise";
+import globals from "./globals";
 
-	var gGroupStacks = [];
-	var linkedQuestions = {};
-	
-	return {	
-		addOneQuestion: addOneQuestion,
-		addPanelStyle: addPanelStyle,
-		addQType: addQType,
-		addQuestions: addQuestions,
-		addMedia: addMedia,
-		refresh: refresh,
-		includeQuestion: includeQuestion,
-		addQuestionSequence: addQuestionSequence,
-		getLinkedQuestions: getLinkedQuestions,
-		refreshQuestionFeaturedProperties: refreshQuestionFeaturedProperties
-	};
+let gGroupStacks = [];
+const linkedQuestions = {};
+
+export default {	
+	addOneQuestion: addOneQuestion,
+	addPanelStyle: addPanelStyle,
+	addQType: addQType,
+	addQuestions: addQuestions,
+	addMedia: addMedia,
+	refresh: refresh,
+	includeQuestion: includeQuestion,
+	addQuestionSequence: addQuestionSequence,
+	getLinkedQuestions: getLinkedQuestions,
+	refreshQuestionFeaturedProperties: refreshQuestionFeaturedProperties
+};
 	
 	/*
 	 * Add a single question
@@ -1039,7 +1036,7 @@ define([
 			}, 0);
 		} else {
 			addHourglass();
-		 	$.ajax({
+			$.ajax({
 				url: "/surveyKPI/questionList/" + surveyId + "/none",	// Will use the default language
 				cache: false,
 				dataType: 'json',
@@ -1050,15 +1047,17 @@ define([
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
-	  				if(xhr.readyState == 0 || xhr.status == 0) {
-			              return;  // Not an error
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
 					} else {
 						bootbox.alert("Error failed to get questions for survey:" + surveyId);
 						$("#" + questionId).find(".linkedQuestion").html("");
 					}
 				}
 			});
+
 		}
+
 		
 	}
 	
@@ -1095,5 +1094,3 @@ define([
 		
 		$("#" + questionId).find(".linkedQuestion").html(h.join(''));
 	}
-
-});

@@ -19,8 +19,10 @@
 /*
  * Quick solution to issue of legacy globals after migrating to AMD / require.js
  */
-define(function () {
-    window.globals = {
+(function () {
+    var globals;
+
+    globals = window.globals = {
 
         // Security groups
         GROUP_ADMIN: 1,
@@ -154,7 +156,6 @@ define(function () {
 
     }
 
-    return window.globals;
 
     function Selector() {
 
@@ -1295,4 +1296,8 @@ define(function () {
         }
 
     }
-});
+
+    return globals;
+})();
+
+export default window.globals;

@@ -48,6 +48,8 @@
 - Always retain full page functionality: keep existing event handlers and logic intact. If refactoring wrappers, ensure the body of each entry file is preserved. Prefer reverting to the last known good version if functionality drops, then re-apply minimal import/bootstrap changes.
 
 ## Lessons Learned from pilot
-- Avoid importing/exporting functions already defined locally to prevent duplicate declarations; align on a single source of truth per function.
-- Audit real usage before removing plugins; if unused, drop them deliberately. If uncertain, keep until confirmed.
-- Export shared helpers from `common.js`/`theme.js`/`custom.js` and import explicitly, but only after verifying the destination files do not redefine them.
+- Use webpack externals for `jquery` so legacy plugins (bootstrap, multiselect, toggle) stay attached to the global jQuery instance.
+- AMD locale files contain comments; loading via dynamic `<script>` + `define` capture avoids CSP `unsafe-eval` and JSON parse errors.
+- Watch for `const`→`let` conversions in migrated modules (legacy code mutates arrays like `gGroupStacks`, `modelGeneratedChanges`).
+- Keep `bootstrap4-toggle` and `bootstrap-multiselect` loaded via script tag to avoid AMD wrapper conflicts.
+- Copy full `WebContent` in deploy packaging; copying only `build` drops required `js/` assets.

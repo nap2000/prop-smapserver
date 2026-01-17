@@ -15,72 +15,35 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+"use strict";
+
+const $ = window.$;
+import "./libs/bootstrap.file-input.js";
+import "./libs/bootbox.5.1.1.min.js";
+import "./libs/bootstrap-colorpicker.min.js";
+import "./libs/wb/plugins/iCheck/icheck.min.js";
+import localise from "./app/localise";
+import globals from "./app/globals";
+import question from "./app/question";
+import optionlist from "./app/optionlist";
+import markup from "./app/editorMarkup";
+import changeset from "./app/changeset";
+import option from "./app/option";
+import aws from "./app/aws";
+
+const bootbox = window.bootbox;
+const moment = window.moment;
+
+let gUserLocale = navigator.language;
+if (typeof localStorage !== "undefined") {
+	try {
+		gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+	} catch (error) {
+		gUserLocale = navigator.language;
+	}
 }
 
-"use strict";
-require.config({
-    baseUrl: 'js/libs',
-    waitSeconds: 0,
-    locale: gUserLocale,
-    paths: {
-    	app: '../app',
-    	bootbox: 'bootbox.min',
-    	toggle: 'bootstrap4-toggle.min',
-    	moment: 'moment-with-locales.min',
-    	lang_location: '..',
-    	icheck: '/wb/plugins/iCheck/icheck.min',
-	    bootstrapcolorpicker: 'bootstrap-colorpicker.min',
-		multiselect: 'bootstrap-multiselect.min',
-		knockout: 'knockout'
-
-    },
-    shim: {
-    	'app/common': ['jquery'],
-    	'bootbox': ['jquery'],
-    	'icheck': ['jquery'],
-		'multiselect': ['jquery', 'knockout'],
-
-    }
-});
-
-require([
-         'jquery',
-         'app/common',
-         'app/localise',
-         'app/globals',
-         'bootstrap.file-input',
-         'bootbox',
-         'toggle',
-         'app/question',
-         'app/optionlist',
-         'app/editorMarkup',
-         'app/changeset',
-         'app/option',
-		 'bootstrapcolorpicker',
-		 'moment',
-		 'app/aws',
-         'icheck',
-		 'multiselect'],
-		function(
-				$,
-				common,
-				lang,
-				globals,
-				bsfi,
-				bootbox,
-				toggle,
-				question,
-				optionlist,
-				markup,
-				changeset,
-				option,
-				bootstrapcolorpicker,
-				moment,
-				aws) {
-
+window.gUserLocale = gUserLocale;
 
 var	gMode = "survey",
 	gTempQuestions = [],
@@ -108,10 +71,8 @@ var gNewVal,
 window.gAppChoiceArray = [];
 var gAppearanceQuestion;
 var gAppearanceParams;
+$(function() {
 
-'use strict';
-
-$(document).ready(function() {
 
 	var i,
 		params,
@@ -125,34 +86,39 @@ $(document).ready(function() {
 	setTheme();
     setCustomEdit();
 	setupUserProfile(false);
-	localise.setlang();		// Localise HTML
+		localise.initLocale(gUserLocale).then(function () {
+			window.gUserLocale = gUserLocale;
+			localise.setlang();		// Localise HTML
 
-	// Get the parameters and start editing a survey if one was passed as a parameter
-	params = location.search.substring(location.search.indexOf("?") + 1);
-	pArray = params.split("&");
-	dont_get_current_survey = false;
-	for (i = 0; i < pArray.length; i++) {
-		param = pArray[i].split("=");
-		if ( param[0] === "id" ) {
-			dont_get_current_survey = true;		// Use the passed in survey id
-			globals.gCurrentSurvey = param[1];
-			saveCurrentProject(-1, globals.gCurrentSurvey, undefined);	// Save the current survey id
-		} else if ( param[0] === "new" ) {
-			dont_get_current_survey = true;		// Don't get any survey details
-			globals.gCurrentSurvey = -1;
-			openForm("new");
-		}
-	}
+			// Get the parameters and start editing a survey if one was passed as a parameter
+			params = location.search.substring(location.search.indexOf("?") + 1);
+			pArray = params.split("&");
+			dont_get_current_survey = false;
+			for (i = 0; i < pArray.length; i++) {
+				param = pArray[i].split("=");
+				if ( param[0] === "id" ) {
+					dont_get_current_survey = true;		// Use the passed in survey id
+					globals.gCurrentSurvey = param[1];
+					saveCurrentProject(-1, globals.gCurrentSurvey, undefined);	// Save the current survey id
+				} else if ( param[0] === "new" ) {
+					dont_get_current_survey = true;		// Don't get any survey details
+					globals.gCurrentSurvey = -1;			
+					openForm("new");
+				}
+			}
 
-	/*
-	 * Get surveys and csv files that the user can link to
-	 */
-	getAccessibleSurveys($('.linkable_surveys'), true, true, false, true);
-	getAccessibleCsvFiles($('.linkable_files'), true);
+			/*
+			 * Get surveys and csv files that the user can link to
+			 */
+			getAccessibleSurveys($('.linkable_surveys'), true, true, false, true);
+			getAccessibleCsvFiles($('.linkable_files'), true);
+		});
 
-	/*
-	 * Initialise controls in the open form dialog
-	 */
+/*
+ * Initialise controls in the open form dialog
+ */
+
+
 	 $('#base_on_existing').click(function () {
 		 if($(this).is(':checked')) {
 			 $('.reusing_form').show();
@@ -1061,9 +1027,7 @@ $(document).ready(function() {
 		setLanguageCodes();
 	});
 
-});
-
-function setLanguageCodes() {
+	function setLanguageCodes() {
 	var type = $('#p_source').find(':selected').data('type');
 	var translateType;
 
@@ -1090,14 +1054,14 @@ function setLanguageCodes() {
 /*
  * Export the survey being currently edited
  */
-function exportSurvey() {
+	function exportSurvey() {
 	window.location.href = "/surveyKPI/xlsForm/" + globals.gCurrentSurvey + "?filetype=" + "xlsx" + addCacheBuster("?");
 }
 
 /*
  * Save a selected media file
  */
-function mediaSelectSave() {
+	function mediaSelectSave() {
 	var type;
 
 	if(globals.gOptionList) {
@@ -1109,7 +1073,7 @@ function mediaSelectSave() {
 
 	$('#mediaModal').modal('hide');
 }
-function setLanguageCodeVals() {
+	function setLanguageCodeVals() {
 	$('#to_lang').val(g_to_lang_val);
 	$('#from_lang').val(g_from_lang_val);
 }
@@ -1117,7 +1081,7 @@ function setLanguageCodeVals() {
 /*
  * Set all the questions to either required or not required
  */
-function setAllRequired(required) {
+	function setAllRequired(required) {
 
 	addHourglass();
 	$.ajax({
@@ -1143,7 +1107,7 @@ function setAllRequired(required) {
 }
 
 //Set up question type dialog
-function setupQuestionTypes($elem, columns, draggable, currentType) {
+	function setupQuestionTypes($elem, columns, draggable, currentType) {
 	var i,j,
 		tArray,
 		types = globals.model.qTypes,
@@ -1200,7 +1164,7 @@ function setupQuestionTypes($elem, columns, draggable, currentType) {
 /*
  * return true if the current published type can be converted to the new type
  */
-function isCompatible(compatTypes, currentType) {
+	function isCompatible(compatTypes, currentType) {
 	var compatible = false;
 	if(!currentType) {
 		compatible = true;
@@ -1212,7 +1176,7 @@ function isCompatible(compatTypes, currentType) {
 	return compatible;
 }
 
-function getSurveyList() {
+	function getSurveyList() {
 	if(globals.gCurrentSurvey > 0) {
 		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyListDone, false, undefined, false);
 	} else {
@@ -1221,11 +1185,11 @@ function getSurveyList() {
 }
 
 
-function surveyListDone() {
+	function surveyListDone() {
 	getSurveyDetails(surveyDetailsDone);
 }
 
-function surveyDetailsDone() {
+	function surveyDetailsDone() {
 	// Get survey level files
 	if(globals.gCurrentSurvey) {
 		getFilesFromServer(globals.gCurrentSurvey, refreshMediaPickLists, true);   // Get all media
@@ -1263,7 +1227,7 @@ function surveyDetailsDone() {
 /*
  * Refresh any pick lists that use media
  */
-function refreshMediaPickLists(data) {
+	function refreshMediaPickLists(data) {
 	var h = [],
 		idx = -1,
 		i,
@@ -1339,7 +1303,7 @@ function refreshMediaPickLists(data) {
 /*
  * Show the form on the screen
  */
-function refreshForm() {
+	function refreshForm() {
 
 	var $context,
 		survey,
@@ -1365,7 +1329,7 @@ function refreshForm() {
 /*
  * Refresh the featured properties part of the form
  */
-function refreshFeaturedProperties() {
+	function refreshFeaturedProperties() {
 
 	var $context,
 		survey,
@@ -1389,7 +1353,7 @@ function refreshFeaturedProperties() {
 /*
  * The passed in context is for a list of choices
  */
-function respondToEventsChoices($context) {
+	function respondToEventsChoices($context) {
 
 	$('[type="checkbox"]', $context).iCheck({
 	    checkboxClass: 'icheckbox_square-green',
@@ -1798,7 +1762,7 @@ function respondToEventsChoices($context) {
 /*
  * Add a new option
  */
-function addNewOption($elem, locn) {
+	function addNewOption($elem, locn) {
 	var oId =  $elem.data("id"),
 		fId =  $elem.data("fid"),
 		qname = $elem.data("qname"),
@@ -1816,7 +1780,7 @@ function addNewOption($elem, locn) {
 /*
  * The passed in context is for a list item containing either a question or an option
  */
-function respondToEvents($context) {
+	function respondToEvents($context) {
 
 	// Open choices for editing
 	$('.edit_choice', $context).off().click(function(index){
@@ -2632,10 +2596,11 @@ function respondToEvents($context) {
 					keyboard: true,
 					backdrop: 'static',
 					show: true
-				});
+			});
 		}
 
 	});
+
 
 	/*
 	 * Enable drag and drop to move questions and choices
@@ -2792,7 +2757,7 @@ function respondToEvents($context) {
  * End of drag and drop
  */
 
-function mediaPropSelected($this) {
+	function mediaPropSelected($this) {
 
 	var $elem = $this.closest('li');
 
@@ -2837,7 +2802,7 @@ function mediaPropSelected($this) {
 /*
  * Add a new question after an add new question button identified by $this is selected
  */
-function addQuestion($this, type) {
+	function addQuestion($this, type) {
 	var $context,						// Updated HTML
 		survey = globals.model.survey,
 		prop = $('#selProperty').val(),
@@ -2905,7 +2870,7 @@ function addQuestion($this, type) {
 /*
  * Update the settings data (excluding languages which is set globally)
  */
-function updateSettingsData() {
+	function updateSettingsData() {
 
 	$('.survey_name').val(globals.model.survey.displayName);
 	$('.formName').text(globals.model.survey.displayName);
@@ -2936,7 +2901,7 @@ function updateSettingsData() {
 /*
  * Update the language model view
  */
-function updateLanguageView() {
+	function updateLanguageView() {
 	var i,
 		$selector = $('#language_edit_list'),
 		languages = gTempLanguages,
@@ -3044,7 +3009,7 @@ function updateLanguageView() {
 /*
  * Update the pulldata modal view
  */
-function updatePulldataView() {
+	function updatePulldataView() {
 	var i,
 		$selector = $('#pulldata_edit_list'),
 		pulldata = gTempPulldata,
@@ -3160,7 +3125,7 @@ function updatePulldataView() {
  *  newVal: The new value for the label
  *  type: question || option
  */
-function updateLabel(type, formIndex, itemIndex, optionList, element, newVal, qname, prop) {
+	function updateLabel(type, formIndex, itemIndex, optionList, element, newVal, qname, prop) {
 
 	var $context,
 		change,
@@ -3261,7 +3226,7 @@ function updateLabel(type, formIndex, itemIndex, optionList, element, newVal, qn
 /*
  * Return true if the option list exists
  */
-function optionListExists(list) {
+	function optionListExists(list) {
 	var optionLists = globals.model.survey.optionLists;
 
 	if(typeof optionLists[list] === "undefined") {
@@ -3277,7 +3242,7 @@ function optionListExists(list) {
 /*
  * Get forms for a survey
  */
-function getSurveyForms(sId, callback) {
+	function getSurveyForms(sId, callback) {
 
 	if(sId != -1 && sId && sId !== 'null') {
 		var url = '/surveyKPI/survey/' + sId + '/getMeta';
@@ -3306,7 +3271,7 @@ function getSurveyForms(sId, callback) {
 	}
 }
 
-function addForms(data) {
+	function addForms(data) {
 	var h = [],
 		idx = -1,
 		i,
@@ -3331,7 +3296,7 @@ function addForms(data) {
 /*
  * User has changed the filter value on an option
  */
-function updateFilterValues($this, isCascade, isChecked) {
+	function updateFilterValues($this, isCascade, isChecked) {
 
 	var $elem = $this.closest('tr'),
 		$f = $this.closest('td'),
@@ -3376,14 +3341,14 @@ function updateFilterValues($this, isCascade, isChecked) {
 /*
  * Set the choice filter to a value appropriate for cascade selects
  */
-function setCascadeFilter() {
+	function setCascadeFilter() {
 	var filter = "selected(${" + $('#previousSelect option:selected').html() + "}, _smap_cascade)";
 	$('#choiceFilter').val(filter);
 	updateLabel("question", globals.gFormIndex,
 			globals.gItemIndex, undefined, "text", filter, undefined, "choice_filter");
 }
 
-function showSurveySummary(summary) {
+	function showSurveySummary(summary) {
 
 	var h = [],
 		idx = -1;
@@ -3413,7 +3378,7 @@ function showSurveySummary(summary) {
 
 }
 
-function showSurveyIdentList(surveys) {
+	function showSurveyIdentList(surveys) {
 
 	var h = [],
 		idx = -1,
@@ -3475,7 +3440,7 @@ function showSurveyIdentList(surveys) {
 /*
  * clear the choice filter
  */
-function setNoFilter() {
+	function setNoFilter() {
 	$('#choiceFilter').val("");
 	updateLabel("question", globals.gFormIndex,
 			globals.gItemIndex, undefined, "text", "", undefined, "choice_filter");
@@ -4183,8 +4148,8 @@ function setNoFilter() {
 									if(labelValue && labelValue.trim().length > 0) {
 										var labelArray = labelValue.split(",");
 										for (i = 0; i < labelArray.length; i++) {
-											$('#a_search_label' + choiceIdx).multiselect('select', labelArray[i])
-												.multiselect('refresh');
+											$('#a_search_label' + choiceIdx).multiselect('select', labelArray[i]);
+											$('#a_search_label' + choiceIdx).multiselect('refresh');
 										}
 									}
 								}
@@ -4224,7 +4189,9 @@ function setNoFilter() {
 						}
 					}
 
-					showSearchElements();
-				}
+				showSearchElements();
 			}
+		}
 });
+
+

@@ -37,11 +37,14 @@ function jq(choiceList) {
 	return c;
 }
 
-/* 
+window.globals = window.globals || {};
+
+/*
  * ==============================================================
  * Task Functions
  * ==============================================================
  */
+
 
 function addPendingTask(taskId, assignmentId, status, source) {
 	var i,

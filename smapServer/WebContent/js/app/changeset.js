@@ -22,32 +22,29 @@
 
 "use strict";
 
-define([
-        'jquery',
-        'modernizr',
-        'app/localise',
-        'app/globals',
-        'app/editorMarkup',
-        'app/option'],
-    function($, modernizr, lang, globals, markup, option) {
+import $ from "jquery";
+import localise from "./localise";
+import globals from "./globals";
+import markup from "./editorMarkup";
+import option from "./option";
 
-        var modelGeneratedChanges = [];
+let modelGeneratedChanges = [];
 
-        return {
-            add: add,
-            undo: undo,
-            save: save,
-            setHasChanges: setHasChanges,
-            addValidationError: addValidationError,
-            removeValidationError: removeValidationError,
-            validateItem: validateItem,
-            validateName: validateName,
-            updateModelWithErrorStatus: updateModelWithErrorStatus,
-            validateAll: validateAll,
-            numberIssues: numberIssues,
-            addUpdateMessage: addUpdateMessage,
-            updateViewControls: updateViewControls
-        };
+export default {
+    add: add,
+    undo: undo,
+    save: save,
+    setHasChanges: setHasChanges,
+    addValidationError: addValidationError,
+    removeValidationError: removeValidationError,
+    validateItem: validateItem,
+    validateName: validateName,
+    updateModelWithErrorStatus: updateModelWithErrorStatus,
+    validateAll: validateAll,
+    numberIssues: numberIssues,
+    addUpdateMessage: addUpdateMessage,
+    updateViewControls: updateViewControls
+};
 
 		/*
 		 * Add a new change item
@@ -2333,5 +2330,3 @@ define([
             globals.gSelProperty = "label";
             $('#propSelected').text(globals.gSelLabel);
         }
-
-    });

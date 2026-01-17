@@ -22,19 +22,16 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-define([
-         'jquery',
-         'modernizr',
-         'app/localise',
-         'app/globals',
-         'app/editorMarkup',
-         'app/changeset'], 
-		function($, modernizr, lang, globals, markup, changeset) {
+import $ from "jquery";
+import localise from "./localise";
+import globals from "./globals";
+import markup from "./editorMarkup";
+import changeset from "./changeset";
 
-	return {	
-		add: add,
-		deleteList: deleteList
-	};
+export default {	
+	add: add,
+	deleteList: deleteList
+};
 	
 	var gEditor;
 
@@ -109,5 +106,3 @@ define([
 	
 
 	
-
-});

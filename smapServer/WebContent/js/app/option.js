@@ -26,27 +26,25 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-define([
-         'jquery',
-         'modernizr',
-         'app/localise',
-         'app/globals',
-         'app/editorMarkup',
-         'app/changeset'], 
-		function($, modernizr, lang, globals, markup, changeset) {
+import $ from "jquery";
+import localise from "./localise";
+import globals from "./globals";
+import markup from "./editorMarkup";
+import changeset from "./changeset";
 
-	return {	
-		refreshOptionListControls: refreshOptionListControls,
-		createChoiceView: createChoiceView,
-		setupChoiceView: setupChoiceView,						// On create of option view
-		addOneOption: addOneOption,
-		resetFilterColumns: resetFilterColumns,
-		setPreviousChoices: setPreviousChoices,
-		addOptionTable: addOptionTable,
-		addFilter: addFilter,
-		addFilterSelectList: addFilterSelectList,
-		addOptionSequence: addOptionSequence
-	};
+export default {	
+	refreshOptionListControls: refreshOptionListControls,
+	createChoiceView: createChoiceView,
+	setupChoiceView: setupChoiceView,					// On create of option view
+	addOneOption: addOneOption,
+	resetFilterColumns: resetFilterColumns,
+	setPreviousChoices: setPreviousChoices,
+	addOptionTable: addOptionTable,
+	addFilter: addFilter,
+	addFilterSelectList: addFilterSelectList,
+	addOptionSequence: addOptionSequence
+};
+
 	
 	globals.gFilterArray = [];			// Filters in repeatable order
 	
@@ -903,5 +901,3 @@ define([
 		
 		return show;
 	}
-	
-});

@@ -25,16 +25,13 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 var gLanguages;
 
-define([
-		'jquery',
-		'modernizr',
-		'app/localise',
-		'app/globals'],
-	function($, modernizr, lang, globals) {
+import $ from "jquery";
+import localise from "./localise";
+import globals from "./globals";
 
-		return {
-			setLanguageSelect: setLanguageSelect
-		};
+export default {
+	setLanguageSelect: setLanguageSelect
+};
 
 		function setLanguageSelect ($elem, type, callback) {
 
@@ -89,4 +86,3 @@ define([
 				}
 			});
 		}
-	});

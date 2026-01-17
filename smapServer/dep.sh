@@ -1,27 +1,27 @@
 #!/bin/sh
 
-# Minify the smap server code
-echo "--------------------------- minify smap server code"
-#node tools/r.js -o tools/build.js
-node tools/r_2_3_6.js -o tools/build.js
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
-#uglification - note minifiy is above s largely not working nowadays
-if [ "$1" != develop ]
+# Minify the smap server code
+echo "--------------------------- build smap server code"
+
+# Run webpack build for bundled entrypoints
+if [ "$1" = develop ]
 then
-	grunt
-        rm smapServer/js/edit.js
+	npm run build:dev
 else
-	cp smapServer/js/edit.js smapServer/js/edit.min.js
+	npm run build
 fi
 
 export COPYFILE_DISABLE=true
 # Create a tar file and copy to the deploy directory
-cp -R WebContent/build smapServer
-cd smapServer
+rm -rf "$SCRIPT_DIR/smapServer"
+cp -R "$SCRIPT_DIR/WebContent" "$SCRIPT_DIR/smapServer"
+cd "$SCRIPT_DIR/smapServer"
 tar --no-xattrs -zcf smapServer.tgz *
 cp smapServer.tgz ~/deploy/smap/deploy/version1
 rm smapServer.tgz
-cd ..
+cd "$SCRIPT_DIR"
 
 # deploy to local
 docdir=$WEBSITE_DOCS
