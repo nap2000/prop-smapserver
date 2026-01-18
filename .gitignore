@@ -46,6 +46,7 @@ node_modules
 
 # webforms 
 smapServer/WebContent/build
+tasks/WebContent/build
 
 smapServer/.idea/
 tasks/.idea/
