@@ -20,48 +20,30 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * Purpose: Manage the panels that display graphs, maps etc of results data
  */
 
+"use strict";
+
+import localise from "../../../smapServer/WebContent/js/app/localise";
+import globals from "../../../smapServer/WebContent/js/app/globals";
+import "../../../smapServer/WebContent/js/app/common";
+import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-4.17.47";
+
+const $ = window.$;
+const moment = window.moment;
+
 var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
+if (typeof localStorage !== "undefined") {
+	try {
+		gUserLocale = localStorage.getItem("user_locale") || navigator.language;
+	} catch (error) {
+		gUserLocale = navigator.language;
+	}
+}
 
-requirejs.config({
-    baseUrl: 'js/libs',
-    locale: gUserLocale,
-    waitSeconds: 0,
-    paths: {
-     	app: '../app',
-     	i18n: '../../../../js/libs/i18n',
-     	async: '../../../../js/libs/async',
-     	localise: '../../../../js/app/localise',
-	    globals: '../../../../js/app/globals',
-	    moment: '../../../../js/libs/moment-with-locales.2.24.0',
-	    datetimepicker: '../../../../js/libs/bootstrap-datetimepicker-4.17.47',
-    	modernizr: '../../../../js/libs/modernizr',
-    	common: '../../../../js/app/common',
-    	lang_location: '../../../../js',
-    	pace: '../../../../js/libs/wb/pace/pace.min'
-    },
-    shim: {
-	    'datetimepicker': ['moment'],
-    	'common': ['jquery']
-    	}
-    });
+window.gUserLocale = gUserLocale;
 
-require([
-         'jquery',
-         'common',
-         'localise',
-		 'globals',
-		 'moment',
-		 'datetimepicker',
-         'pace'
+localise.initLocale(gUserLocale).then(function () {
+	window.moment = window.moment || moment;
 
-         ], function($,
-        		 common,
-        		 localise,
-        		 globals,
-		         moment) {
 
 	var table;
 	var gSelectedRecord;

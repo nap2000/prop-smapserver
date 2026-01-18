@@ -20,60 +20,30 @@
  * Purpose: Manage the panels that display graphs, maps etc of results data
  */
 
-var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-    gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-}
-
 "use strict";
-requirejs.config({
-    baseUrl: 'js/libs',
-    locale: gUserLocale,
-    waitSeconds: 60,
-    paths: {
-        app: '../app',
-        i18n: '../../../../js/libs/i18n',
-        async: '../../../../js/libs/async',
-        localise: '../../../../js/app/localise',
-        modernizr: '../../../../js/libs/modernizr',
-        common: '../../../../js/app/common',
-        globals: '../../../../js/app/globals',
-        toggle: 'bootstrap-toggle.min',
-        lang_location: '../../../../js',
-        file_input: '../../../../js/libs/bootstrap.file-input',
-        datetimepicker: '../../../../js/libs/bootstrap-datetimepicker.min',
-        pace: '../../../../js/libs/wb/plugins/pace/pace.min',
-        knockout: '../../../../js/libs/knockout',
-	    slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll.min',
-        bootbox: 'bootbox.min',
 
-    },
-    shim: {
+import localise from "../../../smapServer/WebContent/js/app/localise";
+import globals from "../../../smapServer/WebContent/js/app/globals";
+import "../../../smapServer/WebContent/js/app/common";
+import "../../../smapServer/WebContent/js/libs/bootstrap-toggle.min";
+import "../../../smapServer/WebContent/js/libs/bootstrap.file-input";
+import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker.min";
+import "../../../smapServer/WebContent/js/libs/wb/plugins/slimscroll/jquery.slimscroll.min";
+import "../../../smapServer/WebContent/js/libs/bootbox.min";
 
-        'common': ['jquery'],
-        'datetimepicker': ['moment'],
-        'file_input': ['jquery'],
-	    'slimscroll': ['jquery'],
-        'toggle': ['jquery']
+const $ = window.$;
+
+var gUserLocale = navigator.language;
+if (typeof localStorage !== "undefined") {
+    try {
+        gUserLocale = localStorage.getItem("user_locale") || navigator.language;
+    } catch (error) {
+        gUserLocale = navigator.language;
     }
-});
+}
+window.gUserLocale = gUserLocale;
 
-require([
-    'jquery',
-    'common',
-    'localise',
-    'globals',
-    'moment',
-    'bootbox',
-    'datetimepicker',
-	'slimscroll'
-
-], function ($,
-             common,
-             localise,
-             globals,
-             moment,
-             bootbox) {
+localise.initLocale(gUserLocale).then(function () {
 
     var gSurveyIdent;
     var gRecord;
@@ -200,7 +170,7 @@ require([
     /*
      * Get matches for a singe link item
      */
-    function getMatches(index, link) {
+    function getMatches(index) {
         var threshold = $('#threshold').val();
         var link = gLinkageItems[index];
 

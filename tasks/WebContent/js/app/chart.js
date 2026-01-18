@@ -146,7 +146,7 @@ define([
         function refresh() {
 
 
-            if(!gTasks.cache.currentData) {
+            if(!gTasks.cache.currentData || !globals.gMainTable) {
                 // Data not available yet.
                 return;
             }

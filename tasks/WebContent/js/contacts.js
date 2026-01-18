@@ -20,47 +20,28 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * Purpose: Manage the panels that display graphs, maps etc of results data
  */
 
+"use strict";
+
+import bootbox from "../../../smapServer/WebContent/js/libs/bootbox.5.1.1.min";
+import localise from "../../../smapServer/WebContent/js/app/localise";
+import globals from "../../../smapServer/WebContent/js/app/globals";
+import "../../../smapServer/WebContent/js/app/common";
+
+const $ = window.$;
+
 var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
+if (typeof localStorage !== "undefined") {
+	try {
+		gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+	} catch (error) {
+		gUserLocale = navigator.language;
+	}
+}
+window.gUserLocale = gUserLocale;
+window.bootbox = bootbox;
 
-requirejs.config({
-    baseUrl: 'js/libs',
-    locale: gUserLocale,
-    waitSeconds: 0,
-    paths: {
-     	app: '../app',
-     	i18n: '../../../../js/libs/i18n',
-     	async: '../../../../js/libs/async',
-     	localise: '../../../../js/app/localise',
-	    globals: '../../../../js/app/globals',
-    	modernizr: '../../../../js/libs/modernizr',
-	    moment: '../../../../js/libs/moment-with-locales.2.24.0',
-    	common: '../../../../js/app/common',
-    	lang_location: '../../../../js',
-    	pace: '../../../../js/libs/wb/pace/pace.min'
-    },
-    shim: {
+localise.initLocale(gUserLocale).then(function () {
 
-    	'common': ['jquery'],
-    	'bootstrap': ['jquery']
-    	}
-    });
-
-require([
-         'jquery',
-         'common',
-         'localise',
-		 'globals',
-		 'moment',
-         'pace'
-
-         ], function($,
-        		 common,
-        		 localise,
-        		 globals,
-		         moment) {
 
 	var table;
 	var gSelectedIndexes;
@@ -291,5 +272,6 @@ require([
 		gSelectedIndexes = indexes;
 		gSelectedRecord = table.rows(gSelectedIndexes).data().toArray()[0];
 	}
+
 });
 

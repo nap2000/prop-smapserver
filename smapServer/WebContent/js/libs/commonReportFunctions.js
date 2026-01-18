@@ -265,3 +265,7 @@ function getMedia(property) {
 	return media;
 		
 }
+
+if (typeof window !== "undefined") {
+	window.addAnchors = window.addAnchors || addAnchors;
+}

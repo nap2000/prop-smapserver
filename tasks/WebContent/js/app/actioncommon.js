@@ -23,8 +23,7 @@ define([
         'modernizr',
         'localise',
         'globals',
-        'app/mapOL3',
-        'multiselect'],
+        'app/mapOL3'],
     function ($, common, modernizr, lang, globals, map) {
 
         return {

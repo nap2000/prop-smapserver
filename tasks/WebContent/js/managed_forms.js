@@ -20,82 +20,38 @@
  * Purpose: Manage the panels that display graphs, maps etc of results data
  */
 
-var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-    gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-}
-
 "use strict";
-requirejs.config({
-    baseUrl: 'js/libs',
-    locale: gUserLocale,
-    waitSeconds: 60,
-    paths: {
-        app: '../app',
-        i18n: '../../../../js/libs/i18n',
-        async: '../../../../js/libs/async',
-        localise: '../../../../js/app/localise',
-        modernizr: '../../../../js/libs/modernizr',
-        common: '../../../../js/app/common',
-        globals: '../../../../js/app/globals',
-        crf: '../../../../js/libs/commonReportFunctions',
-        toggle: 'bootstrap-toggle.min',
-        lang_location: '../../../../js',
-        file_input: '../../../../js/libs/bootstrap.file-input',
-        datetimepicker: '../../../../js/libs/bootstrap-datetimepicker.min',
-        svgsave: '../../../../js/libs/saveSvgAsPng',
-        pace: '../../../../js/libs/wb/plugins/pace/pace.min',
-        qrcode: '../../../../js/libs/jquery-qrcode-0.14.0.min',
-        multiselect: '../../../../js/libs/bootstrap-multiselect.min',
-        knockout: '../../../../js/libs/knockout',
-	    slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll.min'
-    },
-    shim: {
 
-        'common': ['jquery'],
-        'datetimepicker': ['moment'],
-        'crf': ['jquery'],
-        'file_input': ['jquery'],
-        'qrcode': ['jquery'],
-	    'slimscroll': ['jquery'],
-        'multiselect': ['jquery', 'knockout']
-    }
-});
+import localise from "../../../smapServer/WebContent/js/app/localise";
+import globals from "../../../smapServer/WebContent/js/app/globals";
+import "../../../smapServer/WebContent/js/app/common";
+import "../../../smapServer/WebContent/js/libs/commonReportFunctions";
+import "../../../smapServer/WebContent/js/libs/saveSvgAsPng";
+import "../../../smapServer/WebContent/js/libs/jquery-qrcode-0.14.0.min";
+import "../../../smapServer/WebContent/js/libs/knockout";
+import "../../../smapServer/WebContent/js/libs/wb/plugins/slimscroll/jquery.slimscroll.min";
+import "../../../smapServer/WebContent/js/libs/bootstrap-toggle.min";
+import "../../../smapServer/WebContent/js/libs/bootstrap.file-input";
+import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker.min";
+import chart from "./app/chart";
+import map from "./app/mapOL3";
+import actioncommon from "./app/actioncommon";
 
-require([
-    'jquery',
-    'common',
-    'localise',
-    'globals',
-    'moment',
-    'app/chart',
-    'app/mapOL3',
-    'svgsave',
-    'app/actioncommon',
-    'datetimepicker',
-    'crf',
-    'qrcode',
-    'toggle',
-	'slimscroll',
-    'multiselect'
+const $ = window.$;
+const moment = window.moment;
 
-], function ($,
-             common,
-             localise,
-             globals,
-             moment,
-             chart,
-             map,
-             svgsave,
-             actioncommon) {
+var gUserLocale = navigator.language;
+if (typeof localStorage !== "undefined") {
+    try {
+        gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+    } catch (error) {
+        gUserLocale = navigator.language;
+	}
+}
+window.gUserLocale = gUserLocale;
 
-    /*
-     * Report definition
-     * Default Settings
-     *    Create a chart for data table columns that are enabled and do not have column specific setting
-     * Column specific settings
-     *    Override settings where names match
-     */
+localise.initLocale(gUserLocale).then(function () {
+    window.moment = window.moment || moment;
 
     var gMapView = false;           // Set true when the map tab is shown
     var gChartView = false;         // Set true when the chart view is shown
@@ -3917,5 +3873,4 @@ require([
     }
 
 });
-
 
