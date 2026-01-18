@@ -20,85 +20,41 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * Purpose: Manage the panels that display graphs, maps etc of results data
  */
 
+"use strict";
+
+import bootbox from "../../../smapServer/WebContent/js/libs/bootbox.min";
+import localise from "../../../smapServer/WebContent/js/app/localise";
+import globals from "../../../smapServer/WebContent/js/app/globals";
+import "../../../smapServer/WebContent/js/app/common";
+import "../../../smapServer/WebContent/js/app/mapbox_app";
+import "./libs/jquery-barcode";
+import "./app/media";
+import "../../../smapServer/WebContent/js/libs/wb/plugins/peity/jquery.peity.min";
+import "../../../smapServer/WebContent/js/libs/wb/plugins/fullcalendar/fullcalendar.min";
+import "../../../smapServer/WebContent/js/libs/wb/plugins/fullcalendar/es";
+import "../../../smapServer/WebContent/js/libs/knockout";
+import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-4.17.47";
+
+import "./app/task_plugins";
+
+const $ = window.$;
+const L = window.L;
 var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+if (typeof localStorage !== "undefined") {
+	try {
+		gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+	} catch (error) {
+		gUserLocale = navigator.language;
+	}
 }
+window.gUserLocale = gUserLocale;
+window.bootbox = bootbox;
 
-requirejs.config({
-    baseUrl: 'js/libs',
-    locale: gUserLocale,
-    waitSeconds: 0,
-    paths: {
-     	app: '../app',
-     	i18n: '../../../../js/libs/i18n',
-     	localise: '../../../../js/app/localise',
-    	modernizr: '../../../../js/libs/modernizr',
-    	moment: '../../../../js/libs/moment-with-locales.2.24.0',
-    	datetimepicker: '../../../../js/libs/bootstrap-datetimepicker-4.17.47',
-    	common: '../../../../js/app/common',
-    	globals: '../../../../js/app/globals',
-	    popper: '../../../../js/libs/popper.v1.16.1.min',
-    	bootbox: '../../../../js/libs/bootbox.min',
-    	crf: '../../../../js/libs/commonReportFunctions',
-    	lang_location: '../../../../js',
-    	mapbox_app: '../../../../js/app/mapbox_app',
-    	
-    	mapbox: '../../../../js/libs/mapbox/js/mapbox',
-    	pace: '../../../../js/libs/wb/pace/pace.min',
-    	peity: '../../../../js/libs/wb/peity/jquery.peity.min',
-    	calendar: '../../../../js/libs/wb/plugins/fullcalendar/fullcalendar.min',
-        es: '../../../../js/libs/wb/plugins/fullcalendar/es',
-        multiselect: '../../../../js/libs/bootstrap-multiselect.min',
-        knockout: '../../../../js/libs/knockout'
-    },
-    shim: {
+localise.initLocale(gUserLocale).then(function () {
+	window.moment = window.moment || moment;
+	window.L = window.L || L;
+	window.globals = window.globals || globals;
 
-    	'common': ['jquery'],
-    	'datetimepicker': ['moment'],
-    	'jquery-barcode': ['jquery'],
-    	'crf': ['jquery'],
-    	'mapbox_app' : ['jquery', 'mapbox'],
-    	'mapbox': {
-            exports: 'L'
-        },
-    	'peity': ['jquery'],
-        'multiselect': ['jquery', 'knockout'],
-        'es': ['calendar']
-	
-    	}
-    });
-
-require([
-         'jquery',
-         'popper',
-         'common', 
-         'localise', 
-         'globals',
-         'bootbox',
-         'app/task_plugins',
-         'jquery-barcode',
-         'crf',
-         'moment',
-         'mapbox',
-         'datetimepicker',
-         'mapbox_app',
-         'pace',
-         'peity',
-         'calendar',
-	     'multiselect'
-         
-         ], function($,
-        		 Popper,
-        		 common, 
-        		 localise, 
-        		 globals, 
-        		 bootbox,
-        		 task_plugins,
-        		 barcode, 
-        		 crf, 
-        		 moment,
-        		 mapbox) {
 
 
 	// The following globals are only in this java script file
@@ -1235,6 +1191,7 @@ require([
 							success: function (table) {
 								var colname,
 									coltype,
+									isMedia,
 									sMedia,
 									h = [],
 									idx = -1,
@@ -2267,6 +2224,4 @@ require([
 			$('.bulk_selected').prop('disabled', false).removeClass("disabled");
 		}
 	}
-
 });
-
