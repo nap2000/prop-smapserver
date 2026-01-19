@@ -1230,7 +1230,7 @@ define({
     "u_mobile_security": "Security",
     "u_mobile_security_h": "Access protection and authentication policies.",
     "u_mobile_menus": "Menus",
-    "u_mobile_menus_h": "Expose or hide in-app menus.",
+    "u_mobile_menus_h": "Expose or hide in-app menus. You must restart the mobile device to see changes in these options.",
     "u_mobile_completion": "Form Completion",
     "u_mobile_completion_h": "How forms are reviewed, finalized, and cleaned up.",
     "u_mobile_sync": "Sync & Connectivity",
