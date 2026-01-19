@@ -58,3 +58,4 @@
 - Import Bootbox as module and assign `window.bootbox` so alerts render HTML; avoid `alert()` fallback.
 - Translate save alerts should not `htmlEncode` change messages or tags show up.
 - When converting from RequireJS, ensure handler blocks are still closed; missing `});` can skip later bindings.
+- Keep AMD app modules in place for now; entries can strip RequireJS wrapper and bootstrap from webpack instead of rewriting modules.

@@ -47,6 +47,7 @@ node_modules
 # webforms 
 smapServer/WebContent/build
 tasks/WebContent/build
+fieldManagerClient/WebContent/build
 
 smapServer/.idea/
 tasks/.idea/
