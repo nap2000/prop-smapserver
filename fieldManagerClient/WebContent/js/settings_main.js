@@ -20,48 +20,13 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * Purpose: Manage the panels that display graphs, maps etc of results data
  */
 
-var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-}
+"use strict";
 
-requirejs.config({
-	baseUrl: 'js/libs',
-	locale: gUserLocale,
-	waitSeconds: 0,
-	paths: {
-		app: '../app',
-		i18n: '../../../../js/libs/i18n',
-		async: '../../../../js/libs/async',
-		localise: '../../../../js/app/localise',
-		bootstrapcolorpicker: '../../../../js/libs/bootstrap-colorpicker.min',
-		datetimepicker: '../../../../js/libs/bootstrap-datetimepicker-4.17.47',
-		common: '../../../../js/app/common',
-		globals: '../../../../js/app/globals',
-		crf: '../../../../js/libs/commonReportFunctions',
-		moment: '../../../../js/libs/moment-with-locales.2.24.0',
-		slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll',
-		lang_location: '../../../../js'
-	},
-	shim: {
-		'bootstrapcolorpicker': ['jquery'],
-		'slimscroll': ['jquery'],
-		'datetimepicker': ['moment'],
-		'common': ['jquery']
-	}
-});
+const $ = window.$;
+const localise = window.localise;
+const globals = window.globals;
+const moment = window.moment;
 
-require([
-	'jquery',
-	'common',
-	'localise',
-	'globals',
-	'moment',
-	'slimscroll',
-	'bootstrapcolorpicker',
-	'datetimepicker'
-
-], function($, common, localise, globals, moment) {
 
 	var
 		gGroups,
@@ -1218,7 +1183,7 @@ require([
 		h[++idx] = '</option>';
 
 		if(names && names.length > 0) {
-			for (i = 0; i < names.length; i++) {
+			for (let i = 0; i < names.length; i++) {
 				h[++idx] = '<option value="';
 				h[++idx] = names[i]
 				h[++idx] = '">';
@@ -1245,7 +1210,7 @@ require([
 		h[++idx] = '</option>';
 
 		if(names && names.length > 0) {
-			for (i = 0; i < names.length; i++) {
+			for (let i = 0; i < names.length; i++) {
 				h[++idx] = '<option value="';
 				h[++idx] = names[i]
 				h[++idx] = '">';
@@ -1267,6 +1232,4 @@ require([
 		$('#o_banner_logo').attr("src", "/surveyKPI/file/bannerLogo/organisation?settings=true&org=" + orgId + "&" + d.valueOf());
 		$('#o_main_logo').attr("src", "/surveyKPI/file/mainLogo/organisation?settings=true&org=" + orgId + "&" + d.valueOf());
 	}
-
-});
 

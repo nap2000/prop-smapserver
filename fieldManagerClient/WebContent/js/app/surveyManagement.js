@@ -404,6 +404,10 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 
 
         function projectSet() {
+            globals = window.globals || globals;
+            if(!globals.gLoggedInUser) {
+                return;
+            }
             var groups = globals.gLoggedInUser.groups,
                 group,
                 redirect = true,

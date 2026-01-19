@@ -20,45 +20,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * Purpose: Manage the panels that display graphs, maps etc of results data
  */
 
-var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
+"use strict";
 
-requirejs.config({
-    baseUrl: 'js/libs',
-    locale: gUserLocale,
-    waitSeconds: 0,
-    paths: {
-     	app: '../app',
-     	i18n: '../../../../js/libs/i18n',
-     	async: '../../../../js/libs/async',
-     	localise: '../../../../js/app/localise',
-    	bootbox: '../../../../js/libs/bootbox.min',
-    	common: '../../../../js/app/common',
-    	globals: '../../../../js/app/globals',
-    	lang_location: '../../../../js',
-	    slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll.min',
-    },
-    shim: {
-       	'bootstrapfileinput': ['jquery'],
-    	'bootbox': ['bootstrap'],
-    	'common': ['jquery'],
-	    'slimscroll': ['jquery']
-    	}
-    });
+setCustomBilling();
 
-require([
-         'jquery',
-         'common', 
-         'localise', 
-         'globals',
-         'bootbox',
-         'app/billing',
-		 'slimscroll'
-         
-         ], function($, bootstrap, common, localise, globals) {
-	setCustomBilling();
-
-});
 

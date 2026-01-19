@@ -30,6 +30,17 @@ var selectResultsControl = null, // OpenLayers select control for vector feature
 	gNewTasksLayer = false,		// Only in this java script file
 	gTaskClick;					// Only in this java script file
 
+window.initializeMap = initializeMap;
+window.addMarker = addMarker;
+window.zoomTo = zoomTo;
+window.refreshMap = refreshMap;
+window.refreshMapAssignments = refreshMapAssignments;
+window.setMapRegions = setMapRegions;
+window.updateMapTaskSelections = updateMapTaskSelections;
+window.registerForNewTasks = registerForNewTasks;
+window.clearNewTasks = clearNewTasks;
+window.getTasksAsGeoJSON = getTasksAsGeoJSON;
+
 /**
  * Map Initialization
  */

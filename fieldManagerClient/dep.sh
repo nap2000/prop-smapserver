@@ -1,28 +1,33 @@
 #!/bin/sh
 
-# Minify
-#node tools/r.js -o tools/build.js
-node tools/r_2_3_6.js -o tools/build.js
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
-#uglification - note minifiy is above s largely not working nowadays
-if [ "$1" != develop ]
+# Webpack build
+if [ "$1" = develop ]
 then
-        grunt
-        rm fieldManager/js/surveymanagement_main.js
-else 
-        cp fieldManager/js/surveymanagement_main.js fieldManager/js/surveymanagement_main.min.js
+	npm run build:dev
+else
+	npm run build
 fi
 
-# Create a tar file and copy to the deploy directory
-
-echo "----------------- fieldManagerClient"
-echo "Placing tar file in ~/deploy"
+if [ ! -f "$SCRIPT_DIR/WebContent/build/js/surveyManagement.bundle.js" ]
+then
+	echo "Missing build output: $SCRIPT_DIR/WebContent/build/js/surveyManagement.bundle.js"
+	exit 1
+fi
 
 export COPYFILE_DISABLE=true
-tar --no-xattrs -zcf fieldManager.tgz fieldManager
+# Create a tar file and copy to the deploy directory
+rm -rf "$SCRIPT_DIR/fieldManager"
+cp -R "$SCRIPT_DIR/WebContent" "$SCRIPT_DIR/fieldManager"
+cd "$SCRIPT_DIR/fieldManager"
+tar --no-xattrs -zcf fieldManager.tgz *
 cp fieldManager.tgz ~/deploy/smap/deploy/version1
+rm fieldManager.tgz
+cd "$SCRIPT_DIR"
 
 # deploy to local
+
 docdir=$WEBSITE_DOCS/app/fieldManager
 
 echo "Website: $WEBSITE_DOCS"
@@ -32,9 +37,8 @@ sudo rm -rf $docdir
 sudo mkdir $docdir
 sudo cp -rf fieldManager/* $docdir
 sudo apachectl restart
-rm fieldManager.tgz
 
-# clean up the temporary fieldManagerdirectory but first check that it is the right one
+# clean up the temporary fieldManager directory but first check that it is the right one
 if [ -f dep.sh ]
 then
 	rm -rf fieldManager

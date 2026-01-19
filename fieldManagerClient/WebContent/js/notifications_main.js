@@ -20,56 +20,29 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * Purpose: Manage the panels that display graphs, maps etc of results data
  */
 
-var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+"use strict";
+
+const $ = window.$;
+const localise = window.localise;
+const globals = window.globals;
+
+window.gUpdateFwdPassword = undefined;
+window.gSelectedNotification = -1;
+window.gNotifications = undefined;
+window.gTaskGroups = undefined;
+window.oversightQuestions = {};
+window.gSelectedOversightQuestion = undefined;
+window.gSelectedOversightSurvey = undefined;
+window.gEligibleUser = undefined;
+
+window.gTasks = {
+	cache: {
+		groupSurveys: {},
+		eligibleUsers: {}
+	}
 }
 
-"use strict";
-requirejs.config({
-    baseUrl: 'js/libs',
-    locale: gUserLocale,
-    waitSeconds: 0,
-    paths: {
-     	app: '../app',
-     	i18n: '../../../../js/libs/i18n',
-     	async: '../../../../js/libs/async',
-     	localise: '../../../../js/app/localise',
-    	modernizr: '../../../../js/libs/modernizr',
-    	common: '../../../../js/app/common',
-    	globals: '../../../../js/app/globals',
-    	lang_location: '../../../../js'
-    },
-    shim: {
-    	'common': ['jquery']
-    	}
-    });
-
-require([
-         'jquery', 
-         'common', 
-         'localise', 
-         'globals'
-         
-         ], function($, common, localise, globals) {
-
-	window.gUpdateFwdPassword = undefined;
-	window.gSelectedNotification = -1;
-	window.gNotifications = undefined;
-	window.gTaskGroups = undefined;
-	window.oversightQuestions = {};
-	window.gSelectedOversightQuestion = undefined;
-	window.gSelectedOversightSurvey = undefined;
-	window.gEligibleUser = undefined;
-
-	window.gTasks = {
-		cache: {
-			groupSurveys: {},
-			eligibleUsers: {}
-		}
-	}
-
-	$(document).ready(function() {
+$(document).ready(function() {
 
 		setCustomNotifications();			// Apply custom javascript
 
@@ -649,5 +622,4 @@ require([
 			}
 		}
 	}
-});
 

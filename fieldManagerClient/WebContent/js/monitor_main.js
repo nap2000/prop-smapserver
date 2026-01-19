@@ -20,46 +20,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * Purpose: Manage the panels that display graphs, maps etc of results data
  */
 
-var gUserLocale = navigator.language;
-if (typeof(localStorage) !== "undefined") {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
+"use strict";
 
-requirejs.config({
-    baseUrl: 'js/libs',
-    locale: gUserLocale,
-    waitSeconds: 0,
-    paths: {
-     	app: '../app',
-     	i18n: '../../../../js/libs/i18n',
-     	async: '../../../../js/libs/async',
-     	localise: '../../../../js/app/localise',
-    	common: '../../../../js/app/common',
-    	moment: '../../../../js/libs/moment-with-locales.min',
-    	globals: '../../../../js/app/globals',
-    	crf: '../../../../js/libs/commonReportFunctions',
-    	lang_location: '../../../../js'
-    },
-    shim: {
-    	'common': ['jquery'],
-    	'crf': ['jquery']
-	
-    	}
-    });
-
-require([
-         'jquery',
-         'common', 
-         'localise', 
-         'globals',
-         'moment',
-         'app/monitorChart',
-         'app/monitor', 
-         'app/map-ol-mgmt',
-         'crf'
-         
-         ], function($, jquery, common, localise, globals, moment, chart) {
-
-    setCustomMonitor();			// Apply custom javascript
-});
+setCustomMonitor();			// Apply custom javascript
 

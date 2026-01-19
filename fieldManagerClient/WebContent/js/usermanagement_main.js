@@ -20,51 +20,13 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * Purpose: Manage the panels that display graphs, maps etc of results data
  */
 
-var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-}
+"use strict";
 
-requirejs.config({
-	baseUrl: 'js/libs',
-	locale: gUserLocale,
-	waitSeconds: 0,
-	paths: {
-		app: '../app',
-		i18n: '../../../../js/libs/i18n',
-		async: '../../../../js/libs/async',
-		localise: '../../../../js/app/localise',
-		bootstrapcolorpicker: '../../../../js/libs/bootstrap-colorpicker.min',
-		datetimepicker: '../../../../js/libs/bootstrap-datetimepicker-4.17.47',
-		common: '../../../../js/app/common',
-		globals: '../../../../js/app/globals',
-		crf: '../../../../js/libs/commonReportFunctions',
-		moment: '../../../../js/libs/moment-with-locales.2.24.0',
-		slimscroll: '../../../../js/libs/wb/plugins/slimscroll/jquery.slimscroll',
-		lang_location: '../../../../js',
-		qrcode: '../../../../js/libs/jquery-qrcode-0.14.0.min',
-	},
-	shim: {
-		'bootstrapcolorpicker': ['jquery'],
-		'slimscroll': ['jquery'],
-		'datetimepicker': ['moment'],
-		'common': ['jquery'],
-		'qrcode': ['jquery'],
-	}
-});
+const $ = window.$;
+const localise = window.localise;
+const globals = window.globals;
+const moment = window.moment;
 
-require([
-	'jquery',
-	'common',
-	'localise',
-	'globals',
-	'moment',
-	'slimscroll',
-	'bootstrapcolorpicker',
-	'datetimepicker',
-	'qrcode'
-
-], function($, common, localise, globals, moment) {
 
 	var gUsers,
 		gGroups,
@@ -80,7 +42,8 @@ require([
 		gOrgId,
 		gSmsType,
 		gNumberIdx,
-		gPanel;
+		gPanel,
+		gNumbers = [];
 
 	var limitTypes = [
 		{
@@ -3292,5 +3255,4 @@ require([
 		$('#theirNumberQuestion').val(gNumbers[gNumberIdx].theirNumberQuestion);
 		$('#messageQuestion').val(gNumbers[gNumberIdx].messageQuestion);
 	}
-});
 
