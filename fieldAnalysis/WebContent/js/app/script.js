@@ -128,6 +128,9 @@ $(window).on('load', function() {
 });
 
 
+window.initialiseDialogs = initialiseDialogs;
+window.dashboardURL = dashboardURL;
+
 function initialiseDialogs() {
 
     /*

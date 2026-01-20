@@ -16,7 +16,30 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+/*
+ * Entry point for report list page
+ */
+
 "use strict";
 
-setCustomAudit();
+import "../../../smapServer/WebContent/js/app/localise";
+import "../../../smapServer/WebContent/js/app/globals";
+import "../../../smapServer/WebContent/js/app/common";
+import "./app/review";
 
+const localise = window.localise;
+
+var gUserLocale = navigator.language;
+if (typeof localStorage !== "undefined") {
+	try {
+		gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+	} catch (error) {
+		gUserLocale = navigator.language;
+	}
+}
+window.gUserLocale = gUserLocale;
+
+localise.initLocale(gUserLocale).then(function () {
+	setCustomReview();
+	localise.setlang();
+});

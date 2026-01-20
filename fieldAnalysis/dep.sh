@@ -1,26 +1,30 @@
 #!/bin/sh
 
-# Minify
-#node tools/r.js -o tools/build.js
-node tools/r_2_3_6.js -o tools/build.js
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
-#uglification - note minifiy is above s largely not working nowadays
-if [ "$1" != develop ]
+# Webpack build
+if [ "$1" = develop ]
 then
-	grunt
-        rm fieldAnalysis/js/dashboard_main.js
+	npm run build:dev
 else
-	cp fieldAnalysis/js/dashboard_main.js fieldAnalysis/js/dashboard_main.min.js
+	npm run build
 fi
 
-# Create a tar file and copy to the deploy directory
-
-echo "----------------- fieldManagerClient"
-echo "Placing tar file in ~/deploy"
+if [ ! -f "$SCRIPT_DIR/WebContent/build/js/dashboard.bundle.js" ]
+then
+	echo "Missing build output: $SCRIPT_DIR/WebContent/build/js/dashboard.bundle.js"
+	exit 1
+fi
 
 export COPYFILE_DISABLE=true
-tar --no-xattrs -zcf fieldAnalysis.tgz fieldAnalysis
+# Create a tar file and copy to the deploy directory
+rm -rf "$SCRIPT_DIR/fieldAnalysis"
+cp -R "$SCRIPT_DIR/WebContent" "$SCRIPT_DIR/fieldAnalysis"
+cd "$SCRIPT_DIR/fieldAnalysis"
+tar --no-xattrs -zcf fieldAnalysis.tgz *
 cp fieldAnalysis.tgz ~/deploy/smap/deploy/version1
+rm fieldAnalysis.tgz
+cd "$SCRIPT_DIR"
 
 # deploy to local
 
@@ -33,7 +37,6 @@ sudo rm -rf $docdir
 sudo mkdir $docdir
 sudo cp -rf fieldAnalysis/* $docdir
 sudo apachectl restart
-rm fieldAnalysis.tgz
 
 # clean up the temporary fieldAnalysis directory but first check that it is the right one
 if [ -f dep.sh ]

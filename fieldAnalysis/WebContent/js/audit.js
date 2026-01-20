@@ -18,5 +18,24 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-setCustomAudit();
+import "../../../smapServer/WebContent/js/app/localise";
+import "../../../smapServer/WebContent/js/app/globals";
+import "../../../smapServer/WebContent/js/app/common";
+import "./app/review_audit";
 
+const localise = window.localise;
+
+var gUserLocale = navigator.language;
+if (typeof localStorage !== "undefined") {
+	try {
+		gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+	} catch (error) {
+		gUserLocale = navigator.language;
+	}
+}
+window.gUserLocale = gUserLocale;
+
+localise.initLocale(gUserLocale).then(function () {
+	setCustomAudit();
+	localise.setlang();
+});

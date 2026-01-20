@@ -20,45 +20,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * Purpose: Manage the panels that display graphs, maps etc of results data
  */
 
-require.config({
-    baseUrl: 'js/libs',
-    locale: gUserLocale,
-    waitSeconds: 0,
-    paths: {
-     	app: '../app',
-     	localise: '../../../../js/app/localise',
-    	modernizr: '../../../../js/libs/modernizr',
-    	rmm: '../../../../js/libs/responsivemobilemenu',
-    	common: '../../../../js/app/common',
-    	globals: '../../../../js/app/globals',
-    	crf: '../../../../js/libs/commonReportFunctions',
-    	lang_location: '../../../../js'
+"use strict";
 
-    },
-    shim: {
-    	'jqplot/plugins/jqplot.highlighter': ['jqplot/jquery.jqplot.min'],
-    	'jqplot/plugins/jqplot.cursor': ['jqplot/jquery.jqplot.min'],
-    	'jqplot/plugins/jqplot.dateAxisRenderer': ['jqplot/jquery.jqplot.min'],
-    	'jqplot/plugins/jqplot.barRenderer': ['jqplot/jquery.jqplot.min'],
-    	'jqplot/plugins/jqplot.categoryAxisRenderer': ['jqplot/jquery.jqplot.min'],
-    	'jqplot/plugins/jqplot.canvasAxisLabelRenderer': ['jqplot/jquery.jqplot.min'],
-    	'jqplot/plugins/jqplot.canvasAxisTickRenderer': ['jqplot/jquery.jqplot.min'],
-    	'jqplot/plugins/jqplot.canvasTextRenderer': ['jqplot/jquery.jqplot.min'],
-    	'jqplot/plugins/jqplot.enhancedLegendRenderer': ['jqplot/jquery.jqplot.min'],
-    	}
-    });
 
-require(['jquery',
-         'jqplot/jquery.jqplot.min',
-         'jqplot/plugins/jqplot.highlighter',
-         'jqplot/plugins/jqplot.cursor',
-         'jqplot/plugins/jqplot.dateAxisRenderer',
-         'jqplot/plugins/jqplot.barRenderer',
-         'jqplot/plugins/jqplot.categoryAxisRenderer',
-         'jqplot/plugins/jqplot.canvasAxisLabelRenderer',
-         'jqplot/plugins/jqplot.canvasAxisTickRenderer',
-         'jqplot/plugins/jqplot.canvasTextRenderer',
-         'jqplot/plugins/jqplot.enhancedLegendRenderer'
-         
-         ], function($, jquery_ui) {});
 

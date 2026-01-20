@@ -20,38 +20,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * Entry point for report list page
  */
 
-var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
+"use strict";
 
-requirejs.config({
-    baseUrl: 'js/libs',
-    locale: gUserLocale,
-    waitSeconds: 0,
-    paths: {
-     	app: '../app',
-    	i18n: '../../../../js/libs/i18n',
-    	modernizr: '../../../../js/libs/modernizr',
-    	localise: '../../../../js/app/localise',
-    	common: '../../../../js/app/common',
-    	globals: '../../../../js/app/globals',
-    	lang_location: '../../../../js'
-    },
-    shim: {
-       	'common': ['jquery']
-    	}
-    });
+setCustomReview();
 
-
-require([
-         'jquery',
-         'modernizr',
-         'common', 
-         'globals',
-         'localise', 
-         'app/review'
-         
-         ], function($,  modernizr, common, globals, localise) {
-    setCustomReview();
-});
