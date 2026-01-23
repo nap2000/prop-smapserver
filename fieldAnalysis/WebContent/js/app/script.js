@@ -513,7 +513,7 @@ function addCustomReportList(templates) {
 /*
  * Get the type of a question
  */
-function getQuestionInfo(sId, language, qId) {
+window.getQuestionInfo = function getQuestionInfo(sId, language, qId) {
 
     var qList = globals.gSelector.getSurveyQuestions(sId, language),
         i,
@@ -601,7 +601,7 @@ function reportSaveURL(projectId) {
     return url;
 }
 
-function dashboardStateURL() {
+window.dashboardStateURL = function dashboardStateURL() {
 
     var url = "/surveyKPI/dashboard/state";
     return url;
@@ -631,7 +631,7 @@ function regionURL(region) {
     return url;
 }
 
-function resultsURL (sId, qId, dateId, groupId, groupType, geoTable, fn, lang, timeGroup,
+window.resultsURL = function resultsURL (sId, qId, dateId, groupId, groupType, geoTable, fn, lang, timeGroup,
                      startDate, endDate, qId_is_calc, filter, advanced_filter, geomFormQuestions,
                      selectedGeomQuestion) {
 
@@ -698,7 +698,7 @@ function resultsURL (sId, qId, dateId, groupId, groupType, geoTable, fn, lang, t
 }
 
 
-function surveyList () {
+window.surveyList = function surveyList () {
 
     var url = "/surveyKPI/surveys";
     if(globals.gCurrentProject !== 0 && globals.gCurrentProject !== -1) {
@@ -712,7 +712,7 @@ function surveyList () {
 }
 
 
-function regionsURL () {
+window.regionsURL = function regionsURL () {
 
     var url = "/surveyKPI/regions";
     return url;
@@ -735,7 +735,7 @@ function regionsURL () {
  * @param inc_ro
  * @param geomFormQuestions
  */
-function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bBad, filter, dateId, startDate,
+window.formItemsURL = function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bBad, filter, dateId, startDate,
                        endDate, advanced_filter, tz, inc_ro, geomFormQuestions) {
 
     var url = "/surveyKPI/items/";

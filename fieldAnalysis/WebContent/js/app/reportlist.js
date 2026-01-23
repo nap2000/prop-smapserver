@@ -1,56 +1,7 @@
 /*
 This file is part of SMAP.
 
-SMAP is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
 
-SMAP is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
-
-*/
-
-/*
- * Purpose: Show a list of reports
- */
-
-define(['jquery', 'jquery_ui', 'localise', 'common', 'globals', 'moment'], 
-		function($, ui, lang, common, globals, moment) {
-	
-var reportList = null,
-	minDate = null,
-	maxDate = null,
-	exportCss =  '.post-image {width:600px;} ' +
-		'table,th,td {border:1px solid black}',
-	gAccessToken,			// Facebook Access Token
-	gData,					// This java script file only			
-	gFeatures = [],			// This java script file only
-	gMap,					// This java script file only
-	gOverallBounds,			// This java script file only
-	gSelectResultsControl,	// This java script file only
-	gResultsLayer;			// This java script file only
-
-$(document).ready(function() {
-	
-	/*
-	 * Initialise Facebook
-	 * 
-	 * This has been disabled as it needs fixing and the php channel needs to be replaced with java
-	 *
-	  window.fbAsyncInit = function() {
-	      FB.init({
-	        appId      : '563570780321012', // App ID
-	    channelUrl : '//dev.smap.com.au/channel.php', // Channel File
-	    status     : true, // check login status
-	    cookie     : true, // enable cookies to allow the server to access the session
-	    xfbml      : true  // parse XFBML
-	  });
 	  
 	  // Get notified of the users logon status
 	  FB.Event.subscribe('auth.statusChange', authStatusChange);

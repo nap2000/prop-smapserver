@@ -24,10 +24,17 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 // HTML fragments for constructing panels
 
-define(['jquery', 'jquery_ui', 'localise', 'common', 
-        'globals','app/script', 'rmm', 'moment', 'app/extended_model'],
-		function($, ui, lang, common, globals, script, rmm, moment, extended_model) {
-	
+import "jquery";
+import "jquery_ui";
+import "localise";
+import "common";
+import "globals";
+import "./script";
+import "rmm";
+import "moment";
+import { getData } from "./survey_control";
+import extendedModel from "./extended_model";
+
 var hstart = '<li class="ui-state-default pSmall" id="p';
 var hstart2 = '">';
 var hend = '</li>';
@@ -119,9 +126,9 @@ $(document).ready(function() {
 	
 	var aDate;
 	
-	window.moment = moment;	                // Required as common.js not part of module
-	window.extended_model = extended_model;
-	window.localise = localise;             // Required as survey control is not part of module
+	window.moment = window.moment || moment; // Required as common.js not part of module
+	window.extended_model = extendedModel;
+	window.localise = window.localise || localise; // Required as survey control is not part of module
 
 	setTheme();
 	setupUserProfile(false);
@@ -346,8 +353,8 @@ $(document).ready(function() {
 	setTimeout(function() {
 		$('.ui-dialog').css('z-index','3000');	// Float the dialog over other controls
 	}, 0);
-	
-});
+
+
 
 function loggedInUserIdentified(projectId) {
 	getPanels(projectId);
@@ -462,7 +469,7 @@ function refreshPanels() {
 
 // Set the state of the panel based on the view settings
 function setPanelState(view, idx, oldState) {
-	$panel = $('#p' + idx);
+	var $panel = $('#p' + idx);
 	$panel.removeClass("shown expanded delete minimised").addClass(view.state);
 	
 	switch(view.state) {
@@ -609,7 +616,7 @@ function createPanel(idx, $panels, title, surveyName, subject_type) {
 //Create a single panel for the passed in view
 function setPanelType(type, idx, period, qId, subject_type) {
 	
-	$panelContent = $('#p' + idx).find('.pContent');
+	var $panelContent = $('#p' + idx).find('.pContent');
 	$panelContent.empty();
 	
 	var h = [];

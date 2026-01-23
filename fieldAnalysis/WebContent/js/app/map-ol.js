@@ -181,7 +181,8 @@ function zoomToMax(idx) {
 /*
  * Add a map panel
  */
-function setMap(view, secondaryLayer) {
+window.setMap = function setMap(view, secondaryLayer) {
+
 	
 	var i, j,
 		views = globals.gSelector.getViews(),

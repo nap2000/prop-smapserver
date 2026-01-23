@@ -18,7 +18,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Get a surveys meta data
  */
-function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, currentDate, callback) {
+window.getSurveyMetaSE = function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, currentDate, callback) {
 
 	if(sId != -1) {
         var url = "/surveyKPI/survey/" + sId + "/getMeta";
@@ -146,7 +146,7 @@ function getExtendedSurveyMetaSE(sId, callback) {
    * Get a group's Meta Data
    * This meta data will identify the data that can be retrieved for this grouping question
    */
-   function getGroupMeta(sId, qId, language) {
+   window.getGroupMeta = function getGroupMeta(sId, qId, language) {
 		
 	   if(typeof qId === "undefined") {
 		   return;
@@ -196,7 +196,7 @@ function getExtendedSurveyMetaSE(sId, callback) {
  /*
   * Get the survey level data for a specific table
   */
-function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
+window.processSurveyData = function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 	
 	// For table all of survey views. page the results and include "bad records"
 	if(f_view.type === "table") {
@@ -424,7 +424,7 @@ function getUserLocationsData(view, start_rec, nocache) {
   * Get the data for the specified question
   * The current view is updated with the results
   */
- function getResults(view) {
+ window.getResults = function getResults(view) {
 	 
 	 	function getAsyncResults(view, sId, data, dateId, groupId, groupType, groupRegion, fn, lang, timeGroup, 
 	 			fromDate, toDate, qId_is_calc) {
@@ -487,7 +487,7 @@ function getUserLocationsData(view, start_rec, nocache) {
  }
  
 //Refresh the data in the panel
- function refreshData(view, surveyLevel) {
+ window.refreshData = function refreshData(view, surveyLevel) {
  		
  	var views,
  		i,

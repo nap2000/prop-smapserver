@@ -20,8 +20,17 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * This file manages the selection of data sources
  */
 
+import "./script";
+import "data";
+
+const getSurveyMetaSE = window.getSurveyMetaSE;
+const getSurveyDataSE = window.getSurveyDataSE;
+const getUserData = window.getUserData;
+const getResults = window.getResults;
+const getGroupMeta = window.getGroupMeta;
+
 var gSurveyControlView;	// Store the temporary state of the view
-var gMetaInProgress = 0;	// Records the existence of asynch meta calls qhich must complete before user saves
+window.gMetaInProgress = 0;	// Records the existence of asynch meta calls qhich must complete before user saves
 
 $(document).ready(function() {
 	
@@ -102,7 +111,7 @@ $(document).ready(function() {
 });
 
 //Handle click on settings button
-function showSettings($this) {
+window.showSettings = function showSettings($this) {
 	
 	globals.gViewIdx = $this.attr("value");
 	
@@ -123,8 +132,8 @@ function showSettings($this) {
 /*
  * Copy a view
  */
-function copyView(v) {
-	cp = {
+window.copyView = function copyView(v) {
+	var cp = {
 			type: v.type,
 			title: v.title,
 			timeGroup: v.timeGroup,
@@ -589,7 +598,7 @@ function setSurveyViewControl(view) {
 	
 	// Display Panel and other map specific fields
 	var views = globals.gSelector.getViews();
-	$display_panel = $('#display_panel');
+	var $display_panel = $('#display_panel');
 	$display_panel.empty().append('<option value="-1">' + localise.set["a_tc"] + '</option>');
 	for (i = 0; i < views.length; i++) {
 		if(views[i].pId != view.pId && views[i].type == "map" && views[i].layerId < 1) {
@@ -767,7 +776,7 @@ function autoRefreshAnalysisData() {
 }
 
 //Get the data for the specified view
-function getData(view, nocache) {
+export function getData(view, nocache) {
 
 	if(view.subject_type === "survey") {
 		if (view.qId != "-1") {			// Question level results

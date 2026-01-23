@@ -19,12 +19,15 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Purpose: Review and modify collected data
  */
-define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, globals) {
+import "jquery";
+import "localise";
+import "common";
+import "globals";
 
-	var gChangeset,
-		gAuditItems;
+var gChangeset,
+	gAuditItems;
 
-	$(document).ready(function () {
+$(document).ready(function () {
 
 		setTheme();
 		setupUserProfile(true);
@@ -111,71 +114,20 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 
 				removeHourglass();
 				alert(xhr.responseText);
-				resp = xhr.responseText.split(":");
-				if (resp.length > 0) {
-					blockingChangeset = resp[1];
-				}
-				getAuditList(blockingChangeset);
+			resp = xhr.responseText.split(":");
+			if (resp.length > 0) {
+				blockingChangeset = resp[1];
+			}
+			getAuditList(blockingChangeset);
 
 			}
+
 		});
-		$('#reversal_popup').modal("hide");
 	}
 
-	/*
-	function enableReversal() {
-		$('#reversal_popup').dialog(
-			{
-				autoOpen: false, closeOnEscape: true, draggable: true, modal: true,
-				title: localise.set["c_rev"],
-				show: "drop",
-				width: 350,
-				zIndex: 2000,
-				buttons: [
-					{
-						text: localise.set["c_cancel"],
-						click: function () {
-
-							$(this).dialog("close");
-						}
-					}, {
-						text: localise.set["c_rev"],
-						click: function () {
-							addHourglass();
-							$.ajax({
-								type: "POST",
-								dataType: 'text',
-								cache: false,
-								url: "/surveyKPI/review/" + globals.gCurrentSurvey + "/undo/" + gChangeset,
-								success: function (data, status) {
-									removeHourglass();
-									getAuditList();
-								},
-								error: function (xhr, textStatus, err) {
-									var resp = [],
-										blockingChangeset;
-
-									removeHourglass();
-									alert(xhr.responseText);
-									resp = xhr.responseText.split(":");
-									if (resp.length > 0) {
-										blockingChangeset = resp[1];
-									}
-									getAuditList(blockingChangeset);
-
-								}
-							});
-							$(this).dialog("close");
-						}
-
-					}
-				]
-			}
-		);
-	}
-	*/
 
 	function getSurveyList() {
+
 		loadSurveys(globals.gCurrentProject, undefined, false, false, getAuditList, false, undefined, undefined, false);
 	}
 
@@ -324,7 +276,4 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 			}
 		});
 	}
-})
-
-
 

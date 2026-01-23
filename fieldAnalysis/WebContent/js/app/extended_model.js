@@ -15,10 +15,12 @@ You should have received a copy of the GNU General Public License
 along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-define(['jquery', 'jquery_ui', 'rmm', 'localise'],
-		function($, jquery_ui, rmm, localise) {
-	
-	var graph;
+import "jquery";
+import "jquery_ui";
+import "rmm";
+import "localise";
+
+var graph;
 	var surveyList;
 	var selected = [];
 	var selectedPath;
@@ -32,11 +34,11 @@ define(['jquery', 'jquery_ui', 'rmm', 'localise'],
 		theWidth,
 		theHeight;
 		
-	
-	return {
-		getPath: getPath
-	}
-	
+
+export default {
+	getPath: getPath
+};
+
 	/*
 	 * Get the path and return undefined if it has not been set
 	 */
@@ -372,4 +374,3 @@ define(['jquery', 'jquery_ui', 'rmm', 'localise'],
 		return false;
 		
 	}
-});

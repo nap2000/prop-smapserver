@@ -16,7 +16,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-function setGraphSurvey(view) {
+window.setGraphSurvey = function setGraphSurvey(view) {
 	
 	var isVisible = true,
 		$pc,
@@ -45,7 +45,7 @@ function setGraphSurvey(view) {
 
 }
 
-function newSetGraphQuestion(view) {
+window.newSetGraphQuestion = function newSetGraphQuestion(view) {
 	
 	var isVisible = true,
 		$chartdiv,

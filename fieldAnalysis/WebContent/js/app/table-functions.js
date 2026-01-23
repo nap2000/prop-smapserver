@@ -16,11 +16,13 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-var gTab = [];
+import "tablesorter";
+
+var gTab = [],
 	gIdx = -1;
 
 
-function generateTable(elementId, data, disp_desc, survey_ident, sId) {
+window.generateTable = function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 	
 	console.log("generate table");
 	var i,j,k,

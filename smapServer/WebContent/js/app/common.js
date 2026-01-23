@@ -6191,7 +6191,7 @@ function htmlDecode(input) {
 	return doc.documentElement.textContent;
 }
 
-function htmlEncode(input) {
+window.htmlEncode = function htmlEncode(input) {
 	if(input) {
 		return $('<div>').text(input).html();
 	}

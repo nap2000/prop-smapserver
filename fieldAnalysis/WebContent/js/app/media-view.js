@@ -16,7 +16,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-function setMediaSurvey(view) {
+window.setMediaSurvey = function setMediaSurvey(view) {
 	
 	var $image_wrap = $("#media_panel" + view.pId + " .image_wrap"),
 		$flow_player_wrap = $("#media_panel" + view.pId + " .flow_player_wrap"),
@@ -76,7 +76,7 @@ function setMediaSurvey(view) {
 	}
 }
 
-function setMediaQuestion(view, mediaItems) {
+window.setMediaQuestion = function setMediaQuestion(view, mediaItems) {
 	
 	var $image_wrap = $("#media_panel" + view.pId + " .image_wrap"),
 		$flow_player_wrap = $("#media_panel" + view.pId + " .flow_player_wrap"),

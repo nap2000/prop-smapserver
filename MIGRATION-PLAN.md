@@ -49,6 +49,7 @@
 
 ## Lessons Learned from pilot
 - Use webpack externals for `jquery` so legacy plugins (bootstrap, multiselect, toggle) stay attached to the global jQuery instance.
+- FieldAnalysis AMD wrappers converted to ESM with alias paths to smapServer common/localise/globals/data, removing shim indirection.
 - AMD locale files contain comments; loading via dynamic `<script>` + `define` capture avoids CSP `unsafe-eval` and JSON parse errors.
 - Watch for `const`→`let` conversions in migrated modules (legacy code mutates arrays like `gGroupStacks`, `modelGeneratedChanges`).
 - Keep `bootstrap4-toggle` and `bootstrap-multiselect` loaded via script tag to avoid AMD wrapper conflicts.

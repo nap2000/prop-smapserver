@@ -18,7 +18,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 var gMarkerOptions = [{style:'diamond'}, {style:'x'}, {style:'circle'}, {style:'filledSquare'}];
 
-function setGraph(data, chart, optionSelElement, pId) {
+window.setGraph = function setGraph(data, chart, optionSelElement, pId) {
 	
 	var isVisible = true,
 		$chartdiv,

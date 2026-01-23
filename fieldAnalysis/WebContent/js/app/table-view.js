@@ -19,6 +19,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Show an entire survey in a table
  */
+import "tablesorter";
+
 var gSelectedTemplate,          // Survey ident of the current template
 	gInstanceId,
 	gExportUrl,
@@ -28,7 +30,7 @@ var gSelectedTemplate,          // Survey ident of the current template
 	MAX_EXPORT = 10000,
 	gArchiveSurveyId;
 
-function setTableSurvey(view) {
+window.setTableSurvey = function setTableSurvey(view) {
 
 	var $selHead = $('#p' + view.pId).find('.phead'),
 		$selMain = $('#table_panel' + view.pId),
@@ -778,7 +780,7 @@ function addMoreLessUserButtons($elem, view) {
 /*
  * Called to display a table with question data
  */
-function setTableQuestion(view) {
+window.setTableQuestion = function setTableQuestion(view) {
 	
 	var $selHead = $('#p' + view.pId).find('.phead'),
 		elemMain = 'table_panel' + view.pId,

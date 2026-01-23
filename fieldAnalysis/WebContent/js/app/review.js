@@ -32,9 +32,12 @@ var gTextValues,
 	gTextId,			// The id of the selected text question
 	gTextOtherId;		// The id of the other selected text question
 
-define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, globals) {
+import "jquery";
+import "localise";
+import "common";
+import "globals";
 
-	$(document).ready(function() {
+$(document).ready(function() {
 		setTheme();
 		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
@@ -272,15 +275,16 @@ define(['jquery', 'localise', 'common', 'globals'], function($, lang, common, gl
 			}, error: function(data, status) {
 				removeHourglass();
 				alert(localise.set["c_error"] + data.responseText);
-			}
-		});
-
+		}
 	});
+
+
 
 
 function getSurveyList() {
 	loadSurveys(globals.gCurrentProject, undefined, false, false, getReviewLanguageList, false, undefined, undefined, false);
 }
+window.getSurveyList = getSurveyList;
 
 
 function getReviewLanguageList() {
