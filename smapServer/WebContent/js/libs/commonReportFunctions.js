@@ -20,7 +20,9 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * The description should always be encoded / not used as html therefore do not encode
  */
-window.getDisplayDescription = function getDisplayDescription(fn, reportType, survey, question, group, option, qtype, 
+import localise from "../app/localise";
+
+function getDisplayDescription(fn, reportType, survey, question, group, option, qtype, 
 		date_question, start, end, interval, units, filter) {
 	
 	var txt = [],
@@ -266,6 +268,4 @@ function getMedia(property) {
 		
 }
 
-if (typeof window !== "undefined") {
-	window.addAnchors = window.addAnchors || addAnchors;
-}
+export { addAnchors, getDisplayDescription, getMedia };

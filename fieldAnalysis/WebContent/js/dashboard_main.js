@@ -22,6 +22,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
+import { initialiseDialogs } from "./app/script";
+
 setCustomDashboard();
 window.localise = window.localise;
 initialiseDialogs();

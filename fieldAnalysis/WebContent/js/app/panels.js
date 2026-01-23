@@ -27,12 +27,13 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 import "jquery";
 import "jquery_ui";
 import "localise";
-import "common";
+import { getLoggedInUser, htmlEncode, setupUserProfile, shapeFormsChanged } from "common";
+import { initialiseDialogs } from "./script";
 import "globals";
 import "./script";
 import "rmm";
 import "moment";
-import { getData } from "./survey_control";
+import { copyView, gMetaInProgress, getData, showSettings } from "./survey_control";
 import extendedModel from "./extended_model";
 
 var hstart = '<li class="ui-state-default pSmall" id="p';
@@ -127,8 +128,6 @@ $(document).ready(function() {
 	var aDate;
 	
 	window.moment = window.moment || moment; // Required as common.js not part of module
-	window.extended_model = extendedModel;
-	window.localise = window.localise || localise; // Required as survey control is not part of module
 
 	setTheme();
 	setupUserProfile(false);

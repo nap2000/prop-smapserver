@@ -21,16 +21,15 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 import "./script";
-import "data";
-
-const getSurveyMetaSE = window.getSurveyMetaSE;
-const getSurveyDataSE = window.getSurveyDataSE;
-const getUserData = window.getUserData;
-const getResults = window.getResults;
-const getGroupMeta = window.getGroupMeta;
+import { addDatePickList, addFormPickList, addGeomPickList, addHourglass, getLanguageList, handleLogout, htmlEncode, removeHourglass, saveCurrentProject, setSurveyViewLanguages } from "common";
+import globals from "globals";
+import localise from "localise";
+import { getGroupMeta, getResults, getSurveyDataSE, getSurveyMetaSE, getUserData } from "data";
 
 var gSurveyControlView;	// Store the temporary state of the view
-window.gMetaInProgress = 0;	// Records the existence of asynch meta calls qhich must complete before user saves
+var gMetaInProgress = 0;	// Records the existence of asynch meta calls qhich must complete before user saves
+
+export { gMetaInProgress };
 
 $(document).ready(function() {
 	
@@ -111,7 +110,7 @@ $(document).ready(function() {
 });
 
 //Handle click on settings button
-window.showSettings = function showSettings($this) {
+function showSettings($this) {
 	
 	globals.gViewIdx = $this.attr("value");
 	
@@ -132,7 +131,7 @@ window.showSettings = function showSettings($this) {
 /*
  * Copy a view
  */
-window.copyView = function copyView(v) {
+function copyView(v) {
 	var cp = {
 			type: v.type,
 			title: v.title,
@@ -418,8 +417,8 @@ function languageChangeEvent() {
 		if(setGroupList) {
 			setSurveyViewQuestionGroups(qList);
 		}
-		
-	}	
+}
+
 }
 
 //Selected language has changed
@@ -648,8 +647,8 @@ function setSurveyViewControl(view) {
 		$('#settings_group').prop("disabled", true);
 		$('#q1_function').prop("disabled", true);
 		$('.select_only', '#p_settings').hide();
-	}	
-		
+}
+
 
 	// Group
 	if(view.type == "map") {
@@ -1014,8 +1013,8 @@ function updateFilterOptions(data, value, isSelect) {
 			h[++idx] = htmlEncode(data[i].text);
             h[++idx] = '</option>';
         }
-    }
-			
+}
+
 	$elem.append(h.join(''));
 			
 	if(typeof value !== "undefined") {
@@ -1121,3 +1120,5 @@ function getUsers(projectId) {
 		}
 	});
 }
+
+export { copyView, showSettings };

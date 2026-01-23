@@ -16,7 +16,10 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-window.setMediaSurvey = function setMediaSurvey(view) {
+import { getMedia } from "commonReportFunctions";
+import globals from "globals";
+
+export function setMediaSurvey(view) {
 	
 	var $image_wrap = $("#media_panel" + view.pId + " .image_wrap"),
 		$flow_player_wrap = $("#media_panel" + view.pId + " .flow_player_wrap"),
@@ -76,7 +79,7 @@ window.setMediaSurvey = function setMediaSurvey(view) {
 	}
 }
 
-window.setMediaQuestion = function setMediaQuestion(view, mediaItems) {
+export function setMediaQuestion(view, mediaItems) {
 	
 	var $image_wrap = $("#media_panel" + view.pId + " .image_wrap"),
 		$flow_player_wrap = $("#media_panel" + view.pId + " .flow_player_wrap"),

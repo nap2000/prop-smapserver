@@ -16,7 +16,9 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-window.setGraphSurvey = function setGraphSurvey(view) {
+import { setGraph } from "./graph-functions";
+
+export function setGraphSurvey(view) {
 	
 	var isVisible = true,
 		$pc,
@@ -45,7 +47,7 @@ window.setGraphSurvey = function setGraphSurvey(view) {
 
 }
 
-window.newSetGraphQuestion = function newSetGraphQuestion(view) {
+export function newSetGraphQuestion(view) {
 	
 	var isVisible = true,
 		$chartdiv,

@@ -35,6 +35,7 @@ var gTextValues,
 import "jquery";
 import "localise";
 import "common";
+import { getLoggedInUser, htmlEncode } from "common";
 import "globals";
 
 $(document).ready(function() {
@@ -284,7 +285,6 @@ $(document).ready(function() {
 function getSurveyList() {
 	loadSurveys(globals.gCurrentProject, undefined, false, false, getReviewLanguageList, false, undefined, undefined, false);
 }
-window.getSurveyList = getSurveyList;
 
 
 function getReviewLanguageList() {

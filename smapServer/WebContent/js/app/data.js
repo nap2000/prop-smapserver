@@ -18,7 +18,11 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Get a surveys meta data
  */
-window.getSurveyMetaSE = function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, currentDate, callback) {
+import globals from "./globals";
+import localise from "./localise";
+import { addHourglass, handleLogout, removeHourglass } from "./common";
+
+function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, currentDate, callback) {
 
 	if(sId != -1) {
         var url = "/surveyKPI/survey/" + sId + "/getMeta";
@@ -32,18 +36,13 @@ window.getSurveyMetaSE = function getSurveyMetaSE(sId, view, getS, updateExport,
 				removeHourglass();
 				if(handleLogout(data)) {
 					globals.gSelector.addSurvey(sId, data);
-					if (getS) {
-						getSurveyDataSE(sId, view);
-					}
-					if (updateExport) {
-						addFormPickList(data);
-					}
-					if (updateDatePicker) {
-						addDatePickList(data, currentDate);
-						addGeomPickList(data);
-					}
+				if (getS) {
+					getSurveyDataSE(sId, view);
+				}
 
-					if (typeof callback === "function") {
+				if (typeof callback === "function") {
+
+
 						callback();
 					}
 				}
@@ -146,11 +145,12 @@ function getExtendedSurveyMetaSE(sId, callback) {
    * Get a group's Meta Data
    * This meta data will identify the data that can be retrieved for this grouping question
    */
-   window.getGroupMeta = function getGroupMeta(sId, qId, language) {
+   function getGroupMeta(sId, qId, language) {
 		
 	   if(typeof qId === "undefined") {
 		   return;
-	   }
+ }
+
 	   
 	   gMetaInProgress++;
 
@@ -168,8 +168,9 @@ function getExtendedSurveyMetaSE(sId, callback) {
 	  				console.log("Error in " + aUrl);
 	  			}
 	  		});
-	  	}
-	  	
+ }
+
+
 	  	if(sId != -1 && qId > 0) {
 	  		var url = questionMetaURL(sId, language, qId);
 	  		getAsyncGroupMeta(url, sId, qId, language);
@@ -196,7 +197,7 @@ function getExtendedSurveyMetaSE(sId, callback) {
  /*
   * Get the survey level data for a specific table
   */
-window.processSurveyData = function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
+function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 	
 	// For table all of survey views. page the results and include "bad records"
 	if(f_view.type === "table") {
@@ -251,19 +252,24 @@ window.processSurveyData = function processSurveyData(fId, f_sId, f_view, survey
 	 		globals.gSelector.addDataItem(theUrl, data);
 	 		f_view.tableCount--;
 	 		
-	 		if(replace) {
+			if(replace) {
 	 			for(i = 0; i < f_view.results.length; i++) {
-	 				if(f_view.results[i].fId === fId) {
-	 					f_view.results[i] = data;
-	 					break;
-	 				}
-	 			}
-	 		} else {
+					if(f_view.results[i].fId === fId) {
+						f_view.results[i] = data;
+						break;
+					}
+
+				}
+
+			} else {
+
 	 			f_view.results[f_view.tableCount] = data;
-	 		}
+			}
+
 			if(f_view.tableCount === 0) {
+
 				refreshData(f_view, "survey");	// Update the views with the new survey data after all services have returned
-			}	
+			}
 
 		},
 		error: function(data) {
@@ -424,7 +430,7 @@ function getUserLocationsData(view, start_rec, nocache) {
   * Get the data for the specified question
   * The current view is updated with the results
   */
- window.getResults = function getResults(view) {
+ function getResults(view) {
 	 
 	 	function getAsyncResults(view, sId, data, dateId, groupId, groupType, groupRegion, fn, lang, timeGroup, 
 	 			fromDate, toDate, qId_is_calc) {
@@ -457,8 +463,8 @@ function getUserLocationsData(view, start_rec, nocache) {
 	  				}
 	  			}
 			});
-		} 
-	
+ }
+
 	// Call ajax to get the results
 	getAsyncResults(view,
 			view.sId, 
@@ -487,7 +493,7 @@ function getUserLocationsData(view, start_rec, nocache) {
  }
  
 //Refresh the data in the panel
- window.refreshData = function refreshData(view, surveyLevel) {
+ function refreshData(view, surveyLevel) {
  		
  	var views,
  		i,
@@ -552,10 +558,21 @@ function getUserLocationsData(view, start_rec, nocache) {
 	        case "media":
 	            setMediaQuestion(outputView);
 	            break;
-	        case "graph":
-	            newSetGraphQuestion(outputView);
-	            break;
-	        }
- 	}
+		case "graph":
+		    newSetGraphQuestion(outputView);
+		    break;
+		}
+	}
 
- }
+}
+
+export {
+	getGroupMeta,
+	getResults,
+	getSurveyDataSE,
+	getSurveyMetaSE,
+	getUserData,
+	processSurveyData,
+	refreshData
+};
+

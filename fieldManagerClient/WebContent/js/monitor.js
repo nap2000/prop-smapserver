@@ -22,15 +22,12 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-import "../../../smapServer/WebContent/js/app/localise";
-import "../../../smapServer/WebContent/js/app/globals";
-import "../../../smapServer/WebContent/js/app/common";
+import localise from "../../../smapServer/WebContent/js/app/localise";
+import globals from "../../../smapServer/WebContent/js/app/globals";
 import "../../../smapServer/WebContent/js/libs/wb/plugins/slimscroll/jquery.slimscroll.min";
 import "../../../smapServer/WebContent/js/libs/wb/plugins/pace/pace.min";
 
 const moment = window.moment;
-const localise = window.localise;
-const globals = window.globals;
 
 var gUserLocale = navigator.language;
 if (typeof localStorage !== "undefined") {
@@ -44,11 +41,14 @@ window.gUserLocale = gUserLocale;
 
 localise.initLocale(gUserLocale).then(function () {
 	window.moment = window.moment || moment;
+	window.localise = localise;
+	window.globals = globals;
 
 	import(/* webpackMode: "eager" */ "./app/map-ol-mgmt").then(function () {
 		import(/* webpackMode: "eager" */ "./app/monitorChart").then(function () {
 			import(/* webpackMode: "eager" */ "./app/monitor").then(function () {
 				setCustomMonitor();
+				localise.setlang();
 			});
 		});
 	});

@@ -20,6 +20,11 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * Show an entire survey in a table
  */
 import "tablesorter";
+import { getDisplayDescription } from "commonReportFunctions";
+import { generateTable, generateUserTable } from "./table-functions";
+import globals from "globals";
+import { addHourglass, handleLogout, htmlEncode, populateLanguageSelect, populatePdfSelect, removeHourglass } from "common";
+import { toggleBadURL } from "./script";
 
 var gSelectedTemplate,          // Survey ident of the current template
 	gInstanceId,
@@ -30,7 +35,7 @@ var gSelectedTemplate,          // Survey ident of the current template
 	MAX_EXPORT = 10000,
 	gArchiveSurveyId;
 
-window.setTableSurvey = function setTableSurvey(view) {
+export function setTableSurvey(view) {
 
 	var $selHead = $('#p' + view.pId).find('.phead'),
 		$selMain = $('#table_panel' + view.pId),
@@ -780,7 +785,7 @@ function addMoreLessUserButtons($elem, view) {
 /*
  * Called to display a table with question data
  */
-window.setTableQuestion = function setTableQuestion(view) {
+export function setTableQuestion(view) {
 	
 	var $selHead = $('#p' + view.pId).find('.phead'),
 		elemMain = 'table_panel' + view.pId,

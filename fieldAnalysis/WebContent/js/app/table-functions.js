@@ -17,12 +17,15 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import "tablesorter";
+import { addAnchors } from "commonReportFunctions";
+import { htmlEncode } from "common";
+import globals from "globals";
 
 var gTab = [],
 	gIdx = -1;
 
 
-window.generateTable = function generateTable(elementId, data, disp_desc, survey_ident, sId) {
+function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 	
 	console.log("generate table");
 	var i,j,k,
@@ -226,7 +229,7 @@ window.generateTable = function generateTable(elementId, data, disp_desc, survey
 				gTab[++gIdx] = groups[i].properties.period;
 				gTab[++gIdx] = '</td>';
 			} else {
-				if(typeof globals !== "undefined" && globals.gCanEdit) {
+if(globals.gCanEdit) {
 					// Add a button to edit the survey data in web forms
 					gTab[++gIdx] = '<td>';
 					if(groups[i].properties.parkey == "0") {
@@ -435,7 +438,7 @@ function generateUserTable(elementId, data, user_ident, uId, subject_type) {
 
 		gTab[++gIdx] = '<tr>';
 
-		if(typeof globals !== "undefined" && globals.gCanEdit && subject_type !== 'user_locations') {
+if(globals.gCanEdit && subject_type !== 'user_locations') {
 			// Add a button to edit the survey data in web forms
 			gTab[++gIdx] = '<td>';
 				gTab[++gIdx] = '<div class="menu_button btn context_table dropdown-toggle" type="button" data-toggle="dropdown"';
@@ -528,4 +531,4 @@ function writeRecord(record, recordObject, groupLabels, numberCols) {
 	gTab[++gIdx] = '</tr>';
 }
 
-
+export { generateTable, generateUserTable };

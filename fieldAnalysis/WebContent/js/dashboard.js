@@ -22,11 +22,14 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-import "../../../smapServer/WebContent/js/app/localise";
-import "../../../smapServer/WebContent/js/app/globals";
-import "../../../smapServer/WebContent/js/app/common";
-import "../../../smapServer/WebContent/js/app/data";
-import "../../../smapServer/WebContent/js/libs/commonReportFunctions";
+import localise from "localise";
+import globals from "globals";
+import { initialiseDialogs } from "./app/script";
+import { setGraph } from "./app/graph-functions";
+import { newSetGraphQuestion, setGraphSurvey } from "./app/graph-view2";
+import { setMap } from "./app/map-ol";
+import { setMediaQuestion, setMediaSurvey } from "./app/media-view";
+import { setTableQuestion, setTableSurvey } from "./app/table-view";
 import "pace";
 import "jqplot/jquery.jqplot.min";
 import "main/jqplot_main";
@@ -53,10 +56,6 @@ import "./app/script";
 import "./app/panels";
 
 const moment = window.moment;
-const localise = window.localise;
-const globals = window.globals;
-const initialiseDialogs = window.initialiseDialogs;
-window.globals = window.globals || globals;
 
 var gUserLocale = navigator.language;
 if (typeof localStorage !== "undefined") {
@@ -70,7 +69,6 @@ window.gUserLocale = gUserLocale;
 
 localise.initLocale(gUserLocale).then(function () {
 	window.moment = window.moment || moment;
-	window.globals = window.globals || globals;
 
 	import(/* webpackMode: "eager" */ "./dashboard_main").then(function () {
 		setCustomDashboard();
@@ -79,3 +77,4 @@ localise.initLocale(gUserLocale).then(function () {
 		localise.setlang();
 	});
 });
+

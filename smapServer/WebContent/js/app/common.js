@@ -26,6 +26,9 @@ var gSelectedOversightQuestion;
 var gSelectedOversightSurvey;
 var gConversationalSMS;	// Set true if a conversational SMS choice has been added to notification types
 
+import globals from "./globals";
+import localise from "./localise";
+
 /*
  * Convert a choice list name into a valid jquery class name
  */
@@ -37,7 +40,6 @@ function jq(choiceList) {
 	return c;
 }
 
-window.globals = window.globals || {};
 
 /*
  * ==============================================================
@@ -6191,7 +6193,7 @@ function htmlDecode(input) {
 	return doc.documentElement.textContent;
 }
 
-window.htmlEncode = function htmlEncode(input) {
+function htmlEncode(input) {
 	if(input) {
 		return $('<div>').text(input).html();
 	}
@@ -6465,3 +6467,24 @@ function setOurNumbersList() {
 		}
 	}
 }
+
+export {
+	addDatePickList,
+	addFormPickList,
+	addGeomPickList,
+	addHourglass,
+	getLoggedInUser,
+	getLanguageList,
+	getEligibleUsers,
+	handleLogout,
+	htmlDecode,
+	htmlEncode,
+	loadSurveys,
+	populateLanguageSelect,
+	populatePdfSelect,
+	removeHourglass,
+	saveCurrentProject,
+	setSurveyViewLanguages,
+	shapeFormsChanged,
+	setupUserProfile
+};

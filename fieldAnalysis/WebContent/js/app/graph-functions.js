@@ -16,9 +16,11 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+import { getDisplayDescription } from "commonReportFunctions";
+
 var gMarkerOptions = [{style:'diamond'}, {style:'x'}, {style:'circle'}, {style:'filledSquare'}];
 
-window.setGraph = function setGraph(data, chart, optionSelElement, pId) {
+export function setGraph(data, chart, optionSelElement, pId) {
 	
 	var isVisible = true,
 		$chartdiv,

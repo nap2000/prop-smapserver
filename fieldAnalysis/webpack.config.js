@@ -33,6 +33,7 @@ module.exports = {
       common: path.resolve(__dirname, "../smapServer/WebContent/js/app/common.js"),
       localise: path.resolve(__dirname, "../smapServer/WebContent/js/app/localise.js"),
       globals: path.resolve(__dirname, "../smapServer/WebContent/js/app/globals.js"),
+      commonReportFunctions: path.resolve(__dirname, "../smapServer/WebContent/js/libs/commonReportFunctions.js"),
       modernizr: path.resolve(__dirname, "WebContent/js/libs/modernizr.custom.js"),
       rmm: path.resolve(__dirname, "../smapServer/WebContent/js/libs/responsivemobilemenu.js"),
       tablesorter: path.resolve(__dirname, "../smapServer/WebContent/js/libs/jquery.tablesorter.min.js"),

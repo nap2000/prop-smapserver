@@ -181,7 +181,7 @@ function zoomToMax(idx) {
 /*
  * Add a map panel
  */
-window.setMap = function setMap(view, secondaryLayer) {
+export function setMap(view, secondaryLayer) {
 
 	
 	var i, j,

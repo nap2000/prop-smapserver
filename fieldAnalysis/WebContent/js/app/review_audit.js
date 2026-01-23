@@ -22,6 +22,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 import "jquery";
 import "localise";
 import "common";
+import { getLoggedInUser, htmlEncode } from "common";
 import "globals";
 
 var gChangeset,

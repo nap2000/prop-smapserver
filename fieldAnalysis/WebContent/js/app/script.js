@@ -16,6 +16,12 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+import globals from "globals";
+import { addDatePickList, addFormPickList, addGeomPickList, getLanguageList, setSurveyViewLanguages, shapeFormsChanged } from "common";
+import { getSurveyMetaSE } from "data";
+
+import localise from "localise";
+
 var viewIdx = 0;
 var gLastSetForm;
 
@@ -117,7 +123,7 @@ $(window).on('load', function() {
                     setReport(gReport);
                     reportIdent = undefined;
                 }, error: function(data, status) {
-                    alert(window.localise.set("c_error"));
+                    alert(localise.set("c_error"));
                     reportIdent = undefined;
                 }
             });
@@ -128,10 +134,7 @@ $(window).on('load', function() {
 });
 
 
-window.initialiseDialogs = initialiseDialogs;
-window.dashboardURL = dashboardURL;
-
-function initialiseDialogs() {
+export function initialiseDialogs() {
 
     /*
      * Export Dialog
@@ -144,16 +147,16 @@ function initialiseDialogs() {
             show:"drop",
             width: 480,
             zIndex: 2000,
-            title: window.localise.set["a_exp_title"],
+            title: localise.set["a_exp_title"],
             buttons: [
                 {
-                    text: window.localise.set["c_cancel"],
+                    text: localise.set["c_cancel"],
                     click: function() {
                         $(this).dialog("close");
                     }
                 },
                 {
-                    text: window.localise.set["m_export"],
+                    text: localise.set["m_export"],
                     click: function() {
 
                         var sId = $('#export_survey option:selected').val(),
@@ -183,7 +186,7 @@ function initialiseDialogs() {
                             filter = $('#ad_filter').val();
 
                         if(sId == "-1") {
-                            alert(window.localise.set["msg_pss"]);
+                            alert(localise.set["msg_pss"]);
                             return(false);
                         }
                         // Set the filename of the exported file
@@ -195,7 +198,7 @@ function initialiseDialogs() {
 
                         // TODO validate dates
                         if(exp_from_date && exp_to_date && exp_to_date < exp_from_date) {
-                            alert(window.localise.set["msg_sel_dates"]);
+                            alert(localise.set["msg_sel_dates"]);
                             return(false);
                         }
 
@@ -230,7 +233,7 @@ function initialiseDialogs() {
                                 return this.value;
                             }).get();
                             if(forms.length === 0) {
-                                alert(window.localise.set["msg_one_f2"]);
+                                alert(localise.set["msg_one_f2"]);
                                 return(false);
                             }
                             url = exportSurveyThingsatURL(sId, displayName, forms[0], language,
@@ -240,7 +243,7 @@ function initialiseDialogs() {
                                 return this.value;
                             }).get();
                             if(forms.length === 0) {
-                                alert(window.localise.set["msg_one_f2"]);
+                                alert(localise.set["msg_one_f2"]);
                                 return(false);
                             }
                             var traceFormat = "shape";	// Todo add gpx
@@ -251,7 +254,7 @@ function initialiseDialogs() {
 
                             // Validate
                             if(!mediaQuestion) {
-                                alert(window.localise.set["msg_sel_media"]);
+                                alert(localise.set["msg_sel_media"]);
                                 return(false);
                             }
                             name_questions = $(':checkbox:checked', '.mediaselect').map(function() {
@@ -271,7 +274,7 @@ function initialiseDialogs() {
                                     return this.value;
                                 }).get();
                                 if(forms.length === 0) {
-                                    alert(window.localise.set["msg_one_f2"]);
+                                    alert(localise.set["msg_one_f2"]);
                                     return(false);
                                 }
                                 form = forms[0];
@@ -286,11 +289,11 @@ function initialiseDialogs() {
                                 }).get();
 
                                 if (forms.length === 0) {
-                                    alert(window.localise.set["msg_one_f"]);
+                                    alert(localise.set["msg_one_f"]);
                                     return (false);
                                 } else {
                                     if (embedImages === true && xlstype === "html") {
-                                        alert(window.localise.set["msg_embed"]);
+                                        alert(localise.set["msg_embed"]);
                                         return (false);
                                     }
                                 }
@@ -319,7 +322,7 @@ function initialiseDialogs() {
             zIndex: 2000,
             buttons: [
                 {
-                    text: window.localise.set["c_close"],
+                    text: localise.set["c_close"],
                     click: function() {
                         $(this).dialog("close");
                     }
@@ -513,7 +516,7 @@ function addCustomReportList(templates) {
 /*
  * Get the type of a question
  */
-window.getQuestionInfo = function getQuestionInfo(sId, language, qId) {
+export function getQuestionInfo(sId, language, qId) {
 
     var qList = globals.gSelector.getSurveyQuestions(sId, language),
         i,
@@ -577,7 +580,7 @@ function downloadFileURL() {
     return url;
 }
 
-function toggleBadURL(form, pKey) {
+export function toggleBadURL(form, pKey) {
 
     var url = "/surveyKPI/items/";
     url += form;
@@ -601,13 +604,13 @@ function reportSaveURL(projectId) {
     return url;
 }
 
-window.dashboardStateURL = function dashboardStateURL() {
+export function dashboardStateURL() {
 
     var url = "/surveyKPI/dashboard/state";
     return url;
 }
 
-function dashboardURL(projectId) {
+export function dashboardURL(projectId) {
 
     if(!projectId) {
         projectId = 0;
@@ -631,7 +634,7 @@ function regionURL(region) {
     return url;
 }
 
-window.resultsURL = function resultsURL (sId, qId, dateId, groupId, groupType, geoTable, fn, lang, timeGroup,
+export function resultsURL (sId, qId, dateId, groupId, groupType, geoTable, fn, lang, timeGroup,
                      startDate, endDate, qId_is_calc, filter, advanced_filter, geomFormQuestions,
                      selectedGeomQuestion) {
 
@@ -698,7 +701,7 @@ window.resultsURL = function resultsURL (sId, qId, dateId, groupId, groupType, g
 }
 
 
-window.surveyList = function surveyList () {
+export function surveyList () {
 
     var url = "/surveyKPI/surveys";
     if(globals.gCurrentProject !== 0 && globals.gCurrentProject !== -1) {
@@ -712,7 +715,7 @@ window.surveyList = function surveyList () {
 }
 
 
-window.regionsURL = function regionsURL () {
+export function regionsURL () {
 
     var url = "/surveyKPI/regions";
     return url;
@@ -735,7 +738,7 @@ window.regionsURL = function regionsURL () {
  * @param inc_ro
  * @param geomFormQuestions
  */
-window.formItemsURL = function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bBad, filter, dateId, startDate,
+export function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bBad, filter, dateId, startDate,
                        endDate, advanced_filter, tz, inc_ro, geomFormQuestions) {
 
     var url = "/surveyKPI/items/";
