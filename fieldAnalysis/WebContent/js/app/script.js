@@ -17,7 +17,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import globals from "globals";
-import { addDatePickList, addFormPickList, addGeomPickList, getLanguageList, setSurveyViewLanguages, shapeFormsChanged } from "common";
+import { addDatePickList, addFormPickList, addGeomPickList, formItemsURL, getLanguageList, resultsURL, setSurveyViewLanguages, shapeFormsChanged } from "common";
 import { getSurveyMetaSE } from "data";
 
 import localise from "localise";
@@ -634,71 +634,7 @@ function regionURL(region) {
     return url;
 }
 
-export function resultsURL (sId, qId, dateId, groupId, groupType, geoTable, fn, lang, timeGroup,
-                     startDate, endDate, qId_is_calc, filter, advanced_filter, geomFormQuestions,
-                     selectedGeomQuestion) {
-
-    var qList = "";
-    var i;
-    var url = "/surveyKPI/results/";
-    url += sId;
-    url += "?qId=" + qId;
-
-    if(dateId != null) {
-        url += "&dateId=" + dateId;
-    }
-    if(groupId != null && groupId != "-1") {
-        url += "&groupId=" + groupId;
-
-        if(groupType != null) {
-            url += "&group_t=" + groupType;
-        }
-        if(geoTable != null && geoTable.toLowerCase() != "none") {
-            url += "&geoTable=" + geoTable;
-        }
-    }
-    if(fn) {
-        url += "&fn=" + fn;
-    } else {
-        url += "&fn=percent";
-    }
-
-    if(lang) {
-        url += "&lang=" + lang;
-    } else {
-        url += "&lang=eng";
-    }
-
-    if(typeof timeGroup !== "undefined") {
-        url+= "&timeGroup=" + timeGroup;
-    }
-
-    if(typeof startDate !== "undefined" && startDate.length > 0) {
-        url+= "&startDate=" + startDate;
-    }
-
-    if(typeof endDate !== "undefined" && endDate.length > 0) {
-        url+= "&endDate=" + endDate;
-    }
-
-    if(qId_is_calc) {
-        url+= "&qId_is_calc=true";
-    }
-
-    if(typeof filter !== "undefined") {
-        url+= "&filter=" + encodeURIComponent(filter);
-    }
-
-    if(typeof advanced_filter !== "undefined") {
-        url+= "&advanced_filter=" + encodeURIComponent(advanced_filter);
-    }
-
-    if(selectedGeomQuestion) {
-        url+= "&selected_geom_question=" + encodeURIComponent(selectedGeomQuestion);
-    }
-
-    return url;
-}
+export { formItemsURL, resultsURL };
 
 
 export function surveyList () {
@@ -718,100 +654,6 @@ export function surveyList () {
 export function regionsURL () {
 
     var url = "/surveyKPI/regions";
-    return url;
-}
-
-/**
- * Web service handler for retrieving items in a table
- * @param form
- * @param getFeatures
- * @param mustHaveGeom
- * @param start_key
- * @param rec_limit
- * @param bBad
- * @param filter
- * @param dateId
- * @param startDate
- * @param endDate
- * @param advanced_filter
- * @param tz
- * @param inc_ro
- * @param geomFormQuestions
- */
-export function formItemsURL (form, getFeatures, mustHaveGeom, start_key, rec_limit, bBad, filter, dateId, startDate,
-                       endDate, advanced_filter, tz, inc_ro, geomFormQuestions) {
-
-    var url = "/surveyKPI/items/";
-	var ampersand = false;
-    var i;
-
-    url += form;
-
-    if(getFeatures == "no") {
-        if(ampersand) {
-            url += "&";
-        } else {
-            url += "?";
-        }
-        ampersand=true;
-        url += "feats=no";
-    }
-    if(mustHaveGeom == "no") {
-        if(ampersand) {
-            url += "&";
-        } else {
-            url += "?";
-        }
-        ampersand=true;
-        url += "mustHaveGeom=no";
-    }
-    url += "&start_key=" + start_key;
-    if(rec_limit) {
-        url += "&rec_limit=" + rec_limit;
-    }
-    if(bBad) {
-        url += "&get_bad=true";
-    }
-
-    if(inc_ro) {
-        url += "&inc_ro=true";
-    }
-
-    if(typeof filter !== "undefined") {
-        url+= "&filter=" + encodeURIComponent(filter);
-    }
-
-    if(dateId != null) {
-        url += "&dateId=" + dateId;
-    }
-
-    if(typeof startDate !== "undefined" && startDate.length > 0) {
-        url+= "&startDate=" + startDate;
-    }
-
-    if(typeof endDate !== "undefined" && endDate.length > 0) {
-        url+= "&endDate=" + endDate;
-    }
-
-    if(typeof advanced_filter !== "undefined" && advanced_filter.length > 0) {
-        url+= "&advanced_filter=" + encodeURIComponent(advanced_filter);
-    }
-
-    if(geomFormQuestions && geomFormQuestions.length > 0) {
-        var qList = "";
-        for(i = 0; i < geomFormQuestions.length; i++) {
-            if(i > 0) {
-                qList += ",";
-            }
-            qList += geomFormQuestions[i].question;
-        }
-        url+= "&geom_questions=" + encodeURIComponent(qList);
-    }
-
-	if(tz) {
-		url += '&tz=' + encodeURIComponent(tz);
-	}
-
     return url;
 }
 

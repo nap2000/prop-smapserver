@@ -47,7 +47,9 @@ localise.initLocale(gUserLocale).then(function () {
 	window.globals = globals;
 
 	import(/* webpackMode: "eager" */ "./app/surveyManagement").then(function () {
-		setCustomSurveyManagement();
+		if (typeof window.setCustomSurveyManagement === "function") {
+			window.setCustomSurveyManagement();
+		}
 		setupUserProfile(true);
 		localise.setlang();
 	});

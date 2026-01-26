@@ -20,7 +20,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  */
 import globals from "./globals";
 import localise from "./localise";
-import { addHourglass, handleLogout, removeHourglass } from "./common";
+import { addHourglass, formItemsURL, handleLogout, removeHourglass, resultsURL } from "./common";
 
 function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, currentDate, callback) {
 
@@ -182,10 +182,12 @@ function getExtendedSurveyMetaSE(sId, callback) {
  
 //Get data at the survey level
  function getSurveyDataSE(sId, view) {
- 	
+	var survey,
+		i;
+	
 	view.tableCount = 0;
 	view.results = [];
- 	
+	
 	survey = globals.gSelector.getSurvey(sId);
 	view.tableCount = survey.forms.length;
 	for(i = 0; i < survey.forms.length; i++) {
@@ -197,9 +199,12 @@ function getExtendedSurveyMetaSE(sId, callback) {
  /*
   * Get the survey level data for a specific table
   */
-function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
+function processSurveyData(fId, f_sId, f_view, surveyName, replace, start_rec) {
 	
 	// For table all of survey views. page the results and include "bad records"
+	var rec_limit,
+		bBad;
+	
 	if(f_view.type === "table") {
 		rec_limit = globals.REC_LIMIT;
 		bBad = true;
@@ -215,9 +220,8 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 		start_rec = 0;
 	}
 	
-	var survey,
-		i,
-		tz = globals.gTimezone;
+	var i,
+		tz = globals.gTimezone,
 		url = formItemsURL(fId, "yes", "no", start_rec, rec_limit, bBad, f_view.filter,
 				f_view.dateQuestionId, f_view.fromDate, f_view.toDate,
 				f_view.advanced_filter,  // Get all records with all features
@@ -238,7 +242,7 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 			data.sId = f_sId;
 			data.table = true;
 			data.fId = fId;
-			data.survey = survey;
+			data.survey = surveyName;
 			
 			// Record starting records for each table so that "less" will work
 			if(typeof f_view.start_recs === "undefined") {
@@ -285,6 +289,7 @@ function processSurveyData(fId, f_sId, f_view, survey, replace, start_rec) {
 function getUserData(view, start_rec) {
 
 	// For table all of survey views. page the results
+	var rec_limit;
 	if(view.type === "table") {
 		rec_limit = globals.REC_LIMIT;
 	} else {
@@ -358,6 +363,7 @@ function getUserData(view, start_rec) {
 function getUserLocationsData(view, start_rec, nocache) {
 
 	// For table all of survey views. page the results
+	var rec_limit;
 	if(view.type === "table") {
 		rec_limit = globals.REC_LIMIT;
 	} else {
@@ -495,10 +501,11 @@ function getUserLocationsData(view, start_rec, nocache) {
 //Refresh the data in the panel
  function refreshData(view, surveyLevel) {
  		
- 	var views,
- 		i,
- 		outputView,
- 		secondaryLayer = false;		// Set true if this is map data displayed on a different panel
+	var views,
+		i,
+		outputView,
+		secondaryLayer = false,		// Set true if this is map data displayed on a different panel
+		viewHandlers = globals.viewHandlers || {};
  	
  	outputView = view;
  	// Check to see if we need to show these results on a different view panel
@@ -517,49 +524,72 @@ function getUserLocationsData(view, start_rec, nocache) {
  		
  		switch(outputView.type) {
 	        case "map":
-
-	            setMap(outputView, secondaryLayer);
+			if (typeof viewHandlers.setMap === "function") {
+				viewHandlers.setMap(outputView, secondaryLayer);
+			}
 	            break;
 	        case "table":
-	            setTableSurvey(outputView);
+			if (typeof viewHandlers.setTableSurvey === "function") {
+				viewHandlers.setTableSurvey(outputView);
+			}
 	            break;
 	        case "media":
-	            setMediaSurvey(outputView);
+			if (typeof viewHandlers.setMediaSurvey === "function") {
+				viewHandlers.setMediaSurvey(outputView);
+			}
 	            break;
 	        case "graph":
-	            setGraphSurvey(outputView);
+			if (typeof viewHandlers.setGraphSurvey === "function") {
+				viewHandlers.setGraphSurvey(outputView);
+			}
 	            break;
  		}
  	} else if(surveyLevel === "user") {
 
 		 switch(outputView.type) {
-			 case "map":
-				 setMap(outputView, secondaryLayer);
-				 break;
-			 case "table":
-				 setUserTableSurvey(outputView);
-				 break;
-			 case "media":
-				 setUserMediaSurvey(outputView);
-				 break;
-			 case "graph":
-				 setUserGraphSurvey(outputView);
-				 break;
+		 case "map":
+			 if (typeof viewHandlers.setMap === "function") {
+				 viewHandlers.setMap(outputView, secondaryLayer);
+			 }
+			 break;
+		 case "table":
+			 if (typeof viewHandlers.setUserTableSurvey === "function") {
+				 viewHandlers.setUserTableSurvey(outputView);
+			 }
+			 break;
+		 case "media":
+			 if (typeof viewHandlers.setUserMediaSurvey === "function") {
+				 viewHandlers.setUserMediaSurvey(outputView);
+			 }
+			 break;
+		 case "graph":
+			 if (typeof viewHandlers.setUserGraphSurvey === "function") {
+				 viewHandlers.setUserGraphSurvey(outputView);
+			 }
+			 break;
 		 }
 	 } else {
  		
  		switch(outputView.type) {
 	        case "map":
-	            setMap(outputView, secondaryLayer);
+			if (typeof viewHandlers.setMap === "function") {
+				viewHandlers.setMap(outputView, secondaryLayer);
+			}
 	            break;
 	        case "table":
-	            setTableQuestion(outputView);
+			if (typeof viewHandlers.setTableQuestion === "function") {
+				viewHandlers.setTableQuestion(outputView);
+			}
 	            break;
 	        case "media":
-	            setMediaQuestion(outputView);
+			if (typeof viewHandlers.setMediaQuestion === "function") {
+				viewHandlers.setMediaQuestion(outputView);
+			}
 	            break;
 		case "graph":
-		    newSetGraphQuestion(outputView);
+			if (typeof viewHandlers.newSetGraphQuestion === "function") {
+				viewHandlers.newSetGraphQuestion(outputView);
+			}
 		    break;
 		}
 	}
@@ -575,4 +605,3 @@ export {
 	processSurveyData,
 	refreshData
 };
-

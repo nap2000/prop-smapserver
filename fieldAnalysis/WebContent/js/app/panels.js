@@ -27,9 +27,9 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 import "jquery";
 import "jquery_ui";
 import "localise";
-import { getLoggedInUser, htmlEncode, setupUserProfile, shapeFormsChanged } from "common";
-import { initialiseDialogs } from "./script";
-import "globals";
+import { addHourglass, enableUserProfile, getLoggedInUser, handleLogout, htmlEncode, removeHourglass, setupUserProfile, shapeFormsChanged, validGeneralName } from "common";
+import { dashboardURL, initialiseDialogs } from "./script";
+import globals from "globals";
 import "./script";
 import "rmm";
 import "moment";

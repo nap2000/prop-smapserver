@@ -156,17 +156,17 @@ const globals = {
 
     function Selector() {
 
-        this.dataItems = new Object();
-        this.surveys = new Object();
-        this.surveysExtended = new Object();
-        this.surveyLanguages = new Object();
-        this.surveyQuestions = new Object();
-        this.surveyMeta = new Object();
-        this.surveyAlerts = new Object();
-        this.questions = new Object();
-        this.allSurveys;				// Simple list of surveys
-        this.allRegions;
-        this.sharedMaps;
+        this.dataItems = {};
+        this.surveys = {};
+        this.surveysExtended = {};
+        this.surveyLanguages = {};
+        this.surveyQuestions = {};
+        this.surveyMeta = {};
+        this.surveyAlerts = {};
+        this.questions = {};
+        this.allSurveys = undefined;			// Simple list of surveys
+        this.allRegions = undefined;
+        this.sharedMaps = undefined;
         this.views = [];			// Simple list of views
         this.maps = {};				// map panels indexed by the panel id
         this.changed = false;
@@ -177,13 +177,142 @@ const globals = {
         this.SELECTED_COLOR = "#0000aa";
         this.currentPanel = "map";
 
-        /*
-         * Get Functions
-         */
         this.getAll = function () {
             return this.dataItems;
-    };
+        };
 
-};
+        this.getItem = function (key) {
+            return this.dataItems[key];
+        };
 
-export default globals;
+        this.addDataItem = function (key, data) {
+            this.dataItems[key] = data;
+        };
+
+        this.clearDataItems = function () {
+            this.dataItems = {};
+        };
+
+        this.addSurvey = function (sId, data) {
+            this.surveys[sId] = data;
+        };
+
+        this.addSurveyExtended = function (sId, data) {
+            this.surveysExtended[sId] = data;
+        };
+
+        this.getSurvey = function (sId) {
+            return this.surveysExtended[sId] || this.surveys[sId];
+        };
+
+        this.clearSurveys = function () {
+            this.surveys = {};
+            this.surveysExtended = {};
+            this.surveyLanguages = {};
+            this.surveyQuestions = {};
+            this.surveyMeta = {};
+            this.surveyAlerts = {};
+            this.allSurveys = undefined;
+        };
+
+        this.setSurveyList = function (data) {
+            this.allSurveys = data;
+        };
+
+        this.getSurveyList = function () {
+            return this.allSurveys;
+        };
+
+        this.setSurveyLanguages = function (sId, data) {
+            this.surveyLanguages[sId] = data;
+        };
+
+        this.getSurveyLanguages = function (sId) {
+            return this.surveyLanguages[sId];
+        };
+
+        this.setSurveyQuestions = function (sId, language, data) {
+            if (!this.surveyQuestions[sId]) {
+                this.surveyQuestions[sId] = {};
+            }
+            this.surveyQuestions[sId][language] = data;
+        };
+
+        this.getSurveyQuestions = function (sId, language) {
+            if (!this.surveyQuestions[sId]) {
+                return undefined;
+            }
+            if (typeof language === "undefined") {
+                return this.surveyQuestions[sId];
+            }
+            return this.surveyQuestions[sId][language];
+        };
+
+        this.getQuestion = function (qId, language) {
+            return this.getQuestionDetails(globals.gCurrentSurvey, qId, language);
+        };
+
+        this.getQuestionDetails = function (sId, qId, language) {
+            var questions = this.getSurveyQuestions(sId, language);
+            if (!questions) {
+                return undefined;
+            }
+            for (var i = 0; i < questions.length; i++) {
+                if (questions[i].id == qId) {
+                    return questions[i];
+                }
+            }
+            return undefined;
+        };
+
+        this.setSurveyMeta = function (sId, data) {
+            this.surveyMeta[sId] = data;
+        };
+
+        this.getSurveyMeta = function (sId) {
+            return this.surveyMeta[sId];
+        };
+
+        this.setSurveyAlerts = function (sId, data) {
+            this.surveyAlerts[sId] = data;
+        };
+
+        this.getSurveyAlerts = function (sId) {
+            return this.surveyAlerts[sId];
+        };
+
+        this.setRegionList = function (data) {
+            this.allRegions = data;
+        };
+
+        this.getRegionList = function () {
+            return this.allRegions;
+        };
+
+        this.setSharedMaps = function (data) {
+            this.sharedMaps = data;
+        };
+
+        this.getSharedMaps = function () {
+            return this.sharedMaps;
+        };
+
+        this.setViews = function (data) {
+            this.views = data || [];
+        };
+
+        this.getViews = function () {
+            return this.views;
+        };
+
+        this.setMap = function (idx, map) {
+            this.maps[idx] = map;
+        };
+
+        this.getMap = function (idx) {
+            return this.maps[idx];
+        };
+
+    }
+
+    export default globals;

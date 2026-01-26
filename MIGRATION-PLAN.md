@@ -51,6 +51,7 @@
 - Use webpack externals for `jquery` so legacy plugins (bootstrap, multiselect, toggle) stay attached to the global jQuery instance.
 - FieldAnalysis now imports ESM exports from common/data/commonReportFunctions (no window.* helpers).
 - Tasks and fieldManagerClient aliases now point at smapServer ESM common/localise/globals; globals shims removed.
+- myWork converted to webpack bundles with ESM modules; requirejs removed from index/history/done and dep.sh now uses webpack.
 - AMD locale files contain comments; loading via dynamic `<script>` + `define` capture avoids CSP `unsafe-eval` and JSON parse errors.
 - Watch for `const`→`let` conversions in migrated modules (legacy code mutates arrays like `gGroupStacks`, `modelGeneratedChanges`).
 - Keep `bootstrap4-toggle` and `bootstrap-multiselect` loaded via script tag to avoid AMD wrapper conflicts.

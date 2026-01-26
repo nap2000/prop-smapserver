@@ -310,7 +310,7 @@ function importSourceChanged(source) {
 	}
 }
 
-function setUserTableSurvey(view) {
+export function setUserTableSurvey(view) {
 
 	var $selHead = $('#p' + view.pId).find('.phead'),
 		$selMain = $('#table_panel' + view.pId),
@@ -962,4 +962,3 @@ $('#download_pdf').click(function () {
 	//window.location.href = docURL;
 	$('#instance_functions_popup').dialog("close");
 });
-

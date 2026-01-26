@@ -19,41 +19,22 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Purpose: Allow the user to select a web form in order to complete a survey
  */
+import "jquery";
+import localise from "localise";
+import globals from "globals";
+import dbstorage from "./app/db-storage";
+import { addCacheBuster, addHourglass, getLoggedInUser, handleLogout, htmlEncode, removeHourglass, saveCurrentProject, setupUserProfile } from "common";
 var gUserLocale = navigator.language;
 if (Modernizr.localstorage) {
 	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
 }
+window.gUserLocale = gUserLocale;
 
 let gIsApp = false;
 
-requirejs.config({
-	baseUrl: 'js/libs',
-	waitSeconds: 0,
-	locale: gUserLocale,
-	paths: {
-		app: '../app',
-		i18n: '../../../../js/libs/i18n',
-		async: '../../../../js/libs/async',
-		localise: '../../../../js/app/localise',
-		modernizr: '../../../../js/libs/modernizr',
-		common: '../../../../js/app/common',
-		globals: '../../../../js/app/globals',
-		lang_location: '../../../../js'
-	},
-	shim: {
-		'common': ['jquery']
-	}
-});
+const $ = window.$;
 
-require([
-	'jquery',
-	'common',
-	'globals',
-	'localise',
-	'app/db-storage'
-], function($, common, globals, localise, dbstorage) {
-
-	$(document).ready(function() {
+$(document).ready(function() {
 
 		setCustomWebForms();			// Apply custom javascript
 		setTheme();
@@ -357,7 +338,3 @@ require([
 
 
 	}
-
-
-});
-

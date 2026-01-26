@@ -22,6 +22,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
+import { addHourglass, getLoggedInUser, getNotificationTypes, handleLogout, htmlEncode, loadSurveys, populateTaskGroupList, removeHourglass, saveCurrentProject, setupNotificationDialog, setupUserProfile } from "common";
+
 const $ = window.$;
 const localise = window.localise;
 const globals = window.globals;
@@ -46,7 +48,9 @@ $(document).ready(function() {
 
 		setCustomNotifications();			// Apply custom javascript
 
-		setTheme();
+		if (typeof window.setTheme === "function") {
+			window.setTheme();
+		}
 		setupUserProfile(true);
 		localise.setlang();		    // Localise HTML
 
@@ -622,4 +626,3 @@ $(document).ready(function() {
 			}
 		}
 	}
-

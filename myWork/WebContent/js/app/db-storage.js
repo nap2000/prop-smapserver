@@ -20,8 +20,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  This file provides access to the same database used by webforms.  The db creation code is duplicated for this reason.
  */
-define([],
-    function() {
+export default (function() {
 
         /*
 		 * Variables for indexedDB Storage
@@ -346,8 +345,7 @@ define([],
 
             });
         }
-    });
-
+    })();
 
 
 

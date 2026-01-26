@@ -16,10 +16,25 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
-    function($, lang, common, globals, moment) {
+import "jquery";
+import localise from "localise";
+import globals from "globals";
+import moment from "moment";
+import "datetimepicker";
+import {
+	addCacheBuster,
+	addHourglass,
+	checkLoggedIn,
+	downloadFile,
+	getLoggedInUser,
+	handleLogout,
+	htmlEncode,
+	removeHourglass,
+	saveCurrentProject,
+	setupUserProfile
+} from "common";
 
-        var	gSurveys,		// Only in this java script file
+	var	gSurveys,		// Only in this java script file
             gControlDelete,
             gControlRestore,
             gShowDeleted = false,
@@ -35,7 +50,9 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
 
         $(document).ready(function() {
 
-            setTheme();
+			if (typeof window.setTheme === "function") {
+				window.setTheme();
+			}
 	        setupUserProfile(true);
             localise.setlang();		// Localise HTML
 
@@ -48,7 +65,7 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
                     url += addCacheBuster(url);
                     window.location.href = url;
                 })
-            });
+	    });
             $('#customOffences').click(function() {
                 checkLoggedIn(function() {
                     var url = "/customApi/bps/offences/pivot";
@@ -1195,5 +1212,3 @@ define(['jquery','localise', 'common', 'globals','moment', 'datetimepicker'],
         function executeStructureUserReport() {
             downloadFile("/surveyKPI/adminreport/userstructure");
         }
-
-    });

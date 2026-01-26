@@ -3053,6 +3053,106 @@ function downloadPdf(language, orientation, include_references, launched_only, s
 	downloadFile(docURL);
 }
 
+function formItemsURL(form, getFeatures, mustHaveGeom, start_key, rec_limit, bBad, filter, dateId, startDate,
+	endDate, advanced_filter, tz, inc_ro, geomFormQuestions) {
+	var url = "/surveyKPI/items/";
+	url += form;
+	url += "?getFeatures=" + getFeatures;
+	url += "&mustHaveGeom=" + mustHaveGeom;
+	url += "&start_key=" + start_key;
+	url += "&rec_limit=" + rec_limit;
+	url += "&bBad=" + bBad;
+	if(typeof filter !== "undefined") {
+		url += "&filter=" + encodeURIComponent(filter);
+	}
+	if(typeof dateId !== "undefined" && dateId) {
+		url += "&dateId=" + dateId;
+	}
+	if(typeof startDate !== "undefined" && startDate) {
+		url += "&startDate=" + startDate;
+	}
+	if(typeof endDate !== "undefined" && endDate) {
+		url += "&endDate=" + endDate;
+	}
+	if(typeof advanced_filter !== "undefined") {
+		url += "&advanced_filter=" + encodeURIComponent(advanced_filter);
+	}
+	if(typeof tz !== "undefined") {
+		url += "&tz=" + encodeURIComponent(tz);
+	}
+	if(typeof inc_ro !== "undefined") {
+		url += "&inc_ro=" + inc_ro;
+	}
+	if(typeof geomFormQuestions !== "undefined") {
+		url += "&geomFormQuestions=" + encodeURIComponent(geomFormQuestions);
+	}
+	return url;
+}
+
+function resultsURL(sId, qId, dateId, groupId, groupType, geoTable, fn, lang, timeGroup,
+	startDate, endDate, qId_is_calc, filter, advanced_filter, geomFormQuestions,
+	selectedGeomQuestion) {
+
+	var url = "/surveyKPI/results/";
+	url += sId;
+	url += "?qId=" + qId;
+
+	if(dateId != null) {
+		url += "&dateId=" + dateId;
+	}
+	if(groupId != null && groupId != "-1") {
+		url += "&groupId=" + groupId;
+
+		if(groupType != null) {
+			url += "&group_t=" + groupType;
+		}
+		if(geoTable != null && geoTable.toLowerCase() != "none") {
+			url += "&geoTable=" + geoTable;
+		}
+	}
+	if(fn) {
+		url += "&fn=" + fn;
+	} else {
+		url += "&fn=percent";
+	}
+
+	if(lang) {
+		url += "&lang=" + lang;
+	} else {
+		url += "&lang=eng";
+	}
+
+	if(typeof timeGroup !== "undefined") {
+		url+= "&timeGroup=" + timeGroup;
+	}
+
+	if(typeof startDate !== "undefined" && startDate.length > 0) {
+		url+= "&startDate=" + startDate;
+	}
+
+	if(typeof endDate !== "undefined" && endDate.length > 0) {
+		url+= "&endDate=" + endDate;
+	}
+
+	if(qId_is_calc) {
+		url+= "&qId_is_calc=true";
+	}
+
+	if(typeof filter !== "undefined") {
+		url+= "&filter=" + encodeURIComponent(filter);
+	}
+
+	if(typeof advanced_filter !== "undefined") {
+		url+= "&advanced_filter=" + encodeURIComponent(advanced_filter);
+	}
+
+	if(selectedGeomQuestion) {
+		url+= "&selected_geom_question=" + encodeURIComponent(selectedGeomQuestion);
+	}
+
+	return url;
+}
+
 function downloadFile(url) {
 
 	url += addCacheBuster(url);
@@ -6472,7 +6572,14 @@ export {
 	addDatePickList,
 	addFormPickList,
 	addGeomPickList,
+	addCacheBuster,
 	addHourglass,
+	checkLoggedIn,
+	getLocations,
+	getFromLocalStorage,
+	getTaskUsers,
+	downloadFile,
+	enableUserProfile,
 	getLoggedInUser,
 	getLanguageList,
 	getEligibleUsers,
@@ -6484,7 +6591,16 @@ export {
 	populatePdfSelect,
 	removeHourglass,
 	saveCurrentProject,
+	setLocationList,
+	formItemsURL,
+	refreshLocationGroups,
 	setSurveyViewLanguages,
+	getNotificationTypes,
+	resultsURL,
+	populateTaskGroupList,
+	setupNotificationDialog,
+	setupTaskDialog,
+	validGeneralName,
 	shapeFormsChanged,
 	setupUserProfile
 };
