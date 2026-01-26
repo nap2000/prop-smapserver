@@ -76,7 +76,7 @@ $(window).on('load', function() {
     // Initialise the panel items dialog
     $('#panelItems').dialog(
         {
-            autoOpen: false, closeOnEscape:true, draggable:true, modal:false,
+            autoOpen: false, closeOnEscape:true, modal:false,
             width:300,
             resizable: false,
             draggable: false,
