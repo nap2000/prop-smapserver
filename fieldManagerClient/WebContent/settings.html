@@ -587,127 +587,170 @@
 
 					<div class="container">
 						<form id="server_form">
-							<div class="form-group row">
-								<label for="mapbox_key" data-lang="u_mb_k" class="lang control-label col-sm-4"></label>
-								<div class="col-sm-6">
-									<input type="text" id="mapbox_key" required class="form-control">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="google_key" data-lang="u_g_k" class="lang control-label col-sm-4">google</label>
-								<div class="col-sm-6">
-									<input type="text" id="google_key" required class="form-control">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="maptiler_key" data-lang="u_mt_k" class="lang control-label col-sm-4"></label>
-								<div class="col-sm-6">
-									<input type="text" id="maptiler_key" required class="form-control">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="vonage_application_id" data-lang="u_v_k" class="lang control-label col-sm-4"></label>
-								<div class="col-sm-6">
-									<input type="text" id="vonage_application_id" required class="form-control">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="vonage_webhook_secret" data-lang="u_v_whs" class="lang control-label col-sm-4"></label>
-								<div class="col-sm-6">
-									<input type="text" id="vonage_webhook_secret" required class="form-control">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="s_email_type" data-lang="u_e_type" class="lang control-label col-sm-4"></label>
-								<div class="col-sm-6">
-									<select class="form-control" id="s_email_type">
-										<option class="lang" data-lang="u_smtp" value="smtp"></option>
-										<option class="lang" data-lang="awsses" value="awssdk"></option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group row awssdk">
-								<label for="s_aws_region" data-lang="u_ar" class="lang col-sm-4 control-label"></label>
-								<div class="col-sm-6">
-									<input class="form-control" type="text" id="s_aws_region" tabindex="10">
-								</div>
-							</div>
-							<div class="form-group row smtp">
-								<label for="s_smtp_host" data-lang="u_smtp" class="lang col-sm-4 control-label"></label>
-								<div class="col-sm-6">
-									<input class="form-control" type="text" id="s_smtp_host" tabindex="10">
-								</div>
-							</div>
-							<div class="form-group row smtp">
-								<label for="s_email_domain" data-lang="u_e_dom" class="lang col-sm-4 control-label"></label>
-								<div class="col-sm-6">
-									<input class="form-control" type="text" id="s_email_domain" tabindex="11">
-								</div>
-							</div>
-							<div class="form-group row smtp">
-								<label for="s_email_user" data-lang="u_e_nm" class="lang col-sm-4 control-label">email name</label>
-								<div class="col-sm-6">
-									<input class="form-control" type="text" id="s_email_user" tabindex="12">
-								</div>
-							</div>
-							<div class="form-group row smtp">
-								<label for="s_email_password"  data-lang="u_e_p" class="lang col-sm-4 control-label">email pwd</label>
-								<div class="col-sm-6">
-									<input class="form-control" type="password" id="s_email_password" tabindex="13">
-								</div>
-							</div>
-							<div class="form-group row smtp">
-								<label for="s_email_port" data-lang="u_e_port" class="lang col-sm-4 control-label">email port</label>
-								<div class="col-sm-6">
-									<input class="form-control" type="text" id="s_email_port" tabindex="14">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="s_sms_url" data-lang="u_sms_url" class="lang col-sm-4 control-label">sms</label>
-								<div class="col-sm-6">
-									<input class="form-control" type="text" id="s_sms_url" tabindex="15">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="s_ratelimit" data-lang="u_ratelimit" class="lang col-sm-4 control-label"></label>
-								<div class="col-sm-6">
-									<input class="form-control" type="number" id="s_ratelimit" tabindex="16">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="s_p_strength" data-lang="u_mps" class="lang col-sm-4 control-label">strength</label>
-								<div class="col-sm-6">
-									<div class="input-group">
-										<input class="form-control" type="number" id="s_p_strength" tabindex="17">
-										<div class="input-group-append">
-											<span class="input-group-text" id="basic-addon2">
-												<a href="https://www.smap.com.au/docs/admin-security.html#password-strength" target="_blank"><i class="fa fa-info-circle" aria-hidden="true"></i></a></span>
+							<div class="card mb-3">
+								<div class="card-header lang" data-lang="u_server_map_services"></div>
+								<div class="card-body">
+									<div class="form-group row">
+										<label for="mapbox_key" data-lang="u_mb_k" class="lang control-label col-sm-4"></label>
+										<div class="col-sm-6">
+											<input type="text" id="mapbox_key" required class="form-control">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label for="google_key" data-lang="u_g_k" class="lang control-label col-sm-4">google</label>
+										<div class="col-sm-6">
+											<input type="text" id="google_key" required class="form-control">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label for="maptiler_key" data-lang="u_mt_k" class="lang control-label col-sm-4"></label>
+										<div class="col-sm-6">
+											<input type="text" id="maptiler_key" required class="form-control">
 										</div>
 									</div>
 								</div>
 							</div>
-							<div class="form-group row">
-								<label for="s_sec_mgr_del" data-lang="u_sec_mgr_del" class="lang col-sm-4 control-label"></label>
-								<div class="col-sm-6">
-									<div class="checkbox">
-										<input type="checkbox" id="s_sec_mgr_del" tabindex="18">
+
+							<div class="card mb-3">
+								<div class="card-header lang" data-lang="u_server_messaging"></div>
+								<div class="card-body">
+									<div class="form-group row">
+										<label for="vonage_application_id" data-lang="u_v_k" class="lang control-label col-sm-4"></label>
+										<div class="col-sm-6">
+											<input type="text" id="vonage_application_id" required class="form-control">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label for="vonage_webhook_secret" data-lang="u_v_whs" class="lang control-label col-sm-4"></label>
+										<div class="col-sm-6">
+											<input type="text" id="vonage_webhook_secret" required class="form-control">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label for="s_sms_url" data-lang="u_sms_url" class="lang col-sm-4 control-label">sms</label>
+										<div class="col-sm-6">
+											<input class="form-control" type="text" id="s_sms_url" tabindex="15">
+										</div>
 									</div>
 								</div>
 							</div>
 
-							<div class="card-body bg-light">
-								<h5 class="card-title lang" data-lang="c_style">style</h5>
-								<p class="lang" data-lang="u_css_info"></p>
-								<div class="form-group row">
-									<label for="cssSelect" data-lang="u_css_sel" class="lang control-label col-sm-4">select</label>
-									<div class="col-sm-6">
-										<select class="form-control" id="cssSelect">
-
-										</select>
+							<div class="card mb-3">
+								<div class="card-header lang" data-lang="u_server_email"></div>
+								<div class="card-body">
+									<div class="form-group row">
+										<label for="s_email_type" data-lang="u_e_type" class="lang control-label col-sm-4"></label>
+										<div class="col-sm-6">
+											<select class="form-control" id="s_email_type">
+												<option class="lang" data-lang="u_smtp" value="smtp"></option>
+												<option class="lang" data-lang="awsses" value="awssdk"></option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group row awssdk">
+										<label for="s_aws_region" data-lang="u_ar" class="lang col-sm-4 control-label"></label>
+										<div class="col-sm-6">
+											<input class="form-control" type="text" id="s_aws_region" tabindex="10">
+										</div>
+									</div>
+									<div class="form-group row smtp">
+										<label for="s_smtp_host" data-lang="u_smtp" class="lang col-sm-4 control-label"></label>
+										<div class="col-sm-6">
+											<input class="form-control" type="text" id="s_smtp_host" tabindex="10">
+										</div>
+									</div>
+									<div class="form-group row smtp">
+										<label for="s_email_domain" data-lang="u_e_dom" class="lang col-sm-4 control-label"></label>
+										<div class="col-sm-6">
+											<input class="form-control" type="text" id="s_email_domain" tabindex="11">
+										</div>
+									</div>
+									<div class="form-group row smtp">
+										<label for="s_email_user" data-lang="u_e_nm" class="lang col-sm-4 control-label">email name</label>
+										<div class="col-sm-6">
+											<input class="form-control" type="text" id="s_email_user" tabindex="12">
+										</div>
+									</div>
+									<div class="form-group row smtp">
+										<label for="s_email_password" data-lang="u_e_p" class="lang col-sm-4 control-label">email pwd</label>
+										<div class="col-sm-6">
+											<input class="form-control" type="password" id="s_email_password" tabindex="13">
+										</div>
+									</div>
+									<div class="form-group row smtp">
+										<label for="s_email_port" data-lang="u_e_port" class="lang col-sm-4 control-label">email port</label>
+										<div class="col-sm-6">
+											<input class="form-control" type="text" id="s_email_port" tabindex="14">
+										</div>
 									</div>
 								</div>
-								<button type="button" id="uploadCss" class="btn btn-success mt-4 lang" data-lang="u_css">upload</button>
-								<button type="button" id="deleteCss" class="btn btn-danger mt-4 lang" data-lang="u_css_del">delete</button>
+							</div>
+
+							<div class="card mb-3">
+								<div class="card-header lang" data-lang="u_load_mgmt"></div>
+								<div class="card-body">
+									<div class="form-group row">
+										<label for="s_ratelimit" data-lang="u_ratelimit" class="lang col-sm-4 control-label"></label>
+										<div class="col-sm-6">
+											<input class="form-control" type="number" id="s_ratelimit" tabindex="16">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label for="s_api_max_records" data-lang="u_api_max_records" class="lang col-sm-4 control-label"></label>
+										<div class="col-sm-6">
+											<input class="form-control" type="number" id="s_api_max_records">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label for="s_api_max_age_days" data-lang="u_api_max_age_days" class="lang col-sm-4 control-label"></label>
+										<div class="col-sm-6">
+											<input class="form-control" type="number" id="s_api_max_age_days">
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="card mb-3">
+								<div class="card-header lang" data-lang="u_mobile_security"></div>
+								<div class="card-body">
+									<div class="form-group row">
+										<label for="s_p_strength" data-lang="u_mps" class="lang col-sm-4 control-label">strength</label>
+										<div class="col-sm-6">
+											<div class="input-group">
+												<input class="form-control" type="number" id="s_p_strength" tabindex="17">
+												<div class="input-group-append">
+													<span class="input-group-text" id="basic-addon2">
+														<a href="https://www.smap.com.au/docs/admin-security.html#password-strength" target="_blank"><i class="fa fa-info-circle" aria-hidden="true"></i></a></span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="form-group row">
+										<label for="s_sec_mgr_del" data-lang="u_sec_mgr_del" class="lang col-sm-4 control-label"></label>
+										<div class="col-sm-6">
+											<div class="checkbox">
+												<input type="checkbox" id="s_sec_mgr_del" tabindex="18">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="card mb-3">
+								<div class="card-header lang" data-lang="c_style"></div>
+								<div class="card-body">
+									<p class="lang" data-lang="u_css_info"></p>
+									<div class="form-group row">
+										<label for="cssSelect" data-lang="u_css_sel" class="lang control-label col-sm-4">select</label>
+										<div class="col-sm-6">
+											<select class="form-control" id="cssSelect">
+
+											</select>
+										</div>
+									</div>
+									<button type="button" id="uploadCss" class="btn btn-success mt-4 lang" data-lang="u_css">upload</button>
+									<button type="button" id="deleteCss" class="btn btn-danger mt-4 lang" data-lang="u_css_del">delete</button>
+								</div>
 							</div>
 
 						</form>
