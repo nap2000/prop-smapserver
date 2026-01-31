@@ -26,12 +26,12 @@
 - Scripts assume macOS/Linux, tar available.
 
 ## Install Dependencies
-- Each module already has `package.json` (minimal). Run per module if needed:
+- Each module has `package.json` (minimal). Run per module if needed:
 - `cd smapServer && npm install`
 - `cd tasks && npm install`
 - `cd fieldManagerClient && npm install`
 - `cd fieldAnalysis && npm install`
-- `cd myWork && npm install` (if package.json exists; verify first)
+- `cd myWork && npm install`
 - `cd dashboard && npm install` (rarely needed)
 - For global grunt CLI if missing: `npm install -g grunt-cli` (avoid unless necessary).
 
@@ -46,6 +46,7 @@
 - dashboard: `cd dashboard && ./dep.sh`
 - Grunt default task per module minifies JS per `Gruntfile.js`.
 - RequireJS build: `node tools/r_2_3_6.js -o tools/build.js` (module-specific).
+- myWork webpack build: `cd myWork && npm run build` (prod) or `npm run build:dev`.
 - Dep scripts package tarballs to `~/deploy/smap/deploy/version1`.
 - Dep scripts copy assets to `$WEBSITE_DOCS/...` and restart apache.
 - Be careful: dep scripts `rm -rf` target dirs; confirm paths before running.
@@ -54,6 +55,7 @@
 - Minify only (smapServer example): `cd smapServer && grunt`
 - Copy non-minified for develop (smapServer): `cd smapServer && cp WebContent/js/edit.js WebContent/js/edit.min.js` (dep.sh handles when `develop`).
 - For tasks/fieldManagerClient/fieldAnalysis similar pattern copying .js to .min.js when develop.
+- myWork webpack only: `cd myWork && npm run build:dev`.
 
 ## Tests
 - No automated tests present; no test runner scripts.
@@ -70,6 +72,8 @@
 ## JavaScript Style (AMD/RequireJS heavy)
 - Use `"use strict"` at top where missing when feasible.
 - Prefer `const`/`let` for new code; leave existing `var` unless nearby refactor.
+- Types: JavaScript only; avoid TS/Flow; add JSDoc only where pattern exists.
+- Prefer AMD `define([...], function(...) { ... })`/`require([...], ...)` patterns; avoid ES module syntax unless already used.
 - RequireJS: add deps in `paths`/`shim` then in `require([...], function(...) { ... })` matching order.
 - Keep dependency lists sorted logically: core libs, shared app modules, feature modules.
 - Avoid polluting globals; attach to existing namespaces (e.g., `globals`, `window.*` only when pattern used).
