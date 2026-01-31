@@ -1264,7 +1264,6 @@ define({
     "u_ratelimit": "Max number of API requests per minute per organisation",
     "u_load_mgmt": "Load Management",
     "u_api_max_records": "Max records per API request",
-    "u_api_max_age_days": "Max age (days) of data in API requests",
     "u_server_map_services": "Map Services",
     "u_server_messaging": "Messaging",
     "u_server_email": "Email Server",
