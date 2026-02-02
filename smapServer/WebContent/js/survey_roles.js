@@ -263,7 +263,7 @@ function refreshView() {
 	h[++idx] = '</th>';
 	h[++idx] = '<th>';
 	h[++idx] = localise.set["ro_f_group"];
-	h[++idx] = '<a class="filter_help" href="https://www.smap.com.au/docs/admin-rbac.html#filter-groups" target="_blank"> ( i ) </a>';
+	h[++idx] = '<a class="filter_help" href="' + getFilterHelp() + '" target="_blank"> ( i ) </a>';
 	h[++idx] = '</th>';
 	h[++idx] = '</tr>';
 	h[++idx] = '</thead>';
