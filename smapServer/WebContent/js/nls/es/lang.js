@@ -1375,7 +1375,7 @@ define(
     "n_spec_nbr": "Ingrese el número",
     "n_cur_emails": "Seleccione el correo",
     "n_spec_nbr_h": "Ingresa el número sin espacios ni comas. Incluye el código del país. Opcionalmente, incluya un signo +. Por ejemplo: +442071838451",
-    "ro_b": "Aplicar el filtro de roles a todos los paquetes con el mismo rol",
+    "ro_b": "Aplicar el filtro de roles a todos los formularios del paquete ",
     "ro_b_w": "Advertencia. La aplicación de roles al paquete anulará los roles establecidos en todas los demás formularios del paquete. ¿Desea continuar?",
     "ro_b_d": "Se han aplicado roles idénticos a todos los formularios del paquete.",
     "ro_fr": "Filtrar Filas",
