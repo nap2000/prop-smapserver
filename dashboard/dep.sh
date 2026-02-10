@@ -3,7 +3,7 @@
 # Create a tar file and copy to the deploy directory
 mkdir dashboard
 cp -R WebContent/* dashboard
-tar -zcf dashboard.tgz dashboard
+tar --no-xattrs -zcf dashboard.tgz dashboard
 
 echo "----------------- dashboard"
 echo "Placing tar file in ~/deploy"
