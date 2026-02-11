@@ -544,7 +544,6 @@ require([
                     if(handleLogout(data)) {
                         gTasks.gSelectedRecord._assigned = globals.gLoggedInUser.ident;
                         showManagedData(globals.gCurrentSurvey, showTable, true);
-
                     }
                 }, error: function (data, status) {
                     removeHourglass();
@@ -3348,6 +3347,9 @@ require([
                             initialiseColumns();
                             checkFilters();
                             theCallback(data);
+                        }
+                        if(gTasks.gSelectedRecord && gTasks.gSelectedRecord.instanceid) {
+                            globals.gMainTable.row('#' + escSelector(gTasks.gSelectedRecord.instanceid)).select();
                         }
                     }
 			    },
