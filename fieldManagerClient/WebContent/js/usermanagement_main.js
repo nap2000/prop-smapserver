@@ -933,7 +933,7 @@ require([
 			loadSurveyIdentList($(this).val(), gNumbers[gNumberIdx].surveyIdent,false, true);			// Get surveys
 		});
 		$('#smsSurvey').change(function() {
-			getQuestionsInSurvey($('.select_question'), undefined, $(this).val(), true, true, undefined, false);
+			getQuestionsInSurvey($('.select_question'), undefined, $(this).val(), true, true, undefined, false, undefined);
 		});
 
 		/*
@@ -3257,7 +3257,7 @@ require([
 			if(pId > 0) {
 				$('#smsProject').val(pId);
 				loadSurveyIdentList(pId, gNumbers[gNumberIdx].surveyIdent,false, true);			// Get surveys
-				getQuestionsInSurvey($('.select_question'), undefined, gNumbers[gNumberIdx].surveyIdent, true, true, setQuestionNames, false);
+				getQuestionsInSurvey($('.select_question'), undefined, gNumbers[gNumberIdx].surveyIdent, true, true, setQuestionNames, false, undefined);
 			}
 			$('#mcMsg').val(gNumbers[gNumberIdx].mcMsg);
 		} else {
