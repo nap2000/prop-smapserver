@@ -3287,7 +3287,10 @@ require([
                 gPreviousUrl = url;
                 gTasks.cache.currentData = gTasks.cache.data[url];
                 callback(gTasks.cache.data[url]);
-                updateSettings(gTasks.cache.currentData.settings);
+                // Only update the settings if this is the top level view
+                if(gDrillDownStack.length === 0) {
+                    updateSettings(gTasks.cache.currentData.settings);
+                }
                 map.setLayers(gTasks.cache.currentData.schema.layers);
                 updateFormList(gTasks.cache.currentData.forms);
                 updateCharts(gTasks.cache.currentData.settings.charts);
@@ -3327,7 +3330,10 @@ require([
                             gTasks.cache.data[theKey] = data;
                             gTasks.cache.currentData = data;
 
-                            updateSettings(gTasks.cache.currentData.settings);
+                            // Only update the settings if this is the top level view
+                            if(gDrillDownStack.length === 0) {
+                                updateSettings(gTasks.cache.currentData.settings);
+                            }
                             map.setLayers(gTasks.cache.currentData.schema.layers);
                             updateFormList(gTasks.cache.currentData.forms);
                             updateCharts(gTasks.cache.currentData.settings.charts);
