@@ -115,6 +115,9 @@
         "xpatherror": {
             "heading": "Errore formula",
             "msg": "Si &egrave; verificato un' errore di valutazione sulla formula. Si prega di contattare __emailLink__ con il seguente errore:"
+        },
+        "returning": {
+            "heading": "Ritorno"
         }
     },
     "confirm": {
@@ -221,6 +224,9 @@
         },
         "submit": {
             "btn": "Invia"
+        },
+        "submitReturn": {
+            "btn": "Invia e torna"
         },
         "validate": {
             "btn": "Convalida"

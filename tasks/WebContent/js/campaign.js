@@ -128,10 +128,12 @@ require([
 				data: { mailoutId: gMailouts[gCurrentMailOutIdx].id },
 				success: function(data, status) {
 					removeHourglass();
-					$('#confirmDeletePopup').modal("hide");
-					gCurrentMailOutIdx = -1;
-					loadMailouts();
-					clearMailoutStatus();
+					if(handleLogout(data)) {
+						$('#confirmDeletePopup').modal("hide");
+						gCurrentMailOutIdx = -1;
+						loadMailouts();
+						clearMailoutStatus();
+					}
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
@@ -345,8 +347,10 @@ require([
 				data: { mailout: mailoutString },
 				success: function(data, status) {
 					removeHourglass();
-					$('#addMailoutPopup').modal("hide");
-					loadMailouts(data.id);
+					if(handleLogout(data)) {
+						$('#addMailoutPopup').modal("hide");
+						loadMailouts(data.id);
+					}
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
@@ -543,48 +547,50 @@ require([
 			cache: false,
 			success: function(data) {
 				removeHourglass();
-				gMailouts = data;
-				var h = [],
-					idx = -1,
-					i,
-					count = 0,
-					item,
-					selValue;
+				if(handleLogout(data)) {
+					gMailouts = data;
+					var h = [],
+						idx = -1,
+						i,
+						count = 0,
+						item,
+						selValue;
 
-				if(data) {
-					for (i = 0; i < data.length; i++) {
-						item = data[i];
-						h[++idx] = '<option';
-						if (count++ === 0) {
-							selValue = i;
+					if (data) {
+						for (i = 0; i < data.length; i++) {
+							item = data[i];
+							h[++idx] = '<option';
+							if (count++ === 0) {
+								selValue = i;
+							}
+							h[++idx] = ' value="';
+							h[++idx] = i;
+							h[++idx] = '">';
+							h[++idx] = htmlEncode(item.name);
+							h[++idx] = '</option>';
 						}
-						h[++idx] = ' value="';
-						h[++idx] = i;
-						h[++idx] = '">';
-						h[++idx] = htmlEncode(item.name);
-						h[++idx] = '</option>';
+
+						if (data.length > 0) {
+							$('#m_edit, #m_delete').removeClass("disabled");
+						} else {
+							$('#m_edit, #m_delete').addClass("disabled");
+						}
 					}
 
-					if(data.length > 0) {
-						$('#m_edit, #m_delete').removeClass("disabled");
+					$mailout.empty().append(h.join(''));
+
+					if (id) {
+						gCurrentMailOutIdx = getMailoutIdx(id);
+					}
+
+					if (gCurrentMailOutIdx >= 0) {
+						$mailout.val(gCurrentMailOutIdx);
 					} else {
-						$('#m_edit, #m_delete').addClass("disabled");
+						$mailout.val(selValue);
+						gCurrentMailOutIdx = selValue;
 					}
+					mailoutChanged(false);
 				}
-
-				$mailout.empty().append(h.join(''));
-
-				if(id) {
-					gCurrentMailOutIdx = getMailoutIdx(id);
-				}
-
-				if(gCurrentMailOutIdx >= 0) {
-					$mailout.val(gCurrentMailOutIdx);
-				} else {
-					$mailout.val(selValue);
-					gCurrentMailOutIdx = selValue;
-				}
-				mailoutChanged(false);
 
 			},
 			error: function(xhr, textStatus, err) {
@@ -615,15 +621,17 @@ require([
 			success: function(data) {
 				removeHourglass();
 
-				if(data) {
-					$('#mo_sent').text(data.sent);
-					$('#mo_complete').text(data.complete);
-					$('#mo_unsent').text(data.unsent);
-					$('#mo_pending').text(data.pending);
-					$('#mo_error').text(data.error);
-					$('#mo_unsubscribed').text(data.unsubscribed);
-					$('#mo_expired').text(data.expired);
-					$('#mo_manual').text(data.manual);
+				if(handleLogout(data)) {
+					if(data) {
+						$('#mo_sent').text(data.sent);
+						$('#mo_complete').text(data.complete);
+						$('#mo_unsent').text(data.unsent);
+						$('#mo_pending').text(data.pending);
+						$('#mo_error').text(data.error);
+						$('#mo_unsubscribed').text(data.unsubscribed);
+						$('#mo_expired').text(data.expired);
+						$('#mo_manual').text(data.manual);
+					}
 				}
 			},
 			error: function(xhr, textStatus, err) {
@@ -693,9 +701,11 @@ require([
 			$.ajax({
 				url: url,
 				cache: false,
-				success: function () {
+				success: function (data) {
 					removeHourglass();
-					mailoutChanged(true);
+					if(handleLogout(data)) {
+						mailoutChanged(true);
+					}
 				},
 				error: function (xhr, textStatus, err) {
 
@@ -732,9 +742,11 @@ require([
 			$.ajax({
 				url: url,
 				cache: false,
-				success: function () {
+				success: function (data) {
 					removeHourglass();
-					mailoutChanged(true);
+					if(handleLogout(data)) {
+						mailoutChanged(true);
+					}
 				},
 				error: function (xhr, textStatus, err) {
 
