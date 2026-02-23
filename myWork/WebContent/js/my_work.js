@@ -188,10 +188,14 @@ require([
 		for(i = 0; i < taskList.length; i++) {
 
 			if(!filterProjectId || filterProjectId == taskList[i].task.pid) {
+				var isCancelled = taskList[i].assignment.assignment_status === 'cancelled';
+				var isNew = taskList[i].assignment.assignment_status === 'new';
 				var repeat = taskList[i].task.repeat || taskList[i].task.type === 'case'; 	// Can complete the task multiple times
 				h[++idx] = '<div class="btn-group btn-block btn-group-lg d-flex" role="group" aria-label="Button group for task selection or rejection">';
-				if(taskList[i].assignment.assignment_status === 'cancelled') {
-					h[++idx] = '<button class="btn btn-danger w-10" type="button">';
+				if(isCancelled) {
+					h[++idx] = '<button class="btn btn-danger w-10" type="button" disabled>'; 
+				} else if(isNew) {
+					h[++idx] = '<button class="btn btn-secondary w-10" type="button" disabled>';
 				} else {
 					h[++idx] = '<button class="btn btn-info w-10" type="button">';
 				}
@@ -203,8 +207,10 @@ require([
 				h[++idx] = '</button>';
 				h[++idx] = '<a id="a_';
 				h[++idx] = i;
-				if(taskList[i].assignment.assignment_status === 'cancelled') {
-					h[++idx] = '" class="task btn btn-danger w-100" role="button"';
+				if(isCancelled) {
+					h[++idx] = '" class="task btn btn-danger w-100 disabled" role="button" aria-disabled="true"';
+				} else if(isNew) {
+					h[++idx] = '" class="task btn btn-secondary w-100 disabled" role="button" aria-disabled="true"';
 				} else {
 					h[++idx] = '" class="task btn btn-info w-100" role="button"';
 					h[++idx] = ' target="_blank"';
@@ -219,7 +225,7 @@ require([
 
 				// Add the href
 				var hasParam = false;
-				if(taskList[i].assignment.assignment_status === 'cancelled') {
+				if(isCancelled || isNew) {
 					href = '#';
 				} else {
 					var href = '/app/myWork/webForm/';
@@ -254,12 +260,12 @@ require([
 				h[++idx] = '<span class="text-center">'
 					+ htmlEncode(taskList[i].task.title)
 					+ " (" + localise.set["c_id"] + ": " + taskList[i].assignment.assignment_id + ")"
-					+ ((taskList[i].assignment.assignment_status === 'cancelled') ? (' : ' + localise.set["cancelled"]) : '')
+					+ (isCancelled ? (' : ' + localise.set["cancelled"]) : '')
 					+ '</span>';
 				h[++idx] = '</a>';
 
 				// Add button with additional options
-				if(taskList[i].assignment.assignment_status !== 'cancelled') {
+				if(!isCancelled && !isNew) {
 					h[++idx] = '<button ';
 					h[++idx] = 'id="a_r_' + i;
 					h[++idx] = '" class="btn btn-danger w-20 reject" type="button"';
@@ -275,7 +281,7 @@ require([
 				}
 
 				h[++idx] = '</div>';        // input group
-				if(taskList[i].assignment.assignment_status !== 'cancelled') {
+				if(!isCancelled) {
 					count++;
 				}
 			}
@@ -288,6 +294,10 @@ require([
 			$('.up_alert').hide();
 			var $this = $(this),
 				repeat = $this.data("repeat");
+
+			if($this.hasClass('disabled')) {
+				return;
+			}
 
 			if(!repeat) {
 				$this.removeClass('btn-warning').addClass('btn-success');		// Mark task as done
@@ -360,4 +370,3 @@ require([
 
 
 });
-
