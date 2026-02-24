@@ -281,7 +281,11 @@ require([
 					h[++idx] = '...';
 					h[++idx] = '</button>';
 					h[++idx] = '<div class="dropdown-menu dropdown-menu-right">';
-					h[++idx] = '<a class="dropdown-item task-action-accept" href="#" data-id="' + i + '">' + localise.set["c_accept"] + '</a>';
+					if(isAccepted) {
+						h[++idx] = '<a class="dropdown-item task-action-accept disabled" href="#" data-id="' + i + '" aria-disabled="true">' + localise.set["c_accept"] + '</a>';
+					} else {
+						h[++idx] = '<a class="dropdown-item task-action-accept" href="#" data-id="' + i + '">' + localise.set["c_accept"] + '</a>';
+					}
 					h[++idx] = '<a class="dropdown-item task-action-reject" href="#" data-id="' + i + '">' + localise.set["c_reject"] + '</a>';
 					h[++idx] = '</div>';
 					h[++idx] = '</div>';
@@ -345,6 +349,9 @@ require([
 			e.preventDefault();
 			var $this = $(this);
 			var tl = taskList;
+			if($this.hasClass('disabled')) {
+				return;
+			}
 			accept($this.data("id"), tl);
 		});
 	}
