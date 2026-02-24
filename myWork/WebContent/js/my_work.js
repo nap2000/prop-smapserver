@@ -190,14 +190,15 @@ require([
 			if(!filterProjectId || filterProjectId == taskList[i].task.pid) {
 				var isCancelled = taskList[i].assignment.assignment_status === 'cancelled';
 				var isNew = taskList[i].assignment.assignment_status === 'new';
+				var isAccepted = taskList[i].assignment.assignment_status === 'accepted';
 				var repeat = taskList[i].task.repeat || taskList[i].task.type === 'case'; 	// Can complete the task multiple times
 				h[++idx] = '<div class="btn-group btn-block btn-group-lg d-flex" role="group" aria-label="Button group for task selection or rejection">';
 				if(isCancelled) {
-					h[++idx] = '<button class="btn btn-danger w-10" type="button" disabled>'; 
+					h[++idx] = '<button class="btn btn-danger w-10 task-icon" type="button" disabled>'; 
 				} else if(isNew) {
-					h[++idx] = '<button class="btn btn-secondary w-10" type="button" disabled>';
+					h[++idx] = '<button class="btn btn-secondary w-10 task-icon" type="button" disabled>';
 				} else {
-					h[++idx] = '<button class="btn btn-info w-10" type="button">';
+					h[++idx] = '<button class="btn btn-info w-10 task-icon" type="button">';
 				}
 				if(taskList[i].task.type === 'case') {
 					h[++idx] = '<i class="fa fa-folder-open"></i>';
@@ -225,10 +226,9 @@ require([
 
 				// Add the href
 				var hasParam = false;
-				if(isCancelled || isNew) {
-					href = '#';
-				} else {
-					var href = '/app/myWork/webForm/';
+				var href = '#';
+				if(!isCancelled) {
+					href = '/app/myWork/webForm/';
 					href += taskList[i].task.form_id;
 
 					if (taskList[i].task.initial_data_source) {
@@ -254,7 +254,15 @@ require([
 					href += addCacheBuster(href);		// Add a cache buster
 				}
 
-				h[++idx] = '" href="' + href + '">';
+				if(isNew) {
+					h[++idx] = '" href="#" data-href="' + href + '">';
+				} else {
+					h[++idx] = '" href="' + href + '"';
+					if(!isCancelled) {
+						h[++idx] = ' data-href="' + href + '"';
+					}
+					h[++idx] = '>';
+				}
 
 				// Add the text
 				h[++idx] = '<span class="text-center">'
@@ -265,7 +273,19 @@ require([
 				h[++idx] = '</a>';
 
 				// Add button with additional options
-				if(!isCancelled && !isNew) {
+				if(!isCancelled && (isAccepted || isNew)) {
+					h[++idx] = '<div class="btn-group w-20" role="group">';
+					h[++idx] = '<button ';
+					h[++idx] = 'id="a_r_' + i;
+					h[++idx] = '" class="btn btn-secondary dropdown-toggle w-100" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+					h[++idx] = '...';
+					h[++idx] = '</button>';
+					h[++idx] = '<div class="dropdown-menu dropdown-menu-right">';
+					h[++idx] = '<a class="dropdown-item task-action-accept" href="#" data-id="' + i + '">' + localise.set["c_accept"] + '</a>';
+					h[++idx] = '<a class="dropdown-item task-action-reject" href="#" data-id="' + i + '">' + localise.set["c_reject"] + '</a>';
+					h[++idx] = '</div>';
+					h[++idx] = '</div>';
+				} else if(!isCancelled) {
 					h[++idx] = '<button ';
 					h[++idx] = 'id="a_r_' + i;
 					h[++idx] = '" class="btn btn-danger w-20 reject" type="button"';
@@ -313,6 +333,20 @@ require([
 				reject($this.data("id"), tl);
 			}
 		});
+
+		$taskList.find('.task-action-reject').off().click(function(e){
+			e.preventDefault();
+			var $this = $(this);
+			var tl = taskList;
+			reject($this.data("id"), tl);
+		});
+
+		$taskList.find('.task-action-accept').off().click(function(e){
+			e.preventDefault();
+			var $this = $(this);
+			var tl = taskList;
+			accept($this.data("id"), tl);
+		});
 	}
 
 
@@ -352,7 +386,11 @@ require([
 					success: function(data, status) {
 						removeHourglass();
 						if(handleLogout(data)) {
-							$('#a_' + idx).removeClass('btn-info').addClass('btn-danger').addClass('disabled');
+							var $task = $('#a_' + idx);
+							$task.removeClass('btn-info btn-secondary').addClass('btn-danger').addClass('disabled');
+							$task.attr('href', '#').removeAttr('target').attr('aria-disabled', 'true');
+							$task.closest('.btn-group').find('.task-icon')
+								.removeClass('btn-info btn-secondary').addClass('btn-danger').prop('disabled', true);
 							$('#a_r_' + idx).addClass('disabled');
 						}
 					},
@@ -366,6 +404,44 @@ require([
 		});
 
 
+	}
+
+	function accept(idx, taskList) {
+
+		$('.up_alert').hide();
+		var taskUpdate = {
+			assignment_id: taskList[idx].assignment.assignment_id,
+			assignment_status: 'accepted',
+			task_id: taskList[idx].task.id,
+			type: taskList[idx].task.type,
+			sIdent: taskList[idx].task.form_id,
+			uuid: taskList[idx].task.update_id
+		};
+
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			data: {assignment: JSON.stringify(taskUpdate)},
+			cache: false,
+			contentType: "application/x-www-form-urlencoded",
+			url: "/surveyKPI/assignments/mine/update_status",
+			success: function(data, status) {
+				removeHourglass();
+				if(handleLogout(data)) {
+					taskList[idx].assignment.assignment_status = 'accepted';
+					var $task = $('#a_' + idx);
+					var href = $task.data('href');
+					$task.removeClass('btn-secondary disabled').addClass('btn-info');
+					$task.attr('href', href).attr('target', '_blank').attr('aria-disabled', 'false');
+					$task.closest('.btn-group').find('.task-icon')
+						.removeClass('btn-secondary').addClass('btn-info').prop('disabled', false);
+				}
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				$('.up_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["msg_err_upd"] + htmlEncode(xhr.responseText));
+			}
+		});
 	}
 
 

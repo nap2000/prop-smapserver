@@ -389,6 +389,7 @@ define({
     "c_lon": "Longitude",
     "c_browse": "Browse",
     "c_reject": "Reject",
+    "c_accept": "Accept",
     "c_history": "History",
     "c_events": "Events",
     "c_resend": "Resend",
