@@ -162,12 +162,19 @@ function addAnchors (property, minsize) {
                         + '" type="' + media.source_type + '">'
                         + 'Your browser does not support this video type'
                         + '</video>';
-                } else {
-                    style = (media.thumbNail == '/fieldAnalysis/img/link.png') ? "width:32px;" : "width:100%;";
-                    output[i] = '<a href="' + media.url
-                        + '" target="_blank"><img style="' + style + '" src="'
-                        + (minsize ? media.thumbNail : media.url)
-						+ '" alt="Picture"></a>';
+                } else if (media.type === "image") {
+					output[i] = '<a class="media-link" href="' + media.url
+						+ '" target="_blank" aria-label="Open file">'
+						+ '<img style="width:100%;" src="'
+						+ (minsize ? media.thumbNail : media.url)
+						+ '" alt="Picture">'
+						+ '</a>';
+				} else {
+                    output[i] = '<a class="media-link" href="' + media.url
+                        + '" target="_blank" aria-label="Open file">'
+                        + '<span class="fas fa-link '
+                        + '" aria-hidden="true" style="color:blue;display:inline-block;width:1.5em;height:1.5em;line-height:1.5em;font-size:1.5em;text-align:center;"></span>'
+                        + '</a>';
                 }
             } else {
                 output[i] = '<a href="' + media.url
