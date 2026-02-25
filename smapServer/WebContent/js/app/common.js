@@ -4530,7 +4530,7 @@ function setOrganisationTheme() {
 }
 
 /*
- * Surround get / set from local storage in case user has disabled local sorage reading in browser settings
+ * Surround get / set from local storage in case user has disabled local storage reading in browser settings
  */
 function getFromLocalStorage(key) {
 	var value;
@@ -6579,23 +6579,28 @@ export {
 	addGeomPickList,
 	addCacheBuster,
 	addHourglass,
+	addTimeZoneToUrl,
 	checkLoggedIn,
 	getLocations,
 	getFromLocalStorage,
 	getTaskUsers,
 	downloadFile,
+	enableDebugging,
 	enableUserProfile,
 	getLoggedInUser,
 	getLanguageList,
 	getEligibleUsers,
+	getRoles,
 	handleLogout,
 	htmlDecode,
 	htmlEncode,
+	isBusinessServer,
 	loadSurveys,
 	populateLanguageSelect,
 	populatePdfSelect,
 	removeHourglass,
 	saveCurrentProject,
+	setInLocalStorage,
 	setLocationList,
 	formItemsURL,
 	refreshLocationGroups,
@@ -6605,6 +6610,8 @@ export {
 	populateTaskGroupList,
 	setupNotificationDialog,
 	setupTaskDialog,
+	updateProjectList,
+	validateEmails,
 	validGeneralName,
 	shapeFormsChanged,
 	setupUserProfile

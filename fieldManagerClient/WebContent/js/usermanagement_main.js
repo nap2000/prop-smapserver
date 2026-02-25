@@ -22,6 +22,25 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
+import {
+	addHourglass,
+	addTimeZoneToUrl,
+	downloadFile,
+	enableDebugging,
+	getFromLocalStorage,
+	getLoggedInUser,
+	getRoles,
+	handleLogout,
+	htmlEncode,
+	isBusinessServer,
+	removeHourglass,
+	setInLocalStorage,
+	updateProjectList,
+	setupUserProfile,
+	validGeneralName,
+	validateEmails
+} from "common";
+
 const $ = window.$;
 const localise = window.localise;
 const globals = window.globals;
@@ -3255,4 +3274,3 @@ const moment = window.moment;
 		$('#theirNumberQuestion').val(gNumbers[gNumberIdx].theirNumberQuestion);
 		$('#messageQuestion').val(gNumbers[gNumberIdx].messageQuestion);
 	}
-
