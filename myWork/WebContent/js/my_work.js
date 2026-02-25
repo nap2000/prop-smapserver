@@ -431,6 +431,3 @@ $(document).ready(function() {
 			}
 		});
 	}
-
-
-});
