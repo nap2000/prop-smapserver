@@ -327,6 +327,7 @@ define(
     "c_lon": "Longitude",
     "c_browse": "Browse",
     "c_reject": "Rejeitar",
+    "c_accept": "Aceitar",
     "c_history": "Histórico",
     "c_events": "Events",
     "c_resend": "Reenviar",

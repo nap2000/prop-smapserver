@@ -4142,7 +4142,7 @@ function getAccessibleCsvFiles($elem, includeNone) {
  /*
   * Get the questions in a survey
   */
-function getQuestionsInSurvey($elem, $elem_multiple, sIdent, includeNone, textOnly, callback, includeHrk) {
+function getQuestionsInSurvey($elem, $elem_multiple, sIdent, includeNone, textOnly, callback, includeHrk, value) {
 
 	function populateElement($elem, $elem_multiple, data) {
 		var h = [],
@@ -4150,7 +4150,8 @@ function getQuestionsInSurvey($elem, $elem_multiple, sIdent, includeNone, textOn
 			idx = -1,
 			idx_m = -1,
 			i,
-			setValueFn = callback;
+			setValueFn = callback,
+		    setValue = value;
 
 		if (includeNone) {
 			h[++idx] = '<option value="0">';
@@ -4186,6 +4187,10 @@ function getQuestionsInSurvey($elem, $elem_multiple, sIdent, includeNone, textOn
 
 		if(typeof setValueFn === "function") {
 			setValueFn();
+		} else if(setValue) {
+			if($elem) {
+				$elem.val(setValue);
+			}
 		}
 	}
 

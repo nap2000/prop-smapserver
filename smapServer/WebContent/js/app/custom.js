@@ -83,6 +83,10 @@ function setCustomSubscriptions() {
 function setCustomEdit() {
 }
 
+function getFilterHelp() {
+    return "https://www.smap.com.au/docs/admin-rbac.html#filter-groups";
+}
+
 function setCustomWebForms() {
 }
 

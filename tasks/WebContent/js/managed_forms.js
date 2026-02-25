@@ -500,7 +500,6 @@ localise.initLocale(gUserLocale).then(function () {
                     if(handleLogout(data)) {
                         gTasks.gSelectedRecord._assigned = globals.gLoggedInUser.ident;
                         showManagedData(globals.gCurrentSurvey, showTable, true);
-
                     }
                 }, error: function (data, status) {
                     removeHourglass();
@@ -3244,7 +3243,10 @@ localise.initLocale(gUserLocale).then(function () {
                 gPreviousUrl = url;
                 gTasks.cache.currentData = gTasks.cache.data[url];
                 callback(gTasks.cache.data[url]);
-                updateSettings(gTasks.cache.currentData.settings);
+                // Only update the settings if this is the top level view
+                if(gDrillDownStack.length === 0) {
+                    updateSettings(gTasks.cache.currentData.settings);
+                }
                 map.setLayers(gTasks.cache.currentData.schema.layers);
                 updateFormList(gTasks.cache.currentData.forms);
                 updateCharts(gTasks.cache.currentData.settings.charts);
@@ -3284,7 +3286,10 @@ localise.initLocale(gUserLocale).then(function () {
                             gTasks.cache.data[theKey] = data;
                             gTasks.cache.currentData = data;
 
-                            updateSettings(gTasks.cache.currentData.settings);
+                            // Only update the settings if this is the top level view
+                            if(gDrillDownStack.length === 0) {
+                                updateSettings(gTasks.cache.currentData.settings);
+                            }
                             map.setLayers(gTasks.cache.currentData.schema.layers);
                             updateFormList(gTasks.cache.currentData.forms);
                             updateCharts(gTasks.cache.currentData.settings.charts);
@@ -3304,6 +3309,9 @@ localise.initLocale(gUserLocale).then(function () {
                             initialiseColumns();
                             checkFilters();
                             theCallback(data);
+                        }
+                        if(gTasks.gSelectedRecord && gTasks.gSelectedRecord.instanceid) {
+                            globals.gMainTable.row('#' + escSelector(gTasks.gSelectedRecord.instanceid)).select();
                         }
                     }
 			    },

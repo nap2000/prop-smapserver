@@ -46,6 +46,8 @@ define(
     "c_download": "डाउनलोड",
     "c_done": "होगया",
     "c_cancel": "रद्द",
+    "c_reject": "अस्वीकार करें",
+    "c_accept": "स्वीकार करें",
     "c_save": "सहेजें",
     "c_block": "खंड",
     "c_graph": "ग्राफ",

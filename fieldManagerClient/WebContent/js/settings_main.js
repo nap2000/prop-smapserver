@@ -749,6 +749,7 @@ const moment = window.moment;
 		$('#s_email_port').val(data.email_port);
 		$('#s_sms_url').val(data.sms_url);
 		$('#s_ratelimit').val(data.ratelimit);
+		$('#s_api_max_records').val(data.api_max_records);
 		$('#s_p_strength').val(data.password_strength);
 		$('#s_sec_mgr_del').prop('checked', data.sec_mgr_del);
 		gCssFile = data.css;
@@ -777,6 +778,7 @@ const moment = window.moment;
 				email_port: $('#s_email_port').val(),
 				sms_url: $('#s_sms_url').val(),
 				ratelimit: $('#s_ratelimit').val(),
+				api_max_records: $('#s_api_max_records').val(),
 				password_strength: $('#s_p_strength').val(),
 				sec_mgr_del: $('#s_sec_mgr_del').prop('checked'),
 				css: $('#cssSelect').val()

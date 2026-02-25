@@ -177,6 +177,18 @@ localise.initLocale(gUserLocale).then(function () {
 			globals.gCurrentUserId = $('option:selected', $(this)).val();
 		});
 
+		$('#tp_user').change(function () {
+			if($(this).val() !== '-1') {
+				$('#tp_assign_auto').prop('checked', false);
+			}
+		});
+
+		$('#tp_assign_auto').change(function () {
+			if($(this).prop('checked')) {
+				$('#tp_user').val('-1').trigger('change');
+			}
+		});
+
 		/*
 		 * Menus
 		 */

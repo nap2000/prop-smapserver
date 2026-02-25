@@ -189,6 +189,8 @@ define(
     "c_scheduled": "Planifier",
     "c_t_c": "Termes et Conditions",
     "c_agree": "J'accepte la",
+    "c_accept": "Accepter",
+    "c_reject": "Rejeter",
     "c_select": "Selection",
     "c_status": "Statut",
     "c_coords": "Coordonnés",

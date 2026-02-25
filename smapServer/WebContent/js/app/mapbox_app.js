@@ -36,7 +36,7 @@ function initialiseMap(elementId, zoom, setUserLocation, callbackClick, callback
 					L.mapbox.accessToken = data;
 					initialiseMapKeySet(elementId, zoom, setUserLocation, callbackClick, callbackInitialised);
 				} else {
-					alert("mapbox key not set");
+					//alert("mapbox key not set");
 				}
 			},
 			error: function(xhr, textStatus, err) {

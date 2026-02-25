@@ -82,6 +82,8 @@ define(
     "c_upload": "تحميل ",
     "c_done": "تم",
     "c_cancel": "إلغاء ",
+    "c_reject": "رفض",
+    "c_accept": "قبول",
     "c_save": "حفظ",
     "c_saved": "تم الحفظ ",
     "c_submit": "عرض ",

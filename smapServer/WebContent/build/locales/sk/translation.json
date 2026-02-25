@@ -120,6 +120,9 @@
         "xpatherror": {
             "heading": "Chyba pri Vyhodnocovaný Vzorca",
             "msg": "Došlo k chybe pri vyhodnocovaní vzorca. Prosím kontaktujte __emailLink__ s touto chybou:"
+        },
+        "returning": {
+            "heading": "Návrat"
         }
     },
     "confirm": {
@@ -246,6 +249,9 @@
         },
         "submit": {
             "btn": "Odoslať"
+        },
+        "submitReturn": {
+            "btn": "Odoslať a vrátiť sa"
         },
         "validate": {
             "btn": "Overiť"
