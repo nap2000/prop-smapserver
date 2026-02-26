@@ -20,6 +20,10 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * This javascript file handles map initialization and events.
  */
 
+"use strict";
+
+import { addGoogleMapLayers, addHourglass, getGoogleMapApi, removeHourglass } from "common";
+
 
 var selectResultsControl = null, // OpenLayers select control for vector feature layer
 	bounds,
