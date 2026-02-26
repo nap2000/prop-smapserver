@@ -22,89 +22,84 @@
 
 "use strict";
 
-define([
-        'jquery',
-        'modernizr',
-        'localise',
-        'globals'],
-    function ($, modernizr, localise, globals) {
-        return {
-            refresh: refresh
-        };
+import localise from "localise";
 
-        var initialised = false;
+export default {
+	refresh: refresh
+};
 
-        var gProgressChart;
-        var gProgressConfig;
+var initialised = false;
 
-        function init() {
+var gProgressChart;
+var gProgressConfig;
 
-            initProgressChart();
-            initialised = true;
+function init() {
 
-        }
+	initProgressChart();
+	initialised = true;
 
-        function initProgressChart() {
-            gProgressConfig = {
-                type: 'bar',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: localise.set["c_opened"],
-                        backgroundColor: 'rgb(255, 00, 00)',
-                        borderColor: 'rgb(255, 00, 00)',
-                        data: [],
-                    },
-                        {
-                            label: localise.set["c_closed"],
-                            backgroundColor: 'rgb(00, 64, 00)',
-                            borderColor: 'rgb(00, 64, 00)',
-                            data: [],
-                        }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                }
-            };
+}
 
-            gProgressChart = new Chart(
-                document.getElementById('progressChart'),
-                gProgressConfig
-            );
-        }
+function initProgressChart() {
+	gProgressConfig = {
+		type: 'bar',
+		data: {
+			labels: [],
+			datasets: [{
+				label: localise.set["c_opened"],
+				backgroundColor: 'rgb(255, 00, 00)',
+				borderColor: 'rgb(255, 00, 00)',
+				data: [],
+			},
+				{
+					label: localise.set["c_closed"],
+					backgroundColor: 'rgb(00, 64, 00)',
+					borderColor: 'rgb(00, 64, 00)',
+					data: [],
+				}]
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+		}
+	};
 
-        /*
-         * Extract the data in chart form
-         */
-        function refresh() {
+	gProgressChart = new Chart(
+		document.getElementById('progressChart'),
+		gProgressConfig
+	);
+}
 
-            if(!gMonitor.caseProgress) {
-                // Data not available yet.
-                return;
-            }
+/*
+ * Extract the data in chart form
+ */
+function refresh() {
 
-            if(!initialised) {
-                init()
-            }
+	if(!gMonitor.caseProgress) {
+		// Data not available yet.
+		return;
+	}
 
-            /*
-             * Show the charts
-             */
-            updateProgressChart(gProgressConfig, gMonitor.caseProgress, gProgressChart);
+	if(!initialised) {
+		init();
+	}
 
-        }
+	/*
+	 * Show the charts
+	 */
+	updateProgressChart(gProgressConfig, gMonitor.caseProgress, gProgressChart);
 
-        function updateProgressChart(config, data, chart) {
-            var i;
-            config.data.labels = [];
-            config.data.datasets[0].data = [];
-            config.data.datasets[1].data = [];
-            for (i = 0; i < data.length; i++) {
-                config.data.labels.push(data[i].day);
-                config.data.datasets[0].data.push(data[i].opened);
-                config.data.datasets[1].data.push(data[i].closed);
-            }
-            chart.update();
-        }
-    });
+}
+
+function updateProgressChart(config, data, chart) {
+	var i;
+	config.data.labels = [];
+	config.data.datasets[0].data = [];
+	config.data.datasets[1].data = [];
+	for (i = 0; i < data.length; i++) {
+		config.data.labels.push(data[i].day);
+		config.data.datasets[0].data.push(data[i].opened);
+		config.data.datasets[1].data.push(data[i].closed);
+	}
+	chart.update();
+}
