@@ -19,14 +19,23 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Purpose: Allow the user to select a web form in order to complete a survey
  */
+"use strict";
+
 import "jquery";
 import localise from "localise";
 import globals from "globals";
 import dbstorage from "./app/db-storage";
 import { addCacheBuster, addHourglass, getLoggedInUser, handleLogout, htmlEncode, removeHourglass, saveCurrentProject, setupUserProfile } from "common";
+
 var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+if (typeof localStorage !== "undefined") {
+	try {
+		if (typeof Modernizr !== "undefined" ? Modernizr.localstorage : true) {
+			gUserLocale = localStorage.getItem("user_locale") || navigator.language;
+		}
+	} catch (error) {
+		gUserLocale = navigator.language;
+	}
 }
 window.gUserLocale = gUserLocale;
 
@@ -34,7 +43,11 @@ let gIsApp = false;
 
 const $ = window.$;
 
-$(document).ready(function() {
+localise.initLocale(gUserLocale).then(function () {
+	window.localise = localise;
+	window.globals = globals;
+
+	$(document).ready(function() {
 
 		setCustomWebForms();			// Apply custom javascript
 		setTheme();
@@ -70,6 +83,7 @@ $(document).ready(function() {
 		}
 
 	});
+});
 	
 	function projectSet() {
 		getSurveysForList();			// Get surveys
