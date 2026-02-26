@@ -56,6 +56,13 @@ function initialiseMap(elementId, zoom, setUserLocation, callbackClick, callback
 	 
 }
 
+"use strict";
+
+import $ from "jquery";
+import { addHourglass, includeByStatus, removeHourglass } from "./common";
+
+const L = window.L;
+
 /*
  * This function does the initialisation once the mapbox key has been set
  */
@@ -281,3 +288,10 @@ function zoomToFeatureLayer(elementId) {
 
 }
 
+export {
+	initialiseMap,
+	refreshMapAssignments,
+	clearDraggableMarker,
+	addDraggableMarker,
+	zoomToFeatureLayer
+};

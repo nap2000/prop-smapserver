@@ -93,6 +93,7 @@ const defaults = {
         gAssignmentsLayer: undefined,
         gPendingUpdates: [],
         gCurrentTaskGroup: undefined,
+		gCurrentTaskFeature: undefined,
 	    gCurrentMailout: undefined,
         gTaskList: undefined,
         gCurrentSurveyIndex: 0,

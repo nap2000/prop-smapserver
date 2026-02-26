@@ -4767,7 +4767,7 @@ function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback, t
 	 */
 	if (currentTaskFeature.geometry) {
 		if (currentTaskFeature.geometry.coordinates && currentTaskFeature.geometry.coordinates.length > 1) {
-			//taskFeature.properties.location = "POINT(" + gCurrentTaskFeature.geometry.coordinates.join(" ") + ")";  // deprecate
+			//taskFeature.properties.location = "POINT(" + globals.gCurrentTaskFeature.geometry.coordinates.join(" ") + ")";  // deprecate
 			taskFeature.properties.lon = currentTaskFeature.geometry.coordinates[0];
 			taskFeature.properties.lat = currentTaskFeature.geometry.coordinates[1];
 
@@ -4931,8 +4931,8 @@ function setupTaskDialog() {
 
 		var startDateLocal = $(this).data("DateTimePicker").date(),
 			endDateLocal = $('#tp_to').data("DateTimePicker").date(),
-			originalStart = gCurrentTaskFeature.properties.from,
-			originalEnd = gCurrentTaskFeature.properties.to,
+		originalStart = globals.gCurrentTaskFeature.properties.from,
+		originalEnd = globals.gCurrentTaskFeature.properties.to,
 			newEndDate,
 			duration;
 

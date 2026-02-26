@@ -164,7 +164,6 @@ localise.initLocale(gUserLocale).then(function () {
         gDirn: undefined,
         gInitialInstance: undefined
     };
-    window.gCurrentTaskFeature; // Currently edited task feature, hack to support shared functions with console
     window.gUpdateFwdPassword = undefined;
     window.gSaveType = '';
     window.gNotifications = undefined;
@@ -380,7 +379,7 @@ localise.initLocale(gUserLocale).then(function () {
             if(typeof gTasks !== "undefined" && gTasks.gSelectedRecord) {
                 instance = gTasks.gSelectedRecord.instanceid;
             }
-            saveTask(true, gCurrentTaskFeature, gSaveType, instance, doneTaskSave, 0);
+			saveTask(true, globals.gCurrentTaskFeature, gSaveType, instance, doneTaskSave, 0);
         });
 
         window.addEventListener("popstate", function(e) {
@@ -782,7 +781,7 @@ localise.initLocale(gUserLocale).then(function () {
 
         // Respond to a new task location being clicked
         $('#taskPropertiesForm').on("smap_task::geopoint", function (event, config) {
-            gCurrentTaskFeature.geometry = config.value;
+			globals.gCurrentTaskFeature.geometry = config.value;
             console.log("New task geopoint");
         });
 
@@ -859,8 +858,8 @@ localise.initLocale(gUserLocale).then(function () {
                    map.setSelectedFeature(gTaskMapConfig, undefined, lon, lat, true);
 
                 }
-                gCurrentTaskFeature.geometry.coordinates[0] = lon;
-                gCurrentTaskFeature.geometry.coordinates[1] = lat;
+				globals.gCurrentTaskFeature.geometry.coordinates[0] = lon;
+				globals.gCurrentTaskFeature.geometry.coordinates[1] = lat;
             }
         });
 
@@ -3651,7 +3650,7 @@ localise.initLocale(gUserLocale).then(function () {
         console.log("open edit task: " + task.from);
         $('#dashboardInfo').hide();
 
-        window.gCurrentTaskFeature = taskFeature;
+		globals.gCurrentTaskFeature = taskFeature;
 
         $('form[name="taskProperties"]')[0].reset();
 

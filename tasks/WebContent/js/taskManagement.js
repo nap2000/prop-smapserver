@@ -86,7 +86,6 @@ localise.initLocale(gUserLocale).then(function () {
 		window.moment = moment;		// Make moment global for use by common.js
 		window.gTags = [];
 
-		window.gCurrentTaskFeature; // Currently edited task feature, hack to support shared functions with console
 		window.gSaveType = '';
 
 		globals.gRegion = {};	// Initialise global values
@@ -261,7 +260,7 @@ localise.initLocale(gUserLocale).then(function () {
 		$('.assign_role, .assign_email, .assign_data').hide();
 		setupTaskDialog();
 		$('#taskPropertiesSave').off().click(function () {
-			saveTask(false, gCurrentTaskFeature, gSaveType, undefined, doneTaskSave, globals.gCurrentTaskGroup);
+			saveTask(false, globals.gCurrentTaskFeature, gSaveType, undefined, doneTaskSave, globals.gCurrentTaskGroup);
 		});
 
 
@@ -1570,7 +1569,7 @@ localise.initLocale(gUserLocale).then(function () {
 
 		console.log("open edit task: " + task.from);
 
-		gCurrentTaskFeature = taskFeature;
+		globals.gCurrentTaskFeature = taskFeature;
 
 		$('form[name="taskProperties"]')[0].reset();
 		clearDraggableMarker('mapModal');
@@ -1646,7 +1645,7 @@ localise.initLocale(gUserLocale).then(function () {
 		if (!gModalMapInitialised) {
 			setTimeout(function () {
 				initialiseMap('mapModal', 14,
-					!gCurrentTaskFeature.geometry.coordinates[0] && !gCurrentTaskFeature.geometry.coordinates[1], 		// Show user location if there is no task location
+			!globals.gCurrentTaskFeature.geometry.coordinates[0] && !globals.gCurrentTaskFeature.geometry.coordinates[1], 		// Show user location if there is no task location
 					clickOnMap, modalMapReady);
 			}, 500);
 			gModalMapInitialised = true;
@@ -1661,9 +1660,9 @@ localise.initLocale(gUserLocale).then(function () {
 	 * Called when the modal map is ready to accept features
 	 */
 	function modalMapReady() {
-		if (gCurrentTaskFeature.geometry.coordinates[0] || gCurrentTaskFeature.geometry.coordinates[1]) {
+		if (globals.gCurrentTaskFeature.geometry.coordinates[0] || globals.gCurrentTaskFeature.geometry.coordinates[1]) {
 			addDraggableMarker('mapModal',
-				new L.LatLng(gCurrentTaskFeature.geometry.coordinates[1], gCurrentTaskFeature.geometry.coordinates[0]),
+			new L.LatLng(globals.gCurrentTaskFeature.geometry.coordinates[1], globals.gCurrentTaskFeature.geometry.coordinates[0]),
 				onDragEnd);
 		}
 	}
@@ -1679,7 +1678,7 @@ localise.initLocale(gUserLocale).then(function () {
 		coords[0] = latlng.lng;
 		coords[1] = latlng.lat;
 
-		gCurrentTaskFeature.geometry.coordinates = coords;
+		globals.gCurrentTaskFeature.geometry.coordinates = coords;
 		addDraggableMarker('mapModal', latlng, onDragEnd);
 		setupSaveLocation();
 		$('#location_save_panel').show();
@@ -1696,7 +1695,7 @@ localise.initLocale(gUserLocale).then(function () {
 		coords[0] = latlng.lng;
 		coords[1] = latlng.lat;
 
-		gCurrentTaskFeature.geometry.coordinates = coords;
+		globals.gCurrentTaskFeature.geometry.coordinates = coords;
 		setupSaveLocation();
 		$('#location_save_panel').show();
 	}
@@ -1920,8 +1919,8 @@ localise.initLocale(gUserLocale).then(function () {
 				//clearDraggableMarker('mapModal');
 				addDraggableMarker('mapModal', new L.LatLng(lat, lon), onDragEnd);
 			}
-			gCurrentTaskFeature.geometry.coordinates[0] = lon;
-			gCurrentTaskFeature.geometry.coordinates[1] = lat;
+			globals.gCurrentTaskFeature.geometry.coordinates[0] = lon;
+			globals.gCurrentTaskFeature.geometry.coordinates[1] = lat;
 		}
 		zoomToFeatureLayer('mapModal');
 	});
