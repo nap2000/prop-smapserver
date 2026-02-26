@@ -45,7 +45,6 @@ const $ = window.$;
 
 localise.initLocale(gUserLocale).then(function () {
 	window.localise = localise;
-	window.globals = globals;
 
 	$(document).ready(function() {
 

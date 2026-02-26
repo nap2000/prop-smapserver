@@ -19,7 +19,7 @@
 /*
  * Quick solution to issue of legacy globals after migrating to AMD / require.js
  */
-const globals = {
+const defaults = {
 
         // Security groups
         GROUP_ADMIN: 1,
@@ -149,9 +149,20 @@ const globals = {
 
         gMapboxDefault: undefined,		// Mapbox key
         
-        model: typeof Model !== "undefined" ? new Model() : undefined
+	    model: typeof Model !== "undefined" ? new Model() : undefined
 
-    }
+    };
+
+const globals = typeof window !== "undefined" && window.globals ? window.globals : {};
+if (typeof window !== "undefined") {
+	window.globals = globals;
+}
+
+Object.keys(defaults).forEach(function(key) {
+	if (typeof globals[key] === "undefined") {
+		globals[key] = defaults[key];
+	}
+});
 
 
     function Selector() {

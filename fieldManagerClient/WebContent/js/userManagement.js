@@ -47,8 +47,6 @@ localise.initLocale(gUserLocale).then(function () {
 	window.moment = window.moment || moment;
 	window.bootbox = bootbox;
 	window.localise = localise;
-	window.globals = globals;
 
 	import(/* webpackMode: "eager" */ "./usermanagement_main");
 });
-

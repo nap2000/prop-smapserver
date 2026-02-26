@@ -45,7 +45,6 @@ window.bootbox = bootbox;
 localise.initLocale(gUserLocale).then(function () {
 	window.moment = window.moment || moment;
 	window.localise = localise;
-	window.globals = globals;
 
 	import(/* webpackMode: "eager" */ "./settings_main");
 });

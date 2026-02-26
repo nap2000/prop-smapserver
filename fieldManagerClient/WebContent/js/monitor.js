@@ -42,7 +42,6 @@ window.gUserLocale = gUserLocale;
 localise.initLocale(gUserLocale).then(function () {
 	window.moment = window.moment || moment;
 	window.localise = localise;
-	window.globals = globals;
 
 	import(/* webpackMode: "eager" */ "./app/map-ol-mgmt").then(function () {
 		import(/* webpackMode: "eager" */ "./app/monitorChart").then(function () {

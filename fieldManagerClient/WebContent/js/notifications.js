@@ -41,11 +41,9 @@ window.gUserLocale = gUserLocale;
 localise.initLocale(gUserLocale).then(function () {
 	window.moment = window.moment || moment;
 	window.localise = localise;
-	window.globals = globals;
 
 	import(/* webpackMode: "eager" */ "./notifications_main").then(function () {
 		setCustomNotifications();
 		localise.setlang();
 	});
 });
-

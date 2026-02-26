@@ -44,7 +44,6 @@ window.gUserLocale = gUserLocale;
 localise.initLocale(gUserLocale).then(function () {
 	window.moment = window.moment || moment;
 	window.localise = localise;
-	window.globals = globals;
 
 	import(/* webpackMode: "eager" */ "./app/surveyManagement").then(function () {
 		if (typeof window.setCustomSurveyManagement === "function") {

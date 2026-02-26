@@ -54,7 +54,6 @@ localise.initLocale(gUserLocale).then(function () {
 	window.moment = window.moment || moment;
 	window.L = window.L || L;
 	window.localise = localise;
-	window.globals = globals;
 
 
 	// The following globals are only in this java script file
