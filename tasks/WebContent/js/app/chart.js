@@ -22,24 +22,21 @@
 
 "use strict";
 
-define([
-        'jquery',
-        'modernizr',
-        'localise',
-        'globals'],
-    function ($, modernizr, localise, globals) {
+import $ from "jquery";
+import localise from "localise";
+import globals from "globals";
 
-        var charts = [];
-        //var barColors = ["red", "green","blue","orange","brown"];
-        var barColors = ["#e60049", "#0bb4ff", "#50e991", "#e6d800", "#9b19f5", "#ffa300", "#dc0ab4", "#b3d4ff", "#00bfa0"];  // River nights from: https://www.heavy.ai/blog/12-color-palettes-for-telling-better-stories-with-your-data
+var charts = [];
+//var barColors = ["red", "green","blue","orange","brown"];
+var barColors = ["#e60049", "#0bb4ff", "#50e991", "#e6d800", "#9b19f5", "#ffa300", "#dc0ab4", "#b3d4ff", "#00bfa0"];  // River nights from: https://www.heavy.ai/blog/12-color-palettes-for-telling-better-stories-with-your-data
 
-        return {
-            add: add,
-            replace: replace,
-            refresh: refresh,
-            remove: remove,
-            clear: clear
-        };
+export default {
+	add: add,
+	replace: replace,
+	refresh: refresh,
+	remove: remove,
+	clear: clear
+};
 
         function add(settings) {
 
@@ -197,4 +194,3 @@ define([
             }
             chart.update();
         }
-    });
