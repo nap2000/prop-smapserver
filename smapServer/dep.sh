@@ -15,8 +15,18 @@ fi
 
 export COPYFILE_DISABLE=true
 # Create a tar file and copy to the deploy directory
+echo "Removing contents of $SCRIPT_DIR/smapServer"
 rm -rf "$SCRIPT_DIR/smapServer"
+echo "Copying $SCRIPT_DIR/WebContent to $SCRIPT_DIR/smapServer"
 cp -R "$SCRIPT_DIR/WebContent" "$SCRIPT_DIR/smapServer"
+
+# Include webform javascript bundle and css files
+echo "Adding webform bundle to $SCRIPT_DIR/smapServer"
+pushd /Users/neilpenman/git/webform
+./deploy.sh $1
+popd
+cp -R WebContent/build $SCRIPT_DIR/smapServer
+
 cd "$SCRIPT_DIR/smapServer"
 tar --no-xattrs -zcf smapServer.tgz *
 cp smapServer.tgz ~/deploy/smap/deploy/version1
