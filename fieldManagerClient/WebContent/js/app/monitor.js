@@ -16,12 +16,32 @@
 
  */
 
-define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 'app/monitorChart'],
-    function($, ol_mgmt, lang, common, globals, moment, chart) {
+"use strict";
+
+import $ from "jquery";
+import localise from "localise";
+import globals from "globals";
+import moment from "moment";
+import chart from "./monitorChart";
+import "./map-ol-mgmt";
+import {
+	addCacheBuster,
+	addHourglass,
+	getFromLocalStorage,
+	getLoggedInUser,
+	handleLogout,
+	htmlEncode,
+	loadSurveys,
+	removeHourglass,
+	saveCurrentProject,
+	setInLocalStorage,
+	setupUserProfile
+} from "common";
 
         var gStartEvents = [],		// Only in this java script file
             gPageCount = 1,			// Only in this java script file
-            gCaseProgress;
+            gCaseProgress,
+			gPanel;
 
         let SUBMIT_PANEL = "submit";
         let FORMS_PANEL = "forms";
@@ -766,4 +786,3 @@ define(['jquery', 'app/map-ol-mgmt', 'localise', 'common', 'globals', 'moment', 
             setInLocalStorage("currentTab" + $('body').data('page'), '#' + name + 'Tab a');
 
         }
-    });
