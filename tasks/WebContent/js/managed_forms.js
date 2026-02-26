@@ -24,7 +24,33 @@
 
 import localise from "../../../smapServer/WebContent/js/app/localise";
 import globals from "../../../smapServer/WebContent/js/app/globals";
-import "../../../smapServer/WebContent/js/app/common";
+import {
+	addCacheBuster,
+	addHourglass,
+	checkLoggedIn,
+	downloadFile,
+	getEligibleUsers,
+	getFromLocalStorage,
+	getLanguageList,
+	getLocations,
+	getLoggedInUser,
+	getGroupSurveys,
+	getCustomMenuClass,
+	getServerSubDomainName,
+	getNotificationTypes,
+	getTaskUsers,
+	handleLogout,
+	htmlEncode,
+	populatePdfSelect,
+	refreshLocationGroups,
+	removeHourglass,
+	saveCurrentProject,
+	setInLocalStorage,
+	setLocationList,
+	setupNotificationDialog,
+	setupTaskDialog,
+	setupUserProfile
+} from "common";
 import "../../../smapServer/WebContent/js/libs/commonReportFunctions";
 import "../../../smapServer/WebContent/js/libs/saveSvgAsPng";
 import "../../../smapServer/WebContent/js/libs/jquery-qrcode-0.14.0.min";
@@ -3881,4 +3907,3 @@ localise.initLocale(gUserLocale).then(function () {
     }
 
 });
-

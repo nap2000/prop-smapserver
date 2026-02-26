@@ -6346,7 +6346,8 @@ function getEligibleUsers(sIdent, isNotification) {
 function fillUsersList(isNotification, data) {
 	var h = [],
 		idx = -1,
-		$elem = $('#user_to_assign');
+		$elem = $('#user_to_assign'),
+		i;
 
 	$elem.empty();
 
@@ -6593,6 +6594,9 @@ export {
 	getEligibleUsers,
 	getRoles,
 	getGoogleMapApi,
+	getCustomMenuClass,
+	getGroupSurveys,
+	getServerSubDomainName,
 	handleLogout,
 	htmlDecode,
 	htmlEncode,
