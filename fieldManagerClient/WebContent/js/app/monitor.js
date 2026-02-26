@@ -32,6 +32,7 @@ import {
 	handleLogout,
 	htmlEncode,
 	loadSurveys,
+	localTime,
 	removeHourglass,
 	saveCurrentProject,
 	setInLocalStorage,

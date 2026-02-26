@@ -44,12 +44,15 @@ import {
 	populatePdfSelect,
 	refreshLocationGroups,
 	removeHourglass,
+	saveCurrentGroupSurvey,
 	saveCurrentProject,
 	setInLocalStorage,
 	setLocationList,
+	setGroupSelector,
 	setupNotificationDialog,
 	setupTaskDialog,
-	setupUserProfile
+	setupUserProfile,
+	updateConversationalSMS
 } from "common";
 import "../../../smapServer/WebContent/js/libs/commonReportFunctions";
 import "../../../smapServer/WebContent/js/libs/saveSvgAsPng";
@@ -62,6 +65,7 @@ import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker.min";
 import chart from "./app/chart";
 import map from "./app/mapOL3";
 import actioncommon from "./app/actioncommon";
+import { addAnchors } from "../../../smapServer/WebContent/js/libs/commonReportFunctions";
 
 const $ = window.$;
 const moment = window.moment;

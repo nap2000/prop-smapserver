@@ -48,13 +48,14 @@ define([
             setSelectedFeature: setSelectedFeature
         };
 
-        function deleteLayers() {
-            if(gLayers) {
-                for(i = 0; i < gLayers.length; i++) {
-                    deleteLayer(i);
-                }
-            }
-        }
+		function deleteLayers() {
+			var i;
+			if(gLayers) {
+				for(i = 0; i < gLayers.length; i++) {
+					deleteLayer(i);
+				}
+			}
+		}
 
         function setLayers(layers, map) {
 
@@ -798,5 +799,4 @@ define([
 
 
     });
-
 
