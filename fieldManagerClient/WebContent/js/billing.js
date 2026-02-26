@@ -23,14 +23,12 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 "use strict";
 
 import bootbox from "../../../smapServer/WebContent/js/libs/bootbox.min";
-import "../../../smapServer/WebContent/js/app/localise";
+import localise from "../../../smapServer/WebContent/js/app/localise";
 import "../../../smapServer/WebContent/js/app/globals";
 import "../../../smapServer/WebContent/js/app/common";
 import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-4.17.47";
-import "./app/billing";
 
 const moment = window.moment;
-const localise = window.localise;
 
 var gUserLocale = navigator.language;
 if (typeof localStorage !== "undefined") {
@@ -45,6 +43,10 @@ window.bootbox = bootbox;
 
 localise.initLocale(gUserLocale).then(function () {
 	window.moment = window.moment || moment;
+	window.localise = localise;
 
-	setCustomBilling();
+	import(/* webpackMode: "eager" */ "./app/billing").then(function () {
+		setCustomBilling();
+		localise.setlang();
+	});
 });

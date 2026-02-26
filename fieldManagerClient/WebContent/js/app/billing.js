@@ -16,17 +16,22 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-define(['jquery','localise', 'common', 'globals', 
-        'bootbox', 
-        'moment',
-        'datetimepicker'], function($, lang, common, globals, bootbox, moment) {
+"use strict";
 
-    var gLevel,
-        gOrganisationList,
-	    gEnterpriseList,
-	    gEnabled;
+import $ from "jquery";
+import localise from "localise";
+import globals from "globals";
+import bootbox from "bootbox";
+import moment from "moment";
+import "datetimepicker";
+import { addHourglass, downloadFile, getLoggedInUser, htmlEncode, removeHourglass, setupUserProfile } from "common";
 
-	$(document).ready(function() {
+var gLevel,
+    gOrganisationList,
+	gEnterpriseList,
+	gEnabled;
+
+$(document).ready(function() {
 
 		setTheme();
 		setupUserProfile(true);
@@ -393,8 +398,9 @@ define(['jquery','localise', 'common', 'globals',
 		var $elem = $('#billing_table'),
 			h = [],
 			idx = -1,
-            lineItems = data.line,
-			grandTotal  = 0.0;
+			lineItems = data.line,
+			grandTotal  = 0.0,
+			i;
 
 		for(i = 0; i < lineItems.length; i++) {
 			var line = lineItems[i];
@@ -521,6 +527,4 @@ define(['jquery','localise', 'common', 'globals',
 			}
 		});
 	}
-
-});
 	
