@@ -69,14 +69,14 @@
 - Preserve existing indentation style per file.
 - Do not auto-format entire files; limit changes to touched regions.
 
-## JavaScript Style (AMD/RequireJS heavy)
+## JavaScript Style (ES Modules required)
 - Use `"use strict"` at top where missing when feasible.
 - Prefer `const`/`let` for new code; leave existing `var` unless nearby refactor.
 - Types: JavaScript only; avoid TS/Flow; add JSDoc only where pattern exists.
-- Prefer AMD `define([...], function(...) { ... })`/`require([...], ...)` patterns; avoid ES module syntax unless already used.
-- RequireJS: add deps in `paths`/`shim` then in `require([...], function(...) { ... })` matching order.
+- Convert AMD `define([...], function(...) { ... })`/`require([...], ...)` modules to ES modules when touching files.
+- Replace globals from previous AMD modules with explicit `export` and `import` usage.
 - Keep dependency lists sorted logically: core libs, shared app modules, feature modules.
-- Avoid polluting globals; attach to existing namespaces (e.g., `globals`, `window.*` only when pattern used).
+- Avoid polluting globals; use exports and imports instead of `window.*`.
 - Prefer pure functions; minimize side effects in init blocks.
 - When editing UI code, ensure DOM ready wrappers remain (`$(document).ready(...)`).
 - Use strict equality `===` / `!==`.
