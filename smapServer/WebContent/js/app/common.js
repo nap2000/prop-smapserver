@@ -6608,6 +6608,8 @@ export {
 	populateLanguageSelect,
 	populatePdfSelect,
 	removeHourglass,
+	getAccessibleSurveys,
+	getAccessibleCsvFiles,
 	saveCurrentGroupSurvey,
 	saveCurrentProject,
 	setInLocalStorage,

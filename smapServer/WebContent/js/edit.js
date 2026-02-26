@@ -24,6 +24,7 @@ import "./libs/bootstrap-colorpicker.min.js";
 import "./libs/wb/plugins/iCheck/icheck.min.js";
 import localise from "./app/localise";
 import globals from "./app/globals";
+import { addCacheBuster, addHourglass, checkLoggedIn, getAccessibleCsvFiles, getAccessibleSurveys, getLoggedInUser, handleLogout, htmlEncode, loadSurveys, localTime, removeHourglass, saveCurrentProject, setupUserProfile, validGeneralName } from "./app/common";
 import question from "./app/question";
 import optionlist from "./app/optionlist";
 import markup from "./app/editorMarkup";
@@ -82,8 +83,13 @@ $(function() {
 
 	window.bootbox = bootbox;
 	window.moment = moment;
+	if (!globals.model && typeof window.Model !== "undefined") {
+		globals.model = new window.Model();
+	}
 
-	setTheme();
+	if (typeof setTheme === "function") {
+		setTheme();
+	}
     setCustomEdit();
 	setupUserProfile(false);
 		localise.initLocale(gUserLocale).then(function () {
@@ -4201,5 +4207,3 @@ $(function() {
 			}
 		}
 });
-
-
