@@ -21,32 +21,29 @@
 
 "use strict";
 
-define([
-        'jquery',
-        'modernizr',
-        'localise',
-        'globals',
-        'icheck'],
-    function ($, modernizr, lang, globals) {
+import $ from "jquery";
+import localise from "localise";
+import globals from "globals";
+import "icheck";
+import { getMapboxDefault } from "common";
 
+var gMap,
+	gLayers = [],
+	gVectorSources = [],
+	gVectorLayers = [],
+	gMapUpdatePending = true,
+	gSelectFeature;
 
-        var gMap,
-            gLayers = [],
-            gVectorSources = [],
-            gVectorLayers = [],
-            gMapUpdatePending = true,
-            gSelectFeature;
-
-        return {
-            setLayers: setLayers,
-            refreshLayer: refreshLayer,
-            refreshAllLayers: refreshAllLayers,
-            saveLayer: saveLayer,
-            deleteLayers: deleteLayers,
-            initDynamicMap: initDynamicMap,
-            clearSelectFeatures: clearSelectFeatures,
-            setSelectedFeature: setSelectedFeature
-        };
+export default {
+	setLayers: setLayers,
+	refreshLayer: refreshLayer,
+	refreshAllLayers: refreshAllLayers,
+	saveLayer: saveLayer,
+	deleteLayers: deleteLayers,
+	initDynamicMap: initDynamicMap,
+	clearSelectFeatures: clearSelectFeatures,
+	setSelectedFeature: setSelectedFeature
+};
 
 		function deleteLayers() {
 			var i;
@@ -795,8 +792,4 @@ define([
             if(recenter) {
                 config.map.getView().fit(config.selectSource.getExtent(), config.map.getSize());
             }
-        }
-
-
-    });
-
+	}

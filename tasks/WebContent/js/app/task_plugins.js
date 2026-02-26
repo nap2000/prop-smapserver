@@ -114,6 +114,8 @@ function addSelectCheckBox(isRadio, val, checked) {
 
 }
 
+export { addSelectCheckBox };
+
 function addPie(complete, total) {
     complete = complete || 0;
     total = total || 1;			// 1 is an arbitary total as 0 out of 0 does not render
@@ -121,7 +123,6 @@ function addPie(complete, total) {
     return '<td><span class="pie">' + complete + '/' + total + '</span></td>';
 }
 	
-
 
 
 

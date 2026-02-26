@@ -5640,8 +5640,8 @@ function surveyChangedNotification(qName, assignQuestion, metaItem, alertId, upd
 }
 
 function getInitialDataLink(task) {
-	var tab = [];
-	idx = -1;
+	var tab = [],
+		idx = -1;
 
 	tab[++idx] = '<a href="';
 	tab[++idx] = getWebFormUrl(task.properties.survey_ident,
@@ -5660,7 +5660,7 @@ function getWebFormUrl(form_ident, update_id, initial_data_source, taskId, assig
 	var url,
 		hasParams = false;
 
-	initial_data_souce = initial_data_source || 'none';
+	var initial_data_souce = initial_data_source || 'none';
 
 	url = "/webForm/" + form_ident;
 
@@ -6596,6 +6596,7 @@ export {
 	getGoogleMapApi,
 	getCustomMenuClass,
 	getGroupSurveys,
+	getMapboxDefault,
 	getServerSubDomainName,
 	handleLogout,
 	htmlDecode,
@@ -6622,7 +6623,10 @@ export {
 	updateProjectList,
 	updateConversationalSMS,
 	validateEmails,
+	getStatusClass,
+	getInitialDataLink,
 	validGeneralName,
 	shapeFormsChanged,
-	setupUserProfile
+	setupUserProfile,
+	includeByStatus
 };

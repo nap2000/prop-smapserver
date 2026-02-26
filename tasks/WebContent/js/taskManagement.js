@@ -25,7 +25,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 import bootbox from "../../../smapServer/WebContent/js/libs/bootbox.min";
 import localise from "../../../smapServer/WebContent/js/app/localise";
 import globals from "../../../smapServer/WebContent/js/app/globals";
-import { addHourglass, getFromLocalStorage, getLanguageList, getLocations, getLoggedInUser, getTaskUsers, handleLogout, htmlEncode, loadSurveys, refreshLocationGroups, removeHourglass, saveCurrentProject, setLocationList, setupTaskDialog, setupUserProfile } from "common";
+import { addHourglass, getFromLocalStorage, getInitialDataLink, getLanguageList, getLocations, getLoggedInUser, getStatusClass, getTaskUsers, handleLogout, htmlEncode, includeByStatus, loadSurveys, localTime, localTimeAsDate, refreshLocationGroups, removeHourglass, saveCurrentProject, setLocationList, setupTaskDialog, setupUserProfile } from "common";
 import "../../../smapServer/WebContent/js/app/mapbox_app";
 import "./libs/jquery-barcode";
 import "./app/media";
@@ -35,7 +35,7 @@ import "../../../smapServer/WebContent/js/libs/wb/plugins/fullcalendar/es";
 import "../../../smapServer/WebContent/js/libs/knockout";
 import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-4.17.47";
 
-import "./app/task_plugins";
+import { addSelectCheckBox } from "./app/task_plugins";
 
 const $ = window.$;
 const L = window.L;
