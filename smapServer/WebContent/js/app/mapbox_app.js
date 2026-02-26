@@ -16,6 +16,33 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+"use strict";
+
+import $ from "jquery";
+import { addHourglass, includeByStatus, removeHourglass } from "./common";
+
+var L;
+var mapboxLoader;
+
+function getLeaflet() {
+	if (!L) {
+		L = window.L;
+	}
+	return L;
+}
+
+function ensureMapbox() {
+	if (window.L && window.L.mapbox) {
+		return Promise.resolve(window.L);
+	}
+	if (!mapboxLoader) {
+		mapboxLoader = import("../libs/mapbox/js/mapbox.js").then(function () {
+			return window.L;
+		});
+	}
+	return mapboxLoader;
+}
+
 var gUserLocation,
 	gDraggableMarker,
 	mapData = {};
@@ -24,6 +51,18 @@ var gUserLocation,
  * Map Initialisation
  */
 function initialiseMap(elementId, zoom, setUserLocation, callbackClick, callbackInitialised) {
+	var L = getLeaflet();
+	if (!L || !L.mapbox) {
+		ensureMapbox().then(function () {
+			var loaded = getLeaflet();
+			if (!loaded || !loaded.mapbox) {
+				console.error("Mapbox library not available");
+				return;
+			}
+			initialiseMap(elementId, zoom, setUserLocation, callbackClick, callbackInitialised);
+		});
+		return;
+	}
 	
 	if(!L.mapbox.accessToken) {
 		addHourglass();
@@ -56,17 +95,11 @@ function initialiseMap(elementId, zoom, setUserLocation, callbackClick, callback
 	 
 }
 
-"use strict";
-
-import $ from "jquery";
-import { addHourglass, includeByStatus, removeHourglass } from "./common";
-
-const L = window.L;
-
 /*
  * This function does the initialisation once the mapbox key has been set
  */
 function initialiseMapKeySet(elementId, zoom, setUserLocation, callbackClick, callbackInitialised) {
+	var L = getLeaflet();
 
 	var thisMapData = {};
 	
@@ -218,6 +251,7 @@ function clearDraggableMarker(elementId) {
  * Add a draggable marker to the map
  */
 function addDraggableMarker(elementId, latlng, callback) {
+	var L = getLeaflet();
 	// Creates a single, draggable marker on the page.
 	
 	if(gDraggableMarker) {

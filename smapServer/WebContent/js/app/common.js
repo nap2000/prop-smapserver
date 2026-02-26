@@ -6625,8 +6625,11 @@ export {
 	validateEmails,
 	getStatusClass,
 	getInitialDataLink,
+	getLocationIndex,
 	validGeneralName,
 	shapeFormsChanged,
 	setupUserProfile,
+	setupAssignType,
+	saveTask,
 	includeByStatus
 };

@@ -25,8 +25,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 import bootbox from "../../../smapServer/WebContent/js/libs/bootbox.min";
 import localise from "../../../smapServer/WebContent/js/app/localise";
 import globals from "../../../smapServer/WebContent/js/app/globals";
-import { addHourglass, getFromLocalStorage, getInitialDataLink, getLanguageList, getLocations, getLoggedInUser, getStatusClass, getTaskUsers, handleLogout, htmlEncode, includeByStatus, loadSurveys, localTime, localTimeAsDate, refreshLocationGroups, removeHourglass, saveCurrentProject, setLocationList, setupTaskDialog, setupUserProfile } from "common";
-import "../../../smapServer/WebContent/js/app/mapbox_app";
+import { addHourglass, getFromLocalStorage, getInitialDataLink, getLanguageList, getLocationIndex, getLocations, getLoggedInUser, getStatusClass, getTaskUsers, handleLogout, htmlEncode, includeByStatus, loadSurveys, localTime, localTimeAsDate, refreshLocationGroups, removeHourglass, saveCurrentProject, saveTask, setLocationList, setupAssignType, setupTaskDialog, setupUserProfile } from "common";
+import { addDraggableMarker, clearDraggableMarker, initialiseMap, refreshMapAssignments, zoomToFeatureLayer } from "../../../smapServer/WebContent/js/app/mapbox_app";
 import "./libs/jquery-barcode";
 import "./app/media";
 import "../../../smapServer/WebContent/js/libs/wb/plugins/peity/jquery.peity.min";
@@ -1650,7 +1650,7 @@ localise.initLocale(gUserLocale).then(function () {
 			}, 500);
 			gModalMapInitialised = true;
 		} else {
-			gClickOnMapenabled = false;
+			window.gClickOnMapenabled = false;
 			modalMapReady();
 		}
 
@@ -1660,9 +1660,13 @@ localise.initLocale(gUserLocale).then(function () {
 	 * Called when the modal map is ready to accept features
 	 */
 	function modalMapReady() {
+		if (!window.L || !window.L.LatLng) {
+			setTimeout(modalMapReady, 100);
+			return;
+		}
 		if (globals.gCurrentTaskFeature.geometry.coordinates[0] || globals.gCurrentTaskFeature.geometry.coordinates[1]) {
 			addDraggableMarker('mapModal',
-			new L.LatLng(globals.gCurrentTaskFeature.geometry.coordinates[1], globals.gCurrentTaskFeature.geometry.coordinates[0]),
+			new window.L.LatLng(globals.gCurrentTaskFeature.geometry.coordinates[1], globals.gCurrentTaskFeature.geometry.coordinates[0]),
 				onDragEnd);
 		}
 	}
