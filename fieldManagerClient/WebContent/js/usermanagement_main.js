@@ -30,6 +30,7 @@ import {
 	getFromLocalStorage,
 	getLoggedInUser,
 	getRoles,
+	getCustomMenuClass,
 	handleLogout,
 	htmlEncode,
 	isBusinessServer,

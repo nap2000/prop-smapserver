@@ -35,12 +35,15 @@ import {
 	getLocations,
 	getLoggedInUser,
 	getGroupSurveys,
+	getSurveyRoles,
+	getOurNumbers,
 	getCustomMenuClass,
 	getServerSubDomainName,
 	getNotificationTypes,
 	getTaskUsers,
 	handleLogout,
 	htmlEncode,
+	getStatusClass,
 	populatePdfSelect,
 	refreshLocationGroups,
 	removeHourglass,
@@ -64,7 +67,7 @@ import "../../../smapServer/WebContent/js/libs/bootstrap.file-input";
 import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker.min";
 import chart from "./app/chart";
 import map from "./app/mapOL3";
-import actioncommon from "./app/actioncommon";
+import { showEditRecordForm } from "./app/actioncommon";
 import { addAnchors } from "../../../smapServer/WebContent/js/libs/commonReportFunctions";
 
 const $ = window.$;
@@ -3584,7 +3587,7 @@ localise.initLocale(gUserLocale).then(function () {
         $('.overviewSection').hide();
         $('.editRecordSection').show();
 
-        actioncommon.showEditRecordForm(gTasks.gSelectedRecord, gTasks.cache.currentData.schema, $('#surveyForm'), true);
+			showEditRecordForm(gTasks.gSelectedRecord, gTasks.cache.currentData.schema, $('#surveyForm'), true);
     }
 
     /*

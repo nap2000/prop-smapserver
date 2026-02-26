@@ -17,23 +17,21 @@
 
 "use strict";
 
-define([
-        'jquery',
-        'common',
-        'modernizr',
-        'localise',
-        'globals',
-        'app/mapOL3'],
-    function ($, common, modernizr, lang, globals, map) {
+import $ from "jquery";
+import localise from "localise";
+import globals from "globals";
+import { htmlEncode } from "common";
+import map from "app/mapOL3";
+import { addAnchors } from "../../../../smapServer/WebContent/js/libs/commonReportFunctions.js";
 
-        return {
-            showEditRecordForm: showEditRecordForm,
-            showBulkEditForm: showBulkEditForm,
-            addCellMarkup: addCellMarkup,
-            addCellMap: addCellMap,
-            initialiseDynamicMaps: initialiseDynamicMaps,
-            formatConversation: formatConversation
-        };
+export {
+	showEditRecordForm,
+	showBulkEditForm,
+	addCellMarkup,
+	addCellMap,
+	initialiseDynamicMaps,
+	formatConversation
+};
 
         /*
 	     * Refresh any select lists that are dependent on entered values
@@ -912,4 +910,3 @@ define([
             }
             return h.join('');
         }
-    });

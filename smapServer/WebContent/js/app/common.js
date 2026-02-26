@@ -25,6 +25,7 @@ var gEligibleUser;
 var gSelectedOversightQuestion;
 var gSelectedOversightSurvey;
 var gConversationalSMS;	// Set true if a conversational SMS choice has been added to notification types
+var gNumbers;
 
 import globals from "./globals";
 import localise from "./localise";
@@ -6631,5 +6632,7 @@ export {
 	setupUserProfile,
 	setupAssignType,
 	saveTask,
-	includeByStatus
+	includeByStatus,
+	getSurveyRoles,
+	getOurNumbers
 };
