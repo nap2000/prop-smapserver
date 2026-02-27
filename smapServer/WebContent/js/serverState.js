@@ -19,64 +19,56 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Purpose: Allow the user to select a web form in order to complete a survey
  */
+"use strict";
+
+import $ from "jquery";
+import globals from "./app/globals";
+import localise from "./app/localise";
+import { getLoggedInUser, setupUserProfile } from "./app/common";
+
 var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
+if (typeof localStorage !== "undefined") {
+	try {
+		if (typeof Modernizr !== "undefined" ? Modernizr.localstorage : true) {
+			gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+		}
+	} catch (error) {
+		gUserLocale = navigator.language;
+	}
+}
 
-requirejs.config({
-    baseUrl: '/js/libs',
-    waitSeconds: 0,
-    locale: gUserLocale,
-    paths: {
-    	app: '/js/app',
-       	lang_location: '/js'
-    },
-    shim: {
-    	'app/common': ['jquery'],
-        'app/data': ['jquery']
-    }
-});
+$(document).ready(function() {
 
-require([
-         'jquery',
-         'app/common',
-         'app/globals',
-         'app/localise'
-         ], function($, common, globals, localise) {
-
-	$(document).ready(function() {
-
-		setupUserProfile(true);
+	setupUserProfile(true);
+	if (typeof setTheme === "function") {
 		setTheme();
+	}
+	localise.initLocale(gUserLocale).then(function () {
 		localise.setlang();		// Localise HTML
+	});
 
-        getLoggedInUser(undefined, false, false, undefined);
+	getLoggedInUser(undefined, false, false, undefined);
 
-		const ctx = document.getElementById('myChart');
+	const ctx = document.getElementById('myChart');
 
-		new Chart(ctx, {
-			type: 'bar',
-			data: {
-				labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-				datasets: [{
-					label: '# of Votes',
-					data: [12, 19, 3, 5, 2, 3],
-					borderWidth: 1
-				}]
-			},
-			options: {
-				scales: {
-					y: {
-						beginAtZero: true
-					}
+	new Chart(ctx, {
+		type: 'bar',
+		data: {
+			labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+			datasets: [{
+				label: '# of Votes',
+				data: [12, 19, 3, 5, 2, 3],
+				borderWidth: 1
+			}]
+		},
+		options: {
+			scales: {
+				y: {
+					beginAtZero: true
 				}
 			}
-		});
-
-
+		}
 	});
 
 
 });
-
