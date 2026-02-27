@@ -23,7 +23,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 "use strict";
 
 import $ from "jquery";
-import localise from "./localise";
+import localise from "./localise.js";
 import globals from "./globals.js";
 import markup from "./editorMarkup";
 import changeset from "./changeset";

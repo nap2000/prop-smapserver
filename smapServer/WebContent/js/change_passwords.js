@@ -19,7 +19,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 "use strict";
 
 import $ from "jquery";
-import localise from "./app/localise";
+import localise from "./app/localise.js";
 import globals from "./app/globals.js";
 import { addHourglass, getLoggedInUser, htmlEncode, removeHourglass } from "./app/common";
 

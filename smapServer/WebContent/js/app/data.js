@@ -19,7 +19,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * Get a surveys meta data
  */
 import globals from "./globals.js";
-import localise from "./localise";
+import localise from "./localise.js";
 import { addHourglass, formItemsURL, handleLogout, removeHourglass, resultsURL } from "./common";
 
 function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, currentDate, callback) {

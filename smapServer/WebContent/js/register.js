@@ -19,7 +19,7 @@
 "use strict";
 
 import bootbox from "./libs/bootbox.min";
-import localise from "./app/localise";
+import localise from "./app/localise.js";
 import "./app/common";
 
 const $ = window.$;

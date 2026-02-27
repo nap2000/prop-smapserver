@@ -23,7 +23,7 @@
 "use strict";
 
 import $ from "jquery";
-import localise from "./localise";
+import localise from "./localise.js";
 import globals from "./globals.js";
 import markup from "./editorMarkup";
 import option from "./option";

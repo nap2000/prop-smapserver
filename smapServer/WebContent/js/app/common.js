@@ -6602,6 +6602,7 @@ export {
 	getSurveyDetails,
 	getMapboxDefault,
 	getServerSubDomainName,
+	getChangeDescription,
 	handleLogout,
 	htmlDecode,
 	htmlEncode,

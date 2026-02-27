@@ -19,7 +19,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 "use strict";
 
 import bootbox from "./libs/bootbox.min";
-import localise from "./app/localise";
+import localise from "./app/localise.js";
 import globals from "./app/globals.js";
 import changeset from "./app/changeset";
 import aws from "./app/aws";

@@ -23,7 +23,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 import $ from "jquery";
 import globals from "./app/globals.js";
-import localise from "./app/localise";
+import localise from "./app/localise.js";
 import { getLoggedInUser, setupUserProfile } from "./app/common";
 
 var gUserLocale = navigator.language;

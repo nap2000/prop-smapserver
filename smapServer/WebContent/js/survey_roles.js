@@ -18,7 +18,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-import localise from "./app/localise";
+import localise from "./app/localise.js";
 import globals from "./app/globals.js";
 import "./libs/wb/plugins/iCheck/icheck.min";
 import "./libs/jquery.autosize.min";
