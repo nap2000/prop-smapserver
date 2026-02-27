@@ -28,6 +28,7 @@ var gLanguages;
 import $ from "jquery";
 import localise from "./localise";
 import globals from "./globals";
+import { addHourglass, htmlEncode, removeHourglass } from "./common";
 
 export default {
 	setLanguageSelect: setLanguageSelect
