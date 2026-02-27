@@ -16,42 +16,38 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+"use strict";
+
+import globals from "./app/globals.js";
+import localise from "./app/localise.js";
+import {
+	getChangeDescription,
+	getLoggedInUser,
+	getSurveyDetails,
+	htmlEncode,
+	setupUserProfile
+} from "./app/common.js";
+
+const $ = window.$;
+
 var gUserLocale = navigator.language;
 if (Modernizr.localstorage) {
 	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
-
-"use strict";
-require.config({
-    baseUrl: '/js/libs',
-    waitSeconds: 0,
-    locale: gUserLocale,
-    paths: {
-    	app: '/js/app',
-    	lang_location: '/js'
-    },
-    shim: {
-    	'app/common': ['jquery'],
-        'jquery.autosize.min': ['jquery']
-    }
-});
-
-require([
-         'jquery',
-         'app/common',
-         'app/localise',
-         'app/globals'],
-		function($, common, lang, globals) {
+}
+window.gUserLocale = gUserLocale;
 
 $(document).ready(function() {
 
 	setCustomChanges();
 	setTheme();
 	setupUserProfile(true);
-	localise.setlang();		// Localise HTML
 
-	// Get the user details
-	getLoggedInUser(surveyListDone, false, true, undefined, false, false);
+	localise.initLocale(gUserLocale).then(function () {
+		localise.setlang();		// Localise HTML
+
+		// Get the user details
+		getLoggedInUser(surveyListDone, false, true, undefined, false, false);
+	});
 
 });
 
@@ -72,30 +68,30 @@ function setChangesHtml($element, survey) {
 		idx = -1,
 		i,
 		changes;
-	
+
 	if(!survey) {
 		$('#errormesg').html("<strong>No Changes</strong> Create or select a survey to see changes");
 		$('#infobox').show();
 	} else {
 
 		changes = survey.changes;
-		
+
 		h[++idx] = '<table class="table table-responsive-sm table-striped">';
-		
+
 		// write the table headings
 		h[++idx] = '<thead>';
 			h[++idx] = '<tr>';
-        		h[++idx] = '<th>';
-        			h[++idx] = localise.set["c_version"];
-        		h[++idx] = '</th>';
+	        	h[++idx] = '<th>';
+	        		h[++idx] = localise.set["c_version"];
+	        	h[++idx] = '</th>';
 
-        		h[++idx] = '<th>';
-        			h[++idx] = localise.set["c_changes"];
-        		h[++idx] = '</th>';
+	        	h[++idx] = '<th>';
+	        		h[++idx] = localise.set["c_changes"];
+	        	h[++idx] = '</th>';
 
-        		h[++idx] = '<th>';
+	        	h[++idx] = '<th>';
 					h[++idx] = localise.set["rev_cb"];
-        		h[++idx] = '</th>';
+	        	h[++idx] = '</th>';
 
 				h[++idx] = '<th>';
 					h[++idx] = localise.set["ed_dt"];
@@ -108,11 +104,11 @@ function setChangesHtml($element, survey) {
 				h[++idx] = '<th>' + localise.set["c_msg"] + '</th>';
 			h[++idx] = '</tr>';
 		h[++idx] = '</thead>';
-		
+
 		// Write the table body
 		h[++idx] = '<body>';
 		for(i = 0; i < changes.length; i++) {
-			
+
 			var status = "pending";
 			if(!changes[i].apply_results) {		// Change has been applied to the results tables
 				status = changes[i].success ? "success" : "failed";
@@ -148,7 +144,7 @@ function setChangesHtml($element, survey) {
 					h[++idx] = '">';
 				h[++idx] = '<td>';
 				h[++idx] = changes[i].version;
-				h[++idx] = '</td>';	
+				h[++idx] = '</td>';
 				h[++idx] = '<td>';
 				h[++idx] = getChangeDescription(changes[i].change, changes[i].version);
 				h[++idx] = '</td>';
@@ -167,13 +163,11 @@ function setChangesHtml($element, survey) {
 			h[++idx] = '</tr>';
 		}
 		h[++idx] = '</body>';
-		
-		h[++idx] = '</table>';
-	} 
-	
-	$element.html(h.join(''));
-	
-	
-}
 
-});
+		h[++idx] = '</table>';
+	}
+
+	$element.html(h.join(''));
+
+
+}

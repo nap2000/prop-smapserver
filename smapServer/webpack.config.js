@@ -12,7 +12,8 @@ module.exports = {
     survey_roles: "./WebContent/js/survey_roles.js",
     translate: "./WebContent/js/translate.js",
     logout: "./WebContent/js/logout.js",
-	change_passwords: "./WebContent/js/change_passwords.js",
+    change_passwords: "./WebContent/js/change_passwords.js",
+	changes: "./WebContent/js/changes.js",
 	serverState: "./WebContent/js/serverState.js",
 	api: "./WebContent/js/api.js",
 	reports: "./WebContent/js/reports.js"
