@@ -16,69 +16,65 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+"use strict";
+
+import $ from "jquery";
+import localise from "./app/localise";
+import globals from "./app/globals";
+import { addHourglass, getLoggedInUser, htmlEncode, removeHourglass } from "./app/common";
+
 var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+if (typeof localStorage !== "undefined") {
+	try {
+		if (typeof Modernizr !== "undefined" ? Modernizr.localstorage : true) {
+			gUserLocale = localStorage.getItem("user_locale") || navigator.language;
+		}
+	} catch (error) {
+		gUserLocale = navigator.language;
+	}
 }
 
-"use strict";
-requirejs.config({
-	baseUrl: '/js/libs',
-	waitSeconds: 0,
-	locale: gUserLocale,
-	paths: {
-		app: '/js/app',
-		lang_location: '/js'
-	},
-	shim: {
-		'app/common': ['jquery']
-	}
-});
-
-require([
-	'jquery',
-	'app/localise',
-	'app/globals',
-	'app/common'
-], function($, localise, globals) {
+window.gUserLocale = gUserLocale;
 
 	var gToken;
 
 	$(document).ready(function() {
 
 		setCustomUserForgottonPasswords();			// Apply custom javascript
-		setTheme();
-		localise.setlang();		// Localise HTML
-		var params = location.search.substr(location.search.indexOf("?") + 1);
-		if(params.indexOf('expired') >= 0) {
-			$('.pwd_alert').show().removeClass('alert-danger alert-success').addClass('alert-info').html(localise.set["msg_pex"]);
+		if (typeof setTheme === "function") {
+			setTheme();
 		}
-		$('#passwordConfirm, #passwordValue').keydown(function() {
-			$('.pwd_alert').hide();
-		});
-
-		getLoggedInUser(gotuser, false, false, undefined, false, true);
-
-
-
-		$('#generate_password').change(function() {
-			$('.pwd_alert').hide();
-			if($(this).is(':checked')) {
-				$('#genGroup').removeClass("d-none").show();
-				getPassword(8);
-			} else {
-				$('#genGroup').hide();
+		localise.initLocale(gUserLocale).then(function () {
+			localise.setlang();		// Localise HTML
+			var params = location.search.substr(location.search.indexOf("?") + 1);
+			if(params.indexOf('expired') >= 0) {
+				$('.pwd_alert').show().removeClass('alert-danger alert-success').addClass('alert-info').html(localise.set["msg_pex"]);
 			}
-		})
-		$('#genPassword').click(function(e){
-			e.preventDefault();
-			$('.pwd_alert').hide();
-			getPassword(8);
-		});
+			$('#passwordConfirm, #passwordValue').keydown(function() {
+				$('.pwd_alert').hide();
+			});
 
-		$('#goback').click(function(){
-			history.back();
-		})
+			getLoggedInUser(gotuser, false, false, undefined, false, true);
+
+			$('#generate_password').change(function() {
+				$('.pwd_alert').hide();
+				if($(this).is(':checked')) {
+					$('#genGroup').removeClass("d-none").show();
+					getPassword(8);
+				} else {
+					$('#genGroup').hide();
+				}
+			});
+			$('#genPassword').click(function(e){
+				e.preventDefault();
+				$('.pwd_alert').hide();
+				getPassword(8);
+			});
+
+			$('#goback').click(function(){
+				history.back();
+			});
+		});
 	});
 
 	function gotuser() {
@@ -146,7 +142,3 @@ require([
 		return false;
 
 	});
-});
-
-
-

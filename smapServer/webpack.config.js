@@ -12,6 +12,7 @@ module.exports = {
     survey_roles: "./WebContent/js/survey_roles.js",
     translate: "./WebContent/js/translate.js",
     logout: "./WebContent/js/logout.js"
+	,change_passwords: "./WebContent/js/change_passwords.js"
   },
   output: {
     filename: "[name].bundle.js",

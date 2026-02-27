@@ -3,6 +3,7 @@ var gUserLocale = navigator.language;
 
 import localise from "./app/localise";
 import globals from "./app/globals";
+import { getLoggedInUser, handleLogout, isSelfRegistrationServer, setupUserProfile } from "./app/common";
 
 const $ = window.$;
 

@@ -6636,5 +6636,6 @@ export {
 	saveTask,
 	includeByStatus,
 	getSurveyRoles,
-	getOurNumbers
+	getOurNumbers,
+	isSelfRegistrationServer
 };
