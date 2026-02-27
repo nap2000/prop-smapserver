@@ -6605,6 +6605,7 @@ export {
 	isBusinessServer,
 	loadSurveys,
 	localTime,
+	localTimeAsDate,
 	populateLanguageSelect,
 	populatePdfSelect,
 	removeHourglass,
@@ -6637,5 +6638,6 @@ export {
 	includeByStatus,
 	getSurveyRoles,
 	getOurNumbers,
-	isSelfRegistrationServer
+	isSelfRegistrationServer,
+	getViewLanguages
 };

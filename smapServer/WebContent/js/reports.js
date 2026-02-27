@@ -19,10 +19,46 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Purpose: Allow the user to select a web form in order to complete a survey
  */
+"use strict";
+
+import $ from "jquery";
+import globals from "./app/globals";
+import localise from "./app/localise";
+var moment = window.moment;
+import "./libs/wb/plugins/slimscroll/jquery.slimscroll";
+import "./libs/bootstrap-datetimepicker.min";
+import { getSurveyMetaSE } from "./app/data";
+import {
+	addCacheBuster,
+	addDatePickList,
+	addFormPickList,
+	addHourglass,
+	checkLoggedIn,
+	downloadFile,
+	getLoggedInUser,
+	getSurveyRoles,
+	handleLogout,
+	htmlEncode,
+	loadSurveys,
+	removeHourglass,
+	saveCurrentProject,
+	setSurveyViewLanguages,
+	setupUserProfile,
+	getViewLanguages
+} from "./app/common";
+
 var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
+if (typeof localStorage !== "undefined") {
+	try {
+		if (typeof Modernizr !== "undefined" ? Modernizr.localstorage : true) {
+			gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+		}
+	} catch (error) {
+		gUserLocale = navigator.language;
+	}
+}
+
+window.gUserLocale = gUserLocale;
 
 var gReportList = [];
 var gGeneratedList = [];
@@ -38,52 +74,26 @@ window.gTasks = {
     }
 };
 
-requirejs.config({
-    baseUrl: '/js/libs',
-    waitSeconds: 0,
-    locale: gUserLocale,
-    paths: {
-    	app: '/js/app',
-        moment: 'moment-with-locales.min',
-       	lang_location: '/js'
-    },
-    shim: {
-    	'app/common': ['jquery'],
-        'app/data': ['jquery'],
-    	'slimscroll': ['jquery'],
-        'bootstrap-datetimepicker.min': ['moment']
-    }
-});
+$(document).ready(function() {
 
-require([
-         'jquery',
-         'app/common',
-         'app/globals',
-         'app/localise',
-         'bootstrapfileinput',
-         'moment',
-         'slimscroll',
-         'pace',
-         'app/data',
-         'bootstrap-datetimepicker.min'
-         ], function($, common, globals, localise, bsfi, moment) {
-
-	$(document).ready(function() {
-
-		setCustomReports();			// Apply custom javascript
+	setCustomReports();			// Apply custom javascript
+	if (typeof setTheme === "function") {
 		setTheme();
-		setupUserProfile(true);
+	}
+	setupUserProfile(true);
+	localise.initLocale(gUserLocale).then(function () {
 		localise.setlang();		// Localise HTML
+	});
 
-		// Get the user details
-        getLoggedInUser(projectChanged, false, true, undefined);
+	// Get the user details
+    getLoggedInUser(projectChanged, false, true, undefined);
 
-		$('#m_refresh').click(function() {
-			checkLoggedIn(function() {
-				getReports();
-				getGeneratedReports();
-			})
+	$('#m_refresh').click(function() {
+		checkLoggedIn(function() {
+			getReports();
+			getGeneratedReports();
 		});
+	});
 
 		$('#generatedTab a').click(function (e) {
 			panelChange($(this), 'generated');
@@ -202,7 +212,6 @@ require([
 			locale: gUserLocale || 'en'
 		}).data("DateTimePicker").date(moment());
 
-	});
 
 	/*
  	 * Respond to a panel being changed
@@ -1150,4 +1159,3 @@ require([
 
 
 });
-

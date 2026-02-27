@@ -14,7 +14,8 @@ module.exports = {
     logout: "./WebContent/js/logout.js",
 	change_passwords: "./WebContent/js/change_passwords.js",
 	serverState: "./WebContent/js/serverState.js",
-	api: "./WebContent/js/api.js"
+	api: "./WebContent/js/api.js",
+	reports: "./WebContent/js/reports.js"
   },
   output: {
     filename: "[name].bundle.js",
@@ -24,11 +25,13 @@ module.exports = {
   },
   module: {},
   externals: {
-    jquery: "jQuery"
+    jquery: "jQuery",
+    moment: "moment"
   },
   resolve: {
     alias: {
-      knockout: path.resolve(__dirname, "WebContent/js/libs/knockout.js")
+      knockout: path.resolve(__dirname, "WebContent/js/libs/knockout.js"),
+      moment: path.resolve(__dirname, "WebContent/js/libs/moment-with-locales.2.24.0.js")
     }
   },
   optimization: {
