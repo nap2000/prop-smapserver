@@ -92,39 +92,51 @@ $(function() {
 	}
     setCustomEdit();
 	setupUserProfile(false);
-		localise.initLocale(gUserLocale).then(function () {
-			window.gUserLocale = gUserLocale;
-			localise.setlang();		// Localise HTML
-			var $defaultProperty = $('#selProperty a.default').first();
-			if ($defaultProperty.length) {
-				$('#propSelected').html($defaultProperty.html());
-				globals.gSelLabel = $defaultProperty.html();
-				globals.gSelProperty = $defaultProperty.data("prop");
-			}
+	localise.initLocale(gUserLocale).then(function () {
+		window.gUserLocale = gUserLocale;
+		localise.setlang();		// Localise HTML
+		changeset.updateViewControls();
+		var $defaultProperty = $('#selProperty a.default').first();
+		if ($defaultProperty.length) {
+			$('#propSelected').html($defaultProperty.html());
+			globals.gSelLabel = $defaultProperty.html();
+			globals.gSelProperty = $defaultProperty.data("prop");
+		}
 
-			// Get the parameters and start editing a survey if one was passed as a parameter
-			params = location.search.substring(location.search.indexOf("?") + 1);
-			pArray = params.split("&");
-			dont_get_current_survey = false;
-			for (i = 0; i < pArray.length; i++) {
-				param = pArray[i].split("=");
-				if ( param[0] === "id" ) {
-					dont_get_current_survey = true;		// Use the passed in survey id
-					globals.gCurrentSurvey = param[1];
-					saveCurrentProject(-1, globals.gCurrentSurvey, undefined);	// Save the current survey id
-				} else if ( param[0] === "new" ) {
-					dont_get_current_survey = true;		// Don't get any survey details
-					globals.gCurrentSurvey = -1;			
-					openForm("new");
-				}
-			}
+		// Set up view type toggle
+		$('#viewType').attr("data-on", localise.set["c_questions"]).attr("data-off", localise.set["c_choices"]).bootstrapToggle();
 
-			/*
-			 * Get surveys and csv files that the user can link to
-			 */
-			getAccessibleSurveys($('.linkable_surveys'), true, true, false, true);
-			getAccessibleCsvFiles($('.linkable_files'), true);
-		});
+		setupQuestionTypes($('#dialog_types'), 2, false, undefined);		// Double column, not draggable for change type dialog
+		setupQuestionTypes($('#toolbar_types'), 1, true, undefined);		// Single column, draggable for toolbar
+
+		// Get the parameters and start editing a survey if one was passed as a parameter
+		params = window.location.search.substring(1);
+		pArray = params.split("&");
+		dont_get_current_survey = false;
+		for (i = 0; i < pArray.length; i++) {
+			param = pArray[i].split("=");
+			if ( param[0] === "id" ) {
+				dont_get_current_survey = true;		// Use the passed in survey id
+				globals.gCurrentSurvey = param[1];
+				saveCurrentProject(-1, globals.gCurrentSurvey, undefined);	// Save the current survey id
+			} else if ( param[0] === "new" ) {
+				dont_get_current_survey = true;		// Don't get any survey details
+				globals.gCurrentSurvey = -1;
+				openForm("new");
+			}
+		}
+
+		/*
+		 * Get surveys and csv files that the user can link to
+		 */
+		getAccessibleSurveys($('.linkable_surveys'), true, true, false, true);
+		getAccessibleCsvFiles($('.linkable_files'), true);
+
+		window.history.pushState('',document.title, document.location.origin + document.location.pathname);	// Strip out the parameters from the href
+
+		// Get the user details
+		getLoggedInUser(getSurveyList, false, true, undefined, false, dont_get_current_survey);
+	});
 
 /*
  * Initialise controls in the open form dialog
@@ -145,15 +157,9 @@ $(function() {
 		getSurveyForms($this.val(), addForms);
 	 });
 
-	window.history.pushState('',document.title, document.location.origin + document.location.pathname);	// Strip out the parameters from the href
-
-	// Get the user details
-	getLoggedInUser(getSurveyList, false, true, undefined, false, dont_get_current_survey);
-
 	/*
 	 * Switch between choices list view and question view
 	 */
-	changeset.updateViewControls();
 	$('#viewType').change(function() {
 		globals.gIsQuestionView = $(this).prop('checked');
 		changeset.updateViewControls();
@@ -329,9 +335,6 @@ $(function() {
 		});
 		updatePulldataView();
 	});
-
-	// Set up view type toggle
-	$('#viewType').attr("data-on", localise.set["c_questions"]).attr("data-off", localise.set["c_choices"]).bootstrapToggle();
 
 	$('#m_settings').off().click(function() {	// Show the settings dialog
 
@@ -984,9 +987,6 @@ $(function() {
 		updateLabel(type, globals.gFormIndex, globals.gSelOptionId, globals.gOptionList, gElement, undefined, gQname, "media");
 
 	});
-
-	setupQuestionTypes($('#dialog_types'), 2, false, undefined);		// Double column, not draggable for change type dialog
-	setupQuestionTypes($('#toolbar_types'), 1, true, undefined);		// Single column, draggable for toolbar
 
 	$('#openFormModal').on('shown.bs.modal', function () {
 		$('#new_form_name').focus();
