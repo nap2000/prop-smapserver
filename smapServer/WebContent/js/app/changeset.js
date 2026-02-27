@@ -24,7 +24,7 @@
 
 import $ from "jquery";
 import localise from "./localise";
-import globals from "./globals";
+import globals from "./globals.js";
 import markup from "./editorMarkup";
 import option from "./option";
 import { addHourglass, checkExistenceOfReferences, getReferenceNames, handleLogout, htmlEncode, isValidODKQuestionName, removeHourglass } from "./common";

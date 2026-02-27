@@ -23,7 +23,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 import "./libs/bootstrap.file-input.js";
 import localise from "./app/localise";
-import globals from "./app/globals";
+import globals from "./app/globals.js";
 
 const $ = window.$;
 

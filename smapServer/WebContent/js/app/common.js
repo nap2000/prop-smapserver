@@ -27,8 +27,8 @@ var gSelectedOversightSurvey;
 var gConversationalSMS;	// Set true if a conversational SMS choice has been added to notification types
 var gNumbers;
 
-import globals from "./globals";
-import localise from "./localise";
+import globals from "./globals.js";
+import localise from "./localise.js";
 
 /*
  * Convert a choice list name into a valid jquery class name

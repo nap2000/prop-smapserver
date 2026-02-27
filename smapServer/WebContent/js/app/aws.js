@@ -27,7 +27,7 @@ var gLanguages;
 
 import $ from "jquery";
 import localise from "./localise";
-import globals from "./globals";
+import globals from "./globals.js";
 import { addHourglass, htmlEncode, removeHourglass } from "./common";
 
 export default {

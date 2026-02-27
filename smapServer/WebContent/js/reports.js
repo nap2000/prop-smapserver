@@ -22,7 +22,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 "use strict";
 
 import $ from "jquery";
-import globals from "./app/globals";
+import globals from "./app/globals.js";
 import localise from "./app/localise";
 var moment = window.moment;
 import "./libs/wb/plugins/slimscroll/jquery.slimscroll";

@@ -23,7 +23,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 "use strict";
 
 import localise from "../../../smapServer/WebContent/js/app/localise";
-import globals from "../../../smapServer/WebContent/js/app/globals";
+import globals from "../../../smapServer/WebContent/js/app/globals.js";
 import { setupUserProfile } from "../../../smapServer/WebContent/js/app/common";
 import "../../../smapServer/WebContent/js/libs/wb/plugins/slimscroll/jquery.slimscroll.min";
 import "../../../smapServer/WebContent/js/libs/wb/plugins/pace/pace.min";

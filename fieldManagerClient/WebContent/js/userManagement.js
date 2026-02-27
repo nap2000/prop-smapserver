@@ -24,7 +24,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 import bootbox from "../../../smapServer/WebContent/js/libs/bootbox.min";
 import localise from "../../../smapServer/WebContent/js/app/localise";
-import globals from "../../../smapServer/WebContent/js/app/globals";
+import globals from "../../../smapServer/WebContent/js/app/globals.js";
 import "../../../smapServer/WebContent/js/libs/wb/plugins/slimscroll/jquery.slimscroll";
 import "../../../smapServer/WebContent/js/libs/bootstrap-colorpicker.min";
 import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-4.17.47";

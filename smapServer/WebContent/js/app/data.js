@@ -18,7 +18,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Get a surveys meta data
  */
-import globals from "./globals";
+import globals from "./globals.js";
 import localise from "./localise";
 import { addHourglass, formItemsURL, handleLogout, removeHourglass, resultsURL } from "./common";
 

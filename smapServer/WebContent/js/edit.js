@@ -23,7 +23,7 @@ import bootbox from "./libs/bootbox.5.1.1.min.js";
 import "./libs/bootstrap-colorpicker.min.js";
 import "./libs/wb/plugins/iCheck/icheck.min.js";
 import localise from "./app/localise";
-import globals from "./app/globals";
+import globals from "./app/globals.js";
 import { addCacheBuster, addHourglass, checkLoggedIn, getAccessibleCsvFiles, getAccessibleSurveys, getFilesFromServer, getGroupQuestionsInSurvey, getLoggedInUser, getSurveyDetails, handleLogout, htmlEncode, loadSurveys, localTime, openForm, removeHourglass, saveCurrentProject, setupUserProfile, validGeneralName } from "./app/common";
 import question from "./app/question";
 import optionlist from "./app/optionlist";

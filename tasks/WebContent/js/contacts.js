@@ -24,7 +24,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 import bootbox from "../../../smapServer/WebContent/js/libs/bootbox.5.1.1.min";
 import localise from "../../../smapServer/WebContent/js/app/localise";
-import globals from "../../../smapServer/WebContent/js/app/globals";
+import globals from "../../../smapServer/WebContent/js/app/globals.js";
 import "../../../smapServer/WebContent/js/app/common";
 
 const $ = window.$;
@@ -274,4 +274,3 @@ localise.initLocale(gUserLocale).then(function () {
 	}
 
 });
-

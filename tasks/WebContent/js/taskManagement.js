@@ -24,7 +24,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 import bootbox from "../../../smapServer/WebContent/js/libs/bootbox.min";
 import localise from "../../../smapServer/WebContent/js/app/localise";
-import globals from "../../../smapServer/WebContent/js/app/globals";
+import globals from "../../../smapServer/WebContent/js/app/globals.js";
 import { addHourglass, getFromLocalStorage, getInitialDataLink, getLanguageList, getLocationIndex, getLocations, getLoggedInUser, getStatusClass, getTaskUsers, handleLogout, htmlEncode, includeByStatus, loadSurveys, localTime, localTimeAsDate, refreshLocationGroups, removeHourglass, saveCurrentProject, saveTask, setLocationList, setupAssignType, setupTaskDialog, setupUserProfile } from "common";
 import { addDraggableMarker, clearDraggableMarker, initialiseMap, refreshMapAssignments, zoomToFeatureLayer } from "../../../smapServer/WebContent/js/app/mapbox_app";
 import "./libs/jquery-barcode";

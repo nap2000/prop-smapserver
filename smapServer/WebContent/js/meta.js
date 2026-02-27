@@ -19,7 +19,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 "use strict";
 
 import localise from "./app/localise";
-import globals from "./app/globals";
+import globals from "./app/globals.js";
 
 const $ = window.$;
 
@@ -370,4 +370,3 @@ localise.initLocale(gUserLocale).then(function () {
 		}
 
 	});
-

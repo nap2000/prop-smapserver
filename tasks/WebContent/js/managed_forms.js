@@ -23,7 +23,7 @@
 "use strict";
 
 import localise from "../../../smapServer/WebContent/js/app/localise";
-import globals from "../../../smapServer/WebContent/js/app/globals";
+import globals from "../../../smapServer/WebContent/js/app/globals.js";
 import {
 	addCacheBuster,
 	addHourglass,

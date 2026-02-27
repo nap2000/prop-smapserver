@@ -23,7 +23,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 "use strict";
 
 import localise from "../../../smapServer/WebContent/js/app/localise";
-import globals from "../../../smapServer/WebContent/js/app/globals";
+import globals from "../../../smapServer/WebContent/js/app/globals.js";
 import "../../../smapServer/WebContent/js/app/common";
 import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-4.17.47";
 
@@ -259,4 +259,3 @@ localise.initLocale(gUserLocale).then(function () {
 	}
 
 });
-

@@ -2,7 +2,7 @@ var gUserLocale = navigator.language;
 "use strict";
 
 import localise from "./app/localise";
-import globals from "./app/globals";
+import globals from "./app/globals.js";
 import { getLoggedInUser, handleLogout, isSelfRegistrationServer, setupUserProfile } from "./app/common";
 
 const $ = window.$;

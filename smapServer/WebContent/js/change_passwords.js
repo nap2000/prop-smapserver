@@ -20,7 +20,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 import $ from "jquery";
 import localise from "./app/localise";
-import globals from "./app/globals";
+import globals from "./app/globals.js";
 import { addHourglass, getLoggedInUser, htmlEncode, removeHourglass } from "./app/common";
 
 var gUserLocale = navigator.language;

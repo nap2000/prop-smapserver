@@ -23,7 +23,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 import $ from "jquery";
 import localise from "./localise";
-import globals from "./globals";
+import globals from "./globals.js";
 import { addHourglass, htmlEncode, removeHourglass } from "./common";
 
 let gGroupStacks = [];
