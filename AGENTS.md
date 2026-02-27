@@ -65,8 +65,9 @@
 ## Lint / Format
 - No lint scripts configured; prefer manual consistency.
 - Follow existing whitespace (tabs in legacy files; spaces elsewhere).
+- When edits are whitespace-only, do not change quote style.
+- More generally, avoid changing quote style unless required by the change.
 - Max line length: keep under ~120 chars when editing.
-- Preserve existing indentation style per file.
 - Do not auto-format entire files; limit changes to touched regions.
 
 ## JavaScript Style (ES Modules required)
