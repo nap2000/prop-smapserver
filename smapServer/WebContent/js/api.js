@@ -19,10 +19,26 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Purpose: Allow the user to select a web form in order to complete a survey
  */
+"use strict";
+
+import $ from "jquery";
+import globals from "./app/globals";
+import localise from "./app/localise";
+import { getSurveyMetaSE } from "./app/data";
+import { addHourglass, getLoggedInUser, handleLogout, loadSurveys, removeHourglass, saveCurrentProject, setupUserProfile } from "./app/common";
+
 var gUserLocale = navigator.language;
-if (Modernizr.localstorage) {
-	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
+if (typeof localStorage !== "undefined") {
+	try {
+		if (typeof Modernizr !== "undefined" ? Modernizr.localstorage : true) {
+			gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+		}
+	} catch (error) {
+		gUserLocale = navigator.language;
+	}
+}
+
+window.gUserLocale = gUserLocale;
 
 var gReportList = [];
 var gConfig;
@@ -35,31 +51,9 @@ window.gTasks = {
     }
 };
 
-requirejs.config({
-    baseUrl: '/js/libs',
-    waitSeconds: 0,
-    locale: gUserLocale,
-    paths: {
-    	app: '/js/app',
-       	lang_location: '/js'
-    },
-    shim: {
-    	'app/common': ['jquery'],
-        'app/data': ['jquery']
-    }
+$(document).ready(function() {
+	authorise(setupPage);
 });
-
-require([
-         'jquery',
-         'app/common',
-         'app/globals',
-         'app/localise',
-         'app/data'
-         ], function($, common, globals, localise, datafns) {
-
-	$(document).ready(function() {
-		authorise(setupPage);
-	});
 
 	/*
 	 * Authorise the user to access this page
@@ -97,9 +91,13 @@ require([
 	 */
 	function setupPage() {
 		setupUserProfile(true);
-		setTheme();
+		if (typeof setTheme === "function") {
+			setTheme();
+		}
 		setCustomApi();
-		localise.setlang();		// Localise HTML
+		localise.initLocale(gUserLocale).then(function () {
+			localise.setlang();		// Localise HTML
+		});
 
 		// Get the user details
 		getLoggedInUser(projectChanged, true, true, undefined);
@@ -219,7 +217,4 @@ require([
 		    }
 	    }
     	$('#url').html(url).prop("href", url);
-    }
-
-});
-
+	}

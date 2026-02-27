@@ -13,7 +13,8 @@ module.exports = {
     translate: "./WebContent/js/translate.js",
     logout: "./WebContent/js/logout.js",
 	change_passwords: "./WebContent/js/change_passwords.js",
-	serverState: "./WebContent/js/serverState.js"
+	serverState: "./WebContent/js/serverState.js",
+	api: "./WebContent/js/api.js"
   },
   output: {
     filename: "[name].bundle.js",
