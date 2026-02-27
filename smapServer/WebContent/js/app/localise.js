@@ -64,11 +64,7 @@ function parseAmdLocale(text) {
 		throw new Error("Invalid locale format");
 	}
 	const objectText = trimmed.slice(start + prefix.length, end).trim();
-	const jsonText = objectText
-		.replace(/\s*\/\/.*$/gm, "")
-		.replace(/\s\/\*[\s\S]*?\*\//g, "")
-		.trim();
-	return JSON.parse(jsonText);
+	return Function("return (" + objectText + ");")();
 }
 
 async function loadLocaleFile(locale) {
