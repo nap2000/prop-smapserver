@@ -14,6 +14,8 @@ module.exports = {
     logout: "./WebContent/js/logout.js",
     change_passwords: "./WebContent/js/change_passwords.js",
 	changes: "./WebContent/js/changes.js",
+	passwords: "./WebContent/js/passwords.js",
+	resetForgottonPassword: "./WebContent/js/resetForgottonPassword.js",
 	serverState: "./WebContent/js/serverState.js",
 	api: "./WebContent/js/api.js",
 	reports: "./WebContent/js/reports.js"
