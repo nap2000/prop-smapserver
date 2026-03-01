@@ -275,7 +275,7 @@ function addUserDetailsPopup() {
 	h[++idx] = '<label for="me_email">';
 	h[++idx] = localise.set["c_email"];
 	h[++idx] = '</label>';
-	h[++idx] = '<input type="text" id="me_email" pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"><br/>';
+	h[++idx] = '<input type="text" id="me_email" pattern="^[_A-Za-z0-9+\\-]+(\\.[_A-Za-z0-9\\-]+)*@[A-Za-z0-9\\-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"><br/>';
 
 	h[++idx] = '<label for="me_organisation">';
 	h[++idx] = localise.set["c_org"];
@@ -395,7 +395,7 @@ function addUserDetailsPopupBootstrap4() {
 	h[++idx] = '<div class="col-sm-10">';
 	h[++idx] = '<input type="email" class="form-control" id="me_email"';
 	h[++idx] = ' placeholder="Enter email"';
-	h[++idx] = ' pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$">';
+	h[++idx] = ' pattern="^[_A-Za-z0-9+\\-]+(\\.[_A-Za-z0-9\\-]+)*@[A-Za-z0-9\\-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$">';
 	h[++idx] = '</div>';
 	h[++idx] = '</div>';
 
@@ -790,6 +790,11 @@ function enableUserProfile () {
 				}, {
 					text: "Save",
 					click: function() {
+						var form = document.getElementById('me_edit_form');
+						if(form && !form.checkValidity()) {
+							form.reportValidity();
+							return false;
+						}
 
 						var user = globals.gLoggedInUser;
 
@@ -852,6 +857,12 @@ function enableUserProfileBS () {
 	 * Save the user profile
 	 */
 	$('#userProfileSave').click(function() {
+		var form = document.getElementById('me_edit_form');
+		if(form && !form.checkValidity()) {
+			form.reportValidity();
+			return false;
+		}
+
 		var user = globals.gLoggedInUser;
 
 		user.name = $('#me_name').val();
