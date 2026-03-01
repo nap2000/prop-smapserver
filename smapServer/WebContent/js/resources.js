@@ -24,6 +24,22 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 import "./libs/bootstrap.file-input.js";
 import localise from "./app/localise.js";
 import globals from "./app/globals.js";
+import {
+	addHourglass,
+	downloadFile,
+	getBaseName,
+	getFilesFromServer,
+	getLocations,
+	getLoggedInUser,
+	handleLogout,
+	htmlEncode,
+	includeLocation,
+	refreshMediaViewManage,
+	refreshLocationGroups,
+	removeHourglass,
+	setupUserProfile,
+	uploadFiles
+} from "./app/common.js";
 
 const $ = window.$;
 

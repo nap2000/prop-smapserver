@@ -16,32 +16,28 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+"use strict";
+
+import globals from './app/globals.js';
+import localise from './app/localise.js';
+import {
+	addCacheBuster,
+	addHourglass,
+	getLoggedInUser,
+	htmlEncode,
+	removeHourglass,
+	setupUserProfile
+} from './app/common.js';
+
+const $ = window.$;
+
 var gUserLocale = navigator.language;
 if (Modernizr.localstorage) {
 	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
-} 
+}
+window.gUserLocale = gUserLocale;
 
-"use strict";
-require.config({
-    baseUrl: '/js/libs',
-    waitSeconds: 0,
-    locale: gUserLocale,
-    paths: {
-    	app: '/js/app',
-    	lang_location: '/js'
-    },
-    shim: {
-    	'app/common': ['jquery'],
-        'jquery.autosize.min': ['jquery']
-    }
-});
-
-require([
-         'jquery',
-         'app/common',
-         'app/localise',
-         'app/globals'],
-		function($, common, lang, globals) {
+localise.initLocale(gUserLocale).then(function() {
 
 	var gHistory,
 		gResource,
