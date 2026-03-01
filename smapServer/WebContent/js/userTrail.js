@@ -20,37 +20,31 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * Entry point for user trail page
  */
 
+"use strict";
+
+import globals from './app/globals.js';
+import localise from './app/localise.js';
+import {
+	addHourglass,
+	getLoggedInUser,
+	getTrailData,
+	handleLogout,
+	htmlEncode,
+	removeHourglass,
+	saveCurrentProject,
+	setupUserProfile
+} from './app/common.js';
+
+const $ = window.$;
+const moment = window.moment;
+
 var gUserLocale = navigator.language;
 if (Modernizr.localstorage) {
 	gUserLocale = localStorage.getItem('user_locale') || navigator.language;
 }
+window.gUserLocale = gUserLocale;
 
-requirejs.config({
-	baseUrl: '/js/libs',
-	locale: gUserLocale,
-	waitSeconds: 0,
-	paths: {
-		app: '../app',
-		i18n: 'i18n',
-		modernizr: 'modernizr',
-		lang_location: '..'
-	},
-	shim: {
-		'app/common': ['jquery'],
-		'bootstrap-datetimepicker.min': ['moment']
-	}
-});
-
-
-require([
-	'jquery',
-	'app/common',
-	'app/localise',
-	'app/globals',
-	'moment',
-	'bootstrap-datetimepicker.min'
-
-], function($, common, localise, globals, moment) {
+localise.initLocale(gUserLocale).then(function() {
 
 	var gOverlayHasFeature;
 	var gTrailData;
@@ -469,5 +463,4 @@ require([
 		gMap.render();
 	};
 });
-
 

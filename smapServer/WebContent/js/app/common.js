@@ -6597,6 +6597,7 @@ export {
 	getRoles,
 	getGoogleMapApi,
 	getCustomMenuClass,
+	getTrailData,
 	getGroupSurveys,
 	getGroupQuestionsInSurvey,
 	getSurveyDetails,
