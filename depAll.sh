@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export BUILD_ID=${BUILD_ID:-$(git rev-parse --short HEAD 2>/dev/null || date +%Y%m%d%H%M%S)}
+
 #
 # Editor and miscelaneous
 #
@@ -41,4 +43,3 @@ cd ..
 cd dashboard
 ./dep.sh $1
 cd ..
-

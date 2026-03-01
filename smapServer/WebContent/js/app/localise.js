@@ -29,7 +29,8 @@ const dtLangFiles = {
 
 const localeCache = {};
 let currentLocale = "en";
-const localeCacheBuster = `?_v=${Date.now().toString()}`;
+const localeBuildId = window.__BUILD_ID__;
+const localeCacheBuster = localeBuildId ? `?_v=${encodeURIComponent(localeBuildId)}` : "";
 
 function normalizeLocale(locale) {
 	if (!locale) {
