@@ -25,7 +25,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 import localise from "../../../smapServer/WebContent/js/app/localise";
 import globals from "../../../smapServer/WebContent/js/app/globals.js";
 import "../../../smapServer/WebContent/js/app/common";
-import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-4.17.47";
+import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-flatpickr-bridge.js";
 
 const $ = window.$;
 const moment = window.moment;

@@ -29,6 +29,7 @@ var gNumbers;
 
 import globals from "./globals.js";
 import localise from "./localise.js";
+import "../libs/bootstrap-datetimepicker-flatpickr-bridge.js";
 
 /*
  * Convert a choice list name into a valid jquery class name

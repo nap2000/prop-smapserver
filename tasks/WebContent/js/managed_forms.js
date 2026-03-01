@@ -64,7 +64,7 @@ import "../../../smapServer/WebContent/js/libs/knockout";
 import "../../../smapServer/WebContent/js/libs/wb/plugins/slimscroll/jquery.slimscroll.min";
 import "../../../smapServer/WebContent/js/libs/bootstrap-toggle.min";
 import "../../../smapServer/WebContent/js/libs/bootstrap.file-input";
-import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker.min";
+import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-flatpickr-bridge.js";
 import chart from "./app/chart";
 import map from "./app/mapOL3";
 import { showEditRecordForm } from "./app/actioncommon";

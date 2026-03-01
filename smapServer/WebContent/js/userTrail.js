@@ -22,6 +22,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
+import './libs/bootstrap-datetimepicker-flatpickr-bridge.js';
 import globals from './app/globals.js';
 import localise from './app/localise.js';
 import {
@@ -463,4 +464,3 @@ localise.initLocale(gUserLocale).then(function() {
 		gMap.render();
 	};
 });
-

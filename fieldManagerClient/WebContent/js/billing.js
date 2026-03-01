@@ -26,7 +26,7 @@ import bootbox from "../../../smapServer/WebContent/js/libs/bootbox.min";
 import localise from "../../../smapServer/WebContent/js/app/localise";
 import "../../../smapServer/WebContent/js/app/globals";
 import "../../../smapServer/WebContent/js/app/common";
-import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-4.17.47";
+import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-flatpickr-bridge.js";
 
 const moment = window.moment;
 

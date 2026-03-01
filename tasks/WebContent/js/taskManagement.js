@@ -33,7 +33,7 @@ import "../../../smapServer/WebContent/js/libs/wb/plugins/peity/jquery.peity.min
 import "../../../smapServer/WebContent/js/libs/wb/plugins/fullcalendar/fullcalendar.min";
 import "../../../smapServer/WebContent/js/libs/wb/plugins/fullcalendar/es";
 import "../../../smapServer/WebContent/js/libs/knockout";
-import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-4.17.47";
+import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-flatpickr-bridge.js";
 
 import { addSelectCheckBox } from "./app/task_plugins";
 

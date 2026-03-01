@@ -27,7 +27,7 @@ import localise from "../../../smapServer/WebContent/js/app/localise";
 import globals from "../../../smapServer/WebContent/js/app/globals.js";
 import "../../../smapServer/WebContent/js/libs/wb/plugins/slimscroll/jquery.slimscroll";
 import "../../../smapServer/WebContent/js/libs/bootstrap-colorpicker.min";
-import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-4.17.47";
+import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-flatpickr-bridge.js";
 import "../../../smapServer/WebContent/js/libs/jquery-qrcode-0.14.0.min";
 
 const moment = window.moment;

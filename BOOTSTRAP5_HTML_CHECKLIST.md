@@ -43,7 +43,7 @@ Use `[x]` when complete, `[ ]` when pending, `[-]` when not applicable.
 |---|---|---|---|---|---|---|---|
 | `smapServer/WebContent/index.html` | [x] | [x] | [x] | [x] | [-] | [-] | [ ] |
 | `smapServer/WebContent/translate.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/edit.html` | [x] | [x] | [x] | [x] | [ ] | [ ] | [ ] |
+| `smapServer/WebContent/edit.html` | [x] | [x] | [x] | [x] | [x] | [ ] | [ ] |
 | `smapServer/WebContent/meta.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
 | `smapServer/WebContent/surveyRoles.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
 | `smapServer/WebContent/login.html` | [x] | [x] | [x] | [-] | [-] | [-] | [ ] |
@@ -70,19 +70,19 @@ Use `[x]` when complete, `[ ]` when pending, `[-]` when not applicable.
 | `smapServer/WebContent/app/serverState.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
 | `smapServer/WebContent/app/subscriptions.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
 | `smapServer/WebContent/app/templates.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/userTrail.html` | [x] | [x] | [x] | [x] | [ ] | [ ] | [ ] |
+| `smapServer/WebContent/app/userTrail.html` | [x] | [x] | [x] | [x] | [x] | [ ] | [ ] |
 
 ## tasks
 
 | Page | S1 | S2 | S3 | S4 | S5 | S6 | MT |
 |---|---|---|---|---|---|---|---|
-| `tasks/WebContent/campaign.html` | [x] | [x] | [x] | [x] | [ ] | [ ] | [ ] |
+| `tasks/WebContent/campaign.html` | [x] | [x] | [x] | [x] | [x] | [ ] | [ ] |
 | `tasks/WebContent/contacts.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
 | `tasks/WebContent/duplicates.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
 | `tasks/WebContent/linkages.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
 | `tasks/WebContent/log.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `tasks/WebContent/managed_forms.html` | [x] | [x] | [x] | [x] | [ ] | [ ] | [ ] |
-| `tasks/WebContent/taskManagement.html` | [x] | [x] | [x] | [x] | [ ] | [ ] | [ ] |
+| `tasks/WebContent/managed_forms.html` | [x] | [x] | [x] | [x] | [x] | [ ] | [ ] |
+| `tasks/WebContent/taskManagement.html` | [x] | [x] | [x] | [x] | [x] | [ ] | [ ] |
 
 ## fieldManagerClient
 
@@ -90,10 +90,10 @@ Use `[x]` when complete, `[ ]` when pending, `[-]` when not applicable.
 |---|---|---|---|---|---|---|---|
 | `fieldManagerClient/WebContent/billing.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
 | `fieldManagerClient/WebContent/monitor.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `fieldManagerClient/WebContent/notifications.html` | [x] | [x] | [x] | [x] | [ ] | [ ] | [ ] |
-| `fieldManagerClient/WebContent/settings.html` | [x] | [x] | [x] | [x] | [ ] | [ ] | [ ] |
-| `fieldManagerClient/WebContent/surveyManagement.html` | [x] | [x] | [x] | [x] | [ ] | [ ] | [ ] |
-| `fieldManagerClient/WebContent/userManagement.html` | [x] | [x] | [x] | [x] | [ ] | [ ] | [ ] |
+| `fieldManagerClient/WebContent/notifications.html` | [x] | [x] | [x] | [x] | [x] | [ ] | [ ] |
+| `fieldManagerClient/WebContent/settings.html` | [x] | [x] | [x] | [x] | [x] | [ ] | [ ] |
+| `fieldManagerClient/WebContent/surveyManagement.html` | [x] | [x] | [x] | [x] | [x] | [ ] | [ ] |
+| `fieldManagerClient/WebContent/userManagement.html` | [x] | [x] | [x] | [x] | [x] | [ ] | [ ] |
 
 ## fieldAnalysis
 

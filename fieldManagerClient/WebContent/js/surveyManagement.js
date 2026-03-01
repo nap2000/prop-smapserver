@@ -27,7 +27,7 @@ import globals from "../../../smapServer/WebContent/js/app/globals.js";
 import { setupUserProfile } from "../../../smapServer/WebContent/js/app/common";
 import "../../../smapServer/WebContent/js/libs/wb/plugins/slimscroll/jquery.slimscroll.min";
 import "../../../smapServer/WebContent/js/libs/wb/plugins/pace/pace.min";
-import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-4.17.47";
+import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-flatpickr-bridge.js";
 
 const moment = window.moment;
 
