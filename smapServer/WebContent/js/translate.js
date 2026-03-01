@@ -18,7 +18,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-import bootbox from "./libs/bootbox.min";
+import "./libs/bootbox-bootstrap-bridge.js";
 import localise from "./app/localise.js";
 import globals from "./app/globals.js";
 import changeset from "./app/changeset";
@@ -36,7 +36,6 @@ if (typeof localStorage !== "undefined") {
 	}
 }
 window.gUserLocale = gUserLocale;
-window.bootbox = bootbox;
 
 var	gMode = "survey",
 	gTempLanguageItems = [];

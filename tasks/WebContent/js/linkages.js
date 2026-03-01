@@ -29,7 +29,7 @@ import "../../../smapServer/WebContent/js/libs/bootstrap-toggle.min";
 import "../../../smapServer/WebContent/js/libs/bootstrap.file-input";
 import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-flatpickr-bridge.js";
 import "../../../smapServer/WebContent/js/libs/wb/plugins/slimscroll/jquery.slimscroll.min";
-import "../../../smapServer/WebContent/js/libs/bootbox.min";
+import "../../../smapServer/WebContent/js/libs/bootbox-bootstrap-bridge.js";
 
 const $ = window.$;
 

@@ -18,7 +18,7 @@
 
 "use strict";
 
-import bootbox from "./libs/bootbox.min";
+import "./libs/bootbox-bootstrap-bridge.js";
 import localise from "./app/localise.js";
 import "./app/common";
 
@@ -33,7 +33,6 @@ if (typeof localStorage !== "undefined") {
     }
 }
 window.gUserLocale = gUserLocale;
-window.bootbox = bootbox;
 
 localise.initLocale(gUserLocale).then(function () {
     setCustomRegister();			// Apply custom javascript

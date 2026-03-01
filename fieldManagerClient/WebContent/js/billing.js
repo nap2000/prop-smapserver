@@ -22,7 +22,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-import bootbox from "../../../smapServer/WebContent/js/libs/bootbox.min";
+import "../../../smapServer/WebContent/js/libs/bootbox-bootstrap-bridge.js";
 import localise from "../../../smapServer/WebContent/js/app/localise";
 import "../../../smapServer/WebContent/js/app/globals";
 import "../../../smapServer/WebContent/js/app/common";
@@ -39,7 +39,6 @@ if (typeof localStorage !== "undefined") {
 	}
 }
 window.gUserLocale = gUserLocale;
-window.bootbox = bootbox;
 
 localise.initLocale(gUserLocale).then(function () {
 	window.moment = window.moment || moment;

@@ -21,7 +21,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 import $ from "jquery";
 import localise from "localise";
 import globals from "globals";
-import bootbox from "bootbox";
 import moment from "moment";
 import "datetimepicker";
 import { addHourglass, downloadFile, getLoggedInUser, htmlEncode, removeHourglass, setupUserProfile } from "common";

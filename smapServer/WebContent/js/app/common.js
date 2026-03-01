@@ -29,6 +29,7 @@ var gNumbers;
 
 import globals from "./globals.js";
 import localise from "./localise.js";
+import "../libs/bootbox-bootstrap-bridge.js";
 import "../libs/bootstrap-datetimepicker-flatpickr-bridge.js";
 
 /*

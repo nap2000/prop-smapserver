@@ -42,14 +42,14 @@ Use `[x]` when complete, `[ ]` when pending, `[-]` when not applicable.
 | Page | S1 | S2 | S3 | S4 | S5 | S6 | MT |
 |---|---|---|---|---|---|---|---|
 | `smapServer/WebContent/index.html` | [x] | [x] | [x] | [x] | [-] | [-] | [ ] |
-| `smapServer/WebContent/translate.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/edit.html` | [x] | [x] | [x] | [x] | [x] | [ ] | [ ] |
-| `smapServer/WebContent/meta.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/surveyRoles.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
+| `smapServer/WebContent/translate.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `smapServer/WebContent/edit.html` | [x] | [x] | [x] | [x] | [x] | [x] | [ ] |
+| `smapServer/WebContent/meta.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `smapServer/WebContent/surveyRoles.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
 | `smapServer/WebContent/login.html` | [x] | [x] | [x] | [-] | [-] | [-] | [ ] |
 | `smapServer/WebContent/inlineLogin.html` | [x] | [x] | [x] | [-] | [-] | [-] | [ ] |
 | `smapServer/WebContent/logout.html` | [x] | [x] | [x] | [-] | [-] | [-] | [ ] |
-| `smapServer/WebContent/register.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
+| `smapServer/WebContent/register.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
 | `smapServer/WebContent/terms.html` | [x] | [x] | [x] | [-] | [-] | [-] | [ ] |
 | `smapServer/WebContent/unauthorised.html` | [x] | [x] | [x] | [-] | [-] | [-] | [ ] |
 | `smapServer/WebContent/deleteaccount.html` | [x] | [x] | [x] | [-] | [-] | [-] | [ ] |
@@ -58,63 +58,63 @@ Use `[x]` when complete, `[ ]` when pending, `[-]` when not applicable.
 | `smapServer/WebContent/errors/404.html` | [x] | [x] | [x] | [-] | [-] | [-] | [ ] |
 | `smapServer/WebContent/errors/405.html` | [x] | [x] | [x] | [-] | [-] | [-] | [ ] |
 | `smapServer/WebContent/errors/500.html` | [x] | [x] | [x] | [-] | [-] | [-] | [ ] |
-| `smapServer/WebContent/app/api.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/cases.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/changePassword.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/changes.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/forgottenPassword.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/reports.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/resetForgottonPassword.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/resource_history.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/resources.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/serverState.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/subscriptions.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/templates.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/userTrail.html` | [x] | [x] | [x] | [x] | [x] | [ ] | [ ] |
+| `smapServer/WebContent/app/api.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `smapServer/WebContent/app/cases.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `smapServer/WebContent/app/changePassword.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `smapServer/WebContent/app/changes.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `smapServer/WebContent/app/forgottenPassword.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `smapServer/WebContent/app/reports.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `smapServer/WebContent/app/resetForgottonPassword.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `smapServer/WebContent/app/resource_history.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `smapServer/WebContent/app/resources.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `smapServer/WebContent/app/serverState.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `smapServer/WebContent/app/subscriptions.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `smapServer/WebContent/app/templates.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `smapServer/WebContent/app/userTrail.html` | [x] | [x] | [x] | [x] | [x] | [x] | [ ] |
 
 ## tasks
 
 | Page | S1 | S2 | S3 | S4 | S5 | S6 | MT |
 |---|---|---|---|---|---|---|---|
-| `tasks/WebContent/campaign.html` | [x] | [x] | [x] | [x] | [x] | [ ] | [ ] |
-| `tasks/WebContent/contacts.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `tasks/WebContent/duplicates.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `tasks/WebContent/linkages.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `tasks/WebContent/log.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `tasks/WebContent/managed_forms.html` | [x] | [x] | [x] | [x] | [x] | [ ] | [ ] |
-| `tasks/WebContent/taskManagement.html` | [x] | [x] | [x] | [x] | [x] | [ ] | [ ] |
+| `tasks/WebContent/campaign.html` | [x] | [x] | [x] | [x] | [x] | [x] | [ ] |
+| `tasks/WebContent/contacts.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `tasks/WebContent/duplicates.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `tasks/WebContent/linkages.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `tasks/WebContent/log.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `tasks/WebContent/managed_forms.html` | [x] | [x] | [x] | [x] | [x] | [x] | [ ] |
+| `tasks/WebContent/taskManagement.html` | [x] | [x] | [x] | [x] | [x] | [x] | [ ] |
 
 ## fieldManagerClient
 
 | Page | S1 | S2 | S3 | S4 | S5 | S6 | MT |
 |---|---|---|---|---|---|---|---|
-| `fieldManagerClient/WebContent/billing.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `fieldManagerClient/WebContent/monitor.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `fieldManagerClient/WebContent/notifications.html` | [x] | [x] | [x] | [x] | [x] | [ ] | [ ] |
-| `fieldManagerClient/WebContent/settings.html` | [x] | [x] | [x] | [x] | [x] | [ ] | [ ] |
-| `fieldManagerClient/WebContent/surveyManagement.html` | [x] | [x] | [x] | [x] | [x] | [ ] | [ ] |
-| `fieldManagerClient/WebContent/userManagement.html` | [x] | [x] | [x] | [x] | [x] | [ ] | [ ] |
+| `fieldManagerClient/WebContent/billing.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `fieldManagerClient/WebContent/monitor.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `fieldManagerClient/WebContent/notifications.html` | [x] | [x] | [x] | [x] | [x] | [x] | [ ] |
+| `fieldManagerClient/WebContent/settings.html` | [x] | [x] | [x] | [x] | [x] | [x] | [ ] |
+| `fieldManagerClient/WebContent/surveyManagement.html` | [x] | [x] | [x] | [x] | [x] | [x] | [ ] |
+| `fieldManagerClient/WebContent/userManagement.html` | [x] | [x] | [x] | [x] | [x] | [x] | [ ] |
 
 ## fieldAnalysis
 
 | Page | S1 | S2 | S3 | S4 | S5 | S6 | MT |
 |---|---|---|---|---|---|---|---|
-| `fieldAnalysis/WebContent/modify_data.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `fieldAnalysis/WebContent/review_audit.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
+| `fieldAnalysis/WebContent/modify_data.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `fieldAnalysis/WebContent/review_audit.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
 
 ## myWork
 
 | Page | S1 | S2 | S3 | S4 | S5 | S6 | MT |
 |---|---|---|---|---|---|---|---|
-| `myWork/WebContent/done.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `myWork/WebContent/history.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
-| `myWork/WebContent/index.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
+| `myWork/WebContent/done.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `myWork/WebContent/history.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
+| `myWork/WebContent/index.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
 
 ## dashboard
 
 | Page | S1 | S2 | S3 | S4 | S5 | S6 | MT |
 |---|---|---|---|---|---|---|---|
-| `dashboard/WebContent/index.html` | [x] | [x] | [x] | [x] | [-] | [ ] | [ ] |
+| `dashboard/WebContent/index.html` | [x] | [x] | [x] | [x] | [-] | [x] | [ ] |
 
 ## Manual test checklist template (for MT column)
 
