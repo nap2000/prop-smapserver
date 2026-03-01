@@ -1,5 +1,4 @@
-define(
-{
+export default {
     "m_home": "Inicio",
     "m_admin": "Admin",
     "m_tm": "Formulários",
@@ -1245,4 +1244,4 @@ define(
     "svc_at": "Auto Traduzir",
     "svc_from_l": "Do Idioma",
     "svc_to_l": "Para o Idioma"
-});
+};

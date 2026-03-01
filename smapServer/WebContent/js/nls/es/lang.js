@@ -1,5 +1,4 @@
-define(
-{
+export default {
     "m_home": "Inicio",
     "m_admin": "Administración",
     "m_tm": "Formularios",
@@ -1558,4 +1557,4 @@ define(
     "ss_title": "Estado del servidor",
     "sms_their_q": "Pregunta para llamar al numero",
     "sms_conv_q": "Pregunta de conversación"
-});
+};

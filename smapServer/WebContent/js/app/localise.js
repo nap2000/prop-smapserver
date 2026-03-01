@@ -29,6 +29,7 @@ const dtLangFiles = {
 
 const localeCache = {};
 let currentLocale = "en";
+const localeCacheBuster = `?_v=${Date.now().toString()}`;
 
 function normalizeLocale(locale) {
 	if (!locale) {
@@ -55,49 +56,17 @@ function localeCandidates(locale) {
 	return candidates;
 }
 
-function parseAmdLocale(text) {
-	const trimmed = text.trim();
-	const prefix = "define(";
-	const start = trimmed.indexOf(prefix);
-	const end = trimmed.lastIndexOf(")");
-	if (start === -1 || end === -1 || end <= start) {
-		throw new Error("Invalid locale format");
-	}
-	const objectText = trimmed.slice(start + prefix.length, end).trim();
-	const jsonText = objectText
-		.replace(/\s*\/\/.*$/gm, "")
-		.replace(/\s\/\*[\s\S]*?\*\//g, "")
-		.trim();
-	return JSON.parse(jsonText);
-}
-
 async function loadLocaleFile(locale) {
 	if (localeCache[locale]) {
 		return localeCache[locale];
 	}
 
-	const src = `/js/nls/${locale}/lang.js`;
-	const data = await new Promise((resolve, reject) => {
-		const previousDefine = window.define;
-		const script = document.createElement("script");
-
-		window.define = function (payload) {
-			window.define = previousDefine;
-			script.remove();
-			resolve(payload);
-		};
-		window.define.amd = true;
-
-		script.src = src;
-		script.async = true;
-		script.onerror = function () {
-			window.define = previousDefine;
-			script.remove();
-			reject(new Error(`Locale ${locale} not found`));
-		};
-
-		document.head.appendChild(script);
-	});
+	const src = `/js/nls/${locale}/lang.js${localeCacheBuster}`;
+	const module = await import(/* webpackIgnore: true */ src);
+	const data = module && module.default ? module.default : module;
+	if (!data || typeof data !== "object") {
+		throw new Error(`Locale ${locale} not found`);
+	}
 
 	localeCache[locale] = data;
 	return data;

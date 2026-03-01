@@ -1,4 +1,4 @@
-define({
+export default {
     "m_home": "Home",
     "m_admin": "Admin",
     "m_tm": "Forms",
@@ -1644,4 +1644,4 @@ define({
     // sms
     "sms_their_q": "Question for calling number",
     "sms_conv_q": "Conversation Question"
-});
+};
