@@ -16,31 +16,24 @@
 
  */
 
+"use strict";
+
+import localise from './app/localise.js';
+import {
+    addHourglass,
+    htmlEncode,
+    removeHourglass
+} from './app/common.js';
+
+const $ = window.$;
+
 var gUserLocale = navigator.language;
 if (Modernizr.localstorage) {
     gUserLocale = localStorage.getItem('user_locale') || navigator.language;
 }
+window.gUserLocale = gUserLocale;
 
-"use strict";
-requirejs.config({
-    baseUrl: '/js/libs',
-    waitSeconds: 0,
-    locale: gUserLocale,
-    paths: {
-        app: '/js/app',
-        bootbox: 'bootbox.min',
-        lang_location: '/js'
-    },
-    shim: {
-    }
-});
-
-require([
-    'jquery',
-    'app/localise',
-    'app/common',
-    'bootbox'
-], function ($, localise, common, bootbox) {
+localise.initLocale(gUserLocale).then(function () {
 
     var gToken;
     var gSubscribe;
@@ -48,7 +41,6 @@ require([
 
     $(document).ready(function () {
 
-        window.bootbox = bootbox;
         var i,
             params,
             pArray = [],
@@ -248,6 +240,5 @@ require([
     }
 
 });
-
 
 
