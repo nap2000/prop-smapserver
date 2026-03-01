@@ -16,37 +16,37 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-var gUserLocale = navigator.language;
+"use strict";
 
+import globals from './app/globals.js';
+import localise from './app/localise.js';
+import {
+    addHourglass,
+    getCms,
+    getGroupKeys,
+    getGroupStatusQuestions,
+    getGroupSurveys,
+    getLoggedInUser,
+    handleLogout,
+    htmlEncode,
+    removeHourglass,
+    setInLocalStorage,
+    setupUserProfile
+} from './app/common.js';
+
+const $ = window.$;
+const bootbox = window.bootbox;
+
+var gUserLocale = navigator.language;
 if (Modernizr.localstorage) {
     gUserLocale = localStorage.getItem('user_locale') || navigator.language;
 }
+window.gUserLocale = gUserLocale;
 
-"use strict";
-require.config({
-    baseUrl: '/js/libs',
-    waitSeconds: 0,
-    locale: gUserLocale,
-    paths: {
-        app: '/js/app',
-        bootbox: 'bootbox.min',
-        lang_location: '/js'
-    },
-    shim: {
-        'app/common': ['jquery'],
-        'jquery.autosize.min': ['jquery']
-    }
-});
-
-require([
-        'jquery',
-        'app/common',
-        'app/localise',
-        'bootbox',
-        'app/globals'],
-    function($, common, lang, bootbox, globals) {
+localise.initLocale(gUserLocale).then(function() {
 
         var gCurrentCmsIndex;
+        var gPanel;
 
         window.gTasks = {
             cache: {
@@ -433,8 +433,4 @@ require([
             }
             $('#create_cms_popup').modal("show");
         }
-
-
-
-
-    });
+});
