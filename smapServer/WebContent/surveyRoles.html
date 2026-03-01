@@ -32,14 +32,14 @@
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
 	<a class="navbar-brand" href="#"><i class="fa fa-edit" aria-hidden="true"></i><span class="lang" data-lang="c_s_roles"></span></a>
 	<div class="spinner-grow text-danger hour_glass"></div>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
 	</button>
 
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-		<ul class="navbar-nav ml-auto">
+		<ul class="navbar-nav ms-auto">
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<span class="lang" data-lang="m_modules">modules</span>
 				</a>
 				<div class="dropdown-menu" aria-labelledby="m_modules">
@@ -64,13 +64,13 @@
 			<li class="nav-item"><a id="m_meta" href="/meta.html" class="nav-link lang" data-lang="c_meta"></a></li>
 			<li id="m_help" class="nav-item"><a class="nav-link lang" data-lang="m_help" href="http://www.smap.com.au/docs/online-editor.html" target="_blank">Help</a></li>
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<i class="fa fa-user" aria-hidden="true"></i>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="m_profile">
-					<a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"> </a>
+					<a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-bs-toggle="modal" data-bs-target="#modify_me_popup" aria-label="User"> </a>
 					<a class="dropdown-item lang" data-lang="c_change_p" href="/app/changePassword.html"></a>
-					<a class="dropdown-item lang" data-lang="c_ak" data-toggle="modal" data-target="#api_key_popup" aria-label="Get API key"></a>
+					<a class="dropdown-item lang" data-lang="c_ak" data-bs-toggle="modal" data-bs-target="#api_key_popup" aria-label="Get API key"></a>
 					<a id="userProfileLogout" class="dropdown-item lang" data-lang="c_logout" href="/dologout.html"></a>
 				</div>
 			</li>
@@ -101,9 +101,9 @@
 			</form>
 		</div>
 		<div class="col-md-4 col-xs-12">
-			<div class="col-sm-10 offset-sm-2 custom-control custom-checkbox">
-				<input type="checkbox" class="custom-control-input" name="bundle" value="bundle" id="bundle">
-				<label class="custom-control-label lang" data-lang="ro_b" for="bundle"></label>
+			<div class="col-sm-10 offset-sm-2 form-check form-check">
+				<input type="checkbox" class="form-check-input" name="bundle" value="bundle" id="bundle">
+				<label class="form-check-label lang" data-lang="ro_b" for="bundle"></label>
 			</div>
 		</div>
 	</div>
@@ -125,7 +125,7 @@
    		<div class="modal-content">
    			<div class="modal-header">
 				<h5 class="modal-title" id="addRowFilterLabel"></h5>
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span><span class="visually-hidden">Close</span></button>
    			</div>
    			
 		    <div class="modal-body">
@@ -136,7 +136,7 @@
 					</a>
 				</div>
 				<form id="role_filter_row_form">
-					<div class="form-group row" data-toggle="tooltip" title="Row Filter">
+					<div class="form-group row" data-bs-toggle="tooltip" title="Row Filter">
 						<label for="filter_row_content" data-lang="ro_fr_rule" class="lang col-2 control-label"></label>
 						<div class="col-10">
 							<textarea id="filter_row_content" class="labelProp form-control"></textarea>
@@ -155,7 +155,7 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-               	<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">close</button>
+               	<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">close</button>
                	<button id="saveRowFilter" type="button" class="btn btn-primary lang" data-lang="c_save">save</button>
        		</div>
 		
@@ -168,7 +168,7 @@
    		<div class="modal-content">
    			<div class="modal-header">
 				<h5 class="modal-title" id="addColumnFilterLabel"></h5>
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span><span class="visually-hidden">Close</span></button>
    			</div>
    			
 		    <div class="modal-body">
@@ -176,7 +176,7 @@
 				<div id="column_select"></div>
 			</div>
 			<div class="modal-footer">
-               	<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">close</button>
+               	<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">close</button>
                	<button id="saveColumnFilter" type="button" class="btn btn-primary lang" data-lang="c_save">save</button>
        		</div>
 		

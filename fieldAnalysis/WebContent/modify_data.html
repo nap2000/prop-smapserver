@@ -32,14 +32,14 @@
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
 	<a class="navbar-brand lang" data-lang="m_modify" href="#">monitor</a>
 	<div class="spinner-grow text-danger hour_glass"></div>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
 	</button>
 
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-		<ul class="navbar-nav ml-auto">
+		<ul class="navbar-nav ms-auto">
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<span class="lang" data-lang="m_modules">modules</span>
 				</a>
 				<div class="dropdown-menu" aria-labelledby="m_modules">
@@ -64,13 +64,13 @@
 
 			<li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<i class="fa fa-user" aria-hidden="true"></i>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="m_profile">
-					<a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"> </a>
+					<a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-bs-toggle="modal" data-bs-target="#modify_me_popup" aria-label="User"> </a>
 					<a class="dropdown-item lang" data-lang="c_change_p" href="/app/changePassword.html"></a>
-					<a class="dropdown-item lang" data-lang="c_ak" data-toggle="modal" data-target="#api_key_popup" aria-label="Get API key"></a>
+					<a class="dropdown-item lang" data-lang="c_ak" data-bs-toggle="modal" data-bs-target="#api_key_popup" aria-label="Get API key"></a>
 					<a id="userProfileLogout" class="dropdown-item lang" data-lang="c_logout" href="/dologout.html"></a>
 				</div>
 			</li>
@@ -89,14 +89,14 @@
 				<div class="col-sm-4 border-right">
 					<form>
 						<!-- Not sure if this is scalable of useful
-						<div class="custom-control custom-checkbox">
-							<input type="checkbox" class="custom-control-input" id="primary_key_cb" name="primary_key" value="success">
-							<label class="custom-control-label lang" data-lang="rev_sel_pk" for="primary_key_cb">su</label>
+						<div class="form-check form-check">
+							<input type="checkbox" class="form-check-input" id="primary_key_cb" name="primary_key" value="success">
+							<label class="form-check-label lang" data-lang="rev_sel_pk" for="primary_key_cb">su</label>
 						</div>
 						-->
-						<div class="custom-control custom-checkbox mt-4 mb-4">
-							<input type="checkbox" class="custom-control-input" id="other_target_cb" name="other_target" value="success">
-							<label class="custom-control-label lang" data-lang="rev_upd_diff" for="other_target_cb">ud</label>
+						<div class="form-check form-check mt-4 mb-4">
+							<input type="checkbox" class="form-check-input" id="other_target_cb" name="other_target" value="success">
+							<label class="form-check-label lang" data-lang="rev_upd_diff" for="other_target_cb">ud</label>
 						</div>
 
 					</form>
@@ -196,7 +196,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title lang" data-lang="rev_upd_text">update</h4>
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span><span class="visually-hidden">Close</span></button>
 			</div>
 			<div class="modal-body">
 
@@ -234,7 +234,7 @@
 			</div>
 
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">Close</button>
 				<button id="applyUpdate" type="button" class="btn btn-primary lang" data-lang="c_save">save</button>
 			</div>
 		</div>

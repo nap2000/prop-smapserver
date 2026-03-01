@@ -77,14 +77,14 @@
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
     <a class="navbar-brand lang" data-lang="m_console" href="#">console</a>
     <div class="spinner-grow text-danger hour_glass"></div>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown active">
-                <a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="lang" data-lang="m_modules">modules</span>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="m_modules">
@@ -105,7 +105,7 @@
             </li>
 
             <li class="nav-item dropdown active">
-                <a class="nav-link dropdown-toggle lang" data-lang="c_file" id="m_file" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+                <a class="nav-link dropdown-toggle lang" data-lang="c_file" id="m_file" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
                 <div class="dropdown-menu" aria-labelledby="m_file">
                     <a id="m_export_xls" class="dropdown-item genfile docx lang" data-lang="c_word" href="#"></a>
                     <a id="m_export_word" class="dropdown-item genfile xls lang" data-lang="c_excel" href="#"></a>
@@ -118,7 +118,7 @@
 
             <!--
             <li class="nav-item dropdown active">
-                <a class="nav-link dropdown-toggle" href="#" id="m_local_reports" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="lang" data-lang="m_lr">reports</span></a>
+                <a class="nav-link dropdown-toggle" href="#" id="m_local_reports" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="lang" data-lang="m_lr">reports</span></a>
                 <div class="dropdown-menu" aria-labelledby="m_local_reports">
                     <a class="dropdown-item xxxx1 d-none" href="/misc/CreatingIdentificationCards.docx"><span>Guide on creating Id Cards</span></a>
                     <a class="dropdown-item xxxx1 d-none" href="/misc/CardMergeTemplate.docx"><span>ID Card Template</span></a>
@@ -131,14 +131,14 @@
             <li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
             <li id="m_training" class="nav-item d-none"><a class="nav-link" id="train_link" href="#" target="_blank"><span class="nav-label lang" data-lang="m_training">training</span></a></li>
             <li class="nav-item dropdown active">
-                <a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-user" aria-hidden="true"></i> <span class="total_tasks">(0)</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="m_profile">
                     <a class="dropdown-item" href="/app/myWork/index.html?tasks" aria-label="My Tasks"><span class="lang" data-lang="t_mt"></span> <span class="total_tasks">(0)</span></a>
-                    <a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"> </a>
+                    <a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-bs-toggle="modal" data-bs-target="#modify_me_popup" aria-label="User"> </a>
                     <a class="dropdown-item lang" data-lang="c_change_p" href="/app/changePassword.html"></a>
-                    <a class="dropdown-item lang" data-lang="c_ak" data-toggle="modal" data-target="#api_key_popup" aria-label="Get API key"></a>
+                    <a class="dropdown-item lang" data-lang="c_ak" data-bs-toggle="modal" data-bs-target="#api_key_popup" aria-label="Get API key"></a>
                     <a id="userProfileLogout" class="dropdown-item lang" data-lang="c_logout" href="/dologout.html"></a>
                 </div>
             </li>
@@ -210,17 +210,17 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-12">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="include_bad">
-                                    <label class="custom-control-label lang" data-lang="mf_id" for="include_bad"></label>
+                                <div class="form-check custom-switch">
+                                    <input type="checkbox" class="form-check-input" id="include_bad">
+                                    <label class="form-check-label lang" data-lang="mf_id" for="include_bad"></label>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-12">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="include_completed">
-                                    <label class="custom-control-label lang" data-lang="mf_cc" for="include_completed"></label>
+                                <div class="form-check custom-switch">
+                                    <input type="checkbox" class="form-check-input" id="include_completed">
+                                    <label class="form-check-label lang" data-lang="mf_cc" for="include_completed"></label>
                                 </div>
                             </div>
                         </div>
@@ -230,17 +230,17 @@
                 <div class="col-sm-4 pt-4 px-2 overviewSection">
                     <form class="form" role="form">
 
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input assign_filter" id="my_records">
-                            <label class="custom-control-label lang" data-lang="mf_mr" for="my_records"></label>
+                        <div class="form-check custom-switch">
+                            <input type="checkbox" class="form-check-input assign_filter" id="my_records">
+                            <label class="form-check-label lang" data-lang="mf_mr" for="my_records"></label>
                         </div>
-                        <div class="custom-control custom-switch ">
-                            <input type="checkbox" class="custom-control-input assign_filter" id="unassigned_records">
-                            <label class="custom-control-label lang" data-lang="mf_ur" for="unassigned_records"></label>
+                        <div class="form-check custom-switch ">
+                            <input type="checkbox" class="form-check-input assign_filter" id="unassigned_records">
+                            <label class="form-check-label lang" data-lang="mf_ur" for="unassigned_records"></label>
                         </div>
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input assign_filter" id="other_records">
-                            <label class="custom-control-label lang" data-lang="mf_or" for="other_records"></label>
+                        <div class="form-check custom-switch">
+                            <input type="checkbox" class="form-check-input assign_filter" id="other_records">
+                            <label class="form-check-label lang" data-lang="mf_or" for="other_records"></label>
                         </div>
 
                         <div class="form-group row">
@@ -274,7 +274,7 @@
                     <form id="bulkEditForm"></form>
 
                     <button id="saveBulkEdit" type="button" class="btn btn-success lang saverecord"
-                            data-dismiss="modal"
+                            data-bs-dismiss="modal"
                             data-lang="c_save">Save
                     </button>
 
@@ -290,31 +290,31 @@
             <!-- record editing commands -->
             <div class="bg-light row">
                 <div class="col-sm-4 pt-4 px-2 editRecordSection border-right">
-                    <div class="custom-control custom-switch dataView">
-                        <input type="checkbox" class="custom-control-input table_filter"
+                    <div class="form-check custom-switch dataView">
+                        <input type="checkbox" class="form-check-input table_filter"
                                name="formdata" value="yes" id="er_form_data" checked="checked">
-                        <label class="custom-control-label lang" data-lang="mf_fd" for="er_form_data"></label>
+                        <label class="form-check-label lang" data-lang="mf_fd" for="er_form_data"></label>
                     </div>
 
-                    <div class="custom-control custom-switch historyView" style="display:none">
-                        <input type="checkbox" class="custom-control-input changes_filter"
+                    <div class="form-check custom-switch historyView" style="display:none">
+                        <input type="checkbox" class="form-check-input changes_filter"
                                name="showtasks" value="yes" id="er_show_tasks" checked="checked">
-                        <label class="custom-control-label lang" data-lang="t_tasks" for="er_show_tasks"></label>
+                        <label class="form-check-label lang" data-lang="t_tasks" for="er_show_tasks"></label>
                     </div>
-                    <div class="custom-control custom-switch historyView" style="display:none">
-                        <input type="checkbox" class="custom-control-input changes_filter"
+                    <div class="form-check custom-switch historyView" style="display:none">
+                        <input type="checkbox" class="form-check-input changes_filter"
                                name="showNotifications" value="yes" id="er_show_notifications" checked="checked">
-                        <label class="custom-control-label lang" data-lang="m_notify" for="er_show_notifications"></label>
+                        <label class="form-check-label lang" data-lang="m_notify" for="er_show_notifications"></label>
                     </div>
-                    <div class="custom-control custom-switch historyView" style="display:none">
-                        <input type="checkbox" class="custom-control-input changes_filter"
+                    <div class="form-check custom-switch historyView" style="display:none">
+                        <input type="checkbox" class="form-check-input changes_filter"
                                name="showChanges" value="yes" id="er_show_changes" checked="checked">
-                        <label class="custom-control-label lang" data-lang="c_changes" for="er_show_changes"></label>
+                        <label class="form-check-label lang" data-lang="c_changes" for="er_show_changes"></label>
                     </div>
-                    <div class="custom-control custom-switch historyView" style="display:none">
-                        <input type="checkbox" class="custom-control-input changes_filter"
+                    <div class="form-check custom-switch historyView" style="display:none">
+                        <input type="checkbox" class="form-check-input changes_filter"
                                name="showAssignments" value="yes" id="er_show_assignments" checked="checked">
-                        <label class="custom-control-label lang" data-lang="t_assignments" for="er_show_assignments"></label>
+                        <label class="form-check-label lang" data-lang="t_assignments" for="er_show_assignments"></label>
                     </div>
                 </div>
 
@@ -332,7 +332,7 @@
 
             <div class="overviewSection">
                 <div class="d-flex w-100 px-1">
-                    <!--<p id="timezone" class="mr-auto py-2"></p>  Is this really useful and it complicates mobile first-->
+                    <!--<p id="timezone" class="me-auto py-2"></p>  Is this really useful and it complicates mobile first-->
                     <ul class="nav">
 
                         <li class="nav-item filtersChanged" style="display:none;">
@@ -352,9 +352,9 @@
                         </li>
 
                         <li class="nav-item mapOnly targetSpecific" style="display:none;">
-                            <div class="custom-control custom-switch custom-control-inline my-2">
-                                <input type="checkbox" class="custom-control-input" id="showlayers">
-                                <label class="custom-control-label lang" data-lang="d_layers" for="showlayers"></label>
+                            <div class="form-check form-switch form-check-inline my-2">
+                                <input type="checkbox" class="form-check-input" id="showlayers">
+                                <label class="form-check-label lang" data-lang="d_layers" for="showlayers"></label>
                             </div>
                         </li>
 
@@ -363,7 +363,7 @@
                                 <button type="button" class="lang du_only btn btn-secondary" data-lang="co_up" id="drill_up"></button>
                                 <button type="button" class="dd_only lang btn btn-secondary" data-lang="co_dd" id="drill_down"></button>
                                 <div class="btn-group dd_only" role="group">
-                                    <button id="dd_form" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button id="dd_form" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
                                     </button>
                                     <div id="drill_down_list" class="dropdown-menu" aria-labelledby="drill_down">
@@ -399,15 +399,15 @@
         <div class="card-header">
             <ul id="mainTabs" class="nav nav-tabs card-header-tabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a data-toggle="tab" id="table-view" href="#tablePanel" role="tab" class="active nav-link" aria-controls="table-view" aria-selected="true"><i class="fa fa-list" aria-hidden="true"></i> <span class="lang" data-lang="c_table"></span></a>
+                    <a data-bs-toggle="tab" id="table-view" href="#tablePanel" role="tab" class="active nav-link" aria-controls="table-view" aria-selected="true"><i class="fa fa-list" aria-hidden="true"></i> <span class="lang" data-lang="c_table"></span></a>
                 </li>
                 <li class="nav-item">
-                    <a data-toggle="tab" id="map-view" href="#mapPanel" role="tab" class="nav-link" aria-controls="map-view" aria-selected="false"><i class="fa fa-globe" aria-hidden="true"></i> <span class="lang" data-lang="c_map"></span></a>
+                    <a data-bs-toggle="tab" id="map-view" href="#mapPanel" role="tab" class="nav-link" aria-controls="map-view" aria-selected="false"><i class="fa fa-globe" aria-hidden="true"></i> <span class="lang" data-lang="c_map"></span></a>
                 </li>
                 <li class="nav-item">
-                    <a data-toggle="tab" id="chart-view" href="#chartPanel" role="tab" class="nav-link"><i class="fa fa-chart-bar" aria-hidden="true"></i> <span class="lang" data-lang="c_chart"></span></a>
+                    <a data-bs-toggle="tab" id="chart-view" href="#chartPanel" role="tab" class="nav-link"><i class="fa fa-chart-bar" aria-hidden="true"></i> <span class="lang" data-lang="c_chart"></span></a>
                 </li>
-                <li class="nav-item" style="display:none;"><a data-toggle="tab" id="timing-view" href="#timingPanel" role="tab" class="nav-link"><i class="fa fa-clock-o" aria-hidden="true"></i></a></li>
+                <li class="nav-item" style="display:none;"><a data-bs-toggle="tab" id="timing-view" href="#timingPanel" role="tab" class="nav-link"><i class="fa fa-clock-o" aria-hidden="true"></i></a></li>
             </ul>
         </div>
 
@@ -492,8 +492,8 @@
     <div class="card text-center editRecordSection">
         <div class="card-header">
             <ul id="editTabs" class="nav nav-tabs mt-4" role="tablist">
-                <li class="nav-item" role="presentation"><a data-toggle="tab" href="#data-view" class="active nav-link"><i class="fa fa-list"></i> <span class="lang" data-lang="c_data"></span></a></li>
-                <li class="nav-item" role="presentation"><a data-toggle="tab" href="#changes-view" class="nav-link"><i class="fa fa-edit"></i> <span class="lang" data-lang="c_history"></span></a></li>
+                <li class="nav-item" role="presentation"><a data-bs-toggle="tab" href="#data-view" class="active nav-link"><i class="fa fa-list"></i> <span class="lang" data-lang="c_data"></span></a></li>
+                <li class="nav-item" role="presentation"><a data-bs-toggle="tab" href="#changes-view" class="nav-link"><i class="fa fa-edit"></i> <span class="lang" data-lang="c_history"></span></a></li>
             </ul>
         </div>
 
@@ -510,7 +510,7 @@
                             </div>
                         </div>
                         <button id="saveRecord" type="button" class="btn btn-primary lang saverecord"
-                                data-dismiss="modal"
+                                data-bs-dismiss="modal"
                                 data-lang="c_save">Save
                         </button>
                     </div>
@@ -533,8 +533,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <!--  <button id="shareRecord" type="button" class="btn btn-info"><i class="fa fa-share-alt"></i> <span class="lang" data-lang="n_share">get link</span></button> -->
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                        class="sr-only">Close</span></button>
+                <button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="visually-hidden">Close</span></button>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -642,7 +642,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
+                <button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">Close
                 </button>
                 <button id="editChartSave" type="button" class="btn btn-primary lang" data-lang="c_save">Save</button>
             </div>
@@ -655,8 +655,8 @@
     <div class="modal-dialog custom-modal-width">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                        class="sr-only">Close</span></button>
+                <button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="visually-hidden">Close</span></button>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -730,7 +730,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
+                <button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close"></button>
                 <button id="addLayerSave" type="button" class="btn btn-primary lang" data-lang="c_save"></button>
             </div>
         </div>
@@ -743,15 +743,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title lang" data-lang="t_assign"></h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                        class="sr-only"></span></button>
+                <button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="visually-hidden"></span></button>
             </div>
             <div class="modal-body">
 
                 <form class = "px-4" role="form">
 
                     <div class="form-group row">
-                        <select id="user_to_assign" class="custom-select"></select>
+                        <select id="user_to_assign" class="form-select"></select>
                     </div>
 
                 </form>
@@ -759,8 +759,8 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
-                <button id="assignUserSave" type="button" data-dismiss="modal" class="btn btn-primary lang " data-lang="c_save"></button>
+                <button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close"></button>
+                <button id="assignUserSave" type="button" data-bs-dismiss="modal" class="btn btn-primary lang " data-lang="c_save"></button>
             </div>
         </div>
     </div>
@@ -772,8 +772,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="toggleRecordTitle" class="modal-title"></h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                        class="sr-only"></span></button>
+                <button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="visually-hidden"></span></button>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -794,8 +794,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
-                <button id="toggleRecordSave" type="button" data-dismiss="modal" class="btn btn-primary"></button>
+                <button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close"></button>
+                <button id="toggleRecordSave" type="button" data-bs-dismiss="modal" class="btn btn-primary"></button>
             </div>
         </div>
     </div>
@@ -811,7 +811,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="taskPropLabel"></h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
@@ -890,7 +890,7 @@
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label lang" data-lang="c_from" for="tp_from"></label>
                             <div class="col-sm-10">
-                                <div class='input-group date' id='tp_from' data-toggle="tooltip" data-container="body"
+                                <div class='input-group date' id='tp_from' data-bs-toggle="tooltip" data-container="body"
                                      title="Scheduled date in local time zone">
                                     <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
                                     <div class="input-group-append">
@@ -902,7 +902,7 @@
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label lang" data-lang="c_to" for="tp_to"></label>
                             <div class="col-sm-10">
-                                <div class='input-group date' id='tp_to' data-toggle="tooltip" data-container="body"
+                                <div class='input-group date' id='tp_to' data-bs-toggle="tooltip" data-container="body"
                                      title="Finish time">
                                     <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
                                     <div class="input-group-append">
@@ -927,8 +927,8 @@
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <button type="button" class="btn btn-outline-secondary"><span class="location_group_list_sel"></span></button>
-                                            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <span class="sr-only">Toggle Dropdown</span></button>
+                                            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="visually-hidden">Toggle Dropdown</span></button>
                                             <div class="dropdown-menu location_group_list" id="location_group"></div>
                                         </div>
                                         <select class="form-control location_select" id="location_select" name="location_trigger"></select>
@@ -1004,7 +1004,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
+                <button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">Close
                 </button>
                 <button id="taskPropertiesSave" type="button" class="btn btn-primary lang" data-lang="c_save">Save
                 </button>
@@ -1019,7 +1019,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title lang" id="addNotificationLabel" data-lang="msg_send_notification">send</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
             </div>
 
@@ -1083,21 +1083,21 @@
                             </div>
                         </div>
 
-                        <div id="notify_emails_cont" class="form-group row lang_tt" data-lang_tt="n_cs_e" data-toggle="tooltip"  data-container="body" title="">
+                        <div id="notify_emails_cont" class="form-group row lang_tt" data-lang_tt="n_cs_e" data-bs-toggle="tooltip"  data-container="body" title="">
                             <label for="notify_emails" data-lang="c_email" class="lang col-sm-2 control-label"></label>
                             <div class="col-sm-10">
                                 <textarea type="email" rows="2" id="notify_emails" class="form-control lang_ph" data-lang_ph="n_ea" required multiple placeholder=""></textarea>
                             </div>
                         </div>
 
-                        <div id="email_subject_cont" class="form-group row lang_tt" data-lang_tt="n_esc" data-toggle="tooltip"  data-container="body" title="">
+                        <div id="email_subject_cont" class="form-group row lang_tt" data-lang_tt="n_esc" data-bs-toggle="tooltip"  data-container="body" title="">
                             <label for="email_subject" data-lang="c_subject" class="lang col-sm-2 control-label"></label>
                             <div class="col-sm-10">
                                 <input type="text" id="email_subject" class="form-control">
                             </div>
                         </div>
                         <div class="well">
-                            <div class="form-group row" data-toggle="tooltip"  data-container="body">
+                            <div class="form-group row" data-bs-toggle="tooltip"  data-container="body">
                                 <label for="email_content" data-lang="c_content" class="lang col-sm-2 control-label"></label>
                                 <div class="col-sm-10">
                                     <textarea id="email_content" class="labelProp form-control"></textarea>
@@ -1161,7 +1161,7 @@
                     </div>
 
                     <div class="sms_options" style="display:none;">
-                        <div class="form-group row lang_tt" data-lang_tt="n_sms_n_tt" data-toggle="tooltip"  data-container="body" title="">
+                        <div class="form-group row lang_tt" data-lang_tt="n_sms_n_tt" data-bs-toggle="tooltip"  data-container="body" title="">
                             <label for="notify_sms" data-lang="c_sms" class="lang col-sm-2 control-label"></label>
                             <div class="col-sm-10">
                                 <input type="tel" id="notify_sms" class="form-control" required>
@@ -1185,7 +1185,7 @@
 
                 </form>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
+                    <button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close"></button>
                     <button id="saveNotification" type="button" class="btn btn-primary lang" data-lang="c_save"></button>
                 </div>
             </div>
@@ -1199,7 +1199,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title lang" id="genpdfLabel" data-lang="d_d_pdf">pdf</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
             </div>
 
@@ -1254,8 +1254,8 @@
 
                 </form>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
-                    <button id="genPdf" type="button" data-dismiss="modal" class="btn btn-primary lang" data-lang="c_save"></button>
+                    <button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close"></button>
+                    <button id="genPdf" type="button" data-bs-dismiss="modal" class="btn btn-primary lang" data-lang="c_save"></button>
                 </div>
             </div>
         </div>
@@ -1267,8 +1267,8 @@
     <div class="modal-dialog custom-modal-width modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                        class="sr-only">close</span></button>
+                <button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="visually-hidden">close</span></button>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -1315,7 +1315,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
+                <button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">Close
                 </button>
                 <button id="overviewReportSave" type="button" class="btn btn-primary lang" data-lang="m_export">export</button>
             </div>
@@ -1329,7 +1329,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title lang" data-lang="c_settings">pdf</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
             </div>
 
@@ -1350,8 +1350,8 @@
                 <div id="tab-columns-content"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
-                <button id="saveSettings" type="button" data-dismiss="modal" class="btn btn-primary lang" data-lang="c_save"></button>
+                <button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close"></button>
+                <button id="saveSettings" type="button" data-bs-dismiss="modal" class="btn btn-primary lang" data-lang="c_save"></button>
             </div>
         </div>
     </div>
@@ -1363,7 +1363,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title lang" data-lang="u_access"></h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span><span class="visually-hidden">Close</span></button>
             </div>
             <div class="modal-body">
 
@@ -1377,7 +1377,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+                <button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">Close</button>
                 <button id="tdh_individual_report_save" type="button" class="btn btn-primary lang" data-lang="c_create">create</button>
             </div>
         </div>
@@ -1390,7 +1390,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="csLabel" class="modal-title lang" data-lang="c_settings"></h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span><span class="visually-hidden">Close</span></button>
             </div>
             <div class="modal-body">
 
@@ -1425,7 +1425,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+                <button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">Close</button>
                 <button id="chart_settings_save" type="button" class="btn btn-primary lang" data-lang="c_save">save</button>
             </div>
         </div>
@@ -1438,7 +1438,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="mLabel" class="modal-title lang" data-lang="msg_nc"></h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span><span class="visually-hidden">Close</span></button>
             </div>
             <div class="modal-body">
 
@@ -1453,7 +1453,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_no">Close</button>
+                <button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_no">Close</button>
                 <button id="messageSave" type="button" class="btn btn-primary lang" data-lang="c_yes">save</button>
             </div>
         </div>

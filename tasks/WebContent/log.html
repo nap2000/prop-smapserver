@@ -32,14 +32,14 @@
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
 	<a class="navbar-brand lang" data-lang="m_logs" href="#">logs</a>
 	<div class="spinner-grow text-danger hour_glass"></div>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
 	</button>
 
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-		<ul class="navbar-nav ml-auto">
+		<ul class="navbar-nav ms-auto">
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<span class="lang" data-lang="m_modules">modules</span>
 				</a>
 				<div class="dropdown-menu" aria-labelledby="m_modules">
@@ -65,7 +65,7 @@
 			<li id="m_settings" class="nav-item restrict_role admin_role"><a class="nav-link" href="/app/fieldManager/settings.html"><span class="lang" data-lang="c_settings">settings</span></a></li>
 			<li id="m_resources" class="nav-item restrict_role admin_role analyst_role"><a class="nav-link" href="/app/resources.html"><span class="lang" data-lang="m_resources">resources</span></a></li>
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle" href="#" id="m_local_reports" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="lang" data-lang="m_lr">reports</span></a>
+				<a class="nav-link dropdown-toggle" href="#" id="m_local_reports" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="lang" data-lang="m_lr">reports</span></a>
 				<div class="dropdown-menu" aria-labelledby="m_local_reports">
 					<a id="m_hourly_sr" class="dropdown-item restrict_role admin_role analyst_role" href="#"><span class="nav-label lang" data-lang="log_hr"></span></a>
 				</div>
@@ -74,13 +74,13 @@
 			<li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
 			<li id="m_training" class="nav-item d-none"><a class="nav-link" id="train_link" href="#" target="_blank"><i class="fas fa-running"></i> <span class="nav-label lang" data-lang="m_training">training</span></a></li>
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<i class="fa fa-user" aria-hidden="true"></i>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="m_profile">
-					<a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"> </a>
+					<a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-bs-toggle="modal" data-bs-target="#modify_me_popup" aria-label="User"> </a>
 					<a class="dropdown-item lang" data-lang="c_change_p" href="/app/changePassword.html"></a>
-					<a class="dropdown-item lang" data-lang="c_ak" data-toggle="modal" data-target="#api_key_popup" aria-label="Get API key"></a>
+					<a class="dropdown-item lang" data-lang="c_ak" data-bs-toggle="modal" data-bs-target="#api_key_popup" aria-label="Get API key"></a>
 					<a id="userProfileLogout" class="dropdown-item lang" data-lang="c_logout" href="/dologout.html"></a>
 				</div>
 			</li>
@@ -169,7 +169,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title lang" data-lang="log_hr"></h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
 						aria-hidden="true">&times;</span></button>
 
 			</div>
@@ -193,8 +193,8 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-				<button id="hourly_sr_save" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_create">create</button>
+				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="hourly_sr_save" type="button" class="btn btn-primary lang" data-bs-dismiss="modal" data-lang="c_create">create</button>
 			</div>
 		</div>
 	</div>
@@ -206,7 +206,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title lang" data-lang="log_sd"></h4>
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span><span class="visually-hidden">Close</span></button>
 			</div>
 			<div class="modal-body">
 
@@ -220,7 +220,7 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">Close</button>
 			</div>
 		</div>
 	</div>

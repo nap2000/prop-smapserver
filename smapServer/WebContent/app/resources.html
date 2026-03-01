@@ -45,14 +45,14 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
 	<a class="navbar-brand" href="#"><span id="page_title" class="lang" data-lang="m_resources"></span> <span class="formName"></span></a>
 	<div class="spinner-grow text-danger hour_glass"></div>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
 	</button>
 
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-		<ul class="navbar-nav ml-auto">
+		<ul class="navbar-nav ms-auto">
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<span class="lang" data-lang="m_modules">modules</span>
 				</a>
 				<div class="dropdown-menu" aria-labelledby="m_modules">
@@ -81,13 +81,13 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 			<li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
 			<li id="m_training" class="nav-item d-none"><a class="nav-link" id="train_link" href="#" target="_blank"><span class="nav-label lang" data-lang="m_train">training</span></a></li>
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<i class="fa fa-user" aria-hidden="true"></i>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="m_profile">
-					<a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"> </a>
+					<a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-bs-toggle="modal" data-bs-target="#modify_me_popup" aria-label="User"> </a>
 					<a class="dropdown-item lang" data-lang="c_change_p" href="/app/changePassword.html"></a>
-					<a class="dropdown-item lang" data-lang="c_ak" data-toggle="modal" data-target="#api_key_popup" aria-label="Get API key"></a>
+					<a class="dropdown-item lang" data-lang="c_ak" data-bs-toggle="modal" data-bs-target="#api_key_popup" aria-label="Get API key"></a>
 					<a id="userProfileLogout" class="dropdown-item lang" data-lang="c_logout" href="/dologout.html"></a>
 				</div>
 			</li>
@@ -271,7 +271,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title lang" id="addMapLabel" data-lang="c_map">Map</h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			</div>
 
 			<div class="modal-body">
@@ -339,7 +339,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					</div>
 				</form>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default lang" data-lang="c_close" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-secondary lang" data-lang="c_close" data-bs-dismiss="modal">Close</button>
 					<button id="saveMap" type="button" class="btn btn-primary lang" data-lang="c_save">Save</button>
 				</div>
 			</div>
@@ -353,7 +353,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 id="media_add_title"><span class="lang notreplace" data-lang="tm_ul_sr"></span></h5>
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span><span class="visually-hidden">Close</span></button>
 
 			</div>
 			<div class="modal-body">
@@ -370,9 +370,9 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<div class="form-group row">
 							<label class="col-sm-2 col-form-label" for="fileCsv"><span data-lang="c_file" class="lang">file</span></label>
 							<div class="col-sm-10">
-								<input type="file" class="form-control-file" name="tname" id="fileCsv" required
+								<input type="file" class="form-control" name="tname" id="fileCsv" required
 									   accept="text/csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"/>
-								<input type="file" name="files" class="form-control-file" id="fileMedia"
+								<input type="file" name="files" class="form-control" id="fileMedia"
 									   accept="image/png, image/jpeg, image/gif, video/3gpp, video/mp4, video/mpeg, audio/mpeg,
 	                							audio/mp3, image/svg+xml">
 
@@ -386,7 +386,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">Close</button>
 				<button id="submitResourceFile" type="button" class="btn btn-primary lang" data-lang="c_upload">Upload</button>
 			</div>
 		</div>
@@ -399,7 +399,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5><span class="lang notreplace" data-lang="tm_ul_sl"></span></h5>
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span><span class="visually-hidden">Close</span></button>
 
 			</div>
 			<div class="modal-body">
@@ -422,7 +422,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">Close</button>
 				<button id="submitLocationFile" type="button" class="btn btn-primary lang" data-lang="c_upload">Upload</button>
 			</div>
 		</div>

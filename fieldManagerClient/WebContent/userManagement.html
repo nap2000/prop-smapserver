@@ -34,14 +34,14 @@
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
 	<a class="navbar-brand lang" data-lang="m_user" href="#">users</a>
 	<div class="spinner-grow text-danger hour_glass"></div>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
 	</button>
 
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-		<ul class="navbar-nav ml-auto">
+		<ul class="navbar-nav ms-auto">
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<span class="lang" data-lang="m_modules">modules</span>
 				</a>
 				<div class="dropdown-menu" aria-labelledby="m_modules">
@@ -61,7 +61,7 @@
 				</div>
 			</li>
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle lang" data-lang="c_file" id="m_file" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+				<a class="nav-link dropdown-toggle lang" data-lang="c_file" id="m_file" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
 				<div class="dropdown-menu" aria-labelledby="m_file">
 					<a id="m_export_xls" class="dropdown-item lang" data-lang="m_export" href="#">export</a>
 					<a id="m_import_xls" class="dropdown-item lang" data-lang="m_import" href="#">import</a>
@@ -76,14 +76,14 @@
 			<li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
 			<li id="m_training" class="nav-item d-none"><a class="nav-link" id="train_link" href="#" target="_blank"><span class="nav-label lang" data-lang="m_train">training</span></a></li>
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<i class="fa fa-user" aria-hidden="true"></i> <span class="total_tasks">(0)</span>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="m_profile">
 					<a class="dropdown-item" href="/app/myWork/index.html?tasks" aria-label="My Tasks"><span class="lang" data-lang="t_mt"></span> <span class="total_tasks">(0)</span></a>
-					<a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"> </a>
+					<a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-bs-toggle="modal" data-bs-target="#modify_me_popup" aria-label="User"> </a>
 					<a class="dropdown-item lang" data-lang="c_change_p" href="/app/changePassword.html"></a>
-					<a class="dropdown-item lang" data-lang="c_ak" data-toggle="modal" data-target="#api_key_popup" aria-label="Get API key"></a>
+					<a class="dropdown-item lang" data-lang="c_ak" data-bs-toggle="modal" data-bs-target="#api_key_popup" aria-label="Get API key"></a>
 					<a id="userProfileLogout" class="dropdown-item lang" data-lang="c_logout" href="/dologout.html"></a>
 				</div>
 			</li>
@@ -148,7 +148,7 @@
 					<div class="container">
 						<div class="row">
 							<div class="col-md-12 col-xs-12">
-								<button class="btn btn-success lang mr-2" id="create_user" data-lang="u_add"></button>
+								<button class="btn btn-success lang me-2" id="create_user" data-lang="u_add"></button>
 							</div>
 						</div>
 						<div class="row">
@@ -168,7 +168,7 @@
 						<div class="org_alert alert alert-success" role="alert" style="display:none;"></div>
 						<div class="row">
 							<div class="col-md-12 col-xs-12">
-								<button class="btn btn-success lang mr-2" id="create_project" data-lang="u_add_p"></button>
+								<button class="btn btn-success lang me-2" id="create_project" data-lang="u_add_p"></button>
 							</div>
 						</div>
 						<div class="row">
@@ -260,7 +260,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title lang" id="modifyUserLabel" data-lang="u_det">user</h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
 						aria-hidden="true">&times;</span></button>
 			</div>
 			<div class="modal-body row">
@@ -280,23 +280,23 @@
 								   placeholder="Enter email"
 								   pattern="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$">
 							<div id="send_email_fields" style="display:none;">
-								<div class="custom-control custom-radio">
-									<input type="radio" class="custom-control-input" id="send_email" name="send_email" value="send_email" checked="checked"/>
-									<label class="custom-control-label" for="send_email">
+								<div class="form-check form-check">
+									<input type="radio" class="form-check-input" id="send_email" name="send_email" value="send_email" checked="checked"/>
+									<label class="form-check-label" for="send_email">
 										<span class="lang" data-lang="u_email"></span>
 									</label>
 								</div>
-								<div class="custom-control custom-radio">
-									<input  type="radio" class="custom-control-input" id="set_password" name="send_email" value="set_password" />
-									<label class="custom-control-label" for="set_password">
+								<div class="form-check form-check">
+									<input  type="radio" class="form-check-input" id="set_password" name="send_email" value="set_password" />
+									<label class="form-check-label" for="set_password">
 										<span class="lang" data-lang="u_set_p"></span>
 									</label>
 								</div>
 							</div>
 							<div id="reset_password_fields" style="display:none;">
-								<div class="custom-control custom-checkbox mt-3">
-									<input type="checkbox" class="custom-control-input" id="reset_password">
-									<label class="custom-control-label" for="reset_password">
+								<div class="form-check form-check mt-3">
+									<input type="checkbox" class="form-check-input" id="reset_password">
+									<label class="form-check-label" for="reset_password">
 										<span data-lang="c_r_p" class="lang"></span>
 									</label>
 								</div>
@@ -323,7 +323,7 @@
 						<div class="noo card text-white">
 							<div class="card-header" id="userGroupDetails">
 								<h4 class="card-title">
-									<a class="card-link" data-toggle="collapse" role="button" href="#collapseUserGroupDetails" aria-expanded="true" aria-controls="collapseUserGroupDetails">
+									<a class="card-link" data-bs-toggle="collapse" role="button" href="#collapseUserGroupDetails" aria-expanded="true" aria-controls="collapseUserGroupDetails">
 										<span class="lang" data-lang="u_sg">security</span>
 									</a>
 								</h4>
@@ -342,7 +342,7 @@
 						<div class="noo card">
 							<div class="card-header" id="userProjectDetails">
 								<h4 class="card-title">
-									<a class="card-link" data-toggle="collapse" role="button" href="#collapseUserProjectDetails" aria-expanded="false" aria-controls="collapseUserProjectDetails">
+									<a class="card-link" data-bs-toggle="collapse" role="button" href="#collapseUserProjectDetails" aria-expanded="false" aria-controls="collapseUserProjectDetails">
 										<span class="lang" data-lang="c_projects">projects</span>
 									</a>
 								</h4>
@@ -359,7 +359,7 @@
 						<div class="noo card restrict_role org_role security_role text-white">
 							<div class="card-header" id="userRoleDetails">
 								<h4 class="card-title">
-									<a class="card-link" data-toggle="collapse" role="button" href="#collapseUserRoleDetails" aria-expanded="false" aria-controls="collapseUserRoleDetails">
+									<a class="card-link" data-bs-toggle="collapse" role="button" href="#collapseUserRoleDetails" aria-expanded="false" aria-controls="collapseUserRoleDetails">
 										<span class="lang" data-lang="c_roles">roles</span>
 									</a>
 								</h4>
@@ -376,7 +376,7 @@
 						<div class="card restrict_role org_role admin_role text-white">
 							<div class="card-header" id="userOrgDetails">
 								<h4 class="card-title">
-									<a class="card-link" data-toggle="collapse" role="button" href="#collapseUserOrgDetails" aria-expanded="false" aria-controls="collapseUserOrgDetails">
+									<a class="card-link" data-bs-toggle="collapse" role="button" href="#collapseUserOrgDetails" aria-expanded="false" aria-controls="collapseUserOrgDetails">
 										<span class="lang" data-lang="c_orgs">orgs</span>
 									</a>
 								</h4>
@@ -395,7 +395,7 @@
 			</div>
 
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">Close</button>
 				<button id="userDetailsSave" type="button" class="btn btn-primary lang" data-lang="c_save">Save</button>
 			</div>
 		</div>
@@ -409,7 +409,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 id="createProjectLabel" class="modal-title lang" data-lang="u_det_p">project</h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
 						aria-hidden="true">&times;</span></button>
 			</div>
 			<div class="modal-body">
@@ -432,16 +432,16 @@
 						<div class="card">
 							<div class="card-header" id="pUserProjectDetails">
 								<h4 class="card-title">
-									<a class="card-link" data-toggle="collapse" role="button" href="#collapsePUserProjectDetails" aria-expanded="false" aria-controls="collapsePUserProjectDetails">
+									<a class="card-link" data-bs-toggle="collapse" role="button" href="#collapsePUserProjectDetails" aria-expanded="false" aria-controls="collapsePUserProjectDetails">
 										<span class="lang" data-lang="m_user">u</span>
 									</a>
 								</h4>
 							</div>
 							<div id="collapsePUserProjectDetails" class="collapse" role="tabpanel" aria-labelledby="pUserProjectDetails">
 								<div class="card-body">
-									<div class="custom-control custom-checkbox select_all">
-										<input type="checkbox" id="sau" class="custom-control-input" name="p_user_projects_cb" value="-1">
-										<label class="custom-control-label lang" data-lang="c_sa" for="sau"></label>
+									<div class="form-check form-check select_all">
+										<input type="checkbox" id="sau" class="form-check-input" name="p_user_projects_cb" value="-1">
+										<label class="form-check-label lang" data-lang="c_sa" for="sau"></label>
 									</div>
 									<div class="bg-warning">
 										<div id="p_user_projects"></div>
@@ -454,8 +454,8 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close"></button>
-				<button id="projectSave" type="button" class="btn btn-primary lang btn-default" data-lang="c_save"></button>
+				<button type="button" class="btn lang" data-bs-dismiss="modal" data-lang="c_close"></button>
+				<button id="projectSave" type="button" class="btn btn-primary lang btn-secondary" data-lang="c_save"></button>
 			</div>
 		</div>
 	</div>
@@ -467,7 +467,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title lang" data-lang="u_det_ur" id="createRoleLabel">role</h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
 						aria-hidden="true">&times;</span></button>
 			</div>
 			<div class="modal-body">
@@ -489,7 +489,7 @@
 						<div class="card">
 							<div class="card-header" id="pUserRoleDetails">
 								<h4 class="card-title">
-									<a class="card-link" data-toggle="collapse" role="button" href="#collapsePUserRoleDetails" aria-expanded="false" aria-controls="collapsePUserRoleDetails">
+									<a class="card-link" data-bs-toggle="collapse" role="button" href="#collapsePUserRoleDetails" aria-expanded="false" aria-controls="collapsePUserRoleDetails">
 										<span class="lang" data-lang="m_user">u</span>
 									</a>
 								</h4>
@@ -508,8 +508,8 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close">Close</button>
-				<button id="roleSave" type="button" class="btn btn-primary lang btn-default" data-lang="c_save">Save</button>
+				<button type="button" class="btn lang" data-bs-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="roleSave" type="button" class="btn btn-primary lang btn-secondary" data-lang="c_save">Save</button>
 			</div>
 		</div>
 	</div>
@@ -521,7 +521,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title lang" data-lang="u_det_o" id="createOrganisationLabel">organisation</h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
 						aria-hidden="true">&times;</span></button>
 			</div>
 			<div class="modal-body">
@@ -539,7 +539,7 @@
 						<div class="card">
 							<div class="card-header" id="companyDetails">
 								<h4 class="card-title">
-									<a class="card-link" data-toggle="collapse" role="button" href="#collapseCompanyDetails" aria-expanded="false" aria-controls="collapseCompanyDetails">
+									<a class="card-link" data-bs-toggle="collapse" role="button" href="#collapseCompanyDetails" aria-expanded="false" aria-controls="collapseCompanyDetails">
 										<span class="lang" data-lang="u_det_o">org details</span>
 									</a>
 								</h4>
@@ -566,7 +566,7 @@
 					<div class="card restrict_role org_role">
 						<div class="card-header" id="emailOptions">
 							<h4 class="card-title">
-								<a class="card-link" data-toggle="collapse" role="button" href="#collapseEmailOptions" aria-expanded="false" aria-controls="collapseEmailOptions">
+								<a class="card-link" data-bs-toggle="collapse" role="button" href="#collapseEmailOptions" aria-expanded="false" aria-controls="collapseEmailOptions">
 									<span class="lang" data-lang="u_det_o_email">email options</span>
 								</a>
 							</h4>
@@ -605,7 +605,7 @@
 					<div class="card">
 						<div class="card-header" id="otherOptions">
 							<h4 class="card-title">
-								<a class="card-link" data-toggle="collapse" role="button" href="#collapseOtherOptions" aria-expanded="false" aria-controls="collapseOtherOptions">
+								<a class="card-link" data-bs-toggle="collapse" role="button" href="#collapseOtherOptions" aria-expanded="false" aria-controls="collapseOtherOptions">
 									<span class="lang" data-lang="u_det_o_other">other</span>
 								</a>
 							</h4>
@@ -614,51 +614,51 @@
 							<div class="card-body">
 
 								<form>
-									<div class="custom-control custom-checkbox">
-										<input type="checkbox" class="custom-control-input puboption" id="can_edit" value="can_edit" checked="checked">
-										<label class="custom-control-label" for="can_edit">
+									<div class="form-check form-check">
+										<input type="checkbox" class="form-check-input puboption" id="can_edit" value="can_edit" checked="checked">
+										<label class="form-check-label" for="can_edit">
 											<span data-lang="u_other_edit" class="lang"></span>
 										</label>
 									</div>
 
-									<div class="custom-control custom-checkbox">
-										<input type="checkbox" class="custom-control-input puboption" id="email_task" value="email_task" checked="checked">
-										<label class="custom-control-label" for="email_task">
+									<div class="form-check form-check">
+										<input type="checkbox" class="form-check-input puboption" id="email_task" value="email_task" checked="checked">
+										<label class="form-check-label" for="email_task">
 											<span data-lang="u_email_tasks" class="lang"></span>
 										</label>
 									</div>
 
-									<div class="custom-control custom-checkbox">
-										<input type="checkbox" class="custom-control-input puboption" id="can_notify" value="can_notify" checked="checked">
-										<label class="custom-control-label" for="can_notify">
+									<div class="form-check form-check">
+										<input type="checkbox" class="form-check-input puboption" id="can_notify" value="can_notify" checked="checked">
+										<label class="form-check-label" for="can_notify">
 											<span data-lang="u_notifications" class="lang"></span>
 										</label>
 									</div>
 
-									<div class="custom-control custom-checkbox">
-										<input type="checkbox" class="custom-control-input puboption" id="can_use_api" value="can_use_api" checked="checked">
-										<label class="custom-control-label" for="can_use_api">
+									<div class="form-check form-check">
+										<input type="checkbox" class="form-check-input puboption" id="can_use_api" value="can_use_api" checked="checked">
+										<label class="form-check-label" for="can_use_api">
 											<span data-lang="u_use_api" class="lang"></span>
 										</label>
 									</div>
 
-									<div class="custom-control custom-checkbox">
-										<input type="checkbox" class="custom-control-input puboption" id="can_submit" value="can_submit" checked="checked">
-										<label class="custom-control-label" for="can_submit">
+									<div class="form-check form-check">
+										<input type="checkbox" class="form-check-input puboption" id="can_submit" value="can_submit" checked="checked">
+										<label class="form-check-label" for="can_submit">
 											<span data-lang="u_submissions" class="lang"></span>
 										</label>
 									</div>
 
-									<div class="custom-control custom-checkbox awsSmsOnly">
-										<input type="checkbox" class="custom-control-input puboption" id="can_sms" value="can_sms" checked="checked">
-										<label class="custom-control-label" for="can_sms">
+									<div class="form-check form-check awsSmsOnly">
+										<input type="checkbox" class="form-check-input puboption" id="can_sms" value="can_sms" checked="checked">
+										<label class="form-check-label" for="can_sms">
 											<span data-lang="u_sms" class="lang"></span>
 										</label>
 									</div>
 
-									<div class="custom-control custom-checkbox">
-										<input type="checkbox" class="custom-control-input puboption" id="send_optin" value="send_optin" checked="checked">
-										<label class="custom-control-label" for="send_optin">
+									<div class="form-check form-check">
+										<input type="checkbox" class="form-check-input puboption" id="send_optin" value="send_optin" checked="checked">
+										<label class="form-check-label" for="send_optin">
 											<span data-lang="u_eoi" class="lang"></span>
 										</label>
 									</div>
@@ -713,7 +713,7 @@
 					<div class="card restrict_role org_role">
 						<div class="card-header" id="limitOptions">
 							<h4 class="card-title">
-								<a class="card-link" data-toggle="collapse" role="button" href="#collapseLimitOptions" aria-expanded="false" aria-controls="collapseLimitOptions">
+								<a class="card-link" data-bs-toggle="collapse" role="button" href="#collapseLimitOptions" aria-expanded="false" aria-controls="collapseLimitOptions">
 									<span class="lang" data-lang="u_det_o_limits">limits</span>
 								</a>
 							</h4>
@@ -727,7 +727,7 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close" tabindex="13">Close</button>
+				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close" tabindex="13">Close</button>
 				<button id="organisationSave" type="button" class="btn btn-primary lang" data-lang="c_save" tabindex="12">Save</button>
 			</div>
 		</div>
@@ -741,7 +741,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title lang" id="createEnterpriseLabel" data-lang="u_det_e">ent</h4>
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
+				<button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span><span class="visually-hidden"></span></button>
 			</div>
 			<div class="modal-body">
 				<form class="form" id="enterprise_create_form">
@@ -757,7 +757,7 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close" tabindex="13"></button>
+				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close" tabindex="13"></button>
 				<button id="enterpriseSave" type="button" class="btn btn-primary lang" data-lang="c_save" tabindex="12"></button>
 			</div>
 		</div>
@@ -771,7 +771,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title lang" id="moveOrganisationLabel" data-lang="u_mv">move</h4>
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"></span></button>
+				<button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span><span class="visually-hidden"></span></button>
 			</div>
 			<div class="modal-body">
 				<form id="organisation_move_form">
@@ -791,8 +791,8 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-				<button id="organisationMove" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_save">Save</button>
+				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="organisationMove" type="button" class="btn btn-primary lang" data-bs-dismiss="modal" data-lang="c_save">Save</button>
 			</div>
 		</div>
 	</div>
@@ -804,7 +804,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title lang" id="moveEnterpriseLabel" data-lang="u_mv_ent">move</h4>
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span><span class="visually-hidden">Close</span></button>
 			</div>
 			<div class="modal-body">
 				<form id="enterprise_move_form">
@@ -820,8 +820,8 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-				<button id="enterpriseMove" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_save">Save</button>
+				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="enterpriseMove" type="button" class="btn btn-primary lang" data-bs-dismiss="modal" data-lang="c_save">Save</button>
 			</div>
 		</div>
 	</div>
@@ -833,7 +833,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title lang" id="delUserLabel" data-lang="c_c_d">confirm</h4>
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span><span class="visually-hidden">Close</span></button>
 			</div>
 			<div class="modal-body">
 
@@ -862,7 +862,7 @@
 			</div>
 
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
+				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">Close</button>
 				<button id="confirmDelUser" type="button" class="btn btn-primary lang" data-lang="c_ok">ok</button>
 			</div>
 		</div>
@@ -876,7 +876,7 @@
 			<div class="modal-header">
 
 				<h4 class="modal-title lang" id="importLabel" data-lang="m_import"></h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
 						aria-hidden="true">&times;</span></button>
 
 			</div>
@@ -890,9 +890,9 @@
 						</div>
 					</div>
 
-					<div class="custom-control custom-checkbox">
-						<input id="fi_clear" type="checkbox" class="custom-control-input" name="file_clear" value="true" >
-						<label id="fi_clear_label" class="custom-control-label mt-3" for="fi_clear"></label>
+					<div class="form-check form-check">
+						<input id="fi_clear" type="checkbox" class="form-check-input" name="file_clear" value="true" >
+						<label id="fi_clear_label" class="form-check-label mt-3" for="fi_clear"></label>
 					</div>
 
 				</form>
@@ -901,7 +901,7 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">c</button>
+				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">c</button>
 				<button id="importFileGo" type="button" class="btn btn-primary lang" data-lang="m_import">i</button>
 			</div>
 		</div>
@@ -913,7 +913,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title lang" data-lang="u_usage"></h5>
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<button type="button" class="close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span><span class="visually-hidden">Close</span></button>
 			</div>
 			<div class="modal-body">
 
@@ -921,7 +921,7 @@
 					<div class="form-group row">
 						<label for="usageDateInput" data-lang="c_month" class="lang col-sm-2 control-label">month</label>
 						<div class="col-sm-10">
-							<div class='input-group date' id='usageDate' data-toggle="tooltip"  data-container="body" title="Month and Year of report">
+							<div class='input-group date' id='usageDate' data-bs-toggle="tooltip"  data-container="body" title="Month and Year of report">
 								<input id = "usageDateInput" type='text' class="form-control" data-date-format="YYYY/MM"/>
 								<div class="input-group-append">
 									<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i class="fas fa-calendar-alt"></i></span></button>
@@ -964,8 +964,8 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close</button>
-				<button id="usage_report_save" type="button" class="btn btn-primary lang" data-dismiss="modal" data-lang="c_create">create</button>
+				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">Close</button>
+				<button id="usage_report_save" type="button" class="btn btn-primary lang" data-bs-dismiss="modal" data-lang="c_create">create</button>
 			</div>
 		</div>
 	</div>
@@ -977,7 +977,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 id="addSmsLabel" class="modal-title lang" data-lang="c_phone"></h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			</div>
 			<div class="modal-body">
 
@@ -1011,8 +1011,8 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close"></button>
-				<button id="addSmsSave" type="button" class="btn btn-primary lang btn-default" data-lang="c_save"></button>
+				<button type="button" class="btn lang" data-bs-dismiss="modal" data-lang="c_close"></button>
+				<button id="addSmsSave" type="button" class="btn btn-primary lang btn-secondary" data-lang="c_save"></button>
 			</div>
 		</div>
 	</div>
@@ -1024,7 +1024,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 id="editSmsLabel" class="modal-title" ><span class="lang" data-lang="c_edit"></span> <span class="edit_number"></span></h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			</div>
 			<div class="modal-body">
 
@@ -1082,8 +1082,8 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close"></button>
-				<button id="editSmsSave" type="button" class="btn btn-primary lang btn-default" data-lang="c_save"></button>
+				<button type="button" class="btn lang" data-bs-dismiss="modal" data-lang="c_close"></button>
+				<button id="editSmsSave" type="button" class="btn btn-primary lang btn-secondary" data-lang="c_save"></button>
 			</div>
 		</div>
 	</div>
@@ -1095,20 +1095,20 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 id="appCodeLabel" class="modal-title" ><span class="lang" data-lang="u_code"></span></h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			</div>
 			<div class="modal-body">
 				<div id="appKeyQR"></div>
 				<div id="appKey"></div>
 
 				<button id="createKey" type="button" class="btn btn-primary"></button>
-				<button id="deleteKey" type="button" class="btn btn-danger ml-2 lang" data-lang="c_del"></button>
+				<button id="deleteKey" type="button" class="btn btn-danger ms-2 lang" data-lang="c_del"></button>
 
 				<div class="app_code_alert alert alert-success" role="alert" style="display:none;"></div>
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close"></button>
+				<button type="button" class="btn lang" data-bs-dismiss="modal" data-lang="c_close"></button>
 			</div>
 		</div>
 	</div>

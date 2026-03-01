@@ -34,14 +34,14 @@
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
 	<a class="navbar-brand lang" data-lang="c_settings" href="#">settings</a>
 	<div class="spinner-grow text-danger hour_glass"></div>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
 	</button>
 
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-		<ul class="navbar-nav ml-auto">
+		<ul class="navbar-nav ms-auto">
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<span class="lang" data-lang="m_modules">modules</span>
 				</a>
 				<div class="dropdown-menu" aria-labelledby="m_modules">
@@ -61,7 +61,7 @@
 				</div>
 			</li>
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle lang" data-lang="c_file" id="m_file" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+				<a class="nav-link dropdown-toggle lang" data-lang="c_file" id="m_file" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
 				<div class="dropdown-menu" aria-labelledby="m_file">
 					<a id="m_export_xls" class="dropdown-item lang" data-lang="m_export" href="#">export</a>
 					<a id="m_import_xls" class="dropdown-item lang" data-lang="m_import" href="#">import</a>
@@ -77,13 +77,13 @@
 			<li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
 			<li id="m_training" class="nav-item d-none"><a class="nav-link" id="train_link" href="#" target="_blank"><i class="fas fa-running"></i> <span class="nav-label lang" data-lang="m_training">training</span></a></li>
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<i class="fa fa-user" aria-hidden="true"></i>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="m_profile">
-					<a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"> </a>
+					<a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-bs-toggle="modal" data-bs-target="#modify_me_popup" aria-label="User"> </a>
 					<a class="dropdown-item lang" data-lang="c_change_p" href="/app/changePassword.html"></a>
-					<a class="dropdown-item lang" data-lang="c_ak" data-toggle="modal" data-target="#api_key_popup" aria-label="Get API key"></a>
+					<a class="dropdown-item lang" data-lang="c_ak" data-bs-toggle="modal" data-bs-target="#api_key_popup" aria-label="Get API key"></a>
 					<a id="userProfileLogout" class="dropdown-item lang" data-lang="c_logout" href="/dologout.html"></a>
 				</div>
 			</li>
@@ -496,7 +496,7 @@
 									<img id="o_banner_logo" alt="not found" style="height:50px;" src="/images/smap_logo.png" onerror='if(this.src.indexOf("smap_logo.png") < 0) this.src="/images/smap_logo.png";' style="width:100%;">
 								</div>
 								<div class="col-sm-4">
-									<input id="change_banner_logo" name="banner_logo" title="Add" class="form-control-file" type="file" accept="image/png, image/jpeg, image/gif">
+									<input id="change_banner_logo" name="banner_logo" title="Add" class="form-control" type="file" accept="image/png, image/jpeg, image/gif">
 								</div>
 							</div>
 						</form>
@@ -530,7 +530,7 @@
 									<img id="o_main_logo" alt="nf" src="#" style="width:100%;">
 								</div>
 								<div class="col-sm-6">
-									<input type="file" class="form-control-file" id="change_main_logo" accept="image/png, image/jpeg, image/gif" name="main_logo" >
+									<input type="file" class="form-control" id="change_main_logo" accept="image/png, image/jpeg, image/gif" name="main_logo" >
 								</div>
 							</div>
 
@@ -887,7 +887,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 id="uploadCssLabel" class="modal-title lang" data-lang="u_css_ss">upload</h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
 						aria-hidden="true">&times;</span></button>
 			</div>
 			<div class="modal-body">
@@ -896,7 +896,7 @@
 					<div class="form-group row">
 						<label for="cssUpload" data-lang="u_css_f" class="lang col-sm-4 control-label">upload</label>
 						<div class="col-sm-6">
-							<input type="file" class="form-control-file" id="cssUpload" accept="text/css" name="file">
+							<input type="file" class="form-control" id="cssUpload" accept="text/css" name="file">
 						</div>
 					</div>
 				</form>
@@ -904,8 +904,8 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close"></button>
-				<button id="cssSave" type="button" class="btn btn-primary lang btn-default" data-lang="c_save"></button>
+				<button type="button" class="btn lang" data-bs-dismiss="modal" data-lang="c_close"></button>
+				<button id="cssSave" type="button" class="btn btn-primary lang btn-secondary" data-lang="c_save"></button>
 			</div>
 		</div>
 	</div>
@@ -917,7 +917,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 id="uploadCssLabelOrg" class="modal-title lang" data-lang="u_css_ss_org">upload</h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			</div>
 			<div class="modal-body">
 
@@ -925,7 +925,7 @@
 					<div class="form-group row">
 						<label for="cssUploadOrg" data-lang="u_css_f" class="lang col-sm-4 control-label">upload</label>
 						<div class="col-sm-6">
-							<input type="file" class="form-control-file" id="cssUploadOrg" accept="text/css" name="file">
+							<input type="file" class="form-control" id="cssUploadOrg" accept="text/css" name="file">
 						</div>
 					</div>
 				</form>
@@ -933,8 +933,8 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn lang" data-dismiss="modal" data-lang="c_close"></button>
-				<button id="cssSaveOrg" type="button" class="btn btn-primary lang btn-default" data-lang="c_save"></button>
+				<button type="button" class="btn lang" data-bs-dismiss="modal" data-lang="c_close"></button>
+				<button id="cssSaveOrg" type="button" class="btn btn-primary lang btn-secondary" data-lang="c_save"></button>
 			</div>
 		</div>
 	</div>

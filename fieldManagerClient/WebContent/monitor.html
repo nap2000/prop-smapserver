@@ -31,14 +31,14 @@
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
 	<a class="navbar-brand lang" data-lang="m_monitor" href="#">monitor</a>
 	<div class="spinner-grow text-danger hour_glass"></div>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
 	</button>
 
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-		<ul class="navbar-nav ml-auto">
+		<ul class="navbar-nav ms-auto">
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<span class="lang" data-lang="m_modules">modules</span>
 				</a>
 				<div class="dropdown-menu" aria-labelledby="m_modules">
@@ -67,14 +67,14 @@
 			<li><a href="#" id="m_refresh"><span class="lang nav-link" data-lang="m_refresh">r</span></a></li>
 			<li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<i class="fa fa-user" aria-hidden="true"></i> <span class="total_tasks">(0)</span>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="m_profile">
 					<a class="dropdown-item" href="/app/myWork/index.html?tasks" aria-label="My Tasks"><span class="lang" data-lang="t_mt"></span> <span class="total_tasks">(0)</span></a>
-					<a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"> </a>
+					<a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-bs-toggle="modal" data-bs-target="#modify_me_popup" aria-label="User"> </a>
 					<a class="dropdown-item lang" data-lang="c_change_p" href="/app/changePassword.html"></a>
-					<a class="dropdown-item lang" data-lang="c_ak" data-toggle="modal" data-target="#api_key_popup" aria-label="Get API key"></a>
+					<a class="dropdown-item lang" data-lang="c_ak" data-bs-toggle="modal" data-bs-target="#api_key_popup" aria-label="Get API key"></a>
 					<a id="userProfileLogout" class="dropdown-item lang" data-lang="c_logout" href="/dologout.html"></a>
 				</div>
 			</li>
@@ -136,15 +136,15 @@
 						</div>
 						<div class="form-group row conditional get_less_more">
 							<button type="button" class="mx-2 col-sm-3 button-light get_less">&lt;&lt;&lt;</button>
-							<button type="button" class="mr-2 col-sm-3 button-light get_more">&gt;&gt;&gt;</button>
+							<button type="button" class="me-2 col-sm-3 button-light get_more">&gt;&gt;&gt;</button>
 							<span class="col -sm-6 get_less_more_text">Page 1 of 1</span>
 						</div>
 						<div class="conditional retry">
 							<button id="submission_retry" type="button" class="lang btn btn-info" data-lang="mon_retry">retry</button>
 						</div>
-						<div class="custom-control custom-checkbox conditional showold">
-							<input type="checkbox" class="custom-control-input" id="ignoreOldIssues" name="ignoreOldIssues" checked="checked">
-							<label class="custom-control-label lang" data-lang="mon_ignore_old" for="ignoreOldIssues">ig</label>
+						<div class="form-check form-check conditional showold">
+							<input type="checkbox" class="form-check-input" id="ignoreOldIssues" name="ignoreOldIssues" checked="checked">
+							<label class="form-check-label lang" data-lang="mon_ignore_old" for="ignoreOldIssues">ig</label>
 						</div>
 					</form>
 				</div>
@@ -152,48 +152,48 @@
 					<div class="row">
 						<div id="showstatus" class="conditional col-sm-6">
 							<h5 class="lang" data-lang="c_include">inc</h5>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="statusCheck1" name="showstatus" value="success" checked="checked">
-								<label class="custom-control-label lang" data-lang="c_success" for="statusCheck1">su</label>
+							<div class="form-check form-check">
+								<input type="checkbox" class="form-check-input" id="statusCheck1" name="showstatus" value="success" checked="checked">
+								<label class="form-check-label lang" data-lang="c_success" for="statusCheck1">su</label>
 							</div>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="statusCheck2" name="showstatus" value="errors" checked="checked">
-								<label class="custom-control-label lang" data-lang="c_errors" for="statusCheck2">err</label>
+							<div class="form-check form-check">
+								<input type="checkbox" class="form-check-input" id="statusCheck2" name="showstatus" value="errors" checked="checked">
+								<label class="form-check-label lang" data-lang="c_errors" for="statusCheck2">err</label>
 							</div>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="statusCheck3" name="showstatus" value="not_loaded" checked="checked">
-								<label class="custom-control-label lang" data-lang="mon_nl" for="statusCheck3">nl</label>
+							<div class="form-check form-check">
+								<input type="checkbox" class="form-check-input" id="statusCheck3" name="showstatus" value="not_loaded" checked="checked">
+								<label class="form-check-label lang" data-lang="mon_nl" for="statusCheck3">nl</label>
 							</div>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="statusCheck4" name="showstatus" value="duplicates" checked="checked">
-								<label class="custom-control-label lang" data-lang="mon_dup" for="statusCheck4">dups</label>
+							<div class="form-check form-check">
+								<input type="checkbox" class="form-check-input" id="statusCheck4" name="showstatus" value="duplicates" checked="checked">
+								<label class="form-check-label lang" data-lang="mon_dup" for="statusCheck4">dups</label>
 							</div>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="statusCheck5" name="showstatus" value="merged" checked="checked">
-								<label class="custom-control-label lang" data-lang="mon_att" for="statusCheck5">att</label>
+							<div class="form-check form-check">
+								<input type="checkbox" class="form-check-input" id="statusCheck5" name="showstatus" value="merged" checked="checked">
+								<label class="form-check-label lang" data-lang="mon_att" for="statusCheck5">att</label>
 							</div>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="statusCheck6" name="showstatus" value="upload_errors" checked="checked">
-								<label class="custom-control-label lang" data-lang="mon_ue" for="statusCheck6">ue</label>
+							<div class="form-check form-check">
+								<input type="checkbox" class="form-check-input" id="statusCheck6" name="showstatus" value="upload_errors" checked="checked">
+								<label class="form-check-label lang" data-lang="mon_ue" for="statusCheck6">ue</label>
 							</div>
 						</div>
 						<div id="groupsurvey" class="col-sm-6 conditional">
 							<h5 class="lang" data-lang="mon_gtb">inc</h5>
-							<div class="custom-control custom-checkbox">
-								<input type="radio" class="custom-control-input" id="groupCheck1" name="groupsurvey" value="device" checked="checked">
-								<label class="custom-control-label lang" data-lang="c_device" for="groupCheck1">dev</label>
+							<div class="form-check form-check">
+								<input type="radio" class="form-check-input" id="groupCheck1" name="groupsurvey" value="device" checked="checked">
+								<label class="form-check-label lang" data-lang="c_device" for="groupCheck1">dev</label>
 							</div>
-							<div class="custom-control custom-checkbox">
-								<input type="radio" class="custom-control-input" id="groupCheck2" name="groupsurvey" value="month">
-								<label class="custom-control-label lang" data-lang="c_month" for="groupCheck2">day</label>
+							<div class="form-check form-check">
+								<input type="radio" class="form-check-input" id="groupCheck2" name="groupsurvey" value="month">
+								<label class="form-check-label lang" data-lang="c_month" for="groupCheck2">day</label>
 							</div>
-							<div class="custom-control custom-checkbox">
-								<input type="radio" class="custom-control-input" id="groupCheck3" name="groupsurvey" value="week">
-								<label class="custom-control-label lang" data-lang="c_week" for="groupCheck3">wk</label>
+							<div class="form-check form-check">
+								<input type="radio" class="form-check-input" id="groupCheck3" name="groupsurvey" value="week">
+								<label class="form-check-label lang" data-lang="c_week" for="groupCheck3">wk</label>
 							</div>
-							<div class="custom-control custom-checkbox">
-								<input type="radio" class="custom-control-input" id="groupCheck4" name="groupsurvey" value="day">
-								<label class="custom-control-label lang" data-lang="c_day" for="groupCheck4">mth</label>
+							<div class="form-check form-check">
+								<input type="radio" class="form-check-input" id="groupCheck4" name="groupsurvey" value="day">
+								<label class="form-check-label lang" data-lang="c_day" for="groupCheck4">mth</label>
 							</div>
 						</div>
 
@@ -209,19 +209,19 @@
 		<div class="card-header">
 			<ul id="mainTabs" class="nav nav-tabs card-header-tabs" role="tablist">
 				<li id="submitTab" class="nav-item" role="presentation">
-					<a data-toggle="tab" id="submit-view" href="#submitPanel" role="tab" class="active nav-link lang" aria-controls="table-view" aria-selected="true" data-lang="c_submitted"></a>
+					<a data-bs-toggle="tab" id="submit-view" href="#submitPanel" role="tab" class="active nav-link lang" aria-controls="table-view" aria-selected="true" data-lang="c_submitted"></a>
 				</li>
 				<li id="notifyTab" class="nav-item">
-					<a data-toggle="tab" id="notify-view" href="#notifyPanel" role="tab" class="nav-link lang" aria-controls="map-view" aria-selected="false" data-lang="m_notify"></a>
+					<a data-bs-toggle="tab" id="notify-view" href="#notifyPanel" role="tab" class="nav-link lang" aria-controls="map-view" aria-selected="false" data-lang="m_notify"></a>
 				</li>
 				<li id="optinTab" class="nav-item">
-					<a data-toggle="tab" id="optin-view" href="#optinPanel" role="tab" class="nav-link lang" data-lang="mon_optin_msg"></a>
+					<a data-bs-toggle="tab" id="optin-view" href="#optinPanel" role="tab" class="nav-link lang" data-lang="mon_optin_msg"></a>
 				</li>
 				<li id="caseTab" class="nav-item">
-					<a data-toggle="tab" id="case-view" href="#casePanel" role="tab" class="nav-link lang" data-lang="c_cases"></a>
+					<a data-bs-toggle="tab" id="case-view" href="#casePanel" role="tab" class="nav-link lang" data-lang="c_cases"></a>
 				</li>
 				<li id="serverTab" class="nav-item ownerOnly d-none">
-					<a data-toggle="tab" id="server-view" href="#serverPanel" role="tab" class="nav-link lang" data-lang="server"></a>
+					<a data-bs-toggle="tab" id="server-view" href="#serverPanel" role="tab" class="nav-link lang" data-lang="server"></a>
 				</li>
 			</ul>
 		</div>
@@ -260,7 +260,7 @@
 							<div class="col-sm-12">
 								<div class="card card">
 									<div class="card-header d-flex chart-header">
-										<span class="mr-auto lang" data-lang="cm_oc"></span>
+										<span class="me-auto lang" data-lang="cm_oc"></span>
 										<i class="fa fa-cog"></i>
 									</div>
 									<div class="card-body wide-chart">
@@ -278,7 +278,7 @@
 							<div class="col-sm-12">
 								<div class="card card">
 									<div class="card-header d-flex chart-header">
-										<span class="mr-auto lang" data-lang="cm_oc"></span>
+										<span class="me-auto lang" data-lang="cm_oc"></span>
 										<i class="fa fa-cog"></i>
 									</div>
 									<div class="card-body wide-chart">

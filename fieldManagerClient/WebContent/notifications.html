@@ -46,14 +46,14 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
 	<a class="navbar-brand lang" data-lang="m_notify" href="#">notify</a>
 	<div class="spinner-grow text-danger hour_glass"></div>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
 	</button>
 
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-		<ul class="navbar-nav ml-auto">
+		<ul class="navbar-nav ms-auto">
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<span class="lang" data-lang="m_modules">modules</span>
 				</a>
 				<div class="dropdown-menu" aria-labelledby="m_modules">
@@ -82,14 +82,14 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 			<li class="nav-item"><a href="#" id="m_refresh" class="nav-link"><span class="lang" data-lang="m_refresh">r</span></a></li>
 			<li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<i class="fa fa-user" aria-hidden="true"></i> <span class="total_tasks">(0)</span>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="m_profile">
 					<a class="dropdown-item" href="/app/myWork/index.html?tasks" aria-label="My Tasks"><span class="lang" data-lang="t_mt"></span> <span class="total_tasks">(0)</span></a>
-					<a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"> </a>
+					<a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-bs-toggle="modal" data-bs-target="#modify_me_popup" aria-label="User"> </a>
 					<a class="dropdown-item lang" data-lang="c_change_p" href="/app/changePassword.html"></a>
-					<a class="dropdown-item lang" data-lang="c_ak" data-toggle="modal" data-target="#api_key_popup" aria-label="Get API key"></a>
+					<a class="dropdown-item lang" data-lang="c_ak" data-bs-toggle="modal" data-bs-target="#api_key_popup" aria-label="Get API key"></a>
 					<a id="userProfileLogout" class="dropdown-item lang" data-lang="c_logout" href="/dologout.html"></a>
 				</div>
 			</li>
@@ -136,7 +136,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title lang" id="addNotificationLabel" data-lang="msg_add_notification">add</h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
 						aria-hidden="true">&times;</span></button>
 			</div>
 
@@ -163,9 +163,9 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					</div>
 
 					<div class="submission_options cm_alert_options sc_options">
-						<div class="col-sm-10 offset-sm-2 custom-control custom-checkbox mb-4">
-							<input type="checkbox" class="custom-control-input" name="bundle" value="bundle" id="bundle">
-							<label class="custom-control-label lang mt-3" data-lang="t_b" for="bundle"></label>
+						<div class="col-sm-10 offset-sm-2 form-check form-check mb-4">
+							<input type="checkbox" class="form-check-input" name="bundle" value="bundle" id="bundle">
+							<label class="form-check-label lang mt-3" data-lang="t_b" for="bundle"></label>
 						</div>
 
 						<div class="bundle form-group row">
@@ -352,14 +352,14 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					<div class="escalate_options form-group row">
 						<label for="user_to_assign" class="lang col-sm-2 control-label" data-lang="t_assign"></label>
 						<div class="col-sm-10">
-							<select id="user_to_assign" class="custom-select form-control"></select>
+							<select id="user_to_assign" class="form-select form-control"></select>
 						</div>
 					</div>
 
 					<div class="form-group row d-none assign_question">
 						<label for="assign_question" class="lang col-sm-2 control-label" data-lang="n_uiqc"></label>
 						<div class="col-sm-10">
-							<select id="assign_question" class="custom-select form-control selected_name_question"></select>
+							<select id="assign_question" class="form-select form-control selected_name_question"></select>
 						</div>
 					</div>
 
@@ -440,19 +440,19 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					<div class="email_options" style="display:none;">
 
 						<p class="lang escalate_options" data-lang="t_iewe" style="display:none;"></p>
-						<div id="notify_emails_cont" class="form-group row lang_tt" data-lang_tt="n_cs_e" data-toggle="tooltip"  data-container="body" title="">
+						<div id="notify_emails_cont" class="form-group row lang_tt" data-lang_tt="n_cs_e" data-bs-toggle="tooltip"  data-container="body" title="">
 							<label for="notify_emails" data-lang="c_email" class="lang col-sm-2 control-label"></label>
 							<div class="col-sm-10">
 								<textarea type="email" rows="2" id="notify_emails" class="form-control lang_ph" data-lang_ph="n_ea" required multiple placeholder=""></textarea>
 							</div>
 						</div>
-						<div id="email_question_cont" class="form-group row submission_options task_reminder_options sc_options lang_tt" data-lang_tt="n_eqc" data-toggle="tooltip"  data-container="body" title="">
+						<div id="email_question_cont" class="form-group row submission_options task_reminder_options sc_options lang_tt" data-lang_tt="n_eqc" data-bs-toggle="tooltip"  data-container="body" title="">
 							<label for="email_question" class="col-sm-2 control-label lang" data-lang="n_eq"></label>
 							<div class="col-sm-10">
 								<select class="selected_name_question form-control" id="email_question"></select>
 							</div>
 						</div>
-						<div id="email_meta_cont" class="form-group row submission_options task_reminder_options lang_tt" data-lang_tt="n_e_p_tt" data-toggle="tooltip"  data-container="body" title="">
+						<div id="email_meta_cont" class="form-group row submission_options task_reminder_options lang_tt" data-lang_tt="n_e_p_tt" data-bs-toggle="tooltip"  data-container="body" title="">
 							<label for="email_meta" class="col-sm-2 control-label lang" data-lang="n_ep"></label>
 							<div class="col-sm-10">
 								<select class="selected_meta form-control" id="email_meta"></select>
@@ -466,13 +466,13 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 								</div>
 							</div>
 						</div>
-						<div id="email_subject_cont" class="form-group row lang_tt" data-lang_tt="n_esc" data-toggle="tooltip"  data-container="body" title="">
+						<div id="email_subject_cont" class="form-group row lang_tt" data-lang_tt="n_esc" data-bs-toggle="tooltip"  data-container="body" title="">
 							<label for="email_subject" data-lang="c_subject" class="lang col-sm-2 control-label"></label>
 							<div class="col-sm-10">
 								<input type="text" id="email_subject" class="form-control">
 							</div>
 						</div>
-						<div class="form-group row" data-toggle="tooltip"  data-container="body">
+						<div class="form-group row" data-bs-toggle="tooltip"  data-container="body">
 							<label for="email_content" data-lang="c_content" class="lang col-sm-2 control-label"></label>
 							<div class="col-sm-10">
 								<textarea id="email_content" class="labelProp form-control"></textarea>
@@ -525,13 +525,13 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					</div>
 
 					<div class="sms_options" style="display:none;">
-						<div class="form-group row lang_tt" data-lang_tt="n_sms_n_tt" data-toggle="tooltip"  data-container="body" title="">
+						<div class="form-group row lang_tt" data-lang_tt="n_sms_n_tt" data-bs-toggle="tooltip"  data-container="body" title="">
 							<label for="notify_sms" data-lang="c_phone" class="lang col-sm-2 control-label"></label>
 							<div class="col-sm-10">
 								<input type="tel" id="notify_sms" class="form-control" required>
 							</div>
 						</div>
-						<div class="submission_options form-group row lang_tt" data-lang_tt="n_sms_q_tt" data-toggle="tooltip"  data-container="body" title="">
+						<div class="submission_options form-group row lang_tt" data-lang_tt="n_sms_q_tt" data-bs-toggle="tooltip"  data-container="body" title="">
 							<label for="sms_question" class="col-sm-2 control-label lang" data-lang="n_smsq"></label>
 							<div class="col-sm-10">
 								<select class="selected_name_question form-control" id="sms_question"></select>
@@ -567,14 +567,14 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						</div>
 					</div>
 
-					<div class="col-sm-10 offset-sm-2 custom-control custom-checkbox mb-4">
-						<input type="checkbox" class="custom-control-input" name="nt_enabled" value="nt_enabled" id="nt_enabled">
-						<label class="custom-control-label lang mt-3" data-lang="c_enabled" for="nt_enabled"></label>
+					<div class="col-sm-10 offset-sm-2 form-check form-check mb-4">
+						<input type="checkbox" class="form-check-input" name="nt_enabled" value="nt_enabled" id="nt_enabled">
+						<label class="form-check-label lang mt-3" data-lang="c_enabled" for="nt_enabled"></label>
 					</div>
 
 				</form>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
+					<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close"></button>
 					<button id="saveNotification" type="button" class="btn btn-primary lang" data-lang="c_save"></button>
 				</div>
 			</div>

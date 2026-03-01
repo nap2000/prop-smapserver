@@ -41,80 +41,80 @@ Use `[x]` when complete, `[ ]` when pending, `[-]` when not applicable.
 
 | Page | S1 | S2 | S3 | S4 | S5 | S6 | MT |
 |---|---|---|---|---|---|---|---|
-| `smapServer/WebContent/index.html` | [ ] | [ ] | [ ] | [ ] | [-] | [-] | [ ] |
-| `smapServer/WebContent/translate.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/edit.html` | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
-| `smapServer/WebContent/meta.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/surveyRoles.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/login.html` | [ ] | [ ] | [ ] | [-] | [-] | [-] | [ ] |
-| `smapServer/WebContent/inlineLogin.html` | [ ] | [ ] | [ ] | [-] | [-] | [-] | [ ] |
-| `smapServer/WebContent/logout.html` | [ ] | [ ] | [ ] | [-] | [-] | [-] | [ ] |
-| `smapServer/WebContent/register.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/terms.html` | [ ] | [ ] | [ ] | [-] | [-] | [-] | [ ] |
-| `smapServer/WebContent/unauthorised.html` | [ ] | [ ] | [ ] | [-] | [-] | [-] | [ ] |
-| `smapServer/WebContent/deleteaccount.html` | [ ] | [ ] | [ ] | [-] | [-] | [-] | [ ] |
-| `smapServer/WebContent/motd.html` | [ ] | [ ] | [ ] | [-] | [-] | [-] | [ ] |
-| `smapServer/WebContent/errors/403.html` | [ ] | [ ] | [ ] | [-] | [-] | [-] | [ ] |
-| `smapServer/WebContent/errors/404.html` | [ ] | [ ] | [ ] | [-] | [-] | [-] | [ ] |
-| `smapServer/WebContent/errors/405.html` | [ ] | [ ] | [ ] | [-] | [-] | [-] | [ ] |
-| `smapServer/WebContent/errors/500.html` | [ ] | [ ] | [ ] | [-] | [-] | [-] | [ ] |
-| `smapServer/WebContent/app/api.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/cases.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/changePassword.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/changes.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/forgottenPassword.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/reports.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/resetForgottonPassword.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/resource_history.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/resources.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/serverState.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/subscriptions.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/templates.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `smapServer/WebContent/app/userTrail.html` | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
+| `smapServer/WebContent/index.html` | [x] | [x] | [ ] | [ ] | [-] | [-] | [ ] |
+| `smapServer/WebContent/translate.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `smapServer/WebContent/edit.html` | [x] | [x] | [ ] | [ ] | [ ] | [ ] | [ ] |
+| `smapServer/WebContent/meta.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `smapServer/WebContent/surveyRoles.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `smapServer/WebContent/login.html` | [x] | [x] | [ ] | [-] | [-] | [-] | [ ] |
+| `smapServer/WebContent/inlineLogin.html` | [x] | [x] | [ ] | [-] | [-] | [-] | [ ] |
+| `smapServer/WebContent/logout.html` | [x] | [x] | [ ] | [-] | [-] | [-] | [ ] |
+| `smapServer/WebContent/register.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `smapServer/WebContent/terms.html` | [x] | [x] | [ ] | [-] | [-] | [-] | [ ] |
+| `smapServer/WebContent/unauthorised.html` | [x] | [x] | [ ] | [-] | [-] | [-] | [ ] |
+| `smapServer/WebContent/deleteaccount.html` | [x] | [x] | [ ] | [-] | [-] | [-] | [ ] |
+| `smapServer/WebContent/motd.html` | [x] | [x] | [ ] | [-] | [-] | [-] | [ ] |
+| `smapServer/WebContent/errors/403.html` | [x] | [x] | [ ] | [-] | [-] | [-] | [ ] |
+| `smapServer/WebContent/errors/404.html` | [x] | [x] | [ ] | [-] | [-] | [-] | [ ] |
+| `smapServer/WebContent/errors/405.html` | [x] | [x] | [ ] | [-] | [-] | [-] | [ ] |
+| `smapServer/WebContent/errors/500.html` | [x] | [x] | [ ] | [-] | [-] | [-] | [ ] |
+| `smapServer/WebContent/app/api.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `smapServer/WebContent/app/cases.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `smapServer/WebContent/app/changePassword.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `smapServer/WebContent/app/changes.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `smapServer/WebContent/app/forgottenPassword.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `smapServer/WebContent/app/reports.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `smapServer/WebContent/app/resetForgottonPassword.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `smapServer/WebContent/app/resource_history.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `smapServer/WebContent/app/resources.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `smapServer/WebContent/app/serverState.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `smapServer/WebContent/app/subscriptions.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `smapServer/WebContent/app/templates.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `smapServer/WebContent/app/userTrail.html` | [x] | [x] | [ ] | [ ] | [ ] | [ ] | [ ] |
 
 ## tasks
 
 | Page | S1 | S2 | S3 | S4 | S5 | S6 | MT |
 |---|---|---|---|---|---|---|---|
-| `tasks/WebContent/campaign.html` | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
-| `tasks/WebContent/contacts.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `tasks/WebContent/duplicates.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `tasks/WebContent/linkages.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `tasks/WebContent/log.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `tasks/WebContent/managed_forms.html` | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
-| `tasks/WebContent/taskManagement.html` | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
+| `tasks/WebContent/campaign.html` | [x] | [x] | [ ] | [ ] | [ ] | [ ] | [ ] |
+| `tasks/WebContent/contacts.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `tasks/WebContent/duplicates.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `tasks/WebContent/linkages.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `tasks/WebContent/log.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `tasks/WebContent/managed_forms.html` | [x] | [x] | [ ] | [ ] | [ ] | [ ] | [ ] |
+| `tasks/WebContent/taskManagement.html` | [x] | [x] | [ ] | [ ] | [ ] | [ ] | [ ] |
 
 ## fieldManagerClient
 
 | Page | S1 | S2 | S3 | S4 | S5 | S6 | MT |
 |---|---|---|---|---|---|---|---|
-| `fieldManagerClient/WebContent/billing.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `fieldManagerClient/WebContent/monitor.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `fieldManagerClient/WebContent/notifications.html` | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
-| `fieldManagerClient/WebContent/settings.html` | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
-| `fieldManagerClient/WebContent/surveyManagement.html` | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
-| `fieldManagerClient/WebContent/userManagement.html` | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
+| `fieldManagerClient/WebContent/billing.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `fieldManagerClient/WebContent/monitor.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `fieldManagerClient/WebContent/notifications.html` | [x] | [x] | [ ] | [ ] | [ ] | [ ] | [ ] |
+| `fieldManagerClient/WebContent/settings.html` | [x] | [x] | [ ] | [ ] | [ ] | [ ] | [ ] |
+| `fieldManagerClient/WebContent/surveyManagement.html` | [x] | [x] | [ ] | [ ] | [ ] | [ ] | [ ] |
+| `fieldManagerClient/WebContent/userManagement.html` | [x] | [x] | [ ] | [ ] | [ ] | [ ] | [ ] |
 
 ## fieldAnalysis
 
 | Page | S1 | S2 | S3 | S4 | S5 | S6 | MT |
 |---|---|---|---|---|---|---|---|
-| `fieldAnalysis/WebContent/modify_data.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `fieldAnalysis/WebContent/review_audit.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `fieldAnalysis/WebContent/modify_data.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `fieldAnalysis/WebContent/review_audit.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
 
 ## myWork
 
 | Page | S1 | S2 | S3 | S4 | S5 | S6 | MT |
 |---|---|---|---|---|---|---|---|
-| `myWork/WebContent/done.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `myWork/WebContent/history.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
-| `myWork/WebContent/index.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `myWork/WebContent/done.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `myWork/WebContent/history.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `myWork/WebContent/index.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
 
 ## dashboard
 
 | Page | S1 | S2 | S3 | S4 | S5 | S6 | MT |
 |---|---|---|---|---|---|---|---|
-| `dashboard/WebContent/index.html` | [ ] | [ ] | [ ] | [ ] | [-] | [ ] | [ ] |
+| `dashboard/WebContent/index.html` | [x] | [x] | [ ] | [ ] | [-] | [ ] | [ ] |
 
 ## Manual test checklist template (for MT column)
 

@@ -48,14 +48,14 @@
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
     <a class="navbar-brand lang" data-lang="m_task_m" href="#">tasks</a>
     <div class="spinner-grow text-danger hour_glass"></div>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown active">
-                <a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="lang" data-lang="m_modules">modules</span>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="m_modules">
@@ -76,7 +76,7 @@
             </li>
 
             <li class="nav-item dropdown active">
-                <a class="nav-link dropdown-toggle lang" data-lang="c_file" id="m_file" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+                <a class="nav-link dropdown-toggle lang" data-lang="c_file" id="m_file" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
                 <div class="dropdown-menu" aria-labelledby="m_file">
                     <a id="m_export_xls" class="dropdown-item" href="#"> <span class="lang" data-lang="m_export">export</span> XLS</a>
                     <a id="m_import_xls" class="dropdown-item" href="#"><span class="lang" data-lang="m_import">import</span> XLS</a>
@@ -86,7 +86,7 @@
             </li>
 
             <li class="nav-item dropdown active task_dd">
-                <a class="nav-link dropdown-toggle lang task_menu" data-lang="t_tasks" href="#" id="m_tasks" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+                <a class="nav-link dropdown-toggle lang task_menu" data-lang="t_tasks" href="#" id="m_tasks" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
                 <div class="dropdown-menu" aria-labelledby="m_tasks">
                     <a id="addSingleTask" class="dropdown-item task_menu" href="#"><span class="lang" data-lang="t_add_task">add task</span></a>
                     <a id="assignUser" class="dropdown-item task_menu bulk_selected" href="#"><span class="lang" data-lang="t_assign"></span></a>
@@ -96,7 +96,7 @@
             </li>
 
             <li class="nav-item dropdown active">
-                <a class="nav-link dropdown-toggle lang" data-lang="t_tg" href="#" id="m_task_groups" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+                <a class="nav-link dropdown-toggle lang" data-lang="t_tg" href="#" id="m_task_groups" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
                 <div class="dropdown-menu" aria-labelledby="m_task_groups">
                     <a id="addTaskGroup" class="dropdown-item" href="#"><span class="lang" data-lang="t_add_group">add group</span></a>
                     <a id="editTaskGroup" class="dropdown-item" href="#"><span class="lang" data-lang="t_edit_group"></span></a>
@@ -110,7 +110,7 @@
                     class="lang" data-lang="m_notify"></span></a></li>
 
             <li class="nav-item dropdown active">
-                <a class="nav-link dropdown-toggle" href="#" id="m_local_reports" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="lang" data-lang="m_lr">reports</span></a>
+                <a class="nav-link dropdown-toggle" href="#" id="m_local_reports" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="lang" data-lang="m_lr">reports</span></a>
                 <div class="dropdown-menu" aria-labelledby="m_local_reports">
                     <a id="m_all_tasks_report" class="dropdown-item restrict_role admin_role analyst_role" style="display:none;" href="#"><span class="nav-label lang" data-lang="t_all"></span></a></a>
                 </div>
@@ -118,14 +118,14 @@
             <li class="nav-item"><a href="#" id="m_refresh" class="nav-link"><span class="lang" data-lang="m_refresh">r</span></a></li>
             <li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
             <li class="nav-item dropdown active">
-                <a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-user" aria-hidden="true"></i> <span class="total_tasks">(0)</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="m_profile">
                     <a class="dropdown-item" href="/app/myWork/index.html?tasks" aria-label="My Tasks"><span class="lang" data-lang="t_mt"></span> <span class="total_tasks">(0)</span></a>
-                    <a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-toggle="modal" data-target="#modify_me_popup" aria-label="User"> </a>
+                    <a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-bs-toggle="modal" data-bs-target="#modify_me_popup" aria-label="User"> </a>
                     <a class="dropdown-item lang" data-lang="c_change_p" href="/app/changePassword.html"></a>
-                    <a class="dropdown-item lang" data-lang="c_ak" data-toggle="modal" data-target="#api_key_popup" aria-label="Get API key"></a>
+                    <a class="dropdown-item lang" data-lang="c_ak" data-bs-toggle="modal" data-bs-target="#api_key_popup" aria-label="Get API key"></a>
                     <a id="userProfileLogout" class="dropdown-item lang" data-lang="c_logout" href="/dologout.html"></a>
                 </div>
             </li>
@@ -212,9 +212,9 @@
     <div class="card mt-2">
         <div class="tabs-container">
             <ul class="nav nav-tabs">
-                <li><a class="nav-link active" data-toggle="tab" href="#table-view"> <i class="fa fa-list"></i></a></li>
-                <li><a class="nav-link" data-toggle="tab" href="#map-view"><i class="fa fa-globe"></i></a></li>
-                <li><a class="nav-link" data-toggle="tab" href="#cal-view"><i class="fa fa-calendar-alt"></i></a></li>
+                <li><a class="nav-link active" data-bs-toggle="tab" href="#table-view"> <i class="fa fa-list"></i></a></li>
+                <li><a class="nav-link" data-bs-toggle="tab" href="#map-view"><i class="fa fa-globe"></i></a></li>
+                <li><a class="nav-link" data-bs-toggle="tab" href="#cal-view"><i class="fa fa-calendar-alt"></i></a></li>
             </ul>
             <div class="tab-content">
                 <div id="table-view" class="tab-pane active" role="tabpanel">
@@ -291,7 +291,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="taskPropLabel"></h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
@@ -379,7 +379,7 @@
                         <div class="form-group row">
                             <label class="col-sm-2 control-label lang" data-lang="c_from" for="tp_from"></label>
                             <div class="col-sm-10">
-                                <div class='input-group date' id='tp_from' data-toggle="tooltip" data-container="body"
+                                <div class='input-group date' id='tp_from' data-bs-toggle="tooltip" data-container="body"
                                      title="Scheduled date in local time zone">
                                     <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
                                     <div class="input-group-append">
@@ -391,7 +391,7 @@
                         <div class="form-group row">
                             <label class="col-sm-2 control-label lang" data-lang="c_to" for="tp_to"></label>
                             <div class="col-sm-10">
-                                <div class='input-group date' id='tp_to' data-toggle="tooltip" data-container="body"
+                                <div class='input-group date' id='tp_to' data-bs-toggle="tooltip" data-container="body"
                                      title="Finish time">
                                     <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
                                     <div class="input-group-append">
@@ -416,8 +416,8 @@
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <button type="button" class="btn btn-outline-secondary"><span class="location_group_list_sel"></span></button>
-                                            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <span class="sr-only">Toggle Dropdown</span></button>
+                                            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="visually-hidden">Toggle Dropdown</span></button>
                                             <div class="dropdown-menu location_group_list" id="location_group"></div>
                                         </div>
                                         <select class="form-control location_select" id="location_select" name="location_trigger"></select>
@@ -500,7 +500,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
+                <button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">Close
                 </button>
                 <button id="taskPropertiesSave" type="button" class="btn btn-primary lang" data-lang="c_save">Save
                 </button>
@@ -516,7 +516,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title lang" data-lang="t_assign" id="assignUserLabel"></h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
@@ -527,9 +527,9 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">Close
+                <button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">Close
                 </button>
-                <button id="assignUserSave" type="button" class="btn btn-primary lang" data-dismiss="modal"
+                <button id="assignUserSave" type="button" class="btn btn-primary lang" data-bs-dismiss="modal"
                         data-lang="c_save">Save
                 </button>
             </div>
@@ -555,7 +555,7 @@
                         <span>)</span>
                     </span>
                 </h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
 
             </div>
@@ -687,7 +687,7 @@
                                     <label class="col-sm-2 control-label lang" for="startDate"
                                            data-lang="c_from">from</label>
                                     <div class="col-sm-10">
-                                        <div class='input-group date' id='startDate' data-toggle="tooltip"
+                                        <div class='input-group date' id='startDate' data-bs-toggle="tooltip"
                                              data-container="body" title="Dates in local time zone">
                                             <input type='text' class="form-control" data-date-format="YYYY/MM/DD"/>
                                             <div class="input-group-append">
@@ -701,7 +701,7 @@
                                     <label class="col-sm-2 control-label lang" for="endDate"
                                            data-lang="c_to">to</label>
                                     <div class="col-sm-10">
-                                        <div class='input-group date' id='endDate' data-toggle="tooltip"
+                                        <div class='input-group date' id='endDate' data-bs-toggle="tooltip"
                                              data-container="body" title="Dates in local time zone">
                                             <input type='text' class="form-control" data-date-format="YYYY/MM/DD"/>
                                             <div class="input-group-append">
@@ -734,7 +734,7 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading" role="tab" id="headingTaskParams">
                                     <h4>
-                                        <a data-toggle="collapse" href="#collapseTaskParams"
+                                        <a data-bs-toggle="collapse" href="#collapseTaskParams"
                                            aria-expanded="true" aria-controls="collapseLayers" class="lang"
                                            data-lang="t_ap">
                                         </a>
@@ -916,7 +916,7 @@
                                     <input type="text" id="email_subject" class="form-control" placeholder="">
                                 </div>
                             </div>
-                            <div class="form-group row" data-toggle="tooltip" data-container="body">
+                            <div class="form-group row" data-bs-toggle="tooltip" data-container="body">
                                 <label for="email_content" data-lang="c_content"
                                        class="lang col-sm-2 control-label">content</label>
                                 <div class="col-sm-10">
@@ -941,7 +941,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close">close</button>
+                <button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">close</button>
                 <button id="addNewGroupSave" type="button" class="btn btn-primary lang" data-lang="c_save">save</button>
             </div>
         </div>
@@ -955,7 +955,7 @@
             <div class="modal-header">
 
                 <h4 class="modal-title lang" id="importLabel" data-lang="m_import"></h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
 
             </div>
@@ -972,9 +972,9 @@
                         </div>
                     </div>
 
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" name="tg_clear" value="true" id="tg_clear">
-                        <label class="custom-control-label lang mt-3" data-lang="t_ce" for="tg_clear"></label>
+                    <div class="form-check form-check">
+                        <input type="checkbox" class="form-check-input" name="tg_clear" value="true" id="tg_clear">
+                        <label class="form-check-label lang mt-3" data-lang="t_ce" for="tg_clear"></label>
                     </div>
 
 
@@ -982,7 +982,7 @@
                 <div id="load_tasks_alert" style="display:none; background-color: #FEFC7C; padding: 5px 2px;" role="alert"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default lang" data-dismiss="modal" data-lang="c_close"></button>
+                <button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close"></button>
                 <button id="importTaskGroupGo" type="button" class="btn btn-primary lang" data-lang="m_import"></button>
             </div>
         </div>
