@@ -153,7 +153,7 @@ localise.initLocale(gUserLocale).then(function () {
 
 		for(i = 0; i < formList.length; i++) {
 			if(!formList[i].tasks_only && (!filterProjectId || filterProjectId == formList[i].pid)) {
-				h[++idx] = '<a role="button" class="btn btn-block btn-lg';
+				h[++idx] = '<a role="button" class="btn w-100 btn-lg';
 				if(formList[i].read_only) {
 					h[++idx] = ' bg-light';
 				} else {
@@ -186,7 +186,7 @@ localise.initLocale(gUserLocale).then(function () {
 				var isNew = taskList[i].assignment.assignment_status === 'new';
 				var isAccepted = taskList[i].assignment.assignment_status === 'accepted';
 				var repeat = taskList[i].task.repeat || taskList[i].task.type === 'case'; 	// Can complete the task multiple times
-				h[++idx] = '<div class="btn-group btn-block btn-group-lg d-flex" role="group" aria-label="Button group for task selection or rejection">';
+				h[++idx] = '<div class="btn-group w-100 btn-group-lg d-flex" role="group" aria-label="Button group for task selection or rejection">';
 				if(isCancelled) {
 					h[++idx] = '<button class="btn btn-danger w-10 task-icon" type="button" disabled>'; 
 				} else if(isNew) {
@@ -271,7 +271,7 @@ localise.initLocale(gUserLocale).then(function () {
 					h[++idx] = '<div class="btn-group w-20" role="group">';
 					h[++idx] = '<button ';
 					h[++idx] = 'id="a_r_' + i;
-					h[++idx] = '" class="btn btn-secondary dropdown-toggle w-100" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+					h[++idx] = '" class="btn btn-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
 					h[++idx] = '...';
 					h[++idx] = '</button>';
 					h[++idx] = '<div class="dropdown-menu dropdown-menu-right">';

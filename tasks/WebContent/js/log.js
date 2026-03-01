@@ -93,7 +93,7 @@ localise.initLocale(gUserLocale).then(function () {
 		}).data("DateTimePicker").date(moment());
 
 		$('#m_hourly_sr').click(function(){
-			$('#hourly_sr_popup').modal("show");
+			window.bsModalShow('#hourly_sr_popup');
 		});
 
 		$('#hourly_sr_save').click(function() {
@@ -206,7 +206,7 @@ localise.initLocale(gUserLocale).then(function () {
 			success: function(data) {
 				removeHourglass();
 				$('#survey_project').val(data.projectName);
-				$('#surveyDetails').modal("show");
+				window.bsModalShow('#surveyDetails');
 
 				console.log(JSON.stringify(data));
 			},

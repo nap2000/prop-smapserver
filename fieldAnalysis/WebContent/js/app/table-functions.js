@@ -233,7 +233,7 @@ if(globals.gCanEdit) {
 					// Add a button to edit the survey data in web forms
 					gTab[++gIdx] = '<td>';
 					if(groups[i].properties.parkey == "0") {
-						gTab[++gIdx] = '<div class="menu_button btn context_table dropdown-toggle" type="button" data-toggle="dropdown" data-pkey="';
+						gTab[++gIdx] = '<div class="menu_button btn context_table dropdown-toggle" type="button" data-bs-toggle="dropdown" data-pkey="';
 						gTab[++gIdx] = groups[i].properties.prikeys[0];
 						gTab[++gIdx] = '" data-ident="';
 						gTab[++gIdx] = survey_ident;
@@ -441,7 +441,7 @@ function generateUserTable(elementId, data, user_ident, uId, subject_type) {
 if(globals.gCanEdit && subject_type !== 'user_locations') {
 			// Add a button to edit the survey data in web forms
 			gTab[++gIdx] = '<td>';
-				gTab[++gIdx] = '<div class="menu_button btn context_table dropdown-toggle" type="button" data-toggle="dropdown"';
+				gTab[++gIdx] = '<div class="menu_button btn context_table dropdown-toggle" type="button" data-bs-toggle="dropdown"';
 				gTab[++gIdx] = ' data-ident="';
 				gTab[++gIdx] = groups[i].properties.survey_ident;
 				gTab[++gIdx] = '" data-id="';

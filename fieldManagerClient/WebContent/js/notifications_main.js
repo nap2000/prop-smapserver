@@ -80,7 +80,7 @@ $(document).ready(function() {
 
 		$('#addNotification').click(function(){
 			edit_notification(false, -1, false);
-			$('#addNotificationPopup').modal("show");
+			window.bsModalShow('#addNotificationPopup');
 		});
 
 		$('#bundle').change(function() {
@@ -282,7 +282,7 @@ $(document).ready(function() {
 					removeHourglass();
 					if(handleLogout(data)) {
 						getNotifications(globals.gCurrentProject);
-						$('#addNotificationPopup').modal("hide");
+						window.bsModalHide('#addNotificationPopup');
 					}
 				},
 				error: function(xhr, textStatus, err) {
@@ -578,7 +578,7 @@ $(document).ready(function() {
 
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-danger btn-sm rm_not mr-2">';
+			h[++idx] = '" class="btn btn-danger btn-sm rm_not me-2">';
 			h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
 
 			h[++idx] = '<button type="button" data-idx="';
@@ -611,7 +611,7 @@ $(document).ready(function() {
 			var idx = $(this).data("idx");
 			checkLoggedIn(function(){
 				edit_notification(true, idx, false);
-				$('#addNotificationPopup').modal("show");
+				window.bsModalShow('#addNotificationPopup');
 			});
 		});
 

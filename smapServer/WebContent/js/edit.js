@@ -231,7 +231,7 @@ $(function() {
 		} else {
 			gTempLanguages = globals.model.survey.languages.slice();
 			updateLanguageView();
-			$('#editLanguageModal').modal("show");
+			window.bsModalShow('#editLanguageModal');
 		}
 	});
 
@@ -345,7 +345,7 @@ $(function() {
 		updateSettingsData();
 
 		$('#settingsMsg').html("").hide();
-		$('#settingsModal').modal('show');
+		window.bsModalShow('#settingsModal');
 	});
 
     $('#m_keys').off().click(function() {	// Show the keys dialog
@@ -413,7 +413,7 @@ $(function() {
 		$('#i_table_names').val(tableNames);
         $('#i_id').val(globals.model.survey.id);
 
-		$('#infoModal').modal('show');
+		window.bsModalShow('#infoModal');
 	});
 	
 	// Set initial focus to the cancel button as nothing else is possible
@@ -483,7 +483,7 @@ $(function() {
 		newVal += other;
 		updateLabel("question", globals.gFormIndex, globals.gItemIndex, undefined, "text", newVal, gQname, "parameters");
 
-		$('#parameterModal').modal("hide");
+		window.bsModalHide('#parameterModal');
 	});
 
 	/*
@@ -503,7 +503,7 @@ $(function() {
 	// Set up the tabs
 	$('#standardTab a').click(function (e) {
 		e.preventDefault();
-		$(this).tab('show');
+		window.bsTabShow(this);
 
 		$(".appearancetab").hide();
 		$('#standardPanel').show();
@@ -511,7 +511,7 @@ $(function() {
 	});
 	$('#searchTab a').click(function (e) {
 		e.preventDefault();
-		$(this).tab('show');
+		window.bsTabShow(this);
 
 		$(".appearancetab").hide();
 		$('#searchPanel').show();
@@ -519,7 +519,7 @@ $(function() {
 
 	$('#pdfTab a').click(function (e) {
 		e.preventDefault();
-		$(this).tab('show');
+		window.bsTabShow(this);
 
 		$(".appearancetab").hide();
 		$('#pdfPanel').show();
@@ -528,14 +528,14 @@ $(function() {
 	// parameter tabs
 	$('#standardParamTab a').click(function (e) {
 		e.preventDefault();
-		$(this).tab('show');
+		window.bsTabShow(this);
 
 		$(".paramtab").hide();
 		$('#standardParamPanel').show();
 	});
 	$('#annotateParamTab a').click(function (e) {
 		e.preventDefault();
-		$(this).tab('show');
+		window.bsTabShow(this);
 
 		$(".paramtab").hide();
 		$('#annotateParamPanel').show();
@@ -791,7 +791,7 @@ $(function() {
 		// Save the updated settings for search choices
 		newAppChoiceVal = app_choices.join(' ');
 		updateLabel("question", globals.gFormIndex, globals.gItemIndex, undefined, "text", newAppChoiceVal, gQname, "app_choices");
-		$('#appearanceModal').modal("hide");
+		window.bsModalHide('#appearanceModal');
 	});
 
 	/*
@@ -810,7 +810,7 @@ $(function() {
 				success: function(data) {
 					removeHourglass();
 					if(handleLogout(data)) {
-						$('#editLanguageModal').modal("hide");
+						window.bsModalHide('#editLanguageModal');
 						globals.model.setSurveyData(data);
 						setLanguages(data.languages, refreshForm);
 						refreshForm();
@@ -910,7 +910,7 @@ $(function() {
 	/*
     $('#orgLevelTab a').click(function (e) {
     	  e.preventDefault();
-    	  $(this).tab('show');
+    	  window.bsTabShow(this);
     	  gUrl = gBaseUrl;
     	  $('#survey_id').val("");				// clear the survey id in the forms hidden field
   		  gIsSurveyLevel = false;
@@ -1083,7 +1083,7 @@ $(function() {
 	}
 	updateLabel(type, globals.gFormIndex, globals.gSelOptionId, globals.gOptionList, gElement, gNewVal, gQname, "media");
 
-	$('#mediaModal').modal('hide');
+	window.bsModalHide('#mediaModal');
 }
 	function setLanguageCodeVals() {
 	$('#to_lang').val(g_to_lang_val);
@@ -1211,7 +1211,7 @@ $(function() {
 	$('.formName').text(globals.model.survey.displayName);
 	$('#m_media').prop('href', '/app/resources.html?survey=true&survey_name=' + globals.model.survey.displayName);
 
-	$('#openFormModal').modal("hide");		// Hide the open form modal if its open
+	window.bsModalHide('#openFormModal');		// Hide the open form modal if its open
 
 	// Get group questions for this current survey - used for selecting the source parameter
 	getGroupQuestionsInSurvey($('.group_column_select'), globals.model.survey.ident);
@@ -1391,7 +1391,7 @@ $(function() {
 	});
 
 	$('#addFilter', $context).off().click(function() {
-		$('#filterModal').modal('show');
+		window.bsModalShow('#filterModal');
 	});
 
 	// Set option list value
@@ -2001,11 +2001,7 @@ $(function() {
 
 		setLanguageCodes();     // Do this last as it is dependent on the source question type
 
-		$('#parameterModal').modal({
-			keyboard: true,
-			backdrop: 'static',
-			show: true
-		});
+		window.bsModalShow('#parameterModal');
 
 	});
 
@@ -2277,11 +2273,7 @@ $(function() {
 		$('#a_other').val(otherAppearances);       // Not sure if we want to do this
 
 		$('#appearance_msg').hide();
-		$('#appearanceModal').modal({
-			keyboard: true,
-			backdrop: 'static',
-			show: true
-		});
+		window.bsModalShow('#appearanceModal');
 
 		/*
 		 * Store the dialogs choice values so we know if these change
@@ -2579,7 +2571,7 @@ $(function() {
 				var type = $(this).val();
 
 				updateLabel("question", formIndex, itemIndex, undefined, "text", type, undefined, "type");
-				$('#typeModal').modal('hide');
+				window.bsModalHide('#typeModal');
 
 				// Add an end group question if a new group has been created
 				if(type === "begin group") {
@@ -2606,11 +2598,7 @@ $(function() {
 				}
 			});
 
-			$('#typeModal').modal({
-					keyboard: true,
-					backdrop: 'static',
-					show: true
-			});
+			window.bsModalShow('#typeModal');
 		}
 
 	});
@@ -2809,7 +2797,7 @@ $(function() {
 	});
 
 	$('.upload_file_msg').removeClass('alert-danger').addClass('alert-success').html("");
-	$('#mediaModal').modal('show');
+	window.bsModalShow('#mediaModal');
 
 }
 
@@ -3388,7 +3376,7 @@ $(function() {
 
 
 	$('#slu_content').html(h.join(''));
-	$('#slu').modal("show");
+	window.bsModalShow('#slu');
 
 }
 
@@ -3443,11 +3431,11 @@ $(function() {
 		if (event.keyCode === 13) {
 			event.preventDefault();
 			document.execCommand('copy');
-			$('#gsi').modal("hide");
+			window.bsModalHide('#gsi');
 		}
 	});
 
-	$('#gsi').modal("show");
+	window.bsModalShow('#gsi');
 
 }
 

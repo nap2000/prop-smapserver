@@ -534,14 +534,14 @@ const moment = window.moment;
 			$('#cssUpload').val("");
 			$('.load_file_alert').hide();
 			gCssModal = "server";
-			$('#upload_css_popup').modal("show");
+			window.bsModalShow('#upload_css_popup');
 		});
 
 		$('#uploadCssOrg').click(function() {
 			$('#cssUploadOrg').val("");
 			$('.load_file_alert').hide();
 			gCssModal = "org";
-			$('#upload_css_popup_org').modal("show");
+			window.bsModalShow('#upload_css_popup_org');
 		});
 
 		$('#cssSave, #cssSaveOrg').click(function(){
@@ -572,7 +572,7 @@ const moment = window.moment;
 						} else {
 							getCustomCssOrg();
 						}
-						$('#upload_css_popup, #upload_css_popup_org').modal("hide");
+						window.bsModalHide('#upload_css_popup, #upload_css_popup_org');
 					}
 				},
 				error: function(xhr, textStatus, err) {
@@ -662,7 +662,7 @@ const moment = window.moment;
 		gPanel = name;
 
 		$('.org_alert').hide();
-		$this.tab('show');
+		window.bsTabShow($this);
 
 		$(".usertab").hide();
 		$('.panel' + name).show();

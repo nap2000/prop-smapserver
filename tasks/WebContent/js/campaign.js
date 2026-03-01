@@ -89,14 +89,14 @@ localise.initLocale(gUserLocale).then(function () {
 				return;
 			}
 			initMailoutDialog("add");
-			$('#addMailoutPopup').modal("show");
+			window.bsModalShow('#addMailoutPopup');
 		});
 
 		$('#m_delete').click(function(){
 			var msg = localise.set["mo_del"];
 			msg = msg.replace("%s1", gMailouts[gCurrentMailOutIdx].name);
 			$('#confirmDeleteMsg').html(msg);
-			$('#confirmDeletePopup').modal("show");
+			window.bsModalShow('#confirmDeletePopup');
 		});
 
 		$('#confirmDeleteGo').click(function(){
@@ -110,7 +110,7 @@ localise.initLocale(gUserLocale).then(function () {
 				success: function(data, status) {
 					removeHourglass();
 					if(handleLogout(data)) {
-						$('#confirmDeletePopup').modal("hide");
+						window.bsModalHide('#confirmDeletePopup');
 						gCurrentMailOutIdx = -1;
 						loadMailouts();
 						clearMailoutStatus();
@@ -140,7 +140,7 @@ localise.initLocale(gUserLocale).then(function () {
 		 */
 		$('#m_edit').click(function(){
 			initMailoutDialog("edit");
-			$('#addMailoutPopup').modal("show");
+			window.bsModalShow('#addMailoutPopup');
 		});
 
 		$('#addMailoutPopup').on('shown.bs.modal', function () {
@@ -156,7 +156,7 @@ localise.initLocale(gUserLocale).then(function () {
 			e.preventDefault();
 			$('#mo_initial_data').val(JSON.stringify(gSelectedRecord.initialData, null, 4));
 			$('#mo_link').val(gSelectedRecord.url);
-			$('#vrd').modal("show");
+			window.bsModalShow('#vrd');
 		});
 
 		/*
@@ -188,11 +188,7 @@ localise.initLocale(gUserLocale).then(function () {
 			e.preventDefault();
 			if (gCurrentMailOutIdx && gCurrentMailOutIdx >= 0) {
 				$('#load_mailouts_alert').hide();
-				$('#import_mailoutpeople').modal({
-					keyboard: true,
-					backdrop: 'static',
-					show: true
-				});
+				window.bsModalShow('#import_mailoutpeople');
 				$('.custom-file-input').val("");
 				$('#importMailoutPeopleLabel').html("");
 				$('#loadMailoutPeople')[0].reset();
@@ -329,7 +325,7 @@ localise.initLocale(gUserLocale).then(function () {
 				success: function(data, status) {
 					removeHourglass();
 					if(handleLogout(data)) {
-						$('#addMailoutPopup').modal("hide");
+						window.bsModalHide('#addMailoutPopup');
 						loadMailouts(data.id);
 					}
 				},
@@ -650,7 +646,7 @@ localise.initLocale(gUserLocale).then(function () {
 			success: function (data, status) {
 				removeHourglass();
 				if(handleLogout(data)) {
-					$('#import_mailoutpeople').modal("hide");
+					window.bsModalHide('#import_mailoutpeople');
 					$('#load_mailouts_alert').show().removeClass('alert-danger').addClass('alert-success').empty("");
 					mailoutChanged(true);
 				}
@@ -670,7 +666,7 @@ localise.initLocale(gUserLocale).then(function () {
 	function generateLinks() {
 
 		$('#confirmGenMsg').html(localise.set["mo_gen"]);
-		$('#confirmGenPopup').modal("show");
+		window.bsModalShow('#confirmGenPopup');
 	}
 
 	function generateLinksGo() {
@@ -708,7 +704,7 @@ localise.initLocale(gUserLocale).then(function () {
 
 		gRetry = retry;
 		$('#confirmSendMsg').html(localise.set["mo_send"]);
-		$('#confirmSendPopup').modal("show");
+		window.bsModalShow('#confirmSendPopup');
 	}
 
 	function sendUnsentGo() {

@@ -173,7 +173,7 @@ localise.initLocale(gUserLocale).then(function() {
 		$('#exportMenu').click(function(e) {
 			e.preventDefault();
 			$('#all_users').prop('checked', gAllUsers);
-			$('#trail_export_popup').modal("show");
+			window.bsModalShow('#trail_export_popup');
 		});
 
 		$('#trail_export_save').click(function(e) {
@@ -281,7 +281,7 @@ localise.initLocale(gUserLocale).then(function() {
 		});
 
 		// Enable tooltips
-		$('[data-toggle="tooltip"]').tooltip();
+		window.bsInitTooltips('[data-bs-toggle="tooltip"]');
 
 		// Enable the time slider
 		$('#time').on('input', function(event) {

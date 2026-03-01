@@ -782,7 +782,7 @@ import {
             refreshCases();
             
             $(".monpanel").hide();
-            $this.tab('show');
+            window.bsTabShow($this);
             $('#' + name + 'Panel').removeClass('d-none').show();
             setInLocalStorage("currentTab" + $('body').data('page'), '#' + name + 'Tab a');
 

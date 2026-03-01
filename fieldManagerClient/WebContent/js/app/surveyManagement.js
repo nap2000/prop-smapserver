@@ -129,7 +129,7 @@ import {
                 $('#up_alert, #up_warnings').hide();
                 $('.notreplace').show();
                 $('#survey_add_title').text(localise.set["tm_c_form"])
-                $('#survey_add').modal('show');
+                window.bsModalShow('#survey_add');
             });
 
             // Upload File
@@ -309,7 +309,7 @@ import {
                         gLinkSurvey.publicLink = undefined;
                         $('#srLink').val("");
                         completeSurveyList();
-                        $('#survey_link').modal('hide');
+                        window.bsModalHide('#survey_link');
                     },
                     error: function (xhr, textStatus, err) {
                         removeHourglass();
@@ -324,27 +324,27 @@ import {
             });
 
             // Respond to a user clicking copy link
-            $('.has_tt').tooltip();
+            window.bsInitTooltips('.has_tt');
             $('#copyLink').click(function () {
                 var copyText = document.getElementById("srLink");
                 copyText.select();
                 document.execCommand("Copy");
 
-                $('#copyLink').tooltip('dispose').tooltip({title: localise.set["c_c"] + ": " + copyText.value}).tooltip('show');
+                window.bsTooltipSetAndShow('#copyLink', localise.set["c_c"] + ": " + copyText.value);
 
             });
             $('#copyLink').mouseout(function () {
-                $('#copyLink').tooltip({title: localise.set["c_c"]});
+                window.bsTooltipSet('#copyLink', localise.set["c_c"]);
             });
 
             /*
              * Reports
              */
             $('#m_usage_report').click(function(){
-                $('#usage_report_popup').modal("show");
+                window.bsModalShow('#usage_report_popup');
             });
             $('#m_attendance_report').click(function(){
-                $('#attendance_report_popup').modal("show");
+                window.bsModalShow('#attendance_report_popup');
             });
             $('#usage_report_save').click(function(){
                 executeUsageReport();
@@ -353,10 +353,10 @@ import {
                 executeAttendanceReport();
             });
 	        $('#m_form_access_report').click(function(){
-		        $('#form_access_report_popup').modal("show");
+		        window.bsModalShow('#form_access_report_popup');
 	        });
             $('#m_bundle_access_report').click(function(){
-                $('#bundle_access_report_popup').modal("show");
+                window.bsModalShow('#bundle_access_report_popup');
             });
 	        $('#form_access_report_save').click(function(){
 		        executeFormAccessReport();
@@ -406,7 +406,7 @@ import {
                 h = [];
 
             h[++idx] = '<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> ';
-            h[++idx] = '<span class="sr-only"> Error:</span>';
+            h[++idx] = '<span class="visually-hidden"> Error:</span>';
             h[++idx] = ' ';
             if(msg.status === "error") {
                 h[++idx] = localise.set["c_error"];
@@ -802,7 +802,7 @@ import {
                 $('#up_alert, #up_warnings').hide();
                 $('.notreplace').hide();
                 $('#survey_add_title').text(localise.set["tm_c_form_rep"] + ": " + survey.displayName);
-                $('#survey_add').modal('show');
+                window.bsModalShow('#survey_add');
             });
 
             $('.survey_link').click(function(e) {
@@ -810,7 +810,7 @@ import {
                 gLinkSurvey = gSurveys[$(this).val()];
                 $('#srLink').val(gLinkSurvey.publicLink);
                 setLinkControls();
-                $('#survey_link').modal('show');
+                window.bsModalShow('#survey_link');
             });
 
             $('.pdf_td').click(function(e) {
@@ -832,7 +832,7 @@ import {
                 }
                 $('form', '#download_template')[0].reset();
                 $('#download_language_div, .pdf_elements').hide();
-                $('#download_template').modal('show');
+                window.bsModalShow('#download_template');
             });
 
             /*

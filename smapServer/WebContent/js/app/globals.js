@@ -1016,7 +1016,7 @@
                         $('.formName').text(globals.model.survey.displayName);
                         $('#m_media').prop('href', '/app/resources.html?survey=true&survey_name=' + globals.model.survey.displayName);
 
-                        $('#settingsModal').modal("hide");
+                        window.bsModalHide('#settingsModal');
                     }
                 },
                 error: function (xhr, textStatus, err) {

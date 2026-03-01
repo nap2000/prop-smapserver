@@ -125,7 +125,7 @@ $(document).ready(function() {
                 }
             }
 
-            $('#report_popup').modal("hide");
+            window.bsModalHide('#report_popup');
             window.location.href = url;
 
 		});
@@ -150,7 +150,7 @@ $(document).ready(function() {
 		        // Set button to create
 		        $('#publishReport').show();
 		        $('#saveReport').hide();
-		        $('#publish_popup').modal("show");
+		        window.bsModalShow('#publish_popup');
 	        }
 		});
 
@@ -477,7 +477,7 @@ $(document).ready(function() {
 
                 removeHourglass();
                 getReports();
-                $('#publish_popup').modal("hide");
+                window.bsModalHide('#publish_popup');
 				$('#publishReport, #saveReport').prop("disabled", false);     // debounce
             },
             error: function (xhr, textStatus, err) {
@@ -648,7 +648,7 @@ $(document).ready(function() {
 				tab[++idx] = '">';
 
 				tab[++idx] = '<td>';			// Anonymous Link
-				tab[++idx] = '<a type="button" class="btn btn-block btn-primary" href="';
+				tab[++idx] = '<a type="button" class="btn w-100 btn-primary" href="';
 				tab[++idx] = link;
 				tab[++idx] = addCacheBuster(link);
 				tab[++idx] = '">';
@@ -661,7 +661,7 @@ $(document).ready(function() {
 				tab[++idx] = '</td>';
 
 				tab[++idx] = '<td>';			// Copy Link
-				tab[++idx] = '<button type="button" class="btn btn-default has_tt copyLink" title="';
+				tab[++idx] = '<button type="button" class="btn btn-secondary has_tt copyLink" title="';
 				tab[++idx] = localise.set["c_cl"];
 				tab[++idx] = '" value="';
 				tab[++idx] = i;
@@ -670,7 +670,7 @@ $(document).ready(function() {
 
 				tab[++idx] = '<td>';
 				tab[++idx] = '<div class="dropdown">';
-				tab[++idx] = '<button id="dropdownMenu' + i + '" class="btn btn-default dropdown-toggle report_action" data-toggle="dropdown"  type="button" aria-haspopup="true" aria-expanded="false">';
+				tab[++idx] = '<button id="dropdownMenu' + i + '" class="btn btn-secondary dropdown-toggle report_action" data-bs-toggle="dropdown"  type="button" aria-haspopup="true" aria-expanded="false">';
 				tab[++idx] = localise.set["c_action"];
 				tab[++idx] = '</button>';
 				tab[++idx] = '<div class="dropdown-menu" aria-labelledby="dropdownMenu' + i + '">';
@@ -693,7 +693,7 @@ $(document).ready(function() {
 		/*
          * Respond to a user clicking copy link
          */
-		$('.has_tt').tooltip();
+		window.bsInitTooltips('.has_tt');
 		$('.copyLink').click(function () {
 			var $this = $(this);
 			var copyText = $this.closest('tr').data("link");
@@ -704,12 +704,12 @@ $(document).ready(function() {
 			$temp.val(copyText).select();
 			document.execCommand("copy");
 
-			$this.attr('title', localise.set["c_c"] + ": " + copyText).tooltip('_fixTitle').tooltip('show');
+			window.bsTooltipSetAndShow($this, localise.set["c_c"] + ": " + copyText);
 			$temp.remove();
 
 		});
 		$('.copyLink').on('hidden.bs.tooltip', function () {
-			$(this).attr('title', localise.set["c_cl"]).tooltip('_fixTitle');
+			window.bsTooltipSet(this, localise.set["c_cl"]);
 		})
 
 		/*
@@ -718,7 +718,7 @@ $(document).ready(function() {
 		var $dropdown = $('#contextMenu');
 		$reportList.find('.report_action').click(function() {
 			$(this).after($dropdown.clone(true));
-			$(this).dropdown();
+			window.bsDropdownToggle(this);
 		});
 
 		/*
@@ -891,7 +891,7 @@ $(document).ready(function() {
 
 			setupReportDialog();        // Enable and disable controls
 
-			$('#publish_popup').modal("show");
+			window.bsModalShow('#publish_popup');
 		});
 
 		$('.repGenerate', $reportList).click(function() {
@@ -986,7 +986,7 @@ $(document).ready(function() {
 				}
 			}
 
-			$('#report_popup').modal("show");
+			window.bsModalShow('#report_popup');
 		});
 
 	}
@@ -1027,7 +1027,7 @@ $(document).ready(function() {
 
 	            tab[++idx] = '<td>';			// Anonymous Link
 				if(genItem.status === 'complete') {
-					tab[++idx] = '<a type="button" class="btn btn-block btn-primary';
+					tab[++idx] = '<a type="button" class="btn w-100 btn-primary';
 					if(typeof genItem.filename === "undefined") {
 						tab[++idx] = ' disabled'
 					}

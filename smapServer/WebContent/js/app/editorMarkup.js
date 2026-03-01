@@ -88,7 +88,7 @@ export default {
 				h[++idx] = '</div>';	// End of question type cell
 
 				// Add question name cell
-				h[++idx] = '<div class="col-sm-3 col-12 "><input class="qname form-control has_tt" data-toggle="tooltip" title="';
+				h[++idx] = '<div class="col-sm-3 col-12 "><input class="qname form-control has_tt" data-bs-toggle="tooltip" title="';
 				h[++idx] = question.name;
 				h[++idx] = '" value="';
 				h[++idx] = question.name;
@@ -106,7 +106,7 @@ export default {
 				h[++idx] = '<div class="col-sm-2 col-12 q_icons_col">';
 					h[++idx] = '<div class="btn-group">';
 
-						h[++idx] = '<button tabindex="-1" class="btn btn-light delete_question ml-1" data-id="';
+						h[++idx] = '<button tabindex="-1" class="btn btn-light delete_question ms-1" data-id="';
 						h[++idx] = questionId;
 						h[++idx] = '">';
 						h[++idx]='<i class="fas fa-trash-alt edit_icon"></i>';
@@ -115,12 +115,12 @@ export default {
 						if(question.type === "begin repeat" 
 								|| question.type === "begin group") {
 							
-							h[++idx] = '<a button tabindex="-1" class="btn btn-light ml-1" data-toggle="collapse" href="#collapse';
+							h[++idx] = '<a button tabindex="-1" class="btn btn-light ms-1" data-bs-toggle="collapse" href="#collapse';
 							h[++idx] = globals.gElementIndex;
 							h[++idx]='"><i class="fas fa-chevron-down edit_icon"></i></a>';
 						} else if(question.type.indexOf("select") === 0 || question.type === "rank") {
 						
-							h[++idx] = '<a button tabindex="-1" class="btn btn-light edit_choice ml-1" ';
+							h[++idx] = '<a button tabindex="-1" class="btn btn-light edit_choice ms-1" ';
 							h[++idx]='"><i class="fa fa-edit edit_icon"></i></a>';
 							
 						}
@@ -191,7 +191,7 @@ export default {
 		h[++idx] = '<div class="row">';
 
 		// Add choice name cell
-		h[++idx] = '<div class="col-10"><input class="olname form-control has_tt" data-toggle="tooltip" title="List Name" value="';
+		h[++idx] = '<div class="col-10"><input class="olname form-control has_tt" data-bs-toggle="tooltip" title="List Name" value="';
 		h[++idx] = list_name;
 		h[++idx] = '" type="text"></div>';
 
@@ -351,7 +351,7 @@ export default {
 		for(i = 0; i < types.length; i++) {
 			if(types[i].type === type) {
 				name = localise.set[types[i].trans];
-				h[++idx] = '<span class="has_tt" data-toggle="tooltip" title="Question type: ';
+				h[++idx] = '<span class="has_tt" data-bs-toggle="tooltip" title="Question type: ';
 				h[++idx] = name;
 				h[++idx] = '">';
 				if(types[i].icon) {
@@ -526,7 +526,7 @@ export default {
 			} else if(selProperty === "autoplay" && type === "question"
 				&& question.type != "calculate") {		// Add a radio buttons to select autoplay status
 				
-				h[++idx] = '<div class="btn-group" role="group" aria-label="Autoplay Selection" data-toggle="buttons-radio">';
+				h[++idx] = '<div class="btn-group" role="group" aria-label="Autoplay Selection" data-bs-toggle="buttons-radio">';
 					// Add "none" autoplay option
 					h[++idx] = '<button data-prop="autoplay" type="button" class="btn btn-light labelButton ';
 					if(question[selProperty] == "none") {
@@ -570,7 +570,7 @@ export default {
 			     * Add the text area to display the parameters
 			     */
 				h[++idx] = '<div class="col-sm-6">';
-				h[++idx] = '<textarea class="labelProp has_tt" data-toggle="tooltip" readonly title="';
+				h[++idx] = '<textarea class="labelProp has_tt" data-bs-toggle="tooltip" readonly title="';
 				h[++idx] = selLabel;
 				h[++idx] = '" data-prop="';
 				h[++idx] = selProperty;
@@ -600,7 +600,7 @@ export default {
 			     * Add the text area to display the appearances
 			     */
 				h[++idx] = '<div class="col-sm-6">';
-				h[++idx] = '<textarea class="labelProp has_tt" data-toggle="tooltip" readonly title="';
+				h[++idx] = '<textarea class="labelProp has_tt" data-bs-toggle="tooltip" readonly title="';
 				h[++idx] = selLabel;
 				h[++idx] = '" data-prop="';
 				h[++idx] = selProperty;
@@ -642,7 +642,7 @@ export default {
 			if((question.type === 'calculate' || question.type === 'server_calculate') && selProperty !== "appearance" && selProperty !== "parameters" && selProperty !== "display_name") {
 				h[++idx] = ' calculate';
 			}
-			h[++idx] = '" data-toggle="tooltip" title="';
+			h[++idx] = '" data-bs-toggle="tooltip" title="';
 			if((question.type === 'calculate' || question.type === 'server_calculate') && selProperty !== "appearance" && selProperty !== "parameters" && selProperty !== "display_name") {
 				h[++idx] = localise.set["ed_addcalc"];
 			} else {

@@ -365,7 +365,7 @@ function addUserDetailsPopupBootstrap4() {
 	h[++idx] = '<div class="modal-content">';
 	h[++idx] = '<div class="modal-header">';
 	h[++idx] = '<h4 class="modal-title" id="modifyMeLabel"></h4>';
-	h[++idx] = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+	h[++idx] = '<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
 	h[++idx] = '</div>';    // modal-headers
 
 	h[++idx] = '<div class="modal-body">';
@@ -431,7 +431,7 @@ function addUserDetailsPopupBootstrap4() {
 	h[++idx] = '</div>';    // modal body
 
 	h[++idx] = '<div class="modal-footer">';
-	h[++idx] = '<button type="button" class="btn btn-default" data-dismiss="modal">';
+	h[++idx] = '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">';
 	h[++idx] = localise.set["c_close"];
 	h[++idx] = '</button>';
 
@@ -460,7 +460,7 @@ function addApiKeyPopup() {
 	h[++idx] = '<div class="modal-content">';
 	h[++idx] = '<div class="modal-header">';
 	h[++idx] = '<h4 class="modal-title" id="apiKeyLabel"></h4>';
-	h[++idx] = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+	h[++idx] = '<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
 	h[++idx] = '</div>';    // modal-headers
 
 	h[++idx] = '<div class="modal-body">';
@@ -472,16 +472,16 @@ function addApiKeyPopup() {
 	h[++idx] = '<button id="getKey" type="button" class="btn btn-primary">';
 	h[++idx] = localise.set["c_gak"];
 	h[++idx] = '</button>';
-	h[++idx] = '<button id="deleteKey" type="button" class="btn btn-danger ml-2">';
+	h[++idx] = '<button id="deleteKey" type="button" class="btn btn-danger ms-2">';
 	h[++idx] = localise.set["c_del"];
 	h[++idx] = '</button>';
-	h[++idx] = '<button id="copyKey" type="button" class="btn btn-default has_tt ml-2" title="Copy Key">';
+	h[++idx] = '<button id="copyKey" type="button" class="btn btn-secondary has_tt ms-2" title="Copy Key">';
 	h[++idx] = localise.set["c_ck"];
 	h[++idx] = '</button>';
 	h[++idx] = '</div>';
 
 	h[++idx] = '<div class="modal-footer">';
-	h[++idx] = '<button type="button" class="btn btn-default" data-dismiss="modal">';
+	h[++idx] = '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">';
 	h[++idx] = localise.set["c_close"];
 	h[++idx] = '</button>';
 
@@ -1015,17 +1015,17 @@ function enableApiKeyPopup() {
 	});
 
 	// Respond to a user clicking copy api key
-	$('.has_tt').tooltip();
+	window.bsInitTooltips('.has_tt');
 	$('#copyKey').click(function () {
 		var copyText = document.getElementById("apiKey");
 		copyText.select();
 		navigator.clipboard.writeText($('#apiKey').val());
 
-		$('#copyKey').tooltip('dispose').tooltip({title: localise.set["c_c"] + ": " + copyText.value}).tooltip('show');
+		window.bsTooltipSetAndShow('#copyKey', localise.set["c_c"] + ": " + copyText.value);
 
 	});
 	$('#copyKey').mouseout(function () {
-		$('#copyKey').tooltip({title: localise.set["c_c"]});
+		window.bsTooltipSet('#copyKey', localise.set["c_c"]);
 	});
 }
 
@@ -1054,7 +1054,7 @@ function saveCurrentUser(user, $dialog) {
 						alert(localise.set["c_error"] + " : " + data.msg);  // legacy non bootstrap
 					}
 				} else if ($dialog) {
-					$dialog.modal("hide");
+					window.bsModalHide($dialog);
 				}
 				updateUserDetails(data, undefined);
 			}
@@ -1272,7 +1272,7 @@ function uploadFiles(url, formName, callback1) {
 					cb1(data);
 				}
 				document.forms.namedItem(formName).reset();
-				$('#fileAddLocations').modal('hide');
+				window.bsModalHide('#fileAddLocations');
 			}
 		},
 		error: function(xhr, textStatus, err) {
@@ -1289,7 +1289,7 @@ function uploadFiles(url, formName, callback1) {
 						msg = localise.set["msg_u_f"] + " : " + msg;
 					}
 					$('.upload_file_msg').show().removeClass('alert-success').addClass('alert-danger').html(msg);
-					$('#fileAddLocations').modal('hide');
+					window.bsModalHide('#fileAddLocations');
 				}
 			}
 		}
@@ -1404,7 +1404,7 @@ function replace(item) {
 	$('.notreplace').hide();
 	$('#media_add_title').text(localise.set["tm_c_sr_rep"] + ": " + item.name);
 
-	$('#fileAddPopup').modal('show');
+	window.bsModalShow('#fileAddPopup');
 
 }
 function getBaseName(fileName) {
@@ -2442,7 +2442,7 @@ function openForm(type) {
 		$('#get_form').html(localise.set["m_open"]);
 		globals.gExistingSurvey = true;
 	}
-	$('#openFormModal').modal('show');
+	window.bsModalShow('#openFormModal');
 
 }
 
@@ -3523,7 +3523,7 @@ function refreshCustomReportView(data, callback1, callback2, type) {
 		idx = -1;
 
 	$('.panel_msg').show();
-	$('#addReportPopup').modal("hide");
+	window.bsModalHide('#addReportPopup');
 
 	data = data || [];
 	globals.gReports = data;
@@ -3556,12 +3556,12 @@ function refreshCustomReportView(data, callback1, callback2, type) {
 
 		h[++idx] = '<button type="button" data-idx="';
 		h[++idx] = i;
-		h[++idx] = '" class="btn btn-default btn-sm rm_cr">';
+		h[++idx] = '" class="btn btn-secondary btn-sm rm_cr">';
 		h[++idx] = '<i class="fa fa-trash-o"></i></button>';
 
 		h[++idx] = '<button type="button" data-idx="';
 		h[++idx] = i;
-		h[++idx] = '" class="btn btn-default btn-sm download_cr">';
+		h[++idx] = '" class="btn btn-secondary btn-sm download_cr">';
 		h[++idx] = '<i class="fa fa-download"></i></button>';
 
 		h[++idx] = '</td>';
@@ -3891,7 +3891,7 @@ function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms, bs4) 
 		h[++idx] = '">';
 	}
 	if(bs4) {
-		h[++idx] = '<span class="ml-2">';
+		h[++idx] = '<span class="ms-2">';
 	}
 	h[++idx] = htmlEncode(form.form);
 	if(bs4) {
@@ -3996,18 +3996,18 @@ function showRoles(data, selectedRoles, setall) {
 	$('.role_select_roles').empty();
 	if (data.length > 0) {
 		for (i = 0; i < data.length; i++) {
-			h[++idx] = '<div class="col-sm-10 custom-control custom-checkbox ml-2 mb-1">'
+			h[++idx] = '<div class="col-sm-10 form-check form-check ms-2 mb-1">'
 			h[++idx] = '<input type="checkbox"';
 			selId = 'rolesel_' + i;
 			h[++idx] = ' id="' + selId + '"';
 			if(setall || roleSelected(data[i].id, selectedRoles)) {
 				selList.push(selId);
 			}
-			h[++idx] = ' class="custom-control-input" value="';
+			h[++idx] = ' class="form-check-input" value="';
 			h[++idx] = data[i].id;
 			h[++idx] = '">';
 
-			h[++idx] = '<label class="custom-control-label"';
+			h[++idx] = '<label class="form-check-label"';
 			h[++idx] = ' for="rolesel_' + i + '">';
 			h[++idx] = 	htmlEncode(data[i].name);
 			h[++idx] = '</label>';
@@ -4818,7 +4818,7 @@ function saveTask(isConsole, currentTaskFeature, saveType, updateId, callback, t
 		success: function (data, status) {
 			removeHourglass();
 			if(handleLogout(data)) {
-				$('#task_properties').modal("hide");
+				window.bsModalHide('#task_properties');
 				callback();
 			}
 		},

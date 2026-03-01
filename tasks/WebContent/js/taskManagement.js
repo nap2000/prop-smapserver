@@ -221,11 +221,7 @@ localise.initLocale(gUserLocale).then(function () {
 				$('.custom-file-input').val("");
 				$('#importTasksLabel').html("");
 				$('#load_tasks_alert').hide();
-				$('#import_taskgroup').modal({
-						keyboard: true,
-						backdrop: 'static',
-						show: true
-				});
+				window.bsModalShow('#import_taskgroup');
 			} else {
 				alert(localise.set["msg_tg_ns"]);
 			}
@@ -270,7 +266,7 @@ localise.initLocale(gUserLocale).then(function () {
 			globals.gCurrentUserName = $('#users_select_user option:selected').text();
 			globals.gCurrentUserId = $('#users_select_user option:selected').val();
 
-			$('#assign_user').modal("show");
+			window.bsModalShow('#assign_user');
 		});
 
 		// Add a trigger to set a task as assigned
@@ -507,7 +503,7 @@ localise.initLocale(gUserLocale).then(function () {
 			$('#tg_id').html(tg.tg_id);
 
 			$('.tg_edit_only').show();
-			$('#addTask').modal("show");
+			window.bsModalShow('#addTask');
 
 		});
 
@@ -540,7 +536,7 @@ localise.initLocale(gUserLocale).then(function () {
 			$('#addTask').find('input,select, #addNewGroupSave').prop('disabled', false);
 			$('#addTaskLabel').text(localise.set["t_add_group"]);
 			$('.tg_edit_only').hide();
-			$('#addTask').modal("show");
+			window.bsModalShow('#addTask');
 
 		});
 
@@ -745,7 +741,7 @@ localise.initLocale(gUserLocale).then(function () {
 					success: function (data, status) {
 						if(handleLogout(data)) {
 							removeHourglass();
-							$('#addTask').modal("hide");
+							window.bsModalHide('#addTask');
 							globals.gCurrentTaskGroup = data.tg_id;
 							refreshTaskGroupData();
 						}
@@ -773,7 +769,7 @@ localise.initLocale(gUserLocale).then(function () {
 					success: function (data, status) {
 						removeHourglass();
 						if(handleLogout(data)) {
-							$('#addTask').modal("hide");
+							window.bsModalHide('#addTask');
 							globals.gCurrentTaskGroup = data.tg_id;
 							refreshTaskGroupData();
 						}
@@ -912,7 +908,7 @@ localise.initLocale(gUserLocale).then(function () {
 		 * Take action on tab change to initialise tab contents
 		 * Refer: http://stackoverflow.com/questions/20705905/bootstrap-3-jquery-event-for-active-tab-change
 		 */
-		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		$('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
 			$('#zoomData').hide();
 			var target = $(e.target).attr("href") // activated tab
 			console.log("panel change: " + target);
@@ -1640,7 +1636,7 @@ localise.initLocale(gUserLocale).then(function () {
 		}
 
 		// Show modal
-		$('#task_properties').modal("show");
+		window.bsModalShow('#task_properties');
 
 		if (!gModalMapInitialised) {
 			setTimeout(function () {
@@ -1873,7 +1869,7 @@ localise.initLocale(gUserLocale).then(function () {
 				tab[++idx] = '<td>';		// scheduled
 				tab[++idx] = localTime(task.properties.from);
 				tab[++idx] = '<td>';			// edit
-				tab[++idx] = '<button class="btn btn-default task_edit" value="';
+				tab[++idx] = '<button class="btn btn-secondary task_edit" value="';
 				tab[++idx] = i;
 				tab[++idx] = '" type="button"><i class="fa fa-edit"></i></button>';
 				tab[++idx] = '</td>';
@@ -1967,7 +1963,7 @@ localise.initLocale(gUserLocale).then(function () {
 			success: function (data, status) {
 				removeHourglass();
 				if(handleLogout(data)) {
-					$('#import_taskgroup').modal("hide");
+					window.bsModalHide('#import_taskgroup');
 					$('#load_tasks_alert').show().removeClass('alert-danger').addClass('alert-success').empty("");
 					refreshAssignmentData();
 					getLocations(processLocationList);	// Refresh the location data since new locations may have been loaded

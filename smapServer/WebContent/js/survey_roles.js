@@ -266,14 +266,14 @@ function refreshView() {
 		if (!gRoles[i].enabled) {
 			h[++idx] = 'btn-danger active"';
 		} else {
-			h[++idx] = 'btn-default"';
+			h[++idx] = 'btn-secondary"';
 		}
 		h[++idx] = '>';
 		h[++idx] = localise.set["c_no"];
 		h[++idx] = '</button>';
 		h[++idx] = '<button class="btn btn-xs yesrole ';
 		if (!gRoles[i].enabled) {
-			h[++idx] = 'btn-default"';
+			h[++idx] = 'btn-secondary"';
 		} else {
 			h[++idx] = 'btn-success active"';
 		}
@@ -317,7 +317,7 @@ function refreshView() {
 		if (gRoles[i].role_group === 'A') {
 			h[++idx] = 'btn-success active';
 		} else {
-			h[++idx] = 'btn-default';
+			h[++idx] = 'btn-secondary';
 		}
 		if (!gRoles[i].enabled) {
 			h[++idx] = ' disabled';
@@ -327,7 +327,7 @@ function refreshView() {
 		if (gRoles[i].role_group === 'B') {
 			h[++idx] = 'btn-danger active';
 		} else {
-			h[++idx] = 'btn-default';
+			h[++idx] = 'btn-secondary';
 		}
 		if (!gRoles[i].enabled) {
 			h[++idx] = ' disabled';
@@ -350,9 +350,9 @@ function refreshView() {
 		var $this = $(this),
 			idx;
 
-		$this.find('.btn').toggleClass('active').removeClass("btn-success btn-danger").addClass("btn-default");
-		$this.find('.yesrole.active').addClass("btn-success").removeClass("btn-default");
-		$this.find('.norole.active').addClass("btn-danger").removeClass("btn-default");
+		$this.find('.btn').toggleClass('active').removeClass("btn-success btn-danger").addClass("btn-secondary");
+		$this.find('.yesrole.active').addClass("btn-success").removeClass("btn-secondary");
+		$this.find('.norole.active').addClass("btn-danger").removeClass("btn-secondary");
 
 		idx = $this.data("idx");
 		gRoles[idx].enabled = !gRoles[idx].enabled;
@@ -370,7 +370,7 @@ function refreshView() {
 		if (!$this.hasClass("disabled")) {
 			gIdx = $this.closest('tr').find('.btn-group').data("idx");
 			$('#filter_row_content').val(gRoles[gIdx].row_filter);
-			$('#row_filter_popup').modal("show");
+			window.bsModalShow('#row_filter_popup');
 		}
 	});
 
@@ -384,7 +384,7 @@ function refreshView() {
 				gRoles[gIdx].column_filter = [];
 			}
 			refreshColumnSelect(gCache[globals.gCurrentSurvey], gRoles[gIdx].column_filter);
-			$('#column_filter_popup').modal("show");
+			window.bsModalShow('#column_filter_popup');
 		}
 	});
 
@@ -392,9 +392,9 @@ function refreshView() {
 	$('.role_group', $element).off().click(function () {
 		var $this = $(this);
 
-		$this.find('.btn').toggleClass('active').removeClass("btn-success btn-danger").addClass("btn-default");
-		$this.find('.groupA.active').addClass("btn-success").removeClass("btn-default");
-		$this.find('.groupB.active').addClass("btn-danger").removeClass("btn-default");
+		$this.find('.btn').toggleClass('active').removeClass("btn-success btn-danger").addClass("btn-secondary");
+		$this.find('.groupA.active').addClass("btn-success").removeClass("btn-secondary");
+		$this.find('.groupB.active').addClass("btn-danger").removeClass("btn-secondary");
 
 		idx = $this.data("idx");
 		if (gRoles[idx].role_group === 'A') {
@@ -515,15 +515,15 @@ function updateRole(idx, property, $popup) {
 						  gRoles[idx].role_group = data.role_group;
 						  var $g = $('#role_table .role_group[data-idx=' + idx + ']')
 
-						  $g.find('.btn').removeClass('active').removeClass("btn-success btn-danger").addClass("btn-default");
+						  $g.find('.btn').removeClass('active').removeClass("btn-success btn-danger").addClass("btn-secondary");
 						  $g.find('.group' + data.role_group).addClass('active');
-						  $g.find('.groupA.active').addClass("btn-success").removeClass("btn-default");
-						  $g.find('.groupB.active').addClass("btn-danger").removeClass("btn-default");
+						  $g.find('.groupA.active').addClass("btn-success").removeClass("btn-secondary");
+						  $g.find('.groupB.active').addClass("btn-danger").removeClass("btn-secondary");
 					  }
 				  }
 
 				  if($popup) {
-					  $popup.modal("hide");
+					  window.bsModalHide($popup);
 				  }
 			  }
 

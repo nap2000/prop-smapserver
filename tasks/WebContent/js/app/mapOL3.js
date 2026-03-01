@@ -109,8 +109,8 @@ export default {
                 h[++idx] = '<tr>';
 
                 h[++idx] = '<td>';      // Select
-                h[++idx] = '<div class="switch custom-control custom-checkbox">';
-                h[++idx] = '<input type="checkbox" class="custom-control-input layerSelect" name="columnSelect"';
+                h[++idx] = '<div class="switch form-check form-check">';
+                h[++idx] = '<input type="checkbox" class="form-check-input layerSelect" name="columnSelect"';
                 if(gLayers[i].enabled) {
                     h[++idx] = 'checked="checked"';
                 }
@@ -119,7 +119,7 @@ export default {
                 h[++idx] = '"';
                 h[++idx] = ' id="layer' + i + '"';
                 h[++idx] = '>';
-                h[++idx] = '<label class="custom-control-label" for="layer' + i + '">';
+                h[++idx] = '<label class="form-check-label" for="layer' + i + '">';
                 h[++idx] = gLayers[i].title;
                 h[++idx] = '</label>';
                 h[++idx] = '</div>';
@@ -127,7 +127,7 @@ export default {
                 h[++idx] = '<td>';      // Delete
                 h[++idx] = '<button type="button" data-idx="';
                 h[++idx] = i;
-                h[++idx] = '" class="btn btn-default btn-sm rm_layer danger"';
+                h[++idx] = '" class="btn btn-secondary btn-sm rm_layer danger"';
                 if(gLayers[i].fixed) {
                     h[++idx] = ' disabled';
                 }
@@ -282,7 +282,7 @@ export default {
             layer.clump = $('input[name=clump]:checked', '#mapForm').val();
 
             gLayers.push(layer);
-            $('#layerEdit').modal("hide");	// All good close the modal
+            window.bsModalHide('#layerEdit');	// All good close the modal
 
             refreshLayer(gLayers.length - 1, map);
             showLayerSelections(map);

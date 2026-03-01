@@ -201,7 +201,7 @@ $(document).ready(function () {
 
 					gChangeset = $(this).val();
 					$('h5', '#reversal_popup').html(localise.set["rev_rcn"] + " " + gChangeset);
-					$('#reversal_popup').modal("show");
+					window.bsModalShow('#reversal_popup');
 				});
 				$('.reversed .reverse').prop("disabled", true);
 
@@ -263,7 +263,7 @@ $(document).ready(function () {
 						}
 					});
 
-					$('#details_popup').modal("show");
+					window.bsModalShow('#details_popup');
 				});
 
 			},

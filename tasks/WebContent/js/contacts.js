@@ -122,14 +122,14 @@ localise.initLocale(gUserLocale).then(function () {
 			e.preventDefault();
 			gSelectedId = -1;
 			initPersonDialog(-1);
-			$('#addPersonPopup').modal("show");
+			window.bsModalShow('#addPersonPopup');
 		});
 
 		$('#m_edit').click(function(e){
 			e.preventDefault();
 			gSelectedId = gSelectedRecord.id;
 			initPersonDialog(gSelectedRecord.id);
-			$('#addPersonPopup').modal("show");
+			window.bsModalShow('#addPersonPopup');
 		});
 
 		$('#m_del').click(function(e){
@@ -250,7 +250,7 @@ localise.initLocale(gUserLocale).then(function () {
 				success: function(data, status) {
 					removeHourglass();
 					table.ajax.reload();
-					$('#addPersonPopup').modal("hide");
+					window.bsModalHide('#addPersonPopup');
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();

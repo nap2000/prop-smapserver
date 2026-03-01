@@ -87,7 +87,7 @@ $(document).ready(function() {
         // Set up the tabs
         $('#billTab a').click(function (e) {
             e.preventDefault();
-            $(this).tab('show');
+            window.bsTabShow(this);
 
             $("#billPanel, .billOnly").show();
             $('#ratesPanel').hide();
@@ -95,7 +95,7 @@ $(document).ready(function() {
         });
         $('#ratesTab a').click(function (e) {
             e.preventDefault();
-            $(this).tab('show');
+            window.bsTabShow(this);
 
             $("#billPanel, .billOnly").hide();
             $('#ratesPanel').show();

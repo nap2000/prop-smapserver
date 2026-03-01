@@ -58,7 +58,7 @@ localise.initLocale(gUserLocale).then(function () {
 
 	$('#addPreload').off().click(function() {
 		$('#metaForm')[0].reset();
-		$('#addModal').modal('show');
+		window.bsModalShow('#addModal');
 	});
 
 	$('#saveMetaItem').click(function() {
@@ -105,7 +105,7 @@ localise.initLocale(gUserLocale).then(function () {
 
 		updateMetaItem(item, surveyListDone);
 
-		$('#addModal').modal("hide");
+		window.bsModalHide('#addModal');
 	});
 
 	// Add responses to events
@@ -306,7 +306,7 @@ localise.initLocale(gUserLocale).then(function () {
 						}
 					}
 				}
-				$('#addModal').modal('show');
+				window.bsModalShow('#addModal');
 			});
 
 		}

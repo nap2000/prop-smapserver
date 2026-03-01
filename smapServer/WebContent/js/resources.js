@@ -98,7 +98,7 @@ $(function() {
 		// Set up the tabs
 		$('#csvTab a').click(function (e) {
 			e.preventDefault();
-			$(this).tab('show');
+			window.bsTabShow(this);
 
 			$('.resourcePanel').hide();
 			$('#csvPanel').show();
@@ -107,7 +107,7 @@ $(function() {
 		});
 		$('#mediaTab a').click(function (e) {
 			e.preventDefault();
-			$(this).tab('show');
+			window.bsTabShow(this);
 
 			$('.resourcePanel').hide();
 			$('#mediaPanel').show();
@@ -116,14 +116,14 @@ $(function() {
 		});
 		$('#mapTab a').click(function (e) {
 			e.preventDefault();
-			$(this).tab('show');
+			window.bsTabShow(this);
 
 			$('.resourcePanel').hide();
 			$('#mapPanel').show();
 		});
 		$('#locationTab a').click(function (e) {
 			e.preventDefault();
-			$(this).tab('show');
+			window.bsTabShow(this);
 
 			$('.resourcePanel').hide();
 			$('#locationPanel').show();
@@ -144,7 +144,7 @@ $(function() {
 			$('.notreplace, #fileCsv').show();
 			$('#fileMedia').hide();
 			$('.upload_alert').removeClass('alert-danger').addClass('alert-success').html("");
-			$('#fileAddPopup').modal('show');
+			window.bsModalShow('#fileAddPopup');
 		});
 
 		// Open the dialog to select a new survey for upload
@@ -154,7 +154,7 @@ $(function() {
 			$('.notreplace, #fileMedia').show();
 			$('#fileCsv').hide();
 			$('.upload_alert').removeClass('alert-danger').addClass('alert-success').html("");
-			$('#fileAddPopup').modal('show');
+			window.bsModalShow('#fileAddPopup');
 		});
 
 		/*
@@ -200,7 +200,7 @@ $(function() {
 		$('.upload_file_msg').hide();
 		$('#uploadLocationFiles').click( function() {
 			$('.upload_file_msg').hide();
-			$('#fileAddLocations').modal('show');
+			window.bsModalShow('#fileAddLocations');
 		});
 		$('#submitLocationFile').click( function(){
 			uploadFiles('/surveyKPI/tasks/locations/upload', "locationsUpload", loadedLocationData);
@@ -227,7 +227,7 @@ $(function() {
          */
 		$('#addMap').click(function(){
 			edit_map();
-			$('#addMapPopup').modal("show");
+			window.bsModalShow('#addMapPopup');
 		});
 
 		// Enable the save notifications function
@@ -244,7 +244,7 @@ $(function() {
          * Set up location tabs
          */
 		$('#addNfc').click(function(){
-			$('#addMapPopup').modal("show");
+			window.bsModalShow('#addMapPopup');
 		});
 
 		$('.vector-data-inputs').bootstrapFileInput();
@@ -350,7 +350,7 @@ $(function() {
 			success: function(data, status) {
 				removeHourglass();
 				getMaps();
-				$('#addMapPopup').modal("hide");
+				window.bsModalHide('#addMapPopup');
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
@@ -480,7 +480,7 @@ $(function() {
 		$(".edit_map", $selector).click(function(){
 			var idx = $(this).data("idx");
 			edit_map(idx);
-			$('#addMapPopup').modal("show");
+			window.bsModalShow('#addMapPopup');
 		});
 
 	}

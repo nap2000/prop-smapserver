@@ -83,7 +83,7 @@ localise.initLocale(gUserLocale).then(function () {
 			if (survey.languages.length > 1) {
 				aws.setLanguageSelect($('.translate_select'), 'translate', setTranslateValues);
 				$('#overwrite').prop("checked", false);
-				$('#autoTranslateModal').modal("show");
+				window.bsModalShow('#autoTranslateModal');
 			}
 		} else {
 			bootbox.alert(localise.set["ed_sct"]);
@@ -466,7 +466,7 @@ function autoTranslate() {
 		timeout: 0,
 		success: function() {
 			removeHourglass();
-			$('#autoTranslateModal').modal("hide");
+			window.bsModalHide('#autoTranslateModal');
 			$('#translateGo').removeClass("disabled");
 			getSurveyDetails(refreshView, false, true);
 

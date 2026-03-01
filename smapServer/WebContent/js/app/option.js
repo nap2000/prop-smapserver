@@ -174,7 +174,7 @@ export default {
 				// Add option name and value cell
 				h[++idx] = '<td>';
 						h[++idx] = '<div class="dropdown">';
-						h[++idx] = '<button type="button" class="btn btn-secondary btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i> ';
+						h[++idx] = '<button type="button" class="btn btn-secondary btn-lg dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i> ';
 						h[++idx] = '</button>';
 							h[++idx] = '<div class="dropdown-menu">';
 								h[++idx] = '<a href="javascript:void(0)" class="dropdown-item delete_option">';
@@ -572,7 +572,7 @@ export default {
 				h[++idx] = addOptionErrorMsg(option.errorMsg);
 
 			} else {
-				h[++idx] = '<textarea data-toggle="tooltip" class="labelProp has_tt" title="';
+				h[++idx] = '<textarea data-bs-toggle="tooltip" class="labelProp has_tt" title="';
 				h[++idx] = localise.set["ed_clab"];
 				h[++idx] = '">';
 				h[++idx] = option.labels[globals.gLanguage].text;
@@ -689,7 +689,7 @@ export default {
 			h[++idx] = '" data-f_name="';
 			h[++idx] = globals.gFilterArray[i];
 			h[++idx] = '">';
-			h[++idx] = '<input class="filter form-control data-toggle="tooltip" has_tt" value="';
+			h[++idx] = '<input class="filter form-control data-bs-toggle="tooltip" has_tt" value="';
 			h[++idx] = filters ? filters[globals.gFilterArray[i]] : "";
 			h[++idx] = '" ';	
 			h[++idx] = ' type="text" title="';
@@ -745,7 +745,7 @@ export default {
 		} else {
 			h[++idx] = '</div>';
 		}
-	    h[++idx] = '<a type="button" class="btn btn-default mediaProp form-control" data-element="';
+	    h[++idx] = '<a type="button" class="btn btn-secondary mediaProp form-control" data-element="';
 	    h[++idx] = label.toLowerCase();
 	    h[++idx] = '">';
 	    h[++idx] = lcLabel;

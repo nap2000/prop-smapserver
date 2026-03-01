@@ -270,7 +270,7 @@ $(document).ready(function() {
 			data: { updates: updateString },
 			success: function(data, status) {
 				removeHourglass();
-				$('#text_update_popup').modal("hide");
+				window.bsModalHide('#text_update_popup');
 				getData();
 
 			}, error: function(data, status) {
@@ -552,7 +552,7 @@ function textUpdate() {
 		$('.tu_existing_text').css('color','black').prop("disabled", false);
 	}
 
-	$('#text_update_popup').modal("show");
+	window.bsModalShow('#text_update_popup');
 }
 
 

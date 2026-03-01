@@ -92,7 +92,7 @@ export {
             $('.respond', $surveyForm).on('click', function(e) {
                 window.gMessageIdx = $(this).data("idx");
                 $('#messageForm')[0].reset();
-                $('#messagePopup').modal('show');
+                window.bsModalShow('#messagePopup');
             });
 
             // Set up the map fields

@@ -143,7 +143,7 @@ const moment = window.moment;
 
 		$('.move_to_organisation').click(function () {
 			if(!$(this).hasClass("disabled")) {
-				$('#move_to_organisation_popup').modal("show");
+				window.bsModalShow('#move_to_organisation_popup');
 			}
 		});
 
@@ -406,7 +406,7 @@ const moment = window.moment;
 					removeHourglass();
 					getUsers();
 					getProjects();
-					$('#create_project_popup').modal("hide");
+					window.bsModalHide('#create_project_popup');
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
@@ -462,7 +462,7 @@ const moment = window.moment;
 					removeHourglass();
 					getUsers();
 					getRoles(updateRoleTable);
-					$('#create_role_popup').modal("hide");
+					window.bsModalHide('#create_role_popup');
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
@@ -613,7 +613,7 @@ const moment = window.moment;
 					if(handleLogout(data)) {
 						getLoggedInUser(userKnown, false, false, getOrganisations, false,
 							false, getEnterprises, undefined);
-						$('#create_organisation_popup').modal("hide");
+						window.bsModalHide('#create_organisation_popup');
 					}
 				}, error: function(xhr, textStatus, err) {
 					removeHourglass();
@@ -666,7 +666,7 @@ const moment = window.moment;
 				success: function(data) {
 					removeHourglass();
 					if(handleLogout(data)) {
-						$('#create_enterprise_popup').modal("hide");
+						window.bsModalHide('#create_enterprise_popup');
 						getEnterprises();
 					}
 				}, error: function(xhr, textStatus, err) {
@@ -781,7 +781,7 @@ const moment = window.moment;
 				// cancel just ignore
 			}
 
-			$('#del_user_confirm_popup').modal("hide");
+			window.bsModalHide('#del_user_confirm_popup');
 		});
 
 		/*
@@ -836,7 +836,7 @@ const moment = window.moment;
 			$('#load_file_alert').hide();
 			document.forms.namedItem("importFile").reset();
 			$('#importFileLabel').text("");
-			$('#import_file').modal("show");
+			window.bsModalShow('#import_file');
 		});
 
 		// Respond to selection of a file for upload
@@ -866,7 +866,7 @@ const moment = window.moment;
 		$('#uploadCss').click(function() {
 			$('#file').val("");
 			$('.load_file_alert').hide();
-			$('#upload_css_popup').modal("show");
+			window.bsModalShow('#upload_css_popup');
 		});
 
 		$('#cssSave').click(function(){
@@ -883,7 +883,7 @@ const moment = window.moment;
 				url: url,
 				success: function(data, status) {
 					removeHourglass();
-					$('#upload_css_popup').modal("hide");
+					window.bsModalHide('#upload_css_popup');
 				},
 				error: function(xhr, textStatus, err) {
 					removeHourglass();
@@ -909,7 +909,7 @@ const moment = window.moment;
 			$('#addSmsOrganisation').val(globals.gOrgId);
 
 			$('.add_sms_alert').hide();
-			$('#add_sms_popup').modal("show");
+			window.bsModalShow('#add_sms_popup');
 		});
 
 		$('#smsProject').change(function() {
@@ -946,7 +946,7 @@ const moment = window.moment;
 					removeHourglass();
 					if(handleLogout(data)) {
 						getSMSNumbers();
-						$('#add_sms_popup').modal("hide");
+						window.bsModalHide('#add_sms_popup');
 					}
 				},
 				error: function(xhr, textStatus, err) {
@@ -1001,7 +1001,7 @@ const moment = window.moment;
 					removeHourglass();
 					if(handleLogout(data)) {
 						getSMSNumbers();
-						$('#edit_sms_popup').modal("hide");
+						window.bsModalHide('#edit_sms_popup');
 					}
 				},
 				error: function(xhr, textStatus, err) {
@@ -1032,7 +1032,7 @@ const moment = window.moment;
 		gPanel = name;
 
 		$('.org_alert').hide();
-		$this.tab('show');
+		window.bsTabShow($this);
 
 		$(".usertab").hide();
 		$('.panel' + name).show();
@@ -1252,8 +1252,8 @@ const moment = window.moment;
 				(gGroups[i].id != globals.GROUP_ENTERPRISE || globals.gIsEnterpriseAdministrator  || globals.gIsServerOwner) &&
 				gGroups[i].id !== globals.GROUP_OWNER
 			) {
-				h[++idx] = '<div class="custom-control custom-checkbox ml-2">';
-				h[++idx] = '<input type="checkbox" class="custom-control-input" id="';
+				h[++idx] = '<div class="form-check form-check ms-2">';
+				h[++idx] = '<input type="checkbox" class="form-check-input" id="';
 				h[++idx] = 'user_groups_cb' + i;
 				h[++idx] = '" name="';
 				h[++idx] = 'user_groups_cb';
@@ -1267,7 +1267,7 @@ const moment = window.moment;
 					}
 				}
 				h[++idx] = '/> ';
-				h[++idx] = '<label class="custom-control-label" for="';
+				h[++idx] = '<label class="form-check-label" for="';
 				h[++idx] = 'user_groups_cb' + i;
 				h[++idx] = '">';
 				h[++idx] = localise.set[gGroups[i].name];
@@ -1282,8 +1282,8 @@ const moment = window.moment;
 		h = [];
 		idx = -1;
 		for(i = 0; i < globals.gProjectList.length; i++) {
-			h[++idx] = '<div class="custom-control custom-checkbox ml-2">';
-			h[++idx] = '<input type="checkbox" class="custom-control-input" id="';
+			h[++idx] = '<div class="form-check form-check ms-2">';
+			h[++idx] = '<input type="checkbox" class="form-check-input" id="';
 			h[++idx] = 'user_projects_cb' + i;
 			h[++idx] = '" name="';
 			h[++idx] = 'user_projects_cb';
@@ -1298,7 +1298,7 @@ const moment = window.moment;
 				}
 			}
 			h[++idx] = '/>';
-			h[++idx] = '<label class="custom-control-label" for="';
+			h[++idx] = '<label class="form-check-label" for="';
 			h[++idx] = 'user_projects_cb' + i;
 			h[++idx] = '">';
 			h[++idx] = htmlEncode(globals.gProjectList[i].name);
@@ -1312,8 +1312,8 @@ const moment = window.moment;
 			h = [];
 			idx = -1;
 			for(i = 0; i < globals.gRoleList.length; i++) {
-				h[++idx] = '<div class="custom-control custom-checkbox ml-2">';
-				h[++idx] = '<input type="checkbox" class="custom-control-input" id="';
+				h[++idx] = '<div class="form-check form-check ms-2">';
+				h[++idx] = '<input type="checkbox" class="form-check-input" id="';
 				h[++idx] = 'user_roles_cb' + i;
 				h[++idx] = '" name="user_roles_cb"';
 				h[++idx] = ' value="';
@@ -1326,7 +1326,7 @@ const moment = window.moment;
 					}
 				}
 				h[++idx] = '/>';
-				h[++idx] = '<label class="custom-control-label" for="';
+				h[++idx] = '<label class="form-check-label" for="';
 				h[++idx] = 'user_roles_cb' + i;
 				h[++idx] = '">';
 				h[++idx] = htmlEncode(globals.gRoleList[i].name);
@@ -1341,8 +1341,8 @@ const moment = window.moment;
 			h = [];
 			idx = -1;
 			for(i = 0; i < gOrganisationList.length; i++) {
-				h[++idx] = '<div class="custom-control custom-checkbox ml-2">';
-				h[++idx] = '<input type="checkbox" class="custom-control-input" id="';
+				h[++idx] = '<div class="form-check form-check ms-2">';
+				h[++idx] = '<input type="checkbox" class="form-check-input" id="';
 				h[++idx] = 'user_orgs_cb' + i;
 				h[++idx] = '" name="user_orgs_cb"';
 				h[++idx] = ' value="';
@@ -1356,7 +1356,7 @@ const moment = window.moment;
 					}
 				}
 				h[++idx] = '/>';
-				h[++idx] = '<label class="custom-control-label" for="';
+				h[++idx] = '<label class="form-check-label" for="';
 				h[++idx] = 'user_orgs_cb' + i;
 				h[++idx] = '">';
 				h[++idx] = htmlEncode(gOrganisationList[i].name);
@@ -1413,7 +1413,7 @@ const moment = window.moment;
 			$('.oo').hide();
 			$('.noo').show();
 		}
-		$('#create_user_popup').modal("show");
+		window.bsModalShow('#create_user_popup');
 	}
 
 	/*
@@ -1446,8 +1446,8 @@ const moment = window.moment;
 			}
 
 
-			h[++idx] = '<div class="custom-control custom-checkbox ml-2">';
-			h[++idx] = '<input type="checkbox" class="custom-control-input" id="';
+			h[++idx] = '<div class="form-check form-check ms-2">';
+			h[++idx] = '<input type="checkbox" class="form-check-input" id="';
 			h[++idx] = 'p_user_projects_cb' + i;
 			h[++idx] = '" name="';
 			h[++idx] = 'p_user_projects_cb';
@@ -1457,7 +1457,7 @@ const moment = window.moment;
 				h[++idx] = ' checked="checked"';
 			}
 			h[++idx] = '/>';
-			h[++idx] = '<label class="custom-control-label" for="';
+			h[++idx] = '<label class="form-check-label" for="';
 			h[++idx] = 'p_user_projects_cb' + i;
 			h[++idx] = '">';
 			h[++idx] = htmlEncode(user.name);
@@ -1466,7 +1466,7 @@ const moment = window.moment;
 
 		$p_user_projects.empty().append(h.join(''));
 
-		$('#create_project_popup').modal("show");
+		window.bsModalShow('#create_project_popup');
 	}
 
 	/*
@@ -1495,8 +1495,8 @@ const moment = window.moment;
 			}
 
 
-			h[++idx] = '<div class="custom-control custom-checkbox ml-2">';
-			h[++idx] = '<input type="checkbox" class="custom-control-input" id="';
+			h[++idx] = '<div class="form-check form-check ms-2">';
+			h[++idx] = '<input type="checkbox" class="form-check-input" id="';
 			h[++idx] = 'user_role_details_cb' + i;
 			h[++idx] = '" name="';
 			h[++idx] = 'user_role_details_cb';
@@ -1506,7 +1506,7 @@ const moment = window.moment;
 				h[++idx] = ' checked="checked"';
 			}
 			h[++idx] = '/>';
-			h[++idx] = '<label class="custom-control-label" for="';
+			h[++idx] = '<label class="form-check-label" for="';
 			h[++idx] = 'user_role_details_cb' + i;
 			h[++idx] = '">';
 			h[++idx] = htmlEncode(user.name);
@@ -1515,7 +1515,7 @@ const moment = window.moment;
 
 		$p_user_roles.empty().append(h.join(''));
 
-		$('#create_role_popup').modal("show");
+		window.bsModalShow('#create_role_popup');
 	}
 
 
@@ -1667,7 +1667,7 @@ const moment = window.moment;
 			}
 		}
 
-		$('#create_organisation_popup').modal("show");
+		window.bsModalShow('#create_organisation_popup');
 	}
 
 	/*
@@ -1683,7 +1683,7 @@ const moment = window.moment;
 		if (existing) {
 			$('#e_name').val(enterprise.name);
 		}
-		$('#create_enterprise_popup').modal("show");
+		window.bsModalShow('#create_enterprise_popup');
 	}
 
 	function setLogos(orgId) {
@@ -1713,14 +1713,14 @@ const moment = window.moment;
 						location.reload();
 					} else {
 						getUsers();
-						$dialog.modal("hide");
+						window.bsModalHide($dialog);
 					}
 				}
 			}, error: function (xhr, textStatus, err) {
 				removeHourglass();
 				$('#userDetailsSave').prop("disabled", false);
 				if (xhr.readyState == 0 || xhr.status == 0) {
-					$dialog.modal("hide");
+					window.bsModalHide($dialog);
 					return;  // Not an error
 				} else {
 					if (xhr.status === 409) {
@@ -1830,7 +1830,7 @@ const moment = window.moment;
 				h[++idx] = '<td class="control_td"><input type="checkbox" name="controls" value="';
 				h[++idx] = i;
 				h[++idx] = '"></td>';
-				h[++idx] = '<td class="user_edit_td"><button class="btn btn-default user_edit" style="width:100%;" data-idx="';
+				h[++idx] = '<td class="user_edit_td"><button class="btn btn-secondary user_edit" style="width:100%;" data-idx="';
 				h[++idx] = i;
 				h[++idx] = '">';
 				h[++idx] = user.ident;
@@ -1846,7 +1846,7 @@ const moment = window.moment;
 				h[++idx] = '<div class="d-flex">';
 				h[++idx] = '<button type="button" data-idx="';
 				h[++idx] = i;
-				h[++idx] = '" class="btn btn-sm rm_user btn-danger mr-2">';
+				h[++idx] = '" class="btn btn-sm rm_user btn-danger me-2">';
 				h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
 				h[++idx] = '<button type="button" data-idx="';
 				h[++idx] = i;
@@ -1861,7 +1861,7 @@ const moment = window.moment;
 				if(isEnum && globals.gLoggedInUser && user.current_org_name === globals.gLoggedInUser.organisation_name) {
 					h[++idx] = '<button type="button" data-idx="';
 					h[++idx] = i;
-					h[++idx] = '" class="btn btn-sm app_code btn-primary ml-2">';
+					h[++idx] = '" class="btn btn-sm app_code btn-primary ms-2">';
 					h[++idx] = '<i class="fas fa-qrcode"></i> <span class="lang" data-lang="u_code"</button>';
 				}
 
@@ -1890,7 +1890,7 @@ const moment = window.moment;
 		$('.app_code', $userTable).click(function () {
 			gCurrentUserIndex = $(this).data("idx");
 			getAppCode(gUsers[gCurrentUserIndex].ident);
-			$('#app_code_popup').modal('show');
+			window.bsModalShow('#app_code_popup');
 		});
 
 		$('#createKey').click(function () {
@@ -1968,7 +1968,7 @@ const moment = window.moment;
 			h[++idx] = '<td>';
 			h[++idx] = project.id;
 			h[++idx] = '</td>';
-			h[++idx] = '<td class="user_edit_td"><button class="btn btn-default project_edit" style="width:100%;" data-idx="';
+			h[++idx] = '<td class="user_edit_td"><button class="btn btn-secondary project_edit" style="width:100%;" data-idx="';
 			h[++idx] = i;
 			h[++idx] = '">';
 			h[++idx] = htmlEncode(project.name);
@@ -1981,11 +1981,11 @@ const moment = window.moment;
 			h[++idx] = '<div class="d-flex">';
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-default btn-sm rm_project btn-danger mr-2">';
+			h[++idx] = '" class="btn btn-secondary btn-sm rm_project btn-danger me-2">';
 			h[++idx] = '<i class="fas fa-trash-alt"></i></span></button>';
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-default btn-sm project_edit btn-info">';
+			h[++idx] = '" class="btn btn-secondary btn-sm project_edit btn-info">';
 			h[++idx] = '<i class="far fa-edit"></i></button>';
 			h[++idx] = '</div>';
 			h[++idx] = '</td>';
@@ -2066,7 +2066,7 @@ const moment = window.moment;
 			h[++idx] = '<td>';
 			h[++idx] = role.id;
 			h[++idx] = '</td>';
-			h[++idx] = '<td class="user_edit_td"><button class="btn btn-default role_edit" style="width:100%;" value="';
+			h[++idx] = '<td class="user_edit_td"><button class="btn btn-secondary role_edit" style="width:100%;" value="';
 			h[++idx] = i;
 			h[++idx] = '">';
 			h[++idx] = htmlEncode(role.name);
@@ -2079,7 +2079,7 @@ const moment = window.moment;
 			h[++idx] = '<div class="d-flex">';
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-sm rm_role btn-danger mr-2">';
+			h[++idx] = '" class="btn btn-sm rm_role btn-danger me-2">';
 			h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
 
 			h[++idx] = '<button type="button" data-idx="';
@@ -2174,7 +2174,7 @@ const moment = window.moment;
 			h[++idx] = '<td>';
 			h[++idx] = organisation.id;
 			h[++idx] = '</td>';
-			h[++idx] = '<td class="user_edit_td"><button style="width:100%;" class="btn btn-default organisation_edit" value="';
+			h[++idx] = '<td class="user_edit_td"><button style="width:100%;" class="btn btn-secondary organisation_edit" value="';
 			h[++idx] = i;
 			h[++idx] = '">';
 			h[++idx] = htmlEncode(organisation.name);
@@ -2185,7 +2185,7 @@ const moment = window.moment;
 			h[++idx] = '<td class="usage_report_td">';
 
 			if (bs && globals.gIsOrgAdministrator) {
-				h[++idx] = '<button style="margin-right:2px;" class="btn btn-default btn-sm btn-warning usage_report" value="';
+				h[++idx] = '<button style="margin-right:2px;" class="btn btn-secondary btn-sm btn-warning usage_report" value="';
 				h[++idx] = i;
 				h[++idx] = '">';
 				h[++idx] = localise.set["u_usage"];
@@ -2193,7 +2193,7 @@ const moment = window.moment;
 				h[++idx] = '</button>';
 			}
 			if(globals.gIsEnterpriseAdministrator) {
-				h[++idx] = '<button style="margin-right:2px;" class="btn btn-default btn-sm btn-info move_org" value="';
+				h[++idx] = '<button style="margin-right:2px;" class="btn btn-secondary btn-sm btn-info move_org" value="';
 				h[++idx] = i;
 				h[++idx] = '">';
 				h[++idx] = localise.set["c_move"];
@@ -2224,7 +2224,7 @@ const moment = window.moment;
 		});
 		$('.usage_report', '#organisation_table').click(function () {
 			gCurrentOrganisationIndex = $(this).val();
-			$('#usage_report_popup').modal("show");
+			window.bsModalShow('#usage_report_popup');
 		});
 		$(".rm_org", $('#organisation_table')).click(function(){
 			var idx = $(this).data("idx");
@@ -2232,7 +2232,7 @@ const moment = window.moment;
 		});
 		$(".move_org", $('#organisation_table')).click(function(){
 			gCurrentOrganisationIndex = $(this).val();
-			$('#move_to_enterprise_popup').modal("show");
+			window.bsModalShow('#move_to_enterprise_popup');
 		});
 
 		/*
@@ -2303,7 +2303,7 @@ const moment = window.moment;
 			h[++idx] = '<td>';
 			h[++idx] = htmlEncode(enterprise.id);
 			h[++idx] = '</td>';
-			h[++idx] = '<td class="user_edit_td"><button style="width:100%;" class="btn btn-default enterprise_edit" value="';
+			h[++idx] = '<td class="user_edit_td"><button style="width:100%;" class="btn btn-secondary enterprise_edit" value="';
 			h[++idx] = i;
 			h[++idx] = '">';
 			h[++idx] = htmlEncode(enterprise.name);
@@ -2741,7 +2741,7 @@ const moment = window.moment;
 
 			gCurrentDeleteUsers = users;      // Save in case they say yes
 
-			$('#del_user_confirm_popup').modal("show");
+			window.bsModalShow('#del_user_confirm_popup');
 			return;
 		} else {
 			decision = confirm(localise.set["msg_confirm_del"] + " " + userName);
@@ -3181,7 +3181,7 @@ const moment = window.moment;
 			if(globals.gIsServerOwner) {	// Only allow system owners to delete
 				h[++idx] = '<button type="button" data-idx="';
 				h[++idx] = i;
-				h[++idx] = '" class="btn btn-danger btn-sm rm_n mr-2">';
+				h[++idx] = '" class="btn btn-danger btn-sm rm_n me-2">';
 				h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
 			}
 
@@ -3247,7 +3247,7 @@ const moment = window.moment;
 			$('.sameOrg').hide();
 			$('.diffOrg').show();
 		}
-		$('#edit_sms_popup').modal("show");
+		window.bsModalShow('#edit_sms_popup');
 	}
 
 	function deleteNumber(idx) {

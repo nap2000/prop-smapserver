@@ -50,7 +50,7 @@ window.gUserLocale = gUserLocale;
 
 			$('#addTemplate').click( function(e) {
 				$('#up_alert, #up_warnings').hide();
-				$('#template_add').modal('show');
+				window.bsModalShow('#template_add');
 			});
 
 			$('#templateLoad').click( function(e) {
@@ -246,7 +246,7 @@ window.gUserLocale = gUserLocale;
 				var idx = $(this).data("idx");
 				gEditTemplate = gTemplates[idx];
 				$('#templateRule').val(gTemplates[idx].rule);
-				$('#template_edit').modal("show");
+				window.bsModalShow('#template_edit');
 			});
 
 			$('.not_available').find('input').click(function() {
@@ -316,7 +316,7 @@ window.gUserLocale = gUserLocale;
 					$('#templateLoad').prop("disabled", false);  // debounce
 					if(handleLogout(data)) {
 						document.forms.namedItem("uploadTemplate").reset();
-						$('#template_add').modal('hide');
+						window.bsModalHide('#template_add');
 						getTemplates();
 						$('#file').val("");     // Work around ERR_UPLOAD_FILE_CHANGED error
 					}
@@ -385,7 +385,7 @@ window.gUserLocale = gUserLocale;
 				data: { prop: propString },
 				success: function() {
 					removeHourglass();
-					$('#template_edit').modal("hide");
+					window.bsModalHide('#template_edit');
 					getTemplates();	// Reload templates view
 				}, error: function(xhr, textStatus, err) {
 					removeHourglass();

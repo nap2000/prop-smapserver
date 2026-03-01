@@ -353,7 +353,7 @@ localise.initLocale(gUserLocale).then(function () {
          * Setup dialog to change the current survey
          */
         $("#changeSurveys").click(function () {
-            $("#surveySelect").modal("show");
+            window.bsModalShow('#surveySelect');
         });
 
         $('.exitEditRecord').click(function(e) {
@@ -442,7 +442,7 @@ localise.initLocale(gUserLocale).then(function () {
             } else {
                 $('#user_to_assign').val("_none");
             }
-            $('#userAssign').modal("show");
+            window.bsModalShow('#userAssign');
         });
 
         /*
@@ -454,7 +454,7 @@ localise.initLocale(gUserLocale).then(function () {
             $('#addChartForm')[0].reset();
             gSelectedChart = -1;
             setChartPopupControls();
-            $('#chart_settings_popup').modal("show");
+            window.bsModalShow('#chart_settings_popup');
         });
 
         $('#cs_subject').change(function() {
@@ -564,7 +564,7 @@ localise.initLocale(gUserLocale).then(function () {
                     removeHourglass();
                     $('#assignUserSave').prop("disabled", false);     // debounce
                     if(handleLogout(data)) {
-                        $('#userAssign').modal("hide");
+                        window.bsModalHide('#userAssign');
                         gTasks.gSelectedRecord._assigned = $('#user_to_assign').val();
                         showManagedData(globals.gCurrentSurvey, showTable, true);
                     }
@@ -666,7 +666,7 @@ localise.initLocale(gUserLocale).then(function () {
 
         $('.genrecordpdf').click(function (e)  {
             e.preventDefault();
-            $('#genPdfPopup').modal("show");
+            window.bsModalShow('#genPdfPopup');
         });
 
         $('#genPdf').click(function(e) {
@@ -688,7 +688,7 @@ localise.initLocale(gUserLocale).then(function () {
          */
         $('#show_settings').click(function(e) {
             e.preventDefault();
-            $('#settingsPopup').modal("show");
+            window.bsModalShow('#settingsPopup');
         });
 
         /*
@@ -712,7 +712,7 @@ localise.initLocale(gUserLocale).then(function () {
                 data: action,
                 success: function (data) {
                     if(handleLogout(data)) {
-                        $('#messagePopup').modal('hide');
+                        window.bsModalHide('#messagePopup');
                         getRecordChanges(gTasks.gSelectedRecord);
                     }
                 },
@@ -773,7 +773,7 @@ localise.initLocale(gUserLocale).then(function () {
             e.preventDefault();
             $('#layerInfo').hide();
             $('#ml_title').val("");
-            $('#layerEdit').modal("show");
+            window.bsModalShow('#layerEdit');
         });
 
         // Respond to save on a layer edit dialog
@@ -792,7 +792,7 @@ localise.initLocale(gUserLocale).then(function () {
          * Take action on tab change to initialiseColumns tab contents
          * Refer: http://stackoverflow.com/questions/20705905/bootstrap-3-jquery-event-for-active-tab-change
          */
-        $('a[data-toggle="tab"]', '#mainTabs').on('shown.bs.tab', function (e) {
+        $('a[data-bs-toggle="tab"]', '#mainTabs').on('shown.bs.tab', function (e) {
             var target = $(e.target).attr("href") // activated tab
             var trigger;
 
@@ -828,7 +828,7 @@ localise.initLocale(gUserLocale).then(function () {
             setInLocalStorage("currentTab" + page, trigger);
         });
 
-        $('a[data-toggle="tab"]', '#editTabs').on('shown.bs.tab', function (e) {
+        $('a[data-bs-toggle="tab"]', '#editTabs').on('shown.bs.tab', function (e) {
             var target = $(e.target).attr("href") // activated tab
 
             $('.historyView,.dataView').hide();
@@ -901,7 +901,7 @@ localise.initLocale(gUserLocale).then(function () {
             $('.' + ssd).removeClass('d-none').show();
         }
 	    $('#m_tdh_individual').click(function() {
-		    $('#tdh_individual_report_popup').modal("show");
+		    window.bsModalShow('#tdh_individual_report_popup');
 	    });
 	    $('#tdh_individual_report_save').click(function() {
 		    var bc = $('#tdh_rep_bc').val();
@@ -915,7 +915,7 @@ localise.initLocale(gUserLocale).then(function () {
 		    }
 
 		    downloadFile(link);
-		    $('#tdh_individual_report_popup').modal("hide");
+		    window.bsModalHide('#tdh_individual_report_popup');
 	    });
 
         $('#chart_settings_save').click(function() {
@@ -937,7 +937,7 @@ localise.initLocale(gUserLocale).then(function () {
                     setupChartEdit();
                 }
             }
-            $('#chart_settings_popup').modal("hide");
+            window.bsModalHide('#chart_settings_popup');
             chart.refresh();
             saveCharts();
         });
@@ -1034,13 +1034,13 @@ localise.initLocale(gUserLocale).then(function () {
             }
             $groupBy.empty().append(h.join(''));
         }
-        $('#overviewReport').modal("show");
+        window.bsModalShow('#overviewReport');
     });
 
     $('#overviewReportSave').click(function(e) {
         e.preventDefault();
         genFile(true, "xlsx");
-        $('#overviewReport').modal("hide");
+        window.bsModalHide('#overviewReport');
     });
 
     function editRecord() {
@@ -1072,7 +1072,7 @@ localise.initLocale(gUserLocale).then(function () {
             $('#cs_chart_label').val(gTasks.cache.currentData.settings.charts[gSelectedChart].label);
 
             setChartPopupControls();
-            $('#chart_settings_popup').modal("show");
+            window.bsModalShow('#chart_settings_popup');
         });
 
         $('.fa-trash','#chartcontent').click(function(){
@@ -2708,7 +2708,7 @@ localise.initLocale(gUserLocale).then(function () {
 
             $('#saveNotification').html(localise.set["c_resend"]);
             edit_notification(true,0, true);
-            $('#addNotificationPopup').modal("show");
+            window.bsModalShow('#addNotificationPopup');
         });
 
         $('.edit_task').click(function(){
@@ -2804,7 +2804,7 @@ localise.initLocale(gUserLocale).then(function () {
         h[++idx] = index;
         h[++idx] = '">';
         h[++idx] = '<h5 class="mb-0">';
-        h[++idx] = '<button class="btn btn-link card-button" data-toggle="collapse" data-target="#task_collapse_';
+        h[++idx] = '<button class="btn btn-link card-button" data-bs-toggle="collapse" data-bs-target="#task_collapse_';
         h[++idx] = index;
         h[++idx] = '" aria-expanded="false" aria-controls="task_collapse_';
         h[++idx] = index;
@@ -2843,7 +2843,7 @@ localise.initLocale(gUserLocale).then(function () {
                 event = taskHistory[i];
                 addBreak = false;
                 h[++idx] = event.when;
-                h[++idx] = '<div class="ml-4">';
+                h[++idx] = '<div class="ms-4">';
                 if(event.status) {
                     addBreak = true;
                     h[++idx] = localise.set["c_status"];
@@ -3021,7 +3021,7 @@ localise.initLocale(gUserLocale).then(function () {
         h[++idx] = index;
         h[++idx] = '">';
         h[++idx] = '<h5 class="mb-0">';
-        h[++idx] = '<button class="btn btn-link card-button" data-toggle="collapse" data-target="#collapse_';
+        h[++idx] = '<button class="btn btn-link card-button" data-bs-toggle="collapse" data-bs-target="#collapse_';
         h[++idx] = index;
         h[++idx] = '" aria-expanded="false" aria-controls="collapse_';
         h[++idx] = index;
@@ -3062,7 +3062,7 @@ localise.initLocale(gUserLocale).then(function () {
                         }
                         h[++idx] = '" id="chgtab_';
                         h[++idx] = id;
-                        h[++idx] = '" data-toggle="tab" href="#chgpanel_';
+                        h[++idx] = '" data-bs-toggle="tab" href="#chgpanel_';
                         h[++idx] = id;
                         h[++idx] = '" role="tab" aria-controls="chgpanel_';
                         h[++idx] = id;
@@ -3640,7 +3640,7 @@ localise.initLocale(gUserLocale).then(function () {
     $('#addNotification').click(function(){
         $('#dashboardInfo').hide();
         edit_notification(false, -1, true);
-        $('#addNotificationPopup').modal("show");
+        window.bsModalShow('#addNotificationPopup');
     });
 
     /*
@@ -3714,7 +3714,7 @@ localise.initLocale(gUserLocale).then(function () {
         $('#tp_show_dist').val(task.show_dist);
 
         $('#location_save_panel').hide();
-        $('#task_properties').modal("show");
+        window.bsModalShow('#task_properties');
 
         if (!gModalMapInitialised) {
             setTimeout(function () {
@@ -3828,7 +3828,7 @@ localise.initLocale(gUserLocale).then(function () {
                     $('#saveNotification').prop("disabled", false);  // debounce
                     if(handleLogout(data)) {
                         $('#dashboardInfo').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["n_sent"]);
-                        $('#addNotificationPopup').modal("hide");
+                        window.bsModalHide('#addNotificationPopup');
                     }
                 },
                 error: function(xhr, textStatus, err) {
@@ -3867,7 +3867,7 @@ localise.initLocale(gUserLocale).then(function () {
             $('#toggle_reason').val("");
         }
         $('#toggleRecordTitle, #toggleRecordSave').text(title);
-        $('#toggleRecord').modal("show");
+        window.bsModalShow('#toggleRecord');
     }
 
     function clearTable() {
