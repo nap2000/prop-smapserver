@@ -659,7 +659,7 @@ function addSecondary(item, i) {
 		type = gQuestions[qIndex].type;
 
 	if(type === "select1") {
-		h[++idx] = '<select class="sec_sel1" class="form-control" data-orig="';
+		h[++idx] = '<select class="sec_sel1 form-select" data-orig="';
 		h[++idx] = item.targetQuestion;
 		h[++idx] = '" data-idx="';
 		h[++idx] = i;
@@ -773,4 +773,3 @@ function getFormList(sId) {
 
 
 });
-

@@ -111,7 +111,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<div class="form-group row">
 							<label class="lang col-sm-4 control-label"  data-lang="c_project"  for="project_name"></label>
 							<div class="col-sm-8">
-								<select class="project_list form-control col-sm-8" id="project_name"></select>
+								<select class="project_list form-select col-sm-8" id="project_name"></select>
 							</div>
 						</div>
 					</form>
@@ -152,7 +152,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					<div class="form-group row">
 						<label class="lang col-sm-2 control-label" data-lang="c_trigger" for="trigger"></label>
 						<div class="col-sm-10">
-							<select class="form-control" id="trigger">
+							<select class="form-select" id="trigger">
 								<option value="submission" selected="selected" class="lang" data-lang="submission">submission</option>
 								<option value="task_reminder" class="lang" data-lang="task_reminder">reminder</option>
 								<option value="cm_alert" class="lang" data-lang="cm_a">a</option>
@@ -171,14 +171,14 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<div class="bundle form-group row">
 							<label for="bundle_survey" class="lang col-sm-2 control-label" data-lang="c_bundle"></label>
 							<div class="col-sm-10">
-								<select id="bundle_survey" class="bundle_select form-control"></select>
+								<select id="bundle_survey" class="bundle_select form-select"></select>
 							</div>
 						</div>
 
 						<div class="notbundle form-group row">
 							<label for="survey" class="lang col-sm-2 control-label" data-lang="c_survey"></label>
 							<div class="col-sm-10">
-								<select id="survey" class="survey_select data_survey form-control"></select>
+								<select id="survey" class="survey_select data_survey form-select"></select>
 							</div>
 						</div>
 					</div>
@@ -186,14 +186,14 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					<div class="periodic_options form-group row">
 						<label for="report" class="lang col-sm-2 control-label" data-lang="c_report"></label>
 						<div class="col-sm-10">
-							<select id="report" class="report_select data_survey form-control"></select>
+							<select id="report" class="report_select data_survey form-select"></select>
 						</div>
 					</div>
 
 					<div class="form-group row">
 						<label class="lang col-sm-2 control-label" data-lang="c_target" for="target"></label>
 						<div class="col-sm-10">
-							<select class="form-control" id="target"></select>
+							<select class="form-select" id="target"></select>
 						</div>
 					</div>
 
@@ -203,7 +203,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<div class="form-group row">
 							<label for="task_group" class="lang col-sm-2 control-label" data-lang="t_tg"></label>
 							<div class="col-sm-10">
-								<select id="task_group" class="task_group_select form-control"></select>
+								<select id="task_group" class="task_group_select form-select"></select>
 							</div>
 						</div>
 
@@ -214,7 +214,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 									<input type="number" min="1" class="form-control" id="r_period">
 									<div class="input-group-append">
-										<select id="period_list_sel" class="period_list_sel form-control">
+										<select id="period_list_sel" class="period_list_sel form-select">
 											<option class="lang" data-lang="d_min" value="minutes">minutes</option>
 											<option class="lang" data-lang="d_hour" value="hours">hours</option>
 											<option class="lang" data-lang="d_day" value="days">day</option>
@@ -231,7 +231,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<div class="form-group row">
 							<label for="periodic_period" class="lang col-sm-2 control-label" data-lang="c_period"></label>
 							<div class="col-sm-10">
-								<select id="periodic_period" class="form-control">
+								<select id="periodic_period" class="form-select">
 									<option class="lang" data-lang="c_daily" value="daily"></option>
 									<option class="lang" data-lang="c_weekly" value="weekly"></option>
 									<option class="lang" data-lang="c_monthly" value="monthly"></option>
@@ -251,7 +251,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<div class="form-group row periodic_week_day">
 							<label for="periodic_week_day" class="lang col-sm-2 control-label" data-lang="n_dow"></label>
 							<div class="col-sm-10">
-								<select id="periodic_week_day" class="form-control">
+								<select id="periodic_week_day" class="form-select">
 									<option class="lang" data-lang="c_sunday" value="0"></option>
 									<option class="lang" data-lang="c_monday" value="1"></option>
 									<option class="lang" data-lang="c_tuesday" value="2"></option>
@@ -266,7 +266,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<div class="form-group row periodic_month_day periodic_month periodic_month_quarter">
 							<label for="periodic_month_day" class="lang col-sm-2 control-label" data-lang="n_dom"></label>
 							<div class="col-sm-10">
-								<select id="periodic_month_day" class="form-control">
+								<select id="periodic_month_day" class="form-select">
 									<option value="1">1</option>
 									<option value="2">2</option>
 									<option value="3">3</option>
@@ -305,7 +305,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<div class="form-group row periodic_month">
 							<label for="periodic_month" class="lang col-sm-2 control-label" data-lang="c_month"></label>
 							<div class="col-sm-10">
-								<select id="periodic_month" class="form-control">
+								<select id="periodic_month" class="form-select">
 									<option value="1">1</option>
 									<option value="2">2</option>
 									<option value="3">3</option>
@@ -325,7 +325,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<div class="form-group row periodic_month_quarter">
 							<label for="periodic_month_quarter" class="lang col-sm-2 control-label" data-lang="c_month"></label>
 							<div class="col-sm-10">
-								<select id="periodic_month_quarter" class="form-control">
+								<select id="periodic_month_quarter" class="form-select">
 									<option value="1">1</option>
 									<option value="2">2</option>
 									<option value="3">3</option>
@@ -338,28 +338,28 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					<div class="form-group row cm_alert_options">
 						<label class="lang col-sm-2 control-label" data-lang="c_alert" for="alerts"></label>
 						<div class="col-sm-10">
-							<select class="form-control alert_list" id="alerts"></select>
+							<select class="form-select alert_list" id="alerts"></select>
 						</div>
 					</div>
 
 					<div class="escalate_options form-group row">
 						<label for="survey_case" class="lang col-sm-2 control-label" data-lang="ed_sc"></label>
 						<div class="col-sm-10">
-							<select id="survey_case" class="data_survey form-control"></select>
+							<select id="survey_case" class="data_survey form-select"></select>
 						</div>
 					</div>
 
 					<div class="escalate_options form-group row">
 						<label for="user_to_assign" class="lang col-sm-2 control-label" data-lang="t_assign"></label>
 						<div class="col-sm-10">
-							<select id="user_to_assign" class="form-select form-control"></select>
+							<select id="user_to_assign" class="form-select"></select>
 						</div>
 					</div>
 
 					<div class="form-group row d-none assign_question">
 						<label for="assign_question" class="lang col-sm-2 control-label" data-lang="n_uiqc"></label>
 						<div class="col-sm-10">
-							<select id="assign_question" class="form-select form-control selected_name_question"></select>
+							<select id="assign_question" class="form-select selected_name_question"></select>
 						</div>
 					</div>
 
@@ -371,14 +371,14 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<div class="form-group row">
 							<label class="lang col-sm-2 control-label" data-lang="mf_of" for="oversight_survey"></label>
 							<div class="col-sm-10">
-								<select class="form-control" id="oversight_survey"></select>
+								<select class="form-select" id="oversight_survey"></select>
 							</div>
 						</div>
 
 						<div class="form-group row">
 							<label class="lang col-sm-2" data-lang="n_uq" for="update_question"></label>
 							<div class="col-sm-10">
-								<select class="form-control" id="update_question"></select>
+								<select class="form-select" id="update_question"></select>
 							</div>
 						</div>
 
@@ -400,7 +400,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<div class="form-group row">
 							<label class="lang col-sm-2" data-lang="n_scc" for="sc_question"></label>
 							<div class="col-sm-10">
-								<select class="form-control" id="sc_question"></select>
+								<select class="form-select" id="sc_question"></select>
 							</div>
 						</div>
 
@@ -449,13 +449,13 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<div id="email_question_cont" class="form-group row submission_options task_reminder_options sc_options lang_tt" data-lang_tt="n_eqc" data-bs-toggle="tooltip"  data-container="body" title="">
 							<label for="email_question" class="col-sm-2 control-label lang" data-lang="n_eq"></label>
 							<div class="col-sm-10">
-								<select class="selected_name_question form-control" id="email_question"></select>
+								<select class="selected_name_question form-select" id="email_question"></select>
 							</div>
 						</div>
 						<div id="email_meta_cont" class="form-group row submission_options task_reminder_options lang_tt" data-lang_tt="n_e_p_tt" data-bs-toggle="tooltip"  data-container="body" title="">
 							<label for="email_meta" class="col-sm-2 control-label lang" data-lang="n_ep"></label>
 							<div class="col-sm-10">
-								<select class="selected_meta form-control" id="email_meta"></select>
+								<select class="selected_meta form-select" id="email_meta"></select>
 							</div>
 						</div>
 						<div class="escalate_options form-group row">
@@ -481,7 +481,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<div class="form-group task_reminder_options row">
 							<label for="email_content_ap" data-lang="n_ap" class="lang col-sm-2 control-label"></label>
 							<div class="col-sm-8">
-								<select id="email_content_ap" class="labelProp form-control">
+								<select id="email_content_ap" class="labelProp form-select">
 									<option class="lang" data-lang="c_task" value="${task_webform}">webform</option>
 									<option class="lang" data-lang="t_assigned" value="${assignee_name}">assigned</option>
 									<option class="lang" data-lang="c_scheduled" value="${scheduled}">scheduled</option>
@@ -495,7 +495,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<div class="submission_options sc_options form-group row" >
 							<label class="lang col-sm-2 control-label" data-lang="c_attach" for="email_attach"></label>
 							<div class="col-sm-10">
-								<select class="form-control" id="email_attach">
+								<select class="form-select" id="email_attach">
 									<option value="none" class="lang" data-lang="c_none">none</option>
 									<option value="webform" class="lang" data-lang="n_wf">web form</option>
 									<option value="pdf" class="lang" data-lang="n_pdfp">pdf p</option>
@@ -534,7 +534,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<div class="submission_options form-group row lang_tt" data-lang_tt="n_sms_q_tt" data-bs-toggle="tooltip"  data-container="body" title="">
 							<label for="sms_question" class="col-sm-2 control-label lang" data-lang="n_smsq"></label>
 							<div class="col-sm-10">
-								<select class="selected_name_question form-control" id="sms_question"></select>
+								<select class="selected_name_question form-select" id="sms_question"></select>
 							</div>
 						</div>
 						<div class="form-group row" data-container="body">

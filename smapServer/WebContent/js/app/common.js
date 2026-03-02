@@ -386,7 +386,7 @@ function addUserDetailsPopupBootstrap4() {
 	h[++idx] = localise.set["c_lang"];
 	h[++idx] = '</label>';
 	h[++idx] = '<div class="col-sm-10">';
-	h[++idx] = '<select id="me_language" class="language_select form-control"></select>';
+	h[++idx] = '<select id="me_language" class="language_select form-select"></select>';
 	h[++idx] = '</div>';
 	h[++idx] = '</div>';
 
@@ -406,7 +406,7 @@ function addUserDetailsPopupBootstrap4() {
 	h[++idx] = localise.set["c_org"];
 	h[++idx] = '</label>';
 	h[++idx] = '<div class="col-sm-10">';
-	h[++idx] = '<select id="me_organisation" class="organisation_select form-control"></select>';
+	h[++idx] = '<select id="me_organisation" class="organisation_select form-select"></select>';
 	h[++idx] = '</div>';
 	h[++idx] = '</div>';
 
@@ -424,7 +424,7 @@ function addUserDetailsPopupBootstrap4() {
 	h[++idx] = localise.set["c_tz"];
 	h[++idx] = '</label>';
 	h[++idx] = '<div class="col-sm-10">';
-	h[++idx] = '<select class="form-control timezone_select" id="u_tz"></select>';
+	h[++idx] = '<select class="form-select timezone_select" id="u_tz"></select>';
 	h[++idx] = '</div>';
 	h[++idx] = '</div>';
 	

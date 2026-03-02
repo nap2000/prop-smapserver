@@ -1518,7 +1518,7 @@ localise.initLocale(gUserLocale).then(function () {
                     if (columns[colIdx].filter || columns[colIdx].type === "select1"
                             || columns[colIdx].type === "calculate") {
                         var column = this;
-                        var select = $('<select class="form-control">')
+                        var select = $('<select class="form-select">')
                             .appendTo( $(column.header()))
                             .on('change', function () {
                                 var val = $.fn.dataTable.util.escapeRegex(

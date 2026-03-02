@@ -4099,7 +4099,7 @@ $(function() {
 					h[++idx] = '<div class="col-sm-8">';
 					h[++idx] = '<select id="';
 						h[++idx] = labelControlId;
-						h[++idx] = '" multiple="multiple" class="form-control column_select_multiple"></select>';
+						h[++idx] = '" multiple="multiple" class="form-select column_select_multiple"></select>';
 					h[++idx] = '</div>';
 					h[++idx] = '</div>';
 				}

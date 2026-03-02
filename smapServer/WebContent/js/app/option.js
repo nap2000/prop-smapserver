@@ -253,7 +253,7 @@ export default {
 									h[++idx] = localise.set["ed_cl"];
 								h[++idx] = '</label>';
 								h[++idx] = '<div class="col-sm-10">';
-									h[++idx] = '<select class="form-control option-lists">';
+									h[++idx] = '<select class="form-select option-lists">';
 									h[++idx] = getOptionLists();
 									h[++idx] = '</select>';
 								h[++idx] = '</div>';
@@ -266,7 +266,7 @@ export default {
 								h[++idx] = localise.set["c_filter"];
 							h[++idx] = '</label>';
 							h[++idx] = '<div class="col-sm-10">';
-								h[++idx] = '<select class="form-control" id="filterType">';
+								h[++idx] = '<select class="form-select" id="filterType">';
 								
 								h[++idx] = '<option value="none">';
 								h[++idx] = localise.set["c_none"];
@@ -325,7 +325,7 @@ export default {
 									h[++idx] = localise.set["ed_cspq"];
 								h[++idx] = '</label>';
 								h[++idx] = '<div class="col-sm-10">';
-									h[++idx] = '<select class="form-control" id="previousSelect">';
+									h[++idx] = '<select class="form-select" id="previousSelect">';
 										h[++idx] = addSelectQuestions(question);
 									h[++idx] = '</select>';
 								h[++idx] = '</div>';
@@ -336,7 +336,7 @@ export default {
 									h[++idx] = localise.set["ed_csp"];
 								h[++idx] = '</label>';
 								h[++idx] = '<div class="col-sm-10">';
-									h[++idx] = '<select class="form-control" id="previousSelectChoice">';	
+									h[++idx] = '<select class="form-select" id="previousSelectChoice">';	
 									h[++idx] = '</select>';
 								h[++idx] = '</div>';
 							h[++idx] = '</div>';

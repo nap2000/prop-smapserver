@@ -147,13 +147,13 @@
                         <div class="form-group row">
                             <label class="lang col-sm-4 control-label"  data-lang="c_project"  for="project_name"></label>
                             <div class="col-sm-8">
-                                <select class="project_list form-control col-sm-8" id="project_name"></select>
+                                <select class="project_list form-select col-sm-8" id="project_name"></select>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="lang col-sm-4 control-label" data-lang="t_tg" for="taskgroup"></label>
                             <div class="col-sm-8">
-                                <select class="form-control col-sm-8" id="taskgroup"></select>
+                                <select class="form-select col-sm-8" id="taskgroup"></select>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -171,7 +171,7 @@
                         <div class="form-group row">
                             <label class="control-label lang col-sm-4" data-lang="t_show" for="users_filter">show for</label>
                             <div class="col-sm-8">
-                                <select class="task_filter form-control" id="users_filter"></select>
+                                <select class="task_filter form-select" id="users_filter"></select>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -196,7 +196,7 @@
                         <div class="form-group row">
                             <label class="control-label lang col-sm-4" data-lang="c_period" for="period">period</label>
                             <div class="col-sm-8">
-                                <select class="form-control task_filter" id="period">
+                                <select class="form-select task_filter" id="period">
                                     <option class="lang" data-lang="c_week" value="week" selected>week</option>
                                     <option class="lang" data-lang="c_month" value="month">month</option>
                                     <option class="lang" data-lang="c_all" value="all">all</option>
@@ -306,7 +306,7 @@
                         <div class="form-group row">
                             <label class="lang col-sm-2 control-label" data-lang="c_survey" for="tp_form_name"></label>
                             <div class="col-sm-10">
-                                <select class="survey_select data_survey disable_blocked form-control" id="tp_form_name"></select>
+                                <select class="survey_select data_survey disable_blocked form-select" id="tp_form_name"></select>
                             </div>
                         </div>
                         <div class="well">
@@ -323,14 +323,14 @@
                             <div class="form-group assign_user assign_group row">
                                 <label class="lang col-sm-2 control-label" data-lang="c_user" for="tp_user"></label>
                                 <div class="col-sm-10">
-                                    <select class="users_select form-control" id="tp_user"></select>
+                                    <select class="users_select form-select" id="tp_user"></select>
                                 </div>
                             </div>
 
                             <div class="form-group assign_role assign_group row">
                                 <label for="tp_assign_roles" class="col-sm-2 control-label lang" data-lang="t_assign_roles">assign role</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control roles_select" id="tp_assign_roles"></select>
+                                    <select class="form-select roles_select" id="tp_assign_roles"></select>
                                 </div>
                             </div>
 
@@ -420,7 +420,7 @@
                                                 <span class="visually-hidden">Toggle Dropdown</span></button>
                                             <div class="dropdown-menu location_group_list" id="location_group"></div>
                                         </div>
-                                        <select class="form-control location_select" id="location_select" name="location_trigger"></select>
+                                        <select class="form-select location_select" id="location_select" name="location_trigger"></select>
                                     </div>
                                 </div>
                             </div>
@@ -522,7 +522,7 @@
                 <p class="single lang" data-lang="t_choose_user">choose user</p>
                 <form class="form" role="form" id="user_assign_form">
                     <label class="control-label lang" data-lang="c_user" for="users_select_user">user</label>
-                    <select class="form-control users_select" id="users_select_user"></select>
+                    <select class="form-select users_select" id="users_select_user"></select>
                 </form>
             </div>
             <div class="modal-footer">
@@ -592,7 +592,7 @@
                             <label for="project_select" class="col-sm-2 control-label lang" data-lang="t_ep">existing
                                 project</label>
                             <div class="col-sm-10">
-                                <select id="project_select" class="project_list form-control"></select>
+                                <select id="project_select" class="project_list form-select"></select>
                             </div>
                         </div>
 
@@ -600,7 +600,7 @@
                             <label for="survey" class="col-sm-2 control-label lang" data-lang="t_es">existing
                                 survey</label>
                             <div class="col-sm-10">
-                                <select class="survey_select data_survey form-control" id="survey"></select><br/>
+                                <select class="survey_select data_survey form-select" id="survey"></select><br/>
                             </div>
                         </div>
 
@@ -608,7 +608,7 @@
                             <label for="survey_to_complete" class="col-sm-2 control-label lang" data-lang="t_ns">New
                                 Survey</label>
                             <div class="col-sm-10">
-                                <select class="survey_select data_survey disable_blocked form-control"
+                                <select class="survey_select data_survey disable_blocked form-select"
                                         id="survey_to_complete"></select>
                             </div>
                         </div>
@@ -635,7 +635,7 @@
                             <div class="form-group row">
                                 <label for="filter_language" class="col-sm-2 control-label lang" data-lang="c_lang">Language</label>
                                 <div class="col-sm-10">
-                                    <select id="filter_language" class="form-control"></select>
+                                    <select id="filter_language" class="form-select"></select>
                                 </div>
                             </div>
 
@@ -643,7 +643,7 @@
                                 <label for="filter_question" class="col-sm-2 control-label lang" data-lang="t_fq">Filter
                                     by question</label>
                                 <div class="col-sm-10">
-                                    <select class="selected_question form-control" id="filter_question"></select>
+                                    <select class="selected_question form-select" id="filter_question"></select>
                                 </div>
                             </div>
 
@@ -652,7 +652,7 @@
                                     <label class="col-sm-2 control-label lang" data-lang="t_so" for="filter_option">selected
                                         option</label>
                                     <div class="col-sm-10">
-                                        <select class="form-control selected_option" id="filter_option"></select>
+                                        <select class="form-select selected_option" id="filter_option"></select>
                                     </div>
                                 </div>
                             </div>
@@ -798,14 +798,14 @@
                                 <label for="users_task_group" class="col-sm-2 control-label lang" data-lang="t_assign">assign
                                     user</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control users_select" id="users_task_group"></select>
+                                    <select class="form-select users_select" id="users_task_group"></select>
                                 </div>
                             </div>
 
                             <div class="form-group assign_role assign_group row">
                                 <label for="roles_task_group" class="col-sm-2 control-label lang" data-lang="t_assign_roles">assign role</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control roles_select" id="roles_task_group"></select>
+                                    <select class="form-select roles_select" id="roles_task_group"></select>
                                 </div>
                             </div>
 
@@ -836,7 +836,7 @@
                             <div class="form-group assign_role row">
                                 <label for="roles_task_group" class="col-sm-2 control-label lang" data-lang="t_fixed_role">fixed role</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control" id="fixed_role"></select>
+                                    <select class="form-select" id="fixed_role"></select>
                                 </div>
                             </div>
 
@@ -869,7 +869,7 @@
                             <div class="form-group row">
                                 <label for="task_start" class="col-sm-2 control-label lang" data-lang="c_start">start</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control date_questions" id="task_start"></select>
+                                    <select class="form-select date_questions" id="task_start"></select>
                                 </div>
                             </div>
 
@@ -879,7 +879,7 @@
                                     <input type="number" id="task_after" class="form-control" value="0">
                                 </div>
                                 <div class="col-sm-5">
-                                    <select class="form-control" id="task_units">
+                                    <select class="form-select" id="task_units">
                                         <option value="minutes" class="lang" data-lang="i_m"></option>
                                         <option value="hours" class="lang" data-lang="i_h"></option>
                                         <option value="days" class="lang" data-lang="i_d" selected></option>
@@ -894,7 +894,7 @@
                                     <input type="number" id="task_duration" class="form-control" value="0">
                                 </div>
                                 <div class="col-sm-5">
-                                    <select class="form-control" id="duration_units">
+                                    <select class="form-select" id="duration_units">
                                         <option value="minutes" class="lang" data-lang="i_m"></option>
                                         <option value="hours" class="lang" data-lang="i_h" selected></option>
                                         <option value="days" class="lang" data-lang="i_d"></option>

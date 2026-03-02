@@ -325,8 +325,7 @@ export {
             } else if (column.type === "select1" || column.type === "select" || column.type === "select_one") {
                 h[++idx] = ' <select id="select_';
                 h[++idx] = prefix + itemIndex;
-                h[++idx] = '" class="form-control editable ';
-                if (column.type === "select") {
+                h[++idx] = '" class="form-select editable '; if (column.type ==="select") {
                     h[++idx] = ' select';
                 }
                 h[++idx] = '" data-item="';

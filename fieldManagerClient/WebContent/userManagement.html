@@ -117,27 +117,27 @@
 								<div class="form-group row">
 									<label class="control-label col-sm-4" for="group_name"><span class="lang" data-lang="u_show_u"></span>:</label>
 									<div class="col-sm-4">
-										<select class="form-control" id="group_name"></select>
+										<select class="form-select" id="group_name"></select>
 									</div>
 								</div>
 								<div class="form-group row">
 									<label class="control-label col-sm-4" for="project_name"><span class="lang" data-lang="u_show_p"></span>:</label>
 									<div class="col-sm-4">
-										<select class="form-control project_list" id="project_name"></select>
+										<select class="form-select project_list" id="project_name"></select>
 									</div>
 								</div>
 
 								<div class="security_role form-group row" style="display:none;">
 									<label class="control-label col-sm-4" for="role_name"><span class="lang" data-lang="u_show_r"></span>:</label>
 									<div class="col-sm-4">
-										<select class="form-control role_list" id="role_name"></select>
+										<select class="form-select role_list" id="role_name"></select>
 									</div>
 								</div>
 
 								<div class="org_role form-group row" style="display:none;">
 									<label class="control-label col-sm-4" for="org_name"><span class="lang" data-lang="u_show_o"></span>:</label>
 									<div class="col-sm-4">
-										<select class="form-control org_list" id="org_name"></select>
+										<select class="form-select org_list" id="org_name"></select>
 									</div>
 								</div>
 							</form>
@@ -662,13 +662,13 @@
 									<div class="form-group row">
 										<label for="o_tz" data-lang="c_tz" class="lang control-label col-sm-2">tz</label>
 										<div class="col-sm-10">
-											<select class="form-control timezone_select" id="o_tz"></select>
+											<select class="form-select timezone_select" id="o_tz"></select>
 										</div>
 									</div>
 									<div class="form-group row">
 										<label for="o_language" data-lang="c_lang" class="lang control-label col-sm-2">lang</label>
 										<div class="col-sm-10">
-											<select class="form-control" id="o_language"></select>
+											<select class="form-select" id="o_language"></select>
 										</div>
 									</div>
 									<div class="form-group row restrict_role org_role">
@@ -693,7 +693,7 @@
 									<div class="form-group row">
 										<label for="o_map_source" data-lang="ed_map_source" class="lang col-sm-2 control-label"></label>
 										<div class="col-sm-10">
-											<select id="o_map_source" class="form-control">
+											<select id="o_map_source" class="form-select">
 												<option value="mapbox">Mapbox</option>
 												<option value="google">Google</option>
 												<option value="maptiler">MapTiler</option>
@@ -775,13 +775,13 @@
 						<div class="restrict_role enterprise_role">
 							<label for="current_enterprise" class="lang col-sm-2 control-label" data-lang="c_ent"></label>
 							<div class="col-sm-10">
-								<select class="enterprise_select form-control" id="current_enterprise"></select>
+								<select class="enterprise_select form-select" id="current_enterprise"></select>
 							</div>
 						</div>
 
 						<label for="target_organisation" class="lang col-sm-2 control-label" data-lang="c_org">organisation</label>
 						<div class="col-sm-10">
-							<select class="new_organisation_select form-control" id="target_organisation"></select>
+							<select class="new_organisation_select form-select" id="target_organisation"></select>
 						</div>
 					</div>
 				</form>
@@ -810,7 +810,7 @@
 					<div class="form-group many">
 						<label for="target_enterprise" class="lang col-sm-2 control-label" data-lang="c_ent">enterprise</label>
 						<div class="col-sm-10">
-							<select class="new_enterprise_select form-control" id="target_enterprise"></select>
+							<select class="new_enterprise_select form-select" id="target_enterprise"></select>
 						</div>
 					</div>
 				</form>
@@ -988,7 +988,7 @@
 					<div class="form-group row conv_options">
 						<label for="addSmsChannel" data-lang="c_channel" class="lang col-sm-3 control-label"></label>
 						<div class="col-sm-4">
-							<select id="addSmsChannel" class="labelProp form-control">
+							<select id="addSmsChannel" class="labelProp form-select">
 								<option value="sms">SMS</option>
 								<option value="whatsapp">WhatsApp</option>
 							</select>
@@ -998,7 +998,7 @@
 					<div class="form-group row">
 						<label for="addSmsOrganisation" data-lang="c_org" class="lang col-sm-3 control-label"></label>
 						<div class="col-sm-4">
-							<select id="addSmsOrganisation" class="organisation_select form-control"></select>
+							<select id="addSmsOrganisation" class="organisation_select form-select"></select>
 						</div>
 					</div>
 				</form>
@@ -1027,7 +1027,7 @@
 					<div class="form-group row ownerOnly d-none">
 						<label for="smsOrganisation" class="lang col-sm-2 control-label" data-lang="c_org"></label>
 						<div class="col-sm-10">
-							<select id="smsOrganisation" class="organisation_select form-control"></select>
+							<select id="smsOrganisation" class="organisation_select form-select"></select>
 						</div>
 					</div>
 
@@ -1035,28 +1035,28 @@
 						<div class="form-group row">
 							<label for="smsProject" class="lang col-sm-2 control-label" data-lang="c_project"></label>
 							<div class="col-sm-10">
-								<select id="smsProject" class="project_list_min form-control"></select>
+								<select id="smsProject" class="project_list_min form-select"></select>
 							</div>
 						</div>
 
 						<div class="form-group row">
 							<label for="smsSurvey" class="lang col-sm-2 control-label" data-lang="c_survey"></label>
 							<div class="col-sm-10">
-								<select id="smsSurvey" class="survey_select form-control"></select>
+								<select id="smsSurvey" class="survey_select form-select"></select>
 							</div>
 						</div>
 
 						<div class="form-group row">
 							<label for="theirNumberQuestion" class="lang col-sm-2 control-label" data-lang="sms_their_q"></label>
 							<div class="col-sm-10">
-								<select id="theirNumberQuestion" class="select_question form-control"></select>
+								<select id="theirNumberQuestion" class="select_question form-select"></select>
 							</div>
 						</div>
 
 						<div class="form-group row">
 							<label for="messageQuestion" class="lang col-sm-2 control-label" data-lang="sms_conv_q"></label>
 							<div class="col-sm-10">
-								<select id="messageQuestion" class="select_question form-control"></select>
+								<select id="messageQuestion" class="select_question form-select"></select>
 							</div>
 						</div>
 

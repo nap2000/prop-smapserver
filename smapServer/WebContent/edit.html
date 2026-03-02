@@ -220,14 +220,14 @@
 					<div class="form-group row">
 						<label for="set_project_name" data-lang="c_project" class="lang col-sm-2 control-label">Project</label>
 						<div class="col-sm-10">
-							<select id="set_project_name" class="form-control project_list"></select>
+							<select id="set_project_name" class="form-select project_list"></select>
 						</div>
 					</div>
 
 					<div class="form-group row">
 						<label for="set_default_language" data-lang="ed_dl" class="lang col-sm-2 control-label">language</label>
 						<div class="col-sm-10">
-							<select id="set_default_language" class="form-control language_list"></select>
+							<select id="set_default_language" class="form-select language_list"></select>
 						</div>
 					</div>
 
@@ -241,7 +241,7 @@
 					<div class="form-group row">
 						<label for="set_style" data-lang="c_style" class="lang col-sm-2 control-label">Style</label>
 						<div class="col-sm-10">
-							<select id="set_style" class="form-control">
+							<select id="set_style" class="form-select">
 								<option class="lang" data-lang="c_none" value="none">none</option>
 								<option class="lang" data-lang="ed_s_g" value="theme-grid">grid</option>
 								<option class="lang" data-lang="ed_s_p" value="pages">pages</option>
@@ -354,7 +354,7 @@
 					<div class="form-group row">
 						<label for="default_logo" data-lang="ed_drl" class="lang col-sm-2 control-label">drl</label>
 						<div class="col-sm-10">
-							<select id="default_logo" class="form-control">
+							<select id="default_logo" class="form-select">
 							</select>
 						</div>
 					</div>
@@ -465,7 +465,7 @@
 					<div class="form-group row">
 						<label for="project_name" class="lang col-sm-2 control-label" data-lang="c_project"></label>
 						<div class="col-sm-10">
-							<select id="project_name" class="project_list form-control"></select>
+							<select id="project_name" class="project_list form-select"></select>
 						</div>
 					</div>
 					<div class="form-group row new_form" style="display:none;">
@@ -486,13 +486,13 @@
 					<div class="form-group row existing_project reusing_form">
 						<label for="existing_project" class="lang col-sm-2 control-label" data-lang="ed_ep">project</label>
 						<div class="col-sm-10">
-							<select id="existing_project" class="project_list form-control"></select>
+							<select id="existing_project" class="project_list form-select"></select>
 						</div>
 					</div>
 					<div class="form-group row existing_form reusing_form">
 						<label for="survey_name" class="lang col-sm-2 control-label" data-lang="ed_es">survey</label>
 						<div class="col-sm-10">
-							<select id="survey_name" class="survey_select data_oversight_survey form-control"></select>
+							<select id="survey_name" class="survey_select data_oversight_survey form-select"></select>
 						</div>
 					</div>
 					<div class="form-group row reusing_form" style="display:none;">
@@ -639,27 +639,27 @@
 							<div class="form-group row parameter_field p_form_identifier">
 								<label for="p_form_identifier" data-lang="ed_sl" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
-									<select id="p_form_identifier" class="form-control linkable_surveys"></select>
+									<select id="p_form_identifier" class="form-select linkable_surveys"></select>
 								</div>
 							</div>
 							<div class="form-group row parameter_field p_key_question">
 								<label for="p_key_question" id="p_key_question_label" class="col-sm-4 control-label">question</label>
 								<div class="col-sm-8">
-									<select id="p_key_question" class="form-control"></select>
+									<select id="p_key_question" class="form-select"></select>
 								</div>
 							</div>
 
 							<div class="form-group row parameter_field p_ref">
 								<label for="p_ref" data-lang="ed_rf" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
-									<select id="p_ref" class="form-control"></select>
+									<select id="p_ref" class="form-select"></select>
 								</div>
 							</div>
 
 							<div class="form-group row parameter_field p_instance_order">
 								<label for="p_instance_order" data-lang="ed_io" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
-									<select id="p_instance_order" class="form-control">
+									<select id="p_instance_order" class="form-select">
 										<option class="lang" data-lang="c_none" value=""></option>
 										<option class="lang" data-lang="c_forward" value="forward"></option>
 										<option class="lang" data-lang="c_rev" value="reverse"></option>
@@ -677,7 +677,7 @@
 							<div class="form-group row parameter_field p_chart_type">
 								<label for="p_chart_type" data-lang="a_type" class="lang col-sm-4 control-label">type</label>
 								<div class="col-sm-8">
-									<select id="p_chart_type" class="form-control">
+									<select id="p_chart_type" class="form-select">
 										<option class="lang" data-lang="bar_h" value="horizontal_bar"></option>
 										<option class="lang" data-lang="line" value="line"></option>
 									</select>
@@ -687,7 +687,7 @@
 							<div class="form-group row parameter_field p_quality">
 								<label for="p_quality" data-lang="c_quality" class="lang col-sm-4 control-label">type</label>
 								<div class="col-sm-8">
-									<select id="p_quality" class="form-control">
+									<select id="p_quality" class="form-select">
 										<option class="lang" data-lang="c_normal" value="normal"></option>
 										<option class="lang" data-lang="c_low" value="low"></option>
 										<option class="lang" data-lang="ed_voice" value="voice-only"></option>
@@ -699,7 +699,7 @@
 							<div class="form-group row parameter_field p_key_policy">
 								<label for="p_key_policy" data-lang="ed_kp" class="lang col-sm-4 control-label">order</label>
 								<div class="col-sm-8">
-									<select id="p_key_policy" class="form-control">
+									<select id="p_key_policy" class="form-select">
 										<option class="lang" data-lang="c_none" value=""></option>
 										<option class="lang" data-lang="c_append" value="append"></option>
 										<option class="lang" data-lang="c_merge" value="merge"></option>
@@ -772,28 +772,28 @@
 							<div class="form-group row parameter_field p_source">
 								<label for="p_source" data-lang="ed_p_q" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
-									<select id="p_source" class="form-control group_column_select"></select>
+									<select id="p_source" class="form-select group_column_select"></select>
 								</div>
 							</div>
 
 							<div class="form-group row parameter_field from_lang param_lang">
 								<label for="from_lang" class="lang col-sm-4 control-label" data-lang="svc_from_l"></label>
 								<div class="col-sm-8">
-									<select id="from_lang" class="parameter_lang form-control" data-live-search="true"></select>
+									<select id="from_lang" class="parameter_lang form-select" data-live-search="true"></select>
 								</div>
 							</div>
 							<div class="to_lang_override">
 								<div class="form-group row parameter_field to_lang param_lang">
 									<label for="to_lang" class="lang col-sm-4 control-label" data-lang="svc_to_l"></label>
 									<div class="col-sm-8">
-										<select id="to_lang" class="parameter_lang form-control" data-live-search="true"></select>
+										<select id="to_lang" class="parameter_lang form-select" data-live-search="true"></select>
 									</div>
 								</div>
 							</div>
 							<div class="form-group row parameter_field p_med_type">
 								<label for="p_med_type" data-lang="ed_mat" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
-									<select id="p_med_type" class="form-control">
+									<select id="p_med_type" class="form-select">
 										<option class="lang" data-lang="ed_mat_d" value="dictation"></option>
 										<option class="lang" data-lang="ed_mat_c" value="conversation"></option>
 									</select>
@@ -834,7 +834,7 @@
 							<div class="form-group row appearance_field a_page">
 								<label for="a_page" data-lang="ed_pl" class="lang col-sm-4 control-label">page</label>
 								<div class="col-sm-8">
-									<select id="a_page" class="form-control">
+									<select id="a_page" class="form-select">
 										<option class="lang" data-lang="c_none" value=""></option>
 										<option class="lang" data-lang="c_field_list" value="field-list"></option>
 										<option class="lang" data-lang="c_table_list" value="table-list"></option>
@@ -845,7 +845,7 @@
 							<div class="form-group row appearance_field a_image_type">
 								<label for="a_image_type" data-lang="ed_image_type" class="lang col-sm-4 control-label">image</label>
 								<div class="col-sm-8">
-									<select id="a_image_type" class="form-control">
+									<select id="a_image_type" class="form-select">
 										<option class="lang" data-lang="c_photo" value=""></option>
 										<option class="lang" data-lang="c_annotate" value="annotate"></option>
 										<option class="lang" data-lang="c_draw" value="draw"></option>
@@ -857,7 +857,7 @@
 							<div class="form-group row appearance_field a_date_type">
 								<label for="a_date_type" data-lang="ed_date_type" class="lang col-sm-4 control-label">date</label>
 								<div class="col-sm-8">
-									<select id="a_date_type" class="form-control">
+									<select id="a_date_type" class="form-select">
 										<option class="lang" data-lang="c_normal" value=""></option>
 										<option class="lang" data-lang="ed_nc" value="no-calendar"></option>
 										<option class="lang" data-lang="ed_my" value="month-year"></option>
@@ -875,7 +875,7 @@
 							<div class="form-group row appearance_field a_select1_type">
 								<label for="a_select1_type" data-lang="ed_select_type" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
-									<select id="a_select1_type" class="form-control">
+									<select id="a_select1_type" class="form-select">
 										<option class="lang" data-lang="c_normal" value=""></option>
 										<option class="lang" data-lang="ed_min" value="minimal"></option>
 										<option class="lang" data-lang="ed_adv" value="quick"></option>
@@ -893,7 +893,7 @@
 							<div class="form-group row appearance_field a_select_type">
 								<label for="a_select_type" data-lang="ed_select_type" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
-									<select id="a_select_type" class="form-control">
+									<select id="a_select_type" class="form-select">
 										<option class="lang" data-lang="c_normal" value=""></option>
 										<option class="lang" data-lang="ed_min" value="minimal"></option>
 										<option class="lang" data-lang="ed_ac" value="autocomplete"></option>
@@ -909,7 +909,7 @@
 							<div class="form-group row appearance_field a_number_columns">
 								<label for="a_number_columns" data-lang="ed_numb_cols" class="lang col-sm-4 control-label">cols</label>
 								<div class="col-sm-8">
-									<select id="a_number_columns" class="form-control">
+									<select id="a_number_columns" class="form-select">
 										<option class="lang" data-lang="max" value="">max</option>
 										<option value="1">1</option>
 										<option value="2">2</option>
@@ -1033,7 +1033,7 @@
 							<div class="form-group row appearance_field a_width">
 								<label for="a_width" data-lang="ed_w" class="lang col-sm-4 control-label">order</label>
 								<div class="col-sm-8">
-									<select id="a_width" class="form-control">
+									<select id="a_width" class="form-select">
 										<option class="lang" data-lang="c_none" value=""></option>
 										<option value="1">1</option>
 										<option value="2">2</option>
@@ -1086,7 +1086,7 @@
 						<div class="form-group row pdf_appearance_field">
 							<label for="a_pdf_lw" data-lang="ed_lw" class="lang col-sm-4 control-label">width</label>
 							<div class="col-sm-8">
-								<select id="a_pdf_lw" class="form-control">
+								<select id="a_pdf_lw" class="form-select">
 									<option class="lang" data-lang="c_default" value="">default</option>
 									<option value="1">1</option>
 									<option value="2">2</option>
@@ -1114,7 +1114,7 @@
 								<p class="lang" data-lang="ed_pdfcols_help"></p>
 								<label for="a_pdfcols_number" data-lang="ed_numb_cols" class="lang col-sm-4 control-label">width</label>
 								<div class="col-sm-8">
-									<select id="a_pdfcols_number" class="form-control">
+									<select id="a_pdfcols_number" class="form-select">
 										<option class="lang" data-lang="c_default" value="">default</option>
 										<option value="1">1</option>
 										<option value="2">2</option>
@@ -1275,7 +1275,7 @@
 						<div class="form-group row">	<!-- This appearance is never hidden because it can apply to a hidden question -->
 							<label for="a_pdfaddto" class="col-sm-4 control-label lang" data-lang="ed_add_to"></label>
 							<div class="col-sm-8">
-								<select id="a_pdfaddto" class="form-control"></select>
+								<select id="a_pdfaddto" class="form-select"></select>
 							</div>
 						</div>
 
@@ -1289,7 +1289,7 @@
 						<div class="form-group row pdf_appearance_field">
 							<label for="a_pdfmapsource" class="col-sm-4 control-label lang" data-lang="ed_map_source"></label>
 							<div class="col-sm-8">
-								<select id="a_pdfmapsource" class="form-control">
+								<select id="a_pdfmapsource" class="form-select">
 									<option value="none" class="lang" data-lang="c_none">None</option>
 									<option value="mapbox">Mapbox</option>
 									<option value="google">Google</option>
@@ -1301,7 +1301,7 @@
 						<div class="form-group row pdf_appearance_field a_pdfmap_mb">
 							<label for="a_pdfmap" class="col-sm-4 control-label lang" data-lang="ed_map_style"></label>
 							<div class="col-sm-8">
-								<select id="a_pdfmap" class="form-control">
+								<select id="a_pdfmap" class="form-select">
 									<option class="lang" data-lang="c_default" value="default">default</option>
 									<option class="lang" data-lang="c_custom" value="custom">custom</option>
 									<option value="streets-v11">streets-v11</option>
@@ -1423,14 +1423,14 @@
 							<div class="form-group row search_csv">
 								<label for="a_csv_identifier" data-lang="ed_csv" class="lang col-sm-4 control-label">file</label>
 								<div class="col-sm-8">
-									<select id="a_csv_identifier" class="form-control linkable_files"></select>
+									<select id="a_csv_identifier" class="form-select linkable_files"></select>
 								</div>
 							</div>
 
 							<div class="form-group row search_survey">
 								<label for="a_survey_identifier" data-lang="c_survey" class="lang col-sm-4 control-label">survey</label>
 								<div class="col-sm-8">
-									<select id="a_survey_identifier" class="form-control linkable_surveys"></select>
+									<select id="a_survey_identifier" class="form-select linkable_surveys"></select>
 								</div>
 							</div>
 
@@ -1438,7 +1438,7 @@
 							<div class="form-group row search_value a_choice_values">
 								<label for="a_search_value" data-lang="ed_cval" class="lang col-sm-4 control-label"></label>
 								<div class="col-sm-8">
-									<select id="a_search_value" class="form-control column_select"></select>
+									<select id="a_search_value" class="form-select column_select"></select>
 								</div>
 							</div>
 
@@ -1471,14 +1471,14 @@
 								<div class="form-group row a_filter_column">
 									<label for="a_filter_column" data-lang="ed_fc" class="lang col-sm-4 control-label">filter column</label>
 									<div class="col-sm-8">
-										<select id="a_filter_column" class="form-control column_select"></select>
+										<select id="a_filter_column" class="form-select column_select"></select>
 									</div>
 								</div>
 
 								<div class="form-group row has_filter">
 									<label for="a_match" data-lang="ed_m" class="lang col-sm-4 control-label">match</label>
 									<div class="col-sm-8">
-										<select id="a_match" class="form-control">
+										<select id="a_match" class="form-select">
 											<option class="lang" data-lang="c_none" value=""></option>
 											<option class="lang" data-lang="c_matches" value="matches"></option>
 											<option class="lang" data-lang="contains" value="contains"></option>
@@ -1505,7 +1505,7 @@
 								<div class="form-group row a_second_filter_column">
 									<label for="a_second_filter_column" data-lang="ed_sfc" class="lang col-sm-4 control-label">second filter</label>
 									<div class="col-sm-8">
-										<select id="a_second_filter_column" class="form-control column_select"></select>
+										<select id="a_second_filter_column" class="form-select column_select"></select>
 									</div>
 								</div>
 
