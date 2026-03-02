@@ -5,6 +5,10 @@
     padding-right: 1rem;
 }
 
+.form-group {
+    margin-bottom: 1rem;
+}
+
 .navbar-smap .navbar-brand {
     background-color: #2C3D29;
     border-color: #e7e7e7;
