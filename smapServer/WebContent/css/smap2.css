@@ -1,4 +1,10 @@
 /* Navigation */
+.navbar-smap {
+    --bs-navbar-padding-x: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
 .navbar-smap .navbar-brand {
     background-color: #2C3D29;
     border-color: #e7e7e7;

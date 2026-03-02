@@ -3,6 +3,13 @@
     width: 100%;
 }
 
+/* Bootstrap 5 defaults navbar horizontal padding to 0; restore v4 spacing */
+.navbar-smap {
+	--bs-navbar-padding-x: 1rem;
+	padding-left: 1rem;
+	padding-right: 1rem;
+}
+
 tr.deleted td a {
     color: red !important;
 }
