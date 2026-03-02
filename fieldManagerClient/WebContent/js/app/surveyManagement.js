@@ -29,6 +29,7 @@ import {
 	getLoggedInUser,
 	handleLogout,
 	htmlEncode,
+	populateLanguageSelect,
 	removeHourglass,
 	saveCurrentProject,
 	setupUserProfile
