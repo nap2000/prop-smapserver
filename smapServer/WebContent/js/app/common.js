@@ -6653,6 +6653,7 @@ export {
 	updateProjectList,
 	updateConversationalSMS,
 	validateEmails,
+	validDates,
 	getStatusClass,
 	getInitialDataLink,
 	getLocationIndex,

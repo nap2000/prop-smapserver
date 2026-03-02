@@ -20,7 +20,7 @@
 
 import "./libs/bootbox-bootstrap-bridge.js";
 import localise from "./app/localise.js";
-import "./app/common";
+import { addHourglass, removeHourglass } from "./app/common";
 
 const $ = window.$;
 
@@ -111,6 +111,5 @@ function validateForm() {
     }
 
 }
-
 
 

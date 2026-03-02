@@ -24,7 +24,13 @@
 
 import localise from "../../../smapServer/WebContent/js/app/localise";
 import globals from "../../../smapServer/WebContent/js/app/globals.js";
-import "../../../smapServer/WebContent/js/app/common";
+import {
+	addCacheBuster,
+	addHourglass,
+	removeHourglass,
+	saveCurrentProject,
+	setupUserProfile
+} from "../../../smapServer/WebContent/js/app/common";
 import "../../../smapServer/WebContent/js/libs/bootstrap-toggle.min";
 import "../../../smapServer/WebContent/js/libs/bootstrap.file-input";
 import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-flatpickr-bridge.js";
@@ -239,4 +245,3 @@ localise.initLocale(gUserLocale).then(function () {
         }
     }
 });
-

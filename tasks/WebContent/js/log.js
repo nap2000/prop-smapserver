@@ -24,7 +24,15 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 import localise from "../../../smapServer/WebContent/js/app/localise";
 import globals from "../../../smapServer/WebContent/js/app/globals.js";
-import "../../../smapServer/WebContent/js/app/common";
+import {
+	addHourglass,
+	checkLoggedIn,
+	downloadFile,
+	getLoggedInUser,
+	localTime,
+	removeHourglass,
+	setupUserProfile
+} from "../../../smapServer/WebContent/js/app/common";
 import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-flatpickr-bridge.js";
 
 const $ = window.$;

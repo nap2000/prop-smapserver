@@ -25,7 +25,35 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 import "../../../smapServer/WebContent/js/libs/bootbox-bootstrap-bridge.js";
 import localise from "../../../smapServer/WebContent/js/app/localise";
 import globals from "../../../smapServer/WebContent/js/app/globals.js";
-import { addHourglass, getFromLocalStorage, getInitialDataLink, getLanguageList, getLocationIndex, getLocations, getLoggedInUser, getStatusClass, getTaskUsers, handleLogout, htmlEncode, includeByStatus, loadSurveys, localTime, localTimeAsDate, refreshLocationGroups, removeHourglass, saveCurrentProject, saveTask, setLocationList, setupAssignType, setupTaskDialog, setupUserProfile } from "common";
+import {
+	addHourglass,
+	downloadFile,
+	getFromLocalStorage,
+	getInitialDataLink,
+	getLanguageList,
+	getLocationIndex,
+	getLocations,
+	getLoggedInUser,
+	getStatusClass,
+	getTaskUsers,
+	handleLogout,
+	htmlEncode,
+	includeByStatus,
+	loadSurveys,
+	localTime,
+	localTimeAsDate,
+	refreshLocationGroups,
+	removeHourglass,
+	saveCurrentProject,
+	saveTask,
+	setInLocalStorage,
+	setLocationList,
+	setupAssignType,
+	setupTaskDialog,
+	setupUserProfile,
+	validDates,
+	validateEmails
+} from "common";
 import { addDraggableMarker, clearDraggableMarker, initialiseMap, refreshMapAssignments, zoomToFeatureLayer } from "../../../smapServer/WebContent/js/app/mapbox_app";
 import "./libs/jquery-barcode";
 import "./app/media";
@@ -344,13 +372,22 @@ localise.initLocale(gUserLocale).then(function () {
 		/*
 		 * Set up filters
 		 */
-		$('#status_filter').multiselect({
+		var statusMultiselectOptions = {
+			buttonClass: 'btn btn-outline-secondary text-start',
+			templates: {
+				button: '<button type="button" class="multiselect dropdown-toggle btn btn-outline-secondary text-start" data-bs-toggle="dropdown" aria-expanded="false"><span class="multiselect-selected-text"></span></button>'
+			},
 			onChange: function(option, checked, select) {
 				setInLocalStorage("status_filter",$('#status_filter').val() );
 				refreshTableAssignments();
 				refreshMainMap();
 				updateCalendar();
 			}
+		};
+		$('#status_filter').multiselect({
+			buttonClass: statusMultiselectOptions.buttonClass,
+			templates: statusMultiselectOptions.templates,
+			onChange: statusMultiselectOptions.onChange
 		});
 		var statusSelections = getFromLocalStorage("status_filter");
 		if(statusSelections) {

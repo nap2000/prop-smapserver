@@ -25,7 +25,14 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 import "../../../smapServer/WebContent/js/libs/bootbox-bootstrap-bridge.js";
 import localise from "../../../smapServer/WebContent/js/app/localise";
 import globals from "../../../smapServer/WebContent/js/app/globals.js";
-import "../../../smapServer/WebContent/js/app/common";
+import {
+	addHourglass,
+	getLoggedInUser,
+	htmlEncode,
+	removeHourglass,
+	setupUserProfile,
+	validateEmails
+} from "../../../smapServer/WebContent/js/app/common";
 
 const $ = window.$;
 

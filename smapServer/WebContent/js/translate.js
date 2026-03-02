@@ -23,6 +23,15 @@ import localise from "./app/localise.js";
 import globals from "./app/globals.js";
 import changeset from "./app/changeset";
 import aws from "./app/aws";
+import {
+	addHourglass,
+	getLoggedInUser,
+	getSurveyDetails,
+	openForm,
+	removeHourglass,
+	saveCurrentProject,
+	setupUserProfile
+} from "./app/common";
 import "./libs/jquery.autosize.min";
 
 const $ = window.$;

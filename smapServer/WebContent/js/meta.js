@@ -20,6 +20,18 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 import localise from "./app/localise.js";
 import globals from "./app/globals.js";
+import {
+	addHourglass,
+	getLoggedInUser,
+	getSurveyDetails,
+	htmlEncode,
+	isValidODKQuestionName,
+	loadSurveys,
+	openForm,
+	removeHourglass,
+	saveCurrentProject,
+	setupUserProfile
+} from "./app/common";
 
 const $ = window.$;
 

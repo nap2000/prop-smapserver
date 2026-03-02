@@ -27,7 +27,7 @@ import localise from "./localise.js";
 import globals from "./globals.js";
 import markup from "./editorMarkup";
 import option from "./option";
-import { addHourglass, checkExistenceOfReferences, getReferenceNames, handleLogout, htmlEncode, isValidODKQuestionName, removeHourglass } from "./common";
+import { addHourglass, checkExistenceOfReferences, getChangeDescription, getReferenceNames, handleLogout, htmlEncode, isValidODKQuestionName, removeHourglass } from "./common";
 
 let modelGeneratedChanges = [];
 
