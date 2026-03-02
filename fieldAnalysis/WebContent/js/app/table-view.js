@@ -120,6 +120,9 @@ export function setTableSurvey(view) {
 		}
 	);
 	$('#download_edit, #download_pdf').button();
+	$('#download_pdf').off().click(function () {
+		downloadPdfFromPopup();
+	});
 	
 	$selFoot.find('.tDelete').button().off().click(function() {
 		deleteAllTables(view.sId);
@@ -941,8 +944,7 @@ function addRightClickToTable($elem, sId, view) {
 	toggleBadFn(sId, view);
 	tableEditFn(sId, view);
 }
-
-$('#download_pdf').click(function () {
+function downloadPdfFromPopup() {
 
 	var docURL,
 		language,
@@ -961,4 +963,4 @@ $('#download_pdf').click(function () {
 	
 	//window.location.href = docURL;
 	$('#instance_functions_popup').dialog("close");
-});
+}

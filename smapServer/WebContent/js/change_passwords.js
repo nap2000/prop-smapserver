@@ -74,6 +74,10 @@ window.gUserLocale = gUserLocale;
 			$('#goback').click(function(){
 				history.back();
 			});
+
+			$('#changePasswordSubmit').click(function(event) {
+				changePasswordSubmit(event);
+			});
 		});
 	});
 
@@ -109,7 +113,7 @@ window.gUserLocale = gUserLocale;
 		return true;
 	}
 
-	$('#changePasswordSubmit').click( function(event) {
+	function changePasswordSubmit(event) {
 
 		if(!validate()) {
 			return false;
@@ -141,4 +145,4 @@ window.gUserLocale = gUserLocale;
 		});
 		return false;
 
-	});
+	}

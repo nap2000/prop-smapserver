@@ -45,10 +45,10 @@ $(document).ready(function() {
 		if(location.search.indexOf("menu=yes") >= 0) {
 			$('.menuopt').removeClass('d-none').show();
 		}
-	});
 
-	$('#m_refresh').click(function(){
-		getHistory();
+		$('#m_refresh').click(function(){
+			getHistory();
+		});
 	});
 
 

@@ -61,9 +61,17 @@ $(document).ready(function() {
 	$('#forgottenPasswordEmail, #passwordValue').change(function(){
 		$('.pwd_alert, .pwd_home').hide();
 	});
+
+	$('#forgottenPasswordSubmit').click(function(e){
+		submitForgottenPassword(e);
+	});
+
+	$('#resetPasswordSubmit').click(function(e){
+		resetPassword(e);
+	});
 });
 
-$('#forgottenPasswordSubmit').click(function(e){
+function submitForgottenPassword(e){
 	e.preventDefault();
 
 	if (! $('#emailForm')[0].checkValidity()) {
@@ -94,10 +102,10 @@ $('#forgottenPasswordSubmit').click(function(e){
 		});
 	}
 
-});
+}
 
 
-$('#resetPasswordSubmit').click(function(e){
+function resetPassword(e){
 	e.preventDefault();
 
 	if(!validate()) {
@@ -127,7 +135,7 @@ $('#resetPasswordSubmit').click(function(e){
 			$('.pwd_alert').show().addClass('alert-danger').removeClass('alert-success').html(localise.set["c_error"] + ": " + data.responseText);
 		}
 	});
-});
+}
 
 function validate() {
 	var pv =  $('#password').val();
