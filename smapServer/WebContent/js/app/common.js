@@ -367,7 +367,7 @@ function addUserDetailsPopupBootstrap4() {
 	h[++idx] = '<div class="modal-content">';
 	h[++idx] = '<div class="modal-header">';
 	h[++idx] = '<h4 class="modal-title" id="modifyMeLabel"></h4>';
-	h[++idx] = '<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+	h[++idx] = '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
 	h[++idx] = '</div>';    // modal-headers
 
 	h[++idx] = '<div class="modal-body">';
@@ -462,7 +462,7 @@ function addApiKeyPopup() {
 	h[++idx] = '<div class="modal-content">';
 	h[++idx] = '<div class="modal-header">';
 	h[++idx] = '<h4 class="modal-title" id="apiKeyLabel"></h4>';
-	h[++idx] = '<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+	h[++idx] = '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
 	h[++idx] = '</div>';    // modal-headers
 
 	h[++idx] = '<div class="modal-body">';
