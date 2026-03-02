@@ -24,7 +24,17 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 import localise from "../../../smapServer/WebContent/js/app/localise";
 import globals from "../../../smapServer/WebContent/js/app/globals.js";
-import "../../../smapServer/WebContent/js/app/common";
+import {
+	addHourglass,
+	downloadFile,
+	getLoggedInUser,
+	handleLogout,
+	htmlEncode,
+	loadSurveys,
+	removeHourglass,
+	saveCurrentProject,
+	setupUserProfile
+} from "../../../smapServer/WebContent/js/app/common";
 
 const $ = window.$;
 

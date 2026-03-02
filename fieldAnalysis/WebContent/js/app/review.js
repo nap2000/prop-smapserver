@@ -35,7 +35,16 @@ var gTextValues,
 import "jquery";
 import "localise";
 import "common";
-import { getLoggedInUser, htmlEncode } from "common";
+import {
+	addHourglass,
+	getLanguageList,
+	getLoggedInUser,
+	htmlEncode,
+	loadSurveys,
+	removeHourglass,
+	saveCurrentProject,
+	setupUserProfile
+} from "common";
 import "globals";
 
 $(document).ready(function() {
@@ -277,6 +286,7 @@ $(document).ready(function() {
 				removeHourglass();
 				alert(localise.set["c_error"] + data.responseText);
 		}
+	});
 	});
 
 
@@ -639,7 +649,7 @@ function saveTargetResults() {
 }
 
 function targetHasChanged() {
-	changed = false;
+	var changed = false;
 
 	$('.review_update_other input').each(function(index){
 		var $this = $(this);
@@ -770,6 +780,3 @@ function getFormList(sId) {
 		}
 	});
 }
-
-
-});

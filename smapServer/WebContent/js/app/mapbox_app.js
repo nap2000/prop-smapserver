@@ -100,6 +100,11 @@ function initialiseMap(elementId, zoom, setUserLocation, callbackClick, callback
  */
 function initialiseMapKeySet(elementId, zoom, setUserLocation, callbackClick, callbackInitialised) {
 	var L = getLeaflet();
+	var mapContainer = document.getElementById(elementId);
+	if (!mapContainer) {
+		console.error("Map container not found: " + elementId);
+		return;
+	}
 
 	var thisMapData = {};
 	
