@@ -2596,7 +2596,10 @@ $(function() {
 				}
 			});
 
-			window.bsModalShow('#typeModal');
+			window.bsModalShow('#typeModal', {
+				keyboard: true,
+				backdrop: 'static'
+			});
 		}
 
 	});

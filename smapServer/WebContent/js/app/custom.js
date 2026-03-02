@@ -122,10 +122,20 @@ function getBsElement(target) {
     return target;
 }
 
-function bsModalShow(target) {
+function bsModalShow(target, options) {
     var elem = getBsElement(target);
     if(elem && window.bootstrap && window.bootstrap.Modal) {
-        window.bootstrap.Modal.getOrCreateInstance(elem).show();
+        var modal;
+        if(options) {
+            modal = window.bootstrap.Modal.getInstance(elem);
+            if(modal) {
+                modal.dispose();
+            }
+            modal = new window.bootstrap.Modal(elem, options);
+        } else {
+            modal = window.bootstrap.Modal.getOrCreateInstance(elem);
+        }
+        modal.show();
     }
 }
 
