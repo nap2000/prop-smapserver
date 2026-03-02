@@ -274,7 +274,7 @@ localise.initLocale(gUserLocale).then(function () {
 					h[++idx] = '" class="btn btn-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
 					h[++idx] = '...';
 					h[++idx] = '</button>';
-					h[++idx] = '<div class="dropdown-menu dropdown-menu-right">';
+					h[++idx] = '<div class="dropdown-menu dropdown-menu-end">';
 					if(isAccepted) {
 						h[++idx] = '<a class="dropdown-item task-action-accept disabled" href="#" data-id="' + i + '" aria-disabled="true">' + localise.set["c_accept"] + '</a>';
 					} else {
