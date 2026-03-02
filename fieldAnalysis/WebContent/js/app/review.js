@@ -30,6 +30,7 @@ var gTextValues,
 	gQuestions,
 	gSecondaryChoices = {},
 	gTextId,			// The id of the selected text question
+	gTextIdx,           // The index of the selected text question
 	gTextOtherId;		// The id of the other selected text question
 
 import "jquery";
@@ -104,6 +105,10 @@ $(document).ready(function() {
 		$('#m_refresh').click(function() {
 			getData();
 			getRelevance();
+		});
+
+		$('#applyUpdate').click(function() {
+			applyUpdate();
 		});
 
 		// Set change function on the other text question
@@ -191,12 +196,13 @@ $(document).ready(function() {
 		};
 	});
 
-	$('#applyUpdate').click(function() {
-		// TODO only save if value has changed
-		var updateString,
-			newValue,
-			optionSelected,
-			newUpdates = [];
+function applyUpdate() {
+	// TODO only save if value has changed
+	var updateString,
+		newValue,
+		optionSelected,
+		i,
+		newUpdates = [];
 
 		// Get the new value to be applied, first try the list of options
 		newValue = $('#tu_existing_option option:selected').val();
@@ -287,7 +293,7 @@ $(document).ready(function() {
 				alert(localise.set["c_error"] + data.responseText);
 		}
 	});
-	});
+}
 
 
 
