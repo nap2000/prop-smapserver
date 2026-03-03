@@ -485,14 +485,16 @@ function createPanel(idx, $panels, title, surveyName, subject_type) {
 	el.id = 'p' + idx;
 	el.innerHTML = `
 		<div class="card h-100">
-			<div class="card-header d-flex align-items-center gap-1 py-1">
-				<span class="panel_title me-auto small">${htmlEncode(title)}</span>
-				<button class="btn btn-sm btn-outline-secondary pSettings" value="${idx}" title="Settings">
-					<i class="fas fa-cog"></i></button>
-				<button class="btn btn-sm btn-outline-secondary pExpand" value="${idx}" title="Expand">
-					<i class="fas fa-expand"></i></button>
-				<button class="btn btn-sm btn-outline-danger pDel" value="${idx}" title="Delete">
-					<i class="fas fa-trash"></i></button>
+			<div class="card-header panel-header d-flex align-items-center">
+				<span class="panel_title me-auto text-truncate">${htmlEncode(title)}</span>
+				<div class="panel-actions">
+					<button class="panel-btn pSettings" value="${idx}" title="Settings">
+						<i class="fas fa-sliders-h"></i></button>
+					<button class="panel-btn pExpand" value="${idx}" title="Expand">
+						<i class="fas fa-expand"></i></button>
+					<button class="panel-btn panel-btn-danger pDel" value="${idx}" title="Remove">
+						<i class="fas fa-times"></i></button>
+				</div>
 			</div>
 			<div class="card-body pContent p-0" style="overflow:auto;"></div>
 		</div>`;
