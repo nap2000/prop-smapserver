@@ -4147,7 +4147,7 @@ $(function() {
 								var labels = optionList.options[i].labels;
 								for (choiceIdx = 0; choiceIdx < labels.length; choiceIdx++) {
 									var labelValue = labels[choiceIdx].text;
-									$('#a_search_label' + choiceIdx).multiselect('deselectAll', false);
+								$('#a_search_label' + choiceIdx).multiselect('deselectAll', false);
 									if(labelValue && labelValue.trim().length > 0) {
 										var labelArray = labelValue.split(",");
 										for (i = 0; i < labelArray.length; i++) {

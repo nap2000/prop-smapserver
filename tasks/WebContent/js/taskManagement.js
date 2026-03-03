@@ -372,22 +372,13 @@ localise.initLocale(gUserLocale).then(function () {
 		/*
 		 * Set up filters
 		 */
-		var statusMultiselectOptions = {
-			buttonClass: 'btn btn-outline-secondary text-start',
-			templates: {
-				button: '<button type="button" class="multiselect dropdown-toggle btn btn-outline-secondary text-start" data-bs-toggle="dropdown" aria-expanded="false"><span class="multiselect-selected-text"></span></button>'
-			},
+		$('#status_filter').multiselect({
 			onChange: function(option, checked, select) {
 				setInLocalStorage("status_filter",$('#status_filter').val() );
 				refreshTableAssignments();
 				refreshMainMap();
 				updateCalendar();
 			}
-		};
-		$('#status_filter').multiselect({
-			buttonClass: statusMultiselectOptions.buttonClass,
-			templates: statusMultiselectOptions.templates,
-			onChange: statusMultiselectOptions.onChange
 		});
 		var statusSelections = getFromLocalStorage("status_filter");
 		if(statusSelections) {
