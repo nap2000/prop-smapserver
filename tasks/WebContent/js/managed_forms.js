@@ -45,6 +45,7 @@ import {
 	getTaskUsers,
 	handleLogout,
 	htmlEncode,
+	edit_notification,
 	getStatusClass,
 	localTime,
 	loadSurveys,

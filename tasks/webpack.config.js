@@ -38,7 +38,7 @@ module.exports = {
       globals: path.resolve(__dirname, "../smapServer/WebContent/js/app/globals.js"),
       multiselect: path.resolve(__dirname, "WebContent/js/libs/multiselect-shim.js"),
       modernizr: path.resolve(__dirname, "WebContent/js/libs/modernizr-shim.js"),
-      "app/mapOL3": path.resolve(__dirname, "WebContent/js/libs/mapOL3-shim.js"),
+      "app/mapOL3": path.resolve(__dirname, "WebContent/js/app/mapOL3.js"),
       icheck: path.resolve(__dirname, "WebContent/js/libs/icheck-shim.js")
     }
   }

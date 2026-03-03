@@ -6648,6 +6648,7 @@ export {
 	resultsURL,
 	populateTaskGroupList,
 	setupNotificationDialog,
+	edit_notification,
 	setupTaskDialog,
 	setGroupSelector,
 	updateProjectList,
