@@ -24,7 +24,7 @@ import { getDisplayDescription } from "commonReportFunctions";
 import { generateTable, generateUserTable } from "./table-functions";
 import globals from "globals";
 import { addHourglass, handleLogout, htmlEncode, populateLanguageSelect, populatePdfSelect, removeHourglass } from "common";
-import { toggleBadURL } from "./script";
+import { toggleBadURL, openModal, closeModal } from "./script";
 
 var gSelectedTemplate,          // Survey ident of the current template
 	gInstanceId,
@@ -85,7 +85,6 @@ export function setTableSurvey(view) {
 		
 	}
 	$tabSelect.append(btns.join(''));
-	$tabSelect.buttonset();
 	
 	function addChangeFunction (ident) {
 		$tabSelect.find('input').change(function() {
@@ -104,141 +103,62 @@ export function setTableSurvey(view) {
 	/*
 	 * Enable the dialog to create a PDF of an instance or edit in WebForms
 	 */
-	$('#instance_functions_popup').dialog(
-		{
-			autoOpen: false, closeOnEscape:true, draggable:true, model:true,
-			show:"drop",
-			zIndex: 3000,
-			buttons: [
-		        {
-		        	text: "Ok",
-		        	click: function() {
-		        		$(this).dialog("close");
-		        	}
-		        }
-			]
-		}
-	);
-	$('#download_edit, #download_pdf').button();
 	$('#download_pdf').off().click(function () {
 		downloadPdfFromPopup();
 	});
-	
-	$selFoot.find('.tDelete').button().off().click(function() {
+
+	$selFoot.find('.tDelete').off().click(function() {
 		deleteAllTables(view.sId);
 	});
 
-    $selFoot.find('.tRestore').button().off().click(function() {
+    $selFoot.find('.tRestore').off().click(function() {
         if(restoreAllTables(view.sId, view.sName)) {
 			alert(localise.set["msg_restore_started"]);
 		}
     });
 
-	$selFoot.find('.tArchive').button().off().click(function() {
+	$selFoot.find('.tArchive').off().click(function() {
 		if(confirm(localise.set["msg_archive_data"])) {
 			gArchiveSurveyId = view.sId;
 			$('#archive_data_alert').hide();
-			$('#archive_before_date').datepicker({ dateFormat: "yy-mm-dd" });
-			$('#archive_data_popup').dialog("open");
+			openModal('archive_data_popup');
 		}
 	});
-	
-	/*
-	 * Enable the dialog to import data
-	 */
-	$('#load_data_popup').dialog(
-		{
-			autoOpen: false, closeOnEscape:true, draggable:true, model:true,
-			show:"drop",
-			zIndex: 2000,
-			buttons: [
-		        {
-		        	text: localise.set["c_close"],
-		        	click: function() {
-		        		$(this).dialog("close");
-		        	}
-		        },
-		        {
-		        	text: localise.set["m_import"],
-		        	click: function() {
-		        		var importSource = $("input[name='import_source']:checked").val();
-				        var fileSelect = $("#file_select").val();
-				        var form = $('#form_select option:selected').val();
-				        if(importSource === "file" && (!fileSelect || fileSelect.length === 0)) {
-				        	alert(localise.set["msg_val_file"]);
-				        } else if(importSource === "form" && form < 1) {
-					        alert(localise.set["msg_pss"]);
-				        } else {
-					        importData();
-				        }
-		        	}
-		        }
-			]
-		}
-	);
 
-	/*
- 	 * Enable the dialog to archive data
- 	 */
-	$('#archive_data_popup').dialog(
-		{
-			autoOpen: false, closeOnEscape:true, draggable:true, model:true,
-			show:"drop",
-			zIndex: 2000,
-			buttons: [
-				{
-					text: localise.set["c_close"],
-					click: function() {
-						$(this).dialog("close");
-					}
-				},
-				{
-					text: localise.set["c_archive_data"],
-					click: function() {
-						archiveCount(gArchiveSurveyId);
-					}
-				}
-			]
-		}
-	);
+	// Wire archive submit button
+	$('#archive_data_submit').off().click(function() {
+		archiveCount(gArchiveSurveyId);
+	});
 
-	/*
-     * Enable the dialog to export data
-     */
+	// Wire load_data import button
+	$('#load_data_import').off().click(function() {
+		var importSource = $("input[name='import_source']:checked").val();
+        var fileSelect = $("#file_select").val();
+        var form = $('#form_select option:selected').val();
+        if(importSource === "file" && (!fileSelect || fileSelect.length === 0)) {
+        	alert(localise.set["msg_val_file"]);
+        } else if(importSource === "form" && form < 1) {
+	        alert(localise.set["msg_pss"]);
+        } else {
+	        importData();
+        }
+	});
+
+	// Wire export_data submit button
 	$('#export_data_alert').hide().removeClass('alert-danger').addClass('alert-success').html("");
-	$('#export_data_popup').dialog(
-		{
-			autoOpen: false, closeOnEscape:true, draggable:true, model:true,
-			show:"drop",
-			zIndex: 2000,
-			width:350,
-			height:350,
-			buttons: [
-				{
-					text: localise.set["c_close"],
-					click: function() {
-						$(this).dialog("close");
-					}
-				},
-				{
-					text: localise.set["m_export"],
-					click: function() {
-						exportData();
-					}
-				}
-			]
-		}
-	);
-	
-	$selFoot.find('.tExport').button().off().click(function() {
+	$('#export_data_submit').off().click(function() {
+		exportData();
+	});
+
+	$selFoot.find('.tExport').off().click(function() {
 		setupExportDialog(view, false);
 	});
 
-    $selFoot.find('.tExportMedia').button().off().click(function() {
+    $selFoot.find('.tExportMedia').off().click(function() {
 		setupExportDialog(view, true);
     });
-	
-	$selFoot.find('.tImport').button().off().click(function() {
+
+	$selFoot.find('.tImport').off().click(function() {
 
 		if(globals.gSelector.surveys[view.sId].task_file) {
 			document.forms.namedItem("loadtasks").reset();
@@ -271,7 +191,7 @@ export function setTableSurvey(view) {
 									return;  // Not an error
 								} else {
 									$('#status_msg_msg').empty().text("Error: Failed to get a list of surveys");
-									$("#status_msg").dialog("open");
+									bootstrap.Modal.getOrCreateInstance(document.getElementById('status_msg')).show();
 								}
 							}
 						}
@@ -281,7 +201,7 @@ export function setTableSurvey(view) {
 				$('#form_select option:selected').val("-1");    // No form selected
 			}
 
-            $('#load_data_popup').dialog("open");
+            openModal('load_data_popup');
 
 		} else {
             alert(localise.set["a_ni"]);
@@ -333,25 +253,6 @@ export function setUserTableSurvey(view) {
 	/*
 	 * Enable the dialog to create a PDF of an instance or edit in WebForms
 	 */
-	$('#instance_functions_popup').dialog(
-		{
-			autoOpen: false,
-			closeOnEscape:true,
-			draggable:true,
-			modal:true,
-			show:"drop",
-			zIndex: 3000,
-			buttons: [
-				{
-					text: "Ok",
-					click: function() {
-						$(this).dialog("close");
-					}
-				}
-			]
-		}
-	);
-	$('#download_edit, #download_pdf').button();
 
 }
 
@@ -367,7 +268,7 @@ function setupExportDialog(view, media) {
 	validateExport();
 
 	$('#exp_s_name').text(view.sName);
-	$('#export_data_popup').dialog("open");
+	openModal('export_data_popup');
 	$('#exp_start_record,#exp_end_record').keyup(function() {validateExport()});
 }
 
@@ -429,7 +330,7 @@ function exportData() {
 			hasParam = true;
 		}
 		downloadFile(url);
-		$('#export_data_popup').dialog("close");
+		closeModal('export_data_popup');
 	}
 }
 
@@ -463,7 +364,7 @@ function importData() {
 					  i;
 
 				  if (!data || data.length === 0) {
-					  $('#load_data_popup').dialog("close");
+					  closeModal('load_data_popup');
 				  } else {
 					  for (i = 0; i < data.length; i++) {
 						  h[++idx] = '<ul>';
@@ -629,7 +530,7 @@ function restoreAllTables(sId, sName) {
  */
 function archiveCount(sId) {
 
-	var before = $('#archive_before_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	var before = $('#archive_before_date').val();
 	if(before === '') {
 		$('#archive_data_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["msg_archive_before"]);
 		return;
@@ -673,7 +574,7 @@ function archiveCount(sId) {
 
 function archiveAllTables(sId) {
 
-	var before = $('#archive_before_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	var before = $('#archive_before_date').val();
 
 	addHourglass();
 	$.ajax({
@@ -760,29 +661,29 @@ function showUserTable(view) {
 }
 
 function addMoreLessButtons($elem, tView, fId, tItems) {
-	$elem.find('.get_less').button().click(function() {
+	$elem.find('.get_less').click(function() {
 		tView.tableCount = 1;
 		var currentStart = tView.start_recs[fId].pop();
 		var newStart = tView.start_recs[fId].pop();
 		processSurveyData(fId, tView.sId, tView, tItems.survey, true, newStart);
 	});
-	$elem.find('.get_more').button().click(function() {
+	$elem.find('.get_more').click(function() {
 		tView.tableCount = 1;
 		processSurveyData(fId, tView.sId, tView, tItems.survey, true, parseInt($(this).val()));
 	});
-	$elem.find('.get_less_dis, .get_more_dis').button({ disabled: true });
+	$elem.find('.get_less_dis, .get_more_dis').prop('disabled', true);
 }
 
 function addMoreLessUserButtons($elem, view) {
-	$elem.find('.get_less').button().click(function() {
+	$elem.find('.get_less').click(function() {
 		var currentStart = view.start_recs[0].pop();
 		var newStart = view.start_recs[0].pop();
 		getUserData(view, newStart);
 	});
-	$elem.find('.get_more').button().click(function() {
+	$elem.find('.get_more').click(function() {
 		getUserData(view, parseInt($(this).val()));
 	});
-	$elem.find('.get_less_dis, .get_more_dis').button({ disabled: true });
+	$elem.find('.get_less_dis, .get_more_dis').prop('disabled', true);
 }
 
 /*
@@ -915,10 +816,10 @@ function addRightClickToTable($elem, sId, view) {
 			gInstanceId = instanceid;
 			
 			if((isBad && isReplaced) || (!globals.gIsAnalyst && !globals.gIsManage)) {
-				$('#download_edit').button("disable");
+				$('#download_edit').addClass('disabled').attr('aria-disabled', 'true');
 			} else {
 				var url;
-				$('#download_edit').button("enable");
+				$('#download_edit').removeClass('disabled').removeAttr('aria-disabled');
 				if(view.subject_type === "survey") {
 					url ="/app/myWork/webForm/" + survey_ident + "?datakey=prikey&datakeyvalue=" + pkey;
 				} else if(view.subject_type === "user") {
@@ -927,14 +828,11 @@ function addRightClickToTable($elem, sId, view) {
 				url += addCacheBuster(url);
 				$('#download_edit').attr("href", url);
 				$('#download_edit').click(function () {
-                    $('#instance_functions_popup').dialog("close");
+                    closeModal('instance_functions_popup');
 				});
 			}
-			
-			$('#instance_functions_popup').dialog("open");
-			setTimeout(function() {
-				$('.ui-dialog, #instance_functions_popup').css('z-index','3000');	// Float the dialog over other controls
-			}, 0);
+
+			openModal('instance_functions_popup');
 			
 			return false;
 		});
@@ -962,5 +860,5 @@ function downloadPdfFromPopup() {
 	downloadPdf(language, orientation, include_references, launched_only, gSelectedTemplate, gInstanceId, pdf_template);
 	
 	//window.location.href = docURL;
-	$('#instance_functions_popup').dialog("close");
+	closeModal('instance_functions_popup');
 }

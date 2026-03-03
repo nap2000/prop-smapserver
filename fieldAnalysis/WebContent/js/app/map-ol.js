@@ -20,6 +20,12 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * This javascript file handles map initialization and events.
  */
 
+import globals from "globals";
+import localise from "localise";
+import { addGoogleMapLayers, getGoogleMapApi, getMapboxDefault } from "common";
+import { addLayer, addSharedMaps, zoomToData } from "./map-functions";
+import { showSettings } from "./survey_control";
+
 /*
  * Globals specifically for OpenLayers Use
  */
@@ -37,7 +43,7 @@ $(document).ready(function() {
 /**
  * Map Initialization
  */
-function initializeMap(idx){
+export function initializeMap(idx){
 	
 	var $pc, mapOptions,
 		isVisible = true,
@@ -77,7 +83,7 @@ function initializeMap(idx){
                "//b.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png",
                "//c.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png"];
 	
-	  loadEnd = false;
+	  var loadEnd = false;
 	  function layerLoadStart(event) {
 		  loadEnd = false;
 	  }
@@ -115,7 +121,7 @@ function initializeMap(idx){
 	$('#mLayers' + idx).append('<button type="button" value="' + idx + '" id="zoom_to_data' + idx + '">' +
 		localise.set["c_zoom_data"] +
 	    '</button>');
-	$('#zoom_to_data' + idx).button().click(function() {
+	$('#zoom_to_data' + idx).click(function() {
 		zoomToData(globals.gSelector.getMap($(this).val()));
 	});
 
@@ -217,7 +223,7 @@ export function setMap(view, secondaryLayer) {
 				}
 			} 
 		}
-		$('.layerSettings').button().off().click(function() {	// display the settings dialog
+		$('.layerSettings').off().click(function() {	// display the settings dialog
 			showSettings($(this));
 		});
 	}
@@ -262,7 +268,7 @@ function addUserTrail(view, secondaryLayer, data) {
 				}
 			}
 		}
-		$('.layerSettings').button().off().click(function() {	// display the settings dialog
+		$('.layerSettings').off().click(function() {	// display the settings dialog
 			showSettings($(this));
 		});
 	}

@@ -18,10 +18,21 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 import { getDisplayDescription } from "commonReportFunctions";
 
-var gMarkerOptions = [{style:'diamond'}, {style:'x'}, {style:'circle'}, {style:'filledSquare'}];
+var CHART_COLORS = [
+	'rgba(54, 162, 235, 0.8)',
+	'rgba(255, 99, 132, 0.8)',
+	'rgba(75, 192, 192, 0.8)',
+	'rgba(255, 159, 64, 0.8)',
+	'rgba(153, 102, 255, 0.8)',
+	'rgba(255, 205, 86, 0.8)',
+	'rgba(201, 203, 207, 0.8)',
+	'rgba(255, 99, 71, 0.8)',
+	'rgba(0, 200, 83, 0.8)',
+	'rgba(33, 150, 243, 0.8)'
+];
 
 export function setGraph(data, chart, optionSelElement, pId) {
-	
+
 	var isVisible = true,
 		$chartdiv,
 		$pc,
@@ -57,12 +68,14 @@ export function setGraph(data, chart, optionSelElement, pId) {
 	if(typeof data.interval !== "undefined") {
 		isTimeSeries = true;
 	}
-	
-	$chartdiv = $('#' + chart);
-	$chartdiv.empty();	// Clear out the old graph
-	
-	$.jqplot.config.enablePlugins = true;
-	
+
+	// Destroy existing Chart.js instance before redrawing
+	var existingCanvas = document.getElementById(chart);
+	if(existingCanvas && existingCanvas._chart) {
+		existingCanvas._chart.destroy();
+		existingCanvas._chart = null;
+	}
+
 	/*
 	 * Sort the data by size and create a matrix of the data
 	 */
@@ -71,14 +84,12 @@ export function setGraph(data, chart, optionSelElement, pId) {
 		var groupName = "none";
 		for(i = 0; i < cols.length; i++) {
 			pareto[i] = i;
-			
+
 			for(j = 0; j < groups.length; j++) {
-				//matrix[i].push([groups[j].properties.period, groups[j].properties[cols[i]]]);
-				
 				if(typeof groups[j].properties.group_name !== "undefined") {
 					groupName = groups[j].properties.group_name;
 				}
-				if(typeof seriesObj[groupName] === "undefined") {	// Add the matrix for this group
+				if(typeof seriesObj[groupName] === "undefined") {
 					seriesObj[groupName] = [];
 				}
 				cMatrix = seriesObj[groupName];
@@ -90,9 +101,8 @@ export function setGraph(data, chart, optionSelElement, pId) {
 					ticksObj[groups[j].properties.timeIdx] = groups[j].properties.period;
 				}
 			}
-
 		}
-		
+
 		// Generate the ticks array
 		var maxTimeIdx = data.maxTimeIdx;
 		for(i = 0; i <= maxTimeIdx; i++) {
@@ -102,7 +112,7 @@ export function setGraph(data, chart, optionSelElement, pId) {
 				ticks.push(" ");
 			}
 		}
-		
+
 	} else {
 		for(i = 0; i < cols.length; i++) {
 			pareto[i] = i;
@@ -122,28 +132,18 @@ export function setGraph(data, chart, optionSelElement, pId) {
 		pareto = pareto.slice(0, 30);	// Max length of bar chart is 30
 	}
 
-
-	
 	/*
 	 * Add buttons to select the options to include in the graph
-	 * Ignore if an HTML element was not provided to contain these buttons
 	 */
 	if(typeof optionSelElement != "undefined") {
-		/*
-		 * The optionIdx will be undefined for a new question
-		 * Regenerate the option buttons 
-		 */
-		//$btnSelect = $('#mDataOptions' + pId);
 		$btnSelect = $('#' + optionSelElement);
 		if(typeof data.optionIdx === "undefined") {
-			
-			// Add any data series to the options pane
+
 			j = -1;
 			if(cols) {
 				id_name = "btnsel" + pId +"_";
-				for(i = 0; i < pareto.length; i++) {		// Add in descending order of series total value
-	
-					btns[++j] = '<input type="checkbox" id="'; 
+				for(i = 0; i < pareto.length; i++) {
+					btns[++j] = '<input type="checkbox" id="';
 					btns[++j] = id_name + i;
 					btns[++j] = '" name="';
 					btns[++j] = id_name;
@@ -152,31 +152,28 @@ export function setGraph(data, chart, optionSelElement, pId) {
 
 					if(!isTimeSeries) {
 						if(grandTotal[pareto[i]] !== 0) {
-							btns[++j] = ' checked="checked"';	// for the graph check non zero by default
+							btns[++j] = ' checked="checked"';
 						}
 					} else {
-						btns[++j] = ' checked="checked"';	
+						btns[++j] = ' checked="checked"';
 					}
 					btns[++j] = '/><label for="';
 					btns[++j] = id_name + i;
-					
 					btns[++j] = '">' + cols[pareto[i]];
-					
 					btns[++j] =	 '</label><br/>';
 				}
 				$btnSelect.empty().append(btns.join(''));
-			
+
 				$btnSelect.find('input').change(function() {
 					data.optionIdx = $(this).val();
-					setGraph(data, chart, optionSelElement, pId);		// Regenerate graph, this time the index will not be undefined
+					setGraph(data, chart, optionSelElement, pId);
 				});
 			}
 		}
 	}
-	
+
 	// Remove rows from the matrix that have not been selected by the user
 	if(isTimeSeries) {
-		// Convert the matrix per group_by into a single matrix of data
 		idx = 0;
 		grpIdx = 0;
 		var g;
@@ -192,13 +189,7 @@ export function setGraph(data, chart, optionSelElement, pId) {
 					} else {
 						label = g + " : " + cols[val];
 					}
-	
-					markerOptionIdx = grpIdx % gMarkerOptions.length;
-					series[idx++] = {
-							label: label,
-							lineWidth:2,
-							markerOptions: gMarkerOptions[markerOptionIdx]
-					};
+					series[idx++] = { label: label };
 				});
 			} else {
 				for(i = 0; i < cMatrix.length; i++) {
@@ -208,16 +199,9 @@ export function setGraph(data, chart, optionSelElement, pId) {
 					} else {
 						label = g + " : " + cols[i];
 					}
-	
-					markerOptionIdx = grpIdx % gMarkerOptions.length;
-					series[i] = {
-							label: label,
-							lineWidth:2,
-							markerOptions: gMarkerOptions[markerOptionIdx]
-					};
+					series[i] = { label: label };
 				}
 			}
-				
 			grpIdx++;
 		}
 
@@ -235,14 +219,14 @@ export function setGraph(data, chart, optionSelElement, pId) {
 			}
 		}
 	}
-	
+
 	console.log("Graph description");
 	console.log(data);
-	disp_desc = getDisplayDescription(fn, "graph", data.survey, data.question, data.group, undefined, data.qtype, 
+	disp_desc = getDisplayDescription(fn, "graph", data.survey, data.question, data.group, undefined, data.qtype,
 			data.date_question, data.start, data.end, data.interval, data.units, data.filter);
 	$('#p' + pId).find('.r_description').text(disp_desc);
 	data.caption = disp_desc;
-	
+
 	if(matrix2 && matrix2.length > 0) {
 		if(isTimeSeries) {
 			ts_graph(ticks, matrix2, series, chart, data, pId);
@@ -250,180 +234,139 @@ export function setGraph(data, chart, optionSelElement, pId) {
 			bar_graph(ticks, matrix2, series, chart, data, pId);
 		}
 	} else {
-		$('#graph_panel' + pId + ' h3').html("No data available");
+		$('#graph_panel' + pId + ' canvas').closest('.graph_panel').find('h3').html("No data available");
 	}
 
 }
 
 /*
- * Show the bar graph
+ * Show the bar graph using Chart.js
  */
-function bar_graph(ticks, matrix, series, chart, data, pId) {
-	var i,
-		plot,
-		yaxislabel;
-	
-	// Truncate tick labels for readability
-	for(i = 0; i < ticks.length; i++) {
-		if(ticks[i].length > 32) {
-			ticks[i] = ticks[i].substring(0,32);
+function bar_graph(ticks, matrix2, series, chart, data, pId) {
+	var yaxislabel;
+
+	// Truncate tick labels
+	for(var i = 0; i < ticks.length; i++) {
+		if(ticks[i] && ticks[i].length > 32) {
+			ticks[i] = ticks[i].substring(0, 32);
 		}
 	}
-	
 
-	// If there are no tick values ensure nothing gets displayed
-	if(ticks.length === 1 && ticks[0] === "") {
-		ticks[0] = " ";		// JQPlot converts a zero length string into "1" so create a string containing a space
-	}
-	
 	if(data.units) {
 		yaxislabel = data.fn + " (" + data.units + ")";
 	} else {
 		yaxislabel = data.fn;
 	}
-	
-    plot = $.jqplot(chart, matrix, {
-        seriesDefaults: {
-        	 renderer:$.jqplot.BarRenderer,
-             rendererOptions: {fillToZero: true}
-        },
-    	series: series,
-		legend: {
-            show: true,
-            placement: 'insideGrid',
-            rendererOptions: {
-            	   fontSize: "12pt"
-            }
-		}, 
-        axes: {
-          xaxis: {
-            renderer: $.jqplot.CategoryAxisRenderer,
-            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-            tickRenderer: $.jqplot.CanvasAxisTickRenderer,
-            ticks: ticks,
-            label: data.group,
-            tickOptions: {
-                angle: -30,
-                fontSize: '12pt'
-            }          
-          },
-          yaxis: {
-            label: yaxislabel,
-            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-            pad: 1.05,
-            tickOptions: {
-                fontSize: '12pt'
-            }  
-          }
 
-        },
-        highlighter: {
-      	  show: true,
-      	  tooltipContentEditor: tooltipContentEditor,
-      	  sizeAdjust: 5
-        }
-    });
-    
-    function tooltipContentEditor(str, seriesIndex, pointIndex) {
-    	return plot.series[seriesIndex]["label"] + (plot.data[seriesIndex][pointIndex] ? ", " + plot.data[seriesIndex][pointIndex] : "");
-    }
- 
-	// Replot on resize events
-	function replot() {
-		try {
-			plot.replot({resetAxes: true, barMargin: 8});
-		} catch (error) {
-			// Ignore errors - this is a hack to get around calling of this function when not required
+	// matrix2 rows are series; columns are data points per tick
+	// Chart.js expects datasets each with data array matching labels
+	var canvas = document.getElementById(chart);
+	if(!canvas) return;
+	if(canvas._chart) { canvas._chart.destroy(); }
+
+	canvas._chart = new Chart(canvas, {
+		type: 'bar',
+		data: {
+			labels: ticks,
+			datasets: matrix2.map(function(d, i) {
+				var color = CHART_COLORS[i % CHART_COLORS.length];
+				return {
+					label: series[i] ? series[i].label : '',
+					data: d,
+					backgroundColor: color,
+					borderColor: color.replace('0.8', '1'),
+					borderWidth: 1
+				};
+			})
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+			plugins: {
+				legend: { display: true },
+				tooltip: { mode: 'index', intersect: false }
+			},
+			scales: {
+				x: {
+					title: { display: !!data.group, text: data.group || '' },
+					ticks: { maxRotation: 30 }
+				},
+				y: {
+					title: { display: true, text: yaxislabel },
+					beginAtZero: true
+				}
+			}
 		}
-	}
+	});
 
-	$('#graph_panel' + pId).bind('resized', function() {
-		replot();
+	$('.graphLabel').off().click(function() {
+		graphLabel(pId);
 	});
-	
-	$('.graphLabel').off().click(function() {	// Show / hide graph labels
-		graphLabel($(this));
-	});
-	
 }
 
 /*
- * Show the time series
+ * Show the time series using Chart.js
  */
-function ts_graph(ticks, matrix, series, chart, data, pId) {
-	var i,
-		plot;
-	
-	// Truncate tick labels for readability
-	for(i = 0; i < ticks.length; i++) {
-		if(ticks[i].length > 32) {
-			ticks[i] = ticks[i].substring(0,32);
+function ts_graph(ticks, matrix2, series, chart, data, pId) {
+
+	// Truncate tick labels
+	for(var i = 0; i < ticks.length; i++) {
+		if(ticks[i] && ticks[i].length > 32) {
+			ticks[i] = ticks[i].substring(0, 32);
 		}
 	}
-	
-	// If there are no tick values ensure nothing gets displayed
-	if(ticks.length === 1 && ticks[0] === "") {
-		ticks[0] = " ";		// JQPlot converts a zero length string into "1" so create a string containing a space
-	}
-	
-    plot = $.jqplot(chart, matrix, {
-    	series: series,
-		legend: {
-            show: true,
-            placement: 'insideGrid',
-            rendererOptions: {
-            	   fontSize: "12pt"
-            }
-		}, 
-        axes: {
-          xaxis: {
-            renderer: $.jqplot.CategoryAxisRenderer,
-            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-            tickRenderer: $.jqplot.CanvasAxisTickRenderer,
-            ticks: ticks,
-            label: data.interval,
-            tickOptions: {
-                angle: -30,
-                fontSize: '12pt'
-            }          
-          },
-          yaxis: {
-            label: data.fn,
-            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-            pad: 1.05,
-            tickOptions: {
-                fontSize: '12pt'
-            }  
-          }
 
-        },
-        highlighter: {
-      	  show: true,
-      	  tooltipContentEditor: tooltipContentEditor,
-      	  sizeAdjust: 5
-        }
-    });
-    
-    function tooltipContentEditor(str, seriesIndex, pointIndex) {
-    	return plot.series[seriesIndex]["label"] + ", " + plot.data[seriesIndex][pointIndex];
-    }
- 
-	// Replot on resize events
-	function replot() {
-		plot.replot( { resetAxes: true, barMargin: 8 } );
-	}
-	
-	$('#graph_panel' + pId).bind('resized', function() {
-		replot();
-	});
-	
-	$('.graphLabel').off().click(function() {	// Show / hide graph labels
-		graphLabel($(this));
-	});
-	
-}	
+	var canvas = document.getElementById(chart);
+	if(!canvas) return;
+	if(canvas._chart) { canvas._chart.destroy(); }
 
-function graphLabel($elem) {
-	var $legend = $elem.closest('.pContent,.rep_content').find('.jqplot-table-legend');
-	$legend.toggle();
+	// matrix2 rows: each row is a series; values are [timeIdx, value] pairs
+	canvas._chart = new Chart(canvas, {
+		type: 'line',
+		data: {
+			labels: ticks,
+			datasets: matrix2.map(function(d, i) {
+				var color = CHART_COLORS[i % CHART_COLORS.length];
+				return {
+					label: series[i] ? series[i].label : '',
+					data: d ? d.map(function(pt) { return pt[1]; }) : [],
+					tension: 0.3,
+					fill: false,
+					borderColor: color.replace('0.8', '1'),
+					backgroundColor: color,
+					pointBackgroundColor: color.replace('0.8', '1')
+				};
+			})
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+			plugins: {
+				legend: { display: true },
+				tooltip: { mode: 'index', intersect: false }
+			},
+			scales: {
+				x: {
+					title: { display: !!data.interval, text: data.interval || '' },
+					ticks: { maxRotation: 30 }
+				},
+				y: {
+					title: { display: true, text: data.fn || '' },
+					beginAtZero: true
+				}
+			}
+		}
+	});
+
+	$('.graphLabel').off().click(function() {
+		graphLabel(pId);
+	});
+}
+
+export function graphLabel(pId) {
+	var canvas = document.querySelector('#graph_panel' + pId + ' canvas');
+	var chart = canvas && canvas._chart;
+	if(!chart) return;
+	chart.options.plugins.legend.display = !chart.options.plugins.legend.display;
+	chart.update();
 }

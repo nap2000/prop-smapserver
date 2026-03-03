@@ -20,8 +20,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * This file manages the selection of data sources
  */
 
-import "./script";
-import { addDatePickList, addFormPickList, addGeomPickList, addHourglass, getLanguageList, handleLogout, htmlEncode, removeHourglass, saveCurrentProject, setSurveyViewLanguages } from "common";
+import { surveyList, regionsURL, getQuestionInfo } from "./script";
+import { addDatePickList, addFormPickList, addGeomPickList, addHourglass, getLanguageList, getQuestionList, getViewLanguages, handleLogout, htmlEncode, removeHourglass, saveCurrentProject, setSurveyViewLanguages, setSurveyViewQuestions } from "common";
 import globals from "globals";
 import localise from "localise";
 import { getGroupMeta, getResults, getSurveyDataSE, getSurveyMetaSE, getUserData } from "data";
@@ -68,16 +68,16 @@ $(document).ready(function() {
 	 	groupChangeEvent(sId, groupId);
 	 });
 	 
-	 // Add datepicker functionality TODO Bootstrap
-	 $('#from_date').datepicker({ dateFormat: "yy-mm-dd" });
-	 $('#to_date').datepicker({ dateFormat: "yy-mm-dd" });
+	 // Flatpickr date pickers
+	 flatpickr('#from_date', { dateFormat: 'Y-m-d', allowInput: true });
+	 flatpickr('#to_date', { dateFormat: 'Y-m-d', allowInput: true });
 
 	 getUsers();
 
 	 /*
 	  * Question filter
 	  */
-	$('#filter_button').button().click(function(e) {
+	$('#filter_button').click(function(e) {
 		e.preventDefault();
 		$("#filter_controls").show();
 	});
@@ -121,10 +121,7 @@ function showSettings($this) {
 	getViewData(gSurveyControlView);
 	setSurveyViewControl(gSurveyControlView);		// Set the values in the settings dialog from the view
 	
-	$('#p_settings').dialog("open");
-	setTimeout(function() {
-		$('.ui-dialog, #p_settings').css('z-index','3000');	// Float the dialog over other controls
-	}, 0);
+	bootstrap.Modal.getOrCreateInstance(document.getElementById('p_settings')).show();
 
 }
 
@@ -802,8 +799,8 @@ export function getData(view, nocache) {
 }
 
 function addUserTrail(view) {
-	var startDate = $('#from_date').datepicker({ dateFormat: 'yy-mm-dd' }).val(),
-		endDate = $('#to_date').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	var startDate = $('#from_date').val(),
+		endDate = $('#to_date').val();
 
 	var startUtcValue = 0;
 	var endUtcValue = 0;
@@ -874,6 +871,7 @@ function setQ1Functions(type, panelType, defValue) {
 /*
  * Set the filter dialog values from the filter string stored in the view
  */
+window.setFilterFromView = setFilterFromView;
 function setFilterFromView(view) {
 	// Set the filter if the question list has already been loaded
 	if(typeof view.filter !== "undefined") {
@@ -1049,10 +1047,7 @@ function getViewSurveys (view) {
 		              return;  // Not an error
 				} else {
 					$('#status_msg_msg').empty().text("Error: Failed to get a list of surveys");
-					$("#status_msg").dialog("open");
-					setTimeout(function() {
-						$('.ui-dialog, #status_msg').css('z-index','3000');	// Float the dialog over other controls
-					}, 0);
+					bootstrap.Modal.getOrCreateInstance(document.getElementById('status_msg')).show();
 				}
 			}
 		});		

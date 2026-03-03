@@ -1,458 +1,634 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta charset="utf-8">
 	<title class="lang" data-lang="m_analysis">analysis</title>
 	<meta name="description" content="Smap Analysis Module.">
 	<meta name="author" content="Neil Penman">
-	
-	<!-- Allow all robots -->	
-	<meta content="all" name="robots" />
-	
-	<!-- turn off IE image toolbar -->
-    <meta http-equiv="imagetoolbar" content="no" />
 
+	<link href="/css/bootstrap.v5.3.8.min.css" rel="stylesheet">
 	<link href="/css/fa.v5.15.1.all.min.css" rel="stylesheet">
-	<link type="text/css" href="/css/jquery-ui-1.13.2.min.css" rel="stylesheet" />
-  	<link type="text/css" href="css/datatable.css" rel="stylesheet"/>
-	<link type="text/css" href="js/libs/jqplot/jquery.jqplot.css" rel="stylesheet"/>
-	<link type="text/css" href="/js/libs/OpenLayers/theme/default/style.tidy.css" rel="stylesheet"/>
-  	<link type="text/css" href="/css/smap.css" rel="stylesheet"/>
-  	<link type="text/css" href="css/reports.css" rel="stylesheet"/>	
-	<link type="text/css" href="/css/responsivemobilemenu.css" rel="stylesheet"/>
-	<link type="text/css" href="/css/tablesorter.dark.min.css" rel="stylesheet"/>
+	<link href="/css/flatpickr.min.css" rel="stylesheet">
+	<link href="/js/libs/OpenLayers/theme/default/style.tidy.css" rel="stylesheet"/>
+	<link href="/css/smap.css" rel="stylesheet"/>
+	<link href="css/reports.css" rel="stylesheet"/>
 
 	<script src="/js/libs/jquery-3.5.1.min.js"></script>
-	<script src="/js/libs/jquery-ui-1.13.2.min.js"></script>
 	<script src="/js/app/theme.js"></script>
 	<script src="/js/app/bootstrapHelpers.js"></script>
+	<script src="/js/libs/bootstrap.bundle.v5.3.8.min.js"></script>
 	<script src="/js/libs/paceSettings.js" charset="utf-8"></script>
 	<script src="/js/libs/OpenLayers/OpenLayers.js" charset="utf-8"></script>
 	<script src="/js/libs/moment-with-locales.2.24.0.min.js"></script>
-	<script src="/js/app/custom.js" charset="utf-8"></script>  <!-- Override this in custom code to apply changes at run time -->
-	<script src="/app/fieldAnalysis/build/js/jqplot.bundle.js"></script>
+	<script src="/js/libs/chart.min.3.8.0.js"></script>
+	<script src="/js/libs/sortable-1.15.6.min.js"></script>
+	<script src="/js/libs/flatpickr.min.js"></script>
+	<script src="/js/libs/bootbox.5.1.1.min.js"></script>
+	<script src="/js/app/custom.js" charset="utf-8"></script>
 	<script src="/app/fieldAnalysis/build/js/dashboard.bundle.js"></script>
 
 </head>
 
 <body>
-	<!-- Portal -->
-	<div id="container">
-		<div class="rmm noPrint" data-menu-style = "minimal">
-			<!-- Menu Bar -->
-			<ul id="menu_bar">
-				<li id="m_home"><a class="lang" data-lang="m_home" href="/">home</a></li>
-				<li id="m_admin" class="restrict_role admin_role analyst_role"><a class="lang" data-lang="m_admin" href="/app/fieldManager/surveyManagement.html" title="Admin">Admin</a></li>
-				<li id="m_reports" class="restrict_role admin_role analyst_role data_role"><a class="lang" data-lang="m_reports" href="/app/reports.html" title="Reports">Reports</a></li>
-				<li id="m_refresh"><a class="lang" data-lang="m_refresh" id="refreshMenu" href="#" title="Refresh">Refresh</a></li> 
-				<li id="m_export" class="restrict_role admin_role analyst_role data_role"><a class="lang" data-lang="m_export" id="exportMenu" href="#" title="Export">Export</a></li>
-				<li id="m_web_forms" class="restrict_role manage_role admin_role analyst_role"><a href="/app/tasks/managed_forms.html"><span class="lang" data-lang="m_console" ></span><span class="glyphicon glyphicon-globe pull-right"></span></a></li>
-				<li id="m_modify" class="restrict_role admin_role analyst_role"><a class="lang" data-lang="m_modify" href="/app/fieldAnalysis/modify_data.html" title="Modify">modify</a></li>
-			</ul>
-		</div> 	<!-- End of menu -->
-	
-		<p class="lang" style="clear: both;"></p>
-		<div id="header">
-			<div id="username"></div>
-			<div class="lang" data-lang="m_analysis" id="banner">Analysis</div>
-		</div>
-	
-		<div id="main" role="main">
-			<!-- Analysis Panels -->
-			<div style="width:210px; height:32px; float:left; font-size:16px">
-				<label class="lang" data-lang="c_project" for="project_name" style="width:200px; margin-left:5px;">Select Project:</label>
-				<select class="project_list" id="project_name" style="width:200px; margin-left:5px; font-size:16px;"></select>
-			</div>
-			<button type="button" class="db_settings_add ui-priority-primary ui-corner-all hover" value="graph"><img src="img/graph_ico.png" width="32" height="32" alt="graph icon"/><br/><span class="lang" data-lang="c_graph">Graph</span></button>
-			<button type="button" class="db_settings_add ui-priority-primary ui-corner-all hover" value="map"><img src="img/map_ico2.png" width="32" height="32" alt="map icon"/><br/><span class="lang" data-lang="c_map">Map</span></button>
-			<button type="button" class="db_settings_add ui-priority-primary ui-corner-all hover" value="table"><img src="img/table_ico.png" width="32" height="32" alt="table icon"/><br/><span class="lang" data-lang="c_table" >Table</span></button>
-			<button type="button" class="db_settings_add ui-priority-primary ui-corner-all hover" value="media"><img src="img/camera.png" width="32" height="32" alt="media icon"/><br/><span class="lang" data-lang="c_images">Images</span></button>
-			<div id="panel-container">
-				<ul id="panels">
-				</ul>
-			</div>
-						
-			<img id="hour_glass" src="/images/ajax-loader.gif" style="display:none;" alt="hourglass" height="60" width="60">
-			
-		</div>	<!-- End of main -->
-	
-	</div> <!-- end of #container -->
-	
-	<!-- Report Popup -->
-	<div id="reportContainer" style="display:none;">		
-		<form>
-			<fieldset class="ui-widget-content">
-				<label for="report_title" class="lang" data-lang="c_title">Title</label>
-				<input type="text" id="report_title"/><br/>
-				<label for="report_description" class="lang" data-lang="c_comment">Comment</label>
-				<textarea id="report_description"></textarea><br/>
-			</fieldset>						
-		</form>								
-		<div id="report_map"></div>
-		<div style="clear: both;"></div>
-		<form>
-			<fieldset class="ui-widget-content">
-				<label class="report_field lang" for="report_country" data-lang="c_country">Country</label>
-				<input class="report_field" type="text" id="report_country"/><br/>
-				<label class="report_field lang" for="report_region" data-lang="c_region">Region</label>
-				<input class="report_field" type="text" id="report_region"/><br/>
-				<label class="report_field lang" for="report_district" data-lang="c_district">District</label>
-				<input class="report_field" type="text" id="report_district"/><br/>
-				<label class="report_field lang" for="report_community" data-lang="c_community">Community</label>
-				<input class="report_field" type="text" id="report_community"/><br/>
-			</fieldset>						
-		</form>
-	</div>
-			
-	<div id="export" style="display:none;">
-		<form>
-			<fieldset class="ui-widget-content">
-				
-				<div class="selectsurvey">
-					<label for="export_survey" class="lang" data-lang="c_survey">survey</label>
-					<select id="export_survey"></select>
-				</div>
-			
-				<div class="selectquery" style="display:none;">
-					<label for="export_query" class="lang" data-lang="m_query">queries</label>
-					<select id="export_query"></select>
-				</div>			
 
-				<label for="exportformat" class="lang" data-lang="c_type">type</label>
-				<select id="exportformat">
-					<option value="xls" class="lang" data-lang="c_excel">excel</option>
-					<option value="csv" class="lang" data-lang="c_csv">csv</option>
-					<option value="osm" class="lang" data-lang="c_osm">osm</option>
-					<option value="shape" class="lang" data-lang="c_shape">shape</option>
-					<option value="media" class="lang" data-lang="c_media">media</option>
-					<option value="kml" class="lang" data-lang="c_kml">kml</option>
-					<option value="vrt" class="lang" data-lang="c_vrt">vrt</option>
-					<option value="stata" class="lang" data-lang="c_stata">stata</option>
-					<option value="spss" class="lang" data-lang="c_spss">spss</option>
-				</select>
-			</fieldset><br/>
-			
-			<div>
-				<fieldset class="ui-widget-content">
-					<div class="exportcontrol showoldxls shownewxls">
-						<label for="export_xlstype" class="lang" data-lang="c_xlstype">xls</label>
-						<select id="export_xlstype">
-							<option value="new_xlsx" selected class="lang" data-lang="a_nx" >new xlsx</option>
-							<option value="html" class="lang" data-lang="a_lh">html</option>
+<nav class="navbar navbar-expand-lg navbar-smap bg-navbar-smap">
+	<a class="navbar-brand lang" data-lang="m_analysis" href="#">Analysis</a>
+	<div class="spinner-grow text-danger hour_glass" style="display:none;"></div>
+	<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+		<ul class="navbar-nav ms-auto">
+			<li class="nav-item"><a class="lang nav-link" data-lang="m_home" href="/">home</a></li>
+			<li class="nav-item restrict_role admin_role analyst_role"><a class="lang nav-link" data-lang="m_admin" href="/app/fieldManager/surveyManagement.html">Admin</a></li>
+			<li class="nav-item restrict_role admin_role analyst_role data_role"><a class="lang nav-link" data-lang="m_reports" href="/app/reports.html">Reports</a></li>
+			<li class="nav-item"><a class="lang nav-link" data-lang="m_refresh" id="refreshMenu" href="#">Refresh</a></li>
+			<li class="nav-item restrict_role admin_role analyst_role data_role"><a class="lang nav-link" data-lang="m_export" id="exportMenu" href="#" data-bs-toggle="modal" data-bs-target="#export">Export</a></li>
+			<li class="nav-item restrict_role manage_role admin_role analyst_role"><a class="nav-link" href="/app/tasks/managed_forms.html"><span class="lang" data-lang="m_console"></span></a></li>
+			<li class="nav-item restrict_role admin_role analyst_role"><a class="lang nav-link" data-lang="m_modify" href="/app/fieldAnalysis/modify_data.html">modify</a></li>
+			<li class="nav-item loggedin"><span id="username" class="nav-link"></span></li>
+		</ul>
+	</div>
+</nav>
+
+<div id="main" class="container-fluid mt-3" role="main">
+
+	<!-- Project selector + add panel buttons -->
+	<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+		<div class="d-flex align-items-center gap-2">
+			<label class="lang fw-bold" data-lang="c_project" for="project_name">Select Project:</label>
+			<select class="project_list form-select" id="project_name" style="width:auto;"></select>
+		</div>
+		<button type="button" class="btn btn-outline-secondary db_settings_add" value="graph">
+			<i class="fas fa-chart-bar"></i> <span class="lang" data-lang="c_graph">Graph</span>
+		</button>
+		<button type="button" class="btn btn-outline-secondary db_settings_add" value="map">
+			<i class="fas fa-map"></i> <span class="lang" data-lang="c_map">Map</span>
+		</button>
+		<button type="button" class="btn btn-outline-secondary db_settings_add" value="table">
+			<i class="fas fa-table"></i> <span class="lang" data-lang="c_table">Table</span>
+		</button>
+		<button type="button" class="btn btn-outline-secondary db_settings_add" value="media">
+			<i class="fas fa-camera"></i> <span class="lang" data-lang="c_images">Images</span>
+		</button>
+	</div>
+
+	<!-- Analysis Panels -->
+	<div id="panel-container">
+		<div id="panels" class="row g-3">
+		</div>
+	</div>
+
+</div><!-- End of main -->
+
+<!-- Popup to show features when a user clicks on a geometry item -->
+<div id="features" class="feature-panel-right"></div>
+
+<!-- Modal: Panel Settings -->
+<div class="modal fade" id="p_settings" tabindex="-1" data-bs-backdrop="static">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title lang" data-lang="c_settings">Settings</h5>
+				<button type="button" class="btn-close" id="settings_x_close"></button>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="mb-2 subject_survey_only">
+						<label for="settings_type" class="form-label lang" data-lang="a_type">Chart Type</label>
+						<select id="settings_type" class="form-select">
+							<option value="map" class="lang" data-lang="c_map">Map</option>
+							<option value="table" class="lang" data-lang="c_table">Table</option>
+							<option value="graph" class="lang" data-lang="c_graph">Graph</option>
+							<option value="media" class="lang" data-lang="c_images">Images</option>
 						</select>
 					</div>
-					<div class="exportcontrol showlang showoldxls shownewxls">
-						<label for="export_language" class="lang" data-lang="c_lang">Language</label>
-						<select id="export_language"></select>
+					<div class="mb-2 table_only map_only" style="display:none;">
+						<label for="subject_type" class="form-label lang" data-lang="c_subject">subject</label>
+						<select id="subject_type" class="form-select">
+							<option value="survey" class="lang" data-lang="c_data">data</option>
+							<option value="user" class="lang" data-lang="a_ua">user</option>
+							<option value="user_locations" class="lang" data-lang="a_ul">user locs</option>
+						</select>
 					</div>
-					<div class="exportcontrol showoldxls shownewxls">
-						<label for="splitlocn" class="lang" data-lang="a_exp_split">Split lat / lon:</label>	
-						<input type="checkbox" id="splitlocn"/>
+					<div class="mb-2">
+						<label for="settings_title" class="form-label lang" data-lang="c_title">Title</label>
+						<input type="text" id="settings_title" class="form-control"/>
 					</div>
-					<div class="exportcontrol mergeselmult showoldxls shownewxls">
-						<label for="mergeSelectMultiple" class="lang" data-lang="a_exp_merge">Compress Select Multiples:</label>	
-						<input type="checkbox" id="mergeSelectMultiple"/>
+					<div class="mb-2 map_only" style="display:none;">
+						<label for="display_panel" class="form-label lang" data-lang="a_showon">Show on</label>
+						<select id="display_panel" class="form-select"></select>
 					</div>
-					<div class="exportcontrol showoldxls shownewxls">
-						<label for="embedImages" class="lang" data-lang="a_embed">Embed:</label>	
-						<input type="checkbox" id="embedImages"/>
-					</div>
-					<div class="exportcontrol showoldxls shownewxls">
-						<label for="incHxl" class="lang" data-lang="a_hxl">hxl:</label>
-						<input type="checkbox" id="incHxl"/>
-					</div>
-					<div class="exportcontrol shownewxls">
-						<label for="includeMeta" class="lang" data-lang="a_exp_meta">meta</label>
-						<input type="checkbox" checked="checked" id="includeMeta"/>
-					</div>
-					<div class="exportcontrol shownewxls">
-						<label for="exportReadOnly" class="lang" data-lang="a_inc_ro">ro</label>
-						<input type="checkbox" id="exportReadOnly"/>
+					<div class="mb-2">
+						<div class="form-check">
+							<input type="checkbox" id="settings_inc_ro" class="form-check-input"/>
+							<label for="settings_inc_ro" class="form-check-label lang" data-lang="a_inc_ro">ro</label>
+						</div>
 					</div>
 
-				</fieldset><br/>
-			</div>		
-			
-			<div class="showosm" style="display:none;">
-				<fieldset class="ui-widget-content">
-					<legend class="ui-widget-header ui-corner-all lang" data-lang="a_sel_ways">Select ways (if any):</legend>
-					<div class="osmforms"></div>
-				</fieldset>
+					<fieldset class="border p-2 mb-2 subject_survey_only">
+						<legend class="float-none w-auto px-1 small lang" data-lang="a_ss">Select Survey</legend>
+						<div class="mb-2">
+							<label for="settings_survey" class="form-label lang" data-lang="c_survey">Survey</label>
+							<select id="settings_survey" class="form-select"></select>
+						</div>
+					</fieldset>
+
+					<fieldset class="border p-2 mb-2 subject_user_only">
+						<legend class="float-none w-auto px-1 small lang" data-lang="c_user">user</legend>
+						<div class="mb-2">
+							<label for="settings_user" class="form-label lang" data-lang="c_user">user</label>
+							<select id="settings_user" class="form-select"></select>
+						</div>
+					</fieldset>
+
+					<fieldset class="border p-2 mb-2 map_only subject_survey_only" style="display:none;">
+						<legend class="float-none w-auto px-1 small lang" data-lang="a_locn">locn</legend>
+						<div class="geomselect_settings"></div>
+					</fieldset>
+
+					<fieldset class="border p-2 mb-2 subject_survey_only">
+						<legend class="float-none w-auto px-1 small lang" data-lang="a_sq">Select Question</legend>
+						<div class="mb-2">
+							<label for="settings_language" class="form-label lang" data-lang="c_lang">Language</label>
+							<select id="settings_language" class="form-select"></select>
+						</div>
+						<div class="mb-2">
+							<label for="settings_question" class="form-label lang" data-lang="c_question">Question</label>
+							<div class="d-flex gap-2">
+								<select class="selected_question form-select" id="settings_question"></select>
+								<select id="q1_function" class="form-select w-auto"></select>
+							</div>
+						</div>
+						<div class="mb-2">
+							<label for="settings_group" class="form-label lang" data-lang="a_gb">Group by</label>
+							<select id="settings_group" class="form-select" disabled="disabled"></select>
+						</div>
+						<div class="mb-2">
+							<label for="time_group" class="form-label lang" data-lang="a_ts">Time Series</label>
+							<select id="time_group" class="form-select" disabled="disabled">
+								<option value="none" class="lang" data-lang="c_none">None</option>
+								<option value="hour" class="lang" data-lang="c_hour">Hour</option>
+								<option value="day" class="lang" data-lang="c_day">Day</option>
+								<option value="week" class="lang" data-lang="c_week">Week</option>
+								<option value="month" class="lang" data-lang="c_month">Month</option>
+								<option value="year" class="lang" data-lang="c_year">Year</option>
+							</select>
+						</div>
+						<div class="map_group_only" style="display:none">
+							<div class="form-check">
+								<input type="radio" class="form-check-input" name="mapgrouptype" value="contains" checked="checked"/>
+								<label class="form-check-label lang" data-lang="a_g_gps"></label>
+							</div>
+							<div class="form-check">
+								<input type="radio" class="form-check-input" name="mapgrouptype" value="matches"/>
+								<label class="form-check-label lang" data-lang="c_matches">Matches</label>
+							</div>
+						</div>
+					</fieldset>
+
+					<fieldset class="border p-2 mb-2 subject_user_only subject_survey_only">
+						<legend class="float-none w-auto px-1 small lang" data-lang="t_df">date filter</legend>
+						<div class="mb-2 subject_user_only">
+							<label for="usage_settings_date_question" class="form-label lang" data-lang="c_dateq">date question</label>
+							<select class="form-select" id="usage_settings_date_question">
+								<option value="0" class="lang" data-lang="c_none">none</option>
+								<option value="1" class="lang" data-lang="Upload Time">upload</option>
+								<option value="2" class="lang" data-lang="_start">start</option>
+								<option value="3" class="lang" data-lang="_end">end</option>
+								<option value="4" class="lang" data-lang="c_scheduled">scheduled</option>
+							</select>
+						</div>
+						<div class="mb-2 subject_survey_only">
+							<label for="settings_date_question" class="form-label lang" data-lang="c_dateq">date question</label>
+							<select class="date_question subject_survey_only form-select" id="settings_date_question"></select>
+						</div>
+						<div class="mb-2">
+							<label for="from_date" class="form-label lang" data-lang="a_from_date">From date</label>
+							<input type="date" id="from_date" class="form-control"/> <span class="lang" data-lang="c_inclusive">inclusive</span>
+						</div>
+						<div class="mb-2">
+							<label for="to_date" class="form-label lang" data-lang="a_to_date">To date</label>
+							<input type="date" id="to_date" class="form-control"/> <span class="lang" data-lang="c_inclusive">inclusive</span>
+						</div>
+					</fieldset>
+
+					<fieldset class="border p-2 mb-2 subject_survey_only">
+						<legend class="float-none w-auto px-1 small lang" data-lang="c_filter">filter</legend>
+						<div class="mb-2">
+							<label for="set_ad_filter" class="form-label lang" data-lang="t_aft">filter</label>
+							<div class="d-flex gap-2">
+								<input type="text" id="set_ad_filter" class="form-control">
+								<a class="filter_help btn btn-sm btn-outline-secondary" href="https://www.smap.com.au/docs/server-expressions.html" target="_blank">i</a>
+							</div>
+						</div>
+						<button id="filter_button" class="btn btn-sm btn-outline-secondary lang" data-lang="a_fbv">Filter by value</button>
+					</fieldset>
+
+					<fieldset id="filter_controls" class="border p-2 mb-2" style="display:none;">
+						<div class="mb-2">
+							<label for="filter_question" class="form-label lang" data-lang="a_fq">Filter Question</label>
+							<select class="selected_question form-select" id="filter_question"></select>
+						</div>
+						<div class="mb-2">
+							<label for="filter_value" class="form-label lang" data-lang="c_value">Value</label>
+							<select class="form-select" id="filter_value"></select>
+						</div>
+						<button id="filter_clear" class="btn btn-sm btn-outline-secondary lang" data-lang="c_clear">Clear</button>
+					</fieldset>
+				</form>
 			</div>
-			<div class="exportcontrol showoldxls" style="display:none;">
-				<fieldset class="ui-widget-content">
-					<legend class="ui-widget-header ui-corner-all lang" data-lang="a_sel_forms">Select forms to include:</legend>
-					<div class="selectforms"></div>
-				</fieldset>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" id="settings_cancel"><span class="lang" data-lang="c_cancel">Cancel</span></button>
+				<button type="button" class="btn btn-primary" id="settings_save"><span class="lang" data-lang="c_save">Save</span></button>
 			</div>
-			<div class="exportcontrol showshape shownewxls">
-				<fieldset class="ui-widget-content">
-					<legend class="ui-widget-header ui-corner-all lang" data-lang="msg_sel_form">Select form:</legend>
-					<div class="shapeforms"></div>
-				</fieldset>
-			</div>
-			<div class="exportcontrol showshape showosm">
-				<fieldset class="ui-widget-content">
-					<legend class="ui-widget-header ui-corner-all lang" data-lang="a_locn">locn</legend>
-					<div class="geomselect_export"></div>
-				</fieldset>
-			</div>
-			<div class="exportcontrol showmedia" style="display:none;">
-				<fieldset class="ui-widget-content">
-					<legend class="ui-widget-header ui-corner-all lang" data-lang="msg_sel_media">Select Media:</legend>
-					<label class="lang" data-lang="msg_sel_media" for="export_media_question" >Media Question</label>
-					<select id="export_media_question"></select>
-					<h4 class="lang" data-lang="msg_mfn">create with</h4>
-					<div class="mediaselect"></div>
-				</fieldset>
-			</div>
-			<div class="exportcontrol showlqas">
-				<label class="lang" data-lang="a_rd" for="export_report_defn" >rpt defn</label>
-				<select id="export_report_defn"></select>
-				<label for="sources" class="lang" data-lang="a_dv">Details</label>	
-				<input type="checkbox" id="sources"/>
-			</div>
-			
-			<br/>
-			<fieldset class="ui-widget-content">
-				<legend class="ui-widget-header ui-corner-all lang" data-lang="c_filter">Filter</legend>
-				<label for="export_date_question" class="lang" data-lang="c_dateq">date</label>
-				<select class="date_question" id="export_date_question"></select>
-				<label for="exp_from_date" class="lang" data-lang="a_from_date">from</label>
-				<input type="date" id="exp_from_date" class="hasDatepicker"> <span class="lang" data-lang="c_inclusive">Inclusive</span>
-				<label for="exp_to_date" class="lang" data-lang="a_to_date">to</label>
-				<input type="date" id="exp_to_date" class="hasDatepicker"> <span class="lang" data-lang="c_inclusive">inclusive</span>
-			</fieldset>
-			<fieldset class="ui-widget-content">
-				<legend class="ui-widget-header ui-corner-all lang" data-lang="t_aft">advanced filter</legend>
-				<label for="ad_filter" data-lang="c_filter" class="lang">filter</label>
-				<input type="text" id="ad_filter">
-				<a class="filter_help" href="https://www.smap.com.au/docs/server-expressions.html" target="_blank"> ( i ) </a>
-			</fieldset>
-			
-		</form>
-		<div class="exportcontrol showthingsat" style="display:none;">
-			<button id="btn_edit_thingsat" class="lang" data-lang="a_sel_model">Edit Survey Model</button>	
-			<div id="ta_model_show"></div>
 		</div>
 	</div>
-		
-	<!-- Popup to show features when a user clicks on a geometry item -->
-	<div id="features" class="feature-panel-right"></div>
-	
-	<!-- Popup to edit panel settings -->
-	<div id="p_settings" style="display:none;">
-		<form>
-			<fieldset class="ui-widget-content">
-				<div class="subject_survey_only">
-					<label for="settings_type" class="lang" data-lang="a_type">Chart Type</label>
-					<select id="settings_type">
-						<option value="map" class="lang" data-lang="c_map">Map</option>
-						<option value="table" class="lang" data-lang="c_table">Table</option>
-						<option value="graph" class="lang" data-lang="c_graph">Graph</option>
-						<option value="media" class="lang" data-lang="c_images">Images</option>
-					</select>
-				</div>
-				<div class="table_only map_only" style="display:none;">
-					<label for="subject_type" class="lang" data-lang="c_subject">subject</label>
-					<select id="subject_type">
-						<option value="survey" class="lang" data-lang="c_data">data</option>
-						<option value="user" class="lang" data-lang="a_ua">user</option>
-						<option value="user_locations" class="lang" data-lang="a_ul">user locs</option>
-					</select>
-				</div>
+</div>
 
-				<label for="settings_title" class="lang" data-lang="c_title">Title</label>
-				<input type="text" id="settings_title"/><br/>
-				<span class="map_only" style="display:none;">
-					<label for="display_panel" class="lang" data-lang="a_showon">Show on</label>
-					<select id="display_panel"></select><br/>
-				</span>
-				<div>
-					<label for="settings_inc_ro" class="lang" data-lang="a_inc_ro">ro</label>
-					<input type="checkbox" id="settings_inc_ro"/>
-				</div>
-			</fieldset>	
-			<fieldset class="ui-widget-content subject_survey_only">
-				<legend class="ui-widget-header ui-corner-all lang" data-lang="a_ss">Select Survey</legend>
-				<div class="subject_survey_only">
-					<label for="settings_survey" class="lang" data-lang="c_survey">Survey</label>
-					<select id="settings_survey"></select><br/>
-				</div>
-			</fieldset>
-			<fieldset class="ui-widget-content subject_user_only">
-				<legend class="ui-widget-header ui-corner-all lang subject_user_only" data-lang="c_user">user</legend>
-				<div class="subject_user_only">
-					<label for="settings_user" class="lang" data-lang="c_user">user</label>
-					<select id="settings_user"></select>
-				</div>
-			</fieldset>
-
-			<div class="ui-widget-content map_only subject_survey_only" style="display:none;">
-				<fieldset class="ui-widget-content">
-					<legend class="ui-widget-header ui-corner-all lang" data-lang="a_locn">locn</legend>
-					<div class="geomselect_settings"></div>
-				</fieldset>
+<!-- Modal: Export Survey -->
+<div class="modal fade" id="export" tabindex="-1">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title lang" data-lang="a_exp_title">Export</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 			</div>
+			<div class="modal-body">
+				<form>
+					<div class="mb-2 selectsurvey">
+						<label for="export_survey" class="form-label lang" data-lang="c_survey">survey</label>
+						<select id="export_survey" class="form-select"></select>
+					</div>
+					<div class="mb-2 selectquery" style="display:none;">
+						<label for="export_query" class="form-label lang" data-lang="m_query">queries</label>
+						<select id="export_query" class="form-select"></select>
+					</div>
+					<div class="mb-2">
+						<label for="exportformat" class="form-label lang" data-lang="c_type">type</label>
+						<select id="exportformat" class="form-select">
+							<option value="xls" class="lang" data-lang="c_excel">excel</option>
+							<option value="csv" class="lang" data-lang="c_csv">csv</option>
+							<option value="osm" class="lang" data-lang="c_osm">osm</option>
+							<option value="shape" class="lang" data-lang="c_shape">shape</option>
+							<option value="media" class="lang" data-lang="c_media">media</option>
+							<option value="kml" class="lang" data-lang="c_kml">kml</option>
+							<option value="vrt" class="lang" data-lang="c_vrt">vrt</option>
+							<option value="stata" class="lang" data-lang="c_stata">stata</option>
+							<option value="spss" class="lang" data-lang="c_spss">spss</option>
+						</select>
+					</div>
 
-			<fieldset class="ui-widget-content subject_survey_only">
-				<legend class="ui-widget-header ui-corner-all lang" data-lang="a_sq">Select Question</legend>
-				<label for="settings_language" class="lang" data-lang="c_lang">Language</label>
-				<select id="settings_language"></select>
-				<br/>
-				<label for="settings_question" class="lang" data-lang="c_question">Question</label>
-				<select class="selected_question" id="settings_question"></select>
-				<select id="q1_function"></select>
-				<br/>	
-				<label for="settings_group" class="lang" data-lang="a_gb">Group by</label>
-				<select id="settings_group" disabled="disabled"></select><br/>
-				<label for="time_group" class="lang" data-lang="a_ts">Time Series</label>
-				<select id="time_group" disabled="disabled">
-					<option value="none" class="lang" data-lang="c_none">None</option>
-					<option value="hour" class="lang" data-lang="c_hour">Hour</option>
-					<option value="day" class="lang" data-lang="c_day">Day</option>
-					<option value="week" class="lang" data-lang="c_week">Week</option>
-					<option value="month" class="lang" data-lang="c_month">Month</option>
-					<option value="year" class="lang" data-lang="c_year">Year</option>
-				</select><br/>
-				<span class="map_group_only" style="display:none">
-					<input type="radio" name="mapgrouptype" value="contains" checked="checked"/> <span class="lang" data-lang="a_g_gps"></span><br/>
-					<input type="radio" name="mapgrouptype" value="matches"/> <span class="lang" data-lang="c_matches">Matches</span><br/>
-				</span>	
-			</fieldset>	
-			<fieldset class="ui-widget-content subject_user_only subject_survey_only">
-				<legend class="ui-widget-header ui-corner-all lang" data-lang="t_df">date filter</legend>
+					<div>
+						<fieldset class="border p-2 mb-2">
+							<div class="mb-2 exportcontrol showoldxls shownewxls">
+								<label for="export_xlstype" class="form-label lang" data-lang="c_xlstype">xls</label>
+								<select id="export_xlstype" class="form-select">
+									<option value="new_xlsx" selected class="lang" data-lang="a_nx">new xlsx</option>
+									<option value="html" class="lang" data-lang="a_lh">html</option>
+								</select>
+							</div>
+							<div class="mb-2 exportcontrol showlang showoldxls shownewxls">
+								<label for="export_language" class="form-label lang" data-lang="c_lang">Language</label>
+								<select id="export_language" class="form-select"></select>
+							</div>
+							<div class="form-check exportcontrol showoldxls shownewxls">
+								<input type="checkbox" id="splitlocn" class="form-check-input"/>
+								<label for="splitlocn" class="form-check-label lang" data-lang="a_exp_split">Split lat / lon</label>
+							</div>
+							<div class="form-check exportcontrol mergeselmult showoldxls shownewxls">
+								<input type="checkbox" id="mergeSelectMultiple" class="form-check-input"/>
+								<label for="mergeSelectMultiple" class="form-check-label lang" data-lang="a_exp_merge">Compress Select Multiples</label>
+							</div>
+							<div class="form-check exportcontrol showoldxls shownewxls">
+								<input type="checkbox" id="embedImages" class="form-check-input"/>
+								<label for="embedImages" class="form-check-label lang" data-lang="a_embed">Embed</label>
+							</div>
+							<div class="form-check exportcontrol showoldxls shownewxls">
+								<input type="checkbox" id="incHxl" class="form-check-input"/>
+								<label for="incHxl" class="form-check-label lang" data-lang="a_hxl">hxl</label>
+							</div>
+							<div class="form-check exportcontrol shownewxls">
+								<input type="checkbox" checked="checked" id="includeMeta" class="form-check-input"/>
+								<label for="includeMeta" class="form-check-label lang" data-lang="a_exp_meta">meta</label>
+							</div>
+							<div class="form-check exportcontrol shownewxls">
+								<input type="checkbox" id="exportReadOnly" class="form-check-input"/>
+								<label for="exportReadOnly" class="form-check-label lang" data-lang="a_inc_ro">ro</label>
+							</div>
+						</fieldset>
+					</div>
 
-				<label for="usage_settings_date_question" class="lang subject_user_only" data-lang="c_dateq">date question</label>
-				<select class="subject_user_only" id="usage_settings_date_question">
-					<option value="0" class="lang" data-lang="c_none">none</option>
-					<option value="1" class="lang" data-lang="Upload Time">upload</option>
-					<option value="2" class="lang" data-lang="_start">start</option>
-					<option value="3" class="lang" data-lang="_end">end</option>
-					<option value="4" class="lang" data-lang="c_scheduled">scheduled</option>
-				</select>
+					<div class="showosm" style="display:none;">
+						<fieldset class="border p-2 mb-2">
+							<legend class="float-none w-auto px-1 small lang" data-lang="a_sel_ways">Select ways (if any):</legend>
+							<div class="osmforms"></div>
+						</fieldset>
+					</div>
+					<div class="exportcontrol showoldxls" style="display:none;">
+						<fieldset class="border p-2 mb-2">
+							<legend class="float-none w-auto px-1 small lang" data-lang="a_sel_forms">Select forms to include:</legend>
+							<div class="selectforms"></div>
+						</fieldset>
+					</div>
+					<div class="exportcontrol showshape shownewxls">
+						<fieldset class="border p-2 mb-2">
+							<legend class="float-none w-auto px-1 small lang" data-lang="msg_sel_form">Select form:</legend>
+							<div class="shapeforms"></div>
+						</fieldset>
+					</div>
+					<div class="exportcontrol showshape showosm">
+						<fieldset class="border p-2 mb-2">
+							<legend class="float-none w-auto px-1 small lang" data-lang="a_locn">locn</legend>
+							<div class="geomselect_export"></div>
+						</fieldset>
+					</div>
+					<div class="exportcontrol showmedia" style="display:none;">
+						<fieldset class="border p-2 mb-2">
+							<legend class="float-none w-auto px-1 small lang" data-lang="msg_sel_media">Select Media:</legend>
+							<div class="mb-2">
+								<label class="form-label lang" data-lang="msg_sel_media" for="export_media_question">Media Question</label>
+								<select id="export_media_question" class="form-select"></select>
+							</div>
+							<h6 class="lang" data-lang="msg_mfn">create with</h6>
+							<div class="mediaselect"></div>
+						</fieldset>
+					</div>
+					<div class="exportcontrol showlqas">
+						<div class="mb-2">
+							<label class="form-label lang" data-lang="a_rd" for="export_report_defn">rpt defn</label>
+							<select id="export_report_defn" class="form-select"></select>
+						</div>
+						<div class="form-check">
+							<input type="checkbox" id="sources" class="form-check-input"/>
+							<label for="sources" class="form-check-label lang" data-lang="a_dv">Details</label>
+						</div>
+					</div>
 
-				<label for="settings_date_question" class="lang subject_survey_only" data-lang="c_dateq">date question</label>
-				<select class="date_question subject_survey_only" id="settings_date_question"></select>
+					<fieldset class="border p-2 mb-2">
+						<legend class="float-none w-auto px-1 small lang" data-lang="c_filter">Filter</legend>
+						<div class="mb-2">
+							<label for="export_date_question" class="form-label lang" data-lang="c_dateq">date</label>
+							<select class="date_question form-select" id="export_date_question"></select>
+						</div>
+						<div class="row g-2">
+							<div class="col-auto">
+								<label for="exp_from_date" class="form-label lang" data-lang="a_from_date">from</label>
+								<input type="date" id="exp_from_date" class="form-control">
+								<span class="lang" data-lang="c_inclusive">Inclusive</span>
+							</div>
+							<div class="col-auto">
+								<label for="exp_to_date" class="form-label lang" data-lang="a_to_date">to</label>
+								<input type="date" id="exp_to_date" class="form-control">
+								<span class="lang" data-lang="c_inclusive">inclusive</span>
+							</div>
+						</div>
+					</fieldset>
+					<fieldset class="border p-2 mb-2">
+						<legend class="float-none w-auto px-1 small lang" data-lang="t_aft">advanced filter</legend>
+						<div class="d-flex gap-2">
+							<input type="text" id="ad_filter" class="form-control">
+							<a class="filter_help btn btn-sm btn-outline-secondary" href="https://www.smap.com.au/docs/server-expressions.html" target="_blank">i</a>
+						</div>
+					</fieldset>
 
-				<br/><br/>
-				<label for="from_date" class="lang" data-lang="a_from_date">From date</label>
-				<input type="date" id="from_date" class="hasDatepicker"/> <span class="lang" data-lang="c_inclusive">inclusive</span><br/>
-				<label for="to_date" class="lang" data-lang="a_to_date">To date</label>
-				<input type="date" id="to_date" class="hasDatepicker"/> <span class="lang" data-lang="c_inclusive">inclusive</span><br/>
-			</fieldset>
-			<fieldset class="ui-widget-content subject_survey_only">
-				<legend class="ui-widget-header ui-corner-all lang" data-lang="c_filter">filter</legend>
-				<label for="set_ad_filter" data-lang="t_aft" class="lang">filter</label>
-				<input type="text" id="set_ad_filter"><a class="filter_help" href="https://www.smap.com.au/docs/server-expressions.html" target="_blank"> ( i ) </a><br/><br/>
-				<button id="filter_button" class="lang" data-lang="a_fbv">Filter by value</button>
-			</fieldset>
-			<fieldset id="filter_controls"  class="ui-widget-content" style="display:none;">
-				<label for="filter_question" class="lang" data-lang="a_fq">Filter Question</label>
-				<select class="selected_question" id="filter_question"></select><br/>
-				<label for="filter_value" class="lang" data-lang="c_value">Value</label>
-				<select class="" id="filter_value"></select><br/>
-				<button id="filter_clear" class="lang" data-lang="c_clear">Clear</button>
-			</fieldset>
-		</form>
-	</div>
-		
-	<!-- Popup for status message -->
-	<div id="status_msg" title="Status" style="display:none;">
-		<h3 id="status_msg_msg"></h3>
-	</div>
-
-	<!-- Popup to allow the user to download a PDF of the instance or edit it using a WebForm -->
-	<div id="instance_functions_popup" style="display:none;">
-	
-		<form role="form">
-			<fieldset  class="ui-widget ui-widget-content">
-				<legend class="lang" data-lang="c_action">Action:</legend>
-				<a id="download_edit" class="ui-button ui-widget ui-corner-all instance_functions lang" href="#" data-lang="d_edit_web">edit in web form</a><br/>
-   				<a id="download_pdf" class="ui-button ui-widget ui-corner-all instance_functions lang" href="#" data-lang="d_d_pdf">download PDF</a>
-   			</fieldset>
-			<div id="download_options_div">
-				<fieldset  class="ui-widget ui-widget-content">
-					<input id="include_references" type="checkbox" name="include_references" value="include_references"/>
-						<span class="lang" data-lang="n_inc_ref">inc reference surveys</span><br/>
-					<input id="launched_only" type="checkbox" name="launched_only" value="launched_only"/>
-						<span class="lang" data-lang="n_lo"></span><br/>
-
-					<legend class="lang" data-lang="c_options">Options</legend>
-					<label class="lang" data-lang="c_lang" for="download_language"></label><br/>
-					<select id="download_language" class="form-select"></select><br/>
-					<label class="lang" data-lang="c_template" for="select_pdf"></label><br/>
-					<select id="select_pdf" class="form-select"></select><br/>
-					<input type="radio" name="orientation" value="portrait" checked="checked"/> <span data-lang="c_portrait" class="lang">Portrait</span><br/>
-					<input type="radio" name="orientation" value="landscape"/> <span data-lang="c_landscape" class="lang">Landscape</span><br/>
-				</fieldset>							
+					<div class="exportcontrol showthingsat" style="display:none;">
+						<button id="btn_edit_thingsat" class="btn btn-sm btn-outline-secondary lang" data-lang="a_sel_model">Edit Survey Model</button>
+						<div id="ta_model_show"></div>
+					</div>
+				</form>
 			</div>
-		</form>
-								
-	</div>
-	
-	<!-- Modal to import data from a file -->
-	<div id="load_data_popup" style="display:none;">
-	
-		<form role="form" enctype="multipart/form-data" name="loadtasks">
-
-			<span class="lang" data-lang="c_survey">survey</span>: <span id="survey_to_update_name"></span><br/>
-			<input id="survey_to_update" type="hidden" name="survey" value="-1" style="display:none;">
-			<input type="checkbox" name="clear_existing" value="clear_existing"/> <span data-lang="t_ce" class="lang">clear</span><br/>
-
-			<fieldset>
-				<legend class="lang" data-lang="c_source">Source</legend>
-				<input class="import_source" type="radio" name="import_source" value="file" checked="checked"/> <span data-lang="c_file" class="lang">file</span><br/>
-				<input class="import_source" type="radio" name="import_source" value="form"/> <span data-lang="c_form" class="lang">form</span><br/>
-			</fieldset>
-			<br/>
-			<div id="clear_existing_alert" style="display:none; background-color: #FEFC7C; padding: 5px 2px;" class="lang" role="alert" data-lang="t_ce_warn">This will clear all the existing data</div>
-			<div class="import_file">
-				<div class="input-group">
-					<span class="input-group-btn">
-						<input id="file_select" name="files" title="Add" class="file-inputs" type="file" accept="text/csv, application/zip, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-					</span>
-				</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" id="export_cancel" data-bs-dismiss="modal"><span class="lang" data-lang="c_cancel">Cancel</span></button>
+				<button type="button" class="btn btn-primary" id="export_submit"><span class="lang" data-lang="m_export">Export</span></button>
 			</div>
-			<div class="import_form" style="display:none;">
-				<label for="form_select" data-lang="c_form" class="lang">form</label>
-				<select class="form_select" name="import_form" id="form_select"></select><br/>
+		</div>
+	</div>
+</div>
+
+<!-- Modal: Status message -->
+<div class="modal fade" id="status_msg" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Status</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 			</div>
-		</form>
-		<div id="load_tasks_alert" style="display:none;  padding: 5px 2px;" role="alert"></div>
-					
+			<div class="modal-body">
+				<h3 id="status_msg_msg"></h3>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><span class="lang" data-lang="c_close">Close</span></button>
+			</div>
+		</div>
 	</div>
+</div>
 
-	<!-- Modal to archive -->
-	<div id="archive_data_popup" style="display:none;">
-
-		<form role="form" enctype="multipart/form-data" name="archivedata">
-			<label for="archive_before_date" class="lang" data-lang="c_before">before</label>
-			<input type="date" id="archive_before_date" class="hasDatepicker"> <span class="lang" data-lang="c_inclusive">Inclusive</span>
-		</form>
-		<div id="archive_data_alert" style="display:none;  padding: 5px 2px;" role="alert"></div>
-
+<!-- Modal: Report container -->
+<div class="modal fade" id="reportContainer" tabindex="-1">
+	<div class="modal-dialog modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Report</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="mb-2">
+						<label for="report_title" class="form-label lang" data-lang="c_title">Title</label>
+						<input type="text" id="report_title" class="form-control"/>
+					</div>
+					<div class="mb-2">
+						<label for="report_description" class="form-label lang" data-lang="c_comment">Comment</label>
+						<textarea id="report_description" class="form-control"></textarea>
+					</div>
+				</form>
+				<div id="report_map"></div>
+				<form>
+					<div class="row g-2">
+						<div class="col-md-6">
+							<label for="report_country" class="form-label lang" data-lang="c_country">Country</label>
+							<input class="report_field form-control" type="text" id="report_country"/>
+						</div>
+						<div class="col-md-6">
+							<label for="report_region" class="form-label lang" data-lang="c_region">Region</label>
+							<input class="report_field form-control" type="text" id="report_region"/>
+						</div>
+						<div class="col-md-6">
+							<label for="report_district" class="form-label lang" data-lang="c_district">District</label>
+							<input class="report_field form-control" type="text" id="report_district"/>
+						</div>
+						<div class="col-md-6">
+							<label for="report_community" class="form-label lang" data-lang="c_community">Community</label>
+							<input class="report_field form-control" type="text" id="report_community"/>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		</div>
 	</div>
+</div>
 
-	<!-- Modal to export data from a file -->
-	<div id="export_data_popup" style="display:none;">
-
-		<span class="lang" data-lang="c_survey">s</span>: <span id="exp_s_name"></span><br/>
-		<form role="form" enctype="multipart/form-data" name="exportData">
-
-			<label for="exp_start_record"><span data-lang="a_start_pk" class="lang"></span> (<span data-lang="c_inclusive" class="lang"></span>)</label>
-			<input type="number" id="exp_start_record">
-			<br/>
-			<label for="exp_end_record"><span data-lang="a_end_pk" class="lang"></span> (<span data-lang="c_inclusive" class="lang"></span>)</label>
-			<input type="number" id="exp_end_record">
-
-		</form>
-		<br/>
-		<div id="export_data_alert" style="display:none;  padding: 5px 2px;" role="alert"></div>
-
+<!-- Modal: Instance functions (PDF download / web form edit) -->
+<div class="modal fade" id="instance_functions_popup" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title lang" data-lang="c_action">Action</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<form role="form">
+					<div class="mb-3">
+						<a id="download_edit" class="btn btn-outline-primary instance_functions lang d-block mb-2" href="#" data-lang="d_edit_web">edit in web form</a>
+						<a id="download_pdf" class="btn btn-outline-secondary instance_functions lang d-block" href="#" data-lang="d_d_pdf">download PDF</a>
+					</div>
+					<div id="download_options_div">
+						<div class="mb-2">
+							<div class="form-check">
+								<input id="include_references" type="checkbox" name="include_references" value="include_references" class="form-check-input"/>
+								<label for="include_references" class="form-check-label lang" data-lang="n_inc_ref">inc reference surveys</label>
+							</div>
+							<div class="form-check">
+								<input id="launched_only" type="checkbox" name="launched_only" value="launched_only" class="form-check-input"/>
+								<label for="launched_only" class="form-check-label lang" data-lang="n_lo"></label>
+							</div>
+						</div>
+						<div class="mb-2">
+							<label class="form-label lang" data-lang="c_lang" for="download_language"></label>
+							<select id="download_language" class="form-select"></select>
+						</div>
+						<div class="mb-2">
+							<label class="form-label lang" data-lang="c_template" for="select_pdf"></label>
+							<select id="select_pdf" class="form-select"></select>
+						</div>
+						<div class="form-check">
+							<input type="radio" class="form-check-input" name="orientation" value="portrait" checked="checked"/>
+							<label class="form-check-label lang" data-lang="c_portrait">Portrait</label>
+						</div>
+						<div class="form-check">
+							<input type="radio" class="form-check-input" name="orientation" value="landscape"/>
+							<label class="form-check-label lang" data-lang="c_landscape">Landscape</label>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><span class="lang" data-lang="c_close">Close</span></button>
+			</div>
+		</div>
 	</div>
+</div>
 
+<!-- Modal: Import data from file -->
+<div class="modal fade" id="load_data_popup" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title lang" data-lang="m_import">Import</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<form role="form" enctype="multipart/form-data" name="loadtasks">
+					<p><span class="lang" data-lang="c_survey">survey</span>: <span id="survey_to_update_name"></span></p>
+					<input id="survey_to_update" type="hidden" name="survey" value="-1">
+					<div class="form-check mb-2">
+						<input type="checkbox" class="form-check-input" name="clear_existing" value="clear_existing"/>
+						<label class="form-check-label lang" data-lang="t_ce">clear</label>
+					</div>
+					<fieldset class="border p-2 mb-2">
+						<legend class="float-none w-auto px-1 small lang" data-lang="c_source">Source</legend>
+						<div class="form-check">
+							<input class="import_source form-check-input" type="radio" name="import_source" value="file" checked="checked"/>
+							<label class="form-check-label lang" data-lang="c_file">file</label>
+						</div>
+						<div class="form-check">
+							<input class="import_source form-check-input" type="radio" name="import_source" value="form"/>
+							<label class="form-check-label lang" data-lang="c_form">form</label>
+						</div>
+					</fieldset>
+					<div id="clear_existing_alert" style="display:none;" class="alert alert-warning lang" role="alert" data-lang="t_ce_warn">This will clear all the existing data</div>
+					<div class="import_file mb-2">
+						<input id="file_select" name="files" title="Add" class="form-control" type="file" accept="text/csv, application/zip, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+					</div>
+					<div class="import_form mb-2" style="display:none;">
+						<label for="form_select" class="form-label lang" data-lang="c_form">form</label>
+						<select class="form_select form-select" name="import_form" id="form_select"></select>
+					</div>
+				</form>
+				<div id="load_tasks_alert" style="display:none;" class="alert" role="alert"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><span class="lang" data-lang="c_close">Close</span></button>
+				<button type="button" class="btn btn-primary" id="load_data_import"><span class="lang" data-lang="m_import">Import</span></button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal: Archive data -->
+<div class="modal fade" id="archive_data_popup" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title lang" data-lang="c_archive_data">Archive</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<form role="form" enctype="multipart/form-data" name="archivedata">
+					<div class="mb-2">
+						<label for="archive_before_date" class="form-label lang" data-lang="c_before">before</label>
+						<input type="date" id="archive_before_date" class="form-control">
+						<span class="lang" data-lang="c_inclusive">Inclusive</span>
+					</div>
+				</form>
+				<div id="archive_data_alert" style="display:none;" class="alert" role="alert"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><span class="lang" data-lang="c_close">Close</span></button>
+				<button type="button" class="btn btn-primary" id="archive_data_submit"><span class="lang" data-lang="c_archive_data">Archive</span></button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal: Export data (by record range) -->
+<div class="modal fade" id="export_data_popup" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title lang" data-lang="m_export">Export Data</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<p><span class="lang" data-lang="c_survey">s</span>: <span id="exp_s_name"></span></p>
+				<form role="form" enctype="multipart/form-data" name="exportData">
+					<div class="mb-2">
+						<label for="exp_start_record" class="form-label">
+							<span data-lang="a_start_pk" class="lang"></span> (<span data-lang="c_inclusive" class="lang"></span>)
+						</label>
+						<input type="number" id="exp_start_record" class="form-control">
+					</div>
+					<div class="mb-2">
+						<label for="exp_end_record" class="form-label">
+							<span data-lang="a_end_pk" class="lang"></span> (<span data-lang="c_inclusive" class="lang"></span>)
+						</label>
+						<input type="number" id="exp_end_record" class="form-control">
+					</div>
+				</form>
+				<div id="export_data_alert" style="display:none;" class="alert" role="alert"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><span class="lang" data-lang="c_close">Close</span></button>
+				<button type="button" class="btn btn-primary" id="export_data_submit"><span class="lang" data-lang="m_export">Export</span></button>
+			</div>
+		</div>
+	</div>
+</div>
 
 </body>
 </html>

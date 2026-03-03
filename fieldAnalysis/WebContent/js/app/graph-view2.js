@@ -28,8 +28,6 @@ export function setGraphSurvey(view) {
 	
 	$panel = $('#p' + view.pId);
 	
-	$.jqplot.config.enablePlugins = true;
-
 	// Make the container visible temporarily in case it has been hidden
 	$pc = $('#panel-container');
 	if(!$pc.is(':visible')) {

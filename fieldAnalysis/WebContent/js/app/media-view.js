@@ -18,6 +18,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 import { getMedia } from "commonReportFunctions";
 import globals from "globals";
+import { renderMedia } from "./plugins";
 
 export function setMediaSurvey(view) {
 	
@@ -37,7 +38,7 @@ export function setMediaSurvey(view) {
 		$image_wrap.find("img").attr("src", "img/blank.gif");
 		
 		// Add new media items
-		$scrollable.mediaGeneratorSurvey(mediaItems);
+		renderMedia($scrollable[0], mediaItems);
 		$("#scrollable" + view.pId + " img").off().click(function () {
 				media_show_full(view, $(this));
 			}).filter(":first").click();
@@ -72,7 +73,7 @@ export function setMediaSurvey(view) {
 			gReport.smap.data_gen_type = mediaType;
 			
 			$('#report_title').val(gReport.title);
-			$('#reportContainer').dialog("open");
+			bootstrap.Modal.getOrCreateInstance(document.getElementById('reportContainer')).show();
 			initialiseReportMap();
 			return false;
 		});

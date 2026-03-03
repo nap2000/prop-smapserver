@@ -3791,7 +3791,7 @@ function addGeomPickList(sMeta) {
 	var h = [],
 		k = [],
 		idx = -1,
-		i,
+		i, j,
 		value,
 		theForm;
 
@@ -6643,7 +6643,9 @@ export {
 	refreshLocationGroups,
 	includeLocation,
 	uploadFiles,
+	getQuestionList,
 	setSurveyViewLanguages,
+	setSurveyViewQuestions,
 	getNotificationTypes,
 	resultsURL,
 	populateTaskGroupList,

@@ -16,7 +16,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import "jquery";
-import "jquery_ui";
 import "rmm";
 import "localise";
 

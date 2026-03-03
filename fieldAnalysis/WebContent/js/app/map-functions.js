@@ -23,7 +23,7 @@ var gMapData = {};
 var gCurrentBoundsLayer,
 	gSelectedBounds;
 
-function addLayer(data, pId1, pId2, view, title, map) {
+export function addLayer(data, pId1, pId2, view, title, map) {
 	"use strict";
 	
 	var itemIdx,
@@ -125,7 +125,7 @@ function addLayer(data, pId1, pId2, view, title, map) {
 		}
 
 		$span.empty().append(h.join(''));
-		$timecontrols.show();
+		$timecontrols.removeClass('d-none').show();
 		$span.change(function() {
 			md["span"] = parseInt($(this).val());
 	 	 	setTimeFilter(md);
@@ -134,34 +134,25 @@ function addLayer(data, pId1, pId2, view, title, map) {
 			var mapData = md;
 			startAnimation(mapData);
 		});
-		
+
 		md["span"] = 1;
  	 	setTimeFilter(md);
- 	 	
+
  	 	if(md["endIdx"] > 25) {
- 	 		md["interval"] = 5000 / md["endIdx"];		// The whole animation should always a max of 5 seconds
+ 	 		md["interval"] = 5000 / md["endIdx"];
  	 	} else {
- 	 		md["interval"] = 200;	// Each animation point is 0.2 seconds
+ 	 		md["interval"] = 200;
  	 	}
-		
-		// initialise slider
-		md["$slider"].slider({
-			range: true,
-			min: 0,
-			max: md["endIdx"] + 1,
-			values: [ 0, md["span"] ],
-			slide: function( event, ui ) {
-				
-			},
-			stop: function(event, ui) {
-				md["span"] = ui.values[1] - ui.values[0];
-				$span.val(md["span"]);
-				md["startIdx"] = -0.5 + ui.values[0];
-				md["currentIdx"] = md["startIdx"];
-				setTimeFilter(md);
-			}
+
+		// Initialise native range slider
+		md["$slider"].attr({ min: 0, max: md["endIdx"] + 1, step: 1 }).val(0);
+		md["$slider"].on('input change', function() {
+			var startPos = parseInt($(this).val());
+			md["startIdx"] = -0.5 + startPos;
+			md["currentIdx"] = md["startIdx"];
+			md["span"] = parseInt($span.val());
+			setTimeFilter(md);
 		});
-		md["$slider"].slider('enable');	// Enable slider
 	}
 	
 	/*
@@ -272,7 +263,7 @@ function setFeatureValue(data, pId1, pId2, view, title, map) {
 				btns[++j] = '</label>';
 			}
 			
-			$btnLayerSelect.append(btns.join('')).buttonset();
+			$btnLayerSelect.append(btns.join(''));
 			$btnLayerSelect.find('input').change(function() {
 				data.optionIdx = $(this).val();
 				data.option = cols[data.optionIdx];
@@ -561,7 +552,7 @@ function loadFeatures(map, key, item, ext_g, bounds, layers, isPeriod, md) {
 }
 
 //Zoom to the data on a map (check all layers on the map)
-function zoomToData(map) {
+export function zoomToData(map) {
 	
 	var bounds,
 		num,
@@ -696,9 +687,9 @@ function onFeatureUnselect(feature) {
 function setTimeFilter(md) {
         md["filter"].lowerBoundary = md["startIdx"];
         md["filter"].upperBoundary = md["startIdx"] + md["span"];
-        md["$slider"].slider({ values: [ md["filter"].lowerBoundary, md["filter"].upperBoundary ] });
-        md["$slideDate1"].val(getPeriodLabel(md["filter"].lowerBoundary + 0.5, md));
-        md["$slideDate2"].val(getPeriodLabel(md["filter"].upperBoundary + 0.5, md));
+        md["$slider"].val(Math.max(0, Math.round(md["filter"].lowerBoundary + 0.5)));
+        md["$slideDate1"].text(getPeriodLabel(md["filter"].lowerBoundary + 0.5, md));
+        md["$slideDate2"].text(getPeriodLabel(md["filter"].upperBoundary + 0.5, md));
         md["filterStrategy"].setFilter(md["filter"]);
 };
 
@@ -720,9 +711,9 @@ function startAnimation(md) {
             theMD["filter"].upperBoundary = theMD["currentIdx"] + theMD["span"];
             theMD["filterStrategy"].setFilter(theMD["filter"]);
             theMD["currentIdx"] = theMD["currentIdx"] + theMD["step"];
-            theMD["$slider"].slider({ values: [ theMD["filter"].lowerBoundary, theMD["filter"].upperBoundary ] });
-            theMD["$slideDate1"].val(getPeriodLabel(theMD["filter"].lowerBoundary + 0.5, theMD));
-            theMD["$slideDate2"].val(getPeriodLabel(theMD["filter"].upperBoundary + 0.5, theMD));
+            theMD["$slider"].val(Math.max(0, Math.round(theMD["filter"].lowerBoundary + 0.5)));
+            theMD["$slideDate1"].text(getPeriodLabel(theMD["filter"].lowerBoundary + 0.5, theMD));
+            theMD["$slideDate2"].text(getPeriodLabel(theMD["filter"].upperBoundary + 0.5, theMD));
         } else {
             stopAnimation(true, theMD);
         }
@@ -742,7 +733,7 @@ function stopAnimation(reset, md) {
 /*
  * Add shared maps
  */
-function addSharedMaps(map, sharedMaps) {
+export function addSharedMaps(map, sharedMaps) {
 	
 	var i,
 		layerUrl,
