@@ -41,6 +41,27 @@ td {
 	overflow: auto;
 }
 
+/* Panel card fixed heights */
+.panel-col .card {
+    height: 420px;
+}
+.panel-col.col-12 .card {
+    height: 80vh;
+}
+.panel-col .pContent {
+    height: 100%;
+    overflow: auto;
+}
+
+/* Map/graph/table fill panel body */
+.panel-col .map_panel,
+.panel-col .graph_panel,
+.panel-col .table_panel,
+.panel-col .media_panel {
+    height: 100%;
+    width: 100%;
+}
+
 .graphLabel {
     background: none repeat scroll 0 0 rgba(0, 60, 136, 0.5);
     z-index:2005; 
