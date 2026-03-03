@@ -404,7 +404,7 @@ function addTriggers() {
 		slide($(this));
 	});
 
-	$('.set_date_range').off().click(function() {
+$('.set_date_range').off().click(function() {
 		set_date_range($(this));
 	});
 
@@ -562,8 +562,7 @@ function setPanelType(type, idx, period, qId, subject_type) {
 		break;
 	case "graph":
 		html = `<button class="slide btn btn-sm btn-outline-secondary m-1" href="#slideLeft">&lt;</button>
-			<button class="btn btn-sm btn-outline-secondary graphLabel m-1">L</button>
-			<div class="analysis graph_panel" id="graph_panel${idx}">
+<div class="analysis graph_panel" id="graph_panel${idx}">
 				<div class="r_overview"><div class="r_description"></div></div>
 				<div style="position:relative;height:90%;width:100%;">
 					<canvas id="chartdiv${idx}"></canvas>

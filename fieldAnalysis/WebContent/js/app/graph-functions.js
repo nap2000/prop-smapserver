@@ -283,7 +283,7 @@ function bar_graph(ticks, matrix2, series, chart, data, pId) {
 			responsive: true,
 			maintainAspectRatio: false,
 			plugins: {
-				legend: { display: true },
+				legend: { display: false },
 				tooltip: { mode: 'index', intersect: false }
 			},
 			scales: {
@@ -299,10 +299,8 @@ function bar_graph(ticks, matrix2, series, chart, data, pId) {
 		}
 	});
 
-	$('.graphLabel').off().click(function() {
-		graphLabel(pId);
-	});
 }
+
 
 /*
  * Show the time series using Chart.js
@@ -342,7 +340,7 @@ function ts_graph(ticks, matrix2, series, chart, data, pId) {
 			responsive: true,
 			maintainAspectRatio: false,
 			plugins: {
-				legend: { display: true },
+				legend: { display: false },
 				tooltip: { mode: 'index', intersect: false }
 			},
 			scales: {
@@ -358,15 +356,4 @@ function ts_graph(ticks, matrix2, series, chart, data, pId) {
 		}
 	});
 
-	$('.graphLabel').off().click(function() {
-		graphLabel(pId);
-	});
-}
-
-export function graphLabel(pId) {
-	var canvas = document.querySelector('#graph_panel' + pId + ' canvas');
-	var chart = canvas && canvas._chart;
-	if(!chart) return;
-	chart.options.plugins.legend.display = !chart.options.plugins.legend.display;
-	chart.update();
 }
