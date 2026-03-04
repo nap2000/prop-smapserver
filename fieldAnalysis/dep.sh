@@ -62,11 +62,9 @@ export COPYFILE_DISABLE=true
 rm -rf "$SCRIPT_DIR/fieldAnalysis"
 cp -R "$SCRIPT_DIR/WebContent" "$SCRIPT_DIR/fieldAnalysis"
 add_build_id_cache_busting "$SCRIPT_DIR/fieldAnalysis"
-cd "$SCRIPT_DIR/fieldAnalysis"
-tar --no-xattrs -zcf fieldAnalysis.tgz *
-cp fieldAnalysis.tgz ~/deploy/smap/deploy/version1
-rm fieldAnalysis.tgz
 cd "$SCRIPT_DIR"
+tar --no-xattrs -zcf fieldAnalysis.tgz fieldAnalysis
+mv fieldAnalysis.tgz ~/deploy/smap/deploy/version1
 
 # deploy to local
 

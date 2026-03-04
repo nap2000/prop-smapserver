@@ -62,11 +62,9 @@ export COPYFILE_DISABLE=true
 rm -rf "$SCRIPT_DIR/fieldManager"
 cp -R "$SCRIPT_DIR/WebContent" "$SCRIPT_DIR/fieldManager"
 add_build_id_cache_busting "$SCRIPT_DIR/fieldManager"
-cd "$SCRIPT_DIR/fieldManager"
-tar --no-xattrs -zcf fieldManager.tgz *
-cp fieldManager.tgz ~/deploy/smap/deploy/version1
-rm fieldManager.tgz
 cd "$SCRIPT_DIR"
+tar --no-xattrs -zcf fieldManager.tgz fieldManager
+mv fieldManager.tgz ~/deploy/smap/deploy/version1
 
 # deploy to local
 

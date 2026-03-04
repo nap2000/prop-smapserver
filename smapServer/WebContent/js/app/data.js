@@ -598,6 +598,7 @@ function getUserLocationsData(view, start_rec, nocache) {
 
 export {
 	getGroupMeta,
+	getQuestionMeta,
 	getResults,
 	getSurveyDataSE,
 	getSurveyMetaSE,

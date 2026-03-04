@@ -62,11 +62,9 @@ export COPYFILE_DISABLE=true
 rm -rf "$SCRIPT_DIR/myWork"
 cp -R "$SCRIPT_DIR/WebContent" "$SCRIPT_DIR/myWork"
 add_build_id_cache_busting "$SCRIPT_DIR/myWork"
-cd "$SCRIPT_DIR/myWork"
-tar --no-xattrs -zcf myWork.tgz *
-cp myWork.tgz ~/deploy/smap/deploy/version1
-rm myWork.tgz
 cd "$SCRIPT_DIR"
+tar --no-xattrs -zcf myWork.tgz myWork
+mv myWork.tgz ~/deploy/smap/deploy/version1
 
 # deploy to local
 
