@@ -449,7 +449,7 @@ function delPanel($this, idx) {
 	views = globals.gSelector.getViews();
 	if(views[idx].state === "expanded") {
 		gExpandedPanelSeq = idx;
-		$('.col-12 col-md-6 col-lg-4.panel-col').removeClass('d-none');
+		$('.col-12.col-md-6.col-lg-4.panel-col').removeClass('d-none');
 	}
 	views[idx].state = "deleted";
 
