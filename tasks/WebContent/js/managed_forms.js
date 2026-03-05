@@ -1070,7 +1070,7 @@ localise.initLocale(gUserLocale).then(function () {
     }
 
     function setupChartEdit() {
-        $('.fa-cog','#chartcontent').click(function(){
+        $('.fa-sliders-h','#chartcontent').closest('button').click(function(){
             gSelectedChart = $(this).data("idx");
             $('#addChartForm')[0].reset();
             $('#cs_subject').val(gTasks.cache.currentData.settings.charts[gSelectedChart].subject);
@@ -1082,9 +1082,10 @@ localise.initLocale(gUserLocale).then(function () {
             window.bsModalShow('#chart_settings_popup');
         });
 
-        $('.fa-trash','#chartcontent').click(function(){
-            chart.remove($(this).data("idx"));
-            gTasks.cache.currentData.settings.charts.splice($(this).data("idx"), 1);
+        $('.fa-times','#chartcontent').closest('button').click(function(){
+            var idx = $(this).data("idx");
+            chart.remove(idx);
+            gTasks.cache.currentData.settings.charts.splice(idx, 1);
             saveCharts();
             updateCharts(gTasks.cache.currentData.settings.charts);
             chart.refresh();

@@ -54,6 +54,64 @@ tr.deleted td a {
     color: #922B21 !important;
 }
 
+/* ============================================================
+   Panel card header & action buttons
+   Used by fieldAnalysis dashboard and managed_forms chart panels
+   ============================================================ */
+
+.panel-header {
+    padding: 0.35rem 0.75rem;
+    background: #f8f9fa;
+    border-bottom: 1px solid rgba(0,0,0,.1);
+    min-height: 2.25rem;
+}
+
+.panel_title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #495057;
+    letter-spacing: 0.02em;
+    min-width: 0;
+}
+
+.panel-actions {
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.card:hover .panel-actions {
+    opacity: 1;
+}
+
+.panel-btn {
+    background: none;
+    border: none;
+    color: #6c757d;
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 0;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s, background 0.15s;
+}
+
+.panel-btn:hover {
+    color: #212529;
+    background: rgba(0,0,0,0.08);
+}
+
+.panel-btn-danger:hover {
+    color: #dc3545;
+    background: rgba(220,53,69,0.1);
+}
+
 .chart-header.card-header {
     padding-top: 0.1rem;
     padding-bottom: 0.1rem;

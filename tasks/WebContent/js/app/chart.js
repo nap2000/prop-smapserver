@@ -82,10 +82,14 @@ export default {
             var index = charts.length;
             var card = `<div class="col-sm-12 col-md-6 col-lg-3">
                                     <div class="card">
-                                        <div class="card-header d-flex chart-header">
-                                            <span class="mr-auto">${label}</span>
-                                            <i class="fa fa-trash text-danger pr-2" data-idx="${index}"></i>
-                                            <i class="fa fa-cog" data-idx="${index}"></i>
+                                        <div class="card-header panel-header d-flex align-items-center">
+                                            <span class="panel_title me-auto text-truncate">${label}</span>
+                                            <div class="panel-actions">
+                                                <button class="panel-btn" data-idx="${index}" title="Settings">
+                                                    <i class="fas fa-sliders-h"></i></button>
+                                                <button class="panel-btn panel-btn-danger" data-idx="${index}" title="Remove">
+                                                    <i class="fas fa-times"></i></button>
+                                            </div>
                                         </div>
                                         <div class="card-body">
                                             <canvas id="chart${index}"></canvas>
