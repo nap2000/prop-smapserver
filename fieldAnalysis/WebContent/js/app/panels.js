@@ -370,12 +370,12 @@ function setPanelState(view, idx, oldState) {
 	switch(view.state) {
 	case "shown":
 		$panel.find('.pExpand').html('<i class="fas fa-expand"></i>');
-		$panel.removeClass('col-12').addClass('col-12 col-md-6 col-lg-4');
+		$panel.removeClass('col-12').addClass('col-12 col-md-6 col-lg-3');
 		$panel.removeClass('d-none');
 		break;
 	case "expanded":
 		$panel.find('.pExpand').html('<i class="fas fa-compress"></i>');
-		$panel.removeClass('col-12 col-md-6 col-lg-4').addClass('col-12');
+		$panel.removeClass('col-12 col-md-6 col-lg-3').addClass('col-12');
 		$panel.removeClass('d-none');
 		break;
 	case "minimised":
@@ -481,7 +481,7 @@ function createPanel(idx, $panels, title, surveyName, subject_type) {
 	}
 
 	var el = document.createElement('div');
-	el.className = 'col-12 col-md-6 col-lg-4 panel-col';
+	el.className = 'col-12 col-md-6 col-lg-3 panel-col';
 	el.id = 'p' + idx;
 	el.innerHTML = `
 		<div class="card h-100">

@@ -303,17 +303,27 @@ div.olControlZoom a:link {
 	background: rgba(220,53,69,0.1);
 }
 
-/* Fixed card heights — normal and expanded (col-12) */
-.panel-col .card {
-	height: 420px;
+/* Panel column height — flex stretch in Bootstrap rows prevents aspect-ratio
+   from working on the card, so set height directly on the column. */
+.panel-col {
+	height: 30vh;
 }
 
-.panel-col.col-12 .card {
+.panel-col .card {
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+/* Expanded (col-12) panel overrides */
+.panel-col.col-12 {
 	height: 80vh;
 }
 
+/* Content area fills all space below the header and scrolls internally */
 .panel-col .pContent {
-	height: 100%;
+	flex: 1;
+	min-height: 0;
 	overflow: auto;
 }
 
