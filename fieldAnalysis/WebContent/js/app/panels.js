@@ -496,7 +496,7 @@ function createPanel(idx, $panels, title, surveyName, subject_type) {
 						<i class="fas fa-times"></i></button>
 				</div>
 			</div>
-			<div class="card-body pContent p-0" style="overflow:auto;"></div>
+			<div class="card-body pContent p-0"></div>
 		</div>`;
 	$panels[0].appendChild(el);
 }
@@ -511,7 +511,7 @@ function setPanelType(type, idx, period, qId, subject_type) {
 
 	switch(type) {
 	case "map":
-		html = `<button class="slide btn btn-sm btn-outline-secondary m-1" href="#slideLeft">&lt;</button>
+		html = `<button class="slide" href="#slideLeft"><i class="fas fa-chevron-left"></i></button>
 			<div style="height:100%;width:100%;">
 				<div class="r_overview"><div class="r_description"></div></div>
 				<div class="analysis map_panel" id="map_panel${idx}"></div>`;
@@ -540,7 +540,7 @@ function setPanelType(type, idx, period, qId, subject_type) {
 		break;
 	case "table":
 		if(subject_type === 'survey') {
-			html = `<button class="slide btn btn-sm btn-outline-secondary m-1" href="#slideLeft">&lt;</button>`;
+			html = `<button class="slide" href="#slideLeft"><i class="fas fa-chevron-left"></i></button>`;
 		} else {
 			html = '';
 		}
@@ -563,7 +563,7 @@ function setPanelType(type, idx, period, qId, subject_type) {
 		$panelContent.append(html);
 		break;
 	case "graph":
-		html = `<button class="slide btn btn-sm btn-outline-secondary m-1" href="#slideLeft">&lt;</button>
+		html = `<button class="slide" href="#slideLeft"><i class="fas fa-chevron-left"></i></button>
 <div class="analysis graph_panel" id="graph_panel${idx}">
 				<div class="r_overview"><div class="r_description"></div></div>
 				<div style="position:relative;height:90%;width:100%;">
@@ -723,18 +723,21 @@ function savePanelState(view) {
 function slide($elem) {
 	var current = $elem.attr("href");
 	var e = jQuery.Event("resized");
+	var $pContent = $elem.closest('.pContent');
 	if(current == "#slideLeft") {
-		$elem.html("&gt;");
+		$elem.html('<i class="fas fa-chevron-right"></i>');
 		$elem.attr("href", "#slideRight");
-		$elem.closest('.pContent').find('.pSidebar').show();
-		$elem.closest('.pContent').find('.map_panel, .graph_panel, .table_panel, .timecontrols').css('width', '74%').trigger(e);
-		$elem.closest('.pContent').find('.timecontrols').css('width', '70%');
+		$pContent.addClass('sidebar-open');
+		$pContent.find('.pSidebar').show();
+		$pContent.find('.map_panel, .graph_panel, .table_panel, .timecontrols').css('width', '74%').trigger(e);
+		$pContent.find('.timecontrols').css('width', '70%');
 	} else {
-		$elem.html("&lt;");
+		$elem.html('<i class="fas fa-chevron-left"></i>');
 		$elem.attr("href", "#slideLeft");
-		$elem.closest('.pContent').find('.pSidebar').hide();
-		$elem.closest('.pContent').find('.map_panel, .graph_panel, .table_panel, .timecontrols').css('width', '100%').trigger(e);
-		$elem.closest('.pContent').find('.timecontrols').css('width', '95%');
+		$pContent.removeClass('sidebar-open');
+		$pContent.find('.pSidebar').hide();
+		$pContent.find('.map_panel, .graph_panel, .table_panel, .timecontrols').css('width', '100%').trigger(e);
+		$pContent.find('.timecontrols').css('width', '95%');
 	}
 }
 

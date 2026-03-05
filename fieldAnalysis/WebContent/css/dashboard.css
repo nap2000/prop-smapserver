@@ -64,41 +64,85 @@
 
 /* Sidebar panel (layers/data/settings drawer inside a panel) */
 .pSidebar {
-	height: 100%;
-	width: 25%;
-	display: none;
-	float: right;
-	background: white;
-	overflow: auto;
-	border: thin solid grey;
 	position: absolute;
 	top: 0;
 	right: 0;
+	width: 26%;
+	height: 100%;
+	display: none;
+	background: #f8f9fa;
+	border-left: 1px solid rgba(0,0,0,0.12);
+	box-shadow: -3px 0 12px rgba(0,0,0,0.1);
+	overflow-y: auto;
 	z-index: 2000;
+	padding: 0.5rem 0.75rem;
+	font-size: 0.8rem;
 }
 
 .pSidebar h3 {
-	color: #FF5050;
-	clear: both;
+	font-size: 0.68rem;
+	font-weight: 700;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+	color: #6c757d;
+	margin: 0.75rem 0 0.4rem;
+	padding-bottom: 0.25rem;
+	border-bottom: 1px solid rgba(0,0,0,0.1);
+	clear: none;
 }
 
+.pSidebar h3:first-child {
+	margin-top: 0;
+}
+
+/* Let Bootstrap handle button sizing in the sidebar */
+.pSidebar .pfoot button,
 .pSidebar label.ui-button,
-.pSidebar button,
 .pSidebar .pfoot form input {
-	width: 90%;
-	margin: auto;
-	margin-left: 5px;
-	max-width: none;
+	width: auto;
+	margin: 0;
 }
 
-.pSidebar input {
-	float: left;
+.pSidebar input[type="radio"],
+.pSidebar input[type="checkbox"] {
+	margin-right: 0.25rem;
 }
 
 /* Map layer switcher button */
 .layerbutton {
-	width: 80%;
-	margin: 2px auto;
+	width: 100%;
+	margin: 2px 0;
+}
+
+/* Slide-in sidebar toggle tab */
+.slide {
+	position: absolute;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	z-index: 2001;
+	width: 18px;
+	height: 48px;
+	padding: 0;
+	border: none;
+	border-radius: 5px 0 0 5px;
+	background: rgba(33, 37, 41, 0.45);
+	color: #fff;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.6rem;
+	transition: right 0.2s ease, background 0.15s;
+	line-height: 1;
+}
+
+.slide:hover {
+	background: rgba(33, 37, 41, 0.75);
+}
+
+.pContent.sidebar-open .slide {
+	right: 26%;
 }
 
 /* ============================================================
@@ -320,11 +364,12 @@ div.olControlZoom a:link {
 	height: 80vh;
 }
 
-/* Content area fills all space below the header and scrolls internally */
+/* Content area fills all space below the header */
 .panel-col .pContent {
 	flex: 1;
 	min-height: 0;
-	overflow: auto;
+	overflow: hidden;
+	position: relative;
 }
 
 /* Panel content areas fill the card body */
@@ -334,6 +379,12 @@ div.olControlZoom a:link {
 .panel-col .media_panel {
 	height: 100%;
 	width: 100%;
+	transition: width 0.2s ease;
+}
+
+/* Tables need their own scroll since pContent is overflow:hidden */
+.panel-col .table_panel {
+	overflow: auto;
 }
 
 /* Time-series slider for animated maps */
