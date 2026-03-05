@@ -1,8 +1,8 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title class="lang" data-lang="r_f"></title>
+    <title class="lang" data-lang="r_f">Register – Smap Server</title>
 
     <link href="/css/bootstrap.v5.3.8.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="favicon.ico"/>
@@ -22,19 +22,20 @@
 
 </head>
 <body>
+<a class="visually-hidden-focusable" href="#main-content">Skip to main content</a>
 
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
     <a id="navbar-brand" href="#" class="navbar-brand">
         <span class="thick">SMAP</span> Server
     </a>
-    <div class="spinner-grow text-danger hour_glass" style="display:none;"></div>
+    <div class="spinner-grow text-danger hour_glass" role="status" aria-label="Loading" style="display:none;"></div>
 </nav>
 
 <div class="page-header text-center">
     <h1 class="lang" data-lang="r_f"></h1>
 </div>
 
-<div class="container">
+<div class="container" id="main-content" tabindex="-1">
 
     <div class="row mt-2 mb-2">
         <p class="col-3"></p>
@@ -88,7 +89,7 @@
 
         <div class="form-group row has-error">
             <div class="col-12 text-center">
-                <button id="registerSubmit" type="submit" class="btn btn-secondary btn-primary lang"
+                <button id="registerSubmit" type="submit" class="btn btn-primary lang"
                         data-lang="c_submit"
                         disabled="disabled">submit
                 </button>

@@ -3502,7 +3502,7 @@ localise.initLocale(gUserLocale).then(function () {
                     var $this = $(this);
                     if($this.text() === "t") {
                         $this.text(localise.set["c_yes"]);
-                        $this.addClass('bg-danger');
+                        $this.addClass('cell-is-deleted');
                     } else  if($this.text() === "f") {
                         $this.text(localise.set["c_no"]);
                     }

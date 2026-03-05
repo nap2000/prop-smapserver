@@ -11,7 +11,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=0.7">
 	-->
 
-	<title class="lang" data-lang="c_edit"></title>
+	<title class="lang" data-lang="c_edit">Edit – Smap Server</title>
 
 	<link href="/css/bootstrap.v5.3.8.min.css" rel="stylesheet">
 	<link href="/css/wb/plugins/iCheck/custom.css" rel="stylesheet">
@@ -36,10 +36,11 @@
 	<script src="/build/js/edit.bundle.js"></script>
 </head>
 <body>
+<a class="visually-hidden-focusable" href="#main-content">Skip to main content</a>
 
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap sticky-top">
 	<a class="navbar-brand" href="#"><i class="fa fa-edit" aria-hidden="true"></i> <span class="formName"></span></a>
-	<div class="spinner-grow text-danger hour_glass"></div>
+	<div class="spinner-grow text-danger hour_glass" role="status" aria-label="Loading"></div>
 	<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
 	</button>
@@ -47,7 +48,7 @@
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
 		<ul class="navbar-nav ms-auto">
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-bs-toggle="dropdown" aria-haspopup="menu" aria-expanded="false">
 					<span class="lang" data-lang="m_modules">modules</span>
 				</a>
 				<div class="dropdown-menu" aria-labelledby="m_modules">
@@ -156,6 +157,7 @@
 	</div>
 </nav>
 
+<div id="main-content" tabindex="-1"></div>
 <div id="content" class="editorContent">
 	<div class="container-fluid">
 			<div class="col-md-12">

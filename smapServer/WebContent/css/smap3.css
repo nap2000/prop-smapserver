@@ -49,6 +49,11 @@ tr.deleted td a {
     color: white
 }
 
+.cell-is-deleted {
+    background-color: #FADBD8 !important;
+    color: #922B21 !important;
+}
+
 .chart-header.card-header {
     padding-top: 0.1rem;
     padding-bottom: 0.1rem;
@@ -66,7 +71,7 @@ tr.deleted td a {
 }
 
 ::placeholder {
-    color: lightgrey;
+    color: #767676;
 }
 
 .conv-from.sms {

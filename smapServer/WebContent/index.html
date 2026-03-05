@@ -24,11 +24,12 @@
 
 </head>
 <body class="backdos">
+<a class="visually-hidden-focusable" href="#main-content">Skip to main content</a>
 
 <nav class="navbar navbar-expand-md navbar-smap bg-navbar-smap">
 	<div class="navbar-header">
 		<a href="#" class="navbar-brand">
-			<img alt="brand" src="/images/logo.png">
+			<img alt="" src="/images/logo.png">
 			<span class="thick">SMAP</span> Server
 		</a>
 	</div>
@@ -42,7 +43,7 @@
 		<ul class="navbar-nav ms-auto">
 
 			<li class="nav-item dropdown active">
-				<a class="nav-link dropdown-toggle" href="#" id="m_downloads" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link dropdown-toggle" href="#" id="m_downloads" role="button" data-bs-toggle="dropdown" aria-haspopup="menu" aria-expanded="false">
 					<span class="lang" data-lang="c_download">Download</span>
 				</a>
 				<div class="dropdown-menu" aria-labelledby="m_downloads">
@@ -68,7 +69,7 @@
 	</div>
 </nav>
 
-<div class="container-fluid mt-2">
+<div class="container-fluid mt-2" id="main-content" tabindex="-1">
 	<div class="row">
 		<div class="col-sm-10 offset-md-1">
 			<img id="main_logo" alt="Logo" class="main_logo maxwidth mx-auto d-block" src="" onerror="setCustomMainLogo();"/>

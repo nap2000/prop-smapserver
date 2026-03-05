@@ -549,13 +549,16 @@ div > input.colgroup {
 }
 
 td.accepted {
-	background-color: yellow !important;	
+	background-color: #FEF9E7 !important;
+	color: #7D6608 !important;
 }
 td.new {
-	background-color: red !important;	
+	background-color: #FADBD8 !important;
+	color: #922B21 !important;
 }
 td.completed, td.submitted {
-	background-color: green !important;	
+	background-color: #EAFAF1 !important;
+	color: #1E8449 !important;
 }
 
 .bootstrap-datetimepicker-widget {
