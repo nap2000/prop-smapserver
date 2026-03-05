@@ -724,13 +724,16 @@ function slide($elem) {
 	var current = $elem.attr("href");
 	var e = jQuery.Event("resized");
 	var $pContent = $elem.closest('.pContent');
+	var isExpanded = $elem.closest('.panel-col').hasClass('expanded');
+	var sidebarPct = isExpanded ? 30 : 70;
+	var contentPct = 100 - sidebarPct;
 	if(current == "#slideLeft") {
 		$elem.html('<i class="fas fa-chevron-right"></i>');
 		$elem.attr("href", "#slideRight");
 		$pContent.addClass('sidebar-open');
 		$pContent.find('.pSidebar').show();
-		$pContent.find('.map_panel, .graph_panel, .table_panel, .timecontrols').css('width', '74%').trigger(e);
-		$pContent.find('.timecontrols').css('width', '70%');
+		$pContent.find('.map_panel, .graph_panel, .table_panel, .timecontrols').css('width', contentPct + '%').trigger(e);
+		$pContent.find('.timecontrols').css('width', (contentPct - 4) + '%');
 	} else {
 		$elem.html('<i class="fas fa-chevron-left"></i>');
 		$elem.attr("href", "#slideLeft");

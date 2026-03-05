@@ -67,7 +67,7 @@
 	position: absolute;
 	top: 0;
 	right: 0;
-	width: 26%;
+	width: 70%;
 	height: 100%;
 	display: none;
 	background: #f8f9fa;
@@ -141,8 +141,18 @@
 	background: rgba(33, 37, 41, 0.75);
 }
 
+/* Default (small panels): sidebar is 70% wide */
 .pContent.sidebar-open .slide {
-	right: 26%;
+	right: 70%;
+}
+
+/* Expanded panels: sidebar only needs 30% */
+.panel-col.expanded .pSidebar {
+	width: 30%;
+}
+
+.panel-col.expanded .pContent.sidebar-open .slide {
+	right: 30%;
 }
 
 /* ============================================================
