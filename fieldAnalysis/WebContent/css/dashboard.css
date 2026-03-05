@@ -5,6 +5,15 @@
  */
 
 /* ============================================================
+   Navbar controls — project selector and add-panel dropdown
+   ============================================================ */
+
+.navbar-project-select {
+	max-width: 180px;
+	min-width: 100px;
+}
+
+/* ============================================================
    Feature panel — right-side overlay when a map geometry
    is clicked (populated by map-functions.js)
    ============================================================ */

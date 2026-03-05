@@ -40,6 +40,19 @@
 		<span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
 	</button>
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+		<!-- Project selector + Add panel — left side of navbar -->
+		<select class="project_list form-select form-select-sm navbar-project-select ms-2" id="project_name" aria-label="Project"></select>
+		<div class="dropdown ms-2">
+			<button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Add panel">
+				<i class="fas fa-plus"></i>
+			</button>
+			<ul class="dropdown-menu">
+				<li><button class="dropdown-item db_settings_add" value="graph"><i class="fas fa-chart-bar me-2"></i><span class="lang" data-lang="c_graph">Graph</span></button></li>
+				<li><button class="dropdown-item db_settings_add" value="map"><i class="fas fa-map me-2"></i><span class="lang" data-lang="c_map">Map</span></button></li>
+				<li><button class="dropdown-item db_settings_add" value="table"><i class="fas fa-table me-2"></i><span class="lang" data-lang="c_table">Table</span></button></li>
+				<li><button class="dropdown-item db_settings_add" value="media"><i class="fas fa-camera me-2"></i><span class="lang" data-lang="c_images">Images</span></button></li>
+			</ul>
+		</div>
 		<ul class="navbar-nav ms-auto">
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -79,27 +92,7 @@
 	</div>
 </nav>
 
-<div id="main" class="container-fluid mt-3" role="main">
-
-	<!-- Project selector + add panel buttons -->
-	<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-		<div class="d-flex align-items-center gap-2">
-			<label class="lang fw-bold" data-lang="c_project" for="project_name">Select Project:</label>
-			<select class="project_list form-select" id="project_name" style="width:auto;"></select>
-		</div>
-		<button type="button" class="btn btn-outline-secondary db_settings_add" value="graph">
-			<i class="fas fa-chart-bar"></i> <span class="lang" data-lang="c_graph">Graph</span>
-		</button>
-		<button type="button" class="btn btn-outline-secondary db_settings_add" value="map">
-			<i class="fas fa-map"></i> <span class="lang" data-lang="c_map">Map</span>
-		</button>
-		<button type="button" class="btn btn-outline-secondary db_settings_add" value="table">
-			<i class="fas fa-table"></i> <span class="lang" data-lang="c_table">Table</span>
-		</button>
-		<button type="button" class="btn btn-outline-secondary db_settings_add" value="media">
-			<i class="fas fa-camera"></i> <span class="lang" data-lang="c_images">Images</span>
-		</button>
-	</div>
+<div id="main" class="container-fluid mt-2" role="main">
 
 	<!-- Analysis Panels -->
 	<div id="panel-container">
