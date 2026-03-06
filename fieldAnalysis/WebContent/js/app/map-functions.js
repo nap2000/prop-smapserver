@@ -16,7 +16,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 import { addAnchors, getDisplayDescription } from "commonReportFunctions";
-import { htmlEncode } from "common";
+import { htmlEncode, translateKey, translateKeyValue } from "common";
 
 var gMapData = {};
 
@@ -775,7 +775,7 @@ export function addSharedMaps(map, sharedMaps) {
 (function($) {
 	$.fn.featureSelect = function( data, clusterData ) {
 		
-		writebuffer = "";
+		var writebuffer = "";
 		var priKey, total, totalRecs, computedResult,
 			aDataItem,
 			h = [],
