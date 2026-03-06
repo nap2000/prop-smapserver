@@ -21,140 +21,137 @@ import globals from "globals";
 import { renderMedia } from "./plugins";
 
 export function setMediaSurvey(view) {
-	
-	var $image_wrap = $("#media_panel" + view.pId + " .image_wrap"),
-		$flow_player_wrap = $("#media_panel" + view.pId + " .flow_player_wrap"),
-		$scrollable = $('#scrollable' + view.pId),
-		mediaItems = view.results,
-		mediaType;
-	
-	if(typeof view.results[0].features === "undefined") {
-		$scrollable.append("<h2>Error: No data available for this survey</h2>");
-	} else {
-		$flow_player_wrap.hide();	
-		$image_wrap.show();
-	
-		$scrollable.empty();	// Empty out media viewer
-		$image_wrap.find("img").attr("src", "img/blank.gif");
-		
-		// Add new media items
-		renderMedia($scrollable[0], mediaItems);
-		$("#scrollable" + view.pId + " img").off().click(function () {
-				media_show_full(view, $(this));
-			}).filter(":first").click();
-		
-		// Add a right click option to export to reports
-		$("#scrollable" + view.pId + " img").bind("contextmenu", function(e) {
-			$this = $(this);
-			var media = $this.attr("full"),
-				thumbnail = $this.attr("src");
-			
-			gReport = {
-				imageURL: media, 
-				title: "media", 
-				thumbnail_url: thumbnail,
-				url: media,
-				action: "new",
-				smap: {
-					sId: view.sId
-				}
-			};
-			
-			if(thumbnail.indexOf("audio-icon") > -1) {
-				mediaType = "audio";
-			} else {
-				mediaObj = getMedia(media);
-				mediaType = mediaObj.type;
-				if(mediaType === "image") {
-					mediaType = "photo";		// Photo used instead of image in reports as per oembed
-				}
-			}
-			gReport.type = mediaType;
-			gReport.smap.data_gen_type = mediaType;
-			
-			$('#report_title').val(gReport.title);
-			bootstrap.Modal.getOrCreateInstance(document.getElementById('reportContainer')).show();
-			initialiseReportMap();
-			return false;
-		});
+
+	var $strip = $('#scrollable' + view.pId),
+		mediaItems = view.results;
+
+	if (typeof view.results[0].features === "undefined") {
+		$strip.html('<div class="mg-empty">No data available for this survey</div>');
+		return;
 	}
+
+	$strip.empty();
+	renderMedia($strip[0], mediaItems);
+
+	var $items = $strip.children();
+	if ($items.length === 0) {
+		$strip.html('<div class="mg-empty">No media found</div>');
+		return;
+	}
+
+	var currentIdx = 0;
+
+	function scrollThumbIntoView(idx) {
+		var stripEl = $strip[0];
+		var thumb = $items[idx];
+		var left = thumb.offsetLeft;
+		var w = thumb.offsetWidth;
+		var sw = stripEl.clientWidth;
+		var sl = stripEl.scrollLeft;
+		if (left < sl) {
+			stripEl.scrollLeft = left - 4;
+		} else if (left + w > sl + sw) {
+			stripEl.scrollLeft = left + w - sw + 4;
+		}
+	}
+
+	function showItem(idx) {
+		currentIdx = idx;
+		$items.removeClass('active');
+		$items.eq(idx).addClass('active');
+		scrollThumbIntoView(idx);
+		$('#mg_counter' + view.pId).text((idx + 1) + '\u2009/\u2009' + $items.length);
+		media_show_full(view, $items.eq(idx));
+
+		// Update nav button visibility
+		$('#mg_prev' + view.pId).css('visibility', idx > 0 ? 'visible' : 'hidden');
+		$('#mg_next' + view.pId).css('visibility', idx < $items.length - 1 ? 'visible' : 'hidden');
+	}
+
+	$items.on('click', function() {
+		showItem($items.index(this));
+	});
+
+	$('#mg_prev' + view.pId).off().on('click', function() {
+		if (currentIdx > 0) { showItem(currentIdx - 1); }
+	});
+
+	$('#mg_next' + view.pId).off().on('click', function() {
+		if (currentIdx < $items.length - 1) { showItem(currentIdx + 1); }
+	});
+
+	// Keyboard arrow navigation
+	$(document).off('keydown.mg' + view.pId).on('keydown.mg' + view.pId, function(e) {
+		if (e.key === 'ArrowLeft' && currentIdx > 0) { showItem(currentIdx - 1); }
+		else if (e.key === 'ArrowRight' && currentIdx < $items.length - 1) { showItem(currentIdx + 1); }
+	});
+
+	showItem(0);
+
+	// Right-click to export image to report
+	$strip.find('img.mg-thumb').bind("contextmenu", function(e) {
+		var $this = $(this);
+		var media = $this.attr("full"),
+			thumbnail = $this.attr("src"),
+			mediaType,
+			mediaObj;
+
+		if (thumbnail && thumbnail.indexOf("audio-icon") > -1) {
+			mediaType = "audio";
+		} else {
+			mediaObj = getMedia(media);
+			mediaType = mediaObj ? mediaObj.type : "photo";
+			if (mediaType === "image") { mediaType = "photo"; }
+		}
+
+		gReport = {
+			imageURL: media,
+			title: "media",
+			thumbnail_url: thumbnail,
+			url: media,
+			action: "new",
+			type: mediaType,
+			smap: { sId: view.sId, data_gen_type: mediaType }
+		};
+
+		$('#report_title').val(gReport.title);
+		bootstrap.Modal.getOrCreateInstance(document.getElementById('reportContainer')).show();
+		initialiseReportMap();
+		return false;
+	});
 }
 
 export function setMediaQuestion(view, mediaItems) {
-	
-	var $image_wrap = $("#media_panel" + view.pId + " .image_wrap"),
-		$flow_player_wrap = $("#media_panel" + view.pId + " .flow_player_wrap"),
-		$scrollable = $('#scrollable' + view.pId);
-		
-	
-	$flow_player_wrap.hide();	
-	$image_wrap.show();
-
-	$scrollable.empty();	// Empty out media viewer
-	$image_wrap.find("img").attr("src", "img/blank.gif");
-	
-	// Add new media items
-	$scrollable.append("<h2>Error: Media view is not available for a specific question</h2>" +
-			"<h2>Hint: Set question to \"none\"</h2>");
-
+	var $strip = $('#scrollable' + view.pId);
+	$strip.html('<div class="mg-empty">Media view requires question set to "none"</div>');
 }
 
-function media_show_full(view, $this) {
-	
-	var $image_wrap = $("#media_panel" + view.pId + " .image_wrap");
-	var $media_wrap = $('#media_wrap' + view.pId);
-	var style = ' width="512" height="344"';
-	
-	// see if same thumb is being clicked
-	if ($(this).hasClass("active")) { return; }
+function media_show_full(view, $item) {
 
-	var url = $this.attr("full");
-	var type = $this.attr("type");
-	var source_type = $this.attr("source_type");
+	var $img = $('#mg_img' + view.pId);
+	var $media = $('#mg_media' + view.pId);
+	var url = $item.attr("full");
+	var type = $item.attr("type");
+	var source_type = $item.attr("source_type");
 
-	$image_wrap.fadeTo("medium", 0.5);
-
-	if(type == "image") {
-		$media_wrap.hide();
-		$image_wrap.show();
-		var img = new Image();
-		img.onload = function() {
-			$image_wrap.fadeTo("fast", 1);
-			$image_wrap.find("img").attr("src", url);
+	if (type === "image") {
+		$media.hide();
+		$img.css('opacity', 0.4);
+		var imgEl = new Image();
+		imgEl.onload = function() {
+			$img.attr("src", url).css('opacity', 1);
 		};
-		img.src = url;	// begin loading the image 
+		imgEl.src = url;
+		$img.show();
 	} else if (type === "audio") {
-		$media_wrap.show();
-		$image_wrap.hide();
-
-		$media_wrap.empty().append('<audio controls' + style + '><source src="' + url
-			+ '" type="' + source_type + '"/>'
-			+ 'Your browser does not support this audio type'
-			+ '</audio>');
+		$img.hide();
+		$media.show().html('<audio controls><source src="' + url +
+			'" type="' + source_type + '"/>Your browser does not support this audio type</audio>');
 	} else if (type === "video") {
-		$media_wrap.show();
-		$image_wrap.hide();
-
-		var content = '<video controls'
-			+ style
-			+ '><source src="' + url
-			+ '" type="' + source_type + '">'
-			+ 'Your browser does not support this video type'
-			+ '</video>';
-
-		$media_wrap.empty().append('<video controls'
-			+ style
-			+ '><source src="' + url
-			+ '" type="' + source_type + '">'
-			+ 'Your browser does not support this video type'
-			+ '</video>');
-
+		$img.hide();
+		$media.show().html('<video controls><source src="' + url +
+			'" type="' + source_type + '">Your browser does not support this video type</video>');
 	}
-
-	// activate item
-	$("#scrollable" + view.pId + " img").removeClass("active");
-	$this.addClass("active");
-
 }
 
 

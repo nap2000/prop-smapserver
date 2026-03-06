@@ -579,11 +579,15 @@ function setPanelType(type, idx, period, qId, subject_type) {
 		$panelContent.append(html);
 		break;
 	case "media":
-		html = `<div class="analysis media_panel" id="media_panel${idx}">
-			<div class="image_wrap"><img src="img/blank.gif" width="512" height="344" /></div>
-			<div class="media_wrap"><div id="media_wrap${idx}"><div class="player"></div></div></div>
-			<br clear="all"/>
-			<div class="scrollable" id="scrollable${idx}"></div>
+		html = `<div class="analysis media_panel mg-panel" id="media_panel${idx}">
+			<div class="mg-stage">
+				<img class="mg-img" src="img/blank.gif" id="mg_img${idx}" />
+				<div class="mg-media" id="mg_media${idx}" style="display:none"></div>
+				<button class="mg-nav mg-prev" id="mg_prev${idx}">&#8249;</button>
+				<button class="mg-nav mg-next" id="mg_next${idx}">&#8250;</button>
+				<span class="mg-counter" id="mg_counter${idx}"></span>
+			</div>
+			<div class="mg-strip" id="scrollable${idx}"></div>
 		</div>`;
 		$panelContent.append(html);
 		break;

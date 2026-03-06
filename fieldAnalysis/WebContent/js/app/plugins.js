@@ -19,37 +19,32 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 import { getMedia } from "commonReportFunctions";
 
 /*
- * Generate media data
+ * Generate media thumbnail strip items
  */
 export function renderMedia(el, data) {
-	var html = [],
-		th = -1,
-		setSize = 4,
-		count = setSize,
-		i;
+	var html = [], th = -1, i;
 
-	for(i = 0; i < data.length; i++) {
-		$.each(data[i].features, function(j, features) {
-			$.each(features.properties, function(key, value) {
+	for (i = 0; i < data.length; i++) {
+		$.each(data[i].features, function(j, feature) {
+			$.each(feature.properties, function(key, value) {
 				var media = getMedia(value);
-				if(media) {
-					var inSet = count % setSize;
-					if(!inSet) {
-						if(setSize != count) {
-							html[++th] = '</div>';
-						}
-						html[++th] = '<div>';
+				if (media) {
+					if (media.type === 'image') {
+						html[++th] = '<img class="mg-thumb" src="' + media.thumbNail +
+							'" full="' + media.url +
+							'" type="image" source_type="' + media.source_type + '" alt="photo" />';
+					} else if (media.type === 'audio') {
+						html[++th] = '<div class="mg-thumb mg-audio-item" full="' + media.url +
+							'" type="audio" source_type="' + media.source_type + '">' +
+							'<i class="fa fa-music"></i></div>';
+					} else if (media.type === 'video') {
+						html[++th] = '<div class="mg-thumb mg-video-item" full="' + media.url +
+							'" type="video" source_type="' + media.source_type + '">' +
+							'<i class="fa fa-film"></i></div>';
 					}
-					html[++th] = '<img src="' + media.thumbNail + '" full="' + media.url + '" type="' +
-							media.type + '" source_type="' + media.source_type + '" alt="' + media.type + '" />';
-					++count;
 				}
 			});
 		});
-	}
-
-	if(setSize != count) {
-		html[++th] = '</div>';
 	}
 
 	$(el).html(html.join(''));
