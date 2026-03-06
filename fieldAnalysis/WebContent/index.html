@@ -114,52 +114,66 @@
 				<button type="button" class="btn-close" id="settings_x_close"></button>
 			</div>
 			<div class="modal-body">
-				<form>
-					<div class="mb-2 subject_survey_only">
-						<label for="settings_type" class="form-label lang" data-lang="a_type">Chart Type</label>
-						<select id="settings_type" class="form-select">
-							<option value="map" class="lang" data-lang="c_map">Map</option>
-							<option value="table" class="lang" data-lang="c_table">Table</option>
-							<option value="graph" class="lang" data-lang="c_graph">Graph</option>
-							<option value="media" class="lang" data-lang="c_images">Images</option>
-						</select>
+				<form class="ps-form">
+					<div class="row mb-2 subject_survey_only">
+						<label for="settings_type" class="col-sm-4 col-form-label lang" data-lang="a_type">Chart Type</label>
+						<div class="col-sm-8">
+							<select id="settings_type" class="form-select">
+								<option value="map" class="lang" data-lang="c_map">Map</option>
+								<option value="table" class="lang" data-lang="c_table">Table</option>
+								<option value="graph" class="lang" data-lang="c_graph">Graph</option>
+								<option value="media" class="lang" data-lang="c_images">Images</option>
+							</select>
+						</div>
 					</div>
-					<div class="mb-2 table_only map_only" style="display:none;">
-						<label for="subject_type" class="form-label lang" data-lang="c_subject">subject</label>
-						<select id="subject_type" class="form-select">
-							<option value="survey" class="lang" data-lang="c_data">data</option>
-							<option value="user" class="lang" data-lang="a_ua">user</option>
-							<option value="user_locations" class="lang" data-lang="a_ul">user locs</option>
-						</select>
+					<div class="row mb-2 table_only map_only" style="display:none;">
+						<label for="subject_type" class="col-sm-4 col-form-label lang" data-lang="c_subject">subject</label>
+						<div class="col-sm-8">
+							<select id="subject_type" class="form-select">
+								<option value="survey" class="lang" data-lang="c_data">data</option>
+								<option value="user" class="lang" data-lang="a_ua">user</option>
+								<option value="user_locations" class="lang" data-lang="a_ul">user locs</option>
+							</select>
+						</div>
 					</div>
-					<div class="mb-2">
-						<label for="settings_title" class="form-label lang" data-lang="c_title">Title</label>
-						<input type="text" id="settings_title" class="form-control"/>
+					<div class="row mb-2">
+						<label for="settings_title" class="col-sm-4 col-form-label lang" data-lang="c_title">Title</label>
+						<div class="col-sm-8">
+							<input type="text" id="settings_title" class="form-control"/>
+						</div>
 					</div>
-					<div class="mb-2 map_only" style="display:none;">
-						<label for="display_panel" class="form-label lang" data-lang="a_showon">Show on</label>
-						<select id="display_panel" class="form-select"></select>
+					<div class="row mb-2 map_only" style="display:none;">
+						<label for="display_panel" class="col-sm-4 col-form-label lang" data-lang="a_showon">Show on</label>
+						<div class="col-sm-8">
+							<select id="display_panel" class="form-select"></select>
+						</div>
 					</div>
-					<div class="mb-2">
-						<div class="form-check">
-							<input type="checkbox" id="settings_inc_ro" class="form-check-input"/>
-							<label for="settings_inc_ro" class="form-check-label lang" data-lang="a_inc_ro">ro</label>
+					<div class="row mb-2">
+						<div class="col-sm-8 offset-sm-4">
+							<div class="form-check">
+								<input type="checkbox" id="settings_inc_ro" class="form-check-input"/>
+								<label for="settings_inc_ro" class="form-check-label lang" data-lang="a_inc_ro">ro</label>
+							</div>
 						</div>
 					</div>
 
 					<fieldset class="border p-2 mb-2 subject_survey_only">
 						<legend class="float-none w-auto px-1 small lang" data-lang="a_ss">Select Survey</legend>
-						<div class="mb-2">
-							<label for="settings_survey" class="form-label lang" data-lang="c_survey">Survey</label>
-							<select id="settings_survey" class="form-select"></select>
+						<div class="row mb-2">
+							<label for="settings_survey" class="col-sm-4 col-form-label lang" data-lang="c_survey">Survey</label>
+							<div class="col-sm-8">
+								<select id="settings_survey" class="form-select"></select>
+							</div>
 						</div>
 					</fieldset>
 
 					<fieldset class="border p-2 mb-2 subject_user_only">
 						<legend class="float-none w-auto px-1 small lang" data-lang="c_user">user</legend>
-						<div class="mb-2">
-							<label for="settings_user" class="form-label lang" data-lang="c_user">user</label>
-							<select id="settings_user" class="form-select"></select>
+						<div class="row mb-2">
+							<label for="settings_user" class="col-sm-4 col-form-label lang" data-lang="c_user">user</label>
+							<div class="col-sm-8">
+								<select id="settings_user" class="form-select"></select>
+							</div>
 						</div>
 					</fieldset>
 
@@ -170,92 +184,124 @@
 
 					<fieldset class="border p-2 mb-2 subject_survey_only">
 						<legend class="float-none w-auto px-1 small lang" data-lang="a_sq">Select Question</legend>
-						<div class="mb-2">
-							<label for="settings_language" class="form-label lang" data-lang="c_lang">Language</label>
-							<select id="settings_language" class="form-select"></select>
+						<div class="row mb-2">
+							<label for="settings_language" class="col-sm-4 col-form-label lang" data-lang="c_lang">Language</label>
+							<div class="col-sm-8">
+								<select id="settings_language" class="form-select"></select>
+							</div>
 						</div>
-						<div class="mb-2">
-							<label for="settings_question" class="form-label lang" data-lang="c_question">Question</label>
-							<div class="d-flex gap-2">
+						<div class="row mb-2">
+							<label for="settings_question" class="col-sm-4 col-form-label lang" data-lang="c_question">Question</label>
+							<div class="col-sm-8 d-flex gap-2">
 								<select class="selected_question form-select" id="settings_question"></select>
 								<select id="q1_function" class="form-select w-auto"></select>
 							</div>
 						</div>
-						<div class="mb-2">
-							<label for="settings_group" class="form-label lang" data-lang="a_gb">Group by</label>
-							<select id="settings_group" class="form-select" disabled="disabled"></select>
+						<div class="row mb-2">
+							<label for="settings_group" class="col-sm-4 col-form-label lang" data-lang="a_gb">Group by</label>
+							<div class="col-sm-8">
+								<select id="settings_group" class="form-select" disabled="disabled"></select>
+							</div>
 						</div>
-						<div class="mb-2">
-							<label for="time_group" class="form-label lang" data-lang="a_ts">Time Series</label>
-							<select id="time_group" class="form-select" disabled="disabled">
-								<option value="none" class="lang" data-lang="c_none">None</option>
-								<option value="hour" class="lang" data-lang="c_hour">Hour</option>
-								<option value="day" class="lang" data-lang="c_day">Day</option>
-								<option value="week" class="lang" data-lang="c_week">Week</option>
-								<option value="month" class="lang" data-lang="c_month">Month</option>
-								<option value="year" class="lang" data-lang="c_year">Year</option>
-							</select>
+						<div class="row mb-2">
+							<label for="time_group" class="col-sm-4 col-form-label lang" data-lang="a_ts">Time Series</label>
+							<div class="col-sm-8">
+								<select id="time_group" class="form-select" disabled="disabled">
+									<option value="none" class="lang" data-lang="c_none">None</option>
+									<option value="hour" class="lang" data-lang="c_hour">Hour</option>
+									<option value="day" class="lang" data-lang="c_day">Day</option>
+									<option value="week" class="lang" data-lang="c_week">Week</option>
+									<option value="month" class="lang" data-lang="c_month">Month</option>
+									<option value="year" class="lang" data-lang="c_year">Year</option>
+								</select>
+							</div>
 						</div>
 						<div class="map_group_only" style="display:none">
-							<div class="form-check">
-								<input type="radio" class="form-check-input" name="mapgrouptype" value="contains" checked="checked"/>
-								<label class="form-check-label lang" data-lang="a_g_gps"></label>
-							</div>
-							<div class="form-check">
-								<input type="radio" class="form-check-input" name="mapgrouptype" value="matches"/>
-								<label class="form-check-label lang" data-lang="c_matches">Matches</label>
+							<div class="row">
+								<div class="col-sm-8 offset-sm-4">
+									<div class="form-check">
+										<input type="radio" class="form-check-input" name="mapgrouptype" value="contains" checked="checked"/>
+										<label class="form-check-label lang" data-lang="a_g_gps"></label>
+									</div>
+									<div class="form-check">
+										<input type="radio" class="form-check-input" name="mapgrouptype" value="matches"/>
+										<label class="form-check-label lang" data-lang="c_matches">Matches</label>
+									</div>
+								</div>
 							</div>
 						</div>
 					</fieldset>
 
 					<fieldset class="border p-2 mb-2 subject_user_only subject_survey_only">
 						<legend class="float-none w-auto px-1 small lang" data-lang="t_df">date filter</legend>
-						<div class="mb-2 subject_user_only">
-							<label for="usage_settings_date_question" class="form-label lang" data-lang="c_dateq">date question</label>
-							<select class="form-select" id="usage_settings_date_question">
-								<option value="0" class="lang" data-lang="c_none">none</option>
-								<option value="1" class="lang" data-lang="Upload Time">upload</option>
-								<option value="2" class="lang" data-lang="_start">start</option>
-								<option value="3" class="lang" data-lang="_end">end</option>
-								<option value="4" class="lang" data-lang="c_scheduled">scheduled</option>
-							</select>
+						<div class="row mb-2 subject_user_only">
+							<label for="usage_settings_date_question" class="col-sm-4 col-form-label lang" data-lang="c_dateq">date question</label>
+							<div class="col-sm-8">
+								<select class="form-select" id="usage_settings_date_question">
+									<option value="0" class="lang" data-lang="c_none">none</option>
+									<option value="1" class="lang" data-lang="Upload Time">upload</option>
+									<option value="2" class="lang" data-lang="_start">start</option>
+									<option value="3" class="lang" data-lang="_end">end</option>
+									<option value="4" class="lang" data-lang="c_scheduled">scheduled</option>
+								</select>
+							</div>
 						</div>
-						<div class="mb-2 subject_survey_only">
-							<label for="settings_date_question" class="form-label lang" data-lang="c_dateq">date question</label>
-							<select class="date_question subject_survey_only form-select" id="settings_date_question"></select>
+						<div class="row mb-2 subject_survey_only">
+							<label for="settings_date_question" class="col-sm-4 col-form-label lang" data-lang="c_dateq">date question</label>
+							<div class="col-sm-8">
+								<select class="date_question subject_survey_only form-select" id="settings_date_question"></select>
+							</div>
 						</div>
-						<div class="mb-2">
-							<label for="from_date" class="form-label lang" data-lang="a_from_date">From date</label>
-							<input type="date" id="from_date" class="form-control"/> <span class="lang" data-lang="c_inclusive">inclusive</span>
+						<div class="row mb-2">
+							<label for="from_date" class="col-sm-4 col-form-label lang" data-lang="a_from_date">From date</label>
+							<div class="col-sm-8 d-flex align-items-center gap-2">
+								<input type="date" id="from_date" class="form-control"/>
+								<span class="text-muted small text-nowrap lang" data-lang="c_inclusive">inclusive</span>
+							</div>
 						</div>
-						<div class="mb-2">
-							<label for="to_date" class="form-label lang" data-lang="a_to_date">To date</label>
-							<input type="date" id="to_date" class="form-control"/> <span class="lang" data-lang="c_inclusive">inclusive</span>
+						<div class="row mb-2">
+							<label for="to_date" class="col-sm-4 col-form-label lang" data-lang="a_to_date">To date</label>
+							<div class="col-sm-8 d-flex align-items-center gap-2">
+								<input type="date" id="to_date" class="form-control"/>
+								<span class="text-muted small text-nowrap lang" data-lang="c_inclusive">inclusive</span>
+							</div>
 						</div>
 					</fieldset>
 
 					<fieldset class="border p-2 mb-2 subject_survey_only">
 						<legend class="float-none w-auto px-1 small lang" data-lang="c_filter">filter</legend>
-						<div class="mb-2">
-							<label for="set_ad_filter" class="form-label lang" data-lang="t_aft">filter</label>
-							<div class="d-flex gap-2">
+						<div class="row mb-2">
+							<label for="set_ad_filter" class="col-sm-4 col-form-label lang" data-lang="t_aft">filter</label>
+							<div class="col-sm-8 d-flex gap-2">
 								<input type="text" id="set_ad_filter" class="form-control">
 								<a class="filter_help btn btn-sm btn-outline-secondary" href="https://www.smap.com.au/docs/server-expressions.html" target="_blank">i</a>
 							</div>
 						</div>
-						<button id="filter_button" class="btn btn-sm btn-outline-secondary lang" data-lang="a_fbv">Filter by value</button>
+						<div class="row">
+							<div class="col-sm-8 offset-sm-4">
+								<button id="filter_button" class="btn btn-sm btn-outline-secondary lang" data-lang="a_fbv">Filter by value</button>
+							</div>
+						</div>
 					</fieldset>
 
 					<fieldset id="filter_controls" class="border p-2 mb-2" style="display:none;">
-						<div class="mb-2">
-							<label for="filter_question" class="form-label lang" data-lang="a_fq">Filter Question</label>
-							<select class="selected_question form-select" id="filter_question"></select>
+						<div class="row mb-2">
+							<label for="filter_question" class="col-sm-4 col-form-label lang" data-lang="a_fq">Filter Question</label>
+							<div class="col-sm-8">
+								<select class="selected_question form-select" id="filter_question"></select>
+							</div>
 						</div>
-						<div class="mb-2">
-							<label for="filter_value" class="form-label lang" data-lang="c_value">Value</label>
-							<select class="form-select" id="filter_value"></select>
+						<div class="row mb-2">
+							<label for="filter_value" class="col-sm-4 col-form-label lang" data-lang="c_value">Value</label>
+							<div class="col-sm-8">
+								<select class="form-select" id="filter_value"></select>
+							</div>
 						</div>
-						<button id="filter_clear" class="btn btn-sm btn-outline-secondary lang" data-lang="c_clear">Clear</button>
+						<div class="row">
+							<div class="col-sm-8 offset-sm-4">
+								<button id="filter_clear" class="btn btn-sm btn-outline-secondary lang" data-lang="c_clear">Clear</button>
+							</div>
+						</div>
 					</fieldset>
 				</form>
 			</div>

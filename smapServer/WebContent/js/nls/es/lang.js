@@ -212,7 +212,7 @@ export default {
     "c_yearly": "Anual",
     "c_matches": "Concidencia exacta",
     "c_filter": "Filtrar",
-    "c_inclusive": "Inclusive",
+    "c_inclusive": "Incluye",
     "c_value": "Valor",
     "c_clear": "Limpiar",
     "c_options": "Opciones",
