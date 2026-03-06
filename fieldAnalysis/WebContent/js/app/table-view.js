@@ -23,7 +23,7 @@ import "tablesorter";
 import { getDisplayDescription } from "commonReportFunctions";
 import { generateTable, generateUserTable } from "./table-functions";
 import globals from "globals";
-import { addHourglass, handleLogout, htmlEncode, populateLanguageSelect, populatePdfSelect, removeHourglass } from "common";
+import { addCacheBuster, addHourglass, handleLogout, htmlEncode, populateLanguageSelect, populatePdfSelect, removeHourglass } from "common";
 import { toggleBadURL, openModal, closeModal } from "./script";
 import { refreshAnalysisData } from "./survey_control";
 

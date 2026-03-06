@@ -651,9 +651,187 @@ div.olControlZoom a:link {
 	transition: width 0.2s ease;
 }
 
-/* Tables need their own scroll since pContent is overflow:hidden */
+/* Tables use internal scroll via #scroll_zone */
 .panel-col .table_panel {
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+/* ============================================================
+   Dashboard table (.dt-*)
+   ============================================================ */
+
+/* Outer wrapper fills .table_panel */
+.dt-panel {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+	font-size: 0.82rem;
+}
+
+/* Toolbar — sticky info + nav row */
+.dt-toolbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.35rem 0.75rem;
+	background: #f8f9fa;
+	border-bottom: 1px solid #dee2e6;
+	flex-shrink: 0;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+}
+
+.dt-info {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-width: 0;
+}
+
+.dt-title {
+	font-size: 0.78rem;
+	font-weight: 600;
+	color: #495057;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* Record count badge: "42 / 198" */
+.dt-count {
+	font-size: 0.7rem;
+	font-weight: 600;
+	background: #e9ecef;
+	color: #495057;
+	padding: 0.1rem 0.45rem;
+	border-radius: 10px;
+	white-space: nowrap;
+}
+
+/* Bad-record count badge */
+.dt-bad-count {
+	font-size: 0.7rem;
+	font-weight: 600;
+	background: #fde8e8;
+	color: #dc3545;
+	padding: 0.1rem 0.45rem;
+	border-radius: 10px;
+	white-space: nowrap;
+}
+
+/* Prev/next navigation buttons */
+.dt-nav-btn {
+	padding: 0.15rem 0.5rem;
+	line-height: 1.2;
+	font-size: 0.72rem;
+}
+
+/* Scrollable table area */
+#scroll_zone {
+	flex: 1;
 	overflow: auto;
+	min-height: 0;
+}
+
+/* The table itself */
+.dt-table {
+	width: 100%;
+	border-collapse: collapse;
+	table-layout: auto;
+}
+
+/* Sticky header */
+.dt-table thead th {
+	position: sticky;
+	top: 0;
+	background: #212529;
+	color: #f8f9fa;
+	font-weight: 600;
+	font-size: 0.7rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	padding: 0.5rem 0.75rem;
+	border: none;
+	white-space: nowrap;
+	z-index: 2;
+}
+
+.dt-table thead th:first-child { border-radius: 0; }
+
+/* Body rows */
+.dt-table tbody tr {
+	border-bottom: 1px solid #f0f0f0;
+	transition: background 0.1s;
+}
+
+.dt-table tbody tr:last-child { border-bottom: none; }
+
+.dt-table tbody tr:hover { background: #eef2ff; }
+
+.dt-table tbody td {
+	padding: 0.35rem 0.75rem;
+	border: none;
+	vertical-align: middle;
+	color: #343a40;
+	max-width: 220px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* Bad/good record rows */
+.dt-table .bad_r {
+	color: #dc3545;
+	font-weight: 500;
+}
+
+.dt-table tr:has(.bad_r) {
+	background: #fff8f8;
+}
+
+.dt-table tr:has(.bad_r):hover {
+	background: #ffe9e9;
+}
+
+.dt-table .good_r {
+	color: #198754;
+}
+
+.dt-table .bad_replaced {
+	font-style: italic;
+	color: #adb5bd;
+}
+
+/* Kebab / context menu trigger button */
+.menu_button {
+	display: inline-flex;
+	gap: 3px;
+	align-items: center;
+	justify-content: center;
+	padding: 0.2rem 0.35rem;
+	cursor: pointer;
+	border-radius: 4px;
+	color: #adb5bd;
+	background: transparent;
+	border: 1px solid transparent;
+	transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.menu_button:hover {
+	color: #495057;
+	background: #e9ecef;
+	border-color: #dee2e6;
+}
+
+.menu_button span {
+	display: block;
+	width: 3px;
+	height: 3px;
+	background: currentColor;
+	border-radius: 50%;
 }
 
 /* Time-series slider for animated maps */

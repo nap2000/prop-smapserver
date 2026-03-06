@@ -26,8 +26,6 @@ var gTab = [],
 
 
 function generateTable(elementId, data, disp_desc, survey_ident, sId) {
-	
-	console.log("generate table");
 	var i,j,k,
 		fn = data.fn,
 		groups = data.features,
@@ -60,50 +58,37 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 	
 	// Write information about the table
 	gTab = [];
-	gTab[++gIdx] = '<div><div id="scroll_controls"><p>';
-	if(typeof disp_desc !== "undefined") {
-		gTab[++gIdx] = htmlEncode(disp_desc);
+	gTab[++gIdx] = '<div class="dt-panel"><div id="scroll_controls" class="dt-toolbar">';
+	gTab[++gIdx] = '<div class="dt-info">';
+	if(disp_desc) {
+		gTab[++gIdx] = '<span class="dt-title">' + (htmlEncode(disp_desc) || '') + '</span>';
 	} else if(fn != "none") {
-		gTab[++gIdx] = localise.set[fn] + " " + localise.set["c_of"] + " : ";
-		gTab[++gIdx] = title;
+		gTab[++gIdx] = '<span class="dt-title">' + (htmlEncode((localise.set[fn] || fn) + " " + (localise.set["c_of"] || "of") + ": " + (title || "")) || '') + '</span>';
 	} else {
-		gTab[++gIdx] = title;
+		gTab[++gIdx] = '<span class="dt-title">' + (htmlEncode(title) || '') + '</span>';
 	}
 	if(typeof data.totals !== "undefined") {
-		gTab[++gIdx] = '(';
-		gTab[++gIdx] = data.totals.filtered_count;
-		gTab[++gIdx] = ' ';
-		gTab[++gIdx] = data.totals.filtered_count == 1 ? localise.set["c_record"] : localise.set["c_records"];
-		gTab[++gIdx] = ' ';
-        gTab[++gIdx] = " " + localise.set["a_oo"] + " ";
-        gTab[++gIdx] = data.totals.total_count;
-        gTab[++gIdx] = ', ';
-		gTab[++gIdx] = data.totals.bad_count;
-		gTab[++gIdx] = ' ' + localise.set["a_mb"] + ")";
+		gTab[++gIdx] = '<span class="dt-count">';
+		gTab[++gIdx] = data.totals.filtered_count + ' / ' + data.totals.total_count;
+		gTab[++gIdx] = '</span>';
+		if(data.totals.bad_count > 0) {
+			gTab[++gIdx] = '<span class="dt-bad-count">' + data.totals.bad_count + ' ' + localise.set["a_mb"] + '</span>';
+		}
 	}
-	
-	gTab[++gIdx] = '</p>';
-	
+	gTab[++gIdx] = '</div>';
+
 	// Add next / previous buttons
 	if(typeof data.totals !== "undefined" && data.totals.returned_count < data.totals.total_count) {
-		gTab[++gIdx] = '<div class="get_less_more">';
+		gTab[++gIdx] = '<div class="dt-nav d-flex gap-1">';
 		if(data.totals.start_key > 0) {
-			// Add less
-			gTab[++gIdx] = '<button class="get_less" value="';	
-			//gTab[++gIdx] = survey_ident;	// No value required for less
-			gTab[++gIdx] = '">&lt;&lt;&lt;</button>';
+			gTab[++gIdx] = '<button class="btn btn-sm btn-outline-secondary dt-nav-btn get_less" value=""><i class="fa fa-angle-double-left"></i></button>';
 		} else {
-			// Add disabled less
-			gTab[++gIdx] = '<button class="get_less_dis">&lt;&lt;&lt;</button>';
+			gTab[++gIdx] = '<button class="btn btn-sm btn-outline-secondary dt-nav-btn get_less_dis" disabled><i class="fa fa-angle-double-left"></i></button>';
 		}
 		if(data.totals.more_recs > 0) {
-			// Add more
-			gTab[++gIdx] = '<button class="get_more" value="';
-			gTab[++gIdx] = data.totals.max_rec;
-			gTab[++gIdx] = '">&gt;&gt;&gt;</button>';
+			gTab[++gIdx] = '<button class="btn btn-sm btn-outline-secondary dt-nav-btn get_more" value="' + data.totals.max_rec + '"><i class="fa fa-angle-double-right"></i></button>';
 		} else {
-			// Add disabled more
-			gTab[++gIdx] = '<button class="get_more_dis">&gt;&gt;&gt;</button>';
+			gTab[++gIdx] = '<button class="btn btn-sm btn-outline-secondary dt-nav-btn get_more_dis" disabled><i class="fa fa-angle-double-right"></i></button>';
 		}
 		gTab[++gIdx] = '</div>';
 	}
@@ -116,13 +101,13 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 		isPeriod = true;
 	}
 	gTab[++gIdx] = '<div id="scroll_zone">';
-	gTab[++gIdx] = '<table form="' + data.fId + '" border="1" class="tablesorter">';
+	gTab[++gIdx] = '<table form="' + data.fId + '" class="tablesorter dt-table">';
 
 	// Write headers
 	gTab[++gIdx] = '<thead>';
 
 	numberCols = cols.length;
-	
+
 	// Add grouping columns across the top of the table if there are both time series and groups
 	if(isPeriod && isGrouped) {
 		numberGroups = groupLabels.length;
@@ -233,7 +218,7 @@ if(globals.gCanEdit) {
 					// Add a button to edit the survey data in web forms
 					gTab[++gIdx] = '<td>';
 					if(groups[i].properties.parkey == "0") {
-						gTab[++gIdx] = '<div class="menu_button btn context_table dropdown-toggle" type="button" data-bs-toggle="dropdown" data-pkey="';
+						gTab[++gIdx] = '<div class="menu_button btn context_table" type="button" data-pkey="';
 						gTab[++gIdx] = groups[i].properties.prikeys[0];
 						gTab[++gIdx] = '" data-ident="';
 						gTab[++gIdx] = survey_ident;
@@ -316,8 +301,6 @@ if(globals.gCanEdit) {
 }
 
 function generateUserTable(elementId, data, user_ident, uId, subject_type) {
-
-	console.log("generate user table");
 	var i,j,k,
 		groups = data.features,
 		cols = data.cols,
@@ -347,45 +330,30 @@ function generateUserTable(elementId, data, user_ident, uId, subject_type) {
 
 	// Write information about the table
 	gTab = [];
-	gTab[++gIdx] = '<div><div id="scroll_controls"><p>';
+	gTab[++gIdx] = '<div class="dt-panel"><div id="scroll_controls" class="dt-toolbar">';
+	gTab[++gIdx] = '<div class="dt-info">';
 	if(typeof disp_desc !== "undefined") {
-		gTab[++gIdx] = htmlEncode(disp_desc);
+		gTab[++gIdx] = '<span class="dt-title">' + htmlEncode(disp_desc) + '</span>';
 	} else {
-		gTab[++gIdx] = title;
+		gTab[++gIdx] = '<span class="dt-title">' + htmlEncode(title) + '</span>';
 	}
 	if(typeof data.totals !== "undefined") {
-		gTab[++gIdx] = ' (';
-		gTab[++gIdx] = data.totals.filtered_count;
-		gTab[++gIdx] = ' ';
-		gTab[++gIdx] = data.totals.filtered_count == 1 ? localise.set["c_record"] : localise.set["c_records"];
-		gTab[++gIdx] = ' ';
-		gTab[++gIdx] = " " + localise.set["a_oo"] + " ";
-		gTab[++gIdx] = data.totals.total_count;
-		gTab[++gIdx] = ')';
+		gTab[++gIdx] = '<span class="dt-count">' + data.totals.filtered_count + ' / ' + data.totals.total_count + '</span>';
 	}
-
-	gTab[++gIdx] = '</p>';
+	gTab[++gIdx] = '</div>';
 
 	// Add next / previous buttons
 	if(typeof data.totals !== "undefined" && data.totals.returned_count < data.totals.total_count) {
-		gTab[++gIdx] = '<div class="get_less_more">';
+		gTab[++gIdx] = '<div class="dt-nav d-flex gap-1">';
 		if(data.totals.start_key > 0) {
-			// Add less
-			gTab[++gIdx] = '<button class="get_less" value="';
-			//gTab[++gIdx] = survey_ident;	// No value required for less
-			gTab[++gIdx] = '">&lt;&lt;&lt;</button>';
+			gTab[++gIdx] = '<button class="btn btn-sm btn-outline-secondary dt-nav-btn get_less" value=""><i class="fa fa-angle-double-left"></i></button>';
 		} else {
-			// Add disabled less
-			gTab[++gIdx] = '<button class="get_less_dis">&lt;&lt;&lt;</button>';
+			gTab[++gIdx] = '<button class="btn btn-sm btn-outline-secondary dt-nav-btn get_less_dis" disabled><i class="fa fa-angle-double-left"></i></button>';
 		}
 		if(data.totals.more_recs > 0) {
-			// Add more
-			gTab[++gIdx] = '<button class="get_more" value="';
-			gTab[++gIdx] = data.totals.max_rec;
-			gTab[++gIdx] = '">&gt;&gt;&gt;</button>';
+			gTab[++gIdx] = '<button class="btn btn-sm btn-outline-secondary dt-nav-btn get_more" value="' + data.totals.max_rec + '"><i class="fa fa-angle-double-right"></i></button>';
 		} else {
-			// Add disabled more
-			gTab[++gIdx] = '<button class="get_more_dis">&gt;&gt;&gt;</button>';
+			gTab[++gIdx] = '<button class="btn btn-sm btn-outline-secondary dt-nav-btn get_more_dis" disabled><i class="fa fa-angle-double-right"></i></button>';
 		}
 		gTab[++gIdx] = '</div>';
 	}
@@ -398,7 +366,7 @@ function generateUserTable(elementId, data, user_ident, uId, subject_type) {
 		isPeriod = true;
 	}
 	gTab[++gIdx] = '<div id="scroll_zone">';
-	gTab[++gIdx] = '<table form="' + data.fId + '" border="1" class="tablesorter">';
+	gTab[++gIdx] = '<table form="' + data.fId + '" class="tablesorter dt-table">';
 
 	// Write headers
 	gTab[++gIdx] = '<thead>';
@@ -441,7 +409,7 @@ function generateUserTable(elementId, data, user_ident, uId, subject_type) {
 if(globals.gCanEdit && subject_type !== 'user_locations') {
 			// Add a button to edit the survey data in web forms
 			gTab[++gIdx] = '<td>';
-				gTab[++gIdx] = '<div class="menu_button btn context_table dropdown-toggle" type="button" data-bs-toggle="dropdown"';
+				gTab[++gIdx] = '<div class="menu_button btn context_table" type="button"';
 				gTab[++gIdx] = ' data-ident="';
 				gTab[++gIdx] = groups[i].properties.survey_ident;
 				gTab[++gIdx] = '" data-id="';
