@@ -25,6 +25,7 @@ import { generateTable, generateUserTable } from "./table-functions";
 import globals from "globals";
 import { addHourglass, handleLogout, htmlEncode, populateLanguageSelect, populatePdfSelect, removeHourglass } from "common";
 import { toggleBadURL, openModal, closeModal } from "./script";
+import { refreshAnalysisData } from "./survey_control";
 
 var gSelectedTemplate,          // Survey ident of the current template
 	gInstanceId,

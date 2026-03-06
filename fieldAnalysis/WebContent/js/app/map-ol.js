@@ -199,13 +199,14 @@ export function setMap(view, secondaryLayer) {
 	
 	// Add the layer(s) for the selected panel
 	if(!secondaryLayer) {
-		
+
 		if(view.results) {
+			console.log("setMap: view.pId=" + view.pId + " results length=" + view.results.length + " map=" + (map ? "ok" : "NULL"));
 			for(i = 0; i < view.results.length; i++) {
 				addLayer(view.results[i], view.pId, view.pId, view, view.title + i + " " + view.pId, map);
 			}
 		} else {
-			console.log("Selected View: "+ view.title + " does not have results");
+			console.log("setMap: view " + view.title + " has no results");
 		}
 	}
 	

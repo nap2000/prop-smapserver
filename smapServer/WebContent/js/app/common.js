@@ -3097,8 +3097,13 @@ function formItemsURL(form, getFeatures, mustHaveGeom, start_key, rec_limit, bBa
 	if(typeof inc_ro !== "undefined") {
 		url += "&inc_ro=" + inc_ro;
 	}
-	if(typeof geomFormQuestions !== "undefined") {
-		url += "&geomFormQuestions=" + encodeURIComponent(geomFormQuestions);
+	if(geomFormQuestions && geomFormQuestions.length > 0) {
+		var qList = "";
+		for(var gfq = 0; gfq < geomFormQuestions.length; gfq++) {
+			if(gfq > 0) { qList += ","; }
+			qList += geomFormQuestions[gfq].question;
+		}
+		url += "&geom_questions=" + encodeURIComponent(qList);
 	}
 	return url;
 }

@@ -524,6 +524,7 @@ function getUserLocationsData(view, start_rec, nocache) {
  		
  		switch(outputView.type) {
 	        case "map":
+			console.log("refreshData map: setMap=" + (typeof viewHandlers.setMap) + " surveyLevel=" + surveyLevel + " results=" + (outputView.results ? outputView.results.length : "none"));
 			if (typeof viewHandlers.setMap === "function") {
 				viewHandlers.setMap(outputView, secondaryLayer);
 			}
