@@ -666,19 +666,14 @@ function boxesIntersect(selX, selY, selWidth, selHeight, bbox) {
 
 // Respond to a feature being selected
 function onFeatureSelectOL(feature) {
-	
 	onFeatureUnselect();
-	
-	$("#features").show();
-    $("#features").featureSelect(feature.data, feature.cluster);
-	$('#fDel').off().click(function() {	// Closing the panel manually
-		$("#features").hide().empty();
-	});
+	$("#features").featureSelect(feature.data, feature.cluster);
+	$("#features").addClass('fp-open');
 }
 
 // Remove display of features
 function onFeatureUnselect(feature) {
-    $("#features").hide().empty();
+	$("#features").removeClass('fp-open').empty();
 }
 
 /*
@@ -770,210 +765,144 @@ export function addSharedMaps(map, sharedMaps) {
 }
 
 /*
- * Generate a table with all the properties for a selected item
+ * Generate a slide-in panel with all the properties for a selected item
  */
 (function($) {
-	$.fn.featureSelect = function( data, clusterData ) {
-		
-		var writebuffer = "";
-		var priKey, total, totalRecs, computedResult,
+	$.fn.featureSelect = function(data, clusterData) {
+
+		var total, totalRecs, computedResult,
 			aDataItem,
 			h = [],
 			idx = -1,
 			i;
-		
-		if(clusterData) {
+
+		if (clusterData) {
 			aDataItem = clusterData[0].attributes;
 		} else {
 			aDataItem = data;
 		}
 
-		console.log("aDataItem");
-		console.log(aDataItem);
-		// Close button
-		h[++idx] = '<img id="fDel" src="/app/fieldAnalysis/img/delete.png"/><br/>';
-		h[++idx] = '<div id="feature_data">';
-		
-		// Process
-		if(aDataItem._ftype && aDataItem._ftype === "q") {		// Question level data
-			h[++idx] = '<table border="1"><tbody>';
-			if(!clusterData) {
-				h[++idx] = '<tr>';
-				h[++idx] = '<td>Location</td>';
-				h[++idx] = '<td>';
-				h[++idx] = htmlEncode(aDataItem.group_value);
-				h[++idx] = '</td>';
-				h[++idx] = '</tr>';
+		// Determine panel title
+		var titleText;
+		if (aDataItem._ftype && aDataItem._ftype === "q") {
+			titleText = htmlEncode(aDataItem.question || 'Feature');
+		} else {
+			var pk = aDataItem.prikeys ? aDataItem.prikeys[0] : aDataItem.prikey;
+			titleText = pk ? 'Record ' + htmlEncode(pk) : 'Feature';
+		}
+
+		// Header
+		h[++idx] = '<div class="fp-header">';
+		if (clusterData) {
+			h[++idx] = '<span class="fp-badge">' + clusterData.length + '</span>';
+		}
+		h[++idx] = '<span class="fp-title">' + titleText + '</span>';
+		h[++idx] = '<button class="fp-close" id="fDel" title="Close"><i class="fa fa-times"></i></button>';
+		h[++idx] = '</div>';
+
+		// Scrollable body
+		h[++idx] = '<div class="fp-body">';
+
+		if (aDataItem._ftype && aDataItem._ftype === "q") {
+			// --- Question-level data ---
+			h[++idx] = '<div class="fp-section">Summary</div>';
+			if (!clusterData && aDataItem.group_value) {
+				h[++idx] = '<div class="fp-row"><span class="fp-key">Location</span><span class="fp-val">' + htmlEncode(aDataItem.group_value) + '</span></div>';
 			}
-			h[++idx] = '<tr>';
-			h[++idx] = '<td>Question</td>';
-			h[++idx] = '<td>';
-			h[++idx] = aDataItem.question;
-			h[++idx] = '</td>';
-			h[++idx] = '</tr>';
-			h[++idx] = '<tr>';
-			h[++idx] = '<td>Function</td>';
-			h[++idx] = '<td>';
-			h[++idx] = aDataItem.aggregation;
-			h[++idx] = '</td>';
-			h[++idx] = '</tr>';
-			h[++idx] = '<tr>';
-			h[++idx] = '<td>Units</td>';
-			h[++idx] = '<td>';
-			h[++idx] = aDataItem.units;
-			h[++idx] = '</td>';
-			h[++idx] = '</tr>';
-			h[++idx] = '<tr>';
-			h[++idx] = '<td>Answer</td>';
-			h[++idx] = '<td>';
-			if(clusterData) {
+			h[++idx] = '<div class="fp-row"><span class="fp-key">Question</span><span class="fp-val">' + htmlEncode(aDataItem.question) + '</span></div>';
+			h[++idx] = '<div class="fp-row"><span class="fp-key">Function</span><span class="fp-val">' + htmlEncode(aDataItem.aggregation) + '</span></div>';
+			if (aDataItem.units) {
+				h[++idx] = '<div class="fp-row"><span class="fp-key">Units</span><span class="fp-val">' + htmlEncode(aDataItem.units) + '</span></div>';
+			}
+			if (aDataItem.selected) {
+				h[++idx] = '<div class="fp-row"><span class="fp-key">Selected</span><span class="fp-val">' + htmlEncode(aDataItem.selected) + '</span></div>';
+			}
+
+			// Compute answer
+			var answerHtml;
+			if (clusterData) {
 				computedResult = 0.0;
-				if(aDataItem.aggregation === "percent") {
-					total = 0;
-					totalRecs = 0;
-					for(i = 0; i < clusterData.length; i++) {
+				if (aDataItem.aggregation === "percent") {
+					total = 0; totalRecs = 0;
+					for (i = 0; i < clusterData.length; i++) {
 						total += clusterData[i].attributes.result;
 						totalRecs++;
 					}
-					if(totalRecs > 0) {
-						computedResult = Math.round(100 * total / totalRecs) / 100;
-					} else {
-						computedResult = 0.0;
-					}
-				} else if(aDataItem.aggregation === "count") {
+					computedResult = totalRecs > 0 ? Math.round(100 * total / totalRecs) / 100 : 0.0;
+				} else if (aDataItem.aggregation === "count") {
 					computedResult = 0;
-					for(i = 0; i < clusterData.length; i++) {
+					for (i = 0; i < clusterData.length; i++) {
 						computedResult += clusterData[i].attributes.result;
 					}
 				} else {
-					computedResult = "";	// No aggregation required
+					computedResult = "";
 				}
-				h[++idx] = addAnchors(htmlEncode(computedResult), true).join(',');
+				answerHtml = addAnchors(htmlEncode(computedResult), true).join(',');
 			} else {
-				h[++idx] = addAnchors(htmlEncode(aDataItem.result), true).join(',');
+				answerHtml = addAnchors(htmlEncode(aDataItem.result), true).join(',');
 			}
-			h[++idx] = '</td>';
-			h[++idx] = '</tr>';
+			h[++idx] = '<div class="fp-row"><span class="fp-key">Answer</span><span class="fp-val fp-answer">' + answerHtml + '</span></div>';
 
-			h[++idx] = '<tr>';
-			h[++idx] = '<td>Selected</td>';
-			h[++idx] = '<td>';
-			h[++idx] = aDataItem.selected;
-			h[++idx] = '</td>';
-			h[++idx] = '</tr>';
-			h[++idx] = '</tbody></table>';
-			
-			if(clusterData) {
-				h[++idx] = '<h3>' + localise.set["a_cm"] + '</h3>';
-				h[++idx] = '<table border="1"><thead>';
-				h[++idx] = '<tr><td>Location</td><td>Answer</td></tr>';
-				h[++idx] = '</thead><tbody>';
-				
-				for(i = 0; i < clusterData.length; i++) {
-					h[++idx] = '<tr>';
-					h[++idx] = '<td>';
-					h[++idx] = htmlEncode(clusterData[i].attributes.group_value);
-					h[++idx] = '</td>';
-					h[++idx] = '<td>';
-					h[++idx] = addAnchors(htmlEncode(clusterData[i].attributes.result), true).join(',');
-					h[++idx] = '</td>';
-					h[++idx] = '</tr>';
+			if (clusterData) {
+				h[++idx] = '<div class="fp-section">' + localise.set["a_cm"] + '</div>';
+				h[++idx] = '<div class="fp-cluster-scroll">';
+				for (i = 0; i < clusterData.length; i++) {
+					h[++idx] = '<div class="fp-cluster-card">';
+					h[++idx] = '<div class="fp-row"><span class="fp-key">Location</span><span class="fp-val">' + htmlEncode(clusterData[i].attributes.group_value) + '</span></div>';
+					h[++idx] = '<div class="fp-row"><span class="fp-key">Answer</span><span class="fp-val">' + addAnchors(htmlEncode(clusterData[i].attributes.result), true).join(',') + '</span></div>';
+					h[++idx] = '</div>';
 				}
-				h[++idx] = '</tbody></table>';
-			} else {
-				
-				// Show the data records that make up this item
-				if(aDataItem.records) {
-					h[++idx] = '<h3>' + localise.set["c_data"] + '</h3>';
-					h[++idx] = '<table border="1"><thead>';
-					h[++idx] = '<tr><td>' + localise.set["c_record"] + '</td><td>' + localise.set["c_value"] + '</td></tr>';
-					h[++idx] = '</thead><tbody>';
-					for(i = 0; i < aDataItem.records.length; i++) {
-						h[++idx] = '<tr>';
-						h[++idx] = '<td>';
-						h[++idx] = aDataItem.records[i];
-						h[++idx] = '</td>';
-						h[++idx] = '<td>';
-						h[++idx] = addAnchors(htmlEncode(aDataItem.sourceData[i]), true).join(',');
-						h[++idx] = '</td>';
-						h[++idx] = '</tr>';
-					}
-					h[++idx] = '</tbody></table>';
+				h[++idx] = '</div>';
+			} else if (aDataItem.records) {
+				h[++idx] = '<div class="fp-section">' + localise.set["c_data"] + '</div>';
+				h[++idx] = '<div class="fp-cluster-scroll">';
+				for (i = 0; i < aDataItem.records.length; i++) {
+					h[++idx] = '<div class="fp-cluster-card">';
+					h[++idx] = '<div class="fp-row"><span class="fp-key">' + localise.set["c_record"] + '</span><span class="fp-val">' + htmlEncode(aDataItem.records[i]) + '</span></div>';
+					h[++idx] = '<div class="fp-row"><span class="fp-key">' + localise.set["c_value"] + '</span><span class="fp-val">' + addAnchors(htmlEncode(aDataItem.sourceData[i]), true).join(',') + '</span></div>';
+					h[++idx] = '</div>';
 				}
+				h[++idx] = '</div>';
 			}
-			
-		} else {			// Survey level data
-							// show all the properties for the survey
-			h[++idx] = '<table border="1">';
-			h[++idx] = '<thead><td>Key</td>';
-			if(clusterData) {
-				for(i = 0; i < clusterData.length; i++) {
-					h[++idx] = '<td>';
-					if(clusterData[i].attributes.prikeys) {
-						h[++idx] = clusterData[i].attributes.prikeys[0];        // Survey data
-					} else {
-						h[++idx] = clusterData[i].attributes.prikey;            // Usage data
-					}
-					h[++idx] = '</td>';
-				}
-			} else {
-				h[++idx] = '<td>';
-				if(aDataItem.prikeys) {
-					h[++idx] = aDataItem.prikeys[0];    // survey data
-				} else {
-					h[++idx] = aDataItem.prikey;        // usage data
-				}
-				h[++idx] = '</td>';
-			}
-			h[++idx] = '</thead>';
-			
-			h[++idx] = '<tbody>';
-			$.each(aDataItem, function(key, value) {
-				
-				var key_orig,
-					value_c,
-					i;
-				
-				key_orig = key;
-				
-				if(key !== "prikeys" && key !== "_task_key" 
-					&& key !== "_task_replace" && key !== "_modified"
-					&& key !== "parkey" && key !== "_instanceid"
-						&& key !== "instanceid") {
 
-					value = translateKeyValue(key, value);
-					key = translateKey(key);
-					
-					h[++idx] = '<tr>';
-					h[++idx] = '<td>' + key + '</td>';
-					if(clusterData) {
-						for(i = 0; i < clusterData.length; i++) {
-							value_c = clusterData[i].attributes[key_orig];
-							if(key_orig === "_bad") {
-								if(value_c === "t") {
-									value_c = localise.set["c_yes"];
-								} else {
-									value_c = localise.set["c_no"];
-								}
-							} else if (key_orig === "_start" || key_orig === "_end" || key_orig === "Upload Time") {
-								// No change to value
-							}
-							h[++idx] = '<td>' + addAnchors(htmlEncode(value_c), true).join(',') + '</td>';
+		} else {
+			// --- Survey-level data ---
+			var skipKeys = {"prikeys":1,"_task_key":1,"_task_replace":1,"_modified":1,"parkey":1,"_instanceid":1,"instanceid":1};
+
+			if (clusterData) {
+				h[++idx] = '<div class="fp-cluster-scroll">';
+				for (i = 0; i < clusterData.length; i++) {
+					var attrs = clusterData[i].attributes;
+					var memberPk = attrs.prikeys ? attrs.prikeys[0] : attrs.prikey;
+					h[++idx] = '<div class="fp-cluster-card">';
+					h[++idx] = '<div class="fp-section" style="padding-top:0.5rem">Record ' + htmlEncode(memberPk) + '</div>';
+					$.each(attrs, function(key, value) {
+						if (!skipKeys[key]) {
+							value = translateKeyValue(key, value);
+							h[++idx] = '<div class="fp-row"><span class="fp-key">' + htmlEncode(translateKey(key)) + '</span><span class="fp-val">' + addAnchors(htmlEncode(value), true).join(',') + '</span></div>';
 						}
-					} else {
-						h[++idx] = '<td>' + addAnchors(htmlEncode(value), true).join(',') + '</td>';
-					}
-					h[++idx] = '</tr>';
+					});
+					h[++idx] = '</div>';
 				}
-
-			});
-			h[++idx] = '</tbody></table>';
+				h[++idx] = '</div>';
+			} else {
+				$.each(aDataItem, function(key, value) {
+					if (!skipKeys[key]) {
+						value = translateKeyValue(key, value);
+						h[++idx] = '<div class="fp-row"><span class="fp-key">' + htmlEncode(translateKey(key)) + '</span><span class="fp-val">' + addAnchors(htmlEncode(value), true).join(',') + '</span></div>';
+					}
+				});
+			}
 		}
-		h[++idx] = '</div>';
-		
-		// Populate table
+
+		h[++idx] = '</div>'; // end fp-body
+
 		$(this).append(h.join(''));
-		
+
+		// Wire up close button
+		$(this).find('#fDel').on('click', function() {
+			$("#features").removeClass('fp-open').empty();
+		});
 	};
-		
+
 })(jQuery);

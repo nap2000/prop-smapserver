@@ -14,40 +14,193 @@
 }
 
 /* ============================================================
-   Feature panel — right-side overlay when a map geometry
-   is clicked (populated by map-functions.js)
+   Feature panel — slide-in drawer from the right when a map
+   geometry is clicked (populated by map-functions.js)
    ============================================================ */
 
 .feature-panel-right {
 	position: fixed;
-	top: 50px;
+	top: 0;
 	right: 0;
-	display: none;
-	background-color: #E6E6E6;
-	border: 1px solid #111111;
-	border-radius: 20px 0 0 20px;
-	width: 40%;
-	height: 80%;
-	padding: 10px;
-	opacity: .85;
+	width: 360px;
+	max-width: 92vw;
+	height: 100vh;
+	background: #fff;
+	box-shadow: -6px 0 32px rgba(0,0,0,0.18);
 	z-index: 10000;
+	display: flex;
+	flex-direction: column;
+	transform: translateX(100%);
+	transition: transform 0.22s cubic-bezier(.4,0,.2,1);
 }
 
-#feature_data {
-	width: 100%;
-	height: 100%;
-	overflow: auto;
+.feature-panel-right.fp-open {
+	transform: translateX(0);
 }
 
-/* Delete button inside feature panel */
-#fDel {
-	top: 5px;
-	left: 5px;
-	height: 18px;
-	width: 18px;
-	padding: 0 5px;
-	position: absolute;
-	z-index: 2005;
+/* Header */
+.fp-header {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.85rem 1rem;
+	border-bottom: 1px solid rgba(0,0,0,0.08);
+	background: #f8f9fa;
+	flex-shrink: 0;
+}
+
+.fp-title {
+	flex: 1;
+	font-size: 0.85rem;
+	font-weight: 600;
+	color: #212529;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.fp-close {
+	background: none;
+	border: none;
+	color: #6c757d;
+	cursor: pointer;
+	width: 1.75rem;
+	height: 1.75rem;
+	padding: 0;
+	border-radius: 0.25rem;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.85rem;
+	flex-shrink: 0;
+	transition: background 0.12s, color 0.12s;
+}
+
+.fp-close:hover {
+	background: rgba(0,0,0,0.08);
+	color: #212529;
+}
+
+/* Scrollable body */
+.fp-body {
+	overflow-y: auto;
+	flex: 1;
+	padding: 0.25rem 0;
+}
+
+/* Section label (e.g. "Cluster members") */
+.fp-section {
+	padding: 0.75rem 1rem 0.2rem;
+	font-size: 0.68rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.07em;
+	color: #adb5bd;
+}
+
+/* Key-value row */
+.fp-row {
+	display: flex;
+	padding: 0.45rem 1rem;
+	border-bottom: 1px solid #f0f0f0;
+	gap: 0.75rem;
+	align-items: flex-start;
+}
+
+.fp-row:last-child {
+	border-bottom: none;
+}
+
+.fp-key {
+	flex: 0 0 38%;
+	font-size: 0.73rem;
+	font-weight: 500;
+	color: #6c757d;
+	padding-top: 0.05rem;
+	overflow-wrap: break-word;
+}
+
+.fp-val {
+	flex: 1;
+	font-size: 0.82rem;
+	color: #212529;
+	overflow-wrap: break-word;
+	word-break: break-word;
+	min-width: 0;
+}
+
+.fp-val img {
+	max-width: 100%;
+	max-height: 140px;
+	border-radius: 4px;
+	display: block;
+	margin-top: 2px;
+}
+
+.fp-val audio, .fp-val video {
+	max-width: 100%;
+	margin-top: 2px;
+}
+
+/* Prominent answer for question-level data */
+.fp-answer {
+	font-size: 1.15rem;
+	font-weight: 700;
+	color: #0d6efd;
+}
+
+/* Badge for cluster count */
+.fp-badge {
+	display: inline-flex;
+	align-items: center;
+	background: #dee2e6;
+	color: #495057;
+	font-size: 0.7rem;
+	font-weight: 600;
+	padding: 0.1rem 0.45rem;
+	border-radius: 10px;
+	margin-right: 0.3rem;
+}
+
+/* Horizontal scroll strip for multiple cluster cards */
+.fp-cluster-scroll {
+	display: flex;
+	flex-direction: row;
+	gap: 0.5rem;
+	overflow-x: auto;
+	padding: 0.25rem 0.75rem 0.5rem;
+	scroll-snap-type: x mandatory;
+}
+
+.fp-cluster-scroll::-webkit-scrollbar {
+	height: 5px;
+}
+
+.fp-cluster-scroll::-webkit-scrollbar-track {
+	background: #f1f1f1;
+	border-radius: 3px;
+}
+
+.fp-cluster-scroll::-webkit-scrollbar-thumb {
+	background: #ced4da;
+	border-radius: 3px;
+}
+
+/* Individual cluster item card */
+.fp-cluster-card {
+	flex: 0 0 200px;
+	border: 1px solid #e9ecef;
+	border-radius: 6px;
+	overflow: hidden;
+	scroll-snap-align: start;
+}
+
+.fp-cluster-card .fp-row {
+	padding: 0.35rem 0.75rem;
+}
+
+.fp-cluster-card .fp-row:last-child {
+	border-bottom: none;
 }
 
 /* ============================================================
