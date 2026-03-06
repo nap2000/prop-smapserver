@@ -62,6 +62,8 @@ import {
 	setupNotificationDialog,
 	setupTaskDialog,
 	setupUserProfile,
+	translateKey,
+	translateKeyValue,
 	updateConversationalSMS
 } from "common";
 import "../../../smapServer/WebContent/js/libs/commonReportFunctions";
@@ -74,6 +76,7 @@ import "../../../smapServer/WebContent/js/libs/bootstrap.file-input";
 import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-flatpickr-bridge.js";
 import chart from "./app/chart";
 import map from "./app/mapOL3";
+import * as actioncommon from "./app/actioncommon";
 import { showEditRecordForm } from "./app/actioncommon";
 import { addAnchors } from "../../../smapServer/WebContent/js/libs/commonReportFunctions";
 

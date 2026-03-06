@@ -6672,5 +6672,7 @@ export {
 	getSurveyRoles,
 	getOurNumbers,
 	isSelfRegistrationServer,
-	getViewLanguages
+	getViewLanguages,
+	translateKey,
+	translateKeyValue
 };
