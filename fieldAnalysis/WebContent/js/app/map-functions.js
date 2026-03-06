@@ -787,8 +787,12 @@ export function addSharedMaps(map, sharedMaps) {
 		if (aDataItem._ftype && aDataItem._ftype === "q") {
 			titleText = htmlEncode(aDataItem.question || 'Feature');
 		} else {
-			var pk = aDataItem.prikeys ? aDataItem.prikeys[0] : aDataItem.prikey;
-			titleText = pk ? 'Record ' + htmlEncode(pk) : 'Feature';
+			if (clusterData) {
+				titleText = 'Details';
+			} else {
+				var pk = aDataItem.prikeys ? aDataItem.prikeys[0] : aDataItem.prikey;
+				titleText = pk ? 'Record ' + htmlEncode(pk) : 'Details';
+			}
 		}
 
 		// Header
