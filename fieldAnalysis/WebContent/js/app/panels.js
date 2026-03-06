@@ -43,8 +43,12 @@ $(document).ready(function() {
 	window.moment = window.moment || moment; // Required as common.js not part of module
 
 	setTheme();
-	setupUserProfile(true);
 	localise.setlang();		// Localise HTML
+
+	// Defer until locale is loaded so modal labels have their translated text
+	localise.initLocale(window.gUserLocale).then(function() {
+		setupUserProfile(true);
+	});
 
 	// Initialise p_settings as BS5 modal
 	pSettingsModal = new bootstrap.Modal(document.getElementById('p_settings'), { backdrop: 'static' });
