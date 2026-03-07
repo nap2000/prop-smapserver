@@ -20,6 +20,7 @@ import "tablesorter";
 import { addAnchors } from "commonReportFunctions";
 import { htmlEncode } from "common";
 import globals from "globals";
+import localise from "localise";
 
 var gTab = [],
 	gIdx = -1;

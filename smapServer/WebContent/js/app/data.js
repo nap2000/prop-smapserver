@@ -229,6 +229,7 @@ function processSurveyData(fId, f_sId, f_view, surveyName, replace, start_rec) {
 				f_view.inc_ro,
 				f_view.geomFormQuestions);
 	
+	console.log("[processSurveyData] type=" + f_view.type + " bBad=" + bBad + " url=" + url);
 	addHourglass();
  	$.ajax({
 		url: url,
@@ -237,6 +238,7 @@ function processSurveyData(fId, f_sId, f_view, surveyName, replace, start_rec) {
 		success: function(data) {
 			// Add meta data to results
 			removeHourglass();
+			console.log("[processSurveyData] response features=" + (data.features ? data.features.length : "none") + " fId=" + fId);
 			var theUrl = url;
 			data.source = "survey";
 			data.sId = f_sId;

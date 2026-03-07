@@ -26,6 +26,8 @@ import globals from "globals";
 import { addCacheBuster, addHourglass, handleLogout, htmlEncode, populateLanguageSelect, populatePdfSelect, removeHourglass } from "common";
 import { toggleBadURL, openModal, closeModal } from "./script";
 import { refreshAnalysisData } from "./survey_control";
+import { getUserData, processSurveyData } from "data";
+import localise from "localise";
 
 var gSelectedTemplate,          // Survey ident of the current template
 	gInstanceId,
@@ -768,9 +770,7 @@ function toggleBad($elem, fId, pKey, value, sId, theView) {
 				  $elem.text(toValue);
 				  $elem.next().text(reason);
 				  $elem.toggleClass('bad_r').toggleClass('good_r');
-				  if (theView) {
-					  theView.dirty = true;
-				  }
+				  refreshAnalysisData();
 			  }
 		  }, error: function(data, status) {
 			  if(handleLogout(data.responseText)) {

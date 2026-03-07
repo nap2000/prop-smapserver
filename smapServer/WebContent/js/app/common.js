@@ -3075,7 +3075,7 @@ function formItemsURL(form, getFeatures, mustHaveGeom, start_key, rec_limit, bBa
 	url += "&mustHaveGeom=" + mustHaveGeom;
 	url += "&start_key=" + start_key;
 	url += "&rec_limit=" + rec_limit;
-	url += "&bBad=" + bBad;
+	url += "&get_bad=" + bBad;
 	if(typeof filter !== "undefined") {
 		url += "&filter=" + encodeURIComponent(filter);
 	}
