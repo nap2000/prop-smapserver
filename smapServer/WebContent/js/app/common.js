@@ -3071,11 +3071,25 @@ function formItemsURL(form, getFeatures, mustHaveGeom, start_key, rec_limit, bBa
 	endDate, advanced_filter, tz, inc_ro, geomFormQuestions) {
 	var url = "/surveyKPI/items/";
 	url += form;
-	url += "?getFeatures=" + getFeatures;
-	url += "&mustHaveGeom=" + mustHaveGeom;
-	url += "&start_key=" + start_key;
-	url += "&rec_limit=" + rec_limit;
-	url += "&get_bad=" + bBad;
+	var sep = "?";
+	if(getFeatures === "no") {
+		url += sep + "feats=no";
+		sep = "&";
+	}
+	if(mustHaveGeom === "no") {
+		url += sep + "mustHaveGeom=no";
+		sep = "&";
+	}
+	url += sep + "start_key=" + start_key;
+	if(rec_limit) {
+		url += "&rec_limit=" + rec_limit;
+	}
+	if(bBad) {
+		url += "&get_bad=true";
+	}
+	if(inc_ro) {
+		url += "&inc_ro=true";
+	}
 	if(typeof filter !== "undefined") {
 		url += "&filter=" + encodeURIComponent(filter);
 	}
@@ -3088,14 +3102,8 @@ function formItemsURL(form, getFeatures, mustHaveGeom, start_key, rec_limit, bBa
 	if(typeof endDate !== "undefined" && endDate) {
 		url += "&endDate=" + endDate;
 	}
-	if(typeof advanced_filter !== "undefined") {
+	if(typeof advanced_filter !== "undefined" && advanced_filter.length > 0) {
 		url += "&advanced_filter=" + encodeURIComponent(advanced_filter);
-	}
-	if(typeof tz !== "undefined") {
-		url += "&tz=" + encodeURIComponent(tz);
-	}
-	if(typeof inc_ro !== "undefined") {
-		url += "&inc_ro=" + inc_ro;
 	}
 	if(geomFormQuestions && geomFormQuestions.length > 0) {
 		var qList = "";
@@ -3104,6 +3112,9 @@ function formItemsURL(form, getFeatures, mustHaveGeom, start_key, rec_limit, bBa
 			qList += geomFormQuestions[gfq].question;
 		}
 		url += "&geom_questions=" + encodeURIComponent(qList);
+	}
+	if(tz) {
+		url += "&tz=" + encodeURIComponent(tz);
 	}
 	return url;
 }
