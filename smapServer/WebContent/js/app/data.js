@@ -64,42 +64,6 @@ function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, curren
 	}
 }
 
-/*
- * Get extended survey meta data
- */
-function getExtendedSurveyMetaSE(sId, callback) {
-
-	if(sId != -1) {
-        var url = "/surveyKPI/survey/" + sId + "/getMeta" + "?extended=true";
-	
-		addHourglass();
-	 	$.ajax({
-			url: url,
-			cache: false,
-			dataType: 'json',
-			success: function(data) {
-				removeHourglass();
-				globals.gSelector.addSurveyExtended(sId, data);
-			
-				if(typeof callback === "function") {
-					callback(data);
-				}
-
-			},
-			error: function(xhr, textStatus, err) {
-				removeHourglass();
-  				if(xhr.readyState == 0 || xhr.status == 0) {
-		              return;  // Not an error
-				} else {
-					$('#status_msg_msg').empty().text("Error failed to get extended meta data for survey:" + sId);
-					$("#status_msg").dialog("open");
-				}
-				refreshData(view, "survey");
-			}
-		});
-	} 
-}
-
  /*
   * Get a question's Meta Data
   * This meta data will identify the data that can be retrieved for this question
@@ -238,43 +202,42 @@ function processSurveyData(fId, f_sId, f_view, surveyName, replace, start_rec) {
 		success: function(data) {
 			// Add meta data to results
 			removeHourglass();
-			console.log("[processSurveyData] response features=" + (data.features ? data.features.length : "none") + " fId=" + fId);
-			var theUrl = url;
-			data.source = "survey";
-			data.sId = f_sId;
-			data.table = true;
-			data.fId = fId;
-			data.survey = surveyName;
-			
-			// Record starting records for each table so that "less" will work
-			if(typeof f_view.start_recs === "undefined") {
-				f_view.start_recs = {};
-			}
-			if(typeof f_view.start_recs[fId] === "undefined") {
-				f_view.start_recs[fId] = [];
-			}
-			f_view.start_recs[fId].push(start_rec);
-			
-	 		globals.gSelector.addDataItem(theUrl, data);
-	 		f_view.tableCount--;
-	 		
-			if(replace) {
-	 			for(i = 0; i < f_view.results.length; i++) {
-					if(f_view.results[i].fId === fId) {
-						f_view.results[i] = data;
-						break;
-					}
+			if(handleLogout(data)) {
+				console.log("[processSurveyData] response features=" + (data.features ? data.features.length : "none") + " fId=" + fId);
+				var theUrl = url;
+				data.source = "survey";
+				data.sId = f_sId;
+				data.table = true;
+				data.fId = fId;
+				data.survey = surveyName;
 
+				// Record starting records for each table so that "less" will work
+				if (typeof f_view.start_recs === "undefined") {
+					f_view.start_recs = {};
+				}
+				if (typeof f_view.start_recs[fId] === "undefined") {
+					f_view.start_recs[fId] = [];
+				}
+				f_view.start_recs[fId].push(start_rec);
+
+				globals.gSelector.addDataItem(theUrl, data);
+				f_view.tableCount--;
+
+				if (replace) {
+					for (i = 0; i < f_view.results.length; i++) {
+						if (f_view.results[i].fId === fId) {
+							f_view.results[i] = data;
+							break;
+						}
+					}
+				} else {
+
+					f_view.results[f_view.tableCount] = data;
 				}
 
-			} else {
-
-	 			f_view.results[f_view.tableCount] = data;
-			}
-
-			if(f_view.tableCount === 0) {
-
-				refreshData(f_view, "survey");	// Update the views with the new survey data after all services have returned
+				if (f_view.tableCount === 0) {
+					refreshData(f_view, "survey");	// Update the views with the new survey data after all services have returned
+				}
 			}
 
 		},
