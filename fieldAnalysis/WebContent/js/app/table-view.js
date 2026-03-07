@@ -223,7 +223,11 @@ export function setTableSurvey(view) {
 	$('.import_source').change(function(){
 		importSourceChanged($(this).val());
 	});
-	
+
+	$('#p' + view.pId).find('.tShowMeta').off('change').on('change', function() {
+		$('#table_panel' + view.pId).find('.dt-table').toggleClass('hide-meta', !$(this).prop('checked'));
+	});
+
 }
 
 function importSourceChanged(source) {
@@ -625,6 +629,8 @@ function showTable(tableIdx, view, tableItems, fId, survey_ident) {
 	
 	if(tableItems && tableItems.features && tableItems.features.length > 0) {
 		generateTable(elemMain, tableItems, "", survey_ident, view.sId);
+		var showMeta = $('#p' + view.pId).find('.tShowMeta').prop('checked');
+		if (!showMeta) { $selMain.find('.dt-table').addClass('hide-meta'); }
 		addRightClickToTable($selMain, view.sId, view);
 		$selMain.find('table').tablesorter({ theme : 'dark' });
 		addMoreLessButtons($selMain, view, fId, tableItems);

@@ -167,6 +167,7 @@ export default {
     "c_rec": "(موصى به)",
     "c_source": "مصدر ",
     "c_show": "عرض ",
+    "c_show_meta": "عرض البيانات الوصفية",
     "c_hide": "إخفاء ",
     "c_totals": "المجموع ",
     "c_instances": "الحالات ",

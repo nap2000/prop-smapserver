@@ -197,6 +197,7 @@ export default {
     "c_rec": "(Recommandé)",
     "c_source": "Source",
     "c_show": "Afficher",
+    "c_show_meta": "Afficher les Métadonnées",
     "c_hide": "Cacher",
     "c_total": "Total",
     "c_totals": "Total",

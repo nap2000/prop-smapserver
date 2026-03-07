@@ -108,6 +108,8 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 	gTab[++gIdx] = '<thead>';
 
 	numberCols = cols.length;
+	var instanceidIdx = cols.indexOf("instanceid");
+	if (instanceidIdx === -1) { instanceidIdx = cols.indexOf("_instanceid"); }
 
 	// Add grouping columns across the top of the table if there are both time series and groups
 	if(isPeriod && isGrouped) {
@@ -140,9 +142,9 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 	
 	for(j = 0; j < repeatCols; j++) {
 		for(i = 0; i < numberCols; i++) {	
-			if(cols[i] !== "_instanceid" && cols[i] !== "instanceid" && cols[i] !== "_task_key" && 
+			if(cols[i] !== "_instanceid" && cols[i] !== "instanceid" && cols[i] !== "_task_key" &&
 					cols[i] !== "_task_replace"&& cols[i] !== "prikey" && cols[i] !== "_modified") {
-				gTab[++gIdx] = '<th>';
+				gTab[++gIdx] = (instanceidIdx >= 0 && i <= instanceidIdx) ? '<th data-meta="true">' : '<th>';
 				var translatedName = cols[i];
 				if(translatedName.indexOf('_') == 0) {
 					if(translatedName === "_device") {
@@ -247,8 +249,9 @@ if(globals.gCanEdit) {
 				key = cols[k];
 				type = types[k];
 	
-				if(key !== "_instanceid" && key !== "instanceid" && key !== "_task_key" && 
+				if(key !== "_instanceid" && key !== "instanceid" && key !== "_task_key" &&
 						key !== "_task_replace" && key !== "prikey" && key !== "_modified") {
+					var metaAttr = (instanceidIdx >= 0 && k <= instanceidIdx) ? ' data-meta="true"' : '';
 					if (isGrouped && fn === "none") {
 						// Grouped but no aggregating function. Show as an array
 						for(j = 0; j < groups[i].properties[key].length; j++) {
@@ -259,7 +262,7 @@ if(globals.gCanEdit) {
 								val = groups[i].geometry.coordinates.join(',');
 							}
 
-							gTab[++gIdx] = '<td ' + params + '>';
+							gTab[++gIdx] = '<td ' + params + metaAttr + '>';
 							gTab[++gIdx] = addAnchors(val, true).join(',');
 							gTab[++gIdx] = '</td>';
 						}
@@ -282,7 +285,7 @@ if(globals.gCanEdit) {
 						} else if(type === "dateTime") {
 							//val = formatLocalTime(val);  all good
 						}
-						gTab[++gIdx] = '<td ' + params + '>';
+						gTab[++gIdx] = '<td ' + params + metaAttr + '>';
 						gTab[++gIdx] = addAnchors(val, true).join(',');
 						gTab[++gIdx] = '</td>';
 					}

@@ -259,6 +259,7 @@ export default {
     "c_rec": "(Recomendado)",
     "c_source": "Fuente",
     "c_show": "Mostrar",
+    "c_show_meta": "Mostrar Metadatos",
     "c_show_q": "Mostrar pregunta",
     "c_hide": "Ocultar",
     "c_total": "Total",

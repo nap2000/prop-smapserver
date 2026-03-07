@@ -805,6 +805,9 @@ div.olControlZoom a:link {
 	color: #adb5bd;
 }
 
+/* Hide meta columns when Show Meta Data is unchecked */
+.dt-table.hide-meta [data-meta] { display: none; }
+
 /* Kebab / context menu trigger button */
 .menu_button {
 	display: inline-flex;

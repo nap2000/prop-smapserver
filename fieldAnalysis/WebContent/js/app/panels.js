@@ -563,6 +563,13 @@ function setPanelType(type, idx, period, qId, subject_type) {
 				<button class="btn btn-sm btn-outline-secondary tRestore">${localise.set["c_res_data"] || "Restore"}</button>
 				<button class="btn btn-sm btn-outline-secondary tArchive">${localise.set["c_archive_data"] || "Archive"}</button>
 			</div>
+			<h3>${localise.set["c_view"] || "View"}</h3>
+			<div class="p-1">
+				<div class="form-check form-switch">
+					<input class="form-check-input tShowMeta" type="checkbox" id="show_meta_${idx}" checked>
+					<label class="form-check-label" for="show_meta_${idx}">${localise.set["c_show_meta"] || "Show Meta Data"}</label>
+				</div>
+			</div>
 		</div>`;
 		$panelContent.append(html);
 		break;

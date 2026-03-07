@@ -210,6 +210,7 @@ export default {
     "c_rec": "(Recomendado)",
     "c_source": "Origem",
     "c_show": "Mostrar",
+    "c_show_meta": "Mostrar Meta Dados",
     "c_hide": "Esconder",
     "c_total": "Total",
     "c_totals": "Totais",
