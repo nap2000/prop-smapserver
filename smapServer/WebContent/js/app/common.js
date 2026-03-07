@@ -6598,6 +6598,7 @@ export {
 	addFormPickList,
 	addGeomPickList,
 	addCacheBuster,
+	cleanFileName,
 	addGoogleMapLayers,
 	addHourglass,
 	addTimeZoneToUrl,
