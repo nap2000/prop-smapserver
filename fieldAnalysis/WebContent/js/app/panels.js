@@ -22,7 +22,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 import "jquery";
 import "localise";
-import { addHourglass, getLoggedInUser, handleLogout, htmlEncode, removeHourglass, setupUserProfile, shapeFormsChanged, validGeneralName } from "common";
+import { addHourglass, getLoggedInUser, handleLogout, htmlEncode, removeHourglass, saveCurrentProject, setupUserProfile, shapeFormsChanged, validGeneralName } from "common";
 import { dashboardURL, dashboardStateURL, getQuestionInfo, initialiseDialogs, openModal, closeModal } from "./script";
 import globals from "globals";
 import "./script";
