@@ -29,7 +29,9 @@ if (Modernizr.localstorage) {
 
 const $ = window.$;
 
-$(document).ready(function() {
+localise.initLocale(gUserLocale).then(function() {
+
+	$(document).ready(function() {
 
 		localise.setlang();		// Localise HTML
 
@@ -42,6 +44,8 @@ $(document).ready(function() {
 			} else {
 				window.close();
 			}
-		})
+		});
 
 	});
+
+});

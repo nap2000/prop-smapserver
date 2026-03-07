@@ -548,37 +548,52 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 			</div>
 			<div class="modal-body">
-				<form role="form">
-					<div class="mb-3">
-						<a id="download_edit" class="btn btn-outline-primary instance_functions lang d-block mb-2" href="#" data-lang="d_edit_web">edit in web form</a>
-						<a id="download_pdf" class="btn btn-outline-secondary instance_functions lang d-block" href="#" data-lang="d_d_pdf">download PDF</a>
+				<form class="ps-form" role="form">
+					<div class="row mb-3 justify-content-center">
+						<div class="col-auto">
+							<a id="download_edit" class="btn btn-outline-primary instance_functions lang" href="#" data-lang="d_edit_web">edit in web form</a>
+						</div>
+						<div class="col-auto">
+							<a id="download_pdf" class="btn btn-outline-secondary instance_functions lang" href="#" data-lang="d_d_pdf">download PDF</a>
+						</div>
 					</div>
 					<div id="download_options_div">
-						<div class="mb-2">
-							<div class="form-check">
-								<input id="include_references" type="checkbox" name="include_references" value="include_references" class="form-check-input"/>
-								<label for="include_references" class="form-check-label lang" data-lang="n_inc_ref">inc reference surveys</label>
+						<div class="row mb-2">
+							<div class="col-sm-8 offset-sm-4">
+								<div class="form-check">
+									<input id="include_references" type="checkbox" name="include_references" value="include_references" class="form-check-input"/>
+									<label for="include_references" class="form-check-label lang" data-lang="n_inc_ref">inc reference surveys</label>
+								</div>
+								<div class="form-check">
+									<input id="launched_only" type="checkbox" name="launched_only" value="launched_only" class="form-check-input"/>
+									<label for="launched_only" class="form-check-label lang" data-lang="n_lo"></label>
+								</div>
 							</div>
-							<div class="form-check">
-								<input id="launched_only" type="checkbox" name="launched_only" value="launched_only" class="form-check-input"/>
-								<label for="launched_only" class="form-check-label lang" data-lang="n_lo"></label>
+						</div>
+						<div class="row mb-2">
+							<label class="col-sm-4 col-form-label lang" data-lang="c_lang" for="download_language"></label>
+							<div class="col-sm-8">
+								<select id="download_language" class="form-select"></select>
 							</div>
 						</div>
-						<div class="mb-2">
-							<label class="form-label lang" data-lang="c_lang" for="download_language"></label>
-							<select id="download_language" class="form-select"></select>
+						<div class="row mb-2">
+							<label class="col-sm-4 col-form-label lang" data-lang="c_template" for="select_pdf"></label>
+							<div class="col-sm-8">
+								<select id="select_pdf" class="form-select"></select>
+							</div>
 						</div>
-						<div class="mb-2">
-							<label class="form-label lang" data-lang="c_template" for="select_pdf"></label>
-							<select id="select_pdf" class="form-select"></select>
-						</div>
-						<div class="form-check">
-							<input type="radio" class="form-check-input" name="orientation" value="portrait" checked="checked"/>
-							<label class="form-check-label lang" data-lang="c_portrait">Portrait</label>
-						</div>
-						<div class="form-check">
-							<input type="radio" class="form-check-input" name="orientation" value="landscape"/>
-							<label class="form-check-label lang" data-lang="c_landscape">Landscape</label>
+						<div class="row mb-2">
+							<label class="col-sm-4 col-form-label lang" data-lang="c_orientation">Orientation</label>
+							<div class="col-sm-8 d-flex align-items-center gap-3">
+								<div class="form-check mb-0">
+									<input type="radio" class="form-check-input" name="orientation" value="portrait" checked="checked"/>
+									<label class="form-check-label lang" data-lang="c_portrait">Portrait</label>
+								</div>
+								<div class="form-check mb-0">
+									<input type="radio" class="form-check-input" name="orientation" value="landscape"/>
+									<label class="form-check-label lang" data-lang="c_landscape">Landscape</label>
+								</div>
+							</div>
 						</div>
 					</div>
 				</form>

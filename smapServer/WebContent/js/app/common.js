@@ -6619,6 +6619,7 @@ export {
 	getTaskUsers,
 	getBaseName,
 	downloadFile,
+	downloadPdf,
 	enableDebugging,
 	enableUserProfile,
 	getLoggedInUser,
