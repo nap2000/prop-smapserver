@@ -628,8 +628,8 @@ div.olControlZoom a:link {
 	flex-direction: column;
 }
 
-/* Expanded (col-12) panel overrides */
-.panel-col.col-12 {
+/* Expanded panel overrides */
+.panel-col.expanded {
 	height: 80vh;
 }
 
