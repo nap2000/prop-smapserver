@@ -1000,7 +1000,7 @@ $(function() {
 	/*
 	 * Toolbar
 	 */
-	$('.question_type_sel', '#toolbar_types').off().click(function(){
+	$('#toolbar_types').off('click', '.question_type_sel').on('click', '.question_type_sel', function(){
 		var type = $(this).val(),
 			$finalButton = $('.add_final_button', '#formList');
 		addQuestion($finalButton, type);
