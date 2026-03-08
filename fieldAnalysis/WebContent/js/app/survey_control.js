@@ -1116,4 +1116,4 @@ function getUsers(projectId) {
 	});
 }
 
-export { copyView, showSettings, refreshAnalysisData };
+export { copyView, getViewSurveys, showSettings, refreshAnalysisData };

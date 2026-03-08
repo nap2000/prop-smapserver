@@ -24,7 +24,7 @@ import "./libs/bootstrap-colorpicker.min.js";
 import "./libs/wb/plugins/iCheck/icheck.min.js";
 import localise from "./app/localise.js";
 import globals from "./app/globals.js";
-import { addCacheBuster, addHourglass, checkExistenceOfReferences, checkLoggedIn, getAccessibleCsvFiles, getAccessibleSurveys, getFilesFromServer, getGroupQuestionsInSurvey, getLoggedInUser, getReferenceNames, getSurveyDetails, handleLogout, htmlEncode, loadSurveys, localTime, openForm, removeHourglass, saveCurrentProject, setupUserProfile, validGeneralName } from "./app/common";
+import { addCacheBuster, addHourglass, checkExistenceOfReferences, checkLoggedIn, createNewSurvey, getAccessibleCsvFiles, getAccessibleSurveys, getFilesFromServer, getGroupQuestionsInSurvey, getLoggedInUser, getReferenceNames, getSurveyDetails, handleLogout, htmlEncode, loadSurveys, localTime, openForm, removeHourglass, saveCurrentProject, setupUserProfile, validGeneralName } from "./app/common";
 import question from "./app/question";
 import optionlist from "./app/optionlist";
 import markup from "./app/editorMarkup";

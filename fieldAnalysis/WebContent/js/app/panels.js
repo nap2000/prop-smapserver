@@ -28,7 +28,7 @@ import globals from "globals";
 import "./script";
 import "rmm";
 import "moment";
-import { copyView, gMetaInProgress, getData, showSettings } from "./survey_control";
+import { copyView, gMetaInProgress, getData, getViewSurveys, showSettings } from "./survey_control";
 import extendedModel from "./extended_model";
 import { initializeMap } from "./map-ol";
 
