@@ -28,7 +28,7 @@ import globals from "globals";
 import "./script";
 import "rmm";
 import "moment";
-import { copyView, gMetaInProgress, getData, getViewSurveys, showSettings } from "./survey_control";
+import { copyView, getData, getViewSurveys, showSettings } from "./survey_control";
 import extendedModel from "./extended_model";
 import { initializeMap } from "./map-ol";
 
@@ -84,7 +84,7 @@ $(document).ready(function() {
 			qId_is_calc = false;
 
 		// Check that the meta data for the question has been retrieved
-		if(gMetaInProgress !== 0) {
+		if(globals.gMetaInProgress !== 0) {
 			alert(localise.set["msg_wait"]);
 			return false;
 		}

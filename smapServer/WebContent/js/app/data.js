@@ -20,7 +20,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  */
 import globals from "./globals.js";
 import localise from "./localise.js";
-import { addHourglass, formItemsURL, handleLogout, removeHourglass, resultsURL } from "./common";
+import { addDatePickList, addFormPickList, addGeomPickList, addHourglass, formItemsURL, handleLogout, questionMetaURL, removeHourglass, resultsURL } from "./common";
 
 function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, currentDate, callback) {
 
@@ -36,13 +36,17 @@ function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, curren
 				removeHourglass();
 				if(handleLogout(data)) {
 					globals.gSelector.addSurvey(sId, data);
-				if (getS) {
-					getSurveyDataSE(sId, view);
-				}
-
-				if (typeof callback === "function") {
-
-
+					if (getS) {
+						getSurveyDataSE(sId, view);
+					}
+					if (updateExport) {
+						addFormPickList(data);
+					}
+					if (updateDatePicker) {
+						addDatePickList(data, currentDate);
+						addGeomPickList(data);
+					}
+					if (typeof callback === "function") {
 						callback();
 					}
 				}
@@ -70,7 +74,7 @@ function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, curren
   */
   function getQuestionMeta(sId, qId, language, view) {
 
-	gMetaInProgress++;
+	globals.gMetaInProgress++;
 		
  	function getAsyncQuestionMeta(aUrl, asId, aqId, alanguage, view) {
  	 	$.ajax({
@@ -78,19 +82,20 @@ function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, curren
  			cache: false,
  			dataType: 'json',
  			success: function(data) {
- 				gMetaInProgress--;
+ 				globals.gMetaInProgress--;
  				globals.gSelector.addQuestion(aqId, alanguage, data);	
+ 				var vh = globals.viewHandlers || {};
  				if(view && view.type == "map") {
- 					getGeometryQuestion(asId, data.f_id);
- 				} 
+ 					if(typeof vh.getGeometryQuestion === "function") vh.getGeometryQuestion(asId, data.f_id);
+ 				}
  				if(view && view.fn) {
- 					setQ1Functions(data.type, view.type, view.fn);
+ 					if(typeof vh.setQ1Functions === "function") vh.setQ1Functions(data.type, view.type, view.fn);
  				} else {
- 					setQ1Functions(data.type, undefined, "percent");
+ 					if(typeof vh.setQ1Functions === "function") vh.setQ1Functions(data.type, undefined, "percent");
  				}
  			},
  			error: function(data) {
- 				gMetaInProgress--;
+ 				globals.gMetaInProgress--;
  				console.log("Error in " + aUrl);
  			}
  		});
@@ -101,7 +106,7 @@ function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, curren
  		getAsyncQuestionMeta(url, sId, qId, language, view);
  	} else {
   		console.log("Error: getQuestionMeta:" + sId +":" + qId);
- 		gMetaInProgress--;
+ 		globals.gMetaInProgress--;
  	}
   }
  
@@ -116,7 +121,7 @@ function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, curren
  }
 
 	   
-	   gMetaInProgress++;
+	   globals.gMetaInProgress++;
 
 	  	function getAsyncGroupMeta(aUrl, asId, aqId, alanguage) {
 	  	 	$.ajax({
@@ -124,11 +129,11 @@ function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, curren
 	  			cache: false,
 	  			dataType: 'json',
 	  			success: function(data) {
-	  				gMetaInProgress--;
+	  				globals.gMetaInProgress--;
 	  				globals.gSelector.addQuestion(aqId, alanguage, data);	
 	  			},
 	  			error: function(data) {
-	  				gMetaInProgress--;
+	  				globals.gMetaInProgress--;
 	  				console.log("Error in " + aUrl);
 	  			}
 	  		});
@@ -140,7 +145,7 @@ function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, curren
 	  		getAsyncGroupMeta(url, sId, qId, language);
 	  	} else {
 	  		console.log("Error: getGroupMeta:" + sId +":" + qId);
-	  		gMetaInProgress--;
+	  		globals.gMetaInProgress--;
 	  	}
    }
  

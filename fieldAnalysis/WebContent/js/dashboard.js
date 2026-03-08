@@ -30,6 +30,7 @@ import { newSetGraphQuestion, setGraphSurvey } from "./app/graph-view2";
 import { setMap } from "./app/map-ol";
 import { setMediaQuestion, setMediaSurvey } from "./app/media-view";
 import { setTableQuestion, setTableSurvey, setUserTableSurvey } from "./app/table-view";
+import { getGeometryQuestion, setQ1Functions, setSurveyViewQuestionGroups } from "./app/survey_control";
 import "pace";
 import "./app/map-functions";
 import "./app/map-ol";
@@ -45,11 +46,14 @@ import "./app/panels";
 const moment = window.moment;
 
 globals.viewHandlers = {
+	getGeometryQuestion: getGeometryQuestion,
 	newSetGraphQuestion: newSetGraphQuestion,
 	setGraphSurvey: setGraphSurvey,
 	setMap: setMap,
 	setMediaQuestion: setMediaQuestion,
 	setMediaSurvey: setMediaSurvey,
+	setQ1Functions: setQ1Functions,
+	setSurveyViewQuestionGroups: setSurveyViewQuestionGroups,
 	setTableQuestion: setTableQuestion,
 	setTableSurvey: setTableSurvey,
 	setUserTableSurvey: setUserTableSurvey

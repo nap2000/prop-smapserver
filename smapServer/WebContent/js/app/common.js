@@ -1993,8 +1993,9 @@ function getQuestionList(sId, language, qId, groupId, callback, setGroupList, vi
 					globals.gSelector.setSurveyQuestions(sId, language, data);
 					setSurveyViewQuestions(data, qId, view, dateqId, qName, assignQuestion, scQuestion);
 
-					if (setGroupList && typeof setSurveyViewQuestionGroups === "function") {
-						setSurveyViewQuestionGroups(data, groupId);
+					if (setGroupList) {
+						var vh = globals.viewHandlers || {};
+						if (typeof vh.setSurveyViewQuestionGroups === "function") vh.setSurveyViewQuestionGroups(data, groupId);
 					}
 					if (typeof theCallback === "function") {
 						theCallback();
@@ -6658,6 +6659,7 @@ export {
 	setInLocalStorage,
 	setLocationList,
 	formItemsURL,
+	questionMetaURL,
 	refreshMediaViewManage,
 	refreshLocationGroups,
 	includeLocation,

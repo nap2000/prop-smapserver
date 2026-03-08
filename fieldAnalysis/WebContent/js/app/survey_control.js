@@ -27,9 +27,6 @@ import localise from "localise";
 import { getGroupMeta, getQuestionMeta, getResults, getSurveyDataSE, getSurveyMetaSE, getUserData } from "data";
 
 var gSurveyControlView;	// Store the temporary state of the view
-var gMetaInProgress = 0;	// Records the existence of asynch meta calls qhich must complete before user saves
-
-export { gMetaInProgress };
 
 $(document).ready(function() {
 	
@@ -1116,4 +1113,4 @@ function getUsers(projectId) {
 	});
 }
 
-export { copyView, getViewSurveys, showSettings, refreshAnalysisData };
+export { copyView, getGeometryQuestion, getViewSurveys, setQ1Functions, setSurveyViewQuestionGroups, showSettings, refreshAnalysisData };

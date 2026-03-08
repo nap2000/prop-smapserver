@@ -154,7 +154,9 @@ import { addHourglass, handleLogout, htmlEncode, removeHourglass } from "./commo
 	    gRefreshRate: 0,
 
         gMapboxDefault: undefined,		// Mapbox key
-        
+
+        gMetaInProgress: 0,             // Count of in-progress async meta calls
+
         model: new Model()
 
     }
