@@ -110,22 +110,18 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
+				<i id="settings_type_icon" class="fas fa-map me-2"></i>
 				<h5 class="modal-title lang" data-lang="c_settings">Settings</h5>
 				<button type="button" class="btn-close" id="settings_x_close"></button>
 			</div>
 			<div class="modal-body">
 				<form class="ps-form">
-					<div class="row mb-2 subject_survey_only">
-						<label for="settings_type" class="col-sm-4 col-form-label lang" data-lang="a_type">Chart Type</label>
-						<div class="col-sm-8">
-							<select id="settings_type" class="form-select">
-								<option value="map" class="lang" data-lang="c_map">Map</option>
-								<option value="table" class="lang" data-lang="c_table">Table</option>
-								<option value="graph" class="lang" data-lang="c_graph">Graph</option>
-								<option value="media" class="lang" data-lang="c_images">Images</option>
-							</select>
-						</div>
-					</div>
+					<select id="settings_type" class="d-none">
+						<option value="map">Map</option>
+						<option value="table">Table</option>
+						<option value="graph">Graph</option>
+						<option value="media">Images</option>
+					</select>
 					<div class="row mb-2 table_only map_only" style="display:none;">
 						<label for="subject_type" class="col-sm-4 col-form-label lang" data-lang="c_subject">subject</label>
 						<div class="col-sm-8">
