@@ -17,7 +17,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import globals from "globals";
-import { addDatePickList, addFormPickList, addGeomPickList, cleanFileName, downloadFile, formItemsURL, getLanguageList, resultsURL, setSurveyViewLanguages, shapeFormsChanged } from "common";
+import { addDatePickList, addFormPickList, addGeomPickList, cleanFileName, downloadFile, formItemsURL, getLanguageList, getSelectedForm, resultsURL, setSurveyViewLanguages, shapeFormsChanged } from "common";
 import { getSurveyMetaSE } from "data";
 import { refreshAnalysisData, getViewSurveys } from "./survey_control";
 
@@ -346,11 +346,11 @@ function setExportControls() {
 
 $('.exportcontrol').hide();
     if(format === "osm") {
-        $('.showosm,.showro,.showlang').show();
+        $('.showosm,.showro,.showlang,.showgeom').show();
     } else if(format === "csv") {
-        $('.showshape,.showro,.showlang, .mergeselmult').show();
-    } else if(format === "shape" || format === "kml" || format === "vrt" || format === "csv") {
-        $('.showshape,.showro,.showlang').show();
+        $('.showshape,.showro,.showlang,.mergeselmult').show();
+    } else if(format === "shape" || format === "kml" || format === "vrt") {
+        $('.showshape,.showro,.showlang,.showgeom').show();
     } else if(format === "stata" || format === "spss") {
         $('.showshape,.showro,.showlang').show();
     } else if(format === "trail") {

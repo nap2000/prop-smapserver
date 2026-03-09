@@ -6681,6 +6681,7 @@ export {
 	isValidODKOptionName,
 	isValidODKQuestionName,
 	shapeFormsChanged,
+	getSelectedForm,
 	setupUserProfile,
 	setupAssignType,
 	saveTask,
