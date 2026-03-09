@@ -17,7 +17,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import globals from "globals";
-import { addDatePickList, addFormPickList, addGeomPickList, cleanFileName, formItemsURL, getLanguageList, resultsURL, setSurveyViewLanguages, shapeFormsChanged } from "common";
+import { addDatePickList, addFormPickList, addGeomPickList, cleanFileName, downloadFile, formItemsURL, getLanguageList, resultsURL, setSurveyViewLanguages, shapeFormsChanged } from "common";
 import { getSurveyMetaSE } from "data";
 import { refreshAnalysisData, getViewSurveys } from "./survey_control";
 
@@ -27,16 +27,13 @@ var viewIdx = 0;
 var gLastSetForm;
 
 // BS5 modal manager
-var _modals = {};
 export function openModal(id) {
-    if(!_modals[id]) {
-        var el = document.getElementById(id);
-        if(el) _modals[id] = new bootstrap.Modal(el);
-    }
-    if(_modals[id]) _modals[id].show();
+    var el = document.getElementById(id);
+    if(el) bootstrap.Modal.getOrCreateInstance(el).show();
 }
 export function closeModal(id) {
-    if(_modals[id]) _modals[id].hide();
+    var el = document.getElementById(id);
+    if(el) bootstrap.Modal.getOrCreateInstance(el).hide();
 }
 
 $(document).ready(function() {
