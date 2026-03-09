@@ -19,7 +19,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 import globals from "globals";
 import { addDatePickList, addFormPickList, addGeomPickList, formItemsURL, getLanguageList, resultsURL, setSurveyViewLanguages, shapeFormsChanged } from "common";
 import { getSurveyMetaSE } from "data";
-import { refreshAnalysisData } from "./survey_control";
+import { refreshAnalysisData, getViewSurveys } from "./survey_control";
 
 import localise from "localise";
 

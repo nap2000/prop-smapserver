@@ -157,25 +157,19 @@
 						</div>
 					</div>
 
-					<fieldset class="border p-2 mb-2 subject_survey_only">
-						<legend class="float-none w-auto px-1 small lang" data-lang="a_ss">Select Survey</legend>
-						<div class="row mb-2">
-							<label for="settings_survey" class="col-sm-4 col-form-label lang" data-lang="c_survey">Survey</label>
-							<div class="col-sm-8">
-								<select id="settings_survey" class="form-select"></select>
-							</div>
+					<div class="row mb-2 subject_survey_only">
+						<label for="settings_survey" class="col-sm-4 col-form-label lang" data-lang="a_ss">Select Survey</label>
+						<div class="col-sm-8">
+							<select id="settings_survey" class="form-select"></select>
 						</div>
-					</fieldset>
+					</div>
 
-					<fieldset class="border p-2 mb-2 subject_user_only">
-						<legend class="float-none w-auto px-1 small lang" data-lang="c_user">user</legend>
-						<div class="row mb-2">
-							<label for="settings_user" class="col-sm-4 col-form-label lang" data-lang="c_user">user</label>
-							<div class="col-sm-8">
-								<select id="settings_user" class="form-select"></select>
-							</div>
+					<div class="row mb-2 subject_user_only">
+						<label for="settings_user" class="col-sm-4 col-form-label lang" data-lang="c_user">user</label>
+						<div class="col-sm-8">
+							<select id="settings_user" class="form-select"></select>
 						</div>
-					</fieldset>
+					</div>
 
 					<fieldset class="border p-2 mb-2 map_only subject_survey_only" style="display:none;">
 						<legend class="float-none w-auto px-1 small lang" data-lang="a_locn">locn</legend>
@@ -323,67 +317,97 @@
 			</div>
 			<div class="modal-body">
 				<form>
-					<div class="mb-2 selectsurvey">
-						<label for="export_survey" class="form-label lang" data-lang="c_survey">survey</label>
-						<select id="export_survey" class="form-select"></select>
+					<div class="row mb-2 selectsurvey">
+						<label for="export_survey" class="col-sm-4 col-form-label lang" data-lang="c_survey">survey</label>
+						<div class="col-sm-8">
+							<select id="export_survey" class="form-select"></select>
+						</div>
 					</div>
-					<div class="mb-2 selectquery" style="display:none;">
-						<label for="export_query" class="form-label lang" data-lang="m_query">queries</label>
-						<select id="export_query" class="form-select"></select>
+					<div class="row mb-2 selectquery" style="display:none;">
+						<label for="export_query" class="col-sm-4 col-form-label lang" data-lang="m_query">queries</label>
+						<div class="col-sm-8">
+							<select id="export_query" class="form-select"></select>
+						</div>
 					</div>
-					<div class="mb-2">
-						<label for="exportformat" class="form-label lang" data-lang="c_type">type</label>
-						<select id="exportformat" class="form-select">
-							<option value="xls" class="lang" data-lang="c_excel">excel</option>
-							<option value="csv" class="lang" data-lang="c_csv">csv</option>
-							<option value="osm" class="lang" data-lang="c_osm">osm</option>
-							<option value="shape" class="lang" data-lang="c_shape">shape</option>
-							<option value="media" class="lang" data-lang="c_media">media</option>
-							<option value="kml" class="lang" data-lang="c_kml">kml</option>
-							<option value="vrt" class="lang" data-lang="c_vrt">vrt</option>
-							<option value="stata" class="lang" data-lang="c_stata">stata</option>
-							<option value="spss" class="lang" data-lang="c_spss">spss</option>
-						</select>
+					<div class="row mb-2">
+						<label for="exportformat" class="col-sm-4 col-form-label lang" data-lang="c_type">type</label>
+						<div class="col-sm-8">
+							<select id="exportformat" class="form-select">
+								<option value="xls" class="lang" data-lang="c_excel">excel</option>
+								<option value="csv" class="lang" data-lang="c_csv">csv</option>
+								<option value="osm" class="lang" data-lang="c_osm">osm</option>
+								<option value="shape" class="lang" data-lang="c_shape">shape</option>
+								<option value="media" class="lang" data-lang="c_media">media</option>
+								<option value="kml" class="lang" data-lang="c_kml">kml</option>
+								<option value="vrt" class="lang" data-lang="c_vrt">vrt</option>
+								<option value="stata" class="lang" data-lang="c_stata">stata</option>
+								<option value="spss" class="lang" data-lang="c_spss">spss</option>
+							</select>
+						</div>
 					</div>
 
-					<div>
-						<fieldset class="border p-2 mb-2">
-							<div class="mb-2 exportcontrol showoldxls shownewxls">
-								<label for="export_xlstype" class="form-label lang" data-lang="c_xlstype">xls</label>
-								<select id="export_xlstype" class="form-select">
-									<option value="new_xlsx" selected class="lang" data-lang="a_nx">new xlsx</option>
-									<option value="html" class="lang" data-lang="a_lh">html</option>
-								</select>
-							</div>
-							<div class="mb-2 exportcontrol showlang showoldxls shownewxls">
-								<label for="export_language" class="form-label lang" data-lang="c_lang">Language</label>
-								<select id="export_language" class="form-select"></select>
-							</div>
-							<div class="form-check exportcontrol showoldxls shownewxls">
+					<div class="row mb-2 exportcontrol showoldxls shownewxls">
+						<label for="export_xlstype" class="col-sm-4 col-form-label lang" data-lang="c_xlstype">xls</label>
+						<div class="col-sm-8">
+							<select id="export_xlstype" class="form-select">
+								<option value="new_xlsx" selected class="lang" data-lang="a_nx">new xlsx</option>
+								<option value="html" class="lang" data-lang="a_lh">html</option>
+							</select>
+						</div>
+					</div>
+					<div class="row mb-2 exportcontrol showlang showoldxls shownewxls">
+						<label for="export_language" class="col-sm-4 col-form-label lang" data-lang="c_lang">Language</label>
+						<div class="col-sm-8">
+							<select id="export_language" class="form-select"></select>
+						</div>
+					</div>
+					<div class="row exportcontrol showoldxls shownewxls">
+						<div class="col-sm-8 offset-sm-4">
+							<div class="form-check">
 								<input type="checkbox" id="splitlocn" class="form-check-input"/>
 								<label for="splitlocn" class="form-check-label lang" data-lang="a_exp_split">Split lat / lon</label>
 							</div>
-							<div class="form-check exportcontrol mergeselmult showoldxls shownewxls">
+						</div>
+					</div>
+					<div class="row exportcontrol mergeselmult showoldxls shownewxls">
+						<div class="col-sm-8 offset-sm-4">
+							<div class="form-check">
 								<input type="checkbox" id="mergeSelectMultiple" class="form-check-input"/>
 								<label for="mergeSelectMultiple" class="form-check-label lang" data-lang="a_exp_merge">Compress Select Multiples</label>
 							</div>
-							<div class="form-check exportcontrol showoldxls shownewxls">
+						</div>
+					</div>
+					<div class="row exportcontrol showoldxls shownewxls">
+						<div class="col-sm-8 offset-sm-4">
+							<div class="form-check">
 								<input type="checkbox" id="embedImages" class="form-check-input"/>
 								<label for="embedImages" class="form-check-label lang" data-lang="a_embed">Embed</label>
 							</div>
-							<div class="form-check exportcontrol showoldxls shownewxls">
+						</div>
+					</div>
+					<div class="row exportcontrol showoldxls shownewxls">
+						<div class="col-sm-8 offset-sm-4">
+							<div class="form-check">
 								<input type="checkbox" id="incHxl" class="form-check-input"/>
 								<label for="incHxl" class="form-check-label lang" data-lang="a_hxl">hxl</label>
 							</div>
-							<div class="form-check exportcontrol shownewxls">
+						</div>
+					</div>
+					<div class="row exportcontrol shownewxls">
+						<div class="col-sm-8 offset-sm-4">
+							<div class="form-check">
 								<input type="checkbox" checked="checked" id="includeMeta" class="form-check-input"/>
 								<label for="includeMeta" class="form-check-label lang" data-lang="a_exp_meta">meta</label>
 							</div>
-							<div class="form-check exportcontrol shownewxls">
+						</div>
+					</div>
+					<div class="row mb-2 exportcontrol shownewxls">
+						<div class="col-sm-8 offset-sm-4">
+							<div class="form-check">
 								<input type="checkbox" id="exportReadOnly" class="form-check-input"/>
 								<label for="exportReadOnly" class="form-check-label lang" data-lang="a_inc_ro">ro</label>
 							</div>
-						</fieldset>
+						</div>
 					</div>
 
 					<div class="showosm" style="display:none;">
@@ -413,49 +437,61 @@
 					<div class="exportcontrol showmedia" style="display:none;">
 						<fieldset class="border p-2 mb-2">
 							<legend class="float-none w-auto px-1 small lang" data-lang="msg_sel_media">Select Media:</legend>
-							<div class="mb-2">
-								<label class="form-label lang" data-lang="msg_sel_media" for="export_media_question">Media Question</label>
-								<select id="export_media_question" class="form-select"></select>
+							<div class="row mb-2">
+								<label class="col-sm-4 col-form-label lang" data-lang="msg_sel_media" for="export_media_question">Media Question</label>
+								<div class="col-sm-8">
+									<select id="export_media_question" class="form-select"></select>
+								</div>
 							</div>
 							<h6 class="lang" data-lang="msg_mfn">create with</h6>
 							<div class="mediaselect"></div>
 						</fieldset>
 					</div>
 					<div class="exportcontrol showlqas">
-						<div class="mb-2">
-							<label class="form-label lang" data-lang="a_rd" for="export_report_defn">rpt defn</label>
-							<select id="export_report_defn" class="form-select"></select>
+						<div class="row mb-2">
+							<label class="col-sm-4 col-form-label lang" data-lang="a_rd" for="export_report_defn">rpt defn</label>
+							<div class="col-sm-8">
+								<select id="export_report_defn" class="form-select"></select>
+							</div>
 						</div>
-						<div class="form-check">
-							<input type="checkbox" id="sources" class="form-check-input"/>
-							<label for="sources" class="form-check-label lang" data-lang="a_dv">Details</label>
+						<div class="row">
+							<div class="col-sm-8 offset-sm-4">
+								<div class="form-check">
+									<input type="checkbox" id="sources" class="form-check-input"/>
+									<label for="sources" class="form-check-label lang" data-lang="a_dv">Details</label>
+								</div>
+							</div>
 						</div>
 					</div>
 
 					<fieldset class="border p-2 mb-2">
 						<legend class="float-none w-auto px-1 small lang" data-lang="c_filter">Filter</legend>
-						<div class="mb-2">
-							<label for="export_date_question" class="form-label lang" data-lang="c_dateq">date</label>
-							<select class="date_question form-select" id="export_date_question"></select>
+						<div class="row mb-2">
+							<label for="export_date_question" class="col-sm-4 col-form-label lang" data-lang="c_dateq">date</label>
+							<div class="col-sm-8">
+								<select class="date_question form-select" id="export_date_question"></select>
+							</div>
 						</div>
-						<div class="row g-2">
-							<div class="col-auto">
-								<label for="exp_from_date" class="form-label lang" data-lang="a_from_date">from</label>
+						<div class="row mb-2">
+							<label for="exp_from_date" class="col-sm-4 col-form-label lang" data-lang="a_from_date">from</label>
+							<div class="col-sm-8 d-flex align-items-center gap-2">
 								<input type="date" id="exp_from_date" class="form-control">
 								<span class="lang" data-lang="c_inclusive">Inclusive</span>
 							</div>
-							<div class="col-auto">
-								<label for="exp_to_date" class="form-label lang" data-lang="a_to_date">to</label>
+						</div>
+						<div class="row mb-2">
+							<label for="exp_to_date" class="col-sm-4 col-form-label lang" data-lang="a_to_date">to</label>
+							<div class="col-sm-8 d-flex align-items-center gap-2">
 								<input type="date" id="exp_to_date" class="form-control">
-								<span class="lang" data-lang="c_inclusive">inclusive</span>
+								<span class="lang" data-lang="c_inclusive">Inclusive</span>
 							</div>
 						</div>
-					</fieldset>
-					<fieldset class="border p-2 mb-2">
-						<legend class="float-none w-auto px-1 small lang" data-lang="t_aft">advanced filter</legend>
-						<div class="d-flex gap-2">
-							<input type="text" id="ad_filter" class="form-control">
-							<a class="filter_help btn btn-sm btn-outline-secondary" href="https://www.smap.com.au/docs/server-expressions.html" target="_blank">i</a>
+					<div class="row mb-2">
+							<label for="ad_filter" class="col-sm-4 col-form-label lang" data-lang="t_aft">advanced filter</label>
+							<div class="col-sm-8 d-flex gap-2">
+								<input type="text" id="ad_filter" class="form-control">
+								<a class="filter_help btn btn-sm btn-outline-secondary" href="https://www.smap.com.au/docs/server-expressions.html" target="_blank">i</a>
+							</div>
 						</div>
 					</fieldset>
 
