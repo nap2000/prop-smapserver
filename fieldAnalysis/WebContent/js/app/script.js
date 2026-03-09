@@ -348,7 +348,7 @@ $('.exportcontrol').hide();
     if(format === "osm") {
         $('.showosm,.showro,.showlang,.showgeom').show();
     } else if(format === "csv") {
-        $('.showshape,.showro,.showlang,.mergeselmult').show();
+        $('.showshape,.showro,.mergeselmult').show();
     } else if(format === "shape" || format === "kml" || format === "vrt") {
         $('.showshape,.showro,.showlang,.showgeom').show();
     } else if(format === "stata" || format === "spss") {
