@@ -3730,10 +3730,9 @@ function addFormPickList(sMeta, checked_forms) {
 	// Start with the top level form
 	for(i = 0; i < sMeta.forms.length; i++) {
 		if(sMeta.forms[i].p_id == 0) {
-			$(".osmforms").html(addFormToList(sMeta.forms[i], sMeta, 0, true, false, checked_forms, false));
-			$(".selectforms").html(addFormToList(sMeta.forms[i], sMeta, 0, false, false, checked_forms, false));
-			$(".shapeforms,.taforms").html(addFormToList(sMeta.forms[i], sMeta, 0, true, true, checked_forms, false));
-			$(".shapeforms_bs4").html(addFormToList(sMeta.forms[i], sMeta, 0, true, true, checked_forms, true));
+			$(".osmforms").html(addFormToList(sMeta.forms[i], sMeta, 0, true, false, checked_forms));
+			$(".selectforms").html(addFormToList(sMeta.forms[i], sMeta, 0, false, false, checked_forms));
+			$(".shapeforms,.taforms,.shapeforms_bs4").html(addFormToList(sMeta.forms[i], sMeta, 0, true, true, checked_forms));
 		}
 	}
 
@@ -3865,13 +3864,16 @@ function getSelectedForm($forms, ignoreError) {
 	return forms[0];
 }
 
-function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms, bs4) {
+function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms) {
 
 	var h = [],
 		idx = -1,
 		i,
 		type,
-		checked;
+		checked,
+		depth = offset / 20,
+		msClass = depth > 0 ? ' ms-' + Math.min(depth * 2 + 1, 5) : '',
+		inputId = 'osmform_' + form.f_id;
 
 	if (set_radio) {
 		type = "radio";
@@ -3898,34 +3900,26 @@ function addFormToList(form, sMeta, offset, osm, set_radio, checked_forms, bs4) 
 		}
 	}
 
-	h[++idx] = '<div class="' + type + '"';
-	h[++idx] = '<span style="padding-left:';
-	h[++idx]= offset + 'px;">';
-	h[++idx] = '<label>';
-	h[++idx] = '<input class="osmform" type="' + type + '" ' + checked + ' name="osmform" value="';
+	h[++idx] = '<div class="form-check' + msClass + '">';
+	h[++idx] = '<input class="osmform form-check-input" type="' + type + '" ' + checked + ' name="osmform" id="' + inputId + '" value="';
 	h[++idx] = form.f_id;
 	if(!osm) {
-		h[++idx] = ':false"/>';
+		h[++idx] = ':false">';
 	} else {
 		h[++idx] = '">';
 	}
-	if(bs4) {
-		h[++idx] = '<span class="ms-2">';
-	}
+	h[++idx] = '<label class="form-check-label" for="' + inputId + '">';
 	h[++idx] = htmlEncode(form.form);
-	if(bs4) {
-		h[++idx] = '</span>';
-	}
 	h[++idx] = '</label>';
 	if(form.p_id != 0 && !osm) {
-		h[++idx] = ' <button class="exportpivot">' + localise.set["c_pivot"] + '</button>';
+		h[++idx] = ' <button class="btn btn-sm btn-outline-secondary ms-2 exportpivot">' + localise.set["c_pivot"] + '</button>';
 	}
 	h[++idx]= '</div>';
 
 	// Add the children (recursively)
 	for(i = 0; i < sMeta.forms.length; i++) {
 		if(sMeta.forms[i].p_id != 0  && sMeta.forms[i].p_id == form.f_id) {
-			h[++idx] = addFormToList(sMeta.forms[i], sMeta, offset + 20, osm, set_radio, checked_forms, bs4);
+			h[++idx] = addFormToList(sMeta.forms[i], sMeta, offset + 20, osm, set_radio, checked_forms);
 		}
 	}
 
