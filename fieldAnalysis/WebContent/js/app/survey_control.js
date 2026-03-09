@@ -171,6 +171,8 @@ function getViewData(view) {
 
 	if(view.type) {
 		$('#settings_type').val(view.type);
+		var typeIcons = { map: 'fa-map', table: 'fa-table', graph: 'fa-chart-bar', media: 'fa-camera' };
+		$('#settings_type_icon').attr('class', 'fas ' + (typeIcons[view.type] || 'fa-map') + ' me-2');
 	}
 	
 	// Set the survey selector
