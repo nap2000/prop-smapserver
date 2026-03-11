@@ -6691,5 +6691,7 @@ export {
 	isSelfRegistrationServer,
 	getViewLanguages,
 	translateKey,
-	translateKeyValue
+	translateKeyValue,
+	getAppearanceParams,
+	getQuestionType
 };

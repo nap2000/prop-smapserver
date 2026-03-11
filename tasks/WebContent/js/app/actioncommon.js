@@ -20,7 +20,7 @@
 import $ from "jquery";
 import localise from "localise";
 import globals from "globals";
-import { htmlEncode } from "common";
+import { htmlEncode, getAppearanceParams, getQuestionType } from "common";
 import map from "app/mapOL3";
 import { addAnchors } from "../../../../smapServer/WebContent/js/libs/commonReportFunctions.js";
 
