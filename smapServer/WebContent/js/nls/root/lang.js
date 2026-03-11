@@ -708,10 +708,6 @@ export default {
     "msg_no_nbr": "You must specify their number",
     "msg_nc": "Do you want to move this message to a new case",
 
-    // Editor
-    "e_b_e": "Base on existing form",
-    "e_s_r": "Store results in shared table",
-
     // Tasks
     "t_i_sd": "Invalid Start Date",
     "t_i_ed": "Invalid End Date",
@@ -1120,7 +1116,6 @@ export default {
     "mf_cc": "Include Completed Cases",
     "mf_fd": "Form Data",
     "mf_md": "Management Data",
-    "mf_sc": "Visible Columns",
     "mf_sc_i": "Select the columns that you want to see in the table then press the 'Apply' button. You can then sort on these columns",
     "mf_qr": "QR Columns",
     "mf_bc_i": "Select the columns that you want to see as barcodes in the table and in reports",
@@ -1395,7 +1390,6 @@ export default {
     "n_share": "Get link",
     "n_cs_e": "Comma separated list of email addresses",
     "n_ea": "Email addresses",
-    "n_eq": "Email question",
     "n_eqc": "Question that will contain the email addresses to use",
     "n_uiqc": "Question that will contain the user ident to notify",
     "n_esc": "Subject for the email (optional)",
