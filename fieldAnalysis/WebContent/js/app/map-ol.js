@@ -32,6 +32,15 @@ import { showSettings } from "./survey_control";
 	
 var defaultMapExtent = [-20037508, -20037508, 20037508, 20037508.34];
 
+// OL2 Google layer div is created asynchronously; guard against uninitialized state
+if (typeof OpenLayers !== "undefined" && OpenLayers.Layer && OpenLayers.Layer.Google) {
+	var _origSetGMapVisibility = OpenLayers.Layer.Google.prototype.setGMapVisibility;
+	OpenLayers.Layer.Google.prototype.setGMapVisibility = function(visible) {
+		if (!this.div) return;
+		_origSetGMapVisibility.call(this, visible);
+	};
+}
+
 $(document).ready(function() {
 
 	$('#featuresMenu').click(function() {

@@ -172,6 +172,7 @@ export default {
     "c_logout": "Logout",
     "c_block": "Block",
     "c_blocked": "Blocked",
+    "c_add_panel": "Add panel",
     "c_graph": "Graph",
     "c_map": "Map",
     "c_chart": "Chart",
