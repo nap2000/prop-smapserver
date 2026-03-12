@@ -182,8 +182,13 @@ function getSharedMaps(map) {
  * Update the map size after a resize event
  */
 function updateMapSize(idx) {
-	var map = globals.gSelector.getMap(idx);
-	map.updateSize();
+	// Delay until any CSS width/height transition on the map container has completed
+	setTimeout(function() {
+		var map = globals.gSelector.getMap(idx);
+		if (map) {
+			map.updateSize();
+		}
+	}, 250);
 }
 
 // Zoom to maximum extent
