@@ -40,20 +40,20 @@
 		<span class="navbar-toggler-icon"><i class="fas fa-bars large-bars"></i></span>
 	</button>
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-		<!-- Project selector + Add panel — left side of navbar -->
+		<!-- Project selector — left side of navbar -->
 		<select class="project_list form-select form-select-sm navbar-project-select ms-2" id="project_name" aria-label="Project"></select>
-		<div class="dropdown ms-2">
-			<button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Add panel">
-				<i class="fas fa-plus"></i>
-			</button>
-			<ul class="dropdown-menu">
-				<li><button class="dropdown-item db_settings_add" value="graph"><i class="fas fa-chart-bar me-2"></i><span class="lang" data-lang="c_graph">Graph</span></button></li>
-				<li><button class="dropdown-item db_settings_add" value="map"><i class="fas fa-map me-2"></i><span class="lang" data-lang="c_map">Map</span></button></li>
-				<li><button class="dropdown-item db_settings_add" value="table"><i class="fas fa-table me-2"></i><span class="lang" data-lang="c_table">Table</span></button></li>
-				<li><button class="dropdown-item db_settings_add" value="media"><i class="fas fa-camera me-2"></i><span class="lang" data-lang="c_images">Images</span></button></li>
-			</ul>
-		</div>
 		<ul class="navbar-nav ms-auto">
+			<li class="nav-item dropdown pfoot">
+				<button class="btn btn-sm btn-outline-secondary dropdown-toggle nav-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+					<i class="fas fa-plus me-1"></i><span class="lang" data-lang="c_add_panel">Add panel</span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><button class="dropdown-item db_settings_add" value="graph"><i class="fas fa-chart-bar me-2"></i><span class="lang" data-lang="c_graph">Graph</span></button></li>
+					<li><button class="dropdown-item db_settings_add" value="map"><i class="fas fa-map me-2"></i><span class="lang" data-lang="c_map">Map</span></button></li>
+					<li><button class="dropdown-item db_settings_add" value="table"><i class="fas fa-table me-2"></i><span class="lang" data-lang="c_table">Table</span></button></li>
+					<li><button class="dropdown-item db_settings_add" value="media"><i class="fas fa-camera me-2"></i><span class="lang" data-lang="c_images">Images</span></button></li>
+				</ul>
+			</li>
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<span class="lang" data-lang="m_modules">modules</span>
