@@ -418,7 +418,9 @@ localise.initLocale(gUserLocale).then(function() {
 
 		}
 
-		gMap.getView().fit(gTrailSource.getExtent(), gMap.getSize());
+		if (gTrailSource.getFeatures().length > 0) {
+			gMap.getView().fit(gTrailSource.getExtent(), gMap.getSize());
+		}
 
 		gMap.render();
 	}

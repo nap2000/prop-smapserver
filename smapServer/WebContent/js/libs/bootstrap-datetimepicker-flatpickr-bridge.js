@@ -80,7 +80,10 @@ import "./flatpickr.min.js";
 				fpOptions.dateFormat = "m/Y/d";
 			}
 
-			var instance = window.flatpickr(element, fpOptions);
+			var inputElement = (element.tagName && element.tagName.toLowerCase() === 'input')
+			? element
+			: element.querySelector('input') || element;
+		var instance = window.flatpickr(inputElement, fpOptions);
 
 			var api = {
 				date: function date(value) {

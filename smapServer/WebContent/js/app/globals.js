@@ -16,7 +16,7 @@
 
  */
 
-import { addHourglass, handleLogout, htmlEncode, removeHourglass } from "./common";
+import { addHourglass, handleLogout, htmlEncode, removeHourglass } from "./common.js";
 
 /*
  * Quick solution to issue of legacy globals after migrating to AMD / require.js
