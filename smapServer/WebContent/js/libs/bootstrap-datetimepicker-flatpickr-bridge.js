@@ -85,6 +85,14 @@ import "./flatpickr.min.js";
 			: element.querySelector('input') || element;
 		var instance = window.flatpickr(inputElement, fpOptions);
 
+		// Wire any toggle button in the container to open/close the picker
+		if (inputElement !== element) {
+			$(element).find('button').on('click', function(e) {
+				e.preventDefault();
+				instance.toggle();
+			});
+		}
+
 			var api = {
 				date: function date(value) {
 					if (typeof value === "undefined") {
