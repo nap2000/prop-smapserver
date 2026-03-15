@@ -158,7 +158,8 @@ function copyView(v) {
 			subject_type: v.subject_type,
 		    inc_ro: v.inc_ro,
 			geomFormQuestions: v.geomFormQuestions,
-		    selectedGeomQuestion: v.selectedGeomQuestion
+		    selectedGeomQuestion: v.selectedGeomQuestion,
+		    chartType: v.chartType
 	};
 	
 	return cp;
@@ -662,10 +663,13 @@ function setSurveyViewControl(view) {
 		}
 	}
 
+	// Chart type (graph only)
+	$('#chart_type').val(view.chartType || 'histogram');
+
 	// Filter
 	setFilterFromView(view);
     $('#set_ad_filter').val(view.advanced_filter);
-	
+
 }
 
 /*

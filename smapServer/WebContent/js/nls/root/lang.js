@@ -477,6 +477,8 @@ export default {
     "a_sq": "Select question",
     "a_gb": "Group by",
     "a_ts": "Time series",
+    "a_chart_type": "Chart Type",
+    "a_histogram": "Histogram",
     "a_sl": "Show Label",
     "a_g_gps": "GPS coordinates within region",
     "a_fbv": "Filter by value",

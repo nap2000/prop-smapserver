@@ -31,7 +31,7 @@ var CHART_COLORS = [
 	'rgba(33, 150, 243, 0.8)'
 ];
 
-export function setGraph(data, chart, optionSelElement, pId) {
+export function setGraph(data, chart, optionSelElement, pId, chartType) {
 
 	var isVisible = true,
 		$chartdiv,
@@ -230,6 +230,8 @@ export function setGraph(data, chart, optionSelElement, pId) {
 	if(matrix2 && matrix2.length > 0) {
 		if(isTimeSeries) {
 			ts_graph(ticks, matrix2, series, chart, data, pId);
+		} else if(chartType === 'pie') {
+			pie_graph(ticks, matrix2, series, chart, data, pId);
 		} else {
 			bar_graph(ticks, matrix2, series, chart, data, pId);
 		}
@@ -299,6 +301,59 @@ function bar_graph(ticks, matrix2, series, chart, data, pId) {
 		}
 	});
 
+}
+
+
+/*
+ * Show a pie chart using Chart.js
+ * Two layouts:
+ *  - select1 question: cols = options (e.g. A/B/C/D), one feature row → slice per column
+ *  - grouped question: multiple feature rows, one col → slice per group
+ */
+function pie_graph(ticks, matrix2, series, chart, data, pId) {
+	var canvas = document.getElementById(chart);
+	if(!canvas) return;
+	if(canvas._chart) { canvas._chart.destroy(); }
+
+	var labels, values, i;
+
+	if(ticks.length <= 1 && matrix2.length > 1) {
+		// select1 case: each column (option) is a slice
+		labels = matrix2.map(function(_, i) { return series[i] ? series[i].label : String(i); });
+		values = matrix2.map(function(d) { return +(d[0]) || 0; });
+	} else {
+		// grouped case: each feature row (group) is a slice
+		var groups = data.features;
+		var col = (data.cols && data.cols.length > 0) ? data.cols[0] : 'count';
+		labels = [];
+		values = [];
+		for(i = 0; i < groups.length; i++) {
+			labels.push(groups[i].properties.group_label || String(i));
+			values.push(+(groups[i].properties[col]) || 0);
+		}
+	}
+
+	var colors = labels.map(function(_, i) { return CHART_COLORS[i % CHART_COLORS.length]; });
+
+	canvas._chart = new Chart(canvas, {
+		type: 'pie',
+		data: {
+			labels: labels,
+			datasets: [{
+				data: values,
+				backgroundColor: colors,
+				borderColor: colors.map(function(c) { return c.replace('0.8', '1'); }),
+				borderWidth: 1
+			}]
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+			plugins: {
+				legend: { display: true, position: 'right' }
+			}
+		}
+	});
 }
 
 

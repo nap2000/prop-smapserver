@@ -219,6 +219,7 @@ $(document).ready(function() {
 			view.groupType = "normal";
 		}
 
+		view.chartType = $('#chart_type').val() || 'histogram';
 		view.filter = getFilter();
 		view.advanced_filter = $('#set_ad_filter').val();
 

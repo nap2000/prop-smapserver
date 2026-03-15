@@ -65,7 +65,7 @@ export function newSetGraphQuestion(view) {
 	btnSelElem = 'mDataOptions' + view.pId;
 	$chartdiv = $('#' + chartelem);
 	
-	setGraph(view.results[0], chartelem, btnSelElem, view.pId);
+	setGraph(view.results[0], chartelem, btnSelElem, view.pId, view.chartType);
 	
 	// Hide the container if it wasn't originally visible
 	if(!isVisible) {
