@@ -26,6 +26,7 @@ import {
 	addHourglass,
 	checkLoggedIn,
 	downloadFile,
+	executeAttendanceReport,
 	getLoggedInUser,
 	handleLogout,
 	htmlEncode,
@@ -394,7 +395,7 @@ import {
 
             $('#attendanceDate').datetimepicker({
                 useCurrent: false,
-                format: "MM/YYYY/DD",
+                format: "DD/MM/YYYY",
                 locale: gUserLocale || 'en'
             }).data("DateTimePicker").date(moment());
         });

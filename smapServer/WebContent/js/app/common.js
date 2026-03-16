@@ -6693,5 +6693,6 @@ export {
 	translateKey,
 	translateKeyValue,
 	getAppearanceParams,
-	getQuestionType
+	getQuestionType,
+	executeAttendanceReport
 };
