@@ -3184,6 +3184,23 @@ function resultsURL(sId, qId, dateId, groupId, groupType, geoTable, fn, lang, ti
 	return url;
 }
 
+function userItemsURL(view, start_key, rec_limit, dateId, startDate, endDate, tz) {
+	var url = "/surveyKPI/items/user/" + view.uId + "?start_key=" + start_key;
+	if(rec_limit) { url += "&rec_limit=" + rec_limit; }
+	if(dateId != null) { url += "&dateId=" + dateId; }
+	if(typeof startDate !== "undefined" && startDate.length > 0) { url += "&startDate=" + startDate; }
+	if(typeof endDate !== "undefined" && endDate.length > 0) { url += "&endDate=" + endDate; }
+	if(tz) { url += "&tz=" + encodeURIComponent(tz); }
+	return url;
+}
+
+function userLocationsItemsURL(view, start_key, rec_limit, tz) {
+	var url = "/surveyKPI/items/user_locations/" + globals.gCurrentProject + "?start_key=" + start_key;
+	if(rec_limit) { url += "&rec_limit=" + rec_limit; }
+	if(tz) { url += "&tz=" + encodeURIComponent(tz); }
+	return url;
+}
+
 function downloadFile(url) {
 
 	url += addCacheBuster(url);
@@ -6653,6 +6670,8 @@ export {
 	setInLocalStorage,
 	setLocationList,
 	formItemsURL,
+	userItemsURL,
+	userLocationsItemsURL,
 	questionMetaURL,
 	refreshMediaViewManage,
 	refreshLocationGroups,

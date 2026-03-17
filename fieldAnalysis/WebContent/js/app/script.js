@@ -598,61 +598,6 @@ export function regionsURL () {
     return url;
 }
 
-/**
- * Web service handler for retrieving user access data in a table
- */
-function userItemsURL (view, start_key, rec_limit, dateId, startDate,
-                       endDate, tz) {
-
-	var url = "/surveyKPI/items/user/";
-
-	url += view.uId;
-
-	url += "?start_key=" + start_key;
-	if(rec_limit) {
-		url += "&rec_limit=" + rec_limit;
-	}
-
-	if(dateId != null) {
-		url += "&dateId=" + dateId;
-	}
-
-	if(typeof startDate !== "undefined" && startDate.length > 0) {
-		url+= "&startDate=" + startDate;
-	}
-
-	if(typeof endDate !== "undefined" && endDate.length > 0) {
-		url+= "&endDate=" + endDate;
-	}
-
-	if(tz) {
-		url += '&tz=' + encodeURIComponent(tz);
-	}
-
-	return url;
-}
-
-/**
- * Web service handler for retrieving user location data
- */
-function userLocationsItemsURL (view, start_key, rec_limit, tz) {
-
-    var url = "/surveyKPI/items/user_locations/";
-
-    url += globals.gCurrentProject;
-
-    url += "?start_key=" + start_key;
-    if(rec_limit) {
-        url += "&rec_limit=" + rec_limit;
-    }
-
-    if(tz) {
-        url += '&tz=' + encodeURIComponent(tz);
-    }
-
-    return url;
-}
-
 /*
  * Web service handler for exporting a table
  * @param {string} table

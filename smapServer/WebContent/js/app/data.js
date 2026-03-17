@@ -20,7 +20,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  */
 import globals from "./globals.js";
 import localise from "./localise.js";
-import { addDatePickList, addFormPickList, addGeomPickList, addHourglass, formItemsURL, handleLogout, questionMetaURL, removeHourglass, resultsURL } from "./common";
+import { addDatePickList, addFormPickList, addGeomPickList, addHourglass, formItemsURL, handleLogout, questionMetaURL, removeHourglass, resultsURL, userItemsURL, userLocationsItemsURL } from "./common";
 
 function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, currentDate, callback) {
 
@@ -272,7 +272,7 @@ function getUserData(view, start_rec) {
 		tz = globals.gTimezone,
 		data;
 
-	url = userItemsURL(view, start_rec, rec_limit,  view.dateQuestionId, view.fromDate, view.toDate,tz);
+	var url = userItemsURL(view, start_rec, rec_limit,  view.dateQuestionId, view.fromDate, view.toDate,tz);
 	data = globals.gSelector.getItem(url);      // check cache
 
 	if(data) {
@@ -346,7 +346,7 @@ function getUserLocationsData(view, start_rec, nocache) {
 		tz = globals.gTimezone,
 		data;
 
-	url = userLocationsItemsURL(view, start_rec, rec_limit,tz);
+	var url = userLocationsItemsURL(view, start_rec, rec_limit,tz);
 	data = globals.gSelector.getItem(url);      // check cache
 
 	if(data && !nocache) {
