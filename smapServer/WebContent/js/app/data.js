@@ -574,6 +574,7 @@ export {
 	getSurveyDataSE,
 	getSurveyMetaSE,
 	getUserData,
+	getUserLocationsData,
 	processSurveyData,
 	refreshData
 };

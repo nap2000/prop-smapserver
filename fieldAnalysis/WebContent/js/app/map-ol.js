@@ -36,7 +36,7 @@ var defaultMapExtent = [-20037508, -20037508, 20037508, 20037508.34];
 if (typeof OpenLayers !== "undefined" && OpenLayers.Layer && OpenLayers.Layer.Google) {
 	var _origSetGMapVisibility = OpenLayers.Layer.Google.prototype.setGMapVisibility;
 	OpenLayers.Layer.Google.prototype.setGMapVisibility = function(visible) {
-		if (!this.div) return;
+		if (!this.div || !this.mapObject) return;
 		_origSetGMapVisibility.call(this, visible);
 	};
 }

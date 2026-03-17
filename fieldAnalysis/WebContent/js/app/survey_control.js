@@ -21,10 +21,10 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 import { surveyList, regionsURL, getQuestionInfo } from "./script";
-import { addDatePickList, addFormPickList, addGeomPickList, addHourglass, getLanguageList, getQuestionList, getViewLanguages, handleLogout, htmlEncode, removeHourglass, saveCurrentProject, setSurveyViewLanguages, setSurveyViewQuestions } from "common";
+import { addDatePickList, addFormPickList, addGeomPickList, addHourglass, getLanguageList, getQuestionList, getTrailData, getViewLanguages, handleLogout, htmlEncode, removeHourglass, saveCurrentProject, setSurveyViewLanguages, setSurveyViewQuestions } from "common";
 import globals from "globals";
 import localise from "localise";
-import { getGroupMeta, getQuestionMeta, getResults, getSurveyDataSE, getSurveyMetaSE, getUserData } from "data";
+import { getGroupMeta, getQuestionMeta, getResults, getSurveyDataSE, getSurveyMetaSE, getUserData, getUserLocationsData } from "data";
 
 var gSurveyControlView;	// Store the temporary state of the view
 
