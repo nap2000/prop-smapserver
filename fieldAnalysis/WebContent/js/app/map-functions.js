@@ -244,25 +244,25 @@ function setFeatureValue(data, pId1, pId2, view, title, map) {
 			j = -1;
 			btns = [];
 	
-			$btnSelect.append('<p>Panel: ' + title + ', Question: ' + data.question + 
-					', Function: ' + fn + '</p>');
+			$btnSelect.append('<p class="small fw-semibold mb-1">' + title + ': ' + data.question + ' (' + fn + ')</p>');
 			$btnSelect.append('<div id="mDataOptions' + pId1 + '_' + pId2 +'"></div>');
-			
+
 			$btnLayerSelect = $('#mDataOptions' + pId1 + "_" + pId2);
-			
+
 			for(i = 0; i < pareto.length; i++) {		// Add in descending order of series total value
-				btns[++j] = '<input type="radio" id="radio';
-				btns[++j] = pId1 + '_' + pId2 + '_' + i; 
+				btns[++j] = '<div class="form-check">';
+				btns[++j] = '<input class="form-check-input" type="radio" id="radio';
+				btns[++j] = pId1 + '_' + pId2 + '_' + i;
 				btns[++j] = '" name="radio' + pId1 + '_' +  pId2;
-				btns[++j] = '" value="' + pareto[i] + '"'; 
+				btns[++j] = '" value="' + pareto[i] + '"';
 				if(i == 0) {
 					btns[++j] = ' checked="checked"';
 				}
-				btns[++j] = '/><label for="radio'+ pId1 + '_' + pId2 + '_' + i + '">';
+				btns[++j] = '><label class="form-check-label" for="radio'+ pId1 + '_' + pId2 + '_' + i + '">';
 				btns[++j] = cols[pareto[i]];
-				btns[++j] = '</label>';
+				btns[++j] = '</label></div>';
 			}
-			
+
 			$btnLayerSelect.append(btns.join(''));
 			$btnLayerSelect.find('input').change(function() {
 				data.optionIdx = $(this).val();
