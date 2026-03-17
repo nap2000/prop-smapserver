@@ -1225,6 +1225,7 @@ $(function() {
 
 		$('.editorContent').toggle();
 		$('.notoptionslist').show();
+		$('#viewType').closest('li').show();
 	}
 	refreshForm();
 
@@ -1385,6 +1386,7 @@ $(function() {
 
 		$('.editorContent').toggle();
 		$('.notoptionslist').show();
+		$('#viewType').closest('li').show();
 		refreshForm();
 	});
 
@@ -1829,6 +1831,7 @@ $(function() {
 
 		$('.editorContent').toggle();
 		$('.notoptionslist').hide();
+		$('#viewType').closest('li').hide();
 	});
 
 	// Repeat count change
