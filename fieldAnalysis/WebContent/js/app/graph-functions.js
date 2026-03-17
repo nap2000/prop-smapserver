@@ -306,23 +306,96 @@ function bar_graph(ticks, matrix2, series, chart, data, pId) {
 
 /*
  * Show a pie chart using Chart.js
- * Two layouts:
- *  - select1 question: cols = options (e.g. A/B/C/D), one feature row → slice per column
- *  - grouped question: multiple feature rows, one col → slice per group
+ * Three layouts:
+ *  - select1 without group by: cols = options, one feature row → slice per column
+ *  - select1 with group by: cols = options, multiple feature rows → one pie per group (small multiples)
+ *  - grouped non-select: multiple feature rows, one col → slice per group
  */
 function pie_graph(ticks, matrix2, series, chart, data, pId) {
 	var canvas = document.getElementById(chart);
 	if(!canvas) return;
+
+	// Clean up any previously created small-multiples wrapper and its charts
+	var container = canvas.parentNode;
+	var existingWrap = container.querySelector('.pie-multiples');
+	if(existingWrap) {
+		existingWrap.querySelectorAll('canvas').forEach(function(c) {
+			if(c._chart) { c._chart.destroy(); }
+		});
+		existingWrap.remove();
+	}
+
+	// Small multiples: select1 with group by — multiple cols and multiple groups
+	var isSmallMultiples = data.cols && data.cols.length > 1 &&
+	                       data.features && data.features.length > 1;
+
+	if(isSmallMultiples) {
+		if(canvas._chart) { canvas._chart.destroy(); }
+		canvas.style.display = 'none';
+
+		var cols = data.cols;
+		var colLabels = cols.map(function(col, i) { return series[i] ? series[i].label : col; });
+		var colors = colLabels.map(function(_, i) { return CHART_COLORS[i % CHART_COLORS.length]; });
+
+		var wrap = document.createElement('div');
+		wrap.className = 'pie-multiples';
+		wrap.style.cssText = 'display:flex; flex-wrap:wrap; gap:12px; justify-content:center; align-items:flex-start; width:100%; height:100%; overflow-y:auto;';
+
+		data.features.forEach(function(feature, idx) {
+			var groupLabel = feature.properties.group_label || String(idx);
+			var values = cols.map(function(col) { return +(feature.properties[col]) || 0; });
+
+			var item = document.createElement('div');
+			item.style.cssText = 'display:flex; flex-direction:column; align-items:center; flex:1; min-width:180px; max-width:280px;';
+
+			var title = document.createElement('div');
+			title.style.cssText = 'font-weight:bold; font-size:0.85em; margin-bottom:4px; text-align:center;';
+			title.textContent = groupLabel;
+
+			var c = document.createElement('canvas');
+
+			item.appendChild(title);
+			item.appendChild(c);
+			wrap.appendChild(item);
+
+			c._chart = new Chart(c, {
+				type: 'pie',
+				data: {
+					labels: colLabels,
+					datasets: [{
+						data: values,
+						backgroundColor: colors,
+						borderColor: colors.map(function(clr) { return clr.replace('0.8', '1'); }),
+						borderWidth: 1
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: true,
+					aspectRatio: 1.6,
+					plugins: {
+						legend: { display: idx === 0, position: 'right' }
+					}
+				}
+			});
+		});
+
+		container.insertBefore(wrap, canvas);
+		return;
+	}
+
+	// Single pie cases
+	canvas.style.display = '';
 	if(canvas._chart) { canvas._chart.destroy(); }
 
 	var labels, values, i;
 
 	if(ticks.length <= 1 && matrix2.length > 1) {
-		// select1 case: each column (option) is a slice
+		// select1 without group: each column (option) is a slice
 		labels = matrix2.map(function(_, i) { return series[i] ? series[i].label : String(i); });
 		values = matrix2.map(function(d) { return +(d[0]) || 0; });
 	} else {
-		// grouped case: each feature row (group) is a slice
+		// non-select grouped: each feature row (group) is a slice
 		var groups = data.features;
 		var col = (data.cols && data.cols.length > 0) ? data.cols[0] : 'count';
 		labels = [];
