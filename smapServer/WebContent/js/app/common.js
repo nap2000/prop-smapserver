@@ -3833,10 +3833,10 @@ function addGeomPickList(sMeta) {
 
 			theForm = sMeta.forms[i];
 
-			k[++idx] = h[++idx] = '<div class="exportcontrol showshape showosm" style="display: block;">';
-			k[++idx] = h[++idx] = '<label>' + htmlEncode(theForm.form) + '</label>';
-			h[++idx] = '<select class="geomSelect" id="geomForm_' + theForm.f_id;            // export only
-			k[++idx] = '<select class="geomSelect" id="geomSettingsForm_' + theForm.f_id;    // Settings only
+			k[++idx] = h[++idx] = '<div class="exportcontrol showshape showosm mb-2">';
+			k[++idx] = h[++idx] = '<label class="form-label">' + htmlEncode(theForm.form) + '</label>';
+			h[++idx] = '<select class="geomSelect form-select" id="geomForm_' + theForm.f_id;            // export only
+			k[++idx] = '<select class="geomSelect form-select" id="geomSettingsForm_' + theForm.f_id;    // Settings only
 			k[++idx] = h[++idx] = '" data-form="' + theForm.f_id + '">';
 			if(theForm.geomQuestions) {
 				for(j = 0; j < theForm.geomQuestions.length; j++) {
