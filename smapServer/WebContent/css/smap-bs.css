@@ -285,9 +285,12 @@ tr.deleted td a {
 	height: 60px;
 }
 
-.add_button:hover {
+.add_button:hover,
+.add_button:focus {
   background-color: #1556be;
   color: #fff;
+  outline: 3px solid #f0a500;
+  outline-offset: 2px;
 }
 
 .add_button {
