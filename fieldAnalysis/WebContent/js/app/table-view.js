@@ -77,15 +77,16 @@ export function setTableSurvey(view) {
 	currentForm = undefined;
 	var btns = [];
 	for(idx = 0; idx < data.length; idx++) {
-		btns[++i] = '<input type="radio" id="radio' + view.pId + '_' + idx + 
-				'" name="radio" value="' + idx + '"'; 
+		btns[++i] = '<div class="form-check">';
+		btns[++i] = '<input class="form-check-input" type="radio" id="radio' + view.pId + '_' + idx +
+				'" name="radio" value="' + idx + '"';
 		if(data[idx].fId === topForm) {
 			btns[++i] = ' checked="checked"';
 			currentForm = idx;
 		}
-		btns[++i] = '/><label for="radio'+ view.pId + '_' + idx + '">' +
+		btns[++i] = '><label class="form-check-label" for="radio'+ view.pId + '_' + idx + '">' +
 				htmlEncode(data[idx].formName) + '</label>';
-		
+		btns[++i] = '</div>';
 	}
 	$tabSelect.append(btns.join(''));
 	
