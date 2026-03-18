@@ -128,6 +128,7 @@ $(document).ready(function() {
 		view.qId = qId;
 		view.qId_is_calc = qId_is_calc;
         view.inc_ro = $('#settings_inc_ro').prop('checked');
+        view.tShowMeta = $('#settings_show_meta').prop('checked');
 
         if(subjectType === "user") {
 	        view.dateQuestionId = $('#usage_settings_date_question option:selected').val();
@@ -564,14 +565,7 @@ function setPanelType(type, idx, period, qId, subject_type) {
 				<button class="btn btn-sm btn-outline-secondary tRestore">${localise.set["c_res_data"] || "Restore"}</button>
 				<button class="btn btn-sm btn-outline-secondary tArchive">${localise.set["c_archive_data"] || "Archive"}</button>
 			</div>
-			<h3>${localise.set["c_view"] || "View"}</h3>
-			<div class="p-1">
-				<div class="form-check form-switch">
-					<input class="form-check-input tShowMeta" type="checkbox" id="show_meta_${idx}" checked>
-					<label class="form-check-label" for="show_meta_${idx}">${localise.set["c_show_meta"] || "Show Meta Data"}</label>
-				</div>
-			</div>
-		</div>`;
+			</div>`;
 		$panelContent.append(html);
 		break;
 	case "graph":
