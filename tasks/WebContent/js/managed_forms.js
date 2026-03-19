@@ -64,6 +64,7 @@ import {
 	setupUserProfile,
 	translateKey,
 	translateKeyValue,
+	getTableData,
 	updateConversationalSMS
 } from "common";
 import "../../../smapServer/WebContent/js/libs/commonReportFunctions";

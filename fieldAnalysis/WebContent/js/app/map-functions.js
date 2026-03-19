@@ -98,7 +98,7 @@ export function addLayer(data, pId1, pId2, view, title, map) {
 		md["period"] = data.interval;
 		md["startDate"] = data.start;
 		md["startHour"] = 0;
-		if(data.interval === "hour" && typeof data.features[0] !== "undefined") {
+		if(data.interval === "hour" && data.features && typeof data.features[0] !== "undefined") {
 			var splitArray = data.features[0].properties.period.split(" ");
 			if(splitArray.length > 1) {
 				md["startHour"] = parseInt(splitArray[1]);

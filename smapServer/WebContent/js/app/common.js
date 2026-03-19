@@ -6713,5 +6713,7 @@ export {
 	translateKeyValue,
 	getAppearanceParams,
 	getQuestionType,
-	executeAttendanceReport
+	executeAttendanceReport,
+	taskReport,
+	getTableData
 };
