@@ -64,7 +64,7 @@ $(document).ready(function() {
 		let $table = $('#historyList');
 		$table.empty();
 		if(history && history.length > 0) {
-			for(item of history) {
+			for(let item of history) {
 				let status = item.status;
 				if(!status || status === "") {
 					status = "";

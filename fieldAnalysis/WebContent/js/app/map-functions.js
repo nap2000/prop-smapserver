@@ -212,6 +212,10 @@ function setFeatureValue(data, pId1, pId2, view, title, map) {
 		i,j,
 		btns;
 	
+	if(!cols || cols.length === 0) {
+		return;
+	}
+
 	/*
 	 * Sort the data by size and create a matrix of the data
 	 */
