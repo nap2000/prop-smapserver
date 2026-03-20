@@ -1,4 +1,4 @@
-export default {
+define({
     "m_home": "الرئيسية",
     "m_admin": "مشرف",
     "m_tm": "النماذج",
@@ -601,4 +601,4 @@ export default {
     "rev_cq": "تم تغيير السؤال ",
     "rev_sc": "Selcted Choice",
     "rev_usc": "Un-Selected Choice"
-};
+});

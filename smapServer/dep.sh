@@ -3,6 +3,24 @@
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 BUILD_ID=${BUILD_ID:-$(git rev-parse --short HEAD 2>/dev/null || date +%Y%m%d%H%M%S)}
 
+convert_lang_files() {
+	target_dir=$1
+	find "$target_dir" -path "*/js/nls/*.js" -name "lang.js" | while IFS= read -r lang_file
+	do
+		python3 - "$lang_file" <<'PY'
+import sys
+path = sys.argv[1]
+with open(path, "r", encoding="utf-8") as f:
+	text = f.read()
+stripped = text.strip()
+if stripped.startswith("define(") and stripped.endswith(");"):
+	body = stripped[7:-2].rstrip()
+	with open(path, "w", encoding="utf-8") as f:
+		f.write("export default " + body + ";\n")
+PY
+	done
+}
+
 add_build_id_cache_busting() {
 	target_dir=$1
 	if [ ! -d "$target_dir" ]
@@ -60,6 +78,7 @@ echo "Removing contents of $SCRIPT_DIR/smapServer"
 rm -rf "$SCRIPT_DIR/smapServer"
 echo "Copying $SCRIPT_DIR/WebContent to $SCRIPT_DIR/smapServer"
 cp -R "$SCRIPT_DIR/WebContent" "$SCRIPT_DIR/smapServer"
+convert_lang_files "$SCRIPT_DIR/smapServer"
 
 # Include webform javascript bundle and css files
 echo "Adding webform bundle to $SCRIPT_DIR/smapServer"

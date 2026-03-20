@@ -1,4 +1,4 @@
-export default {
+define({
 	"root": true,
 	"ar": true,
 	"fr": true,
@@ -6,4 +6,4 @@ export default {
 	"es": true,
 	"hi": true,
 	"uk": true
-};
+});
