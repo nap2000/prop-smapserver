@@ -32,9 +32,11 @@ if (typeof localStorage !== "undefined") {
 }
 window.gUserLocale = gUserLocale;
 
-localise.initLocale(gUserLocale).then(function () {
-	localise.setlang();
-    setTheme(true);
+$(document).ready(function() {
+	localise.initLocale(gUserLocale).then(function () {
+		localise.setlang();
+		setTheme(true);
+	});
 });
 
 
