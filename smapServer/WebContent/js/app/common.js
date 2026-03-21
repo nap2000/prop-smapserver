@@ -547,7 +547,7 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 			$('#me_enterprise').text(globals.gEnterpriseName);
 			$('#u_tz').val(globals.gTimezone);
 
-			$(".navbar-collapse").removeClass("in").addClass("collapse");	// Remove drop down menu
+			$(".navbar-collapse").removeClass("show");	// Remove drop down menu
 		});
 
 

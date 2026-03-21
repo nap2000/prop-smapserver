@@ -496,6 +496,9 @@ $(document).ready(function() {
 
     function surveyChangedReports(callback, selectedRoles, setall) {
 
+		if(!gSurveyList || !gSurveyList.length || gSurveyList[$('#survey').val()] === undefined) {
+			return;
+		}
 		var sId = gSurveyList[$('#survey').val()].id;
 		var dateQuestionId = 0;
 
@@ -713,24 +716,12 @@ $(document).ready(function() {
 		})
 
 		/*
-		 * Action Dropbox
-		 */
-		var $dropdown = $('#contextMenu');
-		$reportList.find('.report_action').click(function() {
-			$(this).after($dropdown.clone(true));
-			window.bsDropdownToggle(this);
-		});
-
-		/*
          * Delete
          */
 		$('.repDelete', $reportList).click(function() {
 			var $this = $(this);
 			gReportIdx = $this.closest('tr').data("idx");
 			var report = gReportList[gReportIdx];
-
-			// Move the context menu out of the way
-			$('#menuStore').after($dropdown);
 
 			addHourglass();
 			$.ajax({

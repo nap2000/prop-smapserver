@@ -337,8 +337,8 @@ $(function() {
 	$('#m_settings').off().click(function() {	// Show the settings dialog
 
 		// Close any drop downmenus
-		$('.dropdown-toggle').parent().removeClass("open");
-		$('.navbar-collapse').removeClass("in");
+		$('.dropdown-toggle').parent().removeClass("show");
+		$('.navbar-collapse').removeClass("show");
 
 		updateSettingsData();
 
@@ -400,8 +400,8 @@ $(function() {
             }
 		}
 		// Close any drop down menus
-		$('.dropdown-toggle').parent().removeClass("open");
-		$('.navbar-collapse').removeClass("in");
+		$('.dropdown-toggle').parent().removeClass("show");
+		$('.navbar-collapse').removeClass("show");
 
 		$('#i_name').val(globals.model.survey.displayName);
 		$('#i_ident').val(globals.model.survey.ident);

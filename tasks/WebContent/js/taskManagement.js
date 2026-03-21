@@ -975,14 +975,16 @@ localise.initLocale(gUserLocale).then(function () {
 		var tasks = [],
 			idx;
 
-		$('input[type=checkbox]:checked', '#task_table').each(function () {
-			idx = $(this).val();
-			tasks.push({
-				taskId: globals.gTaskList.features[idx].properties.id,
-				assignmentId: globals.gTaskList.features[idx].properties.a_id
-			});
+		if(globals.gTaskList && globals.gTaskList.features) {
+			$('input[type=checkbox]:checked', '#task_table').each(function () {
+				idx = $(this).val();
+				tasks.push({
+					taskId: globals.gTaskList.features[idx].properties.id,
+					assignmentId: globals.gTaskList.features[idx].properties.a_id
+				});
 
-		});
+			});
+		}
 
 		return tasks;
 	}
@@ -994,6 +996,9 @@ localise.initLocale(gUserLocale).then(function () {
 
 		var tasks = [],
 			idx;
+		if(!globals.gTaskList || !globals.gTaskList.features) {
+			return tasks;
+		}
 		for(idx = 0; idx < globals.gTaskList.features.length; idx++) {
 			if (globals.gTaskList.features[idx].properties.status === "unsent" || globals.gTaskList.features[idx].properties.status === "blocked") {
 				tasks.push({
