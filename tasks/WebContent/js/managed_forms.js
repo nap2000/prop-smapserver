@@ -2193,7 +2193,7 @@ localise.initLocale(gUserLocale).then(function () {
                 removeHourglass();
                 if(handleLogout(data)) {
                     if(refresh) {
-                        showManagedData(globals.gCurrentSurvey, showTable, false); // redraw
+                        showTable(gTasks.cache.currentData); // redraw with updated column config
                         $('#right-sidebar').removeClass("sidebar-open");
                     }
                 }
