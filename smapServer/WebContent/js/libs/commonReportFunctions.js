@@ -167,7 +167,7 @@ function addAnchors (property, minsize) {
                 } else if (media.type === "image") {
 					output[i] = '<a class="media-link" href="' + media.url
 						+ '" target="_blank" aria-label="Open file">'
-						+ '<img style="width:100%;" src="'
+						+ '<img style="' + (minsize ? 'width:75px;height:75px;object-fit:cover;' : 'max-width:100%;height:auto;') + '" src="'
 						+ (minsize ? media.thumbNail : media.url)
 						+ '" alt="Picture">'
 						+ '</a>';
