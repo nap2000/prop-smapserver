@@ -274,21 +274,40 @@
 					</div>
 				</div>
 				<div id="serverPanel" class="d-none monpanel tab-pane fade show active" role="tabpanel" aria-labelledby="server-view">
-					<div class="panel-body">
-						<h5 id="server_msg" class="d-none"></h5>
-						<div id="server_data" class="row d-none">
-							<div class="col-sm-12">
-								<div class="card card">
-									<div class="card-header d-flex chart-header">
-										<span class="me-auto lang" data-lang="cm_oc"></span>
-										<i class="fa fa-cog"></i>
-									</div>
-									<div class="card-body wide-chart">
+					<div class="p-3">
 
+						<!-- Status Cards -->
+						<div class="row g-3 mb-4" id="sq-cards"></div>
+
+						<!-- Charts -->
+						<div class="row g-3 mb-4">
+							<div class="col-md-5">
+								<div class="card shadow-sm h-100">
+									<div class="card-header fw-semibold">Current Queue Snapshot</div>
+									<div class="card-body" style="position:relative;height:260px">
+										<canvas id="sq-snapshot-chart"></canvas>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-7">
+								<div class="card shadow-sm h-100">
+									<div class="card-header fw-semibold">Processing Rates — Last 10 Minutes</div>
+									<div class="card-body" style="position:relative;height:260px">
+										<canvas id="sq-trend-chart"></canvas>
 									</div>
 								</div>
 							</div>
 						</div>
+
+						<!-- Worker Detail (collapsible) -->
+						<div class="card shadow-sm">
+							<div class="card-header fw-semibold d-flex align-items-center" id="sq-workers-toggle" style="cursor:pointer">
+								<i class="fas fa-server me-2"></i> Worker Detail
+								<i class="fas fa-chevron-down ms-auto" id="sq-workers-chevron"></i>
+							</div>
+							<div class="card-body d-none p-3" id="sq-workers-body"></div>
+						</div>
+
 					</div>
 				</div>
 			</div>

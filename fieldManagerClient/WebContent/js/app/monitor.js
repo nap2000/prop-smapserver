@@ -23,6 +23,7 @@ import localise from "localise";
 import globals from "globals";
 import moment from "moment";
 import chart from "./monitorChart";
+import serverQueue from "./serverQueue";
 import "./map-ol-mgmt";
 import {
 	addCacheBuster,
@@ -153,9 +154,13 @@ import {
 
             $('#m_refresh').click(function(e) {
                 e.preventDefault();
-                gMonitor.cache = {};
-                refreshCases();
-                refreshData(globals.gCurrentProject, $('#survey option:selected').val());
+                if (gPanel === SERVER_PANEL) {
+                    serverQueue.refresh();
+                } else {
+                    gMonitor.cache = {};
+                    refreshCases();
+                    refreshData(globals.gCurrentProject, $('#survey option:selected').val());
+                }
             });
 
             // retry submissions
@@ -778,8 +783,13 @@ import {
             gPanel = name;
 
             setcontrols();
-            refreshData(globals.gCurrentProject, $('#survey option:selected').val());
-            refreshCases();
+            if (name === SERVER_PANEL) {
+                serverQueue.startPolling();
+            } else {
+                serverQueue.stopPolling();
+                refreshData(globals.gCurrentProject, $('#survey option:selected').val());
+                refreshCases();
+            }
             
             $(".monpanel").hide();
             window.bsTabShow($this);
