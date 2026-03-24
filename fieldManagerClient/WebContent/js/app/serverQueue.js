@@ -29,7 +29,8 @@ import $ from "jquery";
 
 const QUEUES = [
     { id: "submissions", label: "Submissions", url: "/surveyKPI/api/queues/submissions" },
-    { id: "s3upload",    label: "S3 Storage",  url: "/surveyKPI/api/queues/s3upload"    }
+    { id: "s3upload",    label: "S3 Storage",  url: "/surveyKPI/api/queues/s3upload"    },
+    { id: "message",     label: "Messages",    url: "/surveyKPI/api/queues/message"     }
 ];
 
 const POLL_MS    = 30000;   // 30 seconds
@@ -37,7 +38,8 @@ const MAX_POINTS = 20;      // 20 × 30 s = 10 minutes of history
 
 const PALETTE = {
     submissions: { bar: "rgba(54,162,235,0.85)",  line: "rgb(54,162,235)",  err: "rgb(255,99,132)"  },
-    s3upload:    { bar: "rgba(75,192,192,0.85)",   line: "rgb(75,192,192)",  err: "rgb(255,159,64)"  }
+    s3upload:    { bar: "rgba(75,192,192,0.85)",   line: "rgb(75,192,192)",  err: "rgb(255,159,64)"  },
+    message:     { bar: "rgba(153,102,255,0.85)",  line: "rgb(153,102,255)", err: "rgb(255,99,132)"  }
 };
 
 let gInitialised   = false;
