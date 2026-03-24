@@ -784,8 +784,10 @@ import {
 
             setcontrols();
             if (name === SERVER_PANEL) {
+                $('#m_header_row').hide();
                 serverQueue.startPolling();
             } else {
+                $('#m_header_row').show();
                 serverQueue.stopPolling();
                 refreshData(globals.gCurrentProject, $('#survey option:selected').val());
                 refreshCases();
