@@ -28,8 +28,8 @@
 import $ from "jquery";
 
 const QUEUES = [
-    { id: "submissions", label: "Submissions", url: "/api/v1/queues/submissions" },
-    { id: "s3upload",    label: "S3 Storage",  url: "/api/v1/queues/s3upload"    }
+    { id: "submissions", label: "Submissions", url: "/surveyKPI/api/queues/submissions" },
+    { id: "s3upload",    label: "S3 Storage",  url: "/surveyKPI/api/queues/s3upload"    }
 ];
 
 const POLL_MS    = 30000;   // 30 seconds
