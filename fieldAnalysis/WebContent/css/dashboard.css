@@ -524,10 +524,6 @@
    Settings modal — filter controls
    ============================================================ */
 
-#filter_controls,
-#filter_controls * {
-	background-color: LightGray;
-}
 
 /* ============================================================
    Instance functions modal — action buttons

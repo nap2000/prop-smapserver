@@ -90,9 +90,9 @@ $(document).ready(function() {
 		$('#filter_value').empty(); 
 		$('#filter_button').removeClass('hasfilter');
 		 $('#filter_controls').hide();
-		if(qId != -1) {
+		if(qId != -1 && qInfo) {
 			getFilterValues(sId, qId, undefined, qInfo.type, language);
-		} 
+		}
 	 });
 	 
 	  // Filter clear

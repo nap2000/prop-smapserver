@@ -762,7 +762,7 @@ function getFilter() {
 
 	 var qInfo = getQuestionInfo(sId, language, qFilter);
 
-	 if((qFilter > 0 || qFilter < -1) && typeof filterValue !== "undefined") {
+	 if((qFilter > 0 || qFilter < -1) && typeof filterValue !== "undefined" && qInfo) {
 		 var filterObj = {};
 		 filterObj.qId = qFilter;
 		 filterObj.qType = qInfo.type;
