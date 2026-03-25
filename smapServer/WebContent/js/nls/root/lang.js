@@ -530,7 +530,7 @@ define({
 	"a_dd_group_interval": "Grouped by the responses to the question '%s1' and by '%s2'.",
 	"a_dd_interval": "Grouped by '%s1'",
 
-    "a_dd_where": "<b>Where %s1 equals %s2</b>",
+    "a_dd_where": "Where %s1 equals %s2",
     "_scheduled_start": "Scheduled Start",
 	"a_exp_media_msg": "Exports with media are limited to %s1 records. ",
 	"a_exp_msg": "Exports without media are limited to %s1 records. ",

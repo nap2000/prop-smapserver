@@ -389,7 +389,7 @@ define({
     "a_dd_group": "Grouped by the responses to the question '%s1'.",
     "a_dd_group_interval": "Grouped by the responses to the question '%s1' and by '%s2'.",
     "a_dd_interval": "Grouped by '%s1'",
-    "a_dd_where": "<b>Where %s1 equals %s2</b>",
+    "a_dd_where": "Where %s1 equals %s2",
     "_scheduled_start": "Scheduled Start",
     "msg_pk_sel": "You can only select the record identifier if you have selected the \"Update a different question\" checkbox",
     "msg_wait": "Attente de la réponse du serveur. Réessayez dans quelques secondes",

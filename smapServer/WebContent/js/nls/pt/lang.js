@@ -436,7 +436,7 @@ define({
     "a_dd_group": "Agrupado pelas respostas para a questão '%s1'.",
     "a_dd_group_interval": "Agrupado pelas respostas para a questão '%s1' and by '%s2'.",
     "a_dd_interval": "Agrupado por '%s1'",
-    "a_dd_where": "<b>Onde %s1 é igual a %s2</b>",
+    "a_dd_where": "Onde %s1 é igual a %s2",
     "_scheduled_start": "Início Agendado",
     "a_exp_media_msg": "Exportações com midia são limitados a %s1 registros.",
     "a_exp_msg": "Exportações sem midia são limitados a %s1 registros.",

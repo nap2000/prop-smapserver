@@ -517,7 +517,7 @@ define(
     "a_dd_group": "Agrupado por las respuestas a la pregunta '%s1'.",
     "a_dd_group_interval": "Agrupado por las respuestas a la pregunta '%s1' y por '%s2'.",
     "a_dd_interval": "Agrupado por '%s1'",
-    "a_dd_where": "<b>Donde %s1 es igual a %s2</b>",
+    "a_dd_where": "Donde %s1 es igual a %s2",
     "_scheduled_start": "Inicio Programado",
     "a_exp_media_msg": "Descargar Backup con Imágenes tiene un límite de máximo %s1 registros.",
     "a_exp_msg": "Descargar Backup tiene un límte de máximo %s1 registros.",

@@ -110,8 +110,8 @@ function getDisplayDescription(fn, reportType, survey, question, group, option, 
 	if(filter) {
 		var filterObj = JSON.parse(filter);
 		msg = localise.set["a_dd_where"];
-		msg.replace("%s1", filterObj.qName);
-		msg.replace("%s2", filterObj.value);
+		msg = msg.replace("%s1", filterObj.qName);
+		msg = msg.replace("%s2", filterObj.value);
 		txt[++idx] = ' ';
 		txt[++idx] = msg;
 
