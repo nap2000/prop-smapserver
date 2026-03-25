@@ -24,7 +24,7 @@ import { getDisplayDescription } from "commonReportFunctions";
 import { generateTable, generateUserTable } from "./table-functions";
 import globals from "globals";
 import { addCacheBuster, addHourglass, cleanFileName, downloadFile, downloadPdf, handleLogout, htmlEncode, populateLanguageSelect, populatePdfSelect, removeHourglass } from "common";
-import { toggleBadURL, openModal, closeModal } from "./script";
+import { toggleBadURL, openModal, closeModal, deleteSurveyDataURL } from "./script";
 import { refreshAnalysisData } from "./survey_control";
 import { getUserData, processSurveyData } from "data";
 import localise from "localise";
@@ -267,7 +267,7 @@ function setupExportDialog(view, media) {
 
 	gExportUrl = "/surveyKPI/surveyexchange/" + view.sId + "/" + cleanFileName(view.sName);
 	gMedia = media;
-	gDataLength = view.results[0].features.length;
+	gDataLength = (view.results && view.results[0] && view.results[0].features) ? view.results[0].features.length : 0;
 
 	validateExport();
 
@@ -655,9 +655,9 @@ function showUserTable(view) {
 		$selMain.find('table').tablesorter({ theme : 'dark' });
 		addMoreLessUserButtons($selMain, view);
 	} else {
-		if(typeof tableItems.message !== "undefined" && tableItems.message.trim().length > 0) {
+		if(tableItems && typeof tableItems.message !== "undefined" && tableItems.message.trim().length > 0) {
 			$selMain.html(tableItems.message);
-		} else if(typeof tableItems.totals !== "undefined" && tableItems.totals.total_count > 0) {
+		} else if(tableItems && typeof tableItems.totals !== "undefined" && tableItems.totals.total_count > 0) {
 			$selMain.html(localise.set["an_nmd"]);
 		} else {
 			$selMain.html(localise.set["an_nd"]);

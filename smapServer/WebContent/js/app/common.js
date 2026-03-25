@@ -2841,6 +2841,7 @@ function getChangeDescription(change, version) {
 
 // Translate types for use in change description
 function translateType(input) {
+	var output;
 	if(input === "string") {
 		output = "text";
 	} else {

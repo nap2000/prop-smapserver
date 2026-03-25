@@ -560,7 +560,7 @@ export function dashboardURL(projectId) {
     return url;
 }
 
-function deleteSurveyDataURL(sId) {
+export function deleteSurveyDataURL(sId) {
 
     var url = "/surveyKPI/surveyResults/";
     url += sId;
