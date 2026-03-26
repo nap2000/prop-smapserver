@@ -183,6 +183,7 @@ import {
             $('#file').change(function(){
                 var templateName = $('#templateName').val();
                 var $this = $(this);
+                if(!$this[0].files || !$this[0].files[0]) { return; }
                 var fileName = $this[0].files[0].name;
                 var newTemplateName;
 
