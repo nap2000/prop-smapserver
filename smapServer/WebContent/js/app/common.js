@@ -6716,5 +6716,6 @@ export {
 	getQuestionType,
 	executeAttendanceReport,
 	taskReport,
-	getTableData
+	getTableData,
+	addLanguageOptions
 };

@@ -39,7 +39,8 @@ import {
 	updateProjectList,
 	setupUserProfile,
 	validGeneralName,
-	validateEmails
+	validateEmails,
+	addLanguageOptions
 } from "common";
 
 const $ = window.$;
@@ -527,12 +528,12 @@ const moment = window.moment;
 				organisation.email_port = 0;
 			}
 			// Validate
-			if(organisation.name.length === 0) {
+			if(!organisation.name || organisation.name.length === 0) {
 				alert(localise.set["msg_val_nm"]);
 				$('#o_name').focus();
 				return false;
 			}
-			if(organisation.admin_email.length > 0) {
+			if(organisation.admin_email && organisation.admin_email.length > 0) {
 				if(!validateEmails(organisation.admin_email)) {
 					error = true;
 					alert(localise.set["msg_inv_email"]);
