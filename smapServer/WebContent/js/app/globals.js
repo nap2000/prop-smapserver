@@ -81,6 +81,7 @@ import { addHourglass, handleLogout, htmlEncode, removeHourglass } from "./commo
 	    gEnterpriseName: undefined,
 	    gSetAsTheme: undefined,
 	    gNavbarColor: undefined,
+	    gNavbarTextColor: undefined,
 
         gRegions: undefined,
         gRegion: {},

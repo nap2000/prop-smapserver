@@ -4550,11 +4550,12 @@ function setOrganisationTheme() {
 		if(navbarColor !== globals.gNavbarColor) {
 			setInLocalStorage('navbar_color', globals.gNavbarColor);
 		}
-		// navbar color
+		// navbar text color
 		var navbarTextColor = getFromLocalStorage("navbar_text_color");
 		if(navbarTextColor !== globals.gNavbarTextColor) {
 			setInLocalStorage('navbar_text_color', globals.gNavbarTextColor);
 		}
+		if(typeof setTheme === "function") { setTheme(); }
 	} else {
 		// remove styles
 		var navbarColorElement = document. getElementById("navbar_color");
@@ -4587,7 +4588,11 @@ function getFromLocalStorage(key) {
 
 function setInLocalStorage(key, value) {
 	try {
-		localStorage.setItem(key, value);
+		if(value === undefined || value === null) {
+			localStorage.removeItem(key);
+		} else {
+			localStorage.setItem(key, value);
+		}
 	} catch(e) {
 
 	}
