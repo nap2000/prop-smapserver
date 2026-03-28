@@ -1189,7 +1189,8 @@ import { addHourglass, handleLogout, htmlEncode, removeHourglass } from "./commo
                 $('#my_reference_data').prop('checked'),
                 $('#exclude_empty').prop('checked'),
                 $('#compress_pdf').prop('checked'),
-	            $('#default_logo').val()
+	            $('#default_logo').val(),
+                $('#turnstile').prop('checked')
             );
 
             // Update the model to reflect the current values
@@ -1212,6 +1213,7 @@ import { addHourglass, handleLogout, htmlEncode, removeHourglass } from "./commo
                 this.survey.exclude_empty = current.exclude_empty;
                 this.survey.compress_pdf = current.compress_pdf;
 	            this.survey.default_logo = current.default_logo;
+                this.survey.turnstile = current.turnstile;
             }
 
             return current;
@@ -1239,7 +1241,8 @@ import { addHourglass, handleLogout, htmlEncode, removeHourglass } from "./commo
                     this.survey.compress_pdf,
                     this.survey.hrk,
                     this.survey.key_policy,
-	                this.survey.default_logo
+	                this.survey.default_logo,
+                    this.survey.turnstile
                 ));
 
             this.forceSettingsChange = false;
@@ -1261,7 +1264,8 @@ import { addHourglass, handleLogout, htmlEncode, removeHourglass } from "./commo
                                               myReferenceData,
                                               exclude_empty,
                                               compress_pdf,
-                                              default_logo) {
+                                              default_logo,
+                                              turnstile) {
 
             var projId;
             if (typeof p_id === "string") {
@@ -1287,7 +1291,8 @@ import { addHourglass, handleLogout, htmlEncode, removeHourglass } from "./commo
                 readOnlySurvey: readOnlySurvey,
                 exclude_empty: exclude_empty,
                 compress_pdf: compress_pdf,
-	            default_logo: default_logo
+	            default_logo: default_logo,
+                turnstile: turnstile
             }
         }
 

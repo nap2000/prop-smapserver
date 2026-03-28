@@ -869,7 +869,7 @@ $(function() {
 		globals.model.settingsChange();
 	});
 	$('#hide_on_device, #search_local_data, #audit_location_data, #track_changes, #data_survey, #oversight_survey, ' +
-			'#read_only_survey, #compress_pdf, #my_reference_data').change(function() {
+			'#read_only_survey, #compress_pdf, #my_reference_data, #turnstile').change(function() {
 		globals.model.settingsChange();
 	});
     $('#exclude_empty').change(function() {
@@ -2900,6 +2900,7 @@ $(function() {
 	$('#read_only_survey').prop('checked', globals.model.survey.readOnlySurvey);
     $('#exclude_empty').prop('checked', globals.model.survey.exclude_empty);
 	$('#compress_pdf').prop('checked', globals.model.survey.compress_pdf);
+	$('#turnstile').prop('checked', globals.model.survey.turnstile);
 	$('#default_logo').val(globals.model.survey.default_logo);
 }
 
