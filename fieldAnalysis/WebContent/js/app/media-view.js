@@ -25,7 +25,7 @@ export function setMediaSurvey(view) {
 	var $strip = $('#scrollable' + view.pId),
 		mediaItems = view.results;
 
-	if (typeof view.results[0].features === "undefined") {
+	if (!view.results || typeof view.results[0].features === "undefined") {
 		$strip.html('<div class="mg-empty">No data available for this survey</div>');
 		return;
 	}
