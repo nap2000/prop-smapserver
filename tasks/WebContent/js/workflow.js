@@ -18,8 +18,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 "use strict";
 
 import localise from "../../../smapServer/WebContent/js/app/localise";
-import globals from "../../../smapServer/WebContent/js/app/globals.js";
-import { addHourglass, removeHourglass, getLoggedInUser, saveCurrentProject } from "common";
+import { addHourglass, removeHourglass, getLoggedInUser } from "common";
 
 const TRIGGER_COLORS = {
 	submission: "#e06c00",
@@ -152,9 +151,9 @@ function renderWorkflow(notifications) {
 	});
 }
 
-function loadWorkflow(projectId) {
+function loadWorkflow() {
 	addHourglass();
-	fetch(`/surveyKPI/notifications/${projectId}`, { credentials: "include" })
+	fetch("/surveyKPI/notifications/user", { credentials: "include" })
 		.then(function(resp) {
 			if (!resp.ok) throw new Error("HTTP " + resp.status);
 			return resp.json();
@@ -168,12 +167,6 @@ function loadWorkflow(projectId) {
 		.finally(function() {
 			removeHourglass();
 		});
-}
-
-function projectChanged() {
-	globals.gCurrentProject = $("#project_name option:selected").val();
-	saveCurrentProject(globals.gCurrentProject, undefined, undefined);
-	loadWorkflow(globals.gCurrentProject);
 }
 
 var gUserLocale = navigator.language;
@@ -191,7 +184,6 @@ localise.initLocale(gUserLocale).then(function() {
 
 	$(document).ready(function() {
 		localise.setlang();
-		getLoggedInUser(projectChanged, false, true, undefined);
-		$("#project_name").on("change", projectChanged);
+		getLoggedInUser(loadWorkflow, false, false, undefined);
 	});
 });
