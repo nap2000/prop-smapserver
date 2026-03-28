@@ -6691,6 +6691,7 @@ export {
 	populateTaskGroupList,
 	setupNotificationDialog,
 	edit_notification,
+	surveyChangedNotification,
 	setupTaskDialog,
 	setGroupSelector,
 	updateProjectList,
