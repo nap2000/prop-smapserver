@@ -6722,5 +6722,11 @@ export {
 	executeAttendanceReport,
 	taskReport,
 	getTableData,
-	addLanguageOptions
+	addLanguageOptions,
+	getQuestionsInCsvFile,
+	getQuestionsInSurvey,
+	isTextStorageType,
+	setLanguages,
+	tokenizeAppearance,
+	translateType
 };
