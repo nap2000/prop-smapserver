@@ -9,7 +9,8 @@ module.exports = {
     contacts: "./WebContent/js/contacts.js",
     managed_forms: "./WebContent/js/managed_forms.js",
     linkages: "./WebContent/js/linkages.js",
-    log: "./WebContent/js/log.js"
+    log: "./WebContent/js/log.js",
+    workflow: "./WebContent/js/workflow.js"
   },
   output: {
     filename: "[name].bundle.js",
