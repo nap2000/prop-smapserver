@@ -22,7 +22,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-import { addHourglass, checkLoggedIn, edit_notification, getEligibleUsers, getLoggedInUser, getNotificationTypes, handleLogout, htmlEncode, loadSurveys, populateTaskGroupList, removeHourglass, saveCurrentProject, setupNotificationDialog, setupUserProfile, surveyChangedNotification } from "common";
+import { addHourglass, bundleSelectChanged, checkLoggedIn, edit_notification, getEligibleUsers, getLoggedInUser, getNotificationTypes, handleLogout, htmlEncode, loadSurveys, populateTaskGroupList, removeHourglass, saveCurrentProject, saveDocument, saveEmail, saveEscalate, saveSMS, saveWebhook, setupNotificationDialog, setupUserProfile, surveyChangedNotification, taskGroupChanged } from "common";
 
 const $ = window.$;
 const localise = window.localise;
