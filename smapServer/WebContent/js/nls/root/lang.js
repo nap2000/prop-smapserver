@@ -1648,5 +1648,10 @@ define({
 
     // sms
     "sms_their_q": "Question for calling number",
-    "sms_conv_q": "Conversation Question"
+    "sms_conv_q": "Conversation Question",
+
+    // workflow
+    "m_workflow": "Workflow",
+    "c_case": "Case",
+    "c_send": "Send"
 });

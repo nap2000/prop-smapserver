@@ -36,21 +36,6 @@ const TARGET_COLORS = {
 	forward: "#e06c00"
 };
 
-const TRIGGER_LABELS = {
-	submission: "Submission",
-	periodic: "Scheduled",
-	reminder: "Reminder"
-};
-
-const TARGET_LABELS = {
-	task: "Create Task",
-	"case": "Create Case",
-	email: "Send Email",
-	sms: "Send SMS",
-	server_calc: "Server Calc",
-	forward: "Forward Data"
-};
-
 function triggerColor(type) {
 	return TRIGGER_COLORS[type] || "#6b7280";
 }
@@ -60,16 +45,31 @@ function targetColor(type) {
 }
 
 function triggerLabel(type) {
-	return TRIGGER_LABELS[type] || type;
+	const l = localise.set;
+	const labels = {
+		submission: l["submission"] + " " + l["c_trigger"],
+		periodic: l["c_scheduled"],
+		reminder: l["task_reminder"]
+	};
+	return labels[type] || type;
 }
 
 function targetLabel(type) {
-	return TARGET_LABELS[type] || type;
+	const l = localise.set;
+	const labels = {
+		task:        l["c_create"] + " " + l["c_task"],
+		"case":      l["c_create"] + " " + l["c_case"],
+		email:       l["c_send"]   + " " + l["c_email"],
+		sms:         l["c_send"]   + " " + l["c_sms"],
+		server_calc: l["ed_s_calc"],
+		forward:     l["c_forward"] + " " + l["c_data"]
+	};
+	return labels[type] || type;
 }
 
 function nodeCard(x, y, headerColor, icon, typeLabel, name, subName) {
 	const div = document.createElement("div");
-	div.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:280px;background:#2d2d3a;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.4);color:#e0e0e0;font-family:sans-serif;overflow:hidden;`;
+	div.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:280px;background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.15);border:1px solid #dee2e6;color:#212529;font-family:sans-serif;overflow:hidden;`;
 
 	const header = document.createElement("div");
 	header.style.cssText = `background:${headerColor};height:36px;display:flex;align-items:center;padding:0 12px;gap:8px;`;
@@ -77,8 +77,8 @@ function nodeCard(x, y, headerColor, icon, typeLabel, name, subName) {
 
 	const body = document.createElement("div");
 	body.style.cssText = "padding:10px 12px;";
-	body.innerHTML = `<div style="font-weight:700;color:#fff;font-size:14px;">${name || ""}</div>
-		<div style="font-size:12px;color:#9ca3af;margin-top:3px;">${subName || ""}</div>`;
+	body.innerHTML = `<div style="font-weight:700;color:#212529;font-size:14px;">${name || ""}</div>
+		<div style="font-size:12px;color:#6c757d;margin-top:3px;">${subName || ""}</div>`;
 
 	div.appendChild(header);
 	div.appendChild(body);
@@ -176,8 +176,22 @@ function projectChanged() {
 	loadWorkflow(globals.gCurrentProject);
 }
 
-$(document).ready(function() {
-	localise.setlang();
-	getLoggedInUser(projectChanged, false, true, undefined);
-	$("#project_name").on("change", projectChanged);
+var gUserLocale = navigator.language;
+if (typeof localStorage !== "undefined") {
+	try {
+		gUserLocale = localStorage.getItem('user_locale') || navigator.language;
+	} catch(e) {
+		gUserLocale = navigator.language;
+	}
+}
+window.gUserLocale = gUserLocale;
+
+localise.initLocale(gUserLocale).then(function() {
+	window.localise = localise;
+
+	$(document).ready(function() {
+		localise.setlang();
+		getLoggedInUser(projectChanged, false, true, undefined);
+		$("#project_name").on("change", projectChanged);
+	});
 });

@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
 
-    <title>Workflow</title>
+    <title class="lang" data-lang="m_workflow">Workflow</title>
 
     <link href="/css/bootstrap.v5.3.8.min.css" rel="stylesheet">
     <link href="/custom/css/custom.css" rel="stylesheet">
@@ -27,7 +27,7 @@
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
-    <a class="navbar-brand" href="#">Workflow</a>
+    <a class="navbar-brand lang" data-lang="m_workflow" href="#">Workflow</a>
     <div class="spinner-grow text-danger hour_glass"></div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <i class="fas fa-bars large-bars"></i>
@@ -60,8 +60,8 @@
                     class="nav-link" href="/app/fieldManager/notifications.html"><span
                     class="lang" data-lang="m_notify"></span></a></li>
 
-            <li class="nav-item restrict_role admin_role analyst_role"><a class="nav-link" href="/app/tasks/taskManagement.html"><span>Tasks</span></a></li>
-            <li class="nav-item restrict_role admin_role analyst_role"><a class="nav-link" href="/app/fieldManager/notifications.html"><span>Notifications</span></a></li>
+            <li class="nav-item restrict_role admin_role analyst_role"><a class="nav-link" href="/app/tasks/taskManagement.html"><span class="lang" data-lang="m_assign"></span></a></li>
+            <li class="nav-item restrict_role admin_role analyst_role"><a class="nav-link" href="/app/fieldManager/notifications.html"><span class="lang" data-lang="m_notify"></span></a></li>
 
             <li class="nav-item d-flex align-items-center ms-2">
                 <select class="project_list form-select" id="project_name" style="width:auto;"></select>
@@ -85,7 +85,7 @@
     </div>
 </nav>
 
-<div id="workflow-canvas" style="position:relative; width:100%; height:calc(100vh - 56px); background:#1a1a2e; overflow:auto;">
+<div id="workflow-canvas" style="position:relative; width:100%; height:calc(100vh - 56px); overflow:auto;">
     <svg id="wf-arrows" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"></svg>
     <div id="wf-nodes"></div>
 </div>
