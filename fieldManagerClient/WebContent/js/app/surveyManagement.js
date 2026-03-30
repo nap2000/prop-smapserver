@@ -580,7 +580,7 @@ import {
             h[++idx] = '<table class="table table-responsive-sm table-striped">';
             h[++idx] = '<thead>';
             h[++idx] = '<tr>';
-            h[++idx] = '<th class="col-xs-1 select_all">';
+            h[++idx] = '<th class="col-xs-1 select_all" scope="col" aria-label="Select">';
             h[++idx] = '<input type="checkbox" name="controls" aria-label="Select all surveys" value="-1"></td>';    // select all
             h[++idx] = '</th>';
             h[++idx] = '<th class="col-xs-4">' + localise.set["c_name"] + '</th>';
