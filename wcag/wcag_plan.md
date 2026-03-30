@@ -196,18 +196,25 @@ Static review of HTML source and JavaScript for WCAG criteria that automated too
 
 | Page | Issues Found | Status |
 |------|-------------|--------|
-| smapServer/WebContent/index.html | | Pending |
-| smapServer/WebContent/login.html | | Pending |
-| smapServer/WebContent/inlineLogin.html | | Pending |
-| smapServer/WebContent/register.html | | Pending |
-| smapServer/WebContent/edit.html | | Pending |
-| fieldManagerClient/WebContent/surveyManagement.html | | Pending |
-| fieldManagerClient/WebContent/userManagement.html | | Pending |
-| fieldManagerClient/WebContent/notifications.html | | Pending |
-| tasks/WebContent/managed_forms.html | | Pending |
-| tasks/WebContent/taskManagement.html | | Pending |
-| myWork/WebContent/index.html | | Pending |
-| fieldAnalysis/WebContent/index.html | | Pending |
+| smapServer/WebContent/index.html | Two `<h1>` elements (heading hierarchy); content (MOTD, FieldTask) outside `<main>`; password toggle icon lacks aria-label | Reviewed |
+| smapServer/WebContent/login.html | Missing `<main>`; form inputs lack `<label>`; error alert not linked via `aria-describedby` | Reviewed |
+| smapServer/WebContent/inlineLogin.html | `#logon_alert` not linked to inputs via `aria-describedby`; password toggle icon lacks aria-label | Reviewed |
+| smapServer/WebContent/register.html | `<h1>` empty until localised; `invalid-feedback` divs not linked via `aria-describedby`; some content outside `<main>` | Reviewed |
+| smapServer/WebContent/edit.html | Missing `<main>`; multiple icon-only buttons lack aria-label; form inputs lack labels; no `aria-describedby` for errors | Reviewed |
+| fieldManagerClient/WebContent/surveyManagement.html | `<main>` added this session ✓; form inputs in modals lack labels; no `aria-describedby`; some modals missing `role="dialog"` | Reviewed |
+| fieldManagerClient/WebContent/userManagement.html | **Critical:** `tabindex` > 0 on multiple inputs (violates 2.4.3); missing `<main>`; form inputs lack labels; some modals missing `tabindex="-1"` | Reviewed |
+| fieldManagerClient/WebContent/notifications.html | Missing `<main>`; form inputs lack labels (`name`, `update_value`, `callback_url`, `fwd_user`); empty `<label>` elements with only `data-lang` | Reviewed |
+| tasks/WebContent/managed_forms.html | Missing `lang` on `<html>`; no `<main>`; multiple form inputs lack labels; icon-only buttons lack aria-label | Reviewed |
+| tasks/WebContent/taskManagement.html | Missing `lang` on `<html>`; no `<main>`; form inputs lack labels; checkbox label associations unclear | Reviewed |
+| myWork/WebContent/index.html | Missing `lang` on `<html>`; no `<main>`; `<select>` lacks label | Reviewed |
+| fieldAnalysis/WebContent/index.html | `role="main"` present but no semantic `<main>` element; some buttons lack visible text; no `aria-describedby` for errors | Reviewed |
+
+### Common findings across all pages
+1. **`<main>` landmark missing** — most pages use `<div class="container-fluid">` as top-level wrapper
+2. **No `aria-describedby`** — error/alert divs not programmatically linked to their inputs on any page
+3. **Missing `lang` attribute** — managed_forms, taskManagement, myWork/index all missing `lang="en"` on `<html>`
+4. **`tabindex` > 0** — userManagement.html has tabindex 1–12 on modal inputs (critical, breaks tab order)
+5. **Icon-only buttons/links** — edit.html and managed_forms.html have unlabelled icon buttons beyond those already fixed
 
 ---
 
