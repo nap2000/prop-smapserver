@@ -23,7 +23,6 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 "use strict";
 
 import localise from "../../../smapServer/WebContent/js/app/localise";
-import { setupUserProfile } from "../../../smapServer/WebContent/js/app/common";
 import "../../../smapServer/WebContent/js/libs/wb/plugins/slimscroll/jquery.slimscroll.min";
 import "../../../smapServer/WebContent/js/libs/wb/plugins/pace/pace.min";
 import "../../../smapServer/WebContent/js/libs/bootstrap-datetimepicker-flatpickr-bridge.js";
@@ -46,7 +45,5 @@ localise.initLocale(gUserLocale).then(function () {
 
 	import(/* webpackMode: "eager" */ "./app/surveyManagement").then(function () {
 		setCustomTemplateMgmt();
-		setupUserProfile(true);
-		localise.setlang();
 	});
 });
