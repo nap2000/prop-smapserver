@@ -366,7 +366,7 @@ function addUserDetailsPopupBootstrap4() {
 	h[++idx] = '<div class="modal-dialog modal-lg">';
 	h[++idx] = '<div class="modal-content">';
 	h[++idx] = '<div class="modal-header">';
-	h[++idx] = '<h4 class="modal-title" id="modifyMeLabel"></h4>';
+	h[++idx] = '<h4 class="modal-title lang" id="modifyMeLabel" data-lang="m_user_profile">User</h4>';
 	h[++idx] = '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
 	h[++idx] = '</div>';    // modal-headers
 
@@ -461,14 +461,17 @@ function addApiKeyPopup() {
 	h[++idx] = '<div class="modal-dialog modal-lg">';
 	h[++idx] = '<div class="modal-content">';
 	h[++idx] = '<div class="modal-header">';
-	h[++idx] = '<h4 class="modal-title" id="apiKeyLabel"></h4>';
+	h[++idx] = '<h4 class="modal-title lang" id="apiKeyLabel" data-lang="c_ak"></h4>';
 	h[++idx] = '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
 	h[++idx] = '</div>';    // modal-headers
 
 	h[++idx] = '<div class="modal-body">';
 	h[++idx] = '<form>';
-	h[++idx] = '<div class="form-group">';
+	h[++idx] = '<div class="form-group row align-items-center">';
+	h[++idx] = '<label for="apiKey" class="col-sm-3 col-form-label">' + localise.set["c_ak"] + '</label>';
+	h[++idx] = '<div class="col-sm-9">';
 	h[++idx] = '<input type="text" id="apiKey" required class="form-control" readOnly>';
+	h[++idx] = '</div>';
 	h[++idx] = '</div>';
 	h[++idx] = '</form>';
 	h[++idx] = '<button id="getKey" type="button" class="btn btn-primary">';

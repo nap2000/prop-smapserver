@@ -157,20 +157,20 @@ Run the [axe DevTools browser extension](https://www.deque.com/axe/devtools/) or
 
 Focus on pages with dynamic content / modals: `edit.html`, `surveyManagement.html`, `managed_forms.html`, `taskManagement.html`, `index.html` (analysis).
 
-| Page | axe Violations | WAVE Errors | Notes |
-|------|---------------|-------------|-------|
-| smapServer/WebContent/index.html | | | |
-| smapServer/WebContent/login.html | | | |
-| smapServer/WebContent/inlineLogin.html | | | |
-| smapServer/WebContent/register.html | | | |
-| smapServer/WebContent/edit.html | | | Dynamic modal-heavy page |
-| fieldManagerClient/WebContent/surveyManagement.html | | | |
-| fieldManagerClient/WebContent/userManagement.html | | | |
-| fieldManagerClient/WebContent/notifications.html | | | Modal dialogs |
-| tasks/WebContent/managed_forms.html | | | |
-| tasks/WebContent/taskManagement.html | | | |
-| myWork/WebContent/index.html | | | |
-| fieldAnalysis/WebContent/index.html | | | |
+| Page | axe Violations | WAVE Errors | Notes                    |
+|------|---------------|------|--------------------------|
+| smapServer/WebContent/index.html | |      |                          |
+| smapServer/WebContent/login.html | |      |                          |
+| smapServer/WebContent/inlineLogin.html | |      |                          |
+| smapServer/WebContent/register.html | |      |                          |
+| smapServer/WebContent/edit.html | |      | Dynamic modal-heavy page |
+| fieldManagerClient/WebContent/surveyManagement.html | | None | AIM Score 9.9.  5 Alerts |
+| fieldManagerClient/WebContent/userManagement.html | |      |                          |
+| fieldManagerClient/WebContent/notifications.html | |      | Modal dialogs            |
+| tasks/WebContent/managed_forms.html | |      |                          |
+| tasks/WebContent/taskManagement.html | |      |                          |
+| myWork/WebContent/index.html | |      |                          |
+| fieldAnalysis/WebContent/index.html | |      |                          |
 
 ---
 
