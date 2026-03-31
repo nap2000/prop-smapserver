@@ -46,7 +46,7 @@ function targetColor(type) {
 function triggerLabel(type) {
 	const l = localise.set;
 	const labels = {
-		submission: l["submission"] + " " + l["c_trigger"],
+		submission: l["submission"],
 		periodic: l["c_scheduled"],
 		reminder: l["task_reminder"]
 	};
@@ -84,15 +84,13 @@ function nodeCard(x, y, headerColor, icon, typeLabel, name, subName) {
 	return div;
 }
 
-function renderWorkflow(notifications) {
+function renderWorkflow(data) {
 	const nodesEl = document.getElementById("wf-nodes");
 	const svgEl = document.getElementById("wf-arrows");
 
 	nodesEl.innerHTML = "";
-	// Clear arrow children but keep svg element
 	while (svgEl.firstChild) svgEl.removeChild(svgEl.firstChild);
 
-	// Add arrowhead marker def
 	const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
 	defs.innerHTML = `<marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
 		<polygon points="0 0, 10 3.5, 0 7" fill="#4a9eff"/>
@@ -100,44 +98,58 @@ function renderWorkflow(notifications) {
 	svgEl.appendChild(defs);
 
 	const TRIGGER_X = 60;
-	const ACTION_X = 380;
-	const ROW_H = 130;
-	const CARD_W = 280;
-	const CARD_H = 80; // approximate card height
-	const START_Y = 40;
+	const ACTION_X  = 380;
+	const ROW_H     = 120;
+	const CARD_W    = 280;
+	const CARD_H    = 80;
+	const START_Y   = 40;
 
-	notifications.forEach(function(n, i) {
-		const y = START_Y + i * ROW_H;
+	const items   = (data && data.items) ? data.items : [];
+	const links   = (data && data.links) ? data.links : [];
 
-		// Trigger card
-		const trigType = n.trigger || "submission";
-		const trigCard = nodeCard(
+	// Split by role and assign y positions
+	const triggers = items.filter(function(i) { return i.role === "trigger"; });
+	const actions  = items.filter(function(i) { return i.role === "action"; });
+
+	// Map id → { x, y, cardMidY } for arrow drawing
+	const positions = {};
+
+	triggers.forEach(function(n, idx) {
+		const y = START_Y + idx * ROW_H;
+		positions[n.id] = { x: TRIGGER_X, y: y, midY: y + CARD_H / 2 };
+		nodesEl.appendChild(nodeCard(
 			TRIGGER_X, y,
-			triggerColor(trigType),
+			triggerColor(n.type),
 			"fas fa-bolt",
-			triggerLabel(trigType) + " Trigger",
-			n.name || n.notification_name || "",
-			n.survey_name || n.s_name || ""
-		);
-		nodesEl.appendChild(trigCard);
+			triggerLabel(n.type) + " " + localise.set["c_trigger"],
+			n.name || "",
+			""
+		));
+	});
 
-		// Action card
-		const actType = n.target || n.action || "task";
-		const actCard = nodeCard(
+	actions.forEach(function(n, idx) {
+		const y = START_Y + idx * ROW_H;
+		positions[n.id] = { x: ACTION_X, y: y, midY: y + CARD_H / 2 };
+		nodesEl.appendChild(nodeCard(
 			ACTION_X, y,
-			targetColor(actType),
+			targetColor(n.type),
 			"fas fa-arrow-right",
-			targetLabel(actType),
-			n.name || n.notification_name || "",
-			n.bundle || n.remote_s_name || ""
-		);
-		nodesEl.appendChild(actCard);
+			targetLabel(n.type),
+			n.name || "",
+			""
+		));
+	});
 
-		// SVG bezier arrow
-		const x1 = TRIGGER_X + CARD_W;
-		const y1 = y + CARD_H / 2;
-		const x2 = ACTION_X;
-		const y2 = y + CARD_H / 2;
+	// Draw arrows for each link
+	links.forEach(function(link) {
+		const from = positions[link.from];
+		const to   = positions[link.to];
+		if (!from || !to) return;
+
+		const x1  = from.x + CARD_W;
+		const y1  = from.midY;
+		const x2  = to.x;
+		const y2  = to.midY;
 		const cx1 = x1 + 50;
 		const cx2 = x2 - 50;
 
@@ -153,13 +165,13 @@ function renderWorkflow(notifications) {
 
 function loadWorkflow() {
 	addHourglass();
-	fetch("/surveyKPI/notifications/user", { credentials: "include" })
+	fetch("/surveyKPI/workflow/items", { credentials: "include" })
 		.then(function(resp) {
 			if (!resp.ok) throw new Error("HTTP " + resp.status);
 			return resp.json();
 		})
 		.then(function(data) {
-			renderWorkflow(Array.isArray(data) ? data : (data.notifications || []));
+			renderWorkflow(data);
 		})
 		.catch(function(err) {
 			console.error("loadWorkflow error:", err);
