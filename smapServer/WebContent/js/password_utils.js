@@ -25,19 +25,32 @@ $(document).ready(function() {
       * From https://bigprogrammer.medium.com/login-page-with-password-eye-icon-html-css-javascript-13b6e643d5e7
       */
 	const passwordField = document.getElementById("password");
-	const togglePassword = document.querySelector(".password-toggle-icon i");
+	const togglePasswordSpan = document.querySelector(".password-toggle-icon");
+	const togglePasswordIcon = togglePasswordSpan ? togglePasswordSpan.querySelector("i") : null;
 
-	togglePassword.addEventListener("click", function () {
+	function togglePasswordVisibility() {
 		if (passwordField.type === "password") {
 			passwordField.type = "text";
-			togglePassword.classList.remove("fa-eye");
-			togglePassword.classList.add("fa-eye-slash");
+			togglePasswordIcon.classList.remove("fa-eye");
+			togglePasswordIcon.classList.add("fa-eye-slash");
+			togglePasswordSpan.setAttribute("aria-label", "Hide password");
 		} else {
 			passwordField.type = "password";
-			togglePassword.classList.remove("fa-eye-slash");
-			togglePassword.classList.add("fa-eye");
+			togglePasswordIcon.classList.remove("fa-eye-slash");
+			togglePasswordIcon.classList.add("fa-eye");
+			togglePasswordSpan.setAttribute("aria-label", "Show password");
 		}
-	});
+	}
+
+	if (togglePasswordSpan) {
+		togglePasswordSpan.addEventListener("click", togglePasswordVisibility);
+		togglePasswordSpan.addEventListener("keydown", function(e) {
+			if (e.key === " " || e.key === "Enter") {
+				e.preventDefault();
+				togglePasswordVisibility();
+			}
+		});
+	}
 
 });
 
