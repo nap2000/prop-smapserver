@@ -65,6 +65,9 @@ export function setGraph(data, chart, optionSelElement, pId, chartType) {
 	groups = data.features;
 	fn = data.fn;
 	cols = data.cols;
+	if(!cols || !groups) {
+		return;
+	}
 	if(typeof data.interval !== "undefined") {
 		isTimeSeries = true;
 	}

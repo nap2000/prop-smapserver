@@ -6740,5 +6740,6 @@ export {
 	isTextStorageType,
 	setLanguages,
 	tokenizeAppearance,
-	translateType
+	translateType,
+	generateFile
 };

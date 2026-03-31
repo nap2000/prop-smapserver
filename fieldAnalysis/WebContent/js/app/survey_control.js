@@ -1121,4 +1121,4 @@ function getUsers(projectId) {
 	});
 }
 
-export { copyView, getGeometryQuestion, getViewSurveys, setQ1Functions, setSurveyViewQuestionGroups, showSettings, refreshAnalysisData };
+export { copyView, getGeometryQuestion, getViewSurveys, setQ1Functions, setSurveyViewQuestionGroups, setSurveyViewSurveys, showSettings, refreshAnalysisData };
