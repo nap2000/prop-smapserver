@@ -2717,7 +2717,7 @@ const moment = window.moment;
 		userName = gUsers[userIdx].name;
 		users[0] = {id: gUsers[userIdx].id};
 
-		if(globals.gIsOrgAdministrator && gUsers[userIdx].orgs.length > 1) {
+		if(globals.gIsOrgAdministrator && gUsers[userIdx].orgs && gUsers[userIdx].orgs.length > 1) {
 
 			$('#confirmDelForm')[0].reset();
 			var orgList = '';

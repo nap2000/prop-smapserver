@@ -21,6 +21,14 @@
     color: #ccc
 }
 
+.navbar-smap .navbar-brand:focus-visible,
+.navbar-smap .navbar-toggler:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+    border-radius: 2px;
+    box-shadow: none;
+}
+
 .navbar-smap .navbar-nav .nav-link {
     background-color: #1C3D29;
     border-color: #e7e7e7;
@@ -31,6 +39,12 @@
     background-color: #2C3D29;
     border-color: #e7e7e7;
     color: #fff;
+}
+
+.navbar-smap .navbar-nav .nav-link:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+    border-radius: 2px;
 }
 
 .navbar-smap .navbar-nav .nav-link.disabled {

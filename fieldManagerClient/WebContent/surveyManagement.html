@@ -114,7 +114,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 	</div>
 </nav>
 
-<div class="container-fluid mt-4 mx-4">
+<main class="container-fluid mt-4 mx-4">
 	<!-- Header Row -->
 	<div class="row border-bottom bg-white">
 		<div class="col-sm-6">
@@ -147,13 +147,13 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 		<div class="selected_templates col-sm-4 col-xs-12">
 			<div class="restrict_role admin_role analyst_role" style="display:none">
 				<input id="show_deleted" type="checkbox" name="show_deleted"
-					   value="show_deleted"/> <span class="lang" data-lang="tm_s_del">show del</span><br/>
+					   value="show_deleted"/> <label for="show_deleted" class="lang" data-lang="tm_s_del">show del</label><br/>
 			</div>
 		</div>
 		<div class="selected_templates col-sm-4 col-xs-12">
 			<div class="restrict_role admin_role analyst_role" style="display:none">
 				<input id="show_blocked" type="checkbox" checked=checked name="show_blocked"
-					   value="show_blocked"/> <span class="lang" data-lang="tm_s_block">show block</span><br/>
+					   value="show_blocked"/> <label for="show_blocked" class="lang" data-lang="tm_s_block">show block</label><br/>
 			</div>
 		</div>
 	</div>
@@ -234,19 +234,20 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 </div>
 
 <!-- Popup to edit a public link to a webform -->
-<div id="survey_link" class="modal fade" tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">
-	<div class="modal-dialog">
+<div id="survey_link" class="modal fade" data-bs-backdrop="static" tabindex="-1" aria-labelledby="surveyLinkLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
+				<h4 class="modal-title lang" id="surveyLinkLabel" data-lang="n_share">Share</h4>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				<h4 class="modal-title"></h4>
 			</div>
 			<div class="modal-body">
-				<h3 id="survey_link_title" class="lang" data-lang="n_share"></h3>
-
 				<form>
-					<div class="form-group">
-						<input type="text" id="srLink" required class="form-control" readonly>
+					<div class="form-group row align-items-center">
+						<label for="srLink" class="col-sm-2 col-form-label lang" data-lang="c_link">Link</label>
+						<div class="col-sm-10">
+							<input type="text" id="srLink" required class="form-control" readonly>
+						</div>
 					</div>
 				</form>
 				<button id="getLink" type="button" class="btn btn-primary lang" data-lang="n_share"></button>
@@ -267,7 +268,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="dtLabel"></h5>
+				<h5 class="modal-title lang" id="dtLabel" data-lang="c_download">Download</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -276,11 +277,11 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<legend class="lang" data-lang="c_download">type</legend>
 						<div class="form-group row">
 							<div class="offset-sm-2 col-sm-10">
-								<input type="radio" name="download_type" value="xls_edited" checked="checked"/> <span data-lang="ft_xls" class="lang">latest XLS</span>
-								(<span class="lang" data-lang="c_version"></span>: <span id="dtversion"></span>)<br/>
-								<input type="radio" name="download_type" value="xml"/> <span data-lang="ft_xml" class="lang">XML Form</span><br/>
-								<input type="radio" name="download_type" value="codebook"/> <span data-lang="ft_codebook" class="lang">Codebook</span><br/>
-								<input type="radio" name="download_type" value="pdf"/> <span data-lang="c_template" class="lang">PDF Template</span><br/>
+								<label><input type="radio" name="download_type" value="xls_edited" checked="checked"/> <span data-lang="ft_xls" class="lang">latest XLS</span>
+								(<span class="lang" data-lang="c_version"></span>: <span id="dtversion"></span>)</label><br/>
+								<label><input type="radio" name="download_type" value="xml"/> <span data-lang="ft_xml" class="lang">XML Form</span></label><br/>
+								<label><input type="radio" name="download_type" value="codebook"/> <span data-lang="ft_codebook" class="lang">Codebook</span></label><br/>
+								<label><input type="radio" name="download_type" value="pdf"/> <span data-lang="c_template" class="lang">PDF Template</span></label><br/>
 							</div>
 						</div>
 					</fieldset>
@@ -294,8 +295,8 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						</div>
 						<div class="form-group pdf_elements row">
 							<div class="offset-sm-2 col-sm-10">
-								<input type="radio" name="orientation" value="portrait" checked="checked"/> <span data-lang="c_portrait" class="lang">Portrait</span><br/>
-								<input type="radio" name="orientation" value="landscape"/> <span data-lang="c_landscape" class="lang">Landscape</span><br/>
+								<label><input type="radio" name="orientation" value="portrait" checked="checked"/> <span data-lang="c_portrait" class="lang">Portrait</span></label><br/>
+								<label><input type="radio" name="orientation" value="landscape"/> <span data-lang="c_landscape" class="lang">Landscape</span></label><br/>
 							</div>
 						</div>
 						<div class="form-group pdf_elements row">
@@ -322,11 +323,11 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 <!-- Reports -->
 <!-- Parameters for usage report -->
-<div id="usage_report_popup" class="modal" tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">
+<div id="usage_report_popup" class="modal fade" data-bs-backdrop="static" tabindex="-1" aria-labelledby="usageReportLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title lang" data-lang="u_usage"></h5>
+				<h5 class="modal-title lang" id="usageReportLabel" data-lang="u_usage"></h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -338,7 +339,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 							<div class='input-group date lang_tt' id='usageDate' data-bs-toggle="tooltip"  data-container="body" data-lang_tt="rep_my"  title="">
 								<input id = "usageDateInput" type='text' class="form-control" data-date-format="YYYY/MM"/>
 								<div class="input-group-append">
-									<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i class="fas fa-calendar-alt"></i></span></button>
+									<button class="btn btn-outline-secondary" type="button" aria-label="Pick date"><span class="input-group-addon"><i class="fas fa-calendar-alt" aria-hidden="true"></i></span></button>
 								</div>
 							</div>
 						</div>
@@ -391,7 +392,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 </div>
 
 <!-- Parameters for form access report -->
-<div id="form_access_report_popup" class="modal fade" tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">
+<div id="form_access_report_popup" class="modal fade" data-bs-backdrop="static"  tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -419,7 +420,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 </div>
 
 <!-- Parameters for bundle access report -->
-<div id="bundle_access_report_popup" class="modal fade" tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">
+<div id="bundle_access_report_popup" class="modal fade" data-bs-backdrop="static" tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -448,7 +449,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 
 <!-- Parameters for attendance report -->
-<div id="attendance_report_popup" class="modal" tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">
+<div id="attendance_report_popup" class="modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="dtLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -464,7 +465,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 							<div class='input-group date' id='attendanceDate' data-bs-toggle="tooltip"  data-container="body" title="Date of report">
 								<input id = "attendanceDateInput" type='text' class="form-control" data-date-format="YYYY/MM/DD"/>
 								<div class="input-group-append">
-									<button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i class="fas fa-calendar-alt"></i></span></button>
+									<button class="btn btn-outline-secondary" type="button" aria-label="Pick date"><span class="input-group-addon"><i class="fas fa-calendar-alt" aria-hidden="true"></i></span></button>
 								</div>
 							</div>
 						</div>
@@ -480,7 +481,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 			</div>
 		</div>
 	</div>
-</div>
+</main>
 
 </body>
 </html>

@@ -27,6 +27,7 @@ import {
 	checkLoggedIn,
 	downloadFile,
 	executeAttendanceReport,
+	executeUsageReport,
 	getLoggedInUser,
 	handleLogout,
 	htmlEncode,
@@ -580,8 +581,8 @@ import {
             h[++idx] = '<table class="table table-responsive-sm table-striped">';
             h[++idx] = '<thead>';
             h[++idx] = '<tr>';
-            h[++idx] = '<th class="col-xs-1 select_all">';
-            h[++idx] = '<input type="checkbox" name="controls" value="-1"></td>';    // select all
+            h[++idx] = '<th class="col-xs-1 select_all" scope="col" aria-label="Select">';
+            h[++idx] = '<input type="checkbox" name="controls" aria-label="Select all surveys" value="-1"></td>';    // select all
             h[++idx] = '</th>';
             h[++idx] = '<th class="col-xs-4">' + localise.set["c_name"] + '</th>';
             h[++idx] = '<th class="col-xs-1">' + localise.set["c_version"] + '</th>';
@@ -612,7 +613,7 @@ import {
                         h[++idx] = ' class="hideondevice"';
                     }
                     h[++idx] = '>';
-                    h[++idx] = '<td class="control_td"><input type="checkbox" name="controls" value="';
+                    h[++idx] = '<td class="control_td"><input type="checkbox" name="controls" aria-label="Select survey" value="';
                     h[++idx] = i;
                     h[++idx] = '"></td>';
 
@@ -660,7 +661,7 @@ import {
                     }
                     h[++idx] = '</td>';
 
-                    h[++idx] = '<td class="control_block"><input type="checkbox" name="block" value="';
+                    h[++idx] = '<td class="control_block"><input type="checkbox" name="block" aria-label="Block survey" value="';
                     h[++idx] = survey.id;
                     h[++idx] = '" ';
                     if(survey.blocked) {
@@ -682,7 +683,7 @@ import {
                     h[++idx] = '</td>';
 
                     h[++idx] = '<td>';
-                    h[++idx] = '<button class="btn survey_replace" value="';
+                    h[++idx] = '<button class="btn survey_replace" aria-label="Replace survey" value="';
                     h[++idx] = i;
                     h[++idx] = '">';
                     h[++idx] = '<i class="fas fa-sync-alt"></i>';
@@ -691,7 +692,7 @@ import {
 
                     h[++idx] = '<td>';
 
-                    h[++idx] = '<a class="btn survey_view" data-sid="';
+                    h[++idx] = '<a class="btn survey_view" aria-label="View web form" data-sid="';
                     h[++idx] = survey.id;
                     h[++idx] = '" href="/app/myWork/webForm/';                    // Webform
                     h[++idx] = survey.ident;
@@ -702,18 +703,18 @@ import {
                     h[++idx] = '</a>';
 
                     if(survey.publicLink && survey.publicLink.trim().length > 0) {              // Link
-                        h[++idx] = '<button class="btn btn-primary survey_link" value="';
+                        h[++idx] = '<button class="btn btn-primary survey_link" aria-label="Manage public link" value="';
                     } else {
-                        h[++idx] = '<button class="btn btn-info survey_link" value="';
+                        h[++idx] = '<button class="btn btn-info survey_link" aria-label="Manage public link" value="';
                     }
                     h[++idx] = i;
                     h[++idx] = '">';
                     h[++idx] = '<i class="fa fa-share-alt"></i>';
                     h[++idx] = '</button>';
 
-                    h[++idx] = '<button class="btn pdf_td" value="';                            // Download
+                    h[++idx] = '<button class="btn pdf_td" aria-label="Download survey" value="';                            // Download
                     h[++idx] = survey.id;
-                    h[++idx] = '"><img src="images/downarrow.png" height="16" width="16"></button>';
+                    h[++idx] = '"><i class="fas fa-download"></i></button>';
                     h[++idx] = '</td>';
 
                     h[++idx] = '</tr>';

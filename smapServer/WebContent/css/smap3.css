@@ -173,6 +173,45 @@ tr.deleted td a {
     line-height: 1;
 }
 
+/* WCAG 2.2 AA focus indicators — Bootstrap suppresses outline on .btn and uses box-shadow,
+   but unstyled .btn (no variant) has no shadow colour set so focus is invisible.        */
+.survey_replace:focus-visible,
+.survey_view:focus-visible,
+.pdf_td:focus-visible {
+    outline: 3px solid #0d6efd;
+    outline-offset: 2px;
+    box-shadow: none;
+}
+
+/* WCAG 2.2 AA contrast fixes — Bootstrap 5 defaults fail 4.5:1 with white text */
+/* btn-success #198754 = ~4.5:1; btn-danger #dc3545 = ~4.3:1. Use darker shades.     */
+/* Disabled state: Bootstrap applies opacity:0.65 which kills contrast on both text   */
+/* and bg. Override to opacity:1 and use a lighter-but-still-passing shade instead.   */
+.btn-success {
+    --bs-btn-bg: #146c43;
+    --bs-btn-border-color: #146c43;
+    --bs-btn-hover-bg: #0f5132;
+    --bs-btn-hover-border-color: #0f5132;
+    --bs-btn-active-bg: #0f5132;
+    --bs-btn-active-border-color: #0f5132;
+    --bs-btn-disabled-bg: #d1e7dd;        /* light green bg + dark text: clearly muted */
+    --bs-btn-disabled-border-color: #a3cfbb;
+    --bs-btn-disabled-color: #0f5132;
+    --bs-btn-disabled-opacity: 1;
+}
+.btn-danger {
+    --bs-btn-bg: #b02a37;
+    --bs-btn-border-color: #b02a37;
+    --bs-btn-hover-bg: #8b1f2a;
+    --bs-btn-hover-border-color: #8b1f2a;
+    --bs-btn-active-bg: #8b1f2a;
+    --bs-btn-active-border-color: #8b1f2a;
+    --bs-btn-disabled-bg: #f8d7da;        /* light red bg + dark text: clearly muted */
+    --bs-btn-disabled-border-color: #f1aeb5;
+    --bs-btn-disabled-color: #842029;
+    --bs-btn-disabled-opacity: 1;
+}
+
 .email time, .email dest {
     font-size: 11px;
     color: #333;

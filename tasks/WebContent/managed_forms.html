@@ -148,7 +148,7 @@
     </div>
 </nav>
 
-<div class="container-fluid">
+<main class="container-fluid">
 
     <div class="card mt-2">
         <div class="col-sm-12">
@@ -749,6 +749,7 @@
                 <form class = "px-4" role="form">
 
                     <div class="form-group row">
+                        <label for="user_to_assign" class="lang visually-hidden" data-lang="c_user">User</label>
                         <select id="user_to_assign" class="form-select"></select>
                     </div>
 
@@ -890,7 +891,7 @@
                                      title="Scheduled date in local time zone">
                                     <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
                                     <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i class="fas fa-calendar-alt"></i></span></button>
+                                        <button class="btn btn-outline-secondary" type="button" aria-label="Pick date"><span class="input-group-addon"><i class="fas fa-calendar-alt" aria-hidden="true"></i></span></button>
                                     </div>
                                 </div>
                             </div>
@@ -902,7 +903,7 @@
                                      title="Finish time">
                                     <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
                                     <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button"><span class="input-group-addon"><i class="fas fa-calendar-alt"></i></span></button>
+                                        <button class="btn btn-outline-secondary" type="button" aria-label="Pick date"><span class="input-group-addon"><i class="fas fa-calendar-alt" aria-hidden="true"></i></span></button>
                                     </div>
                                 </div>
                             </div>
@@ -1164,7 +1165,7 @@
                         </div>
 
                         <div class="form-group row" data-container="body">
-                            <label for="notify_sms" data-lang="n_si" class="lang col-sm-2 control-label"></label>
+                            <label for="sms_sender_id" data-lang="n_si" class="lang col-sm-2 control-label"></label>
                             <div class="col-sm-10">
                                 <input type="text" id="sms_sender_id" class="form-control">
                             </div>
@@ -1332,6 +1333,7 @@
                     </div>
                     <div class="col-sm-6"></div>
                     <div class="col-sm-6">
+                        <label class="lang" for="clearColumns" data-lang="c_clear"></label>
                         <input type="checkbox" name="clearColumns" id="clearColumns">
                     </div>
                 </div>
@@ -1450,7 +1452,7 @@
             </div>
         </div>
     </div>
-</div>
+</main>
 
 </body>
 </html>
