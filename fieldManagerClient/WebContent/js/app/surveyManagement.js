@@ -27,6 +27,7 @@ import {
 	checkLoggedIn,
 	downloadFile,
 	executeAttendanceReport,
+	executeUsageReport,
 	getLoggedInUser,
 	handleLogout,
 	htmlEncode,

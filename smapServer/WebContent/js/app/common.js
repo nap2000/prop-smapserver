@@ -6728,6 +6728,7 @@ export {
 	getAppearanceParams,
 	getQuestionType,
 	executeAttendanceReport,
+	executeUsageReport,
 	taskReport,
 	getTableData,
 	addLanguageOptions,
