@@ -349,10 +349,12 @@ $(document).ready(function() {
 				cache: false,
 				success: function(data) {
 					removeHourglass();
-					window.gReports = data;
-					getNotifications(globals.gCurrentProject);
-					if(data) {
-						updateReportList(data);
+					if(handleLogout(data)) {
+						window.gReports = data;
+						getNotifications(globals.gCurrentProject);
+						if (data) {
+							updateReportList(data);
+						}
 					}
 				},
 				error: function(xhr, textStatus, err) {
@@ -380,14 +382,18 @@ $(document).ready(function() {
 			url: "/surveyKPI/notifications/" + id,
 			success: function(data, status) {
 				removeHourglass();
-				getNotifications(globals.gCurrentProject);
+				if(handleLogout(data)) {
+					getNotifications(globals.gCurrentProject);
+				}
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
-				if(xhr.readyState == 0 || xhr.status == 0) {
-					return;  // Not an error
-				} else {
-					alert(localise.set["msg_err_del"] + xhr.responseText);  // Alerts htmlencode text already
+				if(handleLogout(xhr)) {
+					if (xhr.readyState == 0 || xhr.status == 0) {
+						return;  // Not an error
+					} else {
+						alert(localise.set["msg_err_del"] + xhr.responseText);  // Alerts htmlencode text already
+					}
 				}
 			}
 		});
