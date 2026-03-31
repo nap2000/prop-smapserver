@@ -229,42 +229,28 @@ Manual testing: navigate each major user flow using keyboard only (Tab, Shift+Ta
 - Dropdown menus / date pickers operable without mouse
 - No keyboard traps (can always Tab out)
 
-| User Flow | Keyboard Navigable | Focus Visible | Modal Focus Trap | Notes |
-|-----------|-------------------|---------------|-----------------|-------|
-| Login | | | N/A | |
-| Forgot password | | | N/A | |
-| Survey management (CRUD) | | | | |
-| Form editor | | | | Complex drag/drop UI |
-| User management | | | | |
-| Notifications dialog | | | | |
-| Task management | | | | |
-| My work / submit task | | | | |
+### Pages tested
+- `smapServer/WebContent/index.html` — Home
+- `smapServer/WebContent/inlineLogin.html` — Login
+- `fieldManagerClient/WebContent/surveyManagement.html` — Survey Management
+
+### Test date: 2026-03-31
+
+| User Flow | Pages | Keyboard Navigable | Focus Visible | Modal Focus Trap | Notes |
+|-----------|-------|--------------------|---------------|-----------------|-------|
+| Logon | index.html, inlineLogin.html | Pass | Pass | N/A | |
+| Generate local report | surveyManagement.html | Pass | Pass | Pass | Usage report modal tested |
+| Forgot password | | | | N/A | Not yet tested |
+| Survey management (CRUD) | surveyManagement.html | | | | Not yet tested |
+| Form editor | edit.html | | | | Complex drag/drop UI |
+| User management | userManagement.html | | | | |
+| Notifications dialog | notifications.html | | | | |
+| Task management | taskManagement.html | | | | |
+| My work / submit task | myWork/index.html | | | | |
 
 ---
 
-## 5. Colour Contrast Check
-
-Use the [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) or browser DevTools to verify:
-- Normal text: contrast ratio ≥ 4.5:1 (AA)
-- Large text (≥ 18pt / 14pt bold): contrast ratio ≥ 3:1 (AA)
-- UI components and focus indicators: ≥ 3:1 against adjacent colours
-
-Key theme colours to verify (from `smap3.css` / Bootstrap overrides):
-
-| Element | Foreground | Background | Ratio | Pass/Fail |
-|---------|-----------|-----------|-------|-----------|
-| Body text | | | | |
-| Primary button text | | | | |
-| Danger button text | | | | |
-| Nav link (default) | | | | |
-| Nav link (filtersChanged — red) | | | | |
-| Table header | | | | |
-| Disabled input text | | | | |
-| Focus indicator outline | | | | |
-
----
-
-## 6. Screen Reader Testing
+## 5. Screen Reader Testing
 
 Test key flows with a screen reader to validate experience for visually impaired users.
 
@@ -285,24 +271,26 @@ Test key flows with a screen reader to validate experience for visually impaired
 
 ---
 
-## 7. Responsive / Zoom Testing
+## 6. Responsive / Zoom Testing
 
 WCAG 1.4.4 requires text to be resizable to 200% without loss of content or functionality.
 WCAG 1.4.10 (Reflow) requires content to reflow at 320 CSS px width without horizontal scrolling.
 
+### Test date: 2026-03-31
+
 | Page | 200% zoom OK | 320px reflow OK | Notes |
 |------|-------------|-----------------|-------|
-| smapServer/WebContent/index.html | | | |
-| smapServer/WebContent/login.html | | | |
+| smapServer/WebContent/index.html | Pass | Pass | |
+| smapServer/WebContent/login.html | Pass | Pass | |
 | smapServer/WebContent/edit.html | | | Complex layout |
-| fieldManagerClient/WebContent/surveyManagement.html | | | |
+| fieldManagerClient/WebContent/surveyManagement.html | Pass | Pass | |
 | tasks/WebContent/managed_forms.html | | | |
 | myWork/WebContent/index.html | | | |
 | fieldAnalysis/WebContent/index.html | | | |
 
 ---
 
-## 8. Known Exceptions / Partial Conformance
+## 7. Known Exceptions / Partial Conformance
 
 Document any areas where full conformance is not achievable and the justification.
 
@@ -313,7 +301,7 @@ Document any areas where full conformance is not achievable and the justificatio
 
 ---
 
-## 9. Accessibility Statement
+## 8. Accessibility Statement
 
 Once testing is complete, produce a formal accessibility statement covering:
 - Conformance status (full / partial / non-conformance with WCAG 2.2 AA)
