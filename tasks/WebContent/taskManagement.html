@@ -366,7 +366,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-2 control-label lang" data-lang="c_persist" for="users_select_user"></label>
+                            <label class="col-sm-2 control-label lang" data-lang="c_persist" for="tp_repeat"></label>
                             <div class="col-sm-3">
                                 <div class="checkbox">
                                     <input type="checkbox" name="repeat" value="repeat" id="tp_repeat">
@@ -835,7 +835,7 @@
                             </div>
 
                             <div class="form-group assign_role row">
-                                <label for="roles_task_group" class="col-sm-2 control-label lang" data-lang="t_fixed_role">fixed role</label>
+                                <label for="fixed_role" class="col-sm-2 control-label lang" data-lang="t_fixed_role">fixed role</label>
                                 <div class="col-sm-10">
                                     <select class="form-select" id="fixed_role"></select>
                                 </div>
@@ -880,7 +880,7 @@
                                     <input type="number" id="task_after" class="form-control" value="0">
                                 </div>
                                 <div class="col-sm-5">
-                                    <select class="form-select" id="task_units">
+                                    <select class="form-select" id="task_units" aria-label="Time units">
                                         <option value="minutes" class="lang" data-lang="i_m"></option>
                                         <option value="hours" class="lang" data-lang="i_h"></option>
                                         <option value="days" class="lang" data-lang="i_d" selected></option>
@@ -895,7 +895,7 @@
                                     <input type="number" id="task_duration" class="form-control" value="0">
                                 </div>
                                 <div class="col-sm-5">
-                                    <select class="form-select" id="duration_units">
+                                    <select class="form-select" id="duration_units" aria-label="Duration units">
                                         <option value="minutes" class="lang" data-lang="i_m"></option>
                                         <option value="hours" class="lang" data-lang="i_h" selected></option>
                                         <option value="days" class="lang" data-lang="i_d"></option>
