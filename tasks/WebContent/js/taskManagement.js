@@ -96,6 +96,7 @@ localise.initLocale(gUserLocale).then(function () {
 		gIdx = 0,						// Idx set when external task dropped on calendar
 		gSelectedCount = 0,
 		gUnsentEmailCount = 0,
+		gTaskStart,
 		MIN_DOWNLOAD_RANGE = 100,
 		MIN_SHOW_RANGE = 10,
 		gSourceSurvey;
