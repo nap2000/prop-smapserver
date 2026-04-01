@@ -18,7 +18,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 "use strict";
 
 import localise from "../../../smapServer/WebContent/js/app/localise";
-import { addHourglass, removeHourglass, getLoggedInUser } from "common";
+import { addHourglass, removeHourglass, getLoggedInUser, handleLogout } from "common";
 
 // Icon per workitem type
 const TYPE_ICONS = {
@@ -152,11 +152,11 @@ function loadWorkflow() {
 	addHourglass();
 	fetch("/surveyKPI/workflow/items", { credentials: "include" })
 		.then(function(resp) {
-			if (!resp.ok) throw new Error("HTTP " + resp.status);
-			return resp.json();
+			return resp.text();
 		})
-		.then(function(data) {
-			renderWorkflow(data);
+		.then(function(text) {
+			if (!handleLogout(text)) return;
+			renderWorkflow(JSON.parse(text));
 		})
 		.catch(function(err) {
 			console.error("loadWorkflow error:", err);
@@ -182,5 +182,9 @@ localise.initLocale(gUserLocale).then(function() {
 	$(document).ready(function() {
 		localise.setlang();
 		getLoggedInUser(loadWorkflow, false, false, undefined);
+		$("#m_refresh").on("click", function(e) {
+			e.preventDefault();
+			loadWorkflow();
+		});
 	});
 });
