@@ -20,6 +20,13 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 import localise from "../../../smapServer/WebContent/js/app/localise";
 import { addHourglass, removeHourglass, getLoggedInUser, handleLogout } from "common";
 
+const CARD_W = 240;
+const CARD_H = 68;
+
+// Module-level state
+let gData      = null;
+let gPositions = {};   // id -> {x, y}  (updated live during drag)
+
 // Icon per workitem type
 const TYPE_ICONS = {
 	form:     "fas fa-file-alt",
@@ -28,7 +35,8 @@ const TYPE_ICONS = {
 	periodic: "fas fa-clock",
 	reminder: "fas fa-bell",
 	email:    "fas fa-envelope",
-	sms:      "fas fa-comment-alt"
+	sms:      "fas fa-comment-alt",
+	decision: "fas fa-filter"
 };
 
 // Localised label per workitem type — shown in the node card header
@@ -41,48 +49,50 @@ function typeLabel(type) {
 		periodic: l["c_scheduled"],
 		reminder: l["c_reminder"],
 		email:    l["c_email"],
-		sms:      l["c_sms"]
+		sms:      l["c_sms"],
+		decision: l["c_decision"] || "Decision"
 	};
 	return labels[type] || type;
 }
 
 /*
- * Build a node card.  Shape is determined by role:
- *   form         → rectangle
- *   trigger      → rectangle (clock/bell icon)
- *   notification → rectangle (envelope/comment icon)
- *   decision     → diamond (not yet implemented)
+ * Build a node card element positioned at (x, y).
+ * Decision nodes get a distinct amber style.
  */
-function nodeCard(x, y, role, type, name) {
-	const icon = TYPE_ICONS[type] || "fas fa-circle";
-	const label = typeLabel(type);
+function nodeCard(x, y, item) {
+	const icon  = TYPE_ICONS[item.type] || "fas fa-circle";
+	const label = typeLabel(item.type);
+	const isDecision = item.role === "decision";
 
 	const div = document.createElement("div");
-	div.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:240px;`
-		+ `background:#fff;border-radius:6px;`
+	div.dataset.id = item.id;
+	div.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:${CARD_W}px;`
+		+ `background:#fff;border-radius:6px;cursor:grab;user-select:none;`
 		+ `box-shadow:0 2px 8px rgba(0,0,0,0.12);`
-		+ `border:1px solid #dee2e6;overflow:hidden;font-family:sans-serif;`;
+		+ `border:1px solid ${isDecision ? "#fd7e14" : "#dee2e6"};overflow:hidden;font-family:sans-serif;`;
 
 	const header = document.createElement("div");
-	header.style.cssText = `background:#f8f9fa;border-bottom:1px solid #dee2e6;`
+	header.style.cssText = `background:${isDecision ? "#fff3cd" : "#f8f9fa"};`
+		+ `border-bottom:1px solid ${isDecision ? "#fd7e14" : "#dee2e6"};`
 		+ `height:32px;display:flex;align-items:center;padding:0 10px;gap:7px;`;
-	header.innerHTML = `<i class="${icon}" style="color:#6c757d;font-size:13px;"></i>`
-		+ `<span style="font-size:12px;color:#6c757d;font-weight:600;">${label}</span>`;
+	header.innerHTML = `<i class="${icon}" style="color:${isDecision ? "#fd7e14" : "#6c757d"};font-size:13px;"></i>`
+		+ `<span style="font-size:12px;color:${isDecision ? "#854d0e" : "#6c757d"};font-weight:600;">${label}</span>`;
 
 	const body = document.createElement("div");
 	body.style.cssText = "padding:8px 10px;";
-	body.innerHTML = `<div style="font-size:13px;font-weight:600;color:#212529;">${name || ""}</div>`;
+	body.innerHTML = `<div style="font-size:13px;font-weight:600;color:#212529;">${item.name || ""}</div>`;
 
 	div.appendChild(header);
 	div.appendChild(body);
 	return div;
 }
 
-function renderWorkflow(data) {
-	const nodesEl = document.getElementById("wf-nodes");
-	const svgEl   = document.getElementById("wf-arrows");
-
-	nodesEl.innerHTML = "";
+/*
+ * Draw all SVG arrows based on current gPositions.
+ * Also resizes the SVG to cover the full node extent.
+ */
+function drawArrows() {
+	const svgEl = document.getElementById("wf-arrows");
 	while (svgEl.firstChild) svgEl.removeChild(svgEl.firstChild);
 
 	const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
@@ -91,50 +101,25 @@ function renderWorkflow(data) {
 	</marker>`;
 	svgEl.appendChild(defs);
 
-	const LEFT_X  = 60;
-	const RIGHT_X = 340;
-	const ROW_H   = 100;
-	const CARD_W  = 240;
-	const CARD_H  = 68;
-	const START_Y = 40;
-
-	const items = (data && data.items) ? data.items : [];
-	const links = (data && data.links) ? data.links : [];
-
-	// Determine column placement from links:
-	// items that appear only as link sources → left
-	// items that appear only as link targets → right
-	// items appearing as both, or unlinked → left
-	const appearsAsTo   = new Set(links.map(function(l) { return l.to; }));
-	const appearsAsFrom = new Set(links.map(function(l) { return l.from; }));
-
-	const leftItems  = items.filter(function(i) { return !appearsAsTo.has(i.id) || appearsAsFrom.has(i.id); });
-	const rightItems = items.filter(function(i) { return appearsAsTo.has(i.id) && !appearsAsFrom.has(i.id); });
-
-	const positions = {};
-
-	leftItems.forEach(function(n, idx) {
-		const y = START_Y + idx * ROW_H;
-		positions[n.id] = { x: LEFT_X, midY: y + CARD_H / 2 };
-		nodesEl.appendChild(nodeCard(LEFT_X, y, n.role, n.type, n.name));
+	// Resize SVG to encompass all nodes
+	let maxX = 0, maxY = 0;
+	Object.values(gPositions).forEach(function(p) {
+		maxX = Math.max(maxX, p.x + CARD_W + 60);
+		maxY = Math.max(maxY, p.y + CARD_H + 60);
 	});
+	svgEl.setAttribute("width",  maxX);
+	svgEl.setAttribute("height", maxY);
 
-	rightItems.forEach(function(n, idx) {
-		const y = START_Y + idx * ROW_H;
-		positions[n.id] = { x: RIGHT_X, midY: y + CARD_H / 2 };
-		nodesEl.appendChild(nodeCard(RIGHT_X, y, n.role, n.type, n.name));
-	});
-
-	// Draw bezier arrows
+	const links = (gData && gData.links) ? gData.links : [];
 	links.forEach(function(link) {
-		const from = positions[link.from];
-		const to   = positions[link.to];
+		const from = gPositions[link.from];
+		const to   = gPositions[link.to];
 		if (!from || !to) return;
 
 		const x1  = from.x + CARD_W;
-		const y1  = from.midY;
+		const y1  = from.y + CARD_H / 2;
 		const x2  = to.x;
-		const y2  = to.midY;
+		const y2  = to.y + CARD_H / 2;
 		const cx1 = x1 + 40;
 		const cx2 = x2 - 40;
 
@@ -148,12 +133,70 @@ function renderWorkflow(data) {
 	});
 }
 
+/*
+ * Attach mousedown drag behaviour to a node card element.
+ * Updates gPositions and redraws arrows live during the drag.
+ */
+function makeDraggable(el) {
+	el.addEventListener("mousedown", function(e) {
+		if (e.button !== 0) return;
+		e.preventDefault();
+
+		const id       = el.dataset.id;
+		const startX   = e.clientX;
+		const startY   = e.clientY;
+		const startPos = gPositions[id];
+		const origX    = startPos ? startPos.x : 0;
+		const origY    = startPos ? startPos.y : 0;
+
+		el.style.cursor = "grabbing";
+
+		function onMove(e) {
+			const newX = Math.max(0, origX + e.clientX - startX);
+			const newY = Math.max(0, origY + e.clientY - startY);
+			el.style.left = newX + "px";
+			el.style.top  = newY + "px";
+			gPositions[id] = { x: newX, y: newY };
+			drawArrows();
+		}
+
+		function onUp() {
+			el.style.cursor = "grab";
+			document.removeEventListener("mousemove", onMove);
+			document.removeEventListener("mouseup",   onUp);
+		}
+
+		document.addEventListener("mousemove", onMove);
+		document.addEventListener("mouseup",   onUp);
+	});
+}
+
+function renderWorkflow(data) {
+	gData      = data;
+	gPositions = {};
+
+	const items = (data && data.items) ? data.items : [];
+	items.forEach(function(item) {
+		gPositions[item.id] = { x: item.x, y: item.y };
+	});
+
+	const nodesEl = document.getElementById("wf-nodes");
+	nodesEl.innerHTML = "";
+
+	items.forEach(function(item) {
+		const pos  = gPositions[item.id];
+		const card = nodeCard(pos.x, pos.y, item);
+		makeDraggable(card);
+		nodesEl.appendChild(card);
+	});
+
+	drawArrows();
+}
+
 function loadWorkflow() {
 	addHourglass();
 	fetch("/surveyKPI/workflow/items", { credentials: "include" })
-		.then(function(resp) {
-			return resp.text();
-		})
+		.then(function(resp) { return resp.text(); })
 		.then(function(text) {
 			if (!handleLogout(text)) return;
 			renderWorkflow(JSON.parse(text));
@@ -164,6 +207,28 @@ function loadWorkflow() {
 		.finally(function() {
 			removeHourglass();
 		});
+}
+
+function saveLayout() {
+	fetch("/surveyKPI/workflow/positions", {
+		method:      "PUT",
+		credentials: "include",
+		headers:     { "Content-Type": "application/json" },
+		body:        JSON.stringify(gPositions)
+	}).catch(function(err) {
+		console.error("saveLayout error:", err);
+	});
+}
+
+function resetLayout() {
+	fetch("/surveyKPI/workflow/positions", {
+		method:      "DELETE",
+		credentials: "include"
+	})
+	.then(function() { loadWorkflow(); })
+	.catch(function(err) {
+		console.error("resetLayout error:", err);
+	});
 }
 
 var gUserLocale = navigator.language;
@@ -185,6 +250,14 @@ localise.initLocale(gUserLocale).then(function() {
 		$("#m_refresh").on("click", function(e) {
 			e.preventDefault();
 			loadWorkflow();
+		});
+		$("#m_save_layout").on("click", function(e) {
+			e.preventDefault();
+			saveLayout();
+		});
+		$("#m_reset_layout").on("click", function(e) {
+			e.preventDefault();
+			resetLayout();
 		});
 	});
 });
