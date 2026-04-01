@@ -20,64 +20,58 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 import localise from "../../../smapServer/WebContent/js/app/localise";
 import { addHourglass, removeHourglass, getLoggedInUser } from "common";
 
-const TRIGGER_COLORS = {
-	submission: "#e06c00",
-	periodic: "#7c3aed",
-	reminder: "#ca8a04"
+// Icon per workitem type
+const TYPE_ICONS = {
+	form:     "fas fa-file-alt",
+	task:     "fas fa-file-alt",
+	"case":   "fas fa-file-alt",
+	periodic: "fas fa-clock",
+	reminder: "fas fa-bell",
+	email:    "fas fa-envelope",
+	sms:      "fas fa-comment-alt"
 };
 
-const TARGET_COLORS = {
-	task: "#2563eb",
-	"case": "#7c3aed",
-	email: "#16a34a",
-	sms: "#0891b2",
-	server_calc: "#0e7490",
-	forward: "#e06c00"
-};
-
-function triggerColor(type) {
-	return TRIGGER_COLORS[type] || "#6b7280";
-}
-
-function targetColor(type) {
-	return TARGET_COLORS[type] || "#6b7280";
-}
-
-function triggerLabel(type) {
+// Localised label per workitem type — shown in the node card header
+function typeLabel(type) {
 	const l = localise.set;
 	const labels = {
-		submission: l["submission"],
+		form:     l["c_form"],
+		task:     l["c_task"],
+		"case":   l["c_case"],
 		periodic: l["c_scheduled"],
-		reminder: l["task_reminder"]
+		reminder: l["c_reminder"],
+		email:    l["c_email"],
+		sms:      l["c_sms"]
 	};
 	return labels[type] || type;
 }
 
-function targetLabel(type) {
-	const l = localise.set;
-	const labels = {
-		task:        l["c_create"] + " " + l["c_task"],
-		"case":      l["c_create"] + " " + l["c_case"],
-		email:       l["c_send"]   + " " + l["c_email"],
-		sms:         l["c_send"]   + " " + l["c_sms"],
-		server_calc: l["ed_s_calc"],
-		forward:     l["c_forward"] + " " + l["c_data"]
-	};
-	return labels[type] || type;
-}
+/*
+ * Build a node card.  Shape is determined by role:
+ *   form         → rectangle
+ *   trigger      → rectangle (clock/bell icon)
+ *   notification → rectangle (envelope/comment icon)
+ *   decision     → diamond (not yet implemented)
+ */
+function nodeCard(x, y, role, type, name) {
+	const icon = TYPE_ICONS[type] || "fas fa-circle";
+	const label = typeLabel(type);
 
-function nodeCard(x, y, headerColor, icon, typeLabel, name, subName) {
 	const div = document.createElement("div");
-	div.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:280px;background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.15);border:1px solid #dee2e6;color:#212529;font-family:sans-serif;overflow:hidden;`;
+	div.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:240px;`
+		+ `background:#fff;border-radius:6px;`
+		+ `box-shadow:0 2px 8px rgba(0,0,0,0.12);`
+		+ `border:1px solid #dee2e6;overflow:hidden;font-family:sans-serif;`;
 
 	const header = document.createElement("div");
-	header.style.cssText = `background:${headerColor};height:36px;display:flex;align-items:center;padding:0 12px;gap:8px;`;
-	header.innerHTML = `<i class="${icon}" style="color:#fff;font-size:14px;"></i><span style="color:#fff;font-size:13px;font-weight:600;">${typeLabel}</span>`;
+	header.style.cssText = `background:#f8f9fa;border-bottom:1px solid #dee2e6;`
+		+ `height:32px;display:flex;align-items:center;padding:0 10px;gap:7px;`;
+	header.innerHTML = `<i class="${icon}" style="color:#6c757d;font-size:13px;"></i>`
+		+ `<span style="font-size:12px;color:#6c757d;font-weight:600;">${label}</span>`;
 
 	const body = document.createElement("div");
-	body.style.cssText = "padding:10px 12px;";
-	body.innerHTML = `<div style="font-weight:700;color:#212529;font-size:14px;">${name || ""}</div>
-		<div style="font-size:12px;color:#6c757d;margin-top:3px;">${subName || ""}</div>`;
+	body.style.cssText = "padding:8px 10px;";
+	body.innerHTML = `<div style="font-size:13px;font-weight:600;color:#212529;">${name || ""}</div>`;
 
 	div.appendChild(header);
 	div.appendChild(body);
@@ -86,61 +80,52 @@ function nodeCard(x, y, headerColor, icon, typeLabel, name, subName) {
 
 function renderWorkflow(data) {
 	const nodesEl = document.getElementById("wf-nodes");
-	const svgEl = document.getElementById("wf-arrows");
+	const svgEl   = document.getElementById("wf-arrows");
 
 	nodesEl.innerHTML = "";
 	while (svgEl.firstChild) svgEl.removeChild(svgEl.firstChild);
 
 	const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
 	defs.innerHTML = `<marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-		<polygon points="0 0, 10 3.5, 0 7" fill="#4a9eff"/>
+		<polygon points="0 0, 10 3.5, 0 7" fill="#adb5bd"/>
 	</marker>`;
 	svgEl.appendChild(defs);
 
-	const TRIGGER_X = 60;
-	const ACTION_X  = 380;
-	const ROW_H     = 120;
-	const CARD_W    = 280;
-	const CARD_H    = 80;
-	const START_Y   = 40;
+	const LEFT_X  = 60;
+	const RIGHT_X = 340;
+	const ROW_H   = 100;
+	const CARD_W  = 240;
+	const CARD_H  = 68;
+	const START_Y = 40;
 
-	const items   = (data && data.items) ? data.items : [];
-	const links   = (data && data.links) ? data.links : [];
+	const items = (data && data.items) ? data.items : [];
+	const links = (data && data.links) ? data.links : [];
 
-	// Split by role and assign y positions
-	const triggers = items.filter(function(i) { return i.role === "trigger"; });
-	const actions  = items.filter(function(i) { return i.role === "action"; });
+	// Determine column placement from links:
+	// items that appear only as link sources → left
+	// items that appear only as link targets → right
+	// items appearing as both, or unlinked → left
+	const appearsAsTo   = new Set(links.map(function(l) { return l.to; }));
+	const appearsAsFrom = new Set(links.map(function(l) { return l.from; }));
 
-	// Map id → { x, y, cardMidY } for arrow drawing
+	const leftItems  = items.filter(function(i) { return !appearsAsTo.has(i.id) || appearsAsFrom.has(i.id); });
+	const rightItems = items.filter(function(i) { return appearsAsTo.has(i.id) && !appearsAsFrom.has(i.id); });
+
 	const positions = {};
 
-	triggers.forEach(function(n, idx) {
+	leftItems.forEach(function(n, idx) {
 		const y = START_Y + idx * ROW_H;
-		positions[n.id] = { x: TRIGGER_X, y: y, midY: y + CARD_H / 2 };
-		nodesEl.appendChild(nodeCard(
-			TRIGGER_X, y,
-			triggerColor(n.type),
-			"fas fa-bolt",
-			triggerLabel(n.type) + " " + localise.set["c_trigger"],
-			n.name || "",
-			""
-		));
+		positions[n.id] = { x: LEFT_X, midY: y + CARD_H / 2 };
+		nodesEl.appendChild(nodeCard(LEFT_X, y, n.role, n.type, n.name));
 	});
 
-	actions.forEach(function(n, idx) {
+	rightItems.forEach(function(n, idx) {
 		const y = START_Y + idx * ROW_H;
-		positions[n.id] = { x: ACTION_X, y: y, midY: y + CARD_H / 2 };
-		nodesEl.appendChild(nodeCard(
-			ACTION_X, y,
-			targetColor(n.type),
-			"fas fa-arrow-right",
-			targetLabel(n.type),
-			n.name || "",
-			""
-		));
+		positions[n.id] = { x: RIGHT_X, midY: y + CARD_H / 2 };
+		nodesEl.appendChild(nodeCard(RIGHT_X, y, n.role, n.type, n.name));
 	});
 
-	// Draw arrows for each link
+	// Draw bezier arrows
 	links.forEach(function(link) {
 		const from = positions[link.from];
 		const to   = positions[link.to];
@@ -150,12 +135,12 @@ function renderWorkflow(data) {
 		const y1  = from.midY;
 		const x2  = to.x;
 		const y2  = to.midY;
-		const cx1 = x1 + 50;
-		const cx2 = x2 - 50;
+		const cx1 = x1 + 40;
+		const cx2 = x2 - 40;
 
 		const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 		path.setAttribute("d", `M ${x1} ${y1} C ${cx1} ${y1}, ${cx2} ${y2}, ${x2} ${y2}`);
-		path.setAttribute("stroke", "#4a9eff");
+		path.setAttribute("stroke", "#adb5bd");
 		path.setAttribute("stroke-width", "2");
 		path.setAttribute("fill", "none");
 		path.setAttribute("marker-end", "url(#arrow)");
