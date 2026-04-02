@@ -1031,8 +1031,9 @@ function updateFilterOptions(data, value, isSelect) {
 function getViewSurveys (view) {
 		
 	var url = surveyList();
-	addHourglass();
+
 	if(typeof url !== "undefined") {
+		addHourglass();
 		$.ajax({
 			url: url,
 			cache: false,
