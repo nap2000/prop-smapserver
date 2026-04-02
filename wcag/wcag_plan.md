@@ -66,6 +66,7 @@ This plan guides validation that the Smap application conforms to WCAG 2.2 AA, s
 | myWork/WebContent/index.html | My work dashboard |
 | myWork/WebContent/done.html | Completed tasks |
 | myWork/WebContent/history.html | Work history |
+| https://dev.smap.com.au/app/myWork/webForm/s11_69 | WebForm Device Tests Project |
 
 ### fieldAnalysis
 | Page | Description |
@@ -97,57 +98,58 @@ This plan guides validation that the Smap application conforms to WCAG 2.2 AA, s
 Run Chrome DevTools Lighthouse (Accessibility category) against each page while authenticated. Target score: ≥ 90.
 
 | Page | Score | Issues |
-|------|-----|--------|
+|------|--|--------|
 | smapServer/WebContent/index.html | 100 | |
-| smapServer/WebContent/login.html |     | |
+| smapServer/WebContent/login.html |  | |
 | smapServer/WebContent/inlineLogin.html | 100 | |
-| smapServer/WebContent/register.html |     | |
-| smapServer/WebContent/unauthorised.html |     | |
-| smapServer/WebContent/logout.html |     | |
-| smapServer/WebContent/deleteaccount.html |     | |
-| smapServer/WebContent/acknowledgements.html |     | |
-| smapServer/WebContent/terms.html |     | |
-| smapServer/WebContent/meta.html |     | |
-| smapServer/WebContent/translate.html |     | |
-| smapServer/WebContent/edit.html |     | |
-| smapServer/WebContent/surveyRoles.html |     | |
-| smapServer/WebContent/app/changes.html |     | |
-| smapServer/WebContent/app/resource_history.html |     | |
-| smapServer/WebContent/app/cases.html |     | |
-| smapServer/WebContent/app/resetForgottonPassword.html |     | |
-| smapServer/WebContent/app/subscriptions.html |     | |
-| smapServer/WebContent/app/serverState.html |     | |
-| smapServer/WebContent/app/changePassword.html |     | |
-| smapServer/WebContent/app/resources.html |     | |
-| smapServer/WebContent/app/templates.html |     | |
-| smapServer/WebContent/app/forgottenPassword.html |     | |
-| smapServer/WebContent/app/userTrail.html |     | |
-| smapServer/WebContent/app/api.html |     | |
-| smapServer/WebContent/app/reports.html |     | |
-| smapServer/WebContent/errors/403.html |     | |
-| smapServer/WebContent/errors/404.html |     | |
-| smapServer/WebContent/errors/405.html |     | |
-| smapServer/WebContent/errors/500.html |     | |
+| smapServer/WebContent/register.html |  | |
+| smapServer/WebContent/unauthorised.html |  | |
+| smapServer/WebContent/logout.html |  | |
+| smapServer/WebContent/deleteaccount.html |  | |
+| smapServer/WebContent/acknowledgements.html |  | |
+| smapServer/WebContent/terms.html |  | |
+| smapServer/WebContent/meta.html |  | |
+| smapServer/WebContent/translate.html |  | |
+| smapServer/WebContent/edit.html |  | |
+| smapServer/WebContent/surveyRoles.html |  | |
+| smapServer/WebContent/app/changes.html |  | |
+| smapServer/WebContent/app/resource_history.html |  | |
+| smapServer/WebContent/app/cases.html |  | |
+| smapServer/WebContent/app/resetForgottonPassword.html |  | |
+| smapServer/WebContent/app/subscriptions.html |  | |
+| smapServer/WebContent/app/serverState.html |  | |
+| smapServer/WebContent/app/changePassword.html |  | |
+| smapServer/WebContent/app/resources.html |  | |
+| smapServer/WebContent/app/templates.html |  | |
+| smapServer/WebContent/app/forgottenPassword.html |  | |
+| smapServer/WebContent/app/userTrail.html |  | |
+| smapServer/WebContent/app/api.html |  | |
+| smapServer/WebContent/app/reports.html |  | |
+| smapServer/WebContent/errors/403.html |  | |
+| smapServer/WebContent/errors/404.html |  | |
+| smapServer/WebContent/errors/405.html |  | |
+| smapServer/WebContent/errors/500.html |  | |
 | fieldManagerClient/WebContent/surveyManagement.html | 100 | |
-| fieldManagerClient/WebContent/userManagement.html |     | |
-| fieldManagerClient/WebContent/billing.html |     | |
-| fieldManagerClient/WebContent/settings.html |     | |
-| fieldManagerClient/WebContent/notifications.html |     | |
-| fieldManagerClient/WebContent/monitor.html |     | |
-| tasks/WebContent/managed_forms.html |     | |
-| tasks/WebContent/taskManagement.html |     | |
-| tasks/WebContent/campaign.html |     | |
-| tasks/WebContent/contacts.html |     | |
-| tasks/WebContent/linkages.html |     | |
-| tasks/WebContent/log.html |     | |
-| tasks/WebContent/duplicates.html |     | |
-| myWork/WebContent/index.html |     | |
-| myWork/WebContent/done.html |     | |
-| myWork/WebContent/history.html |     | |
-| fieldAnalysis/WebContent/index.html |     | |
-| fieldAnalysis/WebContent/modify_data.html |     | |
-| fieldAnalysis/WebContent/review_audit.html |     | |
-| dashboard/WebContent/index.html |     | |
+| fieldManagerClient/WebContent/userManagement.html |  | |
+| fieldManagerClient/WebContent/billing.html |  | |
+| fieldManagerClient/WebContent/settings.html |  | |
+| fieldManagerClient/WebContent/notifications.html |  | |
+| fieldManagerClient/WebContent/monitor.html |  | |
+| tasks/WebContent/managed_forms.html |  | |
+| tasks/WebContent/taskManagement.html |  | |
+| tasks/WebContent/campaign.html |  | |
+| tasks/WebContent/contacts.html |  | |
+| tasks/WebContent/linkages.html |  | |
+| tasks/WebContent/log.html |  | |
+| tasks/WebContent/duplicates.html |  | |
+| myWork/WebContent/index.html |  | |
+| myWork/WebContent/done.html |  | |
+| myWork/WebContent/history.html |  | |
+| fieldAnalysis/WebContent/index.html |  | |
+| fieldAnalysis/WebContent/modify_data.html |  | |
+| fieldAnalysis/WebContent/review_audit.html |  | |
+| dashboard/WebContent/index.html |  | |
+| https://dev.smap.com.au/app/myWork/webForm/s11_69 | |     |
 
 ---
 
