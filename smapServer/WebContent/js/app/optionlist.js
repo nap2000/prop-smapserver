@@ -39,21 +39,23 @@ export default {
 	/*
 	 * Add a new option list
 	 */
-	function add() {		
-		
-		var name = getDefaultListName();
-		
-		// Create changeset to be applied on save		
+	function add() {
+
+		var name = getDefaultListName(),
+			change,
+			$context;
+
+		// Create changeset to be applied on save
 		change = {
 				changeType: "optionlist",		// survey | form | language | question | option | optionlist (property | label) last two are types of property change
 				action: "add",
 				name: name
 		};
 		globals.gLatestOptionList = name;		// Remember name so focus can be set to new list
-		
+
 		$context = changeset.add(change);
 		return $context;				// Add events on to the altered html
-		
+
 	}
 	
 	/*

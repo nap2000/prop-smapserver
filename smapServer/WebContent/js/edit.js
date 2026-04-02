@@ -1819,7 +1819,7 @@ $(function() {
 		// Show the table of options
 		if(typeof globals.gFormIndex !== "undefined" && typeof globals.gItemIndex !== undefined) {
 			// opened from question
-			survey = globals.model.survey,
+			survey = globals.model.survey;
 			question = survey.forms[globals.gFormIndex].questions[globals.gItemIndex];
 		}
 
