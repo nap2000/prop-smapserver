@@ -158,6 +158,10 @@ function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, curren
 	view.results = [];
 	
 	survey = globals.gSelector.getSurvey(sId);
+	if (!survey || !survey.forms || survey.forms.length === 0) {
+		refreshData(view, "survey");
+		return;
+	}
 	view.tableCount = survey.forms.length;
 	for(i = 0; i < survey.forms.length; i++) {
 		processSurveyData(survey.forms[i].f_id, sId, view, survey.name, false, 0 );		// Get table data

@@ -393,6 +393,10 @@ localise.initLocale(gUserLocale).then(function () {
 		var $survey = $('#survey_name');
 		var surveyIdx = $survey.val();
 
+		if (!gSurveyList || surveyIdx === null || !gSurveyList[surveyIdx]) {
+			return;
+		}
+
 		globals.gCurrentSurvey = gSurveyList[surveyIdx].id;
 		gCurrentMailOutIdx = -1;
 
