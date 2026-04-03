@@ -25,7 +25,7 @@ import { generateTable, generateUserTable } from "./table-functions";
 import globals from "globals";
 import { addCacheBuster, addHourglass, cleanFileName, downloadFile, downloadPdf, handleLogout, htmlEncode, populateLanguageSelect, populatePdfSelect, removeHourglass } from "common";
 import { toggleBadURL, openModal, closeModal, deleteSurveyDataURL } from "./script";
-import { refreshAnalysisData } from "./survey_control";
+import { refreshAnalysisData, setSurveyViewSurveys } from "./survey_control";
 import { getUserData, processSurveyData } from "data";
 import localise from "localise";
 
@@ -54,6 +54,10 @@ export function setTableSurvey(view) {
 
 	$selHead.empty();
 	$selMain.empty();
+
+	if(!data) {
+		return;
+	}
 
 	/*
 	 * Get the top table so it can be automatically selected

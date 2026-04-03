@@ -278,7 +278,9 @@ export default {
 			question,
 			change;
 		
-		$beforeElement = $("#" + beforeId);
+		// beforeId may be a full URL (e.g. https://host/edit.html#collapse1) — extract just the fragment
+		var beforeIdClean = beforeId && beforeId.indexOf('#') >= 0 ? beforeId.split('#').pop() : beforeId;
+		$beforeElement = beforeIdClean ? $("#" + beforeIdClean) : $();
 		seq = 0;
 		beforeItemIndex = 0;
 		if($beforeElement.length > 0) {

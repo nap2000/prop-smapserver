@@ -65,7 +65,8 @@ import {
 	translateKey,
 	translateKeyValue,
 	getTableData,
-	updateConversationalSMS
+	updateConversationalSMS,
+	generateFile
 } from "common";
 import "../../../smapServer/WebContent/js/libs/commonReportFunctions";
 import "../../../smapServer/WebContent/js/libs/saveSvgAsPng";
