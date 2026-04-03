@@ -26,6 +26,27 @@ const CARD_H = 68;
 // Module-level state
 let gData      = null;
 let gPositions = {};   // id -> {x, y}  (updated live during drag)
+let gHighlight = "none";
+
+// Fixed colours per node type (used when highlight = "type")
+const TYPE_COLOURS = {
+	form:     "#4a90d9",
+	task:     "#27ae60",
+	"case":   "#e67e22",
+	decision: "#f39c12",
+	periodic: "#8e44ad",
+	reminder: "#16a085",
+	email:    "#e74c3c",
+	sms:      "#c0392b"
+};
+
+// Palette for dynamic dimensions (project, bundle) — repeated if needed.
+// Derived from ColorBrewer Paired-12 for good perceptual separation.
+const PALETTE = [
+	"#1f78b4","#33a02c","#e31a1c","#ff7f00","#6a3d9a",
+	"#b15928","#a6cee3","#b2df8a","#fb9a99","#fdbf6f",
+	"#cab2d6","#ffff99"
+];
 
 // Icon per workitem type
 const TYPE_ICONS = {
@@ -65,7 +86,11 @@ function nodeCard(x, y, item) {
 	const isDecision = item.role === "decision";
 
 	const div = document.createElement("div");
-	div.dataset.id = item.id;
+	div.dataset.id      = item.id;
+	div.dataset.role    = item.role  || "";
+	div.dataset.type    = item.type  || "";
+	div.dataset.project = item.project || "";
+	div.dataset.bundle  = item.bundle  || "";
 	div.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:${CARD_W}px;`
 		+ `background:#fff;border-radius:6px;cursor:grab;user-select:none;`
 		+ `box-shadow:0 2px 8px rgba(0,0,0,0.12);`
@@ -171,6 +196,82 @@ function makeDraggable(el) {
 	});
 }
 
+/*
+ * Build a colour map for the current highlight dimension.
+ * For "type" the colours are fixed; for other dimensions values are sorted
+ * alphabetically and assigned palette indices so the same value always gets
+ * the same colour regardless of the order items arrive.
+ */
+function buildColourMap(dimension) {
+	const items = (gData && gData.items) ? gData.items : [];
+	if (dimension === "type") {
+		return TYPE_COLOURS;
+	}
+	const values = new Set();
+	items.forEach(function(item) {
+		const v = dimension === "project" ? item.project : item.bundle;
+		if (v) values.add(v);
+	});
+	const sorted = Array.from(values).sort();
+	const map = {};
+	sorted.forEach(function(v, i) { map[v] = PALETTE[i % PALETTE.length]; });
+	return map;
+}
+
+function applyHighlight() {
+	const cards = document.querySelectorAll("#wf-nodes [data-id]");
+	if (gHighlight === "none") {
+		cards.forEach(function(el) {
+			const isDecision = el.dataset.role === "decision";
+			el.style.borderLeft = `1px solid ${isDecision ? "#fd7e14" : "#dee2e6"}`;
+		});
+		hideLegend();
+		return;
+	}
+	const colourMap = buildColourMap(gHighlight);
+	cards.forEach(function(el) {
+		const val = gHighlight === "type"    ? el.dataset.type
+		          : gHighlight === "project" ? el.dataset.project
+		          :                            el.dataset.bundle;
+		const colour = (val && colourMap[val]) ? colourMap[val] : "#ccc";
+		el.style.borderLeft = `4px solid ${colour}`;
+	});
+	showLegend(colourMap);
+}
+
+function showLegend(colourMap) {
+	const canvas = document.getElementById("workflow-canvas");
+	let leg = document.getElementById("wf-legend");
+	if (!leg) {
+		leg = document.createElement("div");
+		leg.id = "wf-legend";
+		leg.style.cssText = "position:absolute;top:8px;right:8px;background:rgba(255,255,255,0.96);"
+			+ "border:1px solid #dee2e6;border-radius:6px;padding:10px 14px;z-index:10;"
+			+ "font-family:sans-serif;font-size:12px;min-width:130px;"
+			+ "box-shadow:0 2px 8px rgba(0,0,0,0.12);pointer-events:none;";
+		canvas.appendChild(leg);
+	}
+	const labels = { type: "Type", project: "Project", bundle: "Bundle" };
+	let html = `<div style="font-weight:700;margin-bottom:8px;color:#495057;">${labels[gHighlight] || gHighlight}</div>`;
+	const entries = Object.entries(colourMap);
+	if (entries.length === 0) {
+		html += `<div style="color:#6c757d;font-style:italic;">No data</div>`;
+	}
+	entries.forEach(function([val, colour]) {
+		html += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">`
+			+ `<span style="display:inline-block;width:13px;height:13px;border-radius:3px;`
+			+ `background:${colour};flex-shrink:0;"></span>`
+			+ `<span style="color:#495057;">${val || "(none)"}</span></div>`;
+	});
+	leg.innerHTML = html;
+	leg.style.display = "";
+}
+
+function hideLegend() {
+	const leg = document.getElementById("wf-legend");
+	if (leg) leg.style.display = "none";
+}
+
 function renderWorkflow(data) {
 	gData      = data;
 	gPositions = {};
@@ -191,6 +292,7 @@ function renderWorkflow(data) {
 	});
 
 	drawArrows();
+	applyHighlight();
 }
 
 function loadWorkflow() {
@@ -258,6 +360,13 @@ localise.initLocale(gUserLocale).then(function() {
 		$("#m_reset_layout").on("click", function(e) {
 			e.preventDefault();
 			resetLayout();
+		});
+		$(document).on("click", "[data-highlight]", function(e) {
+			e.preventDefault();
+			gHighlight = $(this).data("highlight");
+			$("[data-highlight]").removeClass("active");
+			$(this).addClass("active");
+			applyHighlight();
 		});
 	});
 });
