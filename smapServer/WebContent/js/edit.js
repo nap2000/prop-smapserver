@@ -2931,7 +2931,8 @@ $(function() {
 
 		var languageName = languages[i].name;
 		if(languageName.indexOf('(') >= 0) {
-			languageName = languageName.substring(0, languageName.indexOf('('));
+			languageName = languageName.substring(0, languageName.indexOf('(')).trim();
+			gTempLanguages[i].name = languageName;
 		}
 
 		if(!languages[i].deleted) {
