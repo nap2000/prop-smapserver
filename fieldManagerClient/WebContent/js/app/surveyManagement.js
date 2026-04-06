@@ -1216,3 +1216,7 @@ import {
         function executeStructureUserReport() {
             downloadFile("/surveyKPI/adminreport/userstructure");
         }
+
+        function executeSurveyReport() {
+            downloadFile("/surveyKPI/adminreport/survey");
+        }

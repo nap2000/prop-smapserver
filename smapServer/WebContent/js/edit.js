@@ -2922,6 +2922,7 @@ $(function() {
 	h[++idx] = '<th>' + localise.set["c_name"] + '</th>';
 	h[++idx] = '<th>' + localise.set["c_code"] + '</th>';
 	h[++idx] = '<th>' + localise.set["c_rtl"] + '</th>';
+	h[++idx] = '<th>' + localise.set["c_action"] + '</th>';
 	h[++idx] = '</tr>';
 	h[++idx] = '</thead>';
 	h[++idx] = '<tbody class="table-striped">';
@@ -2930,7 +2931,8 @@ $(function() {
 
 		var languageName = languages[i].name;
 		if(languageName.indexOf('(') >= 0) {
-			languageName = languageName.substring(0, languageName.indexOf('('));
+			languageName = languageName.substring(0, languageName.indexOf('(')).trim();
+			gTempLanguages[i].name = languageName;
 		}
 
 		if(!languages[i].deleted) {
@@ -2958,7 +2960,7 @@ $(function() {
 			h[++idx] = '<td>';
 			h[++idx] = '<input type="checkbox" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="ldirn form-control"';
+			h[++idx] = '" class="ldirn"';
 			if(languages[i].rtl) {
 				h[++idx] = " checked";
 			}

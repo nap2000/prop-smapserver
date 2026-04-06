@@ -217,3 +217,9 @@ tr.deleted td a {
     color: #333;
     line-height: 1;
 }
+
+input.ldirn {
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+}

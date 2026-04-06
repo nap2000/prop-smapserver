@@ -2733,6 +2733,9 @@ button {
     color: white; }
 .btn:focus, .vex.vex-theme-plain .vex-dialog-button:focus, .btn:link, .vex.vex-theme-plain .vex-dialog-button:link, .btn:active, .vex.vex-theme-plain .vex-dialog-button:active, .btn:visited, .vex.vex-theme-plain .vex-dialog-button:visited {
     text-decoration: none; }
+.btn:focus-visible, .vex.vex-theme-plain .vex-dialog-button:focus-visible {
+    outline: 3px solid #556B2F;
+    outline-offset: 2px; }
 .btn.btn-default, .vex.vex-theme-plain .btn-default.vex-dialog-button {
     background-color: white;
     border-color: #cccccc;
@@ -3801,7 +3804,9 @@ legend .required {
         margin: 20px -20px -20px -20px; } }
 
 .bootstrap-select {
-    margin-top: 15px; }
+    margin-top: 15px;
+    width: 100%;
+    display: block; }
 .bootstrap-select .dropdown-toggle {
     width: 218.99632px;
     font-family: 'OpenSans', Arial, sans-serif;
@@ -8839,7 +8844,7 @@ h4 + .or-repeat {
     min-width: 34px !important;
     margin: 0;
     height: 3px;
-    background-color: #d15200;
+    background-color: #a03e00;
     z-index: 1000;
     -webkit-transition: all 1s ease-out;
     transition: all 1s ease-out; }
@@ -8862,7 +8867,7 @@ h4 + .or-repeat {
 .offline-enabled__icon {
     width: 34px;
     height: 34px;
-    background-color: #d15200;
+    background-color: #a03e00;
     background-image: url("/x/images/offline-enabled.png");
     background-repeat: no-repeat;
     opacity: 1;
@@ -8879,7 +8884,7 @@ h4 + .or-repeat {
     margin-top: 1px;
     width: 34px;
     min-height: 34px;
-    color: #d15200;
+    color: #a03e00;
     background-color: #ffffff;
     text-align: center;
     padding: 9.5px 0 9.5px 0;
