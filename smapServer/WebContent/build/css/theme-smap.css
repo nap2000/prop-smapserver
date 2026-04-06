@@ -2732,6 +2732,9 @@ button {
     color: white; }
 .btn:focus, .vex.vex-theme-plain .vex-dialog-button:focus, .btn:link, .vex.vex-theme-plain .vex-dialog-button:link, .btn:active, .vex.vex-theme-plain .vex-dialog-button:active, .btn:visited, .vex.vex-theme-plain .vex-dialog-button:visited {
     text-decoration: none; }
+.btn:focus-visible, .vex.vex-theme-plain .vex-dialog-button:focus-visible {
+    outline: 3px solid #325e85;
+    outline-offset: 2px; }
 .btn.btn-default, .vex.vex-theme-plain .btn-default.vex-dialog-button {
     background-color: white;
     border-color: #cccccc;
@@ -3794,9 +3797,11 @@ legend .required {
         margin: 20px -20px -20px -20px; } }
 
 .bootstrap-select {
-    margin-top: 15px; }
+    margin-top: 15px;
+    width: 100%;
+    display: block; }
 .bootstrap-select .dropdown-toggle {
-    width: 374.3272px;
+    width: 100%;
     font-family: 'OpenSans', Arial, sans-serif;
     font-weight: normal;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -7747,7 +7752,7 @@ input[type="checkbox"] {
     margin-top: 1px;
     width: 34px;
     min-height: 34px;
-    color: #d15200;
+    color: #a03e00;
     background-color: #ffffff;
     text-align: center;
     padding: 9.5px 0 9.5px 0;

@@ -66,7 +66,7 @@ This plan guides validation that the Smap application conforms to WCAG 2.2 AA, s
 | myWork/WebContent/index.html | My work dashboard |
 | myWork/WebContent/done.html | Completed tasks |
 | myWork/WebContent/history.html | Work history |
-| https://dev.smap.com.au/app/myWork/webForm/s11_69 | WebForm Device Tests Project |
+| https://dev.smap.com.au/app/myWork/webForm (Full Widgets no rank) | WebForm Device Tests Project |
 
 ### fieldAnalysis
 | Page | Description |
@@ -149,7 +149,7 @@ Run Chrome DevTools Lighthouse (Accessibility category) against each page while 
 | fieldAnalysis/WebContent/modify_data.html |  | |
 | fieldAnalysis/WebContent/review_audit.html |  | |
 | dashboard/WebContent/index.html |  | |
-| https://dev.smap.com.au/app/myWork/webForm/s11_69 | |     |
+| https://dev.smap.com.au/app/myWork/webForm (Full Widgets no rank) | 100 |     |
 
 ---
 
@@ -173,6 +173,7 @@ Focus on pages with dynamic content / modals: `edit.html`, `surveyManagement.htm
 | tasks/WebContent/taskManagement.html | |      |                          |
 | myWork/WebContent/index.html | |      |                          |
 | fieldAnalysis/WebContent/index.html | |      |                          |
+| https://dev.smap.com.au/app/myWork/webForm (Full Widgets no rank) | | None | ARM Score 9.6. 24 Alerts |
 
 ---
 
@@ -249,6 +250,7 @@ Manual testing: navigate each major user flow using keyboard only (Tab, Shift+Ta
 | Notifications dialog | notifications.html | | | | |
 | Task management | taskManagement.html | | | | |
 | My work / submit task | myWork/index.html | | | | |
+| WebForm (full widgets) | https://dev.smap.com.au/app/myWork/webForm (Full Widgets no rank) | Pass | Pass | N/A | Keyboard tested 2026-04-06 |
 
 ---
 
