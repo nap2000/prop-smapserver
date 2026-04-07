@@ -21,7 +21,7 @@ import localise from "../../../smapServer/WebContent/js/app/localise";
 import { addHourglass, removeHourglass, getLoggedInUser, handleLogout } from "common";
 
 const CARD_W = 240;
-const CARD_H = 68;
+const CARD_H = 88;   // expanded to fit assignee row on task/case cards
 
 // Module-level state
 let gData      = null;
@@ -86,11 +86,12 @@ function nodeCard(x, y, item) {
 	const isDecision = item.role === "decision";
 
 	const div = document.createElement("div");
-	div.dataset.id      = item.id;
-	div.dataset.role    = item.role  || "";
-	div.dataset.type    = item.type  || "";
-	div.dataset.project = item.project || "";
-	div.dataset.bundle  = item.bundle  || "";
+	div.dataset.id       = item.id;
+	div.dataset.role     = item.role     || "";
+	div.dataset.type     = item.type     || "";
+	div.dataset.project  = item.project  || "";
+	div.dataset.bundle   = item.bundle   || "";
+	div.dataset.assignee = item.assignee || "";
 	div.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:${CARD_W}px;`
 		+ `background:#fff;border-radius:6px;cursor:grab;user-select:none;`
 		+ `box-shadow:0 2px 8px rgba(0,0,0,0.12);`
@@ -103,9 +104,15 @@ function nodeCard(x, y, item) {
 	header.innerHTML = `<i class="${icon}" style="color:${isDecision ? "#fd7e14" : "#6c757d"};font-size:13px;"></i>`
 		+ `<span style="font-size:12px;color:${isDecision ? "#854d0e" : "#6c757d"};font-weight:600;">${label}</span>`;
 
+	const hasAssignee = (item.type === "task" || item.type === "case") && item.assignee;
+
 	const body = document.createElement("div");
 	body.style.cssText = "padding:8px 10px;";
-	body.innerHTML = `<div style="font-size:13px;font-weight:600;color:#212529;">${item.name || ""}</div>`;
+	let bodyHtml = `<div style="font-size:13px;font-weight:600;color:#212529;">${item.name || ""}</div>`;
+	if (hasAssignee) {
+		bodyHtml += `<div style="font-size:11px;color:#6c757d;margin-top:3px;">${item.assignee}</div>`;
+	}
+	body.innerHTML = bodyHtml;
 
 	div.appendChild(header);
 	div.appendChild(body);
