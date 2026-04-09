@@ -51,6 +51,9 @@ function generateTable(elementId, data, disp_desc, survey_ident, sId) {
 	if(typeof fn === "undefined") {
 		fn = "none";
 	}
+	if(!cols || !groups) {
+		return;
+	}
 	if(data.formName) {
 		title = data.formName;
 	} else {
