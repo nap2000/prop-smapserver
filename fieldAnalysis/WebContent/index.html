@@ -281,29 +281,31 @@
 								<a class="filter_help btn btn-sm btn-outline-secondary" href="https://www.smap.com.au/docs/server-expressions.html" target="_blank">i</a>
 							</div>
 						</div>
-						<div class="row">
+					</fieldset>
+
+					<div class="border rounded p-2 mb-2">
+						<div class="row mb-2">
 							<div class="col-sm-8 offset-sm-4">
 								<button id="filter_button" class="btn btn-sm btn-outline-secondary lang" data-lang="a_fbv">Filter by value</button>
 							</div>
 						</div>
-					</fieldset>
-
-					<div id="filter_controls" class="border rounded p-2 mb-2" style="display:none;">
-						<div class="row mb-2">
-							<label for="filter_question" class="col-sm-4 col-form-label lang" data-lang="a_fq">Filter Question</label>
-							<div class="col-sm-8">
-								<select class="selected_question form-select" id="filter_question"></select>
+						<div id="filter_controls" style="display:none;">
+							<div class="row mb-2">
+								<label for="filter_question" class="col-sm-4 col-form-label lang" data-lang="a_fq">Filter Question</label>
+								<div class="col-sm-8">
+									<select class="selected_question form-select" id="filter_question"></select>
+								</div>
 							</div>
-						</div>
-						<div class="row mb-2">
-							<label for="filter_value" class="col-sm-4 col-form-label lang" data-lang="c_value">Value</label>
-							<div class="col-sm-8">
-								<select class="form-select" id="filter_value"></select>
+							<div class="row mb-2">
+								<label for="filter_value" class="col-sm-4 col-form-label lang" data-lang="c_value">Value</label>
+								<div class="col-sm-8">
+									<select class="form-select" id="filter_value"></select>
+								</div>
 							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-8 offset-sm-4">
-								<button id="filter_clear" class="btn btn-sm btn-outline-secondary lang" data-lang="c_clear">Clear</button>
+							<div class="row">
+								<div class="col-sm-8 offset-sm-4">
+									<button id="filter_clear" class="btn btn-sm btn-outline-secondary lang" data-lang="c_clear">Clear</button>
+								</div>
 							</div>
 						</div>
 					</div>
