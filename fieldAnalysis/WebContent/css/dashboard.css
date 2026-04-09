@@ -748,11 +748,8 @@ div.olControlZoom a:link {
 	color: #f8f9fa;
 	font-weight: 600;
 	font-size: 0.7rem;
-	text-transform: uppercase;
-	letter-spacing: 0.05em;
 	padding: 0.5rem 0.75rem;
 	border: none;
-	white-space: nowrap;
 	z-index: 2;
 }
 
@@ -773,10 +770,7 @@ div.olControlZoom a:link {
 	border: none;
 	vertical-align: middle;
 	color: #343a40;
-	max-width: 220px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+	word-break: break-word;
 }
 
 /* Bad/good record rows */

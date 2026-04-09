@@ -305,6 +305,7 @@ if(globals.gCanEdit) {
 	document.getElementById(elementId).innerHTML=gTab.join('');
 	gTab = [];	// Free memory
 
+
 }
 
 function generateUserTable(elementId, data, user_ident, uId, subject_type) {
@@ -480,6 +481,7 @@ if(globals.gCanEdit && subject_type !== 'user_locations') {
 	gTab[++gIdx] = '</tbody></table></div></div></div>';
 	document.getElementById(elementId).innerHTML=gTab.join('');
 	gTab = [];	// Free memory
+
 
 }
 
