@@ -278,8 +278,17 @@ export default {
 			question,
 			change;
 		
-		// beforeId may be a full URL (e.g. https://host/edit.html#collapse1) — extract just the fragment
-		var beforeIdClean = beforeId && beforeId.indexOf('#') >= 0 ? beforeId.split('#').pop() : beforeId;
+		// beforeId may be a full URL — extract the fragment, or null if no valid ID
+		var beforeIdClean;
+		if (!beforeId) {
+			beforeIdClean = null;
+		} else if (beforeId.indexOf('#') >= 0) {
+			beforeIdClean = beforeId.split('#').pop() || null;
+		} else if (beforeId.indexOf('://') >= 0 || beforeId.charAt(0) === '/') {
+			beforeIdClean = null;	// URL with no fragment — no element ID to use
+		} else {
+			beforeIdClean = beforeId;
+		}
 		$beforeElement = beforeIdClean ? $("#" + beforeIdClean) : $();
 		seq = 0;
 		beforeItemIndex = 0;

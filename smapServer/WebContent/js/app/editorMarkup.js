@@ -953,12 +953,12 @@ export default {
 	function refreshChoiceListView() {
 		var h = [],
 			survey = globals.model.survey,
-			optionLists = survey.optionLists,
+			optionLists = survey && survey.optionLists,
 			idx = -1,
 			name,
 			nameArray = [],
 			i;
-		
+
 		/*
 		 * Process the choice lists in sequential order
 		 */
