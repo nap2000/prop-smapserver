@@ -744,6 +744,38 @@
 							</div>
 
 							<div class="card mb-3">
+								<div class="card-header lang" data-lang="u_sharepoint"></div>
+								<div class="card-body">
+									<div class="form-group row">
+										<label for="sp_url" data-lang="u_sp_url" class="lang col-sm-4 control-label"></label>
+										<div class="col-sm-6">
+											<input type="text" id="sp_url" class="form-control" placeholder="https://sharepoint.example.org">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label for="sp_client_id" data-lang="u_sp_client_id" class="lang col-sm-4 control-label"></label>
+										<div class="col-sm-6">
+											<input type="text" id="sp_client_id" class="form-control" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label for="sp_realm" data-lang="u_sp_realm" class="lang col-sm-4 control-label"></label>
+										<div class="col-sm-6 d-flex gap-2">
+											<input type="text" id="sp_realm" class="form-control" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+											<button type="button" id="discoverRealm" class="btn btn-secondary lang" data-lang="u_sp_discover"></button>
+										</div>
+									</div>
+									<div class="form-group row mt-2">
+										<label for="sp_cert_pem" data-lang="u_sp_cert_pem" class="lang col-sm-4 control-label"></label>
+										<div class="col-sm-6">
+											<textarea id="sp_cert_pem" class="form-control" rows="6"
+												data-lang-ph="u_sp_cert_pem_ph" placeholder="Paste PKCS8 private key here"></textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="card mb-3">
 								<div class="card-header lang" data-lang="c_style"></div>
 								<div class="card-body">
 									<p class="lang" data-lang="u_css_info"></p>

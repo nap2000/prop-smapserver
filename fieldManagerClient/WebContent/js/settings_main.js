@@ -121,6 +121,30 @@ const moment = window.moment;
 			writeServerDetails();
 		});
 
+		// Discover SharePoint realm from server URL
+		$('#discoverRealm').click(function() {
+			var url = $('#sp_url').val().trim();
+			if(!url) {
+				alert(localise.set["u_sp_url"] + " required");
+				return;
+			}
+			addHourglass();
+			$.ajax({
+				url: "/surveyKPI/server/sharepoint/realm",
+				data: { url: url },
+				dataType: 'json',
+				cache: false,
+				success: function(data) {
+					removeHourglass();
+					$('#sp_realm').val(data.realm);
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+					alert(localise.set["c_error"] + ": " + err);
+				}
+			});
+		});
+
 		/*
 		 * Set focus to first element on opening modals
 		 */
@@ -758,6 +782,11 @@ const moment = window.moment;
 		$('#s_sec_mgr_del').prop('checked', data.sec_mgr_del);
 		gCssFile = data.css;
 
+		$('#sp_url').val(data.sharepoint_url);
+		$('#sp_client_id').val(data.sharepoint_client_id);
+		$('#sp_realm').val(data.sharepoint_realm);
+		$('#sp_cert_pem').val(data.sharepoint_cert_pem);
+
 		emailServerTypeChanged();
 	}
 
@@ -787,7 +816,11 @@ const moment = window.moment;
 				api_max_records: $('#s_api_max_records').val(),
 				password_strength: $('#s_p_strength').val(),
 				sec_mgr_del: $('#s_sec_mgr_del').prop('checked'),
-				css: $('#cssSelect').val()
+				css: $('#cssSelect').val(),
+				sharepoint_url: $('#sp_url').val(),
+				sharepoint_client_id: $('#sp_client_id').val(),
+				sharepoint_realm: $('#sp_realm').val(),
+				sharepoint_cert_pem: $('#sp_cert_pem').val()
 			};
 
 		var serverString = JSON.stringify(server);
