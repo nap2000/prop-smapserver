@@ -22,7 +22,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-import { addHourglass, bundleSelectChanged, checkLoggedIn, edit_notification, getEligibleUsers, getLoggedInUser, getNotificationTypes, handleLogout, htmlEncode, loadSurveys, populateTaskGroupList, removeHourglass, saveCurrentProject, saveDocument, saveEmail, saveEscalate, saveSMS, saveWebhook, setupNotificationDialog, setupUserProfile, surveyChangedNotification, taskGroupChanged } from "common";
+import { addHourglass, bundleSelectChanged, checkLoggedIn, edit_notification, getEligibleUsers, getLoggedInUser, getNotificationTypes, handleLogout, htmlEncode, loadSurveys, populateTaskGroupList, removeHourglass, saveCurrentProject, saveDocument, saveEmail, saveEscalate, saveSMS, saveSharePointList, saveWebhook, setupNotificationDialog, setupUserProfile, surveyChangedNotification, taskGroupChanged } from "common";
 
 const $ = window.$;
 const localise = window.localise;
@@ -157,6 +157,8 @@ $(document).ready(function() {
 			var nEmail = saveEmail();	// Save email and escalate detail settings
 			notification = saveEscalate();
 			notification.notifyDetails = Object.assign(nEmail.notifyDetails, notification.notifyDetails);
+		} else if(target === "sharepoint_list") {
+			notification = saveSharePointList();
 		}
 
 		if(!notification.error) {
@@ -562,6 +564,12 @@ $(document).ready(function() {
 				}
 			} else if(data[i].target === "webhook" && data[i].notifyDetails) {
 				h[++idx] = htmlEncode(data[i].notifyDetails.callback_url);
+			} else if(data[i].target === "sharepoint_list" && data[i].notifyDetails) {
+				var spNd = data[i].notifyDetails;
+				h[++idx] = htmlEncode(spNd.sp_list_title || '');
+				if(spNd.sp_operation) {
+					h[++idx] = ' (' + htmlEncode(spNd.sp_operation) + ')';
+				}
 			} else if(data[i].target === "escalate"){
 				h[++idx] = htmlEncode();
 				var msg = '';

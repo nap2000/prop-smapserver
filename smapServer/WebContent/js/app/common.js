@@ -5131,6 +5131,22 @@ function edit_notification(edit, idx, inconsole) {
 				$('#conversation_text').val(notification.notifyDetails.content);
 			} else if (notification.target == "webhook") {
 				$('#callback_url').val(notification.notifyDetails.callback_url);
+			} else if (notification.target == "sharepoint_list") {
+				var nd = notification.notifyDetails;
+				$('#sp_list_name').val(nd.sp_list_title);
+				$('input[name="sp_operation"][value="' + (nd.sp_operation || 'insert') + '"]').prop('checked', true);
+				spOperationChanged(nd.sp_operation);
+				if(nd.sp_list_title) {
+					loadSpColumns(nd.sp_list_title, function() {
+						spPopulateMatchSelects(nd.sp_match_column, nd.sp_match_field);
+						$('#sp_column_map_body').empty();
+						if(nd.sp_column_map) {
+							nd.sp_column_map.forEach(function(row) {
+								spAddColumnMapRow(row.sp_column, row.smap_field);
+							});
+						}
+					});
+				}
 			}
 		}
 		if (!inconsole) {
@@ -5186,8 +5202,11 @@ function bundleSelectChanged() {
 		$('.notbundle').show();
 	}
 }
+// Loaded SharePoint columns for the currently configured list
+var gSpColumns = [];
+
 function setTargetDependencies(target) {
-	$('.sms_options, .webhook_options, .email_options, .escalate_options, .conv_options').hide();
+	$('.sms_options, .webhook_options, .email_options, .escalate_options, .conv_options, .sharepoint_options').hide();
 	if(target === "email") {
 		$('.email_options').show();
 		initMsgNotPopup(target);
@@ -5200,6 +5219,8 @@ function setTargetDependencies(target) {
 	} else if(target  === "conversation") {
 		$('.conv_options').show();
 		initMsgNotPopup(target);
+	} else if(target === "sharepoint_list") {
+		$('.sharepoint_options').show();
 	}
 }
 
@@ -5424,6 +5445,8 @@ function setupNotificationDialog() {
 		$('#name').focus();
 	});
 
+	setupSharePointNotification();
+
 	/*
 	 * Functions for forwarding
 	 */
@@ -5626,6 +5649,170 @@ function saveEscalate() {
 		notification.notifyDetails.survey_case = $('#survey_case').val();
 		notification.notifyDetails.assign_question = $('#assign_question').val();
 
+	} else {
+		notification.error = true;
+	}
+
+	return notification;
+}
+
+/*
+ * SharePoint list notification helpers
+ */
+
+// Fetch columns for a SP list, store in gSpColumns, repopulate all column selects, call callback when done
+function loadSpColumns(listTitle, callback) {
+	addHourglass();
+	$.ajax({
+		url: "/surveyKPI/server/sharepoint/lists/" + encodeURIComponent(listTitle) + "/fields",
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			removeHourglass();
+			gSpColumns = data || [];
+			spRefreshColumnSelects();
+			if(typeof callback === 'function') callback();
+		},
+		error: function(xhr, textStatus, err) {
+			removeHourglass();
+			alert(localise.set["c_error"] + ": " + err);
+		}
+	});
+}
+
+// Rebuild every .sp_col_select dropdown from gSpColumns
+function spRefreshColumnSelects() {
+	$('.sp_col_select').each(function() {
+		var current = $(this).val();
+		$(this).empty();
+		gSpColumns.forEach(function(f) {
+			$('<option>').val(f.internalName).text(f.displayName).appendTo($('.sp_col_select'));
+		});
+		if(current) $(this).val(current);
+	});
+}
+
+// Populate the survey field selects from the cached question list
+function spRefreshFieldSelects() {
+	var sId = $('#survey').val() || 0;
+	var language = "none";
+	var qList = globals.gSelector.getSurveyQuestions(sId, language) || [];
+	$('.sp_field_select').each(function() {
+		var current = $(this).val();
+		$(this).empty();
+		$('<option>').val('').text('').appendTo($(this));
+		qList.forEach(function(q) {
+			$('<option>').val(q.name).text(q.name).appendTo($('.sp_field_select'));
+		});
+		if(current) $(this).val(current);
+	});
+}
+
+// Show/hide the update-specific match fields
+function spOperationChanged(operation) {
+	if(operation === 'update') {
+		$('.sp_update_options').show();
+	} else {
+		$('.sp_update_options').hide();
+	}
+}
+
+// Set match selects to saved values after columns are loaded
+function spPopulateMatchSelects(matchCol, matchField) {
+	if(matchCol) $('#sp_match_column').val(matchCol);
+	if(matchField) $('#sp_match_field').val(matchField);
+}
+
+// Add one row to the column map table
+function spAddColumnMapRow(spValue, smapValue) {
+	var $spSelect = $('<select class="form-select form-select-sm sp_col_select">');
+	var $smapSelect = $('<select class="form-select form-select-sm sp_field_select">');
+
+	// Populate SP columns
+	gSpColumns.forEach(function(f) {
+		$('<option>').val(f.internalName).text(f.displayName).appendTo($spSelect);
+	});
+
+	// Populate survey fields
+	var sId = $('#survey').val() || 0;
+	var qList = globals.gSelector.getSurveyQuestions(sId, "none") || [];
+	$('<option>').val('').text('').appendTo($smapSelect);
+	qList.forEach(function(q) {
+		$('<option>').val(q.name).text(q.name).appendTo($smapSelect);
+	});
+
+	if(spValue)   $spSelect.val(spValue);
+	if(smapValue) $smapSelect.val(smapValue);
+
+	var $deleteBtn = $('<button type="button" class="btn btn-sm btn-danger">×</button>').click(function() {
+		$(this).closest('tr').remove();
+	});
+
+	$('<tr>')
+		.append($('<td>').append($spSelect))
+		.append($('<td>').append($smapSelect))
+		.append($('<td>').append($deleteBtn))
+		.appendTo($('#sp_column_map_body'));
+}
+
+/*
+ * Wire up SharePoint notification dialog events.
+ * Called once from setupNotificationDialog().
+ */
+function setupSharePointNotification() {
+	$('#spLoadColumns').off().click(function() {
+		var listTitle = $('#sp_list_name').val().trim();
+		if(!listTitle) {
+			alert(localise.set["u_sp_list_name"] + " required");
+			return;
+		}
+		loadSpColumns(listTitle);
+	});
+
+	$('input[name="sp_operation"]').off().change(function() {
+		spOperationChanged($(this).val());
+	});
+
+	$('#spAddRow').off().click(function() {
+		spAddColumnMapRow('', '');
+	});
+}
+
+/*
+ * Collect SharePoint list notification data from the dialog
+ */
+function saveSharePointList() {
+	var notification = {};
+	var error = false;
+
+	var listTitle = $('#sp_list_name').val().trim();
+	if(!listTitle) {
+		alert(localise.set["u_sp_list_name"] + " required");
+		error = true;
+	}
+
+	if(!error) {
+		var operation = $('input[name="sp_operation"]:checked').val() || 'insert';
+		var columnMap = [];
+		$('#sp_column_map_body tr').each(function() {
+			var spCol  = $(this).find('.sp_col_select').val();
+			var smapField = $(this).find('.sp_field_select').val();
+			if(spCol && smapField) {
+				columnMap.push({ sp_column: spCol, smap_field: smapField });
+			}
+		});
+
+		notification.target = "sharepoint_list";
+		notification.notifyDetails = {
+			sp_list_title: listTitle,
+			sp_operation: operation,
+			sp_column_map: columnMap
+		};
+
+		if(operation === 'update') {
+			notification.notifyDetails.sp_match_column = $('#sp_match_column').val();
+			notification.notifyDetails.sp_match_field  = $('#sp_match_field').val();
+		}
 	} else {
 		notification.error = true;
 	}
@@ -6698,6 +6885,7 @@ export {
 	saveSMS,
 	saveDocument,
 	saveWebhook,
+	saveSharePointList,
 	saveEscalate,
 	surveyChangedNotification,
 	bundleSelectChanged,
