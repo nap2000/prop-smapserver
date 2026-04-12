@@ -108,6 +108,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 				<li id="mediaTab" role="tab" class="nav-item"><a href="#" class="nav-link lang" data-lang="sr_res"></a></li>
 				<li id="mapTab" role="tab" class="nav-item"><a href="#" class="lang nav-link" data-lang="c_maps"></a></li>
 				<li id="locationTab" role="tab" class="nav-item"><a href="#" class="lang nav-link" data-lang="c_location"></a></li>
+				<li id="spListTab" role="tab" class="nav-item"><a href="#" class="lang nav-link" data-lang="c_sharepoint_list"></a></li>
 			</ul>
 		</div>
 		<div class="card-body">
@@ -258,6 +259,29 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 									</table>
 								</div>
 							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="resourcePanel" id="spListPanel" style="display:none;">
+					<div class="container-responsive">
+						<button type="button" id="addSpList" class="btn btn-success mb-2">
+							<span class="lang" data-lang="c_add"></span>
+						</button>
+						<div class="table-responsive mt-2">
+							<table class="table table-striped" id="sp_list_table">
+								<thead>
+									<tr>
+										<th class="lang" data-lang="u_sp_resource_name"></th>
+										<th class="lang" data-lang="u_sp_list_title"></th>
+										<th class="lang" data-lang="u_sp_refresh_mins"></th>
+										<th class="lang" data-lang="u_sp_last_sync"></th>
+										<th class="lang" data-lang="c_enabled"></th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody id="sp_list_body"></tbody>
+							</table>
 						</div>
 					</div>
 				</div>
@@ -426,6 +450,42 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close">Close</button>
 				<button id="submitLocationFile" type="button" class="btn btn-primary lang" data-lang="c_upload">Upload</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Popup to add/edit a SharePoint list mapping -->
+<div id="spListEditPopup" class="modal fade" tabindex="-1" aria-labelledby="spListEditLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 id="spListEditLabel" class="modal-title lang" data-lang="c_sharepoint_list"></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="spListEditForm">
+					<div class="mb-3">
+						<label class="form-label lang" data-lang="u_sp_resource_name" for="sp_smap_name"></label>
+						<input type="text" id="sp_smap_name" class="form-control" maxlength="64" required>
+					</div>
+					<div class="mb-3">
+						<label class="form-label lang" data-lang="u_sp_list_title" for="sp_list_title"></label>
+						<input type="text" id="sp_list_title" class="form-control" maxlength="256" required>
+					</div>
+					<div class="mb-3">
+						<label class="form-label lang" data-lang="u_sp_refresh_mins" for="sp_refresh_minutes"></label>
+						<input type="number" id="sp_refresh_minutes" class="form-control" min="1" value="60" required>
+					</div>
+					<div class="mb-3 form-check">
+						<input type="checkbox" id="sp_enabled" class="form-check-input" checked>
+						<label class="form-check-label lang" data-lang="c_enabled" for="sp_enabled"></label>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_close"></button>
+				<button id="saveSpList" type="button" class="btn btn-primary lang" data-lang="c_save"></button>
 			</div>
 		</div>
 	</div>

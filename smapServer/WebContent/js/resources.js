@@ -241,6 +241,24 @@ $(function() {
 		getMaps();
 
 		/*
+         * Set up SharePoint lists tab
+         */
+		$('#spListTab a').click(function(e) {
+			e.preventDefault();
+			window.bsTabShow(this);
+			$('.resourcePanel').hide();
+			$('#spListPanel').show();
+			getSpListMaps();
+		});
+
+		$('#addSpList').click(function() {
+			edit_sp_list();
+			window.bsModalShow('#spListEditPopup');
+		});
+
+		$('#saveSpList').click(function() { saveSpList(); });
+
+		/*
          * Set up location tabs
          */
 		$('#addNfc').click(function(){
@@ -261,7 +279,7 @@ $(function() {
 		 * Do it here as menus will have been set automatically according to security privileges
 		 */
 		if(gIsSurvey) {
-			$('#mapTab, #locationTab').hide();
+			$('#mapTab, #locationTab, #spListTab').hide();
 			$('#m_monitor, #m_tm, #m_user, #m_settings, #m_logs').hide();
 			$('#m_form').show();
 			$('#page_title').text(localise.set["sr_sm"]);
@@ -572,6 +590,142 @@ $(function() {
 
 			$element.html(h.join(""));
 		}
+	}
+
+	// -------------------------------------------------------------------------
+	// SharePoint list mappings
+	// -------------------------------------------------------------------------
+
+	let gSpListMaps = [];
+	let gSpListEditId = -1;
+
+	function getSpListMaps() {
+		addHourglass();
+		$.ajax({
+			url: '/surveyKPI/sharepoint/listmaps',
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				gSpListMaps = data;
+				updateSpListTable(data);
+			},
+			error: function(xhr) {
+				removeHourglass();
+				if(xhr.readyState !== 0 && xhr.status !== 0) {
+					console.log("Error getting SharePoint list maps: " + xhr.responseText);
+				}
+			}
+		});
+	}
+
+	function updateSpListTable(data) {
+		let h = [], idx = -1;
+		for(let i = 0; i < data.length; i++) {
+			let m = data[i];
+			h[++idx] = '<tr>';
+			h[++idx] = '<td>' + htmlEncode(m.smap_name) + '</td>';
+			h[++idx] = '<td>' + htmlEncode(m.list_title) + '</td>';
+			h[++idx] = '<td>' + htmlEncode(String(m.refresh_minutes)) + '</td>';
+			h[++idx] = '<td>' + (m.last_sync ? htmlEncode(m.last_sync) : '-') + '</td>';
+			h[++idx] = '<td>' + (m.enabled ? '<i class="fas fa-check text-success"></i>' : '') + '</td>';
+			h[++idx] = '<td class="text-nowrap">';
+			h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-info btn-sm mx-1 sp_edit_map"><i class="far fa-edit"></i></button>';
+			h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-primary btn-sm mx-1 sp_sync_map" title="' + localise.set["u_sp_sync_now"] + '"><i class="fas fa-sync-alt"></i></button>';
+			h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-danger btn-sm mx-1 sp_del_map"><i class="fas fa-trash-alt"></i></button>';
+			h[++idx] = '</td>';
+			h[++idx] = '</tr>';
+		}
+		$('#sp_list_body').html(h.join(''));
+
+		$('.sp_edit_map').click(function() {
+			edit_sp_list($(this).data('idx'));
+			window.bsModalShow('#spListEditPopup');
+		});
+		$('.sp_sync_map').click(function() {
+			sync_sp_list(gSpListMaps[$(this).data('idx')].id);
+		});
+		$('.sp_del_map').click(function() {
+			delete_sp_list(gSpListMaps[$(this).data('idx')].id);
+		});
+	}
+
+	function edit_sp_list(idx) {
+		document.getElementById('spListEditForm').reset();
+		if(typeof idx !== 'undefined') {
+			let m = gSpListMaps[idx];
+			$('#sp_smap_name').val(m.smap_name);
+			$('#sp_list_title').val(m.list_title);
+			$('#sp_refresh_minutes').val(m.refresh_minutes);
+			$('#sp_enabled').prop('checked', m.enabled);
+			gSpListEditId = m.id;
+		} else {
+			$('#sp_refresh_minutes').val(60);
+			$('#sp_enabled').prop('checked', true);
+			gSpListEditId = -1;
+		}
+	}
+
+	function saveSpList() {
+		let m = {
+			id: gSpListEditId,
+			smap_name: $('#sp_smap_name').val().trim(),
+			list_title: $('#sp_list_title').val().trim(),
+			refresh_minutes: parseInt($('#sp_refresh_minutes').val(), 10) || 60,
+			enabled: $('#sp_enabled').prop('checked')
+		};
+		if(!m.smap_name || !m.list_title) {
+			return;
+		}
+		let isNew = gSpListEditId < 0;
+		addHourglass();
+		$.ajax({
+			type: isNew ? 'POST' : 'PUT',
+			url: '/surveyKPI/sharepoint/listmaps' + (isNew ? '' : '/' + gSpListEditId),
+			contentType: 'application/json',
+			data: JSON.stringify(m),
+			success: function() {
+				removeHourglass();
+				window.bsModalHide('#spListEditPopup');
+				getSpListMaps();
+			},
+			error: function(xhr) {
+				removeHourglass();
+				alert(localise.set["msg_err_save"] + " " + xhr.responseText);
+			}
+		});
+	}
+
+	function delete_sp_list(id) {
+		addHourglass();
+		$.ajax({
+			type: 'DELETE',
+			url: '/surveyKPI/sharepoint/listmaps/' + id,
+			success: function() {
+				removeHourglass();
+				getSpListMaps();
+			},
+			error: function(xhr) {
+				removeHourglass();
+				alert(localise.set["msg_err_del"] + " " + xhr.responseText);
+			}
+		});
+	}
+
+	function sync_sp_list(id) {
+		addHourglass();
+		$.ajax({
+			type: 'POST',
+			url: '/surveyKPI/sharepoint/listmaps/' + id + '/sync',
+			success: function() {
+				removeHourglass();
+				getSpListMaps();
+			},
+			error: function(xhr) {
+				removeHourglass();
+				alert(xhr.responseText || 'Sync failed');
+			}
+		});
 	}
 
 	/*

@@ -1666,5 +1666,12 @@ define({
 
     // sms
     "sms_their_q": "Question for calling number",
-    "sms_conv_q": "Conversation Question"
+    "sms_conv_q": "Conversation Question",
+
+    // sharepoint list mappings (shared resources tab)
+    "u_sp_resource_name": "Resource Name",
+    "u_sp_list_title": "SharePoint List Title",
+    "u_sp_refresh_mins": "Refresh (mins)",
+    "u_sp_last_sync": "Last Sync",
+    "u_sp_sync_now": "Sync Now"
 });
