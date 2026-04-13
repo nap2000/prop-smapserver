@@ -1668,6 +1668,14 @@ define({
     "sms_their_q": "Question for calling number",
     "sms_conv_q": "Conversation Question",
 
+    // sharepoint authentication
+    "u_sp_auth_type": "Authentication Type",
+    "u_sp_auth_s2s": "S2S High-Trust (on-premises)",
+    "u_sp_auth_ntlm": "Windows (NTLM)",
+    "u_sp_username": "Username",
+    "u_sp_password": "Password",
+    "u_sp_domain": "Windows Domain",
+
     // sharepoint list mappings (shared resources tab)
     "u_sp_resource_name": "Resource Name",
     "u_sp_list_title": "SharePoint List Title",
