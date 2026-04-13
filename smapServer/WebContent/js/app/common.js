@@ -5133,20 +5133,21 @@ function edit_notification(edit, idx, inconsole) {
 				$('#callback_url').val(notification.notifyDetails.callback_url);
 			} else if (notification.target == "sharepoint_list") {
 				var nd = notification.notifyDetails;
-				$('#sp_list_name').val(nd.sp_list_title);
 				$('input[name="sp_operation"][value="' + (nd.sp_operation || 'insert') + '"]').prop('checked', true);
 				spOperationChanged(nd.sp_operation);
-				if(nd.sp_list_title) {
-					loadSpColumns(nd.sp_list_title, function() {
-						spPopulateMatchSelects(nd.sp_match_column, nd.sp_match_field);
-						$('#sp_column_map_body').empty();
-						if(nd.sp_column_map) {
-							nd.sp_column_map.forEach(function(row) {
-								spAddColumnMapRow(row.sp_column, row.smap_field);
-							});
-						}
-					});
-				}
+				loadSpListNames(nd.sp_list_title, function() {
+					if(nd.sp_list_title) {
+						loadSpColumns(nd.sp_list_title, function() {
+							spPopulateMatchSelects(nd.sp_match_column, nd.sp_match_field);
+							$('#sp_column_map_body').empty();
+							if(nd.sp_column_map) {
+								nd.sp_column_map.forEach(function(row) {
+									spAddColumnMapRow(row.sp_column, row.smap_field);
+								});
+							}
+						});
+					}
+				});
 			}
 		}
 		if (!inconsole) {
@@ -5221,6 +5222,7 @@ function setTargetDependencies(target) {
 		initMsgNotPopup(target);
 	} else if(target === "sharepoint_list") {
 		$('.sharepoint_options').show();
+		loadSpListNames();
 	}
 }
 
@@ -5756,17 +5758,33 @@ function spAddColumnMapRow(spValue, smapValue) {
 }
 
 /*
+ * Populate #sp_list_name select with SharePoint list mappings.
+ * Optionally pre-selects selectedTitle and calls callback after load.
+ */
+function loadSpListNames(selectedTitle, callback) {
+	$.ajax({
+		url: '/surveyKPI/sharepoint/listmaps',
+		type: 'GET',
+		success: function(data) {
+			var $sel = $('#sp_list_name').empty();
+			$sel.append($('<option>').val('').text('-- select --'));
+			(data || []).forEach(function(m) {
+				$sel.append($('<option>').val(m.list_title).text(m.smap_name));
+			});
+			if(selectedTitle) $sel.val(selectedTitle);
+			if(callback) callback();
+		}
+	});
+}
+
+/*
  * Wire up SharePoint notification dialog events.
  * Called once from setupNotificationDialog().
  */
 function setupSharePointNotification() {
-	$('#spLoadColumns').off().click(function() {
-		var listTitle = $('#sp_list_name').val().trim();
-		if(!listTitle) {
-			alert(localise.set["u_sp_list_name"] + " required");
-			return;
-		}
-		loadSpColumns(listTitle);
+	$('#sp_list_name').off('change').change(function() {
+		var listTitle = $(this).val();
+		if(listTitle) loadSpColumns(listTitle);
 	});
 
 	$('input[name="sp_operation"]').off().change(function() {
