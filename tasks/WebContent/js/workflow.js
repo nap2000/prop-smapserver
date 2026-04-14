@@ -221,6 +221,8 @@ function makeDraggable(el) {
 			el.style.cursor = el.dataset.role === "decision" ? "pointer" : "grab";
 			document.removeEventListener("mousemove", onMove);
 			document.removeEventListener("mouseup",   onUp);
+			// Auto-persist so refresh / add-step / delete all restore dragged positions
+			saveLayout();
 		}
 
 		document.addEventListener("mousemove", onMove);
@@ -816,9 +818,8 @@ localise.initLocale(gUserLocale).then(function() {
 		getLoggedInUser(loadWorkflow, false, false, undefined);
 
 		// Navbar actions
-		$("#m_refresh").on("click",       function(e) { e.preventDefault(); loadWorkflow(); });
-		$("#m_save_layout").on("click",   function(e) { e.preventDefault(); saveLayout(); });
-		$("#m_reset_layout").on("click",  function(e) { e.preventDefault(); resetLayout(); });
+		$("#m_refresh").on("click",      function(e) { e.preventDefault(); loadWorkflow(); });
+		$("#m_reset_layout").on("click", function(e) { e.preventDefault(); resetLayout(); });
 
 		// Highlight dropdown
 		$(document).on("click", "[data-highlight]", function(e) {
