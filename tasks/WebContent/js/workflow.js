@@ -348,7 +348,7 @@ function renderWorkflow(data) {
 
 function loadWorkflow() {
 	addHourglass();
-	fetch("/surveyKPI/workflow/items", { credentials: "include" })
+	fetch("/surveyKPI/workflow/items", { credentials: "include", cache: "no-store" })
 		.then(function(resp) { return resp.text(); })
 		.then(function(text) {
 			if (!handleLogout(text)) return;
