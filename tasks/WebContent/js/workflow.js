@@ -116,15 +116,25 @@ function nodeCard(x, y, item) {
 	header.innerHTML = `<i class="${icon}" style="color:${isDecision ? "#fd7e14" : "#6c757d"};font-size:13px;"></i>`
 		+ `<span style="font-size:12px;color:${isDecision ? "#854d0e" : "#6c757d"};font-weight:600;">${label}</span>`;
 
-	// Edit button for editable node types
-	if (isEditable) {
+	// Edit button for editable node types and decision nodes
+	if (isEditable || isDecision) {
 		const editBtn = document.createElement("button");
 		editBtn.className = "wf-node-edit-btn";
 		editBtn.title = "Edit";
 		editBtn.innerHTML = '<i class="fas fa-pencil-alt"></i>';
 		editBtn.addEventListener("click", function(e) {
 			e.stopPropagation();
-			openEditDrawer(div);
+			if (isDecision) {
+				// Open the downstream target's drawer
+				const link = (gData && gData.links || []).find(function(l) { return l.from === item.id; });
+				if (!link) return;
+				const targetEl = document.querySelector(`#wf-nodes [data-id="${link.to}"]`);
+				if (targetEl && EDITABLE_TYPES.includes(targetEl.dataset.type)) {
+					openEditDrawer(targetEl);
+				}
+			} else {
+				openEditDrawer(div);
+			}
 		});
 		header.appendChild(editBtn);
 	}
@@ -205,10 +215,12 @@ function makeDraggable(el) {
 		const startPos = gPositions[id];
 		const origX    = startPos ? startPos.x : 0;
 		const origY    = startPos ? startPos.y : 0;
+		let   didDrag  = false;
 
 		el.style.cursor = "grabbing";
 
 		function onMove(e) {
+			didDrag = true;
 			const newX = Math.max(0, origX + e.clientX - startX);
 			const newY = Math.max(0, origY + e.clientY - startY);
 			el.style.left = newX + "px";
@@ -218,11 +230,19 @@ function makeDraggable(el) {
 		}
 
 		function onUp() {
-			el.style.cursor = el.dataset.role === "decision" ? "pointer" : "grab";
+			el.style.cursor = "grab";
 			document.removeEventListener("mousemove", onMove);
 			document.removeEventListener("mouseup",   onUp);
-			// Auto-persist so refresh / add-step / delete all restore dragged positions
-			saveLayout();
+			if (didDrag) {
+				// Suppress the click event that fires after mouseup so that
+				// a drag on a decision node never opens the edit drawer.
+				el.addEventListener("click", function suppressClick(e) {
+					e.stopPropagation();
+					el.removeEventListener("click", suppressClick, true);
+				}, true);
+				// Auto-persist so refresh / add-step / delete all restore dragged positions
+				saveLayout();
+			}
 		}
 
 		document.addEventListener("mousemove", onMove);
@@ -320,20 +340,6 @@ function renderWorkflow(data) {
 		const card = nodeCard(pos.x, pos.y, item);
 		makeDraggable(card);
 		nodesEl.appendChild(card);
-	});
-
-	// Decision nodes: clicking opens the downstream target's edit drawer
-	document.querySelectorAll("#wf-nodes [data-role='decision']").forEach(function(el) {
-		el.addEventListener("click", function(e) {
-			if (e.target.closest(".wf-node-edit-btn")) return;
-			const decId = el.dataset.id;
-			const link  = (gData.links || []).find(function(l) { return l.from === decId; });
-			if (!link) return;
-			const targetEl = document.querySelector(`#wf-nodes [data-id="${link.to}"]`);
-			if (targetEl && EDITABLE_TYPES.includes(targetEl.dataset.type)) {
-				openEditDrawer(targetEl);
-			}
-		});
 	});
 
 	drawArrows();
