@@ -23,6 +23,116 @@
     <script src="/js/libs/moment-with-locales.2.24.0.min.js"></script>
     <script src="/app/tasks/build/js/workflow.bundle.js"></script>
 
+
+<style>
+/* ---- Edit drawer ---- */
+#wf-drawer {
+    position: fixed;
+    top: 56px;
+    right: -380px;
+    width: 360px;
+    height: calc(100vh - 56px);
+    background: #fff;
+    box-shadow: -2px 0 16px rgba(0,0,0,0.18);
+    z-index: 200;
+    transition: right 0.22s ease;
+    display: flex;
+    flex-direction: column;
+    font-family: sans-serif;
+    font-size: 13px;
+}
+#wf-drawer.open { right: 0; }
+
+#wf-drawer-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px 10px;
+    border-bottom: 1px solid #dee2e6;
+    background: #f8f9fa;
+    flex-shrink: 0;
+}
+#wf-drawer-title { font-weight: 700; font-size: 14px; color: #212529; flex: 1; }
+#wf-drawer-close {
+    background: none; border: none; font-size: 18px; line-height: 1;
+    color: #6c757d; cursor: pointer; padding: 0 4px;
+}
+#wf-drawer-close:hover { color: #212529; }
+
+#wf-drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px;
+}
+
+.wf-field { margin-bottom: 12px; }
+.wf-field label { display: block; font-weight: 600; color: #495057; margin-bottom: 4px; font-size: 12px; }
+.wf-field input[type="text"],
+.wf-field textarea,
+.wf-field select {
+    width: 100%; padding: 6px 8px; border: 1px solid #ced4da;
+    border-radius: 4px; font-size: 13px; box-sizing: border-box;
+}
+.wf-field textarea { min-height: 72px; resize: vertical; }
+.wf-field-inline { display: flex; align-items: center; gap: 10px; }
+.wf-field-inline label { margin-bottom: 0; }
+
+/* Condition section — amber, matching decision card */
+#wf-conditions {
+    margin-top: 4px;
+    border-top: 2px solid #fd7e14;
+    background: #fff3cd;
+    padding: 10px 14px 14px;
+    flex-shrink: 0;
+}
+#wf-conditions-title {
+    font-weight: 700; font-size: 12px; color: #854d0e;
+    display: flex; align-items: center; gap: 6px; margin-bottom: 10px;
+}
+.wf-cond-row { margin-bottom: 10px; }
+.wf-cond-from { display: block; font-size: 11px; color: #6c757d; margin-bottom: 3px; font-style: italic; }
+.wf-cond-input { width: 100%; padding: 5px 8px; border: 1px solid #ffc107; border-radius: 4px; font-size: 12px; background: #fff; box-sizing: border-box; }
+
+#wf-drawer-footer {
+    display: flex;
+    gap: 8px;
+    padding: 10px 14px;
+    border-top: 1px solid #dee2e6;
+    background: #f8f9fa;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+#wf-drawer-footer .btn { font-size: 13px; }
+#wf-drawer-advanced { margin-left: auto; font-size: 12px; }
+
+/* Edit button on node cards */
+.wf-node-edit-btn {
+    background: none; border: none; padding: 2px 5px; cursor: pointer;
+    color: #6c757d; font-size: 11px; line-height: 1; border-radius: 3px;
+    margin-left: auto;
+}
+.wf-node-edit-btn:hover { color: #0d6efd; background: #e9ecef; }
+
+/* "+" add button — floating on canvas */
+#wf-add-btn {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: #0d6efd;
+    color: #fff;
+    border: none;
+    font-size: 24px;
+    line-height: 48px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(13,110,253,0.4);
+    z-index: 150;
+    transition: background 0.15s;
+}
+#wf-add-btn:hover { background: #0b5ed7; }
+</style>
 </head>
 <body>
 
@@ -99,6 +209,150 @@
     <svg id="wf-arrows" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"></svg>
     <div id="wf-nodes"></div>
 </div>
+
+<!-- Edit drawer -->
+<div id="wf-drawer">
+    <div id="wf-drawer-header">
+        <i id="wf-drawer-icon" class="fas fa-circle" style="color:#6c757d;font-size:14px;"></i>
+        <span id="wf-drawer-title">Edit</span>
+        <button id="wf-drawer-close" title="Close">×</button>
+    </div>
+    <div id="wf-drawer-body"></div>
+    <div id="wf-conditions">
+        <div id="wf-conditions-title">
+            <i class="fas fa-filter"></i> <span class="lang" data-lang="c_decision">Condition</span>
+        </div>
+        <div id="wf-conditions-list"></div>
+    </div>
+    <div id="wf-drawer-footer">
+        <button id="wf-drawer-save" class="btn btn-primary btn-sm">
+            <span class="lang" data-lang="c_save">Save</span>
+        </button>
+        <button id="wf-drawer-delete" class="btn btn-outline-danger btn-sm">
+            <i class="fas fa-trash-alt"></i> <span class="lang" data-lang="c_delete">Delete</span>
+        </button>
+        <a id="wf-drawer-advanced" href="#" target="_blank" class="btn btn-link btn-sm">
+            Advanced <i class="fas fa-external-link-alt" style="font-size:10px;"></i>
+        </a>
+    </div>
+</div>
+
+<!-- Add Step modal -->
+<div class="modal fade" id="wf-add-modal" tabindex="-1" aria-labelledby="wf-add-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="wf-add-modal-title">
+                    <span class="lang" data-lang="m_workflow">Add Step</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Type selector -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" style="font-size:12px;">Action type</label>
+                    <div class="d-flex gap-2 flex-wrap" id="wf-add-type-btns">
+                        <button class="btn btn-sm btn-outline-success wf-type-btn active" data-type="task">
+                            <i class="fas fa-file-alt"></i> Task
+                        </button>
+                        <button class="btn btn-sm btn-outline-warning wf-type-btn" data-type="escalate">
+                            <i class="fas fa-file-alt"></i> Case
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger wf-type-btn" data-type="email">
+                            <i class="fas fa-envelope"></i> Email
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary wf-type-btn" data-type="sms">
+                            <i class="fas fa-comment-alt"></i> SMS
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Source survey -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" style="font-size:12px;">Trigger (source survey)</label>
+                    <select id="wf-add-source" class="form-select form-select-sm">
+                        <option value="">Loading surveys…</option>
+                    </select>
+                </div>
+
+                <!-- Label -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" style="font-size:12px;">Label</label>
+                    <input id="wf-add-name" type="text" class="form-control form-control-sm" placeholder="Step name">
+                </div>
+
+                <!-- Assignee (task / case) -->
+                <div class="mb-3" id="wf-add-assignee-row">
+                    <label class="form-label fw-semibold" style="font-size:12px;">Assign to</label>
+                    <input id="wf-add-assignee" type="text" class="form-control form-control-sm"
+                           placeholder="_submitter, _data, or email address">
+                    <div class="form-text">Use _submitter (person who submitted) or _data (from a form question)</div>
+                </div>
+
+                <!-- Email fields -->
+                <div id="wf-add-email-rows" style="display:none;">
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold" style="font-size:12px;">To (emails)</label>
+                        <input id="wf-add-email-to" type="text" class="form-control form-control-sm" placeholder="comma-separated">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold" style="font-size:12px;">Subject</label>
+                        <input id="wf-add-email-subj" type="text" class="form-control form-control-sm">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold" style="font-size:12px;">Message</label>
+                        <textarea id="wf-add-email-content" class="form-control form-control-sm" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <!-- SMS fields -->
+                <div id="wf-add-sms-rows" style="display:none;">
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold" style="font-size:12px;">To (phone number)</label>
+                        <input id="wf-add-sms-to" type="text" class="form-control form-control-sm">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold" style="font-size:12px;">Message</label>
+                        <textarea id="wf-add-sms-content" class="form-control form-control-sm" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <!-- Condition -->
+                <div class="mb-1">
+                    <label class="form-label fw-semibold" style="font-size:12px;">Condition (optional)</label>
+                    <input id="wf-add-filter" type="text" class="form-control form-control-sm"
+                           placeholder="e.g. ${status} = 'urgent'">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary btn-sm" id="wf-add-submit">Create Step</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete confirm modal -->
+<div class="modal fade" id="wf-delete-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h6 class="modal-title text-danger"><i class="fas fa-exclamation-triangle"></i> Delete step</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body pt-2">
+                <p id="wf-delete-msg" style="font-size:13px;"></p>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger btn-sm" id="wf-delete-confirm">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Add button -->
+<button id="wf-add-btn" title="Add step">+</button>
 
 </body>
 </html>
