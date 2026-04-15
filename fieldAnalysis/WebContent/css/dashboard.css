@@ -735,7 +735,8 @@ div.olControlZoom a:link {
 
 /* The table itself */
 .dt-table {
-	width: 100%;
+	width: max-content;
+	min-width: 100%;
 	border-collapse: collapse;
 	table-layout: auto;
 }
@@ -750,6 +751,7 @@ div.olControlZoom a:link {
 	font-size: 0.7rem;
 	padding: 0.5rem 0.75rem;
 	border: none;
+	white-space: nowrap;
 	z-index: 2;
 }
 
@@ -770,7 +772,9 @@ div.olControlZoom a:link {
 	border: none;
 	vertical-align: middle;
 	color: #343a40;
+	max-width: 400px;
 	word-break: break-word;
+	white-space: normal;
 }
 
 /* Bad/good record rows */
@@ -849,4 +853,8 @@ div.olControlZoom a:link {
 @media print {
 	.noPrint { display: none; }
 	* { float: none !important; }
+}
+
+.r_description {
+	padding-left: 1rem;
 }
