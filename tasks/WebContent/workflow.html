@@ -105,6 +105,9 @@
 #wf-drawer-footer .btn { font-size: 13px; }
 #wf-drawer-advanced { margin-left: auto; font-size: 12px; }
 
+/* Selected node highlight (trigger for Add Step) */
+.wf-selected { outline: 2px solid #f0a500 !important; outline-offset: 2px; }
+
 /* Edit button on node cards */
 .wf-node-edit-btn {
     background: none; border: none; padding: 2px 5px; cursor: pointer;
@@ -266,10 +269,16 @@
                     </div>
                 </div>
 
-                <!-- Source survey -->
+                <!-- Trigger (read-only, from selected canvas node) -->
                 <div class="mb-3">
-                    <label class="form-label fw-semibold" style="font-size:12px;">Trigger (source survey)</label>
-                    <select id="wf-add-source" class="form-select form-select-sm">
+                    <label class="form-label fw-semibold" style="font-size:12px;">Trigger</label>
+                    <div id="wf-add-trigger-name" class="form-control-plaintext fw-bold" style="font-size:13px;"></div>
+                </div>
+
+                <!-- Target survey (task type only) -->
+                <div class="mb-3" id="wf-add-target-row" style="display:none;">
+                    <label class="form-label fw-semibold" style="font-size:12px;">Task survey</label>
+                    <select id="wf-add-target" class="form-select form-select-sm">
                         <option value="">Loading surveys…</option>
                     </select>
                 </div>
@@ -314,6 +323,12 @@
                         <label class="form-label fw-semibold" style="font-size:12px;">Message</label>
                         <textarea id="wf-add-sms-content" class="form-control form-control-sm" rows="3"></textarea>
                     </div>
+                </div>
+
+                <!-- Bundle (non-task types only) -->
+                <div class="mb-3 form-check" id="wf-add-bundle-row" style="display:none;">
+                    <input type="checkbox" class="form-check-input" id="wf-add-bundle">
+                    <label class="form-check-label" for="wf-add-bundle" style="font-size:12px;">Bundle notification</label>
                 </div>
 
                 <!-- Condition -->
