@@ -1527,6 +1527,10 @@ localise.initLocale(gUserLocale).then(function () {
 	 */
 	function refreshTableAssignments() {
 
+		if(!globals.gTaskList || !globals.gTaskList.features) {
+			return;
+		}
+
 		var tasks = globals.gTaskList.features,
 			h = [],
 			idx = -1,
