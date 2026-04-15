@@ -257,6 +257,9 @@
                         <button class="btn btn-sm btn-outline-success wf-type-btn active" data-type="task">
                             <i class="fas fa-file-alt"></i> Task
                         </button>
+                        <button class="btn btn-sm btn-outline-success wf-type-btn" data-type="emailtask">
+                            <i class="fas fa-envelope"></i> Email Task
+                        </button>
                         <button class="btn btn-sm btn-outline-warning wf-type-btn" data-type="escalate">
                             <i class="fas fa-file-alt"></i> Case
                         </button>
@@ -289,12 +292,28 @@
                     <input id="wf-add-name" type="text" class="form-control form-control-sm" placeholder="Step name">
                 </div>
 
-                <!-- Assignee (task / case) -->
-                <div class="mb-3" id="wf-add-assignee-row">
+                <!-- Assignee — select for task type -->
+                <div class="mb-3" id="wf-add-assignee-select-row" style="display:none;">
+                    <label class="form-label fw-semibold" style="font-size:12px;">Assign to</label>
+                    <select id="wf-add-assignee-select" class="form-select form-select-sm">
+                        <option value="-1">Unassigned</option>
+                        <option value="-2">Assign from data values</option>
+                    </select>
+                </div>
+
+                <!-- Assignee — text for case type -->
+                <div class="mb-3" id="wf-add-assignee-row" style="display:none;">
                     <label class="form-label fw-semibold" style="font-size:12px;">Assign to</label>
                     <input id="wf-add-assignee" type="text" class="form-control form-control-sm"
                            placeholder="_submitter, _data, or email address">
                     <div class="form-text">Use _submitter (person who submitted) or _data (from a form question)</div>
+                </div>
+
+                <!-- Email addresses (email task) -->
+                <div class="mb-3" id="wf-add-task-email-row" style="display:none;">
+                    <label class="form-label fw-semibold" style="font-size:12px;">Email addresses</label>
+                    <input id="wf-add-task-email" type="text" class="form-control form-control-sm"
+                           placeholder="comma-separated email addresses">
                 </div>
 
                 <!-- Email fields -->

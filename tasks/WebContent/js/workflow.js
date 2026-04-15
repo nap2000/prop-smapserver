@@ -33,6 +33,7 @@ let gEditItem   = null;   // WorkflowItem currently open in drawer
 let gEditNotifs = [];     // WorkflowEditNotif[] from server
 let gEditTGs    = [];     // WorkflowEditTG[]   from server
 let gSurveys    = null;   // cached survey list (null until first fetch)
+let gUsers      = null;   // cached user list (null until first fetch)
 let gAddType    = "task"; // currently selected type in Add Step modal
 
 // Add-step trigger state
@@ -728,6 +729,13 @@ function fetchSurveys() {
 		.then(function(d) { gSurveys = d; return d; });
 }
 
+function fetchUsers() {
+	if (gUsers !== null) return Promise.resolve(gUsers);
+	return fetch("/surveyKPI/userList", { credentials: "include" })
+		.then(function(r) { return r.json(); })
+		.then(function(d) { gUsers = d; return d; });
+}
+
 function openAddDialog() {
 	if (!gSelectedNode) {
 		alert("Select a workflow item on the canvas first.");
@@ -747,10 +755,12 @@ function openAddDialog() {
 	}
 
 	// Reset modal fields
-	document.getElementById("wf-add-name").value     = "";
-	document.getElementById("wf-add-assignee").value  = "";
-	document.getElementById("wf-add-filter").value    = "";
-	document.getElementById("wf-add-bundle").checked  = false;
+	document.getElementById("wf-add-name").value        = "";
+	document.getElementById("wf-add-assignee").value    = "";
+	document.getElementById("wf-add-task-email").value  = "";
+	document.getElementById("wf-add-filter").value      = "";
+	document.getElementById("wf-add-bundle").checked    = false;
+	document.getElementById("wf-add-assignee-select").value = "-1";
 	["email", "subject", "content"].forEach(function(s) {
 		const el = document.getElementById("wf-add-email-" + s);
 		if (el) el.value = "";
@@ -780,20 +790,39 @@ function openAddDialog() {
 		});
 	}
 
+	// Populate user assignee select
+	const assignSelEl = document.getElementById("wf-add-assignee-select");
+	if (assignSelEl) {
+		fetchUsers().then(function(users) {
+			// Keep the fixed options (-1, -2) and replace any user options after them
+			while (assignSelEl.options.length > 2) assignSelEl.remove(2);
+			users.forEach(function(u) {
+				const opt = document.createElement("option");
+				opt.value       = u.id;
+				opt.textContent = u.name;
+				assignSelEl.appendChild(opt);
+			});
+		});
+	}
+
 	new bootstrap.Modal(document.getElementById("wf-add-modal")).show();
 }
 
 function updateAddDialogFields(type) {
 	gAddType = type;
-	const isTask   = (type === "task");
-	const isAssign = (type === "task" || type === "escalate");
-	const isEmail  = (type === "email");
-	const isSms    = (type === "sms");
-	document.getElementById("wf-add-assignee-row").style.display  = isAssign ? "" : "none";
-	document.getElementById("wf-add-email-rows").style.display    = isEmail  ? "" : "none";
-	document.getElementById("wf-add-sms-rows").style.display      = isSms    ? "" : "none";
-	document.getElementById("wf-add-target-row").style.display    = isTask   ? "" : "none";
-	document.getElementById("wf-add-bundle-row").style.display    = isTask   ? "none" : "";
+	const isTask        = (type === "task");
+	const isTaskGroup   = (type === "task" || type === "emailtask");
+	const isEmailTask   = (type === "emailtask");
+	const isEscalate    = (type === "escalate");
+	const isEmail       = (type === "email");
+	const isSms         = (type === "sms");
+	document.getElementById("wf-add-assignee-select-row").style.display = isTask      ? "" : "none";
+	document.getElementById("wf-add-assignee-row").style.display        = isEscalate  ? "" : "none";
+	document.getElementById("wf-add-task-email-row").style.display      = isEmailTask ? "" : "none";
+	document.getElementById("wf-add-email-rows").style.display          = isEmail     ? "" : "none";
+	document.getElementById("wf-add-sms-rows").style.display            = isSms       ? "" : "none";
+	document.getElementById("wf-add-target-row").style.display          = isTaskGroup ? "" : "none";
+	document.getElementById("wf-add-bundle-row").style.display          = isTaskGroup ? "none" : "";
 }
 
 function submitAddStep() {
@@ -811,7 +840,7 @@ function submitAddStep() {
 
 	let url, payload;
 
-	if (gAddType === "task") {
+	if (gAddType === "task" || gAddType === "emailtask") {
 		const targetSurveyId = parseInt(document.getElementById("wf-add-target").value, 10) || 0;
 		if (!targetSurveyId) {
 			removeHourglass();
@@ -823,9 +852,20 @@ function submitAddStep() {
 			sourceSurveyId: srcSurveyId,
 			targetSurveyId: targetSurveyId,
 			name:           name,
-			filter:         filter || null,
-			remoteUser:     document.getElementById("wf-add-assignee").value.trim() || null
+			filter:         filter || null
 		};
+		if (gAddType === "emailtask") {
+			payload.remoteUser = document.getElementById("wf-add-task-email").value.trim() || null;
+		} else {
+			// task — read from select: -1=unassigned, -2=from data, else user ID
+			const selVal = parseInt(document.getElementById("wf-add-assignee-select").value, 10);
+			if (selVal === -2) {
+				payload.remoteUser = "_data";
+			} else if (selVal > 0) {
+				payload.userId = selVal;
+			}
+			// -1 (unassigned) → neither field set
+		}
 	} else {
 		const isBundle = document.getElementById("wf-add-bundle").checked;
 		url     = "/surveyKPI/workflow/edit/notification";
