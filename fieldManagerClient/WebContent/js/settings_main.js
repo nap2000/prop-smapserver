@@ -22,7 +22,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-import { addHourglass, enableDebugging, getFromLocalStorage, getLoggedInUser, handleLogout, htmlEncode, removeHourglass, setInLocalStorage, setupUserProfile, validateEmails } from "common";
+import { addHourglass, displayAsImage, enableDebugging, getFromLocalStorage, getLoggedInUser, handleLogout, htmlEncode, removeHourglass, setInLocalStorage, setupUserProfile, validateEmails } from "common";
 
 const $ = window.$;
 const localise = window.localise;

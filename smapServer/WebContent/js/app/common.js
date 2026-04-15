@@ -6741,5 +6741,6 @@ export {
 	setLanguages,
 	tokenizeAppearance,
 	translateType,
-	generateFile
+	generateFile,
+	displayAsImage
 };

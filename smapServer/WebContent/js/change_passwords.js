@@ -75,8 +75,9 @@ window.gUserLocale = gUserLocale;
 				history.back();
 			});
 
-			$('#changePasswordSubmit').click(function(event) {
-				changePasswordSubmit(event);
+			$('#changePasswordSubmit').click(function(e) {
+				e.preventDefault();
+				changePasswordSubmit(e);
 			});
 		});
 	});
