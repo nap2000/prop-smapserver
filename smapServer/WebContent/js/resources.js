@@ -650,20 +650,47 @@ $(function() {
 		});
 	}
 
+	function loadSpListTitles(selectedTitle, callback) {
+		$.ajax({
+			url: '/surveyKPI/sharepoint/lists',
+			type: 'GET',
+			dataType: 'json',
+			success: function(data) {
+				if(handleLogout(data)) {
+					let $sel = $('#sp_list_title').empty();
+					$sel.append($('<option>').val('').text('-- select --'));
+					(data || []).forEach(function(title) {
+						$sel.append($('<option>').val(title).text(title));
+					});
+					if(selectedTitle) $sel.val(selectedTitle);
+					if(callback) callback();
+				}
+			},
+			error: function(xhr) {
+				if(xhr.readyState !== 0 && xhr.status !== 0 && xhr.status !== 401) {
+					console.log("Error loading SharePoint lists: " + xhr.responseText);
+				}
+				if(callback) callback();
+			}
+		});
+	}
+
 	function edit_sp_list(idx) {
 		document.getElementById('spListEditForm').reset();
+		let selectedTitle;
 		if(typeof idx !== 'undefined') {
 			let m = gSpListMaps[idx];
 			$('#sp_smap_name').val(m.smap_name);
-			$('#sp_list_title').val(m.list_title);
 			$('#sp_refresh_minutes').val(m.refresh_minutes);
 			$('#sp_enabled').prop('checked', m.enabled);
 			gSpListEditId = m.id;
+			selectedTitle = m.list_title;
 		} else {
 			$('#sp_refresh_minutes').val(60);
 			$('#sp_enabled').prop('checked', true);
 			gSpListEditId = -1;
 		}
+		loadSpListTitles(selectedTitle);
 	}
 
 	function saveSpList() {
