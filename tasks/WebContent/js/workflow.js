@@ -498,7 +498,17 @@ function renderDrawerContent(type) {
 		<input id="wfd-name" type="text" value="${esc(name)}">
 	</div>`;
 
-	if (type === "task" || type === "case") {
+	if (type === "task") {
+		const targetSurveyId = firstTG ? firstTG.targetSurveyId : 0;
+		bodyHtml += `<div class="wf-field">
+			<label>Task survey</label>
+			<select id="wfd-task-survey" data-current="${targetSurveyId}">
+				<option value="">Loading…</option>
+			</select>
+		</div>`;
+	}
+
+	if (type === "case") {
 		bodyHtml += `<div class="wf-field">
 			<label>Assign to</label>
 			<input id="wfd-assignee" type="text" value="${esc(remoteUser)}"
@@ -547,6 +557,21 @@ function renderDrawerContent(type) {
 	}
 
 	document.getElementById("wf-drawer-body").innerHTML = bodyHtml;
+
+	// Populate task survey select if present
+	const taskSurveyEl = document.getElementById("wfd-task-survey");
+	if (taskSurveyEl) {
+		const currentId = parseInt(taskSurveyEl.dataset.current, 10) || 0;
+		fetchSurveys().then(function(surveys) {
+			taskSurveyEl.innerHTML = surveys.map(function(s) {
+				const sel = s.sId === currentId ? " selected" : "";
+				return `<option value="${s.sId}"${sel}>${esc(s.projectName)} / ${esc(s.name)}</option>`;
+			}).join("");
+			if (surveys.length === 0) {
+				taskSurveyEl.innerHTML = "<option value=''>No surveys available</option>";
+			}
+		});
+	}
 
 	// Build per-connection condition rows (amber section)
 	const allRecords = [
@@ -643,12 +668,16 @@ function saveDrawer() {
 
 	// Build updated task groups list
 	if (gEditTGs.length > 0) {
+		const taskSurveyEl  = document.getElementById("wfd-task-survey");
+		const targetSurveyId = taskSurveyEl ? (parseInt(taskSurveyEl.value, 10) || 0) : 0;
 		const updatedTGs = gEditTGs.map(function(tg) {
-			return Object.assign({}, tg, {
+			const update = {
 				name:   name,
 				filter: filtersByTgId[String(tg.tgId)] !== undefined
 				            ? filtersByTgId[String(tg.tgId)] : (tg.filter || "")
-			});
+			};
+			if (targetSurveyId > 0) update.targetSurveyId = targetSurveyId;
+			return Object.assign({}, tg, update);
 		});
 		promises.push(
 			fetch("/surveyKPI/workflow/edit/taskgroups", {
