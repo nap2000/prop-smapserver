@@ -5758,18 +5758,18 @@ function spAddColumnMapRow(spValue, smapValue) {
 }
 
 /*
- * Populate #sp_list_name select with SharePoint list mappings.
+ * Populate #sp_list_name select directly from SharePoint.
  * Optionally pre-selects selectedTitle and calls callback after load.
  */
 function loadSpListNames(selectedTitle, callback) {
 	$.ajax({
-		url: '/surveyKPI/sharepoint/listmaps',
+		url: '/surveyKPI/sharepoint/lists',
 		type: 'GET',
 		success: function(data) {
 			var $sel = $('#sp_list_name').empty();
 			$sel.append($('<option>').val('').text('-- select --'));
-			(data || []).forEach(function(m) {
-				$sel.append($('<option>').val(m.list_title).text(m.smap_name));
+			(data || []).forEach(function(title) {
+				$sel.append($('<option>').val(title).text(title));
 			});
 			if(selectedTitle) $sel.val(selectedTitle);
 			if(callback) callback();
