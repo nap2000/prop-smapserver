@@ -910,6 +910,7 @@ function renderExpandedRecord() {
 	h.push('<button class="btn btn-sm btn-outline-secondary dt-expand-next"' + (gExpandIdx >= total - 1 ? ' disabled' : '') + '><i class="fa fa-angle-right"></i></button>');
 	h.push('</div></div>');
 	h.push('<div class="dt-expand-scroll"><table class="dt-expand-table"><tbody>');
+	h.push('<tr><td class="dt-expand-label">Record</td><td class="dt-expand-value">' + htmlEncode(String(props.prikeys[0])) + '</td></tr>');
 
 	for (var k = 0; k < cols.length; k++) {
 		var key = cols[k];
