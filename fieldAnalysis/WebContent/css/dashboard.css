@@ -804,7 +804,7 @@ div.olControlZoom a:link {
 .dt-table.hide-meta [data-meta] { display: none; }
 
 /* Disable text wrap when Wrap Text is unchecked */
-.dt-table.no-wrap-text tbody td { white-space: nowrap; }
+.dt-table.no-wrap-text tbody td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* Kebab / context menu trigger button */
 .menu_button {
