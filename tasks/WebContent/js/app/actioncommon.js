@@ -703,10 +703,16 @@ export {
                 record = gTasks.gSelectedRecord,
                 columns = gTasks.cache.currentData.schema.columns,
                 currentValue,
-                column_name = columns[itemIndex].column_name,
-                displayName = columns[itemIndex].displayName,
+                column_name,
+                displayName,
                 i,
                 foundExistingUpdate;
+
+            if (typeof itemIndex === "undefined" || !columns[itemIndex]) {
+                return;
+            }
+            column_name = columns[itemIndex].column_name;
+            displayName = columns[itemIndex].displayName;
 
             currentValue = record[column_name];
             if (typeof currentValue === "undefined") {

@@ -1830,6 +1830,8 @@ const moment = window.moment;
 				h[++idx] = '<tr>';
 				h[++idx] = '<td class="control_td"><input type="checkbox" name="controls" value="';
 				h[++idx] = i;
+				h[++idx] = '" aria-label="Select ';
+				h[++idx] = htmlEncode(user.ident);
 				h[++idx] = '"></td>';
 				h[++idx] = '<td class="user_edit_td"><button class="btn btn-secondary user_edit" style="width:100%;" data-idx="';
 				h[++idx] = i;
@@ -1847,23 +1849,23 @@ const moment = window.moment;
 				h[++idx] = '<div class="d-flex">';
 				h[++idx] = '<button type="button" data-idx="';
 				h[++idx] = i;
-				h[++idx] = '" class="btn btn-sm rm_user btn-danger me-2">';
-				h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
+				h[++idx] = '" class="btn btn-sm rm_user btn-danger me-2" aria-label="Delete user">';
+				h[++idx] = '<i class="fas fa-trash-alt" aria-hidden="true"></i></button>';
 				h[++idx] = '<button type="button" data-idx="';
 				h[++idx] = i;
 				h[++idx] = '" ';
 				if(globals.gLoggedInUser && user.current_org_name !== globals.gLoggedInUser.organisation_name) {
 					 h[++idx] = 'data-other_org="true" ';
 				}
-				h[++idx] = 'class="btn-sm user_edit btn-info">';
-				h[++idx] = '<i class="far fa-edit"></i></button>';
+				h[++idx] = 'class="btn-sm user_edit btn-info" aria-label="Edit user">';
+				h[++idx] = '<i class="far fa-edit" aria-hidden="true"></i></button>';
 
 				console.log(globals.gLoggedInUser.organisation_name);
 				if(isEnum && globals.gLoggedInUser && user.current_org_name === globals.gLoggedInUser.organisation_name) {
 					h[++idx] = '<button type="button" data-idx="';
 					h[++idx] = i;
-					h[++idx] = '" class="btn btn-sm app_code btn-primary ms-2">';
-					h[++idx] = '<i class="fas fa-qrcode"></i> <span class="lang" data-lang="u_code"</button>';
+					h[++idx] = '" class="btn btn-sm app_code btn-primary ms-2" aria-label="App code">';
+					h[++idx] = '<i class="fas fa-qrcode" aria-hidden="true"></i> <span class="lang" data-lang="u_code"></span></button>';
 				}
 
 				h[++idx] = '</div>';
@@ -1965,6 +1967,8 @@ const moment = window.moment;
 			h[++idx] = '<tr>';
 			h[++idx] = '<td class="control_td"><input type="checkbox" name="controls" value="';
 			h[++idx] = i;
+			h[++idx] = '" aria-label="Select ';
+			h[++idx] = htmlEncode(project.name);
 			h[++idx] = '"></td>';
 			h[++idx] = '<td>';
 			h[++idx] = project.id;
@@ -1982,12 +1986,12 @@ const moment = window.moment;
 			h[++idx] = '<div class="d-flex">';
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-secondary btn-sm rm_project btn-danger me-2">';
-			h[++idx] = '<i class="fas fa-trash-alt"></i></span></button>';
+			h[++idx] = '" class="btn btn-secondary btn-sm rm_project btn-danger me-2" aria-label="Delete project">';
+			h[++idx] = '<i class="fas fa-trash-alt" aria-hidden="true"></i></button>';
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-secondary btn-sm project_edit btn-info">';
-			h[++idx] = '<i class="far fa-edit"></i></button>';
+			h[++idx] = '" class="btn btn-secondary btn-sm project_edit btn-info" aria-label="Edit project">';
+			h[++idx] = '<i class="far fa-edit" aria-hidden="true"></i></button>';
 			h[++idx] = '</div>';
 			h[++idx] = '</td>';
 
@@ -2080,15 +2084,15 @@ const moment = window.moment;
 			h[++idx] = '<div class="d-flex">';
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-sm rm_role btn-danger me-2">';
-			h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
+			h[++idx] = '" class="btn btn-sm rm_role btn-danger me-2" aria-label="Delete role">';
+			h[++idx] = '<i class="fas fa-trash-alt" aria-hidden="true"></i></button>';
 
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
 			h[++idx] = '" class="btn-sm role_edit btn-info" value="';
 			h[++idx] = i;
-			h[++idx] = '">';
-			h[++idx] = '<i class="far fa-edit"></i></button>';
+			h[++idx] = '" aria-label="Edit role">';
+			h[++idx] = '<i class="far fa-edit" aria-hidden="true"></i></button>';
 			h[++idx] = '</div>';
 			h[++idx] = '</td>';
 
@@ -2203,13 +2207,13 @@ const moment = window.moment;
 
 			h[++idx] = '<button type="button" data-idx="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-sm rm_org btn-danger">';
-			h[++idx] = '<i class="fas fa-trash-alt"></i></button>';
+			h[++idx] = '" class="btn btn-sm rm_org btn-danger" aria-label="Delete organisation">';
+			h[++idx] = '<i class="fas fa-trash-alt" aria-hidden="true"></i></button>';
 
 			h[++idx] = '<button type="button" value="';
 			h[++idx] = i;
-			h[++idx] = '" class="btn btn-sm organisation_edit btn-info">';
-			h[++idx] = '<i class="far fa-edit"></i></button>';
+			h[++idx] = '" class="btn btn-sm organisation_edit btn-info" aria-label="Edit organisation">';
+			h[++idx] = '<i class="far fa-edit" aria-hidden="true"></i></button>';
 
 			h[++idx] = '</td>';
 			h[++idx] = '</tr>';

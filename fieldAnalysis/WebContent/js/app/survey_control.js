@@ -158,6 +158,7 @@ function copyView(v) {
 			subject_type: v.subject_type,
 		    inc_ro: v.inc_ro,
 		    tShowMeta: v.tShowMeta,
+		    tWrapText: v.tWrapText,
 			geomFormQuestions: v.geomFormQuestions,
 		    selectedGeomQuestion: v.selectedGeomQuestion,
 		    chartType: v.chartType
@@ -186,6 +187,7 @@ function getViewData(view) {
 	$('#settings_title').val(view.title);
 	$('#settings_inc_ro').prop('checked', view.inc_ro);
 	$('#settings_show_meta').prop('checked', view.tShowMeta !== false);
+	$('#settings_wrap_text').prop('checked', view.tWrapText !== false);
 	
 	// Set the survey meta data
 	var sMeta = globals.gSelector.getSurvey(view.sId);

@@ -735,7 +735,8 @@ div.olControlZoom a:link {
 
 /* The table itself */
 .dt-table {
-	width: 100%;
+	width: max-content;
+	min-width: 100%;
 	border-collapse: collapse;
 	table-layout: auto;
 }
@@ -750,6 +751,7 @@ div.olControlZoom a:link {
 	font-size: 0.7rem;
 	padding: 0.5rem 0.75rem;
 	border: none;
+	white-space: nowrap;
 	z-index: 2;
 }
 
@@ -770,7 +772,9 @@ div.olControlZoom a:link {
 	border: none;
 	vertical-align: middle;
 	color: #343a40;
+	max-width: 400px;
 	word-break: break-word;
+	white-space: normal;
 }
 
 /* Bad/good record rows */
@@ -798,6 +802,9 @@ div.olControlZoom a:link {
 
 /* Hide meta columns when Show Meta Data is unchecked */
 .dt-table.hide-meta [data-meta] { display: none; }
+
+/* Disable text wrap when Wrap Text is unchecked */
+.dt-table.no-wrap-text tbody td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* Kebab / context menu trigger button */
 .menu_button {
@@ -850,3 +857,78 @@ div.olControlZoom a:link {
 	.noPrint { display: none; }
 	* { float: none !important; }
 }
+
+.r_description {
+	padding-left: 1rem;
+}
+
+/* ============================================================
+   Expanded record view (.dt-expand-*)
+   ============================================================ */
+
+.dt-expand-panel {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.dt-expand-toolbar {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.4rem 0.75rem;
+	background: #f8f9fa;
+	border-bottom: 1px solid #dee2e6;
+	flex-shrink: 0;
+}
+
+.dt-expand-pos {
+	flex: 1;
+	text-align: center;
+	font-size: 0.82rem;
+	color: #6c757d;
+}
+
+.dt-expand-nav-btns {
+	display: flex;
+	gap: 0.25rem;
+}
+
+.dt-expand-scroll {
+	flex: 1;
+	overflow: auto;
+	min-height: 0;
+}
+
+.dt-expand-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.dt-expand-table tbody tr {
+	border-bottom: 1px solid #f0f0f0;
+	transition: background 0.1s;
+}
+
+.dt-expand-table tbody tr:hover { background: #eef2ff; }
+
+.dt-expand-label {
+	padding: 0.4rem 0.75rem;
+	font-weight: 600;
+	font-size: 0.82rem;
+	color: #495057;
+	white-space: nowrap;
+	width: 35%;
+	vertical-align: top;
+}
+
+.dt-expand-value {
+	padding: 0.4rem 0.75rem;
+	font-size: 0.82rem;
+	color: #212529;
+	word-break: break-word;
+}
+
+.dt-expand-table tr.expand-bad  .dt-expand-value { color: #dc3545; font-weight: 500; }
+.dt-expand-table tr.expand-good .dt-expand-value { color: #198754; }
+.dt-expand-table tr.expand-replaced .dt-expand-value { font-style: italic; color: #adb5bd; }
