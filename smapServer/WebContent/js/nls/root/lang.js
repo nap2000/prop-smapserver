@@ -265,6 +265,7 @@ define({
     "c_source": "Source",
     "c_show": "Show",
     "c_show_meta": "Show Meta Data",
+    "c_wrap_text": "Wrap Text",
     "c_show_q": "Show Question",
     "c_hide": "Hide",
     "c_total": "Total",

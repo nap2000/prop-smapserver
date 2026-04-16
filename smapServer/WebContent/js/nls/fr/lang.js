@@ -198,6 +198,7 @@ define({
     "c_source": "Source",
     "c_show": "Afficher",
     "c_show_meta": "Afficher les Métadonnées",
+    "c_wrap_text": "Retour à la ligne",
     "c_hide": "Cacher",
     "c_total": "Total",
     "c_totals": "Total",

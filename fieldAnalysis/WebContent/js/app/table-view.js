@@ -651,6 +651,7 @@ function showTable(tableIdx, view, tableItems, fId, survey_ident) {
 	if(tableItems && tableItems.features && tableItems.features.length > 0) {
 		generateTable(elemMain, tableItems, "", survey_ident, view.sId);
 		if (view.tShowMeta === false) { $selMain.find('.dt-table').addClass('hide-meta'); }
+		if (view.tWrapText === false) { $selMain.find('.dt-table').addClass('no-wrap-text'); }
 		addRightClickToTable($selMain, view.sId, view);
 		$selMain.find('table').tablesorter({ theme : 'dark' });
 		addMoreLessButtons($selMain, view, fId, tableItems);

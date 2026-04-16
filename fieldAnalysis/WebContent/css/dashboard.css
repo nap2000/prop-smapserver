@@ -803,6 +803,9 @@ div.olControlZoom a:link {
 /* Hide meta columns when Show Meta Data is unchecked */
 .dt-table.hide-meta [data-meta] { display: none; }
 
+/* Disable text wrap when Wrap Text is unchecked */
+.dt-table.no-wrap-text tbody td { white-space: nowrap; }
+
 /* Kebab / context menu trigger button */
 .menu_button {
 	display: inline-flex;
