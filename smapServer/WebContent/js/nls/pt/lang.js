@@ -1169,6 +1169,7 @@ define({
     "d_from_q": "Link da Pergunta",
     "d_edit_web": "Editar no Formulário Web",
     "d_d_pdf": "Download PDF",
+    "d_expand_rec": "Expandir Registro",
     "d_layers": "Camadas do Mapa",
     "rev_upd_diff": "Atualize uma pergunta diferente para a pergunta de origem",
     "rev_sel_pk": "Selecione os dados a serem alterados usando uma chave primária",

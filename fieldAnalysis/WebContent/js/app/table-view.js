@@ -20,7 +20,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
  * Show an entire survey in a table
  */
 import "tablesorter";
-import { getDisplayDescription } from "commonReportFunctions";
+import { getDisplayDescription, addAnchors } from "commonReportFunctions";
 import { generateTable, generateUserTable } from "./table-functions";
 import globals from "globals";
 import { addCacheBuster, addHourglass, cleanFileName, downloadFile, downloadPdf, handleLogout, htmlEncode, populateLanguageSelect, populatePdfSelect, removeHourglass } from "common";
@@ -32,6 +32,9 @@ import localise from "localise";
 var gSelectedTemplate,          // Survey ident of the current template
 	gEditUrl,
 	gInstanceId,
+	gExpandPkey,
+	gExpandView,
+	gExpandIdx,
 	gExportUrl,
 	gMedia,
 	gDataLength,
@@ -121,6 +124,9 @@ export function setTableSurvey(view) {
 			downloadPdfFromPopup();
 		} else if ($('#action_edit').is(':checked')) {
 			window.location.href = gEditUrl;
+		} else if ($('#action_expand').is(':checked')) {
+			closeModal('instance_functions_popup');
+			showExpandedRecord();
 		} else {
 			closeModal('instance_functions_popup');
 		}
@@ -630,7 +636,10 @@ function showTable(tableIdx, view, tableItems, fId, survey_ident) {
 		$selMain = $('#'+ elemMain);
 	
 	$selMain.empty();
-	view.fId = fId;		// Save current form id for the export function
+	view.fId = fId;
+	view.tableIdx = tableIdx;
+	view.surveyIdent = survey_ident;
+	view.tableItems = tableItems;
 
 	if(view.dirty) {
 		view.dirty = false;
@@ -832,9 +841,11 @@ function addRightClickToTable($elem, sId, view) {
 
 			gSelectedTemplate = survey_ident;
 			gInstanceId = instanceid;
-			
+			gExpandPkey = pkey;
+			gExpandView = view;
+
 			// Reset radio state each time modal opens
-			$('#action_edit, #action_pdf').prop('checked', false);
+			$('#action_edit, #action_pdf, #action_expand').prop('checked', false);
 			$('#download_options_div').addClass('d-none');
 
 			if((isBad && isReplaced) || (!globals.gIsAnalyst && !globals.gIsManage)) {
@@ -863,6 +874,88 @@ function addRightClickToTable($elem, sId, view) {
 	toggleBadFn(sId, view);
 	tableEditFn(sId, view);
 }
+function showExpandedRecord() {
+	var data = gExpandView && gExpandView.tableItems;
+	if (!data || !data.features || data.features.length === 0) return;
+
+	var features = data.features;
+	gExpandIdx = 0;
+	for (var i = 0; i < features.length; i++) {
+		if (String(features[i].properties.prikeys[0]) === String(gExpandPkey)) {
+			gExpandIdx = i;
+			break;
+		}
+	}
+	renderExpandedRecord();
+}
+
+function renderExpandedRecord() {
+	var elemMain = 'table_panel' + gExpandView.pId;
+	var $selMain = $('#' + elemMain);
+	var data = gExpandView.tableItems;
+	var features = data.features;
+	var cols = data.cols;
+	var types = data.types;
+	var props = features[gExpandIdx].properties;
+	var total = features.length;
+	var current = gExpandIdx + 1;
+
+	var h = [];
+	h.push('<div class="dt-expand-panel">');
+	h.push('<div class="dt-expand-toolbar">');
+	h.push('<button class="btn btn-sm btn-outline-secondary dt-expand-back"><i class="fa fa-table"></i> ' + (localise.set["c_table"] || "Table") + '</button>');
+	h.push('<span class="dt-expand-pos">' + current + ' / ' + total + '</span>');
+	h.push('<div class="dt-expand-nav-btns">');
+	h.push('<button class="btn btn-sm btn-outline-secondary dt-expand-prev"' + (gExpandIdx === 0 ? ' disabled' : '') + '><i class="fa fa-angle-left"></i></button>');
+	h.push('<button class="btn btn-sm btn-outline-secondary dt-expand-next"' + (gExpandIdx >= total - 1 ? ' disabled' : '') + '><i class="fa fa-angle-right"></i></button>');
+	h.push('</div></div>');
+	h.push('<div class="dt-expand-scroll"><table class="dt-expand-table"><tbody>');
+
+	for (var k = 0; k < cols.length; k++) {
+		var key = cols[k];
+		var type = types[k];
+		if (key === "_instanceid" || key === "instanceid" || key === "_task_key" ||
+				key === "_task_replace" || key === "prikey" || key === "_modified") continue;
+
+		var label = key;
+		if (label.indexOf('_') === 0) {
+			if (label === "_device")     label = localise.set["c_device"] || label;
+			else if (label === "_bad")   label = localise.set["a_mb"] || label;
+			else if (label === "_bad_reason") label = localise.set["c_reason"] || label;
+			else label = localise.set[label] || label;
+		}
+		if (type === "dateTime") label += ' (' + (localise.set["c_lt"] || "local time") + ')';
+
+		var rawVal = props[key];
+		var val = htmlEncode(rawVal);
+		var rowClass = '';
+		if (key === "_bad") {
+			val = (rawVal === "f") ? "No" : "Yes";
+			rowClass = (rawVal === "f") ? ' class="expand-good"' : ' class="expand-bad"';
+		} else if (key === "_complete") {
+			val = (rawVal === "f") ? "No" : "Yes";
+		} else if (key === "_bad_reason" && rawVal && String(rawVal).indexOf("Replaced by") === 0) {
+			rowClass = ' class="expand-replaced"';
+		}
+		val = addAnchors(val, true).join(',');
+
+		h.push('<tr' + rowClass + '><td class="dt-expand-label">' + htmlEncode(label) + '</td><td class="dt-expand-value">' + val + '</td></tr>');
+	}
+
+	h.push('</tbody></table></div></div>');
+	$selMain.html(h.join(''));
+
+	$selMain.find('.dt-expand-back').off().click(function () {
+		showTable(gExpandView.tableIdx, gExpandView, gExpandView.tableItems, gExpandView.fId, gExpandView.surveyIdent);
+	});
+	$selMain.find('.dt-expand-prev').off().click(function () {
+		if (gExpandIdx > 0) { gExpandIdx--; renderExpandedRecord(); }
+	});
+	$selMain.find('.dt-expand-next').off().click(function () {
+		if (gExpandIdx < features.length - 1) { gExpandIdx++; renderExpandedRecord(); }
+	});
+}
+
 function downloadPdfFromPopup() {
 
 	var docURL,

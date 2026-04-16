@@ -1007,6 +1007,7 @@ define({
     "d_from_q": "Link From Question",
     "d_edit_web": "Edit in Web Form",
     "d_d_pdf": "Télécharger un PDF",
+    "d_expand_rec": "Développer l'enregistrement",
     "d_layers": "Couche de Cartes",
     "rev_upd_diff": "Update a different question to the source question",
     "rev_sel_pk": "Select data to change using a primary key",

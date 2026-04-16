@@ -1489,6 +1489,7 @@ define({
     "d_from_q": "Link From Question",
     "d_edit_web": "Edit in Web Form",
     "d_d_pdf": "Download PDF",
+    "d_expand_rec": "Expand Record",
     "d_layers": "Map Layers",
 
     // Review
