@@ -595,13 +595,15 @@
 				<form class="ps-form" role="form">
 					<div class="row mb-3 justify-content-center">
 						<div class="col-auto">
-							<a id="download_edit" class="btn btn-outline-primary instance_functions lang" href="#" data-lang="d_edit_web">edit in web form</a>
-						</div>
-						<div class="col-auto">
-							<a id="download_pdf" class="btn btn-outline-secondary instance_functions lang" href="#" data-lang="d_d_pdf">download PDF</a>
+							<div class="btn-group" role="group">
+								<input type="radio" class="btn-check" name="instance_action" id="action_edit" autocomplete="off"/>
+								<label id="download_edit" class="btn btn-outline-primary instance_functions lang" for="action_edit" data-lang="d_edit_web">edit in web form</label>
+								<input type="radio" class="btn-check" name="instance_action" id="action_pdf" autocomplete="off"/>
+								<label id="download_pdf" class="btn btn-outline-secondary instance_functions lang" for="action_pdf" data-lang="d_d_pdf">download PDF</label>
+							</div>
 						</div>
 					</div>
-					<div id="download_options_div">
+					<div id="download_options_div" class="d-none">
 						<div class="row mb-2">
 							<div class="col-sm-8 offset-sm-4">
 								<div class="form-check">
@@ -644,6 +646,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><span class="lang" data-lang="c_close">Close</span></button>
+				<button type="button" id="instance_go_btn" class="btn btn-primary"><span class="lang" data-lang="c_go">Go</span></button>
 			</div>
 		</div>
 	</div>

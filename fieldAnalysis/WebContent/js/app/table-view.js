@@ -30,6 +30,7 @@ import { getUserData, processSurveyData } from "data";
 import localise from "localise";
 
 var gSelectedTemplate,          // Survey ident of the current template
+	gEditUrl,
 	gInstanceId,
 	gExportUrl,
 	gMedia,
@@ -111,8 +112,18 @@ export function setTableSurvey(view) {
 	/*
 	 * Enable the dialog to create a PDF of an instance or edit in WebForms
 	 */
-	$('#download_pdf').off().click(function () {
-		downloadPdfFromPopup();
+	$('input[name="instance_action"]').off('change').on('change', function () {
+		$('#download_options_div').toggleClass('d-none', !$('#action_pdf').is(':checked'));
+	});
+
+	$('#instance_go_btn').off().click(function () {
+		if ($('#action_pdf').is(':checked')) {
+			downloadPdfFromPopup();
+		} else if ($('#action_edit').is(':checked')) {
+			window.location.href = gEditUrl;
+		} else {
+			closeModal('instance_functions_popup');
+		}
 	});
 
 	$selFoot.find('.tDelete').off().click(function() {
@@ -822,21 +833,24 @@ function addRightClickToTable($elem, sId, view) {
 			gSelectedTemplate = survey_ident;
 			gInstanceId = instanceid;
 			
+			// Reset radio state each time modal opens
+			$('#action_edit, #action_pdf').prop('checked', false);
+			$('#download_options_div').addClass('d-none');
+
 			if((isBad && isReplaced) || (!globals.gIsAnalyst && !globals.gIsManage)) {
-				$('#download_edit').addClass('disabled').attr('aria-disabled', 'true');
+				$('#action_edit').prop('disabled', true);
+				$('#download_edit').addClass('disabled');
 			} else {
+				$('#action_edit').prop('disabled', false);
+				$('#download_edit').removeClass('disabled');
 				var url;
-				$('#download_edit').removeClass('disabled').removeAttr('aria-disabled');
 				if(view.subject_type === "survey") {
 					url ="/app/myWork/webForm/" + survey_ident + "?datakey=prikey&datakeyvalue=" + pkey;
 				} else if(view.subject_type === "user") {
 					url ="/app/myWork/webForm/" + survey_ident + "?datakey=instanceid&datakeyvalue=" + instanceid;
 				}
 				url += addCacheBuster(url);
-				$('#download_edit').attr("href", url);
-				$('#download_edit').click(function () {
-                    closeModal('instance_functions_popup');
-				});
+				gEditUrl = url;
 			}
 
 			openModal('instance_functions_popup');
