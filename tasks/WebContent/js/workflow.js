@@ -29,9 +29,10 @@ let gPositions = {};   // id -> {x, y}  (updated live during drag)
 let gHighlight = "none";
 
 // Edit-drawer state
-let gEditItem   = null;   // WorkflowItem currently open in drawer
-let gEditNotifs = [];     // WorkflowEditNotif[] from server
-let gEditTGs    = [];     // WorkflowEditTG[]   from server
+let gEditItem     = null;   // WorkflowItem currently open in drawer
+let gEditNotifs   = [];     // WorkflowEditNotif[] from server
+let gEditTGs      = [];     // WorkflowEditTG[]   from server
+let gEditStartIds = [];     // workflow_start IDs backing this node
 let gSurveys    = null;   // cached survey list (null until first fetch)
 let gUsers      = null;   // cached user list (null until first fetch)
 let gAddType    = "task"; // currently selected type in Add Step modal
@@ -119,8 +120,9 @@ function selectNode(cardEl) {
 function nodeCard(x, y, item) {
 	const icon       = TYPE_ICONS[item.type] || "fas fa-circle";
 	const label      = typeLabel(item.type);
-	const isDecision = item.role === "decision";
-	const isEditable = EDITABLE_TYPES.includes(item.type);
+	const isDecision  = item.role === "decision";
+	const hasStartIds = (item.startIds || []).length > 0;
+	const isEditable  = EDITABLE_TYPES.includes(item.type) || (item.type === "form" && hasStartIds);
 
 	const div = document.createElement("div");
 	div.dataset.id       = item.id;
@@ -130,8 +132,9 @@ function nodeCard(x, y, item) {
 	div.dataset.project  = item.project  || "";
 	div.dataset.bundle   = item.bundle   || "";
 	div.dataset.assignee = item.assignee || "";
-	div.dataset.fwdIds   = JSON.stringify(item.fwdIds || []);
-	div.dataset.tgIds    = JSON.stringify(item.tgIds  || []);
+	div.dataset.fwdIds    = JSON.stringify(item.fwdIds    || []);
+	div.dataset.tgIds     = JSON.stringify(item.tgIds     || []);
+	div.dataset.startIds  = JSON.stringify(item.startIds  || []);
 
 	div.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:${CARD_W}px;`
 		+ `background:#fff;border-radius:6px;cursor:${isDecision ? "pointer" : "grab"};user-select:none;`
@@ -432,9 +435,11 @@ function openEditDrawer(cardEl) {
 	gEditNotifs = [];
 	gEditTGs    = [];
 
-	const fwdIds = JSON.parse(cardEl.dataset.fwdIds || "[]");
-	const tgIds  = JSON.parse(cardEl.dataset.tgIds  || "[]");
-	const type   = cardEl.dataset.type;
+	const fwdIds   = JSON.parse(cardEl.dataset.fwdIds   || "[]");
+	const tgIds    = JSON.parse(cardEl.dataset.tgIds    || "[]");
+	const startIds = JSON.parse(cardEl.dataset.startIds || "[]");
+	const type     = cardEl.dataset.type;
+	gEditStartIds  = startIds;
 
 	const promises = [];
 	if (fwdIds.length > 0) {
@@ -464,9 +469,10 @@ function openEditDrawer(cardEl) {
 
 function closeEditDrawer() {
 	document.getElementById("wf-drawer").classList.remove("open");
-	gEditItem   = null;
-	gEditNotifs = [];
-	gEditTGs    = [];
+	gEditItem     = null;
+	gEditNotifs   = [];
+	gEditTGs      = [];
+	gEditStartIds = [];
 }
 
 /*
@@ -482,6 +488,23 @@ function renderDrawerContent(type) {
 	document.getElementById("wf-drawer-icon").className = icon;
 	document.getElementById("wf-drawer-icon").style.color = colour;
 	document.getElementById("wf-drawer-title").textContent = label;
+
+	// Form start nodes: read-only, delete only
+	if (type === "form") {
+		document.getElementById("wf-drawer-body").innerHTML =
+			`<div style="font-size:13px;color:#6c757d;">Survey: <strong>${esc(gEditItem.dataset.name)}</strong></div>`;
+		document.getElementById("wf-conditions").style.display   = "none";
+		document.getElementById("wf-drawer-save").style.display     = "none";
+		document.getElementById("wf-drawer-advanced").style.display = "none";
+		document.getElementById("wf-drawer-delete").style.display   = gEditStartIds.length > 0 ? "" : "none";
+		return;
+	}
+
+	// Restore footer visibility for non-form types (in case drawer was previously on a form node)
+	document.getElementById("wf-conditions").style.display      = "";
+	document.getElementById("wf-drawer-save").style.display     = "";
+	document.getElementById("wf-drawer-advanced").style.display = "";
+	document.getElementById("wf-drawer-delete").style.display   = "";
 
 	// Derive shared values from the first available record
 	const firstNotif = gEditNotifs[0] || null;
@@ -615,7 +638,7 @@ function renderDrawerContent(type) {
  * Collect current drawer values and save to server.
  */
 function saveDrawer() {
-	if (!gEditItem) return;
+	if (!gEditItem || gEditItem.dataset.type === "form") return;
 
 	const name    = (document.getElementById("wfd-name")     || {}).value || "";
 	const enabled = (document.getElementById("wfd-enabled")  || { checked: true }).checked;
@@ -736,9 +759,14 @@ function executeDelete() {
 			method: "DELETE", credentials: "include"
 		});
 	});
+	const startDeletes = gEditStartIds.map(function(id) {
+		return fetch(`/surveyKPI/workflow/edit/form/${id}`, {
+			method: "DELETE", credentials: "include"
+		});
+	});
 
 	addHourglass();
-	Promise.all([...fwdDeletes, ...tgDeletes])
+	Promise.all([...fwdDeletes, ...tgDeletes, ...startDeletes])
 		.then(function() {
 			closeEditDrawer();
 			loadWorkflow();
@@ -766,21 +794,14 @@ function fetchUsers() {
 }
 
 function openAddDialog() {
-	if (!gSelectedNode) {
-		alert("Select a workflow item on the canvas first.");
-		return;
-	}
-	if (!gTriggerSurveyId) {
-		alert("The selected item has no associated survey and cannot be used as a trigger.");
-		return;
-	}
+	gAddType = "form";
 
-	gAddType = "task";
-
-	// Show trigger name
+	// Show trigger name (only relevant for non-form types)
 	const triggerNameEl = document.getElementById("wf-add-trigger-name");
 	if (triggerNameEl) {
-		triggerNameEl.textContent = gSelectedNode.dataset.name || gSelectedNode.dataset.id;
+		triggerNameEl.textContent = gSelectedNode
+			? (gSelectedNode.dataset.name || gSelectedNode.dataset.id)
+			: "(select a node on the canvas first)";
 	}
 
 	// Reset modal fields
@@ -799,11 +820,11 @@ function openAddDialog() {
 		if (el) el.value = "";
 	});
 
-	// Set type buttons
+	// Default to Form type
 	document.querySelectorAll(".wf-type-btn").forEach(function(btn) {
-		btn.classList.toggle("active", btn.dataset.type === "task");
+		btn.classList.toggle("active", btn.dataset.type === "form");
 	});
-	updateAddDialogFields("task");
+	updateAddDialogFields("form");
 
 	// Populate target survey dropdown
 	const targetEl = document.getElementById("wf-add-target");
@@ -811,7 +832,7 @@ function openAddDialog() {
 		targetEl.innerHTML = "<option value=''>Loading…</option>";
 		fetchSurveys().then(function(surveys) {
 			targetEl.innerHTML = surveys.map(function(s) {
-				return `<option value="${s.sId}" data-pid="${s.projectId}">${esc(s.projectName)} / ${esc(s.name)}</option>`;
+				return `<option value="${s.sId}" data-ident="${esc(s.ident)}" data-pid="${s.projectId}">${esc(s.projectName)} / ${esc(s.name)}</option>`;
 			}).join("");
 			if (surveys.length === 0) {
 				targetEl.innerHTML = "<option value=''>No surveys available</option>";
@@ -839,29 +860,28 @@ function openAddDialog() {
 
 function updateAddDialogFields(type) {
 	gAddType = type;
+	const isForm        = (type === "form");
 	const isTask        = (type === "task");
 	const isTaskGroup   = (type === "task" || type === "emailtask");
 	const isEmailTask   = (type === "emailtask");
 	const isEscalate    = (type === "escalate");
 	const isEmail       = (type === "email");
 	const isSms         = (type === "sms");
-	document.getElementById("wf-add-assignee-select-row").style.display = isTask      ? "" : "none";
-	document.getElementById("wf-add-assignee-row").style.display        = isEscalate  ? "" : "none";
-	document.getElementById("wf-add-task-email-row").style.display      = isEmailTask ? "" : "none";
-	document.getElementById("wf-add-email-rows").style.display          = isEmail     ? "" : "none";
-	document.getElementById("wf-add-sms-rows").style.display            = isSms       ? "" : "none";
-	document.getElementById("wf-add-target-row").style.display          = isTaskGroup ? "" : "none";
-	document.getElementById("wf-add-bundle-row").style.display          = isTaskGroup ? "none" : "";
+	document.getElementById("wf-add-trigger-row").style.display         = isForm                   ? "none" : "";
+	document.getElementById("wf-add-name-row").style.display            = isForm                   ? "none" : "";
+	document.getElementById("wf-add-filter-row").style.display          = isForm                   ? "none" : "";
+	document.getElementById("wf-add-assignee-select-row").style.display = isTask                   ? "" : "none";
+	document.getElementById("wf-add-assignee-row").style.display        = isEscalate               ? "" : "none";
+	document.getElementById("wf-add-task-email-row").style.display      = isEmailTask              ? "" : "none";
+	document.getElementById("wf-add-email-rows").style.display          = isEmail                  ? "" : "none";
+	document.getElementById("wf-add-sms-rows").style.display            = isSms                    ? "" : "none";
+	document.getElementById("wf-add-target-row").style.display          = (isForm || isTaskGroup)  ? "" : "none";
+	document.getElementById("wf-add-bundle-row").style.display          = (isForm || isTaskGroup)  ? "none" : "";
+	const targetLabel = document.getElementById("wf-add-target-label");
+	if (targetLabel) targetLabel.textContent = isForm ? "Form survey" : "Task survey";
 }
 
 function submitAddStep() {
-	const srcSurveyId = gTriggerSurveyId;
-	if (!srcSurveyId) { alert("No trigger node selected."); return; }
-
-	const name   = document.getElementById("wf-add-name").value.trim();
-	const filter = document.getElementById("wf-add-filter").value.trim();
-	if (!name) { alert("Please enter a label for this step."); return; }
-
 	// Close modal first
 	bootstrap.Modal.getInstance(document.getElementById("wf-add-modal")).hide();
 
@@ -869,7 +889,23 @@ function submitAddStep() {
 
 	let url, payload;
 
-	if (gAddType === "task" || gAddType === "emailtask") {
+	if (gAddType === "form") {
+		const targetEl   = document.getElementById("wf-add-target");
+		const selectedOpt = targetEl && targetEl.options[targetEl.selectedIndex];
+		const sIdent = selectedOpt ? selectedOpt.dataset.ident : null;
+		if (!sIdent) {
+			removeHourglass();
+			alert("Please select a survey.");
+			return;
+		}
+		url     = "/surveyKPI/workflow/edit/form";
+		payload = { sIdent: sIdent };
+	} else if (gAddType === "task" || gAddType === "emailtask") {
+		const srcSurveyId = gTriggerSurveyId;
+		if (!srcSurveyId) { removeHourglass(); alert("No trigger node selected."); return; }
+		const name   = document.getElementById("wf-add-name").value.trim();
+		const filter = document.getElementById("wf-add-filter").value.trim();
+		if (!name) { removeHourglass(); alert("Please enter a label for this step."); return; }
 		const targetSurveyId = parseInt(document.getElementById("wf-add-target").value, 10) || 0;
 		if (!targetSurveyId) {
 			removeHourglass();
@@ -896,6 +932,11 @@ function submitAddStep() {
 			// -1 (unassigned) → neither field set
 		}
 	} else {
+		const srcSurveyId = gTriggerSurveyId;
+		if (!srcSurveyId) { removeHourglass(); alert("No trigger node selected."); return; }
+		const name   = document.getElementById("wf-add-name").value.trim();
+		const filter = document.getElementById("wf-add-filter").value.trim();
+		if (!name) { removeHourglass(); alert("Please enter a label for this step."); return; }
 		const isBundle = document.getElementById("wf-add-bundle").checked;
 		url     = "/surveyKPI/workflow/edit/notification";
 		payload = {
