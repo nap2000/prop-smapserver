@@ -129,6 +129,7 @@ $(document).ready(function() {
 		view.qId_is_calc = qId_is_calc;
         view.inc_ro = $('#settings_inc_ro').prop('checked');
         view.tShowMeta = $('#settings_show_meta').prop('checked');
+        view.tWrapText = $('#settings_wrap_text').prop('checked');
 
         if(subjectType === "user") {
 	        view.dateQuestionId = $('#usage_settings_date_question option:selected').val();

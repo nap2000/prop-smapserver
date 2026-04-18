@@ -439,6 +439,58 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						</div>
 					</div>
 
+					<div class="sharepoint_options" style="display:none;">
+						<div class="form-group row">
+							<label for="sp_list_name" data-lang="u_sp_list_name" class="lang col-sm-2 control-label"></label>
+							<div class="col-sm-10">
+								<select id="sp_list_name" class="form-select"></select>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="lang col-sm-2 control-label" data-lang="c_operation"></label>
+							<div class="col-sm-10 pt-2">
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="sp_operation" id="sp_op_insert" value="insert" checked>
+									<label class="form-check-label lang" for="sp_op_insert" data-lang="c_insert"></label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="sp_operation" id="sp_op_update" value="update">
+									<label class="form-check-label lang" for="sp_op_update" data-lang="c_upsert"></label>
+								</div>
+							</div>
+						</div>
+						<div class="sp_update_options" style="display:none;">
+							<div class="form-group row">
+								<label for="sp_match_column" data-lang="u_sp_match_col" class="lang col-sm-2 control-label"></label>
+								<div class="col-sm-10">
+									<select id="sp_match_column" class="form-select sp_col_select"></select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="sp_match_field" data-lang="u_sp_match_field" class="lang col-sm-2 control-label"></label>
+								<div class="col-sm-10">
+									<select id="sp_match_field" class="form-select sp_field_select"></select>
+								</div>
+							</div>
+						</div>
+						<div class="form-group row mt-2">
+							<label class="lang col-sm-2 control-label" data-lang="u_sp_col_map"></label>
+							<div class="col-sm-10">
+								<table class="table table-sm table-bordered" id="sp_column_map_table">
+									<thead>
+										<tr>
+											<th class="lang" data-lang="u_sp_col_sp"></th>
+											<th class="lang" data-lang="u_sp_col_smap"></th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody id="sp_column_map_body"></tbody>
+								</table>
+								<button type="button" id="spAddRow" class="btn btn-sm btn-secondary lang" data-lang="c_add_row"></button>
+							</div>
+						</div>
+					</div>
+
 					<div class="email_options" style="display:none;">
 
 						<p class="lang escalate_options" data-lang="t_iewe" style="display:none;"></p>

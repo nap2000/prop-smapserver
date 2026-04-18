@@ -1436,7 +1436,7 @@ define(
     "d_from_q": "Enlazar desde Pregunta",
     "d_edit_web": "Editar en Formulario Web",
     "d_d_pdf": "Descargar Reporte PDF",
-    "d_expand_rec": "Expandir registro",
+    "d_expand_rec": "Expandir Registro",
     "d_layers": "Cambiar Mapa",
     "rev_upd_diff": "Actualizar una pregunta diferente a la pregunta original",
     "rev_sel_pk": "Seleccionar datos a cambiar usando la llave primaria (record)",

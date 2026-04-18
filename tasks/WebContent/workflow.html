@@ -105,8 +105,40 @@
 #wf-drawer-footer .btn { font-size: 13px; }
 #wf-drawer-advanced { margin-left: auto; font-size: 12px; }
 
+/* SharePoint type button active state */
+.wf-type-btn[data-type="sharepoint_list"].active {
+    background: #0078d4 !important;
+    color: #fff !important;
+}
+
 /* Selected node highlight (trigger for Add Step) */
 .wf-selected { outline: 2px solid #f0a500 !important; outline-offset: 2px; }
+
+/* Right-edge connector badge — appears on selected node */
+.wf-connector-badge {
+    position: absolute;
+    right: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: #f0a500;
+    color: #fff;
+    border: 2px solid #fff;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.22);
+    z-index: 50;
+    transition: background 0.15s, transform 0.15s;
+}
+.wf-connector-badge:hover {
+    background: #d4890a;
+    transform: translateY(-50%) scale(1.15);
+}
 
 /* Edit button on node cards */
 .wf-node-edit-btn {
@@ -127,8 +159,9 @@
     color: #fff;
     border: none;
     font-size: 24px;
-    line-height: 48px;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(13,110,253,0.4);
     z-index: 150;
@@ -254,7 +287,10 @@
                 <div class="mb-3">
                     <label class="form-label fw-semibold" style="font-size:12px;">Action type</label>
                     <div class="d-flex gap-2 flex-wrap" id="wf-add-type-btns">
-                        <button class="btn btn-sm btn-outline-success wf-type-btn active" data-type="task">
+                        <button class="btn btn-sm btn-outline-primary wf-type-btn active" data-type="form">
+                            <i class="fas fa-play-circle"></i> Form
+                        </button>
+                        <button class="btn btn-sm btn-outline-success wf-type-btn" data-type="task">
                             <i class="fas fa-file-alt"></i> Task
                         </button>
                         <button class="btn btn-sm btn-outline-success wf-type-btn" data-type="emailtask">
@@ -269,25 +305,29 @@
                         <button class="btn btn-sm btn-outline-secondary wf-type-btn" data-type="sms">
                             <i class="fas fa-comment-alt"></i> SMS
                         </button>
+                        <button class="btn btn-sm wf-type-btn" data-type="sharepoint_list"
+                                style="color:#0078d4;border:1px solid #0078d4;background:transparent;">
+                            <i class="fas fa-table"></i> SharePoint List
+                        </button>
                     </div>
                 </div>
 
                 <!-- Trigger (read-only, from selected canvas node) -->
-                <div class="mb-3">
+                <div class="mb-3" id="wf-add-trigger-row">
                     <label class="form-label fw-semibold" style="font-size:12px;">Trigger</label>
                     <div id="wf-add-trigger-name" class="form-control-plaintext fw-bold" style="font-size:13px;"></div>
                 </div>
 
-                <!-- Target survey (task type only) -->
+                <!-- Target / form survey selector -->
                 <div class="mb-3" id="wf-add-target-row" style="display:none;">
-                    <label class="form-label fw-semibold" style="font-size:12px;">Task survey</label>
+                    <label id="wf-add-target-label" class="form-label fw-semibold" style="font-size:12px;">Task survey</label>
                     <select id="wf-add-target" class="form-select form-select-sm">
                         <option value="">Loading surveys…</option>
                     </select>
                 </div>
 
                 <!-- Label -->
-                <div class="mb-3">
+                <div class="mb-3" id="wf-add-name-row">
                     <label class="form-label fw-semibold" style="font-size:12px;">Label</label>
                     <input id="wf-add-name" type="text" class="form-control form-control-sm" placeholder="Step name">
                 </div>
@@ -344,6 +384,49 @@
                     </div>
                 </div>
 
+                <!-- SharePoint List fields -->
+                <div id="wf-add-sp-rows" style="display:none;">
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold" style="font-size:12px;">List</label>
+                        <select id="wf-add-sp-list" class="form-select form-select-sm">
+                            <option value="">-- select --</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold" style="font-size:12px;">Operation</label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wf-add-sp-op" id="wf-add-sp-op-insert" value="insert" checked>
+                                <label class="form-check-label" for="wf-add-sp-op-insert" style="font-size:12px;">Insert</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wf-add-sp-op" id="wf-add-sp-op-update" value="update">
+                                <label class="form-check-label" for="wf-add-sp-op-update" style="font-size:12px;">Update or Insert</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="wf-add-sp-match-section" style="display:none;">
+                        <div class="mb-2">
+                            <label class="form-label fw-semibold" style="font-size:12px;">Match SP column</label>
+                            <select id="wf-add-sp-match-col" class="form-select form-select-sm"></select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label fw-semibold" style="font-size:12px;">Match survey field</label>
+                            <select id="wf-add-sp-match-field" class="form-select form-select-sm"></select>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold" style="font-size:12px;">Column map</label>
+                        <table class="table table-sm table-bordered" style="font-size:12px;">
+                            <thead><tr>
+                                <th>SP column</th><th>Survey field</th><th></th>
+                            </tr></thead>
+                            <tbody id="wf-add-sp-col-map-body"></tbody>
+                        </table>
+                        <button type="button" id="wf-add-sp-add-row" class="btn btn-sm btn-secondary">+ Add row</button>
+                    </div>
+                </div>
+
                 <!-- Bundle (non-task types only) -->
                 <div class="mb-3 form-check" id="wf-add-bundle-row" style="display:none;">
                     <input type="checkbox" class="form-check-input" id="wf-add-bundle">
@@ -351,7 +434,7 @@
                 </div>
 
                 <!-- Condition -->
-                <div class="mb-1">
+                <div class="mb-1" id="wf-add-filter-row">
                     <label class="form-label fw-semibold" style="font-size:12px;">Condition (optional)</label>
                     <input id="wf-add-filter" type="text" class="form-control form-control-sm"
                            placeholder="e.g. ${status} = 'urgent'">

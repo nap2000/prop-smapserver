@@ -744,6 +744,71 @@
 							</div>
 
 							<div class="card mb-3">
+								<div class="card-header lang" data-lang="u_sharepoint"></div>
+								<div class="card-body">
+									<div class="form-group row">
+										<label for="sp_url" data-lang="u_sp_url" class="lang col-sm-4 control-label"></label>
+										<div class="col-sm-6">
+											<input type="text" id="sp_url" class="form-control" placeholder="http://sharepoint.example.org">
+										</div>
+									</div>
+									<div class="form-group row mt-2">
+										<label for="sp_auth_type" data-lang="u_sp_auth_type" class="lang col-sm-4 control-label"></label>
+										<div class="col-sm-6">
+											<select id="sp_auth_type" class="form-select">
+												<option value="s2s" class="lang" data-lang="u_sp_auth_s2s">S2S High-Trust (on-premises)</option>
+												<option value="ntlm" class="lang" data-lang="u_sp_auth_ntlm">Windows (NTLM)</option>
+											</select>
+										</div>
+									</div>
+									<!-- S2S fields -->
+									<div id="sp_s2s_fields">
+										<div class="form-group row mt-2">
+											<label for="sp_client_id" data-lang="u_sp_client_id" class="lang col-sm-4 control-label"></label>
+											<div class="col-sm-6">
+												<input type="text" id="sp_client_id" class="form-control" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+											</div>
+										</div>
+										<div class="form-group row mt-2">
+											<label for="sp_realm" data-lang="u_sp_realm" class="lang col-sm-4 control-label"></label>
+											<div class="col-sm-6 d-flex gap-2">
+												<input type="text" id="sp_realm" class="form-control" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+												<button type="button" id="discoverRealm" class="btn btn-secondary lang" data-lang="u_sp_discover"></button>
+											</div>
+										</div>
+										<div class="form-group row mt-2">
+											<label for="sp_cert_pem" data-lang="u_sp_cert_pem" class="lang col-sm-4 control-label"></label>
+											<div class="col-sm-6">
+												<textarea id="sp_cert_pem" class="form-control" rows="6"
+													data-lang-ph="u_sp_cert_pem_ph" placeholder="Paste PKCS8 private key here"></textarea>
+											</div>
+										</div>
+									</div>
+									<!-- NTLM fields -->
+									<div id="sp_ntlm_fields" style="display:none;">
+										<div class="form-group row mt-2">
+											<label for="sp_domain" data-lang="u_sp_domain" class="lang col-sm-4 control-label"></label>
+											<div class="col-sm-6">
+												<input type="text" id="sp_domain" class="form-control" placeholder="DOMAIN">
+											</div>
+										</div>
+										<div class="form-group row mt-2">
+											<label for="sp_username" data-lang="u_sp_username" class="lang col-sm-4 control-label"></label>
+											<div class="col-sm-6">
+												<input type="text" id="sp_username" class="form-control" autocomplete="off">
+											</div>
+										</div>
+										<div class="form-group row mt-2">
+											<label for="sp_password" data-lang="u_sp_password" class="lang col-sm-4 control-label"></label>
+											<div class="col-sm-6">
+												<input type="password" id="sp_password" class="form-control" autocomplete="new-password">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="card mb-3">
 								<div class="card-header lang" data-lang="c_style"></div>
 								<div class="card-body">
 									<p class="lang" data-lang="u_css_info"></p>
