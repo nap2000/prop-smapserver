@@ -106,11 +106,20 @@ function surveyIdFromNodeId(nodeId) {
 function selectNode(cardEl) {
 	if (gSelectedNode) {
 		gSelectedNode.classList.remove("wf-selected");
+		const old = gSelectedNode.querySelector(".wf-connector-badge");
+		if (old) old.remove();
 	}
 	gSelectedNode    = cardEl;
 	gTriggerSurveyId = cardEl ? surveyIdFromNodeId(cardEl.dataset.id) : 0;
 	if (gSelectedNode) {
 		gSelectedNode.classList.add("wf-selected");
+		const badge = document.createElement("button");
+		badge.className = "wf-connector-badge";
+		badge.title     = "Add step from this node";
+		badge.textContent = "+";
+		badge.addEventListener("mousedown", function(e) { e.stopPropagation(); });
+		badge.addEventListener("click",     function(e) { e.stopPropagation(); openAddDialog(); });
+		gSelectedNode.appendChild(badge);
 	}
 }
 
@@ -139,12 +148,13 @@ function nodeCard(x, y, item) {
 	div.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:${CARD_W}px;`
 		+ `background:#fff;border-radius:6px;cursor:${isDecision ? "pointer" : "grab"};user-select:none;`
 		+ `box-shadow:0 2px 8px rgba(0,0,0,0.12);`
-		+ `border:1px solid ${isDecision ? "#fd7e14" : "#dee2e6"};overflow:hidden;font-family:sans-serif;`;
+		+ `border:1px solid ${isDecision ? "#fd7e14" : "#dee2e6"};font-family:sans-serif;`;
 
 	const header = document.createElement("div");
 	header.style.cssText = `background:${isDecision ? "#fff3cd" : "#f8f9fa"};`
 		+ `border-bottom:1px solid ${isDecision ? "#fd7e14" : "#dee2e6"};`
-		+ `height:32px;display:flex;align-items:center;padding:0 8px;gap:7px;`;
+		+ `height:32px;display:flex;align-items:center;padding:0 8px;gap:7px;`
+		+ `border-radius:6px 6px 0 0;`;
 	header.innerHTML = `<i class="${icon}" style="color:${isDecision ? "#fd7e14" : "#6c757d"};font-size:13px;"></i>`
 		+ `<span style="font-size:12px;color:${isDecision ? "#854d0e" : "#6c757d"};font-weight:600;">${label}</span>`;
 
@@ -820,11 +830,19 @@ function openAddDialog() {
 		if (el) el.value = "";
 	});
 
-	// Default to Form type
+	// Show only relevant type buttons based on whether a trigger node is selected
+	const hasSelected = !!gSelectedNode;
 	document.querySelectorAll(".wf-type-btn").forEach(function(btn) {
-		btn.classList.toggle("active", btn.dataset.type === "form");
+		const isForm = btn.dataset.type === "form";
+		btn.style.display = (isForm === !hasSelected) ? "" : "none";
 	});
-	updateAddDialogFields("form");
+
+	// Default to appropriate type
+	const defaultType = hasSelected ? "task" : "form";
+	document.querySelectorAll(".wf-type-btn").forEach(function(btn) {
+		btn.classList.toggle("active", btn.dataset.type === defaultType);
+	});
+	updateAddDialogFields(defaultType);
 
 	// Populate target survey dropdown
 	const targetEl = document.getElementById("wf-add-target");
@@ -882,9 +900,6 @@ function updateAddDialogFields(type) {
 }
 
 function submitAddStep() {
-	// Close modal first
-	bootstrap.Modal.getInstance(document.getElementById("wf-add-modal")).hide();
-
 	addHourglass();
 
 	let url, payload;
@@ -967,7 +982,11 @@ function submitAddStep() {
 		headers:     { "Content-Type": "application/json" },
 		body:        JSON.stringify(payload)
 	})
-	.then(function() { loadWorkflow(); })
+	.then(function(resp) {
+		if (!resp.ok) throw new Error(resp.statusText);
+		bootstrap.Modal.getInstance(document.getElementById("wf-add-modal")).hide();
+		loadWorkflow();
+	})
 	.catch(function(err) { console.error("submitAddStep error:", err); })
 	.finally(function() { removeHourglass(); });
 }

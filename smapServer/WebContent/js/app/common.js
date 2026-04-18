@@ -5711,13 +5711,6 @@ function spRefreshFieldSelects() {
 }
 
 // Show/hide the update-specific match fields
-function spOperationChanged(operation) {
-	if(operation === 'update') {
-		$('.sp_update_options').show();
-	} else {
-		$('.sp_update_options').hide();
-	}
-}
 
 // Set match selects to saved values after columns are loaded
 function spPopulateMatchSelects(matchCol, matchField) {
@@ -5794,6 +5787,14 @@ function setupSharePointNotification() {
 	$('#spAddRow').off().click(function() {
 		spAddColumnMapRow('', '');
 	});
+}
+
+function spOperationChanged(operation) {
+	if(operation === 'update') {
+		$('.sp_update_options').show();
+	} else {
+		$('.sp_update_options').hide();
+	}
 }
 
 /*
