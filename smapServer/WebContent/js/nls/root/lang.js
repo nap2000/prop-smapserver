@@ -1297,6 +1297,7 @@ define({
     "c_operation": "Operation",
     "c_update": "Update",
     "c_upsert": "Update or Insert",
+    "c_sharepoint_list": "SharePoint List",
     "c_add_row": "Add Row",
     "u_ar": "AWS Region for Email Service",
     "u_smtp": "Smtp Host",

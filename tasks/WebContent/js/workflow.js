@@ -43,14 +43,15 @@ let gTriggerSurveyId = 0;   // survey ID parsed from selected node
 
 // Fixed colours per node type (used when highlight = "type")
 const TYPE_COLOURS = {
-	form:     "#4a90d9",
-	task:     "#27ae60",
-	"case":   "#e67e22",
-	decision: "#f39c12",
-	periodic: "#8e44ad",
-	reminder: "#16a085",
-	email:    "#e74c3c",
-	sms:      "#c0392b"
+	form:             "#4a90d9",
+	task:             "#27ae60",
+	"case":           "#e67e22",
+	decision:         "#f39c12",
+	periodic:         "#8e44ad",
+	reminder:         "#16a085",
+	email:            "#e74c3c",
+	sms:              "#c0392b",
+	sharepoint_list:  "#0078d4"
 };
 
 // Palette for dynamic dimensions (project, bundle)
@@ -62,18 +63,19 @@ const PALETTE = [
 
 // Icon per workitem type
 const TYPE_ICONS = {
-	form:     "fas fa-file-alt",
-	task:     "fas fa-file-alt",
-	"case":   "fas fa-file-alt",
-	periodic: "fas fa-clock",
-	reminder: "fas fa-bell",
-	email:    "fas fa-envelope",
-	sms:      "fas fa-comment-alt",
-	decision: "fas fa-filter"
+	form:            "fas fa-file-alt",
+	task:            "fas fa-file-alt",
+	"case":          "fas fa-file-alt",
+	periodic:        "fas fa-clock",
+	reminder:        "fas fa-bell",
+	email:           "fas fa-envelope",
+	sms:             "fas fa-comment-alt",
+	decision:        "fas fa-filter",
+	sharepoint_list: "fas fa-table"
 };
 
 // Types that get an edit button on their card
-const EDITABLE_TYPES = ["task", "case", "email", "sms"];
+const EDITABLE_TYPES = ["task", "case", "email", "sms", "sharepoint_list"];
 
 // Localised label per workitem type
 function typeLabel(type) {
@@ -86,7 +88,8 @@ function typeLabel(type) {
 		reminder: l["c_reminder"],
 		email:    l["c_email"],
 		sms:      l["c_sms"],
-		decision: l["c_decision"] || "Decision"
+		decision:        l["c_decision"] || "Decision",
+		sharepoint_list: l["c_sharepoint_list"] || "SharePoint List"
 	};
 	return labels[type] || type;
 }
@@ -577,6 +580,106 @@ function renderDrawerContent(type) {
 		</div>`;
 	}
 
+	if (type === "sharepoint_list") {
+		const spOp = (firstNotif && firstNotif.spOperation) || "insert";
+		bodyHtml += `
+		<div class="wf-field">
+			<label>List</label>
+			<select id="wfd-sp-list"><option value="">Loading…</option></select>
+		</div>
+		<div class="wf-field">
+			<label>Operation</label>
+			<div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" name="wfd-sp-op" id="wfd-sp-op-insert" value="insert" ${spOp !== "update" ? "checked" : ""}>
+					<label class="form-check-label" for="wfd-sp-op-insert">Insert</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" name="wfd-sp-op" id="wfd-sp-op-update" value="update" ${spOp === "update" ? "checked" : ""}>
+					<label class="form-check-label" for="wfd-sp-op-update">Update or Insert</label>
+				</div>
+			</div>
+		</div>
+		<div id="wfd-sp-match-section" style="${spOp === "update" ? "" : "display:none;"}">
+			<div class="wf-field">
+				<label>Match SP column</label>
+				<select id="wfd-sp-match-col"><option value="">Loading…</option></select>
+			</div>
+			<div class="wf-field">
+				<label>Match survey field</label>
+				<select id="wfd-sp-match-field"><option value="">Loading…</option></select>
+			</div>
+		</div>
+		<div class="wf-field">
+			<label>Column map</label>
+			<table class="table table-sm table-bordered" style="font-size:12px;">
+				<thead><tr>
+					<th>SP column</th><th>Survey field</th><th></th>
+				</tr></thead>
+				<tbody id="wfd-sp-col-map-body"></tbody>
+			</table>
+			<button type="button" id="wfd-sp-add-row" class="btn btn-sm btn-secondary">+ Add row</button>
+		</div>`;
+		document.getElementById("wf-drawer-body").innerHTML = bodyHtml;
+
+		// Load lists, columns, and survey fields in parallel then wire up
+		const savedNotif = firstNotif || {};
+		const srcSurveyId = savedNotif.srcSurveyId || 0;
+		addHourglass();
+		Promise.all([
+			fetchSpLists(),
+			savedNotif.spListTitle ? fetchSpColumns(savedNotif.spListTitle) : Promise.resolve([]),
+			fetchSurveyFields(srcSurveyId)
+		]).then(function(results) {
+			const lists    = results[0];
+			const cols     = results[1];
+			const fields   = results[2];
+			spPopulateDrawerLists(lists, savedNotif.spListTitle);
+			spPopulateDrawerColumns(cols, savedNotif.spMatchColumn);
+			spPopulateDrawerFields(fields, savedNotif.spMatchField);
+			(savedNotif.spColumnMap || []).forEach(function(row) {
+				spAddDrawerMapRow(cols, fields, row.sp_column, row.smap_field);
+			});
+		}).finally(function() { removeHourglass(); });
+
+		// Wire operation radio to show/hide match section
+		document.querySelectorAll("input[name='wfd-sp-op']").forEach(function(radio) {
+			radio.addEventListener("change", function() {
+				document.getElementById("wfd-sp-match-section").style.display =
+					this.value === "update" ? "" : "none";
+			});
+		});
+
+		// Wire list select to reload columns
+		document.getElementById("wfd-sp-list").addEventListener("change", function() {
+			const title = this.value;
+			if (!title) return;
+			gSpColumns = null;
+			addHourglass();
+			fetchSpColumns(title).then(function(cols) {
+				spPopulateDrawerColumns(cols, null);
+				document.querySelectorAll("#wfd-sp-col-map-body .wfd-sp-col-sel").forEach(function(sel) {
+					spFillSelect(sel, cols.map(function(c) { return { val: c.internalName, text: c.displayName }; }), sel.value);
+				});
+			}).finally(function() { removeHourglass(); });
+		});
+
+		// Wire add-row button
+		document.getElementById("wfd-sp-add-row").addEventListener("click", function() {
+			const cols   = gSpColumns || [];
+			const fields = Array.from(document.querySelectorAll("#wfd-sp-col-map-body .wfd-sp-field-sel option"))
+				.map(function(o) { return { val: o.value, text: o.textContent }; })
+				.filter(function(o) { return o.val; });
+			spAddDrawerMapRow(cols, fields, "", "");
+		});
+
+		// SP drawer has no Advanced link
+		document.getElementById("wf-drawer-advanced").style.display = "none";
+		document.getElementById("wf-conditions").style.display = "";
+		buildConditionRows();
+		return;   // body already set — skip the generic innerHTML assignment below
+	}
+
 	// Enabled toggle (not shown for task groups — use Advanced)
 	if (gEditNotifs.length > 0) {
 		bodyHtml += `<div class="wf-field wf-field-inline">
@@ -606,7 +709,10 @@ function renderDrawerContent(type) {
 		});
 	}
 
-	// Build per-connection condition rows (amber section)
+	buildConditionRows();
+}
+
+function buildConditionRows() {
 	const allRecords = [
 		...gEditNotifs.map(function(n) {
 			return { id: n.id, tgId: 0, srcName: n.srcSurveyName || "Source", filter: n.filter || "" };
@@ -631,17 +737,19 @@ function renderDrawerContent(type) {
 		}).join("");
 	}
 
-	// Advanced link
-	const hasNotifs = gEditNotifs.length > 0;
-	const advUrl = hasNotifs
-		? "/app/fieldManager/notifications.html"
-		: "/app/tasks/taskManagement.html";
-	document.getElementById("wf-drawer-advanced").href = advUrl;
+	// Advanced link (not shown for SP — no advanced page)
+	const type = gEditItem ? gEditItem.dataset.type : "";
+	if (type !== "sharepoint_list") {
+		const hasNotifs = gEditNotifs.length > 0;
+		document.getElementById("wf-drawer-advanced").href = hasNotifs
+			? "/app/fieldManager/notifications.html"
+			: "/app/tasks/taskManagement.html";
+	}
 
 	// Delete button label with count
 	const totalRecords = gEditNotifs.length + gEditTGs.length;
-	const deleteBtn = document.getElementById("wf-drawer-delete");
-	deleteBtn.title = `Delete ${totalRecords} record(s) that back this step`;
+	document.getElementById("wf-drawer-delete").title =
+		`Delete ${totalRecords} record(s) that back this step`;
 }
 
 /*
@@ -662,6 +770,19 @@ function saveDrawer() {
 	// SMS fields
 	const smsTo      = (document.getElementById("wfd-sms-to")      || {}).value || null;
 	const smsMessage = (document.getElementById("wfd-sms-content") || {}).value || null;
+
+	// SharePoint fields
+	const spListTitle   = (document.getElementById("wfd-sp-list")         || {}).value || null;
+	const spOpEl        = document.querySelector("input[name='wfd-sp-op']:checked");
+	const spOperation   = spOpEl ? spOpEl.value : null;
+	const spMatchColumn = (document.getElementById("wfd-sp-match-col")    || {}).value || null;
+	const spMatchField  = (document.getElementById("wfd-sp-match-field")  || {}).value || null;
+	const spColumnMap   = [];
+	document.querySelectorAll("#wfd-sp-col-map-body tr").forEach(function(tr) {
+		const col   = (tr.querySelector(".wfd-sp-col-sel")   || {}).value;
+		const field = (tr.querySelector(".wfd-sp-field-sel") || {}).value;
+		if (col && field) spColumnMap.push({ sp_column: col, smap_field: field });
+	});
 
 	// Build per-connection filter map from condition inputs
 	const filtersByFwdId = {};
@@ -686,7 +807,12 @@ function saveDrawer() {
 				emailSubject: emailSubject,
 				emailContent: emailContent,
 				smsTo:        smsTo,
-				smsMessage:   smsMessage
+				smsMessage:   smsMessage,
+				spListTitle:   spListTitle,
+				spOperation:   spOperation,
+				spMatchColumn: spMatchColumn,
+				spMatchField:  spMatchField,
+				spColumnMap:   spColumnMap
 			});
 		});
 		promises.push(
@@ -789,11 +915,138 @@ function executeDelete() {
 // Add Step
 // ============================================================
 
+// ============================================================
+// SharePoint drawer helpers
+// ============================================================
+
+function spFillSelect(el, options, selectedVal) {
+	el.innerHTML = options.map(function(o) {
+		const sel = o.val === selectedVal ? " selected" : "";
+		return `<option value="${esc(o.val)}"${sel}>${esc(o.text)}</option>`;
+	}).join("");
+}
+
+function spPopulateDrawerLists(lists, selectedTitle) {
+	const el = document.getElementById("wfd-sp-list");
+	if (!el) return;
+	spFillSelect(el, [{ val: "", text: "-- select --" }].concat(
+		lists.map(function(t) { return { val: t, text: t }; })
+	), selectedTitle || "");
+}
+
+function spPopulateColumns(matchColId, mapBodyId, mapColClass, cols, selectedVal) {
+	const opts = [{ val: "", text: "" }].concat(
+		cols.map(function(c) { return { val: c.internalName, text: c.displayName }; })
+	);
+	const matchEl = document.getElementById(matchColId);
+	if (matchEl) spFillSelect(matchEl, opts, selectedVal || "");
+	document.querySelectorAll("#" + mapBodyId + " ." + mapColClass).forEach(function(sel) {
+		spFillSelect(sel, opts, sel.value);
+	});
+}
+
+function spPopulateFields(matchFieldId, mapBodyId, mapFieldClass, fields, selectedVal) {
+	const opts = [{ val: "", text: "" }].concat(
+		fields.map(function(f) { return { val: f.name, text: f.name }; })
+	);
+	const matchEl = document.getElementById(matchFieldId);
+	if (matchEl) spFillSelect(matchEl, opts, selectedVal || "");
+	document.querySelectorAll("#" + mapBodyId + " ." + mapFieldClass).forEach(function(sel) {
+		spFillSelect(sel, opts, sel.value);
+	});
+}
+
+function spPopulateDrawerColumns(cols, selectedVal) {
+	spPopulateColumns("wfd-sp-match-col", "wfd-sp-col-map-body", "wfd-sp-col-sel", cols, selectedVal);
+}
+
+function spPopulateDrawerFields(fields, selectedVal) {
+	spPopulateFields("wfd-sp-match-field", "wfd-sp-col-map-body", "wfd-sp-field-sel", fields, selectedVal);
+}
+
+function spPopulateModalColumns(cols, selectedVal) {
+	spPopulateColumns("wf-add-sp-match-col", "wf-add-sp-col-map-body", "wf-add-sp-col-sel", cols, selectedVal);
+}
+
+function spPopulateModalFields(fields, selectedVal) {
+	spPopulateFields("wf-add-sp-match-field", "wf-add-sp-col-map-body", "wf-add-sp-field-sel", fields, selectedVal);
+}
+
+function spAddMapRow(tbody, colClass, fieldClass, cols, fields, spVal, smapVal) {
+	const colOpts = [{ val: "", text: "" }].concat(
+		(Array.isArray(cols) && cols.length && cols[0].internalName !== undefined
+			? cols.map(function(c) { return { val: c.internalName, text: c.displayName }; })
+			: cols.map(function(c) { return { val: c.val, text: c.text }; }))
+	);
+	const fieldOpts = [{ val: "", text: "" }].concat(
+		(Array.isArray(fields) && fields.length && fields[0].name !== undefined
+			? fields.map(function(f) { return { val: f.name, text: f.name }; })
+			: fields.map(function(f) { return { val: f.val, text: f.text }; }))
+	);
+
+	const colSel = document.createElement("select");
+	colSel.className = "form-select form-select-sm " + colClass;
+	spFillSelect(colSel, colOpts, spVal);
+
+	const fieldSel = document.createElement("select");
+	fieldSel.className = "form-select form-select-sm " + fieldClass;
+	spFillSelect(fieldSel, fieldOpts, smapVal);
+
+	const delBtn = document.createElement("button");
+	delBtn.type = "button";
+	delBtn.className = "btn btn-sm btn-danger";
+	delBtn.textContent = "×";
+	delBtn.addEventListener("click", function() { delBtn.closest("tr").remove(); });
+
+	const tr = document.createElement("tr");
+	[colSel, fieldSel, delBtn].forEach(function(el) {
+		const td = document.createElement("td");
+		td.appendChild(el);
+		tr.appendChild(td);
+	});
+	tbody.appendChild(tr);
+}
+
+function spAddDrawerMapRow(cols, fields, spVal, smapVal) {
+	spAddMapRow(document.getElementById("wfd-sp-col-map-body"),
+		"wfd-sp-col-sel", "wfd-sp-field-sel", cols, fields, spVal, smapVal);
+}
+
+function spAddModalMapRow(cols, fields, spVal, smapVal) {
+	spAddMapRow(document.getElementById("wf-add-sp-col-map-body"),
+		"wf-add-sp-col-sel", "wf-add-sp-field-sel", cols, fields, spVal, smapVal);
+}
+
 function fetchSurveys() {
 	if (gSurveys !== null) return Promise.resolve(gSurveys);
 	return fetch("/surveyKPI/workflow/edit/surveys", { credentials: "include" })
 		.then(function(r) { return r.json(); })
 		.then(function(d) { gSurveys = d; return d; });
+}
+
+let gSpLists   = null;   // cached SP list titles
+let gSpColumns = null;   // cached SP column defs for currently selected list
+
+function fetchSpLists() {
+	if (gSpLists !== null) return Promise.resolve(gSpLists);
+	return fetch("/surveyKPI/sharepoint/lists", { credentials: "include" })
+		.then(function(r) { return r.json(); })
+		.then(function(d) { gSpLists = d || []; return gSpLists; });
+}
+
+function fetchSpColumns(listTitle) {
+	if (!listTitle) return Promise.resolve([]);
+	return fetch("/surveyKPI/server/sharepoint/lists/" + encodeURIComponent(listTitle) + "/fields",
+		{ credentials: "include" })
+		.then(function(r) { return r.json(); })
+		.then(function(d) { gSpColumns = d || []; return gSpColumns; });
+}
+
+function fetchSurveyFields(sId) {
+	if (!sId) return Promise.resolve([]);
+	return fetch("/surveyKPI/questionList/" + sId + "/none", { credentials: "include" })
+		.then(function(r) { return r.json(); })
+		.then(function(d) { return d || []; });
 }
 
 function fetchUsers() {
@@ -820,6 +1073,10 @@ function openAddDialog() {
 	document.getElementById("wf-add-task-email").value  = "";
 	document.getElementById("wf-add-filter").value      = "";
 	document.getElementById("wf-add-bundle").checked    = false;
+	document.getElementById("wf-add-sp-list").value     = "";
+	document.getElementById("wf-add-sp-op-insert").checked = true;
+	document.getElementById("wf-add-sp-match-section").style.display = "none";
+	document.getElementById("wf-add-sp-col-map-body").innerHTML = "";
 	document.getElementById("wf-add-assignee-select").value = "-1";
 	["email", "subject", "content"].forEach(function(s) {
 		const el = document.getElementById("wf-add-email-" + s);
@@ -885,18 +1142,61 @@ function updateAddDialogFields(type) {
 	const isEscalate    = (type === "escalate");
 	const isEmail       = (type === "email");
 	const isSms         = (type === "sms");
-	document.getElementById("wf-add-trigger-row").style.display         = isForm                   ? "none" : "";
-	document.getElementById("wf-add-name-row").style.display            = isForm                   ? "none" : "";
-	document.getElementById("wf-add-filter-row").style.display          = isForm                   ? "none" : "";
-	document.getElementById("wf-add-assignee-select-row").style.display = isTask                   ? "" : "none";
-	document.getElementById("wf-add-assignee-row").style.display        = isEscalate               ? "" : "none";
-	document.getElementById("wf-add-task-email-row").style.display      = isEmailTask              ? "" : "none";
-	document.getElementById("wf-add-email-rows").style.display          = isEmail                  ? "" : "none";
-	document.getElementById("wf-add-sms-rows").style.display            = isSms                    ? "" : "none";
-	document.getElementById("wf-add-target-row").style.display          = (isForm || isTaskGroup)  ? "" : "none";
-	document.getElementById("wf-add-bundle-row").style.display          = (isForm || isTaskGroup)  ? "none" : "";
+	const isSP          = (type === "sharepoint_list");
+	document.getElementById("wf-add-trigger-row").style.display         = isForm                        ? "none" : "";
+	document.getElementById("wf-add-name-row").style.display            = isForm                        ? "none" : "";
+	document.getElementById("wf-add-filter-row").style.display          = isForm                        ? "none" : "";
+	document.getElementById("wf-add-assignee-select-row").style.display = isTask                        ? "" : "none";
+	document.getElementById("wf-add-assignee-row").style.display        = isEscalate                    ? "" : "none";
+	document.getElementById("wf-add-task-email-row").style.display      = isEmailTask                   ? "" : "none";
+	document.getElementById("wf-add-email-rows").style.display          = isEmail                       ? "" : "none";
+	document.getElementById("wf-add-sms-rows").style.display            = isSms                         ? "" : "none";
+	document.getElementById("wf-add-target-row").style.display          = (isForm || isTaskGroup)        ? "" : "none";
+	document.getElementById("wf-add-bundle-row").style.display          = (isForm || isTaskGroup || isSP) ? "none" : "";
+	document.getElementById("wf-add-sp-rows").style.display             = isSP                           ? "" : "none";
 	const targetLabel = document.getElementById("wf-add-target-label");
 	if (targetLabel) targetLabel.textContent = isForm ? "Form survey" : "Task survey";
+
+	if (isSP) {
+		const srcSurveyId = gTriggerSurveyId || 0;
+		addHourglass();
+		Promise.all([fetchSpLists(), fetchSurveyFields(srcSurveyId)])
+			.then(function(results) {
+				spPopulateModalColumns([], null);
+				spPopulateModalFields(results[1], null);
+				const listEl = document.getElementById("wf-add-sp-list");
+				listEl.innerHTML = '<option value="">-- select --</option>'
+					+ results[0].map(function(t) {
+						return '<option value="' + esc(t) + '">' + esc(t) + '</option>';
+					}).join("");
+			})
+			.finally(function() { removeHourglass(); });
+
+		// Wire list change → reload columns (once, replacing previous handler)
+		const listEl = document.getElementById("wf-add-sp-list");
+		listEl.onchange = function() {
+			const title = this.value;
+			if (!title) return;
+			gSpColumns = null;
+			addHourglass();
+			fetchSpColumns(title)
+				.then(function(cols) { spPopulateModalColumns(cols, null); })
+				.finally(function() { removeHourglass(); });
+		};
+
+		// Wire operation radio → show/hide match section
+		document.querySelectorAll("input[name='wf-add-sp-op']").forEach(function(r) {
+			r.onchange = function() {
+				document.getElementById("wf-add-sp-match-section").style.display =
+					this.value === "update" ? "" : "none";
+			};
+		});
+
+		// Wire add-row button
+		document.getElementById("wf-add-sp-add-row").onclick = function() {
+			spAddModalMapRow(gSpColumns || [], [], "", "");
+		};
+	}
 }
 
 function submitAddStep() {
@@ -974,6 +1274,22 @@ function submitAddStep() {
 			payload.smsTo      = document.getElementById("wf-add-sms-to").value.trim()      || null;
 			payload.smsMessage = document.getElementById("wf-add-sms-content").value.trim() || null;
 		}
+		if (gAddType === "sharepoint_list") {
+			const spOpEl = document.querySelector("input[name='wf-add-sp-op']:checked");
+			payload.spListTitle = document.getElementById("wf-add-sp-list").value.trim() || null;
+			payload.spOperation = spOpEl ? spOpEl.value : "insert";
+			if (payload.spOperation === "update") {
+				payload.spMatchColumn = document.getElementById("wf-add-sp-match-col").value  || null;
+				payload.spMatchField  = document.getElementById("wf-add-sp-match-field").value || null;
+			}
+			const spMap = [];
+			document.querySelectorAll("#wf-add-sp-col-map-body tr").forEach(function(tr) {
+				const col   = (tr.querySelector(".wf-add-sp-col-sel")   || {}).value;
+				const field = (tr.querySelector(".wf-add-sp-field-sel") || {}).value;
+				if (col && field) spMap.push({ sp_column: col, smap_field: field });
+			});
+			payload.spColumnMap = spMap.length ? spMap : null;
+		}
 	}
 
 	fetch(url, {
@@ -1043,9 +1359,9 @@ localise.initLocale(gUserLocale).then(function() {
 		document.getElementById("wf-drawer-save").addEventListener("click",   saveDrawer);
 		document.getElementById("wf-drawer-delete").addEventListener("click", deleteFromDrawer);
 
-		// Deselect node when clicking canvas background
-		document.getElementById("wf-nodes").addEventListener("click", function(e) {
-			if (e.target === this) selectNode(null);
+		// Deselect node when clicking anywhere on the canvas that isn't a node card
+		document.getElementById("workflow-canvas").addEventListener("click", function(e) {
+			if (!e.target.closest("#wf-nodes [data-id]")) selectNode(null);
 		});
 
 		// Add Step button + modal

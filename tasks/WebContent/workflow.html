@@ -105,6 +105,12 @@
 #wf-drawer-footer .btn { font-size: 13px; }
 #wf-drawer-advanced { margin-left: auto; font-size: 12px; }
 
+/* SharePoint type button active state */
+.wf-type-btn[data-type="sharepoint_list"].active {
+    background: #0078d4 !important;
+    color: #fff !important;
+}
+
 /* Selected node highlight (trigger for Add Step) */
 .wf-selected { outline: 2px solid #f0a500 !important; outline-offset: 2px; }
 
@@ -299,6 +305,10 @@
                         <button class="btn btn-sm btn-outline-secondary wf-type-btn" data-type="sms">
                             <i class="fas fa-comment-alt"></i> SMS
                         </button>
+                        <button class="btn btn-sm wf-type-btn" data-type="sharepoint_list"
+                                style="color:#0078d4;border:1px solid #0078d4;background:transparent;">
+                            <i class="fas fa-table"></i> SharePoint List
+                        </button>
                     </div>
                 </div>
 
@@ -371,6 +381,49 @@
                     <div class="mb-2">
                         <label class="form-label fw-semibold" style="font-size:12px;">Message</label>
                         <textarea id="wf-add-sms-content" class="form-control form-control-sm" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <!-- SharePoint List fields -->
+                <div id="wf-add-sp-rows" style="display:none;">
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold" style="font-size:12px;">List</label>
+                        <select id="wf-add-sp-list" class="form-select form-select-sm">
+                            <option value="">-- select --</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold" style="font-size:12px;">Operation</label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wf-add-sp-op" id="wf-add-sp-op-insert" value="insert" checked>
+                                <label class="form-check-label" for="wf-add-sp-op-insert" style="font-size:12px;">Insert</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="wf-add-sp-op" id="wf-add-sp-op-update" value="update">
+                                <label class="form-check-label" for="wf-add-sp-op-update" style="font-size:12px;">Update or Insert</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="wf-add-sp-match-section" style="display:none;">
+                        <div class="mb-2">
+                            <label class="form-label fw-semibold" style="font-size:12px;">Match SP column</label>
+                            <select id="wf-add-sp-match-col" class="form-select form-select-sm"></select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label fw-semibold" style="font-size:12px;">Match survey field</label>
+                            <select id="wf-add-sp-match-field" class="form-select form-select-sm"></select>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold" style="font-size:12px;">Column map</label>
+                        <table class="table table-sm table-bordered" style="font-size:12px;">
+                            <thead><tr>
+                                <th>SP column</th><th>Survey field</th><th></th>
+                            </tr></thead>
+                            <tbody id="wf-add-sp-col-map-body"></tbody>
+                        </table>
+                        <button type="button" id="wf-add-sp-add-row" class="btn btn-sm btn-secondary">+ Add row</button>
                     </div>
                 </div>
 
