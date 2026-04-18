@@ -114,8 +114,10 @@ function selectNode(cardEl) {
 	}
 	gSelectedNode    = cardEl;
 	gTriggerSurveyId = cardEl ? surveyIdFromNodeId(cardEl.dataset.id) : 0;
+	const noChildren = ["email", "sms", "sharepoint_list"];
 	if (gSelectedNode) {
 		gSelectedNode.classList.add("wf-selected");
+		if (noChildren.includes(gSelectedNode.dataset.type)) return;
 		const badge = document.createElement("button");
 		badge.className = "wf-connector-badge";
 		badge.title     = "Add step from this node";
