@@ -634,6 +634,7 @@ function renderDrawerContent(type) {
 			const lists    = results[0];
 			const cols     = results[1];
 			const fields   = results[2];
+			gSpFields = fields;
 			spPopulateDrawerLists(lists, savedNotif.spListTitle);
 			spPopulateDrawerColumns(cols, savedNotif.spMatchColumn);
 			spPopulateDrawerFields(fields, savedNotif.spMatchField);
@@ -666,11 +667,7 @@ function renderDrawerContent(type) {
 
 		// Wire add-row button
 		document.getElementById("wfd-sp-add-row").addEventListener("click", function() {
-			const cols   = gSpColumns || [];
-			const fields = Array.from(document.querySelectorAll("#wfd-sp-col-map-body .wfd-sp-field-sel option"))
-				.map(function(o) { return { val: o.value, text: o.textContent }; })
-				.filter(function(o) { return o.val; });
-			spAddDrawerMapRow(cols, fields, "", "");
+			spAddDrawerMapRow(gSpColumns || [], gSpFields || [], "", "");
 		});
 
 		// SP drawer has no Advanced link
@@ -1026,6 +1023,7 @@ function fetchSurveys() {
 
 let gSpLists   = null;   // cached SP list titles
 let gSpColumns = null;   // cached SP column defs for currently selected list
+let gSpFields  = null;   // cached survey field names for the current SP drawer/modal
 
 function fetchSpLists() {
 	if (gSpLists !== null) return Promise.resolve(gSpLists);
@@ -1162,8 +1160,9 @@ function updateAddDialogFields(type) {
 		addHourglass();
 		Promise.all([fetchSpLists(), fetchSurveyFields(srcSurveyId)])
 			.then(function(results) {
+				gSpFields = results[1];
 				spPopulateModalColumns([], null);
-				spPopulateModalFields(results[1], null);
+				spPopulateModalFields(gSpFields, null);
 				const listEl = document.getElementById("wf-add-sp-list");
 				listEl.innerHTML = '<option value="">-- select --</option>'
 					+ results[0].map(function(t) {
@@ -1194,7 +1193,7 @@ function updateAddDialogFields(type) {
 
 		// Wire add-row button
 		document.getElementById("wf-add-sp-add-row").onclick = function() {
-			spAddModalMapRow(gSpColumns || [], [], "", "");
+			spAddModalMapRow(gSpColumns || [], gSpFields || [], "", "");
 		};
 	}
 }
