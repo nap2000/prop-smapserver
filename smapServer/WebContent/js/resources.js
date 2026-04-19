@@ -744,17 +744,30 @@ $(function() {
 	}
 
 	function sync_sp_list(id) {
+		$('#sp_sync_msg').hide();
 		addHourglass();
 		$.ajax({
 			type: 'POST',
 			url: '/surveyKPI/sharepoint/listmaps/' + id + '/sync',
-			success: function() {
+			success: function(data) {
 				removeHourglass();
+				var count = '';
+				try {
+					var result = (typeof data === 'object') ? data : JSON.parse(data);
+					count = ' ' + result.count + ' ' + localise.set["c_records"];
+				} catch(e) {}
+				$('#sp_sync_msg')
+					.removeClass('alert-danger').addClass('alert-success')
+					.text(localise.set["c_success"] + count)
+					.show();
 				getSpListMaps();
 			},
 			error: function(xhr) {
 				removeHourglass();
-				alert(xhr.responseText || 'Sync failed');
+				$('#sp_sync_msg')
+					.removeClass('alert-success').addClass('alert-danger')
+					.text(xhr.responseText || localise.set["msg_err_sp_sync"])
+					.show();
 			}
 		});
 	}

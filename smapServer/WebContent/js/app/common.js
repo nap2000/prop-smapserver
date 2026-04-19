@@ -4139,6 +4139,67 @@ function getAccessibleSurveys($elem, includeNone, includeBlocked, groupsOnly, in
 /*
  * Get all the csv files that a user can access
  */
+function getAccessibleSpLists($elem, includeNone) {
+	addHourglass();
+	$.ajax({
+		url: '/surveyKPI/sharepoint/listmaps',
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			removeHourglass();
+			if(handleLogout(data)) {
+				globals.gSpListMaps = data;
+				var h = [], idx = -1;
+				if(includeNone) {
+					h[++idx] = '<option value="">';
+					h[++idx] = localise.set["c_none"];
+					h[++idx] = '</option>';
+				}
+				for(var i = 0; i < data.length; i++) {
+					h[++idx] = '<option value="';
+					h[++idx] = htmlEncode(data[i].smap_name);
+					h[++idx] = '">';
+					h[++idx] = htmlEncode(data[i].smap_name);
+					h[++idx] = '</option>';
+				}
+				$elem.empty().append(h.join(''));
+			}
+		},
+		error: function(xhr, textStatus, err) {
+			removeHourglass();
+			if(handleLogout(xhr.responseText)) {
+				if(xhr.readyState == 0 || xhr.status == 0) { return; }
+				console.log("Error: Failed to get sharepoint list maps: " + err);
+			}
+		}
+	});
+}
+
+function getQuestionsInSpList($elem, $elem_multiple, smapName, includeNone) {
+	var h = [], hm = [], idx = -1, idx_m = -1;
+	var map = globals.gSpListMaps ? globals.gSpListMaps.find(function(m) { return m.smap_name === smapName; }) : null;
+	var data = map && map.headers ? map.headers : [];
+
+	if(includeNone) {
+		h[++idx] = '<option value="">';
+		h[++idx] = localise.set["c_none"];
+		h[++idx] = '</option>';
+	}
+	for(var i = 0; i < data.length; i++) {
+		hm[++idx_m] = h[++idx] = '<option value="';
+		hm[++idx_m] = h[++idx] = data[i].fName;
+		hm[++idx_m] = h[++idx] = '">';
+		hm[++idx_m] = h[++idx] = htmlEncode(data[i].fName);
+		hm[++idx_m] = h[++idx] = '</option>';
+	}
+	if($elem) { $elem.empty().append(h.join('')); }
+	if($elem_multiple) {
+		$elem_multiple.empty().append(hm.join(''));
+		$elem_multiple.multiselect('deselectAll', false);
+		$elem_multiple.multiselect('rebuild');
+	}
+}
+
 function getAccessibleCsvFiles($elem, includeNone) {
 
 	var url="/surveyKPI/shared/csv/files";
@@ -6880,6 +6941,7 @@ export {
 	removeHourglass,
 	getAccessibleSurveys,
 	getAccessibleCsvFiles,
+	getAccessibleSpLists,
 	saveCurrentGroupSurvey,
 	saveCurrentProject,
 	setInLocalStorage,
@@ -6943,6 +7005,7 @@ export {
 	getTableData,
 	addLanguageOptions,
 	getQuestionsInCsvFile,
+	getQuestionsInSpList,
 	getQuestionsInSurvey,
 	isTextStorageType,
 	setLanguages,

@@ -1687,6 +1687,7 @@ define({
     "u_sp_refresh_mins": "Refresh (mins)",
     "u_sp_last_sync": "Last Sync",
     "u_sp_sync_now": "Sync Now",
+    "msg_err_sp_sync": "Sync failed",
 
     // workflow
     "m_workflow": "Workflow",
