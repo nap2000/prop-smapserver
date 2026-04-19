@@ -607,8 +607,10 @@ $(function() {
 			cache: false,
 			success: function(data) {
 				removeHourglass();
-				gSpListMaps = data;
-				updateSpListTable(data);
+				if(handleLogout(data)) {
+					gSpListMaps = data;
+					updateSpListTable(data);
+				}
 			},
 			error: function(xhr) {
 				removeHourglass();
@@ -711,10 +713,12 @@ $(function() {
 			url: '/surveyKPI/sharepoint/listmaps' + (isNew ? '' : '/' + gSpListEditId),
 			contentType: 'application/json',
 			data: JSON.stringify(m),
-			success: function() {
+			success: function(data) {
 				removeHourglass();
-				window.bsModalHide('#spListEditPopup');
-				getSpListMaps();
+				if(handleLogout(data)) {
+					window.bsModalHide('#spListEditPopup');
+					getSpListMaps();
+				}
 			},
 			error: function(xhr) {
 				removeHourglass();

@@ -1038,8 +1038,8 @@ function fetchSpColumns(listTitle) {
 	if (!listTitle) return Promise.resolve([]);
 	return fetch("/surveyKPI/server/sharepoint/lists/" + encodeURIComponent(listTitle) + "/fields",
 		{ credentials: "include" })
-		.then(function(r) { return r.json(); })
-		.then(function(d) { gSpColumns = d || []; return gSpColumns; });
+		.then(function(r) { return r.ok ? r.json() : []; })
+		.then(function(d) { gSpColumns = Array.isArray(d) ? d : []; return gSpColumns; });
 }
 
 function fetchSurveyFields(sId) {
