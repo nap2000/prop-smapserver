@@ -138,6 +138,7 @@ define(
     "c_change_p": "Cambiar Contraseña",
     "c_ak": "Clave API",
     "c_gak": "Crear una clave API",
+    "c_go": "Ir",
     "c_rak": "Reemplazar clave API",
     "c_cftk": "Crear clave app móvil",
     "c_rftk": "Reemplazar clave app móvil",
@@ -262,7 +263,6 @@ define(
     "c_source": "Fuente",
     "c_show": "Mostrar",
     "c_show_meta": "Mostrar metadatos",
-    "c_wrap_text": "Ajustar texto",
     "c_show_q": "Mostrar pregunta",
     "c_hide": "Ocultar",
     "c_total": "Total",
@@ -1436,7 +1436,6 @@ define(
     "d_from_q": "Enlazar desde Pregunta",
     "d_edit_web": "Editar en Formulario Web",
     "d_d_pdf": "Descargar Reporte PDF",
-    "d_expand_rec": "Expandir registro",
     "d_layers": "Cambiar Mapa",
     "rev_upd_diff": "Actualizar una pregunta diferente a la pregunta original",
     "rev_sel_pk": "Seleccionar datos a cambiar usando la llave primaria (record)",
@@ -1570,5 +1569,8 @@ define(
     "pw_mm": "La contraseña y su confirmación no son las mismas",
     "ss_title": "Estado del servidor",
     "sms_their_q": "Pregunta para llamar al numero",
-    "sms_conv_q": "Pregunta de conversación"
+    "sms_conv_q": "Pregunta de conversación",
+    "m_workflow": "Flujo de trabajo",
+    "c_case": "Caso",
+    "c_send": "Enviar"
 });
