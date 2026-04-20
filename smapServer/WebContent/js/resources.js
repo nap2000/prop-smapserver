@@ -706,6 +706,10 @@ $(function() {
 		if(!m.smap_name || !m.list_title) {
 			return;
 		}
+		if(m.smap_name.includes(' ')) {
+			alert('Smap name must not contain spaces');
+			return;
+		}
 		let isNew = gSpListEditId < 0;
 		addHourglass();
 		$.ajax({
