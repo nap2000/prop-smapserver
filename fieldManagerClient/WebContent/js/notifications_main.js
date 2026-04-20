@@ -571,7 +571,6 @@ $(document).ready(function() {
 					h[++idx] = ' (' + htmlEncode(spNd.sp_operation) + ')';
 				}
 			} else if(data[i].target === "escalate"){
-				h[++idx] = htmlEncode();
 				var msg = '';
 				if(data[i].trigger === 'cm_alert') {
 					msg = localise.set["n_aa"];
@@ -580,8 +579,10 @@ $(document).ready(function() {
 
 				}
 				msg = msg + localise.set["n_as"];
-				msg = msg.replace("%s1", data[i].notifyDetails.survey_case);
-				msg = msg.replace("%s2", data[i].remote_user);
+				var caseName = (data[i].notifyDetails.survey_case_name) || data[i].notifyDetails.survey_case || '';
+				var assigneeName = (data[i].remote_user_name != null ? data[i].remote_user_name : data[i].remote_user) || '';
+				msg = msg.replace("%s1", caseName);
+				msg = msg.replace("%s2", assigneeName);
 				h[++idx] = htmlEncode(msg);
 			}
 			h[++idx] = '</td>';

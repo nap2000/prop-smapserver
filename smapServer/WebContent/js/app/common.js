@@ -5212,7 +5212,7 @@ function edit_notification(edit, idx, inconsole) {
 			}
 		}
 		if (!inconsole) {
-			$('#fwd_user,#user_to_assign').val(notification.remote_user).change();
+			$('#fwd_user').val(notification.remote_user);
 			$('#assign_question').val(notification.notifyDetails.assign_question);
 			$('#survey_case').val(notification.notifyDetails.survey_case);
 			gEligibleUser = notification.remote_user;
@@ -5220,9 +5220,15 @@ function edit_notification(edit, idx, inconsole) {
 
 			$('#fwd_host').val(notification.remote_host);
 
-			// assign user from data
-			if($('#user_to_assign').val() === '_data') {
-				$('.assign_question').removeClass('d-none').show();
+			// Restore escalate assign type (user vs role)
+			restoreEscalateAssignType(notification.remote_user);
+
+			// For user-type escalate, set the select value and show assign_question if _data
+			if(!notification.remote_user || notification.remote_user.indexOf('_role:') !== 0) {
+				$('#user_to_assign').val(notification.remote_user).change();
+				if($('#user_to_assign').val() === '_data') {
+					$('.assign_question').removeClass('d-none').show();
+				}
 			}
 
 			if (notification.enabled) {
@@ -5491,6 +5497,21 @@ function setupNotificationDialog() {
 	});
 	setTargetDependencies("email");
 
+	// Escalate assign-type toggle (User vs Role — no email, cases are single-assignee)
+	$('#esc_assign_user_type').off().click(function() {
+		$('#esc_assign_user_type').addClass('active');
+		$('#esc_assign_role_type').removeClass('active');
+		$('#esc_user_row').show();
+		$('#esc_role_row').hide();
+	});
+	$('#esc_assign_role_type').off().click(function() {
+		$('#esc_assign_role_type').addClass('active');
+		$('#esc_assign_user_type').removeClass('active');
+		$('#esc_user_row').hide();
+		$('#esc_role_row').show();
+		loadRolesForEscalate();
+	});
+
 	// Set change function attach
 	$('#email_attach').off().change(function() {
 		setAttachDependencies($(this).val());
@@ -5699,14 +5720,17 @@ function saveWebhook() {
 function saveEscalate() {
 
 	var error = false,
-		callback_url,
 		notification = {};
 
 	if(!error) {
 
 		notification.target = "escalate";
-		notification.remote_user = $('#user_to_assign').val();
-
+		if($('#esc_assign_role_type').hasClass('active')) {
+			var roleId = $('#role_to_assign_notif').val();
+			notification.remote_user = '_role:' + roleId;
+		} else {
+			notification.remote_user = $('#user_to_assign').val();
+		}
 
 		notification.notifyDetails = {};
 		notification.notifyDetails.survey_case = $('#survey_case').val();
@@ -6700,6 +6724,50 @@ function fillUsersList(isNotification, data) {
 }
 
 /*
+ * Load roles into #role_to_assign_notif for escalate assignment
+ */
+function loadRolesForEscalate() {
+	var $sel = $('#role_to_assign_notif');
+	if($sel.length === 0 || $sel.find('option').length > 0) return; // already loaded
+	$.ajax({
+		url: "/surveyKPI/role/roles/names",
+		cache: false,
+		success: function(data) {
+			$sel.empty();
+			var h = [], idx = -1;
+			if(data && data.length > 0) {
+				for(var i = 0; i < data.length; i++) {
+					h[++idx] = '<option value="' + data[i].id + '">' + htmlEncode(data[i].name) + '</option>';
+				}
+			}
+			$sel.html(h.join(''));
+		}
+	});
+}
+
+/*
+ * Restore role-type assignment state when editing an escalate notification.
+ * Call after setting remote_user on the form.
+ */
+function restoreEscalateAssignType(remoteUser) {
+	if(remoteUser && remoteUser.indexOf('_role:') === 0) {
+		var roleId = remoteUser.substring(6);
+		$('#esc_assign_user_type').removeClass('active');
+		$('#esc_assign_role_type').addClass('active');
+		$('#esc_user_row').hide();
+		$('#esc_role_row').show();
+		loadRolesForEscalate();
+		// Defer select value until options are populated
+		setTimeout(function() { $('#role_to_assign_notif').val(roleId); }, 300);
+	} else {
+		$('#esc_assign_user_type').addClass('active');
+		$('#esc_assign_role_type').removeClass('active');
+		$('#esc_user_row').show();
+		$('#esc_role_row').hide();
+	}
+}
+
+/*
  * Return true if the passed in value is accepted by xlsFormConverter
  */
 function isValidODKQuestionName(val) {
@@ -6914,6 +6982,8 @@ export {
 	getLoggedInUser,
 	getLanguageList,
 	getEligibleUsers,
+	loadRolesForEscalate,
+	restoreEscalateAssignType,
 	getFilesFromServer,
 	getRoles,
 	getGoogleMapApi,
