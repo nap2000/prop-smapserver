@@ -161,7 +161,8 @@ function nodeCard(x, y, item) {
 		+ `height:32px;display:flex;align-items:center;padding:0 8px;gap:7px;`
 		+ `border-radius:6px 6px 0 0;`;
 	header.innerHTML = `<i class="${icon}" style="color:${isDecision ? "#fd7e14" : "#6c757d"};font-size:13px;"></i>`
-		+ `<span style="font-size:12px;color:${isDecision ? "#854d0e" : "#6c757d"};font-weight:600;">${label}</span>`;
+		+ `<span style="font-size:11px;color:${isDecision ? "#854d0e" : "#6c757d"};font-weight:600;flex-shrink:0;">${label}</span>`
+		+ (item.label ? `<span style="font-size:12px;font-weight:700;color:#212529;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;margin-left:4px;" title="${esc(item.label)}">${esc(item.label)}</span>` : `<span style="flex:1;"></span>`);
 
 	// Edit button for editable node types and decision nodes
 	if (isEditable || isDecision) {
@@ -1233,7 +1234,8 @@ function submitAddStep() {
 			sourceSurveyId: srcSurveyId,
 			targetSurveyId: targetSurveyId,
 			name:           name,
-			filter:         filter || null
+			filter:         filter || null,
+			wfPrevNodeId:   gSelectedNode ? gSelectedNode.dataset.id : null
 		};
 		if (gAddType === "emailtask") {
 			payload.remoteUser = document.getElementById("wf-add-task-email").value.trim() || null;
@@ -1256,12 +1258,13 @@ function submitAddStep() {
 		const isBundle = document.getElementById("wf-add-bundle").checked;
 		url     = "/surveyKPI/workflow/edit/notification";
 		payload = {
-			srcSurveyId: srcSurveyId,
-			target:      gAddType,
-			name:        name,
-			filter:      filter || null,
-			enabled:     true,
-			bundle:      isBundle
+			srcSurveyId:  srcSurveyId,
+			target:       gAddType,
+			name:         name,
+			filter:       filter || null,
+			enabled:      true,
+			bundle:       isBundle,
+			wfPrevNodeId: gSelectedNode ? gSelectedNode.dataset.id : null
 		};
 		if (gAddType === "escalate") {
 			payload.remoteUser = document.getElementById("wf-add-assignee").value.trim() || null;
