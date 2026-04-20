@@ -1019,7 +1019,7 @@ function spAddModalMapRow(cols, fields, spVal, smapVal) {
 
 function fetchSurveys() {
 	if (gSurveys !== null) return Promise.resolve(gSurveys);
-	return fetch("/surveyKPI/workflow/edit/surveys", { credentials: "include" })
+	return fetch("/surveyKPI/workflow/edit/surveys", { credentials: "include", cache: "no-store" })
 		.then(function(r) { return r.json(); })
 		.then(function(d) { gSurveys = d; return d; });
 }
