@@ -332,21 +332,43 @@
                     <input id="wf-add-name" type="text" class="form-control form-control-sm" placeholder="Step name">
                 </div>
 
-                <!-- Assignee — select for task type -->
+                <!-- Assignee toggle — task type -->
+                <div class="mb-2" id="wf-add-task-assign-toggle-row" style="display:none;">
+                    <label class="form-label fw-semibold" style="font-size:12px;">Assign type</label>
+                    <div class="btn-group btn-group-sm">
+                        <button type="button" id="wf-add-task-assign-unassigned" class="btn btn-outline-secondary active" style="font-size:12px;">Unassigned</button>
+                        <button type="button" id="wf-add-task-assign-user" class="btn btn-outline-secondary" style="font-size:12px;">User</button>
+                        <button type="button" id="wf-add-task-assign-role" class="btn btn-outline-secondary" style="font-size:12px;">Role</button>
+                    </div>
+                </div>
                 <div class="mb-3" id="wf-add-assignee-select-row" style="display:none;">
-                    <label class="form-label fw-semibold" style="font-size:12px;">Assign to</label>
+                    <label class="form-label fw-semibold" style="font-size:12px;">User</label>
                     <select id="wf-add-assignee-select" class="form-select form-select-sm">
-                        <option value="-1">Unassigned</option>
                         <option value="-2">Assign from data values</option>
                     </select>
                 </div>
+                <div class="mb-3" id="wf-add-task-role-row" style="display:none;">
+                    <label class="form-label fw-semibold" style="font-size:12px;">Role</label>
+                    <select id="wf-add-task-role-select" class="form-select form-select-sm"></select>
+                </div>
 
-                <!-- Assignee — text for case type -->
+                <!-- Assignee toggle — case type -->
+                <div class="mb-2" id="wf-add-case-assign-toggle-row" style="display:none;">
+                    <label class="form-label fw-semibold" style="font-size:12px;">Assign type</label>
+                    <div class="btn-group btn-group-sm">
+                        <button type="button" id="wf-add-case-assign-user" class="btn btn-outline-secondary active" style="font-size:12px;">User</button>
+                        <button type="button" id="wf-add-case-assign-role" class="btn btn-outline-secondary" style="font-size:12px;">Role</button>
+                    </div>
+                </div>
                 <div class="mb-3" id="wf-add-assignee-row" style="display:none;">
                     <label class="form-label fw-semibold" style="font-size:12px;">Assign to</label>
                     <input id="wf-add-assignee" type="text" class="form-control form-control-sm"
                            placeholder="_submitter, _data, or email address">
                     <div class="form-text">Use _submitter (person who submitted) or _data (from a form question)</div>
+                </div>
+                <div class="mb-3" id="wf-add-case-role-row" style="display:none;">
+                    <label class="form-label fw-semibold" style="font-size:12px;">Role</label>
+                    <select id="wf-add-case-role-select" class="form-select form-select-sm"></select>
                 </div>
 
                 <!-- Email addresses (email task) -->

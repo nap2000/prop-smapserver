@@ -35,6 +35,7 @@ let gEditTGs      = [];     // WorkflowEditTG[]   from server
 let gEditStartIds = [];     // workflow_start IDs backing this node
 let gSurveys    = null;   // cached survey list (null until first fetch)
 let gUsers      = null;   // cached user list (null until first fetch)
+let gRoles      = null;   // cached role list (null until first fetch)
 let gAddType    = "task"; // currently selected type in Add Step modal
 
 // Add-step trigger state
@@ -548,10 +549,23 @@ function renderDrawerContent(type) {
 	}
 
 	if (type === "case") {
+		const isCaseRole = remoteUser.startsWith("_role:");
+		const caseRoleId = isCaseRole ? remoteUser.substring(6) : "";
 		bodyHtml += `<div class="wf-field">
+			<label>Assign type</label>
+			<div class="btn-group btn-group-sm">
+				<button type="button" id="wfd-case-assign-user" class="btn btn-outline-secondary${isCaseRole ? "" : " active"}" style="font-size:11px;">User</button>
+				<button type="button" id="wfd-case-assign-role" class="btn btn-outline-secondary${isCaseRole ? " active" : ""}" style="font-size:11px;">Role</button>
+			</div>
+		</div>
+		<div class="wf-field" id="wfd-case-user-row"${isCaseRole ? ' style="display:none;"' : ""}>
 			<label>Assign to</label>
-			<input id="wfd-assignee" type="text" value="${esc(remoteUser)}"
+			<input id="wfd-assignee" type="text" value="${esc(isCaseRole ? "" : remoteUser)}"
 			       placeholder="_submitter, _data, or email address">
+		</div>
+		<div class="wf-field" id="wfd-case-role-row"${isCaseRole ? "" : ' style="display:none;"'}>
+			<label>Role</label>
+			<select id="wfd-case-role-select" data-current="${esc(caseRoleId)}"><option value="">Loading…</option></select>
 		</div>`;
 	}
 
@@ -680,15 +694,34 @@ function renderDrawerContent(type) {
 		return;   // body already set — skip the generic innerHTML assignment below
 	}
 
-	// Enabled toggle (not shown for task groups — use Advanced)
+	// Enabled toggle (notifications only)
 	if (gEditNotifs.length > 0) {
 		bodyHtml += `<div class="wf-field wf-field-inline">
 			<label>Enabled</label>
 			<input id="wfd-enabled" type="checkbox" ${enabled ? "checked" : ""}>
 		</div>`;
-	} else {
-		bodyHtml += `<div style="font-size:11px;color:#6c757d;margin-top:4px;">
-			To change assignee use <strong>Advanced</strong> below.
+	}
+
+	// Assignee for task (task_group backed) — User | Role | Unassigned
+	if (type === "task" && gEditTGs.length > 0) {
+		const tgRoleId = firstTG ? (firstTG.roleId || 0) : 0;
+		const tgUserId = firstTG ? (firstTG.userId || 0) : 0;
+		const taskAssignMode = tgRoleId > 0 ? "role" : (tgUserId > 0 ? "user" : "unassigned");
+		bodyHtml += `<div class="wf-field">
+			<label>Assign type</label>
+			<div class="btn-group btn-group-sm">
+				<button type="button" id="wfd-task-assign-unassigned" class="btn btn-outline-secondary${taskAssignMode === "unassigned" ? " active" : ""}" style="font-size:11px;">Unassigned</button>
+				<button type="button" id="wfd-task-assign-user"       class="btn btn-outline-secondary${taskAssignMode === "user"       ? " active" : ""}" style="font-size:11px;">User</button>
+				<button type="button" id="wfd-task-assign-role"       class="btn btn-outline-secondary${taskAssignMode === "role"       ? " active" : ""}" style="font-size:11px;">Role</button>
+			</div>
+		</div>
+		<div class="wf-field" id="wfd-task-user-row"${taskAssignMode === "user" ? "" : ' style="display:none;"'}>
+			<label>User</label>
+			<select id="wfd-task-user-select" data-current="${tgUserId}"><option value="">Loading…</option></select>
+		</div>
+		<div class="wf-field" id="wfd-task-role-row"${taskAssignMode === "role" ? "" : ' style="display:none;"'}>
+			<label>Role</label>
+			<select id="wfd-task-role-select" data-current="${tgRoleId}"><option value="">Loading…</option></select>
 		</div>`;
 	}
 
@@ -707,6 +740,63 @@ function renderDrawerContent(type) {
 				taskSurveyEl.innerHTML = "<option value=''>No surveys available</option>";
 			}
 		});
+	}
+
+	// Populate and wire task drawer assignee (user/role selects + toggles)
+	if (type === "task" && gEditTGs.length > 0) {
+		const userEl = document.getElementById("wfd-task-user-select");
+		const roleEl = document.getElementById("wfd-task-role-select");
+		if (userEl) {
+			fetchUsers().then(function(users) {
+				const cur = parseInt(userEl.dataset.current, 10) || 0;
+				userEl.innerHTML = users.map(function(u) {
+					return `<option value="${u.id}"${u.id === cur ? " selected" : ""}>${esc(u.name)}</option>`;
+				}).join("");
+			});
+		}
+		if (roleEl) {
+			fetchRoles().then(function(roles) {
+				fillRoleSelect(roleEl, roles, roleEl.dataset.current);
+			});
+		}
+		function setDrawerTaskMode(mode) {
+			["unassigned","user","role"].forEach(function(m) {
+				const btn = document.getElementById("wfd-task-assign-" + m);
+				if (btn) btn.classList.toggle("active", m === mode);
+			});
+			const uRow = document.getElementById("wfd-task-user-row");
+			const rRow = document.getElementById("wfd-task-role-row");
+			if (uRow) uRow.style.display = mode === "user" ? "" : "none";
+			if (rRow) rRow.style.display = mode === "role" ? "" : "none";
+		}
+		["unassigned","user","role"].forEach(function(m) {
+			const btn = document.getElementById("wfd-task-assign-" + m);
+			if (btn) btn.onclick = function() { setDrawerTaskMode(m); };
+		});
+	}
+
+	// Populate and wire case drawer assignee (role select + toggles)
+	if (type === "case") {
+		const caseRoleEl = document.getElementById("wfd-case-role-select");
+		if (caseRoleEl) {
+			fetchRoles().then(function(roles) {
+				fillRoleSelect(caseRoleEl, roles, caseRoleEl.dataset.current);
+			});
+		}
+		function setDrawerCaseMode(mode) {
+			const uBtn = document.getElementById("wfd-case-assign-user");
+			const rBtn = document.getElementById("wfd-case-assign-role");
+			if (uBtn) uBtn.classList.toggle("active", mode === "user");
+			if (rBtn) rBtn.classList.toggle("active", mode === "role");
+			const uRow = document.getElementById("wfd-case-user-row");
+			const rRow = document.getElementById("wfd-case-role-row");
+			if (uRow) uRow.style.display = mode === "user" ? "" : "none";
+			if (rRow) rRow.style.display = mode === "role" ? "" : "none";
+		}
+		const uBtn = document.getElementById("wfd-case-assign-user");
+		const rBtn = document.getElementById("wfd-case-assign-role");
+		if (uBtn) uBtn.onclick = function() { setDrawerCaseMode("user"); };
+		if (rBtn) rBtn.onclick = function() { setDrawerCaseMode("role"); };
 	}
 
 	buildConditionRows();
@@ -760,7 +850,27 @@ function saveDrawer() {
 
 	const name    = (document.getElementById("wfd-name")     || {}).value || "";
 	const enabled = (document.getElementById("wfd-enabled")  || { checked: true }).checked;
-	const assignee = (document.getElementById("wfd-assignee") || {}).value || "";
+
+	// Case assignee — user text or role select
+	let assignee = "";
+	const caseRoleBtn = document.getElementById("wfd-case-assign-role");
+	if (caseRoleBtn && caseRoleBtn.classList.contains("active")) {
+		const cRoleId = (document.getElementById("wfd-case-role-select") || {}).value || "";
+		assignee = cRoleId ? "_role:" + cRoleId : "";
+	} else {
+		assignee = (document.getElementById("wfd-assignee") || {}).value || "";
+	}
+
+	// Task assignee — role id or user id
+	let taskRoleId = 0;
+	let taskUserId = 0;
+	const taskRoleBtn = document.getElementById("wfd-task-assign-role");
+	const taskUserBtn = document.getElementById("wfd-task-assign-user");
+	if (taskRoleBtn && taskRoleBtn.classList.contains("active")) {
+		taskRoleId = parseInt((document.getElementById("wfd-task-role-select") || {}).value || "0", 10);
+	} else if (taskUserBtn && taskUserBtn.classList.contains("active")) {
+		taskUserId = parseInt((document.getElementById("wfd-task-user-select") || {}).value || "0", 10);
+	}
 
 	// Email fields
 	const emailTo      = (document.getElementById("wfd-email-to")      || {}).value || null;
@@ -833,7 +943,10 @@ function saveDrawer() {
 			const update = {
 				name:   name,
 				filter: filtersByTgId[String(tg.tgId)] !== undefined
-				            ? filtersByTgId[String(tg.tgId)] : (tg.filter || "")
+				            ? filtersByTgId[String(tg.tgId)] : (tg.filter || ""),
+				roleId: taskRoleId,
+				userId: taskUserId,
+				remoteUser: (taskRoleId === 0 && taskUserId === 0) ? (tg.remoteUser || "") : ""
 			};
 			if (targetSurveyId > 0) update.targetSurveyId = targetSurveyId;
 			return Object.assign({}, tg, update);
@@ -1057,6 +1170,20 @@ function fetchUsers() {
 		.then(function(d) { gUsers = d; return d; });
 }
 
+function fetchRoles() {
+	if (gRoles !== null) return Promise.resolve(gRoles);
+	return fetch("/surveyKPI/role/roles/names", { credentials: "include", cache: "no-store" })
+		.then(function(r) { return r.json(); })
+		.then(function(d) { gRoles = d || []; return gRoles; });
+}
+
+function fillRoleSelect(el, roles, selectedId) {
+	el.innerHTML = roles.map(function(r) {
+		const sel = String(r.id) === String(selectedId) ? " selected" : "";
+		return `<option value="${r.id}"${sel}>${esc(r.name)}</option>`;
+	}).join("");
+}
+
 function openAddDialog() {
 	gAddType = "form";
 
@@ -1078,7 +1205,17 @@ function openAddDialog() {
 	document.getElementById("wf-add-sp-op-insert").checked = true;
 	document.getElementById("wf-add-sp-match-section").style.display = "none";
 	document.getElementById("wf-add-sp-col-map-body").innerHTML = "";
-	document.getElementById("wf-add-assignee-select").value = "-1";
+	// Reset task assign toggle to Unassigned
+	["wf-add-task-assign-unassigned","wf-add-task-assign-user","wf-add-task-assign-role"].forEach(function(id) {
+		document.getElementById(id).classList.toggle("active", id === "wf-add-task-assign-unassigned");
+	});
+	document.getElementById("wf-add-assignee-select-row").style.display = "none";
+	document.getElementById("wf-add-task-role-row").style.display = "none";
+	// Reset case assign toggle to User
+	["wf-add-case-assign-user","wf-add-case-assign-role"].forEach(function(id) {
+		document.getElementById(id).classList.toggle("active", id === "wf-add-case-assign-user");
+	});
+	document.getElementById("wf-add-case-role-row").style.display = "none";
 	["email", "subject", "content"].forEach(function(s) {
 		const el = document.getElementById("wf-add-email-" + s);
 		if (el) el.value = "";
@@ -1144,11 +1281,33 @@ function updateAddDialogFields(type) {
 	const isEmail       = (type === "email");
 	const isSms         = (type === "sms");
 	const isSP          = (type === "sharepoint_list");
-	document.getElementById("wf-add-trigger-row").style.display         = isForm                        ? "none" : "";
-	document.getElementById("wf-add-name-row").style.display            = isForm                        ? "none" : "";
-	document.getElementById("wf-add-filter-row").style.display          = isForm                        ? "none" : "";
-	document.getElementById("wf-add-assignee-select-row").style.display = isTask                        ? "" : "none";
-	document.getElementById("wf-add-assignee-row").style.display        = isEscalate                    ? "" : "none";
+	document.getElementById("wf-add-trigger-row").style.display              = isForm     ? "none" : "";
+	document.getElementById("wf-add-name-row").style.display                = isForm     ? "none" : "";
+	document.getElementById("wf-add-filter-row").style.display              = isForm     ? "none" : "";
+	document.getElementById("wf-add-task-assign-toggle-row").style.display  = isTask     ? "" : "none";
+	document.getElementById("wf-add-case-assign-toggle-row").style.display  = isEscalate ? "" : "none";
+	// user/role sub-rows are controlled by the toggles; hide them when type changes
+	if (!isTask) {
+		document.getElementById("wf-add-assignee-select-row").style.display = "none";
+		document.getElementById("wf-add-task-role-row").style.display       = "none";
+	}
+	if (!isEscalate) {
+		document.getElementById("wf-add-assignee-row").style.display     = "none";
+		document.getElementById("wf-add-case-role-row").style.display    = "none";
+	}
+	// When switching to task/case, show the default sub-row (user for case, unassigned for task)
+	if (isTask) {
+		const activeTaskBtn = document.querySelector("#wf-add-task-assign-unassigned.active, #wf-add-task-assign-user.active, #wf-add-task-assign-role.active");
+		const taskMode = activeTaskBtn ? activeTaskBtn.id.replace("wf-add-task-assign-","") : "unassigned";
+		document.getElementById("wf-add-assignee-select-row").style.display = taskMode === "user"    ? "" : "none";
+		document.getElementById("wf-add-task-role-row").style.display       = taskMode === "role"    ? "" : "none";
+	}
+	if (isEscalate) {
+		const activeCaseBtn = document.querySelector("#wf-add-case-assign-user.active, #wf-add-case-assign-role.active");
+		const caseMode = activeCaseBtn ? activeCaseBtn.id.replace("wf-add-case-assign-","") : "user";
+		document.getElementById("wf-add-assignee-row").style.display     = caseMode === "user" ? "" : "none";
+		document.getElementById("wf-add-case-role-row").style.display    = caseMode === "role" ? "" : "none";
+	}
 	document.getElementById("wf-add-task-email-row").style.display      = isEmailTask                   ? "" : "none";
 	document.getElementById("wf-add-email-rows").style.display          = isEmail                       ? "" : "none";
 	document.getElementById("wf-add-sms-rows").style.display            = isSms                         ? "" : "none";
@@ -1157,6 +1316,39 @@ function updateAddDialogFields(type) {
 	document.getElementById("wf-add-sp-rows").style.display             = isSP                           ? "" : "none";
 	const targetLabel = document.getElementById("wf-add-target-label");
 	if (targetLabel) targetLabel.textContent = isForm ? "Form survey" : "Task survey";
+
+	// Wire task assign-type toggle buttons (idempotent — replaces previous handlers)
+	if (isTask) {
+		function setTaskAssignMode(mode) {
+			["unassigned","user","role"].forEach(function(m) {
+				document.getElementById("wf-add-task-assign-" + m).classList.toggle("active", m === mode);
+			});
+			document.getElementById("wf-add-assignee-select-row").style.display = mode === "user" ? "" : "none";
+			document.getElementById("wf-add-task-role-row").style.display       = mode === "role" ? "" : "none";
+			if (mode === "role") fetchRoles().then(function(roles) {
+				fillRoleSelect(document.getElementById("wf-add-task-role-select"), roles, "");
+			});
+		}
+		document.getElementById("wf-add-task-assign-unassigned").onclick = function() { setTaskAssignMode("unassigned"); };
+		document.getElementById("wf-add-task-assign-user").onclick       = function() { setTaskAssignMode("user"); };
+		document.getElementById("wf-add-task-assign-role").onclick       = function() { setTaskAssignMode("role"); };
+	}
+
+	// Wire case assign-type toggle buttons
+	if (isEscalate) {
+		function setCaseAssignMode(mode) {
+			["user","role"].forEach(function(m) {
+				document.getElementById("wf-add-case-assign-" + m).classList.toggle("active", m === mode);
+			});
+			document.getElementById("wf-add-assignee-row").style.display     = mode === "user" ? "" : "none";
+			document.getElementById("wf-add-case-role-row").style.display    = mode === "role" ? "" : "none";
+			if (mode === "role") fetchRoles().then(function(roles) {
+				fillRoleSelect(document.getElementById("wf-add-case-role-select"), roles, "");
+			});
+		}
+		document.getElementById("wf-add-case-assign-user").onclick = function() { setCaseAssignMode("user"); };
+		document.getElementById("wf-add-case-assign-role").onclick = function() { setCaseAssignMode("role"); };
+	}
 
 	if (isSP) {
 		const srcSurveyId = gTriggerSurveyId || 0;
@@ -1240,14 +1432,19 @@ function submitAddStep() {
 		if (gAddType === "emailtask") {
 			payload.remoteUser = document.getElementById("wf-add-task-email").value.trim() || null;
 		} else {
-			// task — read from select: -1=unassigned, -2=from data, else user ID
-			const selVal = parseInt(document.getElementById("wf-add-assignee-select").value, 10);
-			if (selVal === -2) {
-				payload.remoteUser = "_data";
-			} else if (selVal > 0) {
-				payload.userId = selVal;
+			// task — read from assign-type toggle
+			if (document.getElementById("wf-add-task-assign-role").classList.contains("active")) {
+				const roleId = parseInt(document.getElementById("wf-add-task-role-select").value, 10);
+				if (roleId > 0) payload.roleId = roleId;
+			} else if (document.getElementById("wf-add-task-assign-user").classList.contains("active")) {
+				const selVal = parseInt(document.getElementById("wf-add-assignee-select").value, 10);
+				if (selVal === -2) {
+					payload.remoteUser = "_data";
+				} else if (selVal > 0) {
+					payload.userId = selVal;
+				}
 			}
-			// -1 (unassigned) → neither field set
+			// Unassigned → neither field set
 		}
 	} else {
 		const srcSurveyId = gTriggerSurveyId;
@@ -1267,7 +1464,12 @@ function submitAddStep() {
 			wfPrevNodeId: gSelectedNode ? gSelectedNode.dataset.id : null
 		};
 		if (gAddType === "escalate") {
-			payload.remoteUser = document.getElementById("wf-add-assignee").value.trim() || null;
+			if (document.getElementById("wf-add-case-assign-role").classList.contains("active")) {
+				const roleId = parseInt(document.getElementById("wf-add-case-role-select").value, 10);
+				if (roleId > 0) payload.remoteUser = "_role:" + roleId;
+			} else {
+				payload.remoteUser = document.getElementById("wf-add-assignee").value.trim() || null;
+			}
 		}
 		if (gAddType === "email") {
 			payload.emailTo      = document.getElementById("wf-add-email-to").value.trim()      || null;
