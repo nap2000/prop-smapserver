@@ -104,7 +104,11 @@ function typeLabel(type) {
  * Node ID formats: "form:s:123", "task:s:456:a:user@x.com", "case:s:789:a:..."
  */
 function surveyIdFromNodeId(nodeId) {
-	return parseInt((nodeId || "").split(":")[2], 10) || 0;
+	const parts = (nodeId || "").split(":");
+	// Only valid for nodes with an "s" (survey) marker, e.g. "form:s:123" or "task:s:456:a:..."
+	// Nodes like "case:f:100:a:..." carry a forward record ID at [2], not a survey ID.
+	if (parts[1] !== "s") return 0;
+	return parseInt(parts[2], 10) || 0;
 }
 
 /*
@@ -1286,7 +1290,7 @@ function fetchSpColumns(listTitle) {
 function fetchSurveyFields(sId) {
 	if (!sId) return Promise.resolve([]);
 	return fetch("/surveyKPI/questionList/" + sId + "/none", { credentials: "include" })
-		.then(function(r) { return r.json(); })
+		.then(function(r) { return r.ok ? r.json() : []; })
 		.then(function(d) { return d || []; });
 }
 
