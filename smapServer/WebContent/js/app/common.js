@@ -103,9 +103,7 @@ function updateProjectList(addAll, projectId, callback, $projectSelect) {
 		idx = -1,
 		updateCurrentProject;
 
-	if(projectId > 0) {
-		updateCurrentProject = true;		// Only save the current project if there it is set
-	}
+	updateCurrentProject = true;
 
 	if(addAll) {
 		h[++idx] = '<option value="0">' + localise.set["c_all"] + '</option>';
