@@ -36,6 +36,10 @@ let gEditStartIds = [];     // workflow_start IDs backing this node
 let gSurveys    = null;   // cached survey list (null until first fetch)
 let gUsers      = null;   // cached user list (null until first fetch)
 let gRoles      = null;   // cached role list (null until first fetch)
+
+// Drawer create-mode state
+let gDrawerCreateMode = false;
+let gCreateType       = "task";
 let gAddType    = "task"; // currently selected type in Add Step modal
 
 // Add-step trigger state
@@ -486,10 +490,14 @@ function openEditDrawer(cardEl) {
 
 function closeEditDrawer() {
 	document.getElementById("wf-drawer").classList.remove("open");
-	gEditItem     = null;
-	gEditNotifs   = [];
-	gEditTGs      = [];
-	gEditStartIds = [];
+	gEditItem          = null;
+	gEditNotifs        = [];
+	gEditTGs           = [];
+	gEditStartIds      = [];
+	gDrawerCreateMode  = false;
+	// Restore footer defaults
+	const saveBtn = document.getElementById("wf-drawer-save");
+	if (saveBtn) saveBtn.innerHTML = '<span class="lang" data-lang="c_save">Save</span>';
 }
 
 /*
@@ -506,8 +514,8 @@ function renderDrawerContent(type) {
 	document.getElementById("wf-drawer-icon").style.color = colour;
 	document.getElementById("wf-drawer-title").textContent = label;
 
-	// Form start nodes: read-only, delete only
-	if (type === "form") {
+	// Form start nodes: read-only in edit mode; in create mode fall through to survey selector
+	if (type === "form" && !gDrawerCreateMode) {
 		document.getElementById("wf-drawer-body").innerHTML =
 			`<div style="font-size:13px;color:#6c757d;">Survey: <strong>${esc(gEditItem.dataset.name)}</strong></div>`;
 		document.getElementById("wf-conditions").style.display   = "none";
@@ -532,7 +540,57 @@ function renderDrawerContent(type) {
 
 	let bodyHtml = "";
 
-	// Label field (notification name)
+	// Create-mode header: type selector + trigger info
+	if (gDrawerCreateMode) {
+		const availTypes = gSelectedNode
+			? ["task", "emailtask", "case", "email", "sms", "sharepoint_list"]
+			: ["form"];
+		const TYPE_BTN_STYLE = {
+			form:            { cls: "btn-outline-primary",   icon: "fas fa-play-circle" },
+			task:            { cls: "btn-outline-success",   icon: "fas fa-file-alt" },
+			emailtask:       { cls: "btn-outline-success",   icon: "fas fa-envelope" },
+			"case":          { cls: "btn-outline-warning",   icon: "fas fa-file-alt" },
+			email:           { cls: "btn-outline-danger",    icon: "fas fa-envelope" },
+			sms:             { cls: "btn-outline-secondary", icon: "fas fa-comment-alt" },
+			sharepoint_list: { cls: "", icon: "fas fa-table", xstyle: "color:#0078d4;border:1px solid #0078d4;background:transparent;" }
+		};
+		bodyHtml += `<div class="wf-field">
+			<label>Step type</label>
+			<div style="display:flex;flex-wrap:wrap;gap:4px;">
+				${availTypes.map(function(t) {
+					const s = TYPE_BTN_STYLE[t] || { cls: "btn-outline-secondary", icon: "fas fa-circle" };
+					const st = (s.xstyle || "") + "font-size:11px;";
+					return `<button type="button" class="btn ${s.cls} btn-sm wf-create-type-btn${t === type ? " active" : ""}"
+						data-type="${t}" style="${st}"><i class="${s.icon}"></i> ${typeLabel(t)}</button>`;
+				}).join("")}
+			</div>
+		</div>
+		<div class="wf-field" style="font-size:12px;color:#6c757d;margin-bottom:8px;">
+			Trigger: <strong>${esc(gSelectedNode ? (gSelectedNode.dataset.label || gSelectedNode.dataset.name || gSelectedNode.dataset.id) : "(standalone)")}</strong>
+		</div>`;
+	}
+
+	// Form create mode: survey selector
+	if (type === "form" && gDrawerCreateMode) {
+		bodyHtml += `<div class="wf-field">
+			<label>Form survey</label>
+			<select id="wfd-form-survey"><option value="">Loading…</option></select>
+		</div>`;
+		document.getElementById("wf-drawer-body").innerHTML = bodyHtml;
+		fetchSurveys().then(function(surveys) {
+			const el = document.getElementById("wfd-form-survey");
+			if (el) el.innerHTML = surveys.map(function(s) {
+				return `<option value="${esc(s.ident)}" data-id="${s.sId}">${esc(s.projectName)} / ${esc(s.name)}</option>`;
+			}).join("");
+		});
+		document.getElementById("wf-conditions").style.display      = "none";
+		document.getElementById("wf-drawer-delete").style.display   = "none";
+		document.getElementById("wf-drawer-advanced").style.display = "none";
+		document.getElementById("wf-drawer-save").textContent = "Create Step";
+		return;
+	}
+
+	// Label field (notification name) — not shown for form type
 	bodyHtml += `<div class="wf-field">
 		<label>Label</label>
 		<input id="wfd-name" type="text" value="${esc(name)}">
@@ -549,6 +607,12 @@ function renderDrawerContent(type) {
 	}
 
 	if (type === "case") {
+		const caseSurveyIdent = (firstNotif && firstNotif.caseSurveyIdent) || "";
+		bodyHtml += `<div class="wf-field">
+			<label>Case survey</label>
+			<select id="wfd-case-survey" data-current="${esc(caseSurveyIdent)}"><option value="">Loading…</option></select>
+		</div>`;
+
 		const isCaseRole = remoteUser.startsWith("_role:");
 		const caseRoleId = isCaseRole ? remoteUser.substring(6) : "";
 		bodyHtml += `<div class="wf-field">
@@ -641,7 +705,7 @@ function renderDrawerContent(type) {
 
 		// Load lists, columns, and survey fields in parallel then wire up
 		const savedNotif = firstNotif || {};
-		const srcSurveyId = savedNotif.srcSurveyId || 0;
+		const srcSurveyId = gDrawerCreateMode ? gTriggerSurveyId : (savedNotif.srcSurveyId || 0);
 		addHourglass();
 		Promise.all([
 			fetchSpLists(),
@@ -690,20 +754,36 @@ function renderDrawerContent(type) {
 		// SP drawer has no Advanced link
 		document.getElementById("wf-drawer-advanced").style.display = "none";
 		document.getElementById("wf-conditions").style.display = "";
+		if (gDrawerCreateMode) {
+			document.getElementById("wf-drawer-save").textContent = "Create Step";
+			document.getElementById("wf-drawer-delete").style.display = "none";
+			// Wire type selector
+			document.querySelectorAll(".wf-create-type-btn").forEach(function(btn) {
+				btn.addEventListener("click", function() { gCreateType = this.dataset.type; renderDrawerContent(gCreateType); });
+			});
+		}
 		buildConditionRows();
 		return;   // body already set — skip the generic innerHTML assignment below
 	}
 
-	// Enabled toggle (notifications only)
-	if (gEditNotifs.length > 0) {
+	// Bundle checkbox — create mode only, non-task/form/SP types
+	if (gDrawerCreateMode && type !== "task" && type !== "emailtask" && type !== "form" && type !== "sharepoint_list") {
+		bodyHtml += `<div class="wf-field wf-field-inline">
+			<input id="wfd-bundle" type="checkbox">
+			<label style="margin-left:6px;font-size:12px;">Bundle notification</label>
+		</div>`;
+	}
+
+	// Enabled toggle (notifications, or create mode)
+	if (gEditNotifs.length > 0 || gDrawerCreateMode) {
 		bodyHtml += `<div class="wf-field wf-field-inline">
 			<label>Enabled</label>
 			<input id="wfd-enabled" type="checkbox" ${enabled ? "checked" : ""}>
 		</div>`;
 	}
 
-	// Assignee for task (task_group backed) — User | Role | Unassigned
-	if (type === "task" && gEditTGs.length > 0) {
+	// Assignee for task — shown for TG-backed edit OR create mode
+	if (type === "task" && (gEditTGs.length > 0 || gDrawerCreateMode)) {
 		const tgRoleId = firstTG ? (firstTG.roleId || 0) : 0;
 		const tgUserId = firstTG ? (firstTG.userId || 0) : 0;
 		const taskAssignMode = tgRoleId > 0 ? "role" : (tgUserId > 0 ? "user" : "unassigned");
@@ -775,6 +855,42 @@ function renderDrawerContent(type) {
 		});
 	}
 
+	// Populate case survey select
+	if (type === "case") {
+		const caseSurveyEl = document.getElementById("wfd-case-survey");
+		if (caseSurveyEl) {
+			const srcId = gDrawerCreateMode ? gTriggerSurveyId : (firstNotif ? firstNotif.srcSurveyId : 0);
+			if (srcId) {
+				fetch("/surveyKPI/surveyResults/" + srcId + "/groups", { credentials: "include", cache: "no-store" })
+					.then(function(r) { return r.json(); })
+					.then(function(data) {
+						const cur = caseSurveyEl.dataset.current || "";
+						caseSurveyEl.innerHTML = "<option value=''>-- select --</option>"
+							+ (data || []).map(function(s) {
+								return `<option value="${esc(s.surveyIdent)}"${s.surveyIdent === cur ? " selected" : ""}>${esc(s.surveyName)}</option>`;
+							}).join("");
+					})
+					.catch(function() { caseSurveyEl.innerHTML = "<option value=''>No surveys available</option>"; });
+			} else {
+				caseSurveyEl.innerHTML = "<option value=''>No trigger selected</option>";
+			}
+		}
+	}
+
+	// Wire create-mode type selector buttons
+	if (gDrawerCreateMode) {
+		document.querySelectorAll(".wf-create-type-btn").forEach(function(btn) {
+			btn.addEventListener("click", function() {
+				gCreateType = this.dataset.type;
+				renderDrawerContent(gCreateType);
+			});
+		});
+		// Footer: Create mode
+		document.getElementById("wf-drawer-save").textContent = "Create Step";
+		document.getElementById("wf-drawer-delete").style.display   = "none";
+		document.getElementById("wf-drawer-advanced").style.display = "none";
+	}
+
 	// Populate and wire case drawer assignee (role select + toggles)
 	if (type === "case") {
 		const caseRoleEl = document.getElementById("wfd-case-role-select");
@@ -803,6 +919,14 @@ function renderDrawerContent(type) {
 }
 
 function buildConditionRows() {
+	if (gDrawerCreateMode) {
+		document.getElementById("wf-conditions-list").innerHTML =
+			`<div class="wf-cond-row">
+				<input class="wf-cond-input" type="text" placeholder="No condition (always run)">
+			</div>`;
+		document.getElementById("wf-conditions").style.display = "";
+		return;
+	}
 	const allRecords = [
 		...gEditNotifs.map(function(n) {
 			return { id: n.id, tgId: 0, srcName: n.srcSurveyName || "Source", filter: n.filter || "" };
@@ -846,6 +970,7 @@ function buildConditionRows() {
  * Collect current drawer values and save to server.
  */
 function saveDrawer() {
+	if (gDrawerCreateMode) { executeCreate(); return; }
 	if (!gEditItem || gEditItem.dataset.type === "form") return;
 
 	const name    = (document.getElementById("wfd-name")     || {}).value || "";
@@ -906,23 +1031,25 @@ function saveDrawer() {
 
 	// Build updated notifications list
 	if (gEditNotifs.length > 0) {
+		const caseSurveyIdent = (document.getElementById("wfd-case-survey") || {}).value || null;
 		const updatedNotifs = gEditNotifs.map(function(n) {
 			return Object.assign({}, n, {
-				name:         name,
-				enabled:      enabled,
-				remoteUser:   assignee,
-				filter:       filtersByFwdId[String(n.id)] !== undefined
-				                  ? filtersByFwdId[String(n.id)] : (n.filter || ""),
-				emailTo:      emailTo,
-				emailSubject: emailSubject,
-				emailContent: emailContent,
-				smsTo:        smsTo,
-				smsMessage:   smsMessage,
-				spListTitle:   spListTitle,
-				spOperation:   spOperation,
-				spMatchColumn: spMatchColumn,
-				spMatchField:  spMatchField,
-				spColumnMap:   spColumnMap
+				name:            name,
+				enabled:         enabled,
+				remoteUser:      assignee,
+				filter:          filtersByFwdId[String(n.id)] !== undefined
+				                     ? filtersByFwdId[String(n.id)] : (n.filter || ""),
+				emailTo:         emailTo,
+				emailSubject:    emailSubject,
+				emailContent:    emailContent,
+				smsTo:           smsTo,
+				smsMessage:      smsMessage,
+				caseSurveyIdent: caseSurveyIdent,
+				spListTitle:     spListTitle,
+				spOperation:     spOperation,
+				spMatchColumn:   spMatchColumn,
+				spMatchField:    spMatchField,
+				spColumnMap:     spColumnMap
 			});
 		});
 		promises.push(
@@ -1185,92 +1312,137 @@ function fillRoleSelect(el, roles, selectedId) {
 }
 
 function openAddDialog() {
-	gAddType = "form";
-
-	// Show trigger name (only relevant for non-form types)
-	const triggerNameEl = document.getElementById("wf-add-trigger-name");
-	if (triggerNameEl) {
-		triggerNameEl.textContent = gSelectedNode
-			? (gSelectedNode.dataset.name || gSelectedNode.dataset.id)
-			: "(select a node on the canvas first)";
-	}
-
-	// Reset modal fields
-	document.getElementById("wf-add-name").value        = "";
-	document.getElementById("wf-add-assignee").value    = "";
-	document.getElementById("wf-add-task-email").value  = "";
-	document.getElementById("wf-add-filter").value      = "";
-	document.getElementById("wf-add-bundle").checked    = false;
-	document.getElementById("wf-add-sp-list").value     = "";
-	document.getElementById("wf-add-sp-op-insert").checked = true;
-	document.getElementById("wf-add-sp-match-section").style.display = "none";
-	document.getElementById("wf-add-sp-col-map-body").innerHTML = "";
-	// Reset task assign toggle to Unassigned
-	["wf-add-task-assign-unassigned","wf-add-task-assign-user","wf-add-task-assign-role"].forEach(function(id) {
-		document.getElementById(id).classList.toggle("active", id === "wf-add-task-assign-unassigned");
-	});
-	document.getElementById("wf-add-assignee-select-row").style.display = "none";
-	document.getElementById("wf-add-task-role-row").style.display = "none";
-	// Reset case assign toggle to User
-	["wf-add-case-assign-user","wf-add-case-assign-role"].forEach(function(id) {
-		document.getElementById(id).classList.toggle("active", id === "wf-add-case-assign-user");
-	});
-	document.getElementById("wf-add-case-role-row").style.display = "none";
-	["email", "subject", "content"].forEach(function(s) {
-		const el = document.getElementById("wf-add-email-" + s);
-		if (el) el.value = "";
-	});
-	["to", "content"].forEach(function(s) {
-		const el = document.getElementById("wf-add-sms-" + s);
-		if (el) el.value = "";
-	});
-
-	// Show only relevant type buttons based on whether a trigger node is selected
-	const hasSelected = !!gSelectedNode;
-	document.querySelectorAll(".wf-type-btn").forEach(function(btn) {
-		const isForm = btn.dataset.type === "form";
-		btn.style.display = (isForm === !hasSelected) ? "" : "none";
-	});
-
-	// Default to appropriate type
-	const defaultType = hasSelected ? "task" : "form";
-	document.querySelectorAll(".wf-type-btn").forEach(function(btn) {
-		btn.classList.toggle("active", btn.dataset.type === defaultType);
-	});
-	updateAddDialogFields(defaultType);
-
-	// Populate target survey dropdown
-	const targetEl = document.getElementById("wf-add-target");
-	if (targetEl) {
-		targetEl.innerHTML = "<option value=''>Loading…</option>";
-		fetchSurveys().then(function(surveys) {
-			targetEl.innerHTML = surveys.map(function(s) {
-				return `<option value="${s.sId}" data-ident="${esc(s.ident)}" data-pid="${s.projectId}">${esc(s.projectName)} / ${esc(s.name)}</option>`;
-			}).join("");
-			if (surveys.length === 0) {
-				targetEl.innerHTML = "<option value=''>No surveys available</option>";
-			}
-		});
-	}
-
-	// Populate user assignee select
-	const assignSelEl = document.getElementById("wf-add-assignee-select");
-	if (assignSelEl) {
-		fetchUsers().then(function(users) {
-			// Keep the fixed options (-1, -2) and replace any user options after them
-			while (assignSelEl.options.length > 2) assignSelEl.remove(2);
-			users.forEach(function(u) {
-				const opt = document.createElement("option");
-				opt.value       = u.id;
-				opt.textContent = u.name;
-				assignSelEl.appendChild(opt);
-			});
-		});
-	}
-
-	new bootstrap.Modal(document.getElementById("wf-add-modal")).show();
+	gDrawerCreateMode = true;
+	gEditItem         = null;
+	gEditNotifs       = [];
+	gEditTGs          = [];
+	gEditStartIds     = [];
+	gCreateType       = gSelectedNode ? "task" : "form";
+	renderDrawerContent(gCreateType);
+	document.getElementById("wf-drawer").classList.add("open");
 }
 
+function executeCreate() {
+	addHourglass();
+	let url, payload;
+	const type = gCreateType;
+
+	if (type === "form") {
+		const sel = document.getElementById("wfd-form-survey");
+		const sIdent = sel ? sel.options[sel.selectedIndex] && sel.options[sel.selectedIndex].value : null;
+		if (!sIdent) { removeHourglass(); alert("Please select a survey."); return; }
+		url     = "/surveyKPI/workflow/edit/form";
+		payload = { sIdent: sIdent };
+	} else if (type === "task" || type === "emailtask") {
+		if (!gTriggerSurveyId) { removeHourglass(); alert("No trigger node selected."); return; }
+		const name = (document.getElementById("wfd-name") || {}).value || "";
+		const filter = ((document.querySelector(".wf-cond-input") || {}).value || "").trim();
+		if (!name) { removeHourglass(); alert("Please enter a label."); return; }
+		const taskSurveyEl = document.getElementById("wfd-task-survey");
+		const targetSurveyId = taskSurveyEl ? (parseInt(taskSurveyEl.value, 10) || 0) : 0;
+		if (!targetSurveyId) { removeHourglass(); alert("Please select a task survey."); return; }
+		url     = "/surveyKPI/workflow/edit/taskgroup";
+		payload = {
+			sourceSurveyId: gTriggerSurveyId,
+			targetSurveyId: targetSurveyId,
+			name:           name,
+			filter:         filter || null,
+			wfPrevNodeId:   gSelectedNode ? gSelectedNode.dataset.id : null
+		};
+		if (type === "emailtask") {
+			// emailtask uses a notification instead
+			url     = "/surveyKPI/workflow/edit/notification";
+			payload = {
+				srcSurveyId:  gTriggerSurveyId,
+				target:       "task",
+				name:         name,
+				filter:       filter || null,
+				enabled:      true,
+				bundle:       false,
+				wfPrevNodeId: gSelectedNode ? gSelectedNode.dataset.id : null,
+				remoteUser:   (document.getElementById("wfd-task-email-to") || {}).value || null
+			};
+		} else {
+			const roleBtn = document.getElementById("wfd-task-assign-role");
+			const userBtn = document.getElementById("wfd-task-assign-user");
+			if (roleBtn && roleBtn.classList.contains("active")) {
+				const roleId = parseInt((document.getElementById("wfd-task-role-select") || {}).value || "0", 10);
+				if (roleId > 0) payload.roleId = roleId;
+			} else if (userBtn && userBtn.classList.contains("active")) {
+				const userId = parseInt((document.getElementById("wfd-task-user-select") || {}).value || "0", 10);
+				if (userId > 0) payload.userId = userId;
+			}
+		}
+	} else {
+		if (!gTriggerSurveyId) { removeHourglass(); alert("No trigger node selected."); return; }
+		const name   = (document.getElementById("wfd-name") || {}).value || "";
+		const filter = ((document.querySelector(".wf-cond-input") || {}).value || "").trim();
+		if (!name) { removeHourglass(); alert("Please enter a label."); return; }
+		const isBundle  = (document.getElementById("wfd-bundle") || {}).checked || false;
+		const enabled   = (document.getElementById("wfd-enabled") || { checked: true }).checked;
+		url     = "/surveyKPI/workflow/edit/notification";
+		payload = {
+			srcSurveyId:  gTriggerSurveyId,
+			target:       type === "case" ? "escalate" : type,
+			name:         name,
+			filter:       filter || null,
+			enabled:      enabled,
+			bundle:       isBundle,
+			wfPrevNodeId: gSelectedNode ? gSelectedNode.dataset.id : null
+		};
+		if (type === "case") {
+			const roleBtn = document.getElementById("wfd-case-assign-role");
+			if (roleBtn && roleBtn.classList.contains("active")) {
+				const roleId = parseInt((document.getElementById("wfd-case-role-select") || {}).value || "0", 10);
+				if (roleId > 0) payload.remoteUser = "_role:" + roleId;
+			} else {
+				payload.remoteUser = (document.getElementById("wfd-assignee") || {}).value || null;
+			}
+			payload.caseSurveyIdent = (document.getElementById("wfd-case-survey") || {}).value || null;
+		}
+		if (type === "email") {
+			payload.emailTo      = (document.getElementById("wfd-email-to")      || {}).value || null;
+			payload.emailSubject = (document.getElementById("wfd-email-subj")    || {}).value || null;
+			payload.emailContent = (document.getElementById("wfd-email-content") || {}).value || null;
+		}
+		if (type === "sms") {
+			payload.smsTo      = (document.getElementById("wfd-sms-to")      || {}).value || null;
+			payload.smsMessage = (document.getElementById("wfd-sms-content") || {}).value || null;
+		}
+		if (type === "sharepoint_list") {
+			const spOpEl = document.querySelector("input[name='wfd-sp-op']:checked");
+			payload.spListTitle   = (document.getElementById("wfd-sp-list")         || {}).value || null;
+			payload.spOperation   = spOpEl ? spOpEl.value : "insert";
+			if (payload.spOperation === "update") {
+				payload.spMatchColumn = (document.getElementById("wfd-sp-match-col")   || {}).value || null;
+				payload.spMatchField  = (document.getElementById("wfd-sp-match-field") || {}).value || null;
+			}
+			const spMap = [];
+			document.querySelectorAll("#wfd-sp-col-map-body tr").forEach(function(tr) {
+				const col   = (tr.querySelector(".wfd-sp-col-sel")   || {}).value;
+				const field = (tr.querySelector(".wfd-sp-field-sel") || {}).value;
+				if (col && field) spMap.push({ sp_column: col, smap_field: field });
+			});
+			payload.spColumnMap = spMap.length ? spMap : null;
+		}
+	}
+
+	fetch(url, {
+		method:      "POST",
+		credentials: "include",
+		headers:     { "Content-Type": "application/json" },
+		body:        JSON.stringify(payload)
+	})
+	.then(function(resp) {
+		if (!resp.ok) throw new Error(resp.statusText);
+		closeEditDrawer();
+		loadWorkflow();
+	})
+	.catch(function(err) { console.error("executeCreate error:", err); })
+	.finally(function() { removeHourglass(); });
+}
+
+// (updateAddDialogFields removed — modal replaced by drawer create mode)
 function updateAddDialogFields(type) {
 	gAddType = type;
 	const isForm        = (type === "form");
@@ -1291,6 +1463,7 @@ function updateAddDialogFields(type) {
 		document.getElementById("wf-add-assignee-select-row").style.display = "none";
 		document.getElementById("wf-add-task-role-row").style.display       = "none";
 	}
+	document.getElementById("wf-add-case-survey-row").style.display  = isEscalate ? "" : "none";
 	if (!isEscalate) {
 		document.getElementById("wf-add-assignee-row").style.display     = "none";
 		document.getElementById("wf-add-case-role-row").style.display    = "none";
@@ -1332,6 +1505,21 @@ function updateAddDialogFields(type) {
 		document.getElementById("wf-add-task-assign-unassigned").onclick = function() { setTaskAssignMode("unassigned"); };
 		document.getElementById("wf-add-task-assign-user").onclick       = function() { setTaskAssignMode("user"); };
 		document.getElementById("wf-add-task-assign-role").onclick       = function() { setTaskAssignMode("role"); };
+	}
+
+	// Load bundle/group surveys into case survey selector
+	if (isEscalate && gTriggerSurveyId) {
+		const caseSurveyEl = document.getElementById("wf-add-case-survey");
+		caseSurveyEl.innerHTML = "<option value=''>Loading…</option>";
+		fetch("/surveyKPI/surveyResults/" + gTriggerSurveyId + "/groups", { credentials: "include", cache: "no-store" })
+			.then(function(r) { return r.json(); })
+			.then(function(data) {
+				caseSurveyEl.innerHTML = "<option value=''>-- select --</option>"
+					+ (data || []).map(function(s) {
+						return `<option value="${esc(s.surveyIdent)}">${esc(s.surveyName)}</option>`;
+					}).join("");
+			})
+			.catch(function() { caseSurveyEl.innerHTML = "<option value=''>No surveys available</option>"; });
 	}
 
 	// Wire case assign-type toggle buttons
@@ -1470,6 +1658,8 @@ function submitAddStep() {
 			} else {
 				payload.remoteUser = document.getElementById("wf-add-assignee").value.trim() || null;
 			}
+			const caseSurveyIdent = (document.getElementById("wf-add-case-survey") || {}).value || null;
+			if (caseSurveyIdent) payload.caseSurveyIdent = caseSurveyIdent;
 		}
 		if (gAddType === "email") {
 			payload.emailTo      = document.getElementById("wf-add-email-to").value.trim()      || null;
@@ -1570,17 +1760,7 @@ localise.initLocale(gUserLocale).then(function() {
 			if (!e.target.closest("#wf-nodes [data-id]")) selectNode(null);
 		});
 
-		// Add Step button + modal
+		// Add Step button — opens drawer in create mode
 		document.getElementById("wf-add-btn").addEventListener("click", openAddDialog);
-		document.getElementById("wf-add-submit").addEventListener("click", submitAddStep);
-
-		// Type selector in Add Step modal
-		document.getElementById("wf-add-type-btns").addEventListener("click", function(e) {
-			const btn = e.target.closest(".wf-type-btn");
-			if (!btn) return;
-			document.querySelectorAll(".wf-type-btn").forEach(function(b) { b.classList.remove("active"); });
-			btn.classList.add("active");
-			updateAddDialogFields(btn.dataset.type);
-		});
 	});
 });
