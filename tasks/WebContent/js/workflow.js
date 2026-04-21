@@ -111,6 +111,35 @@ function surveyIdFromNodeId(nodeId) {
 	return parseInt(parts[2], 10) || 0;
 }
 
+// Walk gData.links backward from startNodeId to find the survey whose fields should
+// populate the SP column map. Stops at:
+//   - a "case" node  → returns its caseSurveyId (the case management survey)
+//   - a "form:s:X"   → returns the trigger form's survey ID
+// Skips task:s:X nodes (their survey is the task target, not the trigger).
+function findAncestorSurveyId(startNodeId) {
+	if (!gData) return 0;
+	const links  = gData.links || [];
+	const items  = gData.items || [];
+	const visited = new Set();
+	let current = startNodeId;
+	while (current && !visited.has(current)) {
+		visited.add(current);
+		const parts = (current || "").split(":");
+		if (parts[0] === "case") {
+			const item = items.find(function(i) { return i.id === current; });
+			const caseId = item ? (item.caseSurveyId || 0) : 0;
+			if (caseId) return caseId;
+		}
+		if (parts[0] === "form" && parts[1] === "s") {
+			return parseInt(parts[2], 10) || 0;
+		}
+		const inLink = links.find(function(l) { return l.to === current; });
+		if (!inLink) break;
+		current = inLink.from;
+	}
+	return 0;
+}
+
 /*
  * Select a node card as the trigger for a new step.
  * Passing null clears the selection.
@@ -155,9 +184,10 @@ function nodeCard(x, y, item) {
 	div.dataset.project  = item.project  || "";
 	div.dataset.bundle   = item.bundle   || "";
 	div.dataset.assignee = item.assignee || "";
-	div.dataset.fwdIds    = JSON.stringify(item.fwdIds    || []);
-	div.dataset.tgIds     = JSON.stringify(item.tgIds     || []);
-	div.dataset.startIds  = JSON.stringify(item.startIds  || []);
+	div.dataset.fwdIds       = JSON.stringify(item.fwdIds    || []);
+	div.dataset.tgIds        = JSON.stringify(item.tgIds     || []);
+	div.dataset.startIds     = JSON.stringify(item.startIds  || []);
+	div.dataset.caseSurveyId = item.caseSurveyId || 0;
 
 	div.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:${CARD_W}px;`
 		+ `background:#fff;border-radius:6px;cursor:${isDecision ? "pointer" : "grab"};user-select:none;`
@@ -709,7 +739,10 @@ function renderDrawerContent(type) {
 
 		// Load lists, columns, and survey fields in parallel then wire up
 		const savedNotif = firstNotif || {};
-		const srcSurveyId = gDrawerCreateMode ? gTriggerSurveyId : (savedNotif.srcSurveyId || 0);
+		const nodeId = gEditItem ? gEditItem.dataset.id : (gSelectedNode ? gSelectedNode.dataset.id : null);
+		const srcSurveyId = gDrawerCreateMode
+			? (gTriggerSurveyId || findAncestorSurveyId(nodeId))
+			: (savedNotif.srcSurveyId || findAncestorSurveyId(nodeId));
 		addHourglass();
 		Promise.all([
 			fetchSpLists(),
@@ -1378,15 +1411,16 @@ function executeCreate() {
 			}
 		}
 	} else {
-		if (!gTriggerSurveyId) { removeHourglass(); alert("No trigger node selected."); return; }
+		if (!gSelectedNode) { removeHourglass(); alert("No trigger node selected."); return; }
 		const name   = (document.getElementById("wfd-name") || {}).value || "";
 		const filter = ((document.querySelector(".wf-cond-input") || {}).value || "").trim();
 		if (!name) { removeHourglass(); alert("Please enter a label."); return; }
 		const isBundle  = (document.getElementById("wfd-bundle") || {}).checked || false;
 		const enabled   = (document.getElementById("wfd-enabled") || { checked: true }).checked;
+		const effectiveSurveyId = gTriggerSurveyId || findAncestorSurveyId(gSelectedNode.dataset.id);
 		url     = "/surveyKPI/workflow/edit/notification";
 		payload = {
-			srcSurveyId:  gTriggerSurveyId,
+			srcSurveyId:  effectiveSurveyId,
 			target:       type === "case" ? "escalate" : type,
 			name:         name,
 			filter:       filter || null,
