@@ -4175,29 +4175,51 @@ function getAccessibleSpLists($elem, includeNone) {
 	});
 }
 
-function getQuestionsInSpList($elem, $elem_multiple, smapName, includeNone) {
-	var h = [], hm = [], idx = -1, idx_m = -1;
+function getQuestionsInSpList($elem, $elem_multiple, smapName, includeNone, callback) {
 	var map = globals.gSpListMaps ? globals.gSpListMaps.find(function(m) { return m.smap_name === smapName; }) : null;
-	var data = map && map.headers ? map.headers : [];
-
-	if(includeNone) {
-		h[++idx] = '<option value="">';
-		h[++idx] = localise.set["c_none"];
-		h[++idx] = '</option>';
+	if(!map) {
+		if($elem) $elem.empty();
+		if($elem_multiple) { $elem_multiple.empty(); $elem_multiple.multiselect('rebuild'); }
+		if(typeof callback === 'function') callback();
+		return;
 	}
-	for(var i = 0; i < data.length; i++) {
-		hm[++idx_m] = h[++idx] = '<option value="';
-		hm[++idx_m] = h[++idx] = data[i].fName;
-		hm[++idx_m] = h[++idx] = '">';
-		hm[++idx_m] = h[++idx] = htmlEncode(data[i].fName);
-		hm[++idx_m] = h[++idx] = '</option>';
-	}
-	if($elem) { $elem.empty().append(h.join('')); }
-	if($elem_multiple) {
-		$elem_multiple.empty().append(hm.join(''));
-		$elem_multiple.multiselect('deselectAll', false);
-		$elem_multiple.multiselect('rebuild');
-	}
+	addHourglass();
+	$.ajax({
+		url: '/surveyKPI/server/sharepoint/lists/' + encodeURIComponent(map.list_title) + '/fields',
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			removeHourglass();
+			if(handleLogout(data)) {
+				var h = [], hm = [], idx = -1, idx_m = -1;
+				if(includeNone) {
+					h[++idx] = '<option value="">';
+					h[++idx] = localise.set["c_none"];
+					h[++idx] = '</option>';
+				}
+				(data || []).forEach(function(f) {
+					hm[++idx_m] = h[++idx] = '<option value="';
+					hm[++idx_m] = h[++idx] = htmlEncode(f.internalName);
+					hm[++idx_m] = h[++idx] = '">';
+					hm[++idx_m] = h[++idx] = htmlEncode(f.displayName);
+					hm[++idx_m] = h[++idx] = '</option>';
+				});
+				if($elem) $elem.empty().append(h.join(''));
+				if($elem_multiple) {
+					$elem_multiple.empty().append(hm.join(''));
+					$elem_multiple.multiselect('deselectAll', false);
+					$elem_multiple.multiselect('rebuild');
+				}
+				if(typeof callback === 'function') callback();
+			}
+		},
+		error: function(xhr) {
+			removeHourglass();
+			if(xhr.readyState !== 0 && xhr.status !== 0 && xhr.status !== 401) {
+				console.log("Error loading SharePoint fields: " + xhr.responseText);
+			}
+		}
+	});
 }
 
 function getAccessibleCsvFiles($elem, includeNone) {

@@ -633,6 +633,7 @@ $(function() {
 			h[++idx] = '<td>' + (m.enabled ? '<i class="fas fa-check text-success"></i>' : '') + '</td>';
 			h[++idx] = '<td class="text-nowrap">';
 			h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-info btn-sm mx-1 sp_edit_map"><i class="far fa-edit"></i></button>';
+			h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-secondary btn-sm mx-1 sp_headers_btn" title="Show fields"><i class="fas fa-list"></i></button>';
 			h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-primary btn-sm mx-1 sp_sync_map" title="' + localise.set["u_sp_sync_now"] + '"><i class="fas fa-sync-alt"></i></button>';
 			h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-danger btn-sm mx-1 sp_del_map"><i class="fas fa-trash-alt"></i></button>';
 			h[++idx] = '</td>';
@@ -649,6 +650,32 @@ $(function() {
 		});
 		$('.sp_del_map').click(function() {
 			delete_sp_list(gSpListMaps[$(this).data('idx')].id);
+		});
+		$('.sp_headers_btn').click(function() {
+			show_sp_headers(gSpListMaps[$(this).data('idx')].list_title);
+		});
+	}
+
+	function show_sp_headers(listTitle) {
+		addHourglass();
+		$.ajax({
+			url: '/surveyKPI/server/sharepoint/lists/' + encodeURIComponent(listTitle) + '/fields',
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				let h = [], idx = -1;
+				(data || []).forEach(function(f) {
+					h[++idx] = '<tr><td>' + htmlEncode(f.displayName) + '</td><td><code>' + htmlEncode(f.internalName) + '</code></td></tr>';
+				});
+				$('#sp_headers_list').html(h.join(''));
+				$('#sp_headers_title').text(listTitle);
+				window.bsModalShow('#spListHeadersPopup');
+			},
+			error: function(xhr) {
+				removeHourglass();
+				console.log("Error loading SharePoint fields: " + xhr.responseText);
+			}
 		});
 	}
 

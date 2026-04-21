@@ -3807,8 +3807,7 @@ $(function() {
 								$('input[type=radio][name=search_source][value=sharepoint]').prop('checked', true);
 								$('#a_sp_identifier').val(spName);
 								$('.search_sharepoint').show();
-								getQuestionsInSpList($('.column_select'), $('.column_select_multiple'), spName, true);
-								setAppearanceValues();
+								getQuestionsInSpList($('.column_select'), $('.column_select_multiple'), spName, true, setAppearanceValues);
 							} else {
 								var csvIndex = getIndexOfCsvFilename(params.filename);
 								$('input[type=radio][name=search_source][value=csv]').prop('checked', true);
