@@ -6742,5 +6742,6 @@ export {
 	tokenizeAppearance,
 	translateType,
 	generateFile,
-	displayAsImage
+	displayAsImage,
+	getUtcDate
 };

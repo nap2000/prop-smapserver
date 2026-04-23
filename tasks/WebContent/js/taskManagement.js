@@ -53,7 +53,8 @@ import {
 	setupUserProfile,
 	validDates,
 	validateEmails,
-	taskReport
+	taskReport,
+	getUtcDate
 } from "common";
 import { addDraggableMarker, clearDraggableMarker, initialiseMap, refreshMapAssignments, zoomToFeatureLayer } from "../../../smapServer/WebContent/js/app/mapbox_app";
 import "./libs/jquery-barcode";

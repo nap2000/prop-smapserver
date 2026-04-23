@@ -59,7 +59,7 @@ export function setTableSurvey(view) {
 	$selHead.empty();
 	$selMain.empty();
 
-	if(!data) {
+	if(!data || !sMeta) {
 		return;
 	}
 
@@ -656,9 +656,9 @@ function showTable(tableIdx, view, tableItems, fId, survey_ident) {
 		$selMain.find('table').tablesorter({ theme : 'dark' });
 		addMoreLessButtons($selMain, view, fId, tableItems);
 	} else {
-        if(typeof tableItems.message !== "undefined" && tableItems.message.trim().length > 0) {
+        if(tableItems && typeof tableItems.message !== "undefined" && tableItems.message !== null && tableItems.message.trim().length > 0) {
             $selMain.html(tableItems.message);
-        } else if(typeof tableItems.totals !== "undefined" && tableItems.totals.total_count > 0) {
+        } else if(tableItems && typeof tableItems.totals !== "undefined" && tableItems.totals.total_count > 0) {
             $selMain.html(localise.set["an_nmd"]);
         } else {
             $selMain.html(localise.set["an_nd"]);
