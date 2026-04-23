@@ -142,7 +142,7 @@ localise.initLocale(gUserLocale).then(function () {
 			e.preventDefault();
 			gSelectedId = gSelectedRecord.id;
 
-			msg = localise.set["msg_confirm_del"];
+			let msg = localise.set["msg_confirm_del"];
 			msg += ": ";
 			msg += gSelectedRecord.name;
 
