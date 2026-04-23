@@ -155,6 +155,10 @@ localise.initLocale(gUserLocale).then(function () {
 
 
 		$('#savePerson').click(function(){savePerson();});
+
+		$('#addPersonPopup').on('hide.bs.modal', function() {
+			if(document.activeElement) { document.activeElement.blur(); }
+		});
 	}
 	/*
 	 * Initialise the dialog
