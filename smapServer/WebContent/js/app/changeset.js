@@ -2224,6 +2224,7 @@ export default {
 		 * Validate the entire survey
 		 */
         function validateAll() {
+            if(!globals.model || !globals.model.survey) { return; }
             var i,
                 j,
                 forms = globals.model.survey.forms,

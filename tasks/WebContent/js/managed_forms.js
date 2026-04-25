@@ -54,6 +54,9 @@ import {
 	removeHourglass,
 	saveCurrentGroupSurvey,
 	saveCurrentProject,
+	saveDocument,
+	saveEmail,
+	saveSMS,
 	saveTask,
 	setInLocalStorage,
 	setLocationList,
@@ -932,7 +935,7 @@ localise.initLocale(gUserLocale).then(function () {
 	    });
 
         $('#chart_settings_save').click(function() {
-            if(gSelectedChart >= 0) {   // edit
+            if(gSelectedChart >= 0 && gTasks.cache.currentData) {   // edit
                 gTasks.cache.currentData.settings.charts[gSelectedChart].subject = $('#cs_subject').val();
                 gTasks.cache.currentData.settings.charts[gSelectedChart].chart_type = $('#cs_chart_type').val();
                 gTasks.cache.currentData.settings.charts[gSelectedChart].question = $('#cs_question').val();

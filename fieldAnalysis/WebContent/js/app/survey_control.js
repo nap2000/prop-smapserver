@@ -1103,7 +1103,7 @@ function getUsers(projectId) {
 		cache: false,
 		success: function (data) {
 
-			for (i = 0; i < data.length; i++) {
+			if(data) { for (i = 0; i < data.length; i++) {
 				user = data[i];
 
 				h[++idx] = '<option value="';
@@ -1111,7 +1111,7 @@ function getUsers(projectId) {
 				h[++idx] = '">';
 				h[++idx] = htmlEncode(user.ident + " - " + user.name);
 				h[++idx] = '</option>';
-			}
+			} }
 			$users.append(h.join(''));
 		},
 		error: function (xhr, textStatus, err) {
