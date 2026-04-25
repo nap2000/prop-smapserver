@@ -1280,6 +1280,26 @@ define({
     "u_turnstile": "Cloudflare Turnstile Anti-Bot",
     "u_turnstile_site_key": "Turnstile Site Key",
     "u_turnstile_secret_key": "Turnstile Secret Key",
+    "u_sharepoint": "SharePoint",
+    "u_sp_url": "SharePoint URL",
+    "u_sp_client_id": "Client ID",
+    "u_sp_realm": "Realm",
+    "u_sp_discover": "Discover",
+    "u_sp_cert_pem": "Private Key (PEM)",
+    "u_sp_cert_pem_ph": "Paste PKCS8 private key here (-----BEGIN PRIVATE KEY-----)",
+    "u_sp_list_name": "List Name",
+    "u_sp_load_cols": "Load Columns",
+    "u_sp_match_col": "Match Column",
+    "u_sp_match_field": "Match Field",
+    "u_sp_col_map": "Column Map",
+    "u_sp_col_sp": "SharePoint Column",
+    "u_sp_col_smap": "Survey Field",
+    "c_sharepoint_list": "SharePoint List",
+    "c_operation": "Operation",
+    "c_update": "Update",
+    "c_upsert": "Update or Insert",
+    "c_sharepoint_list": "SharePoint List",
+    "c_add_row": "Add Row",
     "u_ar": "AWS Region for Email Service",
     "u_smtp": "Smtp Host",
     "u_e_type": "Email Type",
@@ -1651,5 +1671,26 @@ define({
 
     // sms
     "sms_their_q": "Question for calling number",
-    "sms_conv_q": "Conversation Question"
+    "sms_conv_q": "Conversation Question",
+
+    // sharepoint authentication
+    "u_sp_auth_type": "Authentication Type",
+    "u_sp_auth_s2s": "S2S High-Trust (on-premises)",
+    "u_sp_auth_ntlm": "Windows (NTLM)",
+    "u_sp_username": "Username",
+    "u_sp_password": "Password",
+    "u_sp_domain": "Windows Domain",
+
+    // sharepoint list mappings (shared resources tab)
+    "u_sp_resource_name": "Resource Name",
+    "u_sp_list_title": "SharePoint List Title",
+    "u_sp_refresh_mins": "Refresh (mins)",
+    "u_sp_last_sync": "Last Sync",
+    "u_sp_sync_now": "Sync Now",
+    "msg_err_sp_sync": "Sync failed",
+
+    // workflow
+    "m_workflow": "Workflow",
+    "c_case": "Case",
+    "c_send": "Send"
 });

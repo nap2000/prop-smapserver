@@ -24,7 +24,7 @@ import "./libs/bootstrap-colorpicker.min.js";
 import "./libs/wb/plugins/iCheck/icheck.min.js";
 import localise from "./app/localise.js";
 import globals from "./app/globals.js";
-import { addCacheBuster, addHourglass, checkExistenceOfReferences, checkLoggedIn, createNewSurvey, getAccessibleCsvFiles, getAccessibleSurveys, getAppearanceParams, getFilesFromServer, getGroupQuestionsInSurvey, getLoggedInUser, getQuestionsInCsvFile, getQuestionsInSurvey, getReferenceNames, getSurveyDetails, handleLogout, htmlEncode, isTextStorageType, loadSurveys, localTime, openForm, removeHourglass, saveCurrentProject, setLanguages, setupUserProfile, tokenizeAppearance, translateType, validGeneralName } from "./app/common";
+import { addCacheBuster, addHourglass, checkExistenceOfReferences, checkLoggedIn, createNewSurvey, getAccessibleCsvFiles, getAccessibleSpLists, getAccessibleSurveys, getAppearanceParams, getFilesFromServer, getGroupQuestionsInSurvey, getLoggedInUser, getQuestionsInCsvFile, getQuestionsInSpList, getQuestionsInSurvey, getReferenceNames, getSurveyDetails, handleLogout, htmlEncode, isTextStorageType, loadSurveys, localTime, openForm, removeHourglass, saveCurrentProject, setLanguages, setupUserProfile, tokenizeAppearance, translateType, validGeneralName } from "./app/common";
 import question from "./app/question";
 import optionlist from "./app/optionlist";
 import markup from "./app/editorMarkup";
@@ -129,6 +129,7 @@ $(function() {
 		 */
 		getAccessibleSurveys($('.linkable_surveys'), true, true, false, true);
 		getAccessibleCsvFiles($('.linkable_files'), true);
+		getAccessibleSpLists($('.linkable_sp_lists'), true);
 
 		window.history.pushState('',document.title, document.location.origin + document.location.pathname);	// Strip out the parameters from the href
 
@@ -541,14 +542,19 @@ $(function() {
 
 	// Hide and show search elements
 	$('#a_filter_column, #a_second_filter_column, #a_csv_identifier, ' +
-		'#a_survey_identifier, input[type=radio][name=search_source],' +
+		'#a_survey_identifier, #a_sp_identifier, input[type=radio][name=search_source],' +
 		'#a_search_value, #a_search_label, #a_access, #a_fe').change(function() {
 			showSearchElements();
 	});
 
-	// Trigger change in survey or csv list
+	// Trigger change in survey, csv or sharepoint list when source radio changes
 	$('input[type=radio][name=search_source]').change(function() {
-		$('#a_survey_identifier').trigger('change');
+		var src = $(this).val();
+		if(src === 'sharepoint') {
+			$('#a_sp_identifier').trigger('change');
+		} else {
+			$('#a_survey_identifier').trigger('change');
+		}
 	});
 
 	$('#a_pdfno').change(function() {
@@ -610,10 +616,12 @@ $(function() {
      * Respond to a change in the form that is to be searched
      * If the question type is a child form then the list of questions needs to be updated
      */
-	$('#a_survey_identifier, #a_csv_identifier').change(function(){
+	$('#a_survey_identifier, #a_csv_identifier, #a_sp_identifier').change(function(){
 		var search_source = $('input[type=radio][name=search_source]:checked').val();
 		if(search_source === "survey") {
 			getQuestionsInSurvey($('.column_select'), $('.column_select_multiple'), $('#a_survey_identifier').val(), true, false, setAppearanceValues, true, undefined);
+		} else if(search_source === "sharepoint") {
+			getQuestionsInSpList($('.column_select'), $('.column_select_multiple'), $('#a_sp_identifier').val(), true);
 		} else {
 			getQuestionsInCsvFile($('.column_select'), $('.column_select_multiple'), $('#a_csv_identifier').val(), true);
 		}
@@ -3625,6 +3633,12 @@ $(function() {
 								if(idx > 0) {
 									filename = filename.substring(0, idx);
 								}
+							} else if(search_source === "sharepoint") {
+								if($('#a_sp_identifier').val() === '') {
+									showAppearanceError(localise.set["msg_search_source2"]);
+									return false;
+								}
+								filename = 'sharepointlist_' + $('#a_sp_identifier').val();
 							} else {
 								showAppearanceError(localise.set["msg_search_source"]);
 								return false;
@@ -3792,6 +3806,12 @@ $(function() {
 								$('#a_survey_identifier').val(sIdent);
 								$('.search_survey').show();
 								getQuestionsInSurvey($('.column_select'), $('.column_select_multiple'), sIdent, true, false, setAppearanceValues, true, undefined);
+							} else if(params.filename.startsWith('sharepointlist_')) {
+								var spName = params.filename.substring('sharepointlist_'.length);
+								$('input[type=radio][name=search_source][value=sharepoint]').prop('checked', true);
+								$('#a_sp_identifier').val(spName);
+								$('.search_sharepoint').show();
+								getQuestionsInSpList($('.column_select'), $('.column_select_multiple'), spName, true, setAppearanceValues);
 							} else {
 								var csvIndex = getIndexOfCsvFilename(params.filename);
 								$('input[type=radio][name=search_source][value=csv]').prop('checked', true);
@@ -3979,13 +3999,16 @@ $(function() {
 				if(hasSearch) {
 					$('.appearance_search_details').show();
 
-					$('.search_csv, .search_survey').hide();
+					$('.search_csv, .search_survey, .search_sharepoint').hide();
 					if(searchSource == "survey") {
 						$('.search_survey').show();
 						fileIdentifier = $('#a_survey_identifier').val();
 					} else if(searchSource == "csv") {
 						$('.search_csv').show();
 						fileIdentifier = $('#a_csv_identifier').val();
+					} else if(searchSource == "sharepoint") {
+						$('.search_sharepoint').show();
+						fileIdentifier = $('#a_sp_identifier').val();
 					}
 
 					if(!fileIdentifier || fileIdentifier === '') {

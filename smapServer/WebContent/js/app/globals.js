@@ -131,6 +131,7 @@ import { addHourglass, handleLogout, htmlEncode, removeHourglass } from "./commo
         gMaxOptionList: 0,
         gLatestOptionList: undefined,	// Hack to record the last option list name added
 	    gCsvFiles: undefined,
+	    gSpListMaps: undefined,
 
         gListName: undefined,					// Choice Modal parameters, Set if started from choice list view
         gOptionList: undefined,					// The option list name applying to this set of choices

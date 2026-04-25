@@ -22,7 +22,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-import { addHourglass, bundleSelectChanged, checkLoggedIn, edit_notification, getEligibleUsers, getLoggedInUser, getNotificationTypes, handleLogout, htmlEncode, loadSurveys, populateTaskGroupList, removeHourglass, saveCurrentProject, saveDocument, saveEmail, saveEscalate, saveSMS, saveWebhook, setupNotificationDialog, setupUserProfile, surveyChangedNotification, taskGroupChanged } from "common";
+import { addHourglass, bundleSelectChanged, checkLoggedIn, edit_notification, getEligibleUsers, getLoggedInUser, getNotificationTypes, handleLogout, htmlEncode, loadSurveys, populateTaskGroupList, removeHourglass, saveCurrentProject, saveDocument, saveEmail, saveEscalate, saveSMS, saveSharePointList, saveWebhook, setupNotificationDialog, setupUserProfile, surveyChangedNotification, taskGroupChanged } from "common";
 
 const $ = window.$;
 const localise = window.localise;
@@ -157,6 +157,8 @@ $(document).ready(function() {
 			var nEmail = saveEmail();	// Save email and escalate detail settings
 			notification = saveEscalate();
 			notification.notifyDetails = Object.assign(nEmail.notifyDetails, notification.notifyDetails);
+		} else if(target === "sharepoint_list") {
+			notification = saveSharePointList();
 		}
 
 		if(!notification.error) {
@@ -562,8 +564,13 @@ $(document).ready(function() {
 				}
 			} else if(data[i].target === "webhook" && data[i].notifyDetails) {
 				h[++idx] = htmlEncode(data[i].notifyDetails.callback_url);
+			} else if(data[i].target === "sharepoint_list" && data[i].notifyDetails) {
+				var spNd = data[i].notifyDetails;
+				h[++idx] = htmlEncode(spNd.sp_list_title || '');
+				if(spNd.sp_operation) {
+					h[++idx] = ' (' + htmlEncode(spNd.sp_operation) + ')';
+				}
 			} else if(data[i].target === "escalate"){
-				h[++idx] = htmlEncode();
 				var msg = '';
 				if(data[i].trigger === 'cm_alert') {
 					msg = localise.set["n_aa"];
@@ -572,8 +579,10 @@ $(document).ready(function() {
 
 				}
 				msg = msg + localise.set["n_as"];
-				msg = msg.replace("%s1", data[i].notifyDetails.survey_case);
-				msg = msg.replace("%s2", data[i].remote_user);
+				var caseName = (data[i].notifyDetails.survey_case_name) || data[i].notifyDetails.survey_case || '';
+				var assigneeName = (data[i].remote_user_name != null ? data[i].remote_user_name : data[i].remote_user) || '';
+				msg = msg.replace("%s1", caseName);
+				msg = msg.replace("%s2", assigneeName);
 				h[++idx] = htmlEncode(msg);
 			}
 			h[++idx] = '</td>';

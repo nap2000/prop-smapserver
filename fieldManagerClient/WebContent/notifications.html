@@ -80,6 +80,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 			<li id="m_assign" class="nav-item restrict_role admin_role analyst_role manage_role task_role"><a
 					class="nav-link" href="/app/tasks/taskManagement.html"><span
 					class="lang" data-lang="m_assign"></span></a></li>
+			<li class="nav-item restrict_role admin_role analyst_role"><a class="nav-link" href="/app/tasks/workflow.html"><span>Workflow</span></a></li>
 
 			<li class="nav-item"><a href="#" id="m_refresh" class="nav-link"><span class="lang" data-lang="m_refresh">r</span></a></li>
 			<li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
@@ -351,9 +352,26 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					</div>
 
 					<div class="escalate_options form-group row">
+						<label class="lang col-sm-2 control-label" data-lang="t_assign_type"></label>
+						<div class="col-sm-10">
+							<div class="btn-group" role="group">
+								<button id="esc_assign_user_type" type="button" class="btn btn-outline-secondary lang active" data-lang="c_user"></button>
+								<button id="esc_assign_role_type" type="button" class="btn btn-outline-secondary lang" data-lang="c_role"></button>
+							</div>
+						</div>
+					</div>
+
+					<div class="escalate_options form-group row" id="esc_user_row">
 						<label for="user_to_assign" class="lang col-sm-2 control-label" data-lang="t_assign"></label>
 						<div class="col-sm-10">
 							<select id="user_to_assign" class="form-select"></select>
+						</div>
+					</div>
+
+					<div class="escalate_options form-group row" id="esc_role_row" style="display:none;">
+						<label for="role_to_assign_notif" class="lang col-sm-2 control-label" data-lang="t_assign_roles"></label>
+						<div class="col-sm-10">
+							<select id="role_to_assign_notif" class="form-select"></select>
 						</div>
 					</div>
 
@@ -434,6 +452,58 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 							<label for="fwd_password" data-lang="c_password" class="lang col-sm-2 control-label"></label>
 							<div class="col-sm-10">
 								<input id="fwd_password" type="password" class="form-control lang_ph" data-lang_ph="c_password" placeholder="" required>
+							</div>
+						</div>
+					</div>
+
+					<div class="sharepoint_options" style="display:none;">
+						<div class="form-group row">
+							<label for="sp_list_name" data-lang="u_sp_list_name" class="lang col-sm-2 control-label"></label>
+							<div class="col-sm-10">
+								<select id="sp_list_name" class="form-select"></select>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="lang col-sm-2 control-label" data-lang="c_operation"></label>
+							<div class="col-sm-10 pt-2">
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="sp_operation" id="sp_op_insert" value="insert" checked>
+									<label class="form-check-label lang" for="sp_op_insert" data-lang="c_insert"></label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="sp_operation" id="sp_op_update" value="update">
+									<label class="form-check-label lang" for="sp_op_update" data-lang="c_upsert"></label>
+								</div>
+							</div>
+						</div>
+						<div class="sp_update_options" style="display:none;">
+							<div class="form-group row">
+								<label for="sp_match_column" data-lang="u_sp_match_col" class="lang col-sm-2 control-label"></label>
+								<div class="col-sm-10">
+									<select id="sp_match_column" class="form-select sp_col_select"></select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="sp_match_field" data-lang="u_sp_match_field" class="lang col-sm-2 control-label"></label>
+								<div class="col-sm-10">
+									<select id="sp_match_field" class="form-select sp_field_select"></select>
+								</div>
+							</div>
+						</div>
+						<div class="form-group row mt-2">
+							<label class="lang col-sm-2 control-label" data-lang="u_sp_col_map"></label>
+							<div class="col-sm-10">
+								<table class="table table-sm table-bordered" id="sp_column_map_table">
+									<thead>
+										<tr>
+											<th class="lang" data-lang="u_sp_col_sp"></th>
+											<th class="lang" data-lang="u_sp_col_smap"></th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody id="sp_column_map_body"></tbody>
+								</table>
+								<button type="button" id="spAddRow" class="btn btn-sm btn-secondary lang" data-lang="c_add_row"></button>
 							</div>
 						</div>
 					</div>

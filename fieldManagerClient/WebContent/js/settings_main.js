@@ -121,6 +121,35 @@ const moment = window.moment;
 			writeServerDetails();
 		});
 
+		// Show/hide S2S vs NTLM fields on auth type change
+		$('#sp_auth_type').change(function() {
+			spAuthTypeChanged($(this).val());
+		});
+
+		// Discover SharePoint realm from server URL
+		$('#discoverRealm').click(function() {
+			var url = $('#sp_url').val().trim();
+			if(!url) {
+				alert(localise.set["u_sp_url"] + " required");
+				return;
+			}
+			addHourglass();
+			$.ajax({
+				url: "/surveyKPI/server/sharepoint/realm",
+				data: { url: url },
+				dataType: 'json',
+				cache: false,
+				success: function(data) {
+					removeHourglass();
+					$('#sp_realm').val(data.realm);
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+					alert(localise.set["c_error"] + ": " + err);
+				}
+			});
+		});
+
 		/*
 		 * Set focus to first element on opening modals
 		 */
@@ -702,6 +731,16 @@ const moment = window.moment;
 		});
 	}
 
+	function spAuthTypeChanged(authType) {
+		if(authType === 'ntlm') {
+			$('#sp_s2s_fields').hide();
+			$('#sp_ntlm_fields').show();
+		} else {
+			$('#sp_s2s_fields').show();
+			$('#sp_ntlm_fields').hide();
+		}
+	}
+
 	function emailServerTypeChanged() {
 		var emailType = $('#s_email_type').val();
 		if(emailType === 'smtp') {
@@ -758,6 +797,17 @@ const moment = window.moment;
 		$('#s_sec_mgr_del').prop('checked', data.sec_mgr_del);
 		gCssFile = data.css;
 
+		$('#sp_url').val(data.sharepoint_url);
+		$('#sp_client_id').val(data.sharepoint_client_id);
+		$('#sp_realm').val(data.sharepoint_realm);
+		$('#sp_cert_pem').val(data.sharepoint_cert_pem);
+		var authType = data.sharepoint_auth_type || 's2s';
+		$('#sp_auth_type').val(authType);
+		spAuthTypeChanged(authType);
+		$('#sp_domain').val(data.sharepoint_domain);
+		$('#sp_username').val(data.sharepoint_username);
+		$('#sp_password').val(data.sharepoint_password);
+
 		emailServerTypeChanged();
 	}
 
@@ -787,7 +837,15 @@ const moment = window.moment;
 				api_max_records: $('#s_api_max_records').val(),
 				password_strength: $('#s_p_strength').val(),
 				sec_mgr_del: $('#s_sec_mgr_del').prop('checked'),
-				css: $('#cssSelect').val()
+				css: $('#cssSelect').val(),
+				sharepoint_url: $('#sp_url').val(),
+				sharepoint_client_id: $('#sp_client_id').val(),
+				sharepoint_realm: $('#sp_realm').val(),
+				sharepoint_cert_pem: $('#sp_cert_pem').val(),
+				sharepoint_auth_type: $('#sp_auth_type').val(),
+				sharepoint_username: $('#sp_username').val(),
+				sharepoint_password: $('#sp_password').val(),
+				sharepoint_domain: $('#sp_domain').val()
 			};
 
 		var serverString = JSON.stringify(server);

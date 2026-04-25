@@ -103,9 +103,7 @@ function updateProjectList(addAll, projectId, callback, $projectSelect) {
 		idx = -1,
 		updateCurrentProject;
 
-	if(projectId > 0) {
-		updateCurrentProject = true;		// Only save the current project if there it is set
-	}
+	updateCurrentProject = true;
 
 	if(addAll) {
 		h[++idx] = '<option value="0">' + localise.set["c_all"] + '</option>';
@@ -4139,6 +4137,89 @@ function getAccessibleSurveys($elem, includeNone, includeBlocked, groupsOnly, in
 /*
  * Get all the csv files that a user can access
  */
+function getAccessibleSpLists($elem, includeNone) {
+	addHourglass();
+	$.ajax({
+		url: '/surveyKPI/sharepoint/listmaps',
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			removeHourglass();
+			if(handleLogout(data)) {
+				globals.gSpListMaps = data;
+				var h = [], idx = -1;
+				if(includeNone) {
+					h[++idx] = '<option value="">';
+					h[++idx] = localise.set["c_none"];
+					h[++idx] = '</option>';
+				}
+				for(var i = 0; i < data.length; i++) {
+					h[++idx] = '<option value="';
+					h[++idx] = htmlEncode(data[i].smap_name);
+					h[++idx] = '">';
+					h[++idx] = htmlEncode(data[i].smap_name);
+					h[++idx] = '</option>';
+				}
+				$elem.empty().append(h.join(''));
+			}
+		},
+		error: function(xhr, textStatus, err) {
+			removeHourglass();
+			if(handleLogout(xhr.responseText)) {
+				if(xhr.readyState == 0 || xhr.status == 0) { return; }
+				console.log("Error: Failed to get sharepoint list maps: " + err);
+			}
+		}
+	});
+}
+
+function getQuestionsInSpList($elem, $elem_multiple, smapName, includeNone, callback) {
+	var map = globals.gSpListMaps ? globals.gSpListMaps.find(function(m) { return m.smap_name === smapName; }) : null;
+	if(!map) {
+		if($elem) $elem.empty();
+		if($elem_multiple) { $elem_multiple.empty(); $elem_multiple.multiselect('rebuild'); }
+		if(typeof callback === 'function') callback();
+		return;
+	}
+	addHourglass();
+	$.ajax({
+		url: '/surveyKPI/server/sharepoint/lists/' + encodeURIComponent(map.list_title) + '/fields',
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			removeHourglass();
+			if(handleLogout(data)) {
+				var h = [], hm = [], idx = -1, idx_m = -1;
+				if(includeNone) {
+					h[++idx] = '<option value="">';
+					h[++idx] = localise.set["c_none"];
+					h[++idx] = '</option>';
+				}
+				(data || []).forEach(function(f) {
+					hm[++idx_m] = h[++idx] = '<option value="';
+					hm[++idx_m] = h[++idx] = htmlEncode(f.internalName);
+					hm[++idx_m] = h[++idx] = '">';
+					hm[++idx_m] = h[++idx] = htmlEncode(f.displayName);
+					hm[++idx_m] = h[++idx] = '</option>';
+				});
+				if($elem) $elem.empty().append(h.join(''));
+				if($elem_multiple) {
+					$elem_multiple.empty().append(hm.join(''));
+					$elem_multiple.multiselect('deselectAll', false);
+					$elem_multiple.multiselect('rebuild');
+				}
+				if(typeof callback === 'function') callback();
+			}
+		},
+		error: function(xhr) {
+			removeHourglass();
+			if(xhr.readyState !== 0 && xhr.status !== 0 && xhr.status !== 401) {
+				console.log("Error loading SharePoint fields: " + xhr.responseText);
+			}
+		}
+	});
+}
+
 function getAccessibleCsvFiles($elem, includeNone) {
 
 	var url="/surveyKPI/shared/csv/files";
@@ -5131,10 +5212,27 @@ function edit_notification(edit, idx, inconsole) {
 				$('#conversation_text').val(notification.notifyDetails.content);
 			} else if (notification.target == "webhook") {
 				$('#callback_url').val(notification.notifyDetails.callback_url);
+			} else if (notification.target == "sharepoint_list") {
+				var nd = notification.notifyDetails;
+				$('input[name="sp_operation"][value="' + (nd.sp_operation || 'insert') + '"]').prop('checked', true);
+				spOperationChanged(nd.sp_operation);
+				loadSpListNames(nd.sp_list_title, function() {
+					if(nd.sp_list_title) {
+						loadSpColumns(nd.sp_list_title, function() {
+							spPopulateMatchSelects(nd.sp_match_column, nd.sp_match_field);
+							$('#sp_column_map_body').empty();
+							if(nd.sp_column_map) {
+								nd.sp_column_map.forEach(function(row) {
+									spAddColumnMapRow(row.sp_column, row.smap_field);
+								});
+							}
+						});
+					}
+				});
 			}
 		}
 		if (!inconsole) {
-			$('#fwd_user,#user_to_assign').val(notification.remote_user).change();
+			$('#fwd_user').val(notification.remote_user);
 			$('#assign_question').val(notification.notifyDetails.assign_question);
 			$('#survey_case').val(notification.notifyDetails.survey_case);
 			gEligibleUser = notification.remote_user;
@@ -5142,9 +5240,15 @@ function edit_notification(edit, idx, inconsole) {
 
 			$('#fwd_host').val(notification.remote_host);
 
-			// assign user from data
-			if($('#user_to_assign').val() === '_data') {
-				$('.assign_question').removeClass('d-none').show();
+			// Restore escalate assign type (user vs role)
+			restoreEscalateAssignType(notification.remote_user);
+
+			// For user-type escalate, set the select value and show assign_question if _data
+			if(!notification.remote_user || notification.remote_user.indexOf('_role:') !== 0) {
+				$('#user_to_assign').val(notification.remote_user).change();
+				if($('#user_to_assign').val() === '_data') {
+					$('.assign_question').removeClass('d-none').show();
+				}
 			}
 
 			if (notification.enabled) {
@@ -5186,8 +5290,11 @@ function bundleSelectChanged() {
 		$('.notbundle').show();
 	}
 }
+// Loaded SharePoint columns for the currently configured list
+var gSpColumns = [];
+
 function setTargetDependencies(target) {
-	$('.sms_options, .webhook_options, .email_options, .escalate_options, .conv_options').hide();
+	$('.sms_options, .webhook_options, .email_options, .escalate_options, .conv_options, .sharepoint_options').hide();
 	if(target === "email") {
 		$('.email_options').show();
 		initMsgNotPopup(target);
@@ -5200,6 +5307,9 @@ function setTargetDependencies(target) {
 	} else if(target  === "conversation") {
 		$('.conv_options').show();
 		initMsgNotPopup(target);
+	} else if(target === "sharepoint_list") {
+		$('.sharepoint_options').show();
+		loadSpListNames();
 	}
 }
 
@@ -5407,6 +5517,21 @@ function setupNotificationDialog() {
 	});
 	setTargetDependencies("email");
 
+	// Escalate assign-type toggle (User vs Role — no email, cases are single-assignee)
+	$('#esc_assign_user_type').off().click(function() {
+		$('#esc_assign_user_type').addClass('active');
+		$('#esc_assign_role_type').removeClass('active');
+		$('#esc_user_row').show();
+		$('#esc_role_row').hide();
+	});
+	$('#esc_assign_role_type').off().click(function() {
+		$('#esc_assign_role_type').addClass('active');
+		$('#esc_assign_user_type').removeClass('active');
+		$('#esc_user_row').hide();
+		$('#esc_role_row').show();
+		loadRolesForEscalate();
+	});
+
 	// Set change function attach
 	$('#email_attach').off().change(function() {
 		setAttachDependencies($(this).val());
@@ -5423,6 +5548,8 @@ function setupNotificationDialog() {
 	$('#addNotificationPopup').on('shown.bs.modal', function () {
 		$('#name').focus();
 	});
+
+	setupSharePointNotification();
 
 	/*
 	 * Functions for forwarding
@@ -5613,19 +5740,203 @@ function saveWebhook() {
 function saveEscalate() {
 
 	var error = false,
-		callback_url,
 		notification = {};
 
 	if(!error) {
 
 		notification.target = "escalate";
-		notification.remote_user = $('#user_to_assign').val();
-
+		if($('#esc_assign_role_type').hasClass('active')) {
+			var roleId = $('#role_to_assign_notif').val();
+			notification.remote_user = '_role:' + roleId;
+		} else {
+			notification.remote_user = $('#user_to_assign').val();
+		}
 
 		notification.notifyDetails = {};
 		notification.notifyDetails.survey_case = $('#survey_case').val();
 		notification.notifyDetails.assign_question = $('#assign_question').val();
 
+	} else {
+		notification.error = true;
+	}
+
+	return notification;
+}
+
+/*
+ * SharePoint list notification helpers
+ */
+
+// Fetch columns for a SP list, store in gSpColumns, repopulate all column selects, call callback when done
+function loadSpColumns(listTitle, callback) {
+	addHourglass();
+	$.ajax({
+		url: "/surveyKPI/server/sharepoint/lists/" + encodeURIComponent(listTitle) + "/fields",
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			removeHourglass();
+			gSpColumns = data || [];
+			spRefreshColumnSelects();
+			if(typeof callback === 'function') callback();
+		},
+		error: function(xhr, textStatus, err) {
+			removeHourglass();
+			alert(localise.set["c_error"] + ": " + err);
+		}
+	});
+}
+
+// Rebuild every .sp_col_select dropdown from gSpColumns
+function spRefreshColumnSelects() {
+	$('.sp_col_select').each(function() {
+		var current = $(this).val();
+		$(this).empty();
+		gSpColumns.forEach(function(f) {
+			$('<option>').val(f.internalName).text(f.displayName).appendTo($('.sp_col_select'));
+		});
+		if(current) $(this).val(current);
+	});
+}
+
+// Populate the survey field selects from the cached question list
+function spRefreshFieldSelects() {
+	var sId = $('#survey').val() || 0;
+	var language = "none";
+	var qList = globals.gSelector.getSurveyQuestions(sId, language) || [];
+	$('.sp_field_select').each(function() {
+		var current = $(this).val();
+		$(this).empty();
+		$('<option>').val('').text('').appendTo($(this));
+		qList.forEach(function(q) {
+			$('<option>').val(q.name).text(q.name).appendTo($('.sp_field_select'));
+		});
+		if(current) $(this).val(current);
+	});
+}
+
+// Show/hide the update-specific match fields
+
+// Set match selects to saved values after columns are loaded
+function spPopulateMatchSelects(matchCol, matchField) {
+	if(matchCol) $('#sp_match_column').val(matchCol);
+	if(matchField) $('#sp_match_field').val(matchField);
+}
+
+// Add one row to the column map table
+function spAddColumnMapRow(spValue, smapValue) {
+	var $spSelect = $('<select class="form-select form-select-sm sp_col_select">');
+	var $smapSelect = $('<select class="form-select form-select-sm sp_field_select">');
+
+	// Populate SP columns
+	gSpColumns.forEach(function(f) {
+		$('<option>').val(f.internalName).text(f.displayName).appendTo($spSelect);
+	});
+
+	// Populate survey fields
+	var sId = $('#survey').val() || 0;
+	var qList = globals.gSelector.getSurveyQuestions(sId, "none") || [];
+	$('<option>').val('').text('').appendTo($smapSelect);
+	qList.forEach(function(q) {
+		$('<option>').val(q.name).text(q.name).appendTo($smapSelect);
+	});
+
+	if(spValue)   $spSelect.val(spValue);
+	if(smapValue) $smapSelect.val(smapValue);
+
+	var $deleteBtn = $('<button type="button" class="btn btn-sm btn-danger">×</button>').click(function() {
+		$(this).closest('tr').remove();
+	});
+
+	$('<tr>')
+		.append($('<td>').append($spSelect))
+		.append($('<td>').append($smapSelect))
+		.append($('<td>').append($deleteBtn))
+		.appendTo($('#sp_column_map_body'));
+}
+
+/*
+ * Populate #sp_list_name select directly from SharePoint.
+ * Optionally pre-selects selectedTitle and calls callback after load.
+ */
+function loadSpListNames(selectedTitle, callback) {
+	$.ajax({
+		url: '/surveyKPI/sharepoint/lists',
+		type: 'GET',
+		success: function(data) {
+			var $sel = $('#sp_list_name').empty();
+			$sel.append($('<option>').val('').text('-- select --'));
+			(data || []).forEach(function(title) {
+				$sel.append($('<option>').val(title).text(title));
+			});
+			if(selectedTitle) $sel.val(selectedTitle);
+			if(callback) callback();
+		}
+	});
+}
+
+/*
+ * Wire up SharePoint notification dialog events.
+ * Called once from setupNotificationDialog().
+ */
+function setupSharePointNotification() {
+	$('#sp_list_name').off('change').change(function() {
+		var listTitle = $(this).val();
+		if(listTitle) loadSpColumns(listTitle);
+	});
+
+	$('input[name="sp_operation"]').off().change(function() {
+		spOperationChanged($(this).val());
+	});
+
+	$('#spAddRow').off().click(function() {
+		spAddColumnMapRow('', '');
+	});
+}
+
+function spOperationChanged(operation) {
+	if(operation === 'update') {
+		$('.sp_update_options').show();
+	} else {
+		$('.sp_update_options').hide();
+	}
+}
+
+/*
+ * Collect SharePoint list notification data from the dialog
+ */
+function saveSharePointList() {
+	var notification = {};
+	var error = false;
+
+	var listTitle = $('#sp_list_name').val().trim();
+	if(!listTitle) {
+		alert(localise.set["u_sp_list_name"] + " required");
+		error = true;
+	}
+
+	if(!error) {
+		var operation = $('input[name="sp_operation"]:checked').val() || 'insert';
+		var columnMap = [];
+		$('#sp_column_map_body tr').each(function() {
+			var spCol  = $(this).find('.sp_col_select').val();
+			var smapField = $(this).find('.sp_field_select').val();
+			if(spCol && smapField) {
+				columnMap.push({ sp_column: spCol, smap_field: smapField });
+			}
+		});
+
+		notification.target = "sharepoint_list";
+		notification.notifyDetails = {
+			sp_list_title: listTitle,
+			sp_operation: operation,
+			sp_column_map: columnMap
+		};
+
+		if(operation === 'update') {
+			notification.notifyDetails.sp_match_column = $('#sp_match_column').val();
+			notification.notifyDetails.sp_match_field  = $('#sp_match_field').val();
+		}
 	} else {
 		notification.error = true;
 	}
@@ -6433,6 +6744,50 @@ function fillUsersList(isNotification, data) {
 }
 
 /*
+ * Load roles into #role_to_assign_notif for escalate assignment
+ */
+function loadRolesForEscalate() {
+	var $sel = $('#role_to_assign_notif');
+	if($sel.length === 0 || $sel.find('option').length > 0) return; // already loaded
+	$.ajax({
+		url: "/surveyKPI/role/roles/names",
+		cache: false,
+		success: function(data) {
+			$sel.empty();
+			var h = [], idx = -1;
+			if(data && data.length > 0) {
+				for(var i = 0; i < data.length; i++) {
+					h[++idx] = '<option value="' + data[i].id + '">' + htmlEncode(data[i].name) + '</option>';
+				}
+			}
+			$sel.html(h.join(''));
+		}
+	});
+}
+
+/*
+ * Restore role-type assignment state when editing an escalate notification.
+ * Call after setting remote_user on the form.
+ */
+function restoreEscalateAssignType(remoteUser) {
+	if(remoteUser && remoteUser.indexOf('_role:') === 0) {
+		var roleId = remoteUser.substring(6);
+		$('#esc_assign_user_type').removeClass('active');
+		$('#esc_assign_role_type').addClass('active');
+		$('#esc_user_row').hide();
+		$('#esc_role_row').show();
+		loadRolesForEscalate();
+		// Defer select value until options are populated
+		setTimeout(function() { $('#role_to_assign_notif').val(roleId); }, 300);
+	} else {
+		$('#esc_assign_user_type').addClass('active');
+		$('#esc_assign_role_type').removeClass('active');
+		$('#esc_user_row').show();
+		$('#esc_role_row').hide();
+	}
+}
+
+/*
  * Return true if the passed in value is accepted by xlsFormConverter
  */
 function isValidODKQuestionName(val) {
@@ -6647,6 +7002,8 @@ export {
 	getLoggedInUser,
 	getLanguageList,
 	getEligibleUsers,
+	loadRolesForEscalate,
+	restoreEscalateAssignType,
 	getFilesFromServer,
 	getRoles,
 	getGoogleMapApi,
@@ -6674,6 +7031,7 @@ export {
 	removeHourglass,
 	getAccessibleSurveys,
 	getAccessibleCsvFiles,
+	getAccessibleSpLists,
 	saveCurrentGroupSurvey,
 	saveCurrentProject,
 	setInLocalStorage,
@@ -6698,6 +7056,7 @@ export {
 	saveSMS,
 	saveDocument,
 	saveWebhook,
+	saveSharePointList,
 	saveEscalate,
 	surveyChangedNotification,
 	bundleSelectChanged,
@@ -6736,6 +7095,7 @@ export {
 	getTableData,
 	addLanguageOptions,
 	getQuestionsInCsvFile,
+	getQuestionsInSpList,
 	getQuestionsInSurvey,
 	isTextStorageType,
 	setLanguages,
