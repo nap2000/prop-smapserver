@@ -860,7 +860,7 @@ function renderDrawerContent(type) {
 	}
 
 	// Populate and wire task drawer assignee (user/role selects + toggles)
-	if (type === "task" && gEditTGs.length > 0) {
+	if (type === "task" && (gEditTGs.length > 0 || gDrawerCreateMode)) {
 		const userEl = document.getElementById("wfd-task-user-select");
 		const roleEl = document.getElementById("wfd-task-role-select");
 		if (userEl) {
