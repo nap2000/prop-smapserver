@@ -541,6 +541,7 @@ function closeEditDrawer() {
  * are listed individually in the amber Conditions section.
  */
 function renderDrawerContent(type) {
+	const l      = localise.set;
 	const icon   = TYPE_ICONS[type] || "fas fa-circle";
 	const label  = typeLabel(type);
 	const colour = TYPE_COLOURS[type] || "#6c757d";
@@ -631,13 +632,21 @@ function renderDrawerContent(type) {
 		<input id="wfd-name" type="text" value="${esc(name)}">
 	</div>`;
 
-	if (type === "task") {
+	if (type === "task" || type === "emailtask") {
 		const targetSurveyId = firstTG ? firstTG.targetSurveyId : 0;
 		bodyHtml += `<div class="wf-field">
 			<label>${l["c_survey"]}</label>
 			<select id="wfd-task-survey" data-current="${targetSurveyId}">
 				<option value="">Loading…</option>
 			</select>
+		</div>`;
+	}
+
+	if (type === "emailtask") {
+		const emailTo = (firstNotif && firstNotif.remoteUser) || "";
+		bodyHtml += `<div class="wf-field">
+			<label>${l["c_email_addresses"]}</label>
+			<input id="wfd-task-email-to" type="text" value="${esc(emailTo)}" placeholder="comma-separated">
 		</div>`;
 	}
 
@@ -1145,8 +1154,7 @@ function deleteFromDrawer() {
 	const nodeType = gEditItem.dataset.type;
 	const nodeName = (gEditItem.querySelector("div > div") || {}).textContent || nodeType;
 
-	const msg = `This will permanently delete ${totalRecords} notification(s) `
-		+ `that back the "${nodeName}" step. This cannot be undone.`;
+	const msg = localise.set["t_delete_step_confirm"].replace("{0}", nodeName);
 	document.getElementById("wf-delete-msg").textContent = msg;
 
 	const modal = new bootstrap.Modal(document.getElementById("wf-delete-modal"));

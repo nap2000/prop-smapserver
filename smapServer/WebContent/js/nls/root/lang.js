@@ -1723,5 +1723,7 @@ define({
     "t_select_survey": "Please select a survey.",
     "t_enter_label": "Please enter a label.",
     "t_select_task_survey": "Please select a task survey.",
-    "t_enter_step_label": "Please enter a label for this step."
+    "t_enter_step_label": "Please enter a label for this step.",
+    "t_delete_step_confirm": "This will permanently delete the {0}. This cannot be undone.",
+    "c_email_addresses": "Email addresses"
 });
