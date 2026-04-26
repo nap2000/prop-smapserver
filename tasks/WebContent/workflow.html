@@ -284,7 +284,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <!-- Type selector -->
                 <div class="mb-3">
                     <label class="form-label fw-semibold" style="font-size:12px;">Action type</label>
                     <div class="d-flex gap-2 flex-wrap" id="wf-add-type-btns">
@@ -313,13 +312,11 @@
                     </div>
                 </div>
 
-                <!-- Trigger (read-only, from selected canvas node) -->
                 <div class="mb-3" id="wf-add-trigger-row">
                     <label class="form-label fw-semibold" style="font-size:12px;">Trigger</label>
                     <div id="wf-add-trigger-name" class="form-control-plaintext fw-bold" style="font-size:13px;"></div>
                 </div>
 
-                <!-- Target / form survey selector -->
                 <div class="mb-3" id="wf-add-target-row" style="display:none;">
                     <label id="wf-add-target-label" class="form-label fw-semibold" style="font-size:12px;">Task survey</label>
                     <select id="wf-add-target" class="form-select form-select-sm">
@@ -327,13 +324,11 @@
                     </select>
                 </div>
 
-                <!-- Label -->
                 <div class="mb-3" id="wf-add-name-row">
                     <label class="form-label fw-semibold" style="font-size:12px;">Label</label>
                     <input id="wf-add-name" type="text" class="form-control form-control-sm" placeholder="Step name">
                 </div>
 
-                <!-- Assignee toggle — task type -->
                 <div class="mb-2" id="wf-add-task-assign-toggle-row" style="display:none;">
                     <label class="form-label fw-semibold" style="font-size:12px;">Assign type</label>
                     <div class="btn-group btn-group-sm">
@@ -353,7 +348,6 @@
                     <select id="wf-add-task-role-select" class="form-select form-select-sm"></select>
                 </div>
 
-                <!-- Case survey selector -->
                 <div class="mb-3" id="wf-add-case-survey-row" style="display:none;">
                     <label class="form-label fw-semibold" style="font-size:12px;">Case survey</label>
                     <select id="wf-add-case-survey" class="form-select form-select-sm">
@@ -361,7 +355,6 @@
                     </select>
                 </div>
 
-                <!-- Assignee toggle — case type -->
                 <div class="mb-2" id="wf-add-case-assign-toggle-row" style="display:none;">
                     <label class="form-label fw-semibold" style="font-size:12px;">Assign type</label>
                     <div class="btn-group btn-group-sm">
@@ -380,14 +373,12 @@
                     <select id="wf-add-case-role-select" class="form-select form-select-sm"></select>
                 </div>
 
-                <!-- Email addresses (email task) -->
                 <div class="mb-3" id="wf-add-task-email-row" style="display:none;">
                     <label class="form-label fw-semibold" style="font-size:12px;">Email addresses</label>
                     <input id="wf-add-task-email" type="text" class="form-control form-control-sm"
                            placeholder="comma-separated email addresses">
                 </div>
 
-                <!-- Email fields -->
                 <div id="wf-add-email-rows" style="display:none;">
                     <div class="mb-2">
                         <label class="form-label fw-semibold" style="font-size:12px;">To (emails)</label>
@@ -403,7 +394,6 @@
                     </div>
                 </div>
 
-                <!-- SMS fields -->
                 <div id="wf-add-sms-rows" style="display:none;">
                     <div class="mb-2">
                         <label class="form-label fw-semibold" style="font-size:12px;">To (phone number)</label>
@@ -415,7 +405,6 @@
                     </div>
                 </div>
 
-                <!-- SharePoint List fields -->
                 <div id="wf-add-sp-rows" style="display:none;">
                     <div class="mb-2">
                         <label class="form-label fw-semibold" style="font-size:12px;">List</label>
@@ -458,13 +447,13 @@
                     </div>
                 </div>
 
-                <!-- Bundle (non-task types only) -->
+
                 <div class="mb-3 form-check" id="wf-add-bundle-row" style="display:none;">
                     <input type="checkbox" class="form-check-input" id="wf-add-bundle">
                     <label class="form-check-label" for="wf-add-bundle" style="font-size:12px;">Bundle notification</label>
                 </div>
 
-                <!-- Condition -->
+
                 <div class="mb-1" id="wf-add-filter-row">
                     <label class="form-label fw-semibold" style="font-size:12px;">Condition (optional)</label>
                     <input id="wf-add-filter" type="text" class="form-control form-control-sm"
