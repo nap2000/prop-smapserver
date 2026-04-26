@@ -1380,7 +1380,7 @@ function executeCreate() {
 		url     = "/surveyKPI/workflow/edit/form";
 		payload = { sIdent: sIdent };
 	} else if (type === "task" || type === "emailtask") {
-		if (!gTriggerSurveyId) { removeHourglass(); alert("No trigger node selected."); return; }
+		const sourceSurveyId = gTriggerSurveyId || findAncestorSurveyId(gSelectedNode.dataset.id);
 		const name = (document.getElementById("wfd-name") || {}).value || "";
 		const filter = ((document.querySelector(".wf-cond-input") || {}).value || "").trim();
 		if (!name) { removeHourglass(); alert(localise.set["t_enter_label"]); return; }
@@ -1389,7 +1389,7 @@ function executeCreate() {
 		if (!targetSurveyId) { removeHourglass(); alert(localise.set["t_select_task_survey"]); return; }
 		url     = "/surveyKPI/workflow/edit/taskgroup";
 		payload = {
-			sourceSurveyId: gTriggerSurveyId,
+			sourceSurveyId: sourceSurveyId,
 			targetSurveyId: targetSurveyId,
 			name:           name,
 			filter:         filter || null,
@@ -1399,7 +1399,7 @@ function executeCreate() {
 			// emailtask uses a notification instead
 			url     = "/surveyKPI/workflow/edit/notification";
 			payload = {
-				srcSurveyId:  gTriggerSurveyId,
+				srcSurveyId:  sourceSurveyId,
 				target:       "task",
 				name:         name,
 				filter:       filter || null,
@@ -1420,7 +1420,6 @@ function executeCreate() {
 			}
 		}
 	} else {
-		if (!gSelectedNode) { removeHourglass(); alert("No trigger node selected."); return; }
 		const name   = (document.getElementById("wfd-name") || {}).value || "";
 		const filter = ((document.querySelector(".wf-cond-input") || {}).value || "").trim();
 		if (!name) { removeHourglass(); alert(localise.set["t_enter_label"]); return; }
