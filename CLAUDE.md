@@ -74,7 +74,7 @@ Frontend calls `/surveyKPI/workflow/items`, `/surveyKPI/workflow/positions`, `/s
 - ES modules throughout (`import`/`export`); `"use strict"` at top
 - `const`/`let` for new code; existing `var` left alone
 - DOM ready via `$(document).ready(...)` at module bottom after `localise.initLocale(...).then(...)`
-- User-facing strings use `localise.set[key]` — add translation keys rather than hardcoding
+- **All user-visible labels must be localised** — never hardcode text; always use `localise.set[key]` in JS and `data-lang="key"` on HTML elements. Add new keys to `smapServer/WebContent/js/nls/root/lang.js` (the English root file). Other locales in `nls/<locale>/lang.js` only need entries for strings that differ from root.
 - `esc(s)` helper used to HTML-escape before inserting into `innerHTML`
 - No TypeScript; no test framework
 

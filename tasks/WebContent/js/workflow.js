@@ -93,8 +93,8 @@ function typeLabel(type) {
 		reminder: l["c_reminder"],
 		email:    l["c_email"],
 		sms:      l["c_sms"],
-		decision:        l["c_decision"] || "Decision",
-		sharepoint_list: l["c_sharepoint_list"] || "SharePoint List"
+		decision:        l["c_decision"],
+		sharepoint_list: l["c_sharepoint_list"]
 	};
 	return labels[type] || type;
 }
@@ -158,7 +158,7 @@ function selectNode(cardEl) {
 		if (noChildren.includes(gSelectedNode.dataset.type)) return;
 		const badge = document.createElement("button");
 		badge.className = "wf-connector-badge";
-		badge.title     = "Add step from this node";
+		badge.title     = localise.set["c_add_step_from_node"];
 		badge.textContent = "+";
 		badge.addEventListener("mousedown", function(e) { e.stopPropagation(); });
 		badge.addEventListener("click",     function(e) { e.stopPropagation(); openAddDialog(); });
@@ -207,7 +207,7 @@ function nodeCard(x, y, item) {
 	if (isEditable || isDecision) {
 		const editBtn = document.createElement("button");
 		editBtn.className = "wf-node-edit-btn";
-		editBtn.title = "Edit";
+		editBtn.title = localise.set["c_edit"];
 		editBtn.innerHTML = '<i class="fas fa-pencil-alt"></i>';
 		editBtn.addEventListener("click", function(e) {
 			e.stopPropagation();
@@ -393,11 +393,12 @@ function showLegend(colourMap) {
 			+ "box-shadow:0 2px 8px rgba(0,0,0,0.12);pointer-events:none;";
 		canvas.appendChild(leg);
 	}
-	const labels = { type: "Type", project: "Project", bundle: "Bundle" };
+	const l2 = localise.set;
+	const labels = { type: l2["c_type"], project: l2["c_project"], bundle: l2["c_bundle"] };
 	let html = `<div style="font-weight:700;margin-bottom:8px;color:#495057;">${labels[gHighlight] || gHighlight}</div>`;
 	const entries = Object.entries(colourMap);
 	if (entries.length === 0) {
-		html += `<div style="color:#6c757d;font-style:italic;">No data</div>`;
+		html += `<div style="color:#6c757d;font-style:italic;">${localise.set["c_no_data"]}</div>`;
 	}
 	entries.forEach(function([val, colour]) {
 		html += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">`
@@ -589,7 +590,7 @@ function renderDrawerContent(type) {
 			sharepoint_list: { cls: "", icon: "fas fa-table", xstyle: "color:#0078d4;border:1px solid #0078d4;background:transparent;" }
 		};
 		bodyHtml += `<div class="wf-field">
-			<label>Step type</label>
+			<label>${l["c_step_type"]}</label>
 			<div style="display:flex;flex-wrap:wrap;gap:4px;">
 				${availTypes.map(function(t) {
 					const s = TYPE_BTN_STYLE[t] || { cls: "btn-outline-secondary", icon: "fas fa-circle" };
@@ -600,14 +601,14 @@ function renderDrawerContent(type) {
 			</div>
 		</div>
 		<div class="wf-field" style="font-size:12px;color:#6c757d;margin-bottom:8px;">
-			Trigger: <strong>${esc(gSelectedNode ? (gSelectedNode.dataset.label || gSelectedNode.dataset.name || gSelectedNode.dataset.id) : "(standalone)")}</strong>
+			${l["c_trigger"]}: <strong>${esc(gSelectedNode ? (gSelectedNode.dataset.label || gSelectedNode.dataset.name || gSelectedNode.dataset.id) : l["c_standalone"])}</strong>
 		</div>`;
 	}
 
 	// Form create mode: survey selector
 	if (type === "form" && gDrawerCreateMode) {
 		bodyHtml += `<div class="wf-field">
-			<label>Form survey</label>
+			<label>${l["c_survey"]}</label>
 			<select id="wfd-form-survey"><option value="">Loading…</option></select>
 		</div>`;
 		document.getElementById("wf-drawer-body").innerHTML = bodyHtml;
@@ -620,20 +621,20 @@ function renderDrawerContent(type) {
 		document.getElementById("wf-conditions").style.display      = "none";
 		document.getElementById("wf-drawer-delete").style.display   = "none";
 		document.getElementById("wf-drawer-advanced").style.display = "none";
-		document.getElementById("wf-drawer-save").textContent = "Create Step";
+		document.getElementById("wf-drawer-save").textContent = localise.set["c_create_step"];
 		return;
 	}
 
 	// Label field (notification name) — not shown for form type
 	bodyHtml += `<div class="wf-field">
-		<label>Label</label>
+		<label>${l["c_label"]}</label>
 		<input id="wfd-name" type="text" value="${esc(name)}">
 	</div>`;
 
 	if (type === "task") {
 		const targetSurveyId = firstTG ? firstTG.targetSurveyId : 0;
 		bodyHtml += `<div class="wf-field">
-			<label>Task survey</label>
+			<label>${l["c_survey"]}</label>
 			<select id="wfd-task-survey" data-current="${targetSurveyId}">
 				<option value="">Loading…</option>
 			</select>
@@ -643,26 +644,26 @@ function renderDrawerContent(type) {
 	if (type === "case") {
 		const caseSurveyIdent = (firstNotif && firstNotif.caseSurveyIdent) || "";
 		bodyHtml += `<div class="wf-field">
-			<label>Case survey</label>
+			<label>${l["c_survey"]}</label>
 			<select id="wfd-case-survey" data-current="${esc(caseSurveyIdent)}"><option value="">Loading…</option></select>
 		</div>`;
 
 		const isCaseRole = remoteUser.startsWith("_role:");
 		const caseRoleId = isCaseRole ? remoteUser.substring(6) : "";
 		bodyHtml += `<div class="wf-field">
-			<label>Assign type</label>
+			<label>${l["c_assign_type"]}</label>
 			<div class="btn-group btn-group-sm">
-				<button type="button" id="wfd-case-assign-user" class="btn btn-outline-secondary${isCaseRole ? "" : " active"}" style="font-size:11px;">User</button>
-				<button type="button" id="wfd-case-assign-role" class="btn btn-outline-secondary${isCaseRole ? " active" : ""}" style="font-size:11px;">Role</button>
+				<button type="button" id="wfd-case-assign-user" class="btn btn-outline-secondary${isCaseRole ? "" : " active"}" style="font-size:11px;">${l["c_user"]}</button>
+				<button type="button" id="wfd-case-assign-role" class="btn btn-outline-secondary${isCaseRole ? " active" : ""}" style="font-size:11px;">${l["c_role"]}</button>
 			</div>
 		</div>
 		<div class="wf-field" id="wfd-case-user-row"${isCaseRole ? ' style="display:none;"' : ""}>
-			<label>Assign to</label>
+			<label>${l["c_assign_to"]}</label>
 			<input id="wfd-assignee" type="text" value="${esc(isCaseRole ? "" : remoteUser)}"
 			       placeholder="_submitter, _data, or email address">
 		</div>
 		<div class="wf-field" id="wfd-case-role-row"${isCaseRole ? "" : ' style="display:none;"'}>
-			<label>Role</label>
+			<label>${l["c_role"]}</label>
 			<select id="wfd-case-role-select" data-current="${esc(caseRoleId)}"><option value="">Loading…</option></select>
 		</div>`;
 	}
@@ -672,13 +673,13 @@ function renderDrawerContent(type) {
 		const emailSubject = (firstNotif && firstNotif.emailSubject)  || "";
 		const emailContent = (firstNotif && firstNotif.emailContent)  || "";
 		bodyHtml += `
-		<div class="wf-field"><label>To (emails)</label>
+		<div class="wf-field"><label>${l["c_to_emails"]}</label>
 			<input id="wfd-email-to" type="text" value="${esc(emailTo)}" placeholder="comma-separated">
 		</div>
-		<div class="wf-field"><label>Subject</label>
+		<div class="wf-field"><label>${l["c_subject"]}</label>
 			<input id="wfd-email-subj" type="text" value="${esc(emailSubject)}">
 		</div>
-		<div class="wf-field"><label>Message</label>
+		<div class="wf-field"><label>${l["c_message"]}</label>
 			<textarea id="wfd-email-content">${esc(emailContent)}</textarea>
 		</div>`;
 	}
@@ -687,10 +688,10 @@ function renderDrawerContent(type) {
 		const smsTo      = (firstNotif && firstNotif.smsTo)      || "";
 		const smsMessage = (firstNotif && firstNotif.smsMessage) || "";
 		bodyHtml += `
-		<div class="wf-field"><label>To (phone)</label>
+		<div class="wf-field"><label>${l["c_to_phone"]}</label>
 			<input id="wfd-sms-to" type="text" value="${esc(smsTo)}">
 		</div>
-		<div class="wf-field"><label>Message</label>
+		<div class="wf-field"><label>${l["c_message"]}</label>
 			<textarea id="wfd-sms-content">${esc(smsMessage)}</textarea>
 		</div>`;
 	}
@@ -699,41 +700,41 @@ function renderDrawerContent(type) {
 		const spOp = (firstNotif && firstNotif.spOperation) || "insert";
 		bodyHtml += `
 		<div class="wf-field">
-			<label>List</label>
+			<label>${l["c_list"]}</label>
 			<select id="wfd-sp-list"><option value="">Loading…</option></select>
 		</div>
 		<div class="wf-field">
-			<label>Operation</label>
+			<label>${l["c_operation"]}</label>
 			<div>
 				<div class="form-check form-check-inline">
 					<input class="form-check-input" type="radio" name="wfd-sp-op" id="wfd-sp-op-insert" value="insert" ${spOp !== "update" ? "checked" : ""}>
-					<label class="form-check-label" for="wfd-sp-op-insert">Insert</label>
+					<label class="form-check-label" for="wfd-sp-op-insert">${l["c_insert"]}</label>
 				</div>
 				<div class="form-check form-check-inline">
 					<input class="form-check-input" type="radio" name="wfd-sp-op" id="wfd-sp-op-update" value="update" ${spOp === "update" ? "checked" : ""}>
-					<label class="form-check-label" for="wfd-sp-op-update">Update or Insert</label>
+					<label class="form-check-label" for="wfd-sp-op-update">${l["c_update_or_insert"]}</label>
 				</div>
 			</div>
 		</div>
 		<div id="wfd-sp-match-section" style="${spOp === "update" ? "" : "display:none;"}">
 			<div class="wf-field">
-				<label>Match SP column</label>
+				<label>${l["c_match_sp_column"]}</label>
 				<select id="wfd-sp-match-col"><option value="">Loading…</option></select>
 			</div>
 			<div class="wf-field">
-				<label>Match survey field</label>
+				<label>${l["c_match_survey_field"]}</label>
 				<select id="wfd-sp-match-field"><option value="">Loading…</option></select>
 			</div>
 		</div>
 		<div class="wf-field">
-			<label>Column map</label>
+			<label>${l["c_column_map"]}</label>
 			<table class="table table-sm table-bordered" style="font-size:12px;">
 				<thead><tr>
-					<th>SP column</th><th>Survey field</th><th></th>
+					<th>${l["c_sp_column"]}</th><th>${l["c_survey_field"]}</th><th></th>
 				</tr></thead>
 				<tbody id="wfd-sp-col-map-body"></tbody>
 			</table>
-			<button type="button" id="wfd-sp-add-row" class="btn btn-sm btn-secondary">+ Add row</button>
+			<button type="button" id="wfd-sp-add-row" class="btn btn-sm btn-secondary">+ ${l["c_add_row"]}</button>
 		</div>`;
 		document.getElementById("wf-drawer-body").innerHTML = bodyHtml;
 
@@ -792,7 +793,7 @@ function renderDrawerContent(type) {
 		document.getElementById("wf-drawer-advanced").style.display = "none";
 		document.getElementById("wf-conditions").style.display = "";
 		if (gDrawerCreateMode) {
-			document.getElementById("wf-drawer-save").textContent = "Create Step";
+			document.getElementById("wf-drawer-save").textContent = localise.set["c_create_step"];
 			document.getElementById("wf-drawer-delete").style.display = "none";
 			// Wire type selector
 			document.querySelectorAll(".wf-create-type-btn").forEach(function(btn) {
@@ -807,14 +808,14 @@ function renderDrawerContent(type) {
 	if (gDrawerCreateMode && type !== "task" && type !== "emailtask" && type !== "form" && type !== "sharepoint_list") {
 		bodyHtml += `<div class="wf-field wf-field-inline">
 			<input id="wfd-bundle" type="checkbox">
-			<label style="margin-left:6px;font-size:12px;">Bundle notification</label>
+			<label style="margin-left:6px;font-size:12px;">${l["c_bundle_notification"]}</label>
 		</div>`;
 	}
 
 	// Enabled toggle (notifications, or create mode)
 	if (gEditNotifs.length > 0 || gDrawerCreateMode) {
 		bodyHtml += `<div class="wf-field wf-field-inline">
-			<label>Enabled</label>
+			<label>${l["c_enabled"]}</label>
 			<input id="wfd-enabled" type="checkbox" ${enabled ? "checked" : ""}>
 		</div>`;
 	}
@@ -825,19 +826,19 @@ function renderDrawerContent(type) {
 		const tgUserId = firstTG ? (firstTG.userId || 0) : 0;
 		const taskAssignMode = tgRoleId > 0 ? "role" : (tgUserId > 0 ? "user" : "unassigned");
 		bodyHtml += `<div class="wf-field">
-			<label>Assign type</label>
+			<label>${l["c_assign_type"]}</label>
 			<div class="btn-group btn-group-sm">
-				<button type="button" id="wfd-task-assign-unassigned" class="btn btn-outline-secondary${taskAssignMode === "unassigned" ? " active" : ""}" style="font-size:11px;">Unassigned</button>
-				<button type="button" id="wfd-task-assign-user"       class="btn btn-outline-secondary${taskAssignMode === "user"       ? " active" : ""}" style="font-size:11px;">User</button>
-				<button type="button" id="wfd-task-assign-role"       class="btn btn-outline-secondary${taskAssignMode === "role"       ? " active" : ""}" style="font-size:11px;">Role</button>
+				<button type="button" id="wfd-task-assign-unassigned" class="btn btn-outline-secondary${taskAssignMode === "unassigned" ? " active" : ""}" style="font-size:11px;">${l["c_unassigned"]}</button>
+				<button type="button" id="wfd-task-assign-user"       class="btn btn-outline-secondary${taskAssignMode === "user"       ? " active" : ""}" style="font-size:11px;">${l["c_user"]}</button>
+				<button type="button" id="wfd-task-assign-role"       class="btn btn-outline-secondary${taskAssignMode === "role"       ? " active" : ""}" style="font-size:11px;">${l["c_role"]}</button>
 			</div>
 		</div>
 		<div class="wf-field" id="wfd-task-user-row"${taskAssignMode === "user" ? "" : ' style="display:none;"'}>
-			<label>User</label>
+			<label>${l["c_user"]}</label>
 			<select id="wfd-task-user-select" data-current="${tgUserId}"><option value="">Loading…</option></select>
 		</div>
 		<div class="wf-field" id="wfd-task-role-row"${taskAssignMode === "role" ? "" : ' style="display:none;"'}>
-			<label>Role</label>
+			<label>${l["c_role"]}</label>
 			<select id="wfd-task-role-select" data-current="${tgRoleId}"><option value="">Loading…</option></select>
 		</div>`;
 	}
@@ -854,7 +855,7 @@ function renderDrawerContent(type) {
 				return `<option value="${s.sId}"${sel}>${esc(s.projectName)} / ${esc(s.name)}</option>`;
 			}).join("");
 			if (surveys.length === 0) {
-				taskSurveyEl.innerHTML = "<option value=''>No surveys available</option>";
+				taskSurveyEl.innerHTML = `<option value=''>${localise.set["t_select_survey"]}</option>`;
 			}
 		});
 	}
@@ -923,7 +924,7 @@ function renderDrawerContent(type) {
 			});
 		});
 		// Footer: Create mode
-		document.getElementById("wf-drawer-save").textContent = "Create Step";
+		document.getElementById("wf-drawer-save").textContent = localise.set["c_create_step"];
 		document.getElementById("wf-drawer-delete").style.display   = "none";
 		document.getElementById("wf-drawer-advanced").style.display = "none";
 	}
@@ -959,17 +960,17 @@ function buildConditionRows() {
 	if (gDrawerCreateMode) {
 		document.getElementById("wf-conditions-list").innerHTML =
 			`<div class="wf-cond-row">
-				<input class="wf-cond-input" type="text" placeholder="No condition (always run)">
+				<input class="wf-cond-input" type="text" placeholder="${localise.set["c_no_condition"]}">
 			</div>`;
 		document.getElementById("wf-conditions").style.display = "";
 		return;
 	}
 	const allRecords = [
 		...gEditNotifs.map(function(n) {
-			return { id: n.id, tgId: 0, srcName: n.srcSurveyName || "Source", filter: n.filter || "" };
+			return { id: n.id, tgId: 0, srcName: n.srcSurveyName || localise.set["c_source"], filter: n.filter || "" };
 		}),
 		...gEditTGs.map(function(tg) {
-			return { id: 0, tgId: tg.tgId, srcName: tg.sourceSurveyName || "Source", filter: tg.filter || "" };
+			return { id: 0, tgId: tg.tgId, srcName: tg.sourceSurveyName || localise.set["c_source"], filter: tg.filter || "" };
 		})
 	];
 
@@ -979,11 +980,11 @@ function buildConditionRows() {
 	} else {
 		condList.innerHTML = allRecords.map(function(rec) {
 			const attr = rec.tgId ? `data-tgid="${rec.tgId}"` : `data-fwdid="${rec.id}"`;
-			const fromLabel = allRecords.length > 1 ? `From: ${esc(rec.srcName)}` : "Condition";
+			const fromLabel = allRecords.length > 1 ? `${localise.set["c_source"]}: ${esc(rec.srcName)}` : localise.set["c_no_condition"];
 			return `<div class="wf-cond-row">
 				<span class="wf-cond-from">${fromLabel}</span>
 				<input class="wf-cond-input" ${attr} type="text"
-				       value="${esc(rec.filter)}" placeholder="No condition (always run)">
+				       value="${esc(rec.filter)}" placeholder="${localise.set["c_no_condition"]}">
 			</div>`;
 		}).join("");
 	}
@@ -1367,17 +1368,17 @@ function executeCreate() {
 	if (type === "form") {
 		const sel = document.getElementById("wfd-form-survey");
 		const sIdent = sel ? sel.options[sel.selectedIndex] && sel.options[sel.selectedIndex].value : null;
-		if (!sIdent) { removeHourglass(); alert("Please select a survey."); return; }
+		if (!sIdent) { removeHourglass(); alert(localise.set["t_select_survey"]); return; }
 		url     = "/surveyKPI/workflow/edit/form";
 		payload = { sIdent: sIdent };
 	} else if (type === "task" || type === "emailtask") {
 		if (!gTriggerSurveyId) { removeHourglass(); alert("No trigger node selected."); return; }
 		const name = (document.getElementById("wfd-name") || {}).value || "";
 		const filter = ((document.querySelector(".wf-cond-input") || {}).value || "").trim();
-		if (!name) { removeHourglass(); alert("Please enter a label."); return; }
+		if (!name) { removeHourglass(); alert(localise.set["t_enter_label"]); return; }
 		const taskSurveyEl = document.getElementById("wfd-task-survey");
 		const targetSurveyId = taskSurveyEl ? (parseInt(taskSurveyEl.value, 10) || 0) : 0;
-		if (!targetSurveyId) { removeHourglass(); alert("Please select a task survey."); return; }
+		if (!targetSurveyId) { removeHourglass(); alert(localise.set["t_select_task_survey"]); return; }
 		url     = "/surveyKPI/workflow/edit/taskgroup";
 		payload = {
 			sourceSurveyId: gTriggerSurveyId,
@@ -1414,7 +1415,7 @@ function executeCreate() {
 		if (!gSelectedNode) { removeHourglass(); alert("No trigger node selected."); return; }
 		const name   = (document.getElementById("wfd-name") || {}).value || "";
 		const filter = ((document.querySelector(".wf-cond-input") || {}).value || "").trim();
-		if (!name) { removeHourglass(); alert("Please enter a label."); return; }
+		if (!name) { removeHourglass(); alert(localise.set["t_enter_label"]); return; }
 		const isBundle  = (document.getElementById("wfd-bundle") || {}).checked || false;
 		const enabled   = (document.getElementById("wfd-enabled") || { checked: true }).checked;
 		const effectiveSurveyId = gTriggerSurveyId || findAncestorSurveyId(gSelectedNode.dataset.id);
@@ -1526,7 +1527,7 @@ function updateAddDialogFields(type) {
 	document.getElementById("wf-add-bundle-row").style.display          = (isForm || isTaskGroup || isSP) ? "none" : "";
 	document.getElementById("wf-add-sp-rows").style.display             = isSP                           ? "" : "none";
 	const targetLabel = document.getElementById("wf-add-target-label");
-	if (targetLabel) targetLabel.textContent = isForm ? "Form survey" : "Task survey";
+	if (targetLabel) targetLabel.textContent = localise.set["c_survey"];
 
 	// Wire task assign-type toggle buttons (idempotent — replaces previous handlers)
 	if (isTask) {
@@ -1630,7 +1631,7 @@ function submitAddStep() {
 		const sIdent = selectedOpt ? selectedOpt.dataset.ident : null;
 		if (!sIdent) {
 			removeHourglass();
-			alert("Please select a survey.");
+			alert(localise.set["t_select_survey"]);
 			return;
 		}
 		url     = "/surveyKPI/workflow/edit/form";
@@ -1640,11 +1641,11 @@ function submitAddStep() {
 		if (!srcSurveyId) { removeHourglass(); alert("No trigger node selected."); return; }
 		const name   = document.getElementById("wf-add-name").value.trim();
 		const filter = document.getElementById("wf-add-filter").value.trim();
-		if (!name) { removeHourglass(); alert("Please enter a label for this step."); return; }
+		if (!name) { removeHourglass(); alert(localise.set["t_enter_step_label"]); return; }
 		const targetSurveyId = parseInt(document.getElementById("wf-add-target").value, 10) || 0;
 		if (!targetSurveyId) {
 			removeHourglass();
-			alert("Please select a task survey.");
+			alert(localise.set["t_select_task_survey"]);
 			return;
 		}
 		url     = "/surveyKPI/workflow/edit/taskgroup";
@@ -1677,7 +1678,7 @@ function submitAddStep() {
 		if (!srcSurveyId) { removeHourglass(); alert("No trigger node selected."); return; }
 		const name   = document.getElementById("wf-add-name").value.trim();
 		const filter = document.getElementById("wf-add-filter").value.trim();
-		if (!name) { removeHourglass(); alert("Please enter a label for this step."); return; }
+		if (!name) { removeHourglass(); alert(localise.set["t_enter_step_label"]); return; }
 		const isBundle = document.getElementById("wf-add-bundle").checked;
 		url     = "/surveyKPI/workflow/edit/notification";
 		payload = {
