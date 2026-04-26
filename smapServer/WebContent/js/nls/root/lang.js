@@ -1725,5 +1725,9 @@ define({
     "t_select_task_survey": "Please select a task survey.",
     "t_enter_step_label": "Please enter a label for this step.",
     "t_delete_step_confirm": "This will permanently delete the {0}. This cannot be undone.",
-    "c_email_addresses": "Email addresses"
+    "c_email_addresses": "Email addresses",
+    "c_condition": "Condition",
+    "c_no_conditions": "No conditions",
+    "c_no_surveys": "No surveys available",
+    "c_no_trigger": "No trigger selected"
 });

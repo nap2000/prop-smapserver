@@ -1430,6 +1430,16 @@ localise.initLocale(gUserLocale).then(function () {
 		}
 		$('#taskgroup').val(gTaskGroupIndex);
 
+		const openTgId = parseInt(new URLSearchParams(window.location.search).get("tg_id"), 10);
+		if (openTgId) {
+			const tgIdx = taskgroups.findIndex(function(g) { return g.tg_id === openTgId; });
+			if (tgIdx >= 0) {
+				gTaskGroupIndex = tgIdx;
+				globals.gCurrentTaskGroup = taskgroups[tgIdx].tg_id;
+				$('#taskgroup').val(gTaskGroupIndex);
+				$('#editTaskGroup').trigger('click');
+			}
+		}
 
 		$('#taskgroup').change(function () {
 			gTaskGroupIndex = $(this).val();

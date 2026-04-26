@@ -322,6 +322,14 @@ $(document).ready(function() {
 						window.gNotifications = data;
 						if (data) {
 							updateNotificationList(data);
+							const openFwdId = parseInt(new URLSearchParams(window.location.search).get("fwd_id"), 10);
+							if (openFwdId) {
+								const idx = data.findIndex(function(n) { return n.id === openFwdId; });
+								if (idx >= 0) {
+									edit_notification(true, idx, false);
+									window.bsModalShow('#addNotificationPopup');
+								}
+							}
 						}
 					}
 				},

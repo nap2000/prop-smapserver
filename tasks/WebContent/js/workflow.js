@@ -40,7 +40,6 @@ let gRoles      = null;   // cached role list (null until first fetch)
 // Drawer create-mode state
 let gDrawerCreateMode = false;
 let gCreateType       = "task";
-let gAddType    = "task"; // currently selected type in Add Step modal
 
 // Add-step trigger state
 let gSelectedNode    = null; // card element selected as trigger for new step
@@ -917,9 +916,9 @@ function renderDrawerContent(type) {
 								return `<option value="${esc(s.surveyIdent)}"${s.surveyIdent === cur ? " selected" : ""}>${esc(s.surveyName)}</option>`;
 							}).join("");
 					})
-					.catch(function() { caseSurveyEl.innerHTML = "<option value=''>No surveys available</option>"; });
+					.catch(function() { caseSurveyEl.innerHTML = `<option value=''>${localise.set["c_no_surveys"]}</option>`; });
 			} else {
-				caseSurveyEl.innerHTML = "<option value=''>No trigger selected</option>";
+				caseSurveyEl.innerHTML = `<option value=''>${localise.set["c_no_trigger"]}</option>`;
 			}
 		}
 	}
@@ -985,11 +984,11 @@ function buildConditionRows() {
 
 	const condList = document.getElementById("wf-conditions-list");
 	if (allRecords.length === 0) {
-		condList.innerHTML = `<div style="font-size:11px;color:#6c757d;font-style:italic;">No conditions</div>`;
+		condList.innerHTML = `<div style="font-size:11px;color:#6c757d;font-style:italic;">${localise.set["c_no_conditions"]}</div>`;
 	} else {
 		condList.innerHTML = allRecords.map(function(rec) {
 			const attr = rec.tgId ? `data-tgid="${rec.tgId}"` : `data-fwdid="${rec.id}"`;
-			const fromLabel = allRecords.length > 1 ? `${localise.set["c_source"]}: ${esc(rec.srcName)}` : localise.set["c_no_condition"];
+			const fromLabel = allRecords.length > 1 ? `${localise.set["c_source"]}: ${esc(rec.srcName)}` : localise.set["c_condition"];
 			return `<div class="wf-cond-row">
 				<span class="wf-cond-from">${fromLabel}</span>
 				<input class="wf-cond-input" ${attr} type="text"
@@ -1001,16 +1000,15 @@ function buildConditionRows() {
 	// Advanced link (not shown for SP — no advanced page)
 	const type = gEditItem ? gEditItem.dataset.type : "";
 	if (type !== "sharepoint_list") {
-		const hasNotifs = gEditNotifs.length > 0;
-		document.getElementById("wf-drawer-advanced").href = hasNotifs
-			? "/app/fieldManager/notifications.html"
-			: "/app/tasks/taskManagement.html";
+		const advEl = document.getElementById("wf-drawer-advanced");
+		if (gEditNotifs.length > 0) {
+			advEl.href = "/app/fieldManager/notifications.html?fwd_id=" + gEditNotifs[0].id;
+		} else if (gEditTGs.length > 0) {
+			advEl.href = "/app/tasks/taskManagement.html?tg_id=" + gEditTGs[0].tgId;
+		}
 	}
 
-	// Delete button label with count
-	const totalRecords = gEditNotifs.length + gEditTGs.length;
-	document.getElementById("wf-drawer-delete").title =
-		`Delete ${totalRecords} record(s) that back this step`;
+	document.getElementById("wf-drawer-delete").removeAttribute("title");
 }
 
 /*
@@ -1020,17 +1018,22 @@ function saveDrawer() {
 	if (gDrawerCreateMode) { executeCreate(); return; }
 	if (!gEditItem || gEditItem.dataset.type === "form") return;
 
+	const type    = gEditItem.dataset.type;
 	const name    = (document.getElementById("wfd-name")     || {}).value || "";
 	const enabled = (document.getElementById("wfd-enabled")  || { checked: true }).checked;
 
-	// Case assignee — user text or role select
+	// remoteUser: source depends on node type
 	let assignee = "";
-	const caseRoleBtn = document.getElementById("wfd-case-assign-role");
-	if (caseRoleBtn && caseRoleBtn.classList.contains("active")) {
-		const cRoleId = (document.getElementById("wfd-case-role-select") || {}).value || "";
-		assignee = cRoleId ? "_role:" + cRoleId : "";
+	if (type === "emailtask") {
+		assignee = (document.getElementById("wfd-task-email-to") || {}).value || "";
 	} else {
-		assignee = (document.getElementById("wfd-assignee") || {}).value || "";
+		const caseRoleBtn = document.getElementById("wfd-case-assign-role");
+		if (caseRoleBtn && caseRoleBtn.classList.contains("active")) {
+			const cRoleId = (document.getElementById("wfd-case-role-select") || {}).value || "";
+			assignee = cRoleId ? "_role:" + cRoleId : "";
+		} else {
+			assignee = (document.getElementById("wfd-assignee") || {}).value || "";
+		}
 	}
 
 	// Task assignee — role id or user id
@@ -1198,10 +1201,6 @@ function executeDelete() {
 }
 
 // ============================================================
-// Add Step
-// ============================================================
-
-// ============================================================
 // SharePoint drawer helpers
 // ============================================================
 
@@ -1250,14 +1249,6 @@ function spPopulateDrawerFields(fields, selectedVal) {
 	spPopulateFields("wfd-sp-match-field", "wfd-sp-col-map-body", "wfd-sp-field-sel", fields, selectedVal);
 }
 
-function spPopulateModalColumns(cols, selectedVal) {
-	spPopulateColumns("wf-add-sp-match-col", "wf-add-sp-col-map-body", "wf-add-sp-col-sel", cols, selectedVal);
-}
-
-function spPopulateModalFields(fields, selectedVal) {
-	spPopulateFields("wf-add-sp-match-field", "wf-add-sp-col-map-body", "wf-add-sp-field-sel", fields, selectedVal);
-}
-
 function spAddMapRow(tbody, colClass, fieldClass, cols, fields, spVal, smapVal) {
 	const colOpts = [{ val: "", text: "" }].concat(
 		(Array.isArray(cols) && cols.length && cols[0].internalName !== undefined
@@ -1296,11 +1287,6 @@ function spAddMapRow(tbody, colClass, fieldClass, cols, fields, spVal, smapVal) 
 function spAddDrawerMapRow(cols, fields, spVal, smapVal) {
 	spAddMapRow(document.getElementById("wfd-sp-col-map-body"),
 		"wfd-sp-col-sel", "wfd-sp-field-sel", cols, fields, spVal, smapVal);
-}
-
-function spAddModalMapRow(cols, fields, spVal, smapVal) {
-	spAddMapRow(document.getElementById("wf-add-sp-col-map-body"),
-		"wf-add-sp-col-sel", "wf-add-sp-field-sel", cols, fields, spVal, smapVal);
 }
 
 function fetchSurveys() {
@@ -1485,267 +1471,6 @@ function executeCreate() {
 		loadWorkflow();
 	})
 	.catch(function(err) { console.error("executeCreate error:", err); })
-	.finally(function() { removeHourglass(); });
-}
-
-// (updateAddDialogFields removed — modal replaced by drawer create mode)
-function updateAddDialogFields(type) {
-	gAddType = type;
-	const isForm        = (type === "form");
-	const isTask        = (type === "task");
-	const isTaskGroup   = (type === "task" || type === "emailtask");
-	const isEmailTask   = (type === "emailtask");
-	const isEscalate    = (type === "escalate");
-	const isEmail       = (type === "email");
-	const isSms         = (type === "sms");
-	const isSP          = (type === "sharepoint_list");
-	document.getElementById("wf-add-trigger-row").style.display              = isForm     ? "none" : "";
-	document.getElementById("wf-add-name-row").style.display                = isForm     ? "none" : "";
-	document.getElementById("wf-add-filter-row").style.display              = isForm     ? "none" : "";
-	document.getElementById("wf-add-task-assign-toggle-row").style.display  = isTask     ? "" : "none";
-	document.getElementById("wf-add-case-assign-toggle-row").style.display  = isEscalate ? "" : "none";
-	// user/role sub-rows are controlled by the toggles; hide them when type changes
-	if (!isTask) {
-		document.getElementById("wf-add-assignee-select-row").style.display = "none";
-		document.getElementById("wf-add-task-role-row").style.display       = "none";
-	}
-	document.getElementById("wf-add-case-survey-row").style.display  = isEscalate ? "" : "none";
-	if (!isEscalate) {
-		document.getElementById("wf-add-assignee-row").style.display     = "none";
-		document.getElementById("wf-add-case-role-row").style.display    = "none";
-	}
-	// When switching to task/case, show the default sub-row (user for case, unassigned for task)
-	if (isTask) {
-		const activeTaskBtn = document.querySelector("#wf-add-task-assign-unassigned.active, #wf-add-task-assign-user.active, #wf-add-task-assign-role.active");
-		const taskMode = activeTaskBtn ? activeTaskBtn.id.replace("wf-add-task-assign-","") : "unassigned";
-		document.getElementById("wf-add-assignee-select-row").style.display = taskMode === "user"    ? "" : "none";
-		document.getElementById("wf-add-task-role-row").style.display       = taskMode === "role"    ? "" : "none";
-	}
-	if (isEscalate) {
-		const activeCaseBtn = document.querySelector("#wf-add-case-assign-user.active, #wf-add-case-assign-role.active");
-		const caseMode = activeCaseBtn ? activeCaseBtn.id.replace("wf-add-case-assign-","") : "user";
-		document.getElementById("wf-add-assignee-row").style.display     = caseMode === "user" ? "" : "none";
-		document.getElementById("wf-add-case-role-row").style.display    = caseMode === "role" ? "" : "none";
-	}
-	document.getElementById("wf-add-task-email-row").style.display      = isEmailTask                   ? "" : "none";
-	document.getElementById("wf-add-email-rows").style.display          = isEmail                       ? "" : "none";
-	document.getElementById("wf-add-sms-rows").style.display            = isSms                         ? "" : "none";
-	document.getElementById("wf-add-target-row").style.display          = (isForm || isTaskGroup)        ? "" : "none";
-	document.getElementById("wf-add-bundle-row").style.display          = (isForm || isTaskGroup || isSP) ? "none" : "";
-	document.getElementById("wf-add-sp-rows").style.display             = isSP                           ? "" : "none";
-	const targetLabel = document.getElementById("wf-add-target-label");
-	if (targetLabel) targetLabel.textContent = localise.set["c_survey"];
-
-	// Wire task assign-type toggle buttons (idempotent — replaces previous handlers)
-	if (isTask) {
-		function setTaskAssignMode(mode) {
-			["unassigned","user","role"].forEach(function(m) {
-				document.getElementById("wf-add-task-assign-" + m).classList.toggle("active", m === mode);
-			});
-			document.getElementById("wf-add-assignee-select-row").style.display = mode === "user" ? "" : "none";
-			document.getElementById("wf-add-task-role-row").style.display       = mode === "role" ? "" : "none";
-			if (mode === "role") fetchRoles().then(function(roles) {
-				fillRoleSelect(document.getElementById("wf-add-task-role-select"), roles, "");
-			});
-		}
-		document.getElementById("wf-add-task-assign-unassigned").onclick = function() { setTaskAssignMode("unassigned"); };
-		document.getElementById("wf-add-task-assign-user").onclick       = function() { setTaskAssignMode("user"); };
-		document.getElementById("wf-add-task-assign-role").onclick       = function() { setTaskAssignMode("role"); };
-	}
-
-	// Load bundle/group surveys into case survey selector
-	if (isEscalate && gTriggerSurveyId) {
-		const caseSurveyEl = document.getElementById("wf-add-case-survey");
-		caseSurveyEl.innerHTML = "<option value=''>Loading…</option>";
-		fetch("/surveyKPI/surveyResults/" + gTriggerSurveyId + "/groups", { credentials: "include", cache: "no-store" })
-			.then(function(r) { return r.json(); })
-			.then(function(data) {
-				caseSurveyEl.innerHTML = "<option value=''>-- select --</option>"
-					+ (data || []).map(function(s) {
-						return `<option value="${esc(s.surveyIdent)}">${esc(s.surveyName)}</option>`;
-					}).join("");
-			})
-			.catch(function() { caseSurveyEl.innerHTML = "<option value=''>No surveys available</option>"; });
-	}
-
-	// Wire case assign-type toggle buttons
-	if (isEscalate) {
-		function setCaseAssignMode(mode) {
-			["user","role"].forEach(function(m) {
-				document.getElementById("wf-add-case-assign-" + m).classList.toggle("active", m === mode);
-			});
-			document.getElementById("wf-add-assignee-row").style.display     = mode === "user" ? "" : "none";
-			document.getElementById("wf-add-case-role-row").style.display    = mode === "role" ? "" : "none";
-			if (mode === "role") fetchRoles().then(function(roles) {
-				fillRoleSelect(document.getElementById("wf-add-case-role-select"), roles, "");
-			});
-		}
-		document.getElementById("wf-add-case-assign-user").onclick = function() { setCaseAssignMode("user"); };
-		document.getElementById("wf-add-case-assign-role").onclick = function() { setCaseAssignMode("role"); };
-	}
-
-	if (isSP) {
-		const srcSurveyId = gTriggerSurveyId || 0;
-		addHourglass();
-		Promise.all([fetchSpLists(), fetchSurveyFields(srcSurveyId)])
-			.then(function(results) {
-				gSpFields = results[1];
-				spPopulateModalColumns([], null);
-				spPopulateModalFields(gSpFields, null);
-				const listEl = document.getElementById("wf-add-sp-list");
-				listEl.innerHTML = '<option value="">-- select --</option>'
-					+ results[0].map(function(t) {
-						return '<option value="' + esc(t) + '">' + esc(t) + '</option>';
-					}).join("");
-			})
-			.finally(function() { removeHourglass(); });
-
-		// Wire list change → reload columns (once, replacing previous handler)
-		const listEl = document.getElementById("wf-add-sp-list");
-		listEl.onchange = function() {
-			const title = this.value;
-			if (!title) return;
-			gSpColumns = null;
-			addHourglass();
-			fetchSpColumns(title)
-				.then(function(cols) { spPopulateModalColumns(cols, null); })
-				.finally(function() { removeHourglass(); });
-		};
-
-		// Wire operation radio → show/hide match section
-		document.querySelectorAll("input[name='wf-add-sp-op']").forEach(function(r) {
-			r.onchange = function() {
-				document.getElementById("wf-add-sp-match-section").style.display =
-					this.value === "update" ? "" : "none";
-			};
-		});
-
-		// Wire add-row button
-		document.getElementById("wf-add-sp-add-row").onclick = function() {
-			spAddModalMapRow(gSpColumns || [], gSpFields || [], "", "");
-		};
-	}
-}
-
-function submitAddStep() {
-	addHourglass();
-
-	let url, payload;
-
-	if (gAddType === "form") {
-		const targetEl   = document.getElementById("wf-add-target");
-		const selectedOpt = targetEl && targetEl.options[targetEl.selectedIndex];
-		const sIdent = selectedOpt ? selectedOpt.dataset.ident : null;
-		if (!sIdent) {
-			removeHourglass();
-			alert(localise.set["t_select_survey"]);
-			return;
-		}
-		url     = "/surveyKPI/workflow/edit/form";
-		payload = { sIdent: sIdent };
-	} else if (gAddType === "task" || gAddType === "emailtask") {
-		const srcSurveyId = gTriggerSurveyId;
-		if (!srcSurveyId) { removeHourglass(); alert("No trigger node selected."); return; }
-		const name   = document.getElementById("wf-add-name").value.trim();
-		const filter = document.getElementById("wf-add-filter").value.trim();
-		if (!name) { removeHourglass(); alert(localise.set["t_enter_step_label"]); return; }
-		const targetSurveyId = parseInt(document.getElementById("wf-add-target").value, 10) || 0;
-		if (!targetSurveyId) {
-			removeHourglass();
-			alert(localise.set["t_select_task_survey"]);
-			return;
-		}
-		url     = "/surveyKPI/workflow/edit/taskgroup";
-		payload = {
-			sourceSurveyId: srcSurveyId,
-			targetSurveyId: targetSurveyId,
-			name:           name,
-			filter:         filter || null,
-			wfPrevNodeId:   gSelectedNode ? gSelectedNode.dataset.id : null
-		};
-		if (gAddType === "emailtask") {
-			payload.remoteUser = document.getElementById("wf-add-task-email").value.trim() || null;
-		} else {
-			// task — read from assign-type toggle
-			if (document.getElementById("wf-add-task-assign-role").classList.contains("active")) {
-				const roleId = parseInt(document.getElementById("wf-add-task-role-select").value, 10);
-				if (roleId > 0) payload.roleId = roleId;
-			} else if (document.getElementById("wf-add-task-assign-user").classList.contains("active")) {
-				const selVal = parseInt(document.getElementById("wf-add-assignee-select").value, 10);
-				if (selVal === -2) {
-					payload.remoteUser = "_data";
-				} else if (selVal > 0) {
-					payload.userId = selVal;
-				}
-			}
-			// Unassigned → neither field set
-		}
-	} else {
-		const srcSurveyId = gTriggerSurveyId;
-		if (!srcSurveyId) { removeHourglass(); alert("No trigger node selected."); return; }
-		const name   = document.getElementById("wf-add-name").value.trim();
-		const filter = document.getElementById("wf-add-filter").value.trim();
-		if (!name) { removeHourglass(); alert(localise.set["t_enter_step_label"]); return; }
-		const isBundle = document.getElementById("wf-add-bundle").checked;
-		url     = "/surveyKPI/workflow/edit/notification";
-		payload = {
-			srcSurveyId:  srcSurveyId,
-			target:       gAddType,
-			name:         name,
-			filter:       filter || null,
-			enabled:      true,
-			bundle:       isBundle,
-			wfPrevNodeId: gSelectedNode ? gSelectedNode.dataset.id : null
-		};
-		if (gAddType === "escalate") {
-			if (document.getElementById("wf-add-case-assign-role").classList.contains("active")) {
-				const roleId = parseInt(document.getElementById("wf-add-case-role-select").value, 10);
-				if (roleId > 0) payload.remoteUser = "_role:" + roleId;
-			} else {
-				payload.remoteUser = document.getElementById("wf-add-assignee").value.trim() || null;
-			}
-			const caseSurveyIdent = (document.getElementById("wf-add-case-survey") || {}).value || null;
-			if (caseSurveyIdent) payload.caseSurveyIdent = caseSurveyIdent;
-		}
-		if (gAddType === "email") {
-			payload.emailTo      = document.getElementById("wf-add-email-to").value.trim()      || null;
-			payload.emailSubject = document.getElementById("wf-add-email-subj").value.trim()    || null;
-			payload.emailContent = document.getElementById("wf-add-email-content").value.trim() || null;
-		}
-		if (gAddType === "sms") {
-			payload.smsTo      = document.getElementById("wf-add-sms-to").value.trim()      || null;
-			payload.smsMessage = document.getElementById("wf-add-sms-content").value.trim() || null;
-		}
-		if (gAddType === "sharepoint_list") {
-			const spOpEl = document.querySelector("input[name='wf-add-sp-op']:checked");
-			payload.spListTitle = document.getElementById("wf-add-sp-list").value.trim() || null;
-			payload.spOperation = spOpEl ? spOpEl.value : "insert";
-			if (payload.spOperation === "update") {
-				payload.spMatchColumn = document.getElementById("wf-add-sp-match-col").value  || null;
-				payload.spMatchField  = document.getElementById("wf-add-sp-match-field").value || null;
-			}
-			const spMap = [];
-			document.querySelectorAll("#wf-add-sp-col-map-body tr").forEach(function(tr) {
-				const col   = (tr.querySelector(".wf-add-sp-col-sel")   || {}).value;
-				const field = (tr.querySelector(".wf-add-sp-field-sel") || {}).value;
-				if (col && field) spMap.push({ sp_column: col, smap_field: field });
-			});
-			payload.spColumnMap = spMap.length ? spMap : null;
-		}
-	}
-
-	fetch(url, {
-		method:      "POST",
-		credentials: "include",
-		headers:     { "Content-Type": "application/json" },
-		body:        JSON.stringify(payload)
-	})
-	.then(function(resp) {
-		if (!resp.ok) throw new Error(resp.statusText);
-		bootstrap.Modal.getInstance(document.getElementById("wf-add-modal")).hide();
-		loadWorkflow();
-	})
-	.catch(function(err) { console.error("submitAddStep error:", err); })
 	.finally(function() { removeHourglass(); });
 }
 
