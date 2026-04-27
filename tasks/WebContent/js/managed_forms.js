@@ -1953,6 +1953,7 @@ localise.initLocale(gUserLocale).then(function () {
         $sel.html(h.join(''));
         if(gSavedAssignRole) {
             $sel.val(gSavedAssignRole);
+            getEligibleUsers(globals.gCurrentSurveyIdent, false, gSavedAssignRole);
         }
         $row.show();
     }
