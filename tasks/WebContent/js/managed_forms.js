@@ -108,6 +108,7 @@ localise.initLocale(gUserLocale).then(function () {
     var gRefreshingData = false;    // Prevent double click on  refresh button
     var gAssignedCol = 0;           // Column that contains the assignment status
     var gGetSettings = false;       // Use the settings from the database rather than the client
+    var gSavedAssignRole = 0;       // Saved role filter for the assign dialog
     var gDeleteColumn = -1;         // The index of the column that indicates if the record is deleted
     var gDeleteReasonColumn = -1;   // The index of the column that has the reason for a delete
     var gBad;                       // A boolean indicating the direction of toggle of a deleted state
@@ -141,6 +142,7 @@ localise.initLocale(gUserLocale).then(function () {
             managedData: {},
             surveyList: {},
             surveyRoles: {},
+            userRoles: {},
             recordChanges: {},
             groupSurveys: {},
             eligibleUsers: {},
@@ -453,12 +455,18 @@ localise.initLocale(gUserLocale).then(function () {
          */
         $('#m_assign_to').click(function(e) {
             e.preventDefault();
+            populateAssignRoleFilter();
             if(gTasks.gSelectedRecord._assigned) {
                 $('#user_to_assign').val(gTasks.gSelectedRecord._assigned);
             } else {
                 $('#user_to_assign').val("_none");
             }
             window.bsModalShow('#userAssign');
+        });
+
+        $('#assign_role_filter').change(function() {
+            var roleId = $(this).val();
+            getEligibleUsers(globals.gCurrentSurveyIdent, false, roleId || undefined);
         });
 
         /*
@@ -1352,6 +1360,7 @@ localise.initLocale(gUserLocale).then(function () {
             gTasks.cache.managedData = {};
             gTasks.cache.surveyList = {};
             gTasks.cache.surveyRoles = {};
+            gTasks.cache.userRoles = {};
             gTasks.cache.recordChanges = {};
             gTasks.cache.groupForms = {};
             gTasks.cache.currentData = undefined;
@@ -1896,6 +1905,56 @@ localise.initLocale(gUserLocale).then(function () {
         } else {
             gRefreshingData = false;
         }
+    }
+
+    /*
+     * Populate the role filter dropdown in #userAssign with the current user's roles.
+     * Uses /surveyKPI/role/survey/{sId} without ?enabled=true so we get all roles
+     * assigned to the user, not just those enabled on the survey.
+     * Shows the row only if the user has at least one role.
+     */
+    function populateAssignRoleFilter() {
+        var $row = $('#assign_role_row'),
+            $sel = $('#assign_role_filter');
+
+        if(gTasks.cache.userRoles[globals.gCurrentSurvey]) {
+            renderAssignRoleFilter(gTasks.cache.userRoles[globals.gCurrentSurvey]);
+            return;
+        }
+
+        $.ajax({
+            url: "/surveyKPI/role/survey/" + globals.gCurrentSurvey,
+            dataType: 'json',
+            cache: false,
+            success: function(data) {
+                gTasks.cache.userRoles[globals.gCurrentSurvey] = data || [];
+                renderAssignRoleFilter(gTasks.cache.userRoles[globals.gCurrentSurvey]);
+            },
+            error: function() {
+                $row.hide();
+            }
+        });
+    }
+
+    function renderAssignRoleFilter(roles) {
+        var $row = $('#assign_role_row'),
+            $sel = $('#assign_role_filter'),
+            h = [], idx = -1, i;
+
+        if(!roles || roles.length === 0) {
+            $row.hide();
+            return;
+        }
+
+        h[++idx] = '<option value="">' + localise.set["c_all"] + '</option>';
+        for(i = 0; i < roles.length; i++) {
+            h[++idx] = '<option value="' + roles[i].id + '">' + htmlEncode(roles[i].name) + '</option>';
+        }
+        $sel.html(h.join(''));
+        if(gSavedAssignRole) {
+            $sel.val(gSavedAssignRole);
+        }
+        $row.show();
     }
 
     /*
@@ -3217,6 +3276,10 @@ localise.initLocale(gUserLocale).then(function () {
 		    if($('#include_bad').prop('checked')) {
 			    url += "&bad=yes";
 		    }
+		    var assignRole = $('#assign_role_filter').val();
+		    if(assignRole) {
+			    url += "&assignRole=" + assignRole;
+		    }
             if($('#include_completed').prop('checked')) {
                 url += "&completed=yes";
             } else {
@@ -3575,6 +3638,7 @@ localise.initLocale(gUserLocale).then(function () {
             $('#advanced_filter').val(settings.filter);
             $('#include_bad').prop('checked', settings.include_bad === "yes");
             $('#include_completed').prop('checked', settings.include_completed === "yes");
+            gSavedAssignRole = settings.assign_role || 0;
         }
     }
 

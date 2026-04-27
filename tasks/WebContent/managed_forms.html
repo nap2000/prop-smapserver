@@ -529,11 +529,10 @@
 </div>
 
 <!-- Modal to edit a chart widget -->
-<div id="editChart" class="modal fade" aria-hidden="true">
+<div id="editChart" class="modal fade" data-bs-backdrop="static" aria-hidden="true">
     <div class="modal-dialog custom-modal-width">
         <div class="modal-content">
             <div class="modal-header">
-                <!--  <button id="shareRecord" type="button" class="btn btn-info"><i class="fa fa-share-alt"></i> <span class="lang" data-lang="n_share">get link</span></button> -->
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -651,7 +650,7 @@
 </div>
 
 <!-- Modal to edit a map layer -->
-<div id="layerEdit" class="modal fade" aria-hidden="true">
+<div id="layerEdit" data-bs-backdrop="static" class="modal fade" aria-hidden="true">
     <div class="modal-dialog custom-modal-width">
         <div class="modal-content">
             <div class="modal-header">
@@ -702,25 +701,6 @@
                                 </div>
                             </div>
 
-
-                            <!--
-							<div class="form-group">
-								 <label class="lang col-sm-2 control-label" data-lang="c_survey" for="ml_survey">survey</label>
-								<div class="col-sm-10">
-									<select class="form-select" id="ml_survey">
-									</select>
-								</div>
-							</div>
-
-							<div class="form-group">
-								 <label class="lang col-sm-2 control-label" data-lang="c_survey" for="ml_survey">survey</label>
-								<div class="col-sm-10">
-									<select class="form-select" id="ml_survey">
-									</select>
-								</div>
-							</div>
-							-->
-
                         </form>
                         <div id="layerInfo" style="word-wrap:break-word; display:none;" class="alert"
                              role="alert"></div>
@@ -737,7 +717,7 @@
 </div>
 
 <!-- Modal to assign a user -->
-<div id="userAssign" class="modal fade" aria-hidden="true">
+<div id="userAssign" data-bs-backdrop="static" class="modal fade" aria-hidden="true">
     <div class="modal-dialog custom-modal-width">
         <div class="modal-content">
             <div class="modal-header">
@@ -746,11 +726,20 @@
             </div>
             <div class="modal-body">
 
-                <form class = "px-4" role="form">
+                <form class="px-4" role="form">
 
-                    <div class="form-group row">
-                        <label for="user_to_assign" class="lang visually-hidden" data-lang="c_user">User</label>
-                        <select id="user_to_assign" class="form-select"></select>
+                    <div id="assign_role_row" class="row align-items-center mb-2" style="display:none;">
+                        <label for="assign_role_filter" class="col-sm-3 col-form-label lang" data-lang="c_role">Role</label>
+                        <div class="col-sm-9">
+                            <select id="assign_role_filter" class="form-select"></select>
+                        </div>
+                    </div>
+
+                    <div class="row align-items-center">
+                        <label for="user_to_assign" class="col-sm-3 col-form-label lang" data-lang="c_user">User</label>
+                        <div class="col-sm-9">
+                            <select id="user_to_assign" class="form-select"></select>
+                        </div>
                     </div>
 
                 </form>
@@ -766,7 +755,7 @@
 </div>
 
 <!-- Modal to delete / restore a record -->
-<div id="toggleRecord" class="modal fade" aria-hidden="true">
+<div id="toggleRecord" data-bs-backdrop="static" class="modal fade" aria-hidden="true">
     <div class="modal-dialog custom-modal-width">
         <div class="modal-content">
             <div class="modal-header">
@@ -801,10 +790,10 @@
 
 <!--
 	Modal to show task properties and allow them to be edited
-	Replicated from taskManagement. These two code bases should be combined howeve
-	  currently task managmement and managed_forms use two different map APIs mapbox and OL3
+	Replicated from taskManagement. These two code bases should be combined however
+	  currently task management and managed_forms use two different map APIs mapbox and OL3
 -->
-<div id="task_properties" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="taskPropLabel" aria-hidden="true">
+<div id="task_properties" class="modal fade" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="taskPropLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -1190,7 +1179,7 @@
 </div>
 
 <!-- Popup to allow the user to generate a PDF -->
-<div id="genPdfPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="genpdfLabel" aria-hidden="true">
+<div id="genPdfPopup" class="modal fade" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="genpdfLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -1258,7 +1247,7 @@
 </div>
 
 <!-- Modal to create an overview report -->
-<div id="overviewReport" class="modal fade" aria-hidden="true">
+<div id="overviewReport" data-bs-backdrop="static" class="modal fade" aria-hidden="true">
     <div class="modal-dialog custom-modal-width modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -1318,7 +1307,7 @@
 </div>
 
 <!-- Popup to allow the user to select the visible columns -->
-<div id="settingsPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="genpdfLabel" aria-hidden="true">
+<div id="settingsPopup" class="modal fade" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="genpdfLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -1352,7 +1341,7 @@
 </div>
 
 <!-- Parameters for individual report -->
-<div id="tdh_individual_report_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dtLabel" aria-hidden="true">
+<div id="tdh_individual_report_popup" class="modal fade" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="dtLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -1427,7 +1416,7 @@
 </div>
 
 <!-- Modify Message -->
-<div id="messagePopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mLabel" aria-hidden="true">
+<div id="messagePopup" class="modal fade" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="mLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -1452,6 +1441,7 @@
             </div>
         </div>
     </div>
+</div>
 </main>
 
 </body>

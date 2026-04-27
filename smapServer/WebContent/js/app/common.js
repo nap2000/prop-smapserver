@@ -6669,14 +6669,16 @@ function htmlEncode(input) {
 /*
  * Get the list of users from the server
  */
-function getEligibleUsers(sIdent, isNotification) {
+function getEligibleUsers(sIdent, isNotification, roleId) {
 
-	if(window.gTasks && window.gTasks.cache.eligibleUsers[sIdent]) {
+	if(!roleId && window.gTasks && window.gTasks.cache.eligibleUsers[sIdent]) {
 		fillUsersList(isNotification, window.gTasks && window.gTasks.cache.eligibleUsers[sIdent]);
 	} else if(sIdent) {
 		addHourglass();
+		var url = "/surveyKPI/userList/survey/" + sIdent;
+		if(roleId) { url += "?role=" + roleId; }
 		$.ajax({
-			url: "/surveyKPI/userList/survey/" + sIdent,
+			url: url,
 			dataType: 'json',
 			cache: false,
 			success: function (data) {
