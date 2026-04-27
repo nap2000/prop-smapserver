@@ -6684,7 +6684,9 @@ function getEligibleUsers(sIdent, isNotification, roleId) {
 			success: function (data) {
 				removeHourglass();
 				if(handleLogout(data)) {
-					window.gTasks.cache.eligibleUsers[sIdent] = data;
+					if(!roleId) {
+						window.gTasks.cache.eligibleUsers[sIdent] = data;
+					}
 					fillUsersList(isNotification, data);
 				}
 			},
