@@ -1909,7 +1909,7 @@ localise.initLocale(gUserLocale).then(function () {
     }
 
     /*
-     * Update a selector that is used for oversight forms and does not include current form
+     * Update a selector that is used for oversight forms
      */
     function setOversightSelector(data) {
         var $elemGroups = $('#oversight_survey');
@@ -1927,7 +1927,7 @@ localise.initLocale(gUserLocale).then(function () {
         for (i = 0; i < data.length; i++) {
             item = data[i];
 
-            if (item.sId !== globals.gCurrentSurvey && item.oversightSurvey) {       // Don't include current survey
+            if (item.oversightSurvey) {
 
                 h[++idx] = '<option value="';
                 h[++idx] = item.surveyIdent;

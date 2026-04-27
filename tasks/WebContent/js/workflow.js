@@ -18,7 +18,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 "use strict";
 
 import localise from "../../../smapServer/WebContent/js/app/localise";
-import { addHourglass, removeHourglass, getLoggedInUser, handleLogout } from "common";
+import { addHourglass, removeHourglass, getLoggedInUser, handleLogout, setupUserProfile } from "common";
 
 const CARD_W = 240;
 const CARD_H = 88;   // expanded to fit assignee row on task/case cards
@@ -1506,6 +1506,7 @@ localise.initLocale(gUserLocale).then(function() {
 
 	$(document).ready(function() {
 		localise.setlang();
+		setupUserProfile(true);
 		getLoggedInUser(loadWorkflow, false, false, undefined);
 
 		// Navbar actions
