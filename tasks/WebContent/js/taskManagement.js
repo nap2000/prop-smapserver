@@ -1438,6 +1438,18 @@ localise.initLocale(gUserLocale).then(function () {
 				globals.gCurrentTaskGroup = taskgroups[tgIdx].tg_id;
 				$('#taskgroup').val(gTaskGroupIndex);
 				$('#editTaskGroup').trigger('click');
+
+				// getTaskUsers runs in parallel — re-apply user_id once the options arrive
+				const userId = taskgroups[tgIdx].rule && taskgroups[tgIdx].rule.user_id;
+				if (userId && userId > 0) {
+					const poll = setInterval(function() {
+						if ($('#users_task_group option[value="' + userId + '"]').length) {
+							clearInterval(poll);
+							$('#users_task_group').val(userId);
+						}
+					}, 50);
+					setTimeout(function() { clearInterval(poll); }, 5000);
+				}
 			}
 		}
 
