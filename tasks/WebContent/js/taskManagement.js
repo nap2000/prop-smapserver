@@ -31,6 +31,9 @@ import {
 	getFromLocalStorage,
 	getInitialDataLink,
 	getLanguageList,
+	getQuestionList,
+	setSurveyViewQuestions,
+	questionMetaURL,
 	getLocationIndex,
 	getLocations,
 	getLoggedInUser,
@@ -1111,8 +1114,8 @@ localise.initLocale(gUserLocale).then(function () {
 
 		var language = $('#filter_language option:selected').val(),
 			sId = $('#survey').val(),
-			dateqId = $('#task_start').val();
-		qList;
+			dateqId = $('#task_start').val(),
+			qList;
 
 		qList = globals.gSelector.getSurveyQuestions(sId, language);
 
@@ -2038,9 +2041,6 @@ localise.initLocale(gUserLocale).then(function () {
 			aspectRatio: 1.35,
 			editable: true,
 			droppable: true,
-			drop: function () {
-				$(this).remove();
-			},
 			dayClick: function (date, jsEvent, view) {
 
 				console.log('Clicked on: ' + date.format());
