@@ -441,15 +441,17 @@ localise.initLocale(gUserLocale).then(function () {
 				$('#assign_data').val(tgRule.assign_data);
 				$('#fixed_role').val(tgRule.fixed_role_id);
 				$('#assign_emails').val(tgRule.emails);
-				if(tgRule.source_project) {
-					$('#project_select').val(tgRule.source_project);
-					gSourceSurvey = tg.source_s_id;
-					loadSurveys(tgRule.source_project, "#survey", false, false, sourceProjectSet, false, undefined, undefined, false);
-				} else {
-					$('#survey').val(tg.source_s_id);
-					gSourceSurvey = tg.source_s_id;
+				var sourceProject = tgRule.source_project || globals.gCurrentProject;
+				$('#project_select').val(sourceProject);
+				gSourceSurvey = tg.source_s_id;
+				loadSurveys(sourceProject, "#survey", false, false, function() {
 					sourceProjectSet();
-				}
+					$('#add_current').prop('disabled', true);
+					$('#addTaskLabel').text(localise.set["t_edit_group"]);
+					$('#tg_id').html(tg.tg_id);
+					$('.tg_edit_only').show();
+					window.bsModalShow('#addTask');
+				}, false, gSourceSurvey, undefined, false);
 				if(tgRule.update_results) {
 					$('#id_update_results').prop('checked', true);
 				} else if(tgRule.prepopulate) {
@@ -528,15 +530,17 @@ localise.initLocale(gUserLocale).then(function () {
 			}
 
 			gAddressColumns = tgRule.address_columns;
-			surveyChangedTasks();    // Set survey related parameters
 
-			// open the modal for update
-			$('#add_current').prop('disabled', true);
-			$('#addTaskLabel').text(localise.set["t_edit_group"]);
-			$('#tg_id').html(tg.tg_id);
-
-			$('.tg_edit_only').show();
-			window.bsModalShow('#addTask');
+			if(!tg.source_s_id) {
+				// No survey to load — open immediately
+				surveyChangedTasks();
+				$('#add_current').prop('disabled', true);
+				$('#addTaskLabel').text(localise.set["t_edit_group"]);
+				$('#tg_id').html(tg.tg_id);
+				$('.tg_edit_only').show();
+				window.bsModalShow('#addTask');
+			}
+			// When source_s_id is set, the loadSurveys callback opens the dialog after #survey is set
 
 		});
 

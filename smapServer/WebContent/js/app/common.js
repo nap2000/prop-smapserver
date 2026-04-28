@@ -1841,7 +1841,7 @@ function showSurveyList(data, selector, addAll, dataSurvey, oversightSurvey, use
 				}
 				h[++idx] = '</option>';
 			}
-			if (typeof sid === 'undefined') {
+			if (typeof sId === 'undefined') {
 				if (globals.gCurrentSurvey > 0 && globals.gCurrentSurvey === item.id) {
 					selValue = useIdx ? i : item.id;
 				}
