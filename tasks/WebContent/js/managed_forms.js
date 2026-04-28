@@ -3355,6 +3355,9 @@ localise.initLocale(gUserLocale).then(function () {
                 // URL has changed update views
                 gPreviousUrl = url;
                 gTasks.cache.currentData = gTasks.cache.data[url];
+                if(!gTasks.cache.currentData.settings) {
+                    gTasks.cache.currentData.settings = { charts: [] };
+                }
                 callback(gTasks.cache.data[url]);
                 // Only update the settings if this is the top level view
                 if(gDrillDownStack.length === 0) {
@@ -3398,6 +3401,9 @@ localise.initLocale(gUserLocale).then(function () {
 
                             gTasks.cache.data[theKey] = data;
                             gTasks.cache.currentData = data;
+                            if(!gTasks.cache.currentData.settings) {
+                                gTasks.cache.currentData.settings = { charts: [] };
+                            }
 
                             // Only update the settings if this is the top level view
                             if(gDrillDownStack.length === 0) {
