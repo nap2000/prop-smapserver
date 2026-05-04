@@ -372,7 +372,7 @@
                         <button class="targetSpecific multiSelectOnly lang btn btn-primary mx-1 my-1" data-lang="co_b" id="m_bulk_edit"></button>
                         <a class="targetSpecific singleSelectOnly assigned btn btn-success mx-1 my-1"  id="m_edit" href="#"><span class="lang" data-lang="c_edit"></span> <i class="fas fa-globe"></i></a>
                        <!-- <button class="targetSpecific singleSelectOnly linksOnly assigned not_assigned assigned_other lang btn btn-primary mx-1 my-1" data-lang="c_links" id="m_links"></button> disable -->
-                        <button class="targetSpecific singleSelectOnly assigned not_assigned assigned_other lang btn btn-primary mx-1 my-1" data-lang="m_view" id="m_view"></button>
+                        <button class="targetSpecific singleSelectOnly assigned not_assigned assigned_other lang btn btn-primary mx-1 my-1" data-lang="c_history" id="m_view">History</button>
                         <button class="targetSpecific singleSelectOnly assigned_console_admin lang btn btn-warning mx-1 my-1" type="button" data-lang="t_assign" id="m_assign_to"></button>
                         <button class="targetSpecific chartOnly lang btn btn-success mx-1 my-1 d-none" type="button" data-lang="d_add_c" id="m_add_chart"></button>
                     </form>
@@ -482,15 +482,15 @@
     <div class="card text-center editRecordSection">
         <div class="card-header">
             <ul id="editTabs" class="nav nav-tabs mt-4" role="tablist">
-                <li class="nav-item" role="presentation"><a data-bs-toggle="tab" href="#data-view" class="active nav-link"><i class="fa fa-list"></i> <span class="lang" data-lang="c_data"></span></a></li>
-                <li class="nav-item" role="presentation"><a data-bs-toggle="tab" href="#changes-view" class="nav-link"><i class="fa fa-edit"></i> <span class="lang" data-lang="c_history"></span></a></li>
+                <li class="nav-item" role="presentation"><a data-bs-toggle="tab" href="#changes-view" class="active nav-link"><i class="fa fa-history" aria-hidden="true"></i> <span class="lang" data-lang="c_history"></span></a></li>
+                <li class="nav-item" role="presentation"><a data-bs-toggle="tab" href="#data-view" class="nav-link"><i class="fa fa-list" aria-hidden="true"></i> <span class="lang" data-lang="c_data"></span></a></li>
             </ul>
         </div>
 
         <div class="card-body">
             <div class="tab-content mt-4">
 
-                <div id="data-view" role="tabpanel" class="tab-pane active">
+                <div id="data-view" role="tabpanel" class="tab-pane">
                     <div class="panel-body">
                         <div class="row">
 
@@ -505,7 +505,7 @@
                         </button>
                     </div>
                 </div>
-                <div id="changes-view" role="tabpanel" class="tab-pane">
+                <div id="changes-view" role="tabpanel" class="tab-pane active">
                     <div class="panel-body">
                         <div class="table-responsive">
                             <table class="table" id="changes"></table>

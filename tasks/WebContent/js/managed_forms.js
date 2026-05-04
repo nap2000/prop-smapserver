@@ -2679,10 +2679,10 @@ localise.initLocale(gUserLocale).then(function () {
                             h[++idx] = '<i style="font-size: 10px; line-height: 1em;">sms</i>';
                             h[++idx] = '</span>';
                         } else {
-                            h[++idx] = '<i class="fa fa-lg fa-envelope-o text-info"></i>';
+                            h[++idx] = '<i class="fa fa-lg fa-envelope text-info"></i>';
                         }
                     } else if (data[i].event === 'email_reply') {
-                        h[++idx] = '<i class="fa fa-lg fa-reply text-success"></i>';
+                        h[++idx] = '<i class="fa fa-lg fa-reply text-info"></i>';
                     }
 
                     h[++idx] = '</td>';
