@@ -894,6 +894,7 @@ define({
     "changes": "Update",
     "task": "Task",
     "notification": "Notification",
+    "email_reply": "Email Reply",
     "created": "Created",
 
     // Web forms

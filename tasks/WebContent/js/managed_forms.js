@@ -2653,7 +2653,7 @@ localise.initLocale(gUserLocale).then(function () {
                         || data[i].event === 'new_case')) ||
                     (includeTasks && data[i].event === 'task') ||
                     (includeAssignments && data[i].event === 'assigned') ||
-                    (includeNotifications && data[i].event === 'notification')) {
+                    (includeNotifications && (data[i].event === 'notification' || data[i].event === 'email_reply'))) {
                     h[++idx] = '<tr>';
 
                     h[++idx] = '<td>';
@@ -2673,6 +2673,8 @@ localise.initLocale(gUserLocale).then(function () {
                         } else {
                             h[++idx] = '<i class="fa fa-lg fa-envelope-o text-info"></i>';
                         }
+                    } else if (data[i].event === 'email_reply') {
+                        h[++idx] = '<i class="fa fa-lg fa-reply text-success"></i>';
                     }
 
                     h[++idx] = '</td>';
@@ -2722,6 +2724,8 @@ localise.initLocale(gUserLocale).then(function () {
                         h[++idx] = getTaskCard(data[i].task, i);
                     } else if (data[i].event === 'notification' && data[i].notification) {
                         h[++idx] = getNotificationInfo(data[i].notification, data[i].description);
+                    } else if (data[i].event === 'email_reply' && data[i].emailReply) {
+                        h[++idx] = getEmailReplyInfo(data[i].emailReply);
                     } else {
                         h[++idx] = htmlEncode(data[i].description);
                     }
@@ -3082,6 +3086,28 @@ localise.initLocale(gUserLocale).then(function () {
 
         return h.join('');
 
+    }
+
+    function getEmailReplyInfo(r) {
+        var h = [],
+            idx = -1;
+
+        h[++idx] = '<p>';
+        h[++idx] = localise.set["c_from"];
+        h[++idx] = ': ';
+        h[++idx] = htmlEncode(r.fromAddress || '');
+        h[++idx] = '<br/>';
+        h[++idx] = localise.set["c_subject"];
+        h[++idx] = ': ';
+        h[++idx] = htmlEncode(r.subject || '');
+        h[++idx] = '</p>';
+        if (r.body) {
+            h[++idx] = '<pre style="white-space:pre-wrap;max-height:10em;overflow-y:auto;">';
+            h[++idx] = htmlEncode(r.body);
+            h[++idx] = '</pre>';
+        }
+
+        return h.join('');
     }
 
     /*
