@@ -3094,6 +3094,18 @@ localise.initLocale(gUserLocale).then(function () {
         } else if(n.content) {
             h[++idx] = n.content;
         }
+
+        if(n.attachments && n.attachments.length > 0) {
+            var baseUrl = window.location.protocol + '//' + window.location.host + '/';
+            h[++idx] = '<br/>';
+            for(var ai = 0; ai < n.attachments.length; ai++) {
+                h[++idx] = '<a href="' + baseUrl + htmlEncode(n.attachments[ai]) + '" target="_blank">';
+                h[++idx] = htmlEncode(n.attachments[ai].split('/').pop());
+                h[++idx] = '</a>';
+                if(ai < n.attachments.length - 1) h[++idx] = '<br/>';
+            }
+        }
+
         h[++idx] = '</p>';
 
         return h.join('');
@@ -3117,6 +3129,17 @@ localise.initLocale(gUserLocale).then(function () {
             h[++idx] = '<pre style="white-space:pre-wrap;max-height:10em;overflow-y:auto;">';
             h[++idx] = htmlEncode(r.body);
             h[++idx] = '</pre>';
+        }
+        if(r.attachments && r.attachments.length > 0) {
+            var baseUrl = window.location.protocol + '//' + window.location.host + '/';
+            h[++idx] = '<p>';
+            for(var ai = 0; ai < r.attachments.length; ai++) {
+                h[++idx] = '<a href="' + baseUrl + htmlEncode(r.attachments[ai]) + '" target="_blank">';
+                h[++idx] = htmlEncode(r.attachments[ai].split('/').pop());
+                h[++idx] = '</a>';
+                if(ai < r.attachments.length - 1) h[++idx] = '<br/>';
+            }
+            h[++idx] = '</p>';
         }
 
         return h.join('');
