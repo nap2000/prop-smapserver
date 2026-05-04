@@ -2622,6 +2622,7 @@ localise.initLocale(gUserLocale).then(function () {
         var includeNotifications = $('#er_show_notifications').is(':checked');
         var includeChanges = $('#er_show_changes').is(':checked');
         var includeAssignments = $('#er_show_assignments').is(':checked');
+        var includeEmailReplies = $('#er_show_email_replies').is(':checked');
 
         // Add header
         h[++idx] = '<thead>';
@@ -2661,7 +2662,8 @@ localise.initLocale(gUserLocale).then(function () {
                         || data[i].event === 'new_case')) ||
                     (includeTasks && data[i].event === 'task') ||
                     (includeAssignments && data[i].event === 'assigned') ||
-                    (includeNotifications && (data[i].event === 'notification' || data[i].event === 'email_reply'))) {
+                    (includeNotifications && data[i].event === 'notification') ||
+                    (includeEmailReplies && data[i].event === 'email_reply')) {
                     h[++idx] = '<tr>';
 
                     h[++idx] = '<td>';

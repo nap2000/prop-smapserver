@@ -280,31 +280,48 @@
             <!-- record editing commands -->
             <div class="bg-light row">
                 <div class="col-sm-4 pt-4 px-2 editRecordSection border-end">
-                    <div class="form-check form-switch dataView">
+                    <div class="form-check form-switch dataView" style="display:none">
                         <input type="checkbox" class="form-check-input table_filter"
                                name="formdata" value="yes" id="er_form_data" checked="checked">
                         <label class="form-check-label lang" data-lang="mf_fd" for="er_form_data"></label>
                     </div>
 
-                    <div class="form-check form-switch historyView" style="display:none">
-                        <input type="checkbox" class="form-check-input changes_filter"
-                               name="showtasks" value="yes" id="er_show_tasks" checked="checked">
-                        <label class="form-check-label lang" data-lang="t_tasks" for="er_show_tasks"></label>
-                    </div>
-                    <div class="form-check form-switch historyView" style="display:none">
-                        <input type="checkbox" class="form-check-input changes_filter"
-                               name="showNotifications" value="yes" id="er_show_notifications" checked="checked">
-                        <label class="form-check-label lang" data-lang="m_notify" for="er_show_notifications"></label>
-                    </div>
-                    <div class="form-check form-switch historyView" style="display:none">
-                        <input type="checkbox" class="form-check-input changes_filter"
-                               name="showChanges" value="yes" id="er_show_changes" checked="checked">
-                        <label class="form-check-label lang" data-lang="c_changes" for="er_show_changes"></label>
-                    </div>
-                    <div class="form-check form-switch historyView" style="display:none">
-                        <input type="checkbox" class="form-check-input changes_filter"
-                               name="showAssignments" value="yes" id="er_show_assignments" checked="checked">
-                        <label class="form-check-label lang" data-lang="t_assignments" for="er_show_assignments"></label>
+                    <div class="row row-cols-1 row-cols-md-2 g-1">
+                        <div class="col historyView">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" class="form-check-input changes_filter"
+                                       name="showtasks" value="yes" id="er_show_tasks" checked="checked">
+                                <label class="form-check-label lang" data-lang="t_tasks" for="er_show_tasks"></label>
+                            </div>
+                        </div>
+                        <div class="col historyView">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" class="form-check-input changes_filter"
+                                       name="showNotifications" value="yes" id="er_show_notifications" checked="checked">
+                                <label class="form-check-label lang" data-lang="m_notify" for="er_show_notifications"></label>
+                            </div>
+                        </div>
+                        <div class="col historyView">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" class="form-check-input changes_filter"
+                                       name="showChanges" value="yes" id="er_show_changes" checked="checked">
+                                <label class="form-check-label lang" data-lang="c_changes" for="er_show_changes"></label>
+                            </div>
+                        </div>
+                        <div class="col historyView">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" class="form-check-input changes_filter"
+                                       name="showAssignments" value="yes" id="er_show_assignments" checked="checked">
+                                <label class="form-check-label lang" data-lang="t_assignments" for="er_show_assignments"></label>
+                            </div>
+                        </div>
+                        <div class="col historyView">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" class="form-check-input changes_filter"
+                                       name="showEmailReplies" value="yes" id="er_show_email_replies" checked="checked">
+                                <label class="form-check-label lang" data-lang="email_reply" for="er_show_email_replies">Email Reply</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
