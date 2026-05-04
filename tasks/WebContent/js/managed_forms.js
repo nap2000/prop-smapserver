@@ -2710,18 +2710,20 @@ localise.initLocale(gUserLocale).then(function () {
                     }
                     h[++idx] = '</td>';
 
-                    h[++idx] = '<td class="mincol ';    // status
+                    h[++idx] = '<td class="mincol">';    // status
                     finish = getFinish(data[i]);
                     statusClass = getStatusClass(data[i].status, data[i].assign_auto);
-                    h[++idx] = statusClass;
-                    h[++idx] = '">';
+                    var statusText;
                     if(statusClass == 'bg-danger') {
-                        h[++idx] = localise.set["c_late"];
-                    } if(statusClass == 'bg-orange') {
-                        h[++idx] = localise.set["t_auto2"];
+                        statusText = localise.set["c_late"];
+                    } else if(statusClass == 'bg-orange') {
+                        statusText = localise.set["t_auto2"];
                     } else {
-                        h[++idx] = localise.set[data[i].status];
+                        statusText = localise.set[data[i].status];
                     }
+                    h[++idx] = '<span class="badge rounded-pill status-badge status-badge-' + statusClass.replace('bg-', '') + '">';
+                    h[++idx] = htmlEncode(statusText);
+                    h[++idx] = '</span>';
 
                     h[++idx] = '</td>';
 
