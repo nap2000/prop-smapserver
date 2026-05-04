@@ -216,6 +216,8 @@ function initialiseMapKeySet(elementId, zoom, setUserLocation, callbackClick, ca
  * Assignment specific
  */
 function refreshMapAssignments(elementId, taskList) {
+	if (!taskList || !taskList.features) return;
+
 	var thisMapData = mapData[elementId],
 		i;
 
