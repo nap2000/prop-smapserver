@@ -231,3 +231,7 @@ input.ldirn {
     height: 1.5rem;
     cursor: pointer;
 }
+
+a.filter_help {
+    color: #0058cc;
+}

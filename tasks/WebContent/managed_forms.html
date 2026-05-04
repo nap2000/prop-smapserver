@@ -117,17 +117,6 @@
             <li id="m_web_forms" class="nav-item restrict_role enum_role"><a class="nav-link" href="/app/myWork/index.html"><span class="lang" data-lang="m_web_forms"></span></a></li>
             <li id="m_rep" class="nav-item restrict_role admin_role analyst_role"><a class="nav-link" href="/app/reports.html"><span class="lang" data-lang="m_reports"></span></a></li>
 
-            <!--
-            <li class="nav-item dropdown active">
-                <a class="nav-link dropdown-toggle" href="#" id="m_local_reports" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="lang" data-lang="m_lr">reports</span></a>
-                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="m_local_reports">
-                    <a class="dropdown-item xxxx1 d-none" href="/misc/CreatingIdentificationCards.docx"><span>Guide on creating Id Cards</span></a>
-                    <a class="dropdown-item xxxx1 d-none" href="/misc/CardMergeTemplate.docx"><span>ID Card Template</span></a>
-                    <a id="m_tdh_individual" href="#" class="dropdown-item server_specific tdh localhost d-none">Individual Report</a>
-                </div>
-            </li>
-            -->
-
             <li><a href="#" id="m_refresh"><span class="nav-link lang" data-lang="m_refresh">r</span></a></li>
             <li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
             <li id="m_training" class="nav-item d-none"><a class="nav-link" id="train_link" href="#" target="_blank"><span class="nav-label lang" data-lang="m_training">training</span></a></li>
@@ -320,7 +309,7 @@
                 </div>
 
                 <div class="col-sm-4 pt-4 px-2 editRecordSection border-end">
-                    <button class="genrecordpdf btn btn-danger"><i class="fa fa-file-pdf"></i></button>
+                    <button class="genrecordpdf btn btn-danger" aria-label="Generate PDF"><i class="fa fa-file-pdf" aria-hidden="true"></i></button>
                 </div>
 
                 <div class="col-sm-4 pt-4 px-2 editRecordSection border-end">
@@ -361,8 +350,8 @@
 
                         <li class="nav-item my-2 my-lg-0  mx-1">
                             <div class="btn-group not_deleted singleSelectOnly drill_only my-1" role="group" aria-label="drill down">
-                                <button type="button" class="lang du_only btn btn-secondary" data-lang="co_up" id="drill_up"></button>
-                                <button type="button" class="dd_only lang btn btn-secondary" data-lang="co_dd" id="drill_down"></button>
+                                <button type="button" class="lang du_only btn btn-secondary" data-lang="co_up" id="drill_up" aria-label="Up"></button>
+                                <button type="button" class="dd_only lang btn btn-secondary" data-lang="co_dd" id="drill_down" aria-label="Drill Down"></button>
                                 <div class="btn-group dd_only" role="group">
                                     <button id="dd_form" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
@@ -759,7 +748,7 @@
     <div class="modal-dialog custom-modal-width">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 id="toggleRecordTitle" class="modal-title"></h4>
+                <h4 id="toggleRecordTitle" class="modal-title">Delete or Restore</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -797,7 +786,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="taskPropLabel"></h4>
+                <h4 class="modal-title" id="taskPropLabel">Task</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -810,14 +799,14 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="lang col-sm-2 col-form-label" data-lang="c_survey" for="tp_form_name"></label>
+                            <label class="lang col-sm-2 col-form-label" data-lang="c_survey" for="tp_form_name">Survey</label>
                             <div class="col-sm-10">
                                 <select class="disable_blocked form-select" id="tp_form_name"></select>
                             </div>
                         </div>
                         <div class="well">
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label lang" data-lang="assign_type"></label>
+                                <label class="col-sm-2 col-form-label lang" data-lang="c_assign_type" for="tp_user_type">Assign type</label>
                                 <div class="col-sm-10">
                                     <div class="btn-group" role="group" aria-label="select assignment type">
                                         <button id="tp_user_type" type="button" class="btn btn-outline-secondary assign_type user_type_checkbox lang active" data-lang="c_user"></button>
@@ -874,11 +863,11 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label lang" data-lang="c_from" for="tp_from"></label>
+                            <label class="col-sm-2 col-form-label lang" data-lang="c_from" for="tp_from_date"></label>
                             <div class="col-sm-10">
                                 <div class='input-group date' id='tp_from' data-bs-toggle="tooltip" data-container="body"
                                      title="Scheduled date in local time zone">
-                                    <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
+                                    <input type='text' class="form-control" id="tp_from_date" data-date-format="YYYY-MM-DD HH:mm:ss">
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-secondary" type="button" aria-label="Pick date"><span class="input-group-addon"><i class="fas fa-calendar-alt" aria-hidden="true"></i></span></button>
                                     </div>
@@ -886,11 +875,11 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label lang" data-lang="c_to" for="tp_to"></label>
+                            <label class="col-sm-2 col-form-label lang" data-lang="c_to" for="tp_to_date"></label>
                             <div class="col-sm-10">
                                 <div class='input-group date' id='tp_to' data-bs-toggle="tooltip" data-container="body"
                                      title="Finish time">
-                                    <input type='text' class="form-control" data-date-format="YYYY-MM-DD HH:mm:ss">
+                                    <input type='text' class="form-control" id="tp_to_date" data-date-format="YYYY-MM-DD HH:mm:ss">
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-secondary" type="button" aria-label="Pick date"><span class="input-group-addon"><i class="fas fa-calendar-alt" aria-hidden="true"></i></span></button>
                                     </div>

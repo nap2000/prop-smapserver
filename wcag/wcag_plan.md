@@ -135,7 +135,7 @@ Run Chrome DevTools Lighthouse (Accessibility category) against each page while 
 | fieldManagerClient/WebContent/settings.html |  | |
 | fieldManagerClient/WebContent/notifications.html |  | |
 | fieldManagerClient/WebContent/monitor.html |  | |
-| tasks/WebContent/managed_forms.html |  | |
+| tasks/WebContent/managed_forms.html | 100 | |
 | tasks/WebContent/taskManagement.html |  | |
 | tasks/WebContent/campaign.html |  | |
 | tasks/WebContent/contacts.html |  | |

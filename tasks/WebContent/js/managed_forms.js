@@ -1484,12 +1484,12 @@ localise.initLocale(gUserLocale).then(function () {
             shownColumns.push({
                 "data": headItem.column_name
             });
-            h[++idx] = '<th>';
+            h[++idx] = '<th scope="col">';
             h[++idx] = '<span class="ch">';
             h[++idx] = htmlEncode(headItem.displayName);
             h[++idx] = '</span>';
             h[++idx] = '</th>';
-            hfoot[++foot_idx] = '<th></th>';
+            hfoot[++foot_idx] = '<th scope="col"></th>';
 
             if (headItem.hide) {
                 hiddenColumns.push(i);
@@ -1544,7 +1544,8 @@ localise.initLocale(gUserLocale).then(function () {
                     if (columns[colIdx].filter || columns[colIdx].type === "select1"
                             || columns[colIdx].type === "calculate") {
                         var column = this;
-                        var select = $('<select class="form-select">')
+                        var headerText = $(column.header()).text().trim();
+                        var select = $('<select class="form-select">').attr('aria-label', 'Filter by ' + headerText)
                             .appendTo( $(column.header()))
                             .on('change', function () {
                                 var val = $.fn.dataTable.util.escapeRegex(
@@ -1592,6 +1593,9 @@ localise.initLocale(gUserLocale).then(function () {
             ],
             language: {
                 url: localise.dt()
+            },
+            headerCallback: function(thead) {
+                $(thead).find('th').attr('scope', 'col');
             }
         });
 
@@ -1725,7 +1729,9 @@ localise.initLocale(gUserLocale).then(function () {
         h[++idx] = '<div class="col-sm-6">';
         h[++idx] = '<div class="switch">';
         h[++idx] = '<input type="checkbox" name="columnSelect"';
-        h[++idx] = ' class="columnSelect" value="';
+        h[++idx] = ' class="columnSelect" aria-label="';
+        h[++idx] = htmlEncode(item.displayName);
+        h[++idx] = '" value="';
         h[++idx] = item.displayName;
         h[++idx] = '"';
         if(!item.hide) {
@@ -1773,7 +1779,9 @@ localise.initLocale(gUserLocale).then(function () {
 
             h[++idx] = '<div class="col-sm-1">';
             h[++idx] = '<input type="checkbox" name="columnSelect"';
-            h[++idx] = ' class="columnSelect" value="';
+            h[++idx] = ' class="columnSelect" aria-label="';
+            h[++idx] = htmlEncode(item.displayName);
+            h[++idx] = '" value="';
             h[++idx] = item.displayName;
             h[++idx] = '"';
             h[++idx] = '>';
@@ -2618,26 +2626,26 @@ localise.initLocale(gUserLocale).then(function () {
         // Add header
         h[++idx] = '<thead>';
         h[++idx] = '<tr>';
-        h[++idx] = '<th></th>';     // icon
-        h[++idx] = '<th class="mincol">';
+        h[++idx] = '<th scope="col"></th>';     // icon
+        h[++idx] = '<th scope="col" class="mincol">';
         h[++idx] = localise.set["c_user"];
         h[++idx] = '</th>';
-        h[++idx] = '<th class="mincol">';
+        h[++idx] = '<th scope="col" class="mincol">';
         h[++idx] = localise.set["c_survey"];
         h[++idx] = '</th>';
-        h[++idx] = '<th class="mincol">';
+        h[++idx] = '<th scope="col" class="mincol">';
         h[++idx] = localise.set["c_date"];
         h[++idx] = '</th>';
-        h[++idx] = '<th class="mincol">';
+        h[++idx] = '<th scope="col" class="mincol">';
         h[++idx] = localise.set["c_event"];
         h[++idx] = '</th>';
-        h[++idx] = '<th class="mincol">';
+        h[++idx] = '<th scope="col" class="mincol">';
         h[++idx] = localise.set["c_status"];
         h[++idx] = '</th>';
-        h[++idx] = '<th>';
+        h[++idx] = '<th scope="col">';
         h[++idx] = localise.set["c_details"];
         h[++idx] = '</th>';
-        h[++idx] = '<th class="mincol">';
+        h[++idx] = '<th scope="col" class="mincol">';
         h[++idx] = localise.set["c_action"];
         h[++idx] = '</th>';
         h[++idx] = '</tr>';
