@@ -619,7 +619,7 @@ $(function() {
 	$('#a_survey_identifier, #a_csv_identifier, #a_sp_identifier').change(function(){
 		var search_source = $('input[type=radio][name=search_source]:checked').val();
 		if(search_source === "survey") {
-			getQuestionsInSurvey($('.column_select'), $('.column_select_multiple'), $('#a_survey_identifier').val(), true, false, setAppearanceValues, true, undefined);
+			getQuestionsInSurvey($('.column_select'), $('.column_select_multiple'), $('#a_survey_identifier').val(), true, false, setAppearanceValues, true, undefined, true);
 		} else if(search_source === "sharepoint") {
 			getQuestionsInSpList($('.column_select'), $('.column_select_multiple'), $('#a_sp_identifier').val(), true);
 		} else {
@@ -3805,7 +3805,7 @@ $(function() {
 								$('input[type=radio][name=search_source][value=survey]').prop('checked', true);
 								$('#a_survey_identifier').val(sIdent);
 								$('.search_survey').show();
-								getQuestionsInSurvey($('.column_select'), $('.column_select_multiple'), sIdent, true, false, setAppearanceValues, true, undefined);
+								getQuestionsInSurvey($('.column_select'), $('.column_select_multiple'), sIdent, true, false, setAppearanceValues, true, undefined, true);
 							} else if(params.filename.startsWith('sharepointlist_')) {
 								var spName = params.filename.substring('sharepointlist_'.length);
 								$('input[type=radio][name=search_source][value=sharepoint]').prop('checked', true);

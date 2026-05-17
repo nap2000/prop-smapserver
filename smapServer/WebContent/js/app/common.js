@@ -4269,7 +4269,11 @@ function getAccessibleCsvFiles($elem, includeNone) {
  /*
   * Get the questions in a survey
   */
-function getQuestionsInSurvey($elem, $elem_multiple, sIdent, includeNone, textOnly, callback, includeHrk, value) {
+function isValueBearingType(type) {
+	return type !== "begin group" && type !== "end group" && type !== "begin repeat" && type !== "end repeat" && type !== "note";
+}
+
+function getQuestionsInSurvey($elem, $elem_multiple, sIdent, includeNone, textOnly, callback, includeHrk, value, valueOnly) {
 
 	function populateElement($elem, $elem_multiple, data) {
 		var h = [],
@@ -4295,7 +4299,7 @@ function getQuestionsInSurvey($elem, $elem_multiple, sIdent, includeNone, textOn
 			hm[++idx_m] = h[++idx] = '</option>';
 		}
 		for (i = 0; i < data.length; i++) {
-			if(!textOnly || isTextStorageType(data[i].type)) {
+			if((!textOnly || isTextStorageType(data[i].type)) && (!valueOnly || isValueBearingType(data[i].type))) {
 				hm[++idx_m] = h[++idx] = '<option value="';
 				hm[++idx_m] = h[++idx] = data[i].name;
 				hm[++idx_m] = h[++idx] = '">';
