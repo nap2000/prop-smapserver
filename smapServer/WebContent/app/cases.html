@@ -115,7 +115,16 @@
 								   title="Specify a unique key if you want to refer to the data collected by this form from another form"
 							>key</label>
 							<div class="col-sm-8">
-								<input type="text" id="key" required class="form-control">
+								<div class="input-group">
+									<input type="text" id="key" required class="form-control">
+									<button class="btn btn-outline-secondary" type="button">
+									<span class="input-group-append">
+										<a class="filter_help" href="https://www.smap.com.au/docs/keys.html" target="_blank">
+											<i class="fas fa-info-circle"></i>
+										</a>
+									</span>
+									</button>
+								</div>
 							</div>
 						</div>
 						<div class="save_alert alert alert-success d-none" role="alert"></div>

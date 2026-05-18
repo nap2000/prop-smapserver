@@ -33,21 +33,23 @@ const $ = window.$;
 $(document).ready(function() {
 
 		setCustomChanges();
-		localise.setlang();		// Localise HTML
-		dbstorage.open().then(
-			function() {
+		localise.initLocale(gUserLocale).then(function() {
+			localise.setlang();		// Localise HTML
+			dbstorage.open().then(
+				function() {
+					getHistory();
+				},
+				function(e) {
+					console.log(e);
+				});
+
+			if(location.search.indexOf("menu=yes") >= 0) {
+				$('.menuopt').removeClass('d-none').show();
+			}
+
+			$('#m_refresh').click(function(){
 				getHistory();
-			},
-			function(e) {
-				console.log(e);
 			});
-
-		if(location.search.indexOf("menu=yes") >= 0) {
-			$('.menuopt').removeClass('d-none').show();
-		}
-
-		$('#m_refresh').click(function(){
-			getHistory();
 		});
 	});
 
