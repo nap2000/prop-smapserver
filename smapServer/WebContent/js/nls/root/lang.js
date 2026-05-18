@@ -1289,6 +1289,7 @@ define({
     "u_sp_cert_pem": "Private Key (PEM)",
     "u_sp_cert_pem_ph": "Paste PKCS8 private key here (-----BEGIN PRIVATE KEY-----)",
     "u_sp_list_name": "List Name",
+    "msg_sel_sp_list": "Select a SharePoint list",
     "u_sp_load_cols": "Load Columns",
     "u_sp_match_col": "Match Column",
     "u_sp_match_field": "Match Field",

@@ -5911,38 +5911,34 @@ function spOperationChanged(operation) {
  */
 function saveSharePointList() {
 	var notification = {};
-	var error = false;
 
-	var listTitle = $('#sp_list_name').val().trim();
+	var listTitle = ($('#sp_list_name').val() || '').trim();
 	if(!listTitle) {
-		alert(localise.set["u_sp_list_name"] + " required");
-		error = true;
+		notification.error = true;
+		notification.errorMsg = localise.set["msg_sel_sp_list"];
+		return notification;
 	}
 
-	if(!error) {
-		var operation = $('input[name="sp_operation"]:checked').val() || 'insert';
-		var columnMap = [];
-		$('#sp_column_map_body tr').each(function() {
-			var spCol  = $(this).find('.sp_col_select').val();
-			var smapField = $(this).find('.sp_field_select').val();
-			if(spCol && smapField) {
-				columnMap.push({ sp_column: spCol, smap_field: smapField });
-			}
-		});
-
-		notification.target = "sharepoint_list";
-		notification.notifyDetails = {
-			sp_list_title: listTitle,
-			sp_operation: operation,
-			sp_column_map: columnMap
-		};
-
-		if(operation === 'update') {
-			notification.notifyDetails.sp_match_column = $('#sp_match_column').val();
-			notification.notifyDetails.sp_match_field  = $('#sp_match_field').val();
+	var operation = $('input[name="sp_operation"]:checked').val() || 'insert';
+	var columnMap = [];
+	$('#sp_column_map_body tr').each(function() {
+		var spCol  = $(this).find('.sp_col_select').val();
+		var smapField = $(this).find('.sp_field_select').val();
+		if(spCol && smapField) {
+			columnMap.push({ sp_column: spCol, smap_field: smapField });
 		}
-	} else {
-		notification.error = true;
+	});
+
+	notification.target = "sharepoint_list";
+	notification.notifyDetails = {
+		sp_list_title: listTitle,
+		sp_operation: operation,
+		sp_column_map: columnMap
+	};
+
+	if(operation === 'update') {
+		notification.notifyDetails.sp_match_column = $('#sp_match_column').val();
+		notification.notifyDetails.sp_match_field  = $('#sp_match_field').val();
 	}
 
 	return notification;
