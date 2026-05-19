@@ -983,6 +983,8 @@ function getSelectOptions(sId, qId, value, language) {
  */
 function updateFilterOptions(data, value, isSelect) {
 
+	if (!data) return;
+
 	var	$elem = $('#filter_value'),
 		i,
 		h = [],
