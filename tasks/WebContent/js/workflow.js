@@ -1011,7 +1011,22 @@ function buildConditionRows() {
 		const advEl = document.getElementById("wf-drawer-advanced");
 		advEl.onclick = null;
 		if (gEditNotifs.length > 0) {
-			advEl.href = "/app/fieldManager/notifications.html?fwd_id=" + gEditNotifs[0].id;
+			const notif = gEditNotifs[0];
+			const url   = "/app/fieldManager/notifications.html?fwd_id=" + notif.id;
+			advEl.href  = url;
+			const needsSwitch = notif.projectId && notif.projectId !== globals.gCurrentProject;
+			if (needsSwitch) {
+				advEl.onclick = function(e) {
+					e.preventDefault();
+					const newTab = window.open("about:blank", "_blank");
+					fetch("/surveyKPI/user/currentproject", {
+						method: "POST",
+						credentials: "include",
+						headers: { "Content-Type": "application/json", "X-Requested-With": "XMLHttpRequest" },
+						body: JSON.stringify({ current_project_id: notif.projectId, current_survey_id: 0, current_task_group_id: 0 })
+					}).finally(function() { newTab.location.href = url; });
+				};
+			}
 		} else if (gEditTGs.length > 0) {
 			const tg = gEditTGs[0];
 			const url = "/app/tasks/taskManagement.html?tg_id=" + tg.tgId;
