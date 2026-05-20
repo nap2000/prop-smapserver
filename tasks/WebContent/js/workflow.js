@@ -113,9 +113,10 @@ function surveyIdFromNodeId(nodeId) {
 
 // Walk gData.links backward from startNodeId to find the survey whose fields should
 // populate the SP column map. Stops at:
-//   - a "case" node  → returns its caseSurveyId (the case management survey)
-//   - a "form:s:X"   → returns the trigger form's survey ID
-// Skips task:s:X nodes (their survey is the task target, not the trigger).
+//   - a "case" node       → returns its caseSurveyId (the case management survey)
+//   - a "form:s:X" node   → returns the trigger form's survey ID
+//   - a "task:tg:X" node  → returns the task's targetSurveyId (source for downstream steps)
+//   - a "task:s:X" node   → returns the survey ID encoded in the node ID (legacy format)
 function findAncestorSurveyId(startNodeId) {
 	if (!gData) return 0;
 	const links  = gData.links || [];
@@ -132,6 +133,12 @@ function findAncestorSurveyId(startNodeId) {
 		}
 		if (parts[0] === "form" && parts[1] === "s") {
 			return parseInt(parts[2], 10) || 0;
+		}
+		if (parts[0] === "task" || parts[0] === "emailtask") {
+			if (parts[1] === "s") return parseInt(parts[2], 10) || 0;
+			const item = items.find(function(i) { return i.id === current; });
+			const survId = item ? (item.targetSurveyId || 0) : 0;
+			if (survId) return survId;
 		}
 		const inLink = links.find(function(l) { return l.to === current; });
 		if (!inLink) break;
