@@ -19,6 +19,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 import localise from "../../../smapServer/WebContent/js/app/localise";
 import { addHourglass, removeHourglass, getLoggedInUser, handleLogout, setupUserProfile } from "common";
+import globals from "globals";
 
 const CARD_W = 240;
 const CARD_H = 88;   // expanded to fit assignee row on task/case cards
@@ -1001,10 +1002,26 @@ function buildConditionRows() {
 	const type = gEditItem ? gEditItem.dataset.type : "";
 	if (type !== "sharepoint_list") {
 		const advEl = document.getElementById("wf-drawer-advanced");
+		advEl.onclick = null;
 		if (gEditNotifs.length > 0) {
 			advEl.href = "/app/fieldManager/notifications.html?fwd_id=" + gEditNotifs[0].id;
 		} else if (gEditTGs.length > 0) {
-			advEl.href = "/app/tasks/taskManagement.html?tg_id=" + gEditTGs[0].tgId;
+			const tg = gEditTGs[0];
+			const url = "/app/tasks/taskManagement.html?tg_id=" + tg.tgId;
+			advEl.href = url;
+			const needsSwitch = tg.projectId && tg.projectId !== globals.gCurrentProject;
+			if (needsSwitch) {
+				advEl.onclick = function(e) {
+					e.preventDefault();
+					const newTab = window.open("about:blank", "_blank");
+					fetch("/surveyKPI/user/currentproject", {
+						method: "POST",
+						credentials: "include",
+						headers: { "Content-Type": "application/json", "X-Requested-With": "XMLHttpRequest" },
+						body: JSON.stringify({ current_project_id: tg.projectId, current_survey_id: 0, current_task_group_id: 0 })
+					}).finally(function() { newTab.location.href = url; });
+				};
+			}
 		}
 	}
 
