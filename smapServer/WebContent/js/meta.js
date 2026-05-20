@@ -31,7 +31,7 @@ import {
 	removeHourglass,
 	saveCurrentProject,
 	setupUserProfile
-} from "./app/common";
+} from "./app/common.js";
 
 const $ = window.$;
 
@@ -49,6 +49,7 @@ var gMode = "survey",
 	gIdx;
 
 localise.initLocale(gUserLocale).then(function () {
+	$(document).ready(function() {
 	setCustomChanges();
 	setTheme();
 	setupUserProfile(true);
@@ -141,7 +142,7 @@ localise.initLocale(gUserLocale).then(function () {
 			$('.item_audio').hide();
 		}
 	});
-
+	}); // document.ready
 
 		function getSurveyList() {
 			console.log("getSurveyList: " + globals.gCurrentSurvey);
