@@ -5244,14 +5244,16 @@ function edit_notification(edit, idx, inconsole) {
 
 			$('#fwd_host').val(notification.remote_host);
 
-			// Restore escalate assign type (user vs role)
-			restoreEscalateAssignType(notification.remote_user);
+			if (notification.target === 'escalate') {
+				// Restore escalate assign type (user vs role)
+				restoreEscalateAssignType(notification.remote_user);
 
-			// For user-type escalate, set the select value and show assign_question if _data
-			if(!notification.remote_user || notification.remote_user.indexOf('_role:') !== 0) {
-				$('#user_to_assign').val(notification.remote_user).change();
-				if($('#user_to_assign').val() === '_data') {
-					$('.assign_question').removeClass('d-none').show();
+				// For user-type escalate, set the select value and show assign_question if _data
+				if(!notification.remote_user || notification.remote_user.indexOf('_role:') !== 0) {
+					$('#user_to_assign').val(notification.remote_user).change();
+					if($('#user_to_assign').val() === '_data') {
+						$('.assign_question').removeClass('d-none').show();
+					}
 				}
 			}
 
