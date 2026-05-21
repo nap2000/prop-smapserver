@@ -1994,6 +1994,10 @@ function getQuestionList(sId, language, qId, groupId, callback, setGroupList, vi
 					globals.gSelector.setSurveyQuestions(sId, language, data);
 					setSurveyViewQuestions(data, qId, view, dateqId, qName, assignQuestion, scQuestion);
 
+					if($('.sp_update_options').is(':visible')) {
+						spRefreshFieldSelects();
+					}
+
 					if (setGroupList) {
 						var vh = globals.viewHandlers || {};
 						if (typeof vh.setSurveyViewQuestionGroups === "function") vh.setSurveyViewQuestionGroups(data, groupId);
@@ -5827,8 +5831,8 @@ function spRefreshFieldSelects() {
 		$(this).empty();
 		$('<option>').val('').text('').appendTo($(this));
 		qList.forEach(function(q) {
-			$('<option>').val(q.name).text(q.name).appendTo($('.sp_field_select'));
-		});
+			$('<option>').val(q.name).text(q.name).appendTo($(this));
+		}.bind(this));
 		if(current) $(this).val(current);
 	});
 }
@@ -5915,6 +5919,7 @@ function setupSharePointNotification() {
 function spOperationChanged(operation) {
 	if(operation === 'update') {
 		$('.sp_update_options').show();
+		spRefreshFieldSelects();
 	} else {
 		$('.sp_update_options').hide();
 	}
