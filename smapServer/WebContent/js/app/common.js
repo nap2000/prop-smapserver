@@ -2404,6 +2404,20 @@ function createNewSurvey(name, existing, existing_survey, shared_results, callba
 
 				saveCurrentProject(-1, globals.gCurrentSurvey, undefined);	// Save the current survey id
 
+				// Notify parent window (SharePoint extension hosting the editor in an iframe)
+				if(window.parent && window.parent !== window) {
+					try {
+						window.parent.postMessage({
+							type: 'smapAction',
+							action: 'formCreated',
+							status: 'success',
+							surveyIdent: data.ident,
+							surveyId: data.id,
+							surveyName: data.displayName
+						}, '*');
+					} catch (e) { /* parent unreachable */ }
+				}
+
 				setLanguages(data.languages, callback);
 
 				if (typeof callback == "function") {
