@@ -328,6 +328,7 @@ $(document).ready(function() {
 								if (idx >= 0) {
 									edit_notification(true, idx, false);
 									window.bsModalShow('#addNotificationPopup');
+									history.replaceState(null, "", window.location.pathname);
 								}
 							}
 						}
