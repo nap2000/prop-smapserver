@@ -2735,9 +2735,9 @@ localise.initLocale(gUserLocale).then(function () {
                     } else if (data[i].event === 'task' && data[i].task) {
                         h[++idx] = getTaskCard(data[i].task, i);
                     } else if (data[i].event === 'notification' && data[i].notification) {
-                        h[++idx] = getNotificationInfo(data[i].notification, data[i].description);
+                        h[++idx] = getNotificationInfo(data[i].notification, data[i].description, i);
                     } else if (data[i].event === 'email_reply' && data[i].emailReply) {
-                        h[++idx] = getEmailReplyInfo(data[i].emailReply);
+                        h[++idx] = getEmailReplyInfo(data[i].emailReply, i);
                     } else {
                         h[++idx] = htmlEncode(data[i].description);
                     }
@@ -3073,75 +3073,142 @@ localise.initLocale(gUserLocale).then(function () {
     /*
      * Get notification info
      */
-    function getNotificationInfo(n, description) {
+    function getNotificationInfo(n, description, index) {
         var h = [],
-            idx = -1;
+            idx = -1,
+            baseUrl = window.location.protocol + '//' + window.location.host + '/';
 
-        h[++idx] = '<p>';
-        h[++idx] = localise.set["c_target"];
-        h[++idx] = ': ';
-        h[++idx] = n.target;
-        h[++idx] = '<br/>';
+        var toLine = (localise.set["c_to"] || 'To') + ': ' + htmlEncode(n.emails ? n.emails.join(', ') : '');
+        var subjectLine = (localise.set["c_subject"] || 'Subject') + ': ' + htmlEncode(n.subject || '');
+        var summaryLabel = toLine + ' — ' + subjectLine;
 
-        h[++idx] = localise.set["c_to"];
-        h[++idx] = ': ';
-        h[++idx] = n.emails ? n.emails.join(',') : '';
-        h[++idx] = '<br/>';
-
-        if(description) {
-            h[++idx] = description;
-            h[++idx] = '<br/>';
-        } else if(n.content) {
-            h[++idx] = n.content;
+        var attachLabel = null;
+        if (n.attach === 'pdf' || n.attach === 'pdf_landscape') {
+            attachLabel = (localise.set["c_attach"] || 'Attach') + ': ' +
+                (n.attach === 'pdf' ? (localise.set["n_pdfp"] || 'PDF (Portrait)') : (localise.set["n_pdfl"] || 'PDF (Landscape)'));
+        } else if (n.attach === 'webform') {
+            attachLabel = (localise.set["c_attach"] || 'Attach') + ': ' + (localise.set["n_wf"] || 'Web Form');
         }
 
-        if(n.attachments && n.attachments.length > 0) {
-            var baseUrl = window.location.protocol + '//' + window.location.host + '/';
-            h[++idx] = '<br/>';
-            for(var ai = 0; ai < n.attachments.length; ai++) {
-                h[++idx] = '<a href="' + baseUrl + htmlEncode(n.attachments[ai]) + '" target="_blank">';
-                h[++idx] = htmlEncode(n.attachments[ai].split('/').pop());
-                h[++idx] = '</a>';
-                if(ai < n.attachments.length - 1) h[++idx] = '<br/>';
+        var hasBody = !!(description || n.content);
+        var hasAttachments = n.attachments && n.attachments.length > 0;
+        var hasExtraFiles = (n.extraFileNames && n.extraFileNames.length > 0) || (n.extraAttachmentUrls && n.extraAttachmentUrls.length > 0);
+        var expandable = hasBody || hasAttachments || hasExtraFiles || !!attachLabel;
+
+        h[++idx] = '<div class="card bg-white">';
+        h[++idx] = '<div class="card-header" id="notif_heading_' + index + '">';
+        h[++idx] = '<h5 class="mb-0">';
+        if (expandable) {
+            h[++idx] = '<button class="btn btn-link card-button" data-bs-toggle="collapse" data-bs-target="#notif_collapse_' + index + '" aria-expanded="false" aria-controls="notif_collapse_' + index + '">';
+            h[++idx] = summaryLabel;
+            h[++idx] = '</button>';
+        } else {
+            h[++idx] = '<span class="ps-3">' + summaryLabel + '</span>';
+        }
+        h[++idx] = '</h5>';
+        h[++idx] = '</div>';
+
+        if (expandable) {
+            h[++idx] = '<div id="notif_collapse_' + index + '" class="collapse change_card" aria-labelledby="notif_heading_' + index + '">';
+            h[++idx] = '<div class="card-body">';
+            if (description) {
+                h[++idx] = '<p>' + htmlEncode(description) + '</p>';
+            } else if (n.content) {
+                h[++idx] = '<p>' + htmlEncode(n.content) + '</p>';
             }
+            if (attachLabel) {
+                h[++idx] = '<p>' + htmlEncode(attachLabel);
+                if (hasAttachments) {
+                    h[++idx] = '<br/>';
+                    for (var ai = 0; ai < n.attachments.length; ai++) {
+                        h[++idx] = '<a href="' + baseUrl + htmlEncode(n.attachments[ai]) + '" target="_blank">';
+                        h[++idx] = htmlEncode(n.attachments[ai].split('/').pop());
+                        h[++idx] = '</a>';
+                        if (ai < n.attachments.length - 1) h[++idx] = '<br/>';
+                    }
+                }
+                h[++idx] = '</p>';
+            } else if (hasAttachments) {
+                h[++idx] = '<p>';
+                for (var ai = 0; ai < n.attachments.length; ai++) {
+                    h[++idx] = '<a href="' + baseUrl + htmlEncode(n.attachments[ai]) + '" target="_blank">';
+                    h[++idx] = htmlEncode(n.attachments[ai].split('/').pop());
+                    h[++idx] = '</a>';
+                    if (ai < n.attachments.length - 1) h[++idx] = '<br/>';
+                }
+                h[++idx] = '</p>';
+            }
+            if (hasExtraFiles) {
+                var urls = n.extraAttachmentUrls || [];
+                var names = n.extraFileNames || [];
+                var count = Math.max(urls.length, names.length);
+                h[++idx] = '<p>';
+                for (var ei = 0; ei < count; ei++) {
+                    var fname = htmlEncode(names[ei] || (urls[ei] ? urls[ei].split('/').pop() : ''));
+                    if (urls[ei]) {
+                        h[++idx] = '<a href="' + baseUrl + htmlEncode(urls[ei]) + '" target="_blank">' + fname + '</a>';
+                    } else {
+                        h[++idx] = fname;
+                    }
+                    if (ei < count - 1) h[++idx] = '<br/>';
+                }
+                h[++idx] = '</p>';
+            }
+            h[++idx] = '</div>';
+            h[++idx] = '</div>';
         }
 
-        h[++idx] = '</p>';
-
+        h[++idx] = '</div>';
         return h.join('');
-
     }
 
-    function getEmailReplyInfo(r) {
+    function getEmailReplyInfo(r, index) {
         var h = [],
-            idx = -1;
+            idx = -1,
+            baseUrl = window.location.protocol + '//' + window.location.host + '/';
 
-        h[++idx] = '<p>';
-        h[++idx] = localise.set["c_from"];
-        h[++idx] = ': ';
-        h[++idx] = htmlEncode(r.fromAddress || '');
-        h[++idx] = '<br/>';
-        h[++idx] = localise.set["c_subject"];
-        h[++idx] = ': ';
-        h[++idx] = htmlEncode(r.subject || '');
-        h[++idx] = '</p>';
-        if (r.body) {
-            h[++idx] = '<pre style="white-space:pre-wrap;max-height:10em;overflow-y:auto;">';
-            h[++idx] = htmlEncode(r.body);
-            h[++idx] = '</pre>';
+        var fromLine = (localise.set["c_from"] || 'From') + ': ' + htmlEncode(r.fromAddress || '');
+        var subjectLine = (localise.set["c_subject"] || 'Subject') + ': ' + htmlEncode(r.subject || '');
+        var summaryLabel = fromLine + ' — ' + subjectLine;
+
+        var hasBody = !!r.body;
+        var hasAttachments = r.attachments && r.attachments.length > 0;
+        var expandable = hasBody || hasAttachments;
+
+        h[++idx] = '<div class="card bg-white">';
+        h[++idx] = '<div class="card-header" id="reply_heading_' + index + '">';
+        h[++idx] = '<h5 class="mb-0">';
+        if (expandable) {
+            h[++idx] = '<button class="btn btn-link card-button" data-bs-toggle="collapse" data-bs-target="#reply_collapse_' + index + '" aria-expanded="false" aria-controls="reply_collapse_' + index + '">';
+            h[++idx] = summaryLabel;
+            h[++idx] = '</button>';
+        } else {
+            h[++idx] = '<span class="ps-3">' + summaryLabel + '</span>';
         }
-        if(r.attachments && r.attachments.length > 0) {
-            var baseUrl = window.location.protocol + '//' + window.location.host + '/';
-            h[++idx] = '<p>';
-            for(var ai = 0; ai < r.attachments.length; ai++) {
-                h[++idx] = '<a href="' + baseUrl + htmlEncode(r.attachments[ai]) + '" target="_blank">';
-                h[++idx] = htmlEncode(r.attachments[ai].split('/').pop());
-                h[++idx] = '</a>';
-                if(ai < r.attachments.length - 1) h[++idx] = '<br/>';
+        h[++idx] = '</h5>';
+        h[++idx] = '</div>';
+
+        if (expandable) {
+            h[++idx] = '<div id="reply_collapse_' + index + '" class="collapse change_card" aria-labelledby="reply_heading_' + index + '">';
+            h[++idx] = '<div class="card-body">';
+            if (hasBody) {
+                h[++idx] = '<pre style="white-space:pre-wrap;max-height:10em;overflow-y:auto;">' + htmlEncode(r.body) + '</pre>';
             }
-            h[++idx] = '</p>';
+            if (hasAttachments) {
+                h[++idx] = '<p>';
+                for (var ai = 0; ai < r.attachments.length; ai++) {
+                    h[++idx] = '<a href="' + baseUrl + htmlEncode(r.attachments[ai]) + '" target="_blank">';
+                    h[++idx] = htmlEncode(r.attachments[ai].split('/').pop());
+                    h[++idx] = '</a>';
+                    if (ai < r.attachments.length - 1) h[++idx] = '<br/>';
+                }
+                h[++idx] = '</p>';
+            }
+            h[++idx] = '</div>';
+            h[++idx] = '</div>';
         }
 
+        h[++idx] = '</div>';
         return h.join('');
     }
 
