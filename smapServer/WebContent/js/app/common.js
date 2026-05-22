@@ -1994,6 +1994,10 @@ function getQuestionList(sId, language, qId, groupId, callback, setGroupList, vi
 					globals.gSelector.setSurveyQuestions(sId, language, data);
 					setSurveyViewQuestions(data, qId, view, dateqId, qName, assignQuestion, scQuestion);
 
+					if($('.sp_update_options').is(':visible')) {
+						spRefreshFieldSelects();
+					}
+
 					if (setGroupList) {
 						var vh = globals.viewHandlers || {};
 						if (typeof vh.setSurveyViewQuestionGroups === "function") vh.setSurveyViewQuestionGroups(data, groupId);
@@ -2403,6 +2407,20 @@ function createNewSurvey(name, existing, existing_survey, shared_results, callba
 				globals.gCurrentSurvey = data.id;
 
 				saveCurrentProject(-1, globals.gCurrentSurvey, undefined);	// Save the current survey id
+
+				// Notify parent window (SharePoint extension hosting the editor in an iframe)
+				if(window.parent && window.parent !== window) {
+					try {
+						window.parent.postMessage({
+							type: 'smapAction',
+							action: 'formCreated',
+							status: 'success',
+							surveyIdent: data.ident,
+							surveyId: data.id,
+							surveyName: data.displayName
+						}, '*');
+					} catch (e) { /* parent unreachable */ }
+				}
 
 				setLanguages(data.languages, callback);
 
@@ -5815,8 +5833,8 @@ function spRefreshFieldSelects() {
 		$(this).empty();
 		$('<option>').val('').text('').appendTo($(this));
 		qList.forEach(function(q) {
-			$('<option>').val(q.name).text(q.name).appendTo($('.sp_field_select'));
-		});
+			$('<option>').val(q.name).text(q.name).appendTo($(this));
+		}.bind(this));
 		if(current) $(this).val(current);
 	});
 }
@@ -5903,6 +5921,7 @@ function setupSharePointNotification() {
 function spOperationChanged(operation) {
 	if(operation === 'update') {
 		$('.sp_update_options').show();
+		spRefreshFieldSelects();
 	} else {
 		$('.sp_update_options').hide();
 	}

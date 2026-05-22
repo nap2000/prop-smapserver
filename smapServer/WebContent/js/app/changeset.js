@@ -186,6 +186,20 @@ export default {
                             responseFn();
                         }
 
+                        // Notify parent window (SharePoint extension hosting the editor in an iframe)
+                        if (data.success > 0 && window.parent && window.parent !== window) {
+                            try {
+                                window.parent.postMessage({
+                                    type: 'smapAction',
+                                    action: 'formEdited',
+                                    status: 'success',
+                                    surveyIdent: globals.model.survey.ident,
+                                    surveyId: globals.model.survey.id,
+                                    surveyName: globals.model.survey.displayName
+                                }, '*');
+                            } catch (e) { /* parent unreachable */ }
+                        }
+
                         // Report success and failure
                         globals.model.lastChanges = data.changeSet;
                         $('#successLabel .counter').html(data.success);
