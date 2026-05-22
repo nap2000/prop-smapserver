@@ -1261,6 +1261,7 @@ define({
     "u_det_o_limits": "Monthly Usage Limits",
     "u_other_edit": "Allow editing of results",
     "u_email_tasks": "Allow sending of task emails",
+    "u_notification_webform": "Allow notifications to be sent from WebForms",
 	"u_use_api": "Allow API access",
 	"u_submissions": "Allow submissions",
 	"u_notifications": "Allow notifications",

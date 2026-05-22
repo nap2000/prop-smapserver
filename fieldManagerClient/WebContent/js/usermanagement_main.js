@@ -557,6 +557,7 @@ const moment = window.moment;
 			organisation.allow_twitter = false;
 			organisation.can_edit = false;
 			organisation.email_task = false;
+			organisation.notification_webform = false;
 			organisation.can_notify = false;
 			organisation.can_use_api = false;
 			organisation.can_submit = false;
@@ -574,6 +575,8 @@ const moment = window.moment;
 					organisation.can_edit = true;
 				} else if(options[i] === "email_task") {
 					organisation.email_task = true;
+				} else if(options[i] === "notification_webform") {
+					organisation.notification_webform = true;
 				} else if(options[i] === "ft_sync_incomplete") {
 					organisation.ft_sync_incomplete = true;
 				} else if(options[i] === "can_notify") {
@@ -1579,6 +1582,8 @@ const moment = window.moment;
 					this.checked = org.can_edit;
 				} else if($(this).val() === "email_task") {
 					this.checked = org.email_task;
+				} else if($(this).val() === "notification_webform") {
+					this.checked = org.notification_webform;
 				} else if($(this).val() === "ft_sync_incomplete") {
 					this.checked = org.ft_sync_incomplete;
 				} else if($(this).val() === "can_notify") {
