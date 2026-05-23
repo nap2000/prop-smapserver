@@ -1371,6 +1371,7 @@ define({
     "dashboard": "Dashboard",
     "links": "Follow Links",
     "mcp access": "AI Access",
+    "dpo": "Data Protection Officer",
     "u_css_f": "CSS file",
     "u_css": "Upload a CSS style sheet",
     "u_css_ss": "Upload a new CSS style sheet for the server",
