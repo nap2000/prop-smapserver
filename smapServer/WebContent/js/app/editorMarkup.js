@@ -523,9 +523,39 @@ export default {
 			    
 				h[++idx] ='</div>';		// End Row
 				
+			} else if(selProperty === "pii" && type === "question") {		// PII classification
+
+				h[++idx] = '<div class="btn-group" role="group" aria-label="PII Selection" data-bs-toggle="buttons-radio">';
+
+					h[++idx] = '<button data-prop="pii" type="button" class="btn btn-light labelButton ';
+					if(!question.pii) {
+						h[++idx] = 'active';
+					}
+					h[++idx] = '" value="">';
+					h[++idx] = localise.set["ed_pii_none"];
+					h[++idx] = '</button>';
+
+					h[++idx] = '<button data-prop="pii" type="button" class="btn btn-light labelButton ';
+					if(question.pii === "pii") {
+						h[++idx] = 'active';
+					}
+					h[++idx] = '" value="pii">';
+					h[++idx] = localise.set["ed_pii_pii"];
+					h[++idx] = '</button>';
+
+					h[++idx] = '<button data-prop="pii" type="button" class="btn btn-warning labelButton ';
+					if(question.pii === "anonymise") {
+						h[++idx] = 'active';
+					}
+					h[++idx] = '" value="anonymise">';
+					h[++idx] = localise.set["ed_pii_anonymise"];
+					h[++idx] = '</button>';
+
+				h[++idx] = '</div>';
+
 			} else if(selProperty === "autoplay" && type === "question"
 				&& question.type != "calculate") {		// Add a radio buttons to select autoplay status
-				
+
 				h[++idx] = '<div class="btn-group" role="group" aria-label="Autoplay Selection" data-bs-toggle="buttons-radio">';
 					// Add "none" autoplay option
 					h[++idx] = '<button data-prop="autoplay" type="button" class="btn btn-light labelButton ';
