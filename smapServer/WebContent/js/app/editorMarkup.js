@@ -527,26 +527,20 @@ export default {
 
 				h[++idx] = '<div class="btn-group" role="group" aria-label="PII Selection" data-bs-toggle="buttons-radio">';
 
-					h[++idx] = '<button data-prop="pii" type="button" class="btn btn-light labelButton ';
-					if(!question.pii) {
-						h[++idx] = 'active';
-					}
+					h[++idx] = '<button data-prop="pii" type="button" class="btn labelButton ';
+					h[++idx] = !question.pii ? 'btn-secondary active' : 'btn-outline-secondary';
 					h[++idx] = '" value="">';
 					h[++idx] = localise.set["ed_pii_none"];
 					h[++idx] = '</button>';
 
-					h[++idx] = '<button data-prop="pii" type="button" class="btn btn-light labelButton ';
-					if(question.pii === "pii") {
-						h[++idx] = 'active';
-					}
+					h[++idx] = '<button data-prop="pii" type="button" class="btn labelButton ';
+					h[++idx] = question.pii === "pii" ? 'btn-secondary active' : 'btn-outline-secondary';
 					h[++idx] = '" value="pii">';
 					h[++idx] = localise.set["ed_pii_pii"];
 					h[++idx] = '</button>';
 
-					h[++idx] = '<button data-prop="pii" type="button" class="btn btn-warning labelButton ';
-					if(question.pii === "anonymise") {
-						h[++idx] = 'active';
-					}
+					h[++idx] = '<button data-prop="pii" type="button" class="btn labelButton ';
+					h[++idx] = question.pii === "anonymise" ? 'btn-warning active' : 'btn-outline-warning';
 					h[++idx] = '" value="anonymise">';
 					h[++idx] = localise.set["ed_pii_anonymise"];
 					h[++idx] = '</button>';
