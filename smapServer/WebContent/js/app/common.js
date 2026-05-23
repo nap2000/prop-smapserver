@@ -620,6 +620,8 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 
             } else if(groups[i].id === globals.GROUP_CONSOLE_ADMIN) {
 				globals.gIsConsoleAdmin = true;
+			} else if(groups[i].id === globals.GROUP_DPO) {
+				globals.gIsDpo = true;
 			}
 		}
 	}
@@ -669,6 +671,9 @@ function updateUserDetails(data, getOrganisationsFn, getEnterprisesFn, getServer
 		if(typeof getServerDetailsFn === "function") {
 			getServerDetailsFn();
 		}
+	}
+	if(globals.gIsDpo) {
+		$('.dpo_role').removeClass('d-none').show();
 	}
 
 	if(globals.gTraining) {
@@ -1148,6 +1153,7 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
                          dontGetCurrentSurvey, getEnterprisesFn, getServerDetailsFn, getSMSNumbers) {
 
 	globals.gIsAdministrator = false;
+	globals.gIsDpo = false;
 
 	addHourglass();
 	$.ajax({
