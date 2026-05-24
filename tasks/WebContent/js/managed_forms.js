@@ -255,9 +255,9 @@ localise.initLocale(gUserLocale).then(function () {
                 gLocalDefaults = JSON.parse(def);
 
                 if(gLocalDefaults) {
-                    $('#my_records').prop('checked', gLocalDefaults.myRecords);
-                    $('#unassigned_records').prop('checked', gLocalDefaults.unassignedRecords);
-                    $('#other_records').prop('checked', gLocalDefaults.otherRecords);
+                    $('#my_records').prop('checked', gLocalDefaults.myRecords ?? true);
+                    $('#unassigned_records').prop('checked', gLocalDefaults.unassignedRecords ?? true);
+                    $('#other_records').prop('checked', gLocalDefaults.otherRecords ?? true);
                 } else {
                     gLocalDefaults = {};
                 }
@@ -3645,6 +3645,11 @@ localise.initLocale(gUserLocale).then(function () {
 
         globals.gMainTable.draw();
         $('.filtersChanged').hide();
+
+        gLocalDefaults.myRecords = $('#my_records').prop('checked');
+        gLocalDefaults.unassignedRecords = $('#unassigned_records').prop('checked');
+        gLocalDefaults.otherRecords = $('#other_records').prop('checked');
+        setInLocalStorage("console", JSON.stringify(gLocalDefaults));
 
     }
 
