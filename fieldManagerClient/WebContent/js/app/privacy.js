@@ -92,7 +92,7 @@ function rtbfAnonymise() {
 		return;
 	}
 
-	if (!confirm('Anonymise all PII data (including edit history) matching "' + ident + '"? This cannot be undone.')) {
+	if (!confirm(localise.set['rtbf_confirm'].replace('%s1', ident))) {
 		return;
 	}
 
@@ -112,7 +112,9 @@ function rtbfAnonymise() {
 			});
 		})
 		.then(function(data) {
-			var msg = data.affected + ' submission(s) anonymised for identifier "' + data.identifier + '"';
+			var msg = data.affected > 0
+				? localise.set['rtbf_done'].replace('%s1', data.affected).replace('%s2', data.identifier)
+				: localise.set['rtbf_none'].replace('%s1', data.identifier);
 			showResult('#rtbf_result', data.affected > 0 ? 'success' : 'warning', msg);
 		})
 		.catch(function(err) {
