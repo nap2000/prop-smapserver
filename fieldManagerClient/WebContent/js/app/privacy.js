@@ -35,12 +35,8 @@ $(document).ready(function() {
 		dsarExport();
 	});
 
-	$('#rtbf_erase').on('click', function() {
-		rtbfAction('erase');
-	});
-
 	$('#rtbf_anonymise').on('click', function() {
-		rtbfAction('anonymise');
+		rtbfAnonymise();
 	});
 
 });
@@ -89,19 +85,18 @@ function dsarExport() {
 		});
 }
 
-function rtbfAction(action) {
+function rtbfAnonymise() {
 	var ident = $('#rtbf_ident').val().trim();
 	if (!ident) {
 		showResult('#rtbf_result', 'danger', localise.set['msg_val_required'] || 'Identifier required');
 		return;
 	}
 
-	var actionLabel = action === 'erase' ? 'permanently erase' : 'anonymise';
-	if (!confirm('Are you sure you want to ' + actionLabel + ' all submissions matching "' + ident + '"? This cannot be undone.')) {
+	if (!confirm('Anonymise all PII data (including edit history) matching "' + ident + '"? This cannot be undone.')) {
 		return;
 	}
 
-	var url = '/surveyKPI/rtbf?identifier=' + encodeURIComponent(ident) + '&action=' + action;
+	var url = '/surveyKPI/rtbf?identifier=' + encodeURIComponent(ident);
 	if ($('#rtbf_partial').is(':checked')) {
 		url += '&partial=true';
 	}
@@ -117,7 +112,7 @@ function rtbfAction(action) {
 			});
 		})
 		.then(function(data) {
-			var msg = data.affected + ' submission(s) ' + data.action + 'd for identifier "' + data.identifier + '"';
+			var msg = data.affected + ' submission(s) anonymised for identifier "' + data.identifier + '"';
 			showResult('#rtbf_result', data.affected > 0 ? 'success' : 'warning', msg);
 		})
 		.catch(function(err) {

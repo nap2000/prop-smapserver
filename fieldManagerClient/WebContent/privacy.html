@@ -132,7 +132,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 			<h5 class="mb-0 lang" data-lang="m_rtbf">Right to be Forgotten</h5>
 		</div>
 		<div class="card-body">
-			<p class="text-muted lang" data-lang="rtbf_desc">Erase or anonymise all data held for a data subject.</p>
+			<p class="text-muted lang" data-lang="rtbf_desc">Anonymise all PII data held for a data subject, including edit history.</p>
 			<form id="rtbf_form" class="row g-3">
 				<div class="col-sm-6">
 					<label for="rtbf_ident" class="form-label lang" data-lang="c_identifier">Identifier</label>
@@ -144,8 +144,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<label class="form-check-label lang" data-lang="dsar_partial" for="rtbf_partial">Partial match (use for name searches; may return false positives)</label>
 					</div>
 				</div>
-				<div class="col-sm-6 d-flex align-items-end gap-2">
-					<button id="rtbf_erase" type="button" class="btn btn-danger lang" data-lang="c_erase">Erase</button>
+				<div class="col-sm-6 d-flex align-items-end">
 					<button id="rtbf_anonymise" type="button" class="btn btn-warning lang" data-lang="c_anonymise">Anonymise</button>
 				</div>
 			</form>
