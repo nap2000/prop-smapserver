@@ -60,8 +60,33 @@ function dsarExport() {
 		showResult('#dsar_result', 'danger', localise.set['msg_val_required'] || 'Identifier required');
 		return;
 	}
-	// TODO: implement backend API /api/v1/privacy/dsar
-	showResult('#dsar_result', 'warning', 'DSAR export API not yet implemented');
+	var url = '/surveyKPI/dsar?identifier=' + encodeURIComponent(ident);
+	if ($('#dsar_partial').is(':checked')) {
+		url += '&partial=true';
+	}
+	showResult('#dsar_result', 'info', localise.set['msg_loading'] || 'Exporting...');
+
+	fetch(url, { credentials: 'same-origin' })
+		.then(function(response) {
+			if (!response.ok) {
+				return response.text().then(function(text) {
+					throw new Error('HTTP ' + response.status + (text ? ': ' + text : ''));
+				});
+			}
+			return response.blob();
+		})
+		.then(function(blob) {
+			var a = document.createElement('a');
+			a.href = URL.createObjectURL(blob);
+			a.download = 'dsar_' + ident.replace(/[^a-zA-Z0-9_\-]/g, '_') + '.xlsx';
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+			showResult('#dsar_result', 'success', localise.set['msg_success'] || 'Export complete');
+		})
+		.catch(function(err) {
+			showResult('#dsar_result', 'danger', err.message);
+		});
 }
 
 function rtbfAction(action) {

@@ -69,6 +69,20 @@ Java REST API in `~/git/smapserver2`. Key classes for workflow:
 
 Frontend calls `/surveyKPI/workflow/items`, `/surveyKPI/workflow/positions`, `/surveyKPI/workflow/edit/*`.
 
+## Calling surveyKPI endpoints from JavaScript
+
+Always use `/surveyKPI/<path>` — **never** `/surveyKPI/rest/<path>`.
+
+The nginx proxy rewrites `/surveyKPI/` → `http://localhost:8080/surveyKPI/rest/` before the request reaches Tomcat. The `rest/` segment is in the Tomcat `web.xml` servlet mapping and is added by the proxy; it must not appear in browser-side URLs.
+
+```javascript
+// correct
+fetch('/surveyKPI/dsar?identifier=' + encodeURIComponent(ident))
+
+// wrong — 404 in production
+fetch('/surveyKPI/rest/dsar?identifier=' + encodeURIComponent(ident))
+```
+
 ## JavaScript conventions
 
 - ES modules throughout (`import`/`export`); `"use strict"` at top

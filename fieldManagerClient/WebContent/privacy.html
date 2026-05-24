@@ -112,6 +112,12 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					<label for="dsar_ident" class="form-label lang" data-lang="c_identifier">Identifier</label>
 					<input type="text" id="dsar_ident" class="form-control" placeholder="">
 				</div>
+				<div class="col-12">
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" id="dsar_partial">
+						<label class="form-check-label lang" data-lang="dsar_partial" for="dsar_partial">Partial match (use for name searches; may return false positives)</label>
+					</div>
+				</div>
 				<div class="col-sm-6 d-flex align-items-end">
 					<button id="dsar_submit" type="button" class="btn btn-primary lang" data-lang="c_export">Export</button>
 				</div>
