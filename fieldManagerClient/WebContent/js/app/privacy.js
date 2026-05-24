@@ -95,8 +95,34 @@ function rtbfAction(action) {
 		showResult('#rtbf_result', 'danger', localise.set['msg_val_required'] || 'Identifier required');
 		return;
 	}
-	// TODO: implement backend API /api/v1/privacy/rtbf
-	showResult('#rtbf_result', 'warning', 'RTBF ' + action + ' API not yet implemented');
+
+	var actionLabel = action === 'erase' ? 'permanently erase' : 'anonymise';
+	if (!confirm('Are you sure you want to ' + actionLabel + ' all submissions matching "' + ident + '"? This cannot be undone.')) {
+		return;
+	}
+
+	var url = '/surveyKPI/rtbf?identifier=' + encodeURIComponent(ident) + '&action=' + action;
+	if ($('#rtbf_partial').is(':checked')) {
+		url += '&partial=true';
+	}
+	showResult('#rtbf_result', 'info', localise.set['msg_loading'] || 'Processing...');
+
+	fetch(url, { method: 'POST', credentials: 'same-origin' })
+		.then(function(response) {
+			return response.json().then(function(data) {
+				if (!response.ok) {
+					throw new Error(data.error || 'HTTP ' + response.status);
+				}
+				return data;
+			});
+		})
+		.then(function(data) {
+			var msg = data.affected + ' submission(s) ' + data.action + 'd for identifier "' + data.identifier + '"';
+			showResult('#rtbf_result', data.affected > 0 ? 'success' : 'warning', msg);
+		})
+		.catch(function(err) {
+			showResult('#rtbf_result', 'danger', err.message);
+		});
 }
 
 function showResult(selector, level, msg) {
