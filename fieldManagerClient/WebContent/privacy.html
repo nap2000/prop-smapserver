@@ -138,6 +138,12 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 					<label for="rtbf_ident" class="form-label lang" data-lang="c_identifier">Identifier</label>
 					<input type="text" id="rtbf_ident" class="form-control" placeholder="">
 				</div>
+				<div class="col-12">
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" id="rtbf_partial">
+						<label class="form-check-label lang" data-lang="dsar_partial" for="rtbf_partial">Partial match (use for name searches; may return false positives)</label>
+					</div>
+				</div>
 				<div class="col-sm-6 d-flex align-items-end gap-2">
 					<button id="rtbf_erase" type="button" class="btn btn-danger lang" data-lang="c_erase">Erase</button>
 					<button id="rtbf_anonymise" type="button" class="btn btn-warning lang" data-lang="c_anonymise">Anonymise</button>
