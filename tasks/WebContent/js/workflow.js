@@ -912,7 +912,9 @@ function renderDrawerContent(type) {
 	if (type === "case") {
 		const caseSurveyEl = document.getElementById("wfd-case-survey");
 		if (caseSurveyEl) {
-			const srcId = gDrawerCreateMode ? gTriggerSurveyId : (firstNotif ? firstNotif.srcSurveyId : 0);
+			const srcId = gDrawerCreateMode
+					? (gTriggerSurveyId || findAncestorSurveyId(gSelectedNode ? gSelectedNode.dataset.id : ""))
+					: (firstNotif ? firstNotif.srcSurveyId : 0);
 			if (srcId) {
 				fetch("/surveyKPI/surveyResults/" + srcId + "/groups", { credentials: "include", cache: "no-store" })
 					.then(function(r) { return r.json(); })
