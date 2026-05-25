@@ -675,8 +675,7 @@ function renderDrawerContent(type) {
 		</div>
 		<div class="wf-field" id="wfd-case-user-row"${isCaseRole ? ' style="display:none;"' : ""}>
 			<label>${l["c_assign_to"]}</label>
-			<input id="wfd-assignee" type="text" value="${esc(isCaseRole ? "" : remoteUser)}"
-			       placeholder="_submitter, _data, or email address">
+			<select id="wfd-case-user-select" data-current="${esc(isCaseRole ? "" : remoteUser)}"><option value="">Loading…</option></select>
 		</div>
 		<div class="wf-field" id="wfd-case-role-row"${isCaseRole ? "" : ' style="display:none;"'}>
 			<label>${l["c_role"]}</label>
@@ -953,6 +952,21 @@ function renderDrawerContent(type) {
 				fillRoleSelect(caseRoleEl, roles, caseRoleEl.dataset.current);
 			});
 		}
+		const caseUserEl = document.getElementById("wfd-case-user-select");
+		if (caseUserEl) {
+			fetchUsers().then(function(users) {
+				const cur = caseUserEl.dataset.current;
+				const special = [
+					{value: "_submitter", label: localise.set["c_submitter"]},
+					{value: "_data",      label: localise.set["t_ad"]}
+				];
+				caseUserEl.innerHTML = special.concat(users.map(function(u) {
+					return {value: u.ident, label: u.name};
+				})).map(function(o) {
+					return `<option value="${esc(o.value)}"${o.value === cur ? " selected" : ""}>${esc(o.label)}</option>`;
+				}).join("");
+			});
+		}
 		function setDrawerCaseMode(mode) {
 			const uBtn = document.getElementById("wfd-case-assign-user");
 			const rBtn = document.getElementById("wfd-case-assign-role");
@@ -1071,7 +1085,7 @@ function saveDrawer() {
 			const cRoleId = (document.getElementById("wfd-case-role-select") || {}).value || "";
 			assignee = cRoleId ? "_role:" + cRoleId : "";
 		} else {
-			assignee = (document.getElementById("wfd-assignee") || {}).value || "";
+			assignee = (document.getElementById("wfd-case-user-select") || {}).value || "";
 		}
 	}
 
@@ -1467,7 +1481,7 @@ function executeCreate() {
 				const roleId = parseInt((document.getElementById("wfd-case-role-select") || {}).value || "0", 10);
 				if (roleId > 0) payload.remoteUser = "_role:" + roleId;
 			} else {
-				payload.remoteUser = (document.getElementById("wfd-assignee") || {}).value || null;
+				payload.remoteUser = (document.getElementById("wfd-case-user-select") || {}).value || null;
 			}
 			payload.caseSurveyIdent = (document.getElementById("wfd-case-survey") || {}).value || null;
 		}
