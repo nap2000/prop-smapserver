@@ -107,12 +107,12 @@ localise.initLocale(gUserLocale).then(function () {
 	});
 	
 	$('#filter_row_aq_insert').click(function() {
+		var val = $('#filter_row_aq').val();
+		if (!val) return;
 		var current = $('#filter_row_content').val();
 		$('#filter_row_content').val(current
 				+ (current.length > 0 ? " " : "")
-				+ "${"
-				+ $('#filter_row_aq option:selected').val()
-				+ "} ");
+				+ "${" + val + "} ");
 	});
 
 	$('#bundle').off().on('change', function() {
@@ -183,7 +183,7 @@ function getAllRolesForSurvey() {
 			cache: false,
 			success: function(data) {
 				removeHourglass();
-				gRoles = data;
+				gRoles = data || [];
 				refreshView();
 			},
 			error: function(xhr, textStatus, err) {
