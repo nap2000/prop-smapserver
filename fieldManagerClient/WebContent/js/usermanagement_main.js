@@ -1253,6 +1253,7 @@ const moment = window.moment;
 			if((gGroups[i].id !== globals.GROUP_ORG_ADMIN || globals.gIsOrgAdministrator || globals.gIsEnterpriseAdministrator || globals.gIsServerOwner) &&
 				(gGroups[i].id !== globals.GROUP_DASHBOARD || hasDashboard || globals.gIsServerOwner) &&
 				(gGroups[i].id !== globals.GROUP_SECURITY || globals.gIsOrgAdministrator || globals.gIsSecurityAdministrator  || globals.gIsServerOwner) &&
+				(gGroups[i].id !== globals.GROUP_DPO || globals.gIsOrgAdministrator || globals.gIsSecurityAdministrator || globals.gIsServerOwner) &&
 				(gGroups[i].id != globals.GROUP_ENTERPRISE || globals.gIsEnterpriseAdministrator  || globals.gIsServerOwner) &&
 				gGroups[i].id !== globals.GROUP_OWNER
 			) {
@@ -2698,6 +2699,7 @@ const moment = window.moment;
 		for(i = 0; i < gGroups.length; i++) {
 			if((gGroups[i].id != globals.GROUP_ORG_ADMIN || globals.gIsOrgAdministrator) &&
 				(gGroups[i].id != globals.GROUP_SECURITY || globals.gIsSecurityAdministrator || globals.gIsOrgAdministrator) &&
+				(gGroups[i].id != globals.GROUP_DPO || globals.gIsSecurityAdministrator || globals.gIsOrgAdministrator) &&
 				(gGroups[i].id != globals.GROUP_ENTERPRISE || globals.gIsEnterpriseAdministrator) &&
 				gGroups[i].id != globals.GROUP_OWNER
 			) {
