@@ -80,8 +80,8 @@ $(document).ready(function() {
 	if (typeof setTheme === "function") {
 		setTheme();
 	}
-	setupUserProfile(true);
 	localise.initLocale(gUserLocale).then(function () {
+		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
 	});
 
