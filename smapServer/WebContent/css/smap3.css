@@ -266,3 +266,13 @@ a.filter_help {
     background-color: #e2e3e5;
     color: #41464b;
 }
+
+#trackingTable td {
+    min-width: 200px;
+    max-width: 350px;
+    vertical-align: top;
+}
+#trackingTable .td-scroll {
+    max-height: 100px;
+    overflow-y: auto;
+}

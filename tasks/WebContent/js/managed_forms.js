@@ -1579,7 +1579,11 @@ localise.initLocale(gUserLocale).then(function () {
                 {
                     targets: "_all",
                     render: function (data, type, full, meta) {
-                        return addAnchors(data, true).join(',');
+                        var content = addAnchors(data, true).join(',');
+                        if (type === 'display') {
+                            return '<div class="td-scroll">' + content + '</div>';
+                        }
+                        return content;
                     }
                 },
                 {
