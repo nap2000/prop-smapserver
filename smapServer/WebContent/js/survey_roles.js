@@ -57,7 +57,7 @@ localise.initLocale(gUserLocale).then(function () {
 
     setCustomEdit();
 	setTheme();
-	setupUserProfile(true);
+	setupUserProfile();
 	localise.setlang();		// Localise HTML
 	
 	// Get the user details

@@ -1561,7 +1561,7 @@ localise.initLocale(gUserLocale).then(function() {
 
 	$(document).ready(function() {
 		localise.setlang();
-		setupUserProfile(true);
+		setupUserProfile();
 		getLoggedInUser(loadWorkflow, false, false, undefined);
 
 		// Navbar actions

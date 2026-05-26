@@ -46,7 +46,7 @@ localise.initLocale(gUserLocale).then(function() {
 $(document).ready(function() {
 
 	setTheme();
-	setupUserProfile(true);
+	setupUserProfile();
 	localise.setlang();		// Localise HTML
 
 	/*

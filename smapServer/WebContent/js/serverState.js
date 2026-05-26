@@ -43,7 +43,7 @@ $(document).ready(function() {
 		setTheme();
 	}
 	localise.initLocale(gUserLocale).then(function () {
-		setupUserProfile(true);
+		setupUserProfile();
 		localise.setlang();		// Localise HTML
 	});
 

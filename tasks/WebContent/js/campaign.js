@@ -64,7 +64,7 @@ localise.initLocale(gUserLocale).then(function () {
 
 		setCustomSubs();
 		setTheme();
-		setupUserProfile(true);
+		setupUserProfile();
 		localise.setlang();		// Localise HTML
 
 		$('#m_edit, #m_delete').addClass("disabled");

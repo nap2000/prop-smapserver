@@ -68,7 +68,7 @@ function isLoggedIn() {
 			if(data == 'loggedin') {
 				getLoggedInUser(undefined, false, false, undefined, false, false);
 				setTheme();
-				setupUserProfile(true);
+				setupUserProfile();
 				localise.setlang();
 				$('.loggedin').show().removeClass('d-none');
 				$('.notloggedin').hide();

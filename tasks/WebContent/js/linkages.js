@@ -59,7 +59,7 @@ localise.initLocale(gUserLocale).then(function () {
 
         setCustomLinkages();
         setTheme();
-        setupUserProfile(true);
+        setupUserProfile();
         localise.setlang();		// Localise HTML
 
         // Get the parameters and start editing a survey if one was passed as a parameter

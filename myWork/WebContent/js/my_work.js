@@ -50,7 +50,7 @@ localise.initLocale(gUserLocale).then(function () {
 
 		setCustomWebForms();			// Apply custom javascript
 		setTheme();
-		setupUserProfile(true);
+		setupUserProfile();
 		localise.setlang();		// Localise HTML
 
 		dbstorage.open();

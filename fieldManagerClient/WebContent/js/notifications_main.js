@@ -51,7 +51,7 @@ $(document).ready(function() {
 		if (typeof window.setTheme === "function") {
 			window.setTheme();
 		}
-		setupUserProfile(true);
+		setupUserProfile();
 		localise.setlang();		    // Localise HTML
 
 		// Get Notification Types for this server

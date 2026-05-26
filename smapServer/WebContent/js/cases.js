@@ -59,7 +59,7 @@ localise.initLocale(gUserLocale).then(function() {
 
             setCustomChanges();
             setTheme();
-            setupUserProfile(true);
+            setupUserProfile();
             localise.setlang();		// Localise HTML
 
             // Get the user details

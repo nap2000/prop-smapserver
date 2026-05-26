@@ -241,7 +241,7 @@ localise.initLocale(gUserLocale).then(function () {
         window.moment = moment;
         setCustomManage();
         setTheme();
-	    setupUserProfile(true);
+	    setupUserProfile();
         localise.setlang();		// Localise HTML
         userDefaults();
 

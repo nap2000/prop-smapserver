@@ -111,7 +111,7 @@ const moment = window.moment;
 
 		localise.setlang();		// Localise HTML
 		setTheme();
-		setupUserProfile(true);
+		setupUserProfile();
 		window.moment = moment;		// Make moment global for use by common.js
 		enableDebugging();
 

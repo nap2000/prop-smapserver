@@ -26,7 +26,7 @@ import { getLoggedInUser, setupUserProfile } from "common";
 $(document).ready(function() {
 
 	setTheme();
-	setupUserProfile(true);
+	setupUserProfile();
 	localise.setlang();
 
 	getLoggedInUser(userKnown, false, false, undefined);

@@ -90,7 +90,7 @@ $(document).ready(function() {
 	 * Set up the page after the user has been authorised to access it
 	 */
 	function setupPage() {
-		setupUserProfile(true);
+		setupUserProfile();
 		if (typeof setTheme === "function") {
 			setTheme();
 		}

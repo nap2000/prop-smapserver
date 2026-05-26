@@ -109,7 +109,7 @@ localise.initLocale(gUserLocale).then(function() {
 
 		setCustomUserTrail();			// Apply custom javascript
 		setTheme();
-		setupUserProfile(true);
+		setupUserProfile();
 		localise.setlang();
 		$('.date').prop("title", localise.set["c_lt"]);
 

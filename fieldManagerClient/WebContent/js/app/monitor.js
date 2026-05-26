@@ -62,7 +62,7 @@ import {
         $(document).ready(function() {
 
             setTheme();
-	        setupUserProfile(true);
+	        setupUserProfile();
             window.moment = moment;
 
             localise.setlang();		// Localise HTML

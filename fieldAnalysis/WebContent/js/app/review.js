@@ -50,7 +50,7 @@ import "globals";
 
 $(document).ready(function() {
 		setTheme();
-		setupUserProfile(true);
+		setupUserProfile();
 		localise.setlang();		// Localise HTML
 		/*
 		 * Get the user details so we have the default project

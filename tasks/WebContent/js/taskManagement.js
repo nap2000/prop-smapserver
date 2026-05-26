@@ -125,7 +125,7 @@ localise.initLocale(gUserLocale).then(function () {
 		globals.gRegions = undefined;
 
 		setTheme();
-		setupUserProfile(true);
+		setupUserProfile();
 		localise.setlang();		// Localise HTML
 		$('#email_subject').prop('placeholder', localise.set['n_esc']);
 		$('#tp_assign_emails, #assign_emails').prop('placeholder', localise.set['n_cs_e']);

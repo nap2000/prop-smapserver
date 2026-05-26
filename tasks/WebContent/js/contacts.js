@@ -58,7 +58,7 @@ localise.initLocale(gUserLocale).then(function () {
 
         setCustomSubs();
 		setTheme();
-		setupUserProfile(true);
+		setupUserProfile();
 		localise.setlang();		// Localise HTML
 
 

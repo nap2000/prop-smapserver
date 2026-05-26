@@ -47,7 +47,7 @@ window.gUserLocale = gUserLocale;
 			setTheme();
 			localise.initLocale(gUserLocale).then(function () {
 				localise.setlang();		// Localise HTML
-				setupUserProfile(true);
+				setupUserProfile();
 			});
 
 			$('#addTemplate').click( function(e) {

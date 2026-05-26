@@ -56,7 +56,7 @@ import {
 			if (typeof window.setTheme === "function") {
 				window.setTheme();
 			}
-	        setupUserProfile(true);
+	        setupUserProfile();
             localise.setlang();		// Localise HTML
 
             /*

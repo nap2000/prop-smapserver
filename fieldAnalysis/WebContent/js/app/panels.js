@@ -47,7 +47,7 @@ $(document).ready(function() {
 
 	// Defer until locale is loaded so modal labels have their translated text
 	localise.initLocale(window.gUserLocale).then(function() {
-		setupUserProfile(true);
+		setupUserProfile();
 	});
 
 	// Initialise p_settings as BS5 modal

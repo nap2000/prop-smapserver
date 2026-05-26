@@ -61,7 +61,7 @@ localise.initLocale(gUserLocale).then(function () {
 		window.moment = moment;		// Make moment global for use by common.js
         setCustomLogs();
 		setTheme();
-		setupUserProfile(true);
+		setupUserProfile();
 		localise.setlang();		// Localise HTML
 
 		/*

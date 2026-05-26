@@ -89,8 +89,8 @@ $(function() {
 		setTheme();
 	}
     setCustomEdit();
-	setupUserProfile(false);
 	localise.initLocale(gUserLocale).then(function () {
+		setupUserProfile();
 		window.gUserLocale = gUserLocale;
 		localise.setlang();		// Localise HTML
 		changeset.updateViewControls();

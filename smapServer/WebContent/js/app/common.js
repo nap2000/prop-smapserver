@@ -253,53 +253,6 @@ function saveCurrentGroupSurvey(surveyId, gs, fName) {
  * Add user details popup to the page
  * Legacy only used with non bootstrap pages - these should be replaced with bootstrap
  */
-function addUserDetailsPopup() {
-	var
-		h =[],
-		idx = -1;
-
-
-	h[++idx] = '<div id="modify_me_popup" style="display:none;">';
-	h[++idx] = '<div class="left_panel">';
-	h[++idx] = '<form id="me_edit_form">';
-	h[++idx] = '<label for="me_name">';
-	h[++idx] = localise.set["c_name"];
-	h[++idx] = '</label>';
-	h[++idx] = '<input type="text" id="me_name" required><br/>';
-
-	h[++idx] = '<label for="me_language">';
-	h[++idx] = localise.set["c_lang"];
-	h[++idx] = '</label>';
-	h[++idx] = '<select class="language_select" id="me_language"></select><br/>';
-
-	h[++idx] = '<label for="me_email">';
-	h[++idx] = localise.set["c_email"];
-	h[++idx] = '</label>';
-	h[++idx] = '<input type="text" id="me_email" pattern="^[_A-Za-z0-9+\\-]+(\\.[_A-Za-z0-9\\-]+)*@[A-Za-z0-9\\-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"><br/>';
-
-	h[++idx] = '<label for="me_organisation">';
-	h[++idx] = localise.set["c_org"];
-	h[++idx] = '</label>';
-	h[++idx] = '<select class="organisation_select" id="me_organisation"></select><br/>';
-
-	h[++idx] = '<label for="me_enterprise">';
-	h[++idx] = localise.set["c_ent"];
-	h[++idx] = '</label>';
-	h[++idx] = '<div id="me_enterprise"></div><br/>';
-
-	h[++idx] = '<label for="u_tz">';
-	h[++idx] = localise.set["c_tz"];
-	h[++idx] = '</label>';
-	h[++idx] = '<select class="timezone_select" id="u_tz"></select>';
-
-	h[++idx] = '</form>';
-	h[++idx] = '</div>';
-	h[++idx] = '</div>';
-
-	$(document.body).append(h.join(''));
-
-}
-
 /*
  * Populate a language select widget
  */
@@ -360,7 +313,7 @@ function addUserDetailsPopupBootstrap4() {
 	var	h =[],
 		idx = -1;
 
-	h[++idx] = '<div id="modify_me_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modifyMeLabel" aria-hidden="true">';
+	h[++idx] = '<div id="modify_me_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modifyMeLabel" aria-hidden="true" data-bs-backdrop="static">';
 	h[++idx] = '<div class="modal-dialog modal-lg">';
 	h[++idx] = '<div class="modal-content">';
 	h[++idx] = '<div class="modal-header">';
@@ -778,83 +731,6 @@ function addOrganisationOptions($elem, current, orgs) {
 /*
  * Enable the user profile button
  */
-function enableUserProfile () {
-	// Initialise the dialog for the user to edit their own account details
-	$('#modify_me_popup').dialog(
-		{
-			autoOpen: false, closeOnEscape:true, draggable:true, modal:true,
-			title:"User Profile",
-			show:"drop",
-			width:350,
-			height:350,
-			zIndex: 2000,
-			buttons: [
-				{
-					text: "Cancel",
-					click: function() {
-
-						$(this).dialog("close");
-					}
-				}, {
-					text: "Save",
-					click: function() {
-						var form = document.getElementById('me_edit_form');
-						if(form && !form.checkValidity()) {
-							form.reportValidity();
-							return false;
-						}
-
-						var user = globals.gLoggedInUser;
-
-						user.name = $('#me_name').val();
-						user.language = $('#me_language').val();
-						user.email = $('#me_email').val();
-						if($('#me_password').is(':visible')) {
-							user.password = $('#me_password').val();
-							if($('#me_password_confirm').val() !== user.password) {
-								user.password = undefined;
-								alert("Passwords do not match");
-								$('#me_password').focus();
-								return false;
-							}
-						} else {
-							user.password = undefined;
-						}
-
-						user.current_project_id = 0;	// Tell service to ignore project id and update other details
-						user.current_survey_id = 0;
-						user.current_task_group_id = 0;
-
-						user.timezone = $('#u_tz').val();
-						globals.gTimezone = user.timezone;
-
-						user.o_id = $('#me_organisation').val();
-						if(user.o_id == globals.gOrgId) {
-							user.o_id = 0;	// No change
-						}
-
-						saveCurrentUser(user, undefined);			// Save the updated user details to disk
-						$(this).dialog("close");
-					},
-				}
-			]
-		}
-	);
-
-
-	// Initialise the reset password checkbox
-	$('#reset_me_password').click(function () {
-		if($(this).is(':checked')) {
-			$('#password_me_fields').removeClass('d-none').show();
-		} else {
-			$('#password_me_fields').hide();
-		}
-	});
-}
-
-/*
- * Enable the user profile button
- */
 function enableUserProfileBS () {
 
 	$("#modify_me_popup :input").keydown(function() {
@@ -1138,14 +1014,9 @@ function addTimeZoneToUrl(url) {
 /*
  * Create the user profile dialog and get any data it needs
  */
-function setupUserProfile(bs4) {
-
-	if(bs4) {
-		addUserDetailsPopupBootstrap4();
-		addApiKeyPopup();
-	} else {
-		addUserDetailsPopup();	// legacy
-	}
+function setupUserProfile() {
+	addUserDetailsPopupBootstrap4();
+	addApiKeyPopup();
 	getAvailableTimeZones(showTimeZones);
 }
 
@@ -7029,7 +6900,6 @@ export {
 	downloadFile,
 	downloadPdf,
 	enableDebugging,
-	enableUserProfile,
 	getLoggedInUser,
 	getLanguageList,
 	getEligibleUsers,

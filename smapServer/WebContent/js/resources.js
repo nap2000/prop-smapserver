@@ -82,7 +82,7 @@ $(function() {
 
 		setCustomResources();			// Apply custom javascript
 		setTheme();
-		setupUserProfile(true);
+		setupUserProfile();
 		localise.initLocale(gUserLocale).then(function () {
 			localise.setlang();		// Localise HTML
 			$('#map_name').attr("placeholder", localise.set["sr_m_ph"]);
