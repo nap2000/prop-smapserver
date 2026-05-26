@@ -40,9 +40,9 @@ $(document).ready(function() {
 
 	setCustomChanges();
 	setTheme();
-	setupUserProfile(true);
 
 	localise.initLocale(gUserLocale).then(function () {
+		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
 
 		// Get the user details

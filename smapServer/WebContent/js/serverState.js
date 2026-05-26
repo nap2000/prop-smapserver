@@ -39,11 +39,11 @@ if (typeof localStorage !== "undefined") {
 
 $(document).ready(function() {
 
-	setupUserProfile(true);
 	if (typeof setTheme === "function") {
 		setTheme();
 	}
 	localise.initLocale(gUserLocale).then(function () {
+		setupUserProfile(true);
 		localise.setlang();		// Localise HTML
 	});
 
