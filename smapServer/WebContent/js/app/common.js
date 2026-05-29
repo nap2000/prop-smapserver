@@ -4164,7 +4164,10 @@ function getAccessibleCsvFiles($elem, includeNone) {
  /*
   * Get the questions in a survey
   */
-function isValueBearingType(type) {
+function isValueBearingType(type, name) {
+	// instanceID and instanceName can be stored as "note" type in some surveys due to
+	// XML import behaviour, but they do contain data and must always be selectable
+	if (name === 'instanceID' || name === 'instanceName') return true;
 	return type !== "begin group" && type !== "end group" && type !== "begin repeat" && type !== "end repeat" && type !== "note";
 }
 
@@ -4194,7 +4197,7 @@ function getQuestionsInSurvey($elem, $elem_multiple, sIdent, includeNone, textOn
 			hm[++idx_m] = h[++idx] = '</option>';
 		}
 		for (i = 0; i < data.length; i++) {
-			if((!textOnly || isTextStorageType(data[i].type)) && (!valueOnly || isValueBearingType(data[i].type))) {
+			if((!textOnly || isTextStorageType(data[i].type)) && (!valueOnly || isValueBearingType(data[i].type, data[i].name))) {
 				hm[++idx_m] = h[++idx] = '<option value="';
 				hm[++idx_m] = h[++idx] = data[i].name;
 				hm[++idx_m] = h[++idx] = '">';
@@ -4221,7 +4224,9 @@ function getQuestionsInSurvey($elem, $elem_multiple, sIdent, includeNone, textOn
 	}
 
 	if(sIdent === 'self') {
-		populateElement($elem, $elem_multiple, globals.model.survey.forms[globals.gFormIndex].questions);
+		var selfQuestions = [{name: 'instanceID', type: 'string'}].concat(
+			globals.model.survey.forms[globals.gFormIndex].questions || []);
+		populateElement($elem, $elem_multiple, selfQuestions);
 	} else if(gCache[sIdent]) {
 		populateElement($elem, $elem_multiple, gCache[sIdent]);
 	} else {
