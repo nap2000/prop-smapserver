@@ -494,9 +494,14 @@ function resetLayout() {
  * Fetches notification / task-group detail from the server.
  */
 function openEditDrawer(cardEl) {
-	gEditItem   = cardEl;
-	gEditNotifs = [];
-	gEditTGs    = [];
+	selectNode(null);
+	gEditItem        = cardEl;
+	gDrawerCreateMode = false;
+	gEditNotifs      = [];
+	gEditTGs         = [];
+
+	const saveBtn = document.getElementById("wf-drawer-save");
+	if (saveBtn) saveBtn.innerHTML = '<span class="lang" data-lang="c_save">Save</span>';
 
 	const fwdIds   = JSON.parse(cardEl.dataset.fwdIds   || "[]");
 	const tgIds    = JSON.parse(cardEl.dataset.tgIds    || "[]");
