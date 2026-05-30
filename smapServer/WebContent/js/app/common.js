@@ -1041,6 +1041,7 @@ function getLoggedInUser(callback, getAll, getProjects, getOrganisationsFn, hide
 				globals.gFacebookEnabled = data.allow_facebook;
 				globals.gTwitterEnabled = data.allow_twitter;
 				globals.gCanEdit = data.can_edit;
+				globals.gEnableRedact = data.enable_redact;
 				globals.gSendTrail = data.ft_send_location;
 				globals.gAlertSeen = data.seen;		// Alerts have been acknowledged
 				globals.gLastAlertTime = data.lastalert;

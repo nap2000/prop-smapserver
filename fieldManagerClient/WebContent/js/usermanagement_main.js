@@ -563,6 +563,7 @@ const moment = window.moment;
 			organisation.can_submit = false;
 			organisation.can_sms = false;
 			organisation.send_optin = false;
+			organisation.enable_redact = false;
 			organisation.appearance.set_as_theme = false;
 			for(i = 0; i < options.length; i++) {
 				if(options[i] === "email") {
@@ -591,6 +592,8 @@ const moment = window.moment;
 					organisation.can_sms = true;
 				} else if(options[i] === "send_optin") {
 					organisation.send_optin = true;
+				} else if(options[i] === "enable_redact") {
+					organisation.enable_redact = true;
 				}
 			}
 
@@ -1597,6 +1600,8 @@ const moment = window.moment;
 					this.checked = org.can_sms;
 				} else if($(this).val() === "send_optin") {
 					this.checked = org.send_optin;
+				} else if($(this).val() === "enable_redact") {
+					this.checked = org.enable_redact;
 				} else if($(this).val() === "ft_odk_style_menus") {
 					this.checked = org.ft_odk_style_menus;
 				} else if($(this).val() === "ft_odk_style_menus") {

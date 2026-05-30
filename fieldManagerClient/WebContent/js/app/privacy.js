@@ -60,6 +60,10 @@ function userKnown() {
 		$('#dpo_access_denied').removeClass('d-none');
 		return;
 	}
+	if (!globals.gEnableRedact) {
+		$('#rtbf_redact').prop('disabled', true);
+		$('#rtbf_disabled_msg').removeClass('d-none');
+	}
 }
 
 // -------------------------------------------------------------------------
