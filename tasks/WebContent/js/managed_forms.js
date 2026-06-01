@@ -3077,6 +3077,11 @@ localise.initLocale(gUserLocale).then(function () {
     /*
      * Get notification info
      */
+    function attachmentUrl(baseUrl, path) {
+        var p = path.indexOf('/app/attachments/') === -1 ? path.replace('/attachments/', '/app/attachments/') : path;
+        return baseUrl + p;
+    }
+
     function getNotificationInfo(n, description, index) {
         var h = [],
             idx = -1,
@@ -3120,25 +3125,19 @@ localise.initLocale(gUserLocale).then(function () {
             } else if (n.content) {
                 h[++idx] = '<p>' + htmlEncode(n.content) + '</p>';
             }
-            if (attachLabel) {
-                h[++idx] = '<p>' + htmlEncode(attachLabel);
+            if (attachLabel || hasAttachments) {
+                h[++idx] = '<p>';
+                if (attachLabel) {
+                    h[++idx] = htmlEncode(attachLabel);
+                    if (hasAttachments) h[++idx] = '<br/>';
+                }
                 if (hasAttachments) {
-                    h[++idx] = '<br/>';
                     for (var ai = 0; ai < n.attachments.length; ai++) {
-                        h[++idx] = '<a href="' + baseUrl + htmlEncode(n.attachments[ai]) + '" target="_blank">';
+                        h[++idx] = '<a href="' + attachmentUrl(baseUrl, n.attachments[ai]) + '" target="_blank">';
                         h[++idx] = htmlEncode(n.attachments[ai].split('/').pop());
                         h[++idx] = '</a>';
                         if (ai < n.attachments.length - 1) h[++idx] = '<br/>';
                     }
-                }
-                h[++idx] = '</p>';
-            } else if (hasAttachments) {
-                h[++idx] = '<p>';
-                for (var ai = 0; ai < n.attachments.length; ai++) {
-                    h[++idx] = '<a href="' + baseUrl + htmlEncode(n.attachments[ai]) + '" target="_blank">';
-                    h[++idx] = htmlEncode(n.attachments[ai].split('/').pop());
-                    h[++idx] = '</a>';
-                    if (ai < n.attachments.length - 1) h[++idx] = '<br/>';
                 }
                 h[++idx] = '</p>';
             }
@@ -3201,7 +3200,7 @@ localise.initLocale(gUserLocale).then(function () {
             if (hasAttachments) {
                 h[++idx] = '<p>';
                 for (var ai = 0; ai < r.attachments.length; ai++) {
-                    h[++idx] = '<a href="' + baseUrl + htmlEncode(r.attachments[ai]) + '" target="_blank">';
+                    h[++idx] = '<a href="' + attachmentUrl(baseUrl, r.attachments[ai]) + '" target="_blank">';
                     h[++idx] = htmlEncode(r.attachments[ai].split('/').pop());
                     h[++idx] = '</a>';
                     if (ai < r.attachments.length - 1) h[++idx] = '<br/>';
