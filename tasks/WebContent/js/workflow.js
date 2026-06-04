@@ -447,13 +447,14 @@ function renderWorkflow(data) {
 	applyHighlight();
 }
 
-function loadWorkflow() {
+function loadWorkflow(afterRender) {
 	addHourglass();
 	fetch("/surveyKPI/workflow/items", { credentials: "include", cache: "no-store" })
 		.then(function(resp) { return resp.text(); })
 		.then(function(text) {
 			if (!handleLogout(text)) return;
 			renderWorkflow(JSON.parse(text));
+			if (typeof afterRender === "function") afterRender();
 		})
 		.catch(function(err) {
 			console.error("loadWorkflow error:", err);
@@ -461,6 +462,46 @@ function loadWorkflow() {
 		.finally(function() {
 			removeHourglass();
 		});
+}
+
+// Find the lowest y at which a CARD_H-tall item at x=newX doesn't overlap anything,
+// excluding the item with id excludeId.
+function findFreeY(newX, excludeId) {
+	const GAP = 20;
+	const occupied = [];
+	Object.entries(gPositions).forEach(function([id, pos]) {
+		if (id === excludeId) return;
+		if (pos.x < newX + CARD_W && pos.x + CARD_W > newX) {
+			occupied.push({ y: pos.y, bottom: pos.y + CARD_H });
+		}
+	});
+	occupied.sort(function(a, b) { return a.y - b.y; });
+	let candidate = GAP;
+	for (const slot of occupied) {
+		if (candidate + CARD_H + GAP <= slot.y) break;
+		candidate = Math.max(candidate, slot.bottom + GAP);
+	}
+	return candidate;
+}
+
+// Move any newly-created form items (ids not in knownIds) to a non-overlapping position.
+function positionNewFormItems(knownIds) {
+	let moved = false;
+	Object.entries(gPositions).forEach(function([id, pos]) {
+		if (knownIds.has(id)) return;
+		const el = document.querySelector(`#wf-nodes [data-id="${id}"]`);
+		if (!el || el.dataset.type !== "form") return;
+		const freeY = findFreeY(pos.x, id);
+		if (freeY === pos.y) return;
+		gPositions[id] = { x: pos.x, y: freeY };
+		el.style.left = pos.x + "px";
+		el.style.top  = freeY + "px";
+		moved = true;
+	});
+	if (moved) {
+		drawArrows();
+		saveLayout();
+	}
 }
 
 function saveLayout() {
@@ -1418,6 +1459,7 @@ function executeCreate() {
 	addHourglass();
 	let url, payload;
 	const type = gCreateType;
+	const knownIds = new Set(Object.keys(gPositions));
 
 	if (type === "form") {
 		const sel = document.getElementById("wfd-form-survey");
@@ -1528,7 +1570,7 @@ function executeCreate() {
 	.then(function(resp) {
 		if (!resp.ok) throw new Error(resp.statusText);
 		closeEditDrawer();
-		loadWorkflow();
+		loadWorkflow(function() { positionNewFormItems(knownIds); });
 	})
 	.catch(function(err) { console.error("executeCreate error:", err); })
 	.finally(function() { removeHourglass(); });
