@@ -7010,5 +7010,15 @@ export {
 	translateType,
 	generateFile,
 	displayAsImage,
-	getUtcDate
+	getUtcDate,
+	debounceClick
 };
+
+function debounceClick(selector, handler) {
+	$(selector).off('click').on('click', function() {
+		const $btn = $(this);
+		if ($btn.prop('disabled')) return;
+		$btn.prop('disabled', true).addClass('disabled');
+		handler($btn, () => $btn.prop('disabled', false).removeClass('disabled'));
+	});
+}

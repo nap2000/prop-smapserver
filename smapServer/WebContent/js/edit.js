@@ -24,7 +24,7 @@ import "./libs/bootstrap-colorpicker.min.js";
 import "./libs/wb/plugins/iCheck/icheck.min.js";
 import localise from "./app/localise.js";
 import globals from "./app/globals.js";
-import { addCacheBuster, addHourglass, checkExistenceOfReferences, checkLoggedIn, createNewSurvey, getAccessibleCsvFiles, getAccessibleSpLists, getAccessibleSurveys, getAppearanceParams, getFilesFromServer, getGroupQuestionsInSurvey, getLoggedInUser, getQuestionsInCsvFile, getQuestionsInSpList, getQuestionsInSurvey, getReferenceNames, getSurveyDetails, handleLogout, htmlEncode, isTextStorageType, loadSurveys, localTime, openForm, removeHourglass, saveCurrentProject, setLanguages, setupUserProfile, tokenizeAppearance, translateType, validGeneralName } from "./app/common";
+import { addCacheBuster, addHourglass, checkExistenceOfReferences, checkLoggedIn, createNewSurvey, debounceClick, getAccessibleCsvFiles, getAccessibleSpLists, getAccessibleSurveys, getAppearanceParams, getFilesFromServer, getGroupQuestionsInSurvey, getLoggedInUser, getQuestionsInCsvFile, getQuestionsInSpList, getQuestionsInSurvey, getReferenceNames, getSurveyDetails, handleLogout, htmlEncode, isTextStorageType, loadSurveys, localTime, openForm, removeHourglass, saveCurrentProject, setLanguages, setupUserProfile, tokenizeAppearance, translateType, validGeneralName } from "./app/common";
 import question from "./app/question";
 import optionlist from "./app/optionlist";
 import markup from "./app/editorMarkup";
@@ -198,15 +198,17 @@ $(function() {
 		}
 
 	});
-	$('.m_save_survey').off().click(function() {	// Save a survey to the server
+	debounceClick('.m_save_survey', ($btn, reEnable) => {	// Save a survey to the server
 		globals.gSaveInProgress = true;
 		changeset.validateAll();
 
 		if(changeset.numberIssues("error") === 0) {
 			changeset.save(surveyListDone);
 			gSurveyUrlCacheBuster = addCacheBuster(gSurveyUrl);	// Update the cache buster
+			// success: setHasChanges(0) keeps button disabled; AJAX error: changeset.js re-enables
 		} else {
 			globals.gSaveInProgress = false;
+			reEnable();
 			bootbox.alert(localise.set["ed_er"]);
 		}
 	});

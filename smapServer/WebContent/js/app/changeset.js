@@ -238,6 +238,7 @@ export default {
                     removeHourglass();
                     if(handleLogout(xhr.responseText)) {
                         globals.gSaveInProgress = false;
+                        setHasChanges(globals.changes.length);	// re-enable save button
 
                         if (typeof responseFn === "function") {
                             responseFn();
