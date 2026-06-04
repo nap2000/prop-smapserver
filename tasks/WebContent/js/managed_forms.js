@@ -3258,6 +3258,10 @@ localise.initLocale(gUserLocale).then(function () {
 
                 h[++idx] = '<div class="col-md-12">';
 
+                h[++idx] = '<div class="fw-bold mb-1">';
+                h[++idx] = htmlEncode(changes[i].displayName || changes[i].col);
+                h[++idx] = '</div>';
+
                 // Add the tab nav links
                 h[++idx] = '<ul class="nav nav-tabs" role="tablist">';
                 for(j = 0; j < changeArray.length; j++) {
@@ -3281,7 +3285,7 @@ localise.initLocale(gUserLocale).then(function () {
                             h[++idx] = 'false';
                         }
                         h[++idx] = '">';
-                        h[++idx] = j;
+                        h[++idx] = localise.set["c_row"] ? localise.set["c_row"] + ' ' + (j + 1) : 'Row ' + (j + 1);
                         h[++idx] = '</a>';
                     h[++idx] = '</li>';
                 }
