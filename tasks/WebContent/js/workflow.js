@@ -18,7 +18,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 "use strict";
 
 import localise from "../../../smapServer/WebContent/js/app/localise";
-import { addHourglass, removeHourglass, getLoggedInUser, handleLogout, setupUserProfile } from "common";
+import { addHourglass, removeHourglass, getLoggedInUser, handleLogout, htmlEncode, setupUserProfile } from "common";
 import globals from "globals";
 
 const CARD_W = 240;
@@ -1580,14 +1580,7 @@ function executeCreate() {
 // Utility
 // ============================================================
 
-function esc(s) {
-	if (!s) return "";
-	return String(s)
-		.replace(/&/g, "&amp;")
-		.replace(/</g, "&lt;")
-		.replace(/>/g, "&gt;")
-		.replace(/"/g, "&quot;");
-}
+function esc(s) { return htmlEncode(s) || ""; }
 
 // ============================================================
 // Bootstrap

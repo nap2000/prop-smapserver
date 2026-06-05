@@ -675,6 +675,14 @@ localise.initLocale(gUserLocale).then(function () {
                         gTasks.gUpdate = [];
                         $('.saverecord').prop("disabled", true);
 
+                        var savedPrikey = gTasks.gSelectedRecord.prikey;
+                        Object.keys(gTasks.cache.data).forEach(function(key) {
+                            if (key.indexOf('&parkey=' + savedPrikey) !== -1) {
+                                delete gTasks.cache.data[key];
+                            }
+                        });
+                        loadAndShowSubForms(gTasks.gSelectedRecord);
+
                         getRecordChanges(gTasks.gSelectedRecord);
                         $('.re_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
                     }
@@ -859,6 +867,9 @@ localise.initLocale(gUserLocale).then(function () {
 
             if (target === '#data-view') {
                 $('.dataView').removeClass('d-none').show();
+                if (gTasks.gSelectedRecord) {
+                    loadAndShowSubForms(gTasks.gSelectedRecord);
+                }
             } else if(target === '#changes-view') {
                 $('.historyView').removeClass('d-none').show();
             }
@@ -3838,6 +3849,68 @@ localise.initLocale(gUserLocale).then(function () {
         $('.editRecordSection').show();
 
 			showEditRecordForm(gTasks.gSelectedRecord, gTasks.cache.currentData.schema, $('#surveyForm'), true);
+            $('#subFormData').empty();
+    }
+
+    function loadAndShowSubForms(record) {
+        var forms = (gTasks.cache.currentData.forms || [])
+            .filter(function(f) { return f.type === 'sub_form' && f.parentName === 'main'; });
+        var $container = $('#subFormData').empty();
+        if (!forms.length) return;
+
+        forms.forEach(function(formDef) {
+            var url = '/surveyKPI/api/data/' + globals.gCurrentSurvey
+                + '?mgmt=true&form=' + encodeURIComponent(formDef.name)
+                + '&parkey=' + record.prikey
+                + '&format=dt&schema=true&merge_select_multiple=yes'
+                + '&tz=' + encodeURIComponent(globals.gTimezone);
+
+            var $section = $('<div class="subform-section mt-3"></div>');
+            $container.append($section);
+
+            if (gTasks.cache.data[url]) {
+                renderSubFormSection($section, formDef, gTasks.cache.data[url]);
+                return;
+            }
+            $section.html('<p class="text-muted small">' + htmlEncode(formDef.name) + '&hellip;</p>');
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                cache: false,
+                success: function(data) {
+                    gTasks.cache.data[url] = data;
+                    renderSubFormSection($section, formDef, data);
+                }
+            });
+        });
+    }
+
+    function renderSubFormSection($section, formDef, data) {
+        var columns = (data.schema && data.schema.columns) ? data.schema.columns : [];
+        var records = data.data || [];
+        var h = [], idx = -1;
+
+        h[++idx] = '<h5 class="mt-2">' + htmlEncode(formDef.name)
+            + ' <small class="text-muted">(' + records.length + ')</small></h5>';
+
+        if (!records.length) {
+            h[++idx] = '<p class="text-muted small">' + htmlEncode(localise.set["c_no_data"]) + '</p>';
+        }
+        records.forEach(function(rec, i) {
+            h[++idx] = '<div class="card mb-2"><div class="card-header small">#' + (i + 1) + '</div>';
+            h[++idx] = '<div class="card-body p-2">';
+            columns.forEach(function(col) {
+                if (col.column_name === 'prikey' || col.column_name === 'instanceid') return;
+                if (col.readonly && col.column_name[0] === '_') return;
+                var val = rec[col.column_name];
+                if (val === null || val === undefined || val === '') return;
+                h[++idx] = '<div class="row mb-1"><label class="col-sm-4 small fw-semibold">'
+                    + htmlEncode(col.displayName || col.column_name)
+                    + '</label><div class="col-sm-8 small">' + htmlEncode(String(val)) + '</div></div>';
+            });
+            h[++idx] = '</div></div>';
+        });
+        $section.html(h.join(''));
     }
 
     /*
