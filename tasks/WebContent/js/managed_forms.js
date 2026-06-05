@@ -3253,8 +3253,14 @@ localise.initLocale(gUserLocale).then(function () {
 
             var type = changes[i].type;
             if(type === 'begin repeat') {
-                var changeArray = changes[i].changes;
+                // rows = new typed format; changes = legacy format
+                var rowArray = changes[i].rows || changes[i].changes;
                 var id;
+
+                if(!rowArray) {
+                    h[++idx] = '</div>';   // close row
+                    continue;
+                }
 
                 h[++idx] = '<div class="col-md-12">';
 
@@ -3264,8 +3270,20 @@ localise.initLocale(gUserLocale).then(function () {
 
                 // Add the tab nav links
                 h[++idx] = '<ul class="nav nav-tabs" role="tablist">';
-                for(j = 0; j < changeArray.length; j++) {
+                for(j = 0; j < rowArray.length; j++) {
                     id = i + '_' + j;
+                    var rowType = rowArray[j].type;  // present in new format, undefined in legacy
+                    var tabLabel, tabClass;
+                    if(rowType === 'new_record') {
+                        tabLabel = 'New Record';
+                        tabClass = 'text-success';
+                    } else if(rowType === 'deleted_record') {
+                        tabLabel = 'Deleted Record';
+                        tabClass = 'text-danger';
+                    } else {
+                        tabLabel = 'Row ' + (j + 1);
+                        tabClass = '';
+                    }
 
                     h[++idx] = '<li class="nav-item">';
                         h[++idx] = '<a class="nav-link ';
@@ -3284,9 +3302,11 @@ localise.initLocale(gUserLocale).then(function () {
                         } else {
                             h[++idx] = 'false';
                         }
+                        h[++idx] = '"><span class="';
+                        h[++idx] = tabClass;
                         h[++idx] = '">';
-                        h[++idx] = localise.set["c_row"] ? localise.set["c_row"] + ' ' + (j + 1) : 'Row ' + (j + 1);
-                        h[++idx] = '</a>';
+                        h[++idx] = tabLabel;
+                        h[++idx] = '</span></a>';
                     h[++idx] = '</li>';
                 }
                 h[++idx] = '</ul>';
@@ -3294,8 +3314,10 @@ localise.initLocale(gUserLocale).then(function () {
                 // Add the tab panels
                 h[++idx] = '<div class="tab-content">';
 
-                for(j = 0; j < changeArray.length; j++) {
+                for(j = 0; j < rowArray.length; j++) {
                     id = i + '_' + j;
+                    // new format row has .changes; legacy format row IS the changes array
+                    var rowChanges = rowArray[j].changes !== undefined ? rowArray[j].changes : rowArray[j];
 
                     h[++idx] = '<div class="tab-pane fade';
                     if(j == 0) {
@@ -3306,7 +3328,7 @@ localise.initLocale(gUserLocale).then(function () {
                     h[++idx] = '" role="tabpanel" aria-labelledby="chgtab_';
                     h[++idx] = id;
                     h[++idx] = '">';
-                    h[++idx] = getChangeCard(changeArray[j], id);
+                    h[++idx] = getChangeCard(rowChanges, id);
                     h[++idx] = '</div>';
                 }
                 h[++idx] = '</div>';        // Tab content
