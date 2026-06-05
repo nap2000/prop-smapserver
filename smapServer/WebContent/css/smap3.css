@@ -328,6 +328,9 @@ a.filter_help {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 0.55rem 1.5rem;
 }
+.sf-field-full {
+    grid-column: 1 / -1;
+}
 .sf-label {
     font-size: 0.68rem;
     color: #6c757d;

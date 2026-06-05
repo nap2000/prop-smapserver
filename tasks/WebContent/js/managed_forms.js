@@ -125,6 +125,7 @@ localise.initLocale(gUserLocale).then(function () {
         task: false
     };
 
+    var gSfMapSeq = 0;              // Unique ID counter for sub-form map elements
     var gTags;                      // Task Map
     var gModalMapInitialised;
     var gTaskMapConfig = {
@@ -3889,6 +3890,8 @@ localise.initLocale(gUserLocale).then(function () {
         var columns = (data.schema && data.schema.columns) ? data.schema.columns : [];
         var records = data.data || [];
         var multiRecord = records.length > 1;
+        var sfMaps = [];
+        var sfMapBase = 'sf_map_' + (++gSfMapSeq) + '_';
         var h = [], idx = -1;
 
         var countLabel = records.length + ' ' + localise.set[records.length === 1 ? 'c_record' : 'c_records'];
@@ -3900,25 +3903,44 @@ localise.initLocale(gUserLocale).then(function () {
             h[++idx] = '<p class="text-muted small">' + htmlEncode(localise.set["c_no_data"]) + '</p>';
         }
 
-        records.forEach(function(rec, i) {
+        records.forEach(function(rec, recIdx) {
             h[++idx] = '<div class="sf-record">';
             if (multiRecord) {
-                h[++idx] = '<div class="sf-record-num">' + (i + 1) + '</div>';
+                h[++idx] = '<div class="sf-record-num">' + (recIdx + 1) + '</div>';
             }
             h[++idx] = '<div class="sf-fields">';
-            columns.forEach(function(col) {
+            columns.forEach(function(col, colIdx) {
                 if (col.column_name === 'prikey' || col.column_name === 'instanceid') return;
                 if (col.readonly && col.column_name[0] === '_') return;
                 var val = rec[col.column_name];
                 if (val === null || val === undefined || val === '') return;
-                h[++idx] = '<div><div class="sf-label">' + htmlEncode(col.displayName || col.column_name)
-                    + '</div><div class="sf-value">' + htmlEncode(String(val)) + '</div></div>';
+
+                var isGeo = col.type === 'geopoint' || col.type === 'geoshape' || col.type === 'geotrace';
+                var isConv = col.type === 'conversation';
+                var fullWidth = isGeo || isConv;
+
+                h[++idx] = '<div' + (fullWidth ? ' class="sf-field-full"' : '') + '>';
+                h[++idx] = '<div class="sf-label">' + htmlEncode(col.displayName || col.column_name) + '</div>';
+
+                if (isGeo) {
+                    h[++idx] = actioncommon.addCellMap(true, sfMapBase, sfMaps, col, val, undefined, colIdx);
+                } else if (isConv) {
+                    h[++idx] = '<div class="border border-primary rounded p-1">'
+                        + actioncommon.formatConversation(val, false) + '</div>';
+                } else {
+                    h[++idx] = '<div class="sf-value">' + htmlEncode(String(val)) + '</div>';
+                }
+                h[++idx] = '</div>';
             });
             h[++idx] = '</div></div>';
         });
 
         h[++idx] = '</div>';
         $section.html(h.join(''));
+
+        if (sfMaps.length) {
+            actioncommon.initialiseDynamicMaps(sfMaps);
+        }
     }
 
     /*
