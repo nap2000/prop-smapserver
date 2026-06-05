@@ -3888,28 +3888,36 @@ localise.initLocale(gUserLocale).then(function () {
     function renderSubFormSection($section, formDef, data) {
         var columns = (data.schema && data.schema.columns) ? data.schema.columns : [];
         var records = data.data || [];
+        var multiRecord = records.length > 1;
         var h = [], idx = -1;
 
-        h[++idx] = '<h5 class="mt-2">' + htmlEncode(formDef.name)
-            + ' <small class="text-muted">(' + records.length + ')</small></h5>';
+        var countLabel = records.length + ' ' + localise.set[records.length === 1 ? 'c_record' : 'c_records'];
+        h[++idx] = '<div class="sf-section">';
+        h[++idx] = '<div class="sf-divider">' + htmlEncode(formDef.name)
+            + ' <span class="sf-count">' + htmlEncode(countLabel) + '</span></div>';
 
         if (!records.length) {
             h[++idx] = '<p class="text-muted small">' + htmlEncode(localise.set["c_no_data"]) + '</p>';
         }
+
         records.forEach(function(rec, i) {
-            h[++idx] = '<div class="card mb-2"><div class="card-header small">#' + (i + 1) + '</div>';
-            h[++idx] = '<div class="card-body p-2">';
+            h[++idx] = '<div class="sf-record">';
+            if (multiRecord) {
+                h[++idx] = '<div class="sf-record-num">' + (i + 1) + '</div>';
+            }
+            h[++idx] = '<div class="sf-fields">';
             columns.forEach(function(col) {
                 if (col.column_name === 'prikey' || col.column_name === 'instanceid') return;
                 if (col.readonly && col.column_name[0] === '_') return;
                 var val = rec[col.column_name];
                 if (val === null || val === undefined || val === '') return;
-                h[++idx] = '<div class="row mb-1"><label class="col-sm-4 small fw-semibold">'
-                    + htmlEncode(col.displayName || col.column_name)
-                    + '</label><div class="col-sm-8 small">' + htmlEncode(String(val)) + '</div></div>';
+                h[++idx] = '<div><div class="sf-label">' + htmlEncode(col.displayName || col.column_name)
+                    + '</div><div class="sf-value">' + htmlEncode(String(val)) + '</div></div>';
             });
             h[++idx] = '</div></div>';
         });
+
+        h[++idx] = '</div>';
         $section.html(h.join(''));
     }
 
