@@ -54,6 +54,12 @@ tr.deleted td a {
     color: #922B21 !important;
 }
 
+/* Records the current user references are highlighted in the assigned column */
+td.cell-is-referenced {
+    background-color: var(--bs-info-bg-subtle, #cff4fc) !important;
+    color: var(--bs-info-text-emphasis, #055160) !important;
+}
+
 /* ============================================================
    Panel card header & action buttons
    Used by fieldAnalysis dashboard and managed_forms chart panels

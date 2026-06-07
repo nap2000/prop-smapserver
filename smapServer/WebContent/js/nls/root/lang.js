@@ -1163,6 +1163,8 @@ define({
     "mf_sr": "Summary Report",
     "mf_lock": "Lock for editing",
     "mf_rel": "Release",
+    "mf_ref": "Reference",
+    "mf_deref": "De-reference",
     "mf_mr": "My records",
     "mf_ur": "Unassigned records",
     "mf_or": "Other records",

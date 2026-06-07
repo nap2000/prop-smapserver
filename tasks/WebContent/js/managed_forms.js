@@ -107,6 +107,7 @@ localise.initLocale(gUserLocale).then(function () {
     var gTimingView = false;        // Set true when the timing view is shown
     var gRefreshingData = false;    // Prevent double click on  refresh button
     var gAssignedCol = 0;           // Column that contains the assignment status
+    var gReferenced = {};           // Map of instanceid -> true for records referenced by the current user
     var gGetSettings = false;       // Use the settings from the database rather than the client
     var gSavedAssignRole = 0;       // Saved role filter for the assign dialog
     var gDeleteColumn = -1;         // The index of the column that indicates if the record is deleted
@@ -630,6 +631,88 @@ localise.initLocale(gUserLocale).then(function () {
                 }, error: function (data, status) {
                     removeHourglass();
                     $('#m_release').prop("disabled", false);     // debounce
+                    if(handleLogout(data)) {
+                        alert(data.responseText);
+                    }
+                }
+            });
+        });
+
+        /*
+         * Reference a record - give the current user read only access
+         */
+        $('#m_reference').click(function(e) {
+            e.preventDefault();
+            $('#m_reference').prop("disabled", true);     // debounce
+
+            var url = "/surveyKPI/managed/reference/" + globals.gCurrentSurvey;
+            addHourglass();
+            $.ajax({
+                type: "POST",
+                dataType: 'text',
+                contentType: "application/x-www-form-urlencoded",
+                cache: false,
+                url: url,
+                data: {
+                    record: gTasks.gSelectedRecord.instanceid,
+                    users: globals.gLoggedInUser.ident
+                },
+                success: function (data, status) {
+                    removeHourglass();
+                    $('#m_reference').prop("disabled", false);     // debounce
+                    if(handleLogout(data)) {
+                        gTasks.gSelectedRecord._referencedByMe = true;
+                        gReferenced[gTasks.gSelectedRecord.instanceid] = true;
+                        $('.not_referenced').hide();
+                        $('.referenced').show();
+                        if(globals.gMainTable) {
+                            globals.gMainTable.draw(false);     // colour the assigned column
+                        }
+                    }
+                }, error: function (data, status) {
+                    removeHourglass();
+                    $('#m_reference').prop("disabled", false);     // debounce
+                    if(handleLogout(data)) {
+                        alert(data.responseText);
+                    }
+                }
+            });
+        });
+
+        /*
+         * De-reference a record - remove the current user's read only access
+         */
+        $('#m_dereference').click(function(e) {
+            e.preventDefault();
+            $('#m_dereference').prop("disabled", true);     // debounce
+
+            var url = "/surveyKPI/managed/unreference/" + globals.gCurrentSurvey;
+            addHourglass();
+            $.ajax({
+                type: "POST",
+                dataType: 'text',
+                contentType: "application/x-www-form-urlencoded",
+                cache: false,
+                url: url,
+                data: {
+                    record: gTasks.gSelectedRecord.instanceid,
+                    users: globals.gLoggedInUser.ident
+                },
+                success: function (data, status) {
+                    removeHourglass();
+                    $('#m_dereference').prop("disabled", false);     // debounce
+                    if(handleLogout(data)) {
+                        gTasks.gSelectedRecord._referencedByMe = false;
+                        delete gReferenced[gTasks.gSelectedRecord.instanceid];
+                        $('.referenced').hide();
+                        $('.not_referenced').show();
+                        if(globals.gMainTable) {
+                            globals.gMainTable.draw(false);     // remove the assigned column colour
+                        }
+                    }
+                }, error: function (data, status) {
+                    removeHourglass();
+                    $('#m_dereference').prop("disabled", false);     // debounce
                     if(handleLogout(data)) {
                         alert(data.responseText);
                     }
@@ -1635,6 +1718,9 @@ localise.initLocale(gUserLocale).then(function () {
             tableOnDraw();
         });
 
+        // Load the records referenced by the current user so they can be indicated in the table
+        loadReferencedRecords();
+
         $('.table_filter').off().on('blur', function (e) {
             e.preventDefault();
             showManagedData(globals.gCurrentSurvey, showTable, false);  // update console with changed data
@@ -2480,6 +2566,59 @@ localise.initLocale(gUserLocale).then(function () {
     }
 
     /*
+     * Load the set of records referenced by the current user for the current survey.
+     * Stored in gReferenced (instanceid -> true) and used to indicate referenced records
+     * in the table and to drive the reference / de-reference buttons.
+     */
+    function loadReferencedRecords() {
+
+        $.ajax({
+            type: "GET",
+            dataType: 'json',
+            cache: false,
+            url: "/surveyKPI/managed/myreferences/" + globals.gCurrentSurvey,
+            success: function (data) {
+                gReferenced = {};
+                if(Array.isArray(data)) {
+                    for(var i = 0; i < data.length; i++) {
+                        gReferenced[data[i]] = true;
+                    }
+                }
+                // Redraw so referenced records are highlighted in the assigned column
+                if(globals.gMainTable) {
+                    globals.gMainTable.draw(false);
+                }
+            }
+        });
+    }
+
+    /*
+     * Show the reference / de-reference buttons for the selected record based on
+     * whether the current user already references it.  Called on single record select.
+     */
+    function updateReferenceButtons(instanceId) {
+
+        $('.referenced, .not_referenced').hide();
+        if(!instanceId || !gTasks.gSelectedRecord) {
+            return;
+        }
+        var referencedByMe = !!gReferenced[instanceId];
+        var assignedToMe = gTasks.gSelectedRecord._assigned === globals.gLoggedInUser.ident;
+        gTasks.gSelectedRecord._referencedByMe = referencedByMe;
+        if(referencedByMe) {
+            // De-reference is available whenever the record is referenced by the current user
+            $('.referenced').show();
+            $('.not_referenced').hide();
+        } else {
+            // Reference is available only if the record is not already assigned to the current user
+            $('.referenced').hide();
+            if(!assignedToMe) {
+                $('.not_referenced').show();
+            }
+        }
+    }
+
+    /*
      * Respond to a record of data being selected
      */
     function recordSelected(records) {
@@ -2532,6 +2671,9 @@ localise.initLocale(gUserLocale).then(function () {
             } else {
                 $('.not_assigned').show();
             }
+
+            // Show reference / de-reference controls based on the current user's reference state
+            updateReferenceButtons(gTasks.gSelectedRecord.instanceid);
 
             // Set up the record edit button if there is an oversight form
             var oversightIdent = $('#oversight_survey').val();
@@ -3771,6 +3913,18 @@ localise.initLocale(gUserLocale).then(function () {
                     }
                 });
             }
+        }
+
+        // Indicate records referenced by the current user by colouring the assigned column
+        if(gAssignedCol >= 0) {
+            $(globals.gMainTable.column(gAssignedCol).nodes()).each(function () {
+                var rowData = globals.gMainTable.row($(this).closest('tr')).data();
+                if(rowData && gReferenced[rowData.instanceid]) {
+                    $(this).addClass('cell-is-referenced');
+                } else {
+                    $(this).removeClass('cell-is-referenced');
+                }
+            });
         }
 
         // Refresh the views that depend on the displayed rows
