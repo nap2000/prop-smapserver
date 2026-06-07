@@ -176,12 +176,39 @@ localise.initLocale(gUserLocale).then(function () {
 		var i,
 			h = [],
 			idx = -1,
+			hr = [],
+			ridx = -1,
 			$taskList = $('#task_list'),
-			count = 0;
+			$refList = $('#reference_list'),
+			count = 0,
+			refCount = 0;
 
 		for(i = 0; i < taskList.length; i++) {
 
 			if(!filterProjectId || filterProjectId == taskList[i].task.pid) {
+
+				// Referenced (read only) records are shown in their own list, opened read only
+				if(taskList[i].task.read_only) {
+					// Open read only - viewOnly drives the client (submit becomes close, no save),
+					// readonly drives the server footer button, matching read_only_survey
+					var rhref = '/app/myWork/webForm/' + taskList[i].task.form_id;
+					if(taskList[i].task.update_id) {
+						rhref += '?datakey=instanceid&datakeyvalue=' + taskList[i].task.update_id + '&viewOnly=true&readonly=true';
+					} else {
+						rhref += '?viewOnly=true&readonly=true';
+					}
+					rhref += addCacheBuster(rhref);
+
+					hr[++ridx] = '<div class="btn-group w-100 btn-group-lg d-flex mb-2" role="group">';
+					hr[++ridx] = '<button class="btn btn-reference w-10 task-icon" type="button"><i class="fa fa-eye"></i></button>';
+					hr[++ridx] = '<a class="btn btn-reference w-100" role="button" target="_blank" href="' + rhref + '">';
+					hr[++ridx] = '<span class="text-center">' + htmlEncode(taskList[i].task.title) + '</span>';
+					hr[++ridx] = '</a>';
+					hr[++ridx] = '</div>';
+					refCount++;
+					continue;
+				}
+
 				var isCancelled = taskList[i].assignment.assignment_status === 'cancelled';
 				var isNew = taskList[i].assignment.assignment_status === 'new';
 				var isAccepted = taskList[i].assignment.assignment_status === 'accepted';
@@ -307,6 +334,9 @@ localise.initLocale(gUserLocale).then(function () {
 
 		$('#tasks_count').html('(' + count + ')');
 		$taskList.html(h.join(''));
+
+		$('#references_count').html('(' + refCount + ')');
+		$refList.html(hr.join(''));
 
 		$taskList.find('.task').off().click(function(){
 			$('.up_alert').hide();

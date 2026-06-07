@@ -786,6 +786,7 @@ define({
     "t_tasks_only": "Tasks Only",
     "t_tg": "Task Group",
     "t_tasks": "Tasks",
+    "t_references": "References",
     "t_id": "Initial Data",
     "t_n_s": "Tasks without start time",
     "t_drag": "Drag a task and drop onto calendar",

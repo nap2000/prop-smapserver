@@ -54,10 +54,24 @@ tr.deleted td a {
     color: #922B21 !important;
 }
 
-/* Records the current user references are highlighted in the assigned column */
+/* Records the current user references are highlighted in the assigned column,
+   using the same purple as the reference launch button in myWork */
 td.cell-is-referenced {
-    background-color: var(--bs-info-bg-subtle, #cff4fc) !important;
-    color: var(--bs-info-text-emphasis, #055160) !important;
+    background-color: #e6ddf6 !important;
+    color: #432874 !important;
+}
+
+/* Launch button for referenced (read only) records in myWork, distinct from task buttons */
+.btn-reference {
+    color: #fff;
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+}
+.btn-reference:hover,
+.btn-reference:focus {
+    color: #fff;
+    background-color: #59359a;
+    border-color: #533285;
 }
 
 /* ============================================================
