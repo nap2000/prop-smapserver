@@ -35,6 +35,7 @@ import { initializeMap } from "./map-ol";
 var gNewPanel = false;	// Set to true when editing settings of a new panel
 var gExpandedPanelSeq;	// Set to the sequence number of a newly created panel
 var pSettingsModal;
+var gActAsUser;			// Set by an administrator to manage another user's panels (their identifier)
 
 $(document).ready(function() {
 
@@ -244,13 +245,24 @@ $(document).ready(function() {
 		globals.gCurrentSurvey = -1;
 		globals.gCurrentTaskGroup = undefined;
 
-		getPanels(globals.gCurrentProject);
+		if(globals.gIsAdministrator) {
+			getProjectUsers(globals.gCurrentProject);	// Refreshes the user list then loads the panels
+		} else {
+			getPanels(globals.gCurrentProject);
+		}
 		saveCurrentProject(globals.gCurrentProject,
 				globals.gCurrentSurvey,
 				globals.gCurrentTaskGroup);
 
 		getViewSurveys({sId:"-1"});
  	 });
+
+	// Set change function on the user an administrator is managing panels for
+	$('#dashboard_user').change(function() {
+		var ident = $('#dashboard_user option:selected').val();
+		gActAsUser = (ident && ident !== globals.gLoggedInUser.ident) ? ident : undefined;
+		getPanels(globals.gCurrentProject);
+	});
 
 	// Respond to changes to the shape forms selector
 	$('.shapeforms').change(function() {
@@ -275,10 +287,60 @@ $(document).ready(function() {
 
 
 function loggedInUserIdentified(projectId) {
-	getPanels(projectId);
+	if(globals.gIsAdministrator) {
+		getProjectUsers(projectId);	// Refreshes the user list then loads the panels
+	} else {
+		getPanels(projectId);
+	}
 	if(globals.gRefreshRate > 0) {
 		autoRefresh();
 	}
+}
+
+/*
+ * Administrators can manage the panels of any user with access to the current project
+ * Populate the user selector with those users, defaulting back to the administrator's own panels
+ */
+function getProjectUsers(projectId) {
+
+	if(projectId == -1) {
+		return;
+	}
+
+	$.ajax({
+		url: "/surveyKPI/userList/" + projectId,
+		dataType: 'json',
+		cache: false,
+		success: function(data) {
+			var i, user,
+				h = [],
+				idx = -1;
+
+			if(data) {
+				for(i = 0; i < data.length; i++) {
+					user = data[i];
+					h[++idx] = '<option value="';
+					h[++idx] = htmlEncode(user.ident);
+					h[++idx] = '">';
+					h[++idx] = htmlEncode(user.name + " (" + user.ident + ")");
+					h[++idx] = '</option>';
+				}
+			}
+			$('#dashboard_user').empty().append(h.join(''));
+			$('#dashboard_user').val(globals.gLoggedInUser.ident);
+			$('#dashboard_user_label').removeClass('d-none');
+			$('#dashboard_user').removeClass('d-none');
+
+			gActAsUser = undefined;		// Default back to managing your own panels
+			getPanels(projectId);
+		},
+		error: function(xhr, textStatus, err) {
+			if (xhr.readyState !== 0 && xhr.status !== 0) {
+				console.log("Error: Failed to get users for project: " + err);
+			}
+			getPanels(projectId);
+		}
+	});
 }
 
 /*
@@ -305,7 +367,7 @@ function getPanels(projectId) {
 	if(projectId != -1) {
 		addHourglass();
 	 	$.ajax({
-			url: dashboardURL(projectId),
+			url: dashboardURL(projectId, gActAsUser),
 			dataType: 'json',
 			cache: false,
 			success: function(data) {
@@ -686,6 +748,10 @@ function savePanels(newPanel) {
 	}
 
 	var viewsString = JSON.stringify(saveViews);
+	var postData = { settings: viewsString };
+	if(gActAsUser) {
+		postData.user = gActAsUser;
+	}
 	addHourglass();
 	$.ajax({
 		  type: "POST",
@@ -693,7 +759,7 @@ function savePanels(newPanel) {
 		  dataType: 'text',
 		  contentType: "application/x-www-form-urlencoded",
 		  url: "/surveyKPI/dashboard/",
-		  data: { settings: viewsString },
+		  data: postData,
 		  success: function(data, status) {
 			  removeHourglass();
 			  if(handleLogout(data)) {
@@ -716,13 +782,17 @@ function savePanelState(view) {
 	var saveView = copyView(view);
 
 	var viewString = JSON.stringify(saveView);
+	var postData = { state: viewString };
+	if(gActAsUser) {
+		postData.user = gActAsUser;
+	}
 	$.ajax({
 		  type: "POST",
 		  cache: false,
 		  dataType: 'text',
 		  contentType: "application/x-www-form-urlencoded",
-		  url: dashboardStateURL(),
-		  data: { state: viewString },
+		  url: dashboardStateURL(gActAsUser),
+		  data: postData,
 		  success: function(data, status) {
 			  	handleLogout(data);
 		  }, error: function(data, status) {

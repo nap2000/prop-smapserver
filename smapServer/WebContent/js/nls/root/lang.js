@@ -193,6 +193,7 @@ define({
     "c_block": "Block",
     "c_blocked": "Blocked",
     "c_add_panel": "Add panel",
+    "c_manage_panels_for": "Manage panels for",
     "c_graph": "Graph",
     "c_map": "Map",
     "c_chart": "Chart",
