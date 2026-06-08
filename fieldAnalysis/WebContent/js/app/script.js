@@ -545,18 +545,24 @@ function reportSaveURL(projectId) {
     return url;
 }
 
-export function dashboardStateURL() {
+export function dashboardStateURL(onBehalfOf) {
 
     var url = "/surveyKPI/dashboard/state";
+    if(onBehalfOf) {
+        url += "?user=" + encodeURIComponent(onBehalfOf);
+    }
     return url;
 }
 
-export function dashboardURL(projectId) {
+export function dashboardURL(projectId, onBehalfOf) {
 
     if(!projectId) {
         projectId = 0;
     }
     var url = "/surveyKPI/dashboard/" + projectId;
+    if(onBehalfOf) {
+        url += "?user=" + encodeURIComponent(onBehalfOf);
+    }
     return url;
 }
 
