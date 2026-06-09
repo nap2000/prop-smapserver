@@ -82,7 +82,7 @@ convert_lang_files "$SCRIPT_DIR/smapServer"
 
 # Include webform javascript bundle and css files
 echo "Adding webform bundle to $SCRIPT_DIR/smapServer"
-pushd /Users/neilpenman/git/webform
+pushd "${WEBFORM_PATH:-/Users/neilpenman/git/webform}"
 ./deploy.sh $1
 popd
 cp -R WebContent/build $SCRIPT_DIR/smapServer
