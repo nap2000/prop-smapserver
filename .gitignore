@@ -15,7 +15,6 @@ surveyKPI/WebContent/WEB-INF/lib/*
 Servers/
 
 package-lock.json
-package.json
 
 subscribers/target/
 tdh/target/
