@@ -20,7 +20,8 @@ module.exports = {
 	api: "./WebContent/js/api.js",
 	reports: "./WebContent/js/reports.js",
 	operations: "./WebContent/js/operations.js",
-	operations_unit: "./WebContent/js/operations_unit.js"
+	operations_unit: "./WebContent/js/operations_unit.js",
+	operations_items: "./WebContent/js/operations_items.js"
   },
   output: {
     filename: "[name].bundle.js",

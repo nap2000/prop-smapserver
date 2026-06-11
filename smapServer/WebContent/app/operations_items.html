@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+
+    <title class="lang" data-lang="ops_items_title">At-risk records – Operations Monitor</title>
+
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    <link href="/css/bootstrap.v5.3.8.min.css" rel="stylesheet">
+    <link href="/custom/css/custom.css" rel="stylesheet">
+    <link href="/custom/css/org/custom.css" rel="stylesheet">
+    <link href="/css/fa.v5.15.1.all.min.css" rel="stylesheet">
+    <link href="/css/smap3.css" rel="stylesheet">
+
+    <script src="/js/libs/modernizr.js"></script>
+    <script src="/js/app/theme.js"></script>
+    <script src="/js/app/bootstrapHelpers.js"></script>
+    <script src="/js/app/error-logger.js"></script>
+    <script src="/js/libs/jquery-3.5.1.min.js"></script>
+    <script src="/js/libs/bootstrap.bundle.v5.3.8.min.js"></script>
+
+    <script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
+
+    <script src="/build/js/operations_items.bundle.js"></script>
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
+    <a class="navbar-brand" href="/app/operations.html"><i class="fas fa-chevron-left me-1"></i><span class="lang" data-lang="m_operations">Operations</span></a>
+    <div class="spinner-grow text-danger hour_glass"></div>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars large-bars"></i>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="/app/operations.html"><span class="nav-label lang" data-lang="m_operations">Operations</span></a></li>
+            <li class="nav-item restrict_role manage_role admin_role analyst_role"><a class="nav-link" href="/app/tasks/managed_forms.html"><span class="nav-label lang" data-lang="m_console">Console</span></a></li>
+            <li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
+            <li class="nav-item dropdown active">
+                <a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="m_profile">
+                    <a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-bs-toggle="modal" data-bs-target="#modify_me_popup" aria-label="User"> </a>
+                    <a class="dropdown-item lang" data-lang="c_change_p" href="/app/changePassword.html"></a>
+                    <a id="userProfileLogout" class="dropdown-item lang" data-lang="c_logout" href="/dologout.html"></a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container-fluid mt-3" id="main-content">
+
+    <div class="d-flex align-items-center mb-3">
+        <h3 class="mb-0 me-3" id="ops_items_heading"></h3>
+        <div class="btn-group btn-group-sm" role="group" id="ops_items_filter">
+            <a class="btn btn-outline-secondary" data-type="all" href="?type=all"><span class="lang" data-lang="ops_filter_all">All</span></a>
+            <a class="btn btn-outline-secondary" data-type="overdue" href="?type=overdue"><span class="lang" data-lang="ops_tasks_overdue">Overdue</span></a>
+            <a class="btn btn-outline-secondary" data-type="stale" href="?type=stale"><span class="lang" data-lang="ops_stale_items">Stale</span></a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th class="lang" data-lang="ops_item">Item</th>
+                        <th class="lang" data-lang="ops_assignee">Assignee</th>
+                        <th class="text-end lang" data-lang="ops_age_days">Age (days)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="ops_items"></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

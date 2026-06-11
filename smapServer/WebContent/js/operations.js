@@ -108,18 +108,27 @@ function renderKpis(kpis) {
 	gSparklines.forEach(function (c) { try { c.destroy(); } catch (e) {} });
 	gSparklines = [];
 
+	const linkFor = {
+		stale_items: '/app/operations_items.html?type=stale',
+		tasks_overdue: '/app/operations_items.html?type=overdue'
+	};
+
 	let html = "";
 	ordered.forEach(function (k) {
 		const colour = RAG[k.rag] || RAG.none;
 		const hasTrend = k.trend && k.trend.length > 0;
-		html += '<div class="col-6 col-md-4 col-xl">' +
+		const url = linkFor[k.key];
+		const open = url ? '<a href="' + url + '" class="text-decoration-none text-reset">' : '';
+		const close = url ? '</a>' : '';
+		html += '<div class="col-6 col-md-4 col-xl">' + open +
 			'<div class="card h-100">' +
 			'<div class="card-body py-2">' +
-			'<div class="text-muted text-uppercase small">' + esc(kpiLabel(k)) + '</div>' +
+			'<div class="text-muted text-uppercase small">' + esc(kpiLabel(k)) +
+			(url ? ' <i class="fas fa-chevron-right small"></i>' : '') + '</div>' +
 			'<div class="d-flex align-items-center justify-content-between">' +
 			'<span class="fs-3 fw-bold" style="color:' + colour + '">' + esc(String(k.value)) + '</span>' +
 			(hasTrend ? '<canvas class="ops-spark" data-key="' + esc(k.key) + '" width="80" height="34"></canvas>' : '') +
-			'</div></div></div></div>';
+			'</div></div></div>' + close + '</div>';
 	});
 	$('#ops_kpis').html(html);
 

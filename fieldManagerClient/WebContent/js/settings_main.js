@@ -60,6 +60,7 @@ const moment = window.moment;
 		getAppearanceSettings();
 		getSensitiveSettings();
 		getOtherSettings();		// miscellaneous settings
+		getOperationsSettings();	// operations monitor thresholds
 
 		// Set up the tabs
 		$('#appearanceTab a').on('click', function (e) {
@@ -93,6 +94,10 @@ const moment = window.moment;
 		$('#otherTab a').on('click',function (e) {
 			e.preventDefault();
 			panelChange($(this), 'other');
+		});
+		$('#operationsTab a').on('click',function (e) {
+			e.preventDefault();
+			panelChange($(this), 'operations');
 		});
 
 		// Copy user ident to email if it is a valid email
@@ -219,6 +224,35 @@ const moment = window.moment;
 						var msg = xhr.responseText;
 						alert(localise.set["msg_err_upd"] + msg);    // Alerts htmlencode text already
 					}
+				}
+			});
+		});
+
+		$('#saveOperationsSettings').click(function() {
+			var opsObj = {
+				staleIntervalDays: parseInt($('#ops_stale_days').val(), 10) || 14,
+				trendDays: parseInt($('#ops_trend_days').val(), 10) || 30,
+				ragAmberPct: parseFloat($('#ops_rag_amber').val()) || 0,
+				ragRedPct: parseFloat($('#ops_rag_red').val()) || 0
+			};
+			addHourglass();
+			$.ajax({
+				type: "POST",
+				contentType: "application/x-www-form-urlencoded",
+				cache: false,
+				url: "/surveyKPI/ops/settings",
+				data: { settings: JSON.stringify(opsObj) },
+				success: function() {
+					removeHourglass();
+					$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+				},
+				error: function(xhr, textStatus, err) {
+					removeHourglass();
+					if(xhr.readyState == 0 || xhr.status == 0) {
+						$('.org_alert').show().removeClass('alert-danger').addClass('alert-success').html(localise.set["msg_upd"]);
+						return;
+					}
+					alert(localise.set["msg_err_upd"] + xhr.responseText);
 				}
 			});
 		});
@@ -1179,6 +1213,34 @@ const moment = window.moment;
 				removeHourglass();
 				$('#o_p_strength').val(other.password_strength);
 
+			},
+			error: function(xhr, textStatus, err) {
+				removeHourglass();
+				if(xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				} else {
+					alert(localise.set["c_error"] + ": " + err);
+				}
+			}
+		});
+	}
+
+	/*
+	 * Get the Operations Monitor settings
+	 */
+	function getOperationsSettings() {
+
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/ops/settings",
+			dataType: 'json',
+			cache: false,
+			success: function(s) {
+				removeHourglass();
+				$('#ops_stale_days').val(s.staleIntervalDays);
+				$('#ops_trend_days').val(s.trendDays);
+				$('#ops_rag_amber').val(s.ragAmberPct);
+				$('#ops_rag_red').val(s.ragRedPct);
 			},
 			error: function(xhr, textStatus, err) {
 				removeHourglass();

@@ -1800,5 +1800,13 @@ define({
     "ops_overdue_flag": "Overdue",
     "ops_stale_flag": "Stale",
     "ops_task": "Task",
-    "ops_case": "Case"
+    "ops_case": "Case",
+    "ops_items_title": "At-risk records",
+    "ops_filter_all": "All",
+    "ops_settings_tab": "Operations",
+    "ops_set_stale_days": "Stale interval (days)",
+    "ops_set_trend_days": "Trend window (days)",
+    "ops_set_rag_amber": "RAG amber threshold (overdue %)",
+    "ops_set_rag_red": "RAG red threshold (overdue %)",
+    "ops_set_intro": "Thresholds for the Operations Monitor. Stale = any open task or case older than this; RAG colours a unit by its overdue percentage."
 });
