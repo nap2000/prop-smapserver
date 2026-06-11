@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+
+    <title class="lang" data-lang="ops_title">Operations Monitor – Smap Server</title>
+
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    <link href="/css/bootstrap.v5.3.8.min.css" rel="stylesheet">
+    <link href="/custom/css/custom.css" rel="stylesheet">
+    <link href="/custom/css/org/custom.css" rel="stylesheet">
+    <link href="/css/fa.v5.15.1.all.min.css" rel="stylesheet">
+    <link href="/css/smap3.css" rel="stylesheet">
+
+    <script src="/js/libs/modernizr.js"></script>
+    <script src="/js/app/theme.js"></script>
+    <script src="/js/app/bootstrapHelpers.js"></script>
+    <script src="/js/app/error-logger.js"></script>
+    <script src="/js/libs/jquery-3.5.1.min.js"></script>
+    <script src="/js/libs/bootstrap.bundle.v5.3.8.min.js"></script>
+    <script src="/js/libs/chart.min.3.8.0.js"></script>
+
+    <script src="/js/app/custom.js"></script>  <!-- Override this in custom code to apply changes at run time -->
+
+    <script src="/build/js/operations.bundle.js"></script>
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-smap navbar-light bg-light bg-navbar-smap">
+    <a class="navbar-brand lang" data-lang="ops_title" href="#"></a>
+    <div class="spinner-grow text-danger hour_glass"></div>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars large-bars"></i>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item dropdown active">
+                <a class="nav-link dropdown-toggle" href="#" id="m_modules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="lang" data-lang="m_modules">modules</span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="m_modules">
+                    <a class="dropdown-item lang" data-lang="m_home" href="/">home</a>
+                    <a class="dropdown-item restrict_role admin_role analyst_role" href="/edit.html"> <span class="lang" data-lang="c_edit">Edit</span></a>
+                    <a class="dropdown-item restrict_role admin_role analyst_role" href="/app/fieldManager/surveyManagement.html"><span class="lang" data-lang="m_admin">Admin</span></a>
+                    <a class="dropdown-item restrict_role manage_role admin_role analyst_role" href="/app/tasks/managed_forms.html"><span class="lang" data-lang="m_console"></span></a>
+                    <a class="dropdown-item restrict_role analyst_role data_role" href="/app/fieldAnalysis/index.html"><span class="lang" data-lang="m_analysis">Analysis</span></a>
+                    <a class="dropdown-item restrict_role admin_role analyst_role manage_role task_role" href="/app/tasks/workflow.html"><span class="nav-label lang" data-lang="m_workflow">Workflow</span></a>
+                    <a class="dropdown-item restrict_role admin_role" href="/app/operations.html"><span class="nav-label lang" data-lang="m_operations">Operations</span></a>
+                    <a class="dropdown-item restrict_role admin_role analyst_role manage_role task_role" href="/app/reports.html"><span class="nav-label lang" data-lang="m_reports">reports</span></a>
+                </div>
+            </li>
+
+            <li class="nav-item restrict_role manage_role admin_role analyst_role"><a class="nav-link" href="/app/tasks/managed_forms.html"><span class="nav-label lang" data-lang="m_console">Console</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#" id="ops_refresh"><span class="nav-label lang" data-lang="c_refresh">Refresh</span></a></li>
+            <li id="m_help" class="nav-item"><a class="nav-link" href="https://www.smap.com.au/docs" target="_blank"><span class="nav-label lang" data-lang="m_help">help</span></a></li>
+            <li class="nav-item dropdown active">
+                <a class="nav-link dropdown-toggle" href="#" id="m_profile" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="m_profile">
+                    <a class="dropdown-item lang"  id="username" data-lang="m_user_profile" data-bs-toggle="modal" data-bs-target="#modify_me_popup" aria-label="User"> </a>
+                    <a class="dropdown-item lang" data-lang="c_change_p" href="/app/changePassword.html"></a>
+                    <a id="userProfileLogout" class="dropdown-item lang" data-lang="c_logout" href="/dologout.html"></a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container-fluid mt-3" id="main-content">
+
+    <!-- KPI tiles -->
+    <div class="row g-3" id="ops_kpis"></div>
+
+    <div class="row g-3 mt-1">
+        <!-- Backlog trend -->
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="card-header lang" data-lang="ops_backlog">Case backlog (30 days)</div>
+                <div class="card-body">
+                    <canvas id="ops_backlog_chart" height="110"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- Open alerts -->
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header lang" data-lang="ops_alerts">Open alerts</div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush" id="ops_alerts"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Units (roles) -->
+    <div class="row g-3 mt-1">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header lang" data-lang="ops_units">Units (roles)</div>
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th class="lang" data-lang="ops_role">Role</th>
+                                <th class="text-end lang" data-lang="ops_open_cases">Open cases</th>
+                                <th class="text-end lang" data-lang="ops_open_tasks">Open tasks</th>
+                                <th class="text-end lang" data-lang="ops_tasks_overdue">Overdue</th>
+                                <th class="text-end lang" data-lang="ops_overdue_pct">Overdue %</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ops_units"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p class="text-muted small mt-2" id="ops_generated"></p>
+
+</div>
+
+</body>
+</html>

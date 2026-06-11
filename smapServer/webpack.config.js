@@ -18,7 +18,8 @@ module.exports = {
 	resetForgottonPassword: "./WebContent/js/resetForgottonPassword.js",
 	serverState: "./WebContent/js/serverState.js",
 	api: "./WebContent/js/api.js",
-	reports: "./WebContent/js/reports.js"
+	reports: "./WebContent/js/reports.js",
+	operations: "./WebContent/js/operations.js"
   },
   output: {
     filename: "[name].bundle.js",
