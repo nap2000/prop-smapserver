@@ -19,7 +19,8 @@ module.exports = {
 	serverState: "./WebContent/js/serverState.js",
 	api: "./WebContent/js/api.js",
 	reports: "./WebContent/js/reports.js",
-	operations: "./WebContent/js/operations.js"
+	operations: "./WebContent/js/operations.js",
+	operations_unit: "./WebContent/js/operations_unit.js"
   },
   output: {
     filename: "[name].bundle.js",

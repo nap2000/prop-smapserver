@@ -1786,5 +1786,19 @@ define({
     "ops_generated": "Updated",
     "ops_days_ago": "d ago",
     "ops_hours_ago": "h ago",
-    "ops_mins_ago": "m ago"
+    "ops_mins_ago": "m ago",
+    "ops_avg_cycle_cases": "Avg case cycle (days)",
+    "ops_avg_cycle_tasks": "Avg task cycle (days)",
+    "ops_throughput": "Throughput (30 days)",
+    "ops_cases_closed": "Cases closed",
+    "ops_tasks_completed": "Tasks completed",
+    "ops_at_risk": "At-risk items",
+    "ops_no_at_risk": "Nothing at risk",
+    "ops_item": "Item",
+    "ops_assignee": "Assignee",
+    "ops_age_days": "Age (days)",
+    "ops_overdue_flag": "Overdue",
+    "ops_stale_flag": "Stale",
+    "ops_task": "Task",
+    "ops_case": "Case"
 });

@@ -230,10 +230,11 @@ function renderUnits(units) {
 	let html = "";
 	units.forEach(function (u) {
 		const colour = RAG[u.rag] || RAG.none;
-		const tgUrl = '/app/tasks/taskManagement.html';
+		const href = '/app/operations_unit.html?role=' + encodeURIComponent(u.role);
 		html += '<tr>' +
 			'<td><span class="badge me-1" style="background-color:' + colour + '">&nbsp;</span>' +
-			'<a href="' + tgUrl + '" class="text-decoration-none">' + esc(u.role) + '</a></td>' +
+			'<a href="' + href + '" class="text-decoration-none">' + esc(u.role) +
+			' <i class="fas fa-chevron-right text-muted small"></i></a></td>' +
 			'<td class="text-end">' + esc(String(u.openCases)) + '</td>' +
 			'<td class="text-end">' + esc(String(u.openTasks)) + '</td>' +
 			'<td class="text-end">' + esc(String(u.overdue)) + '</td>' +
