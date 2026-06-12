@@ -208,7 +208,15 @@ $(document).ready(function() {
 				} else {
 					notification.periodic_month = $('#periodic_month').val();
 				}
-				notification.r_id = $('#report').val();
+				var repVal = $('#report').val();
+				if(repVal === 'ops_summary') {
+					notification.r_id = 0;
+					if(!notification.notifyDetails) { notification.notifyDetails = {}; }
+					notification.notifyDetails.report_type = 'ops_summary';
+				} else {
+					notification.r_id = repVal;
+					if(notification.notifyDetails) { notification.notifyDetails.report_type = ''; }
+				}
 
 				/*
 				 * Validate
@@ -419,6 +427,7 @@ $(document).ready(function() {
 			i;
 
 		$selector.empty();
+		$selector.append(`<option value="ops_summary">${localise.set["ops_summary_report"] || "Operations Summary"}</option>`);
 		if(data && data.length > 0) {
 			for(i = 0; i < data.length; i++) {
 				$selector.append(`<option value="${data[i].id}">${data[i].name}</option>`);

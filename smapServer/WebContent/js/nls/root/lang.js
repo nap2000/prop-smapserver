@@ -1777,7 +1777,7 @@ define({
     "ops_role": "Role",
     "ops_overdue_pct": "Overdue %",
     "ops_alerts": "Open alerts",
-    "ops_backlog": "Case backlog (30 days)",
+    "ops_backlog": "Case backlog",
     "ops_net_backlog": "Net backlog",
     "ops_opened": "Opened",
     "ops_closed": "Closed",
@@ -1789,7 +1789,7 @@ define({
     "ops_mins_ago": "m ago",
     "ops_avg_cycle_cases": "Avg case cycle (days)",
     "ops_avg_cycle_tasks": "Avg task cycle (days)",
-    "ops_throughput": "Throughput (30 days)",
+    "ops_throughput": "Throughput",
     "ops_cases_closed": "Cases closed",
     "ops_tasks_completed": "Tasks completed",
     "ops_at_risk": "At-risk items",
@@ -1808,5 +1808,6 @@ define({
     "ops_set_trend_days": "Trend window (days)",
     "ops_set_rag_amber": "RAG amber threshold (overdue %)",
     "ops_set_rag_red": "RAG red threshold (overdue %)",
-    "ops_set_intro": "Thresholds for the Operations Monitor. Stale = any open task or case older than this; RAG colours a unit by its overdue percentage."
+    "ops_set_intro": "Thresholds for the Operations Monitor. Stale = any open task or case older than this; RAG colours a unit by its overdue percentage.",
+    "ops_summary_report": "Operations Summary"
 });

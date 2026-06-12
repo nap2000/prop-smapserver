@@ -5078,6 +5078,9 @@ function edit_notification(edit, idx, inconsole) {
 		$('#periodic_month_day').val(notification.periodic_month_day);
 		$('#periodic_month, #periodic_month_quarter').val(notification.periodic_month);
 		$('#report').val(notification.r_id);
+		if(notification.notifyDetails && notification.notifyDetails.report_type === 'ops_summary') {
+			$('#report').val('ops_summary');
+		}
 		setPeriodDependencies(notification.periodic_period);
 
 		if(notification.trigger !== "task_reminder" && (typeof notification.alert_id !== 'undefined'
