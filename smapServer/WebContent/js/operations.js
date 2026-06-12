@@ -61,13 +61,13 @@ $(document).ready(function () {
 
 	$('#ops_refresh').on('click', function (e) {
 		e.preventDefault();
-		loadOverview();
+		loadOverview(true);
 	});
 });
 
-function loadOverview() {
+function loadOverview(force) {
 	$('.hour_glass').show();
-	fetch('/surveyKPI/ops/overview', { credentials: 'same-origin' })
+	fetch('/surveyKPI/ops/overview' + (force ? '?refresh=true' : ''), { credentials: 'same-origin' })
 		.then(function (resp) {
 			if (!resp.ok) { throw new Error('HTTP ' + resp.status); }
 			return resp.json();
@@ -110,8 +110,12 @@ function renderKpis(kpis) {
 	gSparklines = [];
 
 	const linkFor = {
+		open_cases: '/app/operations_items.html?type=open_cases',
+		unassigned_cases: '/app/operations_items.html?type=unassigned',
+		tasks_in_progress: '/app/operations_items.html?type=in_progress',
+		tasks_overdue: '/app/operations_items.html?type=overdue',
 		stale_items: '/app/operations_items.html?type=stale',
-		tasks_overdue: '/app/operations_items.html?type=overdue'
+		open_alerts: '/app/operations_items.html?type=alerts'
 	};
 
 	let html = "";

@@ -1801,6 +1801,11 @@ define({
     "ops_stale_flag": "Stale",
     "ops_task": "Task",
     "ops_case": "Case",
+    "ops_alert": "Alert",
+    "ops_status_open": "Open",
+    "ops_status_in_progress": "In progress",
+    "ops_status_unassigned": "Unassigned",
+    "ops_status_alert": "Alert",
     "ops_items_title": "At-risk records",
     "ops_settings_tab": "Operations",
     "ops_set_stale_days": "Stale interval (days)",
@@ -1808,5 +1813,14 @@ define({
     "ops_set_rag_amber": "RAG amber threshold (overdue %)",
     "ops_set_rag_red": "RAG red threshold (overdue %)",
     "ops_set_intro": "Thresholds for the Operations Monitor. Stale = any open task or case older than this; RAG colours a unit by its overdue percentage.",
-    "ops_summary_report": "Operations Summary"
+    "ops_summary_report": "Operations Summary",
+    "ops_case_title": "Case",
+    "ops_case_owner": "Owner",
+    "ops_case_assign": "Assign",
+    "ops_case_release": "Release",
+    "ops_case_unassigned": "Unassigned",
+    "ops_case_closed": "Closed",
+    "ops_case_open_state": "Open",
+    "ops_case_fields": "Case details",
+    "ops_case_no_fields": "No data"
 });

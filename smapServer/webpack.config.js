@@ -21,7 +21,8 @@ module.exports = {
 	reports: "./WebContent/js/reports.js",
 	operations: "./WebContent/js/operations.js",
 	operations_unit: "./WebContent/js/operations_unit.js",
-	operations_items: "./WebContent/js/operations_items.js"
+	operations_items: "./WebContent/js/operations_items.js",
+	operations_case: "./WebContent/js/operations_case.js"
   },
   output: {
     filename: "[name].bundle.js",
