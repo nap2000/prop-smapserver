@@ -35,6 +35,7 @@ if (typeof localStorage !== "undefined") {
 		gUserLocale = navigator.language;
 	}
 }
+window.gUserLocale = gUserLocale;	// common.js reads this as a global
 
 var gType;
 
@@ -42,13 +43,15 @@ $(document).ready(function () {
 	if (typeof setTheme === "function") {
 		setTheme();
 	}
-	gType = new URLSearchParams(window.location.search).get("type") || "all";
+	gType = new URLSearchParams(window.location.search).get("type");
+	if (gType !== "stale" && gType !== "overdue") {
+		gType = "overdue";		// page is reached from the L0 stale / overdue cards
+	}
 
 	localise.initLocale(gUserLocale).then(function () {
 		setupUserProfile();
 		localise.setlang();
 		applyHeading();
-		highlightFilter();
 		loadItems();
 	});
 
@@ -56,16 +59,8 @@ $(document).ready(function () {
 });
 
 function applyHeading() {
-	var key = gType === 'overdue' ? "ops_tasks_overdue" : (gType === 'stale' ? "ops_stale_items" : "ops_at_risk");
+	var key = gType === 'stale' ? "ops_stale_items" : "ops_tasks_overdue";
 	$('#ops_items_heading').text(localise.set[key] || "At-risk records");
-}
-
-function highlightFilter() {
-	$('#ops_items_filter a').each(function () {
-		if ($(this).data('type') === gType) {
-			$(this).addClass('active');
-		}
-	});
 }
 
 function loadItems() {

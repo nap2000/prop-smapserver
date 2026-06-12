@@ -35,6 +35,7 @@ if (typeof localStorage !== "undefined") {
 		gUserLocale = navigator.language;
 	}
 }
+window.gUserLocale = gUserLocale;	// common.js reads this as a global
 
 var gBacklogChart;
 var gSparklines = [];

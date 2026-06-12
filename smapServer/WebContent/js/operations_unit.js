@@ -35,6 +35,7 @@ if (typeof localStorage !== "undefined") {
 		gUserLocale = navigator.language;
 	}
 }
+window.gUserLocale = gUserLocale;	// common.js reads this as a global
 
 const RAG = { green: "#198754", amber: "#ffc107", red: "#dc3545", none: "#6c757d" };
 

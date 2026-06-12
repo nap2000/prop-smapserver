@@ -1802,7 +1802,6 @@ define({
     "ops_task": "Task",
     "ops_case": "Case",
     "ops_items_title": "At-risk records",
-    "ops_filter_all": "All",
     "ops_settings_tab": "Operations",
     "ops_set_stale_days": "Stale interval (days)",
     "ops_set_trend_days": "Trend window (days)",
