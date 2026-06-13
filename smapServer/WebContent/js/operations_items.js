@@ -44,7 +44,7 @@ $(document).ready(function () {
 		setTheme();
 	}
 	gType = new URLSearchParams(window.location.search).get("type");
-	if (["stale", "overdue", "open_cases", "unassigned", "in_progress", "alerts"].indexOf(gType) < 0) {
+	if (["stale", "overdue", "open_cases", "unassigned", "in_progress", "alerts", "no_unit"].indexOf(gType) < 0) {
 		gType = "overdue";		// page is reached from an L0 card
 	}
 
@@ -65,7 +65,8 @@ function applyHeading() {
 		open_cases: "ops_open_cases",
 		unassigned: "ops_unassigned_cases",
 		in_progress: "ops_tasks_in_progress",
-		alerts: "ops_open_alerts"
+		alerts: "ops_open_alerts",
+		no_unit: "ops_unit_none"
 	};
 	var key = keyByType[gType] || "ops_items_title";
 	$('#ops_items_heading').text(localise.set[key] || "At-risk records");

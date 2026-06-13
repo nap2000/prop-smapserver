@@ -245,9 +245,14 @@ function renderUnits(units) {
 	units.forEach(function (u) {
 		const colour = RAG[u.rag] || RAG.none;
 		if (u.aggregate) {
-			// Reconciliation row (Unassigned / No unit) - not a real role, no drill-down
+			// Reconciliation row (Unassigned / No unit). Drills to the L2 record list when a type is set.
+			const label = u.itemType
+				? '<a href="/app/operations_items.html?type=' + encodeURIComponent(u.itemType) +
+					'" class="text-decoration-none text-muted">' + esc(u.role) +
+					' <i class="fas fa-chevron-right small"></i></a>'
+				: esc(u.role);
 			html += '<tr class="text-muted">' +
-				'<td><span class="badge me-1 bg-light">&nbsp;</span>' + esc(u.role) + '</td>' +
+				'<td><span class="badge me-1 bg-light">&nbsp;</span>' + label + '</td>' +
 				'<td class="text-end">' + esc(String(u.openCases)) + '</td>' +
 				'<td class="text-end">&mdash;</td>' +
 				'<td class="text-end">&mdash;</td>' +
