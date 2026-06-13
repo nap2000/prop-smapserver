@@ -244,6 +244,17 @@ function renderUnits(units) {
 	let html = "";
 	units.forEach(function (u) {
 		const colour = RAG[u.rag] || RAG.none;
+		if (u.aggregate) {
+			// Reconciliation row (Unassigned / No unit) - not a real role, no drill-down
+			html += '<tr class="text-muted">' +
+				'<td><span class="badge me-1 bg-light">&nbsp;</span>' + esc(u.role) + '</td>' +
+				'<td class="text-end">' + esc(String(u.openCases)) + '</td>' +
+				'<td class="text-end">&mdash;</td>' +
+				'<td class="text-end">&mdash;</td>' +
+				'<td class="text-end">&mdash;</td>' +
+				'</tr>';
+			return;
+		}
 		const href = '/app/operations_unit.html?role=' + encodeURIComponent(u.role);
 		html += '<tr>' +
 			'<td><span class="badge me-1" style="background-color:' + colour + '">&nbsp;</span>' +

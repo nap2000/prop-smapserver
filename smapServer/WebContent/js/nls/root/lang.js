@@ -1782,6 +1782,8 @@ define({
     "ops_opened": "Opened",
     "ops_closed": "Closed",
     "ops_no_units": "No units with open work",
+    "ops_unit_unassigned": "Unassigned",
+    "ops_unit_none": "No unit",
     "ops_no_alerts": "No open alerts",
     "ops_generated": "Updated",
     "ops_days_ago": "d ago",
