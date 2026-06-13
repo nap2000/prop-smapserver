@@ -164,17 +164,27 @@ function renderBacklog(d) {
 	});
 }
 
+function statusBadge(it) {
+	var status = it.status || (it.overdue ? "overdue" : "stale");
+	var map = {
+		overdue:     { cls: "bg-danger",            key: "ops_overdue_flag",       def: "Overdue" },
+		stale:       { cls: "bg-warning text-dark",  key: "ops_stale_flag",         def: "Stale" },
+		open:        { cls: "bg-info text-dark",      key: "ops_status_open",        def: "Open" },
+		in_progress: { cls: "bg-primary",            key: "ops_status_in_progress", def: "In progress" }
+	};
+	var m = map[status] || map.open;
+	return '<span class="badge ' + m.cls + '">' + (localise.set[m.key] || m.def) + '</span>';
+}
+
 function renderAtRisk(items) {
 	if (!items.length) {
 		$('#ops_unit_atrisk').html('<tr><td colspan="4" class="text-muted">' +
-			(localise.set["ops_no_at_risk"] || "Nothing at risk") + '</td></tr>');
+			(localise.set["ops_unit_no_work"] || "No open work") + '</td></tr>');
 		return;
 	}
 	let html = "";
 	items.forEach(function (it) {
-		const flag = it.overdue
-			? '<span class="badge bg-danger">' + (localise.set["ops_overdue_flag"] || "Overdue") + '</span>'
-			: '<span class="badge bg-warning text-dark">' + (localise.set["ops_stale_flag"] || "Stale") + '</span>';
+		const flag = statusBadge(it);
 		const typeLabel = it.type === 'task'
 			? (localise.set["ops_task"] || "Task")
 			: (localise.set["ops_case"] || "Case");

@@ -1784,6 +1784,8 @@ define({
     "ops_no_units": "No units with open work",
     "ops_unit_unassigned": "Unassigned",
     "ops_unit_none": "No unit",
+    "ops_unit_work": "Open cases & tasks",
+    "ops_unit_no_work": "No open work",
     "ops_no_alerts": "No open alerts",
     "ops_generated": "Updated",
     "ops_days_ago": "d ago",
