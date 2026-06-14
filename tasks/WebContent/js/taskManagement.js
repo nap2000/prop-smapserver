@@ -1078,7 +1078,7 @@ localise.initLocale(gUserLocale).then(function () {
 
 		globals.gCurrentProject = $('#project_name option:selected').val();
 
-		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChangedTasks, false, undefined, undefined, false);			// Get surveys
+		loadSurveys(globals.gCurrentProject, undefined, false, false, surveyChangedTasks, false, undefined, undefined, false);			// Get surveys (fan-out to all .survey_select controls: #survey, #survey_to_complete, #tp_form_name)
 		refreshTaskGroupData();		// Get the task groups from the server
 
 		saveCurrentProject(globals.gCurrentProject,

@@ -92,6 +92,16 @@ fetch('/surveyKPI/rest/dsar?identifier=' + encodeURIComponent(ident))
 - `esc(s)` helper used to HTML-escape before inserting into `innerHTML`
 - No TypeScript; no test framework
 
+## Survey dropdown population (`loadSurveys` / `.survey_select`)
+
+`loadSurveys(projectId, selector, ...)` (in `common.js`) populates survey `<select>` controls.
+
+- A `<select>` auto-populates on project change **iff** it carries the `survey_select` class. When `selector` is `undefined`, `loadSurveys` fans out to the whole `.survey_select` class (`.data_survey`, `.oversight_survey`, `.data_oversight_survey`, `.bundle_select`). ~14 call sites rely on this default.
+- Pass an explicit `selector` (e.g. `"#survey"`) to target one control instead.
+- A control can legitimately need **both**: the `survey_select` class so a page-wide refresh (the `undefined` fan-out at init/project-change) fills it, *plus* explicit `"#survey"` calls for a context-specific override (e.g. the task-group dialog loads `#survey` for a *source* project that differs from the current one). Keeping both is fine — they serve different events.
+- **The trap:** if a select is populated only by the fan-out at init, it MUST keep the `survey_select` class. Removing the class (e.g. to add explicit calls elsewhere) silently breaks init-time population. In taskManagement, `#survey`, `#survey_to_complete`, and `#tp_form_name` are all populated solely by the init fan-out in `projectChanged()` — none may drop the class.
+- When adding/removing `survey_select` on a select, grep the page's JS for both the class and `loadSurveys(.*undefined` to find every caller that depends on the fan-out.
+
 ## Workflow page design
 
 Full specification in `~/git/smapserver2/docs/workflow-page-design.md`. The workflow page renders nodes derived from `forward` (notifications) and `task_group` tables. Node positions are persisted per-user in `workflow_node_positions`. The `WorkflowItem` fields:
