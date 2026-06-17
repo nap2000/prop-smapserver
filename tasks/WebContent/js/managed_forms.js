@@ -1077,7 +1077,8 @@ localise.initLocale(gUserLocale).then(function () {
     });         // End of document ready
 
     // Generate a file based on current console data
-    $('.genfile').click(function (e) {
+    // Delegated: this code can run before the nav menu is parsed (script is in <head>)
+    $(document).on('click', '.genfile', function (e) {
         e.preventDefault();
         var format,
             $this = $(this);
@@ -1106,62 +1107,6 @@ localise.initLocale(gUserLocale).then(function () {
     });
 
     // Generate an xls file of basic counts for all data
-    $('.genxlsfileall').click(function (e) {
-        e.preventDefault();
-        var $groupBy = $('#srf_group');
-        if(gTasks.cache.currentData.schema &&  $groupBy.html().length == 0) {
-            var cols = gTasks.cache.currentData.schema.columns;
-            var h = [];
-            var idx = -1;
-            var i;
-            var currentSelectQuestion = "";
-            var selectQuestion = "";
-
-            h[++idx] = '<option value="-1">';
-            h[++idx] = localise.set["none"];
-            h[++idx] = '</option>';
-
-            for(i = 0; i < cols.length; i++) {
-
-                // Don't use some types to group
-                if(cols[i].type === "image" || cols[i].type === "video" || cols[i].type === "audio"
-                    || cols[i].type === "prikey" || cols[i].type === "geopoint" || cols[i].type === "geoshape" || cols[i].type === "geotrace"
-                    || cols[i].type === "geocompound") {
-
-                    continue;
-
-                }
-
-                if(cols[i].type === "select") {
-                    var n = cols[i].displayName.split(" - ");         // Handle legacy select multiple
-                    if (n.length > 1) {
-                        selectQuestion = n[0];
-                        if(selectQuestion === currentSelectQuestion) {
-                            continue;
-                        } else {
-                            currentSelectQuestion = selectQuestion;
-                        }
-                    } else {
-                        selectQuestion = n;     // A compressed select multiple
-                    }
-                }
-                h[++idx] = '<option value="';
-                h[++idx] = i;
-                h[++idx] = '">';
-                h[++idx] = cols[i].type === "select" ? selectQuestion : cols[i].displayName;
-                h[++idx] = '</option>';
-            }
-            $groupBy.empty().append(h.join(''));
-        }
-        window.bsModalShow('#overviewReport');
-    });
-
-    $('#overviewReportSave').click(function(e) {
-        e.preventDefault();
-        genFile(true, "xlsx");
-        window.bsModalHide('#overviewReport');
-    });
-
     function editRecord() {
         if(gEditUrl !== '#') {
             window.location.href = gEditUrl;
@@ -1255,24 +1200,6 @@ localise.initLocale(gUserLocale).then(function () {
             k: localise.set["mf_cc"],
             v: $('#include_completed').prop('checked') ? localise.set["c_yes"] : localise.set["c_no"]
         });
-        if(format === "xlsx" && alldata) {
-            settings.push({
-                k: localise.set["br_tf"],
-                v: $('#srf_text_fn').val()
-            });
-            settings.push({
-                k: localise.set["br_nf"],
-                v: $('#srf_num_fn').val()
-            });
-
-            var groupIdx = $('#srf_group').val();
-            if(groupIdx != -1) {
-                settings.push({
-                    k: "Group By",
-                    v: gTasks.cache.currentData.schema.columns[groupIdx].displayName
-                });
-            }
-        }
         colCount = globals.gMainTable.columns()[0].length;
         for (i = 0; i < colCount; i++) {
             colValue = globals.gMainTable.column(i).search();
@@ -4128,7 +4055,7 @@ localise.initLocale(gUserLocale).then(function () {
     /*
      * Add a task
 	 */
-    $('#addTask').click(function () {
+    $(document).on('click', '#addTask', function () {
 
         // TODO default location to location of record
         var task = {},
@@ -4144,7 +4071,7 @@ localise.initLocale(gUserLocale).then(function () {
         editTask(true, task, taskFeature);
     });
 
-    $('#addNotification').click(function(){
+    $(document).on('click', '#addNotification', function(){
         $('#dashboardInfo').hide();
         edit_notification(false, -1, true);
         window.bsModalShow('#addNotificationPopup');

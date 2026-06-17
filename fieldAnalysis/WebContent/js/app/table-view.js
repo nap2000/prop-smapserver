@@ -434,7 +434,7 @@ function deleteAllTables(sId) {
 			if(handleLogout(response)) {
 				if(response.length > 1) {
 					var surveyList = "";
-					for(i = 0; i < response.length; i++) {
+					for(var i = 0; i < response.length; i++) {
 						if(sId != response[i].sId) {
 							if (surveyList.length > 0) {
 								surveyList += ", ";
@@ -448,10 +448,10 @@ function deleteAllTables(sId) {
 					}
 				}
 				var decision = confirm(localise.set["msg_del_data"]);
-				if (decision == true) {
+				if (decision === true) {
 					var msg2 = localise.set["msg_del_data2"];
 					var decision2 = confirm(msg2);
-					if (decision2 == true) {
+					if (decision2 === true) {
 						addHourglass();
 						$.ajax({
 							type: 'Delete',
