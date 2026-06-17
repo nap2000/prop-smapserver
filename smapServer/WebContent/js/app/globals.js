@@ -17,6 +17,7 @@
  */
 
 import { addHourglass, handleLogout, htmlEncode, removeHourglass } from "./common.js";
+import localise from "./localise.js";
 
 /*
  * Quick solution to issue of legacy globals after migrating to AMD / require.js
@@ -1003,14 +1004,24 @@ import { addHourglass, handleLogout, htmlEncode, removeHourglass } from "./commo
         // Save the settings for the survey
         this.save_settings = function () {
 
-            var settings = JSON.stringify(this.getSettings(true));
+            // Build a list of the settings that actually changed (old -> new) before the model is updated
+            var oldSettings = {};
+            try {
+                oldSettings = JSON.parse(this.savedSettings);
+            } catch (e) {
+                oldSettings = {};
+            }
+            var newSettings = this.getSettings(true);     // Also updates the model
+            var changeList = this.buildSettingsChangeList(oldSettings, newSettings);
+
+            var settings = JSON.stringify(newSettings);
 
             addHourglass();
             $.ajax({
                 type: "POST",
                 contentType: "application/x-www-form-urlencoded",
                 cache: false,
-                data: { settings: settings },
+                data: { settings: settings, changeList: JSON.stringify(changeList) },
                 url: "/surveyKPI/surveys/save_settings/" + globals.gCurrentSurvey,
                 success: function (data, status) {
                     removeHourglass();
@@ -1038,6 +1049,81 @@ import { addHourglass, handleLogout, htmlEncode, removeHourglass } from "./commo
                 }
             });
 
+        };
+
+        // Definition of every survey setting: model key, its localisation key and value type.
+        // Used to diff the settings dialog so the change log lists only what changed.
+        this.settingsFields = [
+            { key: "displayName",          label: "c_form",        type: "text" },
+            { key: "instanceNameDefn",     label: "ed_in",         type: "text" },
+            { key: "surveyClass",          label: "c_style",       type: "text" },
+            { key: "p_id",                 label: "c_project",     type: "project" },
+            { key: "def_lang",             label: "ed_dl",         type: "text" },
+            { key: "default_logo",         label: "ed_drl",        type: "text" },
+            { key: "task_file",            label: "ed_ld",         type: "bool" },
+            { key: "timing_data",          label: "ed_td",         type: "bool" },
+            { key: "audit_location_data",  label: "ed_rl",         type: "bool" },
+            { key: "track_changes",        label: "ed_rc",         type: "bool" },
+            { key: "hideOnDevice",         label: "ed_hod",        type: "bool" },
+            { key: "searchLocalData",      label: "ed_sld",        type: "bool" },
+            { key: "dataSurvey",           label: "ed_ds",         type: "bool" },
+            { key: "oversightSurvey",      label: "ed_os",         type: "bool" },
+            { key: "myReferenceData",      label: "ed_mr",         type: "bool" },
+            { key: "readOnlySurvey",       label: "ed_ro",         type: "bool" },
+            { key: "exclude_empty",        label: "ed_ee",         type: "bool" },
+            { key: "compress_pdf",         label: "ed_cpdf",       type: "bool" },
+            { key: "turnstile",            label: "ed_turnstile",  type: "bool" },
+            { key: "showFormIndex",        label: "ed_sfi",        type: "bool" }
+        ];
+
+        // Format a single setting value for display in the change log
+        this.formatSettingValue = function (val, type) {
+            if (type === "bool") {
+                return val ? localise.set["c_yes"] : localise.set["c_no"];
+            } else if (type === "project") {
+                var name = $('#set_project_name option[value="' + val + '"]').text();
+                return (name && name.length > 0) ? name : ("" + val);
+            } else {    // text
+                if (val === undefined || val === null || ("" + val).trim().length === 0 || val === "none") {
+                    return localise.set["c_none"];
+                }
+                return "" + val;
+            }
+        };
+
+        // Compare old and new settings, returning an array of { label, oldVal, newVal } for changed fields only
+        this.buildSettingsChangeList = function (oldSettings, newSettings) {
+            var changes = [],
+                i,
+                field,
+                oldRaw,
+                newRaw,
+                differs;
+
+            for (i = 0; i < this.settingsFields.length; i++) {
+                field = this.settingsFields[i];
+                oldRaw = oldSettings[field.key];
+                newRaw = newSettings[field.key];
+
+                if (field.type === "bool") {
+                    differs = (!!oldRaw !== !!newRaw);
+                } else if (field.type === "project") {
+                    differs = (oldRaw !== newRaw);
+                } else {    // text - treat undefined/null as empty string
+                    differs = ((oldRaw === undefined || oldRaw === null ? "" : "" + oldRaw) !==
+                               (newRaw === undefined || newRaw === null ? "" : "" + newRaw));
+                }
+
+                if (differs) {
+                    changes.push({
+                        label: localise.set[field.label],
+                        oldVal: this.formatSettingValue(oldRaw, field.type),
+                        newVal: this.formatSettingValue(newRaw, field.type)
+                    });
+                }
+            }
+
+            return changes;
         };
 
         // Modify a label for a question or an option called from translate where multiple questions can be modified at once if the text is the same

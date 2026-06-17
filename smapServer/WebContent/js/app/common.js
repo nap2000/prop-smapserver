@@ -2529,9 +2529,26 @@ function getChangeDescription(change, version) {
 
 	} else if(change.action === "settings_update") {
 		h[++idx] = localise.set["ed_c_settings"];
-		h[++idx] = ' <span style="color:blue;">';
-		h[++idx] = htmlEncode(change.msg);
-		h[++idx] = '</span>';
+		if(change.settingsChanges && change.settingsChanges.length > 0) {
+			// Structured list of only the settings that changed (old -> new)
+			h[++idx] = '<ul style="margin:0;padding-left:18px;">';
+			for(var si = 0; si < change.settingsChanges.length; si++) {
+				var sc = change.settingsChanges[si];
+				h[++idx] = '<li>';
+				h[++idx] = htmlEncode(sc.label);
+				h[++idx] = ': <span style="color:red;">';
+				h[++idx] = htmlEncode(sc.oldVal);
+				h[++idx] = '</span> &rarr; <span style="color:blue;">';
+				h[++idx] = htmlEncode(sc.newVal);
+				h[++idx] = '</span></li>';
+			}
+			h[++idx] = '</ul>';
+		} else {
+			// Legacy change rows store a plain text summary in msg
+			h[++idx] = ' <span style="color:blue;">';
+			h[++idx] = htmlEncode(change.msg);
+			h[++idx] = '</span>';
+		}
 
 	} else if(change.action === "language_update") {
 		h[++idx] = localise.set["ed_c_languages"];
