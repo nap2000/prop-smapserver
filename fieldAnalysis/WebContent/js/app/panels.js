@@ -22,13 +22,13 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 import "jquery";
 import "localise";
-import { addHourglass, getLoggedInUser, handleLogout, htmlEncode, removeHourglass, saveCurrentProject, setupUserProfile, shapeFormsChanged, validGeneralName } from "common";
+import { addHourglass, getFromLocalStorage, getLoggedInUser, handleLogout, htmlEncode, removeHourglass, saveCurrentProject, setInLocalStorage, setupUserProfile, shapeFormsChanged, validGeneralName } from "common";
 import { dashboardURL, dashboardStateURL, getQuestionInfo, initialiseDialogs, openModal, closeModal } from "./script";
 import globals from "globals";
 import "./script";
 import "rmm";
 import "moment";
-import { copyView, getData, getViewSurveys, showSettings } from "./survey_control";
+import { copyView, getData, getViewSurveys, refreshAnalysisData, showSettings } from "./survey_control";
 import extendedModel from "./extended_model";
 import { initializeMap } from "./map-ol";
 
@@ -257,6 +257,13 @@ $(document).ready(function() {
 		getViewSurveys({sId:"-1"});
  	 });
 
+	// Dashboard-wide date range - saved locally per user, applied to panels without their own range
+	$('#dashboard_date_range').change(function() {
+		globals.gDashboardDateRange = $(this).val();
+		setInLocalStorage('an_date_range_' + globals.gLoggedInUser.ident, globals.gDashboardDateRange);
+		refreshAnalysisData();
+	});
+
 	// Set change function on the user an administrator is managing panels for
 	$('#dashboard_user').change(function() {
 		var ident = $('#dashboard_user option:selected').val();
@@ -287,6 +294,11 @@ $(document).ready(function() {
 
 
 function loggedInUserIdentified(projectId) {
+	// Restore the user's saved dashboard-wide date range before loading panels
+	var savedRange = getFromLocalStorage('an_date_range_' + globals.gLoggedInUser.ident) || 'all';
+	globals.gDashboardDateRange = savedRange;
+	$('#dashboard_date_range').val(savedRange);
+
 	if(globals.gIsAdministrator) {
 		getProjectUsers(projectId);	// Refreshes the user list then loads the panels
 	} else {

@@ -149,6 +149,37 @@ function getSurveyMetaSE(sId, view, getS, updateExport, updateDatePicker, curren
 	  	}
    }
  
+/*
+ * Returns {fromDate, toDate, dateQuestionId} for a view, applying the
+ * dashboard-wide relative range (globals.gDashboardDateRange) only when the
+ * view has no date range of its own ("fill blanks").  Non-mutating.
+ */
+function getEffectiveDateFilter(view) {
+	var fromDate = view.fromDate,
+		toDate = view.toDate,
+		dateQuestionId = view.dateQuestionId,
+		range = globals.gDashboardDateRange;
+
+	if(range && range !== 'all' && !fromDate && !toDate) {
+		var now = new Date(),
+			from = new Date();
+		if(range === '1d') {
+			from.setDate(from.getDate() - 1);
+		} else if(range === '1w') {
+			from.setDate(from.getDate() - 7);
+		} else if(range === '1m') {
+			from.setMonth(from.getMonth() - 1);
+		}
+		var fmt = function(d) { return d.toISOString().slice(0, 10); };	// YYYY-MM-DD
+		fromDate = fmt(from);
+		toDate = fmt(now);
+		if(!dateQuestionId || dateQuestionId == 0) {
+			dateQuestionId = -100;	// Upload Time pseudo id
+		}
+	}
+	return { fromDate: fromDate, toDate: toDate, dateQuestionId: dateQuestionId };
+}
+
 //Get data at the survey level
  function getSurveyDataSE(sId, view) {
 	var survey,
@@ -193,10 +224,11 @@ function processSurveyData(fId, f_sId, f_view, surveyName, replace, start_rec) {
 		start_rec = 0;
 	}
 	
+	var df = getEffectiveDateFilter(f_view);
 	var i,
 		tz = globals.gTimezone,
 		url = formItemsURL(fId, "yes", "no", start_rec, rec_limit, bBad, f_view.filter,
-				f_view.dateQuestionId, f_view.fromDate, f_view.toDate,
+				df.dateQuestionId, df.fromDate, df.toDate,
 				f_view.advanced_filter,  // Get all records with all features
 				tz,
 				f_view.inc_ro,
@@ -276,7 +308,8 @@ function getUserData(view, start_rec) {
 		tz = globals.gTimezone,
 		data;
 
-	var url = userItemsURL(view, start_rec, rec_limit,  view.dateQuestionId, view.fromDate, view.toDate,tz);
+	var df = getEffectiveDateFilter(view);
+	var url = userItemsURL(view, start_rec, rec_limit,  df.dateQuestionId, df.fromDate, df.toDate,tz);
 	data = globals.gSelector.getItem(url);      // check cache
 
 	if(data) {
@@ -446,19 +479,20 @@ function getUserLocationsData(view, start_rec, nocache) {
  }
 
 	// Call ajax to get the results
+	var df = getEffectiveDateFilter(view);
 	getAsyncResults(view,
-			view.sId, 
-			view.qId, 
-			view.dateQuestionId, 
+			view.sId,
+			view.qId,
+			df.dateQuestionId,
 			view.groupQuestionId,
 			view.groupType,
 			view.region,
 			view.fn,
 			view.lang,
 			view.timeGroup,
-			view.fromDate,
-			view.toDate,
-			view.qId_is_calc);	
+			df.fromDate,
+			df.toDate,
+			view.qId_is_calc);
  }
  
  function lookup(key, array) {

@@ -45,6 +45,13 @@
 		<select class="project_list form-select form-select-sm navbar-project-select ms-2" id="project_name" aria-label="Project"></select>
 		<span id="dashboard_user_label" class="navbar-text text-light ms-2 d-none lang" data-lang="c_manage_panels_for">Manage panels for</span>
 		<select class="form-select form-select-sm navbar-project-select ms-2 d-none" id="dashboard_user" aria-label="User"></select>
+		<!-- Dashboard-wide date range -->
+		<select class="form-select form-select-sm navbar-project-select ms-2" id="dashboard_date_range" aria-label="Date range">
+			<option value="all" class="lang" data-lang="c_all">All</option>
+			<option value="1d" class="lang" data-lang="a_dr_1d">Last day</option>
+			<option value="1w" class="lang" data-lang="a_dr_1w">Last week</option>
+			<option value="1m" class="lang" data-lang="a_dr_1m">Last month</option>
+		</select>
 		<ul class="navbar-nav ms-auto">
 			<li class="nav-item dropdown pfoot">
 				<button class="btn btn-sm btn-outline-secondary dropdown-toggle nav-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
