@@ -82,7 +82,7 @@ const TYPE_ICONS = {
 };
 
 // Types that get an edit button on their card
-const EDITABLE_TYPES = ["task", "case", "reference", "email", "sms", "sharepoint_list"];
+const EDITABLE_TYPES = ["task", "case", "reference", "email", "sms", "sharepoint_list", "periodic"];
 
 // Localised label per workitem type
 function typeLabel(type) {
@@ -557,7 +557,7 @@ function openEditDrawer(cardEl) {
 	const promises = [];
 	if (fwdIds.length > 0) {
 		promises.push(
-			fetch(`/surveyKPI/workflow/edit/notifications?ids=${fwdIds.join(",")}`, { credentials: "include" })
+			fetch(`/surveyKPI/workflow/edit/notifications?ids=${fwdIds.join(",")}&tz=${encodeURIComponent((typeof globals !== "undefined" && globals.gTimezone) || "UTC")}`, { credentials: "include" })
 				.then(function(r) { return r.json(); })
 				.then(function(d) { gEditNotifs = d; })
 		);
@@ -602,6 +602,99 @@ function wireCreateTypeButtons() {
 	document.querySelectorAll(".wf-create-type-btn").forEach(function(btn) {
 		btn.addEventListener("click", function() { gCreateType = this.dataset.type; renderDrawerContent(gCreateType); });
 	});
+}
+
+/*
+ * Build the schedule fields (label, report, period, time, weekday/monthday/month)
+ * shared by the scheduled create drawer and the periodic edit drawer.
+ * `vals` pre-fills the controls when editing.
+ */
+function scheduleFieldsHtml(l, vals) {
+	vals = vals || {};
+	const period = vals.period || "daily";
+	const time   = vals.time   || "09:00";
+	const wd     = vals.weekday  != null ? vals.weekday  : 0;
+	const md     = vals.monthday != null ? vals.monthday : 1;
+	const mo     = vals.month    != null ? vals.month    : 1;
+	const weekDays = [
+		[0, l["c_sunday"]], [1, l["c_monday"]], [2, l["c_tuesday"]], [3, l["c_wednesday"]],
+		[4, l["c_thursday"]], [5, l["c_friday"]], [6, l["c_saturday"]]
+	];
+	let dayOpts = "";
+	for (let d = 1; d <= 31; d++) dayOpts += `<option value="${d}"${d === md ? " selected" : ""}>${d}</option>`;
+	let monthOpts = "";
+	for (let m = 1; m <= 12; m++) monthOpts += `<option value="${m}"${m === mo ? " selected" : ""}>${m}</option>`;
+	function psel(v) { return period === v ? " selected" : ""; }
+	return `<div class="wf-field">
+			<label>${l["c_label"]}</label>
+			<input id="wfd-sched-label" type="text" value="${esc(vals.label || "")}" placeholder="${esc(l["c_scheduled"])}">
+		</div>
+		<div class="wf-field">
+			<label>${l["c_report"]}</label>
+			<select id="wfd-sched-report"><option value="ops_summary">${l["ops_summary_report"]}</option></select>
+		</div>
+		<div class="wf-field">
+			<label>${l["c_period"]}</label>
+			<select id="wfd-sched-period">
+				<option value="daily"${psel("daily")}>${l["c_daily"]}</option>
+				<option value="weekly"${psel("weekly")}>${l["c_weekly"]}</option>
+				<option value="monthly"${psel("monthly")}>${l["c_monthly"]}</option>
+				<option value="quarterly"${psel("quarterly")}>${l["c_quarterly"]}</option>
+				<option value="yearly"${psel("yearly")}>${l["c_yearly"]}</option>
+			</select>
+		</div>
+		<div class="wf-field">
+			<label>${l["ed_t"]}</label>
+			<input id="wfd-sched-time" type="time" value="${esc(time)}">
+		</div>
+		<div class="wf-field" id="wfd-sched-weekday-row" style="display:none;">
+			<label>${l["n_dow"]}</label>
+			<select id="wfd-sched-weekday">${weekDays.map(function(w){return `<option value="${w[0]}"${w[0] === wd ? " selected" : ""}>${esc(w[1])}</option>`;}).join("")}</select>
+		</div>
+		<div class="wf-field" id="wfd-sched-monthday-row" style="display:none;">
+			<label>${l["n_dom"]}</label>
+			<select id="wfd-sched-monthday">${dayOpts}</select>
+		</div>
+		<div class="wf-field" id="wfd-sched-month-row" style="display:none;">
+			<label>${l["c_month"]}</label>
+			<select id="wfd-sched-month">${monthOpts}</select>
+		</div>`;
+}
+
+/*
+ * Populate the report list for the current project and wire the period selector
+ * so only the schedule fields relevant to the chosen period are shown.
+ * `selectedReport` pre-selects a report value once the list loads ("ops_summary"
+ * or a numeric report id) when editing.
+ */
+function wireScheduleFields(selectedReport) {
+	const repSel = document.getElementById("wfd-sched-report");
+	const pId = (typeof globals !== "undefined" && globals.gCurrentProject) || 0;
+	if (pId && repSel) {
+		fetch(`/surveyKPI/reporting/reports?pId=${pId}`, { credentials: "include", cache: "no-store" })
+			.then(function(r) { return r.json(); })
+			.then(function(reports) {
+				if (!Array.isArray(reports)) return;
+				reports.forEach(function(rep) {
+					const opt = document.createElement("option");
+					opt.value = rep.id;
+					opt.textContent = rep.name;
+					repSel.appendChild(opt);
+				});
+				if (selectedReport != null && selectedReport !== "") repSel.value = String(selectedReport);
+			})
+			.catch(function(err) { console.error("load reports error:", err); });
+	}
+
+	const periodSel = document.getElementById("wfd-sched-period");
+	function syncSchedFields() {
+		const p = periodSel.value;
+		document.getElementById("wfd-sched-weekday-row").style.display  = (p === "weekly") ? "" : "none";
+		document.getElementById("wfd-sched-monthday-row").style.display = (p === "monthly" || p === "quarterly" || p === "yearly") ? "" : "none";
+		document.getElementById("wfd-sched-month-row").style.display    = (p === "yearly") ? "" : "none";
+	}
+	periodSel.addEventListener("change", syncSchedFields);
+	syncSchedFields();
 }
 
 function renderDrawerContent(type) {
@@ -695,85 +788,36 @@ function renderDrawerContent(type) {
 
 	// Scheduled create mode: report selector + periodic schedule fields
 	if (type === "scheduled" && gDrawerCreateMode) {
-		const weekDays = [
-			[0, l["c_sunday"]], [1, l["c_monday"]], [2, l["c_tuesday"]], [3, l["c_wednesday"]],
-			[4, l["c_thursday"]], [5, l["c_friday"]], [6, l["c_saturday"]]
-		];
-		let dayOpts = "";
-		for (let d = 1; d <= 31; d++) dayOpts += `<option value="${d}">${d}</option>`;
-		let monthOpts = "";
-		for (let m = 1; m <= 12; m++) monthOpts += `<option value="${m}">${m}</option>`;
-
-		bodyHtml += `<div class="wf-field">
-			<label>${l["c_label"]}</label>
-			<input id="wfd-sched-label" type="text" placeholder="${esc(l["c_scheduled"])}">
-		</div>
-		<div class="wf-field">
-			<label>${l["c_report"]}</label>
-			<select id="wfd-sched-report"><option value="ops_summary">${l["ops_summary_report"]}</option></select>
-		</div>
-		<div class="wf-field">
-			<label>${l["c_period"]}</label>
-			<select id="wfd-sched-period">
-				<option value="daily">${l["c_daily"]}</option>
-				<option value="weekly">${l["c_weekly"]}</option>
-				<option value="monthly">${l["c_monthly"]}</option>
-				<option value="quarterly">${l["c_quarterly"]}</option>
-				<option value="yearly">${l["c_yearly"]}</option>
-			</select>
-		</div>
-		<div class="wf-field">
-			<label>${l["ed_t"]}</label>
-			<input id="wfd-sched-time" type="time" value="09:00">
-		</div>
-		<div class="wf-field" id="wfd-sched-weekday-row" style="display:none;">
-			<label>${l["n_dow"]}</label>
-			<select id="wfd-sched-weekday">${weekDays.map(function(w){return `<option value="${w[0]}">${esc(w[1])}</option>`;}).join("")}</select>
-		</div>
-		<div class="wf-field" id="wfd-sched-monthday-row" style="display:none;">
-			<label>${l["n_dom"]}</label>
-			<select id="wfd-sched-monthday">${dayOpts}</select>
-		</div>
-		<div class="wf-field" id="wfd-sched-month-row" style="display:none;">
-			<label>${l["c_month"]}</label>
-			<select id="wfd-sched-month">${monthOpts}</select>
-		</div>`;
+		bodyHtml += scheduleFieldsHtml(l, {});
 		document.getElementById("wf-drawer-body").innerHTML = bodyHtml;
 		wireCreateTypeButtons();
-
-		// Populate the report list for the current project (fixed Operations Summary + public reports)
-		const repSel = document.getElementById("wfd-sched-report");
-		const pId = (typeof globals !== "undefined" && globals.gCurrentProject) || 0;
-		if (pId) {
-			fetch(`/surveyKPI/reporting/reports?pId=${pId}`, { credentials: "include", cache: "no-store" })
-				.then(function(r) { return r.json(); })
-				.then(function(reports) {
-					if (!repSel || !Array.isArray(reports)) return;
-					reports.forEach(function(rep) {
-						const opt = document.createElement("option");
-						opt.value = rep.id;
-						opt.textContent = rep.name;
-						repSel.appendChild(opt);
-					});
-				})
-				.catch(function(err) { console.error("load reports error:", err); });
-		}
-
-		// Show only the schedule fields relevant to the chosen period
-		const periodSel = document.getElementById("wfd-sched-period");
-		function syncSchedFields() {
-			const p = periodSel.value;
-			document.getElementById("wfd-sched-weekday-row").style.display  = (p === "weekly") ? "" : "none";
-			document.getElementById("wfd-sched-monthday-row").style.display = (p === "monthly" || p === "quarterly" || p === "yearly") ? "" : "none";
-			document.getElementById("wfd-sched-month-row").style.display    = (p === "yearly") ? "" : "none";
-		}
-		periodSel.addEventListener("change", syncSchedFields);
-		syncSchedFields();
-
+		wireScheduleFields(null);
 		document.getElementById("wf-conditions").style.display      = "none";
 		document.getElementById("wf-drawer-delete").style.display   = "none";
 		document.getElementById("wf-drawer-advanced").style.display = "none";
 		document.getElementById("wf-drawer-save").textContent = localise.set["c_create_step"];
+		return;
+	}
+
+	// Periodic edit mode: change schedule, label and report of an existing scheduled step.
+	// Recipients are edited separately on the linked email node.
+	if (type === "periodic" && !gDrawerCreateMode) {
+		const n = gEditNotifs[0] || {};
+		const isOps = n.reportType === "ops_summary";
+		bodyHtml += scheduleFieldsHtml(l, {
+			label:    n.name,
+			period:   n.periodicPeriod,
+			time:     n.periodicTime,
+			weekday:  n.periodicWeekDay,
+			monthday: n.periodicMonthDay,
+			month:    n.periodicMonth
+		});
+		document.getElementById("wf-drawer-body").innerHTML = bodyHtml;
+		wireScheduleFields(isOps ? "ops_summary" : n.rId);
+		document.getElementById("wf-conditions").style.display      = "none";
+		document.getElementById("wf-drawer-advanced").style.display = "none";
+		document.getElementById("wf-drawer-delete").style.display   = "";
+		document.getElementById("wf-drawer-save").innerHTML = '<span class="lang" data-lang="c_save">Save</span>';
 		return;
 	}
 
@@ -1208,6 +1252,7 @@ function buildConditionRows() {
 function saveDrawer() {
 	if (gDrawerCreateMode) { executeCreate(); return; }
 	if (!gEditItem || gEditItem.dataset.type === "form") return;
+	if (gEditItem.dataset.type === "periodic") { saveScheduled(); return; }
 
 	const type    = gEditItem.dataset.type;
 	const name    = (document.getElementById("wfd-name")     || {}).value || "";
@@ -1336,6 +1381,43 @@ function saveDrawer() {
 			loadWorkflow();
 		})
 		.catch(function(err) { console.error("saveDrawer error:", err); })
+		.finally(function() { removeHourglass(); });
+}
+
+/*
+ * Save schedule/label/report changes for a periodic (scheduled) node.
+ */
+function saveScheduled() {
+	const n = gEditNotifs[0];
+	if (!n) { closeEditDrawer(); return; }
+	const repSel  = document.getElementById("wfd-sched-report");
+	const repVal  = repSel ? repSel.value : "";
+	const isOps   = (repVal === "ops_summary");
+	const repName = repSel ? (repSel.options[repSel.selectedIndex] || {}).text || "" : "";
+	const period  = (document.getElementById("wfd-sched-period") || {}).value || "daily";
+	const payload = {
+		id:               n.id,
+		projectId:        n.projectId || (typeof globals !== "undefined" && globals.gCurrentProject) || 0,
+		label:            (document.getElementById("wfd-sched-label") || {}).value || "",
+		rId:              isOps ? 0 : (parseInt(repVal, 10) || 0),
+		reportType:       isOps ? "ops_summary" : "",
+		reportName:       repName,
+		periodicPeriod:   period,
+		periodicTime:     (document.getElementById("wfd-sched-time")     || {}).value || "09:00",
+		periodicWeekDay:  parseInt((document.getElementById("wfd-sched-weekday")  || {}).value || "0", 10),
+		periodicMonthDay: parseInt((document.getElementById("wfd-sched-monthday") || {}).value || "1", 10),
+		periodicMonth:    parseInt((document.getElementById("wfd-sched-month")    || {}).value || "1", 10),
+		tz:               (typeof globals !== "undefined" && globals.gTimezone) || "UTC"
+	};
+	addHourglass();
+	fetch("/surveyKPI/workflow/edit/scheduled", {
+		method:      "PUT",
+		credentials: "include",
+		headers:     { "Content-Type": "application/json" },
+		body:        JSON.stringify(payload)
+	})
+		.then(function() { closeEditDrawer(); loadWorkflow(); })
+		.catch(function(err) { console.error("saveScheduled error:", err); })
 		.finally(function() { removeHourglass(); });
 }
 
