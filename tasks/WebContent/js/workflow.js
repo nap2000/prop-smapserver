@@ -51,6 +51,7 @@ const TYPE_COLOURS = {
 	form:             "#4a90d9",
 	task:             "#27ae60",
 	"case":           "#e67e22",
+	reference:        "#d35400",
 	decision:         "#f39c12",
 	periodic:         "#8e44ad",
 	reminder:         "#16a085",
@@ -71,6 +72,7 @@ const TYPE_ICONS = {
 	form:            "fas fa-file-alt",
 	task:            "fas fa-file-alt",
 	"case":          "fas fa-file-alt",
+	reference:       "fas fa-link",
 	periodic:        "fas fa-clock",
 	reminder:        "fas fa-bell",
 	email:           "fas fa-envelope",
@@ -80,7 +82,7 @@ const TYPE_ICONS = {
 };
 
 // Types that get an edit button on their card
-const EDITABLE_TYPES = ["task", "case", "email", "sms", "sharepoint_list"];
+const EDITABLE_TYPES = ["task", "case", "reference", "email", "sms", "sharepoint_list"];
 
 // Localised label per workitem type
 function typeLabel(type) {
@@ -89,6 +91,7 @@ function typeLabel(type) {
 		form:     l["c_form"],
 		task:     l["c_task"],
 		"case":   l["c_case"],
+		reference: l["c_reference"],
 		periodic: l["c_scheduled"],
 		scheduled: l["c_scheduled"],
 		reminder: l["c_reminder"],
@@ -127,7 +130,7 @@ function findAncestorSurveyId(startNodeId) {
 	while (current && !visited.has(current)) {
 		visited.add(current);
 		const parts = (current || "").split(":");
-		if (parts[0] === "case") {
+		if (parts[0] === "case" || parts[0] === "reference") {
 			const item = items.find(function(i) { return i.id === current; });
 			const caseId = item ? (item.caseSurveyId || 0) : 0;
 			if (caseId) return caseId;
@@ -234,7 +237,7 @@ function nodeCard(x, y, item) {
 		header.appendChild(editBtn);
 	}
 
-	const hasAssignee = (item.type === "task" || item.type === "case") && item.assignee;
+	const hasAssignee = (item.type === "task" || item.type === "case" || item.type === "reference") && item.assignee;
 
 	const body = document.createElement("div");
 	body.style.cssText = "padding:8px 10px;";
@@ -640,7 +643,7 @@ function renderDrawerContent(type) {
 	// Create-mode header: type selector + trigger info
 	if (gDrawerCreateMode) {
 		const availTypes = gSelectedNode
-			? ["task", "emailtask", "case", "email", "sms", "sharepoint_list"]
+			? ["task", "emailtask", "case", "reference", "email", "sms", "sharepoint_list"]
 			: ["form", "scheduled"];
 		const TYPE_BTN_STYLE = {
 			form:            { cls: "btn-outline-primary",   icon: "fas fa-play-circle" },
@@ -648,6 +651,7 @@ function renderDrawerContent(type) {
 			task:            { cls: "btn-outline-success",   icon: "fas fa-file-alt" },
 			emailtask:       { cls: "btn-outline-success",   icon: "fas fa-envelope" },
 			"case":          { cls: "btn-outline-warning",   icon: "fas fa-file-alt" },
+			reference:       { cls: "", icon: "fas fa-link", xstyle: "color:#d35400;border:1px solid #d35400;background:transparent;" },
 			email:           { cls: "btn-outline-danger",    icon: "fas fa-envelope" },
 			sms:             { cls: "btn-outline-secondary", icon: "fas fa-comment-alt" },
 			sharepoint_list: { cls: "", icon: "fas fa-table", xstyle: "color:#0078d4;border:1px solid #0078d4;background:transparent;" }
@@ -797,7 +801,7 @@ function renderDrawerContent(type) {
 		</div>`;
 	}
 
-	if (type === "case") {
+	if (type === "case" || type === "reference") {
 		const caseSurveyIdent = (firstNotif && firstNotif.caseSurveyIdent) || "";
 		bodyHtml += `<div class="wf-field">
 			<label>${l["c_survey"]}</label>
@@ -1045,8 +1049,8 @@ function renderDrawerContent(type) {
 		});
 	}
 
-	// Populate case survey select
-	if (type === "case") {
+	// Populate case/reference survey select (shared control)
+	if (type === "case" || type === "reference") {
 		const caseSurveyEl = document.getElementById("wfd-case-survey");
 		if (caseSurveyEl) {
 			const srcId = gDrawerCreateMode
@@ -1078,8 +1082,8 @@ function renderDrawerContent(type) {
 		document.getElementById("wf-drawer-advanced").style.display = "none";
 	}
 
-	// Populate and wire case drawer assignee (role select + toggles)
-	if (type === "case") {
+	// Populate and wire case/reference drawer assignee (role select + toggles) - shared controls
+	if (type === "case" || type === "reference") {
 		const caseRoleEl = document.getElementById("wfd-case-role-select");
 		if (caseRoleEl) {
 			fetchRoles().then(function(roles) {
@@ -1637,7 +1641,7 @@ function executeCreate() {
 			bundle:       isBundle,
 			wfPrevNodeId: gSelectedNode ? gSelectedNode.dataset.id : null
 		};
-		if (type === "case") {
+		if (type === "case" || type === "reference") {
 			const roleBtn = document.getElementById("wfd-case-assign-role");
 			if (roleBtn && roleBtn.classList.contains("active")) {
 				const roleId = parseInt((document.getElementById("wfd-case-role-select") || {}).value || "0", 10);

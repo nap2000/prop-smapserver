@@ -5165,11 +5165,11 @@ function edit_notification(edit, idx, inconsole) {
 
 			$('#fwd_host').val(notification.remote_host);
 
-			if (notification.target === 'escalate') {
-				// Restore escalate assign type (user vs role)
+			if (notification.target === 'escalate' || notification.target === 'reference') {
+				// Restore escalate/reference assign type (user vs role) - shared controls
 				restoreEscalateAssignType(notification.remote_user);
 
-				// For user-type escalate, set the select value and show assign_question if _data
+				// For user-type assignment, set the select value and show assign_question if _data
 				if(!notification.remote_user || notification.remote_user.indexOf('_role:') !== 0) {
 					$('#user_to_assign').val(notification.remote_user).change();
 					if($('#user_to_assign').val() === '_data') {
@@ -5221,7 +5221,7 @@ function bundleSelectChanged() {
 var gSpColumns = [];
 
 function setTargetDependencies(target) {
-	$('.sms_options, .webhook_options, .email_options, .escalate_options, .conv_options, .sharepoint_options').hide();
+	$('.sms_options, .webhook_options, .email_options, .escalate_options, .reference_options, .conv_options, .sharepoint_options').hide();
 	if(target === "email") {
 		$('.email_options').show();
 		initMsgNotPopup(target);
@@ -5231,6 +5231,8 @@ function setTargetDependencies(target) {
 		$('.webhook_options').show();
 	} else if(target  === "escalate") {
 		$('.escalate_options,.email_options').show();
+	} else if(target  === "reference") {
+		$('.reference_options').show();		// References give read only access to many users - no email
 	} else if(target  === "conversation") {
 		$('.conv_options').show();
 		initMsgNotPopup(target);
@@ -5686,6 +5688,30 @@ function saveEscalate() {
 	} else {
 		notification.error = true;
 	}
+
+	return notification;
+}
+
+/*
+ * Save a reference notification. Like escalate it assigns by user or role and reuses the
+ * same controls, but it gives read only access to many users (all members of the role) and
+ * sends no email.
+ */
+function saveReference() {
+
+	var notification = {};
+
+	notification.target = "reference";
+	if($('#esc_assign_role_type').hasClass('active')) {
+		var roleId = $('#role_to_assign_notif').val();
+		notification.remote_user = '_role:' + roleId;
+	} else {
+		notification.remote_user = $('#user_to_assign').val();
+	}
+
+	notification.notifyDetails = {};
+	notification.notifyDetails.survey_case = $('#survey_case').val();
+	notification.notifyDetails.assign_question = $('#assign_question').val();
 
 	return notification;
 }
@@ -6985,6 +7011,7 @@ export {
 	saveWebhook,
 	saveSharePointList,
 	saveEscalate,
+	saveReference,
 	surveyChangedNotification,
 	bundleSelectChanged,
 	taskGroupChanged,

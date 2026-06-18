@@ -22,7 +22,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-import { addHourglass, bundleSelectChanged, checkLoggedIn, edit_notification, getEligibleUsers, getLoggedInUser, getNotificationTypes, handleLogout, htmlEncode, loadSurveys, populateTaskGroupList, removeHourglass, saveCurrentProject, saveDocument, saveEmail, saveEscalate, saveSMS, saveSharePointList, saveWebhook, setupNotificationDialog, setupUserProfile, surveyChangedNotification, taskGroupChanged } from "common";
+import { addHourglass, bundleSelectChanged, checkLoggedIn, edit_notification, getEligibleUsers, getLoggedInUser, getNotificationTypes, handleLogout, htmlEncode, loadSurveys, populateTaskGroupList, removeHourglass, saveCurrentProject, saveDocument, saveEmail, saveEscalate, saveReference, saveSMS, saveSharePointList, saveWebhook, setupNotificationDialog, setupUserProfile, surveyChangedNotification, taskGroupChanged } from "common";
 
 const $ = window.$;
 const localise = window.localise;
@@ -157,6 +157,8 @@ $(document).ready(function() {
 			var nEmail = saveEmail();	// Save email and escalate detail settings
 			notification = saveEscalate();
 			notification.notifyDetails = Object.assign(nEmail.notifyDetails, notification.notifyDetails);
+		} else if(target === "reference") {
+			notification = saveReference();		// References give read only access - no email
 		} else if(target === "sharepoint_list") {
 			notification = saveSharePointList();
 		}
@@ -602,6 +604,19 @@ $(document).ready(function() {
 				msg = msg.replace("%s1", caseName);
 				msg = msg.replace("%s2", assigneeName);
 				h[++idx] = htmlEncode(msg);
+			} else if(data[i].target === "reference"){
+				var rMsg = '';
+				if(data[i].trigger === 'cm_alert') {
+					rMsg = localise.set["n_aa"];
+					rMsg = rMsg.replace('%s1', data[i].alert_name);
+					rMsg = rMsg + ' ';
+				}
+				rMsg = rMsg + localise.set["n_ar"];
+				var rCaseName = (data[i].notifyDetails.survey_case_name) || data[i].notifyDetails.survey_case || '';
+				var rAssigneeName = (data[i].remote_user_name != null ? data[i].remote_user_name : data[i].remote_user) || '';
+				rMsg = rMsg.replace("%s1", rCaseName);
+				rMsg = rMsg.replace("%s2", rAssigneeName);
+				h[++idx] = htmlEncode(rMsg);
 			}
 			h[++idx] = '</td>';
 
