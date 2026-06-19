@@ -38,13 +38,13 @@ localise.initLocale(gUserLocale).then(function () {
     setCustomRegister();			// Apply custom javascript
     localise.setlang();
 
-    $('#registerForm input').keyup(function () {
+    // Use input/change (not keyup) so autofill, autocomplete and mouse-paste also re-validate
+    $('#registerForm input').on('input change', function () {
         validateForm();
     });
 
-    $('#accept_tc').change(function () {
-        validateForm();
-    });
+    // Validate once at load in case fields are pre-filled by the browser
+    validateForm();
 
     $('#registerSubmit').click(function (e) {
         e.preventDefault();
