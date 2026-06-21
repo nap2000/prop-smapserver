@@ -24,7 +24,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 import $ from "jquery";
 import localise from "./localise.js";
 import globals from "./globals.js";
-import { addCacheBuster, addHourglass, htmlEncode, removeHourglass } from "./common";
+import { addCacheBuster, addHourglass, htmlEncode, isEditablePulldata, removeHourglass } from "./common";
 
 let gGroupStacks = [];
 const linkedQuestions = {};
@@ -660,6 +660,44 @@ export default {
 				}
 				
 			h[++idx] = '</div>';		// End of row
+
+		} else if(type === "question" && question.type !== "server_calculate"
+				&& selProperty !== "appearance" && selProperty !== "parameters" && selProperty !== "display_name"
+				&& (question.type === "calculate" || selProperty === "calculation")) {
+
+			// Calculation field with a pulldata() / lookup() builder button
+			var pdReadonly = (question.source != "user"
+					&& question.type != "begin group"
+					&& question.type != "begin repeat"
+					&& question.type != "pdf_field");
+			var pdDisabled = (pdReadonly || !isEditablePulldata(question.calculation)) ? ' disabled' : '';
+			var pdTitle = pdDisabled ? localise.set["ed_pd_disabled"] : localise.set["ed_pulldata"];
+
+			h[++idx] = '<div class="row">';
+
+			h[++idx] = '<div class="col-sm-2">';
+			h[++idx] = '<button type="button" class="btn btn-info pulldataButton has_tt" data-bs-toggle="tooltip" title="';
+			h[++idx] = pdTitle;
+			h[++idx] = '"';
+			h[++idx] = pdDisabled;
+			h[++idx] = ' data-prop="calculation">';
+			h[++idx] = '<i class="fa fa-database"></i>';
+			h[++idx] = '</button>';
+			h[++idx] = '</div>';		// End Col
+
+			h[++idx] = '<div class="col-sm-10">';
+			h[++idx] = '<textarea tabindex="0" class="labelProp calculate has_tt" data-bs-toggle="tooltip" title="';
+			h[++idx] = localise.set["ed_addcalc"];
+			h[++idx] = '" data-prop="calculation"';
+			if(pdReadonly) {
+				h[++idx] = ' readonly tabindex="-1"';
+			}
+			h[++idx] = '>';
+			h[++idx] = question.calculation ? question.calculation : '';
+			h[++idx] = '</textarea>';
+			h[++idx] = '</div>';		// End Col
+
+			h[++idx] = '</div>';		// End Row
 
 		} else {
 			h[++idx] = '<textarea tabindex="0" class="labelProp has_tt';

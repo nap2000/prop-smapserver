@@ -1327,6 +1327,13 @@ function getMediaRecord(file, panel, record, surveyLevel) {
 	h[++idx] = '<td class="filename">';
 	h[++idx] = '<p>';
 	h[++idx] = htmlEncode(file.name);
+	if(panel === 'csv' && file.loaded === false) {
+		h[++idx] = ' <span class="badge bg-warning text-dark" title="';
+		h[++idx] = localise.set["c_not_loaded_tt"];
+		h[++idx] = '">';
+		h[++idx] = localise.set["c_not_loaded"];
+		h[++idx] = '</span>';
+	}
 	h[++idx] = '</p>';
 	h[++idx] = '</td>';
 
@@ -4133,9 +4140,12 @@ function getQuestionsInSpList($elem, $elem_multiple, smapName, includeNone, call
 	});
 }
 
-function getAccessibleCsvFiles($elem, includeNone) {
+function getAccessibleCsvFiles($elem, includeNone, surveyId) {
 
 	var url="/surveyKPI/shared/csv/files";
+	if(surveyId && surveyId > 0) {
+		url += "?survey_id=" + surveyId;     // Also include CSV files uploaded for this survey
+	}
 
 	addHourglass();
 	$.ajax({
@@ -6357,6 +6367,112 @@ function getAppearanceParams(appearance) {
 	return response;
 }
 
+/*
+ * Tokenize the arguments of a single pulldata()/lookup() function call.
+ * Quote and parenthesis aware so commas inside quoted strings or nested
+ * function calls do not split arguments.
+ * Returns { fn: 'pulldata'|'lookup', args: [{value, quoted}] } or undefined
+ * if the input is not a single recognised call.
+ */
+function tokenizePulldataArgs(calc) {
+	if(!calc) {
+		return undefined;
+	}
+	var s = calc.trim();
+	var m = s.match(/^(pulldata|lookup)\s*\(/i);
+	if(!m) {
+		return undefined;
+	}
+	var fn = m[1].toLowerCase();
+	var open = s.indexOf('(');
+
+	// Walk to the matching close paren, tracking quotes and nesting
+	var depth = 0;
+	var inQuote = false;
+	var quoteChar = '';
+	var close = -1;
+	var i;
+	var c;
+	for(i = open; i < s.length; i++) {
+		c = s.charAt(i);
+		if(inQuote) {
+			if(c === quoteChar) {
+				inQuote = false;
+			}
+		} else if(c === '\'' || c === '"') {
+			inQuote = true;
+			quoteChar = c;
+		} else if(c === '(') {
+			depth++;
+		} else if(c === ')') {
+			depth--;
+			if(depth === 0) {
+				close = i;
+				break;
+			}
+		}
+	}
+	if(close < 0) {
+		return undefined;
+	}
+
+	// Anything other than whitespace after the closing paren means it is not a single call
+	if(s.substring(close + 1).trim().length > 0) {
+		return undefined;
+	}
+
+	// Split the inner arguments on top level commas only
+	var inner = s.substring(open + 1, close);
+	var args = [];
+	var cur = '';
+	var curQuoted = false;
+	depth = 0;
+	inQuote = false;
+	quoteChar = '';
+	for(i = 0; i < inner.length; i++) {
+		c = inner.charAt(i);
+		if(inQuote) {
+			if(c === quoteChar) {
+				inQuote = false;
+			} else {
+				cur += c;
+			}
+		} else if(c === '\'' || c === '"') {
+			inQuote = true;
+			quoteChar = c;
+			curQuoted = true;
+		} else if(c === '(') {
+			depth++;
+			cur += c;
+		} else if(c === ')') {
+			depth--;
+			cur += c;
+		} else if(c === ',' && depth === 0) {
+			args.push({ value: cur.trim(), quoted: curQuoted });
+			cur = '';
+			curQuoted = false;
+		} else {
+			cur += c;
+		}
+	}
+	if(cur.trim().length > 0 || args.length > 0) {
+		args.push({ value: cur.trim(), quoted: curQuoted });
+	}
+
+	return { fn: fn, args: args };
+}
+
+/*
+ * The pulldata builder button is only available when the calculation is empty
+ * or holds exactly one pulldata()/lookup() function call.
+ */
+function isEditablePulldata(calc) {
+	if(!calc || calc.trim().length === 0) {
+		return true;
+	}
+	return !!tokenizePulldataArgs(calc);
+}
+
 function getQuestionType(schema, qname) {
 	var i;
 	for(i = 0; i < schema.columns.length; i++) {
@@ -7042,6 +7158,8 @@ export {
 	translateKey,
 	translateKeyValue,
 	getAppearanceParams,
+	tokenizePulldataArgs,
+	isEditablePulldata,
 	getQuestionType,
 	executeAttendanceReport,
 	executeUsageReport,

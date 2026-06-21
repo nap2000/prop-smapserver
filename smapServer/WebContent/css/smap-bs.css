@@ -444,9 +444,18 @@ li.card {
 
 .question > button, .question > .row > div > button {
 	color: #fff;
-	font-size: 2em;
+	font-size: 1em;
 	width: 100%;
 	height: 60px;
+	overflow: hidden;
+	white-space: normal;
+	line-height: 1.2;
+}
+
+/* Keep the icons prominent while the button text stays at a readable size */
+.question > button i, .question > .row > div > button i {
+	font-size: 2em;
+	vertical-align: middle;
 }
 
 button.prop_no {

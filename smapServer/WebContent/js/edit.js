@@ -24,7 +24,7 @@ import "./libs/bootstrap-colorpicker.min.js";
 import "./libs/wb/plugins/iCheck/icheck.min.js";
 import localise from "./app/localise.js";
 import globals from "./app/globals.js";
-import { addCacheBuster, addHourglass, checkExistenceOfReferences, checkLoggedIn, createNewSurvey, debounceClick, getAccessibleCsvFiles, getAccessibleSpLists, getAccessibleSurveys, getAppearanceParams, getFilesFromServer, getGroupQuestionsInSurvey, getLoggedInUser, getQuestionsInCsvFile, getQuestionsInSpList, getQuestionsInSurvey, getReferenceNames, getSurveyDetails, handleLogout, htmlEncode, isTextStorageType, loadSurveys, localTime, openForm, removeHourglass, saveCurrentProject, setLanguages, setupUserProfile, tokenizeAppearance, translateType, validGeneralName } from "./app/common";
+import { addCacheBuster, addHourglass, checkExistenceOfReferences, checkLoggedIn, createNewSurvey, debounceClick, getAccessibleCsvFiles, getAccessibleSpLists, getAccessibleSurveys, getAppearanceParams, getFilesFromServer, getGroupQuestionsInSurvey, getLoggedInUser, getQuestionsInCsvFile, getQuestionsInSpList, getQuestionsInSurvey, getReferenceNames, getSurveyDetails, handleLogout, htmlEncode, isEditablePulldata, isTextStorageType, loadSurveys, localTime, openForm, removeHourglass, saveCurrentProject, setLanguages, setupUserProfile, tokenizeAppearance, tokenizePulldataArgs, translateType, validGeneralName } from "./app/common";
 import question from "./app/question";
 import optionlist from "./app/optionlist";
 import markup from "./app/editorMarkup";
@@ -71,6 +71,10 @@ var gNewVal,
 window.gAppChoiceArray = [];
 var gAppearanceQuestion;
 var gAppearanceParams;
+var gPulldataFormIndex;
+var gPulldataItemIndex;
+var gPulldataQname;
+var gPulldataArgs;          // Parsed args of the function being edited
 $(function() {
 
 
@@ -630,6 +634,37 @@ $(function() {
 	});
 
 	/*
+	 * Pulldata builder dialog - show / hide dependent elements
+	 */
+	$('#pd_filter_column, #pd_csv_identifier, #pd_survey_identifier, #pd_sp_identifier, ' +
+		'input[type=radio][name=pd_source], #pd_return_column, ' +
+		'input[type=radio][name=pd_access], #pd_fe, #pd_match').change(function() {
+			showPulldataElements();
+	});
+
+	// When the pulldata source changes, repopulate the columns for the selected source
+	$('input[type=radio][name=pd_source]').change(function() {
+		var src = $(this).val();
+		if(src === 'sharepoint') {
+			$('#pd_sp_identifier').trigger('change');
+		} else if(src === 'survey') {
+			$('#pd_survey_identifier').trigger('change');
+		} else {
+			$('#pd_csv_identifier').trigger('change');
+		}
+	});
+
+	// Repopulate the columns when the selected file / survey / list changes
+	$('#pd_survey_identifier, #pd_csv_identifier, #pd_sp_identifier').change(function() {
+		setPulldataColumns();
+	});
+
+	// Respond to selecting a question as the filter value
+	$('#pd_filter_value_sel').change(function() {
+		$('#pd_filter_value_static').val('${' + $(this).val() + '}');
+	});
+
+	/*
      * Respond to clicking of the save appearances button in the appearance edit modal
      */
 	$('#appearanceSave').click(function() {
@@ -800,6 +835,18 @@ $(function() {
 		newAppChoiceVal = app_choices.join(' ');
 		updateLabel("question", globals.gFormIndex, globals.gItemIndex, undefined, "text", newAppChoiceVal, gQname, "app_choices");
 		window.bsModalHide('#appearanceModal');
+	});
+
+	/*
+	 * Save the pulldata / lookup function into the question calculation
+	 */
+	$('#pulldataSave').off().click(function() {
+		var val = buildPulldataFunction();
+		if(val === false) {
+			return;     // Validation error already shown
+		}
+		updateLabel("question", gPulldataFormIndex, gPulldataItemIndex, undefined, "text", val, gPulldataQname, "calculation");
+		window.bsModalHide('#pulldataModal');
 	});
 
 	/*
@@ -1216,6 +1263,8 @@ $(function() {
 	// Get survey level files
 	if(globals.gCurrentSurvey) {
 		getFilesFromServer(globals.gCurrentSurvey, refreshMediaPickLists, true);   // Get all media
+		// Refresh the CSV pick lists to include CSV files uploaded for this survey (with headers)
+		getAccessibleCsvFiles($('.linkable_files'), true, globals.gCurrentSurvey);
 	}
 
 	// Set the survey name
@@ -2298,6 +2347,11 @@ $(function() {
 		window.gAppChoiceArray = [];
 		getDummyChoiceAppearances(window.gAppChoiceArray)
 
+	});
+
+	// Respond to a click on the pulldata builder button
+	$context.find('.pulldataButton').off().click(function() {
+		openPulldataDialog($(this).closest('li'));
 	});
 
 
@@ -4049,6 +4103,274 @@ $(function() {
 
 				} else {
 					$('.appearance_search_details').hide();
+				}
+			}
+
+			/*
+			 * Pulldata builder helpers
+			 */
+			function showPulldataError(msg) {
+				$('#pulldata_msg').removeClass('alert-warning').addClass('alert-danger').show().html(msg);
+			}
+
+			/*
+			 * Populate the return column and filter column selects for the current source
+			 */
+			function setPulldataColumns(callback) {
+				var src = $('input[type=radio][name=pd_source]:checked').val();
+				var $cols = $('#pd_return_column, #pd_filter_column');
+				if(src === 'survey') {
+					getQuestionsInSurvey($cols, undefined, $('#pd_survey_identifier').val(), true, false, callback, true, undefined, true);
+				} else if(src === 'sharepoint') {
+					getQuestionsInSpList($cols, undefined, $('#pd_sp_identifier').val(), true, callback);
+				} else {
+					getQuestionsInCsvFile($cols, undefined, $('#pd_csv_identifier').val(), true);
+					if(typeof callback === 'function') {
+						callback();
+					}
+				}
+			}
+
+			/*
+			 * Show / hide elements in the pulldata builder dialog
+			 */
+			function showPulldataElements() {
+				var src = $('input[type=radio][name=pd_source]:checked').val();
+				var filterColumn = $('#pd_filter_column').val();
+				var fileIdentifier;
+
+				$('#pulldata_msg').hide();
+
+				if(src && src !== '') {
+					$('.pulldata_details').show();
+
+					$('.pd_csv, .pd_survey, .pd_sharepoint').hide();
+					if(src === 'survey') {
+						$('.pd_survey').show();
+						fileIdentifier = $('#pd_survey_identifier').val();
+					} else if(src === 'csv') {
+						$('.pd_csv').show();
+						fileIdentifier = $('#pd_csv_identifier').val();
+					} else if(src === 'sharepoint') {
+						$('.pd_sharepoint').show();
+						fileIdentifier = $('#pd_sp_identifier').val();
+					}
+
+					if(!fileIdentifier || fileIdentifier === '') {
+						$('.pd_return, .pd_filter_block, .pd_classic_filter, .pd_filter_expression, .pd_index_block').hide();
+					} else {
+						$('.pd_return, .pd_filter_block, .pd_index_block').show();
+
+						if($('#pd_fe').prop('checked')) {
+							$('.pd_filter_expression').show();
+							$('.pd_classic_filter').hide();
+						} else {
+							$('.pd_filter_expression').hide();
+							$('.pd_classic_filter').show();
+
+							if(!filterColumn || filterColumn === '' || filterColumn === '0') {
+								$('.pd_has_filter').hide();
+							} else {
+								$('.pd_has_filter').show();
+							}
+						}
+					}
+				} else {
+					$('.pulldata_details').hide();
+				}
+			}
+
+			/*
+			 * Build the pulldata() / lookup() function string from the dialog
+			 * Returns false (and shows an error) if the input is invalid
+			 */
+			function buildPulldataFunction() {
+				var src = $('input[type=radio][name=pd_source]:checked').val();
+				var access = $('input[type=radio][name=pd_access]:checked').val();
+				var fn = (access === 'online') ? 'lookup' : 'pulldata';
+				var filename;
+				var csvfile;
+				var dotIdx;
+
+				// 1. Source filename
+				if(src === 'survey') {
+					if($('#pd_survey_identifier').val() === '') {
+						showPulldataError(localise.set["msg_search_source2"]);
+						return false;
+					}
+					filename = 'linked_' + $('#pd_survey_identifier').val();
+				} else if(src === 'csv') {
+					if($('#pd_csv_identifier').val() === '') {
+						showPulldataError(localise.set["msg_search_source2"]);
+						return false;
+					}
+					csvfile = globals.gCsvFiles[$('#pd_csv_identifier').val()];
+					filename = csvfile.filename;
+					dotIdx = filename.lastIndexOf('.');    // remove the extension
+					if(dotIdx > 0) {
+						filename = filename.substring(0, dotIdx);
+					}
+				} else if(src === 'sharepoint') {
+					if($('#pd_sp_identifier').val() === '') {
+						showPulldataError(localise.set["msg_search_source2"]);
+						return false;
+					}
+					filename = 'sharepointlist_' + $('#pd_sp_identifier').val();
+				} else {
+					showPulldataError(localise.set["msg_search_source"]);
+					return false;
+				}
+
+				// 2. Column to retrieve
+				var returnColumn = $('#pd_return_column').val();
+				if(!returnColumn || returnColumn.trim() === '' || returnColumn === '0') {
+					showPulldataError(localise.set["msg_pd_return"]);
+					return false;
+				}
+				returnColumn = returnColumn.trim();
+
+				var index = $('#pd_index').val().trim();
+				var val = fn + "('" + filename + "', '" + returnColumn + "'";
+
+				if($('#pd_fe').prop('checked')) {
+					// 3. Expression filter (3 or 5 parameter form)
+					var expr = $('#pd_fe_val').val().trim();
+					if(expr === '') {
+						showPulldataError(localise.set["msg_filter_expr"]);
+						return false;
+					}
+					val += ", '" + expr + "'";
+					if(index !== '') {
+						val += ", '" + index + "', 'eval'";
+					}
+				} else {
+					// 3. Classic filter (4 or 6 parameter form)
+					var filterColumn = $('#pd_filter_column').val();
+					var filterType = $('#pd_match').val();
+					if(!filterColumn || filterColumn.trim() === '' || filterColumn === '0') {
+						showPulldataError(localise.set["msg_pd_filter"]);
+						return false;
+					}
+					filterColumn = filterColumn.trim();
+
+					var filterValue = $('#pd_filter_value_static').val().trim();
+					if(filterValue.indexOf('${') !== 0) {
+						filterValue = "'" + filterValue + "'";    // static value - add quotes
+					}
+					val += ", '" + filterColumn + "', " + filterValue;
+
+					// An index or a non-exact match requires the 6 parameter form
+					if(index !== '' || (filterType && filterType !== '')) {
+						val += ", '" + (index !== '' ? index : '1') + "'";
+						val += ", '" + (filterType && filterType !== '' ? filterType : 'matches') + "'";
+					}
+				}
+
+				val += ")";
+				return val;
+			}
+
+			/*
+			 * Populate the pulldata builder dialog from a parsed function
+			 */
+			function parsePulldataFunction(parsed, callback) {
+
+				if(parsed.fn === 'lookup') {
+					$('input[type=radio][name=pd_access][value=online]').prop('checked', true);
+				} else {
+					$('input[type=radio][name=pd_access][value=offline]').prop('checked', true);
+				}
+
+				var args = parsed.args;
+				var filename = args.length > 0 ? args[0].value : '';
+
+				// Set the remaining fields once the source columns are populated
+				var afterColumns = function() {
+					if(args.length > 1) {
+						$('#pd_return_column').val(args[1].value);
+					}
+
+					if(args.length === 3 || args.length === 5) {
+						// Expression filter
+						$('#pd_fe').prop('checked', true);
+						$('#pd_fe_val').val(args[2].value);
+						if(args.length === 5) {
+							$('#pd_index').val(args[3].value);    // args[4] is the 'eval' marker
+						}
+					} else if(args.length >= 4) {
+						// Classic filter
+						$('#pd_fe').prop('checked', false);
+						$('#pd_filter_column').val(args[2].value);
+						$('#pd_filter_value_static').val(args[3].value);
+						if(args.length >= 6) {
+							$('#pd_index').val(args[4].value);
+							$('#pd_match').val(args[5].value);
+						}
+					}
+
+					showPulldataElements();
+					if(typeof callback === 'function') {
+						callback();
+					}
+				};
+
+				if(filename.indexOf('linked_') === 0) {
+					var sIdent = filename.substring('linked_'.length);
+					$('input[type=radio][name=pd_source][value=survey]').prop('checked', true);
+					$('#pd_survey_identifier').val(sIdent);
+					getQuestionsInSurvey($('#pd_return_column, #pd_filter_column'), undefined, sIdent, true, false, afterColumns, true, undefined, true);
+				} else if(filename.indexOf('sharepointlist_') === 0) {
+					var spName = filename.substring('sharepointlist_'.length);
+					$('input[type=radio][name=pd_source][value=sharepoint]').prop('checked', true);
+					$('#pd_sp_identifier').val(spName);
+					getQuestionsInSpList($('#pd_return_column, #pd_filter_column'), undefined, spName, true, afterColumns);
+				} else {
+					var csvIndex = getIndexOfCsvFilename(filename);
+					$('input[type=radio][name=pd_source][value=csv]').prop('checked', true);
+					$('#pd_csv_identifier').val(csvIndex);
+					if(typeof csvIndex !== 'undefined') {
+						getQuestionsInCsvFile($('#pd_return_column, #pd_filter_column'), undefined, csvIndex, true);
+					}
+					afterColumns();
+				}
+			}
+
+			/*
+			 * Open the pulldata builder for a question, populating from an existing function if present
+			 */
+			function openPulldataDialog($li) {
+				var formIndex = $li.data("fid");
+				var itemIndex = $li.data("id");
+				var survey = globals.model.survey;
+				var question = survey.forms[formIndex].questions[itemIndex];
+
+				gPulldataFormIndex = formIndex;
+				gPulldataItemIndex = itemIndex;
+				gPulldataQname = question.name;
+				globals.gFormIndex = formIndex;
+				globals.gItemIndex = itemIndex;
+
+				$('#pulldata_form')[0].reset();
+				$('#pulldata_msg').hide();
+				$('.pulldata_details').hide();
+
+				// Questions available as filter values
+				$('#pd_filter_value_sel').empty().append(getQuestionsAsSelect(localise.set["c_question"] + "...", false));
+
+				var calc = question.calculation;
+				var parsed = calc ? tokenizePulldataArgs(calc) : undefined;
+
+				if(parsed) {
+					gPulldataArgs = parsed;
+					parsePulldataFunction(parsed, function() {
+						window.bsModalShow('#pulldataModal');
+					});
+				} else {
+					gPulldataArgs = undefined;
+					$('input[type=radio][name=pd_source][value=csv]').prop('checked', true);
+					$('input[type=radio][name=pd_access][value=offline]').prop('checked', true);
+					showPulldataElements();
+					window.bsModalShow('#pulldataModal');
 				}
 			}
 

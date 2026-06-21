@@ -1573,6 +1573,175 @@
 	</div>
 </div>
 
+<!-- Modal to build / edit a pulldata() or lookup() calculation -->
+<div id="pulldataModal" class="modal fade" role="dialog" data-bs-backdrop="static" aria-labelledby="pulldataModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title lang" id="pulldataModalLabel" data-lang="ed_pulldata">pulldata</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<div class="modal-body">
+				<div class="container-fluid">
+					<form id="pulldata_form" role="form">
+
+						<!-- Source -->
+						<div class="form-group row">
+							<label data-lang="c_source" class="lang col-sm-4 control-label">source</label>
+							<div class="col-sm-8 row">
+
+								<div class="col-sm-1">
+									<div class="radio">
+										<input type="radio" name="pd_source" value="csv" checked="checked">
+									</div>
+								</div>
+								<label class="col-sm-11 control-label lang mb-0" data-lang="c_csv"></label>
+
+								<div class="col-sm-1">
+									<div class="radio">
+										<input type="radio" name="pd_source" value="survey">
+									</div>
+								</div>
+								<label class="col-sm-11 control-label lang mb-0" data-lang="c_survey"></label>
+
+								<div class="col-sm-1">
+									<div class="radio">
+										<input type="radio" name="pd_source" value="sharepoint">
+									</div>
+								</div>
+								<label class="col-sm-11 control-label lang mb-0" data-lang="u_sharepoint"></label>
+
+							</div>
+						</div>
+
+						<!-- Access -->
+						<div class="form-group row">
+							<label data-lang="c_access" class="lang col-sm-4 control-label">access</label>
+							<div class="col-sm-8 row">
+								<div class="col-sm-1">
+									<div class="radio">
+										<input type="radio" name="pd_access" value="offline" checked="checked">
+									</div>
+								</div>
+								<label class="col-sm-11 control-label lang" data-lang="ed_offline"></label>
+
+								<div class="col-sm-1">
+									<div class="radio">
+										<input type="radio" name="pd_access" value="online">
+									</div>
+								</div>
+								<label class="col-sm-11 control-label lang" data-lang="ed_online"></label>
+							</div>
+						</div>
+
+						<div class="pulldata_details" style="display:none;">
+
+							<div class="form-group row pd_csv">
+								<label for="pd_csv_identifier" data-lang="ed_csv" class="lang col-sm-4 control-label">file</label>
+								<div class="col-sm-8">
+									<select id="pd_csv_identifier" class="form-select linkable_files"></select>
+								</div>
+							</div>
+
+							<div class="form-group row pd_survey">
+								<label for="pd_survey_identifier" data-lang="c_survey" class="lang col-sm-4 control-label">survey</label>
+								<div class="col-sm-8">
+									<select id="pd_survey_identifier" class="form-select linkable_surveys"></select>
+								</div>
+							</div>
+
+							<div class="form-group row pd_sharepoint">
+								<label for="pd_sp_identifier" data-lang="c_sharepoint_list" class="lang col-sm-4 control-label">SharePoint List</label>
+								<div class="col-sm-8">
+									<select id="pd_sp_identifier" class="form-select linkable_sp_lists"></select>
+								</div>
+							</div>
+
+							<!-- Column to retrieve -->
+							<div class="form-group row pd_return">
+								<label for="pd_return_column" data-lang="ed_pd_return" class="lang col-sm-4 control-label">column to retrieve</label>
+								<div class="col-sm-8">
+									<select id="pd_return_column" class="form-select column_select"></select>
+								</div>
+							</div>
+
+							<!-- Use an expression filter -->
+							<div class="form-group row pd_filter_block">
+								<div class="offset-sm-4 col-sm-1">
+									<div class="checkbox">
+										<input type="checkbox" id="pd_fe">
+									</div>
+								</div>
+								<label class="col-sm-7 control-label lang" data-lang="ed_fe" for="pd_fe"></label>
+							</div>
+
+							<div class="pd_filter_expression">
+								<div class="form-group row">
+									<label for="pd_fe_val" class="col-sm-4 control-label lang" data-lang="ed_e"></label>
+									<div class="col-sm-8">
+										<textarea id="pd_fe_val"></textarea>
+									</div>
+								</div>
+							</div>
+
+							<div class="pd_classic_filter">
+								<div class="form-group row pd_filter_column">
+									<label for="pd_filter_column" data-lang="ed_fc" class="lang col-sm-4 control-label">filter column</label>
+									<div class="col-sm-8">
+										<select id="pd_filter_column" class="form-select column_select"></select>
+									</div>
+								</div>
+
+								<div class="form-group row pd_has_filter">
+									<label for="pd_match" data-lang="ed_m" class="lang col-sm-4 control-label">match</label>
+									<div class="col-sm-8">
+										<select id="pd_match" class="form-select">
+											<option class="lang" data-lang="ed_pd_exact" value=""></option>
+											<option class="lang" data-lang="c_matches" value="matches"></option>
+											<option class="lang" data-lang="contains" value="contains"></option>
+											<option class="lang" data-lang="startsWith" value="startsWith"></option>
+											<option class="lang" data-lang="endsWith" value="endsWith"></option>
+											<option class="lang" data-lang="c_in" value="in"></option>
+											<option class="lang" data-lang="c_notin" value="not in"></option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group row pd_has_filter">
+									<label for="pd_filter_value_sel" data-lang="ed_fv" class="lang control-label col-sm-4"></label>
+									<div class="col-sm-8">
+										<div class="input-group mb-3">
+											<select id="pd_filter_value_sel" class="form-select questions_in_form"></select>
+											<input type="text" id="pd_filter_value_static" class="form-control">
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Index / aggregation -->
+							<div class="form-group row pd_index_block">
+								<label for="pd_index" data-lang="ed_pd_index" class="lang col-sm-4 control-label">index</label>
+								<div class="col-sm-8">
+									<input type="text" id="pd_index" class="form-control" placeholder="1, sum, mean, min, max, count, list">
+								</div>
+							</div>
+
+						</div>
+
+						<div id="pulldata_msg" class="alert alert-danger" role="alert" style="display:none;"></div>
+
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary lang" data-bs-dismiss="modal" data-lang="c_cancel">cancel</button>
+				<button id="pulldataSave" type="button" class="btn btn-primary lang" data-lang="c_done">done</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- Modal to add/remove a filter -->
 <div id="filterModal" class="modal fade" role="dialog" data-bs-backdrop="static" aria-labelledby="filterModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
