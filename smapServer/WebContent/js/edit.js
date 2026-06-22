@@ -664,6 +664,11 @@ $(function() {
 		$('#pd_filter_value_static').val('${' + $(this).val() + '}');
 	});
 
+	// Respond to selecting a question as the index value
+	$('#pd_index_value_sel').change(function() {
+		$('#pd_index_value').val('${' + $(this).val() + '}');
+	});
+
 	/*
      * Respond to clicking of the save appearances button in the appearance edit modal
      */
@@ -4241,17 +4246,20 @@ $(function() {
 				}
 				returnColumn = returnColumn.trim();
 
-				// Index / aggregation, only when looking up repeating data
-				var index = '';
+				// Index / aggregation, only when looking up repeating data.
+				// indexArg is the fully-formatted argument: a ${question} reference is left
+				// unquoted (it must be evaluated), anything else (number or aggregation) is quoted.
+				var indexArg = '';
 				if($('#pd_repeat').prop('checked')) {
 					var indexType = $('#pd_index_type').val();
 					if(indexType === 'index') {
-						index = $('#pd_index_value').val().trim();
-						if(index === '') {
-							index = '1';
+						var idx = $('#pd_index_value').val().trim();
+						if(idx === '') {
+							idx = '1';
 						}
+						indexArg = (idx.indexOf('${') === 0) ? idx : "'" + idx + "'";
 					} else {
-						index = indexType;      // aggregation / list
+						indexArg = "'" + indexType + "'";      // aggregation / list
 					}
 				}
 				var val = fn + "('" + filename + "', '" + returnColumn + "'";
@@ -4264,8 +4272,8 @@ $(function() {
 						return false;
 					}
 					val += ", '" + expr + "'";
-					if(index !== '') {
-						val += ", '" + index + "', 'eval'";
+					if(indexArg !== '') {
+						val += ", " + indexArg + ", 'eval'";
 					}
 				} else {
 					// 3. Classic filter (4 or 6 parameter form)
@@ -4284,8 +4292,8 @@ $(function() {
 					val += ", '" + filterColumn + "', " + filterValue;
 
 					// An index or a non-exact match requires the 6 parameter form
-					if(index !== '' || (filterType && filterType !== '')) {
-						val += ", '" + (index !== '' ? index : '1') + "'";
+					if(indexArg !== '' || (filterType && filterType !== '')) {
+						val += ", " + (indexArg !== '' ? indexArg : "'1'");
 						val += ", '" + (filterType && filterType !== '' ? filterType : 'matches') + "'";
 					}
 				}
@@ -4395,7 +4403,7 @@ $(function() {
 				$('.pulldata_details').hide();
 
 				// Questions available as filter values
-				$('#pd_filter_value_sel').empty().append(getQuestionsAsSelect(localise.set["c_question"] + "...", false));
+				$('#pd_filter_value_sel, #pd_index_value_sel').empty().append(getQuestionsAsSelect(localise.set["c_question"] + "...", false));
 
 				var calc = question.calculation;
 				var parsed = calc ? tokenizePulldataArgs(calc) : undefined;
