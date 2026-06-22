@@ -55,7 +55,9 @@ $(document).ready(function () {
 	localise.initLocale(gUserLocale).then(function () {
 		setupUserProfile();
 		localise.setlang();		// Localise static HTML
-		loadOverview();			// Load data directly - does not depend on the user lookup
+		// A full page draw forces a fresh snapshot (recompute + repopulate the server cache).
+		// Drill-down pages then read that snapshot. The app "refresh" menu does the same.
+		loadOverview(true);		// Load data directly - does not depend on the user lookup
 	});
 
 	// Loads the profile menu and applies role-based menu visibility
@@ -86,7 +88,7 @@ $(document).ready(function () {
 
 function loadOverview(force) {
 	$('.hour_glass').show();
-	fetch('/surveyKPI/ops/overview' + (force ? '?refresh=true' : ''), { credentials: 'same-origin' })
+	fetch('/surveyKPI/ops/overview' + (force ? '?refresh=true' : ''), { credentials: 'same-origin', cache: 'no-store' })
 		.then(function (resp) {
 			if (!resp.ok) { throw new Error('HTTP ' + resp.status); }
 			return resp.json();

@@ -74,7 +74,7 @@ function applyHeading() {
 
 function loadItems() {
 	$('.hour_glass').show();
-	fetch('/surveyKPI/ops/items?type=' + encodeURIComponent(gType), { credentials: 'same-origin' })
+	fetch('/surveyKPI/ops/items?type=' + encodeURIComponent(gType), { credentials: 'same-origin', cache: 'no-store' })
 		.then(function (resp) {
 			if (!resp.ok) { throw new Error('HTTP ' + resp.status); }
 			return resp.json();

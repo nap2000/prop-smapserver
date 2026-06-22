@@ -71,7 +71,7 @@ function loadCase() {
 	if (!gSurvey || !gInstance) { return; }
 	$('.hour_glass').show();
 	fetch('/surveyKPI/ops/case?survey=' + encodeURIComponent(gSurvey) + '&instanceid=' + encodeURIComponent(gInstance),
-		{ credentials: 'same-origin' })
+		{ credentials: 'same-origin', cache: 'no-store' })
 		.then(function (resp) {
 			if (!resp.ok) { throw new Error('HTTP ' + resp.status); }
 			return resp.json();
@@ -82,7 +82,7 @@ function loadCase() {
 }
 
 function loadUsers() {
-	fetch('/surveyKPI/ops/case/users', { credentials: 'same-origin' })
+	fetch('/surveyKPI/ops/case/users', { credentials: 'same-origin', cache: 'no-store' })
 		.then(function (resp) { return resp.ok ? resp.json() : []; })
 		.then(function (users) {
 			var html = '<option value="">' + (localise.set["ops_case_unassigned"] || "Unassigned") + '</option>';

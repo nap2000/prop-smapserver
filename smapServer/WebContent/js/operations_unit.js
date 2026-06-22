@@ -65,7 +65,7 @@ function loadUnit() {
 	$('#ops_unit_role').text(gRole);
 	document.title = gRole + " – " + (localise.set["ops_title"] || "Operations Monitor");
 
-	fetch('/surveyKPI/ops/unit/' + encodeURIComponent(gRole), { credentials: 'same-origin' })
+	fetch('/surveyKPI/ops/unit/' + encodeURIComponent(gRole), { credentials: 'same-origin', cache: 'no-store' })
 		.then(function (resp) {
 			if (!resp.ok) { throw new Error('HTTP ' + resp.status); }
 			return resp.json();
