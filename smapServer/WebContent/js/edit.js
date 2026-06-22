@@ -638,7 +638,7 @@ $(function() {
 	 */
 	$('#pd_filter_column, #pd_csv_identifier, #pd_survey_identifier, #pd_sp_identifier, ' +
 		'input[type=radio][name=pd_source], #pd_return_column, ' +
-		'input[type=radio][name=pd_access], #pd_fe, #pd_match').change(function() {
+		'input[type=radio][name=pd_access], #pd_fe, #pd_match, #pd_repeat, #pd_index_type').change(function() {
 			showPulldataElements();
 	});
 
@@ -4157,9 +4157,9 @@ $(function() {
 					}
 
 					if(!fileIdentifier || fileIdentifier === '') {
-						$('.pd_return, .pd_filter_block, .pd_classic_filter, .pd_filter_expression, .pd_index_block').hide();
+						$('.pd_return, .pd_repeat_block, .pd_filter_block, .pd_classic_filter, .pd_filter_expression, .pd_index_block, .pd_index_value_block').hide();
 					} else {
-						$('.pd_return, .pd_filter_block, .pd_index_block').show();
+						$('.pd_return, .pd_repeat_block, .pd_filter_block').show();
 
 						if($('#pd_fe').prop('checked')) {
 							$('.pd_filter_expression').show();
@@ -4173,6 +4173,18 @@ $(function() {
 							} else {
 								$('.pd_has_filter').show();
 							}
+						}
+
+						// Index / aggregation only applies when looking up repeating data
+						if($('#pd_repeat').prop('checked')) {
+							$('.pd_index_block').show();
+							if($('#pd_index_type').val() === 'index') {
+								$('.pd_index_value_block').show();
+							} else {
+								$('.pd_index_value_block').hide();
+							}
+						} else {
+							$('.pd_index_block, .pd_index_value_block').hide();
 						}
 					}
 				} else {
@@ -4229,7 +4241,19 @@ $(function() {
 				}
 				returnColumn = returnColumn.trim();
 
-				var index = $('#pd_index').val().trim();
+				// Index / aggregation, only when looking up repeating data
+				var index = '';
+				if($('#pd_repeat').prop('checked')) {
+					var indexType = $('#pd_index_type').val();
+					if(indexType === 'index') {
+						index = $('#pd_index_value').val().trim();
+						if(index === '') {
+							index = '1';
+						}
+					} else {
+						index = indexType;      // aggregation / list
+					}
+				}
 				var val = fn + "('" + filename + "', '" + returnColumn + "'";
 
 				if($('#pd_fe').prop('checked')) {
@@ -4271,6 +4295,22 @@ $(function() {
 			}
 
 			/*
+			 * Set the repeating-data index controls from a parsed index argument
+			 * The value is either an integer position or an aggregation keyword
+			 */
+			function setPulldataIndex(idxStr) {
+				var aggregations = ['sum', 'mean', 'min', 'max', 'count', 'list'];
+				idxStr = (idxStr || '').trim();
+				$('#pd_repeat').prop('checked', true);
+				if(aggregations.indexOf(idxStr) >= 0) {
+					$('#pd_index_type').val(idxStr);
+				} else {
+					$('#pd_index_type').val('index');
+					$('#pd_index_value').val(idxStr === '' ? '1' : idxStr);
+				}
+			}
+
+			/*
 			 * Populate the pulldata builder dialog from a parsed function
 			 */
 			function parsePulldataFunction(parsed, callback) {
@@ -4295,7 +4335,7 @@ $(function() {
 						$('#pd_fe').prop('checked', true);
 						$('#pd_fe_val').val(args[2].value);
 						if(args.length === 5) {
-							$('#pd_index').val(args[3].value);    // args[4] is the 'eval' marker
+							setPulldataIndex(args[3].value);    // args[4] is the 'eval' marker
 						}
 					} else if(args.length >= 4) {
 						// Classic filter
@@ -4303,7 +4343,7 @@ $(function() {
 						$('#pd_filter_column').val(args[2].value);
 						$('#pd_filter_value_static').val(args[3].value);
 						if(args.length >= 6) {
-							$('#pd_index').val(args[4].value);
+							setPulldataIndex(args[4].value);
 							$('#pd_match').val(args[5].value);
 						}
 					}
