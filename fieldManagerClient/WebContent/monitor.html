@@ -118,16 +118,6 @@
 								</select>
 							</div>
 						</div>
-						<div class="form-group conditional showinterval row">
-							<label class="lang col-sm-4 control-label" data-lang="cm_p" for="showInterval">interval</label>
-							<div class="col-sm-8">
-								<select class="form-select" id="showInterval">
-									<option value="7" class="lang" data-lang="cm_7days"></option>
-									<option value="14" class="lang" data-lang="cm_14days"></option>
-									<option value="30" class="lang" data-lang="cm_30days"></option>
-								</select>
-							</div>
-						</div>
 						<div class="showtarget conditional form-group row">
 							<label class="lang col-sm-4 control-label" data-lang="mon_sa" for="showAs">as</label>
 							<div class="col-sm-8">
@@ -220,9 +210,6 @@
 				<li id="optinTab" class="nav-item">
 					<a data-bs-toggle="tab" id="optin-view" href="#optinPanel" role="tab" class="nav-link lang" data-lang="mon_optin_msg"></a>
 				</li>
-				<li id="caseTab" class="nav-item">
-					<a data-bs-toggle="tab" id="case-view" href="#casePanel" role="tab" class="nav-link lang" data-lang="c_cases"></a>
-				</li>
 				<li id="serverTab" class="nav-item ownerOnly d-none">
 					<a data-bs-toggle="tab" id="server-view" href="#serverPanel" role="tab" class="nav-link lang" data-lang="server"></a>
 				</li>
@@ -253,24 +240,6 @@
 						<p class="lang" data-lang="mo_oi"></p>
 						<div class="table-responsive col-xs-12">
 							<table class="table table-responsive-sm table-striped table-bordered table-sm w-100" id="optin_events"></table>
-						</div>
-					</div>
-				</div>
-				<div id="casePanel" class="d-none monpanel tab-pane fade show active" role="tabpanel" aria-labelledby="optin-view">
-					<div class="panel-body">
-						<h5 id="case_msg" class="d-none"></h5>
-						<div id="case_data" class="row d-none">
-							<div class="col-sm-12">
-								<div class="card card">
-									<div class="card-header d-flex chart-header">
-										<span class="me-auto lang" data-lang="cm_oc"></span>
-										<i class="fa fa-cog"></i>
-									</div>
-									<div class="card-body wide-chart">
-										<canvas id="progressChart"></canvas>
-									</div>
-								</div>
-							</div>
 						</div>
 					</div>
 				</div>

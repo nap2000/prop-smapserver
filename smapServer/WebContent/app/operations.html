@@ -14,6 +14,11 @@
     <link href="/css/fa.v5.15.1.all.min.css" rel="stylesheet">
     <link href="/css/smap3.css" rel="stylesheet">
 
+    <style>
+        .ops-chart-wrap { position: relative; height: 260px; transition: height 0.2s ease; }
+        .ops-chart-wrap.chart-expanded { height: 600px; }
+    </style>
+
     <script src="/js/libs/modernizr.js"></script>
     <script src="/js/app/theme.js"></script>
     <script src="/js/app/bootstrapHelpers.js"></script>
@@ -80,9 +85,27 @@
         <!-- Backlog trend -->
         <div class="col-lg-8">
             <div class="card h-100">
-                <div class="card-header lang" data-lang="ops_backlog">Case backlog</div>
+                <div class="card-header d-flex align-items-center">
+                    <span class="me-auto lang" data-lang="ops_backlog">Case backlog</span>
+                    <div class="btn-group btn-group-sm me-2" role="group" id="ops_backlog_toggle">
+                        <button type="button" class="btn btn-outline-secondary active lang_tt" data-mode="line"
+                                data-lang_tt="ops_chart_line" aria-label="Line chart">
+                            <i class="fas fa-chart-line"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary lang_tt" data-mode="bar"
+                                data-lang_tt="ops_chart_bar" aria-label="Bar chart">
+                            <i class="fas fa-chart-bar"></i>
+                        </button>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-link p-0 text-secondary lang_tt" id="ops_backlog_expand"
+                            data-lang_tt="ops_expand" aria-label="Expand">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                </div>
                 <div class="card-body">
-                    <canvas id="ops_backlog_chart" height="110"></canvas>
+                    <div id="ops_backlog_wrap" class="ops-chart-wrap">
+                        <canvas id="ops_backlog_chart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>

@@ -22,7 +22,6 @@ import $ from "jquery";
 import localise from "localise";
 import globals from "globals";
 import moment from "moment";
-import chart from "./monitorChart";
 import serverQueue from "./serverQueue";
 import "./map-ol-mgmt";
 import {
@@ -42,21 +41,16 @@ import {
 
         var gStartEvents = [],		// Only in this java script file
             gPageCount = 1,			// Only in this java script file
-            gCaseProgress,
 			gPanel;
 
         let SUBMIT_PANEL = "submit";
         let FORMS_PANEL = "forms";
         let NOTIFICATIONS_PANEL = "notify";
         let OPTIN_MSG_PANEL = "optin";
-        let CASE_PANEL = "case";
         let SERVER_PANEL = "server";
 
         window.gMonitor = {
-            caseProgress: undefined,
-            cache: {
-                caseProgress: {}
-            }
+            cache: {}
         };
 
         $(document).ready(function() {
@@ -88,10 +82,6 @@ import {
                 e.preventDefault();
                 panelChange($(this), OPTIN_MSG_PANEL);
             });
-            $('#caseTab a').click(function (e) {
-                e.preventDefault();
-                panelChange($(this), CASE_PANEL);
-            });
             $('#serverTab a').click(function (e) {
                 e.preventDefault();
                 panelChange($(this), SERVER_PANEL);
@@ -108,10 +98,6 @@ import {
             $('#showType').change(function () {
                 setcontrols();
                 refreshData(globals.gCurrentProject, $('#survey option:selected').val());
-            });
-
-            $('#showInterval').change(function () {
-                refreshCases();
             });
 
             $('#showAs').change(function () {
@@ -133,7 +119,6 @@ import {
             $('#survey').change(function () {
                 setcontrols();
                 refreshData(globals.gCurrentProject, $('#survey option:selected').val());
-                refreshCases();
             });
 
             // Status values change
@@ -158,7 +143,6 @@ import {
                     serverQueue.refresh();
                 } else {
                     gMonitor.cache = {};
-                    refreshCases();
                     refreshData(globals.gCurrentProject, $('#survey option:selected').val());
                 }
             });
@@ -207,7 +191,6 @@ import {
              * Get the data
              */
             refreshData(globals.gCurrentProject, $('#survey option:selected').val());
-            refreshCases();
 
             // Set page defaults
             var currentTab = getFromLocalStorage("currentTab" + $('body').data('page'));
@@ -241,10 +224,6 @@ import {
 
             if(gPanel !== OPTIN_MSG_PANEL) {
                 $('.showproject').removeClass('d-none').show();
-            }
-
-            if(gPanel === CASE_PANEL) {
-                $('.showinterval').removeClass('d-none').show();
             }
 
             if(gPanel === SERVER_PANEL) {
@@ -731,50 +710,6 @@ import {
             });
         }
 
-        function refreshCases() {
-            var sId = $('#survey').val();
-            if(sId && sId != "_all") {
-
-                var url = "/surveyKPI/api/cases/progress/" + $('#survey').val() + "?intervalCount=" + $('#showInterval').val();
-                var savedData = gMonitor.cache[url];
-                if(savedData) {
-                    gMonitor.caseProgress = savedData;
-                    $('#case_msg').hide();
-                    $('#case_data').removeClass("d-none").show();
-                    chart.refresh();
-                } else {
-                    url += addCacheBuster(url);
-                    addHourglass();
-                    $.ajax({
-                        url: url,
-                        dataType: 'json',
-                        cache: false,
-                        success: function (data) {
-                            removeHourglass();
-                            gMonitor.cache[url] = data;
-                            gMonitor.caseProgress = data;
-                            $('#case_msg').hide();
-                            $('#case_data').removeClass("d-none").show();
-                            chart.refresh();
-
-                        },
-                        error: function (xhr, textStatus, err) {
-                            removeHourglass();
-                            if (xhr.readyState == 0 || xhr.status == 0) {
-                                return;  // Not an error
-                            } else {
-                                $('#case_data').hide();
-                                $('#case_msg').removeClass("d-none").text(localise.set["c_error"] + ": " + htmlEncode(xhr.responseText)).show();
-                            }
-                        }
-                    });
-                }
-            } else {
-                $('#case_data').hide();
-                $('#case_msg').removeClass("d-none").text(localise.set["cm_ns"]).show();
-            }
-        }
-
         /*
 	     * Respond to a panel being changed
 	     * panelChange($(this), 'userPanel', 'usersTab');
@@ -790,7 +725,6 @@ import {
                 $('#m_header_row').show();
                 serverQueue.stopPolling();
                 refreshData(globals.gCurrentProject, $('#survey option:selected').val());
-                refreshCases();
             }
             
             $(".monpanel").hide();

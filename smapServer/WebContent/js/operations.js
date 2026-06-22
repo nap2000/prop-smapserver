@@ -38,6 +38,8 @@ if (typeof localStorage !== "undefined") {
 window.gUserLocale = gUserLocale;	// common.js reads this as a global
 
 var gBacklogChart;
+var gBacklog = [];				// latest backlog series, kept so the toggle can re-render without re-fetching
+var gBacklogMode = "line";		// "line" (net backlog + opened/closed lines) or "bar" (opened vs closed throughput)
 var gSparklines = [];
 
 const RAG = { green: "#198754", amber: "#ffc107", red: "#dc3545", none: "#6c757d" };
@@ -62,6 +64,23 @@ $(document).ready(function () {
 	$('#ops_refresh').on('click', function (e) {
 		e.preventDefault();
 		loadOverview(true);
+	});
+
+	// Switch the backlog chart between line (backlog trend) and bar (opened/closed throughput)
+	$('#ops_backlog_toggle button').on('click', function () {
+		var mode = $(this).data('mode');
+		if (mode === gBacklogMode) { return; }
+		gBacklogMode = mode;
+		$('#ops_backlog_toggle button').removeClass('active');
+		$(this).addClass('active');
+		renderBacklog(gBacklog);
+	});
+
+	// Expand / collapse the backlog chart
+	$('#ops_backlog_expand').on('click', function () {
+		var expanded = $('#ops_backlog_wrap').toggleClass('chart-expanded').hasClass('chart-expanded');
+		$(this).find('i').toggleClass('fa-expand', !expanded).toggleClass('fa-compress', expanded);
+		if (gBacklogChart) { gBacklogChart.resize(); }
 	});
 });
 
@@ -167,52 +186,83 @@ function renderKpis(kpis) {
 }
 
 function renderBacklog(backlog) {
+	gBacklog = backlog || [];
 	const ctx = document.getElementById('ops_backlog_chart');
 	if (!ctx) { return; }
 	if (gBacklogChart) { try { gBacklogChart.destroy(); } catch (e) {} }
-	gBacklogChart = new Chart(ctx, {
-		type: 'line',
-		data: {
-			labels: backlog.map(function (p) { return p.date; }),
-			datasets: [
-				{
-					label: localise.set["ops_net_backlog"] || "Net backlog",
-					data: backlog.map(function (p) { return p.net; }),
-					borderColor: RAG.red,
-					backgroundColor: 'rgba(220,53,69,0.1)',
-					borderWidth: 2,
-					pointRadius: 0,
-					tension: 0.3,
-					fill: true
-				},
-				{
-					label: localise.set["ops_opened"] || "Opened",
-					data: backlog.map(function (p) { return p.opened; }),
-					borderColor: RAG.amber,
-					borderWidth: 1,
-					pointRadius: 0,
-					tension: 0.3,
-					fill: false
-				},
-				{
-					label: localise.set["ops_closed"] || "Closed",
-					data: backlog.map(function (p) { return p.closed; }),
-					borderColor: RAG.green,
-					borderWidth: 1,
-					pointRadius: 0,
-					tension: 0.3,
-					fill: false
-				}
-			]
-		},
-		options: {
-			responsive: true,
-			maintainAspectRatio: false,
-			interaction: { mode: 'index', intersect: false },
-			plugins: { legend: { position: 'bottom' } },
-			scales: { y: { beginAtZero: true } }
-		}
-	});
+
+	const labels = gBacklog.map(function (p) { return p.date; });
+	let config;
+
+	if (gBacklogMode === "bar") {
+		// Throughput: opened vs closed per day, across the same surveys the backlog trend covers
+		config = {
+			type: 'bar',
+			data: {
+				labels: labels,
+				datasets: [
+					{
+						label: localise.set["ops_opened"] || "Opened",
+						data: gBacklog.map(function (p) { return p.opened; }),
+						backgroundColor: RAG.red
+					},
+					{
+						label: localise.set["ops_closed"] || "Closed",
+						data: gBacklog.map(function (p) { return p.closed; }),
+						backgroundColor: RAG.green
+					}
+				]
+			}
+		};
+	} else {
+		// Cumulative backlog trend with opened / closed reference lines
+		config = {
+			type: 'line',
+			data: {
+				labels: labels,
+				datasets: [
+					{
+						label: localise.set["ops_net_backlog"] || "Net backlog",
+						data: gBacklog.map(function (p) { return p.net; }),
+						borderColor: RAG.red,
+						backgroundColor: 'rgba(220,53,69,0.1)',
+						borderWidth: 2,
+						pointRadius: 0,
+						tension: 0.3,
+						fill: true
+					},
+					{
+						label: localise.set["ops_opened"] || "Opened",
+						data: gBacklog.map(function (p) { return p.opened; }),
+						borderColor: RAG.amber,
+						borderWidth: 1,
+						pointRadius: 0,
+						tension: 0.3,
+						fill: false
+					},
+					{
+						label: localise.set["ops_closed"] || "Closed",
+						data: gBacklog.map(function (p) { return p.closed; }),
+						borderColor: RAG.green,
+						borderWidth: 1,
+						pointRadius: 0,
+						tension: 0.3,
+						fill: false
+					}
+				]
+			}
+		};
+	}
+
+	config.options = {
+		responsive: true,
+		maintainAspectRatio: false,
+		interaction: { mode: 'index', intersect: false },
+		plugins: { legend: { position: 'bottom' } },
+		scales: { y: { beginAtZero: true } }
+	};
+
+	gBacklogChart = new Chart(ctx, config);
 }
 
 function renderAlerts(alerts) {

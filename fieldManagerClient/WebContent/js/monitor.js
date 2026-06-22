@@ -44,11 +44,9 @@ localise.initLocale(gUserLocale).then(function () {
 	window.localise = localise;
 
 	import(/* webpackMode: "eager" */ "./app/map-ol-mgmt").then(function () {
-		import(/* webpackMode: "eager" */ "./app/monitorChart").then(function () {
-			import(/* webpackMode: "eager" */ "./app/monitor").then(function () {
-				setCustomMonitor();
-				localise.setlang();
-			});
+		import(/* webpackMode: "eager" */ "./app/monitor").then(function () {
+			setCustomMonitor();
+			localise.setlang();
 		});
 	});
 });
