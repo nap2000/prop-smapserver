@@ -40,6 +40,9 @@ window.gUserLocale = gUserLocale;	// common.js reads this as a global
 var gBacklogChart;
 var gBacklog = [];				// latest backlog series, kept so the toggle can re-render without re-fetching
 var gBacklogMode = "line";		// "line" (net backlog + opened/closed lines) or "bar" (opened vs closed throughput)
+var gUnits = [];				// latest per-unit (role) breakdown
+var gBundles = [];				// latest per-bundle breakdown
+var gUnitMode = "unit";			// "unit" or "bundle" - which case breakdown the table shows
 var gSparklines = [];
 
 const RAG = { green: "#198754", amber: "#ffc107", red: "#dc3545", none: "#6c757d" };
@@ -84,6 +87,16 @@ $(document).ready(function () {
 		$(this).find('i').toggleClass('fa-expand', !expanded).toggleClass('fa-compress', expanded);
 		if (gBacklogChart) { gBacklogChart.resize(); }
 	});
+
+	// Switch the case breakdown between by-unit (role) and by-bundle
+	$('#ops_units_toggle button').on('click', function () {
+		var mode = $(this).data('mode');
+		if (mode === gUnitMode) { return; }
+		gUnitMode = mode;
+		$('#ops_units_toggle button').removeClass('active');
+		$(this).addClass('active');
+		renderBreakdown();
+	});
 });
 
 function loadOverview(force) {
@@ -108,7 +121,9 @@ function renderOverview(data) {
 	renderKpis(data.kpis || []);
 	renderBacklog(data.backlog || []);
 	renderAlerts(data.alerts || []);
-	renderUnits(data.units || []);
+	gUnits = data.units || [];
+	gBundles = data.bundles || [];
+	renderBreakdown();
 	if (data.generatedAt) {
 		$('#ops_generated').text((localise.set["ops_generated"] || "Updated") + ": " + data.generatedAt.replace('T', ' '));
 	}
@@ -287,7 +302,23 @@ function renderAlerts(alerts) {
 	$('#ops_alerts').html(html);
 }
 
+function renderBreakdown() {
+	if (gUnitMode === "bundle") {
+		renderBundles(gBundles);
+	} else {
+		renderUnits(gUnits);
+	}
+}
+
 function renderUnits(units) {
+	$('#ops_units_title').text(localise.set["ops_units"] || "Units (roles)");
+	$('#ops_units_head').html('<tr>' +
+		'<th>' + (localise.set["ops_role"] || "Role") + '</th>' +
+		'<th class="text-end">' + (localise.set["ops_open_cases"] || "Open cases") + '</th>' +
+		'<th class="text-end">' + (localise.set["ops_open_tasks"] || "Open tasks") + '</th>' +
+		'<th class="text-end">' + (localise.set["ops_tasks_overdue"] || "Overdue") + '</th>' +
+		'<th class="text-end">' + (localise.set["ops_overdue_pct"] || "Overdue %") + '</th>' +
+		'</tr>');
 	if (!units.length) {
 		$('#ops_units').html('<tr><td colspan="5" class="text-muted">' +
 			(localise.set["ops_no_units"] || "No units with open work") + '</td></tr>');
@@ -321,6 +352,32 @@ function renderUnits(units) {
 			'<td class="text-end">' + esc(String(u.openTasks)) + '</td>' +
 			'<td class="text-end">' + esc(String(u.overdue)) + '</td>' +
 			'<td class="text-end" style="color:' + colour + '">' + u.overduePct.toFixed(0) + '%</td>' +
+			'</tr>';
+	});
+	$('#ops_units').html(html);
+}
+
+function renderBundles(bundles) {
+	$('#ops_units_title').text(localise.set["ops_bundles"] || "Bundles");
+	$('#ops_units_head').html('<tr>' +
+		'<th>' + (localise.set["ops_bundle"] || "Bundle") + '</th>' +
+		'<th class="text-end">' + (localise.set["ops_open_cases"] || "Open cases") + '</th>' +
+		'<th class="text-end">' + (localise.set["ops_stale"] || "Stale") + '</th>' +
+		'<th class="text-end">' + (localise.set["ops_unit_unassigned"] || "Unassigned") + '</th>' +
+		'</tr>');
+	if (!bundles.length) {
+		$('#ops_units').html('<tr><td colspan="4" class="text-muted">' +
+			(localise.set["ops_no_bundles"] || "No bundles with open cases") + '</td></tr>');
+		return;
+	}
+	let html = "";
+	bundles.forEach(function (b) {
+		const colour = RAG[b.rag] || RAG.none;
+		html += '<tr>' +
+			'<td><span class="badge me-1" style="background-color:' + colour + '">&nbsp;</span>' + esc(b.name) + '</td>' +
+			'<td class="text-end">' + esc(String(b.openCases)) + '</td>' +
+			'<td class="text-end">' + esc(String(b.stale)) + '</td>' +
+			'<td class="text-end">' + esc(String(b.unassigned)) + '</td>' +
 			'</tr>';
 	});
 	$('#ops_units').html(html);

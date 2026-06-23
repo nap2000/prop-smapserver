@@ -120,22 +120,26 @@
         </div>
     </div>
 
-    <!-- Units (roles) -->
+    <!-- Case breakdown (by unit / by bundle) -->
     <div class="row g-3 mt-1">
         <div class="col-12">
             <div class="card">
-                <div class="card-header lang" data-lang="ops_units">Units (roles)</div>
+                <div class="card-header d-flex align-items-center">
+                    <span class="me-auto" id="ops_units_title"></span>
+                    <div class="btn-group btn-group-sm" role="group" id="ops_units_toggle">
+                        <button type="button" class="btn btn-outline-secondary active lang_tt" data-mode="unit"
+                                data-lang_tt="ops_by_unit" aria-label="By unit">
+                            <i class="fas fa-users"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary lang_tt" data-mode="bundle"
+                                data-lang_tt="ops_by_bundle" aria-label="By bundle">
+                            <i class="fas fa-layer-group"></i>
+                        </button>
+                    </div>
+                </div>
                 <div class="card-body p-0">
                     <table class="table table-hover mb-0">
-                        <thead>
-                            <tr>
-                                <th class="lang" data-lang="ops_role">Role</th>
-                                <th class="text-end lang" data-lang="ops_open_cases">Open cases</th>
-                                <th class="text-end lang" data-lang="ops_open_tasks">Open tasks</th>
-                                <th class="text-end lang" data-lang="ops_tasks_overdue">Overdue</th>
-                                <th class="text-end lang" data-lang="ops_overdue_pct">Overdue %</th>
-                            </tr>
-                        </thead>
+                        <thead id="ops_units_head"></thead>
                         <tbody id="ops_units"></tbody>
                     </table>
                 </div>
