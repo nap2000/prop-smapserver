@@ -199,11 +199,17 @@ localise.initLocale(gUserLocale).then(function () {
 					}
 					rhref += addCacheBuster(rhref);
 
-					hr[++ridx] = '<div class="btn-group w-100 btn-group-lg d-flex mb-2" role="group">';
+					hr[++ridx] = '<div id="ref_' + i + '" class="btn-group w-100 btn-group-lg d-flex mb-2" role="group">';
 					hr[++ridx] = '<button class="btn btn-reference w-10 task-icon" type="button"><i class="fa fa-eye"></i></button>';
 					hr[++ridx] = '<a class="btn btn-reference w-100" role="button" target="_blank" href="' + rhref + '">';
 					hr[++ridx] = '<span class="text-center">' + htmlEncode(taskList[i].task.title) + '</span>';
 					hr[++ridx] = '</a>';
+					hr[++ridx] = '<div class="btn-group w-20" role="group">';
+					hr[++ridx] = '<button class="btn btn-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>';
+					hr[++ridx] = '<div class="dropdown-menu dropdown-menu-end">';
+					hr[++ridx] = '<a class="dropdown-item ref-action-remove" href="#" data-id="' + i + '">' + localise.set["c_delete"] + '</a>';
+					hr[++ridx] = '</div>';
+					hr[++ridx] = '</div>';
 					hr[++ridx] = '</div>';
 					refCount++;
 					continue;
@@ -338,6 +344,11 @@ localise.initLocale(gUserLocale).then(function () {
 		$('#references_count').html('(' + refCount + ')');
 		$refList.html(hr.join(''));
 
+		$refList.find('.ref-action-remove').off().click(function(e){
+			e.preventDefault();
+			removeReference($(this).data("id"), taskList);
+		});
+
 		$taskList.find('.task').off().click(function(){
 			$('.up_alert').hide();
 			var $this = $(this),
@@ -471,6 +482,54 @@ localise.initLocale(gUserLocale).then(function () {
 			error: function(xhr, textStatus, err) {
 				removeHourglass();
 				$('.up_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["msg_err_upd"] + htmlEncode(xhr.responseText));
+			}
+		});
+	}
+
+	/*
+	 * Remove a reference (read only) record allocated to this user.
+	 * Identical server processing to a device dereference - no comment required.
+	 */
+	function removeReference(idx, taskList) {
+
+		$('.up_alert').hide();
+		bootbox.confirm({
+			title: localise.set["c_delete"],
+			message: htmlEncode(taskList[idx].task.title),
+			centerVertical: true,
+			locale: gUserLocale,
+			callback: function(result){
+				if(!result) {
+					return;
+				}
+
+				var taskUpdate = {
+					assignment_status: 'cancelled',
+					type: 'reference',
+					sIdent: taskList[idx].task.form_id,
+					uuid: taskList[idx].task.update_id
+				};
+
+				addHourglass();
+				$.ajax({
+					type: "POST",
+					data: {assignment: JSON.stringify(taskUpdate)},
+					cache: false,
+					contentType: "application/x-www-form-urlencoded",
+					url: "/surveyKPI/assignments/mine/update_status",
+					success: function(data, status) {
+						removeHourglass();
+						if(handleLogout(data)) {
+							$('#ref_' + idx).remove();
+							var count = $('#reference_list').children().length;
+							$('#references_count').html('(' + count + ')');
+						}
+					},
+					error: function(xhr, textStatus, err) {
+						removeHourglass();
+						$('.up_alert').show().removeClass('alert-success').addClass('alert-danger').text(localise.set["msg_err_upd"] + htmlEncode(xhr.responseText));
+					}
+				});
 			}
 		});
 	}
