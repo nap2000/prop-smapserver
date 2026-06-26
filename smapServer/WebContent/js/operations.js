@@ -101,7 +101,11 @@ $(document).ready(function () {
 
 function loadOverview(force) {
 	$('.hour_glass').show();
-	fetch('/surveyKPI/ops/overview' + (force ? '?refresh=true' : ''), { credentials: 'same-origin', cache: 'no-store' })
+	// Send the browser timezone so the backlog trend buckets by local day, not UTC.
+	// Computed directly (not via globals.gTimezone) as this runs before the user lookup.
+	var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+	var params = (force ? 'refresh=true&' : '') + 'tz=' + encodeURIComponent(tz);
+	fetch('/surveyKPI/ops/overview?' + params, { credentials: 'same-origin', cache: 'no-store' })
 		.then(function (resp) {
 			if (!resp.ok) { throw new Error('HTTP ' + resp.status); }
 			return resp.json();
