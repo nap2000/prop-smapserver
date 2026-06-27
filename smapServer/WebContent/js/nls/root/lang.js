@@ -282,6 +282,7 @@ define({
     "c_status": "Status",
     "c_coords": "Coordinates",
     "c_task": "Task",
+    "c_emailtask": "Email Task",
     "c_rec": "(Recommended)",
     "c_source": "Source",
     "c_show": "Show",

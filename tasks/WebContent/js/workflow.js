@@ -50,6 +50,7 @@ let gTriggerSurveyId = 0;   // survey ID parsed from selected node
 const TYPE_COLOURS = {
 	form:             "#4a90d9",
 	task:             "#27ae60",
+	emailtask:        "#27ae60",
 	"case":           "#e67e22",
 	reference:        "#d35400",
 	decision:         "#f39c12",
@@ -71,6 +72,7 @@ const PALETTE = [
 const TYPE_ICONS = {
 	form:            "fas fa-file-alt",
 	task:            "fas fa-file-alt",
+	emailtask:       "fas fa-envelope",
 	"case":          "fas fa-file-alt",
 	reference:       "fas fa-link",
 	periodic:        "fas fa-clock",
@@ -82,7 +84,7 @@ const TYPE_ICONS = {
 };
 
 // Types that get an edit button on their card
-const EDITABLE_TYPES = ["task", "case", "reference", "email", "sms", "sharepoint_list", "periodic"];
+const EDITABLE_TYPES = ["task", "emailtask", "case", "reference", "email", "sms", "sharepoint_list", "periodic"];
 
 // Localised label per workitem type
 function typeLabel(type) {
@@ -90,6 +92,7 @@ function typeLabel(type) {
 	const labels = {
 		form:     l["c_form"],
 		task:     l["c_task"],
+		emailtask: l["c_emailtask"],
 		"case":   l["c_case"],
 		reference: l["c_reference"],
 		periodic: l["c_scheduled"],
@@ -838,7 +841,7 @@ function renderDrawerContent(type) {
 	}
 
 	if (type === "emailtask") {
-		const emailTo = (firstNotif && firstNotif.remoteUser) || "";
+		const emailTo = (firstTG && firstTG.remoteUser) || (firstNotif && firstNotif.remoteUser) || "";
 		bodyHtml += `<div class="wf-field">
 			<label>${l["c_email_addresses"]}</label>
 			<input id="wfd-task-email-to" type="text" value="${esc(emailTo)}" placeholder="comma-separated">
@@ -1359,7 +1362,9 @@ function saveDrawer() {
 				            ? filtersByTgId[String(tg.tgId)] : (tg.filter || ""),
 				roleId: taskRoleId,
 				userId: taskUserId,
-				remoteUser: (taskRoleId === 0 && taskUserId === 0) ? (tg.remoteUser || "") : ""
+				remoteUser: type === "emailtask"
+				                ? assignee
+				                : ((taskRoleId === 0 && taskUserId === 0) ? (tg.remoteUser || "") : "")
 			};
 			if (targetSurveyId > 0) update.targetSurveyId = targetSurveyId;
 			return Object.assign({}, tg, update);
@@ -1683,18 +1688,8 @@ function executeCreate() {
 			wfPrevNodeId:   gSelectedNode ? gSelectedNode.dataset.id : null
 		};
 		if (type === "emailtask") {
-			// emailtask uses a notification instead
-			url     = "/surveyKPI/workflow/edit/notification";
-			payload = {
-				srcSurveyId:  sourceSurveyId,
-				target:       "task",
-				name:         name,
-				filter:       filter || null,
-				enabled:      true,
-				bundle:       false,
-				wfPrevNodeId: gSelectedNode ? gSelectedNode.dataset.id : null,
-				remoteUser:   (document.getElementById("wfd-task-email-to") || {}).value || null
-			};
+			// emailtask is a task group whose assignee is an email address (remote user)
+			payload.remoteUser = (document.getElementById("wfd-task-email-to") || {}).value || null;
 		} else {
 			const roleBtn = document.getElementById("wfd-task-assign-role");
 			const userBtn = document.getElementById("wfd-task-assign-user");
