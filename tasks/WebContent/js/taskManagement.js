@@ -1458,6 +1458,18 @@ localise.initLocale(gUserLocale).then(function () {
 					}, 50);
 					setTimeout(function() { clearInterval(poll); }, 5000);
 				}
+
+				// loadSurveys fan-out runs in parallel — re-apply survey_to_complete once its options arrive
+				const targetSId = taskgroups[tgIdx].target_s_id;
+				if (targetSId) {
+					const pollSurvey = setInterval(function() {
+						if ($('#survey_to_complete option[value="' + targetSId + '"]').length) {
+							clearInterval(pollSurvey);
+							$('#survey_to_complete').val(targetSId);
+						}
+					}, 50);
+					setTimeout(function() { clearInterval(pollSurvey); }, 5000);
+				}
 			}
 		}
 
