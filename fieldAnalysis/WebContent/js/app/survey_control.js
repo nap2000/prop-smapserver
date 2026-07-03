@@ -196,6 +196,7 @@ function getViewData(view) {
 	} else {
 		addFormPickList(sMeta);
 		addDatePickList(sMeta);
+		addGeomPickList(sMeta);
 	}
 	
 	// Get the languages 

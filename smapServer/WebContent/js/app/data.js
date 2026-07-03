@@ -173,9 +173,7 @@ function getEffectiveDateFilter(view) {
 		var fmt = function(d) { return d.toISOString().slice(0, 10); };	// YYYY-MM-DD
 		fromDate = fmt(from);
 		toDate = fmt(now);
-		if(!dateQuestionId || dateQuestionId == 0) {
-			dateQuestionId = -100;	// Upload Time pseudo id
-		}
+		dateQuestionId = -100;	// Relative ranges always filter on Upload Time, not the view's (often arbitrary) date question
 	}
 	return { fromDate: fromDate, toDate: toDate, dateQuestionId: dateQuestionId };
 }
