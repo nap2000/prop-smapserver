@@ -1073,7 +1073,8 @@ import localise from "./localise.js";
             { key: "exclude_empty",        label: "ed_ee",         type: "bool" },
             { key: "compress_pdf",         label: "ed_cpdf",       type: "bool" },
             { key: "turnstile",            label: "ed_turnstile",  type: "bool" },
-            { key: "showFormIndex",        label: "ed_sfi",        type: "bool" }
+            { key: "showFormIndex",        label: "ed_sfi",        type: "bool" },
+            { key: "maxReferenceRecords",  label: "ed_mrr",        type: "number" }
         ];
 
         // Format a single setting value for display in the change log
@@ -1281,7 +1282,8 @@ import localise from "./localise.js";
                 globals.model.survey.key_policy,
 	            $('#default_logo').val(),
                 $('#turnstile').prop('checked'),
-                $('#showFormIndex').prop('checked')
+                $('#showFormIndex').prop('checked'),
+                parseInt($('#maxReferenceRecords').val(), 10) || 0
             );
 
             // Update the model to reflect the current values
@@ -1306,6 +1308,7 @@ import localise from "./localise.js";
 	            this.survey.default_logo = current.default_logo;
                 this.survey.turnstile = current.turnstile;
                 this.survey.showFormIndex = current.showFormIndex;
+                this.survey.maxReferenceRecords = current.maxReferenceRecords;
             }
 
             return current;
@@ -1335,7 +1338,8 @@ import localise from "./localise.js";
                     this.survey.key_policy,
 	                this.survey.default_logo,
                     this.survey.turnstile,
-                    this.survey.showFormIndex
+                    this.survey.showFormIndex,
+                    this.survey.maxReferenceRecords
                 ));
 
             this.forceSettingsChange = false;
@@ -1361,7 +1365,8 @@ import localise from "./localise.js";
                                               key_policy,
                                               default_logo,
                                               turnstile,
-                                              showFormIndex) {
+                                              showFormIndex,
+                                              maxReferenceRecords) {
 
             var projId;
             if (typeof p_id === "string") {
@@ -1391,7 +1396,8 @@ import localise from "./localise.js";
                 key_policy: key_policy,
 	            default_logo: default_logo,
                 turnstile: turnstile,
-                showFormIndex: showFormIndex
+                showFormIndex: showFormIndex,
+                maxReferenceRecords: maxReferenceRecords
             }
         }
 

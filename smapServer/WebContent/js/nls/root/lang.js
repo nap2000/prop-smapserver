@@ -1103,6 +1103,7 @@ define({
 	"ed_hod": "Hide the form on devices",
     "ed_sld": "Lookup local, unsent, data on device",
     "ed_sfi": "Show Form Index",
+    "ed_mrr": "Max reference records (0 = unlimited)",
     "ed_s_g": "Grid (Web Forms)",
     "ed_s_p": "Pages",
     "ed_c_sr": "All questions set to <span style=\"color:blue;\">required</span>",
