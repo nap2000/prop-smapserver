@@ -1317,9 +1317,11 @@ $(function() {
 
 	gFiles = data.files;	// Reference the data on selection of an item
 
+	var mediaCount = 0;
 	for(i = 0; i < data.files.length; i++) {
 		var f = data.files[i];
 		if(f.type === 'image' || f.type === 'video' || f.type === 'audio') {
+			mediaCount++;
 			h[++idx] = '<div class="row mediaItem" data-idx="';
 			h[++idx] = i;
 			h[++idx] = '">';
@@ -1353,6 +1355,10 @@ $(function() {
 			h2[++idx2] = htmlEncode(f.name);
 			h2[++idx2] = '</option>';
 		}
+	}
+
+	if(mediaCount === 0) {
+		h = ['<div class="alert alert-info m-2">' + htmlEncode(localise.set['msg_no_media']) + '</div>'];
 	}
 
 	$('#imageSelect').empty().html(h.join(''));

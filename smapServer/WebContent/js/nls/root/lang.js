@@ -610,6 +610,7 @@ define({
     "msg_sel_media": "Select Media Question:",
     "msg_mfn": "Create media file name with:",
     "msg_sel_media_f": "Select Media File",
+    "msg_no_media": "No media files are available. Add media to shared resources or the survey media first, then reopen this dialog.",
     "msg_err_save": "Error: Save failed: ",
     "msg_err_del": "Error: Delete failed: ",
     "msg_err_cr": "Error: Create failed: ",
