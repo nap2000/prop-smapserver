@@ -726,7 +726,7 @@ export default {
 
 		if(mediaIdent) {
 			if(thumbUrl || (lcLabel === "image" && url)) {
-				h[++idx] = '<img height="100" width="100" src="';
+				h[++idx] = '<img src="';
 				if(thumbUrl) {
 					h[++idx] = thumbUrl;
 				} else {
@@ -745,7 +745,7 @@ export default {
 		} else {
 			h[++idx] = '</div>';
 		}
-	    h[++idx] = '<a type="button" class="btn btn-secondary mediaProp form-control" data-element="';
+	    h[++idx] = '<a type="button" class="btn btn-primary mediaProp form-control" data-element="';
 	    h[++idx] = label.toLowerCase();
 	    h[++idx] = '">';
 	    h[++idx] = lcLabel;

@@ -493,18 +493,15 @@ textarea {
 
 .emptyMedia {
 	background-color: grey;
-	color: #ccc;
-	display: table-cell;
-	width: 100px;
-	height: 80px;
-	/*margin: 5px;*/
-	border-style: solid;
-	border-width: 5px;
-	border-color: #ccc;
-	float: none;
-    margin: 0 auto;
-    float: none;
-    vertical-align: middle;
+	color: #eee;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 110px;
+	box-sizing: border-box;
+	border: 1px solid #ccc;
+	border-radius: 4px;
 }
 
 .naMedia {
@@ -523,8 +520,31 @@ textarea {
     vertical-align: middle;
 }
 
+/* Media thumbnail tile (Media property panel). Bootstrap 5 no longer styles
+   .thumbnail, so define the box here so it fills the column and aligns with
+   the button beneath it. */
 .preview {
-	height: 100px;
+	display: block;
+	width: 100%;
+	height: 110px;
+	box-sizing: border-box;
+	padding: 4px;
+	background: #fff;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+.preview img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	display: block;
+}
+
+/* Media action button sits directly under its thumbnail; small gap between. */
+.mediaProp.form-control {
+	margin-top: 6px;
 }
 
 #map {

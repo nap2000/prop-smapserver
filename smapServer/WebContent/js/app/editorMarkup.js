@@ -639,7 +639,7 @@ export default {
 			} else if(selProperty === "media" && question.type != "calculate") {
 				h[++idx] = '<div class="row">';
 				if(type === "question" && (question.inMeta || question.source != "user" )) {
-					h[++idx] = '<div class="col-sm-4 col-sm-offset-4">';
+					h[++idx] = '<div class="col-sm-4 offset-sm-4">';
 					h[++idx] = naMedia;
 					h[++idx] = '</div>';
 				} else {
@@ -915,7 +915,7 @@ export default {
 
 		if(mediaIdent) {
 			if(thumbUrl || (lcLabel === "image" && url)) {
-				h[++idx] = '<img height="100" width="100" src="';
+				h[++idx] = '<img src="';
 				if(thumbUrl) {
 					h[++idx] = thumbUrl + addCacheBuster(thumbUrl);;
 				} else {
