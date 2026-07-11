@@ -1526,6 +1526,16 @@ define({
     "ro_fc_i": "Select the columns to show with this filter. If no columns are selected then all columns will be shown.",
     "ro_transform": "Long to wide data transformation",
 
+    // Reference data filters
+    "c_ref_filters": "Reference Filters",
+    "rf_source": "Source Survey",
+    "rf_filter": "Filter",
+    "rf_edit": "Edit reference data filter",
+    "rf_i": "Restrict the reference data that this survey pulls from another survey. Enter a rule that determines which rows are supplied. Enclose question names from the source survey in ${...}. Enclose text in single quotes. Make sure there are spaces between question names and operators such as =.<br/>Example 1: ${status} = 'open'<br/>Example 2: ${age} > 16. Only top level questions may be used. If no rule is specified then all rows are supplied.",
+    "rf_none": "This survey does not link to any other surveys, so there is nothing to filter.",
+    "rf_has": "Reference data filters are in place.",
+    "rf_no": "No reference data filters are in place.",
+
     // Intervals
     "i_m": "minutes",
     "i_h": "hours",

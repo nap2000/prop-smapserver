@@ -10,6 +10,7 @@ module.exports = {
     meta: "./WebContent/js/meta.js",
     register: "./WebContent/js/register.js",
     survey_roles: "./WebContent/js/survey_roles.js",
+    reference_filters: "./WebContent/js/reference_filters.js",
     translate: "./WebContent/js/translate.js",
     logout: "./WebContent/js/logout.js",
     change_passwords: "./WebContent/js/change_passwords.js",

@@ -80,6 +80,10 @@
 	    exclude: ['jquery', 'bootstrap']
         },
         {
+            name: '../reference_filters',
+	    exclude: ['jquery', 'bootstrap']
+        },
+        {
             name: '../register',
 	    exclude: ['jquery', 'bootstrap']
         }
