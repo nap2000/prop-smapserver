@@ -925,9 +925,6 @@ $(function() {
 	$('#showFormIndex').change(function() {
 		globals.model.settingsChange();
 	});
-	$('#maxReferenceRecords').change(function() {
-		globals.model.settingsChange();
-	});
 	$('#timing_data').change(function() {
 		if($(this).is(':checked')) {
 			$('.audit_location_data').show();
@@ -2968,7 +2965,6 @@ $(function() {
 	$('#set_style').val(globals.model.survey.surveyClass)
 	$('#task_file').prop('checked', globals.model.survey.task_file);
 	$('#showFormIndex').prop('checked', globals.model.survey.showFormIndex);
-	$('#maxReferenceRecords').val(globals.model.survey.maxReferenceRecords);
 	$('#timing_data').prop('checked', globals.model.survey.timing_data);
 	if(globals.model.survey.timing_data) {
 		$('.audit_location_data').show();

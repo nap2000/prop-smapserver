@@ -58,7 +58,7 @@ localise.initLocale(gUserLocale).then(function () {
 
 	// Save the filter being edited
 	$('#saveFilter').off().click(function() {
-		saveFilter(gCurrentLinked, $('#filter_content').val());
+		saveFilter(gCurrentLinked, $('#filter_content').val(), parseInt($('#filter_max_records').val(), 10) || 0);
 	});
 
 	$('#project_name').change(function() {
@@ -157,6 +157,7 @@ function refreshView() {
 	h[++idx] = '<tr>';
 	h[++idx] = '<th>' + localise.set["rf_source"] + '</th>';
 	h[++idx] = '<th>' + localise.set["rf_filter"] + '</th>';
+	h[++idx] = '<th>' + localise.set["ed_mrr"] + '</th>';
 	h[++idx] = '<th></th>';
 	h[++idx] = '</tr>';
 	h[++idx] = '</thead>';
@@ -167,6 +168,8 @@ function refreshView() {
 
 		filter = getFilterFor(sources[i].linkedSIdent);
 
+		var hasSetting = !!(filter && (filter.filter || filter.maxRecords > 0));
+
 		h[++idx] = '<tr>';
 		h[++idx] = '<td>';
 		h[++idx] = htmlEncode(sources[i].linkedSName || sources[i].linkedSIdent);
@@ -175,11 +178,14 @@ function refreshView() {
 		h[++idx] = (filter && filter.filter) ? htmlEncode(filter.filter) : '';
 		h[++idx] = '</code></td>';
 		h[++idx] = '<td>';
+		h[++idx] = (filter && filter.maxRecords > 0) ? filter.maxRecords : '';
+		h[++idx] = '</td>';
+		h[++idx] = '<td>';
 		h[++idx] = '<button class="btn btn-xs edit_filter" data-ident="' + htmlEncode(sources[i].linkedSIdent) + '">';
 		h[++idx] = '<i class="fa fa-filter" aria-hidden="true"></i>';
 		h[++idx] = '</button> ';
 		h[++idx] = '<button class="btn btn-xs clear_filter" data-ident="' + htmlEncode(sources[i].linkedSIdent) + '"';
-		if (!(filter && filter.filter)) {
+		if (!hasSetting) {
 			h[++idx] = ' disabled';
 		}
 		h[++idx] = '>';
@@ -188,7 +194,7 @@ function refreshView() {
 		h[++idx] = '</td>';
 		h[++idx] = '</tr>';
 
-		if(filter && filter.filter) {
+		if(hasSetting) {
 			hasFilter = true;
 		}
 	}
@@ -207,6 +213,7 @@ function refreshView() {
 		gCurrentLinked = ident;
 		$('#filter_source_disp').text(source ? (source.linkedSName || source.linkedSIdent) : ident);
 		$('#filter_content').val(filter ? filter.filter : '');
+		$('#filter_max_records').val(filter ? filter.maxRecords : 0);
 		window.bsModalShow('#filter_popup');
 	});
 
@@ -242,11 +249,12 @@ function getSource(linkedIdent) {
 /*
  * Save (create or update) a filter for a source survey
  */
-function saveFilter(linkedIdent, filterText) {
+function saveFilter(linkedIdent, filterText, maxRecords) {
 
 	var rf = {
 		linkedSIdent: linkedIdent,
 		filter: filterText,
+		maxRecords: maxRecords,
 		enabled: true
 	};
 
