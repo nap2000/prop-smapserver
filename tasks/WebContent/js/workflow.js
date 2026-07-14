@@ -314,28 +314,66 @@ function makeDraggable(el) {
 		if (e.target.closest(".wf-node-edit-btn")) return;
 		e.preventDefault();
 
+		const canvas   = document.getElementById("workflow-canvas");
 		const id       = el.dataset.id;
-		const startX   = e.clientX;
-		const startY   = e.clientY;
-		const startPos = gPositions[id];
-		const origX    = startPos ? startPos.x : 0;
-		const origY    = startPos ? startPos.y : 0;
+		const cardRect = el.getBoundingClientRect();
+		// Offset of the cursor within the card, so the grab point stays under the pointer.
+		const grabX    = e.clientX - cardRect.left;
+		const grabY    = e.clientY - cardRect.top;
 		let   didDrag  = false;
+		let   curX     = e.clientX;   // last known pointer position (viewport coords)
+		let   curY     = e.clientY;
+		let   scrollRAF = null;       // active auto-scroll animation frame, if any
+
+		// Distance from a canvas edge (px) at which auto-scroll kicks in; also fires
+		// when the pointer is dragged beyond the edge (outside the window).
+		const EDGE  = 40;
+		const SPEED = 20;             // max scroll step per frame
 
 		el.style.cursor = "grabbing";
 
-		function onMove(e) {
-			didDrag = true;
-			const newX = Math.max(0, origX + e.clientX - startX);
-			const newY = Math.max(0, origY + e.clientY - startY);
+		// Position the node so the grab point tracks the pointer, accounting for scroll.
+		function positionNode() {
+			const r    = canvas.getBoundingClientRect();
+			const newX = Math.max(0, curX - r.left + canvas.scrollLeft - grabX);
+			const newY = Math.max(0, curY - r.top  + canvas.scrollTop  - grabY);
 			el.style.left = newX + "px";
 			el.style.top  = newY + "px";
 			gPositions[id] = { x: newX, y: newY };
 			drawArrows();
 		}
 
+		// Scroll the canvas while the pointer sits near/beyond an edge; repositions the
+		// node each frame so it keeps following the pointer. Stops when back inside.
+		function autoScrollStep() {
+			const r = canvas.getBoundingClientRect();
+			let dx = 0, dy = 0;
+			if      (curX < r.left  + EDGE) dx = -Math.min(SPEED, r.left + EDGE - curX);
+			else if (curX > r.right - EDGE) dx =  Math.min(SPEED, curX - (r.right - EDGE));
+			if      (curY < r.top    + EDGE) dy = -Math.min(SPEED, r.top + EDGE - curY);
+			else if (curY > r.bottom - EDGE) dy =  Math.min(SPEED, curY - (r.bottom - EDGE));
+
+			if (dx !== 0 || dy !== 0) {
+				canvas.scrollLeft += dx;
+				canvas.scrollTop  += dy;
+				positionNode();
+				scrollRAF = requestAnimationFrame(autoScrollStep);
+			} else {
+				scrollRAF = null;
+			}
+		}
+
+		function onMove(e) {
+			didDrag = true;
+			curX = e.clientX;
+			curY = e.clientY;
+			positionNode();
+			if (scrollRAF === null) scrollRAF = requestAnimationFrame(autoScrollStep);
+		}
+
 		function onUp() {
 			el.style.cursor = "grab";
+			if (scrollRAF !== null) { cancelAnimationFrame(scrollRAF); scrollRAF = null; }
 			document.removeEventListener("mousemove", onMove);
 			document.removeEventListener("mouseup",   onUp);
 			if (didDrag) {
