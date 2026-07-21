@@ -2534,8 +2534,9 @@ function getChangeDescription(change, version) {
 		h[++idx] = htmlEncode(change.msg);
 		h[++idx] = '</span>';
 
-	} else if(change.action === "settings_update") {
-		h[++idx] = localise.set["ed_c_settings"];
+	} else if(change.action === "settings_update" || change.action === "reference_filter") {
+		// Both record a list of changed settings, only the heading differs
+		h[++idx] = localise.set[change.action === "reference_filter" ? "ed_c_rf" : "ed_c_settings"];
 		if(change.settingsChanges && change.settingsChanges.length > 0) {
 			// Structured list of only the settings that changed (old -> new)
 			h[++idx] = '<ul style="margin:0;padding-left:18px;">';

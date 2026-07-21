@@ -1115,6 +1115,7 @@ define({
     "ed_c_add_q": "Added question %s1 with type %s2",
     "ed_c_add_o": "Added choice %s1 to choice list: %s2",
     "ed_c_settings": "Settings changed",
+    "ed_c_rf": "Reference filter changed",
     "ed_c_languages": "Languages changed",
     "ed_c_template": "PDF template changed",
     "ed_a_template": "PDF template added",
