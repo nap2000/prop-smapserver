@@ -856,9 +856,8 @@ function addRightClickToTable($elem, sId, view) {
 				$('#action_edit').prop('disabled', false);
 				$('#download_edit').removeClass('disabled');
 				var url;
-				if(view.subject_type === "survey") {
-					url ="/app/myWork/webForm/" + survey_ident + "?datakey=prikey&datakeyvalue=" + pkey;
-				} else if(view.subject_type === "user") {
+				if(view.subject_type === "survey" || view.subject_type === "user") {
+					// Address the record by its non-guessable instanceid, never by prikey
 					url ="/app/myWork/webForm/" + survey_ident + "?datakey=instanceid&datakeyvalue=" + instanceid;
 				}
 				url += addCacheBuster(url);
