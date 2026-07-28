@@ -5207,6 +5207,7 @@ function edit_notification(edit, idx, inconsole) {
 
 		setTargetDependencies('email');
 		setTriggerDependencies('submission');
+		restoreEscalateAssignType(undefined);		// New notification defaults to assigning a user
 
 		// Reminders
 		$('#r_period').val(1);
@@ -5242,8 +5243,10 @@ function setTargetDependencies(target) {
 		$('.webhook_options').show();
 	} else if(target  === "escalate") {
 		$('.escalate_options,.email_options').show();
+		applyEscalateAssignType();		// Both assign rows share the class - only one should be shown
 	} else if(target  === "reference") {
 		$('.reference_options').show();		// References give read only access to many users - no email
+		applyEscalateAssignType();
 	} else if(target  === "conversation") {
 		$('.conv_options').show();
 		initMsgNotPopup(target);
@@ -5461,14 +5464,12 @@ function setupNotificationDialog() {
 	$('#esc_assign_user_type').off().click(function() {
 		$('#esc_assign_user_type').addClass('active');
 		$('#esc_assign_role_type').removeClass('active');
-		$('#esc_user_row').show();
-		$('#esc_role_row').hide();
+		applyEscalateAssignType();
 	});
 	$('#esc_assign_role_type').off().click(function() {
 		$('#esc_assign_role_type').addClass('active');
 		$('#esc_assign_user_type').removeClass('active');
-		$('#esc_user_row').hide();
-		$('#esc_role_row').show();
+		applyEscalateAssignType();
 		loadRolesForEscalate();
 	});
 
@@ -7017,14 +7018,27 @@ function restoreEscalateAssignType(remoteUser) {
 		var roleId = remoteUser.substring(6);
 		$('#esc_assign_user_type').removeClass('active');
 		$('#esc_assign_role_type').addClass('active');
-		$('#esc_user_row').hide();
-		$('#esc_role_row').show();
+		applyEscalateAssignType();
 		loadRolesForEscalate();
 		// Defer select value until options are populated
 		setTimeout(function() { $('#role_to_assign_notif').val(roleId); }, 300);
 	} else {
 		$('#esc_assign_user_type').addClass('active');
 		$('#esc_assign_role_type').removeClass('active');
+		applyEscalateAssignType();
+	}
+}
+
+/*
+ * Show the user or the role assignment row according to the selected assign type
+ * Both rows have the escalate_options / reference_options class so any show() of that
+ * class reveals them both - call this afterwards to hide the one not in use
+ */
+function applyEscalateAssignType() {
+	if($('#esc_assign_role_type').hasClass('active')) {
+		$('#esc_user_row').hide();
+		$('#esc_role_row').show();
+	} else {
 		$('#esc_user_row').show();
 		$('#esc_role_row').hide();
 	}
