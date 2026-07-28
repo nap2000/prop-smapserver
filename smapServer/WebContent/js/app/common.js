@@ -6812,6 +6812,178 @@ function fillUsersList(isNotification, data) {
 	if (typeof gEligibleUser !== 'undefined') {
 		$elem.val(gEligibleUser);
 	}
+	refreshSearchableSelect($elem);
+}
+
+/*
+ * Convert a select into a searchable combo where the user can type to filter the list
+ * The original select is kept in the DOM (hidden) so existing val() / change() code keeps working
+ */
+function makeSearchableSelect(selector) {
+
+	var $sel = $(selector);
+	if($sel.length === 0 || $sel.data('ss_on')) {
+		return;
+	}
+	$sel.data('ss_on', true);
+
+	var selId = $sel.attr('id'),
+		$wrap = $('<div class="ss_wrap"></div>'),
+		$input = $('<input type="text" class="form-control ss_input" autocomplete="off" spellcheck="false">'),
+		$menu = $('<div class="ss_menu"></div>');
+
+	$input.attr('placeholder', localise.set["c_search"]);
+	if(selId) {
+		$input.attr('id', selId + '_ss_input');
+		$('label[for="' + selId + '"]').attr('for', selId + '_ss_input');
+	}
+
+	$sel.after($wrap);
+	$wrap.append($sel).append($input).append($menu);
+	$sel.addClass('ss_hidden');
+	$input.val($sel.find('option:selected').text());
+
+	function openMenu() {
+		ssRenderMenu($sel, $menu, undefined);
+		$wrap.addClass('ss_open');
+		$input.val('');			// Clear so typing filters the whole list, the current value stays highlighted in the menu
+	}
+
+	function closeMenu() {
+		$wrap.removeClass('ss_open');
+		$input.val($sel.find('option:selected').text());
+	}
+
+	function choose(val) {
+		$wrap.removeClass('ss_open');
+		$sel.val(val).change();		// change() syncs the input text and runs any application handlers
+	}
+
+	function moveActive(dir) {
+		var $items = $menu.find('.ss_item'),
+			i;
+		if($items.length === 0) {
+			return;
+		}
+		i = $items.index($menu.find('.ss_item.ss_active')) + dir;
+		if(i < 0) {
+			i = $items.length - 1;
+		} else if(i >= $items.length) {
+			i = 0;
+		}
+		$items.removeClass('ss_active');
+		ssScrollIntoView($menu, $items.eq(i).addClass('ss_active'));
+	}
+
+	// Keep the visible input in step with programmatic changes to the select
+	$sel.on('change', function() {
+		if(!$wrap.hasClass('ss_open')) {
+			$input.val($sel.find('option:selected').text());
+		}
+	});
+
+	$input.on('focus click', function() {
+		if(!$wrap.hasClass('ss_open')) {
+			openMenu();
+		}
+	});
+
+	$input.on('input', function() {
+		ssRenderMenu($sel, $menu, $input.val());
+		$wrap.addClass('ss_open');
+	});
+
+	$input.on('keydown', function(e) {
+		var $active;
+		if(e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+			e.preventDefault();
+			if(!$wrap.hasClass('ss_open')) {
+				openMenu();
+			} else {
+				moveActive(e.key === 'ArrowDown' ? 1 : -1);
+			}
+		} else if(e.key === 'Enter') {
+			if($wrap.hasClass('ss_open')) {
+				e.preventDefault();
+				$active = $menu.find('.ss_item.ss_active');
+				if($active.length === 0) {
+					$active = $menu.find('.ss_item').first();		// Take the first / only match
+				}
+				if($active.length > 0) {
+					choose($active.attr('data-value'));
+				} else {
+					closeMenu();
+				}
+			}
+		} else if(e.key === 'Escape') {
+			if($wrap.hasClass('ss_open')) {
+				e.stopPropagation();		// Don't close the enclosing dialog
+				closeMenu();
+			}
+		}
+	});
+
+	$input.on('blur', function() {
+		closeMenu();
+	});
+
+	$menu.on('mousedown', '.ss_item', function(e) {
+		e.preventDefault();			// Keep focus on the input so blur does not fight the click
+		choose($(this).attr('data-value'));
+	});
+}
+
+/*
+ * Update the text shown by a searchable select after its options or value have changed
+ * Does nothing if the select has not been made searchable
+ */
+function refreshSearchableSelect(selector) {
+	var $sel = $(selector);
+	if($sel.data('ss_on')) {
+		$sel.closest('.ss_wrap').find('.ss_input').val($sel.find('option:selected').text());
+	}
+}
+
+function ssRenderMenu($sel, $menu, filter) {
+	var f = (filter || '').toLowerCase().trim(),
+		cur = $sel.val(),
+		h = [],
+		idx = -1;
+
+	$sel.find('option').each(function() {
+		var txt = $(this).text(),
+			val = $(this).val();
+		if(f.length === 0 || txt.toLowerCase().indexOf(f) >= 0) {
+			h[++idx] = '<div class="ss_item';
+			h[++idx] = (val === cur) ? ' ss_selected' : '';
+			h[++idx] = '" data-value="';
+			h[++idx] = htmlEncode(val) || '';
+			h[++idx] = '">';
+			h[++idx] = htmlEncode(txt) || '';
+			h[++idx] = '</div>';
+		}
+	});
+	if(idx < 0) {
+		h[++idx] = '<div class="ss_empty">' + localise.set["c_no_matches"] + '</div>';
+	}
+	$menu.html(h.join(''));
+	$menu.scrollTop(0);
+	ssScrollIntoView($menu, $menu.find('.ss_item.ss_selected').first());
+}
+
+function ssScrollIntoView($menu, $item) {
+	if($item.length === 0) {
+		return;
+	}
+	var top = $item.position().top,
+		h = $item.outerHeight(),
+		mh = $menu.height();
+
+	if(top < 0) {
+		$menu.scrollTop($menu.scrollTop() + top);
+	} else if(top + h > mh) {
+		$menu.scrollTop($menu.scrollTop() + top + h - mh);
+	}
 }
 
 /*
@@ -7093,6 +7265,8 @@ export {
 	htmlEncode,
 	isBusinessServer,
 	loadSurveys,
+	makeSearchableSelect,
+	refreshSearchableSelect,
 	localTime,
 	localTimeAsDate,
 	populateLanguageSelect,

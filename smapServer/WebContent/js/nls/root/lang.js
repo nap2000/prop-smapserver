@@ -69,6 +69,7 @@ define({
     "rtbf_redact_selected": "Redact Selected",
     "rtbf_disabled": "Redactions disabled - see your organisation manager to enable",
     "c_search": "Search",
+    "c_no_matches": "No matches",
     "dsar_partial": "Partial match (use for name searches; may return false positives)",
     "c_identifier": "Identifier",
     "c_export": "Export",

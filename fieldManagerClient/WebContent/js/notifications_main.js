@@ -22,7 +22,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-import { addHourglass, bundleSelectChanged, checkLoggedIn, edit_notification, getEligibleUsers, getLoggedInUser, getNotificationTypes, handleLogout, htmlEncode, loadSurveys, populateTaskGroupList, removeHourglass, saveCurrentProject, saveDocument, saveEmail, saveEscalate, saveReference, saveSMS, saveSharePointList, saveWebhook, setupNotificationDialog, setupUserProfile, surveyChangedNotification, taskGroupChanged } from "common";
+import { addHourglass, bundleSelectChanged, checkLoggedIn, edit_notification, getEligibleUsers, getLoggedInUser, getNotificationTypes, handleLogout, htmlEncode, loadSurveys, makeSearchableSelect, populateTaskGroupList, removeHourglass, saveCurrentProject, saveDocument, saveEmail, saveEscalate, saveReference, saveSMS, saveSharePointList, saveWebhook, setupNotificationDialog, setupUserProfile, surveyChangedNotification, taskGroupChanged } from "common";
 
 const $ = window.$;
 const localise = window.localise;
@@ -75,6 +75,9 @@ $(document).ready(function() {
 
 		setupNotificationDialog();
 
+		// The user list can be long - allow it to be filtered by typing
+		makeSearchableSelect('#user_to_assign');
+
 		// Enable the save notifications function
 		$('#saveNotification').click(function(){saveNotification();});
 
@@ -102,7 +105,8 @@ $(document).ready(function() {
 			taskGroupChanged($('#task_group').val());
 		});
 
-		$('#user_to_assign').off().change(function() {
+		// Namespaced so it does not remove the handler added by makeSearchableSelect()
+		$('#user_to_assign').off('change.notif').on('change.notif', function() {
 			var user = $('#user_to_assign').val();
 			console.log("User changed to: " + user);
 			if(user) {

@@ -365,3 +365,50 @@ a.filter_help {
     line-height: 1.4;
     word-break: break-word;
 }
+
+/*
+ * Searchable select (combo) - see makeSearchableSelect() in common.js
+ */
+.ss_wrap {
+    position: relative;
+}
+.ss_hidden {
+    display: none !important;
+}
+.ss_menu {
+    display: none;
+    position: absolute;
+    z-index: 1080;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 2px;
+    max-height: 240px;
+    overflow-y: auto;
+    background: var(--bs-body-bg, #fff);
+    color: var(--bs-body-color, #212529);
+    border: 1px solid var(--bs-border-color, #dee2e6);
+    border-radius: 0.375rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, .15);
+}
+.ss_open .ss_menu {
+    display: block;
+}
+.ss_item {
+    padding: 0.35rem 0.75rem;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.ss_item.ss_selected {
+    font-weight: 600;
+}
+.ss_item:hover,
+.ss_item.ss_active {
+    background: var(--bs-secondary-bg, #e9ecef);
+}
+.ss_empty {
+    padding: 0.35rem 0.75rem;
+    color: var(--bs-secondary-color, #6c757d);
+}
