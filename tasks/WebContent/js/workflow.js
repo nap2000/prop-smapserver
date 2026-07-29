@@ -36,6 +36,7 @@ let gEditTGs      = [];     // WorkflowEditTG[]   from server
 let gEditStartIds = [];     // workflow_start IDs backing this node
 let gSurveys    = null;   // cached survey list (null until first fetch)
 let gUsers      = null;   // cached user list (null until first fetch)
+let gSurveyUsers = {};    // cached users who can be assigned, by survey ident
 let gRoles      = null;   // cached role list (null until first fetch)
 
 // Drawer create-mode state
@@ -1185,20 +1186,17 @@ function renderDrawerContent(type) {
 				fillRoleSelect(caseRoleEl, roles, caseRoleEl.dataset.current);
 			});
 		}
-		const caseUserEl = document.getElementById("wfd-case-user-select");
+		// The case is completed in the case survey, so only users who can access that survey
+		// may be assigned.  Matches the list on the notifications page
+		const caseUserEl   = document.getElementById("wfd-case-user-select");
+		const caseSurveySel = document.getElementById("wfd-case-survey");
 		if (caseUserEl) {
-			fetchUsers().then(function(users) {
-				const cur = caseUserEl.dataset.current;
-				const special = [
-					{value: "_submitter", label: localise.set["c_submitter"]},
-					{value: "_data",      label: localise.set["t_ad"]}
-				];
-				caseUserEl.innerHTML = special.concat(users.map(function(u) {
-					return {value: u.ident, label: u.name};
-				})).map(function(o) {
-					return `<option value="${esc(o.value)}"${o.value === cur ? " selected" : ""}>${esc(o.label)}</option>`;
-				}).join("");
-			});
+			fillCaseUserSelect(caseUserEl, caseSurveySel ? caseSurveySel.dataset.current : "");
+			if (caseSurveySel) {
+				caseSurveySel.onchange = function() {
+					fillCaseUserSelect(caseUserEl, caseSurveySel.value);
+				};
+			}
 		}
 		function setDrawerCaseMode(mode) {
 			const uBtn = document.getElementById("wfd-case-assign-user");
@@ -1653,6 +1651,45 @@ function fetchUsers() {
 	return fetch("/surveyKPI/userList", { credentials: "include" })
 		.then(function(r) { return r.json(); })
 		.then(function(d) { gUsers = d; return d; });
+}
+
+/*
+ * Get the users who may be assigned a record in the passed in survey.  Same list as the
+ * notifications page.  Cached per survey as the drawer is opened repeatedly
+ */
+function fetchSurveyUsers(sIdent) {
+	if (!sIdent) return Promise.resolve([]);
+	if (gSurveyUsers[sIdent]) return Promise.resolve(gSurveyUsers[sIdent]);
+	return fetch("/surveyKPI/userList/survey/" + encodeURIComponent(sIdent), { credentials: "include" })
+		.then(function(r) { return r.json(); })
+		.then(function(d) { gSurveyUsers[sIdent] = d || []; return gSurveyUsers[sIdent]; })
+		.catch(function() { return []; });
+}
+
+/*
+ * Fill the case/reference assignee select with the users eligible for the case survey.
+ * Keeps the current selection if that user is still eligible
+ */
+function fillCaseUserSelect(el, sIdent) {
+	const cur = el.dataset.current || el.value || "";
+	fetchSurveyUsers(sIdent).then(function(users) {
+		const options = [
+			{value: "_none",      label: localise.set["c_none"]},
+			{value: "_submitter", label: localise.set["c_submitter"]},
+			{value: "_data",      label: localise.set["t_ad"]}
+		].concat(users.map(function(u) {
+			return {value: u.ident, label: u.name};
+		}));
+		// Keep the assigned user in the list even if they are no longer eligible, so that
+		// saving an unrelated change does not silently reassign the step
+		if (cur && !options.some(function(o) { return o.value === cur; })) {
+			options.push({value: cur, label: cur});
+		}
+		el.innerHTML = options.map(function(o) {
+			return `<option value="${esc(o.value)}"${o.value === cur ? " selected" : ""}>${esc(o.label)}</option>`;
+		}).join("");
+		el.dataset.current = el.value;
+	});
 }
 
 function fetchRoles() {
