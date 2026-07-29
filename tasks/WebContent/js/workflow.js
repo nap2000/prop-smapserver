@@ -339,7 +339,9 @@ function makeDraggable(el) {
 			const newY = Math.max(0, curY - r.top  + canvas.scrollTop  - grabY);
 			el.style.left = newX + "px";
 			el.style.top  = newY + "px";
-			gPositions[id] = { x: newX, y: newY };
+			const pos = gPositions[id] || (gPositions[id] = {});
+			pos.x = newX;			// Update in place so the backing record ids are kept
+			pos.y = newY;
 			drawArrows();
 		}
 
@@ -475,7 +477,15 @@ function renderWorkflow(data) {
 
 	const items = (data && data.items) ? data.items : [];
 	items.forEach(function(item) {
-		gPositions[item.id] = { x: item.x, y: item.y };
+		// fwdIds / tgIds are saved with the position. A node id contains data values, such as
+		// the assignee, so it changes when the step is edited; the backing record ids do not
+		// and let the server match the saved position to the edited node.
+		gPositions[item.id] = {
+			x:      item.x,
+			y:      item.y,
+			fwdIds: item.fwdIds || [],
+			tgIds:  item.tgIds  || []
+		};
 	});
 
 	const nodesEl = document.getElementById("wf-nodes");
@@ -538,7 +548,7 @@ function positionNewFormItems(knownIds) {
 		if (!el || el.dataset.type !== "form") return;
 		const freeY = findFreeY(pos.x, id);
 		if (freeY === pos.y) return;
-		gPositions[id] = { x: pos.x, y: freeY };
+		pos.y = freeY;			// Update in place so the backing record ids are kept
 		el.style.left = pos.x + "px";
 		el.style.top  = freeY + "px";
 		moved = true;
