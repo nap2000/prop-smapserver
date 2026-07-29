@@ -89,7 +89,7 @@ localise.initLocale(gUserLocale).then(function () {
                 url: "/surveyKPI/subscriptions/unsubscribe/" + gToken,
                 success: function (data, status) {
                     removeHourglass();
-                    alert(localise.set["msg_uns"]);
+                    showResult(localise.set["msg_uns"]);
                 }, error: function (data, status) {
                     removeHourglass();
                     alert(data.responseText);
@@ -107,7 +107,7 @@ localise.initLocale(gUserLocale).then(function () {
                 url: "/surveyKPI/subscriptions/subscribe/" + gToken,
                 success: function (data, status) {
                     removeHourglass();
-                    alert(localise.set["msg_s2"]);
+                    showResult(localise.set["msg_s2"]);
                 }, error: function (data, status) {
                     removeHourglass();
                     alert(data.responseText);
@@ -152,6 +152,15 @@ localise.initLocale(gUserLocale).then(function () {
 
     });
 
+
+    /*
+     * Replace the panel with the outcome so that the action cannot be repeated
+     */
+    function showResult(msg) {
+        $('.hideme').hide();
+        $('#result_msg').text(msg);
+        $('#result').show();
+    }
 
     /*
      * Update the organisation list
@@ -228,7 +237,7 @@ localise.initLocale(gUserLocale).then(function () {
                     },
                     success: function (data, status) {
                         removeHourglass();
-                        alert(localise.set["msg_s1"]);
+                        showResult(localise.set["msg_s1"]);
                     }, error: function (data, status) {
                         removeHourglass();
                         alert(data.responseText);
