@@ -230,10 +230,14 @@
         "header": "Information"
     },
     "filepicker": {
+        "chooseExisting": "Choose an existing file",
         "file": "file",
         "notFound": "File __existing__ could not be found (leave unchanged if already submitted and you want to preserve it).",
         "placeholder": "Click here to upload file. (< __maxSize__)",
+        "recordAudio": "Record audio",
+        "recordVideo": "Record video",
         "resetWarning": "This will remove the __item__. Are you sure you want to do this?",
+        "takePhoto": "Take photo",
         "toolargeerror": "File too large (> __maxSize__)",
         "waitingForPermissions": "Waiting for user permissions."
     },
@@ -271,6 +275,10 @@
         "accuracy": "accuracy (m)",
         "altitude": "altitude (m)",
         "closepolygon": "close polygon",
+        "detectDenied": "Permission to use your location was refused. Allow location access for this site in the browser settings and try again.",
+        "detectInsecure": "Your location can only be recorded over a secure (https) connection.",
+        "detectTimeout": "Your location could not be determined in time. Move to a place with a clear view of the sky and try again.",
+        "detectUnavailable": "Your location could not be determined. Check that location is switched on for this device.",
         "kmlcoords": "KML coordinates",
         "kmlpaste": "paste KML coordinates here",
         "latitude": "latitude (x.y °)",
