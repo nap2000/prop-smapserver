@@ -108,6 +108,7 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 				<li id="csvTab" role="tab" class="nav-item"><a href="#" class="nav-link active lang" data-lang="c_spread"></a></li>
 				<li id="mediaTab" role="tab" class="nav-item"><a href="#" class="nav-link lang" data-lang="sr_res"></a></li>
 				<li id="mapTab" role="tab" class="nav-item"><a href="#" class="lang nav-link" data-lang="c_maps"></a></li>
+				<li id="offlineMapTab" role="tab" class="nav-item"><a href="#" class="lang nav-link" data-lang="c_offline_maps"></a></li>
 				<li id="locationTab" role="tab" class="nav-item"><a href="#" class="lang nav-link" data-lang="c_location"></a></li>
 				<li id="spListTab" role="tab" class="nav-item"><a href="#" class="lang nav-link" data-lang="c_sharepoint_list"></a></li>
 			</ul>
@@ -173,6 +174,15 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 						<a id="addMap" type="button" class="btn btn-success lang" data-lang="msg_add_map" aria-label="Add Map">add</a>
 						<div class="table-responsive mt-4">
 							<table class="table" id="map_list"></table>
+						</div>
+					</div>
+				</div>
+
+				<div class="resourcePanel" id="offlineMapPanel" style="display:none;">
+					<div class="container-responsive">
+						<a id="addOfflineMap" type="button" class="btn btn-success lang" data-lang="msg_add_offline_map" aria-label="Add Offline Map">add</a>
+						<div class="table-responsive mt-4">
+							<table class="table" id="offline_map_list"></table>
 						</div>
 					</div>
 				</div>
@@ -376,6 +386,57 @@ along with SMAP.  If not, see <http://www.gnu.org/licenses/>.
 </div>
 
 <!-- Popup to add a new shared resource file -->
+<div id="addOfflineMapPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addOfflineMapLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title lang" id="addOfflineMapLabel" data-lang="c_offline_map">Offline Map</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<div class="modal-body">
+				<form id="offline_map_edit_form" class="form" role="form">
+					<input type="hidden" id="offline_map_id" value="0">
+					<div class="form-group row">
+						<label class="lang col-sm-3 control-label" data-lang="c_name" for="offline_map_name">name</label>
+						<div class="col-sm-9">
+							<input type="text" id="offline_map_name" class="form-control" placeholder="name" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="lang col-sm-3 control-label" data-lang="c_desc" for="offline_map_description">Description</label>
+						<div class="col-sm-9">
+							<input type="text" id="offline_map_description" class="form-control" placeholder="description">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="lang col-sm-3 control-label" data-lang="c_file" for="offline_map_file">File</label>
+						<div class="col-sm-9">
+							<input type="file" id="offline_map_file" class="form-control" accept=".mbtiles">
+							<small class="text-muted lang" data-lang="msg_offline_map_file"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="lang col-sm-3 control-label" data-lang="c_projects">Projects</label>
+						<div class="col-sm-9">
+							<div id="offline_map_projects" class="border rounded p-2" style="max-height:150px; overflow-y:auto;"></div>
+							<small class="text-muted lang" data-lang="msg_offline_map_project"></small>
+						</div>
+					</div>
+				</form>
+				<div class="progress mt-3" id="offline_map_progress" style="display:none;">
+					<div class="progress-bar" id="offline_map_progress_bar" role="progressbar" style="width:0%;">0%</div>
+				</div>
+				<div class="alert alert-danger mt-3" id="offline_map_alert" style="display:none;"></div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary lang" data-lang="c_close" data-bs-dismiss="modal">Close</button>
+					<button id="saveOfflineMap" type="button" class="btn btn-primary lang" data-lang="c_save">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div id="fileAddPopup" class="modal fade" tabindex="-1" aria-labelledby="survey_add_title" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">

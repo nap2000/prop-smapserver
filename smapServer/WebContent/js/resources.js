@@ -59,7 +59,9 @@ let gMaps,
 	gMapId,
 	gTags,          // NFC tags
 	gCurrentGroup,
-	gIsSurvey;
+	gIsSurvey,
+	gOfflineMaps,    // Offline map layers (mbtiles) managed on the server
+	gOfflineProjects; // Projects that an offline map layer can be assigned to
 
 $(function() {
 
@@ -121,6 +123,15 @@ $(function() {
 			$('.resourcePanel').hide();
 			$('#mapPanel').show();
 		});
+		$('#offlineMapTab a').click(function (e) {
+			e.preventDefault();
+			window.bsTabShow(this);
+
+			$('.resourcePanel').hide();
+			$('#offlineMapPanel').show();
+
+			getOfflineMaps();
+		});
 		$('#locationTab a').click(function (e) {
 			e.preventDefault();
 			window.bsTabShow(this);
@@ -129,6 +140,18 @@ $(function() {
 			$('#locationPanel').show();
 
 			$('.upload_file_msg').hide().removeClass('alert-danger').addClass('alert-success').html("");
+		});
+
+		/*
+		 * Set up the offline maps tab
+		 */
+		$('#addOfflineMap').click(function () {
+			edit_offline_map(-1);
+			window.bsModalShow('#addOfflineMapPopup');
+		});
+
+		$('#saveOfflineMap').click(function () {
+			saveOfflineMap();
 		});
 
 		/*
@@ -526,6 +549,293 @@ $(function() {
 				}
 			}
 		});
+	}
+
+	/*
+	 * Get the offline map layers from the server.  The list of users is fetched at the same
+	 * time so the edit dialog can show who each layer is assigned to.
+	 */
+	function getOfflineMaps() {
+
+		addHourglass();
+		$.ajax({
+			url: "/surveyKPI/shared/offlinemaps",
+			dataType: 'json',
+			cache: false,
+			success: function (data) {
+				removeHourglass();
+				gOfflineMaps = data;
+				updateOfflineMapList(data);
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				}
+				console.log("Error: Failed to get offline maps: " + err);
+			}
+		});
+
+		// This page does not load the project list on startup so it is fetched here
+		if (!gOfflineProjects) {
+			$.ajax({
+				url: "/surveyKPI/projectList",
+				dataType: 'json',
+				cache: false,
+				success: function (data) {
+					gOfflineProjects = data;
+					updateOfflineMapList(gOfflineMaps || []);   // Project names are now known
+				},
+				error: function () {
+					gOfflineProjects = [];
+				}
+			});
+		}
+	}
+
+	/*
+	 * Show the offline map layers
+	 */
+	function updateOfflineMapList(data) {
+
+		var $selector = $('#offline_map_list'),
+			i,
+			h = [],
+			idx = -1;
+
+		h[++idx] = '<thead>';
+		h[++idx] = '<tr>';
+		h[++idx] = '<th>' + localise.set["c_name"] + '</th>';
+		h[++idx] = '<th>' + localise.set["c_desc"] + '</th>';
+		h[++idx] = '<th>' + localise.set["c_size"] + '</th>';
+		h[++idx] = '<th>' + localise.set["c_projects"] + '</th>';
+		h[++idx] = '<th>' + localise.set["c_devices"] + '</th>';
+		h[++idx] = '<th></th>';
+		h[++idx] = '</tr>';
+		h[++idx] = '</thead>';
+		h[++idx] = '<tbody class="table-striped">';
+
+		for (i = 0; i < data.length; i++) {
+
+			h[++idx] = '<tr>';
+
+			h[++idx] = '<td>';
+			h[++idx] = htmlEncode(data[i].name);
+			h[++idx] = '</td>';
+
+			h[++idx] = '<td>';
+			h[++idx] = htmlEncode(data[i].description || '');
+			h[++idx] = '</td>';
+
+			h[++idx] = '<td>';
+			h[++idx] = htmlEncode(humanSize(data[i].size));
+			h[++idx] = '</td>';
+
+			h[++idx] = '<td>';
+			h[++idx] = htmlEncode(projectNames(data[i].projects));
+			h[++idx] = '</td>';
+
+			// Devices that have reported holding the current version of this layer
+			h[++idx] = '<td>';
+			h[++idx] = htmlEncode(String(data[i].devices || 0));
+			h[++idx] = '</td>';
+
+			h[++idx] = '<td>';
+			h[++idx] = '<button type="button" data-idx="' + i +
+				'" class="btn btn-info mx-2 btn-sm edit_offline_map warning"><i class="far fa-edit"></i></button>';
+			h[++idx] = '<button type="button" data-idx="' + i +
+				'" class="btn btn-danger mx-2 btn-sm rm_offline_map danger"><i class="fas fa-trash-alt"></i></button>';
+			h[++idx] = '</td>';
+
+			h[++idx] = '</tr>';
+		}
+		h[++idx] = '</tbody>';
+
+		$selector.empty().append(h.join(''));
+
+		$(".rm_offline_map", $selector).click(function () {
+			var idx = $(this).data("idx");
+			if (confirm(localise.set["msg_offline_map_del"])) {
+				delete_offline_map(gOfflineMaps[idx].id);
+			}
+		});
+
+		$(".edit_offline_map", $selector).click(function () {
+			var idx = $(this).data("idx");
+			edit_offline_map(idx);
+			window.bsModalShow('#addOfflineMapPopup');
+		});
+	}
+
+	/*
+	 * Populate the offline map dialog.  Pass -1 to add a new layer.
+	 */
+	function edit_offline_map(idx) {
+
+		var layer = idx >= 0 ? gOfflineMaps[idx] : undefined,
+			assignedProjects = layer && layer.projects ? layer.projects : [],
+			h = [],
+			i,
+			hIdx = -1;
+
+		$('#offline_map_id').val(layer ? layer.id : 0);
+		$('#offline_map_name').val(layer ? layer.name : '');
+		$('#offline_map_description').val(layer ? layer.description : '');
+		$('#offline_map_file').val('');
+		$('#offline_map_alert').hide().html('');
+		$('#offline_map_progress').hide();
+		$('#offline_map_progress_bar').css('width', '0%').html('0%');
+
+		if (gOfflineProjects) {
+			for (i = 0; i < gOfflineProjects.length; i++) {
+				var pChecked = assignedProjects.indexOf(gOfflineProjects[i].id) >= 0 ? ' checked="checked"' : '';
+				h[++hIdx] = '<div class="form-check">';
+				h[++hIdx] = '<input class="form-check-input offline_map_project" type="checkbox" value="';
+				h[++hIdx] = gOfflineProjects[i].id;
+				h[++hIdx] = '" id="oml_project_' + i + '"' + pChecked + '>';
+				h[++hIdx] = '<label class="form-check-label" for="oml_project_' + i + '">';
+				h[++hIdx] = htmlEncode(gOfflineProjects[i].name);
+				h[++hIdx] = '</label>';
+				h[++hIdx] = '</div>';
+			}
+		}
+		$('#offline_map_projects').empty().append(h.join(''));
+	}
+
+	/*
+	 * Show the names of the projects a layer is assigned to
+	 */
+	function projectNames(ids) {
+
+		var names = [],
+			i,
+			j;
+
+		if (!ids || !gOfflineProjects) {
+			return '';
+		}
+		for (i = 0; i < ids.length; i++) {
+			for (j = 0; j < gOfflineProjects.length; j++) {
+				if (gOfflineProjects[j].id === ids[i]) {
+					names.push(gOfflineProjects[j].name);
+					break;
+				}
+			}
+		}
+		return names.join(', ');
+	}
+
+	/*
+	 * Save an offline map layer.  The file can be hundreds of megabytes so the upload is sent
+	 * with XMLHttpRequest in order to report progress.
+	 */
+	function saveOfflineMap() {
+
+		var id = $('#offline_map_id').val(),
+			name = $('#offline_map_name').val(),
+			projects = [],
+			formData = new FormData(),
+			file = $('#offline_map_file')[0].files[0];
+
+		if (!name) {
+			$('#offline_map_alert').show().html(localise.set["msg_val_name"] || "A name is required");
+			return;
+		}
+		if (id <= 0 && !file) {
+			$('#offline_map_alert').show().html(localise.set["msg_offline_map_file"]);
+			return;
+		}
+
+		$('.offline_map_project:checked').each(function () {
+			projects.push(parseInt($(this).val(), 10));
+		});
+
+		// Fields are added before the file so the server has them while the upload streams
+		formData.append('id', id);
+		formData.append('name', name);
+		formData.append('description', $('#offline_map_description').val());
+		formData.append('projects', JSON.stringify(projects));
+		if (file) {
+			formData.append('file', file);
+		}
+
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', '/surveyKPI/shared/offlinemaps', true);
+		xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+		$('#offline_map_alert').hide().html('');
+		$('#saveOfflineMap').prop('disabled', true);
+
+		if (file) {
+			$('#offline_map_progress').show();
+			xhr.upload.onprogress = function (e) {
+				if (e.lengthComputable) {
+					var pc = Math.round((e.loaded / e.total) * 100);
+					$('#offline_map_progress_bar').css('width', pc + '%').html(pc + '%');
+				}
+			};
+		}
+
+		xhr.onload = function () {
+			$('#saveOfflineMap').prop('disabled', false);
+			$('#offline_map_progress').hide();
+			if (xhr.status === 200) {
+				window.bsModalHide('#addOfflineMapPopup');
+				getOfflineMaps();
+			} else if (xhr.status === 409) {
+				$('#offline_map_alert').show().html(localise.set["msg_dup"] || "That name is already in use");
+			} else {
+				$('#offline_map_alert').show().html(htmlEncode(xhr.responseText || xhr.statusText));
+			}
+		};
+
+		xhr.onerror = function () {
+			$('#saveOfflineMap').prop('disabled', false);
+			$('#offline_map_progress').hide();
+			$('#offline_map_alert').show().html(localise.set["msg_err_upload"] || "Upload failed");
+		};
+
+		xhr.send(formData);
+	}
+
+	/*
+	 * Delete an offline map layer
+	 */
+	function delete_offline_map(id) {
+
+		addHourglass();
+		$.ajax({
+			type: "DELETE",
+			url: "/surveyKPI/shared/offlinemaps/" + id,
+			success: function () {
+				removeHourglass();
+				getOfflineMaps();
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (xhr.readyState == 0 || xhr.status == 0) {
+					return;  // Not an error
+				}
+				alert(localise.set["msg_err_del"] + " " + xhr.responseText);
+			}
+		});
+	}
+
+	/*
+	 * Show a file size in units that a person can read
+	 */
+	function humanSize(bytes) {
+		if (!bytes) {
+			return '';
+		}
+		var units = ['B', 'KB', 'MB', 'GB'],
+			i = 0,
+			size = bytes;
+		while (size >= 1024 && i < units.length - 1) {
+			size = size / 1024;
+			i++;
+		}
+		return (i === 0 ? size : size.toFixed(1)) + ' ' + units[i];
 	}
 
 	/*
