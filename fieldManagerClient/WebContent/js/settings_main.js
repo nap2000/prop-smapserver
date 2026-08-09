@@ -329,32 +329,9 @@ const moment = window.moment;
 				return $(this).val();
 			}).toArray();
 
+			// Each devoption checkbox value is the name of the device setting it sets
 			for(i = 0; i < options.length; i++) {
-				if(options[i] === "ft_odk_style_menus") {
-					device.ft_odk_style_menus = true;
-				} else if(options[i] === "ft_specify_instancename") {
-					device.ft_specify_instancename = true;
-				} else if(options[i] === "ft_mark_finalized") {
-					device.ft_mark_finalized = true;
-				} else if(options[i] === "ft_prevent_disable_track") {
-					device.ft_prevent_disable_track = true;
-				}  else if(options[i] === "ft_enable_geofence") {
-					device.ft_enable_geofence = true;
-				} else if(options[i] === "ft_admin_menu") {
-					device.ft_admin_menu = true;
-				} else if(options[i] === "ft_server_menu") {
-					device.ft_server_menu = true;
-				} else if(options[i] === "ft_meta_menu") {
-					device.ft_meta_menu = true;
-				} else if(options[i] === "ft_exit_track_menu") {
-					device.ft_exit_track_menu = true;
-				} else if(options[i] === "ft_bg_stop_menu") {
-					device.ft_bg_stop_menu = true;
-				} else if(options[i] === "ft_review_final") {
-					device.ft_review_final = true;
-				} else if(options[i] === "ft_force_token") {
-					device.ft_force_token = true;
-				}
+				device[options[i]] = true;
 			}
 
 			var deviceString = JSON.stringify(device);
@@ -973,32 +950,9 @@ const moment = window.moment;
 				removeHourglass();
 
 				if(handleLogout(device)) {
+					// Each devoption checkbox value is the name of the device setting it shows
 					$('.devoption').each(function () {
-						if ($(this).val() === "ft_odk_style_menus") {
-							this.checked = device.ft_odk_style_menus;
-						} else if ($(this).val() === "ft_specify_instancename") {
-							this.checked = device.ft_specify_instancename;
-						} else if ($(this).val() === "ft_mark_finalized") {
-							this.checked = device.ft_mark_finalized;
-						} else if ($(this).val() === "ft_prevent_disable_track") {
-							this.checked = device.ft_prevent_disable_track;
-						} else if ($(this).val() === "ft_enable_geofence") {
-							this.checked = device.ft_enable_geofence;
-						} else if ($(this).val() === "ft_admin_menu") {
-							this.checked = device.ft_admin_menu;
-						} else if ($(this).val() === "ft_server_menu") {
-							this.checked = device.ft_server_menu;
-						} else if ($(this).val() === "ft_meta_menu") {
-							this.checked = device.ft_meta_menu;
-						} else if ($(this).val() === "ft_exit_track_menu") {
-							this.checked = device.ft_exit_track_menu;
-						} else if ($(this).val() === "ft_bg_stop_menu") {
-							this.checked = device.ft_bg_stop_menu;
-						} else if ($(this).val() === "ft_review_final") {
-							this.checked = device.ft_review_final;
-						} else if ($(this).val() === "ft_force_token") {
-							this.checked = device.ft_force_token;
-						}
+						this.checked = !!device[$(this).val()];
 					});
 
 					$('#ft_send').val(device.ft_send);
