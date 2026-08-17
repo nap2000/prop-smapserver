@@ -914,6 +914,203 @@ function enableApiKeyPopup() {
 }
 
 /*
+ * Add the two factor authentication popup, and its item in the profile menu.
+ *
+ * The profile menu is copied into every page's markup, so the item is injected here
+ * instead - the same approach the api key modal already uses to avoid touching every page.
+ */
+function addTwoFactorPopup() {
+	var	h =[],
+		idx = -1;
+
+	h[++idx] = '<div id="two_factor_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="twoFactorLabel" aria-hidden="true">';
+	h[++idx] = '<div class="modal-dialog">';
+	h[++idx] = '<div class="modal-content">';
+	h[++idx] = '<div class="modal-header">';
+	// Text is set here rather than through data-lang: pages call localise.setlang() before
+	// setupUserProfile(), so anything injected afterwards is never visited by it
+	h[++idx] = '<h4 class="modal-title" id="twoFactorLabel">' + localise.set["c_2fa"] + '</h4>';
+	h[++idx] = '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
+	h[++idx] = '</div>';    // modal-header
+
+	h[++idx] = '<div class="modal-body">';
+
+	// Shown when the user has not enrolled
+	h[++idx] = '<div id="tfSetup" class="d-none">';
+	h[++idx] = '<p>' + localise.set["c_2fa_scan"] + '</p>';
+	h[++idx] = '<div class="text-center mb-3"><img id="tfQr" alt="" class="img-fluid"></div>';
+	h[++idx] = '<div class="mb-3">';
+	h[++idx] = '<label for="tfSecret" class="form-label">' + localise.set["c_2fa_manual"] + '</label>';
+	h[++idx] = '<input type="text" id="tfSecret" class="form-control" readonly>';
+	h[++idx] = '</div>';
+	h[++idx] = '</div>';
+
+	// Shown when the user has enrolled
+	h[++idx] = '<div id="tfEnabled" class="d-none">';
+	h[++idx] = '<p>' + localise.set["c_2fa_on"] + '</p>';
+	h[++idx] = '<p>' + localise.set["c_2fa_remove_help"] + '</p>';
+	h[++idx] = '</div>';
+
+	h[++idx] = '<div class="mb-3">';
+	h[++idx] = '<label for="tfCode" class="form-label">' + localise.set["c_2fa_code"] + '</label>';
+	h[++idx] = '<input type="text" id="tfCode" class="form-control" inputmode="numeric" autocomplete="one-time-code" maxlength="6">';
+	h[++idx] = '</div>';
+
+	h[++idx] = '<div id="tfAlert" class="alert alert-danger d-none" role="alert"></div>';
+	h[++idx] = '</div>';    // modal-body
+
+	h[++idx] = '<div class="modal-footer">';
+	h[++idx] = '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">';
+	h[++idx] = localise.set["c_close"];
+	h[++idx] = '</button>';
+	h[++idx] = '<button id="tfEnable" type="button" class="btn btn-primary d-none">';
+	h[++idx] = localise.set["c_2fa_enable"];
+	h[++idx] = '</button>';
+	h[++idx] = '<button id="tfRemove" type="button" class="btn btn-danger d-none">';
+	h[++idx] = localise.set["c_2fa_remove"];
+	h[++idx] = '</button>';
+	h[++idx] = '</div>';    // modal-footer
+	h[++idx] = '</div>';        // modal-content
+	h[++idx] = '</div>';            // modal-dialog
+	h[++idx] = '</div>';                // popup
+
+	$(document.body).append(h.join(''));
+
+	// Put the menu item above logout, which is always the last item
+	var menuItem = '<a class="dropdown-item" id="m_two_factor" '
+		+ 'data-bs-toggle="modal" data-bs-target="#two_factor_popup" href="#" '
+		+ 'aria-label="Two factor authentication">' + localise.set["c_2fa"] + '</a>';
+	var $logout = $('#userProfileLogout');
+	if($logout.length > 0) {
+		$logout.before(menuItem);
+	} else {
+		$('.dropdown-menu[aria-labelledby="m_profile"]').append(menuItem);
+	}
+
+	enableTwoFactorPopup();
+}
+
+/*
+ * Respond to events on the two factor popup
+ */
+function enableTwoFactorPopup() {
+
+	function tfError(msg) {
+		$('#tfAlert').removeClass('d-none').text(msg);
+	}
+
+	function tfClearError() {
+		$('#tfAlert').addClass('d-none').text('');
+	}
+
+	/*
+	 * The secret is created when the dialog is opened, not when it is saved, because the
+	 * user has to be able to scan it before they can produce a code to confirm it.  It does
+	 * nothing until a code confirms it.
+	 */
+	$('#two_factor_popup').on('show.bs.modal', function () {
+
+		tfClearError();
+		$('#tfCode').val('');
+		$('#tfSetup,#tfEnabled,#tfEnable,#tfRemove').addClass('d-none');
+
+		addHourglass();
+		$.ajax({
+			url: '/surveyKPI/twofactor/status',
+			cache: false,
+			success: function (data) {
+				removeHourglass();
+				if (handleLogout(data)) {
+					if (data.enabled) {
+						$('#tfEnabled,#tfRemove').removeClass('d-none');
+					} else {
+						startEnrolment();
+					}
+				}
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (handleLogout(xhr.responseText)) {
+					tfError(localise.set["c_error"] + ": " + err);
+				}
+			}
+		});
+	});
+
+	function startEnrolment() {
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			url: '/surveyKPI/twofactor/enrol',
+			cache: false,
+			success: function (data) {
+				removeHourglass();
+				if (handleLogout(data)) {
+					if (data.qrPng) {
+						$('#tfQr').attr('src', data.qrPng).show();
+					} else {
+						$('#tfQr').hide();		// Fall back to typing the secret in
+					}
+					$('#tfSecret').val(data.secret);
+					$('#tfSetup,#tfEnable').removeClass('d-none');
+					$('#tfCode').focus();
+				}
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (handleLogout(xhr.responseText)) {
+					tfError(xhr.responseText || err);
+				}
+			}
+		});
+	}
+
+	function submitCode(url, onDone) {
+		var code = $('#tfCode').val();
+		if (!code) {
+			tfError(localise.set["c_2fa_code"]);
+			return;
+		}
+		tfClearError();
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			url: url,
+			cache: false,
+			contentType: "application/x-www-form-urlencoded",
+			data: {code: code},
+			success: function (data) {
+				removeHourglass();
+				if (handleLogout(data)) {
+					onDone();
+				}
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (handleLogout(xhr.responseText)) {
+					tfError(xhr.responseText || err);
+					$('#tfCode').val('').focus();
+				}
+			}
+		});
+	}
+
+	$('#tfEnable').on("click", function () {
+		submitCode('/surveyKPI/twofactor/confirm', function () {
+			window.bsModalHide('#two_factor_popup');
+			alert(localise.set["c_2fa_on"]);
+		});
+	});
+
+	$('#tfRemove').on("click", function () {
+		submitCode('/surveyKPI/twofactor/remove', function () {
+			window.bsModalHide('#two_factor_popup');
+			alert(localise.set["c_2fa_off"]);
+		});
+	});
+}
+
+/*
  * Save the currently logged on user's details
  */
 function saveCurrentUser(user, $dialog) {
@@ -1017,6 +1214,7 @@ function addTimeZoneToUrl(url) {
 function setupUserProfile() {
 	addUserDetailsPopupBootstrap4();
 	addApiKeyPopup();
+	addTwoFactorPopup();
 	getAvailableTimeZones(showTimeZones);
 }
 
@@ -7169,7 +7367,38 @@ function checkLoggedIn(callback) {
 /*
  * Respond to a logged out redirect
  */
+/*
+ * Send the user to the two factor challenge, remembering where they were going.
+ *
+ * Every service call goes through handleLogout(), so putting the redirect there covers
+ * every console page without each one having to check.
+ */
+function goToTwoFactor() {
+	if(window.location.pathname === '/app/twoFactor.html') {
+		return;		// Already there - do not loop
+	}
+	window.location.href = '/app/twoFactor.html?next='
+		+ encodeURIComponent(window.location.pathname + window.location.search);
+}
+
+function isTwoFactorRequired(data) {
+	if(!data) {
+		return false;
+	}
+	if(typeof data === "string") {
+		return data.indexOf('"twoFactorRequired"') >= 0;
+	}
+	return data.twoFactorRequired === true;
+}
+
 function handleLogout(data) {
+
+	// The password was accepted but a two factor code has not been given yet
+	if(isTwoFactorRequired(data)) {
+		goToTwoFactor();
+		return false;
+	}
+
 	if(data) {
 		if(    (data.code && data.code === 401)
 			|| (data.status && data.status === 405)
