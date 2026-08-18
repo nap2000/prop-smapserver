@@ -1831,10 +1831,6 @@ const moment = window.moment;
 		h[++idx] = localise.set["c_2fa"];
 		h[++idx] = '</th>';
 
-		h[++idx] = '<th scope="col" style="text-align: center;">'
-		h[++idx] = localise.set["c_pw_legacy_short"];
-		h[++idx] = '</th>';
-
 		h[++idx] = '<th scope="col">';
 		h[++idx] = localise.set["c_action"];
 		h[++idx] = '</th>';
@@ -1880,15 +1876,6 @@ const moment = window.moment;
 					h[++idx] = '<span class="visually-hidden">' + localise.set["c_2fa_on"] + '</span>';
 				} else {
 					h[++idx] = '<span class="visually-hidden">' + localise.set["c_2fa_off"] + '</span>';
-				}
-				h[++idx] = '</td>';
-
-				// Password not changed since the move to bcrypt, so still an unsalted
-				// SHA-1.  It still works; the flag is here so it can be chased up.
-				h[++idx] = '<td style="text-align: center;">';
-				if(user.legacyPassword) {
-					h[++idx] = '<i class="fas fa-exclamation-triangle text-warning" aria-hidden="true"></i>';
-					h[++idx] = '<span class="visually-hidden">' + localise.set["c_pw_legacy"] + '</span>';
 				}
 				h[++idx] = '</td>';
 

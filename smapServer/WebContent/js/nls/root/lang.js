@@ -172,8 +172,6 @@ define({
     "c_2fa_reset_confirm": "Turn off two factor authentication for this user? They will sign in with their password alone until they choose to set it up again.",
     "c_ak": "API key",
     "c_created": "Created",
-    "c_pw_legacy_short": "Old hash",
-    "c_pw_legacy": "Password still stored with the old hash. It will move to the current one when the password is next changed.",
     "c_tok_name": "Name",
     "c_tok_expires": "Expires (days)",
     "c_tok_used": "Last used",
