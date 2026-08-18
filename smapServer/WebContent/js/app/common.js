@@ -417,23 +417,55 @@ function addApiKeyPopup() {
 	h[++idx] = '</div>';    // modal-headers
 
 	h[++idx] = '<div class="modal-body">';
-	h[++idx] = '<form>';
-	h[++idx] = '<div class="form-group row align-items-center">';
-	h[++idx] = '<label for="apiKey" class="col-sm-3 col-form-label">' + localise.set["c_ak"] + '</label>';
-	h[++idx] = '<div class="col-sm-9">';
-	h[++idx] = '<input type="text" id="apiKey" required class="form-control" readOnly>';
-	h[++idx] = '</div>';
-	h[++idx] = '</div>';
-	h[++idx] = '</form>';
-	h[++idx] = '<button id="getKey" type="button" class="btn btn-primary">';
-	h[++idx] = localise.set["c_gak"];
-	h[++idx] = '</button>';
-	h[++idx] = '<button id="deleteKey" type="button" class="btn btn-danger ms-2">';
-	h[++idx] = localise.set["c_del"];
-	h[++idx] = '</button>';
-	h[++idx] = '<button id="copyKey" type="button" class="btn btn-secondary has_tt ms-2" title="Copy Key">';
+
+	// The value of a newly created token.  Hidden until there is one to show, because
+	// the server only ever returns it once - it stores a hash and cannot show it again.
+	h[++idx] = '<div id="newTokenPanel" class="alert alert-warning" style="display:none;">';
+	h[++idx] = '<p class="mb-2">' + localise.set["c_tok_once"] + '</p>';
+	h[++idx] = '<div class="input-group">';
+	h[++idx] = '<input type="text" id="apiKey" class="form-control" readOnly>';
+	h[++idx] = '<button id="copyKey" type="button" class="btn btn-secondary has_tt" title="' + localise.set["c_ck"] + '">';
 	h[++idx] = localise.set["c_ck"];
 	h[++idx] = '</button>';
+	h[++idx] = '</div>';
+	h[++idx] = '</div>';
+
+	// Create
+	h[++idx] = '<form class="row gx-2 gy-2 align-items-end mb-3">';
+	h[++idx] = '<div class="col-sm-6">';
+	h[++idx] = '<label for="tokenName" class="form-label">' + localise.set["c_tok_name"] + '</label>';
+	h[++idx] = '<input type="text" id="tokenName" class="form-control" maxlength="60">';
+	h[++idx] = '</div>';
+	h[++idx] = '<div class="col-sm-3">';
+	h[++idx] = '<label for="tokenExpiry" class="form-label">' + localise.set["c_tok_expires"] + '</label>';
+	h[++idx] = '<select id="tokenExpiry" class="form-select">';
+	h[++idx] = '<option value="90">90</option>';
+	h[++idx] = '<option value="365">365</option>';
+	h[++idx] = '<option value="0">' + localise.set["c_tok_never"] + '</option>';
+	h[++idx] = '</select>';
+	h[++idx] = '</div>';
+	h[++idx] = '<div class="col-sm-3">';
+	h[++idx] = '<button id="getKey" type="button" class="btn btn-primary w-100">';
+	h[++idx] = localise.set["c_gak"];
+	h[++idx] = '</button>';
+	h[++idx] = '</div>';
+	h[++idx] = '</form>';
+
+	// Existing tokens
+	h[++idx] = '<div class="table-responsive">';
+	h[++idx] = '<table class="table table-sm">';
+	h[++idx] = '<thead><tr>';
+	h[++idx] = '<th>' + localise.set["c_tok_name"] + '</th>';
+	h[++idx] = '<th>' + localise.set["c_ak"] + '</th>';
+	h[++idx] = '<th>' + localise.set["c_created"] + '</th>';
+	h[++idx] = '<th>' + localise.set["c_tok_expires"] + '</th>';
+	h[++idx] = '<th>' + localise.set["c_tok_used"] + '</th>';
+	h[++idx] = '<th></th>';
+	h[++idx] = '</tr></thead>';
+	h[++idx] = '<tbody id="tokenList"></tbody>';
+	h[++idx] = '</table>';
+	h[++idx] = '</div>';
+
 	h[++idx] = '</div>';
 
 	h[++idx] = '<div class="modal-footer">';
@@ -795,60 +827,88 @@ function enableUserProfileBS () {
  */
 function enableApiKeyPopup() {
 
-	$('#api_key_popup').on('show.bs.modal', function (event) {
-		/*
-		 * Get the current API key
-		 */
-		$('#getKey').prop('disabled', true);
+	/*
+	 * Draw the token list.  There is deliberately no way to show the value of an existing
+	 * token: the server stores only a hash of it, so a lost token is replaced, not read
+	 * back.  The prefix is enough to tell two of them apart.
+	 */
+	function showTokens(tokens) {
+		var h = [],
+			idx = -1,
+			i,
+			t;
+
+		if (!tokens || tokens.length === 0) {
+			h[++idx] = '<tr><td colspan="6" class="text-muted">' + localise.set["c_none"] + '</td></tr>';
+		} else {
+			for (i = 0; i < tokens.length; i++) {
+				t = tokens[i];
+				h[++idx] = '<tr' + (t.revoked ? ' class="text-muted"' : '') + '>';
+				h[++idx] = '<td>' + htmlEncode(t.name || '') + '</td>';
+				h[++idx] = '<td><code>' + htmlEncode(t.prefix || '') + '\u2026</code></td>';
+				h[++idx] = '<td>' + (t.created || '') + '</td>';
+				h[++idx] = '<td>' + (t.expires || localise.set["c_tok_never"]) + '</td>';
+				h[++idx] = '<td>' + (t.last_used || localise.set["c_none"]) + '</td>';
+				h[++idx] = '<td class="text-end">';
+				if (t.revoked) {
+					h[++idx] = '<span class="badge bg-secondary">' + localise.set["c_tok_revoked"] + '</span>';
+				} else {
+					h[++idx] = '<button type="button" class="btn btn-sm btn-danger revoke_token" data-id="' +
+						t.id + '">' + localise.set["c_tok_revoke"] + '</button>';
+				}
+				h[++idx] = '</td>';
+				h[++idx] = '</tr>';
+			}
+		}
+		$('#tokenList').empty().append(h.join(''));
+	}
+
+	function getTokens() {
 		addHourglass();
 		$.ajax({
-			url: '/surveyKPI/user/api_key',
+			url: '/surveyKPI/token?scope=api',
 			cache: false,
 			success: function (data) {
 				removeHourglass();
 				if (handleLogout(data)) {
-					$('#apiKey').val(data.apiKey);
-					$('#getKey').prop('disabled', false);
-					if (data.apiKey) {
-						$('#getKey').text(localise.set["c_rak"]);
-						$('#deleteKey,#copyKey').prop('disabled', false);
-					} else {
-						$('#getKey').text(localise.set["c_gak"]);
-						$('#deleteKey,#copyKey').prop('disabled', true);
-					}
+					showTokens(data);
 				}
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
 				if (handleLogout(xhr.responseText)) {
-					$('#getKey').prop('disabled', false);
 					if (xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
-					} else {
-						alert(err);
-						console.log("Error: Failed to get api key: " + err);
 					}
+					alert(err);
+					console.log("Error: Failed to get api tokens: " + err);
 				}
 			}
 		});
+	}
+
+	$('#api_key_popup').on('show.bs.modal', function (event) {
+		// A value shown for a previous create must not survive a reopen
+		$('#newTokenPanel').hide();
+		$('#apiKey').val("");
+		$('#tokenName').val("");
+		getTokens();
 	});
 
 	/*
-	 * Delete a key
+	 * Revoke a token
 	 */
-	$('#deleteKey').on("click",function () {
+	$('#tokenList').on("click", ".revoke_token", function () {
+		var id = $(this).data("id");
 		addHourglass();
 		$.ajax({
 			type: "DELETE",
-			url: '/surveyKPI/user/api_key',
+			url: '/surveyKPI/token/' + id,
 			cache: false,
 			success: function (data) {
 				removeHourglass();
 				if (handleLogout(data)) {
-					$('#apiKey').val("");
-					$('#getKey').prop('disabled', false);
-					$('#getKey').text(localise.set["c_gak"]);
-					$('#deleteKey,#copyKey').prop('disabled', true);
+					getTokens();
 				}
 			},
 			error: function (xhr, textStatus, err) {
@@ -856,32 +916,38 @@ function enableApiKeyPopup() {
 				if (handleLogout(xhr.responseText)) {
 					if (xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
-					} else {
-						alert(err);
-						console.log("Error: Failed to delete api key: " + err);
 					}
+					alert(err);
+					console.log("Error: Failed to revoke api token: " + err);
 				}
 			}
 		});
 	});
 
 	/*
-	 * Create a key
+	 * Create a token.  The value comes back once and is never available again.
 	 */
 	$('#getKey').on("click", function () {
+		var details = {
+			scope: "api",
+			name: $('#tokenName').val(),
+			expiryDays: +$('#tokenExpiry').val()
+		};
 		addHourglass();
 		$.ajax({
 			type: "POST",
 			cache: false,
 			contentType: "application/x-www-form-urlencoded",
 			dataType: 'json',
-			url: "/surveyKPI/user/api_key/create",
+			url: "/surveyKPI/token",
+			data: {tokenDetails: JSON.stringify(details)},
 			success: function (data) {
 				removeHourglass();
 				if (handleLogout(data)) {
-					$('#apiKey').val(data.apiKey);
-					$('#getKey').text(localise.set["c_rak"]);
-					$('#deleteKey,#copyKey').prop('disabled', false);
+					$('#apiKey').val(data.auth_token);
+					$('#newTokenPanel').show();
+					$('#tokenName').val("");
+					getTokens();
 				}
 			},
 			error: function (xhr, textStatus, err) {
@@ -889,10 +955,9 @@ function enableApiKeyPopup() {
 				if (handleLogout(xhr.responseText)) {
 					if (xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
-					} else {
-						alert(err);
-						console.log("Error: Failed to get api key: " + err);
 					}
+					alert(err);
+					console.log("Error: Failed to create api token: " + err);
 				}
 			}
 		});
@@ -905,11 +970,11 @@ function enableApiKeyPopup() {
 		copyText.select();
 		navigator.clipboard.writeText($('#apiKey').val());
 
-		window.bsTooltipSetAndShow('#copyKey', localise.set["c_c"] + ": " + copyText.value);
+		window.bsTooltipSetAndShow('#copyKey', localise.set["c_c"]);
 
 	});
 	$('#copyKey').mouseout(function () {
-		window.bsTooltipSet('#copyKey', localise.set["c_c"]);
+		window.bsTooltipSet('#copyKey', localise.set["c_ck"]);
 	});
 }
 

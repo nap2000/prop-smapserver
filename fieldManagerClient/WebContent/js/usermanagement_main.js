@@ -1831,6 +1831,10 @@ const moment = window.moment;
 		h[++idx] = localise.set["c_2fa"];
 		h[++idx] = '</th>';
 
+		h[++idx] = '<th scope="col" style="text-align: center;">'
+		h[++idx] = localise.set["c_pw_legacy_short"];
+		h[++idx] = '</th>';
+
 		h[++idx] = '<th scope="col">';
 		h[++idx] = localise.set["c_action"];
 		h[++idx] = '</th>';
@@ -1876,6 +1880,15 @@ const moment = window.moment;
 					h[++idx] = '<span class="visually-hidden">' + localise.set["c_2fa_on"] + '</span>';
 				} else {
 					h[++idx] = '<span class="visually-hidden">' + localise.set["c_2fa_off"] + '</span>';
+				}
+				h[++idx] = '</td>';
+
+				// Password not changed since the move to bcrypt, so still an unsalted
+				// SHA-1.  It still works; the flag is here so it can be chased up.
+				h[++idx] = '<td style="text-align: center;">';
+				if(user.legacyPassword) {
+					h[++idx] = '<i class="fas fa-exclamation-triangle text-warning" aria-hidden="true"></i>';
+					h[++idx] = '<span class="visually-hidden">' + localise.set["c_pw_legacy"] + '</span>';
 				}
 				h[++idx] = '</td>';
 
@@ -2603,20 +2616,40 @@ const moment = window.moment;
 		});
 
 	}
+	/*
+	 * Show the state of the user's device token.
+	 *
+	 * Only a create returns auth_token, and only once - the server stores a hash of it.
+	 * So the QR can be scanned while it is on screen and never again; reopening the popup
+	 * reports that a token exists but cannot redisplay it.
+	 */
 	function displayAppCode(data) {
 		if(data.auth_token) {
 			var bc = {
 				render: 'div',
 				size: 200,
-				text: JSON.stringify(data)
+				text: JSON.stringify({
+					server_url: data.server_url,
+					username: data.username,
+					auth_token: data.auth_token
+				})
 			}
 			$('#appKey').text(data["auth_token"]);
 			$('#appKeyQR').empty().qrcode(bc);
+			$('#appKeyNew').show();
+			$('#appKeyStatus').text("");
 			$('#createKey').text(localise.set["c_rftk"]);
 		} else {
-			$('#appKey').text(localise.set["c_none"]);
+			$('#appKeyNew').hide();
 			$('#appKeyQR').empty();
-			$('#createKey').text(localise.set["c_cftk"]);
+			$('#appKey').text("");
+			if(data.prefix) {
+				$('#appKeyStatus').text(data.prefix + "\u2026");
+				$('#createKey').text(localise.set["c_rftk"]);
+			} else {
+				$('#appKeyStatus').text(localise.set["c_none"]);
+				$('#createKey').text(localise.set["c_cftk"]);
+			}
 		}
 	}
 
