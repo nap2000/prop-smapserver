@@ -2846,7 +2846,9 @@ const moment = window.moment;
 	 * Clear a user's two factor authentication.
 	 *
 	 * The only way back in for a user who has lost the device their authenticator was on -
-	 * there are no recovery codes.  They set it up again at their next login.
+	 * there are no recovery codes.  This turns two factor off rather than restarting
+	 * enrolment: the user signs in with their password alone afterwards, and sets it up
+	 * again from their profile menu only if they choose to.
 	 */
 	function resetTwoFactor(userIdx) {
 
