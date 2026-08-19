@@ -742,16 +742,29 @@ const moment = window.moment;
 			var h = [],
 				i = -1,
 				idx,
+				org,
 				orgId,
 				orgName,
+				entId,
 				entName,
 				msg;
 
-			orgId = gOrganisationList[gCurrentOrganisationIndex].id;
-			orgName = gOrganisationList[gCurrentOrganisationIndex].name;
+			// The organisation being moved is the one whose move button opened this popup
+			org = gOrganisationList[gCurrentOrganisationIndex];
+			if(!org) {
+				alert(localise.set["msg_no_org_sel"]);
+				return;
+			}
+			orgId = org.id;
+			orgName = org.name;
 
+			// The target enterprise may have no organisations, it just has to be specified
 			entId = $('#target_enterprise').val();
 			entName = $('#target_enterprise :selected').text();
+			if(!entId) {
+				alert(localise.set["msg_no_ent_sel"]);
+				return;
+			}
 
 			msg = localise.set["u_check_mv_o"];
 			msg = msg.replace("%s1", orgName);
@@ -3029,6 +3042,11 @@ const moment = window.moment;
 		orgId = $('#target_organisation').val();
 		orgName = $('#target_organisation :selected').text();
 
+		if(!orgId) {			// Target organisation select is empty
+			alert(localise.set["u_no_org_target"]);
+			return;
+		}
+
 		msg = localise.set["u_check_mv_p"];
 		msg = msg.replace("%s1", projectsMoving);
 		msg = msg.replace("%s2", orgName);
@@ -3067,6 +3085,11 @@ const moment = window.moment;
 		});
 
 		orgId = $('#target_organisation').val();
+
+		if(!orgId) {			// Target organisation select is empty
+			alert(localise.set["u_no_org_target"]);
+			return;
+		}
 
 		msg = localise.set["u_check_mv_u"];
 		msg = msg.replace("%s1", usersMoving);
