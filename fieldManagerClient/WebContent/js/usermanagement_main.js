@@ -121,7 +121,7 @@ const moment = window.moment;
 			false, getEnterprises, undefined, getSMSNumbers);
 
 		// Add change event on group and project filter
-		$('#group_name, #project_name, #role_name, #org_name').change(function() {
+		$('#group_name, #project_name, #role_name, #org_name, #two_factor_filter').change(function() {
 			updateUserTable();
 		});
 
@@ -1783,12 +1783,15 @@ const moment = window.moment;
 			yesProject,
 			yesRole,
 			yesOrg,
+			yesTwoFactor,
 			isEnum,
+			canResetTwoFactor,
 			project,
 			group,
 			projectStr,
 			role,
-			org;
+			org,
+			twoFactor;
 
 		$('#controls').find('button').addClass("disabled");
 
@@ -1796,6 +1799,7 @@ const moment = window.moment;
 		projectStr = $('#project_name').val();
 		role = $('#role_name').val();
 		org = $('#org_name').val();
+		twoFactor = $('#two_factor_filter').val();
 
 		project = Number(projectStr);
 
@@ -1811,6 +1815,10 @@ const moment = window.moment;
 		if (!org || org == -1) {
 			filterOrg = false;
 		}
+
+		// Only an administrator can clear someone else's two factor - the server enforces
+		// this too, this just keeps the button off screens where it would always fail
+		canResetTwoFactor = globals.gIsAdministrator || globals.gIsOrgAdministrator;
 
 		h[++idx] = '<div class="table-responsive">';
 		h[++idx] = '<table class="table table-striped">';
@@ -1832,6 +1840,10 @@ const moment = window.moment;
 		h[++idx] = localise.set["u_co"];
 		h[++idx] = '</th>';
 
+		h[++idx] = '<th scope="col" style="text-align: center;">'
+		h[++idx] = localise.set["c_2fa"];
+		h[++idx] = '</th>';
+
 		h[++idx] = '<th scope="col">';
 		h[++idx] = localise.set["c_action"];
 		h[++idx] = '</th>';
@@ -1848,9 +1860,11 @@ const moment = window.moment;
 			yesProject = !filterProject || hasId(user.projects, project);
 			yesRole = !filterRole || hasId(user.roles, +role);
 			yesOrg = !filterOrg || hasId(user.orgs, +org);
+			yesTwoFactor = !twoFactor || twoFactor === 'all'
+					|| (twoFactor === 'yes') === !!user.twoFactorEnabled;
 			isEnum = hasName(user.groups, 'enum');
 
-			if (yesGroup && yesProject && yesRole && yesOrg) {
+			if (yesGroup && yesProject && yesRole && yesOrg && yesTwoFactor) {
 				h[++idx] = '<tr>';
 				h[++idx] = '<td class="control_td"><input type="checkbox" name="controls" value="';
 				h[++idx] = i;
@@ -1867,6 +1881,15 @@ const moment = window.moment;
 				h[++idx] = '</td>';
 				h[++idx] = '<td style="text-align: center;">';
 				h[++idx] = htmlEncode(user.current_org_name);
+				h[++idx] = '</td>';
+
+				h[++idx] = '<td style="text-align: center;">';
+				if(user.twoFactorEnabled) {
+					h[++idx] = '<i class="fas fa-shield-alt text-success" aria-hidden="true"></i>';
+					h[++idx] = '<span class="visually-hidden">' + localise.set["c_2fa_on"] + '</span>';
+				} else {
+					h[++idx] = '<span class="visually-hidden">' + localise.set["c_2fa_off"] + '</span>';
+				}
 				h[++idx] = '</td>';
 
 				h[++idx] = '<td>';
@@ -1892,6 +1915,18 @@ const moment = window.moment;
 					h[++idx] = '<i class="fas fa-qrcode" aria-hidden="true"></i> <span class="lang" data-lang="u_code"></span></button>';
 				}
 
+				// The only way back in for a user who has lost the device with their
+				// authenticator on it
+				if(user.twoFactorEnabled && canResetTwoFactor) {
+					h[++idx] = '<button type="button" data-idx="';
+					h[++idx] = i;
+					h[++idx] = '" class="btn btn-sm reset_2fa btn-warning ms-2" aria-label="';
+					h[++idx] = localise.set["c_2fa_reset"];
+					h[++idx] = '" title="';
+					h[++idx] = localise.set["c_2fa_reset"];
+					h[++idx] = '"><i class="fas fa-shield-alt" aria-hidden="true"></i></button>';
+				}
+
 				h[++idx] = '</div>';
 				h[++idx] = '</td>';
 
@@ -1912,6 +1947,11 @@ const moment = window.moment;
 		$(".rm_user", $userTable).click(function(){
 			var idx = $(this).data("idx");
 			deleteUser(idx);
+		});
+
+		$(".reset_2fa", $userTable).click(function(){
+			var idx = $(this).data("idx");
+			resetTwoFactor(idx);
 		});
 
 		$('.app_code', $userTable).click(function () {
@@ -2576,20 +2616,40 @@ const moment = window.moment;
 		});
 
 	}
+	/*
+	 * Show the state of the user's device token.
+	 *
+	 * Only a create returns auth_token, and only once - the server stores a hash of it.
+	 * So the QR can be scanned while it is on screen and never again; reopening the popup
+	 * reports that a token exists but cannot redisplay it.
+	 */
 	function displayAppCode(data) {
 		if(data.auth_token) {
 			var bc = {
 				render: 'div',
 				size: 200,
-				text: JSON.stringify(data)
+				text: JSON.stringify({
+					server_url: data.server_url,
+					username: data.username,
+					auth_token: data.auth_token
+				})
 			}
 			$('#appKey').text(data["auth_token"]);
 			$('#appKeyQR').empty().qrcode(bc);
+			$('#appKeyNew').show();
+			$('#appKeyStatus').text("");
 			$('#createKey').text(localise.set["c_rftk"]);
 		} else {
-			$('#appKey').text(localise.set["c_none"]);
+			$('#appKeyNew').hide();
 			$('#appKeyQR').empty();
-			$('#createKey').text(localise.set["c_cftk"]);
+			$('#appKey').text("");
+			if(data.prefix) {
+				$('#appKeyStatus').text(data.prefix + "\u2026");
+				$('#createKey').text(localise.set["c_rftk"]);
+			} else {
+				$('#appKeyStatus').text(localise.set["c_none"]);
+				$('#createKey').text(localise.set["c_cftk"]);
+			}
 		}
 	}
 
@@ -2780,6 +2840,40 @@ const moment = window.moment;
 		if (decision === true) {
 			callUsersDeleteService(users);
 		}
+	}
+
+	/*
+	 * Clear a user's two factor authentication.
+	 *
+	 * The only way back in for a user who has lost the device their authenticator was on -
+	 * there are no recovery codes.  This turns two factor off rather than restarting
+	 * enrolment: the user signs in with their password alone afterwards, and sets it up
+	 * again from their profile menu only if they choose to.
+	 */
+	function resetTwoFactor(userIdx) {
+
+		var user = gUsers[userIdx];
+
+		if (!confirm(localise.set["c_2fa_reset_confirm"] + " (" + user.ident + ")")) {
+			return;
+		}
+
+		addHourglass();
+		$.ajax({
+			type: "DELETE",
+			url: "/surveyKPI/twofactor/user/" + encodeURIComponent(user.ident),
+			success: function(data) {
+				removeHourglass();
+				if(handleLogout(data)) {
+					getUsers();
+				}
+			}, error: function(data) {
+				removeHourglass();
+				if(handleLogout(data.responseText)) {
+					alert(data.responseText || localise.set["c_error"]);
+				}
+			}
+		});
 	}
 
 	/*

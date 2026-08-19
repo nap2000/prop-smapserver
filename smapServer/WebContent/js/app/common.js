@@ -417,23 +417,55 @@ function addApiKeyPopup() {
 	h[++idx] = '</div>';    // modal-headers
 
 	h[++idx] = '<div class="modal-body">';
-	h[++idx] = '<form>';
-	h[++idx] = '<div class="form-group row align-items-center">';
-	h[++idx] = '<label for="apiKey" class="col-sm-3 col-form-label">' + localise.set["c_ak"] + '</label>';
-	h[++idx] = '<div class="col-sm-9">';
-	h[++idx] = '<input type="text" id="apiKey" required class="form-control" readOnly>';
-	h[++idx] = '</div>';
-	h[++idx] = '</div>';
-	h[++idx] = '</form>';
-	h[++idx] = '<button id="getKey" type="button" class="btn btn-primary">';
-	h[++idx] = localise.set["c_gak"];
-	h[++idx] = '</button>';
-	h[++idx] = '<button id="deleteKey" type="button" class="btn btn-danger ms-2">';
-	h[++idx] = localise.set["c_del"];
-	h[++idx] = '</button>';
-	h[++idx] = '<button id="copyKey" type="button" class="btn btn-secondary has_tt ms-2" title="Copy Key">';
+
+	// The value of a newly created token.  Hidden until there is one to show, because
+	// the server only ever returns it once - it stores a hash and cannot show it again.
+	h[++idx] = '<div id="newTokenPanel" class="alert alert-warning" style="display:none;">';
+	h[++idx] = '<p class="mb-2">' + localise.set["c_tok_once"] + '</p>';
+	h[++idx] = '<div class="input-group">';
+	h[++idx] = '<input type="text" id="apiKey" class="form-control" readOnly>';
+	h[++idx] = '<button id="copyKey" type="button" class="btn btn-secondary has_tt" title="' + localise.set["c_ck"] + '">';
 	h[++idx] = localise.set["c_ck"];
 	h[++idx] = '</button>';
+	h[++idx] = '</div>';
+	h[++idx] = '</div>';
+
+	// Create
+	h[++idx] = '<form class="row gx-2 gy-2 align-items-end mb-3">';
+	h[++idx] = '<div class="col-sm-6">';
+	h[++idx] = '<label for="tokenName" class="form-label">' + localise.set["c_tok_name"] + '</label>';
+	h[++idx] = '<input type="text" id="tokenName" class="form-control" maxlength="60">';
+	h[++idx] = '</div>';
+	h[++idx] = '<div class="col-sm-3">';
+	h[++idx] = '<label for="tokenExpiry" class="form-label">' + localise.set["c_tok_expires"] + '</label>';
+	h[++idx] = '<select id="tokenExpiry" class="form-select">';
+	h[++idx] = '<option value="90">90</option>';
+	h[++idx] = '<option value="365">365</option>';
+	h[++idx] = '<option value="0">' + localise.set["c_tok_never"] + '</option>';
+	h[++idx] = '</select>';
+	h[++idx] = '</div>';
+	h[++idx] = '<div class="col-sm-3">';
+	h[++idx] = '<button id="getKey" type="button" class="btn btn-primary w-100">';
+	h[++idx] = localise.set["c_gak"];
+	h[++idx] = '</button>';
+	h[++idx] = '</div>';
+	h[++idx] = '</form>';
+
+	// Existing tokens
+	h[++idx] = '<div class="table-responsive">';
+	h[++idx] = '<table class="table table-sm">';
+	h[++idx] = '<thead><tr>';
+	h[++idx] = '<th>' + localise.set["c_tok_name"] + '</th>';
+	h[++idx] = '<th>' + localise.set["c_ak"] + '</th>';
+	h[++idx] = '<th>' + localise.set["c_created"] + '</th>';
+	h[++idx] = '<th>' + localise.set["c_tok_expires"] + '</th>';
+	h[++idx] = '<th>' + localise.set["c_tok_used"] + '</th>';
+	h[++idx] = '<th></th>';
+	h[++idx] = '</tr></thead>';
+	h[++idx] = '<tbody id="tokenList"></tbody>';
+	h[++idx] = '</table>';
+	h[++idx] = '</div>';
+
 	h[++idx] = '</div>';
 
 	h[++idx] = '<div class="modal-footer">';
@@ -795,60 +827,88 @@ function enableUserProfileBS () {
  */
 function enableApiKeyPopup() {
 
-	$('#api_key_popup').on('show.bs.modal', function (event) {
-		/*
-		 * Get the current API key
-		 */
-		$('#getKey').prop('disabled', true);
+	/*
+	 * Draw the token list.  There is deliberately no way to show the value of an existing
+	 * token: the server stores only a hash of it, so a lost token is replaced, not read
+	 * back.  The prefix is enough to tell two of them apart.
+	 */
+	function showTokens(tokens) {
+		var h = [],
+			idx = -1,
+			i,
+			t;
+
+		if (!tokens || tokens.length === 0) {
+			h[++idx] = '<tr><td colspan="6" class="text-muted">' + localise.set["c_none"] + '</td></tr>';
+		} else {
+			for (i = 0; i < tokens.length; i++) {
+				t = tokens[i];
+				h[++idx] = '<tr' + (t.revoked ? ' class="text-muted"' : '') + '>';
+				h[++idx] = '<td>' + htmlEncode(t.name || '') + '</td>';
+				h[++idx] = '<td><code>' + htmlEncode(t.prefix || '') + '\u2026</code></td>';
+				h[++idx] = '<td>' + (t.created || '') + '</td>';
+				h[++idx] = '<td>' + (t.expires || localise.set["c_tok_never"]) + '</td>';
+				h[++idx] = '<td>' + (t.last_used || localise.set["c_none"]) + '</td>';
+				h[++idx] = '<td class="text-end">';
+				if (t.revoked) {
+					h[++idx] = '<span class="badge bg-secondary">' + localise.set["c_tok_revoked"] + '</span>';
+				} else {
+					h[++idx] = '<button type="button" class="btn btn-sm btn-danger revoke_token" data-id="' +
+						t.id + '">' + localise.set["c_tok_revoke"] + '</button>';
+				}
+				h[++idx] = '</td>';
+				h[++idx] = '</tr>';
+			}
+		}
+		$('#tokenList').empty().append(h.join(''));
+	}
+
+	function getTokens() {
 		addHourglass();
 		$.ajax({
-			url: '/surveyKPI/user/api_key',
+			url: '/surveyKPI/token?scope=api',
 			cache: false,
 			success: function (data) {
 				removeHourglass();
 				if (handleLogout(data)) {
-					$('#apiKey').val(data.apiKey);
-					$('#getKey').prop('disabled', false);
-					if (data.apiKey) {
-						$('#getKey').text(localise.set["c_rak"]);
-						$('#deleteKey,#copyKey').prop('disabled', false);
-					} else {
-						$('#getKey').text(localise.set["c_gak"]);
-						$('#deleteKey,#copyKey').prop('disabled', true);
-					}
+					showTokens(data);
 				}
 			},
 			error: function (xhr, textStatus, err) {
 				removeHourglass();
 				if (handleLogout(xhr.responseText)) {
-					$('#getKey').prop('disabled', false);
 					if (xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
-					} else {
-						alert(err);
-						console.log("Error: Failed to get api key: " + err);
 					}
+					alert(err);
+					console.log("Error: Failed to get api tokens: " + err);
 				}
 			}
 		});
+	}
+
+	$('#api_key_popup').on('show.bs.modal', function (event) {
+		// A value shown for a previous create must not survive a reopen
+		$('#newTokenPanel').hide();
+		$('#apiKey').val("");
+		$('#tokenName').val("");
+		getTokens();
 	});
 
 	/*
-	 * Delete a key
+	 * Revoke a token
 	 */
-	$('#deleteKey').on("click",function () {
+	$('#tokenList').on("click", ".revoke_token", function () {
+		var id = $(this).data("id");
 		addHourglass();
 		$.ajax({
 			type: "DELETE",
-			url: '/surveyKPI/user/api_key',
+			url: '/surveyKPI/token/' + id,
 			cache: false,
 			success: function (data) {
 				removeHourglass();
 				if (handleLogout(data)) {
-					$('#apiKey').val("");
-					$('#getKey').prop('disabled', false);
-					$('#getKey').text(localise.set["c_gak"]);
-					$('#deleteKey,#copyKey').prop('disabled', true);
+					getTokens();
 				}
 			},
 			error: function (xhr, textStatus, err) {
@@ -856,32 +916,38 @@ function enableApiKeyPopup() {
 				if (handleLogout(xhr.responseText)) {
 					if (xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
-					} else {
-						alert(err);
-						console.log("Error: Failed to delete api key: " + err);
 					}
+					alert(err);
+					console.log("Error: Failed to revoke api token: " + err);
 				}
 			}
 		});
 	});
 
 	/*
-	 * Create a key
+	 * Create a token.  The value comes back once and is never available again.
 	 */
 	$('#getKey').on("click", function () {
+		var details = {
+			scope: "api",
+			name: $('#tokenName').val(),
+			expiryDays: +$('#tokenExpiry').val()
+		};
 		addHourglass();
 		$.ajax({
 			type: "POST",
 			cache: false,
 			contentType: "application/x-www-form-urlencoded",
 			dataType: 'json',
-			url: "/surveyKPI/user/api_key/create",
+			url: "/surveyKPI/token",
+			data: {tokenDetails: JSON.stringify(details)},
 			success: function (data) {
 				removeHourglass();
 				if (handleLogout(data)) {
-					$('#apiKey').val(data.apiKey);
-					$('#getKey').text(localise.set["c_rak"]);
-					$('#deleteKey,#copyKey').prop('disabled', false);
+					$('#apiKey').val(data.auth_token);
+					$('#newTokenPanel').show();
+					$('#tokenName').val("");
+					getTokens();
 				}
 			},
 			error: function (xhr, textStatus, err) {
@@ -889,10 +955,9 @@ function enableApiKeyPopup() {
 				if (handleLogout(xhr.responseText)) {
 					if (xhr.readyState == 0 || xhr.status == 0) {
 						return;  // Not an error
-					} else {
-						alert(err);
-						console.log("Error: Failed to get api key: " + err);
 					}
+					alert(err);
+					console.log("Error: Failed to create api token: " + err);
 				}
 			}
 		});
@@ -905,11 +970,208 @@ function enableApiKeyPopup() {
 		copyText.select();
 		navigator.clipboard.writeText($('#apiKey').val());
 
-		window.bsTooltipSetAndShow('#copyKey', localise.set["c_c"] + ": " + copyText.value);
+		window.bsTooltipSetAndShow('#copyKey', localise.set["c_c"]);
 
 	});
 	$('#copyKey').mouseout(function () {
-		window.bsTooltipSet('#copyKey', localise.set["c_c"]);
+		window.bsTooltipSet('#copyKey', localise.set["c_ck"]);
+	});
+}
+
+/*
+ * Add the two factor authentication popup, and its item in the profile menu.
+ *
+ * The profile menu is copied into every page's markup, so the item is injected here
+ * instead - the same approach the api key modal already uses to avoid touching every page.
+ */
+function addTwoFactorPopup() {
+	var	h =[],
+		idx = -1;
+
+	h[++idx] = '<div id="two_factor_popup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="twoFactorLabel" aria-hidden="true">';
+	h[++idx] = '<div class="modal-dialog">';
+	h[++idx] = '<div class="modal-content">';
+	h[++idx] = '<div class="modal-header">';
+	// Text is set here rather than through data-lang: pages call localise.setlang() before
+	// setupUserProfile(), so anything injected afterwards is never visited by it
+	h[++idx] = '<h4 class="modal-title" id="twoFactorLabel">' + localise.set["c_2fa"] + '</h4>';
+	h[++idx] = '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
+	h[++idx] = '</div>';    // modal-header
+
+	h[++idx] = '<div class="modal-body">';
+
+	// Shown when the user has not enrolled
+	h[++idx] = '<div id="tfSetup" class="d-none">';
+	h[++idx] = '<p>' + localise.set["c_2fa_scan"] + '</p>';
+	h[++idx] = '<div class="text-center mb-3"><img id="tfQr" alt="" class="img-fluid"></div>';
+	h[++idx] = '<div class="mb-3">';
+	h[++idx] = '<label for="tfSecret" class="form-label">' + localise.set["c_2fa_manual"] + '</label>';
+	h[++idx] = '<input type="text" id="tfSecret" class="form-control" readonly>';
+	h[++idx] = '</div>';
+	h[++idx] = '</div>';
+
+	// Shown when the user has enrolled
+	h[++idx] = '<div id="tfEnabled" class="d-none">';
+	h[++idx] = '<p>' + localise.set["c_2fa_on"] + '</p>';
+	h[++idx] = '<p>' + localise.set["c_2fa_remove_help"] + '</p>';
+	h[++idx] = '</div>';
+
+	h[++idx] = '<div class="mb-3">';
+	h[++idx] = '<label for="tfCode" class="form-label">' + localise.set["c_2fa_code"] + '</label>';
+	h[++idx] = '<input type="text" id="tfCode" class="form-control" inputmode="numeric" autocomplete="one-time-code" maxlength="6">';
+	h[++idx] = '</div>';
+
+	h[++idx] = '<div id="tfAlert" class="alert alert-danger d-none" role="alert"></div>';
+	h[++idx] = '</div>';    // modal-body
+
+	h[++idx] = '<div class="modal-footer">';
+	h[++idx] = '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">';
+	h[++idx] = localise.set["c_close"];
+	h[++idx] = '</button>';
+	h[++idx] = '<button id="tfEnable" type="button" class="btn btn-primary d-none">';
+	h[++idx] = localise.set["c_2fa_enable"];
+	h[++idx] = '</button>';
+	h[++idx] = '<button id="tfRemove" type="button" class="btn btn-danger d-none">';
+	h[++idx] = localise.set["c_2fa_remove"];
+	h[++idx] = '</button>';
+	h[++idx] = '</div>';    // modal-footer
+	h[++idx] = '</div>';        // modal-content
+	h[++idx] = '</div>';            // modal-dialog
+	h[++idx] = '</div>';                // popup
+
+	$(document.body).append(h.join(''));
+
+	// Put the menu item above logout, which is always the last item
+	var menuItem = '<a class="dropdown-item" id="m_two_factor" '
+		+ 'data-bs-toggle="modal" data-bs-target="#two_factor_popup" href="#" '
+		+ 'aria-label="Two factor authentication">' + localise.set["c_2fa"] + '</a>';
+	var $logout = $('#userProfileLogout');
+	if($logout.length > 0) {
+		$logout.before(menuItem);
+	} else {
+		$('.dropdown-menu[aria-labelledby="m_profile"]').append(menuItem);
+	}
+
+	enableTwoFactorPopup();
+}
+
+/*
+ * Respond to events on the two factor popup
+ */
+function enableTwoFactorPopup() {
+
+	function tfError(msg) {
+		$('#tfAlert').removeClass('d-none').text(msg);
+	}
+
+	function tfClearError() {
+		$('#tfAlert').addClass('d-none').text('');
+	}
+
+	/*
+	 * The secret is created when the dialog is opened, not when it is saved, because the
+	 * user has to be able to scan it before they can produce a code to confirm it.  It does
+	 * nothing until a code confirms it.
+	 */
+	$('#two_factor_popup').on('show.bs.modal', function () {
+
+		tfClearError();
+		$('#tfCode').val('');
+		$('#tfSetup,#tfEnabled,#tfEnable,#tfRemove').addClass('d-none');
+
+		addHourglass();
+		$.ajax({
+			url: '/surveyKPI/twofactor/status',
+			cache: false,
+			success: function (data) {
+				removeHourglass();
+				if (handleLogout(data)) {
+					if (data.enabled) {
+						$('#tfEnabled,#tfRemove').removeClass('d-none');
+					} else {
+						startEnrolment();
+					}
+				}
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (handleLogout(xhr.responseText)) {
+					tfError(localise.set["c_error"] + ": " + err);
+				}
+			}
+		});
+	});
+
+	function startEnrolment() {
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			url: '/surveyKPI/twofactor/enrol',
+			cache: false,
+			success: function (data) {
+				removeHourglass();
+				if (handleLogout(data)) {
+					if (data.qrPng) {
+						$('#tfQr').attr('src', data.qrPng).show();
+					} else {
+						$('#tfQr').hide();		// Fall back to typing the secret in
+					}
+					$('#tfSecret').val(data.secret);
+					$('#tfSetup,#tfEnable').removeClass('d-none');
+					$('#tfCode').focus();
+				}
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (handleLogout(xhr.responseText)) {
+					tfError(xhr.responseText || err);
+				}
+			}
+		});
+	}
+
+	function submitCode(url, onDone) {
+		var code = $('#tfCode').val();
+		if (!code) {
+			tfError(localise.set["c_2fa_code"]);
+			return;
+		}
+		tfClearError();
+		addHourglass();
+		$.ajax({
+			type: "POST",
+			url: url,
+			cache: false,
+			contentType: "application/x-www-form-urlencoded",
+			data: {code: code},
+			success: function (data) {
+				removeHourglass();
+				if (handleLogout(data)) {
+					onDone();
+				}
+			},
+			error: function (xhr, textStatus, err) {
+				removeHourglass();
+				if (handleLogout(xhr.responseText)) {
+					tfError(xhr.responseText || err);
+					$('#tfCode').val('').focus();
+				}
+			}
+		});
+	}
+
+	$('#tfEnable').on("click", function () {
+		submitCode('/surveyKPI/twofactor/confirm', function () {
+			window.bsModalHide('#two_factor_popup');
+			alert(localise.set["c_2fa_on"]);
+		});
+	});
+
+	$('#tfRemove').on("click", function () {
+		submitCode('/surveyKPI/twofactor/remove', function () {
+			window.bsModalHide('#two_factor_popup');
+			alert(localise.set["c_2fa_off"]);
+		});
 	});
 }
 
@@ -1017,6 +1279,7 @@ function addTimeZoneToUrl(url) {
 function setupUserProfile() {
 	addUserDetailsPopupBootstrap4();
 	addApiKeyPopup();
+	addTwoFactorPopup();
 	getAvailableTimeZones(showTimeZones);
 }
 
@@ -7169,7 +7432,38 @@ function checkLoggedIn(callback) {
 /*
  * Respond to a logged out redirect
  */
+/*
+ * Send the user to the two factor challenge, remembering where they were going.
+ *
+ * Every service call goes through handleLogout(), so putting the redirect there covers
+ * every console page without each one having to check.
+ */
+function goToTwoFactor() {
+	if(window.location.pathname === '/app/twoFactor.html') {
+		return;		// Already there - do not loop
+	}
+	window.location.href = '/app/twoFactor.html?next='
+		+ encodeURIComponent(window.location.pathname + window.location.search);
+}
+
+function isTwoFactorRequired(data) {
+	if(!data) {
+		return false;
+	}
+	if(typeof data === "string") {
+		return data.indexOf('"twoFactorRequired"') >= 0;
+	}
+	return data.twoFactorRequired === true;
+}
+
 function handleLogout(data) {
+
+	// The password was accepted but a two factor code has not been given yet
+	if(isTwoFactorRequired(data)) {
+		goToTwoFactor();
+		return false;
+	}
+
 	if(data) {
 		if(    (data.code && data.code === 401)
 			|| (data.status && data.status === 405)

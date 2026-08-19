@@ -142,6 +142,17 @@
 										<select class="form-select org_list" id="org_name"></select>
 									</div>
 								</div>
+
+								<div class="form-group row">
+									<label class="control-label col-sm-4" for="two_factor_filter"><span class="lang" data-lang="u_show_2fa"></span>:</label>
+									<div class="col-sm-4">
+										<select class="form-select" id="two_factor_filter">
+											<option value="all" class="lang" data-lang="c_all"></option>
+											<option value="yes" class="lang" data-lang="c_2fa_on"></option>
+											<option value="no" class="lang" data-lang="c_2fa_off"></option>
+										</select>
+									</div>
+								</div>
 							</form>
 						</div>
 					</div>
@@ -1109,8 +1120,14 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<div id="appKeyQR"></div>
-				<div id="appKey"></div>
+				<!-- The QR is only rendered from the response to a create.  The server keeps
+				     a hash of the token and cannot show the value again. -->
+				<div id="appKeyNew" style="display:none;">
+					<div class="alert alert-warning lang" data-lang="c_tok_qr_once"></div>
+					<div id="appKeyQR"></div>
+					<div id="appKey"></div>
+				</div>
+				<div id="appKeyStatus" class="mb-2"></div>
 
 				<button id="createKey" type="button" class="btn btn-primary"></button>
 				<button id="deleteKey" type="button" class="btn btn-danger ms-2 lang" data-lang="c_del"></button>
