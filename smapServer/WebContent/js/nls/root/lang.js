@@ -1788,6 +1788,23 @@ define({
     "u_sp_sync_now": "Sync Now",
     "msg_err_sp_sync": "Sync failed",
 
+    // dhis2 connections (shared resources tab)
+    "c_dhis2": "DHIS2",
+    "u_dh_name": "Name",
+    "u_dh_url": "DHIS2 URL",
+    "u_dh_token": "Personal Access Token",
+    "u_dh_token_help": "Leave blank to keep the token already stored",
+    "u_dh_token_set": "Token stored",
+    "u_dh_version": "API Version",
+    "u_dh_version_help": "Optional. Leave blank to use the default version",
+    "u_dh_last_test": "Last Test",
+    "u_dh_test_now": "Test Connection",
+    "u_dh_user": "DHIS2 User",
+    "u_dh_capture_ou": "Data capture organisation units",
+    "u_dh_no_capture_ou": "This DHIS2 user has no data capture organisation units. Data sent from Smap will be rejected until org units are assigned to the user.",
+    "u_dh_no_add_data": "This DHIS2 user does not report the authority to add data values. Exporting data may be rejected.",
+    "msg_err_dh_test": "Could not reach DHIS2",
+
     // workflow
     "m_workflow": "Workflow",
     "c_case": "Case",

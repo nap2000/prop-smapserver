@@ -282,6 +282,24 @@ $(function() {
 		$('#saveSpList').click(function() { saveSpList(); });
 
 		/*
+         * Set up DHIS2 tab
+         */
+		$('#dhis2Tab a').click(function(e) {
+			e.preventDefault();
+			window.bsTabShow(this);
+			$('.resourcePanel').hide();
+			$('#dhis2Panel').show();
+			getDhis2Servers();
+		});
+
+		$('#addDhis2').click(function() {
+			edit_dhis2();
+			window.bsModalShow('#dhis2EditPopup');
+		});
+
+		$('#saveDhis2').click(function() { saveDhis2(); });
+
+		/*
          * Set up location tabs
          */
 		$('#addNfc').click(function(){
@@ -302,7 +320,7 @@ $(function() {
 		 * Do it here as menus will have been set automatically according to security privileges
 		 */
 		if(gIsSurvey) {
-			$('#mapTab, #locationTab, #spListTab').hide();
+			$('#mapTab, #locationTab, #spListTab, #dhis2Tab').hide();
 			$('#m_monitor, #m_tm, #m_user, #m_settings, #m_logs').hide();
 			$('#m_form').show();
 			$('#page_title').text(localise.set["sr_sm"]);
@@ -900,6 +918,212 @@ $(function() {
 
 			$element.html(h.join(""));
 		}
+	}
+
+	// -------------------------------------------------------------------------
+	// DHIS2 connections
+	// -------------------------------------------------------------------------
+
+	let gDhis2Servers = [];
+	let gDhis2EditId = -1;
+
+	function getDhis2Servers() {
+		addHourglass();
+		$.ajax({
+			url: '/surveyKPI/dhis2/servers',
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				removeHourglass();
+				if(handleLogout(data)) {
+					gDhis2Servers = data;
+					updateDhis2Table(data);
+				}
+			},
+			error: function(xhr) {
+				removeHourglass();
+				if(xhr.readyState !== 0 && xhr.status !== 0) {
+					console.log("Error getting DHIS2 connections: " + xhr.responseText);
+				}
+			}
+		});
+	}
+
+	function updateDhis2Table(data) {
+		let h = [], idx = -1;
+		for(let i = 0; i < data.length; i++) {
+			let s = data[i];
+			h[++idx] = '<tr>';
+			h[++idx] = '<td>' + htmlEncode(s.label) + '</td>';
+			h[++idx] = '<td>' + htmlEncode(s.base_url) + '</td>';
+			h[++idx] = '<td>' + (s.last_test_result ? htmlEncode(s.last_test_result) : '-') + '</td>';
+			h[++idx] = '<td>' + (s.enabled ? '<i class="fas fa-check text-success"></i>' : '') + '</td>';
+			h[++idx] = '<td class="text-nowrap">';
+			h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-info btn-sm mx-1 dh_edit"><i class="far fa-edit"></i></button>';
+			h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-primary btn-sm mx-1 dh_test" title="' + localise.set["u_dh_test_now"] + '"><i class="fas fa-plug"></i></button>';
+			h[++idx] = '<button type="button" data-idx="' + i + '" class="btn btn-danger btn-sm mx-1 dh_del"><i class="fas fa-trash-alt"></i></button>';
+			h[++idx] = '</td>';
+			h[++idx] = '</tr>';
+		}
+		$('#dhis2_body').html(h.join(''));
+
+		$('.dh_edit').click(function() {
+			edit_dhis2($(this).data('idx'));
+			window.bsModalShow('#dhis2EditPopup');
+		});
+		$('.dh_test').click(function() {
+			test_dhis2(gDhis2Servers[$(this).data('idx')].id);
+		});
+		$('.dh_del').click(function() {
+			delete_dhis2(gDhis2Servers[$(this).data('idx')].id);
+		});
+	}
+
+	function edit_dhis2(idx) {
+		$('#dh_msg').hide();
+		if(typeof idx !== 'undefined') {
+			let s = gDhis2Servers[idx];
+			$('#dh_label').val(s.label);
+			$('#dh_base_url').val(s.base_url);
+			$('#dh_api_version').val(s.api_version || '');
+			$('#dh_enabled').prop('checked', s.enabled);
+			gDhis2EditId = s.id;
+			// The token is never sent to the browser.  An empty box means keep the stored one
+			$('#dh_token_help').text(s.token_set
+				? localise.set["u_dh_token_help"]
+				: '');
+		} else {
+			$('#dh_label').val('');
+			$('#dh_base_url').val('');
+			$('#dh_api_version').val('');
+			$('#dh_enabled').prop('checked', true);
+			$('#dh_token_help').text('');
+			gDhis2EditId = -1;
+		}
+		$('#dh_api_token').val('');
+	}
+
+	function saveDhis2() {
+		let s = {
+			id: gDhis2EditId,
+			label: $('#dh_label').val().trim(),
+			base_url: $('#dh_base_url').val().trim(),
+			api_version: $('#dh_api_version').val().trim(),
+			enabled: $('#dh_enabled').prop('checked')
+		};
+
+		// Only send the token when one has been typed, otherwise the stored one is kept
+		let token = $('#dh_api_token').val();
+		if(token && token.trim().length > 0) {
+			s.api_token = token.trim();
+		}
+
+		if(!s.label || !s.base_url) {
+			return;
+		}
+
+		let isNew = gDhis2EditId < 0;
+		addHourglass();
+		$.ajax({
+			type: isNew ? 'POST' : 'PUT',
+			url: '/surveyKPI/dhis2/servers' + (isNew ? '' : '/' + gDhis2EditId),
+			contentType: 'application/json',
+			data: JSON.stringify(s),
+			success: function(data) {
+				removeHourglass();
+				if(handleLogout(data)) {
+					$('#dh_api_token').val('');
+					window.bsModalHide('#dhis2EditPopup');
+					getDhis2Servers();
+				}
+			},
+			error: function(xhr) {
+				removeHourglass();
+				alert(localise.set["msg_err_save"] + " " + xhr.responseText);
+			}
+		});
+	}
+
+	function delete_dhis2(id) {
+		addHourglass();
+		$.ajax({
+			type: 'DELETE',
+			url: '/surveyKPI/dhis2/servers/' + id,
+			success: function() {
+				removeHourglass();
+				getDhis2Servers();
+			},
+			error: function(xhr) {
+				removeHourglass();
+				alert(localise.set["msg_err_del"] + " " + xhr.responseText);
+			}
+		});
+	}
+
+	function test_dhis2(id) {
+		$('#dh_msg').hide();
+		addHourglass();
+		$.ajax({
+			type: 'POST',
+			url: '/surveyKPI/dhis2/servers/' + id + '/test',
+			dataType: 'json',
+			success: function(data) {
+				removeHourglass();
+				if(handleLogout(data)) {
+					showDhis2TestResult(data);
+					getDhis2Servers();		// The result is stored against the connection
+				}
+			},
+			error: function(xhr) {
+				removeHourglass();
+				$('#dh_msg')
+					.removeClass('alert-success').addClass('alert-danger')
+					.text(xhr.responseText || localise.set["msg_err_dh_test"])
+					.show();
+			}
+		});
+	}
+
+	/*
+	 * A connection can be reachable and authenticated and still not be able to write anything,
+	 * so the warnings matter as much as the version
+	 */
+	function showDhis2TestResult(t) {
+		let h = [], idx = -1;
+
+		if(!t.reachable) {
+			h[++idx] = '<div class="alert alert-danger">' + localise.set["msg_err_dh_test"]
+					+ (t.error ? ': ' + htmlEncode(t.error) : '') + '</div>';
+		} else if(!t.authenticated) {
+			h[++idx] = '<div class="alert alert-danger">' + htmlEncode(t.error || '') + '</div>';
+		} else {
+			h[++idx] = '<div class="alert alert-success">DHIS2 ' + htmlEncode(t.version || '?') + '</div>';
+			h[++idx] = '<dl class="row">';
+			if(t.system_name) {
+				h[++idx] = '<dt class="col-sm-6">' + localise.set["c_name"] + '</dt>';
+				h[++idx] = '<dd class="col-sm-6">' + htmlEncode(t.system_name) + '</dd>';
+			}
+			if(t.database_name) {
+				h[++idx] = '<dt class="col-sm-6">Database</dt>';
+				h[++idx] = '<dd class="col-sm-6">' + htmlEncode(t.database_name) + '</dd>';
+			}
+			if(t.username) {
+				h[++idx] = '<dt class="col-sm-6">' + localise.set["u_dh_user"] + '</dt>';
+				h[++idx] = '<dd class="col-sm-6">' + htmlEncode(t.username) + '</dd>';
+			}
+			h[++idx] = '<dt class="col-sm-6">' + localise.set["u_dh_capture_ou"] + '</dt>';
+			h[++idx] = '<dd class="col-sm-6">' + t.capture_org_units + '</dd>';
+			h[++idx] = '</dl>';
+		}
+
+		if(t.warnings && t.warnings.length > 0) {
+			for(let i = 0; i < t.warnings.length; i++) {
+				h[++idx] = '<div class="alert alert-warning">' + htmlEncode(t.warnings[i]) + '</div>';
+			}
+		}
+
+		$('#dh_test_result').html(h.join(''));
+		window.bsModalShow('#dhis2TestPopup');
 	}
 
 	// -------------------------------------------------------------------------
